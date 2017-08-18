@@ -292,6 +292,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 			this.forceUpdateJob.stop();
 			this.scrollStopJob.stop();
+			this.hideThumbJob.stop();
 
 			if (containerRef && containerRef.removeEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
@@ -472,6 +473,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
 				this.childRef.shouldPreventScrollByFocus() :
 				false;
+
+			if (!Spotlight.getPointerMode()) {
+				this.alertThumb();
+			}
 
 			if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode())) {
 				const
@@ -844,13 +849,21 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			});
 		}
 
-		hideThumb () {
+		hideThumb = () => {
 			if (this.state.isHorizontalScrollbarVisible) {
 				this.horizontalScrollbarRef.startHidingThumb();
 			}
 			if (this.state.isVerticalScrollbarVisible) {
 				this.verticalScrollbarRef.startHidingThumb();
 			}
+		}
+
+		hideThumbJob = new Job(this.hideThumb, 200);
+
+		alertThumb () {
+			const bounds = this.getScrollBounds();
+			this.showThumb(bounds);
+			this.hideThumbJob.start();
 		}
 
 		updateScrollbars = () => {

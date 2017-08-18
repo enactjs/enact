@@ -18,7 +18,12 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import css from './Scroller.less';
 import Scrollable from './Scrollable';
 
-const dataContainerDisabledAttribute = 'data-container-disabled';
+const
+	dataContainerDisabledAttribute = 'data-container-disabled',
+	reverseDirections = {
+		'left': 'right',
+		'right': 'left'
+	};
 
 /**
  * {@link moonstone/Scroller.ScrollerBase} is a base component for Scroller.
@@ -373,13 +378,20 @@ class ScrollerBase extends Component {
 	}
 
 	scrollToBoundary = (direction) => {
+		const
+			isVerticalDirection = (direction === 'up' || direction === 'down'),
+			canScrollHorizontally = (!isVerticalDirection && this.scrollPos.left > 0 && (this.scrollPos.left !== this.scrollBounds.maxLeft)),
+			canScrollVertically = (isVerticalDirection && this.scrollPos.top > 0 && (this.scrollPos.top !== this.scrollBounds.maxTop));
+
 		let align;
 
 		if (direction === 'up') align = 'top';
 		else if (direction === 'down') align = 'bottom';
-		else align = direction;
+		else align = this.context.rtl ? reverseDirections[direction] : direction;
 
-		this.props.cbScrollTo({align});
+		if (canScrollHorizontally || canScrollVertically) {
+			this.props.cbScrollTo({align});
+		}
 	}
 
 	isVertical = () => {
