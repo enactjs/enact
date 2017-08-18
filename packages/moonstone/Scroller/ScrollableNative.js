@@ -103,6 +103,7 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 			 * it to customize the spotlight container for its use case.
 			 *
 			 * @type {String}
+			 * @memberof moonstone/Scroller.Scrollable.prototype
 			 * @private
 			 */
 			'data-container-id': PropTypes.string,
