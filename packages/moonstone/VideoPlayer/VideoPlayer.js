@@ -681,9 +681,9 @@ const VideoPlayerBase = class extends React.Component {
 	componentWillUpdate (nextProps, nextState) {
 		const
 			isInfoComponentsEqual = equals(this.props.infoComponents, nextProps.infoComponents),
-			{titleOffsetHeight} = this.state,
+			{titleOffsetHeight: titleHeight} = this.state,
 			shouldCalculateTitleOffset = (
-				((!titleOffsetHeight && isInfoComponentsEqual) || (titleOffsetHeight && !isInfoComponentsEqual)) &&
+				((!titleHeight && isInfoComponentsEqual) || (titleHeight && !isInfoComponentsEqual)) &&
 				this.state.bottomControlsVisible
 			);
 
@@ -700,13 +700,9 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		if (shouldCalculateTitleOffset) {
-			const titleOffset = this.getHeightForElement('infoComponents');
-			const bottomHeight = this.getHeightForElement('bottom');
-			const overlayHeight = this.getHeightForElement('overlay');
-			const bottomOffsetHeight = bottomHeight / overlayHeight;
-
-			if (titleOffset) {
-				this.setState({titleOffsetHeight: titleOffset, bottomOffsetHeight});
+			const titleOffsetHeight = this.getHeightForElement('infoComponents');
+			if (titleOffsetHeight) {
+				this.setState({titleOffsetHeight});
 			}
 		}
 	}
@@ -762,7 +758,6 @@ const VideoPlayerBase = class extends React.Component {
 
 	getHeightForElement = (elementName) => {
 		const element = this.player.querySelector(`.${css[elementName]}`);
-
 		if (element) {
 			return element.offsetHeight;
 		} else {
@@ -1640,9 +1635,8 @@ const VideoPlayerBase = class extends React.Component {
 				</video>
 
 				<Overlay
-					bottomControlsVisible={this.state.bottomControlsVisible && this.state.bottomOffsetHeight !== 0}
+					bottomControlsVisible={this.state.bottomControlsVisible}
 					onClick={this.onVideoClick}
-					style={{'--bottomOffset': this.state.bottomOffsetHeight}}
 				>
 					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>

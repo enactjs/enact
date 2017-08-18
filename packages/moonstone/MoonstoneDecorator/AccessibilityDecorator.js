@@ -17,12 +17,11 @@ const AccessibilityDecorator = hoc((config, Wrapped) => kind({
 
 	propTypes: /** @lends moonstone/MoonstoneDecorator.AccessibilityDecorator.prototype */ {
 		/**
-		 * Set the goal size of the text. The UI library will be responsible for using this
-		 * information to adjust the components' text sizes to this preset.
-		 * Current presets are `'normal'` (default), and `'large'`.
+		 * Enables additional features to help users visually differentiate components.
+		 * The UI library will be responsible for using this information to adjust
+		 * the components' contrast to this preset.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		highContrast: PropTypes.bool,
@@ -47,9 +46,9 @@ const AccessibilityDecorator = hoc((config, Wrapped) => kind({
 	styles: {},	// Empty `styles` tells `kind` that we want to use `styler` later and don't have a base className.
 
 	computed: {
-		className: ({textSize, styler}) => styler.append({
-			['enact-a11y-high-contrast']: config.highContrast,
-			['enact-text-' + (config.textSize || textSize)]: config.textSize || textSize
+		className: ({highContrast, textSize, styler}) => styler.append({
+			['enact-a11y-high-contrast']: highContrast,
+			['enact-text-' + (textSize)]: textSize
 		})
 	},
 
