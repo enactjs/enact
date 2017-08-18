@@ -12,12 +12,14 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` to scroll on `keydown` event instead of `keyup` event of page up and page down keys
 - `moonstone/VirtualGridList` to scroll by item via 5 way key
 - `moonstone/VideoPlayer` to read target time when jump by left/right key
 - `moonstone/IconButton` to not use `MarqueeDecorator` and `Uppercase`
 
 ### Fixed
 
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to focus the correct item when page up and page down keys are pressed
 - `moonstone/VirtualList` not to lose focus when moving out from the first item via 5way when it has disabled items
 - `moonstone/Header` to not have its contents extend beyond its bounds
 - `moonstone/Slider` to align tooltip with detached knob
