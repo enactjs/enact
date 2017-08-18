@@ -16,6 +16,8 @@ import CheckboxItem from '../CheckboxItem';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import RadioItem from '../RadioItem';
 
+import css from './ExpandableList.less';
+
 /**
  * {@link moonstone/ExpandableList.ExpandableListBase} is a stateless component that
  * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
@@ -222,6 +224,11 @@ const ExpandableListBase = kind({
 		}
 	},
 
+	styles: {
+		css,
+		className: 'expandableList'
+	},
+
 	computed: {
 		'aria-multiselectable': ({select}) => select === 'multiple',
 
@@ -231,6 +238,7 @@ const ExpandableListBase = kind({
 			onSpotlightRight,
 			spotlightDisabled
 		}) => ({
+			className: css.listItem,
 			onSpotlightDisappear,
 			onSpotlightLeft,
 			onSpotlightRight,

@@ -117,6 +117,15 @@ const scenarios = {
 			}),
 			spottable({id: 'lastFocused'})
 		)
+	}),
+	emptySubcontainer: container({
+		[containerAttribute]: 'container',
+		children: join(
+			container({
+				[containerAttribute]: 'subcontainer'
+			}),
+			spottable({id: 'afterSubcontainer'}),
+		)
 	})
 };
 
@@ -590,6 +599,19 @@ describe('container', () => {
 				setContainerLastFocusedElement(root.querySelector('#lastChildFocused'), [rootContainerId, 'container', 'child']);
 
 				const expected = 'lastChildFocused';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should skip empty subcontainers', testScenario(
+			scenarios.emptySubcontainer,
+			() => {
+				configureContainer('container');
+				configureContainer('subcontainer');
+
+				const expected = 'afterSubcontainer';
 				const actual = getContainerFocusTarget('container').id;
 
 				expect(actual).to.equal(expected);

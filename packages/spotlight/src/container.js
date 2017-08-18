@@ -39,18 +39,9 @@ let _lastContainerId = '';
 // - a string "@<containerId>" to indicate the specified container
 // - a string "@" to indicate the default container
 let GlobalConfig = {
-	selector: '',           // can be a valid <extSelector> except "@" syntax.
-	straightOnly: false,
-	straightOverlapThreshold: 0.5,
-	rememberSource: false,
-	selectorDisabled: false,
+	continue5WayHold: false,
 	defaultElement: '',     // <extSelector> except "@" syntax.
 	enterTo: '',            // '', 'last-focused', 'default-element'
-	leaveFor: null,         // {left: <extSelector>, right: <extSelector>, up: <extSelector>, down: <extSelector>}
-	restrict: 'self-first', // 'self-first', 'self-only', 'none'
-	tabIndexIgnoreList: 'a, input, select, textarea, button, iframe, [contentEditable=true]',
-	navigableFilter: null,
-	overflow: false,
 	lastFocusedElement: null,
 	lastFocusedKey: null,
 	lastFocusedPersist: (node, all) => {
@@ -61,9 +52,19 @@ let GlobalConfig = {
 			key: container ? node : all.indexOf(node)
 		};
 	},
-	lastFocusedRestore: ({key}, all) => {
-		return all[key];
-	}
+	lastFocusedRestore: ({container, key}, all) => {
+		return container ? key : all[key];
+	},
+	leaveFor: null,         // {left: <extSelector>, right: <extSelector>, up: <extSelector>, down: <extSelector>}
+	navigableFilter: null,
+	overflow: false,
+	rememberSource: false,
+	restrict: 'self-first', // 'self-first', 'self-only', 'none'
+	selector: '',           // can be a valid <extSelector> except "@" syntax.
+	selectorDisabled: false,
+	straightOnly: false,
+	straightOverlapThreshold: 0.5,
+	tabIndexIgnoreList: 'a, input, select, textarea, button, iframe, [contentEditable=true]'
 };
 
 /**
@@ -323,6 +324,18 @@ const getDeepSpottableDescendants = (containerId, excludedContainers) => {
 			return [n];
 		})
 		.reduce(concat, []);
+};
+
+/**
+ * Determines if a container allows 5-way key hold to be preserved or not.
+ *
+ * @param {String} containerId Container Id
+ * @returns {Boolean} `true` if a container is 5 way holdable
+ * @memberof spotlight/container
+ * @private
+ */
+const isContainer5WayHoldable = (containerId) => {
+	return getContainerConfig(containerId).continue5WayHold || false;
 };
 
 /**
@@ -667,13 +680,20 @@ function getContainerFocusTarget (containerId) {
 	// deferring restoration until it's requested to allow containers to prepare first
 	restoreLastFocusedElement(containerId);
 
-	const next = getContainerNavigableElements(containerId)[0] || null;
-	if (isContainer(next)) {
-		const nextId = isContainerNode(next) ? getContainerId(next) : next;
-		return getContainerFocusTarget(nextId);
-	}
+	let next = getContainerNavigableElements(containerId);
 
-	return next;
+	// If multiple candidates returned, we need to find the first viable target since some may
+	// be empty containers which should be skipped.
+	return next.reduce((result, element) => {
+		if (result) {
+			return result;
+		} else if (isContainer(element)) {
+			const nextId = isContainerNode(element) ? getContainerId(element) : element;
+			return getContainerFocusTarget(nextId);
+		}
+
+		return element;
+	}, null) || null;
 }
 
 function getContainerPreviousTarget (containerId, direction, destination) {
@@ -818,11 +838,12 @@ export {
 	getContainerNode,
 
 	// Maybe
-	getContainersForNode,
 	getContainerConfig,
 	getContainerDefaultElement,
 	getContainerLastFocusedElement,
 	getContainerNavigableElements,
+	getContainersForNode,
+	isContainer5WayHoldable,
 	setContainerLastFocusedElement,
 
 	// Keep
