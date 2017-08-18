@@ -643,7 +643,7 @@ const VideoPlayerBase = class extends React.Component {
 			bottomControlsRendered: false,
 			bottomControlsVisible: false,
 			feedbackIconVisible: true,
-			feedbackVisible: true,
+			feedbackVisible: false,
 			more: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
@@ -880,6 +880,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedTitleHide();
 		this.setState({
 			bottomControlsVisible: false,
+			feedbackVisible: false,
 			more: false
 		}, () => {
 			Spotlight.focus(`.${css.controlsHandleAbove}`);
@@ -924,11 +925,15 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	showFeedback = () => {
-		this.setState({feedbackVisible: true});
+		if (this.state.bottomControlsVisible && this.state.feedbackVisible === false) {
+			this.setState({feedbackVisible: true});
+		}
 	}
 
 	hideFeedback = () => {
-		this.setState({feedbackVisible: false});
+		if (this.state.feedbackVisible === true) {
+			this.setState({feedbackVisible: false});
+		}
 	}
 
 	hideFeedbackJob = new Job(this.hideFeedback)
