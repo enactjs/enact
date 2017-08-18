@@ -749,7 +749,7 @@ class VirtualListCoreNative extends Component {
 		this.setRestrict(isSelfOnly);
 	}
 
-	getIndicesForPageScroll = (direction, currentIndex) => {
+	getIndexForPageScroll = (direction, currentIndex) => {
 		const
 			{context, dimensionToExtent, isPrimaryDirectionVertical, primary} = this,
 			{dataSize, spacing} = this.props;
@@ -766,15 +766,12 @@ class VirtualListCoreNative extends Component {
 			isRtl = this.context.rtl,
 			isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right'),
 			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
-			indexToFocus = this.getIndicesForPageScroll(direction, focusedIndex);
+			indexToFocus = this.getIndexForPageScroll(direction, focusedIndex);
 
 		if (focusedIndex !== indexToFocus) {
 			focusedItem.blur();
-			this.props.cbScrollTo({index: indexToFocus, stickTo: isForward ? 'end' : 'start', animate: false});
-			this.focusByIndex(indexToFocus);
+			this.props.cbScrollTo({index: indexToFocus, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
 		}
-
-		this.isScrolledBy5way = true;
 
 		return true;
 	}
