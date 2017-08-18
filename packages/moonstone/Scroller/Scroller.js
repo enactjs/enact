@@ -379,8 +379,7 @@ class ScrollerBase extends Component {
 
 	scrollToBoundary = (direction) => {
 		const
-			{scrollPos} = this,
-			{scrollBounds} = this.scrollBounds,
+			{scrollBounds, scrollPos} = this,
 			isVerticalDirection = (direction === 'up' || direction === 'down');
 
 		if (isVerticalDirection) {
