@@ -796,6 +796,9 @@ class VirtualListCore extends Component {
 
 		if (focusedIndex !== indexToFocus) {
 			focusedItem.blur();
+			// To prevent item positioning issue, make all items to be rendered.
+			this.updateFrom = null;
+			this.updateTo = null;
 			this.props.cbScrollTo({index: indexToFocus, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
 		}
 
