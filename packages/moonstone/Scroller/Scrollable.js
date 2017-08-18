@@ -86,7 +86,7 @@ const dataIndexAttribute = 'data-index';
  * that applies a Scrollable behavior to its wrapped component.
  *
  * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
- * and also catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, `onWheel` and `onKeyUp` events
+ * and also catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, `onWheel` and `onKeyDown` events
  * from its wrapped component for scrolling behaviors.
  *
  * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
@@ -266,7 +266,7 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 			this.updateEventListeners();
 			this.updateScrollbars();
 
-			on('keyup', this.onKeyUp);
+			on('keydown', this.onKeyDown);
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -316,7 +316,7 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
 				childContainerRef.removeEventListener('focus', this.onFocus, true);
 			}
-			off('keyup', this.onKeyUp);
+			off('keydown', this.onKeyDown);
 		}
 
 		// status
@@ -424,13 +424,7 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 			}
 		}
 
-		calculateDistanceByWheel (e, maxPixel) {
-			const
-				deltaMode = e.deltaMode,
-				wheelDeltaY = -e.wheelDeltaY;
-			let
-				delta = (wheelDeltaY || e.deltaY);
-
+		calculateDistanceByWheel (deltaMode, delta, maxPixel) {
 			if (deltaMode === 0) {
 				delta = clamp(-maxPixel, maxPixel, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
 			} else if (deltaMode === 1) { // line; firefox
@@ -509,14 +503,17 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 					bounds = this.getScrollBounds(),
 					canScrollHorizontally = this.canScrollHorizontally(bounds),
 					canScrollVertically = this.canScrollVertically(bounds),
-					focusedItem = Spotlight.getCurrent();
+					focusedItem = Spotlight.getCurrent(),
+					eventDeltaMode = e.deltaMode,
+					eventDelta = (-e.wheelDeltaY || e.deltaY);
 				let
-					delta = 0, direction;
+					delta = 0,
+					direction;
 
 				if (canScrollVertically) {
-					delta = this.calculateDistanceByWheel(e, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
+					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 				} else if (canScrollHorizontally) {
-					delta = this.calculateDistanceByWheel(e, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
+					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				}
 				direction = Math.sign(delta);
 
@@ -666,9 +663,9 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 			return current && this.containerRef.contains(current);
 		}
 
-		onKeyUp = (e) => {
+		onKeyDown = (e) => {
 			this.animateOnFocus = true;
-			if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && this.hasFocus()) {
+			if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && !e.repeat && this.hasFocus()) {
 				this.scrollByPage(e.keyCode);
 			}
 		}

@@ -12,12 +12,15 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/Scrollbar` to disable paging control down button properly at the bottom when a scroller size is a non-integer value
+- `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` to scroll on `keydown` event instead of `keyup` event of page up and page down keys
 - `moonstone/VirtualGridList` to scroll by item via 5 way key
 - `moonstone/VideoPlayer` to read target time when jump by left/right key
 - `moonstone/IconButton` to not use `MarqueeDecorator` and `Uppercase`
 
 ### Fixed
 
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to focus the correct item when page up and page down keys are pressed
 - `moonstone/VirtualList` not to lose focus when moving out from the first item via 5way when it has disabled items
 - `moonstone/Header` to not have its contents extend beyond its bounds
 - `moonstone/Slider` to align tooltip with detached knob
@@ -26,6 +29,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/SelectableItem` to display correct icon width and alignment
 - `moonstone/Scroller` to properly 5-way navigate from scroll buttons
 - `moonstone/Scroller` and `moonstone/VirtualList` navigation via 5-way from paging controls
+- `moonstone/ExpandableList` to display correct font weight and size for list items
 
 ## [1.6.1] - 2017-08-07
 
