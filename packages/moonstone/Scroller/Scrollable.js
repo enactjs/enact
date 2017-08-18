@@ -512,14 +512,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusedItem.blur();
 				}
 
+				this.childRef.setContainerDisabled(true);
+
 				if (direction !== this.wheelDirection) {
 					this.isScrollAnimationTargetAccumulated = false;
 					this.wheelDirection = direction;
 				}
 
 				if (delta !== 0) {
-					this.childRef.setContainerDisabled(true);
-
 					this.scrollToAccumulatedTarget(delta, canScrollVertically);
 				}
 			}
