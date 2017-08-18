@@ -22,6 +22,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` to align tooltip with detached knob
 - `moonstone/FormCheckbox` to display correct colors in light skin
 - `moonstone/SelectableItem` to display correct icon width and alignment
+- `moonstone/LabeledItem` to align correctly with RTL texts
 
 ## [1.6.1] - 2017-08-07
 
