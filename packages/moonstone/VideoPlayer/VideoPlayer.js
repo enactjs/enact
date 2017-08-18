@@ -700,9 +700,9 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		if (shouldCalculateTitleOffset) {
-			const titleOffset = this.getHeightOffset('infoComponents');
-			const bottomHeight = this.getHeightOffset('bottom');
-			const overlayHeight = this.getHeightOffset('overlay');
+			const titleOffset = this.getHeightForElement('infoComponents');
+			const bottomHeight = this.getHeightForElement('bottom');
+			const overlayHeight = this.getHeightForElement('overlay');
 			const bottomOffsetHeight = bottomHeight / overlayHeight;
 
 			if (titleOffset) {
@@ -760,12 +760,11 @@ const VideoPlayerBase = class extends React.Component {
 		this.announceJob.start(msg);
 	}
 
-	getHeightOffset = (componentName) => {
-		// calculate how far the title should animate up when infoComponents appear.
-		const component = this.player.querySelector(`.${css[componentName]}`);
+	getHeightForElement = (elementName) => {
+		const element = this.player.querySelector(`.${css[elementName]}`);
 
-		if (component) {
-			return component.offsetHeight;
+		if (element) {
+			return element.offsetHeight;
 		} else {
 			return 0;
 		}
