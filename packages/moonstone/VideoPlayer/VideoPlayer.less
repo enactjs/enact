@@ -18,8 +18,22 @@
 	}
 
 	.overlay {
+		--bottomOffset: 0;
 		position: absolute;
 		.position(0);
+		&.high-contrast-scrim::after {
+			:global(.enact-a11y-high-contrast) & {
+				content: '';
+				position: absolute;
+				bottom: 0;
+				height: 100%;
+				width: 100%;
+				background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 100%);
+				transform: scale(1, var(--bottomOffset));
+				transform-origin: bottom;
+			}
+		}
+
 	}
 
 	.fullscreen {

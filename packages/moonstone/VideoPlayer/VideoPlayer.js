@@ -637,6 +637,7 @@ const VideoPlayerBase = class extends React.Component {
 			readyState: 0,
 			volume: 1,
 			titleOffsetHeight: 0,
+			bottomOffsetHeight: 0,
 
 			// Non-standard state computed from properties
 			bottomControlsRendered: false,
@@ -699,7 +700,14 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		if (shouldCalculateTitleOffset) {
-			this.calculateTitleOffset();
+			const titleOffset = this.calculateHeightOffset('infoComponents');
+			const bottomHeight = this.calculateHeightOffset('bottom');
+			const overlayHeight = this.calculateHeightOffset('overlay');
+			const bottomOffsetHeight = bottomHeight / overlayHeight;
+
+			if (titleOffset) {
+				this.setState({titleOffsetHeight: titleOffset, bottomOffsetHeight});
+			}
 		}
 	}
 
@@ -752,14 +760,14 @@ const VideoPlayerBase = class extends React.Component {
 		this.announceJob.start(msg);
 	}
 
-	calculateTitleOffset = () => {
+	calculateHeightOffset = (component) => {
 		// calculate how far the title should animate up when infoComponents appear.
-		const infoComponents = this.player.querySelector(`.${css.infoComponents}`);
+		const infoComponents = this.player.querySelector(`.${css[component]}`);
 
 		if (infoComponents) {
-			const infoHeight = infoComponents.offsetHeight;
-
-			this.setState({titleOffsetHeight: infoHeight});
+			return infoComponents.offsetHeight;
+		} else {
+			return 0;
 		}
 	}
 
@@ -1632,7 +1640,11 @@ const VideoPlayerBase = class extends React.Component {
 					{source}
 				</video>
 
-				<Overlay onClick={this.onVideoClick}>
+				<Overlay
+					bottomControlsVisible={this.state.bottomControlsVisible && this.state.bottomOffsetHeight !== 0}
+					onClick={this.onVideoClick}
+					style={{'--bottomOffset': this.state.bottomOffsetHeight}}
+				>
 					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>
 

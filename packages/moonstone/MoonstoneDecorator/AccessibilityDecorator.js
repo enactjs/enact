@@ -47,9 +47,9 @@ const AccessibilityDecorator = hoc((config, Wrapped) => kind({
 	styles: {},	// Empty `styles` tells `kind` that we want to use `styler` later and don't have a base className.
 
 	computed: {
-		className: ({styler}) => styler.append({
+		className: ({textSize, styler}) => styler.append({
 			['enact-a11y-high-contrast']: config.highContrast,
-			['enact-text-' + config.textSize]: config.textSize
+			['enact-text-' + (config.textSize || textSize)]: config.textSize || textSize
 		})
 	},
 
