@@ -238,7 +238,8 @@ class VirtualListCore extends Component {
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
-		if ((this.props.dataSize !== nextProps.dataSize) &&
+		if (!this.restoreLastFocused &&
+			(this.props.dataSize > 0 && this.props.dataSize !== nextProps.dataSize) &&
 			(nextState.firstIndex + nextState.numOfItems) < nextProps.dataSize) {
 			return false;
 		}
@@ -294,6 +295,7 @@ class VirtualListCore extends Component {
 	nodeIndexToBeBlurred = null
 	nodeIndexToBeFocused = null
 	lastFocusedIndex = null
+	preservedIndex = null
 
 	isVertical = () => this.isPrimaryDirectionVertical
 
@@ -315,22 +317,8 @@ class VirtualListCore extends Component {
 			const index = placeholder.dataset.index;
 
 			if (index) {
-				this.lastFocusedIndex = parseInt(index);
+				this.preservedIndex = parseInt(index);
 				this.restoreLastFocused = true;
-
-				// adjust the firstIndex to include the last focused index, if necessary
-				this.setState(nextState => {
-					let {firstIndex, numOfItems} = nextState;
-					const lastIndex = firstIndex + numOfItems;
-
-					if (this.lastFocusedIndex < firstIndex || this.lastFocusedIndex >= lastIndex) {
-						firstIndex = this.lastFocusedIndex;
-					}
-
-					return {
-						firstIndex
-					};
-				});
 			}
 		}
 	}
@@ -340,8 +328,8 @@ class VirtualListCore extends Component {
 		if (
 			this.restoreLastFocused &&
 			!this.isPlaceholderFocused() &&
-			firstVisibleIndex <= this.lastFocusedIndex &&
-			lastVisibleIndex >= this.lastFocusedIndex
+			firstVisibleIndex <= this.preservedIndex &&
+			lastVisibleIndex >= this.preservedIndex
 		) {
 			// if we're supposed to restore focus and virtual list has positioned a set of items
 			// that includes lastFocusedIndex, clear the indicator
@@ -350,12 +338,13 @@ class VirtualListCore extends Component {
 
 			// try to focus the last focused item
 			const foundLastFocused = Spotlight.focus(
-				`[data-container-id="${containerId}"] [data-index="${this.lastFocusedIndex}"]`
+				`[data-container-id="${containerId}"] [data-index="${this.preservedIndex}"]`
 			);
 
 			// but if that fails (because it isn't found or is disabled), focus the container so
 			// spotlight isn't lost
 			if (!foundLastFocused) {
+				this.restoreLastFocused = true;
 				Spotlight.focus(containerId);
 			}
 		}
@@ -465,9 +454,10 @@ class VirtualListCore extends Component {
 		const
 			{dataSize, overhang} = props,
 			{firstIndex} = this.state,
-			{dimensionToExtent, primary, moreInfo} = this,
+			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
 			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex));
+		let newFirstIndex = firstIndex;
 
 		this.maxFirstIndex = dataSize - numOfItems;
 		this.curDataSize = dataSize;
@@ -477,8 +467,22 @@ class VirtualListCore extends Component {
 		// reset children
 		this.cc = [];
 
-		this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(firstIndex, this.maxFirstIndex), numOfItems});
+		// Adjust scroll position
+		if (this.restoreLastFocused &&
+			numOfItems > 0 &&
+			(this.preservedIndex < moreInfo.firstVisibleIndex || this.preservedIndex > moreInfo.lastVisibleIndex)) {
+			// If we need to restore last focus and the index is beyond the screen,
+			// we call `scrollTo` to create DOM for it.
+			this.props.cbScrollTo({index: this.preservedIndex, animate: false});
+		} else if (wasFirstIndexMax) {
+			newFirstIndex = this.maxFirstIndex;
+		} else {
+			newFirstIndex = Math.min(firstIndex, this.maxFirstIndex);
+		}
+
+		this.setState({firstIndex: newFirstIndex, numOfItems});
 		this.calculateScrollBounds(props);
+		this.updateMoreInfo(dataSize, scrollPosition);
 	}
 
 	calculateScrollBounds (props) {
@@ -512,6 +516,20 @@ class VirtualListCore extends Component {
 		}
 	}
 
+	updateMoreInfo (dataSize, primaryPosition) {
+		const
+			{dimensionToExtent, moreInfo} = this,
+			{itemSize, gridSize, clientSize} = this.primary;
+
+		if (dataSize <= 0) {
+			moreInfo.firstVisibleIndex = null;
+			moreInfo.lastVisibleIndex = null;
+		} else {
+			moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - itemSize) / gridSize) + 1) * dimensionToExtent;
+			moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * dimensionToExtent - 1);
+		}
+	}
+
 	syncThreshold (maxPos) {
 		const {threshold} = this;
 
@@ -528,6 +546,7 @@ class VirtualListCore extends Component {
 
 	setScrollPosition (x, y, dirX, dirY) {
 		const
+			{dataSize} = this.props,
 			{firstIndex, numOfItems} = this.state,
 			{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds} = this,
 			{gridSize} = this.primary,
@@ -561,6 +580,7 @@ class VirtualListCore extends Component {
 
 		this.syncThreshold(maxPos);
 		this.scrollPosition = pos;
+		this.updateMoreInfo(dataSize, pos);
 
 		if (firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
@@ -614,12 +634,11 @@ class VirtualListCore extends Component {
 	}
 
 	positionItems ({updateFrom, updateTo}) {
-		const {isPrimaryDirectionVertical, dimensionToExtent, moreInfo, primary, secondary, scrollPosition} = this;
+		const {isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition} = this;
 
 		// we only calculate position of the first child
 		let
 			{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom),
-			firstVisibleIndex = null, lastVisibleIndex = null,
 			width, height;
 
 		primaryPosition -= scrollPosition;
@@ -628,14 +647,6 @@ class VirtualListCore extends Component {
 
 		// positioning items
 		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
-
-			// determine the first and the last visible item
-			if (firstVisibleIndex === null && (primaryPosition + primary.itemSize) > 0) {
-				firstVisibleIndex = i;
-			}
-			if (primaryPosition < primary.clientSize) {
-				lastVisibleIndex = i;
-			}
 			if (this.updateFrom === null || this.updateTo === null || this.updateFrom > i || this.updateTo <= i) {
 				this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
 			} else {
@@ -653,8 +664,6 @@ class VirtualListCore extends Component {
 
 		this.updateFrom = updateFrom;
 		this.updateTo = updateTo;
-		moreInfo.firstVisibleIndex = firstVisibleIndex;
-		moreInfo.lastVisibleIndex = lastVisibleIndex;
 	}
 
 	composeStyle (style, width, height, ...rest) {
@@ -712,14 +721,14 @@ class VirtualListCore extends Component {
 		this.lastFocusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 	}
 
-	calculatePositionOnFocus = (item, scrollPosition = this.scrollPosition) => {
+	calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
 		const
 			{pageScroll} = this.props,
 			{primary, numOfItems} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
-		if (!isNaN(focusedIndex) && focusedIndex !== this.lastFocusedIndex) {
+		if (!isNaN(focusedIndex) && (focusedIndex !== this.lastFocusedIndex || this.restoreLastFocused)) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
 			this.nodeIndexToBeBlurred = this.lastFocusedIndex % numOfItems;
@@ -741,6 +750,29 @@ class VirtualListCore extends Component {
 			gridPosition.secondaryPosition = 0;
 			return this.gridPositionToItemPosition(gridPosition);
 		}
+	}
+
+	setRestrict = (bool) => {
+		Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
+	}
+
+	setSpotlightContainerRestrict = (keyCode, index) => {
+		const
+			{dataSize} = this.props,
+			{isPrimaryDirectionVertical, dimensionToExtent} = this,
+			canMoveBackward = index >= dimensionToExtent,
+			canMoveForward = index < (dataSize - (((dataSize - 1) % dimensionToExtent) + 1));
+		let isSelfOnly = false;
+
+		if (isPrimaryDirectionVertical) {
+			if (isUp(keyCode) && canMoveBackward || isDown(keyCode) && canMoveForward) {
+				isSelfOnly = true;
+			}
+		} else if (isLeft(keyCode) && canMoveBackward || isRight(keyCode) && canMoveForward) {
+			isSelfOnly = true;
+		}
+
+		this.setRestrict(isSelfOnly);
 	}
 
 	getIndicesForPageScroll = (direction, currentIndex) => {
@@ -814,7 +846,7 @@ class VirtualListCore extends Component {
 				return false;
 			}
 
-			for (let i = currentIndex + 1; i < dataSize; i++) {
+			for (let i = currentIndex + 2; i < dataSize; i++) {
 				if (!data[i].disabled) {
 					nextIndex = i;
 					break;
@@ -826,7 +858,7 @@ class VirtualListCore extends Component {
 				return false;
 			}
 
-			for (let i = currentIndex - 1; i >= 0; i--) {
+			for (let i = currentIndex - 2; i >= 0; i--) {
 				if (!data[i].disabled) {
 					nextIndex = i;
 					break;
@@ -860,7 +892,7 @@ class VirtualListCore extends Component {
 		this.isScrolledBy5way = false;
 		if (getDirection(keyCode)) {
 			const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
-
+			this.setSpotlightContainerRestrict(keyCode, index);
 			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, index);
 		}
 		forwardKeyDown(e, this.props);
@@ -940,6 +972,7 @@ class VirtualListCore extends Component {
 						data-index={0}
 						data-vl-placeholder
 						onFocus={this.handlePlaceholderFocus}
+						role="region"
 					/>
 				)}
 				{needsScrollingPlaceholder ? (
@@ -970,7 +1003,6 @@ const VirtualListBase = SpotlightContainerDecorator(
 		 */
 		lastFocusedPersist: (node) => {
 			const indexed = node.dataset.index ? node : node.closest('[data-index]');
-
 			if (indexed) {
 				return {
 					container: false,

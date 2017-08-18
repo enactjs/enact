@@ -13,6 +13,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';
 
+import IdProvider from '../internal/IdProvider';
 import $L from '../internal/$L';
 import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator';
 import Skinnable from '../Skinnable';
@@ -132,6 +133,14 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			focused: PropTypes.bool,
+
+			/**
+			 * The slider id reference for setting aria-controls.
+			 *
+			 * @type {String}
+			 * @private
+			 */
+			id: PropTypes.string,
 
 			/**
 			 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -484,6 +493,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			handleDecrementKeyDown,
 			handleIncrementKeyDown,
 			handleSliderKeyDown,
+			id,
 			incrementAriaLabel,
 			incrementDisabled,
 			incrementIcon,
@@ -521,6 +531,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			return (
 				<div {...rest} className={incrementSliderClasses}>
 					<IncrementSliderButton
+						aria-controls={id}
 						aria-hidden={ariaHidden}
 						aria-label={decrementAriaLabel}
 						className={css.decrementButton}
@@ -542,6 +553,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						detachedKnob={detachedKnob}
 						focused={focused}
 						inputRef={inputRef}
+						id={id}
 						max={max}
 						min={min}
 						noFill={noFill}
@@ -566,6 +578,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						{children}
 					</Slider>
 					<IncrementSliderButton
+						aria-controls={id}
 						aria-hidden={ariaHidden}
 						aria-label={incrementAriaLabel}
 						className={css.incrementButton}
@@ -603,13 +616,16 @@ const IncrementSliderFactory = factory((config) => {
 	 * @public
 	 */
 	return Changeable(
-		SliderDecorator(
-			DisappearSpotlightDecorator(
-				{events: {
-					onIncrementSpotlightDisappear: `.${componentCss.decrementButton}`,
-					onDecrementSpotlightDisappear: `.${componentCss.incrementButton}`
-				}},
-				Base
+		IdProvider(
+			{generateProp: null, prefix: 's_'},
+			SliderDecorator(
+				DisappearSpotlightDecorator(
+					{events: {
+						onIncrementSpotlightDisappear: `.${componentCss.decrementButton}`,
+						onDecrementSpotlightDisappear: `.${componentCss.incrementButton}`
+					}},
+					Base
+				)
 			)
 		)
 	);

@@ -71,7 +71,22 @@ const ScrollButtonBase = kind({
 	},
 
 	computed: {
-		'aria-label': ({active, direction}) => active ? $L(`scroll ${direction}`) : null,
+		'aria-label': ({active, direction}) => {
+			if (!active) {
+				return null;
+			}
+
+			switch (direction) {
+				case 'up':
+					return $L('scroll up');
+				case 'down':
+					return $L('scroll down');
+				case 'left':
+					return $L('scroll left');
+				case 'right':
+					return $L('scroll right');
+			}
+		},
 		className: ({direction, styler}) => styler.append(classNameMap[direction])
 	},
 
