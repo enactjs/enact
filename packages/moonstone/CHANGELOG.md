@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/VirtualGridList` to scroll by item via 5 way key
+- `moonstone/VideoPlayer` to read target time when jump by left/right key
 - `moonstone/IconButton` to not use `MarqueeDecorator` and `Uppercase`
 
 ### Fixed
@@ -21,6 +22,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Header` to not have its contents extend beyond its bounds
 - `moonstone/Slider` to align tooltip with detached knob
 - `moonstone/FormCheckbox` to display correct colors in light skin
+- `moonstone/Picker` and `moonstone/RangePicker` to forward `onKeyDown` events when not `joined`
+- `moonstone/SelectableItem` to display correct icon width and alignment
+- `moonstone/Scroller` to properly 5-way navigate from scroll buttons
+- `moonstone/ExpandableList` to display correct font weight and size for list items
 
 ## [1.6.1] - 2017-08-07
 
