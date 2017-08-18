@@ -379,18 +379,16 @@ class ScrollerBase extends Component {
 
 	scrollToBoundary = (direction) => {
 		const
-			isVerticalDirection = (direction === 'up' || direction === 'down'),
-			canScrollHorizontally = (!isVerticalDirection && this.scrollPos.left > 0 && (this.scrollPos.left < this.scrollBounds.maxLeft)),
-			canScrollVertically = (isVerticalDirection && this.scrollPos.top > 0 && (this.scrollPos.top < this.scrollBounds.maxTop));
+			{scrollPos} = this,
+			{scrollBounds} = this.scrollBounds,
+			isVerticalDirection = (direction === 'up' || direction === 'down');
 
-		let align;
-
-		if (direction === 'up') align = 'top';
-		else if (direction === 'down') align = 'bottom';
-		else align = this.context.rtl ? reverseDirections[direction] : direction;
-
-		if (canScrollHorizontally || canScrollVertically) {
-			this.props.cbScrollTo({align});
+		if (isVerticalDirection) {
+			if (scrollPos.top > 0 && scrollPos.top < scrollBounds.maxTop) {
+				this.props.cbScrollTo({align: direction === 'up' ? 'top' : 'bottom'});
+			}
+		} else if (scrollPos.left > 0 && scrollPos.left < scrollBounds.maxLeft) {
+			this.props.cbScrollTo({align: this.context.rtl ? reverseDirections[direction] : direction});
 		}
 	}
 
