@@ -1,7 +1,13 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import RangePicker from '../RangePicker';
-import css from '../../internal/Picker/Picker.less';
+
+const tap = (node) => {
+	node.simulate('mousedown');
+	node.simulate('mouseup');
+};
+const decrement = (slider) => tap(slider.find('IconButton').last());
+const increment = (slider) => tap(slider.find('IconButton').first());
 
 describe('RangePicker Specs', () => {
 	it('should render a single child with the current value', function () {
@@ -20,8 +26,8 @@ describe('RangePicker Specs', () => {
 			<RangePicker min={0} max={100} defaultValue={10} step={1} />
 		);
 
-		const button = picker.find(`.${css.incrementer}`);
-		button.simulate('click');
+		increment(picker);
+
 		const expected = '11';
 		const actual = picker.find('PickerItem').text();
 
@@ -33,8 +39,8 @@ describe('RangePicker Specs', () => {
 			<RangePicker min={0} max={100} defaultValue={10} step={1} />
 		);
 
-		const button = picker.find(`.${css.decrementer}`);
-		button.simulate('click');
+		decrement(picker);
+
 		const expected = '9';
 		const actual = picker.find('PickerItem').text();
 
