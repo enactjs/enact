@@ -16,7 +16,6 @@ import Skinnable from '../Skinnable';
 
 import I18nFontDecorator from './I18nFontDecorator';
 import AccessibilityDecorator from './AccessibilityDecorator';
-import TextSizeDecorator from './TextSizeDecorator';
 import screenTypes from './screenTypes.json';
 import css from './MoonstoneDecorator.less';
 
