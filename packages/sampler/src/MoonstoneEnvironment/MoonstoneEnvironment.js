@@ -95,6 +95,7 @@ const StorybookDecorator = (story, config) => {
 			description={config.description}
 			locale={select('locale', locales, getLocaleFromURL())}
 			textSize={boolean('large text', false) ? 'large' : 'normal'}
+			highContrast={boolean('high contrast', false)}
 			skin={select('skin', skins, 'dark')}
 		>
 			{sample}

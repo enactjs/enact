@@ -5,10 +5,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ## [Unreleased]
 
 ### Deprecated
+- `moonstone/TextSizeDecorator` and it will be replaced by `moonstone/AccessibilityDecorator`
 
 ### Added
 
 - `moonstone/TooltipDecorator` config property to direct tooltip into a property instead of adding to `children`
+- `moonstone/AccessibilityDecorator` with `highContrast` and `textSize`
+- `moonstone/VideoPlayer` high contrast scrim
 
 ### Changed
 
