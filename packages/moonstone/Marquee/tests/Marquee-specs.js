@@ -46,28 +46,6 @@ describe('Marquee', () => {
 		expect(actual).to.have.property('transition');
 	});
 
-	it('should set RTL direction in LTR context when the text directionality is RTL', function () {
-		const subject = shallow(
-			<Marquee rtl />,
-			{context: {rtl: false}}
-		);
-
-		const expected = 'rtl';
-		const actual = subject.childAt(0).prop('style').direction;
-		expect(actual).to.equal(expected);
-	});
-
-	it('should set LTR direction in RTL when the text directionality is LTR', function () {
-		const subject = shallow(
-			<Marquee />,
-			{context: {rtl: true}}
-		);
-
-		const expected = 'ltr';
-		const actual = subject.childAt(0).prop('style').direction;
-		expect(actual).to.equal(expected);
-	});
-
 	it('should have negative translate for LTR text', function () {
 		const subject = shallow(
 			<Marquee animating distance={100} />
@@ -137,25 +115,25 @@ describe('Marquee', () => {
 		expect(actual).to.have.property('direction').to.equal(expected);
 	});
 
-	it('should have direction of inherit when forceDirection is null, and content and context are LTR', function () {
+	it('should have direction of null when forceDirection is null, and content and context are LTR', function () {
 		const subject = shallow(
 			<Marquee />,
 			{context: {rtl: false}}
 		);
 
-		const expected = 'inherit';
+		const expected = null;
 		const actual = subject.find(`.${css.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
 	});
 
-	it('should have direction of inherit when forceDirection is null, and content and context are RTL', function () {
+	it('should have direction of null when forceDirection is null, and content and context are RTL', function () {
 		const subject = shallow(
 			<Marquee rtl />,
 			{context: {rtl: true}}
 		);
 
-		const expected = 'inherit';
+		const expected = null;
 		const actual = subject.find(`.${css.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
