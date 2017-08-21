@@ -536,22 +536,12 @@ const VideoPlayerBase = class extends React.Component {
 		thumbnailSrc: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
-		* Enables the thumbnail transition from opaque to translucent while scrubbing the media slider.
+		* Enables the thumbnail transition from opaque to translucent.
 		*
 		* @type {Boolean}
 		* @public
 		*/
-		thumbnailTransition: PropTypes.bool,
-
-		/**
-		* The amount of time in milliseconds that should pass before the tooltip thumbnail fades from
-		* translucent to opaque.
-		*
-		* @type {Number}
-		* @default 1000
-		* @private
-		*/
-		thumbnailTransitionDelay: PropTypes.number,
+		thumbnailUnavailable: PropTypes.bool,
 
 		/**
 		 * Set a title for the video being played.
@@ -608,8 +598,6 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		playIcon: 'play',
-		thumbnailTransition: false,
-		thumbnailTransitionDelay: 1000,
 		titleHideDelay: 5000,
 		tooltipHideDelay: 3000
 	}
@@ -665,7 +653,6 @@ const VideoPlayerBase = class extends React.Component {
 			more: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
-			thumbnailDeactivated: false,
 			sliderKnobProportion: 0,
 			titleVisible: true
 		};
@@ -694,11 +681,6 @@ const VideoPlayerBase = class extends React.Component {
 			React.Children.count(this.props.children) !== React.Children.count(nextProps.children)
 		) {
 			this.calculateMaxComponentCount();
-		}
-		// Activate thumbnail immediately with new `thumbnailSrc`
-		if (this.props.thumbnailTransition && this.props.thumbnailSrc !== nextProps.thumbnailSrc) {
-			this.autoStopScrubbingJob.stop();
-			this.setState({thumbnailDeactivated: false});
 		}
 	}
 
@@ -1470,14 +1452,6 @@ const VideoPlayerBase = class extends React.Component {
 
 	sliderTooltipTimeJob = new Job((time) => this.setState({sliderTooltipTime: time}), 20)
 
-	stopScrubbing = () => {
-		if (this.state.thumbnailDeactivated) {
-			this.setState({thumbnailDeactivated: false});
-		}
-	}
-
-	autoStopScrubbingJob = new Job(this.stopScrubbing)
-
 	handleKnobMove = (ev) => {
 		this.sliderScrubbing = ev.detached;
 
@@ -1494,13 +1468,6 @@ const VideoPlayerBase = class extends React.Component {
 				forward('onScrub', {...ev, seconds}, this.props);
 
 				this.announce(`${$L('jump to')} ${knobTime}`);
-
-				if (this.props.thumbnailTransition && !this.state.thumbnailDeactivated) {
-					this.setState({
-						thumbnailDeactivated: this.sliderScrubbing
-					});
-					this.autoStopScrubbingJob.startAfter(this.props.thumbnailTransitionDelay);
-				}
 			}
 		}
 	}
@@ -1647,8 +1614,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;
 		delete rest.setApiProvider;
-		delete rest.thumbnailTransition;
-		delete rest.thumbnailTransitionDelay;
+		delete rest.thumbnailUnavailable;
 		delete rest.titleHideDelay;
 		delete rest.tooltipHideDelay;
 
@@ -1717,7 +1683,7 @@ const VideoPlayerBase = class extends React.Component {
 									noFeedback={this.state.mouseOver}
 									playbackState={this.prevCommand}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
-									thumbnailDeactivated={this.state.thumbnailDeactivated}
+									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
 									visible={this.state.feedbackVisible}
 								>
