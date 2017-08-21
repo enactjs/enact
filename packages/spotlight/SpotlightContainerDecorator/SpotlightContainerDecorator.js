@@ -116,6 +116,14 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardMouseLeave = forward(leaveEvent);
 	const {navigableFilter, preserveId, ...containerConfig} = config;
 
+	const add = ({containerId}) => {
+		const id = Spotlight.add(containerId);
+		return {
+			id,
+			preserveId: preserveId && id === containerId
+		};
+	};
+
 	return class extends React.Component {
 		static displayName = 'SpotlightContainerDecorator';
 
@@ -169,9 +177,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.state = {
-				id: Spotlight.add(this.props.containerId)
-			};
+			this.state = add(props);
 		}
 
 		componentWillMount () {
@@ -190,10 +196,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillReceiveProps (nextProps) {
 			if (this.props.containerId !== nextProps.containerId) {
 				Spotlight.remove(this.props.containerId);
-				Spotlight.add(nextProps.containerId);
-				this.setState({
-					id: nextProps.containerId
-				});
+				this.setState(add(nextProps));
 			}
 		}
 
@@ -204,7 +207,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			if (preserveId) {
+			if (this.state.preserveId) {
 				Spotlight.unmount(this.state.id);
 			} else {
 				Spotlight.remove(this.state.id);
