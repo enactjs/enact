@@ -536,12 +536,20 @@ const VideoPlayerBase = class extends React.Component {
 		thumbnailSrc: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
+		* Enables the thumbnail transition from opaque to translucent while scrubbing the media slider.
+		*
+		* @type {Boolean}
+		* @public
+		*/
+		thumbnailTransition: PropTypes.Bool,
+
+		/**
 		* The amount of time in milliseconds that should pass before the tooltip thumbnail fades from
 		* translucent to opaque.
 		*
 		* @type {Number}
 		* @default 1000
-		* @public
+		* @private
 		*/
 		thumbnailTransitionDelay: PropTypes.number,
 
@@ -600,6 +608,7 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		playIcon: 'play',
+		thumbnailTransition: false,
 		thumbnailTransitionDelay: 1000,
 		titleHideDelay: 5000,
 		tooltipHideDelay: 3000
@@ -685,6 +694,11 @@ const VideoPlayerBase = class extends React.Component {
 			React.Children.count(this.props.children) !== React.Children.count(nextProps.children)
 		) {
 			this.calculateMaxComponentCount();
+		}
+		// Activate thumbnail immediately with new `thumbnailSrc`
+		if (this.props.thumbnailTransition && this.props.thumbnailSrc !== nextProps.thumbnailSrc) {
+			this.autoStopScrubbingJob.stop();
+			this.setState({thumbnailDeactivated: false});
 		}
 	}
 
@@ -1481,7 +1495,7 @@ const VideoPlayerBase = class extends React.Component {
 
 				this.announce(`${$L('jump to')} ${knobTime}`);
 
-				if (!this.state.thumbnailDeactivated) {
+				if (this.props.thumbnailTransition && !this.state.thumbnailDeactivated) {
 					this.setState({
 						thumbnailDeactivated: this.sliderScrubbing
 					});
@@ -1633,6 +1647,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;
 		delete rest.setApiProvider;
+		delete rest.thumbnailTransition;
 		delete rest.thumbnailTransitionDelay;
 		delete rest.titleHideDelay;
 		delete rest.tooltipHideDelay;
