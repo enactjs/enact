@@ -9,8 +9,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/TooltipDecorator` config property to direct tooltip into a property instead of adding to `children`
-- `moonstone/VideoPlayer` tooltip-thumbnail that becomes semi-transparent when scrubbing slider
-- `moonstone/VideoPlayer` prop `thumbnailTransitionDelay`
+- `moonstone/VideoPlayer` prop `thumbnailUnavailable` to fade thumbnail
 
 ### Changed
 
