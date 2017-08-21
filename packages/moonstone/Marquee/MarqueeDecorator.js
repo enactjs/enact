@@ -1,3 +1,4 @@
+import deprecate from '@enact/core/internal/deprecate';
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
 import {childrenEquals} from '@enact/core/util';
@@ -111,6 +112,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/Marquee.MarqueeDecorator.prototype */ {
 			/**
+			 * Text alignment value of the marquee. Valid values are `left`, `right` and `center`.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			alignment: PropTypes.oneOf(['left', 'right', 'center']),
+
+			/**
 			 * Children to be marqueed
 			 *
 			 * @type {Node}
@@ -142,6 +151,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 *
 			 * @type {Boolean}
 			 * @public
+			 * @deprecated replaced by `alignment`
 			 */
 			marqueeCentered: PropTypes.bool,
 
@@ -220,6 +230,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.forceRestartMarquee = false;
 
 			this.invalidateMetrics();
+
+			if (this.props.marqueeCentered) {
+				deprecate({name: 'marqueeCentered', since: '1.7.0', message: 'Use `alignment` instead', until: '2.0.0'});
+			}
 		}
 
 		componentDidMount () {
@@ -520,6 +534,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		renderMarquee () {
 			const {
+				alignment,
 				children,
 				disabled,
 				forceDirection,
@@ -557,6 +572,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return (
 				<Wrapped {...rest} disabled={disabled}>
 					<Marquee
+						alignment={alignment}
 						animating={this.state.animating}
 						centered={marqueeCentered}
 						className={marqueeClassName}
@@ -577,6 +593,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		renderWrapped () {
 			const props = Object.assign({}, this.props);
 
+			delete props.alignment;
 			delete props.marqueeCentered;
 			delete props.marqueeDelay;
 			delete props.marqueeDisabled;

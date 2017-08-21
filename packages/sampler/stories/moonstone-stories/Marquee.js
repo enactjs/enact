@@ -14,8 +14,9 @@ storiesOf('Marquee')
 			return (
 				<section>
 					<MarqueeText
-						style={{width: '400px'}}
+						alignment={nullify(select('alignment', [null, 'left', 'right', 'center']))}
 						disabled={disabled}
+						forceDirection={nullify(select('forceDirection', [null, 'rtl', 'ltr']))}
 						marqueeCentered={nullify(boolean('marqueeCentered', false))}
 						marqueeDelay={number('marqueeDelay', 1000)}
 						marqueeDisabled={nullify(boolean('marqueeDisabled', false))}
@@ -23,6 +24,7 @@ storiesOf('Marquee')
 						marqueeOnRenderDelay={number('marqueeOnRenderDelay', 1000)}
 						marqueeResetDelay={number('marqueeResetDelay', 1000)}
 						marqueeSpeed={number('marqueeSpeed', 60)}
+						style={{width: '400px'}}
 					>
 						{text('children', 'The quick brown fox jumped over the lazy dog. The bean bird flies at sundown.')}
 					</MarqueeText>
