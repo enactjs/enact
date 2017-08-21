@@ -536,6 +536,14 @@ const VideoPlayerBase = class extends React.Component {
 		thumbnailSrc: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
+		* Enables the thumbnail transition from opaque to translucent.
+		*
+		* @type {Boolean}
+		* @public
+		*/
+		thumbnailUnavailable: PropTypes.bool,
+
+		/**
 		 * Set a title for the video being played.
 		 *
 		 * @type {String}
@@ -646,7 +654,6 @@ const VideoPlayerBase = class extends React.Component {
 			more: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
-			sliderScrubbing: false,
 			sliderKnobProportion: 0,
 			titleVisible: true
 		};
@@ -1610,6 +1617,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;
 		delete rest.setApiProvider;
+		delete rest.thumbnailUnavailable;
 		delete rest.titleHideDelay;
 		delete rest.tooltipHideDelay;
 
@@ -1681,6 +1689,7 @@ const VideoPlayerBase = class extends React.Component {
 									noFeedback={this.state.mouseOver}
 									playbackState={this.prevCommand}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
+									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
 									visible={this.state.feedbackVisible}
 								>
