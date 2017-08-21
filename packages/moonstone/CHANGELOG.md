@@ -34,6 +34,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` and `moonstone/VirtualList` navigation via 5-way from paging controls
 - `moonstone/ExpandableList` to display correct font weight and size for list items
 
+### Removed
+
+- `moonstone/Input` large-text mode
+
 ## [1.6.1] - 2017-08-07
 
 ### Changed
