@@ -7,13 +7,14 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
-import Item from '../Item';
+import {ItemBase} from '../Item';
 import Skinnable from '../Skinnable';
 import {MarqueeController, MarqueeText} from '../Marquee';
 
-const Controller = MarqueeController(Item);
+const Controller = MarqueeController({marqueeOnFocus: true}, Spottable(ItemBase));
 
 import css from './LabeledItem.less';
 

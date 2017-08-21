@@ -536,6 +536,14 @@ const VideoPlayerBase = class extends React.Component {
 		thumbnailSrc: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
+		* Enables the thumbnail transition from opaque to translucent.
+		*
+		* @type {Boolean}
+		* @public
+		*/
+		thumbnailUnavailable: PropTypes.bool,
+
+		/**
 		 * Set a title for the video being played.
 		 *
 		 * @type {String}
@@ -638,6 +646,7 @@ const VideoPlayerBase = class extends React.Component {
 			readyState: 0,
 			volume: 1,
 			titleOffsetHeight: 0,
+			bottomOffsetHeight: 0,
 
 			// Non-standard state computed from properties
 			bottomControlsRendered: false,
@@ -680,9 +689,9 @@ const VideoPlayerBase = class extends React.Component {
 	componentWillUpdate (nextProps, nextState) {
 		const
 			isInfoComponentsEqual = equals(this.props.infoComponents, nextProps.infoComponents),
-			{titleOffsetHeight} = this.state,
+			{titleOffsetHeight: titleHeight} = this.state,
 			shouldCalculateTitleOffset = (
-				((!titleOffsetHeight && isInfoComponentsEqual) || (titleOffsetHeight && !isInfoComponentsEqual)) &&
+				((!titleHeight && isInfoComponentsEqual) || (titleHeight && !isInfoComponentsEqual)) &&
 				this.state.bottomControlsVisible
 			);
 
@@ -699,7 +708,10 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		if (shouldCalculateTitleOffset) {
-			this.calculateTitleOffset();
+			const titleOffsetHeight = this.getHeightForElement('infoComponents');
+			if (titleOffsetHeight) {
+				this.setState({titleOffsetHeight});
+			}
 		}
 	}
 
@@ -752,14 +764,12 @@ const VideoPlayerBase = class extends React.Component {
 		this.announceJob.start(msg);
 	}
 
-	calculateTitleOffset = () => {
-		// calculate how far the title should animate up when infoComponents appear.
-		const infoComponents = this.player.querySelector(`.${css.infoComponents}`);
-
-		if (infoComponents) {
-			const infoHeight = infoComponents.offsetHeight;
-
-			this.setState({titleOffsetHeight: infoHeight});
+	getHeightForElement = (elementName) => {
+		const element = this.player.querySelector(`.${css[elementName]}`);
+		if (element) {
+			return element.offsetHeight;
+		} else {
+			return 0;
 		}
 	}
 
@@ -1621,6 +1631,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;
 		delete rest.setApiProvider;
+		delete rest.thumbnailUnavailable;
 		delete rest.titleHideDelay;
 		delete rest.tooltipHideDelay;
 
@@ -1647,7 +1658,10 @@ const VideoPlayerBase = class extends React.Component {
 					{source}
 				</video>
 
-				<Overlay onClick={this.onVideoClick}>
+				<Overlay
+					bottomControlsVisible={this.state.bottomControlsVisible}
+					onClick={this.onVideoClick}
+				>
 					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>
 
@@ -1692,6 +1706,7 @@ const VideoPlayerBase = class extends React.Component {
 									noFeedback={!this.state.feedbackIconVisible}
 									playbackState={this.prevCommand}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
+									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
 									visible={this.state.feedbackVisible}
 								>

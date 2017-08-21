@@ -1,7 +1,5 @@
-import hoc from '@enact/core/hoc';
-import kind from '@enact/core/kind';
-import React from 'react';
-import PropTypes from 'prop-types';
+import deprecate from '@enact/core/internal/deprecate';
+import AccessibilityDecorator from './AccessibilityDecorator';
 
 /**
  * {@link moonstone/MoonstoneDecorator.TextSizeDecorator} is a Higher-order Component that
@@ -10,41 +8,10 @@ import PropTypes from 'prop-types';
  * @class TextSizeDecorator
  * @memberof moonstone/MoonstoneDecorator
  * @hoc
+ * @deprecated will be replaced by `AccessibilityDecorator` in 2.0.0
  * @public
  */
-const TextSizeDecorator = hoc((config, Wrapped) => kind({
-	name: 'TextSizeDecorator',
-
-	propTypes: /** @lends moonstone/MoonstoneDecorator.TextSizeDecorator.prototype */ {
-		/**
-		 * Set the goal size of the text. The UI library will be responsible for using this
-		 * information to adjust the components' text sizes to this preset.
-		 * Current presets are `'normal'` (default), and `'large'`.
-		 *
-		 * @type {String}
-		 * @default 'normal'
-		 * @public
-		 */
-		textSize: PropTypes.oneOf(['normal', 'large'])
-	},
-
-	defaultProps: {
-		textSize: 'normal'
-	},
-
-	styles: {},	// Empty `styles` tells `kind` that we want to use `styler` later and don't have a base className.
-
-	computed: {
-		className: ({textSize, styler}) => styler.append('enact-text-' + textSize)
-	},
-
-	render: (props) => {
-		delete props.textSize;
-		return (
-			<Wrapped {...props} />
-		);
-	}
-}));
+const TextSizeDecorator = deprecate(AccessibilityDecorator, {name: 'TextSizeDecorator', since: '1.7.0', message: 'Use `AccessibilityDecorator` instead', until: '2.0.0'});
 
 export default TextSizeDecorator;
 export {TextSizeDecorator};
