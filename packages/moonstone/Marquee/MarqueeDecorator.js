@@ -1,7 +1,6 @@
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
 import {childrenEquals} from '@enact/core/util';
-import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -130,7 +129,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * Forces the `direction` of the marquee. Valid values are `'rtl'` and `'ltr'`. This
 			 * includes non-text elements as well. The default behavior, if this prop is unset, is
-			 * to evaluate the text content for directionality using {@link i18n/util.isRtlText}.
+			 * to evaluate the text content for directionality using the browser engine.
 			 *
 			 * @type {String}
 			 * @public
@@ -513,9 +512,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		checkRtl = () => {
 			const {forceDirection} = this.props;
-			const textContent = this.node && this.node.textContent;
+			const textContentDirection = this.node && window.getComputedStyle(this.node).direction;
 			// If forceDirection is set, check if it is RTL; otherwise, determine the directionality
-			return (forceDirection ? (forceDirection === 'rtl') : isRtlText(textContent));
+			return (forceDirection ? (forceDirection === 'rtl') : textContentDirection === 'rtl');
 		}
 
 		renderMarquee () {

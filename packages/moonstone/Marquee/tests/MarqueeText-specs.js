@@ -9,23 +9,23 @@ const
 	rtlText = 'العربية - العراق';
 
 describe('MarqueeText', () => {
-	it('should determine the correct directionality of latin text on initial render', function () {
+	it('should not set directionality of latin text on initial render without forceDirection', function () {
 		const subject = mount(
 			<MarqueeText>{ltrText}</MarqueeText>
 		);
 
-		const expected = 'ltr';
+		const expected = null;
 		const actual = subject.find(`.${css.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
 	});
 
-	it('should determine the correct directionality of non-latin text on initial render', function () {
+	it('should note set correct directionality of rtl text on initial render without forceDirection', function () {
 		const subject = mount(
 			<MarqueeText>{rtlText}</MarqueeText>
 		);
 
-		const expected = 'rtl';
+		const expected = null;
 		const actual = subject.find(`.${css.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
@@ -37,19 +37,6 @@ describe('MarqueeText', () => {
 		);
 
 		const expected = 'ltr';
-		const actual = subject.find(`.${css.text}`).prop('style');
-
-		expect(actual).to.have.property('direction').to.equal(expected);
-	});
-
-	it('should switch directionality when the text content changes after initial render', function () {
-		const subject = mount(
-			<MarqueeText>{ltrText}</MarqueeText>
-		);
-
-		subject.setProps({children: rtlText});
-
-		const expected = 'rtl';
 		const actual = subject.find(`.${css.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
