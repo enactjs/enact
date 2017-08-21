@@ -541,7 +541,7 @@ const VideoPlayerBase = class extends React.Component {
 		* @type {Boolean}
 		* @public
 		*/
-		thumbnailTransition: PropTypes.Bool,
+		thumbnailTransition: PropTypes.bool,
 
 		/**
 		* The amount of time in milliseconds that should pass before the tooltip thumbnail fades from
