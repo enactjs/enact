@@ -29,6 +29,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/SelectableItem` to display correct icon width and alignment
 - `moonstone/Scroller` to properly 5-way navigate from scroll buttons
 - `moonstone/ExpandableList` to display correct font weight and size for list items
+- `moonstone/text` from italicizing in non-italic locales
 
 ## [1.6.1] - 2017-08-07
 
