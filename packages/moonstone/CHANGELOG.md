@@ -31,6 +31,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/FormCheckbox` to display correct colors in light skin
 - `moonstone/Picker` and `moonstone/RangePicker` to forward `onKeyDown` events when not `joined`
 - `moonstone/SelectableItem` to display correct icon width and alignment
+- `moonstone/LabeledItem` to always match alignment with the locale
 - `moonstone/Scroller` to properly 5-way navigate from scroll buttons
 - `moonstone/Scroller` and `moonstone/VirtualList` navigation via 5-way from paging controls
 - `moonstone/ExpandableList` to display correct font weight and size for list items
