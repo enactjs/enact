@@ -1,7 +1,7 @@
 // RadioItem.less
 //
-@import '../styles/variables.less';
-@import '../styles/skin.less';
+@import "../styles/variables.less";
+@import "../styles/skin.less";
 
 .radioItem {
 	.dot {
@@ -20,11 +20,11 @@
 	// Skin colors
 	.applySkins({
 		.dot {
-			background-color: @moon-button-disabled-text-color;
-			border-color: @moon-spotlight-text-color;
+			background-color: @moon-radio-item-indicator-color;
+			border-color: @moon-radio-item-indicator-border-color;
 
 			&.selected {
-				background-color: @moon-accent;
+				background-color: @moon-spotlight-color;
 			}
 		}
 	});

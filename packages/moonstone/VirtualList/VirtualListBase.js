@@ -14,13 +14,45 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import Spottable from '@enact/spotlight/Spottable';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
 
 import css from './ListItem.less';
 
 const SpotlightPlaceholder = Spottable('div');
+
+const configureSpotlight = (containerId, instance) => {
+	Spotlight.set(containerId, {
+		enterTo: 'last-focused',
+		/*
+		 * Returns the data-index as the key for last focused
+		 */
+		lastFocusedPersist: function () {
+			if (this.lastFocusedIndex != null) {
+				return {
+					container: false,
+					element: true,
+					key: this.lastFocusedIndex
+				};
+			}
+		}.bind(instance),
+		/*
+		 * Restores the data-index into the placeholder if its the only element. Tries to find a
+		 * matching child otherwise.
+		 */
+		lastFocusedRestore: ({key}, all) => {
+			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
+				all[0].dataset.index = key;
+
+				return all[0];
+			}
+
+			return all.reduce((focused, node) => {
+				return focused || node.dataset.index === key && node;
+			}, null);
+		}
+	});
+};
 
 const
 	dataContainerMutedAttribute = 'data-container-muted',
@@ -104,6 +136,14 @@ class VirtualListCore extends Component {
 		}),
 
 		/**
+		 * Spotlight container Id
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		containerId: PropTypes.string,
+
+		/**
 		 * Data for the list.
 		 * Check mutation of this and determine whether the list should update or not.
 		 *
@@ -112,14 +152,6 @@ class VirtualListCore extends Component {
 		 * @public
 		 */
 		data: PropTypes.any,
-
-		/**
-		 * Spotlight container Id
-		 *
-		 * @type {String}
-		 * @private
-		 */
-		'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types
 
 		/**
 		 * Size of the data.
@@ -186,6 +218,11 @@ class VirtualListCore extends Component {
 
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContainerRef = this.initRef('containerRef');
+
+		const {containerId} = props;
+		if (containerId) {
+			configureSpotlight(containerId, this);
+		}
 	}
 
 	componentWillMount () {
@@ -234,6 +271,10 @@ class VirtualListCore extends Component {
 			this.updateStatesAndBounds(nextProps);
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
+		}
+
+		if (nextProps.containerId && nextProps.containerId !== this.props.containerId) {
+			configureSpotlight(nextProps.containerId, this);
 		}
 	}
 
@@ -334,7 +375,8 @@ class VirtualListCore extends Component {
 			// if we're supposed to restore focus and virtual list has positioned a set of items
 			// that includes lastFocusedIndex, clear the indicator
 			this.restoreLastFocused = false;
-			const containerId = this.props['data-container-id'];
+
+			const {containerId} = this.props;
 
 			// try to focus the last focused item
 			const foundLastFocused = Spotlight.focus(
@@ -365,10 +407,9 @@ class VirtualListCore extends Component {
 
 	getItemPosition = (index, stickTo = 'start') => {
 		const
-			{itemSize} = this.props,
 			{primary} = this,
 			position = this.getGridPosition(index),
-			offset = ((itemSize instanceof Object) || stickTo === 'start') ? 0 : primary.clientSize - primary.itemSize;
+			offset = (stickTo === 'start') ? 0 : primary.clientSize - primary.itemSize;
 
 		position.primaryPosition -= offset;
 
@@ -754,7 +795,7 @@ class VirtualListCore extends Component {
 	}
 
 	setRestrict = (bool) => {
-		Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
+		Spotlight.set(this.props.containerId, {restrict: (bool) ? 'self-only' : 'self-first'});
 	}
 
 	setSpotlightContainerRestrict = (keyCode, index) => {
@@ -776,41 +817,31 @@ class VirtualListCore extends Component {
 		this.setRestrict(isSelfOnly);
 	}
 
-	getIndicesForPageScroll = (direction, currentIndex) => {
+	getIndexForPageScroll = (direction, currentIndex) => {
 		const
 			{context, dimensionToExtent, isPrimaryDirectionVertical, primary} = this,
-			{dataSize} = this.props,
-			indices = {};
+			{dataSize, spacing} = this.props;
+		let offsetIndex = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent;
 
-		let	offsetIndex = Math.floor(primary.clientSize / primary.gridSize) * dimensionToExtent;
 		offsetIndex *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
+		offsetIndex *= (direction === 'down' || direction === 'right') ? 1 : -1;
 
-		if (direction === 'down' || direction === 'right') {
-			indices.indexToFocus = clamp(0, dataSize - 1, currentIndex + offsetIndex);
-			indices.indexToScroll = currentIndex + dimensionToExtent;
-			if (context.rtl && !isPrimaryDirectionVertical) {
-				indices.indexToScroll = indices.indexToFocus;
-			}
-		} else {
-			indices.indexToFocus = clamp(0, dataSize - 1, currentIndex - offsetIndex);
-			indices.indexToScroll = indices.indexToFocus;
-			if (context.rtl && !isPrimaryDirectionVertical) {
-				indices.indexToScroll = currentIndex + dimensionToExtent;
-			}
-		}
-
-		return indices;
+		return clamp(0, dataSize - 1, currentIndex + offsetIndex);
 	}
 
 	scrollToNextPage = ({direction, focusedItem}) => {
 		const
+			isRtl = this.context.rtl,
+			isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right'),
 			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
-			{indexToFocus, indexToScroll} = this.getIndicesForPageScroll(direction, focusedIndex);
+			indexToFocus = this.getIndexForPageScroll(direction, focusedIndex);
 
 		if (focusedIndex !== indexToFocus) {
 			focusedItem.blur();
-			this.props.cbScrollTo({index: indexToScroll, animate: false});
-			this.focusByIndex(indexToFocus);
+			// To prevent item positioning issue, make all items to be rendered.
+			this.updateFrom = null;
+			this.updateTo = null;
+			this.props.cbScrollTo({index: indexToFocus, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
 		}
 
 		return true;
@@ -900,7 +931,8 @@ class VirtualListCore extends Component {
 	}
 
 	setContainerDisabled = (bool) => {
-		const containerNode = this.containerRef;
+		const {containerId} = this.props;
+		const containerNode = document.querySelector(`[data-container-id="${containerId}"]`);
 
 		if (containerNode) {
 			containerNode.setAttribute(dataContainerMutedAttribute, bool);
@@ -951,6 +983,7 @@ class VirtualListCore extends Component {
 		delete props.cbScrollTo;
 		delete props.clientSize;
 		delete props.component;
+		delete props.containerId;
 		delete props.data;
 		delete props.dataSize;
 		delete props.direction;
@@ -996,43 +1029,9 @@ class VirtualListCore extends Component {
  * @ui
  * @private
  */
-const VirtualListBase = SpotlightContainerDecorator(
-	{
-		enterTo: 'last-focused',
-		/*
-		 * Returns the data-index as the key for last focused
-		 */
-		lastFocusedPersist: (node) => {
-			const indexed = node.dataset.index ? node : node.closest('[data-index]');
-			if (indexed) {
-				return {
-					container: false,
-					element: true,
-					key: indexed.dataset.index
-				};
-			}
-		},
-		/*
-		 * Restores the data-index into the placeholder if its the only element. Tries to find a
-		 * matching child otherwise.
-		 */
-		lastFocusedRestore: ({key}, all) => {
-			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
-				all[0].dataset.index = key;
-
-				return all[0];
-			}
-
-			return all.reduce((focused, node) => {
-				return focused || node.dataset.index === key && node;
-			}, null);
-		},
-		preserveId: true,
-		restrict: 'self-first'
-	},
-	Scrollable(
-		VirtualListCore
-	)
+const VirtualListBase = Scrollable(
+	{configureSpotlight: true},
+	VirtualListCore
 );
 
 export default VirtualListBase;

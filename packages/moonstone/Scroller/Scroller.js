@@ -13,12 +13,16 @@ import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from 
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {Spotlight, getDirection} from '@enact/spotlight';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Scroller.less';
 import Scrollable from './Scrollable';
 
-const dataContainerDisabledAttribute = 'data-container-disabled';
+const
+	dataContainerDisabledAttribute = 'data-container-disabled',
+	reverseDirections = {
+		'left': 'right',
+		'right': 'left'
+	};
 
 /**
  * {@link moonstone/Scroller.ScrollerBase} is a base component for Scroller.
@@ -373,13 +377,17 @@ class ScrollerBase extends Component {
 	}
 
 	scrollToBoundary = (direction) => {
-		let align;
+		const
+			{scrollBounds, scrollPos} = this,
+			isVerticalDirection = (direction === 'up' || direction === 'down');
 
-		if (direction === 'up') align = 'top';
-		else if (direction === 'down') align = 'bottom';
-		else align = direction;
-
-		this.props.cbScrollTo({align});
+		if (isVerticalDirection) {
+			if (scrollPos.top > 0 && scrollPos.top < scrollBounds.maxTop) {
+				this.props.cbScrollTo({align: direction === 'up' ? 'top' : 'bottom'});
+			}
+		} else if (scrollPos.left > 0 && scrollPos.left < scrollBounds.maxLeft) {
+			this.props.cbScrollTo({align: this.context.rtl ? reverseDirections[direction] : direction});
+		}
 	}
 
 	isVertical = () => {
@@ -466,11 +474,8 @@ class ScrollerBase extends Component {
  * @ui
  * @public
  */
-const Scroller = SpotlightContainerDecorator(
-	{restrict: 'self-first'},
-	Scrollable(
-		ScrollerBase
-	)
+const Scroller = Scrollable(
+	ScrollerBase
 );
 
 // Docs for Scroller

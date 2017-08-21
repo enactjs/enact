@@ -52,6 +52,23 @@ const
 		'down': 'up'
 	};
 
+const navigableFilter = (elem) => {
+	if (
+		!Spotlight.getPointerMode() &&
+		// ignore containers passed as their id
+		typeof elem !== 'string' &&
+		elem.classList.contains(scrollbarCss.scrollButton)
+	) {
+		return false;
+	}
+};
+
+const configureSpotlightContainer = ({'data-container-id': containerId, focusableScrollbar}) => {
+	Spotlight.set(containerId, {
+		navigableFilter: focusableScrollbar ? null : navigableFilter
+	});
+};
+
 /**
  * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
  * which indicates the index of an item in {@link moonstone/VirtualList.VirtualList}
@@ -64,36 +81,12 @@ const
  */
 const dataIndexAttribute = 'data-index';
 
-const ScrollableSpotlightContainer = SpotlightContainerDecorator(
-	{
-		navigableFilter: (elem, {focusableScrollbar}) => {
-			if (
-				!focusableScrollbar &&
-				!Spotlight.getPointerMode() &&
-				// ignore containers passed as their id
-				typeof elem !== 'string' &&
-				elem.classList.contains(scrollbarCss.scrollButton)
-			) {
-				return false;
-			}
-		},
-		overflow: true
-	},
-	({containerRef, ...rest}) => {
-		delete rest.focusableScrollbar;
-
-		return (
-			<div ref={containerRef} {...rest} />
-		);
-	}
-);
-
 /**
  * {@link moonstone/Scroller.Scrollable} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
  *
  * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
- * and also catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, `onWheel` and `onKeyUp` events
+ * and also catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, `onWheel` and `onKeyDown` events
  * from its wrapped component for scrolling behaviors.
  *
  * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
@@ -103,11 +96,23 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
  * @hoc
  * @private
  */
-const ScrollableHoC = hoc((config, Wrapped) => {
-	return class Scrollable extends Component {
+const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
+	const {configureSpotlight} = config;
+
+	class Scrollable extends Component {
 		static displayName = 'Scrollable'
 
 		static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
+			/**
+			 * When `configureSpotlight` is true, this is passed onto the wrapped component to allow
+			 * it to customize the spotlight container for its use case.
+			 *
+			 * @type {String}
+			 * @memberof moonstone/Scroller.Scrollable.prototype
+			 * @private
+			 */
+			'data-container-id': PropTypes.string,
+
 			/**
 			 * The callback function which is called for linking scrollTo function.
 			 * You should specify a callback function as the value of this prop
@@ -240,6 +245,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			};
 
 			props.cbScrollTo(this.scrollTo);
+
+			configureSpotlightContainer(props);
 		}
 
 		// component life cycle
@@ -260,7 +267,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.updateEventListeners();
 			this.updateScrollbars();
 
-			on('keyup', this.onKeyUp);
+			on('keydown', this.onKeyDown);
+		}
+
+		componentWillReceiveProps (nextProps) {
+			configureSpotlightContainer(nextProps);
 		}
 
 		componentWillUpdate () {
@@ -297,6 +308,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.animator.stop();
 			}
 			this.forceUpdateJob.stop();
+			this.hideThumbJob.stop();
 
 			if (containerRef && containerRef.removeEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
@@ -306,7 +318,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
 				childContainerRef.removeEventListener('focus', this.onFocus, true);
 			}
-			off('keyup', this.onKeyUp);
+			off('keydown', this.onKeyDown);
 		}
 
 		// status
@@ -414,13 +426,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		calculateDistanceByWheel (e, maxPixel) {
-			const
-				deltaMode = e.deltaMode,
-				wheelDeltaY = -e.wheelDeltaY;
-			let
-				delta = (wheelDeltaY || e.deltaY);
-
+		calculateDistanceByWheel (deltaMode, delta, maxPixel) {
 			if (deltaMode === 0) {
 				delta = clamp(-maxPixel, maxPixel, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
 			} else if (deltaMode === 1) { // line; firefox
@@ -499,14 +505,17 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					bounds = this.getScrollBounds(),
 					canScrollHorizontally = this.canScrollHorizontally(bounds),
 					canScrollVertically = this.canScrollVertically(bounds),
-					focusedItem = Spotlight.getCurrent();
+					focusedItem = Spotlight.getCurrent(),
+					eventDeltaMode = e.deltaMode,
+					eventDelta = (-e.wheelDeltaY || e.deltaY);
 				let
-					delta = 0, direction;
+					delta = 0,
+					direction;
 
 				if (canScrollVertically) {
-					delta = this.calculateDistanceByWheel(e, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
+					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 				} else if (canScrollHorizontally) {
-					delta = this.calculateDistanceByWheel(e, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
+					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				}
 				direction = Math.sign(delta);
 
@@ -551,6 +560,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
 				this.childRef.shouldPreventScrollByFocus() :
 				false;
+
+			if (!Spotlight.getPointerMode()) {
+				this.alertThumb();
+			}
 
 			if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || this.isDragging)) {
 				const
@@ -656,9 +669,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			return current && this.containerRef.contains(current);
 		}
 
-		onKeyUp = (e) => {
+		onKeyDown = (e) => {
 			this.animateOnFocus = true;
-			if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && this.hasFocus()) {
+			if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && !e.repeat && this.hasFocus()) {
 				this.scrollByPage(e.keyCode);
 			}
 		}
@@ -942,13 +955,21 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			});
 		}
 
-		hideThumb () {
+		hideThumb = () => {
 			if (this.state.isHorizontalScrollbarVisible) {
 				this.horizontalScrollbarRef.startHidingThumb();
 			}
 			if (this.state.isVerticalScrollbarVisible) {
 				this.verticalScrollbarRef.startHidingThumb();
 			}
+		}
+
+		hideThumbJob = new Job(this.hideThumb, 200);
+
+		alertThumb () {
+			const bounds = this.getScrollBounds();
+			this.showThumb(bounds);
+			this.hideThumbJob.start();
 		}
 
 		updateScrollbars = () => {
@@ -1080,12 +1101,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		render () {
 			const
 				props = Object.assign({}, this.props),
-				{className, focusableScrollbar, style} = this.props,
+				{className, 'data-container-id': containerId, style} = this.props,
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 				scrollableClasses = classNames(css.scrollable, className);
 
 			delete props.cbScrollTo;
 			delete props.className;
+			delete props['data-container-id'];
 			delete props.focusableScrollbar;
 			delete props.horizontalScrollbar;
 			delete props.onScroll;
@@ -1094,11 +1116,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.style;
 			delete props.verticalScrollbar;
 
+			if (configureSpotlight) {
+				props.containerId = containerId;
+			}
+
 			return (
-				<ScrollableSpotlightContainer
+				<div
 					className={scrollableClasses}
-					containerRef={this.initContainerRef}
-					focusableScrollbar={focusableScrollbar}
+					data-container-id={containerId}
+					ref={this.initContainerRef}
 					style={style}
 				>
 					<div className={css.container}>
@@ -1112,10 +1138,19 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 					</div>
 					{isHorizontalScrollbarVisible ? <Scrollbar {...this.horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
-				</ScrollableSpotlightContainer>
+				</div>
 			);
 		}
-	};
+	}
+
+	return SpotlightContainerDecorator(
+		{
+			overflow: true,
+			preserveId: true,
+			restrict: 'self-first'
+		},
+		Scrollable
+	);
 });
 
 export default ScrollableHoC;
