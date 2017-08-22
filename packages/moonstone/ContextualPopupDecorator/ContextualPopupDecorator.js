@@ -1,9 +1,9 @@
 /**
- * Exports the {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} Higher-order
- * Component (HOC) and the {@link moonstone/ContextualPopupDecorator.ContextualPopup} component.
- * The default export is {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator}.
+ * A Higher-Order Component that positions a popup around a wrapped component.
  *
  * @module moonstone/ContextualPopupDecorator
+ * @exports ContextualPopupDecorator
+ * @exports ContextualPopup
  */
 
 import {contextTypes} from '@enact/i18n/I18nDecorator';
@@ -53,9 +53,8 @@ const defaultConfig = {
 const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'last-focused', preserveId: true}, ContextualPopup);
 
 /**
- * {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} is a Higher-order Component
- * which positions {@link moonstone/ContextualPopupDecorator.ContextualPopup} in
- * relation to the Wrapped component.
+ * A Higher-order Component which positions
+ * {@link moonstone/ContextualPopupDecorator.ContextualPopup} in relation to the Wrapped component.
  *
  * Example:
  * ```

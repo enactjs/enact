@@ -29,7 +29,7 @@ const isSelectionAtLocation = (target, location) => {
  * spotlight behavior for an {@link moonstone/Input.Input}
  *
  * @class InputSpotlightDecorator
- * @memberof moonstone/Input/InputSpotlightDecorator
+ * @memberof moonstone/Input
  * @hoc
  * @private
  */
@@ -44,7 +44,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'InputSpotlightDecorator';
 
-		static propTypes = /** @lends moonstone/Input/InputSpotlightDecorator.InputSpotlightDecorator.prototype */ {
+		static propTypes = /** @lends moonstone/Input.InputSpotlightDecorator.prototype */ {
 			/**
 			 * When `true`, focusing the decorator directly via 5-way will forward the focus onto the <input>
 			 *

@@ -12,9 +12,8 @@ import css from './DatePicker.less';
 import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
 
 /**
- * {@link moonstone/DatePicker.DatePickerBase} is the stateless functional date picker
- * component. Should not be used directly but may be composed within another component as it is
- * within {@link moonstone/DatePicker.DatePicker}.
+ * A stateless functional date picker component. Should not be used directly but may be composed
+ * within another component as it is within {@link moonstone/DatePicker.DatePicker}.
  *
  * @class DatePickerBase
  * @memberof moonstone/DatePicker
@@ -24,7 +23,7 @@ import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponen
 const DatePickerBase = kind({
 	name: 'DatePickerBase',
 
-	propTypes:  /** @lends moonstone/DatePicker.DatePickerBase.prototype */ {
+	propTypes: /** @lends moonstone/DatePicker.DatePickerBase.prototype */ {
 		/**
 		 * The `day` component of the Date
 		 *

@@ -1,14 +1,11 @@
 // Tooltip.less
 //
-@import '../styles/variables.less';
-@import '../styles/text.less';
-@import '../styles/skin.less';
+@import "../styles/variables.less";
+@import "../styles/text.less";
+@import "../styles/skin.less";
 
 .tooltip {
-	position: absolute;
-
 	.tooltipArrow {
-		position: absolute;
 		width: @moon-tooltip-point-width;
 		height: @moon-tooltip-point-height;
 		transform-origin: top left;
@@ -17,18 +14,8 @@
 	.tooltipLabel {
 		.moon-small-button-text();
 		line-height: @moon-tooltip-label-height;
-		white-space: nowrap;
 		padding: @moon-spotlight-outset @moon-tooltip-h-padding;
 		border-radius: @moon-tooltip-border-radius;
-
-		:global(.enact-locale-right-to-left) & {
-			text-align: right;
-		}
-
-		&.multi {
-			white-space: normal;
-			.locale-japanese-line-break();
-		}
 	}
 
 	&.below {
@@ -58,7 +45,7 @@
 		&.centerArrow {
 			.tooltipArrow {
 				transform: rotate(-90deg) translateY(-50%);
-				left: 50%
+				left: 50%;
 			}
 		}
 	}
@@ -101,7 +88,7 @@
 	&.left {
 		&.topArrow {
 			.tooltipArrow {
-				transform: translate(100%,100%) scaleY(-1);
+				transform: translate(100%, 100%) scaleY(-1);
 				bottom: 0;
 				right: 0;
 			}

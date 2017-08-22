@@ -1,20 +1,46 @@
 /**
- * Exports the {@link moonstone/Image.Image} component.
+ * A component for displaying images.
+ *
+ * @example
+ * <Image src="http://lorempixel.com/64/64/city/1/" />
  *
  * @module moonstone/Image
+ * @exports Image
+ * @exports ImageFactory
  */
 
-import kind from '@enact/core/kind';
-import React from 'react';
-import PropTypes from 'prop-types';
-import {selectSrc} from '@enact/ui/resolution';
+import factory from '@enact/core/factory';
+// import {diffClasses} from '@enact/ui/MigrationAid';
+import {ImageFactory as UiImageFactory} from '@enact/ui/Image';
 
-import css from './Image.less';
+import componentCss from './Image.less';
 
 /**
- * {@link moonstone/Image.Image} is a component designed to display images
- * conditionally based on screen size. This component has a default size but should have a size
- * specified for its particular usage using a CSS `className` or inline `style`.
+ * A factory for customizing the visual style of [Image]{@link moonstone/Image.Image}.
+ * @see {@link ui/Image.ImageFactory}.
+ *
+ * @class ImageFactory
+ * @memberof moonstone/Image
+ * @factory
+ * @public
+ */
+const ImageBaseFactory = factory({css: componentCss}, ({css}) => {
+	// diffClasses('Moon Image', componentCss, css);
+
+	return UiImageFactory({
+		/* Replace classes in this step */
+		css: /** @lends moonstone/Image.ImageFactory.prototype */ {
+			...componentCss,
+			// Include the component class name so it too may be overridden.
+			image: css.image
+		}
+	});
+});
+
+/**
+ * A component designed to display images conditionally based on screen size. This component has a
+ * default size but should have a size specified for its particular usage using a CSS `className` or
+ * inline `style`.
  *
  * Usage:
  *
@@ -36,124 +62,16 @@ import css from './Image.less';
  *
  * @class Image
  * @memberof moonstone/Image
+ * @extends ui/Image
  * @ui
  * @public
  */
-
-const ImageBase = kind({
-	name: 'Image',
-
-	propTypes: /** @lends moonstone/Image.Image.prototype */ {
-		/**
-		 * String value or Object of values used to determine which image will appear on
-		 * a specific screenSize.
-		 *
-		 * @type {String | Object}
-		 * @required
-		 * @public
-		 */
-		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-
-		/**
-		 * Sets the aria-label for the image. If unset, it defaults to the value of `alt`
-		 *
-		 * @type {String}
-		 * @public
-		 * @memberof moonstone/Image.Image.prototype
-		 */
-		// Quoting this (necessary) makes it alphabetically sort differently...
-		'aria-label': PropTypes.string,
-
-		/**
-		 * String value for the alt attribute of the image.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		alt: PropTypes.string,
-
-		/**
-		 * Node for the children of an Image. Useful for overlays.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		children: PropTypes.node,
-
-		/**
-		 * Function that will run if the image has an error.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onError: PropTypes.func,
-
-		/**
-		 * Function that will run once the image is loaded.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onLoad: PropTypes.func,
-
-		/**
-		 * A placeholder image to be displayed before the image is loaded.
-		 * For performance purposes, it should be pre-loaded or be a data url.
-		 *
-		 * @type {String}
-		 * @default ''
-		 * @public
-		 */
-		placeholder: PropTypes.string,
-
-		/**
-		 * Used to set the `background-size` of an Image.
-		 *
-		 * * `'fill'` - sets `background-size: cover`
-		 * * `'fit'` - sets `background-size: contain`
-		 * * `'none'` - uses the image's natural size
-		 *
-		 * @type {String}
-		 * @default 'fill'
-		 * @public
-		 */
-		sizing: PropTypes.oneOf(['fit', 'fill', 'none'])
-	},
-
-	defaultProps: {
-		placeholder: '',
-		sizing: 'fill'
-	},
-
-	styles: {
-		css,
-		className: 'image'
-	},
-
-	computed: {
-		bgImage: ({src, placeholder}) => {
-			const imageSrc = selectSrc(src) || '';
-			return placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
-		},
-		className: ({className, sizing, styler}) => {
-			return sizing !== 'none' ? styler.append(sizing) : className;
-		},
-		imgSrc: ({src}) => selectSrc(src) || null
-	},
-
-	render: ({alt, 'aria-label': ariaLabel, bgImage, children, imgSrc, onError, onLoad, style, ...rest}) => {
-		delete rest.placeholder;
-		delete rest.sizing;
-		delete rest.src;
-
-		return (
-			<div role="img" {...rest} aria-label={ariaLabel || alt} style={{...style, backgroundImage: bgImage}}>
-				{children}
-				<img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} />
-			</div>
-		);
-	}
-});
+const ImageBase = ImageBaseFactory();
 
 export default ImageBase;
-export {ImageBase as Image, ImageBase};
+export {
+	ImageBase as Image,
+	ImageBase,
+	ImageBaseFactory as ImageFactory,
+	ImageBaseFactory
+};

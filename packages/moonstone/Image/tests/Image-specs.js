@@ -2,6 +2,7 @@ import React from 'react';
 import {mount, shallow} from 'enzyme';
 import Image from '../Image';
 import css from '../Image.less';
+import uiCss from '@enact/ui/Image/Image.less';
 
 const src = {
 	'hd': 'http://lorempixel.com/64/64/city/1/',
@@ -10,13 +11,35 @@ const src = {
 };
 
 describe('Image Specs', () => {
+	it('should have `image` class from UI', function () {
+		const image = mount(
+			<Image src={src} />
+		);
+
+		const expected = true;
+		const actual = image.find('div').hasClass(css.image);
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should have `image` class from Moonstone', function () {
+		const image = mount(
+			<Image src={src} />
+		);
+
+		const expected = true;
+		const actual = image.find('div').hasClass(uiCss.image);
+
+		expect(actual).to.equal(expected);
+	});
+
 	it('should only have image class without sizing', function () {
 		const image = mount(
 			<Image src={src} sizing="none" />
 		);
 
-		const expected = css.image;
-		const actual = image.find('div').prop('className');
+		const expected = false;
+		const actual = (image.find('div').hasClass(uiCss.fill) || image.find('div').hasClass(uiCss.fit));
 
 		expect(actual).to.equal(expected);
 	});
@@ -27,7 +50,7 @@ describe('Image Specs', () => {
 		);
 
 		const expected = true;
-		const actual = image.find('div').hasClass(css.fill);
+		const actual = image.find('div').hasClass(uiCss.fill);
 
 		expect(actual).to.equal(expected);
 	});
@@ -38,7 +61,7 @@ describe('Image Specs', () => {
 		);
 
 		const expected = true;
-		const actual = image.find('div').hasClass(css.fit);
+		const actual = image.find('div').hasClass(uiCss.fit);
 
 		expect(actual).to.equal(expected);
 	});

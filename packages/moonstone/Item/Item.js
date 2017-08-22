@@ -1,134 +1,149 @@
 /**
- * Exports the {@link moonstone/Item.Item} and {@link moonstone/Item.ItemBase} components.
+ * A component typically used in list, this supports a variety of options including marqueeing text
+ * that is too long, and via optional import, overlays which allow insertion of icons at the start
+ * or end of the item which can always be visible or only visible on Item focus.
+ *
+ * @example
+ * <div>
+ * 	<Item>An item to use in a list</Item>
+ * 	<Item>Another item to use in a list</Item>
+ * 	<ItemOverlay>
+ * 		A third item to use in a list
+ * 		<overlayAfter>
+ * 			<Icon>flag</Icon>
+ * 		</overlayAfter>
+ * 	</ItemOverlay>
+ * </div>
  *
  * @module moonstone/Item
+ * @exports Item
+ * @exports ItemBase
+ * @exports ItemBaseFactory
+ * @exports ItemFactory
  */
 
-import {forProp, forward, handle} from '@enact/core/handle';
-import kind from '@enact/core/kind';
-import React from 'react';
-import PropTypes from 'prop-types';
+import factory from '@enact/core/factory';
+// import {diffClasses} from '@enact/ui/MigrationAid';
+import {ItemBaseFactory as UiItemBaseFactory, ItemMarqueeDecorator} from '@enact/ui/Item';
 import Slottable from '@enact/ui/Slottable';
 import Spottable from '@enact/spotlight/Spottable';
 
-import {MarqueeDecorator} from '../Marquee';
+// import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import OverlayDecorator from './OverlayDecorator';
+import {OverlayDecoratorFactory} from './OverlayDecorator';
 
-import css from './Item.less';
+import componentCss from './Item.less';
+import overlayCss from './Overlay.less';
 
 /**
- * {@link moonstone/Item.ItemBase} is a Moonstone-styled control that can display
- * simple text or a set of controls. Most developers will want to use the spottable
- * version: {@link moonstone/Item.Item}.
+ * A factory for customizing the visual style of [ItemBase]{@link moonstone/Item.ItemBase}.
  *
- * @class ItemBase
+ * @class ItemBaseFactory
  * @memberof moonstone/Item
- * @ui
+ * @factory
  * @public
  */
-const ItemBase = kind({
-	name: 'Item',
+const ItemBaseFactory = factory({css: componentCss}, ({css}) => {
+	// diffClasses('Moon Item', componentCss, css);
 
-	propTypes: /** @lends moonstone/Item.ItemBase.prototype */ {
-		/**
-		 * The node to be displayed as the main content of the item.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		children: PropTypes.node.isRequired,
-
-		/**
-		 * The type of component to use to render the item. May be a DOM node name (e.g 'div',
-		 * 'span', etc.) or a custom component.
-		 *
-		 * @type {String|Node}
-		 * @default 'div'
-		 * @public
-		 */
-		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-
-		/**
-		 * Applies a disabled visual state to the item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		disabled: PropTypes.bool,
-
-		/**
-		 * Applies inline styling to the item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		inline: PropTypes.bool
-	},
-
-	defaultProps: {
-		component: 'div',
-		disabled: false,
-		inline: false
-	},
-
-	styles: {
-		css,
-		className: 'item'
-	},
-
-	computed: {
-		className: ({inline, styler}) => styler.append({inline})
-	},
-
-	handlers: {
-		onClick: handle(
-			forProp('disabled', false),
-			forward('onClick')
-		)
-	},
-
-	render: ({component: Component, disabled, ...rest}) => {
-		delete rest.inline;
-
-		return (
-			<Component
-				{...rest}
-				aria-disabled={disabled}
-				disabled={disabled}
-			/>
-		);
-	}
+	return UiItemBaseFactory({
+		/* Replace classes in this step */
+		css: /** @lends moonstone/Item.ItemFactory.prototype */ {
+			...componentCss,
+			// Include the component class name so it too may be overridden.
+			item: css.item
+		}
+		// DEV-NOTE: The commented line below represents the implementation of the branch `feature/component-factory`, currently in review.
+		// components: {MarqueeDecorator}
+	});
 });
 
-// cache the MarqueeDecorator so it can be used for Item and ItemOverlay
-const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidateProps: ['inline', 'autoHide']});
-
 /**
- * {@link moonstone/Item.Item} is a focusable Moonstone-styled control that can display
- * simple text or a set of controls.
+ * A stateless [Item]{@link moonstone/Item.Item}, with no HOCs applied.
  *
- * @class Item
+ * @class ItemBase
+ * @extends ui/Item.ItemBase
  * @memberof moonstone/Item
- * @mixes spotlight.Spottable
- * @mixes moonstone/Marquee.MarqueeDecorator
  * @ui
  * @public
  */
-const Item = Spottable(
+const ItemBase = ItemBaseFactory();
+
+//
+// DEV-NOTE: Technically our MarqueeDecorator is coming from UI, not Moonstone. Research must be
+// done to determine the best way to support this component in UI and Moonstone.
+// This can be done at a later time, after the `feature/component-factory` branch is reviewed.
+//
+// const ItemMarqueeDecorator = MarqueeDecorator({className: marqueeContentClassName, invalidateProps: ['inline', 'autoHide']});
+
+/**
+ * A factory for customizing the visual style of [Item]{@link moonstone/Item.Item}.
+ * @see {@link moonstone/Item.ItemBaseFactory}.
+ *
+ * @class ItemFactory
+ * @memberof moonstone/Item
+ * @mixes spotlight/Spottable
+ * @mixes ui/Marquee.MarqueeDecorator
+ * @mixes moonstone/Skinnable
+ * @factory
+ * @public
+ */
+const ItemFactory = (props) => Spottable(
 	ItemMarqueeDecorator(
 		Skinnable(
-			ItemBase
+			ItemBaseFactory(props)
 		)
 	)
 );
 
 /**
- * {@link moonstone/Item.ItemOverlay} is a focusable Moonstone-styled control that can display
- * simple text or a set of controls along with overlays before and/or after the contents.
+ * A ready-to-use {@link ui/Item}, with HOCs applied.
+ *
+ * @class Item
+ * @memberof moonstone/Item
+ * @extends moonstone/Item.ItemBase
+ * @mixes spotlight/Spottable
+ * @mixes ui/Marquee.MarqueeDecorator
+ * @mixes moonstone/Skinnable
+ * @ui
+ * @public
+ */
+const Item = ItemFactory();
+
+
+const OverlayDecorator = OverlayDecoratorFactory({css: overlayCss});
+
+/**
+ * A factory for customizing the visual style of [ItemOverlay]{@link moonstone/Item.ItemOverlay}.
+ * @see {@link moonstone/Item.ItemOverlayBaseFactory}.
+ *
+ * @class ItemOverlayFactory
+ * @memberof moonstone/Item
+ * @mixes spotlight/Spottable
+ * @mixes ui/Slottable
+ * @mixes ui/Marquee.MarqueeDecorator
+ * @mixes moonstone/Item.OverlayDecorator
+ * @mixes moonstone/Skinnable
+ * @factory
+ * @public
+ */
+const ItemOverlayFactory = (props) => Spottable(
+	Slottable(
+		{slots: ['overlayAfter', 'overlayBefore']},
+		ItemMarqueeDecorator(
+			OverlayDecorator(
+				Skinnable(
+					ItemBaseFactory(props)
+				)
+			)
+		)
+	)
+);
+
+/**
+ * A ready-to-use {@link ui/Button}, with HOCs applied that can display simple text or a set of
+ * controls along with overlays before and/or after the contents.
  *
  * ```
  *	<ItemOverlay autoHide="both">
@@ -143,27 +158,23 @@ const Item = Spottable(
  *
  * @class ItemOverlay
  * @memberof moonstone/Item
- * @mixes spotlight.Spottable
- * @mixes moonstone/Marquee.MarqueeDecorator
+ * @mixes spotlight/Spottable
+ * @mixes ui/Slottable
+ * @mixes ui/Marquee.MarqueeDecorator
+ * @mixes moonstone/Item.OverlayDecorator
+ * @mixes moonstone/Skinnable
  * @ui
  * @public
  */
-const ItemOverlay = Spottable(
-	Slottable(
-		{slots: ['overlayAfter', 'overlayBefore']},
-		ItemMarqueeDecorator(
-			OverlayDecorator(
-				Skinnable(
-					ItemBase
-				)
-			)
-		)
-	)
-);
+const ItemOverlay = ItemOverlayFactory();
+
 
 export default Item;
 export {
 	Item,
+	ItemFactory,
 	ItemBase,
-	ItemOverlay
+	ItemBaseFactory,
+	ItemOverlay,
+	ItemOverlayFactory
 };

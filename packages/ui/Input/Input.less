@@ -1,0 +1,72 @@
+// Input.less
+//
+@import "../styles/mixins.less";
+
+.input {
+	padding: 0;
+	border: 0;
+	cursor: pointer;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	flex-grow: 1;
+
+	&[type=number] {
+		-moz-appearance: textfield;
+
+		&::-webkit-inner-spin-button,
+		&::-webkit-outer-spin-button {
+			-webkit-appearance: none;
+		}
+
+		&:hover {
+			-moz-appearance: none;
+		}
+	}
+
+	&[placeholder] {
+		text-overflow: ellipsis;
+	}
+
+	.input-placeholder({
+		.vendor-opacity(1);
+	});
+
+	.focus ({
+		cursor: text;
+	});
+
+	.disabled({
+		cursor: default;
+	});
+
+	:global(.enact-locale-right-to-left) & {
+		text-align: right;
+	}
+}
+
+.decorator {
+	display: inline-flex;
+	position: relative;
+	box-sizing: border-box;
+
+	.iconBefore,
+	.iconAfter {
+		flex: 0 0;
+	}
+
+	// RIGBY NOTE: multiline is a NOT YET IMPLEMENTED feature that combines <input> and <textarea>
+	// into one control, to simplify input handling.
+	&.multiline {
+		display: block;
+	}
+
+	// an Input that isn't spottable is behaviorly disabled but not visually
+	&:not(:global(.spottable)) .input {
+		pointer-events: none;
+	}
+}
+
+.invalidTooltip {
+	pointer-events: none;
+}

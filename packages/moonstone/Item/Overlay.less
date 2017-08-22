@@ -1,19 +1,10 @@
 // ItemOverlay.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-
-// Defined so we don't repeat rules.
-@overlay-hidden: {
-	.overlay.hidden {
-		display: none;
-	}
-};
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
 
 .item {
 	.overlay {
-		line-height: 1;
-
 		&.before > :first-child {
 			.margin-start-end(0, @moon-icon-margin);
 		}
@@ -21,28 +12,5 @@
 		&.after > :last-child {
 			.margin-start-end(@moon-icon-margin, 0);
 		}
-
-		&.before,
-		&.after {
-			> * {
-				margin-top: 0;
-				margin-bottom: 0;
-				vertical-align: top;
-			}
-		}
 	}
-
-	// Spottable but not focused
-	.spottable({
-		&:not(:focus) {
-			@overlay-hidden();
-		}
-	});
-	.disabled(@overlay-hidden);
 }
-
-.muted({
-	.item {
-		.focus(@overlay-hidden);
-	}
-});

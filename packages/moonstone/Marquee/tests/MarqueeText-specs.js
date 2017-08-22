@@ -2,7 +2,8 @@ import React from 'react';
 import {mount} from 'enzyme';
 import MarqueeText from '../MarqueeText';
 
-import css from '../Marquee.less';
+// import css from '../Marquee.less';
+import uiCss from '@enact/ui/Marquee/Marquee.less';
 
 const
 	ltrText = 'This is some fine latin text.',
@@ -15,7 +16,7 @@ describe('MarqueeText', () => {
 		);
 
 		const expected = 'ltr';
-		const actual = subject.find(`.${css.text}`).prop('style');
+		const actual = subject.find(`.${uiCss.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
 	});
@@ -26,7 +27,7 @@ describe('MarqueeText', () => {
 		);
 
 		const expected = 'rtl';
-		const actual = subject.find(`.${css.text}`).prop('style');
+		const actual = subject.find(`.${uiCss.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
 	});
@@ -37,7 +38,7 @@ describe('MarqueeText', () => {
 		);
 
 		const expected = 'ltr';
-		const actual = subject.find(`.${css.text}`).prop('style');
+		const actual = subject.find(`.${uiCss.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
 	});
@@ -50,7 +51,7 @@ describe('MarqueeText', () => {
 		subject.setProps({children: rtlText});
 
 		const expected = 'rtl';
-		const actual = subject.find(`.${css.text}`).prop('style');
+		const actual = subject.find(`.${uiCss.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
 	});
@@ -63,7 +64,7 @@ describe('MarqueeText', () => {
 		subject.setProps({children: rtlText});
 
 		const expected = 'ltr';
-		const actual = subject.find(`.${css.text}`).prop('style');
+		const actual = subject.find(`.${uiCss.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
 	});

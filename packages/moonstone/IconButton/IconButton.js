@@ -1,36 +1,52 @@
 /**
- * Exports the {@link moonstone/IconButton.IconButton} component.
+ * Provides a special kind of {@link moonstone/IconButton} which accepts the same formats from
+ * {@link moonstone/Icon} but renders the Icon in a pressable {@link moonstone/IconButton}.
+ *
+ * @example
+ * <Button>gear</IconButton>
  *
  * @module moonstone/IconButton
+ * @exports IconButton
+ * @exports IconButtonBase
+ * @exports IconButtonBaseFactory
+ * @exports IconButtonFactory
  */
 
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
-import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
+// import {diffClasses} from '@enact/ui/MigrationAid';
 import React from 'react';
-import PropTypes from 'prop-types';
-
+import {IconButtonFactory as UiIconButtonFactory} from '@enact/ui/IconButton';
 import {ButtonFactory} from '../Button';
-import Icon from '../Icon';
+import {IconFactory} from '../Icon';
+
+import Skinnable from '../Skinnable';
 
 import componentCss from './IconButton.less';
 
-const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
-
 /**
- * {@link moonstone/IconButton.IconButtonFactory} is Factory wrapper around
- * {@link moonstone/IconButton.IconButton} that allows overriding certain classes of the base
- * `Button` component at design time. See {@link moonstone/Button.ButtonBaseFactory}.
+ * A factory for customizing the visual style of [IconButtonBase]{@link moonstone/IconButton.IconButtonBase}.
  *
- * @class IconButtonFactory
+ * @class IconButtonBaseFactory
  * @memberof moonstone/IconButton
  * @factory
  * @public
  */
 const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
+	// diffClasses('Moon IconButton', componentCss, css);
+
+	const UiIconButton = UiIconButtonFactory({
+		/* Replace classes in this step */
+		css: /** @lends moonstone/IconButton.IconButtonBaseFactory.prototype */ {
+			...componentCss,
+			// Include the component class name so it too may be overridden.
+			iconButton: css.iconButton
+		}
+	});
 	const Button = ButtonFactory({css});
+	const Icon = IconFactory({css});
 	/**
-	 * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon} that acts like a button.
+	 * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon} that acts like a Iconbutton.
 	 * You may specify an image or a font-based icon by setting the children to either the path to the
 	 * image or a string from the [IconList]{@link moonstone/Icon.IconList}.
 	 *
@@ -47,105 +63,60 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 	 * @public
 	 */
 	return kind({
-		name: 'IconButton',
+		name: 'MoonstoneIconButton',
 
-		propTypes: /** @lends moonstone/IconButton.IconButton.prototype */ {
-			/**
-			 * The background-color opacity of this icon button; valid values are `'opaque'`,
-			 * `'translucent'`, and `'transparent'`.
-			 *
-			 * @type {String}
-			 * @default 'opaque'
-			 * @public
-			 */
-			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
-
-			/**
-			 * The icon displayed within the button.
-			 *
-			 * @see {@link moonstone/Icon.Icon#children}
-			 * @type {String|Object}
-			 * @public
-			 */
-			children: PropTypes.string,
-
-			/**
-			 * This property accepts one of the following color names, which correspond with the
-			 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
-
-			/**
-			 * When `true`, the [button]{@glossary button} is shown as disabled and does not
-			 * generate `onClick` [events]{@glossary event}.
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			disabled: PropTypes.bool,
-
-			/**
-			 * When `true`, a pressed visual effect is applied to the icon button
-			 *
-			 * @type {Boolean}
-			 * @public
-			 */
-			pressed: PropTypes.bool,
-
-			/**
-			 * When `true`, a selected visual effect is applied to the icon button
-			 *
-			 * @type {Boolean}
-			 * @public
-			 */
-			selected: PropTypes.bool,
-
-			/**
-			 * A boolean parameter affecting the size of the button. If `true`, the
-			 * button's diameter will be set to 60px. However, the button's tap target
-			 * will still have a diameter of 78px, with an invisible DOM element
-			 * wrapping the small button to provide the larger tap zone.
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			small: PropTypes.bool
-		},
-
-		defaultProps: {
-			small: false
-		},
-
-		styles: {
-			css: componentCss,
-			className: 'iconButton'
-		},
-
-		computed: {
-			className: ({color, small, styler}) => styler.append({small}, color)
-		},
-
-		render: ({children, small, ...rest}) => {
+		render: (props) => {
 			return (
-				<Button {...rest} small={small} minWidth={false} marqueeDisabled>
-					<OptimizedIcon small={small} className={css.icon}>{children}</OptimizedIcon>
-				</Button>
+				<UiIconButton {...props} Button={Button} Icon={Icon} />
 			);
 		}
 	});
 });
 
+/**
+ * A stateless [IconButton]{@link moonstone/IconButton.IconButton}, with no HOCs applied.
+ *
+ * @class IconButtonBase
+ * @extends ui/IconButton.IconButtonBase
+ * @memberof moonstone/IconButton
+ * @ui
+ * @public
+ */
 const IconButtonBase = IconButtonBaseFactory();
 
-export default IconButtonBase;
+/**
+ * A factory for customizing the visual style of [IconButton]{@link moonstone/IconButton.IconButton}.
+ * @see {@link moonstone/IconButton.IconButtonBaseFactory}.
+ *
+ * @class IconButtonFactory
+ * @memberof moonstone/IconButton
+ * @factory
+ * @public
+ */
+const IconButtonFactory = (props) => Skinnable(
+	IconButtonBaseFactory(props)
+);
+
+/**
+ * A ready-to-use IconButton, with HOCs applied.
+ *
+ * @class IconButton
+ * @memberof moonstone/IconButton
+ * @extends moonstone/IconButton.IconButtonBase
+ * @mixes i18n/Uppercase
+ * @mixes moonstone/TooltipDecorator
+ * @mixes ui/Pressable
+ * @mixes spotlight/Spottable
+ * @mixes moonstone/Skinnable
+ * @ui
+ * @public
+ */
+const IconButton = IconButtonFactory();
+
+export default IconButton;
 export {
-	IconButtonBase as IconButton,
+	IconButton,
 	IconButtonBase,
-	IconButtonBaseFactory as IconButtonFactory,
+	IconButtonFactory,
 	IconButtonBaseFactory
 };

@@ -13,9 +13,9 @@ import css from './ContextualPopup.less';
  * {@link moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopup}.
  *
  * @class ContextualPopupArrow
+ * @memberof moonstone/ContextualPopupDecorator
  * @ui
  * @private
- * @memberof moonstone/ContextualPopupDecorator
  */
 const ContextualPopupArrow = kind({
 	name: 'ContextualPopupArrow',

@@ -1,77 +1,46 @@
-import kind from '@enact/core/kind';
-import {isRtlText} from '@enact/i18n/util';
-import React from 'react';
-import PropTypes from 'prop-types';
+import factory from '@enact/core/factory';
+// import {diffClasses} from '@enact/ui/MigrationAid';
+import {TooltipLabelFactory as UiTooltipLabelFactory} from '@enact/ui/TooltipDecorator';
 
-import css from './Tooltip.less';
+import componentCss from './Tooltip.less';
 
 /**
- * {@link moonstone/TooltipDecorator.TooltipLabel} is a stateless tooltip component with
- * Moonston styling applied.
+ * A Factory wrapper around {@link ui/TooltipDecorator.TooltipLabelBase} that allows overriding
+ * certain classes at design time.  The following are properties of the `css` member of the argument
+ * to the factory.
+ *
+ * @class TooltipLabelFactory
+ * @memberof moonstone/TooltipDecorator
+ * @factory
+ * @private
+ */
+const TooltipLabelBaseFactory = factory({css: componentCss}, ({css}) => {
+	// diffClasses('Moon TooltipLabel', componentCss, css);
+
+	return UiTooltipLabelFactory({
+		/* Replace classes in this step */
+		css: /** @lends moonstone/TooltipDecorator.TooltipLabelFactory.prototype */ {
+			...componentCss,
+			// Include the component class name so it too may be overridden.
+			tooltipLabel: css.tooltipLabel
+		}
+	});
+});
+
+/**
+ * A stateless Tooltip label
  *
  * @class TooltipLabel
  * @memberof moonstone/TooltipDecorator
  * @ui
  * @private
  */
-const TooltipLabel = kind({
-	name: 'TooltipLabel',
+const TooltipLabelBase = TooltipLabelBaseFactory();
 
-	propTypes: /** @lends moonstone/TooltipDecorator.TooltipLabel.prototype */ {
-		/**
-		 * The node to be displayed as the main content of the tooltip.
-		 *
-		 * @type {Node}
-		 * @required
-		 */
-		children: PropTypes.node.isRequired,
-
-		/**
-		 * The method to run when the tooltip mounts/unmounts, giving a reference to the DOM.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		tooltipRef: PropTypes.func,
-
-		/**
-		 * The width of tooltip content in pixels (px). If the content goes over the given width,
-		 * then it will automatically wrap. When `null`, content does not wrap.
-		 *
-		 * @type {Number}
-		 * @public
-		 */
-		width: PropTypes.number
-	},
-
-	styles: {
-		css,
-		className: 'tooltipLabel'
-	},
-
-	computed: {
-		className: ({width, styler}) => styler.append({multi: !!width}),
-		style: ({children, width, style}) => {
-			return {
-				...style,
-				direction: isRtlText(children) ? 'rtl' : 'ltr',
-				width
-			};
-		}
-	},
-
-	render: ({children, tooltipRef, ...rest}) => {
-		delete rest.width;
-
-		return (
-			<div {...rest} ref={tooltipRef}>
-				{children}
-			</div>
-		);
-	}
-});
-
-export default TooltipLabel;
+export default TooltipLabelBase;
 export {
-	TooltipLabel
+	TooltipLabelBase as TooltipLabel,
+	TooltipLabelBase,
+	TooltipLabelBaseFactory as TooltipLabelFactory,
+	TooltipLabelBaseFactory
 };

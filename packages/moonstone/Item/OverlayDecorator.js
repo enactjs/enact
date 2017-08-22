@@ -1,11 +1,8 @@
 import hoc from '@enact/core/hoc';
-import kind from '@enact/core/kind';
 import React from 'react';
-import PropTypes from 'prop-types';
+import {OverlayDecoratorFactory as UiOverlayDecoratorFactory} from '@enact/ui/Item';
 
 import Overlay from './Overlay';
-
-import css from './Overlay.less';
 
 /**
  * {@link moonstone/Item.OverlayDecorator} is a Higher-order Component that adds
@@ -18,62 +15,27 @@ import css from './Overlay.less';
  * @hoc
  * @public
  */
-const OverlayDecorator = hoc((config, Wrapped) => {
-	return kind({
-		name: 'OverlayDecorator',
+const OverlayDecoratorBase = hoc((config, Wrapped) => {
+	return class extends React.Component {
+		static displayName = 'MoonstoneOverlayDecorator'
 
-		propTypes: /** @lends moonstone/Item.OverlayDecorator.prototype */ {
-			/**
-			 * Controls the visibility state of the overlays. One, both, or neither overlay can be
-			 * shown when the item is focused. Choosing `'after'` will leave `overlayBefore` visible
-			 * at all times; only `overlayAfter` will have its visibility toggled on focus.  Valid
-			 * values are `'before'`, `'after'` and `'both'`. Omitting the property will result in
-			 * no-auto-hiding for either overlay. They will both be present regardless of focus.
-			 *
-			 * @type {Boolean}
-			 * @public
-			 */
-			autoHide: PropTypes.oneOf(['before', 'after', 'both']),
-
-			/**
-			 * A node which will be displayed at the end of the item.  Typically this will be an
-			 * icon or multiple icons.
-			 *
-			 * @type {Element}
-			 * @public
-			 */
-			overlayAfter: PropTypes.node,
-
-			/**
-			 * A node which will be displayed at the beginning of the item.  Typically this will be
-			 * an icon or multiple icons.
-			 *
-			 * @type {Element}
-			 * @public
-			 */
-			overlayBefore: PropTypes.node
-		},
-
-		styles: {
-			css,
-			className: 'item'
-		},
-
-		render: ({overlayAfter, autoHide, overlayBefore, children, ...rest}) => {
+		render () {
 			return (
-				<Wrapped {...rest}>
-					<Overlay className={css.before} hidden={autoHide === 'before' || autoHide === 'both'}>
-						{overlayBefore}
-					</Overlay>
-					{children}
-					<Overlay className={css.after} hidden={autoHide === 'after' || autoHide === 'both'}>
-						{overlayAfter}
-					</Overlay>
-				</Wrapped>
+				<Wrapped {...this.props} Overlay={Overlay} />
 			);
 		}
-	});
+	};
 });
 
+// Generate a base Overlay hoc
+const UiOverlayDecorator = UiOverlayDecoratorFactory();
+// Use the base hoc from above as the basis for OverlayDecoratorBase
+const OverlayDecorator = (config, props) => OverlayDecoratorBase(UiOverlayDecorator(config, props));
+// Generates a factory of a hoc and applies the factory props to the inner hoc-factory and the incoming props to the generated hoc (sorry, it's sorta confusing)
+const OverlayDecoratorFactory = (factoryProps) => (props) => OverlayDecoratorBase(UiOverlayDecoratorFactory(factoryProps)(props));
+
 export default OverlayDecorator;
-export {OverlayDecorator};
+export {
+	OverlayDecorator,
+	OverlayDecoratorFactory
+};

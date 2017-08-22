@@ -1,63 +1,86 @@
 /**
- * Exports the {@link moonstone/BodyText.BodyText} and {@link moonstone/BodyText.BodyTextBase}
- * components.  The default export is {@link moonstone/BodyText.BodyTextBase}.
+ * Displays multi-line text in a block with a medium font weight.
+ *
+ * @example
+ * <BodyText>
+ *   Lots of room here. Put whatever you like.
+ * </BodyText>
  *
  * @module moonstone/BodyText
+ * @exports BodyText
+ * @exports BodyTextBase
+ * @exports BodyTextBaseFactory
+ * @exports BodyTextFactory
  */
 
-import kind from '@enact/core/kind';
-import React from 'react';
-import PropTypes from 'prop-types';
+import factory from '@enact/core/factory';
+// import {diffClasses} from '@enact/ui/MigrationAid';
+import {BodyTextBaseFactory as UiBodyTextFactory} from '@enact/ui/BodyText';
+
 import Skinnable from '../Skinnable';
 
-import css from './BodyText.less';
+import componentCss from './BodyText.less';
 
 /**
- * {@link moonstone/BodyText.BodyText} is a stateless BodyText with Moonstone styling
- * applied.
+ * A factory for customizing the visual style of [BodyTextBase]{@link moonstone/BodyText.BodyTextBase}.
  *
- * @class BodyText
+ * @class BodyTextBaseFactory
+ * @memberof moonstone/BodyText
+ * @factory
+ * @public
+ */
+const BodyTextBaseFactory = factory({css: componentCss}, ({css}) => {
+	// diffClasses('Moon BodyText', componentCss, css);
+
+	return UiBodyTextFactory({
+		/* Replace classes in this step */
+		css: /** @lends moonstone/BodyText.BodyTextBaseFactory.prototype */ {
+			...componentCss,
+			// Include the component class name so it too may be overridden.
+			bodyText: css.bodyText
+		}
+	});
+});
+
+/**
+ * A stateless [BodyText]{@link moonstone/BodyText.BodyText}, with no HOCs applied.
+ *
+ * @class BodyTextBase
+ * @extends ui/BodyText.BodyTextBase
  * @memberof moonstone/BodyText
  * @ui
  * @public
  */
-const BodyTextBase = kind({
-	name: 'BodyText',
+const BodyTextBase = BodyTextBaseFactory();
 
-	propTypes: /** @lends moonstone/BodyText.BodyText.prototype */ {
-		/**
-		 * If `true`, text content is centered; otherwise, it is left-aligned.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		centered: PropTypes.bool
-	},
+/**
+ * A factory for customizing the visual style of [BodyText]{@link moonstone/BodyText.BodyText}.
+ *
+ * @class BodyTextFactory
+ * @memberof moonstone/BodyText
+ * @factory
+ * @public
+ */
+const BodyTextFactory = (props) => Skinnable(
+	BodyTextBaseFactory(props)
+);
 
-	defaultProps: {
-		centered: false
-	},
-
-	styles: {
-		css,
-		className: 'bodyText'
-	},
-
-	computed: {
-		className: ({centered, styler}) => styler.append({centered})
-	},
-
-	render: (props) => {
-		delete props.centered;
-
-		return (
-			<p {...props} />
-		);
-	}
-});
-
-const BodyText = Skinnable(BodyTextBase);
+/**
+ * A ready-to-use {@link ui/BodyText}, with HOCs applied.
+ *
+ * @class BodyText
+ * @memberof moonstone/BodyText
+ * @extends moonstone/BodyText.BodyTextBase
+ * @mixes moonstone/Skinnable
+ * @ui
+ * @public
+ */
+const BodyText = BodyTextFactory();
 
 export default BodyText;
-export {BodyText, BodyTextBase};
+export {
+	BodyText,
+	BodyTextBase,
+	BodyTextFactory,
+	BodyTextBaseFactory
+};

@@ -1,0 +1,37 @@
+// Tooltip.less
+//
+@import "../styles/text.less";
+
+.tooltip {
+	position: absolute;
+
+	.tooltipArrow {
+		position: absolute;
+	}
+
+	.tooltipLabel {
+		white-space: nowrap;
+
+		:global(.enact-locale-right-to-left) & {
+			text-align: right;
+		}
+
+		&.multi {
+			white-space: normal;
+			.locale-japanese-line-break();
+		}
+	}
+
+	.above,
+	.below,
+	.left,
+	.right,
+	.bottomArrow,
+	.centerArrow,
+	.leftArrow,
+	.middleArrow,
+	.rightArrow,
+	.topArrow {
+		/* FACTORY-EXPORT */
+	}
+}

@@ -1,108 +1,86 @@
 /**
- * Exports the {@link moonstone/Divider.Divider} component.
+ * A simply styled component that may be used as a separator between groups of components.
+ *
+ * @example
+ * <Divider>Divider Text</Divider>
  *
  * @module moonstone/Divider
+ * @exports Divider
+ * @exports DividerBase
+ * @exports DividerBaseFactory
+ * @exports DividerFactory
  */
 
-import kind from '@enact/core/kind';
-import Uppercase from '@enact/i18n/Uppercase';
-import React from 'react';
-import PropTypes from 'prop-types';
+import factory from '@enact/core/factory';
+// import {diffClasses} from '@enact/ui/MigrationAid';
+import {DividerFactory as UiDividerFactory} from '@enact/ui/Divider';
 
-import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import css from './Divider.less';
-
-const MarqueeH3 = Uppercase(MarqueeDecorator('h3'));
+import componentCss from './Divider.less';
 
 /**
- * {@link moonstone/Divider.Divider} is a simply styled component that may be used as a separator
- * between groups of components.
+ * A Factory wrapper around {@link moonstone/Divider.DividerBase} that allows overriding
+ * certain classes of the base `Divider` components at design time.
  *
- * @class Divider
+ * @class DividerBaseFactory
  * @memberof moonstone/Divider
+ * @factory
+ * @public
+ */
+const DividerBaseFactory = factory({css: componentCss}, ({css}) => {
+	// diffClasses('Moon Divider', componentCss, css);
+
+	return UiDividerFactory({
+		/* Replace classes in this step */
+		css: /** @lends moonstone/Divider.DividerBaseFactory.prototype */ {
+			...componentCss,
+			// Include the component class name so it too may be overridden.
+			divider: css.divider
+		}
+	});
+});
+
+/**
+ * A simply styled component that may be used as a separator between groups of components.
+ *
+ * @class DividerBase
+ * @memberof moonstone/Divider
+ * @extends ui/Divider.Divider
  * @ui
  * @public
  */
-const DividerBase = kind({
-	name: 'Divider',
+const DividerBase = DividerBaseFactory();
 
-	propTypes: /** @lends moonstone/Divider.Divider.prototype */ {
-		/**
-		 * Configures how the `children` string will be capitalized. By default, each word is capitalized.
-		 *
-		 * @see i18n/Uppercase#casing
-		 * @type {String}
-		 * @default 'word'
-		 * @public
-		 */
-		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
+/**
+ * A Factory wrapper around {@link moonstone/Divider.Divider} that allows overriding
+ * certain classes of the `Divider` components at design time.
+ *
+ * @class DividerFactory
+ * @memberof moonstone/Divider
+ * @factory
+ * @public
+ */
+const DividerFactory = (props) => Skinnable(
+	DividerBaseFactory(props)
+);
 
-		/**
-		 * The content of the divider. A divider with no children (text content) will render simply
-		 * as a horizontal line, with even spacing above and below.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		children: PropTypes.string,
-
-		/**
-		 * The children string will have each word capitalized, unless this is set to `true`.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @deprecated use `casing`
-		 * @public
-		 */
-		preserveCase: PropTypes.bool,
-
-		/**
-		 * The size of the spacing around the divider.
-		 *
-		 * * `'normal'` (default) spacing is slightly larger than the standard spotlight spacing.
-		 * * `'small'` is the same size as spotlight spacing.
-		 * * `'medium'` is 2x spotlight.
-		 * * `'large'` is 3x spotlight.
-		 * * `'none'` has no spacing at all. Neighboring elements will directly touch the divider.
-		 *
-		 * _Note:_ Spacing is separate from margin with regard to `margin-top`. It ensures a
-		 * consistent distance from the bottom horizontal line. It's safe to use `margin-top` to add
-		 * additional spacing above your {@link moonstone/Divider.Divider}.
-		 *
-		 * @type {String}
-		 * @default 'normal'
-		 * @public
-		 */
-		spacing: PropTypes.oneOf(['normal', 'small', 'medium', 'large', 'none'])
-	},
-
-	defaultProps: {
-		casing: 'word',
-		preserveCase: false,
-		spacing: 'normal'
-	},
-
-	styles: {
-		css,
-		className: 'divider'
-	},
-
-	computed: {
-		className: ({spacing, styler}) => styler.append(spacing)
-	},
-
-	render: ({children, ...rest}) => {
-		delete rest.spacing;
-
-		return (
-			<MarqueeH3 {...rest} marqueeOn="hover">{children}</MarqueeH3>
-		);
-	}
-});
-
-const Divider = Skinnable(DividerBase);
+/**
+ * A simply styled component that may be used as a separator between groups of components.
+ *
+ * @class Divider
+ * @memberof moonstone/Divider
+ * @extends moonstone/Divider.DividerBase
+ * @mixes moonstone/Skinnable
+ * @ui
+ * @public
+ */
+const Divider = DividerFactory();
 
 export default Divider;
-export {Divider, DividerBase};
+export {
+	Divider,
+	DividerBase,
+	DividerFactory,
+	DividerBaseFactory
+};

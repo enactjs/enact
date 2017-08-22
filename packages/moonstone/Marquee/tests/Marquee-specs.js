@@ -2,7 +2,8 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import Marquee from '../Marquee';
 
-import css from '../Marquee.less';
+// import css from '../Marquee.less';
+import uiCss from '@enact/ui/Marquee/Marquee.less';
 
 describe('Marquee', () => {
 
@@ -14,7 +15,7 @@ describe('Marquee', () => {
 		);
 
 		const expected = false;
-		const actual = subject.childAt(0).hasClass(css.animate);
+		const actual = subject.childAt(0).hasClass(uiCss.animate);
 		expect(actual).to.equal(expected);
 	});
 
@@ -24,7 +25,7 @@ describe('Marquee', () => {
 		);
 
 		const expected = true;
-		const actual = subject.childAt(0).hasClass(css.animate);
+		const actual = subject.childAt(0).hasClass(uiCss.animate);
 		expect(actual).to.equal(expected);
 	});
 
@@ -96,7 +97,7 @@ describe('Marquee', () => {
 		);
 
 		const expected = 'rtl';
-		const actual = subject.find(`.${css.text}`).prop('style');
+		const actual = subject.find(`.${uiCss.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
 	});
@@ -108,7 +109,7 @@ describe('Marquee', () => {
 		);
 
 		const expected = 'ltr';
-		const actual = subject.find(`.${css.text}`).prop('style');
+		const actual = subject.find(`.${uiCss.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
 	});
@@ -120,7 +121,7 @@ describe('Marquee', () => {
 		);
 
 		const expected = 'rtl';
-		const actual = subject.find(`.${css.text}`).prop('style');
+		const actual = subject.find(`.${uiCss.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
 	});
@@ -132,7 +133,7 @@ describe('Marquee', () => {
 		);
 
 		const expected = 'ltr';
-		const actual = subject.find(`.${css.text}`).prop('style');
+		const actual = subject.find(`.${uiCss.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
 	});
@@ -144,7 +145,7 @@ describe('Marquee', () => {
 		);
 
 		const expected = 'inherit';
-		const actual = subject.find(`.${css.text}`).prop('style');
+		const actual = subject.find(`.${uiCss.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
 	});
@@ -156,7 +157,7 @@ describe('Marquee', () => {
 		);
 
 		const expected = 'inherit';
-		const actual = subject.find(`.${css.text}`).prop('style');
+		const actual = subject.find(`.${uiCss.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
 	});

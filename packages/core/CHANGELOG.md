@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+
+- `@core/factory` to ignore customized css properties that do not exist in the default configuration
+
+### Fixed
+
 ## [1.6.0] - 2017-08-04
 
 No significant changes.

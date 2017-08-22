@@ -1,68 +1,94 @@
+import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
+// import {diffClasses} from '@enact/ui/MigrationAid';
 import React from 'react';
-import PropTypes from 'prop-types';
+import {ToggleIconFactory as UiToggleIconFactory} from '@enact/ui/ToggleItem';
+import {IconFactory} from '../Icon';
 
-import Icon from '../Icon';
-
-import css from './ToggleItem.less';
+import componentCss from './ToggleItem.less';
 
 /**
- * Utility component to render the {@link moonstone/Icon.Icon} for
- * {@link moonstone/ToggleItem.ToggleItem}.
+ * A factory for customizing the visual style of [ToggleIconBase]{@link moonstone/ToggleItem.ToggleIconBase}.
+ *
+ * @class ToggleIconBaseFactory
+ * @memberof moonstone/ToggleItem
+ * @factory
+ * @public
+ */
+const ToggleIconBaseFactory = factory({css: componentCss}, ({css}) => {
+	// diffClasses('Moon ToggleIcon', componentCss, css);
+
+	const UiToggleIcon = UiToggleIconFactory({
+		/* Replace classes in this step */
+		css: /** @lends moonstone/ToggleItem.ToggleIconFactory.prototype */ {
+			...componentCss,
+			// Include the component class name so it too may be overridden.
+			ToggleIcon: css.ToggleIcon
+		}
+	});
+	const Icon = IconFactory({css});
+
+	/**
+	 * Utility component to render the {@link moonstone/Icon.Icon} for
+	 * {@link moonstone/ToggleItem.ToggleItem}.
+	 *
+	 * @class ToggleIcon
+	 * @memberof moonstone/ToggleItem
+	 * @ui
+	 * @private
+	 */
+	return kind({
+		name: 'MoonstoneToggleIcon',
+
+		styles: {
+			css: css,
+			className: 'icon'
+		},
+
+		render: (props) => {
+			return (
+				<UiToggleIcon {...props} Icon={Icon} />
+			);
+		}
+	});
+});
+
+/**
+ * A stateless [ToggleIcon]{@link moonstone/ToggleItem.ToggleIcon}, with no HOCs applied.
+ *
+ * @class ToggleIconBase
+ * @extends ui/ToggleIcon.ToggleIconBase
+ * @memberof moonstone/ToggleItem
+ * @ui
+ * @public
+ */
+const ToggleIconBase = ToggleIconBaseFactory();
+
+/**
+ * A factory for customizing the visual style of [ToggleIcon]{@link moonstone/ToggleItem.ToggleIcon}.
+ * @see {@link moonstone/ToggleItem.ToggleIconBaseFactory}.
+ *
+ * @class ToggleIconFactory
+ * @memberof moonstone/ToggleItem
+ * @factory
+ * @public
+ */
+
+/**
+ * A ready-to-use {@link ui/ToggleIcon}.
  *
  * @class ToggleIcon
  * @memberof moonstone/ToggleItem
+ * @extends moonstone/ToggleItem.ToggleIconBase
  * @ui
- * @private
+ * @public
  */
-const ToggleIconBase = kind({
-	name: 'ToggleIcon',
-
-	propTypes: /** @lends moonstone/ToggleItem.ToggleIcon.prototype */ {
-		/**
-		 * Nothing, a string, or an {@link moonstone/Icon.Icon}
-		 *
-		 * @type {Node}
-		 */
-		children: PropTypes.node,
-
-		/**
-		 * When `true`, the icon is displayed
-		 *
-		 * @type {Boolean}
-		 */
-		selected: PropTypes.bool
-	},
-
-	defaultProps: {
-		selected: false
-	},
-
-	styles: {
-		css,
-		className: 'icon'
-	},
-
-	computed: {
-		className: ({selected, styler}) => styler.append({selected})
-	},
-
-	render: ({children, ...rest}) => {
-		if (children) {
-			if (React.isValidElement(children)) {
-				return children;
-			}
-			return (
-				<Icon {...rest}>{children}</Icon>
-			);
-		}
-
-		return null;
-	}
-});
 
 export default ToggleIconBase;
 export {
 	ToggleIconBase as ToggleIcon,
-	ToggleIconBase
+	ToggleIconBase,
+	ToggleIconBaseFactory as ToggleIconFactory,
+	ToggleIconBaseFactory
 };
+

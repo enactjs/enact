@@ -7,8 +7,8 @@ import Cancelable from '../Cancelable';
 import Scrim from './Scrim';
 
 /**
- * {@link ui/FloatingLayer.FloatingLayerBase} is a component that creates an entry point to the new
- * render tree. This is used for modal components such as popups.
+ * A component that creates an entry point to the new render tree. This is used for modal components
+ * such as popups.
  *
  * @class FloatingLayerBase
  * @memberof ui/FloatingLayer
@@ -217,11 +217,12 @@ const handleCancel = (props) => {
 };
 
 /**
- * {@link ui/FloatingLayer.FloatingLayer} is a component that creates an entry point to the new
- * render tree. This is used for modal components such as popups.
+ * A component that creates an entry point to the new render tree. This is used for modal components
+ * such as popups.
  *
  * @class FloatingLayer
  * @memberof ui/FloatingLayer
+ * @extends ui/FloatingLayerBase
  * @ui
  * @mixes ui/Cancelable.Cancelable
  * @public
