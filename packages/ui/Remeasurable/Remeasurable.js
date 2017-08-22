@@ -3,6 +3,7 @@
  * and its contextTypes. The default export is {@link ui/Remeasurable.Remeasurable}.
  *
  * @module ui/Remeasurable
+ * @private
  */
 import PropTypes from 'prop-types';
 import getContext from 'recompose/getContext';
