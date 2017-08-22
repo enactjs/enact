@@ -1,7 +1,6 @@
 import {mount} from 'enzyme';
 import React from 'react';
 
-import Item from '../../Item';
 import VirtualList from '../VirtualList';
 
 describe('VirtualList', () => {
@@ -47,9 +46,9 @@ describe('VirtualList', () => {
 		};
 		renderItem = ({data, index, ...rest}) => {	// eslint-disable-line enact/display-name, enact/prop-types
 			return (
-				<Item {...rest}>
+				<div {...rest}>
 					{data[index].name}
-				</Item>
+				</div>
 			);
 		};
 
