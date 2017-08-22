@@ -8,6 +8,7 @@ import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Remeasurable from '@enact/ui/Remeasurable';
 import Slottable from '@enact/ui/Slottable';
 import Spottable from '@enact/spotlight/Spottable';
 
@@ -17,7 +18,6 @@ import Skinnable from '../Skinnable';
 import OverlayDecorator from './OverlayDecorator';
 
 import css from './Item.less';
-import Remeasurable from '@enact/ui/Remeasurable';
 
 /**
  * {@link moonstone/Item.ItemBase} is a Moonstone-styled control that can display
