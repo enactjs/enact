@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` prop `thumbnailUnavailable` to fade thumbnail
 - `moonstone/AccessibilityDecorator` with `highContrast` and `textSize`
 - `moonstone/VideoPlayer` high contrast scrim
+- `moonstone/MarqueeDecorator` prop `remeasure` to trigger remeasures when things like width change.
 
 ### Changed
 
@@ -37,6 +38,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableList` to display correct font weight and size for list items
 - `moonstone/Divider` to not italicize in non-italic locales
 - `moonstone/Panels.Header` and `moonstone/Item` to prevent them from allowing their contents to overflow unexpectedly
+- `moonstone/Marquee` to recalculate when vertical scrollbar appears
+- `moonstone/SelectableItem` to recalculate marquee toggled.
 
 ### Removed
 

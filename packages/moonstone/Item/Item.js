@@ -17,6 +17,7 @@ import Skinnable from '../Skinnable';
 import OverlayDecorator from './OverlayDecorator';
 
 import css from './Item.less';
+import Remeasurable from '@enact/ui/Remeasurable';
 
 /**
  * {@link moonstone/Item.ItemBase} is a Moonstone-styled control that can display
@@ -105,7 +106,7 @@ const ItemBase = kind({
 });
 
 // cache the MarqueeDecorator so it can be used for Item and ItemOverlay
-const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidateProps: ['inline', 'autoHide']});
+const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidateProps: ['inline', 'autoHide', 'remeasure']});
 
 /**
  * {@link moonstone/Item.Item} is a focusable Moonstone-styled control that can display
@@ -119,9 +120,11 @@ const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidat
  * @public
  */
 const Item = Spottable(
-	ItemMarqueeDecorator(
-		Skinnable(
-			ItemBase
+	Remeasurable(
+		ItemMarqueeDecorator(
+			Skinnable(
+				ItemBase
+			)
 		)
 	)
 );
@@ -151,10 +154,12 @@ const Item = Spottable(
 const ItemOverlay = Spottable(
 	Slottable(
 		{slots: ['overlayAfter', 'overlayBefore']},
-		ItemMarqueeDecorator(
-			OverlayDecorator(
-				Skinnable(
-					ItemBase
+		Remeasurable(
+			ItemMarqueeDecorator(
+				OverlayDecorator(
+					Skinnable(
+						ItemBase
+					)
 				)
 			)
 		)

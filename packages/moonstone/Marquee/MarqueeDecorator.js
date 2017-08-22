@@ -57,10 +57,10 @@ const defaultConfig = {
 	* Expects an array of props which on change trigger invalidateMetrics.
 	*
 	* @type {Array}
-	* @default null
+	* @default ['remeasure']
 	* @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	*/
-	invalidateProps: null,
+	invalidateProps: ['remeasure'],
 
 	/**
 	 * Property containing the callback to stop the animation when `marqueeOn` is `'hover'`
@@ -97,7 +97,6 @@ const didPropChange = (propList, prev, next) => {
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {blur, className: marqueeClassName, enter, focus, invalidateProps, leave} = config;
-
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
 	const forwardFocus = forward(focus);
@@ -199,7 +198,17 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default 60
 			 * @public
 			 */
-			marqueeSpeed: PropTypes.number
+			marqueeSpeed: PropTypes.number,
+
+			/**
+			 * Used to signal for a remeasurement inside of marquee. The value
+			 * must change for the remeasurement to take place. The value
+			 * type is `any` because it does not matter. It is only used to
+			 * check for changes.
+			 *
+			 * @public
+			 */
+			remeasure: PropTypes.any
 		}
 
 		static defaultProps = {
@@ -553,6 +562,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.marqueeOnRenderDelay;
 			delete rest.marqueeResetDelay;
 			delete rest.marqueeSpeed;
+			delete rest.remeasure;
 
 			return (
 				<Wrapped {...rest} disabled={disabled}>
@@ -584,6 +594,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.marqueeOnRenderDelay;
 			delete props.marqueeResetDelay;
 			delete props.marqueeSpeed;
+			delete props.remeasure;
 
 			return <Wrapped {...props} />;
 		}
