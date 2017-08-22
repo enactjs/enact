@@ -281,6 +281,7 @@ class VirtualListCore extends Component {
 	shouldComponentUpdate (nextProps, nextState) {
 		if (!this.restoreLastFocused &&
 			(this.props.dataSize > 0 && this.props.dataSize !== nextProps.dataSize) &&
+			(this.state.numOfItems === nextState.numOfItems) &&
 			(nextState.firstIndex + nextState.numOfItems) < nextProps.dataSize) {
 			return false;
 		}
