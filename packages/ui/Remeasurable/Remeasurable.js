@@ -11,7 +11,7 @@ import getContext from 'recompose/getContext';
  * Context propTypes for Remeasurable
  *
  * @memberof ui/Remeasurable.Remeasurable
- * @public
+ * @private
  */
 const contextTypes = {
 	/**
@@ -21,7 +21,7 @@ const contextTypes = {
 	 * to use as a trigger.
 	 *
 	 * @memberof ui/Remeasurable.Remeasurable.contextTypes
-	 * @public
+	 * @private
 	 */
 	remeasure: PropTypes.any
 };
@@ -34,7 +34,7 @@ const contextTypes = {
  * @class Remeasurable
  * @memberof ui/Remeasurable
  * @hoc
- * @public
+ * @private
  */
 
 const Remeasurable = getContext(contextTypes);

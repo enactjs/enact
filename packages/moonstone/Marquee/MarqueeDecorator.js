@@ -206,7 +206,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * type is `any` because it does not matter. It is only used to
 			 * check for changes.
 			 *
-			 * @public
+			 * @private
 			 */
 			remeasure: PropTypes.any
 		}

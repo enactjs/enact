@@ -7,7 +7,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Deprecated
 
 ### Added
-- `ui/Remeasurable` HOC to notify components if a parent's size has changed.
 
 ### Changed
 
