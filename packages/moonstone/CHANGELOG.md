@@ -36,6 +36,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` and `moonstone/VirtualList` navigation via 5-way from paging controls
 - `moonstone/ExpandableList` to display correct font weight and size for list items
 - `moonstone/Divider` to not italicize in non-italic locales
+- `moonstone/Panels.Header` and `moonstone/Item` to prevent them from allowing their contents to overflow unexpectedly
 
 ### Removed
 
