@@ -22,6 +22,13 @@ import Scrollbar from './Scrollbar';
 import css from './Scrollable.less';
 
 const
+	forwardMouseDown = forward('onMouseDown'),
+	forwardMouseLeave = forward('onMouseLeave'),
+	forwardMouseMove = forward('onMouseMove'),
+	forwardMouseUp = forward('onMouseUp'),
+	forwardTouchStart = forward('onTouchStart'),
+	forwardTouchMove = forward('onTouchMove'),
+	forwardTouchEnd = forward('onTouchEnd'),
 	forwardScroll = forward('onScroll'),
 	forwardScrollStart = forward('onScrollStart'),
 	forwardScrollStop = forward('onScrollStop');
@@ -171,6 +178,18 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
 			};
 
+			const {onMouseDown, onMouseLeave, onMouseMove, onMouseUp, onTouchStart, onTouchMove, onTouchEnd, onWheel} = this;
+			this.eventHandlers = {
+				onMouseDown,
+				onMouseLeave,
+				onMouseMove,
+				onMouseUp,
+				onTouchStart,
+				onTouchMove,
+				onTouchEnd,
+				onWheel
+			};
+
 			this.initChildRef = this.initRef('childRef');
 			this.initContainerRef = this.initRef('containerRef');
 
@@ -197,7 +216,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		componentDidMount () {
 			this.direction = this.childRef.props.direction;
-			this.updateEventListeners();
 			this.updateScrollbars();
 		}
 
@@ -212,7 +230,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			this.direction = this.childRef.props.direction;
-			this.updateEventListeners();
 			this.updateScrollbars();
 
 			if (this.scrollToInfo !== null) {
@@ -363,6 +380,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		onMouseDown = (e) => {
 			this.animator.stop();
 			this.dragStart(e);
+			forwardMouseDown(e);
 		}
 
 		onMouseMove = (e) => {
@@ -378,6 +396,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.showThumb(bounds);
 				this.scroll(this.scrollLeft - dx, this.scrollTop - dy);
 			}
+			forwardMouseMove(e);
 		}
 
 		onMouseUp = (e) => {
@@ -406,11 +425,30 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					});
 				}
 			}
+			forwardMouseUp(e);
 		}
 
 		onMouseLeave = (e) => {
 			this.onMouseMove(e);
-			this.onMouseUp();
+			this.onMouseUp(e);
+			forwardMouseLeave(e);
+		}
+
+		// touch event handler for JS scroller
+
+		onTouchStart = (e) => {
+			this.onMouseDown(e.changedTouches[0]);
+			forwardTouchStart(e);
+		}
+
+		onTouchMove = (e) => {
+			this.onMouseMove(e.changedTouches[0]);
+			forwardTouchMove(e);
+		}
+
+		onTouchEnd = (e) => {
+			this.onMouseUp(e.changedTouches[0]);
+			forwardTouchEnd(e);
 		}
 
 		onWheel = (e) => {
@@ -744,15 +782,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		updateEventListeners = () => {
-			const {containerRef} = this;
-
-			if (containerRef && containerRef.addEventListener) {
-				// FIXME `onWheel` doesn't work on the v8 snapshot.
-				containerRef.addEventListener('wheel', this.onWheel);
-			}
-		}
-
 		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
 		// queue it up in case we get multiple calls (e.g. when grouped expandables toggle).
 		//
@@ -805,6 +834,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					<div className={css.container}>
 						<Wrapped
 							{...props}
+							{...this.eventHandlers}
 							cbScrollTo={this.scrollTo}
 							className={css.content}
 							onScroll={this.handleScroll}
@@ -812,7 +842,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						/>
 						{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 					</div>
-					{isHorizontalScrollbarVisible ? <Scrollbar {...this.horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
+					{isHorizontalScrollbarVisible ? <Scrollbar {...this.horizontalScrollbarProps} disabled={!isHorizontalScrollbarVisible} /> : null}
 				</div>
 			);
 		}
