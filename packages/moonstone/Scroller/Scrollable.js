@@ -576,8 +576,13 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 					let pos;
 					// If scroll animation is ongoing, we need to pass last target position to
 					// determine correct scroll position.
-					if (this.animator.isAnimating() && lastPos) {
-						pos = positionFn({item, scrollPosition: (this.direction !== 'horizontal') ? lastPos.top : lastPos.left});
+					if (this.animator.isAnimating()) {
+						if (lastPos) {
+							pos = positionFn({item, scrollPosition: (this.direction !== 'horizontal') ? lastPos.top : lastPos.left});
+						} else {
+							this.stop();
+							pos = positionFn({item});
+						}
 					} else {
 						pos = positionFn({item});
 					}
