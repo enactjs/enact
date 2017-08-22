@@ -29,6 +29,8 @@
   },
   "dependencies": {
     "@enact/core": "^1.6.1",
+    "@enact/i18n": "^1.6.1",
+    "classnames": "~2.2.5",
     "invariant": "~2.2.2",
     "prop-types": "~15.5.10",
     "ramda": "~0.24.1",
