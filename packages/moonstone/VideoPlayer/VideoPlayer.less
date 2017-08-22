@@ -45,7 +45,9 @@
 			right: @moon-video-player-padding-side;
 
 			&.hidden {
-				transform: scale(0);
+				will-change: opacity;
+				opacity: 0;
+				pointer-events: none;
 			}
 
 			.infoFrame {

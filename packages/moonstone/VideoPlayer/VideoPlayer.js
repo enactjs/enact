@@ -1494,6 +1494,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleSliderBlur = () => {
+		this.sliderScrubbing = false;
 		this.startDelayedFeedbackHide();
 		this.setState({
 			feedbackIconVisible: true
