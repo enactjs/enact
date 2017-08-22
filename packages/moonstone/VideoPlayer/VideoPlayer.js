@@ -935,13 +935,13 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	showFeedback = () => {
-		if (this.state.bottomControlsVisible && this.state.feedbackVisible === false) {
+		if (this.state.bottomControlsVisible && !this.state.feedbackVisible) {
 			this.setState({feedbackVisible: true});
 		}
 	}
 
 	hideFeedback = () => {
-		if (this.state.feedbackVisible === true) {
+		if (this.state.feedbackVisible) {
 			this.setState({feedbackVisible: false});
 		}
 	}
