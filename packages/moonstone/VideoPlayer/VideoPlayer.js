@@ -1485,6 +1485,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleSliderFocus = () => {
+		this.sliderScrubbing = true;
 		this.setState({
 			feedbackIconVisible: false,
 			feedbackVisible: true
