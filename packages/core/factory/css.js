@@ -1,6 +1,6 @@
 /**
  * Merges the local CSS object and a CSS object from the props. When both exist, the class names are
- * joined with a space.
+ * joined with a space. Props CSS keys are discarded if they do not exist in the local CSS object.
  *
  * @param	{Object}	[componentCss]	Component class name map
  * @param	{Object}	[authorCss]		Customization class name map

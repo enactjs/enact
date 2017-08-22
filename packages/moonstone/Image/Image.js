@@ -1,7 +1,12 @@
 /**
- * Exports the {@link moonstone/Image.Image} component.
+ * A component for displaying images.
+ *
+ * @example
+ * <Image src="http://lorempixel.com/64/64/city/1/" />
  *
  * @module moonstone/Image
+ * @exports Image
+ * @exports ImageFactory
  */
 
 import factory from '@enact/core/factory';
@@ -11,9 +16,31 @@ import {ImageFactory as UiImageFactory} from '@enact/ui/Image';
 import componentCss from './Image.less';
 
 /**
- * {@link moonstone/Image.Image} is a component designed to display images
- * conditionally based on screen size. This component has a default size but should have a size
- * specified for its particular usage using a CSS `className` or inline `style`.
+ * A factory for customizing the visual style of [Image]{@link moonstone/Image.Image}.
+ * @see {@link ui/Image.ImageFactory}.
+ *
+ * @class ImageFactory
+ * @memberof moonstone/Image
+ * @factory
+ * @public
+ */
+const ImageBaseFactory = factory({css: componentCss}, ({css}) => {
+	// diffClasses('Moon Image', componentCss, css);
+
+	return UiImageFactory({
+		/* Replace classes in this step */
+		css: /** @lends moonstone/Image.ImageFactory.prototype */ {
+			...componentCss,
+			// Include the component class name so it too may be overridden.
+			image: css.image
+		}
+	});
+});
+
+/**
+ * A component designed to display images conditionally based on screen size. This component has a
+ * default size but should have a size specified for its particular usage using a CSS `className` or
+ * inline `style`.
  *
  * Usage:
  *
@@ -35,23 +62,10 @@ import componentCss from './Image.less';
  *
  * @class Image
  * @memberof moonstone/Image
+ * @extends ui/Image
  * @ui
  * @public
  */
-
-const ImageBaseFactory = factory({css: componentCss}, ({css}) => {
-	// diffClasses('Moon Image', componentCss, css);
-
-	return UiImageFactory({
-		/* Replace classes in this step */
-		css: /** @lends moonstone/Image.ImageFactory.prototype */ {
-			...componentCss,
-			// Include the component class name so it too may be overridden.
-			image: css.image
-		}
-	});
-});
-
 const ImageBase = ImageBaseFactory();
 
 export default ImageBase;

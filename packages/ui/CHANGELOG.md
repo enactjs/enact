@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+- many new unstyled components, ready for use by ui library developers
+
+### Changed
+
+### Fixed
+
 ## [1.6.0] - 2017-08-04
 
 ### Fixed
