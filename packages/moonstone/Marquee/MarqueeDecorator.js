@@ -538,7 +538,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				children,
 				disabled,
 				forceDirection,
-				marqueeCentered,
 				marqueeOn,
 				marqueeSpeed,
 				...rest
@@ -563,6 +562,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				rest[enter] = this.handleEnter;
 			}
 
+			delete rest.marqueeCentered;
 			delete rest.marqueeDelay;
 			delete rest.marqueeDisabled;
 			delete rest.marqueeOnRenderDelay;
@@ -574,7 +574,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					<Marquee
 						alignment={alignment}
 						animating={this.state.animating}
-						centered={marqueeCentered}
 						className={marqueeClassName}
 						clientRef={this.cacheNode}
 						distance={this.distance}

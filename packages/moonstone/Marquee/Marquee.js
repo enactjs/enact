@@ -148,13 +148,11 @@ const MarqueeBase = kind({
 
 			if (centered) {
 				deprecate({name: 'centered', since: '1.7.0', message: 'Use `alignment` instead', until: '2.0.0'});
+				alignment = 'center';
 			}
 
 			let textAlign = null;
-			// TODO: remove centered in 2.0
-			if (centered) {
-				textAlign = 'center';
-			} else if (alignment) {
+			if (alignment) {
 				textAlign = alignment;
 			}
 
