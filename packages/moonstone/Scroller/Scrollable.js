@@ -575,6 +575,7 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 				if (item && item === spotItem && positionFn) {
 					const lastPos = this.lastScrollPositionOnFocus;
 					let pos;
+
 					// If scroll animation is ongoing, we need to pass last target position to
 					// determine correct scroll position.
 					if (item !== this.lastFocusedItem && this.animator.isAnimating() && lastPos !== null) {
@@ -585,7 +586,10 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 						}
 						pos = positionFn({item});
 					}
-					this.startScrollOnFocus(pos, item);
+
+					if (pos) {
+						this.startScrollOnFocus(pos, item);
+					}
 				}
 			} else if (this.childRef.setLastFocusedIndex) {
 				this.childRef.setLastFocusedIndex(e.target);
