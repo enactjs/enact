@@ -7,6 +7,7 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
+import {contextTypes as contextTypesRemeasurable} from '@enact/ui/Remeasurable';
 import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
@@ -211,15 +212,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			verticalScrollbar: 'auto'
 		}
 
-		static childContextTypes = contextTypesResize
-		static contextTypes = contextTypesRtl
+		static childContextTypes = Object.assign({}, contextTypesResize, contextTypesRemeasurable)
+		static contextTypes = Object.assign({}, contextTypesRtl, contextTypesRemeasurable)
 
 		constructor (props) {
 			super(props);
 
 			this.state = {
 				isHorizontalScrollbarVisible: props.horizontalScrollbar === 'visible',
-				isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
+				isVerticalScrollbarVisible: props.verticalScrollbar === 'visible',
+				remeasure: null
 			};
 
 			this.initChildRef = this.initRef('childRef');
@@ -246,7 +248,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		getChildContext () {
 			return {
-				invalidateBounds: this.enqueueForceUpdate
+				invalidateBounds: this.enqueueForceUpdate,
+				remeasure: this.state.remeasure
 			};
 		}
 
@@ -263,8 +266,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			on('keydown', this.onKeyDown);
 		}
 
-		componentWillUpdate () {
+		componentWillUpdate (nextProps, nextState, nextContext) {
 			this.deferScrollTo = true;
+			if (nextContext.remeasure !== this.context.remeasure || nextState.isVerticalScrollbarVisible !== this.state.isVerticalScrollbarVisible) {
+				this.setState((prevState) => ({
+					remeasure: !prevState.remeasure
+				}));
+			}
 		}
 
 		componentDidUpdate () {

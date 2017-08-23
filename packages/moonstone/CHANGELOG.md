@@ -37,6 +37,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Divider` to not italicize in non-italic locales
 - `moonstone/LabeledItem` to correctly position its icon. This affects all of the `Expandables`,`moonstone/DatePicker` and `moonstone/TimePicker`.
 - `moonstone/Panels.Header` and `moonstone/Item` to prevent them from allowing their contents to overflow unexpectedly
+- `moonstone/MarqueeText` to recalculate when vertical scrollbar appears
+- `moonstone/SelectableItem` to recalculate marquee when toggled.
 
 ### Removed
 
