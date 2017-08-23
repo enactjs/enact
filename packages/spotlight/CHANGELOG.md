@@ -16,6 +16,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Fixed
 
 - `spotlight` to correctly restore focus to a spotlight container in another container
+- `spotlight` to not try to focus something when the window is activated if focus is already set
 
 ## [1.6.1] - 2017-08-07
 
