@@ -600,7 +600,12 @@ function getContainerDefaultElement (containerId) {
  * @public
  */
 function getContainerLastFocusedElement (containerId) {
-	const {lastFocusedElement} = getContainerConfig(containerId);
+	let {lastFocusedElement} = getContainerConfig(containerId);
+
+	// lastFocusedElement may be a container ID so try to convert it to a node
+	if (typeof lastFocusedElement === 'string') {
+		lastFocusedElement = getContainerNode(lastFocusedElement);
+	}
 
 	return isNavigable(lastFocusedElement, containerId, true) ? lastFocusedElement : null;
 }
