@@ -12,7 +12,7 @@ class Flick {
 		this.minVelocity = config.minVelocity;
 		this.maxMoves = config.maxMoves;
 
-		this.tracking = true;
+		this.tracking = !!onFlick;
 		this.moves.length = 0;
 		this.onFlick = onFlick;
 
@@ -65,12 +65,15 @@ class Flick {
 
 			const v = Math.sqrt(x * x + y * y);
 			if (v > this.minVelocity) {
+				const vertical = Math.abs(y) > Math.abs(x);
 				// generate the flick using the start event so it has those coordinates
 				// this.sendFlick(ti.startEvent, x, y, v);
 				this.onFlick({
+					horizontal: !vertical,
 					velocityX: x,
 					velocityY: y,
-					velocity: v
+					velocity: v,
+					vertical
 				});
 			}
 		}
