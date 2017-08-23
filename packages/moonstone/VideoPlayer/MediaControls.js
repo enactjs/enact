@@ -139,7 +139,8 @@ const MediaControls = kind({
 		 */
 		rateButtonsDisabled: PropTypes.bool,
 		rightComponents: PropTypes.node,
-		showMoreComponents: PropTypes.bool
+		showMoreComponents: PropTypes.bool,
+		spotlightDisabled: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -200,6 +201,7 @@ const MediaControls = kind({
 			playPauseLabel,
 			rateButtonsDisabled,
 			rightComponents,
+			spotlightDisabled,
 			...rest
 		} = props;
 
@@ -214,23 +216,27 @@ const MediaControls = kind({
 
 		return (
 			<div {...rest}>
-				<div className={css.leftComponents}>{leftComponents}</div>
+				<div className={css.leftComponents}>{React.Children.map(leftComponents, component => {
+					return component.type === IconButton ? React.cloneElement(component, {spotlightDisabled}) : component;
+				})}</div>
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
-						<Container className={css.mediaControls} spotlightDisabled={!moreDisabled}> {/* rtl={false} */}
+						<Container className={css.mediaControls} spotlightDisabled={!moreDisabled || spotlightDisabled}> {/* rtl={false} */}
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick}>{jumpBackwardIcon}</MediaButton>}
 							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick}>{backwardIcon}</MediaButton>}
 							<MediaButton aria-label={playPauseLabel} className={spotlightDefaultClass} backgroundOpacity="translucent" onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
 							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onForwardButtonClick}>{forwardIcon}</MediaButton>}
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick}>{jumpForwardIcon}</MediaButton>}
 						</Container>
-						<Container className={css.moreControls} spotlightDisabled={moreDisabled}>
+						<Container className={css.moreControls} spotlightDisabled={moreDisabled || spotlightDisabled}>
 							{children}
 						</Container> {/* rtl={false} */}
 					</div>
 				</div>
 				<div className={css.rightComponents}>
-					{rightComponents}
+					{React.Children.map(rightComponents, component => {
+						return component.type === IconButton ? React.cloneElement(component, {spotlightDisabled}) : component;
+					})}
 					{React.Children.count(children) ? (
 						<MediaButton
 							aria-label={moreIconLabel}
@@ -240,6 +246,7 @@ const MediaControls = kind({
 							onClick={onToggleMore}
 							tooltipProps={{role: 'dialog'}}
 							tooltipText={moreIconLabel}
+							spotlightDisabled={spotlightDisabled}
 						>
 							{moreIcon}
 						</MediaButton>

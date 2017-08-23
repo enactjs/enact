@@ -526,6 +526,14 @@ const VideoPlayerBase = class extends React.Component {
 		source: PropTypes.node,
 
 		/**
+		 * When `true`, the component cannot be navigated using spotlight.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		spotlightDisabled: PropTypes.bool,
+
+		/**
 		 * Set a thumbnail image source to show on VideoPlayer's Slider knob. This is a standard
 		 * {@link moonstone/Image} component so it supports all of the same options for the `src`
 		 * property. If no `thumbnailSrc` is set, no tooltip will display.
@@ -1617,6 +1625,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;
 		delete rest.setApiProvider;
+		delete rest.spotlightDisabled;
 		delete rest.thumbnailUnavailable;
 		delete rest.titleHideDelay;
 		delete rest.tooltipHideDelay;
@@ -1684,6 +1693,7 @@ const VideoPlayerBase = class extends React.Component {
 								onMouseOut={this.handleMouseOut}
 								onSpotlightUp={this.handleSpotlightUpFromSlider}
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
+								spotlightDisabled={this.props.spotlightDisabled}
 							>
 								<FeedbackTooltip
 									noFeedback={this.state.mouseOver}
@@ -1726,6 +1736,7 @@ const VideoPlayerBase = class extends React.Component {
 								rateButtonsDisabled={rateButtonsDisabled}
 								rightComponents={rightComponents}
 								showMoreComponents={this.state.more}
+								spotlightDisabled={this.props.spotlightDisabled}
 							>
 								{children}
 							</MediaControls>
@@ -1740,6 +1751,7 @@ const VideoPlayerBase = class extends React.Component {
 					onSpotlightDown={this.showControls}
 					onClick={this.showControls}
 					onKeyDown={this.handleKeyDown}
+					spotlightDisabled={this.props.spotlightDisabled}
 				/>
 				<Announce ref={this.setAnnounceRef} />
 			</div>
