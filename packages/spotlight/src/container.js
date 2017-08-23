@@ -593,21 +593,22 @@ function getContainerDefaultElement (containerId) {
 /**
  * Gets the element last focused within the container.
  *
- * @param   {String}  containerId  ID of container
+ * @param   {String}       containerId  ID of container
  *
- * @returns {Node}                 DOM Node last focused
+ * @returns {Node|String}               DOM Node last focused
  * @memberof spotlight/container
  * @public
  */
 function getContainerLastFocusedElement (containerId) {
-	let {lastFocusedElement} = getContainerConfig(containerId);
+	const {lastFocusedElement} = getContainerConfig(containerId);
 
-	// lastFocusedElement may be a container ID so try to convert it to a node
-	if (typeof lastFocusedElement === 'string') {
-		lastFocusedElement = getContainerNode(lastFocusedElement);
+	// lastFocusedElement may be a container ID so try to convert it to a node to test navigability
+	let node = lastFocusedElement;
+	if (typeof node === 'string') {
+		node = getContainerNode(lastFocusedElement);
 	}
 
-	return isNavigable(lastFocusedElement, containerId, true) ? lastFocusedElement : null;
+	return isNavigable(node, containerId, true) ? lastFocusedElement : null;
 }
 
 /**
