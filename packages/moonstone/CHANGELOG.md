@@ -35,6 +35,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` to properly 5-way navigate from scroll buttons
 - `moonstone/ExpandableList` to display correct font weight and size for list items
 - `moonstone/Divider` to not italicize in non-italic locales
+- `moonstone/VideoPlayer` slider knob to follow progress after being selected when seeking
 - `moonstone/LabeledItem` to correctly position its icon. This affects all of the `Expandables`,`moonstone/DatePicker` and `moonstone/TimePicker`.
 - `moonstone/Panels.Header` and `moonstone/Item` to prevent them from allowing their contents to overflow unexpectedly
 - `moonstone/MarqueeText` to recalculate when vertical scrollbar appears
