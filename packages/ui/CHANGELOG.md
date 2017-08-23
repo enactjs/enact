@@ -9,6 +9,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 ### Changed
+- `ui/Holdable` and `ui/Changeable` to be PureComponents to reduce the amount of updates
 
 ### Fixed
 
