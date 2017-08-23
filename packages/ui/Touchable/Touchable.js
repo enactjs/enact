@@ -76,6 +76,18 @@ const defaultConfig = {
 	 */
 	activeProp: null,
 
+	/**
+	 * Configures the behavior of the flick gesture. It accepts the following parameters
+	 *
+	 * * `maxDuration` - The amount of time, in milliseconds, to complete a flick gesture before it
+	 *   is cancelled. Defaults to 250.
+	 * * `maxMoves` - The number of moves tracked to determine if a flick occurred. Defaults to `5`.
+	 * * `minVelocity` - The minimum threshold, measured as the change in pixels over the change in
+	 *   time per move, that must be exceeded to generate a `onFlick` event.
+	 * 
+	 * @type {Object}
+	 * @memberof ui/Touchable.Touchable.defaultConfig
+	 */
 	flickConfig: {
 		maxDuration: 250,
 		maxMoves: 5,
