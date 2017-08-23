@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import Spottable from '@enact/spotlight/Spottable';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import {dataIndexAttribute, ScrollableNative} from '../Scroller/ScrollableNative';
 
@@ -21,39 +22,6 @@ import css from './VirtualListBaseNative.less';
 import cssItem from './ListItem.less';
 
 const SpotlightPlaceholder = Spottable('div');
-
-const configureSpotlight = (containerId, instance) => {
-	Spotlight.set(containerId, {
-		enterTo: 'last-focused',
-		/*
-		 * Returns the data-index as the key for last focused
-		 */
-		lastFocusedPersist: function () {
-			if (this.lastFocusedIndex != null) {
-				return {
-					container: false,
-					element: true,
-					key: this.lastFocusedIndex
-				};
-			}
-		}.bind(instance),
-		/*
-		 * Restores the data-index into the placeholder if its the only element. Tries to find a
-		 * matching child otherwise.
-		 */
-		lastFocusedRestore: ({key}, all) => {
-			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
-				all[0].dataset.index = key;
-
-				return all[0];
-			}
-
-			return all.reduce((focused, node) => {
-				return focused || node.dataset.index === key && node;
-			}, null);
-		}
-	});
-};
 
 const
 	dataContainerMutedAttribute = 'data-container-muted',
@@ -137,15 +105,6 @@ class VirtualListCoreNative extends Component {
 			clientHeight:  PropTypes.number.isRequired
 		}),
 
-
-		/**
-		 * Spotlight container Id
-		 *
-		 * @type {String}
-		 * @private
-		 */
-		containerId: PropTypes.string,
-
 		/**
 		 * Data for the list.
 		 * Check mutation of this and determine whether the list should update or not.
@@ -155,6 +114,14 @@ class VirtualListCoreNative extends Component {
 		 * @public
 		 */
 		data: PropTypes.any,
+
+		/**
+		 * Spotlight container Id
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types
 
 		/**
 		 * Size of the data.
@@ -222,11 +189,6 @@ class VirtualListCoreNative extends Component {
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContentRef = this.initRef('contentRef');
 		this.initContainerRef = this.initRef('containerRef');
-
-		const {containerId} = props;
-		if (containerId) {
-			configureSpotlight(containerId, this);
-		}
 	}
 
 	componentWillMount () {
@@ -267,15 +229,12 @@ class VirtualListCoreNative extends Component {
 			this.updateStatesAndBounds(nextProps);
 			this.setContainerSize();
 		}
-
-		if (nextProps.containerId && nextProps.containerId !== this.props.containerId) {
-			configureSpotlight(nextProps.containerId, this);
-		}
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
 		if (!this.restoreLastFocused &&
 			(this.props.dataSize > 0 && this.props.dataSize !== nextProps.dataSize) &&
+			(this.state.numOfItems === nextState.numOfItems) &&
 			(nextState.firstIndex + nextState.numOfItems) < nextProps.dataSize) {
 			return false;
 		}
@@ -361,7 +320,7 @@ class VirtualListCoreNative extends Component {
 			// if we're supposed to restore focus and virtual list has positioned a set of items
 			// that includes lastFocusedIndex, clear the indicator
 			this.restoreLastFocused = false;
-			const {containerId} = this.props;
+			const containerId = this.props['data-container-id'];
 
 			// try to focus the last focused item
 			const foundLastFocused = Spotlight.focus(
@@ -768,7 +727,7 @@ class VirtualListCoreNative extends Component {
 	}
 
 	setRestrict = (bool) => {
-		Spotlight.set(this.props.containerId, {restrict: (bool) ? 'self-only' : 'self-first'});
+		Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
 	}
 
 	setSpotlightContainerRestrict = (keyCode, target) => {
@@ -905,8 +864,7 @@ class VirtualListCoreNative extends Component {
 	}
 
 	setContainerDisabled = (bool) => {
-		const {containerId} = this.props;
-		const containerNode = document.querySelector(`[data-container-id="${containerId}"]`);
+		const containerNode = this.containerRef;
 
 		if (containerNode) {
 			containerNode.setAttribute(dataContainerMutedAttribute, bool);
@@ -949,7 +907,6 @@ class VirtualListCoreNative extends Component {
 		delete props.cbScrollTo;
 		delete props.clientSize;
 		delete props.component;
-		delete props.containerId;
 		delete props.data;
 		delete props.dataSize;
 		delete props.direction;
@@ -996,9 +953,44 @@ class VirtualListCoreNative extends Component {
  * @ui
  * @private
  */
-const VirtualListBaseNative = ScrollableNative(
-	{configureSpotlight: true},
-	VirtualListCoreNative
+const VirtualListBaseNative = SpotlightContainerDecorator(
+	{
+		enterTo: 'last-focused',
+		/*
+		 * Returns the data-index as the key for last focused
+		 */
+		lastFocusedPersist: (node) => {
+			const indexed = node.dataset.index ? node : node.closest('[data-index]');
+
+			if (indexed) {
+				return {
+					container: false,
+					element: true,
+					key: indexed.dataset.index
+				};
+			}
+		},
+		/*
+		 * Restores the data-index into the placeholder if its the only element. Tries to find a
+		 * matching child otherwise.
+		 */
+		lastFocusedRestore: ({key}, all) => {
+			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
+				all[0].dataset.index = key;
+
+				return all[0];
+			}
+
+			return all.reduce((focused, node) => {
+				return focused || node.dataset.index === key && node;
+			}, null);
+		},
+		preserveId: true,
+		restrict: 'self-first'
+	},
+	ScrollableNative(
+		VirtualListCoreNative
+	)
 );
 
 export default VirtualListBaseNative;
