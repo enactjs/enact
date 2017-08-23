@@ -123,7 +123,7 @@ const defaultConfig = {
 /**
  * {@link ui/Touchable.Touchable} is a Higher-order Component that provides a consistent set of
  * pointer events -- `onDown`, `onUp`, and `onTap` -- across mouse and touch interfaces along with
- * support for common gestures including `onHold` and `onHoldPulse`.
+ * support for common gestures including `onFlick`, `onHold`, and `onHoldPulse`.
  *
  * @class Touchable
  * @memberof ui/Touchable
