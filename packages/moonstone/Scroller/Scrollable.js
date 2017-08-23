@@ -352,6 +352,7 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 		}
 
 		// scroll info
+		scrolling = false
 		scrollLeft = 0
 		scrollTop = 0
 		scrollToInfo = null
@@ -550,9 +551,9 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 						silent: false,
 						duration: animationDuration
 					});
+					this.lastScrollPositionOnFocus = pos;
 				}
 				this.lastFocusedItem = item;
-				this.lastScrollPositionOnFocus = pos;
 			}
 		}
 
@@ -571,16 +572,18 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 					positionFn = this.childRef.calculatePositionOnFocus,
 					spotItem = Spotlight.getCurrent();
 
-				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
+				if (item && item === spotItem && positionFn) {
 					const lastPos = this.lastScrollPositionOnFocus;
 					let pos;
 					// If scroll animation is ongoing, we need to pass last target position to
 					// determine correct scroll position.
-					if (this.animator.isAnimating() && lastPos) {
+					if (item !== this.lastFocusedItem && this.animator.isAnimating() && lastPos !== null) {
 						pos = positionFn({item, scrollPosition: (this.direction !== 'horizontal') ? lastPos.top : lastPos.left});
-					} else {
+					} else if (lastPos === null) {
+						if (this.scrolling) {
+							this.stop();
+						}
 						pos = positionFn({item});
-						this.stop();
 					}
 					this.startScrollOnFocus(pos, item);
 				}
@@ -749,7 +752,8 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 			const bounds = this.getScrollBounds();
 
 			this.animator.stop();
-			if (!silent) {
+			if (!silent && !this.scrolling) {
+				this.scrolling = true;
 				this.doScrollStart();
 			}
 
@@ -824,6 +828,7 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 			this.hideThumb();
+			this.scrolling = false;
 			this.doScrollStop();
 		}
 
