@@ -112,7 +112,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/Marquee.MarqueeDecorator.prototype */ {
 			/**
-			 * Text alignment value of the marquee. Valid values are `left`, `right` and `center`.
+			 * Text alignment value of the marquee. Valid values are `'left'`, `'right'` and `'center'`.
 			 *
 			 * @type {String}
 			 * @public
