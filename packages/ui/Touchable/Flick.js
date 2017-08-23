@@ -1,3 +1,5 @@
+import {Job} from '@enact/core/util';
+
 class Flick {
 	constructor () {
 		this.tracking = false;
@@ -12,6 +14,7 @@ class Flick {
 		this.minVelocity = config.minVelocity;
 		this.maxMoves = config.maxMoves;
 
+		this.cancelJob.startAfter(config.maxDuration);
 		this.tracking = !!onFlick;
 		this.moves.length = 0;
 		this.onFlick = onFlick;
@@ -34,11 +37,16 @@ class Flick {
 		}
 	}
 
-	/**
-	* @private
-	*/
+	cancel = () => {
+		this.tracking = false;
+	}
+
+	cancelJob = new Job(this.cancel);
+
 	end = () => {
 		if (!this.tracking) return;
+
+		this.cancelJob.stop();
 
 		const moves = this.moves;
 		if (moves.length > 1) {

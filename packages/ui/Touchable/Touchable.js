@@ -77,8 +77,9 @@ const defaultConfig = {
 	activeProp: null,
 
 	flickConfig: {
-		minVelocity: 0.1,
-		maxMoves: 5
+		maxDuration: 250,
+		maxMoves: 5,
+		minVelocity: 0.1
 	},
 
 	/**
