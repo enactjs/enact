@@ -14,7 +14,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` prop `thumbnailUnavailable` to fade thumbnail
 - `moonstone/AccessibilityDecorator` with `highContrast` and `textSize`
 - `moonstone/VideoPlayer` high contrast scrim
-- `moonstone/MarqueeDecorator`and `moonstone/Marquee` property `alignment` to allow setting text alignment of marquee texts
+- `moonstone/MarqueeDecorator`and `moonstone/Marquee` property `alignment` to allow setting  alignment of marquee content
 
 ### Changed
 

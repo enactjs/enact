@@ -17,7 +17,6 @@ storiesOf('Marquee')
 						alignment={nullify(select('alignment', [null, 'left', 'right', 'center']))}
 						disabled={disabled}
 						forceDirection={nullify(select('forceDirection', [null, 'rtl', 'ltr']))}
-						marqueeCentered={nullify(boolean('marqueeCentered', false))}
 						marqueeDelay={number('marqueeDelay', 1000)}
 						marqueeDisabled={nullify(boolean('marqueeDisabled', false))}
 						marqueeOn={select('marqueeOn', ['hover', 'render'], 'render')}

@@ -30,7 +30,7 @@ const MarqueeBase = kind({
 	propTypes: /** @lends moonstone/Marquee.Marquee.prototype */ {
 
 		/**
-		 * Text alignment value of the marquee. Valid values are `left`, `right` and `center`.
+		 * Text alignment value of the marquee. Valid values are `'left'`, `'right'` and `'center'`.
 		 *
 		 * @type {String}
 		 * @public
@@ -146,12 +146,13 @@ const MarqueeBase = kind({
 			const isTextRtl = forceDirection ? forceDirection === 'rtl' : rtl;
 			const overrideRtl = forceDirection ? true : contextRtl !== isTextRtl;
 
+			let textAlign = null;
+
 			if (centered) {
 				deprecate({name: 'centered', since: '1.7.0', message: 'Use `alignment` instead', until: '2.0.0'});
-				alignment = 'center';
+				textAlign = 'center';
 			}
 
-			let textAlign = null;
 			if (alignment) {
 				textAlign = alignment;
 			}
