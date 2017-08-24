@@ -1,7 +1,7 @@
 // colors-light.less (light skin)
 //
 // Base our light skin off of the dark (default) skin
-@import (multiple) './colors.less';
+@import (multiple) "./colors.less";
 
 // ---------------------------------------
 // Universal Color Definitions
@@ -13,6 +13,7 @@
 @moon-black:       #000;
 @moon-accent:      #cf0652;
 @moon-white:       #fff;
+@moon-red:         #f00;
 
 @moon-remote-button-red-color:     #ff6d78; // #da3c3c; // #e71b1c;
 @moon-remote-button-green-color:   #6ff467; // #21c171; // #339966;
@@ -75,6 +76,7 @@
 @moon-button-disabled-bg-color:       @moon-button-bg-color;
 @moon-button-translucent-opacity:     30%;
 @moon-button-translucent-text-color:  @moon-white;
+@moon-button-disabled-text-color:     @moon-dark-gray;
 
 // Icon
 // ---------------------------------------
@@ -122,8 +124,8 @@
 
 // FormCheckbox
 // ---------------------------------------
-@moon-formcheckbox-bg-color: @moon-button-bg-color;
-@moon-formcheckbox-text-color: @moon-button-text-color;
+@moon-formcheckbox-bg-color: @moon-white;
+@moon-formcheckbox-text-color: @moon-text-color;
 
 // GridListImageItem
 // ---------------------------------------
@@ -160,6 +162,11 @@
 @moon-progress-bar-fill-bg-color: #808080;
 @moon-progress-bar-tooltip-text-color: @moon-white;
 
+// RadioItem
+// ---------------------------------------
+@moon-radio-item-indicator-color: @moon-dark-gray;
+@moon-radio-item-indicator-border-color: @moon-white;
+
 // Slider
 // ---------------------------------------
 @moon-slider-nofocus-bg-color: @moon-white;
@@ -172,6 +179,7 @@
 // ---------------------------------------
 @moon-spinner-bg-color: @moon-button-bg-color;
 @moon-spinner-text-color: @moon-white;
+@moon-spinner-text-shadow-color: rgba(0, 0, 0, 0.3);
 @moon-spinner-ball1-color: #69cdff;
 @moon-spinner-ball2-color: #ff4a4a;
 @moon-spinner-ball3-color: #ffb80d;
@@ -185,8 +193,8 @@
 
 // ContextualPopup
 // ---------------------------------------
-@moon-contextual-popup-bg-color:      @moon-bg-color;
-@moon-contextual-popup-border-color:  rgba(0,0,0, 0.5);
+@moon-contextual-popup-bg-color: @moon-bg-color;
+@moon-contextual-popup-border-color: rgba(0, 0, 0, 0.5);
 
 // Notification
 // ---------------------------------------
@@ -194,6 +202,7 @@
 
 // VideoPlayer
 // ---------------------------------------
+@moon-video-slider-tooltip-thumbnail-border-color: @moon-contextual-popup-border-color;
 @moon-video-player-indicator-text-color: @moon-white;
 @moon-video-player-bottom-bg-color: transparent;
 @moon-video-player-redicon-bg-color: transparent;
@@ -204,4 +213,4 @@
 @moon-video-player-slider-load-color: fade(darken(@moon-accent, 30%), 30%);
 @moon-video-player-subdued-text-color: #ccc;
 @moon-video-player-title-color: @moon-white;
-@moon-video-player-title-text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.75);
+@moon-video-player-title-text-shadow: 0 2px 2px rgba(0, 0, 0, 0.75);
