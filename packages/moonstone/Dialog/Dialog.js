@@ -16,7 +16,6 @@ import {MarqueeDecorator} from '../Marquee';
 import Popup from '../Popup';
 
 import css from './Dialog.less';
-import TitleWrapper from './TitleWrapper';
 
 const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
 
@@ -193,7 +192,7 @@ const DialogBase = kind({
 
 		return (
 			<Popup {...rest}>
-				<TitleWrapper>
+				<div className={css.titleWrapper}>
 					<div className={css.titleBlock}>
 						<MarqueeH1 casing={casing} preserveCase={preserveCase} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
 							{title}
@@ -205,7 +204,7 @@ const DialogBase = kind({
 					<div className={css.buttons}>
 						{buttons}
 					</div>
-				</TitleWrapper>
+				</div>
 				<div className={css.body}>
 					{children}
 				</div>
