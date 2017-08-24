@@ -6,6 +6,7 @@
 
 import {forward, forwardWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import complement from 'ramda/src/complement';
 import platform from '@enact/core/platform';
@@ -204,6 +205,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillUnmount () {
 			this.clearTarget();
 			this.hold.end();
+			this.blurJob.stop();
 
 			if (platform.touch) {
 				off('touchend', this.handleGlobalUp, document);
@@ -229,16 +231,30 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.target = null;
 		}
 
+		blurJob = new Job(target => {
+			if (target.blur) {
+				target.blur();
+			}
+		}, 400);
+
 		activate = (ev) => {
 			this.setTarget(ev.currentTarget);
 			if (activeProp) {
 				this.setState(activate);
 			}
 
+			if ('changedTouches' in ev) {
+				this.target.focus();
+			}
+
 			return true;
 		}
 
-		deactivate = () => {
+		deactivate = (ev) => {
+			if ('changedTouches' in ev) {
+				this.blurJob.start(this.target);
+			}
+
 			this.clearTarget();
 			if (activeProp) {
 				this.setState(deactivate);
@@ -382,7 +398,10 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.handleUp
 		)
 
-		handleGlobalUp = this.deactivate
+		handleGlobalUp = this.handle(
+			this.isTracking,
+			this.deactivate
+		)
 
 		addHandlers (props) {
 			props.onMouseDown = this.handleMouseDown;

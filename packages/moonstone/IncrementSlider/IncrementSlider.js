@@ -536,7 +536,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						aria-label={decrementAriaLabel}
 						className={css.decrementButton}
 						disabled={decrementDisabled}
-						onClick={onDecrement}
+						onTap={onDecrement}
 						onKeyDown={handleDecrementKeyDown}
 						onSpotlightDisappear={onDecrementSpotlightDisappear}
 						spotlightDisabled={spotlightDisabled}
@@ -583,7 +583,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						aria-label={incrementAriaLabel}
 						className={css.incrementButton}
 						disabled={incrementDisabled}
-						onClick={onIncrement}
+						onTap={onIncrement}
 						onKeyDown={handleIncrementKeyDown}
 						onSpotlightDisappear={onIncrementSpotlightDisappear}
 						spotlightDisabled={spotlightDisabled}

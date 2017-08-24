@@ -2,6 +2,8 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Touchable from '../internal/Touchable';
+
 import css from './Overlay.less';
 
 /**
@@ -50,8 +52,12 @@ const OverlayBase = kind({
 	}
 });
 
-export default OverlayBase;
+const Overlay = Touchable(
+	OverlayBase
+);
+
+export default Overlay;
 export {
-	OverlayBase as Overlay,
+	Overlay,
 	OverlayBase
 };

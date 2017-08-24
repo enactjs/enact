@@ -20,17 +20,17 @@ const IncrementSliderButtonBase = kind({
 	name: 'IncrementSliderButton',
 
 	propTypes: /** @lends moonstone/IncrementSlider.IncrementSliderButton.prototype */ {
-		onClick: PropTypes.func
+		onTap: PropTypes.func
 	},
 
-	render: ({onClick, ...rest}) => {
+	render: ({onTap, ...rest}) => {
 		return (
 			<IconButton
 				{...rest}
 				backgroundOpacity="transparent"
-				onTap={onClick}
-				onHold={onClick}
-				onHoldPulse={onClick}
+				onTap={onTap}
+				onHold={onTap}
+				onHoldPulse={onTap}
 				small
 			/>
 		);
