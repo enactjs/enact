@@ -44,12 +44,11 @@
 		position: relative;
 	}
 	.buttons {
-		text-align: right;
-		position: relative;
-
-		:global(.enact-locale-right-to-left) & {
-			text-align: left;
-		}
+		display: flex;
+		padding-top: 24px;
+	}
+	.buttons > :last-child {
+		-webkit-margin-end: 0;
 	}
 
 	// Skin colors
