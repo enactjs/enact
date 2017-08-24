@@ -5,6 +5,7 @@
  * @module moonstone/Dialog
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -75,6 +76,15 @@ const DialogBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
+		 * When `true`, a divider line will not separate the title from the dialog body
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noDivider: PropTypes.bool,
+
+		/**
 		 * A function to be run when a closing action is invoked by the user. These actions include
 		 * pressing `ESC` key or clicking on the close button. It is the responsibility of the
 		 * callback to set the `open` property to `false`.
@@ -134,6 +144,7 @@ const DialogBase = kind({
 		 *
 		 * @type {Boolean}
 		 * @public
+		 * @deprecated
 		 */
 		showDivider: PropTypes.bool,
 
@@ -156,6 +167,7 @@ const DialogBase = kind({
 
 	defaultProps: {
 		noAnimation: false,
+		noDivider: false,
 		open: false,
 		preserveCase: false,
 		showCloseButton: false
@@ -167,10 +179,17 @@ const DialogBase = kind({
 	},
 
 	computed: {
-		className: ({showDivider, styler}) => styler.append({showDivider})
+		className: ({noDivider, showDivider, styler}) => {
+			if (showDivider) {
+				deprecate({name: 'showDivider', since: '1.8.0', message: 'Use `noDivider` instead', until: '2.0.0'});
+			}
+
+			return styler.append({showDivider: !noDivider});
+		}
 	},
 
 	render: ({buttons, casing, children, preserveCase, title, titleBelow, ...rest}) => {
+		delete rest.noDivider;
 		delete rest.showDivider;
 
 		return (

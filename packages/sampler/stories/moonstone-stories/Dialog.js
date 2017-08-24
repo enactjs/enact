@@ -15,10 +15,10 @@ storiesOf('Dialog')
 					casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 					noAnimation={boolean('noAnimation', false)}
 					noAutoDismiss={boolean('noAutoDismiss', false)}
+					noDivider={boolean('noDivider', false)}
 					onClose={action('onClose')}
 					open={boolean('open', false)}
 					showCloseButton={boolean('showCloseButton', false)}
-					showDivider={boolean('showDivider', false)}
 				>
 					<title>{text('title', 'Hello Dialog')}</title>
 					<titleBelow>{text('titleBelow', 'This is an organized dialog')}</titleBelow>
