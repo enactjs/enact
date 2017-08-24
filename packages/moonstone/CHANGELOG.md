@@ -2,6 +2,51 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [1.7.0] - 2017-08-23
+
+### Deprecated
+
+- `moonstone/TextSizeDecorator` and it will be replaced by `moonstone/AccessibilityDecorator`
+- `moonstone/MarqueeDecorator` property `marqueeCentered` and `moonstone/Marquee` property `centered` will be replaced by `alignment` property in 2.0.0
+
+### Added
+
+- `moonstone/TooltipDecorator` config property to direct tooltip into a property instead of adding to `children`
+- `moonstone/VideoPlayer` prop `thumbnailUnavailable` to fade thumbnail
+- `moonstone/AccessibilityDecorator` with `highContrast` and `textSize`
+- `moonstone/VideoPlayer` high contrast scrim
+- `moonstone/MarqueeDecorator`and `moonstone/Marquee` property `alignment` to allow setting  alignment of marquee content
+
+### Changed
+
+- `moonstone/Scrollbar` to disable paging control down button properly at the bottom when a scroller size is a non-integer value
+- `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` to scroll on `keydown` event instead of `keyup` event of page up and page down keys
+- `moonstone/VirtualGridList` to scroll by item via 5 way key
+- `moonstone/VideoPlayer` to read target time when jump by left/right key
+- `moonstone/IconButton` to not use `MarqueeDecorator` and `Uppercase`
+
+### Fixed
+
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to focus the correct item when page up and page down keys are pressed
+- `moonstone/VirtualList` not to lose focus when moving out from the first item via 5way when it has disabled items
+- `moonstone/Slider` to align tooltip with detached knob
+- `moonstone/FormCheckbox` to display correct colors in light skin
+- `moonstone/Picker` and `moonstone/RangePicker` to forward `onKeyDown` events when not `joined`
+- `moonstone/SelectableItem` to display correct icon width and alignment
+- `moonstone/LabeledItem` to always match alignment with the locale
+- `moonstone/Scroller` to properly 5-way navigate from scroll buttons
+- `moonstone/ExpandableList` to display correct font weight and size for list items
+- `moonstone/Divider` to not italicize in non-italic locales
+- `moonstone/VideoPlayer` slider knob to follow progress after being selected when seeking
+- `moonstone/LabeledItem` to correctly position its icon. This affects all of the `Expandables`, `moonstone/DatePicker` and `moonstone/TimePicker`.
+- `moonstone/Panels.Header` and `moonstone/Item` to prevent them from allowing their contents to overflow unexpectedly
+- `moonstone/Marquee` to recalculate when vertical scrollbar appears
+- `moonstone/SelectableItem` to recalculate marquee when toggled
+
+### Removed
+
+- `moonstone/Input` large-text mode
+
 ## [1.6.1] - 2017-08-07
 
 ### Changed
