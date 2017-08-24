@@ -501,9 +501,9 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 
 					// If scroll animation is ongoing, we need to pass last target position to
 					// determine correct scroll position.
-					if (this.scrolling && item !== this.lastFocusedItem && lastPos !== null) {
+					if (this.scrolling && item !== this.lastFocusedItem && lastPos) {
 						pos = positionFn({item, scrollPosition: (this.direction !== 'horizontal') ? lastPos.top : lastPos.left});
-					} else if (lastPos === null) {
+					} else if (!lastPos) {
 						// To scroll stop, another non-animated scroll is needed for native scrolling.
 						// Since a browser does not handle scrolling pointing to the current position,
 						// the trick is required changing the target position slightly.

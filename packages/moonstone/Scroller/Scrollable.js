@@ -578,9 +578,9 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 
 					// If scroll animation is ongoing, we need to pass last target position to
 					// determine correct scroll position.
-					if (item !== this.lastFocusedItem && this.animator.isAnimating() && lastPos !== null) {
+					if (item !== this.lastFocusedItem && this.animator.isAnimating() && lastPos) {
 						pos = positionFn({item, scrollPosition: (this.direction !== 'horizontal') ? lastPos.top : lastPos.left});
-					} else if (lastPos === null) {
+					} else if (!lastPos) {
 						if (this.scrolling) {
 							this.stop();
 						}
