@@ -7,7 +7,6 @@
 @import '../styles/skin.less';
 
 .dialog {
-	@dialog-spacing: 39px;
 	position: relative;
 
 	&.showDivider {
@@ -28,8 +27,6 @@
 		margin: 0;
 	}
 	.titleWrapper {
-		margin-bottom: @dialog-spacing;
-
 		// adds a layer to allow detecting mouseenter to start title marquees
 		&::before {
 			position: absolute;
@@ -39,7 +36,6 @@
 	}
 	.body {
 		.moon-dialog-content();
-		margin: 0 0 @dialog-spacing;
 		position: relative;
 	}
 	.buttons {
