@@ -18,6 +18,10 @@
 			margin-bottom: 18px;
 		}
 	}
+	.titleBlock {
+		max-width: 100%;
+		min-width: 0;
+	}
 	.title {
 		.moon-dialog-title();
 		margin: 0 0 6px;
@@ -27,6 +31,7 @@
 		margin: 0;
 	}
 	.titleWrapper {
+		display: flex;
 		// adds a layer to allow detecting mouseenter to start title marquees
 		&::before {
 			position: absolute;

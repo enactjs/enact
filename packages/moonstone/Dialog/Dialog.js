@@ -19,7 +19,6 @@ import css from './Dialog.less';
 import TitleWrapper from './TitleWrapper';
 
 const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
-const MarqueeH2 = MarqueeDecorator('h2');
 
 /**
  * {@link moonstone/Dialog.DialogBase} is a modal component with a title, a subtitle, a
@@ -195,18 +194,20 @@ const DialogBase = kind({
 		return (
 			<Popup {...rest}>
 				<TitleWrapper>
-					<MarqueeH1 casing={casing} preserveCase={preserveCase} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
-						{title}
-					</MarqueeH1>
-					<MarqueeH2 className={css.titleBelow} marqueeOn="render" marqueeOnRenderDelay={5000}>
-						{titleBelow}
-					</MarqueeH2>
+					<div className={css.titleBlock}>
+						<MarqueeH1 casing={casing} preserveCase={preserveCase} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
+							{title}
+						</MarqueeH1>
+						<h2 className={css.titleBelow}>
+							{titleBelow}
+						</h2>
+					</div>
+					<div className={css.buttons}>
+						{buttons}
+					</div>
 				</TitleWrapper>
 				<div className={css.body}>
 					{children}
-				</div>
-				<div className={css.buttons}>
-					{buttons}
 				</div>
 			</Popup>
 		);
