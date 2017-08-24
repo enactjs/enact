@@ -18,7 +18,9 @@
  *     // since it doesn't return `true`, no further input functions would be called after this one
  *     console.log('The Enter key was pressed down');
  *   }
- * );
+ * ).finally(() => {
+ * 	 console.log('This will log at the end no matter what happens within the handler above')
+ * });
  * ```
  *
  * `handle()` can also be bound to a component instance which allows it to access the instance
@@ -77,6 +79,10 @@ const makeHandler = compose(allPass, map(makeSafeHandler));
 /**
  * Allows generating event handlers by chaining input functions to filter or short-circuit the
  * handling flow. Any input function that returns a falsey value will stop the chain.
+ * 
+ * The returned handler function has a `finally()` member that accepts a function and returns a new
+ * handler function. The accepted function is called once the original handler completes regardless
+ * of the returned value.
  *
  * @method   handle
  * @memberof core/handle
@@ -100,11 +106,15 @@ const handle = function (...handlers) {
 	};
 
 	fn.finally = (cleanup) => (...args) => {
+		let result = false;
+
 		try {
-			fn(...args);
+			result = fn(...args);
 		} finally {
 			cleanup(...args);
 		}
+
+		return result;
 	};
 
 	return fn;
@@ -133,6 +143,29 @@ const oneOf = handle.oneOf = function (...handlers) {
 	return handle.call(this, cond(handlers));
 };
 
+/**
+ * A function that always returns `true`. Optionally accepts a `handler` function which is called
+ * before returning `true`.
+ *
+ * ```
+ * // Used to coerce an existing function into a handler change
+ * const coercedHandler = handle(
+ *   returnsTrue(doesSomething),
+ *   willAlwaysBeCalled
+ * );
+ * 
+ * // Used to emulate if/else blocks with `oneOf`
+ * const ifElseHandler = oneOf(
+ * 	[forKey('enter'), handleEnter],
+ * 	[returnsTrue, handleOtherwise]
+ * );
+ * ```
+ *
+ * @method   returnsTrue
+ * @memberof core/handle
+ * @param    {[Function]}  handler  Handler function called before returning `true`
+ * @returns  {Function}	   A function that returns true
+ */
 const returnsTrue = handle.returnsTrue = function (handler) {
 	if (handler) {
 		return function (...args) {

@@ -1,3 +1,8 @@
+/**
+ * @module moonstone/internal/Touchable
+ * @private
+ */
+
 import hoc from '@enact/core/hoc';
 import UiTouchable from '@enact/ui/Touchable';
 

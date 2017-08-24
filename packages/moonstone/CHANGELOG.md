@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `moonstone/Button`, `moonstone/IconButton`, `moonstone/IncrementSlider`, `moonstone/Picker`, and `moonstone/RangePicker` to use `ui/Touchable`
+
 ## [1.6.1] - 2017-08-07
 
 ### Changed
