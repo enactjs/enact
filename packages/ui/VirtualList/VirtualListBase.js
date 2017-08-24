@@ -164,21 +164,9 @@ class VirtualListCore extends Component {
 	// Calculate metrics for VirtualList after the 1st render to know client W/H.
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
-		const containerNode = this.containerRef;
-
 		if (!this.props.clientSize) {
 			this.calculateMetrics(this.props);
 			this.updateStatesAndBounds(this.props);
-		}
-
-		// prevent native scrolling by Spotlight
-		this.preventScroll = () => {
-			containerNode.scrollTop = 0;
-			containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
-		};
-
-		if (containerNode && containerNode.addEventListener) {
-			containerNode.addEventListener('scroll', this.preventScroll);
 		}
 	}
 
@@ -200,15 +188,6 @@ class VirtualListCore extends Component {
 			this.updateStatesAndBounds(nextProps);
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
-		}
-	}
-
-	componentWillUnmount () {
-		const containerNode = this.containerRef;
-
-		// remove a function for preventing native scrolling by Spotlight
-		if (containerNode && containerNode.removeEventListener) {
-			containerNode.removeEventListener('scroll', this.preventScroll);
 		}
 	}
 
@@ -240,7 +219,6 @@ class VirtualListCore extends Component {
 	scrollPosition = 0
 	updateFrom = null
 	updateTo = null
-	isScrolledBy5way = false
 
 	containerRef = null
 
@@ -647,7 +625,6 @@ class VirtualListCore extends Component {
  * @class VirtualListBase
  * @memberof ui/VirtualList
  * @mixes moonstone/Scrollable
- * @mixes spotlight/SpotlightContainerDecorator
  * @ui
  * @private
  */

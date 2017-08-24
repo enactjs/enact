@@ -16,7 +16,7 @@ import Scrollable from './Scrollable';
 
 /**
  * {@link ui/Scroller.ScrollerBase} is a base component for Scroller.
- * In most circumstances, you will want to use the SpotlightContainerDecorator and Scrollable version:
+ * In most circumstances, you will want to use Scrollable version:
  * {@link ui/Scroller.Scroller}
  *
  * @class ScrollerBase
@@ -267,8 +267,7 @@ class ScrollerBase extends Component {
 }
 
 /**
- * {@link ui/Scroller.Scroller} is a Scroller with Moonstone styling,
- * SpotlightContainerDecorator and Scrollable applied.
+ * {@link ui/Scroller.Scroller} is a Scroller with Scrollable applied.
  *
  * Usage:
  * ```

@@ -46,8 +46,8 @@ const
 
 /**
  * {@link ui/Scroller.dataIndexAttribute} is the name of a custom attribute
- * which indicates the index of an item in {@link moonstone/VirtualList.VirtualList}
- * or {@link moonstone/VirtualList.VirtualGridList}.
+ * which indicates the index of an item in {@link ui/VirtualList.VirtualList}
+ * or {@link ui/VirtualList.VirtualGridList}.
  *
  * @constant dataIndexAttribute
  * @memberof ui/Scroller
@@ -60,8 +60,8 @@ const dataIndexAttribute = 'data-index';
  * {@link ui/Scroller.Scrollable} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
  *
- * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
- * and also catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, `onWheel` and `onKeyUp` events
+ * Scrollable catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, `onWheel`, `onTouchStart`,
+ * `onTouchMove` and `onTouchEnd` events
  * from its wrapped component for scrolling behaviors.
  *
  * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
@@ -255,8 +255,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isFirstDragging = false
 		isDragging = false
 		deferScrollTo = true
-		pageDistance = 0
-		animateOnFocus = true
 
 		// drag info
 		dragInfo = {
