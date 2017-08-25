@@ -75,7 +75,7 @@ const CellBase = kind({
 
 		/**
 		 * Sets the requested size, possibly overflowing if the contents are too large for the space.
-		 * When used inconjunction with [shrink]{@link ui/Layout.Cell#shrink}, the size will be set
+		 * When used in conjunction with [shrink]{@link ui/Layout.Cell#shrink}, the size will be set
 		 * as close to the requested size as is possible, given the dimensions of the contents of
 		 * this cell. E.g. If your content is `40px` tall and you set `size` to "30px", the Cell will
 		 * render `30px` tall. If [shrink]{@link ui/Layout.Cell#shrink} was used also, the rendered
@@ -186,7 +186,7 @@ const LayoutBase = kind({
 		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
-		 * Allows this Layout to have following sibblings drawn on the same line as itself, instead
+		 * Allows this Layout to have following siblings drawn on the same line as itself, instead
 		 * of carving out the entire horizontal space for itself.
 		 *
 		 * @type {Boolean}
@@ -264,7 +264,7 @@ const LayoutBase = kind({
 	}
 });
 
-/**
+/*
  * Accepts a `contextTypes` object and a component, then matches those contextTypes with incoming
  * props on the component, and sends them to context on that component for children to to access.
  *
