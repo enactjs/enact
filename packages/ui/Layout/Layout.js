@@ -19,7 +19,7 @@
  */
 
 import kind from '@enact/core/kind';
-import withContext from 'recompose/withContext';
+import {withContextFromProps} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -268,23 +268,7 @@ const LayoutBase = kind({
 	}
 });
 
-/*
- * Accepts a `contextTypes` object and a component, then matches those contextTypes with incoming
- * props on the component, and sends them to context on that component for children to to access.
- *
- * @param  {Object} propsList) a contextTypes object full of keys to be used as prop->context and their PropTypes as keys
- * @param  {Component} Wrapped) a component to apply this to
- *
- * @return {Component}              The component, now with context on it
- * @private
- */
-const withContextFromProps = (propsList, Wrapped) => withContext(propsList, (props) => {
-	return Object.keys(propsList).reduce((obj, key) => {
-		obj[key] = props[key]; return obj;
-	}, {});
-})(Wrapped);
-
-// Apply to Layout so children have access to a few relevant props applied to Layout
+// Convert a few incoming props of Layout into context keys so children Cells can adjust their behavior accordingly.
 const Layout = withContextFromProps(contextTypes, LayoutBase);
 
 export default Layout;

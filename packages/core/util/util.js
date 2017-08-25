@@ -14,6 +14,7 @@ import sort from 'ramda/src/sort';
 import unless from 'ramda/src/unless';
 import useWith from 'ramda/src/useWith';
 import when from 'ramda/src/when';
+import withContext from 'recompose/withContext';
 
 import Job from './Job';
 
@@ -147,6 +148,33 @@ const perfNow = function () {
 	}
 };
 
+/*
+ * Accepts a `contextTypes` object and a component, then matches those contextTypes with incoming
+ * props on the component, and sends them to context on that component for children to to access.
+ *
+ * Usage:
+ * ```
+ * const contextTypes = {
+ * 	alignment: PropTypes.string
+ * };
+ *
+ * const Component = withContextFromProps(contextTypes, BaseBase);
+ *
+ * // The `alignment` will now be available as a context key in Component's children.
+ * ```
+ *
+ * @param  {Object} propsList) a contextTypes object full of keys to be used as prop->context and their PropTypes as keys
+ * @param  {Component} Wrapped) a component to apply this to
+ *
+ * @return {Component}              The component, now with context on it
+ * @private
+ */
+const withContextFromProps = (propsList, Wrapped) => withContext(propsList, (props) => {
+	return Object.keys(propsList).reduce((obj, key) => {
+		obj[key] = props[key]; return obj;
+	}, {});
+})(Wrapped);
+
 export {
 	cap,
 	childrenEquals,
@@ -156,4 +184,5 @@ export {
 	isRenderable,
 	extractAriaProps,
 	perfNow
+	withContextFromProps
 };
