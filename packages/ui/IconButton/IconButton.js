@@ -11,7 +11,7 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {ButtonFactory as UiButtonFactory} from '../Button';
+import UiButtonFactory from '../ButtonFactory';
 import UiIcon from '../Icon';
 
 import componentCss from './IconButton.less';
@@ -21,7 +21,7 @@ const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(UiIcon);
 /**
  * {@link ui/IconButton.IconButtonFactory} is Factory wrapper around
  * {@link ui/IconButton.IconButton} that allows overriding certain classes of the base
- * `Button` component at design time. See {@link ui/Button.ButtonBaseFactory}.
+ * `Button` component at design time. See {@link ui/ButtonFactory.ButtonBaseFactory}.
  *
  * @class IconButtonFactory
  * @memberof ui/IconButton
@@ -67,7 +67,7 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * The Button component to use as the basis for this Button.
 			 *
 			 * @type {Component}
-			 * @default {@link ui/Button}
+			 * @default Button Component
 			 * @public
 			 */
 			Button: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),

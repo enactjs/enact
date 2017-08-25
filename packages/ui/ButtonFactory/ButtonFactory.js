@@ -1,12 +1,10 @@
 /**
- * Exports the {@link ui/Button.Button} and {@link ui/Button.ButtonBase}
- * components. The default export is {@link ui/Button.Button}.
+ * Exports the {@link ui/ButtonFactory.ButtonFactory} and {@link ui/ButtonFactory.ButtonBaseFactory}
+ * components. The default export is {@link ui/ButtonFactory.ButtonFactory}.
  *
- * @module ui/Button
- * @exports Button
- * @exports ButtonBase
- * @exports ButtonBaseFactory
+ * @module ui/ButtonFactory
  * @exports ButtonFactory
+ * @exports ButtonBaseFactory
  */
 
 import factory from '@enact/core/factory';
@@ -21,17 +19,19 @@ import {MarqueeDecorator} from '../Marquee';
 import Pressable from '../Pressable';
 import {TooltipDecorator} from '../TooltipDecorator';
 
-import componentCss from './Button.less';
+import componentCss from './ButtonFactory.less';
 
 /**
- * {@link ui/Button.ButtonBaseFactory} is Factory wrapper around {@link ui/Button.ButtonBase}
- * that allows overriding certain classes at design time. The following are properties of the `css`
- * member of the argument to the factory.
+ * The Base Factory generates the most basic form of the component. In most circumstances, you
+ * will want to use the standard factory component which has already been extended with interactive
+ * features like focus and state management, etc.
+ * The Factory allows its consumer to overriding certain classes at design time.
+ * The following are properties of the `css` member of the argument to the factory.
  *
- * Usage:
+ * Using Factory to create a custom styled component:
  * ```
  * import css from './CustomButton.less';
- * import {ButtonFactory} from '@enact/ui/Button';
+ * import ButtonFactory from '@enact/ui/ButtonFactory';
  * const Button = ButtonFactory({
  *     css: {
  *         bg: css.bg,
@@ -41,47 +41,19 @@ import componentCss from './Button.less';
  * ```
  *
  * @class ButtonBaseFactory
- * @memberof ui/Button
+ * @memberof ui/ButtonFactory
  * @factory
  * @ui
  * @public
  */
 const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 	const CustomIcon = IconFactory({css});
-	/**
-	 * {@link ui/Button.ButtonBase} is a stateless Button with ui styling
-	 * applied. In most circumstances, you will want to use the Pressable and Spottable version:
-	 * {@link ui/Button.Button}
-	 *
-	 * @class ButtonBase
-	 * @memberof ui/Button
-	 * @ui
-	 * @public
-	 */
+
 	return kind({
 		name: 'Button',
 
-		propTypes: /** @lends ui/Button.ButtonBase.prototype */ {
+		propTypes: /** @lends ui/ButtonFactory.ButtonBaseFactory.prototype */ {
 			children: PropTypes.node.isRequired,
-
-			/**
-			 * The background-color opacity of this button; valid values are `'opaque'`, `'translucent'`,
-			 * and `'transparent'`.
-			 *
-			 * @type {String}
-			 * @default 'opaque'
-			 * @public
-			 */
-			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
-
-			/**
-			 * This property accepts one of the following color names, which correspond with the
-			 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
 
 			/**
 			 * When `true`, the [button]{@glossary button} is shown as disabled and does not
@@ -94,7 +66,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * Include an [icon]{@link ui/Icon.Icon} in your [button]{@link ui/Button.Button}.
+			 * Include an [icon]{@link ui/Icon.Icon} in your [button]{@link ui/ButtonFactory.ButtonFactory}.
 			 * The icon will be displayed before the natural reading order of the text, regardless
 			 * of locale. Any string that is valid for the `Icon` component is valid here. `icon` is
 			 * outside the marqueeable content so it will not scroll along with the text content of
@@ -118,7 +90,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 
 			/**
 			 * A boolean parameter affecting the minimum width of the button. When `true`,
-			 * the minimum width will be set to 180px (or 130px if [small]{@link ui/Button.Button#small}
+			 * the minimum width will be set to 180px (or 130px if [small]{@link ui/ButtonFactory.ButtonFactory#small}
 			 * is `true`). If `false`, the minimum width will be set to the current value of
 			 * `@moon-button-height` (thus forcing the button to be no smaller than a circle with
 			 * diameter `@moon-button-height`).
@@ -160,7 +132,6 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		defaultProps: {
-			backgroundOpacity: 'opaque',
 			disabled: false,
 			Icon: CustomIcon,
 			minWidth: true,
@@ -174,9 +145,8 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		computed: {
-			className: ({backgroundOpacity, color, minWidth, pressed, selected, small, styler}) => styler.append(
-				{pressed, small, minWidth, selected},
-				backgroundOpacity, color
+			className: ({minWidth, pressed, selected, small, styler}) => styler.append(
+				{pressed, small, minWidth, selected}
 			),
 			icon: ({icon, Icon, small}) =>
 				(typeof icon === 'string' ? <Icon className={css.icon} small={small}>{icon}</Icon> : icon)
@@ -190,8 +160,6 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		render: ({children, disabled, icon, ...rest}) => {
-			delete rest.backgroundOpacity;
-			delete rest.color;
 			delete rest.Icon;
 			delete rest.minWidth;
 			delete rest.pressed;
@@ -209,36 +177,28 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 });
 
 /**
- * {@link ui/Button.ButtonFactory} is Factory wrapper around {@link ui/Button.Button}
- * that allows overriding certain classes at design time. See {@link ui/Button.ButtonBaseFactory}.
+ * A full-featured component factory with minimum-to-function styling applied, ready to be styled
+ * and used by a theme. The classes from [ButtonBaseFactory]{@link ui/ButtonFactory.ButtonBaseFactory}
+ * are also available here.
+ *
+ * Usage:
+ * ```
+ * <Button>Press me!</Button>
+ * ```
  *
  * @class ButtonFactory
- * @memberof ui/Button
+ * @memberof ui/ButtonFactory
+ * @mixes i18n/Uppercase.Uppercase
+ * @mixes ui/TooltipDecorator.TooltipDecorator
+ * @mixes ui/Marquee.MarqueeDecorator
+ * @mixes ui/Pressable.Pressable
+ * @mixes spotlight/Spottable.Spottable
  * @factory
+ * @ui
  * @public
  */
 const ButtonFactory = factory(props => {
 	const Base = ButtonBaseFactory(props);
-	/**
-	 * {@link ui/Button.Button} is a Button with ui styling, Spottable and
-	 * Pressable applied.  If the Button's child component is text, it will be uppercased unless
-	 * `casing` is set.
-	 *
-	 * Usage:
-	 * ```
-	 * <Button>Press me!</Button>
-	 * ```
-	 *
-	 * @class Button
-	 * @memberof ui/Button
-	 * @mixes i18n/Uppercase.Uppercase
-	 * @mixes ui/TooltipDecorator.TooltipDecorator
-	 * @mixes ui/Marquee.MarqueeDecorator
-	 * @mixes ui/Pressable.Pressable
-	 * @mixes spotlight/Spottable.Spottable
-	 * @ui
-	 * @public
-	 */
 	return TooltipDecorator(
 		MarqueeDecorator(
 			{className: componentCss.marquee},
@@ -251,13 +211,8 @@ const ButtonFactory = factory(props => {
 	);
 });
 
-const ButtonBase = ButtonBaseFactory();
-const Button = ButtonFactory();
-
-export default Button;
+export default ButtonFactory;
 export {
-	Button,
-	ButtonBase,
 	ButtonFactory,
 	ButtonBaseFactory
 };

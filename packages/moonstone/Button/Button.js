@@ -14,11 +14,10 @@
 
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
-// import {diffClasses} from '@enact/ui/MigrationAid';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
 import Pressable from '@enact/ui/Pressable';
-import {ButtonBaseFactory as UiButtonBaseFactory} from '@enact/ui/Button';
+import {ButtonBaseFactory as UiButtonBaseFactory} from '@enact/ui/ButtonFactory';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -32,15 +31,30 @@ import componentCss from './Button.less';
 
 /**
  * A factory for customizing the visual style of [ButtonBase]{@link moonstone/Button.ButtonBase}.
+ * The following are CSS classes that may be overridden.
+ *
+ * Using ButtonFactory to create a custom styled component:
+ * ```
+ * import css from './CustomButton.less';
+ * import {ButtonFactory} from '@enact/moonstone/Button';
+ * const MyButton = ButtonFactory({
+ *     css: {
+ *         bg: css.bg,
+ *         selected: css.selected
+ *     }
+ * });
+ *
+ * // New component usable like any other:
+ * <MyButton>Customized!</MyButton>
+ * ```
  *
  * @class ButtonBaseFactory
+ * @extends ui/ButtonFactory.ButtonBaseFactory
  * @memberof moonstone/Button
  * @factory
  * @public
  */
 const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
-	// diffClasses('Moon Button', componentCss, css);
-
 	const MoonstoneButtonBase = UiButtonBaseFactory({
 		/* Replace classes in this step */
 		css: /** @lends moonstone/Button.ButtonBaseFactory.prototype */ {
@@ -67,17 +81,56 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 	return kind({
 		name: 'MoonstoneButton',
 
-		render: (props) => (
-			<MoonstoneButtonBase {...props} Icon={Icon} />
-		)
+		propTypes: /** @lends moonstone/Button.ButtonBase.prototype */ {
+			/**
+			 * The background-color opacity of this button; valid values are `'opaque'`, `'translucent'`,
+			 * and `'transparent'`.
+			 *
+			 * @type {String}
+			 * @default 'opaque'
+			 * @public
+			 */
+			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
+
+			/**
+			 * This property accepts one of the following color names, which correspond with the
+			 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue'])
+		},
+
+		defaultProps: {
+			backgroundOpacity: 'opaque'
+		},
+
+		styles: {
+			css,
+			className: 'button'
+		},
+
+		computed: {
+			className: ({backgroundOpacity, color, styler}) => styler.append(
+				backgroundOpacity, color
+			)
+		},
+
+		render: (props) => {
+			delete props.backgroundOpacity;
+			delete props.color;
+
+			return <MoonstoneButtonBase {...props} Icon={Icon} />;
+		}
 	});
 });
 
 /**
- * A stateless [Button]{@link moonstone/Button.Button}, with no HOCs applied.
+ * A stateless [ButtonBaseFactory]{@link moonstone/Button.ButtonBaseFactory}, with no HOCs applied.
  *
  * @class ButtonBase
- * @extends ui/Button.ButtonBase
+ * @extends moonstone/Button.ButtonBaseFactory
  * @memberof moonstone/Button
  * @ui
  * @public
@@ -129,7 +182,8 @@ const ButtonFactory = (props) => {
 };
 
 /**
- * A ready-to-use {@link ui/Button}, with HOCs applied.
+ * A ready-to-use component based on [ButtonFactory]{@link moonstone/Button.ButtonFactory},
+ * with HOCs applied.
  *
  * @class Button
  * @memberof moonstone/Button
