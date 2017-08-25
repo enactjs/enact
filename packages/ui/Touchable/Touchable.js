@@ -175,12 +175,12 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			noResume: false
 		}
 
-		target = null
-		handle = handle.bind(this)
-		hold = new Hold()
-
 		constructor () {
 			super();
+
+			this.target = null;
+			this.handle = handle.bind(this);
+			this.hold = new Hold();
 
 			this.state = {
 				active: States.Inactive
