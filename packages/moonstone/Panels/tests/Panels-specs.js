@@ -4,6 +4,10 @@ import sinon from 'sinon';
 
 import {Panels, PanelsBase} from '../Panels';
 
+import Panel from '../Panel';
+
+import css from '../Panel.less';
+
 describe('Panels Specs', () => {
 
 	it('should render application close button when \'noCloseButton\' is not specified', function () {
@@ -40,6 +44,94 @@ describe('Panels Specs', () => {
 
 		const expected = true;
 		const actual = handleAppClose.calledOnce;
+
+		expect(expected).to.equal(actual);
+	});
+
+	it('should have \'fadeIn\' class on Panel body if Panels does not have \'noFadeIn\' prop', function () {
+		const MainPanel = (props) => (
+			<Panel {...props}>
+				<div>Hello</div>
+			</Panel>
+		);
+
+		const subject = mount(
+			<Panels>
+				<MainPanel />
+			</Panels>
+		);
+
+		const PanelBody = subject.find(`.${css.body}`);
+
+		const expected = true;
+
+		const actual = PanelBody.hasClass(css.fadeIn);
+
+		expect(expected).to.equal(actual);
+	});
+
+	it('should have \'fadeIn\' class on Panel body if Panels does have \'noFadeIn\' prop', function () {
+		const MainPanel = (props) => (
+			<Panel {...props}>
+				<div>Hello</div>
+			</Panel>
+		);
+
+		const subject = mount(
+			<Panels noFadeIn>
+				<MainPanel />
+			</Panels>
+		);
+
+		const PanelBody = subject.find(`.${css.body}`);
+
+		const expected = false;
+
+		const actual = PanelBody.hasClass(css.fadeIn);
+
+		expect(expected).to.equal(actual);
+	});
+
+	it('should override \'Panels\' \'noFadeIn={false}\' with \'Panel\' \'noFadeIn\'', function () {
+		const MainPanel = (props) => (
+			<Panel {...props}>
+				<div>Hello</div>
+			</Panel>
+		);
+
+		const subject = mount(
+			<Panels>
+				<MainPanel noFadeIn />
+			</Panels>
+		);
+
+		const PanelBody = subject.find(`.${css.body}`);
+
+		const expected = false;
+
+		const actual = PanelBody.hasClass(css.fadeIn);
+
+		expect(expected).to.equal(actual);
+	});
+
+	it('should override \'Panels\' \'noFadeIn\' with \'Panel\' \'noFadeIn={false}\'', function () {
+		const MainPanel = (props) => (
+			<Panel {...props}>
+				<div>Hello</div>
+			</Panel>
+		);
+
+		const subject = mount(
+			<Panels noFadeIn>
+				<MainPanel noFadeIn={false} />
+			</Panels>
+		);
+
+		const PanelBody = subject.find(`.${css.body}`);
+
+		const expected = true;
+
+		const actual = PanelBody.hasClass(css.fadeIn);
 
 		expect(expected).to.equal(actual);
 	});

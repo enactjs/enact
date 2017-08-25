@@ -89,6 +89,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ## [1.5.0] - 2017-07-19
 
 ### Added
+- `moonstone/Panels` prop `noFadeIn` to prevent fading in children on `Panel` transition.
+- `moonstone/Panel` prop `noFadeIn` to prevent fading in children.
 
 - `moonstone/Slider` and `moonstone/IncrementSlider` prop `aria-valuetext` to support reading custom text instead of value
 - `moonstone/TooltipDecorator` property `tooltipProps` to attach props to tooltip component

@@ -93,7 +93,19 @@ const PanelBase = kind({
 		 * @default false
 		 * @public
 		 */
-		noAutoFocus: PropTypes.bool
+		noAutoFocus: PropTypes.bool,
+
+		/**
+		 * When `true`, the Panel will not fade-in.
+		 *
+		 * Typically one should set this at the parent `Panels` and have `Panels`
+		 * control everything. This is only if you would like to override for
+		 * each panel individually.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		noFadeIn: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -152,10 +164,11 @@ const PanelBase = kind({
 			return spotOnRender;
 		},
 		children: ({children, hideChildren}) => hideChildren ? null : children,
-		bodyClassName: ({header, hideChildren, styler}) => styler.join({
+		bodyClassName: ({header, hideChildren, noFadeIn, styler}) => styler.join({
 			body: true,
 			noHeader: !header,
-			visible: !hideChildren
+			visible: !hideChildren,
+			fadeIn: !noFadeIn
 		}),
 		// nulling headerId prevents the aria-labelledby relationship which is necessary to allow
 		// aria-label to take precedence
@@ -167,6 +180,7 @@ const PanelBase = kind({
 		delete rest.autoFocus;
 		delete rest.hideChildren;
 		delete rest.noAutoFocus;
+		delete rest.noFadeIn;
 
 		return (
 			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender}>
