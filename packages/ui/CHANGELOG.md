@@ -2,6 +2,20 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+- `ui/Layout` which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
+
+### Changed
+
+### Fixed
+
+### Removed
+
 ## [1.7.0] - 2017-08-23
 
 No significant changes.
@@ -11,9 +25,6 @@ No significant changes.
 No significant changes.
 
 ## [1.6.0] - 2017-08-04
-- `ui/Layout` which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
-
-### Changed
 
 ### Fixed
 
