@@ -77,7 +77,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * When `true`, the knob displays selected and can be moved using 5-way controls.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			active: PropTypes.bool,
@@ -106,7 +105,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			detachedKnob: PropTypes.bool,
@@ -115,7 +113,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * When `true`, the component is shown as disabled and does not generate events
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			disabled: PropTypes.bool,
@@ -123,7 +120,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			/**
 			 * When `true`, the tooltip, if present, is shown
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			focused: PropTypes.bool,
@@ -135,6 +131,16 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @private
 			 */
 			inputRef: PropTypes.func,
+
+			/**
+			* When not `vertical`, determines which side of the knob the tooltip appears on.
+			* When `false`, the tooltip will be on the left side, when `true`, the tooltip will
+			* be on the right.
+			*
+			* @type {String}
+			* @private
+			*/
+			knobAfterMidpoint: PropTypes.bool,
 
 			/**
 			 * The maximum value of the slider.
@@ -158,7 +164,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * When `true`, the slider bar doesn't show a fill and doesn't highlight when spotted
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			noFill: PropTypes.bool,
@@ -226,7 +231,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * When `true`, a pressed visual effect is applied
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			pressed: PropTypes.bool,
@@ -237,7 +241,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * user interaction.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			scrubbing: PropTypes.bool,
@@ -272,7 +275,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * properties.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			tooltip: PropTypes.bool,
@@ -282,18 +284,16 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * The percentage respects the min and max value props.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			tooltipAsPercent: PropTypes.bool,
 
 			/**
 			 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale
-			 * changes. This may be useful if you have a static layout that does not automatically
-			 * reverse when in an RTL language.
+			 * changes for `vertical` sliders. This may be useful if you have a static layout that
+			 * does not automatically reverse when in an RTL language.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			tooltipForceSide: PropTypes.bool,
@@ -325,7 +325,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * If `true` the slider will be oriented vertically.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			vertical: PropTypes.bool
@@ -334,6 +333,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		defaultProps: {
 			active: false,
 			backgroundProgress: 0,
+			knobAfterMidpoint: false,
 			detachedKnob: false,
 			focused: false,
 			max: 100,
@@ -398,7 +398,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, children, disabled, focused, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, children, disabled, focused, inputRef, knobAfterMidpoint, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
 			delete rest.noFill;
@@ -417,6 +417,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			} else if (focused) {
 				// only display tooltip when `focused`
 				tooltipComponent = <SliderTooltip
+					knobAfterMidpoint={knobAfterMidpoint}
 					forceSide={tooltipForceSide}
 					proportion={proportionProgress}
 					side={tooltipSide}

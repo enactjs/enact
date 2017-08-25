@@ -178,7 +178,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidUpdate (prevProps) {
 			// if the component is spotted and became disabled,
-			if (this.state.spotted && !prevProps.disabled && this.props.disabled) {
+			if (this.state.spotted && (
+				(!prevProps.disabled && this.props.disabled) ||
+				(!prevProps.spotlightDisabled && this.props.spotlightDisabled)
+			)) {
 				forward('onSpotlightDisappear', null, this.props);
 				if (lastSelectTarget === this) {
 					selectCancelled = true;
@@ -193,6 +196,22 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 					getContainersForNode(this.node).reverse().reduce((found, id) => {
 						return found || Spotlight.focus(id);
 					}, false);
+				}
+			}
+
+			// if the component became enabled, notify spotlight to enable restoring "lost" focus
+			if (
+				(!this.props.disabled && !this.props.spotlightDisabled) && (
+					(prevProps.disabled && !this.props.disabled) ||
+					(prevProps.spotlightDisabled && !this.props.spotlightDisabled)
+				)
+			) {
+				if (!Spotlight.getCurrent() && !Spotlight.getPointerMode() && !Spotlight.isPaused()) {
+					const containers = getContainersForNode(this.node);
+					const containerId = Spotlight.getActiveContainer();
+					if (containers.indexOf(containerId) >= 0) {
+						Spotlight.focus(containerId);
+					}
 				}
 			}
 		}

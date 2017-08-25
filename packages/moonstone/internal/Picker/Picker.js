@@ -721,7 +721,7 @@ const PickerBase = class extends React.Component {
 				disabled={disabled}
 				onBlur={this.handleBlur}
 				onFocus={this.handleFocus}
-				onKeyDown={joined ? this.handleKeyDown : null}
+				onKeyDown={this.handleKeyDown}
 				ref={this.initContainerRef}
 			>
 				<PickerButton

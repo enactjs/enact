@@ -11,7 +11,7 @@
 @moon-black:       #000;
 @moon-accent:      #cf0652;
 @moon-white:       #fff;
-@moon-red:         #ff0000;
+@moon-red:         #f00;
 
 @moon-remote-button-red-color:     #ff6d78; // #da3c3c; // #e71b1c;
 @moon-remote-button-green-color:   #6ff467; // #21c171; // #339966;
@@ -134,7 +134,7 @@
 
 // Panels
 // ---------------------------------------
-@moon-panels-scrim-always-viewing-bg-color: fade(@moon-bg-color, 75%);;
+@moon-panels-scrim-always-viewing-bg-color: fade(@moon-bg-color, 75%);
 @moon-panels-scrim-activity-bg-color: @moon-bg-color;
 @moon-panels-spot-fg-color: @moon-accent;
 @moon-panels-spot-bg-color: @moon-dark-gray;
@@ -158,6 +158,11 @@
 @moon-progress-bar-loaded-bg-color: rgba(86, 86, 86, 0.2);
 @moon-progress-bar-fill-bg-color: #808080;
 @moon-progress-bar-tooltip-text-color: @moon-white;
+
+// RadioItem
+// ---------------------------------------
+@moon-radio-item-indicator-color: @moon-dark-gray;
+@moon-radio-item-indicator-border-color: @moon-white;
 
 // Slider
 // ---------------------------------------
@@ -186,7 +191,7 @@
 // ContextualPopup
 // ---------------------------------------
 @moon-contextual-popup-bg-color: @moon-dark-gray;
-@moon-contextual-popup-border-color: rgba(0,0,0, 0.5);
+@moon-contextual-popup-border-color: rgba(0, 0, 0, 0.5);
 
 // Notification
 // ---------------------------------------
@@ -205,4 +210,4 @@
 @moon-video-player-slider-load-color: fade(darken(@moon-accent, 30%), 30%);
 @moon-video-player-subdued-text-color: #ccc;
 @moon-video-player-title-color: @moon-white;
-@moon-video-player-title-text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.75);
+@moon-video-player-title-text-shadow: 0 2px 2px rgba(0, 0, 0, 0.75);
