@@ -89,11 +89,11 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			Icon: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
 
 			/**
-			 * A boolean parameter affecting the minimum width of the button. When `true`,
-			 * the minimum width will be set to 180px (or 130px if [small]{@link ui/ButtonFactory.ButtonFactory#small}
-			 * is `true`). If `false`, the minimum width will be set to the current value of
-			 * `@moon-button-height` (thus forcing the button to be no smaller than a circle with
-			 * diameter `@moon-button-height`).
+			 * A boolean parameter affecting the minimum width of the button. When `true`, the
+			 * Button will not be smaller than the minimum width defined by the theme.
+			 * Having a minimum width allows features like Marquee to take effect, text to be
+			 * centered, and the button not unintentionally becoming a circle shape when the intent
+			 * was for a "pill" or rectangle shape.
 			 *
 			 * @type {Boolean}
 			 * @default true
@@ -119,10 +119,9 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			selected: PropTypes.bool,
 
 			/**
-			 * A boolean parameter affecting the size of the button. If `true`, the
-			 * button's diameter will be set to 60px. However, the button's tap target
-			 * will still have a diameter of 78px, with an invisible DOM element
-			 * wrapping the small button to provide the larger tap zone.
+			 * Typically components are designed at a single specific size. Some UX scenarios
+			 * require a denser set of information or controls be on the screen.
+			 * A `small` version of this Button may be appropriate for information-dense layouts.
 			 *
 			 * @type {Boolean}
 			 * @default false
