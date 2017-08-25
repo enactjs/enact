@@ -3,6 +3,8 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Touchable from '../internal/Touchable';
+
 import css from './VideoPlayer.less';
 
 /**
@@ -32,7 +34,11 @@ const OverlayBase = kind({
 	)
 });
 
-const Overlay = onlyUpdateForKeys(['children'])(OverlayBase);
+const Overlay = onlyUpdateForKeys(['children'])(
+	Touchable(
+		OverlayBase
+	)
+);
 
 export default Overlay;
 export {
