@@ -79,6 +79,25 @@ storiesOf('Touchable')
 				Flick within this component
 			</TouchableDiv>
 		)
+	)
+	.addWithInfo(
+		'with drag handlers',
+		() => (
+			<TouchableDiv
+				dragConfig={{
+					global: boolean('dragConfig.global', false),
+					moveTolerance: number('dragConfig.moveTolerance', 16)
+				}}
+				noResume={boolean('noResume', false)}
+				onDragStart={action('onDragStart')}
+				onDrag={action('onDrag')}
+				onDragEnd={action('onDragEnd')}
+				disabled={boolean('disabled')}
+				style={{border: '2px dashed #888', width: 500, height: 500}}
+			>
+				Flick within this component
+			</TouchableDiv>
+		)
 	);
 
 

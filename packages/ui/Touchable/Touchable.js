@@ -16,8 +16,9 @@ import React from 'react';
 import {activate, deactivate, pause, States} from './state';
 import {block, unblock, isNotBlocked} from './block';
 
-import {Hold, holdConfigPropType} from './Hold';
+import Drag from './Drag';
 import Flick from './Flick';
+import {Hold, holdConfigPropType} from './Hold';
 
 const getEventCoordinates = (ev) => {
 	let {clientX: x, clientY: y, type} = ev;
@@ -76,6 +77,13 @@ const defaultConfig = {
 	 */
 	activeProp: null,
 
+	dragConfig: {
+		constrain: 'window',
+		constrainBoxSizing: 'border-box',
+		global: false,
+		moveTolerance: 16
+	},
+
 	/**
 	 * Configures the behavior of the flick gesture. It accepts the following parameters
 	 *
@@ -133,6 +141,7 @@ const defaultConfig = {
 const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 	const {
 		activeProp,
+		dragConfig: defaultDragConfig,
 		flickConfig: defaultFlickConfig,
 		holdConfig: defaultHoldConfig
 	} = config;
@@ -250,6 +259,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		target = null
 		handle = handle.bind(this)
+		drag = new Drag()
 		flick = new Flick()
 		hold = new Hold()
 
@@ -318,8 +328,9 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		startGesture = (ev, props) => {
 			const coords = getEventCoordinates(ev);
 
-			this.hold.begin(defaultHoldConfig, props, coords);
-			this.flick.begin(defaultFlickConfig, props, coords);
+			this.hold.begin(defaultHoldConfig, props, coords, this.target);
+			this.flick.begin(defaultFlickConfig, props, coords, this.target);
+			this.drag.begin(defaultDragConfig, props, coords, this.target);
 
 			return true;
 		}
@@ -329,20 +340,21 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.hold.move(coords);
 			this.flick.move(coords);
+			this.drag.move(coords);
 
 			return true;
 		}
 
 		enterGesture = () => {
+			this.drag.enter();
 			this.hold.enter();
-			// this.flick.enter();
 
 			return true;
 		}
 
 		leaveGesture = () => {
+			this.drag.leave();
 			this.hold.leave();
-			// this.flick.leave();
 
 			return true;
 		}
@@ -350,6 +362,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		endGesture = () => {
 			this.hold.end();
 			this.flick.end();
+			this.drag.end();
 
 			return true;
 		}
@@ -391,9 +404,9 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		handleEnter = this.handle(
 			forProp('disabled', false),
 			forProp('noResume', false),
+			this.enterGesture,
 			this.isPaused,
-			this.activate,
-			this.enterGesture
+			this.activate
 		)
 
 		handleLeave = this.handle(
@@ -466,9 +479,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		// Global touchend/mouseup event handler to deactivate the component
 		handleGlobalUp = this.handle(
 			this.isTracking,
-			this.deactivate,
-			this.endGesture
-		)
+			this.deactivate
+		).finally(this.endGesture)
 
 		addHandlers (props) {
 			props.onMouseDown = this.handleMouseDown;
