@@ -251,7 +251,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		deactivate = (ev) => {
-			if ('changedTouches' in ev) {
+			if (ev && 'changedTouches' in ev) {
 				this.blurJob.start(this.target);
 			}
 
