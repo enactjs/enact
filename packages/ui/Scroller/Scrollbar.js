@@ -25,8 +25,8 @@ const setCSSVariable = (element, variable, value) => {
 };
 
 /**
- * {@link ui/Scroller.Scrollbar} is a Scrollbar with Moonstone styling.
- * It is used in {@link moonstone/Scrollable.Scrollable}.
+ * {@link ui/Scroller.Scrollbar} is a Scrollbar.
+ * It is used in {@link ui/Scrollable.Scrollable}.
  *
  * @class Scrollbar
  * @memberof ui/Scroller

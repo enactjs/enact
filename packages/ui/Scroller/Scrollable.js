@@ -60,7 +60,7 @@ const dataIndexAttribute = 'data-index';
  * {@link ui/Scroller.Scrollable} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
  *
- * Scrollable catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, `onWheel`, `onTouchStart`,
+ * Scrollable catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, `onTouchStart`,
  * `onTouchMove` and `onTouchEnd` events
  * from its wrapped component for scrolling behaviors.
  *

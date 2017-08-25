@@ -602,7 +602,6 @@ class VirtualListCore extends Component {
 		delete props.direction;
 		delete props.itemSize;
 		delete props.overhang;
-		delete props.pageScroll;
 		delete props.spacing;
 
 		if (primary) {
@@ -624,7 +623,7 @@ class VirtualListCore extends Component {
  *
  * @class VirtualListBase
  * @memberof ui/VirtualList
- * @mixes moonstone/Scrollable
+ * @mixes ui/Scrollable
  * @ui
  * @private
  */
