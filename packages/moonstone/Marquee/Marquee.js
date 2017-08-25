@@ -5,6 +5,7 @@
  * note: not jsdoc on purpose, exports in index.js
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
@@ -29,6 +30,14 @@ const MarqueeBase = kind({
 	propTypes: /** @lends moonstone/Marquee.Marquee.prototype */ {
 
 		/**
+		 * Text alignment value of the marquee. Valid values are `'left'`, `'right'` and `'center'`.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		alignment: PropTypes.oneOf(['left', 'right', 'center']),
+
+		/**
 		 * `true` when the component should be animating
 		 *
 		 * @type {Boolean}
@@ -41,6 +50,7 @@ const MarqueeBase = kind({
 		 *
 		 * @type {Boolean}
 		 * @public
+		 * @deprecated replaced by `alignment`
 		 */
 		centered: PropTypes.bool,
 
@@ -132,22 +142,19 @@ const MarqueeBase = kind({
 
 	computed: {
 		clientClassName: ({animating}) => animating ? animated : css.text,
-		clientStyle: ({animating, centered, distance, forceDirection, overflow, rtl, speed}, {rtl: contextRtl}) => {
+		clientStyle: ({alignment, animating, centered, distance, forceDirection, overflow, rtl, speed}, {rtl: contextRtl}) => {
 			const isTextRtl = forceDirection ? forceDirection === 'rtl' : rtl;
 			const overrideRtl = forceDirection ? true : contextRtl !== isTextRtl;
 
-			// We only attempt to set the textAlign of this control if the locale's directionality
-			// differs from the directionality of our current marqueeable control (as determined by
-			// the control's content) and it will marquee.
 			let textAlign = null;
+
 			if (centered) {
+				deprecate({name: 'centered', since: '1.7.0', message: 'Use `alignment` instead', until: '2.0.0'});
 				textAlign = 'center';
-			} else if (overrideRtl && distance > 0) {
-				if (isTextRtl) {
-					textAlign = 'right';
-				} else {
-					textAlign = 'left';
-				}
+			}
+
+			if (alignment) {
+				textAlign = alignment;
 			}
 
 			// If the components content directionality doesn't match the context, we need to set it

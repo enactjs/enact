@@ -1,6 +1,6 @@
 {
   "name": "@enact/ui",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "description": "A collection of simplified unstyled cross-platform UI components for Enact",
   "main": "index.js",
   "scripts": {
@@ -28,8 +28,8 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^1.6.1",
-    "@enact/i18n": "^1.6.1",
+    "@enact/core": "^1.7.0",
+    "@enact/i18n": "^1.7.0",
     "classnames": "~2.2.5",
     "invariant": "~2.2.2",
     "prop-types": "~15.5.10",
