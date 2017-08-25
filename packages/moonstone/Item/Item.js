@@ -142,7 +142,7 @@ const ItemOverlayFactory = (props) => Spottable(
 );
 
 /**
- * A ready-to-use {@link ui/Button}, with HOCs applied that can display simple text or a set of
+ * A ready-to-use {@link ui/Item}, with HOCs applied that can display simple text or a set of
  * controls along with overlays before and/or after the contents.
  *
  * ```
