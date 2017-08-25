@@ -25,6 +25,10 @@ import PropTypes from 'prop-types';
 
 import css from './Layout.less';
 
+/*
+ * contextTypes, which are available to the `kind` and `withContextFromProps`, allow Layout to
+ * inform child Cells about itself that Cell can act upon.
+ */
 const contextTypes = {
 	align: PropTypes.string,
 	orientation: PropTypes.string
@@ -280,16 +284,8 @@ const withContextFromProps = (propsList, Wrapped) => withContext(propsList, (pro
 	}, {});
 })(Wrapped);
 
-// NOTE: Discuss which is a better format, the above code block or this below.
-// const withContextFromProps = (propsList) => withContext(propsList, (props) => {
-// 	return Object.keys(propsList).reduce((obj, key) => {
-// 		obj[key] = props[key]; return obj;
-// 	}, {});
-// });
-
 // Apply to Layout so children have access to a few relevant props applied to Layout
 const Layout = withContextFromProps(contextTypes, LayoutBase);
-// const Layout = withContextFromProps(contextTypes)(LayoutBase);
 
 export default Layout;
 export {Layout, LayoutBase, CellBase as Cell, CellBase};
