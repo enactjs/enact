@@ -1603,6 +1603,7 @@ const VideoPlayerBase = class extends React.Component {
 			rateButtonsDisabled,
 			rightComponents,
 			source,
+			spotlightDisabled,
 			style,
 			thumbnailSrc,
 			title,
@@ -1625,7 +1626,6 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;
 		delete rest.setApiProvider;
-		delete rest.spotlightDisabled;
 		delete rest.thumbnailUnavailable;
 		delete rest.titleHideDelay;
 		delete rest.tooltipHideDelay;
@@ -1662,7 +1662,7 @@ const VideoPlayerBase = class extends React.Component {
 
 				{this.state.bottomControlsRendered ?
 					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}} {...controlsAriaProps}>
-						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible}>
+						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible || spotlightDisabled}>
 							{/*
 								Info Section: Title, Description, Times
 								Only render when `this.state.bottomControlsVisible` is true in order for `Marquee`
@@ -1693,7 +1693,7 @@ const VideoPlayerBase = class extends React.Component {
 								onMouseOut={this.handleMouseOut}
 								onSpotlightUp={this.handleSpotlightUpFromSlider}
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
-								spotlightDisabled={this.props.spotlightDisabled}
+								spotlightDisabled={spotlightDisabled}
 							>
 								<FeedbackTooltip
 									noFeedback={this.state.mouseOver}
