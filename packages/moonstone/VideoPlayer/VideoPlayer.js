@@ -1037,7 +1037,8 @@ const VideoPlayerBase = class extends React.Component {
 		() => (
 			!this.state.bottomControlsVisible &&
 			!Spotlight.getCurrent() &&
-			Spotlight.getPointerMode()
+			Spotlight.getPointerMode() &&
+			!this.props.spotlightDisabled
 		),
 		stopImmediate,
 		this.showControlsFromPointer
