@@ -13,8 +13,16 @@ import Icon from '../Icon';
 import {ItemBase} from '../Item';
 import Skinnable from '../Skinnable';
 import {MarqueeController, MarqueeText} from '../Marquee';
+import Touchable from '../internal/Touchable';
 
-const Controller = MarqueeController({marqueeOnFocus: true}, Spottable(ItemBase));
+const Item = MarqueeController(
+	{marqueeOnFocus: true},
+	Touchable(
+		Spottable(
+			ItemBase
+		)
+	)
+);
 
 import css from './LabeledItem.less';
 
@@ -63,13 +71,13 @@ const LabeledItemBase = kind({
 	},
 
 	render: ({children, label, titleIcon, ...rest}) => (
-		<Controller {...rest}>
+		<Item {...rest}>
 			<div className={css.text}>
 				<MarqueeText className={css.title}>{children}</MarqueeText>
 				{(titleIcon != null) ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
 			</div>
 			{(label != null) ? <MarqueeText className={css.label}>{label}</MarqueeText> : null}
-		</Controller>
+		</Item>
 	)
 });
 
