@@ -163,15 +163,17 @@ const perfNow = function () {
  * // The `alignment` will now be available as a context key in Component's children.
  * ```
  *
- * @param  {Object} propsList) a contextTypes object full of keys to be used as prop->context and their PropTypes as keys
- * @param  {Component} Wrapped) a component to apply this to
+ * @param  {Object} propsList	A contextTypes object full of keys to be used as prop->context and
+ *	their PropTypes as keys
+ * @param  {Component} Wrapped	A component to apply this to
  *
  * @return {Component}              The component, now with context on it
  * @private
  */
 const withContextFromProps = (propsList, Wrapped) => withContext(propsList, (props) => {
 	return Object.keys(propsList).reduce((obj, key) => {
-		obj[key] = props[key]; return obj;
+		obj[key] = props[key];
+		return obj;
 	}, {});
 })(Wrapped);
 
