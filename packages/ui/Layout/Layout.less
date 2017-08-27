@@ -1,0 +1,74 @@
+// Layout.less
+//
+
+.layout {
+	display: flex;
+	margin: 0;
+	box-sizing: border-box;
+
+	// Children
+	.cell {
+		flex: 1 0;
+		position: relative;  // Allow content to treat cells as positionable spaces
+
+		&.grow {
+			flex: 1 1 100%;
+		}
+
+		&.shrink {
+			flex: 0 0 0;
+		}
+	}
+
+	// Modes
+	&.horizontal {
+		flex-direction: row;
+
+		> .cell {
+			&.grow {
+				width: 0;
+			}
+		}
+	}
+
+	&.vertical {
+		flex-direction: column;
+		height: 100%;
+
+		> .cell {
+			&.grow {
+				height: 0;
+				align-self: normal;
+			}
+		}
+	}
+
+	&.inline {
+		display: inline-flex;
+	}
+
+	&.wrap {
+		flex-wrap: wrap;
+	}
+
+	&.nowrap {
+		flex-wrap: nowrap;
+	}
+
+	&.wrapReverse {
+		flex-wrap: wrap-reverse;
+	}
+
+	// Debug lines to help see what's going on
+	:global(.debug)&,
+	:global(.debug) & {
+		outline: 1px dotted teal;
+	}
+
+	.cell {
+		:global(.debug)&,
+		:global(.debug) & {
+			outline: 1px dashed orange;
+		}
+	}
+}
