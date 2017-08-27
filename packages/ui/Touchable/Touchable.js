@@ -243,7 +243,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				this.setState(activate);
 			}
 
-			if ('changedTouches' in ev) {
+			if (ev && 'changedTouches' in ev) {
 				this.target.focus();
 			}
 
