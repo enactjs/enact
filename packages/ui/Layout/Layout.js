@@ -109,8 +109,8 @@ const CellBase = kind({
 		className: ({shrink, size, styler}) => styler.append({shrink, grow: (!shrink && !size)}),
 		style: ({shrink, size, style = {}}, {orientation}) => {
 			style.flexBasis = size;
-			if (!shrink) style[orientation === 'vertical' ? 'maxHeight' : 'maxWidth'] = size; // shrink and size uses just basis, size without shrink forcively sets the size, allowing overflow.
-			return  style;
+			if (!shrink) style[orientation === 'vertical' ? 'maxHeight' : 'maxWidth'] = size; // shrink and size uses just basis, size without shrink forcibly sets the size, allowing overflow.
+			return style;
 		}
 	},
 
