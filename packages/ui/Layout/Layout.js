@@ -116,6 +116,7 @@ const CellBase = kind({
 
 	render: ({component: Component, ...rest}) => {
 		delete rest.shrink;
+		delete rest.size;
 
 		return <Component {...rest} />;
 	}
@@ -209,13 +210,6 @@ const LayoutBase = kind({
 		 */
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
-		// {
-		// 	false: noWrap,
-		// 	nowrap: noWrap
-		// 	true: wrap
-		// 	wrap: wrap
-		// 	reverse: wrapReverse
-		// }
 		/**
 		 * Determine how a Layout handles its cells if there are more than fit in the available
 		 * space. This works like a normal Boolean prop, but also accepts strings for customization
@@ -263,6 +257,7 @@ const LayoutBase = kind({
 		delete rest.align;
 		delete rest.inline;
 		delete rest.orientation;
+		delete rest.wrap;
 
 		return <Component {...rest} />;
 	}
