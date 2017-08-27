@@ -178,10 +178,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		constructor () {
 			super();
 
-			this.target = null;
-			this.handle = handle.bind(this);
-			this.hold = new Hold();
-
 			this.state = {
 				active: States.Inactive
 			};
@@ -212,6 +208,10 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 			off('mouseup', this.handleGlobalUp, document);
 		}
+
+		target = null
+		handle = handle.bind(this)
+		hold = new Hold()
 
 		setTarget = (target) => {
 			this.target = target;
