@@ -2,26 +2,16 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [2.0.0-alpha.1] - 2017-08-27
 
 ## Added
 
+- `ui/Layout` which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
 - `ui/Touchable` to support consistent mouse and touch events along with hold gesture
 
 ## Removed
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
-### Deprecated
-
-### Added
-
-- `ui/Layout` which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
-
-### Changed
-
-### Fixed
-
-### Removed
 
 ## [1.7.0] - 2017-08-23
 
