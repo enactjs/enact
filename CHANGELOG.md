@@ -2,6 +2,21 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.0.0-alpha.1] - 2017-08-27
+
+## Added
+
+- `ui/Layout` which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
+- `ui/Touchable` to support consistent mouse and touch events along with hold gesture
+
+### Changed
+
+- `moonstone/Button`, `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/IconButton`, `moonstone/IncrementSlider`, `moonstone/Item`, `moonstone/Picker`, and `moonstone/RangePicker`, `moonstone/Switch` and `moonstone/VideoPlayer` to use `ui/Touchable`
+
+## Removed
+
+- `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
+
 ## [1.7.0] - 2017-08-23
 
 ### Deprecated
