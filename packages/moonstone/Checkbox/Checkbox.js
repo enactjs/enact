@@ -11,8 +11,11 @@ import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
 import Skinnable from '../Skinnable';
+import Touchable from '../internal/Touchable';
 
 import css from './Checkbox.less';
+
+const TouchableDiv = Touchable('div');
 
 /**
  * {@link moonstone/Checkbox.Checkbox} represents a Boolean state, and looks like a check mark in a box.
@@ -68,7 +71,7 @@ const CheckboxBase = kind({
 
 	handlers: {
 		onToggle: handle(
-			forward('onClick'),
+			forward('onTap'),
 			(ev, {selected, onToggle}) => {
 				if (onToggle) {
 					onToggle({selected: !selected});
@@ -85,9 +88,9 @@ const CheckboxBase = kind({
 		delete rest.selected;
 
 		return (
-			<div {...rest} onClick={onToggle}>
+			<TouchableDiv {...rest} onTap={onToggle}>
 				<Icon className={css.icon}>check</Icon>
-			</div>
+			</TouchableDiv>
 		);
 	}
 });

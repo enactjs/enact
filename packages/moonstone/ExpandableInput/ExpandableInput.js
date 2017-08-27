@@ -257,7 +257,13 @@ class ExpandableInputBase extends React.Component {
 		}
 	}
 
-	handleInputBlur = () => {
+	handleInputBlur = (ev) => {
+		// this avoids firing a close on blur when tapping the label in touch mode which momentarily
+		// focused the component for feedback
+		if (ev.relatedTarget && ev.relatedTarget.dataset.expandableLabel) {
+			return;
+		}
+
 		// if `open` is `false`, the contained <input> has lost focus due to 5-way navigation
 		// in `handleInputKeyDown`, where the `fireCloseEvent` method has already been called
 		// verify the expandable is open before calling that method again.

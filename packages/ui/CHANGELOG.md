@@ -4,6 +4,13 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+## Added
+
+- `ui/Touchable` to support consistent mouse and touch events along with hold gesture
+
+## Removed
+
+- `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
 ### Deprecated
 
 ### Added

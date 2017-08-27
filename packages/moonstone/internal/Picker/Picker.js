@@ -52,8 +52,6 @@ const forwardBlur = forward('onBlur'),
 	forwardClick = forward('onClick'),
 	forwardFocus = forward('onFocus'),
 	forwardKeyDown = forward('onKeyDown'),
-	forwardMouseDown = forward('onMouseDown'),
-	forwardMouseUp = forward('onMouseUp'),
 	forwardWheel = forward('onWheel');
 
 /**
@@ -213,22 +211,6 @@ const PickerBase = class extends React.Component {
 		onIncrementSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * Initiate the pressed state
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onMouseDown: PropTypes.func,
-
-		/**
-		 * End the pressed state
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onMouseUp: PropTypes.func,
-
-		/**
 		 * The handler to run prior to focus leaving the picker when the 5-way down key is pressed.
 		 *
 		 * @type {Function}
@@ -273,17 +255,6 @@ const PickerBase = class extends React.Component {
 		 * @public
 		 */
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
-
-		/**
-		 * Which button (increment, decrement, or neither) is pressed
-		 *
-		 * @type {Number|null}
-		 * @public
-		 */
-		pressed: PropTypes.oneOfType([
-			PropTypes.number,
-			PropTypes.bool
-		]),
 
 		/**
 		 * When `true`, the picker buttons operate in the reverse direction such that pressing
@@ -365,7 +336,8 @@ const PickerBase = class extends React.Component {
 		this.state = {
 			// Set to `true` onFocus and `false` onBlur to prevent setting aria-valuetext (which
 			// will notify the user) when the component does not have focus
-			active: false
+			active: false,
+			pressed: 0
 		};
 
 		this.initContainerRef = this.initRef('containerRef');
@@ -474,39 +446,31 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
-	handleDown = (dir) => {
-		const {joined, onMouseDown} = this.props;
-		if (joined && onMouseDown) {
-			onMouseDown({pressed: dir});
+	handleDown = (pressed) => {
+		const {joined} = this.props;
+		if (joined) {
+			this.setState({pressed});
 		}
 	}
 
-	emulateMouseUp = new Job((ev) => {
-		const {onMouseUp} = this.props;
-		if (onMouseUp) {
-			onMouseUp(ev);
-		}
+	emulateMouseUp = new Job(() => {
+		this.setState({
+			pressed: 0
+		});
 	}, 175)
 
-	handleUp = (ev) => {
+	handleUp = () => {
 		const {joined} = this.props;
-		forwardMouseUp(ev, this.props);
 		if (joined) {
 			this.emulateMouseUp.start();
 		}
 	}
 
-	handleDecDown = (ev) => {
-		if (ev) {
-			forwardMouseDown(ev, this.props);
-		}
+	handleDecDown = () => {
 		this.handleDown(-1);
 	}
 
-	handleIncDown = (ev) => {
-		if (ev) {
-			forwardMouseDown(ev, this.props);
-		}
+	handleIncDown = () => {
 		this.handleDown(1);
 	}
 
@@ -535,14 +499,14 @@ const PickerBase = class extends React.Component {
 
 	handleDecPulse = () => {
 		if (!this.hasReachedBound(this.props.step * -1)) {
-			this.handleDecDown();
+			this.handleDown(-1);
 			this.updateValue(-1);
 		}
 	}
 
 	handleIncPulse = () => {
 		if (!this.hasReachedBound(this.props.step)) {
-			this.handleIncDown();
+			this.handleDown(1);
 			this.updateValue(1);
 		}
 	}
@@ -633,7 +597,8 @@ const PickerBase = class extends React.Component {
 	}
 
 	determineClasses (decrementerDisabled, incrementerDisabled) {
-		const {joined, orientation, pressed, width} = this.props;
+		const {joined, orientation, width} = this.props;
+		const {pressed} = this.state;
 		return [
 			css.picker,
 			css[orientation],
@@ -717,13 +682,10 @@ const PickerBase = class extends React.Component {
 		delete rest.max;
 		delete rest.min;
 		delete rest.onChange;
-		delete rest.onMouseDown;
-		delete rest.onMouseUp;
 		delete rest.onPickerSpotlightDown;
 		delete rest.onPickerSpotlightLeft;
 		delete rest.onPickerSpotlightRight;
 		delete rest.onPickerSpotlightUp;
-		delete rest.pressed;
 		delete rest.reverse;
 		delete rest.value;
 		delete rest.wrap;
@@ -770,12 +732,12 @@ const PickerBase = class extends React.Component {
 					hidden={reachedEnd}
 					icon={incrementIcon}
 					joined={joined}
-					onClick={this.handleIncClick}
+					onDown={this.handleIncDown}
 					onHoldPulse={this.handleIncPulse}
 					onKeyDown={this.handleIncKeyDown}
-					onMouseDown={this.handleIncDown}
-					onMouseUp={this.handleUp}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}
+					onTap={this.handleIncClick}
+					onUp={this.handleUp}
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
@@ -806,12 +768,12 @@ const PickerBase = class extends React.Component {
 					hidden={reachedStart}
 					icon={decrementIcon}
 					joined={joined}
-					onClick={this.handleDecClick}
+					onDown={this.handleDecDown}
 					onHoldPulse={this.handleDecPulse}
 					onKeyDown={this.handleDecKeyDown}
-					onMouseDown={this.handleDecDown}
-					onMouseUp={this.handleUp}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
+					onTap={this.handleDecClick}
+					onUp={this.handleUp}
 					spotlightDisabled={spotlightDisabled}
 				/>
 			</div>
