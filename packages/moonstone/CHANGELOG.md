@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [Unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+
+### Fixed
+
+- `moonstone/VideoPlayer` tooltip time after `mouseOut`
+
 ## [1.7.0] - 2017-08-23
 
 ### Deprecated
