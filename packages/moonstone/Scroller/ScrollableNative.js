@@ -248,11 +248,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			const
-				bounds = this.getScrollBounds(),
-				isVertical = this.canScrollVertically(bounds);
+			const bounds = this.getScrollBounds();
 
-			this.pageDistance = (isVertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+			this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
 			this.updateScrollbars();
@@ -544,14 +542,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const
 				{getEndPoint, scrollToAccumulatedTarget} = this,
 				bounds = this.getScrollBounds(),
-				isVertical = this.canScrollVertically(bounds),
+				canScrollVertically = this.canScrollVertically(bounds),
 				pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
 				spotItem = Spotlight.getCurrent();
 
 			if (!Spotlight.getPointerMode() && spotItem) {
 				const
 					containerId = Spotlight.getActiveContainer(),
-					direction = this.getPageDirection(keyCode, isVertical),
+					direction = this.getPageDirection(keyCode, canScrollVertically),
 					rDirection = reverseDirections[direction],
 					viewportBounds = this.containerRef.getBoundingClientRect(),
 					spotItemBounds = spotItem.getBoundingClientRect(),
@@ -559,7 +557,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
 
 				if (!next) {
-					scrollToAccumulatedTarget(pageDistance, isVertical);
+					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 				} else if (next !== spotItem) {
 					this.animateOnFocus = false;
 					Spotlight.focus(next);
@@ -570,11 +568,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						this.animateOnFocus = false;
 						Spotlight.focus(nextPage);
 					} else if (!nextPage) {
-						scrollToAccumulatedTarget(pageDistance, isVertical);
+						scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 					}
 				}
 			} else {
-				scrollToAccumulatedTarget(pageDistance, isVertical);
+				scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 			}
 		}
 
@@ -982,6 +980,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 		// state member.
 		enqueueForceUpdate = () => {
+			this.childRef.calculateMetrics();
 			this.forceUpdateJob.start();
 		}
 
