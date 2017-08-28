@@ -64,7 +64,7 @@ storiesOf('Touchable')
 				onHoldPulse={action('onHoldPulse')}
 				disabled={boolean('disabled')}
 			>
-				Resumable
+				Not Resumable
 			</Button>
 		)
 	)

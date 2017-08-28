@@ -489,8 +489,10 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.addHandlers(props);
 
+			delete props.holdConfig;
 			delete props.noResume;
 			delete props.onDown;
+			delete props.onFlick;
 			delete props.onHold;
 			delete props.onHoldPulse;
 			delete props.onTap;
