@@ -1079,7 +1079,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	/**
 	 * Returns an object with the current state of the media including `currentTime`, `duration`,
-	 * `paused`, `proportionLoaded`, and `proportionPlayed`.
+	 * `paused`, `playbackRate`, `proportionLoaded`, and `proportionPlayed`.
 	 *
 	 * @function
 	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
@@ -1091,6 +1091,7 @@ const VideoPlayerBase = class extends React.Component {
 			currentTime       : this.state.currentTime,
 			duration          : this.state.duration,
 			paused            : this.state.paused,
+			playbackRate      : this.video.playbackRate,
 			proportionLoaded  : this.state.proportionLoaded,
 			proportionPlayed  : this.state.proportionPlayed
 		};
