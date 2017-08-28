@@ -794,7 +794,8 @@ class VirtualListCoreNative extends Component {
 				this.isPrimaryDirectionVertical && isDown(keyCode) ||
 				!this.isPrimaryDirectionVertical && (!this.context.rtl && isRight(keyCode) || this.context.rtl && isLeft(keyCode)) ||
 				null
-			), isBackward = (
+			),
+			isBackward = (
 				this.isPrimaryDirectionVertical && isUp(keyCode) ||
 				!this.isPrimaryDirectionVertical && (!this.context.rtl && isLeft(keyCode) || this.context.rtl && isRight(keyCode)) ||
 				null
@@ -831,6 +832,9 @@ class VirtualListCoreNative extends Component {
 		}
 
 		if (nextIndex !== -1 && (firstIndex > nextIndex || nextIndex >= firstIndex + numOfItems)) {
+			// When changing from "pointer" mode to "5way key" mode,
+			// a pointer is hidden and a last focused item get focused after 30ms.
+			// To make sure the item to be blurred after that, we used 50ms.
 			setTimeout(() => {
 				target.blur();
 			}, 50);
@@ -901,27 +905,24 @@ class VirtualListCoreNative extends Component {
 
 	render () {
 		const
-			props = Object.assign({}, this.props),
-			{primary, cc} = this;
+			{className, style, ...rest} = this.props,
+			{primary, cc} = this,
+			mergedClasses = classNames(css.list, this.containerClass, className);
 
-		delete props.cbScrollTo;
-		delete props.clientSize;
-		delete props.component;
-		delete props.data;
-		delete props.dataSize;
-		delete props.direction;
-		delete props.itemSize;
-		delete props.overhang;
-		delete props.pageScroll;
-		delete props.spacing;
+		delete rest.cbScrollTo;
+		delete rest.clientSize;
+		delete rest.component;
+		delete rest.data;
+		delete rest.dataSize;
+		delete rest.direction;
+		delete rest.itemSize;
+		delete rest.overhang;
+		delete rest.pageScroll;
+		delete rest.spacing;
 
 		if (primary) {
 			this.positionItems();
 		}
-
-		const
-			{className, style, ...rest} = props,
-			mergedClasses = classNames(css.list, this.containerClass, className);
 
 		return (
 			<div className={mergedClasses} ref={this.initContainerRef} style={style}>
