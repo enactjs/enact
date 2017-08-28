@@ -293,7 +293,6 @@ class VirtualListCore extends Component {
 	containerRef = null
 
 	// spotlight
-	nodeIndexToBeBlurred = null
 	nodeIndexToBeFocused = null
 	lastFocusedIndex = null
 	preservedIndex = null
@@ -595,15 +594,6 @@ class VirtualListCore extends Component {
 			node = this.containerRef.children[index % numOfItems];
 
 		if (node) {
-			if ((index % numOfItems) === this.nodeIndexToBeBlurred && index !== this.lastFocusedIndex) {
-				// When changing from "pointer" mode to "5way key" mode,
-				// a pointer is hidden and a last focused item get focused after 30ms.
-				// To make sure the item to be blurred after that, we used 50ms.
-				setTimeout(() => {
-					node.blur();
-				}, 50);
-				this.nodeIndexToBeBlurred = null;
-			}
 			this.composeStyle(node.style, ...rest);
 		}
 	}
@@ -725,14 +715,13 @@ class VirtualListCore extends Component {
 	calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
 		const
 			{pageScroll} = this.props,
-			{primary, numOfItems} = this,
+			{primary} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
 		if (!isNaN(focusedIndex) && (focusedIndex !== this.lastFocusedIndex || this.restoreLastFocused)) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
-			this.nodeIndexToBeBlurred = this.lastFocusedIndex % numOfItems;
 			this.nodeIndexToBeFocused = null;
 			this.lastFocusedIndex = focusedIndex;
 
@@ -757,10 +746,11 @@ class VirtualListCore extends Component {
 		Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
 	}
 
-	setSpotlightContainerRestrict = (keyCode, index) => {
+	setSpotlightContainerRestrict = (keyCode, target) => {
 		const
 			{dataSize} = this.props,
 			{isPrimaryDirectionVertical, dimensionToExtent} = this,
+			index = Number.parseInt(target.getAttribute(dataIndexAttribute)),
 			canMoveBackward = index >= dimensionToExtent,
 			canMoveForward = index < (dataSize - (((dataSize - 1) % dimensionToExtent) + 1));
 		let isSelfOnly = false;
@@ -808,10 +798,11 @@ class VirtualListCore extends Component {
 
 	shouldPreventScrollByFocus = () => this.isScrolledBy5way
 
-	jumpToSpottableItem = (keyCode, currentIndex) => {
+	jumpToSpottableItem = (keyCode, target) => {
 		const
 			{cbScrollTo, data, dataSize} = this.props,
-			{firstIndex, numOfItems} = this.state;
+			{firstIndex, numOfItems} = this.state,
+			currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
 
 		if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled) {
 			return false;
@@ -860,7 +851,13 @@ class VirtualListCore extends Component {
 		}
 
 		if (nextIndex !== -1 && (firstIndex > nextIndex || nextIndex >= firstIndex + numOfItems)) {
-			this.nodeIndexToBeBlurred = currentIndex % numOfItems;
+			// When changing from "pointer" mode to "5way key" mode,
+			// a pointer is hidden and a last focused item get focused after 30ms.
+			// To make sure the item to be blurred after that, we used 50ms.
+			setTimeout(() => {
+				target.blur();
+			}, 50);
+
 			this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
 
 			if (!Spotlight.isPaused()) {
@@ -882,9 +879,8 @@ class VirtualListCore extends Component {
 
 		this.isScrolledBy5way = false;
 		if (getDirection(keyCode)) {
-			const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
-			this.setSpotlightContainerRestrict(keyCode, index);
-			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, index);
+			this.setSpotlightContainerRestrict(keyCode, target);
+			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, target);
 		}
 		forwardKeyDown(e, this.props);
 	}
