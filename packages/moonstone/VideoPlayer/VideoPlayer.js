@@ -1482,7 +1482,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedFeedbackHide();
 	}
 	handleMouseOut = () => {
-		this.setState({mouseOver: false});
+		this.setState({mouseOver: false, sliderTooltipTime: this.state.currentTime});
 		this.startDelayedFeedbackHide();
 	}
 	onJumpBackward = this.handle(
