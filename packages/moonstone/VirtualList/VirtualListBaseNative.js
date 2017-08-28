@@ -906,7 +906,8 @@ class VirtualListCoreNative extends Component {
 	render () {
 		const
 			{className, style, ...rest} = this.props,
-			{primary, cc} = this;
+			{primary, cc} = this,
+			mergedClasses = classNames(css.list, this.containerClass, className);
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
@@ -922,8 +923,6 @@ class VirtualListCoreNative extends Component {
 		if (primary) {
 			this.positionItems();
 		}
-
-		const mergedClasses = classNames(css.list, this.containerClass, className);
 
 		return (
 			<div className={mergedClasses} ref={this.initContainerRef} style={style}>
