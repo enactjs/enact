@@ -94,6 +94,8 @@ const handledCustomMediaEventsMap = {
 
 // provide forwarding of events on media controls
 const forwardControlsAvailable = forward('onControlsAvailable');
+const forwardRewind = forward('onRewind');
+const forwardFastForward = forward('onFastForward');
 const forwardBackwardButtonClick = forward('onBackwardButtonClick');
 const forwardForwardButtonClick = forward('onForwardButtonClick');
 const forwardJumpBackwardButtonClick = forwardWithPrevent('onJumpBackwardButtonClick');
@@ -395,6 +397,14 @@ const VideoPlayerBase = class extends React.Component {
 		onControlsAvailable: PropTypes.func,
 
 		/**
+		 * Function executed when media playback rate changes in the forwards direction (e.g.:
+		 * clicking fast forward button on remote). The playback rate is sent in the `playbackRate`
+		 * member of the first argument.
+		 * @type {Function}
+		 */
+		onFastForward: PropTypes.func,
+
+		/**
 		 * Function executed when the user clicks the Forward button. Is passed
 		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
 		 *
@@ -429,6 +439,14 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		onPlayButtonClick: PropTypes.func,
+
+		/**
+		 * Function executed when media playback rate changes in the backwards direction (e.g.:
+		 * clicking rewind button on remote). The playback rate is sent in the `playbackRate` member
+		 * of the first argument.
+		 * @type {Function}
+		 */
+		onRewind: PropTypes.func,
 
 		/**
 		 * Function executed when the user is moving the VideoPlayer's Slider knob independently of
@@ -1225,6 +1243,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedFeedbackHide();
 
 		this.showFeedback();
+
+		forwardFastForward({playbackRate: this.video.playbackRate}, this.props);
 	}
 
 	/**
@@ -1274,6 +1294,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedFeedbackHide();
 
 		this.showFeedback();
+
+		forwardRewind({playbackRate: this.video.playbackRate}, this.props);
 	}
 
 	/**
@@ -1607,12 +1629,14 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.jumpBy;
 		delete rest.jumpDelay;
 		delete rest.no5WayJump;
-		delete rest.onControlsAvailable;
 		delete rest.onBackwardButtonClick;
+		delete rest.onControlsAvailable;
+		delete rest.onFastForward;
 		delete rest.onForwardButtonClick;
 		delete rest.onJumpBackwardButtonClick;
 		delete rest.onJumpForwardButtonClick;
 		delete rest.onPlayButtonClick;
+		delete rest.onRewind;
 		delete rest.onScrub;
 		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;

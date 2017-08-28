@@ -24,6 +24,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/TooltipDecorator` config property to direct tooltip into a property instead of adding to `children`
+- `moonstone/VideoPlayer` callback properties `onFastForward` and `onRewind`
 - `moonstone/VideoPlayer` prop `thumbnailUnavailable` to fade thumbnail
 - `moonstone/AccessibilityDecorator` with `highContrast` and `textSize`
 - `moonstone/VideoPlayer` high contrast scrim
