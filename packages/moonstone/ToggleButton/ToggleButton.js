@@ -173,7 +173,7 @@ const ToggleButtonBase = kind({
  * @public
  */
 const ToggleButton = Toggleable(
-	{prop: 'selected', toggle: 'onClick'},
+	{prop: 'selected', toggle: 'onTap'},
 	Skinnable(
 		ToggleButtonBase
 	)

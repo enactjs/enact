@@ -218,11 +218,11 @@ const MediaControls = kind({
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
 						<Container className={css.mediaControls} spotlightDisabled={!moreDisabled}> {/* rtl={false} */}
-							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick}>{jumpBackwardIcon}</MediaButton>}
-							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick}>{backwardIcon}</MediaButton>}
-							<MediaButton aria-label={playPauseLabel} className={spotlightDefaultClass} backgroundOpacity="translucent" onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
-							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onForwardButtonClick}>{forwardIcon}</MediaButton>}
-							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick}>{jumpForwardIcon}</MediaButton>}
+							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onTap={onJumpBackwardButtonClick}>{jumpBackwardIcon}</MediaButton>}
+							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onTap={onBackwardButtonClick}>{backwardIcon}</MediaButton>}
+							<MediaButton aria-label={playPauseLabel} className={spotlightDefaultClass} backgroundOpacity="translucent" onTap={onPlayButtonClick}>{playPauseIcon}</MediaButton>
+							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onTap={onForwardButtonClick}>{forwardIcon}</MediaButton>}
+							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onTap={onJumpForwardButtonClick}>{jumpForwardIcon}</MediaButton>}
 						</Container>
 						<Container className={css.moreControls} spotlightDisabled={moreDisabled}>
 							{children}
@@ -237,7 +237,7 @@ const MediaControls = kind({
 							backgroundOpacity="translucent"
 							className={css.moreButton}
 							disabled={moreButtonDisabled}
-							onClick={onToggleMore}
+							onTap={onToggleMore}
 							tooltipProps={{role: 'dialog'}}
 							tooltipText={moreIconLabel}
 						>

@@ -13,7 +13,6 @@ import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
-import Pressable from '@enact/ui/Pressable';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -21,6 +20,7 @@ import Icon from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
 import {TooltipDecorator} from '../TooltipDecorator';
 import Skinnable from '../Skinnable';
+import Touchable from '../internal/Touchable';
 
 import componentCss from './Button.less';
 
@@ -50,7 +50,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 
 	/**
 	 * {@link moonstone/Button.ButtonBase} is a stateless Button with Moonstone styling
-	 * applied. In most circumstances, you will want to use the Pressable and Spottable version:
+	 * applied. In most circumstances, you will want to use the Touchable and Spottable version:
 	 * {@link moonstone/Button.Button}
 	 *
 	 * @class ButtonBase
@@ -225,7 +225,7 @@ const ButtonFactory = factory(css => {
 	const Base = ButtonBaseFactory(css);
 	/**
 	 * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
-	 * Pressable applied.  If the Button's child component is text, it will be uppercased unless
+	 * Touchable applied.  If the Button's child component is text, it will be uppercased unless
 	 * `casing` is set.
 	 *
 	 * Usage:
@@ -238,7 +238,7 @@ const ButtonFactory = factory(css => {
 	 * @mixes i18n/Uppercase.Uppercase
 	 * @mixes moonstone/TooltipDecorator.TooltipDecorator
 	 * @mixes moonstone/Marquee.MarqueeDecorator
-	 * @mixes ui/Pressable.Pressable
+	 * @mixes ui/Touchable.Touchable
 	 * @mixes spotlight/Spottable.Spottable
 	 * @ui
 	 * @public
@@ -247,7 +247,8 @@ const ButtonFactory = factory(css => {
 		TooltipDecorator(
 			MarqueeDecorator(
 				{className: componentCss.marquee},
-				Pressable(
+				Touchable(
+					{activeProp: 'pressed'},
 					Spottable(
 						Skinnable(
 							Base

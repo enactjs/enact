@@ -2,6 +2,17 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [2.0.0-alpha.1] - 2017-08-27
+
+## Added
+
+- `ui/Layout` which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
+- `ui/Touchable` to support consistent mouse and touch events along with hold gesture
+
+## Removed
+
+- `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
+
 ## [1.7.0] - 2017-08-23
 
 No significant changes.
@@ -58,7 +69,6 @@ No significant changes.
 ### Added
 
 - `ui/Skinnable` to provide themes with a way to apply a base theme styling and skins on top of that
-## Unreleased
 - `ui/Transition` prop `onShow` that fires when transitioning into view a component.
 - `ui/transition` callback prop `onShow` that fires when transitioning into view completes
 

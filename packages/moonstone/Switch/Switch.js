@@ -11,8 +11,11 @@ import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
 import Skinnable from '../Skinnable';
+import Touchable from '../internal/Touchable';
 
 import css from './Switch.less';
+
+const TouchableSpan = Touchable('span');
 
 /**
  * {@link moonstone/Switch.Switch} represents a Boolean state, and looks like a switch in
@@ -79,7 +82,7 @@ const SwitchBase = kind({
 
 	handlers: {
 		onToggle: handle(
-			forward('onClick'),
+			forward('onTap'),
 			(ev, {selected, onToggle}) => {
 				if (onToggle) {
 					onToggle({selected: !selected});
@@ -99,9 +102,9 @@ const SwitchBase = kind({
 		delete rest.selected;
 
 		return (
-			<span {...rest} onClick={onToggle}>
+			<TouchableSpan {...rest} onTap={onToggle}>
 				<Icon className={css.icon}>circle</Icon>
-			</span>
+			</TouchableSpan>
 		);
 	}
 });

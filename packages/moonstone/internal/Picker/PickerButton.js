@@ -1,4 +1,3 @@
-import Holdable from '../Holdable';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -8,7 +7,29 @@ import Icon from '../../Icon';
 import IconButton from '../../IconButton';
 import {withSkinnableProps} from '../../Skinnable';
 
+import Touchable from '../Touchable';
+
 import css from './Picker.less';
+
+const JoinedPickerButtonBase = kind({
+	name: 'JoinedPickerButtonBase',
+
+	propTypes: {
+		disabled: PropTypes.bool,
+		icon: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.object
+		])
+	},
+
+	render: ({disabled, icon, ...rest}) => (
+		<span {...rest} disabled={disabled}>
+			<Icon className={css.icon} disabled={disabled} small>{icon}</Icon>
+		</span>
+	)
+});
+
+const JoinedPickerButton = Touchable(JoinedPickerButtonBase);
 
 const PickerButtonBase = kind({
 	name: 'PickerButton',
@@ -44,9 +65,7 @@ const PickerButtonBase = kind({
 			delete rest.spotlightDisabled;
 
 			return (
-				<span {...rest} disabled={disabled}>
-					<Icon className={css.icon} disabled={disabled} small>{icon}</Icon>
-				</span>
+				<JoinedPickerButton {...rest} icon={icon} disabled={disabled} />
 			);
 		} else {
 			return (
@@ -58,12 +77,9 @@ const PickerButtonBase = kind({
 	}
 });
 
-const PickerButton = Holdable(
-	{resume: true, endHold: 'onLeave'},
-	withSkinnableProps(
-		onlyUpdateForKeys(['aria-label', 'disabled', 'icon', 'joined', 'onMouseUp', 'skin', 'spotlightDisabled'])(
-			PickerButtonBase
-		)
+const PickerButton = withSkinnableProps(
+	onlyUpdateForKeys(['aria-label', 'disabled', 'icon', 'joined', 'onMouseUp', 'skin', 'spotlightDisabled'])(
+		PickerButtonBase
 	)
 );
 

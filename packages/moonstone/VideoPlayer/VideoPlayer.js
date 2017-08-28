@@ -25,6 +25,7 @@ import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlig
 import $L from '../internal/$L';
 import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
+import Touchable from '../internal/Touchable';
 
 import {calcNumberValueOfPlaybackRate, getNow, secondsToTime} from './util';
 import Overlay from './Overlay';
@@ -36,7 +37,7 @@ import Times from './Times';
 
 import css from './VideoPlayer.less';
 
-const SpottableDiv = Spottable('div');
+const SpottableDiv = Touchable(Spottable('div'));
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 
 // Keycode map for webOS TV
@@ -1646,7 +1647,7 @@ const VideoPlayerBase = class extends React.Component {
 
 				<Overlay
 					bottomControlsVisible={this.state.bottomControlsVisible}
-					onClick={this.onVideoClick}
+					onTap={this.onVideoClick}
 				>
 					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>
@@ -1738,7 +1739,7 @@ const VideoPlayerBase = class extends React.Component {
 					// It's non-visible but lives at the top of the VideoPlayer.
 					className={css.controlsHandleAbove}
 					onSpotlightDown={this.showControls}
-					onClick={this.showControls}
+					onTap={this.showControls}
 					onKeyDown={this.handleKeyDown}
 				/>
 				<Announce ref={this.setAnnounceRef} />

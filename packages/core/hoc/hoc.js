@@ -1,4 +1,14 @@
 import {isRenderable} from '../util';
+import mergeDeepWithKey from 'ramda/src/mergeDeepWithKey';
+
+const mergeFn = (key, defaultValue, userValue) => {
+	// eslint-disable-next-line no-undefined
+	if (userValue === undefined) {
+		return defaultValue;
+	}
+
+	return userValue;
+};
 
 /**
  * Constructs a Higher-order Component using an optional set of default configuration parameters and
@@ -53,7 +63,7 @@ const hoc = (defaultConfig, hawk) => {
 		if (isRenderable(config)) {
 			return factory(defaults, config);
 		} else {
-			const cfg = Object.assign({}, defaults, config);
+			const cfg = mergeDeepWithKey(mergeFn, defaults, config);
 			if (isRenderable(maybeWrapped)) {
 				return factory(cfg, maybeWrapped);
 			} else {

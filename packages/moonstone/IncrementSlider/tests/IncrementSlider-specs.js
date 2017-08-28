@@ -4,6 +4,13 @@ import {mount} from 'enzyme';
 import {IncrementSlider, IncrementSliderBase} from '../IncrementSlider';
 import css from '../IncrementSlider.less';
 
+const tap = (node) => {
+	node.simulate('mousedown');
+	node.simulate('mouseup');
+};
+const decrement = (slider) => tap(slider.find('IconButton').first());
+const increment = (slider) => tap(slider.find('IconButton').last());
+
 describe('IncrementSlider Specs', () => {
 	it('should decrement value', function () {
 		const handleChange = sinon.spy();
@@ -15,7 +22,7 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.decrementButton}`).simulate('click');
+		decrement(incrementSlider);
 
 		const expected = value - 1;
 		const actual = handleChange.args[0][0].value;
@@ -33,7 +40,7 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.incrementButton}`).simulate('click');
+		increment(incrementSlider);
 
 		const expected = value + 1;
 		const actual = handleChange.args[0][0].value;
@@ -51,7 +58,7 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.incrementButton}`).simulate('click');
+		increment(incrementSlider);
 
 		const expected = true;
 		const actual = handleChange.calledOnce;
@@ -115,7 +122,7 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.incrementButton}`).simulate('click');
+		increment(incrementSlider);
 
 		const expected = true;
 		const actual = handleIncrement.calledOnce;
@@ -133,7 +140,7 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.incrementButton}`).simulate('click');
+		increment(incrementSlider);
 
 		const expected = false;
 		const actual = handleIncrement.called;
@@ -151,7 +158,7 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.decrementButton}`).simulate('click');
+		decrement(incrementSlider);
 
 		const expected = true;
 		const actual = handleDecrement.calledOnce;
@@ -169,7 +176,7 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.decrementButton}`).simulate('click');
+		decrement(incrementSlider);
 
 		const expected = false;
 		const actual = handleDecrement.called;
