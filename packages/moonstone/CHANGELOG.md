@@ -12,7 +12,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/VideoPlayer` tooltip time after `mouseOut`
+- `moonstone/IconButton` Tooltip position when disabled
+- `moonstone/VideoPlayer` Tooltip time after `mouseOut`
 
 ## [1.7.0] - 2017-08-23
 
