@@ -148,6 +148,8 @@ storiesOf('VideoPlayer')
 						pauseIcon={select('pauseIcon', icons, 'pause')}
 						playIcon={select('playIcon', icons, 'play')}
 						poster={poster}
+						thumbnailSrc={poster}
+						thumbnailUnavailable={boolean('thumbnailUnavailable', false)}
 						title={text('title', 'Moonstone VideoPlayer Sample Video')}
 						titleHideDelay={number('titleHideDelay', 4000)}
 						{...prop.eventActions}

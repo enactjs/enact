@@ -180,7 +180,6 @@ class ScrollbarBase extends PureComponent {
 	minThumbSizeRatio = 0
 	pressed = false
 	ignoreMode = false
-	buttonToFocus = null
 	// component refs
 	containerRef = null
 	thumbRef = null
@@ -189,10 +188,6 @@ class ScrollbarBase extends PureComponent {
 
 	setPressStatus = (isPressed) => {
 		this.pressed = isPressed;
-		if (!isPressed && this.buttonToFocus) {
-			Spotlight.focus(this.buttonToFocus);
-			this.buttonToFocus = null;
-		}
 	}
 
 	setIgnoreMode = (shouldIgnore) => {
@@ -216,8 +211,10 @@ class ScrollbarBase extends PureComponent {
 			currentPos = vertical ? bounds.scrollTop : bounds.scrollLeft,
 			maxPos = vertical ? bounds.maxTop : bounds.maxLeft,
 			shouldDisablePrevButton = currentPos <= 0,
-			shouldDisableNextButton = currentPos >= maxPos,
-			spotItem = window.document.activeElement;
+			/* If a scroll size or a client size is not integer,
+			   browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
+			shouldDisableNextButton = maxPos - currentPos <= 1,
+			spotItem = Spotlight.getCurrent();
 
 		this.setState((prevState) => {
 			const
@@ -233,16 +230,11 @@ class ScrollbarBase extends PureComponent {
 			}
 		});
 
-		if (shouldDisablePrevButton && spotItem === prevButtonNodeRef) {
-			if (this.pressed) {
-				this.setIgnoreMode(true);
-				this.buttonToFocus = nextButtonNodeRef;
-			}
-		} else if (shouldDisableNextButton && spotItem === nextButtonNodeRef) {
-			if (this.pressed) {
-				this.setIgnoreMode(true);
-				this.buttonToFocus = prevButtonNodeRef;
-			}
+		if (this.pressed && (
+			shouldDisablePrevButton && spotItem === prevButtonNodeRef ||
+			shouldDisableNextButton && spotItem === nextButtonNodeRef
+		)) {
+			this.setIgnoreMode(true);
 		}
 	}
 

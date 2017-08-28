@@ -134,7 +134,7 @@ const SpinnerBase = kind({
 		marquee: ({children}) => {
 			if (children) {
 				return (
-					<MarqueeText className={css.client} marqueeOn="render" marqueeCentered>
+					<MarqueeText className={css.client} marqueeOn="render" alignment="center">
 						{children}
 					</MarqueeText>
 				);
