@@ -6,7 +6,6 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
@@ -168,7 +167,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		static childContextTypes = contextTypesResize
-		static contextTypes = contextTypesRtl
 
 		constructor (props) {
 			super(props);

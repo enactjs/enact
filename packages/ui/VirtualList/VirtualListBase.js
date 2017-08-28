@@ -5,7 +5,6 @@
  * export is {@link ui/VirtualList.VirtualListBase}.
  */
 import classNames from 'classnames';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -135,8 +134,6 @@ class VirtualListCore extends Component {
 		 */
 		spacing: PropTypes.number
 	}
-
-	static contextTypes = contextTypes
 
 	static defaultProps = {
 		cbScrollTo: nop,
@@ -531,8 +528,7 @@ class VirtualListCore extends Component {
 	}
 
 	getXY = (primaryPosition, secondaryPosition) => {
-		const rtlDirection = this.context.rtl ? -1 : 1;
-		return (this.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
+		return (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition});
 	}
 
 	composeTransform (style, primaryPosition, secondaryPosition = 0) {

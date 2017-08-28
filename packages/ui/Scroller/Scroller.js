@@ -7,7 +7,6 @@
  */
 
 import classNames from 'classnames';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -49,8 +48,6 @@ class ScrollerBase extends Component {
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
 	}
 
-	static contextTypes = contextTypes
-
 	static defaultProps = {
 		direction: 'both'
 	}
@@ -83,8 +80,6 @@ class ScrollerBase extends Component {
 
 	getScrollBounds = () => this.scrollBounds
 
-	getRtlPositionX = (x) => (this.context.rtl ? this.scrollBounds.maxLeft - x : x)
-
 	// for Scrollable
 	setScrollPosition (x, y) {
 		const
@@ -95,7 +90,7 @@ class ScrollerBase extends Component {
 			this.scrollPos.top = y;
 		}
 		if (this.isHorizontal()) {
-			node.scrollLeft = this.getRtlPositionX(x);
+			node.scrollLeft = x;
 			this.scrollPos.left = x;
 		}
 	}
