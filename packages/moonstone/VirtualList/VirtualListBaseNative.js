@@ -923,8 +923,7 @@ class VirtualListCoreNative extends Component {
 			this.positionItems();
 		}
 
-		const
-			mergedClasses = classNames(css.list, this.containerClass, className);
+		const mergedClasses = classNames(css.list, this.containerClass, className);
 
 		return (
 			<div className={mergedClasses} ref={this.initContainerRef} style={style}>
