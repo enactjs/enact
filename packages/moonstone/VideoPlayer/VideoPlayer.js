@@ -48,6 +48,9 @@ const keyMap = {
 	'FASTFORWARD': 417
 };
 
+// Default props from MediaControls
+const controlsDefault = MediaControls.defaultProps;
+
 // Video ReadyStates
 // - Commented are currently unused.
 //
@@ -582,14 +585,14 @@ const VideoPlayerBase = class extends React.Component {
 
 	static defaultProps = {
 		autoCloseTimeout: 5000,
-		backwardIcon: 'backward',
+		backwardIcon: controlsDefault.backwardIcon,
 		feedbackHideDelay: 3000,
-		forwardIcon: 'forward',
+		forwardIcon: controlsDefault.forwardIcon,
 		initialJumpDelay: 400,
-		jumpBackwardIcon: 'skipbackward',
+		jumpBackwardIcon: controlsDefault.jumpBackwardIcon,
 		jumpBy: 30,
 		jumpDelay: 200,
-		jumpForwardIcon: 'skipforward',
+		jumpForwardIcon: controlsDefault.jumpForwardIcon,
 		moreButtonDisabled: false,
 		muted: false,
 		no5WayJump: false,
@@ -598,14 +601,14 @@ const VideoPlayerBase = class extends React.Component {
 		pauseAtEnd: false,
 		noRateButtons: false,
 		noSlider: false,
-		pauseIcon: 'pause',
+		pauseIcon: controlsDefault.pauseIcon,
 		playbackRateHash: {
 			fastForward: ['2', '4', '8', '16'],
 			rewind: ['-2', '-4', '-8', '-16'],
 			slowForward: ['1/4', '1/2'],
 			slowRewind: ['-1/2', '-1']
 		},
-		playIcon: 'play',
+		playIcon: controlsDefault.playIcon,
 		titleHideDelay: 5000,
 		tooltipHideDelay: 3000
 	}
@@ -1737,7 +1740,7 @@ const VideoPlayerBase = class extends React.Component {
 								rateButtonsDisabled={rateButtonsDisabled}
 								rightComponents={rightComponents}
 								showMoreComponents={this.state.more}
-								spotlightDisabled={this.props.spotlightDisabled}
+								spotlightDisabled={spotlightDisabled}
 							>
 								{children}
 							</MediaControls>
@@ -1752,7 +1755,7 @@ const VideoPlayerBase = class extends React.Component {
 					onSpotlightDown={this.showControls}
 					onClick={this.showControls}
 					onKeyDown={this.handleKeyDown}
-					spotlightDisabled={this.props.spotlightDisabled}
+					spotlightDisabled={spotlightDisabled}
 				/>
 				<Announce ref={this.setAnnounceRef} />
 			</div>
