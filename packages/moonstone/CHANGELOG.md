@@ -8,11 +8,15 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Popup` callback property `onShow` which fires after popup appears for both animating and non-animating popups
+
 ### Changed
+
+- `moonstone/Popup` callback property `onHide` runs on both animating and non-animating popups
 
 ### Fixed
 
--`moonstone/IconButton` Tooltip position when disabled
+- `moonstone/IconButton` Tooltip position when disabled
 
 ## [1.7.0] - 2017-08-23
 

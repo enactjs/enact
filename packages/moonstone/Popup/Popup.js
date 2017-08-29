@@ -240,7 +240,8 @@ class Popup extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
-		 * A function to be run after transition for hiding is finished.
+		 * A function to be run when popup hides. When animating it runs after transition for
+		 * hiding is finished.
 		 *
 		 * @type {Function}
 		 * @public
@@ -256,7 +257,8 @@ class Popup extends React.Component {
 		onKeyDown: PropTypes.func,
 
 		/**
-		 * A function to run after transition for showing is finished.
+		 * A function to run when popup shows. When animating, it runs after transition for
+		 * showing is finished.
 		 *
 		 * @type {Function}
 		 * @public
