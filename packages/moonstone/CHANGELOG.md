@@ -42,7 +42,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to focus the correct item when page up and page down keys are pressed
 - `moonstone/VirtualList` not to lose focus when moving out from the first item via 5way when it has disabled items
-- `moonstone/Header` to not have its contents extend beyond its bounds
 - `moonstone/Slider` to align tooltip with detached knob
 - `moonstone/FormCheckbox` to display correct colors in light skin
 - `moonstone/Picker` and `moonstone/RangePicker` to forward `onKeyDown` events when not `joined`
