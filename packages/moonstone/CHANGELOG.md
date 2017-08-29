@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/VideoPlayer` thumbnail positioning and style
+
 ### Fixed
 
 - `moonstone/IconButton` Tooltip position when disabled
