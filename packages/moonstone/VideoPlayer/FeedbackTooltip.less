@@ -12,8 +12,9 @@
 	.thumbnail,
 	.content {
 		pointer-events: none;
-		will-change: transform;
-		transform: translateX(calc(var(--knob-progress) ~' * -100%'));
+		// The thumbnail positioning based on `knob-progress`
+		// will-change: transform;
+		// transform: translateX(calc(var(--knob-progress) ~' * -100%'));
 	}
 
 	.thumbnail {
@@ -46,12 +47,12 @@
 		bottom: @moon-spotlight-outset;
 	}
 
-	[data-knob-after-midpoint="false"] & {
-		.thumbnail,
-		.content {
-			transform: translateX(0%) translateX(0);
-		}
-	}
+	// [data-knob-after-midpoint="false"] & {
+	// 	.thumbnail,
+	// 	.content {
+	// 		transform: translateX(0%) translateX(0);
+	// 	}
+	// }
 
 	[data-knob-after-midpoint="true"] & {
 		.thumbnail,
