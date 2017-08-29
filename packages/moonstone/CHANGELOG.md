@@ -12,7 +12,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
--`moonstone/IconButton` Tooltip position when disabled
+- `moonstone/IconButton` Tooltip position when disabled
+- `moonstone/VideoPlayer` to display feedback tooltip correctly when navigating in 5-way
 
 ## [1.7.0] - 2017-08-23
 
@@ -41,7 +42,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to focus the correct item when page up and page down keys are pressed
 - `moonstone/VirtualList` not to lose focus when moving out from the first item via 5way when it has disabled items
-- `moonstone/VideoPlayer` to display feedback tooltip correctly when navigating in 5-way
 - `moonstone/Header` to not have its contents extend beyond its bounds
 - `moonstone/Slider` to align tooltip with detached knob
 - `moonstone/FormCheckbox` to display correct colors in light skin
