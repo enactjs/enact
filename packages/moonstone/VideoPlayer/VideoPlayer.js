@@ -615,6 +615,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.speedIndex = 0;
 		this.id = this.generateId();
 		this.selectPlaybackRates('fastForward');
+		this.sliderKnobProportion = 0;
 
 		this.initI18n();
 
@@ -650,11 +651,11 @@ const VideoPlayerBase = class extends React.Component {
 			// Non-standard state computed from properties
 			bottomControlsRendered: false,
 			bottomControlsVisible: false,
-			feedbackVisible: true,
+			feedbackIconVisible: true,
+			feedbackVisible: false,
 			more: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
-			sliderKnobProportion: 0,
 			titleVisible: true
 		};
 
@@ -889,8 +890,12 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedTitleHide();
 		this.setState({
 			bottomControlsVisible: false,
+			feedbackVisible: false,
 			more: false
-		}, () => forwardControlsAvailable({available: false}, this.props));
+		}, () => {
+			Spotlight.focus(`.${css.controlsHandleAbove}`);
+			return forwardControlsAvailable({available: false}, this.props);
+		});
 		this.markAnnounceRead();
 	}
 
@@ -930,11 +935,15 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	showFeedback = () => {
-		this.setState({feedbackVisible: true});
+		if (this.state.bottomControlsVisible && !this.state.feedbackVisible) {
+			this.setState({feedbackVisible: true});
+		}
 	}
 
 	hideFeedback = () => {
-		this.setState({feedbackVisible: false});
+		if (this.state.feedbackVisible) {
+			this.setState({feedbackVisible: false});
+		}
 	}
 
 	hideFeedbackJob = new Job(this.hideFeedback)
@@ -1474,17 +1483,24 @@ const VideoPlayerBase = class extends React.Component {
 			}
 		}
 	}
-	handleMouseOver = () => {
+
+	handleSliderFocus = () => {
+		this.sliderScrubbing = true;
 		this.setState({
-			mouseOver: true,
+			feedbackIconVisible: false,
 			feedbackVisible: true
 		});
 		this.stopDelayedFeedbackHide();
 	}
-	handleMouseOut = () => {
-		this.setState({mouseOver: false});
+
+	handleSliderBlur = () => {
+		this.sliderScrubbing = false;
 		this.startDelayedFeedbackHide();
+		this.setState({
+			feedbackIconVisible: true
+		});
 	}
+
 	onJumpBackward = this.handle(
 		(ev, props) => forwardJumpBackwardButtonClick(this.addStateToEvent(ev), props),
 		() => this.jump(-1 * this.props.jumpBy)
@@ -1652,8 +1668,11 @@ const VideoPlayerBase = class extends React.Component {
 				</Overlay>
 
 				{this.state.bottomControlsRendered ?
-					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}} {...controlsAriaProps}>
-						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible}>
+					<div className={css.fullscreen + ' enyo-fit scrim'} {...controlsAriaProps}>
+						<Container
+							className={css.bottom + (this.state.bottomControlsVisible ? '' : ' ' + css.hidden)}
+							spotlightDisabled={!this.state.bottomControlsVisible}
+						>
 							{/*
 								Info Section: Title, Description, Times
 								Only render when `this.state.bottomControlsVisible` is true in order for `Marquee`
@@ -1678,15 +1697,15 @@ const VideoPlayerBase = class extends React.Component {
 							{noSlider ? null : <MediaSlider
 								backgroundProgress={this.state.proportionLoaded}
 								value={this.state.proportionPlayed}
+								onBlur={this.handleSliderBlur}
 								onChange={this.onSliderChange}
+								onFocus={this.handleSliderFocus}
 								onKnobMove={this.handleKnobMove}
-								onMouseOver={this.handleMouseOver}
-								onMouseOut={this.handleMouseOut}
 								onSpotlightUp={this.handleSpotlightUpFromSlider}
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
 							>
 								<FeedbackTooltip
-									noFeedback={this.state.mouseOver}
+									noFeedback={!this.state.feedbackIconVisible}
 									playbackState={this.prevCommand}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
 									thumbnailDeactivated={this.props.thumbnailUnavailable}
