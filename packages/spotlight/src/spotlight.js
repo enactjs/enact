@@ -296,10 +296,15 @@ const Spotlight = (function () {
 			Spotlight.setPointerMode(palmSystem.cursor.visibility);
 		}
 
-		// If the window was previously blurred while in pointer mode, the last active containerId may
-		// not have yet set focus to its spottable elements. For this reason we can't rely on setting focus
-		// to the last focused element of the last active containerId, so we use rootContainerId instead
-		Spotlight.focus(getContainerLastFocusedElement(rootContainerId));
+		// Normally, there isn't focus at this point because we've blurred it above. On webOS, the
+		// platform may focus the window after the app has already focused a component so we prevent
+		// trying to focus something else (potentially) if focus is set.
+		if (!getCurrent()) {
+			// If the window was previously blurred while in pointer mode, the last active containerId may
+			// not have yet set focus to its spottable elements. For this reason we can't rely on setting focus
+			// to the last focused element of the last active containerId, so we use rootContainerId instead
+			Spotlight.focus(getContainerLastFocusedElement(rootContainerId));
+		}
 	}
 
 	function onKeyUp (evt) {

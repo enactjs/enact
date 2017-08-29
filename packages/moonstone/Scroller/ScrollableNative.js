@@ -7,6 +7,7 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
+import {contextTypes as contextTypesRemeasurable} from '@enact/ui/Remeasurable';
 import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
@@ -60,22 +61,29 @@ const
  */
 const dataIndexAttribute = 'data-index';
 
-const navigableFilter = (elem) => {
-	if (
-		!Spotlight.getPointerMode() &&
-		// ignore containers passed as their id
-		typeof elem !== 'string' &&
-		elem.classList.contains(scrollbarCss.scrollButton)
-	) {
-		return false;
-	}
-};
+const ScrollableSpotlightContainer = SpotlightContainerDecorator(
+	{
+		navigableFilter: (elem, {focusableScrollbar}) => {
+			if (
+				!focusableScrollbar &&
+				!Spotlight.getPointerMode() &&
+				// ignore containers passed as their id
+				typeof elem !== 'string' &&
+				elem.classList.contains(scrollbarCss.scrollButton)
+			) {
+				return false;
+			}
+		},
+		overflow: true
+	},
+	({containerRef, ...rest}) => {
+		delete rest.focusableScrollbar;
 
-const configureSpotlightContainer = ({'data-container-id': containerId, focusableScrollbar}) => {
-	Spotlight.set(containerId, {
-		navigableFilter: focusableScrollbar ? null : navigableFilter
-	});
-};
+		return (
+			<div ref={containerRef} {...rest} />
+		);
+	}
+);
 
 /**
  * {@link moonstone/Scroller.ScrollableNative} is a Higher-order Component
@@ -91,23 +99,11 @@ const configureSpotlightContainer = ({'data-container-id': containerId, focusabl
  * @hoc
  * @private
  */
-const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
-	const {configureSpotlight} = config;
-
-	class Scrollable extends Component {
+const ScrollableHoC = hoc((config, Wrapped) => {
+	return class Scrollable extends Component {
 		static displayName = 'ScrollableNative'
 
 		static propTypes = /** @lends moonstone/Scroller.ScrollableNative.prototype */ {
-			/**
-			 * When `configureSpotlight` is true, this is passed onto the wrapped component to allow
-			 * it to customize the spotlight container for its use case.
-			 *
-			 * @type {String}
-			 * @memberof moonstone/Scroller.Scrollable.prototype
-			 * @private
-			 */
-			'data-container-id': PropTypes.string,
-
 			/**
 			 * The callback function which is called for linking scrollTo function.
 			 * You should specify a callback function as the value of this prop
@@ -211,7 +207,7 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 			verticalScrollbar: 'auto'
 		}
 
-		static childContextTypes = contextTypesResize
+		static childContextTypes = Object.assign({}, contextTypesResize, contextTypesRemeasurable)
 		static contextTypes = contextTypesRtl
 
 		constructor (props) {
@@ -240,24 +236,21 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 			};
 
 			props.cbScrollTo(this.scrollTo);
-
-			configureSpotlightContainer(props);
 		}
 
 		// component life cycle
 
 		getChildContext () {
 			return {
-				invalidateBounds: this.enqueueForceUpdate
+				invalidateBounds: this.enqueueForceUpdate,
+				remeasure: this.state.isVerticalScrollbarVisible
 			};
 		}
 
 		componentDidMount () {
-			const
-				bounds = this.getScrollBounds(),
-				isVertical = this.canScrollVertically(bounds);
+			const bounds = this.getScrollBounds();
 
-			this.pageDistance = (isVertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+			this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
 			this.updateScrollbars();
@@ -265,12 +258,13 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 			on('keydown', this.onKeyDown);
 		}
 
-		componentWillReceiveProps (nextProps) {
-			configureSpotlightContainer(nextProps);
-		}
-
-		componentWillUpdate () {
+		componentWillUpdate (nextProps, nextState, nextContext) {
 			this.deferScrollTo = true;
+			if (nextContext.remeasure !== this.context.remeasure || nextState.isVerticalScrollbarVisible !== this.state.isVerticalScrollbarVisible) {
+				this.setState((prevState) => ({
+					remeasure: !prevState.remeasure
+				}));
+			}
 		}
 
 		componentDidUpdate () {
@@ -548,14 +542,14 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 			const
 				{getEndPoint, scrollToAccumulatedTarget} = this,
 				bounds = this.getScrollBounds(),
-				isVertical = this.canScrollVertically(bounds),
+				canScrollVertically = this.canScrollVertically(bounds),
 				pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
 				spotItem = Spotlight.getCurrent();
 
 			if (!Spotlight.getPointerMode() && spotItem) {
 				const
 					containerId = Spotlight.getActiveContainer(),
-					direction = this.getPageDirection(keyCode, isVertical),
+					direction = this.getPageDirection(keyCode, canScrollVertically),
 					rDirection = reverseDirections[direction],
 					viewportBounds = this.containerRef.getBoundingClientRect(),
 					spotItemBounds = spotItem.getBoundingClientRect(),
@@ -563,7 +557,7 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
 
 				if (!next) {
-					scrollToAccumulatedTarget(pageDistance, isVertical);
+					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 				} else if (next !== spotItem) {
 					this.animateOnFocus = false;
 					Spotlight.focus(next);
@@ -574,11 +568,11 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 						this.animateOnFocus = false;
 						Spotlight.focus(nextPage);
 					} else if (!nextPage) {
-						scrollToAccumulatedTarget(pageDistance, isVertical);
+						scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 					}
 				}
 			} else {
-				scrollToAccumulatedTarget(pageDistance, isVertical);
+				scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 			}
 		}
 
@@ -986,6 +980,7 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 		// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 		// state member.
 		enqueueForceUpdate = () => {
+			this.childRef.calculateMetrics();
 			this.forceUpdateJob.start();
 		}
 
@@ -1002,13 +997,12 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 		render () {
 			const
 				props = Object.assign({}, this.props),
-				{className, 'data-container-id': containerId, style} = this.props,
+				{className, focusableScrollbar, style} = this.props,
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 				scrollableClasses = classNames(css.scrollable, className);
 
 			delete props.cbScrollTo;
 			delete props.className;
-			delete props['data-container-id'];
 			delete props.focusableScrollbar;
 			delete props.horizontalScrollbar;
 			delete props.onScroll;
@@ -1017,15 +1011,11 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 			delete props.style;
 			delete props.verticalScrollbar;
 
-			if (configureSpotlight) {
-				props.containerId = containerId;
-			}
-
 			return (
-				<div
+				<ScrollableSpotlightContainer
 					className={scrollableClasses}
-					data-container-id={containerId}
-					ref={this.initContainerRef}
+					containerRef={this.initContainerRef}
+					focusableScrollbar={focusableScrollbar}
 					style={style}
 				>
 					<div className={css.container}>
@@ -1038,19 +1028,10 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 						{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 					</div>
 					{isHorizontalScrollbarVisible ? <Scrollbar {...this.horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
-				</div>
+				</ScrollableSpotlightContainer>
 			);
 		}
-	}
-
-	return SpotlightContainerDecorator(
-		{
-			overflow: true,
-			preserveId: true,
-			restrict: 'self-first'
-		},
-		Scrollable
-	);
+	};
 });
 
 export default ScrollableHoC;

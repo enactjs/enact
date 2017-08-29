@@ -13,6 +13,7 @@ import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from 
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {Spotlight, getDirection} from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Scroller.less';
 import Scrollable from './Scrollable';
@@ -474,8 +475,11 @@ class ScrollerBase extends Component {
  * @ui
  * @public
  */
-const Scroller = Scrollable(
-	ScrollerBase
+const Scroller = SpotlightContainerDecorator(
+	{restrict: 'self-first'},
+	Scrollable(
+		ScrollerBase
+	)
 );
 
 // Docs for Scroller

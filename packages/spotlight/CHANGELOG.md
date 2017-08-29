@@ -2,20 +2,17 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
-
-### Deprecated
+## [1.7.0] - 2017-08-23
 
 ### Added
 
 - `spotlight/SpotlightContainerDecorator` config option `continue5WayHold` to support moving focus to the next spottable element on 5-way hold key.
 - `spotlight/Spottable` ability to restore focus when an initially disabled component becomes enabled
 
-### Changed
-
 ### Fixed
 
 - `spotlight` to correctly restore focus to a spotlight container in another container
+- `spotlight` to not try to focus something when the window is activated if focus is already set
 
 ## [1.6.1] - 2017-08-07
 
