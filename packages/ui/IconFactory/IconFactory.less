@@ -1,0 +1,23 @@
+// IconFactory.less
+//
+@import "../styles/mixins.less";
+
+.icon {
+	display: inline-block;
+	vertical-align: middle;
+	font-weight: normal;
+	font-style: normal;
+	text-align: center;
+	position: relative;
+
+	.font-kerning(none);
+
+	&.dingbat,
+	&.small {
+		/* FACTORY-EXPORT */
+	}
+
+	.disabled({
+		cursor: default;
+	});
+}
