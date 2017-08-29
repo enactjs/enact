@@ -6,12 +6,12 @@ import ViewManager from '@enact/ui/ViewManager';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import IdProvider from '../internal/IdProvider';
 import Skinnable from '../Skinnable';
 
 import Breadcrumb from './Breadcrumb';
 import BreadcrumbArranger from './BreadcrumbArranger';
 import CancelDecorator from './CancelDecorator';
-import IdProvider from './IdProvider';
 import IndexedBreadcrumbs from './IndexedBreadcrumbs';
 
 import css from './Panels.less';

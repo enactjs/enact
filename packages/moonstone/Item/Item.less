@@ -7,6 +7,8 @@
 	.moon-text-base(@moon-item-font-size);
 	.moon-spotlight-padding(@moon-item-vertical-padding);
 
+	width: 100%;
+	box-sizing: border-box;
 	display: flex;
 	align-items: center;
 	line-height: @moon-item-line-height;
@@ -25,6 +27,7 @@
 
 	&.inline {
 		display: inline-flex;
+		vertical-align: top;
 		max-width: 240px;
 		box-sizing: border-box;
 	}

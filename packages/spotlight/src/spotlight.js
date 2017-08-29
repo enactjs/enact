@@ -32,6 +32,7 @@ import {
 	getLastContainer,
 	getSpottableDescendants,
 	isContainer,
+	isContainer5WayHoldable,
 	isNavigable,
 	unmountContainer,
 	removeAllContainers,
@@ -161,6 +162,10 @@ const Spotlight = (function () {
 
 		let currentFocusedElement = getCurrent();
 
+		if (elem === currentFocusedElement) {
+			return true;
+		}
+
 		let silentFocus = function () {
 			if (currentFocusedElement) {
 				currentFocusedElement.blur();
@@ -232,7 +237,7 @@ const Spotlight = (function () {
 
 			// prevent focus if 5-way is being held and the next element isn't wrapped by
 			// the current element's immediate container
-			if (_5WayKeyHold && nextContainerIds.indexOf(currentContainerId) < 0) {
+			if (_5WayKeyHold && nextContainerIds.indexOf(currentContainerId) < 0 && !isContainer5WayHoldable(currentContainerId)) {
 				return false;
 			}
 
@@ -291,10 +296,15 @@ const Spotlight = (function () {
 			Spotlight.setPointerMode(palmSystem.cursor.visibility);
 		}
 
-		// If the window was previously blurred while in pointer mode, the last active containerId may
-		// not have yet set focus to its spottable elements. For this reason we can't rely on setting focus
-		// to the last focused element of the last active containerId, so we use rootContainerId instead
-		Spotlight.focus(getContainerLastFocusedElement(rootContainerId));
+		// Normally, there isn't focus at this point because we've blurred it above. On webOS, the
+		// platform may focus the window after the app has already focused a component so we prevent
+		// trying to focus something else (potentially) if focus is set.
+		if (!getCurrent()) {
+			// If the window was previously blurred while in pointer mode, the last active containerId may
+			// not have yet set focus to its spottable elements. For this reason we can't rely on setting focus
+			// to the last focused element of the last active containerId, so we use rootContainerId instead
+			Spotlight.focus(getContainerLastFocusedElement(rootContainerId));
+		}
 	}
 
 	function onKeyUp (evt) {
@@ -558,12 +568,14 @@ const Spotlight = (function () {
 		 */
 		focus: function (elem) {
 			let target = elem;
+			let wasContainerId = false;
 
 			if (!elem) {
 				target = getTargetByContainer();
 			} else if (typeof elem === 'string') {
 				if (getContainerConfig(elem)) {
 					target = getTargetByContainer(elem);
+					wasContainerId = true;
 				} else {
 					target = getTargetBySelector(elem);
 				}
@@ -573,6 +585,10 @@ const Spotlight = (function () {
 			const nextContainerId = last(nextContainerIds);
 			if (isNavigable(target, nextContainerId)) {
 				return focusElement(target, nextContainerIds);
+			} else if (wasContainerId) {
+				// if we failed to find a spottable target within the provided container, we'll set
+				// it as the active container to allow it to focus itself if its contents change
+				this.setActiveContainer(elem);
 			}
 
 			return false;

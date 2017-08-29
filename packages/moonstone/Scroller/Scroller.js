@@ -9,7 +9,7 @@
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
-import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target.js';
+import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {Spotlight, getDirection} from '@enact/spotlight';
@@ -18,7 +18,12 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import css from './Scroller.less';
 import Scrollable from './Scrollable';
 
-const dataContainerDisabledAttribute = 'data-container-disabled';
+const
+	dataContainerDisabledAttribute = 'data-container-disabled',
+	reverseDirections = {
+		'left': 'right',
+		'right': 'left'
+	};
 
 /**
  * {@link moonstone/Scroller.ScrollerBase} is a base component for Scroller.
@@ -165,9 +170,9 @@ class ScrollerBase extends Component {
 	/**
 	 * Returns the first spotlight container between `node` and the scroller
 	 *
-	 * @param   {Node}      node  A DOM node
+	 * @param {Node} node A DOM node
 	 *
-	 * @returns {Node|Null}       Spotlight container for `node`
+	 * @returns {Node|Null} Spotlight container for `node`
 	 * @private
 	 */
 	getSpotlightContainerForNode = (node) => {
@@ -182,9 +187,9 @@ class ScrollerBase extends Component {
 	 * Calculates the "focus bounds" of a node. If the node is within a spotlight container, that
 	 * container is scrolled into view rather than just the element.
 	 *
-	 * @param   {Node}   node  Focused node
+	 * @param {Node} node Focused node
 	 *
-	 * @returns {Object}       Bounds as returned by `getBoundingClientRect`
+	 * @returns {Object} Bounds as returned by `getBoundingClientRect`
 	 * @private
 	 */
 	getFocusedItemBounds = (node) => {
@@ -192,18 +197,63 @@ class ScrollerBase extends Component {
 		return node.getBoundingClientRect();
 	}
 
-	calculatePositionOnFocus = (focusedItem, scrollInfo) => {
-		if (!this.isVertical() && !this.isHorizontal() || !focusedItem || !this.containerRef.contains(focusedItem)) return;
+	scrollToNextPage = ({direction, reverseDirection, focusedItem}) => {
+		const
+			endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect()),
+			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, Spotlight.getActiveContainer());
+
+		return (next !== focusedItem) && next;
+	}
+
+	getNextEndPoint = (direction, oSpotBounds) => {
+		const bounds = this.getScrollBounds();
+
+		let oPoint = {};
+		switch (direction) {
+			case 'up':
+				oPoint.x = oSpotBounds.left;
+				oPoint.y = oSpotBounds.top - bounds.clientHeight;
+				break;
+			case 'left':
+				oPoint.x = oSpotBounds.left - bounds.clientWidth;
+				oPoint.y = oSpotBounds.top;
+				break;
+			case 'down':
+				oPoint.x = oSpotBounds.left;
+				oPoint.y = oSpotBounds.top + oSpotBounds.height + bounds.clientHeight;
+				break;
+			case 'right':
+				oPoint.x = oSpotBounds.left + oSpotBounds.width + bounds.clientWidth;
+				oPoint.y = oSpotBounds.top;
+				break;
+		}
+		return oPoint;
+	}
+
+	/**
+	 * Calculates the new top and left position for scroller based on focusedItem.
+	 *
+	 * @param {Node} item node
+	 * @param {Object} scrollInfo position info. `calculateScrollTop` uses
+	 * `scrollInfo.previousScrollHeight` and `scrollInfo.scrollTop`
+	 *
+	 * @returns {Object} with keys {top, left} containing caculated top and left positions for scroll.
+	 * @private
+	 */
+	calculatePositionOnFocus = ({item, scrollInfo}) => {
+		if (!this.isVertical() && !this.isHorizontal() || !item || !this.containerRef.contains(item)) {
+			return;
+		}
 
 		const {
 			top: itemTop,
 			left: itemLeft,
 			height: itemHeight,
 			width: itemWidth
-		} = this.getFocusedItemBounds(focusedItem);
+		} = this.getFocusedItemBounds(item);
 
 		if (this.isVertical()) {
-			this.scrollPos.top = this.calculateScrollTop(focusedItem, itemTop, itemHeight, scrollInfo);
+			this.scrollPos.top = this.calculateScrollTop(item, itemTop, itemHeight, scrollInfo);
 		}
 
 		if (this.isHorizontal()) {
@@ -211,15 +261,11 @@ class ScrollerBase extends Component {
 				{clientWidth} = this.scrollBounds,
 				rtlDirection = this.context.rtl ? -1 : 1,
 				{left: containerLeft} = this.containerRef.getBoundingClientRect(),
-				currentScrollLeft = this.scrollPos.left * rtlDirection,
+				currentScrollLeft = this.context.rtl ? (this.scrollBounds.maxLeft - this.scrollPos.left) : this.scrollPos.left,
 				// calculation based on client position
 				newItemLeft = this.containerRef.scrollLeft + (itemLeft - containerLeft);
 
-			if (this.context.rtl && newItemLeft > clientWidth) {
-				// For RTL, and if the `focusedItem` is bigger than `this.scrollBounds.clientWidth`, keep
-				// the scroller to the right.
-				this.scrollPos.left -= newItemLeft;
-			} else if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
+			if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
 				// If focus is moved to an element outside of view area (to the right), scroller will move
 				// to the right just enough to show the current `focusedItem`. This does not apply to
 				// `focusedItem` that has a width that is bigger than `this.scrollBounds.clientWidth`.
@@ -233,6 +279,18 @@ class ScrollerBase extends Component {
 		return this.scrollPos;
 	}
 
+	/**
+	 * Calculates the new `scrollTop`.
+	 *
+	 * @param {Node} focusedItem node
+	 * @param {Number} itemTop of the focusedItem / focusedContainer
+	 * @param {Number} itemHeight of focusedItem / focusedContainer
+	 * @param {Object} scrollInfo position info. Uses `scrollInfo.previousScrollHeight`
+	 * and `scrollInfo.scrollTop`
+	 *
+	 * @returns {Number} Calculated `scrollTop`
+	 * @private
+	 */
 	calculateScrollTop = (focusedItem, itemTop, itemHeight, scrollInfo) => {
 		const
 			{clientHeight} = this.scrollBounds,
@@ -245,6 +303,7 @@ class ScrollerBase extends Component {
 
 		let newScrollTop = this.scrollPos.top;
 
+		// Caculations for when scrollHeight decrease.
 		if (scrollInfo) {
 			const
 				{scrollTop, previousScrollHeight} = scrollInfo,
@@ -254,7 +313,6 @@ class ScrollerBase extends Component {
 			newScrollTop = scrollTop;
 
 			if (scrollHeightDecrease > 0) {
-				// Update scrollTop for scrollHeight decrease
 				const
 					itemBounds = focusedItem.getBoundingClientRect(),
 					newItemBottom = newScrollTop + itemBounds.top + itemBounds.height - containerTop;
@@ -262,7 +320,8 @@ class ScrollerBase extends Component {
 				if (newItemBottom < scrollBottom && scrollHeightDecrease + newItemBottom > scrollBottom) {
 					// When `focusedItem` is not at the very bottom of the `Scroller` and
 					// `scrollHeightDecrease` caused a scroll.
-					const distanceFromBottom = scrollBottom - newItemBottom,
+					const
+						distanceFromBottom = scrollBottom - newItemBottom,
 						bottomOffset = scrollHeightDecrease - distanceFromBottom;
 					if (bottomOffset < newScrollTop) {
 						// guard against negative `scrollTop`
@@ -278,8 +337,8 @@ class ScrollerBase extends Component {
 			}
 		}
 
+		// Calculations for `containerHeight` that are bigger than `clientHeight`
 		if (itemHeight > clientHeight) {
-			// scroller behavior for containers that are bigger than `clientHeight`
 			const
 				{top, height: nestedItemHeight} = focusedItem.getBoundingClientRect(),
 				nestedItemTop = this.containerRef.scrollTop + (top - containerTop),
@@ -289,15 +348,20 @@ class ScrollerBase extends Component {
 				// set scroll position so that the top of the container is at least on the top
 				newScrollTop = newItemTop - nestedItemHeight;
 			} else if (nestedItemBottom > scrollBottom) {
+				// Caculate when 5-way focus down past the bottom.
 				newScrollTop += nestedItemBottom - scrollBottom;
 			} else if (nestedItemTop < currentScrollTop) {
+				// Caculate when 5-way focus up past the top.
 				newScrollTop += nestedItemTop - currentScrollTop;
 			}
 		} else if (itemBottom > scrollBottom) {
+			// Caculate when 5-way focus down past the bottom.
 			newScrollTop += itemBottom - scrollBottom;
 		} else if (newItemTop < currentScrollTop) {
+			// Caculate when 5-way focus up past the top.
 			newScrollTop += newItemTop - currentScrollTop;
 		}
+
 		return newScrollTop;
 	}
 
@@ -314,13 +378,17 @@ class ScrollerBase extends Component {
 	}
 
 	scrollToBoundary = (direction) => {
-		let align;
+		const
+			{scrollBounds, scrollPos} = this,
+			isVerticalDirection = (direction === 'up' || direction === 'down');
 
-		if (direction === 'up') align = 'top';
-		else if (direction === 'down') align = 'bottom';
-		else align = direction;
-
-		this.props.cbScrollTo({align});
+		if (isVerticalDirection) {
+			if (scrollPos.top > 0 && scrollPos.top < scrollBounds.maxTop) {
+				this.props.cbScrollTo({align: direction === 'up' ? 'top' : 'bottom'});
+			}
+		} else if (scrollPos.left > 0 && scrollPos.left < scrollBounds.maxLeft) {
+			this.props.cbScrollTo({align: this.context.rtl ? reverseDirections[direction] : direction});
+		}
 	}
 
 	isVertical = () => {
@@ -344,8 +412,6 @@ class ScrollerBase extends Component {
 		scrollBounds.maxLeft = Math.max(0, scrollWidth - clientWidth);
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
 	}
-
-	getContainerNode = () => (this.containerRef)
 
 	onKeyDown = ({keyCode, target}) => {
 		const direction = getDirection(keyCode);

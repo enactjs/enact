@@ -117,6 +117,15 @@ const scenarios = {
 			}),
 			spottable({id: 'lastFocused'})
 		)
+	}),
+	emptySubcontainer: container({
+		[containerAttribute]: 'container',
+		children: join(
+			container({
+				[containerAttribute]: 'subcontainer'
+			}),
+			spottable({id: 'afterSubcontainer'}),
+		)
 	})
 };
 
@@ -434,6 +443,38 @@ describe('container', () => {
 			}
 		));
 
+		it('should return the default spottable element when enterTo is "default-element" and defaultElement contains an array of selectors', testScenario(
+			scenarios.containerWithDefaultAndLastFocused,
+			() => {
+				configureContainer('container', {
+					enterTo: 'default-element',
+					defaultElement: ['.does-not-exist', '.spottable-default']
+				});
+
+				const expected = 'spottableDefault';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		// FIXME: This is testing a previously supported feature (setting a node as defaultElement)
+		// which was never documented and should be removed in a future release.
+		it('should return the default spottable element when enterTo is "default-element" and defaultElement contains an array of selectors wiht a node reference', testScenario(
+			scenarios.containerWithDefaultAndLastFocused,
+			(root) => {
+				configureContainer('container', {
+					enterTo: 'default-element',
+					defaultElement: [root.querySelector('#lastFocused'), '.spottable-default']
+				});
+
+				const expected = 'lastFocused';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
 		it('should return the first spottable element when enterTo is "default-element" but defaultElement is not configured', testScenario(
 			scenarios.containerWithDefaultAndLastFocused,
 			() => {
@@ -558,6 +599,19 @@ describe('container', () => {
 				setContainerLastFocusedElement(root.querySelector('#lastChildFocused'), [rootContainerId, 'container', 'child']);
 
 				const expected = 'lastChildFocused';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should skip empty subcontainers', testScenario(
+			scenarios.emptySubcontainer,
+			() => {
+				configureContainer('container');
+				configureContainer('subcontainer');
+
+				const expected = 'afterSubcontainer';
 				const actual = getContainerFocusTarget('container').id;
 
 				expect(actual).to.equal(expected);

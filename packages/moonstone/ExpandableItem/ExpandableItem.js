@@ -8,10 +8,13 @@
  */
 
 import {extractAriaProps} from '@enact/core/util';
+import {forward, handle} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Spotlight from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import LabeledItem from '../LabeledItem';
 
@@ -20,6 +23,8 @@ import ExpandableTransitionContainer from './ExpandableTransitionContainer';
 
 const isUp = is('up');
 const isDown = is('down');
+
+const ContainerDiv = SpotlightContainerDecorator({continue5WayHold: true}, 'div');
 
 /**
  * {@link moonstone/ExpandableItem.ExpandableItemBase} is a stateless component that
@@ -139,6 +144,42 @@ const ExpandableItemBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way down key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDown: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightLeft: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightRight: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way up key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightUp: PropTypes.func,
+
+		/**
 		 * When `true`, the control is rendered in the expanded state, with the contents visible
 		 *
 		 * @type {Boolean}
@@ -188,8 +229,8 @@ const ExpandableItemBase = kind({
 	},
 
 	handlers: {
-		handleKeyDown: (ev, {autoClose, lockBottom, onClose}) => {
-			if (autoClose || lockBottom) {
+		handleKeyDown: (ev, {autoClose, lockBottom, onClose, onSpotlightDown}) => {
+			if (autoClose || lockBottom || onSpotlightDown) {
 				const {keyCode, target} = ev;
 				// Basing first/last child on the parent of the target to support both the use
 				// case here in which the children of the container are spottable and the
@@ -198,21 +239,42 @@ const ExpandableItemBase = kind({
 				if (autoClose && isUp(keyCode) && target.parentNode.firstChild === target && onClose) {
 					onClose();
 					ev.nativeEvent.stopImmediatePropagation();
-				} else if (lockBottom && isDown(keyCode) && target.parentNode.lastChild === target) {
-					ev.nativeEvent.stopImmediatePropagation();
+				} else if (isDown(keyCode) && target.parentNode.lastChild === target) {
+					if (lockBottom) {
+						ev.nativeEvent.stopImmediatePropagation();
+					} else if (onSpotlightDown) {
+						onSpotlightDown(ev);
+					}
 				}
+			}
+		},
+		handleLabelKeyDown: (ev, {onSpotlightDown, open}) => {
+			if (isDown(ev.keyCode) && !open && onSpotlightDown) {
+				onSpotlightDown(ev);
 			}
 		},
 		handleOpen: (ev, {disabled, onClose, onOpen, open}) => {
 			// When disabled, don't attach an event
 			if (!disabled) {
+				if (!Spotlight.getPointerMode()) {
+					Spotlight.pause();
+				}
+
 				if (open) {
 					onClose(ev);
 				} else {
 					onOpen(ev);
 				}
 			}
-		}
+		},
+		onHide: handle(
+			forward('onHide'),
+			Spotlight.resume
+		),
+		onShow: handle(
+			forward('onShow'),
+			Spotlight.resume
+		)
 	},
 
 	computed: {
@@ -229,18 +291,39 @@ const ExpandableItemBase = kind({
 		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
 	},
 
-	render: ({children, disabled, handleKeyDown, handleOpen, label, open, onHide, onShow, onSpotlightDisappear, setContainerNode, spotlightDisabled, title, titleIcon, transitionSpotlightDisabled, ...rest}) => {
+	render: ({
+		children,
+		disabled,
+		handleKeyDown,
+		handleLabelKeyDown,
+		handleOpen,
+		label,
+		open,
+		onHide,
+		onShow,
+		onSpotlightDisappear,
+		onSpotlightLeft,
+		onSpotlightRight,
+		onSpotlightUp,
+		setContainerNode,
+		spotlightDisabled,
+		title,
+		titleIcon,
+		transitionSpotlightDisabled,
+		...rest
+	}) => {
 		delete rest.autoClose;
 		delete rest.lockBottom;
 		delete rest.noneText;
 		delete rest.onClose;
 		delete rest.onOpen;
+		delete rest.onSpotlightDown;
 		delete rest.showLabel;
 
 		const ariaProps = extractAriaProps(rest);
 
 		return (
-			<div
+			<ContainerDiv
 				{...rest}
 				aria-disabled={disabled}
 				disabled={disabled}
@@ -253,7 +336,11 @@ const ExpandableItemBase = kind({
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}
+					onKeyDown={handleLabelKeyDown}
 					onSpotlightDisappear={onSpotlightDisappear}
+					onSpotlightLeft={onSpotlightLeft}
+					onSpotlightRight={onSpotlightRight}
+					onSpotlightUp={onSpotlightUp}
 					spotlightDisabled={spotlightDisabled}
 					titleIcon={titleIcon}
 				>{title}</LabeledItem>
@@ -269,7 +356,7 @@ const ExpandableItemBase = kind({
 				>
 					{children}
 				</ExpandableTransitionContainer>
-			</div>
+			</ContainerDiv>
 		);
 	}
 });

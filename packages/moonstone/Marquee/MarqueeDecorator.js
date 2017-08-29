@@ -1,3 +1,4 @@
+import deprecate from '@enact/core/internal/deprecate';
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
 import {childrenEquals} from '@enact/core/util';
@@ -57,10 +58,10 @@ const defaultConfig = {
 	* Expects an array of props which on change trigger invalidateMetrics.
 	*
 	* @type {Array}
-	* @default null
+	* @default ['remeasure']
 	* @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	*/
-	invalidateProps: null,
+	invalidateProps: ['remeasure'],
 
 	/**
 	 * Property containing the callback to stop the animation when `marqueeOn` is `'hover'`
@@ -97,7 +98,6 @@ const didPropChange = (propList, prev, next) => {
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {blur, className: marqueeClassName, enter, focus, invalidateProps, leave} = config;
-
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
 	const forwardFocus = forward(focus);
@@ -110,6 +110,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static contextTypes = contextTypes
 
 		static propTypes = /** @lends moonstone/Marquee.MarqueeDecorator.prototype */ {
+			/**
+			 * Text alignment value of the marquee. Valid values are `'left'`, `'right'` and `'center'`.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			alignment: PropTypes.oneOf(['left', 'right', 'center']),
+
 			/**
 			 * Children to be marqueed
 			 *
@@ -128,7 +136,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * Forces the `direction` of the marquee. Valid values are `'rtl'` and `'ltr'`. This includes non-text elements as well.
+			 * Forces the `direction` of the marquee. Valid values are `'rtl'` and `'ltr'`. This
+			 * includes non-text elements as well. The default behavior, if this prop is unset, is
+			 * to evaluate the text content for directionality using {@link i18n/util.isRtlText}.
 			 *
 			 * @type {String}
 			 * @public
@@ -140,6 +150,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 *
 			 * @type {Boolean}
 			 * @public
+			 * @deprecated replaced by `alignment`
 			 */
 			marqueeCentered: PropTypes.bool,
 
@@ -197,7 +208,17 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default 60
 			 * @public
 			 */
-			marqueeSpeed: PropTypes.number
+			marqueeSpeed: PropTypes.number,
+
+			/**
+			 * Used to signal for a remeasurement inside of marquee. The value
+			 * must change for the remeasurement to take place. The value
+			 * type is `any` because it does not matter. It is only used to
+			 * check for changes.
+			 *
+			 * @private
+			 */
+			remeasure: PropTypes.any
 		}
 
 		static defaultProps = {
@@ -212,12 +233,16 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 			this.state = {
 				overflow: 'ellipsis',
-				rtl: false
+				rtl: null
 			};
 			this.sync = false;
 			this.forceRestartMarquee = false;
 
 			this.invalidateMetrics();
+
+			if (this.props.marqueeCentered) {
+				deprecate({name: 'marqueeCentered', since: '1.7.0', message: 'Use `alignment` instead', until: '2.0.0'});
+			}
 		}
 
 		componentDidMount () {
@@ -235,16 +260,25 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (next) {
-			const {marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
+			const {forceDirection, marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
+			if (forceDirection !== next.forceDirection) {
+				this.setState({rtl: next.forceDirection ? (next.forceDirection === 'rtl') : null});
+			}
 			if ((!childrenEquals(this.props.children, next.children)) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
 				this.invalidateMetrics();
 				this.cancelAnimation();
+				this.setState({rtl: null});
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled || next.marqueeSpeed !== marqueeSpeed) {
 				this.cancelAnimation();
 			}
 		}
 
 		componentDidUpdate () {
+			if (this.state.rtl == null) {
+				const rtl = this.checkRtl();
+				// eslint-disable-next-line react/no-did-update-set-state
+				this.setState({rtl});
+			}
 			if (this.distance === null) {
 				this.calculateMetrics();
 			}
@@ -330,9 +364,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (node && this.distance == null && !this.props.marqueeDisabled) {
 				this.distance = this.calculateDistance(node);
 				this.contentFits = !this.shouldAnimate(this.distance);
-				this.setState({
-					overflow: this.calculateTextOverflow(this.distance)
-				});
+				this.setState({overflow: this.calculateTextOverflow(this.distance)});
 			}
 		}
 
@@ -499,17 +531,22 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		cacheNode = (node) => {
 			this.node = node;
+			this.setState({rtl: this.checkRtl()});
+		}
+
+		checkRtl = () => {
 			const {forceDirection} = this.props;
-			const textContent = node && node.textContent;
-			this.setState({rtl: forceDirection ? forceDirection === 'rtl' : isRtlText(textContent)});
+			const textContent = this.node && this.node.textContent;
+			// If forceDirection is set, check if it is RTL; otherwise, determine the directionality
+			return (forceDirection ? (forceDirection === 'rtl') : isRtlText(textContent));
 		}
 
 		renderMarquee () {
 			const {
+				alignment,
 				children,
 				disabled,
 				forceDirection,
-				marqueeCentered,
 				marqueeOn,
 				marqueeSpeed,
 				...rest
@@ -517,6 +554,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			const marqueeOnFocus = marqueeOn === 'focus';
 			const marqueeOnHover = marqueeOn === 'hover';
+			const marqueeOnRender = marqueeOn === 'render';
 
 			if (marqueeOnFocus && !disabled) {
 				rest[focus] = this.handleFocus;
@@ -529,17 +567,23 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				rest[leave] = this.handleLeave;
 			}
 
+			if (marqueeOnRender) {
+				rest[enter] = this.handleEnter;
+			}
+
+			delete rest.marqueeCentered;
 			delete rest.marqueeDelay;
 			delete rest.marqueeDisabled;
 			delete rest.marqueeOnRenderDelay;
 			delete rest.marqueeResetDelay;
 			delete rest.marqueeSpeed;
+			delete rest.remeasure;
 
 			return (
 				<Wrapped {...rest} disabled={disabled}>
 					<Marquee
+						alignment={alignment}
 						animating={this.state.animating}
-						centered={marqueeCentered}
 						className={marqueeClassName}
 						clientRef={this.cacheNode}
 						distance={this.distance}
@@ -558,6 +602,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		renderWrapped () {
 			const props = Object.assign({}, this.props);
 
+			delete props.alignment;
 			delete props.marqueeCentered;
 			delete props.marqueeDelay;
 			delete props.marqueeDisabled;
@@ -565,6 +610,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.marqueeOnRenderDelay;
 			delete props.marqueeResetDelay;
 			delete props.marqueeSpeed;
+			delete props.remeasure;
 
 			return <Wrapped {...props} />;
 		}

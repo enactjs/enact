@@ -3,14 +3,17 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Image from '../Image';
+import Skinnable from '../Skinnable';
+
 import Feedback from './Feedback';
 import states from './FeedbackIcons.js';
 
-import css from './VideoPlayer.less';
+import css from './FeedbackTooltip.less';
 
 /**
  * FeedbackTooltip {@link moonstone/VideoPlayer}. This displays the media's playback rate and
- * time infromation.
+ * time information.
  *
  * @class FeedbackTooltip
  * @memberof moonstone/VideoPlayer
@@ -54,6 +57,24 @@ const FeedbackTooltipBase = kind({
 		playbackState: PropTypes.oneOf(Object.keys(states)),
 
 		/**
+		 * `true` if Slider knob is scrubbing.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		thumbnailDeactivated: PropTypes.bool,
+
+		/**
+		 * Set a thumbnail image source to show on VideoPlayer's Slider knob. This is a standard
+		 * {@link moonstone/Image} component so it supports all of the same options for the `src`
+		 * property. If no `thumbnailSrc` is set, no tooltip will display.
+		 *
+		 * @type {String|Object}
+		 * @public
+		 */
+		thumbnailSrc: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+
+		/**
 		 * If the current `playbackState` allows this component's visibility to be changed,
 		 * this component will be hidden. If not, setting this property will have no effect.
 		 * All `playbackState`s respond to this property except the following:
@@ -68,37 +89,51 @@ const FeedbackTooltipBase = kind({
 
 	defaultProps: {
 		noFeedback: false,
+		thumbnailDeactivated: false,
 		visible: true
 	},
 
 	styles: {
 		css,
-		className: 'sliderTooltip'
+		className: 'feedbackTooltip'
 	},
 
 	computed: {
-		className: ({playbackState: s, styler, visible}) => styler.append({
-			hidden: !visible && states[s] && states[s].allowHide
+		className: ({playbackState: s, thumbnailDeactivated, styler, visible}) => styler.append({
+			hidden: !visible && states[s] && states[s].allowHide,
+			thumbnailDeactivated
 		})
 	},
 
-	render: ({children, noFeedback, playbackState, playbackRate, ...rest}) => {
+	render: ({children, noFeedback, playbackState, playbackRate, thumbnailSrc, ...rest}) => {
 		delete rest.visible;
+		delete rest.thumbnailDeactivated;
 		return (
 			<div {...rest}>
-				<Feedback
-					playbackState={playbackState}
-					visible={!noFeedback}
-				>
-					{playbackRate}
-				</Feedback>
-				{children}
+				{thumbnailSrc ? <div className={css.thumbnail} style={!noFeedback ? {display: 'none'} : null}>
+					<Image src={thumbnailSrc} className={css.image} />
+				</div> : null}
+				<div className={css.content}>
+					<Feedback
+						playbackState={playbackState}
+						visible={!noFeedback}
+					>
+						{playbackRate}
+					</Feedback>
+					{children}
+				</div>
 			</div>
 		);
 	}
 });
 
-const FeedbackTooltip = onlyUpdateForKeys(['children', 'noFeedback', 'playbackState', 'playbackRate', 'visible'])(FeedbackTooltipBase);
+const FeedbackTooltip = onlyUpdateForKeys(
+	['children', 'noFeedback', 'playbackState', 'playbackRate', 'thumbnailDeactivated', 'thumbnailSrc', 'visible']
+)(
+	Skinnable(
+		FeedbackTooltipBase
+	)
+);
 
 export default FeedbackTooltip;
 export {

@@ -16,6 +16,8 @@ import CheckboxItem from '../CheckboxItem';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import RadioItem from '../RadioItem';
 
+import css from './ExpandableList.less';
+
 /**
  * {@link moonstone/ExpandableList.ExpandableListBase} is a stateless component that
  * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
@@ -146,6 +148,24 @@ const ExpandableListBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightLeft: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightRight: PropTypes.func,
+
+		/**
 		 * When `true`, the expandable is open with its contents visible
 		 *
 		 * @type {Boolean}
@@ -187,7 +207,7 @@ const ExpandableListBase = kind({
 	},
 
 	defaultProps: {
-		select: 'single',
+		select: 'radio',
 		spotlightDisabled: false
 	},
 
@@ -204,10 +224,26 @@ const ExpandableListBase = kind({
 		}
 	},
 
+	styles: {
+		css,
+		className: 'expandableList'
+	},
+
 	computed: {
 		'aria-multiselectable': ({select}) => select === 'multiple',
 
-		itemProps: ({onSpotlightDisappear, spotlightDisabled}) => ({onSpotlightDisappear, spotlightDisabled}),
+		itemProps: ({
+			onSpotlightDisappear,
+			onSpotlightLeft,
+			onSpotlightRight,
+			spotlightDisabled
+		}) => ({
+			className: css.listItem,
+			onSpotlightDisappear,
+			onSpotlightLeft,
+			onSpotlightRight,
+			spotlightDisabled
+		}),
 
 		// generate a label that concatenates the text of the selected items
 		label: ({children, label, select, selected}) => {
@@ -227,7 +263,7 @@ const ExpandableListBase = kind({
 
 		// Selects the appropriate list item based on the selection mode
 		ListItem: ({select}) => {
-			return	select === 'radio' && RadioItem ||
+			return	(select === 'radio' || select === 'single') && RadioItem ||
 					CheckboxItem; // for single or multiple
 		},
 
@@ -238,7 +274,17 @@ const ExpandableListBase = kind({
 		}
 	},
 
-	render: ({children, itemProps, ListItem, noAutoClose, noLockBottom, onSelect, select, selected, ...rest}) => {
+	render: ({
+		children,
+		itemProps,
+		ListItem,
+		noAutoClose,
+		noLockBottom,
+		onSelect,
+		select,
+		selected,
+		...rest
+	}) => {
 		delete rest.closeOnSelect;
 
 		return (

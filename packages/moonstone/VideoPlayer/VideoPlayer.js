@@ -16,8 +16,9 @@ import ilib from '@enact/i18n';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import {platform} from '@enact/core/platform';
+import {is} from '@enact/core/keymap';
 import Slottable from '@enact/ui/Slottable';
-import {getDirection, Spotlight} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 
@@ -37,6 +38,15 @@ import css from './VideoPlayer.less';
 
 const SpottableDiv = Spottable('div');
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
+
+// Keycode map for webOS TV
+const keyMap = {
+	'PLAY': 415,
+	'STOP': 413,
+	'PAUSE': 19,
+	'REWIND': 412,
+	'FASTFORWARD': 417
+};
 
 // Video ReadyStates
 // - Commented are currently unused.
@@ -90,9 +100,22 @@ const forwardJumpBackwardButtonClick = forwardWithPrevent('onJumpBackwardButtonC
 const forwardJumpForwardButtonClick = forwardWithPrevent('onJumpForwardButtonClick');
 const forwardPlayButtonClick = forward('onPlayButtonClick');
 
-// localized strings
-const playLabel = 'Play';
-const pauseLabel = 'Pause';
+const AnnounceState = {
+	// Video is loaded but additional announcements have not been made
+	READY: 0,
+
+	// The title should be announced
+	TITLE: 1,
+
+	// The title has been announce
+	TITLE_READ: 2,
+
+	// The infoComponents should be announce
+	INFO: 3,
+
+	// All announcements have been made
+	DONE: 4
+};
 
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
@@ -201,6 +224,16 @@ const VideoPlayerBase = class extends React.Component {
 		infoComponents: PropTypes.node,
 
 		/**
+		 * The number of milliseconds that the player will pause before firing the
+		 * first jump event on a right or left pulse.
+		 *
+		 * @type {Number}
+		 * @default 400
+		 * @public
+		 */
+		initialJumpDelay: PropTypes.number,
+
+		/**
 		 * A string which is sent to the `jumpBackward` icon of the player controls. This can be
 		 * anything that is accepted by {@link moonstone/Icon}.
 		 *
@@ -219,7 +252,7 @@ const VideoPlayerBase = class extends React.Component {
 		jumpButtonsDisabled: PropTypes.bool,
 
 		/**
-		 * The amount of seconds the player should skip forward or backward when a "jump" button is
+		 * The number of seconds the player should skip forward or backward when a "jump" button is
 		 * pressed.
 		 *
 		 * @type {Number}
@@ -227,6 +260,16 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		jumpBy: PropTypes.number,
+
+		/**
+		 * The number of milliseconds that the player will throttle before firing a
+		 * jump event on a right or left pulse.
+		 *
+		 * @type {Number}
+		 * @default 200
+		 * @public
+		 */
+		jumpDelay: PropTypes.number,
 
 		/**
 		 * A string which is sent to the `jumpForward` icon of the play controls. This can be
@@ -250,6 +293,33 @@ const VideoPlayerBase = class extends React.Component {
 		leftComponents: PropTypes.node,
 
 		/**
+		 * The label for the "More" button for when the "More" tray is open.
+		 * This will show on the tooltip.
+		 *
+		 * @type {String}
+		 * @default 'Back'
+		 * @public
+		 */
+		moreButtonCloseLabel: PropTypes.string,
+
+		/**
+		 * This boolean sets the disabled state of the "More" button.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		moreButtonDisabled: PropTypes.bool,
+
+		/**
+		 * The label for the "More" button. This will show on the tooltip.
+		 *
+		 * @type {String}
+		 * @default 'More'
+		 * @public
+		 */
+		moreButtonLabel: PropTypes.string,
+
+		/**
 		 * Disable audio for this video. In a TV context, this is handled by the remote control,
 		 * not programmatically in the VideoPlayer API.
 		 *
@@ -258,6 +328,15 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		muted: PropTypes.bool,
+
+		/**
+		 * Setting this to `true` will disable left and right keys for seeking.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		no5WayJump: PropTypes.bool,
 
 		/**
 		 * By default, the video will start playing immediately after it's loaded, unless this is set.
@@ -352,6 +431,17 @@ const VideoPlayerBase = class extends React.Component {
 		onPlayButtonClick: PropTypes.func,
 
 		/**
+		 * Function executed when the user is moving the VideoPlayer's Slider knob independently of
+		 * the current playback position. It is passed an object with a `seconds` key (float value) to
+		 * indicate the current time index. It can be used to update the `thumbnailSrc` to the reflect
+		 * the current scrub position.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onScrub: PropTypes.func,
+
+		/**
 		 * When `true`, the video will pause when it reaches either the start or the end of the
 		 * video during rewind, slow rewind, fast forward, or slow forward.
 		 *
@@ -436,6 +526,24 @@ const VideoPlayerBase = class extends React.Component {
 		source: PropTypes.node,
 
 		/**
+		 * Set a thumbnail image source to show on VideoPlayer's Slider knob. This is a standard
+		 * {@link moonstone/Image} component so it supports all of the same options for the `src`
+		 * property. If no `thumbnailSrc` is set, no tooltip will display.
+		 *
+		 * @type {String|Object}
+		 * @public
+		 */
+		thumbnailSrc: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+
+		/**
+		* Enables the thumbnail transition from opaque to translucent.
+		*
+		* @type {Boolean}
+		* @public
+		*/
+		thumbnailUnavailable: PropTypes.bool,
+
+		/**
 		 * Set a title for the video being played.
 		 *
 		 * @type {String}
@@ -444,7 +552,7 @@ const VideoPlayerBase = class extends React.Component {
 		title: PropTypes.string,
 
 		/**
-		 * The amount of time in miliseconds that should pass before the title disappears from the
+		 * The amount of time in milliseconds that should pass before the title disappears from the
 		 * controls. Setting this to `0` disables the hiding.
 		 *
 		 * @type {Number}
@@ -454,7 +562,7 @@ const VideoPlayerBase = class extends React.Component {
 		titleHideDelay: PropTypes.number,
 
 		/**
-		 * The amount of time in miliseconds that should pass before the tooltip disappears from the
+		 * The amount of time in milliseconds that should pass before the tooltip disappears from the
 		 * controls. Setting this to `0` disables the hiding.
 		 *
 		 * @type {Number}
@@ -469,10 +577,14 @@ const VideoPlayerBase = class extends React.Component {
 		backwardIcon: 'backward',
 		feedbackHideDelay: 3000,
 		forwardIcon: 'forward',
+		initialJumpDelay: 400,
 		jumpBackwardIcon: 'skipbackward',
 		jumpBy: 30,
+		jumpDelay: 200,
 		jumpForwardIcon: 'skipforward',
+		moreButtonDisabled: false,
 		muted: false,
+		no5WayJump: false,
 		noAutoPlay: false,
 		noJumpButtons: false,
 		pauseAtEnd: false,
@@ -501,7 +613,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.speedIndex = 0;
-		this.titleOffsetCalculated = false;
+		this.id = this.generateId();
 		this.selectPlaybackRates('fastForward');
 
 		this.initI18n();
@@ -521,6 +633,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		// Re-render-necessary State
 		this.state = {
+			announce: AnnounceState.READY,
 			buffered: 0,
 			currentTime: 0,
 			duration: 0,
@@ -531,6 +644,8 @@ const VideoPlayerBase = class extends React.Component {
 			playbackRate: 1,
 			readyState: 0,
 			volume: 1,
+			titleOffsetHeight: 0,
+			bottomOffsetHeight: 0,
 
 			// Non-standard state computed from properties
 			bottomControlsRendered: false,
@@ -539,7 +654,6 @@ const VideoPlayerBase = class extends React.Component {
 			more: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
-			sliderScrubbing: false,
 			sliderKnobProportion: 0,
 			titleVisible: true
 		};
@@ -553,6 +667,7 @@ const VideoPlayerBase = class extends React.Component {
 		on('mousemove', this.activityDetected);
 		on('keypress', this.activityDetected);
 		on('keydown', this.handleGlobalKeyDown);
+		on('keyup', this.handleKeyUp);
 		this.attachCustomMediaEvents();
 		this.startDelayedFeedbackHide();
 		this.renderBottomControl.idle();
@@ -573,10 +688,11 @@ const VideoPlayerBase = class extends React.Component {
 	componentWillUpdate (nextProps, nextState) {
 		const
 			isInfoComponentsEqual = equals(this.props.infoComponents, nextProps.infoComponents),
+			{titleOffsetHeight: titleHeight} = this.state,
 			shouldCalculateTitleOffset = (
-			((!this.titleOffsetCalculated && isInfoComponentsEqual) || (this.titleOffsetCalculated && !isInfoComponentsEqual)) &&
-			this.state.bottomControlsVisible
-		);
+				((!titleHeight && isInfoComponentsEqual) || (titleHeight && !isInfoComponentsEqual)) &&
+				this.state.bottomControlsVisible
+			);
 
 		this.initI18n();
 
@@ -591,7 +707,10 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		if (shouldCalculateTitleOffset) {
-			this.calculateTitleOffset();
+			const titleOffsetHeight = this.getHeightForElement('infoComponents');
+			if (titleOffsetHeight) {
+				this.setState({titleOffsetHeight});
+			}
 		}
 	}
 
@@ -612,18 +731,27 @@ const VideoPlayerBase = class extends React.Component {
 		) {
 			this.focusDefaultMediaControl();
 		}
+
+		if (this.state.more !== prevState.more) {
+			this.refocusMoreButton.start();
+		}
 	}
 
 	componentWillUnmount () {
 		off('mousemove', this.activityDetected);
 		off('keypress', this.activityDetected);
 		off('keydown', this.handleGlobalKeyDown);
+		off('keyup', this.handleKeyUp);
 		this.detachCustomMediaEvents();
 		this.stopRewindJob();
 		this.stopAutoCloseTimeout();
 		this.stopDelayedTitleHide();
 		this.stopDelayedFeedbackHide();
+		this.announceJob.stop();
 		this.renderBottomControl.stop();
+		this.refocusMoreButton.stop();
+		this.stopListeningForPulses();
+		this.sliderTooltipTimeJob.stop();
 	}
 
 	//
@@ -635,16 +763,12 @@ const VideoPlayerBase = class extends React.Component {
 		this.announceJob.start(msg);
 	}
 
-	calculateTitleOffset = () => {
-		// calculate how far the title should animate up when infoComponents appear.
-		const titleElement = this.player.querySelector(`.${css.title}`);
-		const infoComponents = this.player.querySelector(`.${css.infoComponents}`);
-
-		if (titleElement && infoComponents) {
-			const infoHeight = infoComponents.offsetHeight;
-
-			titleElement.setAttribute('style', `--infoComponentsOffset: ${infoHeight}px`);
-			this.titleOffsetCalculated = true;
+	getHeightForElement = (elementName) => {
+		const element = this.player.querySelector(`.${css[elementName]}`);
+		if (element) {
+			return element.offsetHeight;
+		} else {
+			return 0;
 		}
 	}
 
@@ -703,29 +827,81 @@ const VideoPlayerBase = class extends React.Component {
 		this.autoCloseJob.stop();
 	}
 
-	showControls = () => {
-		// Read the title
-		this.announce(this.props.title);
+	generateId = () => {
+		return Math.random().toString(36).substr(2, 8);
+	}
 
+	/**
+	 * If the announce state is either ready to read the title or ready to read info, advance the
+	 * state to "read".
+	 *
+	 * @returns {Boolean} Returns true to be used in event handlers
+	 * @private
+	 */
+	markAnnounceRead = () => {
+		if (this.state.announce === AnnounceState.TITLE) {
+			this.setState({announce: AnnounceState.TITLE_READ});
+		} else if (this.state.announce === AnnounceState.INFO) {
+			this.setState({announce: AnnounceState.DONE});
+		}
+
+		return true;
+	}
+
+	/**
+	 * Shows media controls.
+	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
+	 * @public
+	 */
+	showControls = () => {
 		this.startDelayedFeedbackHide();
 		this.startDelayedTitleHide();
-		forwardControlsAvailable({available: true}, this.props);
+
+		let {announce} = this.state;
+		if (announce === AnnounceState.READY) {
+			// if we haven't read the title yet, do so this time
+			announce = AnnounceState.TITLE;
+		} else if (announce === AnnounceState.TITLE) {
+			// if we have read the title, advance to INFO so title isn't read again
+			announce = AnnounceState.TITLE_READ;
+		}
+
 		this.setState({
+			announce,
 			bottomControlsRendered: true,
 			bottomControlsVisible: true,
 			feedbackVisible: true,
 			titleVisible: true
-		});
+		}, () => forwardControlsAvailable({available: true}, this.props));
 	}
 
+	/**
+	 * Hides media controls.
+	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
+	 * @public
+	 */
 	hideControls = () => {
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedTitleHide();
-		forwardControlsAvailable({available: false}, this.props);
-		this.setState({bottomControlsVisible: false, more: false});
+		this.setState({
+			bottomControlsVisible: false,
+			more: false
+		}, () => forwardControlsAvailable({available: false}, this.props));
+		this.markAnnounceRead();
 	}
 
 	autoCloseJob = new Job(this.hideControls)
+
+	refocusMoreButton = new Job(() => {
+		// Readout 'more' or 'back' button explicitly.
+		let selectedButton = Spotlight.getCurrent();
+		selectedButton.blur();
+		selectedButton.focus();
+	}, 100)
 
 	startDelayedTitleHide = () => {
 		if (this.props.titleHideDelay) {
@@ -765,17 +941,87 @@ const VideoPlayerBase = class extends React.Component {
 
 	handle = handle.bind(this)
 
-	handleLeft = () => {
-		this.jump(-1 * this.props.jumpBy);
+	startListeningForPulses = (keyCode) => () => {
+		// Ignore new pulse calls if key code is same, otherwise start new series if we're pulsing
+		if (this.pulsing && keyCode !== this.pulsingKeyCode) {
+			this.stopListeningForPulses();
+		}
+		if (!this.pulsing) {
+			this.pulsingKeyCode = keyCode;
+			this.pulsing = true;
+			this.keyLoop = setTimeout(this.handlePulse, this.props.initialJumpDelay);
+			this.doPulseAction();
+		}
 	}
 
-	handleRight = () => {
-		this.jump(this.props.jumpBy);
+	doPulseAction () {
+		if (is('left', this.pulsingKeyCode)) {
+			this.jump(-1 * this.props.jumpBy);
+			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
+		} else if (is('right', this.pulsingKeyCode)) {
+			this.jump(this.props.jumpBy);
+			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
+		}
+	}
+
+	handlePulse = () => {
+		this.doPulseAction();
+		this.keyLoop = setTimeout(this.handlePulse, this.props.jumpDelay);
+	}
+
+	stopListeningForPulses () {
+		this.pulsing = false;
+		if (this.keyLoop) {
+			clearTimeout(this.keyLoop);
+			this.keyLoop = null;
+		}
+	}
+
+	handleKeyDown = (ev) => {
+		if (!this.props.no5WayJump &&
+				!this.state.bottomControlsVisible &&
+				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
+			Spotlight.pause();
+			this.startListeningForPulses(ev.keyCode)();
+		}
+		return true;
 	}
 
 	showControlsFromPointer = () => {
 		Spotlight.setPointerMode(false);
 		this.showControls();
+	}
+
+	handleKeyUp = (ev) => {
+		const {PLAY, PAUSE, STOP, REWIND, FASTFORWARD} = keyMap;
+
+		switch (ev.keyCode) {
+			case PLAY:
+				this.play();
+				break;
+			case PAUSE:
+				this.pause();
+				break;
+			case REWIND:
+				if (!this.props.noRateButtons) {
+					this.rewind();
+				}
+				break;
+			case FASTFORWARD:
+				if (!this.props.noRateButtons) {
+					this.fastForward();
+				}
+				break;
+			case STOP:
+				this.pause();
+				this.seek(0);
+				break;
+		}
+
+		if (!this.props.no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
+			this.stopListeningForPulses();
+			Spotlight.resume();
+		}
 	}
 
 	handleGlobalKeyDown = this.handle(
@@ -822,11 +1068,12 @@ const VideoPlayerBase = class extends React.Component {
 			updatedState.error
 		);
 
-		if (this.props.pauseAtEnd && (
-				(el.currentTime === 0 && (this.prevCommand === 'rewind' || this.prevCommand === 'slowRewind')) ||
-				(el.currentTime === el.duration && (this.prevCommand === 'fastForward' || this.prevCommand === 'slowForward')))) {
+		const isRewind = this.prevCommand === 'rewind' || this.prevCommand === 'slowRewind';
+		const isForward = this.prevCommand === 'fastForward' || this.prevCommand === 'slowForward';
+		if (this.props.pauseAtEnd && (el.currentTime === 0 && isRewind || el.currentTime === el.duration && isForward)) {
 			this.pause();
 		}
+
 		this.setState(updatedState);
 	}
 
@@ -852,6 +1099,9 @@ const VideoPlayerBase = class extends React.Component {
 	reloadVideo = () => {
 		// When changing a HTML5 video, you have to reload it.
 		this.video.load();
+		this.setState({
+			announce: AnnounceState.READY
+		});
 	}
 
 	/**
@@ -880,6 +1130,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(1);
 		this.send('play');
 		this.prevCommand = 'play';
+		this.announce($L('Play'));
 	}
 
 	/**
@@ -894,6 +1145,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(1);
 		this.send('pause');
 		this.prevCommand = 'pause';
+		this.announce($L('Pause'));
 	}
 
 	/**
@@ -1160,11 +1412,13 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	handleKeyDownFromControls = (ev) => {
-		if (getDirection(ev.keyCode) === 'down') {
-			this.hideControls();
-		}
-	}
+	handleKeyDownFromControls = this.handle(
+		// onKeyDown is used as a proxy for when the title has been read because it can only occur
+		// after the controls have been shown.
+		this.markAnnounceRead,
+		forKey('down'),
+		this.hideControls
+	)
 
 	handleSpotlightUpFromSlider = handle(
 		stopImmediate,
@@ -1198,6 +1452,9 @@ const VideoPlayerBase = class extends React.Component {
 		this.seek(value * this.state.duration);
 		this.sliderScrubbing = false;
 	}
+
+	sliderTooltipTimeJob = new Job((time) => this.setState({sliderTooltipTime: time}), 20)
+
 	handleKnobMove = (ev) => {
 		this.sliderScrubbing = ev.detached;
 
@@ -1205,11 +1462,13 @@ const VideoPlayerBase = class extends React.Component {
 		// TODO: fix Slider to not send onKnobMove when the knob hasn't, in fact, moved
 		if (this.sliderKnobProportion !== ev.proportion) {
 			this.sliderKnobProportion = ev.proportion;
+			const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
 
-			if (this.sliderScrubbing) {
-				const
-					seconds = Math.round(this.sliderKnobProportion * this.video.duration),
-					knobTime = secondsToTime(seconds, this.durfmt);
+			if (this.sliderScrubbing && !isNaN(seconds)) {
+				this.sliderTooltipTimeJob.throttle(seconds);
+				const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
+
+				forward('onScrub', {...ev, seconds}, this.props);
 
 				this.announce(`${$L('jump to')} ${knobTime}`);
 			}
@@ -1217,13 +1476,13 @@ const VideoPlayerBase = class extends React.Component {
 	}
 	handleMouseOver = () => {
 		this.setState({
-			mouseOver:true,
+			mouseOver: true,
 			feedbackVisible: true
 		});
 		this.stopDelayedFeedbackHide();
 	}
 	handleMouseOut = () => {
-		this.setState({mouseOver:false});
+		this.setState({mouseOver: false});
 		this.startDelayedFeedbackHide();
 	}
 	onJumpBackward = this.handle(
@@ -1240,10 +1499,8 @@ const VideoPlayerBase = class extends React.Component {
 		forwardPlayButtonClick(ev, this.props);
 		if (this.state.paused) {
 			this.play();
-			this.announce($L(playLabel));
 		} else {
 			this.pause();
-			this.announce($L(pauseLabel));
 		}
 	}
 	onForward = (ev) => {
@@ -1267,9 +1524,11 @@ const VideoPlayerBase = class extends React.Component {
 			// Interrupt the title-hide since we don't want it hiding autonomously in "more".
 			this.stopDelayedTitleHide();
 		}
+
 		this.setState({
 			more: !this.state.more,
-			titleVisible: true
+			titleVisible: true,
+			announce: this.state.announce < AnnounceState.INFO ? AnnounceState.INFO : AnnounceState.DONE
 		});
 	}
 
@@ -1295,21 +1554,70 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState({bottomControlsRendered: true});
 	});
 
+	getControlsAriaProps () {
+		if (this.state.announce === AnnounceState.TITLE) {
+			return {
+				role: 'alert',
+				'aria-live': 'off',
+				'aria-labelledby': `${this.id}_title`
+			};
+		} else if (this.state.announce === AnnounceState.INFO) {
+			return {
+				role: 'alert',
+				'aria-live': 'off',
+				'aria-labelledby': `${this.id}_info`
+			};
+		}
+
+		return null;
+	}
+
 	render () {
-		const {backwardIcon, children, className, forwardIcon, infoComponents, jumpBackwardIcon, jumpButtonsDisabled, jumpForwardIcon, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, pauseIcon, playIcon, rateButtonsDisabled, rightComponents, source, style, title, ...rest} = this.props;
+		const {
+			backwardIcon,
+			children,
+			className,
+			forwardIcon,
+			infoComponents,
+			jumpBackwardIcon,
+			jumpButtonsDisabled,
+			jumpForwardIcon,
+			leftComponents,
+			moreButtonCloseLabel,
+			moreButtonDisabled,
+			moreButtonLabel,
+			noAutoPlay,
+			noJumpButtons,
+			noRateButtons,
+			noSlider,
+			pauseIcon,
+			playIcon,
+			rateButtonsDisabled,
+			rightComponents,
+			source,
+			style,
+			thumbnailSrc,
+			title,
+			...rest} = this.props;
+
 		delete rest.announce;
 		delete rest.autoCloseTimeout;
 		delete rest.feedbackHideDelay;
+		delete rest.initialJumpDelay;
 		delete rest.jumpBy;
+		delete rest.jumpDelay;
+		delete rest.no5WayJump;
 		delete rest.onControlsAvailable;
 		delete rest.onBackwardButtonClick;
 		delete rest.onForwardButtonClick;
 		delete rest.onJumpBackwardButtonClick;
 		delete rest.onJumpForwardButtonClick;
 		delete rest.onPlayButtonClick;
+		delete rest.onScrub;
 		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;
 		delete rest.setApiProvider;
+		delete rest.thumbnailUnavailable;
 		delete rest.titleHideDelay;
 		delete rest.tooltipHideDelay;
 
@@ -1320,6 +1628,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		// Handle some cases when the "more" button is pressed
 		const moreDisabled = !(this.state.more);
+		const controlsAriaProps = this.getControlsAriaProps();
 
 		return (
 			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
@@ -1335,24 +1644,36 @@ const VideoPlayerBase = class extends React.Component {
 					{source}
 				</video>
 
-				<Overlay onClick={this.onVideoClick}>
+				<Overlay
+					bottomControlsVisible={this.state.bottomControlsVisible}
+					onClick={this.onVideoClick}
+				>
 					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>
 
 				{this.state.bottomControlsRendered ?
-					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}}>
+					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}} {...controlsAriaProps}>
 						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible}>
-							{/* Info Section: Title, Description, Times */}
-							<div className={css.infoFrame}>
-								<MediaTitle
-									title={title}
-									visible={this.state.titleVisible}
-									infoVisible={this.state.more}
-								>
-									{infoComponents}
-								</MediaTitle>
-								<Times current={this.state.currentTime} total={this.state.duration} formatter={this.durfmt} />
-							</div>
+							{/*
+								Info Section: Title, Description, Times
+								Only render when `this.state.bottomControlsVisible` is true in order for `Marquee`
+								to make calculations correctly in `MediaTitle`.
+							*/}
+							{this.state.bottomControlsVisible ?
+								<div className={css.infoFrame}>
+									<MediaTitle
+										id={this.id}
+										infoVisible={this.state.more}
+										style={{'--infoComponentsOffset': this.state.titleOffsetHeight + 'px'}}
+										title={title}
+										visible={this.state.titleVisible}
+									>
+										{infoComponents}
+									</MediaTitle>
+									<Times current={this.state.currentTime} total={this.state.duration} formatter={this.durfmt} />
+								</div> :
+								null
+							}
 
 							{noSlider ? null : <MediaSlider
 								backgroundProgress={this.state.proportionLoaded}
@@ -1368,6 +1689,8 @@ const VideoPlayerBase = class extends React.Component {
 									noFeedback={this.state.mouseOver}
 									playbackState={this.prevCommand}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
+									thumbnailDeactivated={this.props.thumbnailUnavailable}
+									thumbnailSrc={thumbnailSrc}
 									visible={this.state.feedbackVisible}
 								>
 									{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
@@ -1382,11 +1705,13 @@ const VideoPlayerBase = class extends React.Component {
 								jumpForwardIcon={jumpForwardIcon}
 								leftComponents={leftComponents}
 								mediaDisabled={this.state.mediaControlsDisabled}
+								moreButtonCloseLabel={moreButtonCloseLabel}
+								moreButtonDisabled={moreButtonDisabled}
+								moreButtonLabel={moreButtonLabel}
 								moreDisabled={moreDisabled}
 								noJumpButtons={noJumpButtons}
 								noRateButtons={noRateButtons}
 								onBackwardButtonClick={this.onBackward}
-								onClick={this.resetAutoTimeout}
 								onForwardButtonClick={this.onForward}
 								onJumpBackwardButtonClick={this.onJumpBackward}
 								onJumpForwardButtonClick={this.onJumpForward}
@@ -1395,9 +1720,9 @@ const VideoPlayerBase = class extends React.Component {
 								onToggleMore={this.onMoreClick}
 								paused={this.state.paused}
 								pauseIcon={pauseIcon}
-								pauseLabel={pauseLabel}
+								pauseLabel={$L('Pause')}
 								playIcon={playIcon}
-								playLabel={playLabel}
+								playLabel={$L('Play')}
 								rateButtonsDisabled={rateButtonsDisabled}
 								rightComponents={rightComponents}
 								showMoreComponents={this.state.more}
@@ -1413,9 +1738,8 @@ const VideoPlayerBase = class extends React.Component {
 					// It's non-visible but lives at the top of the VideoPlayer.
 					className={css.controlsHandleAbove}
 					onSpotlightDown={this.showControls}
-					onSpotlightLeft={this.handleLeft}
-					onSpotlightRight={this.handleRight}
 					onClick={this.showControls}
+					onKeyDown={this.handleKeyDown}
 				/>
 				<Announce ref={this.setAnnounceRef} />
 			</div>
@@ -1442,8 +1766,9 @@ const VideoPlayerBase = class extends React.Component {
  *	</VideoPlayer>
  * ```
  *
- * To invoke methods (`fastForward()`, `jump()`, `pause()`, `play()`, `rewind()`, `seek()`) or get
- * the current state (`getMediaState()`), store a ref to the `VideoPlayer` within your component:
+ * To invoke methods (`fastForward()`, `hideControls()`, `jump()`, `pause()`, `play()`, `rewind()`,
+ * `seek()`, 'showControls()') or get the current state (`getMediaState()`), store a ref to the
+ * `VideoPlayer` within your component:
  *
  * ```
  * 	...
@@ -1470,7 +1795,7 @@ const VideoPlayerBase = class extends React.Component {
  * @public
  */
 const VideoPlayer = ApiDecorator(
-	{api: ['fastForward', 'getMediaState', 'jump', 'pause', 'play', 'rewind', 'seek']},
+	{api: ['fastForward', 'getMediaState', 'hideControls', 'jump', 'pause', 'play', 'rewind', 'seek', 'showControls']},
 	Slottable(
 		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
 		Skinnable(

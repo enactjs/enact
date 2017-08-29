@@ -2,19 +2,32 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [1.7.0] - 2017-08-23
 
-### Deprecated
+No significant changes.
 
-### Added
+## [1.6.1] - 2017-08-07
 
 - 'ui/styles/mixins.less' mixins: `.remove-margin-on-edge-children()` and `.remove-padding-on-edge-children()` to better handle edge margins on container components
 
 ### Changed
+No significant changes.
+
+## [1.6.0] - 2017-08-04
 
 ### Fixed
 
-### Removed
+- `ui/PlaceholderDecorator` to update bounds of `Scroller` when the `visible` state changed
+
+## [1.5.0] - 2017-07-19
+
+### Fixed
+
+- `ui/Cancelable` warning for string type cancel handler
+
+## [1.4.1] - 2017-07-05
+
+No significant changes.
 
 ## [1.4.0] - 2017-06-29
 
