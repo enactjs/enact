@@ -46,19 +46,19 @@
 		bottom: @moon-spotlight-outset;
 	}
 
-	// .knob[data-climax="rising"] {
-	// 	.thumbnail,
-	// 	.content {
-	// 		transform: translateX(0%) translateX(30px);
-	// 	}
-	// }
+	[data-knob-after-midpoint="false"] & {
+		.thumbnail,
+		.content {
+			transform: translateX(0%) translateX(0);
+		}
+	}
 
-	// .knob[data-climax="falling"] {
-	// 	.thumbnail,
-	// 	.content {
-	// 		transform: translateX(-100%) translateX(-30px);
-	// 	}
-	// }
+	[data-knob-after-midpoint="true"] & {
+		.thumbnail,
+		.content {
+			transform: translateX(-100%) translateX(0);
+		}
+	}
 
 	.applySkins({
 		.thumbnail {
