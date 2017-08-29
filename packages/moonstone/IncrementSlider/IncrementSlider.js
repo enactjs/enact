@@ -73,7 +73,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * When `true`, the knob displays selected and can be moved using 5-way controls.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			active: PropTypes.bool,
@@ -112,7 +111,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			detachedKnob: PropTypes.bool,
@@ -121,7 +119,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * When `true`, the component is shown as disabled and does not generate events
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			disabled: PropTypes.bool,
@@ -129,7 +126,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			/**
 			 * When `true`, the tooltip is shown when present
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			focused: PropTypes.bool,
@@ -161,6 +157,16 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			inputRef: PropTypes.func,
 
 			/**
+			* When not `vertical`, determines which side of the knob the tooltip appears on.
+			* When `false`, the tooltip will be on the left side, when `true`, the tooltip will
+			* be on the right.
+			*
+			* @type {String}
+			* @private
+			*/
+			knobAfterMidpoint: PropTypes.bool,
+
+			/**
 			 * The maximum value of the increment slider.
 			 *
 			 * @type {Number}
@@ -182,7 +188,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * When `true`, the slider bar doesn't show a fill and doesn't highlight when spotted
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			noFill: PropTypes.bool,
@@ -290,7 +295,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * user interaction.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			scrubbing: PropTypes.bool,
@@ -315,7 +319,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * When `true`, the component cannot be navigated using spotlight.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			spotlightDisabled: PropTypes.bool,
@@ -336,7 +339,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * a custom tooltip is provided.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			tooltip: PropTypes.bool,
@@ -346,18 +348,16 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * The percentage respects the min and max value props.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			tooltipAsPercent: PropTypes.bool,
 
 			/**
 			 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale
-			 * changes. This may be useful if you have a static layout that does not automatically
-			 * reverse when in an RTL language.
+			 * changes for `vertical` sliders. This may be useful if you have a static layout that
+			 * does not automatically reverse when in an RTL language.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			tooltipForceSide: PropTypes.bool,
@@ -390,7 +390,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			* If `true` the increment slider will be oriented vertically.
 			*
 			* @type {Boolean}
-			* @default false
 			* @public
 			*/
 			vertical: PropTypes.bool
@@ -398,6 +397,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 		defaultProps: {
 			backgroundProgress: 0,
+			knobAfterMidpoint: false,
 			max: 100,
 			min: 0,
 			noFill: false,
@@ -499,6 +499,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementIcon,
 			incrementSliderClasses,
 			inputRef,
+			knobAfterMidpoint,
 			max,
 			min,
 			noFill,
@@ -549,6 +550,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						aria-hidden={ariaHidden}
 						backgroundProgress={backgroundProgress}
 						className={css.slider}
+						knobAfterMidpoint={knobAfterMidpoint}
 						disabled={disabled}
 						detachedKnob={detachedKnob}
 						focused={focused}

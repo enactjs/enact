@@ -14,7 +14,7 @@ storiesOf('LabeledItem')
 		'Basic usage of LabeledItem',
 		() => (
 			<LabeledItem
-				label="Label"
+				label={text('label', 'Label')}
 				disabled={boolean('disabled', false)}
 			>
 				{text('children', 'Hello LabeledItem')}

@@ -19,6 +19,7 @@ const OverlayBase = kind({
 	name: 'Overlay',
 
 	propTypes: /** @lends moonstone/VideoPlayer.Overlay.prototype */ {
+		bottomControlsVisible: PropTypes.bool,
 		children: PropTypes.node
 	},
 
@@ -27,12 +28,17 @@ const OverlayBase = kind({
 		className: 'overlay'
 	},
 
-	render: (props) => (
-		<div {...props} />
-	)
+	computed: {
+		className: ({bottomControlsVisible, styler}) => styler.append({['high-contrast-scrim']: bottomControlsVisible})
+	},
+
+	render: (props) => {
+		delete props.bottomControlsVisible;
+		return <div {...props} />;
+	}
 });
 
-const Overlay = onlyUpdateForKeys(['children'])(OverlayBase);
+const Overlay = onlyUpdateForKeys(['bottomControlsVisible', 'children'])(OverlayBase);
 
 export default Overlay;
 export {

@@ -31,6 +31,7 @@ storiesOf('IconButton')
 				disabled={boolean('disabled', false)}
 				selected={nullify(boolean('selected', false))}
 				small={boolean('small', false)}
+				tooltipText={nullify(text('tooltipText', ''))}
 			>
 				{select('src', ['', fwd, play, rew], '') + select('icon', ['', ...icons], 'plus') + text('custom icon', '')}
 			</IconButton>
