@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/VideoPlayer` support for `spotlightDisabled`
+
 ### Changed
 
 ### Fixed
