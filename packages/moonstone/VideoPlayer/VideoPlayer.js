@@ -48,9 +48,6 @@ const keyMap = {
 	'FASTFORWARD': 417
 };
 
-// Default props from MediaControls
-const controlsDefault = MediaControls.defaultProps;
-
 // Video ReadyStates
 // - Commented are currently unused.
 //
@@ -585,14 +582,10 @@ const VideoPlayerBase = class extends React.Component {
 
 	static defaultProps = {
 		autoCloseTimeout: 5000,
-		backwardIcon: controlsDefault.backwardIcon,
 		feedbackHideDelay: 3000,
-		forwardIcon: controlsDefault.forwardIcon,
 		initialJumpDelay: 400,
-		jumpBackwardIcon: controlsDefault.jumpBackwardIcon,
 		jumpBy: 30,
 		jumpDelay: 200,
-		jumpForwardIcon: controlsDefault.jumpForwardIcon,
 		moreButtonDisabled: false,
 		muted: false,
 		no5WayJump: false,
@@ -601,14 +594,12 @@ const VideoPlayerBase = class extends React.Component {
 		pauseAtEnd: false,
 		noRateButtons: false,
 		noSlider: false,
-		pauseIcon: controlsDefault.pauseIcon,
 		playbackRateHash: {
 			fastForward: ['2', '4', '8', '16'],
 			rewind: ['-2', '-4', '-8', '-16'],
 			slowForward: ['1/4', '1/2'],
 			slowRewind: ['-1/2', '-1']
 		},
-		playIcon: controlsDefault.playIcon,
 		titleHideDelay: 5000,
 		tooltipHideDelay: 3000
 	}
