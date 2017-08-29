@@ -473,6 +473,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleFocus = (ev) => {
 			forwardFocus(ev, this.props);
 
+			if (this.props.detachedKnob) {
+				this.moveKnobByAmount(0);
+			}
+
 			this.setState({
 				focused: true
 			});
