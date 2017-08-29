@@ -7,8 +7,8 @@
  *
  * @module moonstone/Button
  * @exports Button
- * @exports ButtonBase
  * @exports ButtonBaseFactory
+ * @exports ButtonDecorator
  * @exports ButtonFactory
  */
 
@@ -31,23 +31,9 @@ import Touchable from '../internal/Touchable';
 import componentCss from './Button.less';
 
 /**
- * A factory for customizing the visual style of [ButtonBase]{@link moonstone/Button.ButtonBase}.
- * The following are CSS classes that may be overridden.
- *
- * Using ButtonFactory to create a custom styled component:
- * ```
- * import css from './CustomButton.less';
- * import {ButtonFactory} from '@enact/moonstone/Button';
- * const MyButton = ButtonFactory({
- *     css: {
- *         bg: css.bg,
- *         selected: css.selected
- *     }
- * });
- *
- * // New component usable like any other:
- * <MyButton>Customized!</MyButton>
- * ```
+ * A factory for customizing the visual style of [Button]{@link moonstone/Button}. This factory will
+ * not apply any HOCs. When using this factory, apply `ButtonDecorator` to enable Moonstone button
+ * behaviors.
  *
  * @class ButtonBaseFactory
  * @extends ui/ButtonFactory.ButtonBaseFactory
@@ -84,7 +70,7 @@ const ButtonBaseFactory = factory({css: componentCss}, (config) => {
 	return kind({
 		name: 'Button',
 
-		propTypes: /** @lends moonstone/Button.ButtonBase.prototype */ {
+		propTypes: /** @lends moonstone/Button.Button.prototype */ {
 			/**
 			 * The background-color opacity of this button; valid values are `'opaque'`, `'translucent'`,
 			 * and `'transparent'`.
@@ -150,6 +136,21 @@ const ButtonDecorator = compose(
  * A factory for customizing the visual style of [Button]{@link moonstone/Button.Button}.
  * @see {@link moonstone/Button.ButtonBaseFactory}.
  *
+ * Using ButtonFactory to create a custom styled component:
+ * ```
+ * import css from './CustomButton.less';
+ * import {ButtonFactory} from '@enact/moonstone/Button';
+ * const MyButton = ButtonFactory({
+ *     css: {
+ *         bg: css.bg,
+ *         selected: css.selected
+ *     }
+ * });
+ *
+ * // New component usable like any other:
+ * <MyButton>Customized!</MyButton>
+ * ```
+ *
  * @class ButtonFactory
  * @memberof moonstone/Button
  * @factory
@@ -163,7 +164,6 @@ const ButtonFactory = compose(ButtonDecorator, ButtonBaseFactory);
  *
  * @class Button
  * @memberof moonstone/Button
- * @extends moonstone/Button.ButtonBase
  * @mixes i18n/Uppercase
  * @mixes moonstone/TooltipDecorator
  * @mixes ui/Touchable

@@ -1,7 +1,7 @@
 /**
  * Exports the {@link ui/IconFactory.IconFactory} component factory
  *
- * @module ui/Icon
+ * @module ui/IconFactory
  */
 
 import factory from '@enact/core/factory';
@@ -47,12 +47,11 @@ const isSingleCharacter = function (c) {
 };
 
 /**
- * {@link ui/Icon.IconFactory} is Factory wrapper around {@link ui/Icon.IconBase}
- * that allows overriding certain classes at design time. The following are properties of the `css`
- * member of the argument to the factory.
+ * A Factory for creating Icons that allows overriding certain classes at design time. The following
+ * are properties of the `css` member of the argument to the factory.
  *
  * @class IconFactory
- * @memberof ui/Icon
+ * @memberof ui/IconFactory
  * @factory
  * @ui
  * @public
@@ -60,32 +59,15 @@ const isSingleCharacter = function (c) {
 const IconFactory = factory({css: componentCss}, (config) => {
 	const {css} = config;
 
-	/**
-	 * {@link ui/Icon.Icon} is a component that displays an icon image.  You may
-	 * specify an image, by setting the `src` property, or a font-based icon, by setting the child to a
-	 * string from the [IconList]{@link ui/Icon.IconList}.  If both `src` and
-	 * children are specified, both will be rendered.
-	 *
-	 * Usage:
-	 * ```
-	 * <Icon small>
-	 *     plus
-	 * </Icon>
-	 * ```
-	 *
-	 * @class Icon
-	 * @memberof ui/Icon
-	 * @ui
-	 * @public
-	 */
 	return kind({
 		name: 'Icon',
 
-		propTypes: /** @lends ui/Icon.Icon.prototype */ {
+		propTypes: /** @lends ui/IconFactory.IconFactory.prototype */ {
 			/**
 			 * The icon specified as either:
 			 *
-			 * * A string that represents an icon from the [IconList]{@link ui/Icon.IconList},
+			 * * A string that represents an icon from the
+			 * [IconList]{@link ui/IconFactory.IconFactory.IconList},
 			 * * An HTML entity string, Unicode reference or hex value (in the form '0x...'),
 			 * * A URL specifying path to an icon image, or
 			 * * An object representing a resolution independent resource (See {@link ui/resolution}).

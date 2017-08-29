@@ -3,12 +3,12 @@
  * {@link moonstone/Icon} but renders the Icon in a pressable {@link moonstone/IconButton}.
  *
  * @example
- * <Button>gear</IconButton>
+ * <IconButton>gear</IconButton>
  *
  * @module moonstone/IconButton
  * @exports IconButton
- * @exports IconButtonBase
  * @exports IconButtonBaseFactory
+ * @exports IconButtonDecorator
  * @exports IconButtonFactory
  */
 
@@ -28,7 +28,7 @@ import Touchable from '../internal/Touchable';
 import componentCss from './IconButton.less';
 
 /**
- * A factory for customizing the visual style of [IconButtonBase]{@link moonstone/IconButton.IconButtonBase}.
+ * A factory for customizing the visual style of [IconButton]{@link moonstone/IconButton.IconButton}.
  *
  * @class IconButtonBaseFactory
  * @memberof moonstone/IconButton
@@ -50,9 +50,9 @@ const IconButtonBaseFactory = factory({css: componentCss}, (config) => {
 	});
 
 	/**
-	 * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon} that acts like a Iconbutton.
-	 * You may specify an image or a font-based icon by setting the children to either the path to the
-	 * image or a string from the [IconList]{@link moonstone/Icon.IconList}.
+	 * {@link moonstone/IconButton.IconButton} is an [Icon]{@link moonstone/Icon.Icon} that acts
+	 * like a button.  You may specify an image or a font-based icon by setting the children to
+	 * either the path to the image or a string from the [IconList]{@link moonstone/Icon.IconList}.
 	 *
 	 * Usage:
 	 * ```
@@ -77,6 +77,14 @@ const IconButtonBaseFactory = factory({css: componentCss}, (config) => {
 	});
 });
 
+/**
+ * A pre-configured Higher-Order Component (HOC) which adds `IconButton` behavior to a component.
+ *
+ * @class IconButtonDecorator
+ * @memberof moonstone/IconButton
+ * @hoc
+ * @public
+ */
 const IconButtonDecorator = compose(
 	TooltipDecorator({tooltipDestinationProp: 'tooltipNode'}),
 	Touchable,
@@ -100,7 +108,6 @@ const IconButtonFactory = compose(IconButtonDecorator, IconButtonBaseFactory);
  *
  * @class IconButton
  * @memberof moonstone/IconButton
- * @extends moonstone/IconButton.IconButtonBase
  * @mixes i18n/Uppercase
  * @mixes moonstone/TooltipDecorator
  * @mixes ui/Pressable

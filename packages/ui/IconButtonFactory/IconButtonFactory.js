@@ -1,7 +1,7 @@
 /**
- * Exports the {@link ui/IconButton.IconButton} component.
+ * Exports the {@link ui/IconButtonFactory.IconButtonFactory} factory.
  *
- * @module ui/IconButton
+ * @module ui/IconButtonFactory
  */
 
 import factory from '@enact/core/factory';
@@ -35,7 +35,7 @@ const OnlyUpdate = onlyUpdateForKeys(['small', 'children']);
  * ```
  *
  * @class IconButtonFactory
- * @memberof ui/IconButton
+ * @memberof ui/IconButtonFactory
  * @factory
  * @public
  */
@@ -47,27 +47,10 @@ const IconButtonFactory = factory({css: componentCss}, (config) => {
 		IconFactory(config)
 	);
 
-	/**
-	 * {@link ui/IconButton.IconButton} is a {@link ui/Icon.Icon} that acts like a button.
-	 * You may specify an image or a font-based icon by setting the children to either the path to the
-	 * image or a string from the [IconList]{@link ui/Icon.IconList}.
-	 *
-	 * Usage:
-	 * ```
-	 * <IconButton onClick={handleClick} small>
-	 *     plus
-	 * </IconButton>
-	 * ```
-	 *
-	 * @class IconButton
-	 * @memberof ui/IconButton
-	 * @ui
-	 * @public
-	 */
 	return kind({
 		name: 'IconButton',
 
-		propTypes: /** @lends ui/IconButton.IconButton.prototype */ {
+		propTypes: /** @lends ui/IconButtonFactory.IconButtonFactory.prototype */ {
 			/**
 			 * The background-color opacity of this icon button; valid values are `'opaque'`,
 			 * `'translucent'`, and `'transparent'`.

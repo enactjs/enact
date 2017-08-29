@@ -7,8 +7,8 @@
  *
  * @module moonstone/Icon
  * @exports Icon
- * @exports IconBase
  * @exports IconBaseFactory
+ * @exports IconDecorator
  * @exports IconFactory
  * @exports iconList
  */
@@ -26,7 +26,7 @@ import iconList from './IconList.js';
 import componentCss from './Icon.less';
 
 /**
- * A factory for customizing the visual style of [IconBase]{@link moonstone/Icon.IconBase}.
+ * A factory for customizing the visual style of [Icon]{@link moonstone/Icon.Icon}.
  *
  * @class IconBaseFactory
  * @memberof moonstone/Icon
@@ -145,6 +145,14 @@ const IconBaseFactory = factory({css: componentCss}, (config) => {
  * @public
  */
 
+/**
+ * A pre-configured Higher-Order Component (HOC) which adds `Icon` behavior to a component.
+ *
+ * @class IconDecorator
+ * @memberof moonstone/Icon
+ * @hoc
+ * @public
+ */
 const IconDecorator = Skinnable;
 
 /**
@@ -163,7 +171,6 @@ const IconFactory = compose(IconDecorator, IconBaseFactory);
  *
  * @class Icon
  * @memberof moonstone/Icon
- * @extends moonstone/Icon.IconBase
  * @mixes moonstone/Skinnable
  * @ui
  * @public
