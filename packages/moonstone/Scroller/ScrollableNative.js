@@ -547,6 +547,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				spotItem = Spotlight.getCurrent();
 
 			if (!Spotlight.getPointerMode() && spotItem) {
+				if (!this.childRef.containerRef.contains(spotItem)) {
+					return;
+				}
 				const
 					containerId = Spotlight.getActiveContainer(),
 					direction = this.getPageDirection(keyCode, canScrollVertically),
@@ -584,7 +587,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				current = document.querySelector(`[data-container-id="${containerId}"]`);
 			}
 
-			return current && this.childRef.containerRef.contains(current) && this.containerRef.contains(current);
+			return current && this.containerRef.contains(current);
 		}
 
 		onKeyDown = (e) => {

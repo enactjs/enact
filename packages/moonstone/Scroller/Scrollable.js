@@ -623,7 +623,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
 				spotItem = Spotlight.getCurrent();
 
-			if (!Spotlight.getPointerMode() && spotItem && this.childRef.containerRef.contains(spotItem)) {
+			if (!Spotlight.getPointerMode() && spotItem) {
+				if (!this.childRef.containerRef.contains(spotItem)) {
+					return;
+				}
 				const
 					containerId = Spotlight.getActiveContainer(),
 					direction = this.getPageDirection(keyCode, canScrollVertically),
