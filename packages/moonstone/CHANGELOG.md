@@ -6,6 +6,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
+- `moonstone/Dialog` property `showDivider` will be replaced by `noDivider` property in 2.0.0
+
 ### Added
 
 - `moonstone/Popup` callback property `onShow` which fires after popup appears for both animating and non-animating popups
@@ -20,6 +22,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VideoPlayer` thumbnail positioning and style
 - `moonstone/VirtualList` to render when dataSize increased or decreased
+- `moonstone/Dialog` style
 
 ### Fixed
 
