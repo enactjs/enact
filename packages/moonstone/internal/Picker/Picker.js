@@ -764,7 +764,7 @@ const PickerBase = class extends React.Component {
 			>
 				<PickerButton
 					aria-controls={!joined ? id : null}
-					aria-label={this.calcIncrementLabel(valueText)}
+					aria-label={this.calcIncrementLabel(ariaValueText != null ? ariaValueText : valueText)}
 					className={css.incrementer}
 					disabled={incrementerDisabled}
 					hidden={reachedEnd}
@@ -800,7 +800,7 @@ const PickerBase = class extends React.Component {
 				</div>
 				<PickerButton
 					aria-controls={!joined ? id : null}
-					aria-label={this.calcDecrementLabel(valueText)}
+					aria-label={this.calcDecrementLabel(ariaValueText != null ? ariaValueText : valueText)}
 					className={css.decrementer}
 					disabled={decrementerDisabled}
 					hidden={reachedStart}
