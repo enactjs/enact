@@ -146,6 +146,7 @@ storiesOf('VideoPlayer')
 						pauseIcon={select('pauseIcon', icons, 'pause')}
 						playIcon={select('playIcon', icons, 'play')}
 						poster={poster}
+						spotlightDisabled={boolean('spotlightDisabled', false)}
 						thumbnailSrc={poster}
 						thumbnailUnavailable={boolean('thumbnailUnavailable', false)}
 						title={text('title', 'Moonstone VideoPlayer Sample Video')}

@@ -9,12 +9,17 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 -`moonstone/VideoPlayer` state `playbackRate` to media events
+- `moonstone/VideoPlayer` support for `spotlightDisabled`
 
 ### Changed
 
+- `moonstone/VirtualList` to render when dataSize increased or decreased
+
 ### Fixed
 
--`moonstone/IconButton` Tooltip position when disabled
+- `moonstone/VirtualList` not to show invisible items
+- `moonstone/IconButton` Tooltip position when disabled
+- `moonstone/VideoPlayer` to display feedback tooltip correctly when navigating in 5-way
 
 ## [1.7.0] - 2017-08-23
 

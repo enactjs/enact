@@ -44,6 +44,12 @@
 			left: @moon-video-player-padding-side;
 			right: @moon-video-player-padding-side;
 
+			&.hidden {
+				will-change: opacity;
+				opacity: 0;
+				pointer-events: none;
+			}
+
 			.infoFrame {
 				display: flex;
 				margin-bottom: @moon-spotlight-outset;
