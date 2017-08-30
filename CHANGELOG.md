@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.0.0-alpha.2] - 2017-08-29
+
+## Added
+
+- `ui/Scroller` and `ui/VirtualList`
+
 ## [2.0.0-alpha.1] - 2017-08-27
 
 ## Added
