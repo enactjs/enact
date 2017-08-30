@@ -135,6 +135,10 @@ class VirtualListCore extends Component {
 		spacing: PropTypes.number
 	}
 
+	static contextTypes = {
+		rtl: PropTypes.bool
+	}
+
 	static defaultProps = {
 		cbScrollTo: nop,
 		data: [],
@@ -528,7 +532,8 @@ class VirtualListCore extends Component {
 	}
 
 	getXY = (primaryPosition, secondaryPosition) => {
-		return (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition});
+		const rtlDirection = this.context.rtl ? -1 : 1;
+		return (this.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
 	}
 
 	composeTransform (style, primaryPosition, secondaryPosition = 0) {

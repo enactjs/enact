@@ -48,6 +48,10 @@ class ScrollerBase extends Component {
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
 	}
 
+	static contextTypes = {
+		rtl: PropTypes.bool
+	}
+
 	static defaultProps = {
 		direction: 'both'
 	}
@@ -80,6 +84,8 @@ class ScrollerBase extends Component {
 
 	getScrollBounds = () => this.scrollBounds
 
+	getRtlPositionX = (x) => (this.context.rtl ? this.scrollBounds.maxLeft - x : x)
+
 	// for Scrollable
 	setScrollPosition (x, y) {
 		const
@@ -90,7 +96,7 @@ class ScrollerBase extends Component {
 			this.scrollPos.top = y;
 		}
 		if (this.isHorizontal()) {
-			node.scrollLeft = x;
+			node.scrollLeft = this.getRtlPositionX(x);
 			this.scrollPos.left = x;
 		}
 	}
