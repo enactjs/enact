@@ -519,13 +519,17 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleEnter = (ev) => {
 			this.isHovered = true;
-			this.startAnimation();
+			if (this.props.marqueeOn !== 'render') {
+				this.startAnimation();
+			}
 			forwardEnter(ev, this.props);
 		}
 
 		handleLeave = (ev) => {
 			this.isHovered = false;
-			this.cancelAnimation();
+			if (this.props.marqueeOn !== 'render') {
+				this.cancelAnimation();
+			}
 			forwardLeave(ev, this.props);
 		}
 
