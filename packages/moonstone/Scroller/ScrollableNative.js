@@ -7,7 +7,6 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
-import {contextTypes as contextTypesRemeasurable} from '@enact/ui/Remeasurable';
 import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
@@ -163,6 +162,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			onScroll: PropTypes.func,
 
 			/**
+			 * Called scrollbar visability changes
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onScrollbarVisabilityChange: PropTypes.func,
+
+			/**
 			 * Called when scroll starts
 			 *
 			 * @type {Function}
@@ -207,7 +214,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			verticalScrollbar: 'auto'
 		}
 
-		static childContextTypes = Object.assign({}, contextTypesResize, contextTypesRemeasurable)
+		static childContextTypes = contextTypesResize
 		static contextTypes = contextTypesRtl
 
 		constructor (props) {
@@ -242,8 +249,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		getChildContext () {
 			return {
-				invalidateBounds: this.enqueueForceUpdate,
-				remeasure: this.state.isVerticalScrollbarVisible
+				invalidateBounds: this.enqueueForceUpdate
 			};
 		}
 
@@ -258,13 +264,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			on('keydown', this.onKeyDown);
 		}
 
-		componentWillUpdate (nextProps, nextState, nextContext) {
+		componentWillUpdate () {
 			this.deferScrollTo = true;
-			if (nextContext.remeasure !== this.context.remeasure || nextState.isVerticalScrollbarVisible !== this.state.isVerticalScrollbarVisible) {
-				this.setState((prevState) => ({
-					remeasure: !prevState.remeasure
-				}));
-			}
 		}
 
 		componentDidUpdate () {
@@ -894,6 +895,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				);
 
 			if (isVisibilityChanged) {
+				if (this.props.onScrollbarVisabilityChange) {
+					this.props.onScrollbarVisabilityChange();
+				}
 				// one or both scrollbars have changed visibility
 				this.setState({
 					isHorizontalScrollbarVisible: curHorizontalScrollbarVisible,

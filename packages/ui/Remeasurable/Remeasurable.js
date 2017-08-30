@@ -5,27 +5,73 @@
  * @module ui/Remeasurable
  * @private
  */
-import PropTypes from 'prop-types';
-import getContext from 'recompose/getContext';
+import React from 'react';
+import hoc from '@enact/core/hoc';
+import {Broadcast, Subscriber} from '../Broadcast';
 
-/**
- * Context propTypes for Remeasurable
- *
- * @memberof ui/Remeasurable.Remeasurable
- * @private
- */
-const contextTypes = {
-	/**
-	 * Notifies child of a change in size from a parent. This value type is set to
-	 * `any`, because the value truly doesn't matter. The value is meant to be a trigger,
-	 * to the wrapped component to remeasure it self. A boolean is typically the easiest
-	 * to use as a trigger.
-	 *
-	 * @memberof ui/Remeasurable.Remeasurable.contextTypes
-	 * @private
-	 */
-	remeasure: PropTypes.any
+const defaultConfig = {
+	trigger: () => {}
 };
+
+// Used to get most recent update.
+const perfNow = function () {
+	if (typeof window === 'object') {
+		return window.performance.now();
+	} else {
+		return Date.now();
+	}
+};
+
+const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
+	const {trigger} = config;
+	return class extends React.Component {
+		static displayName = 'RemeasurableDecorator'
+
+		constructor (props) {
+			super(props);
+			this.state = {
+				remeasure: perfNow()
+			};
+		}
+
+		triggerRemeasure = () => {
+			this.setState({remeasure: perfNow()});
+		}
+
+		render () {
+			const props = Object.assign({}, this.props);
+			props[trigger] = this.triggerRemeasure;
+
+			return (
+				<Subscriber channel="remeasure">
+					{(value) => (
+						<Broadcast channel="remeasure" value={this.state.remeasure > value ? this.state.remeasure : value}>
+							<Wrapped {...props} />
+						</Broadcast>
+					)}
+				</Subscriber>
+			);
+		}
+	};
+});
+
+const Remeasurable = hoc(defaultConfig, (config, Wrapped) => {
+	return class extends React.Component {
+		static displayName = 'Remeasurable'
+
+		constructor (props) {
+			super(props);
+		}
+
+		render () {
+			return (
+				<Subscriber channel="remeasure">
+					{(value) => <Wrapped {...this.props} remeasure={value} />}
+				</Subscriber>
+			);
+		}
+	};
+});
 
 /**
  * {@link ui/Remeasurable.Remeasurable} is a Higher-order Component which
@@ -38,7 +84,5 @@ const contextTypes = {
  * @private
  */
 
-const Remeasurable = getContext(contextTypes);
-
 export default Remeasurable;
-export {Remeasurable, contextTypes};
+export {Remeasurable, RemeasurableDecorator};
