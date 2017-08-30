@@ -231,16 +231,6 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
-	shouldComponentUpdate (nextProps, nextState) {
-		if (!this.restoreLastFocused &&
-			(this.props.dataSize > 0 && this.props.dataSize !== nextProps.dataSize) &&
-			(this.state.numOfItems === nextState.numOfItems) &&
-			(nextState.firstIndex + nextState.numOfItems) < nextProps.dataSize) {
-			return false;
-		}
-		return true;
-	}
-
 	componentDidUpdate () {
 		this.restoreFocus();
 	}
@@ -457,7 +447,7 @@ class VirtualListCoreNative extends Component {
 			// If we need to restore last focus and the index is beyond the screen,
 			// we call `scrollTo` to create DOM for it.
 			this.props.cbScrollTo({index: this.preservedIndex, animate: false});
-		} else if (wasFirstIndexMax) {
+		} else if (wasFirstIndexMax && dimensionToExtent > 1) {
 			newFirstIndex = this.maxFirstIndex;
 		} else {
 			newFirstIndex = Math.min(firstIndex, this.maxFirstIndex);
@@ -495,7 +485,7 @@ class VirtualListCoreNative extends Component {
 		this.syncThreshold(maxPos);
 
 		if (this.scrollPosition > maxPos) {
-			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}});
+			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
 		}
 
 		this.containerClass = (isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
