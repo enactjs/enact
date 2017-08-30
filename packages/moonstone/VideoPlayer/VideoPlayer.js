@@ -127,6 +127,7 @@ const AnnounceState = {
  * @property {Number} currentTime - Playback index of the media in seconds
  * @property {Number} duration - Media's entire duration in seconds
  * @property {Boolean} paused - Playing vs paused state. `true` means the media is paused
+ * @property {Number} playbackRate - Current playback rate, as a number
  * @property {Number} proportionLoaded - A value between `0` and `1` representing the proportion of the media that has loaded
  * @property {Number} proportionPlayed - A value between `0` and `1` representing the proportion of the media that has already been shown
  *
@@ -526,6 +527,14 @@ const VideoPlayerBase = class extends React.Component {
 		source: PropTypes.node,
 
 		/**
+		 * When `true`, the component cannot be navigated using spotlight.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		spotlightDisabled: PropTypes.bool,
+
+		/**
 		 * Set a thumbnail image source to show on VideoPlayer's Slider knob. This is a standard
 		 * {@link moonstone/Image} component so it supports all of the same options for the `src`
 		 * property. If no `thumbnailSrc` is set, no tooltip will display.
@@ -574,14 +583,10 @@ const VideoPlayerBase = class extends React.Component {
 
 	static defaultProps = {
 		autoCloseTimeout: 5000,
-		backwardIcon: 'backward',
 		feedbackHideDelay: 3000,
-		forwardIcon: 'forward',
 		initialJumpDelay: 400,
-		jumpBackwardIcon: 'skipbackward',
 		jumpBy: 30,
 		jumpDelay: 200,
-		jumpForwardIcon: 'skipforward',
 		moreButtonDisabled: false,
 		muted: false,
 		no5WayJump: false,
@@ -590,14 +595,12 @@ const VideoPlayerBase = class extends React.Component {
 		pauseAtEnd: false,
 		noRateButtons: false,
 		noSlider: false,
-		pauseIcon: 'pause',
 		playbackRateHash: {
 			fastForward: ['2', '4', '8', '16'],
 			rewind: ['-2', '-4', '-8', '-16'],
 			slowForward: ['1/4', '1/2'],
 			slowRewind: ['-1/2', '-1']
 		},
-		playIcon: 'play',
 		titleHideDelay: 5000,
 		tooltipHideDelay: 3000
 	}
@@ -1038,7 +1041,8 @@ const VideoPlayerBase = class extends React.Component {
 		() => (
 			!this.state.bottomControlsVisible &&
 			!Spotlight.getCurrent() &&
-			Spotlight.getPointerMode()
+			Spotlight.getPointerMode() &&
+			!this.props.spotlightDisabled
 		),
 		stopImmediate,
 		this.showControlsFromPointer
@@ -1088,7 +1092,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	/**
 	 * Returns an object with the current state of the media including `currentTime`, `duration`,
-	 * `paused`, `proportionLoaded`, and `proportionPlayed`.
+	 * `paused`, `playbackRate`, `proportionLoaded`, and `proportionPlayed`.
 	 *
 	 * @function
 	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
@@ -1100,6 +1104,7 @@ const VideoPlayerBase = class extends React.Component {
 			currentTime       : this.state.currentTime,
 			duration          : this.state.duration,
 			paused            : this.state.paused,
+			playbackRate      : this.video.playbackRate,
 			proportionLoaded  : this.state.proportionLoaded,
 			proportionPlayed  : this.state.proportionPlayed
 		};
@@ -1611,6 +1616,7 @@ const VideoPlayerBase = class extends React.Component {
 			rateButtonsDisabled,
 			rightComponents,
 			source,
+			spotlightDisabled,
 			style,
 			thumbnailSrc,
 			title,
@@ -1671,7 +1677,7 @@ const VideoPlayerBase = class extends React.Component {
 					<div className={css.fullscreen + ' enyo-fit scrim'} {...controlsAriaProps}>
 						<Container
 							className={css.bottom + (this.state.bottomControlsVisible ? '' : ' ' + css.hidden)}
-							spotlightDisabled={!this.state.bottomControlsVisible}
+							spotlightDisabled={!this.state.bottomControlsVisible || spotlightDisabled}
 						>
 							{/*
 								Info Section: Title, Description, Times
@@ -1703,6 +1709,7 @@ const VideoPlayerBase = class extends React.Component {
 								onKnobMove={this.handleKnobMove}
 								onSpotlightUp={this.handleSpotlightUpFromSlider}
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
+								spotlightDisabled={spotlightDisabled}
 							>
 								<FeedbackTooltip
 									noFeedback={!this.state.feedbackIconVisible}
@@ -1745,6 +1752,7 @@ const VideoPlayerBase = class extends React.Component {
 								rateButtonsDisabled={rateButtonsDisabled}
 								rightComponents={rightComponents}
 								showMoreComponents={this.state.more}
+								spotlightDisabled={spotlightDisabled}
 							>
 								{children}
 							</MediaControls>
@@ -1759,6 +1767,7 @@ const VideoPlayerBase = class extends React.Component {
 					onSpotlightDown={this.showControls}
 					onClick={this.showControls}
 					onKeyDown={this.handleKeyDown}
+					spotlightDisabled={spotlightDisabled}
 				/>
 				<Announce ref={this.setAnnounceRef} />
 			</div>
