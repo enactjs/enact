@@ -68,7 +68,7 @@ const defaultConfig = {
 	 * * `events` - An array of `onHold` events which each contain a `name` and `time`. The `time`
 	 *   controls the amount of time that must pass before this `onHold` event is fired and should
 	 *   be a multiple of `frequency`.
-	 * 
+	 *
 	 * @type {Object}
 	 * @memberof ui/Touchable.Touchable.defaultConfig
 	 */
