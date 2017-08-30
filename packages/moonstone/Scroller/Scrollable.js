@@ -624,6 +624,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				spotItem = Spotlight.getCurrent();
 
 			if (!Spotlight.getPointerMode() && spotItem) {
+				// Should skip scroll by page when spotItem is paging control button of Scrollbar
 				if (!this.childRef.containerRef.contains(spotItem)) {
 					return;
 				}
