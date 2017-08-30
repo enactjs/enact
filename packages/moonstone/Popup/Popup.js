@@ -33,6 +33,7 @@ const getContainerNode = (containerId) => {
 };
 
 const forwardHide = forward('onHide');
+const forwardShow = forward('onShow');
 
 /**
  * {@link moonstone/Popup.PopupBase} is a modal component that appears at the bottom of
@@ -91,6 +92,14 @@ const PopupBase = kind({
 		 * @public
 		 */
 		onHide: PropTypes.func,
+
+		/**
+		 * A function to run after transition for showing is finished.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onShow: PropTypes.func,
 
 		/**
 		 * When `true`, the popup is in the open/expanded state with the contents visible
@@ -152,21 +161,22 @@ const PopupBase = kind({
 		}
 	},
 
-	render: ({closeButton, children, containerId, noAnimation, open, onHide, spotlightRestrict, ...rest}) => {
+	render: ({closeButton, children, containerId, noAnimation, open, onHide, onShow, spotlightRestrict, ...rest}) => {
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
 		return (
 			<TransitionContainer
-				noAnimation={noAnimation}
+				className={css.popupTransitionContainer}
 				containerId={containerId}
-				spotlightDisabled={!open}
-				spotlightRestrict={spotlightRestrict}
-				visible={open}
 				direction="down"
 				duration="short"
-				type="slide"
-				className={css.popupTransitionContainer}
+				noAnimation={noAnimation}
 				onHide={onHide}
+				onShow={onShow}
+				spotlightDisabled={!open}
+				spotlightRestrict={spotlightRestrict}
+				type="slide"
+				visible={open}
 			>
 				<div
 					aria-live="off"
@@ -230,7 +240,8 @@ class Popup extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
-		 * A function to be run after transition for hiding is finished.
+		 * A function to be run when popup hides. When animating it runs after transition for
+		 * hiding is finished.
 		 *
 		 * @type {Function}
 		 * @public
@@ -244,6 +255,15 @@ class Popup extends React.Component {
 		 * @public
 		 */
 		onKeyDown: PropTypes.func,
+
+		/**
+		 * A function to run when popup shows. When animating, it runs after transition for
+		 * showing is finished.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onShow: PropTypes.func,
 
 		/**
 		 * When `true`, the popup is rendered. Popups are rendered into the
@@ -330,9 +350,11 @@ class Popup extends React.Component {
 			if (!this.props.noAnimation) {
 				Spotlight.pause();
 			} else if (this.props.open) {
+				forwardShow(null, this.props);
 				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
 			} else if (prevProps.open) {
+				forwardHide(null, this.props);
 				off('keydown', this.handleKeyDown);
 				this.spotActivator(prevState.activator);
 			}
@@ -379,25 +401,33 @@ class Popup extends React.Component {
 		}
 	}
 
-	handlePopupHide = () => {
-		forwardHide(null, this.props);
+	handlePopupHide = (ev) => {
+		forwardHide(ev, this.props);
 
 		this.setState({
 			floatLayerOpen: false,
 			activator: null
 		});
+
+		if (ev.target.getAttribute('data-container-id') === this.state.containerId) {
+			Spotlight.resume();
+
+			if (!this.props.open) {
+				off('keydown', this.handleKeyDown);
+				this.spotActivator(this.state.activator);
+			}
+		}
 	}
 
-	handleTransitionEnd = (ev) => {
+	handlePopupShow = (ev) => {
+		forwardShow(ev, this.props);
+
 		if (ev.target.getAttribute('data-container-id') === this.state.containerId) {
 			Spotlight.resume();
 
 			if (this.props.open) {
 				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
-			} else {
-				off('keydown', this.handleKeyDown);
-				this.spotActivator(this.state.activator);
 			}
 		}
 	}
@@ -441,7 +471,6 @@ class Popup extends React.Component {
 				open={this.state.floatLayerOpen}
 				onOpen={this.handleFloatingLayerOpen}
 				onDismiss={onClose}
-				onTransitionEnd={this.handleTransitionEnd}
 				scrimType={scrimType}
 			>
 				<SkinnedPopupBase
@@ -450,6 +479,7 @@ class Popup extends React.Component {
 					open={this.state.popupOpen}
 					onCloseButtonClick={onClose}
 					onHide={this.handlePopupHide}
+					onShow={this.handlePopupShow}
 					spotlightRestrict="self-only"
 				/>
 			</FloatingLayer>

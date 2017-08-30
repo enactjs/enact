@@ -8,6 +8,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Popup` callback property `onShow` which fires after popup appears for both animating and non-animating popups
+
+### Changed
+
+- `moonstone/Popup` callback property `onHide` runs on both animating and non-animating popups
 -`moonstone/VideoPlayer` state `playbackRate` to media events
 - `moonstone/VideoPlayer` support for `spotlightDisabled`
 
