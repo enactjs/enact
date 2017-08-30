@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+
+### Fixed
+
 ## [2.0.0-alpha.2] - 2017-08-29
 
 No significant changes.
