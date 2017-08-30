@@ -405,7 +405,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.throttleUpdateValue(this.clamp(this.current5WayValue));
 					this.current5WayValue = null;
 
-					// only clear knobPosition when not in 
+					// only clear knobPosition when not in
 					if (!Spotlight.getPointerMode()) {
 						this.knobPosition = null;
 					}
@@ -472,6 +472,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleFocus = (ev) => {
 			forwardFocus(ev, this.props);
+
+			if (this.props.detachedKnob) {
+				this.moveKnobByAmount(0);
+			}
 
 			this.setState({
 				focused: true

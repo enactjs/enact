@@ -162,8 +162,8 @@ const GridListImageItemBase = kind({
 				<Image className={css.image} placeholder={placeholder} src={source}>
 					{selectionOverlay}
 				</Image>
-				{caption ? (<MarqueeText className={css.caption} marqueeOn="hover">{caption}</MarqueeText>) : null}
-				{subCaption ? (<MarqueeText className={css.subCaption} marqueeOn="hover">{subCaption}</MarqueeText>) : null}
+				{caption ? (<MarqueeText alignment="center" className={css.caption} marqueeOn="hover">{caption}</MarqueeText>) : null}
+				{subCaption ? (<MarqueeText alignment="center" className={css.subCaption} marqueeOn="hover">{subCaption}</MarqueeText>) : null}
 			</div>
 		);
 	}
