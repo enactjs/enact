@@ -1502,7 +1502,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.sliderScrubbing = false;
 		this.startDelayedFeedbackHide();
 		this.setState({
-			feedbackIconVisible: true
+			feedbackIconVisible: true,
+			sliderTooltipTime: this.state.currentTime
 		});
 	}
 
