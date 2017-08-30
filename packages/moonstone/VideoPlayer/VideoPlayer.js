@@ -618,6 +618,7 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		playIcon: 'play',
+		preloadSources: [],
 		titleHideDelay: 5000,
 		tooltipHideDelay: 3000
 	}
