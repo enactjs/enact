@@ -12,8 +12,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/VirtualList` to render when dataSize increased or decreased
+
 ### Fixed
 
+- `moonstone/VirtualList` not to show invisible items
 - `moonstone/IconButton` Tooltip position when disabled
 - `moonstone/VideoPlayer` to display feedback tooltip correctly when navigating in 5-way
 
