@@ -13,8 +13,6 @@
 	.content {
 		pointer-events: none;
 		will-change: transform;
-		// The thumbnail positioning based on `knob-progress`
-		// transform: translateX(calc(var(--knob-progress) ~' * -100%'));
 	}
 
 	.thumbnail {
@@ -46,13 +44,6 @@
 		position: absolute;
 		bottom: @moon-spotlight-outset;
 	}
-
-	// [data-knob-after-midpoint="false"] & {
-	// 	.thumbnail,
-	// 	.content {
-	// 		transform: translateX(0%) translateX(0);
-	// 	}
-	// }
 
 	[data-knob-after-midpoint="true"] & {
 		.thumbnail,
