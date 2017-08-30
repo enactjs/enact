@@ -447,8 +447,12 @@ class VirtualListCoreNative extends Component {
 			// If we need to restore last focus and the index is beyond the screen,
 			// we call `scrollTo` to create DOM for it.
 			this.props.cbScrollTo({index: this.preservedIndex, animate: false});
-		} else if (wasFirstIndexMax && dimensionToExtent > 1) {
-			newFirstIndex = this.maxFirstIndex;
+		} else if (wasFirstIndexMax) {
+			if (dimensionToExtent > 1) {
+				newFirstIndex = this.maxFirstIndex;
+			} else {
+				newFirstIndex = Math.min(this.maxFirstIndex, firstIndex + (overhang - 1));
+			}
 		} else {
 			newFirstIndex = Math.min(firstIndex, this.maxFirstIndex);
 		}
