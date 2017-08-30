@@ -34,6 +34,7 @@ import MediaTitle from './MediaTitle';
 import MediaSlider from './MediaSlider';
 import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
+import Video from './Video';
 
 import css from './VideoPlayer.less';
 
@@ -215,6 +216,15 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		forwardIcon: PropTypes.string,
+
+		/**
+		 * The index of the video source that is currently playing. The `source` prop in `children` will always be `0`.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		index: PropTypes.number,
 
 		/**
 		 * These components are placed into the slot to the left of the media controls.
@@ -492,6 +502,18 @@ const VideoPlayerBase = class extends React.Component {
 		playIcon: PropTypes.string,
 
 		/**
+		 * An array of objects containing video information `src`, `type, and `preload`.
+		 * `preload` will take in the values `auto`, `metadata`, and `none` like
+		 * just like the `preload` attribute.
+		 *
+		 * This is used for videos to load in the background.
+		 * @type {Array}
+		 * @default []
+		 * @public
+		 */
+		preloadSources: PropTypes.array,
+
+		/**
 		 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
 		 *
 		 * @type {Boolean}
@@ -599,6 +621,7 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		playIcon: 'play',
+		preloadSources: [],
 		titleHideDelay: 5000,
 		tooltipHideDelay: 3000
 	}
@@ -684,6 +707,11 @@ const VideoPlayerBase = class extends React.Component {
 		) {
 			this.calculateMaxComponentCount();
 		}
+
+		if (this.props.index !== nextProps.index) {
+			this.pause();
+			this.seek(0);
+		}
 	}
 
 	componentWillUpdate (nextProps, nextState) {
@@ -735,6 +763,10 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (this.state.more !== prevState.more) {
 			this.refocusMoreButton.start();
+		}
+
+		if (this.props.index !== prevProps.index) {
+			this.play();
 		}
 	}
 
@@ -1579,6 +1611,7 @@ const VideoPlayerBase = class extends React.Component {
 			children,
 			className,
 			forwardIcon,
+			index,
 			infoComponents,
 			jumpBackwardIcon,
 			jumpButtonsDisabled,
@@ -1593,6 +1626,7 @@ const VideoPlayerBase = class extends React.Component {
 			noSlider,
 			pauseIcon,
 			playIcon,
+			preloadSources,
 			rateButtonsDisabled,
 			rightComponents,
 			source,
@@ -1631,19 +1665,23 @@ const VideoPlayerBase = class extends React.Component {
 		const moreDisabled = !(this.state.more);
 		const controlsAriaProps = this.getControlsAriaProps();
 
+		let videoSources = null;
+		if (source) {
+			videoSources = [source.props].concat(preloadSources);
+		}
+
 		return (
 			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
 				{/* Video Section */}
-				<video
+				<Video
 					{...rest}
 					autoPlay={!noAutoPlay}
-					className={css.video}
 					controls={false}
-					ref={this.setVideoRef}
+					index={index}
+					setActiveVideo={this.setVideoRef}
+					sources={videoSources}
 					{...this.handledMediaEvents}
-				>
-					{source}
-				</video>
+				/>
 
 				<Overlay
 					bottomControlsVisible={this.state.bottomControlsVisible}

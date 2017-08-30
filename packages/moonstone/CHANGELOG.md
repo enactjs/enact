@@ -66,6 +66,7 @@ No significant changes.
 ## [1.6.0] - 2017-08-04
 
 ### Added
+- `moonstone/VideoPlayer` support for preloading videos in the background by using `preloadSources` and the ability to change to a preloaded source using `index`
 
 - `moonstone/VideoPlayer` ability to seek when holding down the right and left keys. Sensitivity can be adjusted using throttling options `jumpDelay` and `initialJumpDelay`.
 - `moonstone/VideoPlayer` property `no5WayJump` to disable jumping done by 5-way
