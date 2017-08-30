@@ -231,16 +231,6 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
-	shouldComponentUpdate (nextProps, nextState) {
-		if (!this.restoreLastFocused &&
-			(this.props.dataSize > 0 && this.props.dataSize !== nextProps.dataSize) &&
-			(this.state.numOfItems === nextState.numOfItems) &&
-			(nextState.firstIndex + nextState.numOfItems) < nextProps.dataSize) {
-			return false;
-		}
-		return true;
-	}
-
 	componentDidUpdate () {
 		this.restoreFocus();
 	}
@@ -458,7 +448,7 @@ class VirtualListCoreNative extends Component {
 			// we call `scrollTo` to create DOM for it.
 			this.props.cbScrollTo({index: this.preservedIndex, animate: false});
 		} else if (wasFirstIndexMax) {
-			newFirstIndex = this.maxFirstIndex;
+			newFirstIndex = (dimensionToExtent > 1) ? this.maxFirstIndex : Math.min(this.maxFirstIndex, firstIndex + (overhang - 1));
 		} else {
 			newFirstIndex = Math.min(firstIndex, this.maxFirstIndex);
 		}
@@ -495,7 +485,7 @@ class VirtualListCoreNative extends Component {
 		this.syncThreshold(maxPos);
 
 		if (this.scrollPosition > maxPos) {
-			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}});
+			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
 		}
 
 		this.containerClass = (isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
