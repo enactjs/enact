@@ -448,11 +448,7 @@ class VirtualListCoreNative extends Component {
 			// we call `scrollTo` to create DOM for it.
 			this.props.cbScrollTo({index: this.preservedIndex, animate: false});
 		} else if (wasFirstIndexMax) {
-			if (dimensionToExtent > 1) {
-				newFirstIndex = this.maxFirstIndex;
-			} else {
-				newFirstIndex = Math.min(this.maxFirstIndex, firstIndex + (overhang - 1));
-			}
+			newFirstIndex = (dimensionToExtent > 1) ? this.maxFirstIndex : Math.min(this.maxFirstIndex, firstIndex + (overhang - 1));
 		} else {
 			newFirstIndex = Math.min(firstIndex, this.maxFirstIndex);
 		}
