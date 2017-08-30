@@ -661,7 +661,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				current = document.querySelector(`[data-container-id="${containerId}"]`);
 			}
 
-			return current && this.containerRef.contains(current);
+			return current && this.childRef.containerRef.contains(current) && this.containerRef.contains(current);
 		}
 
 		onKeyDown = (e) => {
