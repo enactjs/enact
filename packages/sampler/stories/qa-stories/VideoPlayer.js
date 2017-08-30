@@ -8,16 +8,12 @@ class VideoPlayerStory extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			index: 0,
-			preloadSources: [
-				{src: 'http://media.w3.org/2010/05/sintel/trailer.mp4', type: 'video/mp4', preload: 'auto'},
-				{src: 'http://media.w3.org/2010/05/video/movie_300.mp4', type: 'video/mp4'}
-			]
+			index: 0
 		};
 	}
 
 	onClick = () => {
-		if (this.state.index === 2 ) {
+		if (this.state.index === 1 ) {
 			this.setState({
 				index: 0
 			});
@@ -46,9 +42,9 @@ class VideoPlayerStory extends React.Component {
 					index={this.state.index}
 					noAutoPlay={false}
 					title={'Moonstone VideoPlayer Sample Video'}
-					preloadSources={this.state.preloadSources}
 				>
-					<source src="http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov" type="video/mp4" preload="auto"/>
+					<source src="http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov" type="video/mp4" preload="auto" />
+					<preload src="http://media.w3.org/2010/05/sintel/trailer.mp4" type="video/mp4" preload="auto" />
 					<infoComponents>A video about some things happening to and around some characters. Very exciting stuff.</infoComponents>
 					<leftComponents><IconButton backgroundOpacity="translucent">fullscreen</IconButton></leftComponents>
 					<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>

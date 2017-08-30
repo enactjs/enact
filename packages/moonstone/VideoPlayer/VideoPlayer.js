@@ -501,16 +501,14 @@ const VideoPlayerBase = class extends React.Component {
 		playIcon: PropTypes.string,
 
 		/**
-		 * An array of objects containing video information `src`, `type, and `preload`.
-		 * `preload` will take in the values `auto`, `metadata`, and `none` like
-		 * just like the `preload` attribute.
+		 * An element that preloads the next video. The props/attributes are the
+		 * same as source.
 		 *
-		 * This is used for videos to load in the background.
-		 * @type {Array}
-		 * @default []
+		 * This is used a video to load in the background.
+		 * @type {Node}
 		 * @public
 		 */
-		preloadSources: PropTypes.array,
+		preload: PropTypes.node,
 
 		/**
 		 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
@@ -620,7 +618,6 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		playIcon: 'play',
-		preloadSources: [],
 		titleHideDelay: 5000,
 		tooltipHideDelay: 3000
 	}
@@ -1625,7 +1622,7 @@ const VideoPlayerBase = class extends React.Component {
 			noSlider,
 			pauseIcon,
 			playIcon,
-			preloadSources,
+			preload,
 			rateButtonsDisabled,
 			rightComponents,
 			source,
@@ -1666,7 +1663,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		let videoSources = null;
 		if (source) {
-			videoSources = [source.props].concat(preloadSources);
+			videoSources = [source.props].concat(preload.props);
 		}
 
 		return (
@@ -1835,7 +1832,7 @@ const VideoPlayerBase = class extends React.Component {
 const VideoPlayer = ApiDecorator(
 	{api: ['fastForward', 'getMediaState', 'hideControls', 'jump', 'pause', 'play', 'rewind', 'seek', 'showControls']},
 	Slottable(
-		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
+		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source', 'preload']},
 		Skinnable(
 			VideoPlayerBase
 		)
