@@ -13,7 +13,8 @@ const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 const MediaButton = onlyUpdateForKeys([
 	'children',
 	'disabled',
-	'onClick'
+	'onClick',
+	'spotlightDisabled'
 ])(IconButton);
 
 /**
@@ -75,20 +76,137 @@ const MediaControls = kind({
 		 * @public
 		 */
 		jumpForwardIcon: PropTypes.string,
+
+		/**
+		 * These components are placed below the title. Typically these will be media descriptor
+		 * icons, like how many audio channels, what codec the video uses, but can also be a
+		 * description for the video or anything else that seems appropriate to provide information
+		 * about the video to the user.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
 		leftComponents: PropTypes.node,
+
+		/**
+		 * Sets the `disabled` state on the media buttons.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
 		mediaDisabled: PropTypes.bool,
+
+		/**
+		 * The label for the "More" button for when the "More" tray is open.
+		 * This will show on the tooltip.
+		 *
+		 * @type {String}
+		 * @default 'Back'
+		 * @public
+		 */
 		moreButtonCloseLabel: PropTypes.string,
+
+		/**
+		 * Sets the `disabled` state on the media "more" button.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
 		moreButtonDisabled: PropTypes.bool,
+
+		/**
+		 * The label for the "More" button. This will show on the tooltip.
+		 *
+		 * @type {String}
+		 * @default 'More'
+		 * @public
+		 */
 		moreButtonLabel: PropTypes.string,
+
+		/**
+		 * `true` disables more components when they are not in view.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
 		moreDisabled: PropTypes.bool,
+
+		/**
+		 * Removes the "jump" buttons. The buttons that skip forward or backward in the video.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
 		noJumpButtons: PropTypes.bool,
+
+		/**
+		 * Removes the "rate" buttons. The buttons that change the playback rate of the video.
+		 * Double speed, half speed, reverse 4x speed, etc.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
 		noRateButtons: PropTypes.bool,
+
+		/**
+		 * Function executed when the user clicks the Backward button. Is passed
+		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onBackwardButtonClick: PropTypes.func,
+
+		/**
+		 * Function executed when the user clicks the Forward button. Is passed
+		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onForwardButtonClick: PropTypes.func,
+
+		/**
+		 * Function executed when the user clicks the JumpBackward button. Is passed
+		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onJumpBackwardButtonClick: PropTypes.func,
+
+		/**
+		 * Function executed when the user clicks the JumpForward button. Is passed
+		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onJumpForwardButtonClick: PropTypes.func,
+
+		/**
+		 * Function executed when the user clicks the Play button. Is passed
+		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onPlayButtonClick: PropTypes.func,
+
+		/**
+		 * Function executed when the user clicks the More button.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onToggleMore: PropTypes.func,
+
+		/**
+		 * `true` when the video is paused.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
 		paused: PropTypes.bool,
 
 		/**
@@ -138,8 +256,30 @@ const MediaControls = kind({
 		 * @public
 		 */
 		rateButtonsDisabled: PropTypes.bool,
+
+		/**
+		 * These components are placed into the slot to the right of the media controls.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
 		rightComponents: PropTypes.node,
-		showMoreComponents: PropTypes.bool
+
+		/**
+		 * `true` when more components are shown.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		showMoreComponents: PropTypes.bool,
+
+		/**
+		 * `true` controls are disabled from Spotlight.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		spotlightDisabled: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -200,6 +340,7 @@ const MediaControls = kind({
 			playPauseLabel,
 			rateButtonsDisabled,
 			rightComponents,
+			spotlightDisabled,
 			...rest
 		} = props;
 
@@ -217,14 +358,14 @@ const MediaControls = kind({
 				<div className={css.leftComponents}>{leftComponents}</div>
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
-						<Container className={css.mediaControls} spotlightDisabled={!moreDisabled}> {/* rtl={false} */}
-							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick}>{jumpBackwardIcon}</MediaButton>}
-							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick}>{backwardIcon}</MediaButton>}
-							<MediaButton aria-label={playPauseLabel} className={spotlightDefaultClass} backgroundOpacity="translucent" onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
-							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onForwardButtonClick}>{forwardIcon}</MediaButton>}
-							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick}>{jumpForwardIcon}</MediaButton>}
+						<Container className={css.mediaControls} spotlightDisabled={!moreDisabled || spotlightDisabled}> {/* rtl={false} */}
+							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpBackwardIcon}</MediaButton>}
+							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{backwardIcon}</MediaButton>}
+							<MediaButton aria-label={playPauseLabel} className={spotlightDefaultClass} backgroundOpacity="translucent" onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{playPauseIcon}</MediaButton>
+							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onForwardButtonClick} spotlightDisabled={spotlightDisabled}>{forwardIcon}</MediaButton>}
+							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpForwardIcon}</MediaButton>}
 						</Container>
-						<Container className={css.moreControls} spotlightDisabled={moreDisabled}>
+						<Container className={css.moreControls} spotlightDisabled={moreDisabled || spotlightDisabled}>
 							{children}
 						</Container> {/* rtl={false} */}
 					</div>
@@ -240,6 +381,7 @@ const MediaControls = kind({
 							onClick={onToggleMore}
 							tooltipProps={{role: 'dialog'}}
 							tooltipText={moreIconLabel}
+							spotlightDisabled={spotlightDisabled}
 						>
 							{moreIcon}
 						</MediaButton>

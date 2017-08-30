@@ -13,9 +13,16 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/Popup` callback property `onHide` runs on both animating and non-animating popups
+-`moonstone/VideoPlayer` state `playbackRate` to media events
+- `moonstone/VideoPlayer` support for `spotlightDisabled`
+
+### Changed
+
+- `moonstone/VirtualList` to render when dataSize increased or decreased
 
 ### Fixed
 
+- `moonstone/VirtualList` not to show invisible items
 - `moonstone/IconButton` Tooltip position when disabled
 - `moonstone/VideoPlayer` to display feedback tooltip correctly when navigating in 5-way
 
