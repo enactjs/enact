@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+-`moonstone/VideoPlayer` state `playbackRate` to media events
 - `moonstone/VideoPlayer` support for `spotlightDisabled`
 
 ### Changed
