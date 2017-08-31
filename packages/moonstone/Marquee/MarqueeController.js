@@ -34,6 +34,14 @@ const contextTypes = {
 	complete: PropTypes.func,
 
 	/**
+	 * Called by Marquee to set synchronized hover state
+	 *
+	 * @type {Function}
+	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 */
+	isHovered: PropTypes.func,
+
+	/**
 	 * Called to register a Marquee instance to be synchronized
 	 *
 	 * @type {Function}
@@ -104,12 +112,14 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.controlled = [];
+			this.isHovered = false;
 		}
 
 		getChildContext () {
 			return {
 				cancel: this.handleCancel,
 				complete: this.handleComplete,
+				isHovered: this.handleHover,
 				register: this.handleRegister,
 				start: this.handleStart,
 				unregister: this.handleUnregister
@@ -137,6 +147,15 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			if (needsStart) {
 				this.dispatch('start');
 			}
+		}
+
+		/*
+		 * @param	{Boolean}	sets internal hover state for synchronization
+		 *
+		 * @returns	{undefined}
+		 */
+		handleHover = (isHovering) => {
+			this.isHovered = isHovering;
 		}
 
 		/*
@@ -170,6 +189,8 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		handleStart = (component) => {
 			if (!this.anyRunning()) {
 				this.markAll(STATE.ready);
+				this.dispatch('start', component);
+			} else if (this.isHovered) {
 				this.dispatch('start', component);
 			}
 		}
@@ -231,7 +252,12 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			this.controlled.forEach((controlled) => {
 				const {component: controlledComponent, [action]: handler} = controlled;
 				if (component !== controlledComponent && typeof handler === 'function') {
-					const complete = handler.call(controlledComponent);
+					let complete;
+					if (this.isHovered) {
+						complete = handler.call(controlledComponent, 0);
+					} else {
+						complete = handler.call(controlledComponent);
+					}
 
 					// Returning `true` from a start request means that the marqueeing is
 					// unnecessary and is therefore not awaiting a finish
