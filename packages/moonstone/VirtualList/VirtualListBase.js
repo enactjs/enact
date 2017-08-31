@@ -843,6 +843,10 @@ class VirtualListCore extends Component {
 					break;
 				}
 			}
+
+			if (nextIndex === -1) {
+				this.setRestrict(false);
+			}
 		} else if (isBackward) {
 			// See if the next item is spottable then delegate scroll to onFocus handler
 			if (currentIndex > 0 && !data[currentIndex - 1].disabled) {
@@ -854,6 +858,10 @@ class VirtualListCore extends Component {
 					nextIndex = i;
 					break;
 				}
+			}
+
+			if (nextIndex === -1) {
+				this.setRestrict(false);
 			}
 		} else {
 			return false;
