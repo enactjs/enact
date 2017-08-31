@@ -1,3 +1,4 @@
+import deprecate from '@enact/core/internal/deprecate';
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
 import {childrenEquals} from '@enact/core/util';
@@ -57,10 +58,10 @@ const defaultConfig = {
 	* Expects an array of props which on change trigger invalidateMetrics.
 	*
 	* @type {Array}
-	* @default null
+	* @default ['remeasure']
 	* @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	*/
-	invalidateProps: null,
+	invalidateProps: ['remeasure'],
 
 	/**
 	 * Property containing the callback to stop the animation when `marqueeOn` is `'hover'`
@@ -97,7 +98,6 @@ const didPropChange = (propList, prev, next) => {
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {blur, className: marqueeClassName, enter, focus, invalidateProps, leave} = config;
-
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
 	const forwardFocus = forward(focus);
@@ -110,6 +110,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static contextTypes = contextTypes
 
 		static propTypes = /** @lends moonstone/Marquee.MarqueeDecorator.prototype */ {
+			/**
+			 * Text alignment value of the marquee. Valid values are `'left'`, `'right'` and `'center'`.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			alignment: PropTypes.oneOf(['left', 'right', 'center']),
+
 			/**
 			 * Children to be marqueed
 			 *
@@ -142,6 +150,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 *
 			 * @type {Boolean}
 			 * @public
+			 * @deprecated replaced by `alignment`
 			 */
 			marqueeCentered: PropTypes.bool,
 
@@ -199,7 +208,17 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default 60
 			 * @public
 			 */
-			marqueeSpeed: PropTypes.number
+			marqueeSpeed: PropTypes.number,
+
+			/**
+			 * Used to signal for a remeasurement inside of marquee. The value
+			 * must change for the remeasurement to take place. The value
+			 * type is `any` because it does not matter. It is only used to
+			 * check for changes.
+			 *
+			 * @private
+			 */
+			remeasure: PropTypes.any
 		}
 
 		static defaultProps = {
@@ -220,6 +239,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.forceRestartMarquee = false;
 
 			this.invalidateMetrics();
+
+			if (this.props.marqueeCentered) {
+				deprecate({name: 'marqueeCentered', since: '1.7.0', message: 'Use `alignment` instead', until: '2.0.0'});
+			}
 		}
 
 		componentDidMount () {
@@ -520,10 +543,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		renderMarquee () {
 			const {
+				alignment,
 				children,
 				disabled,
 				forceDirection,
-				marqueeCentered,
 				marqueeOn,
 				marqueeSpeed,
 				...rest
@@ -548,17 +571,19 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				rest[enter] = this.handleEnter;
 			}
 
+			delete rest.marqueeCentered;
 			delete rest.marqueeDelay;
 			delete rest.marqueeDisabled;
 			delete rest.marqueeOnRenderDelay;
 			delete rest.marqueeResetDelay;
 			delete rest.marqueeSpeed;
+			delete rest.remeasure;
 
 			return (
 				<Wrapped {...rest} disabled={disabled}>
 					<Marquee
+						alignment={alignment}
 						animating={this.state.animating}
-						centered={marqueeCentered}
 						className={marqueeClassName}
 						clientRef={this.cacheNode}
 						distance={this.distance}
@@ -577,6 +602,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		renderWrapped () {
 			const props = Object.assign({}, this.props);
 
+			delete props.alignment;
 			delete props.marqueeCentered;
 			delete props.marqueeDelay;
 			delete props.marqueeDisabled;
@@ -584,6 +610,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.marqueeOnRenderDelay;
 			delete props.marqueeResetDelay;
 			delete props.marqueeSpeed;
+			delete props.remeasure;
 
 			return <Wrapped {...props} />;
 		}

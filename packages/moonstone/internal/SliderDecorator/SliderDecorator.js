@@ -404,6 +404,11 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				if (this.current5WayValue !== null) {
 					this.throttleUpdateValue(this.clamp(this.current5WayValue));
 					this.current5WayValue = null;
+
+					// only clear knobPosition when not in
+					if (!Spotlight.getPointerMode()) {
+						this.knobPosition = null;
+					}
 				}
 			} else {
 				const verticalHint = $L('change a value with up down button');
@@ -421,6 +426,14 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleBlur = (ev) => {
 			forwardBlur(ev, this.props);
+
+			// on mouseup, slider manually focuses the slider from its input causing a blur event to
+			// bubble here. if this is the case, focus hasn't effectively changed so we ignore it.
+			if (
+				ev.relatedTarget &&
+				ev.target === this.sliderNode &&
+				ev.relatedTarget === this.inputNode
+			) return;
 
 			if (this.current5WayValue !== null) {
 				this.current5WayValue = null;
@@ -459,6 +472,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleFocus = (ev) => {
 			forwardFocus(ev, this.props);
+
+			if (this.props.detachedKnob) {
+				this.moveKnobByAmount(0);
+			}
 
 			this.setState({
 				focused: true
