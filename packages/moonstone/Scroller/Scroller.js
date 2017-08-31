@@ -9,6 +9,7 @@
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
+import {forward} from '@enact/core/handle';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -413,7 +414,10 @@ class ScrollerBase extends Component {
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
 	}
 
-	onKeyDown = ({keyCode, target}) => {
+	onKeyDown = (ev) => {
+		forward('onKeyDown', ev, this.props);
+
+		const {keyCode, target} = ev;
 		const direction = getDirection(keyCode);
 
 		if (direction && !this.findInternalTarget(direction, target)) {
