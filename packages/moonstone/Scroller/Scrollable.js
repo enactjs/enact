@@ -347,7 +347,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		// scroll info
-		scrolling = false
 		scrollLeft = 0
 		scrollTop = 0
 		scrollToInfo = null
@@ -537,18 +536,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (pos) {
 				const bounds = this.getScrollBounds();
 
-				if ((bounds.maxTop > 0 || bounds.maxLeft > 0) &&
-					(pos.left !== this.scrollLeft || pos.top !== this.scrollTop)) {
+				if (bounds.maxTop > 0 || bounds.maxLeft > 0) {
 					this.start({
 						targetX: pos.left,
 						targetY: pos.top,
 						animate: (animationDuration > 0) && this.animateOnFocus,
-						silent: false,
 						duration: animationDuration
 					});
-					this.lastScrollPositionOnFocus = pos;
 				}
 				this.lastFocusedItem = item;
+				this.lastScrollPositionOnFocus = pos;
 			}
 		}
 
@@ -573,18 +570,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 					// If scroll animation is ongoing, we need to pass last target position to
 					// determine correct scroll position.
-					if (item !== this.lastFocusedItem && this.animator.isAnimating() && lastPos) {
+					if (this.animator.isAnimating() && lastPos) {
 						pos = positionFn({item, scrollPosition: (this.direction !== 'horizontal') ? lastPos.top : lastPos.left});
-					} else if (!lastPos) {
-						if (this.scrolling) {
-							this.stop();
-						}
+					} else {
 						pos = positionFn({item});
 					}
 
-					if (pos) {
-						this.startScrollOnFocus(pos, item);
-					}
+					this.startScrollOnFocus(pos, item);
 				}
 			} else if (this.childRef.setLastFocusedIndex) {
 				this.childRef.setLastFocusedIndex(e.target);
@@ -751,8 +743,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const bounds = this.getScrollBounds();
 
 			this.animator.stop();
-			if (!silent && !this.scrolling) {
-				this.scrolling = true;
+			if (!silent) {
 				this.doScrollStart();
 			}
 
@@ -827,7 +818,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 			this.hideThumb();
-			this.scrolling = false;
 			this.doScrollStop();
 		}
 

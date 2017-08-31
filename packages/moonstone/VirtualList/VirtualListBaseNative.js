@@ -618,8 +618,18 @@ class VirtualListCoreNative extends Component {
 	}
 
 	scrollToPosition (x, y) {
-		const node = this.containerRef;
-		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
+		const
+			node = this.containerRef,
+			epsilon = 0.1;
+
+		/*
+		 * This code uses the trick to change the target position slightly which will not the actual result
+		 * since a browser ignore `scrollTo` method if the target position is same as the current position.
+		 */
+		node.scrollTo(
+			epsilon + (this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x,
+			epsilon + y
+		);
 	}
 
 	composeStyle (style, width, height, primaryPosition, secondaryPosition) {
@@ -690,13 +700,24 @@ class VirtualListCoreNative extends Component {
 	calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
 		const
 			{pageScroll} = this.props,
+			{numOfItems} = this.state,
 			{primary} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
-		if (!isNaN(focusedIndex) && (focusedIndex !== this.lastFocusedIndex || this.restoreLastFocused)) {
+		if (!isNaN(focusedIndex)) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
+			if (numOfItems > 0 && focusedIndex % numOfItems !== this.lastFocusedIndex % numOfItems) {
+				const node = this.containerRef.children[this.lastFocusedIndex % numOfItems];
+
+				// When changing from "pointer" mode to "5way key" mode,
+				// a pointer is hidden and a last focused item get focused after 30ms.
+				// To make sure the item to be blurred after that, we used 50ms.
+				setTimeout(() => {
+					node.blur();
+				}, 50);
+			}
 			this.lastFocusedIndex = focusedIndex;
 
 			if (primary.clientSize >= primary.itemSize) {
