@@ -704,7 +704,6 @@ const VideoPlayerBase = class extends React.Component {
 			this.state.bottomControlsVisible &&
 			!nextState.bottomControlsVisible &&
 			(!Spotlight.getCurrent() || this.player.contains(Spotlight.getCurrent())) &&
-			!this.props.spotlightDisabled &&
 			!nextProps.spotlightDisabled
 		) {
 			// set focus to the hidden spottable control - maintaining focus on available spottable
