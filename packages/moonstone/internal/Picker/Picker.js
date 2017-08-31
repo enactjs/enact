@@ -801,13 +801,8 @@ const PickerBase = class extends React.Component {
 					</PickerViewManager>
 				</div>
 				<PickerButton
-<<<<<<< HEAD
-					aria-controls={!joined ? id : null}
-					aria-label={this.calcDecrementLabel(ariaValueText != null ? ariaValueText : valueText)}
-=======
 					aria-controls={!joined ? decrementerAriaControls : null}
-					aria-label={this.calcDecrementLabel(valueText)}
->>>>>>> release/1.x
+					aria-label={this.calcDecrementLabel(ariaValueText != null ? ariaValueText : valueText)}
 					className={css.decrementer}
 					disabled={decrementerDisabled}
 					hidden={reachedStart}
