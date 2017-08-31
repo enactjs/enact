@@ -110,6 +110,13 @@ var DateFactory = function(options) {
 		sync = true,
 		obj;
 
+	/* Temporary patch for ENYO-4578
+	 * It will be remobed next major Enact reelase (2.0.0)
+	 */
+	if (!(this instanceof DateFactory)) {
+		return new DateFactory(options);
+	}
+
 	if (options) {
 		if (options.locale) {
 			locale = (typeof(options.locale) === 'string') ? new Locale(options.locale) : options.locale;
