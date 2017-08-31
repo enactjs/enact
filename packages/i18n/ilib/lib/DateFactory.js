@@ -110,12 +110,6 @@ var DateFactory = function(options) {
 		sync = true,
 		obj;
 
-	/* Temporary patch for ENYO-4578
-	 * It will be remobed next major Enact reelase (2.0.0)
-	 */
-	if (!(this instanceof DateFactory)) {
-		return new DateFactory(options);
-	}
 
 	if (options) {
 		if (options.locale) {
@@ -137,16 +131,16 @@ var DateFactory = function(options) {
 		new LocaleInfo(locale, {
 			sync: sync,
 			loadParams: options && options.loadParams,
-			onLoad: ilib.bind(this, function(info) {
-				type = info.getCalendar();
-				
-				obj = DateFactory._init(type, options);
-				
-				if (options && typeof(options.onLoad) === 'function') {
-					options.onLoad(obj);
-				}
-			})
-		});
+			// Note: ENYO-4578
+			onLoad: function onLoad(info) {
+       			type = info.getCalendar();
+                obj = DateFactory._init(type, options);
+
+                if (options && typeof options.onLoad === 'function') {
+          			options.onLoad(obj);
+        		}
+      		}
+    	});
 	} else {
 		obj = DateFactory._init(type, options);
 	}
