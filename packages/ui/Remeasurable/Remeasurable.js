@@ -7,6 +7,8 @@
  */
 import React from 'react';
 import hoc from '@enact/core/hoc';
+import {forward} from '@enact/core/handle';
+
 import {Broadcast, Subscriber} from '../Broadcast';
 
 const defaultConfig = {
@@ -39,6 +41,8 @@ const perfNow = function () {
  */
 const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {trigger} = config;
+	const forwardTrigger = forward(trigger);
+
 	return class extends React.Component {
 		static displayName = 'RemeasurableDecorator'
 
@@ -49,7 +53,8 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		triggerRemeasure = () => {
+		triggerRemeasure = (ev) => {
+			forwardTrigger(ev, this.props);
 			this.setState({remeasure: perfNow()});
 		}
 
@@ -57,6 +62,7 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const props = Object.assign({}, this.props);
 			props[trigger] = this.triggerRemeasure;
 
+			// The extra subscriber to so we can keep nested Broadcasts values in sync
 			return (
 				<Subscriber channel="remeasure">
 					{(value) => (

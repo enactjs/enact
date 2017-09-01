@@ -162,7 +162,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			onScroll: PropTypes.func,
 
 			/**
-			 * Called scrollbar visability changes
+			 * Called when scrollbar visability changes
 			 *
 			 * @type {Function}
 			 * @public
