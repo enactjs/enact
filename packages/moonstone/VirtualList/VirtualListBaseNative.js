@@ -805,6 +805,12 @@ class VirtualListCoreNative extends Component {
 					break;
 				}
 			}
+
+			// If there is no item which could get focus forward,
+			// we need to set restriction option to `self-first`.
+			if (nextIndex === -1) {
+				this.setRestrict(false);
+			}
 		} else if (isBackward) {
 			// See if the next item is spottable then delegate scroll to onFocus handler
 			if (currentIndex > 0 && !data[currentIndex - 1].disabled) {
@@ -816,6 +822,12 @@ class VirtualListCoreNative extends Component {
 					nextIndex = i;
 					break;
 				}
+			}
+
+			// If there is no item which could get focus backward,
+			// we need to set restriction option to `self-first`.
+			if (nextIndex === -1) {
+				this.setRestrict(false);
 			}
 		} else {
 			return false;
