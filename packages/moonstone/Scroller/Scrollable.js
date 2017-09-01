@@ -347,6 +347,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		// scroll info
+		scrolling = false
 		scrollLeft = 0
 		scrollTop = 0
 		scrollToInfo = null
@@ -481,7 +482,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						targetX: target.targetX,
 						targetY: target.targetY,
 						animate: true,
-						silent: true,
 						duration: target.duration
 					});
 				}
@@ -680,8 +680,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scrollToAccumulatedTarget = (delta, vertical) => {
-			const silent = this.isScrollAnimationTargetAccumulated;
-
 			if (!this.isScrollAnimationTargetAccumulated) {
 				this.accumulatedTargetX = this.scrollLeft;
 				this.accumulatedTargetY = this.scrollTop;
@@ -697,23 +695,30 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.start({
 				targetX: this.accumulatedTargetX,
 				targetY: this.accumulatedTargetY,
-				animate: true,
-				silent
+				animate: true
 			});
 		}
 
 		// call scroll callbacks
 
 		doScrollStart () {
-			forwardScrollStart({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
+			if (!this.scrolling) {
+				this.scrolling = true;
+				forwardScrollStart({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
+			}
 		}
 
 		doScrolling () {
-			forwardScroll({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
+			if (this.scrolling) {
+				forwardScroll({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
+			}
 		}
 
 		doScrollStop () {
-			forwardScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
+			if (this.scrolling) {
+				forwardScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
+				this.scrolling = false;
+			}
 		}
 
 		// update scroll position
@@ -738,14 +743,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll start/stop
 
-		start ({targetX, targetY, animate = true, silent = false, duration = animationDuration}) {
+		start ({targetX, targetY, animate = true, duration = animationDuration}) {
 			const {scrollLeft, scrollTop} = this;
 			const bounds = this.getScrollBounds();
 
 			this.animator.stop();
-			if (!silent) {
-				this.doScrollStart();
-			}
+			this.doScrollStart();
 
 			if (Math.abs(bounds.maxLeft - targetX) < epsilon) {
 				targetX = bounds.maxLeft;
