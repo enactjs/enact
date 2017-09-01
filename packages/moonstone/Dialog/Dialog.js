@@ -12,7 +12,6 @@ import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
 import Uppercase from '@enact/i18n/Uppercase';
 
-import BodyText from '../BodyText';
 import {MarqueeDecorator} from '../Marquee';
 import Popup from '../Popup';
 
@@ -55,15 +54,12 @@ const DialogBase = kind({
 		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 
 		/**
-		 * The element(s) to be displayed in the body of the Dialog.
+		 * The contents to be displayed in the body of the Dialog.
 		 *
 		 * @type {Node}
 		 * @public
 		 */
-		children: PropTypes.oneOfType([
-			PropTypes.arrayOf(PropTypes.element),
-			PropTypes.element
-		]),
+		children: PropTypes.node,
 
 		/**
 		 * When `true`, the dialog will not animate on/off screen.
@@ -178,13 +174,6 @@ const DialogBase = kind({
 	},
 
 	computed: {
-		Body: ({children}) => {
-			if (!React.Children.toArray(children).find(c => c && typeof c !== 'string')) {
-				return BodyText;
-			}
-
-			return 'div';
-		},
 		className: ({noDivider, showDivider, styler}) => {
 			if (showDivider) {
 				deprecate({name: 'showDivider', since: '1.8.0', message: 'Use `noDivider` instead', until: '2.0.0'});
@@ -194,7 +183,7 @@ const DialogBase = kind({
 		}
 	},
 
-	render: ({Body, buttons, casing, children, preserveCase, title, titleBelow, ...rest}) => {
+	render: ({buttons, casing, children, preserveCase, title, titleBelow, ...rest}) => {
 		delete rest.noDivider;
 		delete rest.showDivider;
 
@@ -213,9 +202,9 @@ const DialogBase = kind({
 						{buttons}
 					</div>
 				</div>
-				<Body className={css.body}>
+				<div className={css.body}>
 					{children}
-				</Body>
+				</div>
 			</Popup>
 		);
 	}
