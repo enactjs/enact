@@ -21,6 +21,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` to render when dataSize increased or decreased
 - `moonstone/Dialog` style
 - `moonstone/Popup`, `moonstone/Dialog`, and `moonstone/Notification` to support `node` type for children
+- `moonstone/Scroller` to forward `onKeyDown` events
 
 ### Fixed
 
