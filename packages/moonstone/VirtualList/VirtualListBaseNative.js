@@ -806,6 +806,8 @@ class VirtualListCoreNative extends Component {
 				}
 			}
 
+			// If there is no item which could get focus forward,
+			// we need to set restriction option to `self-first`.
 			if (nextIndex === -1) {
 				this.setRestrict(false);
 			}
@@ -822,6 +824,8 @@ class VirtualListCoreNative extends Component {
 				}
 			}
 
+			// If there is no item which could get focus backward,
+			// we need to set restriction option to `self-first`.
 			if (nextIndex === -1) {
 				this.setRestrict(false);
 			}
