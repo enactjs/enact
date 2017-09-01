@@ -465,8 +465,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (pos) {
 				const bounds = this.getScrollBounds();
 
-				if ((bounds.maxTop > 0 || bounds.maxLeft > 0) &&
-					(pos.left !== this.scrollLeft || pos.top !== this.scrollTop)) {
+				if (bounds.maxTop > 0 || bounds.maxLeft > 0) {
 					this.start(pos.left, pos.top, this.animateOnFocus);
 				}
 				this.lastFocusedItem = item;
@@ -498,12 +497,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					if (this.scrolling && lastPos) {
 						pos = positionFn({item, scrollPosition: (this.direction !== 'horizontal') ? lastPos.top : lastPos.left});
 					} else {
-						/*
-						// To scroll stop, another non-animated scroll is needed for native scrolling.
-						// Since a browser does not handle scrolling pointing to the current position,
-						// the trick is required changing the target position slightly.
-						this.start(this.scrollLeft + 0.1, this.scrollTop + 0.1, false);
-						*/
 						pos = positionFn({item});
 					}
 

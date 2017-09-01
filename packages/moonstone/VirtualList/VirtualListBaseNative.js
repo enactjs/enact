@@ -627,7 +627,7 @@ class VirtualListCoreNative extends Component {
 		 * since a browser ignore `scrollTo` method if the target position is same as the current position.
 		 */
 		node.scrollTo(
-			epsilon + (this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x,
+			epsilon + ((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x),
 			epsilon + y
 		);
 	}
@@ -709,7 +709,7 @@ class VirtualListCoreNative extends Component {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
 			if (numOfItems > 0 && focusedIndex % numOfItems !== this.lastFocusedIndex % numOfItems) {
-				const node = this.containerRef.children[this.lastFocusedIndex % numOfItems];
+				const node = this.contentRef.children[this.lastFocusedIndex % numOfItems];
 
 				// When changing from "pointer" mode to "5way key" mode,
 				// a pointer is hidden and a last focused item get focused after 30ms.
