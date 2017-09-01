@@ -347,6 +347,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		// scroll info
+		scrolling = false
 		scrollLeft = 0
 		scrollTop = 0
 		scrollToInfo = null
@@ -447,7 +448,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					bounds = this.getScrollBounds();
 
 				if (this.isFirstDragging) {
-					this.doScrollStart();
+					if (!this.scrolling) {
+						this.scrolling = true;
+						this.doScrollStart();
+					}
 					this.isFirstDragging = false;
 				}
 				this.showThumb(bounds);
@@ -481,7 +485,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						targetX: target.targetX,
 						targetY: target.targetY,
 						animate: true,
-						silent: true,
 						duration: target.duration
 					});
 				}
@@ -536,13 +539,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (pos) {
 				const bounds = this.getScrollBounds();
 
-				if ((bounds.maxTop > 0 || bounds.maxLeft > 0) &&
-					(pos.left !== this.scrollLeft || pos.top !== this.scrollTop)) {
+				if (bounds.maxTop > 0 || bounds.maxLeft > 0) {
 					this.start({
 						targetX: pos.left,
 						targetY: pos.top,
 						animate: (animationDuration > 0) && this.animateOnFocus,
-						silent: false,
 						duration: animationDuration
 					});
 				}
@@ -566,9 +567,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					positionFn = this.childRef.calculatePositionOnFocus,
 					spotItem = Spotlight.getCurrent();
 
-				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
+				if (item && item === spotItem && positionFn) {
 					const lastPos = this.lastScrollPositionOnFocus;
 					let pos;
+
 					// If scroll animation is ongoing, we need to pass last target position to
 					// determine correct scroll position.
 					if (this.animator.isAnimating() && lastPos) {
@@ -576,6 +578,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					} else {
 						pos = positionFn({item});
 					}
+
 					this.startScrollOnFocus(pos, item);
 				}
 			} else if (this.childRef.setLastFocusedIndex) {
@@ -684,8 +687,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scrollToAccumulatedTarget = (delta, vertical) => {
-			const silent = this.isScrollAnimationTargetAccumulated;
-
 			if (!this.isScrollAnimationTargetAccumulated) {
 				this.accumulatedTargetX = this.scrollLeft;
 				this.accumulatedTargetY = this.scrollTop;
@@ -701,8 +702,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.start({
 				targetX: this.accumulatedTargetX,
 				targetY: this.accumulatedTargetY,
-				animate: true,
-				silent
+				animate: true
 			});
 		}
 
@@ -742,12 +742,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll start/stop
 
-		start ({targetX, targetY, animate = true, silent = false, duration = animationDuration}) {
+		start ({targetX, targetY, animate = true, duration = animationDuration}) {
 			const {scrollLeft, scrollTop} = this;
 			const bounds = this.getScrollBounds();
 
 			this.animator.stop();
-			if (!silent) {
+			if (!this.scrolling) {
+				this.scrolling = true;
 				this.doScrollStart();
 			}
 
@@ -822,7 +823,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 			this.hideThumb();
-			this.doScrollStop();
+			if (this.scrolling) {
+				this.scrolling = false;
+				this.doScrollStop();
+			}
 		}
 
 		focusOnItem () {

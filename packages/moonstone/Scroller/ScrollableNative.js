@@ -338,6 +338,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		// scroll info
+		scrolling = false
 		scrollLeft = 0
 		scrollTop = 0
 		scrollToInfo = null
@@ -353,7 +354,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		containerRef = null
 
 		// browser native scrolling
-		scrolling = false
 		resetPosition = null // prevent auto-scroll on focus by Spotlight
 
 		calculateDistanceByWheel (deltaMode, delta, maxPixel) {
@@ -465,8 +465,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (pos) {
 				const bounds = this.getScrollBounds();
 
-				if ((bounds.maxTop > 0 || bounds.maxLeft > 0) &&
-					(pos.left !== this.scrollLeft || pos.top !== this.scrollTop)) {
+				if (bounds.maxTop > 0 || bounds.maxLeft > 0) {
 					this.start(pos.left, pos.top, this.animateOnFocus);
 				}
 				this.lastFocusedItem = item;
@@ -489,9 +488,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					positionFn = this.childRef.calculatePositionOnFocus,
 					spotItem = Spotlight.getCurrent();
 
-				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
+				if (item && item === spotItem && positionFn) {
 					const lastPos = this.lastScrollPositionOnFocus;
 					let pos;
+
 					// If scroll animation is ongoing, we need to pass last target position to
 					// determine correct scroll position.
 					if (this.scrolling && lastPos) {
@@ -499,6 +499,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					} else {
 						pos = positionFn({item});
 					}
+
 					this.startScrollOnFocus(pos, item);
 				}
 			} else if (this.childRef.setLastFocusedIndex) {
