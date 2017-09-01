@@ -618,18 +618,9 @@ class VirtualListCoreNative extends Component {
 	}
 
 	scrollToPosition (x, y) {
-		const
-			node = this.containerRef,
-			epsilon = 0.1;
+		const node = this.containerRef;
 
-		/*
-		 * This code uses the trick to change the target position slightly which will not the actual result
-		 * since a browser ignore `scrollTo` method if the target position is same as the current position.
-		 */
-		node.scrollTo(
-			epsilon + ((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x),
-			epsilon + y
-		);
+		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 	}
 
 	composeStyle (style, width, height, primaryPosition, secondaryPosition) {
@@ -718,7 +709,11 @@ class VirtualListCoreNative extends Component {
 				if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
 					gridPosition.primaryPosition -= pageScroll ? 0 : offsetToClientEnd;
 				} else if (gridPosition.primaryPosition >= scrollPosition) { // inside of client
-					gridPosition.primaryPosition = scrollPosition;
+					/*
+					 * This code uses the trick to change the target position slightly which will not the actual result
+					 * since a browser ignore `scrollTo` method if the target position is same as the current position.
+					 */
+					gridPosition.primaryPosition = scrollPosition + 0.1;
 				} else { // backward over
 					gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
 				}
