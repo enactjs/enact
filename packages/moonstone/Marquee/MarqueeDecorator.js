@@ -87,6 +87,16 @@ const didPropChange = (propList, prev, next) => {
 	return hasPropsChanged.indexOf(true) !== -1;
 };
 
+/*
+ * There's only one timer shared for Marquee so we need to keep track of what we may be using it
+ * for. We may need to clean up certain things as we move among states.
+ */
+const TimerState = {
+	START_PENDING: 1,		// A start request is pending
+	RESET_PENDING: 2,		// Marquee finished, waiting for reset delay
+	SYNCSTART_PENDING: 3	// Waiting to alert Controller that we want to start marqueeing
+};
+
 /**
  * {@link moonstone/Marquee.MarqueeDecorator} is a Higher-order Component which makes
  * the Wrapped component's children marquee.
@@ -315,10 +325,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @param {Number}   time Delay in milliseconds
 		 * @returns {undefined}
 		 */
-		setTimeout (fn, time = 0) {
+		setTimeout (fn, time = 0, state = 0) {
 			this.clearTimeout();
 			if (window) {
-				this.timer = window.setTimeout(fn, time);
+				this.timerState = state;
+				this.timer = window.setTimeout(() => {
+					this.timerState = 0;
+					fn();
+				}, time);
 			}
 		}
 
@@ -406,7 +420,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		/**
 		 * Starts the animation without synchronizing
 		 *
-		 * @param	{Number}	[delay]	Milleseconds to wait before animating
+		 * @param	{Number}	[delay]	Milliseconds to wait before animating
 		 * @returns	{undefined}
 		 */
 		start = (delay = this.props.marqueeDelay) => {
@@ -416,6 +430,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// instances.
 				return true;
 			} else if (!this.state.animating) {
+				// Don't need to worry about this.timerState because if we're sync, we were just
+				// told to start, so our state is correct already. If we're not sync, this will
+				// restart us anyhow. If we were waiting to tell sync to start us, someone else in
+				// our group already did it.
 				this.setTimeout(() => {
 					this.calculateMetrics();
 					if (!this.contentFits) {
@@ -425,7 +443,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					} else if (this.sync) {
 						this.context.complete(this);
 					}
-				}, delay);
+				}, delay, TimerState.START_PENDING);
 			}
 		}
 
@@ -451,9 +469,17 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.state.animating) return;
 
 			if (this.sync) {
+				// If we're running a timer for anything, we should let that finish, unless it's
+				// another syncstart request.  We should probably check to see if the start request
+				// is further in the future than we are so we can choose the nearer one. But, we're
+				// assuming the condition is we're waiting on render delay and someone just hovered
+				// us, so we can start with the (hopefully) faster hover delay.
+				if (this.timerState && this.timerState !== TimerState.SYNCSTART_PENDING) {
+					return;
+				}
 				this.setTimeout(() => {
 					this.context.start();
-				}, delay);
+				}, delay, TimerState.SYNCSTART_PENDING);
 			} else {
 				this.start(delay);
 			}
@@ -483,7 +509,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		resetAnimation = () => {
 			const marqueeResetDelay = Math.max(40, this.props.marqueeResetDelay);
-			this.setTimeout(this.restartAnimation, marqueeResetDelay);
+			// If we're already timing a start action, don't reset.  Start actions will clear us if
+			// sync.
+			if (!this.timerState) {
+				this.setTimeout(this.restartAnimation, marqueeResetDelay, TimerState.RESET_PENDING);
+			}
 		}
 
 		/**
