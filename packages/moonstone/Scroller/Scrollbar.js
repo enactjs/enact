@@ -165,7 +165,7 @@ class ScrollbarBase extends PureComponent {
 
 		this.calculateMetrics();
 		this.prevButtonNodeRef = containerRef.children[0];
-		this.nextButtonNodeRef = containerRef.children[1];
+		this.nextButtonNodeRef = containerRef.children[2];
 	}
 
 	componentDidUpdate () {
@@ -320,12 +320,24 @@ class ScrollbarBase extends PureComponent {
 	}
 
 	releaseButton = (ev) => {
+		const
+			{prevButtonNodeRef, nextButtonNodeRef} = this,
+			{prevButtonDisabled, nextButtonDisabled} = this.state;
+
 		this.setPressStatus(false);
 		this.setIgnoreMode(false);
 		if (isPageUp(ev.keyCode)) {
-			this.handlePrevScroll(ev);
+			if (ev.target === nextButtonNodeRef && !prevButtonDisabled) {
+				Spotlight.focus(prevButtonNodeRef);
+			} else {
+				this.handlePrevScroll(ev);
+			}
 		} else if (isPageDown(ev.keyCode)) {
-			this.handleNextScroll(ev);
+			if (ev.target === prevButtonNodeRef && !nextButtonDisabled) {
+				Spotlight.focus(nextButtonNodeRef);
+			} else {
+				this.handleNextScroll(ev);
+			}
 		}
 	}
 
