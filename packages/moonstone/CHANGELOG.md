@@ -23,6 +23,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VirtualList to move out with 5-way navigation when the 1st or the last item is disabled
 - `moonstone/IconButton` Tooltip position when disabled
 - `moonstone/VideoPlayer` Tooltip time after unhovering
 - `moonstone/VirtualList` not to show invisible items
