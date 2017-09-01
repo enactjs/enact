@@ -51,7 +51,7 @@ var HanCal = function(params) {
 	this.type = "han";
 	var sync = params && typeof(params.sync) === 'boolean' ? params.sync : true;
 	
-	Astro.initAstro(sync, params && params.loadParams, /** @type {function ((Object|null)=): ?} */ ilib.bind(this, function (x) {
+	Astro.initAstro(sync, params && params.loadParams, ilib.bind(this, function (x) {
 		if (params && typeof(params.callback) === 'function') {
 			params.callback(this);
 		}

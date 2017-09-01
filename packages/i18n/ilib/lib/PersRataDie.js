@@ -82,7 +82,7 @@ var GregorianDate = require("./GregorianDate.js");
  * @param {Object=} params parameters that govern the settings and behaviour of this Persian RD date
  */
 var PersRataDie = function(params) {
-	this.rd = undefined;
+	this.rd = NaN;
 	Astro.initAstro(
 		params && typeof(params.sync) === 'boolean' ? params.sync : true,
 		params && params.loadParams,
@@ -102,7 +102,6 @@ PersRataDie.prototype.constructor = PersRataDie;
 /**
  * The difference between a zero Julian day and the first Persian date
  * @private
- * @const
  * @type number
  */
 PersRataDie.prototype.epoch = 1948319.5;
