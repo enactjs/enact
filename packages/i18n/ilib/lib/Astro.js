@@ -62,7 +62,7 @@ Astro.initAstro = function(sync, loadParams, callback) {
 			nonLocale: true,
 			sync: sync, 
 			loadParams: loadParams, 
-			callback: ilib.bind(this, /** @type function() */ function(astroData) {
+			callback: ilib.bind(this, function(astroData) {
 				/** 
 				 * @type {{
 				 *  	_EquinoxpTerms:Array.<number>, 

@@ -93,7 +93,7 @@ var CopticRataDie = require("./CopticRataDie.js");
  * @param {Object=} params parameters that govern the settings and behaviour of this Coptic date
  */
 var CopticDate = function(params) {
-	this.rd = undefined; // clear these out so that the EthiopicDate constructor can set it
+	this.rd = NaN; // clear these out so that the EthiopicDate constructor can set it
 	EthiopicDate.call(this, params);
 	this.cal = new CopticCal();
 };

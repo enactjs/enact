@@ -80,7 +80,7 @@ var RataDie = require("./RataDie.js");
  */
 var HebrewRataDie = function(params) {
 	this.cal = params && params.cal || new HebrewCal();
-	this.rd = undefined;
+	this.rd = NaN;
 	RataDie.call(this, params);
 };
 
@@ -92,7 +92,6 @@ HebrewRataDie.prototype.constructor = HebrewRataDie;
  * The difference between a zero Julian day and the first day of the Hebrew 
  * calendar: sunset on Monday, Tishri 1, 1 = September 7, 3760 BC Gregorian = JD 347997.25
  * @private
- * @const
  * @type number
  */
 HebrewRataDie.prototype.epoch = 347997.25;

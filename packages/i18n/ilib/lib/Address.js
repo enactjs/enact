@@ -137,47 +137,39 @@ var Address = function (freeformAddress, options) {
 	if (typeof(freeformAddress) === 'object') {
 		/**
 		 * The street address, including house numbers and all.
-		 * @expose
 		 * @type {string|undefined} 
 		 */
 		this.streetAddress = freeformAddress.streetAddress;
 		/**
 		 * The locality of this address (usually a city or town).
-		 * @expose
 		 * @type {string|undefined} 
 		 */
 		this.locality = freeformAddress.locality;
 		/**
 		 * The region (province, canton, prefecture, state, etc.) where the address is located.
-		 * @expose
 		 * @type {string|undefined} 
 		 */
 		this.region = freeformAddress.region;
 		/**
 		 * Country-specific code for expediting mail. In the US, this is the zip code.
-		 * @expose
 		 * @type {string|undefined} 
 		 */
 		this.postalCode = freeformAddress.postalCode;
 		/**
 		 * Optional city-specific code for a particular post office, used to expidite
 		 * delivery.
-		 * @expose
 		 * @type {string|undefined} 
 		 */
 		this.postOffice = freeformAddress.postOffice;
 		/**
 		 * The country of the address.
-		 * @expose
 		 * @type {string|undefined}
 		 */
 		this.country = freeformAddress.country;
 		if (freeformAddress.countryCode) {
 			/**
 			 * The 2 or 3 letter ISO 3166 region code for the destination country in this address.
-			 * @expose
 			 * @type {string} 
-			 * 
 			 */
 			this.countryCode = freeformAddress.countryCode;
 		}
@@ -199,9 +191,9 @@ var Address = function (freeformAddress, options) {
 	this.lines = address.split(/[,，\n]/g);
 	this.removeEmptyLines(this.lines);
 	
-	isAscii._init(this.sync, this.loadParams, /** @type {function(*)|undefined} */ ilib.bind(this, function() {
-		isIdeo._init(this.sync, this.loadParams, /** @type {function(*)|undefined} */ ilib.bind(this, function() {
-			isDigit._init(this.sync, this.loadParams, /** @type {function(*)|undefined} */ ilib.bind(this, function() {
+	isAscii._init(this.sync, this.loadParams, ilib.bind(this, function() {
+		isIdeo._init(this.sync, this.loadParams, ilib.bind(this, function() {
+			isDigit._init(this.sync, this.loadParams, ilib.bind(this, function() {
 				if (typeof(ilib.data.nativecountries) === 'undefined') {
 					Utils.loadData({
 						object: Address,
@@ -210,7 +202,7 @@ var Address = function (freeformAddress, options) {
 						nonlocale: true,
 						sync: this.sync, 
 						loadParams: this.loadParams, 
-						callback: /** @type function(Object=):undefined */ ilib.bind(this, /** @type function() */ function(nativecountries) {
+						callback: ilib.bind(this, function(nativecountries) {
 							ilib.data.nativecountries = nativecountries;
 							this._loadCountries(options && options.onLoad);
 						})
@@ -237,7 +229,7 @@ Address.prototype = {
 				nonlocale: true,
 				sync: this.sync, 
 				loadParams: this.loadParams, 
-				callback: /** @type function(Object=):undefined */ ilib.bind(this, /** @type function() */ function(countries) {
+				callback: ilib.bind(this, function(countries) {
 					ilib.data.countries = countries;
 					this._loadCtrynames(onLoad);
 				})
@@ -257,7 +249,7 @@ Address.prototype = {
 			locale: this.locale,
 			sync: this.sync, 
 			loadParams: this.loadParams, 
-			callback: /** @type function(Object=):undefined */ ilib.bind(this, /** @type function() */ function(ctrynames) {
+			callback: ilib.bind(this, function(ctrynames) {
 				this._determineDest(ctrynames, onLoad);
 			})
 		});
@@ -340,7 +332,7 @@ Address.prototype = {
 			name: "address.json", 
 			sync: this.sync, 
 			loadParams: this.loadParams,
-			callback: /** @type function(Object=):undefined */ ilib.bind(this, function(info) {
+			callback: ilib.bind(this, function(info) {
 				if (!info || JSUtils.isEmpty(info)) {
 					// load the "unknown" locale instead
 					Utils.loadData({
@@ -349,7 +341,7 @@ Address.prototype = {
 						name: "address.json", 
 						sync: this.sync, 
 						loadParams: this.loadParams,
-						callback: /** @type function(Object=):undefined */ ilib.bind(this, function(info) {
+						callback: ilib.bind(this, function(info) {
 							this.info = info;
 							this._parseAddress();
 							if (typeof(callback) === 'function') {
@@ -413,7 +405,6 @@ Address.prototype = {
 		//console.log("this.lines is: " + JSON.stringify(this.lines));
 		
 		for (i = 0; i < infoFields.length && this.lines.length > 0; i++) {
-			/** @type {{name:string, line:string, pattern:(string|Array.<string>), matchGroup:number}} */
 			field = infoFields[i];
 			this.removeEmptyLines(this.lines);
 			//console.log("Searching for field " + field.name);
