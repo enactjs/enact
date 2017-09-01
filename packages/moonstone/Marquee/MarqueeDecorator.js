@@ -1,7 +1,7 @@
 import deprecate from '@enact/core/internal/deprecate';
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
-import {childrenEquals} from '@enact/core/util';
+import {childrenEquals, Job} from '@enact/core/util';
 import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -232,6 +232,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
+				animating: false,
 				overflow: 'ellipsis',
 				rtl: null
 			};
@@ -289,36 +290,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			this.clearTimeout();
+			this.startJob.stop();
 			if (this.sync) {
 				this.sync = false;
 				this.context.unregister(this);
-			}
-		}
-
-		/**
-		 * Clears the timer
-		 *
-		 * @returns {undefined}
-		 */
-		clearTimeout () {
-			if (window && this.timer) {
-				window.clearTimeout(this.timer);
-				this.timer = null;
-			}
-		}
-
-		/**
-		 * Starts a new timer
-		 *
-		 * @param {Function} fn   Callback
-		 * @param {Number}   time Delay in milliseconds
-		 * @returns {undefined}
-		 */
-		setTimeout (fn, time = 0) {
-			this.clearTimeout();
-			if (window) {
-				this.timer = window.setTimeout(fn, time);
 			}
 		}
 
@@ -403,6 +378,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return distance > 0;
 		}
 
+		// Sets animation state
+		setAnimating = (isAnimating) => {
+			this.setState({animating: isAnimating});
+		}
+
 		/**
 		 * Starts the animation without synchronizing
 		 *
@@ -416,18 +396,20 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// instances.
 				return true;
 			} else if (!this.state.animating) {
-				this.setTimeout(() => {
-					this.calculateMetrics();
-					if (!this.contentFits) {
-						this.setState({
-							animating: true
-						});
-					} else if (this.sync) {
-						this.context.complete(this);
-					}
-				}, delay);
+				this.startJob.stop();
+				this.startJob.startAfter(delay);
 			}
 		}
+
+		startJob = new Job(() => {
+			this.calculateMetrics();
+			if (!this.contentFits) {
+				this.setAnimating(true);
+			} else if (this.sync) {
+				this.context.cancel();
+				this.context.complete(this);
+			}
+		})
 
 		/**
 		 * Stops the animation
@@ -435,10 +417,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		stop = () => {
-			this.clearTimeout();
-			this.setState({
-				animating: false
-			});
+			this.startJob.stop();
+			this.setAnimating(false);
 		}
 
 		/**
@@ -447,17 +427,20 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @param {Number} [delay] Milleseconds to wait before animating
 		 * @returns {undefined}
 		 */
-		startAnimation = (delay) => {
+		startAnimation = (delay = 0) => {
 			if (this.state.animating) return;
 
 			if (this.sync) {
-				this.setTimeout(() => {
-					this.context.start();
-				}, delay);
+				this.startSyncAnimationJob.stop();
+				this.startSyncAnimationJob.startAfter(delay);
 			} else {
 				this.start(delay);
 			}
 		}
+
+		startSyncAnimationJob = new Job(() => {
+			this.context.start();
+		})
 
 		/**
 		 * Resets the marquee and restarts it after `marqueeDelay` millisecons.
@@ -465,9 +448,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		restartAnimation = () => {
-			this.setState({
-				animating: false
-			});
+			this.setAnimating(false);
 			// synchronized Marquees defer to the controller to restart them
 			if (this.sync) {
 				this.context.complete(this);
@@ -483,8 +464,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		resetAnimation = () => {
 			const marqueeResetDelay = Math.max(40, this.props.marqueeResetDelay);
-			this.setTimeout(this.restartAnimation, marqueeResetDelay);
+			this.resetAnimationJob.startAfter(marqueeResetDelay);
 		}
+
+		resetAnimationJob = new Job(() => {
+			this.restartAnimation();
+		})
 
 		/**
 		 * Cancels the marquee
@@ -521,12 +506,20 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.isHovered = true;
 			this.startAnimation();
 			forwardEnter(ev, this.props);
+			if (this.sync) {
+				this.context.isHovered(true);
+			}
 		}
 
 		handleLeave = (ev) => {
 			this.isHovered = false;
-			this.cancelAnimation();
+			if (this.props.marqueeOn !== 'render') {
+				this.cancelAnimation();
+			}
 			forwardLeave(ev, this.props);
+			if (this.sync) {
+				this.context.isHovered(false);
+			}
 		}
 
 		cacheNode = (node) => {
@@ -562,13 +555,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			// TODO: cancel others on hover
-			if (marqueeOnHover || (disabled && marqueeOnFocus)) {
+			if (marqueeOnHover || (disabled && marqueeOnFocus) || marqueeOnRender) {
 				rest[enter] = this.handleEnter;
 				rest[leave] = this.handleLeave;
-			}
-
-			if (marqueeOnRender) {
-				rest[enter] = this.handleEnter;
 			}
 
 			delete rest.marqueeCentered;
