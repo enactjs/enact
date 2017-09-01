@@ -299,7 +299,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
 			if (this.animator.isAnimating()) {
-				this.doScrollStop();
+				if (this.scrolling) { // just for sure. normally this.scrolling will be true in this case.
+					this.scrolling = false;
+					this.doScrollStop();
+				}
 				this.animator.stop();
 			}
 			this.forceUpdateJob.stop();
@@ -448,7 +451,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					bounds = this.getScrollBounds();
 
 				if (this.isFirstDragging) {
-					this.doScrollStart();
+					if (!this.scrolling) {
+						this.scrolling = true;
+						this.doScrollStart();
+					}
 					this.isFirstDragging = false;
 				}
 				this.showThumb(bounds);
@@ -702,23 +708,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// call scroll callbacks
 
 		doScrollStart () {
-			if (!this.scrolling) {
-				this.scrolling = true;
-				forwardScrollStart({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
-			}
+			forwardScrollStart({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
 		}
 
 		doScrolling () {
-			if (this.scrolling) {
-				forwardScroll({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
-			}
+			forwardScroll({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
 		}
 
 		doScrollStop () {
-			if (this.scrolling) {
-				forwardScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
-				this.scrolling = false;
-			}
+			forwardScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
 		}
 
 		// update scroll position
@@ -748,7 +746,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const bounds = this.getScrollBounds();
 
 			this.animator.stop();
-			this.doScrollStart();
+			if (!this.scrolling) {
+				this.scrolling = true;
+				this.doScrollStart();
+			}
 
 			if (Math.abs(bounds.maxLeft - targetX) < epsilon) {
 				targetX = bounds.maxLeft;
@@ -821,7 +822,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 			this.hideThumb();
-			this.doScrollStop();
+			if (this.scrolling) {
+				this.scrolling = false;
+				this.doScrollStop();
+			}
 		}
 
 		focusOnItem () {
