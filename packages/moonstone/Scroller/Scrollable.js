@@ -299,10 +299,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
 			if (this.animator.isAnimating()) {
-				if (this.scrolling) { // just for sure. normally this.scrolling will be true in this case.
-					this.scrolling = false;
-					this.doScrollStop();
-				}
+				this.doScrollStop();
 				this.animator.stop();
 			}
 			this.forceUpdateJob.stop();
