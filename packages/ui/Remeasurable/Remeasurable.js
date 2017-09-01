@@ -1,6 +1,6 @@
 /**
- * Exports the {@link ui/Remeasurable.Remeasurable} Higher-order Component (HOC),
- * and its contextTypes. The default export is {@link ui/Remeasurable.Remeasurable}.
+ * Exports the {@link ui/Remeasurable.RemeasurableDecorator} Higher-order Component (HOC).
+ * Adds a the ability to broadcast remeasure changes based on a callback. The default export is {@link ui/Remeasurable.Remeasurable}.
  *
  * @module ui/Remeasurable
  * @private
@@ -10,7 +10,13 @@ import hoc from '@enact/core/hoc';
 import {Broadcast, Subscriber} from '../Broadcast';
 
 const defaultConfig = {
-	trigger: () => {}
+	/**
+	 * Configures the event name that triggers the component
+	 *
+	 * @type {String}
+	 * @memberof ui/Remeasurable.Remeasurable.defaultConfig
+	 */
+	trigger: ''
 };
 
 // Used to get most recent update.
@@ -22,6 +28,15 @@ const perfNow = function () {
 	}
 };
 
+/**
+ * {@link ui/Remeasurable.RemeasurableDecorator} is a Higher-order Component which
+ * Adds a the ability to broadcast remeasure changes based on a callback.
+ *
+ * @class RemeasurableDecorator
+ * @memberof ui/Remeasurable
+ * @hoc
+ * @private
+ */
 const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {trigger} = config;
 	return class extends React.Component {
@@ -55,7 +70,18 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	};
 });
 
-const Remeasurable = hoc(defaultConfig, (config, Wrapped) => {
+
+/**
+ * {@link ui/Remeasurable.Remeasurable} is a Higher-order Component which
+ * notifies a child of a change in size from parent. This can then be used to trigger
+ * a new measurement. A `remeasure` prop will be passed down to the wrapped component.
+ *
+ * @class Remeasurable
+ * @memberof ui/Remeasurable
+ * @hoc
+ * @private
+ */
+const Remeasurable = (Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'Remeasurable'
 
@@ -71,7 +97,7 @@ const Remeasurable = hoc(defaultConfig, (config, Wrapped) => {
 			);
 		}
 	};
-});
+};
 
 /**
  * {@link ui/Remeasurable.Remeasurable} is a Higher-order Component which
