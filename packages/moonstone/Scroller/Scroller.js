@@ -20,6 +20,7 @@ import Scrollable from './Scrollable';
 
 const
 	dataContainerDisabledAttribute = 'data-container-disabled',
+	epsilon = 1,
 	reverseDirections = {
 		'left': 'right',
 		'right': 'left'
@@ -240,7 +241,7 @@ class ScrollerBase extends Component {
 	 * @returns {Object} with keys {top, left} containing caculated top and left positions for scroll.
 	 * @private
 	 */
-	calculatePositionOnFocus = ({item, scrollInfo}) => {
+	calculatePositionOnFocus = ({item, scrollInfo, scrollPosition}) => {
 		if (!this.isVertical() && !this.isHorizontal() || !item || !this.containerRef.contains(item)) {
 			return;
 		}
@@ -253,7 +254,7 @@ class ScrollerBase extends Component {
 		} = this.getFocusedItemBounds(item);
 
 		if (this.isVertical()) {
-			this.scrollPos.top = this.calculateScrollTop(item, itemTop, itemHeight, scrollInfo);
+			this.scrollPos.top = this.calculateScrollTop(item, itemTop, itemHeight, scrollInfo, scrollPosition);
 		}
 
 		if (this.isHorizontal()) {
@@ -261,7 +262,8 @@ class ScrollerBase extends Component {
 				{clientWidth} = this.scrollBounds,
 				rtlDirection = this.context.rtl ? -1 : 1,
 				{left: containerLeft} = this.containerRef.getBoundingClientRect(),
-				currentScrollLeft = this.context.rtl ? (this.scrollBounds.maxLeft - this.scrollPos.left) : this.scrollPos.left,
+				scrollLastPosition = scrollPosition ? scrollPosition : this.scrollPos.left,
+				currentScrollLeft = this.context.rtl ? (this.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
 				// calculation based on client position
 				newItemLeft = this.containerRef.scrollLeft + (itemLeft - containerLeft);
 
@@ -291,11 +293,11 @@ class ScrollerBase extends Component {
 	 * @returns {Number} Calculated `scrollTop`
 	 * @private
 	 */
-	calculateScrollTop = (focusedItem, itemTop, itemHeight, scrollInfo) => {
+	calculateScrollTop = (focusedItem, itemTop, itemHeight, scrollInfo, scrollPosition) => {
 		const
 			{clientHeight} = this.scrollBounds,
 			{top: containerTop} = this.containerRef.getBoundingClientRect(),
-			currentScrollTop = this.scrollPos.top,
+			currentScrollTop = (scrollPosition ? scrollPosition : this.scrollPos.top),
 			// calculation based on client position
 			newItemTop = this.containerRef.scrollTop + (itemTop - containerTop),
 			itemBottom = newItemTop + itemHeight,
@@ -344,20 +346,20 @@ class ScrollerBase extends Component {
 				nestedItemTop = this.containerRef.scrollTop + (top - containerTop),
 				nestedItemBottom = nestedItemTop + nestedItemHeight;
 
-			if (newItemTop - nestedItemHeight > currentScrollTop) {
+			if (newItemTop - nestedItemHeight - currentScrollTop > epsilon) {
 				// set scroll position so that the top of the container is at least on the top
 				newScrollTop = newItemTop - nestedItemHeight;
-			} else if (nestedItemBottom > scrollBottom) {
+			} else if (nestedItemBottom - scrollBottom > epsilon) {
 				// Caculate when 5-way focus down past the bottom.
 				newScrollTop += nestedItemBottom - scrollBottom;
-			} else if (nestedItemTop < currentScrollTop) {
+			} else if (nestedItemTop - currentScrollTop < epsilon) {
 				// Caculate when 5-way focus up past the top.
 				newScrollTop += nestedItemTop - currentScrollTop;
 			}
-		} else if (itemBottom > scrollBottom) {
+		} else if (itemBottom - scrollBottom > epsilon) {
 			// Caculate when 5-way focus down past the bottom.
 			newScrollTop += itemBottom - scrollBottom;
-		} else if (newItemTop < currentScrollTop) {
+		} else if (newItemTop - currentScrollTop < epsilon) {
 			// Caculate when 5-way focus up past the top.
 			newScrollTop += newItemTop - currentScrollTop;
 		}
