@@ -238,7 +238,7 @@ class ScrollerBase extends Component {
 	 * @param {Node} item node
 	 * @param {Object} scrollInfo position info. `calculateScrollTop` uses
 	 * `scrollInfo.previousScrollHeight` and `scrollInfo.scrollTop`
-	 * @param {Number} last target position, passed scroll animation is ongoing
+	 * @param {Number} scrollPosition last target position, passed scroll animation is ongoing
 	 *
 	 * @returns {Object} with keys {top, left} containing caculated top and left positions for scroll.
 	 * @private
@@ -291,7 +291,7 @@ class ScrollerBase extends Component {
 	 * @param {Number} itemHeight of focusedItem / focusedContainer
 	 * @param {Object} scrollInfo position info. Uses `scrollInfo.previousScrollHeight`
 	 * and `scrollInfo.scrollTop`
-	 * @param {Number} last target position, passed scroll animation is ongoing
+	 * @param {Number} scrollPosition last target position, passed scroll animation is ongoing
 	 *
 	 * @returns {Number} Calculated `scrollTop`
 	 * @private
