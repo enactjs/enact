@@ -32,6 +32,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` not to show invisible items
 - `moonstone/IconButton` Tooltip position when disabled
 - `moonstone/VideoPlayer` to display feedback tooltip correctly when navigating in 5-way
+- `moonstone/Scroller` to move out with 5-way navigation when focus is moved from expandable child item to out of screen
 
 ## [1.7.0] - 2017-08-23
 
