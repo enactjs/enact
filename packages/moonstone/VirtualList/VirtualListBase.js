@@ -705,13 +705,18 @@ class VirtualListCore extends Component {
 	calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
 		const
 			{pageScroll} = this.props,
+			{numOfItems} = this.state,
 			{primary} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
-		if (!isNaN(focusedIndex) && (focusedIndex !== this.lastFocusedIndex || this.restoreLastFocused)) {
+		if (!isNaN(focusedIndex)) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
+			if (numOfItems > 0 && focusedIndex % numOfItems !== this.lastFocusedIndex % numOfItems) {
+				const node = this.containerRef.children[this.lastFocusedIndex % numOfItems];
+				node.blur();
+			}
 			this.nodeIndexToBeFocused = null;
 			this.lastFocusedIndex = focusedIndex;
 
@@ -824,6 +829,12 @@ class VirtualListCore extends Component {
 					break;
 				}
 			}
+
+			// If there is no item which could get focus forward,
+			// we need to set restriction option to `self-first`.
+			if (nextIndex === -1) {
+				this.setRestrict(false);
+			}
 		} else if (isBackward) {
 			// See if the next item is spottable then delegate scroll to onFocus handler
 			if (currentIndex > 0 && !data[currentIndex - 1].disabled) {
@@ -835,6 +846,12 @@ class VirtualListCore extends Component {
 					nextIndex = i;
 					break;
 				}
+			}
+
+			// If there is no item which could get focus backward,
+			// we need to set restriction option to `self-first`.
+			if (nextIndex === -1) {
+				this.setRestrict(false);
 			}
 		} else {
 			return false;

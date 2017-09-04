@@ -106,14 +106,14 @@ var RataDie = function(params) {
 				params.minute || params.second || params.millisecond || params.parts || params.cycle) {
 			this._setDateComponents(params);
 		} else if (typeof(params.rd) !== 'undefined') {
+			/**
+			 * @type {number} the Rata Die number of this date for this calendar type
+			 */
 			this.rd = (typeof(params.rd) === 'object' && params.rd instanceof RataDie) ? params.rd.rd : params.rd;
 		}
 	}
 	
-	/**
-	 * @type {number} the Rata Die number of this date for this calendar type
-	 */
-	if (typeof(this.rd) === 'undefined') {
+	if (typeof(this.rd) === 'undefined' || isNaN(this.rd)) {
 		var now = new Date();
 		this._setTime(now.getTime());
 	}
@@ -129,7 +129,6 @@ RataDie.gregorianEpoch = 1721424.5;
 RataDie.prototype = {
 	/**
 	 * @protected
-	 * @const
 	 * @type {number}
 	 * the difference between a zero Julian day and the zero Gregorian date. 
 	 */

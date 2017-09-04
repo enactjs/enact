@@ -394,7 +394,7 @@ Utils.loadData = function(params) {
 			// console.log("type is json");
 			basename = name.substring(0, name.lastIndexOf("."));
 			if (nonlocale) {
-				basename = basename.replace(/\//g, '.').replace(/[\\\+\-]/g, "_");
+				basename = basename.replace(/[\.:\(\)\/\\\+\-]/g, "_");
 				data = ilib.data[basename];
 			} else {
 				data = Utils.mergeLocData(basename, locale, replace, returnOne);

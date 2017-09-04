@@ -79,12 +79,11 @@ var EthiopicRataDie = require("./EthiopicRataDie.js");
  */
 var CopticRataDie = function(params) {
 	this.cal = params && params.cal || new CopticCal();
-	this.rd = undefined;
+	this.rd = NaN;
 	/**
 	 * The difference between the zero Julian day and the first Coptic date
 	 * of Friday, August 29, 284 CE Julian at 7:00am UTC. 
 	 * @private
-	 * @const
 	 * @type number
 	 */
 	this.epoch = 1825028.5;

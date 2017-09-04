@@ -6,6 +6,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
+- `moonstone/Dialog` property `showDivider` will be replaced by `noDivider` property in 2.0.0
+
 ### Added
 
 - `moonstone/Popup` callback property `onShow` which fires after popup appears for both animating and non-animating popups
@@ -15,14 +17,16 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Popup` callback property `onHide` to run on both animating and non-animating popups
 - `moonstone/VideoPlayer` state `playbackRate` to media events
 - `moonstone/VideoPlayer` support for `spotlightDisabled`
-
-### Changed
-
 - `moonstone/VideoPlayer` thumbnail positioning and style
 - `moonstone/VirtualList` to render when dataSize increased or decreased
+- `moonstone/Dialog` style
+- `moonstone/Popup`, `moonstone/Dialog`, and `moonstone/Notification` to support `node` type for children
+- `moonstone/Scroller` to forward `onKeyDown` events
 
 ### Fixed
 
+- `moonstone/VirtualList` to stop scrolling when a focus is moved on an item from paging controls or outside
+- `moonstone/VirtualList` to move out with 5-way navigation when the 1st or the last item is disabled
 - `moonstone/IconButton` Tooltip position when disabled
 - `moonstone/VideoPlayer` Tooltip time after unhovering
 - `moonstone/VirtualList` not to show invisible items

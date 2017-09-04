@@ -121,6 +121,32 @@ JSUtils.indexOf = function(array, obj) {
 };
 
 /**
+ * Pad the str with zeros to the given length of digits.
+ * 
+ * @static
+ * @param {string|number} str the string or number to pad
+ * @param {number} length the desired total length of the output string, padded
+ * @param {boolean=} right if true, pad on the right side of the number rather than the left.
+ * Default is false.
+ */
+JSUtils.pad = function (str, length, right) {
+	if (typeof(str) !== 'string') {
+		str = "" + str;
+	}
+	var start = 0;
+	// take care of negative numbers
+	if (str.charAt(0) === '-') {
+		start++;
+	}
+	return (str.length >= length+start) ? str : 
+		(right ? str + JSUtils.pad.zeros.substring(0,length-str.length+start) : 
+			str.substring(0, start) + JSUtils.pad.zeros.substring(0,length-str.length+start) + str.substring(start));
+};
+
+/** @private */
+JSUtils.pad.zeros = "00000000000000000000000000000000";
+
+/**
  * Convert a string into the hexadecimal representation
  * of the Unicode characters in that string.
  * 
@@ -140,7 +166,7 @@ JSUtils.toHexString = function(string, limit) {
 	}
 	for (i = 0; i < string.length; i++) {
 		var ch = string.charCodeAt(i).toString(16);
-		result += "00000000".substring(0, lim-ch.length) + ch;
+		result += JSUtils.pad(ch, lim);
 	}
 	return result.toUpperCase();
 };
@@ -149,15 +175,13 @@ JSUtils.toHexString = function(string, limit) {
  * Test whether an object in a Javascript Date. 
  * 
  * @static
- * @param {*} object The object to test
+ * @param {Object|null|undefined} object The object to test
  * @return {boolean} return true if the object is a Date
  * and false otherwise
  */
 JSUtils.isDate = function(object) {
-	var o;
 	if (typeof(object) === 'object') {
-		o = /** @type {Object|null|undefined} */ object;
-		return Object.prototype.toString.call(o) === '[object Date]';
+		return Object.prototype.toString.call(object) === '[object Date]';
 	}
 	return false; 
 };
