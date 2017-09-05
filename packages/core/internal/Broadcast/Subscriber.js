@@ -3,7 +3,7 @@
  * Component changes in value. The default export is {@link core/Subscriber.Subscriber}.
  *
  * This code is taken and modified from https://github.com/ReactTraining/react-broadcast
- * from author Michael Jackson.
+ * from author Michael Jackson, which is licensed under the MIT license.
  *
  * @module core/Subscriber
  * @private
