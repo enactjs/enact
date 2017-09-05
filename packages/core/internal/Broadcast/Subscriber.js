@@ -1,13 +1,13 @@
 /**
- * Exports the {@link ui/Subscriber.Subscriber}. Component that will listen to
+ * Exports the {@link core/Subscriber.Subscriber}. Component that will listen to
  * `Broadcast` Component changes in value.
- * The default export is {@link ui/Subscriber.Subscriber}.
+ * The default export is {@link core/Subscriber.Subscriber}.
  *
  * This code is taken and modified from https://github.com/ReactTraining/react-broadcast
  * from author Michael Jackson.
  *
- * @module ui/Subscriber
- * @public
+ * @module core/Subscriber
+ * @private
  */
 import invariant from 'invariant';
 import React from 'react';
@@ -18,8 +18,8 @@ import PropTypes from 'prop-types';
  * similar to context but without getting stopped at `shouldComponentUpdate`.
  *
  * @class Subscriber
- * @memberof ui/Subscriber
- * @public
+ * @memberof core/Subscriber
+ * @private
  */
 class Subscriber extends React.Component {
 	static propTypes = {
@@ -27,7 +27,7 @@ class Subscriber extends React.Component {
 		* Name of `Broadcast` channel to listen for value changes on.
 		*
 		* @type {String}
-		* @public
+		* @private
 		*/
 		channel: PropTypes.string.isRequired,
 

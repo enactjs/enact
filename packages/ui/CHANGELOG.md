@@ -8,8 +8,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/Broadcast` and `ui/Subscribe` an alternative to context that allows for updates that bypass `shouldComponentUpdate`
-
 ### Changed
 
 ### Fixed

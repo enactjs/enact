@@ -10,8 +10,7 @@ import PropTypes from 'prop-types';
 import invariant from 'invariant';
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
-
-import {Broadcast, Subscriber} from '../Broadcast';
+import {Broadcast, Subscriber} from '@enact/core/internal/Broadcast';
 
 const defaultConfig = {
 	/**
@@ -45,7 +44,7 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {trigger} = config;
 	const forwardTrigger = forward(trigger);
 
-	invariant(trigger, `trigger is required by RemeasurableDecorator`);
+	invariant(trigger, 'trigger is required by RemeasurableDecorator');
 
 	return class extends React.Component {
 		static displayName = 'RemeasurableDecorator'
