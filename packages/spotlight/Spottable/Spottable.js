@@ -332,11 +332,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (spottable) {
-				rest.onBlur = this.handleBlur;
-				rest.onFocus = this.handleFocus;
-				rest.onKeyDown = this.handleKeyDown;
-				rest.onKeyUp = this.handleKeyUp;
-
 				if (rest.className) {
 					rest.className += ' ' + spottableClass;
 				} else {
@@ -347,6 +342,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return (
 				<Wrapped
 					{...rest}
+					onBlur={this.handleBlur}
+					onFocus={this.handleFocus}
+					onKeyDown={this.handleKeyDown}
+					onKeyUp={this.handleKeyUp}
 					disabled={disabled}
 					tabIndex={tabIndex}
 				/>
