@@ -445,11 +445,8 @@ class VirtualListCore extends Component {
 			{firstIndex} = this.state,
 			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
-			wasFirstIndexMax = (
-				(this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) &&
-				(firstIndex === this.maxFirstIndex) &&
-				dataSize - this.curDataSize < dimensionToExtent
-			);
+			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
+			dataSizeDiff = dataSize - this.curDataSize;
 		let newFirstIndex = firstIndex;
 
 		this.maxFirstIndex = dataSize - numOfItems;
@@ -468,7 +465,11 @@ class VirtualListCore extends Component {
 			// we call `scrollTo` to create DOM for it.
 			this.props.cbScrollTo({index: this.preservedIndex, animate: false});
 		} else if (wasFirstIndexMax) {
-			newFirstIndex = (dimensionToExtent > 1) ? this.maxFirstIndex : Math.min(this.maxFirstIndex, firstIndex + (overhang - 1));
+			if (dimensionToExtent > 1 && dataSizeDiff > 0 && dataSizeDiff < dimensionToExtent) {
+				newFirstIndex = this.maxFirstIndex;
+			} else {
+				newFirstIndex = Math.min(this.maxFirstIndex, firstIndex + (overhang - 1) * dimensionToExtent);
+			}
 		} else {
 			newFirstIndex = Math.min(firstIndex, this.maxFirstIndex);
 		}
