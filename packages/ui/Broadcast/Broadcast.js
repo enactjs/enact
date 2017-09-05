@@ -62,7 +62,7 @@ const createBroadcast = (initialState) => {
 class Broadcast extends React.Component {
 	static propTypes = {
 		/**
-	 	* Name of channel to broadcast changes on.
+		* Name of channel to broadcast changes on.
 		*
 		* @type {String}
 		* @public

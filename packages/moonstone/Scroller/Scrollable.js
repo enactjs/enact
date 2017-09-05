@@ -1124,7 +1124,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.onScrollbarVisabilityChange;
 			delete props.onScrollStart;
 			delete props.onScrollStop;
-			delete props.remeasure;
 			delete props.style;
 			delete props.verticalScrollbar;
 

@@ -1,7 +1,3 @@
-import invariant from 'invariant';
-import React from 'react';
-import PropTypes from 'prop-types';
-
 /**
  * Exports the {@link ui/Subscriber.Subscriber}. Component that will listen to
  * `Broadcast` Component changes in value.
@@ -13,10 +9,22 @@ import PropTypes from 'prop-types';
  * @module ui/Subscriber
  * @public
  */
+import invariant from 'invariant';
+import React from 'react';
+import PropTypes from 'prop-types';
+
+/**
+ * `Subscriber` component that listens for signals from `Broadcast` in a way
+ * similar to context but without getting stopped at `shouldComponentUpdate`.
+ *
+ * @class Subscriber
+ * @memberof ui/Subscriber
+ * @public
+ */
 class Subscriber extends React.Component {
 	static propTypes = {
 		/**
-	 	* Name of `Broadcast` channel to listen for value changes on.
+		* Name of `Broadcast` channel to listen for value changes on.
 		*
 		* @type {String}
 		* @public

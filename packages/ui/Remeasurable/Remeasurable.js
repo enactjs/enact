@@ -6,6 +6,8 @@
  * @private
  */
 import React from 'react';
+import PropTypes from 'prop-types';
+import invariant from 'invariant';
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
 
@@ -18,7 +20,7 @@ const defaultConfig = {
 	 * @type {String}
 	 * @memberof ui/Remeasurable.Remeasurable.defaultConfig
 	 */
-	trigger: ''
+	trigger: null
 };
 
 // Used to get most recent update.
@@ -43,8 +45,20 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {trigger} = config;
 	const forwardTrigger = forward(trigger);
 
+	invariant(trigger, `trigger is required by RemeasurableDecorator`);
+
 	return class extends React.Component {
 		static displayName = 'RemeasurableDecorator'
+
+		static propTypes = {
+			/**
+			* Fuction to execute on the trigger event
+			*
+			* @type {Function}
+			* @public
+			*/
+			[trigger]: PropTypes.func
+		}
 
 		constructor (props) {
 			super(props);
