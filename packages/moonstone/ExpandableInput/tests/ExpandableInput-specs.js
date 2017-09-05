@@ -4,7 +4,7 @@ import {mount, shallow} from 'enzyme';
 import {ExpandableInput, ExpandableInputBase} from '../ExpandableInput';
 
 describe('ExpandableInputBase', () => {
-	const inputHint = ' input field';
+	const inputHint = ' Input field';
 	describe('#aria-label', () => {
 		it('should use title, value, and input hint', function () {
 			const subject = shallow(
