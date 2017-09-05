@@ -431,7 +431,11 @@ class VirtualListCoreNative extends Component {
 			{firstIndex} = this.state,
 			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
-			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex));
+			wasFirstIndexMax = (
+				(this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) &&
+				(firstIndex === this.maxFirstIndex) &&
+				dataSize - this.curDataSize < dimensionToExtent
+			);
 		let newFirstIndex = firstIndex;
 
 		this.maxFirstIndex = dataSize - numOfItems;
