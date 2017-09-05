@@ -34,7 +34,7 @@
 	&.below {
 		&.rightArrow {
 			.tooltipArrow {
-				transform: rotate(-90deg);
+				transform: translateY(1%) rotate(-90deg);
 				left: 0;
 			}
 
@@ -45,7 +45,7 @@
 
 		&.leftArrow {
 			.tooltipArrow {
-				transform: translateX(100%) rotate(-90deg) scaleY(-1);
+				transform: translate(100%, 1%) rotate(-90deg) scaleY(-1);
 				right: 0;
 			}
 
@@ -57,8 +57,8 @@
 
 		&.centerArrow {
 			.tooltipArrow {
-				transform: rotate(-90deg) translateY(-50%);
-				left: 50%
+				transform: rotate(-90deg) translate(-1%, -50%);
+				left: 50%;
 			}
 		}
 	}
@@ -66,7 +66,7 @@
 	&.above {
 		&.rightArrow {
 			.tooltipArrow {
-				transform: translateY(100%) rotate(-90deg) scaleX(-1);
+				transform: translateY(99%) rotate(-90deg) scaleX(-1);
 				left: 0;
 				bottom: 0;
 			}
@@ -78,7 +78,7 @@
 
 		&.leftArrow {
 			.tooltipArrow {
-				transform: translate(100%, 100%) rotate(90deg);
+				transform: translate(100%, 99%) rotate(90deg);
 				bottom: 0;
 				right: 0;
 			}
@@ -91,7 +91,7 @@
 
 		&.centerArrow {
 			.tooltipArrow {
-				transform: rotate(90deg) translateY(-50%);
+				transform: rotate(90deg) translate(-1%, -50%);
 				left: 50%;
 				top: 100%;
 			}
@@ -101,7 +101,7 @@
 	&.left {
 		&.topArrow {
 			.tooltipArrow {
-				transform: translate(100%,100%) scaleY(-1);
+				transform: translate(99%, 100%) scaleY(-1);
 				bottom: 0;
 				right: 0;
 			}
@@ -113,7 +113,7 @@
 
 		&.bottomArrow {
 			.tooltipArrow {
-				transform: translateX(100%);
+				transform: translateX(99%);
 				right: 0;
 			}
 
@@ -134,7 +134,7 @@
 	&.right {
 		&.topArrow {
 			.tooltipArrow {
-				transform: rotate(180deg);
+				transform: translateX(1%) rotate(180deg);
 				top: 100%;
 				left: 0;
 			}
@@ -146,7 +146,7 @@
 
 		&.bottomArrow {
 			.tooltipArrow {
-				transform: scaleX(-1);
+				transform: translateX(1%) scaleX(-1);
 				left: 0;
 			}
 
