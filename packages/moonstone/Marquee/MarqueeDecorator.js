@@ -319,7 +319,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				window.clearTimeout(this.timer);
 				this.timer = null;
 			}
-			this.timerState = 0;
+			this.timerState = TimerState.CLEAR;
 		}
 
 		/*
@@ -329,12 +329,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @param {Number}   time Delay in milliseconds
 		 * @returns {undefined}
 		 */
-		setTimeout (fn, time = 0, state = 0) {
+		setTimeout (fn, time = 0, state = TimerState.CLEAR) {
 			this.clearTimeout();
 			if (window) {
 				this.timerState = state;
 				this.timer = window.setTimeout(() => {
-					this.timerState = 0;
+					this.timerState = TimerState.CLEAR;
 					fn();
 				}, time);
 			}
