@@ -249,6 +249,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 			this.sync = false;
 			this.forceRestartMarquee = false;
+			this.timerState = TimerState.CLEAR;
 
 			this.invalidateMetrics();
 
