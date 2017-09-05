@@ -5,6 +5,7 @@
  * @module moonstone/Dialog
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -15,10 +16,8 @@ import {MarqueeDecorator} from '../Marquee';
 import Popup from '../Popup';
 
 import css from './Dialog.less';
-import TitleWrapper from './TitleWrapper';
 
 const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
-const MarqueeH2 = MarqueeDecorator('h2');
 
 /**
  * {@link moonstone/Dialog.DialogBase} is a modal component with a title, a subtitle, a
@@ -55,15 +54,12 @@ const DialogBase = kind({
 		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 
 		/**
-		 * The element(s) to be displayed in the body of the Dialog.
+		 * The contents to be displayed in the body of the Dialog.
 		 *
 		 * @type {Node}
 		 * @public
 		 */
-		children: PropTypes.oneOfType([
-			PropTypes.arrayOf(PropTypes.element),
-			PropTypes.element
-		]),
+		children: PropTypes.node,
 
 		/**
 		 * When `true`, the dialog will not animate on/off screen.
@@ -73,6 +69,15 @@ const DialogBase = kind({
 		 * @public
 		 */
 		noAnimation: PropTypes.bool,
+
+		/**
+		 * When `true`, a divider line will not separate the title from the dialog body
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noDivider: PropTypes.bool,
 
 		/**
 		 * A function to be run when a closing action is invoked by the user. These actions include
@@ -134,6 +139,7 @@ const DialogBase = kind({
 		 *
 		 * @type {Boolean}
 		 * @public
+		 * @deprecated
 		 */
 		showDivider: PropTypes.bool,
 
@@ -156,6 +162,7 @@ const DialogBase = kind({
 
 	defaultProps: {
 		noAnimation: false,
+		noDivider: false,
 		open: false,
 		preserveCase: false,
 		showCloseButton: false
@@ -167,27 +174,36 @@ const DialogBase = kind({
 	},
 
 	computed: {
-		className: ({showDivider, styler}) => styler.append({showDivider})
+		className: ({noDivider, showDivider, styler}) => {
+			if (showDivider) {
+				deprecate({name: 'showDivider', since: '1.8.0', message: 'Use `noDivider` instead', until: '2.0.0'});
+			}
+
+			return styler.append({showDivider: !noDivider});
+		}
 	},
 
 	render: ({buttons, casing, children, preserveCase, title, titleBelow, ...rest}) => {
+		delete rest.noDivider;
 		delete rest.showDivider;
 
 		return (
 			<Popup {...rest}>
-				<TitleWrapper>
-					<MarqueeH1 casing={casing} preserveCase={preserveCase} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
-						{title}
-					</MarqueeH1>
-					<MarqueeH2 className={css.titleBelow} marqueeOn="render" marqueeOnRenderDelay={5000}>
-						{titleBelow}
-					</MarqueeH2>
-				</TitleWrapper>
+				<div className={css.titleWrapper}>
+					<div className={css.titleBlock}>
+						<MarqueeH1 casing={casing} preserveCase={preserveCase} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
+							{title}
+						</MarqueeH1>
+						<h2 className={css.titleBelow}>
+							{titleBelow}
+						</h2>
+					</div>
+					<div className={css.buttons}>
+						{buttons}
+					</div>
+				</div>
 				<div className={css.body}>
 					{children}
-				</div>
-				<div className={css.buttons}>
-					{buttons}
 				</div>
 			</Popup>
 		);
