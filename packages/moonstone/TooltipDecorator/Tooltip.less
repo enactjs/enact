@@ -34,8 +34,7 @@
 	&.below {
 		&.rightArrow {
 			.tooltipArrow {
-				transform: rotate(-90deg);
-				top: 1px;
+				transform: translateY(1%) rotate(-90deg);
 				left: 0;
 			}
 
@@ -46,8 +45,7 @@
 
 		&.leftArrow {
 			.tooltipArrow {
-				transform: translateX(100%) rotate(-90deg) scaleY(-1);
-				top: 1px;
+				transform: translate(100%, 1%) rotate(-90deg) scaleY(-1);
 				right: 0;
 			}
 
@@ -59,8 +57,7 @@
 
 		&.centerArrow {
 			.tooltipArrow {
-				transform: rotate(-90deg) translateY(-50%);
-				top: 1px;
+				transform: rotate(-90deg) translate(-1%, -50%);
 				left: 50%;
 			}
 		}
@@ -69,9 +66,9 @@
 	&.above {
 		&.rightArrow {
 			.tooltipArrow {
-				transform: translateY(100%) rotate(-90deg) scaleX(-1);
+				transform: translateY(99%) rotate(-90deg) scaleX(-1);
 				left: 0;
-				bottom: 1px;
+				bottom: 0;
 			}
 
 			.tooltipLabel {
@@ -81,8 +78,8 @@
 
 		&.leftArrow {
 			.tooltipArrow {
-				transform: translate(100%, 100%) rotate(90deg);
-				bottom: 1px;
+				transform: translate(100%, 99%) rotate(90deg);
+				bottom: 0;
 				right: 0;
 			}
 
@@ -94,9 +91,9 @@
 
 		&.centerArrow {
 			.tooltipArrow {
-				transform: rotate(90deg) translateY(-50%);
+				transform: rotate(90deg) translate(-1%, -50%);
 				left: 50%;
-				top: 98%;
+				top: 100%;
 			}
 		}
 	}
@@ -104,9 +101,9 @@
 	&.left {
 		&.topArrow {
 			.tooltipArrow {
-				transform: translate(100%,100%) scaleY(-1);
+				transform: translate(99%, 100%) scaleY(-1);
 				bottom: 0;
-				right: 1px;
+				right: 0;
 			}
 
 			.tooltipLabel {
@@ -116,8 +113,8 @@
 
 		&.bottomArrow {
 			.tooltipArrow {
-				transform: translateX(100%);
-				right: 1px;
+				transform: translateX(99%);
+				right: 0;
 			}
 
 			.tooltipLabel {
@@ -137,9 +134,9 @@
 	&.right {
 		&.topArrow {
 			.tooltipArrow {
-				transform: rotate(180deg);
+				transform: translateX(1%) rotate(180deg);
 				top: 100%;
-				left: 1px;
+				left: 0;
 			}
 
 			.tooltipLabel {
@@ -149,8 +146,8 @@
 
 		&.bottomArrow {
 			.tooltipArrow {
-				transform: scaleX(-1);
-				left: 1px;
+				transform: translateX(1%) scaleX(-1);
+				left: 0;
 			}
 
 			.tooltipLabel {
