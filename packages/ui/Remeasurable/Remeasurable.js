@@ -1,7 +1,7 @@
 /**
- * Exports the {@link ui/Remeasurable.RemeasurableDecorator} Higher-order Component (HOC). Adds the
- * ability to broadcast remeasure changes based on a callback. The default export is
- * {@link ui/Remeasurable.Remeasurable}.
+ * Exports the {@link ui/Remeasurable.Remeasurable} and {@link ui/Remeasurable.RemeasurableDecorator}
+ * Higher-order Component (HOC). Adds the ability to broadcast remeasure changes
+ * based on a callback. The default export is {@link ui/Remeasurable.Remeasurable}.
  *
  * @module ui/Remeasurable
  * @private
@@ -12,24 +12,22 @@ import invariant from 'invariant';
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
 import {Broadcast, Subscriber} from '@enact/core/internal/Broadcast';
+import {perfNow} from '@enact/core/util';
 
+/**
+ * Default config for {@link ui/Remeasurable.RemeasurableDecorator}
+ *
+ * @memberof ui/Remeasurable.RemeasurableDecorator
+ * @hocconfig
+ */
 const defaultConfig = {
 	/**
 	 * Configures the event name that triggers the component
 	 *
 	 * @type {String}
-	 * @memberof ui/Remeasurable.Remeasurable.defaultConfig
+	 * @memberof ui/Remeasurable.RemeasurableDecorator.defaultConfig
 	 */
 	trigger: null
-};
-
-// Used to get most recent update.
-const perfNow = function () {
-	if (typeof window === 'object') {
-		return window.performance.now();
-	} else {
-		return Date.now();
-	}
 };
 
 /**
@@ -50,12 +48,13 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'RemeasurableDecorator'
 
-		static propTypes = {
+		static propTypes = /** @lends moonstone/Remeasurable.RemeasurableDecorator.prototype */ {
 			/**
-			* Fuction to execute on the trigger event
+			* Function to execute on the trigger event. The actual name of this
+			* property is set in the config.
 			*
 			* @type {Function}
-			* @public
+			* @private
 			*/
 			[trigger]: PropTypes.func
 		}
@@ -118,17 +117,6 @@ const Remeasurable = (Wrapped) => {
 		}
 	};
 };
-
-/**
- * {@link ui/Remeasurable.Remeasurable} is a Higher-order Component which notifies a child of a
- * change in size from parent. This can then be used to trigger a new measurement. A `remeasure`
- * prop will be passed down to the wrapped component.
- *
- * @class Remeasurable
- * @memberof ui/Remeasurable
- * @hoc
- * @private
- */
 
 export default Remeasurable;
 export {Remeasurable, RemeasurableDecorator};
