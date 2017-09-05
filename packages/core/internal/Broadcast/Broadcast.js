@@ -64,7 +64,7 @@ class Broadcast extends React.Component {
 		* Name of channel to broadcast changes on.
 		*
 		* @type {String}
-		* @public
+		* @private
 		*/
 		channel: PropTypes.string.isRequired,
 
@@ -74,7 +74,7 @@ class Broadcast extends React.Component {
 	 	* Value that gets broadcast to the subcriber
 		*
 		* @type {*}
-		* @public
+		* @private
 		*/
 		value: PropTypes.any
 	}
