@@ -84,7 +84,7 @@ var RataDie = require("./RataDie.js");
  * @param {Object=} params parameters that govern the settings and behaviour of this Han RD date
  */
 var HanRataDie = function(params) {
-	this.rd = undefined;
+	this.rd = NaN;
 	if (params && params.cal) {
 		this.cal = params.cal;
 		RataDie.call(this, params);
@@ -114,7 +114,6 @@ HanRataDie.prototype.constructor = HanRataDie;
  * The difference between a zero Julian day and the first Han date
  * which is February 15, -2636 (Gregorian).
  * @private
- * @const
  * @type number
  */
 HanRataDie.epoch = 758325.5;

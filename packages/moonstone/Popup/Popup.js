@@ -49,15 +49,12 @@ const PopupBase = kind({
 
 	propTypes: /** @lends moonstone/Popup.PopupBase.prototype */ {
 		/**
-		 * The element(s) to be displayed in the body of the popup.
+		 * The contents to be displayed in the body of the popup.
 		 *
 		 * @type {Node}
 		 * @public
 		 */
-		children: PropTypes.oneOfType([
-			PropTypes.arrayOf(PropTypes.element),
-			PropTypes.element
-		]).isRequired,
+		children: PropTypes.node.isRequired,
 
 		/**
 		 * Specifies the container id.

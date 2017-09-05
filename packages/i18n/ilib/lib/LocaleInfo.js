@@ -73,36 +73,34 @@ var LocaleInfo = function(locale, options) {
 	var sync = true,
 	    loadParams = undefined;
 	
-	/* these are all the defaults. Essentially, en-US */
 	/**
 	  @private 
 	  @type {{
-		scripts:Array.<string>,
-		timezone:string,
-		units:string,
 		calendar:string,
 		clock:string,
 		currency:string,
+		delimiter: {quotationStart:string,quotationEnd:string,alternateQuotationStart:string,alternateQuotationEnd:string},
 		firstDayOfWeek:number,
-		weekendStart:number,
-		weekendEnd:number,
 		meridiems:string,
-		unitfmt: {long:string,short:string},
-		numfmt:Object.<{
-			currencyFormats:Object.<{common:string,commonNegative:string,iso:string,isoNegative:string}>,
-			script:string,
+		numfmt:{
+			currencyFormats:{common:string,commonNegative:string,iso:string,isoNegative:string},
 			decimalChar:string,
+			exponential:string,
 			groupChar:string,
-			prigroupSize:number,
-			secgroupSize:number,
 			negativenumFmt:string,
-			pctFmt:string,
 			negativepctFmt:string,
 			pctChar:string,
+			pctFmt:string,
+			prigroupSize:number,
 			roundingMode:string,
-			exponential:string,
-			digits:string
-		}>
+			script:string,
+			secgroupSize:number
+		},
+		timezone:string,
+		units:string,
+		weekendEnd:number,
+		weekendStart:number,
+		paperSizes:{regular:string}
 	  }}
 	*/
 	this.info = LocaleInfo.defaultInfo;
@@ -154,67 +152,45 @@ var LocaleInfo = function(locale, options) {
 	});
 };
 
-LocaleInfo.defaultInfo = /** @type {{
-	scripts:Array.<string>,
-	timezone:string,
-	units:string,
-	calendar:string,
-	clock:string,
-	currency:string,
-	firstDayOfWeek:number,
-	weekendStart:number,
-	weekendEnd:number,
-	meridiems:string,
-	unitfmt: {long:string,short:string},
-	numfmt:Object.<{
-		currencyFormats:Object.<{
-			common:string,
-			commonNegative:string,
-			iso:string,
-			isoNegative:string
-		}>,
-		script:string,
-		decimalChar:string,
-		groupChar:string,
-		prigroupSize:number,
-		secgroupSize:number,
-		negativenumFmt:string,
-		pctFmt:string,
-		negativepctFmt:string,
-		pctChar:string,
-		roundingMode:string,
-		exponential:string,
-		digits:string
-	}>
-}}*/ ilib.data.localeinfo;
+LocaleInfo.defaultInfo = ilib.data.localeinfo;
 LocaleInfo.defaultInfo = LocaleInfo.defaultInfo || {
-	"scripts": ["Latn"],
-    "timezone": "Etc/UTC",
-    "units": "metric",
     "calendar": "gregorian",
     "clock": "24",
     "currency": "USD",
+    "delimiter": {
+        "quotationStart": "“",
+        "quotationEnd": "”",
+        "alternateQuotationStart": "‘",
+        "alternateQuotationEnd": "’"
+    },
     "firstDayOfWeek": 1,
     "meridiems": "gregorian",
     "numfmt": {
-        "currencyFormats": {
-            "common": "{s}{n}",
-            "commonNegative": "{s}-{n}",
-            "iso": "{s}{n}",
-            "isoNegative": "{s}-{n}"
-        },
         "script": "Latn",
-        "decimalChar": ",",
-        "groupChar": ".",
+        "decimalChar": ".",
+        "groupChar": ",",
+        "pctChar": "%",
+        "exponential": "E",
         "prigroupSize": 3,
-        "secgroupSize": 0,
+        "currencyFormats": {
+            "common": "{s} {n}",
+            "commonNegative": "-{s} {n}",
+            "iso": "{s} {n}",
+            "isoNegative": "({s} {n})"
+        },
+        "negativenumFmt": "-{n}",
         "pctFmt": "{n}%",
         "negativepctFmt": "-{n}%",
-        "pctChar": "%",
         "roundingMode": "halfdown",
-        "exponential": "e",
-        "digits": ""
-    }
+        "useNative": false
+    },
+    "paperSizes": {
+        "regular": "A4"
+    },
+    "timezone": "Etc/UTC",
+    "units": "metric",
+    "weekendEnd": 0,
+    "weekendStart": 6
 };
 
 LocaleInfo.prototype = {
@@ -263,10 +239,6 @@ LocaleInfo.prototype = {
 	getUnits: function () {
 		return this.info.units;
 	},
-        
-        getUnitFormat: function () {
-                return this.info.unitfmt;
-        },
 	
 	/**
 	 * Return the name of the calendar that is commonly used in the given locale.
@@ -574,7 +546,28 @@ LocaleInfo.prototype = {
 	 */
 	getMeridiemsStyle: function () {
 		return this.info.meridiems || "gregorian";
-	}	
+	},	
+	/**
+	 * Return the default PaperSize information in this locale.
+	 * @returns {string} default PaperSize in this locale
+	 */
+	getPaperSize: function () {
+		return this.info.paperSizes.regular;
+	},
+	/**
+	 * Return the default Delimiter QuotationStart information in this locale.
+	 * @returns {string} default QuotationStart in this locale
+	 */
+	getDelimiterQuotationStart: function () {
+		return this.info.delimiter.quotationStart;
+	},
+	/**
+	 * Return the default Delimiter QuotationEnd information in this locale.
+	 * @returns {string} default QuotationEnd in this locale
+	 */
+	getDelimiterQuotationEnd: function () {
+		return this.info.delimiter.quotationEnd;
+	}
 };
 
 module.exports = LocaleInfo;

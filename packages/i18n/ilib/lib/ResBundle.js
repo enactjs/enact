@@ -375,11 +375,11 @@ ResBundle.prototype = {
 		return this.type;
 	},
 
-	/*
+	/**
 	 * @private
 	 * Pseudo-translate a string
 	 */
-	pseudo: function (str) {
+	_pseudo: function (str) {
 		if (!str) {
 			return undefined;
 		}
@@ -445,40 +445,41 @@ ResBundle.prototype = {
 		return ret;
 	},
 	
-	/*
+	/**
 	 * @private
 	 * Escape html characters in the output.
 	 */
-	escapeXml: function (str) {
+	_escapeXml: function (str) {
 		str = str.replace(/&/g, '&amp;');
 		str = str.replace(/</g, '&lt;');
 		str = str.replace(/>/g, '&gt;');
 		return str;
 	},
 
-	/*
+	/**
 	 * @private
 	 * @param {string} str the string to unescape
 	 */
-	unescapeXml: function (str) {
+	_unescapeXml: function (str) {
 		str = str.replace(/&amp;/g, '&');
 		str = str.replace(/&lt;/g, '<');
 		str = str.replace(/&gt;/g, '>');
 		return str;
 	},
 	
-	/*
+	/**
 	 * @private
 	 * Create a key name out of a source string. All this does so far is 
 	 * compress sequences of white space into a single space on the assumption
 	 * that this doesn't really change the meaning of the string, and therefore
 	 * all such strings that compress to the same thing should share the same
 	 * translation.
-	 * @param {string} source the source string to make a key out of
+	 * @param {null|string=} source the source string to make a key out of
 	 */
-	makeKey: function (source) {
+	_makeKey: function (source) {
+		if (!source) return undefined;
 		var key = source.replace(/\s+/gm, ' ');
-		return (this.type === "xml" || this.type === "html") ? this.unescapeXml(key) : key;
+		return (this.type === "xml" || this.type === "html") ? this._unescapeXml(key) : key;
 	},
 	
 	/**
@@ -526,13 +527,13 @@ ResBundle.prototype = {
 		var trans;
 		if (this.locale.isPseudo()) {
 			var str = source ? source : this.map[key];
-			trans = this.pseudo(str || key);
+			trans = this._pseudo(str || key);
 		} else {
-			var keyName = key || this.makeKey(source);
+			var keyName = key || this._makeKey(source);
 			if (typeof(this.map[keyName]) !== 'undefined') {
 				trans = this.map[keyName];
 			} else if (this.missing === "pseudo") {
-				trans = this.pseudo(source || key);
+				trans = this._pseudo(source || key);
 			} else if (this.missing === "empty") {
 				trans = "";
 			} else {
@@ -545,7 +546,7 @@ ResBundle.prototype = {
 				escapeMode = this.type;
 			}
 			if (escapeMode === "xml" || escapeMode === "html") {
-				trans = this.escapeXml(trans);
+				trans = this._escapeXml(trans);
 			} else if (escapeMode == "js" || escapeMode === "attribute") {
 				trans = trans.replace(/'/g, "\\\'").replace(/"/g, "\\\"");
 			}
@@ -593,7 +594,7 @@ ResBundle.prototype = {
 			return false;
 		}
 		
-		var keyName = key || this.makeKey(source);
+		var keyName = key || this._makeKey(source);
 		return typeof(this.map[keyName]) !== 'undefined';
 	},
 	

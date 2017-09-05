@@ -296,7 +296,7 @@ DateRngFmt.prototype = {
 	 * @return {string} a date range formatted for the locale
 	 */
 	format: function (start, end) {
-		var startRd, endRd, fmt = "", yearTemplate, monthTemplate, dayTemplate;
+		var startRd, endRd, fmt = "", yearTemplate, monthTemplate, dayTemplate, formats;
 		
 		if (typeof(start) !== 'object' || !start.getCalendar || start.getCalendar() !== this.calName ||
 			typeof(end) !== 'object' || !end.getCalendar || end.getCalendar() !== this.calName) {
@@ -349,9 +349,10 @@ DateRngFmt.prototype = {
 			fmt = new IString(this.dateFmt._getFormat(this.dateFmt.formats.range, "c30", this.length));
 		}
 
-		yearTemplate = this.dateFmt._tokenize(this.dateFmt._getFormat(this.dateFmt.formats.date, "y", this.length) || "yyyy");
-		monthTemplate = this.dateFmt._tokenize(this.dateFmt._getFormat(this.dateFmt.formats.date, "m", this.length) || "MM");
-		dayTemplate = this.dateFmt._tokenize(this.dateFmt._getFormat(this.dateFmt.formats.date, "d", this.length) || "dd");
+		formats = this.dateFmt.formats.date;
+		yearTemplate = this.dateFmt._tokenize(this.dateFmt._getFormatInternal(formats, "y", this.length) || "yyyy");
+		monthTemplate = this.dateFmt._tokenize(this.dateFmt._getFormatInternal(formats, "m", this.length) || "MM");
+		dayTemplate = this.dateFmt._tokenize(this.dateFmt._getFormatInternal(formats, "d", this.length) || "dd");
 		
 		/*
 		console.log("fmt is " + fmt.toString());

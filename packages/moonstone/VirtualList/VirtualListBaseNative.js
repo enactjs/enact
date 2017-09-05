@@ -431,7 +431,8 @@ class VirtualListCoreNative extends Component {
 			{firstIndex} = this.state,
 			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
-			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex));
+			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
+			dataSizeDiff = dataSize - this.curDataSize;
 		let newFirstIndex = firstIndex;
 
 		this.maxFirstIndex = dataSize - numOfItems;
@@ -448,7 +449,11 @@ class VirtualListCoreNative extends Component {
 			// we call `scrollTo` to create DOM for it.
 			this.props.cbScrollTo({index: this.preservedIndex, animate: false});
 		} else if (wasFirstIndexMax) {
-			newFirstIndex = (dimensionToExtent > 1) ? this.maxFirstIndex : Math.min(this.maxFirstIndex, firstIndex + (overhang - 1));
+			if (dimensionToExtent > 1 && dataSizeDiff > 0 && dataSizeDiff < dimensionToExtent) {
+				newFirstIndex = this.maxFirstIndex;
+			} else {
+				newFirstIndex = Math.min(this.maxFirstIndex, firstIndex + (overhang - 1) * dimensionToExtent);
+			}
 		} else {
 			newFirstIndex = Math.min(firstIndex, this.maxFirstIndex);
 		}
@@ -619,6 +624,7 @@ class VirtualListCoreNative extends Component {
 
 	scrollToPosition (x, y) {
 		const node = this.containerRef;
+
 		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 	}
 
@@ -690,20 +696,27 @@ class VirtualListCoreNative extends Component {
 	calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
 		const
 			{pageScroll} = this.props,
+			{numOfItems} = this.state,
 			{primary} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
-		if (!isNaN(focusedIndex) && (focusedIndex !== this.lastFocusedIndex || this.restoreLastFocused)) {
+		if (!isNaN(focusedIndex)) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
+			if (numOfItems > 0 && focusedIndex % numOfItems !== this.lastFocusedIndex % numOfItems) {
+				const node = this.contentRef.children[this.lastFocusedIndex % numOfItems];
+				node.blur();
+			}
 			this.lastFocusedIndex = focusedIndex;
 
 			if (primary.clientSize >= primary.itemSize) {
 				if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
 					gridPosition.primaryPosition -= pageScroll ? 0 : offsetToClientEnd;
 				} else if (gridPosition.primaryPosition >= scrollPosition) { // inside of client
-					gridPosition.primaryPosition = scrollPosition;
+					// This code uses the trick to change the target position slightly which will not affect the actual result
+					// since a browser ignore `scrollTo` method if the target position is same as the current position.
+					gridPosition.primaryPosition = scrollPosition + (this.scrollPosition === scrollPosition ? 0.1 : 0);
 				} else { // backward over
 					gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
 				}
@@ -805,6 +818,12 @@ class VirtualListCoreNative extends Component {
 					break;
 				}
 			}
+
+			// If there is no item which could get focus forward,
+			// we need to set restriction option to `self-first`.
+			if (nextIndex === -1) {
+				this.setRestrict(false);
+			}
 		} else if (isBackward) {
 			// See if the next item is spottable then delegate scroll to onFocus handler
 			if (currentIndex > 0 && !data[currentIndex - 1].disabled) {
@@ -816,6 +835,12 @@ class VirtualListCoreNative extends Component {
 					nextIndex = i;
 					break;
 				}
+			}
+
+			// If there is no item which could get focus backward,
+			// we need to set restriction option to `self-first`.
+			if (nextIndex === -1) {
+				this.setRestrict(false);
 			}
 		} else {
 			return false;

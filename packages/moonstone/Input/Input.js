@@ -20,7 +20,7 @@ import InputDecoratorIcon from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
 
 const calcAriaLabel = function (title, type, value = '') {
-	const hint = $L('input field');
+	const hint = $L('Input field');
 
 	if (type === 'password' && value) {
 		const character = value.length > 1 ? $L('characters') : $L('character');

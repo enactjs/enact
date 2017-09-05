@@ -445,7 +445,8 @@ class VirtualListCore extends Component {
 			{firstIndex} = this.state,
 			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
-			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex));
+			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
+			dataSizeDiff = dataSize - this.curDataSize;
 		let newFirstIndex = firstIndex;
 
 		this.maxFirstIndex = dataSize - numOfItems;
@@ -464,7 +465,11 @@ class VirtualListCore extends Component {
 			// we call `scrollTo` to create DOM for it.
 			this.props.cbScrollTo({index: this.preservedIndex, animate: false});
 		} else if (wasFirstIndexMax) {
-			newFirstIndex = (dimensionToExtent > 1) ? this.maxFirstIndex : Math.min(this.maxFirstIndex, firstIndex + (overhang - 1));
+			if (dimensionToExtent > 1 && dataSizeDiff > 0 && dataSizeDiff < dimensionToExtent) {
+				newFirstIndex = this.maxFirstIndex;
+			} else {
+				newFirstIndex = Math.min(this.maxFirstIndex, firstIndex + (overhang - 1) * dimensionToExtent);
+			}
 		} else {
 			newFirstIndex = Math.min(firstIndex, this.maxFirstIndex);
 		}
@@ -705,13 +710,18 @@ class VirtualListCore extends Component {
 	calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
 		const
 			{pageScroll} = this.props,
+			{numOfItems} = this.state,
 			{primary} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
-		if (!isNaN(focusedIndex) && (focusedIndex !== this.lastFocusedIndex || this.restoreLastFocused)) {
+		if (!isNaN(focusedIndex)) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
+			if (numOfItems > 0 && focusedIndex % numOfItems !== this.lastFocusedIndex % numOfItems) {
+				const node = this.containerRef.children[this.lastFocusedIndex % numOfItems];
+				node.blur();
+			}
 			this.nodeIndexToBeFocused = null;
 			this.lastFocusedIndex = focusedIndex;
 
@@ -824,6 +834,12 @@ class VirtualListCore extends Component {
 					break;
 				}
 			}
+
+			// If there is no item which could get focus forward,
+			// we need to set restriction option to `self-first`.
+			if (nextIndex === -1) {
+				this.setRestrict(false);
+			}
 		} else if (isBackward) {
 			// See if the next item is spottable then delegate scroll to onFocus handler
 			if (currentIndex > 0 && !data[currentIndex - 1].disabled) {
@@ -835,6 +851,12 @@ class VirtualListCore extends Component {
 					nextIndex = i;
 					break;
 				}
+			}
+
+			// If there is no item which could get focus backward,
+			// we need to set restriction option to `self-first`.
+			if (nextIndex === -1) {
+				this.setRestrict(false);
 			}
 		} else {
 			return false;
