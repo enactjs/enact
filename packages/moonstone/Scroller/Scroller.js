@@ -479,7 +479,7 @@ class ScrollerBase extends Component {
 const Scroller = SpotlightContainerDecorator(
 	{restrict: 'self-first'},
 	RemeasurableDecorator(
-		{trigger: 'onScrollbarVisabilityChange'},
+		{trigger: 'onScrollbarVisibilityChange'},
 		Scrollable(
 			ScrollerBase
 		)

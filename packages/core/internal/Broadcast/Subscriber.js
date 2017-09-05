@@ -1,7 +1,6 @@
 /**
- * Exports the {@link core/Subscriber.Subscriber}. Component that will listen to
- * `Broadcast` Component changes in value.
- * The default export is {@link core/Subscriber.Subscriber}.
+ * Exports the {@link core/Subscriber.Subscriber} component that will listen to `Broadcast`
+ * Component changes in value. The default export is {@link core/Subscriber.Subscriber}.
  *
  * This code is taken and modified from https://github.com/ReactTraining/react-broadcast
  * from author Michael Jackson.

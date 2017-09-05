@@ -1,9 +1,8 @@
 /**
- * Exports the {@link core/Broadcast.Broadcast}. A `Broadcast` provides a generic way for descendants to "subscribe"
- * to some value that changes over time, bypassing any intermediate
- * `shouldComponentUpdate`'s in the hierarchy. It puts all subscription
- * functions on context.broadcasts, keyed by "channel".
- * The default export is {@link core/Broadcast.Broadcast}.
+ * Exports the {@link core/Broadcast.Broadcast} component. A `Broadcast` provides a generic way for
+ * descendants to "subscribe" to some value that changes over time, bypassing any intermediate
+ * `shouldComponentUpdate`'s in the hierarchy. It puts all subscription functions on
+ * context.broadcasts, keyed by "channel". The default export is {@link core/Broadcast.Broadcast}.
  *
  * To use it, a subscriber must opt-in to context.broadcasts. See the
  * `Subscriber` component for a reference implementation.
