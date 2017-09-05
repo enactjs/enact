@@ -327,7 +327,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.onSpotlightRight;
 			delete rest.onSpotlightUp;
 
-			if (tabIndex == null) {
+			if (tabIndex == null && spottable) {
 				tabIndex = -1;
 			}
 
