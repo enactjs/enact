@@ -515,6 +515,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				} else if (canScrollHorizontally) {
 					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				}
+
 				direction = Math.sign(delta);
 
 				Spotlight.setPointerMode(false);
@@ -522,14 +523,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusedItem.blur();
 				}
 
-				this.childRef.setContainerDisabled(true);
-
 				if (direction !== this.wheelDirection) {
 					this.isScrollAnimationTargetAccumulated = false;
 					this.wheelDirection = direction;
 				}
 
 				if (delta !== 0) {
+					this.childRef.setContainerDisabled(true);
 					this.scrollToAccumulatedTarget(delta, canScrollVertically);
 				}
 			}
