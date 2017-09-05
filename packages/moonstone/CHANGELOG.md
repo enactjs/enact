@@ -25,7 +25,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/VirtualList` to show scroll thumb when preserve item is focused
+- `moonstone/VirtualList` to show scroll thumb when a preserved item is focused in a Panel
 - `moonstone/Scroller` to navigate properly with 5-way when expandable child is opened
 - `moonstone/VirtualList` to stop scrolling when a focus is moved on an item from paging controls or outside
 - `moonstone/VirtualList` to move out with 5-way navigation when the 1st or the last item is disabled
