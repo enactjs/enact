@@ -9,6 +9,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/Popup` callback property `onShow` which fires after popup appears for both animating and non-animating popups
+- `moonstone/Scrollable` and `moonstone/ScrollableNative` callback property `onScrollbarVisabilityChange` that fires when a scollbar appears or disappears.
 
 ### Changed
 
@@ -30,6 +31,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` not to show invisible items
 - `moonstone/IconButton` Tooltip position when disabled
 - `moonstone/VideoPlayer` to display feedback tooltip correctly when navigating in 5-way
+- `moonstone/Marquee` to recalculate inside `moonstone/Scroller` and `moonstone/SelectableItem` by bypassing `shouldComponentUpdate`
+
 
 ## [1.7.0] - 2017-08-23
 
