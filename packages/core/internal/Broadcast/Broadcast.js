@@ -1,9 +1,9 @@
 /**
- * Exports the {@link ui/Broadcast.Broadcast}. A `Broadcast` provides a generic way for descendants to "subscribe"
+ * Exports the {@link core/Broadcast.Broadcast}. A `Broadcast` provides a generic way for descendants to "subscribe"
  * to some value that changes over time, bypassing any intermediate
  * `shouldComponentUpdate`'s in the hierarchy. It puts all subscription
  * functions on context.broadcasts, keyed by "channel".
- * The default export is {@link ui/Broadcast.Broadcast}.
+ * The default export is {@link core/Broadcast.Broadcast}.
  *
  * To use it, a subscriber must opt-in to context.broadcasts. See the
  * `Subscriber` component for a reference implementation.
@@ -11,8 +11,8 @@
  * This code is taken and modified from https://github.com/ReactTraining/react-broadcast
  * from author Michael Jackson.
  *
- * @module ui/Broadcast
- * @public
+ * @module core/Broadcast
+ * @private
  */
 import invariant from 'invariant';
 import React from 'react';
@@ -22,7 +22,7 @@ import PropTypes from 'prop-types';
  * `createBroadcast` is used by Broadcast to create and keep track of listeners.
  *
  * @class createBroadcast
- * @memberof ui/Broadcast
+ * @memberof core/Broadcast
  * @private
  */
 const createBroadcast = (initialState) => {
@@ -56,8 +56,8 @@ const createBroadcast = (initialState) => {
  * at `shouldComponentUpdate`.
  *
  * @class Broadcast
- * @memberof ui/Broadcast
- * @public
+ * @memberof core/Broadcast
+ * @private
  */
 class Broadcast extends React.Component {
 	static propTypes = {
