@@ -167,12 +167,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			onScroll: PropTypes.func,
 
 			/**
-			 * Called when scrollbar visability changes
+			 * Called when scrollbar visibility changes
 			 *
 			 * @type {Function}
 			 * @public
 			 */
-			onScrollbarVisabilityChange: PropTypes.func,
+			onScrollbarVisibilityChange: PropTypes.func,
 
 			/**
 			 * Called when scroll starts
@@ -992,8 +992,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				);
 
 			if (isVisibilityChanged) {
-				if (this.props.onScrollbarVisabilityChange) {
-					this.props.onScrollbarVisabilityChange();
+				if (this.props.onScrollbarVisibilityChange) {
+					this.props.onScrollbarVisibilityChange();
 				}
 				// one or both scrollbars have changed visibility
 				this.setState({
@@ -1121,7 +1121,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.focusableScrollbar;
 			delete props.horizontalScrollbar;
 			delete props.onScroll;
-			delete props.onScrollbarVisabilityChange;
+			delete props.onScrollbarVisibilityChange;
 			delete props.onScrollStart;
 			delete props.onScrollStop;
 			delete props.style;
