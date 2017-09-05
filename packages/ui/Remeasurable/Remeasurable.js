@@ -1,6 +1,7 @@
 /**
- * Exports the {@link ui/Remeasurable.RemeasurableDecorator} Higher-order Component (HOC).
- * Adds a the ability to broadcast remeasure changes based on a callback. The default export is {@link ui/Remeasurable.Remeasurable}.
+ * Exports the {@link ui/Remeasurable.RemeasurableDecorator} Higher-order Component (HOC). Adds the
+ * ability to broadcast remeasure changes based on a callback. The default export is
+ * {@link ui/Remeasurable.Remeasurable}.
  *
  * @module ui/Remeasurable
  * @private
@@ -32,8 +33,8 @@ const perfNow = function () {
 };
 
 /**
- * {@link ui/Remeasurable.RemeasurableDecorator} is a Higher-order Component which
- * Adds a the ability to broadcast remeasure changes based on a callback.
+ * {@link ui/Remeasurable.RemeasurableDecorator} is a Higher-order Component which adds the ability
+ * to broadcast remeasure changes based on a callback.
  *
  * @class RemeasurableDecorator
  * @memberof ui/Remeasurable
@@ -91,9 +92,9 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 
 /**
- * {@link ui/Remeasurable.Remeasurable} is a Higher-order Component which
- * notifies a child of a change in size from parent. This can then be used to trigger
- * a new measurement. A `remeasure` prop will be passed down to the wrapped component.
+ * {@link ui/Remeasurable.Remeasurable} is a Higher-order Component which notifies a child of a
+ * change in size from parent. This can then be used to trigger a new measurement. A `remeasure`
+ * prop will be passed down to the wrapped component.
  *
  * @class Remeasurable
  * @memberof ui/Remeasurable
@@ -119,9 +120,9 @@ const Remeasurable = (Wrapped) => {
 };
 
 /**
- * {@link ui/Remeasurable.Remeasurable} is a Higher-order Component which
- * notifies a child of a change in size from parent. This can then be used to trigger
- * a new measurement. A `remeasure` prop will be passed down to the wrapped component.
+ * {@link ui/Remeasurable.Remeasurable} is a Higher-order Component which notifies a child of a
+ * change in size from parent. This can then be used to trigger a new measurement. A `remeasure`
+ * prop will be passed down to the wrapped component.
  *
  * @class Remeasurable
  * @memberof ui/Remeasurable
