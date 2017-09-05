@@ -18,6 +18,7 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 
 import css from './Scroller.less';
 import Scrollable from './Scrollable';
+import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 
 const
 	dataContainerDisabledAttribute = 'data-container-disabled',
@@ -485,8 +486,11 @@ class ScrollerBase extends Component {
  */
 const Scroller = SpotlightContainerDecorator(
 	{restrict: 'self-first'},
-	Scrollable(
-		ScrollerBase
+	RemeasurableDecorator(
+		{trigger: 'onScrollbarVisibilityChange'},
+		Scrollable(
+			ScrollerBase
+		)
 	)
 );
 
