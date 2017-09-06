@@ -405,7 +405,8 @@ const PickerBase = class extends React.Component {
 
 	componentWillUnmount () {
 		this.emulateMouseUp.stop();
-
+		this.throttleInc.stop();
+		this.throttleDec.stop();
 		if (this.props.joined) {
 			this.containerRef.removeEventListener('wheel', this.handleWheel);
 		}
@@ -547,6 +548,14 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
+	throttleInc = new Job(() => {
+		this.handleIncClick();
+	}, 200)
+
+	throttleDec = new Job(() => {
+		this.handleDecClick();
+	}, 200)
+
 	handleKeyDown = (ev) => {
 		const {
 			joined,
@@ -563,14 +572,16 @@ const PickerBase = class extends React.Component {
 			const direction = getDirection(keyCode);
 
 			const directions = {
-				up: this.handleIncClick,
-				down: this.handleDecClick,
-				right: this.handleIncClick,
-				left: this.handleDecClick
+				up: this.throttleInc.throttle,
+				down: this.throttleDec.throttle,
+				right: this.throttleInc.throttle,
+				left: this.throttleDec.throttle
 			};
 
 			const isVertical = orientation === 'vertical' && (isUp(keyCode) || isDown(keyCode));
 			const isHorizontal = orientation === 'horizontal' && (isRight(keyCode) || isLeft(keyCode));
+
+			console.log('keyDown');
 
 			if (isVertical || isHorizontal) {
 				directions[direction]();
