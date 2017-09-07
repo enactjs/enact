@@ -476,7 +476,7 @@ class VirtualListCore extends Component {
 		const
 			{overhang} = props,
 			{firstIndex} = this.state,
-			{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, threshold} = this,
+			{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, scrollPosition, threshold} = this,
 			{gridSize} = primary;
 		let newFirstIndex = firstIndex;
 
@@ -488,12 +488,14 @@ class VirtualListCore extends Component {
 				const
 					maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
 					maxOfMin = maxPos - threshold.base,
-					numOfUpperLine = Math.floor(overhang / 2);
+					numOfUpperLine = Math.floor(overhang / 2),
+					firstIndexFromPosition = Math.floor(scrollPosition / gridSize),
+					expectedFirstIndex = Math.max(0, firstIndexFromPosition - numOfUpperLine);
 
 				// To navigate with 5way, we need to adjust firstIndex to the next line
 				// since at the bottom we have num of overhang lines for upper side but none for bottom side
 				// So we add numOfUpperLine at the top and rest lines at the bottom
-				newFirstIndex = Math.min(maxFirstIndex, firstIndex + (overhang - numOfUpperLine) * dimensionToExtent);
+				newFirstIndex = Math.min(maxFirstIndex, expectedFirstIndex * dimensionToExtent);
 
 				// We need to update threshold also since we moved the firstIndex
 				threshold.max = Math.min(maxPos, threshold.max + gridSize);
