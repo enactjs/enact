@@ -108,8 +108,9 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
-			if (this.marqueeState === STATE.ready) {
+			if (this.marqueeState === STATE.ready || this.marqueeState === STATE.active) {
 				this.dispatch('start');
+				this.marqueeState = STATE.active;
 			}
 		}
 
