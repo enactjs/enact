@@ -4,6 +4,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Fixed
+
+- `moonstone/Picker` from moving scroller when pressing 5-way keys in `joined` Picker
+
+## [Unreleased]
+
 ### Deprecated
 
 ### Added
