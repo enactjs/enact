@@ -38,6 +38,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/MarqueeDecorator` to work with synchronized `marqueeOn` `'render'` and hovering as well as `marqueOn` `'hover'` when moving rapidly among synchronized marquees
 - `moonstone/Input` aria-label for translation
 - `moonstone/Marquee` to recalculate inside `moonstone/Scroller` and `moonstone/SelectableItem` by bypassing `shouldComponentUpdate`
+- `moonstone/Picker` to marquee when incrementing and decrementing values with the prop `noAnimation`
 
 
 ## [1.7.0] - 2017-08-23
