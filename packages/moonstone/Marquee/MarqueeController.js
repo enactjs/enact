@@ -104,6 +104,13 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.controlled = [];
+			this.marqueeState = STATE.inactive;
+		}
+
+		componentDidUpdate () {
+			if (this.marqueeState === STATE.ready) {
+				this.dispatch('start');
+			}
 		}
 
 		getChildContext () {
@@ -257,6 +264,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			this.controlled.forEach(c => {
 				c.state = state;
 			});
+			this.marqueeState = state;
 		}
 
 		/*

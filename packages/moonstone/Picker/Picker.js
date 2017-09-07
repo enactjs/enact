@@ -10,11 +10,12 @@ import clamp from 'ramda/src/clamp';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {forward, handle} from '@enact/core/handle';
 
 import {MarqueeController} from '../Marquee';
 import {validateRange} from '../internal/validators';
 
-import PickerCore, {PickerItem} from '../internal/Picker';
+import {PickerCore, PickerItem} from '../internal/Picker';
 import SpottablePicker from './SpottablePicker';
 
 /**
@@ -163,6 +164,25 @@ const PickerBase = kind({
 
 	defaultProps: {
 		value: 0
+	},
+
+	contextTypes: {
+		/**
+		 * A {@link moonstone/Marquee.MarqueeDecorator} function that dispatches marqueeing.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		start: PropTypes.func
+	},
+
+	handlers: {
+		onMouseOver: handle(
+			forward('onMouseOver'),
+			(ev, props, {start}) => {
+				start();
+			}
+		)
 	},
 
 	computed: {
