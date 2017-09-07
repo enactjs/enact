@@ -460,7 +460,7 @@ class VirtualListCoreNative extends Component {
 		const
 			{overhang} = props,
 			{firstIndex} = this.state,
-			{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, threshold} = this,
+			{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, scrollPosition, threshold} = this,
 			{gridSize} = primary;
 		let newFirstIndex = firstIndex;
 
