@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/styles/mixins.less` mixins: `.moon-spotlight-margin()` and `.moon-spotlight-padding()`
+
 ### Changed
 
 ### Fixed
@@ -20,7 +22,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/styles/mixins.less` mixins: `.moon-spotlight-margin()` and `.moon-spotlight-padding()`
 - `moonstone/Popup` callback property `onShow` which fires after popup appears for both animating and non-animating popups
 
 ### Changed
