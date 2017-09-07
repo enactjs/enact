@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Fixed
 
 - `spotlight/Spottable` to clean up internal spotted state when blurred within `onSpotlightDisappear` handler
+- `spotlight` to not try to focus something when the window is activated unless the window has been previously blurred
 
 ## [1.7.0] - 2017-08-23
 
