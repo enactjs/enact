@@ -87,11 +87,6 @@ var CaseMapper = function (options) {
 			var upper = "İI";
 			this._setUpMap(lower, upper);
 			break;
-		case "fr":
-			if (this.up && this.locale.getRegion() !== "CA") {
-				this._setUpMap("àáâãäçèéêëìíîïñòóôöùúûü", "AAAAACEEEEIIIINOOOOUUUU");
-			}
-			break;
 	}
 	
 	if (ilib._getBrowser() === "ie") {

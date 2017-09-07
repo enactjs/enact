@@ -153,7 +153,6 @@ LengthUnit.prototype.getMeasure = function() {
  * measure in the other system, in this case, mph. The formatted result should
  * appear as "37.3 mph". 
  * 
- * @abstract
  * @param {string} locale current locale string
  * @returns {Measurement} a new instance that is converted to locale
  */

@@ -77,7 +77,7 @@ var RataDie = require("./RataDie.js");
  */
 var EthiopicRataDie = function(params) {
 	this.cal = params && params.cal || new EthiopicCal();
-	this.rd = undefined;
+	this.rd = NaN;
 	RataDie.call(this, params);
 };
 

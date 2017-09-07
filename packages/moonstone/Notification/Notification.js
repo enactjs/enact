@@ -40,15 +40,12 @@ const NotificationBase = kind({
 		]).isRequired,
 
 		/**
-		 * The element(s) to be displayed in the body of the Notification.
+		 * The contents to be displayed in the body of the Notification.
 		 *
 		 * @type {Node}
 		 * @public
 		 */
-		children: PropTypes.oneOfType([
-			PropTypes.arrayOf(PropTypes.element),
-			PropTypes.element
-		]),
+		children: PropTypes.node,
 
 		/**
 		 * When `true`, the popup will not close when the user presses `ESC` key.

@@ -104,7 +104,7 @@ var AddressFmt = function(options) {
 		locale: this.locale,
 		sync: this.sync, 
 		loadParams: this.loadParams, 
-		callback: /** @type function(Object?):undefined */ ilib.bind(this, function(info) {
+		callback: ilib.bind(this, function(info) {
 			if (!info || JSUtils.isEmpty(info)) {
 				// load the "unknown" locale instead
 				Utils.loadData({
@@ -113,7 +113,7 @@ var AddressFmt = function(options) {
 					locale: new Locale("XX"),
 					sync: this.sync, 
 					loadParams: this.loadParams, 
-					callback: /** @type function(Object?):undefined */ ilib.bind(this, function(info) {
+					callback: ilib.bind(this, function(info) {
 						this.info = info;
 						this._init();
 						if (options && typeof(options.onLoad) === 'function') {
@@ -159,7 +159,7 @@ AddressFmt.prototype._init = function () {
  * country is on the last line, but in China the country is usually on the first line.
  *
  * @param {Address} address Address to format
- * @eturns {string} Returns a string containing the formatted address
+ * @returns {string} Returns a string containing the formatted address
  */
 AddressFmt.prototype.format = function (address) {
 	var ret, template, other, format;

@@ -75,7 +75,7 @@ var IslamicCal = require("./IslamicCal.js");
  */
 var IslamicRataDie = function(params) {
 	this.cal = params && params.cal || new IslamicCal();
-	this.rd = undefined;
+	this.rd = NaN;
 	RataDie.call(this, params);
 };
 
@@ -87,7 +87,6 @@ IslamicRataDie.prototype.constructor = IslamicRataDie;
  * The difference between a zero Julian day and the first Islamic date
  * of Friday, July 16, 622 CE Julian. 
  * @private
- * @const
  * @type number
  */
 IslamicRataDie.prototype.epoch = 1948439.5;

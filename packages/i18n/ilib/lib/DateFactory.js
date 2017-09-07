@@ -110,6 +110,7 @@ var DateFactory = function(options) {
 		sync = true,
 		obj;
 
+
 	if (options) {
 		if (options.locale) {
 			locale = (typeof(options.locale) === 'string') ? new Locale(options.locale) : options.locale;
@@ -130,16 +131,16 @@ var DateFactory = function(options) {
 		new LocaleInfo(locale, {
 			sync: sync,
 			loadParams: options && options.loadParams,
-			onLoad: function(info) {
-				type = info.getCalendar();
-				
-				obj = DateFactory._init(type, options);
-				
-				if (options && typeof(options.onLoad) === 'function') {
-					options.onLoad(obj);
-				}
-			}
-		});
+			// Note: ENYO-4578
+			onLoad: function onLoad(info) {
+       			type = info.getCalendar();
+                obj = DateFactory._init(type, options);
+
+                if (options && typeof options.onLoad === 'function') {
+          			options.onLoad(obj);
+        		}
+      		}
+    	});
 	} else {
 		obj = DateFactory._init(type, options);
 	}
@@ -221,6 +222,16 @@ DateFactory._dateToIlib = function(inDate, timezone, locale) {
 	if (inDate instanceof IDate) {
 		return inDate;
 	}
+	if (typeof(inDate) === 'number') {
+		return DateFactory({
+			unixtime: inDate,
+			timezone: timezone,
+			locale: locale
+		});
+	}
+	if (typeof(inDate) === 'string') {
+		inDate = new Date(inDate);
+	}
 	if (JSUtils.isDate(inDate)) {
 		return DateFactory({
 			unixtime: inDate.getTime(),
@@ -235,18 +246,8 @@ DateFactory._dateToIlib = function(inDate, timezone, locale) {
 			locale: locale
 		});
 	}
-	if (typeof(inDate) === 'number') {
-		return DateFactory({
-			unixtime: inDate,
-			timezone: timezone,
-			locale: locale
-		});
-	}
 	if (typeof(inDate) === 'object') {
 		return DateFactory(inDate);
-	}
-	if (typeof(inDate) === 'string') {
-		inDate = new Date(inDate);
 	}
 	return DateFactory({
 		unixtime: inDate.getTime(),

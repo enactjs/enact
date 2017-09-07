@@ -14,7 +14,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import warning from 'warning';
 
-import {contextTypes as contextTypesRemeasurable} from '../Remeasurable';
 /**
  * Default config for {@link ui/Toggleable.Toggleable}
  *
@@ -117,9 +116,6 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: false
 		}
 
-		static childContextTypes = contextTypesRemeasurable
-		static contextTypes = contextTypesRemeasurable
-
 		constructor (props) {
 			super(props);
 			let active = props[defaultPropKey];
@@ -135,14 +131,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.state = {
 				active,
-				controlled,
-				remeasure: null
-			};
-		}
-
-		getChildContext () {
-			return {
-				remeasure: this.state.remeasure
+				controlled
 			};
 		}
 
@@ -160,15 +149,6 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				);
 			}
 		}
-
-		componentWillUpdate (nextProps, nextState, nextContext) {
-			if (nextContext.remeasure !== this.context.remeasure || nextState.active !== this.state.active) {
-				this.setState((prevState) => ({
-					remeasure: !prevState.remeasure
-				}));
-			}
-		}
-
 
 		handle = handle.bind(this)
 

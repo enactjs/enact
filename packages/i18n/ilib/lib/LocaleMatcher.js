@@ -103,7 +103,7 @@ var LocaleMatcher = function(options) {
 			})
 		});
 	} else {
-		this.info = /** @type {Object.<string,string>} */ ilib.data.likelylocales;
+		this.info = ilib.data.likelylocales;
 	}
 };
 
