@@ -2,16 +2,11 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
-
-### Deprecated
-
-### Added
+## [1.8.0] - 2017-09-07
 
 ### Changed
-- `ui/Holdable` and `ui/Changeable` to be PureComponents to reduce the amount of updates
 
-### Fixed
+- `ui/Holdable` and `ui/Changeable` to be PureComponents to reduce the number of updates
 
 ## [1.7.0] - 2017-08-23
 
