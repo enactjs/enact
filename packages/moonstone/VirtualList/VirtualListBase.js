@@ -237,16 +237,6 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	shouldComponentUpdate (nextProps, nextState) {
-		if (!this.restoreLastFocused &&
-			(this.props.dataSize > 0 && this.props.dataSize !== nextProps.dataSize) &&
-			(this.state.numOfItems === nextState.numOfItems) &&
-			(nextState.firstIndex + nextState.numOfItems) < nextProps.dataSize) {
-			return false;
-		}
-		return true;
-	}
-
 	componentDidUpdate () {
 		this.restoreFocus();
 	}
@@ -455,7 +445,8 @@ class VirtualListCore extends Component {
 			{firstIndex} = this.state,
 			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
-			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex));
+			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
+			dataSizeDiff = dataSize - this.curDataSize;
 		let newFirstIndex = firstIndex;
 
 		this.maxFirstIndex = dataSize - numOfItems;
@@ -465,23 +456,56 @@ class VirtualListCore extends Component {
 
 		// reset children
 		this.cc = [];
+		this.calculateScrollBounds(props);
+		this.updateMoreInfo(dataSize, scrollPosition);
 
-		// Adjust scroll position
 		if (this.restoreLastFocused &&
 			numOfItems > 0 &&
 			(this.preservedIndex < moreInfo.firstVisibleIndex || this.preservedIndex > moreInfo.lastVisibleIndex)) {
 			// If we need to restore last focus and the index is beyond the screen,
 			// we call `scrollTo` to create DOM for it.
 			this.props.cbScrollTo({index: this.preservedIndex, animate: false});
-		} else if (wasFirstIndexMax) {
-			newFirstIndex = this.maxFirstIndex;
 		} else {
-			newFirstIndex = Math.min(firstIndex, this.maxFirstIndex);
+			newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
 		}
 
 		this.setState({firstIndex: newFirstIndex, numOfItems});
-		this.calculateScrollBounds(props);
-		this.updateMoreInfo(dataSize, scrollPosition);
+	}
+
+	calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff) {
+		const
+			{overhang} = props,
+			{firstIndex} = this.state,
+			{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, scrollPosition, threshold} = this,
+			{gridSize} = primary;
+		let newFirstIndex = firstIndex;
+
+		if (wasFirstIndexMax && dataSizeDiff > 0) { // If dataSize increased from bottom, we need adjust firstIndex
+			// If this is a gridlist and dataSizeDiff is smaller than 1 line, we are adjusting firstIndex without threshold change.
+			if (dimensionToExtent > 1 &&  dataSizeDiff < dimensionToExtent) {
+				newFirstIndex = maxFirstIndex;
+			} else { // For other bottom adding case, we need to update firstIndex and threshold.
+				const
+					maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
+					maxOfMin = maxPos - threshold.base,
+					numOfUpperLine = Math.floor(overhang / 2),
+					firstIndexFromPosition = Math.floor(scrollPosition / gridSize),
+					expectedFirstIndex = Math.max(0, firstIndexFromPosition - numOfUpperLine);
+
+				// To navigate with 5way, we need to adjust firstIndex to the next line
+				// since at the bottom we have num of overhang lines for upper side but none for bottom side
+				// So we add numOfUpperLine at the top and rest lines at the bottom
+				newFirstIndex = Math.min(maxFirstIndex, expectedFirstIndex * dimensionToExtent);
+
+				// We need to update threshold also since we moved the firstIndex
+				threshold.max = Math.min(maxPos, threshold.max + gridSize);
+				threshold.min = Math.min(maxOfMin, threshold.max - gridSize);
+			}
+		} else { // Other cases, we can keep the min value between firstIndex and maxFirstIndex. No need to change threshold
+			newFirstIndex = Math.min(firstIndex, maxFirstIndex);
+		}
+
+		return newFirstIndex;
 	}
 
 	calculateScrollBounds (props) {
@@ -511,7 +535,7 @@ class VirtualListCore extends Component {
 		this.syncThreshold(maxPos);
 
 		if (this.scrollPosition > maxPos) {
-			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}});
+			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
 		}
 	}
 
@@ -715,13 +739,18 @@ class VirtualListCore extends Component {
 	calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
 		const
 			{pageScroll} = this.props,
+			{numOfItems} = this.state,
 			{primary} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
-		if (!isNaN(focusedIndex) && (focusedIndex !== this.lastFocusedIndex || this.restoreLastFocused)) {
+		if (!isNaN(focusedIndex)) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
+			if (numOfItems > 0 && focusedIndex % numOfItems !== this.lastFocusedIndex % numOfItems) {
+				const node = this.containerRef.children[this.lastFocusedIndex % numOfItems];
+				node.blur();
+			}
 			this.nodeIndexToBeFocused = null;
 			this.lastFocusedIndex = focusedIndex;
 
@@ -834,6 +863,12 @@ class VirtualListCore extends Component {
 					break;
 				}
 			}
+
+			// If there is no item which could get focus forward,
+			// we need to set restriction option to `self-first`.
+			if (nextIndex === -1) {
+				this.setRestrict(false);
+			}
 		} else if (isBackward) {
 			// See if the next item is spottable then delegate scroll to onFocus handler
 			if (currentIndex > 0 && !data[currentIndex - 1].disabled) {
@@ -845,6 +880,12 @@ class VirtualListCore extends Component {
 					nextIndex = i;
 					break;
 				}
+			}
+
+			// If there is no item which could get focus backward,
+			// we need to set restriction option to `self-first`.
+			if (nextIndex === -1) {
+				this.setRestrict(false);
 			}
 		} else {
 			return false;

@@ -7,7 +7,6 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
-import {contextTypes as contextTypesRemeasurable} from '@enact/ui/Remeasurable';
 import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
@@ -163,6 +162,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			onScroll: PropTypes.func,
 
 			/**
+			 * Called when scrollbar visability changes
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onScrollbarVisibilityChange: PropTypes.func,
+
+			/**
 			 * Called when scroll starts
 			 *
 			 * @type {Function}
@@ -207,7 +214,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			verticalScrollbar: 'auto'
 		}
 
-		static childContextTypes = Object.assign({}, contextTypesResize, contextTypesRemeasurable)
+		static childContextTypes = contextTypesResize
 		static contextTypes = contextTypesRtl
 
 		constructor (props) {
@@ -242,8 +249,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		getChildContext () {
 			return {
-				invalidateBounds: this.enqueueForceUpdate,
-				remeasure: this.state.isVerticalScrollbarVisible
+				invalidateBounds: this.enqueueForceUpdate
 			};
 		}
 
@@ -258,13 +264,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			on('keydown', this.onKeyDown);
 		}
 
-		componentWillUpdate (nextProps, nextState, nextContext) {
+		componentWillUpdate () {
 			this.deferScrollTo = true;
-			if (nextContext.remeasure !== this.context.remeasure || nextState.isVerticalScrollbarVisible !== this.state.isVerticalScrollbarVisible) {
-				this.setState((prevState) => ({
-					remeasure: !prevState.remeasure
-				}));
-			}
 		}
 
 		componentDidUpdate () {
@@ -338,6 +339,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		// scroll info
+		scrolling = false
 		scrollLeft = 0
 		scrollTop = 0
 		scrollToInfo = null
@@ -353,7 +355,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		containerRef = null
 
 		// browser native scrolling
-		scrolling = false
 		resetPosition = null // prevent auto-scroll on focus by Spotlight
 
 		calculateDistanceByWheel (deltaMode, delta, maxPixel) {
@@ -465,8 +466,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (pos) {
 				const bounds = this.getScrollBounds();
 
-				if ((bounds.maxTop > 0 || bounds.maxLeft > 0) &&
-					(pos.left !== this.scrollLeft || pos.top !== this.scrollTop)) {
+				if (bounds.maxTop > 0 || bounds.maxLeft > 0) {
 					this.start(pos.left, pos.top, this.animateOnFocus);
 				}
 				this.lastFocusedItem = item;
@@ -489,9 +489,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					positionFn = this.childRef.calculatePositionOnFocus,
 					spotItem = Spotlight.getCurrent();
 
-				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
+				if (item && item === spotItem && positionFn) {
 					const lastPos = this.lastScrollPositionOnFocus;
 					let pos;
+
 					// If scroll animation is ongoing, we need to pass last target position to
 					// determine correct scroll position.
 					if (this.scrolling && lastPos) {
@@ -499,6 +500,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					} else {
 						pos = positionFn({item});
 					}
+
 					this.startScrollOnFocus(pos, item);
 				}
 			} else if (this.childRef.setLastFocusedIndex) {
@@ -547,6 +549,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				spotItem = Spotlight.getCurrent();
 
 			if (!Spotlight.getPointerMode() && spotItem) {
+				// Should skip scroll by page when spotItem is paging control button of Scrollbar
+				if (!this.childRef.containerRef.contains(spotItem)) {
+					return;
+				}
 				const
 					containerId = Spotlight.getActiveContainer(),
 					direction = this.getPageDirection(keyCode, canScrollVertically),
@@ -838,10 +844,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// scroll bar
 
 		showThumb (bounds) {
-			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
+			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds) && this.horizontalScrollbarRef) {
 				this.horizontalScrollbarRef.showThumb();
 			}
-			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
+			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds) && this.verticalScrollbarRef) {
 				this.verticalScrollbarRef.showThumb();
 			}
 		}
@@ -889,6 +895,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				);
 
 			if (isVisibilityChanged) {
+				if (this.props.onScrollbarVisibilityChange) {
+					this.props.onScrollbarVisibilityChange();
+				}
 				// one or both scrollbars have changed visibility
 				this.setState({
 					isHorizontalScrollbarVisible: curHorizontalScrollbarVisible,
@@ -899,17 +908,23 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
 					// no visibility change but need to notify whichever scrollbars are visible of the
 					// updated bounds and scroll position
-					const updatedBounds = {
-						...bounds,
-						scrollLeft: this.scrollLeft,
-						scrollTop: this.scrollTop
-					};
+					const
+						updatedBounds = {
+							...bounds,
+							scrollLeft: this.scrollLeft,
+							scrollTop: this.scrollTop
+						},
+						spotItem = Spotlight.getCurrent();
 
 					if (curHorizontalScrollbarVisible) {
 						this.horizontalScrollbarRef.update(updatedBounds);
 					}
 					if (curVerticalScrollbarVisible) {
 						this.verticalScrollbarRef.update(updatedBounds);
+					}
+
+					if (!Spotlight.getPointerMode() && spotItem && this.childRef.containerRef.contains(spotItem)) {
+						this.alertThumb();
 					}
 				}
 			}
@@ -1006,6 +1021,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.focusableScrollbar;
 			delete props.horizontalScrollbar;
 			delete props.onScroll;
+			delete props.onScrollbarVisibilityChange;
 			delete props.onScrollStart;
 			delete props.onScrollStop;
 			delete props.style;
