@@ -2,6 +2,7 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Job} from '@enact/core/util';
 
 const STATE = {
 	inactive: 0,	// Marquee is not necessary (render or focus not happened)
@@ -104,14 +105,6 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.controlled = [];
-			this.marqueeState = STATE.inactive;
-		}
-
-		componentDidUpdate () {
-			if (this.marqueeState === STATE.ready || this.marqueeState === STATE.active) {
-				this.dispatch('start');
-				this.marqueeState = STATE.active;
-			}
 		}
 
 		getChildContext () {
@@ -124,6 +117,9 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		startWithDelayJob = new Job(() => {
+			this.dispatch('start');
+		})
 		/*
 		 * Registers `component` with a set of handlers for `start` and `stop`.
 		 *
@@ -133,8 +129,8 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 *
 		 * @returns {undefined}
 		 */
-		handleRegister = (component, handlers) => {
-			const needsStart = !this.allInactive();
+		handleRegister = (component, handlers, {delay}) => {
+			const needsStart = !this.allInactive() || !this.controlled.length;
 
 			this.controlled.push({
 				...handlers,
@@ -143,7 +139,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			});
 
 			if (needsStart) {
-				this.dispatch('start');
+				this.startWithDelayJob.startAfter(delay);
 			}
 		}
 
@@ -265,7 +261,6 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			this.controlled.forEach(c => {
 				c.state = state;
 			});
-			this.marqueeState = state;
 		}
 
 		/*

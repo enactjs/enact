@@ -259,12 +259,16 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
+			let delay = 0;
+			if (this.shouldStartMarquee()) {
+				delay = this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay;
+			}
 			if (this.context.register) {
 				this.sync = true;
 				this.context.register(this, {
 					start: this.start,
 					stop: this.stop
-				});
+				}, {delay});
 			}
 
 			if (this.props.marqueeOn === 'render') {
