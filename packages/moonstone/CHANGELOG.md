@@ -9,9 +9,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/styles/mixins.less` mixins: `.moon-spotlight-margin()` and `.moon-spotlight-padding()`
-- `moonstone/Popup` warning when using `scrimType` `'none'` and `spotlightRestrict` `'self-only'`
 
 ### Changed
+
+- `moonstone/Popup` to warn when using `scrimType` `'none'` and `spotlightRestrict` `'self-only'`
 
 ### Fixed
 
