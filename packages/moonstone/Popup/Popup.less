@@ -30,6 +30,11 @@
 		.moon-custom-text({
 			.padding-start-end(@padding-h, @moon-icon-button-small-size-large + @moon-spotlight-outset);
 		});
+
+		:global(.enact-locale-right-to-left):global(.enact-text-large) & {
+			padding-right: @padding-h;
+			padding-left: @moon-icon-button-small-size-large + @moon-spotlight-outset;
+		};
 	}
 
 	:global(.enact-locale-right-to-left) & {
