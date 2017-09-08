@@ -9,6 +9,7 @@ import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Publisher, contextTypes as stateContextTypes} from '@enact/core/internal/State';
 
 import ilib from '../src/index.js';
 import {isRtlLocale, updateLocale} from '../locale';
@@ -48,7 +49,8 @@ const contextTypes = {
  */
 const IntlHoc = hoc((config, Wrapped) => {
 	return class I18nDecorator extends React.Component {
-		static childContextTypes = contextTypes
+		static contextTypes = stateContextTypes
+		static childContextTypes = {...contextTypes, ...stateContextTypes}
 		static propTypes = /** @lends i18n/I18nDecorator.I18nDecorator.prototype */ {
 			className: PropTypes.string,
 			locale: PropTypes.string
@@ -66,9 +68,18 @@ const IntlHoc = hoc((config, Wrapped) => {
 
 		getChildContext () {
 			return {
+				Subscriber: this.publisher.getSubscriber(),
 				rtl: isRtlLocale(),
 				updateLocale: this.updateLocale
 			};
+		}
+
+		componentWillMount () {
+			this.publisher = Publisher.create('i18n', this.context.Subscriber);
+			this.publisher.publish({
+				locale: this.state.locale,
+				rtl: isRtlLocale()
+			});
 		}
 
 		componentDidMount () {
@@ -105,6 +116,10 @@ const IntlHoc = hoc((config, Wrapped) => {
 		updateLocale = (newLocale) => {
 			const locale = updateLocale(newLocale);
 			this.setState({locale});
+			this.publisher.publish({
+				locale,
+				rtl: isRtlLocale()
+			});
 		}
 
 		render () {
