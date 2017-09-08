@@ -14,6 +14,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Popup` layout in large text mode to show close button correctly
+
 ## [1.8.0] - 2017-09-07
 
 ### Deprecated
