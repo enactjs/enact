@@ -408,6 +408,8 @@ const PickerBase = class extends React.Component {
 		this.emulateMouseUp.stop();
 		this.throttleInc.stop();
 		this.throttleDec.stop();
+		this.throttleWheelInc.stop();
+		this.throttleWheelDec.stop();
 		if (this.props.joined) {
 			this.containerRef.removeEventListener('wheel', this.handleWheel);
 		}
@@ -523,7 +525,11 @@ const PickerBase = class extends React.Component {
 			// the bounds of the picker
 			if (dir && !this.hasReachedBound(step * dir)) {
 				// fire the onChange event
-				this.updateValue(dir);
+				if (dir > 0) {
+					this.throttleWheelInc.throttle();
+				} else if (dir < 0) {
+					this.throttleWheelDec.throttle();
+				}
 				// simulate mouse down
 				this.handleDown(dir);
 				// set a timer to simulate the mouse up
@@ -549,13 +555,13 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
-	throttleInc = new Job(() => {
-		this.handleIncClick();
-	}, 200)
+	throttleInc = new Job(this.handleIncClick, 200)
 
-	throttleDec = new Job(() => {
-		this.handleDecClick();
-	}, 200)
+	throttleDec = new Job(this.handleDecClick, 200)
+
+	throttleWheelInc = new Job(this.handleIncClick, 100)
+
+	throttleWheelDec = new Job(this.handleDecClick, 100)
 
 	handleKeyDown = (ev) => {
 		const {
