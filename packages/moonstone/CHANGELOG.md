@@ -11,10 +11,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/styles/mixins.less` mixins: `.moon-spotlight-margin()` and `.moon-spotlight-padding()`
 
 ### Changed
-- `moonstone/Picker` to throttle on `keydown` and `wheel` events.
 
 ### Fixed
-- `moonstone/Picker` shows numbers on while holding `keydown`
+- `moonstone/Picker` to show numbers when changing values rapidly
 
 ## [1.8.0] - 2017-09-07
 

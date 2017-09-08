@@ -627,7 +627,6 @@ const PickerBase = class extends React.Component {
 
 			if (isVertical || isHorizontal) {
 				directions[direction]();
-				this.emulateMouseUp.start(ev);
 			}
 		}
 	}
