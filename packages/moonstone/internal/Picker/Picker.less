@@ -207,12 +207,17 @@
 		});
 
 		.item {
-			margin: 0 @moon-spotlight-outset;
+			min-width: @moon-picker-vertical-item-width;
+			padding: 0 @moon-spotlight-outset/2;
 
 			.moon-custom-text({
 				margin: 0;
 			});
 		}
+	}
+
+	&.vertical .sizingPlaceholder {
+		padding: 0 @moon-spotlight-outset/2;
 	}
 
 	// Skin colors
