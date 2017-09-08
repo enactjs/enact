@@ -12,6 +12,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/TimePicker` to use "AM/PM" instead of "meridiem" for label under meridiem picker
+
 ### Fixed
 
 ## [1.8.0] - 2017-09-07
