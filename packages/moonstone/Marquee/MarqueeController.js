@@ -104,6 +104,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.controlled = [];
+			this.isFocused = false;
 		}
 
 		getChildContext () {
