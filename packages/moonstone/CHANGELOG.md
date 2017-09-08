@@ -14,6 +14,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/RangePicker` to display fixed width while changing values
+
 ## [1.8.0] - 2017-09-07
 
 ### Deprecated
