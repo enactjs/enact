@@ -15,6 +15,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Popup` layout in large text mode to show close button correctly
+- `moonstone/Picker` from moving scroller when pressing 5-way keys in `joined` Picker
+- `moonstone/Input` styling for some non-latin locales
 
 ## [1.8.0] - 2017-09-07
 
@@ -52,6 +54,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/MarqueeDecorator` to work with synchronized `marqueeOn` `'render'` and hovering as well as `marqueOn` `'hover'` when moving rapidly among synchronized marquees
 - `moonstone/Input` aria-label for translation
 - `moonstone/Marquee` to recalculate inside `moonstone/Scroller` and `moonstone/SelectableItem` by bypassing `shouldComponentUpdate`
+- `moonstone/Picker` to marquee when incrementing and decrementing values with the prop `noAnimation`
 
 ## [1.7.0] - 2017-08-23
 
