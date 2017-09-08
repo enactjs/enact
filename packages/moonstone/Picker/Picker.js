@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import {MarqueeController} from '../Marquee';
 import {validateRange} from '../internal/validators';
 
-import {PickerCore, PickerItem} from '../internal/Picker';
+import PickerCore, {PickerItem} from '../internal/Picker';
 import SpottablePicker from './SpottablePicker';
 
 /**
