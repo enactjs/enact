@@ -1,4 +1,3 @@
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {forKey, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -197,6 +196,14 @@ const TimePickerBase = kind({
 		onSpotlightRight: PropTypes.func,
 
 		/**
+		 * When `true`, current locale is RTL
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * When `true`, the component cannot be navigated using spotlight.
 		 *
 		 * @type {Boolean}
@@ -209,8 +216,6 @@ const TimePickerBase = kind({
 	defaultProps: {
 		spotlightDisabled: false
 	},
-
-	contextTypes: contextTypes,
 
 	styles: {
 		css,
@@ -243,10 +248,9 @@ const TimePickerBase = kind({
 		onSpotlightLeft,
 		onSpotlightRight,
 		order,
+		rtl,
 		spotlightDisabled,
 		...rest
-	}, {
-		rtl
 	}) => {
 		return (
 			<ExpandableItemBase

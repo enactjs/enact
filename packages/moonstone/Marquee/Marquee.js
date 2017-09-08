@@ -7,7 +7,6 @@
 
 import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -142,9 +141,8 @@ const MarqueeBase = kind({
 
 	computed: {
 		clientClassName: ({animating}) => animating ? animated : css.text,
-		clientStyle: ({alignment, animating, centered, distance, forceDirection, overflow, rtl, speed}, {rtl: contextRtl}) => {
+		clientStyle: ({alignment, animating, centered, distance, forceDirection, overflow, rtl, speed}) => {
 			const isTextRtl = forceDirection ? forceDirection === 'rtl' : rtl;
-			const overrideRtl = forceDirection ? true : contextRtl !== isTextRtl;
 
 			let textAlign = null;
 
@@ -160,7 +158,7 @@ const MarqueeBase = kind({
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
 			let direction = 'inherit';
-			if (overrideRtl) {
+			if (forceDirection) {
 				direction = isTextRtl ? 'rtl' : 'ltr';
 			}
 
@@ -199,8 +197,6 @@ const MarqueeBase = kind({
 		);
 	}
 });
-
-MarqueeBase.contextTypes = contextTypes;
 
 export default MarqueeBase;
 export {MarqueeBase as Marquee, MarqueeBase};

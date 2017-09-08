@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import invariant from 'invariant';
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
-import {Broadcast, Subscriber} from '@enact/core/internal/Broadcast';
+import {contextTypes, Publisher, Subscriber, Subscription} from '@enact/core/internal/State';
 import {perfNow} from '@enact/core/util';
 
 /**
@@ -48,6 +48,9 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'RemeasurableDecorator'
 
+		static contextTypes = contextTypes
+		static childContextTypes = contextTypes
+
 		static propTypes = /** @lends moonstone/Remeasurable.RemeasurableDecorator.prototype */ {
 			/**
 			* Function to execute on the trigger event. The actual name of this
@@ -66,24 +69,45 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		getChildContext () {
+			return {
+				Subscriber: this.publisher.getSubscriber()
+			};
+		}
+
+		componentWillMount () {
+			this.publisher = Publisher.create('resize', this.context.Subscriber);
+			this.publisher.publish({
+				remeasure: perfNow()
+			});
+
+			if (this.context.Subscriber) {
+				this.context.Subscriber.subscribe('remeasure', this.handleRemeasure);
+			}
+		}
+
+		componentWillUnmount () {
+			if (this.context.Subscriber) {
+				this.context.Subscriber.unsubscribe('remeasure', this.handleRemeasure);
+			}
+		}
+
+		handleRemeasure = ({message}) => {
+			this.setState(message);
+			this.publisher.publish(message);
+		}
+
 		triggerRemeasure = (ev) => {
 			forwardTrigger(ev, this.props);
-			this.setState({remeasure: perfNow()});
+			this.handleRemeasure({remeasure: perfNow()});
 		}
 
 		render () {
 			const props = Object.assign({}, this.props);
 			props[trigger] = this.triggerRemeasure;
 
-			// The extra subscriber to so we can keep nested Broadcasts values in sync
 			return (
-				<Subscriber channel="remeasure">
-					{(value) => (
-						<Broadcast channel="remeasure" value={this.state.remeasure > value ? this.state.remeasure : value}>
-							<Wrapped {...props} />
-						</Broadcast>
-					)}
-				</Subscriber>
+				<Wrapped {...props} />
 			);
 		}
 	};
@@ -100,23 +124,10 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
  * @hoc
  * @private
  */
-const Remeasurable = (Wrapped) => {
-	return class extends React.Component {
-		static displayName = 'Remeasurable'
-
-		constructor (props) {
-			super(props);
-		}
-
-		render () {
-			return (
-				<Subscriber channel="remeasure">
-					{(value) => <Wrapped {...this.props} remeasure={value} />}
-				</Subscriber>
-			);
-		}
-	};
-};
+const Remeasurable = Subscription({
+	channels: ['resize'],
+	mapStateToProps: (channel, state) => state
+});
 
 export default Remeasurable;
 export {Remeasurable, RemeasurableDecorator};

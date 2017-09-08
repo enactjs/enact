@@ -17,7 +17,7 @@ const Publisher = {
 				}
 			},
 			removeListener (callback) {
-				this.listeners.remove(callback);
+				this.listeners.delete(callback);
 			},
 
 			message: null,

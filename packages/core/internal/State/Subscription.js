@@ -23,6 +23,12 @@ const Subscription = hoc(defaultConfig, (config, Wrapped) => {
 
 		static contextTypes = contextTypes
 
+		constructor () {
+			super();
+
+			this.state = {};
+		}
+
 		componentWillMount () {
 			if (channels && channels.length && this.context.Subscriber) {
 				channels.forEach(channel => {

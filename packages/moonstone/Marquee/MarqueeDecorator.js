@@ -5,6 +5,7 @@ import {childrenEquals} from '@enact/core/util';
 import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Subscription} from '@enact/core/internal/State';
 
 import Marquee from './Marquee';
 import {contextTypes} from './MarqueeController';
@@ -115,7 +116,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardEnter = forward(enter);
 	const forwardLeave = forward(leave);
 
-	return class extends React.Component {
+	const Decorator = class extends React.Component {
 		static displayName = 'MarqueeDecorator'
 
 		static contextTypes = contextTypes
@@ -684,6 +685,16 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 	};
 
+	return Subscription(
+		{channels: ['i18n', 'resize'], mapStateToProps: (channel, state) => {
+			if (channel === 'i18n') {
+				return {rtl: state.rtl};
+			} else if (channel === 'resize') {
+				return state;
+			}
+		}},
+		Decorator
+	);
 });
 
 export default MarqueeDecorator;

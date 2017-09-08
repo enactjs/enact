@@ -8,7 +8,6 @@ import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Remeasurable from '@enact/ui/Remeasurable';
 import Slottable from '@enact/ui/Slottable';
 import Spottable from '@enact/spotlight/Spottable';
 
@@ -120,11 +119,9 @@ const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidat
  * @public
  */
 const Item = Spottable(
-	Remeasurable(
-		ItemMarqueeDecorator(
-			Skinnable(
-				ItemBase
-			)
+	ItemMarqueeDecorator(
+		Skinnable(
+			ItemBase
 		)
 	)
 );
@@ -154,12 +151,10 @@ const Item = Spottable(
 const ItemOverlay = Spottable(
 	Slottable(
 		{slots: ['overlayAfter', 'overlayBefore']},
-		Remeasurable(
-			ItemMarqueeDecorator(
-				OverlayDecorator(
-					Skinnable(
-						ItemBase
-					)
+		ItemMarqueeDecorator(
+			OverlayDecorator(
+				Skinnable(
+					ItemBase
 				)
 			)
 		)

@@ -11,6 +11,8 @@ import hoc from '@enact/core/hoc';
 import ilib from '@enact/i18n';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Subscription} from '@enact/core/internal/State';
+
 import {Expandable} from '../../ExpandableItem';
 
 /**
@@ -230,9 +232,12 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 	};
 
-	return Expandable(
-		Changeable(
-			Decorator
+	return Subscription(
+		{channels: ['i18n'], mapStateToProps: (channel, {rtl}) => ({rtl})},
+		Expandable(
+			Changeable(
+				Decorator
+			)
 		)
 	);
 });
