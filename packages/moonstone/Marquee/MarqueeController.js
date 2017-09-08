@@ -2,7 +2,6 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Job} from '@enact/core/util';
 
 const STATE = {
 	inactive: 0,	// Marquee is not necessary (render or focus not happened)
@@ -117,9 +116,6 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		startWithDelayJob = new Job(() => {
-			this.dispatch('start');
-		})
 		/*
 		 * Registers `component` with a set of handlers for `start` and `stop`.
 		 *
@@ -129,8 +125,8 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 *
 		 * @returns {undefined}
 		 */
-		handleRegister = (component, handlers, {delay}) => {
-			const needsStart = !this.allInactive() || !this.controlled.length;
+		handleRegister = (component, handlers) => {
+			const needsStart = !this.allInactive() || this.isFocused;
 
 			this.controlled.push({
 				...handlers,
@@ -139,7 +135,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			});
 
 			if (needsStart) {
-				this.startWithDelayJob.startAfter(delay);
+				this.dispatch('start');
 			}
 		}
 
@@ -209,6 +205,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * Handler for the focus event
 		 */
 		handleFocus = (ev) => {
+			this.isFocused = true;
 			this.dispatch('start');
 			forwardFocus(ev, this.props);
 		}
@@ -217,6 +214,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * Handler for the blur event
 		 */
 		handleBlur = (ev) => {
+			this.isFocused = false;
 			this.dispatch('stop');
 			this.markAll(STATE.inactive);
 			forwardBlur(ev, this.props);
