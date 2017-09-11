@@ -12,6 +12,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
+## [1.8.0] - 2017-09-07
+
+### Fixed
+
 - `spotlight/Spottable` to clean up internal spotted state when blurred within `onSpotlightDisappear` handler
 - `spotlight` to not try to focus something when the window is activated unless the window has been previously blurred
 
@@ -19,7 +23,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Added
 
-- `spotlight/SpotlightContainerDecorator` config option `continue5WayHold` to support moving focus to the next spottable element on 5-way hold key.
+- `spotlight/SpotlightContainerDecorator` config option `continue5WayHold` to support moving focus to the next spottable element on 5-way hold key
 - `spotlight/Spottable` ability to restore focus when an initially disabled component becomes enabled
 
 ### Fixed

@@ -8,17 +8,23 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/styles/mixins.less` mixins: `.remove-margin-on-edge-children()` and `.remove-padding-on-edge-children()` to better handle edge margins on container components
+
 ### Changed
-- `ui/Holdable` and `ui/Changeable` to be PureComponents to reduce the amount of updates
 
 ### Fixed
+
+## [1.8.0] - 2017-09-07
+
+### Changed
+
+- `ui/Holdable` and `ui/Changeable` to be PureComponents to reduce the number of updates
 
 ## [1.7.0] - 2017-08-23
 
 No significant changes.
 
 ## [1.6.1] - 2017-08-07
-
 No significant changes.
 
 ## [1.6.0] - 2017-08-04

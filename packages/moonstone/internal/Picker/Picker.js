@@ -574,6 +574,7 @@ const PickerBase = class extends React.Component {
 
 			if (isVertical || isHorizontal) {
 				directions[direction]();
+				ev.preventDefault();
 				ev.stopPropagation();
 				this.emulateMouseUp.start(ev);
 			} else if (orientation === 'horizontal' && isDown(keyCode) && onPickerSpotlightDown) {

@@ -12,6 +12,10 @@ The following is a curated list of changes in the Enact i18n module, newest chan
 
 ### Fixed
 
+## [1.8.0] - 2017-09-07
+
+Updated iLib to latest version
+
 ## [1.7.0] - 2017-08-23
 
 No significant changes.
