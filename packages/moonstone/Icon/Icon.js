@@ -7,8 +7,10 @@
 
 import kind from '@enact/core/kind';
 import ri from '@enact/ui/resolution';
+import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import Skinnable from '../Skinnable';
 
 import iconList from './IconList.js';
@@ -255,7 +257,11 @@ const IconBase = kind({
  * @public
  */
 
-const Icon = Skinnable(IconBase);
+const Icon = Skinnable(
+	Pure(
+		IconBase
+	)
+);
 
 export default Icon;
 export {Icon, IconBase, iconList as icons};

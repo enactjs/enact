@@ -82,24 +82,30 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			});
 
 			if (this.context.Subscriber) {
-				this.context.Subscriber.subscribe('remeasure', this.handleRemeasure);
+				this.context.Subscriber.subscribe('remeasure', this.handleSubscription);
 			}
 		}
 
 		componentWillUnmount () {
 			if (this.context.Subscriber) {
-				this.context.Subscriber.unsubscribe('remeasure', this.handleRemeasure);
+				this.context.Subscriber.unsubscribe('remeasure', this.handleSubscription);
 			}
 		}
 
-		handleRemeasure = ({message}) => {
-			this.setState(message);
-			this.publisher.publish(message);
+		handleSubscription = ({message}) => {
+			this.updateRemeasure(message);
+		}
+
+		updateRemeasure (state) {
+			this.setState(state);
+			this.publisher.publish(state);
 		}
 
 		triggerRemeasure = (ev) => {
 			forwardTrigger(ev, this.props);
-			this.handleRemeasure({remeasure: perfNow()});
+			this.updateRemeasure({
+				remeasure: perfNow()
+			});
 		}
 
 		render () {

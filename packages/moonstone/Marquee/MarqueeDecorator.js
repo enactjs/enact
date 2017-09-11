@@ -3,6 +3,7 @@ import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
 import {childrenEquals} from '@enact/core/util';
 import {isRtlText} from '@enact/i18n/util';
+import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Subscription} from '@enact/core/internal/State';
@@ -693,7 +694,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				return state;
 			}
 		}},
-		Decorator
+		Pure(
+			Decorator
+		)
 	);
 });
 

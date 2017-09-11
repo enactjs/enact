@@ -4,10 +4,12 @@
  * @module moonstone/Item
  */
 
+import {childrenEquals} from '@enact/core/util';
 import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import Slottable from '@enact/ui/Slottable';
 import Spottable from '@enact/spotlight/Spottable';
 
@@ -148,13 +150,20 @@ const Item = Spottable(
  * @ui
  * @public
  */
-const ItemOverlay = Spottable(
-	Slottable(
-		{slots: ['overlayAfter', 'overlayBefore']},
-		ItemMarqueeDecorator(
-			OverlayDecorator(
-				Skinnable(
-					ItemBase
+const ItemOverlay = Pure(
+	{propComparators: {
+		'*': (a, b) => a === b,
+		overlayBefore: childrenEquals,
+		overlayAfter: childrenEquals
+	}},
+	Spottable(
+		Slottable(
+			{slots: ['overlayAfter', 'overlayBefore']},
+			ItemMarqueeDecorator(
+				OverlayDecorator(
+					Skinnable(
+						ItemBase
+					)
 				)
 			)
 		)

@@ -11,12 +11,17 @@
  */
 
 import hoc from '@enact/core/hoc';
-import getContext from 'recompose/getContext';
 import PropTypes from 'prop-types';
+import {contextTypes as stateContextTypes, Publisher, Subscription} from '@enact/core/internal/State';
 import React from 'react';
 
 const contextTypes = {
 	skin: PropTypes.string
+};
+
+const combinedContextTypes = {
+	...stateContextTypes,
+	...contextTypes
 };
 
 /**
@@ -88,22 +93,64 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 			skin: PropTypes.oneOf(Object.keys(skins))
 		}
 
-		static contextTypes = contextTypes;
+		static contextTypes = combinedContextTypes;
 
-		static childContextTypes = contextTypes;
+		static childContextTypes = combinedContextTypes;
+
+		constructor () {
+			super();
+
+			this.state = {};
+		}
 
 		getChildContext () {
 			return {
-				skin: this.getSkin()
+				skin: this.getSkin(this.props),
+				Subscriber: this.publisher.getSubscriber()
 			};
 		}
 
-		getSkin () {
-			return this.props.skin || defaultSkin || this.context.skin;
+		componentWillMount () {
+			this.publisher = Publisher.create('skin', this.context.Subscriber);
+			this.publisher.publish({
+				skin: this.getSkin(this.props)
+			});
+
+			if (this.context.Subscriber) {
+				this.context.Subscriber.subscribe('skin', this.handleSubscription);
+			}
+		}
+
+		componentWillReceiveProps (nextProps) {
+			const skin = this.getSkin(this.props);
+			const nextSkin = this.getSkin(nextProps);
+
+			if (skin !== nextSkin) {
+				this.updateSkin({skin: nextSkin});
+			}
+		}
+
+		componentWillUnmount () {
+			if (this.context.Subscriber) {
+				this.context.Subscriber.unsubscribe('skin', this.handleSubscription);
+			}
+		}
+
+		handleSubscription = ({message}) => {
+			this.updateSkin(message);
+		}
+
+		updateSkin (state) {
+			this.setState(state);
+			this.publisher.publish(state);
+		}
+
+		getSkin (props) {
+			return props.skin || defaultSkin || this.state.skin;
 		}
 
 		getClassName () {
-			const skin = skins[this.getSkin()];
+			const skin = skins[this.getSkin(this.props)];
 			let {className} = this.props;
 
 			// only apply the skin class if it's set and different from the "current" skin as
@@ -132,16 +179,6 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 	};
 });
 
-const getSkin = getContext(/** @lends ui/Skinnable.withSkinnableProps.prototype */{
-	/**
-	 * Derived from the context from the parent, included as a prop.
-	 *
-	 * @type {String}
-	 * @public
-	 */
-	skin: PropTypes.string
-});
-
 /**
  * Occasionally, there's a case where context isn't available or your component only updates on
  * specific props changes. This HOC supplies the relevant context state values as props. In this
@@ -152,7 +189,10 @@ const getSkin = getContext(/** @lends ui/Skinnable.withSkinnableProps.prototype 
  * @hoc
  * @public
  */
-const withSkinnableProps = hoc((config, Wrapped) => getSkin(Wrapped));
+const withSkinnableProps = Subscription({
+	channels: ['skin'],
+	mapStateToProps: (channel, {skin}) => ({skin})
+});
 
 
 export default Skinnable;

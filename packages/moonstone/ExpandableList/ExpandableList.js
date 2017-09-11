@@ -9,6 +9,7 @@
 import Changeable from '@enact/ui/Changeable';
 import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
+import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -334,7 +335,9 @@ const ExpandableListBase = kind({
 const ExpandableList = Expandable(
 	Changeable(
 		{change: 'onSelect', prop: 'selected'},
-		ExpandableListBase
+		Pure(
+			ExpandableListBase
+		)
 	)
 );
 

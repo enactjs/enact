@@ -23,6 +23,10 @@ const Subscription = hoc(defaultConfig, (config, Wrapped) => {
 
 		static contextTypes = contextTypes
 
+		static propTypes = {}
+
+		static defaultProps = {}
+
 		constructor () {
 			super();
 
