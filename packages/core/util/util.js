@@ -162,14 +162,29 @@ const withContextFromProps = (propsList, Wrapped) => withContext(propsList, (pro
 	}, {});
 })(Wrapped);
 
+/**
+ * Gets current timestamp of either `window.performance.now` or `Date.now`
+ *
+ * @method
+ * @memberof core/util
+ * @returns {Number}
+ */
+const perfNow = function () {
+	if (typeof window === 'object') {
+		return window.performance.now();
+	} else {
+		return Date.now();
+	}
+};
 
 export {
 	cap,
 	childrenEquals,
 	coerceFunction,
 	coerceArray,
-	Job,
-	isRenderable,
 	extractAriaProps,
+	isRenderable,
+	Job,
+	perfNow,
 	withContextFromProps
 };
