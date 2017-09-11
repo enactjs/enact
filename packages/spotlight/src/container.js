@@ -12,6 +12,7 @@ import intersection from 'ramda/src/intersection';
 import last from 'ramda/src/last';
 
 import {matchSelector} from './utils';
+import Spotlight from './spotlight';
 
 const containerAttribute = 'data-container-id';
 const containerConfigs   = new Map();
@@ -765,6 +766,9 @@ function persistLastFocusedElement (containerId) {
  * @public
  */
 function restoreLastFocusedElement (containerId) {
+	if (containerId) {
+		Spotlight.setActiveContainer(containerId);
+	}
 	const cfg = getContainerConfig(containerId);
 	if (cfg && cfg.lastFocusedKey) {
 		const all = getDeepSpottableDescendants(containerId);
