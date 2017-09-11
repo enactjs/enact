@@ -22,6 +22,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 ## Removed
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
+
 ## [1.8.0] - 2017-09-07
 
 ### Deprecated
