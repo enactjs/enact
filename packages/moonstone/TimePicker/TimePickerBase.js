@@ -314,7 +314,7 @@ const TimePickerBase = kind({
 										<DateComponentPicker
 											className={css.meridiemComponent}
 											key="meridiem-picker"
-											label={noLabels ? null : meridiems[0] + '/' + meridiems[1]}
+											label={noLabels ? null : meridiems.join('/')}
 											onChange={onChangeMeridiem}
 											onSpotlightDisappear={onSpotlightDisappear}
 											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
