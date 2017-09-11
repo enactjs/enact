@@ -13,6 +13,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/IconButton` changed default style to not animate on press. Note that this is going to change in 2.0.0
+
 ### Fixed
 
 - `moonstone/Popup` layout in large text mode to show close button correctly

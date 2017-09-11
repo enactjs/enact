@@ -79,7 +79,8 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * When `true`, the button does not animate on press
+			 * When `true`, the button does not animate on press. Note that the default value
+			 * will change to `false` in 2.0.0
 			 *
 			 * @type {Boolean}
 			 * @default true
