@@ -13,7 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `moonstone/IconButton` changed default style to not animate on press. Note that this is going to change in 2.0.0
+- `moonstone/IconButton` default style to not animate on press. NOTE: This behavior will change back to its previous setting in release 2.0.0.
 
 ### Fixed
 
