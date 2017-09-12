@@ -20,6 +20,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Popup` layout in large text mode to show close button correctly
 - `moonstone/Picker` from moving scroller when pressing 5-way keys in `joined` Picker
 - `moonstone/Input` styling for some non-latin locales
+- `moonstone/ContextualPopup` pointer mode focus behavior for `spotlightRestrict='self-only'`
 
 ## [1.8.0] - 2017-09-07
 
