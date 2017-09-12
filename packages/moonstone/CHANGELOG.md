@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 ### Fixed
+
 - `moonstone/Picker` to show numbers when changing values rapidly
 
 ## [1.8.0] - 2017-09-07
