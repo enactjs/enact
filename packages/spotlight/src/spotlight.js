@@ -130,6 +130,14 @@ const Spotlight = (function () {
 	let _5WayKeyHold = false;
 
 	/*
+	 * Whether to set focus during the next window focus event
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 */
+	let _spotOnWindowFocus = false;
+
+	/*
 	* protected methods
 	*/
 
@@ -287,23 +295,25 @@ const Spotlight = (function () {
 			current.blur();
 		}
 		Spotlight.setPointerMode(false);
+		_spotOnWindowFocus = true;
 	}
 
 	function onFocus () {
-		const palmSystem = window.PalmSystem;
-
-		if (palmSystem && palmSystem.cursor) {
-			Spotlight.setPointerMode(palmSystem.cursor.visibility);
-		}
-
-		// Normally, there isn't focus at this point because we've blurred it above. On webOS, the
+		// Normally, there isn't focus here unless the window has been blurred above. On webOS, the
 		// platform may focus the window after the app has already focused a component so we prevent
-		// trying to focus something else (potentially) if focus is set.
-		if (!getCurrent()) {
+		// trying to focus something else (potentially) unless the window was previously blurred
+		if (_spotOnWindowFocus) {
+			const palmSystem = window.PalmSystem;
+
+			if (palmSystem && palmSystem.cursor) {
+				Spotlight.setPointerMode(palmSystem.cursor.visibility);
+			}
+
 			// If the window was previously blurred while in pointer mode, the last active containerId may
 			// not have yet set focus to its spottable elements. For this reason we can't rely on setting focus
 			// to the last focused element of the last active containerId, so we use rootContainerId instead
 			Spotlight.focus(getContainerLastFocusedElement(rootContainerId));
+			_spotOnWindowFocus = false;
 		}
 	}
 
