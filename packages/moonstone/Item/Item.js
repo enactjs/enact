@@ -150,15 +150,16 @@ const Item = Spottable(
  * @ui
  * @public
  */
-const ItemOverlay = Pure(
-	{propComparators: {
-		'*': (a, b) => a === b,
-		overlayBefore: childrenEquals,
-		overlayAfter: childrenEquals
-	}},
-	Spottable(
-		Slottable(
-			{slots: ['overlayAfter', 'overlayBefore']},
+const ItemOverlay = Slottable(
+	{slots: ['overlayAfter', 'overlayBefore']},
+	Pure(
+		{propComparators: {
+			'*': (a, b) => a === b,
+			children: childrenEquals,
+			overlayBefore: childrenEquals,
+			overlayAfter: childrenEquals
+		}},
+		Spottable(
 			ItemMarqueeDecorator(
 				OverlayDecorator(
 					Skinnable(

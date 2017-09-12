@@ -7,12 +7,9 @@
  * @private
  */
 import React from 'react';
-import PropTypes from 'prop-types';
 import invariant from 'invariant';
 import hoc from '@enact/core/hoc';
-import {forward} from '@enact/core/handle';
-import {contextTypes, Publisher, Subscriber, Subscription} from '@enact/core/internal/State';
-import {perfNow} from '@enact/core/util';
+import {contextTypes, Publisher, Subscription} from '@enact/core/internal/State';
 
 /**
  * Default config for {@link ui/Remeasurable.RemeasurableDecorator}
@@ -41,7 +38,6 @@ const defaultConfig = {
  */
 const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {trigger} = config;
-	const forwardTrigger = forward(trigger);
 
 	invariant(trigger, 'trigger is required by RemeasurableDecorator');
 
@@ -49,23 +45,13 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'RemeasurableDecorator'
 
 		static contextTypes = contextTypes
-		static childContextTypes = contextTypes
 
-		static propTypes = /** @lends moonstone/Remeasurable.RemeasurableDecorator.prototype */ {
-			/**
-			* Function to execute on the trigger event. The actual name of this
-			* property is set in the config.
-			*
-			* @type {Function}
-			* @private
-			*/
-			[trigger]: PropTypes.func
-		}
+		static childContextTypes = contextTypes
 
 		constructor (props) {
 			super(props);
 			this.state = {
-				remeasure: perfNow()
+				remeasure: false
 			};
 		}
 
@@ -78,17 +64,29 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillMount () {
 			this.publisher = Publisher.create('resize', this.context.Subscriber);
 			this.publisher.publish({
-				remeasure: perfNow()
+				remeasure: false
 			});
 
 			if (this.context.Subscriber) {
-				this.context.Subscriber.subscribe('remeasure', this.handleSubscription);
+				this.context.Subscriber.subscribe('resize', this.handleSubscription);
+			}
+		}
+
+		componentWillReceiveProps (nextProps) {
+			this.setState({
+				remeasure: this.props[trigger] !== nextProps[trigger]
+			});
+		}
+
+		componentDidUpdate (prevProps, prevState) {
+			if (this.state.remeasure && !prevState.remeasure) {
+				this.publisher.publish(this.state);
 			}
 		}
 
 		componentWillUnmount () {
 			if (this.context.Subscriber) {
-				this.context.Subscriber.unsubscribe('remeasure', this.handleSubscription);
+				this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
 			}
 		}
 
@@ -101,19 +99,9 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.publisher.publish(state);
 		}
 
-		triggerRemeasure = (ev) => {
-			forwardTrigger(ev, this.props);
-			this.updateRemeasure({
-				remeasure: perfNow()
-			});
-		}
-
 		render () {
-			const props = Object.assign({}, this.props);
-			props[trigger] = this.triggerRemeasure;
-
 			return (
-				<Wrapped {...props} />
+				<Wrapped {...this.props} />
 			);
 		}
 	};

@@ -7,7 +7,6 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
-import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
@@ -20,6 +19,7 @@ import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/State';
 
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
@@ -219,13 +219,19 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			verticalScrollbar: 'auto'
 		}
 
-		static childContextTypes = contextTypesResize
-		static contextTypes = contextTypesRtl
+		static childContextTypes = {
+			...contextTypesResize,
+			...contextTypesState
+		}
+
+		static contextTypes = contextTypesState
 
 		constructor (props) {
 			super(props);
 
 			this.state = {
+				rtl: false,
+				remeasure: false,
 				isHorizontalScrollbarVisible: props.horizontalScrollbar === 'visible',
 				isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
 			};
@@ -254,8 +260,21 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		getChildContext () {
 			return {
-				invalidateBounds: this.enqueueForceUpdate
+				invalidateBounds: this.enqueueForceUpdate,
+				Subscriber: this.publisher.getSubscriber()
 			};
+		}
+
+		componentWillMount () {
+			this.publisher = Publisher.create('resize', this.context.Subscriber);
+			this.publisher.publish({
+				remeasure: false
+			});
+
+			if (this.context.Subscriber) {
+				this.context.Subscriber.subscribe('resize', this.handleSubscription);
+				this.context.Subscriber.subscribe('i18n', this.handleSubscription);
+			}
 		}
 
 		componentDidMount () {
@@ -273,7 +292,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.deferScrollTo = true;
 		}
 
-		componentDidUpdate () {
+		componentDidUpdate (prevProps, prevState) {
 			// Need to sync calculated client size if it is different from the real size
 			if (this.childRef.syncClientSize) {
 				this.childRef.syncClientSize();
@@ -289,6 +308,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				}
 			} else {
 				this.updateScrollOnFocus();
+			}
+
+			// publish container resize changes
+			const horizontal = this.state.isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
+			const vertical = this.state.isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
+			if (horizontal || vertical) {
+				this.publisher.publish({
+					horizontal,
+					vertical
+				});
 			}
 		}
 
@@ -314,6 +343,22 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				childContainerRef.removeEventListener('focus', this.onFocus, true);
 			}
 			off('keydown', this.onKeyDown);
+
+			if (this.context.Subscriber) {
+				this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
+				this.context.Subscriber.unsubscribe('i18n', this.handleSubscription);
+			}
+		}
+
+		handleSubscription = ({channel, message}) => {
+			if (channel === 'i18n') {
+				const {rtl} = message;
+				if (rtl !== this.state.rtl) {
+					this.setState({rtl});
+				}
+			} else if (channel === 'resize') {
+				this.publisher.publish(message);
+			}
 		}
 
 		// status
@@ -995,6 +1040,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				if (this.props.onScrollbarVisibilityChange) {
 					this.props.onScrollbarVisibilityChange();
 				}
+
 				// one or both scrollbars have changed visibility
 				this.setState({
 					isHorizontalScrollbarVisible: curHorizontalScrollbarVisible,
@@ -1092,7 +1138,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.forceUpdateJob.start();
 		}
 
-		forceUpdateJob = new Job(this.forceUpdate.bind(this), 32)
+		forceUpdateJob = new Job(() => {
+			this.setState({__forceUpdate: Date.now()});
+		}, 32)
 
 		// render
 

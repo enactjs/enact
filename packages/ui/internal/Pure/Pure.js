@@ -12,6 +12,8 @@ const defaultConfig = {
 const Pure = hoc(defaultConfig, (config, Wrapped) => {
 	const {propComparators} = config;
 
+	const name = Wrapped.displayName || Wrapped.name || (typeof Wrapped === 'string' ? Wrapped : 'Anonymous Component');
+
 	return class extends React.Component {
 		static displayName = 'Pure'
 
@@ -24,6 +26,7 @@ const Pure = hoc(defaultConfig, (config, Wrapped) => {
 			const nextKeys = Object.keys(next);
 
 			if (propKeys.length !== nextKeys.length) {
+				console.log('ui/Pure: ', name, ': Changed prop count');
 				return true;
 			}
 
@@ -32,6 +35,7 @@ const Pure = hoc(defaultConfig, (config, Wrapped) => {
 				const prop = nextKeys[i];
 				const comp = comparators[prop] || comparators['*'];
 				if (!hasOwn(prop) || !comp(current[prop], next[prop])) {
+					console.log('ui/Pure:', name, ': Changed', prop, 'from', current[prop], 'to', next[prop]);
 					return true;
 				}
 			}

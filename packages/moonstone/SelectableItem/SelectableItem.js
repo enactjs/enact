@@ -118,10 +118,10 @@ const SelectableItemBase = kind({
  * @ui
  * @public
  */
-const SelectableItem = RemeasurableDecorator(
-	{trigger: 'onToggle'},
-	Toggleable(
-		{prop: 'selected'},
+const SelectableItem = Toggleable(
+	{prop: 'selected'},
+	RemeasurableDecorator(
+		{trigger: 'selected'},
 		Skinnable(
 			SelectableItemBase
 		)

@@ -7,6 +7,7 @@
  */
 
 import Changeable from '@enact/ui/Changeable';
+import equals from 'ramda/src/equals';
 import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
 import Pure from '@enact/ui/internal/Pure';
@@ -336,6 +337,26 @@ const ExpandableList = Expandable(
 	Changeable(
 		{change: 'onSelect', prop: 'selected'},
 		Pure(
+			{propComparators: {
+				'*': (a, b) => a === b,
+				children: (a, b) => {
+					if (!a || !b || a.length !== b.length) return false;
+
+					let type = null;
+					for (let i = 0; i < a.length; i++) {
+						type = type || typeof a[i];
+						if (type === 'string') {
+							if (a !== b) {
+								return false;
+							}
+						} else if (!equals(a, b)) {
+							return false;
+						}
+					}
+
+					return true;
+				}
+			}},
 			ExpandableListBase
 		)
 	)
