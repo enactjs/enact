@@ -616,7 +616,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.handledCustomMediaForwards = {};
 		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
-		this.playbackState = this.prevCommand;
+		this.prevPlaybackState = this.prevCommand;
 		this.speedIndex = 0;
 		this.id = this.generateId();
 		this.selectPlaybackRates('fastForward');
@@ -918,8 +918,10 @@ const VideoPlayerBase = class extends React.Component {
 
 	autoCloseJob = new Job(this.hideControls)
 
-	showMiniFeedback = () => {
+	showMiniFeedback = (playbackState, playbackRate) => {
 		if (!this.state.mediaControlsVisible) {
+			this.prevPlaybackState = playbackState || this.prevCommand;
+			this.prevPlaybackRate = playbackRate || this.selectPlaybackRate(this.speedIndex);
 			this.setState({
 				bottomControlsRendered: true,
 				feedbackVisible: false,
@@ -995,13 +997,11 @@ const VideoPlayerBase = class extends React.Component {
 		if (is('left', this.pulsingKeyCode)) {
 			this.jump(-1 * this.props.jumpBy);
 			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
-			this.playbackState = 'jumpBackward';
-			this.showMiniFeedback();
+			this.showMiniFeedback('jumpBackward', new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}).toUpperCase());
 		} else if (is('right', this.pulsingKeyCode)) {
 			this.jump(this.props.jumpBy);
 			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
-			this.playbackState = 'jumpForward';
-			this.showMiniFeedback();
+			this.showMiniFeedback('jumpForward', new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}).toUpperCase());
 		}
 	}
 
@@ -1039,13 +1039,11 @@ const VideoPlayerBase = class extends React.Component {
 		switch (ev.keyCode) {
 			case PLAY:
 				this.play();
-				this.playbackState = this.prevCommand;
 				this.showMiniFeedback();
 				this.startAutoCloseTimeout(this.state.mediaControlsVisible ? this.props.autoCloseTimeout : 5000);
 				break;
 			case PAUSE:
 				this.pause();
-				this.playbackState = this.prevCommand;
 				this.showMiniFeedback();
 				if (this.state.miniFeedbackVisible) {
 					this.stopAutoCloseTimeout();
@@ -1054,7 +1052,6 @@ const VideoPlayerBase = class extends React.Component {
 			case REWIND:
 				if (!this.props.noRateButtons) {
 					this.rewind();
-					this.playbackState = this.prevCommand;
 					this.showMiniFeedback();
 					if (this.state.miniFeedbackVisible) {
 						this.stopAutoCloseTimeout();
@@ -1064,7 +1061,6 @@ const VideoPlayerBase = class extends React.Component {
 			case FASTFORWARD:
 				if (!this.props.noRateButtons) {
 					this.fastForward();
-					this.playbackState = this.prevCommand;
 					this.showMiniFeedback();
 					if (this.state.miniFeedbackVisible) {
 						this.stopAutoCloseTimeout();
@@ -1074,6 +1070,10 @@ const VideoPlayerBase = class extends React.Component {
 			case STOP:
 				this.pause();
 				this.seek(0);
+				this.showMiniFeedback();
+				if (this.state.miniFeedbackVisible) {
+					this.stopAutoCloseTimeout();
+				}
 				break;
 		}
 
@@ -1642,13 +1642,6 @@ const VideoPlayerBase = class extends React.Component {
 		return null;
 	}
 
-	getPlaybackRate = () => {
-		return this.playbackState === 'jumpBackward' ||
-				this.playbackState === 'jumpForward' ?
-			new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}).toUpperCase() :
-			this.selectPlaybackRate(this.speedIndex);
-	}
-
 	render () {
 		const {
 			backwardIcon,
@@ -1733,8 +1726,8 @@ const VideoPlayerBase = class extends React.Component {
 					<div className={css.fullscreen + ' enyo-fit scrim'} {...controlsAriaProps}>
 						<FeedbackContent
 							className={css.miniFeedback}
-							playbackRate={this.getPlaybackRate()}
-							playbackState={this.playbackState}
+							playbackRate={this.prevPlaybackRate}
+							playbackState={this.prevPlaybackState}
 							visible={this.state.miniFeedbackVisible}
 						>
 							{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
