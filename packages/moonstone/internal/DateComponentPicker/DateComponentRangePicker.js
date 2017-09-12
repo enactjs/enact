@@ -4,6 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import RangePicker from '../../RangePicker';
+import {withSkinnableProps} from '../../Skinnable';
 
 import DateComponentPickerChrome from './DateComponentPickerChrome';
 
@@ -99,8 +100,10 @@ const DateComponentRangePickerBase = kind({
  * @ui
  * @private
  */
-const DateComponentRangePicker = Changeable(
-	DateComponentRangePickerBase
+const DateComponentRangePicker = withSkinnableProps(
+	Changeable(
+		DateComponentRangePickerBase
+	)
 );
 
 export default DateComponentRangePicker;

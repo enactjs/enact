@@ -58,9 +58,9 @@ const PickerButtonBase = kind({
 	}
 });
 
-const PickerButton = Holdable(
-	{resume: true, endHold: 'onLeave'},
-	withSkinnableProps(
+const PickerButton = withSkinnableProps(
+	Holdable(
+		{resume: true, endHold: 'onLeave'},
 		onlyUpdateForKeys(['aria-label', 'disabled', 'icon', 'joined', 'onMouseUp', 'skin', 'spotlightDisabled'])(
 			PickerButtonBase
 		)
