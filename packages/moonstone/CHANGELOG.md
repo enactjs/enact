@@ -22,6 +22,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Popup` layout in large text mode to show close button correctly
 - `moonstone/Picker` from moving scroller when pressing 5-way keys in `joined` Picker
 - `moonstone/Input` styling for some non-latin locales
+- `moonstone/TooltipDecorator` to hide tooltip when 5-way keys are pressed for disabled components
 - `moonstone/Picker` to not tremble in width when changing values while using a numeric width prop value
 
 ## [1.8.0] - 2017-09-07
