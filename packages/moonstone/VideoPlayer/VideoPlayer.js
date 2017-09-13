@@ -926,12 +926,12 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	refocusMoreButton = new Job(() => {
+	refocusMoreButton = () => {
 		// Readout 'more' or 'back' button explicitly.
 		let selectedButton = Spotlight.getCurrent();
 		selectedButton.blur();
 		selectedButton.focus();
-	}, 100)
+	}
 
 	startDelayedTitleHide = () => {
 		if (this.props.titleHideDelay) {
