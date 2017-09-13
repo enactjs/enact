@@ -451,12 +451,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const isEnter = ev.key === 'Enter';
 
 			if (isEnter && isOpen && current === this.state.activator) {
-				// prevent default page scrolling
-				ev.preventDefault();
-				// stop propagation to prevent default spotlight behavior
+				// stop propagation to prevent default wrapped component behavior
 				ev.stopPropagation();
-				// set the pointer mode to false on keydown
-				Spotlight.setPointerMode(false);
 				onClose(ev);
 			}
 		}
