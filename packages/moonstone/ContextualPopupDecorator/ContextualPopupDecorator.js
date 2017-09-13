@@ -449,7 +449,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const spotlessSpotlightModal = spotlightRestrict === 'self-only' && !spottables;
 			const shouldSpotPopup = spottables && current === this.state.activator && direction === this.adjustedDirection;
 
-			if (this.props.open) {
+			if (this.props.open && !spottables) {
 				this.props.onClose(ev);
 			} else if (direction && (shouldSpotPopup || (this.containerNode.contains(current) || spotlessSpotlightModal))) {
 				// prevent default page scrolling
