@@ -240,6 +240,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidMount () {
 			if (this.props.open) {
 				on('keydown', this.handleKeyDown);
+				on('keyup', this.handleKeyUp);
 			}
 		}
 
@@ -266,9 +267,11 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidUpdate (prevProps, prevState) {
 			if (this.props.open && !prevProps.open) {
 				on('keydown', this.handleKeyDown);
+				on('keyup', this.handleKeyUp);
 				this.spotPopupContent();
 			} else if (!this.props.open && prevProps.open) {
 				off('keydown', this.handleKeyDown);
+				off('keyup', this.handleKeyUp);
 				this.spotActivator(prevState.activator);
 			}
 		}
@@ -276,6 +279,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillUnmount () {
 			if (this.props.open) {
 				off('keydown', this.handleKeyDown);
+				off('keyup', this.handleKeyUp);
 			}
 			Spotlight.remove(this.state.containerId);
 		}
@@ -441,17 +445,31 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.clientNode = node;
 		}
 
+		handleKeyUp = (ev) => {
+			const {open: isOpen, onClose} = this.props;
+			const current = Spotlight.getCurrent();
+			const isEnter = ev.key === 'Enter';
+
+			if (isEnter && isOpen && current === this.state.activator) {
+				// prevent default page scrolling
+				ev.preventDefault();
+				// stop propagation to prevent default spotlight behavior
+				ev.stopPropagation();
+				// set the pointer mode to false on keydown
+				Spotlight.setPointerMode(false);
+				onClose(ev);
+			}
+		}
+
 		handleKeyDown = (ev) => {
 			const {onClose, spotlightRestrict} = this.props;
 			const current = Spotlight.getCurrent();
 			const direction = getDirection(ev.keyCode);
 			const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
 			const spotlessSpotlightModal = spotlightRestrict === 'self-only' && !spottables;
-			const shouldSpotPopup = spottables && current === this.state.activator && direction === this.adjustedDirection;
+			const shouldSpotPopup = current === this.state.activator && direction === this.adjustedDirection;
 
-			if (this.props.open && !spottables) {
-				this.props.onClose(ev);
-			} else if (direction && (shouldSpotPopup || (this.containerNode.contains(current) || spotlessSpotlightModal))) {
+			if (direction && spottables && (shouldSpotPopup || (this.containerNode.contains(current) || spotlessSpotlightModal))) {
 				// prevent default page scrolling
 				ev.preventDefault();
 				// stop propagation to prevent default spotlight behavior
