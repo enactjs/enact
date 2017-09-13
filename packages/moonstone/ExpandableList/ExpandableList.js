@@ -20,6 +20,8 @@ import RadioItem from '../RadioItem';
 
 import css from './ExpandableList.less';
 
+const PureGroup = Pure(Group);
+
 /**
  * {@link moonstone/ExpandableList.ExpandableListBase} is a stateless component that
  * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
@@ -296,7 +298,7 @@ const ExpandableListBase = kind({
 				autoClose={!noAutoClose}
 				lockBottom={!noLockBottom}
 			>
-				<Group
+				<PureGroup
 					childComponent={ListItem}
 					childSelect="onToggle"
 					itemProps={itemProps}
@@ -306,7 +308,7 @@ const ExpandableListBase = kind({
 					selectedProp="selected"
 				>
 					{children}
-				</Group>
+				</PureGroup>
 			</ExpandableItemBase>
 		);
 	}
@@ -333,30 +335,30 @@ const ExpandableListBase = kind({
  * @ui
  * @public
  */
-const ExpandableList = Expandable(
-	Changeable(
-		{change: 'onSelect', prop: 'selected'},
-		Pure(
-			{propComparators: {
-				'*': (a, b) => a === b,
-				children: (a, b) => {
-					if (!a || !b || a.length !== b.length) return false;
+const ExpandableList = Pure(
+	{propComparators: {
+		'*': (a, b) => a === b,
+		children: (a, b) => {
+			if (!a || !b || a.length !== b.length) return false;
 
-					let type = null;
-					for (let i = 0; i < a.length; i++) {
-						type = type || typeof a[i];
-						if (type === 'string') {
-							if (a !== b) {
-								return false;
-							}
-						} else if (!equals(a, b)) {
-							return false;
-						}
+			let type = null;
+			for (let i = 0; i < a.length; i++) {
+				type = type || typeof a[i];
+				if (type === 'string') {
+					if (a !== b) {
+						return false;
 					}
-
-					return true;
+				} else if (!equals(a, b)) {
+					return false;
 				}
-			}},
+			}
+
+			return true;
+		}
+	}},
+	Expandable(
+		Changeable(
+			{change: 'onSelect', prop: 'selected'},
 			ExpandableListBase
 		)
 	)

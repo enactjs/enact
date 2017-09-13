@@ -257,8 +257,8 @@ const IconBase = kind({
  * @public
  */
 
-const Icon = Skinnable(
-	Pure(
+const Icon = Pure(
+	Skinnable(
 		IconBase
 	)
 );

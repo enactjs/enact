@@ -505,6 +505,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			delete rest.popupContainerId;
+			delete rest.rtl;
 
 			if (openProp) rest[openProp] = open;
 

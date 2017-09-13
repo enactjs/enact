@@ -12,6 +12,7 @@ import ilib from '@enact/i18n';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 
 import $L from '../internal/$L';
 import {Expandable} from '../ExpandableItem';
@@ -263,10 +264,12 @@ const DayPickerBase = class extends React.Component {
  * @ui
  * @public
  */
-const DayPicker = Expandable(
-	Changeable(
-		{prop: 'selected', change: 'onSelect'},
-		DayPickerBase
+const DayPicker = Pure(
+	Expandable(
+		Changeable(
+			{prop: 'selected', change: 'onSelect'},
+			DayPickerBase
+		)
 	)
 );
 

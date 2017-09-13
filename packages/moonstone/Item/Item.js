@@ -120,10 +120,12 @@ const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidat
  * @ui
  * @public
  */
-const Item = Spottable(
-	ItemMarqueeDecorator(
-		Skinnable(
-			ItemBase
+const Item = Pure(
+	Spottable(
+		ItemMarqueeDecorator(
+			Skinnable(
+				ItemBase
+			)
 		)
 	)
 );

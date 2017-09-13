@@ -10,6 +10,7 @@ import kind from '@enact/core/kind';
 import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import {Subscription} from '@enact/core/internal/State';
 
 import $L from '../internal/$L';
@@ -248,6 +249,7 @@ const InputBase = kind({
 		delete rest.focused;
 		delete rest.invalid;
 		delete rest.invalidMessage;
+		delete rest.rtl;
 
 		return (
 			<div {...rest} disabled={disabled}>
@@ -285,12 +287,14 @@ const InputBase = kind({
  * @ui
  * @public
  */
-const Input = Subscription(
-	{channels: ['i18n'], mapStateToProps: (channel, {rtl}) => ({rtl})},
-	Changeable(
-		InputSpotlightDecorator(
-			Skinnable(
-				InputBase
+const Input = Pure(
+	Subscription(
+		{channels: ['i18n'], mapStateToProps: (channel, {rtl}) => ({rtl})},
+		Changeable(
+			InputSpotlightDecorator(
+				Skinnable(
+					InputBase
+				)
 			)
 		)
 	)

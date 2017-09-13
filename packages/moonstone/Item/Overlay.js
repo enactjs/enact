@@ -1,6 +1,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 
 import css from './Overlay.less';
 
@@ -50,8 +51,12 @@ const OverlayBase = kind({
 	}
 });
 
-export default OverlayBase;
+const Overlay = Pure(
+	OverlayBase
+);
+
+export default Overlay;
 export {
-	OverlayBase as Overlay,
+	Overlay,
 	OverlayBase
 };

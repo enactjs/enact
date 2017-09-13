@@ -5,7 +5,7 @@ import {childrenEquals} from '@enact/core/util';
 import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Subscription, Subscribe, contextTypes as stateContextTypes} from '@enact/core/internal/State';
+import {contextTypes as stateContextTypes} from '@enact/core/internal/State';
 
 import Marquee from './Marquee';
 import {contextTypes} from './MarqueeController';
@@ -116,7 +116,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardEnter = forward(enter);
 	const forwardLeave = forward(leave);
 
-	const Decorator = class extends React.Component {
+	return class extends React.Component {
 		static displayName = 'MarqueeDecorator'
 
 		static contextTypes = {
@@ -265,6 +265,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillMount () {
 			if (this.context.Subscriber) {
 				this.context.Subscriber.subscribe('resize', this.handleResize);
+				this.context.Subscriber.subscribe('i18n', this.handleLocaleChange);
 			}
 		}
 
@@ -320,6 +321,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (this.context.Subscriber) {
 				this.context.Subscriber.unsubscribe('resize', this.handleResize);
+				this.context.Subscriber.unsubscribe('i18n', this.handleLocaleChange);
 			}
 		}
 
@@ -576,6 +578,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		handleLocaleChange = ({message: {rtl}}) => {
+			if (this.state.rtl !== rtl) {
+				this.setState({rtl});
+			}
+		}
+
 		handleMarqueeComplete = (ev) => {
 			this.resetAnimation();
 			ev.stopPropagation();
@@ -711,15 +719,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 	};
-
-	return Subscription(
-		{channels: ['i18n'], mapStateToProps: (channel, state) => {
-			if (channel === 'i18n') {
-				return {rtl: state.rtl};
-			}
-		}},
-		Decorator
-	);
 });
 
 export default MarqueeDecorator;

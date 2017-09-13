@@ -11,7 +11,7 @@ import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import pure from 'recompose/pure';
+import Pure from '@enact/ui/internal/Pure';
 import {Subscription} from '@enact/core/internal/State';
 
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
@@ -333,12 +333,11 @@ const ExpandablePickerBase = kind({
  * @class ExpandablePicker
  * @memberof moonstone/ExpandablePicker
  * @ui
- * @mixes recompose/pure
  * @mixes moonstone/ExpandableItem.Expandable
  * @mixes ui/Changeable.Changeable
  * @public
  */
-const ExpandablePicker = pure(
+const ExpandablePicker = Pure(
 	Subscription(
 		{channels: ['i18n'], mapStateToProps: (channel, {rtl}) => ({rtl})},
 		Expandable(

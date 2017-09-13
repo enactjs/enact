@@ -7,6 +7,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import {selectSrc} from '@enact/ui/resolution';
 
 import css from './Image.less';
@@ -155,5 +156,12 @@ const ImageBase = kind({
 	}
 });
 
-export default ImageBase;
-export {ImageBase as Image, ImageBase};
+const Image = Pure(
+	ImageBase
+);
+
+export default Image;
+export {
+	Image,
+	ImageBase
+};
