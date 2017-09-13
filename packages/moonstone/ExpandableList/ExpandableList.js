@@ -354,10 +354,10 @@ const ExpandableList = Pure(
 			for (let i = 0; i < a.length; i++) {
 				type = type || typeof a[i];
 				if (type === 'string') {
-					if (a !== b) {
+					if (a[i] !== b[i]) {
 						return false;
 					}
-				} else if (!equals(a, b)) {
+				} else if (!equals(a[i], b[i])) {
 					return false;
 				}
 			}
