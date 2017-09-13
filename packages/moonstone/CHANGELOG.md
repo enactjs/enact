@@ -9,9 +9,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/styles/mixins.less` mixins: `.moon-spotlight-margin()` and `.moon-spotlight-padding()`
+- `moonstone/Button` property `noAnimation` to support non-animating pressed visual
 
 ### Changed
 
+- `moonstone/IconButton` default style to not animate on press. NOTE: This behavior will change back to its previous setting in release 2.0.0.
 - `moonstone/Popup` to warn when using `scrimType` `'none'` and `spotlightRestrict` `'self-only'`
 
 ### Fixed
