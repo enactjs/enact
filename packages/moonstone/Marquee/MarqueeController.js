@@ -104,6 +104,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.controlled = [];
+			this.isFocused = false;
 		}
 
 		getChildContext () {
@@ -126,7 +127,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		handleRegister = (component, handlers) => {
-			const needsStart = !this.allInactive();
+			const needsStart = !this.allInactive() || this.isFocused;
 
 			this.controlled.push({
 				...handlers,
@@ -205,6 +206,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * Handler for the focus event
 		 */
 		handleFocus = (ev) => {
+			this.isFocused = true;
 			this.dispatch('start');
 			forwardFocus(ev, this.props);
 		}
@@ -213,6 +215,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * Handler for the blur event
 		 */
 		handleBlur = (ev) => {
+			this.isFocused = false;
 			this.dispatch('stop');
 			this.markAll(STATE.inactive);
 			forwardBlur(ev, this.props);
