@@ -452,7 +452,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const isEnter = is('enter', ev.keyCode);
 
 			if (isEnter && isOpen && current === this.state.activator && onClose) {
-				// stop propagation to prevent default wrapped component behavior
+				// stop propagation to prevent default activator keyup behavior
 				ev.stopPropagation();
 				onClose(ev);
 			}
