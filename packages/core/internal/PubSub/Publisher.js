@@ -6,9 +6,12 @@ const Publisher = {
 			parent,
 			channel,
 
-			listeners: new Set(),
+			listeners: [],
 			addListener (callback) {
-				this.listeners.add(callback);
+				if (this.listeners.indexOf(callback) === -1) {
+					this.listeners.unshift(callback);
+				}
+
 				if (this.message) {
 					callback({
 						channel: this.channel,
@@ -17,18 +20,21 @@ const Publisher = {
 				}
 			},
 			removeListener (callback) {
-				this.listeners.delete(callback);
+				const index = this.listeners.indexOf(callback);
+				if (index >= 0) {
+					this.listeners.splice(index, 1);
+				}
 			},
 
 			message: null,
 			publish (message) {
 				this.message = Object.freeze(message);
-				for (let listener of this.listeners) {
+				this.listeners.forEach(listener => {
 					listener({
 						channel: this.channel,
 						message: this.message
 					});
-				}
+				});
 			},
 
 			subscriber: null,

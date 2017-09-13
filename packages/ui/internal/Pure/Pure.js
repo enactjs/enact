@@ -12,10 +12,12 @@ const defaultConfig = {
 const Pure = hoc(defaultConfig, (config, Wrapped) => {
 	const {propComparators} = config;
 
-	const name = Wrapped.displayName || Wrapped.name || (typeof Wrapped === 'string' ? Wrapped : 'Anonymous Component');
-
 	return class extends React.Component {
 		static displayName = 'Pure'
+
+		static propTypes = {}
+
+		static defaultProps = {}
 
 		shouldComponentUpdate (nextProps) {
 			return this.hasChanged(this.props, nextProps, propComparators);

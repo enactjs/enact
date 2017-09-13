@@ -5,7 +5,7 @@ import {childrenEquals} from '@enact/core/util';
 import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {contextTypes as stateContextTypes} from '@enact/core/internal/State';
+import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
 
 import Marquee from './Marquee';
 import {contextTypes} from './MarqueeController';
@@ -672,7 +672,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.marqueeResetDelay;
 			delete rest.marqueeSpeed;
 			delete rest.remeasure;
-			delete rest.rtl;
+
+			let {rtl} = this.state;
+			if (forceDirection) {
+				rtl = forceDirection === 'rtl';
+			}
 
 			return (
 				<Wrapped {...rest} disabled={disabled}>
@@ -682,10 +686,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						className={marqueeClassName}
 						clientRef={this.cacheNode}
 						distance={this.distance}
-						forceDirection={forceDirection}
 						onMarqueeComplete={this.handleMarqueeComplete}
 						overflow={this.state.overflow}
-						rtl={this.state.rtl}
+						rtl={rtl}
 						speed={marqueeSpeed}
 					>
 						{children}
@@ -706,7 +709,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.marqueeResetDelay;
 			delete props.marqueeSpeed;
 			delete props.remeasure;
-			delete props.rtl;
 
 			return <Wrapped {...props} />;
 		}

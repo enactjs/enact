@@ -9,7 +9,7 @@ import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Publisher, contextTypes as stateContextTypes} from '@enact/core/internal/State';
+import {Publisher, contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
 
 import ilib from '../src/index.js';
 import {isRtlLocale, updateLocale} from '../locale';

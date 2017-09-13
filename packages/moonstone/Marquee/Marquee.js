@@ -89,14 +89,6 @@ const MarqueeBase = kind({
 		distance: PropTypes.number,
 
 		/**
-		 * Forces the `direction` of the marquee. Valid values are `rtl` and `ltr`. This includes non-text elements as well.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		forceDirection: PropTypes.oneOf(['rtl', 'ltr']),
-
-		/**
 		 * Callback function for when the marquee completes its animation
 		 *
 		 * @type {Function}
@@ -141,9 +133,7 @@ const MarqueeBase = kind({
 
 	computed: {
 		clientClassName: ({animating}) => animating ? animated : css.text,
-		clientStyle: ({alignment, animating, centered, distance, forceDirection, overflow, rtl, speed}) => {
-			const isTextRtl = forceDirection ? forceDirection === 'rtl' : rtl;
-
+		clientStyle: ({alignment, animating, centered, distance, overflow, rtl, speed}) => {
 			let textAlign = null;
 
 			if (centered) {
@@ -157,10 +147,7 @@ const MarqueeBase = kind({
 
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
-			let direction = 'inherit';
-			if (forceDirection) {
-				direction = isTextRtl ? 'rtl' : 'ltr';
-			}
+			let direction = rtl ? 'rtl' : 'ltr';
 
 			const style = {
 				direction,

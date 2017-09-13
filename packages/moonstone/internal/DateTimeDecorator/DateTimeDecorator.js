@@ -11,7 +11,7 @@ import hoc from '@enact/core/hoc';
 import ilib from '@enact/i18n';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Subscription} from '@enact/core/internal/State';
+import {Subscription} from '@enact/core/internal/PubSub';
 
 import {Expandable} from '../../ExpandableItem';
 

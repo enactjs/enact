@@ -19,7 +19,7 @@ import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/State';
+import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';

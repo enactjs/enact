@@ -9,7 +9,7 @@
 import React from 'react';
 import invariant from 'invariant';
 import hoc from '@enact/core/hoc';
-import {contextTypes, Publisher, Subscription} from '@enact/core/internal/State';
+import {contextTypes, Publisher, Subscription} from '@enact/core/internal/PubSub';
 
 /**
  * Default config for {@link ui/Remeasurable.RemeasurableDecorator}
