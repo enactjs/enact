@@ -1,7 +1,7 @@
 // ItemOverlay.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
 
 // Defined so we don't repeat rules.
 @overlay-hidden: {
@@ -11,19 +11,29 @@
 };
 
 .item {
+	.remove-margin-on-edge-children();
+
 	.overlay {
 		line-height: 1;
+		white-space: nowrap;
 
-		&.before > :first-child {
-			.margin-start-end(0, @moon-icon-margin);
+		// RTL-safe margin for start/end for each overlay (both sides)
+		-webkit-margin-start: @moon-icon-margin;
+		-webkit-margin-end: @moon-icon-margin;
+
+		// Remove margin on the RTL-safe side for the first overlay, so the padding+margin isn't doubled
+		&:first-child {
+			-webkit-margin-start: 0;
 		}
 
-		&.after > :last-child {
-			.margin-start-end(@moon-icon-margin, 0);
+		&:last-child {
+			-webkit-margin-end: 0;
 		}
 
 		&.before,
 		&.after {
+			.remove-margin-on-edge-children();
+
 			> * {
 				margin-top: 0;
 				margin-bottom: 0;

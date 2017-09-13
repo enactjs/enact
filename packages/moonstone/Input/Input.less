@@ -181,23 +181,29 @@
 	}
 
 	// Languages with combining accent characters
-	&.enact-locale-th, // Thai - Test Chars: ฟิ้ไััุุ
-	&.enact-locale-ar, // Arabic
-	&.enact-locale-fa, // Farsi
-	&.enact-locale-ur, // Urdu
-	&.enact-locale-ku, // Kurdish
-	&.enact-locale-he, // Hebrew
-	&.enact-locale-hi, // Hindi
-	&.enact-locale-ta, // Tamil
-	&.enact-locale-te, // Telugu
-	&.enact-locale-kn, // Kannada
-	&.enact-locale-ml, // Malayalam
-	&.enact-locale-mr, // Marathi
-	&.enact-locale-bn, // Bengali
-	&.enact-locale-pa {// Panjabi
+	&:global(.enact-locale-th), // Thai - Test Chars: ฟิ้ไััุุ
+	&:global(.enact-locale-ar), // Arabic
+	&:global(.enact-locale-fa), // Farsi
+	&:global(.enact-locale-ur), // Urdu
+	&:global(.enact-locale-ku), // Kurdish
+	&:global(.enact-locale-he), // Hebrew
+	&:global(.enact-locale-hi), // Hindi
+	&:global(.enact-locale-ta), // Tamil
+	&:global(.enact-locale-te), // Telugu
+	&:global(.enact-locale-kn), // Kannada
+	&:global(.enact-locale-ml), // Malayalam
+	&:global(.enact-locale-mr), // Marathi
+	&:global(.enact-locale-bn), // Bengali
+	&:global(.enact-locale-pa) {// Panjabi
+		.input,
+		.iconBefore,
+		.iconAfter {
+			line-height: 48px;
+			height: 48px;
+		}
+
 		.input {
 			font-size: 24px;
-			line-height: 48px;
 		}
 
 		.decorator {

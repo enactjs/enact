@@ -740,10 +740,6 @@ const VideoPlayerBase = class extends React.Component {
 		) {
 			this.focusDefaultMediaControl();
 		}
-
-		if (this.state.more !== prevState.more) {
-			this.refocusMoreButton.start();
-		}
 	}
 
 	componentWillUnmount () {
@@ -758,7 +754,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedFeedbackHide();
 		this.announceJob.stop();
 		this.renderBottomControl.stop();
-		this.refocusMoreButton.stop();
 		this.stopListeningForPulses();
 		this.sliderTooltipTimeJob.stop();
 	}
@@ -1599,6 +1594,8 @@ const VideoPlayerBase = class extends React.Component {
 			more: !this.state.more,
 			titleVisible: true,
 			announce: this.state.announce < AnnounceState.INFO ? AnnounceState.INFO : AnnounceState.DONE
+		}, () => {
+			this.refocusMoreButton();
 		});
 	}
 
