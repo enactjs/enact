@@ -449,7 +449,9 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const spotlessSpotlightModal = spotlightRestrict === 'self-only' && !spottables;
 			const shouldSpotPopup = spottables && current === this.state.activator && direction === this.adjustedDirection;
 
-			if (direction && (shouldSpotPopup || (this.containerNode.contains(current) || spotlessSpotlightModal))) {
+			if (this.props.open) {
+				this.props.onClose(ev);
+			} else if (direction && (shouldSpotPopup || (this.containerNode.contains(current) || spotlessSpotlightModal))) {
 				// prevent default page scrolling
 				ev.preventDefault();
 				// stop propagation to prevent default spotlight behavior
@@ -484,7 +486,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		spotPopupContent = () => {
 			const {spotlightRestrict} = this.props;
 			const {containerId} = this.state;
-			if (spotlightRestrict === 'self-only') {
+			const spottableDescendants = Spotlight.getSpottableDescendants(containerId);
+			if (spotlightRestrict === 'self-only' && spottableDescendants.length) {
 				Spotlight.setPointerMode(false);
 			}
 			if (!Spotlight.focus(containerId)) {
