@@ -11,7 +11,7 @@ import {extractAriaProps} from '@enact/core/util';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
-import {is} from '@enact/core/keymap';
+import {handle, forProp, forKey, forward, stop} from '@enact/core/handle';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
@@ -446,17 +446,15 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.clientNode = node;
 		}
 
-		handleKeyUp = (ev) => {
-			const {open: isOpen, onClose} = this.props;
-			const current = Spotlight.getCurrent();
-			const isEnter = is('enter', ev.keyCode);
+		handle = handle.bind(this)
 
-			if (isEnter && isOpen && current === this.state.activator && onClose) {
-				// stop propagation to prevent default activator keyup behavior
-				ev.stopPropagation();
-				onClose(ev);
-			}
-		}
+		handleKeyUp = this.handle(
+			forProp('open', true),
+			forKey('enter'),
+			() => Spotlight.getCurrent() === this.state.activator,
+			stop,
+			forward('onClose')
+		)
 
 		handleKeyDown = (ev) => {
 			const {onClose, spotlightRestrict} = this.props;
