@@ -180,6 +180,7 @@ const PanelBase = kind({
 const Panel = SpotlightContainerDecorator(
 	{
 		// prefer any spottable within the panel body for first render
+		continue5WayHold: true,
 		defaultElement: [`.${spotlightDefaultClass}`, `.${css.body} *`],
 		enterTo: 'last-focused',
 		preserveId: true
