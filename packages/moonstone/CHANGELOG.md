@@ -14,9 +14,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/IconButton` default style to not animate on press. NOTE: This behavior will change back to its previous setting in release 2.0.0.
+- `moonstone/Popup` to warn when using `scrimType` `'none'` and `spotlightRestrict` `'self-only'`
 
 ### Fixed
 
+- `moonstone/Picker` to show numbers when changing values rapidly
 - `moonstone/Popup` layout in large text mode to show close button correctly
 - `moonstone/Picker` from moving scroller when pressing 5-way keys in `joined` Picker
 - `moonstone/Input` styling for some non-latin locales
