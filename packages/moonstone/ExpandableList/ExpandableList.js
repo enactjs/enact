@@ -20,7 +20,17 @@ import RadioItem from '../RadioItem';
 
 import css from './ExpandableList.less';
 
-const PureGroup = Pure(Group);
+const PureGroup = Pure(
+	{propComparators: {
+		itemProps: (a, b) => (
+			a.onSpotlightDisappear === b.onSpotlightDisappear &&
+			a.onSpotlightLeft === b.onSpotlightLeft &&
+			a.onSpotlightRight === b.onSpotlightRight &&
+			a.spotlightDisabled === b.spotlightDisabled
+		)
+	}},
+	Group
+);
 
 /**
  * {@link moonstone/ExpandableList.ExpandableListBase} is a stateless component that
@@ -337,7 +347,6 @@ const ExpandableListBase = kind({
  */
 const ExpandableList = Pure(
 	{propComparators: {
-		'*': (a, b) => a === b,
 		children: (a, b) => {
 			if (!a || !b || a.length !== b.length) return false;
 

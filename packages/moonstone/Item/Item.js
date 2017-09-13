@@ -156,8 +156,6 @@ const ItemOverlay = Slottable(
 	{slots: ['overlayAfter', 'overlayBefore']},
 	Pure(
 		{propComparators: {
-			'*': (a, b) => a === b,
-			children: childrenEquals,
 			overlayBefore: childrenEquals,
 			overlayAfter: childrenEquals
 		}},
