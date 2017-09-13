@@ -365,48 +365,75 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		render () {
-			const {children, tooltipCasing, tooltipPreserveCase, tooltipProps, tooltipText, tooltipWidth, ...rest} = this.props;
-			delete rest.tooltipDelay;
-			delete rest.tooltipPosition;
+		/**
+		 * Conditionally creates the FloatingLayer and Tooltip based on the presence of
+		 * `tooltipText` and returns a property bag to pass onto the Wrapped component
+		 *
+		 * @returns {Object} Prop object
+		 * @private
+		 */
+		renderTooltip () {
+			const {children, tooltipCasing, tooltipPreserveCase, tooltipProps, tooltipText, tooltipWidth} = this.props;
 
-			const renderedTooltip = (
-				<FloatingLayer open={this.state.showing} scrimType="none" key="tooltipFloatingLayer">
-					<Tooltip
-						aria-live="off"
-						role="alert"
-						{...tooltipProps}
-						arrowAnchor={this.state.arrowAnchor}
-						casing={tooltipCasing}
-						direction={this.state.tooltipDirection}
-						position={this.state.position}
-						preserveCase={tooltipPreserveCase}
-						tooltipRef={this.getTooltipRef}
-						width={tooltipWidth}
-					>
-						{tooltipText}
-					</Tooltip>
-				</FloatingLayer>
-			);
+			if (tooltipText) {
+				const renderedTooltip = (
+					<FloatingLayer open={this.state.showing} scrimType="none" key="tooltipFloatingLayer">
+						<Tooltip
+							aria-live="off"
+							role="alert"
+							{...tooltipProps}
+							arrowAnchor={this.state.arrowAnchor}
+							casing={tooltipCasing}
+							direction={this.state.tooltipDirection}
+							position={this.state.position}
+							preserveCase={tooltipPreserveCase}
+							tooltipRef={this.getTooltipRef}
+							width={tooltipWidth}
+						>
+							{tooltipText}
+						</Tooltip>
+					</FloatingLayer>
+				);
 
-			let internalTooltip;
-
-			if (tooltipDestinationProp === 'children') {
-				internalTooltip = [children, renderedTooltip];
-			} else {
-				rest[tooltipDestinationProp] = renderedTooltip;
+				if (tooltipDestinationProp === 'children') {
+					return {
+						children: [children, renderedTooltip]
+					};
+				} else {
+					return {
+						[tooltipDestinationProp]: renderedTooltip
+					};
+				}
 			}
 
+			return {children};
+		}
+
+		render () {
+			// minor optimization to merge all the props together once since we also have to delete
+			// invalid props before passing downstream
+			const props = Object.assign(
+				{},
+				this.props,
+				this.renderTooltip(),
+				{
+					onBlur: this.handleBlur,
+					onFocus: this.handleFocus,
+					onMouseOut: this.handleMouseOut,
+					onMouseOver: this.handleMouseOver
+				}
+			);
+
+			delete props.tooltipDelay;
+			delete props.tooltipPosition;
+			delete props.tooltipCasing;
+			delete props.tooltipPreserveCase;
+			delete props.tooltipProps;
+			delete props.tooltipText;
+			delete props.tooltipWidth;
+
 			return (
-				<Wrapped
-					{...rest}
-					onBlur={this.handleBlur}
-					onFocus={this.handleFocus}
-					onMouseOut={this.handleMouseOut}
-					onMouseOver={this.handleMouseOver}
-				>
-					{internalTooltip || children}
-				</Wrapped>
+				<Wrapped {...props} />
 			);
 		}
 	};
