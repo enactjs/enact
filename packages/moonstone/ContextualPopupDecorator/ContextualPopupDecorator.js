@@ -501,7 +501,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {containerId} = this.state;
 			const spottableDescendants = Spotlight.getSpottableDescendants(containerId);
 			if (spotlightRestrict === 'self-only' && spottableDescendants.length) {
-				Spotlight.setPointerMode(false);
+				Spotlight.getCurrent().blur();
 			}
 			if (!Spotlight.focus(containerId)) {
 				Spotlight.setActiveContainer(containerId);
