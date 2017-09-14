@@ -782,13 +782,18 @@ const PickerBase = class extends React.Component {
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
 
 		let arranger;
-		if (width && !disabled) {
+		if (!noAnimation && !disabled) {
 			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
 		}
 
 		let sizingPlaceholder = null;
+
 		if (typeof width === 'number' && width > 0) {
 			sizingPlaceholder = <div aria-hidden className={css.sizingPlaceholder}>{ '0'.repeat(width) }</div>;
+		} else if (children[index].props.children) {
+			// If width is not specified for Picker, use the character width of the current child
+			const currentChildWidth = children[index].props.children.toString().length;
+			sizingPlaceholder = <div aria-hidden className={css.sizingPlaceholder}>{ '0'.repeat(currentChildWidth) }</div>;
 		}
 
 		const valueText = this.calcValueText();
