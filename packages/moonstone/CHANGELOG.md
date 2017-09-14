@@ -25,7 +25,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Input` styling for some non-latin locales
 - `moonstone/TooltipDecorator` to hide tooltip when 5-way keys are pressed for disabled components
 - `moonstone/Picker` to not tremble in width when changing values while using a numeric width prop value
-- `moonstone/Picker` to not overlap values when changing values in `vertical` and no specified width
+- `moonstone/Picker` to not overlap values when changing values in `vertical`
 
 ## [1.8.0] - 2017-09-07
 
