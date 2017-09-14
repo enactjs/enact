@@ -9,8 +9,9 @@
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import hoc from '@enact/core/hoc';
 import FloatingLayer from '@enact/ui/FloatingLayer';
-import {forward} from '@enact/core/handle';
+import {forward, handle, forProp} from '@enact/core/handle';
 import {Job} from '@enact/core/util';
+import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
@@ -56,10 +57,6 @@ const defaultConfig = {
  */
 const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
-	const forwardBlur = forward('onBlur');
-	const forwardFocus = forward('onFocus');
-	const forwardMouseOver = forward('onMouseOver');
-	const forwardMouseOut = forward('onMouseOut');
 	const tooltipDestinationProp = config.tooltipDestinationProp;
 
 	return class extends React.Component {
@@ -180,6 +177,10 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (currentTooltip === this) {
 				currentTooltip = null;
 				this.showTooltipJob.stop();
+			}
+
+			if (this.props.disabled) {
+				off('keydown', this.handleKeyDown);
 			}
 		}
 
@@ -315,7 +316,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		})
 
-		showTooltip (client) {
+		showTooltip = (client) => {
 			const {tooltipDelay, tooltipText} = this.props;
 
 			if (tooltipText) {
@@ -325,7 +326,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		hideTooltip () {
+		hideTooltip = () => {
 			if (this.props.tooltipText) {
 				this.clientRef = null;
 				currentTooltip = null;
@@ -334,29 +335,43 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handleMouseOver = (ev) => {
-			if (this.props.disabled) {
-				this.showTooltip(ev.target);
-			}
-			forwardMouseOver(ev, this.props);
-		}
+		handle = handle.bind(this)
 
-		handleMouseOut = (ev) => {
-			if (this.props.disabled) {
+		handleKeyDown = this.handle(
+			forProp('disabled', true),
+			() => {
 				this.hideTooltip();
+				off('keydown', this.handleKeyDown);
 			}
-			forwardMouseOut(ev, this.props);
-		}
+		);
 
-		handleFocus = (ev) => {
-			this.showTooltip(ev.target);
-			forwardFocus(ev, this.props);
-		}
+		handleMouseOver = this.handle(
+			forward('onMouseOver'),
+			forProp('disabled', true),
+			(ev) => {
+				this.showTooltip(ev.target);
+				on('keydown', this.handleKeyDown);
+			}
+		)
 
-		handleBlur = (ev) => {
-			this.hideTooltip();
-			forwardBlur(ev, this.props);
-		}
+		handleMouseOut = this.handle(
+			forward('onMouseOut'),
+			forProp('disabled', true),
+			() => {
+				this.hideTooltip();
+				off('keydown', this.handleKeyDown);
+			}
+		)
+
+		handleFocus = this.handle(
+			forward('onFocus'),
+			({target}) => this.showTooltip(target)
+		)
+
+		handleBlur = this.handle(
+			forward('onBlur'),
+			this.hideTooltip
+		)
 
 		getTooltipRef = (node) => {
 			this.tooltipRef = node;
