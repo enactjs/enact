@@ -263,6 +263,7 @@ class VirtualListCoreNative extends Component {
 	cc = []
 	scrollPosition = 0
 	isScrolledBy5way = false
+	isItemReadyForRestore = true
 
 	containerClass = null
 	contentRef = null
@@ -429,7 +430,7 @@ class VirtualListCoreNative extends Component {
 		const
 			{dataSize, overhang} = props,
 			{firstIndex} = this.state,
-			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
+			{dimensionToExtent, primary, moreInfo, preservedIndex, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
 			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
 			dataSizeDiff = dataSize - this.curDataSize;
@@ -437,6 +438,7 @@ class VirtualListCoreNative extends Component {
 
 		this.maxFirstIndex = dataSize - numOfItems;
 		this.curDataSize = dataSize;
+		this.isItemReadyForRestore = (preservedIndex <= dataSize);
 
 		// reset children
 		this.cc = [];
@@ -445,7 +447,7 @@ class VirtualListCoreNative extends Component {
 
 		if (this.restoreLastFocused &&
 			numOfItems > 0 &&
-			(this.preservedIndex < moreInfo.firstVisibleIndex || this.preservedIndex > moreInfo.lastVisibleIndex)) {
+			(this.preservedIndex < moreInfo.firstVisibleIndex || this.preservedIndex > moreInfo.lastVisibleIndex) && this.isItemReadyForRestore) {
 			// If we need to restore last focus and the index is beyond the screen,
 			// we call `scrollTo` to create DOM for it.
 			this.props.cbScrollTo({index: this.preservedIndex, animate: false});
