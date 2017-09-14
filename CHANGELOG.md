@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Input` height for non-latin locales
+
 ## [1.8.0] - 2017-09-07
 
 ### Deprecated
