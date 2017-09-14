@@ -37,7 +37,7 @@ const forwardHide = forward('onHide');
 const forwardShow = forward('onShow');
 
 const shouldChangeFocus = (containerId) => {
-	let current = Spotlight.getCurrent();
+	const current = Spotlight.getCurrent();
 	const containerNode = getContainerNode(containerId);
 	return !current || (containerNode && containerNode.contains(current));
 };
