@@ -2,8 +2,30 @@ import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+/**
+ * Default config for {@link core/internal/PubSub.Subscription}.
+ *
+ * @memberof core/internal/PubSub.Subscription
+ * @hocconfig
+ */
 const defaultConfig = {
+	/**
+	 * Array of channels to which the component should subscribe
+	 *
+	 * @type {String[]}
+	 * @default null
+	 * @required
+	 * @memberof core/internal/PubSub.Subscription.defaultConfig
+	 */
 	channels: null,
+
+	/**
+	 * Function that maps a channel's message to props
+	 *
+	 * @type {Function}
+	 * @default null
+	 * @memberof core/internal/PubSub.Subscription.defaultConfig
+	 */
 	mapStateToProps: null
 };
 
@@ -14,6 +36,39 @@ const contextTypes = {
 	})
 };
 
+/**
+ * Subscribes to the configured `channels` and passes the received messages to the Wrapped component
+ * as props. By default, if the channel has published a message, the prop will be the name of the
+ * channel and the value will be the last message sent. This behavior can be overridden by providing
+ * a value to `mapStateToProps` which will be called for each channel and message and should return
+ * an props object.
+ *
+ * ```
+ * const Component = ({userId, settings}) => { ... };
+ * const SubscribedComponent = Subscription(
+ *     channels: ['user', 'settings'],
+ *     mapStateToProps: (channel, message) => {
+ *         if (channel === 'user') {
+ *             // extract user's id and pass it as userId
+ *             return {
+ *                 userId: message.id
+ *             };
+ *         }
+ *         
+ *         // for settings, pass the message on 'as-is'
+ *         return {
+ *             settings: message
+ *         };
+ *     },
+ *     Component
+ * )
+ * ```
+ *
+ * @class Subscription
+ * @memberof core/internal/PubSub
+ * @hoc
+ * @private
+ */
 const Subscription = hoc(defaultConfig, (config, Wrapped) => {
 	const {channels, mapStateToProps} = config;
 
