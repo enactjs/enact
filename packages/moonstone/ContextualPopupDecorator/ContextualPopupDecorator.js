@@ -11,6 +11,7 @@ import {extractAriaProps} from '@enact/core/util';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
+import {handle, forProp, forKey, forward, stop} from '@enact/core/handle';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
@@ -240,6 +241,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidMount () {
 			if (this.props.open) {
 				on('keydown', this.handleKeyDown);
+				on('keyup', this.handleKeyUp);
 			}
 		}
 
@@ -266,9 +268,11 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidUpdate (prevProps, prevState) {
 			if (this.props.open && !prevProps.open) {
 				on('keydown', this.handleKeyDown);
+				on('keyup', this.handleKeyUp);
 				this.spotPopupContent();
 			} else if (!this.props.open && prevProps.open) {
 				off('keydown', this.handleKeyDown);
+				off('keyup', this.handleKeyUp);
 				this.spotActivator(prevState.activator);
 			}
 		}
@@ -276,6 +280,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillUnmount () {
 			if (this.props.open) {
 				off('keydown', this.handleKeyDown);
+				off('keyup', this.handleKeyUp);
 			}
 			Spotlight.remove(this.state.containerId);
 		}
@@ -441,15 +446,25 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.clientNode = node;
 		}
 
+		handle = handle.bind(this)
+
+		handleKeyUp = this.handle(
+			forProp('open', true),
+			forKey('enter'),
+			() => Spotlight.getCurrent() === this.state.activator,
+			stop,
+			forward('onClose')
+		)
+
 		handleKeyDown = (ev) => {
 			const {onClose, spotlightRestrict} = this.props;
 			const current = Spotlight.getCurrent();
 			const direction = getDirection(ev.keyCode);
 			const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
 			const spotlessSpotlightModal = spotlightRestrict === 'self-only' && !spottables;
-			const shouldSpotPopup = spottables && current === this.state.activator && direction === this.adjustedDirection;
+			const shouldSpotPopup = current === this.state.activator && direction === this.adjustedDirection;
 
-			if (direction && (shouldSpotPopup || (this.containerNode.contains(current) || spotlessSpotlightModal))) {
+			if (direction && spottables && (shouldSpotPopup || (this.containerNode.contains(current) || spotlessSpotlightModal))) {
 				// prevent default page scrolling
 				ev.preventDefault();
 				// stop propagation to prevent default spotlight behavior
@@ -482,7 +497,12 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		spotPopupContent = () => {
+			const {spotlightRestrict} = this.props;
 			const {containerId} = this.state;
+			const spottableDescendants = Spotlight.getSpottableDescendants(containerId);
+			if (spotlightRestrict === 'self-only' && spottableDescendants.length) {
+				Spotlight.getCurrent().blur();
+			}
 			if (!Spotlight.focus(containerId)) {
 				Spotlight.setActiveContainer(containerId);
 			}
