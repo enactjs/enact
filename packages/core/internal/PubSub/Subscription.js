@@ -26,7 +26,7 @@ const defaultConfig = {
 	 * @default null
 	 * @memberof core/internal/PubSub.Subscription.defaultConfig
 	 */
-	mapStateToProps: null
+	mapMessageToProps: null
 };
 
 const contextTypes = {
@@ -40,14 +40,14 @@ const contextTypes = {
  * Subscribes to the configured `channels` and passes the received messages to the Wrapped component
  * as props. By default, if the channel has published a message, the prop will be the name of the
  * channel and the value will be the last message sent. This behavior can be overridden by providing
- * a value to `mapStateToProps` which will be called for each channel and message and should return
+ * a value to `mapMessageToProps` which will be called for each channel and message and should return
  * an props object.
  *
  * ```
  * const Component = ({userId, settings}) => { ... };
  * const SubscribedComponent = Subscription(
  *     channels: ['user', 'settings'],
- *     mapStateToProps: (channel, message) => {
+ *     mapMessageToProps: (channel, message) => {
  *         if (channel === 'user') {
  *             // extract user's id and pass it as userId
  *             return {
@@ -70,7 +70,7 @@ const contextTypes = {
  * @private
  */
 const Subscription = hoc(defaultConfig, (config, Wrapped) => {
-	const {channels, mapStateToProps} = config;
+	const {channels, mapMessageToProps} = config;
 
 	return class extends React.Component {
 
@@ -113,12 +113,12 @@ const Subscription = hoc(defaultConfig, (config, Wrapped) => {
 		combinePropsAndState () {
 			// Choosing to overwrite state with props to provide a simple way to allow localized
 			// overrides. This can be prevented by a Subscription instance by implementing
-			// mapStateToProps in such a way that the state is redirected into different props.
+			// mapMessageToProps in such a way that the state is redirected into different props.
 
-			if (typeof mapStateToProps === 'function') {
+			if (typeof mapMessageToProps === 'function') {
 				return Object.assign(
 					{},
-					...Object.keys(this.state).map(key => mapStateToProps(key, this.state[key])),
+					...Object.keys(this.state).map(key => mapMessageToProps(key, this.state[key])),
 					this.props
 				);
 			}

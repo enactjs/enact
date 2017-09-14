@@ -233,7 +233,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 	};
 
 	return Subscription(
-		{channels: ['i18n'], mapStateToProps: (channel, {rtl}) => ({rtl})},
+		{channels: ['i18n'], mapMessageToProps: (channel, {rtl}) => ({rtl})},
 		Expandable(
 			Changeable(
 				Decorator

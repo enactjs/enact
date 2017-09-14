@@ -191,7 +191,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
  */
 const withSkinnableProps = Subscription({
 	channels: ['skin'],
-	mapStateToProps: (channel, {skin}) => ({skin})
+	mapMessageToProps: (channel, {skin}) => ({skin})
 });
 
 

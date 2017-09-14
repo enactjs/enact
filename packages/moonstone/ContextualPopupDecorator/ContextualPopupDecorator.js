@@ -539,7 +539,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return Subscription(
 		{
 			channels: ['i18n'],
-			mapStateToProps: (key, {rtl}) => ({rtl})
+			mapMessageToProps: (key, {rtl}) => ({rtl})
 		},
 		Decorator
 	);

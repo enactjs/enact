@@ -120,7 +120,7 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
  */
 const Remeasurable = Subscription({
 	channels: ['resize'],
-	mapStateToProps: (channel, state) => state
+	mapMessageToProps: (channel, state) => state
 });
 
 export default Remeasurable;
