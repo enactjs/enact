@@ -16,7 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Panel` to move key navigation to application close button on holding the"up" key.
+- `moonstone/Panel` to move key navigation to application close button on holding the "up" key.
 - `moonstone/Picker` to show numbers when changing values rapidly
 - `moonstone/Popup` layout in large text mode to show close button correctly
 - `moonstone/Picker` from moving scroller when pressing 5-way keys in `joined` Picker
