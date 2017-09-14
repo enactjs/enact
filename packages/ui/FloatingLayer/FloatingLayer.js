@@ -206,11 +206,11 @@ class FloatingLayerBase extends React.Component {
 		}
 	}
 
+	attachClickHandlerJob = new Job(() => on('click', this.handleClick))
+
 	render () {
 		return null;
 	}
-
-	attachClickHandlerJob = new Job(() => on('click', this.handleClick))
 }
 
 const handleCancel = (props) => {
