@@ -589,6 +589,8 @@ const Spotlight = (function () {
 				} else {
 					target = getTargetBySelector(elem);
 				}
+			} else if (typeof elem === 'object' && elem.getAttribute('disabled') !== null) {
+				target = getTargetByContainer();
 			}
 
 			const nextContainerIds = getContainersForNode(target);

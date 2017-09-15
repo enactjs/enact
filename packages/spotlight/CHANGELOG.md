@@ -11,7 +11,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Changed
 
 ### Fixed
-
+- `spotlight` to not to focus when a node is disabled and move the focus to a not disabled element.
 - `spotlight` to not try to focus something when the window is activated unless the window has been previously blurred
 
 ## [1.8.0] - 2017-09-07
