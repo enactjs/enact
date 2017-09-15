@@ -53,7 +53,7 @@
 .decorator {
 	display: inline-flex;
 	position: relative;
-	padding: 12px 30px;
+	padding: 3px 30px;
 	border-radius: 1008px;
 	margin: 6px;
 	border: @moon-input-border-width solid transparent;
@@ -62,8 +62,8 @@
 	.input,
 	.iconBefore,
 	.iconAfter {
-		line-height: 39px;
-		height: 39px;
+		line-height: 57px;
+		height: 57px;
 	}
 
 	.iconBefore,
@@ -174,40 +174,3 @@
 		});
 	}
 });
-
-:global(.enact-locale-non-latin) {
-	.decorator {
-		padding: 6px 30px 12px;
-	}
-
-	// Languages with combining accent characters
-	&:global(.enact-locale-th), // Thai - Test Chars: ฟิ้ไััุุ
-	&:global(.enact-locale-ar), // Arabic
-	&:global(.enact-locale-fa), // Farsi
-	&:global(.enact-locale-ur), // Urdu
-	&:global(.enact-locale-ku), // Kurdish
-	&:global(.enact-locale-he), // Hebrew
-	&:global(.enact-locale-hi), // Hindi
-	&:global(.enact-locale-ta), // Tamil
-	&:global(.enact-locale-te), // Telugu
-	&:global(.enact-locale-kn), // Kannada
-	&:global(.enact-locale-ml), // Malayalam
-	&:global(.enact-locale-mr), // Marathi
-	&:global(.enact-locale-bn), // Bengali
-	&:global(.enact-locale-pa) {// Panjabi
-		.input,
-		.iconBefore,
-		.iconAfter {
-			line-height: 48px;
-			height: 48px;
-		}
-
-		.input {
-			font-size: 24px;
-		}
-
-		.decorator {
-			padding: 1px 30px;
-		}
-	}
-}
