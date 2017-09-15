@@ -105,6 +105,11 @@ const TimePicker = DateTimeDecorator({
 			values.minute = value.getMinutes();
 			if (i18n.meridiemEnabled) {
 				values.meridiem = indexOfMeridiem(value, i18n.meridiemRanges);
+				if (values.meridiems.length > 2) {
+					values.meridiemLabel = `${values.meridiems[0]} / ${values.meridiems[1]} ...`;
+				} else {
+					values.meridiemLabel = values.meridiems.join(' / ');
+				}
 			}
 		}
 

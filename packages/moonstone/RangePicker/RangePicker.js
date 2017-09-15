@@ -215,6 +215,7 @@ const RangePickerBase = kind({
 
 			return value;
 		},
+		width: ({max, min, width}) => (width || Math.max(max.toString().length, min.toString().length)),
 		value: ({min, max, value}) => {
 			if (__DEV__) {
 				validateRange(value, min, max, 'RangePicker');

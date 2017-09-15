@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact i18n module, newest chan
 
 ### Changed
 
+- Vietnamese to be classified as a non-latin language
+
 ### Fixed
 
 ## [1.8.0] - 2017-09-07

@@ -70,10 +70,12 @@
 
 		.incrementer {
 			order: 3;
+			flex-shrink: 0;
 			margin-left: @moon-spotlight-outset;
 		}
 		.decrementer {
 			order: 1;
+			flex-shrink: 0;
 			margin-right: @moon-spotlight-outset;
 		}
 		.valueWrapper {
@@ -190,6 +192,7 @@
 
 		&.vertical {
 			.valueWrapper {
+				.sizingPlaceholder,
 				.item {
 					.moon-custom-text({
 						margin: 0 @moon-spotlight-outset;
@@ -206,6 +209,7 @@
 			padding: 0 @moon-spotlight-outset;
 		});
 
+		.sizingPlaceholder,
 		.item {
 			margin: 0 @moon-spotlight-outset;
 
