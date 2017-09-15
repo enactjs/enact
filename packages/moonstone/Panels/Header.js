@@ -16,6 +16,30 @@ const MarqueeH2 = MarqueeDecorator('h2');
 const HeaderH1 = Uppercase(MarqueeDecorator('h1'));
 
 /**
+ * A container for UppercaseH1 component in the compact header
+ *
+ * @class Header
+ * @memberof moonstone/Panels
+ * @see i18n/Uppercase.Uppercase
+ * @ui
+ * @public
+ */
+const CompactTitleBase = kind({
+    name: 'CompactTitle',
+    render: (props) => {
+        delete props.title;
+        delete props.titleBelow;
+
+        return (
+            <div {...rest} />
+        );
+    };
+});
+
+// Marquee decorated container with title and titleBelow as invalidateProps
+const CompactTitle = MarqueeDecorator({invalidateProps: ['title', 'titleBelow']}, CompactTitleBase);
+
+/**
  * A visual header component for a Panel with a title, titleAbove, titleBelow, and subTitleBelow
  *
  * @class Header
@@ -156,10 +180,10 @@ const HeaderBase = kind({
 		switch (type) {
 			case 'compact': return (
 				<header aria-label={title} {...rest}>
-					<MarqueeText className={css.headerCell} marqueeOn={marqueeOn} forceDirection={direction}>
+					<CompactTitle className={css.headerCell} title={title} titleBelow={titleBelowComponent} marqueeOn={marqueeOn} forceDirection={direction}>
 						<UppercaseH1 casing={casing} className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
 						{titleBelowComponent}
-					</MarqueeText>
+					</CompactTitle>
 					<nav className={css.headerComponents}>{children}</nav>
 				</header>
 			);
