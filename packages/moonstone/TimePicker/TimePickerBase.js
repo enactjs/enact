@@ -270,6 +270,9 @@ const TimePickerBase = kind({
 							const isLeft = rtl && picker === 'a' || isFirst && !rtl;
 							// minute will always be the right-most control in RTL, regardless of the provided order
 							const isRight = rtl && picker === 'm' || isLast && !rtl;
+							// consist meridiem string for label
+							const meridiemLabel = (meridiems.length > 2) ? `${meridiems[0]} / ${meridiems[1]} ...` : meridiems.join('/');
+
 							switch (picker) {
 								case 'h':
 								case 'k':
@@ -314,7 +317,7 @@ const TimePickerBase = kind({
 										<DateComponentPicker
 											className={css.meridiemComponent}
 											key="meridiem-picker"
-											label={noLabels ? null : meridiems.join('/')}
+											label={noLabels ? null : meridiemLabel}
 											onChange={onChangeMeridiem}
 											onSpotlightDisappear={onSpotlightDisappear}
 											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
