@@ -256,9 +256,7 @@ const ExpandableItemBase = kind({
 		handleOpen: (ev, {disabled, onClose, onOpen, open}) => {
 			// When disabled, don't attach an event
 			if (!disabled) {
-				if (!Spotlight.getPointerMode()) {
-					Spotlight.pause();
-				}
+				Spotlight.pause();
 
 				if (open) {
 					onClose(ev);
