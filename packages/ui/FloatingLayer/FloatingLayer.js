@@ -1,4 +1,5 @@
 import {on, off} from '@enact/core/dispatcher';
+import {Job} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
@@ -155,6 +156,7 @@ class FloatingLayerBase extends React.Component {
 		this.floatLayer = null;
 		this.node = null;
 
+		this.attachClickHandlerJob.stop();
 		off('click', this.handleClick);
 	}
 
@@ -199,10 +201,12 @@ class FloatingLayerBase extends React.Component {
 			if (scrimType === 'none') {
 				// Attach click event handler asynchronously to make sure the event responsible for opening
 				// won't be closed by other click event listeners attached to the dispatcher.
-				setTimeout(() => on('click', this.handleClick));
+				this.attachClickHandlerJob.start();
 			}
 		}
 	}
+
+	attachClickHandlerJob = new Job(() => on('click', this.handleClick))
 
 	render () {
 		return null;

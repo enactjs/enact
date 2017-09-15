@@ -79,6 +79,16 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			disabled: PropTypes.bool,
 
 			/**
+			 * When `true`, the button does not animate on press. Note that the default value
+			 * will change to `false` in 2.0.0
+			 *
+			 * @type {Boolean}
+			 * @default true
+			 * @public
+			 */
+			noAnimation: PropTypes.bool,
+
+			/**
 			 * When `true`, a pressed visual effect is applied to the icon button
 			 *
 			 * @type {Boolean}
@@ -116,6 +126,7 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		defaultProps: {
+			noAnimation: true,
 			small: false
 		},
 

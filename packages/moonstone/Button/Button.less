@@ -2,6 +2,7 @@
 //
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
+@import '../styles/colors.less';
 @import '../styles/text.less';
 @import '../styles/skin.less';
 
@@ -144,9 +145,17 @@
 		.focus({
 			&.pressed,
 			&:active {
-				.bg {
-					-webkit-animation-name: expand;
-					animation-name: expand;
+				&.noAnimation {
+					.bg {
+						background-color: @moon-icon-button-active-bg-color;
+						border-color: @moon-icon-button-active-border-color;
+					}
+				}
+				&:not(.noAnimation) {
+					.bg {
+						-webkit-animation-name: expand;
+						animation-name: expand;
+					}
 				}
 			}
 		});
