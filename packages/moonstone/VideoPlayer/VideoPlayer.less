@@ -59,6 +59,13 @@
 			left: @moon-video-player-padding-side;
 			right: @moon-video-player-padding-side;
 
+			&.hidden {
+				.sliderFrame {
+					position: absolute;
+					width: 100%
+				}
+			}
+
 			.infoFrame {
 				display: flex;
 				margin-bottom: @moon-spotlight-outset;
@@ -342,6 +349,7 @@
 		.fullscreen {
 			.miniFeedback {
 				background-color: @moon-video-feedback-mini-bg-color;
+				color: @moon-video-feedback-mini-text-color;
 			}
 			.bottom {
 				background-color: @moon-video-player-bottom-bg-color;

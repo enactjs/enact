@@ -880,8 +880,8 @@ const VideoPlayerBase = class extends React.Component {
 			bottomControlsRendered: true,
 			feedbackVisible: true,
 			mediaControlsVisible: true,
-			miniFeedbackVisible: false,
 			mediaSliderVisible: true,
+			miniFeedbackVisible: false,
 			titleVisible: true
 		}, () => forwardControlsAvailable({available: true}, this.props));
 	}
@@ -920,7 +920,9 @@ const VideoPlayerBase = class extends React.Component {
 			this.setState({
 				bottomControlsRendered: true,
 				feedbackVisible: false,
-				mediaSliderVisible: true,
+				mediaSliderVisible: this.video.playbackRate !== 1 ||
+					this.prevPlaybackState === 'jumpBackward' ||
+					this.prevPlaybackState === 'jumpForward',
 				miniFeedbackVisible: true
 			});
 		}
