@@ -460,7 +460,8 @@ class VirtualListCore extends Component {
 		this.updateMoreInfo(dataSize, scrollPosition);
 
 		if (this.restoreLastFocused &&
-			numOfItems > 0 && (preservedIndex < dataSize) &&
+			numOfItems > 0 &&
+			(preservedIndex < dataSize) &&
 			(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
 			// If we need to restore last focus and the index is beyond the screen,
 			// we call `scrollTo` to create DOM for it.
