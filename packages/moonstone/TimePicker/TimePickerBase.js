@@ -93,6 +93,15 @@ const TimePickerBase = kind({
 		meridiem: PropTypes.number.isRequired,
 
 		/**
+		 * String of meridiem for picker label
+		 *
+		 * @type {String}
+		 * @required
+		 * @public
+		 */
+		meridiemLabel: PropTypes.string.isRequired,
+
+		/**
 		 * Array of meridiem labels to display
 		 *
 		 * @type {String[]}
@@ -233,6 +242,7 @@ const TimePickerBase = kind({
 		hasMeridiem,
 		hour,
 		meridiem,
+		meridiemLabel,
 		meridiems,
 		minute,
 		noLabels,
@@ -270,8 +280,6 @@ const TimePickerBase = kind({
 							const isLeft = rtl && picker === 'a' || isFirst && !rtl;
 							// minute will always be the right-most control in RTL, regardless of the provided order
 							const isRight = rtl && picker === 'm' || isLast && !rtl;
-							// consist meridiem string for label
-							const meridiemLabel = (meridiems.length > 2) ? `${meridiems[0]} / ${meridiems[1]} ...` : meridiems.join('/');
 
 							switch (picker) {
 								case 'h':
