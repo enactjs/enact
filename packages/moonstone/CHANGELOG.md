@@ -18,6 +18,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VirtualList` to scroll to preserved index when it exists within dataSize for preserving focus
 - `moonstone/Picker` buttons to not change size
 - `moonstone/Panel` to move key navigation to application close button on holding the "up" key.
 - `moonstone/Picker` to show numbers when changing values rapidly

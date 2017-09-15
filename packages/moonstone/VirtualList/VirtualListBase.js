@@ -279,7 +279,6 @@ class VirtualListCore extends Component {
 	updateFrom = null
 	updateTo = null
 	isScrolledBy5way = false
-	isItemReadyForRestore = true
 
 	containerRef = null
 
@@ -454,7 +453,6 @@ class VirtualListCore extends Component {
 		this.curDataSize = dataSize;
 		this.updateFrom = null;
 		this.updateTo = null;
-		this.isItemReadyForRestore = (preservedIndex <= dataSize);
 
 		// reset children
 		this.cc = [];
@@ -462,11 +460,11 @@ class VirtualListCore extends Component {
 		this.updateMoreInfo(dataSize, scrollPosition);
 
 		if (this.restoreLastFocused &&
-			numOfItems > 0 &&
-			(this.preservedIndex < moreInfo.firstVisibleIndex || this.preservedIndex > moreInfo.lastVisibleIndex) && this.isItemReadyForRestore) {
+			numOfItems > 0 && (preservedIndex < dataSize) &&
+			(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
 			// If we need to restore last focus and the index is beyond the screen,
 			// we call `scrollTo` to create DOM for it.
-			this.props.cbScrollTo({index: this.preservedIndex, animate: false});
+			this.props.cbScrollTo({index: preservedIndex, animate: false});
 		} else {
 			newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
 		}
