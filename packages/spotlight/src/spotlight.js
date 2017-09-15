@@ -23,6 +23,7 @@ import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
 
 import {
+	addContainer,
 	configureContainer,
 	configureDefaults,
 	getAllContainerIds,
@@ -464,9 +465,7 @@ const Spotlight = (function () {
 		 * @returns {undefined}
 		 * @public
 		 */
-		set: function (containerId, config) {
-			configureContainer(containerId, config);
-		},
+		set: configureContainer,
 
 		// add(<config>);
 		// add(<containerId>, <config>);
@@ -479,9 +478,7 @@ const Spotlight = (function () {
 		 * @returns {String} The container ID of the container
 		 * @public
 		 */
-		add: function (containerId, config) {
-			return configureContainer(containerId, config);
-		},
+		add: addContainer,
 
 		unmount: function (containerId) {
 			if (!containerId || typeof containerId !== 'string') {

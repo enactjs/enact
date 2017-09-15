@@ -39,6 +39,8 @@ let _lastContainerId = '';
 // - a string "@<containerId>" to indicate the specified container
 // - a string "@" to indicate the default container
 let GlobalConfig = {
+	// set to false for unmounted containers to omit them from searches
+	active: true,
 	continue5WayHold: false,
 	defaultElement: '',     // <extSelector> except "@" syntax.
 	enterTo: '',            // '', 'last-focused', 'default-element'
@@ -469,6 +471,27 @@ const configureContainer = (...args) => {
 };
 
 /**
+ * Adds a container and marks it active. When a container id is not specified, it will be generated.
+ *
+ * @param   {String|Object}  containerIdOrConfig  Either a string container id or a configuration
+ *                                                object.
+ * @param   {Object}         [config]             Container configuration when `containerIdOrConfig`
+ *                                                is a string. When omitted, the container will have
+ *                                                the default `GlobalConfig`.
+ *
+ * @returns {String}                              The container id
+ * @memberof spotlight/container
+ * @public
+ */
+const addContainer = (...args) => {
+	const containerId = configureContainer(...args);
+	const config = getContainerConfig(containerId);
+	config.active = true;
+
+	return containerId;
+};
+
+/**
  * Removes a container
  *
  * @param   {String}     containerId  ID of the container to remove
@@ -548,7 +571,9 @@ const getAllContainerIds = () => {
 	// PhantomJS-friendly iterator->array conversion
 	let id;
 	while ((id = keys.next()) && !id.done) {
-		ids.push(id.value);
+		if (isActiveContainer(id.value)) {
+			ids.push(id.value);
+		}
 	}
 
 	return ids;
@@ -780,6 +805,7 @@ function unmountContainer (containerId) {
 	const config = getContainerConfig(containerId);
 
 	if (config) {
+		config.active = false;
 		persistLastFocusedElement(containerId);
 
 		if (typeof config.defaultElement !== 'string') {
@@ -788,8 +814,13 @@ function unmountContainer (containerId) {
 	}
 }
 
+function isActiveContainer (containerId) {
+	const config = getContainerConfig(containerId);
+	return config && config.active;
+}
+
 function getDefaultContainer () {
-	return _defaultContainerId;
+	return isActiveContainer(_defaultContainerId) ? _defaultContainerId : null;
 }
 
 function setDefaultContainer (containerId) {
@@ -803,7 +834,7 @@ function setDefaultContainer (containerId) {
 }
 
 function getLastContainer () {
-	return _lastContainerId;
+	return isActiveContainer(_lastContainerId) ? _lastContainerId : null;
 }
 
 function setLastContainer (containerId) {
@@ -853,6 +884,7 @@ export {
 	setContainerLastFocusedElement,
 
 	// Keep
+	addContainer,
 	containerAttribute,
 	configureDefaults,
 	configureContainer,
