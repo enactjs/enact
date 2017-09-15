@@ -766,9 +766,6 @@ function persistLastFocusedElement (containerId) {
  * @public
  */
 function restoreLastFocusedElement (containerId) {
-	if (containerId) {
-		Spotlight.setActiveContainer(containerId);
-	}
 	const cfg = getContainerConfig(containerId);
 	if (cfg && cfg.lastFocusedKey) {
 		const all = getDeepSpottableDescendants(containerId);
