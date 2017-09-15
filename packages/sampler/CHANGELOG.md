@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ### Added
 
+- Vietnamese to the locale list knob
+
 ### Changed
 
 ### Fixed
