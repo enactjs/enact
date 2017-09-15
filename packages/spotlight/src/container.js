@@ -12,7 +12,6 @@ import intersection from 'ramda/src/intersection';
 import last from 'ramda/src/last';
 
 import {matchSelector} from './utils';
-import Spotlight from './spotlight';
 
 const containerAttribute = 'data-container-id';
 const containerConfigs   = new Map();
