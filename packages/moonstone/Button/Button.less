@@ -150,6 +150,12 @@
 						background-color: @moon-icon-button-active-bg-color;
 						border-color: @moon-icon-button-active-border-color;
 					}
+					&.translucent .bg {
+						background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+					}
+					&.transparent .bg {
+						background-color: transparent;
+					}
 				}
 				&:not(.noAnimation) {
 					.bg {
