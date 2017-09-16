@@ -49,7 +49,6 @@ const selectDecIcon = selectIcon('decrementIcon', 'arrowlargedown', 'arrowlargel
 
 // Set-up event forwarding
 const forwardBlur = forward('onBlur'),
-	forwardClick = forward('onClick'),
 	forwardFocus = forward('onFocus'),
 	forwardKeyDown = forward('onKeyDown'),
 	forwardKeyUp = forward('onKeyUp'),
@@ -458,20 +457,14 @@ const PickerBase = class extends React.Component {
 		this.reverseTransition = !(dir > 0);
 	}
 
-	handleDecClick = (ev) => {
-		if (ev) {
-			forwardClick(ev, this.props);
-		}
+	handleDecrement = () => {
 		if (!this.hasReachedBound(-this.props.step)) {
 			this.updateValue(-1);
 			this.handleDown(-1);
 		}
 	}
 
-	handleIncClick = (ev) => {
-		if (ev) {
-			forwardClick(ev, this.props);
-		}
+	handleIncrement = () => {
 		if (!this.hasReachedBound(this.props.step)) {
 			this.updateValue(1);
 			this.handleDown(1);
@@ -504,14 +497,14 @@ const PickerBase = class extends React.Component {
 		if (ev) {
 			forwardMouseDown(ev, this.props);
 		}
-		this.handleDown(-1);
+		this.handleDecrement();
 	}
 
 	handleIncDown = (ev) => {
 		if (ev) {
 			forwardMouseDown(ev, this.props);
 		}
-		this.handleDown(1);
+		this.handleIncrement();
 	}
 
 	handleWheel = (ev) => {
@@ -555,13 +548,13 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
-	throttleInc = new Job(this.handleIncClick, 200)
+	throttleInc = new Job(this.handleIncrement, 200)
 
-	throttleDec = new Job(this.handleDecClick, 200)
+	throttleDec = new Job(this.handleDecrement, 200)
 
-	throttleWheelInc = new Job(this.handleIncClick, 100)
+	throttleWheelInc = new Job(this.handleIncrement, 100)
 
-	throttleWheelDec = new Job(this.handleDecClick, 100)
+	throttleWheelDec = new Job(this.handleDecrement, 100)
 
 	handleKeyDown = (ev) => {
 		const {
@@ -807,6 +800,7 @@ const PickerBase = class extends React.Component {
 				onFocus={this.handleFocus}
 				onKeyDown={this.handleKeyDown}
 				onKeyUp={this.handleKeyUp}
+				onMouseUp={this.handleUp}
 				ref={this.initContainerRef}
 			>
 				<PickerButton
@@ -817,7 +811,6 @@ const PickerBase = class extends React.Component {
 					hidden={reachedEnd}
 					icon={incrementIcon}
 					joined={joined}
-					onClick={this.handleIncClick}
 					onHoldPulse={this.handleIncPulse}
 					onKeyDown={this.handleIncKeyDown}
 					onMouseDown={this.handleIncDown}
@@ -853,7 +846,6 @@ const PickerBase = class extends React.Component {
 					hidden={reachedStart}
 					icon={decrementIcon}
 					joined={joined}
-					onClick={this.handleDecClick}
 					onHoldPulse={this.handleDecPulse}
 					onKeyDown={this.handleDecKeyDown}
 					onMouseDown={this.handleDecDown}
