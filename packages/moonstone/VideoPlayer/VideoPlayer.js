@@ -614,9 +614,10 @@ const VideoPlayerBase = class extends React.Component {
 		this.handledMediaForwards = {};
 		this.handledMediaEvents = {};
 		this.handledCustomMediaForwards = {};
+		this.miniFeedbackPlaybackRate = null;
+		this.miniFeedbackPlaybackState = null;
 		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
-		this.prevPlaybackState = this.prevCommand;
 		this.speedIndex = 0;
 		this.id = this.generateId();
 		this.selectPlaybackRates('fastForward');
@@ -752,6 +753,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopAutoCloseTimeout();
 		this.stopDelayedTitleHide();
 		this.stopDelayedFeedbackHide();
+		this.stopDelayedMiniFeedbackHide();
 		this.announceJob.stop();
 		this.renderBottomControl.stop();
 		this.stopListeningForPulses();
@@ -818,15 +820,12 @@ const VideoPlayerBase = class extends React.Component {
 		this.startAutoCloseTimeout();
 	}
 
-	startAutoCloseTimeout = (delay) => {
+	startAutoCloseTimeout = () => {
 		// If this.state.more is used as a reference for when this function should fire, timing for
 		// detection of when "more" is pressed vs when the state is updated is mismatched. Using an
 		// instance variable that's only set and used for this express purpose seems cleanest.
-		if (typeof delay !== 'number') {
-			delay = this.props.autoCloseTimeout;
-		}
-		if (delay && !this.moreInProgress) {
-			this.autoCloseJob.startAfter(delay);
+		if (this.props.autoCloseTimeout && !this.moreInProgress) {
+			this.autoCloseJob.startAfter(this.props.autoCloseTimeout);
 		}
 	}
 
@@ -895,6 +894,7 @@ const VideoPlayerBase = class extends React.Component {
 	 */
 	hideControls = () => {
 		this.stopDelayedFeedbackHide();
+		this.stopDelayedMiniFeedbackHide();
 		this.stopDelayedTitleHide();
 		this.setState({
 			feedbackVisible: false,
@@ -911,22 +911,24 @@ const VideoPlayerBase = class extends React.Component {
 		this.markAnnounceRead();
 	}
 
-	autoCloseJob = new Job(this.hideControls)
-
-	showMiniFeedback = (playbackState, playbackRate) => {
-		if (!this.state.mediaControlsVisible) {
-			this.prevPlaybackState = playbackState || this.prevCommand;
-			this.prevPlaybackRate = playbackRate || this.selectPlaybackRate(this.speedIndex);
-			this.setState({
-				bottomControlsRendered: true,
-				feedbackVisible: false,
-				mediaSliderVisible: this.video.playbackRate !== 1 ||
-					this.prevPlaybackState === 'jumpBackward' ||
-					this.prevPlaybackState === 'jumpForward',
-				miniFeedbackVisible: true
-			});
-		}
+	autoHideControls = () => {
+		this.stopDelayedFeedbackHide();
+		this.stopDelayedTitleHide();
+		this.setState({
+			feedbackVisible: false,
+			mediaControlsVisible: false,
+			mediaSliderVisible: this.state.mediaSliderVisible && this.state.miniFeedbackVisible,
+			more: false
+		}, () => {
+			if (!this.props.spotlightDisabled) {
+				Spotlight.focus(`.${css.controlsHandleAbove}`);
+			}
+			return forwardControlsAvailable({available: false}, this.props);
+		});
+		this.markAnnounceRead();
 	}
+
+	autoCloseJob = new Job(this.autoHideControls)
 
 	refocusMoreButton = () => {
 		// Readout 'more' or 'back' button explicitly.
@@ -964,6 +966,15 @@ const VideoPlayerBase = class extends React.Component {
 	showFeedback = () => {
 		if (this.state.mediaControlsVisible && !this.state.feedbackVisible) {
 			this.setState({feedbackVisible: true});
+		} else if (!this.state.mediaControlsVisible) {
+			const shouldShowSlider = this.miniFeedbackPlaybackState !== null || calcNumberValueOfPlaybackRate(this.playbackRate) !== 1;
+
+			if (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider) {
+				this.setState({
+					mediaSliderVisible: shouldShowSlider,
+					miniFeedbackVisible: true
+				});
+			}
 		}
 	}
 
@@ -974,6 +985,25 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	hideFeedbackJob = new Job(this.hideFeedback)
+
+	startDelayedMiniFeedbackHide = (delay) => {
+		this.hideMiniFeedbackJob.startAfter(delay);
+	}
+
+	stopDelayedMiniFeedbackHide = () => {
+		this.hideMiniFeedbackJob.stop();
+	}
+
+	hideMiniFeedback = () => {
+		if (this.state.miniFeedbackVisible) {
+			this.setState({
+				mediaSliderVisible: false,
+				miniFeedbackVisible: false
+			});
+		}
+	}
+
+	hideMiniFeedbackJob = new Job(this.hideMiniFeedback)
 
 	handle = handle.bind(this)
 
@@ -992,13 +1022,15 @@ const VideoPlayerBase = class extends React.Component {
 
 	doPulseAction () {
 		if (is('left', this.pulsingKeyCode)) {
+			this.miniFeedbackPlaybackRate = new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}).toUpperCase();
+			this.miniFeedbackPlaybackState = 'jumpBackward';
 			this.jump(-1 * this.props.jumpBy);
 			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
-			this.showMiniFeedback('jumpBackward', new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}).toUpperCase());
 		} else if (is('right', this.pulsingKeyCode)) {
+			this.miniFeedbackPlaybackRate = new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}).toUpperCase();
+			this.miniFeedbackPlaybackState = 'jumpForward';
 			this.jump(this.props.jumpBy);
 			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
-			this.showMiniFeedback('jumpForward', new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}).toUpperCase());
 		}
 	}
 
@@ -1035,49 +1067,47 @@ const VideoPlayerBase = class extends React.Component {
 
 		switch (ev.keyCode) {
 			case PLAY:
+				this.miniFeedbackPlaybackRate = null;
+				this.miniFeedbackPlaybackState = null;
 				this.play();
-				this.showMiniFeedback();
-				this.startAutoCloseTimeout(this.state.mediaControlsVisible ? this.props.autoCloseTimeout : 5000);
+				this.startDelayedMiniFeedbackHide(5000);
 				break;
 			case PAUSE:
+				this.miniFeedbackPlaybackRate = null;
+				this.miniFeedbackPlaybackState = null;
 				this.pause();
-				this.showMiniFeedback();
-				if (this.state.miniFeedbackVisible) {
-					this.stopAutoCloseTimeout();
-				}
+				this.stopDelayedMiniFeedbackHide();
 				break;
 			case REWIND:
 				if (!this.props.noRateButtons) {
+					this.miniFeedbackPlaybackRate = null;
+					this.miniFeedbackPlaybackState = null;
 					this.rewind();
-					this.showMiniFeedback();
-					if (this.state.miniFeedbackVisible) {
-						this.stopAutoCloseTimeout();
-					}
+					this.stopDelayedMiniFeedbackHide();
 				}
 				break;
 			case FASTFORWARD:
 				if (!this.props.noRateButtons) {
+					this.miniFeedbackPlaybackRate = null;
+					this.miniFeedbackPlaybackState = null;
 					this.fastForward();
-					this.showMiniFeedback();
-					if (this.state.miniFeedbackVisible) {
-						this.stopAutoCloseTimeout();
-					}
+					this.stopDelayedMiniFeedbackHide();
 				}
 				break;
 			case STOP:
+				this.miniFeedbackPlaybackRate = null;
+				this.miniFeedbackPlaybackState = null;
 				this.pause();
 				this.seek(0);
-				this.showMiniFeedback();
-				if (this.state.miniFeedbackVisible) {
-					this.stopAutoCloseTimeout();
-				}
+				this.stopDelayedMiniFeedbackHide();
 				break;
 		}
 
 		if (!this.props.no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			this.stopListeningForPulses();
 			Spotlight.resume();
-			this.startAutoCloseTimeout(2000);
+			this.stopDelayedMiniFeedbackHide();
+			this.startDelayedMiniFeedbackHide(2000);
 		}
 	}
 
@@ -1725,8 +1755,8 @@ const VideoPlayerBase = class extends React.Component {
 					<div className={css.fullscreen + ' enyo-fit scrim'} {...controlsAriaProps}>
 						<FeedbackContent
 							className={css.miniFeedback}
-							playbackRate={this.prevPlaybackRate}
-							playbackState={this.prevPlaybackState}
+							playbackRate={this.miniFeedbackPlaybackRate || this.selectPlaybackRate(this.speedIndex)}
+							playbackState={this.miniFeedbackPlaybackState || this.prevCommand}
 							visible={this.state.miniFeedbackVisible}
 						>
 							{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}

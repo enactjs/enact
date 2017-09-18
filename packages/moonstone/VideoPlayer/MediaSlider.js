@@ -68,6 +68,10 @@ const MediaSliderBase = kind({
 		visible: PropTypes.bool
 	},
 
+	defaultProps: {
+		visible: true
+	},
+
 	styles: {
 		css,
 		className: 'sliderFrame'
