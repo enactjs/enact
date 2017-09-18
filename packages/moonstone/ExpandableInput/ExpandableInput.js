@@ -12,6 +12,7 @@ import {is} from '@enact/core/keymap';
 import deprecate from '@enact/core/internal/deprecate';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 
 import {calcAriaLabel, Input} from '../Input';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
@@ -374,10 +375,12 @@ class ExpandableInputBase extends React.Component {
  * @ui
  * @public
  */
-const ExpandableInput = Expandable(
-	{noPointerMode: true},
-	Changeable(
-		ExpandableInputBase
+const ExpandableInput = Pure(
+	Expandable(
+		{noPointerMode: true},
+		Changeable(
+			ExpandableInputBase
+		)
 	)
 );
 

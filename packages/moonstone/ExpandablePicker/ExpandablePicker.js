@@ -11,7 +11,8 @@ import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import pure from 'recompose/pure';
+import Pure from '@enact/ui/internal/Pure';
+import {Subscription} from '@enact/core/internal/PubSub';
 
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import IconButton from '../IconButton';
@@ -172,6 +173,14 @@ const ExpandablePickerBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
+		 * When `true`, current locale is RTL
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * When `true`, the component cannot be navigated using spotlight.
 		 *
 		 * @type {Boolean}
@@ -237,7 +246,7 @@ const ExpandablePickerBase = kind({
 		label: ({children, value}) => React.Children.toArray(children)[value]
 	},
 
-	render: (props, {rtl}) => {
+	render: (props) => {
 		const {
 			children,
 			decrementIcon,
@@ -253,6 +262,7 @@ const ExpandablePickerBase = kind({
 			onSpotlightRight,
 			open,
 			orientation,
+			rtl,
 			spotlightDisabled,
 			value,
 			width,
@@ -323,16 +333,18 @@ const ExpandablePickerBase = kind({
  * @class ExpandablePicker
  * @memberof moonstone/ExpandablePicker
  * @ui
- * @mixes recompose/pure
  * @mixes moonstone/ExpandableItem.Expandable
  * @mixes ui/Changeable.Changeable
  * @public
  */
-const ExpandablePicker = pure(
-	Expandable(
-		Changeable(
-			ExpandablePickerDecorator(
-				ExpandablePickerBase
+const ExpandablePicker = Pure(
+	Subscription(
+		{channels: ['i18n'], mapMessageToProps: (channel, {rtl}) => ({rtl})},
+		Expandable(
+			Changeable(
+				ExpandablePickerDecorator(
+					ExpandablePickerBase
+				)
 			)
 		)
 	)
