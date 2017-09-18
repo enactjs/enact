@@ -92,6 +92,15 @@ const TimePickerBase = kind({
 		meridiem: PropTypes.number.isRequired,
 
 		/**
+		 * String of meridiem for picker label
+		 *
+		 * @type {String}
+		 * @required
+		 * @public
+		 */
+		meridiemLabel: PropTypes.string.isRequired,
+
+		/**
 		 * Array of meridiem labels to display
 		 *
 		 * @type {String[]}
@@ -238,6 +247,7 @@ const TimePickerBase = kind({
 		hasMeridiem,
 		hour,
 		meridiem,
+		meridiemLabel,
 		meridiems,
 		minute,
 		noLabels,
@@ -274,6 +284,7 @@ const TimePickerBase = kind({
 							const isLeft = rtl && picker === 'a' || isFirst && !rtl;
 							// minute will always be the right-most control in RTL, regardless of the provided order
 							const isRight = rtl && picker === 'm' || isLast && !rtl;
+
 							switch (picker) {
 								case 'h':
 								case 'k':
@@ -318,7 +329,7 @@ const TimePickerBase = kind({
 										<DateComponentPicker
 											className={css.meridiemComponent}
 											key="meridiem-picker"
-											label={noLabels ? null : $L('meridiem')}
+											label={noLabels ? null : meridiemLabel}
 											onChange={onChangeMeridiem}
 											onSpotlightDisappear={onSpotlightDisappear}
 											onSpotlightLeft={isLeft ? onSpotlightLeft : null}

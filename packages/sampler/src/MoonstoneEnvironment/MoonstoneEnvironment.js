@@ -58,6 +58,7 @@ const locales = {
 	'ar-SA': 'ar-SA - Arabic, RTL and standard font',
 	'ur-PK': 'ur-PK - Urdu, RTL and custom Urdu font',
 	'zh-Hant-HK': 'zh-Hant-HK - Traditional Chinese, custom Hant font',
+	'vi-VN': 'vi-VN - Vietnamese, Special non-latin font handling',
 	'ja-JP': 'ja-JP - Japanese, custom Japanese font',
 	'en-JP': 'en-JP - English, custom Japanese font'
 };

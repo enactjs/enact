@@ -8,11 +8,18 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/styles/mixins.less` mixins: `.remove-margin-on-edge-children()` and `.remove-padding-on-edge-children()` to better handle edge margins on container components
+
 ### Changed
 
 - `ui/Holdable` and `ui/Changeable` back to Components and moved performance improvements elsewhere
 
 ### Fixed
+
+
+### Fixed
+
+- `ui/FloatingLayer` to not asynchronously attach a click handler when the floating layer is removed
 
 ## [1.8.0] - 2017-09-07
 
@@ -25,7 +32,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 No significant changes.
 
 ## [1.6.1] - 2017-08-07
-
 No significant changes.
 
 ## [1.6.0] - 2017-08-04

@@ -39,6 +39,36 @@
 	}
 }
 
+// NOTE: Until we are able to automatically remove these JSDoc-style comments, they should remain LESS-commented
+// /**
+//  * Removes the margin from the appropriate side of the child components that touch the edges of the
+//  * component this is applied to. This respects both LTR and RTL modes.
+//  */
+.remove-margin-on-edge-children() {
+	> :first-child {
+		-webkit-margin-start: 0;
+	}
+
+	> :last-child {
+		-webkit-margin-end: 0;
+	}
+}
+
+// /**
+//  * Removes the padding from the appropriate side of the child components that touch the edges of the
+//  * component this is applied to. This respects both LTR and RTL modes.
+//  */
+.remove-padding-on-edge-children() {
+	> :first-child {
+		-webkit-padding-start: 0;
+	}
+
+	> :last-child {
+		-webkit-padding-end: 0;
+	}
+}
+
+
 .full-screen-video-player() {
 	position: static !important;
 	display: block !important;

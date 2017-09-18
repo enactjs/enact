@@ -2,11 +2,42 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [Unreleased]
+## [unreleased]
 
 ### Deprecated
 
-- `moonstone/Dialog` property `showDivider` will be replaced by `noDivider` property in 2.0.0
+### Added
+
+- `moonstone/styles/mixins.less` mixins: `.moon-spotlight-margin()` and `.moon-spotlight-padding()`
+- `moonstone/Button` property `noAnimation` to support non-animating pressed visual
+
+### Changed
+
+- `moonstone/TimePicker` to use "AM/PM" instead of "meridiem" for label under meridiem picker
+- `moonstone/IconButton` default style to not animate on press. NOTE: This behavior will change back to its previous setting in release 2.0.0.
+- `moonstone/Popup` to warn when using `scrimType` `'none'` and `spotlightRestrict` `'self-only'`
+- `moonstone/Scroller` to block spotlight during scroll
+- `moonstone/ExpandableItem` and derivatives to always pause spotlight before animation
+
+### Fixed
+
+- `moonstone/VirtualList` to scroll to preserved index when it exists within dataSize for preserving focus
+- `moonstone/Picker` buttons to not change size
+- `moonstone/Panel` to move key navigation to application close button on holding the "up" key.
+- `moonstone/Picker` to show numbers when changing values rapidly
+- `moonstone/Popup` layout in large text mode to show close button correctly
+- `moonstone/Picker` from moving scroller when pressing 5-way keys in `joined` Picker
+- `moonstone/Input` so it displays all locales the same way, without cutting off the edges of characters
+- `moonstone/TooltipDecorator` to hide tooltip when 5-way keys are pressed for disabled components
+- `moonstone/Picker` to not tremble in width when changing values while using a numeric width prop value
+- `moonstone/Picker` to not overlap values when changing values in `vertical`
+- `moonstone/ContextualPopup` pointer mode focus behavior for `spotlightRestrict='self-only'`
+
+## [1.8.0] - 2017-09-07
+
+### Deprecated
+
+- `moonstone/Dialog` property `showDivider`, will be replaced by `noDivider` property in 2.0.0
 
 ### Added
 
@@ -28,17 +59,17 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scrollable` to enable focus when wheel scroll is stopped
 - `moonstone/VirtualList` to show scroll thumb when a preserved item is focused in a Panel
 - `moonstone/Scroller` to navigate properly with 5-way when expandable child is opened
-- `moonstone/VirtualList` to stop scrolling when a focus is moved on an item from paging controls or outside
-- `moonstone/VirtualList` to move out with 5-way navigation when the 1st or the last item is disabled
+- `moonstone/VirtualList` to stop scrolling when focus is moved on an item from paging controls or outside
+- `moonstone/VirtualList` to move out with 5-way navigation when the first or the last item is disabled
 - `moonstone/IconButton` Tooltip position when disabled
 - `moonstone/VideoPlayer` Tooltip time after unhovering
-- `moonstone/VirtualList` not to show invisible items
+- `moonstone/VirtualList` to not show invisible items
 - `moonstone/IconButton` Tooltip position when disabled
 - `moonstone/VideoPlayer` to display feedback tooltip correctly when navigating in 5-way
 - `moonstone/MarqueeDecorator` to work with synchronized `marqueeOn` `'render'` and hovering as well as `marqueOn` `'hover'` when moving rapidly among synchronized marquees
 - `moonstone/Input` aria-label for translation
 - `moonstone/Marquee` to recalculate inside `moonstone/Scroller` and `moonstone/SelectableItem` by bypassing `shouldComponentUpdate`
-
+- `moonstone/Picker` to marquee when incrementing and decrementing values with the prop `noAnimation`
 
 ## [1.7.0] - 2017-08-23
 
@@ -66,7 +97,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to focus the correct item when page up and page down keys are pressed
-- `moonstone/VirtualList` not to lose focus when moving out from the first item via 5way when it has disabled items
+- `moonstone/VirtualList` to not lose focus when moving out from the first item via 5way when it has disabled items
 - `moonstone/Slider` to align tooltip with detached knob
 - `moonstone/FormCheckbox` to display correct colors in light skin
 - `moonstone/Picker` and `moonstone/RangePicker` to forward `onKeyDown` events when not `joined`
@@ -115,7 +146,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone` icon font sizes for wide icons
 - `moonstone/ContextualPopupDecorator` to prefer setting focus to the appropriate popup instead of other underlying controls when using 5-way from the activating control
 - `moonstone/Scroller` not scrolled via 5 way when `moonstone/ExpandableList` is opened
-- `moonstone/VirtualList` not to let the focus move outside of container even if there are children left when navigating with 5way
+- `moonstone/VirtualList` to not let the focus move outside of container even if there are children left when navigating with 5way
 - `moonstone/Scrollable` to update disability of paging controls when the scrollbar is set to `visible` and the content becomes shorter
 - `moonstone/VideoPlayer` to focus on hover over play/pause button when video is loading
 - `moonstone/VideoPlayer` to update and display proper time while moving knob when video is paused
@@ -140,7 +171,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/ExpandableList` to use 'radio' as the default, and adapt 'single' mode to render as a `moonstone/RadioItem` instead of a `moonstone/CheckboxItem`
-- `moonstone/VideoPlayer` not to hide pause icon when it appears
+- `moonstone/VideoPlayer` to not hide pause icon when it appears
 - `moonstone/ContextualPopupDecorator` to set accessibility-related props onto the container node rather than the popup node
 - `moonstone/ExpandableItem`, `moonstone/ExpandableList`, `moonstone/ExpandablePicker`, `moonstone/DatePicker`, and `moonstone/TimePicker` to pause spotlight when animating in 5-way mode
 - `moonstone/Spinner` to position the text content under the spinner, rather than to the right side
