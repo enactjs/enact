@@ -460,6 +460,7 @@ const Spotlight = (function () {
 		/**
 		 * Sets the config for spotlight or the specified containerID
 		 *
+		 * @function
 		 * @param {String|Object} param1 Configuration object or container ID
 		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
 		 * @returns {undefined}
@@ -473,6 +474,7 @@ const Spotlight = (function () {
 		 * Adds the config for a new container. The container ID may be passed in the configuration
 		 * object. If no container ID is supplied, a new container ID will be generated.
 		 *
+		 * @function
 		 * @param {String|Object} param1 Configuration object or container ID
 		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
 		 * @returns {String} The container ID of the container
