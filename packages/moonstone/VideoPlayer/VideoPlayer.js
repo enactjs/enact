@@ -614,8 +614,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.handledMediaForwards = {};
 		this.handledMediaEvents = {};
 		this.handledCustomMediaForwards = {};
-		this.miniFeedbackPlaybackRate = null;
-		this.miniFeedbackPlaybackState = null;
+		this.pulsedPlaybackRate = null;
+		this.pulsedPlaybackState = null;
 		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.speedIndex = 0;
@@ -896,39 +896,38 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedMiniFeedbackHide();
 		this.stopDelayedTitleHide();
-		this.setState({
+		this.setControlVisibilityStates({
 			feedbackVisible: false,
 			mediaControlsVisible: false,
 			mediaSliderVisible: false,
 			miniFeedbackVisible: false,
 			more: false
-		}, () => {
+		});
+		this.markAnnounceRead();
+	}
+
+	setControlVisibilityStates = (state) => {
+		this.setState(state, () => {
 			if (!this.props.spotlightDisabled) {
 				Spotlight.focus(`.${css.controlsHandleAbove}`);
 			}
 			return forwardControlsAvailable({available: false}, this.props);
 		});
-		this.markAnnounceRead();
 	}
 
-	autoHideControls = () => {
+	doAutoClose = () => {
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedTitleHide();
-		this.setState({
+		this.setControlVisibilityStates({
 			feedbackVisible: false,
 			mediaControlsVisible: false,
 			mediaSliderVisible: this.state.mediaSliderVisible && this.state.miniFeedbackVisible,
 			more: false
-		}, () => {
-			if (!this.props.spotlightDisabled) {
-				Spotlight.focus(`.${css.controlsHandleAbove}`);
-			}
-			return forwardControlsAvailable({available: false}, this.props);
 		});
 		this.markAnnounceRead();
 	}
 
-	autoCloseJob = new Job(this.autoHideControls)
+	autoCloseJob = new Job(this.doAutoClose)
 
 	refocusMoreButton = () => {
 		// Readout 'more' or 'back' button explicitly.
@@ -967,7 +966,7 @@ const VideoPlayerBase = class extends React.Component {
 		if (this.state.mediaControlsVisible && !this.state.feedbackVisible) {
 			this.setState({feedbackVisible: true});
 		} else if (!this.state.mediaControlsVisible) {
-			const shouldShowSlider = this.miniFeedbackPlaybackState !== null || calcNumberValueOfPlaybackRate(this.playbackRate) !== 1;
+			const shouldShowSlider = this.pulsedPlaybackState !== null || calcNumberValueOfPlaybackRate(this.playbackRate) !== 1;
 
 			if (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider) {
 				this.setState({
@@ -1022,13 +1021,13 @@ const VideoPlayerBase = class extends React.Component {
 
 	doPulseAction () {
 		if (is('left', this.pulsingKeyCode)) {
-			this.miniFeedbackPlaybackRate = new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}).toUpperCase();
-			this.miniFeedbackPlaybackState = 'jumpBackward';
+			this.pulsedPlaybackRate = new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}).toUpperCase();
+			this.pulsedPlaybackState = 'jumpBackward';
 			this.jump(-1 * this.props.jumpBy);
 			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
 		} else if (is('right', this.pulsingKeyCode)) {
-			this.miniFeedbackPlaybackRate = new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}).toUpperCase();
-			this.miniFeedbackPlaybackState = 'jumpForward';
+			this.pulsedPlaybackRate = new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}).toUpperCase();
+			this.pulsedPlaybackState = 'jumpForward';
 			this.jump(this.props.jumpBy);
 			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
 		}
@@ -1062,41 +1061,41 @@ const VideoPlayerBase = class extends React.Component {
 		this.showControls();
 	}
 
+	clearPulsedPlayback = () => {
+		this.pulsedPlaybackRate = null;
+		this.pulsedPlaybackState = null;
+	}
+
 	handleKeyUp = (ev) => {
 		const {PLAY, PAUSE, STOP, REWIND, FASTFORWARD} = keyMap;
 
 		switch (ev.keyCode) {
 			case PLAY:
-				this.miniFeedbackPlaybackRate = null;
-				this.miniFeedbackPlaybackState = null;
+				this.clearPulsedPlayback();
 				this.play();
 				this.startDelayedMiniFeedbackHide(5000);
 				break;
 			case PAUSE:
-				this.miniFeedbackPlaybackRate = null;
-				this.miniFeedbackPlaybackState = null;
+				this.clearPulsedPlayback();
 				this.pause();
 				this.stopDelayedMiniFeedbackHide();
 				break;
 			case REWIND:
 				if (!this.props.noRateButtons) {
-					this.miniFeedbackPlaybackRate = null;
-					this.miniFeedbackPlaybackState = null;
+					this.clearPulsedPlayback();
 					this.rewind();
 					this.stopDelayedMiniFeedbackHide();
 				}
 				break;
 			case FASTFORWARD:
 				if (!this.props.noRateButtons) {
-					this.miniFeedbackPlaybackRate = null;
-					this.miniFeedbackPlaybackState = null;
+					this.clearPulsedPlayback();
 					this.fastForward();
 					this.stopDelayedMiniFeedbackHide();
 				}
 				break;
 			case STOP:
-				this.miniFeedbackPlaybackRate = null;
-				this.miniFeedbackPlaybackState = null;
+				this.clearPulsedPlayback();
 				this.pause();
 				this.seek(0);
 				this.stopDelayedMiniFeedbackHide();
@@ -1755,8 +1754,8 @@ const VideoPlayerBase = class extends React.Component {
 					<div className={css.fullscreen + ' enyo-fit scrim'} {...controlsAriaProps}>
 						<FeedbackContent
 							className={css.miniFeedback}
-							playbackRate={this.miniFeedbackPlaybackRate || this.selectPlaybackRate(this.speedIndex)}
-							playbackState={this.miniFeedbackPlaybackState || this.prevCommand}
+							playbackRate={this.pulsedPlaybackRate || this.selectPlaybackRate(this.speedIndex)}
+							playbackState={this.pulsedPlaybackState || this.prevCommand}
 							visible={this.state.miniFeedbackVisible}
 						>
 							{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
