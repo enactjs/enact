@@ -16,6 +16,7 @@ import pure from 'recompose/pure';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import IconButton from '../IconButton';
 import Picker from '../Picker';
+import {withSkinnableProps} from '../Skinnable';
 
 import ExpandablePickerDecorator from './ExpandablePickerDecorator';
 
@@ -172,6 +173,14 @@ const ExpandablePickerBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
+		 * Skin prop from `Skinnable`.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		skin: PropTypes.string,
+
+		/**
 		 * When `true`, the component cannot be navigated using spotlight.
 		 *
 		 * @type {Boolean}
@@ -253,6 +262,7 @@ const ExpandablePickerBase = kind({
 			onSpotlightRight,
 			open,
 			orientation,
+			skin,
 			spotlightDisabled,
 			value,
 			width,
@@ -285,6 +295,7 @@ const ExpandablePickerBase = kind({
 					onSpotlightLeft={!rtl ? onSpotlightLeft : null}
 					onSpotlightRight={rtl ? onSpotlightRight : null}
 					orientation={orientation}
+					skin={skin}
 					spotlightDisabled={spotlightDisabled}
 					width={width}
 					wrap={wrap}
@@ -329,10 +340,12 @@ const ExpandablePickerBase = kind({
  * @public
  */
 const ExpandablePicker = pure(
-	Expandable(
-		Changeable(
-			ExpandablePickerDecorator(
-				ExpandablePickerBase
+	withSkinnableProps(
+		Expandable(
+			Changeable(
+				ExpandablePickerDecorator(
+					ExpandablePickerBase
+				)
 			)
 		)
 	)

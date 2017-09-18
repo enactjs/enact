@@ -4,6 +4,7 @@ import IconButton from '../IconButton';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {withSkinnableProps} from '../Skinnable';
 
 const HoldableIconButton = Holdable(IconButton);
 
@@ -40,8 +41,8 @@ const IncrementSliderButtonBase = kind({
 	}
 });
 
-const OnlyUpdate = onlyUpdateForKeys(['children', 'disabled', 'spotlightDisabled', 'aria-label']);
-const IncrementSliderButton = OnlyUpdate(IncrementSliderButtonBase);
+const OnlyUpdate = onlyUpdateForKeys(['children', 'disabled', 'skin', 'spotlightDisabled', 'aria-label']);
+const IncrementSliderButton = withSkinnableProps(OnlyUpdate(IncrementSliderButtonBase));
 
 export default IncrementSliderButton;
 export {

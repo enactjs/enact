@@ -11,6 +11,7 @@ import ri from '@enact/ui/resolution';
 
 import $L from '../internal/$L';
 import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator';
+import {Skinnable} from '../Skinnable';
 
 import ScrollButton from './ScrollButton';
 import ScrollThumb from './ScrollThumb';
@@ -395,12 +396,15 @@ class ScrollbarBase extends PureComponent {
 
 const Scrollbar = ApiDecorator(
 	{api: ['containerRef', 'hideThumb', 'showThumb', 'startHidingThumb', 'update']},
-	DisappearSpotlightDecorator(
-		{events: {
-			onNextSpotlightDisappear: '[data-scroll-button="previous"]',
-			onPrevSpotlightDisappear: '[data-scroll-button="next"]'
-		}},
-		ScrollbarBase
+	Skinnable(
+		DisappearSpotlightDecorator(
+			{events: {
+				onNextSpotlightDisappear: '[data-scroll-button="previous"]',
+				onPrevSpotlightDisappear: '[data-scroll-button="next"]'
+			}},
+
+			ScrollbarBase
+		)
 	)
 );
 

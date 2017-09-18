@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';
 
 import PickerCore, {PickerItem} from '../Picker';
+import {withSkinnableProps} from '../../Skinnable';
 
 import DateComponentPickerChrome from './DateComponentPickerChrome';
 
@@ -116,8 +117,10 @@ const DateComponentPickerBase = kind({
  * @ui
  * @private
  */
-const DateComponentPicker = Changeable(
-	DateComponentPickerBase
+const DateComponentPicker = withSkinnableProps(
+	Changeable(
+		DateComponentPickerBase
+	)
 );
 
 export default DateComponentPicker;
