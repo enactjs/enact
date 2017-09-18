@@ -30,6 +30,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Input` so it displays all locales the same way, without cutting off the edges of characters
 - `moonstone/TooltipDecorator` to hide tooltip when 5-way keys are pressed for disabled components
 - `moonstone/Picker` to not tremble in width when changing values while using a numeric width prop value
+- `moonstone/Picker` to not overlap values when changing values in `vertical`
 - `moonstone/ContextualPopup` pointer mode focus behavior for `spotlightRestrict='self-only'`
 
 ## [1.8.0] - 2017-09-07
