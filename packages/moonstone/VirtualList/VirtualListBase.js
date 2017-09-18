@@ -443,7 +443,7 @@ class VirtualListCore extends Component {
 		const
 			{dataSize, overhang} = props,
 			{firstIndex} = this.state,
-			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
+			{dimensionToExtent, primary, moreInfo, preservedIndex, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
 			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
 			dataSizeDiff = dataSize - this.curDataSize;
@@ -461,10 +461,11 @@ class VirtualListCore extends Component {
 
 		if (this.restoreLastFocused &&
 			numOfItems > 0 &&
-			(this.preservedIndex < moreInfo.firstVisibleIndex || this.preservedIndex > moreInfo.lastVisibleIndex)) {
+			(preservedIndex < dataSize) &&
+			(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
 			// If we need to restore last focus and the index is beyond the screen,
 			// we call `scrollTo` to create DOM for it.
-			this.props.cbScrollTo({index: this.preservedIndex, animate: false});
+			this.props.cbScrollTo({index: preservedIndex, animate: false});
 		} else {
 			newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
 		}
