@@ -1,4 +1,5 @@
 import {
+	addContainer,
 	configureContainer,
 	configureDefaults,
 	containerAttribute,
@@ -6,12 +7,14 @@ import {
 	getContainerConfig,
 	getContainerFocusTarget,
 	getContainersForNode,
+	getDefaultContainer,
 	getLastContainer,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
 	unmountContainer,
 	removeContainer,
+	removeAllContainers,
 	rootContainerId,
 	setContainerLastFocusedElement,
 	setLastContainer,
@@ -139,7 +142,7 @@ const setupContainers = () => {
 
 const teardownContainers = () => {
 	// clean up any containers we create for safe tests
-	getAllContainerIds().forEach(removeContainer);
+	removeAllContainers();
 };
 
 describe('container', () => {
@@ -903,6 +906,19 @@ describe('container', () => {
 				expect(actual).to.equal(expected);
 			}
 		));
+
+		it('should mark the container inactive', testScenario(
+			scenarios.complexTree,
+			() => {
+				addContainer('first-container');
+				unmountContainer('first-container');
+
+				const expected = false;
+				const actual = getContainerConfig('first-container').active;
+
+				expect(actual).to.equal(expected);
+			}
+		));
 	});
 
 	describe('#setLastContainerFromTarget', () => {
@@ -964,6 +980,62 @@ describe('container', () => {
 
 				const expected = 'first-container';
 				const actual = getLastContainer();
+
+				expect(actual).to.equal(expected);
+			}
+		));
+	});
+
+	describe('#getDefaultContainer', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		it('should return null when container is inactive', testScenario(
+			scenarios.complexTree,
+			() => {
+				unmountContainer(rootContainerId);
+
+				const expected = null;
+				const actual = getDefaultContainer();
+
+				expect(actual).to.equal(expected);
+			}
+		));
+	});
+
+	describe('#getLastContainer', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		it('should return null when container is inactive', testScenario(
+			scenarios.complexTree,
+			() => {
+				addContainer('first-container');
+				setLastContainer('first-container');
+				unmountContainer('first-container');
+
+				const expected = null;
+				const actual = getLastContainer();
+
+				expect(actual).to.equal(expected);
+			}
+		));
+	});
+
+	describe('#getAllContainerIds', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		it('should not include inacive containers', testScenario(
+			scenarios.onlyContainers,
+			(root) => {
+				const {containerId} = root.querySelector('[data-container-id]').dataset;
+
+				addContainer(containerId);
+				unmountContainer(containerId);
+
+				const expected = -1;
+				const actual = getAllContainerIds().indexOf(containerId);
 
 				expect(actual).to.equal(expected);
 			}

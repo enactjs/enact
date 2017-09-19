@@ -23,6 +23,7 @@ import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
 
 import {
+	addContainer,
 	configureContainer,
 	configureDefaults,
 	getAllContainerIds,
@@ -474,14 +475,13 @@ const Spotlight = (function () {
 		/**
 		 * Sets the config for spotlight or the specified containerID
 		 *
+		 * @function
 		 * @param {String|Object} param1 Configuration object or container ID
 		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
 		 * @returns {undefined}
 		 * @public
 		 */
-		set: function (containerId, config) {
-			configureContainer(containerId, config);
-		},
+		set: configureContainer,
 
 		// add(<config>);
 		// add(<containerId>, <config>);
@@ -489,14 +489,13 @@ const Spotlight = (function () {
 		 * Adds the config for a new container. The container ID may be passed in the configuration
 		 * object. If no container ID is supplied, a new container ID will be generated.
 		 *
+		 * @function
 		 * @param {String|Object} param1 Configuration object or container ID
 		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
 		 * @returns {String} The container ID of the container
 		 * @public
 		 */
-		add: function (containerId, config) {
-			return configureContainer(containerId, config);
-		},
+		add: addContainer,
 
 		unmount: function (containerId) {
 			if (!containerId || typeof containerId !== 'string') {
