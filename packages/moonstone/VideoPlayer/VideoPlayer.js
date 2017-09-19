@@ -1441,6 +1441,8 @@ const VideoPlayerBase = class extends React.Component {
 			adjustedDistance = (distance * pbRate) / 1000;
 
 		this.jump(adjustedDistance);
+		this.stopDelayedMiniFeedbackHide();
+		this.clearPulsedPlayback();
 		this.startRewindJob();	// Issue another rewind tick
 	}
 
