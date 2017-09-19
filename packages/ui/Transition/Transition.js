@@ -8,6 +8,7 @@
 import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
+import {contextTypes, Subscription} from '@enact/core/internal/PubSub';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -361,6 +362,7 @@ class Transition extends React.Component {
 		let {visible, ...props} = this.props;
 		delete props.onHide;
 		delete props.onShow;
+		delete props.textSize;
 
 		switch (this.state.renderState) {
 			// If we are deferring children, don't render any
@@ -386,5 +388,5 @@ class Transition extends React.Component {
 	}
 }
 
-export default Transition;
+export default Subscription({channels: ['textSize']}, Transition);
 export {Transition, TransitionBase};
