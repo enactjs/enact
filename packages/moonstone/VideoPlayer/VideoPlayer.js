@@ -508,6 +508,14 @@ const VideoPlayerBase = class extends React.Component {
 		rightComponents: PropTypes.node,
 
 		/**
+		* Disable video seeking.
+		*
+		* @type {Boolean}
+		* @public
+		*/
+		seekDisabled: PropTypes.bool,
+
+		/**
 		 * Registers the VideoPlayer component with an
 		 * {@link core/internal/ApiDecorator.ApiDecorator}.
 		 *
@@ -990,6 +998,7 @@ const VideoPlayerBase = class extends React.Component {
 	handleKeyDown = (ev) => {
 		if (!this.props.no5WayJump &&
 				!this.state.bottomControlsVisible &&
+				!this.props.seekDisabled &&
 				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			Spotlight.pause();
 			this.startListeningForPulses(ev.keyCode)();
@@ -1461,8 +1470,10 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 	onSliderChange = ({value}) => {
-		this.seek(value * this.state.duration);
-		this.sliderScrubbing = false;
+		if (!this.props.seekDisabled) {
+			this.seek(value * this.state.duration);
+			this.sliderScrubbing = false;
+		}
 	}
 
 	sliderTooltipTimeJob = new Job((time) => this.setState({sliderTooltipTime: time}), 20)
@@ -1482,7 +1493,11 @@ const VideoPlayerBase = class extends React.Component {
 
 				forward('onScrub', {...ev, seconds}, this.props);
 
-				this.announce(`${$L('jump to')} ${knobTime}`);
+				if (this.props.seekDisabled) {
+					this.announce('Seek is not supported');
+				} else {
+					this.announce(`${$L('jump to')} ${knobTime}`);
+				}
 			}
 		}
 	}
@@ -1616,10 +1631,12 @@ const VideoPlayerBase = class extends React.Component {
 			playIcon,
 			rateButtonsDisabled,
 			rightComponents,
+			seekDisabled,
 			source,
 			spotlightDisabled,
 			style,
 			thumbnailSrc,
+			thumbnailUnavailable,
 			title,
 			...rest} = this.props;
 
@@ -1640,7 +1657,6 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;
 		delete rest.setApiProvider;
-		delete rest.thumbnailUnavailable;
 		delete rest.titleHideDelay;
 		delete rest.tooltipHideDelay;
 
@@ -1711,17 +1727,18 @@ const VideoPlayerBase = class extends React.Component {
 								onSpotlightUp={this.handleSpotlightUpFromSlider}
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
 								spotlightDisabled={spotlightDisabled}
+								tooltip={seekDisabled && this.sliderScrubbing}
 							>
-								<FeedbackTooltip
+								{seekDisabled && this.sliderScrubbing ? 'seek is not supported' : <FeedbackTooltip
 									noFeedback={!this.state.feedbackIconVisible}
 									playbackState={this.prevCommand}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
-									thumbnailDeactivated={this.props.thumbnailUnavailable}
+									thumbnailDeactivated={thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
 									visible={this.state.feedbackVisible}
 								>
 									{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
-								</FeedbackTooltip>
+								</FeedbackTooltip>}
 							</MediaSlider>}
 
 							<MediaControls

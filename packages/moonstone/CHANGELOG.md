@@ -43,6 +43,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/Popup` callback property `onShow` which fires after popup appears for both animating and non-animating popups
+- `moonstone/VideoPlayer` prop `seekDisabled` to disable seek functionality
 
 ### Changed
 
