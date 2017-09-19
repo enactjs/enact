@@ -18,6 +18,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/FloatingLayer` to not asynchronously attach a click handler when the floating layer is removed
+- `ui/ViewManager` to correctly position items when changing mid-transition
 
 ## [1.8.0] - 2017-09-07
 
