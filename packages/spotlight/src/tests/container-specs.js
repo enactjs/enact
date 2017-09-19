@@ -5,7 +5,9 @@ import {
 	containerAttribute,
 	getAllContainerIds,
 	getContainerConfig,
+	getContainerDefaultElement,
 	getContainerFocusTarget,
+	getContainerLastFocusedElement,
 	getContainersForNode,
 	getDefaultContainer,
 	getLastContainer,
@@ -990,12 +992,12 @@ describe('container', () => {
 		beforeEach(setupContainers);
 		afterEach(teardownContainers);
 
-		it('should return null when container is inactive', testScenario(
+		it('should return an empty string when container is inactive', testScenario(
 			scenarios.complexTree,
 			() => {
 				unmountContainer(rootContainerId);
 
-				const expected = null;
+				const expected = '';
 				const actual = getDefaultContainer();
 
 				expect(actual).to.equal(expected);
@@ -1007,14 +1009,14 @@ describe('container', () => {
 		beforeEach(setupContainers);
 		afterEach(teardownContainers);
 
-		it('should return null when container is inactive', testScenario(
+		it('should return an empty string when container is inactive', testScenario(
 			scenarios.complexTree,
 			() => {
 				addContainer('first-container');
 				setLastContainer('first-container');
 				unmountContainer('first-container');
 
-				const expected = null;
+				const expected = '';
 				const actual = getLastContainer();
 
 				expect(actual).to.equal(expected);
@@ -1036,6 +1038,36 @@ describe('container', () => {
 
 				const expected = -1;
 				const actual = getAllContainerIds().indexOf(containerId);
+
+				expect(actual).to.equal(expected);
+			}
+		));
+	});
+
+	describe('#getContainerLastFocusedElement', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		it('should return null for an invalid container', testScenario(
+			scenarios.onlySpottables,
+			() => {
+				const expected = null;
+				const actual = getContainerLastFocusedElement('does-not-exist');
+
+				expect(actual).to.equal(expected);
+			}
+		));
+	});
+
+	describe('#getContainerDefaultElement', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		it('should return null for an invalid container', testScenario(
+			scenarios.onlySpottables,
+			() => {
+				const expected = null;
+				const actual = getContainerDefaultElement('does-not-exist');
 
 				expect(actual).to.equal(expected);
 			}
