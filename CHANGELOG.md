@@ -2,11 +2,27 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
+## [1.9.0] - 2017-09-19
+
+### Added
+
+- `sampler` locale Vietnamese to the locale list knob
+- `ui/styles/mixins.less` mixins: `.remove-margin-on-edge-children()` and `.remove-padding-on-edge-children()` to better handle edge margins on container components
+
+### Changed
+
+- `i18n` to classify Vietnamese as a non-latin language
+- `spotlight` to block handling repeated key down events that were interrupted by a pointer event
+- `ui/Holdable` to cancel key hold events when the pointer moves
+- `ui/Holdable` and `ui/Changeable` back to Components and moved performance improvements elsewhere
 
 ### Fixed
 
 - `moonstone/Input` height for non-latin locales
+- `spotlight` to not try to focus something when the window is activated unless the window has been previously blurred
+- `spotlight` to prevent containers that have been unmounted from being considered potential targets
+- `ui/FloatingLayer` to not asynchronously attach a click handler when the floating layer is removed
+- `ui/ViewManager` to correctly position items when changing mid-transition
 
 ## [1.8.0] - 2017-09-07
 
