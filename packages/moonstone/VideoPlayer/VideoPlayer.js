@@ -43,11 +43,11 @@ const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 
 // Keycode map for webOS TV
 const keyMap = {
-	'PLAY': 80, //415,
-	'STOP': 83, //413,
-	'PAUSE': 65, //19,
-	'REWIND': 82, //412,
-	'FASTFORWARD': 70, //417
+	'PLAY': 415,
+	'STOP': 413,
+	'PAUSE': 19,
+	'REWIND': 412,
+	'FASTFORWARD': 417
 };
 
 // Video ReadyStates
