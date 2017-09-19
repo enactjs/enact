@@ -31,6 +31,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/TooltipDecorator` to hide tooltip when 5-way keys are pressed for disabled components
 - `moonstone/Picker` to not tremble in width when changing values while using a numeric width prop value
 - `moonstone/ContextualPopup` pointer mode focus behavior for `spotlightRestrict='self-only'`
+- `moonstone/Scroller` to not repaint its entire contents whenever partial content is updated
 
 ## [1.8.0] - 2017-09-07
 
