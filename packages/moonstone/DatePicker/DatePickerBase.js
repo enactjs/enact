@@ -1,4 +1,3 @@
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {forKey, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -175,6 +174,14 @@ const DatePickerBase = kind({
 		onSpotlightRight: PropTypes.func,
 
 		/**
+		 * When `true`, current locale is RTL
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * When `true`, the component cannot be navigated using spotlight.
 		 *
 		 * @type {Boolean}
@@ -189,8 +196,6 @@ const DatePickerBase = kind({
 		minYear: 1900,
 		spotlightDisabled: false
 	},
-
-	contextTypes: contextTypes,
 
 	styles: {
 		css,
@@ -220,11 +225,10 @@ const DatePickerBase = kind({
 		onSpotlightLeft,
 		onSpotlightRight,
 		order,
+		rtl,
 		spotlightDisabled,
 		year,
 		...rest
-	}, {
-		rtl
 	}) => {
 
 		return (

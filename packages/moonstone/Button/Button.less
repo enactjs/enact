@@ -2,7 +2,6 @@
 //
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
-@import '../styles/colors.less';
 @import '../styles/text.less';
 @import '../styles/skin.less';
 
@@ -145,12 +144,6 @@
 		.focus({
 			&.pressed,
 			&:active {
-				&.noAnimation {
-					.bg {
-						background-color: @moon-icon-button-active-bg-color;
-						border-color: @moon-icon-button-active-border-color;
-					}
-				}
 				&:not(.noAnimation) {
 					.bg {
 						-webkit-animation-name: expand;
@@ -211,6 +204,24 @@
 				.bg {
 					background-color: @moon-spotlight-border-color;
 				}
+
+				&.pressed,
+				&:active {
+					&.noAnimation {
+						.bg {
+							background-color: @moon-icon-button-active-bg-color;
+							border-color: @moon-icon-button-active-border-color;
+						}
+
+						&.translucent .bg {
+							background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+						}
+
+						&.transparent .bg {
+							background-color: transparent;
+						}
+					}
+				}
 			});
 		}
 
@@ -227,6 +238,15 @@
 				.bg {
 					border-color: @moon-active-spotlight-border-color;
 					background-color: @moon-spotlight-border-color;
+				}
+
+				&.pressed,
+				&:active {
+					&.noAnimation {
+						.bg {
+							border-color: @moon-active-spotlight-border-color;
+						}
+					}
 				}
 			});
 		}

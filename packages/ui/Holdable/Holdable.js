@@ -137,7 +137,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardPointerDepress = forward(pointerDepress);
 	const forwardPointerEnter = forward(pointerEnter);
 
-	return class Holdable extends React.PureComponent {
+	return class Holdable extends React.Component {
 		static propTypes = /** @lends ui/Holdable.Holdable.prototype */ {
 			/**
 			 * Whether or not the component is in a disabled state.

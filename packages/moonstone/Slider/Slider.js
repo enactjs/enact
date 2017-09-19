@@ -11,6 +11,7 @@ import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import Spottable from '@enact/spotlight/Spottable';
 
 import SliderDecorator from '../internal/SliderDecorator';
@@ -486,12 +487,14 @@ const SliderFactory = factory(css => {
 	 * @ui
 	 * @public
 	 */
-	return Changeable(
-		Spottable(
-			SliderDecorator(
-				Pressable(
-					Skinnable(
-						Base
+	return Pure(
+		Changeable(
+			Spottable(
+				SliderDecorator(
+					Pressable(
+						Skinnable(
+							Base
+						)
 					)
 				)
 			)
