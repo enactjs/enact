@@ -2,9 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
-
-### Deprecated
+## [1.9.0] - 2017-09-19
 
 ### Added
 
