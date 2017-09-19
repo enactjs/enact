@@ -8,7 +8,7 @@
 import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
-import {contextTypes, Subscription} from '@enact/core/internal/PubSub';
+import {Subscription} from '@enact/core/internal/PubSub';
 import React from 'react';
 import PropTypes from 'prop-types';
 
