@@ -138,6 +138,15 @@ const Spotlight = (function () {
 	let _spotOnWindowFocus = false;
 
 	/*
+	 * `true` when a pointer move event occurs during a keypress. Used to short circuit key down
+	 * handling until the next keyup occurs.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 */
+	let _pointerMoveDuringKeyPress = false;
+
+	/*
 	* protected methods
 	*/
 
@@ -318,6 +327,7 @@ const Spotlight = (function () {
 	}
 
 	function onKeyUp (evt) {
+		_pointerMoveDuringKeyPress = false;
 		const keyCode = evt.keyCode;
 
 		if (getDirection(keyCode) || isEnter(keyCode)) {
@@ -343,10 +353,11 @@ const Spotlight = (function () {
 		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
 
 		if (pointerHandled || !(direction || isEnter(keyCode))) {
+			_pointerMoveDuringKeyPress = true;
 			return;
 		}
 
-		if (!_pause) {
+		if (!_pause && !_pointerMoveDuringKeyPress) {
 			if (getCurrent()) {
 				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
 			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
@@ -367,6 +378,10 @@ const Spotlight = (function () {
 		const update = notifyPointerMove(current, target, clientX, clientY);
 
 		if (update) {
+			if (_5WayKeyHold) {
+				_pointerMoveDuringKeyPress = true;
+			}
+
 			const next = getNavigableTarget(target);
 
 			// TODO: Consider encapsulating this work within focusElement

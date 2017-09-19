@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
+- `ui/Holdable` to cancel key hold events when the pointer moves
 - `ui/Holdable` and `ui/Changeable` back to Components and moved performance improvements elsewhere
 
 ### Fixed
