@@ -584,13 +584,14 @@ const getAllContainerIds = () => {
  *
  * @param   {String}  containerId  ID of container
  *
- * @returns {Node}                 Default focus element
+ * @returns {Node|null}                 Default focus element
  * @memberof spotlight/container
  * @public
  */
 function getContainerDefaultElement (containerId) {
-	let defaultElementSelector = getContainerConfig(containerId).defaultElement;
+	const config = getContainerConfig(containerId);
 
+	let defaultElementSelector = config && config.defaultElement;
 	if (!defaultElementSelector) {
 		return null;
 	}
@@ -620,14 +621,19 @@ function getContainerDefaultElement (containerId) {
  *
  * @param   {String}       containerId  ID of container
  *
- * @returns {Node|String}               DOM Node last focused
+ * @returns {Node|String|null}               DOM Node last focused
  * @memberof spotlight/container
  * @public
  */
 function getContainerLastFocusedElement (containerId) {
-	const {lastFocusedElement} = getContainerConfig(containerId);
+	const config = getContainerConfig(containerId);
+
+	if (!config || !config.lastFocusedElement) {
+		return null;
+	}
 
 	// lastFocusedElement may be a container ID so try to convert it to a node to test navigability
+	const {lastFocusedElement} = config;
 	let node = lastFocusedElement;
 	if (typeof node === 'string') {
 		node = getContainerNode(lastFocusedElement);
@@ -820,7 +826,7 @@ function isActiveContainer (containerId) {
 }
 
 function getDefaultContainer () {
-	return isActiveContainer(_defaultContainerId) ? _defaultContainerId : null;
+	return isActiveContainer(_defaultContainerId) ? _defaultContainerId : '';
 }
 
 function setDefaultContainer (containerId) {
@@ -834,7 +840,7 @@ function setDefaultContainer (containerId) {
 }
 
 function getLastContainer () {
-	return isActiveContainer(_lastContainerId) ? _lastContainerId : null;
+	return isActiveContainer(_lastContainerId) ? _lastContainerId : '';
 }
 
 function setLastContainer (containerId) {
