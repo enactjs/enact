@@ -893,6 +893,7 @@ const VideoPlayerBase = class extends React.Component {
 			more: false
 		}, () => {
 			if (!this.props.spotlightDisabled) {
+				Spotlight.setPointerMode(false);
 				Spotlight.focus(`.${css.controlsHandleAbove}`);
 			}
 			return forwardControlsAvailable({available: false}, this.props);
