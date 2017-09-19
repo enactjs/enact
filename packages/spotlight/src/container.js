@@ -584,7 +584,7 @@ const getAllContainerIds = () => {
  *
  * @param   {String}  containerId  ID of container
  *
- * @returns {Node}                 Default focus element
+ * @returns {Node|null}                 Default focus element
  * @memberof spotlight/container
  * @public
  */
@@ -621,7 +621,7 @@ function getContainerDefaultElement (containerId) {
  *
  * @param   {String}       containerId  ID of container
  *
- * @returns {Node|String}               DOM Node last focused
+ * @returns {Node|String|null}               DOM Node last focused
  * @memberof spotlight/container
  * @public
  */
