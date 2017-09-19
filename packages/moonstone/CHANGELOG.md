@@ -33,6 +33,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Picker` to not overlap values when changing values in `vertical`
 - `moonstone/ContextualPopup` pointer mode focus behavior for `spotlightRestrict='self-only'`
 - `moonstone/VideoPlayer` to prevent interacting with more components in pointer mode when hidden
+- `moonstone/Scroller` to not repaint its entire contents whenever partial content is updated
 
 ## [1.8.0] - 2017-09-07
 

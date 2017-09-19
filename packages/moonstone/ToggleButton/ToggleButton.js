@@ -7,6 +7,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import Toggleable from '@enact/ui/Toggleable';
 
 import Button from '../Button';
@@ -172,10 +173,12 @@ const ToggleButtonBase = kind({
  * @mixes ui/Toggleable
  * @public
  */
-const ToggleButton = Toggleable(
-	{prop: 'selected', toggle: 'onClick'},
-	Skinnable(
-		ToggleButtonBase
+const ToggleButton = Pure(
+	Toggleable(
+		{prop: 'selected', toggle: 'onClick'},
+		Skinnable(
+			ToggleButtonBase
+		)
 	)
 );
 

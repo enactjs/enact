@@ -10,9 +10,12 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
+- `spotlight` to block handling repeated key down events that were interrupted by a pointer event
+
 ### Fixed
 
 - `spotlight` to not try to focus something when the window is activated unless the window has been previously blurred
+- `spotlight` to prevent containers that have been unmounted from being considered potential targets
 
 ## [1.8.0] - 2017-09-07
 

@@ -12,9 +12,13 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
+- `ui/Holdable` to cancel key hold events when the pointer moves
+- `ui/Holdable` and `ui/Changeable` back to Components and moved performance improvements elsewhere
+
 ### Fixed
 
 - `ui/FloatingLayer` to not asynchronously attach a click handler when the floating layer is removed
+- `ui/ViewManager` to correctly position items when changing mid-transition
 
 ## [1.8.0] - 2017-09-07
 
@@ -27,6 +31,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 No significant changes.
 
 ## [1.6.1] - 2017-08-07
+
 No significant changes.
 
 ## [1.6.0] - 2017-08-04

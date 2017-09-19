@@ -10,6 +10,7 @@ import clamp from 'ramda/src/clamp';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 
 import {Picker, PickerItem} from '../internal/Picker';
 import SpottablePicker from '../Picker/SpottablePicker';
@@ -248,9 +249,11 @@ const RangePickerBase = kind({
  * @ui
  * @public
  */
-const RangePicker = Changeable(
-	SpottablePicker(
-		RangePickerBase
+const RangePicker = Pure(
+	Changeable(
+		SpottablePicker(
+			RangePickerBase
+		)
 	)
 );
 

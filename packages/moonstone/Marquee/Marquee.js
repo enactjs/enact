@@ -7,7 +7,6 @@
 
 import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -90,14 +89,6 @@ const MarqueeBase = kind({
 		distance: PropTypes.number,
 
 		/**
-		 * Forces the `direction` of the marquee. Valid values are `rtl` and `ltr`. This includes non-text elements as well.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		forceDirection: PropTypes.oneOf(['rtl', 'ltr']),
-
-		/**
 		 * Callback function for when the marquee completes its animation
 		 *
 		 * @type {Function}
@@ -142,10 +133,7 @@ const MarqueeBase = kind({
 
 	computed: {
 		clientClassName: ({animating}) => animating ? animated : css.text,
-		clientStyle: ({alignment, animating, centered, distance, forceDirection, overflow, rtl, speed}, {rtl: contextRtl}) => {
-			const isTextRtl = forceDirection ? forceDirection === 'rtl' : rtl;
-			const overrideRtl = forceDirection ? true : contextRtl !== isTextRtl;
-
+		clientStyle: ({alignment, animating, centered, distance, overflow, rtl, speed}) => {
 			let textAlign = null;
 
 			if (centered) {
@@ -159,10 +147,7 @@ const MarqueeBase = kind({
 
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
-			let direction = 'inherit';
-			if (overrideRtl) {
-				direction = isTextRtl ? 'rtl' : 'ltr';
-			}
+			let direction = rtl ? 'rtl' : 'ltr';
 
 			const style = {
 				direction,
@@ -199,8 +184,6 @@ const MarqueeBase = kind({
 		);
 	}
 });
-
-MarqueeBase.contextTypes = contextTypes;
 
 export default MarqueeBase;
 export {MarqueeBase as Marquee, MarqueeBase};

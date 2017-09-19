@@ -23,6 +23,7 @@ import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
 
 import {
+	addContainer,
 	configureContainer,
 	configureDefaults,
 	getAllContainerIds,
@@ -136,6 +137,15 @@ const Spotlight = (function () {
 	 * @default false
 	 */
 	let _spotOnWindowFocus = false;
+
+	/*
+	 * `true` when a pointer move event occurs during a keypress. Used to short circuit key down
+	 * handling until the next keyup occurs.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 */
+	let _pointerMoveDuringKeyPress = false;
 
 	/*
 	* protected methods
@@ -318,6 +328,7 @@ const Spotlight = (function () {
 	}
 
 	function onKeyUp (evt) {
+		_pointerMoveDuringKeyPress = false;
 		const keyCode = evt.keyCode;
 
 		if (getDirection(keyCode) || isEnter(keyCode)) {
@@ -343,10 +354,11 @@ const Spotlight = (function () {
 		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
 
 		if (pointerHandled || !(direction || isEnter(keyCode))) {
+			_pointerMoveDuringKeyPress = true;
 			return;
 		}
 
-		if (!_pause) {
+		if (!_pause && !_pointerMoveDuringKeyPress) {
 			if (getCurrent()) {
 				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
 			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
@@ -367,6 +379,10 @@ const Spotlight = (function () {
 		const update = notifyPointerMove(current, target, clientX, clientY);
 
 		if (update) {
+			if (_5WayKeyHold) {
+				_pointerMoveDuringKeyPress = true;
+			}
+
 			const next = getNavigableTarget(target);
 
 			// TODO: Consider encapsulating this work within focusElement
@@ -459,14 +475,13 @@ const Spotlight = (function () {
 		/**
 		 * Sets the config for spotlight or the specified containerID
 		 *
+		 * @function
 		 * @param {String|Object} param1 Configuration object or container ID
 		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
 		 * @returns {undefined}
 		 * @public
 		 */
-		set: function (containerId, config) {
-			configureContainer(containerId, config);
-		},
+		set: configureContainer,
 
 		// add(<config>);
 		// add(<containerId>, <config>);
@@ -474,14 +489,13 @@ const Spotlight = (function () {
 		 * Adds the config for a new container. The container ID may be passed in the configuration
 		 * object. If no container ID is supplied, a new container ID will be generated.
 		 *
+		 * @function
 		 * @param {String|Object} param1 Configuration object or container ID
 		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
 		 * @returns {String} The container ID of the container
 		 * @public
 		 */
-		add: function (containerId, config) {
-			return configureContainer(containerId, config);
-		},
+		add: addContainer,
 
 		unmount: function (containerId) {
 			if (!containerId || typeof containerId !== 'string') {
