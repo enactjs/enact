@@ -78,14 +78,14 @@ const MediaSliderBase = kind({
 	},
 
 	computed: {
-		wrapperClassName: ({styler, visible}) => styler.append({hidden: !visible})
+		className: ({styler, visible}) => styler.append({hidden: !visible})
 	},
 
-	render: ({wrapperClassName, ...rest}) => {
+	render: ({className, ...rest}) => {
 		delete rest.visible;
 
 		return (
-			<div className={wrapperClassName}>
+			<div className={className}>
 				<Slider
 					{...rest}
 					aria-hidden="true"

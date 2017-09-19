@@ -21,6 +21,7 @@ import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
+import {toUpperCase} from '@enact/i18n/util';
 
 import $L from '../internal/$L';
 import Spinner from '../Spinner';
@@ -31,7 +32,7 @@ import Overlay from './Overlay';
 import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
 import MediaSlider from './MediaSlider';
-import FeedbackContent from './FeedbackContent'; // added
+import FeedbackContent from './FeedbackContent';
 import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
 
@@ -42,11 +43,11 @@ const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 
 // Keycode map for webOS TV
 const keyMap = {
-	'PLAY': 415,
-	'STOP': 413,
-	'PAUSE': 19,
-	'REWIND': 412,
-	'FASTFORWARD': 417
+	'PLAY': 80, //415,
+	'STOP': 83, //413,
+	'PAUSE': 65, //19,
+	'REWIND': 82, //412,
+	'FASTFORWARD': 70, //417
 };
 
 // Video ReadyStates
@@ -618,6 +619,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.pulsedPlaybackState = null;
 		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
+		this.showMiniFeedback = false;
 		this.speedIndex = 0;
 		this.id = this.generateId();
 		this.selectPlaybackRates('fastForward');
@@ -968,7 +970,7 @@ const VideoPlayerBase = class extends React.Component {
 		} else if (!this.state.mediaControlsVisible) {
 			const shouldShowSlider = this.pulsedPlaybackState !== null || calcNumberValueOfPlaybackRate(this.playbackRate) !== 1;
 
-			if (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider) {
+			if (this.showMiniFeedback && (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider)) {
 				this.setState({
 					mediaSliderVisible: shouldShowSlider,
 					miniFeedbackVisible: true
@@ -995,6 +997,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	hideMiniFeedback = () => {
 		if (this.state.miniFeedbackVisible) {
+			this.showMiniFeedback = false;
 			this.setState({
 				mediaSliderVisible: false,
 				miniFeedbackVisible: false
@@ -1021,13 +1024,11 @@ const VideoPlayerBase = class extends React.Component {
 
 	doPulseAction () {
 		if (is('left', this.pulsingKeyCode)) {
-			this.pulsedPlaybackRate = new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}).toUpperCase();
-			this.pulsedPlaybackState = 'jumpBackward';
+			this.showMiniFeedback = true;
 			this.jump(-1 * this.props.jumpBy);
 			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
 		} else if (is('right', this.pulsingKeyCode)) {
-			this.pulsedPlaybackRate = new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}).toUpperCase();
-			this.pulsedPlaybackState = 'jumpForward';
+			this.showMiniFeedback = true;
 			this.jump(this.props.jumpBy);
 			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
 		}
@@ -1071,42 +1072,35 @@ const VideoPlayerBase = class extends React.Component {
 
 		switch (ev.keyCode) {
 			case PLAY:
-				this.clearPulsedPlayback();
+				this.showMiniFeedback = true;
 				this.play();
-				this.startDelayedMiniFeedbackHide(5000);
 				break;
 			case PAUSE:
-				this.clearPulsedPlayback();
+				this.showMiniFeedback = true;
 				this.pause();
-				this.stopDelayedMiniFeedbackHide();
 				break;
 			case REWIND:
 				if (!this.props.noRateButtons) {
-					this.clearPulsedPlayback();
+					this.showMiniFeedback = true;
 					this.rewind();
-					this.stopDelayedMiniFeedbackHide();
 				}
 				break;
 			case FASTFORWARD:
 				if (!this.props.noRateButtons) {
-					this.clearPulsedPlayback();
+					this.showMiniFeedback = true;
 					this.fastForward();
-					this.stopDelayedMiniFeedbackHide();
 				}
 				break;
 			case STOP:
-				this.clearPulsedPlayback();
+				this.showMiniFeedback = true;
 				this.pause();
 				this.seek(0);
-				this.stopDelayedMiniFeedbackHide();
 				break;
 		}
 
 		if (!this.props.no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			this.stopListeningForPulses();
 			Spotlight.resume();
-			this.stopDelayedMiniFeedbackHide();
-			this.startDelayedMiniFeedbackHide(2000);
 		}
 	}
 
@@ -1201,6 +1195,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * @private
 	 */
 	send = (action, props) => {
+		this.clearPulsedPlayback();
 		this.showFeedback();
 		this.startDelayedFeedbackHide();
 		this.video[action](props);
@@ -1219,6 +1214,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.send('play');
 		this.prevCommand = 'play';
 		this.announce($L('Play'));
+		this.startDelayedMiniFeedbackHide(5000);
 	}
 
 	/**
@@ -1234,6 +1230,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.send('pause');
 		this.prevCommand = 'pause';
 		this.announce($L('Pause'));
+		this.stopDelayedMiniFeedbackHide();
 	}
 
 	/**
@@ -1258,9 +1255,12 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	jump = (distance) => {
+		this.pulsedPlaybackRate = toUpperCase(new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}));
+		this.pulsedPlaybackState = distance > 0 ? 'jumpForward' : 'jumpBackward';
 		this.showFeedback();
 		this.startDelayedFeedbackHide();
 		this.seek(this.state.currentTime + distance);
+		this.startDelayedMiniFeedbackHide(2000);
 	}
 
 	/**
@@ -1311,7 +1311,8 @@ const VideoPlayerBase = class extends React.Component {
 		if (shouldResumePlayback) this.send('play');
 
 		this.stopDelayedFeedbackHide();
-
+		this.stopDelayedMiniFeedbackHide();
+		this.clearPulsedPlayback();
 		this.showFeedback();
 	}
 
@@ -1360,7 +1361,8 @@ const VideoPlayerBase = class extends React.Component {
 		if (shouldResumePlayback) this.send('play');
 
 		this.stopDelayedFeedbackHide();
-
+		this.stopDelayedMiniFeedbackHide();
+		this.clearPulsedPlayback();
 		this.showFeedback();
 	}
 
