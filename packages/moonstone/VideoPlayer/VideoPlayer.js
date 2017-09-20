@@ -445,6 +445,13 @@ const VideoPlayerBase = class extends React.Component {
 		onScrub: PropTypes.func,
 
 		/**
+		 * Function executed when seek is attemped while `seekDisabled` is true.
+		 *
+		 * @type {Function}
+		 */
+		onSeekFailed: PropTypes.func,
+
+		/**
 		 * When `true`, the video will pause when it reaches either the start or the end of the
 		 * video during rewind, slow rewind, fast forward, or slow forward.
 		 *
@@ -508,6 +515,14 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		rightComponents: PropTypes.node,
+
+		/**
+		 * When `true`, seek function is disabled.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		seekDisabled: PropTypes.bool,
 
 		/**
 		 * Registers the VideoPlayer component with an
@@ -1242,7 +1257,11 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	seek = (timeIndex) => {
-		this.video.currentTime = timeIndex;
+		if (!this.props.seekDisabled) {
+			this.video.currentTime = timeIndex;
+		} else {
+			forward('onSeekFailed', null, this.props);
+		}
 	}
 
 	/**
@@ -1710,15 +1729,17 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.jumpBy;
 		delete rest.jumpDelay;
 		delete rest.no5WayJump;
-		delete rest.onControlsAvailable;
 		delete rest.onBackwardButtonClick;
+		delete rest.onControlsAvailable;
 		delete rest.onForwardButtonClick;
 		delete rest.onJumpBackwardButtonClick;
 		delete rest.onJumpForwardButtonClick;
 		delete rest.onPlayButtonClick;
 		delete rest.onScrub;
+		delete rest.onSeekFailed;
 		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;
+		delete rest.seekDisabled;
 		delete rest.setApiProvider;
 		delete rest.thumbnailUnavailable;
 		delete rest.titleHideDelay;
