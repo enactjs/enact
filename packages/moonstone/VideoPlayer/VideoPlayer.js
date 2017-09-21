@@ -988,8 +988,6 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleKeyDown = (ev) => {
-		Spotlight.setPointerMode(false);
-
 		if (!this.props.no5WayJump &&
 				!this.state.bottomControlsVisible &&
 				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
