@@ -893,6 +893,14 @@ const VideoPlayerBase = class extends React.Component {
 			more: false
 		}, () => {
 			if (!this.props.spotlightDisabled) {
+				// blur any currently spotted component within the video player to ensure that any
+				// focus-dependent behaviors (e.g. tooltips) are cleared and that focus is moved to
+				// the placeholder
+				const current = Spotlight.getCurrent();
+				if (current && this.player.contains(current)) {
+					current.blur();
+				}
+
 				Spotlight.focus(`.${css.controlsHandleAbove}`);
 			}
 			return forwardControlsAvailable({available: false}, this.props);
