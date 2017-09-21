@@ -654,7 +654,7 @@ class VirtualListCore extends Component {
 			style = {display: 'none', width, height},
 			attributes = {[dataIndexAttribute]: index, key, style};
 		this.composeTransform(style, primaryPosition, secondaryPosition);
-		this.cc[key] = <div {...attributes} />
+		this.cc[key] = (<div {...attributes} />);
 	}
 
 	positionItems ({updateFrom, updateTo}) {
@@ -695,7 +695,7 @@ class VirtualListCore extends Component {
 		}
 
 		for (let i = updateTo; i < hideTo; i++) {
-			this.applyStyleToHideNode(i);
+			this.applyStyleToHideNode(i, width, height, primaryPosition, secondaryPosition);
 		}
 
 		this.updateFrom = updateFrom;
