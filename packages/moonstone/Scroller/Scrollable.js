@@ -331,7 +331,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.doScrollStop();
 				this.animator.stop();
 			}
-			this.forceUpdateJob.stop();
 			this.hideThumbJob.stop();
 
 			if (containerRef && containerRef.removeEventListener) {
@@ -1135,10 +1134,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// state member.
 		enqueueForceUpdate = () => {
 			this.childRef.calculateMetrics();
-			this.forceUpdateJob.start();
+			this.forceUpdate();
 		}
-
-		forceUpdateJob = new Job(this.forceUpdate.bind(this), 32)
 
 		// render
 
