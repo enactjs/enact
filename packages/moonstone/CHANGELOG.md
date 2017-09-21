@@ -2,9 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
-
-### Deprecated
+## [1.9.0] - 2017-09-19
 
 ### Added
 
@@ -21,6 +19,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VirtualList` to focus an item properly when moving to a next or previous page
+- `moonstone/Scrollable` to move focus toward first or last child when page up or down key is pressed if the number of children is small
 - `moonstone/VirtualList` to scroll to preserved index when it exists within dataSize for preserving focus
 - `moonstone/Picker` buttons to not change size
 - `moonstone/Panel` to move key navigation to application close button on holding the "up" key.
@@ -35,6 +35,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to prevent interacting with more components in pointer mode when hidden
 - `moonstone/Scroller` to not repaint its entire contents whenever partial content is updated
 - `moonstone/Slider` knob positioning after its container is resized
+- `moonstone/VideoPlayer` to maintain focus when media controls are hidden
 
 ## [1.8.0] - 2017-09-07
 

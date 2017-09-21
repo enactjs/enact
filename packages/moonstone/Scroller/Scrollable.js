@@ -631,8 +631,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		getPageDirection = (keyCode, isVertical) => {
-			const isRtl = this.context.rtl;
+		getPageDirection = (keyCode) => {
+			const
+				isRtl = this.context.rtl,
+				{direction} = this,
+				isVertical = (direction === 'vertical' || direction === 'both');
 
 			return isPageUp(keyCode) ?
 				(isVertical && 'up' || isRtl && 'right' || 'left') :
@@ -678,7 +681,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				}
 				const
 					containerId = Spotlight.getActiveContainer(),
-					direction = this.getPageDirection(keyCode, canScrollVertically),
+					direction = this.getPageDirection(keyCode),
 					rDirection = reverseDirections[direction],
 					viewportBounds = this.containerRef.getBoundingClientRect(),
 					spotItemBounds = spotItem.getBoundingClientRect(),
@@ -929,6 +932,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				} else {
 					if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
 						itemPos = this.childRef.getItemPosition(opt.index, opt.stickTo);
+						// If the first or the last item to the sticked direction is disabled,
+						// focus another item which is enabled.
+						if (opt.nodeIndexToBeFocused) {
+							this.childRef.setNodeIndexToBeFocused(opt.nodeIndexToBeFocused);
+						}
 					} else if (opt.node instanceof Object) {
 						if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
 							itemPos = this.childRef.getNodePosition(opt.node);
