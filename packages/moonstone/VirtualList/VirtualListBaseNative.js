@@ -435,7 +435,7 @@ class VirtualListCoreNative extends Component {
 			dataSizeDiff = dataSize - this.curDataSize;
 		let newFirstIndex = firstIndex;
 
-		this.maxFirstIndex = dataSize - numOfItems;
+		this.maxFirstIndex = Math.ceil((dataSize - numOfItems) / dimensionToExtent) * dimensionToExtent;
 		this.curDataSize = dataSize;
 
 		// reset children
@@ -555,7 +555,7 @@ class VirtualListCoreNative extends Component {
 			{gridSize} = this.primary,
 			maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
 			minOfMax = threshold.base,
-			maxOfMin = maxPos - minOfMax;
+			maxOfMin = maxPos - threshold.base;
 		let
 			delta, numOfGridLines, newFirstIndex = firstIndex, pos, dir = 0;
 
@@ -616,16 +616,31 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
+	applyStyleToHideNode = (index, width, height, primaryPosition, secondaryPosition) => {
+		const
+			key = index % this.state.numOfItems,
+			style = {display: 'none', width, height},
+			attributes = {[dataIndexAttribute]: index, key, style};
+		this.composeTransform(style, primaryPosition, secondaryPosition);
+		this.cc[key] = (<div {...attributes} />);
+	}
+
 	positionItems () {
 		const
+			{dataSize} = this.props,
 			{firstIndex, numOfItems} = this.state,
 			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc} = this,
 			diff = firstIndex - this.lastFirstIndex,
-			updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems,
+			updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems;
+		let
+			hideTo = 0,
 			updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0) ? firstIndex + numOfItems : this.lastFirstIndex;
 
 		if (updateFrom >= updateTo) {
 			return;
+		} else if (updateTo > dataSize) {
+			hideTo = updateTo;
+			updateTo = dataSize;
 		}
 
 		// we only calculate position of the first child
@@ -649,6 +664,10 @@ class VirtualListCoreNative extends Component {
 			}
 		}
 
+		for (let i = updateTo; i < hideTo; i++) {
+			this.applyStyleToHideNode(i, width, height, primaryPosition, secondaryPosition);
+		}
+
 		this.lastFirstIndex = firstIndex;
 	}
 
@@ -658,20 +677,24 @@ class VirtualListCoreNative extends Component {
 		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 	}
 
-	composeStyle (style, width, height, primaryPosition, secondaryPosition) {
-		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
-
+	composeStyle (style, width, height, ...rest) {
 		if (this.isItemSized) {
 			style.width = width;
 			style.height = height;
 		}
 
-		/* FIXME: RTL / this calculation only works for Chrome */
-		style.transform = 'translate(' + (this.context.rtl ? -x : x) + 'px,' + y + 'px)';
+		this.composeTransform(style, ...rest);
 	}
 
 	getXY = (primaryPosition, secondaryPosition) => {
 		return (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition});
+	}
+
+	composeTransform (style, primaryPosition, secondaryPosition) {
+		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
+
+		/* FIXME: RTL / this calculation only works for Chrome */
+		style.transform = 'translate(' + (this.context.rtl ? -x : x) + 'px,' + y + 'px)';
 	}
 
 	updateMoreInfo (dataSize, primaryPosition) {
