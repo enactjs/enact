@@ -20,6 +20,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VirtualList` to focus an item properly when moving to a next or previous page
+- `moonstone/Scrollable` to move focus toward first or last child when page up or down key is pressed if the number of children is small
 - `moonstone/VirtualList` to scroll to preserved index when it exists within dataSize for preserving focus
 - `moonstone/Picker` buttons to not change size
 - `moonstone/Panel` to move key navigation to application close button on holding the "up" key.
