@@ -826,7 +826,7 @@ class VirtualListCore extends Component {
 				this.setRestrict(false);
 			}
 		} else {
-			return false;
+			return -1;
 		}
 
 		return nextIndex;
@@ -865,7 +865,7 @@ class VirtualListCore extends Component {
 			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
 			{indexToJump, nodeIndexToBeFocused} = this.getIndexForPageScroll(direction, focusedIndex);
 
-		if (nodeIndexToBeFocused === false) {
+		if (nodeIndexToBeFocused === -1) {
 			return false;
 		}
 
