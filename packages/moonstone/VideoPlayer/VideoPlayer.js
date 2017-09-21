@@ -893,7 +893,6 @@ const VideoPlayerBase = class extends React.Component {
 			more: false
 		}, () => {
 			if (!this.props.spotlightDisabled) {
-				Spotlight.setPointerMode(false);
 				Spotlight.focus(`.${css.controlsHandleAbove}`);
 			}
 			return forwardControlsAvailable({available: false}, this.props);
@@ -989,6 +988,8 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleKeyDown = (ev) => {
+		Spotlight.setPointerMode(false);
+
 		if (!this.props.no5WayJump &&
 				!this.state.bottomControlsVisible &&
 				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
@@ -1425,11 +1426,17 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
+	disablePointerMode = () => {
+		Spotlight.setPointerMode(false);
+		return true;
+	}
+
 	handleKeyDownFromControls = this.handle(
 		// onKeyDown is used as a proxy for when the title has been read because it can only occur
 		// after the controls have been shown.
 		this.markAnnounceRead,
 		forKey('down'),
+		this.disablePointerMode,
 		this.hideControls
 	)
 
