@@ -11,33 +11,41 @@
 };
 
 .item {
-	.remove-margin-on-edge-children();
-
 	.overlay {
 		line-height: 1;
 		white-space: nowrap;
 
-		// RTL-safe margin for start/end for each overlay (both sides)
-		-webkit-margin-start: @moon-icon-margin;
-		-webkit-margin-end: @moon-icon-margin;
-
-		// Remove margin on the RTL-safe side for the first overlay, so the padding+margin isn't doubled
-		&:first-child {
-			-webkit-margin-start: 0;
-		}
-
-		&:last-child {
-			-webkit-margin-end: 0;
-		}
-
 		&.before,
 		&.after {
-			.remove-margin-on-edge-children();
-
 			> * {
 				margin-top: 0;
 				margin-bottom: 0;
 				vertical-align: top;
+			}
+		}
+
+		// Overlay has no margins, however, its edge children must be told how to behave to preserve
+		// the parent's appearance. In the before, the first child must have no margin as well as
+		// last child in the after. This allows them to butt up against the edges. The opposite must
+		// be done for the last child of the before and the first child of the after, so they don't
+		// run into the Item's content.
+		&.after {
+			> :first-child {
+				-webkit-margin-start: @moon-icon-margin;
+			}
+
+			> :last-child {
+				-webkit-margin-end: 0;
+			}
+		}
+
+		&.before {
+			> :first-child {
+				-webkit-margin-start: 0;
+			}
+
+			> :last-child {
+				-webkit-margin-end: @moon-icon-margin;
 			}
 		}
 	}
