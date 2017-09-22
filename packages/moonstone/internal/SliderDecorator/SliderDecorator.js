@@ -235,8 +235,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			// defer measurements a tick to ensure stylesheets have been applied
-			setTimeout(this.updateUI);
+			this.updateUI();
 		}
 
 		componentWillReceiveProps (nextProps) {
