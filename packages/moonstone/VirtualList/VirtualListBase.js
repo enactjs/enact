@@ -648,12 +648,11 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	applyStyleToHideNode = (index, width, height, primaryPosition, secondaryPosition) => {
+	applyStyleToHideNode = (index) => {
 		const
 			key = index % this.state.numOfItems,
-			style = {display: 'none', width, height},
+			style = {display: 'none'},
 			attributes = {[dataIndexAttribute]: index, key, style};
-		this.composeTransform(style, primaryPosition, secondaryPosition);
 		this.cc[key] = (<div {...attributes} />);
 	}
 
@@ -695,7 +694,7 @@ class VirtualListCore extends Component {
 		}
 
 		for (let i = updateTo; i < hideTo; i++) {
-			this.applyStyleToHideNode(i, width, height, primaryPosition, secondaryPosition);
+			this.applyStyleToHideNode(i);
 		}
 
 		this.updateFrom = updateFrom;

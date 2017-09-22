@@ -616,12 +616,11 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
-	applyStyleToHideNode = (index, width, height, primaryPosition, secondaryPosition) => {
+	applyStyleToHideNode = (index) => {
 		const
 			key = index % this.state.numOfItems,
-			style = {display: 'none', width, height},
+			style = {display: 'none'},
 			attributes = {[dataIndexAttribute]: index, key, style};
-		this.composeTransform(style, primaryPosition, secondaryPosition);
 		this.cc[key] = (<div {...attributes} />);
 	}
 
@@ -665,7 +664,7 @@ class VirtualListCoreNative extends Component {
 		}
 
 		for (let i = updateTo; i < hideTo; i++) {
-			this.applyStyleToHideNode(i, width, height, primaryPosition, secondaryPosition);
+			this.applyStyleToHideNode(i);
 		}
 
 		this.lastFirstIndex = firstIndex;
@@ -677,24 +676,20 @@ class VirtualListCoreNative extends Component {
 		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 	}
 
-	composeStyle (style, width, height, ...rest) {
+	composeStyle (style, width, height, primaryPosition, secondaryPosition) {
+		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
+
 		if (this.isItemSized) {
 			style.width = width;
 			style.height = height;
 		}
 
-		this.composeTransform(style, ...rest);
+		/* FIXME: RTL / this calculation only works for Chrome */
+		style.transform = 'translate(' + (this.context.rtl ? -x : x) + 'px,' + y + 'px)';
 	}
 
 	getXY = (primaryPosition, secondaryPosition) => {
 		return (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition});
-	}
-
-	composeTransform (style, primaryPosition, secondaryPosition) {
-		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
-
-		/* FIXME: RTL / this calculation only works for Chrome */
-		style.transform = 'translate(' + (this.context.rtl ? -x : x) + 'px,' + y + 'px)';
 	}
 
 	updateMoreInfo (dataSize, primaryPosition) {
