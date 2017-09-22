@@ -296,7 +296,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (this.scrolling) {
 				this.doScrollStop();
 			}
-			this.forceUpdateJob.stop();
 			this.scrollStopJob.stop();
 			this.hideThumbJob.stop();
 
@@ -992,17 +991,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.bounds.scrollHeight = this.getScrollBounds().scrollHeight;
 		}
 
-		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
-		// queue it up in case we get multiple calls (e.g. when grouped expandables toggle).
-		//
 		// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 		// state member.
 		enqueueForceUpdate = () => {
 			this.childRef.calculateMetrics();
-			this.forceUpdateJob.start();
+			this.forceUpdate();
 		}
-
-		forceUpdateJob = new Job(this.forceUpdate.bind(this), 32)
 
 		// render
 

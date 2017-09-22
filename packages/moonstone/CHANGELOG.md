@@ -37,6 +37,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` to not repaint its entire contents whenever partial content is updated
 - `moonstone/Slider` knob positioning after its container is resized
 - `moonstone/VideoPlayer` to maintain focus when media controls are hidden
+- `moonstone/Scroller` to scroll expandable components into view when opening when pointer has moved elsewhere
 
 ## [1.8.0] - 2017-09-07
 
