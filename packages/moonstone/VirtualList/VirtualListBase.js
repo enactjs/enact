@@ -449,7 +449,7 @@ class VirtualListCore extends Component {
 			dataSizeDiff = dataSize - this.curDataSize;
 		let newFirstIndex = firstIndex;
 
-		this.maxFirstIndex = dataSize - numOfItems;
+		this.maxFirstIndex = Math.ceil((dataSize - numOfItems) / dimensionToExtent) * dimensionToExtent;
 		this.curDataSize = dataSize;
 		this.updateFrom = null;
 		this.updateTo = null;
@@ -576,7 +576,7 @@ class VirtualListCore extends Component {
 			{gridSize} = this.primary,
 			maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
 			minOfMax = threshold.base,
-			maxOfMin = maxPos - minOfMax;
+			maxOfMin = maxPos - threshold.base;
 		let
 			delta, numOfGridLines, newFirstIndex = firstIndex, pos, dir = 0;
 
@@ -648,8 +648,19 @@ class VirtualListCore extends Component {
 		}
 	}
 
+	applyStyleToHideNode = (index) => {
+		const
+			key = index % this.state.numOfItems,
+			style = {display: 'none'},
+			attributes = {[dataIndexAttribute]: index, key, style};
+		this.cc[key] = (<div {...attributes} />);
+	}
+
 	positionItems ({updateFrom, updateTo}) {
-		const {isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition} = this;
+		const
+			{dataSize} = this.props,
+			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition} = this;
+		let hideTo = 0;
 
 		// we only calculate position of the first child
 		let
@@ -659,6 +670,11 @@ class VirtualListCore extends Component {
 		primaryPosition -= scrollPosition;
 		width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
 		height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
+
+		if (updateTo > dataSize) {
+			hideTo = updateTo;
+			updateTo = dataSize;
+		}
 
 		// positioning items
 		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
@@ -675,6 +691,10 @@ class VirtualListCore extends Component {
 			} else {
 				secondaryPosition += secondary.gridSize;
 			}
+		}
+
+		for (let i = updateTo; i < hideTo; i++) {
+			this.applyStyleToHideNode(i);
 		}
 
 		this.updateFrom = updateFrom;
@@ -1025,18 +1045,10 @@ class VirtualListCore extends Component {
 		};
 	}
 
-	renderCalculate () {
-		const
-			{dataSize} = this.props,
-			{firstIndex, numOfItems} = this.state,
-			max = Math.min(dataSize, firstIndex + numOfItems);
-
-		this.positionItems({updateFrom: firstIndex, updateTo: max});
-	}
-
 	render () {
 		const
 			props = Object.assign({}, this.props),
+			{firstIndex, numOfItems} = this.state,
 			{primary, cc} = this;
 
 		delete props.cbScrollTo;
@@ -1051,7 +1063,7 @@ class VirtualListCore extends Component {
 		delete props.spacing;
 
 		if (primary) {
-			this.renderCalculate();
+			this.positionItems({updateFrom: firstIndex, updateTo: firstIndex + numOfItems});
 		}
 
 		const needsScrollingPlaceholder = this.nodeIndexToBeFocused != null && Spotlight.isPaused();
