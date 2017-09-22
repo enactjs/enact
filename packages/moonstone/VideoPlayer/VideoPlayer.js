@@ -911,6 +911,14 @@ const VideoPlayerBase = class extends React.Component {
 	setControlVisibilityStates = (state) => {
 		this.setState(state, () => {
 			if (!this.props.spotlightDisabled) {
+				// blur any currently spotted component within the video player to ensure that any
+				// focus-dependent behaviors (e.g. tooltips) are cleared and that focus is moved to
+				// the placeholder
+				const current = Spotlight.getCurrent();
+				if (current && this.player.contains(current)) {
+					current.blur();
+				}
+
 				Spotlight.focus(`.${css.controlsHandleAbove}`);
 			}
 			return forwardControlsAvailable({available: false}, this.props);
@@ -1504,11 +1512,17 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
+	disablePointerMode = () => {
+		Spotlight.setPointerMode(false);
+		return true;
+	}
+
 	handleKeyDownFromControls = this.handle(
 		// onKeyDown is used as a proxy for when the title has been read because it can only occur
 		// after the controls have been shown.
 		this.markAnnounceRead,
 		forKey('down'),
+		this.disablePointerMode,
 		this.hideControls
 	)
 

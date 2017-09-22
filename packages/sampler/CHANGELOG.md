@@ -2,17 +2,11 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
-## [unreleased]
-
-### Deprecated
+## [1.9.0] - 2017-09-19
 
 ### Added
 
 - Vietnamese to the locale list knob
-
-### Changed
-
-### Fixed
 
 ## [1.8.0] - 2017-09-07
 

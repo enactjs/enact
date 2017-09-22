@@ -105,7 +105,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 
 		getChildContext () {
 			return {
-				skin: this.getSkin(this.props),
+				skin: this.determineSkin(this.props.skin, this.state.skin),
 				Subscriber: this.publisher.getSubscriber()
 			};
 		}
@@ -113,7 +113,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillMount () {
 			this.publisher = Publisher.create('skin', this.context.Subscriber);
 			this.publisher.publish({
-				skin: this.getSkin(this.props)
+				skin: this.determineSkin(this.props.skin, this.state.skin)
 			});
 
 			if (this.context.Subscriber) {
@@ -122,11 +122,9 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const skin = this.getSkin(this.props);
-			const nextSkin = this.getSkin(nextProps);
-
-			if (skin !== nextSkin) {
-				this.updateSkin({skin: nextSkin});
+			if (this.props.skin !== nextProps.skin) {
+				const skin = this.determineSkin(nextProps.skin, this.state.skin);
+				this.updateSkin(skin);
 			}
 		}
 
@@ -137,20 +135,25 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleSubscription = ({message}) => {
-			this.updateSkin(message);
+			const skin = this.determineSkin(this.props.skin, message.skin);
+			this.updateSkin(skin);
 		}
 
-		updateSkin (state) {
-			this.setState(state);
-			this.publisher.publish(state);
+		updateSkin (skin) {
+			if (skin !== this.state.skin) {
+				const state = {skin};
+
+				this.setState(state);
+				this.publisher.publish(state);
+			}
 		}
 
-		getSkin (props) {
-			return props.skin || defaultSkin || this.state.skin;
+		determineSkin (authorSkin, parentSkin) {
+			return authorSkin || defaultSkin || parentSkin;
 		}
 
 		getClassName () {
-			const skin = skins[this.getSkin(this.props)];
+			const skin = skins[this.determineSkin(this.props.skin, this.state.skin)];
 			let {className} = this.props;
 
 			// only apply the skin class if it's set and different from the "current" skin as

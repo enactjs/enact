@@ -228,8 +228,28 @@ const Spotlight = (function () {
 		}
 	}
 
+	function restoreFocus () {
+		const lastContainerId = getLastContainer();
+		const next = [rootContainerId];
+
+		if (lastContainerId) {
+			next.unshift(lastContainerId);
+
+			// only prepend last focused if it exists so that Spotlight.focus() doesn't receive
+			// a falsey target
+			const lastFocused = getContainerLastFocusedElement(lastContainerId);
+			if (lastFocused) {
+				next.unshift(lastFocused);
+			}
+		}
+
+		// attempt to find a target starting with the last focused element in the last
+		// container, followed by the last container, and finally the root container
+		return next.reduce((focused, target) => focused || Spotlight.focus(target), false);
+	}
+
 	function spotNextFromPoint (direction, position) {
-		const containerId = getLastContainer();
+		const containerId = Spotlight.getActiveContainer();
 		const next = getTargetByDirectionFromPosition(direction, position, containerId);
 
 		if (next) {
@@ -273,29 +293,14 @@ const Spotlight = (function () {
 	}
 
 	function onAcceleratedKeyDown (evt) {
-		let currentFocusedElement = getCurrent();
 		const direction = getDirection(evt.keyCode);
 
-		if (!currentFocusedElement) {
-			const lastContainerId = getLastContainer();
-			if (lastContainerId) {
-				currentFocusedElement = getContainerLastFocusedElement(lastContainerId);
-			}
-			if (!currentFocusedElement) {
-				focusElement(getTargetByContainer(), getContainersForNode(currentFocusedElement));
+		if (!direction) return;
 
-				return preventDefault(evt);
-			}
-		}
-
+		const currentFocusedElement = getCurrent();
 		const currentContainerIds = getContainersForNode(currentFocusedElement);
-		if (
-			direction &&
-			!spotNext(direction, currentFocusedElement, currentContainerIds) &&
-			currentFocusedElement !== document.activeElement
-		) {
-			focusElement(currentFocusedElement, currentContainerIds);
-		}
+
+		spotNext(direction, currentFocusedElement, currentContainerIds);
 	}
 
 	function onBlur () {
@@ -338,9 +343,8 @@ const Spotlight = (function () {
 	}
 
 	function handlePointerHide () {
-		const lastContainerId = getLastContainer();
-		if (!getCurrent() && lastContainerId) {
-			Spotlight.focus(getContainerLastFocusedElement(lastContainerId));
+		if (!getCurrent()) {
+			restoreFocus();
 		}
 	}
 
@@ -362,7 +366,7 @@ const Spotlight = (function () {
 			if (getCurrent()) {
 				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
 			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
-				Spotlight.focus(getContainerLastFocusedElement(getLastContainer()));
+				restoreFocus();
 			}
 			_5WayKeyHold = true;
 		}
@@ -652,6 +656,7 @@ const Spotlight = (function () {
 		/**
 		 * Sets or clears the default container that will receive focus.
 		 *
+		 * @function
 		 * @param {String|undefined} containerId The container ID or a falsy value to clear default container
 		 * @returns {undefined}
 		 * @public
@@ -664,7 +669,9 @@ const Spotlight = (function () {
 		 * @returns {String} The id of the currently active container
 		 * @public
 		 */
-		getActiveContainer: getLastContainer,
+		getActiveContainer: function () {
+			return getLastContainer() || rootContainerId;
+		},
 
 		/**
 		 * Sets the currently active container.
