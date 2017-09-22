@@ -5,6 +5,7 @@
  * @private
  */
 
+import {contextTypes} from '@enact/core/internal/PubSub';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import Spotlight from '@enact/spotlight';
@@ -62,6 +63,8 @@ const forwardMouseLeave  = forward('onMouseLeave');
 const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class SliderDecoratorClass extends React.Component {
 		static displayName = 'SliderDecorator';
+
+		static contextTypes = contextTypes
 
 		static propTypes = /** @lends moonstone/internal/SliderDecorator.SliderDecorator.prototype */{
 			/**
@@ -225,6 +228,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		componentWillMount () {
+			if (this.context.Subscriber) {
+				this.context.Subscriber.subscribe('resize', this.handleResize);
+			}
+		}
+
 		componentDidMount () {
 			this.updateUI();
 		}
@@ -255,6 +264,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillUnmount () {
 			this.updateValueJob.stop();
+			if (this.context.Subscriber) {
+				this.context.Subscriber.unsubscribe('resize', this.handleResize);
+			}
 		}
 
 		normalizeBounds (props) {
@@ -344,6 +356,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					proportion,
 					detached
 				});
+			}
+		}
+
+		handleResize = () => {
+			if (this.sliderBarNode) {
+				this.updateUI();
 			}
 		}
 

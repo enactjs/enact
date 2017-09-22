@@ -35,6 +35,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ContextualPopup` pointer mode focus behavior for `spotlightRestrict='self-only'`
 - `moonstone/VideoPlayer` to prevent interacting with more components in pointer mode when hidden
 - `moonstone/Scroller` to not repaint its entire contents whenever partial content is updated
+- `moonstone/Slider` knob positioning after its container is resized
 - `moonstone/VideoPlayer` to maintain focus when media controls are hidden
 
 ## [1.8.0] - 2017-09-07
