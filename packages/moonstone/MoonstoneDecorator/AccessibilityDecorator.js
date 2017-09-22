@@ -15,7 +15,9 @@ import PropTypes from 'prop-types';
 const AccessibilityDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'AccessibilityDecorator'
+
 		static contextTypes = contextTypes
+
 		static childContextTypes = contextTypes
 
 		static propTypes =  /** @lends moonstone/MoonstoneDecorator.AccessibilityDecorator.prototype */ {
@@ -57,14 +59,16 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {
 		}
 
 		componentWillMount () {
-			this.publisher = Publisher.create('textSize', this.context.Subscriber);
-			this.publisher.publish({
-				textSize: 'normal'
-			});
+			this.publisher = Publisher.create('resize', this.context.Subscriber);
 		}
 
-		componentDidUpdate () {
-			this.publisher.publish(this.props.textSize);
+		componentDidUpdate (prevProps) {
+			if (prevProps.textSize !== this.props.textSize) {
+				this.publisher.publish({
+					horizontal: true,
+					vertical: true
+				});
+			}
 		}
 
 		render () {

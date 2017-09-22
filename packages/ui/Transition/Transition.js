@@ -8,7 +8,7 @@
 import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
-import {Subscription} from '@enact/core/internal/PubSub';
+import {contextTypes} from '@enact/core/internal/PubSub';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -184,6 +184,9 @@ const TRANSITION_STATE = {
  * @public
  */
 class Transition extends React.Component {
+
+	static contextTypes = contextTypes
+
 	static propTypes = /** @lends ui/Transition.Transition.prototype */ {
 		children: PropTypes.node.isRequired,
 
@@ -279,6 +282,12 @@ class Transition extends React.Component {
 		};
 	}
 
+	componentWillMount () {
+		if (this.context.Subscriber) {
+			this.context.Subscriber.subscribe('resize', this.handleResize);
+		}
+	}
+
 	componentDidMount () {
 		if (!this.props.visible) {
 			this.measuringJob.idle();
@@ -329,6 +338,12 @@ class Transition extends React.Component {
 			renderState: TRANSITION_STATE.MEASURE
 		});
 	})
+
+	handleResize = () => {
+		this.setState({
+			initialHeight: null
+		});
+	}
 
 	handleTransitionEnd = (ev) => {
 		forwardTransitionEnd(ev, this.props);
@@ -388,5 +403,5 @@ class Transition extends React.Component {
 	}
 }
 
-export default Subscription({channels: ['textSize']}, Transition);
+export default Transition;
 export {Transition, TransitionBase};
