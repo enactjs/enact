@@ -508,8 +508,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		getPageDirection = (keyCode, isVertical) => {
-			const isRtl = this.context.rtl;
+		getPageDirection = (keyCode) => {
+			const
+				isRtl = this.context.rtl,
+				{direction} = this,
+				isVertical = (direction === 'vertical' || direction === 'both');
 
 			return isPageUp(keyCode) ?
 				(isVertical && 'up' || isRtl && 'right' || 'left') :
@@ -555,7 +558,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				}
 				const
 					containerId = Spotlight.getActiveContainer(),
-					direction = this.getPageDirection(keyCode, canScrollVertically),
+					direction = this.getPageDirection(keyCode),
 					rDirection = reverseDirections[direction],
 					viewportBounds = this.containerRef.getBoundingClientRect(),
 					spotItemBounds = spotItem.getBoundingClientRect(),

@@ -816,16 +816,66 @@ class VirtualListCore extends Component {
 		this.setRestrict(isSelfOnly);
 	}
 
+	findEnableItemForPageScroll = (isForward, indexFrom, indexTo, data) => {
+		let nextIndex = -1;
+
+		if (isForward) {
+			for (let i = indexFrom; i < indexTo; i++) {
+				if (!data[i].disabled) {
+					nextIndex = i;
+					break;
+				}
+			}
+
+			// If there is no item which could get focus forward,
+			// we need to set restriction option to `self-first`.
+			if (nextIndex === -1) {
+				this.setRestrict(false);
+			}
+		} else if (!isForward) {
+			for (let i = indexFrom; i >= indexTo; i--) {
+				if (!data[i].disabled) {
+					nextIndex = i;
+					break;
+				}
+			}
+
+			// If there is no item which could get focus backward,
+			// we need to set restriction option to `self-first`.
+			if (indexTo === 0 && nextIndex === -1) {
+				this.setRestrict(false);
+			}
+		} else {
+			return -1;
+		}
+
+		return nextIndex;
+	}
+
 	getIndexForPageScroll = (direction, currentIndex) => {
 		const
 			{context, dimensionToExtent, isPrimaryDirectionVertical, primary} = this,
-			{dataSize, spacing} = this.props;
+			{data, dataSize, spacing} = this.props;
 		let offsetIndex = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent;
 
 		offsetIndex *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
 		offsetIndex *= (direction === 'down' || direction === 'right') ? 1 : -1;
 
-		return clamp(0, dataSize - 1, currentIndex + offsetIndex);
+		let indexToJump = clamp(0, dataSize - 1, currentIndex + offsetIndex);
+
+		// If a currnet index is same as a new index.
+		if (indexToJump === currentIndex) {
+			return {indexToJump, nodeIndexToBeFocused: null};
+		}
+
+		// If a current index is different from a new index and the item with the new index is disabled,
+		// try to find a next item which is enabled.
+		let nodeIndexToBeFocused = this.findEnableItemForPageScroll(
+			indexToJump < currentIndex,
+			indexToJump, currentIndex, data
+		);
+
+		return {indexToJump, nodeIndexToBeFocused};
 	}
 
 	scrollToNextPage = ({direction, focusedItem}) => {
@@ -833,14 +883,23 @@ class VirtualListCore extends Component {
 			isRtl = this.context.rtl,
 			isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right'),
 			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
-			indexToFocus = this.getIndexForPageScroll(direction, focusedIndex);
+			{indexToJump, nodeIndexToBeFocused} = this.getIndexForPageScroll(direction, focusedIndex);
 
-		if (focusedIndex !== indexToFocus) {
+		if (nodeIndexToBeFocused === -1) {
+			return false;
+		}
+
+		if (
+			// If the index to jump is enabled
+			focusedIndex !== indexToJump && indexToJump === nodeIndexToBeFocused ||
+			// If the index to jump is disabled
+			nodeIndexToBeFocused !== null && focusedIndex !== nodeIndexToBeFocused && indexToJump !== nodeIndexToBeFocused
+		) {
 			focusedItem.blur();
 			// To prevent item positioning issue, make all items to be rendered.
 			this.updateFrom = null;
 			this.updateTo = null;
-			this.props.cbScrollTo({index: indexToFocus, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
+			this.props.cbScrollTo({index: indexToJump, nodeIndexToBeFocused, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
 		}
 
 		return true;
@@ -934,6 +993,10 @@ class VirtualListCore extends Component {
 		}
 
 		return false;
+	}
+
+	setNodeIndexToBeFocused = (nextIndex) => {
+		this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
 	}
 
 	onKeyDown = (e) => {
