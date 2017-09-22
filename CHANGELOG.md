@@ -2,6 +2,54 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.9.0] - 2017-09-19
+
+### Added
+
+- `moonstone/styles/mixins.less` mixins: `.moon-spotlight-margin()` and `.moon-spotlight-padding()`
+- `moonstone/Button` property `noAnimation` to support non-animating pressed visual
+- `sampler` locale Vietnamese to the locale list knob
+- `ui/styles/mixins.less` mixins: `.remove-margin-on-edge-children()` and `.remove-padding-on-edge-children()` to better handle edge margins on container components
+
+### Changed
+
+- `i18n` to classify Vietnamese as a non-latin language
+- `moonstone/TimePicker` to use "AM/PM" instead of "meridiem" for label under meridiem picker
+- `moonstone/IconButton` default style to not animate on press. NOTE: This behavior will change back to its previous setting in release 2.0.0.
+- `moonstone/Popup` to warn when using `scrimType` `'none'` and `spotlightRestrict` `'self-only'`
+- `moonstone/Scroller` to block spotlight during scroll
+- `moonstone/ExpandableItem` and derivatives to always pause spotlight before animation
+- `spotlight` to block handling repeated key down events that were interrupted by a pointer event
+- `ui/Holdable` to cancel key hold events when the pointer moves
+- `ui/Holdable` and `ui/Changeable` back to Components and moved performance improvements elsewhere
+
+### Fixed
+
+- `moonstone/Input` height for non-latin locales
+- `moonstone/VirtualGridList` to not move focus to wrong column when scrolled from the bottom by holding the "up" key
+- `moonstone/VirtualList` to focus an item properly when moving to a next or previous page
+- `moonstone/Scrollable` to move focus toward first or last child when page up or down key is pressed if the number of children is small
+- `moonstone/VirtualList` to scroll to preserved index when it exists within dataSize for preserving focus
+- `moonstone/Picker` buttons to not change size
+- `moonstone/Panel` to move key navigation to application close button on holding the "up" key.
+- `moonstone/Picker` to show numbers when changing values rapidly
+- `moonstone/Popup` layout in large text mode to show close button correctly
+- `moonstone/Picker` from moving scroller when pressing 5-way keys in `joined` Picker
+- `moonstone/Input` so it displays all locales the same way, without cutting off the edges of characters
+- `moonstone/TooltipDecorator` to hide tooltip when 5-way keys are pressed for disabled components
+- `moonstone/Picker` to not tremble in width when changing values while using a numeric width prop value
+- `moonstone/Picker` to not overlap values when changing values in `vertical`
+- `moonstone/ContextualPopup` pointer mode focus behavior for `spotlightRestrict='self-only'`
+- `moonstone/VideoPlayer` to prevent interacting with more components in pointer mode when hidden
+- `moonstone/Scroller` to not repaint its entire contents whenever partial content is updated
+- `moonstone/Slider` knob positioning after its container is resized
+- `moonstone/VideoPlayer` to maintain focus when media controls are hidden
+- `moonstone/Scroller` to scroll expandable components into view when opening when pointer has moved elsewhere
+- `spotlight` to not try to focus something when the window is activated unless the window has been previously blurred
+- `spotlight` to prevent containers that have been unmounted from being considered potential targets
+- `ui/FloatingLayer` to not asynchronously attach a click handler when the floating layer is removed
+- `ui/ViewManager` to correctly position items when changing mid-transition
+
 ## [1.8.0] - 2017-09-07
 
 ### Deprecated

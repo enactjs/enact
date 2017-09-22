@@ -1,5 +1,5 @@
 import MarqueeDecorator from './MarqueeDecorator';
-import Remeasurable from '@enact/ui/Remeasurable';
+
 /**
  * {@link moonstone/Marquee.MarqueeText} is a basic marqueeing text component.
  *
@@ -9,7 +9,7 @@ import Remeasurable from '@enact/ui/Remeasurable';
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @public
  */
-const MarqueeText = Remeasurable(MarqueeDecorator('div'));
+const MarqueeText = MarqueeDecorator('div');
 MarqueeText.displayName = 'MarqueeText';
 
 export default MarqueeText;

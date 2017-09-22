@@ -12,6 +12,7 @@ import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import Spottable from '@enact/spotlight/Spottable';
 
 import IdProvider from '../internal/IdProvider';
@@ -617,16 +618,18 @@ const IncrementSliderFactory = factory((config) => {
 	 * @ui
 	 * @public
 	 */
-	return Changeable(
-		IdProvider(
-			{generateProp: null, prefix: 's_'},
-			SliderDecorator(
-				DisappearSpotlightDecorator(
-					{events: {
-						onIncrementSpotlightDisappear: `.${componentCss.decrementButton}`,
-						onDecrementSpotlightDisappear: `.${componentCss.incrementButton}`
-					}},
-					Base
+	return Pure(
+		Changeable(
+			IdProvider(
+				{generateProp: null, prefix: 's_'},
+				SliderDecorator(
+					DisappearSpotlightDecorator(
+						{events: {
+							onIncrementSpotlightDisappear: `.${componentCss.decrementButton}`,
+							onDecrementSpotlightDisappear: `.${componentCss.incrementButton}`
+						}},
+						Base
+					)
 				)
 			)
 		)

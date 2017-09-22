@@ -7,6 +7,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import Toggleable from '@enact/ui/Toggleable';
 import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 
@@ -118,12 +119,14 @@ const SelectableItemBase = kind({
  * @ui
  * @public
  */
-const SelectableItem = RemeasurableDecorator(
-	{trigger: 'onToggle'},
+const SelectableItem = Pure(
 	Toggleable(
 		{prop: 'selected'},
-		Skinnable(
-			SelectableItemBase
+		RemeasurableDecorator(
+			{trigger: 'selected'},
+			Skinnable(
+				SelectableItemBase
+			)
 		)
 	)
 );

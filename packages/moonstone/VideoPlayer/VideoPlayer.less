@@ -38,6 +38,21 @@
 	}
 
 	.fullscreen {
+		.miniFeedback {
+			position: absolute;
+			top: @moon-video-feedback-mini-position-top;
+			left: @moon-video-feedback-mini-position-left;
+			font-family: @moon-video-feedback-mini-font-family;
+			font-weight: @moon-video-feedback-mini-font-weight;
+			font-style: @moon-video-feedback-mini-font-style;
+			font-size: @moon-video-feedback-mini-font-size;
+			padding: 0 @moon-video-feedback-mini-padding-side;
+			line-height: @moon-video-feedback-mini-line-height;
+			border-radius: (@moon-video-feedback-mini-line-height / 2);
+			bottom: auto;
+			pointer-events: none;
+		}
+
 		.bottom {
 			position: absolute;
 			bottom: @moon-video-player-padding-bottom;
@@ -45,9 +60,10 @@
 			right: @moon-video-player-padding-side;
 
 			&.hidden {
-				will-change: opacity;
-				opacity: 0;
-				pointer-events: none;
+				.sliderFrame {
+					position: absolute;
+					width: 100%
+				}
 			}
 
 			.infoFrame {
@@ -145,10 +161,20 @@
 			.sliderFrame {
 				@slider-padding-v: ((@moon-video-player-slider-tap-area - @moon-video-player-slider-height) / 2);
 
+				&.hidden {
+					will-change: opacity;
+					opacity: 0;
+					pointer-events: none;
+				}
+
 				.mediaSlider {
 					padding: @slider-padding-v 0;
 					height: @moon-video-player-slider-height;
 					margin: 0;
+
+					&[disabled] {
+						opacity: 1;
+					}
 
 					// Grow the knob when the Slider gets spotted
 					.focus({
@@ -225,6 +251,12 @@
 				position: relative;
 				display: flex;
 
+				&.hidden {
+					will-change: opacity;
+					opacity: 0;
+					pointer-events: none;
+				}
+
 				.leftComponents,
 				.rightComponents {
 					flex: 0 1;
@@ -286,6 +318,9 @@
 							text-align: center;
 							direction: ltr;
 						}
+						.moreControls {
+							pointer-events: none;
+						}
 					}
 
 					:global(.enact-locale-right-to-left) & {
@@ -315,6 +350,10 @@
 	// Skin colors
 	.applySkins({
 		.fullscreen {
+			.miniFeedback {
+				background-color: @moon-video-feedback-mini-bg-color;
+				color: @moon-video-feedback-mini-text-color;
+			}
 			.bottom {
 				background-color: @moon-video-player-bottom-bg-color;
 

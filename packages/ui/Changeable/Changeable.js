@@ -56,7 +56,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 	const {prop, change} = config;
 	const defaultPropKey = 'default' + cap(prop);
 
-	return class extends React.PureComponent {
+	return class extends React.Component {
 		static displayName = 'Changeable'
 
 		static propTypes = /** @lends ui/Changeable.Changeable.prototype */ {

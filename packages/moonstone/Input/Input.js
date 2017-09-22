@@ -10,6 +10,8 @@ import kind from '@enact/core/kind';
 import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
+import {Subscription} from '@enact/core/internal/PubSub';
 
 import $L from '../internal/$L';
 import Skinnable from '../Skinnable';
@@ -172,6 +174,14 @@ const InputBase = kind({
 		placeholder: PropTypes.string,
 
 		/**
+		 * When `true`, current locale is RTL
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * The type of input. Accepted values correspond to the standard HTML5 input types.
 		 *
 		 * @type {String}
@@ -220,7 +230,7 @@ const InputBase = kind({
 		},
 		className: ({focused, invalid, styler}) => styler.append({focused, invalid}),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
-		invalidTooltip: ({invalid, invalidMessage}, {rtl}) => {
+		invalidTooltip: ({invalid, invalidMessage, rtl}) => {
 			if (invalid && invalidMessage) {
 				const direction = rtl ? 'left' : 'right';
 				return (
@@ -239,6 +249,7 @@ const InputBase = kind({
 		delete rest.focused;
 		delete rest.invalid;
 		delete rest.invalidMessage;
+		delete rest.rtl;
 
 		return (
 			<div {...rest} disabled={disabled}>
@@ -276,10 +287,15 @@ const InputBase = kind({
  * @ui
  * @public
  */
-const Input = Changeable(
-	InputSpotlightDecorator(
-		Skinnable(
-			InputBase
+const Input = Pure(
+	Subscription(
+		{channels: ['i18n'], mapMessageToProps: (channel, {rtl}) => ({rtl})},
+		Changeable(
+			InputSpotlightDecorator(
+				Skinnable(
+					InputBase
+				)
+			)
 		)
 	)
 );

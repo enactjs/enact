@@ -6,16 +6,17 @@
  * @module moonstone/ContextualPopupDecorator
  */
 
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {extractAriaProps} from '@enact/core/util';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
+import {handle, forProp, forKey, forward, stop} from '@enact/core/handle';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import {Subscription} from '@enact/core/internal/PubSub';
 
 import {ContextualPopup} from './ContextualPopup';
 import css from './ContextualPopupDecorator.less';
@@ -95,7 +96,7 @@ const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'last-foc
 const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {noSkin, openProp} = config;
 
-	return class extends React.Component {
+	const Decorator = class extends React.Component {
 		static displayName = 'ContextualPopupDecorator'
 
 		static propTypes = /** @lends moonstone/ContextualPopupDecorator.ContextualPopupDecorator.prototype */ {
@@ -181,6 +182,14 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			popupProps: PropTypes.object,
 
 			/**
+			 * When `true`, current locale is RTL
+			 *
+			 * @type {Boolean}
+			 * @private
+			 */
+			rtl: PropTypes.bool,
+
+			/**
 			 * When `true`, it shows close button.
 			 *
 			 * @type {Boolean}
@@ -211,8 +220,6 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
 		}
 
-		static contextTypes = contextTypes
-
 		static defaultProps = {
 			direction: 'down',
 			open: false,
@@ -240,6 +247,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidMount () {
 			if (this.props.open) {
 				on('keydown', this.handleKeyDown);
+				on('keyup', this.handleKeyUp);
 			}
 		}
 
@@ -266,9 +274,11 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidUpdate (prevProps, prevState) {
 			if (this.props.open && !prevProps.open) {
 				on('keydown', this.handleKeyDown);
+				on('keyup', this.handleKeyUp);
 				this.spotPopupContent();
 			} else if (!this.props.open && prevProps.open) {
 				off('keydown', this.handleKeyDown);
+				off('keyup', this.handleKeyUp);
 				this.spotActivator(prevState.activator);
 			}
 		}
@@ -276,6 +286,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillUnmount () {
 			if (this.props.open) {
 				off('keydown', this.handleKeyDown);
+				off('keyup', this.handleKeyUp);
 			}
 			Spotlight.remove(this.state.containerId);
 		}
@@ -302,10 +313,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					position.top = clientNode.bottom + this.ARROW_OFFSET;
 					break;
 				case 'right':
-					position.left = this.context.rtl ? clientNode.left - containerNode.width - this.ARROW_OFFSET : clientNode.right + this.ARROW_OFFSET;
+					position.left = this.props.rtl ? clientNode.left - containerNode.width - this.ARROW_OFFSET : clientNode.right + this.ARROW_OFFSET;
 					break;
 				case 'left':
-					position.left = this.context.rtl ? clientNode.right + this.ARROW_OFFSET : clientNode.left - containerNode.width - this.ARROW_OFFSET;
+					position.left = this.props.rtl ? clientNode.right + this.ARROW_OFFSET : clientNode.left - containerNode.width - this.ARROW_OFFSET;
 					break;
 			}
 
@@ -358,10 +369,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					position.top = clientNode.bottom;
 					break;
 				case 'left':
-					position.left = this.context.rtl ? clientNode.left + clientNode.width : clientNode.left - this.ARROW_WIDTH;
+					position.left = this.props.rtl ? clientNode.left + clientNode.width : clientNode.left - this.ARROW_WIDTH;
 					break;
 				case 'right':
-					position.left = this.context.rtl ? clientNode.left - this.ARROW_WIDTH : clientNode.left + clientNode.width;
+					position.left = this.props.rtl ? clientNode.left - this.ARROW_WIDTH : clientNode.left + clientNode.width;
 					break;
 				default:
 					return {};
@@ -394,16 +405,16 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.adjustedDirection = 'down';
 			} else if (this.overflow.isOverBottom && !this.overflow.isOverTop && this.adjustedDirection === 'down') {
 				this.adjustedDirection = 'up';
-			} else if (this.overflow.isOverLeft && !this.overflow.isOverRight && this.adjustedDirection === 'left' && !this.context.rtl) {
+			} else if (this.overflow.isOverLeft && !this.overflow.isOverRight && this.adjustedDirection === 'left' && !this.props.rtl) {
 				this.adjustedDirection = 'right';
-			} else if (this.overflow.isOverRight && !this.overflow.isOverLeft && this.adjustedDirection === 'right' && !this.context.rtl) {
+			} else if (this.overflow.isOverRight && !this.overflow.isOverLeft && this.adjustedDirection === 'right' && !this.props.rtl) {
 				this.adjustedDirection = 'left';
 			}
 		}
 
 		adjustRTL (position) {
 			let pos = position;
-			if (this.context.rtl) {
+			if (this.props.rtl) {
 				const tmpLeft = pos.left;
 				pos.left = pos.right;
 				pos.right = tmpLeft;
@@ -416,8 +427,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				const containerNode = this.containerNode.getBoundingClientRect();
 				const {top, left, bottom, right, width, height} = this.clientNode.getBoundingClientRect();
 				const clientNode = {top, left, bottom, right, width, height};
-				clientNode.left = this.context.rtl ? window.innerWidth - right : left;
-				clientNode.right = this.context.rtl ? window.innerWidth - left : right;
+				clientNode.left = this.props.rtl ? window.innerWidth - right : left;
+				clientNode.right = this.props.rtl ? window.innerWidth - left : right;
 
 				this.calcOverflow(containerNode, clientNode);
 				this.adjustDirection();
@@ -441,15 +452,25 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.clientNode = node;
 		}
 
+		handle = handle.bind(this)
+
+		handleKeyUp = this.handle(
+			forProp('open', true),
+			forKey('enter'),
+			() => Spotlight.getCurrent() === this.state.activator,
+			stop,
+			forward('onClose')
+		)
+
 		handleKeyDown = (ev) => {
 			const {onClose, spotlightRestrict} = this.props;
 			const current = Spotlight.getCurrent();
 			const direction = getDirection(ev.keyCode);
 			const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
 			const spotlessSpotlightModal = spotlightRestrict === 'self-only' && !spottables;
-			const shouldSpotPopup = spottables && current === this.state.activator && direction === this.adjustedDirection;
+			const shouldSpotPopup = current === this.state.activator && direction === this.adjustedDirection;
 
-			if (direction && (shouldSpotPopup || (this.containerNode.contains(current) || spotlessSpotlightModal))) {
+			if (direction && spottables && (shouldSpotPopup || (this.containerNode.contains(current) || spotlessSpotlightModal))) {
 				// prevent default page scrolling
 				ev.preventDefault();
 				// stop propagation to prevent default spotlight behavior
@@ -482,7 +503,12 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		spotPopupContent = () => {
+			const {spotlightRestrict} = this.props;
 			const {containerId} = this.state;
+			const spottableDescendants = Spotlight.getSpottableDescendants(containerId);
+			if (spotlightRestrict === 'self-only' && spottableDescendants.length) {
+				Spotlight.getCurrent().blur();
+			}
 			if (!Spotlight.focus(containerId)) {
 				Spotlight.setActiveContainer(containerId);
 			}
@@ -499,6 +525,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			delete rest.popupContainerId;
+			delete rest.rtl;
 
 			if (openProp) rest[openProp] = open;
 
@@ -528,6 +555,14 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			);
 		}
 	};
+
+	return Subscription(
+		{
+			channels: ['i18n'],
+			mapMessageToProps: (key, {rtl}) => ({rtl})
+		},
+		Decorator
+	);
 });
 
 export default ContextualPopupDecorator;
