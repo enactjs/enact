@@ -22,6 +22,9 @@ import css from './ExpandableList.less';
 
 const PureGroup = Pure(
 	{propComparators: {
+		// children has already by checked by ExpandableList but we can't allow it to pass through
+		// to the default implementation which fails on non-ReactElement object arrays
+		children: () => true,
 		itemProps: (a, b) => (
 			a.onSpotlightDisappear === b.onSpotlightDisappear &&
 			a.onSpotlightLeft === b.onSpotlightLeft &&
