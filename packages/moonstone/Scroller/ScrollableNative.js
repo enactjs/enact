@@ -323,6 +323,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		deferScrollTo = true
 		pageDistance = 0
 		animateOnFocus = true
+		pageDirection = 0
 
 		// event handlers
 		eventHandlers = {}
@@ -608,9 +609,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		onScrollbarButtonClick = ({isPreviousScrollButton, isVerticalScrollBar}) => {
 			const
 				bounds = this.getScrollBounds(),
-				pageDistance = (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+				pageDistance = (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
+				delta = isPreviousScrollButton ? -pageDistance : pageDistance,
+				direction = Math.sign(delta);
 
-			this.scrollToAccumulatedTarget(isPreviousScrollButton ? -pageDistance : pageDistance, isVerticalScrollBar);
+			if (direction !== this.pageDirection) {
+				this.isScrollAnimationTargetAccumulated = false;
+				this.pageDirection = direction;
+			}
+
+			this.scrollToAccumulatedTarget(delta, isVerticalScrollBar);
 		}
 
 		scrollToAccumulatedTarget = (delta, vertical) => {
