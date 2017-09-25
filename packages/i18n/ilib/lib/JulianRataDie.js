@@ -75,7 +75,7 @@ var JulianCal = require("./JulianCal.js");
  */
 var JulianRataDie = function(params) {
 	this.cal = params && params.cal || new JulianCal();
-	this.rd = undefined;
+	this.rd = NaN;
 	RataDie.call(this, params);
 };
 
@@ -87,7 +87,6 @@ JulianRataDie.prototype.constructor = JulianRataDie;
  * The difference between a zero Julian day and the first Julian date
  * of Friday, July 16, 622 CE Julian. 
  * @private
- * @const
  * @type number
  */
 JulianRataDie.prototype.epoch = 1721422.5;

@@ -334,9 +334,9 @@ class Transition extends React.Component {
 
 		if (ev.target === this.childNode) {
 			if (!this.props.visible && this.props.onHide) {
-				this.props.onHide();
+				this.props.onHide(ev);
 			} else if (this.props.visible && this.props.onShow) {
-				this.props.onShow();
+				this.props.onShow(ev);
 			}
 		}
 	}

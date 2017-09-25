@@ -2,15 +2,19 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
-## [unreleased]
-
-### Deprecated
-
-### Added
+## [1.9.0] - 2017-09-18
 
 ### Changed
 
-### Fixed
+- Vietnamese to be classified as a non-latin language
+
+## [1.8.0] - 2017-09-07
+
+Updated iLib to latest version
+
+## [1.7.0] - 2017-08-23
+
+No significant changes.
 
 ## [1.6.1] - 2017-08-07
 

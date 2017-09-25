@@ -2,6 +2,143 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.9.0] - 2017-09-19
+
+### Added
+
+- `moonstone/styles/mixins.less` mixins: `.moon-spotlight-margin()` and `.moon-spotlight-padding()`
+- `moonstone/Button` property `noAnimation` to support non-animating pressed visual
+- `sampler` locale Vietnamese to the locale list knob
+- `ui/styles/mixins.less` mixins: `.remove-margin-on-edge-children()` and `.remove-padding-on-edge-children()` to better handle edge margins on container components
+
+### Changed
+
+- `i18n` to classify Vietnamese as a non-latin language
+- `moonstone/TimePicker` to use "AM/PM" instead of "meridiem" for label under meridiem picker
+- `moonstone/IconButton` default style to not animate on press. NOTE: This behavior will change back to its previous setting in release 2.0.0.
+- `moonstone/Popup` to warn when using `scrimType` `'none'` and `spotlightRestrict` `'self-only'`
+- `moonstone/Scroller` to block spotlight during scroll
+- `moonstone/ExpandableItem` and derivatives to always pause spotlight before animation
+- `spotlight` to block handling repeated key down events that were interrupted by a pointer event
+- `ui/Holdable` to cancel key hold events when the pointer moves
+- `ui/Holdable` and `ui/Changeable` back to Components and moved performance improvements elsewhere
+
+### Fixed
+
+- `moonstone/Input` height for non-latin locales
+- `moonstone/VirtualGridList` to not move focus to wrong column when scrolled from the bottom by holding the "up" key
+- `moonstone/VirtualList` to focus an item properly when moving to a next or previous page
+- `moonstone/Scrollable` to move focus toward first or last child when page up or down key is pressed if the number of children is small
+- `moonstone/VirtualList` to scroll to preserved index when it exists within dataSize for preserving focus
+- `moonstone/Picker` buttons to not change size
+- `moonstone/Panel` to move key navigation to application close button on holding the "up" key.
+- `moonstone/Picker` to show numbers when changing values rapidly
+- `moonstone/Popup` layout in large text mode to show close button correctly
+- `moonstone/Picker` from moving scroller when pressing 5-way keys in `joined` Picker
+- `moonstone/Input` so it displays all locales the same way, without cutting off the edges of characters
+- `moonstone/TooltipDecorator` to hide tooltip when 5-way keys are pressed for disabled components
+- `moonstone/Picker` to not tremble in width when changing values while using a numeric width prop value
+- `moonstone/Picker` to not overlap values when changing values in `vertical`
+- `moonstone/ContextualPopup` pointer mode focus behavior for `spotlightRestrict='self-only'`
+- `moonstone/VideoPlayer` to prevent interacting with more components in pointer mode when hidden
+- `moonstone/Scroller` to not repaint its entire contents whenever partial content is updated
+- `moonstone/Slider` knob positioning after its container is resized
+- `moonstone/VideoPlayer` to maintain focus when media controls are hidden
+- `moonstone/Scroller` to scroll expandable components into view when opening when pointer has moved elsewhere
+- `spotlight` to not try to focus something when the window is activated unless the window has been previously blurred
+- `spotlight` to prevent containers that have been unmounted from being considered potential targets
+- `ui/FloatingLayer` to not asynchronously attach a click handler when the floating layer is removed
+- `ui/ViewManager` to correctly position items when changing mid-transition
+
+## [1.8.0] - 2017-09-07
+
+### Deprecated
+
+- `moonstone/Dialog` property `showDivider`, will be replaced by `noDivider` property in 2.0.0
+
+### Added
+
+- `moonstone/Popup` callback property `onShow` which fires after popup appears for both animating and non-animating popups
+
+### Changed
+
+- `i18n` package to use latest iLib
+- `moonstone/Popup` callback property `onHide` to run on both animating and non-animating popups
+- `moonstone/VideoPlayer` state `playbackRate` to media events
+- `moonstone/VideoPlayer` support for `spotlightDisabled`
+- `moonstone/VideoPlayer` thumbnail positioning and style
+- `moonstone/VirtualList` to render when dataSize increased or decreased
+- `moonstone/Dialog` style
+- `moonstone/Popup`, `moonstone/Dialog`, and `moonstone/Notification` to support `node` type for children
+- `moonstone/Scroller` to forward `onKeyDown` events
+- `ui/Holdable` and `ui/Changeable` to be PureComponents to reduce the number of updates
+
+### Fixed
+
+- `moonstone/Scrollable` to enable focus when wheel scroll is stopped
+- `moonstone/VirtualList` to show scroll thumb when a preserved item is focused in a Panel
+- `moonstone/Scroller` to navigate properly with 5-way when expandable child is opened
+- `moonstone/VirtualList` to stop scrolling when focus is moved on an item from paging controls or outside
+- `moonstone/VirtualList` to move out with 5-way navigation when the first or last item is disabled
+- `moonstone/IconButton` Tooltip position when disabled
+- `moonstone/VideoPlayer` Tooltip time after unhovering
+- `moonstone/VirtualList` to not show invisible items
+- `moonstone/IconButton` Tooltip position when disabled
+- `moonstone/VideoPlayer` to display feedback tooltip correctly when navigating in 5-way
+- `moonstone/MarqueeDecorator` to work with synchronized `marqueeOn` `'render'` and hovering as well as `marqueOn` `'hover'` when moving rapidly among synchronized marquees
+- `moonstone/Input` aria-label for translation
+- `moonstone/Marquee` to recalculate inside `moonstone/Scroller` and `moonstone/SelectableItem` by bypassing `shouldComponentUpdate`
+- `spotlight/Spottable` to clean up internal spotted state when blurred within `onSpotlightDisappear` handler
+
+## [1.7.0] - 2017-08-23
+
+### Deprecated
+
+- `moonstone/TextSizeDecorator` and it will be replaced by `moonstone/AccessibilityDecorator`
+- `moonstone/MarqueeDecorator` property `marqueeCentered` and `moonstone/Marquee` property `centered` will be replaced by `alignment` property in 2.0.0
+
+### Added
+
+- `moonstone/TooltipDecorator` config property to direct tooltip into a property instead of adding to `children`
+- `moonstone/VideoPlayer` prop `thumbnailUnavailable` to fade thumbnail
+- `moonstone/AccessibilityDecorator` with `highContrast` and `textSize`
+- `moonstone/VideoPlayer` high contrast scrim
+- `moonstone/MarqueeDecorator`and `moonstone/Marquee` property `alignment` to allow setting  alignment of marquee content
+- `spotlight/SpotlightContainerDecorator` config option `continue5WayHold` to support moving focus to the next spottable element on 5-way hold key
+- `spotlight/Spottable` ability to restore focus when an initially disabled component becomes enabled
+
+### Changed
+
+- `moonstone/Scrollbar` to disable paging control down button properly at the bottom when a scroller size is a non-integer value
+- `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` to scroll on `keydown` event instead of `keyup` event of page up and page down keys
+- `moonstone/VirtualGridList` to scroll by item via 5 way key
+- `moonstone/VideoPlayer` to read target time when jump by left/right key
+- `moonstone/IconButton` to not use `MarqueeDecorator` and `Uppercase`
+
+### Fixed
+
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to focus the correct item when page up and page down keys are pressed
+- `moonstone/VirtualList` to not lose focus when moving out from the first item via 5way when it has disabled items
+- `moonstone/Slider` to align tooltip with detached knob
+- `moonstone/FormCheckbox` to display correct colors in light skin
+- `moonstone/Picker` and `moonstone/RangePicker` to forward `onKeyDown` events when not `joined`
+- `moonstone/SelectableItem` to display correct icon width and alignment
+- `moonstone/LabeledItem` to always match alignment with the locale
+- `moonstone/Scroller` to properly 5-way navigate from scroll buttons
+- `moonstone/ExpandableList` to display correct font weight and size for list items
+- `moonstone/Divider` to not italicize in non-italic locales
+- `moonstone/VideoPlayer` slider knob to follow progress after being selected when seeking
+- `moonstone/LabeledItem` to correctly position its icon. This affects all of the `Expandables`, `moonstone/DatePicker` and `moonstone/TimePicker`.
+- `moonstone/Panels.Header` and `moonstone/Item` to prevent them from allowing their contents to overflow unexpectedly
+- `moonstone/Marquee` to recalculate when vertical scrollbar appears
+- `moonstone/SelectableItem` to recalculate marquee when toggled
+- `spotlight` to correctly restore focus to a spotlight container in another container
+- `spotlight` to not try to focus something when the window is activated if focus is already set
+
+### Removed
+
+- `moonstone/Input` large-text mode
+
 ## [1.6.1] - 2017-08-07
 
 ### Changed
@@ -34,7 +171,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone` icon font sizes for wide icons
 - `moonstone/ContextualPopupDecorator` to prefer setting focus to the appropriate popup instead of other underlying controls when using 5-way from the activating control
 - `moonstone/Scroller` not scrolled via 5 way when `moonstone/ExpandableList` is opened
-- `moonstone/VirtualList` not to let the focus move outside of container even if there are children left when navigating with 5way
+- `moonstone/VirtualList` no not let the focus move outside of container even if there are children left when navigating with 5way
 - `moonstone/Scrollable` to update disability of paging controls when the scrollbar is set to `visible` and the content becomes shorter
 - `moonstone/VideoPlayer` to focus on hover over play/pause button when video is loading
 - `moonstone/VideoPlayer` to update and display proper time while moving knob when video is paused
@@ -61,7 +198,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Changed
 
 - `moonstone/ExpandableList` to use 'radio' as the default, and adapt 'single' mode to render as a `moonstone/RadioItem` instead of a `moonstone/CheckboxItem`
-- `moonstone/VideoPlayer` not to hide pause icon when it appears
+- `moonstone/VideoPlayer` to not hide pause icon when it appears
 - `moonstone/ContextualPopupDecorator` to set accessibility-related props onto the container node rather than the popup node
 - `moonstone/ExpandableItem`, `moonstone/ExpandableList`, `moonstone/ExpandablePicker`, `moonstone/DatePicker`, and `moonstone/TimePicker` to pause spotlight when animating in 5-way mode
 - `moonstone/Spinner` to position the text content under the spinner, rather than to the right side

@@ -5,6 +5,7 @@
  * @private
  */
 
+import {contextTypes} from '@enact/core/internal/PubSub';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import Spotlight from '@enact/spotlight';
@@ -62,6 +63,8 @@ const forwardMouseLeave  = forward('onMouseLeave');
 const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class SliderDecoratorClass extends React.Component {
 		static displayName = 'SliderDecorator';
+
+		static contextTypes = contextTypes
 
 		static propTypes = /** @lends moonstone/internal/SliderDecorator.SliderDecorator.prototype */{
 			/**
@@ -204,6 +207,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.current5WayValue = null;
 			this.knobPosition = null;
 			this.normalizeBounds(props);
+			this.detachedKnobPosition = 0;
 
 			const
 				value = this.clamp(props.value),
@@ -221,6 +225,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				validateRange(props.value, props.min, props.max, SliderDecoratorClass.displayName);
 				validateRange(props.backgroundProgress, 0, 1, SliderDecoratorClass.displayName,
 					'backgroundProgress', 'min', 'max');
+			}
+		}
+
+		componentWillMount () {
+			if (this.context.Subscriber) {
+				this.context.Subscriber.subscribe('resize', this.handleResize);
 			}
 		}
 
@@ -254,6 +264,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillUnmount () {
 			this.updateValueJob.stop();
+			if (this.context.Subscriber) {
+				this.context.Subscriber.unsubscribe('resize', this.handleResize);
+			}
 		}
 
 		normalizeBounds (props) {
@@ -318,7 +331,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.setState({knobAfterMidpoint: currentKnobAfterMidpoint});
 			}
 
-			this.notifyKnobMove(knobProgress, knobProgress !== proportionProgress);
+			if (knobProgress !== this.detachedKnobPosition) {
+				this.notifyKnobMove(knobProgress, knobProgress !== proportionProgress);
+				this.detachedKnobPosition = knobProgress;
+			}
 		}
 
 		getInputNode = (node) => {
@@ -340,6 +356,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					proportion,
 					detached
 				});
+			}
+		}
+
+		handleResize = () => {
+			if (this.sliderBarNode) {
+				this.updateUI();
 			}
 		}
 
@@ -400,6 +422,11 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				if (this.current5WayValue !== null) {
 					this.throttleUpdateValue(this.clamp(this.current5WayValue));
 					this.current5WayValue = null;
+
+					// only clear knobPosition when not in
+					if (!Spotlight.getPointerMode()) {
+						this.knobPosition = null;
+					}
 				}
 			} else {
 				const verticalHint = $L('change a value with up down button');
@@ -417,6 +444,14 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleBlur = (ev) => {
 			forwardBlur(ev, this.props);
+
+			// on mouseup, slider manually focuses the slider from its input causing a blur event to
+			// bubble here. if this is the case, focus hasn't effectively changed so we ignore it.
+			if (
+				ev.relatedTarget &&
+				ev.target === this.sliderNode &&
+				ev.relatedTarget === this.inputNode
+			) return;
 
 			if (this.current5WayValue !== null) {
 				this.current5WayValue = null;
@@ -455,6 +490,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleFocus = (ev) => {
 			forwardFocus(ev, this.props);
+
+			if (this.props.detachedKnob) {
+				this.moveKnobByAmount(0);
+			}
 
 			this.setState({
 				focused: true

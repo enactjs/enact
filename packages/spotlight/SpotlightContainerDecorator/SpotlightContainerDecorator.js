@@ -190,7 +190,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				cfg.restrict = this.props.spotlightRestrict;
 			}
 
-			Spotlight.set(this.state.id, cfg);
+			Spotlight.add(this.state.id, cfg);
 		}
 
 		componentWillReceiveProps (nextProps) {

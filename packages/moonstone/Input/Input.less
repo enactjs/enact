@@ -16,8 +16,6 @@
 	text-overflow: ellipsis;
 	flex-grow: 1;
 
-	.moon-custom-text-size(@moon-item-font-size-large);
-
 	&[type=number] {
 		-moz-appearance: textfield;
 
@@ -31,8 +29,8 @@
 		}
 	}
 
-	&[placeholder] { 
-		text-overflow: ellipsis; 
+	&[placeholder] {
+		text-overflow: ellipsis;
 	}
 
 	.input-placeholder({
@@ -55,7 +53,7 @@
 .decorator {
 	display: inline-flex;
 	position: relative;
-	padding: 12px 30px;
+	padding: 3px 30px;
 	border-radius: 1008px;
 	margin: 6px;
 	border: @moon-input-border-width solid transparent;
@@ -64,8 +62,8 @@
 	.input,
 	.iconBefore,
 	.iconAfter {
-		line-height: 39px;
-		height: 39px;
+		line-height: 57px;
+		height: 57px;
 	}
 
 	.iconBefore,
@@ -176,34 +174,3 @@
 		});
 	}
 });
-
-:global(.enact-locale-non-latin) {
-	.decorator {
-		padding: 6px 30px 12px;
-	}
-
-	// Languages with combining accent characters
-	&.enact-locale-th, // Thai - Test Chars: ฟิ้ไััุุ
-	&.enact-locale-ar, // Arabic
-	&.enact-locale-fa, // Farsi
-	&.enact-locale-ur, // Urdu
-	&.enact-locale-ku, // Kurdish
-	&.enact-locale-he, // Hebrew
-	&.enact-locale-hi, // Hindi
-	&.enact-locale-ta, // Tamil
-	&.enact-locale-te, // Telugu
-	&.enact-locale-kn, // Kannada
-	&.enact-locale-ml, // Malayalam
-	&.enact-locale-mr, // Marathi
-	&.enact-locale-bn, // Bengali
-	&.enact-locale-pa {// Panjabi
-		.input {
-			font-size: 24px;
-			line-height: 48px;
-		}
-
-		.decorator {
-			padding: 1px 30px;
-		}
-	}
-}

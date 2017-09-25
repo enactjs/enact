@@ -1,7 +1,7 @@
 // ItemOverlay.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
 
 // Defined so we don't repeat rules.
 @overlay-hidden: {
@@ -13,14 +13,7 @@
 .item {
 	.overlay {
 		line-height: 1;
-
-		&.before > :first-child {
-			.margin-start-end(0, @moon-icon-margin);
-		}
-
-		&.after > :last-child {
-			.margin-start-end(@moon-icon-margin, 0);
-		}
+		white-space: nowrap;
 
 		&.before,
 		&.after {
@@ -28,6 +21,31 @@
 				margin-top: 0;
 				margin-bottom: 0;
 				vertical-align: top;
+			}
+		}
+
+		// Overlay has no margins, however, its edge children must be told how to behave to preserve
+		// the parent's appearance. In the before, the first child must have no margin as well as
+		// last child in the after. This allows them to butt up against the edges. The opposite must
+		// be done for the last child of the before and the first child of the after, so they don't
+		// run into the Item's content.
+		&.after {
+			> :first-child {
+				-webkit-margin-start: @moon-icon-margin;
+			}
+
+			> :last-child {
+				-webkit-margin-end: 0;
+			}
+		}
+
+		&.before {
+			> :first-child {
+				-webkit-margin-start: 0;
+			}
+
+			> :last-child {
+				-webkit-margin-end: @moon-icon-margin;
 			}
 		}
 	}

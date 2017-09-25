@@ -273,15 +273,6 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
-	shouldComponentUpdate (nextProps, nextState) {
-		if (!this.restoreLastFocused &&
-			(this.props.dataSize > 0 && this.props.dataSize !== nextProps.dataSize) &&
-			(nextState.firstIndex + nextState.numOfItems) < nextProps.dataSize) {
-			return false;
-		}
-		return true;
-	}
-
 	componentDidUpdate () {
 		this.restoreFocus();
 	}
@@ -480,33 +471,68 @@ class VirtualListCoreNative extends Component {
 		const
 			{dataSize, overhang} = props,
 			{firstIndex} = this.state,
-			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
+			{dimensionToExtent, primary, moreInfo, preservedIndex, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
-			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex));
+			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
+			dataSizeDiff = dataSize - this.curDataSize;
 		let newFirstIndex = firstIndex;
 
-		this.maxFirstIndex = dataSize - numOfItems;
+		this.maxFirstIndex = Math.ceil((dataSize - numOfItems) / dimensionToExtent) * dimensionToExtent;
 		this.curDataSize = dataSize;
 
 		// reset children
 		this.cc = [];
+		this.calculateScrollBounds(props);
+		this.updateMoreInfo(dataSize, scrollPosition);
 
-		// Adjust first index
 		if (this.restoreLastFocused &&
 			numOfItems > 0 &&
-			(this.preservedIndex < moreInfo.firstVisibleIndex || this.preservedIndex > moreInfo.lastVisibleIndex)) {
+			(preservedIndex < dataSize) &&
+			(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
 			// If we need to restore last focus and the index is beyond the screen,
 			// we call `scrollTo` to create DOM for it.
-			this.props.cbScrollTo({index: this.preservedIndex, animate: false});
-		} else if (wasFirstIndexMax) {
-			newFirstIndex = this.maxFirstIndex;
+			this.props.cbScrollTo({index: preservedIndex, animate: false});
 		} else {
-			newFirstIndex = Math.min(firstIndex, this.maxFirstIndex);
+			newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
 		}
 
 		this.setState({firstIndex: newFirstIndex, numOfItems});
-		this.calculateScrollBounds(props);
-		this.updateMoreInfo(dataSize, scrollPosition);
+	}
+
+	calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff) {
+		const
+			{overhang} = props,
+			{firstIndex} = this.state,
+			{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, scrollPosition, threshold} = this,
+			{gridSize} = primary;
+		let newFirstIndex = firstIndex;
+
+		if (wasFirstIndexMax && dataSizeDiff > 0) { // If dataSize increased from bottom, we need adjust firstIndex
+			// If this is a gridlist and dataSizeDiff is smaller than 1 line, we are adjusting firstIndex without threshold change.
+			if (dimensionToExtent > 1 &&  dataSizeDiff < dimensionToExtent) {
+				newFirstIndex = maxFirstIndex;
+			} else { // For other bottom adding case, we need to update firstIndex and threshold.
+				const
+					maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
+					maxOfMin = maxPos - threshold.base,
+					numOfUpperLine = Math.floor(overhang / 2),
+					firstIndexFromPosition = Math.floor(scrollPosition / gridSize),
+					expectedFirstIndex = Math.max(0, firstIndexFromPosition - numOfUpperLine);
+
+				// To navigate with 5way, we need to adjust firstIndex to the next line
+				// since at the bottom we have num of overhang lines for upper side but none for bottom side
+				// So we add numOfUpperLine at the top and rest lines at the bottom
+				newFirstIndex = Math.min(maxFirstIndex, expectedFirstIndex * dimensionToExtent);
+
+				// We need to update threshold also since we moved the firstIndex
+				threshold.max = Math.min(maxPos, threshold.max + gridSize);
+				threshold.min = Math.min(maxOfMin, threshold.max - gridSize);
+			}
+		} else { // Other cases, we can keep the min value between firstIndex and maxFirstIndex. No need to change threshold
+			newFirstIndex = Math.min(firstIndex, maxFirstIndex);
+		}
+
+		return newFirstIndex;
 	}
 
 	calculateScrollBounds (props) {
@@ -536,7 +562,7 @@ class VirtualListCoreNative extends Component {
 		this.syncThreshold(maxPos);
 
 		if (this.scrollPosition > maxPos) {
-			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}});
+			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
 		}
 
 		this.containerClass = (isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
@@ -571,7 +597,7 @@ class VirtualListCoreNative extends Component {
 			{gridSize} = this.primary,
 			maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
 			minOfMax = threshold.base,
-			maxOfMin = maxPos - minOfMax;
+			maxOfMin = maxPos - threshold.base;
 		let
 			delta, numOfGridLines, newFirstIndex = firstIndex, pos, dir = 0;
 
@@ -632,16 +658,30 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
+	applyStyleToHideNode = (index) => {
+		const
+			key = index % this.state.numOfItems,
+			style = {display: 'none'},
+			attributes = {[dataIndexAttribute]: index, key, style};
+		this.cc[key] = (<div {...attributes} />);
+	}
+
 	positionItems () {
 		const
+			{dataSize} = this.props,
 			{firstIndex, numOfItems} = this.state,
 			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc} = this,
 			diff = firstIndex - this.lastFirstIndex,
-			updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems,
+			updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems;
+		let
+			hideTo = 0,
 			updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0) ? firstIndex + numOfItems : this.lastFirstIndex;
 
 		if (updateFrom >= updateTo) {
 			return;
+		} else if (updateTo > dataSize) {
+			hideTo = updateTo;
+			updateTo = dataSize;
 		}
 
 		// we only calculate position of the first child
@@ -665,11 +705,16 @@ class VirtualListCoreNative extends Component {
 			}
 		}
 
+		for (let i = updateTo; i < hideTo; i++) {
+			this.applyStyleToHideNode(i);
+		}
+
 		this.lastFirstIndex = firstIndex;
 	}
 
 	scrollToPosition (x, y) {
 		const node = this.containerRef;
+
 		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 	}
 
@@ -741,20 +786,27 @@ class VirtualListCoreNative extends Component {
 	calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
 		const
 			{pageScroll} = this.props,
+			{numOfItems} = this.state,
 			{primary} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
-		if (!isNaN(focusedIndex) && (focusedIndex !== this.lastFocusedIndex || this.restoreLastFocused)) {
+		if (!isNaN(focusedIndex)) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
+			if (numOfItems > 0 && focusedIndex % numOfItems !== this.lastFocusedIndex % numOfItems) {
+				const node = this.contentRef.children[this.lastFocusedIndex % numOfItems];
+				node.blur();
+			}
 			this.lastFocusedIndex = focusedIndex;
 
 			if (primary.clientSize >= primary.itemSize) {
 				if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
 					gridPosition.primaryPosition -= pageScroll ? 0 : offsetToClientEnd;
 				} else if (gridPosition.primaryPosition >= scrollPosition) { // inside of client
-					gridPosition.primaryPosition = scrollPosition;
+					// This code uses the trick to change the target position slightly which will not affect the actual result
+					// since a browser ignore `scrollTo` method if the target position is same as the current position.
+					gridPosition.primaryPosition = scrollPosition + (this.scrollPosition === scrollPosition ? 0.1 : 0);
 				} else { // backward over
 					gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
 				}
@@ -835,7 +887,8 @@ class VirtualListCoreNative extends Component {
 				this.isPrimaryDirectionVertical && isDown(keyCode) ||
 				!this.isPrimaryDirectionVertical && (!this.context.rtl && isRight(keyCode) || this.context.rtl && isLeft(keyCode)) ||
 				null
-			), isBackward = (
+			),
+			isBackward = (
 				this.isPrimaryDirectionVertical && isUp(keyCode) ||
 				!this.isPrimaryDirectionVertical && (!this.context.rtl && isLeft(keyCode) || this.context.rtl && isRight(keyCode)) ||
 				null
@@ -855,6 +908,12 @@ class VirtualListCoreNative extends Component {
 					break;
 				}
 			}
+
+			// If there is no item which could get focus forward,
+			// we need to set restriction option to `self-first`.
+			if (nextIndex === -1) {
+				this.setRestrict(false);
+			}
 		} else if (isBackward) {
 			// See if the next item is spottable then delegate scroll to onFocus handler
 			if (currentIndex > 0 && !data[currentIndex - 1].disabled) {
@@ -867,11 +926,20 @@ class VirtualListCoreNative extends Component {
 					break;
 				}
 			}
+
+			// If there is no item which could get focus backward,
+			// we need to set restriction option to `self-first`.
+			if (nextIndex === -1) {
+				this.setRestrict(false);
+			}
 		} else {
 			return false;
 		}
 
 		if (nextIndex !== -1 && (firstIndex > nextIndex || nextIndex >= firstIndex + numOfItems)) {
+			// When changing from "pointer" mode to "5way key" mode,
+			// a pointer is hidden and a last focused item get focused after 30ms.
+			// To make sure the item to be blurred after that, we used 50ms.
 			setTimeout(() => {
 				target.blur();
 			}, 50);
@@ -943,28 +1011,25 @@ class VirtualListCoreNative extends Component {
 
 	render () {
 		const
-			props = Object.assign({}, this.props),
-			{primary, cc} = this;
+			{className, style, ...rest} = this.props,
+			{primary, cc} = this,
+			mergedClasses = classNames(css.list, this.containerClass, className);
 
-		delete props.cbScrollTo;
-		delete props.clientSize;
-		delete props.component;
-		delete props.containerId;
-		delete props.data;
-		delete props.dataSize;
-		delete props.direction;
-		delete props.itemSize;
-		delete props.overhang;
-		delete props.pageScroll;
-		delete props.spacing;
+		delete rest.cbScrollTo;
+		delete rest.clientSize;
+		delete rest.component;
+		delete rest.containerId;
+		delete rest.data;
+		delete rest.dataSize;
+		delete rest.direction;
+		delete rest.itemSize;
+		delete rest.overhang;
+		delete rest.pageScroll;
+		delete rest.spacing;
 
 		if (primary) {
 			this.positionItems();
 		}
-
-		const
-			{className, style, ...rest} = props,
-			mergedClasses = classNames(css.list, this.containerClass, className);
 
 		return (
 			<div className={mergedClasses} ref={this.initContainerRef} style={style}>

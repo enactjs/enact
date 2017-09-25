@@ -1,9 +1,9 @@
 // Header.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/text.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/text.less";
+@import "../styles/skin.less";
 
 .header {
 	.border-box();
@@ -46,6 +46,9 @@
 	}
 
 	.headerComponents {
+		.remove-margin-on-edge-children();
+
+		max-width: 100%;
 		flex-wrap: nowrap;
 		display: flex;
 		align-items: flex-end;
@@ -123,18 +126,22 @@
 			border: lime dashed 1px;
 			background-color: fade(lime, @alpha);
 		}
+
 		.headerCell {
 			border: orange dashed 1px;
 			background-color: fade(orange, @alpha);
 		}
+
 		.titleBelow {
 			border: green dashed 1px;
 			background-color: fade(green, @alpha);
 		}
+
 		.subTitleBelow {
 			border: teal dashed 1px;
 			background-color: fade(teal, @alpha);
 		}
+
 		.headerComponents {
 			border: cyan dashed 1px;
 			background-color: fade(cyan, @alpha);

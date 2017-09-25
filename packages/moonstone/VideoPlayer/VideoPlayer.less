@@ -20,14 +20,51 @@
 	.overlay {
 		position: absolute;
 		.position(0);
+
+		&.high-contrast-scrim::after {
+			:global(.enact-a11y-high-contrast) & {
+				content: "";
+				position: absolute;
+				.position(auto, 0, 0, 0);
+				height: 360px;
+				background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
+				transform-origin: bottom;
+				// Fancier gradient for future reference. Keeping linear-gradient as specified from Enyo.
+				// background-image: radial-gradient(rgba(0, 0, 0, 0) 50%, #000000 100%);
+				// background-size: 170% 200%;
+				// background-position: bottom center;
+			}
+		}
 	}
 
 	.fullscreen {
+		.miniFeedback {
+			position: absolute;
+			top: @moon-video-feedback-mini-position-top;
+			left: @moon-video-feedback-mini-position-left;
+			font-family: @moon-video-feedback-mini-font-family;
+			font-weight: @moon-video-feedback-mini-font-weight;
+			font-style: @moon-video-feedback-mini-font-style;
+			font-size: @moon-video-feedback-mini-font-size;
+			padding: 0 @moon-video-feedback-mini-padding-side;
+			line-height: @moon-video-feedback-mini-line-height;
+			border-radius: (@moon-video-feedback-mini-line-height / 2);
+			bottom: auto;
+			pointer-events: none;
+		}
+
 		.bottom {
 			position: absolute;
 			bottom: @moon-video-player-padding-bottom;
 			left: @moon-video-player-padding-side;
 			right: @moon-video-player-padding-side;
+
+			&.hidden {
+				.sliderFrame {
+					position: absolute;
+					width: 100%
+				}
+			}
 
 			.infoFrame {
 				display: flex;
@@ -124,10 +161,20 @@
 			.sliderFrame {
 				@slider-padding-v: ((@moon-video-player-slider-tap-area - @moon-video-player-slider-height) / 2);
 
+				&.hidden {
+					will-change: opacity;
+					opacity: 0;
+					pointer-events: none;
+				}
+
 				.mediaSlider {
 					padding: @slider-padding-v 0;
 					height: @moon-video-player-slider-height;
 					margin: 0;
+
+					&[disabled] {
+						opacity: 1;
+					}
 
 					// Grow the knob when the Slider gets spotted
 					.focus({
@@ -204,6 +251,12 @@
 				position: relative;
 				display: flex;
 
+				&.hidden {
+					will-change: opacity;
+					opacity: 0;
+					pointer-events: none;
+				}
+
 				.leftComponents,
 				.rightComponents {
 					flex: 0 1;
@@ -265,6 +318,9 @@
 							text-align: center;
 							direction: ltr;
 						}
+						.moreControls {
+							pointer-events: none;
+						}
 					}
 
 					:global(.enact-locale-right-to-left) & {
@@ -294,6 +350,10 @@
 	// Skin colors
 	.applySkins({
 		.fullscreen {
+			.miniFeedback {
+				background-color: @moon-video-feedback-mini-bg-color;
+				color: @moon-video-feedback-mini-text-color;
+			}
 			.bottom {
 				background-color: @moon-video-player-bottom-bg-color;
 

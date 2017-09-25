@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import Image from '../Image';
 import Skinnable from '../Skinnable';
 
-import Feedback from './Feedback';
+import FeedbackContent from './FeedbackContent';
 import states from './FeedbackIcons.js';
 
 import css from './FeedbackTooltip.less';
@@ -57,6 +57,14 @@ const FeedbackTooltipBase = kind({
 		playbackState: PropTypes.oneOf(Object.keys(states)),
 
 		/**
+		 * `true` if Slider knob is scrubbing.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		thumbnailDeactivated: PropTypes.bool,
+
+		/**
 		 * Set a thumbnail image source to show on VideoPlayer's Slider knob. This is a standard
 		 * {@link moonstone/Image} component so it supports all of the same options for the `src`
 		 * property. If no `thumbnailSrc` is set, no tooltip will display.
@@ -81,6 +89,7 @@ const FeedbackTooltipBase = kind({
 
 	defaultProps: {
 		noFeedback: false,
+		thumbnailDeactivated: false,
 		visible: true
 	},
 
@@ -90,34 +99,35 @@ const FeedbackTooltipBase = kind({
 	},
 
 	computed: {
-		className: ({playbackState: s, styler, visible}) => styler.append({
-			hidden: !visible && states[s] && states[s].allowHide
+		className: ({playbackState: s, thumbnailDeactivated, styler, visible}) => styler.append({
+			hidden: !visible && states[s] && states[s].allowHide,
+			thumbnailDeactivated
 		})
 	},
 
 	render: ({children, noFeedback, playbackState, playbackRate, thumbnailSrc, ...rest}) => {
 		delete rest.visible;
+		delete rest.thumbnailDeactivated;
 		return (
 			<div {...rest}>
 				{thumbnailSrc ? <div className={css.thumbnail} style={!noFeedback ? {display: 'none'} : null}>
 					<Image src={thumbnailSrc} className={css.image} />
 				</div> : null}
-				<div className={css.content}>
-					<Feedback
-						playbackState={playbackState}
-						visible={!noFeedback}
-					>
-						{playbackRate}
-					</Feedback>
+				<FeedbackContent
+					className={css.content}
+					feedbackVisible={!noFeedback}
+					playbackRate={playbackRate}
+					playbackState={playbackState}
+				>
 					{children}
-				</div>
+				</FeedbackContent>
 			</div>
 		);
 	}
 });
 
 const FeedbackTooltip = onlyUpdateForKeys(
-	['children', 'noFeedback', 'playbackState', 'playbackRate', 'thumbnailSrc', 'visible']
+	['children', 'noFeedback', 'playbackState', 'playbackRate', 'thumbnailDeactivated', 'thumbnailSrc', 'visible']
 )(
 	Skinnable(
 		FeedbackTooltipBase

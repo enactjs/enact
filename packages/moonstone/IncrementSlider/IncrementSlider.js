@@ -12,6 +12,7 @@ import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import Spottable from '@enact/spotlight/Spottable';
 
 import IdProvider from '../internal/IdProvider';
@@ -532,7 +533,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			return (
 				<div {...rest} className={incrementSliderClasses}>
 					<IncrementSliderButton
-						aria-controls={id}
+						aria-controls={!incrementDisabled ? id : null}
 						aria-hidden={ariaHidden}
 						aria-label={decrementAriaLabel}
 						className={css.decrementButton}
@@ -580,7 +581,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						{children}
 					</Slider>
 					<IncrementSliderButton
-						aria-controls={id}
+						aria-controls={!decrementDisabled ? id : null}
 						aria-hidden={ariaHidden}
 						aria-label={incrementAriaLabel}
 						className={css.incrementButton}
@@ -617,16 +618,18 @@ const IncrementSliderFactory = factory((config) => {
 	 * @ui
 	 * @public
 	 */
-	return Changeable(
-		IdProvider(
-			{generateProp: null, prefix: 's_'},
-			SliderDecorator(
-				DisappearSpotlightDecorator(
-					{events: {
-						onIncrementSpotlightDisappear: `.${componentCss.decrementButton}`,
-						onDecrementSpotlightDisappear: `.${componentCss.incrementButton}`
-					}},
-					Base
+	return Pure(
+		Changeable(
+			IdProvider(
+				{generateProp: null, prefix: 's_'},
+				SliderDecorator(
+					DisappearSpotlightDecorator(
+						{events: {
+							onIncrementSpotlightDisappear: `.${componentCss.decrementButton}`,
+							onDecrementSpotlightDisappear: `.${componentCss.incrementButton}`
+						}},
+						Base
+					)
 				)
 			)
 		)

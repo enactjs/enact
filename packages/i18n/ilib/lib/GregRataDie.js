@@ -80,7 +80,7 @@ var RataDie = require("./RataDie.js");
 var GregRataDie = function(params) {
 	this.cal = params && params.cal || new GregorianCal();
 	/** @type {number|undefined} */
-	this.rd = undefined;
+	this.rd = NaN;
 	RataDie.call(this, params);
 };
 

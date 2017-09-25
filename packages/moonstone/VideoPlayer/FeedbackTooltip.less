@@ -13,7 +13,6 @@
 	.content {
 		pointer-events: none;
 		will-change: transform;
-		transform: translateX(calc(var(--knob-progress) ~' * -100%'));
 	}
 
 	.thumbnail {
@@ -21,11 +20,20 @@
 		bottom: (@moon-video-slider-tooltip-line-height + @moon-spotlight-outset);
 		border-width: @moon-video-slider-tooltip-thumbnail-border-width;
 		border-style: solid;
-		border-radius: @moon-video-slider-tooltip-thumbnail-border-radius;
+		border-radius: 0;
 		overflow: hidden;
+		transition: opacity 250ms;
 
 		.image {
 			margin: 0;
+			width: 252px;
+			height: 141px;
+		}
+	}
+
+	&.thumbnailDeactivated {
+		.thumbnail {
+			opacity: 0.5;
 		}
 	}
 
@@ -37,19 +45,12 @@
 		bottom: @moon-spotlight-outset;
 	}
 
-	// .knob[data-climax="rising"] {
-	// 	.thumbnail,
-	// 	.content {
-	// 		transform: translateX(0%) translateX(30px);
-	// 	}
-	// }
-
-	// .knob[data-climax="falling"] {
-	// 	.thumbnail,
-	// 	.content {
-	// 		transform: translateX(-100%) translateX(-30px);
-	// 	}
-	// }
+	[data-knob-after-midpoint="true"] & {
+		.thumbnail,
+		.content {
+			transform: translateX(-100%) translateX(0);
+		}
+	}
 
 	.applySkins({
 		.thumbnail {

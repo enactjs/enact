@@ -215,9 +215,8 @@ var NumFmt = function (options) {
 		 */
 		this.roundingMode = options.roundingMode;
 
-		if (typeof (options.sync) !== 'undefined') {
-			/** @type {boolean} */
-			sync = (options.sync == true);
+		if (typeof(options.sync) === 'boolean') {
+			sync = options.sync;
 		}
 		
 		loadParams = options.loadParams;
@@ -369,17 +368,6 @@ NumFmt.prototype = {
 		this.exponentSymbol = this.localeInfo.getExponential() || "e";
 	},
 
-	/*
-	 * @private
-	 */
-	_pad: function (str, length, left) {
-		return (str.length >= length) ?
-			str :
-			(left ?
-			NumFmt.zeros.substring(0, length - str.length) + str :
-			str + NumFmt.zeros.substring(0, length - str.length));
-	},
-
 	/**
 	 * @private
 	 * @param {INumber|Number|string|number} num object, string, or number to convert to a primitive number
@@ -396,9 +384,8 @@ NumFmt.prototype = {
 			n = parseFloat(num);
 			break;
 		case 'object':
-			// Number.valueOf() is incorrectly documented as being of type "string" rather than "number", so coerse 
-			// the type here to shut the type checker up
-			n = /** @type {number} */ num.valueOf();
+			// call parseFloat to coerse the type to number 
+			n = parseFloat(num.valueOf());
 			break;
 		}
 
@@ -441,7 +428,7 @@ NumFmt.prototype = {
 			fraction = fraction.substring(0, this.maxFractionDigits);
 		}
 		if (typeof(this.minFractionDigits) !== 'undefined') {
-			fraction = this._pad(fraction || "", this.minFractionDigits, false);
+			fraction = JSUtils.pad(fraction || "", this.minFractionDigits, true);
 		}
 		formatted = integral;
 		if (fraction.length) {
@@ -477,7 +464,7 @@ NumFmt.prototype = {
 		integral = integral.toString();
 
 		if (this.minFractionDigits > 0) {
-			fraction = this._pad(fraction || "", this.minFractionDigits, false);
+			fraction = JSUtils.pad(fraction || "", this.minFractionDigits, true);
 		}
 
 		if (this.secgroupSize > 0) {

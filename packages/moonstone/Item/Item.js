@@ -4,10 +4,12 @@
  * @module moonstone/Item
  */
 
+import {childrenEquals} from '@enact/core/util';
 import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import Slottable from '@enact/ui/Slottable';
 import Spottable from '@enact/spotlight/Spottable';
 
@@ -105,7 +107,7 @@ const ItemBase = kind({
 });
 
 // cache the MarqueeDecorator so it can be used for Item and ItemOverlay
-const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidateProps: ['inline', 'autoHide']});
+const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidateProps: ['inline', 'autoHide', 'remeasure']});
 
 /**
  * {@link moonstone/Item.Item} is a focusable Moonstone-styled control that can display
@@ -118,10 +120,12 @@ const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidat
  * @ui
  * @public
  */
-const Item = Spottable(
-	ItemMarqueeDecorator(
-		Skinnable(
-			ItemBase
+const Item = Pure(
+	Spottable(
+		ItemMarqueeDecorator(
+			Skinnable(
+				ItemBase
+			)
 		)
 	)
 );
@@ -148,13 +152,19 @@ const Item = Spottable(
  * @ui
  * @public
  */
-const ItemOverlay = Spottable(
-	Slottable(
-		{slots: ['overlayAfter', 'overlayBefore']},
-		ItemMarqueeDecorator(
-			OverlayDecorator(
-				Skinnable(
-					ItemBase
+const ItemOverlay = Slottable(
+	{slots: ['overlayAfter', 'overlayBefore']},
+	Pure(
+		{propComparators: {
+			overlayBefore: childrenEquals,
+			overlayAfter: childrenEquals
+		}},
+		Spottable(
+			ItemMarqueeDecorator(
+				OverlayDecorator(
+					Skinnable(
+						ItemBase
+					)
 				)
 			)
 		)

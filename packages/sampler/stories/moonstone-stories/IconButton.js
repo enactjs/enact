@@ -29,6 +29,7 @@ storiesOf('IconButton')
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				color={nullify(select('color', [null, 'red', 'green', 'yellow', 'blue']))}
 				disabled={boolean('disabled', false)}
+				noAnimation={boolean('noAnimation', true)}
 				selected={nullify(boolean('selected', false))}
 				small={boolean('small', false)}
 				tooltipText={nullify(text('tooltipText', ''))}
