@@ -341,6 +341,7 @@ class Transition extends React.Component {
 
 	handleResize = () => {
 		this.setState({
+			renderState: TRANSITION_STATE.MEASURE,
 			initialHeight: null
 		});
 	}
