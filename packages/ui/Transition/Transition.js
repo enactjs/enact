@@ -282,17 +282,15 @@ class Transition extends React.Component {
 		};
 	}
 
-	componentWillMount () {
-		if (this.context.Subscriber) {
-			this.context.Subscriber.subscribe('resize', this.handleResize);
-		}
-	}
-
 	componentDidMount () {
 		if (!this.props.visible) {
 			this.measuringJob.idle();
 		} else {
 			this.measureInner();
+		}
+
+		if (this.context.Subscriber) {
+			this.context.Subscriber.subscribe('resize', this.handleResize);
 		}
 	}
 
@@ -340,10 +338,11 @@ class Transition extends React.Component {
 	})
 
 	handleResize = () => {
+		// @TODO oddly, using the setState callback is required here to ensure that the bounds
+		// are remeasured in a separate tick
 		this.setState({
-			renderState: TRANSITION_STATE.MEASURE,
 			initialHeight: null
-		});
+		}, this.measureInner);
 	}
 
 	handleTransitionEnd = (ev) => {
