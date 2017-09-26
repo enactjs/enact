@@ -70,6 +70,7 @@ const dateTimeConfig = {
 		let values = {
 			// i18n props
 			meridiems: i18n.meridiemLabels,
+			meridiemLabel: null,
 
 			// date components
 			hour: 12,
@@ -77,17 +78,20 @@ const dateTimeConfig = {
 			meridiem: 0
 		};
 
+		if (i18n.meridiemEnabled) {
+			if (values.meridiems.length > 2) {
+				values.meridiemLabel = `${values.meridiems[0]} / ${values.meridiems[1]} ...`;
+			} else {
+				values.meridiemLabel = values.meridiems.join(' / ');
+			}
+		}
+
 		if (value) {
-			values.hour = value.getHours();
-			values.minute = value.getMinutes();
 			if (i18n.meridiemEnabled) {
 				values.meridiem = indexOfMeridiem(value, i18n.meridiemRanges);
-				if (values.meridiems.length > 2) {
-					values.meridiemLabel = `${values.meridiems[0]} / ${values.meridiems[1]} ...`;
-				} else {
-					values.meridiemLabel = values.meridiems.join(' / ');
-				}
 			}
+			values.hour = value.getHours();
+			values.minute = value.getMinutes();
 		}
 
 		return values;
