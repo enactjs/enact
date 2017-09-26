@@ -1,6 +1,6 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
-import Image from '../Image';
+import {Image, ImageBase} from '../Image';
 import css from '../Image.less';
 
 const src = {
@@ -46,7 +46,7 @@ describe('Image Specs', () => {
 
 	it('should set role to img by default', function () {
 		const image = shallow(
-			<Image src={src} sizing="fit" />
+			<ImageBase src={src} sizing="fit" />
 		);
 
 		const expected = 'img';

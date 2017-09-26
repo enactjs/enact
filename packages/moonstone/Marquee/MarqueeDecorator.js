@@ -5,6 +5,7 @@ import {childrenEquals} from '@enact/core/util';
 import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
 
 import Marquee from './Marquee';
 import {contextTypes} from './MarqueeController';
@@ -118,7 +119,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'MarqueeDecorator'
 
-		static contextTypes = contextTypes
+		static contextTypes = {
+			...contextTypes,
+			...stateContextTypes
+		}
 
 		static propTypes = /** @lends moonstone/Marquee.MarqueeDecorator.prototype */ {
 			/**
@@ -245,8 +249,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				animating: false,
 				overflow: 'ellipsis',
-				rtl: null
+				rtl: false
 			};
+			this.textDirectionValidated = false;
 			this.sync = false;
 			this.forceRestartMarquee = false;
 			this.timerState = TimerState.CLEAR;
@@ -255,6 +260,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (this.props.marqueeCentered) {
 				deprecate({name: 'marqueeCentered', since: '1.7.0', message: 'Use `alignment` instead', until: '2.0.0'});
+			}
+		}
+
+		componentWillMount () {
+			if (this.context.Subscriber) {
+				this.context.Subscriber.subscribe('resize', this.handleResize);
+				this.context.Subscriber.subscribe('i18n', this.handleLocaleChange);
 			}
 		}
 
@@ -267,30 +279,29 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				});
 			}
 
+			this.validateTextDirection(this.props);
 			if (this.props.marqueeOn === 'render') {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
 		}
 
 		componentWillReceiveProps (next) {
-			const {forceDirection, marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
-			if (forceDirection !== next.forceDirection) {
-				this.setState({rtl: next.forceDirection ? (next.forceDirection === 'rtl') : null});
-			}
+			const {marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
+			this.validateTextDirection(next);
 			if ((!childrenEquals(this.props.children, next.children)) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
 				this.invalidateMetrics();
 				this.cancelAnimation();
-				this.setState({rtl: null});
+				this.textDirectionValidated = false;
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled || next.marqueeSpeed !== marqueeSpeed) {
 				this.cancelAnimation();
 			}
 		}
 
 		componentDidUpdate () {
-			if (this.state.rtl == null) {
-				const rtl = this.checkRtl();
-				// eslint-disable-next-line react/no-did-update-set-state
-				this.setState({rtl});
+			// if text directionality was invalidated by a prop change, we need to revalidate now
+			// potentially causing a re-render if rtl changes
+			if (this.textDirectionValidated === false) {
+				this.validateTextDirection(this.props);
 			}
 			if (this.distance === null) {
 				this.calculateMetrics();
@@ -306,6 +317,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.sync) {
 				this.sync = false;
 				this.context.unregister(this);
+			}
+
+			if (this.context.Subscriber) {
+				this.context.Subscriber.unsubscribe('resize', this.handleResize);
+				this.context.Subscriber.unsubscribe('i18n', this.handleLocaleChange);
 			}
 		}
 
@@ -382,7 +398,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (node && this.distance == null && !this.props.marqueeDisabled) {
 				this.distance = this.calculateDistance(node);
 				this.contentFits = !this.shouldAnimate(this.distance);
-				this.setState({overflow: this.calculateTextOverflow(this.distance)});
+
+				// TODO: Replace with functional setState with React 16
+				const overflow = this.calculateTextOverflow(this.distance);
+				if (overflow !== this.state.overflow) {
+					this.setState({overflow});
+				}
 			}
 		}
 
@@ -550,6 +571,18 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.stop();
 		}
 
+		handleResize = () => {
+			if (this.node && !this.props.marqueeDisabled) {
+				this.invalidateMetrics();
+				this.calculateMetrics();
+			}
+		}
+
+		handleLocaleChange = ({message: {rtl}}) => {
+			this.rtlLocale = rtl;
+			this.validateTextDirection(this.props);
+		}
+
 		handleMarqueeComplete = (ev) => {
 			this.resetAnimation();
 			ev.stopPropagation();
@@ -591,14 +624,26 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		cacheNode = (node) => {
 			this.node = node;
-			this.setState({rtl: this.checkRtl()});
 		}
 
-		checkRtl = () => {
-			const {forceDirection} = this.props;
-			const textContent = this.node && this.node.textContent;
-			// If forceDirection is set, check if it is RTL; otherwise, determine the directionality
-			return (forceDirection ? (forceDirection === 'rtl') : isRtlText(textContent));
+		validateTextDirection = ({forceDirection}) => {
+			// @TODO: replace with functional setState with React 16
+			// Text directionality is a function of locale (this.rtlLocale), content
+			// (this.node.textContent), and props (this.props.forceDirection) in increasing order of
+			// significance.
+			let rtl = this.rtlLocale;
+			if (forceDirection) {
+				rtl = forceDirection === 'rtl';
+			} else if (this.node) {
+				rtl = isRtlText(this.node.textContent);
+				this.textDirectionValidated = true;
+			}
+
+			// prevent re-render when text direction matches locale direction
+			if (rtl !== this.state.rtl) {
+				// eslint-disable-next-line react/no-did-update-set-state
+				this.setState({rtl});
+			}
 		}
 
 		renderMarquee () {
@@ -639,6 +684,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.marqueeSpeed;
 			delete rest.remeasure;
 
+			let {rtl} = this.state;
+			if (forceDirection) {
+				rtl = forceDirection === 'rtl';
+			}
+
 			return (
 				<Wrapped {...rest} disabled={disabled}>
 					<Marquee
@@ -647,10 +697,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						className={marqueeClassName}
 						clientRef={this.cacheNode}
 						distance={this.distance}
-						forceDirection={forceDirection}
 						onMarqueeComplete={this.handleMarqueeComplete}
 						overflow={this.state.overflow}
-						rtl={this.state.rtl}
+						rtl={rtl}
 						speed={marqueeSpeed}
 					>
 						{children}
@@ -683,7 +732,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 	};
-
 });
 
 export default MarqueeDecorator;

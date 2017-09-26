@@ -204,6 +204,7 @@
 
 	&.vertical .valueWrapper {
 		display: block;
+		position: relative;
 
 		.moon-custom-text({
 			padding: 0 @moon-spotlight-outset;
@@ -216,6 +217,11 @@
 			.moon-custom-text({
 				margin: 0;
 			});
+		}
+
+		.item {
+			position: absolute;
+			.position(0);
 		}
 	}
 

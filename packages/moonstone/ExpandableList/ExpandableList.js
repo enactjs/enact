@@ -7,8 +7,10 @@
  */
 
 import Changeable from '@enact/ui/Changeable';
+import equals from 'ramda/src/equals';
 import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
+import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -17,6 +19,37 @@ import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import RadioItem from '../RadioItem';
 
 import css from './ExpandableList.less';
+
+const compareChildren = (a, b) => {
+	if (!a || !b || a.length !== b.length) return false;
+
+	let type = null;
+	for (let i = 0; i < a.length; i++) {
+		type = type || typeof a[i];
+		if (type === 'string') {
+			if (a[i] !== b[i]) {
+				return false;
+			}
+		} else if (!equals(a[i], b[i])) {
+			return false;
+		}
+	}
+
+	return true;
+};
+
+const PureGroup = Pure(
+	{propComparators: {
+		children: compareChildren,
+		itemProps: (a, b) => (
+			a.onSpotlightDisappear === b.onSpotlightDisappear &&
+			a.onSpotlightLeft === b.onSpotlightLeft &&
+			a.onSpotlightRight === b.onSpotlightRight &&
+			a.spotlightDisabled === b.spotlightDisabled
+		)
+	}},
+	Group
+);
 
 /**
  * {@link moonstone/ExpandableList.ExpandableListBase} is a stateless component that
@@ -294,7 +327,7 @@ const ExpandableListBase = kind({
 				autoClose={!noAutoClose}
 				lockBottom={!noLockBottom}
 			>
-				<Group
+				<PureGroup
 					childComponent={ListItem}
 					childSelect="onToggle"
 					itemProps={itemProps}
@@ -304,7 +337,7 @@ const ExpandableListBase = kind({
 					selectedProp="selected"
 				>
 					{children}
-				</Group>
+				</PureGroup>
 			</ExpandableItemBase>
 		);
 	}
@@ -331,10 +364,15 @@ const ExpandableListBase = kind({
  * @ui
  * @public
  */
-const ExpandableList = Expandable(
-	Changeable(
-		{change: 'onSelect', prop: 'selected'},
-		ExpandableListBase
+const ExpandableList = Pure(
+	{propComparators: {
+		children: compareChildren
+	}},
+	Expandable(
+		Changeable(
+			{change: 'onSelect', prop: 'selected'},
+			ExpandableListBase
+		)
 	)
 );
 

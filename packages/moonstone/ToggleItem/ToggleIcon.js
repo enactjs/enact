@@ -1,6 +1,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 
 import Icon from '../Icon';
 
@@ -61,8 +62,12 @@ const ToggleIconBase = kind({
 	}
 });
 
-export default ToggleIconBase;
+const ToggleIcon = Pure(
+	ToggleIconBase
+);
+
+export default ToggleIcon;
 export {
-	ToggleIconBase as ToggleIcon,
+	ToggleIcon,
 	ToggleIconBase
 };

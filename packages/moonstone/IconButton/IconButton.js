@@ -12,7 +12,7 @@ import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 import Pressable from '@enact/ui/Pressable';
-import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
+import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -22,8 +22,6 @@ import {TooltipDecorator} from '../TooltipDecorator';
 import Skinnable from '../Skinnable';
 
 import componentCss from './IconButton.less';
-
-const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
 
 /**
  * A Factory wrapper around {@link moonstone/IconButton.IconButtonBase} that allows overriding
@@ -142,7 +140,7 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 		render: ({children, small, tooltipNode, ...rest}) => {
 			return (
 				<Button {...rest} small={small} minWidth={false}>
-					<OptimizedIcon small={small} className={css.icon}>{children}</OptimizedIcon>
+					<Icon small={small} className={css.icon}>{children}</Icon>
 					{tooltipNode}
 				</Button>
 			);
@@ -174,11 +172,13 @@ const IconButtonBase = IconButtonBaseFactory();
  * @public
  */
 const IconButtonFactory = factory(({css}) => {
-	return TooltipDecorator({tooltipDestinationProp: 'tooltipNode'},
-		Pressable(
-			Spottable(
-				Skinnable(
-					IconButtonBaseFactory({css})
+	return Pure(
+		TooltipDecorator({tooltipDestinationProp: 'tooltipNode'},
+			Pressable(
+				Spottable(
+					Skinnable(
+						IconButtonBaseFactory({css})
+					)
 				)
 			)
 		)

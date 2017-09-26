@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import Image from '../Image';
 import Skinnable from '../Skinnable';
 
-import Feedback from './Feedback';
+import FeedbackContent from './FeedbackContent';
 import states from './FeedbackIcons.js';
 
 import css from './FeedbackTooltip.less';
@@ -113,15 +113,14 @@ const FeedbackTooltipBase = kind({
 				{thumbnailSrc ? <div className={css.thumbnail} style={!noFeedback ? {display: 'none'} : null}>
 					<Image src={thumbnailSrc} className={css.image} />
 				</div> : null}
-				<div className={css.content}>
-					<Feedback
-						playbackState={playbackState}
-						visible={!noFeedback}
-					>
-						{playbackRate}
-					</Feedback>
+				<FeedbackContent
+					className={css.content}
+					feedbackVisible={!noFeedback}
+					playbackRate={playbackRate}
+					playbackState={playbackState}
+				>
 					{children}
-				</div>
+				</FeedbackContent>
 			</div>
 		);
 	}

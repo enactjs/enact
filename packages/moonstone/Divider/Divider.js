@@ -8,6 +8,7 @@ import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
@@ -102,7 +103,11 @@ const DividerBase = kind({
 	}
 });
 
-const Divider = Skinnable(DividerBase);
+const Divider = Pure(
+	Skinnable(
+		DividerBase
+	)
+);
 
 export default Divider;
 export {Divider, DividerBase};
