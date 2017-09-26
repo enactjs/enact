@@ -2,6 +2,14 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+### Added
+
+### Changed
+
+### Fixed
+
+- `moonstone/Scrollable` to not accumulate paging scroll by pressing page up/down in scrollbar
+
 ## [1.9.1] - 2017-09-25
 
 ### Fixed
