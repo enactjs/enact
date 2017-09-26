@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [1.9.2] - 2017-09-26
+
+### Fixed
+
+- `moonstone/ExpandableList` preventing updates when its children had changed
+
 ## [1.9.1] - 2017-09-25
 
 ### Fixed
