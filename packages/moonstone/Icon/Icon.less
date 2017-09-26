@@ -64,15 +64,13 @@
 		cursor: default;
 	});
 
-	.focus({
-		.icon {
-			background-position: center -(@moon-icon-sprite-size + ((@moon-icon-sprite-size - @moon-icon-size) / 2));
+	:global(.spottable):focus & {
+		background-position: center -(@moon-icon-sprite-size + ((@moon-icon-sprite-size - @moon-icon-size) / 2));
 
-			&.small {
-				background-position: center -(@moon-icon-sprite-small-size + ((@moon-icon-sprite-small-size - @moon-icon-small-size) / 2));
-			}
+		&.small {
+			background-position: center -(@moon-icon-sprite-small-size + ((@moon-icon-sprite-small-size - @moon-icon-small-size) / 2));
 		}
-	});
+	}
 
 	// Skin colors
 	.applySkins({

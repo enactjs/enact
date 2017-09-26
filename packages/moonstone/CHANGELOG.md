@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
+- `moonstone/Icon` to correctly display focused state when using external image
+
 ## [1.9.2] - 2017-09-26
 
 ### Fixed
