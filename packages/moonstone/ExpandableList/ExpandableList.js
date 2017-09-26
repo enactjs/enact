@@ -20,11 +20,27 @@ import RadioItem from '../RadioItem';
 
 import css from './ExpandableList.less';
 
+const compareChildren = (a, b) => {
+	if (!a || !b || a.length !== b.length) return false;
+
+	let type = null;
+	for (let i = 0; i < a.length; i++) {
+		type = type || typeof a[i];
+		if (type === 'string') {
+			if (a[i] !== b[i]) {
+				return false;
+			}
+		} else if (!equals(a[i], b[i])) {
+			return false;
+		}
+	}
+
+	return true;
+};
+
 const PureGroup = Pure(
 	{propComparators: {
-		// children has already by checked by ExpandableList but we can't allow it to pass through
-		// to the default implementation which fails on non-ReactElement object arrays
-		children: () => true,
+		children: compareChildren,
 		itemProps: (a, b) => (
 			a.onSpotlightDisappear === b.onSpotlightDisappear &&
 			a.onSpotlightLeft === b.onSpotlightLeft &&
@@ -350,23 +366,7 @@ const ExpandableListBase = kind({
  */
 const ExpandableList = Pure(
 	{propComparators: {
-		children: (a, b) => {
-			if (!a || !b || a.length !== b.length) return false;
-
-			let type = null;
-			for (let i = 0; i < a.length; i++) {
-				type = type || typeof a[i];
-				if (type === 'string') {
-					if (a[i] !== b[i]) {
-						return false;
-					}
-				} else if (!equals(a[i], b[i])) {
-					return false;
-				}
-			}
-
-			return true;
-		}
+		children: compareChildren
 	}},
 	Expandable(
 		Changeable(
