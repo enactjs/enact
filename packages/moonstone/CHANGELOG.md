@@ -2,7 +2,14 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [1.9.0] - 2017-09-19
+## [1.9.1] - 2017-09-25
+
+### Fixed
+
+- `moonstone/ExpandableList` run-time error when using an array of objects as children
+- `moonstone/VideoPlayer` blocking pointer events when the controls were hidden
+
+## [1.9.0] - 2017-09-22
 
 ### Added
 
