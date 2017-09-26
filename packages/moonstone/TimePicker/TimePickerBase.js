@@ -83,33 +83,6 @@ const TimePickerBase = kind({
 		hour: PropTypes.number.isRequired,
 
 		/**
-		 * The `meridiem` component of the time
-		 *
-		 * @type {Number}
-		 * @required
-		 * @public
-		 */
-		meridiem: PropTypes.number.isRequired,
-
-		/**
-		 * String of meridiem for picker label
-		 *
-		 * @type {String}
-		 * @required
-		 * @public
-		 */
-		meridiemLabel: PropTypes.string.isRequired,
-
-		/**
-		 * Array of meridiem labels to display
-		 *
-		 * @type {String[]}
-		 * @required
-		 * @public
-		 */
-		meridiems: PropTypes.arrayOf(PropTypes.string).isRequired,
-
-		/**
 		 * The `minute` component of the time
 		 *
 		 * @type {Number}
@@ -136,6 +109,33 @@ const TimePickerBase = kind({
 		 * @public
 		 */
 		title: PropTypes.string.isRequired,
+
+		/**
+		 * The `meridiem` component of the time
+		 *
+		 * @type {Number}
+		 * @required
+		 * @public
+		 */
+		meridiem: PropTypes.number,
+
+		/**
+		 * String of meridiem for picker label
+		 *
+		 * @type {String}
+		 * @required
+		 * @public
+		 */
+		meridiemLabel: PropTypes.string,
+
+		/**
+		 * Array of meridiem labels to display
+		 *
+		 * @type {String[]}
+		 * @required
+		 * @public
+		 */
+		meridiems: PropTypes.arrayOf(PropTypes.string),
 
 		/**
 		 * When `true`, omits the labels below the pickers
