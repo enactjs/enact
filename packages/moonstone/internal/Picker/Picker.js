@@ -492,17 +492,14 @@ const PickerBase = class extends React.Component {
 			target.className.includes(css.decrementer) ||
 			target.parentNode.className.includes(css.decrementer);
 
-		if (isButtonClicked) {
-			this.emulateMouseUp.start();
+		if (isButtonClicked || this.props.joined) {
+			forwardMouseUp(ev, this.props);
 		}
 	}
 
 	handleDecDown = (ev) => {
 		if (ev) {
 			forwardMouseDown(ev, this.props);
-			if (this.props.joined) {
-				this.emulateMouseUp.start();
-			}
 		}
 		this.handleDecrement();
 	}
@@ -510,9 +507,6 @@ const PickerBase = class extends React.Component {
 	handleIncDown = (ev) => {
 		if (ev) {
 			forwardMouseDown(ev, this.props);
-			if (this.props.joined) {
-				this.emulateMouseUp.start();
-			}
 		}
 		this.handleIncrement();
 	}
