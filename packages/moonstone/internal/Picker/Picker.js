@@ -481,14 +481,18 @@ const PickerBase = class extends React.Component {
 	emulateMouseUp = new Job((ev) => {
 		const {onMouseUp} = this.props;
 		if (onMouseUp) {
-			onMouseUp(ev);
+			forwardMouseUp(ev, this.props);
 		}
 	}, 175)
 
 	handleUp = (ev) => {
-		const {joined} = this.props;
-		forwardMouseUp(ev, this.props);
-		if (joined) {
+		const {target} = ev;
+		const isButtonClicked = target.className.includes(css.incrementer) ||
+			target.parentNode.className.includes(css.incrementer) ||
+			target.className.includes(css.decrementer) ||
+			target.parentNode.className.includes(css.decrementer);
+
+		if (isButtonClicked) {
 			this.emulateMouseUp.start();
 		}
 	}
@@ -496,6 +500,9 @@ const PickerBase = class extends React.Component {
 	handleDecDown = (ev) => {
 		if (ev) {
 			forwardMouseDown(ev, this.props);
+			if (this.props.joined) {
+				this.emulateMouseUp.start();
+			}
 		}
 		this.handleDecrement();
 	}
@@ -503,6 +510,9 @@ const PickerBase = class extends React.Component {
 	handleIncDown = (ev) => {
 		if (ev) {
 			forwardMouseDown(ev, this.props);
+			if (this.props.joined) {
+				this.emulateMouseUp.start();
+			}
 		}
 		this.handleIncrement();
 	}
@@ -814,7 +824,6 @@ const PickerBase = class extends React.Component {
 					onHoldPulse={this.handleIncPulse}
 					onKeyDown={this.handleIncKeyDown}
 					onMouseDown={this.handleIncDown}
-					onMouseUp={this.handleUp}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
 				/>
@@ -849,7 +858,6 @@ const PickerBase = class extends React.Component {
 					onHoldPulse={this.handleDecPulse}
 					onKeyDown={this.handleDecKeyDown}
 					onMouseDown={this.handleDecDown}
-					onMouseUp={this.handleUp}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
 				/>
