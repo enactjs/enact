@@ -23,6 +23,7 @@ import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
 
 import {
+	addContainer,
 	configureContainer,
 	configureDefaults,
 	getAllContainerIds,
@@ -32,6 +33,7 @@ import {
 	getLastContainer,
 	getSpottableDescendants,
 	isContainer,
+	isContainer5WayHoldable,
 	isNavigable,
 	unmountContainer,
 	removeAllContainers,
@@ -129,6 +131,23 @@ const Spotlight = (function () {
 	let _5WayKeyHold = false;
 
 	/*
+	 * Whether to set focus during the next window focus event
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 */
+	let _spotOnWindowFocus = false;
+
+	/*
+	 * `true` when a pointer move event occurs during a keypress. Used to short circuit key down
+	 * handling until the next keyup occurs.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 */
+	let _pointerMoveDuringKeyPress = false;
+
+	/*
 	* protected methods
 	*/
 
@@ -160,6 +179,10 @@ const Spotlight = (function () {
 		}
 
 		let currentFocusedElement = getCurrent();
+
+		if (elem === currentFocusedElement) {
+			return true;
+		}
 
 		let silentFocus = function () {
 			if (currentFocusedElement) {
@@ -205,8 +228,28 @@ const Spotlight = (function () {
 		}
 	}
 
+	function restoreFocus () {
+		const lastContainerId = getLastContainer();
+		const next = [rootContainerId];
+
+		if (lastContainerId) {
+			next.unshift(lastContainerId);
+
+			// only prepend last focused if it exists so that Spotlight.focus() doesn't receive
+			// a falsey target
+			const lastFocused = getContainerLastFocusedElement(lastContainerId);
+			if (lastFocused) {
+				next.unshift(lastFocused);
+			}
+		}
+
+		// attempt to find a target starting with the last focused element in the last
+		// container, followed by the last container, and finally the root container
+		return next.reduce((focused, target) => focused || Spotlight.focus(target), false);
+	}
+
 	function spotNextFromPoint (direction, position) {
-		const containerId = getLastContainer();
+		const containerId = Spotlight.getActiveContainer();
 		const next = getTargetByDirectionFromPosition(direction, position, containerId);
 
 		if (next) {
@@ -232,7 +275,7 @@ const Spotlight = (function () {
 
 			// prevent focus if 5-way is being held and the next element isn't wrapped by
 			// the current element's immediate container
-			if (_5WayKeyHold && nextContainerIds.indexOf(currentContainerId) < 0) {
+			if (_5WayKeyHold && nextContainerIds.indexOf(currentContainerId) < 0 && !isContainer5WayHoldable(currentContainerId)) {
 				return false;
 			}
 
@@ -250,29 +293,14 @@ const Spotlight = (function () {
 	}
 
 	function onAcceleratedKeyDown (evt) {
-		let currentFocusedElement = getCurrent();
 		const direction = getDirection(evt.keyCode);
 
-		if (!currentFocusedElement) {
-			const lastContainerId = getLastContainer();
-			if (lastContainerId) {
-				currentFocusedElement = getContainerLastFocusedElement(lastContainerId);
-			}
-			if (!currentFocusedElement) {
-				focusElement(getTargetByContainer(), getContainersForNode(currentFocusedElement));
+		if (!direction) return;
 
-				return preventDefault(evt);
-			}
-		}
-
+		const currentFocusedElement = getCurrent();
 		const currentContainerIds = getContainersForNode(currentFocusedElement);
-		if (
-			direction &&
-			!spotNext(direction, currentFocusedElement, currentContainerIds) &&
-			currentFocusedElement !== document.activeElement
-		) {
-			focusElement(currentFocusedElement, currentContainerIds);
-		}
+
+		spotNext(direction, currentFocusedElement, currentContainerIds);
 	}
 
 	function onBlur () {
@@ -282,22 +310,30 @@ const Spotlight = (function () {
 			current.blur();
 		}
 		Spotlight.setPointerMode(false);
+		_spotOnWindowFocus = true;
 	}
 
 	function onFocus () {
-		const palmSystem = window.PalmSystem;
+		// Normally, there isn't focus here unless the window has been blurred above. On webOS, the
+		// platform may focus the window after the app has already focused a component so we prevent
+		// trying to focus something else (potentially) unless the window was previously blurred
+		if (_spotOnWindowFocus) {
+			const palmSystem = window.PalmSystem;
 
-		if (palmSystem && palmSystem.cursor) {
-			Spotlight.setPointerMode(palmSystem.cursor.visibility);
+			if (palmSystem && palmSystem.cursor) {
+				Spotlight.setPointerMode(palmSystem.cursor.visibility);
+			}
+
+			// If the window was previously blurred while in pointer mode, the last active containerId may
+			// not have yet set focus to its spottable elements. For this reason we can't rely on setting focus
+			// to the last focused element of the last active containerId, so we use rootContainerId instead
+			Spotlight.focus(getContainerLastFocusedElement(rootContainerId));
+			_spotOnWindowFocus = false;
 		}
-
-		// If the window was previously blurred while in pointer mode, the last active containerId may
-		// not have yet set focus to its spottable elements. For this reason we can't rely on setting focus
-		// to the last focused element of the last active containerId, so we use rootContainerId instead
-		Spotlight.focus(getContainerLastFocusedElement(rootContainerId));
 	}
 
 	function onKeyUp (evt) {
+		_pointerMoveDuringKeyPress = false;
 		const keyCode = evt.keyCode;
 
 		if (getDirection(keyCode) || isEnter(keyCode)) {
@@ -307,9 +343,8 @@ const Spotlight = (function () {
 	}
 
 	function handlePointerHide () {
-		const lastContainerId = getLastContainer();
-		if (!getCurrent() && lastContainerId) {
-			Spotlight.focus(getContainerLastFocusedElement(lastContainerId));
+		if (!getCurrent()) {
+			restoreFocus();
 		}
 	}
 
@@ -323,14 +358,15 @@ const Spotlight = (function () {
 		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
 
 		if (pointerHandled || !(direction || isEnter(keyCode))) {
+			_pointerMoveDuringKeyPress = true;
 			return;
 		}
 
-		if (!_pause) {
+		if (!_pause && !_pointerMoveDuringKeyPress) {
 			if (getCurrent()) {
 				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
 			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
-				Spotlight.focus(getContainerLastFocusedElement(getLastContainer()));
+				restoreFocus();
 			}
 			_5WayKeyHold = true;
 		}
@@ -347,6 +383,10 @@ const Spotlight = (function () {
 		const update = notifyPointerMove(current, target, clientX, clientY);
 
 		if (update) {
+			if (_5WayKeyHold) {
+				_pointerMoveDuringKeyPress = true;
+			}
+
 			const next = getNavigableTarget(target);
 
 			// TODO: Consider encapsulating this work within focusElement
@@ -439,14 +479,13 @@ const Spotlight = (function () {
 		/**
 		 * Sets the config for spotlight or the specified containerID
 		 *
+		 * @function
 		 * @param {String|Object} param1 Configuration object or container ID
 		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
 		 * @returns {undefined}
 		 * @public
 		 */
-		set: function (containerId, config) {
-			configureContainer(containerId, config);
-		},
+		set: configureContainer,
 
 		// add(<config>);
 		// add(<containerId>, <config>);
@@ -454,14 +493,13 @@ const Spotlight = (function () {
 		 * Adds the config for a new container. The container ID may be passed in the configuration
 		 * object. If no container ID is supplied, a new container ID will be generated.
 		 *
+		 * @function
 		 * @param {String|Object} param1 Configuration object or container ID
 		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
 		 * @returns {String} The container ID of the container
 		 * @public
 		 */
-		add: function (containerId, config) {
-			return configureContainer(containerId, config);
-		},
+		add: addContainer,
 
 		unmount: function (containerId) {
 			if (!containerId || typeof containerId !== 'string') {
@@ -558,12 +596,14 @@ const Spotlight = (function () {
 		 */
 		focus: function (elem) {
 			let target = elem;
+			let wasContainerId = false;
 
 			if (!elem) {
 				target = getTargetByContainer();
 			} else if (typeof elem === 'string') {
 				if (getContainerConfig(elem)) {
 					target = getTargetByContainer(elem);
+					wasContainerId = true;
 				} else {
 					target = getTargetBySelector(elem);
 				}
@@ -573,6 +613,10 @@ const Spotlight = (function () {
 			const nextContainerId = last(nextContainerIds);
 			if (isNavigable(target, nextContainerId)) {
 				return focusElement(target, nextContainerIds);
+			} else if (wasContainerId) {
+				// if we failed to find a spottable target within the provided container, we'll set
+				// it as the active container to allow it to focus itself if its contents change
+				this.setActiveContainer(elem);
 			}
 
 			return false;
@@ -612,6 +656,7 @@ const Spotlight = (function () {
 		/**
 		 * Sets or clears the default container that will receive focus.
 		 *
+		 * @function
 		 * @param {String|undefined} containerId The container ID or a falsy value to clear default container
 		 * @returns {undefined}
 		 * @public
@@ -624,7 +669,9 @@ const Spotlight = (function () {
 		 * @returns {String} The id of the currently active container
 		 * @public
 		 */
-		getActiveContainer: getLastContainer,
+		getActiveContainer: function () {
+			return getLastContainer() || rootContainerId;
+		},
 
 		/**
 		 * Sets the currently active container.

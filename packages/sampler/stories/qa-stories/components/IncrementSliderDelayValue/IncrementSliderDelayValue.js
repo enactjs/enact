@@ -21,7 +21,6 @@ class IncrementSliderDelayValue extends React.Component {
 		backgroundPercent: 0,
 		max: 100,
 		min: 0,
-		pressed: false,
 		step: 1,
 		value: 0,
 		vertical: false

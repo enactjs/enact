@@ -19,6 +19,9 @@ storiesOf('Popup')
 					noAnimation={boolean('noAnimation', false)}
 					noAutoDismiss={boolean('noAutoDismiss', false)}
 					onClose={action('onClose')}
+					onHide={action('onHide')}
+					onShow={action('onShow')}
+					scrimType={select('scrimType', ['none', 'translucent', 'transparent'], 'translucent')}
 					showCloseButton={boolean('showCloseButton', false)}
 					spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-only')}
 				>

@@ -6,7 +6,6 @@
 import always from 'ramda/src/always';
 import compose from 'ramda/src/compose';
 import equals from 'ramda/src/equals';
-import isArrayLike from 'ramda/src/isArrayLike';
 import isType from 'ramda/src/is';
 import map from 'ramda/src/map';
 import prop from 'ramda/src/prop';
@@ -95,7 +94,7 @@ const coerceFunction = unless(isType(Function), always);
  * @returns {Array}	Either `array` or `[array]`
  */
 const coerceArray = function (array) {
-	return isArrayLike(array) ? array : [array];
+	return Array.isArray(array) ? array : [array];
 };
 
 /**
@@ -133,6 +132,21 @@ const extractAriaProps = function (props) {
 	return aria;
 };
 
+/**
+ * Gets current timestamp of either `window.performance.now` or `Date.now`
+ *
+ * @method
+ * @memberof core/util
+ * @returns {Number}
+ */
+const perfNow = function () {
+	if (typeof window === 'object') {
+		return window.performance.now();
+	} else {
+		return Date.now();
+	}
+};
+
 export {
 	cap,
 	childrenEquals,
@@ -140,5 +154,6 @@ export {
 	coerceArray,
 	Job,
 	isRenderable,
-	extractAriaProps
+	extractAriaProps,
+	perfNow
 };

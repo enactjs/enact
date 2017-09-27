@@ -179,6 +179,7 @@
 
 .moon-dialog-title() {
 	.moon-popup-header-text();
+	line-height: @moon-small-header-line-height;
 }
 
 .moon-dialog-title-below() {
@@ -188,8 +189,7 @@
 }
 
 .moon-dialog-content() {
-	.moon-font();
-	font-size: @moon-popup-content-font-size;
+	.moon-body-text();
 	.locale-japanese-line-break();
 }
 
@@ -271,6 +271,9 @@
 	font-weight: @moon-divider-font-weight;
 	font-style: @moon-divider-font-style;
 	letter-spacing: @moon-divider-letter-spacing;
+	:global(.enact-locale-non-italic) & {
+		font-style: normal;
+	}
 }
 
 .locale-japanese-line-break() {

@@ -9,6 +9,7 @@
 import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import warning from 'warning';

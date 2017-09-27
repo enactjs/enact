@@ -2,17 +2,59 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [1.9.2] - 2017-09-26
 
-### Deprecated
+No significant changes.
+
+## [1.9.1] - 2017-09-25
+
+No significant changes.
+
+## [1.9.0] - 2017-09-22
 
 ### Added
 
+- `ui/styles/mixins.less` mixins: `.remove-margin-on-edge-children()` and `.remove-padding-on-edge-children()` to better handle edge margins on container components
+
 ### Changed
+
+- `ui/Holdable` to cancel key hold events when the pointer moves
+- `ui/Holdable` and `ui/Changeable` back to Components and moved performance improvements elsewhere
 
 ### Fixed
 
-### Removed
+- `ui/FloatingLayer` to not asynchronously attach a click handler when the floating layer is removed
+- `ui/ViewManager` to correctly position items when changing mid-transition
+
+## [1.8.0] - 2017-09-07
+
+### Changed
+
+- `ui/Holdable` and `ui/Changeable` to be PureComponents to reduce the number of updates
+
+## [1.7.0] - 2017-08-23
+
+No significant changes.
+
+## [1.6.1] - 2017-08-07
+
+No significant changes.
+
+## [1.6.0] - 2017-08-04
+
+### Fixed
+
+- `ui/PlaceholderDecorator` to update bounds of `Scroller` when the `visible` state changed
+
+## [1.5.0] - 2017-07-19
+
+### Fixed
+
+- `ui/Cancelable` warning for string type cancel handler
+
+## [1.4.1] - 2017-07-05
+
+No significant changes.
 
 ## [1.4.0] - 2017-06-29
 

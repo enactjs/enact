@@ -6,11 +6,13 @@
  * @module moonstone/ExpandablePicker
  */
 
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import pure from 'recompose/pure';
+import Pure from '@enact/ui/internal/Pure';
+import {Subscription} from '@enact/core/internal/PubSub';
 
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import IconButton from '../IconButton';
@@ -126,6 +128,41 @@ const ExpandablePickerBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way down key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDown: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightLeft: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightRight: PropTypes.func,
+
+		/**
+		 * When `true`, the control is rendered in the expanded state, with the contents visible
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		open: PropTypes.bool,
+
+		/**
 		 * The orientation of the picker, i.e. whether the buttons are above and below or on the
 		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
 		 *
@@ -134,6 +171,14 @@ const ExpandablePickerBase = kind({
 		 * @public
 		 */
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+
+		/**
+		 * When `true`, current locale is RTL
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
 
 		/**
 		 * When `true`, the component cannot be navigated using spotlight.
@@ -178,6 +223,8 @@ const ExpandablePickerBase = kind({
 		value: 0
 	},
 
+	contextTypes: contextTypes,
+
 	styles: {
 		css,
 		className: 'expandablePicker'
@@ -210,7 +257,12 @@ const ExpandablePickerBase = kind({
 			onChange,
 			onPick,
 			onSpotlightDisappear,
+			onSpotlightDown,
+			onSpotlightLeft,
+			onSpotlightRight,
+			open,
 			orientation,
+			rtl,
 			spotlightDisabled,
 			value,
 			width,
@@ -219,7 +271,16 @@ const ExpandablePickerBase = kind({
 		} = props;
 
 		return (
-			<ExpandableItemBase {...rest} disabled={disabled} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
+			<ExpandableItemBase
+				{...rest}
+				disabled={disabled}
+				onSpotlightDisappear={onSpotlightDisappear}
+				onSpotlightDown={!open ? onSpotlightDown : null}
+				onSpotlightLeft={onSpotlightLeft}
+				onSpotlightRight={onSpotlightRight}
+				open={open}
+				spotlightDisabled={spotlightDisabled}
+			>
 				<Picker
 					className={css.picker}
 					disabled={disabled}
@@ -230,6 +291,9 @@ const ExpandablePickerBase = kind({
 					joined={joined}
 					noAnimation={noAnimation}
 					onSpotlightDisappear={onSpotlightDisappear}
+					onSpotlightDown={onSpotlightDown}
+					onSpotlightLeft={!rtl ? onSpotlightLeft : null}
+					onSpotlightRight={rtl ? onSpotlightRight : null}
 					orientation={orientation}
 					spotlightDisabled={spotlightDisabled}
 					width={width}
@@ -237,7 +301,16 @@ const ExpandablePickerBase = kind({
 				>
 					{children}
 				</Picker>
-				<IconButton onClick={onChange} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled} className={css.button} small>check</IconButton>
+				<IconButton
+					onClick={onChange}
+					onSpotlightDisappear={onSpotlightDisappear}
+					onSpotlightDown={onSpotlightDown}
+					onSpotlightLeft={rtl ? onSpotlightLeft : null}
+					onSpotlightRight={!rtl ? onSpotlightRight : null}
+					spotlightDisabled={spotlightDisabled}
+					className={css.button}
+					small
+				>check</IconButton>
 			</ExpandableItemBase>
 		);
 	}
@@ -260,16 +333,18 @@ const ExpandablePickerBase = kind({
  * @class ExpandablePicker
  * @memberof moonstone/ExpandablePicker
  * @ui
- * @mixes recompose/pure
  * @mixes moonstone/ExpandableItem.Expandable
  * @mixes ui/Changeable.Changeable
  * @public
  */
-const ExpandablePicker = pure(
-	Expandable(
-		Changeable(
-			ExpandablePickerDecorator(
-				ExpandablePickerBase
+const ExpandablePicker = Pure(
+	Subscription(
+		{channels: ['i18n'], mapMessageToProps: (channel, {rtl}) => ({rtl})},
+		Expandable(
+			Changeable(
+				ExpandablePickerDecorator(
+					ExpandablePickerBase
+				)
 			)
 		)
 	)

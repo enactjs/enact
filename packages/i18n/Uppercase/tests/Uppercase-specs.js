@@ -118,7 +118,7 @@ describe('Uppercase', () => {
 			<Wrapped>àçèìñòù</Wrapped>
 		);
 
-		const expected = 'ACEINOU';
+		const expected = 'ÀÇÈÌÑÒÙ';
 		const actual = subject.text();
 
 		updateLocale();

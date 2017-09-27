@@ -56,26 +56,52 @@ const MediaSliderBase = kind({
 		 * @default 0
 		 * @public
 		 */
-		value: PropTypes.number
+		value: PropTypes.number,
+
+		/**
+		 * The visibility of the component. When `false`, the component will be hidden.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		visible: PropTypes.bool
 	},
 
-	render: (props) => (
-		<div className={css.sliderFrame}>
-			<Slider
-				{...props}
-				aria-hidden="true"
-				className={css.mediaSlider}
-				detachedKnob
-				min={0}
-				max={1}
-				step={0.00001}
-				knobStep={0.05}
-			/>
-		</div>
-	)
+	defaultProps: {
+		visible: true
+	},
+
+	styles: {
+		css,
+		className: 'sliderFrame'
+	},
+
+	computed: {
+		className: ({styler, visible}) => styler.append({hidden: !visible})
+	},
+
+	render: ({className, ...rest}) => {
+		delete rest.visible;
+
+		return (
+			<div className={className}>
+				<Slider
+					{...rest}
+					aria-hidden="true"
+					className={css.mediaSlider}
+					detachedKnob
+					min={0}
+					max={1}
+					step={0.00001}
+					knobStep={0.05}
+				/>
+			</div>
+		);
+	}
 });
 
-const MediaSlider = onlyUpdateForKeys(['backgroundProgress', 'children', 'value'])(MediaSliderBase);
+const MediaSlider = onlyUpdateForKeys(['backgroundProgress', 'children', 'value', 'visible'])(MediaSliderBase);
 
 export default MediaSlider;
 export {

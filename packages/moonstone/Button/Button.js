@@ -14,6 +14,7 @@ import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
 import Pressable from '@enact/ui/Pressable';
+import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -75,17 +76,6 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
 
 			/**
-			 * Transformation to apply to the text of the Button. By default, text is transformed
-			 * to uppercase.
-			 *
-			 * @see i18n/Uppercase#casing
-			 * @type {String}
-			 * @default 'upper'
-			 * @public
-			 */
-			casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
-
-			/**
 			 * This property accepts one of the following color names, which correspond with the
 			 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
 			 *
@@ -130,6 +120,15 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			 * @public
 			 */
 			minWidth: PropTypes.bool,
+
+			/**
+			 * When `true`, the button does not animate on press
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			noAnimation: PropTypes.bool,
 
 			/**
 			 * When `true`, a pressed visual effect is applied to the button
@@ -190,8 +189,8 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 		},
 
 		computed: {
-			className: ({backgroundOpacity, color, minWidth, pressed, selected, small, styler}) => styler.append(
-				{pressed, small, minWidth, selected},
+			className: ({backgroundOpacity, color, minWidth, noAnimation, pressed, selected, small, styler}) => styler.append(
+				{pressed, small, minWidth, noAnimation, selected},
 				backgroundOpacity, color
 			),
 			icon: ({icon, small}) =>
@@ -209,6 +208,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			delete rest.backgroundOpacity;
 			delete rest.color;
 			delete rest.minWidth;
+			delete rest.noAnimation;
 			delete rest.pressed;
 			delete rest.selected;
 			delete rest.small;
@@ -254,20 +254,41 @@ const ButtonFactory = factory(css => {
 	 * @ui
 	 * @public
 	 */
-	return Uppercase(
-		TooltipDecorator(
-			MarqueeDecorator(
-				{className: componentCss.marquee},
-				Pressable(
-					Spottable(
-						Skinnable(
-							Base
+	const MoonstoneButton = Pure(
+		Uppercase(
+			TooltipDecorator(
+				MarqueeDecorator(
+					{className: componentCss.marquee},
+					Pressable(
+						Spottable(
+							Skinnable(
+								Base
+							)
 						)
 					)
 				)
 			)
 		)
 	);
+
+	MoonstoneButton.propTypes = /** @lends moonstone/Button.Button.prototype */ {
+		/**
+		 * Transformation to apply to the text of the Button. By default, text is transformed
+		 * to uppercase.
+		 *
+		 * @see i18n/Uppercase#casing
+		 * @type {String}
+		 * @default 'upper'
+		 * @public
+		 */
+		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence'])
+	};
+
+	MoonstoneButton.defaultProps = {
+		casing: 'upper'
+	};
+
+	return MoonstoneButton;
 });
 
 const ButtonBase = ButtonBaseFactory();

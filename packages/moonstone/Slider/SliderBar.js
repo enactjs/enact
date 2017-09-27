@@ -28,7 +28,6 @@ const SliderBarFactory = factory(({css}) => {
 			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @private
 			 */
 			detachedKnob: PropTypes.bool,
@@ -55,7 +54,6 @@ const SliderBarFactory = factory(({css}) => {
 			 * user interaction.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			scrubbing: PropTypes.bool,

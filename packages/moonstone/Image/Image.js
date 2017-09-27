@@ -7,6 +7,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import {selectSrc} from '@enact/ui/resolution';
 
 import css from './Image.less';
@@ -132,13 +133,13 @@ const ImageBase = kind({
 
 	computed: {
 		bgImage: ({src, placeholder}) => {
-			const imageSrc = selectSrc(src);
+			const imageSrc = selectSrc(src) || '';
 			return placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
 		},
 		className: ({className, sizing, styler}) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;
 		},
-		imgSrc: ({src}) => selectSrc(src)
+		imgSrc: ({src}) => selectSrc(src) || null
 	},
 
 	render: ({alt, 'aria-label': ariaLabel, bgImage, children, imgSrc, onError, onLoad, style, ...rest}) => {
@@ -155,5 +156,12 @@ const ImageBase = kind({
 	}
 });
 
-export default ImageBase;
-export {ImageBase as Image, ImageBase};
+const Image = Pure(
+	ImageBase
+);
+
+export default Image;
+export {
+	Image,
+	ImageBase
+};

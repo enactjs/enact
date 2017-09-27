@@ -185,7 +185,35 @@ GlyphString._isJamoT = function (n) {
 };
 
 /**
+ * Return true if the given character is a LV Jamo character.
+ * LV Jamo character is a precomposed Hangul character with LV sequence.
+ * 
+ * @private
+ * @static
+ * @param {number} n code point to check
+ * @return {boolean} true if the character is a LV Jamo character,
+ * false otherwise
+ */
+GlyphString._isJamoLV = function (n) {
+	var syllableBase = 0xAC00;
+	var leadingJamoCount = 19;
+	var vowelJamoCount = 21;
+	var trailingJamoCount = 28;
+	var syllableCount = leadingJamoCount * vowelJamoCount * trailingJamoCount;
+	var syllableIndex = n - syllableBase;
+	// Check if n is a precomposed Hangul
+	if (0 <= syllableIndex && syllableIndex < syllableCount) {
+	// Check if n is a LV Jamo character
+		if((syllableIndex % trailingJamoCount) == 0) {
+			return true;
+		}
+	}
+	return false;
+};
+
+/**
  * Return true if the given character is a precomposed Hangul character.
+ * The precomposed Hangul character may be a LV Jamo character or a LVT Jamo Character.
  * 
  * @private
  * @static
@@ -244,7 +272,7 @@ GlyphString._composeJamoLVT = function (lead, trail) {
 GlyphString._compose = function (lead, trail) {
 	var first = lead.charCodeAt(0);
 	var last = trail.charCodeAt(0);
-	if (GlyphString._isHangul(first) && GlyphString._isJamoT(last)) {
+	if (GlyphString._isJamoLV(first) && GlyphString._isJamoT(last)) {
 		return GlyphString._composeJamoLVT(first, last);
 	} else if (GlyphString._isJamoL(first) && GlyphString._isJamoV(last)) {
 		return GlyphString._composeJamoLV(first, last);

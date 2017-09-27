@@ -77,7 +77,7 @@ var RataDie = require("./RataDie.js");
  */
 var PersAlgoRataDie = function(params) {
 	this.cal = params && params.cal || new PersianAlgoCal();
-	this.rd = undefined;
+	this.rd = NaN;
 	RataDie.call(this, params);
 };
 
@@ -88,7 +88,6 @@ PersAlgoRataDie.prototype.constructor = PersAlgoRataDie;
 /**
  * The difference between a zero Julian day and the first Persian date
  * @private
- * @const
  * @type number
  */
 PersAlgoRataDie.prototype.epoch = 1948319.5;

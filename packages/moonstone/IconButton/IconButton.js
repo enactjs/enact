@@ -1,26 +1,31 @@
 /**
- * Exports the {@link moonstone/IconButton.IconButton} component.
+ * An {@link moonstone/Icon.Icon} that acts like a button.
  *
  * @module moonstone/IconButton
+ * @exports IconButton
+ * @exports IconButtonBase
+ * @exports IconButtonBaseFactory
+ * @exports IconButtonFactory
  */
 
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
-import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
+import Spottable from '@enact/spotlight/Spottable';
+import Pressable from '@enact/ui/Pressable';
+import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {ButtonFactory} from '../Button';
+import {ButtonBaseFactory} from '../Button';
 import Icon from '../Icon';
+import {TooltipDecorator} from '../TooltipDecorator';
+import Skinnable from '../Skinnable';
 
 import componentCss from './IconButton.less';
 
-const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
-
 /**
- * {@link moonstone/IconButton.IconButtonFactory} is Factory wrapper around
- * {@link moonstone/IconButton.IconButton} that allows overriding certain classes of the base
- * `Button` component at design time. See {@link moonstone/Button.ButtonBaseFactory}.
+ * A Factory wrapper around {@link moonstone/IconButton.IconButtonBase} that allows overriding
+ * certain classes of the base `IconButton` component at design time.
  *
  * @class IconButtonFactory
  * @memberof moonstone/IconButton
@@ -28,28 +33,11 @@ const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
  * @public
  */
 const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
-	const Button = ButtonFactory({css});
-	/**
-	 * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon} that acts like a button.
-	 * You may specify an image or a font-based icon by setting the children to either the path to the
-	 * image or a string from the [IconList]{@link moonstone/Icon.IconList}.
-	 *
-	 * Usage:
-	 * ```
-	 * <IconButton onClick={handleClick} small>
-	 *     plus
-	 * </IconButton>
-	 * ```
-	 *
-	 * @class IconButton
-	 * @memberof moonstone/IconButton
-	 * @ui
-	 * @public
-	 */
+	const Button = ButtonBaseFactory({css});
 	return kind({
 		name: 'IconButton',
 
-		propTypes: /** @lends moonstone/IconButton.IconButton.prototype */ {
+		propTypes: /** @lends moonstone/IconButton.IconButtonBase.prototype */ {
 			/**
 			 * The background-color opacity of this icon button; valid values are `'opaque'`,
 			 * `'translucent'`, and `'transparent'`.
@@ -89,6 +77,16 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			disabled: PropTypes.bool,
 
 			/**
+			 * When `true`, the button does not animate on press. Note that the default value
+			 * will change to `false` in 2.0.0
+			 *
+			 * @type {Boolean}
+			 * @default true
+			 * @public
+			 */
+			noAnimation: PropTypes.bool,
+
+			/**
 			 * When `true`, a pressed visual effect is applied to the icon button
 			 *
 			 * @type {Boolean}
@@ -114,10 +112,19 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @default false
 			 * @public
 			 */
-			small: PropTypes.bool
+			small: PropTypes.bool,
+
+			/**
+			 * An optional node to receive the tooltip from `TooltipDecorator`.
+			 *
+			 * @type {Node}
+			 * @private
+			 */
+			tooltipNode: PropTypes.node
 		},
 
 		defaultProps: {
+			noAnimation: true,
 			small: false
 		},
 
@@ -130,22 +137,82 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			className: ({color, small, styler}) => styler.append({small}, color)
 		},
 
-		render: ({children, small, ...rest}) => {
+		render: ({children, small, tooltipNode, ...rest}) => {
 			return (
-				<Button {...rest} small={small} minWidth={false} marqueeDisabled>
-					<OptimizedIcon small={small} className={css.icon}>{children}</OptimizedIcon>
+				<Button {...rest} small={small} minWidth={false}>
+					<Icon small={small} className={css.icon}>{children}</Icon>
+					{tooltipNode}
 				</Button>
 			);
 		}
 	});
 });
 
+/**
+ * An {@link moonstone/Icon.Icon} that acts like a button.  You may specify an image or a font-based
+ * icon by setting the children to either the path to the image or a string from the
+ * [IconList]{@link moonstone/Icon.IconList}. Note: Unlike many `Base` versions, `IconButtonBase`
+ * includes a Higher-order Component to optimize icon rendering.
+ *
+ * @class IconButtonBase
+ * @memberof moonstone/IconButton
+ * @extends moonstone/Button.ButtonBase
+ * @ui
+ * @public
+ */
 const IconButtonBase = IconButtonBaseFactory();
 
-export default IconButtonBase;
+/**
+ * A Factory wrapper around {@link moonstone/IconButton.IconButton} that allows overriding certain
+ * classes of the `IconButton` component at design time.
+ *
+ * @class IconButtonFactory
+ * @memberof moonstone/IconButton
+ * @factory
+ * @public
+ */
+const IconButtonFactory = factory(({css}) => {
+	return Pure(
+		TooltipDecorator({tooltipDestinationProp: 'tooltipNode'},
+			Pressable(
+				Spottable(
+					Skinnable(
+						IconButtonBaseFactory({css})
+					)
+				)
+			)
+		)
+	);
+});
+
+/**
+ * An {@link moonstone/Icon.Icon} that acts like a button.  You may specify an image or a font-based
+ * icon by setting the children to either the path to the image or a string from the
+ * [IconList]{@link moonstone/Icon.IconList}. `IconButton` does not have `Marquee` or `Uppercase`
+ * like `Button` has, as it should not contain text.
+ *
+ * Usage:
+ * ```
+ * <IconButton onClick={handleClick} small>
+ *     plus
+ * </IconButton>
+ * ```
+ *
+ * @class IconButton
+ * @memberof moonstone/IconButton
+ * @extends moonstone/IconButton.IconButtonBase
+ * @mixes moonstone/TooltipDecorator.TooltipDecorator
+ * @mixes ui/Pressable.Pressable
+ * @mixes spotlight/Spottable.Spottable
+ * @ui
+ * @public
+ */
+const IconButton = IconButtonFactory();
+
+export default IconButton;
 export {
-	IconButtonBase as IconButton,
+	IconButton,
 	IconButtonBase,
-	IconButtonBaseFactory as IconButtonFactory,
+	IconButtonFactory,
 	IconButtonBaseFactory
 };

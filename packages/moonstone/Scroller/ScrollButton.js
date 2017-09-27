@@ -1,13 +1,11 @@
 import Holdable from '../internal/Holdable';
 import kind from '@enact/core/kind';
-import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Toggleable from '@enact/ui/Toggleable';
 
 import $L from '../internal/$L';
 import IconButton from '../IconButton';
-import {withSkinnableProps} from '../Skinnable';
 
 import css from './Scrollbar.less';
 
@@ -74,7 +72,22 @@ const ScrollButtonBase = kind({
 	},
 
 	computed: {
-		'aria-label': ({active, direction}) => active ? $L(`scroll ${direction}`) : null,
+		'aria-label': ({active, direction}) => {
+			if (!active) {
+				return null;
+			}
+
+			switch (direction) {
+				case 'up':
+					return $L('scroll up');
+				case 'down':
+					return $L('scroll down');
+				case 'left':
+					return $L('scroll left');
+				case 'right':
+					return $L('scroll right');
+			}
+		},
 		className: ({direction, styler}) => styler.append(classNameMap[direction])
 	},
 
@@ -105,13 +118,9 @@ const ScrollButtonBase = kind({
  * @ui
  * @private
  */
-const ScrollButton = withSkinnableProps(
-	onlyUpdateForKeys(['children', 'disabled', 'skin'])(
-		Toggleable(
-			{activate: 'onFocus', deactivate: 'onBlur', toggle: null},
-			ScrollButtonBase
-		)
-	)
+const ScrollButton = Toggleable(
+	{activate: 'onFocus', deactivate: 'onBlur', toggle: null},
+	ScrollButtonBase
 );
 
 export default ScrollButton;

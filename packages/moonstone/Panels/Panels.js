@@ -3,11 +3,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {shape} from '@enact/ui/ViewManager';
 
+import IdProvider from '../internal/IdProvider';
 import Skinnable from '../Skinnable';
 
 import ApplicationCloseButton from './ApplicationCloseButton';
 import CancelDecorator from './CancelDecorator';
-import IdProvider from './IdProvider';
 import Viewport from './Viewport';
 
 import css from './Panels.less';
@@ -142,7 +142,12 @@ const PanelsBase = kind({
 				const closeId = id ? `${id}_close` : null;
 
 				return (
-					<ApplicationCloseButton backgroundOpacity={closeButtonBackgroundOpacity} id={closeId} onApplicationClose={onApplicationClose} />
+					<ApplicationCloseButton
+						backgroundOpacity={closeButtonBackgroundOpacity}
+						className={css.close}
+						id={closeId}
+						onApplicationClose={onApplicationClose}
+					/>
 				);
 			}
 		},

@@ -7,6 +7,7 @@
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 
@@ -134,7 +135,7 @@ const SpinnerBase = kind({
 		marquee: ({children}) => {
 			if (children) {
 				return (
-					<MarqueeText className={css.client} marqueeOn="render">
+					<MarqueeText className={css.client} marqueeOn="render" alignment="center">
 						{children}
 					</MarqueeText>
 				);
@@ -230,5 +231,12 @@ class Spinner extends Component {
 	}
 }
 
-export default Spinner;
-export {Spinner, SpinnerBase};
+const PureSpinner = Pure(
+	Spinner
+);
+
+export default PureSpinner;
+export {
+	PureSpinner as Spinner,
+	SpinnerBase
+};

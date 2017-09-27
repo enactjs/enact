@@ -10,6 +10,7 @@ import clamp from 'ramda/src/clamp';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 
 import {MarqueeController} from '../Marquee';
 import {validateRange} from '../internal/validators';
@@ -36,6 +37,16 @@ const PickerBase = kind({
 		 * @public
 		 */
 		children: PropTypes.node.isRequired,
+
+		/**
+		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
+		 * to the current selected child text.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/Picker.PickerBase.prototype
+		 * @public
+		 */
+		'aria-valuetext': PropTypes.string,
 
 		/**
 		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
@@ -203,11 +214,13 @@ const PickerBase = kind({
  * @ui
  * @public
  */
-const Picker = Changeable(
-	MarqueeController(
-		{marqueeOnFocus: true},
-		SpottablePicker(
-			PickerBase
+const Picker = Pure(
+	Changeable(
+		MarqueeController(
+			{marqueeOnFocus: true},
+			SpottablePicker(
+				PickerBase
+			)
 		)
 	)
 );

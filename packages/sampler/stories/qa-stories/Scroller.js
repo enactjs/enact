@@ -1,7 +1,9 @@
 import Button from '@enact/moonstone/Button';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import Scroller from '@enact/moonstone/Scroller';
+import Item from '@enact/moonstone/Item';
 import ri from '@enact/ui/resolution';
+import Group from '@enact/ui/Group';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {boolean, select} from '@kadira/storybook-addon-knobs';
@@ -29,6 +31,19 @@ const
 	};
 
 storiesOf('Scroller')
+	.addWithInfo(
+		'List of things',
+		() => (
+			<Scroller
+				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+				style={{height: '600px'}}
+			>
+				<Group childComponent={Item}>
+					{itemData}
+				</Group>
+			</Scroller>
+		)
+	)
 	.addWithInfo(
 		'With ExpandableList',
 		() => (
@@ -61,8 +76,7 @@ storiesOf('Scroller')
 						<Button key={i + 1}>
 							Button {i + 1}
 						</Button>
-					)
-				)}
+					))}
 				</div>
 			</Scroller>
 		)

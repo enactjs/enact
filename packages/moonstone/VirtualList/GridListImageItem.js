@@ -38,6 +38,15 @@ const GridListImageItemBase = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.GridListImageItemBase.prototype */ {
 		/**
+		 * The absolute URL path to the image.
+		 *
+		 * @type {String}
+		 * @required
+		 * @public
+		 */
+		source: PropTypes.string.isRequired,
+
+		/**
 		 * The primary caption to be displayed with the image.
 		 *
 		 * @type {String}
@@ -97,14 +106,6 @@ const GridListImageItemBase = kind({
 		selectionOverlayShowing: PropTypes.bool,
 
 		/**
-		 * The absolute URL path to the image.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		source: PropTypes.string,
-
-		/**
 		 * The second caption line to be displayed with the image.
 		 *
 		 * @type {String}
@@ -161,8 +162,8 @@ const GridListImageItemBase = kind({
 				<Image className={css.image} placeholder={placeholder} src={source}>
 					{selectionOverlay}
 				</Image>
-				{caption ? (<MarqueeText className={css.caption} marqueeOn="hover">{caption}</MarqueeText>) : null}
-				{subCaption ? (<MarqueeText className={css.subCaption} marqueeOn="hover">{subCaption}</MarqueeText>) : null}
+				{caption ? (<MarqueeText alignment="center" className={css.caption} marqueeOn="hover">{caption}</MarqueeText>) : null}
+				{subCaption ? (<MarqueeText alignment="center" className={css.subCaption} marqueeOn="hover">{subCaption}</MarqueeText>) : null}
 			</div>
 		);
 	}

@@ -2,17 +2,43 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
-## [unreleased]
+## [1.9.2] - 2017-09-26
 
-### Deprecated
+No significant changes.
 
-### Added
+## [1.9.1] - 2017-09-25
 
-### Changed
+No significant changes.
+
+## [1.9.0] - 2017-09-22
+
+No significant changes.
+
+## [1.8.0] - 2017-09-07
+
+No significant changes.
+
+## [1.7.0] - 2017-08-23
+
+No significant changes.
+
+## [1.6.1] - 2017-08-07
+
+No significant changes.
+
+## [1.6.0] - 2017-08-04
+
+No significant changes.
+
+## [1.5.0] - 2017-07-19
 
 ### Fixed
 
-### Removed
+- `webos/pmloglib` isomorphic compatibility with logging in non-browser environments
+
+## [1.4.1] - 2017-07-05
+
+No significant changes.
 
 ## [1.4.0] - 2017-06-29
 

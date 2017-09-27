@@ -111,7 +111,7 @@ var ThaiSolarDate = function(params) {
 			p.rd -= 198327;
 		}
 	}
-	this.rd = undefined; // clear these out so that the GregorianDate constructor can set it
+	this.rd = NaN; // clear these out so that the GregorianDate constructor can set it
 	this.offset = undefined;
 	//console.log("ThaiSolarDate.constructor: date is " + JSON.stringify(this) + " parent is " + JSON.stringify(this.parent) + " and parent.parent is " + JSON.stringify(this.parent.parent));
 	GregorianDate.call(this, p);
@@ -130,7 +130,6 @@ ThaiSolarDate.prototype.constructor = ThaiSolarDate;
  * the difference between a zero Julian day and the zero Thai Solar date.
  * This is some 543 years before the start of the Gregorian epoch. 
  * @private
- * @const
  * @type number
  */
 ThaiSolarDate.epoch = 1523097.5;

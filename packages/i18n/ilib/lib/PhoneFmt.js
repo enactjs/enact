@@ -298,7 +298,7 @@ PhoneFmt.prototype = {
 							sync: sync,							
 							loadParms: loadParams,
 							countryCode: countryCode,
-							onLoad: ilib.bind(this, function (/** @type {PhoneLocale} */ locale) {
+							onLoad: ilib.bind(this, function (locale) {
 								Utils.loadData({
 									name: "phonefmt.json",
 									object: PhoneFmt,

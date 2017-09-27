@@ -11,6 +11,8 @@ import hoc from '@enact/core/hoc';
 import ilib from '@enact/i18n';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Subscription} from '@enact/core/internal/PubSub';
+
 import {Expandable} from '../../ExpandableItem';
 
 /**
@@ -74,20 +76,6 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		componentWillUpdate () {
-			// check for a new locale when updating
-			this.initI18n();
-		}
-
-		initI18n () {
-			const locale = ilib.getLocale();
-
-			if (i18n && this.locale !== locale && typeof window === 'object') {
-				this.locale = locale;
-				this.i18nContext = i18n();
-			}
-		}
-
 		componentWillReceiveProps (nextProps) {
 			const newValue = this.toTime(nextProps.value);
 
@@ -109,6 +97,20 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 				this.setState({
 					value: newValue
 				});
+			}
+		}
+
+		componentWillUpdate () {
+			// check for a new locale when updating
+			this.initI18n();
+		}
+
+		initI18n () {
+			const locale = ilib.getLocale();
+
+			if (i18n && this.locale !== locale && typeof window === 'object') {
+				this.locale = locale;
+				this.i18nContext = i18n();
 			}
 		}
 
@@ -230,9 +232,12 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 	};
 
-	return Expandable(
-		Changeable(
-			Decorator
+	return Subscription(
+		{channels: ['i18n'], mapMessageToProps: (channel, {rtl}) => ({rtl})},
+		Expandable(
+			Changeable(
+				Decorator
+			)
 		)
 	);
 });

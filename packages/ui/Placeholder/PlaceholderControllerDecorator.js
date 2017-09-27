@@ -53,12 +53,6 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static childContextTypes = contextTypes
 
-		bounds = null
-		controlled = []
-		leftThreshold = -1
-		node = null
-		topThreshold = -1
-
 		getChildContext () {
 			return {
 				registerPlaceholder: this.handleRegister,
@@ -74,6 +68,12 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillUnmount () {
 			this.notifyAllJob.stop();
 		}
+
+		bounds = null
+		controlled = []
+		leftThreshold = -1
+		node = null
+		topThreshold = -1
 
 		setBounds () {
 			if (bounds != null) {
