@@ -329,6 +329,9 @@ class Transition extends React.Component {
 
 	componentWillUnmount () {
 		this.measuringJob.stop();
+		if (this.context.Subscriber) {
+			this.context.Subscriber.unsubscribe('resize', this.handleResize);
+		}
 	}
 
 	measuringJob = new Job(() => {

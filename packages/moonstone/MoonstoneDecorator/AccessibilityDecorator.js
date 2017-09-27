@@ -48,10 +48,6 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {
 			textSize: 'normal'
 		}
 
-		constructor (props) {
-			super(props);
-		}
-
 		getChildContext () {
 			return {
 				Subscriber: this.publisher.getSubscriber()
