@@ -175,6 +175,14 @@
 			}
 		}
 
+		&.lightTranslucent {
+			color: @moon-button-translucent-text-color;
+
+			.bg {
+				background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
+			}
+		}
+
 		&.transparent {
 			color: @moon-text-color;
 
@@ -215,6 +223,10 @@
 
 						&.translucent .bg {
 							background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+						}
+
+						&.lightTranslucent .bg {
+							background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
 						}
 
 						&.transparent .bg {
@@ -290,6 +302,14 @@
 
 					.bg {
 						background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+					}
+				}
+
+				&.lightTranslucent {
+					color: @moon-button-translucent-text-color;
+
+					.bg {
+						background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
 					}
 				}
 

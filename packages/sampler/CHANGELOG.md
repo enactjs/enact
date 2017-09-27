@@ -6,11 +6,15 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ### Added
 
+- `Background` knob to all samples to give the user an idea of how components, in various states, look against different colored backgrounds, beyond the default skin background color
+
 ### Changed
 
 - `Icon` and `IconButton` to include updated images assets
 
 ### Fixed
+
+- `All Samples` now remember the global settings like: 'Large Text', 'High Contrast', and, 'Skin'
 
 ## [1.9.2] - 2017-09-26
 

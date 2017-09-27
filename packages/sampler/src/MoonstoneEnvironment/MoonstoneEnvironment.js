@@ -64,17 +64,32 @@ const locales = {
 	'en-JP': 'en-JP - English, custom Japanese font'
 };
 
+// Keys for `backgroundLabels` and `backgrounds` must be kept in sync
+const backgroundLabels = {
+	'': 'Default',
+	'backgroundColorful1': 'Reddish Image Background',
+	'backgroundColorful2': 'Greenish Image Background',
+	'backgroundColorful3': 'Bluish Image Background'
+};
+
+const backgrounds = {
+	'': {},
+	'backgroundColorful1': {background: '#804 url("http://lorempixel.com/720/480/abstract/2/") no-repeat center/cover'},
+	'backgroundColorful2': {background: '#2b6 url("http://lorempixel.com/720/480/abstract/9/") no-repeat center/cover'},
+	'backgroundColorful3': {background: '#026 url("http://lorempixel.com/720/480/abstract/7/") no-repeat center/cover'}
+};
+
 const skins = {
 	dark: 'Dark',
 	light: 'Light'
 };
 
-// NOTE: Knobs cannot set locale in fullscreen mode. This allows the locale to
-// be taken from the URL.
-const getLocaleFromURL = () => {
+// NOTE: Knobs cannot set locale in fullscreen mode. This allows any knob to be taken from the URL.
+const getPropFromURL = (propName, fallbackValue) => {
+	propName = encodeURI(propName);
 	const locationParams = window.parent.location.search;
 
-	const startIndex = locationParams.indexOf('knob-locale');
+	const startIndex = locationParams.indexOf('knob-' + propName);
 	if (startIndex > -1) {
 		const keyIndex = locationParams.indexOf('=', startIndex);
 
@@ -86,19 +101,20 @@ const getLocaleFromURL = () => {
 		}
 	}
 
-	return 'en-US';
+	return fallbackValue;
 };
 
 const StorybookDecorator = (story, config) => {
-	const sample = story();
+	const sample = story({props: {className: 'BlakeSpecialClass'}});
 	return (
 		<Moonstone
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
-			locale={select('locale', locales, getLocaleFromURL())}
-			textSize={boolean('large text', false) ? 'large' : 'normal'}
-			highContrast={boolean('high contrast', false)}
-			skin={select('skin', skins, 'dark')}
+			locale={select('locale', locales, getPropFromURL('locale', 'en-US'))}
+			textSize={boolean('large text', (getPropFromURL('large text') === 'true')) ? 'large' : 'normal'}
+			highContrast={boolean('high contrast', (getPropFromURL('high contrast') === 'true'))}
+			style={backgrounds[select('background', backgroundLabels, getPropFromURL('background'))]}
+			skin={select('skin', skins, getPropFromURL('skin'))}
 		>
 			{sample}
 		</Moonstone>
@@ -111,9 +127,11 @@ const FullscreenStorybookDecorator = (story, config) => {
 		<MoonstoneFullscreen
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
-			locale={select('locale', locales, getLocaleFromURL())}
-			textSize={boolean('large text', false) ? 'large' : 'normal'}
-			skin={select('skin', skins, 'dark')}
+			locale={select('locale', locales, getPropFromURL('locale', 'en-US'))}
+			textSize={boolean('large text', (getPropFromURL('large text') === 'true')) ? 'large' : 'normal'}
+			highContrast={boolean('high contrast', (getPropFromURL('high contrast') === 'true'))}
+			style={backgrounds[select('background', backgroundLabels, getPropFromURL('background'))]}
+			skin={select('skin', skins, getPropFromURL('skin'))}
 		>
 			{sample}
 		</MoonstoneFullscreen>

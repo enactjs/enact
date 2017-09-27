@@ -60,14 +60,14 @@ const PanelsBase = kind({
 		children: PropTypes.node,
 
 		/**
-		 * The background-color opacity of the application close button; valid values are `'opaque'`, `'translucent'`,
-		 * and `'transparent'`.
+		 * The background-color opacity of the application close button; valid values are `'opaque'`,
+		 * `'translucent'`, `'lightTranslucent'`, and `'transparent'`.
 		 *
 		 * @type {String}
 		 * @default 'transparent'
 		 * @public
 		 */
-		closeButtonBackgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
+		closeButtonBackgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'lightTranslucent', 'transparent']),
 
 		/**
 		 * Unique identifier for the Panels instance
@@ -171,6 +171,7 @@ const PanelsBase = kind({
 	},
 
 	render: ({noAnimation, arranger, childProps, children, generateId, index, applicationCloseButton, ...rest}) => {
+		delete rest.closeButtonBackgroundOpacity;
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
 		delete rest.onBack;
