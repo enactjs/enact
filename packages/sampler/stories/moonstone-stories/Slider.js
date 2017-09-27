@@ -17,6 +17,7 @@ storiesOf('Slider')
 			<Slider
 				backgroundProgress={number('backgroundProgress', SliderBase.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
 				detachedKnob={nullify(boolean('detachedKnob', false))}
+				directControl={boolean('directControl', false)}
 				disabled={boolean('disabled', false)}
 				knobStep={number('knobStep')}
 				max={number('max', SliderBase.defaultProps.max)}
