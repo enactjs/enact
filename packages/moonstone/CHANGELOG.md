@@ -6,6 +6,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Slider` property `directControl` which when enabled, allows 5-way directional key interaction with the `Slider` value without pressing [Enter] first
+
 ### Changed
 
 ### Fixed
