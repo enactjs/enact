@@ -1,36 +1,36 @@
 {
   "name": "enact-sampler",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "dependencies": {
     "@enact/core": {
-      "version": "1.9.1",
-      "from": "@enact/core@>=1.9.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/core/-/core-1.9.1.tgz"
+      "version": "1.9.2",
+      "from": "@enact/core@>=1.9.2 <2.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/core/-/core-1.9.2.tgz"
     },
     "@enact/i18n": {
-      "version": "1.9.1",
-      "from": "@enact/i18n@>=1.9.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/i18n/-/i18n-1.9.1.tgz"
+      "version": "1.9.2",
+      "from": "@enact/i18n@>=1.9.2 <2.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/i18n/-/i18n-1.9.2.tgz"
     },
     "@enact/moonstone": {
-      "version": "1.9.1",
-      "from": "@enact/moonstone@>=1.9.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/moonstone/-/moonstone-1.9.1.tgz"
+      "version": "1.9.2",
+      "from": "@enact/moonstone@>=1.9.2 <2.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/moonstone/-/moonstone-1.9.2.tgz"
     },
     "@enact/spotlight": {
-      "version": "1.9.1",
-      "from": "@enact/spotlight@>=1.9.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/spotlight/-/spotlight-1.9.1.tgz"
+      "version": "1.9.2",
+      "from": "@enact/spotlight@>=1.9.2 <2.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/spotlight/-/spotlight-1.9.2.tgz"
     },
     "@enact/ui": {
-      "version": "1.9.1",
-      "from": "@enact/ui@>=1.9.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/ui/-/ui-1.9.1.tgz"
+      "version": "1.9.2",
+      "from": "@enact/ui@>=1.9.2 <2.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/ui/-/ui-1.9.2.tgz"
     },
     "@enact/webos": {
-      "version": "1.9.1",
-      "from": "@enact/webos@>=1.9.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/webos/-/webos-1.9.1.tgz"
+      "version": "1.9.2",
+      "from": "@enact/webos@>=1.9.2 <2.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/webos/-/webos-1.9.2.tgz"
     },
     "@kadira/react-split-pane": {
       "version": "1.4.7",
@@ -873,9 +873,9 @@
       }
     },
     "create-react-class": {
-      "version": "15.6.0",
+      "version": "15.6.2",
       "from": "create-react-class@>=15.6.0 <16.0.0",
-      "resolved": "https://registry.npmjs.org/create-react-class/-/create-react-class-15.6.0.tgz"
+      "resolved": "https://registry.npmjs.org/create-react-class/-/create-react-class-15.6.2.tgz"
     },
     "cryptiles": {
       "version": "3.1.2",
@@ -1125,9 +1125,9 @@
       "resolved": "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-1.0.0.tgz"
     },
     "fbjs": {
-      "version": "0.8.15",
+      "version": "0.8.16",
       "from": "fbjs@>=0.8.9 <0.9.0",
-      "resolved": "https://registry.npmjs.org/fbjs/-/fbjs-0.8.15.tgz"
+      "resolved": "https://registry.npmjs.org/fbjs/-/fbjs-0.8.16.tgz"
     },
     "file-loader": {
       "version": "0.9.0",
@@ -2758,14 +2758,14 @@
       "resolved": "https://registry.npmjs.org/range-parser/-/range-parser-1.2.0.tgz"
     },
     "react": {
-      "version": "15.6.1",
+      "version": "15.6.2",
       "from": "react@>=15.6.1 <15.7.0",
-      "resolved": "https://registry.npmjs.org/react/-/react-15.6.1.tgz"
+      "resolved": "https://registry.npmjs.org/react/-/react-15.6.2.tgz"
     },
     "react-addons-create-fragment": {
-      "version": "15.6.0",
+      "version": "15.6.2",
       "from": "react-addons-create-fragment@>=15.3.2 <16.0.0",
-      "resolved": "https://registry.npmjs.org/react-addons-create-fragment/-/react-addons-create-fragment-15.6.0.tgz"
+      "resolved": "https://registry.npmjs.org/react-addons-create-fragment/-/react-addons-create-fragment-15.6.2.tgz"
     },
     "react-addons-perf": {
       "version": "15.4.2",
@@ -2802,14 +2802,14 @@
       }
     },
     "react-dom": {
-      "version": "15.6.1",
+      "version": "15.6.2",
       "from": "react-dom@>=15.6.1 <15.7.0",
-      "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-15.6.1.tgz"
+      "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-15.6.2.tgz"
     },
     "react-dom-factories": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "from": "react-dom-factories@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/react-dom-factories/-/react-dom-factories-1.0.1.tgz"
+      "resolved": "https://registry.npmjs.org/react-dom-factories/-/react-dom-factories-1.0.2.tgz"
     },
     "react-fuzzy": {
       "version": "0.3.3",
@@ -2998,16 +2998,9 @@
       "resolved": "https://registry.npmjs.org/send/-/send-0.15.6.tgz"
     },
     "serve-favicon": {
-      "version": "2.4.4",
+      "version": "2.4.5",
       "from": "serve-favicon@>=2.3.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/serve-favicon/-/serve-favicon-2.4.4.tgz",
-      "dependencies": {
-        "fresh": {
-          "version": "0.5.1",
-          "from": "fresh@0.5.1",
-          "resolved": "https://registry.npmjs.org/fresh/-/fresh-0.5.1.tgz"
-        }
-      }
+      "resolved": "https://registry.npmjs.org/serve-favicon/-/serve-favicon-2.4.5.tgz"
     },
     "serve-static": {
       "version": "1.12.6",
