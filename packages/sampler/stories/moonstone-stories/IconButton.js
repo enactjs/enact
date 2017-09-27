@@ -8,10 +8,9 @@ import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 // import icons
-import list from '../../images/icon-list.png';
-import album from '../../images/icon-album.png';
-import trash from '../../images/trash.svg';
-import magnify from '../../images/magnify.svg';
+import docs from '../../images/icon-enact-docs.png';
+import factory from '../../images/icon-enact-factory.svg';
+import logo from '../../images/icon-enact-logo.svg';
 
 const Config = mergeComponentMetadata('IconButton', IconButtonBase, IconButton);
 
@@ -35,7 +34,7 @@ storiesOf('IconButton')
 				small={boolean('small', false)}
 				tooltipText={nullify(text('tooltipText', ''))}
 			>
-				{select('src', ['', list, album, trash, magnify], '') + select('icon', ['', ...icons], 'plus') + text('custom icon', '')}
+				{select('src', ['', docs, factory, logo], '') + select('icon', ['', ...icons], 'plus') + text('custom icon', '')}
 			</IconButton>
 		),
 		{propTables: [Config]}
