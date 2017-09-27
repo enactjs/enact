@@ -559,7 +559,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleFocus = (ev) => {
 			this.isFocused = true;
-			this.invalidateMetrics();
 			this.setState((prevState) => {
 				if (!prevState.animating) {
 					this.startAnimation();
