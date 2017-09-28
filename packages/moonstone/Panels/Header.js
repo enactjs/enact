@@ -25,15 +25,15 @@ const HeaderH1 = Uppercase(MarqueeDecorator('h1'));
  * @public
  */
 const CompactTitleBase = kind({
-    name: 'CompactTitle',
-    render: (props) => {
-        delete props.title;
-        delete props.titleBelow;
+	name: 'CompactTitle',
+	render: (props) => {
+		delete props.title;
+		delete props.titleBelow;
 
-        return (
-            <div {...rest} />
-        );
-    };
+		return (
+			<div {...rest} />
+		);
+	}
 });
 
 // Marquee decorated container with title and titleBelow as invalidateProps
