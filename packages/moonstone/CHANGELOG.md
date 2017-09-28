@@ -2,9 +2,6 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-### Fixed
-
-- `moonstone/Icon` to not read out image characters
 ## [unreleased]
 
 ### Added
@@ -13,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Icon` to not read out image characters
 - `moonstone/Icon` to correctly display focused state when using external image
 - `moonstone/Button` and `moonstone/IconButton` to be properly visually muted when in a muted container
 
