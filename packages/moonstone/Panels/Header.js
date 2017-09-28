@@ -5,7 +5,7 @@ import Uppercase from '@enact/i18n/Uppercase';
 import {isRtlText} from '@enact/i18n/util';
 import Slottable from '@enact/ui/Slottable';
 
-import {MarqueeDecorator, MarqueeText} from '../Marquee';
+import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import css from './Header.less';
