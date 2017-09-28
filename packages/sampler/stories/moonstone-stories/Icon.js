@@ -6,9 +6,9 @@ import {storiesOf} from '@kadira/storybook';
 import {boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 // import icons
-import fwd from '../../images/icon-fwd-btn.png';
-import play from '../../images/icon-play-btn.png';
-import rew from '../../images/icon-rew-btn.png';
+import docs from '../../images/icon-enact-docs.png';
+import factory from '../../images/icon-enact-factory.svg';
+import logo from '../../images/icon-enact-logo.svg';
 
 storiesOf('Icon')
 	.addWithInfo(
@@ -21,7 +21,7 @@ storiesOf('Icon')
 					<Icon
 						small={small}
 					>
-						{select('src', ['', fwd, play, rew], '') + select('icon', ['', ...iconNames], 'plus') + text('custom icon', '')}
+						{select('src', ['', docs, factory, logo], '') + select('icon', ['', ...iconNames], 'plus') + text('custom icon', '')}
 					</Icon>
 					<br />
 					<br />
