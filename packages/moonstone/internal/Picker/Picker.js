@@ -375,6 +375,9 @@ const PickerBase = class extends React.Component {
 			validateStepped(props.value, props.min, props.step, PickerBase.displayName);
 			validateStepped(props.max, props.min, props.step, PickerBase.displayName, '"max"');
 		}
+
+		// Pressed state for joined pickers
+		this.pressed = false;
 	}
 
 	componentDidMount () {
@@ -481,20 +484,17 @@ const PickerBase = class extends React.Component {
 	emulateMouseUp = new Job((ev) => forwardMouseUp(ev, this.props), 175)
 
 	handleUp = (ev) => {
-		const {target} = ev;
-		const isButtonClicked = target.className.includes(css.incrementer) ||
-			target.parentNode.className.includes(css.incrementer) ||
-			target.className.includes(css.decrementer) ||
-			target.parentNode.className.includes(css.decrementer);
-
-		if (isButtonClicked || this.props.joined) {
+		// Attach handleUp to the container and forward mouseUp if one of the Picker buttons was pressed
+		if (this.pressed) {
 			forwardMouseUp(ev, this.props);
+			this.pressed = false;
 		}
 	}
 
 	handleDecDown = (ev) => {
 		if (ev) {
 			forwardMouseDown(ev, this.props);
+			this.pressed = true;
 		}
 		this.handleDecrement();
 	}
@@ -502,6 +502,7 @@ const PickerBase = class extends React.Component {
 	handleIncDown = (ev) => {
 		if (ev) {
 			forwardMouseDown(ev, this.props);
+			this.pressed = true;
 		}
 		this.handleIncrement();
 	}
