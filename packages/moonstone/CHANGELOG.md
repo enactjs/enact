@@ -2,7 +2,31 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [1.9.0] - 2017-09-19
+## [unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
+- `moonstone/Icon` to correctly display focused state when using external image
+- `moonstone/Button` and `moonstone/IconButton` to be properly visually muted when in a muted container
+
+## [1.9.2] - 2017-09-26
+
+### Fixed
+
+- `moonstone/ExpandableList` preventing updates when its children had changed
+
+## [1.9.1] - 2017-09-25
+
+### Fixed
+
+- `moonstone/ExpandableList` run-time error when using an array of objects as children
+- `moonstone/VideoPlayer` blocking pointer events when the controls were hidden
+
+## [1.9.0] - 2017-09-22
 
 ### Added
 
@@ -19,7 +43,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone`VirtualGridList` to not move focus to wrong column when scrolled from the bottom by holding the "up" key
+- `moonstone/VirtualGridList` to not move focus to wrong column when scrolled from the bottom by holding the "up" key
 - `moonstone/VirtualList` to focus an item properly when moving to a next or previous page
 - `moonstone/Scrollable` to move focus toward first or last child when page up or down key is pressed if the number of children is small
 - `moonstone/VirtualList` to scroll to preserved index when it exists within dataSize for preserving focus
@@ -35,7 +59,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ContextualPopup` pointer mode focus behavior for `spotlightRestrict='self-only'`
 - `moonstone/VideoPlayer` to prevent interacting with more components in pointer mode when hidden
 - `moonstone/Scroller` to not repaint its entire contents whenever partial content is updated
+- `moonstone/Slider` knob positioning after its container is resized
 - `moonstone/VideoPlayer` to maintain focus when media controls are hidden
+- `moonstone/Scroller` to scroll expandable components into view when opening when pointer has moved elsewhere
 
 ## [1.8.0] - 2017-09-07
 
