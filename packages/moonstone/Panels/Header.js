@@ -31,7 +31,7 @@ const CompactTitleBase = kind({
 		delete props.titleBelow;
 
 		return (
-			<div {...rest} />
+			<div {...props} />
 		);
 	}
 });
