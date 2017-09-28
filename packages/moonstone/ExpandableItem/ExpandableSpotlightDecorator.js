@@ -1,3 +1,4 @@
+import {getContainersForNode, setContainerLastFocusedElement} from '@enact/spotlight/src/container';
 import hoc from '@enact/core/hoc';
 import Spotlight from '@enact/spotlight';
 import React from 'react';
@@ -77,6 +78,15 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const current = Spotlight.getCurrent();
 			if (this.containerNode.contains(current)) {
 				Spotlight.focus(this.containerNode.querySelector('[data-expandable-label]'));
+			} else if (!current) {
+				// when focus is not currently set during close (due to a cancel event or the close
+				// on blur from ExpandableInput), we need to fix the last focused element for the
+				// container tree to be the labeled item so that focus can be restored to it rather
+				// that spotlight getting lost
+				const label = this.containerNode.querySelector('[data-expandable-label]');
+				const containerIds = getContainersForNode(label);
+
+				setContainerLastFocusedElement(label, containerIds);
 			}
 		}
 
