@@ -162,7 +162,7 @@ const IconBase = kind({
 	render: ({iconProps, ...rest}) => {
 		delete rest.small;
 
-		return <div {...rest} {...iconProps} />;
+		return <div aria-hidden {...rest} {...iconProps} />;
 	}
 });
 
