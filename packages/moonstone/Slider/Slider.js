@@ -22,16 +22,15 @@ import {SliderBarFactory} from './SliderBar';
 import SliderTooltip from './SliderTooltip';
 import componentCss from './Slider.less';
 
-const isActive = (ev, props) => props.active || props.directControl || props.detachedKnob;
+const isActive = (ev, props) => props.active || props.focusActivated || props.detachedKnob;
 const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
 const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
-// If directControl is enabled -> and not active, run onActivate, otherwise (it's already active) just return true and continue
-const isDirectlyControlled = (ev, props) => (props.directControl && (props.active || forward('onActivate', ev, props)));
+const isFocusActivated = (ev, props) => props.active || props.detachedKnob || (props.focusActivated && forward('onActivate', ev, props));
 
 const handleDecrement = handle(
 	isActive,
 	isDecrement,
-	isDirectlyControlled,
+	isFocusActivated,
 	forward('onDecrement'),
 	stopImmediate
 );
@@ -39,7 +38,7 @@ const handleDecrement = handle(
 const handleIncrement = handle(
 	isActive,
 	isIncrement,
-	isDirectlyControlled,
+	isFocusActivated,
 	forward('onIncrement'),
 	stopImmediate
 );
@@ -120,7 +119,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @type {Boolean}
 			 * @public
 			 */
-			directControl: PropTypes.bool,
+			focusActivated: PropTypes.bool,
 
 			/**
 			 * When `true`, the component is shown as disabled and does not generate events
@@ -348,7 +347,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			backgroundProgress: 0,
 			knobAfterMidpoint: false,
 			detachedKnob: false,
-			directControl: false,
+			focusActivated: false,
 			focused: false,
 			max: 100,
 			min: 0,
@@ -421,7 +420,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		render: ({backgroundProgress, children, disabled, focused, inputRef, knobAfterMidpoint, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
-			delete rest.directControl;
+			delete rest.focusActivated;
 			delete rest.noFill;
 			delete rest.onActivate;
 			delete rest.onDecrement;
