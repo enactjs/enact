@@ -360,6 +360,15 @@ const VideoPlayerBase = class extends React.Component {
 		noJumpButtons: PropTypes.bool,
 
 		/**
+		 * Removes the mini feedback.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noMiniFeedback: PropTypes.bool,
+
+		/**
 		 * Removes the "rate" buttons. The buttons that change the playback rate of the video.
 		 * Double speed, half speed, reverse 4x speed, etc.
 		 *
@@ -589,14 +598,6 @@ const VideoPlayerBase = class extends React.Component {
 		initialJumpDelay: 400,
 		jumpBy: 30,
 		jumpDelay: 200,
-		moreButtonDisabled: false,
-		muted: false,
-		no5WayJump: false,
-		noAutoPlay: false,
-		noJumpButtons: false,
-		pauseAtEnd: false,
-		noRateButtons: false,
-		noSlider: false,
 		playbackRateHash: {
 			fastForward: ['2', '4', '8', '16'],
 			rewind: ['-2', '-4', '-8', '-16'],
@@ -1704,6 +1705,7 @@ const VideoPlayerBase = class extends React.Component {
 			moreButtonLabel,
 			noAutoPlay,
 			noJumpButtons,
+			noMiniFeedback,
 			noRateButtons,
 			noSlider,
 			pauseIcon,
@@ -1774,7 +1776,7 @@ const VideoPlayerBase = class extends React.Component {
 							className={css.miniFeedback}
 							playbackRate={this.pulsedPlaybackRate || this.selectPlaybackRate(this.speedIndex)}
 							playbackState={this.pulsedPlaybackState || this.prevCommand}
-							visible={this.state.miniFeedbackVisible}
+							visible={this.state.miniFeedbackVisible && !noMiniFeedback}
 						>
 							{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
 						</FeedbackContent>

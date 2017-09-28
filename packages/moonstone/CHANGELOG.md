@@ -6,6 +6,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/VideoPlayer` property `noMiniFeedback` to support controlling the visibility of mini feedback
+
 ### Changed
 
 ### Fixed
