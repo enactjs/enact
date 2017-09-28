@@ -2,6 +2,8 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
 ### Added
 
 ### Changed
@@ -9,6 +11,14 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Scrollable` to not accumulate paging scroll by pressing page up/down in scrollbar
+- `moonstone/Icon` to correctly display focused state when using external image
+- `moonstone/Button` and `moonstone/IconButton` to be properly visually muted when in a muted container
+
+## [1.9.2] - 2017-09-26
+
+### Fixed
+
+- `moonstone/ExpandableList` preventing updates when its children had changed
 
 ## [1.9.1] - 2017-09-25
 
