@@ -982,7 +982,7 @@ const VideoPlayerBase = class extends React.Component {
 			if (this.showMiniFeedback && (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider)) {
 				this.setState({
 					mediaSliderVisible: shouldShowSlider,
-					miniFeedbackVisible: true
+					miniFeedbackVisible: !(this.state.readyState < HAVE_ENOUGH_DATA || !this.state.duration || this.state.error)
 				});
 			}
 		}
