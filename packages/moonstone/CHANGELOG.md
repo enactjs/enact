@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/VideoPlayer` to provide audio guidance when setting focus to slider
+
 ### Fixed
 
 - `moonstone/Icon` not to read out image characters
