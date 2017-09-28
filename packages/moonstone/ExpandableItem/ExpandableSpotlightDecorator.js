@@ -82,7 +82,7 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// when focus is not currently set during close (due to a cancel event or the close
 				// on blur from ExpandableInput), we need to fix the last focused element for the
 				// container tree to be the labeled item so that focus can be restored to it rather
-				// that spotlight getting lost
+				// than spotlight getting lost
 				const label = this.containerNode.querySelector('[data-expandable-label]');
 				const containerIds = getContainersForNode(label);
 
