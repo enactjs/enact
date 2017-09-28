@@ -114,20 +114,20 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			detachedKnob: PropTypes.bool,
 
 			/**
-			 * When `true`, the component may be manipulated via the directional input keys
-			 *
-			 * @type {Boolean}
-			 * @public
-			 */
-			focusActivated: PropTypes.bool,
-
-			/**
 			 * When `true`, the component is shown as disabled and does not generate events
 			 *
 			 * @type {Boolean}
 			 * @public
 			 */
 			disabled: PropTypes.bool,
+
+			/**
+			 * When `true`, the component may be manipulated via the directional input keys
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			focusActivated: PropTypes.bool,
 
 			/**
 			 * When `true`, the tooltip, if present, is shown
