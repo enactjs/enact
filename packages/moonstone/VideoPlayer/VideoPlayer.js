@@ -1583,7 +1583,6 @@ const VideoPlayerBase = class extends React.Component {
 
 	handleSliderFocus = () => {
 		const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
-		const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
 
 		this.sliderScrubbing = true;
 		this.setState({
@@ -1593,6 +1592,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedFeedbackHide();
 
 		if (!isNaN(seconds)) {
+			const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
 			this.announce(`${$L('jump to')} ${knobTime}`);
 		}
 	}
