@@ -478,12 +478,7 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
-	emulateMouseUp = new Job((ev) => {
-		const {onMouseUp} = this.props;
-		if (onMouseUp) {
-			forwardMouseUp(ev, this.props);
-		}
-	}, 175)
+	emulateMouseUp = new Job((ev) => forwardMouseUp(ev, this.props), 175)
 
 	handleUp = (ev) => {
 		const {target} = ev;
