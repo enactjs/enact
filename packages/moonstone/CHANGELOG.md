@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `Moonstone Icons` font file to include the latest designs for several icons
+
 ### Fixed
 
 - `moonstone/Icon` not to read out image characters
