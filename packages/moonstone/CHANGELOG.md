@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
+- `moonstone/Picker` to increment and decrement normally at the edges of joined picker
+
 ## [1.9.2] - 2017-09-26
 
 ### Fixed

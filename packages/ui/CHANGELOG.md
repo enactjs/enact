@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `Pressable` to set pressed state to false in all cases on mouse release and mouse leave
+
 ## [1.9.2] - 2017-09-26
 
 No significant changes.

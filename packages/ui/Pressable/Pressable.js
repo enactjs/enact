@@ -164,7 +164,6 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleLeave = this.handle(
 			forward(leave),
-			forProp('disabled', false),
 			() => this.updatePressed(false)
 		)
 
