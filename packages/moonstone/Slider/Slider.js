@@ -25,12 +25,12 @@ import componentCss from './Slider.less';
 const isActive = (ev, props) => props.active || props.activateOnFocus || props.detachedKnob;
 const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
 const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
-const isactivateOnFocus = (ev, props) => props.active || props.detachedKnob || (props.activateOnFocus && forward('onActivate', ev, props));
+const isActivatedOnFocus = (ev, props) => props.active || props.detachedKnob || (props.activateOnFocus && forward('onActivate', ev, props));
 
 const handleDecrement = handle(
 	isActive,
 	isDecrement,
-	isactivateOnFocus,
+	isActivatedOnFocus,
 	forward('onDecrement'),
 	stopImmediate
 );
@@ -38,7 +38,7 @@ const handleDecrement = handle(
 const handleIncrement = handle(
 	isActive,
 	isIncrement,
-	isactivateOnFocus,
+	isActivatedOnFocus,
 	forward('onIncrement'),
 	stopImmediate
 );
@@ -76,6 +76,14 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+			/**
+			 * When `true`, the component may be manipulated via the directional input keys
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			activateOnFocus: PropTypes.bool,
 
 			/**
 			 * When `true`, the knob displays selected and can be moved using 5-way controls.
@@ -120,14 +128,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			disabled: PropTypes.bool,
-
-			/**
-			 * When `true`, the component may be manipulated via the directional input keys
-			 *
-			 * @type {Boolean}
-			 * @public
-			 */
-			activateOnFocus: PropTypes.bool,
 
 			/**
 			 * When `true`, the tooltip, if present, is shown
