@@ -17,7 +17,7 @@ No significant changes.
 - `spotlight` to block handling repeated key down events that were interrupted by a pointer event
 
 ### Fixed
-
+- `spotlight` to not to focus when a node is disabled and move the focus to a not disabled element.
 - `spotlight` to not try to focus something when the window is activated unless the window has been previously blurred
 - `spotlight` to prevent containers that have been unmounted from being considered potential targets
 
