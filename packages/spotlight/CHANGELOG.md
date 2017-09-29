@@ -20,6 +20,25 @@ No significant changes.
 
 No significant changes.
 
+## [1.9.2] - 2017-09-26
+
+No significant changes.
+
+## [1.9.1] - 2017-09-25
+
+No significant changes.
+
+## [1.9.0] - 2017-09-22
+
+### Changed
+
+- `spotlight` to block handling repeated key down events that were interrupted by a pointer event
+
+### Fixed
+
+- `spotlight` to not try to focus something when the window is activated unless the window has been previously blurred
+- `spotlight` to prevent containers that have been unmounted from being considered potential targets
+
 ## [1.8.0] - 2017-09-07
 
 ### Fixed
@@ -30,7 +49,6 @@ No significant changes.
 
 ### Added
 
-- `spotlight/SpotlightContainerDecorator` config option `continue5WayHold` to support moving focus to the next spottable element on 5-way hold key.
 - `spotlight/SpotlightContainerDecorator` config option `continue5WayHold` to support moving focus to the next spottable element on 5-way hold key
 - `spotlight/Spottable` ability to restore focus when an initially disabled component becomes enabled
 

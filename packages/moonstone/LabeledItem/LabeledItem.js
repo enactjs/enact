@@ -7,6 +7,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
@@ -81,7 +82,11 @@ const LabeledItemBase = kind({
 	)
 });
 
-const LabeledItem = Skinnable(LabeledItemBase);
+const LabeledItem = Pure(
+	Skinnable(
+		LabeledItemBase
+	)
+);
 
 export default LabeledItem;
 export {LabeledItem, LabeledItemBase};

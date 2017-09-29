@@ -203,7 +203,6 @@ const VirtualGridListNative = kind({
 		 */
 	},
 
-
 	render: (props) => <VirtualListBaseNative {...props} />
 });
 

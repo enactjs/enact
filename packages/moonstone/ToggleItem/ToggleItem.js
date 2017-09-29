@@ -8,6 +8,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import Toggleable from '@enact/ui/Toggleable';
 
 import {ItemOverlay} from '../Item';
@@ -198,9 +199,11 @@ const ToggleItemBase = kind({
  * @ui
  * @public
  */
-const ToggleItem = Toggleable(
-	{prop: 'selected'},
-	ToggleItemBase
+const ToggleItem = Pure(
+	Toggleable(
+		{prop: 'selected'},
+		ToggleItemBase
+	)
 );
 
 export default ToggleItem;

@@ -52,6 +52,7 @@ const forwardBlur = forward('onBlur'),
 	forwardClick = forward('onClick'),
 	forwardFocus = forward('onFocus'),
 	forwardKeyDown = forward('onKeyDown'),
+	forwardKeyUp = forward('onKeyUp'),
 	forwardWheel = forward('onWheel');
 
 /**
@@ -377,7 +378,10 @@ const PickerBase = class extends React.Component {
 
 	componentWillUnmount () {
 		this.emulateMouseUp.stop();
-
+		this.throttleInc.stop();
+		this.throttleDec.stop();
+		this.throttleWheelInc.stop();
+		this.throttleWheelDec.stop();
 		if (this.props.joined) {
 			this.containerRef.removeEventListener('wheel', this.handleWheel);
 		}
@@ -485,7 +489,11 @@ const PickerBase = class extends React.Component {
 			// the bounds of the picker
 			if (dir && !this.hasReachedBound(step * dir)) {
 				// fire the onChange event
-				this.updateValue(dir);
+				if (dir > 0) {
+					this.throttleWheelInc.throttle();
+				} else if (dir < 0) {
+					this.throttleWheelDec.throttle();
+				}
 				// simulate mouse down
 				this.handleDown(dir);
 				// set a timer to simulate the mouse up
@@ -511,6 +519,14 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
+	throttleInc = new Job(this.handleIncClick, 200)
+
+	throttleDec = new Job(this.handleDecClick, 200)
+
+	throttleWheelInc = new Job(this.handleIncClick, 100)
+
+	throttleWheelDec = new Job(this.handleDecClick, 100)
+
 	handleKeyDown = (ev) => {
 		const {
 			joined,
@@ -527,10 +543,10 @@ const PickerBase = class extends React.Component {
 			const direction = getDirection(keyCode);
 
 			const directions = {
-				up: this.handleIncClick,
-				down: this.handleDecClick,
-				right: this.handleIncClick,
-				left: this.handleDecClick
+				up: this.throttleInc.throttle,
+				down: this.throttleDec.throttle,
+				right: this.throttleInc.throttle,
+				left: this.throttleDec.throttle
 			};
 
 			const isVertical = orientation === 'vertical' && (isUp(keyCode) || isDown(keyCode));
@@ -538,6 +554,7 @@ const PickerBase = class extends React.Component {
 
 			if (isVertical || isHorizontal) {
 				directions[direction]();
+				ev.preventDefault();
 				ev.stopPropagation();
 				this.emulateMouseUp.start(ev);
 			} else if (orientation === 'horizontal' && isDown(keyCode) && onPickerSpotlightDown) {
@@ -548,6 +565,33 @@ const PickerBase = class extends React.Component {
 				onPickerSpotlightLeft(ev);
 			} else if (orientation === 'vertical' && isRight(keyCode) && onPickerSpotlightRight) {
 				onPickerSpotlightRight(ev);
+			}
+		}
+	}
+
+	handleKeyUp = (ev) => {
+		const {
+			joined,
+			orientation
+		} = this.props;
+		const {keyCode} = ev;
+		forwardKeyUp(ev, this.props);
+
+		if (joined) {
+			const direction = getDirection(keyCode);
+
+			const directions = {
+				up: this.throttleInc.stop,
+				down: this.throttleDec.stop,
+				right: this.throttleInc.stop,
+				left: this.throttleDec.stop
+			};
+
+			const isVertical = orientation === 'vertical' && (isUp(keyCode) || isDown(keyCode));
+			const isHorizontal = orientation === 'horizontal' && (isRight(keyCode) || isLeft(keyCode));
+
+			if (isVertical || isHorizontal) {
+				directions[direction]();
 			}
 		}
 	}
@@ -700,7 +744,7 @@ const PickerBase = class extends React.Component {
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
 
 		let arranger;
-		if (width && !disabled) {
+		if (!noAnimation && !disabled) {
 			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
 		}
 
@@ -724,6 +768,7 @@ const PickerBase = class extends React.Component {
 				onBlur={this.handleBlur}
 				onFocus={this.handleFocus}
 				onKeyDown={this.handleKeyDown}
+				onKeyUp={this.handleKeyUp}
 				ref={this.initContainerRef}
 			>
 				<PickerButton

@@ -18,6 +18,16 @@ No significant changes.
 
 ## [2.0.0-alpha.1] - 2017-08-27
 
+## [1.9.2] - 2017-09-26
+
+No significant changes.
+
+## [1.9.1] - 2017-09-25
+
+No significant changes.
+
+## [1.9.0] - 2017-09-22
+
 No significant changes.
 
 ## [1.8.0] - 2017-09-07

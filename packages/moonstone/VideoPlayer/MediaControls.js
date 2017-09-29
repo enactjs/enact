@@ -279,7 +279,16 @@ const MediaControls = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		spotlightDisabled: PropTypes.bool
+		spotlightDisabled: PropTypes.bool,
+
+		/**
+		 * The visibility of the component. When `false`, the component will be hidden.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		visible: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -288,7 +297,8 @@ const MediaControls = kind({
 		jumpBackwardIcon: 'skipbackward',
 		jumpForwardIcon: 'skipforward',
 		pauseIcon: 'pause',
-		playIcon: 'play'
+		playIcon: 'play',
+		visible: true
 	},
 
 	styles: {
@@ -301,6 +311,7 @@ const MediaControls = kind({
 			centerComponents: true,
 			more: showMoreComponents
 		}),
+		className: ({styler, visible}) => styler.append({hidden: !visible}),
 		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowshrinkleft' : 'ellipsis',
 		moreIconLabel: ({moreButtonCloseLabel, moreButtonLabel, showMoreComponents}) => {
 			if (showMoreComponents) {
@@ -352,6 +363,7 @@ const MediaControls = kind({
 		delete rest.playIcon;
 		delete rest.playLabel;
 		delete rest.showMoreComponents;
+		delete rest.visible;
 
 		return (
 			<div {...rest}>

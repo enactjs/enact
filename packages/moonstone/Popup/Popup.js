@@ -15,6 +15,7 @@ import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Transition from '@enact/ui/Transition';
 import {forward} from '@enact/core/handle';
+import warning from 'warning';
 
 import $L from '../internal/$L';
 import IconButton from '../IconButton';
@@ -195,6 +196,13 @@ const SkinnedPopupBase = Skinnable(
 	PopupBase
 );
 
+// Deprecate using scrimType 'none' with spotlightRestrict of 'self-only'
+const checkScrimNone = (props) => {
+	const validScrim = !(props.scrimType === 'none' && props.spotlightRestrict === 'self-only');
+	warning(validScrim, "Using 'spotlightRestrict' of 'self-only' without a scrim " +
+		'is not supported. Use a transparent scrim to prevent spotlight focus outside of the popup');
+};
+
 /**
  * {@link moonstone/Popup.Popup} is a stateful component that help {@link moonstone/Popup.PopupBase}
  * to appear in {@link ui/FloatingLayer.FloatingLayer}.
@@ -273,7 +281,9 @@ class Popup extends React.Component {
 		open: PropTypes.bool,
 
 		/**
-		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.`.
+		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`. `'none'`
+		 * is not compatible with `spotlightRestrict` of `'self-only'`, use a transparent scrim to
+		 * prevent mouse focus when using popup.
 		 *
 		 * @type {String}
 		 * @default 'translucent'
@@ -318,6 +328,7 @@ class Popup extends React.Component {
 			containerId: Spotlight.add(),
 			activator: null
 		};
+		checkScrimNone(this.props);
 	}
 
 	componentDidMount () {
@@ -340,6 +351,7 @@ class Popup extends React.Component {
 				activator: nextProps.noAnimation ? null : this.state.activator
 			});
 		}
+		checkScrimNone(nextProps);
 	}
 
 	componentDidUpdate (prevProps, prevState) {

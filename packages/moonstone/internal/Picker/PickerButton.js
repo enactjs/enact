@@ -1,7 +1,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
+import Pure from '@enact/ui/internal/Pure';
 
 import Icon from '../../Icon';
 import IconButton from '../../IconButton';
@@ -77,8 +77,8 @@ const PickerButtonBase = kind({
 	}
 });
 
-const PickerButton = withSkinnableProps(
-	onlyUpdateForKeys(['aria-label', 'disabled', 'icon', 'joined', 'onMouseUp', 'skin', 'spotlightDisabled'])(
+const PickerButton = Pure(
+	withSkinnableProps(
 		PickerButtonBase
 	)
 );

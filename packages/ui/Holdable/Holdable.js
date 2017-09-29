@@ -12,7 +12,7 @@ import pick from 'ramda/src/pick';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const eventProps = ['clientX', 'clientY', 'pageX', 'pageY', 'screenX', 'screenY',
+const eventProps = ['clientX', 'clientY', 'currentTarget', 'pageX', 'pageY', 'screenX', 'screenY',
 	'altKey', 'ctrlKey', 'metaKey', 'shiftKey', 'detail', 'type'];
 
 const makeEvent = (type, ev) => {
@@ -205,14 +205,16 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		onDocumentPointerMove = (ev) => {
-			if (!this.props.disabled) {
-				if (endHold === 'onMove' && this.downEvent) {
+			if (!this.props.disabled && this.downEvent) {
+				if (endHold === 'onMove' && this.downEvent.type === 'mousedown') {
 					const out = outOfRange(ev.clientY, this.downEvent.clientY, moveTolerance) || outOfRange(ev.clientX, this.downEvent.clientX, moveTolerance);
 					if (out && this.holdJob) {
 						this.endOrSuspendHold();
 					} else if (!out && resume && !this.holdJob) {
 						this.resumeHold();
 					}
+				} else if (this.downEvent.type === 'keydown' && !this.downEvent.currentTarget.contains(ev.target)) {
+					this.endHold();
 				}
 			}
 		}
@@ -241,9 +243,6 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		handlePointerDepress = (ev) => {
 			if (!this.props.disabled && ev.type === 'mousedown') {	// Spotlight forwards keydown as pointer
 				this.beginHold(pick(eventProps, ev));
-				// We are tracking document level because we need to allow for the 'slop' factor
-				// even if the pointer moves slightly off the element
-				on('mousemove', this.onDocumentPointerMove);
 			}
 			forwardPointerDepress(ev, this.props);
 		}
@@ -292,6 +291,11 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			if (ev.type === 'mousedown') {
 				this.onceOnPointerRelease = once(pointerRelease, this.handlePointerRelease);
 			}
+
+			// We are tracking document level because we need to allow for the 'slop' factor
+			// even if the pointer moves slightly off the element. Also supports cancelling a hold
+			// when the pointer moves while a key-based hold is active.
+			on('mousemove', this.onDocumentPointerMove);
 		}
 
 		endHold = () => {

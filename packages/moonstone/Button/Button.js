@@ -13,6 +13,7 @@ import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
+import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -121,6 +122,15 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			minWidth: PropTypes.bool,
 
 			/**
+			 * When `true`, the button does not animate on press
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			noAnimation: PropTypes.bool,
+
+			/**
 			 * When `true`, a pressed visual effect is applied to the button
 			 *
 			 * @type {Boolean}
@@ -179,8 +189,8 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 		},
 
 		computed: {
-			className: ({backgroundOpacity, color, minWidth, pressed, selected, small, styler}) => styler.append(
-				{pressed, small, minWidth, selected},
+			className: ({backgroundOpacity, color, minWidth, noAnimation, pressed, selected, small, styler}) => styler.append(
+				{pressed, small, minWidth, noAnimation, selected},
 				backgroundOpacity, color
 			),
 			icon: ({icon, small}) =>
@@ -198,6 +208,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			delete rest.backgroundOpacity;
 			delete rest.color;
 			delete rest.minWidth;
+			delete rest.noAnimation;
 			delete rest.pressed;
 			delete rest.selected;
 			delete rest.small;
@@ -243,15 +254,16 @@ const ButtonFactory = factory(css => {
 	 * @ui
 	 * @public
 	 */
-	const MoonstoneButton = Uppercase(
-		TooltipDecorator(
-			MarqueeDecorator(
-				{className: componentCss.marquee},
-				Touchable(
-					{activeProp: 'pressed'},
-					Spottable(
-						Skinnable(
-							Base
+	const MoonstoneButton = Pure(
+		Uppercase(
+			TooltipDecorator(
+				MarqueeDecorator(
+					{className: componentCss.marquee},
+					Touchable(
+						Spottable(
+							Skinnable(
+								Base
+							)
 						)
 					)
 				)
