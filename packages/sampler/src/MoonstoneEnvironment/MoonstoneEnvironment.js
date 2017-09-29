@@ -105,7 +105,7 @@ const getPropFromURL = (propName, fallbackValue) => {
 };
 
 const StorybookDecorator = (story, config) => {
-	const sample = story({props: {className: 'BlakeSpecialClass'}});
+	const sample = story();
 	return (
 		<Moonstone
 			title={`${config.kind} ${config.story}`.trim()}
