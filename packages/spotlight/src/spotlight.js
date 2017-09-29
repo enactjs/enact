@@ -611,7 +611,7 @@ const Spotlight = (function () {
 
 			const nextContainerIds = getContainersForNode(target);
 			const nextContainerId = last(nextContainerIds);
-			if (isNavigable(target, nextContainerId)) {
+			if (isNavigable(target, nextContainerId, true)) {
 				return focusElement(target, nextContainerIds);
 			} else if (wasContainerId) {
 				// if we failed to find a spottable target within the provided container, we'll set
