@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VirtualList` to apply "position: absolute" inline style to items
 - `moonstone/Picker` to increment and decrement normally at the edges of joined picker
 - `moonstone/Icon` not to read out image characters
 - `moonstone/Scrollable` not to accumulate paging scroll by pressing page up/down in scrollbar
