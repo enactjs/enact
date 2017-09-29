@@ -22,15 +22,15 @@ import {SliderBarFactory} from './SliderBar';
 import SliderTooltip from './SliderTooltip';
 import componentCss from './Slider.less';
 
-const isActive = (ev, props) => props.active || props.focusActivated || props.detachedKnob;
+const isActive = (ev, props) => props.active || props.activateOnFocus || props.detachedKnob;
 const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
 const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
-const isFocusActivated = (ev, props) => props.active || props.detachedKnob || (props.focusActivated && forward('onActivate', ev, props));
+const isactivateOnFocus = (ev, props) => props.active || props.detachedKnob || (props.activateOnFocus && forward('onActivate', ev, props));
 
 const handleDecrement = handle(
 	isActive,
 	isDecrement,
-	isFocusActivated,
+	isactivateOnFocus,
 	forward('onDecrement'),
 	stopImmediate
 );
@@ -38,7 +38,7 @@ const handleDecrement = handle(
 const handleIncrement = handle(
 	isActive,
 	isIncrement,
-	isFocusActivated,
+	isactivateOnFocus,
 	forward('onIncrement'),
 	stopImmediate
 );
@@ -127,7 +127,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @type {Boolean}
 			 * @public
 			 */
-			focusActivated: PropTypes.bool,
+			activateOnFocus: PropTypes.bool,
 
 			/**
 			 * When `true`, the tooltip, if present, is shown
@@ -347,7 +347,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			backgroundProgress: 0,
 			knobAfterMidpoint: false,
 			detachedKnob: false,
-			focusActivated: false,
+			activateOnFocus: false,
 			focused: false,
 			max: 100,
 			min: 0,
@@ -414,7 +414,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		render: ({backgroundProgress, children, disabled, focused, inputRef, knobAfterMidpoint, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
-			delete rest.focusActivated;
+			delete rest.activateOnFocus;
 			delete rest.noFill;
 			delete rest.onActivate;
 			delete rest.onDecrement;
