@@ -557,7 +557,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					return;
 				}
 				const
-					containerId = Spotlight.getActiveContainer(),
+					containerId = (
+						this.childRef.containerRef.dataset.containerId ||
+						this.childRef.contentRef.dataset.containerId ||
+						Spotlight.getActiveContainer()
+					),
 					direction = this.getPageDirection(keyCode),
 					rDirection = reverseDirections[direction],
 					viewportBounds = this.containerRef.getBoundingClientRect(),
@@ -571,7 +575,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					this.animateOnFocus = false;
 					Spotlight.focus(next);
 				} else {
-					const nextPage = this.childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem});
+					const nextPage = this.childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
 
 					if (typeof nextPage === 'object') {
 						this.animateOnFocus = false;
