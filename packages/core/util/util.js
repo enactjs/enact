@@ -185,6 +185,6 @@ export {
 	Job,
 	isRenderable,
 	extractAriaProps,
-	perfNow
+	perfNow,
 	withContextFromProps
 };
