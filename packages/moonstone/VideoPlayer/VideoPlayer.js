@@ -1532,16 +1532,20 @@ const VideoPlayerBase = class extends React.Component {
 	);
 
 	handleSpotlightDownFromSlider = (ev) => {
-		if (!this.state.mediaControlsDisabled && !this.state.more) {
+		Spotlight.setPointerMode(false);
+
+		if (this.focusDefaultMediaControl()) {
 			ev.preventDefault();
 			ev.stopPropagation();
-			Spotlight.setPointerMode(false);
-			this.focusDefaultMediaControl();
 		}
 	}
 
 	focusDefaultMediaControl = () => {
-		return Spotlight.focus(this.player.querySelector(`.${css.bottom} .${spotlightDefaultClass}.${spottableClass}`));
+		const defaultControl = this.player.querySelector(
+			`.${css.bottom} .${this.state.more ? css.moreControls : css.mediaControls} .${spotlightDefaultClass}.${spottableClass}`
+		);
+
+		return defaultControl ? Spotlight.focus(defaultControl) : false;
 	}
 
 	//

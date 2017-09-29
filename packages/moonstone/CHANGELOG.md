@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/VideoPlayer` child support for designating components with `.spottable-default` as the default focus target when pressing 5-way down from the slider
+
 ### Fixed
 
 - `moonstone/Icon` not to read out image characters
