@@ -54,7 +54,7 @@ const contextTypes = {
  *                 userId: message.id
  *             };
  *         }
- *         
+ *
  *         // for settings, pass the message on 'as-is'
  *         return {
  *             settings: message
