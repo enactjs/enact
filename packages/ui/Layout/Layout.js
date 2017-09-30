@@ -23,6 +23,8 @@ import {withContextFromProps} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import ri from '../resolution';
+
 import css from './Layout.less';
 
 /*
@@ -32,6 +34,12 @@ import css from './Layout.less';
 const contextTypes = {
 	align: PropTypes.string,
 	orientation: PropTypes.string
+};
+
+// Setup a list of shorthand translations
+const shorthandAliases = {
+	end: 'flex-end',
+	start: 'flex-start'
 };
 
 /**
@@ -46,6 +54,19 @@ const CellBase = kind({
 	name: 'Cell',
 
 	propTypes: /** @lends ui/Layout.Cell.prototype */ {
+		/**
+		 * Aligns this `Cell` vertically in the case of a horizontal layout or
+		 * horizontally in the case of a vertical layout. `"start"`, `"center"` and
+		 * `"end"` are the most commonly used, although all values of `align-self` are supported.
+		 * `"start"` refers to the top in a horizontal layout, and left in a vertical LTR layout
+		 * `"end"` refers to the bottom in a horizontal layout, and right in a vertical LTR layout
+		 * `"start"` and `"end"` reverse places when in a vertical layout in a RTL locale.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		align: PropTypes.string,
+
 		/**
 		 * Any valid Node that should be positioned in this Cell.
 		 *
@@ -87,10 +108,10 @@ const CellBase = kind({
 		 * This accepts any valid CSS measurement and overrules the
 		 * [shrink]{@link ui/Layout.Cell#shrink} property.
 		 *
-		 * @type {String}
+		 * @type {String|Number}
 		 * @public
 		 */
-		size: PropTypes.string
+		size: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 	},
 
 	defaultProps: {
@@ -107,7 +128,9 @@ const CellBase = kind({
 
 	computed: {
 		className: ({shrink, size, styler}) => styler.append({shrink, grow: (!shrink && !size)}),
-		style: ({shrink, size, style = {}}, {orientation}) => {
+		style: ({align, shrink, size, style = {}}, {orientation}) => {
+			if (typeof size === 'number') size = ri.unit(ri.scale(size), 'rem');
+			style.alignSelf = shorthandAliases[align] || align;
 			style.flexBasis = size;
 			if (!shrink) style[orientation === 'vertical' ? 'maxHeight' : 'maxWidth'] = size; // shrink and size uses just basis, size without shrink forcibly sets the size, allowing overflow.
 			return style;
@@ -115,18 +138,13 @@ const CellBase = kind({
 	},
 
 	render: ({component: Component, ...rest}) => {
+		delete rest.align;
 		delete rest.shrink;
 		delete rest.size;
 
 		return <Component {...rest} />;
 	}
 });
-
-// Setup a list of shorthand translations
-const shorthandAliases = {
-	end: 'flex-end',
-	start: 'flex-start'
-};
 
 /**
  * A stateless component that acts as a containing area for [Cells]{@link ui/Layout.Cell} to be
