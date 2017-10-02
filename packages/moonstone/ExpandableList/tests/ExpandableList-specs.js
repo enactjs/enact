@@ -18,16 +18,16 @@ describe('ExpandableList', () => {
 	});
 
 	it('should update when children are added', function () {
-		const childrenArray = ['option1', 'option2', 'option3'];
+		const children = ['option1', 'option2', 'option3'];
 
 		const expandableList = mount(
 			<ExpandableListBase title="Item">
-				{childrenArray}
+				{children}
 			</ExpandableListBase>
 		);
 
-		const childrenArray2 = childrenArray.concat('option4', 'option5');
-		expandableList.setProps({children: childrenArray2});
+		const updatedChildren = children.concat('option4', 'option5');
+		expandableList.setProps({children: updatedChildren});
 
 		const expected = 5;
 		const actual = expandableList.find('GroupItem').length;
