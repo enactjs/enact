@@ -11,7 +11,7 @@ const Config = mergeComponentMetadata('Button', ButtonBase, Button);
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: ['', 'translucent', 'transparent'],
+	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
 	icons: ['', ...Object.keys(icons)]
 };
 

@@ -60,6 +60,16 @@ const PanelsBase = kind({
 		children: PropTypes.node,
 
 		/**
+		 * The background-color opacity of the application close button; valid values are `'opaque'`,
+		 * `'translucent'`, `'lightTranslucent'`, and `'transparent'`.
+		 *
+		 * @type {String}
+		 * @default 'transparent'
+		 * @public
+		 */
+		closeButtonBackgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'lightTranslucent', 'transparent']),
+
+		/**
 		 * Unique identifier for the Panels instance
 		 *
 		 * @type {String}
@@ -112,6 +122,7 @@ const PanelsBase = kind({
 	},
 
 	defaultProps: {
+		closeButtonBackgroundOpacity: 'transparent',
 		index: 0,
 		noAnimation: false,
 		noCloseButton: false
@@ -126,12 +137,13 @@ const PanelsBase = kind({
 		className: ({noCloseButton, styler}) => styler.append({
 			hasCloseButton: !noCloseButton
 		}),
-		applicationCloseButton: ({id, noCloseButton, onApplicationClose}) => {
+		applicationCloseButton: ({closeButtonBackgroundOpacity, id, noCloseButton, onApplicationClose}) => {
 			if (!noCloseButton) {
 				const closeId = id ? `${id}_close` : null;
 
 				return (
 					<ApplicationCloseButton
+						backgroundOpacity={closeButtonBackgroundOpacity}
 						className={css.close}
 						id={closeId}
 						onApplicationClose={onApplicationClose}
@@ -159,6 +171,7 @@ const PanelsBase = kind({
 	},
 
 	render: ({noAnimation, arranger, childProps, children, generateId, index, applicationCloseButton, ...rest}) => {
+		delete rest.closeButtonBackgroundOpacity;
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
 		delete rest.onBack;
