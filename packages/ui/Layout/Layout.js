@@ -1,6 +1,9 @@
 /**
  * Exports the {@link ui/Layout.Layout}, {@link ui/Layout.LayoutBase}, and  {@link ui/Layout.Cell}
- * components. The default export is {@link ui/Layout.Layout}.
+ * components. The default export is {@link ui/Layout.Layout}. Layout also has two shorthand
+ * components exported: `Row` and `Column`. These two assign preset `orientation` properties to
+ * simplify usage and readability. They are identical to `<Layout orientation="horizontal">` and
+ * `<Layout orientation="vertical">` respectively.
  *
  * @example
  * <Layout>
@@ -21,6 +24,7 @@
 import kind from '@enact/core/kind';
 import {withContextFromProps} from '@enact/core/util';
 import React from 'react';
+import {compose, withProps} from 'recompose';
 import PropTypes from 'prop-types';
 
 import ri from '../resolution';
@@ -284,5 +288,14 @@ const LayoutBase = kind({
 // Convert a few incoming props of Layout into context keys so children Cells can adjust their behavior accordingly.
 const Layout = withContextFromProps(contextTypes, LayoutBase);
 
+const addOrientation = (orientation) => compose(
+	withProps({
+		orientation
+	})
+);
+
+const Column = addOrientation('vertical')(Layout);
+const Row = addOrientation('horizontal')(Layout);
+
 export default Layout;
-export {Layout, LayoutBase, CellBase as Cell, CellBase};
+export {Layout, LayoutBase, CellBase as Cell, CellBase, Column, Row};
