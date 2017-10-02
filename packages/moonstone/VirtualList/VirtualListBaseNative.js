@@ -683,6 +683,7 @@ class VirtualListCoreNative extends Component {
 			style.width = width;
 			style.height = height;
 		}
+		style.position = 'absolute';
 
 		/* FIXME: RTL / this calculation only works for Chrome */
 		style.transform = 'translate(' + (this.context.rtl ? -x : x) + 'px,' + y + 'px)';

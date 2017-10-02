@@ -8,6 +8,7 @@
 import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
+import {contextTypes} from '@enact/core/internal/PubSub';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -183,6 +184,9 @@ const TRANSITION_STATE = {
  * @public
  */
 class Transition extends React.Component {
+
+	static contextTypes = contextTypes
+
 	static propTypes = /** @lends ui/Transition.Transition.prototype */ {
 		children: PropTypes.node.isRequired,
 
@@ -284,6 +288,10 @@ class Transition extends React.Component {
 		} else {
 			this.measureInner();
 		}
+
+		if (this.context.Subscriber) {
+			this.context.Subscriber.subscribe('resize', this.handleResize);
+		}
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -321,6 +329,9 @@ class Transition extends React.Component {
 
 	componentWillUnmount () {
 		this.measuringJob.stop();
+		if (this.context.Subscriber) {
+			this.context.Subscriber.unsubscribe('resize', this.handleResize);
+		}
 	}
 
 	measuringJob = new Job(() => {
@@ -328,6 +339,14 @@ class Transition extends React.Component {
 			renderState: TRANSITION_STATE.MEASURE
 		});
 	})
+
+	handleResize = () => {
+		// @TODO oddly, using the setState callback is required here to ensure that the bounds
+		// are remeasured in a separate tick
+		this.setState({
+			initialHeight: null
+		}, this.measureInner);
+	}
 
 	handleTransitionEnd = (ev) => {
 		forwardTransitionEnd(ev, this.props);
@@ -361,6 +380,7 @@ class Transition extends React.Component {
 		let {visible, ...props} = this.props;
 		delete props.onHide;
 		delete props.onShow;
+		delete props.textSize;
 
 		switch (this.state.renderState) {
 			// If we are deferring children, don't render any

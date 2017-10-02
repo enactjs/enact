@@ -167,12 +167,12 @@
 			border-color: transparent;
 		}
 
-		&.translucent {
-			color: @moon-button-translucent-text-color;
+		&.translucent .bg {
+			background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+		}
 
-			.bg {
-				background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
-			}
+		&.lightTranslucent .bg {
+			background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
 		}
 
 		&.transparent {
@@ -217,8 +217,16 @@
 							background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
 						}
 
-						&.transparent .bg {
-							background-color: transparent;
+						&.lightTranslucent .bg {
+							background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
+						}
+
+						&.transparent {
+							color: @moon-button-transparent-active-text-color;
+
+							.bg {
+								background-color: transparent;
+							}
 						}
 					}
 				}
@@ -285,12 +293,12 @@
 					background-color: @moon-button-bg-color;
 				}
 
-				&.translucent {
-					color: @moon-button-translucent-text-color;
+				&.translucent .bg {
+					background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+				}
 
-					.bg {
-						background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
-					}
+				&.lightTranslucent .bg {
+					background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
 				}
 
 				&.transparent {
