@@ -8,6 +8,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `Moonstone Icons` font file to include the latest designs for several icons
+- `moonstone/Panels/ApplicationCloseButton` to expose its `backgroundOpacity` prop
+
 ### Fixed
 
 - `moonstone/VirtualList` to apply "position: absolute" inline style to items
