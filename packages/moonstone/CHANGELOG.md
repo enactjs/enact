@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `Moonstone Icons` font file to include the latest designs for several icons
 - `moonstone/Panels/ApplicationCloseButton` to expose its `backgroundOpacity` prop
+- `moonstone/MoonstoneDecorator/fontGenerator` refactored into commonjs for external usage with its `locale` parameter is now required
 
 ### Fixed
 

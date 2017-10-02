@@ -5,9 +5,6 @@
  * included by external developers.
  */
 
-import ilib from '@enact/i18n';
-import Locale from '@enact/i18n/ilib/lib/Locale';
-
 let previousLocale = null;
 
 /**
@@ -47,19 +44,20 @@ let previousLocale = null;
  *
  * @name fontGenerator
  * @memberof moonstone/MoonstoneDecorator
- * @param {String} [locale] Locale string defaulting to the current locale
+ * @param {String} locale Locale string
  * @returns {undefined}
  * @private
  */
-function fontGenerator (locale = ilib.getLocale()) {
+function fontGenerator (locale) {
 	// If the locale is the same as the last time this ran, bail out and don't bother to recompile this again.
 	if (locale === previousLocale) return;
 
 	previousLocale = locale;
 	const
-		loc = new Locale(locale),
-		language = loc.getLanguage(),
-		region = loc.getRegion(),
+		matchLang = locale.match(/^(?:[^-]*-)*([a-z]{2})(?:-[^-]*)*$/),
+		language = matchLang && matchLang[1],
+		matchReg = locale.match(/^(?:[^-]*-)*([A-Z]{2}|[0-9]{3})(?:-[^-]*)*$/),
+		region = matchReg && matchReg[1],
 		styleId = 'enact-localization-font-override',
 		// Locale Configuration Block
 		fonts = {
@@ -206,10 +204,12 @@ function fontGenerator (locale = ilib.getLocale()) {
 
 		styleElem.innerHTML = fontDefinitionCss;
 	} else if (global && global.enactHooks && global.enactHooks.prerender) {
-		// We're rendering without the DOM
+		// We're rendering without the DOM; temporarily support depreciated prerender hook.
 		global.enactHooks.prerender({appendToHead: `<style type="text/css" id="${styleId}">${fontDefinitionCss}</style>`});
+	} else {
+		// We're rendering without the DOM; return the font definition stylesheet element string.
+		return `<style type="text/css" id="${styleId}">${fontDefinitionCss}</style>`;
 	}
 }
 
-export default fontGenerator;
-export {fontGenerator};
+module.exports = fontGenerator;
