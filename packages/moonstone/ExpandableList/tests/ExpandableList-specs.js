@@ -17,7 +17,7 @@ describe('ExpandableList', () => {
 		});
 	});
 
-	it('should update when children is added', function () {
+	it('should update when children are added', function () {
 		const childrenArray = ['option1', 'option2', 'option3'];
 
 		const expandableList = mount(
