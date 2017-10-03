@@ -4,26 +4,22 @@ import Layout, {Cell} from '../Layout';
 import css from '../Layout.less';
 
 describe('Layout Specs', () => {
-	// NOTE: Feature not yet implemented
-	it.skip('should apply author classes', function () {
+	it('should apply author classes', function () {
 		const className = 'classA classB';
 
 		const ChildNode = (props) => <Cell {...props}>Body</Cell>;
 
 		const wrapped = mount(
-			<Layout className={className}>
-				<ChildNode />
-			</Layout>
+			<Layout component={ChildNode} className={className} />
 		);
 
 		const expected = className;
-		const actual = wrapped.find('ChildNode').prop('className');
+		const actual = wrapped.find(ChildNode).prop('className');
 
 		expect(actual).to.contain(expected);
 	});
 
-	// NOTE: Feature not yet implemented
-	it.skip('should apply author styles', function () {
+	it('should apply author styles', function () {
 		const styles = {
 			color: '#000000',
 			backgroundColor: '#FFFFFF'
@@ -32,15 +28,13 @@ describe('Layout Specs', () => {
 		const ChildNode = (props) => <Cell {...props}>Body</Cell>;
 
 		const wrapped = mount(
-			<Layout style={styles}>
-				<ChildNode />
-			</Layout>
+			<Layout component={ChildNode} style={styles} />
 		);
 
 		const expected = styles;
-		const actual = wrapped.find('ChildNode').prop('style');
+		const actual = wrapped.find(ChildNode).prop('style');
 
-		expect(actual).to.equal(expected);
+		expect(actual).to.include(expected);
 	});
 
 	const layoutPropAlign = [
