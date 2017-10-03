@@ -2,6 +2,14 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [1.9.3] - 2017-10-03
+
+### Changed
+
+- `Icon` and `IconButton` to include updated images assets
+
+### Fixed
+
 ## [1.9.2] - 2017-09-26
 
 No significant changes.

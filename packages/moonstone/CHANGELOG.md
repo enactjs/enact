@@ -2,6 +2,22 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [1.9.3] - 2017-10-03
+
+### Changed
+
+- `Moonstone Icons` font file to include the latest designs for several icons
+- `moonstone/Panels/ApplicationCloseButton` to expose its `backgroundOpacity` prop
+
+### Fixed
+
+- `moonstone/VirtualList` to apply "position: absolute" inline style to items
+- `moonstone/Picker` to increment and decrement normally at the edges of joined picker
+- `moonstone/Icon` not to read out image characters
+- `moonstone/Scrollable` not to accumulate paging scroll by pressing page up/down in scrollbar
+- `moonstone/Icon` to correctly display focused state when using external image
+- `moonstone/Button` and `moonstone/IconButton` to be properly visually muted when in a muted container
+
 ## [1.9.2] - 2017-09-26
 
 ### Fixed
