@@ -6,7 +6,7 @@
 
 import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
-import {forKey, forward, handle, stopImmediate} from '@enact/core/handle';
+import {forKey, forward, handle, oneOf, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React from 'react';
@@ -25,26 +25,6 @@ import componentCss from './Slider.less';
 const isActive = (ev, props) => props.active || props.detachedKnob;
 const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
 const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
-
-const handleDecrement = handle(
-	isActive,
-	isDecrement,
-	forward('onDecrement'),
-	stopImmediate
-);
-
-const handleIncrement = handle(
-	isActive,
-	isIncrement,
-	forward('onIncrement'),
-	stopImmediate
-);
-
-const handleActivate = handle(
-	forKey('enter'),
-	forward('onActivate'),
-	stopImmediate
-);
 
 const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	const SliderBar = SliderBarFactory({css});
@@ -364,11 +344,17 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			),
 			onKeyDown: handle(
 				forward('onKeyDown'),
-				(ev, props) => {
-					return	handleDecrement(ev, props) ||
-							handleIncrement(ev, props) ||
-							handleActivate(ev, props);
-				}
+				isActive,
+				oneOf(
+					[isDecrement, forward('onDecrement')],
+					[isIncrement, forward('onIncrement')]
+				),
+				stopImmediate
+			),
+			onKeyUp: handle(
+				forward('onKeyUp'),
+				forKey('enter'),
+				forward('onActivate')
 			),
 			onMouseUp: handle(
 				forward('onMouseUp'),

@@ -16,4 +16,22 @@ describe('ExpandableList', () => {
 			expect(actual).to.equal(expected);
 		});
 	});
+
+	it('should update when children are added', function () {
+		const children = ['option1', 'option2', 'option3'];
+
+		const expandableList = mount(
+			<ExpandableListBase title="Item">
+				{children}
+			</ExpandableListBase>
+		);
+
+		const updatedChildren = children.concat('option4', 'option5');
+		expandableList.setProps({children: updatedChildren});
+
+		const expected = 5;
+		const actual = expandableList.find('GroupItem').length;
+
+		expect(actual).to.equal(expected);
+	});
 });

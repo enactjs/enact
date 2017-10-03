@@ -11,6 +11,16 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+### Fixed
+
+- `moonstone/ExpandableItem` and derivatives to restore focus to the Item if the contents were last focused when closed
+- `moonstone/Slider` toggling activated state when holding enter/select key
+- `moonstone/TimePicker` picker icons shifting slightly when focusing an adjacent picker
+
+## [1.9.3] - 2017-10-03
+
+### Changed
+
 - `Moonstone Icons` font file to include the latest designs for several icons
 - `moonstone/Panels/ApplicationCloseButton` to expose its `backgroundOpacity` prop
 - `moonstone/MoonstoneDecorator/fontGenerator` refactored into commonjs for external usage with its `locale` parameter is now required
