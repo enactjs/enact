@@ -1,5 +1,5 @@
 import hoc from '@enact/core/hoc';
-import kind from '@enact/core/kind';
+import {contextTypes, Publisher} from '@enact/core/internal/PubSub';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -12,54 +12,70 @@ import PropTypes from 'prop-types';
  * @hoc
  * @public
  */
-const AccessibilityDecorator = hoc((config, Wrapped) => kind({
-	name: 'AccessibilityDecorator',
+const AccessibilityDecorator = hoc((config, Wrapped) => {
+	return class extends React.Component {
+		static displayName = 'AccessibilityDecorator'
 
-	propTypes: /** @lends moonstone/MoonstoneDecorator.AccessibilityDecorator.prototype */ {
-		/**
-		 * Enables additional features to help users visually differentiate components.
-		 * The UI library will be responsible for using this information to adjust
-		 * the components' contrast to this preset.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		highContrast: PropTypes.bool,
+		static contextTypes = contextTypes
 
-		/**
-		 * Set the goal size of the text. The UI library will be responsible for using this
-		 * information to adjust the components' text sizes to this preset.
-		 * Current presets are `'normal'` (default), and `'large'`.
-		 *
-		 * @type {String}
-		 * @default 'normal'
-		 * @public
-		 */
-		textSize: PropTypes.oneOf(['normal', 'large'])
-	},
+		static childContextTypes = contextTypes
 
-	defaultProps: {
-		highContrast: false,
-		textSize: 'normal'
-	},
+		static propTypes =  /** @lends moonstone/MoonstoneDecorator.AccessibilityDecorator.prototype */ {
+			/**
+			 * Enables additional features to help users visually differentiate components.
+			 * The UI library will be responsible for using this information to adjust
+			 * the components' contrast to this preset.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			highContrast: PropTypes.bool,
 
-	styles: {},	// Empty `styles` tells `kind` that we want to use `styler` later and don't have a base className.
+			/**
+			 * Set the goal size of the text. The UI library will be responsible for using this
+			 * information to adjust the components' text sizes to this preset.
+			 * Current presets are `'normal'` (default), and `'large'`.
+			 *
+			 * @type {String}
+			 * @default 'normal'
+			 * @public
+			 */
+			textSize: PropTypes.oneOf(['normal', 'large'])
+		}
 
-	computed: {
-		className: ({highContrast, textSize, styler}) => styler.append({
-			['enact-a11y-high-contrast']: highContrast,
-			['enact-text-' + (textSize)]: textSize
-		})
-	},
+		static defaultProps = {
+			highContrast: false,
+			textSize: 'normal'
+		}
 
-	render: (props) => {
-		delete props.highContrast;
-		delete props.textSize;
-		return (
-			<Wrapped {...props} />
-		);
-	}
-}));
+		getChildContext () {
+			return {
+				Subscriber: this.publisher.getSubscriber()
+			};
+		}
+
+		componentWillMount () {
+			this.publisher = Publisher.create('resize', this.context.Subscriber);
+		}
+
+		componentDidUpdate (prevProps) {
+			if (prevProps.textSize !== this.props.textSize) {
+				this.publisher.publish({
+					horizontal: true,
+					vertical: true
+				});
+			}
+		}
+
+		render () {
+			const {className, highContrast, textSize, ...props} = this.props;
+			const accessibilityClassName = highContrast ? `enact-a11y-high-contrast enact-text-${textSize}` : `enact-text-${textSize}`;
+			const combinedClassName = className ? `${className} ${accessibilityClassName}` : accessibilityClassName;
+
+			return <Wrapped className={combinedClassName} {...props} />;
+		}
+	};
+});
 
 export default AccessibilityDecorator;
 export {AccessibilityDecorator};

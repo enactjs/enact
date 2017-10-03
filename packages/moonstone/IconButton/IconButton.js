@@ -40,13 +40,13 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 		propTypes: /** @lends moonstone/IconButton.IconButtonBase.prototype */ {
 			/**
 			 * The background-color opacity of this icon button; valid values are `'opaque'`,
-			 * `'translucent'`, and `'transparent'`.
+			 * `'translucent'`, `'lightTranslucent'`, and `'transparent'`.
 			 *
 			 * @type {String}
 			 * @default 'opaque'
 			 * @public
 			 */
-			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
+			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'lightTranslucent', 'transparent']),
 
 			/**
 			 * The icon displayed within the button.

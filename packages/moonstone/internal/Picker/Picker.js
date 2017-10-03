@@ -4,7 +4,9 @@ import equals from 'ramda/src/equals';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import Touchable from '@enact/ui/Touchable';
 import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import {getDirection} from '@enact/spotlight';
@@ -23,6 +25,8 @@ const isDown = is('down');
 const isLeft = is('left');
 const isRight = is('right');
 const isUp = is('up');
+
+const Div = Touchable('div');
 
 const PickerViewManager = shouldUpdate((props, nextProps) => {
 	return (
@@ -49,7 +53,6 @@ const selectDecIcon = selectIcon('decrementIcon', 'arrowlargedown', 'arrowlargel
 
 // Set-up event forwarding
 const forwardBlur = forward('onBlur'),
-	forwardClick = forward('onClick'),
 	forwardFocus = forward('onFocus'),
 	forwardKeyDown = forward('onKeyDown'),
 	forwardKeyUp = forward('onKeyUp'),
@@ -348,6 +351,9 @@ const PickerBase = class extends React.Component {
 			validateStepped(props.value, props.min, props.step, PickerBase.displayName);
 			validateStepped(props.max, props.min, props.step, PickerBase.displayName, '"max"');
 		}
+
+		// Pressed state for this.handleUp
+		this.pickerButtonPressed = false;
 	}
 
 	componentDidMount () {
@@ -430,20 +436,14 @@ const PickerBase = class extends React.Component {
 		this.reverseTransition = !(dir > 0);
 	}
 
-	handleDecClick = (ev) => {
-		if (ev) {
-			forwardClick(ev, this.props);
-		}
+	handleDecrement = () => {
 		if (!this.hasReachedBound(-this.props.step)) {
 			this.updateValue(-1);
 			this.handleDown(-1);
 		}
 	}
 
-	handleIncClick = (ev) => {
-		if (ev) {
-			forwardClick(ev, this.props);
-		}
+	handleIncrement = () => {
 		if (!this.hasReachedBound(this.props.step)) {
 			this.updateValue(1);
 			this.handleDown(1);
@@ -465,17 +465,19 @@ const PickerBase = class extends React.Component {
 
 	handleUp = () => {
 		const {joined} = this.props;
-		if (joined) {
+		if (joined && this.pickerButtonPressed) {
 			this.emulateMouseUp.start();
 		}
 	}
 
 	handleDecDown = () => {
-		this.handleDown(-1);
+		this.pickerButtonPressed = true;
+		this.handleDecrement();
 	}
 
 	handleIncDown = () => {
-		this.handleDown(1);
+		this.pickerButtonPressed = true;
+		this.handleIncrement();
 	}
 
 	handleWheel = (ev) => {
@@ -519,13 +521,13 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
-	throttleInc = new Job(this.handleIncClick, 200)
+	throttleInc = new Job(this.handleIncrement, 200)
 
-	throttleDec = new Job(this.handleDecClick, 200)
+	throttleDec = new Job(this.handleDecrement, 200)
 
-	throttleWheelInc = new Job(this.handleIncClick, 100)
+	throttleWheelInc = new Job(this.handleIncrement, 100)
 
-	throttleWheelDec = new Job(this.handleDecClick, 100)
+	throttleWheelDec = new Job(this.handleDecrement, 100)
 
 	handleKeyDown = (ev) => {
 		const {
@@ -697,7 +699,10 @@ const PickerBase = class extends React.Component {
 
 	initRef (prop) {
 		return (ref) => {
-			this[prop] = ref;
+			// need a way, for now, to get a DOM node ref ~and~ use onUp. Likely should rework the
+			// wheel handler to avoid this requirement
+			// eslint-disable-next-line react/no-find-dom-node
+			this[prop] = ref && ReactDOM.findDOMNode(ref);
 		};
 	}
 
@@ -758,7 +763,7 @@ const PickerBase = class extends React.Component {
 		const incrementerAriaControls = !decrementerDisabled ? id : null;
 
 		return (
-			<div
+			<Div
 				{...rest}
 				aria-controls={joined ? id : null}
 				aria-disabled={disabled}
@@ -769,6 +774,7 @@ const PickerBase = class extends React.Component {
 				onFocus={this.handleFocus}
 				onKeyDown={this.handleKeyDown}
 				onKeyUp={this.handleKeyUp}
+				onUp={this.handleUp}
 				ref={this.initContainerRef}
 			>
 				<PickerButton
@@ -784,7 +790,6 @@ const PickerBase = class extends React.Component {
 					onKeyDown={this.handleIncKeyDown}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}
 					onTap={this.handleIncClick}
-					onUp={this.handleUp}
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
@@ -823,7 +828,7 @@ const PickerBase = class extends React.Component {
 					onUp={this.handleUp}
 					spotlightDisabled={spotlightDisabled}
 				/>
-			</div>
+			</Div>
 		);
 	}
 };

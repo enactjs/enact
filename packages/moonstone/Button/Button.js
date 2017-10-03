@@ -67,13 +67,13 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 
 			/**
 			 * The background-color opacity of this button; valid values are `'opaque'`, `'translucent'`,
-			 * and `'transparent'`.
+			 * `'lightTranslucent'`, and `'transparent'`.
 			 *
 			 * @type {String}
 			 * @default 'opaque'
 			 * @public
 			 */
-			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
+			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'lightTranslucent', 'transparent']),
 
 			/**
 			 * This property accepts one of the following color names, which correspond with the

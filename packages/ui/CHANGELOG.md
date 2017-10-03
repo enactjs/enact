@@ -29,6 +29,12 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
 
+## [1.9.3] - 2017-10-03
+
+### Fixed
+
+- `ui/Transition` to recalculate height when a resize occurs
+
 ## [1.9.2] - 2017-09-26
 
 No significant changes.
