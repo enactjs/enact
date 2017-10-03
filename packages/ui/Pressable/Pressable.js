@@ -169,19 +169,19 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleRelease = this.handle(
 			forward(release),
+			() => this.state.pressed,
 			() => this.updatePressed(false)
 		)
 
 		handleLeave = this.handle(
 			forward(leave),
+			() => this.state.pressed,
 			() => this.updatePressed(false)
 		)
 
 		handleGlobalKeyup = this.handle(
 			forward('keyup'),
-			() => (
-				this.state.pressed
-			),
+			() => this.state.pressed,
 			stopImmediate,
 			() => this.updatePressed(false)
 		)
