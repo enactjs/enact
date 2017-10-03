@@ -2,9 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
-
-### Added
+## [1.9.3] - 2017-10-03
 
 - `moonstone/Button` property value to `backgroundOpacity` called "lightTranslucent" to better serve colorful image backgrounds behind Buttons. This also affects `moonstone/IconButton` and `moonstone/Panels/ApplicationCloseButton`.
 - `moonstone/Panels` property `closeButtonBackgroundOpacity` to support `moonstone/Panels/ApplicationCloseButton`'s `backgroundOpacity` prop
@@ -23,6 +21,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Icon` to correctly display focused state when using external image
 - `moonstone/Button` and `moonstone/IconButton` to be properly visually muted when in a muted container
 - `moonstone/Slider` toggling activated state when holding enter/select key
+- `moonstone/ExpandableItem` and derivatives to restore focus to the Item if the contents were last focused when closed
 
 ## [1.9.2] - 2017-09-26
 
