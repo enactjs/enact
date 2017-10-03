@@ -26,7 +26,7 @@ storiesOf('IconButton')
 		() => (
 			<IconButton
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
 				color={nullify(select('color', [null, 'red', 'green', 'yellow', 'blue']))}
 				disabled={boolean('disabled', false)}
 				noAnimation={boolean('noAnimation', true)}
