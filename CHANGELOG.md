@@ -2,6 +2,24 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.9.3] - 2017-10-03
+
+### Changed
+
+- `Moonstone Icons` font file to include the latest designs for several icons
+- `moonstone/Panels/ApplicationCloseButton` to expose its `backgroundOpacity` prop
+- `sampler` `Icon` and `IconButton` samples to include updated images assets
+
+### Fixed
+
+- `moonstone/Button` and `moonstone/IconButton` to be properly visually muted when in a muted container
+- `moonstone/Icon` not to read out image characters
+- `moonstone/Icon` to correctly display focused state when using external image
+- `moonstone/Picker` to increment and decrement normally at the edges of joined picker
+- `moonstone/Scrollable` not to accumulate paging scroll by pressing page up/down in scrollbar
+- `moonstone/VirtualList` to apply "position: absolute" inline style to items
+- `ui/Transition` to recalculate height when a resize occurs
+
 ## [1.9.2] - 2017-09-26
 
 ### Fixed
