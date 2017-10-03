@@ -1593,6 +1593,12 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (!isNaN(seconds)) {
 			const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
+
+			forward('onScrub', {
+				detached: this.sliderScrubbing,
+				proportion: this.sliderKnobProportion,
+				seconds
+			}, this.props);
 			this.announce(`${$L('jump to')} ${knobTime}`);
 		}
 	}
