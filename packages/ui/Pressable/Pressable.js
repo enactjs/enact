@@ -6,9 +6,11 @@
  * @module ui/Pressable
  */
 
-import {forProp, forward, handle} from '@enact/core/handle';
+import {forProp, forward, handle, stopImmediate} from '@enact/core/handle';
+import {on, off} from '@enact/core/dispatcher';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
+import Spotlight from '@enact/spotlight';
 import React from 'react';
 import PropTypes from 'prop-types';
 import warning from 'warning';
@@ -129,6 +131,10 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		componentDidMount () {
+			on('keyup', this.handleGlobalKeyup);
+		}
+
 		componentWillReceiveProps (nextProps) {
 			if (this.state.controlled) {
 				const pressed = nextProps[prop];
@@ -142,6 +148,11 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				);
 			}
 		}
+
+		componentWillUnmount () {
+			off('keyup', this.handleGlobalKeyup);
+		}
+
 
 		handle = handle.bind(this)
 
@@ -159,13 +170,22 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleRelease = this.handle(
 			forward(release),
-			forProp('disabled', false),
 			() => this.updatePressed(false)
 		)
 
 		handleLeave = this.handle(
 			forward(leave),
-			forProp('disabled', false),
+			() => this.updatePressed(false)
+		)
+
+		handleGlobalKeyup = this.handle(
+			forward('keyup'),
+			() => (
+				!Spotlight.getCurrent() &&
+				!Spotlight.getPointerMode() &&
+				this.state.pressed
+			),
+			stopImmediate,
 			() => this.updatePressed(false)
 		)
 
