@@ -8,7 +8,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Button` property value to `backgroundOpacity` called "lightTranslucent" to better serve colorful image backgrounds behind Buttons. This also affects `moonstone/IconButton` and `moonstone/Panels/ApplicationCloseButton`.
 - `moonstone/Panels` property `closeButtonBackgroundOpacity` to support `moonstone/Panels/ApplicationCloseButton`'s `backgroundOpacity` prop
-- `moonstone/VideoPlayer/Feedback` property `playbackState` now has a default value of `'play'`
 
 ### Changed
 
