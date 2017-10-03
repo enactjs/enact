@@ -5,7 +5,7 @@ import {childrenEquals} from '@enact/core/util';
 import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
+import {contextTypes as stateContextTypes, Subscription} from '@enact/core/internal/PubSub';
 
 import Marquee from './Marquee';
 import {contextTypes} from './MarqueeController';
@@ -116,7 +116,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardEnter = forward(enter);
 	const forwardLeave = forward(leave);
 
-	return class extends React.Component {
+	class Decorator extends React.Component {
 		static displayName = 'MarqueeDecorator'
 
 		static contextTypes = {
@@ -183,8 +183,20 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * Disables all marquee behavior and removes supporting markup.
 			 *
 			 * @type {Boolean}
+			 * @public
 			 */
 			marqueeDisabled: PropTypes.bool,
+
+			/**
+			 * When wrapped in {@link moonstone/Marquee.MarqueeController}, `marqueeFocused`
+			 * is used to signal the focused state of the container. This allows to correctly
+			 * determine whether it should invalidate and start marquee when children has
+			 * changed.
+			 *
+			 * @type {Boolean}
+			 * @private
+			 */
+			marqueeFocused: PropTypes.bool,
 
 			/**
 			 * Determines what triggers the marquee to start its animation. Valid values are
@@ -370,7 +382,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.props.marqueeOn === 'render' ||
 					(this.isFocused && this.props.marqueeOn === 'focus') ||
 					(this.isHovered && this.props.marqueeOn === 'hover')
-				)
+				) || (this.sync && this.props.marqueeFocused)
 			);
 		}
 
@@ -679,6 +691,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.marqueeCentered;
 			delete rest.marqueeDelay;
 			delete rest.marqueeDisabled;
+			delete rest.marqueeFocused;
 			delete rest.marqueeOnRenderDelay;
 			delete rest.marqueeResetDelay;
 			delete rest.marqueeSpeed;
@@ -715,6 +728,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.marqueeCentered;
 			delete props.marqueeDelay;
 			delete props.marqueeDisabled;
+			delete props.marqueeFocused;
 			delete props.marqueeOn;
 			delete props.marqueeOnRenderDelay;
 			delete props.marqueeResetDelay;
@@ -731,7 +745,15 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				return this.renderMarquee();
 			}
 		}
-	};
+	}
+
+	return Subscription(
+		{
+			channels: ['marqueeFocused'],
+			mapMessageToProps: (key, {marqueeFocused}) => ({marqueeFocused})
+		},
+		Decorator
+	);
 });
 
 export default MarqueeDecorator;
