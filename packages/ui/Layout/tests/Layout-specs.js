@@ -4,39 +4,6 @@ import Layout, {Cell} from '../Layout';
 import css from '../Layout.less';
 
 describe('Layout Specs', () => {
-	it('should apply author classes', function () {
-		const className = 'classA classB';
-
-		const ChildNode = (props) => <Cell {...props}>Body</Cell>;
-
-		const wrapped = mount(
-			<Layout component={ChildNode} className={className} />
-		);
-
-		const expected = className;
-		const actual = wrapped.find(ChildNode).prop('className');
-
-		expect(actual).to.contain(expected);
-	});
-
-	it('should apply author styles', function () {
-		const styles = {
-			color: '#000000',
-			backgroundColor: '#FFFFFF'
-		};
-
-		const ChildNode = (props) => <Cell {...props}>Body</Cell>;
-
-		const wrapped = mount(
-			<Layout component={ChildNode} style={styles} />
-		);
-
-		const expected = styles;
-		const actual = wrapped.find(ChildNode).prop('style');
-
-		expect(actual).to.include(expected);
-	});
-
 	const layoutPropAlign = [
 		['baseline', 'baseline'],
 		['center', 'center'],
