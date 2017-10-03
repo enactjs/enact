@@ -52,6 +52,7 @@ const FeedbackBase = kind({
 	},
 
 	defaultProps: {
+		playbackState: 'play',
 		visible: true
 	},
 
