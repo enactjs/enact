@@ -6,7 +6,6 @@ import ri from '../resolution';
 
 import css from './Layout.less';
 
-// Setup a list of shorthand translations
 const toFlexAlign = (align) => (
 	align === 'end' && 'flex-end' ||
 	align === 'start' && 'flex-start' ||
