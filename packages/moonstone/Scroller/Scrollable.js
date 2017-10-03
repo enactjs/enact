@@ -402,6 +402,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		lastScrollPositionOnFocus = null
 		indexToFocus = null
 		nodeToFocus = null
+		nodeToScrollTo = null
 
 		// component info
 		childRef = null
@@ -1119,7 +1120,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		updateScrollOnFocus () {
 			const
-				focusedItem = Spotlight.getCurrent(),
+				focusedItem = this.nodeToScrollTo ? this.nodeToScrollTo : Spotlight.getCurrent(),
 				{containerRef, calculatePositionOnFocus} = this.childRef;
 
 			if (focusedItem && containerRef && containerRef.contains(focusedItem)) {
@@ -1141,6 +1142,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			// update `scrollHeight`
 			this.bounds.scrollHeight = this.getScrollBounds().scrollHeight;
+			this.nodeToScrollTo = null;
 		}
 
 		// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
@@ -1163,6 +1165,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.childRef.containerRef.scrollTop = this.scrollTop;
 				this.childRef.containerRef.scrollLeft = this.scrollLeft;
 			}
+		}
+
+		handleMouseDown = () => {
+			this.nodeToScrollTo = Spotlight.getCurrent();
 		}
 
 		render () {
@@ -1195,6 +1201,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 							{...props}
 							cbScrollTo={this.scrollTo}
 							className={css.content}
+							onMouseDown={this.handleMouseDown}
 							onScroll={this.handleScroll}
 							ref={this.initChildRef}
 						/>
