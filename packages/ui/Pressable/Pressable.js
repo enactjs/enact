@@ -10,7 +10,6 @@ import {forProp, forward, handle, stopImmediate} from '@enact/core/handle';
 import {on, off} from '@enact/core/dispatcher';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
-import Spotlight from '@enact/spotlight';
 import React from 'react';
 import PropTypes from 'prop-types';
 import warning from 'warning';
@@ -181,8 +180,6 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		handleGlobalKeyup = this.handle(
 			forward('keyup'),
 			() => (
-				!Spotlight.getCurrent() &&
-				!Spotlight.getPointerMode() &&
 				this.state.pressed
 			),
 			stopImmediate,
