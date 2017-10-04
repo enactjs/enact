@@ -188,11 +188,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeDisabled: PropTypes.bool,
 
 			/**
-			 * When wrapped in {@link moonstone/Marquee.MarqueeController}, `marqueeFocused`
-			 * is used to signal the focused state of the container. This allows to correctly
-			 * determine whether it should invalidate and start marquee when children has
-			 * changed.
-			 *
+			 * When wrapped in {@link moonstone/Marquee.MarqueeController}, marqueeFocused is
+			 * used to indicate whether any controlled marquees are focused. This is used to
+			 * determine if the marquee should be invalidated and/or started, such as when
+			 * children have changed.
 			 * @type {Boolean}
 			 * @private
 			 */

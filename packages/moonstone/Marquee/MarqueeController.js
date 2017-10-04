@@ -61,11 +61,6 @@ const contextTypes = {
 	unregister: PropTypes.func
 };
 
-const combinedContextTypes = {
-	...stateContextTypes,
-	...contextTypes
-};
-
 /**
  * Default configuration parameters for {@link moonstone/Marquee.MarqueeController}
  *
@@ -103,9 +98,12 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'MarqueeController'
 
-		static contextTypes = combinedContextTypes
+		static contextTypes = stateContextTypes
 
-		static childContextTypes = combinedContextTypes
+		static childContextTypes = {
+			...stateContextTypes,
+			...contextTypes
+		}
 
 		constructor (props) {
 			super(props);
@@ -138,7 +136,9 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillUpdate (nextProps, nextState) {
 			if (this.state.marqueeFocused !== nextState.marqueeFocused) {
-				this.publisher.publish(nextState);
+				this.publisher.publish({
+					marqueeFocused: nextState.marqueeFocused
+				});
 			}
 		}
 
@@ -152,7 +152,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		handleRegister = (component, handlers) => {
-			const needsStart = !this.allInactive() || this.state.focused;
+			const needsStart = !this.allInactive() || this.state.marqueeFocused;
 
 			this.controlled.push({
 				...handlers,

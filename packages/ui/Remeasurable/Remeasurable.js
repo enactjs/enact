@@ -80,7 +80,9 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidUpdate (prevProps, prevState) {
 			if (this.state.remeasure && !prevState.remeasure) {
-				this.publisher.publish(this.state);
+				this.publisher.publish({
+					remeasure: this.state.remeasure
+				});
 			}
 		}
 
