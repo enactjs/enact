@@ -11,6 +11,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/VideoPlayer` to emit `onScrub` event and provide audio guidance when setting focus to slider
+
 ### Fixed
 
 - `moonstone/ExpandableItem` and derivatives to restore focus to the Item if the contents were last focused when closed
