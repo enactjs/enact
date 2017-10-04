@@ -30,15 +30,6 @@ const defaultConfig = {
 	depress: 'onMouseDown',
 
 	/**
-	 * Configures the event name that loses focus and deactivates the Pressable
-	 *
-	 * @type {String}
-	 * @default 'onKeyUp'
-	 * @memberof ui/Pressable.Pressable.defaultConfig
-	 */
-	unfocus: 'onBlur',
-
-	/**
 	 * Configures the event name that deactivates the Pressable when onMouseLeave is triggered
 	 *
 	 * @type {String}
@@ -63,7 +54,16 @@ const defaultConfig = {
 	 * @default 'pressed'
 	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
-	prop: 'pressed'
+	prop: 'pressed',
+
+	/**
+	 * Configures the event name that loses focus and deactivates the Pressable
+	 *
+	 * @type {String}
+	 * @default 'onKeyUp'
+	 * @memberof ui/Pressable.Pressable.defaultConfig
+	 */
+	unfocus: 'onBlur'
 };
 
 /**
@@ -187,10 +187,10 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			const props = Object.assign({}, this.props);
 			if (depress) props[depress] = this.handleDepress;
-			if (unfocus) props[unfocus] = this.handleUnfocus;
 			if (release) props[release] = this.handleRelease;
 			if (leave) props[leave] = this.handleLeave;
 			if (prop) props[prop] = this.state.pressed;
+			if (unfocus) props[unfocus] = this.handleUnfocus;
 			delete props[defaultPropKey];
 
 			return <Wrapped {...props} />;
