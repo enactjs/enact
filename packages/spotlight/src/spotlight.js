@@ -357,6 +357,7 @@ const Spotlight = (function () {
 		const direction = getDirection(keyCode);
 
 		if (!(direction || isEnter(keyCode))) {
+			_pointerMoveDuringKeyPress = true;
 			return;
 		}
 
