@@ -60,7 +60,7 @@ const defaultConfig = {
 	 * Configures the event name that loses focus and deactivates the Pressable
 	 *
 	 * @type {String}
-	 * @default 'onKeyUp'
+	 * @default 'onBlur'
 	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
 	unfocus: 'onBlur'
