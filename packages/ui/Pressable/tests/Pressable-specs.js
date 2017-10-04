@@ -229,7 +229,7 @@ describe('Pressable', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should should return false for \'pressed\' when \'onMouseUp\' invoked and is not controlled but disabled', function () {
+	it('should return false for \'pressed\' when \'onMouseUp\' invoked and is not controlled but disabled', function () {
 		const Component = Pressable(DivComponent);
 		const subject = mount(
 			<Component defaultPressed disabled />

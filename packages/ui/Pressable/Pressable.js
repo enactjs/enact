@@ -130,10 +130,6 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		componentDidMount () {
-			on('keyup', this.handleGlobalKeyup);
-		}
-
 		componentWillReceiveProps (nextProps) {
 			if (this.state.controlled) {
 				const pressed = nextProps[prop];
@@ -152,7 +148,6 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			off('keyup', this.handleGlobalKeyup);
 		}
 
-
 		handle = handle.bind(this)
 
 		updatePressed = (pressed) => {
@@ -164,7 +159,10 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		handleDepress = this.handle(
 			forward(depress),
 			forProp('disabled', false),
-			(ev) => this.updatePressed(ev && ev.pressed || true)
+			(ev) => {
+				on('keyup', this.handleGlobalKeyup);
+				this.updatePressed(ev && ev.pressed || true);
+			}
 		)
 
 		handleRelease = this.handle(
@@ -193,6 +191,10 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			if (leave) props[leave] = this.handleLeave;
 			if (prop) props[prop] = this.state.pressed;
 			delete props[defaultPropKey];
+
+			if (!this.state.pressed) {
+				off('keyup', this.handleGlobalKeyup);
+			}
 
 			return <Wrapped {...props} />;
 		}
