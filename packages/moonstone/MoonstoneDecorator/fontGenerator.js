@@ -54,9 +54,9 @@ function fontGenerator (locale) {
 
 	previousLocale = locale;
 	const
-		matchLang = locale.match(/^(?:[^-]*-)*([a-z]{2})(?:-[^-]*)*$/),
+		matchLang = locale.match(/\b([a-z]{2})\b/),
 		language = matchLang && matchLang[1],
-		matchReg = locale.match(/^(?:[^-]*-)*([A-Z]{2}|[0-9]{3})(?:-[^-]*)*$/),
+		matchReg = locale.match(/\b([A-Z]{2}|[0-9]{3})\b/),
 		region = matchReg && matchReg[1],
 		styleId = 'enact-localization-font-override',
 		// Locale Configuration Block
