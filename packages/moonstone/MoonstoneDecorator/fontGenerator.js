@@ -203,12 +203,16 @@ function fontGenerator (locale) {
 		}
 
 		styleElem.innerHTML = fontDefinitionCss;
-	} else if (global && global.enactHooks && global.enactHooks.prerender) {
-		// We're rendering without the DOM; temporarily support deprecated prerender hook.
-		global.enactHooks.prerender({appendToHead: `<style type="text/css" id="${styleId}">${fontDefinitionCss}</style>`});
 	} else {
-		// We're rendering without the DOM; return the font definition stylesheet element string.
-		return `<style type="text/css" id="${styleId}">${fontDefinitionCss}</style>`;
+		const tag = `<style type="text/css" id="${styleId}">${fontDefinitionCss}</style>`;
+
+		if (global && global.enactHooks && global.enactHooks.prerender) {
+			// We're rendering without the DOM; temporarily support deprecated prerender hook.
+			global.enactHooks.prerender({appendToHead: tag});
+		} else {
+			// We're rendering without the DOM; return the font definition stylesheet element string.
+			return tag;
+		}
 	}
 }
 
