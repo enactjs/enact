@@ -213,3 +213,4 @@ function fontGenerator (locale) {
 }
 
 module.exports = fontGenerator;
+module.exports.fontGenerator = fontGenerator;
