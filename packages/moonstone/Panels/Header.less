@@ -95,6 +95,15 @@
 		height: @moon-header-height-small;
 		align-items: stretch;
 
+		.headerCell div[style*="direction: rtl;"] h1{
+			display: inline;
+		}
+
+		.headerCell div[style*="direction: rtl;"] {
+			width: initial;
+			padding: 30px 0 0 30px;
+		}
+
 		.title {
 			line-height: @moon-small-header-line-height;
 			font-size: @moon-small-header-font-size;
