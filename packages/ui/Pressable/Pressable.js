@@ -31,6 +31,15 @@ const defaultConfig = {
 	depress: 'onMouseDown',
 
 	/**
+	 * Configures the event name that loses focus and deactivates the Pressable
+	 *
+	 * @type {String}
+	 * @default 'onKeyUp'
+	 * @memberof ui/Pressable.Pressable.defaultConfig
+	 */
+	unfocus: 'onBlur',
+
+	/**
 	 * Configures the event name that deactivates the Pressable when onMouseLeave is triggered
 	 *
 	 * @type {String}
@@ -70,7 +79,7 @@ const defaultConfig = {
  * @public
  */
 const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const {depress, release, prop, leave} = config;
+	const {depress, unfocus, release, prop, leave} = config;
 	const defaultPropKey = 'default' + cap(prop);
 
 	return class Pressable extends React.Component {
@@ -144,10 +153,6 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		componentWillUnmount () {
-			off('keyup', this.handleGlobalKeyup);
-		}
-
 		handle = handle.bind(this)
 
 		updatePressed = (pressed) => {
@@ -159,10 +164,7 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		handleDepress = this.handle(
 			forward(depress),
 			forProp('disabled', false),
-			(ev) => {
-				on('keyup', this.handleGlobalKeyup);
-				this.updatePressed(ev && ev.pressed || true);
-			}
+			(ev) => this.updatePressed(ev && ev.pressed || true)
 		)
 
 		handleRelease = this.handle(
@@ -177,8 +179,8 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			() => this.updatePressed(false)
 		)
 
-		handleGlobalKeyup = this.handle(
-			forward('keyup'),
+		unfocus = this.handle(
+			forward(unfocus),
 			() => this.state.pressed,
 			stopImmediate,
 			() => this.updatePressed(false)
@@ -187,14 +189,11 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			const props = Object.assign({}, this.props);
 			if (depress) props[depress] = this.handleDepress;
+			if (unfocus) props[unfocus] = this.unfocus;
 			if (release) props[release] = this.handleRelease;
 			if (leave) props[leave] = this.handleLeave;
 			if (prop) props[prop] = this.state.pressed;
 			delete props[defaultPropKey];
-
-			if (!this.state.pressed) {
-				off('keyup', this.handleGlobalKeyup);
-			}
 
 			return <Wrapped {...props} />;
 		}
