@@ -178,7 +178,7 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			() => this.updatePressed(false)
 		)
 
-		handelUnfocus = this.handle(
+		handleUnfocus = this.handle(
 			forward(unfocus),
 			() => this.state.pressed,
 			() => this.updatePressed(false)
