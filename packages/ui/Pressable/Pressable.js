@@ -6,8 +6,7 @@
  * @module ui/Pressable
  */
 
-import {forProp, forward, handle, stopImmediate} from '@enact/core/handle';
-import {on, off} from '@enact/core/dispatcher';
+import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React from 'react';
@@ -179,17 +178,16 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			() => this.updatePressed(false)
 		)
 
-		unfocus = this.handle(
+		handelUnfocus = this.handle(
 			forward(unfocus),
 			() => this.state.pressed,
-			stopImmediate,
 			() => this.updatePressed(false)
 		)
 
 		render () {
 			const props = Object.assign({}, this.props);
 			if (depress) props[depress] = this.handleDepress;
-			if (unfocus) props[unfocus] = this.unfocus;
+			if (unfocus) props[unfocus] = this.handleUnfocus;
 			if (release) props[release] = this.handleRelease;
 			if (leave) props[leave] = this.handleLeave;
 			if (prop) props[prop] = this.state.pressed;

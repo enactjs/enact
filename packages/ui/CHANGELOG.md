@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Transition` to recalculate height when a resize occurs
+- `ui/Pressable` to properly set pressed state to false on blur and release
 
 ## [1.9.2] - 2017-09-26
 
