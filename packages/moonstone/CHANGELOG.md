@@ -16,6 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableItem` and derivatives to restore focus to the Item if the contents were last focused when closed
 - `moonstone/Slider` toggling activated state when holding enter/select key
 - `moonstone/TimePicker` picker icons shifting slightly when focusing an adjacent picker
+- `moonstone/Icon` so it handles color the same way generic text does, by inheriting from the parent's color. This applies to all instances of `Icon`, `IconButton`, and `Icon` inside `Button`.
 
 ## [1.9.3] - 2017-10-03
 
