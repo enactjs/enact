@@ -45,7 +45,7 @@ let previousLocale = null;
  * @name fontGenerator
  * @memberof moonstone/MoonstoneDecorator
  * @param {String} locale Locale string
- * @returns {undefined}
+ * @returns {undefined|String} In a non-browser environment, returns the style CSS tag, otherwise undefined.
  * @private
  */
 function fontGenerator (locale) {

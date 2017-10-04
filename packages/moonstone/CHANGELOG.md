@@ -11,8 +11,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `moonstone/MoonstoneDecorator/fontGenerator` refactored into commonjs for external usage with its `locale` parameter is now required
-
 ### Fixed
 
 - `moonstone/ExpandableItem` and derivatives to restore focus to the Item if the contents were last focused when closed
