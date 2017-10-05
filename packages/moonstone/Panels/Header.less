@@ -13,7 +13,7 @@
 	border-bottom-style: solid;
 	position: relative;
 	max-width: 100%;
-	padding: 0;
+	padding: 0 0 @moon-spotlight-outset 0;
 	background-color: transparent;
 	background-repeat: no-repeat;
 	background-position: top left;
@@ -49,7 +49,6 @@
 	// Standard Header
 	&.standard {
 		height: @moon-header-height-medium;
-		padding-bottom: 12px;
 
 		.title {
 			line-height: @moon-medium-header-line-height;
@@ -69,9 +68,12 @@
 	&.compact {
 		height: @moon-header-height-small;
 
+		.headerTitles {
+			margin-bottom: -9px;
+		}
+
 		.title {
 			font-size: @moon-small-header-font-size;
-			margin-bottom: 3px;
 			display: inline;
 
 			.enyo-locale-non-latin & {
