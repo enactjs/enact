@@ -16,15 +16,6 @@ const UppercaseH1 = Uppercase('h1');		// Used by compact header, which provides 
 const MarqueeH2 = MarqueeDecorator('h2');
 const HeaderH1 = Uppercase(MarqueeDecorator('h1'));
 
-/**
-* A container for UppercaseH1 component in the compact header
- *
- * @class Header
- * @memberof moonstone/Panels
- * @see i18n/Uppercase.Uppercase
- * @ui
- * @public
- */
 const CompactTitleBase = kind({
 	name: 'CompactTitle',
 	render: (props) => {

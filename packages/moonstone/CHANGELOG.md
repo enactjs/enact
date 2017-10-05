@@ -32,7 +32,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scrollable` not to accumulate paging scroll by pressing page up/down in scrollbar
 - `moonstone/Icon` to correctly display focused state when using external image
 - `moonstone/Button` and `moonstone/IconButton` to be properly visually muted when in a muted container
-- `moonstone/Panels/Header` so it will show its ellipsis when in an RTL locale
+- `moonstone/Panels.Header` to show an ellipsis for long titles with RTL text
 
 ## [1.9.2] - 2017-09-26
 
