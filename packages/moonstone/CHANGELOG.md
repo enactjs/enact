@@ -6,9 +6,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/Button` property value to `backgroundOpacity` called "lightTranslucent" to better serve colorful image backgrounds behind Buttons. This also affects `moonstone/IconButton` and `moonstone/Panels/ApplicationCloseButton`.
-- `moonstone/Panels` property `closeButtonBackgroundOpacity` to support `moonstone/Panels/ApplicationCloseButton`'s `backgroundOpacity` prop
-
 ### Changed
 
 ### Fixed
@@ -17,8 +14,15 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` toggling activated state when holding enter/select key
 - `moonstone/TimePicker` picker icons shifting slightly when focusing an adjacent picker
 - `moonstone/Icon` so it handles color the same way generic text does, by inheriting from the parent's color. This applies to all instances of `Icon`, `IconButton`, and `Icon` inside `Button`.
+- `moonstone/VideoPlayer` to correctly position knob on mouse click
+- `moonstone/Panels.Header` to show an ellipsis for long titles with RTL text
 
 ## [1.9.3] - 2017-10-03
+
+### Added
+
+- `moonstone/Button` property value to `backgroundOpacity` called "lightTranslucent" to better serve colorful image backgrounds behind Buttons. This also affects `moonstone/IconButton` and `moonstone/Panels/ApplicationCloseButton`.
+- `moonstone/Panels` property `closeButtonBackgroundOpacity` to support `moonstone/Panels/ApplicationCloseButton`'s `backgroundOpacity` prop
 
 ### Changed
 
@@ -33,7 +37,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scrollable` not to accumulate paging scroll by pressing page up/down in scrollbar
 - `moonstone/Icon` to correctly display focused state when using external image
 - `moonstone/Button` and `moonstone/IconButton` to be properly visually muted when in a muted container
-- `moonstone/VideoPlayer` to correctly position knob on mouse click
 
 ## [1.9.2] - 2017-09-26
 
