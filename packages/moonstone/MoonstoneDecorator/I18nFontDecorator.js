@@ -1,4 +1,5 @@
 import hoc from '@enact/core/hoc';
+import ilib from '@enact/i18n';
 import kind from '@enact/core/kind';
 import React from 'react';
 
@@ -8,7 +9,7 @@ const I18nFontDecorator = hoc((config, Wrapped) => kind({
 	name: 'I18nFontDecorator',
 
 	render: (props) => {
-		fontGenerator();
+		fontGenerator(ilib.getLocale());
 		return (
 			<Wrapped {...props} />
 		);

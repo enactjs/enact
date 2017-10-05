@@ -421,7 +421,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (detachedKnob) {
 				if (this.current5WayValue !== null) {
 					this.throttleUpdateValue(this.clamp(this.current5WayValue));
-					this.current5WayValue = null;
 
 					// only clear knobPosition when not in
 					if (!Spotlight.getPointerMode()) {
@@ -448,9 +447,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			// on mouseup, slider manually focuses the slider from its input causing a blur event to
 			// bubble here. if this is the case, focus hasn't effectively changed so we ignore it.
 			if (
-				ev.relatedTarget &&
-				ev.target === this.sliderNode &&
-				ev.relatedTarget === this.inputNode
+				ev.relatedTarget && (
+					(ev.target === this.sliderNode && ev.relatedTarget === this.inputNode) ||
+					(ev.target === this.inputNode && ev.relatedTarget === this.sliderNode)
+				)
 			) return;
 
 			if (this.current5WayValue !== null) {
