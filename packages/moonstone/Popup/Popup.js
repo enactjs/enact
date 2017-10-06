@@ -332,8 +332,10 @@ class Popup extends React.Component {
 	}
 
 	componentDidMount () {
-		if (this.props.open && this.props.noAnimation) {
+		if (this.props.open) {
+			forwardShow(null, this.props);
 			on('keydown', this.handleKeyDown);
+			this.spotPopupContent();
 		}
 	}
 
