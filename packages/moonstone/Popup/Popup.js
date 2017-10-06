@@ -265,6 +265,8 @@ class Popup extends React.Component {
 		 * A function to run when popup shows. When animating, it runs after transition for
 		 * showing is finished.
 		 *
+		 * Note: The function does not run if Popup is initially opened and non animating.
+		 *
 		 * @type {Function}
 		 * @public
 		 */
