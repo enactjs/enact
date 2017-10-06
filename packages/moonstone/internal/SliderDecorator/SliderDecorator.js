@@ -46,6 +46,7 @@ const forwardBlur = forward('onBlur');
 const forwardChange = forward('onChange');
 const forwardClick = forward('onClick');
 const forwardFocus = forward('onFocus');
+const forwardMouseEnter = forward('onMouseEnter');
 const forwardMouseMove = forward('onMouseMove');
 const forwardMouseLeave  = forward('onMouseLeave');
 
@@ -307,6 +308,22 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.updateUI();
 		}
 
+		moveKnobByPointer (position) {
+			const node = this.sliderBarNode.node;
+
+			// Don't let the positional value exceed the bar width, and account for the dead-space padding
+			const min = parseFloat(window.getComputedStyle(this.inputNode).paddingLeft);
+			const pointer = position - this.inputNode.getBoundingClientRect().left;
+			const knob = (clamp(min, min + node.offsetWidth, pointer) - min) / node.offsetWidth;
+
+			this.current5WayValue = (this.normalizedMax - this.normalizedMin) * knob;
+
+			// Update our instance's knowledge of where the knob should be
+			this.knobPosition = knob;
+
+			this.updateUI();
+		}
+
 		updateUI = () => {
 			// intentionally breaking encapsulation to avoid having to specify multiple refs
 			const {barNode, knobNode, loaderNode, node} = this.sliderBarNode;
@@ -375,31 +392,28 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		}
 
+		handleMouseEnter = (ev) => {
+			forwardMouseEnter(ev, this.props);
+
+			// We don't want to run this code if any mouse button is being held down. That indicates dragging.
+			if (!this.props.detachedKnob || this.props.disabled || ev.buttons || this.props.vertical) return;
+
+			this.moveKnobByPointer(ev.clientX);
+		}
+
 		handleMouseMove = (ev) => {
 			forwardMouseMove(ev, this.props);
 
 			// We don't want to run this code if any mouse button is being held down. That indicates dragging.
-			if (this.props.disabled || ev.buttons || this.props.vertical) return;
+			if (!this.props.detachedKnob || this.props.disabled || ev.buttons || this.props.vertical) return;
 
-			const node = this.sliderBarNode.node;
-
-			// Don't let the positional value exceed the bar width, and account for the dead-space padding
-			const min = parseFloat(window.getComputedStyle(this.inputNode).paddingLeft);
-			const pointer = ev.clientX - this.inputNode.getBoundingClientRect().left;
-			const knob = (clamp(min, min + node.offsetWidth, pointer) - min) / node.offsetWidth;
-
-			this.current5WayValue = (this.normalizedMax - this.normalizedMin) * knob;
-
-			// Update our instance's knowledge of where the knob should be
-			this.knobPosition = knob;
-
-			this.updateUI();
+			this.moveKnobByPointer(ev.clientX);
 		}
 
 		handleMouseLeave = (ev) => {
 			forwardMouseLeave(ev, this.props);
 
-			if (this.props.disabled) return;
+			if (!this.props.detachedKnob || this.props.disabled) return;
 
 			this.knobPosition = null;
 			this.updateUI();
@@ -521,8 +535,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onDecrement={this.handleDecrement}
 					onFocus={this.handleFocus}
 					onIncrement={this.handleIncrement}
-					onMouseLeave={this.props.detachedKnob ? this.handleMouseLeave : null}
-					onMouseMove={this.props.detachedKnob ? this.handleMouseMove : null}
+					onMouseEnter={this.handleMouseEnter}
+					onMouseLeave={this.handleMouseLeave}
+					onMouseMove={this.handleMouseMove}
 					scrubbing={(this.knobPosition != null)}
 					sliderBarRef={this.getSliderBarNode}
 					sliderRef={this.getSliderNode}
