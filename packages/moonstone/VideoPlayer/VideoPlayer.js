@@ -1581,12 +1581,9 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	handleSliderFocus = (ev) => {
-		const {detached, proportion} = ev;
-		const seconds = Math.round(proportion * this.video.duration);
-
-		this.sliderKnobProportion = proportion;
-		this.sliderScrubbing = detached;
+	handleSliderFocus = () => {
+		const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
+		this.sliderScrubbing = true;
 
 		this.setState({
 			feedbackIconVisible: false,
@@ -1594,11 +1591,15 @@ const VideoPlayerBase = class extends React.Component {
 		});
 		this.stopDelayedFeedbackHide();
 
-		if (this.sliderScrubbing && !isNaN(seconds)) {
+		if (!isNaN(seconds)) {
 			this.sliderTooltipTimeJob.throttle(seconds);
 			const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
 
-			forward('onScrub', {detached, proportion, seconds}, this.props);
+			forward('onScrub', {
+				detached: this.sliderScrubbing,
+				proportion: this.sliderKnobProportion,
+				seconds},
+			this.props);
 
 			this.announce(`${$L('jump to')} ${knobTime}`);
 		}

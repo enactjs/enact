@@ -396,7 +396,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forwardMouseEnter(ev, this.props);
 
 			// We don't want to run this code if any mouse button is being held down. That indicates dragging.
-			if (this.props.disabled || ev.buttons || this.props.vertical) return;
+			if (!this.props.detachedKnob || this.props.disabled || ev.buttons || this.props.vertical) return;
 
 			this.moveKnobByPointer(ev.clientX);
 		}
@@ -405,7 +405,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forwardMouseMove(ev, this.props);
 
 			// We don't want to run this code if any mouse button is being held down. That indicates dragging.
-			if (this.props.disabled || ev.buttons || this.props.vertical) return;
+			if (!this.props.detachedKnob || this.props.disabled || ev.buttons || this.props.vertical) return;
 
 			this.moveKnobByPointer(ev.clientX);
 		}
@@ -413,7 +413,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleMouseLeave = (ev) => {
 			forwardMouseLeave(ev, this.props);
 
-			if (this.props.disabled) return;
+			if (!this.props.detachedKnob || this.props.disabled) return;
 
 			this.knobPosition = null;
 			this.updateUI();
@@ -503,17 +503,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = (ev) => {
-			const {detachedKnob} = this.props;
-			const proportionProgress = computeProportionProgress({value: this.state.value, max: this.normalizedMax, min: this.normalizedMin});
-			const knobProgress = this.knobPosition != null ? this.knobPosition : proportionProgress;
+			forwardFocus(ev, this.props);
 
-			forwardFocus({
-				...ev,
-				proportion: knobProgress,
-				detached: detachedKnob || knobProgress !== proportionProgress
-			}, this.props);
-
-			if (detachedKnob) {
+			if (this.props.detachedKnob) {
 				this.moveKnobByAmount(0);
 			}
 
@@ -543,9 +535,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onDecrement={this.handleDecrement}
 					onFocus={this.handleFocus}
 					onIncrement={this.handleIncrement}
-					onMouseEnter={this.props.detachedKnob ? this.handleMouseEnter : null}
-					onMouseLeave={this.props.detachedKnob ? this.handleMouseLeave : null}
-					onMouseMove={this.props.detachedKnob ? this.handleMouseMove : null}
+					onMouseEnter={this.handleMouseEnter}
+					onMouseLeave={this.handleMouseLeave}
+					onMouseMove={this.handleMouseMove}
 					scrubbing={(this.knobPosition != null)}
 					sliderBarRef={this.getSliderBarNode}
 					sliderRef={this.getSliderNode}
