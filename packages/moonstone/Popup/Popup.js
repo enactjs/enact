@@ -333,7 +333,6 @@ class Popup extends React.Component {
 
 	componentDidMount () {
 		if (this.props.open && this.props.noAnimation) {
-			forwardShow(null, this.props);
 			on('keydown', this.handleKeyDown);
 			this.spotPopupContent();
 		}
@@ -361,11 +360,11 @@ class Popup extends React.Component {
 			if (!this.props.noAnimation) {
 				Spotlight.pause();
 			} else if (this.props.open) {
-				forwardShow(null, this.props);
+				forwardShow({}, this.props);
 				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
 			} else if (prevProps.open) {
-				forwardHide(null, this.props);
+				forwardHide({}, this.props);
 				off('keydown', this.handleKeyDown);
 				this.spotActivator(prevState.activator);
 			}
