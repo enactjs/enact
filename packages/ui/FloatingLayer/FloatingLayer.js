@@ -1,10 +1,13 @@
 import {on, off} from '@enact/core/dispatcher';
 import {Job} from '@enact/core/util';
+import invariant from 'invariant';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
+
 import Cancelable from '../Cancelable';
 
+import {contextTypes} from './FloatingLayerDecorator';
 import Scrim from './Scrim';
 
 /**
@@ -18,6 +21,8 @@ import Scrim from './Scrim';
  */
 class FloatingLayerBase extends React.Component {
 	static displayName = 'FloatingLayer'
+
+	static contextTypes = contextTypes
 
 	static propTypes = /** @lends ui/FloatingLayer.FloatingLayerBase.prototype */ {
 		/**
@@ -147,7 +152,7 @@ class FloatingLayerBase extends React.Component {
 		if (this.node) {
 			off('scroll', this.handleScroll, this.node);
 			ReactDOM.unmountComponentAtNode(this.node);
-			document.getElementById(this.props.floatLayerId).removeChild(this.node);
+			this.node.parentNode.removeChild(this.node);
 
 			if (this.props.onClose) {
 				this.props.onClose();
@@ -161,11 +166,17 @@ class FloatingLayerBase extends React.Component {
 	}
 
 	renderNode () {
-		const {floatLayerClassName, floatLayerId} = this.props;
+		const {floatLayerClassName} = this.props;
 
 		if (!this.node) {
+			invariant(
+				this.context.getFloatingLayer,
+				'FloatingLayer cannot be used outside the subtree of a FloatingLayerDecorator'
+			);
+
+			const floatingLayer = this.context.getFloatingLayer();
 			this.node = document.createElement('div');
-			document.getElementById(floatLayerId).appendChild(this.node);
+			floatingLayer.appendChild(this.node);
 			on('scroll', this.handleScroll, this.node);
 		}
 
