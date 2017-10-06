@@ -6,6 +6,12 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [1.9.3] - 2017-10-03
+
 - `Background` knob to all samples to give the user an idea of how components, in various states, look against different colored backgrounds, beyond the default skin background color
 
 ### Changed

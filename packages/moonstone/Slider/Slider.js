@@ -6,7 +6,7 @@
 
 import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
-import {forKey, forward, handle, stopImmediate} from '@enact/core/handle';
+import {forKey, forward, handle, oneOf, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React from 'react';
@@ -376,11 +376,17 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			),
 			onKeyDown: handle(
 				forward('onKeyDown'),
-				(ev, props) => {
-					return	handleDecrement(ev, props) ||
-							handleIncrement(ev, props) ||
-							handleActivate(ev, props);
-				}
+				isActive,
+				oneOf(
+					[isDecrement, forward('onDecrement')],
+					[isIncrement, forward('onIncrement')]
+				),
+				stopImmediate
+			),
+			onKeyUp: handle(
+				forward('onKeyUp'),
+				forKey('enter'),
+				forward('onActivate')
 			),
 			onMouseUp: handle(
 				forward('onMouseUp'),
