@@ -137,10 +137,10 @@ const notifyKeyDown = (keyCode, callback) => {
 	} else if (is('pointerShow', keyCode)) {
 		setPointerMode(true);
 		return true;
+	} else if (!is('pointerKeys', keyCode)) {
+		setPointerMode(false);
 	}
 
-	// for all other keys, disable pointer mode and return
-	setPointerMode(false);
 	return false;
 };
 

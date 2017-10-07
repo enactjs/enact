@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
+- `spotlight` to handle key events from pointers and not set pointer mode to false
+
 ### Fixed
 
 - `spotlight.Spotlight` method `focus()` to verify that the target element matches its container's selector rules prior to setting focus
