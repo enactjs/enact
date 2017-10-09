@@ -24,6 +24,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/VideoPlayer` to correctly position knob on mouse click
 - `moonstone/Panels.Header` to show an ellipsis for long titles with RTL text
 - `moonstone/Marquee` to restart when invalidated by a prop change and managed by a `moonstone/Marquee.MarqueeController`
+
 ## [1.9.3] - 2017-10-03
 
 ### Changed
