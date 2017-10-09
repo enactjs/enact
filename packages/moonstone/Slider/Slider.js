@@ -362,6 +362,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			),
 			onKeyUp: handle(
 				forward('onKeyUp'),
+				forProp('activateOnFocus', false),
 				forKey('enter'),
 				forward('onActivate')
 			),
