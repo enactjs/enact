@@ -6,7 +6,7 @@
 
 import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
-import {forKey, forward, handle, oneOf, stopImmediate} from '@enact/core/handle';
+import {forKey, forProp, forward, handle, oneOf, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React from 'react';
@@ -25,29 +25,6 @@ import componentCss from './Slider.less';
 const isActive = (ev, props) => props.active || props.activateOnFocus || props.detachedKnob;
 const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
 const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
-const isActivatedOnFocus = (ev, props) => props.active || props.detachedKnob || (props.activateOnFocus && forward('onActivate', ev, props));
-
-const handleDecrement = handle(
-	isActive,
-	isDecrement,
-	isActivatedOnFocus,
-	forward('onDecrement'),
-	stopImmediate
-);
-
-const handleIncrement = handle(
-	isActive,
-	isIncrement,
-	isActivatedOnFocus,
-	forward('onIncrement'),
-	stopImmediate
-);
-
-const handleActivate = handle(
-	forKey('enter'),
-	forward('onActivate'),
-	stopImmediate
-);
 
 const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	const SliderBar = SliderBarFactory({css});
@@ -371,7 +348,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		handlers: {
 			onBlur: handle(
 				forward('onBlur'),
-				isActive,
+				forProp('active', true),
 				forward('onActivate')
 			),
 			onKeyDown: handle(
@@ -385,6 +362,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			),
 			onKeyUp: handle(
 				forward('onKeyUp'),
+				forProp('activateOnFocus', false),
 				forKey('enter'),
 				forward('onActivate')
 			),
@@ -407,7 +385,8 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				if (!tooltip || children) return children;
 				return tooltipAsPercent ? Math.floor(computeProportionProgress({value, max, min}) * 100) + '%' : value;
 			},
-			className: ({active, noFill, pressed, vertical, styler}) => styler.append({
+			className: ({activateOnFocus, active, noFill, pressed, vertical, styler}) => styler.append({
+				activateOnFocus,
 				active,
 				noFill,
 				pressed,
