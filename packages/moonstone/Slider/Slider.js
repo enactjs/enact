@@ -320,11 +320,11 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		defaultProps: {
+			activateOnFocus: false,
 			active: false,
 			backgroundProgress: 0,
 			knobAfterMidpoint: false,
 			detachedKnob: false,
-			activateOnFocus: false,
 			focused: false,
 			max: 100,
 			min: 0,
@@ -397,9 +397,9 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		render: ({backgroundProgress, children, disabled, focused, inputRef, knobAfterMidpoint, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
+			delete rest.activateOnFocus;
 			delete rest.active;
 			delete rest.detachedKnob;
-			delete rest.activateOnFocus;
 			delete rest.noFill;
 			delete rest.onActivate;
 			delete rest.onDecrement;
