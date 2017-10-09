@@ -55,7 +55,8 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 			/**
-			 * When `true`, the component may be manipulated via the directional input keys
+			 * When `true`, the component may be manipulated via the directional input keys upon
+			 * receiving focus.
 			 *
 			 * @type {Boolean}
 			 * @public
