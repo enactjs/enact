@@ -6,7 +6,7 @@
 
 import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
-import {forKey, forward, handle, oneOf, stopImmediate} from '@enact/core/handle';
+import {forKey, forProp, forward, handle, oneOf, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React from 'react';
@@ -22,7 +22,7 @@ import {SliderBarFactory} from './SliderBar';
 import SliderTooltip from './SliderTooltip';
 import componentCss from './Slider.less';
 
-const isActive = (ev, props) => props.active || props.detachedKnob;
+const isActive = (ev, props) => props.active || props.activateOnFocus || props.detachedKnob;
 const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
 const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
 
@@ -53,6 +53,15 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+			/**
+			 * When `true`, the component may be manipulated via the directional input keys upon
+			 * receiving focus.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			activateOnFocus: PropTypes.bool,
 
 			/**
 			 * When `true`, the knob displays selected and can be moved using 5-way controls.
@@ -312,6 +321,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		defaultProps: {
+			activateOnFocus: false,
 			active: false,
 			backgroundProgress: 0,
 			knobAfterMidpoint: false,
@@ -339,7 +349,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		handlers: {
 			onBlur: handle(
 				forward('onBlur'),
-				isActive,
+				forProp('active', true),
 				forward('onActivate')
 			),
 			onKeyDown: handle(
@@ -353,6 +363,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			),
 			onKeyUp: handle(
 				forward('onKeyUp'),
+				forProp('activateOnFocus', false),
 				forKey('enter'),
 				forward('onActivate')
 			),
@@ -375,7 +386,8 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				if (!tooltip || children) return children;
 				return tooltipAsPercent ? Math.floor(computeProportionProgress({value, max, min}) * 100) + '%' : value;
 			},
-			className: ({active, noFill, pressed, vertical, styler}) => styler.append({
+			className: ({activateOnFocus, active, noFill, pressed, vertical, styler}) => styler.append({
+				activateOnFocus,
 				active,
 				noFill,
 				pressed,
@@ -386,6 +398,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		render: ({backgroundProgress, children, disabled, focused, inputRef, knobAfterMidpoint, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
+			delete rest.activateOnFocus;
 			delete rest.active;
 			delete rest.detachedKnob;
 			delete rest.noFill;

@@ -140,6 +140,7 @@ storiesOf('VideoPlayer')
 						no5WayJump={boolean('no5WayJump', false)}
 						noAutoPlay={boolean('noAutoPlay', false)}
 						noJumpButtons={boolean('noJumpButtons', false)}
+						noMiniFeedback={boolean('noMiniFeedback', false)}
 						noRateButtons={boolean('noRateButtons', false)}
 						noSlider={boolean('noSlider', false)}
 						pauseAtEnd={boolean('pauseAtEnd', false)}

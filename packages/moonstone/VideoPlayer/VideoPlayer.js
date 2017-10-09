@@ -360,6 +360,15 @@ const VideoPlayerBase = class extends React.Component {
 		noJumpButtons: PropTypes.bool,
 
 		/**
+		 * Removes the mini feedback.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noMiniFeedback: PropTypes.bool,
+
+		/**
 		 * Removes the "rate" buttons. The buttons that change the playback rate of the video.
 		 * Double speed, half speed, reverse 4x speed, etc.
 		 *
@@ -589,14 +598,6 @@ const VideoPlayerBase = class extends React.Component {
 		initialJumpDelay: 400,
 		jumpBy: 30,
 		jumpDelay: 200,
-		moreButtonDisabled: false,
-		muted: false,
-		no5WayJump: false,
-		noAutoPlay: false,
-		noJumpButtons: false,
-		pauseAtEnd: false,
-		noRateButtons: false,
-		noSlider: false,
 		playbackRateHash: {
 			fastForward: ['2', '4', '8', '16'],
 			rewind: ['-2', '-4', '-8', '-16'],
@@ -981,7 +982,7 @@ const VideoPlayerBase = class extends React.Component {
 			if (this.showMiniFeedback && (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider)) {
 				this.setState({
 					mediaSliderVisible: shouldShowSlider,
-					miniFeedbackVisible: true
+					miniFeedbackVisible: !(this.state.readyState < HAVE_ENOUGH_DATA || !this.state.duration || this.state.error)
 				});
 			}
 		}
@@ -1582,12 +1583,27 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleSliderFocus = () => {
+		const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
 		this.sliderScrubbing = true;
+
 		this.setState({
 			feedbackIconVisible: false,
 			feedbackVisible: true
 		});
 		this.stopDelayedFeedbackHide();
+
+		if (!isNaN(seconds)) {
+			this.sliderTooltipTimeJob.throttle(seconds);
+			const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
+
+			forward('onScrub', {
+				detached: this.sliderScrubbing,
+				proportion: this.sliderKnobProportion,
+				seconds},
+			this.props);
+
+			this.announce(`${$L('jump to')} ${knobTime}`);
+		}
 	}
 
 	handleSliderBlur = () => {
@@ -1704,6 +1720,7 @@ const VideoPlayerBase = class extends React.Component {
 			moreButtonLabel,
 			noAutoPlay,
 			noJumpButtons,
+			noMiniFeedback,
 			noRateButtons,
 			noSlider,
 			pauseIcon,
@@ -1774,7 +1791,7 @@ const VideoPlayerBase = class extends React.Component {
 							className={css.miniFeedback}
 							playbackRate={this.pulsedPlaybackRate || this.selectPlaybackRate(this.speedIndex)}
 							playbackState={this.pulsedPlaybackState || this.prevCommand}
-							visible={this.state.miniFeedbackVisible}
+							visible={this.state.miniFeedbackVisible && !noMiniFeedback}
 						>
 							{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
 						</FeedbackContent>
@@ -1805,7 +1822,6 @@ const VideoPlayerBase = class extends React.Component {
 
 							{noSlider ? null : <MediaSlider
 								backgroundProgress={this.state.proportionLoaded}
-								disabled={this.state.mediaSliderVisible && !this.state.mediaControlsVisible}
 								value={this.state.proportionPlayed}
 								onBlur={this.handleSliderBlur}
 								onChange={this.onSliderChange}
@@ -1813,7 +1829,7 @@ const VideoPlayerBase = class extends React.Component {
 								onKnobMove={this.handleKnobMove}
 								onSpotlightUp={this.handleSpotlightUpFromSlider}
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
-								spotlightDisabled={spotlightDisabled}
+								spotlightDisabled={spotlightDisabled || this.state.mediaSliderVisible && !this.state.mediaControlsVisible}
 								visible={this.state.mediaSliderVisible}
 							>
 								<FeedbackTooltip
