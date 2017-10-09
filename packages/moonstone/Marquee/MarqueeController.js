@@ -2,6 +2,7 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {contextTypes as stateContextTypes, Publisher} from '@enact/core/internal/PubSub';
 
 const STATE = {
 	inactive: 0,	// Marquee is not necessary (render or focus not happened)
@@ -60,7 +61,6 @@ const contextTypes = {
 	unregister: PropTypes.func
 };
 
-
 /**
  * Default configuration parameters for {@link moonstone/Marquee.MarqueeController}
  *
@@ -98,13 +98,20 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'MarqueeController'
 
-		static childContextTypes = contextTypes;
+		static contextTypes = stateContextTypes
+
+		static childContextTypes = {
+			...stateContextTypes,
+			...contextTypes
+		}
 
 		constructor (props) {
 			super(props);
 
 			this.controlled = [];
-			this.isFocused = false;
+			this.state = {
+				marqueeFocused: false
+			};
 		}
 
 		getChildContext () {
@@ -113,8 +120,26 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				complete: this.handleComplete,
 				register: this.handleRegister,
 				start: this.handleStart,
-				unregister: this.handleUnregister
+				unregister: this.handleUnregister,
+				Subscriber: this.publisher.getSubscriber()
 			};
+		}
+
+		componentWillMount () {
+			if (marqueeOnFocus) {
+				this.publisher = Publisher.create('marqueeFocused', this.context.Subscriber);
+				this.publisher.publish({
+					marqueeFocused: false
+				});
+			}
+		}
+
+		componentWillUpdate (nextProps, nextState) {
+			if (this.state.marqueeFocused !== nextState.marqueeFocused) {
+				this.publisher.publish({
+					marqueeFocused: nextState.marqueeFocused
+				});
+			}
 		}
 
 		/*
@@ -127,7 +152,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		handleRegister = (component, handlers) => {
-			const needsStart = !this.allInactive() || this.isFocused;
+			const needsStart = !this.allInactive() || this.state.marqueeFocused;
 
 			this.controlled.push({
 				...handlers,
@@ -206,7 +231,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * Handler for the focus event
 		 */
 		handleFocus = (ev) => {
-			this.isFocused = true;
+			this.setState({marqueeFocused: true});
 			this.dispatch('start');
 			forwardFocus(ev, this.props);
 		}
@@ -215,7 +240,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * Handler for the blur event
 		 */
 		handleBlur = (ev) => {
-			this.isFocused = false;
+			this.setState({marqueeFocused: false});
 			this.dispatch('stop');
 			this.markAll(STATE.inactive);
 			forwardBlur(ev, this.props);
