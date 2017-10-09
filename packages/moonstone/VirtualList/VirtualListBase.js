@@ -706,6 +706,7 @@ class VirtualListCore extends Component {
 			style.width = width;
 			style.height = height;
 		}
+		style.position = 'absolute';
 		this.composeTransform(style, ...rest);
 	}
 

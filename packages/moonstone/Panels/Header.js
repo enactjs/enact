@@ -3,9 +3,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Uppercase from '@enact/i18n/Uppercase';
 import {isRtlText} from '@enact/i18n/util';
+import {Layout, Cell} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
 
-import {MarqueeDecorator, MarqueeText} from '../Marquee';
+import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import css from './Header.less';
@@ -14,6 +15,21 @@ import css from './Header.less';
 const UppercaseH1 = Uppercase('h1');		// Used by compact header, which provides its own inline strings and tags for marqueeing
 const MarqueeH2 = MarqueeDecorator('h2');
 const HeaderH1 = Uppercase(MarqueeDecorator('h1'));
+
+const CompactTitleBase = kind({
+	name: 'CompactTitle',
+	render: (props) => {
+		delete props.title;
+		delete props.titleBelow;
+
+		return (
+			<div {...props} />
+		);
+	}
+});
+
+// Marquee decorated container with title and titleBelow as invalidateProps
+const CompactTitle = MarqueeDecorator({invalidateProps: ['title', 'titleBelow']}, CompactTitleBase);
 
 /**
  * A visual header component for a Panel with a title, titleAbove, titleBelow, and subTitleBelow
@@ -138,13 +154,13 @@ const HeaderBase = kind({
 		titleBelowComponent: ({marqueeOn, titleBelow, type}) => {
 			switch (type) {
 				case 'compact':
-					return titleBelow ? <h2 className={css.titleBelow}>{titleBelow}</h2> : null;
+					return titleBelow ? <h2 className={css.titleBelow}>   {titleBelow}</h2> : null;
 				case 'standard':
-					return titleBelow ? <MarqueeH2 className={css.titleBelow} marqueeOn={marqueeOn}>{titleBelow}</MarqueeH2> : null;
+					return <MarqueeH2 className={css.titleBelow} marqueeOn={marqueeOn}>{(titleBelow != null && titleBelow !== '') ? titleBelow : ' '}</MarqueeH2>;
 			}
 		},
 		subTitleBelowComponent: ({marqueeOn, subTitleBelow}) => {
-			return subTitleBelow ? <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn}>{subTitleBelow}</MarqueeH2> : null;
+			return <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn}>{(subTitleBelow != null && subTitleBelow !== '') ? subTitleBelow : ' '}</MarqueeH2>;
 		}
 	},
 
@@ -155,13 +171,13 @@ const HeaderBase = kind({
 
 		switch (type) {
 			case 'compact': return (
-				<header aria-label={title} {...rest}>
-					<MarqueeText className={css.headerCell} marqueeOn={marqueeOn} forceDirection={direction}>
+				<Layout component="header" aria-label={title} {...rest} align="end">
+					<Cell component={CompactTitle} className={css.headerTitles} title={title} titleBelow={titleBelowComponent} marqueeOn={marqueeOn} forceDirection={direction}>
 						<UppercaseH1 casing={casing} className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
 						{titleBelowComponent}
-					</MarqueeText>
-					<nav className={css.headerComponents}>{children}</nav>
-				</header>
+					</Cell>
+					<Cell shrink component="nav" className={css.headerComponents}>{children}</Cell>
+				</Layout>
 			);
 			// Keeping this block in case we need to add it back after discussing with UX and GUI about future plans.
 			// case 'large': return (
@@ -174,18 +190,20 @@ const HeaderBase = kind({
 			// 	</header>
 			// );
 			case 'standard': return (
-				<header aria-label={title} {...rest}>
-					<HeaderH1 casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn={marqueeOn}>
+				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
+					<Cell component={HeaderH1} casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn={marqueeOn}>
 						{title}
-					</HeaderH1>
-					<div className={css.headerRow}>
-						<div className={css.headerCell}>
-							{titleBelowComponent}
-							{subTitleBelowComponent}
-						</div>
-						<nav className={css.headerComponents}>{children}</nav>
-					</div>
-				</header>
+					</Cell>
+					<Cell shrink size={63}>
+						<Layout align="end">
+							<Cell>
+								{titleBelowComponent}
+								{subTitleBelowComponent}
+							</Cell>
+							<Cell shrink component="nav" className={css.headerComponents}>{children}</Cell>
+						</Layout>
+					</Cell>
+				</Layout>
 			);
 		}
 	}

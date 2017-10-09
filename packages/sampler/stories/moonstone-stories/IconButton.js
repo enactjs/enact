@@ -16,7 +16,7 @@ const Config = mergeComponentMetadata('IconButton', IconButtonBase, IconButton);
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'transparent': 'transparent'}
+	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent']
 };
 
 storiesOf('IconButton')
@@ -26,7 +26,7 @@ storiesOf('IconButton')
 		() => (
 			<IconButton
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
 				color={nullify(select('color', [null, 'red', 'green', 'yellow', 'blue']))}
 				disabled={boolean('disabled', false)}
 				noAnimation={boolean('noAnimation', true)}
