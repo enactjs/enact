@@ -7,9 +7,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/VideoPlayer` support for designating components with `.spottable-default` as the default focus target when pressing 5-way down from the slider
+- `moonstone/Slider` property `activateOnFocus` which when enabled, allows 5-way directional key interaction with the `Slider` value without pressing [Enter] first
+- `moonstone/VideoPlayer` property `noMiniFeedback` to support controlling the visibility of mini feedback
 
 ### Changed
 
+- `moonstone/Popup` to focus on mount if it’s initially opened and non-animating and to always pass an object to `onHide` and `onShow`
 - `moonstone/VideoPlayer` to emit `onScrub` event and provide audio guidance when setting focus to slider
 
 ### Fixed
