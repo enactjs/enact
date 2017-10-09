@@ -79,9 +79,9 @@ const FeedbackBase = kind({
 		delete rest.visible;
 		return (
 			<div {...rest}>
-				{states[playbackState].position === 'before' ? <FeedbackIcon>{playbackState}</FeedbackIcon> : null}
+				{states[playbackState] && states[playbackState].position === 'before' ? <FeedbackIcon>{playbackState}</FeedbackIcon> : null}
 				{children ? <div className={css.message}>{children}</div> : null}
-				{states[playbackState].position === 'after' ? <FeedbackIcon>{playbackState}</FeedbackIcon> : null}
+				{states[playbackState] && states[playbackState].position === 'after' ? <FeedbackIcon>{playbackState}</FeedbackIcon> : null}
 			</div>
 		);
 	}
