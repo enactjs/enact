@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Slider` property `activateOnFocus` which when enabled, allows 5-way directional key interaction with the `Slider` value without pressing [Enter] first
 - `moonstone/VideoPlayer` property `noMiniFeedback` to support controlling the visibility of mini feedback
 
 ### Changed
