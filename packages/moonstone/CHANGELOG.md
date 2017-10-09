@@ -9,6 +9,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/Popup` to focus on mount if it’s initially opened and non-animating and to always pass an object to `onHide` and `onShow`
+- `moonstone/VideoPlayer` to emit `onScrub` event and provide audio guidance when setting focus to slider
 
 ### Fixed
 

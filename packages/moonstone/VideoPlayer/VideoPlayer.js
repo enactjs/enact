@@ -1582,12 +1582,27 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleSliderFocus = () => {
+		const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
 		this.sliderScrubbing = true;
+
 		this.setState({
 			feedbackIconVisible: false,
 			feedbackVisible: true
 		});
 		this.stopDelayedFeedbackHide();
+
+		if (!isNaN(seconds)) {
+			this.sliderTooltipTimeJob.throttle(seconds);
+			const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
+
+			forward('onScrub', {
+				detached: this.sliderScrubbing,
+				proportion: this.sliderKnobProportion,
+				seconds},
+			this.props);
+
+			this.announce(`${$L('jump to')} ${knobTime}`);
+		}
 	}
 
 	handleSliderBlur = () => {
@@ -1805,7 +1820,6 @@ const VideoPlayerBase = class extends React.Component {
 
 							{noSlider ? null : <MediaSlider
 								backgroundProgress={this.state.proportionLoaded}
-								disabled={this.state.mediaSliderVisible && !this.state.mediaControlsVisible}
 								value={this.state.proportionPlayed}
 								onBlur={this.handleSliderBlur}
 								onChange={this.onSliderChange}
@@ -1813,7 +1827,7 @@ const VideoPlayerBase = class extends React.Component {
 								onKnobMove={this.handleKnobMove}
 								onSpotlightUp={this.handleSpotlightUpFromSlider}
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
-								spotlightDisabled={spotlightDisabled}
+								spotlightDisabled={spotlightDisabled || this.state.mediaSliderVisible && !this.state.mediaControlsVisible}
 								visible={this.state.mediaSliderVisible}
 							>
 								<FeedbackTooltip
