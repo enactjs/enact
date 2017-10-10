@@ -34,7 +34,7 @@ const isSelectionAtLocation = (target, location) => {
  * @private
  */
 const InputSpotlightDecorator = hoc((config, Wrapped) => {
-	const Component = Spottable(Wrapped);
+	const Component = Spottable({emulateMouse: false}, Wrapped);
 	const forwardBlur = forward('onBlur');
 	const forwardMouseDown = forward('onMouseDown');
 	const forwardFocus = forward('onFocus');
@@ -277,6 +277,8 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				this.focusDecorator(currentTarget);
 				// prevent Enter onKeyPress which triggers an onMouseDown via Spotlight
 				preventDefault();
+			} else if (this.state.focused !== 'input' && is('enter', keyCode)) {
+				this.focusInput(currentTarget);
 			}
 			forwardKeyUp(ev, this.props);
 		}
