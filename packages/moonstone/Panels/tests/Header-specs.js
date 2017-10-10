@@ -13,7 +13,7 @@ describe('Header Specs', () => {
 		);
 
 		const expected = msg.toUpperCase();
-		const actual = header.text();
+		const actual = header.find('h1').text();
 
 		expect(actual).to.equal(expected);
 	});

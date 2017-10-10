@@ -289,6 +289,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
 			this.validateTextDirection(next);
 			if ((!childrenEquals(this.props.children, next.children)) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
+				// restart marqueeOn="render" marquees or synced marquees that were animating
+				this.forceRestartMarquee = next.marqueeOn === 'render' || (
+					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)
+				);
+
 				this.invalidateMetrics();
 				this.cancelAnimation();
 				this.textDirectionValidated = false;
@@ -364,10 +369,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		shouldStartMarquee () {
 			return (
-				// restart un-synced marquees or marqueeOn="render" synced marquees that were
-				// cancelled due to a prop change
-				(!this.sync || this.forceRestartMarquee) && (
-					this.props.marqueeOn === 'render' ||
+				this.forceRestartMarquee ||
+				!this.sync && (
 					(this.isFocused && this.props.marqueeOn === 'focus') ||
 					(this.isHovered && this.props.marqueeOn === 'hover')
 				)
@@ -564,7 +567,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		cancelAnimation = () => {
 			if (this.sync) {
-				this.forceRestartMarquee = true;
 				this.context.cancel(this);
 			}
 
