@@ -20,6 +20,10 @@ No significant changes.
 
 No significant changes.
 
+## [1.10.0] - 2017-10-09
+
+No significant changes.
+
 ## [1.9.3] - 2017-10-03
 
 - `Background` knob to all samples to give the user an idea of how components, in various states, look against different colored backgrounds, beyond the default skin background color
