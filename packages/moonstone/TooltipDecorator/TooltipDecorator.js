@@ -173,6 +173,12 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		componentWillReceiveProps (nextProps) {
+			if (!nextProps.tooltipText) {
+				this.setState({showing: false});
+			}
+		}
+
 		componentWillUnmount () {
 			if (currentTooltip === this) {
 				currentTooltip = null;
