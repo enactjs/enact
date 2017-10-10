@@ -7,7 +7,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
-import {getDirection} from '@enact/spotlight';
+import Spotlight, {getDirection} from '@enact/spotlight';
 
 import Skinnable from '../../Skinnable';
 import {validateRange, validateStepped} from '../validators';
@@ -398,10 +398,12 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
-	componentDidUpdate () {
+	componentDidUpdate (prevProps) {
 		if (this.props.joined) {
-			this.containerRef.addEventListener('wheel', this.handleWheel);
-		} else {
+			if (prevProps.joined === false && this.props.joined === true) {
+				this.containerRef.addEventListener('wheel', this.handleWheel);
+			}
+		} else if (prevProps.joined === true && this.props.joined === false) {
 			this.containerRef.removeEventListener('wheel', this.handleWheel);
 		}
 	}
@@ -511,7 +513,9 @@ const PickerBase = class extends React.Component {
 		const {joined, step} = this.props;
 		forwardWheel(ev, this.props);
 
-		if (joined) {
+		const isContainerSpotted = this.containerRef === Spotlight.getCurrent();
+
+		if (joined && isContainerSpotted) {
 			const dir = -Math.sign(ev.deltaY);
 
 			// We'll sometimes get a 0/-0 wheel event we need to ignore or the wheel event has reached
