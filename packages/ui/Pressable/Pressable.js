@@ -45,7 +45,7 @@ const defaultConfig = {
 	 * @default 'onMouseUp'
 	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
-	release: ['onMouseUp', 'onMouseLeave'],
+	release: ['onMouseUp', 'onMouseLeave', 'onBlur'],
 
 	/**
 	 * Configures the property that is passed to the wrapped component when pressed
@@ -185,25 +185,7 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		handleRelease = this.handle(
-<<<<<<< HEAD
-			forward(release),
 			() => this.state.pressed,
-			() => this.updatePressed(false)
-		)
-
-		handleLeave = this.handle(
-			forward(leave),
-			() => this.state.pressed,
-			() => this.updatePressed(false)
-		)
-
-		handleUnfocus = this.handle(
-			forward(unfocus),
-			() => this.state.pressed,
-			() => this.updatePressed(false)
-		)
-=======
-			forProp('disabled', false),
 			() => this.updatePressed(false)
 		)
 
@@ -220,7 +202,6 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				return handlers;
 			}, this.handlers || {});
 		}
->>>>>>> 3b20434... WIP pressable
 
 		render () {
 			const props = Object.assign({}, this.props, this.handlers);
