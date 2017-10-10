@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [1.10.0] - 2017-10-09
+
+### Fixed
+
+- `spotlight.Spotlight` method `focus()` to verify that the target element matches its container's selector rules prior to setting focus
+
 ## [1.9.3] - 2017-10-03
 
 No significant changes.
@@ -131,7 +137,7 @@ No significant changes.
 ### Added
 
 - `spotlight/SpotlightRootDecorator` config option: `noAutoFocus` to support prevention of setting automatic focus after render
-- `spotlight/Spotlight` method `getSpottableDescendants()`
+- `spotlight.Spotlight` method `getSpottableDescendants()`
 
 ### Changed
 
@@ -139,7 +145,7 @@ No significant changes.
 
 ### Fixed
 
-- `spotlight/Spotlight` to consider nested containers when adjusting focus
+- `spotlight.Spotlight` to consider nested containers when adjusting focus
 
 ## [1.0.0] - 2017-03-31
 
@@ -153,8 +159,8 @@ No significant changes.
 
 ### Fixed
 
-- `spotlight/Spotlight` `set()` to properly update the container config
-- `spotlight/Spotlight` to properly save the last-focused element for nested containers
+- `spotlight.Spotlight` `set()` to properly update the container config
+- `spotlight.Spotlight` to properly save the last-focused element for nested containers
 
 ## [1.0.0-beta.4] - 2017-03-10
 
