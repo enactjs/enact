@@ -2,13 +2,14 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [1.10.0] - 2017-10-09
 
 ### Added
 
 - `moonstone/VideoPlayer` support for designating components with `.spottable-default` as the default focus target when pressing 5-way down from the slider
 - `moonstone/Slider` property `activateOnFocus` which when enabled, allows 5-way directional key interaction with the `Slider` value without pressing [Enter] first
 - `moonstone/VideoPlayer` property `noMiniFeedback` to support controlling the visibility of mini feedback
+- `ui/Layout`, which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
 
 ### Changed
 
@@ -25,6 +26,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to correctly position knob on mouse click
 - `moonstone/Panels.Header` to show an ellipsis for long titles with RTL text
 - `moonstone/Marquee` to restart when invalidated by a prop change and managed by a `moonstone/Marquee.MarqueeController`
+- `spotlight.Spotlight` method `focus()` to verify that the target element matches its container's selector rules prior to setting focus
 
 ## [1.9.3] - 2017-10-03
 
