@@ -54,16 +54,7 @@ const defaultConfig = {
 	 * @default 'pressed'
 	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
-	prop: 'pressed',
-
-	/**
-	 * Configures the event name that loses focus and deactivates the Pressable
-	 *
-	 * @type {String}
-	 * @default 'onBlur'
-	 * @memberof ui/Pressable.Pressable.defaultConfig
-	 */
-	unfocus: 'onBlur'
+	prop: 'pressed'
 };
 
 /**
@@ -78,7 +69,7 @@ const defaultConfig = {
  * @public
  */
 const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const {depress, unfocus, release, prop, leave} = config;
+	const {depress, release, prop, leave} = config;
 	const defaultPropKey = 'default' + cap(prop);
 
 	return class Pressable extends React.Component {
@@ -206,7 +197,6 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			const props = Object.assign({}, this.props, this.handlers);
 			if (prop) props[prop] = this.state.pressed;
-			if (unfocus) props[unfocus] = this.handleUnfocus;
 			delete props[defaultPropKey];
 
 			return <Wrapped {...props} />;
