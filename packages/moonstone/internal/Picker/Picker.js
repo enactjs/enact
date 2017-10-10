@@ -399,10 +399,8 @@ const PickerBase = class extends React.Component {
 	}
 
 	componentDidUpdate (prevProps) {
-		if (this.props.joined) {
-			if (prevProps.joined === false && this.props.joined === true) {
-				this.containerRef.addEventListener('wheel', this.handleWheel);
-			}
+		if (this.props.joined === true && prevProps.joined === false) {
+			this.containerRef.addEventListener('wheel', this.handleWheel);
 		} else if (prevProps.joined === true && this.props.joined === false) {
 			this.containerRef.removeEventListener('wheel', this.handleWheel);
 		}
