@@ -14,7 +14,8 @@ const MediaButton = onlyUpdateForKeys([
 	'children',
 	'disabled',
 	'onClick',
-	'spotlightDisabled'
+	'spotlightDisabled',
+	'tooltipText'
 ])(IconButton);
 
 /**
@@ -352,6 +353,7 @@ const MediaControls = kind({
 			rateButtonsDisabled,
 			rightComponents,
 			spotlightDisabled,
+			visible,
 			...rest
 		} = props;
 
@@ -363,7 +365,6 @@ const MediaControls = kind({
 		delete rest.playIcon;
 		delete rest.playLabel;
 		delete rest.showMoreComponents;
-		delete rest.visible;
 
 		return (
 			<div {...rest}>
@@ -392,7 +393,7 @@ const MediaControls = kind({
 							disabled={moreButtonDisabled}
 							onClick={onToggleMore}
 							tooltipProps={{role: 'dialog'}}
-							tooltipText={moreIconLabel}
+							tooltipText={visible ? moreIconLabel : null}
 							spotlightDisabled={spotlightDisabled}
 						>
 							{moreIcon}
