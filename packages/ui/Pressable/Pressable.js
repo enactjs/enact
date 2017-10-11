@@ -175,10 +175,9 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			(ev) => this.updatePressed(ev && ev.pressed || true)
 		)
 
-		handleRelease = this.handle(
-			() => this.state.pressed,
-			() => this.updatePressed(false)
-		)
+		handleRelease = () => {
+			this.updatePressed(false);
+		}
 
 		addEventHandlers (eventNames, handler) {
 			eventNames = Array.isArray(eventNames) ? eventNames : [eventNames];
