@@ -22,7 +22,7 @@ const MediaSliderBase = kind({
 
 	propTypes: /** @lends moonstone/VideoPlayer.MediaSlider.prototype */ {
 		/**
-		 * Background progress, as a proportion from `0` to `1`
+		 * Background progress, as a proportion from `0` to `1`.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -31,13 +31,22 @@ const MediaSliderBase = kind({
 		backgroundProgress: PropTypes.number,
 
 		/**
-		 * When `true`, the component is shown as disabled and does not generate events
+		 * When `true`, the component is shown as disabled and does not generate events.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * When `true`, the knob will expand. Note that Slider is a controlled
+		 * component. Changing the value would only affect pressed visual and
+		 * not the state.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		forcePressed: PropTypes.bool,
 
 		/**
 		 * The handler to run when the value is changed.
@@ -78,10 +87,15 @@ const MediaSliderBase = kind({
 	},
 
 	computed: {
-		className: ({styler, visible}) => styler.append({hidden: !visible})
+		className: ({styler, visible}) => styler.append({hidden: !visible}),
+		sliderClassName: ({styler, forcePressed}) => styler.join({
+			pressed: forcePressed,
+			mediaSlider: true
+		})
 	},
 
-	render: ({className, ...rest}) => {
+	render: ({className, sliderClassName, ...rest}) => {
+		delete rest.forcePressed;
 		delete rest.visible;
 
 		return (
@@ -89,19 +103,19 @@ const MediaSliderBase = kind({
 				<Slider
 					{...rest}
 					aria-hidden="true"
-					className={css.mediaSlider}
+					className={sliderClassName}
 					detachedKnob
-					min={0}
-					max={1}
-					step={0.00001}
 					knobStep={0.05}
+					max={1}
+					min={0}
+					step={0.00001}
 				/>
 			</div>
 		);
 	}
 });
 
-const MediaSlider = onlyUpdateForKeys(['backgroundProgress', 'children', 'value', 'visible'])(MediaSliderBase);
+const MediaSlider = onlyUpdateForKeys(['backgroundProgress', 'children', 'forcePressed', 'value', 'visible'])(MediaSliderBase);
 
 export default MediaSlider;
 export {
