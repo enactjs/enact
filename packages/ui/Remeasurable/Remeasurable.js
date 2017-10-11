@@ -24,6 +24,14 @@ const defaultConfig = {
 	 * @type {String}
 	 * @memberof ui/Remeasurable.RemeasurableDecorator.defaultConfig
 	 */
+	onEvent: null,
+
+	/**
+	 * Configures the prop name that triggers the component on prop change
+	 *
+	 * @type {String}
+	 * @memberof ui/Remeasurable.RemeasurableDecorator.defaultConfig
+	 */
 	trigger: null
 };
 
@@ -37,9 +45,9 @@ const defaultConfig = {
  * @private
  */
 const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {trigger} = config;
+	const {trigger, onEvent} = config;
 
-	invariant(trigger, 'trigger is required by RemeasurableDecorator');
+	invariant(trigger || onEvent, 'trigger or onEvent are required by RemeasurableDecorator');
 
 	return class extends React.Component {
 		static displayName = 'RemeasurableDecorator'
@@ -99,9 +107,15 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.publisher.publish(state);
 		}
 
+		onEvent = () => {
+			this.publisher.publish(this.state);
+		}
+
 		render () {
+			const event = onEvent ? {[onEvent]: this.onEvent} : {};
+
 			return (
-				<Wrapped {...this.props} />
+				<Wrapped {...this.props} {...event} />
 			);
 		}
 	};
