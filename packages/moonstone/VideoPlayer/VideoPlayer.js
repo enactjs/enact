@@ -519,6 +519,8 @@ const VideoPlayerBase = class extends React.Component {
 		/**
 		 * When `true`, seek function is disabled.
 		 *
+		 * Note that jump by arrow keys will also be disabled when `true`.
+		 *
 		 * @type {Boolean}
 		 * @public
 		 */
@@ -1038,7 +1040,9 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	doPulseAction () {
-		if (is('left', this.pulsingKeyCode)) {
+		if (this.props.seekDisabled) {
+			forward('onSeekFailed', null, this.props);
+		} else if (is('left', this.pulsingKeyCode)) {
 			this.showMiniFeedback = true;
 			this.jump(-1 * this.props.jumpBy);
 			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
