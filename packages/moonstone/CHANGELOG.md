@@ -38,6 +38,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Marquee` to restart when invalidated by a prop change and managed by a `moonstone/Marquee.MarqueeController`
 - `spotlight.Spotlight` method `focus()` to verify that the target element matches its container's selector rules prior to setting focus
 - `moonstone/Picker` to only change picker values `onWheel` when spotted
+- `moonstone/ItemOverlay` to remeasure when spotted
 
 ## [1.9.3] - 2017-10-03
 

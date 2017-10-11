@@ -9,6 +9,7 @@
 import {forward, forwardWithPrevent, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
+import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
@@ -164,10 +165,20 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			tabIndex: PropTypes.number
 		}
 
+		static contextTypes = contextTypesState
+
+		static childContextTypes = contextTypesState
+
 		constructor (props) {
 			super(props);
 			this.state = {
 				spotted: false
+			};
+		}
+
+		getChildContext () {
+			return {
+				Subscriber: this.publisher.getSubscriber()
 			};
 		}
 
@@ -176,8 +187,24 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			this.node = ReactDOM.findDOMNode(this);
 		}
 
-		componentDidUpdate (prevProps) {
+		componentWillMount () {
+			this.publisher = Publisher.create('resize', this.context.Subscriber);
+			this.publisher.publish({
+				remeasure: this.state.spotted
+			});
+
+			if (this.context.Subscriber) {
+				this.context.Subscriber.subscribe('resize', this.handleSubscription);
+				this.context.Subscriber.subscribe('i18n', this.handleSubscription);
+			}
+		}
+
+		componentDidUpdate (prevProps, prevState) {
 			// if the component is spotted and became disabled,
+			if (this.state.spotted !== prevState.spotted) {
+				this.publisher.publish({remeasure: this.state.spotted});
+			}
+
 			if (this.state.spotted && (
 				(!prevProps.disabled && this.props.disabled) ||
 				(!prevProps.spotlightDisabled && this.props.spotlightDisabled)
@@ -219,6 +246,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillUnmount () {
 			if (this.state.spotted) {
 				forward('onSpotlightDisappear', null, this.props);
+			}
+
+			if (this.context.Subscriber) {
+				this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
+				this.context.Subscriber.unsubscribe('i18n', this.handleSubscription);
 			}
 		}
 
@@ -313,6 +345,17 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				ev.stopPropagation();
 			} else {
 				forward('onFocus', ev, this.props);
+			}
+		}
+
+		handleSubscription = ({channel, message}) => {
+			if (channel === 'i18n') {
+				const {rtl} = message;
+				if (rtl !== this.state.rtl) {
+					this.setState({rtl});
+				}
+			} else if (channel === 'resize') {
+				this.publisher.publish(message);
 			}
 		}
 
