@@ -508,7 +508,7 @@ const PickerBase = class extends React.Component {
 	}
 
 	handleWheel = (ev) => {
-		const {joined, step} = this.props;
+		const {step} = this.props;
 		forwardWheel(ev, this.props);
 
 		const isContainerSpotted = this.containerRef === Spotlight.getCurrent();
