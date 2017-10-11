@@ -1050,7 +1050,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	doPulseAction () {
 		if (this.props.seekDisabled) {
-			forward('onSeekFailed', null, this.props);
+			forward('onSeekFailed', {}, this.props);
 		} else if (is('left', this.pulsingKeyCode)) {
 			this.showMiniFeedback = true;
 			this.jump(-1 * this.props.jumpBy);
@@ -1273,7 +1273,7 @@ const VideoPlayerBase = class extends React.Component {
 		if (!this.props.seekDisabled) {
 			this.video.currentTime = timeIndex;
 		} else {
-			forward('onSeekFailed', null, this.props);
+			forward('onSeekFailed', {}, this.props);
 		}
 	}
 
