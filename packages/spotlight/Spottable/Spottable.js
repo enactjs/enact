@@ -182,11 +182,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		componentDidMount () {
-			// eslint-disable-next-line react/no-find-dom-node
-			this.node = ReactDOM.findDOMNode(this);
-		}
-
 		componentWillMount () {
 			this.publisher = Publisher.create('resize', this.context.Subscriber);
 			this.publisher.publish({
@@ -197,6 +192,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				this.context.Subscriber.subscribe('resize', this.handleSubscription);
 				this.context.Subscriber.subscribe('i18n', this.handleSubscription);
 			}
+		}
+
+		componentDidMount () {
+			// eslint-disable-next-line react/no-find-dom-node
+			this.node = ReactDOM.findDOMNode(this);
 		}
 
 		componentDidUpdate (prevProps, prevState) {
