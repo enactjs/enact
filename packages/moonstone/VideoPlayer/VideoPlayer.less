@@ -60,6 +60,7 @@
 			right: @moon-video-player-padding-side;
 
 			&.hidden {
+				pointer-events: none;
 				.sliderFrame {
 					position: absolute;
 					width: 100%
@@ -164,17 +165,12 @@
 				&.hidden {
 					will-change: opacity;
 					opacity: 0;
-					pointer-events: none;
 				}
 
 				.mediaSlider {
 					padding: @slider-padding-v 0;
 					height: @moon-video-player-slider-height;
 					margin: 0;
-
-					&[disabled] {
-						opacity: 1;
-					}
 
 					// Grow the knob when the Slider gets spotted
 					.focus({
@@ -254,7 +250,6 @@
 				&.hidden {
 					will-change: opacity;
 					opacity: 0;
-					pointer-events: none;
 				}
 
 				.leftComponents,

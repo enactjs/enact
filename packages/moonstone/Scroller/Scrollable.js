@@ -331,7 +331,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.doScrollStop();
 				this.animator.stop();
 			}
-			this.forceUpdateJob.stop();
 			this.hideThumbJob.stop();
 
 			if (containerRef && containerRef.removeEventListener) {
@@ -365,6 +364,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		direction = 'vertical'
 		isScrollAnimationTargetAccumulated = false
 		wheelDirection = 0
+		pageDirection = 0
 		isFirstDragging = false
 		isDragging = false
 		deferScrollTo = true
@@ -631,8 +631,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		getPageDirection = (keyCode, isVertical) => {
-			const isRtl = this.context.rtl;
+		getPageDirection = (keyCode) => {
+			const
+				isRtl = this.context.rtl,
+				{direction} = this,
+				isVertical = (direction === 'vertical' || direction === 'both');
 
 			return isPageUp(keyCode) ?
 				(isVertical && 'up' || isRtl && 'right' || 'left') :
@@ -678,24 +681,29 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				}
 				const
 					containerId = Spotlight.getActiveContainer(),
-					direction = this.getPageDirection(keyCode, canScrollVertically),
+					direction = this.getPageDirection(keyCode),
 					rDirection = reverseDirections[direction],
 					viewportBounds = this.containerRef.getBoundingClientRect(),
 					spotItemBounds = spotItem.getBoundingClientRect(),
 					endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
 					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
 
+				// If there is no next spottable DOM elements, scroll one page with animation
 				if (!next) {
 					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
+				// If there is a next spottable DOM element vertically or horizontally, focus it without animation
 				} else if (next !== spotItem) {
 					this.animateOnFocus = false;
 					Spotlight.focus(next);
+				// If a next spottable DOM element is equals to the current spottable item, we need to find a next item
 				} else {
 					const nextPage = this.childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem});
 
+					// If finding a next spottable item in a Scroller, focus it
 					if (typeof nextPage === 'object') {
 						this.animateOnFocus = false;
 						Spotlight.focus(nextPage);
+					// Scroll one page with animation if nextPage is equals to `false`
 					} else if (!nextPage) {
 						scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 					}
@@ -726,9 +734,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		onScrollbarButtonClick = ({isPreviousScrollButton, isVerticalScrollBar}) => {
 			const
 				bounds = this.getScrollBounds(),
-				pageDistance = (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+				pageDistance = (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
+				delta = isPreviousScrollButton ? -pageDistance : pageDistance,
+				direction = Math.sign(delta);
 
-			this.scrollToAccumulatedTarget(isPreviousScrollButton ? -pageDistance : pageDistance, isVerticalScrollBar);
+			if (direction !== this.pageDirection) {
+				this.isScrollAnimationTargetAccumulated = false;
+				this.pageDirection = direction;
+			}
+
+			this.scrollToAccumulatedTarget(delta, isVerticalScrollBar);
 		}
 
 		scrollToAccumulatedTarget = (delta, vertical) => {
@@ -929,6 +944,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				} else {
 					if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
 						itemPos = this.childRef.getItemPosition(opt.index, opt.stickTo);
+						// If the first or the last item to the sticked direction is disabled,
+						// focus another item which is enabled.
+						if (opt.nodeIndexToBeFocused) {
+							this.childRef.setNodeIndexToBeFocused(opt.nodeIndexToBeFocused);
+						}
 					} else if (opt.node instanceof Object) {
 						if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
 							itemPos = this.childRef.getNodePosition(opt.node);
@@ -1128,17 +1148,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.bounds.scrollHeight = this.getScrollBounds().scrollHeight;
 		}
 
-		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
-		// queue it up in case we get multiple calls (e.g. when grouped expandables toggle).
-		//
 		// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 		// state member.
 		enqueueForceUpdate = () => {
 			this.childRef.calculateMetrics();
-			this.forceUpdateJob.start();
+			this.forceUpdate();
 		}
-
-		forceUpdateJob = new Job(this.forceUpdate.bind(this), 32)
 
 		// render
 

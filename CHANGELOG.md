@@ -2,11 +2,107 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
+## [1.10.0] - 2017-10-09
+
+### Added
+
+- `moonstone/VideoPlayer` support for designating components with `.spottable-default` as the default focus target when pressing 5-way down from the slider
+- `moonstone/Slider` property `activateOnFocus` which when enabled, allows 5-way directional key interaction with the `Slider` value without pressing [Enter] first
+- `moonstone/VideoPlayer` property `noMiniFeedback` to support controlling the visibility of mini feedback
+
+### Changed
+
+- `moonstone/Popup` to focus on mount if it’s initially opened and non-animating and to always pass an object to `onHide` and `onShow`
+- `moonstone/VideoPlayer` to emit `onScrub` event and provide audio guidance when setting focus to slider
+
+### Fixed
+
+- `moonstone/ExpandableItem` and derivatives to restore focus to the Item if the contents were last focused when closed
+- `moonstone/Slider` toggling activated state when holding enter/select key
+- `moonstone/TimePicker` picker icons shifting slightly when focusing an adjacent picker
+- `moonstone/Icon` so it handles color the same way generic text does, by inheriting from the parent's color. This applies to all instances of `Icon`, `IconButton`, and `Icon` inside `Button`.
+- `moonstone/VideoPlayer` to correctly position knob on mouse click
+- `moonstone/Panels.Header` to show an ellipsis for long titles with RTL text
+- `moonstone/Marquee` to restart when invalidated by a prop change and managed by a `moonstone/Marquee.MarqueeController`
+
+## [1.9.3] - 2017-10-03
+
+### Changed
+
+- `Moonstone Icons` font file to include the latest designs for several icons
+- `moonstone/Panels/ApplicationCloseButton` to expose its `backgroundOpacity` prop
+- `sampler` `Icon` and `IconButton` samples to include updated images assets
+
+### Fixed
+
+- `moonstone/Button` and `moonstone/IconButton` to be properly visually muted when in a muted container
+- `moonstone/Icon` not to read out image characters
+- `moonstone/Icon` to correctly display focused state when using external image
+- `moonstone/Picker` to increment and decrement normally at the edges of joined picker
+- `moonstone/Scrollable` not to accumulate paging scroll by pressing page up/down in scrollbar
+- `moonstone/VirtualList` to apply "position: absolute" inline style to items
+- `ui/Transition` to recalculate height when a resize occurs
+
+## [1.9.2] - 2017-09-26
+
+### Fixed
+
+- `moonstone/ExpandableList` preventing updates when its children had changed
+
+## [1.9.1] - 2017-09-25
+
+### Fixed
+
+- `moonstone/ExpandableList` run-time error when using an array of objects as children
+- `moonstone/VideoPlayer` blocking pointer events when the controls were hidden
+
+## [1.9.0] - 2017-09-22
+
+### Added
+
+- `moonstone/styles/mixins.less` mixins: `.moon-spotlight-margin()` and `.moon-spotlight-padding()`
+- `moonstone/Button` property `noAnimation` to support non-animating pressed visual
+- `sampler` locale Vietnamese to the locale list knob
+- `ui/styles/mixins.less` mixins: `.remove-margin-on-edge-children()` and `.remove-padding-on-edge-children()` to better handle edge margins on container components
+
+### Changed
+
+- `i18n` to classify Vietnamese as a non-latin language
+- `moonstone/TimePicker` to use "AM/PM" instead of "meridiem" for label under meridiem picker
+- `moonstone/IconButton` default style to not animate on press. NOTE: This behavior will change back to its previous setting in release 2.0.0.
+- `moonstone/Popup` to warn when using `scrimType` `'none'` and `spotlightRestrict` `'self-only'`
+- `moonstone/Scroller` to block spotlight during scroll
+- `moonstone/ExpandableItem` and derivatives to always pause spotlight before animation
+- `spotlight` to block handling repeated key down events that were interrupted by a pointer event
+- `ui/Holdable` to cancel key hold events when the pointer moves
+- `ui/Holdable` and `ui/Changeable` back to Components and moved performance improvements elsewhere
 
 ### Fixed
 
 - `moonstone/Input` height for non-latin locales
+- `moonstone/VirtualGridList` to not move focus to wrong column when scrolled from the bottom by holding the "up" key
+- `moonstone/VirtualList` to focus an item properly when moving to a next or previous page
+- `moonstone/Scrollable` to move focus toward first or last child when page up or down key is pressed if the number of children is small
+- `moonstone/VirtualList` to scroll to preserved index when it exists within dataSize for preserving focus
+- `moonstone/Picker` buttons to not change size
+- `moonstone/Panel` to move key navigation to application close button on holding the "up" key.
+- `moonstone/Picker` to show numbers when changing values rapidly
+- `moonstone/Popup` layout in large text mode to show close button correctly
+- `moonstone/Picker` from moving scroller when pressing 5-way keys in `joined` Picker
+- `moonstone/Input` so it displays all locales the same way, without cutting off the edges of characters
+- `moonstone/TooltipDecorator` to hide tooltip when 5-way keys are pressed for disabled components
+- `moonstone/Picker` to not tremble in width when changing values while using a numeric width prop value
+- `moonstone/Picker` to not overlap values when changing values in `vertical`
+- `moonstone/ContextualPopup` pointer mode focus behavior for `spotlightRestrict='self-only'`
+- `moonstone/VideoPlayer` to prevent interacting with more components in pointer mode when hidden
+- `moonstone/Scroller` to not repaint its entire contents whenever partial content is updated
+- `moonstone/Slider` knob positioning after its container is resized
+- `moonstone/VideoPlayer` to maintain focus when media controls are hidden
+- `moonstone/Scroller` to scroll expandable components into view when opening when pointer has moved elsewhere
+- `spotlight` to not try to focus something when the window is activated unless the window has been previously blurred
+- `spotlight` to prevent containers that have been unmounted from being considered potential targets
+- `ui/FloatingLayer` to not asynchronously attach a click handler when the floating layer is removed
+- `ui/ViewManager` to correctly position items when changing mid-transition
 
 ## [1.8.0] - 2017-09-07
 

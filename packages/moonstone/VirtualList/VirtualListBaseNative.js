@@ -435,7 +435,7 @@ class VirtualListCoreNative extends Component {
 			dataSizeDiff = dataSize - this.curDataSize;
 		let newFirstIndex = firstIndex;
 
-		this.maxFirstIndex = dataSize - numOfItems;
+		this.maxFirstIndex = Math.ceil((dataSize - numOfItems) / dimensionToExtent) * dimensionToExtent;
 		this.curDataSize = dataSize;
 
 		// reset children
@@ -555,7 +555,7 @@ class VirtualListCoreNative extends Component {
 			{gridSize} = this.primary,
 			maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
 			minOfMax = threshold.base,
-			maxOfMin = maxPos - minOfMax;
+			maxOfMin = maxPos - threshold.base;
 		let
 			delta, numOfGridLines, newFirstIndex = firstIndex, pos, dir = 0;
 
@@ -616,16 +616,30 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
+	applyStyleToHideNode = (index) => {
+		const
+			key = index % this.state.numOfItems,
+			style = {display: 'none'},
+			attributes = {[dataIndexAttribute]: index, key, style};
+		this.cc[key] = (<div {...attributes} />);
+	}
+
 	positionItems () {
 		const
+			{dataSize} = this.props,
 			{firstIndex, numOfItems} = this.state,
 			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc} = this,
 			diff = firstIndex - this.lastFirstIndex,
-			updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems,
+			updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems;
+		let
+			hideTo = 0,
 			updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0) ? firstIndex + numOfItems : this.lastFirstIndex;
 
 		if (updateFrom >= updateTo) {
 			return;
+		} else if (updateTo > dataSize) {
+			hideTo = updateTo;
+			updateTo = dataSize;
 		}
 
 		// we only calculate position of the first child
@@ -649,6 +663,10 @@ class VirtualListCoreNative extends Component {
 			}
 		}
 
+		for (let i = updateTo; i < hideTo; i++) {
+			this.applyStyleToHideNode(i);
+		}
+
 		this.lastFirstIndex = firstIndex;
 	}
 
@@ -665,6 +683,7 @@ class VirtualListCoreNative extends Component {
 			style.width = width;
 			style.height = height;
 		}
+		style.position = 'absolute';
 
 		/* FIXME: RTL / this calculation only works for Chrome */
 		style.transform = 'translate(' + (this.context.rtl ? -x : x) + 'px,' + y + 'px)';

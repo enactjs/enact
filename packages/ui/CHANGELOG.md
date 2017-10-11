@@ -4,7 +4,33 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
-### Deprecated
+### Added
+
+### Changed
+
+### Fixed
+
+## [1.10.0] - 2017-10-09
+
+### Added
+
+- `ui/Layout` which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
+
+## [1.9.3] - 2017-10-03
+
+### Fixed
+
+- `ui/Transition` to recalculate height when a resize occurs
+
+## [1.9.2] - 2017-09-26
+
+No significant changes.
+
+## [1.9.1] - 2017-09-25
+
+No significant changes.
+
+## [1.9.0] - 2017-09-22
 
 ### Added
 
@@ -82,7 +108,6 @@ No significant changes.
 ### Added
 
 - `ui/Skinnable` to provide themes with a way to apply a base theme styling and skins on top of that
-## Unreleased
 - `ui/Transition` prop `onShow` that fires when transitioning into view a component.
 - `ui/transition` callback prop `onShow` that fires when transitioning into view completes
 

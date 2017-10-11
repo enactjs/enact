@@ -249,8 +249,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				animating: false,
 				overflow: 'ellipsis',
-				rtl: null
+				rtl: false
 			};
+			this.textDirectionValidated = false;
 			this.sync = false;
 			this.forceRestartMarquee = false;
 			this.timerState = TimerState.CLEAR;
@@ -278,30 +279,34 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				});
 			}
 
+			this.validateTextDirection(this.props);
 			if (this.props.marqueeOn === 'render') {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
 		}
 
 		componentWillReceiveProps (next) {
-			const {forceDirection, marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
-			if (forceDirection !== next.forceDirection) {
-				this.setState({rtl: next.forceDirection ? (next.forceDirection === 'rtl') : null});
-			}
+			const {marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
+			this.validateTextDirection(next);
 			if ((!childrenEquals(this.props.children, next.children)) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
+				// restart marqueeOn="render" marquees or synced marquees that were animating
+				this.forceRestartMarquee = next.marqueeOn === 'render' || (
+					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)
+				);
+
 				this.invalidateMetrics();
 				this.cancelAnimation();
-				this.setState({rtl: null});
+				this.textDirectionValidated = false;
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled || next.marqueeSpeed !== marqueeSpeed) {
 				this.cancelAnimation();
 			}
 		}
 
 		componentDidUpdate () {
-			if (this.state.rtl == null) {
-				const rtl = this.checkRtl();
-				// eslint-disable-next-line react/no-did-update-set-state
-				this.setState({rtl});
+			// if text directionality was invalidated by a prop change, we need to revalidate now
+			// potentially causing a re-render if rtl changes
+			if (this.textDirectionValidated === false) {
+				this.validateTextDirection(this.props);
 			}
 			if (this.distance === null) {
 				this.calculateMetrics();
@@ -364,10 +369,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		shouldStartMarquee () {
 			return (
-				// restart un-synced marquees or marqueeOn="render" synced marquees that were
-				// cancelled due to a prop change
-				(!this.sync || this.forceRestartMarquee) && (
-					this.props.marqueeOn === 'render' ||
+				this.forceRestartMarquee ||
+				!this.sync && (
 					(this.isFocused && this.props.marqueeOn === 'focus') ||
 					(this.isHovered && this.props.marqueeOn === 'hover')
 				)
@@ -564,7 +567,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		cancelAnimation = () => {
 			if (this.sync) {
-				this.forceRestartMarquee = true;
 				this.context.cancel(this);
 			}
 
@@ -579,9 +581,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleLocaleChange = ({message: {rtl}}) => {
-			if (this.state.rtl !== rtl) {
-				this.setState({rtl});
-			}
+			this.rtlLocale = rtl;
+			this.validateTextDirection(this.props);
 		}
 
 		handleMarqueeComplete = (ev) => {
@@ -625,14 +626,26 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		cacheNode = (node) => {
 			this.node = node;
-			this.setState({rtl: this.checkRtl()});
 		}
 
-		checkRtl = () => {
-			const {forceDirection} = this.props;
-			const textContent = this.node && this.node.textContent;
-			// If forceDirection is set, check if it is RTL; otherwise, determine the directionality
-			return (forceDirection ? (forceDirection === 'rtl') : isRtlText(textContent));
+		validateTextDirection = ({forceDirection}) => {
+			// @TODO: replace with functional setState with React 16
+			// Text directionality is a function of locale (this.rtlLocale), content
+			// (this.node.textContent), and props (this.props.forceDirection) in increasing order of
+			// significance.
+			let rtl = this.rtlLocale;
+			if (forceDirection) {
+				rtl = forceDirection === 'rtl';
+			} else if (this.node) {
+				rtl = isRtlText(this.node.textContent);
+				this.textDirectionValidated = true;
+			}
+
+			// prevent re-render when text direction matches locale direction
+			if (rtl !== this.state.rtl) {
+				// eslint-disable-next-line react/no-did-update-set-state
+				this.setState({rtl});
+			}
 		}
 
 		renderMarquee () {
