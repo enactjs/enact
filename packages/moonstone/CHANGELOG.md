@@ -11,6 +11,48 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Scrollable` and `moonstone/Scroller` to scroll by page up/down with scrollable container base
+- `moonstone/VirtualList` not to move focus when a current item and the last item are located at the same line and pressing a page down key
+
+## [1.10.0] - 2017-10-09
+
+### Added
+
+- `moonstone/VideoPlayer` support for designating components with `.spottable-default` as the default focus target when pressing 5-way down from the slider
+- `moonstone/Slider` property `activateOnFocus` which when enabled, allows 5-way directional key interaction with the `Slider` value without pressing [Enter] first
+- `moonstone/VideoPlayer` property `noMiniFeedback` to support controlling the visibility of mini feedback
+- `ui/Layout`, which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
+
+### Changed
+
+- `moonstone/Popup` to focus on mount if it’s initially opened and non-animating and to always pass an object to `onHide` and `onShow`
+- `moonstone/VideoPlayer` to emit `onScrub` event and provide audio guidance when setting focus to slider
+
+### Fixed
+
+- `moonstone/ExpandableItem` and derivatives to restore focus to the Item if the contents were last focused when closed
+- `moonstone/Slider` toggling activated state when holding enter/select key
+- `moonstone/TimePicker` picker icons shifting slightly when focusing an adjacent picker
+- `moonstone/Icon` so it handles color the same way generic text does, by inheriting from the parent's color. This applies to all instances of `Icon`, `IconButton`, and `Icon` inside `Button`.
+- `moonstone/fonts` Museo Sans font to correct "Ti" kerning
+- `moonstone/VideoPlayer` to correctly position knob on mouse click
+- `moonstone/Panels.Header` to show an ellipsis for long titles with RTL text
+- `moonstone/Marquee` to restart when invalidated by a prop change and managed by a `moonstone/Marquee.MarqueeController`
+- `spotlight.Spotlight` method `focus()` to verify that the target element matches its container's selector rules prior to setting focus
+
+## [1.9.3] - 2017-10-03
+
+### Added
+
+- `moonstone/Button` property value to `backgroundOpacity` called "lightTranslucent" to better serve colorful image backgrounds behind Buttons. This also affects `moonstone/IconButton` and `moonstone/Panels/ApplicationCloseButton`.
+- `moonstone/Panels` property `closeButtonBackgroundOpacity` to support `moonstone/Panels/ApplicationCloseButton`'s `backgroundOpacity` prop
+
+### Changed
+
+- `Moonstone Icons` font file to include the latest designs for several icons
+- `moonstone/Panels/ApplicationCloseButton` to expose its `backgroundOpacity` prop
+
+### Fixed
+
 - `moonstone/VirtualList` to apply "position: absolute" inline style to items
 - `moonstone/Picker` to increment and decrement normally at the edges of joined picker
 - `moonstone/Icon` not to read out image characters

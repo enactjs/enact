@@ -265,6 +265,8 @@ class Popup extends React.Component {
 		 * A function to run when popup shows. When animating, it runs after transition for
 		 * showing is finished.
 		 *
+		 * Note: The function does not run if Popup is initially opened and non animating.
+		 *
 		 * @type {Function}
 		 * @public
 		 */
@@ -334,6 +336,7 @@ class Popup extends React.Component {
 	componentDidMount () {
 		if (this.props.open && this.props.noAnimation) {
 			on('keydown', this.handleKeyDown);
+			this.spotPopupContent();
 		}
 	}
 
@@ -359,11 +362,11 @@ class Popup extends React.Component {
 			if (!this.props.noAnimation) {
 				Spotlight.pause();
 			} else if (this.props.open) {
-				forwardShow(null, this.props);
+				forwardShow({}, this.props);
 				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
 			} else if (prevProps.open) {
-				forwardHide(null, this.props);
+				forwardHide({}, this.props);
 				off('keydown', this.handleKeyDown);
 				this.spotActivator(prevState.activator);
 			}

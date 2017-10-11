@@ -204,7 +204,11 @@ class ScrollerBase extends Component {
 			endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect()),
 			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, containerId);
 
-		return (next !== focusedItem) && next;
+		if (next === focusedItem) {
+			return false; // Scroll one page with animation
+		} else {
+			return next; // Focus a next item
+		}
 	}
 
 	getNextEndPoint = (direction, oSpotBounds) => {
