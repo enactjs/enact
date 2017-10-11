@@ -8,9 +8,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VideoPlayer` properties `seekDisabled` and `onSeekFailed` to disable seek function
 
-## [1.9.0]
-
-### Deprecated
 ### Changed
 
 ### Fixed
