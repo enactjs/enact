@@ -513,7 +513,7 @@ const PickerBase = class extends React.Component {
 
 		const isContainerSpotted = this.containerRef === Spotlight.getCurrent();
 
-		if (joined && isContainerSpotted) {
+		if (isContainerSpotted) {
 			const dir = -Math.sign(ev.deltaY);
 
 			// We'll sometimes get a 0/-0 wheel event we need to ignore or the wheel event has reached
