@@ -108,7 +108,9 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		onEvent = () => {
-			this.publisher.publish(this.state);
+			this.setState({
+				remeasure: !this.state.remeasure
+			});
 		}
 
 		render () {
