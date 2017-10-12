@@ -548,16 +548,22 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				{getEndPoint, scrollToAccumulatedTarget} = this,
 				bounds = this.getScrollBounds(),
 				canScrollVertically = this.canScrollVertically(bounds),
+				childRef = this.childRef,
 				pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
 				spotItem = Spotlight.getCurrent();
 
 			if (!Spotlight.getPointerMode() && spotItem) {
 				// Should skip scroll by page when spotItem is paging control button of Scrollbar
-				if (!this.childRef.containerRef.contains(spotItem)) {
+				if (!childRef.containerRef.contains(spotItem)) {
 					return;
 				}
 				const
-					containerId = Spotlight.getActiveContainer(),
+					containerId = (
+						// ScrollerNative has a containerId on containerRef
+						childRef.containerRef.dataset.containerId ||
+						// VirtualListNative has a containerId on contentRef
+						childRef.contentRef.dataset.containerId
+					),
 					direction = this.getPageDirection(keyCode),
 					rDirection = reverseDirections[direction],
 					viewportBounds = this.containerRef.getBoundingClientRect(),
@@ -571,7 +577,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					this.animateOnFocus = false;
 					Spotlight.focus(next);
 				} else {
-					const nextPage = this.childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem});
+					const nextPage = childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
 
 					if (typeof nextPage === 'object') {
 						this.animateOnFocus = false;
