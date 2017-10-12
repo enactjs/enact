@@ -9,6 +9,7 @@
 import React from 'react';
 import invariant from 'invariant';
 import hoc from '@enact/core/hoc';
+import {forward} from '@enact/core/handle';
 import {contextTypes, Publisher, Subscription} from '@enact/core/internal/PubSub';
 
 /**
@@ -19,12 +20,12 @@ import {contextTypes, Publisher, Subscription} from '@enact/core/internal/PubSub
  */
 const defaultConfig = {
 	/**
-	 * Configures the event name that triggers the component
+	 * Configures the events that trigger the component
 	 *
-	 * @type {String}
+	 * @type {Array}
 	 * @memberof ui/Remeasurable.RemeasurableDecorator.defaultConfig
 	 */
-	onEvent: null,
+	events: [],
 
 	/**
 	 * Configures the prop name that triggers the component on prop change
@@ -45,9 +46,9 @@ const defaultConfig = {
  * @private
  */
 const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {trigger, onEvent} = config;
+	const {trigger, events} = config;
 
-	invariant(trigger || onEvent, 'trigger or onEvent are required by RemeasurableDecorator');
+	invariant(trigger || events.length > 0, 'trigger or events are required by RemeasurableDecorator');
 
 	return class extends React.Component {
 		static displayName = 'RemeasurableDecorator'
@@ -61,6 +62,7 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				remeasure: false
 			};
+			this.triggerEvents = this.attachEvents();
 		}
 
 		getChildContext () {
@@ -81,13 +83,15 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			this.setState({
-				remeasure: this.props[trigger] !== nextProps[trigger]
-			});
+			if (trigger) {
+				this.setState({
+					remeasure: this.props[trigger] !== nextProps[trigger]
+				});
+			}
 		}
 
 		componentDidUpdate (prevProps, prevState) {
-			if (this.state.remeasure && !prevState.remeasure) {
+			if (this.state.remeasure !== prevState.remeasure) {
 				this.publisher.publish(this.state);
 			}
 		}
@@ -107,17 +111,24 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.publisher.publish(state);
 		}
 
-		handleEvent = () => {
+		handleEvent = (name) => (ev) => {
+			forward(name, ev, this.props);
+
 			this.setState({
 				remeasure: !this.state.remeasure
 			});
 		}
 
-		render () {
-			const event = onEvent ? {[onEvent]: this.handleEvent} : {};
+		attachEvents () {
+			return events.reduce((previous, current, ) => {
+				previous[current] = this.handleEvent(current);
+				return previous;
+			}, {});
+		}
 
+		render () {
 			return (
-				<Wrapped {...this.props} {...event} />
+				<Wrapped {...this.props} {...this.triggerEvents} />
 			);
 		}
 	};

@@ -160,7 +160,7 @@ const ItemOverlay = Slottable(
 			overlayBefore: childrenEquals,
 			overlayAfter: childrenEquals
 		}},
-		RemeasurableDecorator({onEvent: 'onFocus'},
+		RemeasurableDecorator({events: ['onFocus', 'onBlur']},
 			Spottable(
 				ItemMarqueeDecorator(
 					OverlayDecorator(

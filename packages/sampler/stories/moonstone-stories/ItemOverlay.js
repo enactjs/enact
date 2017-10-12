@@ -2,7 +2,7 @@ import Icon from '@enact/moonstone/Icon';
 import Item, {ItemBase, ItemOverlay} from '@enact/moonstone/Item';
 import OverlayDecorator from '@enact/moonstone/Item/OverlayDecorator';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
+import {storiesOf, action} from '@kadira/storybook';
 import {boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
@@ -23,6 +23,8 @@ storiesOf('Item.ItemOverlay')
 			<ItemOverlay
 				autoHide={nullify(select('autoHide', prop.autoHide, 'after'))}
 				disabled={boolean('disabled', false)}
+				onFocus={action('focus')}
+				onBlur={action('blur')}
 			>
 				<Icon slot="overlayBefore">star</Icon>
 				{text('children', 'Hello Item')}
