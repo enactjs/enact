@@ -10,8 +10,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/VirtualList` not to move focus when a current item and the last item are located at the same line and pressing a page down key
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to scroll by 5-way keys right after wheeling
+- `moonstone/VirtualList` not to move focus when a current item and the last item are located at the same line and pressing a page down key
 
 ## [1.10.0] - 2017-10-09
 
