@@ -10,7 +10,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Scrollable` and `moonstone/Scroller` to scroll via page up/down when focus is inside a Spotlight container
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to scroll by 5-way keys right after wheeling
 - `moonstone/VirtualList` not to move focus when a current item and the last item are located at the same line and pressing a page down key
+- `moonstone/Header` to layout header row correctly in `standard` type
 - `moonstone/Input` to not dismiss on-screen keyboard when dragging cursor out of input box
 
 ## [1.10.0] - 2017-10-09
@@ -33,10 +36,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` toggling activated state when holding enter/select key
 - `moonstone/TimePicker` picker icons shifting slightly when focusing an adjacent picker
 - `moonstone/Icon` so it handles color the same way generic text does, by inheriting from the parent's color. This applies to all instances of `Icon`, `IconButton`, and `Icon` inside `Button`.
+- `moonstone/fonts` Museo Sans font to correct "Ti" kerning
 - `moonstone/VideoPlayer` to correctly position knob on mouse click
 - `moonstone/Panels.Header` to show an ellipsis for long titles with RTL text
 - `moonstone/Marquee` to restart when invalidated by a prop change and managed by a `moonstone/Marquee.MarqueeController`
 - `spotlight.Spotlight` method `focus()` to verify that the target element matches its container's selector rules prior to setting focus
+- `moonstone/Picker` to only change picker values `onWheel` when spotted
 
 ## [1.9.3] - 2017-10-03
 
