@@ -53,9 +53,7 @@
 		.title {
 			line-height: @moon-medium-header-line-height;
 
-			.enyo-locale-non-latin & {
-				line-height: @moon-non-latin-medium-header-line-height;
-			}
+			.moon-locale-non-latin({line-height: @moon-non-latin-medium-header-line-height;});
 		}
 
 		.titleBelow,
@@ -80,12 +78,9 @@
 
 		.title {
 			font-size: @moon-small-header-font-size;
-			line-height: @moon-small-header-line-height;
 			display: inline;
 
-			.enyo-locale-non-latin & {
-				line-height: @moon-non-latin-small-header-line-height;
-			}
+			.moon-locale-non-latin({line-height: @moon-small-header-line-height;});
 		}
 
 		.titleBelow {
