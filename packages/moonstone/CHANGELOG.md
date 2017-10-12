@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to scroll by 5-way keys right after wheeling
 - `moonstone/VirtualList` not to move focus when a current item and the last item are located at the same line and pressing a page down key
 - `moonstone/Header` to layout header row correctly in `standard` type
+- `moonstone/ContextualPopupDecorator` to remeasure the popup when the popup component or props change
 
 ## [1.10.0] - 2017-10-09
 

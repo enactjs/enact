@@ -6,6 +6,7 @@
  * @module moonstone/ContextualPopupDecorator
  */
 
+import equals from 'ramda/src/equals';
 import {extractAriaProps} from '@enact/core/util';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import hoc from '@enact/core/hoc';
@@ -280,6 +281,20 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				off('keydown', this.handleKeyDown);
 				off('keyup', this.handleKeyUp);
 				this.spotActivator(prevState.activator);
+			}
+			// If the Popup component or props have changed, we probably need to re-layout. However,
+			// we can't remeasure yet, as the component will not be refreshed in the DOM. This will
+			// cause a double (or triple??) update.
+			if (
+				!equals(this.props.popupProps, prevProps.popupProps) ||
+				this.props.popupComponent !== prevProps.popupComponent
+			) {
+				this.setState({containerPosition: null});	// eslint-disable-line react/no-did-update-set-state
+			}
+			// Now, if our state change has come in and we had a position before but not now, we can
+			// remeasure and all should be good.
+			if (prevState.containerPosition && !this.state.containerPosition) {
+				this.setContainerPosition();
 			}
 		}
 
