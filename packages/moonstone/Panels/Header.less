@@ -60,12 +60,6 @@
 		.subTitleBelow {
 			line-height: 39px;
 		}
-
-		.headerRow {
-			position: absolute;
-			width: 100%;
-			bottom: 12px;
-		}
 	}
 
 	// Compact Header
@@ -110,6 +104,7 @@
 	});
 }
 
-:global(.hasCloseButton) .header {
+:global(.hasCloseButton) .header.compact,
+:global(.hasCloseButton) .header.standard .title {
 	.padding-start-end(0, @moon-spotlight-outset + @moon-icon-button-small-size + @moon-spotlight-outset);
 }
