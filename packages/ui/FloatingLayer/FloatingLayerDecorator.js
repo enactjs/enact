@@ -66,6 +66,10 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		getFloatingLayer = () => {
+			// FIXME: if a component that resides in the floating layer is rendered at the same time
+			// as the floating layer, this.floatingLayer may not have been initialized yet since
+			// componentDidMount runs inside-out. As a fallback, we search by id but this could
+			// introduce issues (e.g. for duplicate layer ids).
 			return this.floatingLayer || document.getElementById(floatLayerId) || null;
 		}
 
