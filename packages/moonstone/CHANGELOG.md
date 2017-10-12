@@ -10,7 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scrollable` and `moonstone/Scroller` to scroll by page up/down with scrollable container base
+- `moonstone/Scrollable` and `moonstone/Scroller` to scroll via page up/down when focus is inside a Spotlight container
 - `moonstone/VirtualList` not to move focus when a current item and the last item are located at the same line and pressing a page down key
 
 ## [1.10.0] - 2017-10-09
