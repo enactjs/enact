@@ -307,7 +307,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				// FIXME `onScroll` doesn't work on the v8 snapshot.
 				childContainerRef.removeEventListener('scroll', this.onScroll, {capture: true});
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('focus', this.onFocus, {capture: true});
+				childContainerRef.removeEventListener('focusin', this.onFocus);
 				// FIXME `onMouseOver` doesn't work on the v8 snapshot.
 				childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
 				// FIXME `onMouseMove` doesn't work on the v8 snapshot.
@@ -973,7 +973,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				// FIXME `onScroll` doesn't work on the v8 snapshot.
 				childContainerRef.addEventListener('scroll', this.onScroll, {capture: true});
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.addEventListener('focus', this.onFocus, {capture: true});
+				childContainerRef.addEventListener('focusin', this.onFocus);
 				// FIXME `onMouseOver` doesn't work on the v8 snapshot.
 				childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
 				// FIXME `onMouseMove` doesn't work on the v8 snapshot.

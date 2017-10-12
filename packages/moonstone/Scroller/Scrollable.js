@@ -339,7 +339,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 			if (childContainerRef && childContainerRef.removeEventListener) {
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('focus', this.onFocus, true);
+				childContainerRef.removeEventListener('focusin', this.onFocus);
 			}
 			off('keydown', this.onKeyDown);
 
@@ -1121,7 +1121,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 			if (childContainerRef && childContainerRef.addEventListener) {
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.addEventListener('focus', this.onFocus, true);
+				childContainerRef.addEventListener('focusin', this.onFocus);
 			}
 		}
 
