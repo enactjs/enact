@@ -30,7 +30,7 @@
   "dependencies": {
     "@enact/core": "^1.10.0",
     "invariant": "~2.2.2",
-    "prop-types": "~15.5.10",
+    "prop-types": "~15.6.0",
     "ramda": "~0.24.1",
     "react": "~15.6.1",
     "react-dom": "~15.6.1",
