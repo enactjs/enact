@@ -286,8 +286,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			// we can't remeasure yet, as the component will not be refreshed in the DOM. This will
 			// cause a double (or triple??) update.
 			if (
-				!equals(this.props.popupProps, prevProps.popupProps) ||
-				this.props.popupComponent !== prevProps.popupComponent
+				this.props.open && (
+					!equals(this.props.popupProps, prevProps.popupProps) ||
+					this.props.popupComponent !== prevProps.popupComponent
+				)
 			) {
 				this.setState({containerPosition: null});	// eslint-disable-line react/no-did-update-set-state
 			}
