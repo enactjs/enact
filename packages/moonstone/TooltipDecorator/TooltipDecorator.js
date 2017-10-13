@@ -338,7 +338,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handle = handle.bind(this)
 
 		handleKeyDown = this.handle(
-			forProp('disabled', true),
 			() => {
 				this.hideTooltip();
 				off('keydown', this.handleKeyDown);
