@@ -120,7 +120,7 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		attachEvents () {
-			return events.reduce((previous, current, ) => {
+			return events.reduce((previous, current) => {
 				previous[current] = this.handleEvent(current);
 				return previous;
 			}, {});
