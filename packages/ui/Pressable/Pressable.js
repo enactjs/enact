@@ -27,7 +27,7 @@ const defaultConfig = {
 	 * @default 'onMouseDown'
 	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
-	depress: 'onMouseDown',
+	depress: ['onMouseDown'],
 
 	/**
 	 * Configures the event name that deactivates the Pressable when onMouseLeave is triggered
@@ -36,7 +36,7 @@ const defaultConfig = {
 	 * @default 'onMouseLeave'
 	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
-	leave: 'onMouseLeave',
+	leave: null,
 
 	/**
 	 * Configures the event name that deactivates the Pressable
@@ -45,7 +45,7 @@ const defaultConfig = {
 	 * @default 'onMouseUp'
 	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
-	release: 'onMouseUp',
+	release: ['onMouseUp', 'onMouseLeave'],
 
 	/**
 	 * Configures the property that is passed to the wrapped component when pressed
@@ -127,6 +127,21 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				controlled,
 				pressed
 			};
+
+			let releaseEvents = release;
+			if (leave) {
+				const leaveEvents = Array.isArray(leave) ? leave : [leave];
+				if (Array.isArray(releaseEvents)) {
+					releaseEvents = releaseEvents.concat(leave);
+				} else if (releaseEvents) {
+					leaveEvents.push(releaseEvents);
+				} else {
+					releaseEvents = leaveEvents;
+				}
+			}
+
+			this.addEventHandlers(depress, this.handleDepress);
+			this.addEventHandlers(releaseEvents, this.handleRelease);
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -134,6 +149,10 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				const pressed = nextProps[prop];
 				this.setState({pressed});
 			} else {
+				if (nextProps.disabled && this.state.pressed) {
+					this.setState({pressed: false});
+				}
+
 				warning(
 					!(prop in nextProps),
 					`'${prop}' specified for an uncontrolled instance of Pressable and will be
@@ -146,34 +165,35 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		handle = handle.bind(this)
 
 		updatePressed = (pressed) => {
-			if (!this.state.controlled) {
+			if (!this.state.controlled && this.state.pressed !== pressed) {
 				this.setState({pressed});
 			}
 		}
 
 		handleDepress = this.handle(
-			forward(depress),
 			forProp('disabled', false),
 			(ev) => this.updatePressed(ev && ev.pressed || true)
 		)
 
-		handleRelease = this.handle(
-			forward(release),
-			forProp('disabled', false),
-			() => this.updatePressed(false)
-		)
+		handleRelease = () => {
+			this.updatePressed(false);
+		}
 
-		handleLeave = this.handle(
-			forward(leave),
-			forProp('disabled', false),
-			() => this.updatePressed(false)
-		)
+		addEventHandlers (eventNames, handler) {
+			eventNames = Array.isArray(eventNames) ? eventNames : [eventNames];
+
+			this.handlers = eventNames.reduce((handlers, name) => {
+				handlers[name] = this.handle(
+					forward(name),
+					handler
+				);
+
+				return handlers;
+			}, this.handlers || {});
+		}
 
 		render () {
-			const props = Object.assign({}, this.props);
-			if (depress) props[depress] = this.handleDepress;
-			if (release) props[release] = this.handleRelease;
-			if (leave) props[leave] = this.handleLeave;
+			const props = Object.assign({}, this.props, this.handlers);
 			if (prop) props[prop] = this.state.pressed;
 			delete props[defaultPropKey];
 

@@ -10,6 +10,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
+## [1.10.0] - 2017-10-09
+
+### Fixed
+
 - `spotlight.Spotlight` method `focus()` to verify that the target element matches its container's selector rules prior to setting focus
 
 ## [1.9.3] - 2017-10-03

@@ -6,9 +6,25 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+### Changed
+
+### Fixed
+
+- `moonstone/Scrollable` and `moonstone/Scroller` to scroll via page up/down when focus is inside a Spotlight container
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to scroll by 5-way keys right after wheeling
+- `moonstone/VirtualList` not to move focus when a current item and the last item are located at the same line and pressing a page down key
+- `moonstone/Header` to layout header row correctly in `standard` type
+- `moonstone/Input` to not dismiss on-screen keyboard when dragging cursor out of input box
+- `moonstone/Header` RTL `line-height` issue
+
+## [1.10.0] - 2017-10-09
+
+### Added
+
 - `moonstone/VideoPlayer` support for designating components with `.spottable-default` as the default focus target when pressing 5-way down from the slider
 - `moonstone/Slider` property `activateOnFocus` which when enabled, allows 5-way directional key interaction with the `Slider` value without pressing [Enter] first
 - `moonstone/VideoPlayer` property `noMiniFeedback` to support controlling the visibility of mini feedback
+- `ui/Layout`, which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
 
 ### Changed
 
@@ -17,14 +33,16 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/VirtualList` not to move focus when a current item and the last item are located at the same line and pressing a page down key
 - `moonstone/ExpandableItem` and derivatives to restore focus to the Item if the contents were last focused when closed
 - `moonstone/Slider` toggling activated state when holding enter/select key
 - `moonstone/TimePicker` picker icons shifting slightly when focusing an adjacent picker
 - `moonstone/Icon` so it handles color the same way generic text does, by inheriting from the parent's color. This applies to all instances of `Icon`, `IconButton`, and `Icon` inside `Button`.
+- `moonstone/fonts` Museo Sans font to correct "Ti" kerning
 - `moonstone/VideoPlayer` to correctly position knob on mouse click
 - `moonstone/Panels.Header` to show an ellipsis for long titles with RTL text
 - `moonstone/Marquee` to restart when invalidated by a prop change and managed by a `moonstone/Marquee.MarqueeController`
+- `spotlight.Spotlight` method `focus()` to verify that the target element matches its container's selector rules prior to setting focus
+- `moonstone/Picker` to only change picker values `onWheel` when spotted
 - `moonstone/VideoPlayer` to hide descendant floating components (tooltips, contextual popups) when the media controls hide
 
 ## [1.9.3] - 2017-10-03
