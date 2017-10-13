@@ -3,6 +3,10 @@ import {mount} from 'enzyme';
 import {FloatingLayerBase} from '../FloatingLayer';
 
 describe('FloatingLayer Specs', () => {
+	const context = {
+		getFloatingLayer: () => document.getElementById('floatLayer')
+	};
+
 	beforeEach(() => {
 		const div = document.createElement('div');
 		div.setAttribute('id', 'floatLayer');
@@ -15,7 +19,10 @@ describe('FloatingLayer Specs', () => {
 	});
 
 	it('should not render if FloatingLayer is not open', () => {
-		const wrapper = mount(<FloatingLayerBase><p>Hi</p></FloatingLayerBase>);
+		const wrapper = mount(
+			<FloatingLayerBase><p>Hi</p></FloatingLayerBase>,
+			{context}
+		);
 
 		const expected = null;
 		const actual = wrapper.instance().node;
@@ -23,7 +30,10 @@ describe('FloatingLayer Specs', () => {
 	});
 
 	it('should render if FloatingLayer is open', () => {
-		const wrapper = mount(<FloatingLayerBase open><p>Hi</p></FloatingLayerBase>);
+		const wrapper = mount(
+			<FloatingLayerBase open><p>Hi</p></FloatingLayerBase>,
+			{context}
+		);
 
 		const expected = 1;
 		const actual = wrapper.instance().node.querySelectorAll('p').length;
