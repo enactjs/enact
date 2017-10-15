@@ -16,6 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Header` to layout header row correctly in `standard` type
 - `moonstone/Input` to not dismiss on-screen keyboard when dragging cursor out of input box
 - `moonstone/Header` RTL `line-height` issue
+- `moonstone/Panels` to render children on idle
 - `moonstone/Scroller.Scrollable` to limit its muted spotlight container scrim to its bounds
 
 ## [1.10.0] - 2017-10-09
