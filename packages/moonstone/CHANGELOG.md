@@ -17,6 +17,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Input` to not dismiss on-screen keyboard when dragging cursor out of input box
 - `moonstone/Header` RTL `line-height` issue
 - `moonstone/Panels` to render children on idle
+- `moonstone/Scroller.Scrollable` to limit its muted spotlight container scrim to its bounds
 
 ## [1.10.0] - 2017-10-09
 
@@ -44,6 +45,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Marquee` to restart when invalidated by a prop change and managed by a `moonstone/Marquee.MarqueeController`
 - `spotlight.Spotlight` method `focus()` to verify that the target element matches its container's selector rules prior to setting focus
 - `moonstone/Picker` to only change picker values `onWheel` when spotted
+- `moonstone/VideoPlayer` to hide descendant floating components (tooltips, contextual popups) when the media controls hide
 
 ## [1.9.3] - 2017-10-03
 
