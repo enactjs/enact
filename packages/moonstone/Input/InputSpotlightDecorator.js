@@ -281,16 +281,18 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 			// verify that we have a matching pair of key down/up events to avoid adjusting focus
 			// when the component received focus mid-press
-			if (target !== this.downTarget) return;
-			this.downTarget = null;
+			if (target === this.downTarget) {
+				this.downTarget = null;
 
-			if (this.state.focused === 'input' && dismissOnEnter && is('enter', keyCode)) {
-				this.focusDecorator(currentTarget);
-				// prevent Enter onKeyPress which triggers an onMouseDown via Spotlight
-				preventDefault();
-			} else if (this.state.focused !== 'input' && is('enter', keyCode)) {
-				this.focusInput(currentTarget);
+				if (this.state.focused === 'input' && dismissOnEnter && is('enter', keyCode)) {
+					this.focusDecorator(currentTarget);
+					// prevent Enter onKeyPress which triggers an onMouseDown via Spotlight
+					preventDefault();
+				} else if (this.state.focused !== 'input' && is('enter', keyCode)) {
+					this.focusInput(currentTarget);
+				}
 			}
+
 			forwardKeyUp(ev, this.props);
 		}
 
