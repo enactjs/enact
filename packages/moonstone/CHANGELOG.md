@@ -16,6 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Header` to layout header row correctly in `standard` type
 - `moonstone/Input` to not dismiss on-screen keyboard when dragging cursor out of input box
 - `moonstone/Header` RTL `line-height` issue
+- `moonstone/Scrollable` and `moonstone/Scroller` to change focus via page up/down only when the scrollbar is visible
 
 ## [1.10.0] - 2017-10-09
 

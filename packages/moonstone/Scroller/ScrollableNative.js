@@ -552,42 +552,44 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
 				spotItem = Spotlight.getCurrent();
 
-			if (!Spotlight.getPointerMode() && spotItem) {
-				// Should skip scroll by page when spotItem is paging control button of Scrollbar
-				if (!childRef.containerRef.contains(spotItem)) {
-					return;
-				}
-				const
-					containerId = (
-						// ScrollerNative has a containerId on containerRef
-						childRef.containerRef.dataset.containerId ||
-						// VirtualListNative has a containerId on contentRef
-						childRef.contentRef.dataset.containerId
-					),
-					direction = this.getPageDirection(keyCode),
-					rDirection = reverseDirections[direction],
-					viewportBounds = this.containerRef.getBoundingClientRect(),
-					spotItemBounds = spotItem.getBoundingClientRect(),
-					endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
-					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
-
-				if (!next) {
-					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
-				} else if (next !== spotItem) {
-					this.animateOnFocus = false;
-					Spotlight.focus(next);
-				} else {
-					const nextPage = childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
-
-					if (typeof nextPage === 'object') {
-						this.animateOnFocus = false;
-						Spotlight.focus(nextPage);
-					} else if (!nextPage) {
-						scrollToAccumulatedTarget(pageDistance, canScrollVertically);
+			if (this.state.isVerticalScrollbarVisible) {
+				if (!Spotlight.getPointerMode() && spotItem) {
+					// Should skip scroll by page when spotItem is paging control button of Scrollbar
+					if (!childRef.containerRef.contains(spotItem)) {
+						return;
 					}
+					const
+						containerId = (
+							// ScrollerNative has a containerId on containerRef
+							childRef.containerRef.dataset.containerId ||
+							// VirtualListNative has a containerId on contentRef
+							childRef.contentRef.dataset.containerId
+						),
+						direction = this.getPageDirection(keyCode),
+						rDirection = reverseDirections[direction],
+						viewportBounds = this.containerRef.getBoundingClientRect(),
+						spotItemBounds = spotItem.getBoundingClientRect(),
+						endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
+						next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
+
+					if (!next) {
+						scrollToAccumulatedTarget(pageDistance, canScrollVertically);
+					} else if (next !== spotItem) {
+						this.animateOnFocus = false;
+						Spotlight.focus(next);
+					} else {
+						const nextPage = childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
+
+						if (typeof nextPage === 'object') {
+							this.animateOnFocus = false;
+							Spotlight.focus(nextPage);
+						} else if (!nextPage) {
+							scrollToAccumulatedTarget(pageDistance, canScrollVertically);
+						}
+					}
+				} else {
+					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 				}
-			} else {
-				scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 			}
 		}
 

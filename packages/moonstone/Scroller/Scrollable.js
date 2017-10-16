@@ -675,44 +675,46 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
 				spotItem = Spotlight.getCurrent();
 
-			if (!Spotlight.getPointerMode() && spotItem) {
-				// Should skip scroll by page when spotItem is paging control button of Scrollbar
-				if (!childRef.containerRef.contains(spotItem)) {
-					return;
-				}
-
-				const
-					// VirtualList and Scroller have a containerId on containerRef
-					containerId = childRef.containerRef.dataset.containerId,
-					direction = this.getPageDirection(keyCode),
-					rDirection = reverseDirections[direction],
-					viewportBounds = this.containerRef.getBoundingClientRect(),
-					spotItemBounds = spotItem.getBoundingClientRect(),
-					endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
-					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
-
-				// If there is no next spottable DOM elements, scroll one page with animation
-				if (!next) {
-					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
-				// If there is a next spottable DOM element vertically or horizontally, focus it without animation
-				} else if (next !== spotItem) {
-					this.animateOnFocus = false;
-					Spotlight.focus(next);
-				// If a next spottable DOM element is equals to the current spottable item, we need to find a next item
-				} else {
-					const nextPage = childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
-
-					// If finding a next spottable item in a Scroller, focus it
-					if (typeof nextPage === 'object') {
-						this.animateOnFocus = false;
-						Spotlight.focus(nextPage);
-					// Scroll one page with animation if nextPage is equals to `false`
-					} else if (!nextPage) {
-						scrollToAccumulatedTarget(pageDistance, canScrollVertically);
+			if (this.state.isVerticalScrollbarVisible) {
+				if (!Spotlight.getPointerMode() && spotItem) {
+					// Should skip scroll by page when spotItem is paging control button of Scrollbar
+					if (!childRef.containerRef.contains(spotItem)) {
+						return;
 					}
+
+					const
+						// VirtualList and Scroller have a containerId on containerRef
+						containerId = childRef.containerRef.dataset.containerId,
+						direction = this.getPageDirection(keyCode),
+						rDirection = reverseDirections[direction],
+						viewportBounds = this.containerRef.getBoundingClientRect(),
+						spotItemBounds = spotItem.getBoundingClientRect(),
+						endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
+						next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
+
+					// If there is no next spottable DOM elements, scroll one page with animation
+					if (!next) {
+						scrollToAccumulatedTarget(pageDistance, canScrollVertically);
+					// If there is a next spottable DOM element vertically or horizontally, focus it without animation
+					} else if (next !== spotItem) {
+						this.animateOnFocus = false;
+						Spotlight.focus(next);
+					// If a next spottable DOM element is equals to the current spottable item, we need to find a next item
+					} else {
+						const nextPage = childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
+
+						// If finding a next spottable item in a Scroller, focus it
+						if (typeof nextPage === 'object') {
+							this.animateOnFocus = false;
+							Spotlight.focus(nextPage);
+						// Scroll one page with animation if nextPage is equals to `false`
+						} else if (!nextPage) {
+							scrollToAccumulatedTarget(pageDistance, canScrollVertically);
+						}
+					}
+				} else {
+					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 				}
-			} else {
-				scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 			}
 		}
 
