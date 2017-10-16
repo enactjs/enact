@@ -20,6 +20,12 @@ No significant changes.
 
 No significant changes.
 
+## [1.10.1] - 2017-10-16
+
+### Fixed
+
+- `spotlight.Spotlight` method `focus()` to prevent focusing components within containers that are being removed
+
 ## [1.10.0] - 2017-10-09
 
 ### Fixed

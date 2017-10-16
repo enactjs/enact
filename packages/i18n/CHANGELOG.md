@@ -20,6 +20,10 @@ No significant changes.
 
 No significant changes.
 
+## [1.10.1] - 2017-10-16
+
+No significant changes.
+
 ## [1.10.0] - 2017-10-09
 
 No significant changes.
