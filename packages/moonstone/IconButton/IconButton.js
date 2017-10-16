@@ -175,6 +175,7 @@ const IconButtonFactory = factory(({css}) => {
 	return Pure(
 		TooltipDecorator({tooltipDestinationProp: 'tooltipNode'},
 			Pressable(
+				{release: ['onMouseUp', 'onMouseLeave', 'onBlur']},
 				Spottable(
 					Skinnable(
 						IconButtonBaseFactory({css})

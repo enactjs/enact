@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [1.10.1] - 2017-10-16
+
+### Fixed
+
+- `ui/Pressable` to properly set pressed state to false on blur and release
+
 ## [1.10.0] - 2017-10-09
 
 ### Added
