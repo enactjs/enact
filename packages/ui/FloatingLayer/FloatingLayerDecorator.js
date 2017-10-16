@@ -3,8 +3,13 @@
  */
 
 import hoc from '@enact/core/hoc';
-import kind from '@enact/core/kind';
+import PropTypes from 'prop-types';
 import React from 'react';
+
+const contextTypes = {
+	getFloatingLayer: PropTypes.func,
+	getRootFloatingLayer: PropTypes.func
+};
 
 /**
  * Default config for {@link ui/FloatingLayer.FloatingLayerDecorator}.
@@ -46,16 +51,54 @@ const defaultConfig = {
 const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {floatLayerId, wrappedClassName} = config;
 
-	return kind({
-		name: 'FloatingLayerDecorator',
+	return class extends React.Component {
+		static displayName = 'FloatingLayerDecorator'
 
-		render: ({className, ...rest}) => (
-			<div className={className}>
-				<Wrapped {...rest} className={wrappedClassName} />
-				<div id={floatLayerId} />
-			</div>
-		)
-	});
+		static contextTypes = contextTypes
+
+		static childContextTypes = contextTypes
+
+		getChildContext () {
+			return {
+				getFloatingLayer: this.getFloatingLayer,
+				getRootFloatingLayer: this.getRootFloatingLayer
+			};
+		}
+
+		getFloatingLayer = () => {
+			// FIXME: if a component that resides in the floating layer is rendered at the same time
+			// as the floating layer, this.floatingLayer may not have been initialized yet since
+			// componentDidMount runs inside-out. As a fallback, we search by id but this could
+			// introduce issues (e.g. for duplicate layer ids).
+			return this.floatingLayer || document.getElementById(floatLayerId) || null;
+		}
+
+		getRootFloatingLayer = () => {
+			if (this.context.getRootFloatingLayer) {
+				return this.context.getRootFloatingLayer();
+			}
+
+			return this.getFloatingLayer();
+		}
+
+		setFloatingLayer = (node) => {
+			this.floatingLayer = node;
+		}
+
+		render () {
+			const {className, ...rest} = this.props;
+			return (
+				<div className={className}>
+					<Wrapped {...rest} className={wrappedClassName} />
+					<div id={floatLayerId} ref={this.setFloatingLayer} />
+				</div>
+			);
+		}
+	};
 });
 
 export default FloatingLayerDecorator;
+export {
+	contextTypes,
+	FloatingLayerDecorator
+};

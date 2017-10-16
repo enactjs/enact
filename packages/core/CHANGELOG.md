@@ -17,6 +17,7 @@ The following is a curated list of changes in the Enact core module, newest chan
 No significant changes.
 
 ## [2.0.0-alpha.1] - 2017-08-27
+## [1.10.1] - 2017-10-16
 
 No significant changes.
 
