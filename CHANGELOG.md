@@ -22,6 +22,21 @@ The following is a curated list of changes in the Enact project, newest changes 
 ## Removed
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
+## [1.10.1] - 2017-10-16
+
+### Fixed
+
+- `moonstone/Scrollable` and `moonstone/Scroller` to scroll via page up/down when focus is inside a Spotlight container
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to scroll by 5-way keys right after wheeling
+- `moonstone/VirtualList` not to move focus when a current item and the last item are located at the same line and pressing a page down key
+- `moonstone/Header` to layout header row correctly in `standard` type
+- `moonstone/Input` to not dismiss on-screen keyboard when dragging cursor out of input box
+- `moonstone/Header` RTL `line-height` issue
+- `moonstone/Panels` to render children on idle
+- `moonstone/Scroller.Scrollable` to limit its muted spotlight container scrim to its bounds
+- `moonstone/Input` to always forward `onKeyUp` event
+- `spotlight.Spotlight` method `focus()` to prevent focusing components within containers that are being removed
+- `ui/Pressable` to properly set pressed state to false on blur and release
 
 ## [1.10.0] - 2017-10-09
 
