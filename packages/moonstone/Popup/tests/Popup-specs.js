@@ -1,10 +1,20 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {mount, shallow} from 'enzyme';
 
 import {Popup, PopupBase} from '../Popup';
 import css from '../Popup.less';
 
 describe('Popup specs', () => {
+	const options = {
+		context: {
+			getFloatingLayer: () => document.getElementById('floatLayer')
+		},
+		childContextTypes: {
+			getFloatingLayer: PropTypes.func
+		}
+	};
+
 	beforeEach(() => {
 		const div = document.createElement('div');
 		div.setAttribute('id', 'floatLayer');
@@ -18,7 +28,8 @@ describe('Popup specs', () => {
 
 	it('should be rendered opened if open is set to true', () => {
 		const popup = mount(
-			<Popup open><div>popup</div></Popup>
+			<Popup open><div>popup</div></Popup>,
+			options
 		);
 
 		const expected = true;
@@ -29,7 +40,8 @@ describe('Popup specs', () => {
 
 	it('should not be rendered if open is set to false', () => {
 		const popup = mount(
-			<Popup><div>popup</div></Popup>
+			<Popup><div>popup</div></Popup>,
+			options
 		);
 
 		const expected = false;

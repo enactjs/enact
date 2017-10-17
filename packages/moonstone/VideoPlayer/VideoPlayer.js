@@ -11,6 +11,7 @@ import equals from 'ramda/src/equals';
 import React from 'react';
 import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
+import {contextTypes, FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import {forKey, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
 import ilib from '@enact/i18n';
 import {Job} from '@enact/core/util';
@@ -39,7 +40,10 @@ import Times from './Times';
 import css from './VideoPlayer.less';
 
 const SpottableDiv = Spottable('div');
-const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
+const Container = SpotlightContainerDecorator(
+	{enterTo: ''},
+	'div'
+);
 
 // Keycode map for webOS TV
 const keyMap = {
@@ -167,6 +171,8 @@ const AnnounceState = {
  */
 const VideoPlayerBase = class extends React.Component {
 	static displayName = 'VideoPlayerBase'
+
+	static contextTypes = contextTypes
 
 	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */ {
 		/**
@@ -753,6 +759,8 @@ const VideoPlayerBase = class extends React.Component {
 			this.reloadVideo();
 		}
 
+		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
+
 		// Added to set default focus on the media control (play) when controls become visible.
 		if (
 			this.state.mediaControlsVisible &&
@@ -872,6 +880,13 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		return true;
+	}
+
+	setFloatingLayerShowing = (showing) => {
+		const layer = this.context.getFloatingLayer && this.context.getFloatingLayer();
+		if (layer) {
+			layer.style.display = showing ? 'block' : 'none';
+		}
 	}
 
 	/**
@@ -1978,7 +1993,10 @@ const VideoPlayer = ApiDecorator(
 	Slottable(
 		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
 		Skinnable(
-			VideoPlayerBase
+			FloatingLayerDecorator(
+				{floatLayerId: 'videoPlayerFloatingLayer'},
+				VideoPlayerBase
+			)
 		)
 	)
 );
