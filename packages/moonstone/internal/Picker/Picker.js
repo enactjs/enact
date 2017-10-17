@@ -539,14 +539,12 @@ const PickerBase = class extends React.Component {
 	handleDecPulse = () => {
 		if (!this.hasReachedBound(this.props.step * -1)) {
 			this.handleDecDown();
-			this.updateValue(-1);
 		}
 	}
 
 	handleIncPulse = () => {
 		if (!this.hasReachedBound(this.props.step)) {
 			this.handleIncDown();
-			this.updateValue(1);
 		}
 	}
 
