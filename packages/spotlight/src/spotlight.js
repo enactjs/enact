@@ -355,9 +355,8 @@ const Spotlight = (function () {
 
 		const keyCode = evt.keyCode;
 		const direction = getDirection(keyCode);
-		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
 
-		if (pointerHandled || !(direction || isEnter(keyCode))) {
+		if (!(direction || isEnter(keyCode))) {
 			_pointerMoveDuringKeyPress = true;
 			return;
 		}
@@ -373,6 +372,19 @@ const Spotlight = (function () {
 
 		if (direction) {
 			preventDefault(evt);
+		}
+	}
+
+	function onKeyDownCapture (evt) {
+		if (shouldPreventNavigation()) {
+			return;
+		}
+
+		const keyCode = evt.keyCode;
+		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
+
+		if (pointerHandled) {
+			evt.stopPropagation();
 		}
 	}
 
@@ -436,6 +448,7 @@ const Spotlight = (function () {
 				window.addEventListener('blur', onBlur);
 				window.addEventListener('focus', onFocus);
 				window.addEventListener('keydown', onKeyDown);
+				window.addEventListener('keydown', onKeyDownCapture, {capture: true});
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
@@ -455,6 +468,7 @@ const Spotlight = (function () {
 			window.removeEventListener('blur', onBlur);
 			window.removeEventListener('focus', onFocus);
 			window.removeEventListener('keydown', onKeyDown);
+			window.removeEventListener('keydown', onKeyDownCapture, {capture: true});
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
