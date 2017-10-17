@@ -299,6 +299,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.textDirectionValidated = false;
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled || next.marqueeSpeed !== marqueeSpeed) {
 				this.cancelAnimation();
+			} else if (this.isHovered || this.isFocused) {
+				this.invalidateMetrics();
 			}
 		}
 
@@ -676,6 +678,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (marqueeOnRender) {
 				rest[enter] = this.handleEnter;
+				rest[focus] = this.handleFocus;
 			}
 
 			delete rest.marqueeCentered;
