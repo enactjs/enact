@@ -229,7 +229,7 @@ describe('Pressable', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not update \'pressed\' when \'onMouseUp\' invoked and is not controlled but disabled', function () {
+	it('should return false for \'pressed\' when \'onMouseUp\' invoked and is not controlled but disabled', function () {
 		const Component = Pressable(DivComponent);
 		const subject = mount(
 			<Component defaultPressed disabled />
@@ -237,7 +237,7 @@ describe('Pressable', () => {
 
 		subject.find(DivComponent).prop('onMouseUp')();
 
-		const expected = true;
+		const expected = false;
 		const actual = subject.find(DivComponent).prop('pressed');
 
 		expect(actual).to.equal(expected);
@@ -257,7 +257,7 @@ describe('Pressable', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not update \'pressed\' when \'onMouseUp\' invoked and is not controlled but disabled', function () {
+	it('should return false for \'pressed\' when \'onMouseUp\' invoked and is not controlled but disabled', function () {
 		const Component = Pressable({deactivate: 'onMouseUp'}, DivComponent);
 		const subject = mount(
 			<Component defaultPressed disabled />
@@ -265,7 +265,7 @@ describe('Pressable', () => {
 
 		subject.find(DivComponent).prop('onMouseUp')();
 
-		const expected = true;
+		const expected = false;
 		const actual = subject.find(DivComponent).prop('pressed');
 
 		expect(actual).to.equal(expected);

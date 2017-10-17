@@ -61,6 +61,7 @@ const prop = {
 		'onProgress',
 		'onRateChange',
 		'onSeeked',
+		'onSeekFailed',
 		'onSeeking',
 		'onStalled',
 		'onSuspend',
@@ -140,12 +141,14 @@ storiesOf('VideoPlayer')
 						no5WayJump={boolean('no5WayJump', false)}
 						noAutoPlay={boolean('noAutoPlay', false)}
 						noJumpButtons={boolean('noJumpButtons', false)}
+						noMiniFeedback={boolean('noMiniFeedback', false)}
 						noRateButtons={boolean('noRateButtons', false)}
 						noSlider={boolean('noSlider', false)}
 						pauseAtEnd={boolean('pauseAtEnd', false)}
 						pauseIcon={select('pauseIcon', icons, 'pause')}
 						playIcon={select('playIcon', icons, 'play')}
 						poster={poster}
+						seekDisabled={boolean('seekDisabled', false)}
 						spotlightDisabled={boolean('spotlightDisabled', false)}
 						thumbnailSrc={poster}
 						thumbnailUnavailable={boolean('thumbnailUnavailable', false)}

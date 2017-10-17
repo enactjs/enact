@@ -260,6 +260,7 @@ const ButtonFactory = factory(css => {
 				MarqueeDecorator(
 					{className: componentCss.marquee},
 					Pressable(
+						{release: ['onMouseUp', 'onMouseLeave', 'onBlur']},
 						Spottable(
 							Skinnable(
 								Base
