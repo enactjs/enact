@@ -8,7 +8,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
-- `spotlight` to handle key events from pointers and not set pointer mode to false
+- `spotlight` to handle key events to preserve pointer mode for specific keys
 
 ### Fixed
 

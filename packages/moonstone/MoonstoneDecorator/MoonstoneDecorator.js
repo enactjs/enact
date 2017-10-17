@@ -82,9 +82,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	// add webOS-specific key maps
 	addAll({
 		cancel: 461,
-		pointerHide: 1537,
-		pointerShow: 1536,
-		pointerKeys: [
+		nonModal: [
 			461,
 			415, // play
 			19, // pause
@@ -94,7 +92,9 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			406, // blue
 			33, // channel up
 			34 // channel down
-		]
+		],
+		pointerHide: 1537,
+		pointerShow: 1536
 	});
 
 	const Decorator = class extends React.Component {
