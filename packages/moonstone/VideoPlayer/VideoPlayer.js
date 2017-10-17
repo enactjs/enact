@@ -11,6 +11,7 @@ import equals from 'ramda/src/equals';
 import React from 'react';
 import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
+import {contextTypes, FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import {forKey, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
 import ilib from '@enact/i18n';
 import {Job} from '@enact/core/util';
@@ -39,7 +40,10 @@ import Times from './Times';
 import css from './VideoPlayer.less';
 
 const SpottableDiv = Spottable('div');
-const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
+const Container = SpotlightContainerDecorator(
+	{enterTo: ''},
+	'div'
+);
 
 // Keycode map for webOS TV
 const keyMap = {
@@ -167,6 +171,8 @@ const AnnounceState = {
  */
 const VideoPlayerBase = class extends React.Component {
 	static displayName = 'VideoPlayerBase'
+
+	static contextTypes = contextTypes
 
 	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */ {
 		/**
@@ -454,6 +460,13 @@ const VideoPlayerBase = class extends React.Component {
 		onScrub: PropTypes.func,
 
 		/**
+		 * Function executed when seek is attemped while `seekDisabled` is true.
+		 *
+		 * @type {Function}
+		 */
+		onSeekFailed: PropTypes.func,
+
+		/**
 		 * When `true`, the video will pause when it reaches either the start or the end of the
 		 * video during rewind, slow rewind, fast forward, or slow forward.
 		 *
@@ -517,6 +530,16 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		rightComponents: PropTypes.node,
+
+		/**
+		 * When `true`, seek function is disabled.
+		 *
+		 * Note that jump by arrow keys will also be disabled when `true`.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		seekDisabled: PropTypes.bool,
 
 		/**
 		 * Registers the VideoPlayer component with an
@@ -736,6 +759,8 @@ const VideoPlayerBase = class extends React.Component {
 			this.reloadVideo();
 		}
 
+		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
+
 		// Added to set default focus on the media control (play) when controls become visible.
 		if (
 			this.state.mediaControlsVisible &&
@@ -855,6 +880,13 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		return true;
+	}
+
+	setFloatingLayerShowing = (showing) => {
+		const layer = this.context.getFloatingLayer && this.context.getFloatingLayer();
+		if (layer) {
+			layer.style.display = showing ? 'block' : 'none';
+		}
 	}
 
 	/**
@@ -1032,7 +1064,9 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	doPulseAction () {
-		if (is('left', this.pulsingKeyCode)) {
+		if (this.props.seekDisabled) {
+			forward('onSeekFailed', {}, this.props);
+		} else if (is('left', this.pulsingKeyCode)) {
 			this.showMiniFeedback = true;
 			this.jump(-1 * this.props.jumpBy);
 			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
@@ -1251,7 +1285,11 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	seek = (timeIndex) => {
-		this.video.currentTime = timeIndex;
+		if (!this.props.seekDisabled) {
+			this.video.currentTime = timeIndex;
+		} else {
+			forward('onSeekFailed', {}, this.props);
+		}
 	}
 
 	/**
@@ -1745,15 +1783,17 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.jumpBy;
 		delete rest.jumpDelay;
 		delete rest.no5WayJump;
-		delete rest.onControlsAvailable;
 		delete rest.onBackwardButtonClick;
+		delete rest.onControlsAvailable;
 		delete rest.onForwardButtonClick;
 		delete rest.onJumpBackwardButtonClick;
 		delete rest.onJumpForwardButtonClick;
 		delete rest.onPlayButtonClick;
 		delete rest.onScrub;
+		delete rest.onSeekFailed;
 		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;
+		delete rest.seekDisabled;
 		delete rest.setApiProvider;
 		delete rest.thumbnailUnavailable;
 		delete rest.titleHideDelay;
@@ -1953,7 +1993,10 @@ const VideoPlayer = ApiDecorator(
 	Slottable(
 		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
 		Skinnable(
-			VideoPlayerBase
+			FloatingLayerDecorator(
+				{floatLayerId: 'videoPlayerFloatingLayer'},
+				VideoPlayerBase
+			)
 		)
 	)
 );

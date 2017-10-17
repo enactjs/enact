@@ -390,6 +390,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				value = parseFn(ev.target.value);
 			this.throttleUpdateValue(value);
 
+			this.knobPosition = null;
 		}
 
 		handleMouseEnter = (ev) => {
@@ -506,6 +507,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forwardFocus(ev, this.props);
 
 			if (this.props.detachedKnob) {
+				this.current5WayValue = null;
 				this.moveKnobByAmount(0);
 			}
 
