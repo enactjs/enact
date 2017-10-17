@@ -550,7 +550,7 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	const config = getContainerConfig(containerId);
-	if (verify && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
+	if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
 		return false;
 	}
 
