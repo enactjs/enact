@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/ContextualPopup` padding to not overlap close button
 - `moonstone/Scroller.Scrollable` and `moonstone/Scroller` to change focus via page up/down only when the scrollbar is visible
+- `moonstone/Picker` to marquee when hovering from `PickerButton` to `PickerItem`
 
 ## [1.10.1] - 2017-10-16
 

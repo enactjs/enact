@@ -1,5 +1,6 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import Spotlight from '@enact/Spotlight';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -94,6 +95,8 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 	const {marqueeOnFocus} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
+	const forwardMouseOver = forward('onMouseOver');
+	const forwardMouseOut = forward('onMouseOut');
 
 	return class extends React.Component {
 		static displayName = 'MarqueeController'
@@ -105,6 +108,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.controlled = [];
 			this.isFocused = false;
+			this.isHovered = false;
 		}
 
 		getChildContext () {
@@ -127,7 +131,8 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		handleRegister = (component, handlers) => {
-			const needsStart = !this.allInactive() || this.isFocused;
+			// make sure to marquee when focused or hovered in noAnimation mode
+			const needsStart = !this.allInactive() || this.isFocused || this.isHovered;
 
 			this.controlled.push({
 				...handlers,
@@ -206,19 +211,46 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * Handler for the focus event
 		 */
 		handleFocus = (ev) => {
-			this.isFocused = true;
-			this.dispatch('start');
-			forwardFocus(ev, this.props);
+			if (!Spotlight.getPointerMode()) {
+				this.isFocused = true;
+				this.dispatch('start');
+				forwardFocus(ev, this.props);
+			}
 		}
 
 		/*
 		 * Handler for the blur event
 		 */
 		handleBlur = (ev) => {
-			this.isFocused = false;
-			this.dispatch('stop');
-			this.markAll(STATE.inactive);
-			forwardBlur(ev, this.props);
+			if (!Spotlight.getPointerMode() || !this.isHovered) {
+				this.isFocused = false;
+				this.dispatch('stop');
+				this.markAll(STATE.inactive);
+				forwardBlur(ev, this.props);
+			}
+		}
+
+		/*
+		 * Handler for the mouseOver event
+		 */
+		handleMouseOver = (ev) => {
+			if (Spotlight.getPointerMode()) {
+				this.isHovered = true;
+				this.dispatch('start');
+				forwardMouseOver(ev, this.props);
+			}
+		}
+
+		/*
+		 * Handler for the mouseOut event
+		 */
+		handleMouseOut = (ev) => {
+			if (Spotlight.getPointerMode()) {
+				this.isHovered = false;
+				this.dispatch('stop');
+				this.markAll(STATE.inactive);
+				forwardMouseOut(ev, this.props);
+			}
 		}
 
 		/*
@@ -312,7 +344,9 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				props = {
 					...this.props,
 					onBlur: this.handleBlur,
-					onFocus: this.handleFocus
+					onFocus: this.handleFocus,
+					onMouseOut: this.handleMouseOut,
+					onMouseOver: this.handleMouseOver
 				};
 			}
 
