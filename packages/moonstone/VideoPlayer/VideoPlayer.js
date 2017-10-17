@@ -1992,9 +1992,9 @@ const VideoPlayer = ApiDecorator(
 	{api: ['fastForward', 'getMediaState', 'hideControls', 'jump', 'pause', 'play', 'rewind', 'seek', 'showControls']},
 	Slottable(
 		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
-		Skinnable(
-			FloatingLayerDecorator(
-				{floatLayerId: 'videoPlayerFloatingLayer'},
+		FloatingLayerDecorator(
+			{floatLayerId:  'videoPlayerFloatingLayer'},
+			Skinnable(
 				VideoPlayerBase
 			)
 		)
