@@ -1,6 +1,6 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import Spotlight from '@enact/Spotlight';
+import Spotlight from '@enact/spotlight';
 import React from 'react';
 import PropTypes from 'prop-types';
 
