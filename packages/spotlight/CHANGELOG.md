@@ -2,13 +2,11 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
-
-### Added
-
-### Changed
+## [1.10.1] - 2017-10-16
 
 ### Fixed
+
+- `spotlight.Spotlight` method `focus()` to prevent focusing components within containers that are being removed
 
 ## [1.10.0] - 2017-10-09
 
