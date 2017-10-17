@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+### Changed
+
+- `spotlight` to handle key events to preserve pointer mode for specific keys
+
+### Fixed
+
 ## [1.10.1] - 2017-10-16
 
 ### Fixed
