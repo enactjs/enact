@@ -22,6 +22,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Panels` to render children on idle
 - `moonstone/Scroller.Scrollable` to limit its muted spotlight container scrim to its bounds
 - `moonstone/Input` to always forward `onKeyUp` event
+- `moonstone/ContextualPopup` padding to not overlap close button
 
 ## [1.10.0] - 2017-10-09
 
