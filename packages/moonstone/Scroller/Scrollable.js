@@ -369,7 +369,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isDragging = false
 		deferScrollTo = true
 		pageDistance = 0
-		animateOnFocus = true
+		animateOnFocus = false
 
 		// drag info
 		dragInfo = {
