@@ -537,15 +537,11 @@ const PickerBase = class extends React.Component {
 	}
 
 	handleDecPulse = () => {
-		if (!this.hasReachedBound(this.props.step * -1)) {
-			this.handleDecDown();
-		}
+		this.handleDecDown();
 	}
 
 	handleIncPulse = () => {
-		if (!this.hasReachedBound(this.props.step)) {
-			this.handleIncDown();
-		}
+		this.handleIncDown();
 	}
 
 	throttleInc = new Job(this.handleIncrement, 200)
