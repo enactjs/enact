@@ -12,9 +12,8 @@ import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import Slottable from '@enact/ui/Slottable';
 import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
-import Spottable from '@enact/spotlight/Spottable';
-import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 import Toggleable from '@enact/ui/Toggleable';
+import Spottable from '@enact/spotlight/Spottable';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
