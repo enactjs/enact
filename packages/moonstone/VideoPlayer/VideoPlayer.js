@@ -1809,7 +1809,7 @@ const VideoPlayerBase = class extends React.Component {
 		const controlsAriaProps = this.getControlsAriaProps();
 
 		return (
-			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
+			<div className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
 				{/* Video Section */}
 				<video
 					{...rest}
