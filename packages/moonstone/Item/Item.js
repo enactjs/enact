@@ -161,7 +161,7 @@ const ItemOverlay = Slottable(
 			overlayAfter: childrenEquals
 		}},
 		Toggleable(
-			{prop: 'remeasure', toggle: 'onFocus'},
+			{prop: 'remeasure', toggle: 'onFocus', deactivate: 'onBlur'},
 			Spottable(
 				RemeasurableDecorator(
 					{trigger: 'remeasure'},
