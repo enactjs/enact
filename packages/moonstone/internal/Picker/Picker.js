@@ -536,20 +536,6 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
-	handleDecPulse = () => {
-		if (!this.hasReachedBound(this.props.step * -1)) {
-			this.handleDecDown();
-			this.updateValue(-1);
-		}
-	}
-
-	handleIncPulse = () => {
-		if (!this.hasReachedBound(this.props.step)) {
-			this.handleIncDown();
-			this.updateValue(1);
-		}
-	}
-
 	throttleInc = new Job(this.handleIncrement, 200)
 
 	throttleDec = new Job(this.handleDecrement, 200)
@@ -813,7 +799,7 @@ const PickerBase = class extends React.Component {
 					hidden={reachedEnd}
 					icon={incrementIcon}
 					joined={joined}
-					onHoldPulse={this.handleIncPulse}
+					onHoldPulse={this.handleIncDown}
 					onKeyDown={this.handleIncKeyDown}
 					onMouseDown={this.handleIncDown}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}
@@ -847,7 +833,7 @@ const PickerBase = class extends React.Component {
 					hidden={reachedStart}
 					icon={decrementIcon}
 					joined={joined}
-					onHoldPulse={this.handleDecPulse}
+					onHoldPulse={this.handleDecDown}
 					onKeyDown={this.handleDecKeyDown}
 					onMouseDown={this.handleDecDown}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
