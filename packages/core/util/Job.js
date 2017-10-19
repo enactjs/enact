@@ -119,7 +119,7 @@ class Job {
 	}
 
 	/**
-	 * Executes job when the CPU is idle.
+	 * Executes job when the CPU is idle, or when the timeout is reached, whichever occurs first.
 	 *
 	 * @method
 	 * @memberof core/util.Job
