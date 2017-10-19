@@ -10,7 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `moonston/ExpandableList` to `disabled` if there is no children
+- `moonston/ExpandableList` to `disabled` if there are no children
 
 ### Fixed
 
