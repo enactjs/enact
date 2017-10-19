@@ -564,7 +564,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				direction = Math.sign(delta);
 
 				Spotlight.setPointerMode(false);
-				if (focusedItem) {
+				if (focusedItem && !this.verticalScrollbarRef.isThumbFocused() && !this.horizontalScrollbarRef.isThumbFocused()) {
 					focusedItem.blur();
 				}
 

@@ -268,6 +268,8 @@ class ScrollbarBase extends PureComponent {
 		this.thumbRef.classList.remove(css.thumbShown);
 	}
 
+	isThumbFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
+
 	hideThumbJob = new Job(this.hideThumb, 200);
 
 	calculateMetrics = () => {
@@ -394,7 +396,7 @@ class ScrollbarBase extends PureComponent {
 }
 
 const Scrollbar = ApiDecorator(
-	{api: ['containerRef', 'hideThumb', 'showThumb', 'startHidingThumb', 'update']},
+	{api: ['containerRef', 'hideThumb', 'isThumbFocused', 'showThumb', 'startHidingThumb', 'update']},
 	DisappearSpotlightDecorator(
 		{events: {
 			onNextSpotlightDisappear: '[data-scroll-button="previous"]',
