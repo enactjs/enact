@@ -24,6 +24,9 @@ const defaultConfig = {
 	/**
 	 * Configures the event name that activates the component
 	 *
+	 * If you choose to use `activate` and don't need to use `toggle`, set
+	 * `toggle` to `null` to prevent an `Unknown prop` error.
+	 *
 	 * @type {String}
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
 	 */
@@ -31,6 +34,9 @@ const defaultConfig = {
 
 	/**
 	 * Configures the event name that deactivates the component
+	 *
+	 * If you choose to use `deactivate` and don't need to use `toggle`, set
+	 * `toggle` to `null` to prevent an `Unknown prop` error.
 	 *
 	 * @type {String}
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
