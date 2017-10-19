@@ -103,10 +103,11 @@ storiesOf('VideoPlayer')
 			return (
 				<div
 					style={{
-						transformOrigin: 'top',
+						transformOrigin: 'left top',
 						transform: 'scale(' + number('video scale', 1, {range: true, min: 0.05, max: 1, step: 0.01}) + ')',
 						outline: 'teal dashed 1px',
-						position: 'relative'
+						width: '1920px',
+						height: '1080px'
 					}}
 				>
 					<label
