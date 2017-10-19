@@ -124,8 +124,8 @@ class Job {
 	 * @method
 	 * @memberof core/util.Job
 	 * @param   {Number}     timeout  The number of milliseconds to wait before executing the
-	 *                                callback. This guarantees that the callback is run, if a
-	 *                                positive value is specified.
+	 *                                job. This guarantees that the job is run, if a positive value
+	 *                                is specified.
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
 	 * @returns {undefined}
 	 * @public
