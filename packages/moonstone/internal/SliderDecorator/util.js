@@ -17,8 +17,14 @@ const computeKnobTransform = (_proportion, vertical, node) => {
 	}
 };
 
+const parseNumber = (value) => {
+	const parseFn = (value % 1 !== 0) ? parseFloat : parseInt;
+	return parseFn(value);
+};
+
 export {
 	computeProportionProgress,
 	computeBarTransform,
-	computeKnobTransform
+	computeKnobTransform,
+	parseNumber
 };
