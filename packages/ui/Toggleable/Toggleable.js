@@ -22,10 +22,10 @@ import warning from 'warning';
  */
 const defaultConfig = {
 	/**
-	 * Configures the event name that activates the component
+	 * Configures the event name that activates the component.
 	 *
-	 * If you choose to use `activate` and don't need to use `toggle`, set
-	 * `toggle` to `null` to prevent an `Unknown prop` error.
+	 * Note: When using `activate`/`deactivate` instead of `toggle`, set `toggle` to `null` to
+	 * prevent passing the default `onToggle` prop to the wrapped component.
 	 *
 	 * @type {String}
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
@@ -33,10 +33,10 @@ const defaultConfig = {
 	activate: null,
 
 	/**
-	 * Configures the event name that deactivates the component
+	 * Configures the event name that deactivates the component.
 	 *
-	 * If you choose to use `deactivate` and don't need to use `toggle`, set
-	 * `toggle` to `null` to prevent an `Unknown prop` error.
+	 * Note: When using `activate`/`deactivate` instead of `toggle`, set `toggle` to `null` to
+	 * prevent passing the default `onToggle` prop to the wrapped component.
 	 *
 	 * @type {String}
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
@@ -53,7 +53,7 @@ const defaultConfig = {
 	toggle: 'onToggle',
 
 	/**
-	 * Configures the property that is passed to the wrapped component when toggled
+	 * Configures the property that is passed to the wrapped component when toggled.
 	 *
 	 * @type {String}
 	 * @default 'active'
