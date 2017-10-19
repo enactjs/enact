@@ -115,10 +115,26 @@ class Job {
 	 * @public
 	 */
 	idle = (...args) => {
+		this.idleUntil(null, ...args);
+	}
+
+	/**
+	 * Executes job when the CPU is idle.
+	 *
+	 * @method
+	 * @memberof core/util.Job
+	 * @param   {Number}     timeout  The number of milliseconds to wait before executing the
+	 *                                callback. This guarantees that the callback is run, if a
+	 *                                positive value is specified.
+	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
+	 * @returns {undefined}
+	 * @public
+	 */
+	idleUntil = (timeout, ...args) => {
 		if (typeof window !== 'undefined') {
 			if (window.requestIdleCallback) {
 				this.type = 'idle';
-				this.id = window.requestIdleCallback(() => this.run(args));
+				this.id = window.requestIdleCallback(() => this.run(args), {timeout});
 			} else {
 				// If requestIdleCallback is not supported just run the function immediately
 				this.fn(...args);
