@@ -179,7 +179,11 @@ class View extends React.Component {
 		const {enteringDelay, enteringProp} = this.props;
 
 		if (enteringProp) {
-			this.enteringJob.startAfter(enteringDelay);
+			if (enteringDelay) {
+				this.enteringJob.startAfter(enteringDelay);
+			} else {
+				this.enteringJob.idle();
+			}
 		}
 	}
 

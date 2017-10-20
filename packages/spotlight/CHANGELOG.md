@@ -8,7 +8,17 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
+- `spotlight` to handle key events to preserve pointer mode for specific keys
+
 ### Fixed
+
+- `spotlight` to not require multiple 5-way key presses in order to change focus after the window regains focus
+
+## [1.10.1] - 2017-10-16
+
+### Fixed
+
+- `spotlight.Spotlight` method `focus()` to prevent focusing components within containers that are being removed
 
 ## [1.10.0] - 2017-10-09
 

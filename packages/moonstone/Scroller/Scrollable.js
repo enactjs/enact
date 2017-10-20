@@ -339,7 +339,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 			if (childContainerRef && childContainerRef.removeEventListener) {
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('focus', this.onFocus, true);
+				childContainerRef.removeEventListener('focusin', this.onFocus);
 			}
 			off('keydown', this.onKeyDown);
 
@@ -369,7 +369,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isDragging = false
 		deferScrollTo = true
 		pageDistance = 0
-		animateOnFocus = true
+		animateOnFocus = false
 
 		// drag info
 		dragInfo = {
@@ -667,20 +667,27 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scrollByPage = (keyCode) => {
+			// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
+			// scroller as a plain container
+			if (!this.state.isVerticalScrollbarVisible) return;
+
 			const
 				{getEndPoint, scrollToAccumulatedTarget} = this,
 				bounds = this.getScrollBounds(),
 				canScrollVertically = this.canScrollVertically(bounds),
+				childRef = this.childRef,
 				pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
 				spotItem = Spotlight.getCurrent();
 
 			if (!Spotlight.getPointerMode() && spotItem) {
 				// Should skip scroll by page when spotItem is paging control button of Scrollbar
-				if (!this.childRef.containerRef.contains(spotItem)) {
+				if (!childRef.containerRef.contains(spotItem)) {
 					return;
 				}
+
 				const
-					containerId = Spotlight.getActiveContainer(),
+					// VirtualList and Scroller have a containerId on containerRef
+					containerId = childRef.containerRef.dataset.containerId,
 					direction = this.getPageDirection(keyCode),
 					rDirection = reverseDirections[direction],
 					viewportBounds = this.containerRef.getBoundingClientRect(),
@@ -697,7 +704,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					Spotlight.focus(next);
 				// If a next spottable DOM element is equals to the current spottable item, we need to find a next item
 				} else {
-					const nextPage = this.childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem});
+					const nextPage = childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
 
 					// If finding a next spottable item in a Scroller, focus it
 					if (typeof nextPage === 'object') {
@@ -1118,7 +1125,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 			if (childContainerRef && childContainerRef.addEventListener) {
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.addEventListener('focus', this.onFocus, true);
+				childContainerRef.addEventListener('focusin', this.onFocus);
 			}
 		}
 

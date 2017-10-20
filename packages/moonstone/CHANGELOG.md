@@ -6,11 +6,34 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/VideoPlayer` properties `seekDisabled` and `onSeekFailed` to disable seek function
+
 ### Changed
+
+- `moonston/ExpandableList` to `disabled` if there are no children
 
 ### Fixed
 
+- `moonstone/Scroller.Scrollable` to scroll withtout animation when panel is changed
+- `moonstone/ContextualPopup` padding to not overlap close button
+- `moonstone/Scroller.Scrollable` and `moonstone/Scroller` to change focus via page up/down only when the scrollbar is visible
+- `moonstone/Picker` to only increment one value on hold
+- `moonstone/ItemOverlay` to remeasure when focused
+
+## [1.10.1] - 2017-10-16
+
+### Fixed
+
+- `moonstone/Scrollable` and `moonstone/Scroller` to scroll via page up/down when focus is inside a Spotlight container
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to scroll by 5-way keys right after wheeling
 - `moonstone/VirtualList` not to move focus when a current item and the last item are located at the same line and pressing a page down key
+- `moonstone/Slider` knob to follow while dragging for detached knob
+- `moonstone/Header` to layout header row correctly in `standard` type
+- `moonstone/Input` to not dismiss on-screen keyboard when dragging cursor out of input box
+- `moonstone/Header` RTL `line-height` issue
+- `moonstone/Panels` to render children on idle
+- `moonstone/Scroller.Scrollable` to limit its muted spotlight container scrim to its bounds
+- `moonstone/Input` to always forward `onKeyUp` event
 
 ## [1.10.0] - 2017-10-09
 
@@ -38,7 +61,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Marquee` to restart when invalidated by a prop change and managed by a `moonstone/Marquee.MarqueeController`
 - `spotlight.Spotlight` method `focus()` to verify that the target element matches its container's selector rules prior to setting focus
 - `moonstone/Picker` to only change picker values `onWheel` when spotted
-- `moonstone/ItemOverlay` to remeasure when spotted
+- `moonstone/VideoPlayer` to hide descendant floating components (tooltips, contextual popups) when the media controls hide
 
 ## [1.9.3] - 2017-10-03
 

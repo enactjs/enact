@@ -156,15 +156,6 @@ const InputBase = kind({
 		onKeyDown: PropTypes.func,
 
 		/**
-		 * The handler to run when a mouse key is pressed down.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @public
-		 */
-		onMouseDown: PropTypes.func,
-
-		/**
 		 * The placeholder text to display.
 		 *
 		 * @type {String}

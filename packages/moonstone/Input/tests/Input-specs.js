@@ -151,7 +151,7 @@ describe('Input Specs', () => {
 			<Input />
 		);
 
-		subject.simulate('click');
+		subject.simulate('mouseDown');
 
 		const expected = true;
 		const actual = pauseSpy.calledOnce;
@@ -166,7 +166,7 @@ describe('Input Specs', () => {
 			<Input />
 		);
 
-		subject.simulate('click');
+		subject.simulate('mouseDown');
 		subject.unmount();
 
 		const expected = true;
