@@ -79,7 +79,18 @@ const defaultConfig = {
 	 * @default false
 	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
 	 */
-	marqueeOnFocus: false
+	marqueeOnFocus: false,
+
+	/**
+	 * When `true`, any `onFocus` events that bubble to the controller will start the contained
+	 * Marquee instances. This is useful when a component contains Marquee instances that need to be
+	 * started with sibling components are focused.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
+	 */
+	marqueeOnHover: false
 };
 
 /**
@@ -92,7 +103,7 @@ const defaultConfig = {
  * @public
  */
 const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
-	const {marqueeOnFocus} = config;
+	const {marqueeOnFocus, marqueeOnHover} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
 	const forwardMouseOver = forward('onMouseOver');
@@ -345,6 +356,14 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 					...this.props,
 					onBlur: this.handleBlur,
 					onFocus: this.handleFocus,
+					onMouseOut: this.handleMouseOut,
+					onMouseOver: this.handleMouseOver
+				};
+			}
+
+			if (marqueeOnHover) {
+				props = {
+					...this.props,
 					onMouseOut: this.handleMouseOut,
 					onMouseOver: this.handleMouseOver
 				};

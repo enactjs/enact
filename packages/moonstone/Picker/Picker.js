@@ -217,7 +217,7 @@ const PickerBase = kind({
 const Picker = Pure(
 	Changeable(
 		MarqueeController(
-			{marqueeOnFocus: true},
+			{marqueeOnFocus: true, marqueeOnHover: true},
 			SpottablePicker(
 				PickerBase
 			)
