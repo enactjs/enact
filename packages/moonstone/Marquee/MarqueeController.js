@@ -355,9 +355,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				props = {
 					...this.props,
 					onBlur: this.handleBlur,
-					onFocus: this.handleFocus,
-					onMouseOut: this.handleMouseOut,
-					onMouseOver: this.handleMouseOver
+					onFocus: this.handleFocus
 				};
 			}
 
