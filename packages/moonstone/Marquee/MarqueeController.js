@@ -10,6 +10,11 @@ const STATE = {
 	ready: 2		// Marquee completed or not needed, but state is active
 };
 
+const onBlur = 'onBlur';
+const onFocus = 'onFocus';
+const onMouseOut = 'onMouseOut';
+const onMouseOver = 'onMouseOver';
+
 /**
  * Context propTypes for MarqueeController
  *
@@ -82,9 +87,8 @@ const defaultConfig = {
 	marqueeOnFocus: false,
 
 	/**
-	 * When `true`, any `onFocus` events that bubble to the controller will start the contained
-	 * Marquee instances. This is useful when a component contains Marquee instances that need to be
-	 * started with sibling components are focused.
+	 * When `true`, any mouse events that bubble to the controller will start the contained
+	 * Marquee instances.
 	 *
 	 * @type {Boolean}
 	 * @default false
@@ -104,10 +108,10 @@ const defaultConfig = {
  */
 const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 	const {marqueeOnFocus, marqueeOnHover} = config;
-	const forwardBlur = forward('onBlur');
-	const forwardFocus = forward('onFocus');
-	const forwardMouseOver = forward('onMouseOver');
-	const forwardMouseOut = forward('onMouseOut');
+	const forwardBlur = forward(onBlur);
+	const forwardFocus = forward(onFocus);
+	const forwardMouseOver = forward(onMouseOver);
+	const forwardMouseOut = forward(onMouseOut);
 
 	return class extends React.Component {
 		static displayName = 'MarqueeController'
@@ -349,23 +353,13 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			let props = this.props;
-
-			if (marqueeOnFocus) {
-				props = {
-					...this.props,
-					onBlur: this.handleBlur,
-					onFocus: this.handleFocus
-				};
-			}
-
-			if (marqueeOnHover) {
-				props = {
-					...this.props,
-					onMouseOut: this.handleMouseOut,
-					onMouseOver: this.handleMouseOver
-				};
-			}
+			const props = {
+				...this.props,
+				onBlur: marqueeOnFocus ? this.handleBlur : this.props[onBlur],
+				onFocus: marqueeOnFocus ? this.handleFocus : this.props[onFocus],
+				onMouseOut: marqueeOnHover ? this.handleMouseOut : this.props[onMouseOut],
+				onMouseOver: marqueeOnHover ? this.handleMouseOver : this.props[onMouseOver]
+			};
 
 			return (
 				<Wrapped {...props} />
