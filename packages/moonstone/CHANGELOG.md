@@ -14,6 +14,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Scrollbar` to hide scroll thumb immediately without delay after scroll position to be min or max
 - `moonstone/Scroller.Scrollable` to scroll withtout animation when panel is changed
 - `moonstone/ContextualPopup` padding to not overlap close button
 - `moonstone/Scroller.Scrollable` and `moonstone/Scroller` to change focus via page up/down only when the scrollbar is visible
