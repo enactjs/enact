@@ -11,6 +11,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonston/ExpandableList` to become `disabled` if there are no children
+- `moonston/ExpandableList` to `disabled` if there are no children
+- `moonstone/Popup` from `last-focused` to `default-element` in `SpotlightContainerDecorator` config
 
 ### Fixed
 
