@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [1.11.0] - 2017-10-23
 
 ### Added
 
@@ -10,7 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `moonston/ExpandableList` to `disabled` if there are no children
+- `moonston/ExpandableList` to become `disabled` if there are no children
 
 ### Fixed
 
