@@ -28,15 +28,9 @@
 	&.reserveClose {
 		.padding-start-end(@padding-h, @moon-icon-button-small-size + @moon-spotlight-outset);
 
-		:global(.enact-text-large) & {
-			padding-left: @padding-h;
-			padding-right: @moon-icon-button-small-size-large + @moon-spotlight-outset;
-		}
-
-		:global(.enact-locale-right-to-left):global(.enact-text-large) & {
-			padding-left: @moon-icon-button-small-size-large + @moon-spotlight-outset;
-			padding-right: @padding-h;
-		};
+		.moon-custom-text({
+			.padding-start-end(@padding-h, @moon-icon-button-small-size-large + @moon-spotlight-outset, parent);
+		});
 	}
 
 	:global(.enact-locale-right-to-left) & {
