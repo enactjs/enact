@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
+- `ui/Toggleable` to respect the `defaultProp` value of the 'prop' on the component
 - `ui/Pressable` to properly set pressed state to false on blur and release
 
 ## [1.10.0] - 2017-10-09
