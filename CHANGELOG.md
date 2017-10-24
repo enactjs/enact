@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
+- `moonstone/VideoPlayer` to apply skin correctly
+
 ## [1.11.0] - 2017-10-24
 
 ### Added
