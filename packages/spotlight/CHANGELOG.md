@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
+- `spotlight` to refocus component when updated, if previously hovered
+
 ### Fixed
 
 ## [1.11.0] - 2017-10-24
