@@ -2,6 +2,27 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.11.0] - 2017-10-24
+
+### Added
+
+- `moonstone/VideoPlayer` properties `seekDisabled` and `onSeekFailed` to disable seek function
+
+### Changed
+
+- `moonston/ExpandableList` to become `disabled` if there are no children
+- `spotlight` to handle key events to preserve pointer mode for specific keys
+
+### Fixed
+
+- `moonstone/Scroller` to apply scroll position on vertical or horizontal Scroller when child gets a focus
+- `moonstone/Scroller.Scrollable` to scroll withtout animation when panel is changed
+- `moonstone/ContextualPopup` padding to not overlap close button
+- `moonstone/Scroller.Scrollable` and `moonstone/Scroller` to change focus via page up/down only when the scrollbar is visible
+- `moonstone/Picker` to only increment one value on hold
+- `moonstone/ItemOverlay` to remeasure when focused
+- `spotlight` to not require multiple 5-way key presses in order to change focus after the window regains focus
+
 ## [1.10.1] - 2017-10-16
 
 ### Fixed
