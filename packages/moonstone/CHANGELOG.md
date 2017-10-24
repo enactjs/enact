@@ -14,7 +14,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Picker` to read out customized value when picker prop has `wrap`
+- `moonstone/Picker` to read out customized accessibility value when picker prop has `joined` and `aria-valuetext`
 - `moonstone/Scroller` to apply scroll position on vertical or horizontal Scroller when child gets a focus
 - `moonstone/Scroller.Scrollable` to scroll withtout animation when panel is changed
 - `moonstone/ContextualPopup` padding to not overlap close button
