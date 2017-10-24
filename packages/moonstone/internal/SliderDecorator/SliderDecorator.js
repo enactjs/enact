@@ -47,6 +47,7 @@ const forwardBlur = forward('onBlur');
 const forwardChange = forward('onChange');
 const forwardClick = forward('onClick');
 const forwardFocus = forward('onFocus');
+const forwardMouseDown = forward('onMouseDown');
 const forwardMouseEnter = forward('onMouseEnter');
 const forwardMouseMove = forward('onMouseMove');
 const forwardMouseLeave  = forward('onMouseLeave');
@@ -217,6 +218,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.knobPosition = null;
 			this.normalizeBounds(props);
 			this.detachedKnobPosition = 0;
+			this.willChange = false;
+			this.prevValue = null; // temp value stored for mouse down and drag
 
 			let value, controlled = false;
 
@@ -312,6 +315,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.willChange) {
 				forwardChange({value}, this.props);
 				this.willChange = false;
+				this.prevValue = value;
 			}
 		}, config.changeDelay)
 
@@ -420,6 +424,11 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.knobPosition = null;
 		}
 
+		handleMouseDown = (ev) => {
+			forwardMouseDown(ev, this.props);
+			this.prevValue = this.state.value;
+		}
+
 		handleMouseEnter = (ev) => {
 			forwardMouseEnter(ev, this.props);
 
@@ -438,13 +447,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.moveKnobByPointer(ev.clientX);
 		}
 
-		handleMouseUp = (ev) => {
-			if (ev.target.nodeName === 'INPUT') {
-				const value = parseNumber(this.state.controlled ? this.changedControlledValue : this.state.value);
-				forwardChange({value}, this.props);
-			}
-		}
-
 		handleMouseLeave = (ev) => {
 			forwardMouseLeave(ev, this.props);
 
@@ -459,6 +461,14 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (!this.props.disabled && Spotlight.getCurrent() !== this.sliderNode) {
 				Spotlight.focus(this.sliderNode);
+			}
+
+			if (ev.target.nodeName === 'INPUT') {
+				const value = parseNumber(this.state.controlled ? this.changedControlledValue : this.state.value);
+				if (this.prevValue !== value) {
+					forwardChange({value}, this.props);
+					this.prevValue = null;
+				}
 			}
 		}
 
@@ -574,10 +584,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onDecrement={this.handleDecrement}
 					onFocus={this.handleFocus}
 					onIncrement={this.handleIncrement}
+					onMouseDown={this.handleMouseDown}
 					onMouseEnter={this.handleMouseEnter}
 					onMouseLeave={this.handleMouseLeave}
 					onMouseMove={this.handleMouseMove}
-					onMouseUp={this.handleMouseUp}
 					scrubbing={(this.knobPosition != null)}
 					sliderBarRef={this.getSliderBarNode}
 					sliderRef={this.getSliderNode}
