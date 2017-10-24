@@ -18,6 +18,16 @@
 }
 
 // Applies RTL-compatible start and end margins to a selector
+.margin-start-end(@start; @end; @target) when (@target = parent) {
+    margin-left: @start;
+    margin-right: @end;
+
+    :global(.enact-locale-right-to-left)& {
+        margin-left: @end;
+        margin-right: @start;
+    }
+}
+
 .margin-start-end (@start, @end) {
 	margin-left: @start;
 	margin-right: @end;
@@ -29,6 +39,16 @@
 }
 
 // Applies RTL-compatible start and end padding to a selector
+.padding-start-end(@start; @end; @target) when (@target = parent) {
+    padding-left: @start;
+    padding-right: @end;
+
+    :global(.enact-locale-right-to-left)& {
+        padding-left: @end;
+        padding-right: @start;
+    }
+}
+
 .padding-start-end (@start, @end) {
 	padding-left: @start;
 	padding-right: @end;

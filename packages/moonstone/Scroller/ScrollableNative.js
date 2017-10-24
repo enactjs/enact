@@ -322,7 +322,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isScrollAnimationTargetAccumulated = false
 		deferScrollTo = true
 		pageDistance = 0
-		animateOnFocus = true
+		animateOnFocus = false
 		pageDirection = 0
 
 		// event handlers
@@ -544,6 +544,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scrollByPage = (keyCode) => {
+			// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
+			// scroller as a plain container
+			if (!this.state.isVerticalScrollbarVisible) return;
+
 			const
 				{getEndPoint, scrollToAccumulatedTarget} = this,
 				bounds = this.getScrollBounds(),

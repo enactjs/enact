@@ -2,6 +2,25 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [1.11.0] - 2017-10-24
+
+### Added
+
+- `moonstone/VideoPlayer` properties `seekDisabled` and `onSeekFailed` to disable seek function
+
+### Changed
+
+- `moonston/ExpandableList` to become `disabled` if there are no children
+
+### Fixed
+
+- `moonstone/Scroller` to apply scroll position on vertical or horizontal Scroller when child gets a focus
+- `moonstone/Scroller.Scrollable` to scroll withtout animation when panel is changed
+- `moonstone/ContextualPopup` padding to not overlap close button
+- `moonstone/Scroller.Scrollable` and `moonstone/Scroller` to change focus via page up/down only when the scrollbar is visible
+- `moonstone/Picker` to only increment one value on hold
+- `moonstone/ItemOverlay` to remeasure when focused
+
 ## [1.10.1] - 2017-10-16
 
 ### Fixed
@@ -9,6 +28,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scrollable` and `moonstone/Scroller` to scroll via page up/down when focus is inside a Spotlight container
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to scroll by 5-way keys right after wheeling
 - `moonstone/VirtualList` not to move focus when a current item and the last item are located at the same line and pressing a page down key
+- `moonstone/Slider` knob to follow while dragging for detached knob
 - `moonstone/Header` to layout header row correctly in `standard` type
 - `moonstone/Input` to not dismiss on-screen keyboard when dragging cursor out of input box
 - `moonstone/Header` RTL `line-height` issue
