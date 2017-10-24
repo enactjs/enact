@@ -52,6 +52,23 @@ const
 		'down': 'up'
 	};
 
+const navigableFilter = (elem) => {
+	if (
+		!Spotlight.getPointerMode() &&
+		// ignore containers passed as their id
+		typeof elem !== 'string' &&
+		elem.classList.contains(scrollbarCss.scrollButton)
+	) {
+		return false;
+	}
+};
+
+const configureSpotlightContainer = ({'data-container-id': containerId, focusableScrollbar}) => {
+	Spotlight.set(containerId, {
+		navigableFilter: focusableScrollbar ? null : navigableFilter
+	});
+};
+
 /**
  * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
  * which indicates the index of an item in {@link moonstone/VirtualList.VirtualList}
@@ -63,30 +80,6 @@ const
  * @private
  */
 const dataIndexAttribute = 'data-index';
-
-const ScrollableSpotlightContainer = SpotlightContainerDecorator(
-	{
-		navigableFilter: (elem, {focusableScrollbar}) => {
-			if (
-				!focusableScrollbar &&
-				!Spotlight.getPointerMode() &&
-				// ignore containers passed as their id
-				typeof elem !== 'string' &&
-				elem.classList.contains(scrollbarCss.scrollButton)
-			) {
-				return false;
-			}
-		},
-		overflow: true
-	},
-	({containerRef, ...rest}) => {
-		delete rest.focusableScrollbar;
-
-		return (
-			<div ref={containerRef} {...rest} />
-		);
-	}
-);
 
 /**
  * {@link moonstone/Scroller.Scrollable} is a Higher-order Component
@@ -103,11 +96,23 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
  * @hoc
  * @private
  */
-const ScrollableHoC = hoc((config, Wrapped) => {
-	return class Scrollable extends Component {
+const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
+	const {configureSpotlight} = config;
+
+	class Scrollable extends Component {
 		static displayName = 'Scrollable'
 
 		static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
+			/**
+			 * When `configureSpotlight` is true, this is passed onto the wrapped component to allow
+			 * it to customize the spotlight container for its use case.
+			 *
+			 * @type {String}
+			 * @memberof moonstone/Scroller.Scrollable.prototype
+			 * @private
+			 */
+			'data-container-id': PropTypes.string,
+
 			/**
 			 * The callback function which is called for linking scrollTo function.
 			 * You should specify a callback function as the value of this prop
@@ -254,6 +259,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			};
 
 			props.cbScrollTo(this.scrollTo);
+
+			configureSpotlightContainer(props);
 		}
 
 		// component life cycle
@@ -286,6 +293,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.updateScrollbars();
 
 			on('keydown', this.onKeyDown);
+		}
+
+		componentWillReceiveProps (nextProps) {
+			configureSpotlightContainer(nextProps);
 		}
 
 		componentWillUpdate () {
@@ -1180,12 +1191,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		render () {
 			const
 				props = Object.assign({}, this.props),
-				{className, focusableScrollbar, style} = this.props,
+				{className, 'data-container-id': containerId, style} = this.props,
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 				scrollableClasses = classNames(css.scrollable, className);
 
 			delete props.cbScrollTo;
 			delete props.className;
+			delete props['data-container-id'];
 			delete props.focusableScrollbar;
 			delete props.horizontalScrollbar;
 			delete props.onScroll;
@@ -1195,11 +1207,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.style;
 			delete props.verticalScrollbar;
 
+			if (configureSpotlight) {
+				props.containerId = containerId;
+			}
+
 			return (
-				<ScrollableSpotlightContainer
+				<div
 					className={scrollableClasses}
-					containerRef={this.initContainerRef}
-					focusableScrollbar={focusableScrollbar}
+					data-container-id={containerId}
+					ref={this.initContainerRef}
 					style={style}
 				>
 					<div className={css.container}>
@@ -1213,10 +1229,19 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 					</div>
 					{isHorizontalScrollbarVisible ? <Scrollbar {...this.horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
-				</ScrollableSpotlightContainer>
+				</div>
 			);
 		}
-	};
+	}
+
+	return SpotlightContainerDecorator(
+		{
+			overflow: true,
+			preserveId: true,
+			restrict: 'self-first'
+		},
+		Scrollable
+	);
 });
 
 export default ScrollableHoC;
