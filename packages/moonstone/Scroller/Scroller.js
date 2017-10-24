@@ -261,9 +261,7 @@ class ScrollerBase extends Component {
 
 		if (this.isVertical()) {
 			this.scrollPos.top = this.calculateScrollTop(item, itemTop, itemHeight, scrollInfo, scrollPosition);
-		}
-
-		if (this.isHorizontal()) {
+		} else if (this.isHorizontal()) {
 			const
 				{clientWidth} = this.scrollBounds,
 				rtlDirection = this.context.rtl ? -1 : 1,

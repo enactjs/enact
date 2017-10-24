@@ -14,6 +14,14 @@ const LongPressButton = Holdable({
 }, Button);
 const ResumeHoldButton = Holdable({resume: true, endHold: 'onLeave'}, Button);
 
+const safeAction = (actionName) => {
+	const actionHandler = action(actionName);
+
+	return (ev) => {
+		actionHandler({type: ev.type, holdTime: ev.holdTime});
+	};
+};
+
 // Set up some defaults for info and knobs
 const prop = {
 	backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'transparent': 'transparent'}
@@ -24,8 +32,8 @@ storiesOf('Holdable')
 		'with default hold events',
 		() => (
 			<HoldableButton
-				onHold={action('onHold')}
-				onHoldPulse={action('onHoldPulse')}
+				onHold={safeAction('onHold')}
+				onHoldPulse={safeAction('onHoldPulse')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}
 			>
@@ -37,8 +45,8 @@ storiesOf('Holdable')
 		'with a custom longpress event and 1 second frequency',
 		() => (
 			<LongPressButton
-				onHold={action('onHold')}
-				onHoldPulse={action('onHoldPulse')}
+				onHold={safeAction('onHold')}
+				onHoldPulse={safeAction('onHoldPulse')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}
 			>
@@ -50,8 +58,8 @@ storiesOf('Holdable')
 		'that can resume a hold on re-entry',
 		() => (
 			<ResumeHoldButton
-				onHold={action('onHold')}
-				onHoldPulse={action('onHoldPulse')}
+				onHold={safeAction('onHold')}
+				onHoldPulse={safeAction('onHoldPulse')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}
 			>

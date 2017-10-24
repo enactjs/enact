@@ -6,7 +6,32 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+### Changed
+
+### Fixed
+
+- `moonstone/VideoPlayer` to apply skin correctly
+- `moonstone/Popup` from `last-focused` to `default-element` in `SpotlightContainerDecorator` config
+
+## [1.11.0] - 2017-10-24
+
+### Added
+
 - `moonstone/VideoPlayer` properties `seekDisabled` and `onSeekFailed` to disable seek function
+
+### Changed
+
+- `moonston/ExpandableList` to become `disabled` if there are no children
+
+### Fixed
+
+- `moonstone/Picker` to read out customized accessibility value when picker prop has `joined` and `aria-valuetext`
+- `moonstone/Scroller` to apply scroll position on vertical or horizontal Scroller when child gets a focus
+- `moonstone/Scroller.Scrollable` to scroll withtout animation when panel is changed
+- `moonstone/ContextualPopup` padding to not overlap close button
+- `moonstone/Scroller.Scrollable` and `moonstone/Scroller` to change focus via page up/down only when the scrollbar is visible
+- `moonstone/Picker` to only increment one value on hold
+- `moonstone/ItemOverlay` to remeasure when focused
 
 ## [1.10.1] - 2017-10-16
 
