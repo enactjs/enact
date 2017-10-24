@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ## [unreleased]
 
+### Added
+
+### Changed
+
 ### Fixed
 
 - `moonstone/VideoPlayer` to apply skin correctly
