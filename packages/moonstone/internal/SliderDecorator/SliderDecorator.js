@@ -94,6 +94,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * Default value applied at construction when the value prop is `undefined` or `null`.
 			 *
 			 * @type {Number}
+			 * @default null
 			 * @public
 			 */
 			defaultValue: PropTypes.number,
