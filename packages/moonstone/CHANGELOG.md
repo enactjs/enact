@@ -2,6 +2,17 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
+- `moonstone/VideoPlayer` to apply skin correctly
+- `moonstone/Popup` from `last-focused` to `default-element` in `SpotlightContainerDecorator` config
+
 ## [1.11.0] - 2017-10-24
 
 ### Added
@@ -11,8 +22,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonston/ExpandableList` to become `disabled` if there are no children
-- `moonston/ExpandableList` to `disabled` if there are no children
-- `moonstone/Popup` from `last-focused` to `default-element` in `SpotlightContainerDecorator` config
 
 ### Fixed
 
@@ -21,7 +30,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller.Scrollable` to scroll withtout animation when panel is changed
 - `moonstone/ContextualPopup` padding to not overlap close button
 - `moonstone/Scroller.Scrollable` and `moonstone/Scroller` to change focus via page up/down only when the scrollbar is visible
-- `moonstone/VideoPlayer` to apply skin correctly
 - `moonstone/Picker` to only increment one value on hold
 - `moonstone/ItemOverlay` to remeasure when focused
 
