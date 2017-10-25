@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VideoPlayer` to apply skin correctly
 - `moonstone/Popup` from `last-focused` to `default-element` in `SpotlightContainerDecorator` config
+- `moonstone/Panels` to retain focus when back key is pressed on breadcrumb
 
 ## [1.11.0] - 2017-10-24
 
@@ -21,7 +22,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `moonston/ExpandableList` to become `disabled` if there are no children
+- `moonstone/ExpandableList` to become `disabled` if there are no children
 
 ### Fixed
 
