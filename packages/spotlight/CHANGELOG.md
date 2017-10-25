@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
+- `spotlight` to focus enabled items that were hovered while disabled
+
 ### Fixed
 
 ## [1.11.0] - 2017-10-24
