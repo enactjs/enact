@@ -8,7 +8,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
-- `spotlight` to refocus component when updated, if previously hovered
+- `spotlight` to focus enabled items that were hovered while disabled
 
 ### Fixed
 
