@@ -13,7 +13,10 @@ const CancelDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		const {index, [cancel]: handler} = props;
 		if (index > 0 && handler) {
 			// clear Spotlight focus
-			Spotlight.getCurrent().blur();
+			const current = Spotlight.getCurrent();
+			if (current) {
+				current.blur();
+			}
 
 			handler({
 				index: index - 1
