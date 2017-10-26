@@ -141,6 +141,67 @@ class Job {
 			}
 		}
 	}
+
+	/**
+	 * Executes job before the next repaint.
+	 *
+	 * @method
+	 * @memberof core/util.Job
+	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
+	 * @returns {undefined}
+	 * @public
+	 */
+	startRaf = (...args) => {
+		this.startRafAfter(this.timeout, ...args);
+	}
+
+	/**
+	 * Executes job before the next repaint after a given amount of timeout.
+	 *
+	 * @method
+	 * @memberof core/util.Job
+	 * @param   {Number}     timeout  The number of milliseconds to wait before running requestAnimationFrame.
+	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
+	 * @returns {undefined}
+	 * @public
+	 */
+	startRafAfter = (timeout, ...args) => {
+		this.timeout = timeout;
+		if (typeof window !== 'undefined') {
+			let time = null;
+			const callback = (timestamp) => {
+				if (time === null) {
+					time = timestamp;
+				}
+				if (this.timeout && timestamp - time < this.timeout) {
+					this.id = window.requestAnimationFrame(callback);
+				} else {
+					time = null;
+					this.run(args);
+					window.cancelAnimationFrame(this.id);
+					this.id = null;
+				}
+			};
+			this.id = window.requestAnimationFrame(callback);
+		} else {
+			// If requestAnimationFrame is not supported just run the function immediately
+			this.fn(...args);
+		}
+	}
+
+	/**
+	 * Stops job executed by Raf.
+	 *
+	 * @method
+	 * @memberof core/util.Job
+	 * @returns {undefined}
+	 */
+	stopRaf = () => {
+		if (this.id) {
+			if (typeof window !== 'undefined')  window.cancelAnimationFrame(this.id);
+			this.id = null;
+		}
+	}
 }
 
 export default Job;

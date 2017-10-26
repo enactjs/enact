@@ -132,7 +132,7 @@ class View extends React.Component {
 
 	componentWillUnmount () {
 		this.cancelAnimationFrame();
-		this.enteringJob.stop();
+		this.enteringJob.stopRaf();
 	}
 
 	cancelAnimationFrame () {
@@ -179,11 +179,9 @@ class View extends React.Component {
 		const {enteringDelay, enteringProp} = this.props;
 
 		if (enteringProp) {
-			if (enteringDelay) {
-				this.enteringJob.startAfter(enteringDelay);
-			} else {
-				this.enteringJob.idleUntil(100);
-			}
+			// FIXME: `startRafAfter` is a temporary solution using rAF. We need a better way to handle
+			// transition cycle and component life cycle to be in sync. See ENYO-4835.
+			this.enteringJob.startRafAfter(enteringDelay);
 		}
 	}
 
@@ -201,7 +199,7 @@ class View extends React.Component {
 	// called.
 	componentWillLeave (callback) {
 		const {arranger, reverseTransition} = this.props;
-		this.enteringJob.stop();
+		this.enteringJob.stopRaf();
 		if (arranger) {
 			this.prepareTransition(reverseTransition ? arranger.enter : arranger.leave, callback);
 		} else {
