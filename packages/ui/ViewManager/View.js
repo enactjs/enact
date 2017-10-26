@@ -182,7 +182,7 @@ class View extends React.Component {
 			if (enteringDelay) {
 				this.enteringJob.startAfter(enteringDelay);
 			} else {
-				this.enteringJob.idle();
+				this.enteringJob.idleUntil(100);
 			}
 		}
 	}
