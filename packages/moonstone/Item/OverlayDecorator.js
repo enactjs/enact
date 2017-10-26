@@ -2,6 +2,7 @@ import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Cell, Row} from '@enact/ui/Layout';
 
 import Overlay from './Overlay';
 
@@ -61,11 +62,11 @@ const OverlayDecorator = hoc((config, Wrapped) => {
 
 		render: ({overlayAfter, autoHide, overlayBefore, children, ...rest}) => {
 			return (
-				<Wrapped {...rest}>
+				<Wrapped component={Row} align="center" {...rest}>
 					<Overlay className={css.before} hidden={autoHide === 'before' || autoHide === 'both'}>
 						{overlayBefore}
 					</Overlay>
-					{children}
+					<Cell>{children}</Cell>
 					<Overlay className={css.after} hidden={autoHide === 'after' || autoHide === 'both'}>
 						{overlayAfter}
 					</Overlay>

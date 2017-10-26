@@ -2,6 +2,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
+import {Cell} from '@enact/ui/Layout';
 
 import css from './Overlay.less';
 
@@ -46,7 +47,7 @@ const OverlayBase = kind({
 
 		delete props.hidden;
 		return (
-			<div {...props} />
+			<Cell shrink {...props} />
 		);
 	}
 });
