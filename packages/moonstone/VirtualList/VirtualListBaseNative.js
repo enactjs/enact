@@ -895,13 +895,21 @@ class VirtualListCoreNative extends Component {
 				Spotlight.pause();
 			}
 
-			// Scroll to the next spottable item without animation
-			focusedItem.blur();
-			// To prevent item positioning issue, make all items to be rendered.
-			this.updateFrom = null;
-			this.updateTo = null;
+			const nodeToBeFocused = this.contentRef.querySelector(`[data-index='${nodeIndexToBeFocused}'].spottable`);
 
-			this.props.cbScrollTo({index: indexToJump, nodeIndexToBeFocused, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
+			if (nodeToBeFocused) {
+				nodeToBeFocused.focus();
+
+				this.props.cbScrollTo({index: indexToJump, focus: false, animate: false});
+			} else {
+				// Scroll to the next spottable item without animation
+				focusedItem.blur();
+				// To prevent item positioning issue, make all items to be rendered.
+				this.updateFrom = null;
+				this.updateTo = null;
+
+				this.props.cbScrollTo({index: indexToJump, nodeIndexToBeFocused, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
+			}
 
 			return true; // Do not scroll additionally
 		} else {
