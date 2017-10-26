@@ -804,16 +804,74 @@ class VirtualListCoreNative extends Component {
 		this.setRestrict(isSelfOnly);
 	}
 
+	findEnableItemForPageScroll = (isForward, indexFrom, indexTo, data) => {
+		let nextIndex = -1;
+
+		if (isForward) {
+			for (let i = indexFrom; i < indexTo; i++) {
+				if (!data[i].disabled) {
+					nextIndex = i;
+					break;
+				}
+			}
+
+			// If there is no item which could get focus forward,
+			// we need to set restriction option to `self-first`.
+			if (nextIndex === -1) {
+				this.setRestrict(false);
+			}
+		} else if (!isForward) {
+			for (let i = indexFrom; i >= indexTo; i--) {
+				if (!data[i].disabled) {
+					nextIndex = i;
+					break;
+				}
+			}
+
+			// If there is no item which could get focus backward,
+			// we need to set restriction option to `self-first`.
+			if (indexTo === 0 && nextIndex === -1) {
+				this.setRestrict(false);
+			}
+		} else {
+			return -1;
+		}
+
+		return nextIndex;
+	}
+
 	getIndexForPageScroll = (direction, currentIndex) => {
 		const
 			{context, dimensionToExtent, isPrimaryDirectionVertical, primary} = this,
-			{dataSize, spacing} = this.props;
+			{data, dataSize, spacing} = this.props;
 		let offsetIndex = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent;
 
 		offsetIndex *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
 		offsetIndex *= (direction === 'down' || direction === 'right') ? 1 : -1;
 
-		return clamp(0, dataSize - 1, currentIndex + offsetIndex);
+		let indexToJump = clamp(0, dataSize - 1, currentIndex + offsetIndex);
+
+		if (
+			// If a currnet index is same as a new index.
+			indexToJump === currentIndex ||
+			// If a current item and a next item are located at the same line vertically or horizontally
+			parseInt(indexToJump / dimensionToExtent) === parseInt(currentIndex / dimensionToExtent)
+		) {
+			return {scroll: 'stop'};
+		}
+
+		// If a current index is different from a new index and the item with the new index is disabled,
+		// try to find a next item which is enabled.
+		let nodeIndexToBeFocused = this.findEnableItemForPageScroll(
+			indexToJump < currentIndex,
+			indexToJump, currentIndex, data
+		);
+
+		if (nodeIndexToBeFocused === -1) {
+			return {scroll: 'one page with animation'};
+		} else {
+			return {scroll: 'scroll without animation', indexToJump, nodeIndexToBeFocused};
+		}
 	}
 
 	scrollToNextPage = ({direction, focusedItem}) => {
@@ -821,14 +879,34 @@ class VirtualListCoreNative extends Component {
 			isRtl = this.context.rtl,
 			isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right'),
 			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
-			indexToFocus = this.getIndexForPageScroll(direction, focusedIndex);
+			{scroll, indexToJump, nodeIndexToBeFocused} = this.getIndexForPageScroll(direction, focusedIndex);
 
-		if (focusedIndex !== indexToFocus) {
+		if (scroll === 'one page with animation') {
+			return false; // Scroll one page with animation
+		} else if (scroll === 'stop') {
+			return true; // Do not scroll
+		} else if ( // scroll === 'scroll without animation'
+			// If the index to jump is enabled
+			focusedIndex !== indexToJump && indexToJump === nodeIndexToBeFocused ||
+			// If the index to jump is disabled
+			focusedIndex !== nodeIndexToBeFocused && indexToJump !== nodeIndexToBeFocused
+		) {
+			if (!Spotlight.isPaused()) {
+				Spotlight.pause();
+			}
+
+			// Scroll to the next spottable item without animation
 			focusedItem.blur();
-			this.props.cbScrollTo({index: indexToFocus, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
-		}
+			// To prevent item positioning issue, make all items to be rendered.
+			this.updateFrom = null;
+			this.updateTo = null;
 
-		return true;
+			this.props.cbScrollTo({index: indexToJump, nodeIndexToBeFocused, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
+
+			return true; // Do not scroll additionally
+		} else {
+			return true; // Do not scroll
+		}
 	}
 
 	shouldPreventScrollByFocus = () => this.isScrolledBy5way
@@ -919,6 +997,10 @@ class VirtualListCoreNative extends Component {
 		}
 
 		return false;
+	}
+
+	setNodeIndexToBeFocused = (nextIndex) => {
+		this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
 	}
 
 	onKeyDown = (e) => {
