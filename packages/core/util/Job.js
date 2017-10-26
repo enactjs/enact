@@ -169,14 +169,13 @@ class Job {
 	 */
 	startRafAfter = (timeout, ...args) => {
 		this.type = 'raf';
-		this.timeout = timeout;
 		if (typeof window !== 'undefined') {
 			let time = null;
 			const callback = (timestamp) => {
 				if (time === null) {
 					time = timestamp;
 				}
-				if (this.timeout && timestamp - time < this.timeout) {
+				if (timeout && timestamp - time < timeout) {
 					this.id = window.requestAnimationFrame(callback);
 				} else {
 					time = null;
