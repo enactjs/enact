@@ -6,6 +6,8 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ### Added
 
+- `core/util.Job` APIs `startRaf` and `startRafAfter`
+
 ### Changed
 
 ### Fixed
@@ -128,7 +130,7 @@ No significant changes.
 
 ## [1.0.0-beta.3] - 2017-02-21
 
-### Addded
+### Added
 
 - `core/handle` function `forEventProp` to test properties on an event
 
