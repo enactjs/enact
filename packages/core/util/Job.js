@@ -64,10 +64,12 @@ class Job {
 		if (this.id) {
 			if (this.type === 'idle') {
 				window.cancelIdleCallback(this.id);
+			} else if (this.type === 'raf') {
+				window.cancelAnimationFrame(this.id);
 			} else {
 				clearTimeout(this.id);
-				this.id = null;
 			}
+			this.id = null;
 		}
 	}
 
@@ -166,6 +168,7 @@ class Job {
 	 * @public
 	 */
 	startRafAfter = (timeout, ...args) => {
+		this.type = 'raf';
 		this.timeout = timeout;
 		if (typeof window !== 'undefined') {
 			let time = null;
@@ -186,20 +189,6 @@ class Job {
 		} else {
 			// If requestAnimationFrame is not supported just run the function immediately
 			this.fn(...args);
-		}
-	}
-
-	/**
-	 * Stops job executed by Raf.
-	 *
-	 * @method
-	 * @memberof core/util.Job
-	 * @returns {undefined}
-	 */
-	stopRaf = () => {
-		if (this.id) {
-			if (typeof window !== 'undefined')  window.cancelAnimationFrame(this.id);
-			this.id = null;
 		}
 	}
 }

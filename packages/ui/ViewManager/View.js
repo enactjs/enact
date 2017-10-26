@@ -132,7 +132,7 @@ class View extends React.Component {
 
 	componentWillUnmount () {
 		this.cancelAnimationFrame();
-		this.enteringJob.stopRaf();
+		this.enteringJob.stop();
 	}
 
 	cancelAnimationFrame () {
@@ -199,7 +199,7 @@ class View extends React.Component {
 	// called.
 	componentWillLeave (callback) {
 		const {arranger, reverseTransition} = this.props;
-		this.enteringJob.stopRaf();
+		this.enteringJob.stop();
 		if (arranger) {
 			this.prepareTransition(reverseTransition ? arranger.enter : arranger.leave, callback);
 		} else {
