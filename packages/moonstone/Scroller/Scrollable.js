@@ -606,7 +606,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			if (this.isWheeling) {
 				this.stop();
-				return;
+				this.animateOnFocus = false;
 			}
 
 			if (!Spotlight.getPointerMode()) {
