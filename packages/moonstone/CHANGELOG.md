@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Scrollable` to prevent scroll to outside screen when 5way key event is triggered during wheeling
 - `moonstone/Scroller` to called scrollToBoundary once when focus is moved using holding child item
 - `moonstone/VideoPlayer` to apply skin correctly
 - `moonstone/Popup` from `last-focused` to `default-element` in `SpotlightContainerDecorator` config
