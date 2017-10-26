@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Item`, `moonstone/LabeledItem`, and `moonstone/ItemOverlay` so they use `ui/Layout` to avoid their brittle incomplete flex-box implementation
 - `moonstone/VideoPlayer` to apply skin correctly
 - `moonstone/Popup` from `last-focused` to `default-element` in `SpotlightContainerDecorator` config
 - `moonstone/Panels` to retain focus when back key is pressed on breadcrumb

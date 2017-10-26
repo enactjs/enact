@@ -8,6 +8,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
+import {Cell, Row} from '@enact/ui/Layout';
 import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
@@ -65,10 +66,10 @@ const LabeledItemBase = kind({
 
 	render: ({children, label, titleIcon, ...rest}) => (
 		<Controller {...rest}>
-			<div className={css.text}>
-				<MarqueeText className={css.title}>{children}</MarqueeText>
-				{(titleIcon != null) ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
-			</div>
+			<Row align="center" className={css.text}>
+				<Cell component={MarqueeText} className={css.title}>{children}</Cell>
+				{(titleIcon != null) ? <Cell shrink component={Icon} small className={css.icon}>{titleIcon}</Cell> : null}
+			</Row>
 			{(label != null) ? <MarqueeText className={css.label}>{label}</MarqueeText> : null}
 		</Controller>
 	)
