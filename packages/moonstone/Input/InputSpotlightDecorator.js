@@ -199,6 +199,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		onMouseDown = (ev) => {
 			const {disabled, spotlightDisabled} = this.props;
 
+			this.setDownTarget(ev);
 			// focus the <input> whenever clicking on any part of the component to ensure both that
 			// the <input> has focus and Spotlight is paused.
 			if (!disabled && !spotlightDisabled) {
@@ -220,13 +221,11 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		onKeyDown = (ev) => {
-			const {currentTarget, keyCode, preventDefault, repeat, target} = ev;
+			const {currentTarget, keyCode, preventDefault, target} = ev;
 
 			// cache the target if this is the first keyDown event to ensure the component had focus
 			// when the key interaction started
-			if (!repeat) {
-				this.downTarget = target;
-			}
+			this.setDownTarget(ev);
 
 			if (this.state.focused === 'input') {
 				const isDown = is('down', keyCode);
@@ -294,6 +293,14 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			}
 
 			forwardKeyUp(ev, this.props);
+		}
+
+		setDownTarget (ev) {
+			const {repeat, target} = ev;
+
+			if (!repeat) {
+				this.downTarget = target;
+			}
 		}
 
 		render () {
