@@ -210,6 +210,11 @@ class TransitionGroup extends React.Component {
 			});
 		}
 	}
+	componentDidUpdate (prevProps, prevState) {
+		if (prevState.children.length > this.state.children.length) {
+			this.component.componentDidEnter();
+		}
+	}
 
 	reconcileChildren (dropped, prevChildMapping, nextChildMapping) {
 		// mark any new child as entering
@@ -325,9 +330,7 @@ class TransitionGroup extends React.Component {
 
 	_handleDoneEntering = (key) => {
 		const component = this.refs[key];
-		if (component.componentDidEnter) {
-			component.componentDidEnter();
-		}
+		this.component = component;
 
 		forwardOnEnter({
 			view: component

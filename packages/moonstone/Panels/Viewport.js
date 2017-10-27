@@ -133,7 +133,6 @@ const ViewportBase = class extends React.Component {
 				className={className}
 				component="main"
 				duration={250}
-				enteringDelay={100} // TODO: Can we remove this?
 				enteringProp={enteringProp}
 				index={index}
 				noAnimation={noAnimation}
