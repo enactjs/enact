@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Fixed
 
 - `spotlight` to not access non-existent container configurations
+- `spotlight/Spottable` to not block next enter key when focus is moved while pressing enter
 
 ## [1.11.0] - 2017-10-24
 
