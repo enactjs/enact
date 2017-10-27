@@ -22,7 +22,6 @@ const Controller = MarqueeController({marqueeOnFocus: true}, Spottable(ItemBase)
 import css from './LabeledItem.less';
 
 const iconSize = 48;  // Icon width (36) + the left spotlight outset (12), so the right margin falls outside the component
-const relativeIconSize = ri.unit(ri.scale(iconSize), 'rem');
 
 /**
  * {@link moonstone/LabeledItem.LabeledItemBase} is a focusable Moonstone-styled component
@@ -68,7 +67,12 @@ const LabeledItemBase = kind({
 		className: 'labeleditem'
 	},
 
-	render: ({children, label, titleIcon, ...rest}) => (
+	computed: {
+		// relativeIconSize must be calculated after initialization so the `rem` scale is correct.
+		relativeIconSize: () => ri.unit(ri.scale(iconSize), 'rem')
+	},
+
+	render: ({children, label, relativeIconSize, titleIcon, ...rest}) => (
 		<Controller {...rest}>
 			<Row align="center" className={css.text} inline>
 				<Cell size={`calc(100% - ${(titleIcon != null) ? relativeIconSize : '0px'})`} component={MarqueeText} className={css.title}>{children}</Cell>
