@@ -14,6 +14,7 @@ storiesOf('Item')
 		() => (
 			<Item
 				disabled={boolean('disabled', false)}
+				inline={boolean('inline', false)}
 			>
 				{text('children', 'Hello Item')}
 			</Item>

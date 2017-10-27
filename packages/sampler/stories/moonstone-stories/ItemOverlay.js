@@ -23,6 +23,7 @@ storiesOf('Item.ItemOverlay')
 			<ItemOverlay
 				autoHide={nullify(select('autoHide', prop.autoHide, 'after'))}
 				disabled={boolean('disabled', false)}
+				inline={boolean('inline', false)}
 			>
 				<Icon slot="overlayBefore">star</Icon>
 				{text('children', 'Hello Item')}
