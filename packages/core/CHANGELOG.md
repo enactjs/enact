@@ -2,15 +2,11 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
-## [unreleased]
+## [1.12.0] - 2017-10-27
 
 ### Added
 
 - `core/util.Job` APIs `idle`, `idleUntil`, `startRaf` and `startRafAfter`
-
-### Changed
-
-### Fixed
 
 ## [1.11.0] - 2017-10-24
 
