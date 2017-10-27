@@ -8,10 +8,6 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 - `core/util.Job` APIs `idle`, `idleUntil`, `startRaf` and `startRafAfter`
 
-### Changed
-
-### Fixed
-
 ## [1.11.0] - 2017-10-24
 
 No significant changes.
