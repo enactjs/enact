@@ -227,6 +227,9 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.state.spotted) {
 				forward('onSpotlightDisappear', null, this.props);
 			}
+			if (lastSelectTarget === this) {
+				lastSelectTarget = null;
+			}
 		}
 
 		shouldEmulateMouse = ({currentTarget, repeat, type, which}) => {
@@ -274,11 +277,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		resetLastSelecTarget = () => {
-			const stop = lastSelectTarget === this;
+		forwardAndResetLastSelectTarget = (ev, props) => {
+			const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
+			const allow = lastSelectTarget === this;
 			selectCancelled = false;
 			lastSelectTarget = null;
-			return stop;
+			return notPrevented && allow;
 		}
 
 		handle = handle.bind(this)
@@ -292,8 +296,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		handleKeyUp = this.handle(
-			forwardWithPrevent('onKeyUp'),
-			this.resetLastSelecTarget,
+			this.forwardAndResetLastSelectTarget,
 			this.shouldEmulateMouse,
 			forward('onMouseUp'),
 			forward('onClick')
