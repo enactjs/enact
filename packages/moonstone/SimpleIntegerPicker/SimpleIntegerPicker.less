@@ -1,0 +1,29 @@
+// SimpleIntegerPicker.less
+//
+@import '../styles/mixins.less';
+@import '../styles/colors.less';
+@import '../styles/variables.less';
+@import '../styles/skin.less';
+
+
+.picker {
+	padding: 6px;
+	box-sizing: border-box;
+
+	.Icon {
+		color: @moon-picker-joined-text-color !important;
+	}
+}
+
+.selectedPicker {
+	background: @moon-white !important;
+	box-shadow: inset 0 0 0 6px @moon-accent;
+	border-color: @moon-accent;
+
+	input{
+		width: 60%;
+		color: @moon-accent !important;
+		vertical-align: center;
+	}
+
+}
