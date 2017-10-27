@@ -2,6 +2,24 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.12.0] - 2017-10-27
+
+### Added
+
+- `core/util.Job` APIs `idle`, `idleUntil`, `startRaf` and `startRafAfter`
+
+### Fixed
+
+- `moonstone/Input` to correctly hide VKB when dismissing
+- `moonstone/Panels` to retain focus when back key is pressed on breadcrumb
+- `moonstone/Popup` from `last-focused` to `default-element` in `SpotlightContainerDecorator` config
+- `moonstone/Scrollable` to prevent focusing outside the viewport when pressing a 5-way key during wheeling
+- `moonstone/Scroller` to called scrollToBoundary once when focus is moved using holding child item
+- `moonstone/VideoPlayer` to apply skin correctly
+- `spotlight` to focus enabled items that were hovered while disabled
+- `spotlight` to not access non-existent container configurations
+- `spotlight/Spottable` to not block next enter key when focus is moved while pressing enter
+
 ## [1.11.0] - 2017-10-24
 
 ### Added
