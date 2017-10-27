@@ -272,11 +272,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		setFocusTarget = () => {
-			lastSelectTarget = this;
-			return true;
-		}
-
 		forwardAndResetLastSelectTarget = (ev, props) => {
 			const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
 			const allow = lastSelectTarget === this;
