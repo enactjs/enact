@@ -8,8 +8,6 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `core/util.Job` APIs `idle`, `idleUntil`, `startRaf` and `startRafAfter`
 
-### Changed
-
 ### Fixed
 
 - `moonstone/Input` to correctly hide VKB when dismissing
