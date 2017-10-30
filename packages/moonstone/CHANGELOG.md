@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/RangePicker` to display negative values correctly in RTL
+- `moonstone/Scrollbar` to hide scroll thumb immediately without delay after scroll position to be min or max
 
 ## [1.12.0] - 2017-10-27
 
@@ -35,7 +36,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scrollbar` to hide scroll thumb immediately without delay after scroll position to be min or max
 - `moonstone/Picker` to read out customized accessibility value when picker prop has `joined` and `aria-valuetext`
 - `moonstone/Scroller` to apply scroll position on vertical or horizontal Scroller when child gets a focus
 - `moonstone/Scroller.Scrollable` to scroll withtout animation when panel is changed
