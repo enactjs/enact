@@ -11,6 +11,9 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Transition` support for all `clip` transition-type directions and made rendering optimizations
+## [1.12.0] - 2017-10-27
+
+No significant changes.
 
 ## [1.11.0] - 2017-10-24
 

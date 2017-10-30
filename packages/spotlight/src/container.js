@@ -318,7 +318,7 @@ const getDeepSpottableDescendants = (containerId, excludedContainers) => {
 				const config = getContainerConfig(id);
 				if (excludedContainers && excludedContainers.indexOf(id) >= 0) {
 					return [];
-				} else if (!config.enterTo) {
+				} else if (config && !config.enterTo) {
 					return getDeepSpottableDescendants(id, excludedContainers);
 				}
 			}
@@ -337,7 +337,8 @@ const getDeepSpottableDescendants = (containerId, excludedContainers) => {
  * @private
  */
 const isContainer5WayHoldable = (containerId) => {
-	return getContainerConfig(containerId).continue5WayHold || false;
+	const config = getContainerConfig(containerId);
+	return (config && config.continue5WayHold) || false;
 };
 
 /**

@@ -92,7 +92,7 @@ function getTargetBySelector (selector) {
 
 function isRestrictedContainer (containerId) {
 	const config = getContainerConfig(containerId);
-	return config.enterTo === 'last-focused' || config.enterTo === 'default-element';
+	return config && (config.enterTo === 'last-focused' || config.enterTo === 'default-element');
 }
 
 function getSpottableDescendantsWithoutContainers (containerId, containerIds) {
@@ -140,7 +140,7 @@ function getOverflowContainerRect (containerId) {
 	// This filter only applies when waterfalling to prevent filtering out elements that share
 	// a container tree with `element`
 	const nextConfig = getContainerConfig(containerId);
-	if (nextConfig.overflow) {
+	if (nextConfig && nextConfig.overflow) {
 		return getContainerRect(containerId);
 	}
 }
@@ -363,17 +363,19 @@ function getTargetByDirectionFromPosition (direction, position, containerId) {
 function getLeaveForTarget (containerId, direction) {
 	const config = getContainerConfig(containerId);
 
-	const target = config.restrict !== 'self-only' && config.leaveFor && config.leaveFor[direction];
-	if (typeof target === 'string') {
-		if (target === '') {
-			return false;
+	if (config) {
+		const target = config.restrict !== 'self-only' && config.leaveFor && config.leaveFor[direction];
+		if (typeof target === 'string') {
+			if (target === '') {
+				return false;
+			}
+			return getTargetBySelector(target);
 		}
-		return getTargetBySelector(target);
-	}
 
-	const nextContainerIds = getContainersForNode(target);
-	if (isNavigable(target, last(nextContainerIds))) {
-		return target;
+		const nextContainerIds = getContainersForNode(target);
+		if (isNavigable(target, last(nextContainerIds))) {
+			return target;
+		}
 	}
 
 	return null;
