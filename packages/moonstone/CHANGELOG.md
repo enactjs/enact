@@ -6,15 +6,38 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+### Changed
+
+### Fixed
+
+- `moonstone/RangePicker` to display negative values correctly in RTL
+
+## [1.12.0] - 2017-10-27
+
+### Fixed
+
+- `moonstone/Scrollable` to prevent focusing outside the viewport when pressing a 5-way key during wheeling
+- `moonstone/Scroller` to called scrollToBoundary once when focus is moved using holding child item
+- `moonstone/VideoPlayer` to apply skin correctly
+- `moonstone/Popup` from `last-focused` to `default-element` in `SpotlightContainerDecorator` config
+- `moonstone/Panels` to retain focus when back key is pressed on breadcrumb
+- `moonstone/Input` to correctly hide VKB when dismissing
+
+## [1.11.0] - 2017-10-24
+
+### Added
+
 - `moonstone/VideoPlayer` properties `seekDisabled` and `onSeekFailed` to disable seek function
 
 ### Changed
 
-- `moonston/ExpandableList` to `disabled` if there are no children
+- `moonstone/ExpandableList` to become `disabled` if there are no children
 
 ### Fixed
 
 - `moonstone/Scrollbar` to hide scroll thumb immediately without delay after scroll position to be min or max
+- `moonstone/Picker` to read out customized accessibility value when picker prop has `joined` and `aria-valuetext`
+- `moonstone/Scroller` to apply scroll position on vertical or horizontal Scroller when child gets a focus
 - `moonstone/Scroller.Scrollable` to scroll withtout animation when panel is changed
 - `moonstone/ContextualPopup` padding to not overlap close button
 - `moonstone/Scroller.Scrollable` and `moonstone/Scroller` to change focus via page up/down only when the scrollbar is visible
