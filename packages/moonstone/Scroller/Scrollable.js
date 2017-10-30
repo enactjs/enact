@@ -370,7 +370,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isDragging = false
 		deferScrollTo = true
 		pageDistance = 0
-		animateOnFocus = true
+		animateOnFocus = false
+		isWheeling = false
 
 		// drag info
 		dragInfo = {
@@ -575,6 +576,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				}
 
 				if (delta !== 0) {
+					this.isWheeling = true;
 					this.childRef.setContainerDisabled(true);
 					this.scrollToAccumulatedTarget(delta, canScrollVertically);
 				}
@@ -602,6 +604,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
 				this.childRef.shouldPreventScrollByFocus() :
 				false;
+
+			if (this.isWheeling) {
+				this.stop();
+				this.animateOnFocus = false;
+			}
 
 			if (!Spotlight.getPointerMode()) {
 				this.alertThumb();
@@ -668,6 +675,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scrollByPage = (keyCode) => {
+			// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
+			// scroller as a plain container
+			if (!this.state.isVerticalScrollbarVisible) return;
+
 			const
 				{getEndPoint, scrollToAccumulatedTarget} = this,
 				bounds = this.getScrollBounds(),
@@ -887,6 +898,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 			this.hideThumb();
+			this.isWheeling = false;
 			if (this.scrolling) {
 				this.scrolling = false;
 				this.doScrollStop();

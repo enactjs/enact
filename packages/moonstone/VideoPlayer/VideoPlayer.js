@@ -461,6 +461,13 @@ const VideoPlayerBase = class extends React.Component {
 		onScrub: PropTypes.func,
 
 		/**
+		 * Function executed when seek is attemped while `seekDisabled` is true.
+		 *
+		 * @type {Function}
+		 */
+		onSeekFailed: PropTypes.func,
+
+		/**
 		 * When `true`, the video will pause when it reaches either the start or the end of the
 		 * video during rewind, slow rewind, fast forward, or slow forward.
 		 *
@@ -524,6 +531,16 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		rightComponents: PropTypes.node,
+
+		/**
+		 * When `true`, seek function is disabled.
+		 *
+		 * Note that jump by arrow keys will also be disabled when `true`.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		seekDisabled: PropTypes.bool,
 
 		/**
 		 * Registers the VideoPlayer component with an
@@ -1048,7 +1065,9 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	doPulseAction () {
-		if (is('left', this.pulsingKeyCode)) {
+		if (this.props.seekDisabled) {
+			forward('onSeekFailed', {}, this.props);
+		} else if (is('left', this.pulsingKeyCode)) {
 			this.showMiniFeedback = true;
 			this.jump(-1 * this.props.jumpBy);
 			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
@@ -1267,7 +1286,11 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	seek = (timeIndex) => {
-		this.video.currentTime = timeIndex;
+		if (!this.props.seekDisabled) {
+			this.video.currentTime = timeIndex;
+		} else {
+			forward('onSeekFailed', {}, this.props);
+		}
 	}
 
 	/**
@@ -1761,15 +1784,17 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.jumpBy;
 		delete rest.jumpDelay;
 		delete rest.no5WayJump;
-		delete rest.onControlsAvailable;
 		delete rest.onBackwardButtonClick;
+		delete rest.onControlsAvailable;
 		delete rest.onForwardButtonClick;
 		delete rest.onJumpBackwardButtonClick;
 		delete rest.onJumpForwardButtonClick;
 		delete rest.onPlayButtonClick;
 		delete rest.onScrub;
+		delete rest.onSeekFailed;
 		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;
+		delete rest.seekDisabled;
 		delete rest.setApiProvider;
 		delete rest.thumbnailUnavailable;
 		delete rest.titleHideDelay;
@@ -1785,7 +1810,7 @@ const VideoPlayerBase = class extends React.Component {
 		const controlsAriaProps = this.getControlsAriaProps();
 
 		return (
-			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
+			<div className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
 				{/* Video Section */}
 				<video
 					{...rest}
@@ -1968,9 +1993,9 @@ const VideoPlayer = ApiDecorator(
 	{api: ['fastForward', 'getMediaState', 'hideControls', 'jump', 'pause', 'play', 'rewind', 'seek', 'showControls']},
 	Slottable(
 		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
-		Skinnable(
-			FloatingLayerDecorator(
-				{floatLayerId: 'videoPlayerFloatingLayer'},
+		FloatingLayerDecorator(
+			{floatLayerId:  'videoPlayerFloatingLayer'},
+			Skinnable(
 				VideoPlayerBase
 			)
 		)

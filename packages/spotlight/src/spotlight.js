@@ -311,6 +311,7 @@ const Spotlight = (function () {
 		}
 		Spotlight.setPointerMode(false);
 		_spotOnWindowFocus = true;
+		_pointerMoveDuringKeyPress = false;
 	}
 
 	function onFocus () {

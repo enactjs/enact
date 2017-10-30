@@ -509,20 +509,6 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
-	handleDecPulse = () => {
-		if (!this.hasReachedBound(this.props.step * -1)) {
-			this.handleDown(-1);
-			this.updateValue(-1);
-		}
-	}
-
-	handleIncPulse = () => {
-		if (!this.hasReachedBound(this.props.step)) {
-			this.handleDown(1);
-			this.updateValue(1);
-		}
-	}
-
 	throttleInc = new Job(this.handleIncrement, 200)
 
 	throttleDec = new Job(this.handleDecrement, 200)
@@ -760,7 +746,7 @@ const PickerBase = class extends React.Component {
 			sizingPlaceholder = <div aria-hidden className={css.sizingPlaceholder}>{ '0'.repeat(width) }</div>;
 		}
 
-		const valueText = this.calcValueText();
+		const valueText = ariaValueText != null ? ariaValueText : this.calcValueText();
 		const decrementerAriaControls = !incrementerDisabled ? id : null;
 		const incrementerAriaControls = !decrementerDisabled ? id : null;
 
@@ -781,14 +767,14 @@ const PickerBase = class extends React.Component {
 			>
 				<PickerButton
 					aria-controls={!joined ? incrementerAriaControls : null}
-					aria-label={this.calcIncrementLabel(ariaValueText != null ? ariaValueText : valueText)}
+					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
 					disabled={incrementerDisabled}
 					hidden={reachedEnd}
 					icon={incrementIcon}
 					joined={joined}
 					onDown={this.handleIncDown}
-					onHoldPulse={this.handleIncPulse}
+					onHoldPulse={this.handleIncDown}
 					onKeyDown={this.handleIncKeyDown}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}
 					onTap={this.handleIncClick}
@@ -797,7 +783,7 @@ const PickerBase = class extends React.Component {
 				<div
 					aria-disabled={disabled}
 					aria-hidden={!active}
-					aria-valuetext={ariaValueText != null ? ariaValueText : valueText}
+					aria-valuetext={valueText}
 					className={css.valueWrapper}
 					id={id}
 					role="spinbutton"
@@ -816,14 +802,14 @@ const PickerBase = class extends React.Component {
 				</div>
 				<PickerButton
 					aria-controls={!joined ? decrementerAriaControls : null}
-					aria-label={this.calcDecrementLabel(ariaValueText != null ? ariaValueText : valueText)}
+					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
 					disabled={decrementerDisabled}
 					hidden={reachedStart}
 					icon={decrementIcon}
 					joined={joined}
 					onDown={this.handleDecDown}
-					onHoldPulse={this.handleDecPulse}
+					onHoldPulse={this.handleDecDown}
 					onKeyDown={this.handleDecKeyDown}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
 					onTap={this.handleDecClick}

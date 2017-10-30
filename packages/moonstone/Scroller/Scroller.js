@@ -123,6 +123,8 @@ class ScrollerBase extends Component {
 		left: 0
 	}
 
+	isScrolledToBoundary = false
+
 	getScrollBounds = () => this.scrollBounds
 
 	getRtlPositionX = (x) => (this.context.rtl ? this.scrollBounds.maxLeft - x : x)
@@ -261,9 +263,7 @@ class ScrollerBase extends Component {
 
 		if (this.isVertical()) {
 			this.scrollPos.top = this.calculateScrollTop(item, itemTop, itemHeight, scrollInfo, scrollPosition);
-		}
-
-		if (this.isHorizontal()) {
+		} else if (this.isHorizontal()) {
 			const
 				{clientWidth} = this.scrollBounds,
 				rtlDirection = this.context.rtl ? -1 : 1,
@@ -427,9 +427,13 @@ class ScrollerBase extends Component {
 
 		const {keyCode, target} = ev;
 		const direction = getDirection(keyCode);
+		if (!ev.repeat) {
+			this.isScrolledToBoundary = false;
+		}
 
-		if (direction && !this.findInternalTarget(direction, target)) {
+		if (direction && !this.findInternalTarget(direction, target) && !this.isScrolledToBoundary) {
 			this.scrollToBoundary(direction);
+			this.isScrolledToBoundary = true;
 		}
 	}
 

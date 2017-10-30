@@ -29,6 +29,14 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
 
+## [1.12.0] - 2017-10-27
+
+No significant changes.
+
+## [1.11.0] - 2017-10-24
+
+No significant changes.
+
 ## [1.10.1] - 2017-10-16
 
 ### Fixed

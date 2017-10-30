@@ -22,6 +22,37 @@ No significant changes.
 
 - `moonstone/Button`, `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/IconButton`, `moonstone/IncrementSlider`, `moonstone/Item`, `moonstone/Picker`, and `moonstone/RangePicker`, `moonstone/Switch` and `moonstone/VideoPlayer` to use `ui/Touchable`
 
+## [1.12.0] - 2017-10-27
+
+### Fixed
+
+- `moonstone/Scrollable` to prevent focusing outside the viewport when pressing a 5-way key during wheeling
+- `moonstone/Scroller` to called scrollToBoundary once when focus is moved using holding child item
+- `moonstone/VideoPlayer` to apply skin correctly
+- `moonstone/Popup` from `last-focused` to `default-element` in `SpotlightContainerDecorator` config
+- `moonstone/Panels` to retain focus when back key is pressed on breadcrumb
+- `moonstone/Input` to correctly hide VKB when dismissing
+
+## [1.11.0] - 2017-10-24
+
+### Added
+
+- `moonstone/VideoPlayer` properties `seekDisabled` and `onSeekFailed` to disable seek function
+
+### Changed
+
+- `moonstone/ExpandableList` to become `disabled` if there are no children
+
+### Fixed
+
+- `moonstone/Picker` to read out customized accessibility value when picker prop has `joined` and `aria-valuetext`
+- `moonstone/Scroller` to apply scroll position on vertical or horizontal Scroller when child gets a focus
+- `moonstone/Scroller.Scrollable` to scroll withtout animation when panel is changed
+- `moonstone/ContextualPopup` padding to not overlap close button
+- `moonstone/Scroller.Scrollable` and `moonstone/Scroller` to change focus via page up/down only when the scrollbar is visible
+- `moonstone/Picker` to only increment one value on hold
+- `moonstone/ItemOverlay` to remeasure when focused
+
 ## [1.10.1] - 2017-10-16
 
 ### Fixed
@@ -29,6 +60,7 @@ No significant changes.
 - `moonstone/Scrollable` and `moonstone/Scroller` to scroll via page up/down when focus is inside a Spotlight container
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to scroll by 5-way keys right after wheeling
 - `moonstone/VirtualList` not to move focus when a current item and the last item are located at the same line and pressing a page down key
+- `moonstone/Slider` knob to follow while dragging for detached knob
 - `moonstone/Header` to layout header row correctly in `standard` type
 - `moonstone/Input` to not dismiss on-screen keyboard when dragging cursor out of input box
 - `moonstone/Header` RTL `line-height` issue
