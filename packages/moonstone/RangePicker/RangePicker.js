@@ -229,7 +229,7 @@ const RangePickerBase = kind({
 		delete rest.padded;
 		return (
 			<Picker {...rest} index={0} value={value} reverse={false}>
-				<PickerItem key={value} marqueeDisabled>{label}</PickerItem>
+				<PickerItem key={value} marqueeDisabled style={{direction: 'ltr'}}>{label}</PickerItem>
 			</Picker>
 		);
 	}

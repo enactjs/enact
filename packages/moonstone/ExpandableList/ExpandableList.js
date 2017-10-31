@@ -265,6 +265,10 @@ const ExpandableListBase = kind({
 	computed: {
 		'aria-multiselectable': ({select}) => select === 'multiple',
 
+		disabled: ({children, disabled}) => {
+			return disabled || !children || children.length === 0;
+		},
+
 		itemProps: ({
 			onSpotlightDisappear,
 			onSpotlightLeft,

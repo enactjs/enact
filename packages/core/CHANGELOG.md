@@ -10,6 +10,20 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ### Fixed
 
+## [1.12.0] - 2017-10-27
+
+### Added
+
+- `core/util.Job` APIs `idle`, `idleUntil`, `startRaf` and `startRafAfter`
+
+## [1.11.0] - 2017-10-24
+
+No significant changes.
+
+## [1.10.1] - 2017-10-16
+
+No significant changes.
+
 ## [1.10.0] - 2017-10-09
 
 No significant changes.
@@ -120,7 +134,7 @@ No significant changes.
 
 ## [1.0.0-beta.3] - 2017-02-21
 
-### Addded
+### Added
 
 - `core/handle` function `forEventProp` to test properties on an event
 
