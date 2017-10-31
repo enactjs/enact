@@ -11,10 +11,19 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VirtualListNative` to scroll properly with page up/down keys if there is an disabled item
+- `moonstone/RangePicker` to display negative values correctly in RTL
+- `moonstone/Scrollbar` to hide scroll thumb immediately without delay after scroll position to be min or max
+
+## [1.12.0] - 2017-10-27
+
+### Fixed
+
+- `moonstone/Scrollable` to prevent focusing outside the viewport when pressing a 5-way key during wheeling
 - `moonstone/Scroller` to called scrollToBoundary once when focus is moved using holding child item
 - `moonstone/VideoPlayer` to apply skin correctly
 - `moonstone/Popup` from `last-focused` to `default-element` in `SpotlightContainerDecorator` config
 - `moonstone/Panels` to retain focus when back key is pressed on breadcrumb
+- `moonstone/Input` to correctly hide VKB when dismissing
 
 ## [1.11.0] - 2017-10-24
 
