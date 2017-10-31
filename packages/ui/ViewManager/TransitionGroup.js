@@ -218,6 +218,10 @@ class TransitionGroup extends React.Component {
 		}
 	}
 
+	componentWillUnmount () {
+		this.enteringComponent = null;
+	}
+
 	reconcileChildren (dropped, prevChildMapping, nextChildMapping) {
 		// mark any new child as entering
 		nextChildMapping.forEach(child => {
