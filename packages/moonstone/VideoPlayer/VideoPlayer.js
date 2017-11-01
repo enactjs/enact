@@ -786,6 +786,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.renderBottomControl.stop();
 		this.stopListeningForPulses();
 		this.sliderTooltipTimeJob.stop();
+		this.slider5WayPressJob.stop();
 	}
 
 	//
@@ -1657,13 +1658,15 @@ const VideoPlayerBase = class extends React.Component {
 		});
 	}
 
+	slider5WayPressJob = new Job(() => {
+		this.setState({slider5WayPressed: false});
+	}, 200);
+
 	handleSliderKeyDown = (ev) => {
 		if (is('enter', ev.keyCode)) {
 			this.setState({
 				slider5WayPressed: true
-			}, new Job(() => {
-				this.setState({slider5WayPressed: false});
-			}, 200).start());
+			}, this.slider5WayPressJob.start());
 		}
 	}
 
