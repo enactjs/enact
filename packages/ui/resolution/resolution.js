@@ -406,11 +406,13 @@ function selectSrc (src) {
  * re-cached.
  *
  * @memberof ui/resolution
- * @returns {undefined} [description]
+ * @param {Object} args A hash of options. The key `measurementNode` is used to as the node,
+ * 	typically the root element, to measure and use as the dimensions for the `screenType`.
+ * @returns {undefined}
  * @public
  */
-function init (args) {
-	const {measurementNode} = args || {};
+function init (args = {}) {
+	const {measurementNode} = args;
 	updateWorkspaceBounds(measurementNode);
 	screenType = getScreenType();
 	screenTypeObject = getScreenTypeObject();

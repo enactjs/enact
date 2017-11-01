@@ -74,8 +74,17 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			className: PropTypes.string
 		}
 
+		constructor (props) {
+			super(props);
+
+			this.state = {
+				resolutionClasses: ''
+			};
+		}
+
 		componentDidMount () {
 			if (config.dynamic) window.addEventListener('resize', this.handleResize);
+			this.rootNode = ReactDOM.findDOMNode(this);
 		}
 
 		componentWillUnmount () {
@@ -83,25 +92,34 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleResize = () => {
-			init({measurementNode: this.rootNode});
-			this.setState({
-				screenType: getScreenTypeObject().name
-			});
+			const classNames = this.didClassesChange();
+
+			if (classNames) {
+				this.setState({resolutionClasses: classNames});
+			}
 		}
 
-		setRootRef = (ref) => {
-			this.rootNode = ReactDOM.findDOMNode(ref);
+		/**
+		 * Compare our current version of the resolved resolution class names with a fresh
+		 * initialization of RI.
+		 *
+		 * @return {String|undefined} A string of new class names or undefined when there is no change.
+		 */
+		didClassesChange () {
+			const prevClassNames = getResolutionClasses();
+			init({measurementNode: this.rootNode});
+			const classNames = getResolutionClasses();
+			if (prevClassNames !== classNames) {
+				return classNames;
+			}
 		}
 
 		render () {
-			// ensure we've initialized the RI members
-			if ((!this.state || !this.state.screenType) && this.rootNode) {
-				init({measurementNode: this.rootNode});
-			}
+			// Check if the classes are different from our previous classes
+			let classes = this.didClassesChange() || this.state.resolutionClasses;
 
-			let classes = getResolutionClasses();
 			if (this.props.className) classes += (classes ? ' ' : '') + this.props.className;
-			return <Wrapped {...this.props} className={classes} ref={this.setRootRef} />;
+			return <Wrapped {...this.props} className={classes} />;
 		}
 	};
 });
