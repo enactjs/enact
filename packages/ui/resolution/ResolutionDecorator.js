@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
 
@@ -82,19 +83,25 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleResize = () => {
-			init();
+			init({measurementNode: this.rootNode});
 			this.setState({
 				screenType: getScreenTypeObject().name
 			});
 		}
 
+		setRootRef = (ref) => {
+			this.rootNode = ReactDOM.findDOMNode(ref);
+		}
+
 		render () {
 			// ensure we've initialized the RI members
-			if (!this.state || !this.state.screenType) init();
+			if ((!this.state || !this.state.screenType) && this.rootNode) {
+				init({measurementNode: this.rootNode});
+			}
 
 			let classes = getResolutionClasses();
 			if (this.props.className) classes += (classes ? ' ' : '') + this.props.className;
-			return <Wrapped {...this.props} className={classes} />;
+			return <Wrapped {...this.props} className={classes} ref={this.setRootRef} />;
 		}
 	};
 });

@@ -2,11 +2,15 @@ let baseScreen,
 	orientation,
 	riRatio,
 	screenType,
+	workspaceBounds = {
+		width: (typeof window === 'object') ? window.innerWidth : 1920,
+		height: (typeof window === 'object') ? window.innerHeight : 1080
+	},
 	screenTypes = [{
 		name: 'standard',
 		pxPerRem: 16,
-		width: (typeof window === 'object') ? window.innerWidth : 1920,
-		height: (typeof window === 'object') ? window.innerHeight : 1080,
+		width: workspaceBounds.width,
+		height: workspaceBounds.height,
 		aspectRatioName: 'standard',
 		base: true
 	}],	// Assign one sane type in case defineScreenTypes is never run.
@@ -26,6 +30,25 @@ const unitToPixelFactors = {
 
 const configDefaults = {
 	orientationHandling: 'normal'
+};
+
+/**
+ * Update the common measured boundary object. This object is used as "what size screen are we
+ * looking at". Providing no arguments has no effect and updates nothing.
+ *
+ * @memberOf ui/resolution
+ * @param {Node} measurementNode A standard DOM node or the `window` node.
+ *
+ * @returns {undefined}
+ * @private
+ */
+const updateWorkspaceBounds = (measurementNode) => {
+	if (measurementNode && (measurementNode.clientHeight || measurementNode.clientWidth)) {
+		workspaceBounds = {height: measurementNode.clientHeight, width: measurementNode.clientWidth};
+	} else if (measurementNode && (measurementNode.innerHeight || measurementNode.innerWidth)) {
+		// A backup for if measurementNode is actually `window` and not a normal node
+		workspaceBounds = {height: measurementNode.innerHeight, width: measurementNode.innerWidth};
+	}
 };
 
 /**
@@ -97,31 +120,30 @@ function defineScreenTypes (types) {
  * @public
  */
 function getScreenType (rez) {
-	rez = rez || {
-		height: (typeof window === 'object') ? window.innerHeight : 1080,
-		width: (typeof window === 'object') ? window.innerWidth : 1920
+	rez = rez || workspaceBounds || {
+		height: 1080,
+		width: 1920
 	};
 
 	const types = screenTypes;
-	let bestMatch = types[types.length - 1].name;
+	let bestMatch = types[0].name, // Blindly set the first screen type, in case no matches are found later.
+		dimensionShorter = 'height';
 
 	orientation = 'landscape';
 
 	if (rez.height > rez.width) {
 		orientation = 'portrait';
-		const swap = rez.width;
-		rez.width = rez.height;
-		rez.height = swap;
+		dimensionShorter = 'width';
 	}
 
-	// loop thorugh resolutions
-	for (let i = types.length - 1; i >= 0; i--) {
-		// find the one that matches our current size or is smaller. default to the first.
-		if (rez.width <= types[i].width) {
+	// Loop thorugh resolutions, first->last, smallest->largest
+	for (var i = 0; i < types.length; i++) {
+		// Find the screenType that matches our current size or is smaller. Default to the first.
+		if (rez[dimensionShorter] >= types[i][dimensionShorter]) {
 			bestMatch = types[i].name;
 		}
 	}
-	// return the name of the resolution if we find one.
+	// Return the name of the closest fitting set of demensions.
 	return bestMatch;
 }
 
@@ -387,7 +409,9 @@ function selectSrc (src) {
  * @returns {undefined} [description]
  * @public
  */
-function init () {
+function init (args) {
+	const {measurementNode} = args || {};
+	updateWorkspaceBounds(measurementNode);
 	screenType = getScreenType();
 	screenTypeObject = getScreenTypeObject();
 	unitToPixelFactors.rem = getUnitToPixelFactors();
