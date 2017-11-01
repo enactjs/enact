@@ -16,16 +16,16 @@ granted by this License.
 “for implementation into consumer electronics products, applications, devices,
 “and other LG interactive products.
 
-“Enyo Applications” shall mean applications developed using the Enyo JavaScript
+“Enact Applications” shall mean applications developed using the Enact JavaScript
 “application framework
 
 2.  Grant of License.  LGSVL grants you a non-exclusive, perpetual, irrevocable,
 non- sublicensable, worldwide, fully paid-up license to use, reproduce, use,
 make use, display and distribute an unlimited number of units of the Font
 Software for the sole purpose of implementation into an unlimited number of
-units of Enyo Applications pursuant to the terms of this Agreement.
+units of Enact Applications pursuant to the terms of this Agreement.
 
-3.  Embedding.  You may embed the Font Software in Enyo Applications either as a
+3.  Embedding.  You may embed the Font Software in Enact Applications either as a
 rasterized representation of the Font Software or as a subset of the Font
 Software so long as the Font Software as embedded in applications, products or
 devices is distributed in a secure format that permits only the viewing, but not
@@ -39,7 +39,7 @@ such copies.
 engineer, decompile, disassemble, alter, or attempt to discover the source code
 of the Font Software.
 
-6.  Restrictions.  This license is restricted for use with Enyo Applications
+6.  Restrictions.  This license is restricted for use with Enact Applications
 
 7.  Ownership.  All copyrights, trademarks and other intellectual property
 rights in the Font Software belong exclusively to MN and are protected by U.S.

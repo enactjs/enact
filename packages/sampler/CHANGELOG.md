@@ -2,6 +2,22 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
+## [1.12.0] - 2017-10-27
+
+No significant changes.
+
+## [1.11.0] - 2017-10-24
+
+No significant changes.
+
 ## [1.10.1] - 2017-10-16
 
 No significant changes.

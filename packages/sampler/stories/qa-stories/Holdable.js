@@ -1,6 +1,5 @@
 import Button from '@enact/moonstone/Button';
 import Holdable from '@enact/ui/Holdable';
-import pick from 'ramda/src/pick';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {boolean, select, text} from '@kadira/storybook-addon-knobs';
@@ -19,7 +18,7 @@ const safeAction = (actionName) => {
 	const actionHandler = action(actionName);
 
 	return (ev) => {
-		actionHandler(pick(['type', 'holdTime'], ev));
+		actionHandler({type: ev.type, holdTime: ev.holdTime});
 	};
 };
 

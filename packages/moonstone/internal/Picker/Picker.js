@@ -772,7 +772,7 @@ const PickerBase = class extends React.Component {
 			sizingPlaceholder = <div aria-hidden className={css.sizingPlaceholder}>{ '0'.repeat(width) }</div>;
 		}
 
-		const valueText = this.calcValueText();
+		const valueText = ariaValueText != null ? ariaValueText : this.calcValueText();
 		const decrementerAriaControls = !incrementerDisabled ? id : null;
 		const incrementerAriaControls = !decrementerDisabled ? id : null;
 
@@ -793,7 +793,7 @@ const PickerBase = class extends React.Component {
 			>
 				<PickerButton
 					aria-controls={!joined ? incrementerAriaControls : null}
-					aria-label={this.calcIncrementLabel(ariaValueText != null ? ariaValueText : valueText)}
+					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
 					disabled={incrementerDisabled}
 					hidden={reachedEnd}
@@ -808,7 +808,7 @@ const PickerBase = class extends React.Component {
 				<div
 					aria-disabled={disabled}
 					aria-hidden={!active}
-					aria-valuetext={ariaValueText != null ? ariaValueText : valueText}
+					aria-valuetext={valueText}
 					className={css.valueWrapper}
 					id={id}
 					role="spinbutton"
@@ -827,7 +827,7 @@ const PickerBase = class extends React.Component {
 				</div>
 				<PickerButton
 					aria-controls={!joined ? decrementerAriaControls : null}
-					aria-label={this.calcDecrementLabel(ariaValueText != null ? ariaValueText : valueText)}
+					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
 					disabled={decrementerDisabled}
 					hidden={reachedStart}

@@ -8,6 +8,20 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
+### Fixed
+
+## [1.12.0] - 2017-10-27
+
+### Fixed
+
+- `spotlight` to focus enabled items that were hovered while disabled
+- `spotlight` to not access non-existent container configurations
+- `spotlight/Spottable` to not block next enter key when focus is moved while pressing enter
+
+## [1.11.0] - 2017-10-24
+
+### Changed
+
 - `spotlight` to handle key events to preserve pointer mode for specific keys
 
 ### Fixed
