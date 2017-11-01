@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Button` min-width for large text
 - `moonstone/RangePicker` to display negative values correctly in RTL
 - `moonstone/Scrollbar` to hide scroll thumb immediately without delay after scroll position to be min or max
 
