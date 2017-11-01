@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/Marquee` to remove kerning from its text
+
 ### Fixed
 
 - `moonstone/RangePicker` to display negative values correctly in RTL
