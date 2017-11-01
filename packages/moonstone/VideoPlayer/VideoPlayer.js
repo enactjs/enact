@@ -1809,7 +1809,7 @@ const VideoPlayerBase = class extends React.Component {
 		const controlsAriaProps = this.getControlsAriaProps();
 
 		return (
-			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
+			<div className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
 				{/* Video Section */}
 				<video
 					{...rest}
@@ -1992,9 +1992,9 @@ const VideoPlayer = ApiDecorator(
 	{api: ['fastForward', 'getMediaState', 'hideControls', 'jump', 'pause', 'play', 'rewind', 'seek', 'showControls']},
 	Slottable(
 		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
-		Skinnable(
-			FloatingLayerDecorator(
-				{floatLayerId: 'videoPlayerFloatingLayer'},
+		FloatingLayerDecorator(
+			{floatLayerId:  'videoPlayerFloatingLayer'},
+			Skinnable(
 				VideoPlayerBase
 			)
 		)

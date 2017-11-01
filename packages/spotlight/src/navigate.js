@@ -154,7 +154,7 @@ function generateDistancefunction (targetRect) {
 }
 
 function navigate (targetRect, direction, rects, config) {
-	if (!targetRect || !direction || !rects || !rects.length) {
+	if (!targetRect || !direction || !rects || !rects.length || !config) {
 		return null;
 	}
 
