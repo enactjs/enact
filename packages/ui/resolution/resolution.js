@@ -102,7 +102,7 @@ function getScreenTypeObject (type) {
  * @public
  */
 function defineScreenTypes (types) {
-	screenTypes = types;
+	if (types) screenTypes = types;
 	for (let i = 0; i < screenTypes.length; i++) {
 		if (screenTypes[i]['base']) baseScreen = screenTypes[i];
 	}
@@ -126,20 +126,21 @@ function getScreenType (rez) {
 	};
 
 	const types = screenTypes;
-	let bestMatch = types[0].name, // Blindly set the first screen type, in case no matches are found later.
-		dimensionShorter = 'height';
+	let bestMatch = types[types.length - 1].name; // Blindly set the first screen type, in case no matches are found later.
 
 	orientation = 'landscape';
 
 	if (rez.height > rez.width) {
 		orientation = 'portrait';
-		dimensionShorter = 'width';
+		const swap = rez.width;
+		rez.width = rez.height;
+		rez.height = swap;
 	}
 
-	// Loop thorugh resolutions, first->last, smallest->largest
-	for (var i = 0; i < types.length; i++) {
+	// Loop thorugh resolutions, last->first, largest->smallest
+	for (var i = types.length - 1; i >= 0; i--) {
 		// Find the screenType that matches our current size or is smaller. Default to the first.
-		if (rez[dimensionShorter] >= types[i][dimensionShorter]) {
+		if (rez.height <= types[i].height && rez.width <= types[i].width) {
 			bestMatch = types[i].name;
 		}
 	}

@@ -76,7 +76,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-
+			init();
 			this.state = {
 				resolutionClasses: ''
 			};
@@ -116,7 +116,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			// Check if the classes are different from our previous classes
-			let classes = this.didClassesChange() || this.state.resolutionClasses;
+			let classes = getResolutionClasses();
 
 			if (this.props.className) classes += (classes ? ' ' : '') + this.props.className;
 			return <Wrapped {...this.props} className={classes} />;
