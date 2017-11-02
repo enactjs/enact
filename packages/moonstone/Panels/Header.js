@@ -172,7 +172,7 @@ const HeaderBase = kind({
 		switch (type) {
 			case 'compact': return (
 				<Layout component="header" aria-label={title} {...rest} align="end">
-					<Cell component={CompactTitle} className={css.headerTitles} title={title} titleBelow={titleBelowComponent} marqueeOn={marqueeOn} forceDirection={direction}>
+					<Cell component={CompactTitle} title={title} titleBelow={titleBelowComponent} marqueeOn={marqueeOn} forceDirection={direction}>
 						<UppercaseH1 casing={casing} className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
 						{titleBelowComponent}
 					</Cell>
