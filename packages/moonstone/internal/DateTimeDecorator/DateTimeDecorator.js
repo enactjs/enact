@@ -5,7 +5,6 @@
  * @private
  */
 
-import Changeable from '@enact/ui/Changeable';
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import hoc from '@enact/core/hoc';
 import ilib from '@enact/i18n';
@@ -235,9 +234,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 	return Subscription(
 		{channels: ['i18n'], mapMessageToProps: (channel, {rtl}) => ({rtl})},
 		Expandable(
-			Changeable(
-				Decorator
-			)
+			Decorator
 		)
 	);
 });
