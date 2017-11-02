@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/Slider` to fire `onChange` on mouse up and key up
+
 ### Fixed
 
 - `moonstone/Button` min-width for large text
