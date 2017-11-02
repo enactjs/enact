@@ -154,7 +154,6 @@ class ScrollbarBase extends PureComponent {
 		this.initAnnounceRef = this.initRef('announceRef');
 		this.initContainerRef = this.initRef('containerRef');
 		this.initThumbRef = this.initRef('thumbRef');
-		this.scrollButtonFocused = false;
 
 		if (props.setApiProvider) {
 			props.setApiProvider(this);
@@ -273,6 +272,8 @@ class ScrollbarBase extends PureComponent {
 		this.thumbRef.classList.remove(css.thumbShown);
 	}
 
+	isThumbFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
+
 	hideThumbJob = new Job(this.hideThumb, 200);
 
 	calculateMetrics = () => {
@@ -284,14 +285,6 @@ class ScrollbarBase extends PureComponent {
 		return (ref) => {
 			this[prop] = ref;
 		};
-	}
-
-	handleButtonFocus = () => {
-		this.scrollButtonFocused = true;
-	}
-
-	handleButtonBlur = () => {
-		this.scrollButtonFocused = false;
 	}
 
 	handlePrevScroll = (ev) => {
@@ -374,8 +367,6 @@ class ScrollbarBase extends PureComponent {
 					direction={vertical ? 'up' : 'left'}
 					disabled={disabled || prevButtonDisabled}
 					onClick={this.handlePrevScroll}
-					onFocus={this.handleButtonFocus}
-					onBlur={this.handleButtonBlur}
 					onHoldPulse={this.handlePrevHoldPulse}
 					onKeyDown={this.depressButton}
 					onKeyUp={this.releaseButton}
@@ -394,8 +385,6 @@ class ScrollbarBase extends PureComponent {
 					direction={vertical ? 'down' : 'right'}
 					disabled={disabled || nextButtonDisabled}
 					onClick={this.handleNextScroll}
-					onFocus={this.handleButtonFocus}
-					onBlur={this.handleButtonBlur}
 					onHoldPulse={this.handleNextHoldPulse}
 					onKeyDown={this.depressButton}
 					onKeyUp={this.releaseButton}
@@ -411,7 +400,7 @@ class ScrollbarBase extends PureComponent {
 }
 
 const Scrollbar = ApiDecorator(
-	{api: ['containerRef', 'hideThumb', 'scrollButtonFocused', 'showThumb', 'startHidingThumb', 'update']},
+	{api: ['containerRef', 'hideThumb', 'isThumbFocused', 'showThumb', 'startHidingThumb', 'update']},
 	DisappearSpotlightDecorator(
 		{events: {
 			onNextSpotlightDisappear: '[data-scroll-button="previous"]',
