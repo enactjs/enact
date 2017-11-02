@@ -23,6 +23,7 @@ const MarqueeH3 = Uppercase(MarqueeDecorator('h3'));
  *
  * @class Divider
  * @memberof moonstone/Divider
+ * @mixes moonstone/MarqueeDecorator.MarqueeDecorator
  * @ui
  * @public
  */
