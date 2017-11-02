@@ -11,8 +11,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import Slottable from '@enact/ui/Slottable';
+import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
+import Toggleable from '@enact/ui/Toggleable';
 import Spottable from '@enact/spotlight/Spottable';
-
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
@@ -159,11 +160,17 @@ const ItemOverlay = Slottable(
 			overlayBefore: childrenEquals,
 			overlayAfter: childrenEquals
 		}},
-		Spottable(
-			ItemMarqueeDecorator(
-				OverlayDecorator(
-					Skinnable(
-						ItemBase
+		Toggleable(
+			{prop: 'remeasure', activate: 'onFocus', deactivate: 'onBlur', toggle: null},
+			Spottable(
+				RemeasurableDecorator(
+					{trigger: 'remeasure'},
+					ItemMarqueeDecorator(
+						OverlayDecorator(
+							Skinnable(
+								ItemBase
+							)
+						)
 					)
 				)
 			)

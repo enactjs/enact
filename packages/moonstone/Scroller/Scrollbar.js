@@ -216,6 +216,10 @@ class ScrollbarBase extends PureComponent {
 			shouldDisableNextButton = maxPos - currentPos <= 1,
 			spotItem = Spotlight.getCurrent();
 
+		if (currentPos <= 0 || currentPos >= maxPos) {
+			this.startHidingThumb();
+		}
+
 		this.setState((prevState) => {
 			const
 				updatePrevButton = (prevState.prevButtonDisabled !== shouldDisablePrevButton),
@@ -267,6 +271,8 @@ class ScrollbarBase extends PureComponent {
 	hideThumb = () => {
 		this.thumbRef.classList.remove(css.thumbShown);
 	}
+
+	isThumbFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
 
 	hideThumbJob = new Job(this.hideThumb, 200);
 
@@ -394,7 +400,7 @@ class ScrollbarBase extends PureComponent {
 }
 
 const Scrollbar = ApiDecorator(
-	{api: ['containerRef', 'hideThumb', 'showThumb', 'startHidingThumb', 'update']},
+	{api: ['containerRef', 'hideThumb', 'isThumbFocused', 'showThumb', 'startHidingThumb', 'update']},
 	DisappearSpotlightDecorator(
 		{events: {
 			onNextSpotlightDisappear: '[data-scroll-button="previous"]',

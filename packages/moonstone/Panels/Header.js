@@ -194,7 +194,7 @@ const HeaderBase = kind({
 					<Cell component={HeaderH1} casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn={marqueeOn}>
 						{title}
 					</Cell>
-					<Cell className={css.headerRow} shrink size={63}>
+					<Cell shrink size={63}>
 						<Layout align="end">
 							<Cell>
 								{titleBelowComponent}

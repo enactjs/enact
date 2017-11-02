@@ -2,6 +2,61 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.12.0] - 2017-10-27
+
+### Added
+
+- `core/util.Job` APIs `idle`, `idleUntil`, `startRaf` and `startRafAfter`
+
+### Fixed
+
+- `moonstone/Input` to correctly hide VKB when dismissing
+- `moonstone/Panels` to retain focus when back key is pressed on breadcrumb
+- `moonstone/Popup` from `last-focused` to `default-element` in `SpotlightContainerDecorator` config
+- `moonstone/Scrollable` to prevent focusing outside the viewport when pressing a 5-way key during wheeling
+- `moonstone/Scroller` to called scrollToBoundary once when focus is moved using holding child item
+- `moonstone/VideoPlayer` to apply skin correctly
+- `spotlight` to focus enabled items that were hovered while disabled
+- `spotlight` to not access non-existent container configurations
+- `spotlight/Spottable` to not block next enter key when focus is moved while pressing enter
+
+## [1.11.0] - 2017-10-24
+
+### Added
+
+- `moonstone/VideoPlayer` properties `seekDisabled` and `onSeekFailed` to disable seek function
+
+### Changed
+
+- `moonston/ExpandableList` to become `disabled` if there are no children
+- `spotlight` to handle key events to preserve pointer mode for specific keys
+
+### Fixed
+
+- `moonstone/Scroller` to apply scroll position on vertical or horizontal Scroller when child gets a focus
+- `moonstone/Scroller.Scrollable` to scroll withtout animation when panel is changed
+- `moonstone/ContextualPopup` padding to not overlap close button
+- `moonstone/Scroller.Scrollable` and `moonstone/Scroller` to change focus via page up/down only when the scrollbar is visible
+- `moonstone/Picker` to only increment one value on hold
+- `moonstone/ItemOverlay` to remeasure when focused
+- `spotlight` to not require multiple 5-way key presses in order to change focus after the window regains focus
+
+## [1.10.1] - 2017-10-16
+
+### Fixed
+
+- `moonstone/Scrollable` and `moonstone/Scroller` to scroll via page up/down when focus is inside a Spotlight container
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to scroll by 5-way keys right after wheeling
+- `moonstone/VirtualList` not to move focus when a current item and the last item are located at the same line and pressing a page down key
+- `moonstone/Header` to layout header row correctly in `standard` type
+- `moonstone/Input` to not dismiss on-screen keyboard when dragging cursor out of input box
+- `moonstone/Header` RTL `line-height` issue
+- `moonstone/Panels` to render children on idle
+- `moonstone/Scroller.Scrollable` to limit its muted spotlight container scrim to its bounds
+- `moonstone/Input` to always forward `onKeyUp` event
+- `spotlight.Spotlight` method `focus()` to prevent focusing components within containers that are being removed
+- `ui/Pressable` to properly set pressed state to false on blur and release
+
 ## [1.10.0] - 2017-10-09
 
 ### Added
