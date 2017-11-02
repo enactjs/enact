@@ -13,7 +13,6 @@
 	border-bottom-style: solid;
 	position: relative;
 	max-width: 100%;
-	padding: 0 0 @moon-spotlight-outset 0;
 	background-color: transparent;
 	background-repeat: no-repeat;
 	background-position: top left;
@@ -42,6 +41,7 @@
 	.headerComponents {
 		.remove-margin-on-edge-children();
 		.margin-start-end(@moon-spotlight-outset, 0);
+		padding-bottom: @moon-spotlight-outset;
 
 		white-space: nowrap;
 	}
