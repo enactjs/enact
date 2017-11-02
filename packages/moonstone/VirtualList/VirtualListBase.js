@@ -906,6 +906,10 @@ class VirtualListCore extends Component {
 			// If the index to jump is disabled
 			focusedIndex !== nodeIndexToBeFocused && indexToJump !== nodeIndexToBeFocused
 		) {
+			if (!Spotlight.isPaused()) {
+				Spotlight.pause();
+			}
+
 			focusedItem.blur();
 			// To prevent item positioning issue, make all items to be rendered.
 			this.updateFrom = null;
