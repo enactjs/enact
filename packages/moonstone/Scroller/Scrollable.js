@@ -552,8 +552,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusedItem = Spotlight.getCurrent(),
 					eventDeltaMode = e.deltaMode,
 					eventDelta = (-e.wheelDeltaY || e.deltaY),
-					isVerticalScrollButtonFocused = this.verticalScrollbarRef && this.verticalScrollbarRef.isThumbFocused(),
-					isHorizontalScrollButtonFocused = this.horizontalScrollbarRef && this.horizontalScrollbarRef.isThumbFocused();
+					isVerticalScrollButtonFocused = this.verticalScrollbarRef && this.verticalScrollbarRef.scrollButtonFocused,
+					isHorizontalScrollButtonFocused = this.horizontalScrollbarRef && this.horizontalScrollbarRef.scrollButtonFocused;
 				let
 					delta = 0,
 					direction;
