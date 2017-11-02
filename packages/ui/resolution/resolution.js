@@ -138,7 +138,7 @@ function getScreenType (rez) {
 	}
 
 	// Loop thorugh resolutions, last->first, largest->smallest
-	for (var i = types.length - 1; i >= 0; i--) {
+	for (let i = types.length - 1; i >= 0; i--) {
 		// Find the screenType that matches our current size or is smaller. Default to the first.
 		if (rez.height <= types[i].height && rez.width <= types[i].width) {
 			bestMatch = types[i].name;

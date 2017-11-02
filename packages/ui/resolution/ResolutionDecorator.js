@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
 
-import {init, defineScreenTypes, getScreenTypeObject, getResolutionClasses} from './resolution';
+import {init, defineScreenTypes, getResolutionClasses} from './resolution';
 
 /**
  * Default config for {@link ui/resolution.ResolutionDecorator}
@@ -84,6 +84,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidMount () {
 			if (config.dynamic) window.addEventListener('resize', this.handleResize);
+			// eslint-disable-next-line react/no-find-dom-node
 			this.rootNode = ReactDOM.findDOMNode(this);
 		}
 
