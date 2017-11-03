@@ -10,6 +10,7 @@ import React from 'react';
 import invariant from 'invariant';
 import hoc from '@enact/core/hoc';
 import {contextTypes, Publisher, Subscription} from '@enact/core/internal/PubSub';
+import {perfNow} from '@enact/core/util';
 
 /**
  * Default config for {@link ui/Remeasurable.RemeasurableDecorator}
@@ -75,7 +76,7 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillReceiveProps (nextProps) {
 			if (this.props[trigger] !== nextProps[trigger]) {
 				this.setState({
-					remeasure: window.performance.now()
+					remeasure: perfNow()
 				});
 			}
 		}
