@@ -51,7 +51,7 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				remeasure: false
+				remeasure: null
 			};
 		}
 
@@ -64,7 +64,7 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillMount () {
 			this.publisher = Publisher.create('resize', this.context.Subscriber);
 			this.publisher.publish({
-				remeasure: false
+				remeasure: null
 			});
 
 			if (this.context.Subscriber) {
@@ -73,13 +73,15 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			this.setState({
-				remeasure: this.props[trigger] !== nextProps[trigger]
-			});
+			if (this.props[trigger] !== nextProps[trigger]) {
+				this.setState({
+					remeasure: window.performance.now()
+				});
+			}
 		}
 
 		componentDidUpdate (prevProps, prevState) {
-			if (this.state.remeasure && !prevState.remeasure) {
+			if (this.state.remeasure !== prevState.remeasure) {
 				this.publisher.publish(this.state);
 			}
 		}
