@@ -8,11 +8,11 @@ import Changeable from '@enact/ui/Changeable';
 import {coerceArray} from '@enact/core/util';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 import {forward} from '@enact/core/handle';
-import ilib from '@enact/i18n';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
+import {Subscription} from '@enact/core/internal/PubSub';
 
 import $L from '../internal/$L';
 import {Expandable} from '../ExpandableItem';
@@ -58,6 +58,14 @@ const DayPickerBase = class extends React.Component {
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * Current locale for DayPicker
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		locale: PropTypes.string,
 
 		/**
 		 * Callback to be called when a condition occurs which should cause the expandable to close
@@ -116,27 +124,30 @@ const DayPickerBase = class extends React.Component {
 		this.longDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 		this.shortDayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-		this.initIlib();
+		this.initIlib(props.locale);
 	}
 
-	componentWillUpdate () {
-		this.initIlib();
+	componentWillReceiveProps (nextProps) {
+		this.initIlib(nextProps.locale);
 	}
 
-	initIlib () {
-		const locale = ilib.getLocale();
+	initIlib (locale) {
 		if (this.locale !== locale && typeof window === 'object') {
 			this.locale = locale;
 
 			const df = new DateFmt({length: 'full'});
 			const sdf = new DateFmt({length: 'long'});
-			const li = new LocaleInfo(ilib.getLocale());
+			const li = new LocaleInfo(locale);
 			const daysOfWeek = df.getDaysOfWeek();
 			const days = sdf.getDaysOfWeek();
 
 			this.firstDayOfWeek = li.getFirstDayOfWeek();
 			this.weekEndStart = li.getWeekEndStart ? this.adjustWeekends(li.getWeekEndStart()) : this.weekEndStart;
 			this.weekEndEnd = li.getWeekEndEnd ? this.adjustWeekends(li.getWeekEndEnd()) : this.weekEndEnd;
+
+			// clone the name arrays
+			this.longDayNames = this.longDayNames.slice();
+			this.shortDayNames = this.shortDayNames.slice();
 
 			for (let i = 0; i < 7; i++) {
 				const index = (i + this.firstDayOfWeek) % 7;
@@ -219,18 +230,20 @@ const DayPickerBase = class extends React.Component {
 
 	render () {
 		const
-			{title} = this.props,
+			{title, ...rest} = this.props,
 			type = this.calcSelectedDayType(this.props.selected),
 			label = this.getSelectedDayString(type, this.shortDayNames);
-		let ariaLabel = null;
 
+		delete rest.locale;
+
+		let ariaLabel = null;
 		if (type === SELECTED_DAY_TYPES.SELECTED_DAYS) {
 			ariaLabel = `${title} ${this.getSelectedDayString(type, this.longDayNames)}`;
 		}
 
 		return (
 			<ExpandableListBase
-				{...this.props}
+				{...rest}
 				aria-label={ariaLabel}
 				label={label}
 				onSelect={this.handleSelect}
@@ -268,7 +281,10 @@ const DayPicker = Pure(
 	Expandable(
 		Changeable(
 			{prop: 'selected', change: 'onSelect'},
-			DayPickerBase
+			Subscription(
+				{channels: ['i18n'], mapMessageToProps: (channel, {locale}) => ({locale})},
+				DayPickerBase
+			)
 		)
 	)
 );
