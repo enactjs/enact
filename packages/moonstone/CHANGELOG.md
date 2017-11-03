@@ -21,6 +21,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to show knob when pressed
 - `moonstone/Header` to layout `titleBelow` and `subTitleBelow` correctly
 - `moonstone/Header` to use correct font-weight for `subTitleBelow`
+- `moonstone/DayPicker` to update day names when changing locale
 
 ## [1.12.0] - 2017-10-27
 
