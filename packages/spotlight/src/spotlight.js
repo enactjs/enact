@@ -356,10 +356,9 @@ const Spotlight = (function () {
 
 		const keyCode = evt.keyCode;
 		const direction = getDirection(keyCode);
-		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
+		_pointerMoveDuringKeyPress = notifyKeyDown(keyCode, handlePointerHide);
 
-		if (pointerHandled || !(direction || isEnter(keyCode))) {
-			_pointerMoveDuringKeyPress = true;
+		if (_pointerMoveDuringKeyPress || !(direction || isEnter(keyCode))) {
 			return;
 		}
 
