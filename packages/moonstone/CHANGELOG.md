@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/Picker` incrementer and decrementer scale when focused
+
 ### Fixed
 
 - `moonstone/ExpandableItem` and all other `Expandable` components to now pull down from the top instead of being revealed from the bottom, matching Enyo's design
