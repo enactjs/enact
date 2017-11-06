@@ -136,7 +136,7 @@ function getScreenType (rez) {
 
 	// Loop thorugh resolutions, last->first, largest->smallest
 	for (let i = types.length - 1; i >= 0; i--) {
-		// Find the screenType that matches our current size or is smaller.
+		// Does the current resolution fit inside this screenType definition? If so, save it as the current best match.
 		if (rez.height <= types[i].height && rez.width <= types[i].width) {
 			bestMatch = types[i].name;
 		}
