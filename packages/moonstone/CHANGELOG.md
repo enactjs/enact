@@ -10,7 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scrollable` to not hide scroll thumb when scrollbar is not rendered
+- `moonstone/Scrollable` to not cause a script error when scrollbar is not rendered
 - `moonstone/ExpandableItem` and all other `Expandable` components to now pull down from the top instead of being revealed from the bottom, matching Enyo's design
 - `moonstone/VirtualListNative` to scroll properly with page up/down keys if there is an disabled item
 - `moonstone/Button` min-width for large text
