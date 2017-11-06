@@ -120,10 +120,7 @@ function defineScreenTypes (types) {
  * @public
  */
 function getScreenType (rez) {
-	rez = rez || workspaceBounds || {
-		height: 1080,
-		width: 1920
-	};
+	rez = rez || workspaceBounds;
 
 	const types = screenTypes;
 	let bestMatch = types[types.length - 1].name; // Blindly set the first screen type, in case no matches are found later.
@@ -139,7 +136,7 @@ function getScreenType (rez) {
 
 	// Loop thorugh resolutions, last->first, largest->smallest
 	for (let i = types.length - 1; i >= 0; i--) {
-		// Find the screenType that matches our current size or is smaller. Default to the first.
+		// Find the screenType that matches our current size or is smaller.
 		if (rez.height <= types[i].height && rez.width <= types[i].width) {
 			bestMatch = types[i].name;
 		}
