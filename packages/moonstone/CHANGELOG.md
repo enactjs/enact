@@ -8,9 +8,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `moonstone/Picker` incrementer and decrementer scale when focused
-
 ### Fixed
+
+- `moonstone/Picker` incrementer and decrementer to not change size when focused
 
 ## [1.12.1] - 2017-11-07
 
