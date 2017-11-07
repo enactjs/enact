@@ -21,6 +21,7 @@ import {
 	computeProportionProgress,
 	computeBarTransform,
 	computeKnobTransform,
+	getDecimalDigits,
 	parseNumber
 } from './util';
 
@@ -237,6 +238,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				controlled,
 				knobAfterMidpoint: false,
 				focused: false,
+				stepDecimalDigits: getDecimalDigits(props.step),
 				value: this.clamp(value),
 				valueText
 			};
@@ -268,6 +270,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.setState({
 					value: clampedValue,
 					valueText: valueText
+				});
+			}
+
+			if (this.props.step !== nextProps.step) {
+				this.setState({
+					stepDecimalDigits: getDecimalDigits(nextProps.step)
 				});
 			}
 
@@ -339,14 +347,18 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		moveKnobByPointer (position) {
+			const {step} = this.props;
 			const node = this.sliderBarNode.node;
 
 			// Don't let the positional value exceed the bar width, and account for the dead-space padding
 			const min = parseFloat(window.getComputedStyle(this.inputNode).paddingLeft);
 			const pointer = position - this.inputNode.getBoundingClientRect().left;
 			const knob = (clamp(min, min + node.offsetWidth, pointer) - min) / node.offsetWidth;
-
-			this.current5WayValue = (this.normalizedMax - this.normalizedMin) * knob;
+			const knobValue = (this.normalizedMax - this.normalizedMin) * knob;
+			this.current5WayValue = knobValue - knobValue % step;
+			if (this.state.stepDecimalDigits !== 0) {
+				this.current5WayValue = parseNumber(this.current5WayValue.toFixed(this.state.stepDecimalDigits));
+			}
 
 			// Update our instance's knowledge of where the knob should be
 			this.knobPosition = knob;
@@ -461,9 +473,17 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (ev.target.nodeName === 'INPUT') {
-				const value = parseNumber(this.state.controlled ? this.changedControlledValue : this.state.value);
+				let value;
+				if (this.state.controlled) {
+					// use current knob position value (i.e. current5WayValue) for detachedKnob as value
+					// may change in between mouse down and mouse up by prop change
+					value = this.props.detachedKnob ? this.current5WayValue : this.changedControlledValue;
+				} else {
+					value = this.state.value;
+				}
+
 				if (this.prevValue !== value) {
-					forwardChange({value}, this.props);
+					forwardChange({value: parseNumber(value)}, this.props);
 					this.prevValue = null;
 				}
 			}
