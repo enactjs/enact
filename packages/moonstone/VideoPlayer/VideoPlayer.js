@@ -786,6 +786,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.renderBottomControl.stop();
 		this.stopListeningForPulses();
 		this.sliderTooltipTimeJob.stop();
+		this.slider5WayPressJob.stop();
 	}
 
 	//
@@ -1657,6 +1658,18 @@ const VideoPlayerBase = class extends React.Component {
 		});
 	}
 
+	slider5WayPressJob = new Job(() => {
+		this.setState({slider5WayPressed: false});
+	}, 200);
+
+	handleSliderKeyDown = (ev) => {
+		if (is('enter', ev.keyCode)) {
+			this.setState({
+				slider5WayPressed: true
+			}, this.slider5WayPressJob.start());
+		}
+	}
+
 	onJumpBackward = this.handle(
 		(ev, props) => forwardJumpBackwardButtonClick(this.addStateToEvent(ev), props),
 		() => this.jump(-1 * this.props.jumpBy)
@@ -1809,7 +1822,7 @@ const VideoPlayerBase = class extends React.Component {
 		const controlsAriaProps = this.getControlsAriaProps();
 
 		return (
-			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
+			<div className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
 				{/* Video Section */}
 				<video
 					{...rest}
@@ -1866,14 +1879,16 @@ const VideoPlayerBase = class extends React.Component {
 
 							{noSlider ? null : <MediaSlider
 								backgroundProgress={this.state.proportionLoaded}
-								value={this.state.proportionPlayed}
 								onBlur={this.handleSliderBlur}
 								onChange={this.onSliderChange}
 								onFocus={this.handleSliderFocus}
+								onKeyDown={this.handleSliderKeyDown}
 								onKnobMove={this.handleKnobMove}
-								onSpotlightUp={this.handleSpotlightUpFromSlider}
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
+								onSpotlightUp={this.handleSpotlightUpFromSlider}
+								forcePressed={this.state.slider5WayPressed}
 								spotlightDisabled={spotlightDisabled || this.state.mediaSliderVisible && !this.state.mediaControlsVisible}
+								value={this.state.proportionPlayed}
 								visible={this.state.mediaSliderVisible}
 							>
 								<FeedbackTooltip
@@ -1992,9 +2007,9 @@ const VideoPlayer = ApiDecorator(
 	{api: ['fastForward', 'getMediaState', 'hideControls', 'jump', 'pause', 'play', 'rewind', 'seek', 'showControls']},
 	Slottable(
 		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
-		Skinnable(
-			FloatingLayerDecorator(
-				{floatLayerId: 'videoPlayerFloatingLayer'},
+		FloatingLayerDecorator(
+			{floatLayerId:  'videoPlayerFloatingLayer'},
+			Skinnable(
 				VideoPlayerBase
 			)
 		)

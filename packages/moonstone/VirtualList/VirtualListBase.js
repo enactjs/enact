@@ -593,14 +593,16 @@ class VirtualListCore extends Component {
 			numOfGridLines = Math.ceil(delta / gridSize); // how many lines should we add
 			threshold.max = Math.min(maxPos, threshold.max + numOfGridLines * gridSize);
 			threshold.min = Math.min(maxOfMin, threshold.max - gridSize);
-			newFirstIndex = Math.min(maxFirstIndex, (dimensionToExtent * Math.ceil(firstIndex / dimensionToExtent)) + (numOfGridLines * dimensionToExtent));
+			newFirstIndex += numOfGridLines * dimensionToExtent;
 		} else if (dir === -1 && pos < threshold.min) {
 			delta = threshold.min - pos;
 			numOfGridLines = Math.ceil(delta / gridSize);
 			threshold.max = Math.max(minOfMax, threshold.min - (numOfGridLines * gridSize - gridSize));
 			threshold.min = (threshold.max > minOfMax) ? threshold.max - gridSize : -Infinity;
-			newFirstIndex = Math.max(0, (dimensionToExtent * Math.ceil(firstIndex / dimensionToExtent)) - (numOfGridLines * dimensionToExtent));
+			newFirstIndex -= numOfGridLines * dimensionToExtent;
 		}
+		newFirstIndex = Math.min(maxFirstIndex, newFirstIndex);
+		newFirstIndex = Math.max(0, newFirstIndex);
 
 		this.syncThreshold(maxPos);
 		this.scrollPosition = pos;
@@ -904,6 +906,10 @@ class VirtualListCore extends Component {
 			// If the index to jump is disabled
 			focusedIndex !== nodeIndexToBeFocused && indexToJump !== nodeIndexToBeFocused
 		) {
+			if (!Spotlight.isPaused()) {
+				Spotlight.pause();
+			}
+
 			focusedItem.blur();
 			// To prevent item positioning issue, make all items to be rendered.
 			this.updateFrom = null;

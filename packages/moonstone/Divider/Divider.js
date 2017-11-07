@@ -23,6 +23,7 @@ const MarqueeH3 = Uppercase(MarqueeDecorator('h3'));
  *
  * @class Divider
  * @memberof moonstone/Divider
+ * @mixes moonstone/MarqueeDecorator.MarqueeDecorator
  * @ui
  * @public
  */
@@ -98,7 +99,8 @@ const DividerBase = kind({
 		delete rest.spacing;
 
 		return (
-			<MarqueeH3 {...rest} marqueeOn="hover">{children}</MarqueeH3>
+			// TODO: change to `marqueeOn="render"`
+			<MarqueeH3 marqueeOn="hover" {...rest}>{children}</MarqueeH3>
 		);
 	}
 });

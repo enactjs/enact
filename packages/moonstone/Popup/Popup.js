@@ -25,7 +25,7 @@ import css from './Popup.less';
 
 const isUp = is('up');
 const TransitionContainer = SpotlightContainerDecorator(
-	{enterTo: 'last-focused', preserveId: true},
+	{enterTo: 'default-element', preserveId: true},
 	Transition
 );
 
