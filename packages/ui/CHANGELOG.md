@@ -10,6 +10,13 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
+- `ui/Remeasurable` to update on every trigger change
+
+
+## [1.12.1] - 2017-11-07
+
+### Fixed
+
 - `ui/Transition` support for all `clip` transition-type directions and made rendering optimizations
 
 ## [1.12.0] - 2017-10-27

@@ -13,7 +13,7 @@ import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
 import {is} from '@enact/core/keymap';
-import {Job} from '@enact/core/util';
+import {perfNow, Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
@@ -35,7 +35,6 @@ const
 const
 	calcVelocity = (d, dt) => (d && dt) ? d / dt : 0,
 	nop = () => {},
-	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
 	holdTime = 50,
 	scrollWheelMultiplierForDeltaPixel = 1.5, // The ratio of wheel 'delta' units to pixels scrolled.
 	scrollWheelPageMultiplierForMaxPixel = 0.2, // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
@@ -418,7 +417,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			this.isDragging = true;
 			this.isFirstDragging = true;
-			d.t = perf.now();
+			d.t = perfNow();
 			d.clientX = e.clientX;
 			d.clientY = e.clientY;
 			d.dx = d.dy = 0;
@@ -427,7 +426,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		drag (e) {
 			const
 				{direction} = this,
-				t = perf.now(),
+				t = perfNow(),
 				d = this.dragInfo;
 
 			if (direction === 'horizontal' || direction === 'both') {
@@ -452,7 +451,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		dragStop () {
 			const
 				d = this.dragInfo,
-				t = perf.now();
+				t = perfNow();
 
 			d.dt = t - d.t;
 			this.isDragging = false;
