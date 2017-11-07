@@ -76,7 +76,6 @@ const calcNumberValueOfPlaybackRate = (rate) => {
 
 export {
 	calcNumberValueOfPlaybackRate,
-	getNow,
 	parseTime,
 	secondsToPeriod,
 	secondsToTime
