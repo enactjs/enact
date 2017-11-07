@@ -420,8 +420,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			const value = parseNumber(ev.target.value);
 			this.throttleUpdateValue(value);
-
-			this.knobPosition = null;
 		}
 
 		handleMouseDown = (ev) => {
@@ -441,8 +439,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forwardMouseMove(ev, this.props);
 			this.willChange = Boolean(ev.buttons);
 
-			// We don't want to run this code if any mouse button is being held down. That indicates dragging.
-			if (!this.props.detachedKnob || this.props.disabled || ev.buttons || this.props.vertical) return;
+			if (!this.props.detachedKnob || this.props.disabled || this.props.vertical) return;
 
 			this.moveKnobByPointer(ev.clientX);
 		}
@@ -554,8 +551,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forwardFocus(ev, this.props);
 
 			if (this.props.detachedKnob) {
-				this.current5WayValue = null;
-				this.moveKnobByAmount(0);
+				this.current5WayValue = this.clamp(this.state.value);
+				this.updateUI();
 			}
 
 			this.setState({

@@ -1051,7 +1051,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	handle = handle.bind(this)
 
-	startListeningForPulses = (keyCode) => () => {
+	startListeningForPulses = (keyCode) => {
 		// Ignore new pulse calls if key code is same, otherwise start new series if we're pulsing
 		if (this.pulsing && keyCode !== this.pulsingKeyCode) {
 			this.stopListeningForPulses();
@@ -1096,7 +1096,7 @@ const VideoPlayerBase = class extends React.Component {
 				!this.state.mediaControlsVisible &&
 				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			Spotlight.pause();
-			this.startListeningForPulses(ev.keyCode)();
+			this.startListeningForPulses(ev.keyCode);
 		}
 		return true;
 	}
