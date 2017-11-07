@@ -1,5 +1,6 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import Spotlight from '@enact/spotlight';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -8,6 +9,11 @@ const STATE = {
 	active: 1,		// Marquee in progress, awaiting complete
 	ready: 2		// Marquee completed or not needed, but state is active
 };
+
+const onBlur = 'onBlur';
+const onFocus = 'onFocus';
+const onMouseOut = 'onMouseOut';
+const onMouseOver = 'onMouseOver';
 
 /**
  * Context propTypes for MarqueeController
@@ -78,7 +84,17 @@ const defaultConfig = {
 	 * @default false
 	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
 	 */
-	marqueeOnFocus: false
+	marqueeOnFocus: false,
+
+	/**
+	 * When `true`, any mouse events that bubble to the controller will start the contained
+	 * Marquee instances.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
+	 */
+	marqueeOnDisabledHover: false
 };
 
 /**
@@ -91,9 +107,11 @@ const defaultConfig = {
  * @public
  */
 const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
-	const {marqueeOnFocus} = config;
-	const forwardBlur = forward('onBlur');
-	const forwardFocus = forward('onFocus');
+	const {marqueeOnFocus, marqueeOnDisabledHover} = config;
+	const forwardBlur = forward(onBlur);
+	const forwardFocus = forward(onFocus);
+	const forwardMouseOver = forward(onMouseOver);
+	const forwardMouseOut = forward(onMouseOut);
 
 	return class extends React.Component {
 		static displayName = 'MarqueeController'
@@ -105,6 +123,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.controlled = [];
 			this.isFocused = false;
+			this.isHovered = false;
 		}
 
 		getChildContext () {
@@ -127,7 +146,8 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		handleRegister = (component, handlers) => {
-			const needsStart = !this.allInactive() || this.isFocused;
+			// make sure to marquee when focused or hovered in noAnimation mode
+			const needsStart = !this.allInactive() || this.isFocused || this.isHovered;
 
 			this.controlled.push({
 				...handlers,
@@ -206,19 +226,47 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * Handler for the focus event
 		 */
 		handleFocus = (ev) => {
-			this.isFocused = true;
-			this.dispatch('start');
-			forwardFocus(ev, this.props);
+			if (!this.isFocused) {
+				this.isFocused = true;
+				this.dispatch('start');
+				forwardFocus(ev, this.props);
+			}
 		}
 
 		/*
 		 * Handler for the blur event
 		 */
 		handleBlur = (ev) => {
-			this.isFocused = false;
-			this.dispatch('stop');
-			this.markAll(STATE.inactive);
-			forwardBlur(ev, this.props);
+			if (this.isFocused) {
+				this.isFocused = false;
+				this.dispatch('stop');
+				this.markAll(STATE.inactive);
+				forwardBlur(ev, this.props);
+			}
+		}
+
+		/*
+		 * Handler for the mouseOver event
+		 */
+		handleMouseOver = (ev) => {
+			if (Spotlight.getPointerMode() && !this.isHovered && !this.isFocused) {
+				this.isHovered = true;
+				this.dispatch('start');
+				forwardMouseOver(ev, this.props);
+			}
+		}
+
+		/*
+		 * Handler for the mouseOut event
+		 */
+		handleMouseOut = (ev) => {
+			if (Spotlight.getPointerMode() && this.isHovered) {
+				this.isHovered = false;
+				this.isFocused = false;
+				this.dispatch('stop');
+				this.markAll(STATE.inactive);
+				forwardMouseOut(ev, this.props);
+			}
 		}
 
 		/*
@@ -306,15 +354,13 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			let props = this.props;
-
-			if (marqueeOnFocus) {
-				props = {
-					...this.props,
-					onBlur: this.handleBlur,
-					onFocus: this.handleFocus
-				};
-			}
+			const props = {
+				...this.props,
+				onBlur: marqueeOnFocus ? this.handleBlur : this.props[onBlur],
+				onFocus: marqueeOnFocus ? this.handleFocus : this.props[onFocus],
+				onMouseOut: marqueeOnDisabledHover ? this.handleMouseOut : this.props[onMouseOut],
+				onMouseOver: marqueeOnDisabledHover ? this.handleMouseOver : this.props[onMouseOver]
+			};
 
 			return (
 				<Wrapped {...props} />

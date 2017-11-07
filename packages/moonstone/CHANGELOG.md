@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
+- `moonstone/Picker` to marquee when hovering from `PickerButton` to `PickerItem` and when `PickerButton` becomes `disabled`
+
 ## [1.12.1] - 2017-11-07
 
 ### Fixed
@@ -451,7 +461,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/MarqueeDecorator` to properly stop marquee on items with `'marqueeOnHover'`
+- `moonstone/MarqueeDecorator` to properly stop marquee on items with `'marqueeOnDisabledHover'`
 - `moonstone/ExpandableList` to work properly with object-based children
 - `moonstone/styles/fonts.less` to restore the Moonstone Icon font to request the local system font by default. Remember to update your webOS build to get the latest version of the font so you don't see empty boxes for your icons.
 - `moonstone/Picker` and `moonstone/RangePicker` to now use the correct size from Enyo (60px v.s. 84px) for icon buttons
