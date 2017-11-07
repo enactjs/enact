@@ -437,7 +437,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleMouseMove = (ev) => {
 			forwardMouseMove(ev, this.props);
-			this.willChange = Boolean(ev.buttons);
+			this.willChange = Boolean(ev.buttons); // if detached knob is dragging, it fires onChange
 
 			if (!this.props.detachedKnob || this.props.disabled || this.props.vertical) return;
 
@@ -549,6 +549,15 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleFocus = (ev) => {
 			forwardFocus(ev, this.props);
+
+			// on mouseup, slider manually focuses the slider from its input causing a blur event to
+			// bubble here. if this is the case, focus hasn't effectively changed so we ignore it.
+			if (
+				ev.relatedTarget && (
+					(ev.target === this.sliderNode && ev.relatedTarget === this.inputNode) ||
+					(ev.target === this.inputNode && ev.relatedTarget === this.sliderNode)
+				)
+			) return;
 
 			if (this.props.detachedKnob) {
 				this.current5WayValue = this.clamp(this.state.value);
