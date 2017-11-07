@@ -11,16 +11,13 @@ import {is} from '@enact/core/keymap';
 import pick from 'ramda/src/pick';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {perfNow} from '@enact/core/util';
 
 const eventProps = ['clientX', 'clientY', 'currentTarget', 'pageX', 'pageY', 'screenX', 'screenY',
 	'altKey', 'ctrlKey', 'metaKey', 'shiftKey', 'detail', 'type'];
 
 const makeEvent = (type, ev) => {
 	return {...ev, type};
-};
-
-const perfNow = () => {
-	return window.performance.now();
 };
 
 const outOfRange = (start, end, tolerance) => {
