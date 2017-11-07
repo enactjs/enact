@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
+- `moonstone/Picker` to marquee when hovering from `PickerButton` to `PickerItem` and when `PickerButton` becomes `disabled`
+
 ## [1.12.1] - 2017-11-07
 
 ### Fixed
@@ -45,7 +55,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller.Scrollable` to scroll withtout animation when panel is changed
 - `moonstone/ContextualPopup` padding to not overlap close button
 - `moonstone/Scroller.Scrollable` and `moonstone/Scroller` to change focus via page up/down only when the scrollbar is visible
-- `moonstone/Picker` to marquee when hovering from `PickerButton` to `PickerItem`
 - `moonstone/Picker` to only increment one value on hold
 - `moonstone/ItemOverlay` to remeasure when focused
 
