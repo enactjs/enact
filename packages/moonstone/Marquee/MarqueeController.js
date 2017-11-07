@@ -94,7 +94,7 @@ const defaultConfig = {
 	 * @default false
 	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
 	 */
-	marqueeOnHover: false
+	marqueeOnDisabledHover: false
 };
 
 /**
@@ -107,7 +107,7 @@ const defaultConfig = {
  * @public
  */
 const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
-	const {marqueeOnFocus, marqueeOnHover} = config;
+	const {marqueeOnFocus, marqueeOnDisabledHover} = config;
 	const forwardBlur = forward(onBlur);
 	const forwardFocus = forward(onFocus);
 	const forwardMouseOver = forward(onMouseOver);
@@ -260,7 +260,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * Handler for the mouseOut event
 		 */
 		handleMouseOut = (ev) => {
-			if (Spotlight.getPointerMode() && this.isHovered && this.isFocused) {
+			if (Spotlight.getPointerMode() && this.isHovered) {
 				this.isHovered = false;
 				this.isFocused = false;
 				this.dispatch('stop');
@@ -358,8 +358,8 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				...this.props,
 				onBlur: marqueeOnFocus ? this.handleBlur : this.props[onBlur],
 				onFocus: marqueeOnFocus ? this.handleFocus : this.props[onFocus],
-				onMouseOut: marqueeOnHover ? this.handleMouseOut : this.props[onMouseOut],
-				onMouseOver: marqueeOnHover ? this.handleMouseOver : this.props[onMouseOver]
+				onMouseOut: marqueeOnDisabledHover ? this.handleMouseOut : this.props[onMouseOut],
+				onMouseOver: marqueeOnDisabledHover ? this.handleMouseOver : this.props[onMouseOver]
 			};
 
 			return (

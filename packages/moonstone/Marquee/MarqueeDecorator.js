@@ -660,7 +660,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} = this.props;
 
 			const marqueeOnFocus = marqueeOn === 'focus';
-			const marqueeOnHover = marqueeOn === 'hover';
+			const marqueeOnDisabledHover = marqueeOn === 'hover';
 			const marqueeOnRender = marqueeOn === 'render';
 
 			if (marqueeOnFocus && !disabled) {
@@ -669,7 +669,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			// TODO: cancel others on hover
-			if (marqueeOnHover || (disabled && marqueeOnFocus)) {
+			if (marqueeOnDisabledHover || (disabled && marqueeOnFocus)) {
 				rest[enter] = this.handleEnter;
 				rest[leave] = this.handleLeave;
 			}
