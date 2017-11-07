@@ -4,7 +4,6 @@
  * @module moonstone/Slider
  */
 
-import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
 import {forKey, forProp, forward, handle, oneOf, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
@@ -470,8 +469,8 @@ const SliderFactory = factory(css => {
 	const Base = SliderBaseFactory(css);
 
 	/**
-	 * {@link moonstone/Slider.Slider} is a Slider with Moonstone styling, Spottable, Changeable,
-	 * Touchable and SliderDecorator applied.
+	 * {@link moonstone/Slider.Slider} is a Slider with Moonstone styling, Spottable, Touchable and
+	 * SliderDecorator applied.
 	 *
 	 * By default, `Slider` maintains the state of its `value` property. Supply the `defaultValue`
 	 * property to control its initial value. If you wish to directly control updates to the
@@ -480,20 +479,17 @@ const SliderFactory = factory(css => {
 	 *
 	 * @class Slider
 	 * @memberof moonstone/Slider
-	 * @mixes ui/Changeable.Changeable
 	 * @mixes ui/Touchable.Touchable
 	 * @mixes spotlight/Spottable.Spottable
 	 * @ui
 	 * @public
 	 */
 	return Pure(
-		Changeable(
-			Spottable(
-				SliderDecorator(
-					Touchable(
-						Skinnable(
-							Base
-						)
+		Spottable(
+			SliderDecorator(
+				Touchable(
+					Skinnable(
+						Base
 					)
 				)
 			)

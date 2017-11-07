@@ -24,6 +24,7 @@
     "@enact/core": "^2.0.0-alpha.2",
     "prop-types": "~15.6.0",
     "ramda": "~0.24.1",
-    "react": "~15.6.1"
+    "react": "~15.6.1",
+    "react-dom": "~15.6.1"
   }
 }

@@ -5,7 +5,6 @@
  */
 
 import {extractAriaProps} from '@enact/core/util';
-import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
@@ -551,12 +550,12 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						aria-hidden={ariaHidden}
 						backgroundProgress={backgroundProgress}
 						className={css.slider}
-						knobAfterMidpoint={knobAfterMidpoint}
-						disabled={disabled}
 						detachedKnob={detachedKnob}
+						disabled={disabled}
 						focused={focused}
-						inputRef={inputRef}
 						id={id}
+						inputRef={inputRef}
+						knobAfterMidpoint={knobAfterMidpoint}
 						max={max}
 						min={min}
 						noFill={noFill}
@@ -604,7 +603,7 @@ const IncrementSliderFactory = factory((config) => {
 
 	/**
 	 * {@link moonstone/IncrementSlider.IncrementSlider} is an IncrementSlider with
-	 * Moonstone styling, Changeable and SliderDecorator applied with IconButtons to
+	 * Moonstone styling and SliderDecorator applied with IconButtons to
 	 * increment and decrement the value.
 	 *
 	 * By default, `IncrementSlider` maintains the state of its `value` property. Supply the
@@ -614,22 +613,19 @@ const IncrementSliderFactory = factory((config) => {
 	 *
 	 * @class IncrementSlider
 	 * @memberof moonstone/IncrementSlider
-	 * @mixes ui/Changeable.Changeable
 	 * @ui
 	 * @public
 	 */
 	return Pure(
-		Changeable(
-			IdProvider(
-				{generateProp: null, prefix: 's_'},
-				SliderDecorator(
-					DisappearSpotlightDecorator(
-						{events: {
-							onIncrementSpotlightDisappear: `.${componentCss.decrementButton}`,
-							onDecrementSpotlightDisappear: `.${componentCss.incrementButton}`
-						}},
-						Base
-					)
+		IdProvider(
+			{generateProp: null, prefix: 's_'},
+			SliderDecorator(
+				DisappearSpotlightDecorator(
+					{events: {
+						onIncrementSpotlightDisappear: `.${componentCss.decrementButton}`,
+						onDecrementSpotlightDisappear: `.${componentCss.incrementButton}`
+					}},
+					Base
 				)
 			)
 		)

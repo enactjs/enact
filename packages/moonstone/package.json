@@ -38,6 +38,7 @@
     "prop-types": "~15.6.0",
     "ramda": "~0.24.1",
     "react": "~15.6.1",
+    "react-dom": "~15.6.1",
     "recompose": "~0.23.5",
     "warning": "~3.0.0"
   }

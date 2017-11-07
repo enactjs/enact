@@ -23,6 +23,22 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
 
+## [1.12.1] - 2017-11-07
+
+### Fixed
+
+- `moonstone/ExpandableItem` and all other `Expandable` components to now pull down from the top instead of being revealed from the bottom, matching Enyo's design
+- `moonstone/VirtualListNative` to scroll properly with page up/down keys if there is an disabled item
+- `moonstone/RangePicker` to display negative values correctly in RTL
+- `moonstone/Scrollable` to not blur scroll buttons when wheeling
+- `moonstone/Scrollbar` to hide scroll thumb immediately without delay after scroll position to be min or max
+- `moonstone/Divider` to pass `marqueeOn` prop
+- `moonstone/Slider` to fire `onChange` on mouse up and key up
+- `moonstone/VideoPlayer` to show knob when pressed
+- `moonstone/Header` to layout `titleBelow` and `subTitleBelow` correctly
+- `moonstone/Header` to use correct font-weight for `subTitleBelow`
+- `ui/Transition` support for all `clip` transition-type directions and made rendering optimizations
+
 ## [1.12.0] - 2017-10-27
 
 ### Added
