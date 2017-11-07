@@ -162,7 +162,9 @@ const TransitionBase = kind({
 		} else {
 			return (
 				<div {...rest} ref={childRef}>
-					{children}
+					<div className={css.inner}>
+						{children}
+					</div>
 				</div>
 			);
 		}

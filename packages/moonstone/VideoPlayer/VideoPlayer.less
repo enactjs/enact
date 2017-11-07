@@ -175,8 +175,14 @@
 							transform: @moon-translate-center scale(0.5);
 							opacity: 1;
 						}
-						&.pressed .knob::before {
-							transform: @moon-translate-center scale(0.75);
+					});
+
+					.spottable({
+						&.pressed {
+							.knob::before {
+								transform: @moon-translate-center scale(0.75);
+								opacity: 1;
+							}
 						}
 					});
 				}

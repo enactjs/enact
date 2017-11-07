@@ -350,6 +350,7 @@ const ExpandableItemBase = kind({
 					onShow={onShow}
 					spotlightDisabled={transitionSpotlightDisabled}
 					type="clip"
+					direction="down"
 					visible={open}
 				>
 					{children}
