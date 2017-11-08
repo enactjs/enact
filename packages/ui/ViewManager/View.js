@@ -2,7 +2,7 @@
  * Exports the {@link ui/ViewManager.View} component.
  */
 
-import {Job} from '@enact/core/util';
+import {perfNow, Job} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
@@ -221,7 +221,7 @@ class View extends React.Component {
 		/* eslint react/no-find-dom-node: "off" */
 		const node = ReactDOM.findDOMNode(this);
 
-		const currentTime = (typeof window !== 'undefined') ? window.performance.now() : new Date().getTime();
+		const currentTime = perfNow();
 		let startTime = currentTime;
 		let endTime = startTime + duration;
 
@@ -295,7 +295,7 @@ class View extends React.Component {
 
 		if (callback(start, end, time) && typeof window !== 'undefined') {
 			this._raf = window.requestAnimationFrame(() => {
-				const current = window.performance.now();
+				const current = perfNow();
 				this.transition(start, end, current, callback);
 			});
 		} else {

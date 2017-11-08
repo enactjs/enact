@@ -1,36 +1,36 @@
 {
   "name": "enact-sampler",
-  "version": "1.12.0",
+  "version": "1.12.1",
   "dependencies": {
     "@enact/core": {
-      "version": "1.12.0",
-      "from": "@enact/core@>=1.12.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/core/-/core-1.12.0.tgz"
+      "version": "1.12.1",
+      "from": "@enact/core@>=1.12.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/core/-/core-1.12.1.tgz"
     },
     "@enact/i18n": {
-      "version": "1.12.0",
-      "from": "@enact/i18n@>=1.12.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/i18n/-/i18n-1.12.0.tgz"
+      "version": "1.12.1",
+      "from": "@enact/i18n@>=1.12.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/i18n/-/i18n-1.12.1.tgz"
     },
     "@enact/moonstone": {
-      "version": "1.12.0",
-      "from": "@enact/moonstone@>=1.12.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/moonstone/-/moonstone-1.12.0.tgz"
+      "version": "1.12.1",
+      "from": "@enact/moonstone@>=1.12.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/moonstone/-/moonstone-1.12.1.tgz"
     },
     "@enact/spotlight": {
-      "version": "1.12.0",
-      "from": "@enact/spotlight@>=1.12.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/spotlight/-/spotlight-1.12.0.tgz"
+      "version": "1.12.1",
+      "from": "@enact/spotlight@>=1.12.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/spotlight/-/spotlight-1.12.1.tgz"
     },
     "@enact/ui": {
-      "version": "1.12.0",
-      "from": "@enact/ui@>=1.12.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/ui/-/ui-1.12.0.tgz"
+      "version": "1.12.1",
+      "from": "@enact/ui@>=1.12.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/ui/-/ui-1.12.1.tgz"
     },
     "@enact/webos": {
-      "version": "1.12.0",
-      "from": "@enact/webos@>=1.12.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/webos/-/webos-1.12.0.tgz"
+      "version": "1.12.1",
+      "from": "@enact/webos@>=1.12.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/webos/-/webos-1.12.1.tgz"
     },
     "@kadira/react-split-pane": {
       "version": "1.4.7",
@@ -188,14 +188,14 @@
       "resolved": "https://registry.npmjs.org/assert-plus/-/assert-plus-1.0.0.tgz"
     },
     "ast-types": {
-      "version": "0.9.12",
-      "from": "ast-types@0.9.12",
-      "resolved": "https://registry.npmjs.org/ast-types/-/ast-types-0.9.12.tgz"
+      "version": "0.9.14",
+      "from": "ast-types@0.9.14",
+      "resolved": "https://registry.npmjs.org/ast-types/-/ast-types-0.9.14.tgz"
     },
     "async": {
-      "version": "2.5.0",
+      "version": "2.6.0",
       "from": "async@>=2.1.4 <3.0.0",
-      "resolved": "https://registry.npmjs.org/async/-/async-2.5.0.tgz"
+      "resolved": "https://registry.npmjs.org/async/-/async-2.6.0.tgz"
     },
     "async-each": {
       "version": "1.0.1",
@@ -727,9 +727,9 @@
       "resolved": "https://registry.npmjs.org/camelcase/-/camelcase-1.2.1.tgz"
     },
     "caniuse-db": {
-      "version": "1.0.30000752",
+      "version": "1.0.30000758",
       "from": "caniuse-db@>=1.0.30000634 <2.0.0",
-      "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000752.tgz"
+      "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000758.tgz"
     },
     "case-sensitive-paths-webpack-plugin": {
       "version": "1.1.4",
@@ -2842,9 +2842,9 @@
       "resolved": "https://registry.npmjs.org/react-modal/-/react-modal-1.9.7.tgz"
     },
     "react-onclickoutside": {
-      "version": "6.6.2",
+      "version": "6.6.3",
       "from": "react-onclickoutside@>=6.5.0 <7.0.0",
-      "resolved": "https://registry.npmjs.org/react-onclickoutside/-/react-onclickoutside-6.6.2.tgz"
+      "resolved": "https://registry.npmjs.org/react-onclickoutside/-/react-onclickoutside-6.6.3.tgz"
     },
     "react-simple-di": {
       "version": "1.2.0",
@@ -2882,9 +2882,9 @@
       "resolved": "https://registry.npmjs.org/readdirp/-/readdirp-2.1.0.tgz"
     },
     "recast": {
-      "version": "0.12.7",
+      "version": "0.12.8",
       "from": "recast@>=0.12.6 <0.13.0",
-      "resolved": "https://registry.npmjs.org/recast/-/recast-0.12.7.tgz",
+      "resolved": "https://registry.npmjs.org/recast/-/recast-0.12.8.tgz",
       "dependencies": {
         "core-js": {
           "version": "2.5.1",
