@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 ### Changed
+- `moonstone/VideoPlayer` to initially renderBottomControls when `onPlay` instead of `componentDidMount`
 
 ### Fixed
 

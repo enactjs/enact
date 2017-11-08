@@ -705,7 +705,6 @@ const VideoPlayerBase = class extends React.Component {
 		on('keyup', this.handleKeyUp);
 		this.attachCustomMediaEvents();
 		this.startDelayedFeedbackHide();
-		this.renderBottomControl.idle();
 		this.calculateMaxComponentCount();
 	}
 
@@ -1527,6 +1526,9 @@ const VideoPlayerBase = class extends React.Component {
 			this.handleLoadStart(ev);
 		}
 
+		if (ev.type === 'play') {
+			this.handlePlay();
+		}
 		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
 		const fwd = this.handledMediaForwards[handledMediaEventsMap[ev.type]];
 		if (fwd) {
@@ -1717,6 +1719,13 @@ const VideoPlayerBase = class extends React.Component {
 	handleLoadStart = () => {
 		if (!this.props.noAutoPlay) {
 			this.video.play();
+		}
+	}
+
+	handlePlay = () => {
+		forward('onPlay');
+		if (!this.bottomControlsRendered) {
+			this.renderBottomControl.idle();
 		}
 	}
 
