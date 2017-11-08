@@ -113,7 +113,7 @@ class View extends React.Component {
 		this.animation = null;
 		this._raf = null;
 		this.state = {
-			entering: true
+			entering: false
 		};
 	}
 
@@ -157,9 +157,9 @@ class View extends React.Component {
 		}
 	}
 
-	componentDidAppear () {
+	setEntering () {
 		this.setState({
-			entering: false
+			entering: true
 		});
 	}
 
@@ -168,6 +168,8 @@ class View extends React.Component {
 	// will not be called on the initial render of a TransitionGroup.
 	componentWillEnter (callback) {
 		const {arranger, reverseTransition} = this.props;
+		this.setEntering();
+
 		if (arranger) {
 			this.prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
 		} else {
