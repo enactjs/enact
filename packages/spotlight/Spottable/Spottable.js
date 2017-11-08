@@ -13,7 +13,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-import {getContainersForNode} from '../src/container';
+import {getContainersForNode, getContainerNode} from '../src/container';
 import Spotlight from '../src/spotlight';
 
 /**
@@ -214,9 +214,13 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 						Spotlight.setPointerMode(true);
 					}
 				} else if (!Spotlight.getCurrent() && !Spotlight.isPaused()) {
-					const containers = getContainersForNode(this.node);
-					const containerId = Spotlight.getActiveContainer();
-					if (containers.indexOf(containerId) >= 0) {
+					const
+						containers = getContainersForNode(this.node),
+						containerId = Spotlight.getActiveContainer(),
+						containerNode = getContainerNode(containerId),
+						isContainerMuted = containerNode && (containerNode.nodeType === 1) && containerNode.dataset.containerMuted;
+
+					if (!isContainerMuted && containers.indexOf(containerId) >= 0) {
 						Spotlight.focus(containerId);
 					}
 				}
