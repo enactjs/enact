@@ -248,6 +248,7 @@ const DayPickerBase = class extends React.Component {
 				label={label}
 				onSelect={this.handleSelect}
 				select="multiple"
+				title={title}
 			>
 				{this.longDayNames}
 			</ExpandableListBase>
