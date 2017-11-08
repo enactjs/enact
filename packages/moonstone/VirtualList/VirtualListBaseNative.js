@@ -235,6 +235,10 @@ class VirtualListCoreNative extends Component {
 		this.restoreFocus();
 	}
 
+	componentWillUnmount () {
+		this.setContainerDisabled(false);
+	}
+
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,

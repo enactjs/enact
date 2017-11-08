@@ -109,6 +109,10 @@ class ScrollerBase extends Component {
 		this.calculateMetrics();
 	}
 
+	componentWillUnmount () {
+		this.setContainerDisabled(false);
+	}
+
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,

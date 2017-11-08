@@ -248,6 +248,8 @@ class VirtualListCore extends Component {
 		if (containerNode && containerNode.removeEventListener) {
 			containerNode.removeEventListener('scroll', this.preventScroll);
 		}
+
+		this.setContainerDisabled(false);
 	}
 
 	scrollBounds = {
