@@ -136,9 +136,29 @@
 		transition-timing-function: ease-in-out;
 	}
 
+	&.ease-in,
+	&.ease-in .inner {
+		transition-timing-function: ease-in;
+	}
+
+	&.ease-out,
+	&.ease-out .inner {
+		transition-timing-function: ease-out;
+	}
+
 	&.ease,
 	&.ease .inner {
 		transition-timing-function: ease;
+	}
+
+	&.ease-in-quart,
+	&.ease-in-quart .inner {
+		transition-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+	}
+
+	&.ease-out-quart,
+	&.ease-out-quart .inner {
+		transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
 	}
 
 	&.linear,

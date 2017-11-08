@@ -4,6 +4,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [1.12.2] - 2017-11-15
 
+- `moonstone/Expandable` and derivatives to use the new `ease-out-quart` animation timing function to better match the aesthetic of Enyo's Expandables
+
 ### Fixed
 
 - `moonstone/VirtualList` to scroll and focus properly by pageUp and pageDown when disabled items are in it

@@ -82,14 +82,22 @@ const TransitionBase = kind({
 
 		/**
 		 * Customize the transition timing function.
-		 * Supported functions are: linear, ease. ease-in-out is the default when none others are
-		 * specified.
+		 * Supported function names are: `ease-in-out`, `ease-in`, `ease-out`, `ease-in-quart`,
+		 * `ease-out-quart`, ease`, and `linear`.
 		 *
 		 * @type {String}
 		 * @default 'ease-in-out'
 		 * @public
 		 */
-		timingFunction: PropTypes.oneOf(['ease-in-out', 'ease', 'linear']),
+		timingFunction: PropTypes.oneOf([
+			'ease-in-out',
+			'ease-in',
+			'ease-out',
+			'ease-in-quart',
+			'ease-out-quart',
+			'ease',
+			'linear'
+		]),
 
 		/**
 		 * Choose how you'd like the transition to affect the content.
