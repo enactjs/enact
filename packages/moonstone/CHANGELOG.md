@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Picker` incrementer and decrementer to not change size when focused
+- `moonstone/SliderDecorator` to correctly position knob for `detachedKnob` on mouse down and fire value where mouse was positioned on mouse up
 
 ## [1.12.1] - 2017-11-07
 
