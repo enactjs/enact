@@ -2,20 +2,6 @@
 //
 
 /**
- * What time is it right this moment
- *
- * @return {Number} Current time in miliseconds.
- * @private
- */
-const getNow = function () {
-	if (typeof window === 'object') {
-		return window.performance.now();
-	} else {
-		return Date.now();
-	}
-};
-
-/**
  * Create a time object (hour, minute, second) from an amount of seconds
  *
  * @param  {Number|String} value A duration of time represented in seconds
@@ -90,7 +76,6 @@ const calcNumberValueOfPlaybackRate = (rate) => {
 
 export {
 	calcNumberValueOfPlaybackRate,
-	getNow,
 	parseTime,
 	secondsToPeriod,
 	secondsToTime
