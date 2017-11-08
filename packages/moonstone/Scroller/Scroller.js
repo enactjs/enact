@@ -437,9 +437,21 @@ class ScrollerBase extends Component {
 		}
 	}
 
+	handleGlobalKeyDown = () => {
+		this.setContainerDisabled(false);
+	}
+
 	setContainerDisabled = (bool) => {
-		if (this.containerRef) {
-			this.containerRef.setAttribute(dataContainerDisabledAttribute, bool);
+		const containerNode = this.containerRef;
+
+		if (containerNode) {
+			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
+
+			if (bool) {
+				document.addEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
+			} else {
+				document.removeEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
+			}
 		}
 	}
 
