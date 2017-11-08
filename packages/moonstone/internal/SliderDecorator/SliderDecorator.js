@@ -347,7 +347,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		moveKnobByPointer (position) {
-			const {step} = this.props;
 			const node = this.sliderBarNode.node;
 
 			// Don't let the positional value exceed the bar width, and account for the dead-space padding
@@ -355,7 +354,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const pointer = position - this.inputNode.getBoundingClientRect().left;
 			const knob = (clamp(min, min + node.offsetWidth, pointer) - min) / node.offsetWidth;
 			const knobValue = (this.normalizedMax - this.normalizedMin) * knob;
-			this.current5WayValue = knobValue - knobValue % step;
+			this.current5WayValue = knobValue - knobValue % this.props.step;
 			if (this.state.stepDecimalDigits !== 0) {
 				this.current5WayValue = parseNumber(this.current5WayValue.toFixed(this.state.stepDecimalDigits));
 			}
