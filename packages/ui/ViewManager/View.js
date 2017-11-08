@@ -113,7 +113,7 @@ class View extends React.Component {
 		this.animation = null;
 		this._raf = null;
 		this.state = {
-			entering: true
+			entering: false
 		};
 	}
 
@@ -157,9 +157,9 @@ class View extends React.Component {
 		}
 	}
 
-	componentDidAppear () {
+	setEntering () {
 		this.setState({
-			entering: false
+			entering: true
 		});
 	}
 
@@ -169,6 +169,7 @@ class View extends React.Component {
 	componentWillEnter (callback) {
 		const {arranger, reverseTransition} = this.props;
 		if (arranger) {
+			this.setEntering();
 			this.prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
 		} else {
 			callback();
