@@ -12,9 +12,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 
+
 import {Picker, PickerItem} from '../internal/Picker';
-import Input from '../Input';
 import SpottablePicker from '../Picker/SpottablePicker';
+import {MarqueeController} from '../Marquee';
 import SimpleIntegerPickerDecorator from './SimpleIntegerPickerDecorator';
 import {validateRange} from '../internal/validators';
 
@@ -57,6 +58,7 @@ const SimpleIntegerPickerBase = kind({
 		 * @public
 		 */
 		min: PropTypes.number.isRequired,
+
 
 		/**
 		 * Current value
@@ -122,6 +124,14 @@ const SimpleIntegerPickerBase = kind({
 		incrementIcon: PropTypes.string,
 
 		/**
+		 *  A function to be run when there is a change in the input
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		inputChange : PropTypes.func,
+
+		/**
 		 * The method to run when the input mounts, giving a reference to the DOM.
 		 *
 		 * @type {Function}
@@ -130,16 +140,23 @@ const SimpleIntegerPickerBase = kind({
 		inputRef: PropTypes.func,
 
 		/**
-		 * Determines the user interaction of the control. A joined picker allows the user to use
-		 * the arrow keys to adjust the picker's value. The user may no longer use those arrow keys
-		 * to navigate, while this control is focused. A split control allows full navigation,
-		 * but requires individual ENTER presses on the incrementer and decrementer buttons.
-		 * Pointer interaction is the same for both formats.
+		 * The value from the input field
+		 * expanded.
 		 *
-		 * @type {Boolean}
+		 * @type {Number}
 		 * @public
 		 */
-		joined: PropTypes.bool,
+		inputValue : PropTypes.number,
+
+		/**
+		 * When `true`, the input will be enabled
+		 * expanded.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		isInputMode : PropTypes.bool,
 
 		/**
 		 * By default, the picker will animate transitions between items if it has a defined
@@ -152,12 +169,20 @@ const SimpleIntegerPickerBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * A function to run when the control should increment or decrement.
+		 *  A function to be run when there is a blur in the input
 		 *
 		 * @type {Function}
 		 * @public
 		 */
-		onChange: PropTypes.func,
+		onBlurHandler : PropTypes.func,
+
+		/**
+		 *  A function to be run when a `onChange` event triggered in the picker
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onChangeHandler : PropTypes.func,
 
 		/**
 		 * A function to run when the control is clicked to enable the input field
@@ -166,6 +191,22 @@ const SimpleIntegerPickerBase = kind({
 		 * @public
 		 */
 		onClick: PropTypes.func,
+
+		/**
+		 *  A function to be run when a `onClick` event triggered in the picker
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onClickHandler : PropTypes.func,
+
+		/**
+		 *  A function to be run when a `onKeyDown` event triggered in the picker
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onKeyDownHandler : PropTypes.func,
 
 		/**
 		 * Sets the orientation of the picker, whether the buttons are above and below or on the
@@ -187,6 +228,14 @@ const SimpleIntegerPickerBase = kind({
 		padded: PropTypes.bool,
 
 		/**
+		 * The method to run when the picker mounts, giving a reference to the DOM.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		pickerRef : PropTypes.func,
+
+		/**
 		 * Allow the picker to only increment or decrement by a given value. A step of `2` would
 		 * cause a picker to increment from 10 to 12 to 14, etc.
 		 *
@@ -195,25 +244,6 @@ const SimpleIntegerPickerBase = kind({
 		 * @public
 		 */
 		step: PropTypes.number,
-
-		/**
-		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
-		 * can be either `'none'`, `'self-first'`, or `'self-only'`.
-		 *
-		 * @type {String}
-		 * @default 'self-only'
-		 * @public
-		 */
-		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only']),
-
-		/**
-		 * When `true`, the component cannot be navigated using spotlight.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		spotlightDisabled: PropTypes.bool,
 
 		/**
 		 * Units in the SimpleIntegerPicker
@@ -252,22 +282,20 @@ const SimpleIntegerPickerBase = kind({
 	},
 
 	defaultProps : {
-		joined: true,
+		isInputMode : false,
+		inputValue : 0,
 		min: 0,
 		max: 100,
-		noAnimation: false,
 		orientation: 'horizontal',
 		padded: false,
 		step: 1,
-		spotlightRestrict: 'self-only',
-		spotlightDisabled: false,
 		units: '',
 		width: 'medium',
 		wrap: false
 	},
 
 	styles: {
-		css,
+		css
 	},
 
 	computed: {
@@ -283,53 +311,62 @@ const SimpleIntegerPickerBase = kind({
 
 			return value;
 		},
-		width: ({max, min, width}) => (width || Math.max(max.toString().length, min.toString().length)),
+
 		value: ({min, max, value}) => {
 			if (__DEV__) {
 				validateRange(value, min, max, 'SimpleIntegerPicker');
 			}
 			return clamp(min, max, value);
+		},
+		width: ({max, min, width}) => (width || Math.max(max.toString().length, min.toString().length)),
+
+		children: ({isInputMode, inputChange, inputRef, inputValue, onBlurHandler, units, value}) => {
+			return (
+				isInputMode ?
+					<input
+						autoFocus
+						className={css.inputClass}
+						onBlur={onBlurHandler}
+						onKeyDown={inputChange}
+						ref={inputRef}
+					/> : <PickerItem
+						key={value}
+					>
+						{`${inputValue} ${units}`}
+					</PickerItem>
+			);
+		},
+
+		classes: ({isInputMode}) => {
+			let pickerClass = ['spottable', css.picker];
+			if (isInputMode) {
+				pickerClass.push(css.selectedPicker);
+			}
+			return pickerClass.join(' ');
 		}
 	},
 
-	render: ({ value, enableInput, onBlurHandler, onClickHandler, inputRef, inputChange, onSelectHandler, onChangeHandler, units ,newValue, ...rest}) => {
+	render: ({children, classes, inputValue, onChangeHandler, onClickHandler, onKeyDownHandler, pickerRef, ...rest}) => {
 		delete rest.padded;
-		delete rest.spotlightRestrict;
-
-		let pickerClass = [css.picker, 'picker', 'spottable', 'horizontal', 'joined', 'medium'];
-
-		if (enableInput) {
-			pickerClass.push(css.selectedPicker);
-		}
+		delete rest.inputRef;
+		delete rest.inputChange;
+		delete rest.onBlurHandler;
+		delete rest.isInputMode;
+		delete rest.units;
 
 		return (
 			<Picker
 				{...rest}
-				className={pickerClass.join(' ')}
+				className={classes}
 				index={0}
-				value={newValue}
-				reverse={false}
+				noAnimation={false}
 				onChange={onChangeHandler}
 				onClick={onClickHandler}
+				onKeyDown={onKeyDownHandler}
+				ref={pickerRef}
+				value={inputValue}
 			>
-				{
-					enableInput ?
-						<Input
-							autoFocus
-							spotlightDisabled
-							dismissOnEnter
-							ref={inputRef}
-							onBlur={onBlurHandler}
-							onKeyDown={inputChange}
-						/>
-					: 	<PickerItem
-							className={'tapArea'}
-							key={value}
-							marqueeDisabled
-						>
-							{`${newValue} ${units}`}
-						</PickerItem>
-				}
+				{children}
 			</Picker>
 		);
 	}
@@ -352,8 +389,11 @@ const SimpleIntegerPickerBase = kind({
 const SimpleIntegerPicker = Pure(
 	Changeable(
 		SimpleIntegerPickerDecorator(
-			SpottablePicker(
-				SimpleIntegerPickerBase
+			MarqueeController(
+				{marqueeOnFocus: true},
+				SpottablePicker(
+					SimpleIntegerPickerBase
+				)
 			)
 		)
 	)
