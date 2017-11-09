@@ -4,9 +4,18 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+### Changed
+
 ### Fixed
 
--`moonstone/Button` to specify `min-width` for large text and large text and `minWidth`
+- `moonstone/Button` to specify `min-width` for large text and large text and `minWidth`
+- `moonstone/Scroller.Scrollable` to restore last focused index when panel is changed
+- `moonstone/VideoPlayer` to display time correctly in RTL locale
+- `moonstone/VirtualList` to scroll correctly using page down key with disabled items
+- `moonstone/Scrollable` to not cause a script error when scrollbar is not rendered
+- `moonstone/Picker` incrementer and decrementer to not change size when focused
 
 ## [1.12.1] - 2017-11-07
 

@@ -130,10 +130,6 @@
 						.fontLgIcons {
 							font-family: "LG Icons";
 						}
-
-						:global(.enyo-locale-right-to-left) & {
-							text-align: right;
-						}
 					}
 				}
 
@@ -150,9 +146,9 @@
 						padding: 0 1ex;
 					}
 
-					// .enyo-locale-right-to-left & {
-					// 	direction: rtl;
-					// }
+					:global(.enact-locale-right-to-left) & {
+						direction: ltr;
+					}
 				}
 			}
 

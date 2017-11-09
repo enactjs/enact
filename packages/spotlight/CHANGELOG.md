@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
+- `spotlight` to handle non-5-way keys correctly to focus on next 5-way keys
+
 ## [1.12.1] - 2017-11-07
 
 No significant changes.
