@@ -179,6 +179,7 @@ class TransitionGroup extends React.Component {
 			children: mapChildren(this.props.children)
 		};
 		this.enteringComponent = null;
+		this.leavingKey = null;
 	}
 
 	componentWillMount () {
@@ -212,14 +213,9 @@ class TransitionGroup extends React.Component {
 		}
 	}
 
-	componentDidUpdate (prevProps, prevState) {
-		if (prevState.children.length > this.state.children.length && this.enteringComponent != null) {
-			this.enteringComponent.componentDidEnter();
-		}
-	}
-
 	componentWillUnmount () {
 		this.enteringComponent = null;
+		this.leavingKey = null;
 	}
 
 	reconcileChildren (dropped, prevChildMapping, nextChildMapping) {
@@ -282,6 +278,9 @@ class TransitionGroup extends React.Component {
 		delete this.currentlyTransitioningKeys[key];
 
 		if (Object.keys(this.currentlyTransitioningKeys).length === 0) {
+			if (this.enteringComponent && this.leavingKey) {
+				this.removeChild();
+			}
 			forwardOnTransition(null, this.props);
 		}
 	}
@@ -384,6 +383,7 @@ class TransitionGroup extends React.Component {
 
 	_handleDoneLeaving = (key) => {
 		const component = this.refs[key];
+		this.leavingKey = key;
 
 		if (component.componentDidLeave) {
 			component.componentDidLeave();
@@ -394,10 +394,16 @@ class TransitionGroup extends React.Component {
 		}, this.props);
 
 		this.completeTransition(key);
+	}
 
+	removeChild = () => {
 		this.setState(function (state) {
-			const index = indexOfChild(key, state.children);
+			const index = indexOfChild(this.leavingKey, state.children);
 			return {children: remove(index, 1, state.children)};
+		}, () => {
+			this.enteringComponent.componentDidEnter();
+			this.enteringComponent = null;
+			this.leavingKey = null;
 		});
 	}
 
