@@ -568,6 +568,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		cancelAnimation = () => {
 			if (this.sync) {
 				this.context.cancel(this);
+				return;
 			}
 
 			this.stop();
@@ -609,18 +610,26 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleEnter = (ev) => {
 			this.isHovered = true;
-			this.setState((prevState) => {
-				if (!prevState.animating) {
-					this.startAnimation();
-				}
-				return null;
-			});
+			if (this.sync) {
+				this.context.enter(this);
+			} else {
+				this.setState((prevState) => {
+					if (!prevState.animating) {
+						this.startAnimation();
+					}
+					return null;
+				});
+			}
 			forwardEnter(ev, this.props);
 		}
 
 		handleLeave = (ev) => {
 			this.isHovered = false;
-			this.cancelAnimation();
+			if (this.sync) {
+				this.context.leave(this);
+			} else {
+				this.cancelAnimation();
+			}
 			forwardLeave(ev, this.props);
 		}
 
