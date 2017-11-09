@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` to scroll correctly using page down key with disabled items
 - `moonstone/Scrollable` to not cause a script error when scrollbar is not rendered
 - `moonstone/Picker` incrementer and decrementer to not change size when focused
+- `moonstone/Picker` to correctly update applied classes when pointer leaves picker buttons
 
 ## [1.12.1] - 2017-11-07
 
