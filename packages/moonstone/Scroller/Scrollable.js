@@ -894,7 +894,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.animator.stop();
 			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(false);
-			this.focusOnItem();
+			if (!this.childRef.getNodeIndexToBeFocused || !this.childRef.getNodeIndexToBeFocused()) {
+				this.focusOnItem();
+			}
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 			this.hideThumb();

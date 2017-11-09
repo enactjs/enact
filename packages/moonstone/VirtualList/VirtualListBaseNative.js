@@ -804,37 +804,35 @@ class VirtualListCoreNative extends Component {
 		this.setRestrict(isSelfOnly);
 	}
 
-	findEnableItemForPageScroll = (isForward, indexFrom, indexTo, data) => {
-		let nextIndex = -1;
+	findEnableItemForPageScroll = (isIncreasingIndex, indexFrom, indexTo, data) => {
+		let
+			{dimensionToExtent} = this,
+			nextIndex = -1,
+			nextDistance = -1,
+			row = parseInt(indexFrom / dimensionToExtent);
+		const
+			column = indexTo % dimensionToExtent,
+			delta = isIncreasingIndex ? -1 : 1;
 
-		if (isForward) {
-			for (let i = indexFrom; i < indexTo; i++) {
-				if (!data[i].disabled) {
-					nextIndex = i;
-					break;
-				}
-			}
-
-			// If there is no item which could get focus forward,
-			// we need to set restriction option to `self-first`.
-			if (nextIndex === -1) {
-				this.setRestrict(false);
-			}
-		} else if (!isForward) {
-			for (let i = indexFrom; i > indexTo; i--) {
-				if (!data[i].disabled) {
-					nextIndex = i;
-					break;
-				}
+		for (let i = indexFrom; i !== indexTo; i += delta) {
+			if (parseInt(i / dimensionToExtent) !== row && nextIndex !== -1) {
+				// If there is enabled items in a row, stop finding enabled items
+				break;
+			} else {
+				row = parseInt(i / dimensionToExtent);
 			}
 
-			// If there is no item which could get focus backward,
-			// we need to set restriction option to `self-first`.
-			if (indexTo === 0 && nextIndex === -1) {
-				this.setRestrict(false);
+			// If there is the enabled item with the shortest distance from a current focus item
+			if (!data[i].disabled && (Math.abs(column - i % dimensionToExtent) < nextDistance || nextDistance === -1)) {
+				nextIndex = i;
+				nextDistance = Math.abs(column - i % dimensionToExtent);
 			}
-		} else {
-			return -1;
+		}
+
+		// If there is no item which could get focus,
+		// we need to set restriction option to `self-first`.
+		if (nextIndex === -1) {
+			this.setRestrict(false);
 		}
 
 		return nextIndex;
@@ -842,14 +840,30 @@ class VirtualListCoreNative extends Component {
 
 	getIndexForPageScroll = (direction, currentIndex) => {
 		const
-			{context, dimensionToExtent, isPrimaryDirectionVertical, primary} = this,
+			{context, dimensionToExtent, isPrimaryDirectionVertical, moreInfo, primary} = this,
 			{data, dataSize, spacing} = this.props;
-		let offsetIndex = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent;
+		let
+			factor = 1,
+			indexToJump;
 
-		offsetIndex *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
-		offsetIndex *= (direction === 'down' || direction === 'right') ? 1 : -1;
+		factor *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
+		factor *= (direction === 'down' || direction === 'right') ? 1 : -1;
 
-		let indexToJump = clamp(0, dataSize - 1, currentIndex + offsetIndex);
+		// If a currnet focused item is not stick to the first visible line or the last visible line of VirtualList, jump to the line.
+		if (factor === 1 && currentIndex <= moreInfo.lastVisibleIndex - dimensionToExtent || factor === -1 && moreInfo.firstVisibleIndex + dimensionToExtent <= currentIndex) {
+			if (factor === 1) {
+				indexToJump = moreInfo.lastVisibleIndex;
+			} else {
+				indexToJump = moreInfo.firstVisibleIndex;
+			}
+		// If a current focused item is stick to the first visible line or the last visible line of VirtualList, scroll the VirtualList without animation.
+		} else {
+			if (factor === 1) {
+				indexToJump = clamp(0, dataSize - 1, moreInfo.lastVisibleIndex + (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent));
+			} else {
+				indexToJump = clamp(0, dataSize - 1, moreInfo.firstVisibleIndex - (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent));
+			}
+		}
 
 		if (
 			// If a currnet index is same as a new index.
@@ -863,7 +877,7 @@ class VirtualListCoreNative extends Component {
 		// If a current index is different from a new index and the item with the new index is disabled,
 		// try to find a next item which is enabled.
 		let nodeIndexToBeFocused = this.findEnableItemForPageScroll(
-			indexToJump < currentIndex,
+			indexToJump > currentIndex,
 			indexToJump, currentIndex, data
 		);
 
@@ -876,6 +890,7 @@ class VirtualListCoreNative extends Component {
 
 	scrollToNextPage = ({direction, focusedItem}) => {
 		const
+			{moreInfo} = this,
 			isRtl = this.context.rtl,
 			isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right'),
 			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
@@ -891,17 +906,22 @@ class VirtualListCoreNative extends Component {
 			// If the index to jump is disabled
 			focusedIndex !== nodeIndexToBeFocused && indexToJump !== nodeIndexToBeFocused
 		) {
-			if (!Spotlight.isPaused()) {
-				Spotlight.pause();
-			}
-
 			const nodeToBeFocused = this.contentRef.querySelector(`[data-index='${nodeIndexToBeFocused}'].spottable`);
 
 			if (nodeToBeFocused) {
 				nodeToBeFocused.focus();
 
-				this.props.cbScrollTo({index: indexToJump, focus: false, animate: false});
+				if (nodeIndexToBeFocused < moreInfo.firstVisibleIndex || nodeIndexToBeFocused > moreInfo.lastVisibleIndex) {
+					if (!Spotlight.isPaused()) {
+						Spotlight.pause();
+					}
+					this.props.cbScrollTo({index: indexToJump, focus: false, animate: false});
+				}
 			} else {
+				if (!Spotlight.isPaused()) {
+					Spotlight.pause();
+				}
+
 				// Scroll to the next spottable item without animation
 				focusedItem.blur();
 				// To prevent item positioning issue, make all items to be rendered.
@@ -1010,6 +1030,8 @@ class VirtualListCoreNative extends Component {
 	setNodeIndexToBeFocused = (nextIndex) => {
 		this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
 	}
+
+	getNodeIndexToBeFocused = () => this.nodeIndexToBeFocused
 
 	onKeyDown = (e) => {
 		const {keyCode, target} = e;
