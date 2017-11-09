@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VideoPlayer` to display time correctly in RTL locale
 - `moonstone/VirtualList` to scroll correctly using page down key with disabled items
 - `moonstone/Scrollable` to not cause a script error when scrollbar is not rendered
 - `moonstone/Picker` incrementer and decrementer to not change size when focused
