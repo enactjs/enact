@@ -593,18 +593,22 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleFocus = (ev) => {
 			this.isFocused = true;
-			this.setState((prevState) => {
-				if (!prevState.animating) {
-					this.startAnimation();
-				}
-				return null;
-			});
+			if (!this.sync) {
+				this.setState((prevState) => {
+					if (!prevState.animating) {
+						this.startAnimation();
+					}
+					return null;
+				});
+			}
 			forwardFocus(ev, this.props);
 		}
 
 		handleBlur = (ev) => {
 			this.isFocused = false;
-			this.cancelAnimation();
+			if (!this.sync) {
+				this.cancelAnimation();
+			}
 			forwardBlur(ev, this.props);
 		}
 
