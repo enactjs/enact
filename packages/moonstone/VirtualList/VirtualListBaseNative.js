@@ -849,7 +849,7 @@ class VirtualListCoreNative extends Component {
 		factor *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
 		factor *= (direction === 'down' || direction === 'right') ? 1 : -1;
 
-		// If a currnet focused item is not stick to the first visible line or the last visible line of VirtualList, jump to the line.
+		// If a current focused item is not stick to the first visible line or the last visible line of VirtualList, jump to the line.
 		if (factor === 1 && currentIndex <= moreInfo.lastVisibleIndex - dimensionToExtent || factor === -1 && moreInfo.firstVisibleIndex + dimensionToExtent <= currentIndex) {
 			if (factor === 1) {
 				indexToJump = moreInfo.lastVisibleIndex;
