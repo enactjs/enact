@@ -221,6 +221,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.detachedKnobPosition = 0;
 			this.willChange = false;
 			this.prevValue = null; // temp value stored for mouse down and drag
+			this.stepDecimalDigits = getDecimalDigits(props.step);
 
 			let value, controlled = false;
 
@@ -238,7 +239,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				controlled,
 				knobAfterMidpoint: false,
 				focused: false,
-				stepDecimalDigits: getDecimalDigits(props.step),
 				value: this.clamp(value),
 				valueText
 			};
@@ -261,7 +261,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const {'aria-valuetext': ariaValueText, backgroundProgress, max, min, value} = nextProps;
+			const {'aria-valuetext': ariaValueText, backgroundProgress, max, min, step, value} = nextProps;
 
 			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value) || (ariaValueText !== this.state.valueText)) {
 				this.normalizeBounds(nextProps);
@@ -273,10 +273,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				});
 			}
 
-			if (this.props.step !== nextProps.step) {
-				this.setState({
-					stepDecimalDigits: getDecimalDigits(nextProps.step)
-				});
+			if (this.props.step !== step) {
+				this.stepDecimalDigits = getDecimalDigits(step);
 			}
 
 			if (__DEV__) {
@@ -355,8 +353,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const knob = (clamp(min, min + node.offsetWidth, pointer) - min) / node.offsetWidth;
 			const knobValue = (this.normalizedMax - this.normalizedMin) * knob;
 			this.current5WayValue = knobValue - knobValue % this.props.step;
-			if (this.state.stepDecimalDigits !== 0) {
-				this.current5WayValue = parseNumber(this.current5WayValue.toFixed(this.state.stepDecimalDigits));
+			if (this.stepDecimalDigits !== 0) {
+				this.current5WayValue = parseNumber(this.current5WayValue.toFixed(this.stepDecimalDigits));
 			}
 
 			// Update our instance's knowledge of where the knob should be
