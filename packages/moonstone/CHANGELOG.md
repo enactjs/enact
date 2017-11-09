@@ -2,6 +2,20 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
+- `moonstone/Scroller.Scrollable` to restore last focused index when panel is changed
+- `moonstone/VideoPlayer` to display time correctly in RTL locale
+- `moonstone/VirtualList` to scroll correctly using page down key with disabled items
+- `moonstone/Scrollable` to not cause a script error when scrollbar is not rendered
+- `moonstone/Picker` incrementer and decrementer to not change size when focused
+
 ## [1.12.1] - 2017-11-07
 
 ### Fixed
