@@ -857,12 +857,10 @@ class VirtualListCoreNative extends Component {
 				indexToJump = moreInfo.firstVisibleIndex;
 			}
 		// If a current focused item is stick to the first visible line or the last visible line of VirtualList, scroll the VirtualList without animation.
+		} else if (factor === 1) {
+			indexToJump = clamp(0, dataSize - 1, moreInfo.lastVisibleIndex + (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent));
 		} else {
-			if (factor === 1) {
-				indexToJump = clamp(0, dataSize - 1, moreInfo.lastVisibleIndex + (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent));
-			} else {
-				indexToJump = clamp(0, dataSize - 1, moreInfo.firstVisibleIndex - (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent));
-			}
+			indexToJump = clamp(0, dataSize - 1, moreInfo.firstVisibleIndex - (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent));
 		}
 
 		if (
