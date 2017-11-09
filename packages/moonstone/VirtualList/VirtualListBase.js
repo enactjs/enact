@@ -820,13 +820,26 @@ class VirtualListCore extends Component {
 	}
 
 	findEnableItemForPageScroll = (isForward, indexFrom, indexTo, data) => {
-		let nextIndex = -1;
+		let
+			{dimensionToExtent} = this,
+			nextIndex = -1,
+			nextDistance = 99,
+			row = parseInt(indexFrom / dimensionToExtent);
+		const column = indexTo % dimensionToExtent;
 
 		if (isForward) {
 			for (let i = indexFrom; i < indexTo; i++) {
-				if (!data[i].disabled) {
-					nextIndex = i;
+				if (parseInt(i / dimensionToExtent) !== row && nextIndex !== -1) {
+					// If there is enabled items in a row, stop finding enabled items
 					break;
+				} else {
+					row = parseInt(i / dimensionToExtent);
+				}
+
+				// If there is the enabled item with the shortest distance from a current focus item
+				if (!data[i].disabled && Math.abs(column - i % dimensionToExtent) < nextDistance) {
+					nextIndex = i;
+					nextDistance = Math.abs(column - i % dimensionToExtent);
 				}
 			}
 
@@ -837,9 +850,17 @@ class VirtualListCore extends Component {
 			}
 		} else if (!isForward) {
 			for (let i = indexFrom; i > indexTo; i--) {
-				if (!data[i].disabled) {
-					nextIndex = i;
+				if (parseInt(i / dimensionToExtent) !== row && nextIndex !== -1) {
+					// If there is enabled items in a row, stop finding enabled items
 					break;
+				} else {
+					row = parseInt(i / dimensionToExtent);
+				}
+
+				// If there is the enabled item with the shortest distance from a current focus item
+				if (!data[i].disabled && Math.abs(column - i % dimensionToExtent) < nextDistance) {
+					nextIndex = i;
+					nextDistance = Math.abs(column - i % dimensionToExtent);
 				}
 			}
 
