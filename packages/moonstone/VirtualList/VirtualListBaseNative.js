@@ -24,7 +24,7 @@ import cssItem from './ListItem.less';
 const SpotlightPlaceholder = Spottable('div');
 
 const
-	dataContainerMutedAttribute = 'data-container-muted',
+	dataContainerDisabledAttribute = 'data-container-disabled',
 	forwardKeyDown = forward('onKeyDown'),
 	nop = () => {},
 	isDown = is('down'),
@@ -233,6 +233,10 @@ class VirtualListCoreNative extends Component {
 
 	componentDidUpdate () {
 		this.restoreFocus();
+	}
+
+	componentWillUnmount () {
+		this.setContainerDisabled(false);
 	}
 
 	scrollBounds = {
@@ -1024,11 +1028,21 @@ class VirtualListCoreNative extends Component {
 		forwardKeyDown(e, this.props);
 	}
 
+	handleGlobalKeyDown = () => {
+		this.setContainerDisabled(false);
+	}
+
 	setContainerDisabled = (bool) => {
 		const containerNode = this.containerRef;
 
 		if (containerNode) {
-			containerNode.setAttribute(dataContainerMutedAttribute, bool);
+			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
+
+			if (bool) {
+				document.addEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
+			} else {
+				document.removeEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
+			}
 		}
 	}
 
