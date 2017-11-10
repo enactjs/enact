@@ -368,7 +368,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isDragging = false
 		deferScrollTo = true
 		pageDistance = 0
-		animateOnFocus = false
 		isWheeling = false
 
 		// drag info
@@ -1039,10 +1038,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		hideThumb = () => {
-			if (this.state.isHorizontalScrollbarVisible) {
+			if (this.state.isHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
 				this.horizontalScrollbarRef.startHidingThumb();
 			}
-			if (this.state.isVerticalScrollbarVisible) {
+			if (this.state.isVerticalScrollbarVisible && this.verticalScrollbarRef) {
 				this.verticalScrollbarRef.startHidingThumb();
 			}
 		}
