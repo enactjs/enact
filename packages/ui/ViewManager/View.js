@@ -168,8 +168,9 @@ class View extends React.Component {
 	// will not be called on the initial render of a TransitionGroup.
 	componentWillEnter (callback) {
 		const {arranger, reverseTransition} = this.props;
+		this.setEntering();
+
 		if (arranger) {
-			this.setEntering();
 			this.prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
 		} else {
 			callback();
