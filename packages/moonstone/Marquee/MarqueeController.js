@@ -361,7 +361,10 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				props = {
 					...this.props,
 					onBlur: this.handleBlur,
-					onFocus: this.handleFocus
+					onFocus: this.handleFocus,
+					// When picker button becomes disabled, it doesn't fire blur, but does fire
+					// `onSpotlightDisappear`.  We should investigate why `onBlur` does not fire
+					onSpotlightDisappear: this.handleBlur
 				};
 			}
 
