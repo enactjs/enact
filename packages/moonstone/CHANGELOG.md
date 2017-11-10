@@ -15,6 +15,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` to scroll correctly using page down key with disabled items
 - `moonstone/Scrollable` to not cause a script error when scrollbar is not rendered
 - `moonstone/Picker` incrementer and decrementer to not change size when focused
+- `moonstone/Marquee` to correctly start when hovering on disabled spottable components
+- `moonstone/Marquee.MarqueeController` to not abort marquee when moving among components
+- `moonstone/Picker` to start marquee when hovering over disabled incrementer/decrementer
 
 ## [1.12.1] - 2017-11-07
 

@@ -1,9 +1,11 @@
-import Holdable from '../Holdable';
+import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 
+import {contextTypes} from '../../Marquee/MarqueeController';
+import Holdable from '../Holdable';
 import Icon from '../../Icon';
 import IconButton from '../../IconButton';
 import {withSkinnableProps} from '../../Skinnable';
@@ -26,8 +28,29 @@ const PickerButtonBase = kind({
 		spotlightDisabled: PropTypes.bool
 	},
 
+	contextTypes: contextTypes,
+
 	styles: {
 		css
+	},
+
+	handlers: {
+		onMouseEnter: handle(
+			forward('onMouseEnter'),
+			(ev, props, context) => {
+				if (context.enter) {
+					context.enter(null);
+				}
+			}
+		),
+		onMouseLeave: handle(
+			forward('onMouseLeave'),
+			(ev, props, context) => {
+				if (context.leave) {
+					context.leave(null);
+				}
+			}
+		)
 	},
 
 	computed: {
@@ -36,7 +59,7 @@ const PickerButtonBase = kind({
 		})
 	},
 
-	render: ({disabled, icon, joined, ...rest}) => {
+	render: ({disabled, icon, joined, onMouseEnter, onMouseLeave, ...rest}) => {
 		if (joined) {
 			delete rest.hidden;
 			delete rest.onSpotlightDisappear;
@@ -50,7 +73,7 @@ const PickerButtonBase = kind({
 			);
 		} else {
 			return (
-				<IconButton {...rest} backgroundOpacity="transparent" disabled={disabled} small>
+				<IconButton {...rest} backgroundOpacity="transparent" disabled={disabled} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} small>
 					{icon}
 				</IconButton>
 			);

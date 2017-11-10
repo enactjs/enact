@@ -321,11 +321,13 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handleEnter = () => {
+		handleEnter = (ev) => {
+			forward('onMouseEnter', ev, this.props);
 			this.isHovered = true;
 		}
 
-		handleLeave = () => {
+		handleLeave = (ev) => {
+			forward('onMouseLeave', ev, this.props);
 			this.isHovered = false;
 		}
 

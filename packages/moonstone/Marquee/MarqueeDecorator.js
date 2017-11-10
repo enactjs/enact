@@ -299,6 +299,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.textDirectionValidated = false;
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled || next.marqueeSpeed !== marqueeSpeed) {
 				this.cancelAnimation();
+			} else if (next.disabled && this.isHovered && marqueeOn === 'focus' && this.sync) {
+				this.context.enter(this);
 			}
 		}
 
@@ -372,7 +374,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.forceRestartMarquee ||
 				!this.sync && (
 					(this.isFocused && this.props.marqueeOn === 'focus') ||
-					(this.isHovered && this.props.marqueeOn === 'hover')
+					(this.isHovered && this.props.marqueeOn === 'hover') ||
+					(this.isHovered && this.props.marqueeOn === 'focus' && this.props.disabled)
 				)
 			);
 		}
@@ -614,25 +617,29 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleEnter = (ev) => {
 			this.isHovered = true;
-			if (this.sync) {
-				this.context.enter(this);
-			} else {
-				this.setState((prevState) => {
-					if (!prevState.animating) {
-						this.startAnimation();
-					}
-					return null;
-				});
+			if (this.props.disabled || this.props.marqueeOn === 'hover') {
+				if (this.sync) {
+					this.context.enter(this);
+				} else {
+					this.setState((prevState) => {
+						if (!prevState.animating) {
+							this.startAnimation();
+						}
+						return null;
+					});
+				}
 			}
 			forwardEnter(ev, this.props);
 		}
 
 		handleLeave = (ev) => {
 			this.isHovered = false;
-			if (this.sync) {
-				this.context.leave(this);
-			} else {
-				this.cancelAnimation();
+			if (this.props.disabled || this.props.marqueeOn === 'hover') {
+				if (this.sync) {
+					this.context.leave(this);
+				} else {
+					this.cancelAnimation();
+				}
 			}
 			forwardLeave(ev, this.props);
 		}
@@ -682,7 +689,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			// TODO: cancel others on hover
-			if (marqueeOnHover || (disabled && marqueeOnFocus)) {
+			if (marqueeOnHover || marqueeOnFocus) {
 				rest[enter] = this.handleEnter;
 				rest[leave] = this.handleLeave;
 			}
