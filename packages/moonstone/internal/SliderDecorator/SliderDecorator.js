@@ -21,6 +21,7 @@ import {
 	computeProportionProgress,
 	computeBarTransform,
 	computeKnobTransform,
+	getDecimalDigits,
 	parseNumber
 } from './util';
 
@@ -220,6 +221,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.detachedKnobPosition = 0;
 			this.willChange = false;
 			this.prevValue = null; // temp value stored for mouse down and drag
+			this.stepDecimalDigits = getDecimalDigits(props.step);
 
 			let value, controlled = false;
 
@@ -259,7 +261,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const {'aria-valuetext': ariaValueText, backgroundProgress, max, min, value} = nextProps;
+			const {'aria-valuetext': ariaValueText, backgroundProgress, max, min, step, value} = nextProps;
 
 			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value) || (ariaValueText !== this.state.valueText)) {
 				this.normalizeBounds(nextProps);
@@ -269,6 +271,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					value: clampedValue,
 					valueText: valueText
 				});
+			}
+
+			if (this.props.step !== step) {
+				this.stepDecimalDigits = getDecimalDigits(step);
 			}
 
 			if (__DEV__) {
@@ -345,8 +351,11 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const min = parseFloat(window.getComputedStyle(this.inputNode).paddingLeft);
 			const pointer = position - this.inputNode.getBoundingClientRect().left;
 			const knob = (clamp(min, min + node.offsetWidth, pointer) - min) / node.offsetWidth;
-
-			this.current5WayValue = (this.normalizedMax - this.normalizedMin) * knob;
+			const knobValue = (this.normalizedMax - this.normalizedMin) * knob;
+			this.current5WayValue = knobValue - knobValue % this.props.step;
+			if (this.stepDecimalDigits !== 0) {
+				this.current5WayValue = parseNumber(this.current5WayValue.toFixed(this.stepDecimalDigits));
+			}
 
 			// Update our instance's knowledge of where the knob should be
 			this.knobPosition = knob;
@@ -420,8 +429,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			const value = parseNumber(ev.target.value);
 			this.throttleUpdateValue(value);
-
-			this.knobPosition = null;
 		}
 
 		handleMouseDown = (ev) => {
@@ -439,10 +446,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleMouseMove = (ev) => {
 			forwardMouseMove(ev, this.props);
-			this.willChange = Boolean(ev.buttons);
+			this.willChange = Boolean(ev.buttons); // if detached knob is dragging, it fires onChange
 
-			// We don't want to run this code if any mouse button is being held down. That indicates dragging.
-			if (!this.props.detachedKnob || this.props.disabled || ev.buttons || this.props.vertical) return;
+			if (!this.props.detachedKnob || this.props.disabled || this.props.vertical) return;
 
 			this.moveKnobByPointer(ev.clientX);
 		}
@@ -464,9 +470,17 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (ev.target.nodeName === 'INPUT') {
-				const value = parseNumber(this.state.controlled ? this.changedControlledValue : this.state.value);
+				let value;
+				if (this.state.controlled) {
+					// use current knob position value (i.e. current5WayValue) for detachedKnob as value
+					// may change in between mouse down and mouse up by prop change
+					value = this.props.detachedKnob ? this.current5WayValue : this.changedControlledValue;
+				} else {
+					value = this.state.value;
+				}
+
 				if (this.prevValue !== value) {
-					forwardChange({value}, this.props);
+					forwardChange({value: parseNumber(value)}, this.props);
 					this.prevValue = null;
 				}
 			}
@@ -553,9 +567,18 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleFocus = (ev) => {
 			forwardFocus(ev, this.props);
 
+			// on mouseup, slider manually focuses the slider from its input causing a blur event to
+			// bubble here. if this is the case, focus hasn't effectively changed so we ignore it.
+			if (
+				ev.relatedTarget && (
+					(ev.target === this.sliderNode && ev.relatedTarget === this.inputNode) ||
+					(ev.target === this.inputNode && ev.relatedTarget === this.sliderNode)
+				)
+			) return;
+
 			if (this.props.detachedKnob) {
-				this.current5WayValue = null;
-				this.moveKnobByAmount(0);
+				this.current5WayValue = this.clamp(this.state.value);
+				this.updateUI();
 			}
 
 			this.setState({

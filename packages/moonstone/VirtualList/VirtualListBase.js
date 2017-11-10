@@ -838,7 +838,7 @@ class VirtualListCore extends Component {
 				this.setRestrict(false);
 			}
 		} else if (!isForward) {
-			for (let i = indexFrom; i >= indexTo; i--) {
+			for (let i = indexFrom; i > indexTo; i--) {
 				if (!data[i].disabled) {
 					nextIndex = i;
 					break;
