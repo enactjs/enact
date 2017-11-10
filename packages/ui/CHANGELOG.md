@@ -11,7 +11,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Remeasurable` to update on every trigger change
-
+- `ui/ViewManager` to suppress `enteringProp` for views that are rendered at mount
 
 ## [1.12.1] - 2017-11-07
 
