@@ -136,6 +136,10 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		componentWillUnmount () {
+			this.cancelJob.stop();
+		}
+
 		cancelJob = new Job(() => this.doCancel(), 30)
 
 		/*
