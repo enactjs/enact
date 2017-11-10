@@ -2,7 +2,7 @@
  * Exports the {@link ui/ViewManager.View} component.
  */
 
-import {Job} from '@enact/core/util';
+import {perfNow, Job} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
@@ -113,7 +113,7 @@ class View extends React.Component {
 		this.animation = null;
 		this._raf = null;
 		this.state = {
-			entering: true
+			entering: false
 		};
 	}
 
@@ -157,9 +157,9 @@ class View extends React.Component {
 		}
 	}
 
-	componentDidAppear () {
+	setEntering () {
 		this.setState({
-			entering: false
+			entering: true
 		});
 	}
 
@@ -168,6 +168,8 @@ class View extends React.Component {
 	// will not be called on the initial render of a TransitionGroup.
 	componentWillEnter (callback) {
 		const {arranger, reverseTransition} = this.props;
+		this.setEntering();
+
 		if (arranger) {
 			this.prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
 		} else {
@@ -221,7 +223,7 @@ class View extends React.Component {
 		/* eslint react/no-find-dom-node: "off" */
 		const node = ReactDOM.findDOMNode(this);
 
-		const currentTime = (typeof window !== 'undefined') ? window.performance.now() : new Date().getTime();
+		const currentTime = perfNow();
 		let startTime = currentTime;
 		let endTime = startTime + duration;
 
@@ -295,7 +297,7 @@ class View extends React.Component {
 
 		if (callback(start, end, time) && typeof window !== 'undefined') {
 			this._raf = window.requestAnimationFrame(() => {
-				const current = window.performance.now();
+				const current = perfNow();
 				this.transition(start, end, current, callback);
 			});
 		} else {

@@ -10,9 +10,20 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Button` to correctly specify minimum width when in large text mode
+- `moonstone/Scroller.Scrollable` to restore last focused index when panel is changed
+- `moonstone/VideoPlayer` to display time correctly in RTL locale
+- `moonstone/VirtualList` to scroll correctly using page down key with disabled items
+- `moonstone/Scrollable` to not cause a script error when scrollbar is not rendered
+- `moonstone/Picker` incrementer and decrementer to not change size when focused
+- `moonstone/DayPicker` to update day names when changing locale
+
+## [1.12.1] - 2017-11-07
+
+### Fixed
+
 - `moonstone/ExpandableItem` and all other `Expandable` components to now pull down from the top instead of being revealed from the bottom, matching Enyo's design
 - `moonstone/VirtualListNative` to scroll properly with page up/down keys if there is an disabled item
-- `moonstone/Button` min-width for large text
 - `moonstone/RangePicker` to display negative values correctly in RTL
 - `moonstone/Scrollable` to not blur scroll buttons when wheeling
 - `moonstone/Scrollbar` to hide scroll thumb immediately without delay after scroll position to be min or max
@@ -21,7 +32,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to show knob when pressed
 - `moonstone/Header` to layout `titleBelow` and `subTitleBelow` correctly
 - `moonstone/Header` to use correct font-weight for `subTitleBelow`
-- `moonstone/DayPicker` to update day names when changing locale
 
 ## [1.12.0] - 2017-10-27
 
