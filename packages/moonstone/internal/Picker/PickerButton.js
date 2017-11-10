@@ -1,4 +1,4 @@
-import {forward, handle} from '@enact/core/handle';
+import {forward, forProp, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -37,6 +37,7 @@ const PickerButtonBase = kind({
 	handlers: {
 		onMouseEnter: handle(
 			forward('onMouseEnter'),
+			forProp('joined', false),
 			(ev, props, context) => {
 				if (context.enter) {
 					context.enter(null);
@@ -45,6 +46,7 @@ const PickerButtonBase = kind({
 		),
 		onMouseLeave: handle(
 			forward('onMouseLeave'),
+			forProp('joined', false),
 			(ev, props, context) => {
 				if (context.leave) {
 					context.leave(null);
@@ -59,7 +61,7 @@ const PickerButtonBase = kind({
 		})
 	},
 
-	render: ({disabled, icon, joined, onMouseEnter, onMouseLeave, ...rest}) => {
+	render: ({disabled, icon, joined, ...rest}) => {
 		if (joined) {
 			delete rest.hidden;
 			delete rest.onSpotlightDisappear;
@@ -73,7 +75,7 @@ const PickerButtonBase = kind({
 			);
 		} else {
 			return (
-				<IconButton {...rest} backgroundOpacity="transparent" disabled={disabled} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} small>
+				<IconButton {...rest} backgroundOpacity="transparent" disabled={disabled} small>
 					{icon}
 				</IconButton>
 			);
