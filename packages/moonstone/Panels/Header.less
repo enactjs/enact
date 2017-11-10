@@ -22,16 +22,20 @@
 	// 	.moon-super-header-text();
 	// }
 
+	// Remove the built-in h1 and h2 margins
+	.title,
+	.titleBelow,
+	.subTitleBelow {
+		margin: 0;
+	}
+
 	.title {
 		.moon-header-text();
-		margin: 0;
 	}
 
 	.titleBelow,
 	.subTitleBelow {
 		.moon-sub-header-text();
-		margin: 0;
-		line-height: 45px;
 	}
 
 	.subTitleBelow {
@@ -56,9 +60,12 @@
 			.moon-locale-non-latin({line-height: @moon-non-latin-medium-header-line-height;});
 		}
 
-		.titleBelow,
+		.titleBelow {
+			line-height: 48px;
+		}
+
 		.subTitleBelow {
-			line-height: 39px;
+			line-height: 45px;
 		}
 	}
 
