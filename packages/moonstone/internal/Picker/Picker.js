@@ -53,7 +53,6 @@ const forwardBlur = forward('onBlur'),
 	forwardKeyDown = forward('onKeyDown'),
 	forwardKeyUp = forward('onKeyUp'),
 	forwardMouseDown = forward('onMouseDown'),
-	forwardMouseLeave = forward('onMouseLeave'),
 	forwardMouseUp = forward('onMouseUp'),
 	forwardWheel = forward('onWheel');
 
@@ -508,11 +507,6 @@ const PickerBase = class extends React.Component {
 		this.handleIncrement();
 	}
 
-	handleButtonLeave = (ev) => {
-		forwardMouseLeave(ev, this.props);
-		this.handleUp(ev);
-	}
-
 	handleWheel = (ev) => {
 		const {step} = this.props;
 		forwardWheel(ev, this.props);
@@ -808,7 +802,6 @@ const PickerBase = class extends React.Component {
 					onHoldPulse={this.handleIncDown}
 					onKeyDown={this.handleIncKeyDown}
 					onMouseDown={this.handleIncDown}
-					onMouseLeave={this.handleButtonLeave}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
 				/>
@@ -843,7 +836,6 @@ const PickerBase = class extends React.Component {
 					onHoldPulse={this.handleDecDown}
 					onKeyDown={this.handleDecKeyDown}
 					onMouseDown={this.handleDecDown}
-					onMouseLeave={this.handleButtonLeave}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
 				/>
