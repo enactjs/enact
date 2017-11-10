@@ -16,6 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` to scroll correctly using page down key with disabled items
 - `moonstone/Scrollable` to not cause a script error when scrollbar is not rendered
 - `moonstone/Picker` incrementer and decrementer to not change size when focused
+- `moonstone/Scroller` and `moonstone/VirtualList` to keep spotlight when pressing a 5-way control while scrolling
 - `moonstone/Panels` to prevent user interaction with panel contents during transition
 - `moonstone/Slider` and related components to correctly position knob for `detachedKnob` on mouse down and fire value where mouse was positioned on mouse up
 - `moonstone/DayPicker` to update day names when changing locale
