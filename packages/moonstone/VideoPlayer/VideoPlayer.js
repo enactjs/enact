@@ -759,7 +759,13 @@ const VideoPlayerBase = class extends React.Component {
 			this.reloadVideo();
 		}
 
-		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
+		if (
+			prevState.mediaControlsVisible !== this.state.mediaControlsVisible ||
+			prevState.mediaSliderVisible !== this.state.mediaSliderVisible
+		) {
+			const showing = this.state.mediaControlsVisible || this.state.mediaSliderVisible;
+			this.setFloatingLayerShowing(showing);
+		}
 
 		// Added to set default focus on the media control (play) when controls become visible.
 		if (
@@ -884,9 +890,15 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	setFloatingLayerShowing = (showing) => {
-		const layer = this.context.getFloatingLayer && this.context.getFloatingLayer();
-		if (layer) {
-			layer.style.display = showing ? 'block' : 'none';
+		if (this.context.getFloatingLayer) {
+			const layer = this.context.getFloatingLayer();
+			if (layer) {
+				layer.style.display = showing ? 'block' : 'none';
+			}
+		}
+
+		if (!showing && this.context.unmountFloatingLayers) {
+			this.context.unmountFloatingLayers();
 		}
 	}
 
