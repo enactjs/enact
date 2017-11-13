@@ -42,6 +42,14 @@ const LabeledItemBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		disabled: PropTypes.bool,
+
+		/**
 		 * The label to be displayed along with the text.
 		 *
 		 * @type {Node}
@@ -63,13 +71,13 @@ const LabeledItemBase = kind({
 		className: 'labeleditem'
 	},
 
-	render: ({children, label, titleIcon, ...rest}) => (
-		<Controller {...rest}>
+	render: ({children, disabled, label, titleIcon, ...rest}) => (
+		<Controller disabled={disabled} {...rest}>
 			<div className={css.text}>
-				<MarqueeText className={css.title}>{children}</MarqueeText>
+				<MarqueeText disabled={disabled} className={css.title}>{children}</MarqueeText>
 				{(titleIcon != null) ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
 			</div>
-			{(label != null) ? <MarqueeText className={css.label}>{label}</MarqueeText> : null}
+			{(label != null) ? <MarqueeText disabled={disabled} className={css.label}>{label}</MarqueeText> : null}
 		</Controller>
 	)
 });
