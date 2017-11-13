@@ -5,10 +5,12 @@
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 const contextTypes = {
 	getFloatingLayer: PropTypes.func,
-	getRootFloatingLayer: PropTypes.func
+	getRootFloatingLayer: PropTypes.func,
+	unmountFloatingLayers: PropTypes.func
 };
 
 /**
@@ -61,8 +63,20 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		getChildContext () {
 			return {
 				getFloatingLayer: this.getFloatingLayer,
-				getRootFloatingLayer: this.getRootFloatingLayer
+				getRootFloatingLayer: this.getRootFloatingLayer,
+				unmountFloatingLayers: this.unmountFloatingLayers
 			};
+		}
+
+		unmountFloatingLayers = () => {
+			const layer = this.getFloatingLayer();
+
+			if (layer) {
+				for (let i = 0; i < layer.children.length; i++) {
+					const child = layer.children.item(i);
+					ReactDOM.unmountComponentAtNode(child);
+				}
+			}
 		}
 
 		getFloatingLayer = () => {

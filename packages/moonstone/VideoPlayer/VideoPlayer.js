@@ -884,9 +884,15 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	setFloatingLayerShowing = (showing) => {
-		const layer = this.context.getFloatingLayer && this.context.getFloatingLayer();
-		if (layer) {
-			layer.style.display = showing ? 'block' : 'none';
+		if (this.context.getFloatingLayer) {
+			const layer = this.context.getFloatingLayer();
+			if (layer) {
+				layer.style.display = showing ? 'block' : 'none';
+			}
+		}
+
+		if (!showing && this.context.unmountFloatingLayers) {
+			this.context.unmountFloatingLayers();
 		}
 	}
 
