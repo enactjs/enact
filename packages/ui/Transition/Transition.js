@@ -82,20 +82,20 @@ const TransitionBase = kind({
 
 		/**
 		 * Customize the transition timing function.
-		 * Supported function names are: `ease-in-out`, `ease-in`, `ease-out`, `ease-in-quart`,
-		 * `ease-out-quart`, ease`, and `linear`.
+		 * Supported function names are: `ease`, `ease-in`, `ease-out`, `ease-in-out`, `ease-in-quart`,
+		 * `ease-out-quart`, and `linear`.
 		 *
 		 * @type {String}
 		 * @default 'ease-in-out'
 		 * @public
 		 */
 		timingFunction: PropTypes.oneOf([
-			'ease-in-out',
+			'ease',
 			'ease-in',
 			'ease-out',
+			'ease-in-out',
 			'ease-in-quart',
 			'ease-out-quart',
-			'ease',
 			'linear'
 		]),
 
@@ -248,14 +248,23 @@ class Transition extends React.Component {
 		onShow: PropTypes.func,
 
 		/**
-		 * The transition timing function.
-		 * Supported functions are: `'linear'`, `'ease'` and `'ease-in-out'`
+		 * Customize the transition timing function.
+		 * Supported function names are: `ease`, `ease-in`, `ease-out`, `ease-in-out`, `ease-in-quart`,
+		 * `ease-out-quart`, and `linear`.
 		 *
 		 * @type {String}
 		 * @default 'ease-in-out'
 		 * @public
 		 */
-		timingFunction: PropTypes.oneOf(['ease-in-out', 'ease', 'linear']),
+		timingFunction: PropTypes.oneOf([
+			'ease',
+			'ease-in',
+			'ease-out',
+			'ease-in-out',
+			'ease-in-quart',
+			'ease-out-quart',
+			'linear'
+		]),
 
 		/**
 		 * How the transition affects the content.
