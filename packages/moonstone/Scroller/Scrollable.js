@@ -894,9 +894,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.animator.stop();
 			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(false);
-			if (!this.childRef.getNodeIndexToBeFocused || !this.childRef.getNodeIndexToBeFocused()) {
-				this.focusOnItem();
-			}
+			this.focusOnItem();
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 			this.hideThumb();
@@ -962,11 +960,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				} else {
 					if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
 						itemPos = this.childRef.getItemPosition(opt.index, opt.stickTo);
-						// If the first or the last item to the sticked direction is disabled,
-						// focus another item which is enabled.
-						if (opt.nodeIndexToBeFocused) {
-							this.childRef.setNodeIndexToBeFocused(opt.nodeIndexToBeFocused);
-						}
 					} else if (opt.node instanceof Object) {
 						if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
 							itemPos = this.childRef.getNodePosition(opt.node);

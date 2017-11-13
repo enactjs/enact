@@ -859,13 +859,26 @@ class VirtualListCore extends Component {
 			{data, dataSize, spacing} = this.props;
 		let
 			factor = 1,
-			indexToJump;
+			indexToJump,
+			hasEnabledItem;
+
+		// Check if there is any enabled item to the direction in VirtualGridList
+		// to make a decision to jump or to scroll.
+		// We don't have to check it in VirtualList because spotlight already did.
+		if (direction === 'up') {
+			hasEnabledItem = data.slice(currentIndex + 1, moreInfo.lastVisibleIndex).some((item) => !item.disabled);
+		} else {
+			hasEnabledItem = data.slice(moreInfo.firstVisibleIndex, currentIndex - 1).some((item) => !item.disabled);
+		}
 
 		factor *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
 		factor *= (direction === 'down' || direction === 'right') ? 1 : -1;
 
-		// If a current focused item is not stick to the first visible line or the last visible line of VirtualList, jump to the line.
-		if (factor === 1 && currentIndex <= moreInfo.lastVisibleIndex - dimensionToExtent || factor === -1 && moreInfo.firstVisibleIndex + dimensionToExtent <= currentIndex) {
+		// If a current focused item is not stick to the first visible line or the last visible line of VirtualGridList, jump to the line.
+		if (this.isItemSized && hasEnabledItem && (
+			factor === 1 && currentIndex <= (moreInfo.lastVisibleIndex - (moreInfo.lastVisibleIndex % dimensionToExtent || dimensionToExtent)) ||
+			factor === -1 && (moreInfo.firstVisibleIndex + (moreInfo.firstVisibleIndex % dimensionToExtent || dimensionToExtent)) <= currentIndex
+		)) {
 			if (factor === 1) {
 				indexToJump = moreInfo.lastVisibleIndex;
 			} else {
@@ -927,7 +940,12 @@ class VirtualListCore extends Component {
 			this.updateFrom = null;
 			this.updateTo = null;
 			// Scroll to the next spottable item without animation
-			this.props.cbScrollTo({index: indexToJump, nodeIndexToBeFocused, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
+			if (nodeIndexToBeFocused !== -1) {
+				this.setNodeIndexToBeFocused(nodeIndexToBeFocused);
+				this.props.cbScrollTo({index: nodeIndexToBeFocused, stickTo: isForward ? 'end' : 'start', focus: false, animate: false});
+			} else {
+				this.props.cbScrollTo({index: indexToJump, stickTo: isForward ? 'end' : 'start', focus: false, animate: false});
+			}
 
 			return true; // Do not scroll additionally
 		} else {
