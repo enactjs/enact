@@ -17,7 +17,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Picker` incrementer and decrementer to not change size when focused
 - `moonstone/Marquee` to correctly start when hovering on disabled spottable components
 - `moonstone/Marquee.MarqueeController` to not abort marquee when moving among components
-- `moonstone/Picker` to start marquee when hovering over disabled incrementer/decrementer
+- `moonstone/Picker` marquee issues with disabled buttons or Picker
 - `moonstone/LabeledItem` to start marquee when hovering over in disabled state
 
 ## [1.12.1] - 2017-11-07
