@@ -1,4 +1,4 @@
-import {forward, forProp, handle} from '@enact/core/handle';
+import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
