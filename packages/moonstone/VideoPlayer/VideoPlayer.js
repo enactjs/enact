@@ -759,7 +759,13 @@ const VideoPlayerBase = class extends React.Component {
 			this.reloadVideo();
 		}
 
-		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
+		if (
+			prevState.mediaControlsVisible !== this.state.mediaControlsVisible ||
+			prevState.mediaSliderVisible !== this.state.mediaSliderVisible
+		) {
+			const showing = this.state.mediaControlsVisible || this.state.mediaSliderVisible;
+			this.setFloatingLayerShowing(showing);
+		}
 
 		// Added to set default focus on the media control (play) when controls become visible.
 		if (
