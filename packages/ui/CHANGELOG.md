@@ -6,6 +6,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/FloatingLayerDecorator` imperative API for hiding all floating layers it owns
+
 ### Changed
 
 ### Fixed
