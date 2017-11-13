@@ -822,7 +822,7 @@ class VirtualListCoreNative extends Component {
 				row = parseInt(i / dimensionToExtent);
 			}
 
-			// If there is the enabled item with the shortest distance from a current focus item
+			// If there are the enabled item with the shortest distance from a current focus item
 			if (!data[i].disabled && (Math.abs(column - i % dimensionToExtent) < nextDistance || nextDistance === -1)) {
 				nextIndex = i;
 				nextDistance = Math.abs(column - i % dimensionToExtent);
@@ -940,9 +940,9 @@ class VirtualListCoreNative extends Component {
 				// Scroll to the next spottable item without animation
 				if (nodeIndexToBeFocused !== -1) {
 					this.setNodeIndexToBeFocused(nodeIndexToBeFocused);
-					this.props.cbScrollTo({index: nodeIndexToBeFocused, stickTo: isForward ? 'end' : 'start', focus: false, animate: false});
+					this.props.cbScrollTo({index: nodeIndexToBeFocused, stickTo: isForward ? 'end' : 'start', animate: false});
 				} else {
-					this.props.cbScrollTo({index: indexToJump, stickTo: isForward ? 'end' : 'start', focus: false, animate: false});
+					this.props.cbScrollTo({index: indexToJump, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
 				}
 			}
 
@@ -1045,8 +1045,6 @@ class VirtualListCoreNative extends Component {
 	setNodeIndexToBeFocused = (nextIndex) => {
 		this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
 	}
-
-	getNodeIndexToBeFocused = () => this.nodeIndexToBeFocused
 
 	onKeyDown = (e) => {
 		const {keyCode, target} = e;

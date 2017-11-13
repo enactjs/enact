@@ -831,7 +831,7 @@ class VirtualListCore extends Component {
 
 		for (let i = indexFrom; i !== indexTo; i += delta) {
 			if (parseInt(i / dimensionToExtent) !== row && nextIndex !== -1) {
-				// If there is enabled items in a row, stop finding enabled items
+				// If there are enabled items in a row, stop finding enabled items
 				break;
 			} else {
 				row = parseInt(i / dimensionToExtent);
@@ -942,9 +942,9 @@ class VirtualListCore extends Component {
 			// Scroll to the next spottable item without animation
 			if (nodeIndexToBeFocused !== -1) {
 				this.setNodeIndexToBeFocused(nodeIndexToBeFocused);
-				this.props.cbScrollTo({index: nodeIndexToBeFocused, stickTo: isForward ? 'end' : 'start', focus: false, animate: false});
+				this.props.cbScrollTo({index: nodeIndexToBeFocused, stickTo: isForward ? 'end' : 'start', animate: false});
 			} else {
-				this.props.cbScrollTo({index: indexToJump, stickTo: isForward ? 'end' : 'start', focus: false, animate: false});
+				this.props.cbScrollTo({index: indexToJump, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
 			}
 
 			return true; // Do not scroll additionally
@@ -1046,8 +1046,6 @@ class VirtualListCore extends Component {
 	setNodeIndexToBeFocused = (nextIndex) => {
 		this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
 	}
-
-	getNodeIndexToBeFocused = () => this.nodeIndexToBeFocused
 
 	onKeyDown = (e) => {
 		const {keyCode, target} = e;
