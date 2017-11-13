@@ -297,7 +297,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.doScrollStop();
 			}
 			this.scrollStopJob.stop();
-			this.hideThumbJob.stop();
 
 			if (containerRef && containerRef.removeEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
@@ -409,6 +408,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (typeof window !== 'undefined') {
 				window.document.activeElement.blur();
 			}
+			this.showThumb(bounds);
 
 			// FIXME This routine is a temporary support for horizontal wheel scroll.
 			// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
@@ -681,7 +681,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 
-			this.hideThumb();
+			this.startHidingThumb();
 			this.scrolling = false;
 			this.doScrollStop();
 		}
@@ -890,7 +890,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			});
 		}
 
-		hideThumb = () => {
+		startHidingThumb = () => {
 			if (this.state.isHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
 				this.horizontalScrollbarRef.startHidingThumb();
 			}
@@ -899,12 +899,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		hideThumbJob = new Job(this.hideThumb, 200);
-
 		alertThumb () {
 			const bounds = this.getScrollBounds();
 			this.showThumb(bounds);
-			this.hideThumbJob.start();
+			this.startHidingThumb();
 		}
 
 		updateScrollbars = () => {
