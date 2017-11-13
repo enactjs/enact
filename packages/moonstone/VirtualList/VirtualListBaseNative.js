@@ -805,14 +805,14 @@ class VirtualListCoreNative extends Component {
 	}
 
 	findEnableItemForPageScroll = (isIncreasingIndex, indexFrom, indexTo, data) => {
-		let
+		const
 			{dimensionToExtent} = this,
+			column = indexTo % dimensionToExtent,
+			delta = isIncreasingIndex ? -1 : 1;
+		let
 			nextIndex = -1,
 			nextDistance = -1,
 			row = parseInt(indexFrom / dimensionToExtent);
-		const
-			column = indexTo % dimensionToExtent,
-			delta = isIncreasingIndex ? -1 : 1;
 
 		for (let i = indexFrom; i !== indexTo; i += delta) {
 			if (parseInt(i / dimensionToExtent) !== row && nextIndex !== -1) {
