@@ -845,25 +845,28 @@ class VirtualListCoreNative extends Component {
 		let
 			factor = 1,
 			indexToJump,
-			hasEnabledItem;
-
-		// Check if there is any enabled item to the direction in VirtualGridList
-		// to make a decision to jump or to scroll.
-		// We don't have to check it in VirtualList because spotlight already did.
-		if (direction === 'up') {
-			hasEnabledItem = data.slice(currentIndex + 1, moreInfo.lastVisibleIndex).some((item) => !item.disabled);
-		} else {
-			hasEnabledItem = data.slice(moreInfo.firstVisibleIndex, currentIndex - 1).some((item) => !item.disabled);
-		}
+			hasEnabledItemInVirtualGridList = false,
+			firstItemIndexExceptFirstLine = moreInfo.firstVisibleIndex + dimensionToExtent,
+			lastItemIndexExceptLastLine = moreInfo.lastVisibleIndex - (moreInfo.lastVisibleIndex % dimensionToExtent || dimensionToExtent),
+			firstItemIndexToBeJumpedForward = currentIndex - (currentIndex % dimensionToExtent) + dimensionToExtent,
+			lastItemIndexToBeJumpedBackward = currentIndex - (currentIndex % dimensionToExtent) - 1;
 
 		factor *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
 		factor *= (direction === 'down' || direction === 'right') ? 1 : -1;
 
+		// Check if there is any enabled item between a current item and the last visible item in VirtualGridList
+		// to make a decision to jump or to scroll.
+		// We don't have to check it in VirtualList because spotlight already did.
+		if (this.isItemSized) {
+			if (factor === 1 && currentIndex <= lastItemIndexExceptLastLine && firstItemIndexToBeJumpedForward <= moreInfo.lastVisibleIndex) {
+				hasEnabledItemInVirtualGridList = data.slice(firstItemIndexToBeJumpedForward, moreInfo.lastVisibleIndex + 1).some((item) => !item.disabled);
+			} else if (factor === -1 && firstItemIndexExceptFirstLine <= currentIndex && moreInfo.firstVisibleIndex <= lastItemIndexToBeJumpedBackward) {
+				hasEnabledItemInVirtualGridList = data.slice(moreInfo.firstVisibleIndex, lastItemIndexToBeJumpedBackward + 1).some((item) => !item.disabled);
+			}
+		}
+
 		// If a current focused item is not stick to the first visible line or the last visible line of VirtualGridList, jump to the line.
-		if (this.isItemSized && hasEnabledItem && (
-			factor === 1 && currentIndex <= (moreInfo.lastVisibleIndex - (moreInfo.lastVisibleIndex % dimensionToExtent || dimensionToExtent)) ||
-			factor === -1 && (moreInfo.firstVisibleIndex + (moreInfo.firstVisibleIndex % dimensionToExtent || dimensionToExtent)) <= currentIndex
-		)) {
+		if (hasEnabledItemInVirtualGridList) {
 			if (factor === 1) {
 				indexToJump = moreInfo.lastVisibleIndex;
 			} else {
