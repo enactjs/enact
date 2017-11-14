@@ -42,7 +42,7 @@ const PickerButtonBase = kind({
 		onMouseEnter: handle(
 			forward('onMouseEnter'),
 			(ev, props, context) => {
-				if (context.enter && (props.joined || props.disabled)) {
+				if (context.enter) {
 					context.enter(null);
 				}
 			}
@@ -50,7 +50,7 @@ const PickerButtonBase = kind({
 		onMouseLeave: handle(
 			forward('onMouseLeave'),
 			(ev, props, context) => {
-				if (context.leave && (props.joined || props.disabled)) {
+				if (context.leave) {
 					context.leave(null);
 				}
 			}
