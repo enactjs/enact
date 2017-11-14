@@ -23,7 +23,7 @@ import css from './ListItem.less';
 const SpotlightPlaceholder = Spottable('div');
 
 const
-	dataContainerMutedAttribute = 'data-container-muted',
+	dataContainerDisabledAttribute = 'data-container-disabled',
 	forwardKeyDown = forward('onKeyDown'),
 	nop = () => {},
 	isDown = is('down'),
@@ -248,6 +248,8 @@ class VirtualListCore extends Component {
 		if (containerNode && containerNode.removeEventListener) {
 			containerNode.removeEventListener('scroll', this.preventScroll);
 		}
+
+		this.setContainerDisabled(false);
 	}
 
 	scrollBounds = {
@@ -314,28 +316,29 @@ class VirtualListCore extends Component {
 	}
 
 	restoreFocus () {
-		const {firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
 		if (
 			this.restoreLastFocused &&
-			!this.isPlaceholderFocused() &&
-			firstVisibleIndex <= this.preservedIndex &&
-			lastVisibleIndex >= this.preservedIndex
+			!this.isPlaceholderFocused()
 		) {
-			// if we're supposed to restore focus and virtual list has positioned a set of items
-			// that includes lastFocusedIndex, clear the indicator
-			this.restoreLastFocused = false;
 			const containerId = this.props['data-container-id'];
-
-			// try to focus the last focused item
-			const foundLastFocused = Spotlight.focus(
+			const node = this.containerRef.querySelector(
 				`[data-container-id="${containerId}"] [data-index="${this.preservedIndex}"]`
 			);
 
-			// but if that fails (because it isn't found or is disabled), focus the container so
-			// spotlight isn't lost
-			if (!foundLastFocused) {
-				this.restoreLastFocused = true;
-				Spotlight.focus(containerId);
+			if (node) {
+				// if we're supposed to restore focus and virtual list has positioned a set of items
+				// that includes lastFocusedIndex, clear the indicator
+				this.restoreLastFocused = false;
+
+				// try to focus the last focused item
+				const foundLastFocused = Spotlight.focus(node);
+
+				// but if that fails (because it isn't found or is disabled), focus the container so
+				// spotlight isn't lost
+				if (!foundLastFocused) {
+					this.restoreLastFocused = true;
+					Spotlight.focus(containerId);
+				}
 			}
 		}
 	}
@@ -1028,11 +1031,21 @@ class VirtualListCore extends Component {
 		forwardKeyDown(e, this.props);
 	}
 
+	handleGlobalKeyDown = () => {
+		this.setContainerDisabled(false);
+	}
+
 	setContainerDisabled = (bool) => {
 		const containerNode = this.containerRef;
 
 		if (containerNode) {
-			containerNode.setAttribute(dataContainerMutedAttribute, bool);
+			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
+
+			if (bool) {
+				document.addEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
+			} else {
+				document.removeEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
+			}
 		}
 	}
 
