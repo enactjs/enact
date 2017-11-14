@@ -816,14 +816,14 @@ class VirtualListCoreNative extends Component {
 
 		for (let i = indexFrom; i !== indexTo; i += delta) {
 			if (parseInt(i / dimensionToExtent) !== row && nextIndex !== -1) {
-				// If there is enabled items in a row, stop finding enabled items
+				// If there are enabled items in a row, stop finding enabled items
 				break;
 			} else {
 				row = parseInt(i / dimensionToExtent);
 			}
 
-			// If there are the enabled item with the shortest distance from a current focus item
-			if (!data[i].disabled && (Math.abs(column - i % dimensionToExtent) < nextDistance || nextDistance === -1)) {
+			// If there is the enabled item with the shortest distance from a current focus item
+			if (!data[i] && !data[i].disabled && (Math.abs(column - i % dimensionToExtent) < nextDistance || nextDistance === -1)) {
 				nextIndex = i;
 				nextDistance = Math.abs(column - i % dimensionToExtent);
 			}
@@ -838,30 +838,41 @@ class VirtualListCoreNative extends Component {
 		return nextIndex;
 	}
 
+	findLastIndex = (array, callback) => {
+		const reverseIndex = [...array].reverse().findIndex(callback);
+		if (reverseIndex < 0) {
+			return reverseIndex;
+		}
+		return array.length - reverseIndex - 1;
+	}
+
+	checkEnabledItem = (item) => !item.disabled
+
 	getIndexForPageScroll = (direction, currentIndex) => {
 		const
 			{context, dimensionToExtent, isPrimaryDirectionVertical, moreInfo, primary} = this,
-			{data, dataSize, spacing} = this.props;
+			{data, dataSize, spacing} = this.props,
+			firstItemIndexExceptFirstLine = moreInfo.firstVisibleIndex + dimensionToExtent,
+			lastItemIndexExceptLastLine = moreInfo.lastVisibleIndex - (moreInfo.lastVisibleIndex % dimensionToExtent || dimensionToExtent),
+			firstItemIndexToBeJumpedForward = currentIndex - (currentIndex % dimensionToExtent) + dimensionToExtent,
+			lastItemIndexToBeJumpedBackward = currentIndex - (currentIndex % dimensionToExtent) - 1,
+			numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent);
 		let
 			factor = 1,
 			indexToJump,
 			hasEnabledItemInVirtualGridList = false,
-			firstItemIndexExceptFirstLine = moreInfo.firstVisibleIndex + dimensionToExtent,
-			lastItemIndexExceptLastLine = moreInfo.lastVisibleIndex - (moreInfo.lastVisibleIndex % dimensionToExtent || dimensionToExtent),
-			firstItemIndexToBeJumpedForward = currentIndex - (currentIndex % dimensionToExtent) + dimensionToExtent,
-			lastItemIndexToBeJumpedBackward = currentIndex - (currentIndex % dimensionToExtent) - 1;
+			nodeIndexToBeFocused;
 
 		factor *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
 		factor *= (direction === 'down' || direction === 'right') ? 1 : -1;
 
-		// Check if there is any enabled item between a current item and the last visible item in VirtualGridList
-		// to make a decision to jump or to scroll.
+		// 1. Check if there is any enabled item in a current page of VirtualGridList.
 		// We don't have to check it in VirtualList because spotlight already did.
 		if (this.isItemSized) {
 			if (factor === 1 && currentIndex <= lastItemIndexExceptLastLine && firstItemIndexToBeJumpedForward <= moreInfo.lastVisibleIndex) {
-				hasEnabledItemInVirtualGridList = data.slice(firstItemIndexToBeJumpedForward, moreInfo.lastVisibleIndex + 1).some((item) => !item.disabled);
+				hasEnabledItemInVirtualGridList = data.slice(firstItemIndexToBeJumpedForward, moreInfo.lastVisibleIndex + 1).some(this.checkEnabledItem);
 			} else if (factor === -1 && firstItemIndexExceptFirstLine <= currentIndex && moreInfo.firstVisibleIndex <= lastItemIndexToBeJumpedBackward) {
-				hasEnabledItemInVirtualGridList = data.slice(moreInfo.firstVisibleIndex, lastItemIndexToBeJumpedBackward + 1).some((item) => !item.disabled);
+				hasEnabledItemInVirtualGridList = data.slice(moreInfo.firstVisibleIndex, lastItemIndexToBeJumpedBackward + 1).some(this.checkEnabledItem);
 			}
 		}
 
@@ -872,11 +883,11 @@ class VirtualListCoreNative extends Component {
 			} else {
 				indexToJump = moreInfo.firstVisibleIndex;
 			}
-		// If a current focused item is stick to the first visible line or the last visible line of VirtualList, scroll the VirtualList without animation.
+		// 2. Check if there is any enabled item in a next page.
 		} else if (factor === 1) {
-			indexToJump = clamp(0, dataSize - 1, moreInfo.lastVisibleIndex + (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent));
+			indexToJump = clamp(0, dataSize - 1, moreInfo.lastVisibleIndex + numOfItemsInPage);
 		} else {
-			indexToJump = clamp(0, dataSize - 1, moreInfo.firstVisibleIndex - (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent));
+			indexToJump = clamp(0, dataSize - 1, moreInfo.firstVisibleIndex - numOfItemsInPage);
 		}
 
 		if (
@@ -888,15 +899,34 @@ class VirtualListCoreNative extends Component {
 			return {scroll: 'stop'};
 		}
 
-		// If a current index is different from a new index and the item with the new index is disabled,
-		// try to find a next item which is enabled.
-		let nodeIndexToBeFocused = this.findEnableItemForPageScroll(
-			indexToJump > currentIndex,
-			indexToJump, currentIndex, data
-		);
+		if (Array.isArray(data)) {
+			// If a current index is different from a new index and the item with the new index is disabled,
+			// try to find a next item which is enabled.
+			nodeIndexToBeFocused = this.findEnableItemForPageScroll(
+				indexToJump > currentIndex,
+				indexToJump, currentIndex, data
+			);
+		} else {
+			nodeIndexToBeFocused = indexToJump;
+		}
 
+		// 3. Check if there is any enabled item after the next page
 		if (nodeIndexToBeFocused === -1) {
-			return {scroll: 'one page with animation'};
+			if (factor === 1) {
+				indexToJump = indexToJump + 1 + data.slice(indexToJump + 1, dataSize).findIndex(this.checkEnabledItem);
+				if (indexToJump !== -1) {
+					return {scroll: 'scroll without animation', indexToJump, nodeIndexToBeFocused: indexToJump};
+				} else {
+					return {scroll: 'stop'};
+				}
+			} else {
+				indexToJump = this.findLastIndex(data.slice(0, indexToJump), this.checkEnabledItem);
+				if (indexToJump !== -1) {
+					return {scroll: 'scroll without animation', indexToJump, nodeIndexToBeFocused: indexToJump};
+				} else {
+					return {scroll: 'stop'};
+				}
+			}
 		} else {
 			return {scroll: 'scroll without animation', indexToJump, nodeIndexToBeFocused};
 		}
