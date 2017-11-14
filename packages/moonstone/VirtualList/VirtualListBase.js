@@ -863,7 +863,7 @@ class VirtualListCore extends Component {
 
 	checkEnabledItem = (item) => !item.disabled
 
-	getIndexForPageScroll = (direction, currentIndex) => {
+	getPageScrollInfoWithDisabledItem = (direction, currentIndex) => {
 		const
 			{context, dimensionToExtent, isPrimaryDirectionVertical, moreInfo, primary} = this,
 			{data, dataSize, spacing} = this.props,
@@ -914,16 +914,12 @@ class VirtualListCore extends Component {
 			return {scroll: 'stop'};
 		}
 
-		if (Array.isArray(data)) {
-			// If a current index is different from a new index and the item with the new index is disabled,
-			// try to find a next item which is enabled.
-			nodeIndexToBeFocused = this.findEnableItemForPageScroll(
-				indexToJump > currentIndex,
-				indexToJump, currentIndex, data
-			);
-		} else {
-			nodeIndexToBeFocused = indexToJump;
-		}
+		// If a current index is different from a new index and the item with the new index is disabled,
+		// try to find a next item which is enabled.
+		nodeIndexToBeFocused = this.findEnableItemForPageScroll(
+			indexToJump > currentIndex,
+			indexToJump, currentIndex, data
+		);
 
 		// 3. Check if there is any enabled item after the next page
 		if (nodeIndexToBeFocused === -1) {
@@ -947,12 +943,38 @@ class VirtualListCore extends Component {
 		}
 	}
 
+	getPageScrollInfoWithoutDisabledItem = (direction, currentIndex) => {
+		const
+			{context, dimensionToExtent, isPrimaryDirectionVertical, primary} = this,
+			{dataSize, spacing} = this.props,
+			numOfItemsInPage = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent;
+		let
+			factor = 1,
+			indexToJump;
+
+		factor *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
+		factor *= (direction === 'down' || direction === 'right') ? 1 : -1;
+
+		indexToJump = clamp(0, dataSize - 1, currentIndex + factor * numOfItemsInPage);
+
+		return {scroll: 'scroll without animation', indexToJump, nodeIndexToBeFocused: indexToJump};
+	}
+
 	scrollToNextPage = ({direction, focusedItem}) => {
 		const
+			{data} = this.props,
 			isRtl = this.context.rtl,
 			isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right'),
-			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
-			{scroll, indexToJump, nodeIndexToBeFocused} = this.getIndexForPageScroll(direction, focusedIndex);
+			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute));
+		let pageScrollInfo;
+
+		if (Array.isArray(data) && data.some((item) => item.disabled)) {
+			pageScrollInfo = this.getPageScrollInfoWithDisabledItem(direction, focusedIndex);
+		} else {
+			pageScrollInfo = this.getPageScrollInfoWithoutDisabledItem(direction, focusedIndex);
+		}
+
+		const {scroll, indexToJump, nodeIndexToBeFocused} = pageScrollInfo;
 
 		if (scroll === 'one page with animation') {
 			return false; // Scroll one page with animation
@@ -964,16 +986,15 @@ class VirtualListCore extends Component {
 			// If the index to jump is disabled
 			focusedIndex !== nodeIndexToBeFocused && indexToJump !== nodeIndexToBeFocused
 		) {
-			if (!Spotlight.isPaused()) {
-				Spotlight.pause();
-			}
-
-			focusedItem.blur();
 			// To prevent item positioning issue, make all items to be rendered.
 			this.updateFrom = null;
 			this.updateTo = null;
 			// Scroll to the next spottable item without animation
 			if (nodeIndexToBeFocused !== -1) {
+				if (!Spotlight.isPaused()) {
+					Spotlight.pause();
+				}
+				focusedItem.blur();
 				this.setNodeIndexToBeFocused(nodeIndexToBeFocused);
 				this.props.cbScrollTo({index: nodeIndexToBeFocused, stickTo: isForward ? 'end' : 'start', animate: false});
 			} else {
