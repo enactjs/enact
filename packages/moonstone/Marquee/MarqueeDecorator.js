@@ -371,7 +371,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return (
 				this.forceRestartMarquee ||
 				!this.sync && (
-					(this.isFocused && this.props.marqueeOn === 'focus') ||
+					(this.isFocused && this.props.marqueeOn === 'focus' && !this.props.disabled) ||
 					(this.isHovered && this.props.marqueeOn === 'hover')
 				)
 			);
