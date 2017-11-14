@@ -48,7 +48,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Popup` from `last-focused` to `default-element` in `SpotlightContainerDecorator` config
 - `moonstone/Panels` to retain focus when back key is pressed on breadcrumb
 - `moonstone/Input` to correctly hide VKB when dismissing
-- `moonstone/Panel` to spot in the proper mounting order
 
 ## [1.11.0] - 2017-10-24
 
