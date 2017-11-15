@@ -13,7 +13,7 @@ import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
 import {is} from '@enact/core/keymap';
-import {Job} from '@enact/core/util';
+import {perfNow, Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
@@ -35,7 +35,6 @@ const
 const
 	calcVelocity = (d, dt) => (d && dt) ? d / dt : 0,
 	nop = () => {},
-	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
 	holdTime = 50,
 	scrollWheelMultiplierForDeltaPixel = 1.5, // The ratio of wheel 'delta' units to pixels scrolled.
 	scrollWheelPageMultiplierForMaxPixel = 0.2, // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
@@ -369,7 +368,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isDragging = false
 		deferScrollTo = true
 		pageDistance = 0
-		animateOnFocus = false
 		isWheeling = false
 
 		// drag info
@@ -418,7 +416,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			this.isDragging = true;
 			this.isFirstDragging = true;
-			d.t = perf.now();
+			d.t = perfNow();
 			d.clientX = e.clientX;
 			d.clientY = e.clientY;
 			d.dx = d.dy = 0;
@@ -427,7 +425,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		drag (e) {
 			const
 				{direction} = this,
-				t = perf.now(),
+				t = perfNow(),
 				d = this.dragInfo;
 
 			if (direction === 'horizontal' || direction === 'both') {
@@ -452,7 +450,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		dragStop () {
 			const
 				d = this.dragInfo,
-				t = perf.now();
+				t = perfNow();
 
 			d.dt = t - d.t;
 			this.isDragging = false;
@@ -702,18 +700,19 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					viewportBounds = this.containerRef.getBoundingClientRect(),
 					spotItemBounds = spotItem.getBoundingClientRect(),
 					endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
-					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
+					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId),
+					scrollFn = childRef.scrollToNextPage || childRef.scrollToNextItem;
 
 				// If there is no next spottable DOM elements, scroll one page with animation
 				if (!next) {
 					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 				// If there is a next spottable DOM element vertically or horizontally, focus it without animation
-				} else if (next !== spotItem) {
+				} else if (next !== spotItem && childRef.scrollToNextPage) {
 					this.animateOnFocus = false;
 					Spotlight.focus(next);
 				// If a next spottable DOM element is equals to the current spottable item, we need to find a next item
 				} else {
-					const nextPage = childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
+					const nextPage = scrollFn({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
 
 					// If finding a next spottable item in a Scroller, focus it
 					if (typeof nextPage === 'object') {
@@ -961,11 +960,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				} else {
 					if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
 						itemPos = this.childRef.getItemPosition(opt.index, opt.stickTo);
-						// If the first or the last item to the sticked direction is disabled,
-						// focus another item which is enabled.
-						if (opt.nodeIndexToBeFocused) {
-							this.childRef.setNodeIndexToBeFocused(opt.nodeIndexToBeFocused);
-						}
 					} else if (opt.node instanceof Object) {
 						if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
 							itemPos = this.childRef.getNodePosition(opt.node);
@@ -1040,10 +1034,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		hideThumb = () => {
-			if (this.state.isHorizontalScrollbarVisible) {
+			if (this.state.isHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
 				this.horizontalScrollbarRef.startHidingThumb();
 			}
-			if (this.state.isVerticalScrollbarVisible) {
+			if (this.state.isVerticalScrollbarVisible && this.verticalScrollbarRef) {
 				this.verticalScrollbarRef.startHidingThumb();
 			}
 		}

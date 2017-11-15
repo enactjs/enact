@@ -22,16 +22,20 @@
 	// 	.moon-super-header-text();
 	// }
 
+	// Remove the built-in h1 and h2 margins
+	.title,
+	.titleBelow,
+	.subTitleBelow {
+		margin: 0;
+	}
+
 	.title {
 		.moon-header-text();
-		margin: 0;
 	}
 
 	.titleBelow,
 	.subTitleBelow {
 		.moon-sub-header-text();
-		margin: 0;
-		line-height: 45px;
 	}
 
 	.subTitleBelow {
@@ -58,7 +62,7 @@
 
 		.titleBelow,
 		.subTitleBelow {
-			line-height: 39px;
+			line-height: 1.4em;
 		}
 	}
 

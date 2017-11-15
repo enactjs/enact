@@ -160,11 +160,13 @@ const TransitionBase = kind({
 				</div>
 			);
 		} else {
+			// The following node, which is required for supporting the `clip` transition, was
+			// removed due to prevent a change to the DOM structure too late for testing in the
+			// current release cycle. This can be restored during 2.x -BS 2017-11-14
+			// <div className={css.inner}>{children}</div>
 			return (
 				<div {...rest} ref={childRef}>
-					<div className={css.inner}>
-						{children}
-					</div>
+					{children}
 				</div>
 			);
 		}

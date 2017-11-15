@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [1.12.2] - 2017-11-15
+
+No significant changes.
+
 ## [1.12.1] - 2017-11-07
 
 No significant changes.
