@@ -2,16 +2,11 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
-
-### Added
-
-### Changed
+## [1.12.2] - 2017-11-15
 
 ### Fixed
 
 - `ui/Remeasurable` to update on every trigger change
-
 
 ## [1.12.1] - 2017-11-07
 
