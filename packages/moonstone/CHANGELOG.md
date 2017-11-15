@@ -11,6 +11,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Expandable` and derivatives to use the new `ease-out-quart` animation timing function to better match the aesthetic of Enyo's Expandables
+- `moonstone/LabeledItem` to start marquee when hovering over in disabled state
+- `moonstone/Marquee` to correctly start when hovering on disabled spottable components
+- `moonstone/Marquee.MarqueeController` to not abort marquee when moving among components
+- `moonstone/Picker` marquee issues with disabled buttons or Picker
 
 ## [1.12.2] - 2017-11-15
 
@@ -23,10 +27,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` to scroll correctly using page down key with disabled items
 - `moonstone/Scrollable` to not cause a script error when scrollbar is not rendered
 - `moonstone/Picker` incrementer and decrementer to not change size when focused
-- `moonstone/Marquee` to correctly start when hovering on disabled spottable components
-- `moonstone/Marquee.MarqueeController` to not abort marquee when moving among components
-- `moonstone/Picker` marquee issues with disabled buttons or Picker
-- `moonstone/LabeledItem` to start marquee when hovering over in disabled state
 - `moonstone/Header` to use a slightly smaller font size for `title` in non-latin locales and a line-height for `titleBelow` and `subTitleBelow` that better meets the needs of tall-glyph languages like Tamil and Thai, as well as latin locales
 - `moonstone/Scroller` and `moonstone/VirtualList` to keep spotlight when pressing a 5-way control while scrolling
 - `moonstone/Panels` to prevent user interaction with panel contents during transition
