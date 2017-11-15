@@ -345,6 +345,7 @@ const ExpandableItemBase = kind({
 				<ExpandableTransitionContainer
 					data-expandable-container
 					duration="short"
+					timingFunction="ease-out-quart"
 					onHide={onHide}
 					onKeyDown={handleKeyDown}
 					onShow={onShow}
