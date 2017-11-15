@@ -12,6 +12,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Changed
 
 ### Fixed
+
+## [1.12.2] - 2017-11-15
+
+### Fixed
 - `ui/Viewport` to blur Spotlight `onWillTransition`
 - `ui/View` use `idleUntil` to prevent wheel blocking error
 

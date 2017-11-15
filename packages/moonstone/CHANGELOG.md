@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
+- `moonstone/Expandable` and derivatives to use the new `ease-out-quart` animation timing function to better match the aesthetic of Enyo's Expandables
+
 ## [1.12.2] - 2017-11-15
 
 ### Fixed
