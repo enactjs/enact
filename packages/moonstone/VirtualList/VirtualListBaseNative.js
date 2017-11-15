@@ -905,7 +905,7 @@ class VirtualListCoreNative extends Component {
 		return clamp(0, dataSize - 1, currentIndex + factor * numOfItemsInPage);
 	}
 
-	scrollToNextPage = ({direction, focusedItem}) => {
+	scrollToNextItem = ({direction, focusedItem}) => {
 		const
 			{data} = this.props,
 			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute));

@@ -700,18 +700,19 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					viewportBounds = this.containerRef.getBoundingClientRect(),
 					spotItemBounds = spotItem.getBoundingClientRect(),
 					endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
-					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
+					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId),
+					scrollFn = childRef.scrollToNextPage || childRef.scrollToNextItem;
 
 				// If there is no next spottable DOM elements, scroll one page with animation
 				if (!next) {
 					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 				// If there is a next spottable DOM element vertically or horizontally, focus it without animation
-				} else if (next !== spotItem) {
+				} else if (next !== spotItem && childRef.scrollToNextPage) {
 					this.animateOnFocus = false;
 					Spotlight.focus(next);
 				// If a next spottable DOM element is equals to the current spottable item, we need to find a next item
 				} else {
-					const nextPage = childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
+					const nextPage = scrollFn({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
 
 					// If finding a next spottable item in a Scroller, focus it
 					if (typeof nextPage === 'object') {

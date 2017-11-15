@@ -849,6 +849,7 @@ class VirtualListCore extends Component {
 			isPageDown = (direction === 'down' || direction === 'right') ? 1 : -1;
 		let candidateIndex = -1;
 
+		console.log('mk: f: ' + firstVisibleIndex + ', l: ' + lastVisibleIndex);
 		/* First, find a spottable item in this page */
 		if (isPageDown === 1) { // Page Down
 			if ((lastVisibleIndex - (lastVisibleIndex % dimensionToExtent || dimensionToExtent)) >= currentIndex) {
@@ -918,7 +919,7 @@ class VirtualListCore extends Component {
 		return clamp(0, dataSize - 1, currentIndex + factor * numOfItemsInPage);
 	}
 
-	scrollToNextPage = ({direction, focusedItem}) => {
+	scrollToNextItem = ({direction, focusedItem}) => {
 		const
 			{data} = this.props,
 			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute));
