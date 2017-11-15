@@ -10,7 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/ScrollableNative` to not accumulate scroll distance when wheel direction is differenct from hold direction
+- `moonstone/VirtualList` to scroll and focus properly by pageUp and pageDown when disabled items are in it
 - `moonstone/Button` to correctly specify minimum width when in large text mode
 - `moonstone/Scroller.Scrollable` to restore last focused index when panel is changed
 - `moonstone/VideoPlayer` to display time correctly in RTL locale
