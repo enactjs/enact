@@ -6,12 +6,19 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/Transition` animation timing functions `ease-in`, `ease-out`, `ease-in-quart`, and `ease-out-quart` to provide prettier options for transitions that may be more suited to a specific visual style
+
 ### Changed
 
 ### Fixed
 
-- `ui/Remeasurable` to update on every trigger change
+## [1.12.2] - 2017-11-15
 
+### Fixed
+- `ui/Viewport` to blur Spotlight `onWillTransition`
+- `ui/View` use `idleUntil` to prevent wheel blocking error
+
+- `ui/Remeasurable` to update on every trigger change
 
 ## [1.12.1] - 2017-11-07
 
