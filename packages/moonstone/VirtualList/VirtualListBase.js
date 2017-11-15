@@ -822,52 +822,91 @@ class VirtualListCore extends Component {
 		this.setRestrict(isSelfOnly);
 	}
 
-	findEnableItemForPageScroll = (isForward, indexFrom, indexTo, data) => {
-		let nextIndex = -1;
+	findEnableItemForPageScroll = (isIncreasingIndex, indexFrom, indexTo, data) => {
+		const
+			{dimensionToExtent} = this,
+			column = indexTo % dimensionToExtent,
+			delta = isIncreasingIndex ? -1 : 1;
+		let
+			nextIndex = -1,
+			nextDistance = -1,
+			row = parseInt(indexFrom / dimensionToExtent);
 
-		if (isForward) {
-			for (let i = indexFrom; i < indexTo; i++) {
-				if (!data[i].disabled) {
-					nextIndex = i;
-					break;
-				}
-			}
-
-			// If there is no item which could get focus forward,
-			// we need to set restriction option to `self-first`.
-			if (nextIndex === -1) {
-				this.setRestrict(false);
-			}
-		} else if (!isForward) {
-			for (let i = indexFrom; i > indexTo; i--) {
-				if (!data[i].disabled) {
-					nextIndex = i;
-					break;
-				}
+		for (let i = indexFrom; i !== indexTo; i += delta) {
+			if (parseInt(i / dimensionToExtent) !== row && nextIndex !== -1) {
+				// If there are enabled items in a row, stop finding enabled items
+				break;
+			} else {
+				row = parseInt(i / dimensionToExtent);
 			}
 
-			// If there is no item which could get focus backward,
-			// we need to set restriction option to `self-first`.
-			if (indexTo === 0 && nextIndex === -1) {
-				this.setRestrict(false);
+			// If there is the enabled item with the shortest distance from a current focus item
+			if (!data[i] && !data[i].disabled && (Math.abs(column - i % dimensionToExtent) < nextDistance || nextDistance === -1)) {
+				nextIndex = i;
+				nextDistance = Math.abs(column - i % dimensionToExtent);
 			}
-		} else {
-			return -1;
+		}
+
+		// If there is no item which could get focus,
+		// we need to set restriction option to `self-first`.
+		if (nextIndex === -1) {
+			this.setRestrict(false);
 		}
 
 		return nextIndex;
 	}
 
-	getIndexForPageScroll = (direction, currentIndex) => {
+	findLastIndex = (array, callback) => {
+		const reverseIndex = [...array].reverse().findIndex(callback);
+		if (reverseIndex < 0) {
+			return reverseIndex;
+		}
+		return array.length - reverseIndex - 1;
+	}
+
+	checkEnabledItem = (item) => !item.disabled
+
+	getPageScrollInfoWithDisabledItem = (direction, currentIndex) => {
 		const
-			{context, dimensionToExtent, isPrimaryDirectionVertical, primary} = this,
-			{data, dataSize, spacing} = this.props;
-		let offsetIndex = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent;
+			{context, dimensionToExtent, isPrimaryDirectionVertical, moreInfo, primary} = this,
+			{data, dataSize, spacing} = this.props,
+			firstItemIndexExceptFirstLine = moreInfo.firstVisibleIndex + dimensionToExtent,
+			lastItemIndexExceptLastLine = moreInfo.lastVisibleIndex - (moreInfo.lastVisibleIndex % dimensionToExtent || dimensionToExtent),
+			firstItemIndexToBeJumpedForward = currentIndex - (currentIndex % dimensionToExtent) + dimensionToExtent,
+			lastItemIndexToBeJumpedBackward = currentIndex - (currentIndex % dimensionToExtent) - 1,
+			numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent);
+		let
+			factor = 1,
+			indexToJump,
+			hasEnabledItemInVirtualGridList = false,
+			nodeIndexToBeFocused;
 
-		offsetIndex *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
-		offsetIndex *= (direction === 'down' || direction === 'right') ? 1 : -1;
+		factor *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
+		factor *= (direction === 'down' || direction === 'right') ? 1 : -1;
 
-		let indexToJump = clamp(0, dataSize - 1, currentIndex + offsetIndex);
+		// 1. Check if there is any enabled item in a current page of VirtualGridList.
+		// We don't have to check it in VirtualList because spotlight already did.
+		if (this.isItemSized) {
+			if (factor === 1 && currentIndex <= lastItemIndexExceptLastLine && firstItemIndexToBeJumpedForward <= moreInfo.lastVisibleIndex) {
+				hasEnabledItemInVirtualGridList = data.slice(firstItemIndexToBeJumpedForward, moreInfo.lastVisibleIndex + 1).some(this.checkEnabledItem);
+			} else if (factor === -1 && firstItemIndexExceptFirstLine <= currentIndex && moreInfo.firstVisibleIndex <= lastItemIndexToBeJumpedBackward) {
+				hasEnabledItemInVirtualGridList = data.slice(moreInfo.firstVisibleIndex, lastItemIndexToBeJumpedBackward + 1).some(this.checkEnabledItem);
+			}
+		}
+
+		// If a current focused item is not stick to the first visible line or the last visible line of VirtualGridList, jump to the line.
+		if (hasEnabledItemInVirtualGridList) {
+			if (factor === 1) {
+				indexToJump = moreInfo.lastVisibleIndex;
+			} else {
+				indexToJump = moreInfo.firstVisibleIndex;
+			}
+		// 2. Check if there is any enabled item in a next page.
+		} else if (factor === 1) {
+			indexToJump = clamp(0, dataSize - 1, moreInfo.lastVisibleIndex + numOfItemsInPage);
+		} else {
+			indexToJump = clamp(0, dataSize - 1, moreInfo.firstVisibleIndex - numOfItemsInPage);
+		}
 
 		if (
 			// If a currnet index is same as a new index.
@@ -880,24 +919,65 @@ class VirtualListCore extends Component {
 
 		// If a current index is different from a new index and the item with the new index is disabled,
 		// try to find a next item which is enabled.
-		let nodeIndexToBeFocused = this.findEnableItemForPageScroll(
-			indexToJump < currentIndex,
+		nodeIndexToBeFocused = this.findEnableItemForPageScroll(
+			indexToJump > currentIndex,
 			indexToJump, currentIndex, data
 		);
 
+		// 3. Check if there is any enabled item after the next page
 		if (nodeIndexToBeFocused === -1) {
-			return {scroll: 'one page with animation'};
+			if (factor === 1) {
+				indexToJump = indexToJump + 1 + data.slice(indexToJump + 1, dataSize).findIndex(this.checkEnabledItem);
+				if (indexToJump !== -1) {
+					return {scroll: 'scroll without animation', indexToJump, nodeIndexToBeFocused: indexToJump};
+				} else {
+					return {scroll: 'stop'};
+				}
+			} else {
+				indexToJump = this.findLastIndex(data.slice(0, indexToJump), this.checkEnabledItem);
+				if (indexToJump !== -1) {
+					return {scroll: 'scroll without animation', indexToJump, nodeIndexToBeFocused: indexToJump};
+				} else {
+					return {scroll: 'stop'};
+				}
+			}
 		} else {
 			return {scroll: 'scroll without animation', indexToJump, nodeIndexToBeFocused};
 		}
 	}
 
+	getPageScrollInfoWithoutDisabledItem = (direction, currentIndex) => {
+		const
+			{context, dimensionToExtent, isPrimaryDirectionVertical, primary} = this,
+			{dataSize, spacing} = this.props,
+			numOfItemsInPage = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent;
+		let
+			factor = 1,
+			indexToJump;
+
+		factor *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
+		factor *= (direction === 'down' || direction === 'right') ? 1 : -1;
+
+		indexToJump = clamp(0, dataSize - 1, currentIndex + factor * numOfItemsInPage);
+
+		return {scroll: 'scroll without animation', indexToJump, nodeIndexToBeFocused: indexToJump};
+	}
+
 	scrollToNextPage = ({direction, focusedItem}) => {
 		const
+			{data} = this.props,
 			isRtl = this.context.rtl,
 			isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right'),
-			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
-			{scroll, indexToJump, nodeIndexToBeFocused} = this.getIndexForPageScroll(direction, focusedIndex);
+			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute));
+		let pageScrollInfo;
+
+		if (Array.isArray(data) && data.some((item) => item.disabled)) {
+			pageScrollInfo = this.getPageScrollInfoWithDisabledItem(direction, focusedIndex);
+		} else {
+			pageScrollInfo = this.getPageScrollInfoWithoutDisabledItem(direction, focusedIndex);
+		}
+
+		const {scroll, indexToJump, nodeIndexToBeFocused} = pageScrollInfo;
 
 		if (scroll === 'one page with animation') {
 			return false; // Scroll one page with animation
@@ -909,16 +989,20 @@ class VirtualListCore extends Component {
 			// If the index to jump is disabled
 			focusedIndex !== nodeIndexToBeFocused && indexToJump !== nodeIndexToBeFocused
 		) {
-			if (!Spotlight.isPaused()) {
-				Spotlight.pause();
-			}
-
-			focusedItem.blur();
 			// To prevent item positioning issue, make all items to be rendered.
 			this.updateFrom = null;
 			this.updateTo = null;
 			// Scroll to the next spottable item without animation
-			this.props.cbScrollTo({index: indexToJump, nodeIndexToBeFocused, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
+			if (nodeIndexToBeFocused !== -1) {
+				if (!Spotlight.isPaused()) {
+					Spotlight.pause();
+				}
+				focusedItem.blur();
+				this.setNodeIndexToBeFocused(nodeIndexToBeFocused);
+				this.props.cbScrollTo({index: nodeIndexToBeFocused, stickTo: isForward ? 'end' : 'start', animate: false});
+			} else {
+				this.props.cbScrollTo({index: indexToJump, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
+			}
 
 			return true; // Do not scroll additionally
 		} else {
