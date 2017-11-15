@@ -899,8 +899,8 @@ class VirtualListCoreNative extends Component {
 		const
 			{dataSize, spacing} = this.props,
 			{dimensionToExtent, primary} = this,
-			numOfItemsInPage = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent;
-		let factor = (direction === 'down' || direction === 'right') ? 1 : -1;
+			numOfItemsInPage = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent,
+			factor = (direction === 'down' || direction === 'right') ? 1 : -1;
 
 		return clamp(0, dataSize - 1, currentIndex + factor * numOfItemsInPage);
 	}
