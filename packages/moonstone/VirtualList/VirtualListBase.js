@@ -1041,10 +1041,6 @@ class VirtualListCore extends Component {
 		return false;
 	}
 
-	setNodeIndexToBeFocused = (nextIndex) => {
-		this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
-	}
-
 	onKeyDown = (e) => {
 		const {keyCode, target} = e;
 

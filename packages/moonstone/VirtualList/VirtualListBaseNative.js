@@ -922,17 +922,10 @@ class VirtualListCoreNative extends Component {
 				isRtl = this.context.rtl,
 				isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right');
 
-			// To prevent item positioning issue, make all items to be rendered.
-			this.updateFrom = null;
-			this.updateTo = null;
-
 			// Scroll to the next spottable item without animation
-			if (!Spotlight.isPaused()) {
-				Spotlight.pause();
-			}
 			focusedItem.blur();
-			this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
-			this.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
+			this.lastFocusedIndex = indexToScroll;
+			this.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
 		}
 
 		return true;
@@ -1026,10 +1019,6 @@ class VirtualListCoreNative extends Component {
 		}
 
 		return false;
-	}
-
-	setNodeIndexToBeFocused = (nextIndex) => {
-		this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
 	}
 
 	onKeyDown = (e) => {
