@@ -2,18 +2,13 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
-
-### Added
-
-### Changed
+## [1.12.2] - 2017-11-15
 
 ### Fixed
 - `ui/Viewport` to blur Spotlight `onWillTransition`
 - `ui/View` use `idleUntil` to prevent wheel blocking error
 
 - `ui/Remeasurable` to update on every trigger change
-- `ui/ViewManager` to suppress `enteringProp` for views that are rendered at mount
 
 ## [1.12.1] - 2017-11-07
 
