@@ -434,7 +434,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (delta !== 0) {
 				/* prevent native scrolling feature for vertical direction */
 				e.preventDefault();
-
+				const direction = Math.sign(delta);
+				// Not to accumulate scroll position if wheel direction is different from hold direction
+				if (direction !== this.pageDirection) {
+					this.isScrollAnimationTargetAccumulated = false;
+					this.pageDirection = direction;
+				}
 				this.scrollToAccumulatedTarget(delta, canScrollVertically);
 			}
 		}
@@ -573,18 +578,19 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					viewportBounds = this.containerRef.getBoundingClientRect(),
 					spotItemBounds = spotItem.getBoundingClientRect(),
 					endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
-					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
+					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId),
+					scrollFn = childRef.scrollToNextPage || childRef.scrollToNextItem;
 
 				// If there is no next spottable DOM elements, scroll one page with animation
 				if (!next) {
 					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 				// If there is a next spottable DOM element vertically or horizontally, focus it without animation
-				} else if (next !== spotItem) {
+				} else if (next !== spotItem && childRef.scrollToNextPage) {
 					this.animateOnFocus = false;
 					Spotlight.focus(next);
 				// If a next spottable DOM element is equals to the current spottable item, we need to find a next item
 				} else {
-					const nextPage = childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
+					const nextPage = scrollFn({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
 
 					// If finding a next spottable item in a Scroller, focus it
 					if (typeof nextPage === 'object') {
@@ -810,11 +816,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				} else {
 					if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
 						itemPos = this.childRef.getItemPosition(opt.index, opt.stickTo);
-						// If the first or the last item to the sticked direction is disabled,
-						// focus another item which is enabled.
-						if (opt.nodeIndexToBeFocused) {
-							this.childRef.setNodeIndexToBeFocused(opt.nodeIndexToBeFocused);
-						}
 					} else if (opt.node instanceof Object) {
 						if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
 							itemPos = this.childRef.getNodePosition(opt.node);
