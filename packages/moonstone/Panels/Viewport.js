@@ -91,6 +91,15 @@ const ViewportBase = class extends React.Component {
 		return true;
 	}
 
+	mayBlurSpotlight = () => {
+		const current = Spotlight.getCurrent();
+		if (current && this.node.contains(current)) {
+			current.blur();
+		}
+
+		return true;
+	}
+
 	handle = handle.bind(this)
 
 	handleTransition = this.handle(
@@ -102,6 +111,7 @@ const ViewportBase = class extends React.Component {
 	handleWillTransition = this.handle(
 		forward('onWillTransition'),
 		this.addTransitioningClass,
+		this.mayBlurSpotlight,
 		Spotlight.pause
 	)
 
@@ -133,7 +143,6 @@ const ViewportBase = class extends React.Component {
 				className={className}
 				component="main"
 				duration={250}
-				enteringDelay={100} // TODO: Can we remove this?
 				enteringProp={enteringProp}
 				index={index}
 				noAnimation={noAnimation}
