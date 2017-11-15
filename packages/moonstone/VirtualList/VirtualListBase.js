@@ -849,7 +849,6 @@ class VirtualListCore extends Component {
 			isPageDown = (direction === 'down' || direction === 'right') ? 1 : -1;
 		let candidateIndex = -1;
 
-		console.log('mk: f: ' + firstVisibleIndex + ', l: ' + lastVisibleIndex);
 		/* First, find a spottable item in this page */
 		if (isPageDown === 1) { // Page Down
 			if ((lastVisibleIndex - (lastVisibleIndex % dimensionToExtent || dimensionToExtent)) >= currentIndex) {
