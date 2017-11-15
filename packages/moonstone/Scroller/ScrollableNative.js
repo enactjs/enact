@@ -434,7 +434,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (delta !== 0) {
 				/* prevent native scrolling feature for vertical direction */
 				e.preventDefault();
-
+				const direction = Math.sign(delta);
+				// Not to accumulate scroll position if wheel direction is different from hold direction
+				if (direction !== this.pageDirection) {
+					this.isScrollAnimationTargetAccumulated = false;
+					this.pageDirection = direction;
+				}
 				this.scrollToAccumulatedTarget(delta, canScrollVertically);
 			}
 		}
