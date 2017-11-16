@@ -5,12 +5,11 @@
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 const contextTypes = {
-	getFloatingLayer: PropTypes.func,
-	getRootFloatingLayer: PropTypes.func,
-	unmountFloatingLayers: PropTypes.func
+	renderIntoFloatingLayer: PropTypes.func,
+	unmountAllFromFloatingLayer: PropTypes.func,
+	unmountFromFloatingLayer: PropTypes.func
 };
 
 /**
@@ -20,16 +19,6 @@ const contextTypes = {
  * @hocconfig
  */
 const defaultConfig = {
-	/**
-	 * Element Id of the floatLayer
-	 *
-	 * @type {String}
-	 * @default 'floatLayer'
-	 * @public
-	 * @memberof ui/FloatingLayer.FloatingLayerDecorator.defaultConfig
-	 */
-	floatLayerId: 'floatLayer',
-
 	/**
 	 * Classname applied to wrapped component. It can be used when you want to only apply
 	 * certain styles to the wrapped component and not to the float layer.
@@ -60,43 +49,66 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static childContextTypes = contextTypes
 
-		getChildContext () {
-			return {
-				getFloatingLayer: this.getFloatingLayer,
-				getRootFloatingLayer: this.getRootFloatingLayer,
-				unmountFloatingLayers: this.unmountFloatingLayers
+		constructor () {
+			super();
+
+			this.state = {
+				layers: []
 			};
 		}
 
-		unmountFloatingLayers = () => {
-			const layer = this.getFloatingLayer();
+		getChildContext () {
+			return {
+				renderIntoFloatingLayer: this.renderIntoFloatingLayer,
+				unmountAllFromFloatingLayer: this.unmountAllFromFloatingLayer,
+				unmountFromFloatingLayer: this.unmountFromFloatingLayer
+			};
+		}
 
-			if (layer) {
-				for (let i = 0; i < layer.children.length; i++) {
-					const child = layer.children.item(i);
-					ReactDOM.unmountComponentAtNode(child);
+		unmountAllFromFloatingLayer = () => {
+			this.setState(() => {
+				return {
+					layers: []
+				};
+			});
+		}
+
+		renderIntoFloatingLayer = (instance, element) => {
+			this.setState(state => {
+				const index = state.layers.findIndex(layer => layer.instance === instance);
+
+				if (index === -1) {
+					return {
+						layers: [...state.layers, {instance, element}]
+					};
 				}
-			}
+
+				return null;
+			});
 		}
 
-		getFloatingLayer = () => {
-			// FIXME: if a component that resides in the floating layer is rendered at the same time
-			// as the floating layer, this.floatingLayer may not have been initialized yet since
-			// componentDidMount runs inside-out. As a fallback, we search by id but this could
-			// introduce issues (e.g. for duplicate layer ids).
-			return this.floatingLayer || document.getElementById(floatLayerId) || null;
+		unmountFromFloatingLayer = (instance) => {
+			this.setState(state => {
+				const index = state.layers.findIndex(layer => layer.instance === instance);
+
+				if (index !== -1) {
+					const layers = [...state.layers];
+					layers.splice(index, 1);
+
+					return {
+						layers
+					};
+				}
+
+				return null;
+			});
 		}
 
-		getRootFloatingLayer = () => {
-			if (this.context.getRootFloatingLayer) {
-				return this.context.getRootFloatingLayer();
-			}
+		handleScroll = (ev) => {
+			const {currentTarget} = ev;
 
-			return this.getFloatingLayer();
-		}
-
-		setFloatingLayer = (node) => {
-			this.floatingLayer = node;
+			currentTarget.scrollTop = 0;
+			currentTarget.scrollLeft = 0;
 		}
 
 		render () {
@@ -104,7 +116,13 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return (
 				<div className={className}>
 					<Wrapped {...rest} className={wrappedClassName} />
-					<div id={floatLayerId} ref={this.setFloatingLayer} />
+					<div
+						className="enact-fit enact-clip enact-untouchable"
+						onScroll={this.handleScroll}
+						style={{zIndex: 100}}
+					>
+						{this.state.layers.map(layer => layer.element)}
+					</div>
 				</div>
 			);
 		}

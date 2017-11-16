@@ -26,24 +26,6 @@ class FloatingLayerBase extends React.Component {
 
 	static propTypes = /** @lends ui/FloatingLayer.FloatingLayerBase.prototype */ {
 		/**
-		 * CSS classes for FloatingLayer.
-		 *
-		 * @type {String}
-		 * @default 'enact-fit enact-clip enact-untouchable'
-		 * @public
-		 */
-		floatLayerClassName: PropTypes.string,
-
-		/**
-		 * Element id for floating layer.
-		 *
-		 * @type {String}
-		 * @default 'floatLayer'
-		 * @public
-		 */
-		floatLayerId: PropTypes.string,
-
-		/**
 		 * When `true`, FloatingLayer will not hide when the user presses `ESC` key.
 		 *
 		 * @type {Boolean}
@@ -97,17 +79,9 @@ class FloatingLayerBase extends React.Component {
 	}
 
 	static defaultProps = {
-		floatLayerClassName: 'enact-fit enact-clip enact-untouchable',
-		floatLayerId: 'floatLayer',
 		noAutoDismiss: false,
 		open: false,
 		scrimType: 'translucent'
-	}
-
-	constructor (props) {
-		super(props);
-		this.node = null;
-		this.floatLayer = null;
 	}
 
 	componentDidMount () {
@@ -117,9 +91,9 @@ class FloatingLayerBase extends React.Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		if (nextProps.open) {
+		if (!this.props.open && nextProps.open) {
 			this.renderFloatingLayer(nextProps, this.props.open);
-		} else {
+		} else if (this.props.open && !nextProps.open) {
 			this.closeFloatingLayer();
 		}
 	}
@@ -134,12 +108,6 @@ class FloatingLayerBase extends React.Component {
 		}
 	}
 
-	handleScroll = (ev) => {
-		const {currentTarget} = ev;
-		currentTarget.scrollTop = 0;
-		currentTarget.scrollLeft = 0;
-	}
-
 	stopPropagation = (ev) => {
 		ev.nativeEvent.stopImmediatePropagation();
 
@@ -149,59 +117,36 @@ class FloatingLayerBase extends React.Component {
 	}
 
 	closeFloatingLayer () {
-		if (this.node) {
-			off('scroll', this.handleScroll, this.node);
-			ReactDOM.unmountComponentAtNode(this.node);
-			this.node.parentNode.removeChild(this.node);
+		if (this.context.unmountFromFloatingLayer) {
+			this.context.unmountFromFloatingLayer(this);
 
 			if (this.props.onClose) {
 				this.props.onClose();
 			}
 		}
-		this.floatLayer = null;
-		this.node = null;
 
 		this.attachClickHandlerJob.stop();
 		off('click', this.handleClick);
 	}
 
-	renderNode () {
-		const {floatLayerClassName} = this.props;
-
-		if (!this.node) {
-			invariant(
-				this.context.getFloatingLayer,
-				'FloatingLayer cannot be used outside the subtree of a FloatingLayerDecorator'
-			);
-
-			const floatingLayer = this.context.getFloatingLayer();
-			this.node = document.createElement('div');
-			floatingLayer.appendChild(this.node);
-			on('scroll', this.handleScroll, this.node);
+	renderFloatingLayer (props, isOpened = false) {
+		if (!this.context.renderIntoFloatingLayer) {
+			return;
 		}
 
-		this.node.className = floatLayerClassName;
-		this.node.style.zIndex = 100;
+		const {children, onOpen, scrimType, ...rest} = props;
 
-		return this.node;
-	}
-
-	renderFloatingLayer ({children, onOpen, scrimType, ...rest}, isOpened = false) {
-		delete rest.floatLayerClassName;
-		delete rest.floatLayerId;
 		delete rest.noAutoDismiss;
 		delete rest.onClose;
 		delete rest.onDismiss;
 		delete rest.open;
 
-		const node = this.renderNode();
-		this.floatLayer = ReactDOM.unstable_renderSubtreeIntoContainer(
+		this.context.renderIntoFloatingLayer(
 			this,
 			<div {...rest}>
 				{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
 				{React.cloneElement(children, {onClick: this.stopPropagation})}
-			</div>,
-			node
+			</div>
 		);
 
 		if (!isOpened) {
