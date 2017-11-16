@@ -126,14 +126,6 @@ const SimpleIntegerPickerBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 *  A function to be run when there is a blur in the input
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onBlur : PropTypes.func,
-
-		/**
 		 *  A function to be run when a `onChange` event triggered in the picker
 		 *
 		 * @type {Function}
@@ -148,6 +140,14 @@ const SimpleIntegerPickerBase = kind({
 		 * @public
 		 */
 		onClick: PropTypes.func,
+
+		/**
+		 *  A function to be run when there is a blur in the input
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onInputBlur : PropTypes.func,
 
 		/**
 		 * Sets the orientation of the picker, whether the buttons are above and below or on the
@@ -266,14 +266,14 @@ const SimpleIntegerPickerBase = kind({
 			return clamp(min, max, value);
 		},
 		width: ({max, min, width}) => (width || Math.max(max.toString().length, min.toString().length)),
-		children: ({isInputMode, inputRef, onBlur, units, value}) => {
+		children: ({isInputMode, inputRef, onInputBlur, units, value}) => {
 			return (
 				isInputMode ?
 					<input
 						autoFocus
 						className={css.inputClass}
 						key={value}
-						onBlur={onBlur}
+						onBlur={onInputBlur}
 						ref={inputRef}
 					/> : <PickerItem
 						key={value}
@@ -294,7 +294,7 @@ const SimpleIntegerPickerBase = kind({
 	render: ({children, classes, onChange, onClick, pickerRef, value, ...rest}) => {
 		delete rest.padded;
 		delete rest.inputRef;
-		delete rest.onBlur;
+		delete rest.onInputBlur;
 		delete rest.isInputMode;
 		delete rest.units;
 

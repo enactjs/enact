@@ -75,10 +75,6 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 			};
 		}
 
-		validateValue = (value) => {
-			return (value <= this.props.max) && (value >= this.props.min) ? value : this.state.value;
-		}
-
 		handleChange = (ev) => {
 			if (!this.state.isClicked) {
 				this.setState({
@@ -158,6 +154,10 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
+		validateValue = (value) => {
+			return (value <= this.props.max) && (value >= this.props.min) ? value : this.state.value;
+		}
+
 		render () {
 			return (
 				<Wrapped
@@ -165,7 +165,7 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 					isInputMode={this.state.isClicked}
 					inputRef={this.getInputNode}
 					joined
-					onBlur={this.handleBlur}
+					onInputBlur={this.handleBlur}
 					onChange={this.handleChange}
 					onClick={this.handleClick}
 					onKeyDown={this.handleDown}
