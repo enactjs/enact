@@ -20,6 +20,13 @@ No significant changes.
 
 No significant changes.
 
+## [1.12.2] - 2017-11-15
+
+### Fixed
+
+- `spotlight` to handle non-5-way keys correctly to focus on next 5-way keys
+- `spotlight/Spottable` to forward `onMouseEnter` and `onMouseLeave`
+
 ## [1.12.1] - 2017-11-07
 
 No significant changes.

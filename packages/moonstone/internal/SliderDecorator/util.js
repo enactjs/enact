@@ -22,9 +22,12 @@ const parseNumber = (value) => {
 	return parseFn(value);
 };
 
+const getDecimalDigits = (value) => (value % 1 !== 0) ? (value + '').split('.')[1].length : 0;
+
 export {
 	computeProportionProgress,
 	computeBarTransform,
 	computeKnobTransform,
+	getDecimalDigits,
 	parseNumber
 };

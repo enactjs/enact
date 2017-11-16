@@ -14,7 +14,7 @@ import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {contextTypes, FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import {forKey, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
 import ilib from '@enact/i18n';
-import {Job} from '@enact/core/util';
+import {perfNow, Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import {platform} from '@enact/core/platform';
 import {is} from '@enact/core/keymap';
@@ -29,7 +29,7 @@ import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
 import Touchable from '../internal/Touchable';
 
-import {calcNumberValueOfPlaybackRate, getNow, secondsToTime} from './util';
+import {calcNumberValueOfPlaybackRate, secondsToTime} from './util';
 import Overlay from './Overlay';
 import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
@@ -1052,7 +1052,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	handle = handle.bind(this)
 
-	startListeningForPulses = (keyCode) => () => {
+	startListeningForPulses = (keyCode) => {
 		// Ignore new pulse calls if key code is same, otherwise start new series if we're pulsing
 		if (this.pulsing && keyCode !== this.pulsingKeyCode) {
 			this.stopListeningForPulses();
@@ -1097,7 +1097,7 @@ const VideoPlayerBase = class extends React.Component {
 				!this.state.mediaControlsVisible &&
 				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			Spotlight.pause();
-			this.startListeningForPulses(ev.keyCode)();
+			this.startListeningForPulses(ev.keyCode);
 		}
 		return true;
 	}
@@ -1484,7 +1484,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * @private
 	 */
 	rewindManually = () => {
-		const now = getNow(),
+		const now = perfNow(),
 			distance = now - this.rewindBeginTime,
 			pbRate = calcNumberValueOfPlaybackRate(this.playbackRate),
 			adjustedDistance = (distance * pbRate) / 1000;
@@ -1503,7 +1503,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * @private
 	 */
 	startRewindJob = () => {
-		this.rewindBeginTime = getNow();
+		this.rewindBeginTime = perfNow();
 		this.rewindJob.start();
 	}
 

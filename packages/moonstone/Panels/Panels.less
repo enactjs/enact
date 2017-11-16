@@ -37,6 +37,13 @@
 		position: absolute;
 		.position(0);
 		overflow: hidden;
+
+		&.transitioning::before {
+			content: '';
+			position: absolute;
+			.position(0);
+			z-index: 10000;
+		}
 	}
 
 	:global(.enact-locale-right-to-left) & {

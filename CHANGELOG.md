@@ -23,15 +23,37 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
 
+## [1.12.2] - 2017-11-15
+
+### Fixed
+
+- `moonstone/VirtualList` to scroll and focus properly by pageUp and pageDown when disabled items are in it
+- `moonstone/Button` to correctly specify minimum width when in large text mode
+- `moonstone/Scroller.Scrollable` to restore last focused index when panel is changed
+- `moonstone/VideoPlayer` to display time correctly in RTL locale
+- `moonstone/VirtualList` to scroll correctly using page down key with disabled items
+- `moonstone/Scrollable` to not cause a script error when scrollbar is not rendered
+- `moonstone/Picker` incrementer and decrementer to not change size when focused
+- `moonstone/Header` to use a slightly smaller font size for `title` in non-latin locales and a line-height for `titleBelow` and `subTitleBelow` that better meets the needs of tall-glyph languages like Tamil and Thai, as well as latin locales
+- `moonstone/Scroller` and `moonstone/VirtualList` to keep spotlight when pressing a 5-way control while scrolling
+- `moonstone/Panels` to prevent user interaction with panel contents during transition
+- `moonstone/Slider` and related components to correctly position knob for `detachedKnob` on mouse down and fire value where mouse was positioned on mouse up
+- `moonstone/DayPicker` to update day names when changing locale
+- `moonstone/ExpandableItem` and all other `Expandable` components to revert 1.12.1 change to pull down from the top
+- `spotlight` to handle non-5-way keys correctly to focus on next 5-way keys
+- `spotlight/Spottable` to forward `onMouseEnter` and `onMouseLeave`
+- `ui/Remeasurable` to update on every trigger change
+- `ui/Transition` to revert 1.12.1 change to support `clip` transition-type directions and endering optimizations
+
 ## [1.12.1] - 2017-11-07
 
 ### Fixed
 
 - `moonstone/ExpandableItem` and all other `Expandable` components to now pull down from the top instead of being revealed from the bottom, matching Enyo's design
-- `moonstone/VirtualListNative` to scroll properly with page up/down keys if there is an disabled item
+- `moonstone/VirtualListNative` to scroll properly with page up/down keys if there is a disabled item
 - `moonstone/RangePicker` to display negative values correctly in RTL
 - `moonstone/Scrollable` to not blur scroll buttons when wheeling
-- `moonstone/Scrollbar` to hide scroll thumb immediately without delay after scroll position to be min or max
+- `moonstone/Scrollbar` to hide scroll thumb immediately without delay after scroll position reaches min or max
 - `moonstone/Divider` to pass `marqueeOn` prop
 - `moonstone/Slider` to fire `onChange` on mouse up and key up
 - `moonstone/VideoPlayer` to show knob when pressed
