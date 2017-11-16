@@ -113,7 +113,7 @@ class View extends React.Component {
 		this.animation = null;
 		this._raf = null;
 		this.state = {
-			entering: false
+			entering: true
 		};
 	}
 
@@ -157,9 +157,9 @@ class View extends React.Component {
 		}
 	}
 
-	setEntering () {
+	componentDidAppear () {
 		this.setState({
-			entering: true
+			entering: false
 		});
 	}
 
@@ -168,8 +168,6 @@ class View extends React.Component {
 	// will not be called on the initial render of a TransitionGroup.
 	componentWillEnter (callback) {
 		const {arranger, reverseTransition} = this.props;
-		this.setEntering();
-
 		if (arranger) {
 			this.prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
 		} else {
@@ -178,12 +176,12 @@ class View extends React.Component {
 	}
 
 	componentDidEnter () {
-		const {enteringDelay, enteringProp} = this.props;
+		const {enteringDelay} = this.props;
 
-		if (enteringProp) {
-			// FIXME: `startRafAfter` is a temporary solution using rAF. We need a better way to handle
-			// transition cycle and component life cycle to be in sync. See ENYO-4835.
-			this.enteringJob.startRafAfter(enteringDelay);
+		if (enteringDelay) {
+			this.enteringJob.startAfter(enteringDelay);
+		} else {
+			this.enteringJob.idleUntil(100);
 		}
 	}
 
