@@ -1042,7 +1042,7 @@ class VirtualListCore extends Component {
 			node = this.containerRef;
 
 		if (!props.clientSize && !node) {
-			return;
+			return false;
 		}
 
 		const
@@ -1052,7 +1052,10 @@ class VirtualListCore extends Component {
 		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
 			this.calculateMetrics(props);
 			this.updateStatesAndBounds(props);
+			return true;
 		}
+
+		return false;
 	}
 
 	// render
