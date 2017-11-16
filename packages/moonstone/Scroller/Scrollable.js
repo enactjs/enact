@@ -295,7 +295,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		componentDidUpdate (prevProps, prevState) {
 			// Need to sync calculated client size if it is different from the real size
 			if (this.childRef.syncClientSize) {
-				this.childRef.syncClientSize();
+				// If we actually synced, we need to reset scroll position.
+				if (this.childRef.syncClientSize()) {
+					this.setScrollLeft(0);
+					this.setScrollTop(0);
+				}
 			}
 
 			this.direction = this.childRef.props.direction;
@@ -340,7 +344,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 			if (childContainerRef && childContainerRef.removeEventListener) {
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('focus', this.onFocus, true);
+				childContainerRef.removeEventListener('focusin', this.onFocus);
 			}
 			off('keydown', this.onKeyDown);
 
@@ -370,7 +374,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isDragging = false
 		deferScrollTo = true
 		pageDistance = 0
-		animateOnFocus = true
+		animateOnFocus = false
+		isWheeling = false
 
 		// drag info
 		dragInfo = {
@@ -551,7 +556,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					canScrollVertically = this.canScrollVertically(bounds),
 					focusedItem = Spotlight.getCurrent(),
 					eventDeltaMode = e.deltaMode,
-					eventDelta = (-e.wheelDeltaY || e.deltaY);
+					eventDelta = (-e.wheelDeltaY || e.deltaY),
+					isVerticalScrollButtonFocused = this.verticalScrollbarRef && this.verticalScrollbarRef.isThumbFocused(),
+					isHorizontalScrollButtonFocused = this.horizontalScrollbarRef && this.horizontalScrollbarRef.isThumbFocused();
 				let
 					delta = 0,
 					direction;
@@ -565,7 +572,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				direction = Math.sign(delta);
 
 				Spotlight.setPointerMode(false);
-				if (focusedItem) {
+				if (focusedItem && !isVerticalScrollButtonFocused && !isHorizontalScrollButtonFocused) {
 					focusedItem.blur();
 				}
 
@@ -575,6 +582,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				}
 
 				if (delta !== 0) {
+					this.isWheeling = true;
 					this.childRef.setContainerDisabled(true);
 					this.scrollToAccumulatedTarget(delta, canScrollVertically);
 				}
@@ -602,6 +610,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
 				this.childRef.shouldPreventScrollByFocus() :
 				false;
+
+			if (this.isWheeling) {
+				this.stop();
+				this.animateOnFocus = false;
+			}
 
 			if (!Spotlight.getPointerMode()) {
 				this.alertThumb();
@@ -668,20 +681,27 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scrollByPage = (keyCode) => {
+			// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
+			// scroller as a plain container
+			if (!this.state.isVerticalScrollbarVisible) return;
+
 			const
 				{getEndPoint, scrollToAccumulatedTarget} = this,
 				bounds = this.getScrollBounds(),
 				canScrollVertically = this.canScrollVertically(bounds),
+				childRef = this.childRef,
 				pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
 				spotItem = Spotlight.getCurrent();
 
 			if (!Spotlight.getPointerMode() && spotItem) {
 				// Should skip scroll by page when spotItem is paging control button of Scrollbar
-				if (!this.childRef.containerRef.contains(spotItem)) {
+				if (!childRef.containerRef.contains(spotItem)) {
 					return;
 				}
+
 				const
-					containerId = Spotlight.getActiveContainer(),
+					// VirtualList and Scroller have a containerId on containerRef
+					containerId = childRef.containerRef.dataset.containerId,
 					direction = this.getPageDirection(keyCode),
 					rDirection = reverseDirections[direction],
 					viewportBounds = this.containerRef.getBoundingClientRect(),
@@ -689,17 +709,22 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
 					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
 
+				// If there is no next spottable DOM elements, scroll one page with animation
 				if (!next) {
 					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
+				// If there is a next spottable DOM element vertically or horizontally, focus it without animation
 				} else if (next !== spotItem) {
 					this.animateOnFocus = false;
 					Spotlight.focus(next);
+				// If a next spottable DOM element is equals to the current spottable item, we need to find a next item
 				} else {
-					const nextPage = this.childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem});
+					const nextPage = childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
 
+					// If finding a next spottable item in a Scroller, focus it
 					if (typeof nextPage === 'object') {
 						this.animateOnFocus = false;
 						Spotlight.focus(nextPage);
+					// Scroll one page with animation if nextPage is equals to `false`
 					} else if (!nextPage) {
 						scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 					}
@@ -879,6 +904,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 			this.hideThumb();
+			this.isWheeling = false;
 			if (this.scrolling) {
 				this.scrolling = false;
 				this.doScrollStop();
@@ -1114,7 +1140,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 			if (childContainerRef && childContainerRef.addEventListener) {
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.addEventListener('focus', this.onFocus, true);
+				childContainerRef.addEventListener('focusin', this.onFocus);
 			}
 		}
 

@@ -61,6 +61,7 @@ const prop = {
 		'onProgress',
 		'onRateChange',
 		'onSeeked',
+		'onSeekFailed',
 		'onSeeking',
 		'onStalled',
 		'onSuspend',
@@ -105,7 +106,7 @@ storiesOf('VideoPlayer')
 						transformOrigin: 'top',
 						transform: 'scale(' + number('video scale', 1, {range: true, min: 0.05, max: 1, step: 0.01}) + ')',
 						outline: 'teal dashed 1px',
-						position: 'relative'
+						height: '70vh'
 					}}
 				>
 					<label
@@ -147,6 +148,7 @@ storiesOf('VideoPlayer')
 						pauseIcon={select('pauseIcon', icons, 'pause')}
 						playIcon={select('playIcon', icons, 'play')}
 						poster={poster}
+						seekDisabled={boolean('seekDisabled', false)}
 						spotlightDisabled={boolean('spotlightDisabled', false)}
 						thumbnailSrc={poster}
 						thumbnailUnavailable={boolean('thumbnailUnavailable', false)}

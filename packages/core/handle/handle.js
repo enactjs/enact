@@ -79,7 +79,7 @@ const makeHandler = compose(allPass, map(makeSafeHandler));
 /**
  * Allows generating event handlers by chaining input functions to filter or short-circuit the
  * handling flow. Any input function that returns a falsey value will stop the chain.
- * 
+ *
  * The returned handler function has a `finally()` member that accepts a function and returns a new
  * handler function. The accepted function is called once the original handler completes regardless
  * of the returned value.
@@ -153,7 +153,7 @@ const oneOf = handle.oneOf = function (...handlers) {
  *   returnsTrue(doesSomething),
  *   willAlwaysBeCalled
  * );
- * 
+ *
  * // Used to emulate if/else blocks with `oneOf`
  * const ifElseHandler = oneOf(
  * 	[forKey('enter'), handleEnter],

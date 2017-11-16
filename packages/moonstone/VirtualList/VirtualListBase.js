@@ -593,14 +593,16 @@ class VirtualListCore extends Component {
 			numOfGridLines = Math.ceil(delta / gridSize); // how many lines should we add
 			threshold.max = Math.min(maxPos, threshold.max + numOfGridLines * gridSize);
 			threshold.min = Math.min(maxOfMin, threshold.max - gridSize);
-			newFirstIndex = Math.min(maxFirstIndex, (dimensionToExtent * Math.ceil(firstIndex / dimensionToExtent)) + (numOfGridLines * dimensionToExtent));
+			newFirstIndex += numOfGridLines * dimensionToExtent;
 		} else if (dir === -1 && pos < threshold.min) {
 			delta = threshold.min - pos;
 			numOfGridLines = Math.ceil(delta / gridSize);
 			threshold.max = Math.max(minOfMax, threshold.min - (numOfGridLines * gridSize - gridSize));
 			threshold.min = (threshold.max > minOfMax) ? threshold.max - gridSize : -Infinity;
-			newFirstIndex = Math.max(0, (dimensionToExtent * Math.ceil(firstIndex / dimensionToExtent)) - (numOfGridLines * dimensionToExtent));
+			newFirstIndex -= numOfGridLines * dimensionToExtent;
 		}
+		newFirstIndex = Math.min(maxFirstIndex, newFirstIndex);
+		newFirstIndex = Math.max(0, newFirstIndex);
 
 		this.syncThreshold(maxPos);
 		this.scrollPosition = pos;
@@ -864,9 +866,13 @@ class VirtualListCore extends Component {
 
 		let indexToJump = clamp(0, dataSize - 1, currentIndex + offsetIndex);
 
-		// If a currnet index is same as a new index.
-		if (indexToJump === currentIndex) {
-			return {indexToJump, nodeIndexToBeFocused: null};
+		if (
+			// If a currnet index is same as a new index.
+			indexToJump === currentIndex ||
+			// If a current item and a next item are located at the same line vertically or horizontally
+			parseInt(indexToJump / dimensionToExtent) === parseInt(currentIndex / dimensionToExtent)
+		) {
+			return {scroll: 'stop'};
 		}
 
 		// If a current index is different from a new index and the item with the new index is disabled,
@@ -876,7 +882,11 @@ class VirtualListCore extends Component {
 			indexToJump, currentIndex, data
 		);
 
-		return {indexToJump, nodeIndexToBeFocused};
+		if (nodeIndexToBeFocused === -1) {
+			return {scroll: 'one page with animation'};
+		} else {
+			return {scroll: 'scroll without animation', indexToJump, nodeIndexToBeFocused};
+		}
 	}
 
 	scrollToNextPage = ({direction, focusedItem}) => {
@@ -884,26 +894,33 @@ class VirtualListCore extends Component {
 			isRtl = this.context.rtl,
 			isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right'),
 			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
-			{indexToJump, nodeIndexToBeFocused} = this.getIndexForPageScroll(direction, focusedIndex);
+			{scroll, indexToJump, nodeIndexToBeFocused} = this.getIndexForPageScroll(direction, focusedIndex);
 
-		if (nodeIndexToBeFocused === -1) {
-			return false;
-		}
-
-		if (
+		if (scroll === 'one page with animation') {
+			return false; // Scroll one page with animation
+		} else if (scroll === 'stop') {
+			return true; // Do not scroll
+		} else if ( // scroll === 'scroll without animation'
 			// If the index to jump is enabled
 			focusedIndex !== indexToJump && indexToJump === nodeIndexToBeFocused ||
 			// If the index to jump is disabled
-			nodeIndexToBeFocused !== null && focusedIndex !== nodeIndexToBeFocused && indexToJump !== nodeIndexToBeFocused
+			focusedIndex !== nodeIndexToBeFocused && indexToJump !== nodeIndexToBeFocused
 		) {
+			if (!Spotlight.isPaused()) {
+				Spotlight.pause();
+			}
+
 			focusedItem.blur();
 			// To prevent item positioning issue, make all items to be rendered.
 			this.updateFrom = null;
 			this.updateTo = null;
+			// Scroll to the next spottable item without animation
 			this.props.cbScrollTo({index: indexToJump, nodeIndexToBeFocused, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
-		}
 
-		return true;
+			return true; // Do not scroll additionally
+		} else {
+			return true; // Do not scroll
+		}
 	}
 
 	shouldPreventScrollByFocus = () => this.isScrolledBy5way
@@ -1025,7 +1042,7 @@ class VirtualListCore extends Component {
 			node = this.containerRef;
 
 		if (!props.clientSize && !node) {
-			return;
+			return false;
 		}
 
 		const
@@ -1035,7 +1052,10 @@ class VirtualListCore extends Component {
 		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
 			this.calculateMetrics(props);
 			this.updateStatesAndBounds(props);
+			return true;
 		}
+
+		return false;
 	}
 
 	// render

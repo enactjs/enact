@@ -318,7 +318,7 @@ const getDeepSpottableDescendants = (containerId, excludedContainers) => {
 				const config = getContainerConfig(id);
 				if (excludedContainers && excludedContainers.indexOf(id) >= 0) {
 					return [];
-				} else if (!config.enterTo) {
+				} else if (config && !config.enterTo) {
 					return getDeepSpottableDescendants(id, excludedContainers);
 				}
 			}
@@ -337,7 +337,8 @@ const getDeepSpottableDescendants = (containerId, excludedContainers) => {
  * @private
  */
 const isContainer5WayHoldable = (containerId) => {
-	return getContainerConfig(containerId).continue5WayHold || false;
+	const config = getContainerConfig(containerId);
+	return (config && config.continue5WayHold) || false;
 };
 
 /**
@@ -550,7 +551,7 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	const config = getContainerConfig(containerId);
-	if (verify && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
+	if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
 		return false;
 	}
 

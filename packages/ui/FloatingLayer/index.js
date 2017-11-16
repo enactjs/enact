@@ -7,7 +7,11 @@
  */
 
 import FloatingLayer from './FloatingLayer';
-import FloatingLayerDecorator from './FloatingLayerDecorator';
+import {FloatingLayerDecorator, contextTypes} from './FloatingLayerDecorator';
 
 export default FloatingLayer;
-export {FloatingLayer, FloatingLayerDecorator};
+export {
+	contextTypes,
+	FloatingLayer,
+	FloatingLayerDecorator
+};

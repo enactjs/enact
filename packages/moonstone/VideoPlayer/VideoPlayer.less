@@ -9,12 +9,11 @@
 	// Set by counting the IconButtons inside the side components.
 	--moon-video-player-max-side-components: 0;
 
-	position: relative;
 	overflow: hidden;
 
 	.video {
+		height: 100%;
 		width: 100%;
-		vertical-align: top;
 	}
 
 	.overlay {
@@ -101,9 +100,7 @@
 							transform: translateY(~'calc(var(--infoComponentsOffset) * -1)') translateZ(0);
 						}
 
-						.enyo-locale-non-latin & {
-							line-height: @moon-non-latin-header-text-line-height;
-						}
+						.moon-locale-non-latin({line-height: @moon-non-latin-header-text-line-height;});
 					}
 
 					// Badges and title components
@@ -178,8 +175,14 @@
 							transform: @moon-translate-center scale(0.5);
 							opacity: 1;
 						}
-						&.pressed .knob::before {
-							transform: @moon-translate-center scale(0.75);
+					});
+
+					.spottable({
+						&.pressed {
+							.knob::before {
+								transform: @moon-translate-center scale(0.75);
+								opacity: 1;
+							}
 						}
 					});
 				}
