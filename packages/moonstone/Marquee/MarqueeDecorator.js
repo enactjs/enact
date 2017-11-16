@@ -583,6 +583,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.node && !this.props.marqueeDisabled) {
 				this.invalidateMetrics();
 				this.calculateMetrics();
+				if (this.state.animating) {
+					this.cancelAnimation();
+					this.resetAnimation();
+				}
 			}
 		}
 
