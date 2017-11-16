@@ -128,7 +128,7 @@ const AnnounceState = {
 };
 
 // Given an array, prune out any null or undefined values
-const withoutNull = array => array.filter(n => n != null);
+const withoutNull = array => array && array.filter && array.filter(n => n != null);
 
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
@@ -182,6 +182,8 @@ const VideoPlayerBase = class extends React.Component {
 	static contextTypes = contextTypes
 
 	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */ {
+		'data-component-id': PropTypes.string,
+
 		/**
 		 * passed by AnnounceDecorator for accessibility
 		 *
@@ -209,6 +211,12 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		backwardIcon: PropTypes.string,
+
+		blockKeyPress: PropTypes.bool,
+
+		blockPlayback: PropTypes.bool,
+
+		controlDisabled: PropTypes.bool,
 
 		/**
 		 * Amount of time (in milliseconds) after which the feedback text/icon part of the slider's
@@ -344,6 +352,8 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		muted: PropTypes.bool,
+
+		needLoading: PropTypes.bool,
 
 		/**
 		 * Setting this to `true` will disable left and right keys for seeking.
@@ -558,6 +568,13 @@ const VideoPlayerBase = class extends React.Component {
 		setApiProvider: PropTypes.func,
 
 		/**
+		 * Refer the VideoPlayer component to parents
+		 *
+		 * @type {Function}
+		 */
+		setVideoPlayerRef: PropTypes.func,
+
+		/**
 		 * Any children `<source>` tag elements of [VideoPlayer]{@link moonstone/VideoPlayer} will
 		 * be sent directly to the `<video>` element as video sources.
 		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
@@ -574,6 +591,8 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		spotlightDisabled: PropTypes.bool,
+
+		thumbnailComponent: PropTypes.node,
 
 		/**
 		 * Set a thumbnail image source to show on VideoPlayer's Slider knob. This is a standard
@@ -619,7 +638,9 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 3000
 		 * @public
 		 */
-		tooltipHideDelay: PropTypes.number
+		tooltipHideDelay: PropTypes.number,
+
+		zoomNavigateMode: PropTypes.bool
 	}
 
 	static defaultProps = {
@@ -704,6 +725,10 @@ const VideoPlayerBase = class extends React.Component {
 		if (props.setApiProvider) {
 			props.setApiProvider(this);
 		}
+
+		if (props.setVideoPlayerRef) {
+			props.setVideoPlayerRef(this);
+		}
 	}
 
 	componentDidMount () {
@@ -744,7 +769,7 @@ const VideoPlayerBase = class extends React.Component {
 		if (
 			!this.state.miniFeedbackVisible && this.state.miniFeedbackVisible === nextState.miniFeedbackVisible &&
 			!this.state.mediaSliderVisible && this.state.mediaSliderVisible === nextState.mediaSliderVisible &&
-			this.state.loading === nextState.loading && // this.props.needLoading === nextProps.needLoading &&
+			this.state.loading === nextState.loading && this.props.needLoading === nextProps.needLoading &&
 			(
 				this.state.buffered !== nextState.buffered ||
 				this.state.currentTime !== nextState.currentTime ||
@@ -938,9 +963,9 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	showControls = () => {
-		// if (this.props.blockPlayback) {
-		// 	return;
-		// }
+		if (this.props.blockPlayback) {
+			return;
+		}
 		this.startDelayedFeedbackHide();
 		this.startDelayedTitleHide();
 
@@ -1138,6 +1163,8 @@ const VideoPlayerBase = class extends React.Component {
 	handleKeyDown = (ev) => {
 		if (!this.props.no5WayJump &&
 				!this.state.mediaControlsVisible &&
+				!this.props.controlDisabled &&
+				!this.props.blockKeyPress &&
 				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			Spotlight.pause();
 			this.startListeningForPulses(ev.keyCode);
@@ -1156,6 +1183,9 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleKeyUp = (ev) => {
+		if (this.props.blockKeyPress || this.props.controlDisabled) {
+			return;
+		}
 		const {PLAY, PAUSE, REWIND, FASTFORWARD} = keyMap;
 
 		switch (ev.keyCode) {
@@ -1168,13 +1198,13 @@ const VideoPlayerBase = class extends React.Component {
 				this.pause();
 				break;
 			case REWIND:
-				if (!this.props.noRateButtons) {
+				if (!this.props.noRateButtons && !this.props.rateButtonsDisabled) {
 					this.showMiniFeedback = true;
 					this.rewind();
 				}
 				break;
 			case FASTFORWARD:
-				if (!this.props.noRateButtons) {
+				if (!this.props.noRateButtons && !this.props.rateButtonsDisabled) {
 					this.showMiniFeedback = true;
 					this.fastForward();
 				}
@@ -1636,11 +1666,16 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	focusDefaultMediaControl = () => {
-		const defaultControl = this.player.querySelector(
-			`.${css.bottom} .${this.state.more ? css.moreControls : css.mediaControls} .${spotlightDefaultClass}.${spottableClass}`
-		);
-
-		return defaultControl ? Spotlight.focus(defaultControl) : false;
+		if (this.props.zoomNavigateMode) {
+			Spotlight.focus('[data-component-id=livezoomButton]');
+		} else if (this.props.controlDisabled) {
+			Spotlight.focus('[data-component-id=backToListBtn]');
+		} else {
+			const defaultControl = this.player.querySelector(
+				`.${css.bottom} .${this.state.more ? css.moreControls : css.mediaControls} .${spotlightDefaultClass}.${spottableClass}`
+			);
+			return defaultControl ? Spotlight.focus(defaultControl) : false;
+		}
 	}
 
 	//
@@ -1843,7 +1878,10 @@ const VideoPlayerBase = class extends React.Component {
 			spotlightDisabled,
 			style,
 			thumbnailSrc,
+			thumbnailComponent,
 			title,
+			zoomNavigateMode,
+			controlDisabled,
 			...rest} = this.props;
 
 		delete rest.announce;
@@ -1868,6 +1906,14 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.thumbnailUnavailable;
 		delete rest.titleHideDelay;
 		delete rest.tooltipHideDelay;
+		delete rest.blockPlayback;
+		delete rest.videoPath;
+		delete rest.setVideoPlayerRef;
+		// delete rest.zoomNavigateMode;
+		delete rest.needLoading;
+		// delete rest.thumbnailComponent;
+		delete rest.blockKeyPress;
+		// delete rest.controlDisabled;
 
 		// Remove the events we manually added so they aren't added twice or fail.
 		for (let eventName in handledCustomMediaEventsMap) {
@@ -1896,7 +1942,7 @@ const VideoPlayerBase = class extends React.Component {
 					bottomControlsVisible={this.state.mediaControlsVisible}
 					onClick={this.onVideoClick}
 				>
-					{this.state.loading ? <Spinner centered /> : null}
+					{this.state.loading || this.props.needLoading ? <Spinner centered /> : null}
 				</Overlay>
 
 				{this.state.bottomControlsRendered ?
@@ -1937,6 +1983,7 @@ const VideoPlayerBase = class extends React.Component {
 
 							{noSlider ? null : <MediaSlider
 								backgroundProgress={this.state.proportionLoaded}
+								disabled={controlDisabled}
 								onBlur={this.handleSliderBlur}
 								onChange={this.onSliderChange}
 								onFocus={this.handleSliderFocus}
@@ -1955,6 +2002,7 @@ const VideoPlayerBase = class extends React.Component {
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
 									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
+									thumbnailComponent={thumbnailComponent}
 									visible={this.state.feedbackVisible}
 								>
 									{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
@@ -1968,7 +2016,7 @@ const VideoPlayerBase = class extends React.Component {
 								jumpButtonsDisabled={jumpButtonsDisabled}
 								jumpForwardIcon={jumpForwardIcon}
 								leftComponents={leftComponents}
-								mediaDisabled={this.state.mediaControlsDisabled}
+								mediaDisabled={controlDisabled || this.state.mediaControlsDisabled}
 								moreButtonCloseLabel={moreButtonCloseLabel}
 								moreButtonDisabled={moreButtonDisabled}
 								moreButtonLabel={moreButtonLabel}
@@ -1991,10 +2039,10 @@ const VideoPlayerBase = class extends React.Component {
 								rateButtonsDisabled={rateButtonsDisabled}
 								rightComponents={rightComponents}
 								showMoreComponents={this.state.more}
-								spotlightDisabled={spotlightDisabled}
+								spotlightDisabled={!this.state.mediaControlsVisible || spotlightDisabled}
 								visible={this.state.mediaControlsVisible}
 							>
-								{children}
+								{!zoomNavigateMode ? children : null}
 							</MediaControls>
 						</Container>
 					</div> :

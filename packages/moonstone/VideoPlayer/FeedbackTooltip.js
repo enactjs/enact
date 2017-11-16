@@ -56,6 +56,8 @@ const FeedbackTooltipBase = kind({
 		 */
 		playbackState: PropTypes.oneOf(Object.keys(states)),
 
+		thumbnailComponent: PropTypes.node,
+
 		/**
 		 * `true` if Slider knob is scrubbing.
 		 *
@@ -105,14 +107,14 @@ const FeedbackTooltipBase = kind({
 		})
 	},
 
-	render: ({children, noFeedback, playbackState, playbackRate, thumbnailSrc, ...rest}) => {
+	render: ({children, noFeedback, playbackState, playbackRate, thumbnailComponent, thumbnailSrc, ...rest}) => {
 		delete rest.visible;
 		delete rest.thumbnailDeactivated;
 		return (
 			<div {...rest}>
 				{thumbnailSrc ? <div className={css.thumbnail} style={!noFeedback ? {display: 'none'} : null}>
 					<Image src={thumbnailSrc} className={css.image} />
-				</div> : null}
+				</div> : thumbnailComponent}
 				<FeedbackContent
 					className={css.content}
 					feedbackVisible={!noFeedback}
