@@ -28,10 +28,6 @@ const PickerButtonBase = kind({
 		spotlightDisabled: PropTypes.bool
 	},
 
-	defaultProps: {
-		joined: false
-	},
-
 	contextTypes: contextTypes,
 
 	styles: {

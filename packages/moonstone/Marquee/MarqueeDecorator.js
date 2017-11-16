@@ -540,13 +540,15 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.sync) {
 				this.context.complete(this);
 			} else {
-				this.setState((prevState) => {
-					if (!prevState.animating) {
-						this.startAnimation();
-					}
-					return null;
-				});
+				this.setState(this.setStateStartAnimation);
 			}
+		}
+
+		setStateStartAnimation = (prevState) => {
+			if (!prevState.animating) {
+				this.startAnimation();
+			}
+			return null;
 		}
 
 		/*
@@ -597,12 +599,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleFocus = (ev) => {
 			this.isFocused = true;
 			if (!this.sync) {
-				this.setState((prevState) => {
-					if (!prevState.animating) {
-						this.startAnimation();
-					}
-					return null;
-				});
+				this.setState(this.setStateStartAnimation);
 			}
 			forwardFocus(ev, this.props);
 		}
@@ -621,12 +618,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				if (this.sync) {
 					this.context.enter(this);
 				} else {
-					this.setState((prevState) => {
-						if (!prevState.animating) {
-							this.startAnimation();
-						}
-						return null;
-					});
+					this.setState(this.setStateStartAnimation);
 				}
 			}
 			forwardEnter(ev, this.props);
