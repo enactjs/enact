@@ -1853,6 +1853,7 @@ const VideoPlayerBase = class extends React.Component {
 							{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
 						</FeedbackContent>
 						<Container
+							aria-hidden={!this.state.mediaControlsVisible}
 							className={css.bottom + (this.state.mediaControlsVisible ? '' : ' ' + css.hidden)}
 							spotlightDisabled={!this.state.mediaControlsVisible || spotlightDisabled}
 						>
