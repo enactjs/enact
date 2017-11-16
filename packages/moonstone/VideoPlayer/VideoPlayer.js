@@ -720,7 +720,7 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	componentWillUpdate (nextProps, nextState) {
+	componentWillUpdate (nextProps) {
 		const
 			isInfoComponentsEqual = equals(this.props.infoComponents, nextProps.infoComponents),
 			{titleOffsetHeight: titleHeight} = this.state,
@@ -730,17 +730,6 @@ const VideoPlayerBase = class extends React.Component {
 			);
 
 		this.initI18n();
-
-		if (
-			this.state.mediaControlsVisible &&
-			!nextState.mediaControlsVisible &&
-			(!Spotlight.getCurrent() || this.player.contains(Spotlight.getCurrent())) &&
-			!nextProps.spotlightDisabled
-		) {
-			// set focus to the hidden spottable control - maintaining focus on available spottable
-			// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
-			Spotlight.focus(`.${css.controlsHandleAbove}`);
-		}
 
 		if (shouldCalculateTitleOffset) {
 			const titleOffsetHeight = this.getHeightForElement('infoComponents');
@@ -761,13 +750,23 @@ const VideoPlayerBase = class extends React.Component {
 
 		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
 
-		// Added to set default focus on the media control (play) when controls become visible.
-		if (
-			this.state.mediaControlsVisible &&
-			!prevState.mediaControlsVisible &&
-			(!Spotlight.getCurrent() || this.player.contains(Spotlight.getCurrent()))
-		) {
-			this.focusDefaultMediaControl();
+		if (!this.props.spotlightDisabled ) {
+			const current = Spotlight.getCurrent();
+			if (
+				!this.state.mediaControlsVisible &&
+				prevState.mediaControlsVisible
+			) {
+				// set focus to the hidden spottable control - maintaining focus on available spottable
+				// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
+				Spotlight.focus(`.${css.controlsHandleAbove}`);
+			} else if (
+				this.state.mediaControlsVisible &&
+				!prevState.mediaControlsVisible &&
+				(!current || this.player.contains(current))
+			) {
+				// Added to set default focus on the media control (play) when controls become visible.
+				this.focusDefaultMediaControl();
+			}
 		}
 	}
 
@@ -943,20 +942,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	setControlVisibilityStates = (state) => {
-		this.setState(state, () => {
-			if (!this.props.spotlightDisabled) {
-				// blur any currently spotted component within the video player to ensure that any
-				// focus-dependent behaviors (e.g. tooltips) are cleared and that focus is moved to
-				// the placeholder
-				const current = Spotlight.getCurrent();
-				if (current && this.player.contains(current)) {
-					current.blur();
-				}
-
-				Spotlight.focus(`.${css.controlsHandleAbove}`);
-			}
-			return forwardControlsAvailable({available: false}, this.props);
-		});
+		this.setState(state, () => forwardControlsAvailable({available: false}, this.props));
 	}
 
 	doAutoClose = () => {
