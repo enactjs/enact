@@ -26,24 +26,24 @@ storiesOf('SimpleIntegerPicker')
 		() => (
 			<div>
 				Brightness :
-					<SimpleIntegerPicker
-						decrementIcon={nullify(select('decrementIcon', ['', ...decrementIcons]))}
-						defaultValue={0}
-						disabled={boolean('disabled', false)}
-						incrementIcon={nullify(select('incrementIcon', ['', ...incrementIcons]))}
-						joined={nullify(boolean('joined', true))}
-						max={number('max', 100)}
-						min={number('min', 0)}
-						noAnimation={nullify(boolean('noAnimation', false))}
-						onBlur={action('onBlur')}
-						onChange={action('onChange')}
-						onClick={action('onClick')}
-						orientation={select('orientation', prop.orientation, 'horizontal')}
-						step={number('step', 1)}
-						units={'lumens'}
-						width={parseIntOrNullify(select('width', prop.width, 'medium'))}
-						wrap={nullify(boolean('wrap', false))}
-					/> (0 to 100)
+				<SimpleIntegerPicker
+					decrementIcon={nullify(select('decrementIcon', ['', ...decrementIcons]))}
+					defaultValue={0}
+					disabled={boolean('disabled', false)}
+					incrementIcon={nullify(select('incrementIcon', ['', ...incrementIcons]))}
+					joined={nullify(boolean('joined', true))}
+					max={number('max', 100)}
+					min={number('min', 0)}
+					noAnimation={nullify(boolean('noAnimation', false))}
+					onBlur={action('onBlur')}
+					onChange={action('onChange')}
+					onClick={action('onClick')}
+					orientation={select('orientation', prop.orientation, 'horizontal')}
+					step={number('step', 1)}
+					units={'lumens'}
+					width={parseIntOrNullify(select('width', prop.width, 'medium'))}
+					wrap={nullify(boolean('wrap', false))}
+				/> (0 to 100)
 			</div>
 		),
 		{propTables: [SimpleIntegerPicker]}
