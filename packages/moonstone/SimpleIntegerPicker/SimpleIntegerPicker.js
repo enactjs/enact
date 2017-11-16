@@ -59,15 +59,6 @@ const SimpleIntegerPickerBase = kind({
 		 */
 		min: PropTypes.number.isRequired,
 
-
-		/**
-		 * Current value
-		 *
-		 * @type {Number}
-		 * @public
-		 */
-		value: PropTypes.number.isRequired,
-
 		/**
 		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
 		 * to the current selected child value.
@@ -77,22 +68,6 @@ const SimpleIntegerPickerBase = kind({
 		 * @public
 		 */
 		'aria-valuetext': PropTypes.string,
-
-		/**
-		 * Children from which to pick
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		children: PropTypes.node,
-
-		/**
-		 * Class name for component
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		className: PropTypes.string,
 
 		/**
 		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
@@ -124,14 +99,6 @@ const SimpleIntegerPickerBase = kind({
 		incrementIcon: PropTypes.string,
 
 		/**
-		 *  A function to be run when there is a change in the input
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		inputChange : PropTypes.func,
-
-		/**
 		 * The method to run when the input mounts, giving a reference to the DOM.
 		 *
 		 * @type {Function}
@@ -140,20 +107,10 @@ const SimpleIntegerPickerBase = kind({
 		inputRef: PropTypes.func,
 
 		/**
-		 * The value from the input field
-		 * expanded.
-		 *
-		 * @type {Number}
-		 * @public
-		 */
-		inputValue : PropTypes.number,
-
-		/**
 		 * When `true`, the input will be enabled
 		 * expanded.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		isInputMode : PropTypes.bool,
@@ -174,7 +131,7 @@ const SimpleIntegerPickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onBlurHandler : PropTypes.func,
+		onBlur : PropTypes.func,
 
 		/**
 		 *  A function to be run when a `onChange` event triggered in the picker
@@ -182,7 +139,7 @@ const SimpleIntegerPickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onChangeHandler : PropTypes.func,
+		onChange : PropTypes.func,
 
 		/**
 		 * A function to run when the control is clicked to enable the input field
@@ -191,22 +148,6 @@ const SimpleIntegerPickerBase = kind({
 		 * @public
 		 */
 		onClick: PropTypes.func,
-
-		/**
-		 *  A function to be run when a `onClick` event triggered in the picker
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onClickHandler : PropTypes.func,
-
-		/**
-		 *  A function to be run when a `onKeyDown` event triggered in the picker
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onKeyDownHandler : PropTypes.func,
 
 		/**
 		 * Sets the orientation of the picker, whether the buttons are above and below or on the
@@ -255,6 +196,15 @@ const SimpleIntegerPickerBase = kind({
 		units: PropTypes.string,
 
 		/**
+		 * The value from the decorator
+		 * expanded.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		value : PropTypes.number,
+
+		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
 		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
 		 * word pickers, `'large'` for maximum-sized pickers.
@@ -264,6 +214,7 @@ const SimpleIntegerPickerBase = kind({
 		 * unexpected results.
 		 *
 		 * @type {String|Number}
+		 * @default 'medium'
 		 * @public
 		 */
 		width: PropTypes.oneOfType([
@@ -282,16 +233,13 @@ const SimpleIntegerPickerBase = kind({
 	},
 
 	defaultProps : {
-		isInputMode : false,
-		inputValue : 0,
 		min: 0,
 		max: 100,
 		orientation: 'horizontal',
-		padded: false,
 		step: 1,
 		units: '',
-		width: 'medium',
-		wrap: false
+		value: 0,
+		width: 'medium'
 	},
 
 	styles: {
@@ -311,7 +259,6 @@ const SimpleIntegerPickerBase = kind({
 
 			return value;
 		},
-
 		value: ({min, max, value}) => {
 			if (__DEV__) {
 				validateRange(value, min, max, 'SimpleIntegerPicker');
@@ -319,24 +266,22 @@ const SimpleIntegerPickerBase = kind({
 			return clamp(min, max, value);
 		},
 		width: ({max, min, width}) => (width || Math.max(max.toString().length, min.toString().length)),
-
-		children: ({isInputMode, inputChange, inputRef, inputValue, onBlurHandler, units, value}) => {
+		children: ({isInputMode, inputRef, onBlur, units, value}) => {
 			return (
 				isInputMode ?
 					<input
 						autoFocus
 						className={css.inputClass}
-						onBlur={onBlurHandler}
-						onKeyDown={inputChange}
+						key={value}
+						onBlur={onBlur}
 						ref={inputRef}
 					/> : <PickerItem
 						key={value}
 					>
-						{`${inputValue} ${units}`}
+						{`${value} ${units}`}
 					</PickerItem>
 			);
 		},
-
 		classes: ({isInputMode}) => {
 			let pickerClass = ['spottable', css.picker];
 			if (isInputMode) {
@@ -346,11 +291,10 @@ const SimpleIntegerPickerBase = kind({
 		}
 	},
 
-	render: ({children, classes, inputValue, onChangeHandler, onClickHandler, onKeyDownHandler, pickerRef, ...rest}) => {
+	render: ({children, classes, onChange, onClick, pickerRef, value, ...rest}) => {
 		delete rest.padded;
 		delete rest.inputRef;
-		delete rest.inputChange;
-		delete rest.onBlurHandler;
+		delete rest.onBlur;
 		delete rest.isInputMode;
 		delete rest.units;
 
@@ -360,11 +304,10 @@ const SimpleIntegerPickerBase = kind({
 				className={classes}
 				index={0}
 				noAnimation={false}
-				onChange={onChangeHandler}
-				onClick={onClickHandler}
-				onKeyDown={onKeyDownHandler}
+				onChange={onChange}
+				onClick={onClick}
 				ref={pickerRef}
-				value={inputValue}
+				value={value}
 			>
 				{children}
 			</Picker>
