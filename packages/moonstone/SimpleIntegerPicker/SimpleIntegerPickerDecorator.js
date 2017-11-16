@@ -165,9 +165,9 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 					isInputMode={this.state.isClicked}
 					inputRef={this.getInputNode}
 					joined
-					onInputBlur={this.handleBlur}
 					onChange={this.handleChange}
 					onClick={this.handleClick}
+					onInputBlur={this.handleBlur}
 					onKeyDown={this.handleDown}
 					pickerRef={this.getPickerNode}
 					value={this.state.value}
