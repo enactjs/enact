@@ -1,5 +1,6 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import {Job} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -32,6 +33,22 @@ const contextTypes = {
 	 * @memberof moonstone/Marquee.Marquee.contextTypes
 	 */
 	complete: PropTypes.func,
+
+	/**
+	 * Called by Marquee instances when hovered
+	 *
+	 * @type {Function}
+	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 */
+	enter: PropTypes.func,
+
+	/**
+	 * Called by Marquee instances when unhovered
+	 *
+	 * @type {Function}
+	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 */
+	leave: PropTypes.func,
 
 	/**
 	 * Called to register a Marquee instance to be synchronized
@@ -111,11 +128,19 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			return {
 				cancel: this.handleCancel,
 				complete: this.handleComplete,
+				enter: this.handleEnter,
+				leave: this.handleLeave,
 				register: this.handleRegister,
 				start: this.handleStart,
 				unregister: this.handleUnregister
 			};
 		}
+
+		componentWillUnmount () {
+			this.cancelJob.stop();
+		}
+
+		cancelJob = new Job(() => this.doCancel(), 30)
 
 		/*
 		 * Registers `component` with a set of handlers for `start` and `stop`.
@@ -169,6 +194,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		handleStart = (component) => {
+			this.cancelJob.stop();
 			if (!this.anyRunning()) {
 				this.markAll(STATE.ready);
 				this.dispatch('start', component);
@@ -182,9 +208,16 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 *
 		 * @returns	{undefined}
 		 */
-		handleCancel = (component) => {
+		handleCancel = () => {
+			this.cancelJob.start();
+		}
+
+		doCancel = () => {
+			if (this.isHovered || this.isFocused) {
+				return;
+			}
 			this.markAll(STATE.inactive);
-			this.dispatch('stop', component);
+			this.dispatch('stop');
 		}
 
 		/*
@@ -197,9 +230,23 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		handleComplete = (component) => {
 			const complete = this.markReady(component);
 			if (complete) {
+				this.cancelJob.stop();
 				this.markAll(STATE.ready);
 				this.dispatch('start');
 			}
+		}
+
+		handleEnter = () => {
+			this.isHovered = true;
+			if (!this.anyRunning()) {
+				this.dispatch('start');
+			}
+			this.cancelJob.stop();
+		}
+
+		handleLeave = () => {
+			this.isHovered = false;
+			this.cancelJob.start();
 		}
 
 		/*
@@ -207,7 +254,10 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		handleFocus = (ev) => {
 			this.isFocused = true;
-			this.dispatch('start');
+			if (!this.anyRunning()) {
+				this.dispatch('start');
+			}
+			this.cancelJob.stop();
 			forwardFocus(ev, this.props);
 		}
 
@@ -216,8 +266,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		handleBlur = (ev) => {
 			this.isFocused = false;
-			this.dispatch('stop');
-			this.markAll(STATE.inactive);
+			this.cancelJob.start();
 			forwardBlur(ev, this.props);
 		}
 
@@ -312,7 +361,10 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				props = {
 					...this.props,
 					onBlur: this.handleBlur,
-					onFocus: this.handleFocus
+					onFocus: this.handleFocus,
+					// When picker button becomes disabled, it doesn't fire blur, but does fire
+					// `onSpotlightDisappear`.  We should investigate why `onBlur` does not fire
+					onSpotlightDisappear: this.handleBlur
 				};
 			}
 
