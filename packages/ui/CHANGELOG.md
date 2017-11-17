@@ -12,13 +12,14 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
+- `ui/ViewManager` to prevent interaction issue with `moonstone/Scroller`
+
 ## [1.12.2] - 2017-11-15
 
 ### Fixed
-- `ui/Viewport` to blur Spotlight `onWillTransition`
-- `ui/View` use `idleUntil` to prevent wheel blocking error
 
 - `ui/Remeasurable` to update on every trigger change
+- `ui/Transition` to revert 1.12.1 change to support `clip` transition-type directions and rendering optimizations
 
 ## [1.12.1] - 2017-11-07
 

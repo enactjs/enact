@@ -299,6 +299,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.textDirectionValidated = false;
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled || next.marqueeSpeed !== marqueeSpeed) {
 				this.cancelAnimation();
+			} else if (next.disabled && this.isHovered && marqueeOn === 'focus' && this.sync) {
+				this.context.enter(this);
 			}
 		}
 
@@ -372,7 +374,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.forceRestartMarquee ||
 				!this.sync && (
 					(this.isFocused && this.props.marqueeOn === 'focus') ||
-					(this.isHovered && this.props.marqueeOn === 'hover')
+					(this.isHovered && this.props.marqueeOn === 'hover') ||
+					(this.isHovered && this.props.marqueeOn === 'focus' && this.props.disabled)
 				)
 			);
 		}
@@ -537,13 +540,15 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.sync) {
 				this.context.complete(this);
 			} else {
-				this.setState((prevState) => {
-					if (!prevState.animating) {
-						this.startAnimation();
-					}
-					return null;
-				});
+				this.setState(this.setStateStartAnimation);
 			}
+		}
+
+		setStateStartAnimation = (prevState) => {
+			if (!prevState.animating) {
+				this.startAnimation();
+			}
+			return null;
 		}
 
 		/*
@@ -568,6 +573,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		cancelAnimation = () => {
 			if (this.sync) {
 				this.context.cancel(this);
+				return;
 			}
 
 			this.stop();
@@ -577,6 +583,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.node && !this.props.marqueeDisabled) {
 				this.invalidateMetrics();
 				this.calculateMetrics();
+				if (this.state.animating) {
+					this.cancelAnimation();
+					this.resetAnimation();
+				}
 			}
 		}
 
@@ -592,35 +602,41 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleFocus = (ev) => {
 			this.isFocused = true;
-			this.setState((prevState) => {
-				if (!prevState.animating) {
-					this.startAnimation();
-				}
-				return null;
-			});
+			if (!this.sync) {
+				this.setState(this.setStateStartAnimation);
+			}
 			forwardFocus(ev, this.props);
 		}
 
 		handleBlur = (ev) => {
 			this.isFocused = false;
-			this.cancelAnimation();
+			if (!this.sync) {
+				this.cancelAnimation();
+			}
 			forwardBlur(ev, this.props);
 		}
 
 		handleEnter = (ev) => {
 			this.isHovered = true;
-			this.setState((prevState) => {
-				if (!prevState.animating) {
-					this.startAnimation();
+			if (this.props.disabled || this.props.marqueeOn === 'hover') {
+				if (this.sync) {
+					this.context.enter(this);
+				} else {
+					this.setState(this.setStateStartAnimation);
 				}
-				return null;
-			});
+			}
 			forwardEnter(ev, this.props);
 		}
 
 		handleLeave = (ev) => {
 			this.isHovered = false;
-			this.cancelAnimation();
+			if (this.props.disabled || this.props.marqueeOn === 'hover') {
+				if (this.sync) {
+					this.context.leave(this);
+				} else {
+					this.cancelAnimation();
+				}
+			}
 			forwardLeave(ev, this.props);
 		}
 
@@ -669,7 +685,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			// TODO: cancel others on hover
-			if (marqueeOnHover || (disabled && marqueeOnFocus)) {
+			if (marqueeOnHover || marqueeOnFocus) {
 				rest[enter] = this.handleEnter;
 				rest[leave] = this.handleLeave;
 			}

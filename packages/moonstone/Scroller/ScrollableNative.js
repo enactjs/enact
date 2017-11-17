@@ -409,6 +409,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (typeof window !== 'undefined') {
 				window.document.activeElement.blur();
 			}
+			this.showThumb(bounds);
 
 			// FIXME This routine is a temporary support for horizontal wheel scroll.
 			// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.

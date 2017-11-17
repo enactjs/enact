@@ -22,7 +22,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `spotlight` to handle non-5-way keys correctly to focus on next 5-way keys
 - `spotlight/Spottable` to forward `onMouseEnter` and `onMouseLeave`
 - `ui/Remeasurable` to update on every trigger change
-- `ui/Transition` to revert 1.12.1 change to support `clip` transition-type directions and endering optimizations
+- `ui/Transition` to revert 1.12.1 change to support `clip` transition-type directions and rendering optimizations
 
 ## [1.12.1] - 2017-11-07
 
