@@ -1023,6 +1023,21 @@ const VideoPlayerBase = class extends React.Component {
 		this.markAnnounceRead();
 	}
 
+	/**
+	 * Toggles the media controls.
+	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
+	 * @public
+	 */
+	toggleControls = () => {
+		if (this.state.mediaControlsVisible) {
+			this.hideControls();
+		} else {
+			this.showControls();
+		}
+	}
+
 	setControlVisibilityStates = (state) => {
 		this.setState(state, () => {
 			if (!this.props.spotlightDisabled) {
@@ -1724,11 +1739,7 @@ const VideoPlayerBase = class extends React.Component {
 	// Player Interaction events
 	//
 	onVideoClick = () => {
-		if (this.state.mediaControlsVisible) {
-			this.hideControls();
-		} else {
-			this.showControls();
-		}
+		this.toggleControls();
 	}
 	onSliderChange = ({value}) => {
 		this.seek(value * this.state.duration);
@@ -2159,7 +2170,19 @@ const VideoPlayerBase = class extends React.Component {
  * @public
  */
 const VideoPlayer = ApiDecorator(
-	{api: ['getVideoNode', 'fastForward', 'getMediaState', 'hideControls', 'jump', 'pause', 'play', 'rewind', 'seek', 'showControls']},
+	{api: [
+		'fastForward',
+		'getMediaState',
+		'getVideoNode',
+		'hideControls',
+		'jump',
+		'pause',
+		'play',
+		'rewind',
+		'seek',
+		'showControls',
+		'toggleControls'
+	]},
 	Slottable(
 		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
 		FloatingLayerDecorator(
