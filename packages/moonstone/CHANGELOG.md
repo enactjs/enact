@@ -10,28 +10,43 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Expandable` and derivatives to use the new `ease-out-quart` animation timing function to better match the aesthetic of Enyo's Expandables
+- `moonstone/TooltipDecorator` to correctly display tooltip direction when locale changes
+- `moonstone/Marquee` to restart animation on every resize update
+- `moonstone/LabeledItem` to start marquee when hovering over in disabled state
+- `moonstone/Marquee` to correctly start when hovering on disabled spottable components
+- `moonstone/Marquee.MarqueeController` to not abort marquee when moving among components
+- `moonstone/Picker` marquee issues with disabled buttons or Picker
+- `moonstone/Panels` to prevent loss of spotlight issue when moving between panels
+- `moonstone/MarqueeDecorator` to stop when unhovering a disabled component using `marqueeOn` `'focus'`
+
+## [1.12.2] - 2017-11-15
+
+### Fixed
+
+- `moonstone/VirtualList` to scroll and focus properly by pageUp and pageDown when disabled items are in it
 - `moonstone/Button` to correctly specify minimum width when in large text mode
 - `moonstone/Scroller.Scrollable` to restore last focused index when panel is changed
 - `moonstone/VideoPlayer` to display time correctly in RTL locale
 - `moonstone/VirtualList` to scroll correctly using page down key with disabled items
 - `moonstone/Scrollable` to not cause a script error when scrollbar is not rendered
 - `moonstone/Picker` incrementer and decrementer to not change size when focused
-- `moonstone/Header` to use a slightly smaller font size for `title` in non-latin locales and a line-height for `titleBelow` and `subTitleBelow` that better meets the needs of tall-glyph languages like Tamil and Thai
+- `moonstone/Header` to use a slightly smaller font size for `title` in non-latin locales and a line-height for `titleBelow` and `subTitleBelow` that better meets the needs of tall-glyph languages like Tamil and Thai, as well as latin locales
 - `moonstone/Scroller` and `moonstone/VirtualList` to keep spotlight when pressing a 5-way control while scrolling
 - `moonstone/Panels` to prevent user interaction with panel contents during transition
 - `moonstone/Slider` and related components to correctly position knob for `detachedKnob` on mouse down and fire value where mouse was positioned on mouse up
 - `moonstone/DayPicker` to update day names when changing locale
-- `moonstone/MarqueeDecorator` to stop when unhovering a disabled component using `marqueeOn` `'focus'`
+- `moonstone/ExpandableItem` and all other `Expandable` components to revert 1.12.1 change to pull down from the top
 
 ## [1.12.1] - 2017-11-07
 
 ### Fixed
 
 - `moonstone/ExpandableItem` and all other `Expandable` components to now pull down from the top instead of being revealed from the bottom, matching Enyo's design
-- `moonstone/VirtualListNative` to scroll properly with page up/down keys if there is an disabled item
+- `moonstone/VirtualListNative` to scroll properly with page up/down keys if there is a disabled item
 - `moonstone/RangePicker` to display negative values correctly in RTL
 - `moonstone/Scrollable` to not blur scroll buttons when wheeling
-- `moonstone/Scrollbar` to hide scroll thumb immediately without delay after scroll position to be min or max
+- `moonstone/Scrollbar` to hide scroll thumb immediately without delay after scroll position reaches min or max
 - `moonstone/Divider` to pass `marqueeOn` prop
 - `moonstone/Slider` to fire `onChange` on mouse up and key up
 - `moonstone/VideoPlayer` to show knob when pressed

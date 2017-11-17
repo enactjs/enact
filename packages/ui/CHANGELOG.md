@@ -6,12 +6,20 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/Transition` animation timing functions `ease-in`, `ease-out`, `ease-in-quart`, and `ease-out-quart` to provide prettier options for transitions that may be more suited to a specific visual style
+
 ### Changed
 
 ### Fixed
 
+- `ui/ViewManager` to prevent interaction issue with `moonstone/Scroller`
+
+## [1.12.2] - 2017-11-15
+
+### Fixed
+
 - `ui/Remeasurable` to update on every trigger change
-- `ui/ViewManager` to suppress `enteringProp` for views that are rendered at mount
+- `ui/Transition` to revert 1.12.1 change to support `clip` transition-type directions and rendering optimizations
 
 ## [1.12.1] - 2017-11-07
 
