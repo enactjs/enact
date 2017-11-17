@@ -1514,6 +1514,33 @@ const VideoPlayerBase = class extends React.Component {
 		this.showFeedback();
 	}
 
+	// Creates a proxy to the video node if Proxy is supported
+	videoProxy = typeof Proxy !== 'function' ? null : new Proxy({}, {
+		get: (target, name) => {
+			let value = this.video[name];
+
+			if (typeof value === 'function') {
+				value = value.bind(this.video);
+			}
+
+			return value;
+		},
+		set: (target, name, value) => {
+			return (this.video[name] = value);
+		}
+	})
+
+	/**
+	 * Returns a proxy to the underlying <video> node currently used by the VideoPlayer
+	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
+	 * @public
+	 */
+	getVideoNode = () => {
+		return this.videoProxy || this.video;
+	}
+
 	/**
 	 * Sets the playback rate type (from the [keys]{@glossary Object.keys} of
 	 * [playbackRateHash]{@link moonstone/VideoPlayer.VideoPlayer#playbackRateHash}).
@@ -2132,7 +2159,7 @@ const VideoPlayerBase = class extends React.Component {
  * @public
  */
 const VideoPlayer = ApiDecorator(
-	{api: ['fastForward', 'getMediaState', 'hideControls', 'jump', 'pause', 'play', 'rewind', 'seek', 'showControls']},
+	{api: ['getVideoNode', 'fastForward', 'getMediaState', 'hideControls', 'jump', 'pause', 'play', 'rewind', 'seek', 'showControls']},
 	Slottable(
 		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
 		FloatingLayerDecorator(
