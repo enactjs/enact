@@ -750,21 +750,17 @@ const VideoPlayerBase = class extends React.Component {
 
 		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
 
-		if (!this.props.spotlightDisabled ) {
+		if (!this.props.spotlightDisabled) {
 			const current = Spotlight.getCurrent();
-			if (
-				!this.state.mediaControlsVisible &&
-				prevState.mediaControlsVisible
-			) {
-				// set focus to the hidden spottable control - maintaining focus on available spottable
+			if (!this.state.mediaControlsVisible && prevState.mediaControlsVisible) {
+				// Set focus to the hidden spottable control - maintaining focus on available spottable
 				// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
 				Spotlight.focus(`.${css.controlsHandleAbove}`);
 			} else if (
-				this.state.mediaControlsVisible &&
-				!prevState.mediaControlsVisible &&
+				(this.state.mediaControlsVisible && !prevState.mediaControlsVisible) &&
 				(!current || this.player.contains(current))
 			) {
-				// Added to set default focus on the media control (play) when controls become visible.
+				// Set focus within media controls when they become visible.
 				this.focusDefaultMediaControl();
 			}
 		}
