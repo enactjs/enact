@@ -13,7 +13,7 @@ import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
 import {is} from '@enact/core/keymap';
-import {perfNow} from '@enact/core/util';
+import {perfNow, Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
@@ -330,6 +330,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.doScrollStop();
 				this.animator.stop();
 			}
+			this.hideThumbJob.stop();
 
 			if (containerRef && containerRef.removeEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
@@ -562,6 +563,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				}
 
 				direction = Math.sign(delta);
+
+				Spotlight.setPointerMode(false);
 
 				if (focusedItem && !isVerticalScrollButtonFocused && !isHorizontalScrollButtonFocused) {
 					focusedItem.blur();
@@ -895,7 +898,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.focusOnItem();
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
-			this.startHidingThumb();
+			this.hideThumb();
 			this.isWheeling = false;
 			if (this.scrolling) {
 				this.scrolling = false;
@@ -1031,7 +1034,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			});
 		}
 
-		startHidingThumb = () => {
+		hideThumb = () => {
 			if (this.state.isHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
 				this.horizontalScrollbarRef.startHidingThumb();
 			}
@@ -1040,10 +1043,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
+		hideThumbJob = new Job(this.hideThumb, 200);
+
 		alertThumb () {
 			const bounds = this.getScrollBounds();
 			this.showThumb(bounds);
-			this.startHidingThumb();
+			this.hideThumbJob.start();
 		}
 
 		updateScrollbars = () => {
