@@ -1556,6 +1556,10 @@ const VideoPlayerBase = class extends React.Component {
 		return this.videoProxy || this.video;
 	}
 
+	areControlsVisible = () => {
+		return this.state.mediaControlsVisible;
+	}
+
 	/**
 	 * Sets the playback rate type (from the [keys]{@glossary Object.keys} of
 	 * [playbackRateHash]{@link moonstone/VideoPlayer.VideoPlayer#playbackRateHash}).
@@ -2171,6 +2175,7 @@ const VideoPlayerBase = class extends React.Component {
  */
 const VideoPlayer = ApiDecorator(
 	{api: [
+		'areControlsVisible',
 		'fastForward',
 		'getMediaState',
 		'getVideoNode',
@@ -2181,6 +2186,7 @@ const VideoPlayer = ApiDecorator(
 		'rewind',
 		'seek',
 		'showControls',
+		'showFeedback',
 		'toggleControls'
 	]},
 	Slottable(
