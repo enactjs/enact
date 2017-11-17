@@ -565,7 +565,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				direction = Math.sign(delta);
 
 				Spotlight.setPointerMode(false);
-
 				if (focusedItem && !isVerticalScrollButtonFocused && !isHorizontalScrollButtonFocused) {
 					focusedItem.blur();
 				}
