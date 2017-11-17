@@ -6,6 +6,7 @@ import Spotlight from '@enact/spotlight';
 import {addAll, is} from '@enact/core/keymap';
 import {forward} from '@enact/core/handle';
 import css from './SimpleIntegerPicker.less';
+import classNames from 'classnames';
 import {contextTypes} from '@enact/core/internal/PubSub';
 
 addAll({
@@ -62,8 +63,6 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 		}
 
 		static defaultProps = {
-			max: 100,
-			min: 0,
 			value: 0
 		}
 
@@ -73,6 +72,14 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 				isClicked: false,
 				value: this.props.value ? this.props.value : 0
 			};
+		}
+
+		componentWillMount () {
+			if (this.props.value) {
+				this.setState({
+					value: this.props.value
+				});
+			}
 		}
 
 		handleChange = (ev) => {
@@ -135,23 +142,15 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 		}
 
 		handleBlur = (ev) => {
-			this.inputNode.className = css.hideInput;
 			this.setState({
 				value: this.validateValue(parseInt(ev.target.value)),
 				isClicked: false
 			}, () => {
+				this.inputNode.className = classNames(this.inputNode.className, css.hideInput);
 				Spotlight.focus(this.pickerNode);
 				this.freezeSpotlight(false);
 			});
 			forwardBlur(ev, this.props);
-		}
-
-		componentWillMount () {
-			if (this.props.value) {
-				this.setState({
-					value: this.props.value
-				});
-			}
 		}
 
 		validateValue = (value) => {
