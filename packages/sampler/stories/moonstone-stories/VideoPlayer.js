@@ -126,6 +126,7 @@ storiesOf('VideoPlayer')
 					<VideoPlayer
 						autoCloseTimeout={number('autoCloseTimeout', 7000)}
 						backwardIcon={select('backwardIcon', icons, 'backward')}
+						feedbackHideDelay={number('feedbackHideDelay', 3000)}
 						forwardIcon={select('forwardIcon', icons, 'forward')}
 						initialJumpDelay={number('initialJumpDelay', 400)}
 						jumpBackwardIcon={select('jumpBackwardIcon', icons, 'skipbackward')}
@@ -134,6 +135,7 @@ storiesOf('VideoPlayer')
 						jumpDelay={number('jumpDelay', 200)}
 						rateButtonsDisabled={boolean('rateButtonsDisabled', false)}
 						loop={boolean('loop', true)}
+						miniFeedbackHideDelay={number('miniFeedbackHideDelay', 2000)}
 						moreButtonCloseLabel={text('moreButtonCloseLabel')}
 						moreButtonDisabled={boolean('moreButtonDisabled', false)}
 						moreButtonLabel={text('moreButtonLabel')}
@@ -152,6 +154,7 @@ storiesOf('VideoPlayer')
 						spotlightDisabled={boolean('spotlightDisabled', false)}
 						thumbnailSrc={poster}
 						thumbnailUnavailable={boolean('thumbnailUnavailable', false)}
+						tooltipHideDelay={number('tooltipHideDelay', 3000)}
 						title={text('title', 'Moonstone VideoPlayer Sample Video')}
 						titleHideDelay={number('titleHideDelay', 4000)}
 						{...prop.eventActions}

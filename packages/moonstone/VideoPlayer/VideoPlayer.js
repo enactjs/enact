@@ -12,7 +12,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {contextTypes, FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
-import {forKey, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
+import {forKey, forProp, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
 import ilib from '@enact/i18n';
 import {perfNow, Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
@@ -316,6 +316,8 @@ const VideoPlayerBase = class extends React.Component {
 		 */
 		leftComponents: PropTypes.node,
 
+		miniFeedbackHideDelay: PropTypes.number,
+
 		/**
 		 * The label for the "More" button for when the "More" tray is open.
 		 * This will show on the tooltip.
@@ -372,6 +374,11 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		noAutoPlay: PropTypes.bool,
+
+		noBuiltInBackward: PropTypes.bool,
+		noBuiltInForward: PropTypes.bool,
+		noBuiltInJumpBackward: PropTypes.bool,
+		noBuiltInJumpForward: PropTypes.bool,
 
 		/**
 		 * Removes the "jump" buttons. The buttons that skip forward or backward in the video.
@@ -649,6 +656,11 @@ const VideoPlayerBase = class extends React.Component {
 		initialJumpDelay: 400,
 		jumpBy: 30,
 		jumpDelay: 200,
+		miniFeedbackHideDelay: 2000,
+		noBuiltInJumpBackward: false,
+		noBuiltInBackward: false,
+		noBuiltInForward: false,
+		noBuiltInJumpForward: false,
 		playbackRateHash: {
 			fastForward: ['2', '4', '8', '16'],
 			rewind: ['-2', '-4', '-8', '-16'],
@@ -1099,7 +1111,10 @@ const VideoPlayerBase = class extends React.Component {
 	hideFeedbackJob = new Job(this.hideFeedback)
 
 	startDelayedMiniFeedbackHide = (delay) => {
-		this.hideMiniFeedbackJob.startAfter(delay);
+		delay = (delay != null) ? delay : this.props.miniFeedbackHideDelay;
+		if (delay) {
+			this.hideMiniFeedbackJob.startAfter(delay);
+		}
 	}
 
 	stopDelayedMiniFeedbackHide = () => {
@@ -1383,7 +1398,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.showFeedback();
 		this.startDelayedFeedbackHide();
 		this.seek(this.state.currentTime + distance);
-		this.startDelayedMiniFeedbackHide(2000);
+		this.startDelayedMiniFeedbackHide();
 	}
 
 	/**
@@ -1763,30 +1778,31 @@ const VideoPlayerBase = class extends React.Component {
 	onJumpBackward = this.handle(
 		(ev, props) => forwardJumpBackwardButtonClick(this.addStateToEvent(ev), props),
 		// Add prop to disable this feature
+		forProp('noBuiltInJumpBackward', false),
 		() => this.jump(-1 * this.props.jumpBy)
 	)
-	onBackward = (ev) => {
-		ev = this.addStateToEvent(ev);
-		forwardBackwardButtonClick(ev, this.props);
-		this.rewind();
-	}
+	onBackward = this.handle(
+		(ev, props) => forwardBackwardButtonClick(this.addStateToEvent(ev), props),
+		forProp('noBuiltInBackward', false),
+		this.rewind
+	)
 	onPlay = (ev) => {
-		ev = this.addStateToEvent(ev);
-		forwardPlayButtonClick(ev, this.props);
+		forwardPlayButtonClick(this.addStateToEvent(ev), this.props);
 		if (this.state.paused) {
 			this.play();
 		} else {
 			this.pause();
 		}
 	}
-	onForward = (ev) => {
-		ev = this.addStateToEvent(ev);
-		forwardForwardButtonClick(ev, this.props);
-		this.fastForward();
-	}
+	onForward = this.handle(
+		(ev, props) => forwardForwardButtonClick(this.addStateToEvent(ev), props),
+		forProp('noBuiltInForward', false),
+		this.fastForward
+	)
 	onJumpForward = this.handle(
 		(ev, props) => forwardJumpForwardButtonClick(this.addStateToEvent(ev), props),
 		// Add prop to disable this feature
+		forProp('noBuiltInJumpForward', false),
 		() => this.jump(this.props.jumpBy)
 	)
 	onMoreClick = () => {
@@ -1891,6 +1907,10 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.jumpBy;
 		delete rest.jumpDelay;
 		delete rest.no5WayJump;
+		delete rest.noBuiltInJumpBackward;
+		delete rest.noBuiltInBackward;
+		delete rest.noBuiltInForward;
+		delete rest.noBuiltInJumpForward;
 		delete rest.onBackwardButtonClick;
 		delete rest.onControlsAvailable;
 		delete rest.onForwardButtonClick;
@@ -1946,7 +1966,7 @@ const VideoPlayerBase = class extends React.Component {
 				</Overlay>
 
 				{this.state.bottomControlsRendered ?
-					<div className={css.fullscreen + ' enyo-fit scrim'} {...controlsAriaProps}>
+					<div className={css.fullscreen} {...controlsAriaProps}>
 						<FeedbackContent
 							className={css.miniFeedback}
 							playbackRate={this.pulsedPlaybackRate || this.selectPlaybackRate(this.speedIndex)}

@@ -56,6 +56,16 @@ const FeedbackTooltipBase = kind({
 		 */
 		playbackState: PropTypes.oneOf(Object.keys(states)),
 
+		/**
+		 * This component will be used instead of the built-in version if it is provided. The
+		 * internal thumbnail class will be added to this component, however, it's the
+		 * responsibility of the developer to include this class in their implementation, if
+		 * appropriate for their application. This component follows the same rules as the built-in
+		 * version; hiding and showing according to the state of `noFeedback`.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
 		thumbnailComponent: PropTypes.node,
 
 		/**
@@ -104,17 +114,23 @@ const FeedbackTooltipBase = kind({
 		className: ({playbackState: s, thumbnailDeactivated, styler, visible}) => styler.append({
 			hidden: !visible && states[s] && states[s].allowHide,
 			thumbnailDeactivated
-		})
+		}),
+		thumbnailComponent: ({thumbnailComponent: ThumbnailComponent, thumbnailSrc}) => (
+			ThumbnailComponent ?
+				<ThumbnailComponent className={css.thumbnail} /> :
+				<div className={css.thumbnail}>
+					<Image src={thumbnailSrc} className={css.image} />
+				</div>
+		)
 	},
 
-	render: ({children, noFeedback, playbackState, playbackRate, thumbnailComponent, thumbnailSrc, ...rest}) => {
+	render: ({children, noFeedback, playbackState, playbackRate, thumbnailComponent, ...rest}) => {
 		delete rest.visible;
 		delete rest.thumbnailDeactivated;
+		delete rest.thumbnailSrc;
 		return (
 			<div {...rest}>
-				{thumbnailSrc ? <div className={css.thumbnail} style={!noFeedback ? {display: 'none'} : null}>
-					<Image src={thumbnailSrc} className={css.image} />
-				</div> : thumbnailComponent}
+				{noFeedback ? thumbnailComponent : null}
 				<FeedbackContent
 					className={css.content}
 					feedbackVisible={!noFeedback}
@@ -129,7 +145,7 @@ const FeedbackTooltipBase = kind({
 });
 
 const FeedbackTooltip = onlyUpdateForKeys(
-	['children', 'noFeedback', 'playbackState', 'playbackRate', 'thumbnailDeactivated', 'thumbnailSrc', 'visible']
+	['children', 'noFeedback', 'playbackState', 'playbackRate', 'thumbnailComponent', 'thumbnailDeactivated', 'thumbnailSrc', 'visible']
 )(
 	Skinnable(
 		FeedbackTooltipBase
