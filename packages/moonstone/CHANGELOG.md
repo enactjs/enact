@@ -6,11 +6,14 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/VideoPlayer` props and APIs to offer more customizability. See ENYO-4843, ENYO-4871, ENYO-4872, and ENYO-4874 for details.
+
 ### Changed
 
 ### Fixed
 
 - `moonstone/Expandable` and derivatives to use the new `ease-out-quart` animation timing function to better match the aesthetic of Enyo's Expandables
+- `moonstone/VideoPlayer` to bring it in-line with real-world use-cases
 
 ## [1.12.2] - 2017-11-15
 

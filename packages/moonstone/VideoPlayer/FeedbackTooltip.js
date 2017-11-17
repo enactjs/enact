@@ -57,8 +57,8 @@ const FeedbackTooltipBase = kind({
 		playbackState: PropTypes.oneOf(Object.keys(states)),
 
 		/**
-		 * This component will be used instead of the built-in version if it is provided. The
-		 * internal thumbnail class will be added to this component, however, it's the
+		 * This component will be used instead of the built-in version.
+		 * The internal thumbnail class will be added to this component, however, it's the
 		 * responsibility of the developer to include this class in their implementation, if
 		 * appropriate for their application. This component follows the same rules as the built-in
 		 * version; hiding and showing according to the state of `noFeedback`.

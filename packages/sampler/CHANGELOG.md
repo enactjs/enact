@@ -6,6 +6,8 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ### Added
 
+- `moonstone/VideoPlayer` knobs for missing props: `disabled`, `feedbackHideDelay`, `miniFeedbackHideDelay`, and `tooltipHideDelay`
+
 ### Changed
 
 ### Fixed

@@ -65,7 +65,7 @@ const prop = {
 		'onSeeking',
 		'onStalled',
 		'onSuspend',
-		'onTimeUpdate',
+		// 'onTimeUpdate',	// Disabled due to Storybook Actions-reporting having an adverse effect on VideoPlayer performance. Uncomment to view this event.
 		'onUMSMediaInfo',	// Custom webOS media event
 		'onVolumeChange',
 		'onWaiting'
@@ -126,6 +126,7 @@ storiesOf('VideoPlayer')
 					<VideoPlayer
 						autoCloseTimeout={number('autoCloseTimeout', 7000)}
 						backwardIcon={select('backwardIcon', icons, 'backward')}
+						disabled={boolean('disabled', false)}
 						feedbackHideDelay={number('feedbackHideDelay', 3000)}
 						forwardIcon={select('forwardIcon', icons, 'forward')}
 						initialJumpDelay={number('initialJumpDelay', 400)}
