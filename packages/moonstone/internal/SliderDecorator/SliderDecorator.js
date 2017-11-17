@@ -495,11 +495,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				if (this.current5WayValue !== null) {
 					this.willChange = true;
 					this.throttleUpdateValue(this.clamp(this.current5WayValue));
-
-					// only clear knobPosition when not in
-					if (!Spotlight.getPointerMode()) {
-						this.knobPosition = null;
-					}
 				}
 			} else {
 				const verticalHint = $L('change a value with up down button');
@@ -577,8 +572,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			) return;
 
 			if (this.props.detachedKnob) {
-				this.current5WayValue = this.clamp(this.state.value);
-				this.updateUI();
+				this.moveKnobByAmount(0);
 			}
 
 			this.setState({
