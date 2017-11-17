@@ -18,6 +18,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Marquee.MarqueeController` to not abort marquee when moving among components
 - `moonstone/Picker` marquee issues with disabled buttons or Picker
 - `moonstone/Panels` to prevent loss of spotlight issue when moving between panels
+- `moonstone/Slider` by removing unnecessary repaints to the screen
 
 ## [1.12.2] - 2017-11-15
 
