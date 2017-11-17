@@ -13,13 +13,13 @@ import css from './Panels.less';
  * The container for a set of Panels
  *
  * @class Viewport
+ * @memberof moonstone/Panels
  * @private
  */
 const ViewportBase = class extends React.Component {
 	static displayName = 'Viewport'
 
-	/** @lends Viewport.prototype */
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Panels.Viewport.prototype */ {
 
 		/**
 		 * A function that generates a globally-unique identifier for a panel index
