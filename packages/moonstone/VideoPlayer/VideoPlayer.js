@@ -750,18 +750,23 @@ const VideoPlayerBase = class extends React.Component {
 
 		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
 
-		if (!this.props.spotlightDisabled) {
-			const current = Spotlight.getCurrent();
-			if (!this.state.mediaControlsVisible && prevState.mediaControlsVisible) {
+		if (!this.state.mediaControlsVisible && prevState.mediaControlsVisible) {
+			forwardControlsAvailable({available: false}, this.props);
+
+			if (!this.props.spotlightDisabled ) {
 				// Set focus to the hidden spottable control - maintaining focus on available spottable
 				// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
 				Spotlight.focus(`.${css.controlsHandleAbove}`);
-			} else if (
-				(this.state.mediaControlsVisible && !prevState.mediaControlsVisible) &&
-				(!current || this.player.contains(current))
-			) {
-				// Set focus within media controls when they become visible.
-				this.focusDefaultMediaControl();
+			}
+		} else if (this.state.mediaControlsVisible && !prevState.mediaControlsVisible) {
+			forwardControlsAvailable({available: true}, this.props);
+
+			if (!this.props.spotlightDisabled ) {
+				const current = Spotlight.getCurrent();
+				if (!current || this.player.contains(current)) {
+					// Set focus within media controls when they become visible.
+					this.focusDefaultMediaControl();
+				}
 			}
 		}
 	}
@@ -913,7 +918,7 @@ const VideoPlayerBase = class extends React.Component {
 			mediaSliderVisible: true,
 			miniFeedbackVisible: false,
 			titleVisible: true
-		}, () => forwardControlsAvailable({available: true}, this.props));
+		});
 	}
 
 	/**
@@ -927,7 +932,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedMiniFeedbackHide();
 		this.stopDelayedTitleHide();
-		this.setControlVisibilityStates({
+		this.setState({
 			feedbackVisible: false,
 			mediaControlsVisible: false,
 			mediaSliderVisible: false,
@@ -937,14 +942,10 @@ const VideoPlayerBase = class extends React.Component {
 		this.markAnnounceRead();
 	}
 
-	setControlVisibilityStates = (state) => {
-		this.setState(state, () => forwardControlsAvailable({available: false}, this.props));
-	}
-
 	doAutoClose = () => {
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedTitleHide();
-		this.setControlVisibilityStates({
+		this.setState({
 			feedbackVisible: false,
 			mediaControlsVisible: false,
 			mediaSliderVisible: this.state.mediaSliderVisible && this.state.miniFeedbackVisible,
