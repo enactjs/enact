@@ -74,22 +74,12 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 			};
 		}
 
-		componentWillMount () {
-			if (this.props.value) {
-				this.setState({
-					value: this.props.value
-				});
-			}
-		}
-
 		handleChange = (ev) => {
 			if (!this.state.isClicked) {
 				this.setState({
 					value: this.validateValue(parseInt(ev.value))
 				});
 				forwardChange(ev, this.props);
-			} else {
-				return false;
 			}
 		}
 
