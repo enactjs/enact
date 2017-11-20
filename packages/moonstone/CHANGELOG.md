@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Expandable` and derivatives to use the new `ease-out-quart` animation timing function to better match the aesthetic of Enyo's Expandables
+- `moonstone/TooltipDecorator` to correctly display tooltip direction when locale changes
 - `moonstone/Marquee` to restart animation on every resize update
 - `moonstone/LabeledItem` to start marquee when hovering over in disabled state
 - `moonstone/Marquee` to correctly start when hovering on disabled spottable components
@@ -18,6 +19,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Picker` marquee issues with disabled buttons or Picker
 - `moonstone/Panels` to prevent loss of spotlight issue when moving between panels
 - `moonstone/VideoPlayer` to not read out the focused button when the media controls hide
+- `moonstone/MarqueeDecorator` to stop when unhovering a disabled component using `marqueeOn` `'focus'`
 
 ## [1.12.2] - 2017-11-15
 
