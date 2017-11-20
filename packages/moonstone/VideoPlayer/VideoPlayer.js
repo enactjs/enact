@@ -103,8 +103,8 @@ const handledCustomMediaEventsMap = {
 
 // provide forwarding of events on media controls
 const forwardControlsAvailable = forward('onControlsAvailable');
-const forwardBackwardButtonClick = forward('onBackwardButtonClick');
-const forwardForwardButtonClick = forward('onForwardButtonClick');
+const forwardBackwardButtonClick = forwardWithPrevent('onBackwardButtonClick');
+const forwardForwardButtonClick = forwardWithPrevent('onForwardButtonClick');
 const forwardJumpBackwardButtonClick = forwardWithPrevent('onJumpBackwardButtonClick');
 const forwardJumpForwardButtonClick = forwardWithPrevent('onJumpForwardButtonClick');
 const forwardPlayButtonClick = forward('onPlayButtonClick');
@@ -182,7 +182,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */ {
 		/**
-		 * PRovides a way to set the data-component-id onto the Spottable div that captures
+		 * Provides a way to set the data-component-id onto the Spottable div that captures
 		 * navigational events for advanced Spotlight handling.
 		 *
 		 * @type {String}
@@ -399,46 +399,6 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		noAutoPlay: PropTypes.bool,
-
-		/**
-		 * Prevents the built-in Backward functionality from executing. You'd use this if you only
-		 * wanted your own Backward callback to run and not the "standard" behavior. Regardless of
-		 * this setting, your callback method will always be fired.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		noBuiltInBackward: PropTypes.bool,
-
-		/**
-		 * Prevents the built-in Forward functionality from executing. You'd use this if you only
-		 * wanted your own Forward callback to run and not the "standard" behavior. Regardless of
-		 * this setting, your callback method will always be fired.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		noBuiltInForward: PropTypes.bool,
-
-		/**
-		 * Prevents the built-in JumpBackward functionality from executing. You'd use this if you
-		 * only wanted your own JumpBackward callback to run and not the "standard" behavior.
-		 * Regardless of this setting, your callback method will always be fired.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		noBuiltInJumpBackward: PropTypes.bool,
-
-		/**
-		 * Prevents the built-in JumpForward functionality from executing. You'd use this if you
-		 * only wanted your own JumpForward callback to run and not the "standard" behavior.
-		 * Regardless of this setting, your callback method will always be fired.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		noBuiltInJumpForward: PropTypes.bool,
 
 		/**
 		 * Removes the "jump" buttons. The buttons that skip forward or backward in the video.
@@ -718,10 +678,6 @@ const VideoPlayerBase = class extends React.Component {
 		jumpBy: 30,
 		jumpDelay: 200,
 		miniFeedbackHideDelay: 2000,
-		noBuiltInJumpBackward: false,
-		noBuiltInBackward: false,
-		noBuiltInForward: false,
-		noBuiltInJumpForward: false,
 		playbackRateHash: {
 			fastForward: ['2', '4', '8', '16'],
 			rewind: ['-2', '-4', '-8', '-16'],
@@ -1883,13 +1839,10 @@ const VideoPlayerBase = class extends React.Component {
 
 	onJumpBackward = this.handle(
 		(ev, props) => forwardJumpBackwardButtonClick(this.addStateToEvent(ev), props),
-		// Add prop to disable this feature
-		forProp('noBuiltInJumpBackward', false),
 		() => this.jump(-1 * this.props.jumpBy)
 	)
 	onBackward = this.handle(
 		(ev, props) => forwardBackwardButtonClick(this.addStateToEvent(ev), props),
-		forProp('noBuiltInBackward', false),
 		this.rewind
 	)
 	onPlay = (ev) => {
@@ -1902,13 +1855,10 @@ const VideoPlayerBase = class extends React.Component {
 	}
 	onForward = this.handle(
 		(ev, props) => forwardForwardButtonClick(this.addStateToEvent(ev), props),
-		forProp('noBuiltInForward', false),
 		this.fastForward
 	)
 	onJumpForward = this.handle(
 		(ev, props) => forwardJumpForwardButtonClick(this.addStateToEvent(ev), props),
-		// Add prop to disable this feature
-		forProp('noBuiltInJumpForward', false),
 		() => this.jump(this.props.jumpBy)
 	)
 	onMoreClick = () => {
@@ -2013,10 +1963,6 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.jumpDelay;
 		delete rest.miniFeedbackHideDelay;
 		delete rest.no5WayJump;
-		delete rest.noBuiltInJumpBackward;
-		delete rest.noBuiltInBackward;
-		delete rest.noBuiltInForward;
-		delete rest.noBuiltInJumpForward;
 		delete rest.onBackwardButtonClick;
 		delete rest.onControlsAvailable;
 		delete rest.onForwardButtonClick;
