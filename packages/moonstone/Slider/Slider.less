@@ -71,6 +71,7 @@
 		background-color: transparent;
 		box-sizing: border-box;
 		-webkit-appearance: none;
+		opacity: 0;  // Allows the input to not issue a repaint when dragging the knob, but retains the size and position on screen
 
 		&::-webkit-slider-thumb {
 			height: @moon-slider-knob-height;
