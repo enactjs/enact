@@ -635,13 +635,6 @@ const VideoPlayerBase = class extends React.Component {
 		setApiProvider: PropTypes.func,
 
 		/**
-		 * Refer the VideoPlayer component to parents
-		 *
-		 * @type {Function}
-		 */
-		setVideoPlayerRef: PropTypes.func,
-
-		/**
 		 * Any children `<source>` tag elements of [VideoPlayer]{@link moonstone/VideoPlayer} will
 		 * be sent directly to the `<video>` element as video sources.
 		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
@@ -804,10 +797,6 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (props.setApiProvider) {
 			props.setApiProvider(this);
-		}
-
-		if (props.setVideoPlayerRef) {
-			props.setVideoPlayerRef(this);
 		}
 	}
 
@@ -2044,7 +2033,6 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.titleHideDelay;
 		delete rest.tooltipHideDelay;
 		delete rest.videoPath;
-		delete rest.setVideoPlayerRef;
 		delete rest.loading;
 
 		// Remove the events we manually added so they aren't added twice or fail.
