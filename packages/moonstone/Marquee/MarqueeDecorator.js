@@ -303,7 +303,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.context.enter(this);
 			} else if (!this.props.disabled && next.disabled && this.isFocused) {
 				this.isFocused = false;
-				if (!this.sync && !this.isHovered) {
+				if (!this.isHovered) {
 					this.cancelAnimation();
 				}
 			}
