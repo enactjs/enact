@@ -370,12 +370,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {Boolean} - `true` if a possible marquee condition exists
 		 */
 		shouldStartMarquee () {
+			const {disabled, marqueeOn} = this.props;
 			return (
 				this.forceRestartMarquee ||
 				!this.sync && (
-					(this.isFocused && this.props.marqueeOn === 'focus') ||
-					(this.isHovered && this.props.marqueeOn === 'hover') ||
-					(this.isHovered && this.props.marqueeOn === 'focus' && this.props.disabled)
+					(this.isFocused && marqueeOn === 'focus' && !disabled) ||
+					(this.isHovered && (marqueeOn === 'hover' || marqueeOn === 'focus' && disabled))
 				)
 			);
 		}
