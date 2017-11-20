@@ -1472,7 +1472,9 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	rewind = () => {
-		let shouldResumePlayback = false;
+		const rateForSlowRewind = this.props.playbackRateHash['slowRewind'];
+		let shouldResumePlayback = false,
+			command = 'rewind';
 
 		if (this.video.currentTime === 0) {
 			// Do not rewind if currentTime is 0. We're already at the beginning.
@@ -1482,35 +1484,33 @@ const VideoPlayerBase = class extends React.Component {
 			case 'slowRewind':
 				if (this.speedIndex === this.playbackRates.length - 1) {
 					// reached to the end of array => go to rewind
-					this.selectPlaybackRates('rewind');
+					this.selectPlaybackRates(command);
 					this.speedIndex = 0;
-					this.prevCommand = 'rewind';
+					this.prevCommand = command;
 				} else {
 					this.speedIndex = this.clampPlaybackRate(this.speedIndex + 1);
 				}
 				break;
-			case 'pause': {
-				// not use slowrewind set if slowrewind is not supported : QEVENTSEVT-17386
-				let cmd = 'slowRewind';
-				const rateForSlowRewind = this.props.playbackRateHash['slowRewind'];
-				if (!rateForSlowRewind || (rateForSlowRewind && rateForSlowRewind.length === 0)) {
-					cmd = 'rewind';
+			case 'pause':
+				// If it's possible to slowRewind, do it, otherwise just leave it as normal rewind : QEVENTSEVT-17386
+				if (rateForSlowRewind && rateForSlowRewind.length >= 0) {
+					command = 'slowRewind';
 				}
-				this.selectPlaybackRates(cmd);
+				this.selectPlaybackRates(command);
 				if (this.state.paused && this.state.duration > this.state.currentTime) {
 					shouldResumePlayback = true;
 				}
 				this.speedIndex = 0;
-				this.prevCommand = cmd;
-			} break;
+				this.prevCommand = command;
+				break;
 			case 'rewind':
 				this.speedIndex = this.clampPlaybackRate(this.speedIndex + 1);
-				this.prevCommand = 'rewind';
+				this.prevCommand = command;
 				break;
 			default:
-				this.selectPlaybackRates('rewind');
+				this.selectPlaybackRates(command);
 				this.speedIndex = 0;
-				this.prevCommand = 'rewind';
+				this.prevCommand = command;
 				break;
 		}
 
