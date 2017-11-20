@@ -12,7 +12,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {contextTypes, FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
-import {forKey, forProp, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
+import {forKey, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
 import ilib from '@enact/i18n';
 import {perfNow, Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
