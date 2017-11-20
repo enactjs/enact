@@ -215,7 +215,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.current5WayValue = null;
+			this.detachedValue = null;
 			this.knobPosition = null;
 			this.normalizeBounds(props);
 			this.detachedKnobPosition = 0;
@@ -334,14 +334,18 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		moveKnobByAmount (amount) {
-			const value = this.current5WayValue === null ? this.state.value : this.current5WayValue;
-			this.current5WayValue = this.clamp(value + amount);
+			const value = this.detachedValue === null ? this.state.value : this.detachedValue;
+			this.detachedValue = this.clamp(value + amount);
 			this.knobPosition = computeProportionProgress({
 				max: this.normalizedMax,
 				min: this.normalizedMin,
-				value: this.current5WayValue
+				value: this.detachedValue
 			});
 			this.updateUI();
+		}
+
+		detachKnob () {
+			this.moveKnobByAmount(0);
 		}
 
 		moveKnobByPointer (position) {
@@ -352,9 +356,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const pointer = position - this.inputNode.getBoundingClientRect().left;
 			const knob = (clamp(min, min + node.offsetWidth, pointer) - min) / node.offsetWidth;
 			const knobValue = (this.normalizedMax - this.normalizedMin) * knob;
-			this.current5WayValue = knobValue - knobValue % this.props.step;
+			this.detachedValue = knobValue - knobValue % this.props.step;
 			if (this.stepDecimalDigits !== 0) {
-				this.current5WayValue = parseNumber(this.current5WayValue.toFixed(this.stepDecimalDigits));
+				this.detachedValue = parseNumber(this.detachedValue.toFixed(this.stepDecimalDigits));
 			}
 
 			// Update our instance's knowledge of where the knob should be
@@ -472,9 +476,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (ev.target.nodeName === 'INPUT') {
 				let value;
 				if (this.state.controlled) {
-					// use current knob position value (i.e. current5WayValue) for detachedKnob as value
+					// use current knob position value (i.e. detachedValue) for detachedKnob as value
 					// may change in between mouse down and mouse up by prop change
-					value = this.props.detachedKnob ? this.current5WayValue : this.changedControlledValue;
+					value = this.props.detachedKnob ? this.detachedValue : this.changedControlledValue;
 				} else {
 					value = this.state.value;
 				}
@@ -492,14 +496,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (disabled) return;
 
 			if (detachedKnob) {
-				if (this.current5WayValue !== null) {
+				if (this.detachedValue !== null) {
 					this.willChange = true;
-					this.throttleUpdateValue(this.clamp(this.current5WayValue));
-
-					// only clear knobPosition when not in
-					if (!Spotlight.getPointerMode()) {
-						this.knobPosition = null;
-					}
+					this.throttleUpdateValue(this.clamp(this.detachedValue));
 				}
 			} else {
 				const verticalHint = $L('change a value with up down button');
@@ -527,8 +526,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				)
 			) return;
 
-			if (this.current5WayValue !== null) {
-				this.current5WayValue = null;
+			if (this.detachedValue !== null) {
+				this.detachedValue = null;
 				this.knobPosition = null;
 				this.updateUI();
 			}
@@ -577,8 +576,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			) return;
 
 			if (this.props.detachedKnob) {
-				this.current5WayValue = this.clamp(this.state.value);
-				this.updateUI();
+				// knob should remain in the focused position on focus
+				this.detachKnob();
 			}
 
 			this.setState({
