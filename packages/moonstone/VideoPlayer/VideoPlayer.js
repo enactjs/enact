@@ -126,8 +126,8 @@ const AnnounceState = {
 	DONE: 4
 };
 
-// Given an array, prune out any null or undefined values
-const withoutNull = array => array && array.filter && array.filter(n => n != null);
+// Safely count the children nodes and exclude null & undefined values for an accurate count of real children
+const countReactChildren = (children) => React.Children.toArray(children).filter(n => n != null).length;
 
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
@@ -898,9 +898,9 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	calculateMaxComponentCount = () => {
-		let leftCount = React.Children.count(this.props.leftComponents),
-			rightCount = React.Children.count(withoutNull(this.props.rightComponents)),
-			childrenCount = React.Children.count(this.props.children);
+		let leftCount = countReactChildren(this.props.leftComponents),
+			rightCount = countReactChildren(this.props.rightComponents),
+			childrenCount = countReactChildren(this.props.children);
 
 		// If the "more" button is present, automatically add it to the right's count.
 		if (childrenCount) {
