@@ -344,7 +344,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.updateUI();
 		}
 
-		fixateKnobPosition () {
+		detachKnob () {
 			this.moveKnobByAmount(0);
 		}
 
@@ -577,7 +577,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (this.props.detachedKnob) {
 				// knob should remain in the focused position on focus
-				this.fixateKnobPosition();
+				this.detachKnob();
 			}
 
 			this.setState({
