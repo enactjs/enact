@@ -9,6 +9,7 @@ import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import equals from 'ramda/src/equals';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {contextTypes, FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
@@ -182,15 +183,6 @@ const VideoPlayerBase = class extends React.Component {
 
 	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */ {
 		/**
-		 * Provides a way to set the data-component-id onto the Spottable div that captures
-		 * navigational events for advanced Spotlight handling.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		'data-component-id': PropTypes.string,
-
-		/**
 		 * passed by AnnounceDecorator for accessibility
 		 *
 		 * @type {Function}
@@ -217,6 +209,14 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		backwardIcon: PropTypes.string,
+
+		/**
+		 * Specifies the spotlight container ID for the player
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		containerId: PropTypes.string,
 
 		/**
 		 * Removes interactive capability from this component. This includes, but is not limited to,
@@ -1866,7 +1866,10 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	setPlayerRef = (node) => {
-		this.player = node;
+		// TODO: We've moved SpotlightContainerDecorator up to allow VP to be spottable but also
+		// need a ref to the root node to query for children and set CSS variables.
+		// eslint-disable-next-line react/no-find-dom-node
+		this.player = ReactDOM.findDOMNode(node);
 	}
 
 	setVideoRef = (video) => {
@@ -1910,7 +1913,7 @@ const VideoPlayerBase = class extends React.Component {
 			backwardIcon,
 			children,
 			className,
-			'data-component-id': dataComponentId,
+			containerId,
 			forwardIcon,
 			infoComponents,
 			jumpBackwardIcon,
@@ -1974,7 +1977,15 @@ const VideoPlayerBase = class extends React.Component {
 		const controlsAriaProps = this.getControlsAriaProps();
 
 		return (
-			<div className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
+			<Container
+				className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')}
+				containerId={containerId}
+				onClick={this.activityDetected}
+				onKeyDown={this.activityDetected}
+				ref={this.setPlayerRef}
+				spotlightDisabled={spotlightDisabled}
+				style={style}
+			>
 				{/* Video Section */}
 				<video
 					{...rest}
@@ -2004,11 +2015,7 @@ const VideoPlayerBase = class extends React.Component {
 						>
 							{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
 						</FeedbackContent>
-						<Container
-							className={css.bottom + (this.state.mediaControlsVisible ? '' : ' ' + css.hidden)}
-							data-container-disabled={!this.state.mediaControlsVisible}
-							spotlightDisabled={!this.state.mediaControlsVisible || spotlightDisabled}
-						>
+						<div className={css.bottom + (this.state.mediaControlsVisible ? '' : ' ' + css.hidden)}>
 							{/*
 								Info Section: Title, Description, Times
 								Only render when `this.state.mediaControlsVisible` is true in order for `Marquee`
@@ -2041,7 +2048,7 @@ const VideoPlayerBase = class extends React.Component {
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
 								onSpotlightUp={this.handleSpotlightUpFromSlider}
 								forcePressed={this.state.slider5WayPressed}
-								spotlightDisabled={spotlightDisabled || this.state.mediaSliderVisible && !this.state.mediaControlsVisible}
+								spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
 								value={this.state.proportionPlayed}
 								visible={this.state.mediaSliderVisible}
 							>
@@ -2093,7 +2100,7 @@ const VideoPlayerBase = class extends React.Component {
 							>
 								{children}
 							</MediaControls>
-						</Container>
+						</div>
 					</div> :
 					null
 				}
@@ -2101,14 +2108,13 @@ const VideoPlayerBase = class extends React.Component {
 					// This captures spotlight focus for use with 5-way.
 					// It's non-visible but lives at the top of the VideoPlayer.
 					className={css.controlsHandleAbove}
-					data-component-id={dataComponentId}
 					onSpotlightDown={this.showControls}
 					onClick={this.showControls}
 					onKeyDown={this.handleKeyDown}
 					spotlightDisabled={this.state.mediaControlsVisible || spotlightDisabled}
 				/>
 				<Announce ref={this.setAnnounceRef} />
-			</div>
+			</Container>
 		);
 	}
 };
