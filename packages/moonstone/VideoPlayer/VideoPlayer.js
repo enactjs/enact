@@ -1921,6 +1921,7 @@ const VideoPlayerBase = class extends React.Component {
 			children,
 			className,
 			containerId,
+			disabled,
 			forwardIcon,
 			infoComponents,
 			jumpBackwardIcon,
@@ -1942,10 +1943,9 @@ const VideoPlayerBase = class extends React.Component {
 			source,
 			spotlightDisabled,
 			style,
-			thumbnailSrc,
 			thumbnailComponent,
+			thumbnailSrc,
 			title,
-			disabled,
 			...rest} = this.props;
 
 		delete rest.announce;
@@ -1954,6 +1954,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.initialJumpDelay;
 		delete rest.jumpBy;
 		delete rest.jumpDelay;
+		delete rest.loading;
 		delete rest.miniFeedbackHideDelay;
 		delete rest.no5WayJump;
 		delete rest.onBackwardButtonClick;
@@ -1972,7 +1973,6 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.titleHideDelay;
 		delete rest.tooltipHideDelay;
 		delete rest.videoPath;
-		delete rest.loading;
 
 		// Remove the events we manually added so they aren't added twice or fail.
 		for (let eventName in handledCustomMediaEventsMap) {
@@ -2050,6 +2050,7 @@ const VideoPlayerBase = class extends React.Component {
 							{noSlider ? null : <MediaSlider
 								backgroundProgress={this.state.proportionLoaded}
 								disabled={disabled}
+								forcePressed={this.state.slider5WayPressed}
 								onBlur={this.handleSliderBlur}
 								onChange={this.onSliderChange}
 								onFocus={this.handleSliderFocus}
@@ -2057,18 +2058,17 @@ const VideoPlayerBase = class extends React.Component {
 								onKnobMove={this.handleKnobMove}
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
 								onSpotlightUp={this.handleSpotlightUpFromSlider}
-								forcePressed={this.state.slider5WayPressed}
 								spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
 								value={this.state.proportionPlayed}
 								visible={this.state.mediaSliderVisible}
 							>
 								<FeedbackTooltip
 									noFeedback={!this.state.feedbackIconVisible}
-									playbackState={this.prevCommand}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
+									playbackState={this.prevCommand}
+									thumbnailComponent={thumbnailComponent}
 									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
-									thumbnailComponent={thumbnailComponent}
 									visible={this.state.feedbackVisible}
 								>
 									{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
@@ -2118,9 +2118,9 @@ const VideoPlayerBase = class extends React.Component {
 					// This captures spotlight focus for use with 5-way.
 					// It's non-visible but lives at the top of the VideoPlayer.
 					className={css.controlsHandleAbove}
-					onSpotlightDown={this.showControls}
 					onClick={this.showControls}
 					onKeyDown={this.handleKeyDown}
+					onSpotlightDown={this.showControls}
 					spotlightDisabled={this.state.mediaControlsVisible || spotlightDisabled}
 				/>
 				<Announce ref={this.setAnnounceRef} />
