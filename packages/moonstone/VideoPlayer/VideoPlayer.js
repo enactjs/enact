@@ -1710,6 +1710,12 @@ const VideoPlayerBase = class extends React.Component {
 
 	handleSpotlightUpFromSlider = handle(
 		stopImmediate,
+		// FIXME: This is a workaround for a scenario in which Slider does not receive a blur event
+		// on 5-way up from it.
+		() => {
+			this.handleSliderBlur();
+			return true;
+		},
 		this.hideControls
 	);
 
