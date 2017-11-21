@@ -41,8 +41,8 @@ import Times from './Times';
 import css from './VideoPlayer.less';
 
 const SpottableDiv = Spottable('div');
-const ControlsContainer = SpotlightContainerDecorator('div');
-const RootContainer = SpotlightContainerDecorator(
+const RootContainer = SpotlightContainerDecorator('div');
+const ControlsContainer = SpotlightContainerDecorator(
 	{
 		leaveFor: {down:'', up:'', left:'', right:''},
 		enterTo: ''
