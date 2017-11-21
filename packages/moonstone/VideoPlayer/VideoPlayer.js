@@ -41,7 +41,8 @@ import Times from './Times';
 import css from './VideoPlayer.less';
 
 const SpottableDiv = Spottable('div');
-const Container = SpotlightContainerDecorator(
+const ControlsContainer = SpotlightContainerDecorator('div');
+const RootContainer = SpotlightContainerDecorator(
 	{
 		leaveFor: {down:'', up:'', left:'', right:''},
 		enterTo: ''
@@ -1977,7 +1978,7 @@ const VideoPlayerBase = class extends React.Component {
 		const controlsAriaProps = this.getControlsAriaProps();
 
 		return (
-			<Container
+			<RootContainer
 				className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')}
 				containerId={containerId}
 				onClick={this.activityDetected}
@@ -2015,7 +2016,10 @@ const VideoPlayerBase = class extends React.Component {
 						>
 							{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
 						</FeedbackContent>
-						<div className={css.bottom + (this.state.mediaControlsVisible ? '' : ' ' + css.hidden)}>
+						<ControlsContainer
+							className={css.bottom + (this.state.mediaControlsVisible ? '' : ' ' + css.hidden)}
+							spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
+						>
 							{/*
 								Info Section: Title, Description, Times
 								Only render when `this.state.mediaControlsVisible` is true in order for `Marquee`
@@ -2100,7 +2104,7 @@ const VideoPlayerBase = class extends React.Component {
 							>
 								{children}
 							</MediaControls>
-						</div>
+						</ControlsContainer>
 					</div> :
 					null
 				}
@@ -2114,7 +2118,7 @@ const VideoPlayerBase = class extends React.Component {
 					spotlightDisabled={this.state.mediaControlsVisible || spotlightDisabled}
 				/>
 				<Announce ref={this.setAnnounceRef} />
-			</Container>
+			</RootContainer>
 		);
 	}
 };
