@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
+- `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
+
 ### Fixed
 
 ## [2.0.0-alpha.2] - 2017-08-29

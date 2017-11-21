@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/MoonstoneDecorator` root node to fill the entire space available, which simplifies positioning and sizing for child elements (previously always measured 0 in height)
+
 ### Fixed
 
 - `moonstone/VirtualList` to sync scroll position when clientSize changed
