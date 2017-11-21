@@ -786,7 +786,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopListeningForPulses();
 		this.sliderTooltipTimeJob.stop();
 		this.slider5WayPressJob.stop();
-		this.setDurFmt.stop();
+		this.setDurationFormat.stop();
 	}
 
 	//
@@ -828,11 +828,11 @@ const VideoPlayerBase = class extends React.Component {
 		if (this.locale !== locale && typeof window === 'object') {
 			this.locale = locale;
 
-			this.setDurFmt.idle();
+			this.setDurationFormat.idle();
 		}
 	}
 
-	setDurFmt = new Job(() => {
+	setDurationFormat = new Job(() => {
 		this.durfmt = new DurationFmt({length: 'medium', style: 'clock', useNative: false});
 	})
 
