@@ -336,9 +336,10 @@ const VideoPlayerBase = class extends React.Component {
 		loading: PropTypes.bool,
 
 		/**
-		 * Amount of time (in milliseconds), after the last user action, that the "mini feedback"
+		 * Amount of time (in milliseconds), after the last user action, that the `miniFeedback`
 		 * will automatically hide.
-		 * Setting this to 0 or `null` disables feedbackHideDelay; feedback will always be present.
+		 * Setting this to 0 or `null` disables `miniFeedbackHideDelay`; `miniFeedback` will always
+		 * be present.
 		 *
 		 * @type {Number}
 		 * @default 2000
@@ -618,7 +619,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * The internal thumbnail class will be added to this component, however, it's the
 		 * responsibility of the developer to include this class in their implementation, if
 		 * appropriate for their application. This component follows the same rules as the built-in
-		 * version; hiding and showing according to the state of `noFeedback`.
+		 * version.
 		 *
 		 * @type {Node}
 		 * @public
@@ -628,7 +629,8 @@ const VideoPlayerBase = class extends React.Component {
 		/**
 		 * Set a thumbnail image source to show on VideoPlayer's Slider knob. This is a standard
 		 * {@link moonstone/Image} component so it supports all of the same options for the `src`
-		 * property. If no `thumbnailSrc` is set, no tooltip will display.
+		 * property. If no `thumbnailComponent` and no `thumbnailSrc` is set, no tooltip will
+		 * display.
 		 *
 		 * @type {String|Object}
 		 * @public
