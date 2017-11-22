@@ -2,13 +2,9 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
-## [unreleased]
+## [1.13.0] - 2017-11-28
 
-### Added
-
-### Changed
-
-### Fixed
+No significant changes.
 
 ## [1.12.2] - 2017-11-15
 
