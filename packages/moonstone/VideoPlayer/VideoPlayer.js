@@ -1124,8 +1124,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	hideFeedbackJob = new Job(this.hideFeedback)
 
-	startDelayedMiniFeedbackHide = (delay) => {
-		delay = (delay != null) ? delay : this.props.miniFeedbackHideDelay;
+	startDelayedMiniFeedbackHide = (delay = this.props.miniFeedbackHideDelay) => {
 		if (delay) {
 			this.hideMiniFeedbackJob.startAfter(delay);
 		}
