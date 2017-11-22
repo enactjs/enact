@@ -909,18 +909,16 @@ class VirtualListCoreNative extends Component {
 			} else {
 				return indexToScroll;
 			}
-		} else {
-			if (direction === 'up' && currentIndex < dimensionToExtent || direction === 'down' && currentIndex >= dataSize - dataSize % dimensionToExtent) {
-				return -1;
-			} else if (indexToScroll < 0) {
-				return currentIndex % dimensionToExtent;
-			} else if (indexToScroll >= dataSize) {
-				indexToScroll = dataSize - dataSize % dimensionToExtent + currentIndex % dimensionToExtent;
-				if (indexToScroll >= dataSize) {
-					indexToScroll = dataSize - 1;
-				}
-				return indexToScroll;
+		} else if (direction === 'up' && currentIndex < dimensionToExtent || direction === 'down' && currentIndex >= dataSize - dataSize % dimensionToExtent) {
+			return -1;
+		} else if (indexToScroll < 0) {
+			return currentIndex % dimensionToExtent;
+		} else if (indexToScroll >= dataSize) {
+			indexToScroll = dataSize - dataSize % dimensionToExtent + currentIndex % dimensionToExtent;
+			if (indexToScroll >= dataSize) {
+				indexToScroll = dataSize - 1;
 			}
+			return indexToScroll;
 		}
 	}
 
