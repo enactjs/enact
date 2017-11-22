@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VirtualList` to handle focus properly via page up at the first page and via page down at the last page
 - `moonstone/Expandable` and derivatives to use the new `ease-out-quart` animation timing function to better match the aesthetic of Enyo's Expandables
 - `moonstone/TooltipDecorator` to correctly display tooltip direction when locale changes
 - `moonstone/Marquee` to restart animation on every resize update
