@@ -115,13 +115,21 @@ const FeedbackTooltipBase = kind({
 			hidden: !visible && states[s] && states[s].allowHide,
 			thumbnailDeactivated
 		}),
-		thumbnailComponent: ({thumbnailComponent: ThumbnailComponent, thumbnailSrc}) => (
-			ThumbnailComponent ?
-				<ThumbnailComponent className={css.thumbnail} /> :
-				<div className={css.thumbnail}>
-					<Image src={thumbnailSrc} className={css.image} />
-				</div>
-		)
+		thumbnailComponent: ({noFeedback, thumbnailComponent: ThumbnailComponent, thumbnailSrc}) => {
+			// noFeedback is effectively "tooltip mode", one mode being whether the time and icon are visible,
+			// the other being the thumbnail and time are visible.
+			if (noFeedback) {
+				if (ThumbnailComponent) {
+					return <ThumbnailComponent className={css.thumbnail} />;
+				} else if (thumbnailSrc) {
+					return (
+						<div className={css.thumbnail}>
+							<Image src={thumbnailSrc} className={css.image} />
+						</div>
+					);
+				}
+			}
+		}
 	},
 
 	render: ({children, noFeedback, playbackState, playbackRate, thumbnailComponent, ...rest}) => {
@@ -130,7 +138,7 @@ const FeedbackTooltipBase = kind({
 		delete rest.thumbnailSrc;
 		return (
 			<div {...rest}>
-				{noFeedback ? thumbnailComponent : null}
+				{thumbnailComponent}
 				<FeedbackContent
 					className={css.content}
 					feedbackVisible={!noFeedback}
