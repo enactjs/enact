@@ -96,13 +96,6 @@ const SimpleIntegerPickerBase = kind({
 		 */
 		incrementIcon: PropTypes.string,
 
-		/**
-		 * The method to run when the input mounts, giving a reference to the DOM.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		inputRef: PropTypes.func,
 
 		/**
 		 * When `true`, the input will be enabled
@@ -112,6 +105,14 @@ const SimpleIntegerPickerBase = kind({
 		 * @public
 		 */
 		inputMode : PropTypes.bool,
+
+		/**
+		 * The method to run when the input mounts, giving a reference to the DOM.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		inputRef: PropTypes.func,
 
 		/**
 		 * By default, the picker will animate transitions between items if it has a defined
