@@ -2,7 +2,7 @@ import SimpleIntegerPicker from '@enact/moonstone/SimpleIntegerPicker';
 import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {boolean, number, select} from '@kadira/storybook-addon-knobs';
+import {boolean, number, select, text} from '@kadira/storybook-addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 
@@ -28,7 +28,7 @@ storiesOf('SimpleIntegerPicker')
 				Brightness :
 				<SimpleIntegerPicker
 					decrementIcon={nullify(select('decrementIcon', ['', ...decrementIcons]))}
-					defaultValue={0}
+					defaultValue={20}
 					disabled={boolean('disabled', false)}
 					incrementIcon={nullify(select('incrementIcon', ['', ...incrementIcons]))}
 					joined={nullify(boolean('joined', true))}
@@ -40,7 +40,7 @@ storiesOf('SimpleIntegerPicker')
 					onClick={action('onClick')}
 					orientation={select('orientation', prop.orientation, 'horizontal')}
 					step={number('step', 1)}
-					units={'lumens'}
+					units={text('units', 'lumens')}
 					width={parseIntOrNullify(select('width', prop.width, 'medium'))}
 					wrap={nullify(boolean('wrap', false))}
 				/> (0 to 100)

@@ -1,13 +1,14 @@
+import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import {contextTypes} from '@enact/core/internal/PubSub';
+import {addAll, is} from '@enact/core/keymap';
+import Spotlight from '@enact/spotlight';
+import classNames from 'classnames';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import Spotlight from '@enact/spotlight';
-import {addAll, is} from '@enact/core/keymap';
-import {forward} from '@enact/core/handle';
+
 import css from './SimpleIntegerPicker.less';
-import classNames from 'classnames';
-import {contextTypes} from '@enact/core/internal/PubSub';
 
 addAll({
 	minus: 109,
@@ -15,6 +16,15 @@ addAll({
 	plus: 107
 });
 
+/**
+ *{@link moonstone/SimpleIntegerPicker.SimpleIntegerPickerDecorator} is a Higher-order Component
+ * which handles various functionalities of {@link moonstone/SimpleIntegerPicker.SimpleIntegerPicker}.
+ *
+ * @class SimpleIntegerPickerDecorator
+ * @memberof moonstone/SimpleIntegerPicker
+ * @hoc
+ * @public
+ */
 const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 	// Set-up event forwarding
 	const forwardBlur = forward('onBlur');
@@ -45,32 +55,32 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 			min: PropTypes.number.isRequired,
 
 			/**
+			 * The value by default the picker needs to show when loading for the first time
+			 *
+			 * @type {Number}
+			 * @public
+			 */
+			defaultValue: PropTypes.number,
+
+			/**
 			 * When `true`, the SimpleIntegerPicker is shown as disabled and does not generate `onChange`
 			 * [events]{@glossary event}.
 			 *
 			 * @type {Boolean}
 			 * @public
 			 */
-			disabled: PropTypes.bool,
-
-			/**
-			 * The value by default the picker needs to show when loading for the first time
-			 *
-			 * @type {Number}
-			 * @public
-			 */
-			value: PropTypes.number
+			disabled: PropTypes.bool
 		}
 
 		static defaultProps = {
-			value: 0
+			defaultValue: 0
 		}
 
 		constructor (props) {
 			super(props);
 			this.state = {
 				isClicked: false,
-				value: this.props.value ? this.props.value : 0
+				value: this.props.defaultValue ? this.props.defaultValue : 0
 			};
 		}
 
@@ -151,7 +161,7 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 			return (
 				<Wrapped
 					{...this.props}
-					isInputMode={this.state.isClicked}
+					inputMode={this.state.isClicked}
 					inputRef={this.getInputNode}
 					joined
 					onChange={this.handleChange}
