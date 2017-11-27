@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VirtualListNative` to set disable to correct container node during scroll
 - `moonstone/Expandable` and derivatives to use the new `ease-out-quart` animation timing function to better match the aesthetic of Enyo's Expandables
 - `moonstone/TooltipDecorator` to correctly display tooltip direction when locale changes
 - `moonstone/Marquee` to restart animation on every resize update
