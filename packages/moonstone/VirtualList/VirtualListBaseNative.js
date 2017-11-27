@@ -903,21 +903,18 @@ class VirtualListCoreNative extends Component {
 			factor = (direction === 'down' || direction === 'right') ? 1 : -1;
 		let indexToScroll = currentIndex + factor * numOfItemsInPage;
 
-		if (indexToScroll >= 0 && indexToScroll < dataSize) {
-			if (parseInt(currentIndex / dimensionToExtent) === parseInt(indexToScroll / dimensionToExtent)) {
-				return -1;
-			} else {
-				return indexToScroll;
-			}
-		} else if (direction === 'up' && currentIndex < dimensionToExtent || direction === 'down' && currentIndex >= dataSize - dataSize % dimensionToExtent) {
-			return -1;
-		} else if (indexToScroll < 0) {
-			return currentIndex % dimensionToExtent;
+		if (indexToScroll < 0) {
+			indexToScroll = currentIndex % dimensionToExtent;
 		} else if (indexToScroll >= dataSize) {
 			indexToScroll = dataSize - dataSize % dimensionToExtent + currentIndex % dimensionToExtent;
 			if (indexToScroll >= dataSize) {
 				indexToScroll = dataSize - 1;
 			}
+		}
+
+		if (indexToScroll === currentIndex) {
+			return -1;
+		} else {
 			return indexToScroll;
 		}
 	}
