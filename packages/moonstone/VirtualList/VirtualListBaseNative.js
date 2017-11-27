@@ -1048,7 +1048,7 @@ class VirtualListCoreNative extends Component {
 	}
 
 	setContainerDisabled = (bool) => {
-		const containerNode = this.containerRef;
+		const containerNode = this.contentRef;
 
 		if (containerNode) {
 			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
