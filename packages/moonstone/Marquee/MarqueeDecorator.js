@@ -301,6 +301,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.cancelAnimation();
 			} else if (next.disabled && this.isHovered && marqueeOn === 'focus' && this.sync) {
 				this.context.enter(this);
+			} else if (!this.props.disabled && next.disabled && this.isFocused) {
+				this.isFocused = false;
+				if (!this.isHovered) {
+					this.cancelAnimation();
+				}
 			}
 		}
 
@@ -374,7 +379,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return (
 				this.forceRestartMarquee ||
 				!this.sync && (
-					(this.isFocused && marqueeOn === 'focus' && !disabled) ||
+					(this.isFocused && marqueeOn === 'focus') ||
 					(this.isHovered && (marqueeOn === 'hover' || marqueeOn === 'focus' && disabled))
 				)
 			);
