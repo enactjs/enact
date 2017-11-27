@@ -912,11 +912,7 @@ class VirtualListCoreNative extends Component {
 			}
 		}
 
-		if (indexToScroll === currentIndex) {
-			return -1;
-		} else {
-			return indexToScroll;
-		}
+		return indexToScroll === currentIndex ? -1 : indexToScroll;
 	}
 
 	scrollToNextItem = ({direction, focusedItem}) => {
