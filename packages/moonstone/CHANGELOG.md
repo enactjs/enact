@@ -12,7 +12,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/VirtualListNative` to set disable to correct container node during scroll
 - `moonstone/VirtualList` to handle focus properly via page up at the first page and via page down at the last page
 - `moonstone/Expandable` and derivatives to use the new `ease-out-quart` animation timing function to better match the aesthetic of Enyo's Expandables
 - `moonstone/TooltipDecorator` to correctly display tooltip direction when locale changes
@@ -51,7 +50,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ExpandableItem` and all other `Expandable` components to now pull down from the top instead of being revealed from the bottom, matching Enyo's design
-- `moonstone/VirtualListNative` to scroll properly with page up/down keys if there is a disabled item
 - `moonstone/RangePicker` to display negative values correctly in RTL
 - `moonstone/Scrollable` to not blur scroll buttons when wheeling
 - `moonstone/Scrollbar` to hide scroll thumb immediately without delay after scroll position reaches min or max
