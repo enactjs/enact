@@ -426,7 +426,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleChange = (ev) => {
-			if (this.props.disabled) return;
+			// If disable or not tracking the value (this.prevValue == null), onChange shouldn't be
+			// emitted
+			if (this.props.disabled || this.prevValue === null) return;
 
 			ev.preventDefault();
 			ev.stopPropagation(); // we don't want input's onChange synthetic event to propagate
@@ -466,7 +468,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.updateUI();
 		}
 
-		handleClick = (ev) => {
+		handleMouseUp = (ev) => {
 			forwardClick(ev, this.props);
 
 			if (!this.props.disabled && Spotlight.getCurrent() !== this.sliderNode) {
@@ -602,7 +604,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onActivate={this.handleActivate}
 					onBlur={this.handleBlur}
 					onChange={this.handleChange}
-					onClick={this.handleClick}
 					onDecrement={this.handleDecrement}
 					onFocus={this.handleFocus}
 					onIncrement={this.handleIncrement}
@@ -610,6 +611,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onMouseEnter={this.handleMouseEnter}
 					onMouseLeave={this.handleMouseLeave}
 					onMouseMove={this.handleMouseMove}
+					onMouseUp={this.handleMouseUp}
 					scrubbing={(this.knobPosition != null)}
 					sliderBarRef={this.getSliderBarNode}
 					sliderRef={this.getSliderNode}
