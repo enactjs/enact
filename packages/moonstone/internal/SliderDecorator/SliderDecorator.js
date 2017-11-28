@@ -469,23 +469,25 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleClick = (ev) => {
 			forwardClick(ev, this.props);
 
-			if (!this.props.disabled && Spotlight.getCurrent() !== this.sliderNode) {
-				Spotlight.focus(this.sliderNode);
-			}
-
-			if (ev.target.nodeName === 'INPUT') {
-				let value;
-				if (this.state.controlled) {
-					// use current knob position value (i.e. detachedValue) for detachedKnob as value
-					// may change in between mouse down and mouse up by prop change
-					value = this.props.detachedKnob ? this.detachedValue : this.changedControlledValue;
-				} else {
-					value = this.state.value;
+			if (!this.props.disabled) {
+				if (Spotlight.getCurrent() !== this.sliderNode) {
+					Spotlight.focus(this.sliderNode);
 				}
 
-				if (!this.props.disabled && this.prevValue !== value) {
-					forwardChange({value: parseNumber(value)}, this.props);
-					this.prevValue = null;
+				if (ev.target.nodeName === 'INPUT') {
+					let value;
+					if (this.state.controlled) {
+						// use current knob position value (i.e. detachedValue) for detachedKnob as value
+						// may change in between mouse down and mouse up by prop change
+						value = this.props.detachedKnob ? this.detachedValue : this.changedControlledValue;
+					} else {
+						value = this.state.value;
+					}
+
+					if (this.prevValue !== value) {
+						forwardChange({value: parseNumber(value)}, this.props);
+						this.prevValue = null;
+					}
 				}
 			}
 		}
