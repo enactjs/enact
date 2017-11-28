@@ -483,7 +483,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					value = this.state.value;
 				}
 
-				if (this.prevValue !== value) {
+				if (!this.props.disabled && this.prevValue !== value) {
 					forwardChange({value: parseNumber(value)}, this.props);
 					this.prevValue = null;
 				}

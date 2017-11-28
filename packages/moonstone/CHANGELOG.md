@@ -24,6 +24,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to correctly position knob when interacting with media slider
 - `moonstone/VideoPlayer` to not read out the focused button when the media controls hide
 - `moonstone/MarqueeDecorator` to stop when unhovering a disabled component using `marqueeOn` `'focus'`
+- `moonstone/Slider` to not forward `onChange` when `disabled` on `mouseUp/click`
 
 ## [1.12.2] - 2017-11-15
 
