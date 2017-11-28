@@ -21,6 +21,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Panels` to prevent loss of spotlight issue when moving between panels
 - `moonstone/VideoPlayer` to bring it in line with real-world use-cases
 - `moonstone/Slider` by removing unnecessary repaints to the screen
+- `moonstone/Slider` to fire `onChange` events when the knob is pressed near the boundaries
 - `moonstone/VideoPlayer` to correctly position knob when interacting with media slider
 - `moonstone/VideoPlayer` to not read out the focused button when the media controls hide
 - `moonstone/MarqueeDecorator` to stop when unhovering a disabled component using `marqueeOn` `'focus'`
