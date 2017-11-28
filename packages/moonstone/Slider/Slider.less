@@ -5,8 +5,6 @@
 @import '../styles/text.less';
 @import '../styles/skin.less';
 
-@slider-resting-state-scale: 0.8;
-
 .slider {
 	position: relative;
 	margin: 0 @moon-spotlight-outset;
@@ -45,8 +43,8 @@
 			width: @moon-slider-knob-width;
 			// Vertically and horizontally center this knob.
 			// Using this method rather than -top -left so the knob is more intuitively customizable.
-			-webkit-transform: @moon-translate-center scale(@slider-resting-state-scale);
-			transform:         @moon-translate-center scale(@slider-resting-state-scale);
+			-webkit-transform: @moon-translate-center scale(@moon-slider-knob-resting-state-scale);
+			transform:         @moon-translate-center scale(@moon-slider-knob-resting-state-scale);
 			border-radius: (@moon-slider-knob-height / 2);
 			border: @moon-button-border-width solid transparent;
 			box-sizing: border-box;
@@ -239,7 +237,7 @@
 			&.pressed,
 			&:focus.active {
 				.knob::before {
-					transform: @moon-translate-center scale(@slider-resting-state-scale);
+					transform: @moon-translate-center scale(@moon-slider-knob-resting-state-scale);
 				}
 			}
 		});
