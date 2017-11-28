@@ -324,6 +324,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		pageDistance = 0
 		animateOnFocus = false
 		pageDirection = 0
+		isWheeling = false
 
 		// event handlers
 		eventHandlers = {}
@@ -410,14 +411,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				window.document.activeElement.blur();
 			}
 			this.showThumb(bounds);
-
 			// FIXME This routine is a temporary support for horizontal wheel scroll.
 			// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
 			if (canScrollVertically) { // This routine handles wheel events on scrollbars for vertical scroll.
 				if (eventDelta < 0 && this.scrollTop > 0 || eventDelta > 0 && this.scrollTop < bounds.maxTop) {
 					const {horizontalScrollbarRef, verticalScrollbarRef} = this;
 
-					this.childRef.setContainerDisabled(true);
+					if (!this.isWheeling) {
+						this.childRef.setContainerDisabled(true);
+						this.isWheeling = true;
+					}
 
 					// Not to check if e.target is a descendant of a wrapped component which may have a lot of nodes in it.
 					if ((horizontalScrollbarRef && horizontalScrollbarRef.containerRef.contains(e.target)) ||
@@ -427,7 +430,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				}
 			} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
 				if (eventDelta < 0 && this.scrollLeft > 0 || eventDelta > 0 && this.scrollLeft < bounds.maxLeft) {
-					this.childRef.setContainerDisabled(true);
+					if (!this.isWheeling) {
+						this.childRef.setContainerDisabled(true);
+						this.isWheeling = true;
+					}
 					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				}
 			}
@@ -691,6 +697,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.hideThumb();
 			this.scrolling = false;
 			this.doScrollStop();
+			this.isWheeling = false;
 		}
 
 		scrollStopJob = new Job(this.scrollStopOnScroll.bind(this), scrollStopWaiting);
