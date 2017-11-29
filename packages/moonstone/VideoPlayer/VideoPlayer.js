@@ -1687,7 +1687,7 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		if (ev.type === 'play') {
-			this.handlePlay();
+			this.mayRenderBottomControls();
 		}
 		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
 		const fwd = this.handledMediaForwards[handledMediaEventsMap[ev.type]];
@@ -1896,9 +1896,8 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	handlePlay = () => {
-		forward('onPlay');
-		if (!this.bottomControlsRendered) {
+	mayRenderBottomControls = () => {
+		if (!this.state.bottomControlsRendered) {
 			this.renderBottomControl.idle();
 		}
 	}
