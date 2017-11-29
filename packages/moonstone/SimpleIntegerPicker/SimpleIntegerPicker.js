@@ -134,7 +134,7 @@ const SimpleIntegerPickerBase = kind({
 
 		/**
 		 * A function to run when the picker is clicked. This function enables the
-		 * input field only if middle part of the picker is clicked and ignores other clicks.
+		 * input field only if middle or the text part of the picker is clicked and ignores other clicks.
 		 *
 		 * @type {Function}
 		 * @public
@@ -287,7 +287,7 @@ const SimpleIntegerPickerBase = kind({
 		}
 	},
 
-	render: ({children, classes, noAnimation, onChange, onClick, pickerRef, value, ...rest}) => {
+	render: ({classes, pickerRef, ...rest}) => {
 		delete rest.padded;
 		delete rest.inputRef;
 		delete rest.onInputBlur;
@@ -295,18 +295,7 @@ const SimpleIntegerPickerBase = kind({
 		delete rest.units;
 
 		return (
-			<Picker
-				{...rest}
-				className={classes}
-				index={0}
-				noAnimation={noAnimation}
-				onChange={onChange}
-				onClick={onClick}
-				ref={pickerRef}
-				value={value}
-			>
-				{children}
-			</Picker>
+			<Picker {...rest} className={classes} index={0} ref={pickerRef} />
 		);
 	}
 });
