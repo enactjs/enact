@@ -46,12 +46,12 @@ const defaultConfig = {
 // Set-up event forwarding
 const forwardBlur = forward('onBlur');
 const forwardChange = forward('onChange');
-const forwardClick = forward('onClick');
 const forwardFocus = forward('onFocus');
 const forwardMouseDown = forward('onMouseDown');
 const forwardMouseEnter = forward('onMouseEnter');
-const forwardMouseMove = forward('onMouseMove');
 const forwardMouseLeave  = forward('onMouseLeave');
+const forwardMouseMove = forward('onMouseMove');
+const forwardMouseUp = forward('onMouseUp');
 
 /**
  * {@link moonstone/internal/SliderDecorator.SliderDecorator} is a Higher-order Component that
@@ -426,6 +426,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleChange = (ev) => {
+			// If disable or not tracking the value (this.prevValue == null), onChange shouldn't be
+			// emitted
 			if (this.props.disabled) return;
 
 			ev.preventDefault();
@@ -466,15 +468,15 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.updateUI();
 		}
 
-		handleClick = (ev) => {
-			forwardClick(ev, this.props);
+		handleMouseUp = (ev) => {
+			forwardMouseUp(ev, this.props);
 
 			if (!this.props.disabled) {
 				if (Spotlight.getCurrent() !== this.sliderNode) {
 					Spotlight.focus(this.sliderNode);
 				}
 
-				if (ev.target.nodeName === 'INPUT') {
+				if (ev.target.nodeName === 'INPUT' && this.prevValue !== null) {
 					let value;
 					if (this.state.controlled) {
 						// use current knob position value (i.e. detachedValue) for detachedKnob as value
@@ -604,7 +606,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onActivate={this.handleActivate}
 					onBlur={this.handleBlur}
 					onChange={this.handleChange}
-					onClick={this.handleClick}
 					onDecrement={this.handleDecrement}
 					onFocus={this.handleFocus}
 					onIncrement={this.handleIncrement}
@@ -612,6 +613,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onMouseEnter={this.handleMouseEnter}
 					onMouseLeave={this.handleMouseLeave}
 					onMouseMove={this.handleMouseMove}
+					onMouseUp={this.handleMouseUp}
 					scrubbing={(this.knobPosition != null)}
 					sliderBarRef={this.getSliderBarNode}
 					sliderRef={this.getSliderNode}
