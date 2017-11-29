@@ -9,7 +9,6 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/VideoPlayer` props `disabled`, `loading`, `miniFeedbackHideDelay`, and `thumbnailComponent` as well as new APIs: `areControlsVisible`, `getVideoNode`, `showFeedback`, and `toggleControls`
 - `ui/Transition` animation timing functions `ease-in`, `ease-out`, `ease-in-quart`, and `ease-out-quart` to provide prettier options for transitions that may be more suited to a specific visual style
 
-
 ### Fixed
 
 - `moonstone/VirtualList` to handle focus properly via page up at the first page and via page down at the last page
@@ -26,6 +25,8 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/VideoPlayer` to correctly position knob when interacting with media slider
 - `moonstone/VideoPlayer` to not read out the focused button when the media controls hide
 - `moonstone/MarqueeDecorator` to stop when unhovering a disabled component using `marqueeOn` `'focus'`
+- `moonstone/Slider` to not forward `onChange` when `disabled` on `mouseUp/click`
+- `moonstone/VideoPlayer` to defer rendering playback controls until needed
 - `ui/ViewManager` to prevent interaction issue with `moonstone/Scroller`
 
 ## [1.12.2] - 2017-11-15
