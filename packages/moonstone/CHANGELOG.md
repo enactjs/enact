@@ -26,8 +26,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to not read out the focused button when the media controls hide
 - `moonstone/MarqueeDecorator` to stop when unhovering a disabled component using `marqueeOn` `'focus'`
 - `moonstone/Slider` to not forward `onChange` when `disabled` on `mouseUp/click`
-- `moonstone/VideoPlayer` to initially render playback controls when `onPlay` is fired instead of when the component is mounted instead of `componentDidMount`
-- `moonstone/VideoPlayer` to initially render playback controls when `onPlay` is fired instead of `componentDidMount`
 - `moonstone/VideoPlayer` to defer rendering playback controls until needed
 
 ## [1.12.2] - 2017-11-15
