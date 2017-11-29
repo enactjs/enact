@@ -5,10 +5,10 @@
  */
 
 import kind from '@enact/core/kind';
-import {handle, forward} from '@enact/core/handle';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
+import Toggleable from '@enact/ui/Toggleable';
 
 import Icon from '../Icon';
 import Skinnable from '../Skinnable';
@@ -70,17 +70,6 @@ const CheckboxBase = kind({
 		className: 'checkbox'
 	},
 
-	handlers: {
-		onToggle: handle(
-			forward('onTap'),
-			(ev, {selected, onToggle}) => {
-				if (onToggle) {
-					onToggle({selected: !selected});
-				}
-			}
-		)
-	},
-
 	computed: {
 		className: ({selected, styler}) => styler.append({selected})
 	},
@@ -97,8 +86,11 @@ const CheckboxBase = kind({
 });
 
 const Checkbox = Pure(
-	Skinnable(
-		CheckboxBase
+	Toggleable(
+		{prop: 'selected'},
+		Skinnable(
+			CheckboxBase
+		)
 	)
 );
 
