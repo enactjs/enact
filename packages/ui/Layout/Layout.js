@@ -149,9 +149,16 @@ const LayoutBase = kind({
 			);
 		},
 		style: ({align, style}) => {
+			if (!align) return style;
+
+			// This is effectively a polyfill for the upcoming `place-items` prop which is shorthand
+			// for align-items and justify-items together
+			const alignParts = align.split(' ');
+
 			return {
 				...style,
-				alignItems: toFlexAlign(align)
+				alignItems: toFlexAlign(alignParts[0]),
+				justifyItems: toFlexAlign(alignParts[1])
 			};
 		}
 	},
