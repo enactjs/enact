@@ -67,6 +67,8 @@ const LayoutBase = kind({
 		 * `"start"` refers to the top in a horizontal layout, and left in a vertical LTR layout
 		 * `"end"` refers to the bottom in a horizontal layout, and right in a vertical LTR layout
 		 * `"start"` and `"end"` reverse places when in a vertical layout in a RTL locale.
+		 * This includes support for `align-parts` which is shorthand for combining `align-items`
+		 * and `justify-content` into a single property, separated by a space, in that order.
 		 *
 		 * @type {String}
 		 * @public
