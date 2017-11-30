@@ -2,6 +2,35 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.13.0] - 2017-11-28
+
+### Added
+
+- `moonstone/VideoPlayer` props `disabled`, `loading`, `miniFeedbackHideDelay`, and `thumbnailComponent` as well as new APIs: `areControlsVisible`, `getVideoNode`, `showFeedback`, and `toggleControls`
+- `ui/Transition` animation timing functions `ease-in`, `ease-out`, `ease-in-quart`, and `ease-out-quart` to provide prettier options for transitions that may be more suited to a specific visual style
+
+### Fixed
+
+- `moonstone/Expandable` and derivatives to use the new `ease-out-quart` animation timing function to better match the aesthetic of Enyo's Expandables
+- `moonstone/LabeledItem` to start marquee when hovering while disabled
+- `moonstone/Marquee.MarqueeController` to not abort marquee when moving among components
+- `moonstone/Marquee` to correctly start when hovering on disabled spottable components
+- `moonstone/Marquee` to restart animation on every resize update
+- `moonstone/MarqueeDecorator` to stop when unhovering a disabled component using `marqueeOn` `'focus'`
+- `moonstone/Panels` to prevent loss of spotlight issue when moving between panels
+- `moonstone/Picker` marquee issues with disabled buttons or Picker
+- `moonstone/Slider` by removing unnecessary repaints to the screen
+- `moonstone/Slider` to fire `onChange` events when the knob is pressed near the boundaries
+- `moonstone/Slider` to not forward `onChange` when `disabled` on `mouseUp/click`
+- `moonstone/TooltipDecorator` to correctly display tooltip direction when locale changes
+- `moonstone/VideoPlayer` to bring it in line with real-world use-cases
+- `moonstone/VideoPlayer` to correctly position knob when interacting with media slider
+- `moonstone/VideoPlayer` to defer rendering playback controls until needed
+- `moonstone/VideoPlayer` to not read out the focused button when the media controls hide
+- `moonstone/VirtualList` to handle focus properly via page up at the first page and via page down at the last page
+- `moonstone/VirtualList` to render items from a correct index on edge cases at the top of a list
+- `ui/ViewManager` to prevent interaction issue with `moonstone/Scroller`
+
 ## [1.12.2] - 2017-11-15
 
 ### Fixed

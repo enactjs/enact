@@ -2,30 +2,32 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [1.13.0] - 2017-11-28
 
 ### Added
 
 - `moonstone/VideoPlayer` props `disabled`, `loading`, `miniFeedbackHideDelay`, and `thumbnailComponent` as well as new APIs: `areControlsVisible`, `getVideoNode`, `showFeedback`, and `toggleControls`
 
-### Changed
-
 ### Fixed
 
+- `moonstone/VirtualList` to render items from a correct index on edge cases at the top of a list
 - `moonstone/VirtualList` to handle focus properly via page up at the first page and via page down at the last page
 - `moonstone/Expandable` and derivatives to use the new `ease-out-quart` animation timing function to better match the aesthetic of Enyo's Expandables
 - `moonstone/TooltipDecorator` to correctly display tooltip direction when locale changes
 - `moonstone/Marquee` to restart animation on every resize update
-- `moonstone/LabeledItem` to start marquee when hovering over in disabled state
+- `moonstone/LabeledItem` to start marquee when hovering while disabled
 - `moonstone/Marquee` to correctly start when hovering on disabled spottable components
 - `moonstone/Marquee.MarqueeController` to not abort marquee when moving among components
 - `moonstone/Picker` marquee issues with disabled buttons or Picker
 - `moonstone/Panels` to prevent loss of spotlight issue when moving between panels
-- `moonstone/VideoPlayer` to bring it in-line with real-world use-cases
+- `moonstone/VideoPlayer` to bring it in line with real-world use-cases
 - `moonstone/Slider` by removing unnecessary repaints to the screen
+- `moonstone/Slider` to fire `onChange` events when the knob is pressed near the boundaries
 - `moonstone/VideoPlayer` to correctly position knob when interacting with media slider
 - `moonstone/VideoPlayer` to not read out the focused button when the media controls hide
 - `moonstone/MarqueeDecorator` to stop when unhovering a disabled component using `marqueeOn` `'focus'`
+- `moonstone/Slider` to not forward `onChange` when `disabled` on `mouseUp/click`
+- `moonstone/VideoPlayer` to defer rendering playback controls until needed
 
 ## [1.12.2] - 2017-11-15
 
@@ -50,6 +52,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ExpandableItem` and all other `Expandable` components to now pull down from the top instead of being revealed from the bottom, matching Enyo's design
+- `moonstone/VirtualListNative` to scroll properly with page up/down keys if there is a disabled item
 - `moonstone/RangePicker` to display negative values correctly in RTL
 - `moonstone/Scrollable` to not blur scroll buttons when wheeling
 - `moonstone/Scrollbar` to hide scroll thumb immediately without delay after scroll position reaches min or max
