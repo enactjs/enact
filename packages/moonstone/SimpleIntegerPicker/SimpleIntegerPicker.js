@@ -87,7 +87,6 @@ const SimpleIntegerPickerBase = kind({
 		 */
 		disabled: PropTypes.bool,
 
-
 		/**
 		 * When `true`, the input will be enabled to edit
 		 *
