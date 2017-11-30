@@ -53,6 +53,7 @@ No significant changes.
 - `moonstone/MarqueeDecorator` to stop when unhovering a disabled component using `marqueeOn` `'focus'`
 - `moonstone/Slider` to not forward `onChange` when `disabled` on `mouseUp/click`
 - `moonstone/VideoPlayer` to defer rendering playback controls until needed
+- `moonstone/ExpandableSpotlightDecorator` from handling Spotlight `onHide` when in `pointerMode`
 
 ## [1.12.2] - 2017-11-15
 
