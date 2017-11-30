@@ -14,6 +14,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VirtualList` to prevent infinite function call when total item size is same with client size
 - `moonstone/VirtualList` to sync scroll position when clientSize changed
 
 ## [2.0.0-alpha.2] - 2017-08-29
