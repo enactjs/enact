@@ -109,7 +109,10 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleHide = () => {
-			if (!Spotlight.getPointerMode()) {
+			const pointerMode = Spotlight.getPointerMode();
+
+			if ((pointerMode && noPointerMode) || !pointerMode) {
+				// In `pointerMode`, only highlight `LabeledItem` when `noPointerMode` is `true`
 				this.highlight(this.highlightLabeledItem);
 			}
 		}
