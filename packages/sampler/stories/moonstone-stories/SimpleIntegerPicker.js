@@ -43,7 +43,7 @@ storiesOf('SimpleIntegerPicker')
 					onClick={action('onClick')}
 					orientation={select('orientation', prop.orientation, 'horizontal')}
 					step={number('step', 1)}
-					units={text('units', 'lumens')}
+					unit={text('unit', 'lumens')}
 					width={parseIntOrNullify(select('width', prop.width, 'medium'))}
 					wrap={nullify(boolean('wrap', false))}
 				/> (0 to 100)
