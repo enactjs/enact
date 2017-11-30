@@ -13,13 +13,13 @@ import css from './Panels.less';
  * The container for a set of Panels
  *
  * @class Viewport
+ * @memberof moonstone/Panels
  * @private
  */
 const ViewportBase = class extends React.Component {
 	static displayName = 'Viewport'
 
-	/** @lends Viewport.prototype */
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Panels.Viewport.prototype */ {
 
 		/**
 		 * A function that generates a globally-unique identifier for a panel index
@@ -91,6 +91,15 @@ const ViewportBase = class extends React.Component {
 		return true;
 	}
 
+	mayBlurSpotlight = () => {
+		const current = Spotlight.getCurrent();
+		if (current && this.node.contains(current)) {
+			current.blur();
+		}
+
+		return true;
+	}
+
 	handle = handle.bind(this)
 
 	handleTransition = this.handle(
@@ -102,6 +111,7 @@ const ViewportBase = class extends React.Component {
 	handleWillTransition = this.handle(
 		forward('onWillTransition'),
 		this.addTransitioningClass,
+		this.mayBlurSpotlight,
 		Spotlight.pause
 	)
 
@@ -133,7 +143,6 @@ const ViewportBase = class extends React.Component {
 				className={className}
 				component="main"
 				duration={250}
-				enteringDelay={100} // TODO: Can we remove this?
 				enteringProp={enteringProp}
 				index={index}
 				noAnimation={noAnimation}

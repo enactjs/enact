@@ -66,10 +66,10 @@ describe('Slider Specs', () => {
 			/>
 		);
 
-		slider.find(`.${css.input}`).simulate('click', {value});
+		slider.find(`.${css.input}`).simulate('mousedown', {value}).simulate('mouseup', {value});
 
-		const expected = true;
-		const actual = handleChange.calledOnce;
+		const expected = 1;
+		const actual = handleChange.callCount;
 
 		expect(actual).to.equal(expected);
 	});
@@ -88,8 +88,10 @@ describe('Slider Specs', () => {
 			/>
 		);
 
-		slider.find(`.${css.input}`).simulate('change', {target: {value}});
-		slider.find(`.${css.input}`).simulate('click', {value});
+		slider.find(`.${css.input}`)
+			.simulate('mousedown', {value})
+			.simulate('change', {target: {value}})
+			.simulate('mouseup', {value});
 
 		const expected = value;
 		const actual = handleChange.args[0][0].value;

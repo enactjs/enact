@@ -604,8 +604,13 @@ class VirtualListCore extends Component {
 			threshold.min = (threshold.max > minOfMax) ? threshold.max - gridSize : -Infinity;
 			newFirstIndex -= numOfGridLines * dimensionToExtent;
 		}
-		newFirstIndex = Math.min(maxFirstIndex, newFirstIndex);
-		newFirstIndex = Math.max(0, newFirstIndex);
+
+		if (threshold.min === -Infinity) {
+			newFirstIndex = 0;
+		} else {
+			newFirstIndex = Math.min(maxFirstIndex, newFirstIndex);
+			newFirstIndex = Math.max(0, newFirstIndex);
+		}
 
 		this.syncThreshold(maxPos);
 		this.scrollPosition = pos;
@@ -914,8 +919,18 @@ class VirtualListCore extends Component {
 			{dimensionToExtent, primary} = this,
 			numOfItemsInPage = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent,
 			factor = (direction === 'down' || direction === 'right') ? 1 : -1;
+		let indexToScroll = currentIndex + factor * numOfItemsInPage;
 
-		return clamp(0, dataSize - 1, currentIndex + factor * numOfItemsInPage);
+		if (indexToScroll < 0) {
+			indexToScroll = currentIndex % dimensionToExtent;
+		} else if (indexToScroll >= dataSize) {
+			indexToScroll = dataSize - dataSize % dimensionToExtent + currentIndex % dimensionToExtent;
+			if (indexToScroll >= dataSize) {
+				indexToScroll = dataSize - 1;
+			}
+		}
+
+		return indexToScroll === currentIndex ? -1 : indexToScroll;
 	}
 
 	scrollToNextItem = ({direction, focusedItem}) => {
