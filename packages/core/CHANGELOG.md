@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ### Changed
 
+- `@core/factory` to ignore customized CSS classNames that do not exist in the default configuration
+
 ### Fixed
 
 ## [2.0.0-alpha.2] - 2017-08-29
