@@ -585,8 +585,13 @@ class VirtualListCoreNative extends Component {
 			threshold.min = (threshold.max > minOfMax) ? threshold.max - gridSize : -Infinity;
 			newFirstIndex -= numOfGridLines * dimensionToExtent;
 		}
-		newFirstIndex = Math.min(maxFirstIndex, newFirstIndex);
-		newFirstIndex = Math.max(0, newFirstIndex);
+
+		if (threshold.min === -Infinity) {
+			newFirstIndex = 0;
+		} else {
+			newFirstIndex = Math.min(maxFirstIndex, newFirstIndex);
+			newFirstIndex = Math.max(0, newFirstIndex);
+		}
 
 		this.syncThreshold(maxPos);
 		this.scrollPosition = pos;
