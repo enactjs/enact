@@ -5,17 +5,17 @@
  * @module moonstone/SimpleIntegerPicker
  */
 
-import kind from '@enact/core/kind';
 import Changeable from '@enact/ui/Changeable';
-import Pure from '@enact/ui/internal/Pure';
 import clamp from 'ramda/src/clamp';
+import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 
-import {Picker, PickerItem} from '../internal/Picker';
-import {validateRange} from '../internal/validators';
 import {MarqueeController} from '../Marquee';
+import {Picker, PickerItem} from '../internal/Picker';
 import SpottablePicker from '../Picker/SpottablePicker';
+import {validateRange} from '../internal/validators';
 
 import SimpleIntegerPickerDecorator from './SimpleIntegerPickerDecorator';
 
@@ -79,13 +79,22 @@ const SimpleIntegerPickerBase = kind({
 		decrementIcon: PropTypes.string,
 
 		/**
-		 * When `true`, the SimpleIntegerPicker is shown as disabled and does not generate `onChange`
+		 * When `true`, the SimpleIntegerPicker is shown as disabled and does not generate `onChange` or `onClick`
 		 * [events]{@glossary event}.
 		 *
 		 * @type {Boolean}
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+
+		/**
+		 * When `true`, the input will be enabled to edit
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		editable : PropTypes.bool,
 
 		/**
 		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{moonstone/Icon.Icon} are
@@ -96,16 +105,6 @@ const SimpleIntegerPickerBase = kind({
 		 */
 		incrementIcon: PropTypes.string,
 
-
-		/**
-		 * When `true`, the input will be enabled
-		 * expanded.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		inputMode : PropTypes.bool,
-
 		/**
 		 * The method to run when the input mounts, giving a reference to the DOM.
 		 *
@@ -113,33 +112,6 @@ const SimpleIntegerPickerBase = kind({
 		 * @private
 		 */
 		inputRef: PropTypes.func,
-
-		/**
-		 * By default, the picker will animate transitions between items if it has a defined
-		 * `width`. Specifying `noAnimation` will prevent any transition animation for the
-		 * component.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		noAnimation: PropTypes.bool,
-
-		/**
-		 *  A function to be run when an `onChange` event triggered in the picker
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onChange : PropTypes.func,
-
-		/**
-		 * A function to run when the picker is clicked. This function enables the
-		 * input field only if middle or the text part of the picker is clicked and ignores other clicks.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onClick: PropTypes.func,
 
 		/**
 		 *  A function to be run when there is a blur in the input
@@ -187,18 +159,19 @@ const SimpleIntegerPickerBase = kind({
 		step: PropTypes.number,
 
 		/**
-		 * Units in the SimpleIntegerPicker
+		 * Unit label to be appended to the value for display.
 		 *
 		 * @type {String}
 		 * @default ''
 		 * @public
 		 */
-		units: PropTypes.string,
+		unit: PropTypes.string,
 
 		/**
-		 * The value of the Picker
+		 * The current value of the Picker to be displayed.
 		 *
 		 * @type {Number}
+		 * @default 0
 		 * @public
 		 */
 		value : PropTypes.number,
@@ -234,7 +207,7 @@ const SimpleIntegerPickerBase = kind({
 	defaultProps : {
 		orientation: 'horizontal',
 		step: 1,
-		units: '',
+		unit: '',
 		value: 0,
 		width: 'medium'
 	},
@@ -263,9 +236,9 @@ const SimpleIntegerPickerBase = kind({
 			return clamp(min, max, value);
 		},
 		width: ({max, min, width}) => (width || Math.max(max.toString().length, min.toString().length)),
-		children: ({inputMode, inputRef, onInputBlur, units, value}) => {
+		children: ({editable, inputRef, onInputBlur, unit, value}) => {
 			return (
-				inputMode ?
+				editable ?
 					<input
 						className={css.inputClass}
 						key={value}
@@ -274,13 +247,13 @@ const SimpleIntegerPickerBase = kind({
 					/> : <PickerItem
 						key={value}
 					>
-						{`${value} ${units}`}
+						{`${value} ${unit}`}
 					</PickerItem>
 			);
 		},
-		classes: ({inputMode}) => {
+		classes: ({editable}) => {
 			let pickerClass = ['spottable', css.picker];
-			if (inputMode) {
+			if (editable) {
 				pickerClass.push(css.selectedPicker);
 			}
 			return pickerClass.join(' ');
@@ -288,11 +261,11 @@ const SimpleIntegerPickerBase = kind({
 	},
 
 	render: ({classes, pickerRef, ...rest}) => {
-		delete rest.padded;
+		delete rest.editable;
 		delete rest.inputRef;
 		delete rest.onInputBlur;
-		delete rest.inputMode;
-		delete rest.units;
+		delete rest.padded;
+		delete rest.unit;
 
 		return (
 			<Picker {...rest} className={classes} index={0} ref={pickerRef} />
@@ -316,7 +289,6 @@ const SimpleIntegerPickerBase = kind({
  */
 const SimpleIntegerPicker = Pure(
 	Changeable(
-		{prop: 'defaultValue'},
 		SimpleIntegerPickerDecorator(
 			MarqueeController(
 				{marqueeOnFocus: true},

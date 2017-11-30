@@ -30,6 +30,7 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 	const forwardBlur = forward('onBlur');
 	const forwardChange = forward('onChange');
 	const forwardClick = forward('onClick');
+	const forwardKeyDown = forward('onKeyDown');
 
 	return class extends React.Component {
 
@@ -55,48 +56,50 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 			min: PropTypes.number.isRequired,
 
 			/**
-			 * The value by default the picker needs to show when loading for the first time
-			 *
-			 * @type {Number}
-			 * @public
-			 */
-			defaultValue: PropTypes.number,
-
-			/**
-			 * When `true`, the SimpleIntegerPicker is shown as disabled and does not generate `onChange`
+			 * When `true`, the SimpleIntegerPicker is shown as disabled and does not generate `onChange` or `onClick`
 			 * [events]{@glossary event}.
 			 *
 			 * @type {Boolean}
 			 * @public
 			 */
-			disabled: PropTypes.bool
+			disabled: PropTypes.bool,
+
+			/**
+			 * The value of the picker to be displayed
+			 *
+			 * @type {Number}
+			 * @default 0
+			 * @public
+			 */
+			value: PropTypes.number
 		}
 
 		static defaultProps = {
-			defaultValue: 0
+			value: 0
 		}
 
 		constructor (props) {
 			super(props);
 			this.state = {
-				isClicked: false,
-				value: this.props.defaultValue ? this.props.defaultValue : 0
+				isActive: false,
+				value: props.value
 			};
 		}
 
 		handleChange = (ev) => {
-			if (!this.state.isClicked) {
+			if (!this.state.isActive) {
 				this.setState({
 					value: this.validateValue(parseInt(ev.value))
 				});
-				forwardChange(ev, this.props);
 			}
+			forwardChange(ev, this.props);
 		}
 
 		prepareInput = () => {
 			this.setState({
-				isClicked: true
+				isActive: true
 			});
+			this.pointerMode = Spotlight.getPointerMode();
 			this.freezeSpotlight(true);
 		}
 
@@ -119,10 +122,9 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 		}
 
 		freezeSpotlight = (freeze) => {
-			const pointerMode = Spotlight.getPointerMode();
 			if (!freeze) {
 				Spotlight.resume();
-				Spotlight.setPointerMode(pointerMode);
+				Spotlight.setPointerMode(this.pointerMode);
 			} else {
 				Spotlight.pause();
 				// we temporarily set the pointer mode to false when the input field is enabled.
@@ -130,21 +132,20 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		handleDown = (ev) => {
+		handleKeyDown = (ev) => {
 			const keyCode = ev.keyCode;
-			if ((is('enter', keyCode) && !this.state.isClicked) || is('numSet', keyCode) || (is('plus', keyCode) || is('minus', keyCode))) {
+			if ((is('enter', keyCode) && !this.state.isActive) || (is('numSet', keyCode) && !this.state.isActive) || (is('plus', keyCode) || is('minus', keyCode))) {
 				this.prepareInput();
-			} else if (this.state.isClicked && (is('enter', keyCode) || is('cancel', keyCode) || is('up', keyCode) || is('down', keyCode))) {
+			} else if (this.state.isActive && (is('enter', keyCode) || is('cancel', keyCode) || is('up', keyCode) || is('down', keyCode))) {
 				this.handleBlur(ev);
-			} else {
-				return false;
 			}
+			forwardKeyDown(ev, this.props);
 		}
 
 		handleBlur = (ev) => {
 			this.setState({
 				value: this.validateValue(parseInt(ev.target.value)),
-				isClicked: false
+				isActive: false
 			}, () => {
 				this.inputNode.className = classNames(this.inputNode.className, css.hideInput);
 				Spotlight.focus(this.pickerNode);
@@ -161,13 +162,13 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 			return (
 				<Wrapped
 					{...this.props}
-					inputMode={this.state.isClicked}
+					editable={this.state.isActive}
 					inputRef={this.getInputNode}
 					joined
 					onChange={this.handleChange}
 					onClick={this.handleClick}
 					onInputBlur={this.handleBlur}
-					onKeyDown={this.handleDown}
+					onKeyDown={this.handleKeyDown}
 					pickerRef={this.getPickerNode}
 					value={this.state.value}
 				/>

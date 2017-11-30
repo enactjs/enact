@@ -54,7 +54,7 @@ describe('SimpleIntegerPicker', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should enable input field on click and disable input when blurred on input field', function () {
+	it('should disable input when blurred', function () {
 		const handleClick = sinon.spy();
 		const handleBlur = sinon.spy();
 		const picker = mount(
@@ -102,7 +102,7 @@ describe('SimpleIntegerPicker', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should pause the spotlight when input is focussed', function () {
+	it('should pause the spotlight when input is focused', function () {
 		const handleKeyDown = sinon.spy();
 		const pauseSpy = sinon.spy(Spotlight, 'pause');
 		const picker = mount(
