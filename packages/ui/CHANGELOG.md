@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- many new unstyled components, ready for use by ui library developers
+
 ### Changed
 
 - `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
@@ -117,12 +119,6 @@ No significant changes.
 ## [1.6.1] - 2017-08-07
 
 No significant changes.
-
-- many new unstyled components, ready for use by ui library developers
-
-### Changed
-
-### Fixed
 
 ## [1.6.0] - 2017-08-04
 
