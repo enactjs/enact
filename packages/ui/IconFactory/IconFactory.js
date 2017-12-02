@@ -222,12 +222,7 @@ const IconBaseFactory = factory({css: componentCss}, ({css}) => {
  * @ui
  * @public
  */
-const IconFactory = factory(props => {
-	const Base = IconBaseFactory(props);
-	return Pure(
-		Base
-	);
-});
+const IconFactory = factory(props => IconBaseFactory(props));
 
 export default IconFactory;
 export {
