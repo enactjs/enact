@@ -1056,7 +1056,7 @@ class VirtualListCoreNative extends Component {
 			node = this.containerRef,
 			{clientWidth, clientHeight} = this.props.clientSize || this.getClientSize(node);
 
-		return (this.getVirtualScrollDimension() === (this.isPrimaryDirectionVertical ? clientHeight : clientWidth));
+		return (this.getVirtualScrollDimension() <= (this.isPrimaryDirectionVertical ? clientHeight : clientWidth));
 	}
 
 	syncClientSize = () => {
