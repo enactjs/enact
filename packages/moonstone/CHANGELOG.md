@@ -14,6 +14,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/ExpandableSpotlightDecorator` to not spot the title when in `pointerMode`
 - `moonstone/VirtualList` to prevent infinite function call when a size of contents is slightly longer than a client size without a scrollbar
 - `moonstone/VirtualList` to sync scroll position when clientSize changed
 
@@ -53,7 +54,6 @@ No significant changes.
 - `moonstone/MarqueeDecorator` to stop when unhovering a disabled component using `marqueeOn` `'focus'`
 - `moonstone/Slider` to not forward `onChange` when `disabled` on `mouseUp/click`
 - `moonstone/VideoPlayer` to defer rendering playback controls until needed
-- `moonstone/ExpandableSpotlightDecorator` from handling Spotlight `onHide` when in `pointerMode`
 
 ## [1.12.2] - 2017-11-15
 
