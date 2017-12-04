@@ -38,7 +38,7 @@ const
 	scrollWheelPageMultiplierForMaxPixel = 0.2, // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	pixelPerLine = 39,
 	// spotlight
-	scrollStopWaiting = 500,
+	scrollStopWaiting = 200,
 	isPageUp = is('pageUp'),
 	isPageDown = is('pageDown'),
 	reverseDirections = {

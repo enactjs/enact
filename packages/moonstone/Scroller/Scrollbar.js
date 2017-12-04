@@ -178,6 +178,7 @@ class ScrollbarBase extends PureComponent {
 	}
 
 	minThumbSizeRatio = 0
+	thumbHidingDelay = 400 /* in milliseconds */
 	pressed = false
 	ignoreMode = false
 	// component refs
@@ -274,7 +275,7 @@ class ScrollbarBase extends PureComponent {
 
 	isThumbFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
 
-	hideThumbJob = new Job(this.hideThumb, 200);
+	hideThumbJob = new Job(this.hideThumb, this.thumbHidingDelay);
 
 	calculateMetrics = () => {
 		const trackSize = this.containerRef[this.props.vertical ? 'clientHeight' : 'clientWidth'];
