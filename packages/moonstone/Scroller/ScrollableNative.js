@@ -467,6 +467,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			this.scroll(scrollLeft, scrollTop);
 
+			this.startHidingThumb();
 			this.scrollStopJob.start();
 		}
 
@@ -694,7 +695,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 
-			this.startHidingThumb();
 			this.scrolling = false;
 			this.doScrollStop();
 		}
