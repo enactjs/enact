@@ -8,7 +8,6 @@
 
 import ilib from '../ilib/lib/ilib';
 import LocaleInfo from '../ilib/lib/LocaleInfo';
-import ResBundle from '../ilib/lib/ResBundle';
 import ScriptInfo from '../ilib/lib/ScriptInfo';
 
 import {initCaseMappers} from '../src/case';
@@ -83,8 +82,6 @@ const updateLocale = function (locale) {
 	delete ilib._platform;
 	// load any external ilib data
 	ilib.data = global.ilibData || ilib.data;
-	ResBundle.strings = ResBundle.strings || {};
-	ResBundle.strings.cache = global.resBundleData || ResBundle.strings.cache;
 	// ilib handles falsy values and automatically uses local locale when encountered which
 	// is expected and desired
 	ilib.setLocale(locale);
