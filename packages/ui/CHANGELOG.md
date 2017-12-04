@@ -8,9 +8,12 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/Layout` debugging aid for help with complex layouts. Simply include the `"debug"` className in your app and everything below it will show debugging lines
+
 ### Changed
 
 - `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
+- `ui/Layout` `align` prop to support setting horizontal and vertical alignment in one prop, separated by a space
 
 ### Fixed
 

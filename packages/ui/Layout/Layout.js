@@ -69,6 +69,8 @@ const LayoutBase = kind({
 		 * `"start"` and `"end"` reverse places when in a vertical layout in a RTL locale.
 		 * This includes support for `align-parts` which is shorthand for combining `align-items`
 		 * and `justify-content` into a single property, separated by a space, in that order.
+		 * This allows you to specify both the horizontal and vertical alignment in one property,
+		 * separated by a space.
 		 *
 		 * @type {String}
 		 * @public
