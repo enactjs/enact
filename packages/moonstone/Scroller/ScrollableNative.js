@@ -693,7 +693,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 
-			this.hideThumb();
+			this.startHidingThumb();
 			this.scrolling = false;
 			this.doScrollStop();
 		}
@@ -897,7 +897,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			});
 		}
 
-		hideThumb = () => {
+		startHidingThumb = () => {
 			if (this.state.isHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
 				this.horizontalScrollbarRef.startHidingThumb();
 			}
@@ -906,7 +906,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		hideThumbJob = new Job(this.hideThumb, 200);
+		hideThumbJob = new Job(this.startHidingThumb, 200);
 
 		alertThumb () {
 			const bounds = this.getScrollBounds();
