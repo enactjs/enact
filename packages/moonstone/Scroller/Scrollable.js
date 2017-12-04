@@ -594,12 +594,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		startScrollOnFocus = (pos, item) => {
 			if (pos) {
-				const bounds = this.getScrollBounds();
+				const
+					{top, left} = pos,
+					bounds = this.getScrollBounds();
 
-				if (bounds.maxTop > 0 || bounds.maxLeft > 0) {
+				if ((bounds.maxTop > 0 && top !== this.scrollTop) || (bounds.maxLeft > 0 && left !== this.scrollLeft)) {
 					this.start({
-						targetX: pos.left,
-						targetY: pos.top,
+						targetX: left,
+						targetY: top,
 						animate: (animationDuration > 0) && this.animateOnFocus,
 						duration: animationDuration
 					});
