@@ -9,6 +9,7 @@ import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import equals from 'ramda/src/equals';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {contextTypes, FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
@@ -41,8 +42,12 @@ import Times from './Times';
 import css from './VideoPlayer.less';
 
 const SpottableDiv = Touchable(Spottable('div'));
-const Container = SpotlightContainerDecorator(
-	{enterTo: ''},
+const RootContainer = SpotlightContainerDecorator('div');
+const ControlsContainer = SpotlightContainerDecorator(
+	{
+		leaveFor: {down:'', up:'', left:'', right:''},
+		enterTo: ''
+	},
 	'div'
 );
 
@@ -101,8 +106,8 @@ const handledCustomMediaEventsMap = {
 
 // provide forwarding of events on media controls
 const forwardControlsAvailable = forward('onControlsAvailable');
-const forwardBackwardButtonClick = forward('onBackwardButtonClick');
-const forwardForwardButtonClick = forward('onForwardButtonClick');
+const forwardBackwardButtonClick = forwardWithPrevent('onBackwardButtonClick');
+const forwardForwardButtonClick = forwardWithPrevent('onForwardButtonClick');
 const forwardJumpBackwardButtonClick = forwardWithPrevent('onJumpBackwardButtonClick');
 const forwardJumpForwardButtonClick = forwardWithPrevent('onJumpForwardButtonClick');
 const forwardPlayButtonClick = forward('onPlayButtonClick');
@@ -123,6 +128,9 @@ const AnnounceState = {
 	// All announcements have been made
 	DONE: 4
 };
+
+// Safely count the children nodes and exclude null & undefined values for an accurate count of real children
+const countReactChildren = (children) => React.Children.toArray(children).filter(n => n != null).length;
 
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
@@ -203,6 +211,23 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		backwardIcon: PropTypes.string,
+
+		/**
+		 * Specifies the spotlight container ID for the player
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		containerId: PropTypes.string,
+
+		/**
+		 * Removes interactive capability from this component. This includes, but is not limited to,
+		 * key-press events, most clickable buttons, and prevents the showing of the controls.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		disabled: PropTypes.bool,
 
 		/**
 		 * Amount of time (in milliseconds) after which the feedback text/icon part of the slider's
@@ -301,6 +326,27 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		leftComponents: PropTypes.node,
+
+		/**
+		 * Manually set the loading state of the media, in case you have information that
+		 * `VideoPlayer` does not have.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		loading: PropTypes.bool,
+
+		/**
+		 * Amount of time (in milliseconds), after the last user action, that the `miniFeedback`
+		 * will automatically hide.
+		 * Setting this to 0 or `null` disables `miniFeedbackHideDelay`; `miniFeedback` will always
+		 * be present.
+		 *
+		 * @type {Number}
+		 * @default 2000
+		 * @public
+		 */
+		miniFeedbackHideDelay: PropTypes.number,
 
 		/**
 		 * The label for the "More" button for when the "More" tray is open.
@@ -570,9 +616,22 @@ const VideoPlayerBase = class extends React.Component {
 		spotlightDisabled: PropTypes.bool,
 
 		/**
+		 * This component will be used instead of the built-in version.
+		 * The internal thumbnail class will be added to this component, however, it's the
+		 * responsibility of the developer to include this class in their implementation, if
+		 * appropriate for their application. This component follows the same rules as the built-in
+		 * version.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		thumbnailComponent: PropTypes.node,
+
+		/**
 		 * Set a thumbnail image source to show on VideoPlayer's Slider knob. This is a standard
 		 * {@link moonstone/Image} component so it supports all of the same options for the `src`
-		 * property. If no `thumbnailSrc` is set, no tooltip will display.
+		 * property. If no `thumbnailComponent` and no `thumbnailSrc` is set, no tooltip will
+		 * display.
 		 *
 		 * @type {String|Object}
 		 * @public
@@ -622,6 +681,7 @@ const VideoPlayerBase = class extends React.Component {
 		initialJumpDelay: 400,
 		jumpBy: 30,
 		jumpDelay: 200,
+		miniFeedbackHideDelay: 2000,
 		playbackRateHash: {
 			fastForward: ['2', '4', '8', '16'],
 			rewind: ['-2', '-4', '-8', '-16'],
@@ -646,6 +706,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.showMiniFeedback = false;
 		this.speedIndex = 0;
+		this.firstPlayReadFlag = true;
 		this.id = this.generateId();
 		this.selectPlaybackRates('fastForward');
 		this.sliderKnobProportion = 0;
@@ -706,7 +767,6 @@ const VideoPlayerBase = class extends React.Component {
 		on('keyup', this.handleKeyUp);
 		this.attachCustomMediaEvents();
 		this.startDelayedFeedbackHide();
-		this.renderBottomControl.idle();
 		this.calculateMaxComponentCount();
 	}
 
@@ -719,9 +779,39 @@ const VideoPlayerBase = class extends React.Component {
 		) {
 			this.calculateMaxComponentCount();
 		}
+
+		const {source} = this.props;
+		const {source: nextSource} = nextProps;
+		if (nextSource !== source && !equals(source, nextSource)) {
+			this.setState({currentTime: 0, buffered: 0, proportionPlayed: 0, proportionLoaded: 0});
+			this.reloadVideo();
+		}
 	}
 
-	componentWillUpdate (nextProps, nextState) {
+	shouldComponentUpdate (nextProps, nextState) {
+		const {source} = this.props;
+		const {source: nextSource} = nextProps;
+		if (nextSource !== source && !equals(source, nextSource)) {
+			return true;
+		}
+		if (
+			!this.state.miniFeedbackVisible && this.state.miniFeedbackVisible === nextState.miniFeedbackVisible &&
+			!this.state.mediaSliderVisible && this.state.mediaSliderVisible === nextState.mediaSliderVisible &&
+			this.state.loading === nextState.loading && this.props.loading === nextProps.loading &&
+			(
+				this.state.buffered !== nextState.buffered ||
+				this.state.currentTime !== nextState.currentTime ||
+				this.state.proportionPlayed !== nextState.proportionPlayed ||
+				this.state.sliderTooltipTime !== nextState.sliderTooltipTime
+			)
+		) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	componentWillUpdate (nextProps) {
 		const
 			isInfoComponentsEqual = equals(this.props.infoComponents, nextProps.infoComponents),
 			{titleOffsetHeight: titleHeight} = this.state,
@@ -731,17 +821,6 @@ const VideoPlayerBase = class extends React.Component {
 			);
 
 		this.initI18n();
-
-		if (
-			this.state.mediaControlsVisible &&
-			!nextState.mediaControlsVisible &&
-			(!Spotlight.getCurrent() || this.player.contains(Spotlight.getCurrent())) &&
-			!nextProps.spotlightDisabled
-		) {
-			// set focus to the hidden spottable control - maintaining focus on available spottable
-			// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
-			Spotlight.focus(`.${css.controlsHandleAbove}`);
-		}
 
 		if (shouldCalculateTitleOffset) {
 			const titleOffsetHeight = this.getHeightForElement('infoComponents');
@@ -762,13 +841,26 @@ const VideoPlayerBase = class extends React.Component {
 
 		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
 
-		// Added to set default focus on the media control (play) when controls become visible.
-		if (
-			this.state.mediaControlsVisible &&
-			!prevState.mediaControlsVisible &&
-			(!Spotlight.getCurrent() || this.player.contains(Spotlight.getCurrent()))
-		) {
-			this.focusDefaultMediaControl();
+		if (!this.state.mediaControlsVisible && prevState.mediaControlsVisible) {
+			forwardControlsAvailable({available: false}, this.props);
+			this.stopAutoCloseTimeout();
+
+			if (!this.props.spotlightDisabled ) {
+				// Set focus to the hidden spottable control - maintaining focus on available spottable
+				// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
+				Spotlight.focus(`.${css.controlsHandleAbove}`);
+			}
+		} else if (this.state.mediaControlsVisible && !prevState.mediaControlsVisible) {
+			forwardControlsAvailable({available: true}, this.props);
+			this.startAutoCloseTimeout();
+
+			if (!this.props.spotlightDisabled ) {
+				const current = Spotlight.getCurrent();
+				if (!current || this.player.contains(current)) {
+					// Set focus within media controls when they become visible.
+					this.focusDefaultMediaControl();
+				}
+			}
 		}
 	}
 
@@ -809,9 +901,9 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	calculateMaxComponentCount = () => {
-		let leftCount = React.Children.count(this.props.leftComponents),
-			rightCount = React.Children.count(this.props.rightComponents),
-			childrenCount = React.Children.count(this.props.children);
+		let leftCount = countReactChildren(this.props.leftComponents),
+			rightCount = countReactChildren(this.props.rightComponents),
+			childrenCount = countReactChildren(this.props.children);
 
 		// If the "more" button is present, automatically add it to the right's count.
 		if (childrenCount) {
@@ -854,7 +946,7 @@ const VideoPlayerBase = class extends React.Component {
 		// If this.state.more is used as a reference for when this function should fire, timing for
 		// detection of when "more" is pressed vs when the state is updated is mismatched. Using an
 		// instance variable that's only set and used for this express purpose seems cleanest.
-		if (this.props.autoCloseTimeout && !this.moreInProgress) {
+		if (this.props.autoCloseTimeout && this.state.mediaControlsVisible) {
 			this.autoCloseJob.startAfter(this.props.autoCloseTimeout);
 		}
 	}
@@ -899,6 +991,9 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	showControls = () => {
+		if (this.props.disabled) {
+			return;
+		}
 		this.startDelayedFeedbackHide();
 		this.startDelayedTitleHide();
 
@@ -919,7 +1014,7 @@ const VideoPlayerBase = class extends React.Component {
 			mediaSliderVisible: true,
 			miniFeedbackVisible: false,
 			titleVisible: true
-		}, () => forwardControlsAvailable({available: true}, this.props));
+		});
 	}
 
 	/**
@@ -933,7 +1028,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedMiniFeedbackHide();
 		this.stopDelayedTitleHide();
-		this.setControlVisibilityStates({
+		this.stopAutoCloseTimeout();
+		this.setState({
 			feedbackVisible: false,
 			mediaControlsVisible: false,
 			mediaSliderVisible: false,
@@ -943,27 +1039,25 @@ const VideoPlayerBase = class extends React.Component {
 		this.markAnnounceRead();
 	}
 
-	setControlVisibilityStates = (state) => {
-		this.setState(state, () => {
-			if (!this.props.spotlightDisabled) {
-				// blur any currently spotted component within the video player to ensure that any
-				// focus-dependent behaviors (e.g. tooltips) are cleared and that focus is moved to
-				// the placeholder
-				const current = Spotlight.getCurrent();
-				if (current && this.player.contains(current)) {
-					current.blur();
-				}
-
-				Spotlight.focus(`.${css.controlsHandleAbove}`);
-			}
-			return forwardControlsAvailable({available: false}, this.props);
-		});
+	/**
+	 * Toggles the media controls.
+	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
+	 * @public
+	 */
+	toggleControls = () => {
+		if (this.state.mediaControlsVisible) {
+			this.hideControls();
+		} else {
+			this.showControls();
+		}
 	}
 
 	doAutoClose = () => {
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedTitleHide();
-		this.setControlVisibilityStates({
+		this.setState({
 			feedbackVisible: false,
 			mediaControlsVisible: false,
 			mediaSliderVisible: this.state.mediaSliderVisible && this.state.miniFeedbackVisible,
@@ -1030,8 +1124,10 @@ const VideoPlayerBase = class extends React.Component {
 
 	hideFeedbackJob = new Job(this.hideFeedback)
 
-	startDelayedMiniFeedbackHide = (delay) => {
-		this.hideMiniFeedbackJob.startAfter(delay);
+	startDelayedMiniFeedbackHide = (delay = this.props.miniFeedbackHideDelay) => {
+		if (delay) {
+			this.hideMiniFeedbackJob.startAfter(delay);
+		}
 	}
 
 	stopDelayedMiniFeedbackHide = () => {
@@ -1095,6 +1191,7 @@ const VideoPlayerBase = class extends React.Component {
 	handleKeyDown = (ev) => {
 		if (!this.props.no5WayJump &&
 				!this.state.mediaControlsVisible &&
+				!this.props.disabled &&
 				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			Spotlight.pause();
 			this.startListeningForPulses(ev.keyCode);
@@ -1113,7 +1210,10 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleKeyUp = (ev) => {
-		const {PLAY, PAUSE, STOP, REWIND, FASTFORWARD} = keyMap;
+		if (this.props.disabled) {
+			return;
+		}
+		const {PLAY, PAUSE, REWIND, FASTFORWARD} = keyMap;
 
 		switch (ev.keyCode) {
 			case PLAY:
@@ -1125,21 +1225,16 @@ const VideoPlayerBase = class extends React.Component {
 				this.pause();
 				break;
 			case REWIND:
-				if (!this.props.noRateButtons) {
+				if (!this.props.noRateButtons && !this.props.rateButtonsDisabled) {
 					this.showMiniFeedback = true;
 					this.rewind();
 				}
 				break;
 			case FASTFORWARD:
-				if (!this.props.noRateButtons) {
+				if (!this.props.noRateButtons && !this.props.rateButtonsDisabled) {
 					this.showMiniFeedback = true;
 					this.fastForward();
 				}
-				break;
-			case STOP:
-				this.showMiniFeedback = true;
-				this.pause();
-				this.seek(0);
 				break;
 		}
 
@@ -1150,6 +1245,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleGlobalKeyDown = this.handle(
+		this.activityDetected,
 		forKey('down'),
 		() => (
 			!this.state.mediaControlsVisible &&
@@ -1189,7 +1285,6 @@ const VideoPlayerBase = class extends React.Component {
 		if (updatedState.error) updatedState.loading = false;
 
 		updatedState.mediaControlsDisabled = (
-			updatedState.readyState < HAVE_ENOUGH_DATA ||
 			!updatedState.duration ||
 			updatedState.error
 		);
@@ -1225,6 +1320,8 @@ const VideoPlayerBase = class extends React.Component {
 
 	reloadVideo = () => {
 		// When changing a HTML5 video, you have to reload it.
+		this.stopListeningForPulses();
+
 		this.video.load();
 		this.setState({
 			announce: AnnounceState.READY
@@ -1258,7 +1355,11 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(1);
 		this.send('play');
 		this.prevCommand = 'play';
-		this.announce($L('Play'));
+		if (this.firstPlayReadFlag) {
+			this.firstPlayReadFlag = false;
+		} else {
+			this.announce($L('Play'));
+		}
 		this.startDelayedMiniFeedbackHide(5000);
 	}
 
@@ -1309,7 +1410,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.showFeedback();
 		this.startDelayedFeedbackHide();
 		this.seek(this.state.currentTime + distance);
-		this.startDelayedMiniFeedbackHide(2000);
+		this.startDelayedMiniFeedbackHide();
 	}
 
 	/**
@@ -1373,35 +1474,45 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	rewind = () => {
-		let shouldResumePlayback = false;
+		const rateForSlowRewind = this.props.playbackRateHash['slowRewind'];
+		let shouldResumePlayback = false,
+			command = 'rewind';
 
+		if (this.video.currentTime === 0) {
+			// Do not rewind if currentTime is 0. We're already at the beginning.
+			return;
+		}
 		switch (this.prevCommand) {
 			case 'slowRewind':
 				if (this.speedIndex === this.playbackRates.length - 1) {
 					// reached to the end of array => go to rewind
-					this.selectPlaybackRates('rewind');
+					this.selectPlaybackRates(command);
 					this.speedIndex = 0;
-					this.prevCommand = 'rewind';
+					this.prevCommand = command;
 				} else {
 					this.speedIndex = this.clampPlaybackRate(this.speedIndex + 1);
 				}
 				break;
 			case 'pause':
-				this.selectPlaybackRates('slowRewind');
+				// If it's possible to slowRewind, do it, otherwise just leave it as normal rewind : QEVENTSEVT-17386
+				if (rateForSlowRewind && rateForSlowRewind.length >= 0) {
+					command = 'slowRewind';
+				}
+				this.selectPlaybackRates(command);
 				if (this.state.paused && this.state.duration > this.state.currentTime) {
 					shouldResumePlayback = true;
 				}
 				this.speedIndex = 0;
-				this.prevCommand = 'slowRewind';
+				this.prevCommand = command;
 				break;
 			case 'rewind':
 				this.speedIndex = this.clampPlaybackRate(this.speedIndex + 1);
-				this.prevCommand = 'rewind';
+				this.prevCommand = command;
 				break;
 			default:
-				this.selectPlaybackRates('rewind');
+				this.selectPlaybackRates(command);
 				this.speedIndex = 0;
-				this.prevCommand = 'rewind';
+				this.prevCommand = command;
 				break;
 		}
 
@@ -1413,6 +1524,37 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedMiniFeedbackHide();
 		this.clearPulsedPlayback();
 		this.showFeedback();
+	}
+
+	// Creates a proxy to the video node if Proxy is supported
+	videoProxy = typeof Proxy !== 'function' ? null : new Proxy({}, {
+		get: (target, name) => {
+			let value = this.video[name];
+
+			if (typeof value === 'function') {
+				value = value.bind(this.video);
+			}
+
+			return value;
+		},
+		set: (target, name, value) => {
+			return (this.video[name] = value);
+		}
+	})
+
+	/**
+	 * Returns a proxy to the underlying <video> node currently used by the VideoPlayer
+	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
+	 * @public
+	 */
+	getVideoNode = () => {
+		return this.videoProxy || this.video;
+	}
+
+	areControlsVisible = () => {
+		return this.state.mediaControlsVisible;
 	}
 
 	/**
@@ -1545,6 +1687,9 @@ const VideoPlayerBase = class extends React.Component {
 			this.handleLoadStart(ev);
 		}
 
+		if (ev.type === 'play') {
+			this.mayRenderBottomControls();
+		}
 		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
 		const fwd = this.handledMediaForwards[handledMediaEventsMap[ev.type]];
 		if (fwd) {
@@ -1569,6 +1714,12 @@ const VideoPlayerBase = class extends React.Component {
 
 	handleSpotlightUpFromSlider = handle(
 		stopImmediate,
+		// FIXME: This is a workaround for a scenario in which Slider does not receive a blur event
+		// on 5-way up from it.
+		() => {
+			this.handleSliderBlur();
+			return true;
+		},
 		this.hideControls
 	);
 
@@ -1581,10 +1732,23 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
+	/**
+	 * Check for elements with the spotlightDefaultClass, in the following location order:
+	 * left components, right components, media controls or more controls (depending on which is
+	 * available)
+	 *
+	 * @return {Node|false} The focused control or `false` if nothing is found.
+	 * @private
+	 */
 	focusDefaultMediaControl = () => {
-		const defaultControl = this.player.querySelector(
-			`.${css.bottom} .${this.state.more ? css.moreControls : css.mediaControls} .${spotlightDefaultClass}.${spottableClass}`
-		);
+		const defaultSpottable = `.${spotlightDefaultClass}.${spottableClass}`;
+		const defaultControl =
+			this.player.querySelector(
+				`.${css.leftComponents} ${defaultSpottable}, .${css.rightComponents} ${defaultSpottable}`
+			) ||
+			this.player.querySelector(
+				`.${this.state.more ? css.moreControls : css.mediaControls} ${defaultSpottable}`
+			);
 
 		return defaultControl ? Spotlight.focus(defaultControl) : false;
 	}
@@ -1593,11 +1757,7 @@ const VideoPlayerBase = class extends React.Component {
 	// Player Interaction events
 	//
 	onVideoClick = () => {
-		if (this.state.mediaControlsVisible) {
-			this.hideControls();
-		} else {
-			this.showControls();
-		}
+		this.toggleControls();
 	}
 	onSliderChange = ({value}) => {
 		this.seek(value * this.state.duration);
@@ -1675,25 +1835,22 @@ const VideoPlayerBase = class extends React.Component {
 		(ev, props) => forwardJumpBackwardButtonClick(this.addStateToEvent(ev), props),
 		() => this.jump(-1 * this.props.jumpBy)
 	)
-	onBackward = (ev) => {
-		ev = this.addStateToEvent(ev);
-		forwardBackwardButtonClick(ev, this.props);
-		this.rewind();
-	}
+	onBackward = this.handle(
+		(ev, props) => forwardBackwardButtonClick(this.addStateToEvent(ev), props),
+		this.rewind
+	)
 	onPlay = (ev) => {
-		ev = this.addStateToEvent(ev);
-		forwardPlayButtonClick(ev, this.props);
+		forwardPlayButtonClick(this.addStateToEvent(ev), this.props);
 		if (this.state.paused) {
 			this.play();
 		} else {
 			this.pause();
 		}
 	}
-	onForward = (ev) => {
-		ev = this.addStateToEvent(ev);
-		forwardForwardButtonClick(ev, this.props);
-		this.fastForward();
-	}
+	onForward = this.handle(
+		(ev, props) => forwardForwardButtonClick(this.addStateToEvent(ev), props),
+		this.fastForward
+	)
 	onJumpForward = this.handle(
 		(ev, props) => forwardJumpForwardButtonClick(this.addStateToEvent(ev), props),
 		() => this.jump(this.props.jumpBy)
@@ -1706,7 +1863,6 @@ const VideoPlayerBase = class extends React.Component {
 			this.startDelayedTitleHide();
 		} else {
 			this.moreInProgress = true;
-			this.stopAutoCloseTimeout();	// Interupt the timer since controls should not hide while viewing "more".
 			// Interrupt the title-hide since we don't want it hiding autonomously in "more".
 			this.stopDelayedTitleHide();
 		}
@@ -1721,7 +1877,10 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	setPlayerRef = (node) => {
-		this.player = node;
+		// TODO: We've moved SpotlightContainerDecorator up to allow VP to be spottable but also
+		// need a ref to the root node to query for children and set CSS variables.
+		// eslint-disable-next-line react/no-find-dom-node
+		this.player = ReactDOM.findDOMNode(node);
 	}
 
 	setVideoRef = (video) => {
@@ -1735,6 +1894,12 @@ const VideoPlayerBase = class extends React.Component {
 	handleLoadStart = () => {
 		if (!this.props.noAutoPlay) {
 			this.video.play();
+		}
+	}
+
+	mayRenderBottomControls = () => {
+		if (!this.state.bottomControlsRendered) {
+			this.renderBottomControl.idle();
 		}
 	}
 
@@ -1765,6 +1930,8 @@ const VideoPlayerBase = class extends React.Component {
 			backwardIcon,
 			children,
 			className,
+			containerId,
+			disabled,
 			forwardIcon,
 			infoComponents,
 			jumpBackwardIcon,
@@ -1786,6 +1953,7 @@ const VideoPlayerBase = class extends React.Component {
 			source,
 			spotlightDisabled,
 			style,
+			thumbnailComponent,
 			thumbnailSrc,
 			title,
 			...rest} = this.props;
@@ -1796,6 +1964,8 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.initialJumpDelay;
 		delete rest.jumpBy;
 		delete rest.jumpDelay;
+		delete rest.loading;
+		delete rest.miniFeedbackHideDelay;
 		delete rest.no5WayJump;
 		delete rest.onBackwardButtonClick;
 		delete rest.onControlsAvailable;
@@ -1812,6 +1982,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.thumbnailUnavailable;
 		delete rest.titleHideDelay;
 		delete rest.tooltipHideDelay;
+		delete rest.videoPath;
 
 		// Remove the events we manually added so they aren't added twice or fail.
 		for (let eventName in handledCustomMediaEventsMap) {
@@ -1823,7 +1994,15 @@ const VideoPlayerBase = class extends React.Component {
 		const controlsAriaProps = this.getControlsAriaProps();
 
 		return (
-			<div className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
+			<RootContainer
+				className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')}
+				containerId={containerId}
+				onClick={this.activityDetected}
+				onKeyDown={this.activityDetected}
+				ref={this.setPlayerRef}
+				spotlightDisabled={spotlightDisabled}
+				style={style}
+			>
 				{/* Video Section */}
 				<video
 					{...rest}
@@ -1840,11 +2019,11 @@ const VideoPlayerBase = class extends React.Component {
 					bottomControlsVisible={this.state.mediaControlsVisible}
 					onClick={this.onVideoClick}
 				>
-					{this.state.loading ? <Spinner centered /> : null}
+					{this.state.loading || this.props.loading ? <Spinner centered /> : null}
 				</Overlay>
 
 				{this.state.bottomControlsRendered ?
-					<div className={css.fullscreen + ' enyo-fit scrim'} {...controlsAriaProps}>
+					<div className={css.fullscreen} {...controlsAriaProps}>
 						<FeedbackContent
 							className={css.miniFeedback}
 							playbackRate={this.pulsedPlaybackRate || this.selectPlaybackRate(this.speedIndex)}
@@ -1853,9 +2032,9 @@ const VideoPlayerBase = class extends React.Component {
 						>
 							{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
 						</FeedbackContent>
-						<Container
+						<ControlsContainer
 							className={css.bottom + (this.state.mediaControlsVisible ? '' : ' ' + css.hidden)}
-							spotlightDisabled={!this.state.mediaControlsVisible || spotlightDisabled}
+							spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
 						>
 							{/*
 								Info Section: Title, Description, Times
@@ -1880,6 +2059,8 @@ const VideoPlayerBase = class extends React.Component {
 
 							{noSlider ? null : <MediaSlider
 								backgroundProgress={this.state.proportionLoaded}
+								disabled={disabled}
+								forcePressed={this.state.slider5WayPressed}
 								onBlur={this.handleSliderBlur}
 								onChange={this.onSliderChange}
 								onFocus={this.handleSliderFocus}
@@ -1887,15 +2068,15 @@ const VideoPlayerBase = class extends React.Component {
 								onKnobMove={this.handleKnobMove}
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
 								onSpotlightUp={this.handleSpotlightUpFromSlider}
-								forcePressed={this.state.slider5WayPressed}
-								spotlightDisabled={spotlightDisabled || this.state.mediaSliderVisible && !this.state.mediaControlsVisible}
+								spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
 								value={this.state.proportionPlayed}
 								visible={this.state.mediaSliderVisible}
 							>
 								<FeedbackTooltip
 									noFeedback={!this.state.feedbackIconVisible}
-									playbackState={this.prevCommand}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
+									playbackState={this.prevCommand}
+									thumbnailComponent={thumbnailComponent}
 									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
 									visible={this.state.feedbackVisible}
@@ -1911,7 +2092,7 @@ const VideoPlayerBase = class extends React.Component {
 								jumpButtonsDisabled={jumpButtonsDisabled}
 								jumpForwardIcon={jumpForwardIcon}
 								leftComponents={leftComponents}
-								mediaDisabled={this.state.mediaControlsDisabled}
+								mediaDisabled={disabled || this.state.mediaControlsDisabled}
 								moreButtonCloseLabel={moreButtonCloseLabel}
 								moreButtonDisabled={moreButtonDisabled}
 								moreButtonLabel={moreButtonLabel}
@@ -1919,6 +2100,7 @@ const VideoPlayerBase = class extends React.Component {
 								noJumpButtons={noJumpButtons}
 								noRateButtons={noRateButtons}
 								onBackwardButtonClick={this.onBackward}
+								onClick={this.resetAutoTimeout}
 								onForwardButtonClick={this.onForward}
 								onJumpBackwardButtonClick={this.onJumpBackward}
 								onJumpForwardButtonClick={this.onJumpForward}
@@ -1933,12 +2115,12 @@ const VideoPlayerBase = class extends React.Component {
 								rateButtonsDisabled={rateButtonsDisabled}
 								rightComponents={rightComponents}
 								showMoreComponents={this.state.more}
-								spotlightDisabled={spotlightDisabled}
+								spotlightDisabled={!this.state.mediaControlsVisible || spotlightDisabled}
 								visible={this.state.mediaControlsVisible}
 							>
 								{children}
 							</MediaControls>
-						</Container>
+						</ControlsContainer>
 					</div> :
 					null
 				}
@@ -1946,13 +2128,13 @@ const VideoPlayerBase = class extends React.Component {
 					// This captures spotlight focus for use with 5-way.
 					// It's non-visible but lives at the top of the VideoPlayer.
 					className={css.controlsHandleAbove}
-					onSpotlightDown={this.showControls}
-					onTap={this.showControls}
+					onClick={this.showControls}
 					onKeyDown={this.handleKeyDown}
-					spotlightDisabled={spotlightDisabled}
+					onSpotlightDown={this.showControls}
+					spotlightDisabled={this.state.mediaControlsVisible || spotlightDisabled}
 				/>
 				<Announce ref={this.setAnnounceRef} />
-			</div>
+			</RootContainer>
 		);
 	}
 };
@@ -2005,11 +2187,25 @@ const VideoPlayerBase = class extends React.Component {
  * @public
  */
 const VideoPlayer = ApiDecorator(
-	{api: ['fastForward', 'getMediaState', 'hideControls', 'jump', 'pause', 'play', 'rewind', 'seek', 'showControls']},
+	{api: [
+		'areControlsVisible',
+		'fastForward',
+		'getMediaState',
+		'getVideoNode',
+		'hideControls',
+		'jump',
+		'pause',
+		'play',
+		'rewind',
+		'seek',
+		'showControls',
+		'showFeedback',
+		'toggleControls'
+	]},
 	Slottable(
-		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
+		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source', 'thumbnailComponent']},
 		FloatingLayerDecorator(
-			{floatLayerId:  'videoPlayerFloatingLayer'},
+			{floatLayerId: 'videoPlayerFloatingLayer'},
 			Skinnable(
 				VideoPlayerBase
 			)
