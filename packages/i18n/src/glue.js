@@ -20,17 +20,11 @@
 import './dates';
 
 import ilib from '../ilib/lib/ilib';
-import ResBundle from '../ilib/lib/ResBundle';
 
 import Loader from './Loader';
 import {updateLocale} from '../locale';
 
 ilib.setLoaderCallback(new Loader());
-
-// preload any external ilib data
-ilib.data = global.ilibData || ilib.data;
-ResBundle.strings = ResBundle.strings || {};
-ResBundle.strings.cache = global.resBundleData || ResBundle.strings.cache;
 
 if (typeof window === 'object' && typeof window.UILocale !== 'undefined') {
 	// this is a hack until GF-1581 is fixed
