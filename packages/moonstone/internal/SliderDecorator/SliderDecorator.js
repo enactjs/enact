@@ -46,12 +46,12 @@ const defaultConfig = {
 // Set-up event forwarding
 const forwardBlur = forward('onBlur');
 const forwardChange = forward('onChange');
-const forwardClick = forward('onClick');
 const forwardFocus = forward('onFocus');
 const forwardMouseDown = forward('onMouseDown');
 const forwardMouseEnter = forward('onMouseEnter');
-const forwardMouseMove = forward('onMouseMove');
 const forwardMouseLeave  = forward('onMouseLeave');
+const forwardMouseMove = forward('onMouseMove');
+const forwardMouseUp = forward('onMouseUp');
 
 /**
  * {@link moonstone/internal/SliderDecorator.SliderDecorator} is a Higher-order Component that
@@ -215,7 +215,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.current5WayValue = null;
+			this.detachedValue = null;
 			this.knobPosition = null;
 			this.normalizeBounds(props);
 			this.detachedKnobPosition = 0;
@@ -334,14 +334,18 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		moveKnobByAmount (amount) {
-			const value = this.current5WayValue === null ? this.state.value : this.current5WayValue;
-			this.current5WayValue = this.clamp(value + amount);
+			const value = this.detachedValue === null ? this.state.value : this.detachedValue;
+			this.detachedValue = this.clamp(value + amount);
 			this.knobPosition = computeProportionProgress({
 				max: this.normalizedMax,
 				min: this.normalizedMin,
-				value: this.current5WayValue
+				value: this.detachedValue
 			});
 			this.updateUI();
+		}
+
+		detachKnob () {
+			this.moveKnobByAmount(0);
 		}
 
 		moveKnobByPointer (position) {
@@ -352,9 +356,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const pointer = position - this.inputNode.getBoundingClientRect().left;
 			const knob = (clamp(min, min + node.offsetWidth, pointer) - min) / node.offsetWidth;
 			const knobValue = (this.normalizedMax - this.normalizedMin) * knob;
-			this.current5WayValue = knobValue - knobValue % this.props.step;
+			this.detachedValue = knobValue - knobValue % this.props.step;
 			if (this.stepDecimalDigits !== 0) {
-				this.current5WayValue = parseNumber(this.current5WayValue.toFixed(this.stepDecimalDigits));
+				this.detachedValue = parseNumber(this.detachedValue.toFixed(this.stepDecimalDigits));
 			}
 
 			// Update our instance's knowledge of where the knob should be
@@ -422,6 +426,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleChange = (ev) => {
+			// If disable or not tracking the value (this.prevValue == null), onChange shouldn't be
+			// emitted
 			if (this.props.disabled) return;
 
 			ev.preventDefault();
@@ -462,26 +468,28 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.updateUI();
 		}
 
-		handleClick = (ev) => {
-			forwardClick(ev, this.props);
+		handleMouseUp = (ev) => {
+			forwardMouseUp(ev, this.props);
 
-			if (!this.props.disabled && Spotlight.getCurrent() !== this.sliderNode) {
-				Spotlight.focus(this.sliderNode);
-			}
-
-			if (ev.target.nodeName === 'INPUT') {
-				let value;
-				if (this.state.controlled) {
-					// use current knob position value (i.e. current5WayValue) for detachedKnob as value
-					// may change in between mouse down and mouse up by prop change
-					value = this.props.detachedKnob ? this.current5WayValue : this.changedControlledValue;
-				} else {
-					value = this.state.value;
+			if (!this.props.disabled) {
+				if (Spotlight.getCurrent() !== this.sliderNode) {
+					Spotlight.focus(this.sliderNode);
 				}
 
-				if (this.prevValue !== value) {
-					forwardChange({value: parseNumber(value)}, this.props);
-					this.prevValue = null;
+				if (ev.target.nodeName === 'INPUT' && this.prevValue !== null) {
+					let value;
+					if (this.state.controlled) {
+						// use current knob position value (i.e. detachedValue) for detachedKnob as value
+						// may change in between mouse down and mouse up by prop change
+						value = this.props.detachedKnob ? this.detachedValue : this.changedControlledValue;
+					} else {
+						value = this.state.value;
+					}
+
+					if (this.prevValue !== value) {
+						forwardChange({value: parseNumber(value)}, this.props);
+						this.prevValue = null;
+					}
 				}
 			}
 		}
@@ -492,14 +500,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (disabled) return;
 
 			if (detachedKnob) {
-				if (this.current5WayValue !== null) {
+				if (this.detachedValue !== null) {
 					this.willChange = true;
-					this.throttleUpdateValue(this.clamp(this.current5WayValue));
-
-					// only clear knobPosition when not in
-					if (!Spotlight.getPointerMode()) {
-						this.knobPosition = null;
-					}
+					this.throttleUpdateValue(this.clamp(this.detachedValue));
 				}
 			} else {
 				const verticalHint = $L('change a value with up down button');
@@ -527,8 +530,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				)
 			) return;
 
-			if (this.current5WayValue !== null) {
-				this.current5WayValue = null;
+			if (this.detachedValue !== null) {
+				this.detachedValue = null;
 				this.knobPosition = null;
 				this.updateUI();
 			}
@@ -577,8 +580,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			) return;
 
 			if (this.props.detachedKnob) {
-				this.current5WayValue = this.clamp(this.state.value);
-				this.updateUI();
+				// knob should remain in the focused position on focus
+				this.detachKnob();
 			}
 
 			this.setState({
@@ -603,7 +606,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onActivate={this.handleActivate}
 					onBlur={this.handleBlur}
 					onChange={this.handleChange}
-					onClick={this.handleClick}
 					onDecrement={this.handleDecrement}
 					onFocus={this.handleFocus}
 					onIncrement={this.handleIncrement}
@@ -611,6 +613,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onMouseEnter={this.handleMouseEnter}
 					onMouseLeave={this.handleMouseLeave}
 					onMouseMove={this.handleMouseMove}
+					onMouseUp={this.handleMouseUp}
 					scrubbing={(this.knobPosition != null)}
 					sliderBarRef={this.getSliderBarNode}
 					sliderRef={this.getSliderNode}

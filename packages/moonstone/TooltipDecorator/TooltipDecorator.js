@@ -6,7 +6,7 @@
  * @module moonstone/TooltipDecorator
  */
 
-import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {contextTypes} from '@enact/core/internal/PubSub';
 import hoc from '@enact/core/hoc';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import {forward, handle, forProp} from '@enact/core/handle';
@@ -173,6 +173,12 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		componentWillMount () {
+			if (this.context.Subscriber) {
+				this.context.Subscriber.subscribe('i18n', this.handleLocaleChange);
+			}
+		}
+
 		componentWillUnmount () {
 			if (currentTooltip === this) {
 				currentTooltip = null;
@@ -182,6 +188,14 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.props.disabled) {
 				off('keydown', this.handleKeyDown);
 			}
+
+			if (this.context.Subscriber) {
+				this.context.Subscriber.unsubscribe('i18n', this.handleLocaleChange);
+			}
+		}
+
+		handleLocaleChange = ({message: {rtl}}) => {
+			this.rtlLocale = rtl;
 		}
 
 		setTooltipLayout () {
@@ -233,7 +247,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		adjustDirection (tooltipDirection, overflow) {
-			if (this.context.rtl && (tooltipDirection === 'left' || tooltipDirection === 'right')) {
+			if (this.rtlLocale && (tooltipDirection === 'left' || tooltipDirection === 'right')) {
 				tooltipDirection = tooltipDirection === 'left' ? 'right' : 'left';
 			}
 
@@ -253,7 +267,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		adjustAnchor (arrowAnchor, tooltipDirection, overflow) {
 			if (tooltipDirection === 'above' || tooltipDirection === 'below') {
-				if (this.context.rtl && arrowAnchor !== 'center') {
+				if (this.rtlLocale && arrowAnchor !== 'center') {
 					arrowAnchor = arrowAnchor === 'left' ? 'right' : 'left';
 				}
 
