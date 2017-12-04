@@ -4,6 +4,7 @@
  * @module core/factory
  */
 
+import components from './components';
 import css from './css';
 
 /**
@@ -31,7 +32,8 @@ const feature = function (prop, fn, defaultConfig, config) {
  *
  * Currently, `factory` only supports the `css` feature which expects its key to contain a map
  * of local class names to exported class names. When both maps contain matching keys, the class
- * names are joined together with a space.
+ * names are joined together with a space. Keys on the customized configuration object which do
+ * not exist in the default configuration will be discarded.
  *
  * ```
  * import factory from '@enact/core/factory';
@@ -90,7 +92,8 @@ const factory = (defaultConfig, fn) => (config) => {
 	}
 
 	return factoryFn({
-		css: feature('css', css, componentConfig, authorConfig)
+		css: feature('css', css, componentConfig, authorConfig),
+		components: feature('components', components, componentConfig, authorConfig)
 	});
 };
 

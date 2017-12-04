@@ -118,6 +118,12 @@ No significant changes.
 
 No significant changes.
 
+- many new unstyled components, ready for use by ui library developers
+
+### Changed
+
+### Fixed
+
 ## [1.6.0] - 2017-08-04
 
 ### Fixed

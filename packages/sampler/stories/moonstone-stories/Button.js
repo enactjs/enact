@@ -24,12 +24,12 @@ storiesOf('Button')
 				onClick={action('onClick')}
 				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
 				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
-				disabled={boolean('disabled', ButtonBase.defaultProps.disabled)}
-				icon={nullify(select('icon', prop.icons))}
-				noAnimation={boolean('noAnimation', false)}
-				minWidth={nullify(boolean('minWidth', ButtonBase.defaultProps.minWidth))}
+				disabled={boolean('disabled', Config.defaultProps.disabled)}
+				icon={nullify(select('icon', prop.icons, Config.defaultProps.icon))}
+				noAnimation={nullify(boolean('noAnimation', false))}
+				minWidth={nullify(boolean('minWidth', Config.defaultProps.minWidth))}
 				selected={nullify(boolean('selected', false))}
-				small={nullify(boolean('small', ButtonBase.defaultProps.small))}
+				small={nullify(boolean('small', Config.defaultProps.small))}
 			>
 				{text('children', 'click me')}
 			</Button>
