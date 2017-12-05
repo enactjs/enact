@@ -12,7 +12,6 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Pure from '../internal/Pure';
 import ri from '../resolution';
 
 import componentCss from './IconFactory.less';
@@ -102,7 +101,7 @@ const IconBaseFactory = factory({css: componentCss}, ({css}) => {
 			/**
 			 * The icon specified as either:
 			 *
-				 * * A string that represents an icon from the [IconList]{@link ui/Icon.IconList},
+			 * * A string that represents an icon from the [IconList]{@link ui/Icon.IconList},
 			 * * An HTML entity string, Unicode reference or hex value (in the form '0x...'),
 			 * * A URL specifying path to an icon image, or
 			 * * An object representing a resolution independent resource (See {@link ui/resolution}).
@@ -151,10 +150,10 @@ const IconBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		computed: {
-			className: ({children: icon, iconList, pressed, small, styler}) => styler.append(
-				!iconList[icon] && css.dingbat,	// If the icon isn't in our known set, apply our custom font class
-				{pressed, small}
-			),
+			className: ({children: icon, iconList, pressed, small, styler}) => styler.append({
+				dingbat: !iconList[icon],	// If the icon isn't in our known set, apply our custom font class
+				pressed, small
+			}),
 			iconProps: ({children: iconProp, iconList, style}) => {
 				let icon = iconList[iconProp];
 
