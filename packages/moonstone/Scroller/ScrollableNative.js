@@ -37,8 +37,8 @@ const
 	scrollWheelMultiplierForDeltaPixel = 1.5, // The ratio of wheel 'delta' units to pixels scrolled.
 	scrollWheelPageMultiplierForMaxPixel = 0.2, // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	pixelPerLine = 39,
-	// spotlight
 	scrollStopWaiting = 200,
+	// spotlight
 	isPageUp = is('pageUp'),
 	isPageDown = is('pageDown'),
 	reverseDirections = {
@@ -420,7 +420,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (typeof window !== 'undefined') {
 				window.document.activeElement.blur();
 			}
+
 			this.showThumb(bounds);
+
 			// FIXME This routine is a temporary support for horizontal wheel scroll.
 			// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
 			if (canScrollVertically) { // This routine handles wheel events on scrollbars for vertical scroll.
