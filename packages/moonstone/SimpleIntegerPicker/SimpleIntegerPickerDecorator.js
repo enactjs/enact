@@ -147,7 +147,7 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 				value: this.validateValue(parseInt(ev.target.value)),
 				isActive: false
 			}, () => {
-				this.inputNode.className = classNames(this.inputNode.className, css.hideInput);
+				this.inputNode.className = classNames(this.inputNode.className, css.hidden);
 				Spotlight.focus(this.pickerNode);
 				this.freezeSpotlight(false);
 			});

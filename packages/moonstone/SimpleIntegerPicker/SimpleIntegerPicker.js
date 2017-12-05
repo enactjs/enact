@@ -212,7 +212,8 @@ const SimpleIntegerPickerBase = kind({
 	},
 
 	styles: {
-		css
+		css,
+		className: 'picker'
 	},
 
 	computed: {
@@ -239,7 +240,7 @@ const SimpleIntegerPickerBase = kind({
 			return (
 				editable ?
 					<input
-						className={css.inputClass}
+						className={css.input}
 						key={value}
 						onBlur={onInputBlur}
 						ref={inputRef}
@@ -250,16 +251,13 @@ const SimpleIntegerPickerBase = kind({
 					</PickerItem>
 			);
 		},
-		classes: ({editable}) => {
-			let pickerClass = ['spottable', css.picker];
-			if (editable) {
-				pickerClass.push(css.selectedPicker);
-			}
-			return pickerClass.join(' ');
-		}
+		className: ({editable, styler}) => styler.append({
+			spottable: true,
+			selected: editable
+		})
 	},
 
-	render: ({classes, pickerRef, ...rest}) => {
+	render: ({pickerRef, ...rest}) => {
 		delete rest.editable;
 		delete rest.inputRef;
 		delete rest.onInputBlur;
@@ -267,7 +265,7 @@ const SimpleIntegerPickerBase = kind({
 		delete rest.unit;
 
 		return (
-			<Picker {...rest} className={classes} index={0} ref={pickerRef} />
+			<Picker {...rest} index={0} ref={pickerRef} />
 		);
 	}
 });
