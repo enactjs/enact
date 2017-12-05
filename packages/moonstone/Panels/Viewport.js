@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import {forward, handle} from '@enact/core/handle';
+import {forward, handle, forProp} from '@enact/core/handle';
 import ViewManager, {shape} from '@enact/ui/ViewManager';
 import invariant from 'invariant';
 import React from 'react';
@@ -103,12 +103,14 @@ const ViewportBase = class extends React.Component {
 	handle = handle.bind(this)
 
 	handleTransition = this.handle(
+		forProp('noAnimation', false),
 		forward('onTransition'),
 		this.removeTransitioningClass,
 		Spotlight.resume
 	)
 
 	handleWillTransition = this.handle(
+		forProp('noAnimation', false),
 		forward('onWillTransition'),
 		this.addTransitioningClass,
 		this.mayBlurSpotlight,
