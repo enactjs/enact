@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import {forward, handle, forProp} from '@enact/core/handle';
+import {forProp, forward, handle} from '@enact/core/handle';
 import ViewManager, {shape} from '@enact/ui/ViewManager';
 import invariant from 'invariant';
 import React from 'react';
