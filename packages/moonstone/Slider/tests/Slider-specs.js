@@ -74,6 +74,28 @@ describe('Slider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it('should not fire change event when initial value has not changed', function () {
+		const handleChange = sinon.spy();
+		const value = 25;
+
+		const slider = mount(
+			<Slider
+				min={0}
+				max={100}
+				value={25}
+				step={1}
+				onChange={handleChange}
+			/>
+		);
+
+		slider.find(`.${css.input}`).simulate('mousedown', {value}).simulate('mouseup', {value});
+
+		const expected = false;
+		const actual = handleChange.called;
+
+		expect(actual).to.equal(expected);
+	});
+
 	it('should forward value in change event', function () {
 		const handleChange = sinon.spy();
 		const value = 25;
