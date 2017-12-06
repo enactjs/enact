@@ -108,20 +108,38 @@ const append = (props) => {
  */
 const styles = (cfg, props) => {
 	const prop = cfg.prop || 'className';
+	let css = cfg.css;
+	let config = cfg;
 
 	const style = mergeStyle(cfg, props);
 	if (style) {
 		props.style = style;
 	}
 
-	const className = mergeClassName(cfg, props);
+	if (props.css && cfg.css) {
+		css = Object.assign({}, cfg.css);
+		Object.keys(props.css).forEach(key => {
+			if (cfg.css[key] && (
+				cfg.publicClassNames === true || cfg.publicClassNames.indexOf(key) >= 0
+			)) {
+				css[key] = cfg.css[key] + ' ' + props.css[key];
+			}
+		});
+
+		props.css = css;
+		config = {...cfg, css};
+	} else if (cfg.css) {
+		addInternalProp(props, 'css', cfg.css);
+	}
+
+	const className = mergeClassName(config, props);
 	if (className) {
 		props[prop] = className;
 	}
 
 	// styler should not be automatically spread onto children
 	addInternalProp(props, 'styler', {
-		join: join(cfg)
+		join: join(config)
 	});
 
 	// append requires the computed className property so it is built off the updated props rather
