@@ -15,7 +15,7 @@ import {ItemBase} from '../Item';
 import Skinnable from '../Skinnable';
 import {MarqueeController, MarqueeText} from '../Marquee';
 
-const Controller = MarqueeController({marqueeOnFocus: true}, Spottable(ItemBase));
+const Controller = MarqueeController({marqueeOnFocus: true}, Pure(Spottable(ItemBase)));
 
 import css from './LabeledItem.less';
 
@@ -60,10 +60,10 @@ const LabeledItemBase = kind({
 		/**
 		 * Icon to be displayed next to the title text.
 		 *
-		 * @type {String}
+		 * @type {Node}
 		 * @public
 		 */
-		titleIcon: PropTypes.string
+		titleIcon: PropTypes.node
 	},
 
 	styles: {
@@ -71,15 +71,43 @@ const LabeledItemBase = kind({
 		className: 'labeleditem'
 	},
 
-	render: ({children, disabled, label, titleIcon, ...rest}) => (
-		<Controller disabled={disabled} {...rest}>
-			<div className={css.text}>
-				<MarqueeText disabled={disabled} className={css.title}>{children}</MarqueeText>
-				{(titleIcon != null) ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
-			</div>
-			{(label != null) ? <MarqueeText disabled={disabled} className={css.label}>{label}</MarqueeText> : null}
-		</Controller>
-	)
+	computed: {
+		icon: ({titleIcon}) => {
+			if (titleIcon != null) {
+				if (typeof titleIcon === 'string') {
+					return <Icon small className={css.icon}>{titleIcon}</Icon>;
+				} else {
+					return titleIcon;
+				}
+			} else {
+				return null;
+			}
+		},
+		label: ({disabled, label}) => {
+			if (label != null) {
+				if (typeof titleIcon === 'string') {
+					return <MarqueeText disabled={disabled} className={css.label}>{label}</MarqueeText>;
+				} else {
+					return label;
+				}
+			} else {
+				return null;
+			}
+		}
+	},
+
+	render: ({children, disabled, icon, label, ...rest}) => {
+		delete rest.titleIcon;
+		return (
+			<Controller disabled={disabled} {...rest}>
+				<div className={css.text}>
+					<MarqueeText disabled={disabled} className={css.title}>{children}</MarqueeText>
+					{icon}
+				</div>
+				{label}
+			</Controller>
+		);
+	}
 });
 
 const LabeledItem = Pure(

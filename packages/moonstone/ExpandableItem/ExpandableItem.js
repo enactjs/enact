@@ -16,10 +16,14 @@ import PropTypes from 'prop-types';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
+import Icon from '../Icon';
 import LabeledItem from '../LabeledItem';
+import {MarqueeText} from '../Marquee';
 
 import Expandable from './Expandable';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
+
+import css from './ExpandableItem.less';
 
 const isUp = is('up');
 const isDown = is('down');
@@ -275,17 +279,29 @@ const ExpandableItemBase = kind({
 		)
 	},
 
+	styles: {
+		css,
+		className: 'expandableItem'
+	},
+
 	computed: {
-		label: ({disabled, label, noneText, open, showLabel}) => {
-			const isOpen = open && !disabled;
-			if (showLabel === 'always' || (!isOpen && showLabel !== 'never')) {
-				return label || noneText;
-			} else {
-				return null;
+		label: ({disabled, label, noneText, showLabel, styler}) => {
+			let className;
+
+			if (showLabel === 'always') {
+				className = css.label;
+			} else if (showLabel === 'auto') {
+				className = styler.append(css.label, css.auto);
+			} else if (showLabel === 'never') {
+				className = styler.append(css.label, css.hidden);
 			}
+
+			return (
+				<MarqueeText disabled={disabled} className={className}>{label || noneText}</MarqueeText>
+			);
 		},
 		open: ({disabled, open}) => (open && !disabled),
-		titleIcon: ({disabled, open}) => (open && !disabled ? 'arrowlargeup' : 'arrowlargedown'),
+		titleIcon: () => (<Icon small className={css.icon}>arrowlargedown</Icon>),
 		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
 	},
 
