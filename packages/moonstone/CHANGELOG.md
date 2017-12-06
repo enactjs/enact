@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [1.13.1] - 2017-12-06
+
+### Fixed
+
+- `moonstone/SliderDecorator` to not unnecessarily fire `onChange` if the initial value has not changed
+
 ## [1.13.0] - 2017-11-28
 
 ### Added
