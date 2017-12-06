@@ -13,17 +13,17 @@
  * @exports iconList
  */
 
-import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
+import hoc from '@enact/core/hoc';
 import Pure from '@enact/ui/internal/Pure';
-import UiIconFactory from '@enact/ui/IconFactory';
+import UiIcon from '@enact/ui/Icon';
 import React from 'react';
 
 import Skinnable from '../Skinnable';
 
 import iconList from './IconList.js';
 
-import componentCss from './Icon.less';
+import css from './Icon.less';
 
 /**
  * A factory for customizing the visual style of [IconBase]{@link moonstone/Icon.IconBase}.
@@ -33,22 +33,15 @@ import componentCss from './Icon.less';
  * @factory
  * @public
  */
-const IconBaseFactory = factory({css: componentCss}, ({css}) => {
-	const MoonstoneIcon = UiIconFactory({
-		/* Replace classes in this step */
-		css: /** @lends moonstone/Icon.IconBaseFactory.prototype */ {
-			...componentCss,
-			// Include the component class name so it too may be overridden.
-			icon: css.icon
-		}
-	});
-
-	return kind({
-		name: 'MoonstoneIcon',
-		render: (props) => (
-			<MoonstoneIcon {...props} iconList={iconList} />
-		)
-	});
+const IconBase = kind({
+	name: 'MoonstoneIcon',
+	styles: {
+		css
+		// publicClassNames: true
+	},
+	render: (props) => (
+		<UiIcon {...props} iconList={iconList} />
+	)
 });
 
 // Let's find a way to import this list directly, and bonus feature, render our icons in the docs next to their names.
@@ -151,7 +144,13 @@ const IconBaseFactory = factory({css: componentCss}, ({css}) => {
   * @ui
   * @public
   */
-const IconBase = IconBaseFactory();
+// const IconBase = IconBaseFactory();
+
+const IconDecorator = hoc((config, Wrapped) => Pure(
+	Skinnable(
+		Wrapped
+	)
+));
 
 /**
  * A factory for customizing the visual style of [Icon]{@link moonstone/Icon.Icon}.
@@ -162,11 +161,7 @@ const IconBase = IconBaseFactory();
  * @factory
  * @public
  */
-const IconFactory = (props) => Pure(
-	Skinnable(
-		IconBaseFactory(props)
-	)
-);
+const Icon = IconDecorator(IconBase);
 
 /**
  * A ready-to-use Icon, with HOCs applied.
@@ -178,13 +173,11 @@ const IconFactory = (props) => Pure(
  * @ui
  * @public
  */
-const Icon = IconFactory();
 
 export default Icon;
 export {
 	Icon,
 	IconBase,
-	IconFactory,
-	IconBaseFactory,
+	IconDecorator,
 	iconList as icons
 };

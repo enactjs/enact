@@ -194,7 +194,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 				backgroundOpacity, color
 			),
 			icon: ({icon, small}) =>
-				(typeof icon === 'string' ? <Icon className={css.icon} small={small}>{icon}</Icon> : icon)
+				(typeof icon === 'string' ? <Icon css={css} small={small}>{icon}</Icon> : icon)
 		},
 
 		handlers: {
