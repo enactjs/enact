@@ -1,0 +1,35 @@
+// Button.less
+//
+@import '../styles/mixins.less';
+
+.button {
+	position: relative;
+	overflow: visible;
+	cursor: pointer;
+	display: inline-block;
+	width: auto;
+
+	.bg {
+		.position(0);
+		position: absolute;
+		content: '';
+		background-color: inherit;
+	}
+
+	.client {
+		display: flex;
+		box-sizing: border-box;
+		height: 100%;
+		position: relative;
+	}
+
+	&.minWidth,
+	&.small,
+	.marquee {
+
+	}
+
+	.disabled({
+		cursor: default;
+	});
+}

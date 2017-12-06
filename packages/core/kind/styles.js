@@ -116,7 +116,8 @@ const styles = (cfg, props) => {
 		props.style = style;
 	}
 
-	if (props.css && cfg.css) {
+	if (cfg.css && cfg.publicClassNames && props.css) {
+		// if the props includes a css map, merge them together now
 		css = Object.assign({}, cfg.css);
 		Object.keys(props.css).forEach(key => {
 			if (cfg.css[key] && (
@@ -126,11 +127,13 @@ const styles = (cfg, props) => {
 			}
 		});
 
-		props.css = css;
+		// merge the combined css map into config so it is used by other styler features
 		config = {...cfg, css};
-	} else if (cfg.css) {
-		addInternalProp(props, 'css', cfg.css);
+		props.css = css;
 	}
+
+	// always add a "private" css prop for consistency regardless of config/props
+	addInternalProp(props, 'css', config.css);
 
 	const className = mergeClassName(config, props);
 	if (className) {

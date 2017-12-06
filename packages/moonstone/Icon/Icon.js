@@ -23,7 +23,7 @@ import Skinnable from '../Skinnable';
 
 import iconList from './IconList.js';
 
-import css from './Icon.less';
+import componentCss from './Icon.less';
 
 /**
  * A factory for customizing the visual style of [IconBase]{@link moonstone/Icon.IconBase}.
@@ -36,11 +36,15 @@ import css from './Icon.less';
 const IconBase = kind({
 	name: 'MoonstoneIcon',
 	styles: {
-		css
+		css: componentCss
 		// publicClassNames: true
 	},
 	render: (props) => (
-		<UiIcon {...props} iconList={iconList} />
+		<UiIcon
+			{...props}
+			css={props.css}
+			iconList={iconList}
+		/>
 	)
 });
 
