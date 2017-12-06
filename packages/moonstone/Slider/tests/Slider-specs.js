@@ -41,14 +41,13 @@ describe('Slider Specs', () => {
 			/>
 		);
 
-		slider.find(`.${css.input}`).simulate('mousedown', {value});
-		slider.find(`.${css.input}`).simulate('change', {target: {value}});
-		// Technically it should be mousedown -> change -> mouseup, but simulating mouse down and mouse up on same element does seem to fire click event
-		// Simulating click event also doesn't fire mouse down or mouse up event, so we're okay.
-		slider.find(`.${css.input}`).simulate('click', {value});
+		slider.find(`.${css.input}`)
+			.simulate('mousedown', {value})
+			.simulate('change', {target: {value}})
+			.simulate('mouseup', {value});
 
-		const expected = 0;
-		const actual = handleChange.callCount;
+		const expected = false;
+		const actual = handleChange.called;
 		expect(actual).to.equal(expected);
 	});
 
@@ -66,32 +65,13 @@ describe('Slider Specs', () => {
 			/>
 		);
 
-		slider.find(`.${css.input}`).simulate('mousedown', {value}).simulate('mouseup', {value});
+		slider.find(`.${css.input}`)
+			.simulate('mousedown', {value})
+			.simulate('change', {target: {value}})
+			.simulate('mouseup', {value});
 
 		const expected = 1;
 		const actual = handleChange.callCount;
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should not fire change event when initial value has not changed', function () {
-		const handleChange = sinon.spy();
-		const value = 25;
-
-		const slider = mount(
-			<Slider
-				min={0}
-				max={100}
-				value={25}
-				step={1}
-				onChange={handleChange}
-			/>
-		);
-
-		slider.find(`.${css.input}`).simulate('mousedown', {value}).simulate('mouseup', {value});
-
-		const expected = false;
-		const actual = handleChange.called;
 
 		expect(actual).to.equal(expected);
 	});
