@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Scrollbar` to show its thumb properly when scroll position reaches the top or the bottom by paging controls
+
+### Changed
+
+- `moonstone/Scrollbar` not to hide scroll thumb immediately after scroll position reaches the top or the bottom
+
 ## [1.13.1] - 2017-12-06
 
 ### Fixed
