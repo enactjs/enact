@@ -285,21 +285,8 @@ const ExpandableItemBase = kind({
 	},
 
 	computed: {
-		label: ({disabled, label, noneText, showLabel, styler}) => {
-			let className;
-
-			if (showLabel === 'always') {
-				className = css.label;
-			} else if (showLabel === 'auto') {
-				className = styler.append(css.label, css.auto);
-			} else if (showLabel === 'never') {
-				className = styler.append(css.label, css.hidden);
-			}
-
-			return (
-				<MarqueeText disabled={disabled} className={className}>{label || noneText}</MarqueeText>
-			);
-		},
+		label: ({label, noneText}) => (label || noneText),
+		labelClassName: ({showLabel, styler}) => (styler.append(css.label, css[showLabel])),
 		open: ({disabled, open}) => (open && !disabled),
 		titleIcon: () => (<Icon small className={css.icon}>arrowlargedown</Icon>),
 		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
@@ -312,6 +299,7 @@ const ExpandableItemBase = kind({
 		handleLabelKeyDown,
 		handleOpen,
 		label,
+		labelClassName,
 		open,
 		onHide,
 		onShow,
@@ -348,7 +336,7 @@ const ExpandableItemBase = kind({
 					{...ariaProps}
 					data-expandable-label
 					disabled={disabled}
-					label={label}
+					label={<MarqueeText disabled={disabled} className={labelClassName}>{label}</MarqueeText>}
 					onClick={handleOpen}
 					onKeyDown={handleLabelKeyDown}
 					onSpotlightDisappear={onSpotlightDisappear}

@@ -72,42 +72,23 @@ const LabeledItemBase = kind({
 	},
 
 	computed: {
-		icon: ({titleIcon}) => {
-			if (titleIcon != null) {
-				if (typeof titleIcon === 'string') {
-					return <Icon small className={css.icon}>{titleIcon}</Icon>;
-				} else {
-					return titleIcon;
-				}
-			} else {
-				return null;
-			}
-		},
-		label: ({disabled, label}) => {
-			if (label != null) {
-				if (typeof titleIcon === 'string') {
-					return <MarqueeText disabled={disabled} className={css.label}>{label}</MarqueeText>;
-				} else {
-					return label;
-				}
-			} else {
-				return null;
-			}
-		}
+		label: ({disabled, label}) => (
+			typeof label === 'string' ? <MarqueeText disabled={disabled} className={css.label}>{label}</MarqueeText> : label
+		),
+		titleIcon: ({titleIcon}) => (
+			typeof titleIcon === 'string' ? <Icon small className={css.icon}>{titleIcon}</Icon> : titleIcon
+		)
 	},
 
-	render: ({children, disabled, icon, label, ...rest}) => {
-		delete rest.titleIcon;
-		return (
-			<Controller disabled={disabled} {...rest}>
-				<div className={css.text}>
-					<MarqueeText disabled={disabled} className={css.title}>{children}</MarqueeText>
-					{icon}
-				</div>
-				{label}
-			</Controller>
-		);
-	}
+	render: ({children, disabled, label, titleIcon, ...rest}) => (
+		<Controller disabled={disabled} {...rest}>
+			<div className={css.text}>
+				<MarqueeText disabled={disabled} className={css.title}>{children}</MarqueeText>
+				{titleIcon || null}
+			</div>
+			{label || null}
+		</Controller>
+	)
 });
 
 const LabeledItem = Pure(

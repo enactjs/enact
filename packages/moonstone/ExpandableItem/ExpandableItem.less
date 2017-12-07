@@ -12,6 +12,7 @@
 	.icon {
 		margin-top: 0;
 		margin-bottom: 0;
+		will-change: transform;
 	}
 
 	.label {
@@ -37,7 +38,12 @@
 			padding-left: 0;
 		}
 
-		&.hidden {
+		&.always,
+		&.auto {
+			display: block;
+		}
+
+		&.never {
 			display: none;
 		}
 	}
