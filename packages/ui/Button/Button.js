@@ -34,25 +34,6 @@ const ButtonBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * The background-color opacity of this button; valid values are `'opaque'`, `'translucent'`,
-		 * `'lightTranslucent'`, and `'transparent'`.
-		 *
-		 * @type {String}
-		 * @default 'opaque'
-		 * @public
-		 */
-		backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'lightTranslucent', 'transparent']),
-
-		/**
-		 * This property accepts one of the following color names, which correspond with the
-		 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
-
-		/**
 		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
 		 * generate `onClick` [events]{@glossary event}.
 		 *
@@ -134,7 +115,6 @@ const ButtonBase = kind({
 	},
 
 	defaultProps: {
-		backgroundOpacity: 'opaque',
 		disabled: false,
 		iconComponent: 'span',
 		minWidth: true,
@@ -149,10 +129,13 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({backgroundOpacity, color, minWidth, noAnimation, pressed, selected, small, styler}) => styler.append(
-			{pressed, small, minWidth, noAnimation, selected},
-			backgroundOpacity, color
-		),
+		className: ({minWidth, noAnimation, pressed, selected, small, styler}) => styler.append({
+			pressed,
+			small,
+			minWidth,
+			noAnimation,
+			selected
+		}),
 		icon: ({css, icon, iconComponent: Icon, small}) =>
 			(typeof icon === 'string' ? <Icon css={css} small={small}>{icon}</Icon> : icon)
 	},
@@ -165,8 +148,6 @@ const ButtonBase = kind({
 	},
 
 	render: ({children, css, disabled, icon, ...rest}) => {
-		delete rest.backgroundOpacity;
-		delete rest.color;
 		delete rest.iconComponent;
 		delete rest.minWidth;
 		delete rest.noAnimation;
@@ -183,7 +164,7 @@ const ButtonBase = kind({
 	}
 });
 
-const ButtonDecorator = Touchable;
+const ButtonDecorator = Touchable({activeProp: 'pressed'});
 
 const Button = ButtonDecorator(ButtonBase);
 

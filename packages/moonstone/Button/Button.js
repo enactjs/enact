@@ -15,6 +15,7 @@ import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
 import UiButton from '@enact/ui/Button';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
@@ -25,9 +26,35 @@ import componentCss from './Button.less';
 
 const ButtonBase = kind({
 	name: 'Button',
+
+	propTypes: {
+		/**
+		 * The background-color opacity of this button; valid values are `'opaque'`, `'translucent'`,
+		 * `'lightTranslucent'`, and `'transparent'`.
+		 *
+		 * @type {String}
+		 * @default 'opaque'
+		 * @public
+		 */
+		backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'lightTranslucent', 'transparent']),
+
+		/**
+		 * This property accepts one of the following color names, which correspond with the
+		 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue'])
+	},
+
 	styles: {
 		css: componentCss,
 		publicClassNames: true
+	},
+
+	computed: {
+		className: ({backgroundOpacity, color, styler}) => styler.append(backgroundOpacity, color)
 	},
 
 	render: (props) => {
