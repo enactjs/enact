@@ -33,6 +33,7 @@ const
 	},
 	preparePrevButton = prepareButton(true),
 	prepareNextButton = prepareButton(false),
+	thumbHidingDelay = 400, /* in milliseconds */
 	isPageUp = is('pageUp'),
 	isPageDown = is('pageDown');
 
@@ -274,7 +275,7 @@ class ScrollbarBase extends PureComponent {
 
 	isThumbFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
 
-	hideThumbJob = new Job(this.hideThumb, 200);
+	hideThumbJob = new Job(this.hideThumb, thumbHidingDelay);
 
 	calculateMetrics = () => {
 		const trackSize = this.containerRef[this.props.vertical ? 'clientHeight' : 'clientWidth'];
