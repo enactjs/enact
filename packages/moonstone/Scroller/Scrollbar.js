@@ -216,10 +216,6 @@ class ScrollbarBase extends PureComponent {
 			shouldDisableNextButton = maxPos - currentPos <= 1,
 			spotItem = Spotlight.getCurrent();
 
-		if (currentPos <= 0 || currentPos >= maxPos) {
-			this.startHidingThumb();
-		}
-
 		this.setState((prevState) => {
 			const
 				updatePrevButton = (prevState.prevButtonDisabled !== shouldDisablePrevButton),
