@@ -70,6 +70,14 @@ class ScrollbarBase extends PureComponent {
 		announce: PropTypes.func,
 
 		/**
+		 * The callback function which is called for linking alertThumb function.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		cbAlertThumb: PropTypes.func,
+
+		/**
 		 * If `true`, add the corner between vertical and horizontal scrollbars.
 		 *
 		 * @type {Booelan}
@@ -170,6 +178,7 @@ class ScrollbarBase extends PureComponent {
 
 	componentDidUpdate () {
 		this.calculateMetrics();
+		this.props.cbAlertThumb();
 	}
 
 	componentWillUnmount () {
