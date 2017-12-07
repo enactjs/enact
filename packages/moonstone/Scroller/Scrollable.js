@@ -1089,7 +1089,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		updateScrollThumbSize = () => {
 			const
 				{horizontalScrollbar, verticalScrollbar} = this.props,
-				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 				bounds = this.getScrollBounds(),
 				canScrollHorizontally = this.canScrollHorizontally(bounds),
 				canScrollVertically = this.canScrollVertically(bounds),
@@ -1104,8 +1103,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						...bounds,
 						scrollLeft: this.scrollLeft,
 						scrollTop: this.scrollTop
-					},
-					spotItem = Spotlight.getCurrent();
+					};
 
 				if (curHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
 					this.horizontalScrollbarRef.update(updatedBounds);
