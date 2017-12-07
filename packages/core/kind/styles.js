@@ -3,6 +3,8 @@ import compose from 'ramda/src/compose';
 import merge from 'ramda/src/merge';
 import classnames from 'classnames';
 
+import {mergeClassNameMaps} from '../util';
+
 import {addInternalProp} from './util';
 
 // Joins two strings in a className-friendly way
@@ -116,16 +118,10 @@ const styles = (cfg, props) => {
 		props.style = style;
 	}
 
+	// if the props includes a css map, merge them together now
 	if (cfg.css && cfg.publicClassNames && props.css) {
-		// if the props includes a css map, merge them together now
-		css = Object.assign({}, cfg.css);
-		Object.keys(props.css).forEach(key => {
-			if (cfg.css[key] && (
-				cfg.publicClassNames === true || cfg.publicClassNames.indexOf(key) >= 0
-			)) {
-				css[key] = cfg.css[key] + ' ' + props.css[key];
-			}
-		});
+		const allowedClassNames = cfg.publicClassNames === true ? null : cfg.publicClassNames;
+		css = mergeClassNameMaps(cfg.css, props.css, allowedClassNames);
 
 		// merge the combined css map into config so it is used by other styler features
 		config = {...cfg, css};

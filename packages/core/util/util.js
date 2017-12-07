@@ -177,6 +177,39 @@ const perfNow = function () {
 	}
 };
 
+/**
+ * Merges two class name maps into one. The resulting map will only contain the class names defined
+ * in the `baseMap` and will be appended with the value from `additiveMap` if it exists. Further,
+ * `allowedClassNames` may optionally limit which keys will be merged from `additiveMap` into
+ * `baseMap`.
+ *
+ * ```
+ * // merges all matching class names from additiveMap1 with baseMap1
+ * const newMap1 = mergeClassNameMaps(baseMap1, additiveMap1);
+ *
+ * // merge only 'a' and 'b' class names from additveMap2 with baseMap2
+ * const newMap2 = mergeClassNameMaps(baseMap2, additiveMap2, ['a', 'b']);
+ * ```
+ *
+ * @method
+ * @memberof core/util
+ * @returns {Number}
+ */
+const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
+	let css = baseMap;
+	if (baseMap && additiveMap) {
+		// if the props includes a css map, merge them together now
+		css = Object.assign({}, baseMap);
+		Object.keys(additiveMap).forEach(key => {
+			if (baseMap[key] && (!allowedClassNames || allowedClassNames.indexOf(key) >= 0)) {
+				css[key] = baseMap[key] + ' ' + additiveMap[key];
+			}
+		});
+	}
+
+	return css;
+};
+
 export {
 	cap,
 	childrenEquals,
@@ -185,6 +218,7 @@ export {
 	extractAriaProps,
 	isRenderable,
 	Job,
+	mergeClassNameMaps,
 	perfNow,
 	withContextFromProps
 };
