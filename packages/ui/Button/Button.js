@@ -76,15 +76,6 @@ const ButtonBase = kind({
 		minWidth: PropTypes.bool,
 
 		/**
-		 * When `true`, the button does not animate on press
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noAnimation: PropTypes.bool,
-
-		/**
 		 * When `true`, a pressed visual effect is applied to the button
 		 *
 		 * @type {Boolean}
@@ -129,11 +120,10 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({minWidth, noAnimation, pressed, selected, small, styler}) => styler.append({
+		className: ({minWidth, pressed, selected, small, styler}) => styler.append({
 			pressed,
 			small,
 			minWidth,
-			noAnimation,
 			selected
 		}),
 		icon: ({css, icon, iconComponent: Icon, small}) =>
@@ -150,7 +140,6 @@ const ButtonBase = kind({
 	render: ({children, css, disabled, icon, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.minWidth;
-		delete rest.noAnimation;
 		delete rest.pressed;
 		delete rest.selected;
 		delete rest.small;

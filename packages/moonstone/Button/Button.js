@@ -45,7 +45,16 @@ const ButtonBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue'])
+		color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
+
+		/**
+		 * When `true`, the button does not animate on press
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noAnimation: PropTypes.bool
 	},
 
 	styles: {
@@ -54,15 +63,19 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({backgroundOpacity, color, styler}) => styler.append(backgroundOpacity, color)
+		className: ({backgroundOpacity, color, noAnimation, styler}) => styler.append(backgroundOpacity, color, {noAnimation})
 	},
 
-	render: (props) => {
+	render: ({css, ...rest}) => {
+		delete rest.backgroundOpacity;
+		delete rest.color;
+		delete rest.noAnimation;
+
 		return (
 			<UiButton
-				{...props}
-				css={props.css}
 				iconComponent={Icon}
+				{...rest}
+				css={css}
 			/>
 		);
 	}

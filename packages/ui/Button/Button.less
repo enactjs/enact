@@ -1,32 +1,59 @@
 // Button.less
 //
-@import '../styles/mixins.less';
+@import "../styles/mixins.less";
 
 .button {
+	display: inline-block;
+	box-sizing: border-box;
 	position: relative;
 	overflow: visible;
-	cursor: pointer;
-	display: inline-block;
+	white-space: nowrap;
 	width: auto;
+	z-index: 0;
+	cursor: pointer;
 
+	//**
+	//* Classes to apply to the background of the button, used on a child of button.
+	//* @public
+	//*/
 	.bg {
 		.position(0);
 		position: absolute;
-		content: '';
-		background-color: inherit;
+		z-index: -1;
 	}
 
+	//**
+	//* Where the content of the button lives.
+	//* @public
+	//*/
 	.client {
 		display: flex;
+		align-items: center;
+		justify-content: center;
 		box-sizing: border-box;
 		height: 100%;
 		position: relative;
 	}
 
+	//**
+	//* The marquee container of the client area. Added by {@link moonstone/MarqueeDecorator}.
+	//* @public
+	//*/
+	.marquee {
+		flex-grow: 1;
+		text-align: center;
+	}
+
+	.icon,
 	&.minWidth,
-	&.pressed,
-	&.small {
-		/* saved */
+	&.small,
+	//**
+	//* Classes to apply to the selected state of the button, applied to the base element
+	//* @public
+	//*/
+	&.selected,
+	&.pressed {
+		/* Avaliable to Developers */
 	}
 
 	.disabled({
