@@ -187,13 +187,20 @@ const perfNow = function () {
  * // merges all matching class names from additiveMap1 with baseMap1
  * const newMap1 = mergeClassNameMaps(baseMap1, additiveMap1);
  *
- * // merge only 'a' and 'b' class names from additveMap2 with baseMap2
+ * // merge only 'a' and 'b' class names from additiveMap2 with baseMap2
  * const newMap2 = mergeClassNameMaps(baseMap2, additiveMap2, ['a', 'b']);
  * ```
  *
+ * @param {Object}     baseMap             The source mapping of logical class name to physical
+ *                                         class name
+ * @param {Object}     additiveMap         Mapping of logical to physical class names which are
+ *                                         concatenated with `baseMap` where the logical names match
+ * @param {String[]}  [allowedClassNames]  Array of logical class names that can be augmented. When
+ *                                         set, the logical class name must exist in `baseMap`,
+ *                                         `additiveMap`, and this array to be concatenated.
  * @method
  * @memberof core/util
- * @returns {Number}
+ * @returns {Object}
  */
 const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
 	let css = baseMap;
