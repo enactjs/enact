@@ -267,6 +267,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.normalizeBounds(nextProps);
 				const clampedValue = this.clamp(this.state.controlled ? value : this.state.value);
 				const valueText = ariaValueText != null ? ariaValueText : clampedValue;
+				this.changedControlledValue = clampedValue;
 				this.setState({
 					value: clampedValue,
 					valueText: valueText
