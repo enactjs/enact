@@ -93,7 +93,7 @@ const ViewportBase = class extends React.Component {
 
 	mayBlurSpotlight = () => {
 		const current = Spotlight.getCurrent();
-		if (current && this.node.contains(current)) {
+		if (current && !this.props.noAnimation && this.node.contains(current)) {
 			current.blur();
 		}
 
