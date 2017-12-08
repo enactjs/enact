@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Scrollable` to not show scroll thumb when only child item is updated
 - `moonstone/Scrollbar` to show its thumb properly when scroll position reaches the top or the bottom by paging controls
 
 ### Changed
