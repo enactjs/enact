@@ -24,6 +24,8 @@ import Skinnable from '../Skinnable';
 
 import componentCss from './Button.less';
 
+const ButtonIcon = (props) => <Icon css={componentCss} {...props} />;
+
 const ButtonBase = kind({
 	name: 'Button',
 
@@ -73,9 +75,9 @@ const ButtonBase = kind({
 
 		return (
 			<UiButton
-				iconComponent={Icon}
 				{...rest}
 				css={css}
+				iconComponent={ButtonIcon}
 			/>
 		);
 	}
