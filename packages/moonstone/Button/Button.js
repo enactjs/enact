@@ -1,69 +1,87 @@
 /**
- * Exports the {@link moonstone/Button.Button} and {@link moonstone/Button.ButtonBase}
- * components.  The default export is {@link moonstone/Button.Button}.
+ * Provides the usual complement of button-like features: pressing fires callbacks, visual state
+ * changes for actuation, marqueeing of text that's too long and some basic customizability.
  *
  * @example
  * <Button small>Click me</Button>
  *
  * @module moonstone/Button
+ * @exports Button
+ * @exports ButtonBase
+ * @exports ButtonBaseFactory
+ * @exports ButtonFactory
  */
 
 import factory from '@enact/core/factory';
-import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
+import {ButtonBaseFactory as UiButtonBaseFactory} from '@enact/ui/ButtonFactory';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Icon from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
 import {TooltipDecorator} from '../TooltipDecorator';
+import Icon from '../Icon';
 import Skinnable from '../Skinnable';
 import Touchable from '../internal/Touchable';
 
 import componentCss from './Button.less';
 
 /**
- * {@link moonstone/Button.ButtonBaseFactory} is Factory wrapper around {@link moonstone/Button.ButtonBase}
- * that allows overriding certain classes at design time. The following are properties of the `css`
- * member of the argument to the factory.
+ * A factory for customizing the visual style of [ButtonBase]{@link moonstone/Button.ButtonBase}.
+ * The following are CSS classes that may be overridden.
  *
- * Usage:
+ * Using ButtonFactory to create a custom styled component:
  * ```
  * import css from './CustomButton.less';
  * import {ButtonFactory} from '@enact/moonstone/Button';
- * const Button = ButtonFactory({
+ * const MyButton = ButtonFactory({
  *     css: {
  *         bg: css.bg,
  *         selected: css.selected
  *     }
  * });
+ *
+ * // New component usable like any other:
+ * <MyButton>Customized!</MyButton>
  * ```
  *
  * @class ButtonBaseFactory
+ * @extends ui/ButtonFactory.ButtonBaseFactory
  * @memberof moonstone/Button
  * @factory
  * @public
  */
-const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
+const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
+	const MoonstoneButtonBase = UiButtonBaseFactory({
+		/* Replace classes in this step */
+		css: /** @lends moonstone/Button.ButtonBaseFactory.prototype */ {
+			...componentCss,
+			// Include the component class name so it too may be overridden.
+			button: css.button,
 
-	/**
-	 * {@link moonstone/Button.ButtonBase} is a stateless Button with Moonstone styling
-	 * applied. In most circumstances, you will want to use the Touchable and Spottable version:
-	 * {@link moonstone/Button.Button}
-	 *
-	 * @class ButtonBase
-	 * @memberof moonstone/Button
-	 * @ui
-	 * @public
-	 */
-	kind({
-		name: 'Button',
+			/**
+			 * Classes to apply to the background of the button, used on a child of button
+			 * @type {String}
+			 * @public
+			 */
+			bg: css.bg,
+
+			/**
+			 * Classes to apply to the selected state of the button, applied to the base element
+			 * @type {String}
+			 * @public
+			 */
+			selected: css.selected
+		}
+	});
+
+	return kind({
+		name: 'MoonstoneButton',
 
 		propTypes: /** @lends moonstone/Button.ButtonBase.prototype */ {
-			children: PropTypes.node.isRequired,
 
 			/**
 			 * The background-color opacity of this button; valid values are `'opaque'`, `'translucent'`,
@@ -85,175 +103,63 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
 
 			/**
-			 * When `true`, the [button]{@glossary button} is shown as disabled and does not
-			 * generate `onClick` [events]{@glossary event}.
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			disabled: PropTypes.bool,
-
-			/**
-			 * Include an [icon]{@link moonstone/Icon.Icon} in your [button]{@link moonstone/Button.Button}.
-			 * The icon will be displayed before the natural reading order of the text, regardless
-			 * of locale. Any string that is valid for the `Icon` component is valid here. `icon` is
-			 * outside the marqueeable content so it will not scroll along with the text content of
-			 * your button. This also supports a custom icon, in the form of a DOM node or a
-			 * Component, with the caveat that if you supply a custom icon, you are responsible for
-			 * sizing and locale positioning of the custom component.
-			 *
-			 * @type {Node}
-			 * @public
-			 */
-			icon: PropTypes.node,
-
-			/**
-			 * A boolean parameter affecting the minimum width of the button. When `true`,
-			 * the minimum width will be set to 180px (or 130px if [small]{@link moonstone/Button.Button#small}
-			 * is `true`). If `false`, the minimum width will be set to the current value of
-			 * `@moon-button-height` (thus forcing the button to be no smaller than a circle with
-			 * diameter `@moon-button-height`).
-			 *
-			 * @type {Boolean}
-			 * @default true
-			 * @public
-			 */
-			minWidth: PropTypes.bool,
-
-			/**
 			 * When `true`, the button does not animate on press
 			 *
 			 * @type {Boolean}
 			 * @default false
 			 * @public
 			 */
-			noAnimation: PropTypes.bool,
-
-			/**
-			 * When `true`, a pressed visual effect is applied to the button
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			pressed: PropTypes.bool,
-
-			/**
-			 * When `true`, a selected visual effect is applied to the button
-			 *
-			 * @type {Boolean}
-			 * @public
-			 */
-			selected: PropTypes.bool,
-
-			/**
-			 * A boolean parameter affecting the size of the button. If `true`, the
-			 * button's diameter will be set to 60px. However, the button's tap target
-			 * will still have a diameter of 78px, with an invisible DOM element
-			 * wrapping the small button to provide the larger tap zone.
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			small: PropTypes.bool
+			noAnimation: PropTypes.bool
 		},
 
 		defaultProps: {
 			backgroundOpacity: 'opaque',
-			disabled: false,
-			minWidth: true,
-			pressed: false,
-			small: false
+			noAnimation: false
 		},
 
 		styles: {
-			css: /** @lends moonstone/Button.ButtonBaseFactory.prototype */ {
-				...componentCss,
-				/**
-				 * Classes to apply to the background of the button, used on a child of button
-				 * @type {String}
-				 * @public
-				 */
-				bg: css.bg,
-
-				/**
-				 * Classes to apply to the selected state of the button, applied to the base element
-				 * @type {String}
-				 * @public
-				 */
-				selected: css.selected
-			},
+			css,
 			className: 'button'
 		},
 
 		computed: {
-			className: ({backgroundOpacity, color, minWidth, noAnimation, pressed, selected, small, styler}) => styler.append(
-				{pressed, small, minWidth, noAnimation, selected},
+			className: ({backgroundOpacity, color, noAnimation, styler}) => styler.append(
+				{noAnimation},
 				backgroundOpacity, color
-			),
-			icon: ({icon, small}) =>
-				(typeof icon === 'string' ? <Icon className={css.icon} small={small}>{icon}</Icon> : icon)
-		},
-
-		handlers: {
-			onClick: handle(
-				forProp('disabled', false),
-				forward('onClick')
 			)
 		},
 
-		render: ({children, disabled, icon, ...rest}) => {
-			delete rest.backgroundOpacity;
-			delete rest.color;
-			delete rest.minWidth;
-			delete rest.noAnimation;
-			delete rest.pressed;
-			delete rest.selected;
-			delete rest.small;
+		render: (props) => {
+			delete props.backgroundOpacity;
+			delete props.color;
+			delete props.noAnimation;
 
-			return (
-				<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
-					<div className={css.bg} />
-					<div className={css.client}>{icon}{children}</div>
-				</div>
-			);
+			return <MoonstoneButtonBase {...props} Icon={Icon} />;
 		}
-	})
-);
+	});
+});
 
 /**
- * {@link moonstone/Button.ButtonFactory} is Factory wrapper around {@link moonstone/Button.Button}
- * that allows overriding certain classes at design time. See {@link moonstone/Button.ButtonBaseFactory}.
+ * A stateless [ButtonBaseFactory]{@link moonstone/Button.ButtonBaseFactory}, with no HOCs applied.
+ *
+ * @class ButtonBase
+ * @extends moonstone/Button.ButtonBaseFactory
+ * @memberof moonstone/Button
+ * @ui
+ * @public
+ */
+const ButtonBase = ButtonBaseFactory();
+
+/**
+ * A factory for customizing the visual style of [Button]{@link moonstone/Button.Button}.
+ * @see {@link moonstone/Button.ButtonBaseFactory}.
  *
  * @class ButtonFactory
  * @memberof moonstone/Button
  * @factory
  * @public
  */
-const ButtonFactory = factory(css => {
-	const Base = ButtonBaseFactory(css);
-	/**
-	 * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
-	 * Touchable applied.  If the Button's child component is text, it will be uppercased unless
-	 * `casing` is set.
-	 *
-	 * Usage:
-	 * ```
-	 * <Button>Press me!</Button>
-	 * ```
-	 *
-	 * @class Button
-	 * @memberof moonstone/Button
-	 * @mixes i18n/Uppercase.Uppercase
-	 * @mixes moonstone/TooltipDecorator.TooltipDecorator
-	 * @mixes moonstone/Marquee.MarqueeDecorator
-	 * @mixes ui/Touchable.Touchable
-	 * @mixes spotlight/Spottable.Spottable
-	 * @ui
-	 * @public
-	 */
+const ButtonFactory = (props) => {
 	const MoonstoneButton = Pure(
 		Uppercase(
 			TooltipDecorator(
@@ -262,7 +168,7 @@ const ButtonFactory = factory(css => {
 					Touchable(
 						Spottable(
 							Skinnable(
-								Base
+								ButtonBaseFactory(props)
 							)
 						)
 					)
@@ -289,10 +195,29 @@ const ButtonFactory = factory(css => {
 	};
 
 	return MoonstoneButton;
-});
+};
 
-const ButtonBase = ButtonBaseFactory();
+/**
+ * A ready-to-use component based on [ButtonFactory]{@link moonstone/Button.ButtonFactory},
+ * with HOCs applied.
+ *
+ * @class Button
+ * @memberof moonstone/Button
+ * @extends moonstone/Button.ButtonBase
+ * @mixes i18n/Uppercase
+ * @mixes moonstone/TooltipDecorator
+ * @mixes ui/Pressable
+ * @mixes spotlight/Spottable
+ * @mixes moonstone/Skinnable
+ * @ui
+ * @public
+ */
 const Button = ButtonFactory();
 
 export default Button;
-export {Button, ButtonBase, ButtonBaseFactory, ButtonFactory};
+export {
+	Button,
+	ButtonBase,
+	ButtonFactory,
+	ButtonBaseFactory
+};
