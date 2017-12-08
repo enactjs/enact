@@ -198,10 +198,11 @@ const perfNow = function () {
 const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
 	let css = baseMap;
 	if (baseMap && additiveMap) {
+		allowedClassNames = allowedClassNames || Object.keys(additiveMap);
 		// if the props includes a css map, merge them together now
 		css = Object.assign({}, baseMap);
-		Object.keys(additiveMap).forEach(key => {
-			if (baseMap[key] && (!allowedClassNames || allowedClassNames.indexOf(key) >= 0)) {
+		allowedClassNames.forEach(key => {
+			if (baseMap[key] && additiveMap[key]) {
 				css[key] = baseMap[key] + ' ' + additiveMap[key];
 			}
 		});

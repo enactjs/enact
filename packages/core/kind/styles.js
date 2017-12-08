@@ -108,43 +108,61 @@ const append = (props) => {
  * @returns {Function} Function accepting props and returning update props with computed properties
  * @public
  */
-const styles = (cfg, props) => {
+const styles = (cfg, optProps) => {
 	const prop = cfg.prop || 'className';
-	let css = cfg.css;
-	let config = cfg;
+	let allowedClassNames = cfg.publicClassNames;
 
-	const style = mergeStyle(cfg, props);
-	if (style) {
-		props.style = style;
+	if (cfg.css && allowedClassNames === true) {
+		allowedClassNames = Object.keys(cfg.css);
+	} else if (typeof allowedClassNames === 'string') {
+		allowedClassNames = allowedClassNames.split(/\s+/);
 	}
 
-	// if the props includes a css map, merge them together now
-	if (cfg.css && cfg.publicClassNames && props.css) {
-		const allowedClassNames = cfg.publicClassNames === true ? null : cfg.publicClassNames;
-		css = mergeClassNameMaps(cfg.css, props.css, allowedClassNames);
+	const renderStyles = (props) => {
+		let css = cfg.css;
+		let config = cfg;
 
-		// merge the combined css map into config so it is used by other styler features
-		config = {...cfg, css};
-		props.css = css;
+		const style = mergeStyle(cfg, props);
+		if (style) {
+			props.style = style;
+		}
+
+		// if the props includes a css map, merge them together now
+		if (cfg.css && allowedClassNames && props.css) {
+			css = mergeClassNameMaps(cfg.css, props.css, allowedClassNames);
+
+			// merge the combined css map into config so it is used by other styler features
+			config = {...cfg, css};
+			props.css = css;
+		}
+
+		if (css) {
+			// always add a "private" css prop for consistency regardless of config/props
+			addInternalProp(props, 'css', css);
+		}
+
+		const className = mergeClassName(config, props);
+		if (className) {
+			props[prop] = className;
+		}
+
+		// styler should not be automatically spread onto children
+		addInternalProp(props, 'styler', {
+			join: join(config)
+		});
+
+		// append requires the computed className property so it is built off the updated props rather
+		// than the provided props
+		props.styler.append = append(props);
+		return props;
+	};
+
+	// maintain compatibility with 1.x
+	if (optProps) {
+		return renderStyles(optProps);
 	}
 
-	// always add a "private" css prop for consistency regardless of config/props
-	addInternalProp(props, 'css', config.css);
-
-	const className = mergeClassName(config, props);
-	if (className) {
-		props[prop] = className;
-	}
-
-	// styler should not be automatically spread onto children
-	addInternalProp(props, 'styler', {
-		join: join(config)
-	});
-
-	// append requires the computed className property so it is built off the updated props rather
-	// than the provided props
-	props.styler.append = append(props);
-	return props;
+	return renderStyles;
 };
 
 export default styles;
