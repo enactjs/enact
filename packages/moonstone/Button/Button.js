@@ -24,7 +24,8 @@ import Skinnable from '../Skinnable';
 
 import componentCss from './Button.less';
 
-const ButtonIcon = (props) => <Icon css={componentCss} {...props} />;
+// Create a customized reusable Icon for later use
+const ButtonIcon = (props) => <Icon css={componentCss} className={componentCss.icon} {...props} />;
 
 const ButtonBase = kind({
 	name: 'Button',
@@ -61,7 +62,7 @@ const ButtonBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: true
+		publicClassNames: ['bg', 'selected']
 	},
 
 	computed: {

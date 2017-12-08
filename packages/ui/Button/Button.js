@@ -126,8 +126,8 @@ const ButtonBase = kind({
 			minWidth,
 			selected
 		}),
-		icon: ({icon, iconComponent: Icon, small, styler}) =>
-			(typeof icon === 'string' ? <Icon className={styler.join('icon', {small})} small={small}>{icon}</Icon> : icon)
+		icon: ({icon, iconComponent: Icon, small}) =>
+			(typeof icon === 'string' ? <Icon small={small}>{icon}</Icon> : icon)
 	},
 
 	handlers: {
