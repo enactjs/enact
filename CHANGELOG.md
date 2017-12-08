@@ -6,13 +6,13 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Fixed
 
-- `moonstone/SliderDecorator` to handle updates to its `value` prop correctly 
+- `moonstone/Slider` to handle updates to its `value` prop correctly 
 
 ## [1.13.1] - 2017-12-06
 
 ### Fixed
 
-- `moonstone/SliderDecorator` to not unnecessarily fire `onChange` if the initial value has not changed
+- `moonstone/Slider` to not unnecessarily fire `onChange` if the initial value has not changed
 
 ## [1.13.0] - 2017-11-28
 
