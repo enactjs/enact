@@ -375,6 +375,7 @@ function getNavigableContainersForNode (node) {
 	// find first self-only container id
 	const selfOnlyIndex = containerIds
 		.map(getContainerConfig)
+		.filter(config => config != null)
 		.reduceRight((index, config, i) => {
 			if (index === -1 && config.restrict === 'self-only') {
 				return i;
@@ -669,7 +670,10 @@ function setContainerLastFocusedElement (node, containerIds) {
 }
 
 /**
- * [getContainerNavigableElements description]
+ * Returns all navigable nodes (spottable nodes or containers) visible from outside the container.
+ * If the container is restricting navigation into itself via `enterTo`, this method will attempt to
+ * return that element as the only element in an array. If that fails or if navigation is not restricted, it will return an
+ * array of all possible navigable nodes.
  *
  * @param   {String} containerId Container ID
  *
@@ -680,10 +684,11 @@ function setContainerLastFocusedElement (node, containerIds) {
  */
 function getContainerNavigableElements (containerId) {
 	if (!isContainer(containerId)) {
-		return false;
+		return [];
 	}
 
 	const config = getContainerConfig(containerId);
+
 	const enterLast = config.enterTo === 'last-focused';
 	const enterDefault = config.enterTo === 'default-element';
 	let next;
@@ -865,7 +870,7 @@ function setLastContainerFromTarget (current, target) {
 
 	const sharedContainer = last(intersection(currentContainers, targetContainers));
 
-	if (sharedContainer || currentContainerConfig.restrict !== 'self-only') {
+	if (sharedContainer || !currentContainerConfig || currentContainerConfig.restrict !== 'self-only') {
 		// If the target shares a container with the current container stack or the current
 		// element isn't within a self-only container, use the target's nearest container
 		setLastContainer(targetInnerContainer);
