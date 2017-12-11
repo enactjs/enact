@@ -678,7 +678,6 @@ function setContainerLastFocusedElement (node, containerIds) {
  * @param   {String} containerId Container ID
  *
  * @returns {Node[]}             Navigable elements within container
- * @public
  * @memberof spotlight/container
  * @public
  */
