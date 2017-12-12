@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` and other scrolling components to show scroll thumb properly when scroll position reaches the top or the bottom by paging controls
 - `moonstone/Slider` to handle updates to its `value` prop correctly
 - `moonstone/Panels` to not accept back key presses during transition
+- `moonstone/Panels` to revert 1.13.0 fix that blurred Spotlight when transitioning panels
 
 ## [1.13.1] - 2017-12-06
 
