@@ -48,7 +48,7 @@ describe('SimpleIntegerPicker', () => {
 			<SimpleIntegerPicker onClick={handleClick} min={0} max={100} defaultValue={10} step={1} />
 		);
 
-		picker.find('Picker').simulate('click', {target: {className: 'marquee'}});
+		picker.find('PickerItem').simulate('click', {target: {type: 'click'}});
 		const expected = 1;
 		const actual = picker.find('input').length;
 		expect(actual).to.equal(expected);
@@ -61,7 +61,7 @@ describe('SimpleIntegerPicker', () => {
 			<SimpleIntegerPicker onClick={handleClick} onBlur={handleBlur} min={0} max={100} defaultValue={10} step={1} />
 		);
 
-		picker.find('Picker').simulate('click', {target: {className: 'marquee'}});
+		picker.find('PickerItem').simulate('click', {target: {type: 'click'}});
 		const input = picker.find('input').first();
 		input.node.focus();
 		input.simulate('blur');
@@ -78,7 +78,7 @@ describe('SimpleIntegerPicker', () => {
 			<SimpleIntegerPicker onClick={handleClick} onBlur={handleBlur} min={0} max={100} defaultValue={10} step={1} />
 		);
 
-		picker.find('Picker').simulate('click', {target: {className: 'marquee'}});
+		picker.find('PickerItem').simulate('click', {target: {type: 'click'}});
 		const input = picker.find('input').first();
 		input.node.focus();
 		input.node.value = 38;
@@ -126,7 +126,7 @@ describe('SimpleIntegerPicker', () => {
 			<SimpleIntegerPicker onClick={handleClick} onBlur={handleBlur} min={0} max={100} defaultValue={10} step={1} />
 		);
 
-		picker.find('Picker').simulate('click', {target: {className: 'marquee'}});
+		picker.find('PickerItem').simulate('click', {target: {type: 'click'}});
 		const input = picker.find('input').first();
 
 		input.node.focus();

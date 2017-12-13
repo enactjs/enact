@@ -4,21 +4,21 @@
 @import '../styles/skin.less';
 @import '../styles/variables.less';
 
-.picker {
+.simpleIntegerPicker {
 	vertical-align: middle;
+	padding: @moon-simple-integer-picker-border-size;
 
-	&.selected {
-		box-shadow: inset 0 0 0 @moon-simpleintegerpicker-border-size;	// box-shadow color inherits from `color` if one is provided
+	&.editable {
+		box-shadow: inset 0 0 0 @moon-simple-integer-picker-border-size;  // box-shadow color inherits from `color` if one is provided
 	}
 
 	.input {
 		width: 100%;
 		text-align: center;
 		border-style: none;
+		border-width: 0;
 		font-family: inherit;
 		font-size: inherit;
-		font-weight: normal;
-		outline: 1px dashed cyan;
 
 		&.hidden {
 			display: none;
@@ -27,7 +27,7 @@
 
 	// Skin colors
 	.applySkins({
-		&.selected {
+		&.editable {
 			background-color: @moon-picker-editable-input-bg-color;
 			color: @moon-picker-editable-input-text-color;
 		}
@@ -35,6 +35,6 @@
 		.input {
 			color: inherit;
 		}
+
 	});
 }
-

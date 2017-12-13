@@ -113,12 +113,21 @@ const SimpleIntegerPickerBase = kind({
 		inputRef: PropTypes.func,
 
 		/**
-		 *  A function to be run when there is a blur in the input
+		 * A function to be run when there is a blur in the input
 		 *
 		 * @type {Function}
 		 * @public
 		 */
 		onInputBlur : PropTypes.func,
+
+		/**
+		 * A function to be run when pickerItem is clicked.
+		 * This enables the input field in the component
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onPickerItemClick : PropTypes.func,
 
 		/**
 		 * Sets the orientation of the picker, whether the buttons are above and below or on the
@@ -213,7 +222,7 @@ const SimpleIntegerPickerBase = kind({
 
 	styles: {
 		css,
-		className: 'picker'
+		className: 'simpleIntegerPicker'
 	},
 
 	computed: {
@@ -236,7 +245,7 @@ const SimpleIntegerPickerBase = kind({
 			return clamp(min, max, value);
 		},
 		width: ({max, min, width}) => (width || Math.max(max.toString().length, min.toString().length)),
-		children: ({editable, inputRef, onInputBlur, unit, value}) => {
+		children: ({editable, inputRef, onInputBlur, onPickerItemClick, unit, value}) => {
 			return (
 				editable ?
 					<input
@@ -246,21 +255,20 @@ const SimpleIntegerPickerBase = kind({
 						ref={inputRef}
 					/> : <PickerItem
 						key={value}
+						onClick={onPickerItemClick}
 					>
 						{`${value} ${unit}`}
 					</PickerItem>
 			);
 		},
-		className: ({editable, styler}) => styler.append({
-			spottable: true,
-			selected: editable
-		})
+		className: ({className, editable, styler}) => editable ? styler.append({editable}) : className
 	},
 
 	render: ({pickerRef, ...rest}) => {
 		delete rest.editable;
 		delete rest.inputRef;
 		delete rest.onInputBlur;
+		delete rest.onPickerItemClick;
 		delete rest.padded;
 		delete rest.unit;
 

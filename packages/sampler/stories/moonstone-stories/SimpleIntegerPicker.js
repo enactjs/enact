@@ -12,7 +12,7 @@ const Config = mergeComponentMetadata('SimpleIntegerPicker', SimpleIntegerPicker
 // Set up some defaults for info and knobs
 const prop = {
 	orientation: ['horizontal', 'vertical'],
-	width: [null, 'small', 'medium', 'large', 1, 2, 3, 4, 5, 6]
+	width: [null, 'small', 'medium', 'large']
 };
 const parseIntOrNullify = (v) => {
 	if (!isNaN(parseInt(v))) {
@@ -34,17 +34,17 @@ storiesOf('SimpleIntegerPicker')
 					defaultValue={20}
 					disabled={boolean('disabled', false)}
 					incrementIcon={nullify(select('incrementIcon', ['', ...incrementIcons]))}
-					joined={nullify(boolean('joined', true))}
 					max={number('max', 100)}
 					min={number('min', 0)}
 					noAnimation={nullify(boolean('noAnimation', false))}
 					onBlur={action('onBlur')}
 					onChange={action('onChange')}
 					onClick={action('onClick')}
+					onKeyDown={action('onKeyDown')}
 					orientation={select('orientation', prop.orientation, 'horizontal')}
 					step={number('step', 1)}
 					unit={text('unit', 'lumens')}
-					width={parseIntOrNullify(select('width', prop.width, 'medium'))}
+					width={parseIntOrNullify(select('width', prop.width,  prop.width[2]))}
 					wrap={nullify(boolean('wrap', false))}
 				/> (0 to 100)
 			</div>

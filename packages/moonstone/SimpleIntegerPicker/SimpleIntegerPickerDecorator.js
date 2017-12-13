@@ -104,7 +104,7 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 		}
 
 		handleClick = (ev) => {
-			if (!this.props.disabled && ev.target.className.indexOf('marquee') > -1 ) {
+			if (!this.props.disabled && ev.type === 'click') {
 				this.prepareInput();
 			}
 			forwardClick(ev, this.props);
@@ -166,7 +166,7 @@ const SimpleIntegerPickerDecorator = hoc((config, Wrapped) => {
 					inputRef={this.getInputNode}
 					joined
 					onChange={this.handleChange}
-					onClick={this.handleClick}
+					onPickerItemClick={this.handleClick}
 					onInputBlur={this.handleBlur}
 					onKeyDown={this.handleKeyDown}
 					pickerRef={this.getPickerNode}
