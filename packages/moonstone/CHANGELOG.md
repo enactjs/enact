@@ -10,8 +10,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/MoonstoneDecorator` root node to fill the entire space available, which simplifies positioning and sizing for child elements (previously always measured 0 in height)
+
 ### Fixed
 
+- `moonstone/VirtualList` to prevent infinite function call when a size of contents is slightly longer than a client size without a scrollbar
 - `moonstone/VirtualList` to sync scroll position when clientSize changed
 
 ## [2.0.0-alpha.2] - 2017-08-29
@@ -24,20 +27,66 @@ No significant changes.
 
 - `moonstone/Button`, `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/IconButton`, `moonstone/IncrementSlider`, `moonstone/Item`, `moonstone/Picker`, and `moonstone/RangePicker`, `moonstone/Switch` and `moonstone/VideoPlayer` to use `ui/Touchable`
 
+## [1.13.0] - 2017-11-28
+
+### Added
+
+- `moonstone/VideoPlayer` props `disabled`, `loading`, `miniFeedbackHideDelay`, and `thumbnailComponent` as well as new APIs: `areControlsVisible`, `getVideoNode`, `showFeedback`, and `toggleControls`
+
+### Fixed
+
+- `moonstone/VirtualList` to render items from a correct index on edge cases at the top of a list
+- `moonstone/VirtualList` to handle focus properly via page up at the first page and via page down at the last page
+- `moonstone/Expandable` and derivatives to use the new `ease-out-quart` animation timing function to better match the aesthetic of Enyo's Expandables
+- `moonstone/TooltipDecorator` to correctly display tooltip direction when locale changes
+- `moonstone/Marquee` to restart animation on every resize update
+- `moonstone/LabeledItem` to start marquee when hovering while disabled
+- `moonstone/Marquee` to correctly start when hovering on disabled spottable components
+- `moonstone/Marquee.MarqueeController` to not abort marquee when moving among components
+- `moonstone/Picker` marquee issues with disabled buttons or Picker
+- `moonstone/Panels` to prevent loss of spotlight issue when moving between panels
+- `moonstone/VideoPlayer` to bring it in line with real-world use-cases
+- `moonstone/Slider` by removing unnecessary repaints to the screen
+- `moonstone/Slider` to fire `onChange` events when the knob is pressed near the boundaries
+- `moonstone/VideoPlayer` to correctly position knob when interacting with media slider
+- `moonstone/VideoPlayer` to not read out the focused button when the media controls hide
+- `moonstone/MarqueeDecorator` to stop when unhovering a disabled component using `marqueeOn` `'focus'`
+- `moonstone/Slider` to not forward `onChange` when `disabled` on `mouseUp/click`
+- `moonstone/VideoPlayer` to defer rendering playback controls until needed
+
+## [1.12.2] - 2017-11-15
+
+### Fixed
+
+- `moonstone/VirtualList` to scroll and focus properly by pageUp and pageDown when disabled items are in it
+- `moonstone/Button` to correctly specify minimum width when in large text mode
+- `moonstone/Scroller.Scrollable` to restore last focused index when panel is changed
+- `moonstone/VideoPlayer` to display time correctly in RTL locale
+- `moonstone/VirtualList` to scroll correctly using page down key with disabled items
+- `moonstone/Scrollable` to not cause a script error when scrollbar is not rendered
+- `moonstone/Picker` incrementer and decrementer to not change size when focused
+- `moonstone/Header` to use a slightly smaller font size for `title` in non-latin locales and a line-height for `titleBelow` and `subTitleBelow` that better meets the needs of tall-glyph languages like Tamil and Thai, as well as latin locales
+- `moonstone/Scroller` and `moonstone/VirtualList` to keep spotlight when pressing a 5-way control while scrolling
+- `moonstone/Panels` to prevent user interaction with panel contents during transition
+- `moonstone/Slider` and related components to correctly position knob for `detachedKnob` on mouse down and fire value where mouse was positioned on mouse up
+- `moonstone/DayPicker` to update day names when changing locale
+- `moonstone/ExpandableItem` and all other `Expandable` components to revert 1.12.1 change to pull down from the top
+
 ## [1.12.1] - 2017-11-07
 
 ### Fixed
 
 - `moonstone/ExpandableItem` and all other `Expandable` components to now pull down from the top instead of being revealed from the bottom, matching Enyo's design
-- `moonstone/VirtualListNative` to scroll properly with page up/down keys if there is an disabled item
+- `moonstone/VirtualListNative` to scroll properly with page up/down keys if there is a disabled item
 - `moonstone/RangePicker` to display negative values correctly in RTL
 - `moonstone/Scrollable` to not blur scroll buttons when wheeling
-- `moonstone/Scrollbar` to hide scroll thumb immediately without delay after scroll position to be min or max
+- `moonstone/Scrollbar` to hide scroll thumb immediately without delay after scroll position reaches min or max
 - `moonstone/Divider` to pass `marqueeOn` prop
 - `moonstone/Slider` to fire `onChange` on mouse up and key up
 - `moonstone/VideoPlayer` to show knob when pressed
 - `moonstone/Header` to layout `titleBelow` and `subTitleBelow` correctly
 - `moonstone/Header` to use correct font-weight for `subTitleBelow`
+- `moonstone/VirtualList` to restore focus correctly for lists only slightly larger than the viewport
 
 ## [1.12.0] - 2017-10-27
 

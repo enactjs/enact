@@ -6,7 +6,6 @@
  * @module moonstone/ExpandablePicker
  */
 
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -222,8 +221,6 @@ const ExpandablePickerBase = kind({
 		spotlightDisabled: false,
 		value: 0
 	},
-
-	contextTypes: contextTypes,
 
 	styles: {
 		css,

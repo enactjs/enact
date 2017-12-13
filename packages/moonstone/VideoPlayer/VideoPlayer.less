@@ -1,9 +1,9 @@
 // VideoPlayer.less
 //
-@import '../styles/variables.less';
-@import '../styles/text.less';
-@import '../styles/mixins.less';
-@import '../styles/skin.less';
+@import "../styles/variables.less";
+@import "../styles/text.less";
+@import "../styles/mixins.less";
+@import "../styles/skin.less";
 
 .videoPlayer {
 	// Set by counting the IconButtons inside the side components.
@@ -39,6 +39,7 @@
 	.fullscreen {
 		.miniFeedback {
 			position: absolute;
+			z-index: 50;  // Value assigned as part of the VideoPlayer API so layers may be inserted in-between
 			top: @moon-video-feedback-mini-position-top;
 			left: @moon-video-feedback-mini-position-left;
 			font-family: @moon-video-feedback-mini-font-family;
@@ -54,15 +55,17 @@
 
 		.bottom {
 			position: absolute;
+			z-index: 100;  // Value assigned as part of the VideoPlayer API so layers may be inserted in-between
 			bottom: @moon-video-player-padding-bottom;
 			left: @moon-video-player-padding-side;
 			right: @moon-video-player-padding-side;
 
 			&.hidden {
 				pointer-events: none;
+
 				.sliderFrame {
 					position: absolute;
-					width: 100%
+					width: 100%;
 				}
 			}
 
@@ -130,10 +133,6 @@
 						.fontLgIcons {
 							font-family: "LG Icons";
 						}
-
-						:global(.enyo-locale-right-to-left) & {
-							text-align: right;
-						}
 					}
 				}
 
@@ -150,9 +149,9 @@
 						padding: 0 1ex;
 					}
 
-					// .enyo-locale-right-to-left & {
-					// 	direction: rtl;
-					// }
+					:global(.enact-locale-right-to-left) & {
+						direction: ltr;
+					}
 				}
 			}
 

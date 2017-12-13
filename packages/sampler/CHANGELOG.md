@@ -20,6 +20,16 @@ No significant changes.
 
 No significant changes.
 
+## [1.13.0] - 2017-11-28
+
+### Added
+
+- `moonstone/VideoPlayer` knobs for missing props: `disabled`, `feedbackHideDelay`, `miniFeedbackHideDelay`, and `tooltipHideDelay`
+
+## [1.12.2] - 2017-11-15
+
+No significant changes.
+
 ## [1.12.1] - 2017-11-07
 
 No significant changes.

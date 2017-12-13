@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
+- `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
+
 ### Fixed
 
 ## [2.0.0-alpha.2] - 2017-08-29
@@ -28,6 +30,23 @@ The following is a curated list of changes in the Enact ui module, newest change
 ## Removed
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
+
+## [1.13.0] - 2017-11-15
+
+### Added
+
+- `ui/Transition` animation timing functions `ease-in`, `ease-out`, `ease-in-quart`, and `ease-out-quart` to provide prettier options for transitions that may be more suited to a specific visual style
+
+### Fixed
+
+- `ui/ViewManager` to prevent interaction issue with `moonstone/Scroller`
+
+## [1.12.2] - 2017-11-15
+
+### Fixed
+
+- `ui/Remeasurable` to update on every trigger change
+- `ui/Transition` to revert 1.12.1 change to support `clip` transition-type directions and rendering optimizations
 
 ## [1.12.1] - 2017-11-07
 
