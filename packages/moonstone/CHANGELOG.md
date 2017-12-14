@@ -13,12 +13,18 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` to handle updates to its `value` prop correctly
 - `moonstone/Panels` to not accept back key presses during transition
 - `moonstone/Panels` to revert 1.13.0 fix that blurred Spotlight when transitioning panels
+- `moonstone/Scrollable` to not show scroll thumb when only child item is updated
+- `moonstone/Scrollbar` to show its thumb properly when scroll position reaches the top or the bottom by paging controls
+
+### Changed
+
+- `moonstone/Scrollbar` not to hide scroll thumb immediately after scroll position reaches the top or the bottom
 
 ## [1.13.1] - 2017-12-06
 
 ### Fixed
 
-- `moonstone/Slider` to not unnecessarily fire `onChange` if the initial value has not changed
+- `moonstone/SliderDecorator` to not unnecessarily fire `onChange` if the initial value has not changed
 
 ## [1.13.0] - 2017-11-28
 
