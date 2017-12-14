@@ -1,8 +1,8 @@
+import React from 'react';
+
 import computed from './computed';
 import contextTypes from './contextTypes';
 import defaultProps from './defaultProps';
-import handlers from './handlers';
-import name from './name';
 import propTypes from './propTypes';
 import styles from './styles';
 
@@ -54,57 +54,52 @@ import styles from './styles';
  * @returns {Function}        Component
  */
 const kind = (config) => {
-	window.performance.mark('kind.start');
 	// addition prop decorations would be chained here (after config.render)
-	let render = (props, context, updater) => {
-		window.performance.mark('kind.render.start');
-		let p = Object.assign({}, props);
-		if (config.styles) {
-			window.performance.mark('kind.render.styles.start');
-			p = styles(config.styles, p, context, updater);
-			window.performance.mark('kind.render.styles.end');
-			window.performance.measure('kind.render.styles', 'kind.render.styles.start', 'kind.render.styles.end');
-		}
-		if (config.computed) {
-			window.performance.mark('kind.render.computed.start');
-			p = computed(config.computed, p, context, updater);
-			window.performance.mark('kind.render.computed.end');
-			window.performance.measure('kind.render.computed', 'kind.render.computed.start', 'kind.render.computed.end');
+	const Component = class extends React.Component {
+		constructor () {
+			super();
+			this.handlers = {};
+
+			// cache bound function for each handler
+			if (config.handlers) {
+				Object.keys(config.handlers).forEach(handler => {
+					return this.prepareHandler(handler, config.handlers[handler]);
+				});
+			}
 		}
 
-		window.performance.mark('kind.render.component.start');
-		const result = config.render(p, context, updater);
-		window.performance.mark('kind.render.component.end');
-		window.performance.measure('kind.render.component', 'kind.render.component.start', 'kind.render.component.end');
+		/**
+		 * Caches an event handler on the local `handlers` member
+		 *
+		 * @param   {String}    name     Event name
+		 * @param   {Function}  handler  Event handler
+		 *
+		 * @returns {undefined}
+		 */
+		prepareHandler (name, handler) {
+			this.handlers[name] = (ev) => {
+				handler(ev, this.props, this.context);
+			};
+		}
 
-		window.performance.mark('kind.render.end');
-		window.performance.measure('kind.render', 'kind.render.start', 'kind.render.end');
+		render () {
+			let p = Object.assign({}, this.props);
+			if (config.styles) p = styles(config.styles, p, this.context);
+			if (config.computed) p = computed(config.computed, p, this.context);
 
-		return result;
+			return config.render(p, this.context);
+		}
 	};
 
-	// render() decorations
-	if (config.handlers) {
-		window.performance.mark('kind.handlers.start');
-		// need to set name and contextTypes on pre-wrapped Component
-		if (config.contextTypes) contextTypes(config.contextTypes, render);
-		render = handlers(config.handlers, render, config.contextTypes);
-		window.performance.mark('kind.handlers.end');
-		window.performance.measure('kind.handlers', 'kind.handlers.start', 'kind.handlers.end');
-	}
-
-	if (config.name) name(config.name, render);
-	if (config.propTypes) propTypes(config.propTypes, render);
-	if (config.defaultProps) defaultProps(config.defaultProps, render);
-	if (config.contextTypes) contextTypes(config.contextTypes, render);
+	if (config.propTypes) propTypes(config.propTypes, Component);
+	if (config.defaultProps) defaultProps(config.defaultProps, Component);
+	if (config.contextTypes) contextTypes(config.contextTypes, Component);
 
 	// Decorate the SFC with the computed property object in DEV for easier testability
-	if (__DEV__ && config.computed) render.computed = config.computed;
+	if (__DEV__ && config.computed) Component.computed = config.computed;
 
-	window.performance.mark('kind.end');
-	window.performance.measure('kind', 'kind.start', 'kind.end');
 
-	return render;
+	return Component;
 };
 
 export default kind;
