@@ -45,9 +45,14 @@ const handlers = (cfg, Component) => {
 		}
 
 		render () {
-			return (
+			window.performance.mark('kind.handlers.render.start');
+			const result = (
 				<Component {...this.props} {...this.handlers} />
 			);
+			window.performance.mark('kind.handlers.render.end');
+			window.performance.mark('kind.handlers.render', 'kind.handlers.render.start', 'kind.handlers.render.end');
+
+			return result;
 		}
 	};
 };
