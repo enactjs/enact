@@ -2,16 +2,16 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [1.13.2] - 2017-12-14
 
 ### Fixed
 
 - `moonstone/Panels` to maintain spotlight focus when `noAnimation` is set
+- `moonstone/Panels` to not accept back key presses during transition
+- `moonstone/Panels` to revert 1.13.0 fix that blurred Spotlight when transitioning panels
 - `moonstone/Scroller` and other scrolling components to not show scroll thumb when only child item is updated
 - `moonstone/Scroller` and other scrolling components to not hide scroll thumb immediately after scroll position reaches the top or the bottom
 - `moonstone/Scroller` and other scrolling components to show scroll thumb properly when scroll position reaches the top or the bottom by paging controls
-- `moonstone/Panels` to not accept back key presses during transition
-- `moonstone/Panels` to revert 1.13.0 fix that blurred Spotlight when transitioning panels
 
 ## [1.13.1] - 2017-12-06
 
