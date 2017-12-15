@@ -227,7 +227,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (props.value != null) {
 				controlled = true;
-				value = props.value;
+				this.changedControlledValue = value = props.value;
 			} else {
 				value = props.defaultValue || 0;
 			}
