@@ -1,0 +1,29 @@
+{
+  "name": "enact-sampler",
+  "version": "2.0.0-alpha.2",
+  "description": "Component and QA samples for Enact",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "lint": "enact lint --framework",
+    "test": "echo \"No test suite\" && exit 0",
+    "pack": "build-storybook -c .storybook -o dist",
+    "pack-qa": "build-storybook -c .qa-storybook -o dist",
+    "serve": "start-storybook -p 8080 -c .storybook",
+    "serve-qa": "start-storybook -p 8080 -c .qa-storybook"
+  },
+  "license": "Apache-2.0",
+  "eslintConfig": {
+    "extends": "enact/strict"
+  },
+  "dependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^3.2.17",
+    "@storybook/addon-info": "^3.2.17",
+    "@storybook/addon-options": "^3.2.17",
+    "@storybook/react": "^3.2.17"
+  }
+}
