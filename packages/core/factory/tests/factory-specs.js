@@ -25,8 +25,8 @@ describe('factory', () => {
 		const fnFactory = factory(fn);
 		fnFactory(config);
 
-		const expected = config.css;
-		const actual = fn.firstCall.args[0].css;
+		const expected = config;
+		const actual = fn.firstCall.args[0];
 
 		expect(actual).to.deep.equal(expected);
 	});

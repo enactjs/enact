@@ -6,13 +6,13 @@ describe('css feature', () => {
 		inner: 'component-inner'
 	};
 
-	it('should merge component and author css objects and ignore author css that does not exist in the component css', function () {
+	it('should merge component and author css objects', function () {
 		const authorCss = {
 			other: 'author-other'
 		};
 		const updated = css(componentCss, authorCss);
 
-		const expected = ['button', 'inner'];
+		const expected = ['button', 'inner', 'other'];
 		const actual = Object.keys(updated);
 
 		expect(actual).to.deep.equal(expected);
