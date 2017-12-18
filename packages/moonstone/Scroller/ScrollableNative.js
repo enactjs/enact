@@ -407,7 +407,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				canScrollVertically = this.canScrollVertically(bounds),
 				eventDeltaMode = e.deltaMode,
 				eventDelta = (-e.wheelDeltaY || e.deltaY);
-			let delta = 0;
+			let
+				delta = 0,
+				needToHideThumb = false;
 
 			this.lastFocusedItem = null;
 			if (typeof window !== 'undefined') {
@@ -429,7 +431,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					if ((horizontalScrollbarRef && horizontalScrollbarRef.containerRef.contains(e.target)) ||
 						(verticalScrollbarRef && verticalScrollbarRef.containerRef.contains(e.target))) {
 						delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
+						needToHideThumb = !delta;
 					}
+				} else {
+					needToHideThumb = true;
 				}
 			} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
 				if (eventDelta < 0 && this.scrollLeft > 0 || eventDelta > 0 && this.scrollLeft < bounds.maxLeft) {
@@ -438,6 +443,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						this.isWheeling = true;
 					}
 					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
+					needToHideThumb = !delta;
+				} else {
+					needToHideThumb = true;
 				}
 			}
 
@@ -451,6 +459,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					this.pageDirection = direction;
 				}
 				this.scrollToAccumulatedTarget(delta, canScrollVertically);
+			}
+
+			if (needToHideThumb) {
+				this.hideThumbJob.start();
 			}
 		}
 

@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [1.13.2] - 2017-12-14
+
+### Fixed
+
+- `ui/ViewManager` to revert 1.13.0 fix for lifecycle timing when entering a view
+
 ## [1.13.1] - 2017-12-06
 
 No significant changes.
