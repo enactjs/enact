@@ -2,14 +2,14 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+- `moonstone/TimePicker` to not read out meridiem label when meridiem picker gets a focus
+
 ## [1.13.2] - 2017-12-14
 
 ### Fixed
 
-- `moonstone/TimePicker` to not read out meridiem label when meridiem picker gets a focus
-- `moonstone/Scrollable` to not show scroll thumb when only child item is updated
-- `moonstone/Scrollbar` to show its thumb properly when scroll position reaches the top or the bottom by paging controls
-- `moonstone/Slider` to handle updates to its `value` prop correctly
 - `moonstone/Panels` to maintain spotlight focus when `noAnimation` is set
 - `moonstone/Panels` to not accept back key presses during transition
 - `moonstone/Panels` to revert 1.13.0 fix that blurred Spotlight when transitioning panels
