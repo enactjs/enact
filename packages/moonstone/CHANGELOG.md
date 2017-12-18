@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/TimePicker` to not read out meridiem label when meridiem picker gets a focus
+
 ## [1.13.2] - 2017-12-14
 
 ### Fixed
