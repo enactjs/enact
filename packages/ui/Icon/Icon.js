@@ -78,7 +78,14 @@ const IconBase = kind({
 		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
-		 * Appends CSS classes to the nodes and components with {@link ui/Icon.IconBase}
+		 * Appends CSS classes to the nodes and components with {@link ui/Icon.IconBase}.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `icon` - The root component class
+		 * * `dingbat` - Applied when the value of `icon` is not found in `iconList`
+		 * * `small` - Applied for a `small` icon
+		 * * `pressed` - Applied for a `pressed` icon
 		 *
 		 * @type {Object}
 		 * @public

@@ -24,6 +24,7 @@ storiesOf('Button')
 				onClick={action('onClick')}
 				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
 				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
+				color={select('color', ['', 'red', 'green', 'yellow', 'blue'], '')}
 				disabled={boolean('disabled', Config.defaultProps.disabled)}
 				icon={nullify(select('icon', prop.icons, Config.defaultProps.icon))}
 				noAnimation={nullify(boolean('noAnimation', false))}

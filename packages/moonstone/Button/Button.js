@@ -29,7 +29,9 @@ const ButtonBase = kind({
 
 	propTypes: {
 		/**
-		 * The background-color opacity of this button. Valid values are
+		 * The background-color opacity of this button.
+		 * 
+		 * Valid values are:
 		 * * `'opaque'`,
 		 * * `'translucent'`,
 		 * * `'lightTranslucent'`, and
@@ -47,8 +49,10 @@ const ButtonBase = kind({
 		]),
 
 		/**
-		 * This property accepts one of the following color names, which correspond with the
-		 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
+		 * The color of the underline beneath button's content.
+		 * 
+		 * Accepts one of the following color names, which correspond with the colored buttons on a
+		 * standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`.
 		 *
 		 * @type {String}
 		 * @public
@@ -56,7 +60,11 @@ const ButtonBase = kind({
 		color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
 
 		/**
-		 * Allows override of classes `'bg'` and `'selected'`.
+		 * Appends CSS classes to the nodes and components with {@link moonstone/Button.ButtonBase}.
+		 *
+		 * The following classes are supported:
+		 * * `bg` - The background node of the button
+		 * * `selected` - Applied to a `selected` button
 		 *
 		 * @type {Object}
 		 * @public
@@ -64,7 +72,7 @@ const ButtonBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, the button does not animate on press
+		 * Disables the `pressed` animation.
 		 *
 		 * @type {Boolean}
 		 * @default false
