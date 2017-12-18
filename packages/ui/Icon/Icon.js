@@ -199,7 +199,7 @@ const IconBase = kind({
 });
 
 /**
- * {@link ui/Icon.Icon} is a minimally-styled Icon component
+ * {@link ui/Icon.Icon} is a minimally-styled icon component
  *
  * @class Icon
  * @extends ui/Icon.IconBase

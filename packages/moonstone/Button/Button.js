@@ -110,8 +110,8 @@ const ButtonBase = kind({
 });
 
 /**
- * {@link moonstone/Button.ButtonDecorator} adds moonstone-related button behaviors to a
- * {@link moonstone/Button.ButtonBase}.
+ * {@link moonstone/Button.ButtonDecorator} adds Moonstone-specific button behaviors to a
+ * [Button]{@link moonstone/Button.ButtonBase}.
  *
  * @hoc
  * @memberof moonstone/Button
@@ -132,8 +132,8 @@ const ButtonDecorator = compose(
 );
 
 /**
- * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
- * Touchable applied.
+ * {@link moonstone/Button.Button} is a Moonstone-styled button with built-in support for
+ * uppercasing, tooltips, marqueed text, and Spotlight focus.
  *
  * Usage:
  * ```

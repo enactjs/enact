@@ -134,7 +134,8 @@ const IconBase = kind({
  */
 
 /**
- * Applies Moonstone-specific behaviors to [Icon]{@link moonstone/Icon.IconBase}.
+ * {@link moonstone/Icon.IconDecorator} applies Moonstone-specific behaviors to an 
+ * [Icon]{@link moonstone/Icon.IconBase}.
  *
  * @hoc
  * @memberof moonstone/Icon
@@ -146,7 +147,7 @@ const IconDecorator = compose(
 );
 
 /**
- * Renders a moonstone-styled icon
+ * {@link moonstone/Icon.Icon} is a Moonstone-styled icon
  *
  * @class Icon
  * @memberof moonstone/Icon
