@@ -136,17 +136,13 @@ const styles = (cfg, optProps) => {
 			props.css = css;
 		}
 
-		if (css) {
-			// always add a "private" css prop for consistency regardless of config/props
-			addInternalProp(props, 'css', css);
-		}
-
 		const className = mergeClassName(config, props);
 		if (className) {
 			props[prop] = className;
 		}
 
-		// styler should not be automatically spread onto children
+		// styler and css should not be automatically spread onto children
+		addInternalProp(props, 'css', css);
 		addInternalProp(props, 'styler', {
 			join: join(config)
 		});

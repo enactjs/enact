@@ -8,38 +8,43 @@
  * @module moonstone/Button
  */
 
-import compose from 'ramda/src/compose';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
-import Pure from '@enact/ui/internal/Pure';
 import UiButton from '@enact/ui/Button';
-import React from 'react';
+import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
+import React from 'react';
 
 import Icon from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
-import {TooltipDecorator} from '../TooltipDecorator';
 import Skinnable from '../Skinnable';
+import {TooltipDecorator} from '../TooltipDecorator';
 
 import componentCss from './Button.less';
-
-// Create a customized reusable Icon for later use
-const ButtonIcon = (props) => <Icon css={componentCss} className={componentCss.icon} {...props} />;
 
 const ButtonBase = kind({
 	name: 'Button',
 
 	propTypes: {
 		/**
-		 * The background-color opacity of this button; valid values are `'opaque'`, `'translucent'`,
-		 * `'lightTranslucent'`, and `'transparent'`.
+		 * The background-color opacity of this button. Valid values are
+		 * * `'opaque'`,
+		 * * `'translucent'`,
+		 * * `'lightTranslucent'`, and
+		 * * `'transparent'`.
 		 *
 		 * @type {String}
 		 * @default 'opaque'
 		 * @public
 		 */
-		backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'lightTranslucent', 'transparent']),
+		backgroundOpacity: PropTypes.oneOf([
+			'opaque',
+			'translucent',
+			'lightTranslucent',
+			'transparent'
+		]),
 
 		/**
 		 * This property accepts one of the following color names, which correspond with the
@@ -49,6 +54,14 @@ const ButtonBase = kind({
 		 * @public
 		 */
 		color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
+
+		/**
+		 * Allows override of classes `'bg'` and `'selected'`.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
 
 		/**
 		 * When `true`, the button does not animate on press
@@ -66,7 +79,11 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({backgroundOpacity, color, noAnimation, styler}) => styler.append(backgroundOpacity, color, {noAnimation})
+		className: ({backgroundOpacity, color, noAnimation, styler}) => styler.append(
+			backgroundOpacity,
+			color,
+			{noAnimation}
+		)
 	},
 
 	render: ({css, ...rest}) => {
@@ -78,28 +95,21 @@ const ButtonBase = kind({
 			<UiButton
 				{...rest}
 				css={css}
-				iconComponent={ButtonIcon}
+				iconComponent={Icon}
 			/>
 		);
 	}
 });
 
 /**
- * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
- * Touchable applied.  If the Button's child component is text, it will be uppercased unless
- * `casing` is set.
+ * {@link moonstone/Button.ButtonDecorator} adds moonstone-related button behaviors to a
+ * {@link moonstone/Button.ButtonBase}.
  *
- * Usage:
- * ```
- * <Button>Press me!</Button>
- * ```
- *
- * @class Button
+ * @hoc
  * @memberof moonstone/Button
  * @mixes i18n/Uppercase.Uppercase
  * @mixes moonstone/TooltipDecorator.TooltipDecorator
  * @mixes moonstone/Marquee.MarqueeDecorator
- * @mixes ui/Touchable.Touchable
  * @mixes spotlight/Spottable.Spottable
  * @ui
  * @public
@@ -113,6 +123,21 @@ const ButtonDecorator = compose(
 	Skinnable
 );
 
+/**
+ * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
+ * Touchable applied.
+ *
+ * Usage:
+ * ```
+ * <Button>Press me!</Button>
+ * ```
+ *
+ * @class Button
+ * @memberof moonstone/Button
+ * @mixes moonstone/Button.ButtonDecorator
+ * @ui
+ * @public
+ */
 const Button = ButtonDecorator(ButtonBase);
 
 export default Button;

@@ -1,19 +1,20 @@
 /**
- * Exports the {@link ui/IconFactory.IconFactory} and {@link ui/IconFactory.IconBaseFactory}
- * components. The default export is {@link ui/IconFactory.IconFactory}.
+ * Exports the {@link ui/Icon.Icon} and {@link ui/Icon.IconBase} components. The default export is
+ * {@link ui/Icon.Icon}.
  *
- * @module ui/IconFactory
- * @exports IconFactory
- * @exports IconBaseFactory
+ * @example
+ * <Icon>flag</Icon>
+ *
+ * @module ui/Icon
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import ri from '../resolution';
 
-import css from './Icon.less';
+import componentCss from './Icon.less';
 
 /**
  * Merges consumer styles with the image `src` resolved through the resolution independence module.
@@ -50,54 +51,21 @@ const isSingleCharacter = function (c) {
 };
 
 /**
- * The Base Factory generates the most basic form of the component. In most circumstances, you
- * will want to use the standard factory component which has already been extended with interactive
- * features like focus and state management, etc.
- * The Factory allows its consumer to override certain classes at design time.
- * The following are properties of the `css` member of the argument to the factory.
+ * {@link ui/Icon.IconBase} is a basic icon component structure without any behaviors applied to it.
  *
- * Using Factory to create a custom styled component:
- * ```
- * import css from './CustomIcon.less';
- * import IconFactory from '@enact/ui/IconFactory';
- * const Icon = IconFactory({
- *     css: {
- *         dingbat: css.dingbat,
- *         small: css.small
- *     }
- * });
- * ```
- *
- * @class IconBaseFactory
- * @memberof ui/IconFactory
- * @factory
+ * @class IconBase
+ * @memberof ui/Icon
  * @ui
  * @public
  */
 const IconBase = kind({
-	/**
-	 * {@link ui/Icon.Icon} is a component that displays an icon image.  You may
-	 * specify an image, by setting the `src` property, or a font-based icon, by setting the child to a
-	 * string from the [IconList]{@link ui/Icon.IconList}.  If both `src` and
-	 * children are specified, both will be rendered.
-	 *
-	 * Usage:
-	 * ```
-	 * <Icon small>
-	 *     plus
-	 * </Icon>
-	 * ```
-	 *
-	 * @class Icon
-	 * @memberof ui/Icon
-	 * @ui
-	 * @public
-	 */
-	name: 'Icon',
+	name: 'ui/Icon',
 
 	propTypes: /** @lends ui/Icon.Icon.prototype */ {
 		/**
-		 * The icon specified as either:
+		 * The icon content.
+		 * 
+		 * May be specified as either:
 		 *
 		 * * A string that represents an icon from the [IconList]{@link ui/Icon.IconList},
 		 * * An HTML entity string, Unicode reference or hex value (in the form '0x...'),
@@ -110,25 +78,36 @@ const IconBase = kind({
 		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
-		 * The full list (hash) of supported icons. The keys of this hash are the unique names
-		 * of each icon. The values are the unicode character to insert in the icon. These will
-		 * typically map to glyphs in your icon-font. The format of the keys can be character,
-		 * glyph, or entity reference that correctly renders in a React + JSX string.
+		 * Appends CSS classes to the nodes and components with {@link ui/Icon.IconBase}
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
+
+		/**
+		 * The full list (hash) of supported icons.
+		 * 
+		 * The keys of this hash are the unique names of each icon. The values are the unicode
+		 * character to insert in the icon. These will typically map to glyphs in your icon-font.
+		 * The format of the keys can be character, glyph, or entity reference that correctly
+		 * renders in a React + JSX string.
 		 *
 		 * @type {Object}
 		 */
 		iconList: PropTypes.object,
 
 		/**
-		 * If `true`, apply a pressed styling
+		 * Applies the `pressed` CSS class to the {@link ui/Icon.IconBase}
 		 *
 		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
 		pressed: PropTypes.bool,
 
 		/**
-		 * If `true`, apply the 'small' class.
+		 * Applies the `small` CSS class to the {@link ui/Icon.IconBase}
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -139,19 +118,22 @@ const IconBase = kind({
 
 	defaultProps: {
 		iconList: {},
+		pressed: false,
 		small: false
 	},
 
 	styles: {
-		css,
+		css: componentCss,
 		className: 'icon',
 		publicClassNames: true
 	},
 
 	computed: {
 		className: ({children: icon, iconList, pressed, small, styler}) => styler.append({
-			dingbat: !iconList[icon],	// If the icon isn't in our known set, apply our custom font class
-			pressed, small
+			// If the icon isn't in our known set, apply our custom font class
+			dingbat: !(icon in iconList),
+			pressed,
+			small
 		}),
 		iconProps: ({children: iconProp, iconList, style}) => {
 			let icon = iconList[iconProp];
@@ -195,32 +177,29 @@ const IconBase = kind({
 	},
 
 	render: ({iconProps, ...rest}) => {
-		delete rest.css;
 		delete rest.iconList;
+		delete rest.pressed;
 		delete rest.small;
 
-		return <div aria-hidden {...rest} {...iconProps} />;
+		return (
+			<div
+				aria-hidden
+				{...rest}
+				{...iconProps}
+			/>
+		);
 	}
 });
 
 /**
- * A full-featured component factory with minimum-to-function styling applied, ready to be styled
- * and used by a theme. The classes from [IconBaseFactory]{@link ui/IconFactory.IconBaseFactory}
- * are also available here.
+ * {@link ui/Icon.Icon} is a minimally-styled Icon component
  *
- * Usage:
- * ```
- * <Icon>gear</Icon>
- * ```
- *
- * @class IconFactory
- * @memberof ui/IconFactory
- * @mixes ui/internal/Pure		// Discuss: Should internal mixins/HOCs be listed in documentation?
- * @factory
+ * @class Icon
+ * @extends ui/Icon.IconBase
+ * @memberof ui/Icon
  * @ui
  * @public
  */
-// const IconFactory = factory(props => IconBaseFactory(props));
 
 export default IconBase;
 export {

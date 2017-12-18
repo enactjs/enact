@@ -1,22 +1,18 @@
 /**
- * A versatile way to draw an icon. This accepts strings to refer to preset icons, specific
- * codepoints in a dingbat font, entity references in several formats, and URLs for a graphic file.
+ * Exports the {@link moonstone/Icon.Icon} and {@link moonstone/Icon.IconBase} components and the
+ * {@link moonstone/Icon.IconDecorator} Higher-order Component (HOC).  The default export is
+ * {@link moonstone/Icon.Icon}.
  *
  * @example
  * <Icon>flag</Icon>
  *
  * @module moonstone/Icon
- * @exports Icon
- * @exports IconBase
- * @exports IconBaseFactory
- * @exports IconFactory
- * @exports iconList
  */
 
 import kind from '@enact/core/kind';
-import hoc from '@enact/core/hoc';
-import Pure from '@enact/ui/internal/Pure';
 import UiIcon from '@enact/ui/Icon';
+import Pure from '@enact/ui/internal/Pure';
+import compose from 'ramda/src/compose';
 import React from 'react';
 
 import Skinnable from '../Skinnable';
@@ -26,29 +22,27 @@ import iconList from './IconList.js';
 import componentCss from './Icon.less';
 
 /**
- * A factory for customizing the visual style of [IconBase]{@link moonstone/Icon.IconBase}.
+ * Renders a moonstone-styled icon without any behavior.
  *
- * @class IconBaseFactory
+ * @class IconBase
  * @memberof moonstone/Icon
- * @factory
+ * @ui
  * @public
  */
 const IconBase = kind({
-	name: 'MoonstoneIcon',
-	styles: {
-		css: componentCss
-		// publicClassNames: true
-	},
+	name: 'Icon',
+
 	render: (props) => (
 		<UiIcon
 			{...props}
-			css={props.css}
+			css={componentCss}
 			iconList={iconList}
 		/>
 	)
 });
 
-// Let's find a way to import this list directly, and bonus feature, render our icons in the docs next to their names.
+// Let's find a way to import this list directly, and bonus feature, render our icons in the docs
+// next to their names.
 /**
  * {@link moonstone/Icon.iconList} is an object whose keys can be used as the child of an
  * {@link moonstone/Icon.Icon} component.
@@ -140,43 +134,29 @@ const IconBase = kind({
  */
 
 /**
-  * A stateless [Icon]{@link moonstone/Icon.Icon}, with no HOCs applied.
-  *
-  * @class IconBase
-  * @extends ui/Icon.IconBase
-  * @memberof moonstone/Icon
-  * @ui
-  * @public
-  */
-// const IconBase = IconBaseFactory();
-
-const IconDecorator = hoc((config, Wrapped) => Pure(
-	Skinnable(
-		Wrapped
-	)
-));
-
-/**
- * A factory for customizing the visual style of [Icon]{@link moonstone/Icon.Icon}.
- * @see {@link moonstone/Icon.IconBaseFactory}.
+ * Applies Moonstone-specific behaviors to [Icon]{@link moonstone/Icon.IconBase}.
  *
- * @class IconFactory
+ * @hoc
  * @memberof moonstone/Icon
- * @factory
  * @public
  */
-const Icon = IconDecorator(IconBase);
+const IconDecorator = compose(
+	Pure,
+	Skinnable
+);
 
 /**
- * A ready-to-use Icon, with HOCs applied.
+ * Renders a moonstone-styled icon
  *
  * @class Icon
  * @memberof moonstone/Icon
  * @extends moonstone/Icon.IconBase
- * @mixes moonstone/Skinnable
+ * @mixes moonstone/Icon.IconDecorator
  * @ui
  * @public
  */
+const Icon = IconDecorator(IconBase);
+
 
 export default Icon;
 export {

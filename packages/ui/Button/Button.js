@@ -1,39 +1,49 @@
 /**
- * Exports the {@link moonstone/Button.Button} and {@link moonstone/Button.ButtonBase}
- * components.  The default export is {@link moonstone/Button.Button}.
+ * Exports the {@link ui/Button.Button} and {@link ui/Button.ButtonBase} components and
+ * the {@link ui/Button.ButtonDecorator} Higher-order Component (HOC).  The default export is
+ * {@link ui/Button.Button}.
  *
  * @example
  * <Button small>Click me</Button>
  *
- * @module moonstone/Button
+ * @module ui/Button
  */
 
 import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import Touchable from '../Touchable';
 
 import componentCss from './Button.less';
 
 /**
- * {@link moonstone/Button.ButtonBase} is a stateless Button with Moonstone styling
- * applied. In most circumstances, you will want to use the Touchable and Spottable version:
- * {@link moonstone/Button.Button}
+ * {@link ui/Button.ButtonBase} is a basic button component structure without any behaviors
+ * applied to it.
  *
  * @class ButtonBase
- * @memberof moonstone/Button
+ * @memberof ui/Button
  * @ui
  * @public
  */
 const ButtonBase = kind({
-	name: 'Button',
+	name: 'ui/Button',
 
-	propTypes: /** @lends moonstone/Button.ButtonBase.prototype */ {
+	propTypes: /** @lends ui/Button.ButtonBase.prototype */ {
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * Appends CSS classes to the nodes and components with {@link ui/Button.ButtonBase}
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
+
+		/**
+		 * Disables the {@link ui/Button.ButtonBase}
+		 * 
 		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
 		 * generate `onClick` [events]{@glossary event}.
 		 *
@@ -44,30 +54,35 @@ const ButtonBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Include an [icon]{@link moonstone/Icon.Icon} in your [button]{@link moonstone/Button.Button}.
+		 * The icon displayed within the [button]{@link ui/Button.ButtonBase}.
+		 * 
 		 * The icon will be displayed before the natural reading order of the text, regardless
-		 * of locale. Any string that is valid for the `Icon` component is valid here. `icon` is
-		 * outside the marqueeable content so it will not scroll along with the text content of
-		 * your button. This also supports a custom icon, in the form of a DOM node or a
-		 * Component, with the caveat that if you supply a custom icon, you are responsible for
-		 * sizing and locale positioning of the custom component.
+		 * of locale. Any string that is valid for the `Icon` component is valid here. This also
+		 * supports a custom icon, in the form of a DOM node or a Component, with the caveat that if
+		 * you supply a custom icon, you are responsible for sizing and locale positioning of the
+		 * custom component.
 		 *
 		 * @type {Node}
 		 * @public
 		 */
 		icon: PropTypes.node,
 
+		/**
+		 * The component used to render the [icon]{@link ui/Button.ButtonBase.icon}.
+		 *
+		 * This component will receive the `small` property set on the Button as well as the `icon`
+		 * class to customize its styling.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		iconComponent: PropTypes.oneOfType([
 			PropTypes.string,
 			PropTypes.func
 		]),
 
 		/**
-		 * A boolean parameter affecting the minimum width of the button. When `true`,
-		 * the minimum width will be set to 180px (or 130px if [small]{@link moonstone/Button.Button#small}
-		 * is `true`). If `false`, the minimum width will be set to the current value of
-		 * `@moon-button-height` (thus forcing the button to be no smaller than a circle with
-		 * diameter `@moon-button-height`).
+		 * Applies the `minWidth` CSS class to the {@link ui/Button.ButtonBase}
 		 *
 		 * @type {Boolean}
 		 * @default true
@@ -76,7 +91,7 @@ const ButtonBase = kind({
 		minWidth: PropTypes.bool,
 
 		/**
-		 * When `true`, a pressed visual effect is applied to the button
+		 * Applies the `pressed` CSS class to the {@link ui/Button.ButtonBase}
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -85,18 +100,16 @@ const ButtonBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * When `true`, a selected visual effect is applied to the button
+		 * Applies the `selected` CSS class to the {@link ui/Button.ButtonBase}
 		 *
 		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
 		selected: PropTypes.bool,
 
 		/**
-		 * A boolean parameter affecting the size of the button. If `true`, the
-		 * button's diameter will be set to 60px. However, the button's tap target
-		 * will still have a diameter of 78px, with an invisible DOM element
-		 * wrapping the small button to provide the larger tap zone.
+		 * Applies the `small` CSS class to the {@link ui/Button.ButtonBase}
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -107,9 +120,9 @@ const ButtonBase = kind({
 
 	defaultProps: {
 		disabled: false,
-		iconComponent: 'span',
 		minWidth: true,
 		pressed: false,
+		selected: false,
 		small: false
 	},
 
@@ -126,8 +139,11 @@ const ButtonBase = kind({
 			minWidth,
 			selected
 		}),
-		icon: ({icon, iconComponent: Icon, small}) =>
-			(typeof icon === 'string' ? <Icon small={small}>{icon}</Icon> : icon)
+		icon: ({css, icon, iconComponent: Icon, small}) => {
+			return (typeof icon === 'string' && Icon) ? (
+				<Icon small={small} className={css.icon}>{icon}</Icon>
+			) : icon;
+		}
 	},
 
 	handlers: {
@@ -153,8 +169,26 @@ const ButtonBase = kind({
 	}
 });
 
+/**
+ * {@link ui/Button.ButtonDecorator} adds touch support to a {@link ui/Button.Button}
+ *
+ * @hoc
+ * @memberof ui/Button
+ * @ui
+ * @public
+ */
 const ButtonDecorator = Touchable({activeProp: 'pressed'});
 
+/**
+ * {@link ui/Button.Button} is minimally-styled button component with touch support.
+ *
+ * @class Button
+ * @extends ui/Button.ButtonBase
+ * @memberof ui/Button
+ * @mixes ui/Button.ButtonDecorator
+ * @ui
+ * @public
+ */
 const Button = ButtonDecorator(ButtonBase);
 
 export default Button;
