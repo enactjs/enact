@@ -29,8 +29,6 @@ const IconButtonBase = kind({
 	name: 'IconButton',
 
 	propTypes: /** @lends ui/IconButton.IconButtonBase.prototype */ {
-		icon: PropTypes.string.isRequired,
-
 		/**
 		 * The component used to render the button
 		 *
@@ -42,7 +40,9 @@ const IconButtonBase = kind({
 		buttonComponent: PropTypes.func,
 
 		/**
-		 * The icon displayed within the button.
+		 * Additional children that follow the icon.
+		 *
+		 * If `icon` isn't specified but `children` is, `children` is used as the icon's value.
 		 *
 		 * @see {@link ui/Icon.Icon#children}
 		 * @type {String|Object}
@@ -70,6 +70,16 @@ const IconButtonBase = kind({
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * The icon displayed within the [button]{@link ui/IconButton.IconButtonBase}.
+		 *
+		 * If not specified, the `children` is used as the icon value instead.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		icon: PropTypes.string,
 
 		/**
 		 * The component used to render the [icon]{@link ui/IconButton.IconButtonBase.icon}.
@@ -124,12 +134,18 @@ const IconButtonBase = kind({
 	},
 
 	computed: {
-		className: ({small, styler}) => styler.append({small}),
-		// support either `icon` or `children` for the icon string, favoring `icon`
-		icon: ({children, icon}) => icon || children
+		className: ({small, styler}) => styler.append({small})
 	},
 
 	render: ({buttonComponent: Button, children, css, icon, iconComponent: Icon, small, ...rest}) => {
+
+		// To support the simpler use case of only specifying the icon as the children within
+		// <IconButton>, this falls back on using children if icon isn't specified.
+		if (!icon && children) {
+			icon = children;
+			children = null;
+		}
+
 		return (
 			<Button {...rest} small={small} minWidth={false}>
 				<Icon small={small} className={css.icon}>{icon}</Icon>
@@ -153,9 +169,8 @@ const IconButtonDecorator = Touchable({activeProp: 'pressed'});
 
 /**
  * An {@link ui/Icon.Icon} that acts like a button.  You may specify an image or a font-based
- * icon by setting the children to either the path to the image or a string from the
- * [IconList]{@link ui/Icon.IconList}. `IconButton` does not have `Marquee` or `Uppercase`
- * like `Button` has, as it should not contain text.
+ * icon by setting the children to either the path to the image or a string from its
+ * [iconList]{@link ui/Icon.IconBase.iconList}.
  *
  * Usage:
  * ```
