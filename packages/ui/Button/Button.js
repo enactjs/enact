@@ -1,10 +1,8 @@
 /**
- * Exports the {@link ui/Button.Button} and {@link ui/Button.ButtonBase} components and
- * the {@link ui/Button.ButtonDecorator} Higher-order Component (HOC).  The default export is
- * {@link ui/Button.Button}.
- *
- * @example
- * <Button small>Click me</Button>
+ * Exports the [Button]{@link ui/Button.Button} and [ButtonBase]{@link ui/Button.ButtonBase} components and
+ * the [ButtonDecorator]{@link ui/Button.ButtonDecorator} Higher-order Component (HOC).
+ * 
+ * The default export is [Button]{@link ui/Button.Button}.
  *
  * @module ui/Button
  */
@@ -19,7 +17,7 @@ import Touchable from '../Touchable';
 import componentCss from './Button.less';
 
 /**
- * {@link ui/Button.ButtonBase} is a basic button component structure without any behaviors
+ * [ButtonBase]{@link ui/Button.ButtonBase} is a basic button component structure without any behaviors
  * applied to it.
  *
  * @class ButtonBase
@@ -34,7 +32,7 @@ const ButtonBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * Appends CSS classes to the nodes and components with {@link ui/Button.ButtonBase}.
+		 * Appends CSS classes to the nodes and components with [ButtonBase]{@link ui/Button.ButtonBase}.
 		 *
 		 * The following classes are supported:
 		 * * `button` - The root component class
@@ -52,7 +50,7 @@ const ButtonBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Disables the {@link ui/Button.ButtonBase}
+		 * Disables the [ButtonBase]{@link ui/Button.ButtonBase}
 		 * 
 		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
 		 * generate `onClick` [events]{@glossary event}.
@@ -64,7 +62,7 @@ const ButtonBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * The icon displayed within the [button]{@link ui/Button.ButtonBase}.
+		 * The icon displayed within the [button][ButtonBase]{@link ui/Button.ButtonBase}.
 		 * 
 		 * The icon will be displayed before the natural reading order of the text, regardless
 		 * of locale. Any string that is valid for the `Icon` component is valid here. This also
@@ -89,7 +87,7 @@ const ButtonBase = kind({
 		iconComponent: PropTypes.func,
 
 		/**
-		 * Applies the `minWidth` CSS class to the {@link ui/Button.ButtonBase}
+		 * Applies the `minWidth` CSS class to the [ButtonBase]{@link ui/Button.ButtonBase}
 		 *
 		 * @type {Boolean}
 		 * @default true
@@ -98,7 +96,7 @@ const ButtonBase = kind({
 		minWidth: PropTypes.bool,
 
 		/**
-		 * Applies the `pressed` CSS class to the {@link ui/Button.ButtonBase}
+		 * Applies the `pressed` CSS class to the [ButtonBase]{@link ui/Button.ButtonBase}
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -107,7 +105,7 @@ const ButtonBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * Applies the `selected` CSS class to the {@link ui/Button.ButtonBase}
+		 * Applies the `selected` CSS class to the [ButtonBase]{@link ui/Button.ButtonBase}
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -116,7 +114,7 @@ const ButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Applies the `small` CSS class to the {@link ui/Button.ButtonBase}
+		 * Applies the `small` CSS class to the [ButtonBase]{@link ui/Button.ButtonBase}
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -177,7 +175,8 @@ const ButtonBase = kind({
 });
 
 /**
- * {@link ui/Button.ButtonDecorator} adds touch support to a {@link ui/Button.Button}
+ * [ButtonDecorator]{@link ui/Button.ButtonDecorator} adds touch support to a
+ * [Button]{@link ui/Button.Button}
  *
  * @hoc
  * @memberof ui/Button
@@ -187,7 +186,7 @@ const ButtonBase = kind({
 const ButtonDecorator = Touchable({activeProp: 'pressed'});
 
 /**
- * {@link ui/Button.Button} is minimally-styled button component with touch support.
+ * [Button]{@link ui/Button.Button} is minimally-styled button component with touch support.
  *
  * @class Button
  * @extends ui/Button.ButtonBase

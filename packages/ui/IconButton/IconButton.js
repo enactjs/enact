@@ -1,10 +1,9 @@
 /**
- * Exports the {@link ui/IconButton.IconButton} and {@link ui/IconButton.IconButtonBase} components
- * and the {@link ui/IconButton.IconButtonDecorator} Higher-order Component (HOC).  The default
- * export is {@link ui/IconButton.IconButton}.
- *
- * @example
- * <IconButton small>flag</IconButton>
+ * Exports the [IconButton]{@link ui/IconButton.IconButton} and
+ * [IconButton]{@link ui/IconButton.IconButtonBase} components and the
+ * [IconButtonDecorator]{@link ui/IconButton.IconButtonDecorator} Higher-order Component (HOC).
+ * 
+ * The default export is [IconButton]{@link ui/IconButton.IconButton}.
  *
  * @module ui/IconButton
  */
@@ -18,7 +17,7 @@ import Touchable from '../Touchable';
 import componentCss from './IconButton.less';
 
 /**
- * {@link ui/IconButton.IconButtonBase} is a ui-styled button without any behavior.
+ * [IconButton]{@link ui/IconButton.IconButtonBase} is a ui-styled button without any behavior.
  *
  * @class IconButtonBase
  * @memberof ui/IconButton
@@ -26,7 +25,7 @@ import componentCss from './IconButton.less';
  * @public
  */
 const IconButtonBase = kind({
-	name: 'IconButton',
+	name: 'ui/IconButton',
 
 	propTypes: /** @lends ui/IconButton.IconButtonBase.prototype */ {
 		/**
@@ -51,8 +50,15 @@ const IconButtonBase = kind({
 		children: PropTypes.node,
 
 		/**
-		 * Appends CSS classes to the nodes and components with
+		 * Appends CSS classes to the nodes and components within [IconButton]
 		 * {@link ui/IconButton.IconButtonBase}.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `iconButton` - The root component class
+		 * * `icon` - The [icon component]{@link ui/IconButton.IconButtonBase.iconComponent} class
+		 * * `small` - Applied for a `small` icon
+		 * * `pressed` - Applied for a `pressed` icon
 		 *
 		 * @type {Object}
 		 * @public
@@ -60,7 +66,7 @@ const IconButtonBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Disables the {@link ui/IconButton.IconButtonBase}
+		 * Disables the [IconButton]{@link ui/IconButton.IconButtonBase}
 		 * 
 		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
 		 * generate `onClick` [events]{@glossary event}.
@@ -93,7 +99,7 @@ const IconButtonBase = kind({
 		iconComponent: PropTypes.func,
 
 		/**
-		 * Applies the `pressed` CSS class to the {@link ui/IconButton.IconButtonBase}
+		 * Applies the `pressed` CSS class to the [IconButton]{@link ui/IconButton.IconButtonBase}
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -102,7 +108,7 @@ const IconButtonBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * Applies the `selected` CSS class to the {@link ui/IconButton.IconButtonBase}
+		 * Applies the `selected` CSS class to the [IconButton]{@link ui/IconButton.IconButtonBase}
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -111,7 +117,7 @@ const IconButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Applies the `small` CSS class to the {@link ui/IconButton.IconButtonBase}
+		 * Applies the `small` CSS class to the [IconButton]{@link ui/IconButton.IconButtonBase}
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -157,7 +163,7 @@ const IconButtonBase = kind({
 
 
 /**
- * {@link ui/IconButton.IconButtonDecorator} adds ui-specific button behaviors to an
+ * [IconButtonDecorator]{@link ui/IconButton.IconButtonDecorator} adds ui-specific button behaviors to an
  * [IconButton]{@link ui/IconButton.IconButtonBase}.
  *
  * @hoc
@@ -168,13 +174,13 @@ const IconButtonBase = kind({
 const IconButtonDecorator = Touchable({activeProp: 'pressed'});
 
 /**
- * An {@link ui/Icon.Icon} that acts like a button.  You may specify an image or a font-based
- * icon by setting the children to either the path to the image or a string from its
- * [iconList]{@link ui/Icon.IconBase.iconList}.
+ * [IconButton]{@link ui/IconButton.IconButton} is an [Icon]{@link ui/Icon.Icon} that acts like a
+ * button.  You may specify an image or a font-based icon by setting the children to either the path
+ * to the image or a string from its [iconList]{@link ui/Icon.IconBase.iconList}.
  *
  * Usage:
  * ```
- * <IconButton onClick={handleClick} small>
+ * <IconButton small>
  *     plus
  * </IconButton>
  * ```

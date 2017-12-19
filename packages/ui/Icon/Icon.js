@@ -1,9 +1,7 @@
 /**
- * Exports the {@link ui/Icon.Icon} and {@link ui/Icon.IconBase} components. The default export is
- * {@link ui/Icon.Icon}.
- *
- * @example
- * <Icon>flag</Icon>
+ * Exports the [Icon]{@link ui/Icon.Icon} and [IconBase]{@link ui/Icon.IconBase} components.
+ * 
+ * The default export is [Icon]{@link ui/Icon.Icon}.
  *
  * @module ui/Icon
  */
@@ -51,7 +49,8 @@ const isSingleCharacter = function (c) {
 };
 
 /**
- * {@link ui/Icon.IconBase} is a basic icon component structure without any behaviors applied to it.
+ * [IconBase]{@link ui/Icon.IconBase} is a basic icon component structure without any behaviors
+ * applied to it.
  *
  * @class IconBase
  * @memberof ui/Icon
@@ -61,13 +60,13 @@ const isSingleCharacter = function (c) {
 const IconBase = kind({
 	name: 'ui/Icon',
 
-	propTypes: /** @lends ui/Icon.Icon.prototype */ {
+	propTypes: /** @lends ui/Icon.IconBase.prototype */ {
 		/**
 		 * The icon content.
 		 * 
 		 * May be specified as either:
 		 *
-		 * * A string that represents an icon from the [IconList]{@link ui/Icon.IconList},
+		 * * A string that represents an icon from the [iconList]{@link ui/Icon.IconBase.iconList},
 		 * * An HTML entity string, Unicode reference or hex value (in the form '0x...'),
 		 * * A URL specifying path to an icon image, or
 		 * * An object representing a resolution independent resource (See {@link ui/resolution}).
@@ -83,9 +82,10 @@ const IconBase = kind({
 		 * The following classes are supported:
 		 *
 		 * * `icon` - The root component class
-		 * * `dingbat` - Applied when the value of `icon` is not found in `iconList`
-		 * * `small` - Applied for a `small` icon
-		 * * `pressed` - Applied for a `pressed` icon
+		 * * `dingbat` - Applied when the value of [`icon`]{@link ui/Icon.IconBase.icon} is not
+		 *   found in [iconList]{@link ui/Icon.IconBase.iconList}
+		 * * `small` - Applied for a [small]{@link ui/Icon.IconBase.small} icon
+		 * * `pressed` - Applied for a [pressed]{@link ui/Icon.IconBase.pressed} icon
 		 *
 		 * @type {Object}
 		 * @public
@@ -105,7 +105,7 @@ const IconBase = kind({
 		iconList: PropTypes.object,
 
 		/**
-		 * Applies the `pressed` CSS class to the {@link ui/Icon.IconBase}
+		 * Applies the `pressed` CSS class to the [IconBase]{@link ui/Icon.IconBase}
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -114,7 +114,7 @@ const IconBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * Applies the `small` CSS class to the {@link ui/Icon.IconBase}
+		 * Applies the `small` CSS class to the [IconBase]{@link ui/Icon.IconBase}
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -199,7 +199,7 @@ const IconBase = kind({
 });
 
 /**
- * {@link ui/Icon.Icon} is a minimally-styled icon component
+ * [Icon]{@link ui/Icon.Icon} is a minimally-styled icon component
  *
  * @class Icon
  * @extends ui/Icon.IconBase
