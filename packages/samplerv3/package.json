@@ -24,6 +24,9 @@
     "@storybook/addon-actions": "^3.2.17",
     "@storybook/addon-info": "^3.2.17",
     "@storybook/addon-options": "^3.2.17",
-    "@storybook/react": "^3.2.17"
+    "@storybook/react": "^3.2.17",
+    "babel-plugin-dev-expression": "^0.2.1",
+    "babel-plugin-transform-react-inline-elements": "^6.22.0",
+    "babel-preset-es2015": "^6.24.1"
   }
 }
