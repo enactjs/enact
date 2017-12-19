@@ -182,7 +182,9 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				} else if (!ev.currentTarget.contains(ev.relatedTarget)) {
 					// Blurring decorator but not focusing input
 					forwardBlur(ev, this.props);
-					this.blur();
+					if (this.state.focused !== null && this.state.node !== null) {
+						this.blur();
+					}
 				}
 			} else if (isBubbling(ev)) {
 				if (this.state.focused === 'input' && this.state.node === ev.target && ev.currentTarget !== ev.relatedTarget) {
