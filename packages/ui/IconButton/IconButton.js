@@ -15,7 +15,7 @@ import React from 'react';
 
 import Touchable from '../Touchable';
 
-import css from './IconButton.less';
+import componentCss from './IconButton.less';
 
 /**
  * {@link ui/IconButton.IconButtonBase} is a ui-styled button without any behavior.
@@ -118,7 +118,7 @@ const IconButtonBase = kind({
 	},
 
 	styles: {
-		css,
+		css: componentCss,
 		className: 'iconButton',
 		publicClassNames: true
 	},
@@ -129,7 +129,7 @@ const IconButtonBase = kind({
 		icon: ({children, icon}) => icon || children
 	},
 
-	render: ({buttonComponent: Button, children, icon, iconComponent: Icon, small, ...rest}) => {
+	render: ({buttonComponent: Button, children, css, icon, iconComponent: Icon, small, ...rest}) => {
 		return (
 			<Button {...rest} small={small} minWidth={false}>
 				<Icon small={small} className={css.icon}>{icon}</Icon>
