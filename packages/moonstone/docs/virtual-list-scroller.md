@@ -103,7 +103,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
 ### Items for VirtualGridList
 
-*   `GridListImageItem` can be used as items of VirtualGridList. It has Moonstone styling applied and has a placeholder image as a background.
+*   `GridListImageItem` components can be used as items of `VirtualGridList`. They have Moonstone styling applied and have a placeholder image as a background.
 
 *   `caption` and `subCaption` are supported.
 

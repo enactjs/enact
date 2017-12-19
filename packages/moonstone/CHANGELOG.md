@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/MoonstoneDecorator` root node to fill the entire space available, which simplifies positioning and sizing for child elements (previously always measured 0 in height)
+- `moonstoneVirtualGridList.GridListImageItem` to be a top-level Moonstone component `moonstone/GridListImageItem`
 
 ### Fixed
 
@@ -569,7 +570,6 @@ No significant changes.
 - `moonstone/Slider` colors and sizing to match the latest designs
 - `moonstone/ProgressBar` to position correctly with other components nearby
 - `moonstone/Panels` breadcrumb to no longer have a horizontal line above it
-- `moonstone/VirtualGridList.GridListImageItem` is moved to `moonstone/GridListImageItem`
 - `moonstone/Transition` to measure itself when the CPU is idle
 - style for disabled opacity from 0.4 to 0.3
 - `moonstone/Button` colors for transparent and translucent background opacity when disabled
