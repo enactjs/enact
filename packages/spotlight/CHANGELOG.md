@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Fixed
 
 - `spotlight` to guard against accessing unconfigured container configurations
+- `spotlight/Spottable` to prevent unnecessary renders due to focus changes
 
 ## [1.13.1] - 2017-12-06
 
