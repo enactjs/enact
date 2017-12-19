@@ -8,7 +8,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- many new unstyled components, ready for use by ui library developers
+- `ui/Button`, `ui/Icon`, and `ui/IconButton` components to support reuse by themes
 
 ### Changed
 
