@@ -86,10 +86,7 @@ const ButtonBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		iconComponent: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.func
-		]),
+		iconComponent: PropTypes.func,
 
 		/**
 		 * Applies the `minWidth` CSS class to the {@link ui/Button.ButtonBase}
