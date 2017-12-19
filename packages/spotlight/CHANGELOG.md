@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [1.13.2] - 2017-12-14
+
+### Fixed
+
+- `spotlight` to guard against accessing unconfigured container configurations
+
+## [1.13.1] - 2017-12-06
+
+No significant changes.
+
 ## [1.13.0] - 2017-11-28
 
 No significant changes.

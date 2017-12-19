@@ -231,6 +231,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.verticalScrollbarProps = {
 				ref: this.initRef('verticalScrollbarRef'),
 				vertical: true,
+				cbAlertThumb: this.alertThumbAfterRendered,
 				onPrevScroll: this.onScrollbarButtonClick,
 				onNextScroll: this.onScrollbarButtonClick
 			};
@@ -238,6 +239,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.horizontalScrollbarProps = {
 				ref: this.initRef('horizontalScrollbarRef'),
 				vertical: false,
+				cbAlertThumb: this.alertThumbAfterRendered,
 				onPrevScroll: this.onScrollbarButtonClick,
 				onNextScroll: this.onScrollbarButtonClick
 			};
@@ -325,6 +327,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		animateOnFocus = false
 		pageDirection = 0
 		isWheeling = false
+		isUpdatedScrollThumb = false
 
 		// event handlers
 		eventHandlers = {}
@@ -404,7 +407,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				canScrollVertically = this.canScrollVertically(bounds),
 				eventDeltaMode = e.deltaMode,
 				eventDelta = (-e.wheelDeltaY || e.deltaY);
-			let delta = 0;
+			let
+				delta = 0,
+				needToHideThumb = false;
 
 			this.lastFocusedItem = null;
 			if (typeof window !== 'undefined') {
@@ -426,7 +431,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					if ((horizontalScrollbarRef && horizontalScrollbarRef.containerRef.contains(e.target)) ||
 						(verticalScrollbarRef && verticalScrollbarRef.containerRef.contains(e.target))) {
 						delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
+						needToHideThumb = !delta;
 					}
+				} else {
+					needToHideThumb = true;
 				}
 			} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
 				if (eventDelta < 0 && this.scrollLeft > 0 || eventDelta > 0 && this.scrollLeft < bounds.maxLeft) {
@@ -435,6 +443,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						this.isWheeling = true;
 					}
 					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
+					needToHideThumb = !delta;
+				} else {
+					needToHideThumb = true;
 				}
 			}
 
@@ -448,6 +459,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					this.pageDirection = direction;
 				}
 				this.scrollToAccumulatedTarget(delta, canScrollVertically);
+			}
+
+			if (needToHideThumb) {
+				this.hideThumbJob.start();
 			}
 		}
 
@@ -944,28 +959,45 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				});
 			} else {
 				this.deferScrollTo = false;
-				if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
-					// no visibility change but need to notify whichever scrollbars are visible of the
-					// updated bounds and scroll position
-					const
-						updatedBounds = {
-							...bounds,
-							scrollLeft: this.scrollLeft,
-							scrollTop: this.scrollTop
-						},
-						spotItem = Spotlight.getCurrent();
+				this.isUpdatedScrollThumb = this.updateScrollThumbSize();
+			}
+		}
 
-					if (curHorizontalScrollbarVisible) {
-						this.horizontalScrollbarRef.update(updatedBounds);
-					}
-					if (curVerticalScrollbarVisible) {
-						this.verticalScrollbarRef.update(updatedBounds);
-					}
+		updateScrollThumbSize = () => {
+			const
+				{horizontalScrollbar, verticalScrollbar} = this.props,
+				bounds = this.getScrollBounds(),
+				canScrollHorizontally = this.canScrollHorizontally(bounds),
+				canScrollVertically = this.canScrollVertically(bounds),
+				curHorizontalScrollbarVisible = (horizontalScrollbar === 'auto') ? canScrollHorizontally : horizontalScrollbar === 'visible',
+				curVerticalScrollbarVisible = (verticalScrollbar === 'auto') ? canScrollVertically : verticalScrollbar === 'visible';
 
-					if (!Spotlight.getPointerMode() && spotItem && this.childRef.containerRef.contains(spotItem)) {
-						this.alertThumb();
-					}
+			if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
+				// no visibility change but need to notify whichever scrollbars are visible of the
+				// updated bounds and scroll position
+				const
+					updatedBounds = {
+						...bounds,
+						scrollLeft: this.scrollLeft,
+						scrollTop: this.scrollTop
+					};
+
+				if (curHorizontalScrollbarVisible) {
+					this.horizontalScrollbarRef.update(updatedBounds);
 				}
+				if (curVerticalScrollbarVisible) {
+					this.verticalScrollbarRef.update(updatedBounds);
+				}
+				return true;
+			}
+			return false;
+		}
+
+		alertThumbAfterRendered = () => {
+			const spotItem = Spotlight.getCurrent();
+
+			if (!Spotlight.getPointerMode() && spotItem && this.childRef.containerRef.contains(spotItem) && this.isUpdatedScrollThumb) {
+				this.alertThumb();
 			}
 		}
 

@@ -8,9 +8,11 @@ import {
 	getContainerDefaultElement,
 	getContainerFocusTarget,
 	getContainerLastFocusedElement,
+	getContainerNavigableElements,
 	getContainersForNode,
 	getDefaultContainer,
 	getLastContainer,
+	getNavigableContainersForNode,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
@@ -622,6 +624,16 @@ describe('container', () => {
 				expect(actual).to.equal(expected);
 			}
 		));
+
+		it('should return null for an unconfigured container', testScenario(
+			scenarios.complexTree,
+			() => {
+				const expected = null;
+				const actual = getContainerFocusTarget('first-container');
+
+				expect(actual).to.equal(expected);
+			}
+		));
 	});
 
 	describe('#isNavigable', () => {
@@ -1070,6 +1082,48 @@ describe('container', () => {
 				const actual = getContainerDefaultElement('does-not-exist');
 
 				expect(actual).to.equal(expected);
+			}
+		));
+	});
+
+	describe('#getNavigableContainersForNode', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		it('should include all containers when none are restrict="self-only"', testScenario(
+			scenarios.complexTree,
+			(root) => {
+				const expected = [rootContainerId, 'first-container', 'second-container'];
+				const actual = getNavigableContainersForNode(root.querySelector('#secondContainerFirstSpottable'));
+
+				expect(actual).to.deep.equal(expected);
+			}
+		));
+
+		it('should include all containers within the first restrict="self-only" container (inclusive)', testScenario(
+			scenarios.complexTree,
+			(root) => {
+				configureContainer('first-container', {restrict: 'self-only'});
+
+				const expected = ['first-container', 'second-container'];
+				const actual = getNavigableContainersForNode(root.querySelector('#secondContainerFirstSpottable'));
+
+				expect(actual).to.deep.equal(expected);
+			}
+		));
+	});
+
+	describe('#getContainerNavigableElements', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		it('should return an empty array for an unconfigured container', testScenario(
+			scenarios.complexTree,
+			() => {
+				const expected = [];
+				const actual = getContainerNavigableElements('first-container');
+
+				expect(actual).to.deep.equal(expected);
 			}
 		));
 	});
