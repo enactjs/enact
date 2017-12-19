@@ -1,8 +1,13 @@
 import {on, off} from '@enact/core/dispatcher';
+import {Job} from '@enact/core/util';
+import invariant from 'invariant';
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
+
 import Cancelable from '../Cancelable';
 
+import {contextTypes} from './FloatingLayerDecorator';
 import Scrim from './Scrim';
 
 /**
@@ -17,6 +22,8 @@ import Scrim from './Scrim';
 class FloatingLayerBase extends React.Component {
 	static displayName = 'FloatingLayer'
 
+	static contextTypes = contextTypes
+
 	static propTypes = /** @lends ui/FloatingLayer.FloatingLayerBase.prototype */ {
 		/**
 		 * CSS classes for FloatingLayer.
@@ -25,7 +32,7 @@ class FloatingLayerBase extends React.Component {
 		 * @default 'enact-fit enact-clip enact-untouchable'
 		 * @public
 		 */
-		floatLayerClassName: React.PropTypes.string,
+		floatLayerClassName: PropTypes.string,
 
 		/**
 		 * Element id for floating layer.
@@ -34,7 +41,7 @@ class FloatingLayerBase extends React.Component {
 		 * @default 'floatLayer'
 		 * @public
 		 */
-		floatLayerId: React.PropTypes.string,
+		floatLayerId: PropTypes.string,
 
 		/**
 		 * When `true`, FloatingLayer will not hide when the user presses `ESC` key.
@@ -43,7 +50,7 @@ class FloatingLayerBase extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		noAutoDismiss: React.PropTypes.bool,
+		noAutoDismiss: PropTypes.bool,
 
 		/**
 		 * A function to be run when floating layer is closed.
@@ -51,7 +58,7 @@ class FloatingLayerBase extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onClose: React.PropTypes.func,
+		onClose: PropTypes.func,
 
 		/**
 		 * A function to be run when `ESC` key is pressed. The function will only invoke if
@@ -60,7 +67,7 @@ class FloatingLayerBase extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onDismiss: React.PropTypes.func,
+		onDismiss: PropTypes.func,
 
 		/**
 		 * A function to be run when floating layer is opened. It will only be invoked for the first render.
@@ -68,7 +75,7 @@ class FloatingLayerBase extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onOpen: React.PropTypes.func,
+		onOpen: PropTypes.func,
 
 		/**
 		 * When `true`, the floating layer and its components will be rendered.
@@ -77,7 +84,7 @@ class FloatingLayerBase extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		open: React.PropTypes.bool,
+		open: PropTypes.bool,
 
 		/**
 		 * The scrim type. It can be either `'transparent'`, `'translucent'`, or `'none'`.
@@ -86,7 +93,7 @@ class FloatingLayerBase extends React.Component {
 		 * @default 'translucent'
 		 * @public
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none'])
+		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none'])
 	}
 
 	static defaultProps = {
@@ -127,6 +134,12 @@ class FloatingLayerBase extends React.Component {
 		}
 	}
 
+	handleScroll = (ev) => {
+		const {currentTarget} = ev;
+		currentTarget.scrollTop = 0;
+		currentTarget.scrollLeft = 0;
+	}
+
 	stopPropagation = (ev) => {
 		ev.nativeEvent.stopImmediatePropagation();
 
@@ -137,8 +150,9 @@ class FloatingLayerBase extends React.Component {
 
 	closeFloatingLayer () {
 		if (this.node) {
+			off('scroll', this.handleScroll, this.node);
 			ReactDOM.unmountComponentAtNode(this.node);
-			document.getElementById(this.props.floatLayerId).removeChild(this.node);
+			this.node.parentNode.removeChild(this.node);
 
 			if (this.props.onClose) {
 				this.props.onClose();
@@ -147,15 +161,23 @@ class FloatingLayerBase extends React.Component {
 		this.floatLayer = null;
 		this.node = null;
 
+		this.attachClickHandlerJob.stop();
 		off('click', this.handleClick);
 	}
 
 	renderNode () {
-		const {floatLayerClassName, floatLayerId} = this.props;
+		const {floatLayerClassName} = this.props;
 
 		if (!this.node) {
+			invariant(
+				this.context.getFloatingLayer,
+				'FloatingLayer cannot be used outside the subtree of a FloatingLayerDecorator'
+			);
+
+			const floatingLayer = this.context.getFloatingLayer();
 			this.node = document.createElement('div');
-			document.getElementById(floatLayerId).appendChild(this.node);
+			floatingLayer.appendChild(this.node);
+			on('scroll', this.handleScroll, this.node);
 		}
 
 		this.node.className = floatLayerClassName;
@@ -188,10 +210,14 @@ class FloatingLayerBase extends React.Component {
 			}
 
 			if (scrimType === 'none') {
-				on('click', this.handleClick);
+				// Attach click event handler asynchronously to make sure the event responsible for opening
+				// won't be closed by other click event listeners attached to the dispatcher.
+				this.attachClickHandlerJob.start();
 			}
 		}
 	}
+
+	attachClickHandlerJob = new Job(() => on('click', this.handleClick))
 
 	render () {
 		return null;

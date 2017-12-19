@@ -1,7 +1,7 @@
 import RadioItem from '@enact/moonstone/RadioItem';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
+import {boolean} from '@kadira/storybook-addon-knobs';
 
 const radioData = {
 	longTextWithSpace : ['FirstLongTextWithSpace FirstLongTextWithSpace FirstLongTextWithSpace FirstLongTextWithSpace', 'SecondLongTextWithSpace SecondLongTextWithSpace SecondLongTextWithSpace SecondLongTextWithSpace'],
@@ -11,7 +11,6 @@ const radioData = {
 };
 
 storiesOf('RadioItem')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with long text and spaces',
 		() => (

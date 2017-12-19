@@ -3,7 +3,7 @@ import Item from '@enact/moonstone/Item';
 import VirtualFlexList from '@enact/moonstone/VirtualFlexList';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, number} from '@kadira/storybook-addon-knobs';
+import {number} from '@kadira/storybook-addon-knobs';
 
 const
 	channelWidth = ri.scale(420),
@@ -97,7 +97,6 @@ const
 	};
 
 storiesOf('VirtualFlexList')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of VirtualFlexList',

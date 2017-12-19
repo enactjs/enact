@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import kind from '@enact/core/kind';
 import {mount} from 'enzyme';
 import BreadcrumbDecorator from '../BreadcrumbDecorator';
@@ -10,8 +11,8 @@ describe('BreadcrumbDecorator', () => {
 		name: 'CustomBreadcrumb',
 
 		propsTypes: {
-			index: React.PropTypes.number,
-			onSelect: React.PropTypes.func
+			index: PropTypes.number,
+			onSelect: PropTypes.func
 		},
 
 		render: ({index, onSelect}) => {	// eslint-disable-line enact/prop-types
@@ -100,4 +101,84 @@ describe('BreadcrumbDecorator', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it('should not set aria-owns when no breadcrumbs are needed', function () {
+		const ThreeBreadcrumbPanels = BreadcrumbDecorator({
+			max: 3
+		}, Panels);
+
+		const subject = mount(
+			<ThreeBreadcrumbPanels id="test" index={0} noCloseButton>
+				<Panel />
+				<Panel />
+				<Panel />
+				<Panel />
+			</ThreeBreadcrumbPanels>
+		);
+
+		// eslint-disable-next-line
+		const expected = undefined;
+		const actual = subject.find(Panel).first().prop('aria-owns');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set aria-owns on each Panel for the breadcrumbs', function () {
+		const ThreeBreadcrumbPanels = BreadcrumbDecorator({
+			max: 3
+		}, Panels);
+
+		const subject = mount(
+			<ThreeBreadcrumbPanels id="test" index={3} noCloseButton>
+				<Panel />
+				<Panel />
+				<Panel />
+				<Panel />
+			</ThreeBreadcrumbPanels>
+		);
+
+		// tests for {config.max} aria-owns entries in the format ${id}_bc_{$index}
+		const expected = [0, 1, 2].map(n => `test_bc_${n}`).join(' ');
+		const actual = subject.find(Panel).first().prop('aria-owns');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set aria-owns on each Panel for the `max` breadcrumbs', function () {
+		const ThreeBreadcrumbPanels = BreadcrumbDecorator({
+			max: 1
+		}, Panels);
+
+		const subject = mount(
+			<ThreeBreadcrumbPanels id="test" index={3} noCloseButton>
+				<Panel />
+				<Panel />
+				<Panel />
+				<Panel />
+			</ThreeBreadcrumbPanels>
+		);
+
+		// tests for truncated {config.max} aria-owns entries in the format ${id}_bc_{$index}
+		const expected = 'test_bc_2';
+		const actual = subject.find(Panel).first().prop('aria-owns');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should append breadcrumb aria-owns to set aria-owns value in childProps', function () {
+		const Component = BreadcrumbDecorator({
+			max: 1
+		}, Panels);
+
+		const subject = mount(
+			<Component id="test" noCloseButton index={1} childProps={{'aria-owns': ':allthethings:'}}>
+				<Panel />
+				<Panel />
+			</Component>
+		);
+
+		const expected = ':allthethings: test_bc_0';
+		const actual = subject.find(Panel).first().prop('aria-owns');
+
+		expect(actual).to.equal(expected);
+	});
 });

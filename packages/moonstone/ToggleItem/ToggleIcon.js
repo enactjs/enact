@@ -1,5 +1,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 
 import Icon from '../Icon';
 
@@ -23,14 +25,14 @@ const ToggleIconBase = kind({
 		 *
 		 * @type {Node}
 		 */
-		children: React.PropTypes.node,
+		children: PropTypes.node,
 
 		/**
 		 * When `true`, the icon is displayed
 		 *
 		 * @type {Boolean}
 		 */
-		selected: React.PropTypes.bool
+		selected: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -60,8 +62,12 @@ const ToggleIconBase = kind({
 	}
 });
 
-export default ToggleIconBase;
+const ToggleIcon = Pure(
+	ToggleIconBase
+);
+
+export default ToggleIcon;
 export {
-	ToggleIconBase as ToggleIcon,
+	ToggleIcon,
 	ToggleIconBase
 };

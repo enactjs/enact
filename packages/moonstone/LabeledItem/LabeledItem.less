@@ -1,32 +1,29 @@
-// LabeledItem
+// LabeledItem.less
 //
 @import '../styles/mixins.less';
-@import '../styles/colors.less';
 @import '../styles/text.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
-/* Labeled Text Item */
 .labeleditem {
 	//// Locally scoped LESS variables ////
 	// Vertically shift the text element to position it closer to the header than the line-height naturally allows
 	@text-vertical-offset: 6px;
 
-	min-width: 336px;
 	flex-wrap: wrap;	// Allow the label to fall on the next line
 
 	// Header
 	.text {
 		display: flex;
+		width: 100%;
+		align-items: center;
 
 		.title {
 			overflow: hidden;
 		}
 		.icon {
+			margin-top: 0;
 			margin-bottom: 0;
-
-			.moon-custom-text({
-				margin-top: 18px;
-			});
 		}
 
 		:global(.enact-locale-right-to-left) & {
@@ -46,7 +43,6 @@
 		font-style: @moon-expandable-value-font-style;
 		line-height: @moon-body-line-height;
 		text-transform: none;
-		color: @moon-labeled-item-label-color;
 		// The following two margin values must cancel each other out, so there is zero layout impact when `text` is empty.
 		margin-top: -@text-vertical-offset;
 		margin-bottom: @text-vertical-offset;
@@ -58,10 +54,6 @@
 		:global(.enact-locale-right-to-left) & {
 			padding-left: 0;
 		}
-
-		.moon-neutral & {
-			color: inherit;
-		}
 	}
 
 	&.with-label {
@@ -70,10 +62,17 @@
 		}
 	}
 
-	&:focus {
-		.text,
+	// Skin colors
+	.applySkins({
 		.label {
-			color: inherit;
+			color: @moon-labeled-item-label-color;
 		}
-	}
+
+		.focus({
+			.text,
+			.label {
+				color: inherit;
+			}
+		});
+	});
 }

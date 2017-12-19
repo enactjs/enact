@@ -6,11 +6,16 @@
 
 import kind from '@enact/core/kind';
 import {handle, forward} from '@enact/core/handle';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
+import Skinnable from '../Skinnable';
+import Touchable from '../internal/Touchable';
 
 import css from './Switch.less';
+
+const TouchableSpan = Touchable('span');
 
 /**
  * {@link moonstone/Switch.Switch} represents a Boolean state, and looks like a switch in
@@ -77,7 +82,7 @@ const SwitchBase = kind({
 
 	handlers: {
 		onToggle: handle(
-			forward('onClick'),
+			forward('onTap'),
 			(ev, {selected, onToggle}) => {
 				if (onToggle) {
 					onToggle({selected: !selected});
@@ -97,12 +102,14 @@ const SwitchBase = kind({
 		delete rest.selected;
 
 		return (
-			<span {...rest} onClick={onToggle}>
+			<TouchableSpan {...rest} onTap={onToggle}>
 				<Icon className={css.icon}>circle</Icon>
-			</span>
+			</TouchableSpan>
 		);
 	}
 });
 
-export default SwitchBase;
-export {SwitchBase as Switch, SwitchBase};
+const Switch = Skinnable(SwitchBase);
+
+export default Switch;
+export {Switch, SwitchBase};

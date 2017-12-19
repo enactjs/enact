@@ -2,14 +2,13 @@ import Popup, {PopupBase} from '@enact/moonstone/Popup';
 import BodyText from '@enact/moonstone/BodyText';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
+import {boolean, text, select} from '@kadira/storybook-addon-knobs';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('Popup', PopupBase, Popup);
 
 storiesOf('Popup')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of Popup',
@@ -20,6 +19,9 @@ storiesOf('Popup')
 					noAnimation={boolean('noAnimation', false)}
 					noAutoDismiss={boolean('noAutoDismiss', false)}
 					onClose={action('onClose')}
+					onHide={action('onHide')}
+					onShow={action('onShow')}
+					scrimType={select('scrimType', ['none', 'translucent', 'transparent'], 'translucent')}
 					showCloseButton={boolean('showCloseButton', false)}
 					spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-only')}
 				>

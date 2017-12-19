@@ -1,5 +1,6 @@
 import hoc from '@enact/core/hoc';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Default config for {@link ui/Placeholder.PlaceholderDecorator}
@@ -36,15 +37,16 @@ const defaultConfig = {
  * @public
  */
 const contextTypes = {
-	registerPlaceholder: React.PropTypes.func,
-	unregisterPlaceholder: React.PropTypes.func
+	invalidateBounds: PropTypes.func,
+	registerPlaceholder: PropTypes.func,
+	unregisterPlaceholder: PropTypes.func
 };
 
 /**
  * {@link ui/Placeholder.PlaceholderDecorator} is a Higher-order Component that can be used that
  * a container notify the Wrapped component when scrolling.
  *
- * Containers must provide `registerPlaceholder` and `unregisterPlaceholder` methods via React's context in order for
+ * Containers must provide `registerPlaceholder`, `unregisterPlaceholder`, and `invalidateBounds` methods via React's context for
  * `PlaceholderDecorator` instances.
  *
  * @class PlaceholderDecorator
@@ -82,10 +84,11 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		update = ({leftThreshold, topThreshold}) => {
-			const {offsetLeft, offsetTop} = this.placeholderRef;
+			const {offsetLeft, offsetTop, offsetHeight, offsetWidth} = this.placeholderRef;
 
-			if (offsetTop < topThreshold && offsetLeft < leftThreshold) {
+			if (offsetTop < topThreshold + offsetHeight && offsetLeft < leftThreshold + offsetWidth) {
 				this.setState({visible: true});
+				this.context.invalidateBounds();
 				this.context.unregisterPlaceholder(this);
 			}
 		}

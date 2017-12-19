@@ -2,7 +2,7 @@ import Button, {ButtonBase} from '@enact/moonstone/Button';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 import nullify from '../../src/utils/nullify.js';
@@ -11,12 +11,11 @@ const Config = mergeComponentMetadata('Button', ButtonBase, Button);
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: ['', 'translucent', 'transparent'],
+	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
 	icons: ['', ...Object.keys(icons)]
 };
 
 storiesOf('Button')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'The basic Button',
@@ -24,14 +23,15 @@ storiesOf('Button')
 			<Button
 				onClick={action('onClick')}
 				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
-				disabled={nullify(boolean('disabled', ButtonBase.defaultProps.disabled))}
+				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
+				disabled={boolean('disabled', ButtonBase.defaultProps.disabled)}
 				icon={nullify(select('icon', prop.icons))}
+				noAnimation={boolean('noAnimation', false)}
 				minWidth={nullify(boolean('minWidth', ButtonBase.defaultProps.minWidth))}
-				preserveCase={boolean('preserveCase', false)}
 				selected={nullify(boolean('selected', false))}
 				small={nullify(boolean('small', ButtonBase.defaultProps.small))}
 			>
-				{text('children', 'Click Me')}
+				{text('children', 'click me')}
 			</Button>
 		),
 		{propTables: [Config]}

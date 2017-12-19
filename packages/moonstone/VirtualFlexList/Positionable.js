@@ -5,7 +5,8 @@
 import clamp from 'ramda/src/clamp';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 
 const forwardPositionChange = forward('onPositionChange');
 
@@ -69,9 +70,28 @@ const Positionable = hoc((config, Wrapped) => {
 
 		static defaultProps = {
 			handlesNavigation: false,
-			onPositionChange: nop,
-			x: 0,
-			y: 0
+			onPositionChange: nop
+		}
+
+		/*
+		 * Life cycle methods
+		 */
+
+		componentDidMount () {
+			this.bounds = this.childRef.getScrollBounds();
+		}
+
+		componentWillReceiveProps (nextProps) {
+			const {x, y} = this.props;
+
+			if (x !== nextProps.x || y !== nextProps.y) {
+				this.childRef.setScrollPosition(
+					clamp(0, this.bounds.maxLeft, nextProps.x),
+					clamp(0, this.bounds.maxTop, nextProps.y),
+					Math.sign(nextProps.x - x),
+					Math.sign(nextProps.y - y)
+				);
+			}
 		}
 
 		/*
@@ -130,27 +150,6 @@ const Positionable = hoc((config, Wrapped) => {
 					x: this.props.x,
 					y: clamp(0, this.bounds.maxTop, this.props.y + this.bounds.clientHeight * Math.sign(e.deltaY))
 				}, this.props);
-			}
-		}
-
-		/*
-		 * Life cycle methods
-		 */
-
-		componentDidMount () {
-			this.bounds = this.childRef.getScrollBounds();
-		}
-
-		componentWillReceiveProps (nextProps) {
-			const {x, y} = this.props;
-
-			if (x !== nextProps.x || y !== nextProps.y) {
-				this.childRef.setScrollPosition(
-					clamp(0, this.bounds.maxLeft, nextProps.x),
-					clamp(0, this.bounds.maxTop, nextProps.y),
-					Math.sign(nextProps.x - x),
-					Math.sign(nextProps.y - y)
-				);
 			}
 		}
 

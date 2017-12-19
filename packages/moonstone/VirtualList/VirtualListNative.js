@@ -1,7 +1,8 @@
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import VirtualListBase, {gridListItemSizeShape} from './VirtualListBaseNative';
+import VirtualListBaseNative, {gridListItemSizeShape} from './VirtualListBaseNative';
 
 /**
  * {@link moonstone/VirtualList.VirtualListNative} is a VirtualList with Moonstone styling.
@@ -80,6 +81,16 @@ const VirtualListNative = kind({
 		 */
 
 		/**
+		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
+		 * not move focus to the scrollbar controls.
+		 *
+		 * @name focusableScrollbar
+		 * @type {Boolean}
+		 * @memberof moonstone/VirtualList.VirtualListNative
+		 * @instance
+		 */
+
+		/**
 		 * Spacing between items.
 		 *
 		 * @name spacing
@@ -91,7 +102,7 @@ const VirtualListNative = kind({
 		 */
 	},
 
-	render: (props) => <VirtualListBase {...props} />
+	render: (props) => <VirtualListBaseNative {...props} />
 });
 
 /**
@@ -170,6 +181,17 @@ const VirtualGridListNative = kind({
 		 */
 
 		/**
+		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
+		 * not move focus to the scrollbar controls.
+		 *
+		 * @name focusableScrollbar
+		 * @type {Boolean}
+		 * @memberof moonstone/VirtualList.VirtualGridListNative
+		 * @instance
+		 * @public
+		 */
+
+		/**
 		 * Spacing between items.
 		 *
 		 * @name spacing
@@ -181,7 +203,7 @@ const VirtualGridListNative = kind({
 		 */
 	},
 
-	render: (props) => <VirtualListBase {...props} pageScroll />
+	render: (props) => <VirtualListBaseNative {...props} />
 });
 
 export default VirtualListNative;

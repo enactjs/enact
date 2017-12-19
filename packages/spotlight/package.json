@@ -1,12 +1,14 @@
 {
   "name": "@enact/spotlight",
-  "version": "1.0.0",
+  "version": "2.0.0-alpha.2",
   "description": "A focus management library",
   "main": "src/spotlight.js",
   "scripts": {
     "clean": "enact clean",
     "lint": "enact lint --framework",
-    "test": "echo \"No test suite\" && exit 0",
+    "test": "enact test start --single-run --browsers PhantomJS",
+    "test-json": "enact test start --single-run --browsers PhantomJS --reporters json",
+    "test-watch": "enact test start --browsers PhantomJS",
     "transpile": "enact transpile"
   },
   "license": "Apache-2.0",
@@ -19,8 +21,10 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^1.0.0",
-    "ramda": "~0.22.1",
-    "react": "~15.4.0"
+    "@enact/core": "^2.0.0-alpha.2",
+    "prop-types": "~15.6.0",
+    "ramda": "~0.24.1",
+    "react": "~15.6.1",
+    "react-dom": "~15.6.1"
   }
 }

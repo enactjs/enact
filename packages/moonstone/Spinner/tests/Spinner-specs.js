@@ -1,16 +1,26 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {mount} from 'enzyme';
 import Spinner from '../Spinner';
 import css from '../Spinner.less';
 
 describe('Spinner Specs', () => {
+	const options = {
+		context: {
+			getFloatingLayer: () => document.getElementById('floatLayer')
+		},
+		childContextTypes: {
+			getFloatingLayer: PropTypes.func
+		}
+	};
+
 	it('should have not have MarqueeText as a child when Spinner has no children', function () {
 		const spinner = mount(
 			<Spinner />
 		);
 
-		const expected = true;
-		const actual = spinner.find('MarqueeText').isEmpty();
+		const expected = false;
+		const actual = spinner.find('MarqueeText').exists();
 
 		expect(actual).to.equal(expected);
 	});
@@ -22,8 +32,8 @@ describe('Spinner Specs', () => {
 			</Spinner>
 		);
 
-		const expected = false;
-		const actual = spinner.find('MarqueeText').isEmpty();
+		const expected = true;
+		const actual = spinner.find('MarqueeText').exists();
 
 		expect(actual).to.equal(expected);
 	});
@@ -105,8 +115,8 @@ describe('Spinner Specs', () => {
 			<Spinner blockClickOn="container" />
 		);
 
-		const expected = true;
-		const actual = spinner.find(`.${css.scrim}`).isEmpty();
+		const expected = false;
+		const actual = spinner.find(`.${css.scrim}`).exists();
 
 		expect(actual).to.equal(expected);
 	});
@@ -116,8 +126,8 @@ describe('Spinner Specs', () => {
 			<Spinner blockClickOn="container" scrim />
 		);
 
-		const expected = false;
-		const actual = spinner.find(`.${css.scrim}`).isEmpty();
+		const expected = true;
+		const actual = spinner.find(`.${css.scrim}`).exists();
 
 		expect(actual).to.equal(expected);
 	});
@@ -128,11 +138,12 @@ describe('Spinner Specs', () => {
 		document.body.appendChild(div);
 
 		const spinner = mount(
-			<Spinner blockClickOn="screen" />
+			<Spinner blockClickOn="screen" />,
+			options
 		);
 
-		const expected = false;
-		const actual = spinner.find('FloatingLayer').isEmpty();
+		const expected = true;
+		const actual = spinner.find('FloatingLayer').exists();
 
 		expect(actual).to.equal(expected);
 	});

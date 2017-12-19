@@ -1,8 +1,9 @@
-import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
+import PropTypes from 'prop-types';
 
+import $L from '../internal/$L';
 import css from './Panels.less';
 
 // Since we expose `onSelect` to handle breadcrumb selection, we need that handler to be set on a
@@ -25,6 +26,8 @@ export const breadcrumbWidth = 96;
  *
  * @class Breadcrumb
  * @memberof moonstone/Panels
+ * @ui
+ * @public
  */
 const BreadcrumbBase = kind({
 	name: 'Breadcrumb',
@@ -35,21 +38,21 @@ const BreadcrumbBase = kind({
 		 *
 		 * @type {Number}
 		 */
-		index: React.PropTypes.number.isRequired,
+		index: PropTypes.number.isRequired,
 
 		/**
 		 * Called when the breadcrumb is clicked
 		 *
 		 * @type {Function}
 		 */
-		onClick: React.PropTypes.func,
+		onClick: PropTypes.func,
 
 		/**
 		 * Called when the breadcrumb is clicked
 		 *
 		 * @type {Function}
 		 */
-		onSelect: React.PropTypes.func
+		onSelect: PropTypes.func
 	},
 
 	styles: {
@@ -70,7 +73,7 @@ const BreadcrumbBase = kind({
 	render: ({children, index, onSelect, ...rest}) => (
 		<SpottableDiv
 			{...rest}
-			aria-label={$L('go to previous')}
+			aria-label={$L('GO TO PREVIOUS')}
 			data-index={index}
 			onClick={onSelect}
 		>

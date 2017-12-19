@@ -68,6 +68,72 @@ describe('SliderBase Specs', () => {
 		const actual = handleChange.calledOnce;
 
 		expect(actual).to.equal(expected);
+	});
 
+	describe('tooltip', () => {
+		it('should only show tooltip when tooltip is true and focused', function () {
+			const sliderBase = mount(
+				<SliderBase tooltip focused />
+			);
+
+			const expected = 1;
+			const actual = sliderBase.find('SliderTooltip').length;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should not show tooltip when not focused', function () {
+			const sliderBase = mount(
+				<SliderBase tooltip />
+			);
+
+			const expected = 0;
+			const actual = sliderBase.find('SliderTooltip').length;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should display custom value if children is provided', function () {
+			const customValue = 'custom value';
+			const sliderBase = mount(
+				<SliderBase tooltip focused>
+					{customValue}
+				</SliderBase>
+			);
+
+			const expected = customValue.toUpperCase();
+			const actual = sliderBase.find('SliderTooltip').text();
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should not display custom value if children is provided but not focused', function () {
+			const customValue = 'custom value';
+			const sliderBase = mount(
+				<SliderBase tooltip>
+					{customValue}
+				</SliderBase>
+			);
+
+			const expected = 0;
+			const actual = sliderBase.find('SliderTooltip').length;
+
+			expect(actual).to.equal(expected);
+		});
+
+		const CustomTooltip = () => <div />;
+
+		it('should display custom tooltip component if children is provided', function () {
+			const sliderBase = mount(
+				<SliderBase>
+					<CustomTooltip />
+				</SliderBase>
+			);
+
+			const expected = 1;
+			const actual = sliderBase.find('CustomTooltip').length;
+
+			expect(actual).to.equal(expected);
+		});
 	});
 });

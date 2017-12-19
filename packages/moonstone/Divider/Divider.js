@@ -5,13 +5,17 @@
  */
 
 import kind from '@enact/core/kind';
-import {cap} from '@enact/core/util';
-import React, {PropTypes} from 'react';
+import Uppercase from '@enact/i18n/Uppercase';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
+
+import {MarqueeDecorator} from '../Marquee';
+import Skinnable from '../Skinnable';
 
 import css from './Divider.less';
-import {MarqueeDecorator} from '../Marquee';
 
-const MarqueeH3 = MarqueeDecorator('h3');
+const MarqueeH3 = Uppercase(MarqueeDecorator('h3'));
 
 /**
  * {@link moonstone/Divider.Divider} is a simply styled component that may be used as a separator
@@ -19,6 +23,7 @@ const MarqueeH3 = MarqueeDecorator('h3');
  *
  * @class Divider
  * @memberof moonstone/Divider
+ * @mixes moonstone/MarqueeDecorator.MarqueeDecorator
  * @ui
  * @public
  */
@@ -27,6 +32,16 @@ const DividerBase = kind({
 
 	propTypes: /** @lends moonstone/Divider.Divider.prototype */ {
 		/**
+		 * Configures how the `children` string will be capitalized. By default, each word is capitalized.
+		 *
+		 * @see i18n/Uppercase#casing
+		 * @type {String}
+		 * @default 'word'
+		 * @public
+		 */
+		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
+
+		/**
 		 * The content of the divider. A divider with no children (text content) will render simply
 		 * as a horizontal line, with even spacing above and below.
 		 *
@@ -34,6 +49,16 @@ const DividerBase = kind({
 		 * @public
 		 */
 		children: PropTypes.string,
+
+		/**
+		 * The children string will have each word capitalized, unless this is set to `true`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @deprecated use `casing`
+		 * @public
+		 */
+		preserveCase: PropTypes.bool,
 
 		/**
 		 * The size of the spacing around the divider.
@@ -56,6 +81,8 @@ const DividerBase = kind({
 	},
 
 	defaultProps: {
+		casing: 'word',
+		preserveCase: false,
 		spacing: 'normal'
 	},
 
@@ -65,18 +92,24 @@ const DividerBase = kind({
 	},
 
 	computed: {
-		className: ({spacing, styler}) => styler.append(spacing),
-		content: ({children}) => children ? children.split(' ').map(cap).join(' ') : ''
+		className: ({spacing, styler}) => styler.append(spacing)
 	},
 
-	render: ({content, ...rest}) => {
+	render: ({children, ...rest}) => {
 		delete rest.spacing;
 
 		return (
-			<MarqueeH3 {...rest} marqueeOn="hover">{content}</MarqueeH3>
+			// TODO: change to `marqueeOn="render"`
+			<MarqueeH3 marqueeOn="hover" {...rest}>{children}</MarqueeH3>
 		);
 	}
 });
 
-export default DividerBase;
-export {DividerBase as Divider, DividerBase};
+const Divider = Pure(
+	Skinnable(
+		DividerBase
+	)
+);
+
+export default Divider;
+export {Divider, DividerBase};

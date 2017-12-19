@@ -2,6 +2,9 @@
  * Exports the {@link moonstone/Button.Button} and {@link moonstone/Button.ButtonBase}
  * components.  The default export is {@link moonstone/Button.Button}.
  *
+ * @example
+ * <Button small>Click me</Button>
+ *
  * @module moonstone/Button
  */
 
@@ -10,12 +13,15 @@ import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
-import Pressable from '@enact/ui/Pressable';
-import React, {PropTypes} from 'react';
+import Pure from '@enact/ui/internal/Pure';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
 import {TooltipDecorator} from '../TooltipDecorator';
+import Skinnable from '../Skinnable';
+import Touchable from '../internal/Touchable';
 
 import componentCss from './Button.less';
 
@@ -45,7 +51,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 
 	/**
 	 * {@link moonstone/Button.ButtonBase} is a stateless Button with Moonstone styling
-	 * applied. In most circumstances, you will want to use the Pressable and Spottable version:
+	 * applied. In most circumstances, you will want to use the Touchable and Spottable version:
 	 * {@link moonstone/Button.Button}
 	 *
 	 * @class ButtonBase
@@ -61,13 +67,13 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 
 			/**
 			 * The background-color opacity of this button; valid values are `'opaque'`, `'translucent'`,
-			 * and `'transparent'`.
+			 * `'lightTranslucent'`, and `'transparent'`.
 			 *
 			 * @type {String}
 			 * @default 'opaque'
 			 * @public
 			 */
-			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
+			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'lightTranslucent', 'transparent']),
 
 			/**
 			 * This property accepts one of the following color names, which correspond with the
@@ -114,6 +120,15 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			 * @public
 			 */
 			minWidth: PropTypes.bool,
+
+			/**
+			 * When `true`, the button does not animate on press
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			noAnimation: PropTypes.bool,
 
 			/**
 			 * When `true`, a pressed visual effect is applied to the button
@@ -174,8 +189,8 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 		},
 
 		computed: {
-			className: ({backgroundOpacity, color, minWidth, pressed, selected, small, styler}) => styler.append(
-				{pressed, small, minWidth, selected},
+			className: ({backgroundOpacity, color, minWidth, noAnimation, pressed, selected, small, styler}) => styler.append(
+				{pressed, small, minWidth, noAnimation, selected},
 				backgroundOpacity, color
 			),
 			icon: ({icon, small}) =>
@@ -190,15 +205,10 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 		},
 
 		render: ({children, disabled, icon, ...rest}) => {
-			// Do not add the ARIA attribute if the selected prop is omitted to avoid the potentially
-			// confusing readout for the common case of a standalone Button or IconButton.
-			if ('selected' in rest) {
-				rest['aria-pressed'] = rest.selected;
-			}
-
 			delete rest.backgroundOpacity;
 			delete rest.color;
 			delete rest.minWidth;
+			delete rest.noAnimation;
 			delete rest.pressed;
 			delete rest.selected;
 			delete rest.small;
@@ -226,8 +236,8 @@ const ButtonFactory = factory(css => {
 	const Base = ButtonBaseFactory(css);
 	/**
 	 * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
-	 * Pressable applied.  If the Button's child component is text, it will be uppercased unless
-	 * `preserveCase` is set.
+	 * Touchable applied.  If the Button's child component is text, it will be uppercased unless
+	 * `casing` is set.
 	 *
 	 * Usage:
 	 * ```
@@ -239,23 +249,46 @@ const ButtonFactory = factory(css => {
 	 * @mixes i18n/Uppercase.Uppercase
 	 * @mixes moonstone/TooltipDecorator.TooltipDecorator
 	 * @mixes moonstone/Marquee.MarqueeDecorator
-	 * @mixes ui/Pressable.Pressable
+	 * @mixes ui/Touchable.Touchable
 	 * @mixes spotlight/Spottable.Spottable
 	 * @ui
 	 * @public
 	 */
-	return Uppercase(
-		TooltipDecorator(
-			MarqueeDecorator(
-				{className: componentCss.marquee},
-				Pressable(
-					Spottable(
-						Base
+	const MoonstoneButton = Pure(
+		Uppercase(
+			TooltipDecorator(
+				MarqueeDecorator(
+					{className: componentCss.marquee},
+					Touchable(
+						Spottable(
+							Skinnable(
+								Base
+							)
+						)
 					)
 				)
 			)
 		)
 	);
+
+	MoonstoneButton.propTypes = /** @lends moonstone/Button.Button.prototype */ {
+		/**
+		 * Transformation to apply to the text of the Button. By default, text is transformed
+		 * to uppercase.
+		 *
+		 * @see i18n/Uppercase#casing
+		 * @type {String}
+		 * @default 'upper'
+		 * @public
+		 */
+		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence'])
+	};
+
+	MoonstoneButton.defaultProps = {
+		casing: 'upper'
+	};
+
+	return MoonstoneButton;
 });
 
 const ButtonBase = ButtonBaseFactory();

@@ -6,9 +6,12 @@
 
 import kind from '@enact/core/kind';
 import clamp from 'ramda/src/clamp';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 
 import {validateRange} from '../internal/validators';
+import Skinnable from '../Skinnable';
 
 import css from './ProgressBar.less';
 
@@ -95,5 +98,11 @@ const ProgressBarBase = kind({
 	}
 });
 
-export default ProgressBarBase;
-export {ProgressBarBase as ProgressBar, ProgressBarBase};
+const ProgressBar = Pure(
+	Skinnable(
+		ProgressBarBase
+	)
+);
+
+export default ProgressBar;
+export {ProgressBar, ProgressBarBase};

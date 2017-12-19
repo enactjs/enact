@@ -1,7 +1,7 @@
 import ExpandablePicker, {ExpandablePickerBase} from '@enact/moonstone/ExpandablePicker';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, select, text} from '@kadira/storybook-addon-knobs';
+import {select, text} from '@kadira/storybook-addon-knobs';
 
 import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
 
@@ -11,7 +11,6 @@ removeProps(Config, 'onPick');
 const emoticons = ['💥 boom', '😩🖐 facepalm', '🍩 doughnut', '👻 ghost', '💍 ring', '🎮 videogame', '🍌🍌 bananas'];
 
 storiesOf('ExpandablePicker')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of ExpandablePicker',

@@ -5,10 +5,13 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import Toggleable from '@enact/ui/Toggleable';
 
 import {ToggleItemBase} from '../ToggleItem';
+import Skinnable from '../Skinnable';
 
 import css from './RadioItem.less';
 
@@ -124,9 +127,13 @@ const RadioItemBase = kind({
  * @ui
  * @public
  */
-const RadioItem = Toggleable(
-	{prop: 'selected'},
-	RadioItemBase
+const RadioItem = Pure(
+	Toggleable(
+		{prop: 'selected'},
+		Skinnable(
+			RadioItemBase
+		)
+	)
 );
 
 export default RadioItem;

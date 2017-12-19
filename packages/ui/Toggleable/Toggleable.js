@@ -9,7 +9,9 @@
 import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
+
 import React from 'react';
+import PropTypes from 'prop-types';
 import warning from 'warning';
 
 /**
@@ -20,7 +22,10 @@ import warning from 'warning';
  */
 const defaultConfig = {
 	/**
-	 * Configures the event name that activates the component
+	 * Configures the event name that activates the component.
+	 *
+	 * Note: When using `activate`/`deactivate` instead of `toggle`, set `toggle` to `null` to
+	 * prevent passing the default `onToggle` prop to the wrapped component.
 	 *
 	 * @type {String}
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
@@ -28,7 +33,10 @@ const defaultConfig = {
 	activate: null,
 
 	/**
-	 * Configures the event name that deactivates the component
+	 * Configures the event name that deactivates the component.
+	 *
+	 * Note: When using `activate`/`deactivate` instead of `toggle`, set `toggle` to `null` to
+	 * prevent passing the default `onToggle` prop to the wrapped component.
 	 *
 	 * @type {String}
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
@@ -45,7 +53,7 @@ const defaultConfig = {
 	toggle: 'onToggle',
 
 	/**
-	 * Configures the property that is passed to the wrapped component when toggled
+	 * Configures the property that is passed to the wrapped component when toggled.
 	 *
 	 * @type {String}
 	 * @default 'active'
@@ -79,7 +87,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			[defaultPropKey]: React.PropTypes.bool,
+			[defaultPropKey]: PropTypes.bool,
 
 			/**
 			 * Current toggled state. When set at construction, the component is considered
@@ -90,7 +98,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Boolean}
 			 * @public
 			 */
-			[prop]: React.PropTypes.bool,
+			[prop]: PropTypes.bool,
 
 			/**
 			 * Event callback to notify that state should be toggled.
@@ -98,7 +106,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Function}
 			 * @public
 			 */
-			[toggle]: React.PropTypes.func,
+			[toggle]: PropTypes.func,
 
 			/**
 			 * Whether or not the component is in a disabled state.
@@ -106,7 +114,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Boolean}
 			 * @public
 			 */
-			disabled: React.PropTypes.bool
+			disabled: PropTypes.bool
 		}
 
 		static defaultProps = {

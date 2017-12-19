@@ -5,6 +5,13 @@ import Picker from '../Picker';
 import PickerItem from '../PickerItem';
 import css from '../Picker.less';
 
+const tap = (node) => {
+	node.simulate('mousedown');
+	node.simulate('mouseup');
+};
+const decrement = (slider) => tap(slider.find('IconButton').last());
+const increment = (slider) => tap(slider.find('IconButton').first());
+
 describe('Picker Specs', function () {
 
 	it('should have a default \'value\' of 0', function () {
@@ -13,18 +20,18 @@ describe('Picker Specs', function () {
 		);
 
 		const expected = 0;
-		const actual = picker.prop('value');
+		const actual = picker.find('Picker').prop('value');
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should return an object \{value: Number\} that represents the next value of the Picker component when clicking the increment \<span\>', function () {
+	it('should return an object {value: Number} that represents the next value of the Picker component when pressing the increment <span>', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
 			<Picker onChange={handleChange} min={-1} max={1} value={0} index={0} />
 		);
 
-		picker.find(`.${css.incrementer}`).simulate('click');
+		increment(picker);
 
 		const expected = 1;
 		const actual = handleChange.args[0][0].value;
@@ -32,13 +39,13 @@ describe('Picker Specs', function () {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should return an object \{value: Number\} that represents the next value of the Picker component when clicking the decrement \<span\>', function () {
+	it('should return an object {value: Number} that represents the next value of the Picker component when pressing the decrement <span>', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
 			<Picker onChange={handleChange} min={-1} max={1} value={0} index={0} />
 		);
 
-		picker.find(`.${css.decrementer}`).simulate('click');
+		decrement(picker);
 
 		const expected = -1;
 		const actual = handleChange.args[0][0].value;
@@ -52,7 +59,7 @@ describe('Picker Specs', function () {
 			<Picker onChange={handleChange} disabled min={0} max={0} value={0} index={0} />
 		);
 
-		picker.find(`.${css.incrementer}`).simulate('click');
+		increment(picker);
 
 		const expected = false;
 		const actual = handleChange.called;
@@ -66,7 +73,7 @@ describe('Picker Specs', function () {
 			<Picker onChange={handleChange} wrap min={-1} max={0} value={0} index={0} />
 		);
 
-		picker.find(`.${css.incrementer}`).simulate('click');
+		increment(picker);
 
 		const expected = -1;
 		const actual = handleChange.args[0][0].value;
@@ -80,7 +87,7 @@ describe('Picker Specs', function () {
 			<Picker onChange={handleChange} wrap min={0} max={1} value={0} index={0} />
 		);
 
-		picker.find(`.${css.decrementer}`).simulate('click');
+		decrement(picker);
 
 		const expected = 1;
 		const actual = handleChange.args[0][0].value;
@@ -93,10 +100,10 @@ describe('Picker Specs', function () {
 		const picker = mount(
 			<Picker onChange={handleChange} step={3} min={0} max={6} value={0} index={0} />
 		);
-		const button = picker.find(`.${css.incrementer}`);
+
+		increment(picker);
 
 		const expected = 3;
-		button.simulate('click');
 		const actual = handleChange.args[0][0].value;
 
 		expect(actual).to.equal(expected);
@@ -107,10 +114,10 @@ describe('Picker Specs', function () {
 		const picker = mount(
 			<Picker onChange={handleChange} step={3} min={0} max={3} value={3} index={0} />
 		);
-		const button = picker.find(`.${css.decrementer}`);
+
+		decrement(picker);
 
 		const expected = 0;
-		button.simulate('click');
 		const actual = handleChange.args[0][0].value;
 
 		expect(actual).to.equal(expected);
@@ -122,7 +129,7 @@ describe('Picker Specs', function () {
 			<Picker onChange={handleChange} wrap step={3} min={0} max={3} value={3} index={0} />
 		);
 
-		picker.find(`.${css.incrementer}`).simulate('click');
+		increment(picker);
 
 		const expected = 0;
 		const actual = handleChange.args[0][0].value;
@@ -136,7 +143,7 @@ describe('Picker Specs', function () {
 			<Picker onChange={handleChange} wrap step={3} min={0} max={9} value={0} index={0} />
 		);
 
-		picker.find(`.${css.decrementer}`).simulate('click');
+		decrement(picker);
 
 		const expected = 9;
 		const actual = handleChange.args[0][0].value;

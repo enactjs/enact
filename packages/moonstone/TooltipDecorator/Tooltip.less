@@ -1,7 +1,8 @@
 // Tooltip.less
-@import '../styles/colors.less';
+//
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
 .tooltip {
 	position: absolute;
@@ -10,7 +11,6 @@
 		position: absolute;
 		width: @moon-tooltip-point-width;
 		height: @moon-tooltip-point-height;
-		fill: @moon-tooltip-bg-color;
 		transform-origin: top left;
 	}
 
@@ -19,8 +19,6 @@
 		line-height: @moon-tooltip-label-height;
 		white-space: nowrap;
 		padding: @moon-spotlight-outset @moon-tooltip-h-padding;
-		color: @moon-tooltip-text-color;
-		background-color: @moon-tooltip-bg-color;
 		border-radius: @moon-tooltip-border-radius;
 
 		:global(.enact-locale-right-to-left) & {
@@ -29,13 +27,14 @@
 
 		&.multi {
 			white-space: normal;
+			.locale-japanese-line-break();
 		}
 	}
 
 	&.below {
 		&.rightArrow {
 			.tooltipArrow {
-				transform: rotate(-90deg);
+				transform: translateY(1%) rotate(-90deg);
 				left: 0;
 			}
 
@@ -46,7 +45,7 @@
 
 		&.leftArrow {
 			.tooltipArrow {
-				transform: translateX(100%) rotate(-90deg) scaleY(-1);
+				transform: translate(100%, 1%) rotate(-90deg) scaleY(-1);
 				right: 0;
 			}
 
@@ -58,8 +57,8 @@
 
 		&.centerArrow {
 			.tooltipArrow {
-				transform: rotate(-90deg) translateY(-50%);
-				left: 50%
+				transform: rotate(-90deg) translate(-1%, -50%);
+				left: 50%;
 			}
 		}
 	}
@@ -67,7 +66,7 @@
 	&.above {
 		&.rightArrow {
 			.tooltipArrow {
-				transform: translateY(100%) rotate(-90deg) scaleX(-1);
+				transform: translateY(99%) rotate(-90deg) scaleX(-1);
 				left: 0;
 				bottom: 0;
 			}
@@ -79,7 +78,7 @@
 
 		&.leftArrow {
 			.tooltipArrow {
-				transform: translate(100%, 100%) rotate(90deg);
+				transform: translate(100%, 99%) rotate(90deg);
 				bottom: 0;
 				right: 0;
 			}
@@ -92,7 +91,7 @@
 
 		&.centerArrow {
 			.tooltipArrow {
-				transform: rotate(90deg) translateY(-50%);
+				transform: rotate(90deg) translate(-1%, -50%);
 				left: 50%;
 				top: 100%;
 			}
@@ -102,7 +101,7 @@
 	&.left {
 		&.topArrow {
 			.tooltipArrow {
-				transform: translate(100%,100%) scaleY(-1);
+				transform: translate(99%, 100%) scaleY(-1);
 				bottom: 0;
 				right: 0;
 			}
@@ -114,7 +113,7 @@
 
 		&.bottomArrow {
 			.tooltipArrow {
-				transform: translateX(100%);
+				transform: translateX(99%);
 				right: 0;
 			}
 
@@ -135,7 +134,7 @@
 	&.right {
 		&.topArrow {
 			.tooltipArrow {
-				transform: rotate(180deg);
+				transform: translateX(1%) rotate(180deg);
 				top: 100%;
 				left: 0;
 			}
@@ -147,7 +146,7 @@
 
 		&.bottomArrow {
 			.tooltipArrow {
-				transform: scaleX(-1);
+				transform: translateX(1%) scaleX(-1);
 				left: 0;
 			}
 
@@ -164,4 +163,16 @@
 			}
 		}
 	}
+
+	// Skin colors
+	.applySkins({
+		.tooltipArrow {
+			fill: @moon-tooltip-bg-color;
+		}
+
+		.tooltipLabel {
+			color: @moon-tooltip-text-color;
+			background-color: @moon-tooltip-bg-color;
+		}
+	});
 }

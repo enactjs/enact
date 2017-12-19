@@ -4,22 +4,33 @@
  * @module moonstone/IncrementSlider
  */
 
-import $L from '@enact/i18n/$L';
-import Changeable from '@enact/ui/Changeable';
+import {extractAriaProps} from '@enact/core/util';
 import factory from '@enact/core/factory';
+import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
-import Pressable from '@enact/ui/Pressable';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import Spottable from '@enact/spotlight/Spottable';
 
+import IdProvider from '../internal/IdProvider';
+import $L from '../internal/$L';
+import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator';
+import Skinnable from '../Skinnable';
 import {SliderBaseFactory} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
+import Touchable from '../internal/Touchable';
 
 import IncrementSliderButton from './IncrementSliderButton';
 import componentCss from './IncrementSlider.less';
 
+const isDown = is('down');
+const isLeft = is('left');
+const isRight = is('right');
+const isUp = is('up');
+
 const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
-	const Slider = Spottable(SliderBaseFactory({css}));
+	const Slider = Touchable({activeProp: 'pressed'}, Spottable(Skinnable(SliderBaseFactory({css}))));
 
 	/**
 	 * {@link moonstone/IncrementSlider.IncrementSliderBase} is a stateless Slider
@@ -38,6 +49,35 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 		propTypes: /** @lends moonstone/IncrementSlider.IncrementSliderBase.prototype */ {
 			/**
+			 * When `true`, prevents read out of both the slider and the increment and decrement
+			 * buttons.
+			 *
+			 * @type {Boolean}
+			 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
+			 * @public
+			 */
+			'aria-hidden': PropTypes.bool,
+
+			/**
+			 * Overrides the `aria-valuetext` for the slider. By default, `aria-valuetext` is set
+			 * to the current value. This should only be used when the parent controls the value of
+			 * the slider directly through the props.
+			 *
+			 * @type {String|Number}
+			 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
+			 * @public
+			 */
+			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+			/**
+			 * When `true`, the knob displays selected and can be moved using 5-way controls.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			active: PropTypes.bool,
+
+			/**
 			 * Background progress, as a proportion between `0` and `1`.
 			 *
 			 * @type {Number}
@@ -47,6 +87,15 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			backgroundProgress: PropTypes.number,
 
 			/**
+			 * The custom value or component for the tooltip. If [tooltip]{@link moonstone/Slider.SliderBase#tooltip},
+			 * is `true`, then it will use built-in tooltip with given a string. If `false`, a custom tooltip
+			 * component, which follows the knob, may be used instead.
+			 *
+			 * @type {String|Node}
+			 */
+			children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+
+			/**
 			 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
 			 * supported. Without a custom icon, the default is used, and is automatically changed when
 			 * [vertical]{moonstone/IncrementSlider#vertical} is changed.
@@ -54,16 +103,40 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @type {String}
 			 * @public
 			 */
-			decrementIcon: React.PropTypes.string,
+			decrementIcon: PropTypes.string,
+
+			/**
+			 * The slider can change its behavior to have the knob follow the cursor as it moves
+			 * across the slider, without applying the position. A click or drag behaves the same.
+			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			detachedKnob: PropTypes.bool,
 
 			/**
 			 * When `true`, the component is shown as disabled and does not generate events
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			disabled: PropTypes.bool,
+
+			/**
+			 * When `true`, the tooltip is shown when present
+			 * @type {Boolean}
+			 * @public
+			 */
+			focused: PropTypes.bool,
+
+			/**
+			 * The slider id reference for setting aria-controls.
+			 *
+			 * @type {String}
+			 * @private
+			 */
+			id: PropTypes.string,
 
 			/**
 			 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -73,7 +146,25 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @type {String}
 			 * @public
 			 */
-			incrementIcon: React.PropTypes.string,
+			incrementIcon: PropTypes.string,
+
+			/**
+			 * The method to run when the input mounts, giving a reference to the DOM.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			inputRef: PropTypes.func,
+
+			/**
+			* When not `vertical`, determines which side of the knob the tooltip appears on.
+			* When `false`, the tooltip will be on the left side, when `true`, the tooltip will
+			* be on the right.
+			*
+			* @type {String}
+			* @private
+			*/
+			knobAfterMidpoint: PropTypes.bool,
 
 			/**
 			 * The maximum value of the increment slider.
@@ -92,6 +183,22 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			min: PropTypes.number,
+
+			/**
+			 * When `true`, the slider bar doesn't show a fill and doesn't highlight when spotted
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			noFill: PropTypes.bool,
+
+			/**
+			 * The handler when the knob is activated or deactivated by selecting it via 5-way
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onActivate: PropTypes.func,
 
 			/**
 			 * The handler to run when the value is changed.
@@ -113,6 +220,14 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onDecrement: PropTypes.func,
 
 			/**
+			 * The handler to run when the decrement button becomes disabled
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			onDecrementSpotlightDisappear: PropTypes.func,
+
+			/**
 			 * The handler to run when the value is incremented.
 			 *
 			 * @type {Function}
@@ -120,6 +235,14 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			onIncrement: PropTypes.func,
+
+			/**
+			 * The handler to run when the increment button becomes disabled
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			onIncrementSpotlightDisappear: PropTypes.func,
 
 			/**
 			 * The handler to run when the component is removed while retaining focus.
@@ -131,10 +254,71 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onSpotlightDisappear: PropTypes.func,
 
 			/**
+			 * The handler to run prior to focus leaving the component when the 5-way down key is pressed.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightDown: PropTypes.func,
+
+			/**
+			 * The handler to run prior to focus leaving the component when the 5-way left key is pressed.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightLeft: PropTypes.func,
+
+			/**
+			 * The handler to run prior to focus leaving the component when the 5-way right key is pressed.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightRight: PropTypes.func,
+
+			/**
+			 * The handler to run prior to focus leaving the component when the 5-way up key is pressed.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightUp: PropTypes.func,
+
+			/**
+			 * `scrubbing` only has an effect with a detachedKnob, and is a performance optimization
+			 * to not allow re-assignment of the knob's value (and therefore position) during direct
+			 * user interaction.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			scrubbing: PropTypes.bool,
+
+			/**
+			 * The method to run when the slider bar component mounts, giving a reference to the DOM.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			sliderBarRef: PropTypes.func,
+
+			/**
+			 * The method to run when mounted, giving a reference to the DOM.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			sliderRef: PropTypes.func,
+
+			/**
 			 * When `true`, the component cannot be navigated using spotlight.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			spotlightDisabled: PropTypes.bool,
@@ -155,7 +339,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * a custom tooltip is provided.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			tooltip: PropTypes.bool,
@@ -165,18 +348,16 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * The percentage respects the min and max value props.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			tooltipAsPercent: PropTypes.bool,
 
 			/**
 			 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale
-			 * changes. This may be useful if you have a static layout that does not automatically
-			 * reverse when in an RTL language.
+			 * changes for `vertical` sliders. This may be useful if you have a static layout that
+			 * does not automatically reverse when in an RTL language.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			tooltipForceSide: PropTypes.bool,
@@ -209,7 +390,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			* If `true` the increment slider will be oriented vertically.
 			*
 			* @type {Boolean}
-			* @default false
 			* @public
 			*/
 			vertical: PropTypes.bool
@@ -217,9 +397,10 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 		defaultProps: {
 			backgroundProgress: 0,
+			knobAfterMidpoint: false,
 			max: 100,
 			min: 0,
-			pressed: false,
+			noFill: false,
 			spotlightDisabled: false,
 			step: 1,
 			tooltip: false,
@@ -228,6 +409,60 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			tooltipSide: 'before',
 			value: 0,
 			vertical: false
+		},
+
+		handlers: {
+			handleDecrementKeyDown: (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, vertical}) => {
+				const {keyCode} = ev;
+
+				if (isLeft(keyCode) && onSpotlightLeft) {
+					onSpotlightLeft(ev);
+				} else if (isDown(keyCode) && onSpotlightDown) {
+					onSpotlightDown(ev);
+				} else if (isRight(keyCode) && onSpotlightRight && vertical) {
+					onSpotlightRight(ev);
+				} else if (isUp(keyCode) && onSpotlightUp && !vertical) {
+					onSpotlightUp(ev);
+				}
+			},
+			handleIncrementKeyDown: (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, vertical}) => {
+				const {keyCode} = ev;
+
+				if (isRight(keyCode) && onSpotlightRight) {
+					onSpotlightRight(ev);
+				} else if (isUp(keyCode) && onSpotlightUp) {
+					onSpotlightUp(ev);
+				} else if (isLeft(keyCode) && onSpotlightLeft && vertical) {
+					onSpotlightLeft(ev);
+				} else if (isDown(keyCode) && onSpotlightDown && !vertical) {
+					onSpotlightDown(ev);
+				}
+			},
+			handleSliderKeyDown: (ev, {min, max, value, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, vertical}) => {
+				const {keyCode} = ev;
+				const isMin = value <= min;
+				const isMax = value >= max;
+
+				if (vertical) {
+					if (isLeft(keyCode) && onSpotlightLeft) {
+						onSpotlightLeft(ev);
+					} else if (isRight(keyCode) && onSpotlightRight) {
+						onSpotlightRight(ev);
+					} else if (isDown(keyCode) && isMin && onSpotlightDown) {
+						onSpotlightDown(ev);
+					} else if (isUp(keyCode) && isMax && onSpotlightUp) {
+						onSpotlightUp(ev);
+					}
+				} else if (isLeft(keyCode) && isMin && onSpotlightLeft) {
+					onSpotlightLeft(ev);
+				} else if (isRight(keyCode) && isMax && onSpotlightRight) {
+					onSpotlightRight(ev);
+				} else if (isDown(keyCode) && onSpotlightDown) {
+					onSpotlightDown(ev);
+				} else if (isUp(keyCode) && onSpotlightUp) {
+					onSpotlightUp(ev);
+				}
+			}
 		},
 
 		styles: {
@@ -241,42 +476,125 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
 			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
-			decrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to decrease the value')}`),
-			incrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to increase the value')}`)
+			decrementAriaLabel: ({'aria-valuetext': valueText, disabled, min, value}) => !(disabled || value <= min) ? (`${valueText != null ? valueText : value} ${$L('press ok button to decrease the value')}`) : null,
+			incrementAriaLabel: ({'aria-valuetext': valueText, disabled, max, value}) => !(disabled || value >= max) ? (`${valueText != null ? valueText : value} ${$L('press ok button to increase the value')}`) : null
 		},
 
-		render: ({decrementAriaLabel, decrementDisabled, decrementIcon, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, onIncrement, onDecrement, onSpotlightDisappear, spotlightDisabled, ...rest}) => (
-			<div className={incrementSliderClasses}>
-				<IncrementSliderButton
-					aria-label={decrementAriaLabel}
-					className={css.decrementButton}
-					disabled={decrementDisabled}
-					onClick={onDecrement}
-					onSpotlightDisappear={onSpotlightDisappear}
-					spotlightDisabled={spotlightDisabled}
-				>
-					{decrementIcon}
-				</IncrementSliderButton>
-				<Slider
-					{...rest}
-					className={css.slider}
-					onDecrement={onDecrement}
-					onIncrement={onIncrement}
-					onSpotlightDisappear={onSpotlightDisappear}
-					spotlightDisabled={spotlightDisabled}
-				/>
-				<IncrementSliderButton
-					aria-label={incrementAriaLabel}
-					className={css.incrementButton}
-					disabled={incrementDisabled}
-					onClick={onIncrement}
-					onSpotlightDisappear={onSpotlightDisappear}
-					spotlightDisabled={spotlightDisabled}
-				>
-					{incrementIcon}
-				</IncrementSliderButton>
-			</div>
-		)
+		render: ({active,
+			'aria-hidden': ariaHidden,
+			backgroundProgress,
+			children,
+			decrementAriaLabel,
+			decrementDisabled,
+			decrementIcon,
+			detachedKnob,
+			disabled,
+			focused,
+			handleDecrementKeyDown,
+			handleIncrementKeyDown,
+			handleSliderKeyDown,
+			id,
+			incrementAriaLabel,
+			incrementDisabled,
+			incrementIcon,
+			incrementSliderClasses,
+			inputRef,
+			knobAfterMidpoint,
+			max,
+			min,
+			noFill,
+			onActivate,
+			onChange,
+			onDecrement,
+			onDecrementSpotlightDisappear,
+			onIncrement,
+			onIncrementSpotlightDisappear,
+			onSpotlightDisappear,
+			scrubbing,
+			sliderBarRef,
+			sliderRef,
+			spotlightDisabled,
+			step,
+			tooltip,
+			tooltipAsPercent,
+			tooltipForceSide,
+			tooltipSide,
+			value,
+			vertical,
+			...rest
+		}) => {
+			const ariaProps = extractAriaProps(rest);
+			delete rest.onSpotlightDown;
+			delete rest.onSpotlightLeft;
+			delete rest.onSpotlightRight;
+			delete rest.onSpotlightUp;
+
+			return (
+				<div {...rest} className={incrementSliderClasses}>
+					<IncrementSliderButton
+						aria-controls={!incrementDisabled ? id : null}
+						aria-hidden={ariaHidden}
+						aria-label={decrementAriaLabel}
+						className={css.decrementButton}
+						disabled={decrementDisabled}
+						onTap={onDecrement}
+						onKeyDown={handleDecrementKeyDown}
+						onSpotlightDisappear={onDecrementSpotlightDisappear}
+						spotlightDisabled={spotlightDisabled}
+					>
+						{decrementIcon}
+					</IncrementSliderButton>
+					<Slider
+						{...ariaProps}
+						active={active}
+						aria-hidden={ariaHidden}
+						backgroundProgress={backgroundProgress}
+						className={css.slider}
+						detachedKnob={detachedKnob}
+						disabled={disabled}
+						focused={focused}
+						id={id}
+						inputRef={inputRef}
+						knobAfterMidpoint={knobAfterMidpoint}
+						max={max}
+						min={min}
+						noFill={noFill}
+						onActivate={onActivate}
+						onChange={onChange}
+						onDecrement={onDecrement}
+						onIncrement={onIncrement}
+						onKeyDown={handleSliderKeyDown}
+						onSpotlightDisappear={onSpotlightDisappear}
+						scrubbing={scrubbing}
+						sliderBarRef={sliderBarRef}
+						sliderRef={sliderRef}
+						spotlightDisabled={spotlightDisabled}
+						step={step}
+						tooltip={tooltip}
+						tooltipAsPercent={tooltipAsPercent}
+						tooltipForceSide={tooltipForceSide}
+						tooltipSide={tooltipSide}
+						value={value}
+						vertical={vertical}
+					>
+						{children}
+					</Slider>
+					<IncrementSliderButton
+						aria-controls={!decrementDisabled ? id : null}
+						aria-hidden={ariaHidden}
+						aria-label={incrementAriaLabel}
+						className={css.incrementButton}
+						disabled={incrementDisabled}
+						onTap={onIncrement}
+						onKeyDown={handleIncrementKeyDown}
+						onSpotlightDisappear={onIncrementSpotlightDisappear}
+						spotlightDisabled={spotlightDisabled}
+					>
+						{incrementIcon}
+					</IncrementSliderButton>
+				</div>
+			);
+		}
 	});
 });
 
@@ -285,7 +603,7 @@ const IncrementSliderFactory = factory((config) => {
 
 	/**
 	 * {@link moonstone/IncrementSlider.IncrementSlider} is an IncrementSlider with
-	 * Moonstone styling, Changeable, Pressable and SliderDecorator applied with IconButtons to
+	 * Moonstone styling and SliderDecorator applied with IconButtons to
 	 * increment and decrement the value.
 	 *
 	 * By default, `IncrementSlider` maintains the state of its `value` property. Supply the
@@ -295,15 +613,20 @@ const IncrementSliderFactory = factory((config) => {
 	 *
 	 * @class IncrementSlider
 	 * @memberof moonstone/IncrementSlider
-	 * @mixes ui/Changeable.Changeable
-	 * @mixes ui/Pressable.Pressable
 	 * @ui
 	 * @public
 	 */
-	return Changeable(
-		Pressable(
+	return Pure(
+		IdProvider(
+			{generateProp: null, prefix: 's_'},
 			SliderDecorator(
-				Base
+				DisappearSpotlightDecorator(
+					{events: {
+						onIncrementSpotlightDisappear: `.${componentCss.decrementButton}`,
+						onDecrementSpotlightDisappear: `.${componentCss.incrementButton}`
+					}},
+					Base
+				)
 			)
 		)
 	);

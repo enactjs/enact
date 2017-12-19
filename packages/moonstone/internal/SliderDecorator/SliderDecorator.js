@@ -5,20 +5,24 @@
  * @private
  */
 
-import $L from '@enact/i18n/$L';
+import {contextTypes} from '@enact/core/internal/PubSub';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import Spotlight from '@enact/spotlight';
 import clamp from 'ramda/src/clamp';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {forward} from '@enact/core/handle';
 
+import $L from '../$L';
 import {validateRange} from '../validators';
 
 import {
 	computeProportionProgress,
 	computeBarTransform,
-	computeKnobTransform
+	computeKnobTransform,
+	getDecimalDigits,
+	parseNumber
 } from './util';
 
 /**
@@ -42,9 +46,12 @@ const defaultConfig = {
 // Set-up event forwarding
 const forwardBlur = forward('onBlur');
 const forwardChange = forward('onChange');
-const forwardClick = forward('onClick');
-const forwardMouseMove = forward('onMouseMove');
+const forwardFocus = forward('onFocus');
+const forwardMouseDown = forward('onMouseDown');
+const forwardMouseEnter = forward('onMouseEnter');
 const forwardMouseLeave  = forward('onMouseLeave');
+const forwardMouseMove = forward('onMouseMove');
+const forwardMouseUp = forward('onMouseUp');
 
 /**
  * {@link moonstone/internal/SliderDecorator.SliderDecorator} is a Higher-order Component that
@@ -61,7 +68,20 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class SliderDecoratorClass extends React.Component {
 		static displayName = 'SliderDecorator';
 
+		static contextTypes = contextTypes
+
 		static propTypes = /** @lends moonstone/internal/SliderDecorator.SliderDecorator.prototype */{
+			/**
+			 * Overrides the `aria-valuetext` for the slider. By default, `aria-valuetext` is set
+			 * to the current value. This should only be used when the parent controls the value of
+			 * the slider directly through the props.
+			 *
+			 * @type {String|Number}
+			 * @memberof moonstone/internal/SliderDecorator.SliderDecorator.prototype
+			 * @public
+			 */
+			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
 			/**
 			 * Background progress, as a proportion between `0` and `1`.
 			 *
@@ -72,12 +92,19 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			backgroundProgress: PropTypes.number,
 
 			/**
+			 * Default value applied at construction when the value prop is `undefined` or `null`.
+			 *
+			 * @type {Number}
+			 * @public
+			 */
+			defaultValue: PropTypes.number,
+
+			/**
 			 * The slider can change its behavior to have the knob follow the cursor as it moves
 			 * across the slider, without applying the position. A click or drag behaves the same.
 			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @private
 			 */
 			detachedKnob: PropTypes.bool,
@@ -86,7 +113,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * When `true`, the component is shown as disabled and does not generate events
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			disabled: PropTypes.bool,
@@ -145,15 +171,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			onKnobMove: PropTypes.func,
 
 			/**
-			 * When `true`, a pressed visual effect is applied
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			pressed: PropTypes.bool,
-
-			/**
 			 * The amount to increment or decrement the value.
 			 *
 			 * @type {Number}
@@ -161,6 +178,14 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			step: PropTypes.number,
+
+			/**
+			 * Enables the built-in tooltip.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			tooltip: PropTypes.bool,
 
 			/**
 			 * The value of the slider.
@@ -175,7 +200,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * If `true` the slider will be oriented vertically.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			vertical: PropTypes.bool
@@ -185,23 +209,38 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			max: 100,
 			min: 0,
 			step: 1,
-			pressed: false,
-			value: 0,
 			vertical: false
 		};
 
 		constructor (props) {
 			super(props);
 
-			this.current5WayValue = null;
+			this.detachedValue = null;
 			this.knobPosition = null;
 			this.normalizeBounds(props);
+			this.detachedKnobPosition = 0;
+			this.willChange = false;
+			this.prevValue = null; // temp value stored for mouse down and drag
+			this.stepDecimalDigits = getDecimalDigits(props.step);
 
-			const value = this.clamp(props.value);
+			let value, controlled = false;
+
+			if (props.value != null) {
+				controlled = true;
+				this.changedControlledValue = value = props.value;
+			} else {
+				value = props.defaultValue || 0;
+			}
+
+			const valueText = props['aria-valuetext'] != null ? props['aria-valuetext'] : value;
+
 			this.state = {
 				active: false,
-				value: value,
-				valueText: value
+				controlled,
+				knobAfterMidpoint: false,
+				focused: false,
+				value: this.clamp(value),
+				valueText
 			};
 
 			if (__DEV__) {
@@ -211,20 +250,31 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		componentWillMount () {
+			if (this.context.Subscriber) {
+				this.context.Subscriber.subscribe('resize', this.handleResize);
+			}
+		}
+
 		componentDidMount () {
 			this.updateUI();
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const {backgroundProgress, max, min, value} = nextProps;
+			const {'aria-valuetext': ariaValueText, backgroundProgress, max, min, step, value} = nextProps;
 
-			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value)) {
+			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value) || (ariaValueText !== this.state.valueText)) {
 				this.normalizeBounds(nextProps);
-				const clampedValue = this.clamp(value);
+				const clampedValue = this.clamp(this.state.controlled ? value : this.state.value);
+				const valueText = ariaValueText != null ? ariaValueText : clampedValue;
 				this.setState({
 					value: clampedValue,
-					valueText: clampedValue
+					valueText: valueText
 				});
+			}
+
+			if (this.props.step !== step) {
+				this.stepDecimalDigits = getDecimalDigits(step);
 			}
 
 			if (__DEV__) {
@@ -240,6 +290,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillUnmount () {
 			this.updateValueJob.stop();
+			if (this.context.Subscriber) {
+				this.context.Subscriber.unsubscribe('resize', this.handleResize);
+			}
 		}
 
 		normalizeBounds (props) {
@@ -252,12 +305,24 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		updateValueJob = new Job((value) => {
+			const valueText = this.props['aria-valuetext'] != null ? this.props['aria-valuetext'] : value;
 			this.inputNode.value = value;
+			if (this.state.controlled) {
+				// FIXME: Temporarily store value for mouse down to properly fire `onChange` for controlled slider.
+				// The value will not change as componentWillReceiveProps sets state again with props.value, however
+				// the "changed" value needs to be fired on mouse up.
+				this.changedControlledValue = value;
+			}
+
 			this.setState({
 				value,
-				valueText: value
+				valueText
 			});
-			forwardChange({value}, this.props);
+			if (this.willChange) {
+				forwardChange({value}, this.props);
+				this.willChange = false;
+				this.prevValue = value;
+			}
 		}, config.changeDelay)
 
 		throttleUpdateValue = (value) => {
@@ -269,13 +334,36 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		moveKnobByAmount (amount) {
-			const value = this.current5WayValue === null ? this.state.value : this.current5WayValue;
-			this.current5WayValue = this.clamp(value + amount);
+			const value = this.detachedValue === null ? this.state.value : this.detachedValue;
+			this.detachedValue = this.clamp(value + amount);
 			this.knobPosition = computeProportionProgress({
 				max: this.normalizedMax,
 				min: this.normalizedMin,
-				value: this.current5WayValue
+				value: this.detachedValue
 			});
+			this.updateUI();
+		}
+
+		detachKnob () {
+			this.moveKnobByAmount(0);
+		}
+
+		moveKnobByPointer (position) {
+			const node = this.sliderBarNode.node;
+
+			// Don't let the positional value exceed the bar width, and account for the dead-space padding
+			const min = parseFloat(window.getComputedStyle(this.inputNode).paddingLeft);
+			const pointer = position - this.inputNode.getBoundingClientRect().left;
+			const knob = (clamp(min, min + node.offsetWidth, pointer) - min) / node.offsetWidth;
+			const knobValue = (this.normalizedMax - this.normalizedMin) * knob;
+			this.detachedValue = knobValue - knobValue % this.props.step;
+			if (this.stepDecimalDigits !== 0) {
+				this.detachedValue = parseNumber(this.detachedValue.toFixed(this.stepDecimalDigits));
+			}
+
+			// Update our instance's knowledge of where the knob should be
+			this.knobPosition = knob;
+
 			this.updateUI();
 		}
 
@@ -286,13 +374,27 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {value} = this.state;
 			const proportionProgress = computeProportionProgress({value, max: this.normalizedMax, min: this.normalizedMin});
 			const knobProgress = this.knobPosition != null ? this.knobPosition : proportionProgress;
+			const currentKnobAfterMidpoint = knobProgress > 0.5;
 
 			loaderNode.style.transform = computeBarTransform(backgroundProgress, vertical);
 			barNode.style.transform = computeBarTransform(proportionProgress, vertical);
 			// If we know the knob should be in a custom place, use that place; otherwise, sync it with the progress.
 			knobNode.style.transform = computeKnobTransform(knobProgress, vertical, node);
-			knobNode.dataset.climax = knobProgress > 0.5 ? 'falling' : 'rising';
-			this.notifyKnobMove(knobProgress, knobProgress !== proportionProgress);
+			// Cannot upgrade `transform` to the newer, faster `setProperty` due to lack of support from PhantomJS
+			// const knobTransform = computeKnobTransform(knobProgress, vertical, node);
+			// knobNode.style.setProperty('transform', knobTransform);
+			knobNode.style.setProperty('--knob-progress', knobProgress);
+			knobNode.dataset.knobAfterMidpoint = currentKnobAfterMidpoint ? 'true' : 'false';
+
+			if (currentKnobAfterMidpoint !== this.state.knobAfterMidpoint && this.props.tooltip) {
+				// This dictates tooltip's correct left/right positioning
+				this.setState({knobAfterMidpoint: currentKnobAfterMidpoint});
+			}
+
+			if (knobProgress !== this.detachedKnobPosition) {
+				this.notifyKnobMove(knobProgress, knobProgress !== proportionProgress);
+				this.detachedKnobPosition = knobProgress;
+			}
 		}
 
 		getInputNode = (node) => {
@@ -317,70 +419,97 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		handleResize = () => {
+			if (this.sliderBarNode) {
+				this.updateUI();
+			}
+		}
+
 		handleChange = (ev) => {
+			// If disable or not tracking the value (this.prevValue == null), onChange shouldn't be
+			// emitted
 			if (this.props.disabled) return;
 
 			ev.preventDefault();
-			const parseFn = (ev.target.value % 1 !== 0) ? parseFloat : parseInt,
-				value = parseFn(ev.target.value);
-			this.throttleUpdateValue(value);
+			ev.stopPropagation(); // we don't want input's onChange synthetic event to propagate
 
+			const value = parseNumber(ev.target.value);
+			this.throttleUpdateValue(value);
+		}
+
+		handleMouseDown = (ev) => {
+			forwardMouseDown(ev, this.props);
+			this.prevValue = this.state.value;
+		}
+
+		handleMouseEnter = (ev) => {
+			forwardMouseEnter(ev, this.props);
+
+			if (!this.props.detachedKnob || this.props.disabled || this.props.vertical) return;
+
+			this.moveKnobByPointer(ev.clientX);
 		}
 
 		handleMouseMove = (ev) => {
 			forwardMouseMove(ev, this.props);
+			this.willChange = Boolean(ev.buttons); // if detached knob is dragging, it fires onChange
 
-			// We don't want to run this code if any mouse button is being held down. That indicates dragging.
-			if (this.props.disabled || ev.buttons || this.props.vertical) return;
+			if (!this.props.detachedKnob || this.props.disabled || this.props.vertical) return;
 
-			const node = this.sliderBarNode.node;
-
-			// Don't let the positional value exceed the bar width, and account for the dead-space padding
-			const min = parseFloat(window.getComputedStyle(this.inputNode).paddingLeft);
-			const pointer = ev.clientX - this.inputNode.getBoundingClientRect().left;
-			const knob = (clamp(min, min + node.offsetWidth, pointer) - min) / node.offsetWidth;
-
-			this.current5WayValue = (this.normalizedMax - this.normalizedMin) * knob;
-
-			// Update our instance's knowledge of where the knob should be
-			this.knobPosition = knob;
-
-			this.updateUI();
+			this.moveKnobByPointer(ev.clientX);
 		}
 
 		handleMouseLeave = (ev) => {
 			forwardMouseLeave(ev, this.props);
 
-			if (this.props.disabled) return;
+			if (!this.props.detachedKnob || this.props.disabled) return;
 
 			this.knobPosition = null;
 			this.updateUI();
 		}
 
-		handleClick = (ev) => {
-			forwardClick(ev, this.props);
+		handleMouseUp = (ev) => {
+			forwardMouseUp(ev, this.props);
 
-			if (!this.props.disabled && Spotlight.getCurrent() !== this.sliderNode) {
-				Spotlight.focus(this.sliderNode);
+			if (!this.props.disabled) {
+				if (Spotlight.getCurrent() !== this.sliderNode) {
+					Spotlight.focus(this.sliderNode);
+				}
+
+				if (ev.target.nodeName === 'INPUT' && this.prevValue !== null) {
+					let value;
+					if (this.state.controlled) {
+						// use current knob position value (i.e. detachedValue) for detachedKnob as value
+						// may change in between mouse down and mouse up by prop change
+						value = this.props.detachedKnob ? this.detachedValue : this.changedControlledValue;
+					} else {
+						value = this.state.value;
+					}
+
+					if (this.prevValue !== value) {
+						forwardChange({value: parseNumber(value)}, this.props);
+						this.prevValue = null;
+					}
+				}
 			}
 		}
 
 		handleActivate = () => {
-			const {detachedKnob, disabled, vertical} = this.props;
+			const {'aria-valuetext': ariaValueText, detachedKnob, disabled, vertical} = this.props;
 
 			if (disabled) return;
 
 			if (detachedKnob) {
-				if (this.current5WayValue !== null) {
-					this.throttleUpdateValue(this.clamp(this.current5WayValue));
-					this.current5WayValue = null;
+				if (this.detachedValue !== null) {
+					this.willChange = true;
+					this.throttleUpdateValue(this.clamp(this.detachedValue));
 				}
 			} else {
 				const verticalHint = $L('change a value with up down button');
 				const horizontalHint = $L('change a value with left right button');
 				const active = !this.state.active;
 
-				let valueText = this.state.value;
+				let valueText = ariaValueText != null ? ariaValueText : this.state.value;
 				if (active) {
 					valueText = vertical ? verticalHint : horizontalHint;
 				}
@@ -392,11 +521,24 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleBlur = (ev) => {
 			forwardBlur(ev, this.props);
 
-			if (this.current5WayValue !== null) {
-				this.current5WayValue = null;
+			// on mouseup, slider manually focuses the slider from its input causing a blur event to
+			// bubble here. if this is the case, focus hasn't effectively changed so we ignore it.
+			if (
+				ev.relatedTarget && (
+					(ev.target === this.sliderNode && ev.relatedTarget === this.inputNode) ||
+					(ev.target === this.inputNode && ev.relatedTarget === this.sliderNode)
+				)
+			) return;
+
+			if (this.detachedValue !== null) {
+				this.detachedValue = null;
 				this.knobPosition = null;
 				this.updateUI();
 			}
+
+			this.setState({
+				focused: false
+			});
 		}
 
 		handleIncrement = () => {
@@ -407,6 +549,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (detachedKnob) {
 				this.moveKnobByAmount(amount);
 			} else {
+				this.willChange = true;
 				this.throttleUpdateValueByAmount(amount);
 			}
 		}
@@ -419,8 +562,31 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (detachedKnob) {
 				this.moveKnobByAmount(-amount);
 			} else {
+				this.willChange = true;
 				this.throttleUpdateValueByAmount(-amount);
 			}
+		}
+
+		handleFocus = (ev) => {
+			forwardFocus(ev, this.props);
+
+			// on mouseup, slider manually focuses the slider from its input causing a blur event to
+			// bubble here. if this is the case, focus hasn't effectively changed so we ignore it.
+			if (
+				ev.relatedTarget && (
+					(ev.target === this.sliderNode && ev.relatedTarget === this.inputNode) ||
+					(ev.target === this.inputNode && ev.relatedTarget === this.sliderNode)
+				)
+			) return;
+
+			if (this.props.detachedKnob) {
+				// knob should remain in the focused position on focus
+				this.detachKnob();
+			}
+
+			this.setState({
+				focused: true
+			});
 		}
 
 		render () {
@@ -434,15 +600,20 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					active={this.state.active}
 					aria-disabled={this.props.disabled}
 					aria-valuetext={this.state.valueText}
+					focused={this.state.focused}
 					inputRef={this.getInputNode}
+					knobAfterMidpoint={this.state.knobAfterMidpoint}
 					onActivate={this.handleActivate}
 					onBlur={this.handleBlur}
 					onChange={this.handleChange}
-					onClick={this.handleClick}
 					onDecrement={this.handleDecrement}
+					onFocus={this.handleFocus}
 					onIncrement={this.handleIncrement}
-					onMouseLeave={this.props.detachedKnob ? this.handleMouseLeave : null}
-					onMouseMove={this.props.detachedKnob ? this.handleMouseMove : null}
+					onMouseDown={this.handleMouseDown}
+					onMouseEnter={this.handleMouseEnter}
+					onMouseLeave={this.handleMouseLeave}
+					onMouseMove={this.handleMouseMove}
+					onMouseUp={this.handleMouseUp}
 					scrubbing={(this.knobPosition != null)}
 					sliderBarRef={this.getSliderBarNode}
 					sliderRef={this.getSliderNode}

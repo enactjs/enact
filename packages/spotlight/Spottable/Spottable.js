@@ -6,11 +6,14 @@
  * @module spotlight/Spottable
  */
 
-import {forward, handle} from '@enact/core/handle';
+import {forward, forwardWithPrevent, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import React from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 
+import {getContainersForNode} from '../src/container';
 import Spotlight from '../src/spotlight';
 
 /**
@@ -20,7 +23,6 @@ import Spotlight from '../src/spotlight';
  * @public
  */
 const spottableClass = 'spottable';
-const spottableDisabledClass = 'spottableDisabled';
 
 const ENTER_KEY = 13;
 const REMOTE_OK_KEY = 16777221;
@@ -42,6 +44,11 @@ const isKeyboardAccessible = (node) => {
 		)
 	);
 };
+
+// Last instance of spottable to be focused
+let lastSelectTarget = null;
+// Should we prevent select being passed through
+let selectCancelled = false;
 
 /**
  * Default configuration for Spottable
@@ -65,9 +72,10 @@ const defaultConfig = {
 /**
  * Constructs a Spotlight 5-way navigation-enabled Higher-order Component.
  *
- * @example
+ * Example:
+ * ```
  *	const SpottableComponent = Spottable(Component);
- *
+ * ```
  * @class Spottable
  * @memberof spotlight/Spottable
  * @param  {Object} defaultConfig Set of default configuration parameters
@@ -90,7 +98,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			disabled: React.PropTypes.bool,
+			disabled: PropTypes.bool,
 
 			/**
 			 * The handler to run when the component is removed while retaining focus.
@@ -99,7 +107,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @param {Object} event
 			 * @public
 			 */
-			onSpotlightDisappear: React.PropTypes.func,
+			onSpotlightDisappear: PropTypes.func,
 
 			/**
 			 * The handler to run when the 5-way down key is pressed.
@@ -108,7 +116,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @param {Object} event
 			 * @public
 			 */
-			onSpotlightDown: React.PropTypes.func,
+			onSpotlightDown: PropTypes.func,
 
 			/**
 			 * The handler to run when the 5-way left key is pressed.
@@ -117,7 +125,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @param {Object} event
 			 * @public
 			 */
-			onSpotlightLeft: React.PropTypes.func,
+			onSpotlightLeft: PropTypes.func,
 
 			/**
 			 * The handler to run when the 5-way right key is pressed.
@@ -126,7 +134,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @param {Object} event
 			 * @public
 			 */
-			onSpotlightRight: React.PropTypes.func,
+			onSpotlightRight: PropTypes.func,
 
 			/**
 			 * The handler to run when the 5-way up key is pressed.
@@ -135,7 +143,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @param {Object} event
 			 * @public
 			 */
-			onSpotlightUp: React.PropTypes.func,
+			onSpotlightUp: PropTypes.func,
 
 			/**
 			 * When `true`, the component cannot be navigated using spotlight.
@@ -144,7 +152,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			spotlightDisabled: React.PropTypes.bool,
+			spotlightDisabled: PropTypes.bool,
 
 			/**
 			 * The tabIndex of the component. This value will default to -1 if left
@@ -153,21 +161,74 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Number}
 			 * @public
 			 */
-			tabIndex: React.PropTypes.number
+			tabIndex: PropTypes.number
 		}
 
 		constructor (props) {
 			super(props);
+			this.isHovered = false;
 			this.state = {
 				spotted: false
 			};
 		}
 
-		componentWillUnmount () {
-			const {onSpotlightDisappear} = this.props;
+		componentDidMount () {
+			// eslint-disable-next-line react/no-find-dom-node
+			this.node = ReactDOM.findDOMNode(this);
+		}
 
-			if (this.state.spotted && onSpotlightDisappear) {
-				onSpotlightDisappear();
+		componentDidUpdate (prevProps) {
+			// if the component is spotted and became disabled,
+			if (this.state.spotted && (
+				(!prevProps.disabled && this.props.disabled) ||
+				(!prevProps.spotlightDisabled && this.props.spotlightDisabled)
+			)) {
+				forward('onSpotlightDisappear', null, this.props);
+				if (lastSelectTarget === this) {
+					selectCancelled = true;
+					forward('onMouseUp', null, this.props);
+				}
+
+				// if spotlight didn't move, find something else to spot starting from here
+				const current = Spotlight.getCurrent();
+				if (!Spotlight.getPointerMode() && (!current || this.node === current)) {
+					this.node.blur();
+
+					getContainersForNode(this.node).reverse().reduce((found, id) => {
+						return found || Spotlight.focus(id);
+					}, false);
+				}
+			}
+
+			// if the component became enabled, notify spotlight to enable restoring "lost" focus
+			if (
+				(!this.props.disabled && !this.props.spotlightDisabled) && (
+					(prevProps.disabled && !this.props.disabled) ||
+					(prevProps.spotlightDisabled && !this.props.spotlightDisabled)
+				)
+			) {
+				if (Spotlight.getPointerMode()) {
+					if (this.isHovered) {
+						Spotlight.setPointerMode(false);
+						Spotlight.focus(this.node);
+						Spotlight.setPointerMode(true);
+					}
+				} else if (!Spotlight.getCurrent() && !Spotlight.isPaused()) {
+					const containers = getContainersForNode(this.node);
+					const containerId = Spotlight.getActiveContainer();
+					if (containers.indexOf(containerId) >= 0) {
+						Spotlight.focus(containerId);
+					}
+				}
+			}
+		}
+
+		componentWillUnmount () {
+			if (this.state.spotted) {
+				forward('onSpotlightDisappear', null, this.props);
+			}
+			if (lastSelectTarget === this) {
+				lastSelectTarget = null;
 			}
 		}
 
@@ -200,17 +261,37 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
+		handleSelect = (ev) => {
+			// Only apply accelerator if handling select
+			if ((ev.which === REMOTE_OK_KEY) || (ev.which === ENTER_KEY)) {
+				if (selectCancelled || (lastSelectTarget && lastSelectTarget !== this)) {
+					return false;
+				}
+				lastSelectTarget = this;
+			}
+			return true;
+		}
+
+		forwardAndResetLastSelectTarget = (ev, props) => {
+			const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
+			const allow = lastSelectTarget === this;
+			selectCancelled = false;
+			lastSelectTarget = null;
+			return notPrevented && allow;
+		}
+
 		handle = handle.bind(this)
 
 		handleKeyDown = this.handle(
-			forward('onKeyDown'),
+			this.handleSelect,
+			forwardWithPrevent('onKeyDown'),
 			this.forwardSpotlightEvents,
 			this.shouldEmulateMouse,
 			forward('onMouseDown')
 		)
 
 		handleKeyUp = this.handle(
-			forward('onKeyUp'),
+			this.forwardAndResetLastSelectTarget,
 			this.shouldEmulateMouse,
 			forward('onMouseUp'),
 			forward('onClick')
@@ -240,11 +321,19 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		handleEnter = (ev) => {
+			forward('onMouseEnter', ev, this.props);
+			this.isHovered = true;
+		}
+
+		handleLeave = (ev) => {
+			forward('onMouseLeave', ev, this.props);
+			this.isHovered = false;
+		}
+
 		render () {
 			const {disabled, spotlightDisabled, ...rest} = this.props;
-			const spottableDisabled = this.state.spotted && disabled;
-			const spottable = (spottableDisabled || !disabled) && !spotlightDisabled;
-			const classes = spottableDisabled ? spottableClass + ' ' + spottableDisabledClass : spottableClass;
+			const spottable = !disabled && !spotlightDisabled;
 			let tabIndex = rest.tabIndex;
 
 			delete rest.onSpotlightDisappear;
@@ -258,24 +347,22 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (spottable) {
-				rest.onBlur = this.handleBlur;
-				rest.onFocus = this.handleFocus;
-				rest.onKeyDown = this.handleKeyDown;
-
-				if (!spottableDisabled) {
-					rest.onKeyUp = this.handleKeyUp;
-				}
-
 				if (rest.className) {
-					rest.className += ' ' + classes;
+					rest.className += ' ' + spottableClass;
 				} else {
-					rest.className = classes;
+					rest.className = spottableClass;
 				}
 			}
 
 			return (
 				<Wrapped
 					{...rest}
+					onBlur={this.handleBlur}
+					onFocus={this.handleFocus}
+					onMouseEnter={this.handleEnter}
+					onMouseLeave={this.handleLeave}
+					onKeyDown={this.handleKeyDown}
+					onKeyUp={this.handleKeyUp}
 					disabled={disabled}
 					tabIndex={tabIndex}
 				/>

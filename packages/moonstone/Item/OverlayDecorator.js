@@ -1,6 +1,7 @@
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import Overlay from './Overlay';
 
@@ -35,7 +36,7 @@ const OverlayDecorator = hoc((config, Wrapped) => {
 			autoHide: PropTypes.oneOf(['before', 'after', 'both']),
 
 			/**
-			 * A node which will be displayed at the end of the item.  Typically this will be an
+			 * A node which will be displayed at the end of the item. Typically this will be an
 			 * icon or multiple icons.
 			 *
 			 * @type {Element}
@@ -44,7 +45,7 @@ const OverlayDecorator = hoc((config, Wrapped) => {
 			overlayAfter: PropTypes.node,
 
 			/**
-			 * A node which will be displayed at the beginning of the item.  Typically this will be
+			 * A node which will be displayed at the beginning of the item. Typically this will be
 			 * an icon or multiple icons.
 			 *
 			 * @type {Element}

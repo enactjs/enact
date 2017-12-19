@@ -1,30 +1,9 @@
 // Variables
 //
-@import './colors.less';
 
 // App
 // ---------------------------------------
 @moon-app-keepout: 18px;
-
-// Neutral Theme
-// ---------------------------------------
-// RIGBY NOTE: TODO
-// The Neutral theme should be defined elsewhere. It's inappropriate for color to be assigned here.
-@moon-neutral-bg-color: @moon-light-gray;
-@moon-neutral-text-color: @moon-dark-gray;
-@moon-neutral-child-text-color: @moon-dark-gray;
-@moon-neutral-scroller-icon: url(../images/LightTheme_Icons/scroller_icon.png);
-@moon-neutral-border-color: @moon-dark-gray;
-@moon-neutral-icon-color: @moon-dark-gray;
-@moon-neutral-button-text-color: @moon-white;
-@moon-neutral-button-bg-color: #686868;
-@moon-neutral-button-disabled-text-color: #cdcdcd;
-@moon-neutral-button-disabled-bg-color: #686868;
-@moon-neutral-popup-background-opacity: 95%;
-@moon-neutral-thumb-bg-color: rgba(50, 50, 50, 0.8);
-@moon-neutral-slider-knob-bg-color: @moon-white;
-@moon-neutral-slider-spotlight-bar-color: @moon-spotlight-color;
-@moon-neutral-slider-spotlight-knob-color: @moon-spotlight-color;
 
 // Font Sizes
 // ---------------------------------------
@@ -46,6 +25,7 @@
 @moon-expandable-value-font-size:   27px;
 @moon-expandable-value-font-size-large:   33px;
 @moon-expandable-client-item-font-size:   27px;
+@moon-expandable-client-item-font-size-large:   33px;
 @moon-divider-font-size:            24px;
 @moon-notification-font-size:       30px;
 @moon-button-large-font-size:       36px;
@@ -69,7 +49,7 @@
 @moon-non-latin-divider-font-size:      27px;
 @moon-non-latin-button-large-font-size: 36px;
 @moon-non-latin-button-small-font-size: 27px;
-@moon-non-latin-header-font-size:       102px;
+@moon-non-latin-header-font-size:       96px;
 @moon-non-latin-expandable-client-item-font-size: 27px;
 
 // Other Font Properties
@@ -144,7 +124,6 @@
 @moon-button-letter-spacing: normal;
 
 @moon-icon-font-family: "Moonstone Icons";
-@moon-icon-font-size: 72px;
 
 // Spotlight
 // ---------------------------------------
@@ -185,7 +164,13 @@
 // Icon Sizes
 // ---------------------------------------
 @moon-icon-size: 48px;
+@moon-icon-size-large: (@moon-icon-size * 1.2);
 @moon-icon-small-size: 36px;
+@moon-icon-small-size-large: (@moon-icon-small-size * 1.2);
+@moon-icon-font-size: (@moon-icon-size * 2);
+@moon-icon-font-size-large: (@moon-icon-font-size * 1.2);
+@moon-icon-small-font-size: (@moon-icon-small-size * 2);
+@moon-icon-small-font-size-large: (@moon-icon-small-font-size * 1.2);
 @moon-icon-button-size: @moon-button-height;
 @moon-icon-button-size-large: @moon-button-height-large;
 @moon-icon-button-small-size: @moon-button-small-height;
@@ -204,6 +189,18 @@
 @moon-item-line-height-large: @moon-item-height-large - (@moon-item-vertical-padding * 2);
 @moon-item-indent: 36px;
 
+// FormCheckbox
+// ---------------------------------------
+@moon-formcheckbox-size: (@moon-item-height * 0.8);	// Relative to `Item` height
+@moon-formcheckbox-size-large: (@moon-item-height-large * 0.8);	// Relative to `Item` height
+@moon-formcheckbox-check-icon-size: 72px;
+@moon-formcheckbox-check-icon-size-large: 84px;
+
+// Checkbox
+// ---------------------------------------
+@moon-checkbox-size: 30px;
+@moon-checkbox-size-large: 36px;
+
 // ToggleButton
 // ---------------------------------------
 @moon-toggle-button-switch-border-width: 3px;
@@ -213,7 +210,8 @@
 // Input
 // ---------------------------------------
 @moon-input-border-width: 6px;
-@moon-input-height:60px;
+@moon-input-height: 60px;
+@moon-input-tooltip-offset: @moon-input-border-width + @moon-tooltip-point-width;
 
 // Panels
 // ---------------------------------------
@@ -229,11 +227,20 @@
 // Selectable Item
 // ---------------------------------------
 @moon-selectable-item-indicator-size: @moon-item-height;
+@moon-selectable-item-indicator-width: @moon-icon-size / 2;
 
 // Radio Item
 // ---------------------------------------
 @moon-radio-item-indicator-size: 18px;
 @moon-radio-item-indicator-border: 3px;
+
+// GridListImageItem
+// ---------------------------------------
+@moon-gridlist-item-overlay-icon-size: 60px;
+@moon-gridlist-item-border-width: 6px;
+@moon-gridlist-item-caption-padding-top: 9px;
+@moon-gridlist-item-one-caption-padding-bottom: 42px;
+@moon-gridlist-item-two-captions-padding-bottom: 96px;
 
 // ToggleSwitch
 // ---------------------------------------
@@ -247,7 +254,7 @@
 
 // Scrim
 // ---------------------------------------
-@moon-scrim-color: fade(@moon-black, 30%);
+@moon-scrim-color: fade(black, 30%);
 
 // Slider
 // ---------------------------------------
@@ -257,6 +264,7 @@
 @moon-slider-knob-height: @moon-button-small-height;
 @moon-slider-knob-height-large: @moon-button-small-height-large;
 @moon-slider-tooltip-offset: 54px;
+@moon-slider-knob-resting-state-scale: 0.8;
 
 // IntegerPicker
 // ---------------------------------------
@@ -275,6 +283,7 @@
 @moon-spinner-ball-distance: 20%;	// Distance of the ball from the center
 @moon-spinner-ball-angle: 13deg;
 @moon-spinner-icon: @moon-icon-circle;
+@moon-spinner-font-weight: bold;
 
 // Date/Time Pickers
 // ---------------------------------------
@@ -282,6 +291,7 @@
 
 // ContextualPopup
 // ---------------------------------------
+@moon-contextual-popup-border-width: @moon-button-border-width;
 @moon-contextual-popup-border-radius: 15px;
 @moon-contextual-popup-padding: 18px;
 @moon-contextual-popup-arrow-height: 30px;
@@ -292,7 +302,6 @@
 @moon-notification-font-family: "MuseoSans";
 @moon-notification-font-weight: 500;
 @moon-notification-font-style: normal;
-@moon-notification-border-opacity: 30%;
 @moon-notification-border-width: 6px;
 @moon-notification-border-radius: 15px;
 @moon-notification-out-border-radius: 18px;
@@ -311,10 +320,19 @@
 @moon-video-slider-tooltip-font-size:              24px;
 @moon-video-slider-tooltip-line-height:            36px;
 @moon-video-slider-tooltip-gutter-width:           12px;
-@moon-video-feedback-icon-width:                   36px;
-@moon-video-feedback-icon-font-size:               72px;	// For most icons
-@moon-video-feedback-icon-shrunken-size:           48px;	// For play and pause icons, since they're larger scale than the others
-@moon-video-feedback-icon-line-height:             30px;
+@moon-video-slider-tooltip-thumbnail-border-width: 3px;
+@moon-video-slider-tooltip-thumbnail-border-radius: @moon-contextual-popup-border-radius;
+@moon-video-feedback-icon-width:                   0.5em; // The width of the icon is half of its own font size
+@moon-video-feedback-icon-font-size:               3em; // For most icons; The icon size is 3 times the nearby text font size, so the icon is big enough to visually match
+@moon-video-feedback-icon-shrunken-size:           2em; // For play and pause icons, the em value is smaller since these glyphs are larger scale than the others.
+@moon-video-feedback-mini-font-family:             @moon-alt-font-family;
+@moon-video-feedback-mini-font-weight:             bold;
+@moon-video-feedback-mini-font-style:              normal;
+@moon-video-feedback-mini-position-top:            30px;
+@moon-video-feedback-mini-position-left:           30px;
+@moon-video-feedback-mini-padding-side:            18px;
+@moon-video-feedback-mini-font-size:               39px;
+@moon-video-feedback-mini-line-height:             60px;
 // @moon-video-feedback-icon-pausejumpbackward-width: 36px;	// May need this later
 // @moon-video-feedback-icon-pausejumpforward-width:  36px;	// May need this later
 @moon-video-player-badge-text-size:                24px;

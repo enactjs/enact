@@ -6,6 +6,7 @@
 
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Divider from '../Divider';
 
@@ -38,7 +39,7 @@ const RegionBase = kind({
 		 * @required
 		 * @public
 		 */
-		title: React.PropTypes.string.isRequired,
+		title: PropTypes.string.isRequired,
 
 		/**
 		 * Sets the aria-label for the region. If unset, it defaults to the value of `title`
@@ -47,7 +48,7 @@ const RegionBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		'aria-label': React.PropTypes.string,
+		'aria-label': PropTypes.string,
 
 		/**
 		 * The contents of the region
@@ -55,7 +56,7 @@ const RegionBase = kind({
 		 * @type {Node}
 		 * @public
 		 */
-		children: React.PropTypes.node
+		children: PropTypes.node
 	},
 
 	computed: {

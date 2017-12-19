@@ -184,7 +184,7 @@ var NameFmt = function(options) {
 
 	this.locale = this.locale || new Locale();
 	
-	isPunct._init(sync, this.loadParams, /** @type {function()|undefined} */ ilib.bind(this, function() {
+	isPunct._init(sync, this.loadParams, ilib.bind(this, function() {
 		Utils.loadData({
 			object: Name, 
 			locale: this.locale, 

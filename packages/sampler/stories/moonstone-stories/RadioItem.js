@@ -3,14 +3,13 @@ import ToggleItem from '@enact/moonstone/ToggleItem';
 import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
+import {boolean, text} from '@kadira/storybook-addon-knobs';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('RadioItem', ItemBase, Item, ToggleItem, RadioItem);
 
 storiesOf('RadioItem')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of RadioItem',

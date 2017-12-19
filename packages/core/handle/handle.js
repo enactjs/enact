@@ -18,7 +18,9 @@
  *     // since it doesn't return `true`, no further input functions would be called after this one
  *     console.log('The Enter key was pressed down');
  *   }
- * );
+ * ).finally(() => {
+ * 	 console.log('This will log at the end no matter what happens within the handler above')
+ * });
  * ```
  *
  * `handle()` can also be bound to a component instance which allows it to access the instance
@@ -57,6 +59,7 @@
 import allPass from 'ramda/src/allPass';
 import always from 'ramda/src/always';
 import compose from 'ramda/src/compose';
+import cond from 'ramda/src/cond';
 import curry from 'ramda/src/curry';
 import identity from 'ramda/src/identity';
 import ifElse from 'ramda/src/ifElse';
@@ -77,6 +80,10 @@ const makeHandler = compose(allPass, map(makeSafeHandler));
  * Allows generating event handlers by chaining input functions to filter or short-circuit the
  * handling flow. Any input function that returns a falsey value will stop the chain.
  *
+ * The returned handler function has a `finally()` member that accepts a function and returns a new
+ * handler function. The accepted function is called once the original handler completes regardless
+ * of the returned value.
+ *
  * @method   handle
  * @memberof core/handle
  * @param    {...Function}  handlers List of handlers to process the event
@@ -87,7 +94,7 @@ const handle = function (...handlers) {
 	const h = makeHandler(handlers);
 	h.displayName = 'handle';
 
-	return (ev, props, context) => {
+	const fn = (ev, props, context) => {
 		// if handle() was bound to a class, use its props and context. otherwise, we accept
 		// incoming props/context as would be provided by computed/handlers from kind()
 		if (this) {
@@ -97,6 +104,78 @@ const handle = function (...handlers) {
 
 		return h(ev, props, context);
 	};
+
+	fn.finally = (cleanup) => (...args) => {
+		let result = false;
+
+		try {
+			result = fn(...args);
+		} finally {
+			cleanup(...args);
+		}
+
+		return result;
+	};
+
+	return fn;
+};
+
+/**
+ * Calls the first handler whose condition passes. Each branch must be passed as an array with the
+ * first element being the condition function and the second being the handler function. The same
+ * arguments are passed to both the condition function and the handler function. The value returned
+ * from the handler is returned.
+ *
+ * ```
+ * const handler = oneOf(
+ * 	[forKey('enter'), handleEnter],
+ * 	[forKey('left'), handleLeft],
+ * 	[forKey('right'), handleRight]
+ * );
+ *
+ * @method   oneOf
+ * @memberof core/handle
+ * @param    {...Function}  handlers List of handlers to process the event
+ * @returns  {Function}	    A function that accepts an event which is dispatched to each of the
+ *                          conditions and, if it passes, onto the provided handler.
+ */
+const oneOf = handle.oneOf = function (...handlers) {
+	return handle.call(this, cond(handlers));
+};
+
+/**
+ * A function that always returns `true`. Optionally accepts a `handler` function which is called
+ * before returning `true`.
+ *
+ * ```
+ * // Used to coerce an existing function into a handler change
+ * const coercedHandler = handle(
+ *   returnsTrue(doesSomething),
+ *   willAlwaysBeCalled
+ * );
+ *
+ * // Used to emulate if/else blocks with `oneOf`
+ * const ifElseHandler = oneOf(
+ * 	[forKey('enter'), handleEnter],
+ * 	[returnsTrue, handleOtherwise]
+ * );
+ * ```
+ *
+ * @method   returnsTrue
+ * @memberof core/handle
+ * @param    {[Function]}  handler  Handler function called before returning `true`
+ * @returns  {Function}	   A function that returns true
+ */
+const returnsTrue = handle.returnsTrue = function (handler) {
+	if (handler) {
+		return function (...args) {
+			handler(...args);
+
+			return true;
+		};
+	}
+
+	return true;
 };
 
 /**
@@ -200,6 +279,41 @@ const forward = handle.forward = curry((name, ev, props) => {
  * @returns  {Boolean}           Always returns `true`
  */
 const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
+
+/**
+ * Forwards the event to a function at `name` on `props` with capability to prevent default
+ * behavior. If the specified prop is `undefined` or is not a function, it is ignored. Returns
+ * `false` when `event.preventDefault()` has been called in a handler.
+ *
+ * ```
+ * import {forwardWithPrevent, handle} from '@enact/core/handle';
+ *
+ * const forwardPreventDefault = handle(
+ *   forwardWithPrevent('onClick'),
+ *   (ev) => console.log('default action')
+ * );
+ * ```
+ *
+ * @method   forwardWithPrevent
+ * @private
+ * @memberof core/handle
+ * @param    {String}    name   Name of method on the `props`
+ * @param    {Object}    ev     Event
+ * @param    {Object}    props  Props object
+ * @returns  {Boolean}          Returns `true` if default action is prevented
+ */
+const forwardWithPrevent = handle.forwardWithPrevent = curry((name, ev, props) => {
+	let prevented = false;
+	const wrappedEvent = Object.assign({}, ev, {
+		preventDefault: () => {
+			prevented = true;
+			preventDefault(ev);
+		}
+	});
+	forward(name, wrappedEvent, props);
+
+	return !prevented;
+});
 
 /**
  * Calls `event.stopPropagation()` and returns `true`
@@ -342,13 +456,16 @@ export default handle;
 export {
 	callOnEvent,
 	forward,
+	forwardWithPrevent,
 	forEventProp,
 	forKey,
 	forKeyCode,
 	forProp,
 	handle,
 	log,
+	oneOf,
 	preventDefault,
+	returnsTrue,
 	stop,
 	stopImmediate
 };

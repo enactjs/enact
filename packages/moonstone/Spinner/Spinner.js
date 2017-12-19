@@ -6,10 +6,14 @@
  */
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
+import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 
+import $L from '../internal/$L';
 import {MarqueeText} from '../Marquee';
+import Skinnable from '../Skinnable';
 
 import css from './Spinner.less';
 
@@ -21,8 +25,18 @@ import css from './Spinner.less';
  * @ui
  * @private
  */
-const SpinnerCore = kind({
+const SpinnerCoreBase = kind({
 	name: 'SpinnerCore',
+
+	computed: {
+		'aria-label': ({['aria-label']: aria, children}) => {
+			if (aria) {
+				return aria;
+			} else if (!children) {
+				return $L('Loading');
+			}
+		}
+	},
 
 	render: ({children, ...rest}) => (
 		<div aria-live="off" role="alert" {...rest}>
@@ -35,6 +49,8 @@ const SpinnerCore = kind({
 		</div>
 	)
 });
+
+const SpinnerCore = Skinnable(SpinnerCoreBase);
 
 /**
  * {@link moonstone/Spinner.SpinnerBase} is a component that shows a spinning
@@ -119,7 +135,7 @@ const SpinnerBase = kind({
 		marquee: ({children}) => {
 			if (children) {
 				return (
-					<MarqueeText className={css.client} marqueeOn="render">
+					<MarqueeText className={css.client} marqueeOn="render" alignment="center">
 						{children}
 					</MarqueeText>
 				);
@@ -215,5 +231,12 @@ class Spinner extends Component {
 	}
 }
 
-export default Spinner;
-export {Spinner, SpinnerBase};
+const PureSpinner = Pure(
+	Spinner
+);
+
+export default PureSpinner;
+export {
+	PureSpinner as Spinner,
+	SpinnerBase
+};

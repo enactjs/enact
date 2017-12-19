@@ -1,9 +1,20 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {mount, shallow} from 'enzyme';
 
-import Popup from '../Popup';
+import {Popup, PopupBase} from '../Popup';
+import css from '../Popup.less';
 
 describe('Popup specs', () => {
+	const options = {
+		context: {
+			getFloatingLayer: () => document.getElementById('floatLayer')
+		},
+		childContextTypes: {
+			getFloatingLayer: PropTypes.func
+		}
+	};
+
 	beforeEach(() => {
 		const div = document.createElement('div');
 		div.setAttribute('id', 'floatLayer');
@@ -17,7 +28,8 @@ describe('Popup specs', () => {
 
 	it('should be rendered opened if open is set to true', () => {
 		const popup = mount(
-			<Popup open><div>popup</div></Popup>
+			<Popup open><div>popup</div></Popup>,
+			options
 		);
 
 		const expected = true;
@@ -28,7 +40,8 @@ describe('Popup specs', () => {
 
 	it('should not be rendered if open is set to false', () => {
 		const popup = mount(
-			<Popup><div>popup</div></Popup>
+			<Popup><div>popup</div></Popup>,
+			options
 		);
 
 		const expected = false;
@@ -39,22 +52,22 @@ describe('Popup specs', () => {
 
 	it('should set role to alert by default', function () {
 		const popup = shallow(
-			<Popup><div>popup</div></Popup>
+			<PopupBase><div>popup</div></PopupBase>
 		);
 
 		const expected = 'alert';
-		const actual = popup.find('PopupBase').prop('role');
+		const actual = popup.find(`.${css.popup}`).prop('role');
 
 		expect(actual).to.equal(expected);
 	});
 
 	it('should allow role to be overridden', function () {
 		const popup = shallow(
-			<Popup role="dialog"><div>popup</div></Popup>
+			<PopupBase role="dialog"><div>popup</div></PopupBase>
 		);
 
 		const expected = 'dialog';
-		const actual = popup.find('PopupBase').prop('role');
+		const actual = popup.find(`.${css.popup}`).prop('role');
 
 		expect(actual).to.equal(expected);
 	});

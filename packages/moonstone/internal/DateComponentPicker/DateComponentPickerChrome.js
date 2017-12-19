@@ -1,5 +1,6 @@
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './DateComponentPicker.less';
 
@@ -22,14 +23,14 @@ const DateComponentPickerChromeBase = kind({
 		 *
 		 * @type {Element}
 		 */
-		children: React.PropTypes.element,
+		children: PropTypes.element,
 
 		/**
 		 * The label to display below the picker
 		 *
 		 * @type {String}
 		 */
-		label: React.PropTypes.string
+		label: PropTypes.string
 	},
 
 	styles: {

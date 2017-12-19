@@ -7,13 +7,49 @@
  */
 
 import Changeable from '@enact/ui/Changeable';
+import equals from 'ramda/src/equals';
 import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import Pure from '@enact/ui/internal/Pure';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import CheckboxItem from '../CheckboxItem';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import RadioItem from '../RadioItem';
+
+import css from './ExpandableList.less';
+
+const compareChildren = (a, b) => {
+	if (!a || !b || a.length !== b.length) return false;
+
+	let type = null;
+	for (let i = 0; i < a.length; i++) {
+		type = type || typeof a[i];
+		if (type === 'string') {
+			if (a[i] !== b[i]) {
+				return false;
+			}
+		} else if (!equals(a[i], b[i])) {
+			return false;
+		}
+	}
+
+	return true;
+};
+
+const PureGroup = Pure(
+	{propComparators: {
+		children: compareChildren,
+		itemProps: (a, b) => (
+			a.onSpotlightDisappear === b.onSpotlightDisappear &&
+			a.onSpotlightLeft === b.onSpotlightLeft &&
+			a.onSpotlightRight === b.onSpotlightRight &&
+			a.spotlightDisabled === b.spotlightDisabled
+		)
+	}},
+	Group
+);
 
 /**
  * {@link moonstone/ExpandableList.ExpandableListBase} is a stateless component that
@@ -145,6 +181,24 @@ const ExpandableListBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightLeft: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightRight: PropTypes.func,
+
+		/**
 		 * When `true`, the expandable is open with its contents visible
 		 *
 		 * @type {Boolean}
@@ -186,7 +240,7 @@ const ExpandableListBase = kind({
 	},
 
 	defaultProps: {
-		select: 'single',
+		select: 'radio',
 		spotlightDisabled: false
 	},
 
@@ -203,10 +257,30 @@ const ExpandableListBase = kind({
 		}
 	},
 
+	styles: {
+		css,
+		className: 'expandableList'
+	},
+
 	computed: {
 		'aria-multiselectable': ({select}) => select === 'multiple',
 
-		itemProps: ({onSpotlightDisappear, spotlightDisabled}) => ({onSpotlightDisappear, spotlightDisabled}),
+		disabled: ({children, disabled}) => {
+			return disabled || !children || children.length === 0;
+		},
+
+		itemProps: ({
+			onSpotlightDisappear,
+			onSpotlightLeft,
+			onSpotlightRight,
+			spotlightDisabled
+		}) => ({
+			className: css.listItem,
+			onSpotlightDisappear,
+			onSpotlightLeft,
+			onSpotlightRight,
+			spotlightDisabled
+		}),
 
 		// generate a label that concatenates the text of the selected items
 		label: ({children, label, select, selected}) => {
@@ -215,7 +289,9 @@ const ExpandableListBase = kind({
 			} else if (children.length && (selected || selected === 0)) {
 				const isArray = Array.isArray(selected);
 				if (select === 'multiple' && isArray) {
-					return selected.map(i => children[i]).filter(str => !!str).join(', ');
+					return selected.map(i => typeof children[i] === 'object' ? children[i].children : children[i]).filter(str => !!str).join(', ');
+				} else if (typeof children[selected] === 'object') {
+					return children[selected].children;
 				} else {
 					return children[isArray ? selected[0] : selected];
 				}
@@ -224,7 +300,7 @@ const ExpandableListBase = kind({
 
 		// Selects the appropriate list item based on the selection mode
 		ListItem: ({select}) => {
-			return	select === 'radio' && RadioItem ||
+			return	(select === 'radio' || select === 'single') && RadioItem ||
 					CheckboxItem; // for single or multiple
 		},
 
@@ -235,7 +311,17 @@ const ExpandableListBase = kind({
 		}
 	},
 
-	render: ({children, itemProps, ListItem, noAutoClose, noLockBottom, onSelect, select, selected, ...rest}) => {
+	render: ({
+		children,
+		itemProps,
+		ListItem,
+		noAutoClose,
+		noLockBottom,
+		onSelect,
+		select,
+		selected,
+		...rest
+	}) => {
 		delete rest.closeOnSelect;
 
 		return (
@@ -245,7 +331,7 @@ const ExpandableListBase = kind({
 				autoClose={!noAutoClose}
 				lockBottom={!noLockBottom}
 			>
-				<Group
+				<PureGroup
 					childComponent={ListItem}
 					childSelect="onToggle"
 					itemProps={itemProps}
@@ -255,7 +341,7 @@ const ExpandableListBase = kind({
 					selectedProp="selected"
 				>
 					{children}
-				</Group>
+				</PureGroup>
 			</ExpandableItemBase>
 		);
 	}
@@ -282,10 +368,15 @@ const ExpandableListBase = kind({
  * @ui
  * @public
  */
-const ExpandableList = Expandable(
-	Changeable(
-		{change: 'onSelect', prop: 'selected'},
-		ExpandableListBase
+const ExpandableList = Pure(
+	{propComparators: {
+		children: compareChildren
+	}},
+	Expandable(
+		Changeable(
+			{change: 'onSelect', prop: 'selected'},
+			ExpandableListBase
+		)
 	)
 );
 

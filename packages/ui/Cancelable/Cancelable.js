@@ -9,6 +9,7 @@ import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import invariant from 'invariant';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {addModal, removeModal} from './modalHandler';
 import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
@@ -35,8 +36,8 @@ const defaultConfig = {
 	onCancel: null,
 
 	/**
-	 * When `true`, the Cancelable instance will handle cancel events globally the successfully
-	 * bubble up to the document regardless of which component is focused.
+	 * When `true`, the Cancelable instance will handle cancel events globally that successfully
+	 * bubble up to `window` regardless of which component is focused.
 	 *
 	 * `modal` cancel handlers are processed in reverse of the order they are created such that the
 	 * innermost instance (in terms of the component hierarchy) have the first opportunity to handle
@@ -98,10 +99,10 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'Cancelable';
 
 		static propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
-			onCancel: React.PropTypes.func
+			onCancel: PropTypes.func
 		}
 
-		componentDidMount () {
+		componentWillMount () {
 			if (modal) {
 				addModal(this);
 			}
@@ -152,6 +153,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			const props = Object.assign({}, this.props);
 			delete props.onCancel;
+			delete props[onCancel];
 
 			return	modal && this.renderModal(props) ||
 					Component && this.renderWrapped(props) ||

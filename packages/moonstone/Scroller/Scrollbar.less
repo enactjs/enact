@@ -1,125 +1,68 @@
-@import '../styles/mixins.less';
 @import '../styles/variables.less';
 
-.scrollbarContainerBase {
+.scrollbar {
 	background: inherit;
-	position: absolute;
+	display: flex;
 	border-color: transparent;
-	border-style: solid;
 	visibility: visible;
 	opacity: 1;
+	flex: none;
 
 	transform: translateZ(0);
 	-webkit-transform: translateZ(0);
 	transition: opacity 0.1s linear;
 	-moz-transition: opacity 0.1s linear;
 	-webkit-transition: opacity 0.1s linear;
-}
 
-.scrollbarButtonNoCompositeLayer {
-	&,
-	&:before,
-	&:after,
-	div,
-	span {
-		will-change: auto;
+	&.vertical {
+		flex-direction: column;
 	}
 
-	&:before {
-		content: none;
+	&.horizontal {
+		:global(.enact-locale-right-to-left) & {
+			// Flip the entire bar horizontally in RTL mode, and force it to remain in LTR.
+			direction: ltr;
+			transform: scaleX(-1);
+		}
 	}
 
-	div,
-	span {
-		-webkit-transform: initial;
-		transform: initial;
-	}
-}
+	&.corner {
+		-webkit-padding-end: @moon-icon-button-small-size;
 
-.scrollbarButtonBase {
-	.scrollbarButtonNoCompositeLayer;
-	background-color: transparent;
-	position: absolute;
-	width: @moon-icon-button-small-size;
-	height: @moon-icon-button-small-size;
-	padding: 0;
-	border-color: transparent;
-	margin: 0;
-}
-
-.scrollbarContainerVColumn {
-	.scrollbarContainerBase;
-	width: @moon-icon-button-small-size;
-	border-width: @moon-icon-button-small-size 0;
-	top: 0;
-	bottom: @moon-icon-button-small-size;
-
-	.position-start-end(auto, @moon-spotlight-outset);
-
-	.scrollbarUpButton {
-		.scrollbarButtonBase;
-		top: -@moon-icon-button-small-size;
+		:global(.enact-text-large) & {
+			-webkit-padding-end: @moon-icon-button-small-size-large;
+		}
 	}
 
-	.scrollbarBottomButton {
-		.scrollbarButtonBase;
-		bottom: -@moon-icon-button-small-size;
+	/* ScrollButton */
+	.scrollbarButtonNoCompositeLayer {
+		&,
+		&:before,
+		&:after,
+		div,
+		span {
+			will-change: auto;
+		}
+
+		&:before {
+			content: none;
+		}
+
+		div,
+		span {
+			-webkit-transform: initial;
+			transform: initial;
+		}
 	}
-}
 
-.scrollbarContainerHColumn {
-	.scrollbarContainerBase;
-	height: @moon-icon-button-small-size;
-	border-width: 0 @moon-icon-button-small-size;
-	bottom: 0;
-
-	.position-start-end(0, @moon-icon-button-small-size);
-
-	.scrollbarLeftButton {
-		.scrollbarButtonBase;
-		.position-start-end(-@moon-icon-button-small-size, auto);
+	.scrollButton {
+		.scrollbarButtonNoCompositeLayer;
+		background-color: transparent;
+		margin: 0;
 	}
 
-	.scrollbarRightButton {
-		.scrollbarButtonBase;
-		.position-start-end(auto, -@moon-icon-button-small-size);
+	/* ScrollThumb */
+	.thumbShown {
+		opacity: 1;
 	}
-}
-
-.scrollbarVthumb {
-	background: #666;
-	position: absolute;
-	width: 3px;
-	height: 3px;
-	right: @moon-icon-button-small-size / 2 - 2;
-	opacity: 0;
-
-	-webkit-transition: opacity 0.1s linear;
-	transition: opacity 0.1s linear;
-
-	-webkit-transform-origin: 0 0 0;
-	transform-origin: 0 0 0;
-}
-
-.scrollerHthumb {
-	background: #666;
-	position: absolute;
-	width: 3px;
-	height: 3px;
-	bottom: @moon-icon-button-small-size / 2 - 2;
-	opacity: 0;
-
-	-webkit-transition: opacity 0.1s linear;
-	transition: opacity 0.1s linear;
-
-	-webkit-transform-origin: 0 0 0;
-	transform-origin: 0 0 0;
-}
-
-.thumbShown {
-	opacity: 0.75;
-}
-
-.thumbHidden {
-	opacity: 0;
 }

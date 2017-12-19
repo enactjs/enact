@@ -4,6 +4,13 @@ import {mount} from 'enzyme';
 import {IncrementSlider, IncrementSliderBase} from '../IncrementSlider';
 import css from '../IncrementSlider.less';
 
+const tap = (node) => {
+	node.simulate('mousedown');
+	node.simulate('mouseup');
+};
+const decrement = (slider) => tap(slider.find('IconButton').first());
+const increment = (slider) => tap(slider.find('IconButton').last());
+
 describe('IncrementSlider Specs', () => {
 	it('should decrement value', function () {
 		const handleChange = sinon.spy();
@@ -15,7 +22,7 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.decrementButton}`).simulate('click');
+		decrement(incrementSlider);
 
 		const expected = value - 1;
 		const actual = handleChange.args[0][0].value;
@@ -33,7 +40,7 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.incrementButton}`).simulate('click');
+		increment(incrementSlider);
 
 		const expected = value + 1;
 		const actual = handleChange.args[0][0].value;
@@ -51,7 +58,7 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.incrementButton}`).simulate('click');
+		increment(incrementSlider);
 
 		const expected = true;
 		const actual = handleChange.calledOnce;
@@ -115,7 +122,7 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.incrementButton}`).simulate('click');
+		increment(incrementSlider);
 
 		const expected = true;
 		const actual = handleIncrement.calledOnce;
@@ -133,7 +140,7 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.incrementButton}`).simulate('click');
+		increment(incrementSlider);
 
 		const expected = false;
 		const actual = handleIncrement.called;
@@ -151,7 +158,7 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.decrementButton}`).simulate('click');
+		decrement(incrementSlider);
 
 		const expected = true;
 		const actual = handleDecrement.calledOnce;
@@ -169,7 +176,7 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.decrementButton}`).simulate('click');
+		decrement(incrementSlider);
 
 		const expected = false;
 		const actual = handleDecrement.called;
@@ -203,10 +210,21 @@ describe('IncrementSlider Specs', () => {
 
 	it('should set decrementButton "aria-label" to value and hint string', function () {
 		const incrementSlider = mount(
-			<IncrementSlider value={0} />
+			<IncrementSlider value={10} />
 		);
 
-		const expected = '0 press ok button to decrease the value';
+		const expected = '10 press ok button to decrease the value';
+		const actual = incrementSlider.find(`.${css.decrementButton}`).prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not set decrementButton "aria-label" when decrementButton is disabled', function () {
+		const incrementSlider = mount(
+			<IncrementSlider disabled value={10} />
+		);
+
+		const expected = null;
 		const actual = incrementSlider.find(`.${css.decrementButton}`).prop('aria-label');
 
 		expect(actual).to.equal(expected);
@@ -214,10 +232,21 @@ describe('IncrementSlider Specs', () => {
 
 	it('should set incrementButton "aria-label" to value and hint string', function () {
 		const incrementSlider = mount(
-			<IncrementSlider value={0} />
+			<IncrementSlider value={10} />
 		);
 
-		const expected = '0 press ok button to increase the value';
+		const expected = '10 press ok button to increase the value';
+		const actual = incrementSlider.find(`.${css.incrementButton}`).prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not set incrementButton "aria-label" when incrementButton is disabled', function () {
+		const incrementSlider = mount(
+			<IncrementSlider disabled value={10} />
+		);
+
+		const expected = null;
 		const actual = incrementSlider.find(`.${css.incrementButton}`).prop('aria-label');
 
 		expect(actual).to.equal(expected);

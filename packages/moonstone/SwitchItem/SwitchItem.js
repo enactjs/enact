@@ -5,7 +5,9 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import Toggleable from '@enact/ui/Toggleable';
 
 import {ToggleItemBase} from '../ToggleItem';
@@ -116,9 +118,11 @@ const SwitchItemBase = kind({
  * @ui
  * @public
  */
-const SwitchItem = Toggleable(
-	{prop: 'selected'},
-	SwitchItemBase
+const SwitchItem = Pure(
+	Toggleable(
+		{prop: 'selected'},
+		SwitchItemBase
+	)
 );
 
 export default SwitchItem;

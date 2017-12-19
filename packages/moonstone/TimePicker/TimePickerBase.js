@@ -1,8 +1,9 @@
-import $L from '@enact/i18n/$L';
 import {forKey, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
+import $L from '../internal/$L';
 import {DateComponentPicker, DateComponentRangePicker} from '../internal/DateComponentPicker';
 import {ExpandableItemBase} from '../ExpandableItem';
 
@@ -30,8 +31,8 @@ const hours12 = [
  */
 class HourPicker extends React.Component {
 	static propTypes = {
-		children: React.PropTypes.arrayOf(React.PropTypes.string),
-		value: React.PropTypes.number
+		children: PropTypes.arrayOf(PropTypes.string),
+		value: PropTypes.number
 	}
 
 	constructor () {
@@ -79,25 +80,7 @@ const TimePickerBase = kind({
 		 * @required
 		 * @public
 		 */
-		hour: React.PropTypes.number.isRequired,
-
-		/**
-		 * The `meridiem` component of the time
-		 *
-		 * @type {Number}
-		 * @required
-		 * @public
-		 */
-		meridiem: React.PropTypes.number.isRequired,
-
-		/**
-		 * Array of meridiem labels to display
-		 *
-		 * @type {String[]}
-		 * @required
-		 * @public
-		 */
-		meridiems: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+		hour: PropTypes.number.isRequired,
 
 		/**
 		 * The `minute` component of the time
@@ -106,7 +89,7 @@ const TimePickerBase = kind({
 		 * @required
 		 * @public
 		 */
-		minute: React.PropTypes.number.isRequired,
+		minute: PropTypes.number.isRequired,
 
 		/**
 		 * The order in which the component pickers are displayed. Should be an array of 2 or 3
@@ -116,7 +99,7 @@ const TimePickerBase = kind({
 		 * @required
 		 * @public
 		 */
-		order: React.PropTypes.arrayOf(React.PropTypes.oneOf(['h', 'k', 'm', 'a'])).isRequired,
+		order: PropTypes.arrayOf(PropTypes.oneOf(['h', 'k', 'm', 'a'])).isRequired,
 
 		/**
 		 * The primary text of the item.
@@ -125,7 +108,34 @@ const TimePickerBase = kind({
 		 * @required
 		 * @public
 		 */
-		title: React.PropTypes.string.isRequired,
+		title: PropTypes.string.isRequired,
+
+		/**
+		 * The `meridiem` component of the time
+		 *
+		 * @type {Number}
+		 * @required
+		 * @public
+		 */
+		meridiem: PropTypes.number,
+
+		/**
+		 * String of meridiem for picker label
+		 *
+		 * @type {String}
+		 * @required
+		 * @public
+		 */
+		meridiemLabel: PropTypes.string,
+
+		/**
+		 * Array of meridiem labels to display
+		 *
+		 * @type {String[]}
+		 * @required
+		 * @public
+		 */
+		meridiems: PropTypes.arrayOf(PropTypes.string),
 
 		/**
 		 * When `true`, omits the labels below the pickers
@@ -133,7 +143,7 @@ const TimePickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		noLabels: React.PropTypes.bool,
+		noLabels: PropTypes.bool,
 
 		/**
 		 * Handler for changes in the `hour` component of the time
@@ -141,7 +151,7 @@ const TimePickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onChangeHour: React.PropTypes.func,
+		onChangeHour: PropTypes.func,
 
 		/**
 		 * Handler for changes in the `meridiem` component of the time
@@ -149,7 +159,7 @@ const TimePickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onChangeMeridiem: React.PropTypes.func,
+		onChangeMeridiem: PropTypes.func,
 
 		/**
 		 * Handler for changes in the `minute` component of the time
@@ -157,7 +167,7 @@ const TimePickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onChangeMinute: React.PropTypes.func,
+		onChangeMinute: PropTypes.func,
 
 		/**
 		 * Callback to be called when a condition occurs which should cause the expandable to close
@@ -165,7 +175,7 @@ const TimePickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onClose: React.PropTypes.func,
+		onClose: PropTypes.func,
 
 		/**
 		 * The handler to run when the component is removed while retaining focus.
@@ -174,7 +184,33 @@ const TimePickerBase = kind({
 		 * @param {Object} event
 		 * @public
 		 */
-		onSpotlightDisappear: React.PropTypes.func,
+		onSpotlightDisappear: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightLeft: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightRight: PropTypes.func,
+
+		/**
+		 * When `true`, current locale is RTL
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
 
 		/**
 		 * When `true`, the component cannot be navigated using spotlight.
@@ -183,7 +219,7 @@ const TimePickerBase = kind({
 		 * @default false
 		 * @public
 		 */
-		spotlightDisabled: React.PropTypes.bool
+		spotlightDisabled: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -206,21 +242,61 @@ const TimePickerBase = kind({
 		hasMeridiem: ({order}) => order.indexOf('a') >= 0
 	},
 
-	render: ({handlePickerKeyDown, hasMeridiem, hour, meridiem, meridiems, minute, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, onSpotlightDisappear, order, spotlightDisabled, ...rest}) => {
+	render: ({
+		handlePickerKeyDown,
+		hasMeridiem,
+		hour,
+		meridiem,
+		meridiemLabel,
+		meridiems,
+		minute,
+		noLabels,
+		onChangeHour,
+		onChangeMeridiem,
+		onChangeMinute,
+		onSpotlightDisappear,
+		onSpotlightLeft,
+		onSpotlightRight,
+		order,
+		rtl,
+		spotlightDisabled,
+		...rest
+	}) => {
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
+			<ExpandableItemBase
+				{...rest}
+				showLabel="always"
+				autoClose={false}
+				lockBottom={false}
+				onSpotlightDisappear={onSpotlightDisappear}
+				onSpotlightLeft={onSpotlightLeft}
+				onSpotlightRight={onSpotlightRight}
+				spotlightDisabled={spotlightDisabled}
+			>
 				<div className={dateComponentPickers} onKeyDown={handlePickerKeyDown}>
 					<div className={css.timeComponents}>
-						{order.map(picker => {
+						{order.map((picker, index) => {
+							// although we create a component array based on the provided
+							// order, we ultimately force order in CSS for RTL
+							const isFirst = index === 0;
+							const isLast = index === order.length - 1;
+							// meridiem will always be the left-most control in RTL, regardless of the provided order
+							const isLeft = rtl && picker === 'a' || isFirst && !rtl;
+							// minute will always be the right-most control in RTL, regardless of the provided order
+							const isRight = rtl && picker === 'm' || isLast && !rtl;
+
 							switch (picker) {
 								case 'h':
 								case 'k':
 									return (
 										<HourPicker
+											className={css.hourComponents}
 											key="hour-picker"
 											label={noLabels ? null : $L('hour')}
 											onChange={onChangeHour}
 											onSpotlightDisappear={onSpotlightDisappear}
+											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
+											onSpotlightRight={isRight ? onSpotlightRight : null}
 											spotlightDisabled={spotlightDisabled}
 											value={hour}
 											width={2}
@@ -232,12 +308,15 @@ const TimePickerBase = kind({
 								case 'm':
 									return (
 										<DateComponentRangePicker
+											className={css.minutesComponents}
 											key="minute-picker"
 											label={noLabels ? null : $L('minute')}
 											max={59}
 											min={0}
 											onChange={onChangeMinute}
 											onSpotlightDisappear={onSpotlightDisappear}
+											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
+											onSpotlightRight={isRight ? onSpotlightRight : null}
 											spotlightDisabled={spotlightDisabled}
 											padded
 											value={minute}
@@ -245,27 +324,30 @@ const TimePickerBase = kind({
 											wrap
 										/>
 									);
+								case 'a':
+									return (
+										<DateComponentPicker
+											className={css.meridiemComponent}
+											key="meridiem-picker"
+											label={noLabels ? null : meridiemLabel}
+											onChange={onChangeMeridiem}
+											onSpotlightDisappear={onSpotlightDisappear}
+											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
+											onSpotlightRight={isRight ? onSpotlightRight : null}
+											reverse
+											spotlightDisabled={spotlightDisabled}
+											value={meridiem}
+											width={4}
+											wrap
+										>
+											{meridiems}
+										</DateComponentPicker>
+									);
 							}
 
 							return null;
 						})}
 					</div>
-					{!hasMeridiem ? null : (
-						// eslint-disable-next-line react/jsx-indent
-						<DateComponentPicker
-							key="meridiem-picker"
-							label={noLabels ? null : $L('meridiem')}
-							onChange={onChangeMeridiem}
-							onSpotlightDisappear={onSpotlightDisappear}
-							reverse
-							spotlightDisabled={spotlightDisabled}
-							value={meridiem}
-							width={4}
-							wrap
-						>
-							{meridiems}
-						</DateComponentPicker>
-					)}
 				</div>
 			</ExpandableItemBase>
 		);

@@ -2,20 +2,6 @@
 //
 
 /**
- * What time is it right this moment
- *
- * @return {Number} Current time in miliseconds.
- * @private
- */
-const getNow = function () {
-	if (typeof window === 'object') {
-		return window.performance.now();
-	} else {
-		return Date.now();
-	}
-};
-
-/**
  * Create a time object (hour, minute, second) from an amount of seconds
  *
  * @param  {Number|String} value A duration of time represented in seconds
@@ -55,16 +41,26 @@ const secondsToPeriod = (seconds) => {
  * @param {DurationFmt} durfmt An instance of a {@link i18n/ilib/lib/DurationFmt.DurationFmt} object
  *                             from iLib confugured to display time used by the {@Link VideoPlayer}
  *                             component.
+ * @param  {Object} config Additional configuration object that includes `includeHour`.
  *
  * @return {String}      Formatted duration string
  * @private
  */
-const secondsToTime = (seconds, durfmt) => {
+const secondsToTime = (seconds, durfmt, config) => {
+	const includeHour = config && config.includeHour;
+
 	if (durfmt) {
-		return durfmt.format(parseTime(seconds)).toString();
+		const parsedTime = parseTime(seconds);
+		const timeString = durfmt.format(parsedTime).toString();
+
+		if (includeHour && !parsedTime.hour) {
+			return '00:' + timeString;
+		} else {
+			return timeString;
+		}
 	}
 
-	return '00:00';
+	return includeHour ? '00:00:00' : '00:00';
 };
 
 /**
@@ -80,7 +76,6 @@ const calcNumberValueOfPlaybackRate = (rate) => {
 
 export {
 	calcNumberValueOfPlaybackRate,
-	getNow,
 	parseTime,
 	secondsToPeriod,
 	secondsToTime

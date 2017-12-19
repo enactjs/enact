@@ -1,5 +1,6 @@
 import factory from '@enact/core/factory';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import {
 	computeBarTransform,
@@ -27,7 +28,6 @@ const SliderBarFactory = factory(({css}) => {
 			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @private
 			 */
 			detachedKnob: PropTypes.bool,
@@ -54,7 +54,6 @@ const SliderBarFactory = factory(({css}) => {
 			 * user interaction.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			scrubbing: PropTypes.bool,

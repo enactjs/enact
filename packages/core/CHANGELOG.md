@@ -2,15 +2,151 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+
+### Fixed
+
+## [2.0.0-alpha.2] - 2017-08-29
+
+No significant changes.
+
+## [2.0.0-alpha.1] - 2017-08-27
+
+No significant changes.
+
+## [1.13.2] - 2017-12-14
+
+No significant changes.
+
+## [1.13.1] - 2017-12-06
+
+No significant changes.
+
+## [1.13.0] - 2017-11-28
+
+No significant changes.
+
+## [1.12.2] - 2017-11-15
+
+No significant changes.
+
+## [1.12.1] - 2017-11-07
+
+No significant changes.
+
+## [1.12.0] - 2017-10-27
+
+### Added
+
+- `core/util.Job` APIs `idle`, `idleUntil`, `startRaf` and `startRafAfter`
+
+## [1.11.0] - 2017-10-24
+
+No significant changes.
+
+## [1.10.1] - 2017-10-16
+
+No significant changes.
+
+## [1.10.0] - 2017-10-09
+
+No significant changes.
+
+## [1.9.3] - 2017-10-03
+
+No significant changes.
+
+## [1.9.2] - 2017-09-26
+
+No significant changes.
+
+## [1.9.1] - 2017-09-25
+
+No significant changes.
+
+## [1.9.0] - 2017-09-22
+
+No significant changes.
+
+## [1.8.0] - 2017-09-07
+
+No significant changes.
+
+## [1.7.0] - 2017-08-23
+
+No significant changes.
+
+## [1.6.1] - 2017-08-07
+
+No significant changes.
+
+## [1.6.0] - 2017-08-04
+
+No significant changes.
+
+## [1.5.0] - 2017-07-19
+
+### Changed
+
+- `@core/handle.preventDefault` (and, subsequently, `forwardWithPrevent`) to also call `preventDefault()` on the originating event
+
+## [1.4.1] - 2017-07-05
+
+No significant changes.
+
+## [1.4.0] - 2017-06-29
+
+No significant changes.
+
+## [1.3.1] - 2017-06-14
+
+No significant changes.
+
+## [1.3.0] - 2017-06-12
+
+### Added
+
+- `core/platform` to support platform detection across multiple browsers
+
+## [1.2.2] - 2017-05-31
+
+No significant changes.
+
+## [1.2.1] - 2017-05-25
+
+No significant changes.
+
+## [1.2.0] - 2017-05-17
+
+### Added
+
+- `core/handle.oneOf` to support branching event handlers
+
+## [1.1.0] - 2017-04-21
+
+### Added
+
+- `core/util` documentation
+
+### Fixed
+
+- `core/util.childrenEquals` to work with mixed components and text
+
 ## [1.0.0] - 2017-03-31
 
 ### Added
 
-- `core/util/Job` to replace `core/jobs` with an API that reduced the chance of job name collisions
+- `core/util.Job` to replace `core/jobs` with an API that reduced the chance of job name collisions
 
 ### Removed
 
-- `core/jobs` and replaced it with `core/util/Job`
+- `core/jobs` and replaced it with `core/util.Job`
 - `core/selection`, which was only used internally by `ui/GroupItem`
 - `kind` and `hoc` named exports from root module. Should be directly imported via `@enact/core/kind` and `@enact/core/hoc`, respectively.
 - `core/fetch` which was no longer used by Enact
@@ -28,7 +164,7 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ## [1.0.0-beta.3] - 2017-02-21
 
-### Addded
+### Added
 
 - `core/handle` function `forEventProp` to test properties on an event
 

@@ -3,7 +3,7 @@ import ExpandableList from '@enact/moonstone/ExpandableList';
 import {RadioControllerDecorator} from '@enact/ui/RadioDecorator';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
+import {boolean, text, select} from '@kadira/storybook-addon-knobs';
 
 const ExpandableGroup = RadioControllerDecorator('div');
 
@@ -38,7 +38,6 @@ class ExpandableListChildrenLengthUpdate extends React.Component {
 }
 
 storiesOf('ExpandableList')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with children length update',
 		() => (
@@ -51,7 +50,7 @@ storiesOf('ExpandableList')
 				onSelect={action('onSelect')}
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}
-				select={select('select', ['single', 'radio', 'multiple'], 'single')}
+				select={select('select', ['radio', 'multiple', 'single'], 'radio')}
 				title={text('title', 'title')}
 			/>
 		)

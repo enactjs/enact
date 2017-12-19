@@ -1,7 +1,8 @@
-import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
+import $L from '../internal/$L';
 import IconButton from '../IconButton';
 
 import css from './ApplicationCloseButton.less';
@@ -22,11 +23,25 @@ const ApplicationCloseButton = kind({
 
 	propTypes: /** @lends moonstone/Panels.ApplicationCloseButton.prototype */ {
 		/**
+		 * The background-color opacity of this button; valid values are `'opaque'`, `'translucent'`,
+		 * `'lightTranslucent'` and `'transparent'`.
+		 *
+		 * @type {String}
+		 * @default 'transparent'
+		 * @public
+		 */
+		backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'lightTranslucent', 'transparent']),
+
+		/**
 		 * A function to run when app close button is clicked
 		 *
 		 * @type {Function}
 		 */
-		onApplicationClose: React.PropTypes.func
+		onApplicationClose: PropTypes.func
+	},
+
+	defaultProps: {
+		backgroundOpacity: 'transparent'
 	},
 
 	styles: {
@@ -34,14 +49,14 @@ const ApplicationCloseButton = kind({
 		className: 'applicationCloseButton'
 	},
 
-	render: ({onApplicationClose, ...rest}) => {
+	render: ({backgroundOpacity, onApplicationClose, ...rest}) => {
 		return (
 			<IconButton
 				{...rest}
 				aria-label={$L('Exit app')}
+				backgroundOpacity={backgroundOpacity}
+				onTap={onApplicationClose}
 				small
-				backgroundOpacity="transparent"
-				onClick={onApplicationClose}
 			>
 				closex
 			</IconButton>

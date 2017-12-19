@@ -3,14 +3,16 @@
 // http://lesscss.org/features/#mixins-feature-not-outputting-the-mixin
 //
 
-@import '~@enact/ui/styles/mixins.less';
+@import "~@enact/spotlight/styles/mixins.less";
+@import "~@enact/ui/styles/mixins.less";
+@import "./variables.less";
 
 .moon-taparea(@element-size) when (@moon-button-small-tap-area-height > @element-size) {
 	// Take the size of the minimum tappable area, and subtract the element's current size.
 	@_tap-offset: -(@moon-button-border-width + (@moon-button-small-tap-area-height - @element-size) / 2);
 
-	&:before {
-		content: '';
+	&::before {
+		content: "";
 		position: absolute;
 		top: @_tap-offset;
 		right: @_tap-offset;
@@ -22,7 +24,7 @@
 
 .moon-taparea(@element-size) when (@moon-button-small-tap-area-height <= @element-size) {
 	// Remove the tappable area if the tap area is smaller than the element's current size.
-	&:before {
+	&::before {
 		content: none;
 	}
 }
@@ -35,6 +37,67 @@
 }
 
 .moon-word-break() {
-	word-wrap: break-word;
+	overflow-wrap: break-word;
 	word-break: keep-all;
+}
+
+// NOTE: Until we are able to automatically remove these JSDoc-style comments, they should remain LESS-commented
+// /**
+//  * Add a margin to your component which includes the standard moonstone spotlight margin on the
+//  * sides and uses the two arguments for margin on the top and bottom respectively.
+//  *
+//  * @param  {Measurement} @t Top margin
+//  * @param  {Measurement} @b Bottom margin
+//  */
+.moon-spotlight-margin(@t, @b) {
+	margin: @t @moon-spotlight-outset @b;
+}
+
+// /**
+//  * Add a margin to your component which includes the standard moonstone spotlight margin on the
+//  * sides and uses the argument for margin on the top and bottom.
+//  *
+//  * @param  {Measurement} @tb Top and bottom margin
+//  */
+.moon-spotlight-margin(@tb) {
+	margin: @tb @moon-spotlight-outset;
+}
+
+// /**
+//  * Add a margin to your component which includes the standard moonstone spotlight margin only on
+//  * the sides.
+//  */
+.moon-spotlight-margin() {
+	margin-left: @moon-spotlight-outset;
+	margin-right: @moon-spotlight-outset;
+}
+
+// /**
+//  * Add a padding to your component which includes the standard moonstone spotlight padding on the
+//  * sides and uses the two arguments for padding on the top and bottom respectively.
+//  *
+//  * @param  {Measurement} @t Top padding
+//  * @param  {Measurement} @b Bottom padding
+//  */
+.moon-spotlight-padding(@t, @b) {
+	padding: @t @moon-spotlight-outset @b;
+}
+
+// /**
+//  * Add a padding to your component which includes the standard moonstone spotlight padding on the
+//  * sides and uses the argument for padding on the top and bottom.
+//  *
+//  * @param  {Measurement} @tb Top and bottom padding
+//  */
+.moon-spotlight-padding(@tb) {
+	padding: @tb @moon-spotlight-outset;
+}
+
+// /**
+//  * Add a padding to your component which includes the standard moonstone spotlight padding only on
+//  * the sides.
+//  */
+.moon-spotlight-padding() {
+	padding-left: @moon-spotlight-outset;
+	padding-right: @moon-spotlight-outset;
 }

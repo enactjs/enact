@@ -130,8 +130,8 @@ var INumber = function (str, options) {
 		onLoad = options.onLoad;
 	}
 	
-	isDigit._init(sync, loadParams, /** @type {function()|undefined} */ ilib.bind(this, function() {
-		isSpace._init(sync, loadParams, /** @type {function()|undefined} */ ilib.bind(this, function() {
+	isDigit._init(sync, loadParams, ilib.bind(this, function() {
+		isSpace._init(sync, loadParams, ilib.bind(this, function() {
 			new LocaleInfo(this.locale, {
 				sync: sync,
 				onLoad: ilib.bind(this, function (li) {
@@ -162,6 +162,7 @@ var INumber = function (str, options) {
 						}
 						// record what we actually parsed
 						this.parsed = this.str.substring(0, lastNumericChar+1);
+						/** @type {number} */
 						this.value = parseFloat(stripped);
 						break;
 					case 'number':
@@ -170,8 +171,9 @@ var INumber = function (str, options) {
 						break;
 						
 					case 'object':
-						this.value = /** @type {number} */ str.valueOf();
-						this.str = "" + this.value;
+						// call parseFloat to coerse the type to number
+						this.value = parseFloat(str.valueOf());
+    					this.str = "" + this.value;
 						break;
 						
 					case 'undefined':

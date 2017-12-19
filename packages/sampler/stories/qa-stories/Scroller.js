@@ -1,11 +1,14 @@
-import React from 'react';
-import ri from '@enact/ui/resolution';
 import Button from '@enact/moonstone/Button';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import Scroller from '@enact/moonstone/Scroller';
-
+import Item from '@enact/moonstone/Item';
+import ri from '@enact/ui/resolution';
+import Group from '@enact/ui/Group';
+import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {boolean, select} from '@kadira/storybook-addon-knobs';
+
+import nullify from '../../src/utils/nullify.js';
 
 const itemData = [];
 for (let i = 0; i < 100; i++) {
@@ -14,23 +17,38 @@ for (let i = 0; i < 100; i++) {
 
 const
 	prop = {
-		horizontal: ['auto', 'hidden', 'scroll']
+		direction: ['both', 'horizontal', 'vertical'],
+		horizontalScrollbar: ['auto', 'hidden', 'visible']
 	},
 	style = {
 		horizontalScroller: {
 			width: '100%'
 		},
 		horizontalContent: {
-			width: ri.scale(4200) + 'px'
+			width: ri.scale(4200) + 'px',
+			padding: '1px'
 		}
 	};
 
 storiesOf('Scroller')
-	.addDecorator(withKnobs)
+	.addWithInfo(
+		'List of things',
+		() => (
+			<Scroller
+				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+				style={{height: '600px'}}
+			>
+				<Group childComponent={Item}>
+					{itemData}
+				</Group>
+			</Scroller>
+		)
+	)
 	.addWithInfo(
 		'With ExpandableList',
 		() => (
 			<Scroller
+				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 				style={{height: '600px'}}
 			>
 				<ExpandableList
@@ -46,8 +64,9 @@ storiesOf('Scroller')
 		'Horizontal scroll',
 		() => (
 			<Scroller
-				hideScrollbars={boolean('hideScrollbars', false)}
-				horizontal={select('horizontal', prop.horizontal, 'auto')}
+				direction={select('direction', prop.direction, 'horizontal')}
+				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				style={style.horizontalScroller}
@@ -57,8 +76,7 @@ storiesOf('Scroller')
 						<Button key={i + 1}>
 							Button {i + 1}
 						</Button>
-					)
-				)}
+					))}
 				</div>
 			</Scroller>
 		)

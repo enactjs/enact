@@ -4,13 +4,19 @@
  * @module moonstone/Item
  */
 
+import {childrenEquals} from '@enact/core/util';
 import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import Slottable from '@enact/ui/Slottable';
+import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
+import Toggleable from '@enact/ui/Toggleable';
 import Spottable from '@enact/spotlight/Spottable';
-
 import {MarqueeDecorator} from '../Marquee';
+import Skinnable from '../Skinnable';
+import Touchable from '../internal/Touchable';
 
 import OverlayDecorator from './OverlayDecorator';
 
@@ -103,7 +109,7 @@ const ItemBase = kind({
 });
 
 // cache the MarqueeDecorator so it can be used for Item and ItemOverlay
-const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidateProps: ['inline', 'autoHide']});
+const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidateProps: ['inline', 'autoHide', 'remeasure']});
 
 /**
  * {@link moonstone/Item.Item} is a focusable Moonstone-styled control that can display
@@ -116,9 +122,15 @@ const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidat
  * @ui
  * @public
  */
-const Item = Spottable(
-	ItemMarqueeDecorator(
-		ItemBase
+const Item = Pure(
+	Touchable(
+		Spottable(
+			ItemMarqueeDecorator(
+				Skinnable(
+					ItemBase
+				)
+			)
+		)
 	)
 );
 
@@ -144,12 +156,28 @@ const Item = Spottable(
  * @ui
  * @public
  */
-const ItemOverlay = Spottable(
-	Slottable(
-		{slots: ['overlayAfter', 'overlayBefore']},
-		ItemMarqueeDecorator(
-			OverlayDecorator(
-				ItemBase
+const ItemOverlay = Slottable(
+	{slots: ['overlayAfter', 'overlayBefore']},
+	Pure(
+		{propComparators: {
+			overlayBefore: childrenEquals,
+			overlayAfter: childrenEquals
+		}},
+		Toggleable(
+			{prop: 'remeasure', activate: 'onFocus', deactivate: 'onBlur', toggle: null},
+			Touchable(
+				Spottable(
+					RemeasurableDecorator(
+						{trigger: 'remeasure'},
+						ItemMarqueeDecorator(
+							OverlayDecorator(
+								Skinnable(
+									ItemBase
+								)
+							)
+						)
+					)
+				)
 			)
 		)
 	)

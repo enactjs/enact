@@ -7,7 +7,7 @@ import ToggleButton from '@enact/moonstone/ToggleButton';
 import Group from '@enact/ui/Group';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {boolean, select} from '@kadira/storybook-addon-knobs';
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -23,7 +23,6 @@ const prop = {
 const getComponent = (name) => prop.children[name];
 
 storiesOf('Group')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of Group',

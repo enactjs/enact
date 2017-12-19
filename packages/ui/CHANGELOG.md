@@ -4,6 +4,187 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Deprecated
+
+### Added
+
+### Changed
+
+- `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
+
+### Fixed
+
+## [2.0.0-alpha.2] - 2017-08-29
+
+## Added
+
+- `ui/Scroller` and `ui/VirtualList`
+
+## [2.0.0-alpha.1] - 2017-08-27
+
+## Added
+
+- `ui/Layout` which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
+- `ui/Touchable` to support consistent mouse and touch events along with hold gesture
+
+## Removed
+
+- `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
+
+## [1.13.2] - 2017-12-14
+
+### Fixed
+
+- `ui/ViewManager` to revert 1.13.0 fix for lifecycle timing when entering a view
+
+## [1.13.1] - 2017-12-06
+
+No significant changes.
+
+## [1.13.0] - 2017-11-28
+
+### Added
+
+- `ui/Transition` animation timing functions `ease-in`, `ease-out`, `ease-in-quart`, and `ease-out-quart` to provide prettier options for transitions that may be more suited to a specific visual style
+
+### Fixed
+
+- `ui/ViewManager` to prevent interaction issue with `moonstone/Scroller`
+
+## [1.12.2] - 2017-11-15
+
+### Fixed
+
+- `ui/Remeasurable` to update on every trigger change
+- `ui/Transition` to revert 1.12.1 change to support `clip` transition-type directions and rendering optimizations
+
+## [1.12.1] - 2017-11-07
+
+### Fixed
+
+- `ui/Transition` support for all `clip` transition-type directions and made rendering optimizations
+
+## [1.12.0] - 2017-10-27
+
+No significant changes.
+
+## [1.11.0] - 2017-10-24
+
+No significant changes.
+
+## [1.10.1] - 2017-10-16
+
+### Fixed
+
+- `ui/Pressable` to properly set pressed state to false on blur and release
+
+## [1.10.0] - 2017-10-09
+
+### Added
+
+- `ui/Layout` which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
+
+## [1.9.3] - 2017-10-03
+
+### Fixed
+
+- `ui/Transition` to recalculate height when a resize occurs
+
+## [1.9.2] - 2017-09-26
+
+No significant changes.
+
+## [1.9.1] - 2017-09-25
+
+No significant changes.
+
+## [1.9.0] - 2017-09-22
+
+### Added
+
+- `ui/styles/mixins.less` mixins: `.remove-margin-on-edge-children()` and `.remove-padding-on-edge-children()` to better handle edge margins on container components
+
+### Changed
+
+- `ui/Holdable` to cancel key hold events when the pointer moves
+- `ui/Holdable` and `ui/Changeable` back to Components and moved performance improvements elsewhere
+
+### Fixed
+
+- `ui/FloatingLayer` to not asynchronously attach a click handler when the floating layer is removed
+- `ui/ViewManager` to correctly position items when changing mid-transition
+
+## [1.8.0] - 2017-09-07
+
+### Changed
+
+- `ui/Holdable` and `ui/Changeable` to be PureComponents to reduce the number of updates
+
+## [1.7.0] - 2017-08-23
+
+No significant changes.
+
+## [1.6.1] - 2017-08-07
+
+No significant changes.
+
+## [1.6.0] - 2017-08-04
+
+### Fixed
+
+- `ui/PlaceholderDecorator` to update bounds of `Scroller` when the `visible` state changed
+
+## [1.5.0] - 2017-07-19
+
+### Fixed
+
+- `ui/Cancelable` warning for string type cancel handler
+
+## [1.4.1] - 2017-07-05
+
+No significant changes.
+
+## [1.4.0] - 2017-06-29
+
+No significant changes.
+
+## [1.3.1] - 2017-06-14
+
+No significant changes.
+
+## [1.3.0] - 2017-06-12
+
+### Added
+
+- `ui/ViewManager` prop `childProps` to pass static props to each child
+
+### Fixed
+
+- `ui/ViewManager` to have a view count of 0 specifically for `noAnimation` cases. This helps things like `spotlight` restore `focus` properly.
+- `ui/Cancelable` to run modal handlers on `window` object and correctly store handlers in LIFO order
+
+## [1.2.2] - 2017-05-31
+
+No significant changes.
+
+## [1.2.1] - 2017-05-25
+
+No significant changes.
+
+## [1.2.0] - 2017-05-17
+
+### Added
+
+- `ui/Skinnable` to provide themes with a way to apply a base theme styling and skins on top of that
+- `ui/Transition` prop `onShow` that fires when transitioning into view a component.
+- `ui/transition` callback prop `onShow` that fires when transitioning into view completes
+
+### Changed
+
+-`ui/View` to prevent re-renders on views leaving the `ViewManager`
+
+## [1.1.0] - 2017-04-21
+
 ### Changed
 
 - `ui/Slottable` to support slot-candidate tags that have multiple props, which are now forwarded directly instead of just their children

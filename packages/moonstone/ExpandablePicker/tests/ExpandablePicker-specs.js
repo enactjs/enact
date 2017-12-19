@@ -3,6 +3,11 @@ import {mount} from 'enzyme';
 import sinon from 'sinon';
 import ExpandablePicker, {ExpandablePickerBase} from '../ExpandablePicker';
 
+const tap = (node) => {
+	node.simulate('mousedown');
+	node.simulate('mouseup');
+};
+
 describe('ExpandablePicker Specs', () => {
 
 	it('should close onChange', function () {
@@ -14,10 +19,10 @@ describe('ExpandablePicker Specs', () => {
 		);
 
 		const checkButton = expandablePicker.find('IconButton').last();
-		checkButton.simulate('click');
+		tap(checkButton);
 
 		const expected = false;
-		const actual = expandablePicker.find('ExpandableContainer').props().open;
+		const actual = expandablePicker.find('ExpandableItem').props().open;
 
 		expect(actual).to.equal(expected);
 	});
@@ -32,7 +37,7 @@ describe('ExpandablePicker Specs', () => {
 		);
 
 		const checkButton = expandablePicker.find('IconButton').last();
-		checkButton.simulate('click');
+		tap(checkButton);
 
 		const expected = value;
 		const actual = handleChange.firstCall.args[0].value;
@@ -50,7 +55,7 @@ describe('ExpandablePicker Specs', () => {
 		);
 
 		const checkButton = expandablePicker.find('IconButton').last();
-		checkButton.simulate('click');
+		tap(checkButton);
 
 		const expected = value;
 		const actual = handleChange.firstCall.args[0].value;

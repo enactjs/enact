@@ -3,7 +3,7 @@ import BodyText from '@enact/moonstone/BodyText';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
+import {boolean, text, select} from '@kadira/storybook-addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 
@@ -15,7 +15,6 @@ const renderPopup = () => (
 );
 
 storiesOf('ContextualPopupDecorator')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of ContextualPopupDecorator',

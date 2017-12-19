@@ -6,7 +6,9 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import Toggleable from '@enact/ui/Toggleable';
 
 import {ItemOverlay} from '../Item';
@@ -88,7 +90,7 @@ const ToggleItemBase = kind({
 		 *
 		 * @type {Function}
 		 */
-		onClick: React.PropTypes.func,
+		onTap: PropTypes.func,
 
 		/**
 		 * The handler to run when the toggle item is toggled.
@@ -134,10 +136,10 @@ const ToggleItemBase = kind({
 	},
 
 	handlers: {
-		onToggle: (ev, {onToggle, onClick, selected, disabled, value}) => {
-			if (!disabled && (onToggle || onClick)) {
+		onToggle: (ev, {onToggle, onTap, selected, disabled, value}) => {
+			if (!disabled && (onToggle || onTap)) {
 				if (onToggle) onToggle({selected: !selected, value});
-				if (onClick) onClick(ev);
+				if (onTap) onTap(ev);
 			}
 		}
 	},
@@ -174,7 +176,7 @@ const ToggleItemBase = kind({
 				role="checkbox"
 				{...rest}
 				aria-checked={selected}
-				onClick={onToggle}
+				onTap={onToggle}
 			>
 				{iconBefore}
 				{children}
@@ -197,9 +199,11 @@ const ToggleItemBase = kind({
  * @ui
  * @public
  */
-const ToggleItem = Toggleable(
-	{prop: 'selected'},
-	ToggleItemBase
+const ToggleItem = Pure(
+	Toggleable(
+		{prop: 'selected'},
+		ToggleItemBase
+	)
 );
 
 export default ToggleItem;

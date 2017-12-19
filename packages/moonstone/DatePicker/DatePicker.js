@@ -6,37 +6,14 @@
  */
 
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
+import Pure from '@enact/ui/internal/Pure';
 
 import DateTimeDecorator from '../internal/DateTimeDecorator';
+import Skinnable from '../Skinnable';
 
 import DatePickerBase from './DatePickerBase';
 
-/**
- * {@link moonstone/DatePicker.DatePicker} allows the selection (or simply display) of
- * a day, month, and year.
- *
- * Set the [value]{@link moonstone/DatePicker.DatePicker#value} property to a standard
- * JavaScript {@glossary Date} object to initialize the picker.
- *
- * By default, `DatePicker` maintains the state of its `value` property. Supply the
- * `defaultValue` property to control its initial value. If you wish to directly control updates
- * to the component, supply a value to `value` at creation time and update it in response to
- * `onChange` events.
- *
- * `DatePicker` is an expandable component and it maintains its open/closed state by default. The
- * initial state can be supplied using `defaultOpen`. In order to directly control the open/closed
- * state, supply a value for `open` at creation time and update its value in response to
- * `onClose`/`onOpen` events.
- *
- * @class DatePicker
- * @memberof moonstone/DatePicker
- * @mixes ui/Toggleable.Toggleable
- * @mixes ui/RadioDecorator.RadioDecorator
- * @mixes ui/Changeable.Changeable
- * @ui
- * @public
- */
-const DatePicker = DateTimeDecorator({
+const dateTimeConfig = {
 	customProps: function (i18n, value) {
 		const values = {
 			maxMonths: 12,
@@ -88,7 +65,41 @@ const DatePicker = DateTimeDecorator({
 
 		return {formatter, order};
 	}
-}, DatePickerBase);
+};
+
+/**
+ * {@link moonstone/DatePicker.DatePicker} allows the selection (or simply display) of
+ * a day, month, and year.
+ *
+ * Set the [value]{@link moonstone/DatePicker.DatePicker#value} property to a standard
+ * JavaScript {@glossary Date} object to initialize the picker.
+ *
+ * By default, `DatePicker` maintains the state of its `value` property. Supply the
+ * `defaultValue` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `value` at creation time and update it in response to
+ * `onChange` events.
+ *
+ * `DatePicker` is an expandable component and it maintains its open/closed state by default. The
+ * initial state can be supplied using `defaultOpen`. In order to directly control the open/closed
+ * state, supply a value for `open` at creation time and update its value in response to
+ * `onClose`/`onOpen` events.
+ *
+ * @class DatePicker
+ * @memberof moonstone/DatePicker
+ * @mixes ui/Toggleable.Toggleable
+ * @mixes ui/RadioDecorator.RadioDecorator
+ * @mixes ui/Changeable.Changeable
+ * @ui
+ * @public
+ */
+const DatePicker = Pure(
+	Skinnable(
+		DateTimeDecorator(
+			dateTimeConfig,
+			DatePickerBase
+		)
+	)
+);
 
 export default DatePicker;
 export {DatePicker, DatePickerBase};

@@ -3,7 +3,7 @@ import ToggleItem from '@enact/moonstone/ToggleItem';
 import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
@@ -11,7 +11,6 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('ToggleItem', ItemBase, Item, ToggleItem);
 
 storiesOf('ToggleItem')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'The basic ToggleItem',

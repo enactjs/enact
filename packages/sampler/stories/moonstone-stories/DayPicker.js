@@ -1,10 +1,9 @@
 import DayPicker from '@enact/moonstone/DayPicker';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
+import {boolean, text} from '@kadira/storybook-addon-knobs';
 
 storiesOf('DayPicker')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of DayPicker',

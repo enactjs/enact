@@ -1,4 +1,5 @@
 import clamp from 'ramda/src/clamp';
+import {perfNow} from '@enact/core/util';
 
 const
 	// Use eases library
@@ -82,15 +83,14 @@ class ScrollAnimator {
 
 	animate (rAFCallbackFuntion) {
 		const
-			perf = window.performance,
 			rAF = window.requestAnimationFrame,
-			startTimeStamp = perf.now(),
+			startTimeStamp = perfNow(),
 			fn = () => {
 				const
 					// schedule next frame
 					rAFId = rAF(fn),
 					// current timestamp
-					curTimeStamp = perf.now(),
+					curTimeStamp = perfNow(),
 					// current time if 0 at starting position
 					curTime = curTimeStamp - startTimeStamp;
 
@@ -99,6 +99,10 @@ class ScrollAnimator {
 			};
 
 		this.rAFId = rAF(fn);
+	}
+
+	isAnimating () {
+		return this.rAFId !== null;
 	}
 
 	stop () {

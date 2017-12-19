@@ -137,27 +137,27 @@ EnyoLoader.prototype._loadFilesAsync = function (paths, results, params, cache, 
 	}
 };
 
-EnyoLoader.prototype._loadFilesCache = function (paths) {
+EnyoLoader.prototype._loadFilesCache = function (_root, paths) {
 	this._validateCache();
 	if (typeof window !== 'undefined' && window.localStorage && paths.length > 0) {
-		let stored = window.localStorage.getItem(cachePrefix + paths[0]);
+		let stored = window.localStorage.getItem(cachePrefix + _root + '/' + paths[0]);
 		if (stored) {
 			const target = JSON.stringify(paths);
 			const data = JSON.parse(stored);
 			if (data.target === target) {
 				return data.value;
 			} else {
-				window.localStorage.removeItem(cachePrefix + paths[0]);
+				window.localStorage.removeItem(cachePrefix + _root + '/' + paths[0]);
 			}
 		}
 	}
 	return new Array(paths.length);
 };
 
-EnyoLoader.prototype._storeFilesCache = function (paths, data) {
+EnyoLoader.prototype._storeFilesCache = function (_root, paths, data) {
 	if (typeof window !== 'undefined' && window.localStorage && paths.length > 0) {
 		let target = JSON.stringify(paths);
-		window.localStorage.setItem(cachePrefix + paths[0], JSON.stringify({target:target, value:data}));
+		window.localStorage.setItem(cachePrefix + _root + '/' + paths[0], JSON.stringify({target:target, value:data}));
 	}
 };
 
@@ -179,14 +179,11 @@ EnyoLoader.prototype._validateCache = function () {
 };
 
 EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
-	let cache = {data: this._loadFilesCache(paths)};
+	let _root = (params && typeof params.root !== 'undefined') ? params.root : iLibResources;
+	let cache = {data: this._loadFilesCache(_root, paths)};
 	if (sync) {
 		let ret = [];
-		let _root = iLibResources;
 		let locdata = this._pathjoin(this.base, 'locale');
-		if (params && typeof params.root !== 'undefined') {
-			_root = params.root;
-		}
 		// synchronous
 		paths.forEach(function (path, index) {
 			if (this.webos && path.indexOf('zoneinfo') !== -1) {
@@ -226,7 +223,7 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 		}.bind(this));
 
 		if (cache.update) {
-			this._storeFilesCache(paths, ret);
+			this._storeFilesCache(_root, paths, ret);
 		}
 		if (typeof callback === 'function') {
 			callback.call(this, ret);
@@ -238,7 +235,7 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 	const results = [];
 	this._loadFilesAsync(paths.slice(0), results, params, cache, function (res) {
 		if (cache.update) {
-			this._storeFilesCache(paths, res);
+			this._storeFilesCache(_root, paths, res);
 		}
 		if (typeof callback === 'function') {
 			callback.call(this, res);

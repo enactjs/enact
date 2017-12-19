@@ -7,7 +7,11 @@
 
 import kind from '@enact/core/kind';
 import ri from '@enact/ui/resolution';
-import React, {PropTypes} from 'react';
+import Pure from '@enact/ui/internal/Pure';
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import Skinnable from '../Skinnable';
 
 import iconList from './IconList.js';
 
@@ -158,7 +162,7 @@ const IconBase = kind({
 	render: ({iconProps, ...rest}) => {
 		delete rest.small;
 
-		return <div {...rest} {...iconProps} />;
+		return <div aria-hidden {...rest} {...iconProps} />;
 	}
 });
 
@@ -207,6 +211,8 @@ const IconBase = kind({
  * rollbackward
  * exitfullscreen
  * fullscreen
+ * arrowshrinkleft
+ * arrowshrinkright
  * arrowextend
  * arrowshrink
  * flag
@@ -218,6 +224,30 @@ const IconBase = kind({
  * gear
  * plug
  * lock
+ * forward15
+ * back15
+ * continousplay
+ * playlist
+ * resumeplay
+ * image
+ * audio
+ * music
+ * languages
+ * cc
+ * ccon
+ * ccoff
+ * sub
+ * recordings
+ * livezoom
+ * liveplayback
+ * liveplaybackoff
+ * repeat
+ * repeatoff
+ * series
+ * repeatdownload
+ * view360
+ * view360off
+ * info
  * ```
  *
  * @name iconList
@@ -227,5 +257,11 @@ const IconBase = kind({
  * @public
  */
 
-export default IconBase;
-export {IconBase as Icon, IconBase, iconList as icons};
+const Icon = Pure(
+	Skinnable(
+		IconBase
+	)
+);
+
+export default Icon;
+export {Icon, IconBase, iconList as icons};
