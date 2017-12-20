@@ -1,9 +1,6 @@
 import React from 'react';
 
 import computed from './computed';
-import contextTypes from './contextTypes';
-import defaultProps from './defaultProps';
-import propTypes from './propTypes';
 import styles from './styles';
 
 /**
@@ -54,16 +51,38 @@ import styles from './styles';
  * @returns {Function}        Component
  */
 const kind = (config) => {
+	const {
+		computed: cfgComputed,
+		contextTypes,
+		defaultProps,
+		handlers,
+		name,
+		propTypes,
+		render,
+		styles: cfgStyles
+	} = config;
+
+	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
+	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
+
 	// addition prop decorations would be chained here (after config.render)
 	const Component = class extends React.Component {
+		static displayName = name || 'Component'
+
+		static propTypes = propTypes
+
+		static defaultProps = defaultProps
+
+		static contextTypes = contextTypes
+
 		constructor () {
 			super();
 			this.handlers = {};
 
 			// cache bound function for each handler
-			if (config.handlers) {
-				Object.keys(config.handlers).forEach(handler => {
-					return this.prepareHandler(handler, config.handlers[handler]);
+			if (handlers) {
+				Object.keys(handlers).forEach(handler => {
+					return this.prepareHandler(handler, handlers[handler]);
 				});
 			}
 		}
@@ -76,27 +95,23 @@ const kind = (config) => {
 		 *
 		 * @returns {undefined}
 		 */
-		prepareHandler (name, handler) {
-			this.handlers[name] = (ev) => {
+		prepareHandler (prop, handler) {
+			this.handlers[prop] = (ev) => {
 				handler(ev, this.props, this.context);
 			};
 		}
 
 		render () {
 			let p = Object.assign({}, this.props);
-			if (config.styles) p = styles(config.styles, p, this.context);
-			if (config.computed) p = computed(config.computed, p, this.context);
+			if (renderStyles) p = renderStyles(p, this.context);
+			if (renderComputed) p = renderComputed(p, this.context);
 
-			return config.render(p, this.context);
+			return render(p, this.context);
 		}
 	};
 
-	if (config.propTypes) propTypes(config.propTypes, Component);
-	if (config.defaultProps) defaultProps(config.defaultProps, Component);
-	if (config.contextTypes) contextTypes(config.contextTypes, Component);
-
 	// Decorate the SFC with the computed property object in DEV for easier testability
-	if (__DEV__ && config.computed) Component.computed = config.computed;
+	if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
 
 
 	return Component;

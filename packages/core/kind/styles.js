@@ -36,25 +36,33 @@ import {addInternalProp} from './util';
  * @returns {Function} Function accepting props and returning update props with computed properties
  * @public
  */
-const styles = (cfg, props) => {
-	const prop = cfg.prop || 'className';
+const styles = (cfg, optProps) => {
+	const {className, css, prop = 'className', style} = cfg;
 
-	if (cfg.style) {
-		props.style = Object.assign({}, cfg.style, props.style);
+	const renderStyles = (props) => {
+		if (style) {
+			props.style = Object.assign({}, style, props.style);
+		}
+
+		const cn = css ? classnames.bind(css) : classnames;
+		const joinedClassName = props[prop] = classnames(
+			cn(className),
+			props.className
+		);
+
+		addInternalProp(props, 'styler', {
+			join: cn,
+			append: (...args) => cn(joinedClassName, ...args)
+		});
+
+		return props;
+	};
+
+	if (optProps) {
+		return renderStyles(optProps);
 	}
 
-	const cn = cfg.css ? classnames.bind(cfg.css) : classnames;
-	const joinedClassName = props[prop] = classnames(
-		cn(cfg.className),
-		props.className
-	);
-
-	addInternalProp(props, 'styler', {
-		join: cn,
-		append: (...args) => cn(joinedClassName, ...args)
-	});
-
-	return props;
+	return renderStyles;
 };
 
 export default styles;

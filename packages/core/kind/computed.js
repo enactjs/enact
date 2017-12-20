@@ -22,14 +22,24 @@
  * @returns {Function} Function accepting props and returning update props with computed properties
  * @public
  */
-const computed = (cfg, props, ...args) => {
+const computed = (cfg, ...rest) => {
 	const keys = Object.keys(cfg);
-	const updated = {};
-	for (let i = keys.length - 1; i >= 0; i--) {
-		updated[keys[i]] = cfg[keys[i]](props, ...args);
+
+	const renderComputed = (props, ...args) => {
+		const updated = {};
+		for (let i = keys.length - 1; i >= 0; i--) {
+			updated[keys[i]] = cfg[keys[i]](props, ...args);
+		}
+
+		return Object.assign(props, updated);
+	};
+
+	// maintain 1.x compatibility
+	if (rest.length) {
+		return renderComputed(...rest);
 	}
 
-	return Object.assign(props, updated);
+	return renderComputed;
 };
 
 export default computed;
