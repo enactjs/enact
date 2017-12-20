@@ -1,5 +1,5 @@
 import configure from '../src/configure';
-import { setOptions } from '@kadira/storybook-addon-options';
+import {setOptions} from '@storybook/addon-options';
 
 const stories = require.context('../stories/qa-stories', true, /.js$/);
 
