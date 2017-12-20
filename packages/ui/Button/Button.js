@@ -1,7 +1,7 @@
 /**
  * Exports the [Button]{@link ui/Button.Button} and [ButtonBase]{@link ui/Button.ButtonBase} components and
  * the [ButtonDecorator]{@link ui/Button.ButtonDecorator} Higher-order Component (HOC).
- * 
+ *
  * The default export is [Button]{@link ui/Button.Button}.
  *
  * @module ui/Button
@@ -51,7 +51,7 @@ const ButtonBase = kind({
 
 		/**
 		 * Disables the [ButtonBase]{@link ui/Button.ButtonBase}
-		 * 
+		 *
 		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
 		 * generate `onClick` [events]{@glossary event}.
 		 *
@@ -63,7 +63,7 @@ const ButtonBase = kind({
 
 		/**
 		 * The icon displayed within the [button][ButtonBase]{@link ui/Button.ButtonBase}.
-		 * 
+		 *
 		 * The icon will be displayed before the natural reading order of the text, regardless
 		 * of locale. Any string that is valid for the `Icon` component is valid here. This also
 		 * supports a custom icon, in the form of a DOM node or a Component, with the caveat that if

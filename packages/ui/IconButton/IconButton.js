@@ -2,7 +2,7 @@
  * Exports the [IconButton]{@link ui/IconButton.IconButton} and
  * [IconButton]{@link ui/IconButton.IconButtonBase} components and the
  * [IconButtonDecorator]{@link ui/IconButton.IconButtonDecorator} Higher-order Component (HOC).
- * 
+ *
  * The default export is [IconButton]{@link ui/IconButton.IconButton}.
  *
  * @module ui/IconButton
@@ -67,7 +67,7 @@ const IconButtonBase = kind({
 
 		/**
 		 * Disables the [IconButton]{@link ui/IconButton.IconButtonBase}
-		 * 
+		 *
 		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
 		 * generate `onClick` [events]{@glossary event}.
 		 *

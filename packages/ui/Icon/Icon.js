@@ -1,6 +1,6 @@
 /**
  * Exports the [Icon]{@link ui/Icon.Icon} and [IconBase]{@link ui/Icon.IconBase} components.
- * 
+ *
  * The default export is [Icon]{@link ui/Icon.Icon}.
  *
  * @module ui/Icon
@@ -63,7 +63,7 @@ const IconBase = kind({
 	propTypes: /** @lends ui/Icon.IconBase.prototype */ {
 		/**
 		 * The icon content.
-		 * 
+		 *
 		 * May be specified as either:
 		 *
 		 * * A string that represents an icon from the [iconList]{@link ui/Icon.IconBase.iconList},
@@ -94,7 +94,7 @@ const IconBase = kind({
 
 		/**
 		 * The full list (hash) of supported icons.
-		 * 
+		 *
 		 * The keys of this hash are the unique names of each icon. The values are the unicode
 		 * character to insert in the icon. These will typically map to glyphs in your icon-font.
 		 * The format of the keys can be character, glyph, or entity reference that correctly
