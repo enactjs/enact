@@ -1,11 +1,11 @@
 /* eslint-disable no-var */
 
 var
-	// GracefulFsPlugin = require('graceful-fs-webpack-plugin'),
+	GracefulFsPlugin = require('graceful-fs-webpack-plugin'),
 	// LessPluginRi = require('resolution-independence'),
 	path = require('path'),
 	ILibPlugin = require('ilib-webpack-plugin'),
-	// WebOSMetaPlugin = require('webos-meta-webpack-plugin'),
+	WebOSMetaPlugin = require('webos-meta-webpack-plugin'),
 	webpack = require('webpack');
 
 function configure (dirname) {
@@ -24,13 +24,16 @@ function configure (dirname) {
 		},
 		module: {
 			rules: [
-				// {
-				// 	test: /appinfo\.json$/,
-				// 	loader: 'webos-meta'
-				// },
+				{
+					test: /appinfo\.json$/,
+					use: 'webos-meta-loader'
+				},
 				{
 					test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.woff$|\.ttf$|\.wav$|\.mp3$/,
-					loader: 'file-loader?name=[path][name].[ext]'
+					use: 'file-loader',
+					options: {
+						name: '[path][name].[ext]'
+					}
 				},
 				{
 					test:/\.(c|le)ss$/,
@@ -60,13 +63,13 @@ function configure (dirname) {
 					'NODE_ENV': '"development"'
 				}
 			}),
-			// new GracefulFsPlugin(),
+			new GracefulFsPlugin(),
 			// Automatically configure iLib library within @enact/i18n. Additionally,
 			// ensure the locale data files and the resource files are copied during
 			// the build to the output directory.
-			new ILibPlugin() // ,
+			new ILibPlugin(),
 			// Keep WebOSMetaPlugin last so we can easily swap out for sampler variations
-			// new WebOSMetaPlugin({path:path.join(dirname, 'webos-meta')})
+			new WebOSMetaPlugin({path:path.join(dirname, 'webos-meta')})
 		]
 	};
 }
