@@ -1,15 +1,19 @@
 import ExpandableList, {ExpandableListBase} from '@enact/moonstone/ExpandableList';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select, text} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 
-storiesOf('ExpandableList')
-	.addWithInfo(
+storiesOf('ExpandableList', module)
+	.add(
 		' ',
-		'Basic usage of ExpandableList',
-		() => (
+		withInfo({
+			propTables: [ExpandableListBase],
+			text: 'Basic usage of ExpandableList'
+		})(() => (
 			<ExpandableList
 				closeOnSelect={nullify(boolean('closeOnSelect', false))}
 				disabled={boolean('disabled', false)}
@@ -24,6 +28,5 @@ storiesOf('ExpandableList')
 			>
 				{['option1', 'option2', 'option3']}
 			</ExpandableList>
-		),
-		{propTables: [ExpandableListBase]}
+		))
 	);

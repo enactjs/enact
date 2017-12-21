@@ -1,13 +1,17 @@
-import DayPicker from '@enact/moonstone/DayPicker';
+import DayPicker, {DayPickerBase} from '@enact/moonstone/DayPicker';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, text} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
-storiesOf('DayPicker')
-	.addWithInfo(
+storiesOf('DayPicker', module)
+	.add(
 		' ',
-		'Basic usage of DayPicker',
-		() => (
+		withInfo({
+			propTables: [DayPickerBase],
+			text: 'The basic DayPicker'
+		})(() => (
 			<DayPicker
 				title={text('title', 'Day Picker')}
 				noneText={text('none', 'none')}
@@ -16,6 +20,5 @@ storiesOf('DayPicker')
 				onOpen={action('onOpen')}
 				onClose={action('onClose')}
 			/>
-		),
-		{propTables: [DayPicker]}
+		))
 	);

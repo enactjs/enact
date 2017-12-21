@@ -3,8 +3,10 @@ import VideoPlayer, {VideoPlayerBase} from '@enact/moonstone/VideoPlayer';
 import IconButton from '@enact/moonstone/IconButton';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, number, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, number, select, text} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
@@ -93,11 +95,13 @@ prop.events.forEach( (ev) => {
 	prop.eventActions[ev] = action(ev);
 });
 
-storiesOf('VideoPlayer')
-	.addWithInfo(
+storiesOf('VideoPlayer', module)
+	.add(
 		' ',
-		'The basic VideoPlayer',
-		() => {
+		withInfo({
+			propTables: [Config],
+			text: 'The basic VideoPlayer'
+		})(() => {
 			const videoSource = select('source', videoSources, prop.videos[0].source);
 			const poster = matchPoster(videoSource);
 			return (
@@ -170,6 +174,5 @@ storiesOf('VideoPlayer')
 					</VideoPlayer>
 				</div>
 			);
-		},
-		{propTables: [Config]}
+		})
 	);

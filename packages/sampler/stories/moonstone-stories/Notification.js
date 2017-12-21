@@ -1,18 +1,22 @@
 import Notification, {NotificationBase} from '@enact/moonstone/Notification';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, text} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('Notification', NotificationBase, Notification);
 
-storiesOf('Notification')
-	.addWithInfo(
+storiesOf('Notification', module)
+	.add(
 		' ',
-		'Basic usage of Notification',
-		() => (
+		withInfo({
+			propTables: [Config],
+			text: 'Basic usage of Notification'
+		})(() => (
 			<Notification
 				open={boolean('open', true)}
 				noAutoDismiss={boolean('noAutoDismiss', false)}
@@ -24,6 +28,5 @@ storiesOf('Notification')
 					<Button>Nevermind</Button>
 				</buttons>
 			</Notification>
-		),
-		{propTables: [Config]}
+		))
 	);

@@ -1,8 +1,10 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select, text} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 import nullify from '../../src/utils/nullify.js';
@@ -15,11 +17,13 @@ const prop = {
 	icons: ['', ...Object.keys(icons)]
 };
 
-storiesOf('Button')
-	.addWithInfo(
+storiesOf('Button', module)
+	.add(
 		' ',
-		'The basic Button',
-		() => (
+		withInfo({
+			propTables: [Config],
+			text: 'The basic Button'
+		})(() => (
 			<Button
 				onClick={action('onClick')}
 				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
@@ -33,6 +37,5 @@ storiesOf('Button')
 			>
 				{text('children', 'click me')}
 			</Button>
-		),
-		{propTables: [Config]}
+		))
 	);

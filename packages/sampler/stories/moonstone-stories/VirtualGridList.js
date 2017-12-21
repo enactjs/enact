@@ -3,8 +3,10 @@ import GridListImageItem from '@enact/moonstone/VirtualList/GridListImageItem';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import ri from '@enact/ui/resolution';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, number, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, number, select} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
@@ -42,11 +44,13 @@ for (let i = 0; i < 1000; i++) {
 	items.push({text, subText, source});
 }
 
-storiesOf('VirtualList.VirtualGridList')
-	.addWithInfo(
+storiesOf('VirtualList.VirtualGridList', module)
+	.add(
 		' ',
-		'Basic usage of VirtualGridList',
-		() => (
+		withInfo({
+			propTables: [Config],
+			text: 'Basic usage of VirtualGridList'
+		})(() => (
 			<VirtualGridList
 				component={renderItem}
 				data={items}
@@ -59,6 +63,5 @@ storiesOf('VirtualList.VirtualGridList')
 				spacing={ri.scale(number('spacing', 20))}
 				style={listStyle}
 			/>
-		),
-		{propTables: [Config]}
+		))
 	);

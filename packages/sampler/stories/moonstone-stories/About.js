@@ -5,8 +5,10 @@ import Icon from '@enact/moonstone/Icon';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 import css from './About.less';
 
 const riSafe = (style) => {
@@ -44,11 +46,10 @@ const Pointer = kind({
 	)
 });
 
-storiesOf('About Sampler')
-	.addWithInfo(
+storiesOf('About Sampler', module)
+	.add(
 		' ',
-		'A Tour of Sampler',
-		() => (
+		withInfo('A Tour of Sampler')(() => (
 			<div>
 				<BodyText
 					centered={boolean('text centered', false)}
@@ -92,5 +93,5 @@ storiesOf('About Sampler')
 					</div>
 				</div>
 			</div>
-		)
+		))
 	);

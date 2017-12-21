@@ -1,18 +1,22 @@
 import Popup, {PopupBase} from '@enact/moonstone/Popup';
 import BodyText from '@enact/moonstone/BodyText';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, text, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, text, select} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('Popup', PopupBase, Popup);
 
-storiesOf('Popup')
-	.addWithInfo(
+storiesOf('Popup', module)
+	.add(
 		' ',
-		'Basic usage of Popup',
-		() => (
+		withInfo({
+			propTables: [Config],
+			text: 'Basic usage of Popup'
+		})(() => (
 			<div>
 				<Popup
 					open={boolean('open', false)}
@@ -29,6 +33,5 @@ storiesOf('Popup')
 				</Popup>
 				<BodyText centered>Use KNOBS to interact with Popup.</BodyText>
 			</div>
-		),
-		{propTables: [Config]}
+		))
 	);

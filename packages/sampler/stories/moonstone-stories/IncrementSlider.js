@@ -1,19 +1,23 @@
 import IncrementSlider, {IncrementSliderBase} from '@enact/moonstone/IncrementSlider';
 import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, number, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, number, select} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('IncrementSlider', IncrementSliderBase, IncrementSlider);
 
-storiesOf('IncrementSlider')
-	.addWithInfo(
+storiesOf('IncrementSlider', module)
+	.add(
 		' ',
-		'Basic usage of IncrementSlider',
-		() => (
+		withInfo({
+			propTables: [Config],
+			text: 'Basic usage of IncrementSlider'
+		})(() => (
 			<IncrementSlider
 				backgroundProgress={number('backgroundProgress', IncrementSliderBase.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
 				incrementIcon={nullify(select('incrementIcon', ['', ...incrementIcons]))}
@@ -31,6 +35,5 @@ storiesOf('IncrementSlider')
 				tooltipSide={select('tooltipSide', ['before', 'after'], 'after')}
 				vertical={nullify(boolean('vertical', false))}
 			/>
-		),
-		{propTables: [Config]}
+		))
 	);

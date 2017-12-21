@@ -1,15 +1,15 @@
 import Spinner from '@enact/moonstone/Spinner';
 import React from 'react';
-import {action, storiesOf} from '@kadira/storybook';
-import {boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {action, storiesOf} from '@storybook/react';
+import {boolean, select, text} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 
-storiesOf('Spinner')
-	.addWithInfo(
+storiesOf('Spinner', module)
+	.add(
 		' ',
-		'Basic usage of Spinner',
-		() => (
+		withInfo('Basic usage of Spinner')(() => (
 			<div
 				style={{
 					outline: 'teal dashed 1px',
@@ -67,5 +67,5 @@ storiesOf('Spinner')
 					</Spinner>
 				</div>
 			</div>
-		)
+		))
 	);

@@ -2,14 +2,15 @@ import Dialog from '@enact/moonstone/Dialog';
 import BodyText from '@enact/moonstone/BodyText';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select, text} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
-storiesOf('Dialog')
-	.addWithInfo(
+storiesOf('Dialog', module)
+	.add(
 		' ',
-		'Basic usage of Dialog',
-		() => (
+		withInfo('Basic usage of Dialog')(() => (
 			<div>
 				<Dialog
 					casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
@@ -31,5 +32,5 @@ storiesOf('Dialog')
 				</Dialog>
 				<BodyText centered>Use KNOBS to interact with Dialog.</BodyText>
 			</div>
-		)
+		))
 	);

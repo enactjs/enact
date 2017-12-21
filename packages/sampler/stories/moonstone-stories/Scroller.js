@@ -1,8 +1,10 @@
 import Scroller, {ScrollerBase} from '@enact/moonstone/Scroller';
 import ri from '@enact/ui/resolution';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
@@ -29,11 +31,13 @@ const
 		}
 	};
 
-storiesOf('Scroller')
-	.addWithInfo(
+storiesOf('Scroller', module)
+	.add(
 		' ',
-		'Basic usage of Scroller',
-		() => (
+		withInfo({
+			propTables: [Config],
+			text: 'Basic usage of Scroller'
+		})(() => (
 			<Scroller
 				direction={select('direction', prop.direction, 'both')}
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
@@ -51,6 +55,5 @@ storiesOf('Scroller')
 					</div>
 				</div>
 			</Scroller>
-		),
-		{propTables: [Config]}
+		))
 	);
