@@ -84,7 +84,7 @@ const defaultConfig = {
 	 * * `maxMoves` - The number of moves tracked to determine if a flick occurred. Defaults to `5`.
 	 * * `minVelocity` - The minimum threshold, measured as the change in pixels over the change in
 	 *   time per move, that must be exceeded to generate a `onFlick` event.
-	 * 
+	 *
 	 * @type {Object}
 	 * @memberof ui/Touchable.Touchable.defaultConfig
 	 */
