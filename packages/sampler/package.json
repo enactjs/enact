@@ -27,18 +27,21 @@
     "react-dom": "^16.2.0"
   },
   "devDependencies": {
+    "@enact/dev-utils": "^0.4.0",
     "@storybook/addon-actions": "^3.2.17",
     "@storybook/addon-info": "^3.2.18",
     "@storybook/addon-knobs": "^3.2.18",
     "@storybook/addon-options": "^3.2.17",
     "@storybook/react": "^3.2.17",
+    "autoprefixer": "^7.2.3",
     "babel-plugin-dev-expression": "^0.2.1",
     "babel-plugin-transform-react-inline-elements": "^6.22.0",
     "babel-preset-es2015": "^6.24.1",
-    "graceful-fs-webpack-plugin": "^0.2.0",
-    "ilib-webpack-plugin": "^0.2.1",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
-    "webos-meta-webpack-plugin": "^0.3.1"
+    "postcss-flexbugs-fixes": "^3.2.0",
+    "postcss-loader": "^2.0.9",
+    "resolution-independence": "0.0.3",
+    "style-loader": "^0.19.1"
   }
 }
