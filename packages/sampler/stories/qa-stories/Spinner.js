@@ -2,7 +2,8 @@ import Spinner from '@enact/moonstone/Spinner';
 import Button from '@enact/moonstone/Button';
 import ri from '@enact/ui/resolution';
 import React from 'react';
-import {action, storiesOf} from '@storybook/react';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
 import {text, boolean, select} from '@storybook/addon-knobs';
 import nullify from '../../src/utils/nullify.js';
 

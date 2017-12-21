@@ -1,6 +1,7 @@
 import Spinner from '@enact/moonstone/Spinner';
 import React from 'react';
-import {action, storiesOf} from '@storybook/react';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
 import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
