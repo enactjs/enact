@@ -11,7 +11,6 @@
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
-import Pressable from '@enact/ui/Pressable';
 import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -20,6 +19,7 @@ import {ButtonBaseFactory} from '../Button';
 import Icon from '../Icon';
 import {TooltipDecorator} from '../TooltipDecorator';
 import Skinnable from '../Skinnable';
+import Touchable from '../internal/Touchable';
 
 import componentCss from './IconButton.less';
 
@@ -174,8 +174,7 @@ const IconButtonBase = IconButtonBaseFactory();
 const IconButtonFactory = factory(({css}) => {
 	return Pure(
 		TooltipDecorator({tooltipDestinationProp: 'tooltipNode'},
-			Pressable(
-				{release: ['onMouseUp', 'onMouseLeave', 'onBlur']},
+			Touchable(
 				Spottable(
 					Skinnable(
 						IconButtonBaseFactory({css})
@@ -203,7 +202,7 @@ const IconButtonFactory = factory(({css}) => {
  * @memberof moonstone/IconButton
  * @extends moonstone/IconButton.IconButtonBase
  * @mixes moonstone/TooltipDecorator.TooltipDecorator
- * @mixes ui/Pressable.Pressable
+ * @mixes ui/Touchable.Touchable
  * @mixes spotlight/Spottable.Spottable
  * @ui
  * @public

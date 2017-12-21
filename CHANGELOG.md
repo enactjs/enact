@@ -2,6 +2,27 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.0.0-alpha.2] - 2017-08-29
+
+## Added
+
+- `ui/Scroller` and `ui/VirtualList`
+
+## [2.0.0-alpha.1] - 2017-08-27
+
+## Added
+
+- `ui/Layout` which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
+- `ui/Touchable` to support consistent mouse and touch events along with hold gesture
+
+### Changed
+
+- `moonstone/Button`, `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/IconButton`, `moonstone/IncrementSlider`, `moonstone/Item`, `moonstone/Picker`, and `moonstone/RangePicker`, `moonstone/Switch` and `moonstone/VideoPlayer` to use `ui/Touchable`
+
+## Removed
+
+- `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
+
 ## [1.13.2] - 2017-12-14
 
 ### Fixed
@@ -299,6 +320,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/AccessibilityDecorator` with `highContrast` and `textSize`
 - `moonstone/VideoPlayer` high contrast scrim
 - `moonstone/MarqueeDecorator`and `moonstone/Marquee` property `alignment` to allow setting  alignment of marquee content
+- `spotlight/SpotlightContainerDecorator` config option `continue5WayHold` to support moving focus to the next spottable element on 5-way hold key.
 - `spotlight/SpotlightContainerDecorator` config option `continue5WayHold` to support moving focus to the next spottable element on 5-way hold key
 - `spotlight/Spottable` ability to restore focus when an initially disabled component becomes enabled
 
@@ -313,6 +335,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Fixed
 
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to focus the correct item when page up and page down keys are pressed
+- `moonstone/VirtualList` not to lose focus when moving out from the first item via 5way when it has disabled items
 - `moonstone/VirtualList` to not lose focus when moving out from the first item via 5way when it has disabled items
 - `moonstone/Slider` to align tooltip with detached knob
 - `moonstone/FormCheckbox` to display correct colors in light skin

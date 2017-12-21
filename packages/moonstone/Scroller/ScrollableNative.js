@@ -37,8 +37,8 @@ const
 	scrollWheelMultiplierForDeltaPixel = 1.5, // The ratio of wheel 'delta' units to pixels scrolled.
 	scrollWheelPageMultiplierForMaxPixel = 0.2, // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	pixelPerLine = 39,
+	scrollStopWaiting = 200,
 	// spotlight
-	scrollStopWaiting = 500,
 	isPageUp = is('pageUp'),
 	isPageDown = is('pageDown'),
 	reverseDirections = {
@@ -273,12 +273,22 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		componentDidUpdate () {
 			// Need to sync calculated client size if it is different from the real size
 			if (this.childRef.syncClientSize) {
-				this.childRef.syncClientSize();
+				const {isVerticalScrollbarVisible, isHorizontalScrollbarVisible} = this.state;
+				// If we actually synced, we need to reset scroll position.
+				if (this.childRef.syncClientSize()) {
+					this.setScrollLeft(0);
+					this.setScrollTop(0);
+				}
+				// Need to check item total size is same with client size when scrollbar is visible
+				// By hiding scrollbar again, infinite function call maybe happens
+				this.isFitClientSize = (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) && this.childRef.isSameTotalItemSizeWithClient();
 			}
 
 			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
-			this.updateScrollbars();
+			if (!this.isFitClientSize) {
+				this.updateScrollbars();
+			}
 
 			if (this.scrollToInfo !== null) {
 				if (!this.deferScrollTo) {
@@ -299,7 +309,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.doScrollStop();
 			}
 			this.scrollStopJob.stop();
-			this.hideThumbJob.stop();
 
 			if (containerRef && containerRef.removeEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
@@ -326,6 +335,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		pageDistance = 0
 		animateOnFocus = false
 		pageDirection = 0
+		isFitClientSize = false
 		isWheeling = false
 		isUpdatedScrollThumb = false
 
@@ -415,7 +425,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (typeof window !== 'undefined') {
 				window.document.activeElement.blur();
 			}
+
 			this.showThumb(bounds);
+
 			// FIXME This routine is a temporary support for horizontal wheel scroll.
 			// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
 			if (canScrollVertically) { // This routine handles wheel events on scrollbars for vertical scroll.
@@ -484,6 +496,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			this.scroll(scrollLeft, scrollTop);
 
+			this.startHidingThumb();
 			this.scrollStopJob.start();
 		}
 
@@ -491,10 +504,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		startScrollOnFocus = (pos, item) => {
 			if (pos) {
-				const bounds = this.getScrollBounds();
+				const
+					{top, left} = pos,
+					bounds = this.getScrollBounds();
 
-				if (bounds.maxTop > 0 || bounds.maxLeft > 0) {
-					this.start(pos.left, pos.top, this.animateOnFocus);
+				if ((bounds.maxTop > 0 && top !== this.scrollTop) || (bounds.maxLeft > 0 && left !== this.scrollLeft)) {
+					this.start(left, top, this.animateOnFocus);
 				}
 				this.lastFocusedItem = item;
 				this.lastScrollPositionOnFocus = pos;
@@ -709,7 +724,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 
-			this.hideThumb();
 			this.scrolling = false;
 			this.doScrollStop();
 			this.isWheeling = false;
@@ -914,7 +928,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			});
 		}
 
-		hideThumb = () => {
+		startHidingThumb = () => {
 			if (this.state.isHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
 				this.horizontalScrollbarRef.startHidingThumb();
 			}
@@ -923,12 +937,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		hideThumbJob = new Job(this.hideThumb, 200);
-
 		alertThumb () {
 			const bounds = this.getScrollBounds();
 			this.showThumb(bounds);
-			this.hideThumbJob.start();
+			this.startHidingThumb();
 		}
 
 		updateScrollbars = () => {

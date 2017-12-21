@@ -7,6 +7,21 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Fixed
 
 - `spotlight/Spottable` to prevent unnecessary renders due to focus changes
+### Deprecated
+
+### Added
+
+### Changed
+
+### Fixed
+
+## [2.0.0-alpha.2] - 2017-08-29
+
+No significant changes.
+
+## [2.0.0-alpha.1] - 2017-08-27
+
+No significant changes.
 
 ## [1.13.2] - 2017-12-14
 
@@ -65,7 +80,7 @@ No significant changes.
 
 ## [1.9.3] - 2017-10-03
 
-No significant changes.
+- `spotlight.Spotlight` method `focus()` to verify that the target element matches its container's selector rules prior to setting focus
 
 ## [1.9.2] - 2017-09-26
 

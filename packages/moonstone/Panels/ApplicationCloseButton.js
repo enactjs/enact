@@ -55,7 +55,7 @@ const ApplicationCloseButton = kind({
 				{...rest}
 				aria-label={$L('Exit app')}
 				backgroundOpacity={backgroundOpacity}
-				onClick={onApplicationClose}
+				onTap={onApplicationClose}
 				small
 			>
 				closex

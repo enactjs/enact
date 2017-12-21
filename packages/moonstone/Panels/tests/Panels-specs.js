@@ -4,6 +4,11 @@ import sinon from 'sinon';
 
 import {Panels, PanelsBase} from '../Panels';
 
+const tap = (node) => {
+	node.simulate('mousedown');
+	node.simulate('mouseup');
+};
+
 describe('Panels Specs', () => {
 
 	it('should render application close button when \'noCloseButton\' is not specified', function () {
@@ -36,7 +41,7 @@ describe('Panels Specs', () => {
 			<Panels onApplicationClose={handleAppClose} />
 		);
 
-		subject.find('IconButton').simulate('click');
+		tap(subject.find('IconButton'));
 
 		const expected = true;
 		const actual = handleAppClose.calledOnce;

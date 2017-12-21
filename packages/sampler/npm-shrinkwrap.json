@@ -1,36 +1,50 @@
 {
   "name": "enact-sampler",
-  "version": "1.13.2",
+  "version": "2.0.0-alpha.2",
   "dependencies": {
     "@enact/core": {
-      "version": "1.13.2",
-      "from": "@enact/core@>=1.13.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/core/-/core-1.13.2.tgz"
+      "version": "2.0.0-alpha.2",
+      "from": "@enact/core@>=2.0.0-alpha.2 <3.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/core/-/core-2.0.0-alpha.2.tgz"
     },
     "@enact/i18n": {
-      "version": "1.13.2",
-      "from": "@enact/i18n@>=1.13.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/i18n/-/i18n-1.13.2.tgz"
+      "version": "2.0.0-alpha.2",
+      "from": "@enact/i18n@>=2.0.0-alpha.2 <3.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/i18n/-/i18n-2.0.0-alpha.2.tgz"
     },
     "@enact/moonstone": {
-      "version": "1.13.2",
-      "from": "@enact/moonstone@>=1.13.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/moonstone/-/moonstone-1.13.2.tgz"
+      "version": "2.0.0-alpha.2",
+      "from": "@enact/moonstone@>=2.0.0-alpha.2 <3.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/moonstone/-/moonstone-2.0.0-alpha.2.tgz",
+      "dependencies": {
+        "recompose": {
+          "version": "0.23.5",
+          "from": "recompose@>=0.23.5 <0.24.0",
+          "resolved": "https://registry.npmjs.org/recompose/-/recompose-0.23.5.tgz"
+        }
+      }
     },
     "@enact/spotlight": {
-      "version": "1.13.2",
-      "from": "@enact/spotlight@>=1.13.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/spotlight/-/spotlight-1.13.2.tgz"
+      "version": "2.0.0-alpha.2",
+      "from": "@enact/spotlight@>=2.0.0-alpha.2 <3.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/spotlight/-/spotlight-2.0.0-alpha.2.tgz"
     },
     "@enact/ui": {
-      "version": "1.13.2",
-      "from": "@enact/ui@>=1.13.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/ui/-/ui-1.13.2.tgz"
+      "version": "2.0.0-alpha.2",
+      "from": "@enact/ui@>=2.0.0-alpha.2 <3.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/ui/-/ui-2.0.0-alpha.2.tgz",
+      "dependencies": {
+        "recompose": {
+          "version": "0.23.5",
+          "from": "recompose@>=0.23.5 <0.24.0",
+          "resolved": "https://registry.npmjs.org/recompose/-/recompose-0.23.5.tgz"
+        }
+      }
     },
     "@enact/webos": {
-      "version": "1.13.2",
-      "from": "@enact/webos@>=1.13.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@enact/webos/-/webos-1.13.2.tgz"
+      "version": "2.0.0-alpha.2",
+      "from": "@enact/webos@>=2.0.0-alpha.2 <3.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/webos/-/webos-2.0.0-alpha.2.tgz"
     },
     "@kadira/react-split-pane": {
       "version": "1.4.7",
@@ -1113,9 +1127,9 @@
       "resolved": "https://registry.npmjs.org/expand-range/-/expand-range-1.8.2.tgz"
     },
     "express": {
-      "version": "4.16.2",
+      "version": "4.16.1",
       "from": "express@>=4.13.3 <5.0.0",
-      "resolved": "https://registry.npmjs.org/express/-/express-4.16.2.tgz"
+      "resolved": "https://registry.npmjs.org/express/-/express-4.16.1.tgz"
     },
     "extend": {
       "version": "3.0.1",
@@ -2647,9 +2661,9 @@
       "resolved": "https://registry.npmjs.org/podda/-/podda-1.2.2.tgz"
     },
     "postcss": {
-      "version": "5.2.18",
+      "version": "5.2.17",
       "from": "postcss@>=5.2.16 <6.0.0",
-      "resolved": "https://registry.npmjs.org/postcss/-/postcss-5.2.18.tgz"
+      "resolved": "https://registry.npmjs.org/postcss/-/postcss-5.2.17.tgz"
     },
     "postcss-load-config": {
       "version": "1.2.0",
@@ -2917,9 +2931,9 @@
       "resolved": "https://registry.npmjs.org/rechoir/-/rechoir-0.6.2.tgz"
     },
     "recompose": {
-      "version": "0.23.5",
-      "from": "recompose@>=0.23.5 <0.24.0",
-      "resolved": "https://registry.npmjs.org/recompose/-/recompose-0.23.5.tgz"
+      "version": "0.25.0",
+      "from": "recompose@>=0.25.0 <0.26.0",
+      "resolved": "https://registry.npmjs.org/recompose/-/recompose-0.25.0.tgz"
     },
     "redux": {
       "version": "3.7.2",

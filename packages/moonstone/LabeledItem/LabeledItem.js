@@ -14,8 +14,16 @@ import Icon from '../Icon';
 import {ItemBase} from '../Item';
 import Skinnable from '../Skinnable';
 import {MarqueeController, MarqueeText} from '../Marquee';
+import Touchable from '../internal/Touchable';
 
-const Controller = MarqueeController({marqueeOnFocus: true}, Spottable(ItemBase));
+const Controller = MarqueeController(
+	{marqueeOnFocus: true},
+	Touchable(
+		Spottable(
+			ItemBase
+		)
+	)
+);
 
 import css from './LabeledItem.less';
 

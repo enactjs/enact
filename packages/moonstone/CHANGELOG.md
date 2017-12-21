@@ -7,6 +7,28 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/TimePicker` to not read out meridiem label when meridiem picker gets a focus
+### Deprecated
+
+### Added
+
+### Changed
+
+- `moonstone/MoonstoneDecorator` root node to fill the entire space available, which simplifies positioning and sizing for child elements (previously always measured 0 in height)
+
+### Fixed
+
+- `moonstone/VirtualList` to prevent infinite function call when a size of contents is slightly longer than a client size without a scrollbar
+- `moonstone/VirtualList` to sync scroll position when clientSize changed
+
+## [2.0.0-alpha.2] - 2017-08-29
+
+No significant changes.
+
+## [2.0.0-alpha.1] - 2017-08-27
+
+### Changed
+
+- `moonstone/Button`, `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/IconButton`, `moonstone/IncrementSlider`, `moonstone/Item`, `moonstone/Picker`, and `moonstone/RangePicker`, `moonstone/Switch` and `moonstone/VideoPlayer` to use `ui/Touchable`
 
 ## [1.13.2] - 2017-12-14
 

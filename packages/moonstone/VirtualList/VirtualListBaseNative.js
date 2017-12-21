@@ -1066,13 +1066,21 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
+	isSameTotalItemSizeWithClient = () => {
+		const
+			node = this.containerRef,
+			{clientWidth, clientHeight} = this.props.clientSize || this.getClientSize(node);
+
+		return (this.getVirtualScrollDimension() <= (this.isPrimaryDirectionVertical ? clientHeight : clientWidth));
+	}
+
 	syncClientSize = () => {
 		const
 			{props} = this,
 			node = this.containerRef;
 
 		if (!props.clientSize && !node) {
-			return;
+			return false;
 		}
 
 		const
@@ -1083,7 +1091,10 @@ class VirtualListCoreNative extends Component {
 			this.calculateMetrics(props);
 			this.updateStatesAndBounds(props);
 			this.setContainerSize();
+			return true;
 		}
+
+		return false;
 	}
 
 	// render

@@ -7,7 +7,6 @@
 import factory from '@enact/core/factory';
 import {forKey, forProp, forward, handle, oneOf, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import Pressable from '@enact/ui/Pressable';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
@@ -16,6 +15,7 @@ import Spottable from '@enact/spotlight/Spottable';
 import SliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
 import Skinnable from '../Skinnable';
+import Touchable from '../internal/Touchable';
 
 import {SliderBarFactory} from './SliderBar';
 import SliderTooltip from './SliderTooltip';
@@ -469,8 +469,8 @@ const SliderFactory = factory(css => {
 	const Base = SliderBaseFactory(css);
 
 	/**
-	 * {@link moonstone/Slider.Slider} is a Slider with Moonstone styling, Spottable, Pressable
-	 * and SliderDecorator applied.
+	 * {@link moonstone/Slider.Slider} is a Slider with Moonstone styling, Spottable, Touchable and
+	 * SliderDecorator applied.
 	 *
 	 * By default, `Slider` maintains the state of its `value` property. Supply the `defaultValue`
 	 * property to control its initial value. If you wish to directly control updates to the
@@ -479,7 +479,7 @@ const SliderFactory = factory(css => {
 	 *
 	 * @class Slider
 	 * @memberof moonstone/Slider
-	 * @mixes ui/Pressable.Pressable
+	 * @mixes ui/Touchable.Touchable
 	 * @mixes spotlight/Spottable.Spottable
 	 * @ui
 	 * @public
@@ -487,7 +487,7 @@ const SliderFactory = factory(css => {
 	return Pure(
 		Spottable(
 			SliderDecorator(
-				Pressable(
+				Touchable(
 					Skinnable(
 						Base
 					)

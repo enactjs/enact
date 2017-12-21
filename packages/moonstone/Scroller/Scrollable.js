@@ -13,7 +13,7 @@ import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
 import {is} from '@enact/core/keymap';
-import {perfNow, Job} from '@enact/core/util';
+import {perfNow} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
@@ -296,12 +296,22 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		componentDidUpdate (prevProps, prevState) {
 			// Need to sync calculated client size if it is different from the real size
 			if (this.childRef.syncClientSize) {
-				this.childRef.syncClientSize();
+				const {isVerticalScrollbarVisible, isHorizontalScrollbarVisible} = this.state;
+				// If we actually synced, we need to reset scroll position.
+				if (this.childRef.syncClientSize()) {
+					this.setScrollLeft(0);
+					this.setScrollTop(0);
+				}
+				// Need to check item total size is same with client size when scrollbar is visible
+				// By hiding scrollbar again, infinite function call maybe happens
+				this.isFitClientSize = (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) && this.childRef.isSameTotalItemSizeWithClient();
 			}
 
 			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
-			this.updateScrollbars();
+			if (!this.isFitClientSize) {
+				this.updateScrollbars();
+			}
 
 			if (this.scrollToInfo !== null) {
 				if (!this.deferScrollTo) {
@@ -332,7 +342,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.doScrollStop();
 				this.animator.stop();
 			}
-			this.hideThumbJob.stop();
 
 			if (containerRef && containerRef.removeEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
@@ -371,6 +380,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		deferScrollTo = true
 		pageDistance = 0
 		isWheeling = false
+		isFitClientSize = false
 		isUpdatedScrollThumb = false
 
 		// drag info
@@ -567,7 +577,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 				direction = Math.sign(delta);
 
-				Spotlight.setPointerMode(false);
 				if (focusedItem && !isVerticalScrollButtonFocused && !isHorizontalScrollButtonFocused) {
 					focusedItem.blur();
 				}
@@ -587,12 +596,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		startScrollOnFocus = (pos, item) => {
 			if (pos) {
-				const bounds = this.getScrollBounds();
+				const
+					{top, left} = pos,
+					bounds = this.getScrollBounds();
 
-				if (bounds.maxTop > 0 || bounds.maxLeft > 0) {
+				if ((bounds.maxTop > 0 && top !== this.scrollTop) || (bounds.maxLeft > 0 && left !== this.scrollLeft)) {
 					this.start({
-						targetX: pos.left,
-						targetY: pos.top,
+						targetX: left,
+						targetY: top,
 						animate: (animationDuration > 0) && this.animateOnFocus,
 						duration: animationDuration
 					});
@@ -900,7 +911,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.focusOnItem();
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
-			this.hideThumb();
+			this.startHidingThumb();
 			this.isWheeling = false;
 			if (this.scrolling) {
 				this.scrolling = false;
@@ -1036,7 +1047,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			});
 		}
 
-		hideThumb = () => {
+		startHidingThumb = () => {
 			if (this.state.isHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
 				this.horizontalScrollbarRef.startHidingThumb();
 			}
@@ -1045,12 +1056,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		hideThumbJob = new Job(this.hideThumb, 200);
-
 		alertThumb () {
 			const bounds = this.getScrollBounds();
 			this.showThumb(bounds);
-			this.hideThumbJob.start();
+			this.startHidingThumb();
 		}
 
 		updateScrollbars = () => {

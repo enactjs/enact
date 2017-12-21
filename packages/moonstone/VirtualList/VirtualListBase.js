@@ -1085,13 +1085,21 @@ class VirtualListCore extends Component {
 		}
 	}
 
+	isSameTotalItemSizeWithClient = () => {
+		const
+			node = this.containerRef,
+			{clientWidth, clientHeight} = this.props.clientSize || this.getClientSize(node);
+
+		return (this.getVirtualScrollDimension() <= (this.isPrimaryDirectionVertical ? clientHeight : clientWidth));
+	}
+
 	syncClientSize = () => {
 		const
 			{props} = this,
 			node = this.containerRef;
 
 		if (!props.clientSize && !node) {
-			return;
+			return false;
 		}
 
 		const
@@ -1101,7 +1109,10 @@ class VirtualListCore extends Component {
 		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
 			this.calculateMetrics(props);
 			this.updateStatesAndBounds(props);
+			return true;
 		}
+
+		return false;
 	}
 
 	// render

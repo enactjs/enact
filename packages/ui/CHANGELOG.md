@@ -2,6 +2,35 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+
+- `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
+
+### Fixed
+
+## [2.0.0-alpha.2] - 2017-08-29
+
+## Added
+
+- `ui/Scroller` and `ui/VirtualList`
+
+## [2.0.0-alpha.1] - 2017-08-27
+
+## Added
+
+- `ui/Layout` which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
+- `ui/Touchable` to support consistent mouse and touch events along with hold gesture
+
+## Removed
+
+- `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
+
 ## [1.13.2] - 2017-12-14
 
 ### Fixed

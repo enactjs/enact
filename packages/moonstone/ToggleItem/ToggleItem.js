@@ -90,7 +90,7 @@ const ToggleItemBase = kind({
 		 *
 		 * @type {Function}
 		 */
-		onClick: PropTypes.func,
+		onTap: PropTypes.func,
 
 		/**
 		 * The handler to run when the toggle item is toggled.
@@ -136,10 +136,10 @@ const ToggleItemBase = kind({
 	},
 
 	handlers: {
-		onToggle: (ev, {onToggle, onClick, selected, disabled, value}) => {
-			if (!disabled && (onToggle || onClick)) {
+		onToggle: (ev, {onToggle, onTap, selected, disabled, value}) => {
+			if (!disabled && (onToggle || onTap)) {
 				if (onToggle) onToggle({selected: !selected, value});
-				if (onClick) onClick(ev);
+				if (onTap) onTap(ev);
 			}
 		}
 	},
@@ -176,7 +176,7 @@ const ToggleItemBase = kind({
 				role="checkbox"
 				{...rest}
 				aria-checked={selected}
-				onClick={onToggle}
+				onTap={onToggle}
 			>
 				{iconBefore}
 				{children}

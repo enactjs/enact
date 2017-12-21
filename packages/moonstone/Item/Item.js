@@ -16,6 +16,7 @@ import Toggleable from '@enact/ui/Toggleable';
 import Spottable from '@enact/spotlight/Spottable';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
+import Touchable from '../internal/Touchable';
 
 import OverlayDecorator from './OverlayDecorator';
 
@@ -122,10 +123,12 @@ const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidat
  * @public
  */
 const Item = Pure(
-	Spottable(
-		ItemMarqueeDecorator(
-			Skinnable(
-				ItemBase
+	Touchable(
+		Spottable(
+			ItemMarqueeDecorator(
+				Skinnable(
+					ItemBase
+				)
 			)
 		)
 	)
@@ -162,13 +165,15 @@ const ItemOverlay = Slottable(
 		}},
 		Toggleable(
 			{prop: 'remeasure', activate: 'onFocus', deactivate: 'onBlur', toggle: null},
-			Spottable(
-				RemeasurableDecorator(
-					{trigger: 'remeasure'},
-					ItemMarqueeDecorator(
-						OverlayDecorator(
-							Skinnable(
-								ItemBase
+			Touchable(
+				Spottable(
+					RemeasurableDecorator(
+						{trigger: 'remeasure'},
+						ItemMarqueeDecorator(
+							OverlayDecorator(
+								Skinnable(
+									ItemBase
+								)
 							)
 						)
 					)

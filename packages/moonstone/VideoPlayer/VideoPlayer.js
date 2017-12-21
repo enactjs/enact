@@ -28,6 +28,7 @@ import {toUpperCase} from '@enact/i18n/util';
 import $L from '../internal/$L';
 import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
+import Touchable from '../internal/Touchable';
 
 import {calcNumberValueOfPlaybackRate, secondsToTime} from './util';
 import Overlay from './Overlay';
@@ -40,7 +41,7 @@ import Times from './Times';
 
 import css from './VideoPlayer.less';
 
-const SpottableDiv = Spottable('div');
+const SpottableDiv = Touchable(Spottable('div'));
 const RootContainer = SpotlightContainerDecorator('div');
 const ControlsContainer = SpotlightContainerDecorator(
 	{
