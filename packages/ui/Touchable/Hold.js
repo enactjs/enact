@@ -10,12 +10,21 @@ class Hold {
 
 	isHolding = () => this.holdConfig != null
 
-	begin = (holdConfig, {x, y}) => {
+	begin = (defaultConfig, {holdConfig, noResume, onHold, onHoldPulse}, {x, y}) => {
+		if (!onHold && !onHoldPulse) return;
+
 		this.startX = x;
 		this.startY = y;
 
-		this.holdConfig = Object.assign({}, holdConfig);
+		this.holdConfig = {
+			...defaultConfig,
+			...holdConfig,
+			onHold,
+			onHoldPulse,
+			resume: !noResume
+		};
 
+		// copy the events array since it is mutated for each hold
 		this.holdConfig.events = this.holdConfig.events.slice();
 		this.holdConfig.events.sort((a, b) => {
 			if (a.time < b.time) return -1;
@@ -31,7 +40,7 @@ class Hold {
 		}
 	}
 
-	move = (x, y) => {
+	move = ({x, y}) => {
 		if (!this.isHolding()) return;
 
 		const {cancelOnMove, moveTolerance, resume} = this.holdConfig;
