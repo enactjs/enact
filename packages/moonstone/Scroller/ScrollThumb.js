@@ -10,7 +10,7 @@ import css from './ScrollThumb.less';
  * @class ScrollThumb
  * @memberof moonstone/Scroller
  * @ui
- * @public
+ * @private
  */
 const ScrollThumb = kind({
 	name: 'ScrollThumb',

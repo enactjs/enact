@@ -1,9 +1,12 @@
 import Button from '@enact/moonstone/Button';
 import React from 'react';
+import Touchable from '@enact/ui/Touchable';
 import {storiesOf} from '@storybook/react';
 import {withInfo} from '@storybook/addon-info';
 import {action} from '@storybook/addon-actions';
 import {boolean, number} from '@storybook/addon-knobs';
+
+const TouchableDiv = Touchable('div');
 
 storiesOf('Touchable', module)
 	.add(
@@ -63,8 +66,20 @@ storiesOf('Touchable', module)
 				onHoldPulse={action('onHoldPulse')}
 				disabled={boolean('disabled')}
 			>
-				Resumable
+				Not Resumable
 			</Button>
+		)
+	)
+	.addWithInfo(
+		'with onFlick handler',
+		() => (
+			<TouchableDiv
+				onFlick={action('onFlick')}
+				disabled={boolean('disabled')}
+				style={{border: '2px dashed #888', width: 500, height: 500}}
+			>
+				Flick within this component
+			</TouchableDiv>
 		)
 	);
 
