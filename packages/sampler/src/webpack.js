@@ -25,10 +25,6 @@ function configure (dirname) {
 		module: {
 			rules: [
 				{
-					test: /appinfo\.json$/,
-					loader: 'webos-meta-loader'
-				},
-				{
 					test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.woff$|\.ttf$|\.wav$|\.mp3$/,
 					loader: 'file-loader',
 					options: {
@@ -105,7 +101,7 @@ function configure (dirname) {
 			new ILibPlugin(),
 			// Automatically detect ./appinfo.json and ./webos-meta/appinfo.json files,
 			// and parses any to copy over any webOS meta assets at build time.
-			new WebOSMetaPlugin()
+			new WebOSMetaPlugin({path:path.join(dirname, 'webos-meta')})
 		]
 	};
 }
