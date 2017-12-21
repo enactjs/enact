@@ -2,8 +2,8 @@ import Spinner from '@enact/moonstone/Spinner';
 import Button from '@enact/moonstone/Button';
 import ri from '@enact/ui/resolution';
 import React from 'react';
-import {action, storiesOf} from '@kadira/storybook';
-import {text, boolean, select} from '@kadira/storybook-addon-knobs';
+import {action, storiesOf} from '@storybook/react';
+import {text, boolean, select} from '@storybook/addon-knobs';
 import nullify from '../../src/utils/nullify.js';
 
 // Set up some defaults for info and knobs
@@ -18,8 +18,8 @@ const
 		}
 	};
 
-storiesOf('Spinner')
-	.addWithInfo(
+storiesOf('Spinner', module)
+	.add(
 		'with long content',
 		() => (
 			<div>
@@ -40,7 +40,7 @@ storiesOf('Spinner')
 		)
 	)
 
-	.addWithInfo(
+	.add(
 		'blocking click events',
 		() => (
 			<div>

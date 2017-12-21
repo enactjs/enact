@@ -5,8 +5,9 @@ import Item from '@enact/moonstone/Item';
 import ri from '@enact/ui/resolution';
 import Group from '@enact/ui/Group';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select} from '@storybook/addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 
@@ -30,8 +31,8 @@ const
 		}
 	};
 
-storiesOf('Scroller')
-	.addWithInfo(
+storiesOf('Scroller', module)
+	.add(
 		'List of things',
 		() => (
 			<Scroller
@@ -44,7 +45,7 @@ storiesOf('Scroller')
 			</Scroller>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'With ExpandableList',
 		() => (
 			<Scroller
@@ -60,7 +61,7 @@ storiesOf('Scroller')
 			</Scroller>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Horizontal scroll',
 		() => (
 			<Scroller

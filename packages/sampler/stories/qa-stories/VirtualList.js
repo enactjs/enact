@@ -4,8 +4,10 @@ import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, number} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {withInfo} from '@storybook/addon-info';
+import {action} from '@storybook/addon-actions';
+import {boolean, number} from '@storybook/addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
@@ -72,8 +74,8 @@ class StatefulSwitchItem extends React.Component {
 	}
 }
 
-storiesOf('VirtualList')
-	.addWithInfo(
+storiesOf('VirtualList', module)
+	.add(
 		'with more items',
 		() => {
 			const itemSize = ri.scale(number('itemSize', 72));

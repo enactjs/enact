@@ -1,10 +1,12 @@
 import Button from '@enact/moonstone/Button';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, number} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {withInfo} from '@storybook/addon-info';
+import {action} from '@storybook/addon-actions';
+import {boolean, number} from '@storybook/addon-knobs';
 
-storiesOf('Touchable')
-	.addWithInfo(
+storiesOf('Touchable', module)
+	.add(
 		'with default hold events',
 		() => (
 			<Button
@@ -16,7 +18,7 @@ storiesOf('Touchable')
 			</Button>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with a custom longpress event and 1 second frequency',
 		() => (
 			<Button
@@ -35,7 +37,7 @@ storiesOf('Touchable')
 			</Button>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'that pauses the hold when moving beyond tolerance (16px)',
 		() => (
 			<Button
@@ -52,7 +54,7 @@ storiesOf('Touchable')
 			</Button>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'that does not resume when re-entering component',
 		() => (
 			<Button

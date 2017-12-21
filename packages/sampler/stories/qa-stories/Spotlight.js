@@ -27,8 +27,9 @@ import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select} from '@storybook/addon-knobs';
 
 const Container = SpotlightContainerDecorator(
 	{enterTo: 'last-focused'},
@@ -180,8 +181,8 @@ class PopupFocusTest extends React.Component {
 	}
 }
 
-storiesOf('Spotlight')
-	.addWithInfo(
+storiesOf('Spotlight', module)
+	.add(
 		'Multiple Buttons',
 		() => (
 			<div>
@@ -197,7 +198,7 @@ storiesOf('Spotlight')
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Multiple Containers',
 		() => (
 			<div>
@@ -229,7 +230,7 @@ storiesOf('Spotlight')
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Nested Containers',
 		() => (
 			<div>
@@ -250,7 +251,7 @@ storiesOf('Spotlight')
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Directional Events',
 		() => (
 			<div>
@@ -271,13 +272,13 @@ storiesOf('Spotlight')
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Disappearing Spottable',
 		() => (
 			<DisappearTest />
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Popup Navigation',
 		() => (
 			<PopupFocusTest
@@ -289,7 +290,7 @@ storiesOf('Spotlight')
 			/>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Kitchen Sink',
 		() => (
 			<div>
