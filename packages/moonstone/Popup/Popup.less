@@ -27,6 +27,10 @@
 
 	&.reserveClose {
 		.padding-start-end(@padding-h, @moon-icon-button-small-size + @moon-spotlight-outset);
+
+		.moon-custom-text({
+			.padding-start-end(@padding-h, @moon-icon-button-small-size-large + @moon-spotlight-outset, parent);
+		});
 	}
 
 	:global(.enact-locale-right-to-left) & {

@@ -14,7 +14,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import warning from 'warning';
 
-import {contextTypes as contextTypesRemeasurable} from '../Remeasurable';
 /**
  * Default config for {@link ui/Toggleable.Toggleable}
  *
@@ -23,7 +22,10 @@ import {contextTypes as contextTypesRemeasurable} from '../Remeasurable';
  */
 const defaultConfig = {
 	/**
-	 * Configures the event name that activates the component
+	 * Configures the event name that activates the component.
+	 *
+	 * Note: When using `activate`/`deactivate` instead of `toggle`, set `toggle` to `null` to
+	 * prevent passing the default `onToggle` prop to the wrapped component.
 	 *
 	 * @type {String}
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
@@ -31,7 +33,10 @@ const defaultConfig = {
 	activate: null,
 
 	/**
-	 * Configures the event name that deactivates the component
+	 * Configures the event name that deactivates the component.
+	 *
+	 * Note: When using `activate`/`deactivate` instead of `toggle`, set `toggle` to `null` to
+	 * prevent passing the default `onToggle` prop to the wrapped component.
 	 *
 	 * @type {String}
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
@@ -48,7 +53,7 @@ const defaultConfig = {
 	toggle: 'onToggle',
 
 	/**
-	 * Configures the property that is passed to the wrapped component when toggled
+	 * Configures the property that is passed to the wrapped component when toggled.
 	 *
 	 * @type {String}
 	 * @default 'active'
@@ -117,9 +122,6 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: false
 		}
 
-		static childContextTypes = contextTypesRemeasurable
-		static contextTypes = contextTypesRemeasurable
-
 		constructor (props) {
 			super(props);
 			let active = props[defaultPropKey];
@@ -135,14 +137,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.state = {
 				active,
-				controlled,
-				remeasure: null
-			};
-		}
-
-		getChildContext () {
-			return {
-				remeasure: this.state.remeasure
+				controlled
 			};
 		}
 
@@ -160,15 +155,6 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				);
 			}
 		}
-
-		componentWillUpdate (nextProps, nextState, nextContext) {
-			if (nextContext.remeasure !== this.context.remeasure || nextState.active !== this.state.active) {
-				this.setState((prevState) => ({
-					remeasure: !prevState.remeasure
-				}));
-			}
-		}
-
 
 		handle = handle.bind(this)
 

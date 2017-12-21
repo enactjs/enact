@@ -11,7 +11,7 @@ const Config = mergeComponentMetadata('Button', ButtonBase, Button);
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: ['', 'translucent', 'transparent'],
+	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
 	icons: ['', ...Object.keys(icons)]
 };
 
@@ -26,6 +26,7 @@ storiesOf('Button')
 				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				disabled={boolean('disabled', ButtonBase.defaultProps.disabled)}
 				icon={nullify(select('icon', prop.icons))}
+				noAnimation={boolean('noAnimation', false)}
 				minWidth={nullify(boolean('minWidth', ButtonBase.defaultProps.minWidth))}
 				selected={nullify(boolean('selected', false))}
 				small={nullify(boolean('small', ButtonBase.defaultProps.small))}

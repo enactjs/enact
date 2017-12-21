@@ -56,6 +56,7 @@
 	.moon-custom-text({
 		font-size: @moon-button-large-font-size-large;
 		height: @moon-button-height-large;
+		min-width: @moon-button-height-large;
 		line-height: (@moon-button-height-large - (2 * @moon-button-border-width));
 	});
 
@@ -129,7 +130,12 @@
 		.moon-custom-text({
 			font-size: @moon-button-small-font-size-large;
 			height: @moon-button-small-height-large;
+			min-width: @moon-button-small-height-large;
 			line-height: (@moon-button-small-height-large - (2 * @moon-button-border-width));
+
+			&.minWidth {
+				min-width: @moon-button-small-min-width;
+			}
 		});
 
 		.client::before {
@@ -142,10 +148,13 @@
 	// Button-non-disabled rules
 	&:not([disabled]) {
 		.focus({
-			&.pressed {
-				.bg {
-					-webkit-animation-name: expand;
-					animation-name: expand;
+			&.pressed,
+			&:active {
+				&:not(.noAnimation) {
+					.bg {
+						-webkit-animation-name: expand;
+						animation-name: expand;
+					}
 				}
 			}
 		});
@@ -164,12 +173,12 @@
 			border-color: transparent;
 		}
 
-		&.translucent {
-			color: @moon-button-translucent-text-color;
+		&.translucent .bg {
+			background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+		}
 
-			.bg {
-				background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
-			}
+		&.lightTranslucent .bg {
+			background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
 		}
 
 		&.transparent {
@@ -201,6 +210,32 @@
 				.bg {
 					background-color: @moon-spotlight-border-color;
 				}
+
+				&.pressed,
+				&:active {
+					&.noAnimation {
+						.bg {
+							background-color: @moon-button-bg-color;
+							border-color: @moon-spotlight-border-color;
+						}
+
+						&.translucent .bg {
+							background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+						}
+
+						&.lightTranslucent .bg {
+							background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
+						}
+
+						&.transparent {
+							color: @moon-button-transparent-active-text-color;
+
+							.bg {
+								background-color: transparent;
+							}
+						}
+					}
+				}
 			});
 		}
 
@@ -217,6 +252,15 @@
 				.bg {
 					border-color: @moon-active-spotlight-border-color;
 					background-color: @moon-spotlight-border-color;
+				}
+
+				&.pressed,
+				&:active {
+					&.noAnimation {
+						.bg {
+							border-color: @moon-active-spotlight-border-color;
+						}
+					}
 				}
 			});
 		}
@@ -254,12 +298,12 @@
 					background-color: @moon-button-bg-color;
 				}
 
-				&.translucent {
-					color: @moon-button-translucent-text-color;
+				&.translucent .bg {
+					background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+				}
 
-					.bg {
-						background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
-					}
+				&.lightTranslucent .bg {
+					background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
 				}
 
 				&.transparent {
@@ -267,6 +311,15 @@
 
 					.bg {
 						background-color: transparent;
+					}
+				}
+
+				&.pressed,
+				&:active {
+					&.noAnimation {
+						.bg {
+							border-color: transparent;
+						}
 					}
 				}
 			});

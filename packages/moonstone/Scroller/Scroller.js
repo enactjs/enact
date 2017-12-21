@@ -9,6 +9,7 @@
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
+import {forward} from '@enact/core/handle';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -20,6 +21,7 @@ import Scrollable from './Scrollable';
 
 const
 	dataContainerDisabledAttribute = 'data-container-disabled',
+	epsilon = 1,
 	reverseDirections = {
 		'left': 'right',
 		'right': 'left'
@@ -107,6 +109,10 @@ class ScrollerBase extends Component {
 		this.calculateMetrics();
 	}
 
+	componentWillUnmount () {
+		this.setContainerDisabled(false);
+	}
+
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,
@@ -120,6 +126,8 @@ class ScrollerBase extends Component {
 		top: 0,
 		left: 0
 	}
+
+	isScrolledToBoundary = false
 
 	getScrollBounds = () => this.scrollBounds
 
@@ -197,12 +205,16 @@ class ScrollerBase extends Component {
 		return node.getBoundingClientRect();
 	}
 
-	scrollToNextPage = ({direction, reverseDirection, focusedItem}) => {
+	scrollToNextPage = ({direction, reverseDirection, focusedItem, containerId}) => {
 		const
 			endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect()),
-			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, Spotlight.getActiveContainer());
+			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, containerId);
 
-		return (next !== focusedItem) && next;
+		if (next === focusedItem) {
+			return false; // Scroll one page with animation
+		} else {
+			return next; // Focus a next item
+		}
 	}
 
 	getNextEndPoint = (direction, oSpotBounds) => {
@@ -236,11 +248,12 @@ class ScrollerBase extends Component {
 	 * @param {Node} item node
 	 * @param {Object} scrollInfo position info. `calculateScrollTop` uses
 	 * `scrollInfo.previousScrollHeight` and `scrollInfo.scrollTop`
+	 * @param {Number} scrollPosition last target position, passed scroll animation is ongoing
 	 *
 	 * @returns {Object} with keys {top, left} containing caculated top and left positions for scroll.
 	 * @private
 	 */
-	calculatePositionOnFocus = ({item, scrollInfo}) => {
+	calculatePositionOnFocus = ({item, scrollInfo, scrollPosition}) => {
 		if (!this.isVertical() && !this.isHorizontal() || !item || !this.containerRef.contains(item)) {
 			return;
 		}
@@ -253,15 +266,14 @@ class ScrollerBase extends Component {
 		} = this.getFocusedItemBounds(item);
 
 		if (this.isVertical()) {
-			this.scrollPos.top = this.calculateScrollTop(item, itemTop, itemHeight, scrollInfo);
-		}
-
-		if (this.isHorizontal()) {
+			this.scrollPos.top = this.calculateScrollTop(item, itemTop, itemHeight, scrollInfo, scrollPosition);
+		} else if (this.isHorizontal()) {
 			const
 				{clientWidth} = this.scrollBounds,
 				rtlDirection = this.context.rtl ? -1 : 1,
 				{left: containerLeft} = this.containerRef.getBoundingClientRect(),
-				currentScrollLeft = this.context.rtl ? (this.scrollBounds.maxLeft - this.scrollPos.left) : this.scrollPos.left,
+				scrollLastPosition = scrollPosition ? scrollPosition : this.scrollPos.left,
+				currentScrollLeft = this.context.rtl ? (this.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
 				// calculation based on client position
 				newItemLeft = this.containerRef.scrollLeft + (itemLeft - containerLeft);
 
@@ -287,15 +299,16 @@ class ScrollerBase extends Component {
 	 * @param {Number} itemHeight of focusedItem / focusedContainer
 	 * @param {Object} scrollInfo position info. Uses `scrollInfo.previousScrollHeight`
 	 * and `scrollInfo.scrollTop`
+	 * @param {Number} scrollPosition last target position, passed scroll animation is ongoing
 	 *
 	 * @returns {Number} Calculated `scrollTop`
 	 * @private
 	 */
-	calculateScrollTop = (focusedItem, itemTop, itemHeight, scrollInfo) => {
+	calculateScrollTop = (focusedItem, itemTop, itemHeight, scrollInfo, scrollPosition) => {
 		const
 			{clientHeight} = this.scrollBounds,
 			{top: containerTop} = this.containerRef.getBoundingClientRect(),
-			currentScrollTop = this.scrollPos.top,
+			currentScrollTop = (scrollPosition ? scrollPosition : this.scrollPos.top),
 			// calculation based on client position
 			newItemTop = this.containerRef.scrollTop + (itemTop - containerTop),
 			itemBottom = newItemTop + itemHeight,
@@ -344,20 +357,20 @@ class ScrollerBase extends Component {
 				nestedItemTop = this.containerRef.scrollTop + (top - containerTop),
 				nestedItemBottom = nestedItemTop + nestedItemHeight;
 
-			if (newItemTop - nestedItemHeight > currentScrollTop) {
+			if (newItemTop - nestedItemHeight - currentScrollTop > epsilon) {
 				// set scroll position so that the top of the container is at least on the top
 				newScrollTop = newItemTop - nestedItemHeight;
-			} else if (nestedItemBottom > scrollBottom) {
+			} else if (nestedItemBottom - scrollBottom > epsilon) {
 				// Caculate when 5-way focus down past the bottom.
 				newScrollTop += nestedItemBottom - scrollBottom;
-			} else if (nestedItemTop < currentScrollTop) {
+			} else if (nestedItemTop - currentScrollTop < epsilon) {
 				// Caculate when 5-way focus up past the top.
 				newScrollTop += nestedItemTop - currentScrollTop;
 			}
-		} else if (itemBottom > scrollBottom) {
+		} else if (itemBottom - scrollBottom > epsilon) {
 			// Caculate when 5-way focus down past the bottom.
 			newScrollTop += itemBottom - scrollBottom;
-		} else if (newItemTop < currentScrollTop) {
+		} else if (newItemTop - currentScrollTop < epsilon) {
 			// Caculate when 5-way focus up past the top.
 			newScrollTop += newItemTop - currentScrollTop;
 		}
@@ -413,17 +426,36 @@ class ScrollerBase extends Component {
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
 	}
 
-	onKeyDown = ({keyCode, target}) => {
-		const direction = getDirection(keyCode);
+	onKeyDown = (ev) => {
+		forward('onKeyDown', ev, this.props);
 
-		if (direction && !this.findInternalTarget(direction, target)) {
+		const {keyCode, target} = ev;
+		const direction = getDirection(keyCode);
+		if (!ev.repeat) {
+			this.isScrolledToBoundary = false;
+		}
+
+		if (direction && !this.findInternalTarget(direction, target) && !this.isScrolledToBoundary) {
 			this.scrollToBoundary(direction);
+			this.isScrolledToBoundary = true;
 		}
 	}
 
+	handleGlobalKeyDown = () => {
+		this.setContainerDisabled(false);
+	}
+
 	setContainerDisabled = (bool) => {
-		if (this.containerRef) {
-			this.containerRef.setAttribute(dataContainerDisabledAttribute, bool);
+		const containerNode = this.containerRef;
+
+		if (containerNode) {
+			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
+
+			if (bool) {
+				document.addEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
+			} else {
+				document.removeEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
+			}
 		}
 	}
 

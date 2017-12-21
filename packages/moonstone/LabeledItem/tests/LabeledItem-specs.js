@@ -1,5 +1,5 @@
 import React from 'react';
-import {mount} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 
 import LabeledItem from '../LabeledItem';
 import css from '../LabeledItem.less';
@@ -44,7 +44,7 @@ describe('LabeledItem Specs', () => {
 	});
 
 	it('should have \'disabled\' HTML attribute when \'disabled=true\'', function () {
-		const item = mount(
+		const item = shallow(
 			<LabeledItem disabled>I am a disabled labeledItem</LabeledItem>
 		);
 

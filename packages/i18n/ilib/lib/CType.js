@@ -114,12 +114,12 @@ CType._inRange = function(num, rangeName, obj) {
  * 
  * <ul>
  * <li><i>ascii</i> - basic ASCII
- * <li><i>latin</i> - Latin, Latin Extended Additional, Latin Extended-C, Latin Extended-D
+ * <li><i>latin</i> - Latin, Latin Extended Additional, Latin-1 supplement, Latin Extended-C, Latin Extended-D, Latin Extended-E
  * <li><i>armenian</i>
  * <li><i>greek</i> - Greek, Greek Extended
- * <li><i>cyrillic</i> - Cyrillic, Cyrillic Extended-A, Cyrillic Extended-B
+ * <li><i>cyrillic</i> - Cyrillic, Cyrillic Extended-A, Cyrillic Extended-B, Cyrillic Extended-C, Cyrillic Supplement
  * <li><i>georgian</i> - Georgian, Georgian Supplement
- * <li><i>glagolitic</i>
+ * <li><i>glagolitic</i> - Glagolitic, Glagolitic Supplement
  * <li><i>gothic</i>
  * <li><i>ogham</i>
  * <li><i>oldpersian</i>
@@ -138,7 +138,7 @@ CType._inRange = function(num, rangeName, obj) {
  * <li><i>tifinagh</i>
  * <li><i>val</i>
  * <li><i>arabic</i> - Arabic, Arabic Supplement, Arabic Presentation Forms-A, 
- * Arabic Presentation Forms-B
+ * Arabic Presentation Forms-B, Arabic Mathematical Alphabetic Symbols
  * <li><i>carlan</i>
  * <li><i>hebrew</i>
  * <li><i>mandaic</i>
@@ -161,6 +161,7 @@ CType._inRange = function(num, rangeName, obj) {
  * <li><i>saurashtra</i>
  * <li><i>sinhala</i>
  * <li><i>sylotinagri</i> - Syloti Nagri
+ * <li><i>tangut</i>
  * <li><i>tamil</i>
  * <li><i>telugu</i>
  * <li><i>thaana</i>
@@ -173,10 +174,10 @@ CType._inRange = function(num, rangeName, obj) {
  * <li><i>kayahli</i>
  * <li><i>khmer</i>
  * <li><i>lao</i>
- * <li><i>myanmar</i> - Myanmar, Myanmar Extended-A
+ * <li><i>myanmar</i> - Myanmar, Myanmar Extended-A, Myanmar Extended-B
  * <li><i>newtailue</i>
  * <li><i>rejang</i>
- * <li><i>sundanese</i>
+ * <li><i>sundanese</i> - Sundanese, Sundanese Supplement
  * <li><i>taile</i>
  * <li><i>taitham</i>
  * <li><i>taiviet</i>
@@ -222,16 +223,16 @@ CType._inRange = function(num, rangeName, obj) {
  * <li><i>misc</i> - Miscellaneous technical
  * <li><i>ocr</i> - Optical character recognition (OCR)
  * <li><i>combining</i> - Combining Diacritical Marks, Combining Diacritical Marks 
- * for Symbols, Combining Diacritical Marks Supplement
+ * for Symbols, Combining Diacritical Marks Supplement, Combining Diacritical Marks Extended
  * <li><i>digits</i> - ASCII digits (=isDigit())
  * <li><i>indicnumber</i> - Common Indic Number Forms
- * <li><i>numbers</i> - Number dorms
- * <li><i>supersub</i> - Super- and subscripts
+ * <li><i>numbers</i> - Number forms
+ * <li><i>supersub</i> - Superscripts and Subscripts
  * <li><i>arrows</i> - Arrows, Miscellaneous Symbols and Arrows, Supplemental Arrows-A,
- * Supplemental Arrows-B
+ * Supplemental Arrows-B, Supplemental Arrows-C
  * <li><i>operators</i> - Mathematical operators, supplemental 
  * mathematical operators 
- * <li><i>geometric</i> - Geometric shapes
+ * <li><i>geometric</i> - Geometric shapes, Geometric shapes extended
  * <li><i>ancient</i> - Ancient symbols
  * <li><i>braille</i> - Braille patterns
  * <li><i>currency</i> - Currency symbols
@@ -248,6 +249,22 @@ CType._inRange = function(num, rangeName, obj) {
  * <li><i>lowsurrogates</i>
  * <li><i>reserved</i>
  * <li><i>noncharacters</i>
+ * <li><i>copticnumber</i> - coptic epact numbers
+ * <li><i>oldpermic</i> - old permic
+ * <li><i>albanian</i> - albanian
+ * <li><i>lineara</i> - linear a
+ * <li><i>meroitic</i> - meroitic cursive
+ * <li><i>oldnortharabian</i> - old north arabian
+ * <li><i>oldhungarian</i> - Supplementary private use area-A
+ * <li><i>sorasompeng</i> - sora sompeng
+ * <li><i>warangciti</i> - warang citi
+ * <li><i>paucinhau</i> - pau cin hau
+ * <li><i>bassavah</i> - bassa vah
+ * <li><i>pahawhhmong</i> - pahawh hmong
+ * <li><i>shorthandformat</i> - shorthand format controls
+ * <li><i>suttonsignwriting</i> - sutton signwriting
+ * <li><i>pictographs</i> - miscellaneous symbols and pictographs, supplemental symbols and pictographs
+ * <li><i>ornamentaldingbats</i> - ornamental dingbats
  * </ul><p>
  * 
  * 
@@ -305,7 +322,7 @@ CType._load = function (name, sync, loadParams, onLoad) {
 			nonlocale: true,
 			sync: sync,
 			loadParams: loadParams, 
-			callback: /** @type function(Object=):undefined */ ilib.bind(this, /** @type function() */ function(ct) {
+			callback: ilib.bind(this, function(ct) {
 				ilib.data[name] = ct;
 				if (onLoad && typeof(onLoad) === 'function') {
 					onLoad(ilib.data[name]);

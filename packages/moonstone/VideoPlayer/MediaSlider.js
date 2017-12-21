@@ -22,7 +22,7 @@ const MediaSliderBase = kind({
 
 	propTypes: /** @lends moonstone/VideoPlayer.MediaSlider.prototype */ {
 		/**
-		 * Background progress, as a proportion from `0` to `1`
+		 * Background progress, as a proportion from `0` to `1`.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -31,13 +31,22 @@ const MediaSliderBase = kind({
 		backgroundProgress: PropTypes.number,
 
 		/**
-		 * When `true`, the component is shown as disabled and does not generate events
+		 * When `true`, the component is shown as disabled and does not generate events.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * When `true`, the knob will expand. Note that Slider is a controlled
+		 * component. Changing the value would only affect pressed visual and
+		 * not the state.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		forcePressed: PropTypes.bool,
 
 		/**
 		 * The handler to run when the value is changed.
@@ -56,26 +65,57 @@ const MediaSliderBase = kind({
 		 * @default 0
 		 * @public
 		 */
-		value: PropTypes.number
+		value: PropTypes.number,
+
+		/**
+		 * The visibility of the component. When `false`, the component will be hidden.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		visible: PropTypes.bool
 	},
 
-	render: (props) => (
-		<div className={css.sliderFrame}>
-			<Slider
-				{...props}
-				aria-hidden="true"
-				className={css.mediaSlider}
-				detachedKnob
-				min={0}
-				max={1}
-				step={0.00001}
-				knobStep={0.05}
-			/>
-		</div>
-	)
+	defaultProps: {
+		visible: true
+	},
+
+	styles: {
+		css,
+		className: 'sliderFrame'
+	},
+
+	computed: {
+		className: ({styler, visible}) => styler.append({hidden: !visible}),
+		sliderClassName: ({styler, forcePressed}) => styler.join({
+			pressed: forcePressed,
+			mediaSlider: true
+		})
+	},
+
+	render: ({className, sliderClassName, ...rest}) => {
+		delete rest.forcePressed;
+		delete rest.visible;
+
+		return (
+			<div className={className}>
+				<Slider
+					{...rest}
+					aria-hidden="true"
+					className={sliderClassName}
+					detachedKnob
+					knobStep={0.05}
+					max={1}
+					min={0}
+					step={0.00001}
+				/>
+			</div>
+		);
+	}
 });
 
-const MediaSlider = onlyUpdateForKeys(['backgroundProgress', 'children', 'value'])(MediaSliderBase);
+const MediaSlider = onlyUpdateForKeys(['backgroundProgress', 'children', 'forcePressed', 'value', 'visible'])(MediaSliderBase);
 
 export default MediaSlider;
 export {

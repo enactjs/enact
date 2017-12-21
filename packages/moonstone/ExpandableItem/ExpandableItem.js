@@ -256,9 +256,7 @@ const ExpandableItemBase = kind({
 		handleOpen: (ev, {disabled, onClose, onOpen, open}) => {
 			// When disabled, don't attach an event
 			if (!disabled) {
-				if (!Spotlight.getPointerMode()) {
-					Spotlight.pause();
-				}
+				Spotlight.pause();
 
 				if (open) {
 					onClose(ev);
@@ -347,11 +345,13 @@ const ExpandableItemBase = kind({
 				<ExpandableTransitionContainer
 					data-expandable-container
 					duration="short"
+					timingFunction="ease-out-quart"
 					onHide={onHide}
 					onKeyDown={handleKeyDown}
 					onShow={onShow}
 					spotlightDisabled={transitionSpotlightDisabled}
 					type="clip"
+					direction="down"
 					visible={open}
 				>
 					{children}

@@ -10,6 +10,7 @@ import clamp from 'ramda/src/clamp';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 
 import {MarqueeController} from '../Marquee';
 import {validateRange} from '../internal/validators';
@@ -213,11 +214,13 @@ const PickerBase = kind({
  * @ui
  * @public
  */
-const Picker = Changeable(
-	MarqueeController(
-		{marqueeOnFocus: true},
-		SpottablePicker(
-			PickerBase
+const Picker = Pure(
+	Changeable(
+		MarqueeController(
+			{marqueeOnFocus: true},
+			SpottablePicker(
+				PickerBase
+			)
 		)
 	)
 );

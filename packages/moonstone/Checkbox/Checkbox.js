@@ -8,6 +8,7 @@ import kind from '@enact/core/kind';
 import {handle, forward} from '@enact/core/handle';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 
 import Icon from '../Icon';
 import Skinnable from '../Skinnable';
@@ -95,7 +96,11 @@ const CheckboxBase = kind({
 	}
 });
 
-const Checkbox = Skinnable(CheckboxBase);
+const Checkbox = Pure(
+	Skinnable(
+		CheckboxBase
+	)
+);
 
 export default Checkbox;
 export {Checkbox, CheckboxBase};

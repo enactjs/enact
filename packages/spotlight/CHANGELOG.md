@@ -2,15 +2,113 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+
+### Fixed
+
+## [2.0.0-alpha.2] - 2017-08-29
+
+No significant changes.
+
 ## [2.0.0-alpha.1] - 2017-08-27
 
 No significant changes.
+
+## [1.13.2] - 2017-12-14
+
+### Fixed
+
+- `spotlight` to guard against accessing unconfigured container configurations
+
+## [1.13.1] - 2017-12-06
+
+No significant changes.
+
+## [1.13.0] - 2017-11-28
+
+No significant changes.
+
+## [1.12.2] - 2017-11-15
+
+### Fixed
+
+- `spotlight` to handle non-5-way keys correctly to focus on next 5-way keys
+- `spotlight/Spottable` to forward `onMouseEnter` and `onMouseLeave`
+
+## [1.12.1] - 2017-11-07
+
+No significant changes.
+
+## [1.12.0] - 2017-10-27
+
+### Fixed
+
+- `spotlight` to focus enabled items that were hovered while disabled
+- `spotlight` to not access non-existent container configurations
+- `spotlight/Spottable` to not block next enter key when focus is moved while pressing enter
+
+## [1.11.0] - 2017-10-24
+
+### Changed
+
+- `spotlight` to handle key events to preserve pointer mode for specific keys
+
+### Fixed
+
+- `spotlight` to not require multiple 5-way key presses in order to change focus after the window regains focus
+
+## [1.10.1] - 2017-10-16
+
+### Fixed
+
+- `spotlight.Spotlight` method `focus()` to prevent focusing components within containers that are being removed
+
+## [1.10.0] - 2017-10-09
+
+### Fixed
+
+- `spotlight.Spotlight` method `focus()` to verify that the target element matches its container's selector rules prior to setting focus
+
+## [1.9.3] - 2017-10-03
+
+- `spotlight.Spotlight` method `focus()` to verify that the target element matches its container's selector rules prior to setting focus
+
+## [1.9.2] - 2017-09-26
+
+No significant changes.
+
+## [1.9.1] - 2017-09-25
+
+No significant changes.
+
+## [1.9.0] - 2017-09-22
+
+### Changed
+
+- `spotlight` to block handling repeated key down events that were interrupted by a pointer event
+
+### Fixed
+
+- `spotlight` to not try to focus something when the window is activated unless the window has been previously blurred
+- `spotlight` to prevent containers that have been unmounted from being considered potential targets
+
+## [1.8.0] - 2017-09-07
+
+### Fixed
+
+- `spotlight/Spottable` to clean up internal spotted state when blurred within `onSpotlightDisappear` handler
 
 ## [1.7.0] - 2017-08-23
 
 ### Added
 
-- `spotlight/SpotlightContainerDecorator` config option `continue5WayHold` to support moving focus to the next spottable element on 5-way hold key.
+- `spotlight/SpotlightContainerDecorator` config option `continue5WayHold` to support moving focus to the next spottable element on 5-way hold key
 - `spotlight/Spottable` ability to restore focus when an initially disabled component becomes enabled
 
 ### Fixed
@@ -106,7 +204,7 @@ No significant changes.
 ### Added
 
 - `spotlight/SpotlightRootDecorator` config option: `noAutoFocus` to support prevention of setting automatic focus after render
-- `spotlight/Spotlight` method `getSpottableDescendants()`
+- `spotlight.Spotlight` method `getSpottableDescendants()`
 
 ### Changed
 
@@ -114,7 +212,7 @@ No significant changes.
 
 ### Fixed
 
-- `spotlight/Spotlight` to consider nested containers when adjusting focus
+- `spotlight.Spotlight` to consider nested containers when adjusting focus
 
 ## [1.0.0] - 2017-03-31
 
@@ -128,8 +226,8 @@ No significant changes.
 
 ### Fixed
 
-- `spotlight/Spotlight` `set()` to properly update the container config
-- `spotlight/Spotlight` to properly save the last-focused element for nested containers
+- `spotlight.Spotlight` `set()` to properly update the container config
+- `spotlight.Spotlight` to properly save the last-focused element for nested containers
 
 ## [1.0.0-beta.4] - 2017-03-10
 

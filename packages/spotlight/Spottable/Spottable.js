@@ -166,6 +166,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			this.isHovered = false;
 			this.state = {
 				spotted: false
 			};
@@ -206,7 +207,13 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 					(prevProps.spotlightDisabled && !this.props.spotlightDisabled)
 				)
 			) {
-				if (!Spotlight.getCurrent() && !Spotlight.getPointerMode() && !Spotlight.isPaused()) {
+				if (Spotlight.getPointerMode()) {
+					if (this.isHovered) {
+						Spotlight.setPointerMode(false);
+						Spotlight.focus(this.node);
+						Spotlight.setPointerMode(true);
+					}
+				} else if (!Spotlight.getCurrent() && !Spotlight.isPaused()) {
 					const containers = getContainersForNode(this.node);
 					const containerId = Spotlight.getActiveContainer();
 					if (containers.indexOf(containerId) >= 0) {
@@ -219,6 +226,9 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillUnmount () {
 			if (this.state.spotted) {
 				forward('onSpotlightDisappear', null, this.props);
+			}
+			if (lastSelectTarget === this) {
+				lastSelectTarget = null;
 			}
 		}
 
@@ -262,16 +272,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		setFocusTarget = () => {
-			lastSelectTarget = this;
-			return true;
-		}
-
-		resetLastSelecTarget = () => {
-			const stop = lastSelectTarget === this;
+		forwardAndResetLastSelectTarget = (ev, props) => {
+			const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
+			const allow = lastSelectTarget === this;
 			selectCancelled = false;
 			lastSelectTarget = null;
-			return stop;
+			return notPrevented && allow;
 		}
 
 		handle = handle.bind(this)
@@ -285,8 +291,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		handleKeyUp = this.handle(
-			forwardWithPrevent('onKeyUp'),
-			this.resetLastSelecTarget,
+			this.forwardAndResetLastSelectTarget,
 			this.shouldEmulateMouse,
 			forward('onMouseUp'),
 			forward('onClick')
@@ -316,6 +321,16 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		handleEnter = (ev) => {
+			forward('onMouseEnter', ev, this.props);
+			this.isHovered = true;
+		}
+
+		handleLeave = (ev) => {
+			forward('onMouseLeave', ev, this.props);
+			this.isHovered = false;
+		}
+
 		render () {
 			const {disabled, spotlightDisabled, ...rest} = this.props;
 			const spottable = !disabled && !spotlightDisabled;
@@ -332,11 +347,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (spottable) {
-				rest.onBlur = this.handleBlur;
-				rest.onFocus = this.handleFocus;
-				rest.onKeyDown = this.handleKeyDown;
-				rest.onKeyUp = this.handleKeyUp;
-
 				if (rest.className) {
 					rest.className += ' ' + spottableClass;
 				} else {
@@ -347,6 +357,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return (
 				<Wrapped
 					{...rest}
+					onBlur={this.handleBlur}
+					onFocus={this.handleFocus}
+					onMouseEnter={this.handleEnter}
+					onMouseLeave={this.handleLeave}
+					onKeyDown={this.handleKeyDown}
+					onKeyUp={this.handleKeyUp}
 					disabled={disabled}
 					tabIndex={tabIndex}
 				/>

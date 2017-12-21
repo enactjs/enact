@@ -1,17 +1,24 @@
 import {
+	addContainer,
 	configureContainer,
 	configureDefaults,
 	containerAttribute,
 	getAllContainerIds,
 	getContainerConfig,
+	getContainerDefaultElement,
 	getContainerFocusTarget,
+	getContainerLastFocusedElement,
+	getContainerNavigableElements,
 	getContainersForNode,
+	getDefaultContainer,
 	getLastContainer,
+	getNavigableContainersForNode,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
 	unmountContainer,
 	removeContainer,
+	removeAllContainers,
 	rootContainerId,
 	setContainerLastFocusedElement,
 	setLastContainer,
@@ -139,7 +146,7 @@ const setupContainers = () => {
 
 const teardownContainers = () => {
 	// clean up any containers we create for safe tests
-	getAllContainerIds().forEach(removeContainer);
+	removeAllContainers();
 };
 
 describe('container', () => {
@@ -617,6 +624,16 @@ describe('container', () => {
 				expect(actual).to.equal(expected);
 			}
 		));
+
+		it('should return null for an unconfigured container', testScenario(
+			scenarios.complexTree,
+			() => {
+				const expected = null;
+				const actual = getContainerFocusTarget('first-container');
+
+				expect(actual).to.equal(expected);
+			}
+		));
 	});
 
 	describe('#isNavigable', () => {
@@ -903,6 +920,19 @@ describe('container', () => {
 				expect(actual).to.equal(expected);
 			}
 		));
+
+		it('should mark the container inactive', testScenario(
+			scenarios.complexTree,
+			() => {
+				addContainer('first-container');
+				unmountContainer('first-container');
+
+				const expected = false;
+				const actual = getContainerConfig('first-container').active;
+
+				expect(actual).to.equal(expected);
+			}
+		));
 	});
 
 	describe('#setLastContainerFromTarget', () => {
@@ -966,6 +996,134 @@ describe('container', () => {
 				const actual = getLastContainer();
 
 				expect(actual).to.equal(expected);
+			}
+		));
+	});
+
+	describe('#getDefaultContainer', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		it('should return an empty string when container is inactive', testScenario(
+			scenarios.complexTree,
+			() => {
+				unmountContainer(rootContainerId);
+
+				const expected = '';
+				const actual = getDefaultContainer();
+
+				expect(actual).to.equal(expected);
+			}
+		));
+	});
+
+	describe('#getLastContainer', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		it('should return an empty string when container is inactive', testScenario(
+			scenarios.complexTree,
+			() => {
+				addContainer('first-container');
+				setLastContainer('first-container');
+				unmountContainer('first-container');
+
+				const expected = '';
+				const actual = getLastContainer();
+
+				expect(actual).to.equal(expected);
+			}
+		));
+	});
+
+	describe('#getAllContainerIds', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		it('should not include inacive containers', testScenario(
+			scenarios.onlyContainers,
+			(root) => {
+				const {containerId} = root.querySelector('[data-container-id]').dataset;
+
+				addContainer(containerId);
+				unmountContainer(containerId);
+
+				const expected = -1;
+				const actual = getAllContainerIds().indexOf(containerId);
+
+				expect(actual).to.equal(expected);
+			}
+		));
+	});
+
+	describe('#getContainerLastFocusedElement', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		it('should return null for an invalid container', testScenario(
+			scenarios.onlySpottables,
+			() => {
+				const expected = null;
+				const actual = getContainerLastFocusedElement('does-not-exist');
+
+				expect(actual).to.equal(expected);
+			}
+		));
+	});
+
+	describe('#getContainerDefaultElement', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		it('should return null for an invalid container', testScenario(
+			scenarios.onlySpottables,
+			() => {
+				const expected = null;
+				const actual = getContainerDefaultElement('does-not-exist');
+
+				expect(actual).to.equal(expected);
+			}
+		));
+	});
+
+	describe('#getNavigableContainersForNode', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		it('should include all containers when none are restrict="self-only"', testScenario(
+			scenarios.complexTree,
+			(root) => {
+				const expected = [rootContainerId, 'first-container', 'second-container'];
+				const actual = getNavigableContainersForNode(root.querySelector('#secondContainerFirstSpottable'));
+
+				expect(actual).to.deep.equal(expected);
+			}
+		));
+
+		it('should include all containers within the first restrict="self-only" container (inclusive)', testScenario(
+			scenarios.complexTree,
+			(root) => {
+				configureContainer('first-container', {restrict: 'self-only'});
+
+				const expected = ['first-container', 'second-container'];
+				const actual = getNavigableContainersForNode(root.querySelector('#secondContainerFirstSpottable'));
+
+				expect(actual).to.deep.equal(expected);
+			}
+		));
+	});
+
+	describe('#getContainerNavigableElements', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		it('should return an empty array for an unconfigured container', testScenario(
+			scenarios.complexTree,
+			() => {
+				const expected = [];
+				const actual = getContainerNavigableElements('first-container');
+
+				expect(actual).to.deep.equal(expected);
 			}
 		));
 	});

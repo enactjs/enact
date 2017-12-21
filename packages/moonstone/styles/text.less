@@ -161,6 +161,7 @@
 
 .moon-header-sub-title-below() {
 	.moon-font(@moon-sub-header-below-font-family);
+	font-weight: @moon-sub-header-below-font-weight;
 	font-size: @moon-sub-header-below-font-size;
 }
 
@@ -179,6 +180,7 @@
 
 .moon-dialog-title() {
 	.moon-popup-header-text();
+	line-height: @moon-small-header-line-height;
 }
 
 .moon-dialog-title-below() {
@@ -188,8 +190,7 @@
 }
 
 .moon-dialog-content() {
-	.moon-font();
-	font-size: @moon-popup-content-font-size;
+	.moon-body-text();
 	.locale-japanese-line-break();
 }
 

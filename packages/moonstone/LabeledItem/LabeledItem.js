@@ -7,6 +7,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
@@ -15,7 +16,7 @@ import Skinnable from '../Skinnable';
 import {MarqueeController, MarqueeText} from '../Marquee';
 import Touchable from '../internal/Touchable';
 
-const Item = MarqueeController(
+const Controller = MarqueeController(
 	{marqueeOnFocus: true},
 	Touchable(
 		Spottable(
@@ -49,6 +50,14 @@ const LabeledItemBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		disabled: PropTypes.bool,
+
+		/**
 		 * The label to be displayed along with the text.
 		 *
 		 * @type {Node}
@@ -70,18 +79,22 @@ const LabeledItemBase = kind({
 		className: 'labeleditem'
 	},
 
-	render: ({children, label, titleIcon, ...rest}) => (
-		<Item {...rest}>
+	render: ({children, disabled, label, titleIcon, ...rest}) => (
+		<Controller disabled={disabled} {...rest}>
 			<div className={css.text}>
-				<MarqueeText className={css.title}>{children}</MarqueeText>
+				<MarqueeText disabled={disabled} className={css.title}>{children}</MarqueeText>
 				{(titleIcon != null) ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
 			</div>
-			{(label != null) ? <MarqueeText className={css.label}>{label}</MarqueeText> : null}
-		</Item>
+			{(label != null) ? <MarqueeText disabled={disabled} className={css.label}>{label}</MarqueeText> : null}
+		</Controller>
 	)
 });
 
-const LabeledItem = Skinnable(LabeledItemBase);
+const LabeledItem = Pure(
+	Skinnable(
+		LabeledItemBase
+	)
+);
 
 export default LabeledItem;
 export {LabeledItem, LabeledItemBase};

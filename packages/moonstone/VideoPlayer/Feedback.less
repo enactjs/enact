@@ -22,10 +22,11 @@
 	}
 
 	.icon {
-		width: @moon-video-feedback-icon-width;
 		font-size: @moon-video-feedback-icon-font-size;
-		line-height: @moon-video-feedback-icon-line-height; /* use line-height to middle align the icon, the defaut 32px from moon-icon will make it too low */
-		height: @moon-video-feedback-icon-line-height;
+		width: @moon-video-feedback-icon-width;
+		height: inherit;  // Use the height and line-height from the parent element to always middle align the icon, regardless of the container's size
+		line-height: inherit;
+		vertical-align: bottom;
 
 		&.shrink {
 			font-size: @moon-video-feedback-icon-shrunken-size;

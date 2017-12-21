@@ -33,6 +33,7 @@ const
 	},
 	preparePrevButton = prepareButton(true),
 	prepareNextButton = prepareButton(false),
+	thumbHidingDelay = 400, /* in milliseconds */
 	isPageUp = is('pageUp'),
 	isPageDown = is('pageDown');
 
@@ -68,6 +69,14 @@ class ScrollbarBase extends PureComponent {
 		 * @public
 		 */
 		announce: PropTypes.func,
+
+		/**
+		 * The callback function which is called for linking alertThumb function.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		cbAlertThumb: PropTypes.func,
 
 		/**
 		 * If `true`, add the corner between vertical and horizontal scrollbars.
@@ -165,11 +174,12 @@ class ScrollbarBase extends PureComponent {
 
 		this.calculateMetrics();
 		this.prevButtonNodeRef = containerRef.children[0];
-		this.nextButtonNodeRef = containerRef.children[1];
+		this.nextButtonNodeRef = containerRef.children[2];
 	}
 
 	componentDidUpdate () {
 		this.calculateMetrics();
+		this.props.cbAlertThumb();
 	}
 
 	componentWillUnmount () {
@@ -268,7 +278,9 @@ class ScrollbarBase extends PureComponent {
 		this.thumbRef.classList.remove(css.thumbShown);
 	}
 
-	hideThumbJob = new Job(this.hideThumb, 200);
+	isThumbFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
+
+	hideThumbJob = new Job(this.hideThumb, thumbHidingDelay);
 
 	calculateMetrics = () => {
 		const trackSize = this.containerRef[this.props.vertical ? 'clientHeight' : 'clientWidth'];
@@ -320,12 +332,24 @@ class ScrollbarBase extends PureComponent {
 	}
 
 	releaseButton = (ev) => {
+		const
+			{prevButtonNodeRef, nextButtonNodeRef} = this,
+			{prevButtonDisabled, nextButtonDisabled} = this.state;
+
 		this.setPressStatus(false);
 		this.setIgnoreMode(false);
 		if (isPageUp(ev.keyCode)) {
-			this.handlePrevScroll(ev);
+			if (ev.target === nextButtonNodeRef && !prevButtonDisabled) {
+				Spotlight.focus(prevButtonNodeRef);
+			} else {
+				this.handlePrevScroll(ev);
+			}
 		} else if (isPageDown(ev.keyCode)) {
-			this.handleNextScroll(ev);
+			if (ev.target === prevButtonNodeRef && !nextButtonDisabled) {
+				Spotlight.focus(nextButtonNodeRef);
+			} else {
+				this.handleNextScroll(ev);
+			}
 		}
 	}
 
@@ -382,7 +406,7 @@ class ScrollbarBase extends PureComponent {
 }
 
 const Scrollbar = ApiDecorator(
-	{api: ['containerRef', 'hideThumb', 'showThumb', 'startHidingThumb', 'update']},
+	{api: ['containerRef', 'hideThumb', 'isThumbFocused', 'showThumb', 'startHidingThumb', 'update']},
 	DisappearSpotlightDecorator(
 		{events: {
 			onNextSpotlightDisappear: '[data-scroll-button="previous"]',

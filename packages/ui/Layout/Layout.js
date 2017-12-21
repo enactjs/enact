@@ -1,6 +1,9 @@
 /**
  * Exports the {@link ui/Layout.Layout}, {@link ui/Layout.LayoutBase}, and  {@link ui/Layout.Cell}
- * components. The default export is {@link ui/Layout.Layout}.
+ * components. The default export is {@link ui/Layout.Layout}. Layout also has two shorthand
+ * components exported: `Row` and `Column`. These two assign preset `orientation` properties to
+ * simplify usage and readability. They are identical to `<Layout orientation="horizontal">` and
+ * `<Layout orientation="vertical">` respectively.
  *
  * @example
  * <Layout>
@@ -19,114 +22,12 @@
  */
 
 import kind from '@enact/core/kind';
-import {withContextFromProps} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import {Cell, toFlexAlign} from './Cell';
+
 import css from './Layout.less';
-
-/*
- * contextTypes, which are available to the `kind` and `withContextFromProps`, allow Layout to
- * inform child Cells about itself that Cell can act upon.
- */
-const contextTypes = {
-	align: PropTypes.string,
-	orientation: PropTypes.string
-};
-
-/**
- * A stateless component that provides a space for your content in a
- * [Layout]{@link ui/Layout.Layout}.
- *
- * @class Cell
- * @memberof ui/Layout
- * @public
- */
-const CellBase = kind({
-	name: 'Cell',
-
-	propTypes: /** @lends ui/Layout.Cell.prototype */ {
-		/**
-		 * Any valid Node that should be positioned in this Cell.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		children: PropTypes.node,
-
-		/**
-		 * The type of component to use to render as the Cell. May be a DOM node name (e.g 'div',
-		 * 'span', etc.) or a custom component.
-		 *
-		 * @type {String|Node}
-		 * @default 'div'
-		 * @public
-		 */
-		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-
-		/**
-		 * A `shrink`able cell will contract to its minimum size, according to the dimensions of its
-		 * contents. This is used when you want the size of this Cell's content to influence the
-		 * dimensions of this cell. `shrink` will not allow the contents of the Layout to be pushed
-		 * beyond its boundaries (overflowing). See the [size]{@link ui/Layout.Cell#size} property
-		 * for more details.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		shrink: PropTypes.bool,
-
-		/**
-		 * Sets the requested size, possibly overflowing if the contents are too large for the space.
-		 * When used in conjunction with [shrink]{@link ui/Layout.Cell#shrink}, the size will be set
-		 * as close to the requested size as is possible, given the dimensions of the contents of
-		 * this cell. E.g. If your content is `40px` tall and you set `size` to "30px", the Cell will
-		 * render `30px` tall. If [shrink]{@link ui/Layout.Cell#shrink} was used also, the rendered
-		 * Cell would be `40px` tall.
-		 * This accepts any valid CSS measurement and overrules the
-		 * [shrink]{@link ui/Layout.Cell#shrink} property.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		size: PropTypes.string
-	},
-
-	defaultProps: {
-		component: 'div',
-		shrink: false
-	},
-
-	contextTypes,
-
-	styles: {
-		css,
-		className: 'cell'
-	},
-
-	computed: {
-		className: ({shrink, size, styler}) => styler.append({shrink, grow: (!shrink && !size)}),
-		style: ({shrink, size, style = {}}, {orientation}) => {
-			style.flexBasis = size;
-			if (!shrink) style[orientation === 'vertical' ? 'maxHeight' : 'maxWidth'] = size; // shrink and size uses just basis, size without shrink forcibly sets the size, allowing overflow.
-			return style;
-		}
-	},
-
-	render: ({component: Component, ...rest}) => {
-		delete rest.shrink;
-		delete rest.size;
-
-		return <Component {...rest} />;
-	}
-});
-
-// Setup a list of shorthand translations
-const shorthandAliases = {
-	end: 'flex-end',
-	start: 'flex-start'
-};
 
 /**
  * A stateless component that acts as a containing area for [Cells]{@link ui/Layout.Cell} to be
@@ -237,19 +138,21 @@ const LayoutBase = kind({
 
 	computed: {
 		className: ({inline, orientation, wrap, styler}) => {
-			let wrapClass = 'nowrap';
-			if (wrap && wrap !== 'nowrap') {
-				wrapClass = (wrap === 'reverse' ? 'wrapReverse' : 'wrap');
-			}
 			return styler.append(
 				orientation,
-				wrapClass,
-				{inline}
+				{
+					inline,
+					nowrap: wrap === false || wrap === 'nowrap',
+					wrap: wrap === true || wrap === 'wrap',
+					wrapReverse: wrap === 'wrapReverse'
+				}
 			);
 		},
-		style: ({align, style = {}}) => {
-			style.alignItems = shorthandAliases[align] || align;
-			return  style;
+		style: ({align, style}) => {
+			return {
+				...style,
+				alignItems: toFlexAlign(align)
+			};
 		}
 	},
 
@@ -263,8 +166,33 @@ const LayoutBase = kind({
 	}
 });
 
-// Convert a few incoming props of Layout into context keys so children Cells can adjust their behavior accordingly.
-const Layout = withContextFromProps(contextTypes, LayoutBase);
+/**
+ * A {@link ui/Layout.Layout} that positions its [Cells]{@link ui/Layout.Cell} vertically.
+ *
+ * @class Column
+ * @memberof ui/Layout
+ * @public
+ */
+const Column = (props) => (
+	<LayoutBase {...props} orientation="vertical" />
+);
 
-export default Layout;
-export {Layout, LayoutBase, CellBase as Cell, CellBase};
+/**
+ * A {@link ui/Layout.Layout} that positions its [Cells]{@link ui/Layout.Cell} horizontally.
+ *
+ * @class Row
+ * @memberof ui/Layout
+ * @public
+ */
+const Row = (props) => (
+	<LayoutBase {...props} orientation="horizontal" />
+);
+
+export default LayoutBase;
+export {
+	Cell,
+	Column,
+	LayoutBase as Layout,
+	LayoutBase,
+	Row
+};

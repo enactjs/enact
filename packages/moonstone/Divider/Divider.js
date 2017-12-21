@@ -8,6 +8,7 @@ import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
@@ -22,6 +23,7 @@ const MarqueeH3 = Uppercase(MarqueeDecorator('h3'));
  *
  * @class Divider
  * @memberof moonstone/Divider
+ * @mixes moonstone/MarqueeDecorator.MarqueeDecorator
  * @ui
  * @public
  */
@@ -97,12 +99,17 @@ const DividerBase = kind({
 		delete rest.spacing;
 
 		return (
-			<MarqueeH3 {...rest} marqueeOn="hover">{children}</MarqueeH3>
+			// TODO: change to `marqueeOn="render"`
+			<MarqueeH3 marqueeOn="hover" {...rest}>{children}</MarqueeH3>
 		);
 	}
 });
 
-const Divider = Skinnable(DividerBase);
+const Divider = Pure(
+	Skinnable(
+		DividerBase
+	)
+);
 
 export default Divider;
 export {Divider, DividerBase};

@@ -39,6 +39,8 @@ let _lastContainerId = '';
 // - a string "@<containerId>" to indicate the specified container
 // - a string "@" to indicate the default container
 let GlobalConfig = {
+	// set to false for unmounted containers to omit them from searches
+	active: true,
 	continue5WayHold: false,
 	defaultElement: '',     // <extSelector> except "@" syntax.
 	enterTo: '',            // '', 'last-focused', 'default-element'
@@ -316,7 +318,7 @@ const getDeepSpottableDescendants = (containerId, excludedContainers) => {
 				const config = getContainerConfig(id);
 				if (excludedContainers && excludedContainers.indexOf(id) >= 0) {
 					return [];
-				} else if (!config.enterTo) {
+				} else if (config && !config.enterTo) {
 					return getDeepSpottableDescendants(id, excludedContainers);
 				}
 			}
@@ -335,7 +337,8 @@ const getDeepSpottableDescendants = (containerId, excludedContainers) => {
  * @private
  */
 const isContainer5WayHoldable = (containerId) => {
-	return getContainerConfig(containerId).continue5WayHold || false;
+	const config = getContainerConfig(containerId);
+	return (config && config.continue5WayHold) || false;
 };
 
 /**
@@ -372,6 +375,7 @@ function getNavigableContainersForNode (node) {
 	// find first self-only container id
 	const selfOnlyIndex = containerIds
 		.map(getContainerConfig)
+		.filter(config => config != null)
 		.reduceRight((index, config, i) => {
 			if (index === -1 && config.restrict === 'self-only') {
 				return i;
@@ -469,6 +473,27 @@ const configureContainer = (...args) => {
 };
 
 /**
+ * Adds a container and marks it active. When a container id is not specified, it will be generated.
+ *
+ * @param   {String|Object}  containerIdOrConfig  Either a string container id or a configuration
+ *                                                object.
+ * @param   {Object}         [config]             Container configuration when `containerIdOrConfig`
+ *                                                is a string. When omitted, the container will have
+ *                                                the default `GlobalConfig`.
+ *
+ * @returns {String}                              The container id
+ * @memberof spotlight/container
+ * @public
+ */
+const addContainer = (...args) => {
+	const containerId = configureContainer(...args);
+	const config = getContainerConfig(containerId);
+	config.active = true;
+
+	return containerId;
+};
+
+/**
  * Removes a container
  *
  * @param   {String}     containerId  ID of the container to remove
@@ -527,7 +552,7 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	const config = getContainerConfig(containerId);
-	if (verify && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
+	if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
 		return false;
 	}
 
@@ -548,7 +573,9 @@ const getAllContainerIds = () => {
 	// PhantomJS-friendly iterator->array conversion
 	let id;
 	while ((id = keys.next()) && !id.done) {
-		ids.push(id.value);
+		if (isActiveContainer(id.value)) {
+			ids.push(id.value);
+		}
 	}
 
 	return ids;
@@ -559,13 +586,14 @@ const getAllContainerIds = () => {
  *
  * @param   {String}  containerId  ID of container
  *
- * @returns {Node}                 Default focus element
+ * @returns {Node|null}                 Default focus element
  * @memberof spotlight/container
  * @public
  */
 function getContainerDefaultElement (containerId) {
-	let defaultElementSelector = getContainerConfig(containerId).defaultElement;
+	const config = getContainerConfig(containerId);
 
+	let defaultElementSelector = config && config.defaultElement;
 	if (!defaultElementSelector) {
 		return null;
 	}
@@ -595,14 +623,19 @@ function getContainerDefaultElement (containerId) {
  *
  * @param   {String}       containerId  ID of container
  *
- * @returns {Node|String}               DOM Node last focused
+ * @returns {Node|String|null}               DOM Node last focused
  * @memberof spotlight/container
  * @public
  */
 function getContainerLastFocusedElement (containerId) {
-	const {lastFocusedElement} = getContainerConfig(containerId);
+	const config = getContainerConfig(containerId);
+
+	if (!config || !config.lastFocusedElement) {
+		return null;
+	}
 
 	// lastFocusedElement may be a container ID so try to convert it to a node to test navigability
+	const {lastFocusedElement} = config;
 	let node = lastFocusedElement;
 	if (typeof node === 'string') {
 		node = getContainerNode(lastFocusedElement);
@@ -637,21 +670,24 @@ function setContainerLastFocusedElement (node, containerIds) {
 }
 
 /**
- * [getContainerNavigableElements description]
+ * Returns all navigable nodes (spottable nodes or containers) visible from outside the container.
+ * If the container is restricting navigation into itself via `enterTo`, this method will attempt to
+ * return that element as the only element in an array. If that fails or if navigation is not restricted, it will return an
+ * array of all possible navigable nodes.
  *
  * @param   {String} containerId Container ID
  *
  * @returns {Node[]}             Navigable elements within container
- * @public
  * @memberof spotlight/container
  * @public
  */
 function getContainerNavigableElements (containerId) {
 	if (!isContainer(containerId)) {
-		return false;
+		return [];
 	}
 
 	const config = getContainerConfig(containerId);
+
 	const enterLast = config.enterTo === 'last-focused';
 	const enterDefault = config.enterTo === 'default-element';
 	let next;
@@ -780,6 +816,7 @@ function unmountContainer (containerId) {
 	const config = getContainerConfig(containerId);
 
 	if (config) {
+		config.active = false;
 		persistLastFocusedElement(containerId);
 
 		if (typeof config.defaultElement !== 'string') {
@@ -788,8 +825,13 @@ function unmountContainer (containerId) {
 	}
 }
 
+function isActiveContainer (containerId) {
+	const config = getContainerConfig(containerId);
+	return config && config.active;
+}
+
 function getDefaultContainer () {
-	return _defaultContainerId;
+	return isActiveContainer(_defaultContainerId) ? _defaultContainerId : '';
 }
 
 function setDefaultContainer (containerId) {
@@ -803,7 +845,7 @@ function setDefaultContainer (containerId) {
 }
 
 function getLastContainer () {
-	return _lastContainerId;
+	return isActiveContainer(_lastContainerId) ? _lastContainerId : '';
 }
 
 function setLastContainer (containerId) {
@@ -827,7 +869,7 @@ function setLastContainerFromTarget (current, target) {
 
 	const sharedContainer = last(intersection(currentContainers, targetContainers));
 
-	if (sharedContainer || currentContainerConfig.restrict !== 'self-only') {
+	if (sharedContainer || !currentContainerConfig || currentContainerConfig.restrict !== 'self-only') {
 		// If the target shares a container with the current container stack or the current
 		// element isn't within a self-only container, use the target's nearest container
 		setLastContainer(targetInnerContainer);
@@ -853,6 +895,7 @@ export {
 	setContainerLastFocusedElement,
 
 	// Keep
+	addContainer,
 	containerAttribute,
 	configureDefaults,
 	configureContainer,

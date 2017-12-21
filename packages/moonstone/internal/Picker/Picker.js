@@ -4,10 +4,12 @@ import equals from 'ramda/src/equals';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import Touchable from '@enact/ui/Touchable';
 import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
-import {getDirection} from '@enact/spotlight';
+import Spotlight, {getDirection} from '@enact/spotlight';
 
 import Skinnable from '../../Skinnable';
 import {validateRange, validateStepped} from '../validators';
@@ -23,6 +25,8 @@ const isDown = is('down');
 const isLeft = is('left');
 const isRight = is('right');
 const isUp = is('up');
+
+const Div = Touchable('div');
 
 const PickerViewManager = shouldUpdate((props, nextProps) => {
 	return (
@@ -49,9 +53,9 @@ const selectDecIcon = selectIcon('decrementIcon', 'arrowlargedown', 'arrowlargel
 
 // Set-up event forwarding
 const forwardBlur = forward('onBlur'),
-	forwardClick = forward('onClick'),
 	forwardFocus = forward('onFocus'),
 	forwardKeyDown = forward('onKeyDown'),
+	forwardKeyUp = forward('onKeyUp'),
 	forwardWheel = forward('onWheel');
 
 /**
@@ -347,6 +351,9 @@ const PickerBase = class extends React.Component {
 			validateStepped(props.value, props.min, props.step, PickerBase.displayName);
 			validateStepped(props.max, props.min, props.step, PickerBase.displayName, '"max"');
 		}
+
+		// Pressed state for this.handleUp
+		this.pickerButtonPressed = false;
 	}
 
 	componentDidMount () {
@@ -367,17 +374,20 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
-	componentDidUpdate () {
-		if (this.props.joined) {
+	componentDidUpdate (prevProps) {
+		if (this.props.joined === true && prevProps.joined === false) {
 			this.containerRef.addEventListener('wheel', this.handleWheel);
-		} else {
+		} else if (prevProps.joined === true && this.props.joined === false) {
 			this.containerRef.removeEventListener('wheel', this.handleWheel);
 		}
 	}
 
 	componentWillUnmount () {
 		this.emulateMouseUp.stop();
-
+		this.throttleInc.stop();
+		this.throttleDec.stop();
+		this.throttleWheelInc.stop();
+		this.throttleWheelDec.stop();
 		if (this.props.joined) {
 			this.containerRef.removeEventListener('wheel', this.handleWheel);
 		}
@@ -426,20 +436,14 @@ const PickerBase = class extends React.Component {
 		this.reverseTransition = !(dir > 0);
 	}
 
-	handleDecClick = (ev) => {
-		if (ev) {
-			forwardClick(ev, this.props);
-		}
+	handleDecrement = () => {
 		if (!this.hasReachedBound(-this.props.step)) {
 			this.updateValue(-1);
 			this.handleDown(-1);
 		}
 	}
 
-	handleIncClick = (ev) => {
-		if (ev) {
-			forwardClick(ev, this.props);
-		}
+	handleIncrement = () => {
 		if (!this.hasReachedBound(this.props.step)) {
 			this.updateValue(1);
 			this.handleDown(1);
@@ -461,31 +465,39 @@ const PickerBase = class extends React.Component {
 
 	handleUp = () => {
 		const {joined} = this.props;
-		if (joined) {
+		if (joined && this.pickerButtonPressed) {
 			this.emulateMouseUp.start();
 		}
 	}
 
 	handleDecDown = () => {
-		this.handleDown(-1);
+		this.pickerButtonPressed = true;
+		this.handleDecrement();
 	}
 
 	handleIncDown = () => {
-		this.handleDown(1);
+		this.pickerButtonPressed = true;
+		this.handleIncrement();
 	}
 
 	handleWheel = (ev) => {
-		const {joined, step} = this.props;
+		const {step} = this.props;
 		forwardWheel(ev, this.props);
 
-		if (joined) {
+		const isContainerSpotted = this.containerRef === Spotlight.getCurrent();
+
+		if (isContainerSpotted) {
 			const dir = -Math.sign(ev.deltaY);
 
 			// We'll sometimes get a 0/-0 wheel event we need to ignore or the wheel event has reached
 			// the bounds of the picker
 			if (dir && !this.hasReachedBound(step * dir)) {
 				// fire the onChange event
-				this.updateValue(dir);
+				if (dir > 0) {
+					this.throttleWheelInc.throttle();
+				} else if (dir < 0) {
+					this.throttleWheelDec.throttle();
+				}
 				// simulate mouse down
 				this.handleDown(dir);
 				// set a timer to simulate the mouse up
@@ -497,19 +509,13 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
-	handleDecPulse = () => {
-		if (!this.hasReachedBound(this.props.step * -1)) {
-			this.handleDown(-1);
-			this.updateValue(-1);
-		}
-	}
+	throttleInc = new Job(this.handleIncrement, 200)
 
-	handleIncPulse = () => {
-		if (!this.hasReachedBound(this.props.step)) {
-			this.handleDown(1);
-			this.updateValue(1);
-		}
-	}
+	throttleDec = new Job(this.handleDecrement, 200)
+
+	throttleWheelInc = new Job(this.handleIncrement, 100)
+
+	throttleWheelDec = new Job(this.handleDecrement, 100)
 
 	handleKeyDown = (ev) => {
 		const {
@@ -527,10 +533,10 @@ const PickerBase = class extends React.Component {
 			const direction = getDirection(keyCode);
 
 			const directions = {
-				up: this.handleIncClick,
-				down: this.handleDecClick,
-				right: this.handleIncClick,
-				left: this.handleDecClick
+				up: this.throttleInc.throttle,
+				down: this.throttleDec.throttle,
+				right: this.throttleInc.throttle,
+				left: this.throttleDec.throttle
 			};
 
 			const isVertical = orientation === 'vertical' && (isUp(keyCode) || isDown(keyCode));
@@ -538,6 +544,7 @@ const PickerBase = class extends React.Component {
 
 			if (isVertical || isHorizontal) {
 				directions[direction]();
+				ev.preventDefault();
 				ev.stopPropagation();
 				this.emulateMouseUp.start(ev);
 			} else if (orientation === 'horizontal' && isDown(keyCode) && onPickerSpotlightDown) {
@@ -548,6 +555,33 @@ const PickerBase = class extends React.Component {
 				onPickerSpotlightLeft(ev);
 			} else if (orientation === 'vertical' && isRight(keyCode) && onPickerSpotlightRight) {
 				onPickerSpotlightRight(ev);
+			}
+		}
+	}
+
+	handleKeyUp = (ev) => {
+		const {
+			joined,
+			orientation
+		} = this.props;
+		const {keyCode} = ev;
+		forwardKeyUp(ev, this.props);
+
+		if (joined) {
+			const direction = getDirection(keyCode);
+
+			const directions = {
+				up: this.throttleInc.stop,
+				down: this.throttleDec.stop,
+				right: this.throttleInc.stop,
+				left: this.throttleDec.stop
+			};
+
+			const isVertical = orientation === 'vertical' && (isUp(keyCode) || isDown(keyCode));
+			const isHorizontal = orientation === 'horizontal' && (isRight(keyCode) || isLeft(keyCode));
+
+			if (isVertical || isHorizontal) {
+				directions[direction]();
 			}
 		}
 	}
@@ -653,7 +687,10 @@ const PickerBase = class extends React.Component {
 
 	initRef (prop) {
 		return (ref) => {
-			this[prop] = ref;
+			// need a way, for now, to get a DOM node ref ~and~ use onUp. Likely should rework the
+			// wheel handler to avoid this requirement
+			// eslint-disable-next-line react/no-find-dom-node
+			this[prop] = ref && ReactDOM.findDOMNode(ref);
 		};
 	}
 
@@ -700,7 +737,7 @@ const PickerBase = class extends React.Component {
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
 
 		let arranger;
-		if (width && !disabled) {
+		if (!noAnimation && !disabled) {
 			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
 		}
 
@@ -709,10 +746,12 @@ const PickerBase = class extends React.Component {
 			sizingPlaceholder = <div aria-hidden className={css.sizingPlaceholder}>{ '0'.repeat(width) }</div>;
 		}
 
-		const valueText = this.calcValueText();
+		const valueText = ariaValueText != null ? ariaValueText : this.calcValueText();
+		const decrementerAriaControls = !incrementerDisabled ? id : null;
+		const incrementerAriaControls = !decrementerDisabled ? id : null;
 
 		return (
-			<div
+			<Div
 				{...rest}
 				aria-controls={joined ? id : null}
 				aria-disabled={disabled}
@@ -722,10 +761,12 @@ const PickerBase = class extends React.Component {
 				onBlur={this.handleBlur}
 				onFocus={this.handleFocus}
 				onKeyDown={this.handleKeyDown}
+				onKeyUp={this.handleKeyUp}
+				onUp={this.handleUp}
 				ref={this.initContainerRef}
 			>
 				<PickerButton
-					aria-controls={!joined ? id : null}
+					aria-controls={!joined ? incrementerAriaControls : null}
 					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
 					disabled={incrementerDisabled}
@@ -733,17 +774,16 @@ const PickerBase = class extends React.Component {
 					icon={incrementIcon}
 					joined={joined}
 					onDown={this.handleIncDown}
-					onHoldPulse={this.handleIncPulse}
+					onHoldPulse={this.handleIncDown}
 					onKeyDown={this.handleIncKeyDown}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}
 					onTap={this.handleIncClick}
-					onUp={this.handleUp}
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
 					aria-disabled={disabled}
 					aria-hidden={!active}
-					aria-valuetext={ariaValueText != null ? ariaValueText : valueText}
+					aria-valuetext={valueText}
 					className={css.valueWrapper}
 					id={id}
 					role="spinbutton"
@@ -761,7 +801,7 @@ const PickerBase = class extends React.Component {
 					</PickerViewManager>
 				</div>
 				<PickerButton
-					aria-controls={!joined ? id : null}
+					aria-controls={!joined ? decrementerAriaControls : null}
 					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
 					disabled={decrementerDisabled}
@@ -769,14 +809,14 @@ const PickerBase = class extends React.Component {
 					icon={decrementIcon}
 					joined={joined}
 					onDown={this.handleDecDown}
-					onHoldPulse={this.handleDecPulse}
+					onHoldPulse={this.handleDecDown}
 					onKeyDown={this.handleDecKeyDown}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
 					onTap={this.handleDecClick}
 					onUp={this.handleUp}
 					spotlightDisabled={spotlightDisabled}
 				/>
-			</div>
+			</Div>
 		);
 	}
 };

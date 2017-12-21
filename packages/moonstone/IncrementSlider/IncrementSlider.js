@@ -5,12 +5,12 @@
  */
 
 import {extractAriaProps} from '@enact/core/util';
-import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import Spottable from '@enact/spotlight/Spottable';
 
 import IdProvider from '../internal/IdProvider';
@@ -532,7 +532,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			return (
 				<div {...rest} className={incrementSliderClasses}>
 					<IncrementSliderButton
-						aria-controls={id}
+						aria-controls={!incrementDisabled ? id : null}
 						aria-hidden={ariaHidden}
 						aria-label={decrementAriaLabel}
 						className={css.decrementButton}
@@ -550,12 +550,12 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						aria-hidden={ariaHidden}
 						backgroundProgress={backgroundProgress}
 						className={css.slider}
-						knobAfterMidpoint={knobAfterMidpoint}
-						disabled={disabled}
 						detachedKnob={detachedKnob}
+						disabled={disabled}
 						focused={focused}
-						inputRef={inputRef}
 						id={id}
+						inputRef={inputRef}
+						knobAfterMidpoint={knobAfterMidpoint}
 						max={max}
 						min={min}
 						noFill={noFill}
@@ -580,7 +580,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						{children}
 					</Slider>
 					<IncrementSliderButton
-						aria-controls={id}
+						aria-controls={!decrementDisabled ? id : null}
 						aria-hidden={ariaHidden}
 						aria-label={incrementAriaLabel}
 						className={css.incrementButton}
@@ -603,7 +603,7 @@ const IncrementSliderFactory = factory((config) => {
 
 	/**
 	 * {@link moonstone/IncrementSlider.IncrementSlider} is an IncrementSlider with
-	 * Moonstone styling, Changeable and SliderDecorator applied with IconButtons to
+	 * Moonstone styling and SliderDecorator applied with IconButtons to
 	 * increment and decrement the value.
 	 *
 	 * By default, `IncrementSlider` maintains the state of its `value` property. Supply the
@@ -613,11 +613,10 @@ const IncrementSliderFactory = factory((config) => {
 	 *
 	 * @class IncrementSlider
 	 * @memberof moonstone/IncrementSlider
-	 * @mixes ui/Changeable.Changeable
 	 * @ui
 	 * @public
 	 */
-	return Changeable(
+	return Pure(
 		IdProvider(
 			{generateProp: null, prefix: 's_'},
 			SliderDecorator(

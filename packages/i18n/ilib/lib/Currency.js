@@ -122,7 +122,7 @@ var Currency = function (options) {
 			locale: "-",
 			sync: this.sync, 
 			loadParams: this.loadParams, 
-			callback: /** @type function(Object=):undefined */ ilib.bind(this, /** @type function() */ function(currency) {
+			callback: ilib.bind(this, function(currency) {
 				ilib.data.currency = currency;
 				this._loadLocinfo(options && options.onLoad);
 			})

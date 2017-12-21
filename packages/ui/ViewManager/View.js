@@ -2,7 +2,7 @@
  * Exports the {@link ui/ViewManager.View} component.
  */
 
-import {Job} from '@enact/core/util';
+import {perfNow, Job} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
@@ -179,7 +179,9 @@ class View extends React.Component {
 		const {enteringDelay, enteringProp} = this.props;
 
 		if (enteringProp) {
-			this.enteringJob.startAfter(enteringDelay);
+			// FIXME: `startRafAfter` is a temporary solution using rAF. We need a better way to handle
+			// transition cycle and component life cycle to be in sync. See ENYO-4835.
+			this.enteringJob.startRafAfter(enteringDelay);
 		}
 	}
 
@@ -216,10 +218,12 @@ class View extends React.Component {
 	 */
 	prepareTransition = (arranger, callback, noAnimation) => {
 		const {duration, index, previousIndex, reverseTransition} = this.props;
-		const startTime = (typeof window !== 'undefined') ? window.performance.now() : new Date().getTime();
-		const endTime = startTime + duration;
 		/* eslint react/no-find-dom-node: "off" */
 		const node = ReactDOM.findDOMNode(this);
+
+		const currentTime = perfNow();
+		let startTime = currentTime;
+		let endTime = startTime + duration;
 
 		// disable animation when the instance or props flag is true
 		noAnimation = noAnimation || this.props.noAnimation;
@@ -258,17 +262,19 @@ class View extends React.Component {
 			}
 		};
 
-		let initialTime = 0;
 
 		// When a new transition is initiated mid-transition, adjust time to account for the current
 		// percent complete.
 		if (this.animation && this.changeDirection) {
 			const a = this.animation;
 			const percentComplete = (a.time - a.start) / (a.end - a.start);
-			initialTime = (endTime - startTime) * (1 - percentComplete);
+			const delta = (endTime - startTime) * (1 - percentComplete);
+
+			startTime -= delta;
+			endTime -= delta;
 		}
 
-		this.transition(startTime, endTime, initialTime, fn);
+		this.transition(startTime, endTime, currentTime, fn);
 	}
 
 	/**
@@ -289,7 +295,7 @@ class View extends React.Component {
 
 		if (callback(start, end, time) && typeof window !== 'undefined') {
 			this._raf = window.requestAnimationFrame(() => {
-				const current = window.performance.now();
+				const current = perfNow();
 				this.transition(start, end, current, callback);
 			});
 		} else {

@@ -61,10 +61,11 @@ const prop = {
 		'onProgress',
 		'onRateChange',
 		'onSeeked',
+		'onSeekFailed',
 		'onSeeking',
 		'onStalled',
 		'onSuspend',
-		'onTimeUpdate',
+		// 'onTimeUpdate',	// Disabled due to Storybook Actions-reporting having an adverse effect on VideoPlayer performance. Uncomment to view this event.
 		'onUMSMediaInfo',	// Custom webOS media event
 		'onVolumeChange',
 		'onWaiting'
@@ -105,7 +106,7 @@ storiesOf('VideoPlayer')
 						transformOrigin: 'top',
 						transform: 'scale(' + number('video scale', 1, {range: true, min: 0.05, max: 1, step: 0.01}) + ')',
 						outline: 'teal dashed 1px',
-						position: 'relative'
+						height: '70vh'
 					}}
 				>
 					<label
@@ -125,6 +126,8 @@ storiesOf('VideoPlayer')
 					<VideoPlayer
 						autoCloseTimeout={number('autoCloseTimeout', 7000)}
 						backwardIcon={select('backwardIcon', icons, 'backward')}
+						disabled={boolean('disabled', false)}
+						feedbackHideDelay={number('feedbackHideDelay', 3000)}
 						forwardIcon={select('forwardIcon', icons, 'forward')}
 						initialJumpDelay={number('initialJumpDelay', 400)}
 						jumpBackwardIcon={select('jumpBackwardIcon', icons, 'skipbackward')}
@@ -133,6 +136,7 @@ storiesOf('VideoPlayer')
 						jumpDelay={number('jumpDelay', 200)}
 						rateButtonsDisabled={boolean('rateButtonsDisabled', false)}
 						loop={boolean('loop', true)}
+						miniFeedbackHideDelay={number('miniFeedbackHideDelay', 2000)}
 						moreButtonCloseLabel={text('moreButtonCloseLabel')}
 						moreButtonDisabled={boolean('moreButtonDisabled', false)}
 						moreButtonLabel={text('moreButtonLabel')}
@@ -140,14 +144,18 @@ storiesOf('VideoPlayer')
 						no5WayJump={boolean('no5WayJump', false)}
 						noAutoPlay={boolean('noAutoPlay', false)}
 						noJumpButtons={boolean('noJumpButtons', false)}
+						noMiniFeedback={boolean('noMiniFeedback', false)}
 						noRateButtons={boolean('noRateButtons', false)}
 						noSlider={boolean('noSlider', false)}
 						pauseAtEnd={boolean('pauseAtEnd', false)}
 						pauseIcon={select('pauseIcon', icons, 'pause')}
 						playIcon={select('playIcon', icons, 'play')}
 						poster={poster}
+						seekDisabled={boolean('seekDisabled', false)}
+						spotlightDisabled={boolean('spotlightDisabled', false)}
 						thumbnailSrc={poster}
 						thumbnailUnavailable={boolean('thumbnailUnavailable', false)}
+						tooltipHideDelay={number('tooltipHideDelay', 3000)}
 						title={text('title', 'Moonstone VideoPlayer Sample Video')}
 						titleHideDelay={number('titleHideDelay', 4000)}
 						{...prop.eventActions}

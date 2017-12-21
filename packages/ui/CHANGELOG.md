@@ -2,6 +2,24 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+
+- `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
+
+### Fixed
+
+## [2.0.0-alpha.2] - 2017-08-29
+
+## Added
+
+- `ui/Scroller` and `ui/VirtualList`
+
 ## [2.0.0-alpha.1] - 2017-08-27
 
 ## Added
@@ -12,6 +30,95 @@ The following is a curated list of changes in the Enact ui module, newest change
 ## Removed
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
+
+## [1.13.2] - 2017-12-14
+
+### Fixed
+
+- `ui/ViewManager` to revert 1.13.0 fix for lifecycle timing when entering a view
+
+## [1.13.1] - 2017-12-06
+
+No significant changes.
+
+## [1.13.0] - 2017-11-28
+
+### Added
+
+- `ui/Transition` animation timing functions `ease-in`, `ease-out`, `ease-in-quart`, and `ease-out-quart` to provide prettier options for transitions that may be more suited to a specific visual style
+
+### Fixed
+
+- `ui/ViewManager` to prevent interaction issue with `moonstone/Scroller`
+
+## [1.12.2] - 2017-11-15
+
+### Fixed
+
+- `ui/Remeasurable` to update on every trigger change
+- `ui/Transition` to revert 1.12.1 change to support `clip` transition-type directions and rendering optimizations
+
+## [1.12.1] - 2017-11-07
+
+### Fixed
+
+- `ui/Transition` support for all `clip` transition-type directions and made rendering optimizations
+
+## [1.12.0] - 2017-10-27
+
+No significant changes.
+
+## [1.11.0] - 2017-10-24
+
+No significant changes.
+
+## [1.10.1] - 2017-10-16
+
+### Fixed
+
+- `ui/Pressable` to properly set pressed state to false on blur and release
+
+## [1.10.0] - 2017-10-09
+
+### Added
+
+- `ui/Layout` which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
+
+## [1.9.3] - 2017-10-03
+
+### Fixed
+
+- `ui/Transition` to recalculate height when a resize occurs
+
+## [1.9.2] - 2017-09-26
+
+No significant changes.
+
+## [1.9.1] - 2017-09-25
+
+No significant changes.
+
+## [1.9.0] - 2017-09-22
+
+### Added
+
+- `ui/styles/mixins.less` mixins: `.remove-margin-on-edge-children()` and `.remove-padding-on-edge-children()` to better handle edge margins on container components
+
+### Changed
+
+- `ui/Holdable` to cancel key hold events when the pointer moves
+- `ui/Holdable` and `ui/Changeable` back to Components and moved performance improvements elsewhere
+
+### Fixed
+
+- `ui/FloatingLayer` to not asynchronously attach a click handler when the floating layer is removed
+- `ui/ViewManager` to correctly position items when changing mid-transition
+
+## [1.8.0] - 2017-09-07
+
+### Changed
+
+- `ui/Holdable` and `ui/Changeable` to be PureComponents to reduce the number of updates
 
 ## [1.7.0] - 2017-08-23
 

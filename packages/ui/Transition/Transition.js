@@ -8,6 +8,7 @@
 import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
+import {contextTypes} from '@enact/core/internal/PubSub';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -81,14 +82,22 @@ const TransitionBase = kind({
 
 		/**
 		 * Customize the transition timing function.
-		 * Supported functions are: linear, ease. ease-in-out is the default when none others are
-		 * specified.
+		 * Supported function names are: `ease`, `ease-in`, `ease-out`, `ease-in-out`, `ease-in-quart`,
+		 * `ease-out-quart`, and `linear`.
 		 *
 		 * @type {String}
 		 * @default 'ease-in-out'
 		 * @public
 		 */
-		timingFunction: PropTypes.oneOf(['ease-in-out', 'ease', 'linear']),
+		timingFunction: PropTypes.oneOf([
+			'ease',
+			'ease-in',
+			'ease-out',
+			'ease-in-out',
+			'ease-in-quart',
+			'ease-out-quart',
+			'linear'
+		]),
 
 		/**
 		 * Choose how you'd like the transition to affect the content.
@@ -159,6 +168,10 @@ const TransitionBase = kind({
 				</div>
 			);
 		} else {
+			// The following node, which is required for supporting the `clip` transition, was
+			// removed due to prevent a change to the DOM structure too late for testing in the
+			// current release cycle. This can be restored during 2.x -BS 2017-11-14
+			// <div className={css.inner}>{children}</div>
 			return (
 				<div {...rest} ref={childRef}>
 					{children}
@@ -183,6 +196,9 @@ const TRANSITION_STATE = {
  * @public
  */
 class Transition extends React.Component {
+
+	static contextTypes = contextTypes
+
 	static propTypes = /** @lends ui/Transition.Transition.prototype */ {
 		children: PropTypes.node.isRequired,
 
@@ -232,14 +248,23 @@ class Transition extends React.Component {
 		onShow: PropTypes.func,
 
 		/**
-		 * The transition timing function.
-		 * Supported functions are: `'linear'`, `'ease'` and `'ease-in-out'`
+		 * Customize the transition timing function.
+		 * Supported function names are: `ease`, `ease-in`, `ease-out`, `ease-in-out`, `ease-in-quart`,
+		 * `ease-out-quart`, and `linear`.
 		 *
 		 * @type {String}
 		 * @default 'ease-in-out'
 		 * @public
 		 */
-		timingFunction: PropTypes.oneOf(['ease-in-out', 'ease', 'linear']),
+		timingFunction: PropTypes.oneOf([
+			'ease',
+			'ease-in',
+			'ease-out',
+			'ease-in-out',
+			'ease-in-quart',
+			'ease-out-quart',
+			'linear'
+		]),
 
 		/**
 		 * How the transition affects the content.
@@ -284,6 +309,10 @@ class Transition extends React.Component {
 		} else {
 			this.measureInner();
 		}
+
+		if (this.context.Subscriber) {
+			this.context.Subscriber.subscribe('resize', this.handleResize);
+		}
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -321,6 +350,9 @@ class Transition extends React.Component {
 
 	componentWillUnmount () {
 		this.measuringJob.stop();
+		if (this.context.Subscriber) {
+			this.context.Subscriber.unsubscribe('resize', this.handleResize);
+		}
 	}
 
 	measuringJob = new Job(() => {
@@ -329,14 +361,22 @@ class Transition extends React.Component {
 		});
 	})
 
+	handleResize = () => {
+		// @TODO oddly, using the setState callback is required here to ensure that the bounds
+		// are remeasured in a separate tick
+		this.setState({
+			initialHeight: null
+		}, this.measureInner);
+	}
+
 	handleTransitionEnd = (ev) => {
 		forwardTransitionEnd(ev, this.props);
 
 		if (ev.target === this.childNode) {
 			if (!this.props.visible && this.props.onHide) {
-				this.props.onHide();
+				this.props.onHide(ev);
 			} else if (this.props.visible && this.props.onShow) {
-				this.props.onShow();
+				this.props.onShow(ev);
 			}
 		}
 	}
@@ -361,6 +401,7 @@ class Transition extends React.Component {
 		let {visible, ...props} = this.props;
 		delete props.onHide;
 		delete props.onShow;
+		delete props.textSize;
 
 		switch (this.state.renderState) {
 			// If we are deferring children, don't render any

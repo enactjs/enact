@@ -4,14 +4,16 @@
  * @module moonstone/Item
  */
 
+import {childrenEquals} from '@enact/core/util';
 import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Remeasurable from '@enact/ui/Remeasurable';
+import Pure from '@enact/ui/internal/Pure';
 import Slottable from '@enact/ui/Slottable';
+import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
+import Toggleable from '@enact/ui/Toggleable';
 import Spottable from '@enact/spotlight/Spottable';
-
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 import Touchable from '../internal/Touchable';
@@ -120,9 +122,9 @@ const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidat
  * @ui
  * @public
  */
-const Item = Touchable(
-	Spottable(
-		Remeasurable(
+const Item = Pure(
+	Touchable(
+		Spottable(
 			ItemMarqueeDecorator(
 				Skinnable(
 					ItemBase
@@ -154,15 +156,25 @@ const Item = Touchable(
  * @ui
  * @public
  */
-const ItemOverlay = Touchable(
-	Spottable(
-		Slottable(
-			{slots: ['overlayAfter', 'overlayBefore']},
-			Remeasurable(
-				ItemMarqueeDecorator(
-					OverlayDecorator(
-						Skinnable(
-							ItemBase
+const ItemOverlay = Slottable(
+	{slots: ['overlayAfter', 'overlayBefore']},
+	Pure(
+		{propComparators: {
+			overlayBefore: childrenEquals,
+			overlayAfter: childrenEquals
+		}},
+		Toggleable(
+			{prop: 'remeasure', activate: 'onFocus', deactivate: 'onBlur', toggle: null},
+			Touchable(
+				Spottable(
+					RemeasurableDecorator(
+						{trigger: 'remeasure'},
+						ItemMarqueeDecorator(
+							OverlayDecorator(
+								Skinnable(
+									ItemBase
+								)
+							)
 						)
 					)
 				)

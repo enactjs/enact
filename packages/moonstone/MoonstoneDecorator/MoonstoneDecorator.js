@@ -82,6 +82,17 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	// add webOS-specific key maps
 	addAll({
 		cancel: 461,
+		nonModal: [
+			461,
+			415, // play
+			19, // pause
+			403, // red
+			404, // green
+			405, // yellow
+			406, // blue
+			33, // channel up
+			34 // channel down
+		],
 		pointerHide: 1537,
 		pointerShow: 1536
 	});
@@ -90,7 +101,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'MoonstoneDecorator';
 
 		render () {
-			let className = css.root + ' enact-unselectable';
+			let className = css.root + ' enact-unselectable enact-fit';
 			if (!float) {
 				className += ' ' + bgClassName;
 			}

@@ -6,11 +6,12 @@
  * @module moonstone/TooltipDecorator
  */
 
-import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {contextTypes} from '@enact/core/internal/PubSub';
 import hoc from '@enact/core/hoc';
 import FloatingLayer from '@enact/ui/FloatingLayer';
-import {forward} from '@enact/core/handle';
+import {forward, handle, forProp} from '@enact/core/handle';
 import {Job} from '@enact/core/util';
+import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
@@ -56,10 +57,6 @@ const defaultConfig = {
  */
 const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
-	const forwardBlur = forward('onBlur');
-	const forwardFocus = forward('onFocus');
-	const forwardMouseOver = forward('onMouseOver');
-	const forwardMouseOut = forward('onMouseOut');
 	const tooltipDestinationProp = config.tooltipDestinationProp;
 
 	return class extends React.Component {
@@ -176,11 +173,29 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		componentWillMount () {
+			if (this.context.Subscriber) {
+				this.context.Subscriber.subscribe('i18n', this.handleLocaleChange);
+			}
+		}
+
 		componentWillUnmount () {
 			if (currentTooltip === this) {
 				currentTooltip = null;
 				this.showTooltipJob.stop();
 			}
+
+			if (this.props.disabled) {
+				off('keydown', this.handleKeyDown);
+			}
+
+			if (this.context.Subscriber) {
+				this.context.Subscriber.unsubscribe('i18n', this.handleLocaleChange);
+			}
+		}
+
+		handleLocaleChange = ({message: {rtl}}) => {
+			this.rtlLocale = rtl;
 		}
 
 		setTooltipLayout () {
@@ -232,7 +247,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		adjustDirection (tooltipDirection, overflow) {
-			if (this.context.rtl && (tooltipDirection === 'left' || tooltipDirection === 'right')) {
+			if (this.rtlLocale && (tooltipDirection === 'left' || tooltipDirection === 'right')) {
 				tooltipDirection = tooltipDirection === 'left' ? 'right' : 'left';
 			}
 
@@ -252,7 +267,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		adjustAnchor (arrowAnchor, tooltipDirection, overflow) {
 			if (tooltipDirection === 'above' || tooltipDirection === 'below') {
-				if (this.context.rtl && arrowAnchor !== 'center') {
+				if (this.rtlLocale && arrowAnchor !== 'center') {
 					arrowAnchor = arrowAnchor === 'left' ? 'right' : 'left';
 				}
 
@@ -315,7 +330,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		})
 
-		showTooltip (client) {
+		showTooltip = (client) => {
 			const {tooltipDelay, tooltipText} = this.props;
 
 			if (tooltipText) {
@@ -325,7 +340,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		hideTooltip () {
+		hideTooltip = () => {
 			if (this.props.tooltipText) {
 				this.clientRef = null;
 				currentTooltip = null;
@@ -334,29 +349,43 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handleMouseOver = (ev) => {
-			if (this.props.disabled) {
-				this.showTooltip(ev.target);
-			}
-			forwardMouseOver(ev, this.props);
-		}
+		handle = handle.bind(this)
 
-		handleMouseOut = (ev) => {
-			if (this.props.disabled) {
+		handleKeyDown = this.handle(
+			forProp('disabled', true),
+			() => {
 				this.hideTooltip();
+				off('keydown', this.handleKeyDown);
 			}
-			forwardMouseOut(ev, this.props);
-		}
+		);
 
-		handleFocus = (ev) => {
-			this.showTooltip(ev.target);
-			forwardFocus(ev, this.props);
-		}
+		handleMouseOver = this.handle(
+			forward('onMouseOver'),
+			forProp('disabled', true),
+			(ev) => {
+				this.showTooltip(ev.target);
+				on('keydown', this.handleKeyDown);
+			}
+		)
 
-		handleBlur = (ev) => {
-			this.hideTooltip();
-			forwardBlur(ev, this.props);
-		}
+		handleMouseOut = this.handle(
+			forward('onMouseOut'),
+			forProp('disabled', true),
+			() => {
+				this.hideTooltip();
+				off('keydown', this.handleKeyDown);
+			}
+		)
+
+		handleFocus = this.handle(
+			forward('onFocus'),
+			({target}) => this.showTooltip(target)
+		)
+
+		handleBlur = this.handle(
+			forward('onBlur'),
+			this.hideTooltip
+		)
 
 		getTooltipRef = (node) => {
 			this.tooltipRef = node;
@@ -365,48 +394,75 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		render () {
-			const {children, tooltipCasing, tooltipPreserveCase, tooltipProps, tooltipText, tooltipWidth, ...rest} = this.props;
-			delete rest.tooltipDelay;
-			delete rest.tooltipPosition;
+		/**
+		 * Conditionally creates the FloatingLayer and Tooltip based on the presence of
+		 * `tooltipText` and returns a property bag to pass onto the Wrapped component
+		 *
+		 * @returns {Object} Prop object
+		 * @private
+		 */
+		renderTooltip () {
+			const {children, tooltipCasing, tooltipPreserveCase, tooltipProps, tooltipText, tooltipWidth} = this.props;
 
-			const renderedTooltip = (
-				<FloatingLayer open={this.state.showing} scrimType="none" key="tooltipFloatingLayer">
-					<Tooltip
-						aria-live="off"
-						role="alert"
-						{...tooltipProps}
-						arrowAnchor={this.state.arrowAnchor}
-						casing={tooltipCasing}
-						direction={this.state.tooltipDirection}
-						position={this.state.position}
-						preserveCase={tooltipPreserveCase}
-						tooltipRef={this.getTooltipRef}
-						width={tooltipWidth}
-					>
-						{tooltipText}
-					</Tooltip>
-				</FloatingLayer>
-			);
+			if (tooltipText) {
+				const renderedTooltip = (
+					<FloatingLayer open={this.state.showing} scrimType="none" key="tooltipFloatingLayer">
+						<Tooltip
+							aria-live="off"
+							role="alert"
+							{...tooltipProps}
+							arrowAnchor={this.state.arrowAnchor}
+							casing={tooltipCasing}
+							direction={this.state.tooltipDirection}
+							position={this.state.position}
+							preserveCase={tooltipPreserveCase}
+							tooltipRef={this.getTooltipRef}
+							width={tooltipWidth}
+						>
+							{tooltipText}
+						</Tooltip>
+					</FloatingLayer>
+				);
 
-			let internalTooltip;
-
-			if (tooltipDestinationProp === 'children') {
-				internalTooltip = [children, renderedTooltip];
-			} else {
-				rest[tooltipDestinationProp] = renderedTooltip;
+				if (tooltipDestinationProp === 'children') {
+					return {
+						children: [children, renderedTooltip]
+					};
+				} else {
+					return {
+						[tooltipDestinationProp]: renderedTooltip
+					};
+				}
 			}
 
+			return {children};
+		}
+
+		render () {
+			// minor optimization to merge all the props together once since we also have to delete
+			// invalid props before passing downstream
+			const props = Object.assign(
+				{},
+				this.props,
+				this.renderTooltip(),
+				{
+					onBlur: this.handleBlur,
+					onFocus: this.handleFocus,
+					onMouseOut: this.handleMouseOut,
+					onMouseOver: this.handleMouseOver
+				}
+			);
+
+			delete props.tooltipDelay;
+			delete props.tooltipPosition;
+			delete props.tooltipCasing;
+			delete props.tooltipPreserveCase;
+			delete props.tooltipProps;
+			delete props.tooltipText;
+			delete props.tooltipWidth;
+
 			return (
-				<Wrapped
-					{...rest}
-					onBlur={this.handleBlur}
-					onFocus={this.handleFocus}
-					onMouseOut={this.handleMouseOut}
-					onMouseOver={this.handleMouseOver}
-				>
-					{internalTooltip || children}
-				</Wrapped>
+				<Wrapped {...props} />
 			);
 		}
 	};
