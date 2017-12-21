@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/Touchable` support for flick gestures
+
 ### Changed
 
 - `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
@@ -25,7 +27,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ## Added
 
 - `ui/Layout` which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
-- `ui/Touchable` to support consistent mouse and touch events along with hold and flick gestures
+- `ui/Touchable` to support consistent mouse and touch events along with hold gesture
 
 ## Removed
 
