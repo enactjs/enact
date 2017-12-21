@@ -8,7 +8,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/Touchable` support for flick gestures
+- `ui/Touchable` support for flick and hold gestures
 
 ### Changed
 

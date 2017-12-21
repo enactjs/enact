@@ -95,7 +95,8 @@ storiesOf('Touchable')
 				disabled={boolean('disabled')}
 				style={{border: '2px dashed #888', width: 500, height: 500}}
 			>
-				Flick within this component
+				Drag within this component. Setting <code>noResume</code> to <code>false</code>
+				should prevent drag from resuming when re-entering this component after leaving.
 			</TouchableDiv>
 		)
 	);
