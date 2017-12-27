@@ -134,7 +134,7 @@ const IconBase = kind({
  */
 
 /**
- * {@link moonstone/Icon.IconDecorator} applies Moonstone-specific behaviors to an 
+ * {@link moonstone/Icon.IconDecorator} applies Moonstone-specific behaviors to an
  * [Icon]{@link moonstone/Icon.IconBase}.
  *
  * @hoc

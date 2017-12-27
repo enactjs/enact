@@ -40,7 +40,7 @@ const ButtonBase = kind({
 	propTypes: /** @lends moonstone/Button.ButtonBase.prototype */ {
 		/**
 		 * The background-color opacity of this button.
-		 * 
+		 *
 		 * Valid values are:
 		 * * `'opaque'`,
 		 * * `'translucent'`,
@@ -60,7 +60,7 @@ const ButtonBase = kind({
 
 		/**
 		 * The color of the underline beneath button's content.
-		 * 
+		 *
 		 * Accepts one of the following color names, which correspond with the colored buttons on a
 		 * standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`.
 		 *
@@ -73,6 +73,7 @@ const ButtonBase = kind({
 		 * Appends CSS classes to the nodes and components with {@link moonstone/Button.ButtonBase}.
 		 *
 		 * The following classes are supported:
+		 * * `button` - The root class name
 		 * * `bg` - The background node of the button
 		 * * `selected` - Applied to a `selected` button
 		 *
@@ -93,7 +94,7 @@ const ButtonBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['bg', 'selected']
+		publicClassNames: ['button', 'bg', 'selected']
 	},
 
 	computed: {

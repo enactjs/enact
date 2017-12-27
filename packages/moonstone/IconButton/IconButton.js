@@ -38,7 +38,7 @@ const IconButtonBase = kind({
 	propTypes: /** @lends moonstone/IconButton.IconButtonBase.prototype */ {
 		/**
 		 * The background-color opacity of this icon button
-		 * 
+		 *
 		 * Valid values are:
 		 * * `'opaque'`,
 		 * * `'translucent'`,
@@ -53,7 +53,7 @@ const IconButtonBase = kind({
 
 		/**
 		 * The color of the underline beneath the icon.
-		 * 
+		 *
 		 * This property accepts one of the following color names, which correspond with the
 		 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
 		 *
@@ -63,11 +63,15 @@ const IconButtonBase = kind({
 		color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
 
 		/**
-		 * Appends CSS classes to the nodes and components with
-		 * {@link moonstone/IconButton.IconButtonBase}.
+		 * Appends CSS classes to the nodes and components with {@link moonstone/Button.ButtonBase}.
+		 *
+		 * The following classes are supported:
+		 * * `iconButton` - The root class name
+		 * * `bg` - The background node of the icon button
+		 * * `selected` - Applied to a `selected` icon button
 		 *
 		 * @type {Object}
-		 * @private
+		 * @public
 		 */
 		css: PropTypes.object,
 
@@ -94,7 +98,8 @@ const IconButtonBase = kind({
 	},
 
 	styles: {
-		css: componentCss
+		css: componentCss,
+		publicClassNames: ['iconButton', 'bg', 'selected']
 	},
 
 	computed: {
