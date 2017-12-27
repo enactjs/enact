@@ -50,8 +50,8 @@ const IconButtonBase = kind({
 		children: PropTypes.node,
 
 		/**
-		 * Customizes the component and its internal nodes by exposing the class names for nodes and
-		 * states that may be augmented by authors.
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
 		 *
 		 * The following classes are supported:
 		 *

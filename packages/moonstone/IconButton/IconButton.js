@@ -63,10 +63,11 @@ const IconButtonBase = kind({
 		color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
 
 		/**
-		 * Customizes the component and its internal nodes by exposing the class names for nodes and
-		 * states that may be augmented by authors.
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
 		 *
 		 * The following classes are supported:
+		 *
 		 * * `iconButton` - The root class name
 		 * * `bg` - The background node of the icon button
 		 * * `selected` - Applied to a `selected` icon button
