@@ -77,7 +77,8 @@ const IconBase = kind({
 		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
-		 * Appends CSS classes to the nodes and components with {@link ui/Icon.IconBase}.
+		 * Customizes the component and its internal nodes by exposing the class names for nodes and
+		 * states that may be augmented by authors.
 		 *
 		 * The following classes are supported:
 		 *

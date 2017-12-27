@@ -32,7 +32,8 @@ const ButtonBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * Appends CSS classes to the nodes and components with [ButtonBase]{@link ui/Button.ButtonBase}.
+		 * Customizes the component and its internal nodes by exposing the class names for nodes and
+		 * states that may be augmented by authors.
 		 *
 		 * The following classes are supported:
 		 * * `button` - The root component class
