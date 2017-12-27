@@ -1,159 +1,187 @@
-import ApiDecorator from '@enact/core/internal/ApiDecorator';
-import classNames from 'classnames';
-import {Job} from '@enact/core/util';
+import {forward, handle} from '@enact/core/handle';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
-
-import ri from '../resolution';
-
-import ScrollThumb from './ScrollThumb';
+import React from 'react';
 
 import css from './Scrollbar.less';
 
-const minThumbSize = 18; // Size in pixels
-
-/*
- * Set CSS Varaible value.
- *
- * @method
- * @param {Node} element - Node.
- * @param {String} variable - CSS Variable property.
- * @param {String} value - CSS Variable value.
- */
-const setCSSVariable = (element, variable, value) => {
-	element.style.setProperty(variable, value);
+const clamp = (min, max, value) => {
+	if (value < min) return min;
+	else if (value > max) return max;
+	return value;
 };
 
-/**
- * {@link ui/Scroller.Scrollbar} is a Scrollbar.
- * It is used in {@link ui/Scrollable.Scrollable}.
- *
- * @class Scrollbar
- * @memberof ui/Scroller
- * @ui
- * @private
- */
-class ScrollbarBase extends PureComponent {
-	static displayName = 'Scrollbar'
+const forwardAdjusted = (name, fn) => (ev, props) => forward(name, fn(ev, props), props);
 
-	static propTypes = /** @lends ui/Scroller.Scrollbar.prototype */ {
-		/**
-		 * Exposes this instance as the provider for its imperative API
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		setApiProvider: PropTypes.func,
+const adjustStep = (direction) => (ev, {max, size, step, value}) => ({
+	direction,
+	value: clamp(0, max, value + direction * step * size)
+});
 
+const ScrollbarBase = kind({
+	name: 'ui/Scrollbar',
+
+	propTypes: {
 		/**
-		 * If `true`, the scrollbar will be oriented vertically.
+		 * Orientation of the scrollbar
 		 *
-		 * @type {Boolean}
-		 * @default true
+		 * @type {String}
 		 * @public
 		 */
-		vertical: PropTypes.bool
-	}
+		orientation: PropTypes.oneOf(['vertical', 'horizontal']).isRequired,
 
-	static defaultProps = {
-		vertical: true
-	}
+		/**
+		 * The component used to render the scroll buttons.
+		 *
+		 * When pressed, the scroll buttons will trigger the scroll bar's
+		 * [onStep]{@link ui/Scroller.Scrollbar.onStep} event.
+		 *
+		 * @see {@link ui/Scroller.ScrollButton}
+		 * @type {Function}
+		 * @public
+		 */
+		buttonComponent: PropTypes.func,
 
-	constructor (props) {
-		super(props);
+		/**
+		 * The component used to render the scroll knob.
+		 *
+		 * The scroll knob provides a visual cue to the current scroll position. It may, optionally,
+		 * support dragging to update the current scroll position.
+		 *
+		 * @see {@link ui/Scroller.ScrollKnob}
+		 * @type {Function}
+		 * @public
+		 */
+		knobComponent: PropTypes.func,
 
-		this.initContainerRef = this.initRef('containerRef');
-		this.initThumbRef = this.initRef('thumbRef');
+		/**
+		 * The upper bounds of the scrollbar.
+		 * 
+		 * The lower bounds is always 0.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		max: PropTypes.number,
 
-		if (props.setApiProvider) {
-			props.setApiProvider(this);
-		}
-	}
+		/**
+		 * Event fired when scrolling to an absolute position, typically when the scroll bar is
+		 * pressed or the scroll knob is dragged.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onJump: PropTypes.func,
 
-	componentDidMount () {
-		this.calculateMetrics();
-	}
+		/**
+		 * Event fired when scrolling incrementally, typically when the scroll buttons are pressed.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onStep: PropTypes.func,
 
-	componentDidUpdate () {
-		this.calculateMetrics();
-	}
+		/**
+		 * The available height and width of the scroll bar
+		 *
+		 * The `bounds` are used to calculate the size of the scroll knob as a ratio to the
+		 * available size of the scroll bar.
+		 *
+		 * @type {[type]}
+		 */
+		size: PropTypes.number,
 
-	componentWillUnmount () {
-		this.hideThumbJob.stop();
-	}
+		/**
+		 * Amount to change for each `onStep`
+		 *
+		 * ??: Percentage or amount
+		 *
+		 * @type {Number}
+		 * @default 0.05
+		 * @public
+		 */
+		step: PropTypes.number,
 
-	minThumbSizeRatio = 0
-	// component refs
-	containerRef = null
-	thumbRef = null
+		/**
+		 * Current scroll position between 0 and `max`
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		value: PropTypes.number
+	},
 
-	update = (bounds) => {
-		const
-			{vertical} = this.props,
-			{clientWidth, clientHeight, scrollWidth, scrollHeight, scrollLeft, scrollTop} = bounds,
-			clientSize = vertical ? clientHeight : clientWidth,
-			scrollSize = vertical ? scrollHeight : scrollWidth,
-			scrollOrigin = vertical ? scrollTop : scrollLeft,
+	defaultProps: {
+		value: 0,
+		step: 0.05
+	},
 
-			thumbSizeRatioBase = (clientSize / scrollSize),
-			scrollThumbPositionRatio = (scrollOrigin / (scrollSize - clientSize)),
-			scrollThumbSizeRatio = Math.max(this.minThumbSizeRatio, Math.min(1, thumbSizeRatioBase));
+	styles: {
+		css,
+		className: 'scrollbar'
+	},
 
-		setCSSVariable(this.thumbRef, '--scrollbar-size-ratio', scrollThumbSizeRatio);
-		setCSSVariable(this.thumbRef, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
-	}
+	handlers: {
+		handleBackward: handle(
+			(ev, {value}) => value > 0,
+			forwardAdjusted('onStep', adjustStep(-1))
+		),
+		handleForward: handle(
+			(ev, {max, value}) => value < max,
+			forwardAdjusted('onStep', adjustStep(1))
+		),
+		onJump: handle(
+			forward('onJump')
+		)
+	},
 
-	showThumb () {
-		this.hideThumbJob.stop();
-		this.thumbRef.classList.add(css.thumbShown);
-	}
+	render: ({
+		buttonComponent: Button,
+		handleBackward,
+		handleForward,
+		knobComponent: Knob,
+		max,
+		onJump,
+		orientation,
+		size,
+		value,
+		...rest
+	}) => {
+		const ratio = size / max;
+		const position = value / max;
 
-	startHidingThumb () {
-		this.hideThumbJob.start();
-	}
-
-	hideThumb = () => {
-		this.thumbRef.classList.remove(css.thumbShown);
-	}
-
-	hideThumbJob = new Job(this.hideThumb, 200);
-
-	calculateMetrics = () => {
-		const trackSize = this.containerRef[this.props.vertical ? 'clientHeight' : 'clientWidth'];
-		this.minThumbSizeRatio = ri.scale(minThumbSize) / trackSize;
-	}
-
-	initRef (prop) {
-		return (ref) => {
-			this[prop] = ref;
-		};
-	}
-
-	render () {
-		const
-			{className, vertical} = this.props,
-			containerClassName = classNames(
-				className,
-				css.scrollbar,
-				vertical ? css.vertical : css.horizontal
-			);
+		delete rest.onStep;
+		delete rest.step;
 
 		return (
-			<div ref={this.initContainerRef} className={containerClassName}>
-				<ScrollThumb
-					className={css.scrollThumb}
-					getScrollThumbRef={this.initThumbRef}
-					vertical={vertical}
+			<div {...rest}>
+				<Button
+					className={css.scrollButton}
+					direction="backward"
+					onStep={handleBackward}
+				/>
+				<div className={css.bar}>
+					<Knob
+						className={css.knob}
+						ratio={ratio}
+						orientation={orientation}
+						value={position}
+						onJump={onJump}
+					/>
+				</div>
+				<Button
+					className={css.scrollButton}
+					direction="forward"
+					onStep={handleForward}
 				/>
 			</div>
 		);
 	}
-}
+});
 
-const Scrollbar = ApiDecorator({api: ['hideThumb', 'showThumb', 'startHidingThumb', 'update']}, ScrollbarBase);
-
-export default Scrollbar;
+export default ScrollbarBase;
 export {
-	Scrollbar,
+	ScrollbarBase as Scrollbar,
 	ScrollbarBase
 };
