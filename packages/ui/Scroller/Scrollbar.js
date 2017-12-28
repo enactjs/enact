@@ -3,6 +3,8 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import ComponentOverride from '../ComponentOverride';
+
 import css from './Scrollbar.less';
 
 const clamp = (min, max, value) => {
@@ -56,7 +58,7 @@ const ScrollbarBase = kind({
 
 		/**
 		 * The upper bounds of the scrollbar.
-		 * 
+		 *
 		 * The lower bounds is always 0.
 		 *
 		 * @type {Number}
@@ -119,7 +121,8 @@ const ScrollbarBase = kind({
 
 	styles: {
 		css,
-		className: 'scrollbar'
+		className: 'scrollbar',
+		publicClassNames: true
 	},
 
 	handlers: {
@@ -136,11 +139,15 @@ const ScrollbarBase = kind({
 		)
 	},
 
+	computed: {
+		className: ({orientation, styler}) => styler.append(orientation)
+	},
+
 	render: ({
-		buttonComponent: Button,
+		buttonComponent,
 		handleBackward,
 		handleForward,
-		knobComponent: Knob,
+		knobComponent,
 		max,
 		onJump,
 		orientation,
@@ -148,32 +155,34 @@ const ScrollbarBase = kind({
 		value,
 		...rest
 	}) => {
-		const ratio = size / max;
-		const position = value / max;
-
 		delete rest.onStep;
 		delete rest.step;
 
 		return (
 			<div {...rest}>
-				<Button
+				<ComponentOverride
+					component={buttonComponent}
 					className={css.scrollButton}
 					direction="backward"
 					onStep={handleBackward}
+					orientation={orientation}
 				/>
 				<div className={css.bar}>
-					<Knob
+					<ComponentOverride
+						component={knobComponent}
 						className={css.knob}
-						ratio={ratio}
+						ratio={size / max}
 						orientation={orientation}
-						value={position}
+						value={clamp(0, max, value) / max}
 						onJump={onJump}
 					/>
 				</div>
-				<Button
+				<ComponentOverride
+					component={buttonComponent}
 					className={css.scrollButton}
 					direction="forward"
 					onStep={handleForward}
+					orientation={orientation}
 				/>
 			</div>
 		);

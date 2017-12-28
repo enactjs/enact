@@ -1,9 +1,18 @@
 @import "../styles/mixins.less";
 
 .scrollbar {
-	display: flex;
+	&.horizontal {
+		display: flex;
+		flex-direction: row;
+	}
+
+	&.vertical {
+		display: inline-flex;
+		flex-direction: column;
+	}
 
 	.bar {
+		position: relative;
 		flex: 1 0 auto;
 	}
 
