@@ -649,12 +649,25 @@ class VirtualListCore extends Component {
 		this.composeStyle(style, ...rest);
 
 		this.cc[key] = React.cloneElement(itemElement, {
+			ref: (index === this.nodeIndexToBeFocused) ? (ref) => this.focusOnNode(ref, index) : null,
 			className: classNames(css.listItem, itemElement.props.className),
 			style: {...itemElement.props.style, ...style}
 		});
+	}
 
-		if (index === this.nodeIndexToBeFocused) {
-			this.focusByIndex(index);
+	focusOnNode = (ref, index) => {
+		if (ref) {
+			const node = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
+
+			if (Spotlight.isPaused()) {
+				Spotlight.resume();
+				this.forceUpdate();
+			}
+
+			if (node) {
+				Spotlight.focus(node);
+			}
+			this.nodeIndexToBeFocused = null;
 		}
 	}
 
@@ -743,27 +756,6 @@ class VirtualListCore extends Component {
 		return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
 	}
 
-	focusByIndex = (index) => {
-		// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
-		setTimeout(() => {
-			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
-
-			if (Spotlight.isPaused()) {
-				Spotlight.resume();
-				this.forceUpdate();
-			}
-
-			this.focusOnNode(item);
-			this.nodeIndexToBeFocused = null;
-		}, 0);
-	}
-
-	focusOnNode = (node) => {
-		if (node) {
-			Spotlight.focus(node);
-		}
-	}
-
 	setLastFocusedIndex = (item) => {
 		this.lastFocusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 	}
@@ -832,7 +824,11 @@ class VirtualListCore extends Component {
 			{data, dataSize} = this.props,
 			safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
 			safeIndexTo = clamp(-1, dataSize, indexTo),
-			delta = (indexFrom < indexTo) ? 1 : -1;
+			delta = (indexFrom < safeIndexTo) ? 1 : -1;
+
+		if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
+			return -1;
+		}
 
 		if (safeIndexFrom !== safeIndexTo) {
 			for (let i = safeIndexFrom; i !== safeIndexTo; i += delta) {
@@ -936,7 +932,8 @@ class VirtualListCore extends Component {
 	scrollToNextItem = ({direction, focusedItem}) => {
 		const
 			{data} = this.props,
-			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute));
+			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
+			{firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
 		let indexToScroll = -1;
 
 		if (Array.isArray(data) && data.some((item) => item.disabled)) {
@@ -954,11 +951,19 @@ class VirtualListCore extends Component {
 			this.updateFrom = null;
 			this.updateTo = null;
 
-			// Scroll to the next spottable item without animation
-			if (!Spotlight.isPaused()) {
-				Spotlight.pause();
+			if (firstVisibleIndex <= indexToScroll && indexToScroll <= lastVisibleIndex) {
+				const node = this.containerRef.querySelector(`[data-index='${indexToScroll}'].spottable`);
+
+				if (node) {
+					Spotlight.focus(node);
+				}
+			} else {
+				// Scroll to the next spottable item without animation
+				if (!Spotlight.isPaused()) {
+					Spotlight.pause();
+				}
+				focusedItem.blur();
 			}
-			focusedItem.blur();
 			this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
 			this.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
 		}
