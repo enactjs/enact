@@ -16,26 +16,16 @@ const ScrollThumb = kind({
 	name: 'ScrollThumb',
 
 	propTypes: /** @lends ui/Scroller.ScrollThumb.prototype */ {
-		/**
-		 * The function to pass a wrapped ref.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		getScrollThumbRef: PropTypes.func,
-
-		/**
-		 * If `true`, the scrollbar will be oriented vertically.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		vertical: PropTypes.bool
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
+		ratio: PropTypes.number.isRequired,
+		value: PropTypes.number.isRequired,
+		minRatio: PropTypes.number,
+		onJump: PropTypes.func,
+		style: PropTypes.object
 	},
 
 	defaultProps: {
-		getScrollThumbRef: null,
-		vertical: true
+		minRatio: 0.05
 	},
 
 	styles: {
@@ -44,13 +34,27 @@ const ScrollThumb = kind({
 	},
 
 	computed: {
-		className: ({vertical, styler}) => styler.append({vertical})
+		className: ({orientation, styler}) => styler.append(orientation),
+		style: ({minRatio, ratio, style, value}) => {
+			ratio = Math.max(minRatio, ratio);
+
+			// calculates a postive or negative translate value from its center point relative to
+			// the scale of the knob
+			const translateValue = (value - 0.5) * (1 - ratio);
+
+			return {
+				...style,
+				'--scroller-thumb-value': translateValue,
+				'--scroller-thumb-ratio': ratio
+			};
+		}
 	},
 
-	render: ({getScrollThumbRef, ...rest}) => {
-		delete rest.vertical;
+	render: ({...rest}) => {
+		delete rest.orientation;
+		delete rest.onJump;
 
-		return <div {...rest} ref={getScrollThumbRef} />;
+		return <div {...rest} />;
 	}
 });
 

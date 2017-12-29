@@ -45,18 +45,6 @@ const ScrollbarBase = kind({
 		buttonComponent: PropTypes.func,
 
 		/**
-		 * The component used to render the scroll knob.
-		 *
-		 * The scroll knob provides a visual cue to the current scroll position. It may, optionally,
-		 * support dragging to update the current scroll position.
-		 *
-		 * @see {@link ui/Scroller.ScrollKnob}
-		 * @type {Function}
-		 * @public
-		 */
-		knobComponent: PropTypes.func,
-
-		/**
 		 * The upper bounds of the scrollbar.
 		 *
 		 * The lower bounds is always 0.
@@ -68,7 +56,7 @@ const ScrollbarBase = kind({
 
 		/**
 		 * Event fired when scrolling to an absolute position, typically when the scroll bar is
-		 * pressed or the scroll knob is dragged.
+		 * pressed or the scroll thumb is dragged.
 		 *
 		 * @type {Function}
 		 * @public
@@ -86,7 +74,7 @@ const ScrollbarBase = kind({
 		/**
 		 * The available height and width of the scroll bar
 		 *
-		 * The `bounds` are used to calculate the size of the scroll knob as a ratio to the
+		 * The `bounds` are used to calculate the size of the scroll thumb as a ratio to the
 		 * available size of the scroll bar.
 		 *
 		 * @type {[type]}
@@ -103,6 +91,18 @@ const ScrollbarBase = kind({
 		 * @public
 		 */
 		step: PropTypes.number,
+
+		/**
+		 * The component used to render the scroll thumb.
+		 *
+		 * The scroll thumb provides a visual cue to the current scroll position. It may, optionally,
+		 * support dragging to update the current scroll position.
+		 *
+		 * @see {@link ui/Scroller.ScrollThumb}
+		 * @type {Function}
+		 * @public
+		 */
+		thumbComponent: PropTypes.func,
 
 		/**
 		 * Current scroll position between 0 and `max`
@@ -147,16 +147,18 @@ const ScrollbarBase = kind({
 		buttonComponent,
 		handleBackward,
 		handleForward,
-		knobComponent,
 		max,
 		onJump,
 		orientation,
 		size,
+		thumbComponent,
 		value,
 		...rest
 	}) => {
 		delete rest.onStep;
 		delete rest.step;
+
+		value = clamp(0, max, value);
 
 		return (
 			<div {...rest}>
@@ -164,16 +166,17 @@ const ScrollbarBase = kind({
 					component={buttonComponent}
 					className={css.scrollButton}
 					direction="backward"
+					disabled={value <= 0}
 					onStep={handleBackward}
 					orientation={orientation}
 				/>
 				<div className={css.bar}>
 					<ComponentOverride
-						component={knobComponent}
-						className={css.knob}
+						component={thumbComponent}
+						className={css.thumb}
 						ratio={size / max}
 						orientation={orientation}
-						value={clamp(0, max, value) / max}
+						value={value / max}
 						onJump={onJump}
 					/>
 				</div>
@@ -181,6 +184,7 @@ const ScrollbarBase = kind({
 					component={buttonComponent}
 					className={css.scrollButton}
 					direction="forward"
+					disabled={value >= max}
 					onStep={handleForward}
 					orientation={orientation}
 				/>
