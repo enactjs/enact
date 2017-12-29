@@ -1,5 +1,21 @@
-.hideNativeScrollbar {
-	&::-webkit-scrollbar {
-		display: none;
+.scroller {
+	--scroller-scrollbar-size: 24px;
+	display: grid;
+
+	&.vertical {
+		grid-template-columns: auto var(--scroller-scrollbar-size);
+	}
+
+
+	&.horizontal {
+		grid-template-rows: auto var(--scroller-scrollbar-size);
+	}
+
+	.container {
+		overflow: hidden;
+	}
+
+	.content {
+		transition: transform 200ms ease-in-out;
 	}
 }
