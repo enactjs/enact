@@ -10,7 +10,16 @@
  * @module moonstone/Marquee
  */
 
-import {Marquee} from '@enact/ui/MarqueeDecorator';
+import Marquee from './Marquee';
+import {MarqueeController, contextTypes} from './MarqueeController';
+import MarqueeDecorator from './MarqueeDecorator';
+import MarqueeText from './MarqueeText';
 
-export default Marquee;
-export * from '@enact/ui/MarqueeDecorator';
+export default MarqueeDecorator;
+export {
+	contextTypes as controlContextTypes,
+	Marquee,
+	MarqueeController,
+	MarqueeDecorator,
+	MarqueeText
+};
