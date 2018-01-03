@@ -50,11 +50,13 @@ const ScrollThumb = kind({
 		}
 	},
 
-	render: ({...rest}) => {
-		delete rest.orientation;
-		delete rest.onJump;
+	render: (props) => {
+		delete props.minRatio;
+		delete props.onJump;
+		delete props.orientation;
+		delete props.ratio;
 
-		return <div {...rest} />;
+		return <div {...props} />;
 	}
 });
 

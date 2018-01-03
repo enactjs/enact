@@ -15,10 +15,18 @@ const clamp = (min, max, value) => {
 
 const forwardAdjusted = (name, fn) => (ev, props) => forward(name, fn(ev, props), props);
 
-const adjustStep = (direction) => (ev, {max, size, step, value}) => ({
-	direction,
-	value: clamp(0, max, value + direction * step * size)
-});
+const adjustStep = (direction) => (ev, {max, orientation, size, step, value}) => {
+	const rawDelta = direction * step * size;
+	const newValue = clamp(0, max, value + rawDelta);
+	const delta = newValue - value;
+
+	return {
+		direction,
+		delta,
+		orientation,
+		value: newValue
+	};
+};
 
 const ScrollbarBase = kind({
 	name: 'ui/Scrollbar',

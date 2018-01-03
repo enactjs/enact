@@ -7,14 +7,35 @@
  */
 
 import classNamesBind from 'classnames/bind';
+import {handle, forwardWithPrevent, preventDefault} from '@enact/core/handle';
 import PropTypes from 'prop-types';
+import clamp from 'ramda/src/clamp';
 import React, {Component} from 'react';
 
+import ri from '../resolution';
 import ComponentOverride from '../ComponentOverride';
 
 import css from './Scroller.less';
 
 const classnames = classNamesBind.bind(css);
+
+const ScrollStrategyPropType = PropTypes.shape({
+	// (node) => bounds
+	getBounds: PropTypes.func,
+	// (node, x, y) => undefined
+	scroll: PropTypes.func
+});
+
+const TranslateScrollStrategy = {
+	getBounds: (node) => {
+		const {clientHeight: height, clientWidth: width, scrollHeight, scrollWidth} = node;
+
+		return {height, width, scrollHeight, scrollWidth};
+	},
+	scroll: (node, x, y) => {
+		node.style.transform = `translateX(-${x}px)  translateY(-${y}px)`;
+	}
+};
 
 /**
  * {@link ui/Scroller.ScrollerBase} is a base component for Scroller.
@@ -33,6 +54,10 @@ class ScrollerBase extends Component {
 		defaultScrollLeft: PropTypes.number,
 		defaultScrollTop: PropTypes.number,
 		horizontal: PropTypes.string,
+		onStep: PropTypes.func,
+		onWheel: PropTypes.func,
+		scrollbarComponent: PropTypes.func,
+		strategy: ScrollStrategyPropType,
 		vertical: PropTypes.string
 	}
 
@@ -40,6 +65,7 @@ class ScrollerBase extends Component {
 		defaultScrollLeft: 0,
 		defaultScrollTop: 0,
 		horizontal: 'auto',
+		strategy: TranslateScrollStrategy,
 		vertical: 'auto'
 	}
 
@@ -63,17 +89,11 @@ class ScrollerBase extends Component {
 	componentDidUpdate (prevProps, prevState) {
 		const {x, y} = this.state;
 
-		if (this.containerNode) {
-			let transform = '';
-			if (x !== prevState.x) {
-				transform += ` translateX(-${x}px)`;
-			}
+		const didScrollXChange = this.state.x !== prevState.x;
+		const didScrollYChange = this.state.y !== prevState.y;
 
-			if (y !== prevState.y) {
-				transform += ` translateY(-${y}px)`;
-			}
-
-			this.contentNode.style.transform = transform;
+		if (this.contentNode && this.props.strategy && (didScrollYChange || didScrollXChange)) {
+			this.props.strategy.scroll(this.contentNode, x, y);
 		}
 	}
 
@@ -88,15 +108,15 @@ class ScrollerBase extends Component {
 	calculateMetrics () {
 		this.setState((currentBounds) => {
 			if (this.containerNode) {
-				const {clientHeight: height, clientWidth: width, scrollHeight, scrollWidth} = this.containerNode;
+				const bounds = this.props.strategy.getBounds(this.containerNode);
 
 				if (
-					height !== currentBounds.height ||
-					width !== currentBounds.width ||
-					scrollHeight !== currentBounds.scrollHeight ||
-					scrollWidth !== currentBounds.scrollWidth
+					bounds.height !== currentBounds.height ||
+					bounds.width !== currentBounds.width ||
+					bounds.scrollHeight !== currentBounds.scrollHeight ||
+					bounds.scrollWidth !== currentBounds.scrollWidth
 				) {
-					return {height, width, scrollHeight, scrollWidth};
+					return bounds;
 				}
 			}
 
@@ -116,21 +136,75 @@ class ScrollerBase extends Component {
 		);
 	}
 
-	handleHorizontalStep = ({value}) => {
-		this.setState(() => {
+	scrollIncrementally (dx, dy) {
+		this.setState(({height, scrollHeight, scrollWidth, width, x, y}) => {
 			return {
-				x: value
+				x: clamp(0, scrollWidth - width, x + dx),
+				y: clamp(0, scrollHeight - height, y + dy)
 			};
 		});
 	}
 
-	handleVerticalStep = ({value}) => {
-		this.setState(() => {
-			return {
-				y: value
-			};
-		});
+	scrollByWheel (deltaMode, wheelDelta) {
+		// The ratio of the maximum distance scrolled by wheel to the size of the viewport.
+		const scrollWheelPageMultiplierForMaxPixel = 0.2;
+
+		// The ratio of wheel 'delta' units to pixels scrolled.
+		const scrollWheelMultiplierForDeltaPixel = 1.5;
+
+		// theme-specific?
+		const pixelPerLine = 39;
+
+		let maxPixel = 0;
+		let orientation;
+		if (this.isVerticalScrollbarVisible()) {
+			orientation = 'vertical';
+			maxPixel = this.state.height * scrollWheelPageMultiplierForMaxPixel;
+		} else if (this.isHorizontalScrollbarVisible()) {
+			orientation = 'horizontal';
+			maxPixel = this.state.width * scrollWheelPageMultiplierForMaxPixel;
+		}
+
+		let delta = 0;
+
+		if (deltaMode === 0) {
+			delta = clamp(-maxPixel, maxPixel, ri.scale(wheelDelta * scrollWheelMultiplierForDeltaPixel));
+		} else if (deltaMode === 1) { // line; firefox
+			delta = clamp(-maxPixel, maxPixel, ri.scale(wheelDelta * pixelPerLine * scrollWheelMultiplierForDeltaPixel));
+		} else if (deltaMode === 2) { // page
+			delta = wheelDelta < 0 ? -maxPixel : maxPixel;
+		}
+
+		if (delta !== 0) {
+			this.scrollIncrementally(
+				orientation === 'horizontal' ? delta : 0,
+				orientation === 'vertical' ? delta : 0
+			);
+		}
 	}
+
+	handle = handle.bind(this)
+
+	handleHorizontalStep = this.handle(
+		forwardWithPrevent('onStep'),
+		({delta}) => this.scrollIncrementally(delta, 0)
+	);
+
+	handleVerticalStep = this.handle(
+		forwardWithPrevent('onStep'),
+		({delta}) => this.scrollIncrementally(0, delta)
+	)
+
+	handleWheel = this.handle(
+		forwardWithPrevent('onWheel'),
+		preventDefault,
+		(ev) => {
+			const eventDeltaMode = ev.deltaMode;
+			const eventDelta = (-ev.wheelDeltaY || ev.deltaY);
+
+			this.scrollByWheel(eventDeltaMode, eventDelta);
+		}
+	)
 
 	render () {
 		const {children, className, scrollbarComponent, ...rest} = this.props;
@@ -147,8 +221,14 @@ class ScrollerBase extends Component {
 			}
 		);
 
+		delete rest.defaultScrollLeft;
+		delete rest.defaultScrollTop;
+		delete rest.horizontal;
+		delete rest.strategy;
+		delete rest.vertical;
+
 		return (
-			<div className={classes} {...rest}>
+			<div className={classes} {...rest} onWheel={this.handleWheel}>
 				<div className={css.container} ref={this.setContainer}>
 					<div ref={this.setContent} className={css.content}>
 						{children}
@@ -156,7 +236,7 @@ class ScrollerBase extends Component {
 				</div>
 				<ComponentOverride
 					component={showVertical ? scrollbarComponent : null}
-					max={this.state.scrollHeight}
+					max={this.state.scrollHeight - this.state.height}
 					onStep={this.handleVerticalStep}
 					orientation="vertical"
 					size={this.state.height}
@@ -164,7 +244,7 @@ class ScrollerBase extends Component {
 				/>
 				<ComponentOverride
 					component={showHorizontal ? scrollbarComponent : null}
-					max={this.state.scrollWidth}
+					max={this.state.scrollWidth - this.state.width}
 					onStep={this.handleHorizontalStep}
 					orientation="horizontal"
 					size={this.state.width}
