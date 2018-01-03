@@ -58,7 +58,7 @@ const isSingleCharacter = function (c) {
  * @public
  */
 const IconBase = kind({
-	name: 'ui/Icon',
+	name: 'ui:Icon',
 
 	propTypes: /** @lends ui/Icon.IconBase.prototype */ {
 		/**

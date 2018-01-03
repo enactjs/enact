@@ -133,7 +133,6 @@ const styles = (cfg, optProps) => {
 
 			// merge the combined css map into config so it is used by other styler features
 			config = {...cfg, css};
-			props.css = css;
 		}
 
 		const className = mergeClassName(config, props);

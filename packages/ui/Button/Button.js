@@ -26,7 +26,7 @@ import componentCss from './Button.less';
  * @public
  */
 const ButtonBase = kind({
-	name: 'ui/Button',
+	name: 'ui:Button',
 
 	propTypes: /** @lends ui/Button.ButtonBase.prototype */ {
 		children: PropTypes.node.isRequired,

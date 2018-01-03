@@ -25,7 +25,7 @@ import componentCss from './IconButton.less';
  * @public
  */
 const IconButtonBase = kind({
-	name: 'ui/IconButton',
+	name: 'ui:IconButton',
 
 	propTypes: /** @lends ui/IconButton.IconButtonBase.prototype */ {
 		/**
