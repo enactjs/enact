@@ -4,6 +4,8 @@
  * The default export is [Icon]{@link ui/Icon.Icon}.
  *
  * @module ui/Icon
+ * @exports Icon
+ * @exports IconBase
  */
 
 import kind from '@enact/core/kind';
@@ -85,8 +87,8 @@ const IconBase = kind({
 		 * * `icon` - The root component class
 		 * * `dingbat` - Applied when the value of [`icon`]{@link ui/Icon.IconBase.icon} is not
 		 *   found in [iconList]{@link ui/Icon.IconBase.iconList}
-		 * * `small` - Applied for a [small]{@link ui/Icon.IconBase.small} icon
-		 * * `pressed` - Applied for a [pressed]{@link ui/Icon.IconBase.pressed} icon
+		 * * `small` - Applied when `small` prop is `true`
+		 * * `pressed` - Applied when `pressed` prop is `true`
 		 *
 		 * @type {Object}
 		 * @public
@@ -102,6 +104,8 @@ const IconBase = kind({
 		 * renders in a React + JSX string.
 		 *
 		 * @type {Object}
+		 * @default {}
+		 * @public
 		 */
 		iconList: PropTypes.object,
 

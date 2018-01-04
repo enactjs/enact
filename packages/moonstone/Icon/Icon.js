@@ -7,6 +7,10 @@
  * <Icon>flag</Icon>
  *
  * @module moonstone/Icon
+ * @exports Icon
+ * @exports IconBase
+ * @exports IconDecorator
+ * @exports icons
  */
 
 import kind from '@enact/core/kind';
@@ -139,6 +143,7 @@ const IconBase = kind({
  *
  * @hoc
  * @memberof moonstone/Icon
+ * @mixes ui/Skinnable.Skinnable
  * @public
  */
 const IconDecorator = compose(

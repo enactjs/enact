@@ -1,11 +1,15 @@
 /**
  * Exports the {@link moonstone/Button.Button} and {@link moonstone/Button.ButtonBase}
- * components.  The default export is {@link moonstone/Button.Button}.
+ * components and the {@link moonstone/Button.ButtonDecorator} HOC.  The default export is
+ * {@link moonstone/Button.Button}.
  *
  * @example
  * <Button small>Click me</Button>
  *
  * @module moonstone/Button
+ * @exports Button
+ * @exports ButtonBase
+ * @exports ButtonDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -22,7 +26,6 @@ import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 import TooltipDecorator from '../TooltipDecorator';
 import Touchable from '../internal/Touchable';
-
 
 import componentCss from './Button.less';
 
@@ -133,6 +136,7 @@ const ButtonBase = kind({
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes ui/Touchable.Touchable
  * @mixes spotlight/Spottable.Spottable
+ * @mixes ui/Skinnable.Skinnable
  * @public
  */
 const ButtonDecorator = compose(

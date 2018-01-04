@@ -191,6 +191,8 @@ const perfNow = function () {
  * const newMap2 = mergeClassNameMaps(baseMap2, additiveMap2, ['a', 'b']);
  * ```
  *
+ * @method
+ * @memberof core/util
  * @param {Object}     baseMap             The source mapping of logical class name to physical
  *                                         class name
  * @param {Object}     additiveMap         Mapping of logical to physical class names which are
@@ -198,8 +200,6 @@ const perfNow = function () {
  * @param {String[]}  [allowedClassNames]  Array of logical class names that can be augmented. When
  *                                         set, the logical class name must exist in `baseMap`,
  *                                         `additiveMap`, and this array to be concatenated.
- * @method
- * @memberof core/util
  * @returns {Object}
  */
 const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {

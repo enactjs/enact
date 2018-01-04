@@ -5,6 +5,9 @@
  * The default export is [Button]{@link ui/Button.Button}.
  *
  * @module ui/Button
+ * @exports Button
+ * @exports ButtonBase
+ * @exports ButtonDecorator
  */
 
 import {forProp, forward, handle} from '@enact/core/handle';
@@ -41,10 +44,10 @@ const ButtonBase = kind({
 		 * * `bg` - The background node of the button
 		 * * `client` - The content node of the button
 		 * * `icon` - The icon node, when `icon` is set
-		 * * `minWidth` - Applied to `minWidth` button
-		 * * `pressed` - Applied to a pressed
-		 * * `selected` - Applied to a `selected` button
-		 * * `small` - Applied to a `small` button
+		 * * `minWidth` - Applied when `minWidth` prop is `true`
+		 * * `pressed` - Applied when `pressed` prop is `true`
+		 * * `selected` - Applied when `selected` prop is `true`
+		 * * `small` - Applied when `small` prop is `true`
 		 *
 		 * @type {Object}
 		 * @public
@@ -67,10 +70,13 @@ const ButtonBase = kind({
 		 * The icon displayed within the [button][ButtonBase]{@link ui/Button.ButtonBase}.
 		 *
 		 * The icon will be displayed before the natural reading order of the text, regardless
-		 * of locale. Any string that is valid for the `Icon` component is valid here. This also
-		 * supports a custom icon, in the form of a DOM node or a Component, with the caveat that if
-		 * you supply a custom icon, you are responsible for sizing and locale positioning of the
-		 * custom component.
+		 * of locale. Any string that is valid for its {@link ui/Button.Button.iconComponent} is
+		 * valid here. If `icon` is specified as a string and `iconButton` is undefined, the icon is
+		 * not rendered.
+		 *
+		 * This also supports a custom icon, in the form of a DOM node or a Component,
+		 * with the caveat that if you supply a custom icon, you are responsible for sizing and
+		 * locale positioning of the custom component.
 		 *
 		 * @type {Node}
 		 * @public
@@ -81,7 +87,8 @@ const ButtonBase = kind({
 		 * The component used to render the [icon]{@link ui/Button.ButtonBase.icon}.
 		 *
 		 * This component will receive the `small` property set on the Button as well as the `icon`
-		 * class to customize its styling.
+		 * class to customize its styling. If [icon]{@link ui/Button.ButtonBase.icon} is not a
+		 * string, this property is not used.
 		 *
 		 * @type {Function}
 		 * @public
@@ -182,7 +189,7 @@ const ButtonBase = kind({
  *
  * @hoc
  * @memberof ui/Button
- * @ui
+ * @mixes ui/Touchable.Touchable
  * @public
  */
 const ButtonDecorator = Touchable({activeProp: 'pressed'});

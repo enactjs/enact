@@ -4,8 +4,7 @@
  * @module moonstone/IconButton
  * @exports IconButton
  * @exports IconButtonBase
- * @exports IconButtonBaseFactory
- * @exports IconButtonFactory
+ * @exports IconButtonDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -133,6 +132,7 @@ const IconButtonBase = kind({
  * @mixes moonstone/TooltipDecorator.TooltipDecorator
  * @mixes ui/Touchable.Touchable
  * @mixes spotlight/Spottable.Spottable
+ * @mixes ui/Skinnable.Skinnable
  * @public
  */
 const IconButtonDecorator = compose(

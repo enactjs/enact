@@ -99,13 +99,16 @@ const append = (props) => {
  *		}
  *	};
  *
- *	styles(stylesConfig, props); // {className: 'unambiguous-button-class-name global-class', styles: {color: 'red', display: 'none'}}
+ *	const renderStyles = styles(stylesConfig);
+ *	const renderStyles(props); // {className: 'unambiguous-button-class-name global-class', styles: {color: 'red', display: 'none'}}
  * ```
  *
  * @method styles
- * @param {Object} cfg Configuration object containing one of `css`, `className`, and/or `style`
- * @param {Object} props Render props
- * @returns {Function} Function accepting props and returning update props with computed properties
+ * @param   {Object}    cfg  Configuration object containing one of `css`, `className`,
+ *                           `publicClassNames`, and/or `style`
+ * @returns {Function}       Function that accepts a props object and mutates it to merge class
+ *                           names and style objects and provide the `styler` utility function and
+ *                           `css` merged class name map
  * @public
  */
 const styles = (cfg, optProps) => {

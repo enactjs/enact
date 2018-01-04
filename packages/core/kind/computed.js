@@ -17,9 +17,9 @@
  * ```
  *
  * @method computed
- * @param {Object} cfg Configuration object mapping transformation functions to property names
- * @param {Object} props Render props
- * @returns {Function} Function accepting props and returning update props with computed properties
+ * @param   {Object}    cfg  Configuration object mapping transformation functions to property names
+ * @returns {Function}       Function that accepts a props object and mutates it to include the
+ *                           computed props
  * @public
  */
 const computed = (cfg, optProps) => {

@@ -6,6 +6,9 @@
  * The default export is [IconButton]{@link ui/IconButton.IconButton}.
  *
  * @module ui/IconButton
+ * @exports IconButton
+ * @exports IconButtonBase
+ * @exports IconButtonDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -57,8 +60,8 @@ const IconButtonBase = kind({
 		 *
 		 * * `iconButton` - The root component class
 		 * * `icon` - The [icon component]{@link ui/IconButton.IconButtonBase.iconComponent} class
-		 * * `small` - Applied for a `small` icon
-		 * * `pressed` - Applied for a `pressed` icon
+		 * * `small` - Applied when `small` prop is `true`
+		 * * `pressed` - Applied when `pressed` prop is `true`
 		 *
 		 * @type {Object}
 		 * @public
@@ -80,7 +83,7 @@ const IconButtonBase = kind({
 		/**
 		 * The icon displayed within the [button]{@link ui/IconButton.IconButtonBase}.
 		 *
-		 * If not specified, the `children` is used as the icon value instead.
+		 * If not specified, `children` is used as the icon value instead.
 		 *
 		 * @type {Node}
 		 * @public
