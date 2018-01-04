@@ -782,7 +782,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		const {source} = this.props;
 		const {source: nextSource} = nextProps;
-		if (nextSource !== source && !equals(source, nextSource)) {
+		if (nextSource.props.src !== source.props.src || nextSource.props.type !== source.props.type) {
 			this.setState({currentTime: 0, buffered: 0, proportionPlayed: 0, proportionLoaded: 0});
 			this.reloadVideo();
 		}
@@ -791,7 +791,7 @@ const VideoPlayerBase = class extends React.Component {
 	shouldComponentUpdate (nextProps, nextState) {
 		const {source} = this.props;
 		const {source: nextSource} = nextProps;
-		if (nextSource !== source && !equals(source, nextSource)) {
+		if (nextSource.props.src !== source.props.src || nextSource.props.type !== source.props.type) {
 			return true;
 		}
 		if (
@@ -835,7 +835,7 @@ const VideoPlayerBase = class extends React.Component {
 		const {source: prevSource} = prevProps;
 
 		// Detect a change to the video source and reload if necessary.
-		if (prevSource !== source && !equals(source, prevSource)) {
+		if (prevSource.props.src !== source.props.src || prevSource.props.type !== source.props.type) {
 			this.reloadVideo();
 		}
 
