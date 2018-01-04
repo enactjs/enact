@@ -598,22 +598,20 @@ const VideoPlayerBase = class extends React.Component {
 		setApiProvider: PropTypes.func,
 
 		/**
-		 * Any children `<source>` tag elements of [VideoPlayer]{@link moonstone/VideoPlayer} will
-		 * be sent directly to the `<video>` element as video sources.
-		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		source: PropTypes.node,
-
-		/**
 		 * When `true`, the component cannot be navigated using spotlight.
 		 *
 		 * @type {Boolean}
 		 * @public
 		 */
 		spotlightDisabled: PropTypes.bool,
+
+		/**
+		 * The URL of the video to embed.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		src: PropTypes.string,
 
 		/**
 		 * This component will be used instead of the built-in version.
@@ -672,7 +670,15 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 3000
 		 * @public
 		 */
-		tooltipHideDelay: PropTypes.number
+		tooltipHideDelay: PropTypes.number,
+
+		/**
+		 * The MIME-type of the resource, optionally with a codecs parameter.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		type: PropTypes.string
 	}
 
 	static defaultProps = {
@@ -780,18 +786,18 @@ const VideoPlayerBase = class extends React.Component {
 			this.calculateMaxComponentCount();
 		}
 
-		const {source} = this.props;
-		const {source: nextSource} = nextProps;
-		if (nextSource !== source && !equals(source, nextSource)) {
+		const {src, type} = this.props;
+		const {src: nextSource, type: nextType} = nextProps;
+		if (src !== nextSource || type !== nextType) {
 			this.setState({currentTime: 0, buffered: 0, proportionPlayed: 0, proportionLoaded: 0});
 			this.reloadVideo();
 		}
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
-		const {source} = this.props;
-		const {source: nextSource} = nextProps;
-		if (nextSource !== source && !equals(source, nextSource)) {
+		const {src, type} = this.props;
+		const {src: nextSource, type: nextType} = nextProps;
+		if (src !== nextSource || type !== nextType) {
 			return true;
 		}
 		if (
@@ -831,11 +837,9 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		const {source} = this.props;
-		const {source: prevSource} = prevProps;
-
-		// Detect a change to the video source and reload if necessary.
-		if (prevSource !== source && !equals(source, prevSource)) {
+		const {src, type} = this.props;
+		const {src: nextSource, type: nextType} = prevProps;
+		if (src !== nextSource || type !== nextType) {
 			this.reloadVideo();
 		}
 
@@ -1950,12 +1954,13 @@ const VideoPlayerBase = class extends React.Component {
 			playIcon,
 			rateButtonsDisabled,
 			rightComponents,
-			source,
 			spotlightDisabled,
+			src,
 			style,
 			thumbnailComponent,
 			thumbnailSrc,
 			title,
+			type,
 			...rest} = this.props;
 
 		delete rest.announce;
@@ -2012,7 +2017,7 @@ const VideoPlayerBase = class extends React.Component {
 					ref={this.setVideoRef}
 					{...this.handledMediaEvents}
 				>
-					{source}
+					<source src={src} type={type} />
 				</video>
 
 				<Overlay
@@ -2141,14 +2146,13 @@ const VideoPlayerBase = class extends React.Component {
 
 /**
  * {@link moonstone/VideoPlayer.VideoPlayer} is a standard HTML5 video player for Moonstone. It
- * behaves, responds to, and operates like a standard `<video>` tag in its support for `<source>`s
- * and accepts several additional custom tags like `<infoComponents>`, `<leftComponents>`, and
- * `<rightComponents>`. Any additional children will be rendered into the "more" controls area.
+ * behaves, responds to, and operates like a standard `<video>` tag and accepts custom tags like
+ * `<infoComponents>`, `<leftComponents>`, and `<rightComponents>`. Any additional children will
+ * be rendered into the "more" controls area.
  *
  * Example usage:
  * ```
- *	<VideoPlayer title="Hilarious Cat Video" poster="http://my.cat.videos/boots-poster.jpg">
- *		<source src="http://my.cat.videos/boots.mp4" type="video/mp4" />
+ *	<VideoPlayer title="Hilarious Cat Video" poster="http://my.cat.videos/boots-poster.jpg" src="http://my.cat.videos/boots.mp4" type="video/mp4">
  *		<infoComponents>A video about my cat Boots, wearing boots.</infoComponents>
  *		<leftComponents><IconButton backgroundOpacity="translucent">star</IconButton></leftComponents>
  *		<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
@@ -2203,7 +2207,7 @@ const VideoPlayer = ApiDecorator(
 		'toggleControls'
 	]},
 	Slottable(
-		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source', 'thumbnailComponent']},
+		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'thumbnailComponent']},
 		FloatingLayerDecorator(
 			{floatLayerId: 'videoPlayerFloatingLayer'},
 			Skinnable(
