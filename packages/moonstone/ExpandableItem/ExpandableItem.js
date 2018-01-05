@@ -16,10 +16,14 @@ import PropTypes from 'prop-types';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
+import Icon from '../Icon';
 import LabeledItem from '../LabeledItem';
+import {MarqueeText} from '../Marquee';
 
 import Expandable from './Expandable';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
+
+import css from './ExpandableItem.less';
 
 const isUp = is('up');
 const isDown = is('down');
@@ -275,17 +279,16 @@ const ExpandableItemBase = kind({
 		)
 	},
 
+	styles: {
+		css,
+		className: 'expandableItem'
+	},
+
 	computed: {
-		label: ({disabled, label, noneText, open, showLabel}) => {
-			const isOpen = open && !disabled;
-			if (showLabel === 'always' || (!isOpen && showLabel !== 'never')) {
-				return label || noneText;
-			} else {
-				return null;
-			}
-		},
+		label: ({label, noneText}) => (label || noneText),
+		labelClassName: ({showLabel, styler}) => (styler.append(css.label, css[showLabel])),
 		open: ({disabled, open}) => (open && !disabled),
-		titleIcon: ({disabled, open}) => (open && !disabled ? 'arrowlargeup' : 'arrowlargedown'),
+		titleIcon: () => (<Icon small className={css.icon}>arrowlargedown</Icon>),
 		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
 	},
 
@@ -296,6 +299,7 @@ const ExpandableItemBase = kind({
 		handleLabelKeyDown,
 		handleOpen,
 		label,
+		labelClassName,
 		open,
 		onHide,
 		onShow,
@@ -332,7 +336,7 @@ const ExpandableItemBase = kind({
 					{...ariaProps}
 					data-expandable-label
 					disabled={disabled}
-					label={label}
+					label={<MarqueeText disabled={disabled} className={labelClassName}>{label}</MarqueeText>}
 					onTap={handleOpen}
 					onKeyDown={handleLabelKeyDown}
 					onSpotlightDisappear={onSpotlightDisappear}
