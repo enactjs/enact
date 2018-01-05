@@ -1,5 +1,5 @@
 /**
- * An {@link moonstone/Icon.Icon} that acts like a button.
+ * Provides Moonstone-themed icon button components and behaviors
  *
  * @module moonstone/IconButton
  * @exports IconButton

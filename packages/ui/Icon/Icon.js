@@ -1,7 +1,5 @@
 /**
- * Exports the [Icon]{@link ui/Icon.Icon} and [IconBase]{@link ui/Icon.IconBase} components.
- *
- * The default export is [Icon]{@link ui/Icon.Icon}.
+ * Provides unstyled icon components to be customized by a theme or application
  *
  * @module ui/Icon
  * @exports Icon

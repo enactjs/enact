@@ -1,9 +1,5 @@
 /**
- * Exports the [IconButton]{@link ui/IconButton.IconButton} and
- * [IconButton]{@link ui/IconButton.IconButtonBase} components and the
- * [IconButtonDecorator]{@link ui/IconButton.IconButtonDecorator} Higher-order Component (HOC).
- *
- * The default export is [IconButton]{@link ui/IconButton.IconButton}.
+ * Provides unstyled button icon components and behaviors to be customized by a theme or application
  *
  * @module ui/IconButton
  * @exports IconButton

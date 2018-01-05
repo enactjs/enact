@@ -1,7 +1,5 @@
 /**
- * Exports the {@link moonstone/Icon.Icon} and {@link moonstone/Icon.IconBase} components and the
- * {@link moonstone/Icon.IconDecorator} Higher-order Component (HOC).  The default export is
- * {@link moonstone/Icon.Icon}.
+ * Provides Moonstone-themed icon components and behaviors
  *
  * @example
  * <Icon>flag</Icon>

@@ -1,8 +1,5 @@
 /**
- * Exports the [Button]{@link ui/Button.Button} and [ButtonBase]{@link ui/Button.ButtonBase} components and
- * the [ButtonDecorator]{@link ui/Button.ButtonDecorator} Higher-order Component (HOC).
- *
- * The default export is [Button]{@link ui/Button.Button}.
+ * Provides unstyled button components and behaviors to be customized by a theme or application
  *
  * @module ui/Button
  * @exports Button

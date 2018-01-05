@@ -1,10 +1,5 @@
 /**
- * Exports the {@link moonstone/Button.Button} and {@link moonstone/Button.ButtonBase}
- * components and the {@link moonstone/Button.ButtonDecorator} HOC.  The default export is
- * {@link moonstone/Button.Button}.
- *
- * @example
- * <Button small>Click me</Button>
+ * Provides Moonstone-themed button components and behaviors
  *
  * @module moonstone/Button
  * @exports Button
