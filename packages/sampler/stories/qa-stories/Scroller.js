@@ -19,15 +19,6 @@ const
 	prop = {
 		direction: ['both', 'horizontal', 'vertical'],
 		horizontalScrollbar: ['auto', 'hidden', 'visible']
-	},
-	style = {
-		horizontalScroller: {
-			width: '100%'
-		},
-		horizontalContent: {
-			width: ri.scale(4200) + 'px',
-			padding: '1px'
-		}
 	};
 
 storiesOf('Scroller')
@@ -69,9 +60,16 @@ storiesOf('Scroller')
 				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				style={style.horizontalScroller}
+				style={{
+					width: '100%'
+				}}
 			>
-				<div style={style.horizontalContent}>
+				<div
+					style={{
+						width: ri.scale(4200) + 'px',
+						padding: '1px'
+					}}
+				>
 					{[...Array(20)].map((x, i) => (
 						<Button key={i + 1}>
 							Button {i + 1}
