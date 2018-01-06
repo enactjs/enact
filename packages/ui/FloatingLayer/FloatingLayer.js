@@ -1,5 +1,4 @@
 import {on, off} from '@enact/core/dispatcher';
-import {Job} from '@enact/core/util';
 import invariant from 'invariant';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -107,25 +106,31 @@ class FloatingLayerBase extends React.Component {
 	constructor (props) {
 		super(props);
 		this.node = null;
-		this.floatLayer = null;
 	}
 
-	componentDidMount () {
-		if (this.props.open) {
-			this.renderFloatingLayer(this.props);
+	componentDidUpdate (prevProps) {
+		const {open, onClose, onOpen, scrimType} = this.props;
+
+		if (prevProps.open && !open && onClose) {
+			onClose();
+		} else if (!prevProps.open && open && onOpen) {
+			onOpen();
 		}
-	}
 
-	componentWillReceiveProps (nextProps) {
-		if (nextProps.open) {
-			this.renderFloatingLayer(nextProps, this.props.open);
-		} else {
-			this.closeFloatingLayer();
+		if (scrimType === 'none') {
+			if (!prevProps.open && open) {
+				// Attach click event handler asynchronously to make sure the event responsible for opening
+				// won't be closed by other click event listeners attached to the dispatcher.
+				on('click', this.handleClick);
+			} else if (prevProps.open && !open) {
+				off('click', this.handleClick);
+			}
 		}
 	}
 
 	componentWillUnmount () {
-		this.closeFloatingLayer();
+		this.node = null;
+		off('click', this.handleClick);
 	}
 
 	handleClick = () => {
@@ -148,79 +153,53 @@ class FloatingLayerBase extends React.Component {
 		}
 	}
 
-	closeFloatingLayer () {
-		if (this.node) {
-			off('scroll', this.handleScroll, this.node);
-			ReactDOM.unmountComponentAtNode(this.node);
-			this.node.parentNode.removeChild(this.node);
-
-			if (this.props.onClose) {
-				this.props.onClose();
-			}
-		}
-		this.floatLayer = null;
-		this.node = null;
-
-		this.attachClickHandlerJob.stop();
-		off('click', this.handleClick);
-	}
-
 	renderNode () {
 		const {floatLayerClassName} = this.props;
+		const floatingLayer = this.context.getFloatingLayer();
 
-		if (!this.node) {
+		if (!this.node && floatingLayer) {
 			invariant(
 				this.context.getFloatingLayer,
 				'FloatingLayer cannot be used outside the subtree of a FloatingLayerDecorator'
 			);
 
-			const floatingLayer = this.context.getFloatingLayer();
 			this.node = document.createElement('div');
 			floatingLayer.appendChild(this.node);
 			on('scroll', this.handleScroll, this.node);
 		}
 
-		this.node.className = floatLayerClassName;
-		this.node.style.zIndex = 100;
+		if (this.node) {
+			this.node.className = floatLayerClassName;
+			this.node.style.zIndex = 100;
+		}
 
 		return this.node;
 	}
 
-	renderFloatingLayer ({children, onOpen, scrimType, ...rest}, isOpened = false) {
+	render () {
+		const props = Object.assign({}, this.props);
+		const {children, open, scrimType, ...rest} = props;
+
 		delete rest.floatLayerClassName;
 		delete rest.floatLayerId;
 		delete rest.noAutoDismiss;
 		delete rest.onClose;
 		delete rest.onDismiss;
-		delete rest.open;
+		delete rest.onOpen;
 
 		const node = this.renderNode();
-		this.floatLayer = ReactDOM.unstable_renderSubtreeIntoContainer(
-			this,
-			<div {...rest}>
-				{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
-				{React.cloneElement(children, {onClick: this.stopPropagation})}
-			</div>,
-			node
+
+		return (
+			open ?
+				ReactDOM.createPortal(
+					<div {...rest}>
+						{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
+						{React.cloneElement(children, {onClick: this.stopPropagation})}
+					</div>,
+					node
+				) :
+				null
 		);
-
-		if (!isOpened) {
-			if (onOpen) {
-				onOpen();
-			}
-
-			if (scrimType === 'none') {
-				// Attach click event handler asynchronously to make sure the event responsible for opening
-				// won't be closed by other click event listeners attached to the dispatcher.
-				this.attachClickHandlerJob.start();
-			}
-		}
-	}
-
-	attachClickHandlerJob = new Job(() => on('click', this.handleClick))
-
-	render () {
-		return null;
 	}
 }
 
