@@ -1,5 +1,5 @@
 /**
- * Provides unstyled icon components to be customized by a theme or application
+ * Provides unstyled icon components to be customized by a theme or application.
  *
  * @module ui/Icon
  * @exports Icon
@@ -97,7 +97,7 @@ const IconBase = kind({
 		 * The full list (hash) of supported icons.
 		 *
 		 * The keys of this hash are the unique names of each icon. The values are the unicode
-		 * character to insert in the icon. These will typically map to glyphs in your icon-font.
+		 * characters to insert in the icon. These will typically map to glyphs in your icon-font.
 		 * The format of the keys can be character, glyph, or entity reference that correctly
 		 * renders in a React + JSX string.
 		 *

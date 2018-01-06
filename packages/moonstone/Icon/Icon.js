@@ -1,5 +1,5 @@
 /**
- * Provides Moonstone-themed icon components and behaviors
+ * Provides Moonstone-themed icon components and behaviors.
  *
  * @example
  * <Icon>flag</Icon>
@@ -136,8 +136,7 @@ const IconBase = kind({
  */
 
 /**
- * {@link moonstone/Icon.IconDecorator} applies Moonstone-specific behaviors to an
- * [Icon]{@link moonstone/Icon.IconBase}.
+ * Moonstone-specific behaviors to apply to [Icon]{@link moonstone/Icon.IconBase}.
  *
  * @hoc
  * @memberof moonstone/Icon
@@ -150,7 +149,7 @@ const IconDecorator = compose(
 );
 
 /**
- * {@link moonstone/Icon.Icon} is a Moonstone-styled icon
+ * A Moonstone-styled icon.
  *
  * @class Icon
  * @memberof moonstone/Icon

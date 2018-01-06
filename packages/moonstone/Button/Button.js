@@ -1,5 +1,8 @@
 /**
- * Provides Moonstone-themed button components and behaviors
+ * Provides Moonstone-themed button components and behaviors.
+ *
+ * @example
+ * <Button small>Hello Enact!</Button>
  *
  * @module moonstone/Button
  * @exports Button
@@ -25,7 +28,7 @@ import Touchable from '../internal/Touchable';
 import componentCss from './Button.less';
 
 /**
- * {@link moonstone/Button.ButtonBase} is a moonstone-styled button without any behavior.
+ * A moonstone-styled button without any behavior.
  *
  * @class ButtonBase
  * @memberof moonstone/Button
@@ -121,8 +124,7 @@ const ButtonBase = kind({
 });
 
 /**
- * {@link moonstone/Button.ButtonDecorator} adds Moonstone-specific button behaviors to a
- * [Button]{@link moonstone/Button.ButtonBase}.
+ * Moonstone-specific button behaviors to apply to [Button]{@link moonstone/Button.ButtonBase}.
  *
  * @hoc
  * @memberof moonstone/Button
@@ -145,8 +147,8 @@ const ButtonDecorator = compose(
 );
 
 /**
- * {@link moonstone/Button.Button} is a Moonstone-styled button with built-in support for
- * uppercasing, tooltips, marqueed text, and Spotlight focus.
+ * A Moonstone-styled button with built-in support for uppercasing, tooltips, marqueed text, and
+ * Spotlight focus.
  *
  * Usage:
  * ```

@@ -1,5 +1,8 @@
 /**
- * Provides Moonstone-themed icon button components and behaviors
+ * Provides Moonstone-themed icon button components and behaviors.
+ *
+ * @example
+ * <IconButton small>plus</IconButton>
  *
  * @module moonstone/IconButton
  * @exports IconButton
@@ -24,7 +27,7 @@ import Touchable from '../internal/Touchable';
 import componentCss from './IconButton.less';
 
 /**
- * {@link moonstone/IconButton.IconButtonBase} is a moonstone-styled button without any behavior.
+ * A moonstone-styled icon button without any behavior.
  *
  * @class IconButtonBase
  * @memberof moonstone/IconButton
@@ -124,7 +127,7 @@ const IconButtonBase = kind({
 
 
 /**
- * {@link moonstone/IconButton.IconButtonDecorator} adds Moonstone-specific button behaviors to an
+ * Moonstone-specific button behaviors to apply to
  * [IconButton]{@link moonstone/IconButton.IconButtonBase}.
  *
  * @hoc

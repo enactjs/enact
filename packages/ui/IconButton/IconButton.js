@@ -1,5 +1,6 @@
 /**
- * Provides unstyled button icon components and behaviors to be customized by a theme or application
+ * Provides unstyled button icon components and behaviors to be customized by a theme or
+ * application.
  *
  * @module ui/IconButton
  * @exports IconButton
