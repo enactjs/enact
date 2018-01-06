@@ -6,6 +6,8 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 No significant changes.
 
+- `spotlight/Spottable` to not remove `tabindex` from unspottable components to allow blur events to propagate as expected when a component becomes disabled
+
 ## [2.0.0-alpha.2] - 2017-08-29
 
 No significant changes.
