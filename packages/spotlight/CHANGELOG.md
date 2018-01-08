@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Fixed
+
+- `spotlight/Spottable` to prevent unnecessary renders due to focus changes
+
 ### Deprecated
 
 ### Added
