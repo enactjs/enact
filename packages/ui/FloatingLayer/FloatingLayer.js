@@ -106,6 +106,9 @@ class FloatingLayerBase extends React.Component {
 	constructor (props) {
 		super(props);
 		this.node = null;
+		if (props.open && props.onOpen) {
+			props.onOpen();
+		}
 	}
 
 	componentDidUpdate (prevProps) {
@@ -190,7 +193,7 @@ class FloatingLayerBase extends React.Component {
 		const node = this.renderNode();
 
 		return (
-			open ?
+			open && node ?
 				ReactDOM.createPortal(
 					<div {...rest}>
 						{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
