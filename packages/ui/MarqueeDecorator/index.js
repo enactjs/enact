@@ -1,13 +1,12 @@
 /**
- * Exports the {@link moonstone/Marquee.Marquee},
- * {@link moonstone/Marquee.MarqueeBase},
- * {@link moonstone/Marquee.MarqueeController},
- * {@link moonstone/Marquee.MarqueeDecorator}, and
- * {@link moonstone/Marquee.MarqueeText} components.
+ * Provides a marquee bevavior Higher-Order Component (HOC) and a basic pre-wrapped marqueeing text
+ * component, {@link ui/MarqueeDecorator.MarqueeText}.
  *
- * The default export is {@link moonstone/Marquee.Marquee}.
- *
- * @module moonstone/Marquee
+ * @module ui/MarqueeDecorator
+ * @exports controlContextTypes
+ * @exports MaruqeeController
+ * @exports MarqueeDecorator
+ * @exports MarqueeText
  */
 
 import Marquee from './Marquee';

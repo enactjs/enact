@@ -1,20 +1,19 @@
-import deprecate from '@enact/core/internal/deprecate';
-import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
+import hoc from '@enact/core/hoc';
+import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
 import {childrenEquals} from '@enact/core/util';
 import {isRtlText} from '@enact/i18n/util';
-import React from 'react';
 import PropTypes from 'prop-types';
-import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
+import React from 'react';
 
 import Marquee from './Marquee';
 import {contextTypes} from './MarqueeController';
 
 /**
- * Default configuration parameters for {@link moonstone/Marquee.MarqueeDecorator}
+ * Default configuration parameters for {@link ui/MarqueeDecorator.MarqueeDecorator}
  *
  * @type {Object}
- * @memberof moonstone/Marquee.MarqueeDecorator
+ * @memberof ui/MarqueeDecorator.MarqueeDecorator
  * @hocconfig
  */
 const defaultConfig = {
@@ -23,7 +22,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onBlur'
-	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	 * @memberof ui/MarqueeDecorator.MarqueeDecorator.defaultConfig
 	 */
 	blur: 'onBlur',
 
@@ -32,7 +31,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default null
-	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	 * @memberof ui/MarqueeDecorator.MarqueeDecorator.defaultConfig
 	 */
 	className: null,
 
@@ -41,7 +40,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onMouseEnter'
-	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	 * @memberof ui/MarqueeDecorator.MarqueeDecorator.defaultConfig
 	 */
 	enter: 'onMouseEnter',
 
@@ -50,7 +49,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onFocus'
-	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	 * @memberof ui/MarqueeDecorator.MarqueeDecorator.defaultConfig
 	 */
 	focus: 'onFocus',
 
@@ -60,7 +59,7 @@ const defaultConfig = {
 	*
 	* @type {Array}
 	* @default ['remeasure']
-	* @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	* @memberof ui/MarqueeDecorator.MarqueeDecorator.defaultConfig
 	*/
 	invalidateProps: ['remeasure'],
 
@@ -69,7 +68,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onMouseLeave'
-	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	 * @memberof ui/MarqueeDecorator.MarqueeDecorator.defaultConfig
 	 */
 	leave: 'onMouseLeave'
 };
@@ -100,11 +99,11 @@ const TimerState = {
 };
 
 /**
- * {@link moonstone/Marquee.MarqueeDecorator} is a Higher-order Component which makes
+ * {@link ui/MarqueeDecorator.MarqueeDecorator} is a Higher-order Component which makes
  * the Wrapped component's children marquee.
  *
  * @class MarqueeDecorator
- * @memberof moonstone/Marquee
+ * @memberof ui/MarqueeDecorator
  * @hoc
  * @public
  */
@@ -124,7 +123,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			...stateContextTypes
 		}
 
-		static propTypes = /** @lends moonstone/Marquee.MarqueeDecorator.prototype */ {
+		static propTypes = /** @lends ui/MarqueeDecorator.MarqueeDecorator.prototype */ {
 			/**
 			 * Text alignment value of the marquee. Valid values are `'left'`, `'right'` and `'center'`.
 			 *
@@ -159,15 +158,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			forceDirection: PropTypes.oneOf(['rtl', 'ltr']),
-
-			/**
-			 * When `true`, the contents will be centered regardless of the text directionality.
-			 *
-			 * @type {Boolean}
-			 * @public
-			 * @deprecated replaced by `alignment`
-			 */
-			marqueeCentered: PropTypes.bool,
 
 			/**
 			 * Number of milliseconds to wait before starting marquee when `marqueeOn` is `'hover'` or
@@ -257,10 +247,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.timerState = TimerState.CLEAR;
 
 			this.invalidateMetrics();
-
-			if (this.props.marqueeCentered) {
-				deprecate({name: 'marqueeCentered', since: '1.7.0', message: 'Use `alignment` instead', until: '2.0.0'});
-			}
 		}
 
 		componentWillMount () {

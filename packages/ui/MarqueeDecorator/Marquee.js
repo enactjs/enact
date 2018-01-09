@@ -1,32 +1,24 @@
-/*
- * Exports the {@link moonstone/Marquee.Marquee} and {@link moonstone/Marquee.MarqueeBase}
- * components. The default export is {@link moonstone/Marquee.Marquee}.
- *
- * note: not jsdoc on purpose, exports in index.js
- */
-
-import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import css from './Marquee.less';
 
 const animated = css.text + ' ' + css.animate;
 
 /**
- * {@link moonstone/Marquee.Marquee} is a stateless text container element which
- * implements a text cut-off followed by an ellipsis character.
+ * {@link ui/MarqueeDecorator.Marquee} is a stateless text container element which implements a text
+ * cut-off followed by an ellipsis character.
  *
  * @class Marquee
- * @memberof moonstone/Marquee
+ * @memberof ui/MarqueeDecorator
  * @ui
  * @public
  */
 const MarqueeBase = kind({
 	name: 'Marquee',
 
-	propTypes: /** @lends moonstone/Marquee.Marquee.prototype */ {
+	propTypes: /** @lends ui/MarqueeDecorator.Marquee.prototype */ {
 
 		/**
 		 * Text alignment value of the marquee. Valid values are `'left'`, `'right'` and `'center'`.
@@ -45,17 +37,8 @@ const MarqueeBase = kind({
 		animating: PropTypes.bool,
 
 		/**
-		 * When `true`, the contents will be centered regardless of the text directionality.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 * @deprecated replaced by `alignment`
-		 */
-		centered: PropTypes.bool,
-
-		/**
 		 * `children` is the text or a set of components that should be scrolled by the
-		 * {@link moonstone/Marquee.Marquee} component.
+		 * {@link ui/MarqueeDecorator.Marquee} component.
 		 * This prop may be empty in some cases, which is OK.
 		 *
 		 * @type {Node|Node[]}
@@ -133,25 +116,14 @@ const MarqueeBase = kind({
 
 	computed: {
 		clientClassName: ({animating}) => animating ? animated : css.text,
-		clientStyle: ({alignment, animating, centered, distance, overflow, rtl, speed}) => {
-			let textAlign = null;
-
-			if (centered) {
-				deprecate({name: 'centered', since: '1.7.0', message: 'Use `alignment` instead', until: '2.0.0'});
-				textAlign = 'center';
-			}
-
-			if (alignment) {
-				textAlign = alignment;
-			}
-
+		clientStyle: ({alignment, animating, distance, overflow, rtl, speed}) => {
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
 			let direction = rtl ? 'rtl' : 'ltr';
 
 			const style = {
 				direction,
-				textAlign,
+				textAlign: alignment,
 				textOverflow: overflow
 			};
 

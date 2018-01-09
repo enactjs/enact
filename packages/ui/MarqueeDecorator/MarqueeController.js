@@ -13,7 +13,7 @@ const STATE = {
 /**
  * Context propTypes for MarqueeController
  *
- * @memberof moonstone/Marquee.Marquee
+ * @memberof ui/MarqueeDecorator.Marquee
  * @private
  */
 const contextTypes = {
@@ -22,7 +22,7 @@ const contextTypes = {
 	 * set to `marqueeOn='focus'`)
 	 *
 	 * @type {Function}
-	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 * @memberof ui/MarqueeDecorator.Marquee.contextTypes
 	 */
 	cancel: PropTypes.func,
 
@@ -30,7 +30,7 @@ const contextTypes = {
 	 * Called by Marquee instances when marqueeing has completed
 	 *
 	 * @type {Function}
-	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 * @memberof ui/MarqueeDecorator.Marquee.contextTypes
 	 */
 	complete: PropTypes.func,
 
@@ -38,7 +38,7 @@ const contextTypes = {
 	 * Called by Marquee instances when hovered
 	 *
 	 * @type {Function}
-	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 * @memberof ui/MarqueeDecorator.Marquee.contextTypes
 	 */
 	enter: PropTypes.func,
 
@@ -46,7 +46,7 @@ const contextTypes = {
 	 * Called by Marquee instances when unhovered
 	 *
 	 * @type {Function}
-	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 * @memberof ui/MarqueeDecorator.Marquee.contextTypes
 	 */
 	leave: PropTypes.func,
 
@@ -54,7 +54,7 @@ const contextTypes = {
 	 * Called to register a Marquee instance to be synchronized
 	 *
 	 * @type {Function}
-	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 * @memberof ui/MarqueeDecorator.Marquee.contextTypes
 	 */
 	register: PropTypes.func,
 
@@ -64,7 +64,7 @@ const contextTypes = {
 	 * the function can return `true` to mark itself complete.
 	 *
 	 * @type {Function}
-	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 * @memberof ui/MarqueeDecorator.Marquee.contextTypes
 	 */
 	start: PropTypes.func,
 
@@ -72,17 +72,17 @@ const contextTypes = {
 	 * Called to unregister a synchronized Marquee instance
 	 *
 	 * @type {Function}
-	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 * @memberof ui/MarqueeDecorator.Marquee.contextTypes
 	 */
 	unregister: PropTypes.func
 };
 
 
 /**
- * Default configuration parameters for {@link moonstone/Marquee.MarqueeController}
+ * Default configuration parameters for {@link ui/MarqueeDecorator.MarqueeController}
  *
  * @type {Object}
- * @memberof moonstone/Marquee.MarqueeController
+ * @memberof ui/MarqueeDecorator.MarqueeController
  * @hocconfig
  */
 const defaultConfig = {
@@ -93,17 +93,17 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
-	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
+	 * @memberof ui/MarqueeDecorator.MarqueeController.defaultConfig
 	 */
 	marqueeOnFocus: false
 };
 
 /**
- * {@link moonstone/Marquee.MarqueeController} is a Higher-order Component which will synchronize
+ * {@link ui/MarqueeDecorator.MarqueeController} is a Higher-order Component which will synchronize
  * contained Marquee's.
  *
  * @class MarqueeController
- * @memberof moonstone/Marquee
+ * @memberof ui/MarqueeDecorator
  * @hoc
  * @public
  */
