@@ -45,8 +45,8 @@ const styles = (cfg, optProps) => {
 	const {className, prop = 'className', style} = cfg;
 	let {publicClassNames: allowedClassNames, css} = cfg;
 
-	if (cfg.css && allowedClassNames === true) {
-		allowedClassNames = Object.keys(cfg.css);
+	if (css && allowedClassNames === true) {
+		allowedClassNames = Object.keys(css);
 	} else if (typeof allowedClassNames === 'string') {
 		allowedClassNames = allowedClassNames.split(/\s+/);
 	}
