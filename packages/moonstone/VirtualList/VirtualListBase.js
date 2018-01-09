@@ -11,10 +11,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
-import VirtualListSpotlightManager, {
-	VirtualListSpotlightContainerDecorator,
-	SpotlightPlaceholder
-} from './VirtualListSpotlightManager';
+import VirtualListSpotlightManager, {VirtualListSpotlightContainerDecorator} from './VirtualListSpotlightManager';
 
 import css from './ListItem.less';
 
@@ -687,19 +684,19 @@ class VirtualListCore extends Component {
 		const
 			{pageScroll} = this.props,
 			{numOfItems} = this.state,
-			{primary} = this,
+			{primary, spotlightManager: sm} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
 		if (!isNaN(focusedIndex)) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
-			if (numOfItems > 0 && focusedIndex % numOfItems !== this.spotlightManager.lastFocusedIndex % numOfItems) {
-				const node = this.containerRef.children[this.spotlightManager.lastFocusedIndex % numOfItems];
+			if (numOfItems > 0 && focusedIndex % numOfItems !== sm.lastFocusedIndex % numOfItems) {
+				const node = this.containerRef.children[sm.lastFocusedIndex % numOfItems];
 				node.blur();
 			}
-			this.spotlightManager.nodeIndexToBeFocused = null;
-			this.spotlightManager.lastFocusedIndex = focusedIndex;
+			sm.nodeIndexToBeFocused = null;
+			sm.lastFocusedIndex = focusedIndex;
 
 			if (primary.clientSize >= primary.itemSize) {
 				if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
@@ -759,8 +756,9 @@ class VirtualListCore extends Component {
 	render () {
 		const
 			props = Object.assign({}, this.props),
+			{primary, cc} = this,
 			{firstIndex, numOfItems} = this.state,
-			{primary, cc} = this;
+			{withPlaceholder} = this.spotlightManager;
 
 		delete props.cbScrollTo;
 		delete props.clientSize;
@@ -777,22 +775,9 @@ class VirtualListCore extends Component {
 			this.positionItems({updateFrom: firstIndex, updateTo: firstIndex + numOfItems});
 		}
 
-		const needsScrollingPlaceholder = this.spotlightManager.isNeededScrollingPlaceholder();
-
 		return (
 			<div {...props} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
-				{cc.length ? cc : null}
-				{primary ? null : (
-					<SpotlightPlaceholder
-						data-index={0}
-						data-vl-placeholder
-						onFocus={this.spotlightManager.handlePlaceholderFocus}
-						role="region"
-					/>
-				)}
-				{needsScrollingPlaceholder ? (
-					<SpotlightPlaceholder />
-				) : null}
+				{withPlaceholder(cc.length ? cc : null)}
 			</div>
 		);
 	}

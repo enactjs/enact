@@ -2,6 +2,7 @@ import clamp from 'ramda/src/clamp';
 import curry from 'ramda/src/curry';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
+import React from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Spottable from '@enact/spotlight/Spottable';
@@ -418,9 +419,9 @@ class VirtualListSpotlightManager {
 	 * Manage a placeholder
 	 */
 
-	isNeededScrollingPlaceholder = () => this.nodeIndexToBeFocused != null && Spotlight.isPaused();
+	_isNeededScrollingPlaceholder = () => this.nodeIndexToBeFocused != null && Spotlight.isPaused();
 
-	handlePlaceholderFocus = (ev) => {
+	_handlePlaceholderFocus = (ev) => {
 		const placeholder = ev.currentTarget;
 
 		if (placeholder) {
@@ -431,6 +432,26 @@ class VirtualListSpotlightManager {
 				this.restoreLastFocused = true;
 			}
 		}
+	}
+
+	withPlaceholder = (children) => {
+		const
+			{primary} = this.list,
+			needsScrollingPlaceholder = this._isNeededScrollingPlaceholder(),
+			cc = [
+				children,
+				primary ?
+					null :
+					<SpotlightPlaceholder
+						data-index={0}
+						data-vl-placeholder
+						onFocus={this._handlePlaceholderFocus}
+						role="region"
+					/>,
+				needsScrollingPlaceholder ? <SpotlightPlaceholder /> : null
+			];
+
+		return cc;
 	}
 
 	/**
