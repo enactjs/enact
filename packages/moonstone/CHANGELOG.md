@@ -8,15 +8,20 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/GridListImageItem` to be a top-level Moonstone component
+
 ### Changed
 
 - `moonstone/MoonstoneDecorator` root node to fill the entire space available, which simplifies positioning and sizing for child elements (previously always measured 0 in height)
-- `moonstoneVirtualGridList.GridListImageItem` to be a top-level Moonstone component `moonstone/GridListImageItem`
 
 ### Fixed
 
 - `moonstone/VirtualList` to prevent infinite function call when a size of contents is slightly longer than a client size without a scrollbar
 - `moonstone/VirtualList` to sync scroll position when clientSize changed
+
+### Removed
+
+- `moonstone/VirtualGridList.GridListImageItem` in favor of `moonstone/GridListImageItem`
 
 ## [2.0.0-alpha.2] - 2017-08-29
 
