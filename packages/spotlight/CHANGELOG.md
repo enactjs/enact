@@ -12,6 +12,8 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
+- `spotlight/Spottable` to prevent unnecessary renders due to focus changes
+
 ## [2.0.0-alpha.2] - 2017-08-29
 
 No significant changes.
