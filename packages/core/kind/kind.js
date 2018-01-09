@@ -102,7 +102,7 @@ const kind = (config) => {
 		}
 
 		render () {
-			let p = Object.assign({}, this.props);
+			let p = Object.assign({}, this.props, this.handlers);
 			if (renderStyles) p = renderStyles(p, this.context);
 			if (renderComputed) p = renderComputed(p, this.context);
 
