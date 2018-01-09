@@ -20,10 +20,10 @@ const mergeFn = (key, defaultValue, userValue) => {
  * Constructs a Higher-order Component using an optional set of default configuration parameters and
  * a factory method that accepts instance configuration parameters and a component to wrap. The
  * returned function can accept:
- * 	* an instance config and a component constructor to wrap and return a renderable component, or
- * 	* an instance config only and return a decorator function expecting a component constructor
- * 	  (like the next bullet), or
- * 	* a component constructor and return a renderable component
+ *	* an instance config and a component constructor to wrap and return a renderable component, or
+ *	* an instance config only and return a decorator function expecting a component constructor
+ *	(like the next bullet), or
+ *	* a component constructor and return a renderable component
  *
  * Example:
  * ```
@@ -50,6 +50,8 @@ const mergeFn = (key, defaultValue, userValue) => {
  *	const CountableDiv('div');
  *	const CountableDivAsDataNumber = CountableAsDataNumber('div');
  * ```
+ *
+ * @function
  * @param  {Object} defaultConfig Set of default configuration parameters
  * @param  {Function} hawk        Higher-order component
  *

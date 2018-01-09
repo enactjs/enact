@@ -56,6 +56,7 @@ import styles from './styles';
  *	});
  * ```
  *
+ * @function
  * @param  {Object} config - Component configuration
  *
  * @returns {Function}        Component
