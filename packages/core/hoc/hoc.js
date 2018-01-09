@@ -1,3 +1,9 @@
+/**
+ * Provides the {@link core/hoc.hoc} method to create Higher-Order Components (HOCs).
+ *
+ * @module core/hoc
+ */
+
 import {isRenderable} from '../util';
 import mergeDeepWithKey from 'ramda/src/mergeDeepWithKey';
 
@@ -48,6 +54,8 @@ const mergeFn = (key, defaultValue, userValue) => {
  * @param  {Function} hawk        Higher-order component
  *
  * @returns {Function}             HoC Decorator
+ * @memberof core/hoc
+ * @public
  */
 const hoc = (defaultConfig, hawk) => {
 
