@@ -113,10 +113,12 @@ storiesOf('Divider')
 				}}
 				vertical="auto"
 			>
-				<div style={{
-					height: ri.scale(1000) + 'px',
-					width: ri.scale(2000) + 'px'
-				}}>
+				<div
+					style={{
+						height: ri.scale(1000) + 'px',
+						width: ri.scale(2000) + 'px'
+					}}
+				>
 					<Divider>
 						First Divider
 					</Divider>
