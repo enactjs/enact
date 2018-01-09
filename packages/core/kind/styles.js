@@ -1,5 +1,7 @@
 import classnames from 'classnames/bind';
 
+import {mergeClassNameMaps} from '../util';
+
 import {addInternalProp} from './util';
 
 /**
@@ -27,21 +29,36 @@ import {addInternalProp} from './util';
  *		}
  *	};
  *
- *	styles(stylesConfig, props); // {className: 'unambiguous-button-class-name global-class', styles: {color: 'red', display: 'none'}}
+ *	const renderStyles = styles(stylesConfig);
+ *	const renderStyles(props); // {className: 'unambiguous-button-class-name global-class', styles: {color: 'red', display: 'none'}}
  * ```
  *
  * @method styles
- * @param {Object} cfg Configuration object containing one of `css`, `className`, and/or `style`
- * @param {Object} props Render props
- * @returns {Function} Function accepting props and returning update props with computed properties
+ * @param   {Object}    cfg  Configuration object containing one of `css`, `className`,
+ *                           `publicClassNames`, and/or `style`
+ * @returns {Function}       Function that accepts a props object and mutates it to merge class
+ *                           names and style objects and provide the `styler` utility function and
+ *                           `css` merged class name map
  * @public
  */
 const styles = (cfg, optProps) => {
-	const {className, css, prop = 'className', style} = cfg;
+	const {className, prop = 'className', style} = cfg;
+	let {publicClassNames: allowedClassNames, css} = cfg;
+
+	if (cfg.css && allowedClassNames === true) {
+		allowedClassNames = Object.keys(cfg.css);
+	} else if (typeof allowedClassNames === 'string') {
+		allowedClassNames = allowedClassNames.split(/\s+/);
+	}
 
 	const renderStyles = (props) => {
 		if (style) {
 			props.style = Object.assign({}, style, props.style);
+		}
+
+		// if the props includes a css map, merge them together now
+		if (css && allowedClassNames && props.css) {
+			css = mergeClassNameMaps(css, props.css, allowedClassNames);
 		}
 
 		const cn = css ? classnames.bind(css) : classnames;
@@ -50,6 +67,7 @@ const styles = (cfg, optProps) => {
 			props.className
 		);
 
+		addInternalProp(props, 'css', css);
 		addInternalProp(props, 'styler', {
 			join: cn,
 			append: (...args) => cn(joinedClassName, ...args)

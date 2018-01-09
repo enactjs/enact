@@ -176,12 +176,12 @@ class View extends React.Component {
 	}
 
 	componentDidEnter () {
-		const {enteringDelay} = this.props;
+		const {enteringDelay, enteringProp} = this.props;
 
-		if (enteringDelay) {
-			this.enteringJob.startAfter(enteringDelay);
-		} else {
-			this.enteringJob.idleUntil(100);
+		if (enteringProp) {
+			// FIXME: `startRafAfter` is a temporary solution using rAF. We need a better way to handle
+			// transition cycle and component life cycle to be in sync. See ENYO-4835.
+			this.enteringJob.startRafAfter(enteringDelay);
 		}
 	}
 

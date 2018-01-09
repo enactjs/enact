@@ -17,12 +17,12 @@
  * ```
  *
  * @method computed
- * @param {Object} cfg Configuration object mapping transformation functions to property names
- * @param {Object} props Render props
- * @returns {Function} Function accepting props and returning update props with computed properties
+ * @param   {Object}    cfg  Configuration object mapping transformation functions to property names
+ * @returns {Function}       Function that accepts a props object and mutates it to include the
+ *                           computed props
  * @public
  */
-const computed = (cfg, ...rest) => {
+const computed = (cfg, optProps) => {
 	const keys = Object.keys(cfg);
 
 	const renderComputed = (props, ...args) => {
@@ -34,9 +34,9 @@ const computed = (cfg, ...rest) => {
 		return Object.assign(props, updated);
 	};
 
-	// maintain 1.x compatibility
-	if (rest.length) {
-		return renderComputed(...rest);
+	// maintain compatibility with 1.x
+	if (optProps) {
+		return renderComputed(optProps);
 	}
 
 	return renderComputed;

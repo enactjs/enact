@@ -20,6 +20,14 @@ No significant changes.
 
 No significant changes.
 
+## [1.13.2] - 2017-12-14
+
+No significant changes.
+
+## [1.13.1] - 2017-12-06
+
+No significant changes.
+
 ## [1.13.0] - 2017-11-28
 
 ### Added
