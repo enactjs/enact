@@ -63,7 +63,7 @@ const styles = (cfg, optProps) => {
 
 		const cn = css ? classnames.bind(css) : classnames;
 		const joinedClassName = props[prop] = classnames(
-			cn(className),
+			className ? cn(className.split(' ')) : null,
 			props.className
 		);
 
