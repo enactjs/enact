@@ -30,7 +30,7 @@ import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
 import Touchable from '../internal/Touchable';
 
-import {calcNumberValueOfPlaybackRate, secondsToTime} from './util';
+import {calcNumberValueOfPlaybackRate, compareSources, secondsToTime} from './util';
 import Overlay from './Overlay';
 import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
@@ -782,7 +782,8 @@ const VideoPlayerBase = class extends React.Component {
 
 		const {source} = this.props;
 		const {source: nextSource} = nextProps;
-		if (nextSource.props.src !== source.props.src || nextSource.props.type !== source.props.type) {
+
+		if (!compareSources(source, nextSource)) {
 			this.setState({currentTime: 0, buffered: 0, proportionPlayed: 0, proportionLoaded: 0});
 			this.reloadVideo();
 		}
@@ -791,9 +792,11 @@ const VideoPlayerBase = class extends React.Component {
 	shouldComponentUpdate (nextProps, nextState) {
 		const {source} = this.props;
 		const {source: nextSource} = nextProps;
-		if (nextSource.props.src !== source.props.src || nextSource.props.type !== source.props.type) {
+
+		if (!compareSources(source, nextSource)) {
 			return true;
 		}
+
 		if (
 			!this.state.miniFeedbackVisible && this.state.miniFeedbackVisible === nextState.miniFeedbackVisible &&
 			!this.state.mediaSliderVisible && this.state.mediaSliderVisible === nextState.mediaSliderVisible &&
@@ -835,7 +838,7 @@ const VideoPlayerBase = class extends React.Component {
 		const {source: prevSource} = prevProps;
 
 		// Detect a change to the video source and reload if necessary.
-		if (prevSource.props.src !== source.props.src || prevSource.props.type !== source.props.type) {
+		if (!compareSources(source, prevSource)) {
 			this.reloadVideo();
 		}
 
