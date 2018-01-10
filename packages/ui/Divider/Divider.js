@@ -11,7 +11,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import css from './Divider.less';
+import componentCss from './Divider.less';
 
 /**
  * [DividerBase]{@link ui/Divider.DividerBase} is a basic component that may be used as a separator
@@ -44,7 +44,7 @@ const DividerBase = kind({
 	},
 
 	styles: {
-		css,
+		css: componentCss,
 		className: 'divider'
 	},
 

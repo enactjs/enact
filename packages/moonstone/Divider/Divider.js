@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import css from './Divider.less';
+import componentCss from './Divider.less';
 
 const MarqueeH3 = Uppercase(MarqueeDecorator(UiDivider));
 
@@ -93,7 +93,7 @@ const DividerBase = kind({
 	},
 
 	styles: {
-		css,
+		css: componentCss,
 		className: 'divider'
 	},
 
