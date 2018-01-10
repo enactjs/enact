@@ -1,27 +1,33 @@
 /**
- * Exports the {@link moonstone/Divider.Divider} component.
- *
- * @module moonstone/Divider
- */
-
+* Provides Moonstone-themed divider components and behaviors.
+*
+* @example
+* <Divider>Hello Enact!</Divider>
+*
+* @module moonstone/Divider
+* @exports Divider
+* @exports DividerBase
+* @exports DividerDecorator
+*/
 import kind from '@enact/core/kind';
+import Pure from '@enact/ui/internal/Pure';
 import Uppercase from '@enact/i18n/Uppercase';
+import UiDivider from '@enact/ui/Divider';
+import compose from 'ramda/src/compose';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Pure from '@enact/ui/internal/Pure';
 
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import css from './Divider.less';
 
-const MarqueeH3 = Uppercase(MarqueeDecorator('h3'));
+const MarqueeH3 = Uppercase(MarqueeDecorator(UiDivider));
 
 /**
- * {@link moonstone/Divider.Divider} is a simply styled component that may be used as a separator
- * between groups of components.
+ * A moonstone-styled component that may be used as a separator between groups of components.
  *
- * @class Divider
+ * @class DividerBase
  * @memberof moonstone/Divider
  * @mixes moonstone/MarqueeDecorator.MarqueeDecorator
  * @ui
@@ -30,7 +36,7 @@ const MarqueeH3 = Uppercase(MarqueeDecorator('h3'));
 const DividerBase = kind({
 	name: 'Divider',
 
-	propTypes: /** @lends moonstone/Divider.Divider.prototype */ {
+	propTypes: /** @lends moonstone/Divider.DividerBase.prototype */ {
 		/**
 		 * Configures how the `children` string will be capitalized. By default, each word is capitalized.
 		 *
@@ -71,7 +77,7 @@ const DividerBase = kind({
 		 *
 		 * _Note:_ Spacing is separate from margin with regard to `margin-top`. It ensures a
 		 * consistent distance from the bottom horizontal line. It's safe to use `margin-top` to add
-		 * additional spacing above your {@link moonstone/Divider.Divider}.
+		 * additional spacing above your {@link moonstone/Divider.DividerBase}.
 		 *
 		 * @type {String}
 		 * @default 'normal'
@@ -105,11 +111,42 @@ const DividerBase = kind({
 	}
 });
 
-const Divider = Pure(
-	Skinnable(
-		DividerBase
-	)
+
+/**
+ * Moonstone-specific divider behaviors to apply to [Divider]{@link moonstone/Divider.DividerBase}.
+ *
+ * @hoc
+ * @memberof moonstone/Divider
+ * @mixes ui/Skinnable.Skinnable
+ * @public
+ */
+const DividerDecorator = compose(
+	Pure,
+	Skinnable
+);
+
+/**
+ * A Moonstone-styled Divider with built-in support for uppercasing, tooltips, marqueed text, and
+ * Spotlight focus.
+ *
+ * Usage:
+ * ```
+ * <Divider>Text</Divider>
+ * ```
+ *
+ * @class Divider
+ * @memberof moonstone/Divider
+ * @mixes moonstone/Divider.DividerDecorator
+ * @ui
+ * @public
+ */
+const Divider = DividerDecorator(
+	DividerBase
 );
 
 export default Divider;
-export {Divider, DividerBase};
+export {
+	Divider,
+	DividerBase,
+	DividerDecorator
+};
