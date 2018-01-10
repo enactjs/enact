@@ -9,24 +9,26 @@
  * @exports ItemBase
  * @exports ItemDecorator
  */
-import kind from '@enact/core/kind';
-import Spottable from '@enact/spotlight/Spottable';
 import UiItem from '@enact/ui/Item';
-import Pure from '@enact/ui/internal/Pure';
-import PropTypes from 'prop-types';
+import kind from '@enact/core/kind';
 import compose from 'ramda/src/compose';
 import React from 'react';
+import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
+import Spottable from '@enact/spotlight/Spottable';
 
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
+
+import {ItemOverlay, ItemOverlayDecorator} from './ItemOverlay';
 
 import componentCss from './Item.less';
 
 /**
  * A moonstone-styled item without any behavior.
  *
- * @class ItemBase
- * @memberof moonstone/Item
+ * @class itemBase
+ * @memberof moonstone/item
  * @ui
  * @public
  */
@@ -82,6 +84,7 @@ const ItemDecorator = compose(
 	Skinnable
 );
 
+
 /**
  * A Moonstone-styled item with built-in support for marqueed text, and Spotlight focus.
  *
@@ -103,5 +106,6 @@ export default Item;
 export {
 	Item,
 	ItemBase,
-	ItemDecorator
+	ItemOverlay,
+	ItemOverlayDecorator
 };
