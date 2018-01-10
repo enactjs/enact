@@ -505,6 +505,22 @@ class VirtualListSpotlightManager {
 	setLastFocusedIndex = (item) => {
 		this.lastFocusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 	}
+
+	getRestoreLastFocused = () => this.restoreLastFocused
+
+	getNodeIndexToBeFocused = () => this.nodeIndexToBeFocused
+
+	setNodeIndexToBeFocused = (param) => {
+		this.nodeIndexToBeFocused = param;
+	}
+
+	getPreservedIndex = () => this.preservedIndex
+
+	setLastFocusedIndex = (param) => {
+		this.lastFocusedIndex = param;
+	}
+
+	getLastFocusedIndex = () => this.lastFocusedIndex
 }
 
 export default VirtualListSpotlightManager;

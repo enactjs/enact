@@ -378,7 +378,8 @@ class VirtualListCore extends Component {
 		const
 			{dataSize, overhang} = props,
 			{firstIndex} = this.state,
-			{dimensionToExtent, primary, moreInfo, scrollPosition, spotlightManager: {preservedIndex}} = this,
+			{dimensionToExtent, primary, moreInfo, scrollPosition, spotlightManager: {getPreservedIndex}} = this,
+			preservedIndex = getPreservedIndex(),
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
 			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
 			dataSizeDiff = dataSize - this.curDataSize;
@@ -394,7 +395,7 @@ class VirtualListCore extends Component {
 		this.calculateScrollBounds(props);
 		this.updateMoreInfo(dataSize, scrollPosition);
 
-		if (this.spotlightManager.restoreLastFocused &&
+		if (this.spotlightManager.getRestoreLastFocused() &&
 			numOfItems > 0 &&
 			(preservedIndex < dataSize) &&
 			(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
@@ -581,7 +582,7 @@ class VirtualListCore extends Component {
 		this.composeStyle(style, ...rest);
 
 		this.cc[key] = React.cloneElement(itemElement, {
-			ref: (index === this.spotlightManager.nodeIndexToBeFocused) ? (ref) => this.focusOnNode(ref, index) : null,
+			ref: (index === this.spotlightManager.getNodeIndexToBeFocused()) ? (ref) => this.focusOnNode(ref, index) : null,
 			className: classNames(css.listItem, itemElement.props.className),
 			style: {...itemElement.props.style, ...style}
 		});
@@ -685,6 +686,7 @@ class VirtualListCore extends Component {
 			{pageScroll} = this.props,
 			{numOfItems} = this.state,
 			{primary, spotlightManager: sm} = this,
+			lastFocusedIndex = sm.getLastFocusedIndex(),
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
@@ -695,8 +697,8 @@ class VirtualListCore extends Component {
 				const node = this.containerRef.children[sm.lastFocusedIndex % numOfItems];
 				node.blur();
 			}
-			sm.nodeIndexToBeFocused = null;
-			sm.lastFocusedIndex = focusedIndex;
+			sm.setNodeIndexToBeFocused(null);
+			sm.setLastFocusedIndex(focusedIndex);
 
 			if (primary.clientSize >= primary.itemSize) {
 				if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
