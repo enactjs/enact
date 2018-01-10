@@ -1,0 +1,22 @@
+// Item.less
+//
+// @import "../styles/variables.less";
+// @import "../styles/text.less";
+
+.item {
+	width: 100%;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+
+	// Apply to the content area to tell it to expand to the available width of the container
+	.content {
+		flex: 1 1 auto;
+	}
+
+	&.inline {
+		display: inline-flex;
+		vertical-align: top;
+		box-sizing: border-box;
+	}
+}

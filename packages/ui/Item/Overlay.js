@@ -1,31 +1,31 @@
 /**
- * Provides Moonstone-themed overlay components and behaviors.
+ * Provides unstyled Overlay components and behaviors to be customized by a theme or application.
  *
- * @module moonstone/Overlay
+ * @module ui/Overlay
  * @exports Overlay
  * @exports OverlayBase
  * @exports OverlayDecorator
  */
 
 import kind from '@enact/core/kind';
-import UIOverlay from '@enact/ui/Item/Overlay';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import ComponentCSS from './Overlay.less';
 
 /**
- * A moonstone-styled Overlay without any behavior.
+ * {@link ui/Item.Overlay} is an unstyled component to overlay content, typically icons over an item
+ * {@link ui/Item.ItemOverlay}.
  *
  * @class Overlay
- * @memberof moonstone/Item
+ * @memberof ui/Item
  * @ui
  * @public
  */
 const OverlayBase = kind({
-	name: 'Overlay',
+	name: 'ui:Overlay',
 
-	propTypes: /** @lends moonstone/Item.Overlay.prototype */ {
+	propTypes: /** @lends ui/Item.Overlay.prototype */ {
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
@@ -56,35 +56,26 @@ const OverlayBase = kind({
 
 	styles: {
 		css: ComponentCSS,
-		className: 'overlay',
-		publicClassNames: ['overlay', 'hidden']
+		className: 'overlay'
 	},
 
 	computed: {
 		className: ({hidden, styler}) => styler.append({hidden})
 	},
 
-	render: ({...rest}) => {
+	render: ({css, ...rest}) => {
 		if (!rest.children) return null;
 
+		delete rest.hidden;
 		return (
-			<UIOverlay
+			<div
+				css={css}
 				{...rest}
 			/>
 		);
 	}
 });
 
-/**
- * A Moonstone-styled overlay with proper positioning for Moonstone Items.
- *
- *
- * @class Overlay
- * @memberof moonstone/Overlay
- * @mixes moonstone/Item.OverlayDecorator
- * @ui
- * @public
- */
 const Overlay = OverlayBase;
 const OverlayDecorator = (Wrapped) => Wrapped;
 
