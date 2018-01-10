@@ -1,6 +1,6 @@
 import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import {contextTypes} from '@enact/ui/MarqueeDecorator/MarqueeController';
+import {controlContextTypes} from '@enact/ui/MarqueeDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
@@ -49,7 +49,7 @@ const PickerButtonBase = kind({
 		spotlightDisabled: PropTypes.bool
 	},
 
-	contextTypes: contextTypes,
+	contextTypes: controlContextTypes,
 
 	styles: {
 		css
