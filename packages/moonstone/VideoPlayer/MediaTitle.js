@@ -1,9 +1,9 @@
 import kind from '@enact/core/kind';
+import {MarqueeText} from '@enact/ui/MarqueeDecorator';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {MarqueeText} from '../Marquee';
 
 import css from './VideoPlayer.less';
 

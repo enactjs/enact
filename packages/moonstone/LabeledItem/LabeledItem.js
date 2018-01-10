@@ -7,13 +7,13 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {MarqueeController, MarqueeText} from '@enact/ui/MarqueeDecorator';
 import Pure from '@enact/ui/internal/Pure';
 import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
 import {ItemBase} from '../Item';
 import Skinnable from '../Skinnable';
-import {MarqueeController, MarqueeText} from '../Marquee';
 import Touchable from '../internal/Touchable';
 
 const Controller = MarqueeController(

@@ -1,4 +1,4 @@
-import {MarqueeController, MarqueeText} from '@enact/moonstone/Marquee';
+import {MarqueeController, MarqueeText} from '@enact/ui/MarqueeDecorator';
 import Item from '@enact/moonstone/Item';
 import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';

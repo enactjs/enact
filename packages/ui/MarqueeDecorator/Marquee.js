@@ -47,20 +47,27 @@ const MarqueeBase = kind({
 		children: PropTypes.node,
 
 		/**
-		 * CSS class name for the root node
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		className: PropTypes.string,
-
-		/**
 		 * Function to capture a reference to the client node
 		 *
 		 * @type {Function}
 		 * @public
 		 */
 		clientRef: PropTypes.func,
+
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `marquee` - The root component class
+		 * * `animate` - Applied to the inner content node when the text is animating
+		 * * `text` - The inner content node
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
 
 		/**
 		 * Distance to animate the marquee which is generally the width of the text minus the
@@ -111,7 +118,8 @@ const MarqueeBase = kind({
 
 	styles: {
 		css,
-		className: 'marquee'
+		className: 'marquee',
+		publicClassNames: true
 	},
 
 	computed: {

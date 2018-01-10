@@ -7,13 +7,13 @@
  */
 
 import kind from '@enact/core/kind';
+import {MarqueeController, MarqueeText} from '@enact/ui/MarqueeDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
 import {Image} from '../Image';
-import {MarqueeController, MarqueeText} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import css from './GridListImageItem.less';

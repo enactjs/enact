@@ -27,13 +27,13 @@ const defaultConfig = {
 	blur: 'onBlur',
 
 	/**
-	 * Optional CSS class to apply to the marqueed element
+	 * Optional CSS class name map to pass to the {@link ui/MarqueeDecorator.Marquee} instance
 	 *
-	 * @type {String}
+	 * @type {Object}
 	 * @default null
 	 * @memberof ui/MarqueeDecorator.MarqueeDecorator.defaultConfig
 	 */
-	className: null,
+	css: null,
 
 	/**
 	 * Property containing the callback to start the animation when `marqueeOn` is `'hover'`
@@ -108,7 +108,7 @@ const TimerState = {
  * @public
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {blur, className: marqueeClassName, enter, focus, invalidateProps, leave} = config;
+	const {blur, css, enter, focus, invalidateProps, leave} = config;
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
 	const forwardFocus = forward(focus);
@@ -698,8 +698,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					<Marquee
 						alignment={alignment}
 						animating={this.state.animating}
-						className={marqueeClassName}
 						clientRef={this.cacheNode}
+						css={css}
 						distance={this.distance}
 						onMarqueeComplete={this.handleMarqueeComplete}
 						overflow={this.state.overflow}

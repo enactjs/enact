@@ -1,7 +1,6 @@
 import kind from '@enact/core/kind';
+import {MarqueeText} from '@enact/ui/MarqueeDecorator';
 import React from 'react';
-
-import {MarqueeText} from '../../Marquee';
 
 import css from './Picker.less';
 

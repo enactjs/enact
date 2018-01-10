@@ -9,12 +9,12 @@ import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import MarqueeDecorator from '@enact/ui/MarqueeDecorator';
 import Pure from '@enact/ui/internal/Pure';
 import Slottable from '@enact/ui/Slottable';
 import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 import Toggleable from '@enact/ui/Toggleable';
 import Spottable from '@enact/spotlight/Spottable';
-import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 import Touchable from '../internal/Touchable';
 

@@ -1,4 +1,4 @@
-import {MarqueeText} from '@enact/moonstone/Marquee';
+import {MarqueeText} from '@enact/ui/MarqueeDecorator';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {boolean, number, select, text} from '@kadira/storybook-addon-knobs';
