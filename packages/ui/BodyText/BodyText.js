@@ -1,42 +1,33 @@
 /**
- * Provides Moonstone-themed BodyText components and behaviors.
+ * Provides unstyled BodyText components and behaviors to be customized by a theme or application.
  *
- * @example
- * <BodyText centered>Hello Enact!</BodyText>
- *
- * @module moonstone/BodyText
+ * @module ui/BodyText
  * @exports BodyText
  * @exports BodyTextBase
  * @exports BodyTextDecorator
  */
 
 import kind from '@enact/core/kind';
-import {BodyTextBase as UiButtonBase} from '@enact/ui/BodyText';
 import React from 'react';
 import PropTypes from 'prop-types';
-import compose from 'ramda/src/compose';
-import Pure from '@enact/ui/internal/Pure';
-
-import Skinnable from '../Skinnable';
 
 import componentCss from './BodyText.less';
 
-
 /**
- * {@link moonstone/BodyText.BodyText} is a stateless BodyText with Moonstone styling
- * applied.
+ * [BodyTextBase]{@link ui/BodyText.BodyTextBase} is a basic BodyText component structure without any behaviors
+ * applied to it.
  *
- * @class BodyText
- * @memberof moonstone/BodyText
+ * @class BodyTextBase
+ * @memberof ui/BodyText
  * @ui
  * @public
  */
 const BodyTextBase = kind({
 	name: 'BodyText',
 
-	propTypes: /** @lends moonstone/BodyText.BodyText.prototype */ {
+	propTypes: /** @lends ui/BodyText.BodyText.prototype */ {
 		/**
-		 * If `true`, text content is centered; otherwise, it is left-aligned.
+		 * Applies the `centered` CSS class to the [BodyTextBase]{@link ui/BodyText.BodyTextBase}
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -69,24 +60,24 @@ const BodyTextBase = kind({
 		publicClassNames: true
 	},
 
-	render: ({css, ...rest}) => {
+	computed: {
+		className: ({centered, styler}) => styler.append({centered})
+	},
+
+	render: (props) => {
+		delete props.centered;
+
 		return (
-			<UiButtonBase
-				{...rest}
-				css={css}
-			/>
+			<p {...props} />
 		);
 	}
 });
 
-const BodyTextDecorator = compose(
-	Pure,
-	Skinnable
-);
-
-const BodyText = BodyTextDecorator(BodyTextBase);
+const BodyText = BodyTextBase;
+const BodyTextDecorator = (Wrapped) => Wrapped;
 
 export default BodyText;
+
 export {
 	BodyText,
 	BodyTextBase,
