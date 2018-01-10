@@ -1,7 +1,9 @@
 /**
- * Exports the {@link moonstone/Image.Image} component.
+ * Provides unstyled image component to be customized by a theme or application.
  *
- * @module moonstone/ImageBase
+ * @module ui/ImageBase
+ * @exports Image
+ * @exports ImageBase
  */
 
 import kind from '@enact/core/kind';
@@ -12,7 +14,7 @@ import {selectSrc} from '@enact/ui/resolution';
 import componentCss from './Image.less';
 
 /**
- * {@link moonstone/Image.Image} is a component designed to display images
+ * {@link ui/Image.Image} is a component designed to display images
  * conditionally based on screen size. This component does not have a default
  * size as a result image will not show unless size is specified for its
  * particular usage using a CSS `className` or inline `style`.
@@ -36,7 +38,7 @@ import componentCss from './Image.less';
  * > If you need a naturally sized image, you can use the native `<img>` element instead.
  *
  * @class Image
- * @memberof moonstone/Image
+ * @memberof ui/Image
  * @ui
  * @public
  */
@@ -44,7 +46,7 @@ import componentCss from './Image.less';
 const ImageBase = kind({
 	name: 'Image',
 
-	propTypes: /** @lends moonstone/Image.Image.prototype */ {
+	propTypes: /** @lends ui/Image.Image.prototype */ {
 		/**
 		 * String value or Object of values used to determine which image will appear on
 		 * a specific screenSize.
@@ -60,7 +62,7 @@ const ImageBase = kind({
 		 *
 		 * @type {String}
 		 * @public
-		 * @memberof moonstone/Image.Image.prototype
+		 * @memberof ui/Image.Image.prototype
 		 */
 		// Quoting this (necessary) makes it alphabetically sort differently...
 		'aria-label': PropTypes.string,
