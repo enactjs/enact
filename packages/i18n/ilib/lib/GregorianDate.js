@@ -161,7 +161,11 @@ var GregorianDate = function(params) {
 				// in the overlap time at the end of DST. Do you mean the daylight 1:30am or the standard 1:30am? In this
 				// case, use the ilib calculations below, which can distinguish between the two properly
 				var d = new Date(this.year, this.month-1, this.day, this.hour, this.minute, this.second, this.millisecond);
+				var hBefore = new Date(this.year, this.month-1, this.day, this.hour - 1, this.minute, this.second, this.millisecond);
 				this.offset = -d.getTimezoneOffset() / 1440;
+				if (d.getTimezoneOffset() < hBefore.getTimezoneOffset()) {
+					var startOffset = -hBefore.getTimezoneOffset() / 1440;
+				}
 			} else {
 				if (!this.tz) {
 					this.tz = new TimeZone({id: this.timezone});
@@ -171,7 +175,11 @@ var GregorianDate = function(params) {
 				// what the offset is at that point in the year
 				this.offset = this.tz._getOffsetMillisWallTime(this) / 86400000;
 			}
-			if (this.offset !== 0) {
+			if (typeof(startOffset) !== 'undefined') {
+				this.rd = this.newRd({
+					rd: this.rd.getRataDie() - startOffset
+				});
+			} else if (this.offset !== 0) {
 				this.rd = this.newRd({
 					rd: this.rd.getRataDie() - this.offset
 				});
