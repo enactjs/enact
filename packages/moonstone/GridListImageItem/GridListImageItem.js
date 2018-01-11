@@ -29,14 +29,14 @@ const defaultPlaceholder =
  * GridListImageItem with Moonstone styling applied.
  *
  * @class GridListImageItemBase
- * @memberof moonstone/VirtualList
+ * @memberof moonstone/GridListImageItem
  * @ui
  * @public
  */
 const GridListImageItemBase = kind({
 	name: 'GridListImageItem',
 
-	propTypes: /** @lends moonstone/GridListImageItemBase.prototype */ {
+	propTypes: /** @lends moonstone/GridListImageItem.GridListImageItemBase.prototype */ {
 		/**
 		 * The absolute URL path to the image.
 		 *
@@ -179,9 +179,9 @@ const GridListImageItemBase = kind({
  * ```
  *
  * @class GridListImageItem
- * @memberof moonstone/VirtualList
- * @mixes spotlight.Spottable
- * @see moonstone/GridListImageItemBase
+ * @memberof moonstone/GridListImageItem
+ * @mixes spotlight/Spottable
+ * @see moonstone/GridListImageItem.GridListImageItemBase
  * @ui
  * @public
  */
