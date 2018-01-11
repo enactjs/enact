@@ -93,8 +93,7 @@ const DividerBase = kind({
 	},
 
 	styles: {
-		css: componentCss,
-		className: 'divider'
+		css: componentCss
 	},
 
 	computed: {
@@ -106,11 +105,10 @@ const DividerBase = kind({
 
 		return (
 			// TODO: change to `marqueeOn="render"`
-			<MarqueeH3 marqueeOn="hover" {...rest}>{children}</MarqueeH3>
+			<MarqueeH3 marqueeOn="hover" css={componentCss} {...rest}>{children}</MarqueeH3>
 		);
 	}
 });
-
 
 /**
  * Moonstone-specific divider behaviors to apply to [Divider]{@link moonstone/Divider.DividerBase}.
@@ -126,8 +124,7 @@ const DividerDecorator = compose(
 );
 
 /**
- * A Moonstone-styled Divider with built-in support for uppercasing, tooltips, marqueed text, and
- * Spotlight focus.
+ * A Moonstone-styled divider with built-in support for uppercasing and marqueed text.
  *
  * Usage:
  * ```
