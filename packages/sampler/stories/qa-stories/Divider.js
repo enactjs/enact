@@ -108,15 +108,15 @@ storiesOf('Divider')
 			<Scroller
 				horizontal="auto"
 				style={{
-					height: ri.scale(550) + 'px',
+					height: ri.scale(552) + 'px',
 					width: '100%'
 				}}
 				vertical="auto"
 			>
 				<div
 					style={{
-						height: ri.scale(1000) + 'px',
-						width: ri.scale(2000) + 'px'
+						height: ri.scale(1002) + 'px',
+						width: ri.scale(2001) + 'px'
 					}}
 				>
 					<Divider>

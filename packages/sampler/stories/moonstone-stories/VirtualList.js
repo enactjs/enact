@@ -17,7 +17,7 @@ const
 	renderItem = (size) => ({data, index, ...rest}) => {
 		const itemStyle = {
 			height: size + 'px',
-			borderBottom: ri.scale(2) + 'px solid #202328',
+			borderBottom: ri.scale(3) + 'px solid #202328',
 			boxSizing: 'border-box'
 		};
 
