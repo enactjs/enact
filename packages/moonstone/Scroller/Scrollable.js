@@ -23,6 +23,7 @@ import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal
 
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
+import ScrollableSpotlightContainerDecorator from './ScrollableSpotlightContainerDecorator';
 
 import css from './Scrollable.less';
 import scrollbarCss from './Scrollbar.less';
@@ -62,30 +63,6 @@ const
  * @private
  */
 const dataIndexAttribute = 'data-index';
-
-const ScrollableSpotlightContainer = SpotlightContainerDecorator(
-	{
-		navigableFilter: (elem, {focusableScrollbar}) => {
-			if (
-				!focusableScrollbar &&
-				!Spotlight.getPointerMode() &&
-				// ignore containers passed as their id
-				typeof elem !== 'string' &&
-				elem.classList.contains(scrollbarCss.scrollButton)
-			) {
-				return false;
-			}
-		},
-		overflow: true
-	},
-	({containerRef, ...rest}) => {
-		delete rest.focusableScrollbar;
-
-		return (
-			<div ref={containerRef} {...rest} />
-		);
-	}
-);
 
 /**
  * {@link moonstone/Scroller.Scrollable} is a Higher-order Component
@@ -1230,7 +1207,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.verticalScrollbar;
 
 			return (
-				<ScrollableSpotlightContainer
+				<ScrollableSpotlightContainerDecorator
 					className={scrollableClasses}
 					containerRef={this.initContainerRef}
 					focusableScrollbar={focusableScrollbar}
@@ -1248,7 +1225,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 					</div>
 					{isHorizontalScrollbarVisible ? <Scrollbar {...this.horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
-				</ScrollableSpotlightContainer>
+				</ScrollableSpotlightContainerDecorator>
 			);
 		}
 	};
