@@ -51,7 +51,6 @@ const BodyTextBase = kind({
 		 * The following classes are supported:
 		 *
 		 * * `bodyText` - The root class name
-		 * * `centered` - Applied when `centered` prop is `true`
 		 *
 		 * @type {Object}
 		 * @public
@@ -65,8 +64,7 @@ const BodyTextBase = kind({
 
 	styles: {
 		css: componentCss,
-		className: 'bodyText',
-		publicClassNames: true
+		publicClassNames: ['bodyText']
 	},
 
 	render: ({css, ...rest}) => {
