@@ -126,6 +126,12 @@ class VirtualListCore extends Component {
 		 */
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
+		focusOnNode: PropTypes.func,
+
+		getNodeIndexToBeFocused: PropTypes.object,
+
+		lastFocusedIndex: PropTypes.object,
+
 		/**
 		 * Number of spare DOM node.
 		 * `3` is good for the default value experimentally and
@@ -147,12 +153,22 @@ class VirtualListCore extends Component {
 		pageScroll: PropTypes.bool,
 
 		/**
-		 * Spotlight Manager
+		 * The index to restore
 		 *
-		 * @type {Object}
-		 * @private
+		 * @type {Number}
+		 * @default null
+		 * @public
 		 */
-		sm: PropTypes.object,
+		preservedIndex: PropTypes.object,
+
+		/**
+		 * The value whether restoring focus or not
+		 *
+		 * @type {Number}
+		 * @default null
+		 * @public
+		 */
+		restoreLastFocused: PropTypes.bool,
 
 		/**
 		 * Spacing between items.
@@ -161,7 +177,9 @@ class VirtualListCore extends Component {
 		 * @default 0
 		 * @public
 		 */
-		spacing: PropTypes.number
+		spacing: PropTypes.number,
+
+		withPlaceholder: PropTypes.func
 	}
 
 	static contextTypes = contextTypes
@@ -171,8 +189,12 @@ class VirtualListCore extends Component {
 		data: [],
 		dataSize: 0,
 		direction: 'vertical',
+		getNodeIndexToBeFocused: nop,
+		lastFocusedIndex: null,
 		overhang: 3,
 		pageScroll: false,
+		preservedIndex: null,
+		restoreLastFocused: false,
 		spacing: 0
 	}
 
@@ -181,8 +203,6 @@ class VirtualListCore extends Component {
 
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContainerRef = this.initRef('containerRef');
-
-		this.spotlightManager = props.sm;
 	}
 
 	componentWillMount () {
@@ -234,20 +254,12 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	componentDidUpdate () {
-		this.spotlightManager.restoreFocus();
-	}
-
 	componentWillUnmount () {
 		const containerNode = this.containerRef;
 
 		// remove a function for preventing native scrolling by Spotlight
 		if (containerNode && containerNode.removeEventListener) {
 			containerNode.removeEventListener('scroll', this.preventScroll);
-		}
-
-		if (this.spotlightManager.setContainerDisabled) {
-			this.spotlightManager.setContainerDisabled(false);
 		}
 	}
 
@@ -387,10 +399,9 @@ class VirtualListCore extends Component {
 
 	updateStatesAndBounds (props) {
 		const
-			{dataSize, overhang} = props,
+			{dataSize, overhang, preservedIndex, restoreLastFocused} = props,
 			{firstIndex} = this.state,
-			{dimensionToExtent, primary, moreInfo, scrollPosition, spotlightManager: {getPreservedIndex}} = this,
-			preservedIndex = getPreservedIndex(),
+			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
 			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
 			dataSizeDiff = dataSize - this.curDataSize;
@@ -406,7 +417,7 @@ class VirtualListCore extends Component {
 		this.calculateScrollBounds(props);
 		this.updateMoreInfo(dataSize, scrollPosition);
 
-		if (this.spotlightManager.getRestoreLastFocused() &&
+		if (restoreLastFocused &&
 			numOfItems > 0 &&
 			(preservedIndex < dataSize) &&
 			(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
@@ -579,7 +590,7 @@ class VirtualListCore extends Component {
 
 	applyStyleToNewNode = (index, ...rest) => {
 		const
-			{component, data} = this.props,
+			{component, data, getNodeIndexToBeFocused} = this.props,
 			{numOfItems} = this.state,
 			key = index % numOfItems,
 			itemElement = component({
@@ -593,7 +604,7 @@ class VirtualListCore extends Component {
 		this.composeStyle(style, ...rest);
 
 		this.cc[key] = React.cloneElement(itemElement, {
-			ref: (index === this.spotlightManager.getNodeIndexToBeFocused()) ? (ref) => this.focusOnNode(ref, index) : null,
+			ref: (index === getNodeIndexToBeFocused()) ? (ref) => this.focusOnNode(ref, index) : null,
 			className: classNames(css.listItem, itemElement.props.className),
 			style: {...itemElement.props.style, ...style}
 		});
@@ -603,7 +614,7 @@ class VirtualListCore extends Component {
 		if (ref) {
 			const node = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
 
-			this.spotlightManager.focusOnNode(node);
+			this.props.focusOnNode(node);
 		}
 	}
 
@@ -694,10 +705,9 @@ class VirtualListCore extends Component {
 
 	calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
 		const
-			{pageScroll} = this.props,
+			{lastFocusedIndex, pageScroll} = this.props,
 			{numOfItems} = this.state,
-			{primary, spotlightManager: sm} = this,
-			lastFocusedIndex = sm.getLastFocusedIndex(),
+			{primary} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
@@ -710,8 +720,6 @@ class VirtualListCore extends Component {
 					node.blur();
 				}
 			}
-			sm.setNodeIndexToBeFocused(null);
-			sm.setLastFocusedIndex(focusedIndex);
 
 			if (primary.clientSize >= primary.itemSize) {
 				if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
@@ -770,29 +778,31 @@ class VirtualListCore extends Component {
 
 	render () {
 		const
-			props = Object.assign({}, this.props),
-			{primary, cc} = this,
+			{withPlaceholder, ...rest} = this.props,
 			{firstIndex, numOfItems} = this.state,
-			{withPlaceholder} = this.spotlightManager;
+			{primary, cc} = this;
 
-		delete props.cbScrollTo;
-		delete props.clientSize;
-		delete props.component;
-		delete props.data;
-		delete props.dataSize;
-		delete props.direction;
-		delete props.itemSize;
-		delete props.overhang;
-		delete props.pageScroll;
-		delete props.spacing;
-		delete props.sm;
+		delete rest.cbScrollTo;
+		delete rest.clientSize;
+		delete rest.component;
+		delete rest.data;
+		delete rest.dataSize;
+		delete rest.direction;
+		delete rest.itemSize;
+		delete rest.lastFocusedIndex;
+		delete rest.nodeIndexToBeFocused;
+		delete rest.overhang;
+		delete rest.pageScroll;
+		delete rest.preservedIndex;
+		delete rest.restoreLastFocused;
+		delete rest.spacing;
 
 		if (primary) {
 			this.positionItems({updateFrom: firstIndex, updateTo: firstIndex + numOfItems});
 		}
 
 		return (
-			<div {...props} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
+			<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
 				{withPlaceholder(cc.length ? cc : null)}
 			</div>
 		);

@@ -35,18 +35,67 @@ const VirtualListCoreSpottable = (BaseComponent) => (
 			 * @type {Function}
 			 * @public
 			 */
-			innerRef: PropTypes.func.isRequired
+			innerRef: PropTypes.func.isRequired,
+
+			/**
+			 * Callback method of scrollTo.
+			 * Normally, `Scrollable` should set this value.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			cbScrollTo: PropTypes.func,
+
+			/**
+			 * Data for the list.
+			 * Check mutation of this and determine whether the list should update or not.
+			 *
+			 * @type {Any}
+			 * @default []
+			 * @public
+			 */
+			data: PropTypes.any,
+
+			/**
+			 * Spotlight container Id
+			 *
+			 * @type {String}
+			 * @private
+			 */
+			'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types
+
+			/**
+			 * Size of the data.
+			 *
+			 * @type {Number}
+			 * @default 0
+			 * @public
+			 */
+			dataSize: PropTypes.number,
+
+			/**
+			 * Spacing between items.
+			 *
+			 * @type {Number}
+			 * @default 0
+			 * @public
+			 */
+			spacing: PropTypes.number
+		}
+
+		componentDidUpdate () {
+			this.restoreFocus();
+		}
+
+		componentWillUnmount () {
+			if (this.setContainerDisabled) {
+				this.setContainerDisabled(false);
+			}
 		}
 
 		list = {} // Please do not use the `list` in React component lifecycle.
 
-		initRef = (ref) => {
-			this.list = ref;
-			this.props.innerRef(ref);
-		}
-
 		isScrolledBy5way = false
-
 		restoreLastFocused = false
 		nodeIndexToBeFocused = null
 		preservedIndex = null
@@ -58,7 +107,7 @@ const VirtualListCoreSpottable = (BaseComponent) => (
 
 		_findSpottableItem = (indexFrom, indexTo) => {
 			const
-				{data, dataSize} = this.list.props,
+				{data, dataSize} = this.props,
 				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
 				safeIndexTo = clamp(-1, dataSize, indexTo),
 				delta = (indexFrom < indexTo) ? 1 : -1;
@@ -81,7 +130,7 @@ const VirtualListCoreSpottable = (BaseComponent) => (
 		_getIndexToScrollDisabled = (direction, currentIndex) => {
 			const
 				{_findSpottableItem} = this,
-				{data, dataSize, spacing} = this.list.props,
+				{data, dataSize, spacing} = this.props,
 				{dimensionToExtent, primary} = this.list,
 				{firstVisibleIndex, lastVisibleIndex} = this.list.moreInfo,
 				numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent),
@@ -149,7 +198,7 @@ const VirtualListCoreSpottable = (BaseComponent) => (
 
 		_getIndexToScroll = (direction, currentIndex) => {
 			const
-				{dataSize, spacing} = this.list.props,
+				{dataSize, spacing} = this.props,
 				{dimensionToExtent, primary} = this.list,
 				numOfItemsInPage = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent,
 				factor = (direction === 'down' || direction === 'right') ? 1 : -1;
@@ -169,7 +218,7 @@ const VirtualListCoreSpottable = (BaseComponent) => (
 
 		scrollToNextItem = ({direction, focusedItem}) => {
 			const
-				{data} = this.list.props,
+				{data} = this.props,
 				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
 				{firstVisibleIndex, lastVisibleIndex} = this.list.moreInfo;
 			let indexToScroll = -1;
@@ -203,7 +252,7 @@ const VirtualListCoreSpottable = (BaseComponent) => (
 					focusedItem.blur();
 				}
 				this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
-				this.list.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
+				this.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
 			}
 
 			return true;
@@ -214,12 +263,12 @@ const VirtualListCoreSpottable = (BaseComponent) => (
 		 */
 
 		_setRestrict = (bool) => {
-			Spotlight.set(this.list.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
+			Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
 		}
 
 		_setSpotlightContainerRestrict = (keyCode, target) => {
 			const
-				{dataSize} = this.list.props,
+				{dataSize} = this.props,
 				{isPrimaryDirectionVertical, dimensionToExtent} = this.list,
 				index = Number.parseInt(target.getAttribute(dataIndexAttribute)),
 				canMoveBackward = index >= dimensionToExtent,
@@ -239,7 +288,7 @@ const VirtualListCoreSpottable = (BaseComponent) => (
 
 		_jumpToSpottableItem = (keyCode, target) => {
 			const
-				{cbScrollTo, data, dataSize} = this.list.props,
+				{cbScrollTo, data, dataSize} = this.props,
 				{firstIndex, numOfItems} = this.list.state,
 				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
 
@@ -333,7 +382,7 @@ const VirtualListCoreSpottable = (BaseComponent) => (
 				this._setSpotlightContainerRestrict(keyCode, target);
 				this.isScrolledBy5way = this._jumpToSpottableItem(keyCode, target);
 			}
-			forwardKeyDown(e, this.list.props);
+			forwardKeyDown(e, this.props);
 		}
 
 		/**
@@ -417,7 +466,7 @@ const VirtualListCoreSpottable = (BaseComponent) => (
 		 * Restore the focus of VirtualList
 		 */
 
-		_isPlaceholderFocused () {
+		_isPlaceholderFocused = () => {
 			const current = Spotlight.getCurrent();
 
 			if (current && current.dataset.vlPlaceholder && this.list.containerRef.contains(current)) {
@@ -427,12 +476,12 @@ const VirtualListCoreSpottable = (BaseComponent) => (
 			return false;
 		}
 
-		restoreFocus () {
+		restoreFocus = () => {
 			if (
 				this.restoreLastFocused &&
 				!this._isPlaceholderFocused()
 			) {
-				const containerId = this.list.props['data-container-id'];
+				const containerId = this.props['data-container-id'];
 				const node = this.list.containerRef.querySelector(
 					`[data-container-id="${containerId}"] [data-index="${this.list.preservedIndex}"]`
 				);
@@ -461,35 +510,42 @@ const VirtualListCoreSpottable = (BaseComponent) => (
 
 		shouldPreventScrollByFocus = () => this.isScrolledBy5way
 
-		setLastFocusedIndex = (item) => {
-			this.lastFocusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
-		}
-
-		getRestoreLastFocused = () => this.restoreLastFocused
-
 		getNodeIndexToBeFocused = () => this.nodeIndexToBeFocused
 
 		setNodeIndexToBeFocused = (param) => {
 			this.nodeIndexToBeFocused = param;
 		}
 
-		getPreservedIndex = () => this.preservedIndex
-
 		setLastFocusedIndex = (param) => {
 			this.lastFocusedIndex = param;
 		}
-
-		getLastFocusedIndex = () => this.lastFocusedIndex
 
 		/**
 		 * render
 		 */
 
+		initRef = (ref) => {
+			this.list = ref;
+			this.props.innerRef(ref);
+		}
+
 		render () {
-			const {...props} = this.props;
+			const props = Object.assign({}, this.props);
+
 			delete props.innerRef;
 
-			return <BaseComponent {...props} ref={this.initRef} sm={this} />;
+			return (
+				<BaseComponent
+					{...props}
+					getNodeIndexToBeFocused={this.getNodeIndexToBeFocused}
+					focusOnNode={this.focusOnNode}
+					lastFocusedIndex={this.lastFocusedIndex}
+					preservedIndex={this.preservedIndex}
+					ref={this.initRef}
+					restoreLastFocused={this.restoreLastFocused}
+					withPlaceholder={this.withPlaceholder}
+				/>
+			);
 		}
 	}
 );

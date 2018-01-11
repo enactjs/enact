@@ -613,6 +613,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					const lastPos = this.lastScrollPositionOnFocus;
 					let pos;
 
+					const focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
+					if (!isNaN(focusedIndex)) {
+						this.virtualListCoreWrapperRef.setNodeIndexToBeFocused(null);
+						this.virtualListCoreWrapperRef.setLastFocusedIndex(focusedIndex);
+					}
+
 					// If scroll animation is ongoing, we need to pass last target position to
 					// determine correct scroll position.
 					if (this.animator.isAnimating() && lastPos) {
