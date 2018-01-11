@@ -17,6 +17,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` to prevent infinite function call when a size of contents is slightly longer than a client size without a scrollbar
 - `moonstone/VirtualList` to sync scroll position when clientSize changed
 
+### Removed
+
+- deprecated option `indexToFocus` in `scrollTo` method of `moonstone/Scroller` and other scrolling components
+- deprecated `moonstone/Scroller` props `horizontal` and `vertical` which are replaced with `direction` prop
+
 ## [2.0.0-alpha.2] - 2017-08-29
 
 No significant changes.
