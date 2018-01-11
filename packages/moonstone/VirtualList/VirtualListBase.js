@@ -11,7 +11,8 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
-import VirtualListSpotlightManager, {VirtualListSpotlightContainerDecorator} from './VirtualListSpotlightManager';
+import {VirtualListCoreSpottable} from './VirtualListCoreSpottable';
+import {VirtualListContainerSpottable} from './VirtualListContainerSpottable';
 
 import css from './ListItem.less';
 
@@ -146,6 +147,14 @@ class VirtualListCore extends Component {
 		pageScroll: PropTypes.bool,
 
 		/**
+		 * Spotlight Manager
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		sm: PropTypes.object,
+
+		/**
 		 * Spacing between items.
 		 *
 		 * @type {Number}
@@ -173,7 +182,7 @@ class VirtualListCore extends Component {
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContainerRef = this.initRef('containerRef');
 
-		this.spotlightManager = new VirtualListSpotlightManager({list: this});
+		this.spotlightManager = props.sm;
 	}
 
 	componentWillMount () {
@@ -237,7 +246,9 @@ class VirtualListCore extends Component {
 			containerNode.removeEventListener('scroll', this.preventScroll);
 		}
 
-		this.spotlightManager.setContainerDisabled(false);
+		if (this.spotlightManager.setContainerDisabled) {
+			this.spotlightManager.setContainerDisabled(false);
+		}
 	}
 
 	scrollBounds = {
@@ -693,9 +704,11 @@ class VirtualListCore extends Component {
 		if (!isNaN(focusedIndex)) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
-			if (numOfItems > 0 && focusedIndex % numOfItems !== sm.lastFocusedIndex % numOfItems) {
-				const node = this.containerRef.children[sm.lastFocusedIndex % numOfItems];
-				node.blur();
+			if (numOfItems > 0 && focusedIndex % numOfItems !== lastFocusedIndex % numOfItems) {
+				const node = this.containerRef.children[lastFocusedIndex % numOfItems];
+				if (node) {
+					node.blur();
+				}
 			}
 			sm.setNodeIndexToBeFocused(null);
 			sm.setLastFocusedIndex(focusedIndex);
@@ -772,6 +785,7 @@ class VirtualListCore extends Component {
 		delete props.overhang;
 		delete props.pageScroll;
 		delete props.spacing;
+		delete props.sm;
 
 		if (primary) {
 			this.positionItems({updateFrom: firstIndex, updateTo: firstIndex + numOfItems});
@@ -797,9 +811,9 @@ class VirtualListCore extends Component {
  * @ui
  * @private
  */
-const VirtualListBase = VirtualListSpotlightContainerDecorator(
+const VirtualListBase = VirtualListContainerSpottable(
 	Scrollable(
-		VirtualListCore
+		VirtualListCoreSpottable(VirtualListCore)
 	)
 );
 
