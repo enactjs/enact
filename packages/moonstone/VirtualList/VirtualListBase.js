@@ -812,7 +812,7 @@ class VirtualListCore extends Component {
  * @private
  */
 const VirtualListBase = VirtualListContainerSpottable(
-	Scrollable(
+	Scrollable( // including ScrollableSpotlightContainerDecorator
 		VirtualListCoreSpottable(VirtualListCore)
 	)
 );

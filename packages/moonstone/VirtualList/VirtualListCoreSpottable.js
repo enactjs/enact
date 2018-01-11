@@ -38,7 +38,7 @@ const VirtualListCoreSpottable = (BaseComponent) => (
 			innerRef: PropTypes.func.isRequired
 		}
 
-		list = {}
+		list = {} // Please do not use the `list` in React component lifecycle.
 
 		initRef = (ref) => {
 			this.list = ref;
@@ -480,6 +480,10 @@ const VirtualListCoreSpottable = (BaseComponent) => (
 		}
 
 		getLastFocusedIndex = () => this.lastFocusedIndex
+
+		/**
+		 * render
+		 */
 
 		render () {
 			const {...props} = this.props;

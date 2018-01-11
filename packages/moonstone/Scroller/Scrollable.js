@@ -18,7 +18,6 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 
 import ScrollAnimator from './ScrollAnimator';
@@ -26,7 +25,6 @@ import Scrollbar from './Scrollbar';
 import ScrollableSpotlightContainerDecorator from './ScrollableSpotlightContainerDecorator';
 
 import css from './Scrollable.less';
-import scrollbarCss from './Scrollbar.less';
 
 const
 	forwardScroll = forward('onScroll'),
