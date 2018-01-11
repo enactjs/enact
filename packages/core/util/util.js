@@ -177,6 +177,47 @@ const perfNow = function () {
 	}
 };
 
+/**
+ * Merges two class name maps into one. The resulting map will only contain the class names defined
+ * in the `baseMap` and will be appended with the value from `additiveMap` if it exists. Further,
+ * `allowedClassNames` may optionally limit which keys will be merged from `additiveMap` into
+ * `baseMap`.
+ *
+ * ```
+ * // merges all matching class names from additiveMap1 with baseMap1
+ * const newMap1 = mergeClassNameMaps(baseMap1, additiveMap1);
+ *
+ * // merge only 'a' and 'b' class names from additiveMap2 with baseMap2
+ * const newMap2 = mergeClassNameMaps(baseMap2, additiveMap2, ['a', 'b']);
+ * ```
+ *
+ * @method
+ * @memberof core/util
+ * @param {Object}     baseMap             The source mapping of logical class name to physical
+ *                                         class name
+ * @param {Object}     additiveMap         Mapping of logical to physical class names which are
+ *                                         concatenated with `baseMap` where the logical names match
+ * @param {String[]}  [allowedClassNames]  Array of logical class names that can be augmented. When
+ *                                         set, the logical class name must exist in `baseMap`,
+ *                                         `additiveMap`, and this array to be concatenated.
+ * @returns {Object}
+ */
+const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
+	let css = baseMap;
+	if (baseMap && additiveMap) {
+		allowedClassNames = allowedClassNames || Object.keys(additiveMap);
+		// if the props includes a css map, merge them together now
+		css = Object.assign({}, baseMap);
+		allowedClassNames.forEach(key => {
+			if (baseMap[key] && additiveMap[key]) {
+				css[key] = baseMap[key] + ' ' + additiveMap[key];
+			}
+		});
+	}
+
+	return css;
+};
+
 export {
 	cap,
 	childrenEquals,
@@ -185,6 +226,7 @@ export {
 	extractAriaProps,
 	isRenderable,
 	Job,
+	mergeClassNameMaps,
 	perfNow,
 	withContextFromProps
 };
