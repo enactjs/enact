@@ -47,7 +47,7 @@ storiesOf('Spinner')
 							padding: '0.1em 1em',
 							fontWeight: 100,
 							fontStyle: 'italic',
-							fontSize: ri.unit(16, 'rem')
+							fontSize: ri.unit(15, 'rem')
 						}}
 					>Container</label>
 					<div

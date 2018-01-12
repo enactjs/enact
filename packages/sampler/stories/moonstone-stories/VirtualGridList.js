@@ -60,7 +60,7 @@ storiesOf('VirtualList.VirtualGridList')
 				onScrollStop={action('onScrollStop')}
 				spacing={ri.scale(number('spacing', 20))}
 				style={{
-					height: ri.unit(550, 'rem')
+					height: ri.unit(549, 'rem')
 				}}
 			/>
 		),

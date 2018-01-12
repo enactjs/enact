@@ -28,7 +28,7 @@ storiesOf('Remeasurable')
 	.addWithInfo(
 		'should recalculate long marquee when scrollbar is rendered',
 		() => (
-			<Scroller style={{height: ri.unit(400, 'rem'), width: ri.unit(500, 'rem')}}>
+			<Scroller style={{height: ri.unit(399, 'rem'), width: ri.unit(501, 'rem')}}>
 				<NoUpdate>
 					<Item>ABCDEFGHIJKLMNOPQRST</Item>
 					<SelectableItem>
@@ -46,7 +46,7 @@ storiesOf('Remeasurable')
 	.addWithInfo(
 		'should recalculate when selectable item is selected',
 		() => (
-			<Scroller style={{height: ri.unit(400, 'rem'), width: ri.unit(500, 'rem')}}>
+			<Scroller style={{height: ri.unit(399, 'rem'), width: ri.unit(501, 'rem')}}>
 				<SelectableItem>
 					SELECTABLE ITEM ABCDEFG
 				</SelectableItem>

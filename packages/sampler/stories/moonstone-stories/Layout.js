@@ -15,7 +15,7 @@ storiesOf('Layout')
 	.addWithInfo(
 		' ',
 		'Basic usage of Layout',
-		() => (<div className="debug" style={{height: ri.unit(400, 'rem')}}>
+		() => (<div className="debug" style={{height: ri.unit(399, 'rem')}}>
 			<Layout
 				align={select('align', ['start', 'center', 'stretch', 'end'], 'start')}
 				orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}

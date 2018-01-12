@@ -17,13 +17,13 @@ const renderPopup = () => (
 );
 
 const renderWidePopup = () => (
-	<div style={{width: ri.unit(500, 'rem')}}>
+	<div style={{width: ri.unit(501, 'rem')}}>
 		This is a wide popup
 	</div>
 );
 
 const renderTallPopup = () => (
-	<div style={{height: ri.unit(200, 'rem')}}>
+	<div style={{height: ri.unit(201, 'rem')}}>
 		This is a tall popup
 	</div>
 );
@@ -64,7 +64,7 @@ storiesOf('ContextualPopupDecorator')
 	.addWithInfo(
 		'with 5-way selectable activator',
 		() => (
-			<div style={{textAlign: 'center', marginTop: ri.unit(100, 'rem')}}>
+			<div style={{textAlign: 'center', marginTop: ri.unit(99, 'rem')}}>
 				<ContextualPopupWithActivator
 					direction={select('direction', ['up', 'down', 'left', 'right'], 'down')}
 					popupComponent={renderPopup}

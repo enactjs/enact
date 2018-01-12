@@ -20,7 +20,7 @@ storiesOf('ContextualPopupDecorator')
 		' ',
 		'Basic usage of ContextualPopupDecorator',
 		() => (
-			<div style={{textAlign: 'center', marginTop: ri.unit(100, 'rem')}}>
+			<div style={{textAlign: 'center', marginTop: ri.unit(99, 'rem')}}>
 				<ContextualButton
 					direction={select('direction', ['up', 'down', 'left', 'right'], 'down')}
 					noAutoDismiss={nullify(boolean('noAutoDismiss', false))}
