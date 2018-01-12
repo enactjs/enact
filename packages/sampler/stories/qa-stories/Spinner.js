@@ -19,7 +19,7 @@ storiesOf('Spinner')
 			<div>
 				<div
 					style={{
-						height: ri.scale(420) + 'px',
+						height: ri.unit(420, 'rem'),
 						border: '3px dotted red'
 					}}
 				>
@@ -45,7 +45,7 @@ storiesOf('Spinner')
 			<div>
 				<div
 					style={{
-						height: ri.scale(420) + 'px',
+						height: ri.unit(420, 'rem'),
 						border: '3px dotted red'
 					}}
 				>

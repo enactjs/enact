@@ -28,22 +28,22 @@ storiesOf('Scroller')
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				style={{
-					height: ri.scale(552) + 'px',
+					height: ri.unit(552, 'rem'),
 					width: '100%'
 				}}
 				verticalScrollbar={select('verticalScrollbar', prop.verticalScrollbar, 'auto')}
 			>
 				<div
 					style={{
-						height: ri.scale(1002) + 'px',
-						width: ri.scale(2001) + 'px'
+						height: ri.unit(1002, 'rem'),
+						width: ri.unit(2001, 'rem')
 					}}
 				>
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
 					Aenean id blandit nunc. Donec lacinia nisi vitae mi dictum, eget pulvinar nunc tincidunt. Integer vehicula tempus rutrum. Sed efficitur neque in arcu dignissim cursus.
 					<div
 						style={{
-							marginTop: ri.scale(801) + 'px'
+							marginTop: ri.unit(801, 'rem')
 						}}
 					>
 						Mauris blandit sollicitudin mattis. Fusce commodo arcu vitae risus consectetur sollicitudin. Aliquam eget posuere orci. Cras pellentesque lobortis sapien non lacinia.

@@ -71,7 +71,7 @@ const
 				style={{
 					position: 'absolute',
 					padding: 0,
-					border: ri.scale(3) + 'px solid black',
+					border: ri.unit(3, 'rem') + ' solid black',
 					boxSizing: 'border-box',
 					overflow: 'hidden'
 				}}
@@ -101,7 +101,7 @@ storiesOf('VirtualFlexList')
 						position: 'absolute',
 						width: (channelWidth + clientWidth) + 'px',
 						height: (itemHeight + clientHeight) + 'px',
-						padding: ri.scale(33) + 'px 0'
+						padding: ri.unit(33, 'rem') + ' 0'
 					}}
 				>
 					<VirtualFlexList

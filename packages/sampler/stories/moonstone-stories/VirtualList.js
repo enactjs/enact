@@ -17,7 +17,7 @@ const
 	renderItem = (size) => ({data, index, ...rest}) => {
 		const itemStyle = {
 			height: size + 'px',
-			borderBottom: ri.scale(3) + 'px solid #202328',
+			borderBottom: ri.unit(3, 'rem') + ' solid #202328',
 			boxSizing: 'border-box'
 		};
 
@@ -49,7 +49,7 @@ storiesOf('VirtualList')
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', 0))}
 					style={{
-						height: ri.scale(552) + 'px'
+						height: ri.unit(552, 'rem')
 					}}
 				/>
 			);

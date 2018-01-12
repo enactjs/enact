@@ -35,7 +35,7 @@ storiesOf('Marquee')
 			return (
 				<section>
 					<MarqueeText
-						style={{width: ri.scale(399) + 'px'}}
+						style={{width: ri.unit(399, 'rem')}}
 						disabled={disabled}
 						marqueeDelay={number('marqueeDelay', 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', false)}
@@ -59,7 +59,7 @@ storiesOf('Marquee')
 			return (
 				<section>
 					<MarqueeText
-						style={{width: ri.scale(399) + 'px'}}
+						style={{width: ri.unit(399, 'rem')}}
 						disabled={disabled}
 						marqueeDelay={number('marqueeDelay', 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', false)}
@@ -81,7 +81,7 @@ storiesOf('Marquee')
 		() => {
 			const disabled = nullify(boolean('disabled', false));
 			return (
-				<Controller style={{width: ri.scale(399) + 'px'}}>
+				<Controller style={{width: ri.unit(399, 'rem')}}>
 					{LTR.map((children, index) => (
 						<MarqueeText
 							disabled={disabled}
@@ -107,13 +107,13 @@ storiesOf('Marquee')
 		() => (
 			<div>
 				<Item
-					style={{width: ri.scale(399) + 'px'}}
+					style={{width: ri.unit(399, 'rem')}}
 					marqueeOn="focus"
 				>
 					{LTR[0]}
 				</Item>
 				<SpottableMarquee
-					style={{width: ri.scale(399) + 'px'}}
+					style={{width: ri.unit(399, 'rem')}}
 					marqueeOn="focus"
 				>
 					{LTR[0]}
@@ -127,7 +127,7 @@ storiesOf('Marquee')
 		() => (
 			<SpottableDiv>
 				<MarqueeText
-					style={{width: ri.scale(399) + 'px'}}
+					style={{width: ri.unit(399, 'rem')}}
 					disabled={false}
 					marqueeDelay={1000}
 					marqueeDisabled={false}
@@ -139,7 +139,7 @@ storiesOf('Marquee')
 					{'The quick brown fox.'}
 				</MarqueeText>
 				<MarqueeText
-					style={{width: ri.scale(399) + 'px'}}
+					style={{width: ri.unit(399, 'rem')}}
 					disabled={false}
 					marqueeDelay={1000}
 					marqueeDisabled={false}

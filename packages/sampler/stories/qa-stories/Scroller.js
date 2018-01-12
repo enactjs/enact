@@ -27,7 +27,7 @@ storiesOf('Scroller')
 		() => (
 			<Scroller
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
-				style={{height: ri.scale(600) + 'px'}}
+				style={{height: ri.unit(600, 'rem')}}
 			>
 				<Group childComponent={Item}>
 					{itemData}
@@ -40,7 +40,7 @@ storiesOf('Scroller')
 		() => (
 			<Scroller
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
-				style={{height: ri.scale(600) + 'px'}}
+				style={{height: ri.unit(600, 'rem')}}
 			>
 				<ExpandableList
 					closeOnSelect
@@ -66,7 +66,7 @@ storiesOf('Scroller')
 			>
 				<div
 					style={{
-						width: ri.scale(4200) + 'px',
+						width: ri.unit(4200, 'rem'),
 						padding: '1px'
 					}}
 				>
