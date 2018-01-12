@@ -7,7 +7,6 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
-import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import hoc from '@enact/core/hoc';
@@ -122,7 +121,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * - {node} - You can set a node to scroll
 			 * - {animate} - When `true`, scroll occurs with animation.
 			 *   Set it to `false`, if you want scrolling without animation.
-			 * - {indexToFocus} - Deprecated: Use `focus` insead.
 			 * - {focus} - Set it `true`, if you want the item to be focused after scroll.
 			 *   This option is only valid when you scroll by `index` or `node`.
 			 *
@@ -996,17 +994,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollTo = (opt) => {
 			if (!this.deferScrollTo) {
 				const {left, top} = this.getPositionForScrollTo(opt);
-				this.indexToFocus = null;
-				this.nodeToFocus = null;
-				this.scrollToInfo = null;
-
-				if (typeof opt.indexToFocus === 'number') {
-					this.indexToFocus = opt.indexToFocus;
-					deprecate({name: 'indexToFocus', since: '1.2.0', message: 'Use `focus` instead', until: '2.0.0'});
-				}
-
-				this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : this.indexToFocus;
+				this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
 				this.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
+				this.scrollToInfo = null;
 				this.start({
 					targetX: (left !== null) ? left : this.scrollLeft,
 					targetY: (top !== null) ? top : this.scrollTop,
