@@ -19,7 +19,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
-- `indexToFocus` option which is deprecated from 1.2.0 in `scrollTo` method of `moonstone/Scroller` and other scrolling components
+- `moonstone/Scroller` and `moonstone/VirtualList` option `indexToFocus` in `scrollTo` method which is deprecated from 1.2.0
 - `moonstone/Scroller` props `horizontal` and `vertical` which are deprecated from 1.3.0 and replaced with `direction` prop
 
 ## [2.0.0-alpha.2] - 2017-08-29
