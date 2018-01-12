@@ -2,6 +2,14 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.13.3] - 2017-01-15
+
+### Fixed
+
+- `core/kind` and `core/hoc` public documentation to be visible
+- `moonstone/TimePicker` to not read out meridiem label when meridiem picker gets a focus
+- Several samples that would not rescale correctly when the viewport was resized
+
 ## [1.13.2] - 2017-12-14
 
 ### Fixed
