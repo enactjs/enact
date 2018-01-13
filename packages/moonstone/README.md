@@ -1,9 +1,6 @@
 # @enact/moonstone
 
-> `@enact/moonstone` contains the set of reusable components for an Enact-based application
-targeting smart TVs.
-
-The moonstone library includes ready-to-use components with default styling applied.
+> The set of components for an Enact-based application targeting smart TVs.
 
 ## Usage
 

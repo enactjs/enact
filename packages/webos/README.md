@@ -1,6 +1,6 @@
 # @enact/webos
 
-> `@enact/webos` contains utility functions for working with webOS devices
+> Utility functions for working with webOS devices.
 
 ## Install
 
