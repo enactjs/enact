@@ -9,7 +9,7 @@
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {selectSrc} from '@enact/ui/resolution';
+import {selectSrc} from '../resolution';
 
 import componentCss from './Image.less';
 
