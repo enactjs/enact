@@ -14,10 +14,10 @@ import {selectSrc} from '../resolution';
 import componentCss from './Image.less';
 
 /**
- * {@link ui/Image.Image} is a component designed to display images
- * conditionally based on screen size. This component does not have a default
- * size as a result image will not show unless size is specified for its
- * particular usage using a CSS `className` or inline `style`.
+ * A basic image component designed to display images conditionally based on
+ * screen size. This component does not have a default size as a result
+ * image will not show unless size is specified for its particular
+ * usage using a CSS `className` or inline `style`.
  *
  * Usage:
  *
