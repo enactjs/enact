@@ -14,8 +14,8 @@ import PropTypes from 'prop-types';
 import componentCss from './BodyText.less';
 
 /**
- * [BodyTextBase]{@link ui/BodyText.BodyTextBase} is a basic BodyText component structure without any behaviors
- * applied to it.
+ * [BodyTextBase]{@link ui/BodyText.BodyTextBase} A basic text-block component
+ * without any behaviors applied to it.
  *
  * @class BodyTextBase
  * @memberof ui/BodyText
@@ -64,17 +64,38 @@ const BodyTextBase = kind({
 		className: ({centered, styler}) => styler.append({centered})
 	},
 
-	render: (props) => {
-		delete props.centered;
+	render: ({css, ...rest}) => {
+		delete rest.centered;
 
 		return (
-			<p {...props} />
+			<p
+				css={css}
+				{...rest}
+			/>
 		);
 	}
 });
 
-const BodyText = BodyTextBase;
+/**
+ * Adds no functionality, but is provided for export-API consistency between components
+ *
+ * @hoc
+ * @memberof ui/BodyText
+ * @public
+ */
 const BodyTextDecorator = (Wrapped) => Wrapped;
+
+/**
+ * A minimally-styled BodyText component. (Identical to `BodyTextBase`)
+ *
+ * @class Spinner
+ * @extends ui/Spinner.SpinnerBase
+ * @memberof ui/Spinner
+ * @mixes ui/Spinner.SpinnerDecorator
+ * @ui
+ * @public
+ */
+const BodyText = BodyTextBase;
 
 export default BodyText;
 

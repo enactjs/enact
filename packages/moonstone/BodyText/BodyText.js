@@ -11,7 +11,7 @@
  */
 
 import kind from '@enact/core/kind';
-import {BodyTextBase as UiButtonBase} from '@enact/ui/BodyText';
+import {BodyTextBase as UiBodyText} from '@enact/ui/BodyText';
 import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -69,9 +69,9 @@ const BodyTextBase = kind({
 
 	render: ({css, ...rest}) => {
 		return (
-			<UiButtonBase
-				{...rest}
+			<UiBodyText
 				css={css}
+				{...rest}
 			/>
 		);
 	}
