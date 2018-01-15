@@ -1,5 +1,5 @@
 /**
- * Provides Moonstone-themed BodyText components and behaviors.
+ * Provides block text to an application. Use case is similar to a paragraph tag.
  *
  * @example
  * <BodyText centered>Hello Enact!</BodyText>
