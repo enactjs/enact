@@ -1,4 +1,5 @@
 import Spinner from '@enact/moonstone/Spinner';
+import ri from '@enact/ui/resolution';
 import React from 'react';
 import {action, storiesOf} from '@kadira/storybook';
 import {boolean, select, text} from '@kadira/storybook-addon-knobs';
@@ -14,7 +15,7 @@ storiesOf('Spinner')
 				style={{
 					outline: 'teal dashed 1px',
 					position: 'relative',
-					padding: '90px',
+					padding: ri.unit(90, 'rem'),
 					backgroundColor: 'rgba(0, 187, 187, 0.5)'
 				}}
 			>
@@ -32,7 +33,7 @@ storiesOf('Spinner')
 					style={{
 						outline: 'teal dashed 1px',
 						position: 'relative',
-						height: '180px'
+						height: ri.unit(180, 'rem')
 					}}
 				>
 					<label
@@ -46,7 +47,7 @@ storiesOf('Spinner')
 							padding: '0.1em 1em',
 							fontWeight: 100,
 							fontStyle: 'italic',
-							fontSize: '16px'
+							fontSize: ri.unit(15, 'rem')
 						}}
 					>Container</label>
 					<div
