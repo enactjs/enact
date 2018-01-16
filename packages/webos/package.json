@@ -1,6 +1,6 @@
 {
   "name": "@enact/webos",
-  "version": "1.13.2",
+  "version": "1.13.3",
   "description": "webOS support library",
   "main": "index.js",
   "scripts": {

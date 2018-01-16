@@ -10,7 +10,7 @@ The `I18nDecorator` is usually applied at the root level of an application and p
 
 ### ilib Modules
 
-`ilib` modules are supplied with the `i18n` library but can be imported using an `enact-dev` provided shortcut:
+`ilib` modules are supplied with the `i18n` library but can be imported using an `enact cli` provided shortcut:
 
 **Previous:** `enyo-ilib/[MODULE_NAME]`
 

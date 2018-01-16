@@ -1,6 +1,7 @@
 import {ContextualPopupDecorator} from '@enact/moonstone/ContextualPopupDecorator';
 import BodyText from '@enact/moonstone/BodyText';
 import Button from '@enact/moonstone/Button';
+import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {boolean, text, select} from '@kadira/storybook-addon-knobs';
@@ -19,7 +20,7 @@ storiesOf('ContextualPopupDecorator')
 		' ',
 		'Basic usage of ContextualPopupDecorator',
 		() => (
-			<div style={{textAlign: 'center', marginTop: '100px'}}>
+			<div style={{textAlign: 'center', marginTop: ri.unit(99, 'rem')}}>
 				<ContextualButton
 					direction={select('direction', ['up', 'down', 'left', 'right'], 'down')}
 					noAutoDismiss={nullify(boolean('noAutoDismiss', false))}
