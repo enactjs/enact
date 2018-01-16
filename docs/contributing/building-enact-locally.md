@@ -21,10 +21,10 @@ npm run bootstrap
 # wait a while … installing :allthethings:
 ```
 
-Once this process completes, you can begin working with Enact, run unit tests or the sampler. To use Enact with your apps, you will need to `npm link` each submodule:
+Once this process completes, you can begin working with Enact, run unit tests, or run the sampler. To use the local Enact install with your apps, you will first need to `npm link` each submodule manually or use the `link-all` task:
 
 ```shell
-npm run lerna -- exec -- npm link
+npm run link-all
 ```
 
 Once this process is complete, you can use the Enact cli to link the dependencies to your app:
