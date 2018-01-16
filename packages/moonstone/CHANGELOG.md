@@ -32,6 +32,13 @@ No significant changes.
 
 - `moonstone/Button`, `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/IconButton`, `moonstone/IncrementSlider`, `moonstone/Item`, `moonstone/Picker`, and `moonstone/RangePicker`, `moonstone/Switch` and `moonstone/VideoPlayer` to use `ui/Touchable`
 
+## [1.13.3] - 2017-01-16
+
+### Fixed
+
+- `moonstone/TimePicker` to not read out meridiem label when meridiem picker gets a focus
+- `moonstone/Scroller` to correctly update scrollbars when the scroller's contents change
+
 ## [1.13.2] - 2017-12-14
 
 ### Fixed
