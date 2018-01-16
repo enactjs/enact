@@ -299,6 +299,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.childRef.syncClientSize();
 			}
 
+			this.clampScrollPosition();
+
 			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
 			this.updateScrollbars();
@@ -466,6 +468,18 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				return false;
 			} else {
 				return true;
+			}
+		}
+
+		clampScrollPosition () {
+			const bounds = this.getScrollBounds();
+
+			if (this.scrollTop > bounds.maxTop) {
+				this.scrollTop = bounds.maxTop;
+			}
+
+			if (this.scrollLeft > bounds.maxLeft) {
+				this.scrollLeft = bounds.maxLeft;
 			}
 		}
 
