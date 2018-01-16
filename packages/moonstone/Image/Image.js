@@ -13,7 +13,10 @@ import kind from '@enact/core/kind';
 import UiImage from '@enact/ui/Image';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import React from 'react';
+
+import Skinnable from '../Skinnable';
 
 import componentCss from './Image.less';
 
@@ -35,7 +38,7 @@ const ImageBase = kind({
 		 *
 		 * The following classes are supported:
 		 *
-		 * * `size` - The size of Image
+		 * * `image` - The root component class for Image
 		 *
 		 * @type {Object}
 		 * @public
@@ -45,7 +48,7 @@ const ImageBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['size']
+		publicClassNames: ['image']
 	},
 
 	render: ({css, ...rest}) => {
@@ -58,12 +61,35 @@ const ImageBase = kind({
 	}
 });
 
-const Image = Pure(
-	ImageBase
+/**
+ * Moonstone-specific behaviors to apply to [Image]{@link moonstone/Image.ImageBase}.
+ *
+ * @hoc
+ * @memberof moonstone/Image
+ * @mixes ui/Skinnable.Skinnable
+ * @public
+ */
+const ImageDecorator = compose(
+	Pure,
+	Skinnable
 );
+
+/**
+ * A Moonstone-styled Image.
+ *
+ * @class Image
+ * @memberof moonstone/Image
+ * @extends moonstone/Image.ImageBase
+ * @mixes moonstone/Image.ImageDecorator
+ * @ui
+ * @public
+ */
+const Image = ImageDecorator(ImageBase);
+
 
 export default Image;
 export {
 	Image,
-	ImageBase
+	ImageBase,
+	ImageDecorator
 };

@@ -1,7 +1,7 @@
 /**
  * Provides unstyled image component to be customized by a theme or application.
  *
- * @module ui/ImageBase
+ * @module ui/Image
  * @exports Image
  * @exports ImageBase
  */
@@ -44,7 +44,7 @@ import componentCss from './Image.less';
  */
 
 const ImageBase = kind({
-	name: 'Image',
+	name: 'ui:Image',
 
 	propTypes: /** @lends ui/Image.Image.prototype */ {
 		/**
@@ -86,6 +86,12 @@ const ImageBase = kind({
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `image` - The root component class
+		 * * `fit` - Applied when `sizing` prop is `fit`
+		 * * `fill` - Applied when `sizing` prop is `fill`
 		 *
 		 * @type {Object}
 		 * @public
@@ -146,7 +152,8 @@ const ImageBase = kind({
 	computed: {
 		bgImage: ({src, placeholder}) => {
 			const imageSrc = selectSrc(src) || '';
-			return placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
+			const imageSrcUrl = placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
+			return imageSrc ? imageSrcUrl : 'none';
 		},
 		className: ({className, sizing, styler}) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;
@@ -168,4 +175,18 @@ const ImageBase = kind({
 	}
 });
 
+/**
+ * [Image]{@link ui/Image.Image} is a minimally-styled image component
+ *
+ * @class Image
+ * @extends ui/Image.ImageBase
+ * @memberof ui/Image
+ * @ui
+ * @public
+ */
+
 export default ImageBase;
+export {
+	ImageBase as Image,
+	ImageBase
+};
