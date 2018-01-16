@@ -14,17 +14,6 @@ describe('Spinner Specs', () => {
 		}
 	};
 
-	it('should have not have MarqueeText as a child when Spinner has no children', function () {
-		const spinner = mount(
-			<Spinner spinnerComponent="div" />
-		);
-
-		const expected = false;
-		const actual = spinner.find('MarqueeText').exists();
-
-		expect(actual).to.equal(expected);
-	});
-
 	it('should have centered class when centered prop equals true', function () {
 		const spinner = mount(
 			<Spinner spinnerComponent="div" centered>

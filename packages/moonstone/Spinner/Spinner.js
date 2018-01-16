@@ -25,7 +25,8 @@ import Skinnable from '../Skinnable';
 
 import componentCss from './Spinner.less';
 
-const ChildrenComponent = (props) => <MarqueeText {...props} className={componentCss.client} marqueeOn="render" alignment="center" />;
+// Migration Note: css={componentCss} should likely be added once MarqueeText is merged into the migration target branch.
+const ChildrenComponent = (props) => <MarqueeText {...props} marqueeOn="render" alignment="center" />;
 
 /**
  * {@link moonstone/Spinner.SpinnerCore} shows a spinning animation.
@@ -38,6 +39,10 @@ const ChildrenComponent = (props) => <MarqueeText {...props} className={componen
 const SpinnerCoreBase = kind({
 	name: 'SpinnerCore',
 
+	propTypes: {
+		css: PropTypes.object
+	},
+
 	computed: {
 		'aria-label': ({['aria-label']: aria, children}) => {
 			if (aria) {
@@ -48,23 +53,23 @@ const SpinnerCoreBase = kind({
 		}
 	},
 
-	render: ({children, ...rest}) => (
+	styles: {
+		css: componentCss
+	},
+
+	render: ({children, css, ...rest}) => (
 		<div aria-live="off" role="alert" {...rest}>
-			<div className={componentCss.ballDecorator}>
-				<div className={`${componentCss.ball} ${componentCss.ball1}`} />
-				<div className={`${componentCss.ball} ${componentCss.ball2}`} />
-				<div className={`${componentCss.ball} ${componentCss.ball3}`} />
+			<div className={css.ballDecorator}>
+				<div className={`${css.ball} ${css.ball1}`} />
+				<div className={`${css.ball} ${css.ball2}`} />
+				<div className={`${css.ball} ${css.ball3}`} />
 			</div>
 			{children}
 		</div>
 	)
 });
 
-const SpinnerCoreDecorator = compose(
-	Skinnable
-);
-
-const SpinnerCore = SpinnerCoreDecorator(SpinnerCoreBase);
+const SpinnerCore = Skinnable(SpinnerCoreBase);
 
 /**
  * The base component, defining all of the properties.
@@ -94,7 +99,8 @@ const SpinnerBase = kind({
 	},
 
 	styles: {
-		css: componentCss
+		css: componentCss,
+		publicClassNames: ['spinner']
 	},
 
 	computed: {
@@ -122,7 +128,7 @@ const SpinnerBase = kind({
  * spotlight when unmounted. However, spotlight is not paused when `blockClickOn` prop is
  * `'container'`. Blocking spotlight within the container is up to app implementation.
  *
- * @class SpinnerSpotlightDecorator
+ * @hoc SpinnerSpotlightDecorator
  * @memberof moonstone/Spinner
  * @ui
  * @public

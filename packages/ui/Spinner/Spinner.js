@@ -111,7 +111,7 @@ const SpinnerBase = kind({
 
 	styles: {
 		css: componentCss,
-		className: 'spinner',
+		className: 'spinner running',
 		publicClassNames: true
 	},
 
