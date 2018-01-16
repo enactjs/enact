@@ -151,7 +151,7 @@ const ImageBase = kind({
 
 	computed: {
 		bgImage: ({src, placeholder}) => {
-			const imageSrc = selectSrc(src) || '';
+			const imageSrc = selectSrc(src);
 			if (!imageSrc) return null;
 			return placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
 		},
