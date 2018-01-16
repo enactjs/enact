@@ -163,7 +163,6 @@ const PopupBase = kind({
 			>
 				<div
 					aria-live="off"
-					className={css.popup}
 					role="alert"
 					{...rest}
 				>

@@ -51,7 +51,7 @@ describe('Popup specs', () => {
 	});
 
 	it('should set role to alert by default', function () {
-		const popup = shallow(
+		const popup = mount(
 			<PopupBase><div>popup</div></PopupBase>
 		);
 
@@ -62,7 +62,7 @@ describe('Popup specs', () => {
 	});
 
 	it('should allow role to be overridden', function () {
-		const popup = shallow(
+		const popup = mount(
 			<PopupBase role="dialog"><div>popup</div></PopupBase>
 		);
 

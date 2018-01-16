@@ -1,8 +1,10 @@
 /**
- * Exports the {@link moonstone/Popup.Popup} and {@link moonstone/Popup.PopupBase} components.
- * The default export is {@link moonstone/Popup.Popup}.
+ * Provides Moonstone-themed popup components and behaviors.
  *
  * @module moonstone/Popup
+ * @exports Popup
+ * @exports PopupBase
+ * @exports PopupDecorator
  */
 
 import {is} from '@enact/core/keymap';
@@ -13,21 +15,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import Transition from '@enact/ui/Transition';
+import {PopupBase as UiPopupBase} from '@enact/ui/Popup';
 import {forward} from '@enact/core/handle';
+import compose from 'ramda/src/compose';
 import warning from 'warning';
 
 import $L from '../internal/$L';
 import IconButton from '../IconButton';
 import Skinnable from '../Skinnable';
 
-import css from './Popup.less';
+import componentCss from './Popup.less';
 
 const isUp = is('up');
-const TransitionContainer = SpotlightContainerDecorator(
-	{enterTo: 'default-element', preserveId: true},
-	Transition
-);
 
 const getContainerNode = (containerId) => {
 	return document.querySelector(`[data-container-id='${containerId}']`);
@@ -37,8 +36,8 @@ const forwardHide = forward('onHide');
 const forwardShow = forward('onShow');
 
 /**
- * {@link moonstone/Popup.PopupBase} is a modal component that appears at the bottom of
- * the screen and takes up the full screen width.
+ * [PopupBase]{@link moonstone/Popup.PopupBase} is a modal component that appears
+ * at the bottom of the screen and takes up the full screen width.
  *
  * @class PopupBase
  * @memberof moonstone/Popup
@@ -58,13 +57,13 @@ const PopupBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * Specifies the container id.
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
 		 *
-		 * @type {String}
-		 * @default null
+		 * @type {Object}
 		 * @public
 		 */
-		containerId: PropTypes.string,
+		css: PropTypes.object,
 
 		/**
 		 * When `true`, the popup will not animate on/off screen.
@@ -115,34 +114,22 @@ const PopupBase = kind({
 		 * @default false
 		 * @public
 		 */
-		showCloseButton: PropTypes.bool,
-
-		/**
-		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
-		 * can be either `'none'`, `'self-first'`, or `'self-only'`.
-		 *
-		 * @type {String}
-		 * @default 'self-only'
-		 * @public
-		 */
-		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
+		showCloseButton: PropTypes.bool
 	},
 
 	defaultProps: {
 		noAnimation: false,
 		open: false,
-		showCloseButton: false,
-		spotlightRestrict: 'self-only'
+		showCloseButton: false
 	},
 
 	styles: {
-		css,
-		className: 'popup'
+		css: componentCss
 	},
 
 	computed: {
 		className: ({showCloseButton, styler}) => styler.append({reserveClose: showCloseButton}),
-		closeButton: ({showCloseButton, onCloseButtonClick}) => {
+		closeButton: ({css, showCloseButton, onCloseButtonClick}) => {
 			if (showCloseButton) {
 				return (
 					<IconButton
@@ -159,42 +146,34 @@ const PopupBase = kind({
 		}
 	},
 
-	render: ({closeButton, children, containerId, noAnimation, open, onHide, onShow, spotlightRestrict, ...rest}) => {
+	render: ({closeButton, children, css, noAnimation, open, onHide, onShow, ...rest}) => {
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
+
 		return (
-			<TransitionContainer
-				className={css.popupTransitionContainer}
-				containerId={containerId}
-				direction="down"
-				duration="short"
+			<UiPopupBase
+				css={css}
+				{...rest}
 				noAnimation={noAnimation}
 				onHide={onHide}
 				onShow={onShow}
-				spotlightDisabled={!open}
-				spotlightRestrict={spotlightRestrict}
-				type="slide"
-				visible={open}
+				open={open}
 			>
-				<div
-					aria-live="off"
-					role="alert"
-					{...rest}
-				>
-					<div className={css.body}>
-						{children}
-					</div>
-					{closeButton}
+				<div className={css.body}>
+					{children}
 				</div>
-			</TransitionContainer>
+				{closeButton}
+			</UiPopupBase>
 		);
 	}
 });
 
-const SkinnedPopupBase = Skinnable(
-	{defaultSkin: 'light'},
-	PopupBase
+const PopupDecorater = compose(
+	Skinnable({defaultSkin: 'light'}),
+	SpotlightContainerDecorator({enterTo: 'default-element', preserveId: true})
 );
+
+const DecoratedPopupBase = PopupDecorater(PopupBase);
 
 // Deprecate using scrimType 'none' with spotlightRestrict of 'self-only'
 const checkScrimNone = (props) => {
@@ -416,10 +395,10 @@ class Popup extends React.Component {
 	handlePopupHide = (ev) => {
 		forwardHide(ev, this.props);
 
-		this.setState({
+		this.setState(() => ({
 			floatLayerOpen: false,
 			activator: null
-		});
+		}));
 
 		if (ev.target.getAttribute('data-container-id') === this.state.containerId) {
 			Spotlight.resume();
@@ -485,7 +464,7 @@ class Popup extends React.Component {
 				onDismiss={onClose}
 				scrimType={scrimType}
 			>
-				<SkinnedPopupBase
+				<DecoratedPopupBase
 					{...rest}
 					containerId={this.state.containerId}
 					open={this.state.popupOpen}
