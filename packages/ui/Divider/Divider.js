@@ -35,16 +35,22 @@ const DividerBase = kind({
 		children: PropTypes.node,
 
 		/**
+		 * The type of component to use to render the item. May be a DOM node name (e.g 'div',
+		 * 'span', etc.) or a custom component.
+		 *
+		 * @type {Component}
+		 * @default 'div'
+		 * @public
+		 */
+		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+
+		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
 		 *
 		 * The following classes are supported:
 		 *
-		 * * `'normal'` - Applied when `spacing` prop is `normal`
-		 * * `'small'` - Applied when `spacing` prop is `small`
-		 * * `'medium'` - Applied when `spacing` prop is `medium`
-		 * * `'large'` - Applied when `spacing` prop is `large`
-		 * * `'none'` - Applied when `spacing` prop is `none`
+		 * * `'divider'` - The root component class
 		 *
 		 * @type {Object}
 		 * @public
@@ -57,7 +63,11 @@ const DividerBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		spacing: PropTypes.oneOf(['normal', 'small', 'medium', 'large', 'none'])
+		spacing: PropTypes.string
+	},
+
+	defaultProps: {
+		component: 'h3'
 	},
 
 	styles: {
@@ -70,11 +80,11 @@ const DividerBase = kind({
 		className: ({spacing, styler}) => styler.append(spacing)
 	},
 
-	render: ({children, css, ...rest}) => {
+	render: ({children, component:Component, ...rest}) => {
 		delete rest.spacing;
 
 		return (
-			<h3 css={css} {...rest}>{children}</h3>
+			<Component {...rest}>{children}</Component>
 		);
 	}
 });
