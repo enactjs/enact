@@ -8,8 +8,8 @@
 
 import kind from '@enact/core/kind';
 import clamp from 'ramda/src/clamp';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import {validateRange} from '../internal/validators';
 
