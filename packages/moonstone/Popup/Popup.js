@@ -4,7 +4,6 @@
  * @module moonstone/Popup
  * @exports Popup
  * @exports PopupBase
- * @exports PopupDecorator
  */
 
 import {is} from '@enact/core/keymap';

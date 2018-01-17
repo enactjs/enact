@@ -4,7 +4,6 @@
  * @module ui/Popup
  * @exports Popup
  * @exports PopupBase
- * @exports PopupDecorator
  */
 
 import {forward} from '@enact/core/handle';
