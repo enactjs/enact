@@ -7,12 +7,12 @@
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import {MarqueeText} from '@enact/ui/MarqueeDecorator';
 import Pure from '@enact/ui/internal/Pure';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 
 import $L from '../internal/$L';
+import Marquee from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import css from './Spinner.less';
@@ -135,9 +135,9 @@ const SpinnerBase = kind({
 		marquee: ({children}) => {
 			if (children) {
 				return (
-					<MarqueeText className={css.client} marqueeOn="render" alignment="center">
+					<Marquee className={css.client} marqueeOn="render" alignment="center">
 						{children}
-					</MarqueeText>
+					</Marquee>
 				);
 			} else {
 				return null;

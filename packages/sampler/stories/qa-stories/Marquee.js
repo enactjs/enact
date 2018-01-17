@@ -1,4 +1,4 @@
-import {MarqueeController, MarqueeText} from '@enact/ui/MarqueeDecorator';
+import {Marquee, MarqueeController} from '@enact/moonstone/Marquee';
 import Item from '@enact/moonstone/Item';
 import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
@@ -6,7 +6,7 @@ import {storiesOf} from '@kadira/storybook';
 import {boolean, number, select} from '@kadira/storybook-addon-knobs';
 import nullify from '../../src/utils/nullify.js';
 
-const SpottableMarquee = Spottable(MarqueeText);
+const SpottableMarquee = Spottable(Marquee);
 const Controller = MarqueeController('div');
 const SpottableDiv = MarqueeController({marqueeOnFocus: true}, Spottable('div'));
 
@@ -24,7 +24,7 @@ const RTL = [
 	'فوری بھوری لومڑی سست کتے پر چھلانگ لگا. بین پرندوں سوریاست میں پرواز.'
 ];
 
-const disabledDisclaimer = (disabled) => (disabled ? <p style={{fontSize: '70%', fontStyle: 'italic'}}><sup>*</sup>MarqueeText does not visually respond to <code>disabled</code> state.</p> : <p />);
+const disabledDisclaimer = (disabled) => (disabled ? <p style={{fontSize: '70%', fontStyle: 'italic'}}><sup>*</sup>Marquee does not visually respond to <code>disabled</code> state.</p> : <p />);
 
 storiesOf('Marquee')
 	.addWithInfo(
@@ -33,7 +33,7 @@ storiesOf('Marquee')
 			const disabled = nullify(boolean('disabled', false));
 			return (
 				<section>
-					<MarqueeText
+					<Marquee
 						style={{width: '400px'}}
 						disabled={disabled}
 						marqueeDelay={number('marqueeDelay', 1000)}
@@ -44,7 +44,7 @@ storiesOf('Marquee')
 						marqueeSpeed={number('marqueeSpeed', 60)}
 					>
 						{select('children', LTR, LTR[0])}
-					</MarqueeText>
+					</Marquee>
 					{disabledDisclaimer(disabled)}
 				</section>
 			);
@@ -57,7 +57,7 @@ storiesOf('Marquee')
 			const disabled = nullify(boolean('disabled', false));
 			return (
 				<section>
-					<MarqueeText
+					<Marquee
 						style={{width: '400px'}}
 						disabled={disabled}
 						marqueeDelay={number('marqueeDelay', 1000)}
@@ -68,7 +68,7 @@ storiesOf('Marquee')
 						marqueeSpeed={number('marqueeSpeed', 60)}
 					>
 						{select('children', RTL, RTL[0])}
-					</MarqueeText>
+					</Marquee>
 					{disabledDisclaimer(disabled)}
 				</section>
 			);
@@ -82,7 +82,7 @@ storiesOf('Marquee')
 			return (
 				<Controller style={{width: '400px'}}>
 					{LTR.map((children, index) => (
-						<MarqueeText
+						<Marquee
 							disabled={disabled}
 							key={index}
 							marqueeDelay={number('marqueeDelay', 1000)}
@@ -93,7 +93,7 @@ storiesOf('Marquee')
 							marqueeSpeed={number('marqueeSpeed', 60)}
 						>
 							{children}
-						</MarqueeText>
+						</Marquee>
 					))}
 					{disabledDisclaimer(disabled)}
 				</Controller>
@@ -125,7 +125,7 @@ storiesOf('Marquee')
 		'Restart Marquee when Marquee completes',
 		() => (
 			<SpottableDiv>
-				<MarqueeText
+				<Marquee
 					style={{width: '400px'}}
 					disabled={false}
 					marqueeDelay={1000}
@@ -136,8 +136,8 @@ storiesOf('Marquee')
 					marqueeSpeed={60}
 				>
 					{'The quick brown fox.'}
-				</MarqueeText>
-				<MarqueeText
+				</Marquee>
+				<Marquee
 					style={{width: '400px'}}
 					disabled={false}
 					marqueeDelay={1000}
@@ -148,7 +148,7 @@ storiesOf('Marquee')
 					marqueeSpeed={60}
 				>
 					{LTR[0]}
-				</MarqueeText>
+				</Marquee>
 			</SpottableDiv>
 		)
 	);

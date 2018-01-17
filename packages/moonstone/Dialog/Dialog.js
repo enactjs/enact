@@ -7,7 +7,7 @@
 
 import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
-import MarqueeDecorator from '@enact/ui/MarqueeDecorator';
+import {MarqueeDecorator} from '@enact/moonstone/Marquee';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';

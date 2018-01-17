@@ -7,18 +7,18 @@ import css from './Marquee.less';
 const animated = css.text + ' ' + css.animate;
 
 /**
- * {@link ui/MarqueeDecorator.Marquee} is a stateless text container element which implements a text
- * cut-off followed by an ellipsis character.
+ * {@link ui/Marquee.MarqueeBase} is a container element which implements a text cut-off followed by
+ * an ellipsis character.
  *
- * @class Marquee
- * @memberof ui/MarqueeDecorator
+ * @class MarqueeBase
+ * @memberof ui/Marquee
  * @ui
  * @public
  */
 const MarqueeBase = kind({
 	name: 'Marquee',
 
-	propTypes: /** @lends ui/MarqueeDecorator.Marquee.prototype */ {
+	propTypes: /** @lends ui/Marquee.MarqueeBase.prototype */ {
 
 		/**
 		 * Text alignment value of the marquee. Valid values are `'left'`, `'right'` and `'center'`.
@@ -38,7 +38,7 @@ const MarqueeBase = kind({
 
 		/**
 		 * `children` is the text or a set of components that should be scrolled by the
-		 * {@link ui/MarqueeDecorator.Marquee} component.
+		 * {@link ui/Marquee.MarqueeBase} component.
 		 * This prop may be empty in some cases, which is OK.
 		 *
 		 * @type {Node|Node[]}

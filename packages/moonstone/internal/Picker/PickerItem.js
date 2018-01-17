@@ -1,5 +1,5 @@
 import kind from '@enact/core/kind';
-import {MarqueeText} from '@enact/ui/MarqueeDecorator';
+import Marquee from '@enact/ui/Marquee';
 import React from 'react';
 
 import css from './Picker.less';
@@ -13,7 +13,7 @@ const PickerItemBase = kind({
 	},
 
 	render: (props) => (
-		<MarqueeText {...props} alignment="center" />
+		<Marquee {...props} alignment="center" />
 	)
 });
 

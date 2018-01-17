@@ -6,11 +6,11 @@
 
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
-import MarqueeDecorator from '@enact/ui/MarqueeDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 
+import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import css from './Divider.less';

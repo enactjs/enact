@@ -13,7 +13,7 @@ const STATE = {
 /**
  * Context propTypes for MarqueeController
  *
- * @memberof ui/MarqueeDecorator.Marquee
+ * @memberof ui/Marquee.MarqueeController
  * @private
  */
 const contextTypes = {
@@ -22,7 +22,7 @@ const contextTypes = {
 	 * set to `marqueeOn='focus'`)
 	 *
 	 * @type {Function}
-	 * @memberof ui/MarqueeDecorator.Marquee.contextTypes
+	 * @memberof ui/Marquee.MarqueeController.contextTypes
 	 */
 	cancel: PropTypes.func,
 
@@ -30,7 +30,7 @@ const contextTypes = {
 	 * Called by Marquee instances when marqueeing has completed
 	 *
 	 * @type {Function}
-	 * @memberof ui/MarqueeDecorator.Marquee.contextTypes
+	 * @memberof ui/Marquee.MarqueeController.contextTypes
 	 */
 	complete: PropTypes.func,
 
@@ -38,7 +38,7 @@ const contextTypes = {
 	 * Called by Marquee instances when hovered
 	 *
 	 * @type {Function}
-	 * @memberof ui/MarqueeDecorator.Marquee.contextTypes
+	 * @memberof ui/Marquee.MarqueeController.contextTypes
 	 */
 	enter: PropTypes.func,
 
@@ -46,7 +46,7 @@ const contextTypes = {
 	 * Called by Marquee instances when unhovered
 	 *
 	 * @type {Function}
-	 * @memberof ui/MarqueeDecorator.Marquee.contextTypes
+	 * @memberof ui/Marquee.MarqueeController.contextTypes
 	 */
 	leave: PropTypes.func,
 
@@ -54,7 +54,7 @@ const contextTypes = {
 	 * Called to register a Marquee instance to be synchronized
 	 *
 	 * @type {Function}
-	 * @memberof ui/MarqueeDecorator.Marquee.contextTypes
+	 * @memberof ui/Marquee.MarqueeController.contextTypes
 	 */
 	register: PropTypes.func,
 
@@ -64,7 +64,7 @@ const contextTypes = {
 	 * the function can return `true` to mark itself complete.
 	 *
 	 * @type {Function}
-	 * @memberof ui/MarqueeDecorator.Marquee.contextTypes
+	 * @memberof ui/Marquee.MarqueeController.contextTypes
 	 */
 	start: PropTypes.func,
 
@@ -72,17 +72,17 @@ const contextTypes = {
 	 * Called to unregister a synchronized Marquee instance
 	 *
 	 * @type {Function}
-	 * @memberof ui/MarqueeDecorator.Marquee.contextTypes
+	 * @memberof ui/Marquee.MarqueeController.contextTypes
 	 */
 	unregister: PropTypes.func
 };
 
 
 /**
- * Default configuration parameters for {@link ui/MarqueeDecorator.MarqueeController}
+ * Default configuration parameters for {@link ui/Marquee.MarqueeController}
  *
  * @type {Object}
- * @memberof ui/MarqueeDecorator.MarqueeController
+ * @memberof ui/Marquee.MarqueeController
  * @hocconfig
  */
 const defaultConfig = {
@@ -93,17 +93,16 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
-	 * @memberof ui/MarqueeDecorator.MarqueeController.defaultConfig
+	 * @memberof ui/Marquee.MarqueeController.defaultConfig
 	 */
 	marqueeOnFocus: false
 };
 
 /**
- * {@link ui/MarqueeDecorator.MarqueeController} is a Higher-order Component which will synchronize
+ * {@link ui/Marquee.MarqueeController} is a Higher-order Component which will synchronize
  * contained Marquee's.
  *
- * @class MarqueeController
- * @memberof ui/MarqueeDecorator
+ * @memberof ui/Marquee
  * @hoc
  * @public
  */

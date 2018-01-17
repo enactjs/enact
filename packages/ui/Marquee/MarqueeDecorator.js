@@ -10,10 +10,10 @@ import Marquee from './Marquee';
 import {contextTypes} from './MarqueeController';
 
 /**
- * Default configuration parameters for {@link ui/MarqueeDecorator.MarqueeDecorator}
+ * Default configuration parameters for {@link ui/Marquee.MarqueeDecorator}
  *
  * @type {Object}
- * @memberof ui/MarqueeDecorator.MarqueeDecorator
+ * @memberof ui/Marquee.MarqueeDecorator
  * @hocconfig
  */
 const defaultConfig = {
@@ -22,16 +22,25 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onBlur'
-	 * @memberof ui/MarqueeDecorator.MarqueeDecorator.defaultConfig
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	blur: 'onBlur',
 
 	/**
-	 * Optional CSS class name map to pass to the {@link ui/MarqueeDecorator.Marquee} instance
+	 * The base marquee component wrapping the content.
+	 *
+	 * @type {Component}
+	 * @default ui/Marquee.Marquee
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
+	 */
+	component: Marquee,
+
+	/**
+	 * Optional CSS class name map to pass to the {@link ui/Marquee.Marquee} instance
 	 *
 	 * @type {Object}
 	 * @default null
-	 * @memberof ui/MarqueeDecorator.MarqueeDecorator.defaultConfig
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	css: null,
 
@@ -40,7 +49,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onMouseEnter'
-	 * @memberof ui/MarqueeDecorator.MarqueeDecorator.defaultConfig
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	enter: 'onMouseEnter',
 
@@ -49,7 +58,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onFocus'
-	 * @memberof ui/MarqueeDecorator.MarqueeDecorator.defaultConfig
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	focus: 'onFocus',
 
@@ -59,7 +68,7 @@ const defaultConfig = {
 	*
 	* @type {Array}
 	* @default ['remeasure']
-	* @memberof ui/MarqueeDecorator.MarqueeDecorator.defaultConfig
+	* @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	*/
 	invalidateProps: ['remeasure'],
 
@@ -68,7 +77,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onMouseLeave'
-	 * @memberof ui/MarqueeDecorator.MarqueeDecorator.defaultConfig
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	leave: 'onMouseLeave'
 };
@@ -99,16 +108,17 @@ const TimerState = {
 };
 
 /**
- * {@link ui/MarqueeDecorator.MarqueeDecorator} is a Higher-order Component which makes
+ * {@link ui/Marquee.MarqueeDecorator} is a Higher-order Component which makes
  * the Wrapped component's children marquee.
  *
  * @class MarqueeDecorator
- * @memberof ui/MarqueeDecorator
+ * @memberof ui/Marquee
  * @hoc
  * @public
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {blur, css, enter, focus, invalidateProps, leave} = config;
+	const {blur, css, component: MarqueeComponent, enter, focus, invalidateProps, leave} = config;
+
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
 	const forwardFocus = forward(focus);
@@ -123,7 +133,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			...stateContextTypes
 		}
 
-		static propTypes = /** @lends ui/MarqueeDecorator.MarqueeDecorator.prototype */ {
+		static propTypes = /** @lends ui/Marquee.MarqueeDecorator.prototype */ {
 			/**
 			 * Text alignment value of the marquee. Valid values are `'left'`, `'right'` and `'center'`.
 			 *
@@ -695,7 +705,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			return (
 				<Wrapped {...rest} disabled={disabled}>
-					<Marquee
+					<MarqueeComponent
 						alignment={alignment}
 						animating={this.state.animating}
 						clientRef={this.cacheNode}
@@ -707,7 +717,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						speed={marqueeSpeed}
 					>
 						{children}
-					</Marquee>
+					</MarqueeComponent>
 				</Wrapped>
 			);
 		}
@@ -739,4 +749,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default MarqueeDecorator;
-export {MarqueeDecorator};
+export {
+	MarqueeDecorator
+};

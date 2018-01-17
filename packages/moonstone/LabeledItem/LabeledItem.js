@@ -7,12 +7,12 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {MarqueeController, MarqueeText} from '@enact/ui/MarqueeDecorator';
 import Pure from '@enact/ui/internal/Pure';
 import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
 import {ItemBase} from '../Item';
+import {Marquee, MarqueeController} from '../Marquee';
 import Skinnable from '../Skinnable';
 import Touchable from '../internal/Touchable';
 
@@ -82,10 +82,10 @@ const LabeledItemBase = kind({
 	render: ({children, disabled, label, titleIcon, ...rest}) => (
 		<Controller disabled={disabled} {...rest}>
 			<div className={css.text}>
-				<MarqueeText disabled={disabled} className={css.title}>{children}</MarqueeText>
+				<Marquee disabled={disabled} className={css.title}>{children}</Marquee>
 				{(titleIcon != null) ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
 			</div>
-			{(label != null) ? <MarqueeText disabled={disabled} className={css.label}>{label}</MarqueeText> : null}
+			{(label != null) ? <Marquee disabled={disabled} className={css.label}>{label}</Marquee> : null}
 		</Controller>
 	)
 });

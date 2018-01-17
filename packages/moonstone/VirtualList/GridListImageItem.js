@@ -7,13 +7,13 @@
  */
 
 import kind from '@enact/core/kind';
-import {MarqueeController, MarqueeText} from '@enact/ui/MarqueeDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
 import {Image} from '../Image';
+import {Marquee, MarqueeController} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import css from './GridListImageItem.less';
@@ -162,8 +162,8 @@ const GridListImageItemBase = kind({
 				<Image className={css.image} placeholder={placeholder} src={source}>
 					{selectionOverlay}
 				</Image>
-				{caption ? (<MarqueeText alignment="center" className={css.caption} marqueeOn="hover">{caption}</MarqueeText>) : null}
-				{subCaption ? (<MarqueeText alignment="center" className={css.subCaption} marqueeOn="hover">{subCaption}</MarqueeText>) : null}
+				{caption ? (<Marquee alignment="center" className={css.caption} marqueeOn="hover">{caption}</Marquee>) : null}
+				{subCaption ? (<Marquee alignment="center" className={css.subCaption} marqueeOn="hover">{subCaption}</Marquee>) : null}
 			</div>
 		);
 	}

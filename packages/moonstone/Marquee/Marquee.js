@@ -5,22 +5,32 @@
  * @module moonstone/Marquee
  * @exports controlContextTypes
  * @exports Marquee
+ * @exports MarqueeBase
  * @exports MarqueeController
  * @exports MarqueeDecorator
- * @exports MarqueeText
  */
 
 import {
 	controlContextTypes,
 	Marquee,
+	MarqueeBase,
 	MarqueeController,
-	MarqueeDecorator,
-	MarqueeText
-} from '@enact/ui/MarqueeDecorator';
+	MarqueeDecorator
+} from '@enact/ui/Marquee';
 
 export default Marquee;
 export {
 	controlContextTypes,
+
+	/**
+	 * A block element which will marquee its contents
+	 *
+	 * @see ui/MarqueeDecorator.Marquee
+	 * @class Marquee
+	 * @memberof moonstone/Marquee
+	 * @public
+	 */
+	Marquee,
 
 	/**
 	 * Internal component to provide marquee markup
@@ -30,7 +40,7 @@ export {
 	 * @memberof moonstone/Marquee
 	 * @public
 	 */
-	Marquee,
+	MarqueeBase,
 
 	/**
 	 * Adds marquee behavior to a component
@@ -52,15 +62,5 @@ export {
 	 * @memberof moonstone/Marquee
 	 * @public
 	 */
-	MarqueeDecorator,
-
-	/**
-	 * A block element which will marquee its contents
-	 *
-	 * @see ui/MarqueeDecorator.MarqueeText
-	 * @class MarqueeText
-	 * @memberof moonstone/Marquee
-	 * @public
-	 */
-	MarqueeText
+	MarqueeDecorator
 };

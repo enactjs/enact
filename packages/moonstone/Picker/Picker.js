@@ -8,11 +8,11 @@
 import Changeable from '@enact/ui/Changeable';
 import clamp from 'ramda/src/clamp';
 import kind from '@enact/core/kind';
-import {MarqueeController} from '@enact/ui/MarqueeDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 
+import {MarqueeController} from '../Marquee';
 import {validateRange} from '../internal/validators';
 
 import PickerCore, {PickerItem} from '../internal/Picker';
