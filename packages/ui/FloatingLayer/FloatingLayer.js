@@ -107,7 +107,7 @@ class FloatingLayerBase extends React.Component {
 		super(props);
 		this.node = null;
 		if (props.open && props.onOpen) {
-			props.onOpen();
+			props.onOpen({});
 		}
 	}
 
@@ -115,9 +115,9 @@ class FloatingLayerBase extends React.Component {
 		const {open, onClose, onOpen, scrimType} = this.props;
 
 		if (prevProps.open && !open && onClose) {
-			onClose();
+			onClose({});
 		} else if (!prevProps.open && open && onOpen) {
-			onOpen();
+			onOpen({});
 		}
 
 		if (scrimType === 'none') {
@@ -138,7 +138,7 @@ class FloatingLayerBase extends React.Component {
 
 	handleClick = () => {
 		if (!this.props.noAutoDismiss && this.props.open && this.props.onDismiss) {
-			this.props.onDismiss();
+			this.props.onDismiss({});
 		}
 	}
 
@@ -208,7 +208,7 @@ class FloatingLayerBase extends React.Component {
 
 const handleCancel = (props) => {
 	if (props.open && !props.noAutoDismiss && props.onDismiss) {
-		props.onDismiss();
+		props.onDismiss({});
 		return true;
 	}
 };
