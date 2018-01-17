@@ -1,0 +1,28 @@
+// ProgressBar.less
+//
+.progressBar {
+	position: relative;
+	direction: ltr;
+
+	&.vertical {
+		display: inline-block;
+
+		.fill {
+			width: 100%;
+			bottom: 0;
+		}
+		.load {
+			width: 100%;
+			bottom: 0;
+		}
+	}
+
+	.fill {
+		height: 100%;
+		position: absolute;
+	}
+	.load {
+		height: 100%;
+		position: absolute;
+	}
+}
