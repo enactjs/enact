@@ -25,9 +25,6 @@ import Skinnable from '../Skinnable';
 
 import componentCss from './Spinner.less';
 
-// Migration Note: css={componentCss} should likely be added once MarqueeText is merged into the migration target branch.
-const ChildrenComponent = (props) => <MarqueeText {...props} marqueeOn="render" alignment="center" />;
-
 /**
  * {@link moonstone/Spinner.SpinnerCore} shows a spinning animation.
  *
@@ -109,16 +106,23 @@ const SpinnerBase = kind({
 		)
 	},
 
-	render: ({...rest}) => {
+	render: ({children, ...rest}) => {
 		delete rest.transparent;
 
+		// Migration Note: css={componentCss} should likely be added to <MarqueeText> once MarqueeText is merged into the migration target branch.
 		return (
 			<UiSpinnerBase
 				{...rest}
-				childrenComponent={ChildrenComponent}
 				css={componentCss}
 				spinnerComponent={SpinnerCore}
-			/>
+			>
+				{children ?
+					<MarqueeText className={componentCss.client} marqueeOn="render" alignment="center">
+						{children}
+					</MarqueeText> :
+					null
+				}
+			</UiSpinnerBase>
 		);
 	}
 });

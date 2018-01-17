@@ -65,12 +65,10 @@ const SpinnerBase = kind({
 		/**
 		 * The optional string to be displayed as the main content of the spinner.
 		 *
-		 * @type {String}
+		 * @type {Node}
 		 * @public
 		 */
-		children: PropTypes.string,
-
-		childrenComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+		children: PropTypes.node,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -82,7 +80,6 @@ const SpinnerBase = kind({
 		 * * `spinnerContainer` - Added as a parent in the case of blockOnClick="container"
 		 * * `blockClickOn` - Applied if interaction should be blocked
 		 * * `centered` - Applied if the centered prop is present
-		 * * `client` - The optional text portion of the Spinner
 		 * * `content` - Applied if there is (children) content
 		 * * `running` - Controls the playback state. Attach animation name property to this class.
 		 * * `scrim` - The blocking layer behind the Spinner
@@ -105,7 +102,6 @@ const SpinnerBase = kind({
 
 	defaultProps: {
 		centered: false,
-		childrenComponent: 'div',
 		scrim: false
 	},
 
@@ -119,17 +115,6 @@ const SpinnerBase = kind({
 		className: ({centered, children, styler}) => styler.append(
 			{centered, content: children}
 		),
-		children: ({children, css, childrenComponent: ChildrenComponent}) => {
-			if (children) {
-				return (
-					<ChildrenComponent className={css.client}>
-						{children}
-					</ChildrenComponent>
-				);
-			} else {
-				return null;
-			}
-		},
 		scrimClassName: ({blockClickOn, scrim, styler}) => styler.join(
 			{blockClickOn, scrim}
 		),
