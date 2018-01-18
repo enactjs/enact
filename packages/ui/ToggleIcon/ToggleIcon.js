@@ -67,7 +67,7 @@ const ToggleIconBase = kind({
 		/**
 		 * The component used to render the icon.
 		 *
-		 * @type {Component}
+		 * @type {String|Object}
 		 * @default 'div'
 		 * @public
 		 */
