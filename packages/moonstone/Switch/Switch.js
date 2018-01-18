@@ -5,6 +5,9 @@
  * @example
  * <Switch />
  *
+ * @example
+ * <Switch />
+ *
  * @module moonstone/Switch
  * @exports Switch
  * @exports SwitchBase
