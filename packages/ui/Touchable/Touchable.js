@@ -1,5 +1,7 @@
 /**
- * Exports the {@link ui/Touchable.Touchable} Higher-order Component (HOC).
+ * Provides the [Touchable]{@link ui/Touchable.Touchable} Higher-order Component (HOC) to add
+ * gesture support to components and the [configure()]{@link ui/Touchable.configure} method for
+ * configuring gestures for the application.
  *
  * @module ui/Touchable
  */
