@@ -20,6 +20,7 @@ import {on, off} from '@enact/core/dispatcher';
 import {platform} from '@enact/core/platform';
 import {is} from '@enact/core/keymap';
 import Slottable from '@enact/ui/Slottable';
+import Touchable from '@enact/ui/Touchable';
 import Spotlight from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
@@ -28,7 +29,6 @@ import {toUpperCase} from '@enact/i18n/util';
 import $L from '../internal/$L';
 import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
-import Touchable from '../internal/Touchable';
 
 import {calcNumberValueOfPlaybackRate, secondsToTime} from './util';
 import Overlay from './Overlay';
