@@ -1,6 +1,9 @@
 /**
  * Provides Moonstone-themed checkmark in a circle component and interactive togglable capabilities.
  *
+ * @example
+ * <Checkbox />
+ *
  * @module moonstone/Checkbox
  * @exports Checkbox
  * @exports CheckboxBase

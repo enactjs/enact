@@ -2,6 +2,9 @@
  * Provides Moonstone-themed pill-shaped toggle switch component component with interactive
  * togglable capabilities.
  *
+ * @example
+ * <Switch />
+ *
  * @module moonstone/Switch
  * @exports Switch
  * @exports SwitchBase
