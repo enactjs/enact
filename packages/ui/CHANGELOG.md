@@ -2,20 +2,16 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
-
-### Deprecated
+## [2.0.0-alpha.3] - 2018-01-18
 
 ### Added
 
 - `ui/Button`, `ui/Icon`, and `ui/IconButton` components to support reuse by themes
 - `ui/Touchable` support for flick gestures
 
-### Changed
+### Fixed
 
 - `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
-
-### Fixed
 
 ## [2.0.0-alpha.2] - 2017-08-29
 
