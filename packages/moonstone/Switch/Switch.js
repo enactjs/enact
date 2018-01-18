@@ -1,28 +1,32 @@
 /**
- * Contains the declaration for the {@link moonstone/Switch.Switch} component.
+ * Provides Moonstone-themed pill-shaped toggle switch component component with interactive
+ * togglable capabilities.
  *
  * @module moonstone/Switch
+ * @exports Switch
+ * @exports SwitchBase
+ * @exports SwitchDecorator
  */
 
 import kind from '@enact/core/kind';
-import {handle, forward} from '@enact/core/handle';
 import React from 'react';
 import PropTypes from 'prop-types';
+import ToggleIcon from '@enact/ui/ToggleIcon';
+import compose from 'ramda/src/compose';
+import Pure from '@enact/ui/internal/Pure';
 
 import Icon from '../Icon';
 import Skinnable from '../Skinnable';
-import Touchable from '../internal/Touchable';
 
 import css from './Switch.less';
 
-const TouchableSpan = Touchable('span');
 
 /**
- * {@link moonstone/Switch.Switch} represents a Boolean state, and looks like a switch in
- * either the 'on' or 'off' positions.
+ * Renders the base level DOM structure of the component.
  *
- * @class Switch
+ * @class SwitchBase
  * @memberof moonstone/Switch
+ * @extends moonstone/ToggleIcon.ToggleIcon
  * @ui
  * @public
  */
@@ -37,79 +41,61 @@ const SwitchBase = kind({
 		 * @default true
 		 * @public
 		 */
-		animated: PropTypes.bool,
-
-		/**
-		 * Sets whether this control is disabled, and non-interactive
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		disabled: PropTypes.bool,
-
-		/**
-		 * The handler to run when the component is toggled.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {String} event.selected - Selected value of item.
-		 * @param {*} event.value - Value passed from `value` prop.
-		 * @public
-		 */
-		onToggle: PropTypes.func,
-
-		/**
-		 * Sets whether this control is in the "on" or "off" state. `true` for on, `false` for "off".
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		selected: PropTypes.bool
+		animated: PropTypes.bool
 	},
 
 	defaultProps: {
-		animated: true,
-		selected: false,
-		disabled: false
+		animated: true
 	},
 
 	styles: {
 		css,
-		className: 'switch'
-	},
-
-	handlers: {
-		onToggle: handle(
-			forward('onTap'),
-			(ev, {selected, onToggle}) => {
-				if (onToggle) {
-					onToggle({selected: !selected});
-				}
-			}
-		)
+		className: 'switch',
+		publicClassNames: ['switch']
 	},
 
 	computed: {
-		className: ({animated, selected, styler}) => styler.append(
-			{animated, selected}
+		className: ({animated, styler}) => styler.append(
+			{animated}
 		)
 	},
 
-	render: ({onToggle, ...rest}) => {
+	render: ({...rest}) => {
 		delete rest.animated;
-		delete rest.selected;
-
 		return (
-			<TouchableSpan {...rest} onTap={onToggle}>
-				<Icon className={css.icon}>circle</Icon>
-			</TouchableSpan>
+			<ToggleIcon css={css} iconComponent={Icon} {...rest}>circle</ToggleIcon>
 		);
 	}
 });
 
-const Switch = Skinnable(SwitchBase);
+/**
+ * Moonstone-specific behaviors to apply to `SwitchBase`.
+ *
+ * @hoc
+ * @memberof moonstone/Switch
+ * @mixes moonstone/Skinnable.Skinnable
+ * @public
+ */
+const SwitchDecorator = compose(
+	Pure,
+	Skinnable
+);
+
+/**
+ * A fully functional, ready-to-use, component.
+ *
+ * @class Switch
+ * @memberof moonstone/Switch
+ * @extends moonstone/Switch.SwitchBase
+ * @mixes moonstone/Switch.SwitchDecorator
+ * @ui
+ * @public
+ */
+const Switch = SwitchDecorator(SwitchBase);
 
 export default Switch;
-export {Switch, SwitchBase};
+export {
+	Switch,
+	SwitchBase,
+	SwitchDecorator
+};
