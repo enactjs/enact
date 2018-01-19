@@ -14,8 +14,7 @@ import PropTypes from 'prop-types';
 import componentCss from './BodyText.less';
 
 /**
- * [BodyTextBase]{@link ui/BodyText.BodyTextBase} A basic text-block component
- * without any behaviors applied to it.
+ * A basic text-block component without any behaviors applied to it.
  *
  * @class BodyTextBase
  * @memberof ui/BodyText
@@ -23,7 +22,7 @@ import componentCss from './BodyText.less';
  * @public
  */
 const BodyTextBase = kind({
-	name: 'BodyText',
+	name: 'ui:BodyText',
 
 	propTypes: /** @lends ui/BodyText.BodyText.prototype */ {
 		/**
@@ -64,13 +63,12 @@ const BodyTextBase = kind({
 		className: ({centered, styler}) => styler.append({centered})
 	},
 
-	render: ({css, ...rest}) => {
-		delete rest.centered;
+	render: (props) => {
+		delete props.centered;
 
 		return (
 			<p
-				css={css}
-				{...rest}
+				{...props}
 			/>
 		);
 	}
