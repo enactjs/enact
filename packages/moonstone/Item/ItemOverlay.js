@@ -7,16 +7,14 @@
  * @exports ItemOverlayDecorator
  */
 
-import {ItemOverlay as UIItemOverlay} from '@enact/ui/Item';
+import {Item as UIItemOverlay} from '@enact/ui/Item';
 import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Overlay from './Overlay';
 
-
-import OverlayCSS from './Overlay.less';
-import ComponentCss from './Item.less';
+import componentCss from './Item.less';
 
 /**
  * A moonstone-styled ItemOverlay without any behavior.
@@ -50,7 +48,6 @@ const ItemOverlayBase = kind({
 		 */
 		autoHide: PropTypes.node,
 
-
 		/**
 		 * The type of component to use to render the item. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
@@ -60,7 +57,6 @@ const ItemOverlayBase = kind({
 		 * @public
 		 */
 		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -103,7 +99,7 @@ const ItemOverlayBase = kind({
 	},
 
 	styles: {
-		css: Object.assign({}, ComponentCss, OverlayCSS, {item: `${ComponentCss.item} ${OverlayCSS.item}`}),
+		css: componentCss,
 		className:'item',
 		publicClassNames: ['item']
 	},
@@ -129,13 +125,10 @@ const ItemOverlayBase = kind({
 		)
 	},
 
-	render: ({component: Component, css, disabled, ...rest}) => {
+	render: ({css, ...rest}) => {
 		return (
 			<UIItemOverlay
 				css={css}
-				component={Component}
-				aria-disabled={disabled}
-				disabled={disabled}
 				{...rest}
 			/>
 		);

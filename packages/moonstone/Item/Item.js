@@ -25,7 +25,7 @@ import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 import {ItemOverlayBase} from './ItemOverlay';
 
-import ComponentCss from './Item.less';
+import componentCss from './Item.less';
 
 /**
  * A moonstone-styled item without any behavior.
@@ -111,7 +111,7 @@ const ItemBase = kind({
 	},
 
 	styles: {
-		css: ComponentCss,
+		css: componentCss,
 		className:'item',
 		publicClassNames: ['item']
 	},
@@ -141,7 +141,7 @@ const ItemBase = kind({
 });
 
 // cache the MarqueeDecorator so it can be used for Item and ItemOverlay
-const ItemMarqueeDecorator = MarqueeDecorator({className: ComponentCss.content, invalidateProps: ['inline', 'autoHide', 'remeasure']});
+const ItemMarqueeDecorator = MarqueeDecorator({className: componentCss.content, invalidateProps: ['inline', 'autoHide', 'remeasure']});
 
 /**
  * Moonstone-specific item behaviors to apply to [Item]{@link moonstone/Item.ItemBase}.

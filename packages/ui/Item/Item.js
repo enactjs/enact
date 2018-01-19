@@ -134,33 +134,9 @@ const ItemBase = kind({
 const ItemDecorator = Touchable;
 const Item = ItemDecorator(ItemBase);
 
-/**
- * [ItemOverlayDecorator]{@link ui/Item.ItemOverlayDecorator} adds slottable support to a
- * [Item]{@link ui/Item.Item}
- *
- * @hoc
- * @memberof ui/Item
- * @mixes ui/Slottable.Slottable
- * @public
- */
-const ItemOverlayDecorator = (Wrapped) => Wrapped;
-
-/**
- * [ItemOverlay]{@link ui/Item.ItemOverlay} is a minimally-styled item with
- * touchable, overlay, and slottable support
- * [Item]{@link ui/Item.Item}
- *
- * @hoc
- * @memberof ui/Item
- * @public
- */
-const ItemOverlay = Item;
-
 export default Item;
 export {
 	Item,
 	ItemBase,
-	ItemDecorator,
-	ItemOverlay,
-	ItemOverlayDecorator
+	ItemDecorator
 };

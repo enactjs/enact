@@ -11,7 +11,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import ComponentCSS from './Overlay.less';
+import componentCSS from './Item.less';
 
 /**
  * {@link ui/Item.Overlay} is an unstyled component to overlay content, typically icons over an item
@@ -55,8 +55,9 @@ const OverlayBase = kind({
 	},
 
 	styles: {
-		css: ComponentCSS,
-		className: 'overlay'
+		css: componentCSS,
+		className: 'overlay',
+		publicClassNames: true
 	},
 
 	computed: {
@@ -76,12 +77,7 @@ const OverlayBase = kind({
 	}
 });
 
-const Overlay = OverlayBase;
-const OverlayDecorator = (Wrapped) => Wrapped;
-
-export default Overlay;
+export default OverlayBase;
 export {
-	Overlay,
-	OverlayBase,
-	OverlayDecorator
+	OverlayBase as Overlay
 };
