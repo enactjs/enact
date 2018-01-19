@@ -12,7 +12,7 @@ import UIOverlay from '@enact/ui/Item/Overlay';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import ComponentCSS from './Overlay.less';
+import componentCSS from './Item.less';
 
 /**
  * A moonstone-styled Overlay without any behavior.
@@ -55,7 +55,7 @@ const OverlayBase = kind({
 	},
 
 	styles: {
-		css: ComponentCSS,
+		css: componentCSS,
 		className: 'overlay',
 		publicClassNames: ['overlay', 'hidden']
 	},
