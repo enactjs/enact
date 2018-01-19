@@ -1,6 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import sinon from 'sinon';
+
 import DaySelector from '../DaySelector';
 
 const tap = (node) => {
@@ -54,11 +55,11 @@ describe('DaySelector', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should use the long string format when useLongDayText is true', function () {
+	it('should use the long string format when longDayLabels is true', function () {
 		const handleSelect = sinon.spy();
 		const content = 'Saturday';
 		const subject = mount(
-			<DaySelector useLongDayText onSelect={handleSelect} />
+			<DaySelector longDayLabels onSelect={handleSelect} />
 		);
 
 		const item = subject.find('DaySelectorItem').last();

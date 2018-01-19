@@ -14,8 +14,8 @@ storiesOf('DaySelector')
 		() => (
 			<DaySelector
 				disabled={boolean('disabled', false)}
+				longDayLabels={boolean('longDayLabels', false)}
 				onSelect={action('onSelect')}
-				useLongDayText={boolean('useLongDayText', false)}
 			/>
 		),
 		{propTables: [Config]}

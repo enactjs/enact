@@ -1,9 +1,3 @@
-/**
- * Contains the declaration for the {@link moonstone/DaySelectorCheckbox.DaySelectorCheckbox} component.
- *
- * @module moonstone/DaySelectorCheckbox
- */
-
 import kind from '@enact/core/kind';
 import {handle, forward} from '@enact/core/handle';
 import React from 'react';
@@ -17,19 +11,20 @@ import css from './DaySelectorCheckbox.less';
 const TouchableDiv = Touchable('div');
 
 /**
- * {@link moonstone/DaySelectorCheckbox.DaySelectorCheckbox} represents a Boolean state, and looks like a check
- * mark in a circle. It also has built-in spotlight support and is intended for use in a specialized
- * [Item]{@link moonstone/Item} that does not visually respond to focus, so this can show focus instead.
+ * {@link moonstone/DaySelectorCheckbox.DaySelectorCheckbox} represents a Boolean state, and looks
+ * like a check mark in a circle. It also has built-in spotlight support and is intended for use in
+ * a specialized [Item]{@link moonstone/Item} that does not visually respond to focus, so this can
+ * show focus instead.
  *
  * @class DaySelectorCheckbox
- * @memberof moonstone/DaySelectorCheckbox
+ * @memberof moonstone/DaySelector
  * @ui
- * @public
+ * @private
  */
 const DaySelectorCheckboxBase = kind({
 	name: 'DaySelectorCheckbox',
 
-	propTypes: /** @lends moonstone/DaySelectorCheckbox.DaySelectorCheckbox.prototype */ {
+	propTypes: /** @lends moonstone/DaySelector.DaySelectorCheckbox.prototype */ {
 		/**
 		 * Sets whether this control is disabled, and non-interactive
 		 *
@@ -91,4 +86,7 @@ const DaySelectorCheckboxBase = kind({
 const DaySelectorCheckbox = Skinnable(DaySelectorCheckboxBase);
 
 export default DaySelectorCheckbox;
-export {DaySelectorCheckbox, DaySelectorCheckboxBase};
+export {
+	DaySelectorCheckbox,
+	DaySelectorCheckboxBase
+};

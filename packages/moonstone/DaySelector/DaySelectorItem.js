@@ -1,10 +1,3 @@
-/**
- * Exports [DaySelectorItemBase]{@link moonstone/DaySelectorItem.DaySelectorItemBase} and
- * [DaySelectorItem]{@link moonstone/DaySelectorItem.DaySelectorItem} (default) components.
- *
- * @module moonstone/DaySelectorItem
- */
-
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -18,23 +11,24 @@ import Skinnable from '../Skinnable';
 import css from './DaySelectorItem.less';
 
 /**
- * [DaySelectorItemBase]{@link moonstone/DaySelectorItem.DaySelectorItemBase} is a stateless
- * component that is an extension of [Item]{@link moonstone/Item} that supports
- * [toggleableability]{@link ui/Toggleable}. It has two states: `true` (selected) & `false`
- * (unselected). It uses a check icon to represent its selected state. This differs from
- * [FormCheckboxItemBase]{@link moonstone/FormCheckboxItem.FormCheckboxItemBase}, only visually, in its handling
- * of `Spotlight` focus. When this item receives focus, the entire element appear focused,
- * relying on its child element [DaySelectorCheckbox]{@link moonstone/DaySelectorCheckbox} to reflect that state.
+ * An extension of [Item]{@link moonstone/Item.Item} that can be toggled between two states via its
+ * `selected` prop.
+ *
+ * It uses a check icon to represent its selected state. This differs from
+ * [FormCheckboxItemBase]{@link moonstone/FormCheckboxItem.FormCheckboxItem}, only visually, in its
+ * handling of `Spotlight` focus. When this item receives focus, the entire element appear focused,
+ * relying on its child element
+ * [DaySelectorCheckbox]{@link moonstone/DaySelector.DaySelectorCheckbox} to reflect that state.
  *
  * @class DaySelectorItemBase
- * @memberof moonstone/DaySelectorItem
+ * @memberof moonstone/DaySelector
  * @ui
- * @public
+ * @private
  */
 const DaySelectorItemBase = kind({
 	name: 'DaySelectorItem',
 
-	propTypes: /** @lends moonstone/DaySelectorItem.DaySelectorItemBase.prototype */ {
+	propTypes: /** @lends moonstone/DaySelector.DaySelectorItemBase.prototype */ {
 		/**
 		 * The string to be displayed as the main content of the checkbox item.
 		 *
@@ -120,11 +114,8 @@ const DaySelectorItemBase = kind({
 });
 
 /**
- * [DaySelectorItem]{@link moonstone/DaySelectorItem.DaySelectorItem} is the composed version of
- * [DaySelectorItemBase]{@link moonstone/DaySelectorItem.DaySelectorItemBase} which adds the
- * [Toggleable]{@link ui/Toggleable} High Order Component to support interactivity of the component.
- * [DaySelectorItem]{@link moonstone/DaySelectorItem.DaySelectorItem} has two states: `true`
- * (selected) & `false` (unselected). It uses a check icon to represent its selected state.
+ * An extension of [Item]{@link moonstone/Item.Item} that can be toggled between two states via its
+ * `selected` prop.
  *
  * By default, `DaySelectorItem` maintains the state of its `selected` property. Supply the
  * `defaultSelected` property to control its initial value. If you wish to directly control updates
@@ -132,9 +123,12 @@ const DaySelectorItemBase = kind({
  * `onToggle` events.
  *
  * @class DaySelectorItem
- * @memberof moonstone/DaySelectorItem
+ * @extends moonstone/DaySelector.DaySelectorItemBase
+ * @mixes ui/Toggleable,Toggleable
+ * @mixes ui/Skinnable.Skinnable
+ * @memberof moonstone/DaySelector
  * @ui
- * @public
+ * @private
  */
 const DaySelectorItem = Pure(
 	Toggleable(
