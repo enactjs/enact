@@ -2,7 +2,11 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [1.13.3] - 2017-01-16
+
+### Added
+
+- `moonstone/EditableIntegerPicker` component
 
 ### Deprecated
 
@@ -15,6 +19,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/TimePicker` to not read out meridiem label when meridiem picker gets a focus
+- `moonstone/Scroller` to correctly update scrollbars when the scroller's contents change
 
 ## [1.13.2] - 2017-12-14
 
