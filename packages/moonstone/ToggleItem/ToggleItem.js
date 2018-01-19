@@ -13,9 +13,10 @@ import Toggleable from '@enact/ui/Toggleable';
 
 import SlotItem from '../SlotItem';
 
-import ToggleIcon from './ToggleIcon';
+import ToggleIcon from '@enact/ui/ToggleIcon';
+import Icon from '../Icon';
 
-import css from './ToggleItem.less';
+import componentCss from './ToggleItem.less';
 
 /**
  * {@link moonstone/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
@@ -131,7 +132,7 @@ const ToggleItemBase = kind({
 	},
 
 	styles: {
-		css,
+		css: componentCss,
 		className: 'toggleItem'
 	},
 
