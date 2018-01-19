@@ -80,7 +80,13 @@ import styles from './styles';
  *			css,
  *			className: 'button'
  *		},
- *		// add some computed properties
+ *		// add event handlers that are cached between calls to prevent recreating each call. This
+ *		// wraps the returned component with a `React.Component`. Any handlers are added to the
+ *		// props passed to `render()`.  See also core/handle.
+ *		handlers: {
+ *			onKeyDown: (evt, props) => { .... }
+ *		},
+ *		// add some computed properties, these are added to props passed to `render()`
  *		computed: {
  *			// border color will be the color prepended by 'light'
  *			borderColor: ({color}) => 'light' + color,
