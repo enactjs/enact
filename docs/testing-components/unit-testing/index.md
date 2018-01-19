@@ -6,10 +6,10 @@ title: Unit Testing
 
 ### Running Tests
 
-If you have created a enact project using the `enact-dev` it will have everything you need 
+If you have created a enact project using the `enact cli` it will have everything you need 
 to run tests. For a single-run, execute `enact test start --single-run --browsers PhantomJS`. 
 You can also have the tests automatically run each time the filesystem changes simply with 
-`enact test start`. If you built your app using `enact-dev` you can also use 
+`enact test start`. If you built your app using `enact cli` you can also use 
 `npm run test` and `npm run test-watch` for short. Both commands will execute 
 the test suite and output the results to the console. If you are working on 
 framework modules, at a minimum you should perform the single test run on your 
