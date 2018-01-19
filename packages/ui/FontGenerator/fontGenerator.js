@@ -36,7 +36,9 @@
  *
  * @name fontGenerator
  * @memberof ui/FontGenerator
- * @param {String} locale Locale string
+ * @param	{Object}	fonts		Object with font name for different locales.
+ * @param	{String}	fontName	Name of the font.
+ * @param	{String}	locale		locale Locale string.
  * @returns {undefined|String} In a non-browser environment, returns the style CSS tag, otherwise undefined.
  * @private
  */
