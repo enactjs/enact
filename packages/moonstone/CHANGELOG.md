@@ -4,17 +4,14 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [1.13.3] - 2017-01-16
 
-### Added
-
-- `moonstone/EditableIntegerPicker` component
-
 ### Deprecated
 
 - `moonstone/VirtualGridList.GridListImageItem`, will be replaced by `moonstone/GridListImageItem` property in 2.0.0
 
 ### Added
 
-- `moonstone/GridListImageItem` to be a top-level Moonstone component
+- `moonstone/EditableIntegerPicker` component
+- `moonstone/GridListImageItem` component
 
 ### Fixed
 
