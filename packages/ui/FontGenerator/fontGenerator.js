@@ -143,5 +143,5 @@ function fontGenerator ({fonts, fontName, locale}) {
 	}
 }
 
-export default fontGenerator;
-export {fontGenerator};
+module.exports = fontGenerator;
+module.exports.fontGenerator = fontGenerator;

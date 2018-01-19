@@ -3,7 +3,8 @@
  * {@link moonstone/MoonstoneDecorator.fontGenerator} and is not intended to be directly
  * included by external developers.
  */
-import uiFontGenerator from '@enact/ui/FontGenerator';
+// eslint-disable-next-line no-var
+var uiFontGenerator = require('@enact/ui/FontGenerator');
 
 const fontName = 'Moonstone LG Display';
 
@@ -80,13 +81,13 @@ let previousLocale = null;
  * @returns {undefined|String} In a non-browser environment, returns the style CSS tag, otherwise undefined.
  * @private
  */
-const fontGenerator = (locale) => {
+function fontGenerator (locale) {
 	// If the locale is the same as the last time this ran, bail out and don't bother to recompile this again.
 	if (locale === previousLocale) return;
 
 	previousLocale = locale;
 	return uiFontGenerator({fonts, fontName, locale});
-};
+}
 
 module.exports = fontGenerator;
 module.exports.fontGenerator = fontGenerator;
