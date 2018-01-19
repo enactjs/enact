@@ -221,7 +221,7 @@ const EditableIntegerPickerBase = kind({
 
 	styles: {
 		css,
-		className: 'EditableIntegerPicker'
+		className: 'editableIntegerPicker'
 	},
 
 	computed: {
