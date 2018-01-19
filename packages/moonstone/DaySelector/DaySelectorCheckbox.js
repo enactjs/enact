@@ -11,10 +11,10 @@ import css from './DaySelectorCheckbox.less';
 const TouchableDiv = Touchable('div');
 
 /**
- * {@link moonstone/DaySelectorCheckbox.DaySelectorCheckbox} represents a Boolean state, and looks
- * like a check mark in a circle. It also has built-in spotlight support and is intended for use in
- * a specialized [Item]{@link moonstone/Item} that does not visually respond to focus, so this can
- * show focus instead.
+ * A component that represents the selected state of a day within a
+ * {@link moonstone/DaySelector.DaySelector}. It has built-in spotlight support and is intended for
+ * use in a specialized [Item]{@link moonstone/Item} that does not visually respond to focus, so
+ * this can show focus instead.
  *
  * @class DaySelectorCheckbox
  * @memberof moonstone/DaySelector
