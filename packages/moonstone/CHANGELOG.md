@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/EditableIntegerPicker` component
+
 ### Fixed
 
 - `moonstone/TimePicker` to not read out meridiem label when meridiem picker gets a focus
