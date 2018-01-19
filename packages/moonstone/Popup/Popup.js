@@ -4,17 +4,18 @@
  * @module moonstone/Popup
  * @exports Popup
  * @exports PopupBase
+ * @exports PopupDecorator
  */
 
 import {is} from '@enact/core/keymap';
 import {on, off} from '@enact/core/dispatcher';
-import FloatingLayer from '@enact/ui/FloatingLayer';
+import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import {PopupBase as UiPopupBase} from '@enact/ui/Popup';
+import {FloatingPopupBase, PopupDecorator as UiPopupDecorator} from '@enact/ui/Popup';
 import {forward} from '@enact/core/handle';
 import compose from 'ramda/src/compose';
 import warning from 'warning';
@@ -35,7 +36,7 @@ const forwardHide = forward('onHide');
 const forwardShow = forward('onShow');
 
 /**
- * [PopupBase]{@link moonstone/Popup.PopupBase} is a modal component that appears
+ * [PopupBase]{@link moonstone/Popup.PopupBase} is a moonstone-styled modal component that appears
  * at the bottom of the screen and takes up the full screen width.
  *
  * @class PopupBase
@@ -150,7 +151,7 @@ const PopupBase = kind({
 		delete rest.showCloseButton;
 
 		return (
-			<UiPopupBase
+			<FloatingPopupBase
 				css={css}
 				{...rest}
 				noAnimation={noAnimation}
@@ -162,17 +163,10 @@ const PopupBase = kind({
 					{children}
 				</div>
 				{closeButton}
-			</UiPopupBase>
+			</FloatingPopupBase>
 		);
 	}
 });
-
-const PopupDecorater = compose(
-	Skinnable({defaultSkin: 'light'}),
-	SpotlightContainerDecorator({enterTo: 'default-element', preserveId: true})
-);
-
-const DecoratedPopupBase = PopupDecorater(PopupBase);
 
 // Deprecate using scrimType 'none' with spotlightRestrict of 'self-only'
 const checkScrimNone = (props) => {
@@ -182,300 +176,267 @@ const checkScrimNone = (props) => {
 };
 
 /**
- * {@link moonstone/Popup.Popup} is a stateful component that help {@link moonstone/Popup.PopupBase}
- * to appear in {@link ui/FloatingLayer.FloatingLayer}.
+ * [MoonstonePopupDecorator]{@link moonstone/Popup.MoonstonePopupDecorator} is a Higher-order Component that manages
+ * spotlight focus.
  *
- * @class Popup
- * @memberof moonstone/Popup
- * @ui
- * @public
+ * @class MoonstonePopupDecorator
+ * @memberof moonstone/Popup.MoonstonePopupDecorator
+ * @hoc
+ * @private
  */
-class Popup extends React.Component {
+const MoonstonePopupDecorator = hoc((config, Wrapped) => {
+	return class extends React.Component {
+		static displayName = 'MoonstonePopupDecorator'
 
-	static propTypes = /** @lends moonstone/Popup.Popup.prototype */ {
-		/**
-		 * When `true`, the popup will not animate on/off screen.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noAnimation: PropTypes.bool,
+		static propTypes = /** @lends moonstone/Popup.MoonstonePopupDecorator.prototype */ {
+			/**
+			 * When `true`, the popup will not animate on/off screen.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			noAnimation: PropTypes.bool,
 
-		/**
-		 * When `true`, the popup will not close when the user presses `ESC` key.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noAutoDismiss: PropTypes.bool,
+			/**
+			 * When `true`, the popup will not close when the user presses `ESC` key.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			noAutoDismiss: PropTypes.bool,
 
-		/**
-		 * A function to be run when a closing action is invoked by the user. These actions include
-		 * pressing `ESC` key, clicking on the close button, or spotlight focus moves outside the
-		 * boundary of the popup (when `spotlightRestrict` is not `'self-only'`). It is the
-		 * responsibility of the callback to set the `open` property to `false`.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onClose: PropTypes.func,
+			/**
+			 * A function to be run when a closing action is invoked by the user. These actions include
+			 * pressing `ESC` key, clicking on the close button, or spotlight focus moves outside the
+			 * boundary of the popup (when `spotlightRestrict` is not `'self-only'`). It is the
+			 * responsibility of the callback to set the `open` property to `false`.
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onClose: PropTypes.func,
 
-		/**
-		 * A function to be run when popup hides. When animating it runs after transition for
-		 * hiding is finished.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onHide: PropTypes.func,
+			/**
+			 * A function to be run when a key-down action is invoked by the user.
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onKeyDown: PropTypes.func,
 
-		/**
-		 * A function to be run when a key-down action is invoked by the user.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onKeyDown: PropTypes.func,
+			/**
+			 * When `true`, the popup is rendered. Popups are rendered into the
+			 * [floating layer]{@link ui/FloatingLayer.FloatingLayer}.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			open: PropTypes.bool,
 
-		/**
-		 * A function to run when popup shows. When animating, it runs after transition for
-		 * showing is finished.
-		 *
-		 * Note: The function does not run if Popup is initially opened and non animating.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onShow: PropTypes.func,
-
-		/**
-		 * When `true`, the popup is rendered. Popups are rendered into the
-		 * [floating layer]{@link ui/FloatingLayer.FloatingLayer}.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		open: PropTypes.bool,
-
-		/**
-		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`. `'none'`
-		 * is not compatible with `spotlightRestrict` of `'self-only'`, use a transparent scrim to
-		 * prevent mouse focus when using popup.
-		 *
-		 * @type {String}
-		 * @default 'translucent'
-		 * @public
-		 */
-		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none']),
-
-		/**
-		 * When `true`, the popup includes a close button; when `false`, none is included.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		showCloseButton: PropTypes.bool,
-
-		/**
-		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
-		 * can be either `'none'`, `'self-first'`, or `'self-only'`.
-		 *
-		 * @type {String}
-		 * @default 'self-only'
-		 * @public
-		 */
-		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
-	}
-
-	static defaultProps = {
-		noAnimation: false,
-		noAutoDismiss: false,
-		open: false,
-		scrimType: 'translucent',
-		showCloseButton: false,
-		spotlightRestrict: 'self-only'
-	}
-
-	constructor (props) {
-		super(props);
-		this.state = {
-			floatLayerOpen: this.props.open,
-			popupOpen: this.props.noAnimation,
-			containerId: Spotlight.add(),
-			activator: null
-		};
-		checkScrimNone(this.props);
-	}
-
-	componentDidMount () {
-		if (this.props.open && this.props.noAnimation) {
-			on('keydown', this.handleKeyDown);
-			this.spotPopupContent();
+			/**
+			 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
+			 * can be either `'none'`, `'self-first'`, or `'self-only'`.
+			 *
+			 * @type {String}
+			 * @default 'self-only'
+			 * @public
+			 */
+			spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
 		}
-	}
 
-	componentWillReceiveProps (nextProps) {
-		if (!this.props.open && nextProps.open) {
-			this.setState({
-				popupOpen: nextProps.noAnimation,
-				floatLayerOpen: true,
-				activator: Spotlight.getCurrent()
-			});
-		} else if (this.props.open && !nextProps.open) {
-			this.setState({
-				popupOpen: nextProps.noAnimation,
-				floatLayerOpen: !nextProps.noAnimation,
-				activator: nextProps.noAnimation ? null : this.state.activator
-			});
+		static defaultProps = {
+			spotlightRestrict: 'self-only'
 		}
-		checkScrimNone(nextProps);
-	}
 
-	componentDidUpdate (prevProps, prevState) {
-		if (this.props.open !== prevProps.open) {
-			if (!this.props.noAnimation) {
-				Spotlight.pause();
-			} else if (this.props.open) {
-				forwardShow({}, this.props);
+		constructor (props) {
+			super(props);
+			this.state = {
+				containerId: Spotlight.add(),
+				activator: null
+			};
+			checkScrimNone(this.props);
+		}
+
+		componentDidMount () {
+			if (this.props.open && this.props.noAnimation) {
 				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
-			} else if (prevProps.open) {
-				forwardHide({}, this.props);
-				off('keydown', this.handleKeyDown);
-				this.spotActivator(prevState.activator);
 			}
 		}
-	}
 
-	componentWillUnmount () {
-		if (this.props.open) {
-			off('keydown', this.handleKeyDown);
-		}
-		Spotlight.remove(this.state.containerId);
-	}
-
-	handleFloatingLayerOpen = () => {
-		if (!this.props.noAnimation) {
-			this.setState({
-				popupOpen: true
-			});
-		}
-	}
-
-	handleKeyDown = (ev) => {
-		const {onClose, spotlightRestrict} = this.props;
-		const keyCode = ev.keyCode;
-		const direction = getDirection(keyCode);
-		const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
-
-		if (direction && onClose) {
-			let focusChanged;
-
-			if (spottables && Spotlight.getCurrent() && spotlightRestrict !== 'self-only') {
-				focusChanged = Spotlight.move(direction);
+		componentWillReceiveProps (nextProps) {
+			if (!this.props.open && nextProps.open) {
+				this.setState(() => ({
+					activator: Spotlight.getCurrent()
+				}));
+			} else if (this.props.open && !nextProps.open) {
+				this.setState(() => ({
+					activator: nextProps.noAnimation ? null : this.state.activator
+				}));
 			}
+			checkScrimNone(nextProps);
+		}
 
-			if (!spottables || (focusChanged === false && isUp(keyCode))) {
-				// prevent default page scrolling
-				ev.preventDefault();
-				// stop propagation to prevent default spotlight behavior
-				ev.stopPropagation();
-				// set the pointer mode to false on keydown
-				Spotlight.setPointerMode(false);
-				onClose(ev);
+		componentDidUpdate (prevProps, prevState) {
+			if (this.props.open !== prevProps.open) {
+				if (!this.props.noAnimation) {
+					Spotlight.pause();
+				} else if (this.props.open) {
+					forwardShow({}, this.props);
+					on('keydown', this.handleKeyDown);
+					this.spotPopupContent();
+				} else if (prevProps.open) {
+					forwardHide({}, this.props);
+					off('keydown', this.handleKeyDown);
+					this.spotActivator(prevState.activator);
+				}
 			}
 		}
-	}
 
-	handlePopupHide = (ev) => {
-		forwardHide(ev, this.props);
-
-		this.setState(() => ({
-			floatLayerOpen: false,
-			activator: null
-		}));
-
-		if (ev.target.getAttribute('data-container-id') === this.state.containerId) {
-			Spotlight.resume();
-
-			if (!this.props.open) {
-				off('keydown', this.handleKeyDown);
-				this.spotActivator(this.state.activator);
-			}
-		}
-	}
-
-	handlePopupShow = (ev) => {
-		forwardShow(ev, this.props);
-
-		if (ev.target.getAttribute('data-container-id') === this.state.containerId) {
-			Spotlight.resume();
-
+		componentWillUnmount () {
+			// TODO: does it ever reach here?
 			if (this.props.open) {
-				on('keydown', this.handleKeyDown);
-				this.spotPopupContent();
+				off('keydown', this.handleKeyDown);
+			}
+			Spotlight.remove(this.state.containerId);
+		}
+
+		handleKeyDown = (ev) => {
+			const {onClose, spotlightRestrict} = this.props;
+			const keyCode = ev.keyCode;
+			const direction = getDirection(keyCode);
+			const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
+
+			if (direction && onClose) {
+				let focusChanged;
+
+				if (spottables && Spotlight.getCurrent() && spotlightRestrict !== 'self-only') {
+					focusChanged = Spotlight.move(direction);
+				}
+
+				if (!spottables || (focusChanged === false && isUp(keyCode))) {
+					// prevent default page scrolling
+					ev.preventDefault();
+					// stop propagation to prevent default spotlight behavior
+					ev.stopPropagation();
+					// set the pointer mode to false on keydown
+					Spotlight.setPointerMode(false);
+					onClose(ev);
+				}
 			}
 		}
-	}
 
-	spotActivator = (activator) => {
-		const current = Spotlight.getCurrent();
-		const containerNode = getContainerNode(this.state.containerId);
+		handlePopupHide = (ev) => {
+			forwardHide(ev, this.props);
 
-		// if there is no currently-spotted control or it is wrapped by the popup's container, we
-		// know it's safe to change focus
-		if (!current || (containerNode && containerNode.contains(current))) {
-			// attempt to set focus to the activator, if available
-			if (!Spotlight.focus(activator)) {
-				Spotlight.focus();
+			this.setState(() => ({
+				activator: null
+			}));
+
+			if (ev.target.querySelector(`[data-container-id="${this.state.containerId}"]`)) {
+				Spotlight.resume();
+				if (!this.props.open) {
+					off('keydown', this.handleKeyDown);
+					this.spotActivator(this.state.activator);
+				}
 			}
 		}
-	}
 
-	spotPopupContent = () => {
-		const {containerId} = this.state;
-		if (!Spotlight.focus(containerId)) {
+		handlePopupShow = (ev) => {
+			forwardShow(ev, this.props);
+
+			if (ev.target.querySelector(`[data-container-id="${this.state.containerId}"]`)) {
+				Spotlight.resume();
+
+				if (this.props.open) {
+					on('keydown', this.handleKeyDown);
+					this.spotPopupContent();
+				}
+			}
+		}
+
+		spotActivator = (activator) => {
 			const current = Spotlight.getCurrent();
-
-			// In cases where the container contains no spottable controls or we're in pointer-mode, focus
-			// cannot inherently set the active container or blur the active control, so we must do that
-			// here.
-			if (current) {
-				current.blur();
+			const containerNode = getContainerNode(this.state.containerId);
+			// if there is no currently-spotted control or it is wrapped by the popup's container, we
+			// know it's safe to change focus
+			if (!current || (containerNode && containerNode.contains(current))) {
+				// attempt to set focus to the activator, if available
+				if (!Spotlight.focus(activator)) {
+					Spotlight.focus();
+				}
 			}
-			Spotlight.setActiveContainer(containerId);
 		}
-	}
 
-	render () {
-		const {noAutoDismiss, onClose, scrimType, ...rest} = this.props;
-		delete rest.spotlightRestrict;
+		spotPopupContent = () => {
+			const {containerId} = this.state;
+			if (!Spotlight.focus(containerId)) {
+				const current = Spotlight.getCurrent();
 
-		return (
-			<FloatingLayer
-				noAutoDismiss={noAutoDismiss}
-				open={this.state.floatLayerOpen}
-				onOpen={this.handleFloatingLayerOpen}
-				onDismiss={onClose}
-				scrimType={scrimType}
-			>
-				<DecoratedPopupBase
+				// In cases where the container contains no spottable controls or we're in pointer-mode, focus
+				// cannot inherently set the active container or blur the active control, so we must do that
+				// here.
+				if (current) {
+					current.blur();
+				}
+				Spotlight.setActiveContainer(containerId);
+			}
+		}
+
+		render () {
+			const props = Object.assign({}, this.props);
+			const {onClose, ...rest} = props;
+			delete rest.onDismiss;
+			delete rest.spotlightRestrict;
+
+			return (
+				<Wrapped
 					{...rest}
 					containerId={this.state.containerId}
-					open={this.state.popupOpen}
 					onCloseButtonClick={onClose}
+					onClose={onClose}
 					onHide={this.handlePopupHide}
 					onShow={this.handlePopupShow}
 					spotlightRestrict="self-only"
 				/>
-			</FloatingLayer>
-		);
-	}
-}
+			);
+		}
+	};
+});
+
+/**
+ * Moonstone-specific popup behaviors to apply to [Popup]{@link moonstone/Popup.PopupBase}.
+ *
+ * @hoc
+ * @memberof moonstone/Popup
+ * @mixes ui/Popup.PopupDecorator
+ * @mixes ui/Skinnable.Skinnable
+ * @mixes spotlight/SpotlightContainerDecorator
+ */
+const PopupDecorator = compose(
+	MoonstonePopupDecorator,
+	UiPopupDecorator,
+	Skinnable({defaultSkin: 'light'}),
+	SpotlightContainerDecorator({enterTo: 'default-element', preserveId: true})
+);
+
+/**
+ * A moonstone-styled popup with built-in support for spotlight.
+ *
+ * @class Popup
+ * @memberof moonstone/Popup
+ * @mixes moonstone/Popup.PopupDecorator
+ * @ui
+ * @public
+ */
+const Popup = PopupDecorator(PopupBase);
 
 export default Popup;
-export {Popup, PopupBase};
+export {
+	Popup,
+	PopupBase,
+	PopupDecorator
+};

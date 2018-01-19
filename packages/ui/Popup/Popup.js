@@ -4,9 +4,12 @@
  * @module ui/Popup
  * @exports Popup
  * @exports PopupBase
+ * @exports FloatingPopupBase
+ * @exports PopupDecorator
  */
 
 import {forward} from '@enact/core/handle';
+import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -17,13 +20,14 @@ import Transition from '../Transition';
 import componentCss from './Popup.less';
 
 const forwardHide = forward('onHide');
+const forwardOpen = forward('onOpen');
 
 /**
  * [PopupBase]{@link ui/Popup.PopupBase} is a basic modal component structure without any behaviors
  * applied to it.
  *
- * @class ButtonBase
- * @memberof ui/Button
+ * @class PopupBase
+ * @memberof ui/Popup
  * @ui
  * @public
  */
@@ -42,6 +46,11 @@ const PopupBase = kind({
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `popup` - The root component class
+		 * * `popupTransitionContainer` - A placeholder for the transition container
 		 *
 		 * @type {Object}
 		 * @public
@@ -173,17 +182,70 @@ const PopupBase = kind({
 });
 
 /**
- * [Popup]{@link ui/Popup.Popup} is a stateful component that help {@link ui/Popup.PopupBase}
- * to appear in {@link ui/FloatingLayer.FloatingLayer}.
+ * [FloatingPopupBase]{@link ui/Popup.FloatingPopupBase} is a basic modal component structure
+ * without any behaviors applied to it that is rendered in [floating layer]{@link ui/FloatingLayer.FloatingLayer}.
  *
- * @class Popup
+ * @class FloatingPopupBase
  * @memberof ui/Popup
  * @ui
  * @public
  */
-class Popup extends React.Component {
+const FloatingPopupBase = kind({
+	name: 'ui:FloatingPopupBase',
 
-	static propTypes = /** @lends ui/Popup.Popup.prototype */ {
+	propTypes: /** @lends ui/Popup.FloatingPopupBase.prototype */ {
+		/**
+		 * The contents to be displayed in the body of the popup.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		children: PropTypes.node.isRequired,
+
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `popup` - The root component class
+		 * * `popupTransitionContainer` - A placeholder for the transition container
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
+
+		/**
+		 * The direction of transition (i.e. where the component will move *to*; the destination).
+		 * Supported directions are: `'up'`, `'right'`, `'down'`, `'left'`.
+		 *
+		 * @type {String}
+		 * @default 'down'
+		 * @public
+		 */
+		direction: PropTypes.oneOf(['up', 'right', 'down', 'left']),
+
+		/**
+		 * The duration of the transition.
+		 * Supported durations are: `'short'` (250ms), `'long'` (1s) and `'medium'` (500ms).
+		 *
+		 * @type {String}
+		 * @default 'short'
+		 * @public
+		 */
+		duration: PropTypes.oneOf(['short', 'medium', 'long']),
+
+		/**
+		 * When `true`, the popup is rendered. Popups are rendered into the
+		 * [floating layer]{@link ui/FloatingLayer.FloatingLayer}.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		floatLayerOpen: PropTypes.bool,
+
 		/**
 		 * When `true`, the popup will not animate on/off screen.
 		 *
@@ -202,11 +264,9 @@ class Popup extends React.Component {
 		 */
 		noAutoDismiss: PropTypes.bool,
 
+
 		/**
-		 * A function to be run when a closing action is invoked by the user. These actions include
-		 * pressing `ESC` key, clicking on the close button, or spotlight focus moves outside the
-		 * boundary of the popup (when `spotlightRestrict` is not `'self-only'`). It is the
-		 * responsibility of the callback to set the `open` property to `false`.
+		 * A function to be run when floating layer is closed.
 		 *
 		 * @type {Function}
 		 * @public
@@ -214,8 +274,16 @@ class Popup extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
-		 * A function to be run when popup hides. When animating it runs after transition for
-		 * hiding is finished.
+		 * A function to be run when `ESC` key is pressed. The function will only invoke if
+		 * `noAutoDismiss` is set to `false`.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onDismiss: PropTypes.func,
+
+		/**
+		 * A function to be run after transition for hiding is finished.
 		 *
 		 * @type {Function}
 		 * @public
@@ -223,10 +291,15 @@ class Popup extends React.Component {
 		onHide: PropTypes.func,
 
 		/**
-		 * A function to run when popup shows. When animating, it runs after transition for
-		 * showing is finished.
+		 * A function to be run when floating layer is opened. It will only be invoked for the first render.
 		 *
-		 * Note: The function does not run if Popup is initially opened and non animating.
+		 * @type {Function}
+		 * @public
+		 */
+		onOpen: PropTypes.func,
+
+		/**
+		 * A function to run after transition for showing is finished.
 		 *
 		 * @type {Function}
 		 * @public
@@ -234,8 +307,7 @@ class Popup extends React.Component {
 		onShow: PropTypes.func,
 
 		/**
-		 * When `true`, the popup is rendered. Popups are rendered into the
-		 * [floating layer]{@link ui/FloatingLayer.FloatingLayer}.
+		 * When `true`, the popup is in the open state with the contents visible
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -244,83 +316,164 @@ class Popup extends React.Component {
 		open: PropTypes.bool,
 
 		/**
-		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`. `'none'`
-		 * is not compatible with `spotlightRestrict` of `'self-only'`, use a transparent scrim to
-		 * prevent mouse focus when using popup.
+		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.
 		 *
 		 * @type {String}
 		 * @default 'translucent'
 		 * @public
 		 */
-		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none'])
-	}
+		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none']),
 
-	static defaultProps = {
-		noAnimation: false,
-		noAutoDismiss: false,
-		open: false,
-		scrimType: 'translucent'
-	}
+		/**
+		 * Customize the transition timing function.
+		 * Supported function names are: `ease`, `ease-in`, `ease-out`, `ease-in-out`, `ease-in-quart`,
+		 * `ease-out-quart`, and `linear`.
+		 *
+		 * @type {String}
+		 * @default 'ease-in-out'
+		 * @public
+		 */
+		timingFunction: PropTypes.oneOf([
+			'ease',
+			'ease-in',
+			'ease-out',
+			'ease-in-out',
+			'ease-in-quart',
+			'ease-out-quart',
+			'linear'
+		]),
 
-	constructor (props) {
-		super(props);
-		this.state = {
-			floatLayerOpen: this.props.open,
-			popupOpen: this.props.noAnimation
-		};
-	}
+		/**
+		 * How the transition affects the content.
+		 * Supported types are: `'slide'`, `'clip'`, and `'fade'`.
+		 *
+		 * @type {String}
+		 * @default 'slide'
+		 * @public
+		 */
+		type: PropTypes.oneOf(['slide', 'clip', 'fade'])
+	},
 
-	componentWillReceiveProps (nextProps) {
-		if (!this.props.open && nextProps.open) {
-			this.setState(() => ({
-				popupOpen: nextProps.noAnimation,
-				floatLayerOpen: true
-			}));
-		} else if (this.props.open && !nextProps.open) {
-			this.setState(() => ({
-				popupOpen: nextProps.noAnimation,
-				floatLayerOpen: !nextProps.noAnimation
-			}));
-		}
-	}
-
-	handleFloatingLayerOpen = () => {
-		// TODO: maybe forward `onOpen` event?
-		if (!this.props.noAnimation) {
-			this.setState(() => ({
-				popupOpen: true
-			}));
-		}
-	}
-
-	handlePopupHide = (ev) => {
-		forwardHide(ev, this.props);
-
-		this.setState(() => ({
-			floatLayerOpen: false
-		}));
-	}
-
-	render () {
-		const {noAutoDismiss, onClose, scrimType, ...rest} = this.props;
+	render: ({floatLayerOpen, noAutoDismiss, onClose, onOpen, scrimType, ...rest}) => {
+		delete rest.onDismiss;
 
 		return (
 			<FloatingLayer
 				noAutoDismiss={noAutoDismiss}
-				open={this.state.floatLayerOpen}
-				onOpen={this.handleFloatingLayerOpen}
 				onDismiss={onClose}
+				onOpen={onOpen}
+				open={floatLayerOpen}
 				scrimType={scrimType}
 			>
-				<PopupBase
-					{...rest}
-					open={this.state.popupOpen}
-					onHide={this.handlePopupHide}
-				/>
+				<PopupBase {...rest} />
 			</FloatingLayer>
 		);
 	}
-}
+});
+
+/**
+ * [ui:PopupDecorator]{@link ui/Popup.PopupDecorator} is a Higher-order Component that manages
+ * floating layer and popup open state.
+ *
+ * @class PopupDecorator
+ * @memberof ui/Popup.PopupDecorator
+ * @hoc
+ * @public
+ */
+const PopupDecorator = hoc((config, Wrapped) => {
+	return class extends React.Component {
+		static displayName = 'ui:PopupDecorator'
+
+		static propTypes = /** @lends ui/Popup.Popup.prototype */ {
+			/**
+			 * When `true`, the popup will not animate on/off screen.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			noAnimation: PropTypes.bool,
+
+			/**
+			 * When `true`, the popup is rendered. Popups are rendered into the
+			 * [floating layer]{@link ui/FloatingLayer.FloatingLayer}.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			open: PropTypes.bool
+		}
+
+		static defaultProps = {
+			noAnimation: false,
+			open: false
+		}
+
+		constructor (props) {
+			super(props);
+			this.state = {
+				floatLayerOpen: this.props.open,
+				popupOpen: this.props.noAnimation
+			};
+		}
+
+		componentWillReceiveProps (nextProps) {
+			if (this.props.open !== nextProps.open) {
+				this.setState(() => ({
+					popupOpen: nextProps.noAnimation,
+					floatLayerOpen: this.props.open ? !nextProps.noAnimation : true
+				}));
+			}
+		}
+
+		handleFloatingLayerOpen = () => {
+			forwardOpen({}, this.props);
+
+			if (!this.props.noAnimation) {
+				this.setState(() => ({
+					popupOpen: true
+				}));
+			}
+		}
+
+		handlePopupHide = (ev) => {
+			forwardHide(ev, this.props);
+
+			this.setState(() => ({
+				floatLayerOpen: false
+			}));
+		}
+
+		render () {
+			return (
+				<Wrapped
+					{...this.props}
+					floatLayerOpen={this.state.floatLayerOpen}
+					onHide={this.handlePopupHide}
+					onOpen={this.handleFloatingLayerOpen}
+					open={this.state.popupOpen}
+				/>
+			);
+		}
+	};
+});
+
+/**
+ * [Popup]{@link ui/Popup.Popup} is a stateful component that help {@link ui/Popup.PopupBase}
+ * to appear in {@link ui/FloatingLayer.FloatingLayer}.
+ *
+ * @class Popup
+ * @memberof ui/Popup
+ * @ui
+ * @public
+ */
+const Popup = PopupDecorator(FloatingPopupBase);
 
 export default Popup;
-export {Popup, PopupBase};
+export {
+	Popup,
+	PopupBase,
+	FloatingPopupBase,
+	PopupDecorator
+};
