@@ -380,13 +380,12 @@ const forProp = handle.forProp = curry((prop, value, ev, props) => {
  * );
  * ```
  *
- * @method   forProp
+ * @method   log
  * @memberof core/handle
- * @param    {String}    prop   Name of property on props object
- * @param    {*}         value  Value of property
- * @param    {Object}    ev     Event
- * @param    {Object}    props  Props object
- * @returns  {Boolean}          Event handler
+ * @param    {String}     message  Custom message
+ * @param    {Object}     ev       Event
+ * @param    {...*}       [args]   Any args passed are logged
+ * @returns  {Boolean}             Always returns `true`
  */
 const log = handle.log = curry((message, ev, ...args) => {
 	if (__DEV__) {
