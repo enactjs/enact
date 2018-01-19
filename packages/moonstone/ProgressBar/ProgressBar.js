@@ -24,7 +24,7 @@ import componentCss from './ProgressBar.less';
 /**
  * Renders a moonstone-styled ProgressBar.
  *
- * @class ProgressBar
+ * @class ProgressBarBase
  * @memberof moonstone/ProgressBar
  * @ui
  * @public

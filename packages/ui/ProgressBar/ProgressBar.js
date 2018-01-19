@@ -22,23 +22,23 @@ const progressToPercent = (value) => (clamp(0, 1, value) * 100) + '%';
  * process in a horizontal or vertical bar. A secondary progress indicator can be displayed, which
  * is different than the primary progress indicator i.e. to indicate background loading progress.
  *
- * @class ProgressBar
+ * @class ProgressBarBase
  * @memberof ui/ProgressBar
  * @ui
  * @public
  */
 const ProgressBarBase = kind({
-	name: 'ProgressBar',
+	name: 'ui:ProgressBar',
 
 	propTypes: /** @lends ui/ProgressBar.ProgressBar.prototype */ {
 		/**
-		* The proportion of the loaded portion of the progress bar. Valid values are
-		* between `0` and `1`.
-		*
-		* @type {Number}
-		* @default 0
-		* @public
-		*/
+		 * The proportion of the loaded portion of the progress bar. Valid values are
+		 * between `0` and `1`.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
 		backgroundProgress: PropTypes.number,
 
 		/**
@@ -58,22 +58,22 @@ const ProgressBarBase = kind({
 		css: PropTypes.object,
 
 		/**
-		* The proportion of the filled portion of the progress bar. Valid values are
-		* between `0` and `1`.
-		*
-		* @type {Number}
-		* @default 0
-		* @public
-		*/
+		 * The proportion of the filled portion of the progress bar. Valid values are
+		 * between `0` and `1`.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
 		progress: PropTypes.number,
 
 		/**
-		* If `true` the progress bar will be oriented vertically.
-		*
-		* @type {Boolean}
-		* @default false
-		* @public
-		*/
+		 * If `true` the progress bar will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		vertical: PropTypes.bool
 	},
 
@@ -116,7 +116,7 @@ const ProgressBarBase = kind({
 });
 
 /**
- * [ProgressBar]{@link ui/ProgressBar.ProgressBar} is a minimally-styled image component
+ * [ProgressBar]{@link ui/ProgressBar.ProgressBar} is a minimally styled progress bar component
  *
  * @class ProgressBar
  * @extends ui/ProgressBar.ProgressBarBase
