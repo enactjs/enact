@@ -4,7 +4,6 @@
  * @module ui/Divider
  * @exports Divider
  * @exports DividerBase
- * @exports DividerDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -101,18 +100,8 @@ const DividerBase = kind({
  */
 const Divider = DividerBase;
 
-/**
- * Adds no functionality, but is provided for export-API consistency between components
- *
- * @hoc
- * @memberof ui/Divider
- * @public
- */
-const DivderDecorator = (Wrapped) => (Wrapped);
-
 export default Divider;
 export {
 	DividerBase,
-	Divider,
-	DivderDecorator
+	Divider
 };
