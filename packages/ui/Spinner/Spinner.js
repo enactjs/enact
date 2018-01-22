@@ -1,13 +1,13 @@
 /**
  * Provides an unstyled indeterminate progress indicator (Spinner) component to be customized by a
- * theme or application. The theme using this component must supply a `spinnerComponent` element
- * which follows the requirements listed by the
- * [spinnerComponent]{@link ui/Spinner.spinnerComponent} prop documentation.
+ * theme or application. Basically, this positions your Spinner component where you want it on the
+ * screen, and hooks into the interaction blocking code and scrim management.
+ *
+ * The theme using this component must supply a `component` element which follows the requirements
+ * listed by the [component]{@link ui/Spinner.Spinner.spinnerComponent} prop documentation.
  *
  * @module ui/Spinner
  * @exports Spinner
- * @exports SpinnerBase
- * @exports SpinnerDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -19,17 +19,17 @@ import FloatingLayer from '../FloatingLayer';
 import componentCss from './Spinner.less';
 
 /**
- * A component which accepts the specified props that has no additional behaviors applied
+ * A minimally styled component that controls Spinner positioning and interaction states.
  *
- * @class SpinnerBase
+ * @class Spinner
  * @memberof ui/Spinner
  * @ui
  * @public
  */
-const SpinnerBase = kind({
+const Spinner = kind({
 	name: 'ui:Spinner',
 
-	propTypes: /** @lends ui/Spinner.SpinnerBase.prototype */ {
+	propTypes: /** @lends ui/Spinner.Spinner.prototype */ {
 		/**
 		 * An arbitrarily complex theme-supplied component that animates with the presence of a
 		 * `.running` class. This element should accept a `children` prop which takes the form of
@@ -38,7 +38,7 @@ const SpinnerBase = kind({
 		 * @type {Component|String}
 		 * @public
 		 */
-		spinnerComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+		component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
 
 		/**
 		 * Determines how far the click-blocking should extend. It can be `'screen'`, `'container'`,
@@ -61,14 +61,6 @@ const SpinnerBase = kind({
 		 * @public
 		 */
 		centered: PropTypes.bool,
-
-		/**
-		 * The optional string to be displayed as the main content of the spinner.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		children: PropTypes.node,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -112,8 +104,8 @@ const SpinnerBase = kind({
 	},
 
 	computed: {
-		className: ({centered, children, styler}) => styler.append(
-			{centered, content: children}
+		className: ({centered, styler}) => styler.append(
+			{centered}
 		),
 		scrimClassName: ({blockClickOn, scrim, styler}) => styler.join(
 			{blockClickOn, scrim}
@@ -124,18 +116,15 @@ const SpinnerBase = kind({
 		)
 	},
 
-	render: ({blockClickOn, children, scrimClassName, scrimType, spinnerComponent: SpinnerComponent, spinnerContainerClassName, ...rest}) =>  {
+	render: ({blockClickOn, component: Component, scrimClassName, scrimType, spinnerContainerClassName, ...rest}) =>  {
 		delete rest.centered;
-		delete rest.childrenComponent;
 		delete rest.scrim;
 
 		switch (blockClickOn) {
 			case 'screen': {
 				return (
 					<FloatingLayer noAutoDismiss open scrimType={scrimType}>
-						<SpinnerComponent {...rest}>
-							{children}
-						</SpinnerComponent>
+						<Component {...rest} />
 					</FloatingLayer>
 				);
 			}
@@ -143,48 +132,20 @@ const SpinnerBase = kind({
 				return (
 					<div className={spinnerContainerClassName}>
 						<div className={scrimClassName} />
-						<SpinnerComponent {...rest}>
-							{children}
-						</SpinnerComponent>
+						<Component {...rest} />
 					</div>
 				);
 			}
 			default: {
 				return (
-					<SpinnerComponent {...rest}>
-						{children}
-					</SpinnerComponent>
+					<Component {...rest} />
 				);
 			}
 		}
 	}
 });
 
-/**
- * Adds no functionality, but is provided for export-API consistency between components
- *
- * @hoc
- * @memberof ui/Spinner
- * @public
- */
-const SpinnerDecorator = (Wrapped) => Wrapped;
-
-/**
- * A minimally-styled Spinner component. (Identical to `SpinnerBase`)
- *
- * @class Spinner
- * @extends ui/Spinner.SpinnerBase
- * @memberof ui/Spinner
- * @mixes ui/Spinner.SpinnerDecorator
- * @ui
- * @public
- */
-const Spinner = SpinnerBase;
-
-
 export default Spinner;
 export {
-	Spinner,
-	SpinnerBase,
-	SpinnerDecorator
+	Spinner
 };

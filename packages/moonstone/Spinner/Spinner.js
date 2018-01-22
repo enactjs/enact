@@ -26,18 +26,22 @@ import Skinnable from '../Skinnable';
 import componentCss from './Spinner.less';
 
 /**
- * {@link moonstone/Spinner.SpinnerCore} shows a spinning animation.
+ * A component that shows spinning balls, with optional text as children.
  *
- * @class SpinnerBase
+ * @class SpinnerCore
  * @memberof moonstone/Spinner
  * @ui
  * @private
  */
-const SpinnerCoreBase = kind({
+const SpinnerCore = kind({
 	name: 'SpinnerCore',
 
 	propTypes: {
 		css: PropTypes.object
+	},
+
+	styles: {
+		css: componentCss
 	},
 
 	computed: {
@@ -47,11 +51,15 @@ const SpinnerCoreBase = kind({
 			} else if (!children) {
 				return $L('Loading');
 			}
-		}
-	},
-
-	styles: {
-		css: componentCss
+		},
+		// Migration Note: css={componentCss} should likely be added to <MarqueeText> once MarqueeText is merged into the migration target branch.
+		children: ({children}) => (
+			children ?
+				<MarqueeText className={componentCss.client} marqueeOn="render" alignment="center">
+					{children}
+				</MarqueeText> :
+				null
+		)
 	},
 
 	render: ({children, css, ...rest}) => (
@@ -66,8 +74,6 @@ const SpinnerCoreBase = kind({
 	)
 });
 
-const SpinnerCore = Skinnable(SpinnerCoreBase);
-
 /**
  * The base component, defining all of the properties.
  *
@@ -80,6 +86,19 @@ const SpinnerBase = kind({
 	name: 'Spinner',
 
 	propTypes: /** @lends moonstone/Spinner.SpinnerBase.prototype */ {
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `spinner` - The root component class
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
+
 		/**
 		 * When `true`, the background-color  of the spinner is transparent.
 		 *
@@ -97,7 +116,7 @@ const SpinnerBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['spinner']
+		publicClassNames: 'spinner'
 	},
 
 	computed: {
@@ -106,22 +125,16 @@ const SpinnerBase = kind({
 		)
 	},
 
-	render: ({children, ...rest}) => {
+	render: ({children, css, ...rest}) => {
 		delete rest.transparent;
 
-		// Migration Note: css={componentCss} should likely be added to <MarqueeText> once MarqueeText is merged into the migration target branch.
 		return (
 			<UiSpinnerBase
 				{...rest}
-				css={componentCss}
-				spinnerComponent={SpinnerCore}
+				css={css}
+				component={SpinnerCore}
 			>
-				{children ?
-					<MarqueeText className={componentCss.client} marqueeOn="render" alignment="center">
-						{children}
-					</MarqueeText> :
-					null
-				}
+				{children}
 			</UiSpinnerBase>
 		);
 	}
@@ -182,7 +195,8 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
  */
 const SpinnerDecorator = compose(
 	Pure,
-	SpinnerSpotlightDecorator
+	SpinnerSpotlightDecorator,
+	Skinnable
 );
 
 /**
