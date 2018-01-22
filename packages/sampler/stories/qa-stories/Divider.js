@@ -9,16 +9,6 @@ import {text, select} from '@kadira/storybook-addon-knobs';
 const
 	prop = {
 		tallText: {'नरेंद्र मोदी': 'नरेंद्र मोदी', 'ฟิ้  ไั  ஒ  து': 'ฟิ้  ไั  ஒ  து', 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ': 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ'}
-	},
-	style = {
-		scroller: {
-			height: ri.scale(550) + 'px',
-			width: '100%'
-		},
-		content: {
-			height: ri.scale(1000) + 'px',
-			width: ri.scale(2000) + 'px'
-		}
 	};
 
 storiesOf('Divider')
@@ -117,10 +107,18 @@ storiesOf('Divider')
 		() => (
 			<Scroller
 				horizontal="auto"
-				style={style.scroller}
+				style={{
+					height: ri.unit(552, 'rem'),
+					width: '100%'
+				}}
 				vertical="auto"
 			>
-				<div style={style.content}>
+				<div
+					style={{
+						height: ri.unit(1002, 'rem'),
+						width: ri.unit(2001, 'rem')
+					}}
+				>
 					<Divider>
 						First Divider
 					</Divider>

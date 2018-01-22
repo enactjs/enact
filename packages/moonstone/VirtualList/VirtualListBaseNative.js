@@ -938,6 +938,9 @@ class VirtualListCoreNative extends Component {
 				isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right');
 
 			// Scroll to the next spottable item without animation
+			if (!Spotlight.isPaused()) {
+				Spotlight.pause();
+			}
 			focusedItem.blur();
 			this.lastFocusedIndex = indexToScroll;
 			this.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});

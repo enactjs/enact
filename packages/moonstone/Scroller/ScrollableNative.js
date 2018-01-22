@@ -8,7 +8,6 @@ import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
 import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
-import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import hoc from '@enact/core/hoc';
@@ -37,8 +36,8 @@ const
 	scrollWheelMultiplierForDeltaPixel = 1.5, // The ratio of wheel 'delta' units to pixels scrolled.
 	scrollWheelPageMultiplierForMaxPixel = 0.2, // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	pixelPerLine = 39,
+	scrollStopWaiting = 200,
 	// spotlight
-	scrollStopWaiting = 500,
 	isPageUp = is('pageUp'),
 	isPageDown = is('pageDown'),
 	reverseDirections = {
@@ -118,7 +117,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * - {node} - You can set a node to scroll
 			 * - {animate} - When `true`, scroll occurs with animation.
 			 *   Set it to `false`, if you want scrolling without animation.
-			 * - {indexToFocus} - Deprecated: Use `focus` insead.
 			 * - {focus} - Set it `true`, if you want the item to be focused after scroll.
 			 *   This option is only valid when you scroll by `index` or `node`.
 			 *
@@ -231,6 +229,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.verticalScrollbarProps = {
 				ref: this.initRef('verticalScrollbarRef'),
 				vertical: true,
+				cbAlertThumb: this.alertThumbAfterRendered,
 				onPrevScroll: this.onScrollbarButtonClick,
 				onNextScroll: this.onScrollbarButtonClick
 			};
@@ -238,6 +237,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.horizontalScrollbarProps = {
 				ref: this.initRef('horizontalScrollbarRef'),
 				vertical: false,
+				cbAlertThumb: this.alertThumbAfterRendered,
 				onPrevScroll: this.onScrollbarButtonClick,
 				onNextScroll: this.onScrollbarButtonClick
 			};
@@ -307,7 +307,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.doScrollStop();
 			}
 			this.scrollStopJob.stop();
-			this.hideThumbJob.stop();
 
 			if (containerRef && containerRef.removeEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
@@ -336,6 +335,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		pageDirection = 0
 		isFitClientSize = false
 		isWheeling = false
+		isUpdatedScrollThumb = false
 
 		// event handlers
 		eventHandlers = {}
@@ -415,13 +415,17 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				canScrollVertically = this.canScrollVertically(bounds),
 				eventDeltaMode = e.deltaMode,
 				eventDelta = (-e.wheelDeltaY || e.deltaY);
-			let delta = 0;
+			let
+				delta = 0,
+				needToHideThumb = false;
 
 			this.lastFocusedItem = null;
 			if (typeof window !== 'undefined') {
 				window.document.activeElement.blur();
 			}
+
 			this.showThumb(bounds);
+
 			// FIXME This routine is a temporary support for horizontal wheel scroll.
 			// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
 			if (canScrollVertically) { // This routine handles wheel events on scrollbars for vertical scroll.
@@ -437,7 +441,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					if ((horizontalScrollbarRef && horizontalScrollbarRef.containerRef.contains(e.target)) ||
 						(verticalScrollbarRef && verticalScrollbarRef.containerRef.contains(e.target))) {
 						delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
+						needToHideThumb = !delta;
 					}
+				} else {
+					needToHideThumb = true;
 				}
 			} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
 				if (eventDelta < 0 && this.scrollLeft > 0 || eventDelta > 0 && this.scrollLeft < bounds.maxLeft) {
@@ -446,6 +453,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						this.isWheeling = true;
 					}
 					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
+					needToHideThumb = !delta;
+				} else {
+					needToHideThumb = true;
 				}
 			}
 
@@ -459,6 +469,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					this.pageDirection = direction;
 				}
 				this.scrollToAccumulatedTarget(delta, canScrollVertically);
+			}
+
+			if (needToHideThumb) {
+				this.hideThumbJob.start();
 			}
 		}
 
@@ -480,6 +494,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			this.scroll(scrollLeft, scrollTop);
 
+			this.startHidingThumb();
 			this.scrollStopJob.start();
 		}
 
@@ -487,10 +502,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		startScrollOnFocus = (pos, item) => {
 			if (pos) {
-				const bounds = this.getScrollBounds();
+				const
+					{top, left} = pos,
+					bounds = this.getScrollBounds();
 
-				if (bounds.maxTop > 0 || bounds.maxLeft > 0) {
-					this.start(pos.left, pos.top, this.animateOnFocus);
+				if ((bounds.maxTop > 0 && top !== this.scrollTop) || (bounds.maxLeft > 0 && left !== this.scrollLeft)) {
+					this.start(left, top, this.animateOnFocus);
 				}
 				this.lastFocusedItem = item;
 				this.lastScrollPositionOnFocus = pos;
@@ -705,7 +722,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 
-			this.hideThumb();
 			this.scrolling = false;
 			this.doScrollStop();
 			this.isWheeling = false;
@@ -857,18 +873,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollTo = (opt) => {
 			if (!this.deferScrollTo) {
 				const {left, top} = this.getPositionForScrollTo(opt);
-				this.indexToFocus = null;
-				this.nodeToFocus = null;
-				this.scrollToInfo = null;
-
-				if (typeof opt.indexToFocus === 'number') {
-					this.indexToFocus = opt.indexToFocus;
-					deprecate({name: 'indexToFocus', since: '1.2.0', message: 'Use `focus` instead', until: '2.0.0'});
-				}
-
-				this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : this.indexToFocus;
+				this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
 				this.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
-
+				this.scrollToInfo = null;
 				this.start(
 					(left !== null) ? left : this.scrollLeft,
 					(top !== null) ? top : this.scrollTop,
@@ -910,7 +917,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			});
 		}
 
-		hideThumb = () => {
+		startHidingThumb = () => {
 			if (this.state.isHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
 				this.horizontalScrollbarRef.startHidingThumb();
 			}
@@ -919,12 +926,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		hideThumbJob = new Job(this.hideThumb, 200);
-
 		alertThumb () {
 			const bounds = this.getScrollBounds();
 			this.showThumb(bounds);
-			this.hideThumbJob.start();
+			this.startHidingThumb();
 		}
 
 		updateScrollbars = () => {
@@ -955,28 +960,45 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				});
 			} else {
 				this.deferScrollTo = false;
-				if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
-					// no visibility change but need to notify whichever scrollbars are visible of the
-					// updated bounds and scroll position
-					const
-						updatedBounds = {
-							...bounds,
-							scrollLeft: this.scrollLeft,
-							scrollTop: this.scrollTop
-						},
-						spotItem = Spotlight.getCurrent();
+				this.isUpdatedScrollThumb = this.updateScrollThumbSize();
+			}
+		}
 
-					if (curHorizontalScrollbarVisible) {
-						this.horizontalScrollbarRef.update(updatedBounds);
-					}
-					if (curVerticalScrollbarVisible) {
-						this.verticalScrollbarRef.update(updatedBounds);
-					}
+		updateScrollThumbSize = () => {
+			const
+				{horizontalScrollbar, verticalScrollbar} = this.props,
+				bounds = this.getScrollBounds(),
+				canScrollHorizontally = this.canScrollHorizontally(bounds),
+				canScrollVertically = this.canScrollVertically(bounds),
+				curHorizontalScrollbarVisible = (horizontalScrollbar === 'auto') ? canScrollHorizontally : horizontalScrollbar === 'visible',
+				curVerticalScrollbarVisible = (verticalScrollbar === 'auto') ? canScrollVertically : verticalScrollbar === 'visible';
 
-					if (!Spotlight.getPointerMode() && spotItem && this.childRef.containerRef.contains(spotItem)) {
-						this.alertThumb();
-					}
+			if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
+				// no visibility change but need to notify whichever scrollbars are visible of the
+				// updated bounds and scroll position
+				const
+					updatedBounds = {
+						...bounds,
+						scrollLeft: this.scrollLeft,
+						scrollTop: this.scrollTop
+					};
+
+				if (curHorizontalScrollbarVisible) {
+					this.horizontalScrollbarRef.update(updatedBounds);
 				}
+				if (curVerticalScrollbarVisible) {
+					this.verticalScrollbarRef.update(updatedBounds);
+				}
+				return true;
+			}
+			return false;
+		}
+
+		alertThumbAfterRendered = () => {
+			const spotItem = Spotlight.getCurrent();
+
+			if (!Spotlight.getPointerMode() && spotItem && this.childRef.containerRef.contains(spotItem) && this.isUpdatedScrollThumb) {
+				this.alertThumb();
 			}
 		}
 

@@ -9,11 +9,13 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/Layout` debugging aid for help with complex layouts. Simply include the `"debug"` className in your app and everything below it will show debugging lines
+- `ui/Button`, `ui/Icon`, and `ui/IconButton` components to support reuse by themes
+- `ui/Touchable` support for flick gestures
 
 ### Changed
 
 - `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
-- `ui/Layout` `align` prop to support setting horizontal and vertical alignment in one prop, separated by a space
+- `ui/Layout` prop `align` to support setting horizontal and vertical alignment in one prop, separated by a space
 
 ### Fixed
 
@@ -34,7 +36,21 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
 
-## [1.13.0] - 2017-11-15
+## [1.13.3] - 2017-01-16
+
+No significant changes.
+
+## [1.13.2] - 2017-12-14
+
+### Fixed
+
+- `ui/ViewManager` to revert 1.13.0 fix for lifecycle timing when entering a view
+
+## [1.13.1] - 2017-12-06
+
+No significant changes.
+
+## [1.13.0] - 2017-11-28
 
 ### Added
 
