@@ -3,6 +3,7 @@
  * Exports the {@link ui/internal/Pure.Pure} Higher-order Component (HOC).
  *
  * @module ui/internal/Pure
+ * @private
  */
 
 import {childrenEquals} from '@enact/core/util';
