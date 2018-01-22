@@ -96,6 +96,10 @@ const RepeaterBase = kind({
 				}
 				if (indexProp) props[indexProp] = index;
 
+				// "props" isn't referring to Repeater's render props here
+				// eslint-disable-next-line enact/prop-types
+				props.key = props.key || index;
+
 				return <Component {...props} />;
 			});
 		}
