@@ -1111,7 +1111,8 @@ class VirtualListCoreNative extends Component {
 	render () {
 		const
 			{className, style, ...rest} = this.props,
-			{primary, cc} = this,
+			{primary} = this,
+			cc = this.cc = this.cc.slice(),
 			mergedClasses = classNames(css.list, this.containerClass, className);
 
 		delete rest.cbScrollTo;

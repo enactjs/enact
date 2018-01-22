@@ -1132,7 +1132,8 @@ class VirtualListCore extends Component {
 		const
 			props = Object.assign({}, this.props),
 			{firstIndex, numOfItems} = this.state,
-			{primary, cc} = this;
+			{primary} = this,
+			cc = this.cc = this.cc.slice();
 
 		delete props.cbScrollTo;
 		delete props.clientSize;
