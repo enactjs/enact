@@ -18,7 +18,7 @@ const prop = {
 
 storiesOf('Item.ItemOverlay', module)
 	.add(
-		'',
+		' ',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of ItemOverlay'
