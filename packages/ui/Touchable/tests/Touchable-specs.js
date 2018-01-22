@@ -1,4 +1,6 @@
 /* eslint-disable enact/prop-types */
+/* eslint-disable react/jsx-no-bind */
+
 import React from 'react';
 import {shallow, mount} from 'enzyme';
 import sinon from 'sinon';

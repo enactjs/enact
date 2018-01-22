@@ -1,9 +1,9 @@
 // Icon.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/text.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/text.less";
+@import "../styles/skin.less";
 
 .icon {
 	width: @moon-icon-size;
@@ -11,12 +11,9 @@
 	background-position: center -((@moon-icon-sprite-size - @moon-icon-size) / 2);
 	background-size: @moon-icon-sprite-size (@moon-icon-sprite-size * 2);
 	background-repeat: no-repeat;
-	display: inline-block;
-	vertical-align: middle;
 	margin: @moon-icon-margin;
 	font-family: @moon-icon-font-family;
 	font-size: @moon-icon-font-size;
-	font-weight: normal;
 	line-height: @moon-icon-size;
 	text-align: center;
 	position: relative;
@@ -28,8 +25,6 @@
 		line-height: @moon-icon-size-large;
 	});
 
-	.font-kerning(none);
-	// .moon-taparea(@moon-icon-size);
 
 	&.small {
 		background-position: center -((@moon-icon-sprite-small-size - @moon-icon-small-size) / 2);
@@ -60,9 +55,6 @@
 		}
 	}
 
-	.disabled({
-		cursor: default;
-	});
 
 	// Skin colors
 	.applySkins({

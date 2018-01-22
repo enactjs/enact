@@ -1,5 +1,6 @@
 import {MarqueeController, MarqueeText} from '@enact/moonstone/Marquee';
 import Item from '@enact/moonstone/Item';
+import ri from '@enact/ui/resolution';
 import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -34,7 +35,7 @@ storiesOf('Marquee', module)
 			return (
 				<section>
 					<MarqueeText
-						style={{width: '400px'}}
+						style={{width: ri.unit(399, 'rem')}}
 						disabled={disabled}
 						marqueeDelay={number('marqueeDelay', 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', false)}
@@ -58,7 +59,7 @@ storiesOf('Marquee', module)
 			return (
 				<section>
 					<MarqueeText
-						style={{width: '400px'}}
+						style={{width: ri.unit(399, 'rem')}}
 						disabled={disabled}
 						marqueeDelay={number('marqueeDelay', 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', false)}
@@ -80,7 +81,7 @@ storiesOf('Marquee', module)
 		() => {
 			const disabled = nullify(boolean('disabled', false));
 			return (
-				<Controller style={{width: '400px'}}>
+				<Controller style={{width: ri.unit(399, 'rem')}}>
 					{LTR.map((children, index) => (
 						<MarqueeText
 							disabled={disabled}
@@ -106,13 +107,13 @@ storiesOf('Marquee', module)
 		() => (
 			<div>
 				<Item
-					style={{width: '400px'}}
+					style={{width: ri.unit(399, 'rem')}}
 					marqueeOn="focus"
 				>
 					{LTR[0]}
 				</Item>
 				<SpottableMarquee
-					style={{width: '400px'}}
+					style={{width: ri.unit(399, 'rem')}}
 					marqueeOn="focus"
 				>
 					{LTR[0]}
@@ -126,7 +127,7 @@ storiesOf('Marquee', module)
 		() => (
 			<SpottableDiv>
 				<MarqueeText
-					style={{width: '400px'}}
+					style={{width: ri.unit(399, 'rem')}}
 					disabled={false}
 					marqueeDelay={1000}
 					marqueeDisabled={false}
@@ -138,7 +139,7 @@ storiesOf('Marquee', module)
 					{'The quick brown fox.'}
 				</MarqueeText>
 				<MarqueeText
-					style={{width: '400px'}}
+					style={{width: ri.unit(399, 'rem')}}
 					disabled={false}
 					marqueeDelay={1000}
 					marqueeDisabled={false}

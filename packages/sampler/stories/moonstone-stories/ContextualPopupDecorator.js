@@ -1,6 +1,7 @@
 import {ContextualPopupDecorator} from '@enact/moonstone/ContextualPopupDecorator';
 import BodyText from '@enact/moonstone/BodyText';
 import Button from '@enact/moonstone/Button';
+import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
@@ -20,7 +21,7 @@ storiesOf('ContextualPopupDecorator', module)
 	.add(
 		' ',
 		withInfo('Basic usage of ContextualPopupDecorator')(() => (
-			<div style={{textAlign: 'center', marginTop: '100px'}}>
+			<div style={{textAlign: 'center', marginTop: ri.unit(99, 'rem')}}>
 				<ContextualButton
 					direction={select('direction', ['up', 'down', 'left', 'right'], 'down')}
 					noAutoDismiss={nullify(boolean('noAutoDismiss', false))}

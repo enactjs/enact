@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/Button`, `ui/Icon`, and `ui/IconButton` components to support reuse by themes
 - `ui/Touchable` support for flick gestures
 
 ### Changed
@@ -32,6 +33,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 ## Removed
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
+
+## [1.13.3] - 2017-01-16
+
+No significant changes.
 
 ## [1.13.2] - 2017-12-14
 

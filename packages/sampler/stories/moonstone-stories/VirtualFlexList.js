@@ -8,33 +8,8 @@ import {number} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 const
-	channelWidth = ri.scale(420),
 	channelLength = 200,
-	timeWidth = ri.scale(210),
-	timelineLength = 18,
-	itemHeight = ri.scale(81),
-	clientWidth = timeWidth * 5,
-	clientHeight = itemHeight * 6,
-	maxFlexScrollSize = timeWidth * 18; // for 9 hr
-
-// Inline style
-const
-	style = {
-		epg: {
-			background: 'black',
-			position: 'absolute',
-			width: (channelWidth + clientWidth) + 'px',
-			height: (itemHeight + clientHeight) + 'px',
-			padding: ri.scale(33) + 'px 0'
-		},
-		itemProgram: {
-			position: 'absolute',
-			padding: 0,
-			border: ri.scale(3) + 'px solid black',
-			boxSizing: 'border-box',
-			overflow: 'hidden'
-		}
-	};
+	timelineLength = 18;
 
 // Data
 const
@@ -60,8 +35,9 @@ const
 		'NOVA',
 		'Secrets of the Dead'
 	],
+	getTimeWidth = () => ri.scale(210),
 	getRandomWidth = () => {
-		return (parseInt(Math.random() * 10) + 1) * timeWidth;
+		return (parseInt(Math.random() * 10) + 1) * getTimeWidth();
 	},
 	programData = (function () {
 		const data = [];
@@ -92,7 +68,16 @@ const
 	// eslint-disable-next-line enact/prop-types
 	renderItem = ({data, index, key}) => {
 		return (
-			<Item key={key} style={style.itemProgram}>
+			<Item
+				key={key}
+				style={{
+					position: 'absolute',
+					padding: 0,
+					border: ri.unit(3, 'rem') + ' solid black',
+					boxSizing: 'border-box',
+					overflow: 'hidden'
+				}}
+			>
 				{data[index.row][index.col].programName}
 			</Item>
 		);
@@ -101,23 +86,41 @@ const
 storiesOf('VirtualFlexList', module)
 	.add(
 		' ',
-		withInfo('Basic usage of VirtualFlexList')(() => (
-			<div style={style.epg}>
-				<VirtualFlexList
-					items={{
-						background: '#141416',
-						colCount: getItemLength,
-						component: renderItem,
-						data: programData,
-						height: ri.scale(number('items.height', 81)),
-						rowCount: number('items.rowCount', programData.length),
-						width: getItemWidth
+		withInfo('Basic usage of VirtualFlexList')(() =>  {
+			const
+				timeWidth = getTimeWidth(),
+				channelWidth = ri.scale(420),
+				itemHeight = ri.scale(81),
+				clientWidth = timeWidth * 5,
+				clientHeight = itemHeight * 6,
+				maxFlexScrollSize = timeWidth * 18; // for 9 hr
+
+			return (
+				<div
+					style={{
+						background: 'black',
+						position: 'absolute',
+						width: (channelWidth + clientWidth) + 'px',
+						height: (itemHeight + clientHeight) + 'px',
+						padding: ri.unit(33, 'rem') + ' 0'
 					}}
-					maxFlexScrollSize={maxFlexScrollSize}
-					onPositionChange={action('onPositionChange')}
-					x={ri.scale(number('x', 0))}
-					y={ri.scale(number('y', 0))}
-				/>
-			</div>
-		))
+				>
+					<VirtualFlexList
+						items={{
+							background: '#141416',
+							colCount: getItemLength,
+							component: renderItem,
+							data: programData,
+							height: ri.scale(number('items.height', 81)),
+							rowCount: number('items.rowCount', programData.length),
+							width: getItemWidth
+						}}
+						maxFlexScrollSize={maxFlexScrollSize}
+						onPositionChange={action('onPositionChange')}
+						x={ri.scale(number('x', 0))}
+						y={ri.scale(number('y', 0))}
+					/>
+				</div>
+			);
+		})
 	);

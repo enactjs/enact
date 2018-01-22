@@ -20,6 +20,12 @@ No significant changes.
 
 No significant changes.
 
+## [1.13.3] - 2017-01-16
+
+### Fixed
+
+- Several samples that would not rescale correctly when the viewport was resized
+
 ## [1.13.2] - 2017-12-14
 
 No significant changes.

@@ -14,7 +14,6 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('VirtualGridList', VirtualListCore, VirtualGridList);
 
 const
-	listStyle = {height: ri.scale(550) + 'px'},
 	items = [],
 	// eslint-disable-next-line enact/prop-types
 	renderItem = ({data, index, ...rest}) => {
@@ -51,11 +50,16 @@ storiesOf('VirtualList.VirtualGridList', module)
 				dataSize={number('dataSize', items.length)}
 				direction="horizontal"
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
-				itemSize={{minWidth: ri.scale(number('minWidth', 180)), minHeight: ri.scale(number('minHeight', 270))}}
+				itemSize={{
+					minWidth: ri.scale(number('minWidth', 180)),
+					minHeight: ri.scale(number('minHeight', 270))
+				}}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				spacing={ri.scale(number('spacing', 20))}
-				style={listStyle}
+				spacing={ri.scale(number('spacing', 18))}
+				style={{
+					height: ri.unit(552, 'rem')
+				}}
 			/>
 		),
 		{propTables: [Config]}
