@@ -370,7 +370,7 @@ const MediaControls = kind({
 				<div className={css.leftComponents}>{leftComponents}</div>
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
-						<Container className={css.mediaControls} spotlightDisabled={!moreDisabled || spotlightDisabled}> {/* rtl={false} */}
+						<Container className={css.mediaControls} spotlightDisabled={!moreDisabled || spotlightDisabled}>
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpBackwardIcon}</MediaButton>}
 							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{backwardIcon}</MediaButton>}
 							<MediaButton aria-label={playPauseLabel} className={spotlightDefaultClass} backgroundOpacity="translucent" onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{playPauseIcon}</MediaButton>
@@ -379,7 +379,7 @@ const MediaControls = kind({
 						</Container>
 						<Container className={css.moreControls} spotlightDisabled={moreDisabled || spotlightDisabled}>
 							{children}
-						</Container> {/* rtl={false} */}
+						</Container>
 					</div>
 				</div>
 				<div className={css.rightComponents}>
@@ -390,7 +390,7 @@ const MediaControls = kind({
 							backgroundOpacity="translucent"
 							className={css.moreButton}
 							disabled={moreButtonDisabled}
-							onClick={onToggleMore}
+							onTap={onToggleMore}
 							tooltipProps={{role: 'dialog'}}
 							tooltipText={moreIconLabel}
 							spotlightDisabled={spotlightDisabled}

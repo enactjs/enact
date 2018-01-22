@@ -21,7 +21,7 @@ regardless of platform.
 
 ### Application Structure
 
->***The framework team strongly encourages the use of the [`enact-dev`](https://github.com/enyojs/enact-dev) tools to
+>***The framework team strongly encourages the use of the [`enact cli`](https://github.com/enyojs/enact-cli) tools to
 create, test, and deploy Enact applications.***
 
 Source files are generally arranged in the project like so:
@@ -193,11 +193,11 @@ render: () => (
 The `@enact/core/handle` module exports some input methods designed to be used with `handle`, such as `forward` and
 `preventDefault`.  Please see the [module documentation](../../../modules/core/handle/) for a complete list.
 
-#### `enact-dev` vs. `enyo-dev`
+#### `enact cli` vs. `enyo-dev`
 
 The Enact developer tools simplify, yet remain similar to, the Enyo developer tools.
 
-| Activity | `enact-dev` | `enyo-dev` |
+| Activity | `enact cli` | `enyo-dev` |
 | -------- | ----------- | ---------- |
 | Create a new project | `enact create` | `enyo init` |
 | Create a development build | `npm run pack` | `enyo pack` |

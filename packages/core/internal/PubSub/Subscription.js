@@ -1,6 +1,7 @@
-import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+import hoc from '../../hoc';
 
 /**
  * Default config for {@link core/internal/PubSub.Subscription}.

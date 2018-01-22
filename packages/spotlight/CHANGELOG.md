@@ -4,13 +4,46 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Deprecated
+
 ### Added
 
 ### Changed
 
 ### Fixed
 
+## [2.0.0-alpha.2] - 2017-08-29
+
+No significant changes.
+
+## [2.0.0-alpha.1] - 2017-08-27
+
+No significant changes.
+
+## [1.13.3] - 2017-01-16
+
+No significant changes.
+
+## [1.13.2] - 2017-12-14
+
+### Fixed
+
+- `spotlight` to guard against accessing unconfigured container configurations
+
+## [1.13.1] - 2017-12-06
+
+No significant changes.
+
+## [1.13.0] - 2017-11-28
+
+No significant changes.
+
+## [1.12.2] - 2017-11-15
+
+### Fixed
+
 - `spotlight` to handle non-5-way keys correctly to focus on next 5-way keys
+- `spotlight/Spottable` to forward `onMouseEnter` and `onMouseLeave`
 
 ## [1.12.1] - 2017-11-07
 
@@ -48,7 +81,7 @@ No significant changes.
 
 ## [1.9.3] - 2017-10-03
 
-No significant changes.
+- `spotlight.Spotlight` method `focus()` to verify that the target element matches its container's selector rules prior to setting focus
 
 ## [1.9.2] - 2017-09-26
 

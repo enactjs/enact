@@ -48,7 +48,6 @@ const ScrollerNative = SpotlightContainerDecorator(
  * - {node} - You can set a node to scroll
  * - {animate} - When `true`, scroll occurs with animation.
  *   Set it to `false`, if you want scrolling without animation.
- * - {indexToFocus} - Deprecated: Use `focus` insead.
  * - {focus} - Set it `true`, if you want the item to be focused after scroll.
  *   This option is only valid when you scroll by `index` or `node`.
  *

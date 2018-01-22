@@ -5,10 +5,11 @@
  */
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
 
-import {init, defineScreenTypes, getScreenTypeObject, getResolutionClasses} from './resolution';
+import {init, defineScreenTypes, getResolutionClasses} from './resolution';
 
 /**
  * Default config for {@link ui/resolution.ResolutionDecorator}
@@ -43,8 +44,8 @@ const defaultConfig = {
  * Higher-order Component that configures resolution support for its wrapped component tree.
  *
  * Configuration options:
- *	* dynamic: true - when true, updates the resolution classes when the window resizes
- *	* screenTypes: null - defines a set of screen types to support
+ *	* dynamic: `true` - when `true`, updates the resolution classes when the window resizes
+ *	* screenTypes: `null` - defines a set of screen types to support
  *
  * Example:
  * ```
@@ -73,8 +74,18 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			className: PropTypes.string
 		}
 
+		constructor (props) {
+			super(props);
+			init();
+			this.state = {
+				resolutionClasses: ''
+			};
+		}
+
 		componentDidMount () {
 			if (config.dynamic) window.addEventListener('resize', this.handleResize);
+			// eslint-disable-next-line react/no-find-dom-node
+			this.rootNode = ReactDOM.findDOMNode(this);
 		}
 
 		componentWillUnmount () {
@@ -82,17 +93,32 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleResize = () => {
-			init();
-			this.setState({
-				screenType: getScreenTypeObject().name
-			});
+			const classNames = this.didClassesChange();
+
+			if (classNames) {
+				this.setState({resolutionClasses: classNames});
+			}
+		}
+
+		/**
+		 * Compare our current version of the resolved resolution class names with a fresh
+		 * initialization of RI.
+		 *
+		 * @return {String|undefined} A string of new class names or undefined when there is no change.
+		 */
+		didClassesChange () {
+			const prevClassNames = getResolutionClasses();
+			init({measurementNode: this.rootNode});
+			const classNames = getResolutionClasses();
+			if (prevClassNames !== classNames) {
+				return classNames;
+			}
 		}
 
 		render () {
-			// ensure we've initialized the RI members
-			if (!this.state || !this.state.screenType) init();
-
+			// Check if the classes are different from our previous classes
 			let classes = getResolutionClasses();
+
 			if (this.props.className) classes += (classes ? ' ' : '') + this.props.className;
 			return <Wrapped {...this.props} className={classes} />;
 		}

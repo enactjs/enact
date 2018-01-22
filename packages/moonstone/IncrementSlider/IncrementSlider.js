@@ -8,7 +8,6 @@ import {extractAriaProps} from '@enact/core/util';
 import factory from '@enact/core/factory';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
-import Pressable from '@enact/ui/Pressable';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
@@ -20,6 +19,7 @@ import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator
 import Skinnable from '../Skinnable';
 import {SliderBaseFactory} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
+import Touchable from '../internal/Touchable';
 
 import IncrementSliderButton from './IncrementSliderButton';
 import componentCss from './IncrementSlider.less';
@@ -30,7 +30,7 @@ const isRight = is('right');
 const isUp = is('up');
 
 const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
-	const Slider = Pressable(Spottable(Skinnable(SliderBaseFactory({css}))));
+	const Slider = Touchable({activeProp: 'pressed'}, Spottable(Skinnable(SliderBaseFactory({css}))));
 
 	/**
 	 * {@link moonstone/IncrementSlider.IncrementSliderBase} is a stateless Slider
@@ -537,7 +537,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						aria-label={decrementAriaLabel}
 						className={css.decrementButton}
 						disabled={decrementDisabled}
-						onClick={onDecrement}
+						onTap={onDecrement}
 						onKeyDown={handleDecrementKeyDown}
 						onSpotlightDisappear={onDecrementSpotlightDisappear}
 						spotlightDisabled={spotlightDisabled}
@@ -585,7 +585,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						aria-label={incrementAriaLabel}
 						className={css.incrementButton}
 						disabled={incrementDisabled}
-						onClick={onIncrement}
+						onTap={onIncrement}
 						onKeyDown={handleIncrementKeyDown}
 						onSpotlightDisappear={onIncrementSpotlightDisappear}
 						spotlightDisabled={spotlightDisabled}

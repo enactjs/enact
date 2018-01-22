@@ -149,7 +149,7 @@ const PopupBase = kind({
 						className={css.closeButton}
 						backgroundOpacity="transparent"
 						small
-						onClick={onCloseButtonClick}
+						onTap={onCloseButtonClick}
 						aria-label={$L('Close')}
 					>
 						closex

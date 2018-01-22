@@ -33,6 +33,7 @@ const
 	},
 	preparePrevButton = prepareButton(true),
 	prepareNextButton = prepareButton(false),
+	thumbHidingDelay = 400, /* in milliseconds */
 	isPageUp = is('pageUp'),
 	isPageDown = is('pageDown');
 
@@ -68,6 +69,14 @@ class ScrollbarBase extends PureComponent {
 		 * @public
 		 */
 		announce: PropTypes.func,
+
+		/**
+		 * The callback function which is called for linking alertThumb function.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		cbAlertThumb: PropTypes.func,
 
 		/**
 		 * If `true`, add the corner between vertical and horizontal scrollbars.
@@ -170,6 +179,7 @@ class ScrollbarBase extends PureComponent {
 
 	componentDidUpdate () {
 		this.calculateMetrics();
+		this.props.cbAlertThumb();
 	}
 
 	componentWillUnmount () {
@@ -215,10 +225,6 @@ class ScrollbarBase extends PureComponent {
 			   browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
 			shouldDisableNextButton = maxPos - currentPos <= 1,
 			spotItem = Spotlight.getCurrent();
-
-		if (currentPos <= 0 || currentPos >= maxPos) {
-			this.startHidingThumb();
-		}
 
 		this.setState((prevState) => {
 			const
@@ -274,7 +280,7 @@ class ScrollbarBase extends PureComponent {
 
 	isThumbFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
 
-	hideThumbJob = new Job(this.hideThumb, 200);
+	hideThumbJob = new Job(this.hideThumb, thumbHidingDelay);
 
 	calculateMetrics = () => {
 		const trackSize = this.containerRef[this.props.vertical ? 'clientHeight' : 'clientWidth'];

@@ -4,14 +4,68 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Deprecated
+
 ### Added
 
+- `ui/Layout` debugging aid for help with complex layouts. Simply include the `"debug"` className in your app and everything below it will show debugging lines
+- `ui/Button`, `ui/Icon`, and `ui/IconButton` components to support reuse by themes
+- `ui/Touchable` support for flick gestures
+
 ### Changed
+
+- `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
+- `ui/Layout` prop `align` to support setting horizontal and vertical alignment in one prop, separated by a space
+
+### Fixed
+
+## [2.0.0-alpha.2] - 2017-08-29
+
+## Added
+
+- `ui/Scroller` and `ui/VirtualList`
+
+## [2.0.0-alpha.1] - 2017-08-27
+
+## Added
+
+- `ui/Layout` which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
+- `ui/Touchable` to support consistent mouse and touch events along with hold gesture
+
+## Removed
+
+- `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
+
+## [1.13.3] - 2017-01-16
+
+No significant changes.
+
+## [1.13.2] - 2017-12-14
+
+### Fixed
+
+- `ui/ViewManager` to revert 1.13.0 fix for lifecycle timing when entering a view
+
+## [1.13.1] - 2017-12-06
+
+No significant changes.
+
+## [1.13.0] - 2017-11-28
+
+### Added
+
+- `ui/Transition` animation timing functions `ease-in`, `ease-out`, `ease-in-quart`, and `ease-out-quart` to provide prettier options for transitions that may be more suited to a specific visual style
+
+### Fixed
+
+- `ui/ViewManager` to prevent interaction issue with `moonstone/Scroller`
+
+## [1.12.2] - 2017-11-15
 
 ### Fixed
 
 - `ui/Remeasurable` to update on every trigger change
-
+- `ui/Transition` to revert 1.12.1 change to support `clip` transition-type directions and rendering optimizations
 
 ## [1.12.1] - 2017-11-07
 

@@ -1,14 +1,37 @@
-import Holdable from '../Holdable';
+import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 
+import {contextTypes} from '../../Marquee/MarqueeController';
 import Icon from '../../Icon';
 import IconButton from '../../IconButton';
 import {withSkinnableProps} from '../../Skinnable';
 
+import Touchable from '../Touchable';
+
 import css from './Picker.less';
+
+const JoinedPickerButtonBase = kind({
+	name: 'JoinedPickerButtonBase',
+
+	propTypes: {
+		disabled: PropTypes.bool,
+		icon: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.object
+		])
+	},
+
+	render: ({disabled, icon, ...rest}) => (
+		<span {...rest} disabled={disabled}>
+			<Icon className={css.icon} disabled={disabled} small>{icon}</Icon>
+		</span>
+	)
+});
+
+const JoinedPickerButton = Touchable(JoinedPickerButtonBase);
 
 const PickerButtonBase = kind({
 	name: 'PickerButton',
@@ -26,8 +49,29 @@ const PickerButtonBase = kind({
 		spotlightDisabled: PropTypes.bool
 	},
 
+	contextTypes: contextTypes,
+
 	styles: {
 		css
+	},
+
+	handlers: {
+		onMouseEnter: handle(
+			forward('onMouseEnter'),
+			(ev, props, context) => {
+				if (context.enter) {
+					context.enter(null);
+				}
+			}
+		),
+		onMouseLeave: handle(
+			forward('onMouseLeave'),
+			(ev, props, context) => {
+				if (context.leave) {
+					context.leave(null);
+				}
+			}
+		)
 	},
 
 	computed: {
@@ -44,9 +88,7 @@ const PickerButtonBase = kind({
 			delete rest.spotlightDisabled;
 
 			return (
-				<span {...rest} disabled={disabled}>
-					<Icon className={css.icon} disabled={disabled} small>{icon}</Icon>
-				</span>
+				<JoinedPickerButton {...rest} icon={icon} disabled={disabled} />
 			);
 		} else {
 			return (
@@ -59,11 +101,8 @@ const PickerButtonBase = kind({
 });
 
 const PickerButton = Pure(
-	Holdable(
-		{resume: true, endHold: 'onLeave'},
-		withSkinnableProps(
-			PickerButtonBase
-		)
+	withSkinnableProps(
+		PickerButtonBase
 	)
 );
 

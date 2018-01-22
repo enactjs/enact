@@ -1,9 +1,9 @@
 // Button.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/text.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/text.less";
+@import "../styles/skin.less";
 
 // Local scope for some math variables
 & {
@@ -34,21 +34,13 @@
 
 .button {
 	.moon-large-button-text();
-	position: relative;
-	overflow: visible;
 	height: @moon-button-height;
 	line-height: (@moon-button-height - (2 * @moon-button-border-width));
 	border-radius: @moon-button-border-radius;
-	cursor: pointer;
-	white-space: nowrap;
-	display: inline-block;
-	width: auto;
 	min-width: @moon-button-height;
 	max-width: 300px;
 	padding: 0 @moon-button-h-padding;
 	margin: 0 @moon-button-h-margin;
-	box-sizing: border-box;
-	z-index: 0;
 	text-align: center;
 	vertical-align: middle;
 	.moon-taparea(@moon-button-height);
@@ -56,15 +48,12 @@
 	.moon-custom-text({
 		font-size: @moon-button-large-font-size-large;
 		height: @moon-button-height-large;
+		min-width: @moon-button-height-large;
 		line-height: (@moon-button-height-large - (2 * @moon-button-border-width));
 	});
 
 	.bg {
-		.position(0);
-		position: absolute;
-		content: '';
 		background-color: inherit;
-		z-index: -1;
 		border-width: @moon-button-border-width;
 		border-style: solid;
 		border-radius: @moon-button-border-radius;
@@ -79,22 +68,12 @@
 		animation-timing-function: ease-out;
 	}
 
-	.marquee {
-		flex-grow: 1;
-		text-align: center;
-	}
-
 	.client {
 		padding: @moon-button-border-width;	// We match the amount removed by the line-height above, so the text doesn't overlap the border
-		display: flex;
-		align-items: center;
-		box-sizing: border-box;
-		height: 100%;
-		position: relative;
 
 		// Colored under-bar
 		&::before {
-			content: '';
+			content: "";
 			position: absolute;
 			min-width: 24px;
 			height: 6px;
@@ -129,7 +108,12 @@
 		.moon-custom-text({
 			font-size: @moon-button-small-font-size-large;
 			height: @moon-button-small-height-large;
+			min-width: @moon-button-small-height-large;
 			line-height: (@moon-button-small-height-large - (2 * @moon-button-border-width));
+
+			&.minWidth {
+				min-width: @moon-button-small-min-width;
+			}
 		});
 
 		.client::before {
@@ -153,10 +137,6 @@
 			}
 		});
 	}
-
-	.disabled({
-		cursor: default;
-	});
 
 	// Skin colors
 	.applySkins({
@@ -273,8 +253,7 @@
 		// Button-non-disabled rules
 		&:not([disabled]) {
 			.focus({
-				&.pressed,
-				&:active {
+				&.pressed {
 					.bg {
 						-webkit-animation-name: none;
 						animation-name: none;
