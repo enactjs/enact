@@ -14,6 +14,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Changed
 
 - `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
+- `ui/Toggleable` to use 'selected' as its default prop, rather than 'active', since 'selected' is by far the most common use case
 
 ### Fixed
 

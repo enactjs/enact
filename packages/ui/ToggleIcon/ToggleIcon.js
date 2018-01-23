@@ -8,7 +8,6 @@
 
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
-import {handle, forward} from '@enact/core/handle';
 import React from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
@@ -21,7 +20,7 @@ import componentCss from './ToggleIcon.less';
 /**
  * Represents a Boolean state, and can accept any icon to toggle.
  *
- * @class ToggleIcon
+ * @class ToggleIconBase
  * @memberof ui/ToggleIcon
  * @ui
  * @public
@@ -35,7 +34,7 @@ const ToggleIconBase = kind({
 		 * See [Icon's documentation]{@link ui/Icon.Icon#children} for details.
 		 *
 		 *
-		 * @see ui/Icon#children
+		 * @see ui/Icon.Icon.children
 		 * @type {String|Object}
 		 * @public
 		 */
@@ -111,11 +110,19 @@ const ToggleIconBase = kind({
 	}
 });
 
+/**
+ * Represents a Boolean state, and can accept any icon to toggle.
+ *
+ * @class TouchableToggleIcon
+ * @memberof ui/ToggleIcon
+ * @ui
+ * @public
+ */
 const TouchableToggleIcon = hoc((config, Wrapped) => {
 	return kind({
 		name: 'ui:TouchableToggleIcon',
 
-		propTypes: {
+		propTypes: /** @lends ui/ToggleIcon.ToggleIcon.prototype */ {
 			/**
 			 * The handler to run when the component is toggled.
 			 *
@@ -128,17 +135,6 @@ const TouchableToggleIcon = hoc((config, Wrapped) => {
 			onToggle: PropTypes.func
 		},
 
-		handlers: {
-			onToggle: handle(
-				forward('onTap'),
-				(ev, {selected, onToggle}) => {
-					if (onToggle) {
-						onToggle({selected: !selected});
-					}
-				}
-			)
-		},
-
 		render: ({onToggle, ...rest}) => {
 			return (
 				<Wrapped {...rest} onTap={onToggle} />
@@ -148,11 +144,19 @@ const TouchableToggleIcon = hoc((config, Wrapped) => {
 });
 
 const ToggleIconDecorator = compose(
-	Toggleable({prop: 'selected'}),
+	Toggleable,
 	TouchableToggleIcon,
 	Touchable
 );
 
+/**
+ * Represents a Boolean state, and can accept any icon to toggle.
+ *
+ * @class ToggleIcon
+ * @memberof ui/ToggleIcon
+ * @ui
+ * @public
+ */
 const ToggleIcon = ToggleIconDecorator(ToggleIconBase);
 
 export default ToggleIcon;

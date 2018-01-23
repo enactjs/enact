@@ -56,10 +56,10 @@ const defaultConfig = {
 	 * Configures the property that is passed to the wrapped component when toggled.
 	 *
 	 * @type {String}
-	 * @default 'active'
+	 * @default 'selected'
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
 	 */
-	prop: 'active'
+	prop: 'selected'
 };
 
 /**
@@ -158,6 +158,8 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		handle = handle.bind(this)
 
+		forwardWithState = (evName) => (ev, props) => forward(evName, {[prop]: !this.state.active}, props)
+
 		updateActive = (active) => {
 			if (!this.state.controlled) {
 				this.setState({active});
@@ -166,19 +168,19 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleActivate = this.handle(
 			forProp('disabled', false),
-			forward(activate),
+			this.forwardWithState(activate),
 			() => this.updateActive(true)
 		)
 
 		handleDeactivate = this.handle(
 			forProp('disabled', false),
-			forward(deactivate),
+			this.forwardWithState(deactivate),
 			() => this.updateActive(false)
 		)
 
 		handleToggle = this.handle(
 			forProp('disabled', false),
-			forward(toggle),
+			this.forwardWithState(toggle),
 			() => this.updateActive(!this.state.active)
 		)
 
