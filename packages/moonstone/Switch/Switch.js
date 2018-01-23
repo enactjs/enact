@@ -56,7 +56,7 @@ const SwitchBase = kind({
 	styles: {
 		css: componentCss,
 		className: 'switch',
-		publicClassNames: ['switch']
+		publicClassNames: 'switch'
 	},
 
 	computed: {

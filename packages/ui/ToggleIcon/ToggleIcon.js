@@ -122,6 +122,7 @@ const ToggleIconBase = kind({
  * @ui
  * @public
  */
+<<<<<<< 7b81833bc35c1128ce6515cc510c336dfe4310e6
 const ToggleIconDecorator = compose(
 	Toggleable({toggleProp: 'onTap'}),
 =======
@@ -165,6 +166,10 @@ const ToggleIconDecorator = compose(
 	Toggleable({prop: 'selected'}),
 	TouchableToggleIcon,
 >>>>>>> Extracted handlers to a hoc wrapper
+=======
+const ToggleIconDecorator = compose(
+	Toggleable({toggleProp: 'onTap'}),
+>>>>>>> Toggleable better supports alternate usages, docs updated, and much documentation fixed.
 	Touchable
 );
 
@@ -188,6 +193,10 @@ const ToggleIcon = ToggleIconDecorator(ToggleIconBase);
  * @type {Function}
  * @param {Object} event
  * @param {String} event.selected - Selected value of item.
+<<<<<<< 7b81833bc35c1128ce6515cc510c336dfe4310e6
+=======
+ * @param {*} event.value - Value passed from `value` prop.
+>>>>>>> Toggleable better supports alternate usages, docs updated, and much documentation fixed.
  * @public
  */
 
