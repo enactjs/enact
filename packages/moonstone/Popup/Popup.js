@@ -297,7 +297,6 @@ const MoonstonePopupDecorator = hoc((config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			// TODO: does it ever reach here?
 			if (this.props.open) {
 				off('keydown', this.handleKeyDown);
 			}
