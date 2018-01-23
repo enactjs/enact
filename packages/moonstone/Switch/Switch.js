@@ -29,14 +29,14 @@ import css from './Switch.less';
  *
  * @class SwitchBase
  * @memberof moonstone/Switch
- * @extends moonstone/ToggleIcon.ToggleIcon
+ * @extends ui/ToggleIcon.ToggleIcon
  * @ui
  * @public
  */
 const SwitchBase = kind({
 	name: 'Switch',
 
-	propTypes: /** @lends moonstone/Switch.Switch.prototype */ {
+	propTypes: /** @lends moonstone/Switch.SwitchBase.prototype */ {
 		/**
 		 * Sets whether this control is animated during change.
 		 *
@@ -54,7 +54,7 @@ const SwitchBase = kind({
 	styles: {
 		css,
 		className: 'switch',
-		publicClassNames: ['switch']
+		publicClassNames: 'switch'
 	},
 
 	computed: {
@@ -63,10 +63,10 @@ const SwitchBase = kind({
 		)
 	},
 
-	render: ({...rest}) => {
-		delete rest.animated;
+	render: (props) => {
+		delete props.animated;
 		return (
-			<ToggleIcon css={css} iconComponent={Icon} {...rest}>circle</ToggleIcon>
+			<ToggleIcon {...props} css={css} iconComponent={Icon}>circle</ToggleIcon>
 		);
 	}
 });

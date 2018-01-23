@@ -1,5 +1,3 @@
-/* eslint-disable react/sort-prop-types */
-
 /**
  * Exports the {@link ui/Toggleable.Toggleable} Higher-order Component (HOC).
  *
@@ -53,6 +51,17 @@ const defaultConfig = {
 	toggle: 'onToggle',
 
 	/**
+	 * Allows you to remap the incoming `toggle` callback to an event name of your choosing.
+	 * Ex: run `onToggle` when the wrapped component has an `onClick` property and you've specified
+	 * `onClick` here.
+	 *
+	 * @type {String}
+	 * @default null
+	 * @memberof ui/Toggleable.Toggleable.defaultConfig
+	 */
+	toggleProp: null,
+
+	/**
 	 * Configures the property that is passed to the wrapped component when toggled.
 	 *
 	 * @type {String}
@@ -74,7 +83,7 @@ const defaultConfig = {
  * @public
  */
 const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const {activate, deactivate, prop, toggle} = config;
+	const {activate, deactivate, prop, toggle, toggleProp} = config;
 	const defaultPropKey = 'default' + cap(prop);
 
 	return class Toggleable extends React.Component {
@@ -88,6 +97,14 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			[defaultPropKey]: PropTypes.bool,
+
+			/**
+			 * Whether or not the component is in a disabled state.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			disabled: PropTypes.bool,
 
 			/**
 			 * Current toggled state. When set at construction, the component is considered
@@ -106,15 +123,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Function}
 			 * @public
 			 */
-			[toggle]: PropTypes.func,
-
-			/**
-			 * Whether or not the component is in a disabled state.
-			 *
-			 * @type {Boolean}
-			 * @public
-			 */
-			disabled: PropTypes.bool
+			[toggle]: PropTypes.func
 		}
 
 		static defaultProps = {
@@ -180,6 +189,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleToggle = this.handle(
 			forProp('disabled', false),
+			forward(toggleProp),
 			this.forwardWithState(toggle),
 			() => this.updateActive(!this.state.active)
 		)
@@ -187,7 +197,11 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			const props = Object.assign({}, this.props);
 
-			if (toggle) props[toggle] = this.handleToggle;
+			if (toggleProp || toggle) {
+				// Supporting only one of the toggleProp or toggle, but we don't want both applying.
+				delete props[toggle];
+				props[toggleProp || toggle] = this.handleToggle;
+			}
 			if (activate) props[activate] = this.handleActivate;
 			if (deactivate) props[deactivate] = this.handleDeactivate;
 			if (prop) props[prop] = this.state.active;

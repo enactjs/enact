@@ -26,7 +26,7 @@ import componentCss from './Checkbox.less';
  *
  * @class CheckboxBase
  * @memberof moonstone/Checkbox
- * @extends moonstone/ToggleIcon.ToggleIcon
+ * @extends ui/ToggleIcon.ToggleIcon
  * @ui
  * @public
  */
@@ -36,12 +36,12 @@ const CheckboxBase = kind({
 	styles: {
 		css: componentCss,
 		className: 'checkbox',
-		publicClassNames: ['checkbox']
+		publicClassNames: 'checkbox'
 	},
 
-	render: ({...rest}) => {
+	render: (props) => {
 		return (
-			<ToggleIcon css={componentCss} iconComponent={Icon} {...rest}>check</ToggleIcon>
+			<ToggleIcon {...props} css={componentCss} iconComponent={Icon}>check</ToggleIcon>
 		);
 	}
 });

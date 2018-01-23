@@ -4,10 +4,12 @@
  * state.
  *
  * @module ui/ToggleIcon
+ * @exports ToggleIcon
+ * @exports ToggleIconBase
+ * @exports ToggleIconDecorator
  */
 
 import kind from '@enact/core/kind';
-import hoc from '@enact/core/hoc';
 import React from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
@@ -28,7 +30,7 @@ import componentCss from './ToggleIcon.less';
 const ToggleIconBase = kind({
 	name: 'ui:ToggleIcon',
 
-	propTypes: /** @lends ui/ToggleIcon.ToggleIcon.prototype */ {
+	propTypes: /** @lends ui/ToggleIcon.ToggleIconBase.prototype */ {
 		/**
 		 * The icon to use for this component.
 		 * See [Icon's documentation]{@link ui/Icon.Icon#children} for details.
@@ -111,41 +113,16 @@ const ToggleIconBase = kind({
 });
 
 /**
- * Represents a Boolean state, and can accept any icon to toggle.
+ * Adds support for the `onToggle` prop callback to be fired when the `onTap` (touch-safe `onClick`)
+ * event executes.
  *
- * @class TouchableToggleIcon
+ * @class ToggleIconDecorator
  * @memberof ui/ToggleIcon
  * @ui
  * @public
  */
-const TouchableToggleIcon = hoc((config, Wrapped) => {
-	return kind({
-		name: 'ui:TouchableToggleIcon',
-
-		propTypes: /** @lends ui/ToggleIcon.ToggleIcon.prototype */ {
-			/**
-			 * The handler to run when the component is toggled.
-			 *
-			 * @type {Function}
-			 * @param {Object} event
-			 * @param {String} event.selected - Selected value of item.
-			 * @param {*} event.value - Value passed from `value` prop.
-			 * @public
-			 */
-			onToggle: PropTypes.func
-		},
-
-		render: ({onToggle, ...rest}) => {
-			return (
-				<Wrapped {...rest} onTap={onToggle} />
-			);
-		}
-	});
-});
-
 const ToggleIconDecorator = compose(
-	Toggleable,
-	TouchableToggleIcon,
+	Toggleable({toggleProp: 'onTap'}),
 	Touchable
 );
 
@@ -158,6 +135,18 @@ const ToggleIconDecorator = compose(
  * @public
  */
 const ToggleIcon = ToggleIconDecorator(ToggleIconBase);
+
+/**
+ * The handler to run when the component is toggled.
+ *
+ * @name onToggle
+ * @memberof ui/ToggleIcon.ToggleIcon.prototype
+ * @type {Function}
+ * @param {Object} event
+ * @param {String} event.selected - Selected value of item.
+ * @param {*} event.value - Value passed from `value` prop.
+ * @public
+ */
 
 export default ToggleIcon;
 export {
