@@ -11,7 +11,7 @@
  */
 
 import kind from '@enact/core/kind';
-import {BodyTextBase as UiBodyText} from '@enact/ui/BodyText';
+import UiBodyText from '@enact/ui/BodyText';
 import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -36,15 +36,6 @@ const BodyTextBase = kind({
 
 	propTypes: /** @lends moonstone/BodyText.BodyText.prototype */ {
 		/**
-		 * If `true`, text content is centered; otherwise, it is left-aligned.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		centered: PropTypes.bool,
-
-		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
 		 *
@@ -64,7 +55,7 @@ const BodyTextBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['bodyText']
+		publicClassNames: 'bodyText'
 	},
 
 	render: ({css, ...rest}) => {
