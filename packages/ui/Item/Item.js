@@ -87,21 +87,23 @@ const ItemBase = kind({
 	styles: {
 		css: componentCss,
 		className: 'item',
-		publicClassNames: 'item'
+		publicClassNames: true
 	},
 
 	computed: {
 		className: ({inline, styler}) => styler.append({inline})
 	},
 
-	render: ({component: Component, overlayBefore, overlayAfter, children, ...rest}) => {
+	render: ({component: Component, disabled, children, ...rest}) => {
 		delete rest.inline;
 
 		return (
-			<Component {...rest}>
-				{overlayBefore}
+			<Component
+				{...rest}
+				aria-disabled={disabled}
+				disabled={disabled}
+			>
 				{children}
-				{overlayAfter}
 			</Component>
 		);
 	}
