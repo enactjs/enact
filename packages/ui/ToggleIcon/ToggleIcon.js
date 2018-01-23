@@ -13,7 +13,6 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
-
 import Toggleable from '../Toggleable';
 import Touchable from '../Touchable';
 

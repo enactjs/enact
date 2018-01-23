@@ -13,6 +13,7 @@ import Toggleable from '@enact/ui/Toggleable';
 import Skinnable from '../Skinnable';
 import {ToggleItemBase} from '../ToggleItem';
 import Checkbox from '../Checkbox';
+import componentCss from './CheckboxItem.less';
 
 /**
  * {@link moonstone/CheckboxItem.CheckboxItemBase} is a component that
@@ -97,6 +98,11 @@ const CheckboxItemBase = kind({
 		iconPosition: 'before',
 		inline: false,
 		value: ''
+	},
+
+	style: {
+		css: componentCss,
+		publicClassNames: 'checkboxItem'
 	},
 
 	computed: {

@@ -1,27 +1,31 @@
 /**
- * Exports the {@link moonstone/ToggleItem.ToggleItem} and
- * {@link moonstone/ToggleItem.ToggleItemBase} components.
+ * Provides Moonstone-themed toggle item components and behaviors.
+ *
+ * @example
+ * <ToggleItem icon="lock" iconPosition="before">Toggle Me</ToggleItem>
  *
  * @module moonstone/ToggleItem
+ * @exports ToggleItem
+ * @exports ToggleItemBase
+ * @exports ToggleItemDecorator
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
-import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import Toggleable from '@enact/ui/Toggleable';
+import ToggleIcon from '@enact/ui/ToggleIcon';
+import React from 'react';
+import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 
 import SlotItem from '../SlotItem';
 
-import ToggleIcon from '@enact/ui/ToggleIcon';
-import Icon from '../Icon';
-
 import componentCss from './ToggleItem.less';
+import Touchable from '@enact/ui/Touchable';
+
 
 /**
- * {@link moonstone/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
- * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
- * to represent the selected state.
+ * A moonstone-styled toggle item without any behavior.
  *
  * @class ToggleItemBase
  * @memberof moonstone/ToggleItem
@@ -39,6 +43,19 @@ const ToggleItemBase = kind({
 		 * @public
 		 */
 		children: PropTypes.node.isRequired,
+
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `selected` - Applied to a `selected` toggle item
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
 
 		/**
 		 * Applies a disabled visual state to the toggle item.
@@ -133,17 +150,17 @@ const ToggleItemBase = kind({
 
 	styles: {
 		css: componentCss,
-		className: 'toggleItem'
+		publicClassNames: ['toggleIcon', 'selected', 'dot']
 	},
 
-	handlers: {
-		onToggle: (ev, {onToggle, onTap, selected, disabled, value}) => {
-			if (!disabled && (onToggle || onTap)) {
-				if (onToggle) onToggle({selected: !selected, value});
-				if (onTap) onTap(ev);
-			}
-		}
-	},
+	// handlers: {
+	// 	onToggle: (ev, {onToggle, onTap, selected, disabled, value}) => {
+	// 		if (!disabled && (onToggle || onTap)) {
+	// 			if (onToggle) onToggle({selected: !selected, value});
+	// 			if (onTap) onTap(ev);
+	// 		}
+	// 	}
+	// },
 
 	computed: {
 		iconBefore: ({iconClasses, selected, icon, iconPosition}) => {
@@ -166,7 +183,7 @@ const ToggleItemBase = kind({
 		}
 	},
 
-	render: ({children, iconAfter, iconBefore, onToggle, selected, ...rest}) => {
+	render: ({css, children, iconAfter, iconBefore, onToggle, selected, ...rest}) => {
 		delete rest.icon;
 		delete rest.iconClasses;
 		delete rest.iconPosition;
@@ -175,6 +192,7 @@ const ToggleItemBase = kind({
 		return (
 			<SlotItem
 				role="checkbox"
+				css={css}
 				{...rest}
 				aria-checked={selected}
 				onTap={onToggle}
@@ -189,23 +207,26 @@ const ToggleItemBase = kind({
 
 
 /**
- * {@link moonstone/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
- * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
- * to represent the selected state.
+ * A Moonstone-styled item with built-in support for toggling, marqueed text, and
+ * Spotlight focus.
+ *
+ * Usage:
+ * ```
+ * <ToggleItem icon="lock" iconPosition="before">Toggle Me</ToggleItem>
+ * ```
  *
  * @class ToggleItem
  * @memberof moonstone/ToggleItem
- * @extends moonstone/ToggleItem.ToggleItemBase
  * @mixes ui/Toggleable.Toggleable
  * @ui
  * @public
  */
-const ToggleItem = Pure(
-	Toggleable(
-		{prop: 'selected'},
-		ToggleItemBase
-	)
-);
+
+const ToggleItem = compose(
+	Pure,
+	Toggleable({prop: 'selected', toggleProp: 'onTap'}),
+	Touchable
+)(ToggleItemBase);
 
 export default ToggleItem;
 export {ToggleItem, ToggleItemBase};
