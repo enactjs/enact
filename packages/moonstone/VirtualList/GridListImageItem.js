@@ -35,7 +35,7 @@ const defaultPlaceholder =
  * @memberof moonstone/VirtualList
  * @ui
  * @public
- * @deprecated until 2.0.0, replaced by [moonstone/GridListImageItem.GridListImageItemBase]{@link moonstone/GridListImageItem.GridListImageItemBase}
+ * @deprecated replaced by [moonstone/GridListImageItem.GridListImageItemBase]{@link moonstone/GridListImageItem.GridListImageItemBase}
  */
 const GridListImageItemBase = kind({
 	name: 'GridListImageItem',
@@ -191,7 +191,7 @@ const GridListImageItemBase = kind({
  * @see moonstone/VirtualList.GridListImageItemBase
  * @ui
  * @public
- * @deprecated
+ * @deprecated replaced by [moonstone/GridListImageItem.GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem}
  */
 const GridListImageItem = MarqueeController(
 	{marqueeOnFocus: true},
