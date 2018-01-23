@@ -7,16 +7,16 @@
  */
 
 import kind from '@enact/core/kind';
+import hoc from '@enact/core/hoc';
 import {handle, forward} from '@enact/core/handle';
 import React from 'react';
+import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
 
 import Toggleable from '../Toggleable';
 import Touchable from '../Touchable';
 
 import componentCss from './ToggleIcon.less';
-
-const TouchableDiv = Touchable('div');
 
 /**
  * Represents a Boolean state, and can accept any icon to toggle.
@@ -75,17 +75,6 @@ const ToggleIconBase = kind({
 		iconComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
-		 * The handler to run when the component is toggled.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {String} event.selected - Selected value of item.
-		 * @param {*} event.value - Value passed from `value` prop.
-		 * @public
-		 */
-		onToggle: PropTypes.func,
-
-		/**
 		 * Sets whether this control is in the "on" or "off" state. `true` for on, `false` for "off".
 		 *
 		 * @type {Boolean}
@@ -107,33 +96,62 @@ const ToggleIconBase = kind({
 		publicClassNames: true
 	},
 
-	handlers: {
-		onToggle: handle(
-			forward('onTap'),
-			(ev, {selected, onToggle}) => {
-				if (onToggle) {
-					onToggle({selected: !selected});
-				}
-			}
-		)
-	},
-
 	computed: {
 		className: ({selected, styler}) => styler.append({selected})
 	},
 
-	render: ({children, css, iconComponent: IconComponent, onToggle, ...rest}) => {
+	render: ({children, css, iconComponent: IconComponent, ...rest}) => {
 		delete rest.selected;
 
 		return (
-			<TouchableDiv {...rest} onTap={onToggle}>
+			<div {...rest}>
 				<IconComponent className={css.icon}>{children}</IconComponent>
-			</TouchableDiv>
+			</div>
 		);
 	}
 });
 
-const ToggleIconDecorator = Toggleable({prop: 'selected'});
+const TouchableToggleIcon = hoc((config, Wrapped) => {
+	return kind({
+		name: 'ui:TouchableToggleIcon',
+
+		propTypes: {
+			/**
+			 * The handler to run when the component is toggled.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @param {String} event.selected - Selected value of item.
+			 * @param {*} event.value - Value passed from `value` prop.
+			 * @public
+			 */
+			onToggle: PropTypes.func
+		},
+
+		handlers: {
+			onToggle: handle(
+				forward('onTap'),
+				(ev, {selected, onToggle}) => {
+					if (onToggle) {
+						onToggle({selected: !selected});
+					}
+				}
+			)
+		},
+
+		render: ({onToggle, ...rest}) => {
+			return (
+				<Wrapped {...rest} onTap={onToggle} />
+			);
+		}
+	});
+});
+
+const ToggleIconDecorator = compose(
+	Toggleable({prop: 'selected'}),
+	TouchableToggleIcon,
+	Touchable
+);
 
 const ToggleIcon = ToggleIconDecorator(ToggleIconBase);
 
