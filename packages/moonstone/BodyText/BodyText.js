@@ -1,5 +1,5 @@
 /**
- * Provides block text to an application. Use case is similar to a paragraph tag.
+ * Accepts and displays a block of text. Use case is similar to a paragraph tag.
  *
  * @example
  * <BodyText centered>Hello Enact!</BodyText>
@@ -21,13 +21,12 @@ import Skinnable from '../Skinnable';
 
 import componentCss from './BodyText.less';
 
-
 /**
- * {@link moonstone/BodyText.BodyText} is a stateless BodyText with Moonstone styling
- * applied.
+ * A simple implementation of a block of text.
  *
- * @class BodyText
+ * @class BodyTextBase
  * @memberof moonstone/BodyText
+ * @extends ui/BodyText.BodyText
  * @ui
  * @public
  */
@@ -49,10 +48,6 @@ const BodyTextBase = kind({
 		css: PropTypes.object
 	},
 
-	defaultProps: {
-		centered: false
-	},
-
 	styles: {
 		css: componentCss,
 		publicClassNames: 'bodyText'
@@ -68,11 +63,33 @@ const BodyTextBase = kind({
 	}
 });
 
+/**
+ * Moonstone-specific wrappers to apply to [BodyTextBase]{@link moonstone/BodyText.BodyTextBase}.
+ *
+ * @hoc
+ * @memberof moonstone/BodyText
+ * @mixes ui/Skinnable.Skinnable
+ * @public
+ */
 const BodyTextDecorator = compose(
 	Pure,
 	Skinnable
 );
 
+/**
+ * A Moonstone-styled BodyText, ready to use.
+ *
+ * Usage:
+ * ```
+ * <BodyText>I have a Ham radio. There are many like it, but this one is mine.</BodyText>
+ * ```
+ *
+ * @class BodyText
+ * @memberof moonstone/BodyText
+ * @mixes moonstone/BodyText.BodyTextDecorator
+ * @ui
+ * @public
+ */
 const BodyText = BodyTextDecorator(BodyTextBase);
 
 export default BodyText;

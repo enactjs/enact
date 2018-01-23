@@ -3,8 +3,6 @@
  *
  * @module ui/BodyText
  * @exports BodyText
- * @exports BodyTextBase
- * @exports BodyTextDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -16,12 +14,12 @@ import componentCss from './BodyText.less';
 /**
  * A basic text-block component without any behaviors applied to it.
  *
- * @class BodyTextBase
+ * @class BodyText
  * @memberof ui/BodyText
  * @ui
  * @public
  */
-const BodyTextBase = kind({
+const BodyText = kind({
 	name: 'ui:BodyText',
 
 	propTypes: /** @lends ui/BodyText.BodyText.prototype */ {
@@ -74,31 +72,7 @@ const BodyTextBase = kind({
 	}
 });
 
-/**
- * Adds no functionality, but is provided for export-API consistency between components
- *
- * @hoc
- * @memberof ui/BodyText
- * @public
- */
-const BodyTextDecorator = (Wrapped) => Wrapped;
-
-/**
- * A minimally-styled BodyText component. (Identical to `BodyTextBase`)
- *
- * @class Spinner
- * @extends ui/Spinner.SpinnerBase
- * @memberof ui/Spinner
- * @mixes ui/Spinner.SpinnerDecorator
- * @ui
- * @public
- */
-const BodyText = BodyTextBase;
-
 export default BodyText;
-
 export {
-	BodyText,
-	BodyTextBase,
-	BodyTextDecorator
+	BodyText
 };
