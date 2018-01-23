@@ -36,7 +36,7 @@ const defaultConfig = {
 	 * Note: When using `activate`/`deactivate` instead of `toggle`, set `toggle` to `null` to
 	 * prevent passing the default `onToggle` prop to the wrapped component.
 	 *
-	 * @type {String}
+	 * @type {String}	
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
 	 */
 	deactivate: null,
@@ -189,7 +189,6 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleToggle = this.handle(
 			forProp('disabled', false),
-			(toggleProp ? forward(toggleProp) : null),
 			this.forwardWithState(toggle),
 			() => this.updateActive(!this.state.active)
 		)

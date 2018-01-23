@@ -110,6 +110,7 @@ const ToggleIconBase = kind({
 	}
 });
 
+<<<<<<< a1942e68177a957f1ad9f0dbe0d13eb6557d3ecc
 /**
  * Adds support for the `onToggle` prop callback to be fired when the `onTap` (touch-safe `onClick`)
  * event executes.
@@ -123,6 +124,47 @@ const ToggleIconBase = kind({
  */
 const ToggleIconDecorator = compose(
 	Toggleable({toggleProp: 'onTap'}),
+=======
+const TouchableToggleIcon = hoc((config, Wrapped) => {
+	return kind({
+		name: 'ui:TouchableToggleIcon',
+
+		propTypes: {
+			/**
+			 * The handler to run when the component is toggled.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @param {String} event.selected - Selected value of item.
+			 * @param {*} event.value - Value passed from `value` prop.
+			 * @public
+			 */
+			onToggle: PropTypes.func
+		},
+
+		handlers: {
+			onToggle: handle(
+				forward('onTap'),
+				(ev, {selected, onToggle}) => {
+					if (onToggle) {
+						onToggle({selected: !selected});
+					}
+				}
+			)
+		},
+
+		render: ({onToggle, ...rest}) => {
+			return (
+				<Wrapped {...rest} onTap={onToggle} />
+			);
+		}
+	});
+});
+
+const ToggleIconDecorator = compose(
+	Toggleable({prop: 'selected'}),
+	TouchableToggleIcon,
+>>>>>>> Extracted handlers to a hoc wrapper
 	Touchable
 );
 
