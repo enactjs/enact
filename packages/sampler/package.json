@@ -17,12 +17,12 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^2.0.0-alpha.2",
-    "@enact/i18n": "^2.0.0-alpha.2",
-    "@enact/moonstone": "^2.0.0-alpha.2",
-    "@enact/spotlight": "^2.0.0-alpha.2",
-    "@enact/ui": "^2.0.0-alpha.2",
-    "@enact/webos": "^2.0.0-alpha.2",
+    "@enact/core": "next",
+    "@enact/i18n": "next",
+    "@enact/moonstone": "next",
+    "@enact/spotlight": "next",
+    "@enact/ui": "next",
+    "@enact/webos": "next",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },
@@ -34,6 +34,7 @@
     "@storybook/addon-options": "^3.2.17",
     "@storybook/react": "^3.2.17",
     "autoprefixer": "^7.2.3",
+    "babel-core": "^6.26.0",
     "babel-plugin-dev-expression": "^0.2.1",
     "babel-plugin-transform-react-inline-elements": "^6.22.0",
     "babel-preset-env": "^1.6.1",

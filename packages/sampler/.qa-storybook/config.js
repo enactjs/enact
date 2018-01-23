@@ -7,10 +7,10 @@ setOptions({
 	name: 'ENACT SAMPLER',
 	url: 'http://nebula.lgsvl.com/enyojs/enact-docs/develop/',
 	goFullScreen: false,
-	showLeftPanel: true,
-	showDownPanel: true,
+	showStoriesPanel: true,
+	showAddonPanel: true,
 	showSearchBox: false,
-	downPanelInRight: false,
+	addonPanelInRight: false,
 });
 
 configure(stories, module);
