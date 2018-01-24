@@ -31,11 +31,14 @@ const Spinner = kind({
 
 	propTypes: /** @lends ui/Spinner.Spinner.prototype */ {
 		/**
-		 * An arbitrarily complex theme-supplied component that animates with the presence of a
-		 * `.running` class. This element should accept a `children` prop which takes the form of
-		 * an optional messagefor the user. Unlike most other components, this does *not* represent
-		 * the root rendered element, and instead refers to the "spinner" part of this component.
-		 * The presence of `blockClickOn` changes the rendering tree and where this is used.
+		 * An theme-supplied component that animates with the presence of the `.running` class.
+		 *
+		 * This element should accept a `children` prop which takes the form of an optional message
+		 * for the user.
+		 *
+		 * Unlike most other components, this does *not* represent the root rendered element, and
+		 * instead refers to the "spinner" part of this component. The presence of `blockClickOn`
+		 * changes the rendering tree and where this is used.
 		 *
 		 * @type {Component|String}
 		 * @public
@@ -43,11 +46,14 @@ const Spinner = kind({
 		component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
 
 		/**
-		 * Determines how far the click-blocking should extend. It can be `'screen'`, `'container'`,
-		 * or `null`. 'screen' blocks entire screen. 'container' blocks up to the nearest ancestor
-		 * with absolute or relative positioning. When blockClickOn is either `'screen'` or
-		 * `'container'`, a translucent scrim can be added by setting
-		 * [scrim]{@link ui/Spinner.Spinner#scrim} prop to `true`.
+		 * Determines how far the click-blocking should extend.
+		 *
+		 * * `null` does not block clicking
+		 * * 'screen' blocks entire screen
+		 * * 'container' blocks up to the nearest ancestor with absolute or relative positioning
+		 *
+		 * When blockClickOn is either `'screen'` or `'container'`, a translucent scrim can be added
+		 * by setting [scrim]{@link ui/Spinner.Spinner#scrim} prop to `true`.
 		 *
 		 * @type {String}
 		 * @public
@@ -83,8 +89,10 @@ const Spinner = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, sets visible translucent scrim behind spinner only when blockClickOn is
-		 * `'screen'` or `'container'`. Scrim has no effect by default or when blockClickOn is `null`.
+		 * When `true`, sets visible translucent scrim behind spinner.
+		 *
+		 * Only has an effect when `blockClickOn` is `'screen'` or `'container'` and has no effect
+		 * by default or when blockClickOn is `null`.
 		 *
 		 * @type {Boolean}
 		 * @default false

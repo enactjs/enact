@@ -145,7 +145,7 @@ const SpinnerBase = kind({
  * @hoc SpinnerSpotlightDecorator
  * @memberof moonstone/Spinner
  * @ui
- * @public
+ * @private
  */
 const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
@@ -153,8 +153,9 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/Spinner.Spinner.prototype */ {
 			/**
-			 * Click event blocking type. It can be either `'screen'`, `'container'`, or `null`.
-			 * 'screen' pauses spotlight.
+			 * Determines how far the click-blocking should extend.
+			 *
+			 * It can be either `'screen'`, `'container'`, or `null`. `'screen'` pauses spotlight.
 			 *
 			 * @type {String}
 			 * @default null
@@ -188,6 +189,7 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
  * @hoc
  * @memberof moonstone/Spinner
  * @mixes moonstone/Spinner.SpinnerSpotlightDecorator
+ * @mixes ui/Skinnable.Skinnable
  * @public
  */
 const SpinnerDecorator = compose(
