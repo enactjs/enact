@@ -36,7 +36,7 @@ project_root/   (package.json lives here)
 #### Component Usage
 
 While many Moonstone components retain the same names they have in Enyo, some have changed. We have prepared
-the [Enyo to Enact Component Map](./enyo_enact_component_map.md) to help with the transition.
+the [Enyo to Enact Component Map](./enyo-enact-component-map.md) to help with the transition.
 
 In general, the `content` property is now handled by the implicit `children` property of components. Boolean
 properties can be shortened to just the property name.  For example, `moonstone/Button` in Enyo was configured

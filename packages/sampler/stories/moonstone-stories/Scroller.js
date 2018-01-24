@@ -14,19 +14,6 @@ const
 		direction: ['both', 'horizontal', 'vertical'],
 		horizontalScrollbar: ['auto', 'hidden', 'visible'],
 		verticalScrollbar: ['auto', 'hidden', 'visible']
-	},
-	style = {
-		scroller: {
-			height: ri.scale(552) + 'px',
-			width: '100%'
-		},
-		content: {
-			height: ri.scale(1002) + 'px',
-			width: ri.scale(2001) + 'px'
-		},
-		bottom: {
-			marginTop: ri.scale(801) + 'px'
-		}
 	};
 
 storiesOf('Scroller')
@@ -40,13 +27,25 @@ storiesOf('Scroller')
 				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				style={style.scroller}
+				style={{
+					height: ri.unit(552, 'rem'),
+					width: '100%'
+				}}
 				verticalScrollbar={select('verticalScrollbar', prop.verticalScrollbar, 'auto')}
 			>
-				<div style={style.content}>
+				<div
+					style={{
+						height: ri.unit(1002, 'rem'),
+						width: ri.unit(2001, 'rem')
+					}}
+				>
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
 					Aenean id blandit nunc. Donec lacinia nisi vitae mi dictum, eget pulvinar nunc tincidunt. Integer vehicula tempus rutrum. Sed efficitur neque in arcu dignissim cursus.
-					<div style={style.bottom}>
+					<div
+						style={{
+							marginTop: ri.unit(801, 'rem')
+						}}
+					>
 						Mauris blandit sollicitudin mattis. Fusce commodo arcu vitae risus consectetur sollicitudin. Aliquam eget posuere orci. Cras pellentesque lobortis sapien non lacinia.
 					</div>
 				</div>
