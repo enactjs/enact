@@ -33,7 +33,9 @@ const Spinner = kind({
 		/**
 		 * An arbitrarily complex theme-supplied component that animates with the presence of a
 		 * `.running` class. This element should accept a `children` prop which takes the form of
-		 * an optional messagefor the user.
+		 * an optional messagefor the user. Unlike most other components, this does *not* represent
+		 * the root rendered element, and instead refers to the "spinner" part of this component.
+		 * The presence of `blockClickOn` changes the rendering tree and where this is used.
 		 *
 		 * @type {Component|String}
 		 * @public
