@@ -44,7 +44,7 @@ describe('SpotlightContainerDecorator', () => {
 			{attachTo: node}
 		);
 
-		const selector = '[data-container-id="inner-container"]';
+		const selector = 'div[data-container-id="inner-container"]';
 		const innerWrapper = subject.find(selector);
 		const innerNode = node.querySelector(selector);
 
@@ -72,7 +72,7 @@ describe('SpotlightContainerDecorator', () => {
 			{attachTo: node}
 		);
 
-		const selector = '[data-container-id="inner-container"]';
+		const selector = 'div[data-container-id="inner-container"]';
 		const innerWrapper = subject.find(selector);
 		const innerNode = node.querySelector(selector);
 

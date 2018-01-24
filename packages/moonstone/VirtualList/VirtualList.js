@@ -70,7 +70,6 @@ const VirtualList = kind({
 		 * - {node} - You can set a node to scroll
 		 * - {animate} - When `true`, scroll occurs with animation.
 		 *   Set it to `false` if you want scrolling without animation.
-		 * - {indexToFocus} - Deprecated: Use `focus` instead.
 		 * - {focus} - Set `true` if you want the item to be focused after scroll.
 		 *   This option is only valid when you scroll by `index` or `node`.
 		 *
@@ -259,7 +258,6 @@ const VirtualGridList = kind({
 		 * - {node} - You can set a node to scroll
 		 * - {animate} - When `true`, scroll occurs with animation.
 		 *   Set it to `false` if you want scrolling without animation.
-		 * - {indexToFocus} - Deprecated: Use `focus` instead.
 		 * - {focus} - Set `true` if you want the item to be focused after scroll.
 		 *   This option is only valid when you scroll by `index` or `node`.
 		 *

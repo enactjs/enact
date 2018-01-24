@@ -157,7 +157,7 @@ describe('Picker Specs', function () {
 		);
 
 		const expected = false;
-		const actual = picker.find(`.${css.incrementer}`).prop('disabled');
+		const actual = picker.find(`PickerButton.${css.incrementer}`).prop('disabled');
 
 		expect(actual).to.equal(expected);
 	});
@@ -168,7 +168,7 @@ describe('Picker Specs', function () {
 		);
 
 		const expected = false;
-		const actual = picker.find(`.${css.incrementer}`).prop('disabled');
+		const actual = picker.find(`PickerButton.${css.incrementer}`).prop('disabled');
 
 		expect(actual).to.equal(expected);
 	});
@@ -179,7 +179,7 @@ describe('Picker Specs', function () {
 		);
 
 		const expected = true;
-		const actual = picker.find(`.${css.incrementer}`).prop('disabled');
+		const actual = picker.find(`PickerButton.${css.incrementer}`).prop('disabled');
 
 		expect(actual).to.equal(expected);
 	});
@@ -190,7 +190,7 @@ describe('Picker Specs', function () {
 		);
 
 		const expected = true;
-		const actual = picker.find(`.${css.decrementer}`).prop('disabled');
+		const actual = picker.find(`PickerButton.${css.decrementer}`).prop('disabled');
 
 		expect(actual).to.equal(expected);
 	});
@@ -201,8 +201,8 @@ describe('Picker Specs', function () {
 		);
 
 		const expected = true;
-		const actual = picker.find(`.${css.decrementer}`).prop('disabled') &&
-			picker.find(`.${css.incrementer}`).prop('disabled');
+		const actual = picker.find(`PickerButton.${css.decrementer}`).prop('disabled') &&
+			picker.find(`PickerButton.${css.incrementer}`).prop('disabled');
 
 		expect(actual).to.equal(expected);
 	});
@@ -324,7 +324,7 @@ describe('Picker Specs', function () {
 			);
 
 			const expected = '2 next item';
-			const actual = picker.find(`.${css.incrementer}`).prop('aria-label');
+			const actual = picker.find(`PickerButton.${css.incrementer}`).prop('aria-label');
 
 			expect(actual).to.equal(expected);
 		});
@@ -340,7 +340,7 @@ describe('Picker Specs', function () {
 			);
 
 			const expected = '2 previous item';
-			const actual = picker.find(`.${css.decrementer}`).prop('aria-label');
+			const actual = picker.find(`PickerButton.${css.decrementer}`).prop('aria-label');
 
 			expect(actual).to.equal(expected);
 		});
