@@ -86,7 +86,7 @@ describe('VirtualList', () => {
 		);
 
 		const expected = 'Account 0';
-		const actual = subject.find('VirtualListCore').children().at(0).text();
+		const actual = subject.find('[data-index]').at(0).text();
 
 		expect(actual).to.equal(expected);
 	});
@@ -103,7 +103,7 @@ describe('VirtualList', () => {
 		);
 
 		const expected = 27; // 720 / 30 + 3
-		const actual = subject.find('VirtualListCore').children().length;
+		const actual = subject.find('[data-index]').length;
 
 		expect(actual).to.equal(expected);
 	});
@@ -276,7 +276,7 @@ describe('VirtualList', () => {
 
 			setTimeout(() => {
 				const expected = itemArray[0].name;
-				const actual = subject.find('VirtualListCore').children().at(0).text();
+				const actual = subject.find('[data-index]').at(0).text();
 
 				expect(actual).to.equal(expected);
 				done();

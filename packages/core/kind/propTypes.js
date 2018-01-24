@@ -5,7 +5,7 @@
  *
  * @returns {Function} Function accepting a render method on which `cfg` will be set as propTypes
  * @method propTypes
- * @public
+ * @private
  */
 const propTypes = (cfg, render) => (render.propTypes = cfg);
 

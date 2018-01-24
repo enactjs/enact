@@ -209,6 +209,7 @@ describe('Toggleable', () => {
 		);
 
 		subject.find(DivComponent).prop('onToggle')();
+		subject.update();
 
 		const expected = false;
 		const actual = subject.find(DivComponent).prop('active');

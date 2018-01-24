@@ -309,6 +309,7 @@ describe('Slider Specs', () => {
 		);
 
 		slider.find('Slider').prop('onActivate')();
+		slider.update();
 
 		const expected = 'change a value with left right button';
 		const actual = slider.find('Slider').prop('aria-valuetext');
@@ -323,6 +324,7 @@ describe('Slider Specs', () => {
 		);
 
 		slider.find('Slider').prop('onActivate')();
+		slider.update();
 
 		const expected = 'change a value with up down button';
 		const actual = slider.find('Slider').prop('aria-valuetext');
