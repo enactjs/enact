@@ -16,7 +16,7 @@ describe('Spinner Specs', () => {
 
 	it('should have centered class when centered prop equals true', function () {
 		const spinner = mount(
-			<Spinner spinnerComponent="div" centered>
+			<Spinner component="div" centered>
 				Loading...
 			</Spinner>
 		);
@@ -27,22 +27,9 @@ describe('Spinner Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have content class when Spinner has children', function () {
-		const spinner = mount(
-			<Spinner spinnerComponent="div">
-				Loading...
-			</Spinner>
-		);
-
-		const expected = true;
-		const actual = spinner.find(`.${css.spinner}`).hasClass(css.content);
-
-		expect(actual).to.equal(expected);
-	});
-
 	it('should not have content class when Spinner has no children', function () {
 		const spinner = mount(
-			<Spinner spinnerComponent="div" />
+			<Spinner component="div" />
 		);
 
 		const expected = false;
@@ -53,7 +40,7 @@ describe('Spinner Specs', () => {
 
 	it('should have no scrim class when blockClickOn prop equals container', function () {
 		const spinner = mount(
-			<Spinner spinnerComponent="div" blockClickOn="container" />
+			<Spinner component="div" blockClickOn="container" />
 		);
 
 		const expected = false;
@@ -64,7 +51,7 @@ describe('Spinner Specs', () => {
 
 	it('should have scrim class when blockClickOn prop equals container and when scrim prop equals true', function () {
 		const spinner = mount(
-			<Spinner spinnerComponent="div" blockClickOn="container" scrim />
+			<Spinner component="div" blockClickOn="container" scrim />
 		);
 
 		const expected = true;
@@ -79,7 +66,7 @@ describe('Spinner Specs', () => {
 		document.body.appendChild(div);
 
 		const spinner = mount(
-			<Spinner spinnerComponent="div" blockClickOn="screen" />,
+			<Spinner component="div" blockClickOn="screen" />,
 			options
 		);
 

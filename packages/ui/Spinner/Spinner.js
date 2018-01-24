@@ -72,7 +72,6 @@ const Spinner = kind({
 		 * * `spinnerContainer` - Added as a parent in the case of blockOnClick="container"
 		 * * `blockClickOn` - Applied if interaction should be blocked
 		 * * `centered` - Applied if the centered prop is present
-		 * * `content` - Applied if there is (children) content
 		 * * `running` - Controls the playback state. Attach animation name property to this class.
 		 * * `scrim` - The blocking layer behind the Spinner
 		 *

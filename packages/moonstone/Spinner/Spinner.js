@@ -51,15 +51,7 @@ const SpinnerCore = kind({
 			} else if (!children) {
 				return $L('Loading');
 			}
-		},
-		// Migration Note: css={componentCss} should likely be added to <MarqueeText> once MarqueeText is merged into the migration target branch.
-		children: ({children}) => (
-			children ?
-				<MarqueeText className={componentCss.client} marqueeOn="render" alignment="center">
-					{children}
-				</MarqueeText> :
-				null
-		)
+		}
 	},
 
 	render: ({children, css, ...rest}) => (
@@ -69,7 +61,12 @@ const SpinnerCore = kind({
 				<div className={`${css.ball} ${css.ball2}`} />
 				<div className={`${css.ball} ${css.ball3}`} />
 			</div>
-			{children}
+			{children ?
+				<MarqueeText className={css.client} marqueeOn="render" alignment="center">
+					{children}
+				</MarqueeText> :
+				null
+			}
 		</div>
 	)
 });
@@ -92,7 +89,7 @@ const SpinnerBase = kind({
 		 *
 		 * The following classes are supported:
 		 *
-		 * * `spinner` - The root component class
+		 * * `spinner` - The root component class, unless there is a scrim. The scrim and floating layer can be a sibbling or parent to this root "spinner" element.
 		 *
 		 * @type {Object}
 		 * @public
@@ -120,8 +117,8 @@ const SpinnerBase = kind({
 	},
 
 	computed: {
-		className: ({transparent, styler}) => styler.append(
-			{transparent}
+		className: ({children, transparent, styler}) => styler.append(
+			{content: !!children, transparent}
 		)
 	},
 

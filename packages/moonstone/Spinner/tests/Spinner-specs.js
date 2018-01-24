@@ -38,6 +38,19 @@ describe('Spinner Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it('should have content class when Spinner has children', function () {
+		const spinner = mount(
+			<Spinner>
+				Loading...
+			</Spinner>
+		);
+
+		const expected = true;
+		const actual = spinner.find(`div.${css.spinner}`).hasClass(css.content);
+
+		expect(actual).to.equal(expected);
+	});
+
 	it('should have transparent class when transparent prop equals true', function () {
 		const spinner = mount(
 			<Spinner transparent>
