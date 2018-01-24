@@ -155,10 +155,10 @@ class FloatingLayerBase extends React.Component {
 	}
 
 	renderNode () {
-		const {floatLayerClassName} = this.props;
+		const {floatLayerClassName, open} = this.props;
 		const floatingLayer = this.context.getFloatingLayer();
 
-		if (!this.node && floatingLayer) {
+		if (!this.node && floatingLayer && open) {
 			invariant(
 				this.context.getFloatingLayer,
 				'FloatingLayer cannot be used outside the subtree of a FloatingLayerDecorator'
