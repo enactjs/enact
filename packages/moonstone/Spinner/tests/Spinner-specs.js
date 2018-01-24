@@ -5,15 +5,6 @@ import Spinner from '../Spinner';
 import css from '../Spinner.less';
 
 describe('Spinner Specs', () => {
-	const options = {
-		context: {
-			getFloatingLayer: () => document.getElementById('floatLayer')
-		},
-		childContextTypes: {
-			getFloatingLayer: PropTypes.func
-		}
-	};
-
 	it('should have not have MarqueeText as a child when Spinner has no children', function () {
 		const spinner = mount(
 			<Spinner />
