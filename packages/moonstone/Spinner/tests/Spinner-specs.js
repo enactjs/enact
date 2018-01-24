@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {mount} from 'enzyme';
 import Spinner from '../Spinner';
 import css from '../Spinner.less';
