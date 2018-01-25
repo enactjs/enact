@@ -16,6 +16,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ExpandableSpotlightDecorator` to not spot the title upon collapse when in `pointerMode`
+- `moonstone/VirtualListNative` to focus the item in it immediately if pressing a page up or down key
+
 ## [2.0.0-alpha.3] - 2018-01-18
 
 ### Fixed
