@@ -2,8 +2,8 @@ import Resizable from '../Resizable';
 import Transition from '../Transition';
 
 /**
- * Changes spotlight focus to transition container when opening the container if the previously focused
- * component is contained.
+ * [ExpandableTransitionContainer]{@link ui/ExpandableItem.ExpandableTransitionContainer} is a
+ * transition container for [ExpandableItem]{@link ui/ExpandableItem.ExpandableItem}.
  *
  * @class ExpandableTransitionContainer
  * @memberof ui/ExpandableItem

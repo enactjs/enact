@@ -3,7 +3,6 @@
  *
  * @module ui/ExpandableItem
  * @exports Expandable
- * @exports ExpandableTransitionContainer
  */
 
 import Cancelable from '../Cancelable';

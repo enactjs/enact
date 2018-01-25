@@ -9,7 +9,6 @@
  * @exports ExpandableTransitionContainer
  */
 
-import {extractAriaProps} from '@enact/core/util';
 import kind from '@enact/core/kind';
 import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
@@ -18,8 +17,8 @@ import Expandable from './Expandable';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
 
 /**
- * {@link ui/ExpandableItem.ExpandableItemBase} is a stateless component that
- * renders a component that can be expanded to show additional contents.
+ * {@link ui/ExpandableItem.ExpandableItemBase} is a stateless component that renders a component
+ * that can be expanded to show additional contents.
  *
  * @class ExpandableItemBase
  * @memberof ui/ExpandableItem
@@ -204,12 +203,10 @@ const ExpandableItemBase = kind({
 		delete rest.onClose;
 		delete rest.onOpen;
 
-		const ariaProps = extractAriaProps(rest);
-
 		return (
 			<Fragment>
+				{/* TODO: Consider changing default Component from div to Item and use onTap */}
 				<Component
-					{...ariaProps}
 					{...rest}
 					onClick={handleOpen}
 				>
