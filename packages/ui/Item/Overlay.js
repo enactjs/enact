@@ -14,8 +14,7 @@ import PropTypes from 'prop-types';
 import componentCSS from './Item.less';
 
 /**
- * {@link ui/Item.Overlay} is an unstyled component to overlay content, typically icons over an item
- * {@link ui/Item.ItemOverlay}.
+ * An unstyled component to overlay content, typically icons on an [Item]{@link ui/Item.ItemOverlay}.
  *
  * @class Overlay
  * @memberof ui/Item
@@ -64,14 +63,13 @@ const OverlayBase = kind({
 		className: ({hidden, styler}) => styler.append({hidden})
 	},
 
-	render: ({css, ...rest}) => {
-		if (!rest.children) return null;
+	render: (props) => {
+		if (!props.children) return null;
 
-		delete rest.hidden;
+		delete props.hidden;
 		return (
 			<div
-				css={css}
-				{...rest}
+				{...props}
 			/>
 		);
 	}

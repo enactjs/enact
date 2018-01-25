@@ -1,10 +1,8 @@
 /**
  * Provides Moonstone-themed overlay components and behaviors.
  *
- * @module moonstone/Overlay
+ * @module moonstone/Item
  * @exports Overlay
- * @exports OverlayBase
- * @exports OverlayDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -22,7 +20,7 @@ import componentCSS from './Item.less';
  * @ui
  * @public
  */
-const OverlayBase = kind({
+const Overlay = kind({
 	name: 'Overlay',
 
 	propTypes: /** @lends moonstone/Item.Overlay.prototype */ {
@@ -56,7 +54,6 @@ const OverlayBase = kind({
 
 	styles: {
 		css: componentCSS,
-		className: 'overlay',
 		publicClassNames: ['overlay', 'hidden']
 	},
 
@@ -75,22 +72,7 @@ const OverlayBase = kind({
 	}
 });
 
-/**
- * A Moonstone-styled overlay with proper positioning for Moonstone Items.
- *
- *
- * @class Overlay
- * @memberof moonstone/Overlay
- * @mixes moonstone/Item.OverlayDecorator
- * @ui
- * @public
- */
-const Overlay = OverlayBase;
-const OverlayDecorator = (Wrapped) => Wrapped;
-
 export default Overlay;
 export {
-	Overlay,
-	OverlayBase,
-	OverlayDecorator
+	Overlay
 };

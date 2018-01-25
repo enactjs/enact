@@ -94,16 +94,14 @@ const ItemBase = kind({
 		className: ({inline, styler}) => styler.append({inline})
 	},
 
-	render: ({component: Component, disabled, children, ...rest}) => {
+	render: ({component: Component, overlayBefore, overlayAfter, children, ...rest}) => {
 		delete rest.inline;
 
 		return (
-			<Component
-				{...rest}
-				aria-disabled={disabled}
-				disabled={disabled}
-			>
+			<Component {...rest}>
+				{overlayBefore}
 				{children}
+				{overlayAfter}
 			</Component>
 		);
 	}

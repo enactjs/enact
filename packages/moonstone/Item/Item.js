@@ -8,6 +8,9 @@
  * @exports Item
  * @exports ItemBase
  * @exports ItemDecorator
+ * @exports ItemOverlay
+ * @exports ItemOverlayBase
+ * @exports ItemOverlayDecorator
  */
 import UiItem from '@enact/ui/Item';
 import kind from '@enact/core/kind';
@@ -20,15 +23,15 @@ import Spottable from '@enact/spotlight/Spottable';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import {ItemOverlay, ItemOverlayDecorator} from './ItemOverlay';
+import {ItemOverlay, ItemOverlayBase, ItemOverlayDecorator} from './ItemOverlay';
 
 import componentCss from './Item.less';
 
 /**
  * A moonstone-styled item without any behavior.
  *
- * @class itemBase
- * @memberof moonstone/item
+ * @class ItemBase
+ * @memberof moonstone/Item
  * @ui
  * @public
  */
@@ -80,10 +83,9 @@ const ItemBase = kind({
 const ItemDecorator = compose(
 	Pure,
 	Spottable,
-	MarqueeDecorator({invalidateProps: ['inline', 'autoHide']}),
+	MarqueeDecorator({className: componentCss.content, invalidateProps: ['inline', 'autoHide', 'remeasure']}),
 	Skinnable
 );
-
 
 /**
  * A Moonstone-styled item with built-in support for marqueed text, and Spotlight focus.
@@ -106,6 +108,8 @@ export default Item;
 export {
 	Item,
 	ItemBase,
+	ItemDecorator,
 	ItemOverlay,
+	ItemOverlayBase,
 	ItemOverlayDecorator
 };

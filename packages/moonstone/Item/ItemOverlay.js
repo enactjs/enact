@@ -1,10 +1,8 @@
 /**
  * Provides Moonstone-themed ItemOverlayBase components and behaviors.
  *
- * @module moonstone/ItemOverlay
- * @exports ItemOverlay
+ * @module moonstone/Item
  * @exports ItemOverlayBase
- * @exports ItemOverlayDecorator
  */
 
 import {Item as UIItemOverlay} from '@enact/ui/Item';
@@ -12,6 +10,16 @@ import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
+import {childrenEquals} from '@enact/core/util';
+import Slottable from '@enact/ui/Slottable';
+import {MarqueeDecorator} from '../Marquee';
+import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
+import Toggleable from '@enact/ui/Toggleable';
+import Pure from '@enact/ui/internal/Pure';
+import Spottable from '@enact/spotlight/Spottable';
+import Skinnable from '../Skinnable';
+
 import Overlay from './Overlay';
 
 import componentCss from './Item.less';
@@ -20,7 +28,7 @@ import componentCss from './Item.less';
  * A moonstone-styled ItemOverlay without any behavior.
  *
  * @class ItemOverlayBase
- * @memberof moonstone/ItemOverlay
+ * @memberof moonstone/Item
  * @ui
  * @public
  */
@@ -100,8 +108,7 @@ const ItemOverlayBase = kind({
 
 	styles: {
 		css: componentCss,
-		className:'item',
-		publicClassNames: ['item']
+		className:'item'
 	},
 
 	computed: {
@@ -128,27 +135,67 @@ const ItemOverlayBase = kind({
 	render: ({css, ...rest}) => {
 		return (
 			<UIItemOverlay
-				css={css}
 				{...rest}
+				css={css}
 			/>
 		);
 	}
 });
 
 /**
- * A Moonstone-styled item with overlay. Typically used in lists.
+ * Moonstone-specific item with overlay behaviors to apply to [Item]{@link moonstone/ItemOverlay.ItemOverlayBase}.
  *
- *
- * @class ItemOverlay
- * @memberof moonstone/ItemOverlay
+ * @class ItemOverlayDecorator
+ * @memberof moonstone/Item
+ * @mixes spotlight.Spottable
+ * @mixes moonstone/Marquee.MarqueeDecorator
+ * @mixes moonstone/Skinnable
+ * @mixes ui/Toggleable
  * @ui
  * @public
  */
-const ItemOverlay = ItemOverlayBase;
+const ItemOverlayDecorator = compose(
+	Slottable({slots: ['overlayAfter', 'overlayBefore']}),
+	Pure(
+		{propComparators: {
+			overlayBefore: childrenEquals,
+			overlayAfter: childrenEquals
+		}}),
+	Toggleable(
+		{prop: 'remeasure', activate: 'onFocus', deactivate: 'onBlur', toggle: null}
+	),
+	Spottable,
+	RemeasurableDecorator({trigger: 'remeasure'}),
+	MarqueeDecorator({className: componentCss.content, invalidateProps: ['inline', 'autoHide', 'remeasure']}),
+	Skinnable
+);
+
+/**
+ * A Moonstone-styled item with built-in support for overlays.
+ *
+ * ```
+ *	<ItemOverlay autoHide="both">
+ *		<overlayBefore>
+ *			<Icon>flag</Icon>
+ *			<Icon>star</Icon>
+ *		</overlayBefore>
+ *		An Item that will show some icons before and after this text when spotted
+ *		<Icon slot="overlayAfter">trash</Icon>
+ *	</ItemOverlay>
+ * ```
+ *
+ * @class ItemOverlay
+ * @memberof moonstone/Item
+ * @extends moonstone/Item.ItemOverlayBase
+ * @mixes moonstone/Item.ItemOverlayDecorator
+ * @ui
+ * @public
+ */
+const ItemOverlay = ItemOverlayDecorator(ItemOverlayBase);
 
 export default ItemOverlayBase;
-
 export {
 	ItemOverlay,
-	ItemOverlayBase
+	ItemOverlayBase,
+	ItemOverlayDecorator
 };

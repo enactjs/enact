@@ -180,7 +180,7 @@ const ButtonBase = kind({
 });
 
 /**
- * Adds touch support to a [ButtonBase]{@link ui/Button.ButtonBase}.
+ * Adds touch support to the component it wraps.
  *
  * @hoc
  * @memberof ui/Button
