@@ -14,7 +14,7 @@ git checkout develop
 npm install
 # run the lerna bootstrap command (proxied by an npm script)
 npm run bootstrap
-# wait a while … installing enyo-config, react, ... :allthethings:
+# wait a while … installing enact, react, ... :allthethings:
 ```
 
 You'll probably want to `npm link` the enact modules into your app (e.g. rigby). Once the bootstrap is complete, you can link everything up with this command. It tells the local lerna (`npm run lerna --`) to execute (`exec --`) the `npm link` command on every module in `packages/`.
