@@ -523,7 +523,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.alertThumb();
 			}
 
-			if (!this.childRef.skipFocusHandling && !(shouldPreventScrollByFocus || Spotlight.getPointerMode())) {
+			if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode())) {
 				const
 					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,

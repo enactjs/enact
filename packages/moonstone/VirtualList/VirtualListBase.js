@@ -649,26 +649,40 @@ class VirtualListCore extends Component {
 		this.composeStyle(style, ...rest);
 
 		this.cc[key] = React.cloneElement(itemElement, {
-			ref: (index === this.nodeIndexToBeFocused) ? (ref) => this.focusOnNode(ref, index) : null,
+			ref: (index === this.nodeIndexToBeFocused) ? (ref) => this.initItemRef(ref, index) : null,
 			className: classNames(css.listItem, itemElement.props.className),
 			style: {...itemElement.props.style, ...style}
 		});
 	}
 
-	focusOnNode = (ref, index) => {
-		if (ref) {
-			const node = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
-
-			if (Spotlight.isPaused()) {
-				Spotlight.resume();
-				this.forceUpdate();
-			}
-
-			if (node) {
-				Spotlight.focus(node);
-			}
-			this.nodeIndexToBeFocused = null;
+	focusOnNode = (node) => {
+		if (node) {
+			Spotlight.focus(node);
 		}
+	}
+
+	focusOnItem = (index) => {
+		const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
+
+		if (Spotlight.isPaused()) {
+			Spotlight.resume();
+			this.forceUpdate();
+		}
+		this.focusOnNode(item);
+		this.nodeIndexToBeFocused = null;
+	}
+
+	initItemRef = (ref, index) => {
+		if (ref) {
+			this.focusOnItem(index);
+		}
+	}
+
+	focusByIndex = (index) => {
+		// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
+		setTimeout(() => {
+			this.focusOnItem(index);
+		}, 0);
 	}
 
 	applyStyleToHideNode = (index) => {

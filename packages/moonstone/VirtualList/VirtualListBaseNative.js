@@ -267,7 +267,7 @@ class VirtualListCoreNative extends Component {
 	cc = []
 	scrollPosition = 0
 	isScrolledBy5way = false
-	skipFocusHandling = false
+	isScrolledByJump = false
 
 	containerClass = null
 	contentRef = null
@@ -619,32 +619,45 @@ class VirtualListCoreNative extends Component {
 		this.composeStyle(style, ...rest);
 
 		this.cc[key] = React.cloneElement(itemElement, {
-			ref: (index === this.nodeIndexToBeFocused) ? (ref) => this.focusOnNode(ref, index) : null,
+			ref: (index === this.nodeIndexToBeFocused) ? (ref) => this.initItemRef(ref, index) : null,
 			className: classNames(cssItem.listItem, itemElement.props.className),
 			['data-preventscrollonfocus']: true, // Added this attribute to prevent scroll on focus by browser
 			style: {...itemElement.props.style, ...style}
 		});
 	}
 
-	focusOnNode = (ref, index) => {
-		if (ref) {
-			const node = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
-
-			if (Spotlight.isPaused()) {
-				Spotlight.resume();
-				this.forceUpdate();
-			}
-
-			if (node) {
-				// If focusing the item of VirtuallistNative, `onFocus` in Scrollable will be called.
-				// Then VirtualListNative tries to scroll again differently from VirtualList.
-				// So we would like to skip `focus` handling when focusing the item as a workaround.
-				this.skipFocusHandling = true;
-				Spotlight.focus(node);
-				this.skipFocusHandling = false;
-			}
-			this.nodeIndexToBeFocused = null;
+	focusOnNode = (node) => {
+		if (node) {
+			Spotlight.focus(node);
 		}
+	}
+
+	focusOnItem = (index) => {
+		const item = this.contentRef.querySelector(`[data-index='${index}'].spottable`);
+
+		if (Spotlight.isPaused()) {
+			Spotlight.resume();
+		}
+		this.focusOnNode(item);
+		this.nodeIndexToBeFocused = null;
+	}
+
+	initItemRef = (ref, index) => {
+		if (ref) {
+			// If focusing the item of VirtuallistNative, `onFocus` in Scrollable will be called.
+			// Then VirtualListNative tries to scroll again differently from VirtualList.
+			// So we would like to skip `focus` handling when focusing the item as a workaround.
+			this.isScrolledByJump = true;
+			this.focusOnItem(index);
+			this.isScrolledByJump = false;
+		}
+	}
+
+	focusByIndex = (index) => {
+		// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
+		setTimeout(() => {
+			this.focusOnItem(index);
+		}, 0);
 	}
 
 	applyStyleToHideNode = (index) => {
@@ -962,7 +975,7 @@ class VirtualListCoreNative extends Component {
 		return true;
 	}
 
-	shouldPreventScrollByFocus = () => this.isScrolledBy5way
+	shouldPreventScrollByFocus = () => (this.isScrolledBy5way || this.isScrolledByJump)
 
 	jumpToSpottableItem = (keyCode, target) => {
 		const
