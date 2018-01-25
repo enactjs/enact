@@ -2,6 +2,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import sinon from 'sinon';
 import {DatePicker, DatePickerBase} from '../DatePicker';
+import css from '../DatePicker.less';
 
 describe('DatePicker', () => {
 
@@ -60,9 +61,7 @@ describe('DatePicker', () => {
 			<DatePicker title="Date" value={new Date(2000, 0, 1)} open />
 		);
 
-		const yearPicker = subject.find('DateComponentRangePicker').findWhere(p => {
-			return p.type().displayName === 'DateComponentRangePicker' && p.prop('label') === 'year';
-		});
+		const yearPicker = subject.find(`DateComponentRangePicker.${css.year}`);
 
 		const expected = 2000;
 		const actual = yearPicker.prop('value');
@@ -79,9 +78,7 @@ describe('DatePicker', () => {
 			value: new Date(1900, 0, 1)
 		});
 
-		const yearPicker = subject.find('DateComponentRangePicker').findWhere(p => {
-			return p.type().displayName === 'DateComponentRangePicker' && p.prop('label') === 'year';
-		});
+		const yearPicker = subject.find(`DateComponentRangePicker.${css.year}`);
 
 		const expected = 1900;
 		const actual = yearPicker.prop('value');
