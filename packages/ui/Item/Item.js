@@ -5,20 +5,20 @@
  * @exports Item
  * @exports ItemBase
  * @exports ItemDecorator
- * @exports ItemOverlay,
- * @exports ItemOverlayDecorator
  */
 
 import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import Touchable from '../Touchable';
-import ComponentCSS from './Item.less';
+
+import componentCSS from './Item.less';
 
 /**
- * [ItemBase]{@link ui/Item.ItemBase} is a basic item component structure without any behaviors
- * applied to it. It also has support for overlay to place things before and after the main content.
+ * A basic list item component structure without any behaviors applied to it.
+ * It also has support for overlay to place things before and after the main content.
  *
  * @class ItemBase
  * @memberof ui/Item
@@ -73,7 +73,7 @@ const ItemBase = kind({
 		/**
 		 * Overlay for content to be applied after content.
 		 *
-		 * @type {Boolean}
+		 * @type {Node}
 		 * @public
 		 */
 		overlayAfter: PropTypes.node,
@@ -81,11 +81,10 @@ const ItemBase = kind({
 		/**
 		 * Overlay for content to be applied before content.
 		 *
-		 * @type {Boolean}
+		 * @type {Node}
 		 * @public
 		 */
 		overlayBefore: PropTypes.node
-
 	},
 
 	defaultProps: {
@@ -94,26 +93,20 @@ const ItemBase = kind({
 	},
 
 	styles: {
-		css: ComponentCSS,
+		css: componentCSS,
 		className: 'item',
-		publicClassNams: ['item', 'overlay']
+		publicClassNams: true
 	},
 
 	computed: {
 		className: ({inline, styler}) => styler.append({inline})
 	},
 
-	handlers: {
-		onClick: handle(
-			forward('onClick')
-		)
-	},
-
-	render: ({component: Component, overlayBefore, overlayAfter, css, children, ...rest}) => {
+	render: ({component: Component, overlayBefore, overlayAfter, children, ...rest}) => {
 		delete rest.inline;
 
 		return (
-			<Component css={css} {...rest}>
+			<Component {...rest}>
 				{overlayBefore}
 				{children}
 				{overlayAfter}
@@ -123,8 +116,7 @@ const ItemBase = kind({
 });
 
 /**
- * [ItemDecorator]{@link ui/Item.ItemDecorator} adds touch support to a
- * [Item]{@link ui/Item.Item}
+ * Adds touch support to the component it wraps.
  *
  * @hoc
  * @memberof ui/Item
@@ -132,6 +124,17 @@ const ItemBase = kind({
  * @public
  */
 const ItemDecorator = Touchable;
+
+/**
+ * A minimally-styled ready-to-use list item component with touch support.
+ *
+ * @class Item
+ * @extends ui/Item.ItemBase
+ * @memberof ui/Item
+ * @mixes ui/Item.ItemDecorator
+ * @ui
+ * @public
+ */
 const Item = ItemDecorator(ItemBase);
 
 export default Item;

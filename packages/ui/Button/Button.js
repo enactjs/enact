@@ -181,8 +181,7 @@ const ButtonBase = kind({
 });
 
 /**
- * [ButtonDecorator]{@link ui/Button.ButtonDecorator} adds touch support to a
- * [Button]{@link ui/Button.Button}
+ * Adds touch support to the component it wraps.
  *
  * @hoc
  * @memberof ui/Button
@@ -192,7 +191,7 @@ const ButtonBase = kind({
 const ButtonDecorator = Touchable({activeProp: 'pressed'});
 
 /**
- * [Button]{@link ui/Button.Button} is minimally-styled button component with touch support.
+ * A minimally-styled button component with touch support.
  *
  * @class Button
  * @extends ui/Button.ButtonBase
