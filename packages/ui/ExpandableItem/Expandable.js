@@ -1,16 +1,14 @@
 /**
  * Provides expandable behaviors.
  *
- * @module ui/Expandable
+ * @module ui/ExpandableItem
  * @exports Expandable
  * @exports ExpandableTransitionContainer
  */
 
 import Cancelable from '../Cancelable';
 import RadioDecorator from '../RadioDecorator';
-import Resizable from '../Resizable';
 import Toggleable from '../Toggleable';
-import Transition from '../Transition';
 import compose from 'ramda/src/compose';
 
 /**
@@ -35,7 +33,7 @@ const handleCancel = function (props) {
  * cancel.
  *
  * @class Expandable
- * @memberof ui/Expandable
+ * @memberof ui/ExpandableItem
  * @mixes ui/Toggleable.Toggleable
  * @mixes ui/RadioDecorator.RadioDecorator
  * @mixes ui/Cancelable.Cancelable
@@ -48,17 +46,5 @@ const Expandable = compose(
 	Cancelable({component: 'span', onCancel: handleCancel})
 );
 
-/**
- * Changes spotlight focus to transition container when opening the container if the previously focused
- * component is contained.
- *
- * @class ExpandableTransitionContainer
- * @public
- */
-const ExpandableTransitionContainer = Resizable(
-	{resize: 'onTransitionEnd', filter: (ev) => ev.propertyName === 'height'},
-	Transition
-);
-
 export default Expandable;
-export {Expandable, ExpandableTransitionContainer};
+export {Expandable};

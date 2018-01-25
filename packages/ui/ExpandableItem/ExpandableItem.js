@@ -5,6 +5,8 @@
  * @module ui/ExpandableItem
  * @exports ExpandableItem
  * @exports ExpandableItemBase
+ * @exports Expandable
+ * @exports ExpandableTransitionContainer
  */
 
 import {extractAriaProps} from '@enact/core/util';
@@ -12,7 +14,8 @@ import kind from '@enact/core/kind';
 import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 
-import {Expandable, ExpandableTransitionContainer} from '../Expandable';
+import Expandable from './Expandable';
+import ExpandableTransitionContainer from './ExpandableTransitionContainer';
 
 /**
  * {@link ui/ExpandableItem.ExpandableItemBase} is a stateless component that
@@ -241,7 +244,7 @@ const ExpandableItemBase = kind({
  * @class ExpandableItem
  * @memberof ui/ExpandableItem
  * @ui
- * @mixes ui/Expandable.Expandable
+ * @mixes ui/ExpandableItem.Expandable
  * @public
  */
 const ExpandableItem = Expandable(
@@ -251,5 +254,7 @@ const ExpandableItem = Expandable(
 export default ExpandableItem;
 export {
 	ExpandableItem,
-	ExpandableItemBase
+	ExpandableItemBase,
+	Expandable,
+	ExpandableTransitionContainer
 };

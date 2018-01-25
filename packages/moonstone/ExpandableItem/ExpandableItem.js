@@ -19,7 +19,7 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import LabeledItem from '../LabeledItem';
 
 import Expandable from './Expandable';
-import {ExpandableTransitionContainer as UiExpandableTransitionContainer} from '@enact/ui/Expandable';
+import {ExpandableTransitionContainer as UiExpandableTransitionContainer} from '@enact/ui/ExpandableItem';
 
 const isUp = is('up');
 const isDown = is('down');

@@ -6,7 +6,7 @@
  * @exports Expandable
  */
 
-import {Expandable as UiExpandable} from '@enact/ui/Expandable';
+import {Expandable as UiExpandable} from '@enact/ui/ExpandableItem';
 import hoc from '@enact/core/hoc';
 import compose from 'ramda/src/compose';
 
