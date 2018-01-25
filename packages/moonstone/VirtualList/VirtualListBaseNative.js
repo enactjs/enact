@@ -636,6 +636,9 @@ class VirtualListCoreNative extends Component {
 			}
 
 			if (node) {
+				// If focusing the item of VirtuallistNative, `onFocus` in Scrollable will be called.
+				// Then VirtualListNative tries to scroll again differently from VirtualList.
+				// So we would like to skip `focus` handling when focusing the item as a workaround.
 				this.skipFocusHandling = true;
 				Spotlight.focus(node);
 				this.skipFocusHandling = false;
