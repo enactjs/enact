@@ -15,8 +15,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/ExpandableSpotlightDecorator` to not spot the title upon collapse when in `pointerMode`
 - `moonstone/VirtualList` to work focus option in scrollTo api
+- `moonstone/ExpandableSpotlightDecorator` to not spot the title upon collapse when in `pointerMode`
 
 ## [2.0.0-alpha.3] - 2018-01-18
 
