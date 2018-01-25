@@ -2,11 +2,12 @@
  * Provides Moonstone-themed Image component that supports multiple resolution sources.
  *
  * @example
- * <Image src={{'hd': 'https://dummyimage.com/64/e048e0/0011ff', 'fhd': 'https://dummyimage.com/128/e048e0/0011ff', 'uhd': 'https://dummyimage.com/256/e048e0/0011ff'}}>
+ * <Image src="https://dummyimage.com/64/e048e0/0011ff" style={{height: 64, width: 64}} />
  *
  * @module moonstone/Image
  * @exports Image
  * @exports ImageBase
+ * @exports ImageDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -21,7 +22,7 @@ import Skinnable from '../Skinnable';
 import componentCss from './Image.less';
 
 /**
- * Renders a moonstone-styled Image.
+ * A Moonstone-styled image component without any behavior
  *
  * @class ImageBase
  * @memberof moonstone/Image
@@ -54,8 +55,8 @@ const ImageBase = kind({
 	render: ({css, ...rest}) => {
 		return (
 			<UiImage
-				css={css}
 				{...rest}
+				css={css}
 			/>
 		);
 	}
@@ -75,7 +76,17 @@ const ImageDecorator = compose(
 );
 
 /**
- * A Moonstone-styled Image.
+ * A Moonstone-styled image component
+ *
+ * ```
+ * <Image
+ *   src={{
+ *     'hd': 'https://dummyimage.com/64/e048e0/0011ff',
+ *     'fhd': 'https://dummyimage.com/128/e048e0/0011ff',
+ *     'uhd': 'https://dummyimage.com/256/e048e0/0011ff'
+ *   }}
+ * >
+ * ```
  *
  * @class Image
  * @memberof moonstone/Image
