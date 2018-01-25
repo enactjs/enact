@@ -19,12 +19,13 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import LabeledItem from '../LabeledItem';
 
 import Expandable from './Expandable';
-import ExpandableTransitionContainer from './ExpandableTransitionContainer';
+import {ExpandableTransitionContainer as UiExpandableTransitionContainer} from '@enact/ui/Expandable';
 
 const isUp = is('up');
 const isDown = is('down');
 
 const ContainerDiv = SpotlightContainerDecorator({continue5WayHold: true}, 'div');
+const ExpandableTransitionContainer = SpotlightContainerDecorator(UiExpandableTransitionContainer);
 
 /**
  * {@link moonstone/ExpandableItem.ExpandableItemBase} is a stateless component that

@@ -114,20 +114,20 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handleActivate = () => {
+		handleActivate = (ev) => {
 			if (this.sync) {
 				this.context.activateRadioItem(this);
 			}
 
-			forwardActivate(null, this.props);
+			forwardActivate(ev, this.props);
 		}
 
-		handleDeactivate = () => {
+		handleDeactivate = (ev) => {
 			if (this.sync) {
 				this.context.deactivateRadioItem(this);
 			}
 
-			forwardDeactivate(null, this.props);
+			forwardDeactivate(ev, this.props);
 		}
 
 		render () {
@@ -149,4 +149,3 @@ export {
 	RadioControllerDecorator,
 	RadioDecorator
 };
-

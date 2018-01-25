@@ -1,28 +1,8 @@
-import Cancelable from '@enact/ui/Cancelable';
+import {Expandable as UiExpandable} from '@enact/ui/Expandable';
 import hoc from '@enact/core/hoc';
-import RadioDecorator from '@enact/ui/RadioDecorator';
-import Toggleable from '@enact/ui/Toggleable';
+import compose from 'ramda/src/compose';
 
 import ExpandableSpotlightDecorator from './ExpandableSpotlightDecorator';
-
-// TODO: This module may not doc correctly but we'll need to wait until our doc parsing script is
-// ready
-
-/**
- * Called by {@link ui/Cancelable.Cancelable} when a cancel event occurs and calls the
- * `onClose` handler provided by the wrapping Toggleable HOC.
- *
- * @param  {Object} props Current props object
- *
- * @returns {undefined}
- * @private
- */
-const handleCancel = function (props) {
-	if (props.open) {
-		props.onClose();
-		return true;
-	}
-};
 
 /**
  * Default config for {@link moonstone/ExpandableItem.Expandable}.
@@ -57,19 +37,12 @@ const defaultConfig = {
  * @public
  */
 const Expandable = hoc(defaultConfig, (config, Wrapped) => {
-	return Toggleable(
-		{toggle: null, activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
-		RadioDecorator(
-			{activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
-			Cancelable(
-				{component: 'span', onCancel: handleCancel},
-				ExpandableSpotlightDecorator(
-					{noPointerMode: config.noPointerMode},
-					Wrapped
-				)
-			)
-		)
+	const MoonstoneExpandable = compose(
+		UiExpandable,
+		ExpandableSpotlightDecorator({noPointerMode: config.noPointerMode})
 	);
+
+	return MoonstoneExpandable(Wrapped);
 });
 
 export default Expandable;
