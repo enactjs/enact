@@ -1,3 +1,11 @@
+/**
+ * Provides expandable behaviors.
+ *
+ * @module ui/Expandable
+ * @exports Expandable
+ * @exports ExpandableTransitionContainer
+ */
+
 import Cancelable from '../Cancelable';
 import RadioDecorator from '../RadioDecorator';
 import Resizable from '../Resizable';
@@ -45,7 +53,7 @@ const Expandable = compose(
  * component is contained.
  *
  * @class ExpandableTransitionContainer
- * @private
+ * @public
  */
 const ExpandableTransitionContainer = Resizable(
 	{resize: 'onTransitionEnd', filter: (ev) => ev.propertyName === 'height'},

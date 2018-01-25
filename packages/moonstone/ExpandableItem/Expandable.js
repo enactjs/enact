@@ -1,3 +1,11 @@
+/**
+ * Provides Moonstone specific expandable behaviors to apply to
+ * [ExpandableItem]{@link moonstone/ExpandableItem.ExpandableItemBase}.
+ *
+ * @module moonstone/ExpandableItem
+ * @exports Expandable
+ */
+
 import {Expandable as UiExpandable} from '@enact/ui/Expandable';
 import hoc from '@enact/core/hoc';
 import compose from 'ramda/src/compose';
@@ -37,12 +45,10 @@ const defaultConfig = {
  * @public
  */
 const Expandable = hoc(defaultConfig, (config, Wrapped) => {
-	const MoonstoneExpandable = compose(
+	return compose(
 		UiExpandable,
 		ExpandableSpotlightDecorator({noPointerMode: config.noPointerMode})
-	);
-
-	return MoonstoneExpandable(Wrapped);
+	)(Wrapped);
 });
 
 export default Expandable;

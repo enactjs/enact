@@ -1,24 +1,32 @@
+/**
+ * Provides unstyled expandable item components and behaviors to be customized by
+ * a theme or application.
+ *
+ * @module ui/ExpandableItem
+ * @exports ExpandableItem
+ * @exports ExpandableItemBase
+ */
+
 import {extractAriaProps} from '@enact/core/util';
 import kind from '@enact/core/kind';
-import React from 'react';
+import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 
 import {Expandable, ExpandableTransitionContainer} from '../Expandable';
 
 /**
- * {@link moonstone/ExpandableItem.ExpandableItemBase} is a stateless component that
- * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
- * additional contents.
+ * {@link ui/ExpandableItem.ExpandableItemBase} is a stateless component that
+ * renders a component that can be expanded to show additional contents.
  *
  * @class ExpandableItemBase
- * @memberof moonstone/ExpandableItem
+ * @memberof ui/ExpandableItem
  * @ui
  * @public
  */
 const ExpandableItemBase = kind({
-	name: 'ExpandableItem',
+	name: 'ui:ExpandableItem',
 
-	propTypes: /** @lends moonstone/ExpandableItem.ExpandableItemBase.prototype */ {
+	propTypes: /** @lends ui/ExpandableItem.ExpandableItemBase.prototype */ {
 		/**
 		 * The primary text of the item.
 		 *
@@ -26,7 +34,7 @@ const ExpandableItemBase = kind({
 		 * @required
 		 * @public
 		 */
-		title: PropTypes.string.isRequired,
+		text: PropTypes.string.isRequired,
 
 		/**
 		 * The contents of the expandable item displayed when `open` is `true`
@@ -37,6 +45,15 @@ const ExpandableItemBase = kind({
 		children: PropTypes.node,
 
 		/**
+		 * Specifies the height of the transition when `type` is set to `'clip'`.
+		 *
+		 * @type {Number}
+		 * @default null
+		 * @public
+		 */
+		clipHeight: PropTypes.number,
+
+		/**
 		 * The type of component to use to render the item. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
 		 *
@@ -45,6 +62,36 @@ const ExpandableItemBase = kind({
 		 * @public
 		 */
 		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+
+		/**
+		 * Sets the direction of transition. Where the component will move *to*; the destination.
+		 * Supported directions are: `'up'`, `'right'`, `'down'`, `'left'`.
+		 *
+		 * @type {String}
+		 * @default 'down'
+		 * @public
+		 */
+		direction: PropTypes.oneOf(['up', 'right', 'down', 'left']),
+
+		/**
+		 * Control how long the transition should take.
+		 * Supported durations are: `'short'` (250ms), `'long'` (1s). `'medium'` (500ms) is default
+		 * when no others are specified.
+		 *
+		 * @type {String}
+		 * @default 'short'
+		 * @public
+		 */
+		duration: PropTypes.oneOf(['short', 'medium', 'long']),
+
+		/**
+		 * When `true`, transition animation is disabled. When `false`, visibility changes animate.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noAnimation: PropTypes.bool,
 
 		/**
 		 * Callback to be called when a condition occurs which should cause the expandable to close
@@ -88,17 +135,41 @@ const ExpandableItemBase = kind({
 		open: PropTypes.bool,
 
 		/**
-		 * Sets a reference to the root container node of the ExpandableItem
+		 * Customize the transition timing function.
+		 * Supported function names are: `ease`, `ease-in`, `ease-out`, `ease-in-out`, `ease-in-quart`,
+		 * `ease-out-quart`, and `linear`.
 		 *
-		 * @type {Function}
-		 * @private
+		 * @type {String}
+		 * @default 'ease-out-quart'
+		 * @public
 		 */
-		setContainerNode: PropTypes.func
+		timingFunction: PropTypes.oneOf([
+			'ease',
+			'ease-in',
+			'ease-out',
+			'ease-in-out',
+			'ease-in-quart',
+			'ease-out-quart',
+			'linear'
+		]),
+
+		/**
+		 * Choose how you'd like the transition to affect the content.
+		 * Supported types are: slide, clip, and fade.
+		 *
+		 * @type {String}
+		 * @default 'clip'
+		 * @public
+		 */
+		type: PropTypes.oneOf(['slide', 'clip', 'fade'])
 	},
 
 	defaultProps: {
 		component: 'div',
-		open: false
+		direction: 'down',
+		open: false,
+		timingFunction: 'ease-out-quart',
+		type: 'clip'
 	},
 
 	handlers: {
@@ -114,12 +185,17 @@ const ExpandableItemBase = kind({
 	render: ({
 		component: Component,
 		children,
+		clipHeight,
+		direction,
+		duration,
 		handleOpen,
-		open,
+		noAnimation,
 		onHide,
 		onShow,
-		setContainerNode,
-		title,
+		open,
+		text,
+		timingFunction,
+		type,
 		...rest
 	}) => {
 		delete rest.onClose;
@@ -128,36 +204,34 @@ const ExpandableItemBase = kind({
 		const ariaProps = extractAriaProps(rest);
 
 		return (
-			<div
-				{...rest}
-				open={open}
-				ref={setContainerNode}
-			>
+			<Fragment>
 				<Component
 					{...ariaProps}
+					{...rest}
 					onClick={handleOpen}
 				>
-					{title}
+					{text}
 				</Component>
 				<ExpandableTransitionContainer
-					duration="short"
-					timingFunction="ease-out-quart"
+					clipHeight={clipHeight}
+					direction={direction}
+					duration={duration}
+					noAnimation={noAnimation}
 					onHide={onHide}
 					onShow={onShow}
-					type="clip"
-					direction="down"
+					timingFunction={timingFunction}
+					type={type}
 					visible={open}
 				>
 					{children}
 				</ExpandableTransitionContainer>
-			</div>
+			</Fragment>
 		);
 	}
 });
 
 /**
- * {@link moonstone/ExpandableItem.ExpandableItem} renders a
- * {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show additional
+ * {@link ui/ExpandableItem.ExpandableItem} renders a component that can be expanded to show additional
  * contents.
  *
  * `ExpandableItem` maintains its open/closed state by default. The initial state can be supplied
@@ -165,9 +239,9 @@ const ExpandableItemBase = kind({
  * `open` at creation time and update its value in response to `onClose`/`onOpen` events.
  *
  * @class ExpandableItem
- * @memberof moonstone/ExpandableItem
+ * @memberof ui/ExpandableItem
  * @ui
- * @mixes moonstone/ExpandableItem.Expandable
+ * @mixes ui/Expandable.Expandable
  * @public
  */
 const ExpandableItem = Expandable(
@@ -176,7 +250,6 @@ const ExpandableItem = Expandable(
 
 export default ExpandableItem;
 export {
-	Expandable,
 	ExpandableItem,
 	ExpandableItemBase
 };
