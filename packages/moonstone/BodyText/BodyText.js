@@ -56,8 +56,8 @@ const BodyTextBase = kind({
 	render: ({css, ...rest}) => {
 		return (
 			<UiBodyText
-				css={css}
 				{...rest}
+				css={css}
 			/>
 		);
 	}
