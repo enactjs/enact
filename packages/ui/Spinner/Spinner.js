@@ -40,7 +40,7 @@ const Spinner = kind({
 		 * instead refers to the "spinner" part of this component. The presence of `blockClickOn`
 		 * changes the rendering tree and where this is used.
 		 *
-		 * @type {Component|String}
+		 * @type {Component}
 		 * @public
 		 */
 		component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
