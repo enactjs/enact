@@ -766,8 +766,7 @@ class VirtualListCoreNative extends Component {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
 			if (numOfItems > 0 && focusedIndex % numOfItems !== this.lastFocusedIndex % numOfItems) {
-				const node = this.contentRef.children[this.lastFocusedIndex % numOfItems];
-				node.blur();
+				this.getItemNode(this.lastFocusedIndex).blur();
 			}
 			this.lastFocusedIndex = focusedIndex;
 
@@ -1100,6 +1099,10 @@ class VirtualListCoreNative extends Component {
 		return false;
 	}
 
+	getItemNode = (index) => {
+		return this.containerRef.children[0].children[index % this.state.numOfItems];
+	}
+
 	// render
 
 	initRef (prop) {
@@ -1132,7 +1135,9 @@ class VirtualListCoreNative extends Component {
 		return (
 			<div className={mergedClasses} ref={this.initContainerRef} style={style}>
 				<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContentRef}>
-					{cc.length ? cc : null}
+					<div>
+						{cc.length ? cc : null}
+					</div>
 					{primary ? null : (
 						<SpotlightPlaceholder
 							data-index={0}
