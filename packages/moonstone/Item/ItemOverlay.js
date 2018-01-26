@@ -1,25 +1,19 @@
-/**
- * Provides Moonstone-themed ItemOverlayBase components and behaviors.
- *
- * @module moonstone/Item
- * @exports ItemOverlayBase
- */
-
-import {Item as UIItemOverlay} from '@enact/ui/Item';
-import {forProp, forward, handle} from '@enact/core/handle';
+// This is a sub-component to moonstone/Item, so it does not have a @module declaration
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import {childrenEquals} from '@enact/core/util';
 import Slottable from '@enact/ui/Slottable';
-import {MarqueeDecorator} from '../Marquee';
 import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 import Toggleable from '@enact/ui/Toggleable';
 import Pure from '@enact/ui/internal/Pure';
 import Spottable from '@enact/spotlight/Spottable';
+
+import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
+import {ItemBase} from './Item';
 import Overlay from './Overlay';
 
 import componentCss from './Item.less';
@@ -29,6 +23,7 @@ import componentCss from './Item.less';
  *
  * @class ItemOverlayBase
  * @memberof moonstone/Item
+ * @extends moonstone/Item.ItemBase
  * @ui
  * @public
  */
@@ -36,14 +31,6 @@ const ItemOverlayBase = kind({
 	name: 'ItemOverlay',
 
 	propTypes: /** @lends moonstone/Item.ItemOverlayBase.prototype */ {
-		/**
-		 * The node to be displayed as the main content of the item.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		children: PropTypes.node.isRequired,
-
 		/**
 		 * Controls the visibility state of the overlays. One, both, or neither overlay can be
 		 * shown when the item is focused. Choosing `'after'` will leave `overlayBefore` visible
@@ -57,62 +44,26 @@ const ItemOverlayBase = kind({
 		autoHide: PropTypes.node,
 
 		/**
-		 * The type of component to use to render the item. May be a DOM node name (e.g 'div',
-		 * 'span', etc.) or a custom component.
-		 *
-		 * @type {String|Node}
-		 * @default 'div'
-		 * @public
-		 */
-		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-
-		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
 		 *
 		 * The following classes are supported:
 		 *
-		 * * `item` - The root class name
-		 * * `disabled` - Applied to a `disabled` item
-		 * * `inline` - Applied to a `inline` item
+		 * * `itemOverlay` - The root class name
 		 *
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object,
-
-		/**
-		 * Applies a disabled visual state to the item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		disabled: PropTypes.bool,
-
-		/**
-		 * Applies inline styling to the item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		inline: PropTypes.bool
-	},
-
-	defaultProps: {
-		component: 'div',
-		disabled: false,
-		inline: false
+		css: PropTypes.object
 	},
 
 	styles: {
 		css: componentCss,
-		className:'item'
+		className: 'itemOverlay',
+		publicClassNames: 'itemOverlay'
 	},
 
 	computed: {
-		className: ({inline, styler}) => styler.append({inline}),
 		overlayBefore: ({overlayBefore, css, autoHide}) => ( overlayBefore ?
 			<Overlay className={css.before} hidden={autoHide === 'before' || autoHide === 'both'}>
 				{overlayBefore}
@@ -125,16 +76,10 @@ const ItemOverlayBase = kind({
 		)
 	},
 
-	handlers: {
-		onClick: handle(
-			forProp('disabled', false),
-			forward('onClick')
-		)
-	},
-
 	render: ({css, ...rest}) => {
+		delete rest.autoHide;
 		return (
-			<UIItemOverlay
+			<ItemBase
 				{...rest}
 				css={css}
 			/>
@@ -166,6 +111,7 @@ const ItemOverlayDecorator = compose(
 	),
 	Spottable,
 	RemeasurableDecorator({trigger: 'remeasure'}),
+	// ItemDecorator,
 	MarqueeDecorator({className: componentCss.content, invalidateProps: ['inline', 'autoHide', 'remeasure']}),
 	Skinnable
 );

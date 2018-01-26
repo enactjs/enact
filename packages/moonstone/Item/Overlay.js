@@ -1,16 +1,10 @@
-/**
- * Provides Moonstone-themed overlay components and behaviors.
- *
- * @module moonstone/Item
- * @exports Overlay
- */
-
+// This is a sub-component to moonstone/Item, so it does not have a @module declaration
 import kind from '@enact/core/kind';
 import UIOverlay from '@enact/ui/Item/Overlay';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import componentCSS from './Item.less';
+import componentCss from './Item.less';
 
 /**
  * A moonstone-styled Overlay without any behavior.
@@ -36,16 +30,7 @@ const Overlay = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object,
-
-		/**
-		 * When `true`, the component is no longer visually reprenested on screen.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		hidden: PropTypes.bool
+		css: PropTypes.object
 	},
 
 	defaultProps: {
@@ -53,20 +38,18 @@ const Overlay = kind({
 	},
 
 	styles: {
-		css: componentCSS,
+		css: componentCss,
+		className: 'overlay',
 		publicClassNames: ['overlay', 'hidden']
 	},
 
-	computed: {
-		className: ({hidden, styler}) => styler.append({hidden})
-	},
-
-	render: ({...rest}) => {
+	render: ({css, ...rest}) => {
 		if (!rest.children) return null;
 
 		return (
 			<UIOverlay
 				{...rest}
+				css={css}
 			/>
 		);
 	}

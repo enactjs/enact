@@ -1,17 +1,9 @@
-/**
- * Provides unstyled Overlay components and behaviors to be customized by a theme or application.
- *
- * @module ui/Overlay
- * @exports Overlay
- * @exports OverlayBase
- * @exports OverlayDecorator
- */
-
+// This is a sub-component to ui/Item, so it does not have a @module declaration
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import componentCSS from './Item.less';
+import componentCss from './Overlay.less';
 
 /**
  * An unstyled component to overlay content, typically icons on an [Item]{@link ui/Item.ItemOverlay}.
@@ -21,10 +13,18 @@ import componentCSS from './Item.less';
  * @ui
  * @public
  */
-const OverlayBase = kind({
+const Overlay = kind({
 	name: 'ui:Overlay',
 
 	propTypes: /** @lends ui/Item.Overlay.prototype */ {
+		/**
+		 * The contents of this overlay component. Without `children`, this component will output no
+		 * DOM, so it doesn't interfere with layouts in case of this being blank.
+		 *
+		 * @type {[type]}
+		 */
+		children: PropTypes.node,
+
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
@@ -54,7 +54,7 @@ const OverlayBase = kind({
 	},
 
 	styles: {
-		css: componentCSS,
+		css: componentCss,
 		className: 'overlay',
 		publicClassNames: true
 	},
@@ -75,7 +75,7 @@ const OverlayBase = kind({
 	}
 });
 
-export default OverlayBase;
+export default Overlay;
 export {
-	OverlayBase as Overlay
+	Overlay
 };
