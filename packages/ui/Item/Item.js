@@ -7,14 +7,13 @@
  * @exports ItemDecorator
  */
 
-import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import Touchable from '../Touchable';
 
-import componentCSS from './Item.less';
+import componentCss from './Item.less';
 
 /**
  * A basic list item component structure without any behaviors applied to it.
@@ -62,6 +61,15 @@ const ItemBase = kind({
 		css: PropTypes.object,
 
 		/**
+		 * Applies a disabled state to the item.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		disabled: PropTypes.bool,
+
+		/**
 		 * Applies inline styling to the item.
 		 *
 		 * @type {Boolean}
@@ -93,7 +101,7 @@ const ItemBase = kind({
 	},
 
 	styles: {
-		css: componentCSS,
+		css: componentCss,
 		className: 'item',
 		publicClassNams: true
 	},
@@ -102,11 +110,15 @@ const ItemBase = kind({
 		className: ({inline, styler}) => styler.append({inline})
 	},
 
-	render: ({component: Component, overlayBefore, overlayAfter, children, ...rest}) => {
+	render: ({component: Component, disabled, overlayBefore, overlayAfter, children, ...rest}) => {
 		delete rest.inline;
 
 		return (
-			<Component {...rest}>
+			<Component
+				{...rest}
+				aria-disabled={disabled}
+				disabled={disabled}
+			>
 				{overlayBefore}
 				{children}
 				{overlayAfter}

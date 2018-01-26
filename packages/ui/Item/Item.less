@@ -6,26 +6,13 @@
 .item {
 	width: 100%;
 	box-sizing: border-box;
-	display: flex;
+	display: block;
 	align-items: center;
 
-	// Apply to the content area to tell it to expand to the available width of the container
-	.content {
-		flex: 1 1 auto;
-	}
-
 	&.inline {
-		display: inline-flex;
+		display: inline-block;
 		vertical-align: top;
 		box-sizing: border-box;
-	}
-
-	//**
-	//* Classes to apply to the overlay of the item, applied to the base element
-	//* @public
-	//*/
-	.overlay {
-		/* Public Class Names */
 	}
 }
 
