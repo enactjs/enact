@@ -189,6 +189,7 @@ class VirtualListCoreNative extends Component {
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContentRef = this.initRef('contentRef');
 		this.initContainerRef = this.initRef('containerRef');
+		this.initItemContainerRef = this.initRef('itemContainerRef');
 	}
 
 	componentWillMount () {
@@ -271,6 +272,7 @@ class VirtualListCoreNative extends Component {
 	containerClass = null
 	contentRef = null
 	containerRef = null
+	itemContainerRef = null
 
 	// spotlight
 	lastFocusedIndex = null
@@ -1099,9 +1101,7 @@ class VirtualListCoreNative extends Component {
 		return false;
 	}
 
-	getItemNode = (index) => {
-		return this.containerRef.children[0].children[index % this.state.numOfItems];
-	}
+	getItemNode = (index) => (this.itemContainerRef.children[index % this.state.numOfItems])
 
 	// render
 
@@ -1135,9 +1135,7 @@ class VirtualListCoreNative extends Component {
 		return (
 			<div className={mergedClasses} ref={this.initContainerRef} style={style}>
 				<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContentRef}>
-					<div>
-						{cc.length ? cc : null}
-					</div>
+					{cc.length ? <div ref={this.initItemContainerRef}>{cc}</div> : null}
 					{primary ? null : (
 						<SpotlightPlaceholder
 							data-index={0}
