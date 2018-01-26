@@ -39,6 +39,16 @@ const ExpandableItemBase = kind({
 		text: PropTypes.string.isRequired,
 
 		/**
+		 * Provide a function to get the reference to the child node (the one with the content) at
+		 * render time. Useful if you need to measure or interact with the node directly.
+		 *
+		 * @type {Function}
+		 * @default null
+		 * @public
+		 */
+		childRef: PropTypes.func,
+
+		/**
 		 * The contents of the expandable item displayed when `open` is `true`
 		 *
 		 * @type {Node}
@@ -186,6 +196,7 @@ const ExpandableItemBase = kind({
 
 	render: ({
 		component: Component,
+		childRef,
 		children,
 		clipHeight,
 		direction,
@@ -213,6 +224,7 @@ const ExpandableItemBase = kind({
 					{text}
 				</Component>
 				<ExpandableTransitionContainer
+					childRef={childRef}
 					clipHeight={clipHeight}
 					direction={direction}
 					duration={duration}
