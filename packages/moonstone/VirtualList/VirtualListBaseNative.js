@@ -267,6 +267,7 @@ class VirtualListCoreNative extends Component {
 	cc = []
 	scrollPosition = 0
 	isScrolledBy5way = false
+	isScrolledByJump = false
 
 	containerClass = null
 	contentRef = null
@@ -618,14 +619,45 @@ class VirtualListCoreNative extends Component {
 		this.composeStyle(style, ...rest);
 
 		this.cc[key] = React.cloneElement(itemElement, {
+			ref: (index === this.nodeIndexToBeFocused) ? (ref) => this.initItemRef(ref, index) : null,
 			className: classNames(cssItem.listItem, itemElement.props.className),
 			['data-preventscrollonfocus']: true, // Added this attribute to prevent scroll on focus by browser
 			style: {...itemElement.props.style, ...style}
 		});
+	}
 
-		if (index === this.nodeIndexToBeFocused) {
-			this.focusByIndex(index);
+	focusOnNode = (node) => {
+		if (node) {
+			Spotlight.focus(node);
 		}
+	}
+
+	focusOnItem = (index) => {
+		const item = this.contentRef.querySelector(`[data-index='${index}'].spottable`);
+
+		if (Spotlight.isPaused()) {
+			Spotlight.resume();
+		}
+		this.focusOnNode(item);
+		this.nodeIndexToBeFocused = null;
+	}
+
+	initItemRef = (ref, index) => {
+		if (ref) {
+			// If focusing the item of VirtuallistNative, `onFocus` in Scrollable will be called.
+			// Then VirtualListNative tries to scroll again differently from VirtualList.
+			// So we would like to skip `focus` handling when focusing the item as a workaround.
+			this.isScrolledByJump = true;
+			this.focusOnItem(index);
+			this.isScrolledByJump = false;
+		}
+	}
+
+	focusByIndex = (index) => {
+		// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
+		setTimeout(() => {
+			this.focusOnItem(index);
+		}, 0);
 	}
 
 	applyStyleToHideNode = (index) => {
@@ -731,25 +763,6 @@ class VirtualListCoreNative extends Component {
 		return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
 	}
 
-	focusByIndex = (index) => {
-		// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
-		setTimeout(() => {
-			const item = this.contentRef.querySelector(`[data-index='${index}'].spottable`);
-
-			if (Spotlight.isPaused()) {
-				Spotlight.resume();
-			}
-			this.focusOnNode(item);
-			this.nodeIndexToBeFocused = null;
-		}, 0);
-	}
-
-	focusOnNode = (node) => {
-		if (node) {
-			Spotlight.focus(node);
-		}
-	}
-
 	setLastFocusedIndex = (item) => {
 		this.lastFocusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 	}
@@ -820,6 +833,10 @@ class VirtualListCoreNative extends Component {
 			safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
 			safeIndexTo = clamp(-1, dataSize, indexTo),
 			delta = (indexFrom < indexTo) ? 1 : -1;
+
+		if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
+			return -1;
+		}
 
 		if (safeIndexFrom !== safeIndexTo) {
 			for (let i = safeIndexFrom; i !== safeIndexTo; i += delta) {
@@ -923,7 +940,8 @@ class VirtualListCoreNative extends Component {
 	scrollToNextItem = ({direction, focusedItem}) => {
 		const
 			{data} = this.props,
-			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute));
+			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
+			{firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
 		let indexToScroll = -1;
 
 		if (Array.isArray(data) && data.some((item) => item.disabled)) {
@@ -937,19 +955,27 @@ class VirtualListCoreNative extends Component {
 				isRtl = this.context.rtl,
 				isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right');
 
-			// Scroll to the next spottable item without animation
-			if (!Spotlight.isPaused()) {
-				Spotlight.pause();
+			if (firstVisibleIndex <= indexToScroll && indexToScroll <= lastVisibleIndex) {
+				const node = this.containerRef.querySelector(`[data-index='${indexToScroll}'].spottable`);
+
+				if (node) {
+					Spotlight.focus(node);
+				}
+			} else {
+				// Scroll to the next spottable item without animation
+				if (!Spotlight.isPaused()) {
+					Spotlight.pause();
+				}
+				focusedItem.blur();
 			}
-			focusedItem.blur();
-			this.lastFocusedIndex = indexToScroll;
-			this.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', focus: true, animate: false});
+			this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
+			this.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
 		}
 
 		return true;
 	}
 
-	shouldPreventScrollByFocus = () => this.isScrolledBy5way
+	shouldPreventScrollByFocus = () => (this.isScrolledBy5way || this.isScrolledByJump)
 
 	jumpToSpottableItem = (keyCode, target) => {
 		const
