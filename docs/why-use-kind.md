@@ -9,7 +9,7 @@ more readable React components. There are many other features of `kind()`, which
 discussed below, but we think that the key is reducing the mental load developers have in creating
 and maintaining components.
 
-## What Does It Do?
+## What Does it Do?
 
 The Enact `kind()` method is a factory for creating components. The concept is simple enough: `kind()`
 creates a component that transforms `props` and calls a `render()` method to create the output
@@ -26,7 +26,7 @@ The main features of `kind()` include:
 * A consistent means for adding `propTypes` and `defaultProps`
 * A way to easily add a name to the component for debugging
 
-## Show Me An Example
+## Show Me an Example
 
 Sure. Stateless Functional Components (SFC's) are great and provide for an easy way to make React
 components. Let's look at a simple component:
@@ -149,7 +149,7 @@ name for our component.
 > Note: We used a little ES2015 shortcut (shorthand property names) to set the `css` member in the
 > `styles` object to the `css` import.
 
-## What Are The Downsides?
+## What Are the Downsides?
 
 Sadly, nothing is free in this world. There are some downsides to `kind()` and it's important to be
 aware of them. First, there is some small overhead at app startup where the configuration is
