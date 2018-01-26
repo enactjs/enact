@@ -30,11 +30,11 @@ There are also a set of ARIA attributes that reflect the current state of a comp
 
 > In `@enact/moonstone`, some components include additional ARIA configurations specific to webOS. Those may be (or may soon be) overridden by consumers to suit their own requirements.
 
-# Custom Components
+## Custom Components
 
 We've included a few custom components that may be useful to build accessible applications. None are required but provide some syntactic sugar ease development.
 
-## moonstone/Region
+### moonstone/Region
 
 [moonstone/Region](../../modules/moonstone/Region/) provides a labeled region to group components. The `title` is wrapped by a [moonstone/Divider](../../modules/moonstone/Divider/) to provide visual context to the `children`. The Divider and `children` are wrapped by a `<div role="region">` with its `aria-label` set to the `title` to provide aural context.
 
@@ -55,7 +55,7 @@ const App = () => {
 };
 ```
 
-## ui/A11yDecorator
+### ui/A11yDecorator
 
 [ui/A11yDecorator](../../modules/ui/A11yDecorator/) is a Higher-Order Component that helps provide constant hint text to precede or follow the `aria-label` for a component. This is most useful in cases where the `aria-label` changes but the content before or after it is constant.
 
@@ -81,7 +81,7 @@ const App = (props) => {
 };
 ```
 
-## ui/AnnounceDecorator
+### ui/AnnounceDecorator
 
 [ui/AnnounceDecorator](../../modules/ui/AnnounceDecorator/) provides a Higher-Order Component that adds the ability for the Wrapped component to notify the user of a state change. It provides a callback to the Wrapped component that can be called with a string which is inserted into a node with the [`alert` role](https://www.w3.org/TR/wai-aria/roles#alert) to notify the user.
 
