@@ -12,6 +12,7 @@
 
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import Pure from '@enact/ui/internal/Pure';
 import ToggleIcon from '@enact/ui/ToggleIcon';
@@ -33,15 +34,30 @@ import componentCss from './Checkbox.less';
 const CheckboxBase = kind({
 	name: 'Checkbox',
 
+	propTypes: /** @lends moonstone/Button.ButtonBase.prototype */ {
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `checkbox` - The root class name
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object
+	},
+
 	styles: {
 		css: componentCss,
 		className: 'checkbox',
 		publicClassNames: 'checkbox'
 	},
 
-	render: (props) => {
+	render: ({css, ...rest}) => {
 		return (
-			<ToggleIcon {...props} css={componentCss} iconComponent={Icon}>check</ToggleIcon>
+			<ToggleIcon {...rest} css={css} iconComponent={Icon}>check</ToggleIcon>
 		);
 	}
 });
