@@ -1,7 +1,6 @@
 import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 
 class TooltipTest extends React.Component {
 	constructor (props) {

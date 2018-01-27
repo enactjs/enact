@@ -2,7 +2,6 @@ import Button from '@enact/moonstone/Button';
 import React from 'react';
 import Touchable from '@enact/ui/Touchable';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 import {action} from '@storybook/addon-actions';
 import {boolean, number} from '@storybook/addon-knobs';
 
