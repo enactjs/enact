@@ -60,7 +60,7 @@ const CheckboxDecorator = compose(
 );
 
 /**
- * A fully functional, ready-to-use, component.
+ * A fully functional, ready-to-use, checkbox component.
  *
  * @class Checkbox
  * @memberof moonstone/Checkbox

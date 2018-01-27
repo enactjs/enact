@@ -33,8 +33,6 @@ const ToggleIconBase = kind({
 	propTypes: /** @lends ui/ToggleIcon.ToggleIconBase.prototype */ {
 		/**
 		 * The icon to use for this component.
-		 * See [Icon's documentation]{@link ui/Icon.Icon#children} for details.
-		 *
 		 *
 		 * @see ui/Icon.Icon.children
 		 * @type {String|Object}
@@ -118,6 +116,8 @@ const ToggleIconBase = kind({
  *
  * @class ToggleIconDecorator
  * @memberof ui/ToggleIcon
+ * @mixes ui/Toggleable.Toggleable
+ * @mixes ui/Touchable.Touchable
  * @ui
  * @public
  */
@@ -131,6 +131,8 @@ const ToggleIconDecorator = compose(
  *
  * @class ToggleIcon
  * @memberof ui/ToggleIcon
+ * @extends ui/ToggleIcon.ToggleIconBase
+ * @mixes ui/ToggleIcon.ToggleIconDecorator
  * @ui
  * @public
  */
@@ -144,7 +146,6 @@ const ToggleIcon = ToggleIconDecorator(ToggleIconBase);
  * @type {Function}
  * @param {Object} event
  * @param {String} event.selected - Selected value of item.
- * @param {*} event.value - Value passed from `value` prop.
  * @public
  */
 

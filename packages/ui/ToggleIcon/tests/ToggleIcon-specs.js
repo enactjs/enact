@@ -3,7 +3,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import sinon from 'sinon';
 
-import {ToggleIconBase} from '../ToggleIcon';
+import ToggleIcon from '../ToggleIcon';
 
 const tap = (node) => {
 	node.simulate('mousedown');
@@ -15,9 +15,9 @@ describe('ToggleIcon Specs', () => {
 	it('should call onToggle, onClick, or both when clicked', function () {
 		const handleToggle = sinon.spy();
 		const subject = mount(
-			<ToggleIconBase onToggle={handleToggle}>
+			<ToggleIcon onToggle={handleToggle}>
 				star
-			</ToggleIconBase>
+			</ToggleIcon>
 		);
 
 		tap(subject);
@@ -31,9 +31,9 @@ describe('ToggleIcon Specs', () => {
 	it('should call onClick when clicked', function () {
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<ToggleIconBase onClick={handleClick}>
+			<ToggleIcon onClick={handleClick}>
 				star
-			</ToggleIconBase>
+			</ToggleIcon>
 		);
 
 		subject.simulate('click');
@@ -47,9 +47,9 @@ describe('ToggleIcon Specs', () => {
 	it('should call onTap when tapped', function () {
 		const handleTap = sinon.spy();
 		const subject = mount(
-			<ToggleIconBase onTap={handleTap}>
+			<ToggleIcon onTap={handleTap}>
 				star
-			</ToggleIconBase>
+			</ToggleIcon>
 		);
 
 		tap(subject);
@@ -63,9 +63,9 @@ describe('ToggleIcon Specs', () => {
 	it('should call both onToggle and onTap when tapped', function () {
 		const handleBoth = sinon.spy();
 		const subject = mount(
-			<ToggleIconBase onTap={handleBoth} onToggle={handleBoth}>
+			<ToggleIcon onTap={handleBoth} onToggle={handleBoth}>
 				star
-			</ToggleIconBase>
+			</ToggleIcon>
 		);
 
 		tap(subject);

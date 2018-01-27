@@ -1,6 +1,6 @@
 /**
- * Provides Moonstone-themed pill-shaped toggle switch component component with interactive
- * togglable capabilities.
+ * Provides Moonstone-themed pill-shaped toggle switch component with interactive togglable
+ * capabilities.
  *
  * @example
  * <Switch />
@@ -85,7 +85,7 @@ const SwitchDecorator = compose(
 );
 
 /**
- * A fully functional, ready-to-use, component.
+ * A fully functional, ready-to-use, toggle-switch component.
  *
  * @class Switch
  * @memberof moonstone/Switch
