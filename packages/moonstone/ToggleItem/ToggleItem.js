@@ -163,7 +163,7 @@ const ToggleItemBase = kind({
 	// },
 
 	computed: {
-		iconBefore: ({iconClasses, selected, icon, iconPosition}) => {
+		iconBefore: ({toggleIcon, children, selected, icon, iconClasses, iconPosition}) => {
 			if (iconPosition === 'before') {
 				return (
 					<ToggleIcon slot="slotBefore" className={iconClasses} selected={selected}>

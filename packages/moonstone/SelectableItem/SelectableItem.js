@@ -9,16 +9,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import Toggleable from '@enact/ui/Toggleable';
-import ToggleIcon from '@enact/ui/ToggleIcon';
-import Icon from '@enact/ui/Icon';
+
 import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 
 import {ToggleItemBase} from '../ToggleItem';
 import Skinnable from '../Skinnable';
 
 import componentCss from './SelectableItem.less';
-import hoc from '../../core/hoc/hoc';
-import SelectableIcon from './SelectableIcon'
+
 
 /**
  * {@link moonstone/SelectableItem.SelectableItem} is component
@@ -95,13 +93,13 @@ const SelectableItemBase = kind({
 	},
 
 	computed: {
-		icon: ({selected, disabled, styler}) => {
+		toggleIcon: ({selected, disabled}) => {
 			return <SelectableIcon selected={selected} disabled={disabled} />;
 		}
 	},
 
-	render: (props) => (
-		<ToggleItemBase {...props} />
+	render: ({css, ...props}) => (
+		<ToggleItemBase css={css} {...props} />
 	)
 });
 

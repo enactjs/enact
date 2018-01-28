@@ -19,7 +19,7 @@ import ToggleIcon from '@enact/ui/ToggleIcon';
 import Icon from '../Icon';
 import Skinnable from '../Skinnable';
 
-import componentCss from './SelectableItem.less';
+import componentCss from './SelectableIcon.less';
 
 /**
  * Renders a check mark in a shape which supports a Boolean state.
@@ -35,15 +35,12 @@ const SelectableBase = kind({
 
 	styles: {
 		css: componentCss,
-        className: 'selectableIcon',
-        publicClassNames: ['selectableIcon', 'dot']
+		className: 'selectableIcon'
 	},
 
-	render: ({css, ...props}) => {
-        console.log(componentCss.dot);
-        console.log(props.css);
+	render: ({...props}) => {
 		return (
-			<ToggleIcon css={css} {...props} iconComponent={Icon}>circle</ToggleIcon>
+			<ToggleIcon {...props} css={componentCss} iconClasses={componentCss.dot} iconComponent={Icon}>circle</ToggleIcon>
 		);
 	}
 });

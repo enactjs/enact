@@ -5,21 +5,21 @@
 @import '../styles/skin.less';
 
 .selectableIcon {
-		.dot {
-			@dot-size: @moon-selectable-item-indicator-size - 3px * 2;
-			
-			font-size: @dot-size;
-			text-align: left;
-			width: @moon-selectable-item-indicator-width;
-			
-			&:not(.selected) {
-				display: none;
-			}
-		}
-
+	.dot{
+		@dot-size: @moon-selectable-item-indicator-size - 3px * 2;
+		
+		font-size: @dot-size;
+		text-align: left;
+		width: @moon-selectable-item-indicator-width;
+		margin: 0;
+	}
+	
+	&:not(.selected) {
+		display: none;
+	}
 	// Skin colors
 	.applySkins({
-		.dot {
+		.dot{
 			color: @moon-accent;
 		}
 	});
@@ -29,7 +29,7 @@
 	.selectableIcon {
 		.applySkins({
 			.focus({
-				.dot {
+				.dot{
 					color: @moon-accent;
 				}
 			});
