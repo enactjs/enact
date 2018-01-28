@@ -100,7 +100,7 @@ const ToggleIconBase = kind({
 
 	render: ({children, css, iconComponent: IconComponent, iconClasses, ...rest}) => {
 		delete rest.selected;
-		console.log(rest.className);
+
 		const className = iconClasses ? `${css.icon} ${iconClasses}` : css.icon;
 		return (
 			<div {...rest}>

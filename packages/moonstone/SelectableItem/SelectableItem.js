@@ -14,8 +14,8 @@ import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 
 import {ToggleItemBase} from '../ToggleItem';
 import Skinnable from '../Skinnable';
+import SelectableIcon from './SelectableIcon';
 
-import componentCss from './SelectableItem.less';
 
 
 /**
@@ -85,11 +85,6 @@ const SelectableItemBase = kind({
 		 * @public
 		 */
 		value: PropTypes.any
-	},
-
-	styles: {
-		css: componentCss,
-		className: 'selectableItem'
 	},
 
 	computed: {

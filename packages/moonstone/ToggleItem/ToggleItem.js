@@ -19,10 +19,7 @@ import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 
 import SlotItem from '../SlotItem';
-
-import componentCss from './ToggleItem.less';
 import Touchable from '@enact/ui/Touchable';
-
 
 /**
  * A moonstone-styled toggle item without any behavior.
@@ -148,22 +145,8 @@ const ToggleItemBase = kind({
 		value: null
 	},
 
-	styles: {
-		css: componentCss,
-		publicClassNames: ['toggleIcon', 'selected', 'dot']
-	},
-
-	// handlers: {
-	// 	onToggle: (ev, {onToggle, onTap, selected, disabled, value}) => {
-	// 		if (!disabled && (onToggle || onTap)) {
-	// 			if (onToggle) onToggle({selected: !selected, value});
-	// 			if (onTap) onTap(ev);
-	// 		}
-	// 	}
-	// },
-
 	computed: {
-		iconBefore: ({toggleIcon, children, selected, icon, iconClasses, iconPosition}) => {
+		iconBefore: ({icon, iconClasses, iconPosition, selected}) => {
 			if (iconPosition === 'before') {
 				return (
 					<ToggleIcon slot="slotBefore" className={iconClasses} selected={selected}>
@@ -172,7 +155,7 @@ const ToggleItemBase = kind({
 				);
 			}
 		},
-		iconAfter: ({iconClasses, selected, icon, iconPosition}) => {
+		iconAfter: ({icon, iconClasses, iconPosition, selected}) => {
 			if (iconPosition === 'after') {
 				return (
 					<ToggleIcon slot="slotAfter" className={iconClasses} selected={selected}>

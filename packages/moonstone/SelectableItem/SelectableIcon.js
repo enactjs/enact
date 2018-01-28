@@ -30,8 +30,8 @@ import componentCss from './SelectableIcon.less';
  * @ui
  * @public
  */
-const SelectableBase = kind({
-	name: 'Selectable',
+const SelectableIconBase = kind({
+	name: 'SelectableIcon',
 
 	styles: {
 		css: componentCss,
@@ -68,11 +68,11 @@ const SelectableDecorator = compose(
  * @ui
  * @public
  */
-const Selectable = SelectableDecorator(SelectableBase);
+const Selectable = SelectableDecorator(SelectableIconBase);
 
 export default Selectable;
 export {
 	Selectable,
-	SelectableBase,
+	SelectableIconBase,
 	SelectableDecorator
 };
