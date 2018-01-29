@@ -15,9 +15,9 @@ const prop = {
 	backgroundOpacity: ['', 'translucent', 'transparent']
 };
 
-storiesOf('ToggleButton', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'ToggleButton',
 		withInfo({
 			propTables: [Config],
 			text: 'The basic ToggleButton'

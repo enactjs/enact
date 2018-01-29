@@ -11,9 +11,9 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('CheckboxItem', ItemBase, Item, ToggleItem, CheckboxItem);
 
-storiesOf('CheckboxItem', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'CheckboxItem',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of CheckboxItem'

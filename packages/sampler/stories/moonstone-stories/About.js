@@ -46,9 +46,9 @@ const Pointer = kind({
 	)
 });
 
-storiesOf('About Sampler', module)
+storiesOf('About', module)
 	.add(
-		' ',
+		'A Tour of Sampler',
 		withInfo('A Tour of Sampler')(() => (
 			<div>
 				<BodyText

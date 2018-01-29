@@ -9,9 +9,9 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('ProgressBar', ProgressBarBase, ProgressBar);
 
-storiesOf('ProgressBar', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'ProgressBar',
 		withInfo({
 			propTables: [Config],
 			text: 'The basic ProgressBar'

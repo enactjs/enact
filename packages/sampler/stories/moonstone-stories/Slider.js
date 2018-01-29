@@ -11,9 +11,9 @@ import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('Slider', SliderBase, Slider);
 removeProps(Config, 'defaultPressed pressed');
 
-storiesOf('Slider', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'Slider',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of Slider'

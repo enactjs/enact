@@ -8,9 +8,9 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('Item', ItemBase, Item);
 
-storiesOf('Item', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'Item',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of Item'

@@ -24,9 +24,9 @@ const airports = [
 	'נמל התעופה בן גוריון טרמינל הבינלאומי'
 ];
 
-storiesOf('Picker', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'Picker',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of Picker'

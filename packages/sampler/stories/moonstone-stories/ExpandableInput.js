@@ -12,9 +12,9 @@ const iconNames = ['', ...Object.keys(icons)];
 
 const Config = mergeComponentMetadata('ExpandableInput', ExpandableInputBase, ExpandableInput);
 
-storiesOf('ExpandableInput', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'ExpandableInput',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of divider'

@@ -12,9 +12,9 @@ removeProps(Config, 'onPick');
 
 const emoticons = ['💥 boom', '😩🖐 facepalm', '🍩 doughnut', '👻 ghost', '💍 ring', '🎮 videogame', '🍌🍌 bananas'];
 
-storiesOf('ExpandablePicker', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'ExpandablePicker',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of ExpandablePicker'

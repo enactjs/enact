@@ -11,9 +11,9 @@ const src = {
 	'uhd': 'http://lorempixel.com/512/512/city/1/'
 };
 
-storiesOf('Image', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'Image',
 		withInfo('The basic Image')(() => (
 			<Image
 				src={src}

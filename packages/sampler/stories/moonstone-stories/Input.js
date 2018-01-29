@@ -13,9 +13,9 @@ const Config = mergeComponentMetadata('Input', InputBase, Input);
 
 const iconNames = ['', ...icons];
 
-storiesOf('Input', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'Input',
 		withInfo({
 			propTables: [Config],
 			text: 'The basic Input'

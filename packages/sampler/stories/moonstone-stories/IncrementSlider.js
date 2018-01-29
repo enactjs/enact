@@ -11,9 +11,9 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('IncrementSlider', IncrementSliderBase, IncrementSlider);
 
-storiesOf('IncrementSlider', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'IncrementSlider',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of IncrementSlider'

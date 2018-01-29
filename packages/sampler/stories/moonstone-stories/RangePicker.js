@@ -24,9 +24,9 @@ const parseIntOrNullify = (v) => {
 	}
 };
 
-storiesOf('RangePicker', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'RangePicker',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of RangePicker'

@@ -83,9 +83,9 @@ const
 		);
 	};
 
-storiesOf('VirtualFlexList', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'VirtualFlexList',
 		withInfo('Basic usage of VirtualFlexList')(() =>  {
 			const
 				timeWidth = getTimeWidth(),

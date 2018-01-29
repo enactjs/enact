@@ -10,9 +10,9 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('Popup', PopupBase, Popup);
 
-storiesOf('Popup', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'Popup',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of Popup'

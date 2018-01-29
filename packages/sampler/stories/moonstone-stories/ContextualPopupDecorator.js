@@ -17,9 +17,9 @@ const renderPopup = () => (
 	<div>{text('popup string', 'Hello Contextual Popup')}</div>
 );
 
-storiesOf('ContextualPopupDecorator', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'ContextualPopupDecorator',
 		withInfo('Basic usage of ContextualPopupDecorator')(() => (
 			<div style={{textAlign: 'center', marginTop: ri.unit(99, 'rem')}}>
 				<ContextualButton

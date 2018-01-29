@@ -43,9 +43,9 @@ for (let i = 0; i < 1000; i++) {
 	items.push({text, subText, source});
 }
 
-storiesOf('VirtualList.VirtualGridList', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'VirtualList.VirtualGridList',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of VirtualGridList'

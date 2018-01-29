@@ -18,9 +18,9 @@ const
 		verticalScrollbar: ['auto', 'hidden', 'visible']
 	};
 
-storiesOf('Scroller', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'Scroller',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of Scroller'

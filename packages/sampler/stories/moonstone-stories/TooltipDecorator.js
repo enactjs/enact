@@ -28,9 +28,9 @@ const prop = {
 	}
 };
 
-storiesOf('TooltipDecorator', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'TooltipDecorator',
 		withInfo('The basic TooltipDecorator')(() => (
 			<div style={{textAlign: 'center'}}>
 				<Button

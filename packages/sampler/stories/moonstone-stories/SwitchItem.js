@@ -12,9 +12,9 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('SwitchItem', ItemBase, Item, ToggleItem, SwitchItem);
 
-storiesOf('SwitchItem', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'SwitchItem',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of SwitchItem'
