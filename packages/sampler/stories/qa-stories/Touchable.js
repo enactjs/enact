@@ -69,7 +69,7 @@ storiesOf('Touchable', module)
 			</Button>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with onFlick handler',
 		() => (
 			<TouchableDiv
@@ -81,5 +81,3 @@ storiesOf('Touchable', module)
 			</TouchableDiv>
 		)
 	);
-
-
