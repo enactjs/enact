@@ -17,9 +17,9 @@ const prop = {
 	icons: ['', ...Object.keys(icons)]
 };
 
-storiesOf('Button', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'Button',
 		withInfo({
 			propTables: [Config],
 			text: 'The basic Button'

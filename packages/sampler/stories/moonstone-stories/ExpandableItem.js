@@ -9,9 +9,9 @@ import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 
-storiesOf('ExpandableItem', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'ExpandableItem',
 		withInfo('Basic usage of ExpandableItem')(() => (
 			<ExpandableItem
 				autoClose={nullify(boolean('autoClose', false))}

@@ -95,9 +95,9 @@ prop.events.forEach( (ev) => {
 	prop.eventActions[ev] = action(ev);
 });
 
-storiesOf('VideoPlayer', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'VideoPlayer',
 		withInfo({
 			propTables: [Config],
 			text: 'The basic VideoPlayer'

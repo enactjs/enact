@@ -10,9 +10,9 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('Notification', NotificationBase, Notification);
 
-storiesOf('Notification', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'Notification',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of Notification'

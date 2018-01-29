@@ -7,9 +7,9 @@ import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 
-storiesOf('ExpandableList', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'ExpandableList',
 		withInfo({
 			propTables: [ExpandableListBase],
 			text: 'Basic usage of ExpandableList'

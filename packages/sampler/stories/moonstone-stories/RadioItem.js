@@ -11,9 +11,9 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('RadioItem', ItemBase, Item, ToggleItem, RadioItem);
 
-storiesOf('RadioItem', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'RadioItem',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of RadioItem'

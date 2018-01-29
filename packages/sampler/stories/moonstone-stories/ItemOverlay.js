@@ -16,9 +16,9 @@ const prop = {
 	autoHide: [null, 'after', 'before', 'both']
 };
 
-storiesOf('Item.ItemOverlay', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'Item.ItemOverlay',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of ItemOverlay'

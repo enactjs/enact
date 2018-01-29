@@ -7,9 +7,9 @@ import {action} from '@storybook/addon-actions';
 import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-storiesOf('Dialog', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'Dialog',
 		withInfo('Basic usage of Dialog')(() => (
 			<div>
 				<Dialog

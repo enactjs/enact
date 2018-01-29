@@ -20,9 +20,9 @@ const Config = mergeComponentMetadata('TimePicker', TimePicker.propTypes, TimePi
 );
 removeProps(Config, 'onChangeHour defaultOpen onChangeMeridiem hour onChangeMinute minute meridiem meridiems order');
 
-storiesOf('TimePicker', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'TimePicker',
 		withInfo({
 			propTables: [Config],
 			text: 'The basic TimePicker'

@@ -21,9 +21,9 @@ const prop = {
 	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent']
 };
 
-storiesOf('IconButton', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'IconButton',
 		withInfo({
 			propTables: [Config],
 			text: 'The basic IconButton'

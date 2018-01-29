@@ -12,9 +12,9 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('Layout', Layout);
 
-storiesOf('Layout', module)
+storiesOf('UI', module)
 	.add(
-		' ',
+		'Layout',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of Layout'

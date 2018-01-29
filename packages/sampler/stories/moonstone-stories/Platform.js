@@ -17,9 +17,9 @@ const deviceType = () => {
 	return device;
 };
 
-storiesOf('Platform', module)
+storiesOf('Core', module)
 	.add(
-		' ',
+		'Platform',
 		withInfo('Detection')(() => (
 			<div>
 				Detected: {platformName} {platform.webos ? `(${deviceType()})` : ''}

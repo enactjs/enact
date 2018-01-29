@@ -11,9 +11,9 @@ import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('DatePicker', DatePickerBase, DatePicker);
 removeProps(Config, 'year defaultOpen day maxDays maxMonths month onChangeDate onChangeMonth onChangeYear order');
 
-storiesOf('DatePicker', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'DatePicker',
 		withInfo({
 			propTables: [Config],
 			text: 'The basic DatePicker'

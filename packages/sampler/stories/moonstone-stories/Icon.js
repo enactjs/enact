@@ -11,9 +11,9 @@ import docs from '../../images/icon-enact-docs.png';
 import factory from '../../images/icon-enact-factory.svg';
 import logo from '../../images/icon-enact-logo.svg';
 
-storiesOf('Icon', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'Icon',
 		withInfo('Basic usage of Icon')(() => {
 			const small = boolean('small', false);
 			return (

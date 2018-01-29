@@ -6,9 +6,9 @@ import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 
-storiesOf('BodyText', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'BodyText',
 		withInfo('The basic BodyText')(() => (
 			<BodyText
 				centered={nullify(boolean('centered', false))}

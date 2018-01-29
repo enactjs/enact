@@ -8,9 +8,9 @@ import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 
-storiesOf('Spinner', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'Spinner',
 		withInfo('Basic usage of Spinner')(() => (
 			<div
 				style={{

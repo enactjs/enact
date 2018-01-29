@@ -5,9 +5,9 @@ import {action} from '@storybook/addon-actions';
 import {boolean, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-storiesOf('DayPicker', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'DayPicker',
 		withInfo({
 			propTables: [DayPickerBase],
 			text: 'The basic DayPicker'

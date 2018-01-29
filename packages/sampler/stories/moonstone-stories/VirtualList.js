@@ -34,9 +34,9 @@ for (let i = 0; i < 1000; i++) {
 	items.push('Item ' + ('00' + i).slice(-3));
 }
 
-storiesOf('VirtualList', module)
+storiesOf('Moonstone', module)
 	.add(
-		' ',
+		'VirtualList',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of VirtualList'
