@@ -62,7 +62,9 @@ The `kind()` conversion is pretty similar (we're going to leave out the `import`
 
 ```
 export default kind({
-	render: ({name, ...rest}) => <div {...rest}>Hooray, {name}!</div>
+	render: ({name, ...rest}) => (
+		<div {...rest}>Hooray, {name}!</div>
+	)
 });
 ```
 
@@ -89,7 +91,9 @@ export default kind({
 		name: PropTypes.string
 	},
 
-	render: ({name, ...rest}) => <div {...rest}>Hooray, {name}!</div>
+	render: ({name, ...rest}) => (
+		<div {...rest}>Hooray, {name}!</div>
+	)
 });
 ```
 
@@ -124,7 +128,9 @@ export default kind({
 		name: ({name}) => name ? ', ' + name : ''
 	},
 
-	render: ({name, ...rest}) => <div {...rest}>Hooray{name}!</div>
+	render: ({name, ...rest}) => (
+		<div {...rest}>Hooray{name}!</div>
+	)
 });
 ```
 
@@ -174,7 +180,9 @@ export default kind({
 		name: ({name}) => name ? ', ' + name : ''
 	},
 
-	render: ({name, ...rest}) => <div {...rest}>Hooray{name}!</div>
+	render: ({name, ...rest}) => (
+		<div {...rest}>Hooray{name}!</div>
+	)
 });
 ```
 
