@@ -2,8 +2,10 @@ import ri from '@enact/ui/resolution';
 import Item from '@enact/moonstone/Item';
 import VirtualFlexList from '@enact/moonstone/VirtualFlexList';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {number} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {number} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 const
 	channelLength = 200,
@@ -81,11 +83,10 @@ const
 		);
 	};
 
-storiesOf('VirtualFlexList')
-	.addWithInfo(
-		' ',
-		'Basic usage of VirtualFlexList',
-		() => {
+storiesOf('Moonstone', module)
+	.add(
+		'VirtualFlexList',
+		withInfo('Basic usage of VirtualFlexList')(() =>  {
 			const
 				timeWidth = getTimeWidth(),
 				channelWidth = ri.scale(420),
@@ -121,5 +122,5 @@ storiesOf('VirtualFlexList')
 					/>
 				</div>
 			);
-		}
+		})
 	);

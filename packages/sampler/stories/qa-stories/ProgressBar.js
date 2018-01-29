@@ -1,16 +1,15 @@
 import ProgressBar, {ProgressBarBase} from '@enact/moonstone/ProgressBar';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
-import {boolean, number} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {boolean, number} from '@storybook/addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('ProgressBar', ProgressBarBase, ProgressBar);
 
-storiesOf('ProgressBar')
-	.addWithInfo(
-		' ',
+storiesOf('ProgressBar', module)
+	.add(
 		'The basic ProgressBar',
 		() => (
 			<ProgressBar
