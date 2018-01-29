@@ -53,6 +53,7 @@ const mergeStyle = ({style: componentStyle}, {style: authorStyle}) => {
  * @param {Object} props Render props
  * @returns {Function} `join()`
  * @method join
+ * @private
  */
 const join = (cfg) => {
 	if (cfg.css) {
@@ -68,6 +69,7 @@ const join = (cfg) => {
  * @method append
  * @param {Object} props Render props updated by styles with `className` and `styler.join`
  * @returns {Function} `append()`
+ * @private
  */
 const append = (props) => {
 	const j = props.styler.join;
@@ -109,7 +111,7 @@ const append = (props) => {
  * @returns {Function}       Function that accepts a props object and mutates it to merge class
  *                           names and style objects and provide the `styler` utility function and
  *                           `css` merged class name map
- * @public
+ * @private
  */
 const styles = (cfg, optProps) => {
 	const prop = cfg.prop || 'className';
