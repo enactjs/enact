@@ -22,7 +22,7 @@ const VoiceControl = (function () {
 				if (tObj.onVoice && (typeof tObj.onVoice === 'function')) {
 					// test
 					if (voiceIntent === 'input') {
-						e.value = 'inputed text';
+						e.value = 'text inputed!!!';
 					}
 					tObj.onVoice(e);
 					console.log('VoiceControl>handleVoice>execute!!!!!!>', voiceIntent, voiceLabel, labelIndex, e);

@@ -21,6 +21,8 @@ import css from './Input.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
 
+import VoiceControl from '@enact/webos/VoiceControl';
+
 const calcAriaLabel = function (title, type, value = '') {
 	const hint = $L('Input field');
 
@@ -291,9 +293,61 @@ const Input = Pure(
 	)
 );
 
+class VoiceInput extends React.Component {
+	constructor (props) {
+		super(props);
+		this.voiceList = [];
+	}
+
+	static propTypes = {
+		voiceLabel: PropTypes.string.isRequired,
+		onChange: PropTypes.func
+	}
+
+	componentDidMount () {
+		this.addVoice();
+	}
+
+	componentWillUnmount () {
+		this.removeVoice();
+	}
+
+	addVoice = () => {
+		const {voiceLabel, onChange} = this.props;
+
+		this.voiceList = VoiceControl.addList([
+			{
+				voiceIntent: 'input',
+				voiceLabel: voiceLabel,
+				onVoice: (e) => {
+					if (onChange) {
+						onChange({
+							value: e.value
+						});
+					}
+				}
+			}
+		]);
+	}
+
+	removeVoice = () => {
+		VoiceControl.removeList(this.voiceList);
+	}
+
+	render () {
+		const props = {...this.props};
+		delete props.voiceLabel;
+
+		return (
+			<Input {...props} />
+		);
+	}
+}
+
 export default Input;
 export {
 	calcAriaLabel,
 	Input,
-	InputBase
+	InputBase,
+	VoiceInput
 };
