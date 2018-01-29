@@ -32,7 +32,9 @@ Sure. Stateless Functional Components (SFC's) are great and provide for an easy 
 components. Let's look at a simple component:
 
 ```
-export default (props) => <div {...props}>Hooray!</div>;
+export default (props) => (
+	<div {...props}>Hooray!</div>
+);
 ```
 
 This component is so simple that, if this were the imaginary world where things never change, there
@@ -41,7 +43,9 @@ would be no reason to convert this to `kind()`. But, let's do it anyhow:
 ```
 import kind from '@enact/core/kind';
 
-export default kind({render: (props) => <div {...props}>Hooray!</div>});
+export default kind({
+	render: (props) => <div {...props}>Hooray!</div>
+});
 ```
 
 It's a little more verbose, but not too bad.
@@ -49,22 +53,30 @@ It's a little more verbose, but not too bad.
 Now, let's say we want to cheer on a specific person. We'll need to add a prop for that:
 
 ```
-export default ({name, ...rest}) => <div {...rest}>Hooray, {name}!</div>;
+export default ({name, ...rest}) => (
+	<div {...rest}>Hooray, {name}!</div>
+);
 ```
 
 The `kind()` conversion is pretty similar (we're going to leave out the `import` line for brevity):
 
 ```
-export default kind({render: ({name, ...rest}) => <div {...rest}>Hooray, {name}!</div>});
+export default kind({
+	render: ({name, ...rest}) => <div {...rest}>Hooray, {name}!</div>
+});
 ```
 
 Then, we get told we need to validate the type of `name` so that we don't get any funny data passed
 in. `PropTypes` (import not shown) to the rescue:
 
 ```
-const Hooray = ({name, ...rest}) => <div {...rest}>Hooray, {name}!</div>;
+export default ({name, ...rest}) => (
+	<div {...rest}>Hooray, {name}!</div>
+);
 
-Hooray.propTypes = {name: PropTypes.string};
+Hooray.propTypes = {
+	name: PropTypes.string
+};
 
 export default Hooray;
 ```
@@ -73,7 +85,10 @@ Not too bad yet. Let's see what happens with the `kind()` version:
 
 ```
 export default kind({
-	propTypes: {name: PropTypes.string},
+	propTypes: {
+		name: PropTypes.string
+	},
+
 	render: ({name, ...rest}) => <div {...rest}>Hooray, {name}!</div>
 });
 ```
@@ -86,10 +101,13 @@ keep our jsx as clean as possible:
 ```
 const Hooray = ({name, ...rest}) => {
 	const formattedName = name ? ', ' + name : '';
+
 	return <div {...rest}>Hooray{formattedName}!</div>;
 };
 
-Hooray.propTypes = { name: PropTypes.string };
+Hooray.propTypes = {
+	name: PropTypes.string
+};
 
 export default Hooray;
 ```
@@ -98,8 +116,14 @@ Our simple little SFC is getting complicated. Let's see what we could do with `k
 
 ```
 export default kind({
-	propTypes: {name: PropTypes.string},
-	computed: {name: ({name}) => name ? ', ' + name : ''},
+	propTypes: {
+		name: PropTypes.string
+	},
+
+	computed: {
+		name: ({name}) => name ? ', ' + name : ''
+	},
+
 	render: ({name, ...rest}) => <div {...rest}>Hooray{name}!</div>
 });
 ```
@@ -120,10 +144,13 @@ import css from './hooray.less';
 const Hooray = ({name, className, ...rest}) => {
 	const formattedName = name ? ', ' + name : '';
 	const classes = classNames(css.hooray, className);
+
 	return <div className={classes} {...rest}>Hooray{formattedName}!</div>;
 };
 
-Hooray.propTypes = { name: PropTypes.string };
+Hooray.propTypes = {
+	name: PropTypes.string
+};
 
 export default Hooray;
 ```
@@ -134,9 +161,19 @@ With `kind()`:
 import css from './hooray.less';
 
 export default kind({
-	propTypes: {name: PropTypes.string},
-	styles: {css, className: 'hooray'},
-	computed: {name: ({name}) => name ? ', ' + name : ''},
+	propTypes: {
+		name: PropTypes.string
+	},
+
+	styles: {
+		css,
+		className: 'hooray'
+	},
+
+	computed: {
+		name: ({name}) => name ? ', ' + name : ''
+	},
+
 	render: ({name, ...rest}) => <div {...rest}>Hooray{name}!</div>
 });
 ```
