@@ -13,7 +13,6 @@
 import kind from '@enact/core/kind';
 import UiProgressBar from '@enact/ui/ProgressBar';
 import Pure from '@enact/ui/internal/Pure';
-import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
 
@@ -32,32 +31,16 @@ import componentCss from './ProgressBar.less';
 const ProgressBarBase = kind({
 	name: 'ProgressBar',
 
-	propTypes: /** @lends moonstone/ProgressBar.ProgressBar.prototype */ {
-		/**
-		 * Customizes the component by mapping the supplied collection of CSS class names to the
-		 * corresponding internal Elements and states of this component.
-		 *
-		 * The following classes are supported:
-		 *
-		 * * `progressBar` - The root class name
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		css: PropTypes.object
-	},
-
 	styles: {
 		css: componentCss,
-		publicClassNames: ['progressBar']
+		className: 'progressBar'
 	},
 
-	render: ({css, ...rest}) => {
-
+	render: (props) => {
 		return (
 			<UiProgressBar
-				css={css}
-				{...rest}
+				{...props}
+				css={componentCss}
 			/>
 		);
 	}
@@ -77,7 +60,7 @@ const ProgressBarDecorator = compose(
 );
 
 /**
- * A Moonstone-styled ProgressBar.
+ * The ready-to-use Moonstone-styled ProgressBar.
  *
  * @class ProgressBar
  * @memberof moonstone/ProgressBar

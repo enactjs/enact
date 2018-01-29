@@ -1,9 +1,10 @@
 /**
- * Provides unstyled progress bar component to be customized by a theme or application.
+ * A basic progress bar component that can display the progress of something in a horizontal or
+ * vertical bar format. A secondary independent progress indicator can be displayed, to indicate
+ * an additional degree of information, often used as a background loading progress.
  *
  * @module ui/ProgressBar
  * @exports ProgressBar
- * @exports ProgressBarBase
  */
 
 import kind from '@enact/core/kind';
@@ -18,16 +19,14 @@ import componentCss from './ProgressBar.less';
 const progressToPercent = (value) => (clamp(0, 1, value) * 100) + '%';
 
 /**
- * A basic progress bar component that can display the progress of a
- * process in a horizontal or vertical bar. A secondary progress indicator can be displayed, which
- * is different than the primary progress indicator i.e. to indicate background loading progress.
+ * Provides unstyled progress bar component to be customized by a theme or application.
  *
- * @class ProgressBarBase
+ * @class ProgressBar
  * @memberof ui/ProgressBar
  * @ui
  * @public
  */
-const ProgressBarBase = kind({
+const ProgressBar = kind({
 	name: 'ui:ProgressBar',
 
 	propTypes: /** @lends ui/ProgressBar.ProgressBar.prototype */ {
@@ -48,9 +47,9 @@ const ProgressBarBase = kind({
 		 * The following classes are supported:
 		 *
 		 * * `progressBar` - The root component class
-		 * * `vertical` - Applied when `vertical` prop is `true`
 		 * * `fill` - The foreground node of the progress bar
 		 * * `load` - The background node of the progress bar
+		 * * `vertical` - Applied when `vertical` prop is `true`
 		 *
 		 * @type {Object}
 		 * @public
@@ -115,18 +114,7 @@ const ProgressBarBase = kind({
 	}
 });
 
-/**
- * [ProgressBar]{@link ui/ProgressBar.ProgressBar} is a minimally styled progress bar component
- *
- * @class ProgressBar
- * @extends ui/ProgressBar.ProgressBarBase
- * @memberof ui/ProgressBar
- * @ui
- * @public
- */
-
-export default ProgressBarBase;
+export default ProgressBar;
 export {
-	ProgressBarBase as ProgressBar,
-	ProgressBarBase
+	ProgressBar
 };
