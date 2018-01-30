@@ -2,8 +2,9 @@ import Button from '@enact/moonstone/Button';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import {RadioControllerDecorator} from '@enact/ui/RadioDecorator';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, text, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, text, select} from '@storybook/addon-knobs';
 
 const ExpandableGroup = RadioControllerDecorator('div');
 
@@ -37,8 +38,8 @@ class ExpandableListChildrenLengthUpdate extends React.Component {
 	}
 }
 
-storiesOf('ExpandableList')
-	.addWithInfo(
+storiesOf('ExpandableList', module)
+	.add(
 		'with children length update',
 		() => (
 			<ExpandableListChildrenLengthUpdate
@@ -55,7 +56,7 @@ storiesOf('ExpandableList')
 			/>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'grouped',
 		() => (
 			<ExpandableGroup>
@@ -71,7 +72,7 @@ storiesOf('ExpandableList')
 			</ExpandableGroup>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with multiples (to test "lockBottom" prop)',
 		() => (
 			<div>
