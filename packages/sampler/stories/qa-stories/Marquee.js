@@ -1,10 +1,10 @@
 import {MarqueeController, MarqueeText} from '@enact/moonstone/Marquee';
 import Item from '@enact/moonstone/Item';
+import ri from '@enact/ui/resolution';
 import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
-import ri from '@enact/ui/resolution';
-import {boolean, number, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {boolean, number, select} from '@storybook/addon-knobs';
 import nullify from '../../src/utils/nullify.js';
 
 const SpottableMarquee = Spottable(MarqueeText);
@@ -27,8 +27,8 @@ const RTL = [
 
 const disabledDisclaimer = (disabled) => (disabled ? <p style={{fontSize: '70%', fontStyle: 'italic'}}><sup>*</sup>MarqueeText does not visually respond to <code>disabled</code> state.</p> : <p />);
 
-storiesOf('Marquee')
-	.addWithInfo(
+storiesOf('Marquee', module)
+	.add(
 		'LTR',
 		() => {
 			const disabled = nullify(boolean('disabled', false));
@@ -52,7 +52,7 @@ storiesOf('Marquee')
 		}
 	)
 
-	.addWithInfo(
+	.add(
 		'RTL',
 		() => {
 			const disabled = nullify(boolean('disabled', false));
@@ -76,7 +76,7 @@ storiesOf('Marquee')
 		}
 	)
 
-	.addWithInfo(
+	.add(
 		'Synchronized',
 		() => {
 			const disabled = nullify(boolean('disabled', false));
@@ -102,7 +102,7 @@ storiesOf('Marquee')
 		}
 	)
 
-	.addWithInfo(
+	.add(
 		'On Focus',
 		() => (
 			<div>
@@ -122,7 +122,7 @@ storiesOf('Marquee')
 		)
 	)
 
-	.addWithInfo(
+	.add(
 		'Restart Marquee when Marquee completes',
 		() => (
 			<SpottableDiv>

@@ -3,8 +3,8 @@ import {Icon, icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import Button from '@enact/moonstone/Button';
 import Image from '@enact/moonstone/Image';
-import {storiesOf} from '@kadira/storybook';
-import {boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {boolean, select, text} from '@storybook/addon-knobs';
 
 const iconNames = ['', ...Object.keys(icons)];
 
@@ -16,8 +16,8 @@ const inputData = {
 	normalText : 'Item with text that is spottable'
 };
 
-storiesOf('Item')
-	.addWithInfo(
+storiesOf('Item', module)
+	.add(
 		'with long text',
 		() => (
 			<Item
@@ -27,7 +27,7 @@ storiesOf('Item')
 			</Item>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with tall characters',
 		() => (
 			<Item
@@ -37,7 +37,7 @@ storiesOf('Item')
 			</Item>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with extra spaces',
 		() => (
 			<Item
@@ -47,7 +47,7 @@ storiesOf('Item')
 			</Item>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'integrated with other components',
 		() => (
 			<Item
@@ -63,7 +63,7 @@ storiesOf('Item')
 			</Item>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'sample for spotability test',
 		() => (
 			<div>
