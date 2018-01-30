@@ -106,8 +106,12 @@ class FloatingLayerBase extends React.Component {
 	constructor (props) {
 		super(props);
 		this.node = null;
-		if (props.open && props.onOpen) {
-			props.onOpen({});
+	}
+
+	componentDidMount () {
+		const {open, onOpen} = this.props;
+		if (open && onOpen) {
+			onOpen({});
 		}
 	}
 
