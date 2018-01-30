@@ -109,6 +109,7 @@ const ToggleIconBase = kind({
 
 	render: ({children, iconComponent: IconComponent, iconClassName, ...rest}) => {
 		delete rest.selected;
+		delete rest.iconClasses;
 
 		return (
 			<div {...rest}>

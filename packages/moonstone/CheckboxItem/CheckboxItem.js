@@ -1,12 +1,16 @@
 /**
- * Exports the {@link moonstone/CheckboxItem.CheckboxItem} component.
+ * Provides Moonstone-themed item component and interactive togglable checkbox.
  *
  * @module moonstone/CheckboxItem
+ * @exports CheckboxItem
+ * @exports CheckboxItemBase
+ * @exports CheckboxItemDecorator
  */
 
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import Pure from '@enact/ui/internal/Pure';
 import Toggleable from '@enact/ui/Toggleable';
 
@@ -15,9 +19,7 @@ import {ToggleItemBase} from '../ToggleItem';
 import Checkbox from '../Checkbox';
 
 /**
- * {@link moonstone/CheckboxItem.CheckboxItemBase} is a component that
- * is an Item that is Toggleable. It has two states: `true` (selected) & `false`
- * (unselected). It uses a check icon to represent its selected state.
+ * Renders an item with a checkbox component. Useful to show a selected state on an item.
  *
  * @class CheckboxItemBase
  * @memberof moonstone/CheckboxItem
@@ -112,28 +114,19 @@ const CheckboxItemBase = kind({
 });
 
 /**
- * {@link moonstone/CheckboxItem.CheckboxItem} is a component that is an Item that is Toggleable. It
- * has two states: `true` (selected) & `false` (unselected). It uses a check icon to represent its
- * selected state.
- *
- * By default, `CheckboxItem` maintains the state of its `selected` property. Supply the
- * `defaultSelected` property to control its initial value. If you wish to directly control updates
- * to the component, supply a value to `selected` at creation time and update it in response to
- * `onToggle` events.
+ * Represents a Boolean state of an item with a checkbox
  *
  * @class CheckboxItem
- * @memberof moonstone/CheckboxItem
+ * @memberof ui/CheckboxItem
+ * @mixes ui/Toggleable.Toggleable
  * @ui
  * @public
  */
-const CheckboxItem = Pure(
-	Toggleable(
-		{prop: 'selected'},
-		Skinnable(
-			CheckboxItemBase
-		)
-	)
-);
+const CheckboxItem = compose(
+	Pure,
+	Toggleable({prop: 'selected'}),
+	Skinnable
+)(CheckboxItemBase);
 
 export default CheckboxItem;
 export {CheckboxItem, CheckboxItemBase};

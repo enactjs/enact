@@ -1,12 +1,16 @@
 /**
- * Contains the declaration for the {@link moonstone/SwitchItem.SwitchItem} component.
+ * Provides Moonstone-themed item component and interactive togglable switch.
  *
  * @module moonstone/SwitchItem
+ * @exports SwitchItem
+ * @exports SwitchItemBase
+ * @exports SwitchItemDecorator
  */
 
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import Pure from '@enact/ui/internal/Pure';
 import Toggleable from '@enact/ui/Toggleable';
 
@@ -16,8 +20,7 @@ import Switch from '../Switch';
 import css from './SwitchItem.less';
 
 /**
- * {@link moonstone/SwitchItem.SwitchItemBase} represents a Boolean state. It displays a descriptive
- * text and has a switch that represents the on/off state.
+ * Renders an item with a switch component. Useful to show an on/off state.
  *
  * @class SwitchItemBase
  * @memberof moonstone/SwitchItem
@@ -105,26 +108,18 @@ const SwitchItemBase = kind({
 });
 
 /**
- * {@link moonstone/SwitchItem.SwitchItem} represents a Boolean state. It displays a descriptive
- * text and has a switch that represents the on/off state.
- *
- * By default, `SwitchItem` maintains the state of its `selected` property. Supply the
- * `defaultSelected` property to control its initial value. If you wish to directly control updates
- * to the component, supply a value to `selected` at creation time and update it in response to
- * `onToggle` events.
+ * Represents a Boolean state of an item with a switch
  *
  * @class SwitchItem
- * @memberof moonstone/SwitchItem
+ * @memberof ui/SwitchItem
  * @mixes ui/Toggleable.Toggleable
  * @ui
  * @public
  */
-const SwitchItem = Pure(
-	Toggleable(
-		{prop: 'selected'},
-		SwitchItemBase
-	)
-);
+const SwitchItem = compose(
+	Pure,
+	Toggleable({prop: 'selected'})
+)(SwitchItemBase);
 
 export default SwitchItem;
 export {SwitchItem, SwitchItemBase};

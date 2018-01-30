@@ -47,7 +47,7 @@ const ToggleItemBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		toggleIcon: PropTypes.object.isRequired,
+		toggleIcon: PropTypes.func.isRequired,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the

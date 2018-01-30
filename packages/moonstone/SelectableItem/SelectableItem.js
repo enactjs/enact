@@ -10,6 +10,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import Pure from '@enact/ui/internal/Pure';
 import Toggleable from '@enact/ui/Toggleable';
 
@@ -19,10 +20,8 @@ import {ToggleItemBase} from '../ToggleItem';
 import Skinnable from '../Skinnable';
 import SelectableIcon from './SelectableIcon';
 
-
-
 /**
- * Renders an item with a  circle shaped component. Useful to show a selected state on an item.
+ * Renders an item with a circle shaped component. Useful to show a selected state on an item.
  *
  * @class SelectableItemBase
  * @memberof moonstone/SelectableItem
@@ -89,6 +88,7 @@ const SelectableItemBase = kind({
 	},
 
 	computed: {
+		// eslint-disable-next-line enact/display-name
 		toggleIcon: ({selected, disabled}) => () => {
 			return <SelectableIcon selected={selected} disabled={disabled} />;
 		}
@@ -100,32 +100,21 @@ const SelectableItemBase = kind({
 });
 
 /**
- * {@link moonstone/SelectableItem.SelectableItem} is component that is an Item that is
- * {@link ui/Toggleable.Toggleable}. It has two selected states `true` & `false`. It uses a dot to
- * represent its selected state.
+ * Represents a Boolean state of an item with a checkbox
  *
- * By default, `SelectableItem` maintains the state of its `selected` property. Supply the
- * `defaultSelected` property to control its initial value. If you wish to directly control updates
- * to the component, supply a value to `selected` at creation time and update it in response to
- * `onToggle` events.
- *
- * @class SelectableItem
- * @memberof moonstone/SelectableItem
+ * @class SelectablItem
+ * @memberof ui/SelectablItem
  * @mixes ui/Toggleable.Toggleable
  * @ui
  * @public
  */
-const SelectableItem = Pure(
-	Toggleable(
-		{prop: 'selected'},
-		RemeasurableDecorator(
-			{trigger: 'selected'},
-			Skinnable(
-				SelectableItemBase
-			)
-		)
-	)
-);
+
+const SelectableItem = compose(
+	Pure,
+	Toggleable({prop: 'selected'}),
+	RemeasurableDecorator({trigger: 'selected'}),
+	Skinnable
+)(SelectableItemBase);
 
 export default SelectableItem;
 export {SelectableItem, SelectableItemBase};
