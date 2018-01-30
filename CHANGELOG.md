@@ -926,7 +926,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 > Note: For those who are using `eslint-config-enact` for in-editor linting, there have been some important changes and reinstallation is necessary. Refer to [https://github.com/enactjs/eslint-config-enact/](https://github.com/enactjs/eslint-config-enact/) for install instructions or reinstall via:
 >
 > ```
-> npm install -g eslint eslint-plugin-react eslint-plugin-babel babel-eslint enyojs/eslint-plugin-enact enyojs/eslint-config-enact
+> npm install -g eslint eslint-plugin-react eslint-plugin-babel babel-eslint enactjs/eslint-plugin-enact enactjs/eslint-config-enact
 > ```
 >
 >If you don't use in-editor linting or use a different linting configuration, you can safely ignore this notice.
