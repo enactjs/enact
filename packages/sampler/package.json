@@ -17,12 +17,12 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^2.0.0-alpha.3",
-    "@enact/i18n": "^2.0.0-alpha.3",
-    "@enact/moonstone": "^2.0.0-alpha.3",
-    "@enact/spotlight": "^2.0.0-alpha.3",
-    "@enact/ui": "^2.0.0-alpha.3",
-    "@enact/webos": "^2.0.0-alpha.3",
+    "@enact/core": "^2.0.0-alpha.2",
+    "@enact/i18n": "^2.0.0-alpha.2",
+    "@enact/moonstone": "^2.0.0-alpha.2",
+    "@enact/spotlight": "^2.0.0-alpha.2",
+    "@enact/ui": "^2.0.0-alpha.2",
+    "@enact/webos": "^2.0.0-alpha.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },
