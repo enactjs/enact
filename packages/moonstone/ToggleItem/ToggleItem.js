@@ -42,6 +42,14 @@ const ToggleItemBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * The ToggleIcon you wish to display.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		toggleIcon: PropTypes.object.isRequired,
+
+		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
 		 *
@@ -170,6 +178,7 @@ const ToggleItemBase = kind({
 		delete rest.icon;
 		delete rest.iconClasses;
 		delete rest.iconPosition;
+		delete rest.toggleIcon;
 		delete rest.value;
 
 		return (

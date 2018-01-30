@@ -1,6 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import SwitchItem from '../SwitchItem';
+import SwitchCss from '../../Switch/Switch.less';
 
 describe('SwitchItem Specs', () => {
 
@@ -12,10 +13,12 @@ describe('SwitchItem Specs', () => {
 			</SwitchItem>
 		);
 
-		const expected = 1;
-		const actual = switchItem.find('Switch').length;
+		const IconComponent = switchItem.find('Icon div');
 
-		expect(actual).to.equal(expected);
+		const expected = SwitchCss.icon;
+		const actual = IconComponent.prop('className');
+
+		expect(actual).to.contain(expected);
 	});
 
 	it('should pass selected to Switch element', function () {

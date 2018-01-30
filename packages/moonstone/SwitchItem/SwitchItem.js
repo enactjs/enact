@@ -93,7 +93,8 @@ const SwitchItemBase = kind({
 	},
 
 	computed: {
-		icon: ({selected, disabled}) => (
+		// eslint-disable-next-line enact/display-name
+		toggleIcon: ({selected, disabled}) => () => (
 			<Switch selected={selected} disabled={disabled} className={css.switch} />
 		)
 	},

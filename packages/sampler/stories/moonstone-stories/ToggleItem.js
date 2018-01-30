@@ -1,5 +1,6 @@
 import icons from './icons';
 import ToggleItem from '@enact/moonstone/ToggleItem';
+import ToggleItemIcon from '@enact/moonstone/ToggleItem/ToggleItemIcon';
 import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -20,7 +21,7 @@ storiesOf('Moonstone', module)
 			text: 'The basic ToggleItem'
 		})(() => (
 			<ToggleItem
-				icon={select('icon', icons, 'lock')}
+				toggleIcon={ItemIcon}
 				iconPosition={select('iconPosition', ['before', 'after'], 'before')}
 				disabled={boolean('disabled', false)}
 				inline={nullify(boolean('inline', false))}

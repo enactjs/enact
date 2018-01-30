@@ -64,6 +64,14 @@ const ToggleIconBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
+		* CSS classes to be used on the Icon component
+		*
+		* @type {String}
+		* @public
+		*/
+		iconClasses: PropTypes.string,
+
+		/**
 		 * The component used to render the icon.
 		 *
 		 * @type {Component}
@@ -95,16 +103,16 @@ const ToggleIconBase = kind({
 	},
 
 	computed: {
-		className: ({selected, styler}) => styler.append({selected})
+		className: ({selected, styler}) => styler.append({selected}),
+		iconClassName: ({iconClasses, css}) => iconClasses ? `${css.icon} ${iconClasses}` : css.icon
 	},
 
-	render: ({children, css, iconComponent: IconComponent, iconClasses, ...rest}) => {
+	render: ({children, iconComponent: IconComponent, iconClassName, ...rest}) => {
 		delete rest.selected;
 
-		const className = iconClasses ? `${css.icon} ${iconClasses}` : css.icon;
 		return (
 			<div {...rest}>
-				<IconComponent className={className}>{children}</IconComponent>
+				<IconComponent className={iconClassName}>{children}</IconComponent>
 			</div>
 		);
 	}

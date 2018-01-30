@@ -100,7 +100,8 @@ const CheckboxItemBase = kind({
 	},
 
 	computed: {
-		toggleIcon: ({selected, disabled}) => (
+		// eslint-disable-next-line enact/display-name
+		toggleIcon: ({selected, disabled}) => () => (
 			<Checkbox selected={selected} disabled={disabled} />
 		)
 	},

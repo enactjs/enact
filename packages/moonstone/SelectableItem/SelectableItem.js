@@ -1,7 +1,10 @@
 /**
- * Exports the {@link moonstone/SelectableItem.SelectableItem}
+ * Provides Moonstone-themed item component and interactive togglable circle.
  *
  * @module moonstone/SelectableItem
+ * @exports SelectableItem
+ * @exports SelectableItemBase
+ * @exports SelectableItemDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -19,9 +22,7 @@ import SelectableIcon from './SelectableIcon';
 
 
 /**
- * {@link moonstone/SelectableItem.SelectableItem} is component
- * that is an Item that is Toggleable. It has two selected states `true` &
- * `false`. It uses a dot to represent its selected state.
+ * Renders an item with a  circle shaped component. Useful to show a selected state on an item.
  *
  * @class SelectableItemBase
  * @memberof moonstone/SelectableItem
@@ -88,13 +89,13 @@ const SelectableItemBase = kind({
 	},
 
 	computed: {
-		toggleIcon: ({selected, disabled}) => {
+		toggleIcon: ({selected, disabled}) => () => {
 			return <SelectableIcon selected={selected} disabled={disabled} />;
 		}
 	},
 
-	render: ({css, ...props}) => (
-		<ToggleItemBase css={css} {...props} />
+	render: (props) => (
+		<ToggleItemBase {...props} />
 	)
 });
 

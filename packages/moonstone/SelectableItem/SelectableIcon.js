@@ -1,13 +1,10 @@
 /**
- * Provides Moonstone-themed checkmark in a circle component and interactive togglable capabilities.
+ * Provides Moonstone-themed circle component and interactive togglable capabilities.
  *
- * @example
- * <Selectable />
- *
- * @module moonstone/Selectable
- * @exports Selectable
- * @exports SelectableBase
- * @exports SelectableDecorator
+ * @module moonstone/SelectableIcon
+ * @exports SelectableIcon
+ * @exports SelectableIconBase
+ * @exports SelectableIconDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -22,10 +19,10 @@ import Skinnable from '../Skinnable';
 import componentCss from './SelectableIcon.less';
 
 /**
- * Renders a check mark in a shape which supports a Boolean state.
+ * Renders a circle shaped component which supports a Boolean state.
  *
- * @class SelectableBase
- * @memberof moonstone/Selectable
+ * @class SelectableIconBase
+ * @memberof moonstone/SelectableIcon
  * @extends ui/ToggleIcon.ToggleIcon
  * @ui
  * @public
@@ -38,7 +35,7 @@ const SelectableIconBase = kind({
 		className: 'selectableIcon'
 	},
 
-	render: ({...props}) => {
+	render: (props) => {
 		return (
 			<ToggleIcon {...props} css={componentCss} iconClasses={componentCss.dot} iconComponent={Icon}>circle</ToggleIcon>
 		);
@@ -46,10 +43,10 @@ const SelectableIconBase = kind({
 });
 
 /**
- * Moonstone-specific behaviors to apply to `SelectableBase`.
+ * Moonstone-specific behaviors to apply to `SelectableIconBase`.
  *
  * @hoc
- * @memberof moonstone/Selectable
+ * @memberof moonstone/SelectableIcon
  * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
@@ -61,10 +58,10 @@ const SelectableDecorator = compose(
 /**
  * A fully functional, ready-to-use, component.
  *
- * @class Selectable
- * @memberof moonstone/Selectable
- * @extends moonstone/Selectable.SelectableBase
- * @mixes moonstone/Selectable.SelectableDecorator
+ * @class SelectableIcon
+ * @memberof moonstone/SelectableIcon
+ * @extends moonstone/SelectableIcon.SelectableIconBase
+ * @mixes moonstone/SelectableIcon.SelectableIconDecorator
  * @ui
  * @public
  */

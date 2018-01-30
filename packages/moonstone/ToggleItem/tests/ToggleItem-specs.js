@@ -3,7 +3,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import sinon from 'sinon';
 
-import {ToggleItemBase} from '../ToggleItem';
+import ToggleItem, {ToggleItemBase} from '../ToggleItem';
 
 const tap = (node) => {
 	node.simulate('mousedown');
@@ -47,13 +47,12 @@ describe('ToggleItem Specs', () => {
 	it('should call onTap when tapped', function () {
 		const handleTap = sinon.spy();
 		const subject = mount(
-			<ToggleItemBase onTap={handleTap} icon="star">
+			<ToggleItem onTap={handleTap} icon="star">
 				Toggle Item
-			</ToggleItemBase>
+			</ToggleItem>
 		);
 
 		tap(subject);
-
 		const expected = true;
 		const actual = handleTap.calledOnce;
 
@@ -63,9 +62,9 @@ describe('ToggleItem Specs', () => {
 	it('should call both onToggle and onTap when tapped', function () {
 		const handleBoth = sinon.spy();
 		const subject = mount(
-			<ToggleItemBase onTap={handleBoth} onToggle={handleBoth} icon="star">
+			<ToggleItem onTap={handleBoth} onToggle={handleBoth} icon="star">
 				Toggle Item
-			</ToggleItemBase>
+			</ToggleItem>
 		);
 
 		tap(subject);
