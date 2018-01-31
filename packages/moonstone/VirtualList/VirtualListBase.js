@@ -186,6 +186,7 @@ class VirtualListCore extends Component {
 
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContainerRef = this.initRef('containerRef');
+		this.initItemContainerRef = this.initRef('itemContainerRef');
 	}
 
 	componentWillMount () {
@@ -283,6 +284,7 @@ class VirtualListCore extends Component {
 	isScrolledBy5way = false
 
 	containerRef = null
+	itemContainerRef = null
 
 	// spotlight
 	nodeIndexToBeFocused = null
@@ -624,9 +626,7 @@ class VirtualListCore extends Component {
 	}
 
 	applyStyleToExistingNode = (index, ...rest) => {
-		const
-			{numOfItems} = this.state,
-			node = this.containerRef.children[index % numOfItems];
+		const node = this.getItemNode(index);
 
 		if (node) {
 			this.composeStyle(node.style, ...rest);
@@ -772,8 +772,7 @@ class VirtualListCore extends Component {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
 			if (numOfItems > 0 && focusedIndex % numOfItems !== this.lastFocusedIndex % numOfItems) {
-				const node = this.containerRef.children[this.lastFocusedIndex % numOfItems];
-				node.blur();
+				this.getItemNode(this.lastFocusedIndex).blur();
 			}
 			this.nodeIndexToBeFocused = null;
 			this.lastFocusedIndex = focusedIndex;
@@ -1120,6 +1119,8 @@ class VirtualListCore extends Component {
 		return false;
 	}
 
+	getItemNode = (index) => (this.itemContainerRef.children[index % this.state.numOfItems])
+
 	// render
 
 	initRef (prop) {
@@ -1153,7 +1154,7 @@ class VirtualListCore extends Component {
 
 		return (
 			<div {...props} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
-				{cc.length ? cc : null}
+				{cc.length ? <div ref={this.initItemContainerRef}>{cc}</div> : null}
 				{primary ? null : (
 					<SpotlightPlaceholder
 						data-index={0}
