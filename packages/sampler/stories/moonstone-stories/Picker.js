@@ -1,8 +1,10 @@
 import Picker, {PickerBase} from '@enact/moonstone/Picker';
 import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
@@ -22,11 +24,13 @@ const airports = [
 	'נמל התעופה בן גוריון טרמינל הבינלאומי'
 ];
 
-storiesOf('Picker')
-	.addWithInfo(
-		' ',
-		'Basic usage of Picker',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'Picker',
+		withInfo({
+			propTables: [Config],
+			text: 'Basic usage of Picker'
+		})(() => (
 			<Picker
 				onChange={action('onChange')}
 				width={nullify(select('width', prop.width, prop.width[3]))}
@@ -40,6 +44,5 @@ storiesOf('Picker')
 			>
 				{airports}
 			</Picker>
-		),
-		{propTables: [Config]}
+		))
 	);

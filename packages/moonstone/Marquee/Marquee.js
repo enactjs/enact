@@ -147,8 +147,8 @@ const MarqueeBase = kind({
 
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
-			let direction = rtl ? 'rtl' : 'ltr';
-
+			const direction = rtl ? 'rtl' : 'ltr';
+			const sideProperty = rtl ? 'left' : 'right';
 			const style = {
 				direction,
 				textAlign,
@@ -156,13 +156,12 @@ const MarqueeBase = kind({
 			};
 
 			if (animating) {
-				const adjustedDistance = rtl ? distance : distance * -1;
 				const duration = distance / speed;
 
-				style.transform = `translate3d(${adjustedDistance}px, 0, 0)`;
-				style.transition = `transform ${duration}s linear`;
-				style.WebkitTransition = `transform ${duration}s linear`;
-				style.willChange = 'transform';
+				style[sideProperty] = `${distance}px`;
+				style.transitionDuration = `${duration}s`;
+			} else {
+				style[sideProperty] = 0;
 			}
 
 			return style;

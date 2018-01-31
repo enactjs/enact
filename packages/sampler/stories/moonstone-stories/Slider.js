@@ -1,7 +1,9 @@
 import Slider, {SliderBase} from '@enact/moonstone/Slider';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, number, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, number, select} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
@@ -9,11 +11,13 @@ import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('Slider', SliderBase, Slider);
 removeProps(Config, 'defaultPressed pressed');
 
-storiesOf('Slider')
-	.addWithInfo(
-		' ',
-		'Basic usage of Slider',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'Slider',
+		withInfo({
+			propTables: [Config],
+			text: 'Basic usage of Slider'
+		})(() => (
 			<Slider
 				activateOnFocus={boolean('activateOnFocus', false)}
 				backgroundProgress={number('backgroundProgress', SliderBase.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
@@ -32,6 +36,5 @@ storiesOf('Slider')
 				tooltipSide={select('tooltipSide', ['before', 'after'], 'after')}
 				vertical={nullify(boolean('vertical', false))}
 			/>
-		),
-		{propTables: [Config]}
+		))
 	);

@@ -3,16 +3,16 @@ import Item from '@enact/moonstone/Item';
 import ri from '@enact/ui/resolution';
 import Scroller from '@enact/moonstone/Scroller';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
-import {text, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {text, select} from '@storybook/addon-knobs';
 
 const
 	prop = {
 		tallText: {'नरेंद्र मोदी': 'नरेंद्र मोदी', 'ฟิ้  ไั  ஒ  து': 'ฟิ้  ไั  ஒ  து', 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ': 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ'}
 	};
 
-storiesOf('Divider')
-	.addWithInfo(
+storiesOf('Divider', module)
+	.add(
 		'with long text',
 		() => (
 			<Divider>
@@ -21,7 +21,7 @@ storiesOf('Divider')
 		)
 	)
 
-	.addWithInfo(
+	.add(
 		'with tall characters',
 		() => (
 			<Divider>
@@ -30,7 +30,7 @@ storiesOf('Divider')
 		)
 	)
 
-	.addWithInfo(
+	.add(
 		'with an element below',
 		() => (
 			<div>
@@ -49,7 +49,7 @@ storiesOf('Divider')
 		)
 	)
 
-	.addWithInfo(
+	.add(
 		'Multiple',
 		() => (
 			<div>
@@ -102,7 +102,7 @@ storiesOf('Divider')
 		)
 	)
 
-	.addWithInfo(
+	.add(
 		'Multiple Scroller',
 		() => (
 			<Scroller

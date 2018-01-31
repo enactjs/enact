@@ -6,12 +6,12 @@
 
 import kind from '@enact/core/kind';
 import {handle, forward} from '@enact/core/handle';
+import Touchable from '@enact/ui/Touchable';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
 import Skinnable from '../Skinnable';
-import Touchable from '../internal/Touchable';
 
 import css from './Switch.less';
 
