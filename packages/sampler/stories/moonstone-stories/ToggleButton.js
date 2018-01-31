@@ -1,7 +1,9 @@
 import ToggleButton, {ToggleButtonBase} from '@enact/moonstone/ToggleButton';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {text, boolean, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {text, boolean, select} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
@@ -13,11 +15,13 @@ const prop = {
 	backgroundOpacity: ['', 'translucent', 'transparent']
 };
 
-storiesOf('ToggleButton')
-	.addWithInfo(
-		' ',
-		'The basic ToggleButton',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'ToggleButton',
+		withInfo({
+			propTables: [Config],
+			text: 'The basic ToggleButton'
+		})(() => (
 			<ToggleButton
 				aria-label="toggle button"
 				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
@@ -30,6 +34,5 @@ storiesOf('ToggleButton')
 			>
 				Missing Toggle Label
 			</ToggleButton>
-		),
-		{propTables: [Config]}
+		))
 	);

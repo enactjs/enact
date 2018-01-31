@@ -73,9 +73,31 @@ const calcNumberValueOfPlaybackRate = (rate) => {
 	return (pbArray.length > 1) ? parseInt(pbArray[0]) / parseInt(pbArray[1]) : parseInt(rate);
 };
 
+/**
+ * Compares two source(s) of a video, mainly `src` and `type`.
+ *
+ * @param {Object|Array} source Source node(s)
+ * @param {Object|Array} nextSource Source node(s)
+ * @return {Boolean} true if two sources are the same
+ * @private
+ */
+const compareSources = (source, nextSource) => {
+	if (Array.isArray(source) !== Array.isArray(nextSource)) {
+		return false;
+	} else if (Array.isArray(source) && Array.isArray(nextSource)) {
+		return source.every((src, i) => {
+			return src.props.src === nextSource[i].props.src && src.props.type === nextSource[i].props.type;
+		});
+	} else if (nextSource.props.src === source.props.src && nextSource.props.type === source.props.type) {
+		return true;
+	} else {
+		return false;
+	}
+};
 
 export {
 	calcNumberValueOfPlaybackRate,
+	compareSources,
 	parseTime,
 	secondsToPeriod,
 	secondsToTime

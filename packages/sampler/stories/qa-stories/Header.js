@@ -1,11 +1,11 @@
 import {Header} from '@enact/moonstone/Panels';
 import SwitchItem from '@enact/moonstone/SwitchItem';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
-import {text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {text} from '@storybook/addon-knobs';
 
-storiesOf('Header')
-	.addWithInfo(
+storiesOf('Header', module)
+	.add(
 		'with RTL text',
 		() => (
 			<Header
@@ -16,7 +16,7 @@ storiesOf('Header')
 			/>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Compact type with long text and headerComponent',
 		() => (
 			<Header
@@ -30,7 +30,7 @@ storiesOf('Header')
 
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Standard type with long text and headerComponent',
 		() => (
 			<Header
