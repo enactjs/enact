@@ -1,14 +1,14 @@
 import ExpandableInput from '@enact/moonstone/ExpandableInput';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select, text} from '@storybook/addon-knobs';
 
 const iconNames = ['', ...Object.keys(icons)];
 
-storiesOf('ExpandableInput')
-	.addWithInfo(
-		' ',
+storiesOf('ExpandableInput', module)
+	.add(
 		'Long Placeholder',
 		() => (
 			<ExpandableInput

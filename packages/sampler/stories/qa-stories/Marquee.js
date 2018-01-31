@@ -1,9 +1,10 @@
 import {MarqueeController, MarqueeText} from '@enact/moonstone/Marquee';
 import Item from '@enact/moonstone/Item';
+import ri from '@enact/ui/resolution';
 import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
-import {boolean, number, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {boolean, number, select} from '@storybook/addon-knobs';
 import nullify from '../../src/utils/nullify.js';
 
 const SpottableMarquee = Spottable(MarqueeText);
@@ -26,15 +27,15 @@ const RTL = [
 
 const disabledDisclaimer = (disabled) => (disabled ? <p style={{fontSize: '70%', fontStyle: 'italic'}}><sup>*</sup>MarqueeText does not visually respond to <code>disabled</code> state.</p> : <p />);
 
-storiesOf('Marquee')
-	.addWithInfo(
+storiesOf('Marquee', module)
+	.add(
 		'LTR',
 		() => {
 			const disabled = nullify(boolean('disabled', false));
 			return (
 				<section>
 					<MarqueeText
-						style={{width: '400px'}}
+						style={{width: ri.unit(399, 'rem')}}
 						disabled={disabled}
 						marqueeDelay={number('marqueeDelay', 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', false)}
@@ -51,14 +52,14 @@ storiesOf('Marquee')
 		}
 	)
 
-	.addWithInfo(
+	.add(
 		'RTL',
 		() => {
 			const disabled = nullify(boolean('disabled', false));
 			return (
 				<section>
 					<MarqueeText
-						style={{width: '400px'}}
+						style={{width: ri.unit(399, 'rem')}}
 						disabled={disabled}
 						marqueeDelay={number('marqueeDelay', 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', false)}
@@ -75,12 +76,12 @@ storiesOf('Marquee')
 		}
 	)
 
-	.addWithInfo(
+	.add(
 		'Synchronized',
 		() => {
 			const disabled = nullify(boolean('disabled', false));
 			return (
-				<Controller style={{width: '400px'}}>
+				<Controller style={{width: ri.unit(399, 'rem')}}>
 					{LTR.map((children, index) => (
 						<MarqueeText
 							disabled={disabled}
@@ -101,18 +102,18 @@ storiesOf('Marquee')
 		}
 	)
 
-	.addWithInfo(
+	.add(
 		'On Focus',
 		() => (
 			<div>
 				<Item
-					style={{width: '400px'}}
+					style={{width: ri.unit(399, 'rem')}}
 					marqueeOn="focus"
 				>
 					{LTR[0]}
 				</Item>
 				<SpottableMarquee
-					style={{width: '400px'}}
+					style={{width: ri.unit(399, 'rem')}}
 					marqueeOn="focus"
 				>
 					{LTR[0]}
@@ -121,12 +122,12 @@ storiesOf('Marquee')
 		)
 	)
 
-	.addWithInfo(
+	.add(
 		'Restart Marquee when Marquee completes',
 		() => (
 			<SpottableDiv>
 				<MarqueeText
-					style={{width: '400px'}}
+					style={{width: ri.unit(399, 'rem')}}
 					disabled={false}
 					marqueeDelay={1000}
 					marqueeDisabled={false}
@@ -138,7 +139,7 @@ storiesOf('Marquee')
 					{'The quick brown fox.'}
 				</MarqueeText>
 				<MarqueeText
-					style={{width: '400px'}}
+					style={{width: ri.unit(399, 'rem')}}
 					disabled={false}
 					marqueeDelay={1000}
 					marqueeDisabled={false}
