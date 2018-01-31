@@ -23,6 +23,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
 - `ui/Layout` prop `align` to support setting horizontal and vertical alignment in one prop, separated by a space
 - `ui/Toggleable` to use 'selected' as its default prop, rather than 'active', since 'selected' is by far the most common use case
+- `ui/Touchable` to use global gesture configuration with instance override rather than component-level configuration via HOC configs with instance override
 
 ### Fixed
 
