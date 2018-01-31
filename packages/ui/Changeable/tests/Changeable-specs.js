@@ -164,6 +164,7 @@ describe('Changeable', () => {
 		);
 
 		subject.find(DivComponent).prop('onChange')({value: 1});
+		subject.update();
 
 		const expected = 1;
 		const actual = subject.find(DivComponent).prop('value');

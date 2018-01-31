@@ -1,9 +1,8 @@
 import kind from '@enact/core/kind';
+import Touchable from '@enact/ui/Touchable';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import Touchable from '../internal/Touchable';
 
 import css from './VideoPlayer.less';
 

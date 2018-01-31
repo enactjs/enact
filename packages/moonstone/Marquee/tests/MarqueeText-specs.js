@@ -68,6 +68,7 @@ describe('MarqueeText', () => {
 		);
 
 		subject.setProps({children: rtlText});
+		subject.update();
 
 		const expected = 'rtl';
 		const actual = subject.find(`.${css.text}`).prop('style');
@@ -81,6 +82,7 @@ describe('MarqueeText', () => {
 		);
 
 		subject.setProps({children: rtlText});
+		subject.update();
 
 		const expected = 'ltr';
 		const actual = subject.find(`.${css.text}`).prop('style');

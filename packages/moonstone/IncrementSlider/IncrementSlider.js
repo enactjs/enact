@@ -11,6 +11,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
+import Touchable from '@enact/ui/Touchable';
 import Spottable from '@enact/spotlight/Spottable';
 
 import IdProvider from '../internal/IdProvider';
@@ -19,7 +20,6 @@ import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator
 import Skinnable from '../Skinnable';
 import {SliderBaseFactory} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
-import Touchable from '../internal/Touchable';
 
 import IncrementSliderButton from './IncrementSliderButton';
 import componentCss from './IncrementSlider.less';

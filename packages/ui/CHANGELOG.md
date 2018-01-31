@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Touchable` to use global gesture configuration with instance override rather than component-level configuration via HOC configs with instance override
+
 ## [2.0.0-alpha.3] - 2018-01-18
 
 ### Added
