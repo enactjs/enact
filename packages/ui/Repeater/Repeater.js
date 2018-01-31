@@ -77,13 +77,17 @@ const RepeaterBase = kind({
 	computed: {
 		children: ({childComponent: Component, children, childProp, indexProp, itemProps}) => {
 			return children.map((data, index) => {
-				let props;
+				let props = {};
 				if (typeof data === 'object') {
 					props = {...itemProps, ...data};
 				} else if (childProp) {
 					props = {...itemProps, [childProp]: data};
 				}
 				if (indexProp) props[indexProp] = index;
+
+				// "props" isn't referring to Repeater's render props here
+				// eslint-disable-next-line enact/prop-types
+				props.key = props.key || index;
 
 				return <Component {...props} />;
 			});

@@ -117,7 +117,7 @@ describe('Router', () => {
 		);
 
 		const expected = JSON.stringify(routes);
-		const actual = JSON.stringify(subject.get(0).routes);
+		const actual = JSON.stringify(subject.instance().routes);
 
 		expect(actual).to.equal(expected);
 	});
@@ -158,9 +158,10 @@ describe('Router', () => {
 				<Route path="app" component={NewView} />
 			]
 		});
+		subject.update();
 
 		const expected = NewView;
-		const actual = subject.childAt(0).type();
+		const actual = subject.childAt(0).childAt(0).type();
 
 		expect(actual).to.equal(expected);
 	});
