@@ -22,6 +22,7 @@ import InputDecoratorIcon from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
 
 import VoiceControl from '@enact/webos/VoiceControl';
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
 
 const calcAriaLabel = function (title, type, value = '') {
 	const hint = $L('Input field');
@@ -293,6 +294,13 @@ const Input = Pure(
 	)
 );
 
+const VoiceInput2 = VoiceControlDecorator({
+	voiceSlot: [
+		{voiceIntent: 'input', voiceLabel: 'tvname', onVoice: () => console.log("voice input!!!!!")},
+		{voiceIntent: 'input', voiceLabel: 'tvname2', onVoice: 'onChange'}
+	]
+}, Input);
+
 class VoiceInput extends React.Component {
 	constructor (props) {
 		super(props);
@@ -349,5 +357,6 @@ export {
 	calcAriaLabel,
 	Input,
 	InputBase,
-	VoiceInput
+	VoiceInput,
+	VoiceInput2
 };
