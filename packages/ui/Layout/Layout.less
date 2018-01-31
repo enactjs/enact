@@ -70,7 +70,15 @@
 	.cell {
 		:global(.debug)&,
 		:global(.debug) & {
-			outline: 1px dashed orange;
+			outline: 1px dashed red;
 		}
 	}
+	& .cell {                :global(.debug) & { outline-color: red; }}
+	& & .cell {              :global(.debug) & { outline-color: orange; }}
+	& & & .cell {            :global(.debug) & { outline-color: yellow; }}
+	& & & & .cell {          :global(.debug) & { outline-color: lime; }}
+	& & & & & .cell {        :global(.debug) & { outline-color: cyan; }}
+	& & & & & & .cell {      :global(.debug) & { outline-color: blue; }}
+	& & & & & & & .cell {    :global(.debug) & { outline-color: violet; }}
+	& & & & & & & & .cell {  :global(.debug) & { outline-color: lightslategray; }}
 }
