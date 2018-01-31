@@ -11,7 +11,6 @@
 	// -webkit-line-clamp: 1;
 
 	width: auto;
-	text-overflow: ellipsis;
 	white-space: pre !important;
 	overflow: hidden;
 	text-align: left;
@@ -23,10 +22,11 @@
 		width: 100%;
 		white-space: pre !important;
 		position: relative;
-		left: 0px;
+		will-change: left, right;
+		transition-property: left, right;
+		transition-timing-function: linear;
 
 		&.animate {
-			text-overflow: clip;
 			overflow: visible;
 		}
 	}
