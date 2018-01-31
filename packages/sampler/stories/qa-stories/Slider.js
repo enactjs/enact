@@ -6,8 +6,8 @@ import Slider from '@enact/moonstone/Slider';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {storiesOf} from '@kadira/storybook';
-import {withKnobs, number} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {withKnobs, number} from '@storybook/addon-knobs';
 
 class SliderList extends React.Component {
 
@@ -100,9 +100,9 @@ class SliderList extends React.Component {
 	}
 }
 
-storiesOf('Slider')
+storiesOf('Slider', module)
 	.addDecorator(withKnobs)
-	.addWithInfo(
+	.add(
 		'Add and Remove ',
 		() => {
 			const itemSize = ri.scale(number('itemSize', 72));
@@ -111,4 +111,3 @@ storiesOf('Slider')
 			);
 		}
 	);
-

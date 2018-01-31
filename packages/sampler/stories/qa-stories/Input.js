@@ -1,8 +1,9 @@
 import {icons} from '@enact/moonstone/Icon';
 import {Input, InputBase} from '@enact/moonstone/Input';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select, text} from '@storybook/addon-knobs';
 
 const iconNames = ['', ...Object.keys(icons)];
 
@@ -17,8 +18,8 @@ const inputData = {
 	type: ['text', 'number', 'password']
 };
 
-storiesOf('Input')
-	.addWithInfo(
+storiesOf('Input', module)
+	.add(
 		'with long text',
 		() => (
 			<Input
@@ -36,7 +37,7 @@ storiesOf('Input')
 			/>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with long placeholder',
 		() => (
 			<Input
@@ -53,7 +54,7 @@ storiesOf('Input')
 			/>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with tall characters',
 		() => (
 			<div>
@@ -93,7 +94,7 @@ storiesOf('Input')
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with extra spacing',
 		() => (
 			<Input
@@ -109,7 +110,7 @@ storiesOf('Input')
 			/>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with RTL and LTR text together',
 		() => (
 			<Input
@@ -125,7 +126,7 @@ storiesOf('Input')
 			/>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'5 way test',
 		() => (
 			<div>
@@ -180,7 +181,7 @@ storiesOf('Input')
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with a range',
 		() => (
 			<Input
@@ -192,22 +193,6 @@ storiesOf('Input')
 				noDecorator={boolean('noDecorator')}
 				type={inputData.type[1]}
 				defaultValue={inputData.initialNumericValue}
-			/>
-		)
-	)
-	.addWithInfo(
-		'with long placeholder',
-		() => (
-			<Input
-				onChange={action('onChange')}
-				disabled={boolean('disabled')}
-				iconAfter={select('iconAfter', iconNames)}
-				iconBefore={select('iconBefore', iconNames)}
-				invalid={boolean('invalid', false)}
-				invalidMessage={text('invalidMessage', InputBase.defaultProps.invalidMessage)}
-				noDecorator={boolean('noDecorator')}
-				placeholder={text('placeholder', inputData.longText)}
-				type={select('type', inputData.type, inputData.type[0])}
 			/>
 		)
 	)

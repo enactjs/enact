@@ -1,7 +1,8 @@
 import ToggleButton from '@enact/moonstone/ToggleButton';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {text, boolean, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {text, boolean, select} from '@storybook/addon-knobs';
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -9,8 +10,8 @@ const prop = {
 	tallText:{'ิ้  ไั  ஒ  து': 'ิ้  ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'}
 };
 
-storiesOf('ToggleButton')
-	.addWithInfo(
+storiesOf('ToggleButton', module)
+	.add(
 		'with long text',
 		() => (
 			<ToggleButton
@@ -24,7 +25,7 @@ storiesOf('ToggleButton')
 			/>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with tall characters',
 		() => (
 			<ToggleButton

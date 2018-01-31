@@ -1,9 +1,9 @@
 import IncrementSliderDelayValue from './components/IncrementSliderDelayValue';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
+import {storiesOf} from '@storybook/react';
 
-storiesOf('IncrementSlider')
-	.addWithInfo(
+storiesOf('IncrementSlider', module)
+	.add(
 		'PLAT-28221',
 		() => (
 			<div>
