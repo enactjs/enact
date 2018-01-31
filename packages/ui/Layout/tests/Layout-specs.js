@@ -18,7 +18,7 @@ describe('Layout Specs', () => {
 			);
 
 			const expected = resolved;
-			const actual = wrapped.find(`.${css.layout}`).node.style.alignItems;
+			const actual = wrapped.find(`.${css.layout}`).prop('style').alignItems;
 
 			expect(actual).to.contain(expected);
 		});
@@ -30,7 +30,7 @@ describe('Layout Specs', () => {
 		);
 
 		const expected = true;
-		const actual = wrapped.hasClass(css.inline);
+		const actual = wrapped.find(`.${css.layout}`).hasClass(css.inline);
 
 		expect(actual).to.equal(expected);
 	});
@@ -51,7 +51,7 @@ describe('Layout Specs', () => {
 				);
 
 				const expected = true;
-				const actual = wrapped.hasClass(css[value]);
+				const actual = wrapped.find(`.${css.layout}`).hasClass(css[value]);
 
 				expect(actual).to.equal(expected);
 			});
@@ -73,7 +73,7 @@ describe('Layout Specs', () => {
 			);
 
 			const expected = true;
-			const actual = wrapped.hasClass(css[prop]);
+			const actual = wrapped.find(`.${css.cell}`).hasClass(css[prop]);
 
 			expect(actual).to.equal(expected);
 		});
@@ -94,7 +94,7 @@ describe('Layout Specs', () => {
 				);
 
 				const expected = value;
-				const actual = wrapped.find(`.${css.cell}`).node.style.flexBasis;
+				const actual = wrapped.find(`.${css.cell}`).prop('style').flexBasis;
 
 				expect(actual).to.contain(expected);
 			});

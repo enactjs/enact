@@ -9,7 +9,7 @@ are encouraged to check for updates when you begin a new Enact project.
 
 ## Applications
 
-Developers are strongly encouraged to use the [`enact-dev` tools](https://github.com/enyojs/enact-dev) to create a starting
+Developers are strongly encouraged to use the [`enact cli` tools](https://github.com/enyojs/enact-cli) to create a starting
 application.
 
 As part of the release of an application, use `npm shrinkwrap` (<a href="https://docs.npmjs.com/cli/shrinkwrap">https://docs.npmjs.com/cli/shrinkwrap</a>)
@@ -20,7 +20,7 @@ presents a brief article explaining why and when to use `npm shrinkwrap`.
 
 ## Code Conventions
 
-An `enact-dev`-created project also provides linting (`npm run lint`) to statically analyze your code.  Additionally, the Enact programming conventions are provided as a separate [module](https://github.com/enyojs/eslint-config-enact) (also included in `enact-dev`-created projects).  Developers are encouraged to enable in-editor analysis of their code to catch potential issues as early as possible.  The module documentation details how to set up various editors.
+An `enact cli`-created project also provides linting (`npm run lint`) to statically analyze your code.  Additionally, the Enact programming conventions are provided as a separate [module](https://github.com/enyojs/eslint-config-enact) (also included in `enact cli`-created projects).  Developers are encouraged to enable in-editor analysis of their code to catch potential issues as early as possible.  The module documentation details how to set up various editors.
 
 ## Components
 

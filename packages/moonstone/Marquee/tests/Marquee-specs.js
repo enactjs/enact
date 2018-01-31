@@ -43,7 +43,7 @@ describe('Marquee', () => {
 		);
 
 		const actual = subject.childAt(0).prop('style');
-		expect(actual).to.have.property('transition');
+		expect(actual).to.have.property('transitionDuration');
 	});
 
 	it('should set RTL direction in LTR context when the text directionality is RTL', function () {
@@ -68,25 +68,21 @@ describe('Marquee', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have negative translate for LTR text', function () {
+	it('should transition from the right with LTR text', function () {
 		const subject = shallow(
 			<Marquee animating distance={100} />
 		);
 
-		// Testing for a negative number after transform3d(
-		const expected = true;
-		const actual = subject.childAt(0).prop('style').transform.indexOf('-') >= 0;
-		expect(actual).to.equal(expected);
+		const actual = subject.childAt(0).prop('style');
+		expect(actual).to.have.property('right');
 	});
 
-	it('should have positive translate for RTL text', function () {
+	it('should transition from the left with RTL text', function () {
 		const subject = shallow(
 			<Marquee animating distance={100} rtl />
 		);
 
-		// Testing for a positive number after transform3d(
-		const expected = true;
-		const actual = subject.childAt(0).prop('style').transform.indexOf('-') === -1;
-		expect(actual).to.equal(expected);
+		const actual = subject.childAt(0).prop('style');
+		expect(actual).to.have.property('left');
 	});
 });

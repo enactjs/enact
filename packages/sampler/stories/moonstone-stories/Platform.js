@@ -1,7 +1,8 @@
 import React from 'react';
 import platform from '@enact/core/platform';
 import webosPlatform from '@enact/webos/platform';
-import {storiesOf} from '@kadira/storybook';
+import {storiesOf} from '@storybook/react';
+import {withInfo} from '@storybook/addon-info';
 
 const {gesture, platformName, touch} = platform;
 const version = platform[platformName];
@@ -16,11 +17,10 @@ const deviceType = () => {
 	return device;
 };
 
-storiesOf('Platform')
-	.addWithInfo(
-		' ',
-		'Detection',
-		() => (
+storiesOf('Core', module)
+	.add(
+		'Platform',
+		withInfo('Detection')(() => (
 			<div>
 				Detected: {platformName} {platform.webos ? `(${deviceType()})` : ''}
 				<br />
@@ -30,6 +30,5 @@ storiesOf('Platform')
 				<br />
 				Touch support: {touch ? 'true' : 'false'}
 			</div>
-		)
+		))
 	);
-
