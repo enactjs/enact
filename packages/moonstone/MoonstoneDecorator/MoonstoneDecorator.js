@@ -18,6 +18,7 @@ import I18nFontDecorator from './I18nFontDecorator';
 import AccessibilityDecorator from './AccessibilityDecorator';
 import screenTypes from './screenTypes.json';
 import css from './MoonstoneDecorator.less';
+import {configure} from '@enact/ui/Touchable';
 
 /**
  * Default config for {@link moonstone/MoonstoneDecorator.MoonstoneDecorator}.
@@ -95,6 +96,15 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		],
 		pointerHide: 1537,
 		pointerShow: 1536
+	});
+
+	// configure the default hold time
+	configure({
+		hold: {
+			events: [
+				{name: 'hold', time: 400}
+			]
+		}
 	});
 
 	const Decorator = class extends React.Component {

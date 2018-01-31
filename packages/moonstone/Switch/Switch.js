@@ -23,7 +23,6 @@ import Skinnable from '../Skinnable';
 
 import css from './Switch.less';
 
-
 /**
  * Renders the base level DOM structure of the component.
  *
