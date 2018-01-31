@@ -1278,7 +1278,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			// Non-standard state computed from properties
 			proportionLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration,
-			proportionPlayed: el.currentTime / el.duration,
+			proportionPlayed: el.currentTime / el.duration || 0,
 			error: el.networkState === el.NETWORK_NO_SOURCE,
 			loading: el.readyState < el.HAVE_ENOUGH_DATA,
 			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime
