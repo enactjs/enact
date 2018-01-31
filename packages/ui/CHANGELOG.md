@@ -14,6 +14,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Changed
 
 - `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
+- `ui/Touchable` to use global gesture configuration with instance override rather than component-level configuration via HOC configs with instance override
 
 ### Fixed
 
