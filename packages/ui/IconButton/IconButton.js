@@ -1,6 +1,8 @@
 /**
- * Provides unstyled button icon components and behaviors to be customized by a theme or
- * application.
+ * An [Icon]{@link ui/Icon.Icon} that acts like a [Button]{@link ui/Button.Button}.
+ * You may specify an image or a font-based icon by setting the `children` to either the path
+ * to the image or a string from an [iconList]{@link ui/Icon.IconBase.iconList}. This is unstyled,
+ * but can easily be extended and customized by a theme or application.
  *
  * @module ui/IconButton
  * @exports IconButton
@@ -17,7 +19,7 @@ import Touchable from '../Touchable';
 import componentCss from './IconButton.less';
 
 /**
- * [IconButton]{@link ui/IconButton.IconButtonBase} is a ui-styled button without any behavior.
+ * A ui-styled button without any behavior.
  *
  * @class IconButtonBase
  * @memberof ui/IconButton
@@ -163,8 +165,7 @@ const IconButtonBase = kind({
 
 
 /**
- * [IconButtonDecorator]{@link ui/IconButton.IconButtonDecorator} adds ui-specific button behaviors to an
- * [IconButton]{@link ui/IconButton.IconButtonBase}.
+ * Adds universal button behaviors to an [IconButtonBase]{@link ui/IconButton.IconButtonBase}.
  *
  * @hoc
  * @memberof ui/IconButton
@@ -174,9 +175,7 @@ const IconButtonBase = kind({
 const IconButtonDecorator = Touchable({activeProp: 'pressed'});
 
 /**
- * [IconButton]{@link ui/IconButton.IconButton} is an [Icon]{@link ui/Icon.Icon} that acts like a
- * button.  You may specify an image or a font-based icon by setting the children to either the path
- * to the image or a string from its [iconList]{@link ui/Icon.IconBase.iconList}.
+ * A minimally styled, but interactable, Button ready for customization by a theme.
  *
  * Usage:
  * ```

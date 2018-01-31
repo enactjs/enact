@@ -17,8 +17,7 @@ import Touchable from '../Touchable';
 import componentCss from './Button.less';
 
 /**
- * [ButtonBase]{@link ui/Button.ButtonBase} is a basic button component structure without any behaviors
- * applied to it.
+ * A basic button component structure without any behaviors applied to it.
  *
  * @class ButtonBase
  * @memberof ui/Button
@@ -181,8 +180,7 @@ const ButtonBase = kind({
 });
 
 /**
- * [ButtonDecorator]{@link ui/Button.ButtonDecorator} adds touch support to a
- * [Button]{@link ui/Button.Button}
+ * Adds touch support to a [ButtonBase]{@link ui/Button.ButtonBase}.
  *
  * @hoc
  * @memberof ui/Button
@@ -192,7 +190,7 @@ const ButtonBase = kind({
 const ButtonDecorator = Touchable({activeProp: 'pressed'});
 
 /**
- * [Button]{@link ui/Button.Button} is minimally-styled button component with touch support.
+ * A is minimally-styled button component with touch support.
  *
  * @class Button
  * @extends ui/Button.ButtonBase
