@@ -9,10 +9,10 @@ import {handle, forward} from '@enact/core/handle';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
+import Touchable from '@enact/ui/Touchable';
 
 import Icon from '../Icon';
 import Skinnable from '../Skinnable';
-import Touchable from '../internal/Touchable';
 
 import css from './Checkbox.less';
 

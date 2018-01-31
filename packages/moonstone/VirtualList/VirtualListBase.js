@@ -186,6 +186,7 @@ class VirtualListCore extends Component {
 
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContainerRef = this.initRef('containerRef');
+		this.initItemContainerRef = this.initRef('itemContainerRef');
 	}
 
 	componentWillMount () {
@@ -283,6 +284,7 @@ class VirtualListCore extends Component {
 	isScrolledBy5way = false
 
 	containerRef = null
+	itemContainerRef = null
 
 	// spotlight
 	nodeIndexToBeFocused = null
@@ -624,9 +626,7 @@ class VirtualListCore extends Component {
 	}
 
 	applyStyleToExistingNode = (index, ...rest) => {
-		const
-			{numOfItems} = this.state,
-			node = this.containerRef.children[index % numOfItems];
+		const node = this.getItemNode(index);
 
 		if (node) {
 			this.composeStyle(node.style, ...rest);
@@ -649,26 +649,40 @@ class VirtualListCore extends Component {
 		this.composeStyle(style, ...rest);
 
 		this.cc[key] = React.cloneElement(itemElement, {
-			ref: (index === this.nodeIndexToBeFocused) ? (ref) => this.focusOnNode(ref, index) : null,
+			ref: (index === this.nodeIndexToBeFocused) ? (ref) => this.initItemRef(ref, index) : null,
 			className: classNames(css.listItem, itemElement.props.className),
 			style: {...itemElement.props.style, ...style}
 		});
 	}
 
-	focusOnNode = (ref, index) => {
-		if (ref) {
-			const node = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
-
-			if (Spotlight.isPaused()) {
-				Spotlight.resume();
-				this.forceUpdate();
-			}
-
-			if (node) {
-				Spotlight.focus(node);
-			}
-			this.nodeIndexToBeFocused = null;
+	focusOnNode = (node) => {
+		if (node) {
+			Spotlight.focus(node);
 		}
+	}
+
+	focusOnItem = (index) => {
+		const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
+
+		if (Spotlight.isPaused()) {
+			Spotlight.resume();
+			this.forceUpdate();
+		}
+		this.focusOnNode(item);
+		this.nodeIndexToBeFocused = null;
+	}
+
+	initItemRef = (ref, index) => {
+		if (ref) {
+			this.focusOnItem(index);
+		}
+	}
+
+	focusByIndex = (index) => {
+		// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
+		setTimeout(() => {
+			this.focusOnItem(index);
+		}, 0);
 	}
 
 	applyStyleToHideNode = (index) => {
@@ -772,8 +786,7 @@ class VirtualListCore extends Component {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
 			if (numOfItems > 0 && focusedIndex % numOfItems !== this.lastFocusedIndex % numOfItems) {
-				const node = this.containerRef.children[this.lastFocusedIndex % numOfItems];
-				node.blur();
+				this.getItemNode(this.lastFocusedIndex).blur();
 			}
 			this.nodeIndexToBeFocused = null;
 			this.lastFocusedIndex = focusedIndex;
@@ -1120,6 +1133,8 @@ class VirtualListCore extends Component {
 		return false;
 	}
 
+	getItemNode = (index) => (this.itemContainerRef.children[index % this.state.numOfItems])
+
 	// render
 
 	initRef (prop) {
@@ -1153,7 +1168,7 @@ class VirtualListCore extends Component {
 
 		return (
 			<div {...props} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
-				{cc.length ? cc : null}
+				{cc.length ? <div ref={this.initItemContainerRef}>{cc}</div> : null}
 				{primary ? null : (
 					<SpotlightPlaceholder
 						data-index={0}
