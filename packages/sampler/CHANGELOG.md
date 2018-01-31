@@ -4,13 +4,13 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ## [unreleased]
 
-### Deprecated
-
-### Added
-
 ### Changed
 
-### Fixed
+- samples to be organized by library and removed background selector
+
+## [2.0.0-alpha.3] - 2018-01-18
+
+No significant changes.
 
 ## [2.0.0-alpha.2] - 2017-08-29
 
