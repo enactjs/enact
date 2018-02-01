@@ -6,17 +6,16 @@
  * Not a jsdoc module def on purpose. Exported elsewhere.
  */
 
+import Icon from '@enact/moonstone/Icon';
+import {Image} from '@enact/moonstone/Image';
 import kind from '@enact/core/kind';
+import {MarqueeController, MarqueeText} from '@enact/moonstone/Marquee';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Skinnable from '@enact/moonstone/Skinnable';
 import Spottable from '@enact/spotlight/Spottable';
 
-import Icon from '../Icon';
-import {Image} from '../Image';
-import {MarqueeController, MarqueeText} from '../Marquee';
-import Skinnable from '../Skinnable';
-
-import css from './GridListImageItem.less';
+import css from '@enact/moonstone/VirtualList/GridListImageItem.less';
 
 const defaultPlaceholder =
 	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +

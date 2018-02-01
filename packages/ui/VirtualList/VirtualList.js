@@ -1,10 +1,10 @@
 /**
- * Exports the {@link ui/VirtualList.VirtualList},
- * {@link ui/VirtualList.VirtualGridList}, and
- * {@link ui/VirtualList.GridListImageItem} components.
- * The default export is {@link ui/VirtualList.VirtualList}.
+ * Exports the {@link moonstone/VirtualList.VirtualList},
+ * {@link moonstone/VirtualList.VirtualGridList}, and
+ * {@link moonstone/VirtualList.GridListImageItem} components.
+ * The default export is {@link moonstone/VirtualList.VirtualList}.
  *
- * @module ui/VirtualList
+ * @module moonstone/VirtualList
  */
 
 import kind from '@enact/core/kind';
@@ -14,17 +14,17 @@ import PropTypes from 'prop-types';
 import VirtualListBase, {gridListItemSizeShape} from './VirtualListBase';
 
 /**
- * {@link ui/VirtualList.VirtualList} is a VirtualList.
+ * {@link moonstone/VirtualList.VirtualList} is a VirtualList with Moonstone styling.
  *
  * @class VirtualList
- * @memberof ui/VirtualList
+ * @memberof moonstone/VirtualList
  * @ui
  * @public
  */
 const VirtualList = kind({
-	name: 'VirtualList',
+	name: 'ui:VirtualList',
 
-	propTypes: /** @lends ui/VirtualList.VirtualList.prototype */ {
+	propTypes: /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 		/**
 		 * The render function for an item of the list.
 		 * `index` is for accessing the index of the item.
@@ -34,7 +34,7 @@ const VirtualList = kind({
 		 * @name component
 		 * @type {Function}
 		 * @required
-		 * @memberof ui/VirtualList.VirtualList
+		 * @memberof moonstone/VirtualList.VirtualList
 		 * @instance
 		 * @public
 		 */
@@ -70,6 +70,8 @@ const VirtualList = kind({
 		 * - {node} - You can set a node to scroll
 		 * - {animate} - When `true`, scroll occurs with animation.
 		 *   Set it to `false` if you want scrolling without animation.
+		 * - {focus} - Set `true` if you want the item to be focused after scroll.
+		 *   This option is only valid when you scroll by `index` or `node`.
 		 *
 		 * Example:
 		 * ````
@@ -81,7 +83,7 @@ const VirtualList = kind({
 		 *
 		 * @name cbScrollTo
 		 * @type {Function}
-		 * @memberof ui/VirtualList.VirtualList
+		 * @memberof moonstone/VirtualList.VirtualList
 		 * @instance
 		 * @public
 		 */
@@ -93,7 +95,7 @@ const VirtualList = kind({
 		 * @name data
 		 * @type {Any}
 		 * @default []
-		 * @memberof ui/VirtualList.VirtualList
+		 * @memberof moonstone/VirtualList.VirtualList
 		 * @instance
 		 * @public
 		 */
@@ -104,7 +106,7 @@ const VirtualList = kind({
 		 * @name dataSize
 		 * @type {Number}
 		 * @default 0
-		 * @memberof ui/VirtualList.VirtualList
+		 * @memberof moonstone/VirtualList.VirtualList
 		 * @instance
 		 * @public
 		 */
@@ -115,7 +117,18 @@ const VirtualList = kind({
 		 * @name direction
 		 * @type {String}
 		 * @default 'vertical'
-		 * @memberof ui/VirtualList.VirtualList
+		 * @memberof moonstone/VirtualList.VirtualList
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
+		 * not move focus to the scrollbar controls.
+		 *
+		 * @name focusableScrollbar
+		 * @type {Boolean}
+		 * @memberof moonstone/VirtualList.VirtualList
 		 * @instance
 		 * @public
 		 */
@@ -126,8 +139,8 @@ const VirtualList = kind({
 		 *
 		 * @name horizontalScrollbar
 		 * @type {String}
-		 * @default 'hidden'
-		 * @memberof ui/VirtualList.VirtualList
+		 * @default 'auto'
+		 * @memberof moonstone/VirtualList.VirtualList
 		 * @instance
 		 * @public
 		 */
@@ -137,7 +150,7 @@ const VirtualList = kind({
 		 *
 		 * @name onScroll
 		 * @type {Function}
-		 * @memberof ui/VirtualList.VirtualList
+		 * @memberof moonstone/VirtualList.VirtualList
 		 * @instance
 		 * @public
 		 */
@@ -147,7 +160,7 @@ const VirtualList = kind({
 		 *
 		 * @name onScrollStart
 		 * @type {Function}
-		 * @memberof ui/VirtualList.VirtualList
+		 * @memberof moonstone/VirtualList.VirtualList
 		 * @instance
 		 * @public
 		 */
@@ -157,7 +170,7 @@ const VirtualList = kind({
 		 *
 		 * @name onScrollStop
 		 * @type {Function}
-		 * @memberof ui/VirtualList.VirtualList
+		 * @memberof moonstone/VirtualList.VirtualList
 		 * @instance
 		 * @public
 		 */
@@ -168,7 +181,7 @@ const VirtualList = kind({
 		 * @name spacing
 		 * @type {Number}
 		 * @default 0
-		 * @memberof ui/VirtualList.VirtualList
+		 * @memberof moonstone/VirtualList.VirtualList
 		 * @instance
 		 * @public
 		 */
@@ -179,8 +192,8 @@ const VirtualList = kind({
 		 *
 		 * @name verticalScrollbar
 		 * @type {String}
-		 * @default 'hidden'
-		 * @memberof ui/VirtualList.VirtualList
+		 * @default 'auto'
+		 * @memberof moonstone/VirtualList.VirtualList
 		 * @instance
 		 * @public
 		 */
@@ -190,17 +203,17 @@ const VirtualList = kind({
 });
 
 /**
- * {@link ui/VirtualList.VirtualGridList} is a VirtualGridList.
+ * {@link moonstone/VirtualList.VirtualGridList} is a VirtualGridList with Moonstone styling.
  *
  * @class VirtualGridList
- * @memberof ui/VirtualList
+ * @memberof moonstone/VirtualList
  * @ui
  * @public
  */
 const VirtualGridList = kind({
-	name: 'VirtualGridList',
+	name: 'ui:VirtualGridList',
 
-	propTypes: /** @lends ui/VirtualList.VirtualGridList.prototype */ {
+	propTypes: /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
 		/**
 		 * The render function for an item of the list.
 		 * `index` is for accessing the index of the item.
@@ -210,7 +223,7 @@ const VirtualGridList = kind({
 		 * @name component
 		 * @type {Function}
 		 * @required
-		 * @memberof ui/VirtualList.VirtualGridList
+		 * @memberof moonstone/VirtualList.VirtualGridList
 		 * @instance
 		 * @public
 		 */
@@ -224,7 +237,7 @@ const VirtualGridList = kind({
 		 * <VirtualGridList itemSize={{minWidth: ri.scale(180), minHeight: ri.scale(270)}}/>
 		 * ```
 		 *
-		 * @type {ui/VirtualList.gridListItemSizeShape}
+		 * @type {moonstone/VirtualList.gridListItemSizeShape}
 		 * @required
 		 * @public
 		 */
@@ -245,6 +258,8 @@ const VirtualGridList = kind({
 		 * - {node} - You can set a node to scroll
 		 * - {animate} - When `true`, scroll occurs with animation.
 		 *   Set it to `false` if you want scrolling without animation.
+		 * - {focus} - Set `true` if you want the item to be focused after scroll.
+		 *   This option is only valid when you scroll by `index` or `node`.
 		 *
 		 * Example:
 		 *	// If you set cbScrollTo prop like below;
@@ -255,7 +270,7 @@ const VirtualGridList = kind({
 		 *
 		 * @name cbScrollTo
 		 * @type {Function}
-		 * @memberof ui/VirtualList.VirtualGridList
+		 * @memberof moonstone/VirtualList.VirtualGridList
 		 * @instance
 		 * @public
 		 */
@@ -267,7 +282,7 @@ const VirtualGridList = kind({
 		 * @name data
 		 * @type {Any}
 		 * @default []
-		 * @memberof ui/VirtualList.VirtualGridList
+		 * @memberof moonstone/VirtualList.VirtualGridList
 		 * @instance
 		 * @public
 		 */
@@ -278,7 +293,7 @@ const VirtualGridList = kind({
 		 * @name dataSize
 		 * @type {Number}
 		 * @default 0
-		 * @memberof ui/VirtualList.VirtualGridList
+		 * @memberof moonstone/VirtualList.VirtualGridList
 		 * @instance
 		 * @public
 		 */
@@ -289,7 +304,18 @@ const VirtualGridList = kind({
 		 * @name direction
 		 * @type {String}
 		 * @default 'vertical'
-		 * @memberof ui/VirtualList.VirtualGridList
+		 * @memberof moonstone/VirtualList.VirtualGridList
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
+		 * not move focus to the scrollbar controls.
+		 *
+		 * @name focusableScrollbar
+		 * @type {Boolean}
+		 * @memberof moonstone/VirtualList.VirtualGridList
 		 * @instance
 		 * @public
 		 */
@@ -300,8 +326,8 @@ const VirtualGridList = kind({
 		 *
 		 * @name horizontalScrollbar
 		 * @type {String}
-		 * @default 'hidden'
-		 * @memberof ui/VirtualList.VirtualGridList
+		 * @default 'auto'
+		 * @memberof moonstone/VirtualList.VirtualGridList
 		 * @instance
 		 * @public
 		 */
@@ -311,7 +337,7 @@ const VirtualGridList = kind({
 		 *
 		 * @name onScroll
 		 * @type {Function}
-		 * @memberof ui/VirtualList.VirtualGridList
+		 * @memberof moonstone/VirtualList.VirtualGridList
 		 * @instance
 		 * @public
 		 */
@@ -321,7 +347,7 @@ const VirtualGridList = kind({
 		 *
 		 * @name onScrollStart
 		 * @type {Function}
-		 * @memberof ui/VirtualList.VirtualGridList
+		 * @memberof moonstone/VirtualList.VirtualGridList
 		 * @instance
 		 * @public
 		 */
@@ -331,7 +357,7 @@ const VirtualGridList = kind({
 		 *
 		 * @name onScrollStop
 		 * @type {Function}
-		 * @memberof ui/VirtualList.VirtualGridList
+		 * @memberof moonstone/VirtualList.VirtualGridList
 		 * @instance
 		 * @public
 		 */
@@ -342,7 +368,7 @@ const VirtualGridList = kind({
 		 * @name spacing
 		 * @type {Number}
 		 * @default 0
-		 * @memberof ui/VirtualList.VirtualGridList
+		 * @memberof moonstone/VirtualList.VirtualGridList
 		 * @instance
 		 * @public
 		 */
@@ -353,8 +379,8 @@ const VirtualGridList = kind({
 		 *
 		 * @name verticalScrollbar
 		 * @type {String}
-		 * @default 'hidden'
-		 * @memberof ui/VirtualList.VirtualGridList
+		 * @default 'auto'
+		 * @memberof moonstone/VirtualList.VirtualGridList
 		 * @instance
 		 * @public
 		 */
@@ -364,4 +390,5 @@ const VirtualGridList = kind({
 });
 
 export default VirtualList;
-export {VirtualList, VirtualGridList};
+export {VirtualList, VirtualListBase, VirtualGridList, gridListItemSizeShape};
+export * from './GridListImageItem';

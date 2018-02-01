@@ -6,7 +6,7 @@
 
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
-import ScrollableNative from './ScrollableNative';
+import ScrollableNative from '../Scrollable/ScrollableNative';
 import {ScrollerBase} from './Scroller';
 
 /**

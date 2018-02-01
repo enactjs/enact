@@ -1,6 +1,7 @@
 import {mount} from 'enzyme';
 import React from 'react';
 
+import Item from '../../Item';
 import VirtualList from '../VirtualList';
 
 describe('VirtualList', () => {
@@ -46,9 +47,9 @@ describe('VirtualList', () => {
 		};
 		renderItem = ({data, index, ...rest}) => {	// eslint-disable-line enact/display-name, enact/prop-types
 			return (
-				<div {...rest}>
+				<Item {...rest}>
 					{data[index].name}
-				</div>
+				</Item>
 			);
 		};
 
@@ -103,7 +104,7 @@ describe('VirtualList', () => {
 		);
 
 		const expected = 27; // 720 / 30 + 3
-		const actual = subject.find('[data-index]').length;
+		const actual = subject.find('Item[data-index]').length;
 
 		expect(actual).to.equal(expected);
 	});
@@ -115,7 +116,7 @@ describe('VirtualList', () => {
 				component={renderItem}
 				data={items}
 				dataSize={dataSize}
-				verticalScrollbar="visible"
+				direction="horizontal"
 				itemSize={30}
 			/>
 		);
