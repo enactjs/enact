@@ -1,7 +1,9 @@
+import $L from '@enact/moonstone/internal/$L';
 import {off, on} from '@enact/core/dispatcher';
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import classNames from 'classnames';
+import DisappearSpotlightDecorator from '@enact/moonstone/internal/DisappearSpotlightDecorator';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
@@ -9,13 +11,10 @@ import React, {PureComponent} from 'react';
 import Spotlight from '@enact/spotlight';
 import ri from '@enact/ui/resolution';
 
-import $L from '../internal/$L';
-import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator';
-
 import ScrollButton from './ScrollButton';
 import ScrollThumb from './ScrollThumb';
 
-import css from './Scrollbar.less';
+import css from '@enact/moonstone/Scroller/Scrollbar.less';
 
 const
 	nop = () => {},

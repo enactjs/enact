@@ -10,8 +10,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import VirtualListBase, {gridListItemSizeShape} from './VirtualListBase';
+import {VirtualListBase as UiVirtualListBase, gridListItemSizeShape} from '@enact/ui/VirtualList';
 
 /**
  * {@link moonstone/VirtualList.VirtualList} is a VirtualList with Moonstone styling.
@@ -199,7 +198,7 @@ const VirtualList = kind({
 		 */
 	},
 
-	render: (props) => <VirtualListBase {...props} />
+	render: (props) => <UiVirtualListBase {...props} />
 });
 
 /**
@@ -386,9 +385,9 @@ const VirtualGridList = kind({
 		 */
 	},
 
-	render: (props) => <VirtualListBase {...props} />
+	render: (props) => <UiVirtualListBase {...props} />
 });
 
 export default VirtualList;
 export {VirtualList, VirtualGridList};
-export * from './GridListImageItem';
+export * from '@enact/ui/VirtualList/GridListImageItem';
