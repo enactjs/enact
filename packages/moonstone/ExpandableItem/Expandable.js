@@ -51,6 +51,15 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 	)(Wrapped);
 });
 
+// const ExpandableHoc = hoc(defaultConfig, (config, Wrapped) => ExpandableSpotlightDecorator({noPointerMode: config.noPointerMode})(Wrapped));
+
+// const ExpandableHoc = hoc(defaultConfig, (config) => ExpandableSpotlightDecorator(config));
+
+// const Expandable = compose(
+// 	UiExpandable,
+// 	ExpandableHoc
+// );
+
 export default Expandable;
 export {
 	Expandable

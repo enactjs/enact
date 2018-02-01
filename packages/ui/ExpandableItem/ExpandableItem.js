@@ -15,7 +15,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 
-import Touchable from '../Touchable';
+// import Touchable from '../Touchable';
 
 import Expandable from './Expandable';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
@@ -199,15 +199,15 @@ const ExpandableItemBase = kind({
 		type: 'clip'
 	},
 
-	handlers: {
-		handleOpen: (ev, {onClose, onOpen, open}) => {
-			if (open) {
-				onClose(ev);
-			} else {
-				onOpen(ev);
-			}
-		}
-	},
+	// handlers: {
+	// 	handleOpen: (ev, {onClose, onOpen, open}) => {
+	// 		if (open) {
+	// 			onClose(ev);
+	// 		} else {
+	// 			onOpen(ev);
+	// 		}
+	// 	}
+	// },
 
 	render: ({
 		component: Component,
@@ -217,7 +217,7 @@ const ExpandableItemBase = kind({
 		clipHeight,
 		direction,
 		duration,
-		handleOpen,
+		// handleOpen,
 		noAnimation,
 		onHide,
 		onShow,
@@ -236,7 +236,7 @@ const ExpandableItemBase = kind({
 				<Component
 					data-expandable-label
 					{...rest}
-					onClick={handleOpen}
+					// onClick={handleOpen}
 				>
 					{text}
 				</Component>
@@ -276,14 +276,13 @@ const ExpandableHandlerDecorator = hoc((config, Wrapped) => kind({
 			}
 		}
 	},
-
-	render: (props) => <Wrapped {...props} />
+	render: ({handleOpen, ...rest}) => <Wrapped onTap={handleOpen} {...rest} />
 }));
 
 const ExpandableItemDecorator = compose(
 	Expandable,
-	Touchable,
 	ExpandableHandlerDecorator
+	// Touchable
 );
 
 /**
@@ -308,5 +307,6 @@ export {
 	ExpandableItemBase,
 	ExpandableItemDecorator,
 	Expandable,
+	ExpandableHandlerDecorator,
 	ExpandableTransitionContainer
 };

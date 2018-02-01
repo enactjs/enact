@@ -15,6 +15,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import Spotlight from '@enact/spotlight';
+// import Touchable from '@enact/ui/Touchable';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import LabeledItem from '../LabeledItem';
@@ -22,7 +23,8 @@ import LabeledItem from '../LabeledItem';
 import Expandable from './Expandable';
 import {
 	ExpandableItemBase as UiExpandableItemBase,
-	ExpandableItemDecorator as UiExpandableItemDecorator,
+	// ExpandableItemDecorator as UiExpandableItemDecorator,
+	ExpandableHandlerDecorator as UiExpandableHandlerDecorator,
 	ExpandableTransitionContainer as UiExpandableTransitionContainer
 } from '@enact/ui/ExpandableItem';
 
@@ -263,7 +265,7 @@ const ExpandableItemBase = kind({
 		handleOpen: (ev, {disabled, onClose, onOpen, open}) => {
 			// When disabled, don't attach an event
 			if (!disabled) {
-				Spotlight.pause();
+				// Spotlight.pause();
 
 				if (open) {
 					onClose(ev);
@@ -303,9 +305,9 @@ const ExpandableItemBase = kind({
 		handleLabelKeyDown,
 		handleOpen,
 		label,
-		// open,
-		// onHide,
-		// onShow,
+		open,
+		onHide,
+		onShow,
 		onSpotlightDisappear,
 		onSpotlightLeft,
 		onSpotlightRight,
@@ -332,7 +334,7 @@ const ExpandableItemBase = kind({
 				{...ariaProps}
 				disabled={disabled}
 				label={label}
-				// onTap={handleOpen}
+				onTap={handleOpen}
 				onKeyDown={handleLabelKeyDown}
 				onSpotlightDisappear={onSpotlightDisappear}
 				onSpotlightLeft={onSpotlightLeft}
@@ -352,9 +354,6 @@ const ExpandableItemBase = kind({
 			/>
 		);
 
-		// const TitleComponent = 'div';
-		// const ExpandableContainer = 'div';
-
 		return (
 			// <ContainerDiv
 			// >
@@ -362,16 +361,16 @@ const ExpandableItemBase = kind({
 				{...rest}
 				aria-disabled={disabled}
 				disabled={disabled}
-				// open={open}
-				ref={setContainerNode}
+				open={open}
+				childRef={setContainerNode}
 
 				component={TitleComponent}
 				container={ExpandableContainer}
 				direction="down"
 				duration="short"
-				// onHide={onHide}
-				// onShow={onShow}
-				onTap={handleOpen}
+				onHide={onHide}
+				onShow={onShow}
+				// onTap={handleOpen}
 				text={title} //
 				timingFunction="ease-out-quart"
 				type="clip"
@@ -451,8 +450,10 @@ const ExpandableItemBase = kind({
  */
 const ExpandableItemDecorator = compose(
 	Expandable,
-	UiExpandableItemDecorator,
-	SpotlightContainerDecorator({continue5WayHold: true})
+	// UiExpandableHandlerDecorator,
+	SpotlightContainerDecorator({continue5WayHold: true}),
+	// Touchable,
+	// UiExpandableItemDecorator,
 );
 const ExpandableItem = ExpandableItemDecorator(ExpandableItemBase);
 
