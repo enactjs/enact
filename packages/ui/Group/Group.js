@@ -55,7 +55,9 @@ const GroupBase = kind({
 		 */
 		children: PropTypes.oneOfType([
 			PropTypes.arrayOf(PropTypes.string),
-			PropTypes.arrayOf(PropTypes.object)
+			PropTypes.arrayOf(PropTypes.shape({
+				key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
+			}))
 		]).isRequired,
 
 		/**
