@@ -81,8 +81,7 @@ const ExpandableItemBase = kind({
 		clipHeight: PropTypes.number,
 
 		/**
-		 * The type of component to use to render the item. May be a DOM node name (e.g 'div',
-		 * 'span', etc.) or a custom component.
+		 * The component used to render the base level of this component.
 		 *
 		 * @type {Component}
 		 * @default 'div'
@@ -181,6 +180,15 @@ const ExpandableItemBase = kind({
 		]),
 
 		/**
+		 * The type of component to use to render the primary list item.
+		 *
+		 * @type {Component}
+		 * @default 'div'
+		 * @public
+		 */
+		titleComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+
+		/**
 		 * Choose how you'd like the transition to affect the content.
 		 * Supported types are: slide, clip, and fade.
 		 *
@@ -193,31 +201,22 @@ const ExpandableItemBase = kind({
 
 	defaultProps: {
 		component: 'div',
+		titleComponent: 'div',
 		direction: 'down',
 		open: false,
 		timingFunction: 'ease-out-quart',
 		type: 'clip'
 	},
 
-	// handlers: {
-	// 	handleOpen: (ev, {onClose, onOpen, open}) => {
-	// 		if (open) {
-	// 			onClose(ev);
-	// 		} else {
-	// 			onOpen(ev);
-	// 		}
-	// 	}
-	// },
-
 	render: ({
 		component: Component,
+		titleComponent: TitleComponent,
 		container: Container,
 		childRef,
 		children,
 		clipHeight,
 		direction,
 		duration,
-		// handleOpen,
 		noAnimation,
 		onHide,
 		onShow,
@@ -231,15 +230,11 @@ const ExpandableItemBase = kind({
 		delete rest.onOpen;
 
 		return (
-			<div>
+			<Component {...rest}>
 				{/* TODO: Consider changing default Component from div to Item and use onTap */}
-				<Component
-					data-expandable-label
-					{...rest}
-					// onClick={handleOpen}
-				>
+				<TitleComponent data-expandable-label>
 					{text}
-				</Component>
+				</TitleComponent>
 				<Container
 					childRef={childRef}
 					clipHeight={clipHeight}
@@ -255,11 +250,19 @@ const ExpandableItemBase = kind({
 				>
 					{children}
 				</Container>
-			</div>
+			</Component>
 		);
 	}
 });
 
+/**
+ * Adds open/close support to the wrapped element
+ *
+ * @class ExpandableHandlerDecorator
+ * @memberof ui/ExpandableItem
+ * @hoc
+ * @public
+ */
 const ExpandableHandlerDecorator = hoc((config, Wrapped) => kind({
 	name: 'ui:ExpandableHandlerDecorator',
 	propTypes: /** @lends ui/ExpandableItem.ExpandableHandlerDecorator.prototype */ {
@@ -279,15 +282,23 @@ const ExpandableHandlerDecorator = hoc((config, Wrapped) => kind({
 	render: ({handleOpen, ...rest}) => <Wrapped onTap={handleOpen} {...rest} />
 }));
 
+/**
+ * The functionality decorator for [ExpandableItemBase]{@link ui/ExpandableItem.ExpandableItemBase}
+ *
+ * @class ExpandableItemDecorator
+ * @memberof ui/ExpandableItem
+ * @mixes ui/ExpandableItem.Expandable
+ * @mixes ui/ExpandableItem.ExpandableHandlerDecorator
+ * @hoc
+ * @public
+ */
 const ExpandableItemDecorator = compose(
 	Expandable,
 	ExpandableHandlerDecorator
-	// Touchable
 );
 
 /**
- * {@link ui/ExpandableItem.ExpandableItem} renders a component that can be expanded to show additional
- * contents.
+ * Renders a component that can be expanded to show additional contents.
  *
  * `ExpandableItem` maintains its open/closed state by default. The initial state can be supplied
  * using `defaultOpen`. In order to directly control the open/closed state, supply a value for
@@ -295,8 +306,8 @@ const ExpandableItemDecorator = compose(
  *
  * @class ExpandableItem
  * @memberof ui/ExpandableItem
- * @ui
  * @mixes ui/ExpandableItem.Expandable
+ * @ui
  * @public
  */
 const ExpandableItem = ExpandableItemDecorator(ExpandableItemBase);

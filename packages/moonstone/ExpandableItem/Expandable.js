@@ -44,21 +44,21 @@ const defaultConfig = {
  * @hoc
  * @public
  */
-const Expandable = hoc(defaultConfig, (config, Wrapped) => {
-	return compose(
-		UiExpandable,
-		ExpandableSpotlightDecorator({noPointerMode: config.noPointerMode})
-	)(Wrapped);
-});
+// const Expandable = hoc(defaultConfig, (config, Wrapped) => {
+// 	return compose(
+// 		UiExpandable,
+// 		ExpandableSpotlightDecorator({noPointerMode: config.noPointerMode})
+// 	)(Wrapped);
+// });
 
-// const ExpandableHoc = hoc(defaultConfig, (config, Wrapped) => ExpandableSpotlightDecorator({noPointerMode: config.noPointerMode})(Wrapped));
+const ExpandableHoc = hoc(defaultConfig, (config, Wrapped) => ExpandableSpotlightDecorator({noPointerMode: config.noPointerMode})(Wrapped));
 
 // const ExpandableHoc = hoc(defaultConfig, (config) => ExpandableSpotlightDecorator(config));
 
-// const Expandable = compose(
-// 	UiExpandable,
-// 	ExpandableHoc
-// );
+const Expandable = compose(
+	UiExpandable,
+	ExpandableHoc
+);
 
 export default Expandable;
 export {

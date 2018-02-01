@@ -1,10 +1,13 @@
 /**
- * Exports the {@link moonstone/ExpandableItem.ExpandableItem} and
- * {@link moonstone/ExpandableItem.ExpandableItemBase} components and
- * {@link moonstone/ExpandableItem.Expandable} Higher-Order Component (HOC). The default
- * export is {@link moonstone/ExpandableItem.ExpandableItem}.
+ * A [LabeledItem]{@link moonstone/LabeledItem} (title with a label), which when activated, expands
+ * to reveal its children. Often used to display a current setting and its options in a compact way.
+ * When expanded, the following sibblings are pushed down, with an animation - enabled by default.
  *
  * @module moonstone/ExpandableItem
+ * @exports ExpandableItem
+ * @exports ExpandableItemBase
+ * @exports ExpandableItemDecorator
+ * @exports Expandable
  */
 
 import {extractAriaProps} from '@enact/core/util';
@@ -15,30 +18,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import Spotlight from '@enact/spotlight';
-// import Touchable from '@enact/ui/Touchable';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import LabeledItem from '../LabeledItem';
 
 import Expandable from './Expandable';
-import {
-	ExpandableItemBase as UiExpandableItemBase,
-	// ExpandableItemDecorator as UiExpandableItemDecorator,
-	ExpandableHandlerDecorator as UiExpandableHandlerDecorator,
-	ExpandableTransitionContainer as UiExpandableTransitionContainer
-} from '@enact/ui/ExpandableItem';
+import {ExpandableItemBase as UiExpandableItemBase, ExpandableTransitionContainer as UiExpandableTransitionContainer} from '@enact/ui/ExpandableItem';
 
 const isUp = is('up');
 const isDown = is('down');
 
-// const ContainerDiv = SpotlightContainerDecorator({continue5WayHold: true}, 'div');
-// const ContainerDiv = 'div';
 const ExpandableTransitionContainer = SpotlightContainerDecorator(UiExpandableTransitionContainer);
 
 /**
- * {@link moonstone/ExpandableItem.ExpandableItemBase} is a stateless component that
- * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
- * additional contents.
+ * Renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show additional
+ * contents.
  *
  * @class ExpandableItemBase
  * @memberof moonstone/ExpandableItem
@@ -355,8 +349,6 @@ const ExpandableItemBase = kind({
 		);
 
 		return (
-			// <ContainerDiv
-			// >
 			<UiExpandableItemBase
 				{...rest}
 				aria-disabled={disabled}
@@ -364,7 +356,8 @@ const ExpandableItemBase = kind({
 				open={open}
 				childRef={setContainerNode}
 
-				component={TitleComponent}
+				// component={SpottableContainerDiv}
+				titleComponent={TitleComponent}
 				container={ExpandableContainer}
 				direction="down"
 				duration="short"
@@ -378,7 +371,6 @@ const ExpandableItemBase = kind({
 			>
 				{children}
 			</UiExpandableItemBase>
-			// </ContainerDiv>
 		);
 
 		// return (
@@ -434,9 +426,22 @@ const ExpandableItemBase = kind({
 });
 
 /**
- * Renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show additional
- * contents.
+ * Adds spotlight and expandability functionality to
+ * [ExpandableItemBase]{@link moonstone/ExpandableItem.ExpandableItemBase}.
  *
+ * @class ExpandableItemDecorator
+ * @memberof moonstone/ExpandableItem
+ * @mixes moonstone/ExpandableItem.Expandable
+ * @mixes spotlight/SpotlightContainerDecorator
+ * @hoc
+ * @public
+ */
+const ExpandableItemDecorator = compose(
+	Expandable,
+	SpotlightContainerDecorator({continue5WayHold: true}),
+);
+
+/**
  * This maintains its open/closed state by default. The initial state can be supplied
  * using `defaultOpen`. In order to directly control the open/closed state, supply a value for
  * `open` at creation time and update the prop value in the callbacks for the `onClose`/`onOpen`
@@ -444,22 +449,17 @@ const ExpandableItemBase = kind({
  *
  * @class ExpandableItem
  * @memberof moonstone/ExpandableItem
+ * @extends moonstone/ExpandableItem.ExpandableItemBase
+ * @mixes moonstone/ExpandableItem.ExpandableItemDecorator
  * @ui
- * @mixes moonstone/ExpandableItem.Expandable
  * @public
  */
-const ExpandableItemDecorator = compose(
-	Expandable,
-	// UiExpandableHandlerDecorator,
-	SpotlightContainerDecorator({continue5WayHold: true}),
-	// Touchable,
-	// UiExpandableItemDecorator,
-);
 const ExpandableItem = ExpandableItemDecorator(ExpandableItemBase);
 
 export default ExpandableItem;
 export {
 	Expandable,
 	ExpandableItem,
-	ExpandableItemBase
+	ExpandableItemBase,
+	ExpandableItemDecorator
 };
