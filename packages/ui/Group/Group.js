@@ -40,10 +40,10 @@ const GroupBase = kind({
 		/**
 		 * An array of data to be mapped onto the `childComponent`. This supports two data types.
 		 * If an array of strings is provided, the strings will be used in the generated
-		 * `childComponent` as the readable text. If an array of objects is provided, each object
-		 * will be spread onto the generated `childComponent` with no interpretation. You'll be
-		 * responsible for setting properties like `disabled`, `className`, and setting the
-		 * content using `children`.
+		 * `childComponent` as the content (i.e. passed as `children`). If an array of objects is
+		 * provided, each object will be spread onto the generated `childComponent` with no
+		 * interpretation. You'll be responsible for setting properties like `disabled`,
+		 * `className`, and setting the content using `children`.
 		 *
 		 * NOTE: When providing an array of objects be sure a unique `key` is assigned to each each
 		 * item. [Read about keys](https://reactjs.org/docs/lists-and-keys.html#keys) for more
