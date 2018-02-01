@@ -644,7 +644,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || this.isDragging)) {
 				const
 					item = e.target,
-					positionFn = this.childRef.calculatePositionOnFocus,
+					positionFn = this.innerChildRef.calculatePositionOnFocus,
 					spotItem = Spotlight.getCurrent();
 
 				if (item && item === spotItem && positionFn) {
@@ -1177,8 +1177,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		updateScrollOnFocus () {
 			const
 				focusedItem = Spotlight.getCurrent(),
-				{calculatePositionOnFocus} = this.childRef,
-				{containerRef} = this.innerChildRef;
+				{containerRef, calculatePositionOnFocus} = this.innerChildRef;
 
 			if (focusedItem && containerRef && containerRef.contains(focusedItem)) {
 				const
