@@ -72,6 +72,9 @@ const ExpandableListBase = kind({
 		 * component with no interpretation. You'll be responsible for setting properties like
 		 * `disabled`, `className`, and setting the text content using the `children` key.
 		 *
+		 * NOTE: When an array of objects is provided, make sure unique `key` is assigned to each
+		 * data. See https://fb.me/react-warning-keys for more information.
+		 *
 		 * @type {String[]|Object[]}
 		 * @required
 		 * @public

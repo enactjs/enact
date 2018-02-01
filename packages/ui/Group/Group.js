@@ -31,19 +31,31 @@ const GroupBase = kind({
 		 * Component type to repeat. This can be a React component or a string describing a DOM
 		 * node (e.g. `'div'`)
 		 *
-		 * @type {Element}
+		 * @type {Component}
+		 * @required
 		 * @public
 		 */
 		childComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
 
 		/**
-		 * An array of data to be mapped onto the `childComponent`.  For example, an array of
-		 * strings.
+		 * An array of data to be mapped onto the `childComponent`. This supports two data types.
+		 * If an array of strings is provided, the strings will be used in the generated
+		 * `childComponent` as the readable text. If an array of objects is provided, each object
+		 * will be spread onto the generated `childComponent` with no interpretation. You'll be
+		 * responsible for setting properties like `disabled`, `className`, and setting the text
+		 * content using the `children` key.
 		 *
-		 * @type {Array}
+		 * NOTE: When an array of objects is provided, make sure unique `key` is assigned to each
+		 * data. See https://fb.me/react-warning-keys for more information.
+		 *
+		 * @type {String[]|Object[]}
+		 * @required
 		 * @public
 		 */
-		children: PropTypes.array.isRequired,
+		children: PropTypes.oneOfType([
+			PropTypes.arrayOf(PropTypes.string),
+			PropTypes.arrayOf(PropTypes.object)
+		]).isRequired,
 
 		/**
 		 * The property on each `childComponent` that receives the data in `children`
