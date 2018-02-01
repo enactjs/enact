@@ -45,7 +45,7 @@ const GroupBase = kind({
 		 * interpretation. You'll be responsible for setting properties like `disabled`,
 		 * `className`, and setting the content using `children`.
 		 *
-		 * NOTE: When providing an array of objects be sure a unique `key` is assigned to each each
+		 * NOTE: When providing an array of objects be sure a unique `key` is assigned to each
 		 * item. [Read about keys](https://reactjs.org/docs/lists-and-keys.html#keys) for more
 		 * information.
 		 *
