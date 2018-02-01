@@ -52,4 +52,6 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default Expandable;
-export {Expandable};
+export {
+	Expandable
+};

@@ -13,18 +13,24 @@ import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import LabeledItem from '../LabeledItem';
 
 import Expandable from './Expandable';
-import {ExpandableTransitionContainer as UiExpandableTransitionContainer} from '@enact/ui/ExpandableItem';
+import {
+	ExpandableItemBase as UiExpandableItemBase,
+	ExpandableItemDecorator as UiExpandableItemDecorator,
+	ExpandableTransitionContainer as UiExpandableTransitionContainer
+} from '@enact/ui/ExpandableItem';
 
 const isUp = is('up');
 const isDown = is('down');
 
-const ContainerDiv = SpotlightContainerDecorator({continue5WayHold: true}, 'div');
+// const ContainerDiv = SpotlightContainerDecorator({continue5WayHold: true}, 'div');
+// const ContainerDiv = 'div';
 const ExpandableTransitionContainer = SpotlightContainerDecorator(UiExpandableTransitionContainer);
 
 /**
@@ -297,9 +303,9 @@ const ExpandableItemBase = kind({
 		handleLabelKeyDown,
 		handleOpen,
 		label,
-		open,
-		onHide,
-		onShow,
+		// open,
+		// onHide,
+		// onShow,
 		onSpotlightDisappear,
 		onSpotlightLeft,
 		onSpotlightRight,
@@ -321,55 +327,121 @@ const ExpandableItemBase = kind({
 
 		const ariaProps = extractAriaProps(rest);
 
+		const TitleComponent = (props) => (
+			<LabeledItem
+				{...ariaProps}
+				disabled={disabled}
+				label={label}
+				// onTap={handleOpen}
+				onKeyDown={handleLabelKeyDown}
+				onSpotlightDisappear={onSpotlightDisappear}
+				onSpotlightLeft={onSpotlightLeft}
+				onSpotlightRight={onSpotlightRight}
+				onSpotlightUp={onSpotlightUp}
+				spotlightDisabled={spotlightDisabled}
+				titleIcon={titleIcon}
+				{...props}
+			/>
+		);
+
+		const ExpandableContainer = (props) => (
+			<ExpandableTransitionContainer
+				onKeyDown={handleKeyDown}
+				spotlightDisabled={transitionSpotlightDisabled}
+				{...props}
+			/>
+		);
+
+		// const TitleComponent = 'div';
+		// const ExpandableContainer = 'div';
+
 		return (
-			<ContainerDiv
+			// <ContainerDiv
+			// >
+			<UiExpandableItemBase
 				{...rest}
 				aria-disabled={disabled}
 				disabled={disabled}
-				open={open}
+				// open={open}
 				ref={setContainerNode}
+
+				component={TitleComponent}
+				container={ExpandableContainer}
+				direction="down"
+				duration="short"
+				// onHide={onHide}
+				// onShow={onShow}
+				onTap={handleOpen}
+				text={title} //
+				timingFunction="ease-out-quart"
+				type="clip"
+				// visible={open}
 			>
-				<LabeledItem
-					{...ariaProps}
-					data-expandable-label
-					disabled={disabled}
-					label={label}
-					onTap={handleOpen}
-					onKeyDown={handleLabelKeyDown}
-					onSpotlightDisappear={onSpotlightDisappear}
-					onSpotlightLeft={onSpotlightLeft}
-					onSpotlightRight={onSpotlightRight}
-					onSpotlightUp={onSpotlightUp}
-					spotlightDisabled={spotlightDisabled}
-					titleIcon={titleIcon}
-				>{title}</LabeledItem>
-				<ExpandableTransitionContainer
-					data-expandable-container
-					duration="short"
-					timingFunction="ease-out-quart"
-					onHide={onHide}
-					onKeyDown={handleKeyDown}
-					onShow={onShow}
-					spotlightDisabled={transitionSpotlightDisabled}
-					type="clip"
-					direction="down"
-					visible={open}
-				>
-					{children}
-				</ExpandableTransitionContainer>
-			</ContainerDiv>
+				{children}
+			</UiExpandableItemBase>
+			// </ContainerDiv>
 		);
+
+		// return (
+		// 	<ContainerDiv
+		// 		{...rest}
+		// 		aria-disabled={disabled}
+		// 		disabled={disabled}
+		// 		open={open}
+		// 		ref={setContainerNode}
+		// 	>
+		// 		<LabeledItem
+		// 			{...ariaProps}
+		// 			data-expandable-label
+		// 			disabled={disabled}
+		// 			label={label}
+		// 			onTap={handleOpen}
+		// 			onKeyDown={handleLabelKeyDown}
+		// 			onSpotlightDisappear={onSpotlightDisappear}
+		// 			onSpotlightLeft={onSpotlightLeft}
+		// 			onSpotlightRight={onSpotlightRight}
+		// 			onSpotlightUp={onSpotlightUp}
+		// 			spotlightDisabled={spotlightDisabled}
+		// 			titleIcon={titleIcon}
+		// 		>{title}</LabeledItem>
+		// 		<ExpandableTransitionContainer
+		// 			// childRef={childRef}
+		// 			// clipHeight={clipHeight}
+		// 			// noAnimation={noAnimation}
+
+		// 		//	data-expandable-container
+		// 			// duration={duration}
+		// 			duration="short"
+		// 			// timingFunction={timingFunction}
+		// 			timingFunction="ease-out-quart"
+		// 			// onHide={onHide}
+		// 			onHide={onHide}
+		// 			onKeyDown={handleKeyDown} //
+		// 			// onShow={onShow}
+		// 			onShow={onShow}
+		// 			spotlightDisabled={transitionSpotlightDisabled} //
+		// 			// type={type}
+		// 			type="clip"
+		// 			// direction={direction}
+		// 			direction="down"
+		// 			// visible={open}
+		// 			visible={open}
+		// 		>
+		// 			{children}
+		// 		</ExpandableTransitionContainer>
+		// 	</ContainerDiv>
+		// );
 	}
 });
 
 /**
- * {@link moonstone/ExpandableItem.ExpandableItem} renders a
- * {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show additional
+ * Renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show additional
  * contents.
  *
- * `ExpandableItem` maintains its open/closed state by default. The initial state can be supplied
+ * This maintains its open/closed state by default. The initial state can be supplied
  * using `defaultOpen`. In order to directly control the open/closed state, supply a value for
- * `open` at creation time and update its value in response to `onClose`/`onOpen` events.
+ * `open` at creation time and update the prop value in the callbacks for the `onClose`/`onOpen`
+ * events.
  *
  * @class ExpandableItem
  * @memberof moonstone/ExpandableItem
@@ -377,9 +449,12 @@ const ExpandableItemBase = kind({
  * @mixes moonstone/ExpandableItem.Expandable
  * @public
  */
-const ExpandableItem = Expandable(
-	ExpandableItemBase
+const ExpandableItemDecorator = compose(
+	Expandable,
+	UiExpandableItemDecorator,
+	SpotlightContainerDecorator({continue5WayHold: true})
 );
+const ExpandableItem = ExpandableItemDecorator(ExpandableItemBase);
 
 export default ExpandableItem;
 export {

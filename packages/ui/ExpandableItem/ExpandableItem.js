@@ -10,8 +10,12 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {Fragment} from 'react';
+import hoc from '@enact/core/hoc';
+import React from 'react';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
+
+import Touchable from '../Touchable';
 
 import Expandable from './Expandable';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
@@ -29,6 +33,17 @@ const ExpandableItemBase = kind({
 	name: 'ui:ExpandableItem',
 
 	propTypes: /** @lends ui/ExpandableItem.ExpandableItemBase.prototype */ {
+		/**
+		 * The expandable transition container to render the children into. It is highly recommended
+		 * to use the [ExpandableTransitionContainer]{@link ui/ExpandableItem.ExpandableTransitionContainer}
+		 * as there are many unique properties passed along to this component.
+		 *
+		 * @type {Component}
+		 * @required
+		 * @public
+		 */
+		container: PropTypes.oneOfType([PropTypes.func]).isRequired,
+
 		/**
 		 * The primary text of the item.
 		 *
@@ -196,6 +211,7 @@ const ExpandableItemBase = kind({
 
 	render: ({
 		component: Component,
+		container: Container,
 		childRef,
 		children,
 		clipHeight,
@@ -215,17 +231,19 @@ const ExpandableItemBase = kind({
 		delete rest.onOpen;
 
 		return (
-			<Fragment>
+			<div>
 				{/* TODO: Consider changing default Component from div to Item and use onTap */}
 				<Component
+					data-expandable-label
 					{...rest}
 					onClick={handleOpen}
 				>
 					{text}
 				</Component>
-				<ExpandableTransitionContainer
+				<Container
 					childRef={childRef}
 					clipHeight={clipHeight}
+					data-expandable-container
 					direction={direction}
 					duration={duration}
 					noAnimation={noAnimation}
@@ -236,11 +254,37 @@ const ExpandableItemBase = kind({
 					visible={open}
 				>
 					{children}
-				</ExpandableTransitionContainer>
-			</Fragment>
+				</Container>
+			</div>
 		);
 	}
 });
+
+const ExpandableHandlerDecorator = hoc((config, Wrapped) => kind({
+	name: 'ui:ExpandableHandlerDecorator',
+	propTypes: /** @lends ui/ExpandableItem.ExpandableHandlerDecorator.prototype */ {
+		onClose: PropTypes.func,
+		onOpen: PropTypes.func,
+		open: PropTypes.bool
+	},
+	handlers: {
+		handleOpen: (ev, {onClose, onOpen, open}) => {
+			if (open && onClose) {
+				onClose(ev);
+			} else if (!open && onOpen) {
+				onOpen(ev);
+			}
+		}
+	},
+
+	render: (props) => <Wrapped {...props} />
+}));
+
+const ExpandableItemDecorator = compose(
+	Expandable,
+	Touchable,
+	ExpandableHandlerDecorator
+);
 
 /**
  * {@link ui/ExpandableItem.ExpandableItem} renders a component that can be expanded to show additional
@@ -256,14 +300,13 @@ const ExpandableItemBase = kind({
  * @mixes ui/ExpandableItem.Expandable
  * @public
  */
-const ExpandableItem = Expandable(
-	ExpandableItemBase
-);
+const ExpandableItem = ExpandableItemDecorator(ExpandableItemBase);
 
 export default ExpandableItem;
 export {
 	ExpandableItem,
 	ExpandableItemBase,
+	ExpandableItemDecorator,
 	Expandable,
 	ExpandableTransitionContainer
 };
