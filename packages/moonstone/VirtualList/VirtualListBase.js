@@ -1,5 +1,6 @@
 import clamp from 'ramda/src/clamp';
 import curry from 'ramda/src/curry';
+import {dataIndexAttribute, Scrollable} from '@enact/ui/Scrollable';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
@@ -7,8 +8,7 @@ import React, {Component} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Spottable from '@enact/spotlight/Spottable';
-
-import {dataIndexAttribute} from '../Scrollable';
+import {VirtualListCore as UiVirtualListCore, gridListItemSizeShape} from '@enact/ui/VirtualList/VirtualListBase';
 
 const VirtualListSpotlightContainerConfig = {
 	enterTo: 'last-focused',
@@ -136,9 +136,26 @@ const VirtualListCoreSpottable = (type) => (BaseComponent) => (
 		list = {} // Please do not use the `list` in React component lifecycle.
 
 		isScrolledBy5way = false
+
+		/**
+		 * The value whether restoring focus or not
+		 *
+		 * @type {Number}
+		 * @default null
+		 * @public
+		 */
 		restoreLastFocused = false
 		nodeIndexToBeFocused = null
+
+		/**
+		 * The index to restore
+		 *
+		 * @type {Number}
+		 * @default null
+		 * @public
+		 */
 		preservedIndex = null
+
 		lastFocusedIndex = null
 
 		/**
@@ -580,6 +597,45 @@ const VirtualListCoreSpottable = (type) => (BaseComponent) => (
 		}
 
 		/**
+		 * calculator
+		 */
+
+		calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
+			const
+				{lastFocusedIndex, pageScroll} = this.props,
+				{numOfItems} = this.state,
+				{primary} = this,
+				offsetToClientEnd = primary.clientSize - primary.itemSize,
+				focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
+
+			if (!isNaN(focusedIndex)) {
+				let gridPosition = this.getGridPosition(focusedIndex);
+
+				if (numOfItems > 0 && focusedIndex % numOfItems !== lastFocusedIndex % numOfItems) {
+					const node = this.containerRef.children[lastFocusedIndex % numOfItems];
+					if (node) {
+						node.blur();
+					}
+				}
+
+				if (primary.clientSize >= primary.itemSize) {
+					if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
+						gridPosition.primaryPosition -= pageScroll ? 0 : offsetToClientEnd;
+					} else if (gridPosition.primaryPosition >= scrollPosition) { // inside of client
+						gridPosition.primaryPosition = scrollPosition;
+					} else { // backward over
+						gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
+					}
+				}
+
+				// Since the result is used as a target position to be scrolled,
+				// scrondaryPosition should be 0 here.
+				gridPosition.secondaryPosition = 0;
+				return this.gridPositionToItemPosition(gridPosition);
+			}
+		}
+
+		/**
 		 * setter/getter
 		 */
 
@@ -593,6 +649,67 @@ const VirtualListCoreSpottable = (type) => (BaseComponent) => (
 
 		setLastFocusedIndex = (param) => {
 			this.lastFocusedIndex = param;
+		}
+
+		/**
+		 * override
+		 */
+
+		updateStatesAndBounds (props) {
+			const
+				{dataSize, overhang} = props,
+				{firstIndex} = this.state,
+				{dimensionToExtent, primary, moreInfo, scrollPosition, preservedIndex} = this,
+				numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
+				wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
+				dataSizeDiff = dataSize - this.curDataSize;
+			let newFirstIndex = firstIndex;
+
+			this.maxFirstIndex = Math.ceil((dataSize - numOfItems) / dimensionToExtent) * dimensionToExtent;
+			this.curDataSize = dataSize;
+			this.updateFrom = null;
+			this.updateTo = null;
+
+			// reset children
+			this.cc = [];
+			this.calculateScrollBounds(props);
+			this.updateMoreInfo(dataSize, scrollPosition);
+
+			if (this.restoreLastFocused &&
+				numOfItems > 0 &&
+				(preservedIndex < dataSize) &&
+				(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
+				// If we need to restore last focus and the index is beyond the screen,
+				// we call `scrollTo` to create DOM for it.
+				this.props.cbScrollTo({index: preservedIndex, animate: false});
+			} else {
+				newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
+			}
+
+			this.setState({firstIndex: newFirstIndex, numOfItems});
+		}
+
+		applyStyleToNewNode = (index, ...rest) => {
+			const
+				{component, data} = this.props,
+				{getNodeIndexToBeFocused, initItemRef} = this,
+				{numOfItems} = this.state,
+				key = index % numOfItems,
+				itemElement = component({
+					data,
+					[dataIndexAttribute]: index,
+					index,
+					key
+				}),
+				style = {};
+
+			this.composeStyle(style, ...rest);
+
+			this.cc[key] = React.cloneElement(itemElement, {
+				ref: (index === getNodeIndexToBeFocused()) ? (ref) => initItemRef(ref, index) : null,
+				className: classNames(css.listItem, itemElement.props.className),
+				style: {...itemElement.props.style, ...style}
+			});
 		}
 
 		/**
@@ -612,12 +729,7 @@ const VirtualListCoreSpottable = (type) => (BaseComponent) => (
 			return (
 				<BaseComponent
 					{...props}
-					getNodeIndexToBeFocused={this.getNodeIndexToBeFocused}
-					initItemRef={this.initItemRef}
-					lastFocusedIndex={this.lastFocusedIndex}
-					preservedIndex={this.preservedIndex}
 					ref={this.initRef}
-					restoreLastFocused={this.restoreLastFocused}
 					withPlaceholder={this.withPlaceholder}
 				/>
 			);
@@ -625,5 +737,22 @@ const VirtualListCoreSpottable = (type) => (BaseComponent) => (
 	}
 );
 
-export default VirtualListCoreSpottable;
-export {VirtualListCoreSpottable, VirtualListContainerSpottable};
+const VirtualListCore = VirtualListCoreSpottable('JS')(UiVirtualListCore)
+/**
+ * {@link moonstone/VirtualList.VirtualListBase} is a base component for
+ * {@link moonstone/VirtualList.VirtualList} and
+ * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
+ *
+ * @class VirtualListBase
+ * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable
+ * @mixes spotlight/SpotlightContainerDecorator
+ * @ui
+ * @private
+ */
+const VirtualListBase = VirtualListContainerSpottable(
+	Scrollable(VirtualListCore) // including ScrollableSpotlightContainerDecorator
+);
+
+export default VirtualListBase;
+export {gridListItemSizeShape, VirtualListCore, VirtualListBase};

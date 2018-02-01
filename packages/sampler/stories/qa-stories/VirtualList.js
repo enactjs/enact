@@ -1,6 +1,6 @@
 import SwitchItem from '@enact/moonstone/SwitchItem';
 import VirtualList from '@enact/moonstone/VirtualList';
-import {VirtualListCore} from '@enact/ui/VirtualList/VirtualListBase';
+import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import PropTypes from 'prop-types';
