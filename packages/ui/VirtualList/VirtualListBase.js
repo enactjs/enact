@@ -700,8 +700,7 @@ class VirtualListCore extends Component {
 		const
 			{...rest} = this.props,
 			{firstIndex, numOfItems} = this.state,
-			{primary} = this,
-			children = this.renderChildren();
+			{primary} = this;
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
@@ -721,7 +720,7 @@ class VirtualListCore extends Component {
 
 		return (
 			<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
-				{children}
+				{this.renderChildren()}
 			</div>
 		);
 	}
