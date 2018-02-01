@@ -12,7 +12,7 @@ import React, {Component} from 'react';
 
 import {dataIndexAttribute, Scrollable} from '../Scrollable';
 
-import css from '@enact/moonstone/VirtualList/ListItem.less';
+import css from './ListItem.less';
 
 const nop = () => {};
 
@@ -151,9 +151,7 @@ class VirtualListCore extends Component {
 		 * @default 0
 		 * @public
 		 */
-		spacing: PropTypes.number,
-
-		withPlaceholder: PropTypes.func
+		spacing: PropTypes.number
 	}
 
 	static contextTypes = contextTypes
@@ -693,11 +691,17 @@ class VirtualListCore extends Component {
 		};
 	}
 
+	renderChildren = () => {
+		const cc = this.cc;
+		return cc.length ? cc : null;
+	}
+
 	render () {
 		const
-			{withPlaceholder, ...rest} = this.props,
+			{...rest} = this.props,
 			{firstIndex, numOfItems} = this.state,
-			{primary, cc} = this;
+			{primary} = this,
+			children = this.renderChildren();
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
@@ -710,7 +714,6 @@ class VirtualListCore extends Component {
 		delete rest.overhang;
 		delete rest.pageScroll;
 		delete rest.spacing;
-		delete rest.withPlaceholder;
 
 		if (primary) {
 			this.positionItems({updateFrom: firstIndex, updateTo: firstIndex + numOfItems});
@@ -718,7 +721,7 @@ class VirtualListCore extends Component {
 
 		return (
 			<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
-				{withPlaceholder(cc.length ? cc : null)}
+				{children}
 			</div>
 		);
 	}
