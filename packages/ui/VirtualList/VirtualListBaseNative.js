@@ -813,9 +813,9 @@ class VirtualListCoreNative extends Component {
  * @private
  */
 const VirtualListBaseNative = VirtualListContainerSpottable(
-	ScrollableNative( // including ScrollableSpotlightContainerDecorator
+	 // including ScrollableSpotlightContainerDecorator
 		VirtualListCoreSpottable('Native')(VirtualListCoreNative)
-	)
+
 );
 
 export default VirtualListBaseNative;

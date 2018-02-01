@@ -8,8 +8,9 @@
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
+import Scrollable from '@enact/moonstone/Scrollable';
 import {VirtualListBase as UiVirtualListBase, gridListItemSizeShape} from '@enact/ui/VirtualList';
 
 /**
@@ -198,7 +199,7 @@ const VirtualList = kind({
 		 */
 	},
 
-	render: (props) => <UiVirtualListBase {...props} />
+	render: (props) => <Scrollable wrapped={UiVirtualListBase} {...props} />
 });
 
 /**
@@ -385,7 +386,7 @@ const VirtualGridList = kind({
 		 */
 	},
 
-	render: (props) => <UiVirtualListBase {...props} />
+	render: (props) => <Scrollable wrapped={UiVirtualListBase} {...props} />
 });
 
 export default VirtualList;

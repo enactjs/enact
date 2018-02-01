@@ -476,9 +476,9 @@ class ScrollerBase extends Component {
  */
 const Scroller = SpotlightContainerDecorator(
 	{restrict: 'self-first'},
-	Scrollable(
+//	Scrollable(
 		ScrollerBase
-	)
+//	)
 );
 
 // Docs for Scroller

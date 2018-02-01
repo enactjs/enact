@@ -10,7 +10,7 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import {dataIndexAttribute, Scrollable} from '../Scrollable';
+import {dataIndexAttribute} from '@enact/moonstone/Scrollable';
 import {VirtualListCoreSpottable, VirtualListContainerSpottable} from './VirtualListCoreSpottable';
 
 import css from '@enact/moonstone/VirtualList/ListItem.less';
@@ -816,9 +816,7 @@ class VirtualListCore extends Component {
  * @private
  */
 const VirtualListBase = VirtualListContainerSpottable(
-	Scrollable( // including ScrollableSpotlightContainerDecorator
-		VirtualListCoreSpottable('JS')(VirtualListCore)
-	)
+	VirtualListCoreSpottable('JS')(VirtualListCore)
 );
 
 export default VirtualListBase;
