@@ -48,7 +48,7 @@ const
  * @hoc
  * @private
  */
-class Scrollable extends Component {
+class ScrollableBase extends Component {
 	static displayName = 'ui:Scrollable'
 
 	static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
@@ -997,5 +997,11 @@ class Scrollable extends Component {
 	}
 }
 
+const Scrollable = (Wrapped) => {
+	return (props) =>(
+		<ScrollableBase wrapped={Wrapped} {...props} />
+	);
+};
+
 export default Scrollable;
-export {Scrollable};
+export {Scrollable, ScrollableBase};

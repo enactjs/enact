@@ -4,7 +4,7 @@ import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Scrollable as UiScrollable} from '@enact/ui/Scrollable';
+import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 
 import Scrollbar from './Scrollbar';
 
@@ -55,7 +55,7 @@ const
 		'down': 'up'
 	};
 
-class Scrollable extends UiScrollable {
+class ScrollableBase extends UiScrollableBase {
 	static displayName = 'Scrollable'
 
 	static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
@@ -399,5 +399,11 @@ class Scrollable extends UiScrollable {
 	}
 }
 
+const Scrollable = (Wrapped) => {
+	return (props) =>(
+		<ScrollableBase wrapped={Wrapped} {...props} />
+	);
+};
+
 export default Scrollable;
-export {dataIndexAttribute, Scrollable};
+export {dataIndexAttribute, Scrollable, ScrollableBase};

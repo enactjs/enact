@@ -665,12 +665,7 @@ const VirtualListSelector = (type, UiComponent) => (
 	}
 );
 
-const VirtualListCoreJS = (props) => {
-	const Wrapped = VirtualListSelector('JS', UiVirtualListCore);
-	return (
-		<Scrollable wrapped={Wrapped} {...props} />
-	);
-};
+const VirtualListCoreJS = Scrollable(VirtualListSelector('JS', UiVirtualListCore));
 const VirtualListCoreNative = VirtualListSelector('Native', UiVirtualListCoreNative);
 
 
