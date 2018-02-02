@@ -12,7 +12,7 @@ const tap = (node) => {
 
 describe('ToggleIcon Specs', () => {
 
-	it('should call onToggle, onClick, or both when clicked', function () {
+	it('should call onToggle when tapped', function () {
 		const handleToggle = sinon.spy();
 		const subject = mount(
 			<ToggleIcon onToggle={handleToggle}>
