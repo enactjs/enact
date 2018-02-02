@@ -188,8 +188,8 @@ const VirtualListSelector = (type, UiComponent) => (
 
 		_getIndexToScrollDisabled = (direction, currentIndex) => {
 			const
-				{dimensionToExtent, primary, _findSpottableItem} = this,
 				{data, dataSize, spacing} = this.props,
+				{dimensionToExtent, primary, _findSpottableItem} = this,
 				{firstVisibleIndex, lastVisibleIndex} = this.moreInfo,
 				numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent),
 				isPageDown = (direction === 'down' || direction === 'right') ? 1 : -1;
@@ -350,6 +350,8 @@ const VirtualListSelector = (type, UiComponent) => (
 			const
 				{cbScrollTo, data, dataSize} = this.props,
 				{firstIndex, numOfItems} = this.state,
+				{isPrimaryDirectionVertical} = this,
+				rtl = this.context.rtl,
 				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
 
 			if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled) {
@@ -358,13 +360,13 @@ const VirtualListSelector = (type, UiComponent) => (
 
 			const
 				isForward = (
-					this.isPrimaryDirectionVertical && isDown(keyCode) ||
-					!this.isPrimaryDirectionVertical && (!this.context.rtl && isRight(keyCode) || this.context.rtl && isLeft(keyCode)) ||
+					isPrimaryDirectionVertical && isDown(keyCode) ||
+					!isPrimaryDirectionVertical && (!rtl && isRight(keyCode) || rtl && isLeft(keyCode)) ||
 					null
 				),
 				isBackward = (
-					this.isPrimaryDirectionVertical && isUp(keyCode) ||
-					!this.isPrimaryDirectionVertical && (!this.context.rtl && isLeft(keyCode) || this.context.rtl && isRight(keyCode)) ||
+					isPrimaryDirectionVertical && isUp(keyCode) ||
+					!isPrimaryDirectionVertical && (!rtl && isLeft(keyCode) || rtl && isRight(keyCode)) ||
 					null
 				);
 
@@ -679,8 +681,8 @@ const VirtualListSelector = (type, UiComponent) => (
 		applyStyleToNewNode = (index, ...rest) => {
 			const
 				{component, data} = this.props,
-				{getNodeIndexToBeFocused, initItemRef} = this,
 				{numOfItems} = this.state,
+				{getNodeIndexToBeFocused, initItemRef} = this,
 				key = index % numOfItems,
 				itemElement = component({
 					data,
