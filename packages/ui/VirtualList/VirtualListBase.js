@@ -10,10 +10,7 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import {dataIndexAttribute} from '@enact/moonstone/Scrollable';
-import {VirtualListCoreSpottable, VirtualListContainerSpottable} from './VirtualListCoreSpottable';
-
-import css from '@enact/moonstone/VirtualList/ListItem.less';
+import css from './ListItem.less';
 
 const nop = () => {};
 
@@ -40,8 +37,8 @@ const gridListItemSizeShape = PropTypes.shape({
  * @ui
  * @private
  */
-class VirtualListCore extends Component {
-	static displayName = 'VirtualListBase'
+class VirtualListBase extends Component {
+	static displayName = 'ui:VirtualListBase'
 
 	static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
 		/**
@@ -125,12 +122,6 @@ class VirtualListCore extends Component {
 		 */
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
-		initItemRef: PropTypes.func,
-
-		getNodeIndexToBeFocused: PropTypes.func,
-
-		lastFocusedIndex: PropTypes.object,
-
 		/**
 		 * Number of spare DOM node.
 		 * `3` is good for the default value experimentally and
@@ -152,33 +143,13 @@ class VirtualListCore extends Component {
 		pageScroll: PropTypes.bool,
 
 		/**
-		 * The index to restore
-		 *
-		 * @type {Number}
-		 * @default null
-		 * @public
-		 */
-		preservedIndex: PropTypes.object,
-
-		/**
-		 * The value whether restoring focus or not
-		 *
-		 * @type {Number}
-		 * @default null
-		 * @public
-		 */
-		restoreLastFocused: PropTypes.bool,
-
-		/**
 		 * Spacing between items.
 		 *
 		 * @type {Number}
 		 * @default 0
 		 * @public
 		 */
-		spacing: PropTypes.number,
-
-		withPlaceholder: PropTypes.func
+		spacing: PropTypes.number
 	}
 
 	static contextTypes = contextTypes
@@ -188,12 +159,8 @@ class VirtualListCore extends Component {
 		data: [],
 		dataSize: 0,
 		direction: 'vertical',
-		getNodeIndexToBeFocused: nop,
-		lastFocusedIndex: null,
 		overhang: 3,
 		pageScroll: false,
-		preservedIndex: null,
-		restoreLastFocused: false,
 		spacing: 0
 	}
 
@@ -398,7 +365,7 @@ class VirtualListCore extends Component {
 
 	updateStatesAndBounds (props) {
 		const
-			{dataSize, overhang, preservedIndex, restoreLastFocused} = props,
+			{dataSize, overhang} = props,
 			{firstIndex} = this.state,
 			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
@@ -416,16 +383,7 @@ class VirtualListCore extends Component {
 		this.calculateScrollBounds(props);
 		this.updateMoreInfo(dataSize, scrollPosition);
 
-		if (restoreLastFocused &&
-			numOfItems > 0 &&
-			(preservedIndex < dataSize) &&
-			(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
-			// If we need to restore last focus and the index is beyond the screen,
-			// we call `scrollTo` to create DOM for it.
-			this.props.cbScrollTo({index: preservedIndex, animate: false});
-		} else {
-			newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
-		}
+		newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
 
 		this.setState({firstIndex: newFirstIndex, numOfItems});
 	}
@@ -589,12 +547,11 @@ class VirtualListCore extends Component {
 
 	applyStyleToNewNode = (index, ...rest) => {
 		const
-			{component, data, getNodeIndexToBeFocused, initItemRef} = this.props,
+			{component, data} = this.props,
 			{numOfItems} = this.state,
 			key = index % numOfItems,
 			itemElement = component({
 				data,
-				[dataIndexAttribute]: index,
 				index,
 				key
 			}),
@@ -603,7 +560,6 @@ class VirtualListCore extends Component {
 		this.composeStyle(style, ...rest);
 
 		this.cc[key] = React.cloneElement(itemElement, {
-			ref: (index === getNodeIndexToBeFocused()) ? (ref) => initItemRef(ref, index) : null,
 			className: classNames(css.listItem, itemElement.props.className),
 			style: {...itemElement.props.style, ...style}
 		});
@@ -613,7 +569,7 @@ class VirtualListCore extends Component {
 		const
 			key = index % this.state.numOfItems,
 			style = {display: 'none'},
-			attributes = {[dataIndexAttribute]: index, key, style};
+			attributes = {key, style};
 		this.cc[key] = (<div {...attributes} />);
 	}
 
@@ -694,41 +650,6 @@ class VirtualListCore extends Component {
 		return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
 	}
 
-	calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
-		const
-			{lastFocusedIndex, pageScroll} = this.props,
-			{numOfItems} = this.state,
-			{primary} = this,
-			offsetToClientEnd = primary.clientSize - primary.itemSize,
-			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
-
-		if (!isNaN(focusedIndex)) {
-			let gridPosition = this.getGridPosition(focusedIndex);
-
-			if (numOfItems > 0 && focusedIndex % numOfItems !== lastFocusedIndex % numOfItems) {
-				const node = this.containerRef.children[lastFocusedIndex % numOfItems];
-				if (node) {
-					node.blur();
-				}
-			}
-
-			if (primary.clientSize >= primary.itemSize) {
-				if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
-					gridPosition.primaryPosition -= pageScroll ? 0 : offsetToClientEnd;
-				} else if (gridPosition.primaryPosition >= scrollPosition) { // inside of client
-					gridPosition.primaryPosition = scrollPosition;
-				} else { // backward over
-					gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
-				}
-			}
-
-			// Since the result is used as a target position to be scrolled,
-			// scrondaryPosition should be 0 here.
-			gridPosition.secondaryPosition = 0;
-			return this.gridPositionToItemPosition(gridPosition);
-		}
-	}
-
 	isSameTotalItemSizeWithClient = () => {
 		const
 			node = this.containerRef,
@@ -759,6 +680,9 @@ class VirtualListCore extends Component {
 		return false;
 	}
 
+	// override
+	onKeyDown = () => {}
+
 	// render
 
 	initRef (prop) {
@@ -767,11 +691,16 @@ class VirtualListCore extends Component {
 		};
 	}
 
+	renderChildren = () => {
+		const cc = this.cc;
+		return cc.length ? cc : null;
+	}
+
 	render () {
 		const
-			{withPlaceholder, ...rest} = this.props,
+			{...rest} = this.props,
 			{firstIndex, numOfItems} = this.state,
-			{primary, cc} = this;
+			{primary} = this;
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
@@ -779,17 +708,11 @@ class VirtualListCore extends Component {
 		delete rest.data;
 		delete rest.dataSize;
 		delete rest.direction;
-		delete rest.getNodeIndexToBeFocused;
 		delete rest.itemSize;
-		delete rest.initItemRef;
-		delete rest.lastFocusedIndex;
 		delete rest.nodeIndexToBeFocused;
 		delete rest.overhang;
 		delete rest.pageScroll;
-		delete rest.preservedIndex;
-		delete rest.restoreLastFocused;
 		delete rest.spacing;
-		delete rest.withPlaceholder;
 
 		if (primary) {
 			this.positionItems({updateFrom: firstIndex, updateTo: firstIndex + numOfItems});
@@ -797,27 +720,11 @@ class VirtualListCore extends Component {
 
 		return (
 			<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
-				{withPlaceholder(cc.length ? cc : null)}
+				{this.renderChildren()}
 			</div>
 		);
 	}
 }
 
-/**
- * {@link moonstone/VirtualList.VirtualListBase} is a base component for
- * {@link moonstone/VirtualList.VirtualList} and
- * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
- *
- * @class VirtualListBase
- * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable
- * @mixes spotlight/SpotlightContainerDecorator
- * @ui
- * @private
- */
-const VirtualListBase = VirtualListContainerSpottable(
-	VirtualListCoreSpottable('JS')(VirtualListCore)
-);
-
 export default VirtualListBase;
-export {gridListItemSizeShape, VirtualListCore, VirtualListBase};
+export {gridListItemSizeShape, VirtualListBase};

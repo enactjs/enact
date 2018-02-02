@@ -184,7 +184,7 @@ class Scrollable extends UiScrollable {
 		if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || this.isDragging)) {
 			const
 				item = e.target,
-				positionFn = this.innerChildRef.calculatePositionOnFocus,
+				positionFn = this.childRef.calculatePositionOnFocus,
 				spotItem = Spotlight.getCurrent();
 
 			if (item && item === spotItem && positionFn) {
@@ -221,20 +221,19 @@ class Scrollable extends UiScrollable {
 			{getEndPoint, scrollToAccumulatedTarget} = this,
 			bounds = this.getScrollBounds(),
 			canScrollVertically = this.canScrollVertically(bounds),
-			innerChildRef = this.innerChildRef,
 			childRef = this.childRef,
 			pageDistance = this.isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
 			spotItem = Spotlight.getCurrent();
 
 		if (!Spotlight.getPointerMode() && spotItem) {
 			// Should skip scroll by page when spotItem is paging control button of Scrollbar
-			if (!innerChildRef.containerRef.contains(spotItem)) {
+			if (!childRef.containerRef.contains(spotItem)) {
 				return;
 			}
 
 			const
 				// VirtualList and Scroller have a containerId on containerRef
-				containerId = innerChildRef.containerRef.dataset.containerId,
+				containerId = childRef.containerRef.dataset.containerId,
 				direction = this.getPageDirection(keyCode),
 				rDirection = reverseDirections[direction],
 				viewportBounds = this.containerRef.getBoundingClientRect(),
@@ -296,12 +295,12 @@ class Scrollable extends UiScrollable {
 	}
 
 	focusOnItem () {
-		if (this.indexToFocus !== null && typeof this.innerChildRef.focusByIndex === 'function') {
-			this.innerChildRef.focusByIndex(this.indexToFocus);
+		if (this.indexToFocus !== null && typeof this.childRef.focusByIndex === 'function') {
+			this.childRef.focusByIndex(this.indexToFocus);
 			this.indexToFocus = null;
 		}
-		if (this.nodeToFocus !== null && typeof this.innerChildRef.focusOnNode === 'function') {
-			this.innerChildRef.focusOnNode(this.nodeToFocus);
+		if (this.nodeToFocus !== null && typeof this.childRef.focusOnNode === 'function') {
+			this.childRef.focusOnNode(this.nodeToFocus);
 			this.nodeToFocus = null;
 		}
 	}
@@ -325,7 +324,7 @@ class Scrollable extends UiScrollable {
 	alertThumbAfterRendered = () => {
 		const spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem && this.innerChildRef.containerRef.contains(spotItem) && this.isUpdatedScrollThumb) {
+		if (!Spotlight.getPointerMode() && spotItem && this.childRef.containerRef.contains(spotItem) && this.isUpdatedScrollThumb) {
 			this.alertThumb();
 		}
 	}
@@ -333,7 +332,7 @@ class Scrollable extends UiScrollable {
 	updateScrollOnFocus () {
 		const
 			focusedItem = Spotlight.getCurrent(),
-			{containerRef, calculatePositionOnFocus} = this.innerChildRef;
+			{containerRef, calculatePositionOnFocus} = this.childRef;
 
 		if (focusedItem && containerRef && containerRef.contains(focusedItem)) {
 			const
@@ -390,7 +389,6 @@ class Scrollable extends UiScrollable {
 						cbScrollTo={this.scrollTo}
 						className={css.content}
 						onScroll={this.handleScroll}
-						innerRef={this.initInnerChildRef}
 						ref={this.initChildRef}
 					/>
 					{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}

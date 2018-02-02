@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Toggleable from '@enact/ui/Toggleable';
 
-import css from '@enact/moonstone/Scroller/Scrollbar.less';
+import css from './Scrollbar.less';
 
 const classNameMap = {
 	up: css.scrollbarUpButton,

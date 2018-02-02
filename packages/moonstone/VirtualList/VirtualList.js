@@ -7,11 +7,13 @@
  * @module moonstone/VirtualList
  */
 
+import {gridListItemSizeShape} from '@enact/ui/VirtualList/VirtualListBase';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Scrollable from '@enact/moonstone/Scrollable';
-import {VirtualListBase as UiVirtualListBase, gridListItemSizeShape} from '@enact/ui/VirtualList';
+
+import Scrollable from '../Scrollable';
+import {VirtualListBase} from './VirtualListBase';
 
 /**
  * {@link moonstone/VirtualList.VirtualList} is a VirtualList with Moonstone styling.
@@ -199,7 +201,7 @@ const VirtualList = kind({
 		 */
 	},
 
-	render: (props) => <Scrollable wrapped={UiVirtualListBase} {...props} />
+	render: (props) => <Scrollable wrapped={VirtualListBase} {...props} />
 });
 
 /**
@@ -386,7 +388,7 @@ const VirtualGridList = kind({
 		 */
 	},
 
-	render: (props) => <Scrollable wrapped={UiVirtualListBase} {...props} />
+	render: (props) => <Scrollable wrapped={VirtualListBase} {...props} />
 });
 
 export default VirtualList;

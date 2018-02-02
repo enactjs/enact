@@ -1,5 +1,3 @@
-@import '../styles/variables.less';
-
 .scrollbar {
 	background: inherit;
 	display: flex;
@@ -27,10 +25,10 @@
 	}
 
 	&.corner {
-		-webkit-padding-end: @moon-icon-button-small-size;
+		-webkit-padding-end: 0; // FIX ME
 
 		:global(.enact-text-large) & {
-			-webkit-padding-end: @moon-icon-button-small-size-large;
+			-webkit-padding-end: 0; // FIX ME
 		}
 	}
 

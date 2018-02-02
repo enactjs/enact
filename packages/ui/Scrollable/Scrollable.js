@@ -162,7 +162,6 @@ class Scrollable extends Component {
 			isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
 		};
 
-		this.initInnerChildRef = this.initRef('innerChildRef');
 		this.initChildRef = this.initRef('childRef');
 
 		this.verticalScrollbarProps = {
@@ -207,7 +206,7 @@ class Scrollable extends Component {
 		const bounds = this.getScrollBounds();
 
 		this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
-		this.direction = this.innerChildRef.props.direction;
+		this.direction = this.childRef.props.direction;
 		this.updateEventListeners();
 		this.updateScrollbars();
 
@@ -220,21 +219,21 @@ class Scrollable extends Component {
 
 	componentDidUpdate (prevProps, prevState) {
 		// Need to sync calculated client size if it is different from the real size
-		if (this.innerChildRef.syncClientSize) {
+		if (this.childRef.syncClientSize) {
 			const {isVerticalScrollbarVisible, isHorizontalScrollbarVisible} = this.state;
 			// If we actually synced, we need to reset scroll position.
-			if (this.innerChildRef.syncClientSize()) {
+			if (this.childRef.syncClientSize()) {
 				this.setScrollLeft(0);
 				this.setScrollTop(0);
 			}
 			// Need to check item total size is same with client size when scrollbar is visible
 			// By hiding scrollbar again, infinite function call maybe happens
-			this.isFitClientSize = (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) && this.innerChildRef.isSameTotalItemSizeWithClient();
+			this.isFitClientSize = (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) && this.childRef.isSameTotalItemSizeWithClient();
 		}
 
 		this.clampScrollPosition();
 
-		this.direction = this.innerChildRef.props.direction;
+		this.direction = this.childRef.props.direction;
 		this.updateEventListeners();
 		if (!this.isFitClientSize) {
 			this.updateScrollbars();
@@ -260,7 +259,7 @@ class Scrollable extends Component {
 	componentWillUnmount () {
 		const
 			{containerRef} = this,
-			childContainerRef = this.innerChildRef.containerRef;
+			childContainerRef = this.childRef.containerRef;
 
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
 		if (this.animator.isAnimating()) {
@@ -343,7 +342,7 @@ class Scrollable extends Component {
 	scrollToInfo = null
 
 	// component info
-	innerChildRef = null
+	childRef = null
 
 	// scroll animator
 	animator = new ScrollAnimator()
@@ -713,7 +712,7 @@ class Scrollable extends Component {
 			this.setScrollTop(top);
 		}
 
-		this.innerChildRef.setScrollPosition(this.scrollLeft, this.scrollTop, dirX, dirY);
+		this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, dirX, dirY);
 		this.doScrolling();
 	}
 
@@ -770,11 +769,11 @@ class Scrollable extends Component {
 					}
 				}
 			} else {
-				if (typeof opt.index === 'number' && typeof this.innerChildRef.getItemPosition === 'function') {
-					itemPos = this.innerChildRef.getItemPosition(opt.index, opt.stickTo);
+				if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
+					itemPos = this.childRef.getItemPosition(opt.index, opt.stickTo);
 				} else if (opt.node instanceof Object) {
-					if (opt.node.nodeType === 1 && typeof this.innerChildRef.getNodePosition === 'function') {
-						itemPos = this.innerChildRef.getNodePosition(opt.node);
+					if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
+						itemPos = this.childRef.getNodePosition(opt.node);
 					}
 				}
 				if (itemPos) {
@@ -916,21 +915,21 @@ class Scrollable extends Component {
 	// ref
 
 	getScrollBounds () {
-		if (typeof this.innerChildRef.getScrollBounds === 'function') {
-			return this.innerChildRef.getScrollBounds();
+		if (typeof this.childRef.getScrollBounds === 'function') {
+			return this.childRef.getScrollBounds();
 		}
 	}
 
 	getMoreInfo () {
-		if (typeof this.innerChildRef.getMoreInfo === 'function') {
-			return this.innerChildRef.getMoreInfo();
+		if (typeof this.childRef.getMoreInfo === 'function') {
+			return this.childRef.getMoreInfo();
 		}
 	}
 
 	updateEventListeners = () => {
 		const
 			{containerRef} = this,
-			childContainerRef = this.innerChildRef.containerRef;
+			childContainerRef = this.childRef.containerRef;
 
 		if (containerRef && containerRef.addEventListener) {
 			// FIXME `onWheel` doesn't work on the v8 snapshot.
@@ -945,7 +944,7 @@ class Scrollable extends Component {
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
 	enqueueForceUpdate = () => {
-		this.innerChildRef.calculateMetrics();
+		this.childRef.calculateMetrics();
 		this.forceUpdate();
 	}
 
@@ -958,9 +957,9 @@ class Scrollable extends Component {
 	}
 
 	handleScroll = () => {
-		if (!this.animator.isAnimating() && this.innerChildRef && this.innerChildRef.containerRef) {
-			this.innerChildRef.containerRef.scrollTop = this.scrollTop;
-			this.innerChildRef.containerRef.scrollLeft = this.scrollLeft;
+		if (!this.animator.isAnimating() && this.childRef && this.childRef.containerRef) {
+			this.childRef.containerRef.scrollTop = this.scrollTop;
+			this.childRef.containerRef.scrollLeft = this.scrollLeft;
 		}
 	}
 
@@ -988,7 +987,6 @@ class Scrollable extends Component {
 						cbScrollTo={this.scrollTo}
 						className={css.content}
 						onScroll={this.handleScroll}
-						innerRef={this.initInnerChildRef}
 						ref={this.initChildRef}
 					/>
 					{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}

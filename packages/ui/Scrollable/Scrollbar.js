@@ -14,7 +14,7 @@ import ri from '@enact/ui/resolution';
 import ScrollButton from './ScrollButton';
 import ScrollThumb from './ScrollThumb';
 
-import css from '@enact/moonstone/Scroller/Scrollbar.less';
+import css from './Scrollbar.less';
 
 const
 	nop = () => {},
