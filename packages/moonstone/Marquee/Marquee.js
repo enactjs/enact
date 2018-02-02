@@ -1,7 +1,7 @@
 /**
  * Provides components for displaying and controlling marqueed text.
  *
- * @see ui/MarqueeDecorator
+ * @see ui/Marquee
  * @module moonstone/Marquee
  * @exports Marquee
  * @exports MarqueeBase
@@ -24,7 +24,7 @@ export {
 	/**
 	 * A block element which will marquee its contents
 	 *
-	 * @see ui/MarqueeDecorator.Marquee
+	 * @see ui/Marquee.Marquee
 	 * @class Marquee
 	 * @memberof moonstone/Marquee
 	 * @public
@@ -34,7 +34,7 @@ export {
 	/**
 	 * Internal component to provide marquee markup
 	 *
-	 * @see ui/MarqueeDecorator.Marquee
+	 * @see ui/Marquee.Marquee
 	 * @class Marquee
 	 * @memberof moonstone/Marquee
 	 * @public
@@ -44,7 +44,7 @@ export {
 	/**
 	 * Adds ability to control descendant marquee instances to a component
 	 *
-	 * @see ui/MarqueeDecorator.MarqueeController
+	 * @see ui/Marquee.MarqueeController
 	 * @hoc
 	 * @name MarqueeController
 	 * @memberof moonstone/Marquee
@@ -55,7 +55,7 @@ export {
 	/**
 	 * Adds marquee behavior to a component
 	 *
-	 * @see ui/MarqueeDecorator.MarqueeDecorator
+	 * @see ui/Marquee.MarqueeDecorator
 	 * @hoc
 	 * @name MarqueeDecorator
 	 * @memberof moonstone/Marquee

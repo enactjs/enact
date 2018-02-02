@@ -16,7 +16,7 @@ import Toggleable from '@enact/ui/Toggleable';
 import Touchable from '@enact/ui/Touchable';
 import Spottable from '@enact/spotlight/Spottable';
 
-import {MarqueeDecorator} from '@enact/moonstone/Marquee';
+import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import OverlayDecorator from './OverlayDecorator';
