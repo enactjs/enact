@@ -1,16 +1,19 @@
 /*
- * Exports the {@link ui/Scroller.ScrollerNative} and
- * {@link ui/Scroller.ScrollerBase} components.
- * The default export is {@link ui/Scroller.ScrollerNative}.
+ * Exports the {@link moonstone/Scroller.ScrollerNative} and
+ * {@link moonstone/Scroller.ScrollerBase} components.
+ * The default export is {@link moonstone/Scroller.ScrollerNative}.
  */
 
-import ScrollableNative from '../Scrollable/ScrollableNative';
-import {ScrollerBase} from './Scroller';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
-const ScrollerNativeBase = ScrollerBase;
+import {ScrollableNative as UiScrollableNative} from '@enact/ui/Scrollable/ScrollableNative';
+import {ScrollerBaseNative as UiScrollerBaseNative} from '@enact/ui/ScrollerNative';
+
+class ScrollerBaseNative extends UiScrollerBaseNative {
+}
 
 /**
- * {@link ui/Scroller.ScrollerNative} is a Scroller with ui styling,
+ * {@link moonstone/Scroller.ScrollerNative} is a Scroller with Moonstone styling,
  * SpotlightContainerDecorator and ScrollableNative applied.
  *
  * Usage:
@@ -19,13 +22,18 @@ const ScrollerNativeBase = ScrollerBase;
  * ```
  *
  * @class ScrollerNative
- * @memberof ui/Scroller
- * @mixes ui/Scroller.ScrollableNative
- * @see ui/Scroller.ScrollerBase
+ * @memberof moonstone/Scroller
+ * @mixes moonstone/Scroller.ScrollableNative
+ * @see moonstone/Scroller.ScrollerBase
  * @ui
  * @private
  */
-const ScrollerNative = ScrollableNative(ScrollerNativeBase);
+const ScrollerNative = SpotlightContainerDecorator(
+	{restrict: 'self-first'},
+	UiScrollableNative(
+		UiScrollerBaseNative
+	)
+);
 
 // Docs for ScrollerNative
 /**
@@ -48,7 +56,7 @@ const ScrollerNative = ScrollableNative(ScrollerNativeBase);
  *
  * @name cbScrollTo
  * @type {Function}
- * @memberof ui/Scroller.ScrollerNative
+ * @memberof moonstone/Scroller.ScrollerNative
  * @example
  *	// If you set cbScrollTo prop like below;
  *	cbScrollTo: (fn) => {this.scrollTo = fn;}
@@ -64,7 +72,7 @@ const ScrollerNative = ScrollableNative(ScrollerNativeBase);
  *
  * @name focusableScrollbar
  * @type {Boolean}
- * @memberof ui/Scroller.ScrollerNative
+ * @memberof moonstone/Scroller.ScrollerNative
  * @instance
  * @public
  */
@@ -75,7 +83,7 @@ const ScrollerNative = ScrollableNative(ScrollerNativeBase);
  * @name direction
  * @type {String}
  * @default 'both'
- * @memberof ui/Scroller.ScrollerNative
+ * @memberof moonstone/Scroller.ScrollerNative
  * @instance
  * @public
  */
@@ -87,7 +95,7 @@ const ScrollerNative = ScrollableNative(ScrollerNativeBase);
  * @name horizontalScrollbar
  * @type {String}
  * @default 'auto'
- * @memberof ui/Scroller.ScrollerNative
+ * @memberof moonstone/Scroller.ScrollerNative
  * @instance
  * @public
  */
@@ -97,7 +105,7 @@ const ScrollerNative = ScrollableNative(ScrollerNativeBase);
  *
  * @name onScroll
  * @type {Function}
- * @memberof ui/Scroller.ScrollerNative
+ * @memberof moonstone/Scroller.ScrollerNative
  * @instance
  * @public
  */
@@ -107,7 +115,7 @@ const ScrollerNative = ScrollableNative(ScrollerNativeBase);
  *
  * @name onScrollStart
  * @type {Function}
- * @memberof ui/Scroller.ScrollerNative
+ * @memberof moonstone/Scroller.ScrollerNative
  * @instance
  * @public
  */
@@ -117,7 +125,7 @@ const ScrollerNative = ScrollableNative(ScrollerNativeBase);
  *
  * @name onScrollStop
  * @type {Function}
- * @memberof ui/Scroller.ScrollerNative
+ * @memberof moonstone/Scroller.ScrollerNative
  * @instance
  * @public
  */
@@ -129,10 +137,10 @@ const ScrollerNative = ScrollableNative(ScrollerNativeBase);
  * @name verticalScrollbar
  * @type {String}
  * @default 'auto'
- * @memberof ui/Scroller.ScrollerNative
+ * @memberof moonstone/Scroller.ScrollerNative
  * @instance
  * @public
  */
 
 export default ScrollerNative;
-export {ScrollerNative, ScrollerNativeBase};
+export {ScrollerNative, ScrollerBaseNative};
