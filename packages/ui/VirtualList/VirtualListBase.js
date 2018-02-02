@@ -683,6 +683,9 @@ class VirtualListCore extends Component {
 		return false;
 	}
 
+	// override
+	onKeyDown = () => {}
+
 	// render
 
 	initRef (prop) {

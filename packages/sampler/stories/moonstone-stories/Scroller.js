@@ -1,4 +1,4 @@
-import Scroller, {ScrollerBase} from '@enact/ui/Scroller';
+import Scroller, {ScrollerBase} from '@enact/moonstone/Scroller';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
