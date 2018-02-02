@@ -3,7 +3,6 @@
  *
  * @see ui/MarqueeDecorator
  * @module moonstone/Marquee
- * @exports controlContextTypes
  * @exports Marquee
  * @exports MarqueeBase
  * @exports MarqueeController
@@ -43,22 +42,22 @@ export {
 	MarqueeBase,
 
 	/**
-	 * Adds marquee behavior to a component
+	 * Adds ability to control descendant marquee instances to a component
 	 *
-	 * @see ui/MarqueeDecorator.MarqueeDecorator
+	 * @see ui/MarqueeDecorator.MarqueeController
 	 * @hoc
-	 * @name MarqueeDecorator
+	 * @name MarqueeController
 	 * @memberof moonstone/Marquee
 	 * @public
 	 */
 	MarqueeController,
 
 	/**
-	 * Adds ability to control descendant marquee instances to a component
+	 * Adds marquee behavior to a component
 	 *
-	 * @see ui/MarqueeDecorator.MarqueeController
+	 * @see ui/MarqueeDecorator.MarqueeDecorator
 	 * @hoc
-	 * @name MarqueeController
+	 * @name MarqueeDecorator
 	 * @memberof moonstone/Marquee
 	 * @public
 	 */
