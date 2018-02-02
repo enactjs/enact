@@ -2,28 +2,28 @@ import Spinner from '@enact/moonstone/Spinner';
 import Button from '@enact/moonstone/Button';
 import ri from '@enact/ui/resolution';
 import React from 'react';
-import {action, storiesOf} from '@kadira/storybook';
-import {text, boolean, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {text, boolean, select} from '@storybook/addon-knobs';
 import nullify from '../../src/utils/nullify.js';
 
 // Set up some defaults for info and knobs
 const
 	prop = {
 		longText:'SpinnerWithLongText SpinnerWithLongText SpinnerWithLongText'
-	},
-	style = {
-		spinnerDiv: {
-			height: ri.scale(420) + 'px',
-			border: '3px dotted red'
-		}
 	};
 
-storiesOf('Spinner')
-	.addWithInfo(
+storiesOf('Spinner', module)
+	.add(
 		'with long content',
 		() => (
 			<div>
-				<div style={style.spinnerDiv}>
+				<div
+					style={{
+						height: ri.unit(420, 'rem'),
+						border: ri.unit(3, 'rem') + ' dotted red'
+					}}
+				>
 					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 					<Button onClick={action('Inside Button events')}>Button</Button>
 					<Spinner
@@ -40,11 +40,16 @@ storiesOf('Spinner')
 		)
 	)
 
-	.addWithInfo(
+	.add(
 		'blocking click events',
 		() => (
 			<div>
-				<div style={style.spinnerDiv}>
+				<div
+					style={{
+						height: ri.unit(420, 'rem'),
+						border: ri.unit(3, 'rem') + ' dotted red'
+					}}
+				>
 					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 					<Button onClick={action('Inside Button events')}>Button</Button>
 					<Spinner

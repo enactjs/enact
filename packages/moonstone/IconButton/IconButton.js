@@ -13,6 +13,7 @@
 import kind from '@enact/core/kind';
 import {IconButtonBase as UiIconButtonBase} from '@enact/ui/IconButton';
 import Pure from '@enact/ui/internal/Pure';
+import Touchable from '@enact/ui/Touchable';
 import Spottable from '@enact/spotlight/Spottable';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -22,7 +23,6 @@ import {ButtonBase} from '../Button';
 import Icon from '../Icon';
 import Skinnable from '../Skinnable';
 import TooltipDecorator from '../TooltipDecorator';
-import Touchable from '../internal/Touchable';
 
 import componentCss from './IconButton.less';
 

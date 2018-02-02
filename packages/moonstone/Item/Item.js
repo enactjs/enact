@@ -13,11 +13,11 @@ import Pure from '@enact/ui/internal/Pure';
 import Slottable from '@enact/ui/Slottable';
 import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 import Toggleable from '@enact/ui/Toggleable';
+import Touchable from '@enact/ui/Touchable';
 import Spottable from '@enact/spotlight/Spottable';
 
 import {MarqueeDecorator} from '@enact/moonstone/Marquee';
 import Skinnable from '../Skinnable';
-import Touchable from '../internal/Touchable';
 
 import OverlayDecorator from './OverlayDecorator';
 
