@@ -97,14 +97,6 @@ class VirtualListBase extends Component {
 		data: PropTypes.any,
 
 		/**
-		 * Spotlight container Id
-		 *
-		 * @type {String}
-		 * @private
-		 */
-		'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types
-
-		/**
 		 * Size of the data.
 		 *
 		 * @type {Number}

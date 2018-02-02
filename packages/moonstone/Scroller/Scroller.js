@@ -9,6 +9,7 @@
 import {forward} from '@enact/core/handle';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import kind from '@enact/core/kind';
+import React from 'react';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import {Spotlight, getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
@@ -246,15 +247,8 @@ class ScrollerBase extends UiScrollerBase {
  * @ui
  * @public
  */
-const ScrollerCore = SpotlightContainerDecorator(
-	{restrict: 'self-first'},
-	ScrollerBase
-);
-
-const Scroller = kind({
-	name: 'Scroller',
-	render: (props) => <Scrollable wrapped={ScrollerCore} {...props} />
-});
+const ScrollerCore = (props) => (<Scrollable wrapped={ScrollerBase} {...props} />);
+const Scroller = SpotlightContainerDecorator({restrict: 'self-first'}, ScrollerCore);
 
 /**
  * {@link moonstone/Scroller.Scroller} is a Scroller with Moonstone styling,

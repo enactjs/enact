@@ -12,7 +12,6 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Scrollable from '../Scrollable';
 import {VirtualListBase} from './VirtualListBase';
 
 /**
@@ -201,7 +200,7 @@ const VirtualList = kind({
 		 */
 	},
 
-	render: (props) => <Scrollable wrapped={VirtualListBase} {...props} />
+	render: (props) => <VirtualListBase {...props} />
 });
 
 /**
@@ -388,7 +387,7 @@ const VirtualGridList = kind({
 		 */
 	},
 
-	render: (props) => <Scrollable wrapped={VirtualListBase} {...props} />
+	render: (props) => <VirtualListBase {...props} />
 });
 
 export default VirtualList;

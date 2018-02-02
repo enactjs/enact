@@ -10,7 +10,7 @@ import Spottable from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListCore} from '@enact/ui/VirtualList/VirtualListBase';
 import {VirtualListBaseNative as UiVirtualListCoreNative} from '@enact/ui/VirtualList/VirtualListBaseNative';
 
-import {dataIndexAttribute} from '../Scrollable';
+import {dataIndexAttribute, Scrollable} from '../Scrollable';
 
 import css from '@enact/ui/VirtualList/ListItem.less';
 
@@ -36,49 +36,12 @@ const VirtualListSelector = (type, UiComponent) => (
 	class VirtualListCore extends UiComponent {
 		static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
 			/**
-			 * Callback method of scrollTo.
-			 * Normally, `Scrollable` should set this value.
-			 *
-			 * @type {Function}
-			 * @private
-			 */
-			cbScrollTo: PropTypes.func,
-
-			/**
-			 * Data for the list.
-			 * Check mutation of this and determine whether the list should update or not.
-			 *
-			 * @type {Any}
-			 * @default []
-			 * @public
-			 */
-			data: PropTypes.any,
-
-			/**
 			 * Spotlight container Id
 			 *
 			 * @type {String}
 			 * @private
 			 */
-			'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types
-
-			/**
-			 * Size of the data.
-			 *
-			 * @type {Number}
-			 * @default 0
-			 * @public
-			 */
-			dataSize: PropTypes.number,
-
-			/**
-			 * Spacing between items.
-			 *
-			 * @type {Number}
-			 * @default 0
-			 * @public
-			 */
-			spacing: PropTypes.number
+			'data-container-id': PropTypes.string // eslint-disable-line react/sort-prop-types
 		}
 
 		constructor (props) {
@@ -702,8 +665,14 @@ const VirtualListSelector = (type, UiComponent) => (
 	}
 );
 
-const VirtualListCoreJS = VirtualListSelector('JS', UiVirtualListCore);
+const VirtualListCoreJS = (props) => {
+	const Wrapped = VirtualListSelector('JS', UiVirtualListCore);
+	return (
+		<Scrollable wrapped={Wrapped} {...props} />
+	);
+};
 const VirtualListCoreNative = VirtualListSelector('Native', UiVirtualListCoreNative);
+
 
 /**
  * {@link moonstone/VirtualList.VirtualListBase} is a base component for

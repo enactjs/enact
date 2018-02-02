@@ -1,7 +1,7 @@
 import Item from '@enact/moonstone/Item';
 import VirtualList from '@enact/moonstone/VirtualList';
 // import {VirtualListNative as VirtualList} from '@enact/moonstone/VirtualList/VirtualListNative.js';
-import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
+import {VirtualListBase} from '@enact/moonstone/VirtualList/VirtualListBase';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -12,7 +12,7 @@ import {withInfo} from '@storybook/addon-info';
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('VirtualList', VirtualListCore, VirtualList);
+const Config = mergeComponentMetadata('VirtualList', VirtualListBase, VirtualList);
 
 const
 	items = [],
