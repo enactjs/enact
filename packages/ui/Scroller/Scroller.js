@@ -13,7 +13,7 @@ import React, {Component} from 'react';
 
 import Scrollable from '../Scrollable';
 
-import css from '@enact/ui/Scroller/Scroller.less';
+import css from '@enact/moonstone/Scroller/Scroller.less';
 
 const
 	reverseDirections = {
