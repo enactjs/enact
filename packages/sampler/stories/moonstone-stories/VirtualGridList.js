@@ -1,6 +1,7 @@
+import {VirtualGridList as UiVirtualGridList} from '@enact/ui/VirtualList';
 import {VirtualGridList} from '@enact/moonstone/VirtualList';
 import GridListImageItem from '@enact/ui/VirtualList/GridListImageItem';
-import {VirtualListBase} from '@enact/moonstone/VirtualList/VirtualListBase';
+import VirtualListBase from '@enact/ui/VirtualList/VirtualListBase';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -42,6 +43,33 @@ for (let i = 0; i < 1000; i++) {
 
 	items.push({text, subText, source});
 }
+
+storiesOf('UI', module)
+	.add(
+		'VirtualList.VirtualGridList',
+		withInfo({
+			propTables: [Config],
+			text: 'Basic usage of VirtualGridList'
+		})(() => (
+			<UiVirtualGridList
+				component={renderItem}
+				data={items}
+				dataSize={number('dataSize', items.length)}
+				direction={select('direction', prop.direction, 'vertical')}
+				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+				itemSize={{
+					minWidth: ri.scale(number('minWidth', 180)),
+					minHeight: ri.scale(number('minHeight', 270))
+				}}
+				onScrollStart={action('onScrollStart')}
+				onScrollStop={action('onScrollStop')}
+				spacing={ri.scale(number('spacing', 20))}
+				style={{
+					height: ri.unit(549, 'rem')
+				}}
+			/>
+		))
+	);
 
 storiesOf('Moonstone', module)
 	.add(

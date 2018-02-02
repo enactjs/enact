@@ -1,7 +1,7 @@
 import Item from '@enact/moonstone/Item';
+import {VirtualList as UiVirtualList} from '@enact/ui/VirtualList';
 import VirtualList from '@enact/moonstone/VirtualList';
-// import {VirtualListNative as VirtualList} from '@enact/moonstone/VirtualList/VirtualListNative.js';
-import {VirtualListBase} from '@enact/moonstone/VirtualList/VirtualListBase';
+import VirtualListBase from '@enact/moonstone/VirtualList/VirtualListBase';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -34,6 +34,32 @@ const
 for (let i = 0; i < 1000; i++) {
 	items.push('Item ' + ('00' + i).slice(-3));
 }
+
+storiesOf('UI', module)
+	.add(
+		'VirtualList',
+		withInfo({
+			propTables: [Config],
+			text: 'Basic usage of VirtualList'
+		})(() => {
+			const itemSize = ri.scale(number('itemSize', 72));
+			return (
+				<UiVirtualList
+					component={renderItem(itemSize)}
+					data={items}
+					dataSize={number('dataSize', items.length)}
+					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+					itemSize={itemSize}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
+					spacing={ri.scale(number('spacing', 0))}
+					style={{
+						height: ri.unit(552, 'rem')
+					}}
+				/>
+			);
+		})
+	);
 
 storiesOf('Moonstone', module)
 	.add(
