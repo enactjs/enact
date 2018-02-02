@@ -1,25 +1,32 @@
 /**
- * Exports the {@link moonstone/BodyText.BodyText} and {@link moonstone/BodyText.BodyTextBase}
- * components.  The default export is {@link moonstone/BodyText.BodyTextBase}.
+ * Accepts and displays a block of text. Use case is similar to a paragraph tag.
+ *
+ * @example
+ * <BodyText centered>Hello Enact!</BodyText>
  *
  * @module moonstone/BodyText
+ * @exports BodyText
+ * @exports BodyTextBase
+ * @exports BodyTextDecorator
  */
 
 import kind from '@enact/core/kind';
+import UiBodyText from '@enact/ui/BodyText';
 import React from 'react';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import Pure from '@enact/ui/internal/Pure';
 
 import Skinnable from '../Skinnable';
 
-import css from './BodyText.less';
+import componentCss from './BodyText.less';
 
 /**
- * {@link moonstone/BodyText.BodyText} is a stateless BodyText with Moonstone styling
- * applied.
+ * A simple implementation of a block of text.
  *
- * @class BodyText
+ * @class BodyTextBase
  * @memberof moonstone/BodyText
+ * @extends ui/BodyText.BodyText
  * @ui
  * @public
  */
@@ -28,42 +35,66 @@ const BodyTextBase = kind({
 
 	propTypes: /** @lends moonstone/BodyText.BodyText.prototype */ {
 		/**
-		 * If `true`, text content is centered; otherwise, it is left-aligned.
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
 		 *
-		 * @type {Boolean}
-		 * @default false
+		 * The following classes are supported:
+		 *
+		 * * `bodyText` - The root class name
+		 *
+		 * @type {Object}
 		 * @public
 		 */
-		centered: PropTypes.bool
-	},
-
-	defaultProps: {
-		centered: false
+		css: PropTypes.object
 	},
 
 	styles: {
-		css,
-		className: 'bodyText'
+		css: componentCss,
+		publicClassNames: 'bodyText'
 	},
 
-	computed: {
-		className: ({centered, styler}) => styler.append({centered})
-	},
-
-	render: (props) => {
-		delete props.centered;
-
+	render: ({css, ...rest}) => {
 		return (
-			<p {...props} />
+			<UiBodyText
+				{...rest}
+				css={css}
+			/>
 		);
 	}
 });
 
-const BodyText = Pure(
-	Skinnable(
-		BodyTextBase
-	)
+/**
+ * Moonstone-specific wrappers to apply to [BodyTextBase]{@link moonstone/BodyText.BodyTextBase}.
+ *
+ * @hoc
+ * @memberof moonstone/BodyText
+ * @mixes ui/Skinnable.Skinnable
+ * @public
+ */
+const BodyTextDecorator = compose(
+	Pure,
+	Skinnable
 );
 
+/**
+ * A Moonstone-styled BodyText, ready to use.
+ *
+ * Usage:
+ * ```
+ * <BodyText>I have a Ham radio. There are many like it, but this one is mine.</BodyText>
+ * ```
+ *
+ * @class BodyText
+ * @memberof moonstone/BodyText
+ * @mixes moonstone/BodyText.BodyTextDecorator
+ * @ui
+ * @public
+ */
+const BodyText = BodyTextDecorator(BodyTextBase);
+
 export default BodyText;
-export {BodyText, BodyTextBase};
+export {
+	BodyText,
+	BodyTextBase,
+	BodyTextDecorator
+};
