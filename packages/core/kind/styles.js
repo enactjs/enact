@@ -39,7 +39,7 @@ import {addInternalProp} from './util';
  * @returns {Function}       Function that accepts a props object and mutates it to merge class
  *                           names and style objects and provide the `styler` utility function and
  *                           `css` merged class name map
- * @public
+ * @private
  */
 const styles = (cfg, optProps) => {
 	const {className, prop = 'className', style} = cfg;

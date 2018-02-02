@@ -1,10 +1,16 @@
+/**
+ * Provides the {@link core/kind.kind} method to create components
+ *
+ * @module core/kind
+ */
+
 import React from 'react';
 
 import computed from './computed';
 import styles from './styles';
 
 /**
- * Creates a stateless functional component with some helpful declarative sugar.
+ * Creates a new component with some helpful declarative syntactic sugar.
  *
  * Example:
  * ```
@@ -46,9 +52,13 @@ import styles from './styles';
  *		)
  *	});
  * ```
+ *
+ * @function
  * @param  {Object} config - Component configuration
  *
  * @returns {Function}        Component
+ * @memberof core/kind
+ * @public
  */
 const kind = (config) => {
 	const {

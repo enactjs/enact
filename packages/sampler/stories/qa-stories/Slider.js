@@ -6,19 +6,8 @@ import Slider from '@enact/moonstone/Slider';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {storiesOf} from '@kadira/storybook';
-import {withKnobs, number} from '@kadira/storybook-addon-knobs';
-
-const
-	style = {
-		item: {
-			borderBottom: ri.scale(2) + 'px solid #202328',
-			boxSizing: 'border-box'
-		},
-		list: {
-			height: ri.scale(552) + 'px'
-		}
-	};
+import {storiesOf} from '@storybook/react';
+import {withKnobs, number} from '@storybook/addon-knobs';
 
 class SliderList extends React.Component {
 
@@ -68,7 +57,11 @@ class SliderList extends React.Component {
 	}
 
 	renderItem = (size) => ({data, index, ...rest}) => {
-		const itemStyle = {height: size + 'px', ...style.item};
+		const itemStyle = {
+			height: size + 'px',
+			borderBottom: ri.unit(3, 'rem') + ' solid #202328',
+			boxSizing: 'border-box'
+		};
 
 		return (
 			<Item {...rest} style={itemStyle}>
@@ -98,16 +91,18 @@ class SliderList extends React.Component {
 					dataSize={this.state.selectedItems.length}
 					itemSize={this.props.itemSize}
 					spacing={ri.scale(0)}
-					style={style.list}
+					style={{
+						height: ri.unit(552, 'rem')
+					}}
 				/>
 			</div>
 		);
 	}
 }
 
-storiesOf('Slider')
+storiesOf('Slider', module)
 	.addDecorator(withKnobs)
-	.addWithInfo(
+	.add(
 		'Add and Remove ',
 		() => {
 			const itemSize = ri.scale(number('itemSize', 72));
@@ -116,4 +111,3 @@ storiesOf('Slider')
 			);
 		}
 	);
-
