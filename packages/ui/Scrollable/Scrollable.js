@@ -234,7 +234,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
 			};
 
-			this.initInnerChildRef = this.initRef('innerChildRef');
 			this.initChildRef = this.initRef('childRef');
 			this.initContainerRef = this.initRef('containerRef');
 
@@ -282,7 +281,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const bounds = this.getScrollBounds();
 
 			this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
-			this.direction = this.innerChildRef.props.direction;
+			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
 			this.updateScrollbars();
 
@@ -295,21 +294,21 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		componentDidUpdate (prevProps, prevState) {
 			// Need to sync calculated client size if it is different from the real size
-			if (this.innerChildRef.syncClientSize) {
+			if (this.childRef.syncClientSize) {
 				const {isVerticalScrollbarVisible, isHorizontalScrollbarVisible} = this.state;
 				// If we actually synced, we need to reset scroll position.
-				if (this.innerChildRef.syncClientSize()) {
+				if (this.childRef.syncClientSize()) {
 					this.setScrollLeft(0);
 					this.setScrollTop(0);
 				}
 				// Need to check item total size is same with client size when scrollbar is visible
 				// By hiding scrollbar again, infinite function call maybe happens
-				this.isFitClientSize = (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) && this.innerChildRef.isSameTotalItemSizeWithClient();
+				this.isFitClientSize = (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) && this.childRef.isSameTotalItemSizeWithClient();
 			}
 
 			this.clampScrollPosition();
 
-			this.direction = this.innerChildRef.props.direction;
+			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
 			if (!this.isFitClientSize) {
 				this.updateScrollbars();
@@ -337,7 +336,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		componentWillUnmount () {
 			const
 				{containerRef} = this,
-				childContainerRef = this.innerChildRef.containerRef;
+				childContainerRef = this.childRef.containerRef;
 
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
 			if (this.animator.isAnimating()) {
@@ -418,7 +417,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		nodeToFocus = null
 
 		// component info
-		innerChildRef = null
+		childRef = null
 		containerRef = null
 
 		// scroll animator
@@ -644,7 +643,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || this.isDragging)) {
 				const
 					item = e.target,
-					positionFn = this.innerChildRef.calculatePositionOnFocus,
+					positionFn = this.childRef.calculatePositionOnFocus,
 					spotItem = Spotlight.getCurrent();
 
 				if (item && item === spotItem && positionFn) {
@@ -716,20 +715,19 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				{getEndPoint, scrollToAccumulatedTarget} = this,
 				bounds = this.getScrollBounds(),
 				canScrollVertically = this.canScrollVertically(bounds),
-				innerChildRef = this.innerChildRef,
 				childRef = this.childRef,
 				pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
 				spotItem = Spotlight.getCurrent();
 
 			if (!Spotlight.getPointerMode() && spotItem) {
 				// Should skip scroll by page when spotItem is paging control button of Scrollbar
-				if (!innerChildRef.containerRef.contains(spotItem)) {
+				if (!childRef.containerRef.contains(spotItem)) {
 					return;
 				}
 
 				const
 					// VirtualList and Scroller have a containerId on containerRef
-					containerId = innerChildRef.containerRef.dataset.containerId,
+					containerId = childRef.containerRef.dataset.containerId,
 					direction = this.getPageDirection(keyCode),
 					rDirection = reverseDirections[direction],
 					viewportBounds = this.containerRef.getBoundingClientRect(),
@@ -921,7 +919,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.setScrollTop(top);
 			}
 
-			this.innerChildRef.setScrollPosition(this.scrollLeft, this.scrollTop, dirX, dirY);
+			this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, dirX, dirY);
 			this.doScrolling();
 		}
 
@@ -941,12 +939,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		focusOnItem () {
-			if (this.indexToFocus !== null && typeof this.innerChildRef.focusByIndex === 'function') {
-				this.innerChildRef.focusByIndex(this.indexToFocus);
+			if (this.indexToFocus !== null && typeof this.childRef.focusByIndex === 'function') {
+				this.childRef.focusByIndex(this.indexToFocus);
 				this.indexToFocus = null;
 			}
-			if (this.nodeToFocus !== null && typeof this.innerChildRef.focusOnNode === 'function') {
-				this.innerChildRef.focusOnNode(this.nodeToFocus);
+			if (this.nodeToFocus !== null && typeof this.childRef.focusOnNode === 'function') {
+				this.childRef.focusOnNode(this.nodeToFocus);
 				this.nodeToFocus = null;
 			}
 		}
@@ -993,11 +991,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						}
 					}
 				} else {
-					if (typeof opt.index === 'number' && typeof this.innerChildRef.getItemPosition === 'function') {
-						itemPos = this.innerChildRef.getItemPosition(opt.index, opt.stickTo);
+					if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
+						itemPos = this.childRef.getItemPosition(opt.index, opt.stickTo);
 					} else if (opt.node instanceof Object) {
-						if (opt.node.nodeType === 1 && typeof this.innerChildRef.getNodePosition === 'function') {
-							itemPos = this.innerChildRef.getNodePosition(opt.node);
+						if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
+							itemPos = this.childRef.getNodePosition(opt.node);
 						}
 					}
 					if (itemPos) {
@@ -1141,28 +1139,28 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		alertThumbAfterRendered = () => {
 			const spotItem = Spotlight.getCurrent();
 
-			if (!Spotlight.getPointerMode() && spotItem && this.innerChildRef.containerRef.contains(spotItem) && this.isUpdatedScrollThumb) {
+			if (!Spotlight.getPointerMode() && spotItem && this.childRef.containerRef.contains(spotItem) && this.isUpdatedScrollThumb) {
 				this.alertThumb();
 			}
 		}
 		// ref
 
 		getScrollBounds () {
-			if (typeof this.innerChildRef.getScrollBounds === 'function') {
-				return this.innerChildRef.getScrollBounds();
+			if (typeof this.childRef.getScrollBounds === 'function') {
+				return this.childRef.getScrollBounds();
 			}
 		}
 
 		getMoreInfo () {
-			if (typeof this.innerChildRef.getMoreInfo === 'function') {
-				return this.innerChildRef.getMoreInfo();
+			if (typeof this.childRef.getMoreInfo === 'function') {
+				return this.childRef.getMoreInfo();
 			}
 		}
 
 		updateEventListeners = () => {
 			const
 				{containerRef} = this,
-				childContainerRef = this.innerChildRef.containerRef;
+				childContainerRef = this.childRef.containerRef;
 
 			if (containerRef && containerRef.addEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
@@ -1177,7 +1175,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		updateScrollOnFocus () {
 			const
 				focusedItem = Spotlight.getCurrent(),
-				{containerRef, calculatePositionOnFocus} = this.innerChildRef;
+				{calculatePositionOnFocus} = this.childRef,
+				{containerRef} = this.childRef;
 
 			if (focusedItem && containerRef && containerRef.contains(focusedItem)) {
 				const
@@ -1203,7 +1202,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 		// state member.
 		enqueueForceUpdate = () => {
-			this.innerChildRef.calculateMetrics();
+			this.childRef.calculateMetrics();
 			this.forceUpdate();
 		}
 
@@ -1216,9 +1215,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		handleScroll = () => {
-			if (!this.animator.isAnimating() && this.innerChildRef && this.innerChildRef.containerRef) {
-				this.innerChildRef.containerRef.scrollTop = this.scrollTop;
-				this.innerChildRef.containerRef.scrollLeft = this.scrollLeft;
+			if (!this.animator.isAnimating() && this.childRef && this.childRef.containerRef) {
+				this.childRef.containerRef.scrollTop = this.scrollTop;
+				this.childRef.containerRef.scrollLeft = this.scrollLeft;
 			}
 		}
 
@@ -1253,7 +1252,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 							cbScrollTo={this.scrollTo}
 							className={css.content}
 							onScroll={this.handleScroll}
-							innerRef={this.initInnerChildRef}
 							ref={this.initChildRef}
 						/>
 						{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
