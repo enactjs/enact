@@ -10,8 +10,6 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import {dataIndexAttribute, Scrollable} from '../Scrollable';
-
 import css from './ListItem.less';
 
 const nop = () => {};
@@ -39,8 +37,8 @@ const gridListItemSizeShape = PropTypes.shape({
  * @ui
  * @private
  */
-class VirtualListCore extends Component {
-	static displayName = 'VirtualListBase'
+class VirtualListBase extends Component {
+	static displayName = 'ui:VirtualListBase'
 
 	static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
 		/**
@@ -97,14 +95,6 @@ class VirtualListCore extends Component {
 		 * @public
 		 */
 		data: PropTypes.any,
-
-		/**
-		 * Spotlight container Id
-		 *
-		 * @type {String}
-		 * @private
-		 */
-		'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types
 
 		/**
 		 * Size of the data.
@@ -554,7 +544,6 @@ class VirtualListCore extends Component {
 			key = index % numOfItems,
 			itemElement = component({
 				data,
-				[dataIndexAttribute]: index,
 				index,
 				key
 			}),
@@ -572,7 +561,7 @@ class VirtualListCore extends Component {
 		const
 			key = index % this.state.numOfItems,
 			style = {display: 'none'},
-			attributes = {[dataIndexAttribute]: index, key, style};
+			attributes = {key, style};
 		this.cc[key] = (<div {...attributes} />);
 	}
 
@@ -729,19 +718,5 @@ class VirtualListCore extends Component {
 	}
 }
 
-/**
- * {@link moonstone/VirtualList.VirtualListBase} is a base component for
- * {@link moonstone/VirtualList.VirtualList} and
- * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
- *
- * @class VirtualListBase
- * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable
- * @mixes spotlight/SpotlightContainerDecorator
- * @ui
- * @private
- */
-const VirtualListBase = Scrollable(VirtualListCore);
-
 export default VirtualListBase;
-export {gridListItemSizeShape, VirtualListCore, VirtualListBase};
+export {gridListItemSizeShape, VirtualListBase};

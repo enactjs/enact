@@ -8,12 +8,13 @@
 
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
 import Scrollable from '../Scrollable';
 
-import css from '@enact/moonstone/Scroller/Scroller.less';
+import css from './Scroller.less';
 
 const
 	reverseDirections = {
@@ -32,7 +33,7 @@ const
  * @public
  */
 class ScrollerBase extends Component {
-	static displayName = 'ui:Scroller'
+	static displayName = 'ui:ScrollerBase'
 
 	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
 		children: PropTypes.node.isRequired,
@@ -267,12 +268,14 @@ class ScrollerBase extends Component {
  *
  * @class Scroller
  * @memberof ui/Scroller
- * @mixes ui/Scroller.Scrollable
  * @see ui/Scroller.ScrollerBase
  * @ui
  * @public
  */
-const Scroller = Scrollable(ScrollerBase);
+const Scroller = kind({
+	name: 'ui:Scroller',
+	render: (props) => <Scrollable wrapped={ScrollerBase} {...props} />
+});
 
 // Docs for Scroller
 /**

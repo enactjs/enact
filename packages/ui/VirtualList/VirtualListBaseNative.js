@@ -10,8 +10,6 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import {dataIndexAttribute, ScrollableNative} from '../Scrollable/ScrollableNative.js';
-
 import css from './VirtualListBaseNative.less';
 import cssItem from './ListItem.less';
 
@@ -41,8 +39,8 @@ const gridListItemSizeShape = PropTypes.shape({
  * @ui
  * @private
  */
-class VirtualListCoreNative extends Component {
-	static displayName = 'VirtualListBaseNative'
+class VirtualListBaseNative extends Component {
+	static displayName = 'ui:VirtualListBaseNative'
 
 	static propTypes = /** @lends moonstone/VirtualList.VirtualListCoreNative.prototype */ {
 		/**
@@ -522,7 +520,6 @@ class VirtualListCoreNative extends Component {
 			key = index % numOfItems,
 			itemElement = component({
 				data,
-				[dataIndexAttribute]: index,
 				index,
 				key
 			}),
@@ -541,7 +538,7 @@ class VirtualListCoreNative extends Component {
 		const
 			key = index % this.state.numOfItems,
 			style = {display: 'none'},
-			attributes = {[dataIndexAttribute]: index, key, style};
+			attributes = {key, style};
 		this.cc[key] = (<div {...attributes} />);
 	}
 
@@ -716,19 +713,5 @@ class VirtualListCoreNative extends Component {
 	}
 }
 
-/**
- * {@link moonstone/VirtualList.VirtualListBaseNative} is a base component for
- * {@link moonstone/VirtualList.VirtualList} and
- * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
- *
- * @class VirtualListBaseNative
- * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable
- * @mixes spotlight/SpotlightContainerDecorator
- * @ui
- * @private
- */
-const VirtualListBaseNative = ScrollableNative(VirtualListCoreNative);
-
 export default VirtualListBaseNative;
-export {gridListItemSizeShape, VirtualListCoreNative, VirtualListBaseNative};
+export {gridListItemSizeShape, VirtualListBaseNative};

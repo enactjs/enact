@@ -8,10 +8,13 @@
 
 import {forward} from '@enact/core/handle';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
-import {Scrollable as UiScrollable} from '@enact/ui/Scrollable/Scrollable';
+import kind from '@enact/core/kind';
+import React from 'react';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import {Spotlight, getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+
+import Scrollable from '../Scrollable';
 
 const
 	dataContainerDisabledAttribute = 'data-container-disabled',
@@ -28,7 +31,7 @@ const
  * @public
  */
 class ScrollerBase extends UiScrollerBase {
-	static displayName = 'Scroller'
+	static displayName = 'ScrollerBase'
 
 	componentWillUnmount () {
 		this.setContainerDisabled(false);
@@ -244,12 +247,8 @@ class ScrollerBase extends UiScrollerBase {
  * @ui
  * @public
  */
-const Scroller = SpotlightContainerDecorator(
-	{restrict: 'self-first'},
-	UiScrollable(
-		ScrollerBase
-	)
-);
+const ScrollerCore = (props) => (<Scrollable wrapped={ScrollerBase} {...props} />);
+const Scroller = SpotlightContainerDecorator({restrict: 'self-first'}, ScrollerCore);
 
 /**
  * {@link moonstone/Scroller.Scroller} is a Scroller with Moonstone styling,

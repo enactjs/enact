@@ -7,11 +7,12 @@
  * @module moonstone/VirtualList
  */
 
-import kind from '@enact/core/kind';
-import React from 'react';
-import PropTypes from 'prop-types';
-import {VirtualListBase} from './VirtualListBase';
 import {gridListItemSizeShape} from '@enact/ui/VirtualList/VirtualListBase';
+import kind from '@enact/core/kind';
+import PropTypes from 'prop-types';
+import React from 'react';
+
+import {VirtualListBase} from './VirtualListBase';
 
 /**
  * {@link moonstone/VirtualList.VirtualList} is a VirtualList with Moonstone styling.

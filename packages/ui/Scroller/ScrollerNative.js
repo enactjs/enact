@@ -25,7 +25,10 @@ const ScrollerNativeBase = ScrollerBase;
  * @ui
  * @private
  */
-const ScrollerNative = ScrollableNative(ScrollerNativeBase);
+const ScrollerNative = kind({
+	name: 'ui:ScrollerNative',
+	render: (props) => <ScrollableNative wrapped={ScrollerBase} {...props} />
+});
 
 // Docs for ScrollerNative
 /**

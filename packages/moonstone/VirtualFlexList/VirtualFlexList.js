@@ -12,15 +12,15 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
-import {VirtualListCore} from '@enact/ui/VirtualList/VirtualListBase';
+import {VirtualListBase} from '@enact/ui/VirtualList/VirtualListBase';
 
 import css from './VirtualFlexList.less';
 import Positionable from './Positionable';
 import {VirtualFlexListBase} from './VirtualFlexListBase';
 
 const
-	PositionableVirtualList = Positionable(VirtualListCore),
-	SpotlightPositionableVirtualList = SpotlightContainerDecorator({enterTo: ''}, Positionable(VirtualListCore));
+	PositionableVirtualList = Positionable(VirtualListBase),
+	SpotlightPositionableVirtualList = SpotlightContainerDecorator({enterTo: ''}, Positionable(VirtualListBase));
 
 const forwardPositionChange = forward('onPositionChange');
 

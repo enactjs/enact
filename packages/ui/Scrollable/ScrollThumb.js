@@ -2,7 +2,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import css from '@enact/moonstone/Scroller/ScrollThumb.less';
+import css from './ScrollThumb.less';
 
 /**
  * {@link moonstone/Scroller.ScrollThumb} is a stateless ScrollThumb with Moonstone styling applied.

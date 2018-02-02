@@ -1,7 +1,5 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import curry from 'ramda/src/curry';
-import {dataIndexAttribute, Scrollable} from '@enact/ui/Scrollable';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
@@ -9,48 +7,14 @@ import React from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Spottable from '@enact/spotlight/Spottable';
-import {VirtualListCore as UiVirtualListCore} from '@enact/ui/VirtualList/VirtualListBase';
-import {VirtualListCoreNative as UiVirtualListCoreNative} from '@enact/ui/VirtualList/VirtualListBaseNative';
+import {VirtualListBase as UiVirtualListCore} from '@enact/ui/VirtualList/VirtualListBase';
+import {VirtualListBaseNative as UiVirtualListCoreNative} from '@enact/ui/VirtualList/VirtualListBaseNative';
+
+import {dataIndexAttribute, Scrollable} from '../Scrollable';
 
 import css from '@enact/ui/VirtualList/ListItem.less';
 
-const VirtualListSpotlightContainerConfig = {
-	enterTo: 'last-focused',
-	/**
-	 * Returns the data-index as the key for last focused
-	 */
-	lastFocusedPersist: (node) => {
-		const indexed = node.dataset.index ? node : node.closest('[data-index]');
-		if (indexed) {
-			return {
-				container: false,
-				element: true,
-				key: indexed.dataset.index
-			};
-		}
-	},
-	/**
-	 * Restores the data-index into the placeholder if its the only element. Tries to find a
-	 * matching child otherwise.
-	 */
-	lastFocusedRestore: ({key}, all) => {
-		if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
-			all[0].dataset.index = key;
-
-			return all[0];
-		}
-
-		return all.reduce((focused, node) => {
-			return focused || node.dataset.index === key && node;
-		}, null);
-	},
-	preserveId: true,
-	restrict: 'self-first'
-};
-
-const CurriedSpotlightContainerDecorator = curry(SpotlightContainerDecorator);
-
-const VirtualListContainerSpottable = CurriedSpotlightContainerDecorator(VirtualListSpotlightContainerConfig);
+const SpotlightPlaceholder = Spottable('div');
 
 const
 	dataContainerDisabledAttribute = 'data-container-disabled',
@@ -59,8 +23,6 @@ const
 	isLeft = is('left'),
 	isRight = is('right'),
 	isUp = is('up');
-
-const SpotlightPlaceholder = Spottable('div');
 
 /**
  * {@link moonstone/VirtualList.VirtualListSpotlightManager} is the class to manager the Spotlight in VirtualList.
@@ -74,49 +36,12 @@ const VirtualListSelector = (type, UiComponent) => (
 	class VirtualListCore extends UiComponent {
 		static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
 			/**
-			 * Callback method of scrollTo.
-			 * Normally, `Scrollable` should set this value.
-			 *
-			 * @type {Function}
-			 * @private
-			 */
-			cbScrollTo: PropTypes.func,
-
-			/**
-			 * Data for the list.
-			 * Check mutation of this and determine whether the list should update or not.
-			 *
-			 * @type {Any}
-			 * @default []
-			 * @public
-			 */
-			data: PropTypes.any,
-
-			/**
 			 * Spotlight container Id
 			 *
 			 * @type {String}
 			 * @private
 			 */
-			'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types
-
-			/**
-			 * Size of the data.
-			 *
-			 * @type {Number}
-			 * @default 0
-			 * @public
-			 */
-			dataSize: PropTypes.number,
-
-			/**
-			 * Spacing between items.
-			 *
-			 * @type {Number}
-			 * @default 0
-			 * @public
-			 */
-			spacing: PropTypes.number
+			'data-container-id': PropTypes.string // eslint-disable-line react/sort-prop-types
 		}
 
 		constructor (props) {
@@ -701,6 +626,14 @@ const VirtualListSelector = (type, UiComponent) => (
 			});
 		}
 
+		applyStyleToHideNode = (index) => {
+			const
+				key = index % this.state.numOfItems,
+				style = {display: 'none'},
+				attributes = {[dataIndexAttribute]: index, key, style};
+			this.cc[key] = (<div {...attributes} />);
+		}
+
 		getItemNode = (index) => {
 			const ref = this.itemContainerRef;
 			return ref ? ref.children[index % this.state.numOfItems] : null;
@@ -732,8 +665,14 @@ const VirtualListSelector = (type, UiComponent) => (
 	}
 );
 
-const VirtualListCoreJS = VirtualListSelector('JS', UiVirtualListCore);
+const VirtualListCoreJS = (props) => {
+	const Wrapped = VirtualListSelector('JS', UiVirtualListCore);
+	return (
+		<Scrollable wrapped={Wrapped} {...props} />
+	);
+};
 const VirtualListCoreNative = VirtualListSelector('Native', UiVirtualListCoreNative);
+
 
 /**
  * {@link moonstone/VirtualList.VirtualListBase} is a base component for
@@ -747,9 +686,42 @@ const VirtualListCoreNative = VirtualListSelector('Native', UiVirtualListCoreNat
  * @ui
  * @private
  */
-const VirtualListBase = VirtualListContainerSpottable(
-	Scrollable(VirtualListCoreJS)
+const VirtualListBase = SpotlightContainerDecorator(
+	{
+		enterTo: 'last-focused',
+		/*
+		 * Returns the data-index as the key for last focused
+		 */
+		lastFocusedPersist: (node) => {
+			const indexed = node.dataset.index ? node : node.closest('[data-index]');
+			if (indexed) {
+				return {
+					container: false,
+					element: true,
+					key: indexed.dataset.index
+				};
+			}
+		},
+		/*
+		 * Restores the data-index into the placeholder if its the only element. Tries to find a
+		 * matching child otherwise.
+		 */
+		lastFocusedRestore: ({key}, all) => {
+			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
+				all[0].dataset.index = key;
+
+				return all[0];
+			}
+
+			return all.reduce((focused, node) => {
+				return focused || node.dataset.index === key && node;
+			}, null);
+		},
+		preserveId: true,
+		restrict: 'self-first'
+	},
+	VirtualListCoreJS
 );
 
 export default VirtualListBase;
-export {VirtualListCoreJS as VirtualListCore, VirtualListBase};
+export {VirtualListBase, VirtualListCoreJS as VirtualListCore};
