@@ -31,7 +31,7 @@ const Spinner = kind({
 
 	propTypes: /** @lends ui/Spinner.Spinner.prototype */ {
 		/**
-		 * A theme-supplied component that animates with the presence of the `.running` class.
+		 * A theme-supplied component which should already have a `.running` class applied.
 		 *
 		 * This element should accept a `children` prop which takes the form of an optional message
 		 * for the user.
