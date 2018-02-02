@@ -120,7 +120,7 @@ const kind = (config) => {
 		}
 	};
 
-	// Decorate the SFC with the computed property object in DEV for easier testability
+	// Decorate the Component with the computed property object in DEV for easier testability
 	if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
 
 
