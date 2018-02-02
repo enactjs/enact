@@ -34,6 +34,7 @@ const IconButtonBase = kind({
 		 * This is the root component and will receive all props except `icon`.
 		 *
 		 * @type {Function}
+		 * @required
 		 * @public
 		 */
 		buttonComponent: PropTypes.func.isRequired,
@@ -45,6 +46,7 @@ const IconButtonBase = kind({
 		 * `icon` class to customize its styling.
 		 *
 		 * @type {Function}
+		 * @required
 		 * @public
 		 */
 		iconComponent: PropTypes.func.isRequired,
