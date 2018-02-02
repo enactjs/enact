@@ -81,8 +81,10 @@ const ExpandableItemBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * The secondary, or supportive text. Typically under the `title`, a subtitle.
+		 * The secondary, or supportive text. Typically under the `title`, a subtitle. When this is
+		 * blank or null, the `noneText` will be displayed.
 		 *
+		 * @see moonstone/ExpandableItem.ExpandableItemBase#noneText
 		 * @type {Node}
 		 * @public
 		 */
@@ -101,6 +103,7 @@ const ExpandableItemBase = kind({
 		/**
 		 * Text to display when no `label` or `value` is set.
 		 *
+		 * @see moonstone/ExpandableItem.ExpandableItemBase#label
 		 * @type {String}
 		 */
 		noneText: PropTypes.string,
@@ -206,6 +209,8 @@ const ExpandableItemBase = kind({
 		 * * `'never'` - The label is never visible
 		 * * `'auto'` - The label is visible when the expandable is closed
 		 *
+		 * @see moonstone/ExpandableItem.ExpandableItemBase#label
+		 * @see moonstone/ExpandableItem.ExpandableItemBase#noneText
 		 * @type {String}
 		 * @default 'auto'
 		 * @public
@@ -323,31 +328,6 @@ const ExpandableItemBase = kind({
 
 		const ariaProps = extractAriaProps(rest);
 
-		const TitleComponent = (props) => (
-			<LabeledItem
-				{...ariaProps}
-				disabled={disabled}
-				label={label}
-				onTap={handleOpen}
-				onKeyDown={handleLabelKeyDown}
-				onSpotlightDisappear={onSpotlightDisappear}
-				onSpotlightLeft={onSpotlightLeft}
-				onSpotlightRight={onSpotlightRight}
-				onSpotlightUp={onSpotlightUp}
-				spotlightDisabled={spotlightDisabled}
-				titleIcon={titleIcon}
-				{...props}
-			/>
-		);
-
-		const ExpandableContainer = (props) => (
-			<ExpandableTransitionContainer
-				onKeyDown={handleKeyDown}
-				spotlightDisabled={transitionSpotlightDisabled}
-				{...props}
-			/>
-		);
-
 		return (
 			<UiExpandableItemBase
 				{...rest}
@@ -357,8 +337,29 @@ const ExpandableItemBase = kind({
 				childRef={setContainerNode}
 
 				// component={SpottableContainerDiv}
-				titleComponent={TitleComponent}
-				container={ExpandableContainer}
+				titleComponent={
+					<LabeledItem
+						{...ariaProps}
+						data-expandable-label
+						disabled={disabled}
+						label={label}
+						onTap={handleOpen}
+						onKeyDown={handleLabelKeyDown}
+						onSpotlightDisappear={onSpotlightDisappear}
+						onSpotlightLeft={onSpotlightLeft}
+						onSpotlightRight={onSpotlightRight}
+						onSpotlightUp={onSpotlightUp}
+						spotlightDisabled={spotlightDisabled}
+						titleIcon={titleIcon}
+					/>
+				}
+				container={
+					<ExpandableTransitionContainer
+						data-expandable-container
+						onKeyDown={handleKeyDown}
+						spotlightDisabled={transitionSpotlightDisabled}
+					/>
+				}
 				direction="down"
 				duration="short"
 				onHide={onHide}
@@ -436,10 +437,11 @@ const ExpandableItemBase = kind({
  * @hoc
  * @public
  */
-const ExpandableItemDecorator = compose(
-	Expandable,
-	SpotlightContainerDecorator({continue5WayHold: true}),
-);
+// const ExpandableItemDecorator = compose(
+// 	Expandable,
+// 	SpotlightContainerDecorator({continue5WayHold: true}),	// Migration Note: Investigate the purpose of this
+// );
+const ExpandableItemDecorator = Expandable;
 
 /**
  * This maintains its open/closed state by default. The initial state can be supplied

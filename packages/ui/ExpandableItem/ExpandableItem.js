@@ -15,7 +15,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 
-// import Touchable from '../Touchable';
+import ComponentOverride from '../ComponentOverride';
+import Touchable from '../Touchable';
 
 import Expandable from './Expandable';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
@@ -42,7 +43,7 @@ const ExpandableItemBase = kind({
 		 * @required
 		 * @public
 		 */
-		container: PropTypes.oneOfType([PropTypes.func]).isRequired,
+		container: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
 
 		/**
 		 * The primary text of the item.
@@ -186,7 +187,7 @@ const ExpandableItemBase = kind({
 		 * @default 'div'
 		 * @public
 		 */
-		titleComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+		titleComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.string, PropTypes.func]),
 
 		/**
 		 * Choose how you'd like the transition to affect the content.
@@ -210,8 +211,8 @@ const ExpandableItemBase = kind({
 
 	render: ({
 		component: Component,
-		titleComponent: TitleComponent,
-		container: Container,
+		titleComponent,
+		container,
 		childRef,
 		children,
 		clipHeight,
@@ -231,14 +232,18 @@ const ExpandableItemBase = kind({
 
 		return (
 			<Component {...rest}>
-				{/* TODO: Consider changing default Component from div to Item and use onTap */}
-				<TitleComponent data-expandable-label>
+				<ComponentOverride
+					component={titleComponent}
+					// Add activation and deactivation callbacks to this component
+					// This needs a wording change. it's more of an expandable "handle". It accepts
+					// a component and attaches actions that should be activated by toggleable.
+				>
 					{text}
-				</TitleComponent>
-				<Container
+				</ComponentOverride>
+				<ComponentOverride
+					component={container}
 					childRef={childRef}
 					clipHeight={clipHeight}
-					data-expandable-container
 					direction={direction}
 					duration={duration}
 					noAnimation={noAnimation}
@@ -249,7 +254,7 @@ const ExpandableItemBase = kind({
 					visible={open}
 				>
 					{children}
-				</Container>
+				</ComponentOverride>
 			</Component>
 		);
 	}
@@ -294,7 +299,8 @@ const ExpandableHandlerDecorator = hoc((config, Wrapped) => kind({
  */
 const ExpandableItemDecorator = compose(
 	Expandable,
-	ExpandableHandlerDecorator
+	ExpandableHandlerDecorator,
+	Touchable
 );
 
 /**
