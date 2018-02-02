@@ -43,7 +43,6 @@ const DaySelectorBase = kind({
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		disabled: PropTypes.bool,

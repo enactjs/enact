@@ -6,13 +6,13 @@
 
 
 .daySelector {
-	border: @moon-button-border-width solid @moon-white;
-	border-radius: @moon-button-border-radius;
+	border: @moon-day-selector-border-width solid @moon-white;
+	border-radius: @moon-day-selector-border-radius;
 	display: inline-flex;
 	white-space: nowrap;
 
 	.daySelectorItem {
-		padding: 6px;
+		padding: @moon-day-selector-padding;
 		border-left: inherit;
 
 		> :first-child {
@@ -27,22 +27,25 @@
 
 	> :first-child {
 		border-left: initial;
-		border-radius: @moon-button-border-radius 0 0 @moon-button-border-radius;
+		border-radius: @moon-day-selector-border-radius 0 0 @moon-day-selector-border-radius;
 	}
 
 	> :last-child {
-		border-radius: 0 @moon-button-border-radius @moon-button-border-radius 0;
+		border-radius: 0 @moon-day-selector-border-radius @moon-day-selector-border-radius 0;
+		padding-right: @moon-day-selector-item-padding;
 	}
 
 	:global(.enact-locale-right-to-left) & {
 		> :first-child {
 			border-left: inherit;
-			border-radius: 0 @moon-button-border-radius @moon-button-border-radius 0;
+			border-radius: 0 @moon-day-selector-border-radius @moon-day-selector-border-radius 0;
 		}
 
 		> :last-child {
 			border-left: initial;
-			border-radius: @moon-button-border-radius 0 0 @moon-button-border-radius;
+			border-radius: @moon-day-selector-border-radius 0 0 @moon-day-selector-border-radius;
+			padding-left: @moon-day-selector-item-padding;
+			padding-right: @moon-day-selector-padding;
 		}
 	}
 }

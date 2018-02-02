@@ -1,14 +1,11 @@
 import kind from '@enact/core/kind';
-import {handle, forward} from '@enact/core/handle';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
 import Skinnable from '../Skinnable';
-import Touchable from '../internal/Touchable';
 
 import css from './DaySelectorCheckbox.less';
-const TouchableDiv = Touchable('div');
 
 /**
  * A component that represents the selected state of a day within a
@@ -58,27 +55,16 @@ const DaySelectorCheckboxBase = kind({
 		className: 'daySelectorCheckbox'
 	},
 
-	handlers: {
-		onToggle: handle(
-			forward('onTap'),
-			(ev, {selected, onToggle}) => {
-				if (onToggle) {
-					onToggle({selected: !selected});
-				}
-			}
-		)
-	},
-
 	computed: {
 		className: ({selected, styler}) => styler.append({selected})
 	},
 
-	render: ({onToggle, ...rest}) => {
+	render: ({...rest}) => {
 		delete rest.selected;
 		return (
-			<TouchableDiv {...rest} onTap={onToggle}>
+			<div {...rest}>
 				<Icon className={css.icon}>check</Icon>
-			</TouchableDiv>
+			</div>
 		);
 	}
 });
