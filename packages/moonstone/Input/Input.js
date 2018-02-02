@@ -281,25 +281,21 @@ const InputBase = kind({
  * @ui
  * @public
  */
+
 const Input = Pure(
 	Subscription(
 		{channels: ['i18n'], mapMessageToProps: (channel, {rtl}) => ({rtl})},
-		Changeable(
-			InputSpotlightDecorator(
-				Skinnable(
-					InputBase
+		VoiceControlDecorator({voiceIntent: 'input', voiceHandler: 'onChange'},
+			Changeable(
+				InputSpotlightDecorator(
+					Skinnable(
+						InputBase
+					)
 				)
 			)
 		)
 	)
 );
-
-const VoiceInput2 = VoiceControlDecorator({
-	voiceSlot: [
-		{voiceIntent: 'input', voiceLabel: 'tvname', onVoice: () => console.log("voice input!!!!!")},
-		{voiceIntent: 'input', voiceLabel: 'tvname2', onVoice: 'onChange'}
-	]
-}, Input);
 
 class VoiceInput extends React.Component {
 	constructor (props) {
@@ -357,6 +353,5 @@ export {
 	calcAriaLabel,
 	Input,
 	InputBase,
-	VoiceInput,
-	VoiceInput2
+	VoiceInput
 };
