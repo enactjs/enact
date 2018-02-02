@@ -90,25 +90,21 @@ const ProgressBar = kind({
 
 	computed: {
 		className: ({vertical, styler}) => styler.append({vertical}),
-		progress: ({progress}) => progressToPercent(progress),
-		backgroundProgress: ({backgroundProgress}) => progressToPercent(backgroundProgress),
-		progressCssProp: ({vertical}) => (vertical ? 'height' : 'width'),
-		validate: ({backgroundProgress, progress}) => {
-			if (__DEV__) {
-				validateRange(backgroundProgress, 0, 1, 'ProgressBar', 'backgroundProgress', 'min', 'max');
-				validateRange(progress, 0, 1, 'ProgressBar', 'progress', 'min', 'max');
-			}
-		}
+		progressCssProp: ({vertical}) => (vertical ? 'height' : 'width')
 	},
 
 	render: ({backgroundProgress, css, progress, progressCssProp, ...rest}) => {
-		delete rest.validate;
 		delete rest.vertical;
+
+		if (__DEV__) {
+			validateRange(backgroundProgress, 0, 1, 'ProgressBar', 'backgroundProgress', 'min', 'max');
+			validateRange(progress, 0, 1, 'ProgressBar', 'progress', 'min', 'max');
+		}
 
 		return (
 			<div role="progressbar" {...rest}>
-				<div className={css.load} style={{[progressCssProp]: backgroundProgress}} />
-				<div className={css.fill} style={{[progressCssProp]: progress}} />
+				<div className={css.load} style={{[progressCssProp]: progressToPercent(backgroundProgress)}} />
+				<div className={css.fill} style={{[progressCssProp]: progressToPercent(progress)}} />
 			</div>
 		);
 	}
