@@ -17,10 +17,23 @@ const VirtualListNative = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualListNative.prototype */ {
 		/**
-		 * The render function for an item of the list.
+		 * The render function for an item of the list which passes below parameters.
+		 * NOTICE: The list does NOT always call this function whenever its render function is called
+		 * due to performance optimization.
+		 *
+		 * `data` is for accessing data of the list.
+		 * `data-index` is for passing this to elements in the component that you want to
+		 * make the list scroll by 5way navigation on it.
 		 * `index` is for accessing the index of the item.
 		 * `key` MUST be passed as a prop for DOM recycling.
 		 * Data manipulation can be done in this function.
+		 *
+		 * Usage:
+		 * ```
+		 * renderItem = ({data, index, ...rest}) => (
+		 * 		<MyComponent index={index} {...rest} />
+		 * )
+		 * ```
 		 *
 		 * @name component
 		 * @type {Function}
@@ -47,8 +60,42 @@ const VirtualListNative = kind({
 		itemSize: PropTypes.number.isRequired
 
 		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
+		 * The callback function which is called for linking scrollTo function.
+		 * You should specify a callback function as the value of this prop
+		 * to use scrollTo feature.
+		 *
+		 * The scrollTo function passed to the parent component requires below as an argument.
+		 * - {position: {x, y}} - You can set a pixel value for x and/or y position
+		 * - {align} - You can set one of values below for align
+		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
+		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
+		 * - {index} - You can set an index of specific item. (`0` or positive integer)
+		 *   This option is available only for `VirtualList` kind.
+		 * - {node} - You can set a node to scroll
+		 * - {animate} - When `true`, scroll occurs with animation.
+		 *   Set it to `false` if you want scrolling without animation.
+		 * - {indexToFocus} - Deprecated: Use `focus` instead.
+		 * - {focus} - Set `true` if you want the item to be focused after scroll.
+		 *   This option is only valid when you scroll by `index` or `node`.
+		 *
+		 * Example:
+		 * ````
+		 *	// If you set cbScrollTo prop like below;
+		 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
+		 *	// You can simply call like below;
+		 *	this.scrollTo({align: 'top'}); // scroll to the top
+		 * ```
+		 *
+		 * @name cbScrollTo
+		 * @type {Function}
+		 * @memberof moonstone/VirtualList.VirtualListNative
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Data for passing it through `component` prop.
+		 * NOTICE: For performance reason, changing this prop does NOT always cause redraw items.
 		 *
 		 * @name data
 		 * @type {Any}
@@ -88,6 +135,56 @@ const VirtualListNative = kind({
 		 * @type {Boolean}
 		 * @memberof moonstone/VirtualList.VirtualListNative
 		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
+		 * `'visible'`, and `'hidden'`.
+		 *
+		 * @name horizontalScrollbar
+		 * @type {String}
+		 * @default 'auto'
+		 * @memberof moonstone/VirtualList.VirtualListNative
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Called when scrolling
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`
+		 * It is not recommended to set this prop since it can cause performance degradation.
+		 *
+		 * @name onScroll
+		 * @type {Function}
+		 * @memberof moonstone/VirtualList.VirtualListNative
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Called when scroll starts
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`
+		 *
+		 * @name onScrollStart
+		 * @type {Function}
+		 * @memberof moonstone/VirtualList.VirtualListNative
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Called when scroll stops
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`
+		 *
+		 * @name onScrollStop
+		 * @type {Function}
+		 * @memberof moonstone/VirtualList.VirtualListNative
+		 * @instance
+		 * @public
 		 */
 
 		/**
@@ -96,6 +193,18 @@ const VirtualListNative = kind({
 		 * @name spacing
 		 * @type {Number}
 		 * @default 0
+		 * @memberof moonstone/VirtualList.VirtualListNative
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
+		 * `'visible'`, and `'hidden'`.
+		 *
+		 * @name verticalScrollbar
+		 * @type {String}
+		 * @default 'auto'
 		 * @memberof moonstone/VirtualList.VirtualListNative
 		 * @instance
 		 * @public
@@ -118,10 +227,23 @@ const VirtualGridListNative = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualGridListNative.prototype */ {
 		/**
-		 * The render function for an item of the list.
+		 * The render function for an item of the list which passes below parameters.
+		 * NOTICE: The list does NOT always call this function whenever its render function is called
+		 * due to performance optimization.
+		 *
+		 * `data` is for accessing data of the list.
+		 * `data-index` is for passing this to elements in the component that you want to
+		 * make the list scroll by 5way navigation on it.
 		 * `index` is for accessing the index of the item.
 		 * `key` MUST be passed as a prop for DOM recycling.
 		 * Data manipulation can be done in this function.
+		 *
+		 * Usage:
+		 * ```
+		 * renderItem = ({data, index, ...rest}) => (
+		 * 		<MyComponent index={index} {...rest} />
+		 * )
+		 * ```
 		 *
 		 * @name component
 		 * @type {Function}
@@ -147,8 +269,42 @@ const VirtualGridListNative = kind({
 		itemSize: gridListItemSizeShape.isRequired
 
 		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
+		 * The callback function which is called for linking scrollTo function.
+		 * You should specify a callback function as the value of this prop
+		 * to use scrollTo feature.
+		 *
+		 * The scrollTo function passed to the parent component requires below as an argument.
+		 * - {position: {x, y}} - You can set a pixel value for x and/or y position
+		 * - {align} - You can set one of values below for align
+		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
+		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
+		 * - {index} - You can set an index of specific item. (`0` or positive integer)
+		 *   This option is available only for `VirtualList` kind.
+		 * - {node} - You can set a node to scroll
+		 * - {animate} - When `true`, scroll occurs with animation.
+		 *   Set it to `false` if you want scrolling without animation.
+		 * - {indexToFocus} - Deprecated: Use `focus` instead.
+		 * - {focus} - Set `true` if you want the item to be focused after scroll.
+		 *   This option is only valid when you scroll by `index` or `node`.
+		 *
+		 * Example:
+		 * ````
+		 *	// If you set cbScrollTo prop like below;
+		 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
+		 *	// You can simply call like below;
+		 *	this.scrollTo({align: 'top'}); // scroll to the top
+		 * ```
+		 *
+		 * @name cbScrollTo
+		 * @type {Function}
+		 * @memberof moonstone/VirtualList.VirtualGridListNative
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Data for passing it through `component` prop.
+		 * NOTICE: For performance reason, changing this prop does NOT always cause redraw items.
 		 *
 		 * @name data
 		 * @type {Any}
@@ -192,11 +348,72 @@ const VirtualGridListNative = kind({
 		 */
 
 		/**
+		 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
+		 * `'visible'`, and `'hidden'`.
+		 *
+		 * @name horizontalScrollbar
+		 * @type {String}
+		 * @default 'auto'
+		 * @memberof moonstone/VirtualList.VirtualGridListNative
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Called when scrolling
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`
+		 * It is not recommended to set this prop since it can cause performance degradation.
+		 *
+		 * @name onScroll
+		 * @type {Function}
+		 * @memberof moonstone/VirtualList.VirtualGridListNative
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Called when scroll starts
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`
+		 *
+		 * @name onScrollStart
+		 * @type {Function}
+		 * @memberof moonstone/VirtualList.VirtualGridListNative
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Called when scroll stops
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`
+		 *
+		 * @name onScrollStop
+		 * @type {Function}
+		 * @memberof moonstone/VirtualList.VirtualGridListNative
+		 * @instance
+		 * @public
+		 */
+
+		/**
 		 * Spacing between items.
 		 *
 		 * @name spacing
 		 * @type {Number}
 		 * @default 0
+		 * @memberof moonstone/VirtualList.VirtualGridListNative
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
+		 * `'visible'`, and `'hidden'`.
+		 *
+		 * @name verticalScrollbar
+		 * @type {String}
+		 * @default 'auto'
 		 * @memberof moonstone/VirtualList.VirtualGridListNative
 		 * @instance
 		 * @public

@@ -159,7 +159,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			/**
 			 * Called when scrolling
-			 *
+			 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 	 * It is not recommended to set this prop since it can cause performance degradation.
+		 	 *
 			 * @type {Function}
 			 * @public
 			 */
@@ -169,12 +171,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * Called when scrollbar visibility changes
 			 *
 			 * @type {Function}
-			 * @public
+			 * @private
 			 */
 			onScrollbarVisibilityChange: PropTypes.func,
 
 			/**
 			 * Called when scroll starts
+			 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
 			 *
 			 * @type {Function}
 			 * @public
@@ -183,6 +186,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			/**
 			 * Called when scroll stops
+			 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
 			 *
 			 * @type {Function}
 			 * @public

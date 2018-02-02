@@ -100,6 +100,7 @@ const ScrollerNative = SpotlightContainerDecorator(
 
 /**
  * Called when scrolling
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
  *
  * @name onScroll
  * @type {Function}
@@ -110,6 +111,7 @@ const ScrollerNative = SpotlightContainerDecorator(
 
 /**
  * Called when scroll starts
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
  *
  * @name onScrollStart
  * @type {Function}
@@ -120,6 +122,7 @@ const ScrollerNative = SpotlightContainerDecorator(
 
 /**
  * Called when scroll stops
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
  *
  * @name onScrollStop
  * @type {Function}

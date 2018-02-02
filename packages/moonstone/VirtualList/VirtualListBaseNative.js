@@ -61,10 +61,23 @@ class VirtualListCoreNative extends Component {
 
 	static propTypes = /** @lends moonstone/VirtualList.VirtualListCoreNative.prototype */ {
 		/**
-		 * The render function for an item of the list.
+		 * The render function for an item of the list which passes below parameters.
+		 * NOTICE: The list does NOT always call this function whenever its render function is called
+		 * due to performance optimization.
+		 *
+		 * `data` is for accessing data of the list.
+		 * `data-index` is for passing this to elements in the component that you want to
+		 * make the list scroll by 5way navigation on it.
 		 * `index` is for accessing the index of the item.
 		 * `key` MUST be passed as a prop for DOM recycling.
 		 * Data manipulation can be done in this function.
+		 *
+		 * Usage:
+		 * ```
+		 * renderItem = ({data, index, ...rest}) => (
+		 * 		<MyComponent index={index} {...rest} />
+		 * )
+		 * ```
 		 *
 		 * @type {Function}
 		 * @public
@@ -106,8 +119,8 @@ class VirtualListCoreNative extends Component {
 		}),
 
 		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
+		 * Data for passing it through `component` prop.
+		 * NOTICE: For performance reason, changing this prop does NOT always cause redraw items.
 		 *
 		 * @type {Any}
 		 * @default []

@@ -26,10 +26,23 @@ const VirtualList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 		/**
-		 * The render function for an item of the list.
+		 * The render function for an item of the list which passes below parameters.
+		 * NOTICE: The list does NOT always call this function whenever its render function is called
+		 * due to performance optimization.
+		 *
+		 * `data` is for accessing data of the list.
+		 * `data-index` is for passing this to elements in the component that you want to
+		 * make the list scroll by 5way navigation on it.
 		 * `index` is for accessing the index of the item.
 		 * `key` MUST be passed as a prop for DOM recycling.
 		 * Data manipulation can be done in this function.
+		 *
+		 * Usage:
+		 * ```
+		 * renderItem = ({data, index, ...rest}) => (
+		 * 		<MyComponent index={index} {...rest} />
+		 * )
+		 * ```
 		 *
 		 * @name component
 		 * @type {Function}
@@ -90,8 +103,8 @@ const VirtualList = kind({
 		 */
 
 		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
+		 * Data for passing it through `component` prop.
+		 * NOTICE: For performance reason, changing this prop does NOT always cause redraw items.
 		 *
 		 * @name data
 		 * @type {Any}
@@ -148,6 +161,9 @@ const VirtualList = kind({
 
 		/**
 		 * Called when scrolling
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`
+		 * It is not recommended to set this prop since it can cause performance degradation.
 		 *
 		 * @name onScroll
 		 * @type {Function}
@@ -158,6 +174,8 @@ const VirtualList = kind({
 
 		/**
 		 * Called when scroll starts
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`
 		 *
 		 * @name onScrollStart
 		 * @type {Function}
@@ -168,6 +186,8 @@ const VirtualList = kind({
 
 		/**
 		 * Called when scroll stops
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`
 		 *
 		 * @name onScrollStop
 		 * @type {Function}
@@ -216,10 +236,23 @@ const VirtualGridList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
 		/**
-		 * The render function for an item of the list.
+		 * The render function for an item of the list which passes below parameters.
+		 * NOTICE: The list does NOT always call this function whenever its render function is called
+		 * due to performance optimization.
+		 *
+		 * `data` is for accessing data of the list.
+		 * `data-index` is for passing this to elements in the component that you want to
+		 * make the list scroll by 5way navigation on it.
 		 * `index` is for accessing the index of the item.
 		 * `key` MUST be passed as a prop for DOM recycling.
 		 * Data manipulation can be done in this function.
+		 *
+		 * Usage:
+		 * ```
+		 * renderItem = ({data, index, ...rest}) => (
+		 * 		<MyComponent index={index} {...rest} />
+		 * )
+		 * ```
 		 *
 		 * @name component
 		 * @type {Function}
@@ -278,8 +311,8 @@ const VirtualGridList = kind({
 		 */
 
 		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
+		 * Data for passing it through `component` prop.
+		 * NOTICE: For performance reason, changing this prop does NOT always cause redraw items.
 		 *
 		 * @name data
 		 * @type {Any}
@@ -336,6 +369,9 @@ const VirtualGridList = kind({
 
 		/**
 		 * Called when scrolling
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`
+		 * It is not recommended to set this prop since it can cause performance degradation.
 		 *
 		 * @name onScroll
 		 * @type {Function}
@@ -346,6 +382,8 @@ const VirtualGridList = kind({
 
 		/**
 		 * Called when scroll starts
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`
 		 *
 		 * @name onScrollStart
 		 * @type {Function}
@@ -356,6 +394,8 @@ const VirtualGridList = kind({
 
 		/**
 		 * Called when scroll stops
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`
 		 *
 		 * @name onScrollStop
 		 * @type {Function}

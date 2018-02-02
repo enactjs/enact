@@ -155,6 +155,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			/**
 			 * Called when scrolling
+			 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
 			 *
 			 * @type {Function}
 			 * @public
@@ -165,12 +166,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * Called when scrollbar visability changes
 			 *
 			 * @type {Function}
-			 * @public
+			 * @private
 			 */
 			onScrollbarVisibilityChange: PropTypes.func,
 
 			/**
 			 * Called when scroll starts
+			 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
 			 *
 			 * @type {Function}
 			 * @public
@@ -179,6 +181,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			/**
 			 * Called when scroll stops
+			 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
 			 *
 			 * @type {Function}
 			 * @public
