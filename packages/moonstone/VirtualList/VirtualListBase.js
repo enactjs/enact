@@ -5,11 +5,12 @@ import {dataIndexAttribute, Scrollable} from '@enact/ui/Scrollable';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import React from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Spottable from '@enact/spotlight/Spottable';
-import {VirtualListCore as UiVirtualListCore, gridListItemSizeShape} from '@enact/ui/VirtualList/VirtualListBase';
+import {VirtualListCore as UiVirtualListCore} from '@enact/ui/VirtualList/VirtualListBase';
+import {VirtualListCoreNative as UiVirtualListCoreNative} from '@enact/ui/VirtualList/VirtualListBaseNative';
 
 import css from '@enact/ui/VirtualList/ListItem.less';
 
@@ -68,9 +69,9 @@ const SpotlightPlaceholder = Spottable('div');
  * @memberof moonstone/VirtualList
  * @private
  */
-const VirtualListSelector = (type) => (
+const VirtualListSelector = (type, UiComponent) => (
 
-	class VirtualListCore extends UiVirtualListCore {
+	class VirtualListCore extends UiComponent {
 		static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
 			/**
 			 * Callback method of scrollTo.
@@ -719,18 +720,18 @@ const VirtualListSelector = (type) => (
 					<SpotlightPlaceholder
 						data-index={0}
 						data-vl-placeholder
-						key='1'
+						key="1"
 						onFocus={this._handlePlaceholderFocus}
 						role="region"
 					/>,
-				needsScrollingPlaceholder ? <SpotlightPlaceholder key='2' /> : null
+				needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
 			];
 		}
 	}
 );
 
-const VirtualListCoreJS = VirtualListSelector('JS')
-const VirtualListCoreNative = VirtualListSelector('Native')
+const VirtualListCoreJS = VirtualListSelector('JS', UiVirtualListCore);
+const VirtualListCoreNative = VirtualListSelector('Native', UiVirtualListCoreNative);
 
 /**
  * {@link moonstone/VirtualList.VirtualListBase} is a base component for
@@ -745,8 +746,8 @@ const VirtualListCoreNative = VirtualListSelector('Native')
  * @private
  */
 const VirtualListBase = VirtualListContainerSpottable(
-	Scrollable(VirtualListCoreJS) // including ScrollableSpotlightContainerDecorator
+	Scrollable(VirtualListCoreJS)
 );
 
 export default VirtualListBase;
-export {gridListItemSizeShape, VirtualListCoreJS as VirtualListCore, VirtualListBase};
+export {VirtualListCoreJS as VirtualListCore, VirtualListBase};

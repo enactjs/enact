@@ -11,10 +11,9 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
 import {dataIndexAttribute, ScrollableNative} from '../Scrollable/ScrollableNative.js';
-import {VirtualListCoreSpottable, VirtualListContainerSpottable} from './VirtualListCoreSpottable';
 
-import css from '@enact/moonstone/VirtualList/VirtualListNative.less';
-import cssItem from '@enact/moonstone/VirtualList/ListItem.less';
+import css from './VirtualListBaseNative.less';
+import cssItem from './ListItem.less';
 
 const nop = () => {};
 
@@ -127,9 +126,9 @@ class VirtualListCoreNative extends Component {
 		 */
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
-		initItemRef: PropTypes.func,
-
 		getNodeIndexToBeFocused: PropTypes.func,
+
+		initItemRef: PropTypes.func,
 
 		lastFocusedIndex: PropTypes.object,
 
@@ -812,11 +811,7 @@ class VirtualListCoreNative extends Component {
  * @ui
  * @private
  */
-const VirtualListBaseNative = VirtualListContainerSpottable(
-	ScrollableNative( // including ScrollableSpotlightContainerDecorator
-		VirtualListCoreSpottable('Native')(VirtualListCoreNative)
-	)
-);
+const VirtualListBaseNative = ScrollableNative(VirtualListCoreNative);
 
 export default VirtualListBaseNative;
 export {gridListItemSizeShape, VirtualListCoreNative, VirtualListBaseNative};

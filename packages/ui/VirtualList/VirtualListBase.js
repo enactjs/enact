@@ -738,7 +738,7 @@ class VirtualListCore extends Component {
  * @ui
  * @private
  */
-const VirtualListBase = Scrollable(VirtualListCore); // including ScrollableSpotlightContainerDecorator
+const VirtualListBase = Scrollable(VirtualListCore);
 
 export default VirtualListBase;
 export {gridListItemSizeShape, VirtualListCore, VirtualListBase};
