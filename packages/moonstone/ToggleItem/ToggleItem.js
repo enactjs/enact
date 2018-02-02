@@ -72,22 +72,13 @@ const ToggleItemBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Icon property accepts a string or an Icon Element.
+		 * Icon property accepts a string or an Icon component.
 		 *
-		 * @type {String|moonstone/Icon.Icon}
+		 * @type {String|Component}
 		 * @default null
 		 * @public
 		 */
-		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-
-		/**
-		 * CSS classes for Icon
-		 *
-		 * @type {String}
-		 * @default ''
-		 * @public
-		 */
-		iconClasses: PropTypes.string,
+		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
 		 * Specifies on which side (`before` or `after`) of the text the icon appears.
@@ -97,15 +88,6 @@ const ToggleItemBase = kind({
 		 * @public
 		 */
 		iconPosition: PropTypes.oneOf(['before', 'after']),
-
-		/**
-		 * Applies inline styling to the toggle item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		inline: PropTypes.bool,
 
 		/**
 		 * The handler to run when the toggle item is toggled. Developers should
@@ -146,9 +128,7 @@ const ToggleItemBase = kind({
 
 	defaultProps: {
 		disabled: false,
-		iconClasses: '',
 		iconPosition: 'before',
-		inline: false,
 		selected: false,
 		value: null
 	},
@@ -176,7 +156,6 @@ const ToggleItemBase = kind({
 
 	render: ({css, children, iconAfter, iconBefore, onToggle, selected, ...rest}) => {
 		delete rest.icon;
-		delete rest.iconClasses;
 		delete rest.iconPosition;
 		delete rest.toggleIcon;
 		delete rest.value;
@@ -197,10 +176,22 @@ const ToggleItemBase = kind({
 	}
 });
 
+/**
+ * Adds interactive functionality to `ToggleItemBase`
+ *
+ * @class ToggleItemDecorator
+ * @memberof moonstone/ToggleItem
+ * @mixes ui/Toggleable.Toggleable
+ * @hoc
+ * @public
+ */
+const ToggleItemDecorator = compose(
+	Pure,
+	Toggleable
+);
 
 /**
- * A Moonstone-styled item with built-in support for toggling, marqueed text, and
- * Spotlight focus.
+ * A Moonstone-styled item with built-in support for toggling, marqueed text, and `Spotlight` focus.
  *
  * Usage:
  * ```
@@ -209,16 +200,16 @@ const ToggleItemBase = kind({
  *
  * @class ToggleItem
  * @memberof moonstone/ToggleItem
- * @mixes ui/Toggleable.Toggleable
+ * @extends moonstone/ToggleItem.ToggleItemBase
+ * @mixes moonstone/ToggleItem.ToggleItemDecorator
  * @ui
  * @public
  */
-
-const ToggleItem = compose(
-	Pure,
-	Toggleable({prop: 'selected', toggleProp: 'onTap'}),
-	Touchable
-)(ToggleItemBase);
+const ToggleItem = ToggleItemDecorator(ToggleItemBase);
 
 export default ToggleItem;
-export {ToggleItem, ToggleItemBase};
+export {
+	ToggleItem,
+	ToggleItemBase,
+	ToggleItemDecorator
+};
