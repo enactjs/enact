@@ -17,7 +17,7 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 
 import Scrollable from '../Scrollable';
 
-import css from '@enact/moonstone/Scroller/Scroller.less';
+import css from './Scroller.less';
 
 const
 	dataContainerDisabledAttribute = 'data-container-disabled',
@@ -476,9 +476,7 @@ class ScrollerBase extends Component {
  */
 const Scroller = SpotlightContainerDecorator(
 	{restrict: 'self-first'},
-//	Scrollable(
-		ScrollerBase
-//	)
+	ScrollerBase
 );
 
 // Docs for Scroller

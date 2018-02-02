@@ -9,7 +9,7 @@ import {Scrollable as UiScrollable} from '@enact/ui/Scrollable';
 import Scrollbar from './Scrollbar';
 
 import css from '@enact/ui/Scrollable/Scrollable.less';
-import scrollbarCss from '@enact/moonstone/Scroller/Scrollbar.less';
+import scrollbarCss from './Scrollbar.less';
 
 const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 	{

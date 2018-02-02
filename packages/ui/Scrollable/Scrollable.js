@@ -17,7 +17,7 @@ import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
 
 import ScrollAnimator from './ScrollAnimator';
-import Scrollbar from '../Scrollbar';
+import Scrollbar from './Scrollbar';
 
 import css from './Scrollable.less';
 
