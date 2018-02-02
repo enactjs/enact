@@ -65,11 +65,13 @@ class VirtualListCoreNative extends Component {
 		 * NOTICE: The list does NOT always call this function whenever its render function is called
 		 * due to performance optimization.
 		 *
-		 * `data` is for accessing data of the list.
-		 * `data-index` is for passing this to elements in the component that you want to
+		 * - `data` is for accessing data of the list.
+		 * NOTICE: In most cases, it is recommended to use data from redux store instead of using
+		 * this due to above reason.
+		 * - `data-index` is for passing this to elements in the component that you want to
 		 * make the list scroll by 5way navigation on it.
-		 * `index` is for accessing the index of the item.
-		 * `key` MUST be passed as a prop for DOM recycling.
+		 * - `index` is for accessing the index of the item.
+		 * - `key` MUST be passed as a prop for DOM recycling.
 		 * Data manipulation can be done in this function.
 		 *
 		 * Usage:
