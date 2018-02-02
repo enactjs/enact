@@ -31,7 +31,7 @@ const Spinner = kind({
 
 	propTypes: /** @lends ui/Spinner.Spinner.prototype */ {
 		/**
-		 * An theme-supplied component that animates with the presence of the `.running` class.
+		 * A theme-supplied component that animates with the presence of the `.running` class.
 		 *
 		 * This element should accept a `children` prop which takes the form of an optional message
 		 * for the user.
@@ -77,10 +77,10 @@ const Spinner = kind({
 		 * The following classes are supported:
 		 *
 		 * * `spinner` - The root component class
-		 * * `spinnerContainer` - Added as a parent in the case of blockOnClick="container"
+		 * * `spinnerContainer` - Added as a parent in the case of `blockOnClick="container"`
 		 * * `blockClickOn` - Applied if interaction should be blocked
-		 * * `centered` - Applied if the centered prop is present
-		 * * `running` - Controls the playback state. Attach animation name property to this class.
+		 * * `centered` - Applied if the `centered` prop is present
+		 * * `running` - Always applied. Attach animation name property to this class.
 		 * * `scrim` - The blocking layer behind the Spinner
 		 *
 		 * @type {Object}
@@ -89,7 +89,7 @@ const Spinner = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, sets visible translucent scrim behind spinner.
+		 * When `true`, sets a scrim behind the spinner with the `css.scrim` class applied.
 		 *
 		 * Only has an effect when `blockClickOn` is `'screen'` or `'container'` and has no effect
 		 * by default or when blockClickOn is `null`.
