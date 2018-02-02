@@ -21,7 +21,7 @@ import Pure from '@enact/ui/internal/Pure';
 import Icon from '../Icon';
 import Skinnable from '../Skinnable';
 
-import css from './Switch.less';
+import componentCss from './Switch.less';
 
 /**
  * Renders the base level DOM structure of the component.
@@ -51,9 +51,9 @@ const SwitchBase = kind({
 	},
 
 	styles: {
-		css,
+		css: componentCss,
 		className: 'switch',
-		publicClassNames: 'switch'
+		publicClassNames: ['switch']
 	},
 
 	computed: {
@@ -64,8 +64,15 @@ const SwitchBase = kind({
 
 	render: (props) => {
 		delete props.animated;
+
 		return (
-			<ToggleIcon {...props} css={css} iconComponent={Icon}>circle</ToggleIcon>
+			<ToggleIcon
+				{...props}
+				css={props.css}
+				iconComponent={Icon}
+			>
+				circle
+			</ToggleIcon>
 		);
 	}
 });
