@@ -36,7 +36,18 @@ const IconButtonBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		buttonComponent: PropTypes.func,
+		buttonComponent: PropTypes.func.isRequired,
+
+		/**
+		 * The component used to render the [icon]{@link ui/IconButton.IconButtonBase.icon}.
+		 *
+		 * This component will receive the `small` property set on the IconButton as well as the
+		 * `icon` class to customize its styling.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		iconComponent: PropTypes.func.isRequired,
 
 		/**
 		 * Additional children that follow the icon.
@@ -86,17 +97,6 @@ const IconButtonBase = kind({
 		 * @public
 		 */
 		icon: PropTypes.string,
-
-		/**
-		 * The component used to render the [icon]{@link ui/IconButton.IconButtonBase.icon}.
-		 *
-		 * This component will receive the `small` property set on the IconButton as well as the
-		 * `icon` class to customize its styling.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		iconComponent: PropTypes.func,
 
 		/**
 		 * Applies the `pressed` CSS class to the [IconButton]{@link ui/IconButton.IconButtonBase}
