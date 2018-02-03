@@ -42,6 +42,15 @@ const defaultConfig = {
 	deactivate: null,
 
 	/**
+	 * Configures the property that is passed to the wrapped component when toggled.
+	 *
+	 * @type {String}
+	 * @default 'selected'
+	 * @memberof ui/Toggleable.Toggleable.defaultConfig
+	 */
+	prop: 'selected',
+
+	/**
 	 * Configures the event name that toggles the component.
 	 *
 	 * @type {String}
@@ -59,16 +68,7 @@ const defaultConfig = {
 	 * @default null
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
 	 */
-	toggleProp: null,
-
-	/**
-	 * Configures the property that is passed to the wrapped component when toggled.
-	 *
-	 * @type {String}
-	 * @default 'selected'
-	 * @memberof ui/Toggleable.Toggleable.defaultConfig
-	 */
-	prop: 'selected'
+	toggleProp: null
 };
 
 /**
