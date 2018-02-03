@@ -102,8 +102,8 @@ const SelectableItemBase = kind({
 /**
  * Represents a Boolean state of an item with a checkbox
  *
- * @class SelectablItem
- * @memberof ui/SelectablItem
+ * @class SelectableItem
+ * @memberof ui/SelectableItem
  * @mixes ui/Toggleable.Toggleable
  * @ui
  * @public

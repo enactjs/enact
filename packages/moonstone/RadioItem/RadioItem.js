@@ -1,12 +1,16 @@
 /**
- * Exports the {@link moonstone/RadioItem.RadioItem} component.
+ * Provides Moonstone-themed item component and interactive togglable radio icon.
  *
  * @module moonstone/RadioItem
+ * @exports RadioItem
+ * @exports RadioItemBase
+ * @exports RadioItemDecorator
  */
 
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import Pure from '@enact/ui/internal/Pure';
 import Toggleable from '@enact/ui/Toggleable';
 
@@ -16,9 +20,7 @@ import Skinnable from '../Skinnable';
 import css from './RadioItem.less';
 
 /**
- * {@link moonstone/RadioItem.RadioItemBase} is a component that
- * combines a Toggleable radio selector and an Item. It has two selected states
- * `true` & `false`.
+ * Renders an item with a radio component. Useful to show a selected state on an item.
  *
  * @class RadioItemBase
  * @memberof moonstone/RadioItem
@@ -96,7 +98,8 @@ const RadioItemBase = kind({
 	},
 
 	computed: {
-		icon: ({selected, styler}) => {
+		// eslint-disable-next-line enact/display-name
+		toggleIcon: ({selected, styler}) => () => {
 			const className = styler.join(css.dot, {selected});
 
 			return (
@@ -112,14 +115,7 @@ const RadioItemBase = kind({
 
 
 /**
- * {@link moonstone/RadioItem.RadioItem} is a component that combines a
- * {@link ui/Toggleable.Toggleable} radio selector and an Item. It has two selected states `true` &
- * `false`.
- *
- * By default, `RadioItem` maintains the state of its `selected` property. Supply the
- * `defaultSelected` property to control its initial value. If you wish to directly control updates
- * to the component, supply a value to `selected` at creation time and update it in response to
- * `onToggle` events.
+ * Represents a Boolean state of an item with a checkbox
  *
  * @class RadioItem
  * @memberof moonstone/RadioItem
@@ -127,14 +123,12 @@ const RadioItemBase = kind({
  * @ui
  * @public
  */
-const RadioItem = Pure(
-	Toggleable(
-		{prop: 'selected'},
-		Skinnable(
-			RadioItemBase
-		)
-	)
-);
+
+const RadioItem = compose(
+	Pure,
+	Toggleable({prop: 'selected'}),
+	Skinnable
+)(RadioItemBase);
 
 export default RadioItem;
 export {RadioItem, RadioItemBase};

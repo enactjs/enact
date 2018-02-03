@@ -1,13 +1,16 @@
 /**
- * Exports [FormCheckboxItemBase]{@link moonstone/FormCheckboxItem.FormCheckboxItemBase} and
- * [FormCheckboxItem]{@link moonstone/FormCheckboxItem.FormCheckboxItem} (default) components.
+ * Provides Moonstone-themed form item component and interactive togglable checkbox.
  *
  * @module moonstone/FormCheckboxItem
+ * @exports FormCheckboxItem
+ * @exports FormCheckboxItemBase
+ * @exports FormCheckboxItemDecorator
  */
 
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import Pure from '@enact/ui/internal/Pure';
 import Toggleable from '@enact/ui/Toggleable';
 
@@ -18,15 +21,9 @@ import Skinnable from '../Skinnable';
 import css from './FormCheckboxItem.less';
 
 /**
- * [FormCheckboxItemBase]{@link moonstone/FormCheckboxItem.FormCheckboxItemBase} is a stateless
- * component that is an extension of [Item]{@link moonstone/Item} that supports
- * [toggleableability]{@link ui/Toggleable}. It has two states: `true` (selected) & `false`
- * (unselected). It uses a check icon to represent its selected state. This differs from
- * [CheckboxItemBase]{@link moonstone/CheckboxItem.CheckboxItemBase}, only visually, in its handling
- * of `Spotlight` focus. This item receives focus, but the entire element does not appear focused,
- * relying on its child element [FormCheckbox]{@link moonstone/FormCheckbox} to reflect that state.
+ * Renders a form item with a checkbox component. Useful to show a selected state on an item inside a form.
  *
- * @class FormCheckboxItemBase
+ * @class CheckboxItemBase
  * @memberof moonstone/FormCheckboxItem
  * @ui
  * @public
@@ -112,7 +109,8 @@ const FormCheckboxItemBase = kind({
 	},
 
 	computed: {
-		icon: ({selected, disabled}) => (
+		// eslint-disable-next-line enact/display-name
+		toggleIcon: ({selected, disabled}) => () => (
 			<FormCheckbox selected={selected} disabled={disabled} />
 		)
 	},
@@ -123,30 +121,20 @@ const FormCheckboxItemBase = kind({
 });
 
 /**
- * [FormCheckboxItem]{@link moonstone/FormCheckboxItem.FormCheckboxItem} is the composed version of
- * [FormCheckboxItemBase]{@link moonstone/FormCheckboxItem.FormCheckboxItemBase} which adds the
- * [Toggleable]{@link ui/Toggleable} High Order Component to support interactivity of the component.
- * [FormCheckboxItem]{@link moonstone/FormCheckboxItem.FormCheckboxItem} has two states: `true`
- * (selected) & `false` (unselected). It uses a check icon to represent its selected state.
- *
- * By default, `FormCheckboxItem` maintains the state of its `selected` property. Supply the
- * `defaultSelected` property to control its initial value. If you wish to directly control updates
- * to the component, supply a value to `selected` at creation time and update it in response to
- * `onToggle` events.
+ * Represents a Boolean state of a form item with a checkbox
  *
  * @class FormCheckboxItem
  * @memberof moonstone/FormCheckboxItem
+ * @mixes ui/Toggleable.Toggleable
  * @ui
  * @public
  */
-const FormCheckboxItem = Pure(
-	Toggleable(
-		{prop: 'selected'},
-		Skinnable(
-			FormCheckboxItemBase
-		)
-	)
-);
+
+const FormCheckboxItem = compose(
+	Pure,
+	Toggleable({prop: 'selected'}),
+	Skinnable
+)(FormCheckboxItemBase);
 
 export default FormCheckboxItem;
 export {FormCheckboxItem, FormCheckboxItemBase};
