@@ -166,13 +166,18 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 
 		componentWillMount () {
 			const {blockClickOn} = this.props;
+
 			if (blockClickOn === 'screen') {
 				Spotlight.pause();
 			}
 		}
 
 		componentWillUnmount () {
-			Spotlight.resume();
+			const {blockClickOn} = this.props;
+
+			if (blockClickOn === 'screen') {
+				Spotlight.resume();
+			}
 		}
 
 		render () {

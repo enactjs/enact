@@ -17,6 +17,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` to render properly with fiber reconciler
 - `moonstone/VirtualList` to work focus option in scrollTo api
 - `moonstone/ExpandableSpotlightDecorator` to not spot the title upon collapse when in `pointerMode`
+- `moonstone/Spinner` to not unpause Spotlight unless it was the one to pause it
 
 ## [2.0.0-alpha.3] - 2018-01-18
 
