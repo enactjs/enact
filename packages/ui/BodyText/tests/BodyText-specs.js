@@ -1,6 +1,6 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
-import {BodyTextBase as BodyText} from '../BodyText';
+import BodyText from '../BodyText';
 import css from '../BodyText.less';
 
 describe('BodyText Specs', () => {

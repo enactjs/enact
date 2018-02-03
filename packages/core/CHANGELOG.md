@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `core/kind` to always return a component rather than either a component or an SFC depending upon the configuration
+
 ## [2.0.0-alpha.3] - 2018-01-18
 
 No significant changes.
