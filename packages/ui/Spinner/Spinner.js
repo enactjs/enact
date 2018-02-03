@@ -31,7 +31,8 @@ const Spinner = kind({
 
 	propTypes: /** @lends ui/Spinner.Spinner.prototype */ {
 		/**
-		 * A theme-supplied component which should already have a `.running` class applied.
+		 * A theme-supplied component that performs the animation. Theme authors can use the
+		 * `css.running` class to attach the animation CSS.
 		 *
 		 * This element should accept a `children` prop which takes the form of an optional message
 		 * for the user.
@@ -76,11 +77,11 @@ const Spinner = kind({
 		 *
 		 * The following classes are supported:
 		 *
-		 * * `spinner` - The root component class
-		 * * `spinnerContainer` - Added as a parent in the case of `blockOnClick="container"`
+		 * * `spinner` - The root `component` class
+		 * * `spinnerContainer` - Added as a parent in the case of `blockOnClick="container"
 		 * * `blockClickOn` - Applied if interaction should be blocked
 		 * * `centered` - Applied if the `centered` prop is present
-		 * * `running` - Always applied. Attach animation name property to this class.
+		 * * `running` - Always applied to `component`. Attach animation name property to this class.
 		 * * `scrim` - The blocking layer behind the Spinner
 		 *
 		 * @type {Object}
