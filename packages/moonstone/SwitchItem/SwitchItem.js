@@ -4,7 +4,6 @@
  * @module moonstone/SwitchItem
  * @exports SwitchItem
  * @exports SwitchItemBase
- * @exports SwitchItemDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -42,16 +41,6 @@ const SwitchItemBase = kind({
 		<ToggleItem iconPosition="after" {...props} iconComponent={CustomizedSwitch} />
 	)
 });
-
-/**
- * Represents a Boolean state of an item with a switch
- *
- * @class SwitchItem
- * @memberof ui/SwitchItem
- * @mixes ui/Toggleable.Toggleable
- * @ui
- * @public
- */
 
 export default SwitchItemBase;
 export {

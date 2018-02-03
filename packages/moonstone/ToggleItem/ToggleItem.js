@@ -1,8 +1,7 @@
 /**
- * Provides Moonstone-themed toggle item components and behaviors.
- *
- * @example
- * <ToggleItem icon="lock" iconPosition="before">Toggle Me</ToggleItem>
+ * Provides Moonstone-themed toggle item components and behaviors. This is not intended to be used
+ * directly, but should be extended by a component that will customize this component's appearance
+ * by supplying an [iconComponent prop]{@link moonstone/ToggleItem.ToggleItemBase#iconComponent}.
  *
  * @module moonstone/ToggleItem
  * @exports ToggleItem
@@ -18,6 +17,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
+import Touchable from '@enact/ui/Touchable';
 
 import SlotItem from '../SlotItem';
 import Touchable from '@enact/ui/Touchable';

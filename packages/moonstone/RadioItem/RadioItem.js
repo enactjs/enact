@@ -1,5 +1,5 @@
 /**
- * Provides Moonstone-themed item component and interactive togglable radio icon.
+ * Provides Moonstone-themed Item component and interactive togglable radio icon.
  *
  * @module moonstone/RadioItem
  * @exports RadioItem
@@ -9,16 +9,13 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 
-import {ToggleIconBase} from '@enact/ui/ToggleIcon';
+import ToggleIcon from '../ToggleIcon';
 import ToggleItem from '../ToggleItem';
-import Skinnable from '../Skinnable';
 
-import css from './RadioItem.less';
-
-const RadioIcon = Skinnable((props) => <ToggleIconBase css={css} {...props} />);
+import componentCss from './RadioItem.less';
 
 /**
- * Renders an item with a radio component. Useful to show a selected state on an item.
+ * Renders an `Item` with a radio-dot component. Useful to show a selected state on an Item.
  *
  * @class RadioItemBase
  * @memberof moonstone/RadioItem
@@ -29,7 +26,7 @@ const RadioItemBase = kind({
 	name: 'RadioItem',
 
 	render: ({...rest}) => (
-		<ToggleItem {...rest} css={css} iconComponent={RadioIcon} />
+		<ToggleItem {...rest} css={componentCss} iconComponent={ToggleIcon} />
 	)
 });
 

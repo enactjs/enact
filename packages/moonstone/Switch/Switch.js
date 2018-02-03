@@ -14,12 +14,9 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import ToggleIcon from '@enact/ui/ToggleIcon';
-import compose from 'ramda/src/compose';
-import Pure from '@enact/ui/internal/Pure';
+import Icon from '@enact/ui/Icon';
 
-import Icon from '../Icon';
-import Skinnable from '../Skinnable';
+import ToggleIcon from '../ToggleIcon';
 
 import componentCss from './Switch.less';
 
@@ -77,34 +74,8 @@ const SwitchBase = kind({
 	}
 });
 
-/**
- * Moonstone-specific behaviors to apply to `SwitchBase`.
- *
- * @hoc
- * @memberof moonstone/Switch
- * @mixes moonstone/Skinnable.Skinnable
- * @public
- */
-const SwitchDecorator = compose(
-	Pure,
-	Skinnable
-);
-
-/**
- * A fully functional, ready-to-use, toggle-switch component.
- *
- * @class Switch
- * @memberof moonstone/Switch
- * @extends moonstone/Switch.SwitchBase
- * @mixes moonstone/Switch.SwitchDecorator
- * @ui
- * @public
- */
-const Switch = SwitchDecorator(SwitchBase);
-
-export default Switch;
+export default SwitchBase;
 export {
-	Switch,
-	SwitchBase,
-	SwitchDecorator
+	SwitchBase as Switch,
+	SwitchBase
 };

@@ -7,18 +7,12 @@
  * @module moonstone/Checkbox
  * @exports Checkbox
  * @exports CheckboxBase
- * @exports CheckboxDecorator
  */
 
 import kind from '@enact/core/kind';
 import React from 'react';
-import PropTypes from 'prop-types';
-import compose from 'ramda/src/compose';
-import Pure from '@enact/ui/internal/Pure';
-import ToggleIcon from '@enact/ui/ToggleIcon';
 
-import Icon from '../Icon';
-import Skinnable from '../Skinnable';
+import ToggleIcon from '../ToggleIcon';
 
 import componentCss from './Checkbox.less';
 
@@ -27,7 +21,7 @@ import componentCss from './Checkbox.less';
  *
  * @class CheckboxBase
  * @memberof moonstone/Checkbox
- * @extends ui/ToggleIcon.ToggleIcon
+ * @extends moonstone/ToggleIcon.ToggleIcon
  * @ui
  * @public
  */
@@ -68,34 +62,8 @@ const CheckboxBase = kind({
 	}
 });
 
-/**
- * Moonstone-specific behaviors to apply to `CheckboxBase`.
- *
- * @hoc
- * @memberof moonstone/Checkbox
- * @mixes moonstone/Skinnable.Skinnable
- * @public
- */
-const CheckboxDecorator = compose(
-	Pure,
-	Skinnable
-);
-
-/**
- * A fully functional, ready-to-use, checkbox component.
- *
- * @class Checkbox
- * @memberof moonstone/Checkbox
- * @extends moonstone/Checkbox.CheckboxBase
- * @mixes moonstone/Checkbox.CheckboxDecorator
- * @ui
- * @public
- */
-const Checkbox = CheckboxDecorator(CheckboxBase);
-
-export default Checkbox;
+export default CheckboxBase;
 export {
-	Checkbox,
-	CheckboxBase,
-	CheckboxDecorator
+	CheckboxBase as Checkbox,
+	CheckboxBase
 };

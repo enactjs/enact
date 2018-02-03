@@ -1,20 +1,16 @@
-/**
+// Not actually an exported module
+/*
  * Provides Moonstone-themed circle component and interactive togglable capabilities.
  *
  * @module moonstone/SelectableIcon
  * @exports SelectableIcon
  * @exports SelectableIconBase
- * @exports SelectableIconDecorator
  */
 
 import kind from '@enact/core/kind';
 import React from 'react';
-import compose from 'ramda/src/compose';
-import Pure from '@enact/ui/internal/Pure';
-import ToggleIcon from '@enact/ui/ToggleIcon';
 
-import Icon from '../Icon';
-import Skinnable from '../Skinnable';
+import ToggleIcon from '../ToggleIcon';
 
 import componentCss from './SelectableIcon.less';
 
@@ -23,48 +19,22 @@ import componentCss from './SelectableIcon.less';
  *
  * @class SelectableIconBase
  * @memberof moonstone/SelectableIcon
- * @extends ui/ToggleIcon.ToggleIcon
+ * @extends moonstone/ToggleIcon.ToggleIcon
  * @ui
- * @public
+ * @private
  */
 const SelectableIconBase = kind({
 	name: 'SelectableIcon',
 
 	render: (props) => {
 		return (
-			<ToggleIcon {...props} css={componentCss} iconComponent={Icon}>circle</ToggleIcon>
+			<ToggleIcon {...props} css={componentCss}>circle</ToggleIcon>
 		);
 	}
 });
 
-/**
- * Moonstone-specific behaviors to apply to `SelectableIconBase`.
- *
- * @hoc
- * @memberof moonstone/SelectableIcon
- * @mixes moonstone/Skinnable.Skinnable
- * @public
- */
-const SelectableDecorator = compose(
-	Pure,
-	Skinnable
-);
-
-/**
- * A fully functional, ready-to-use, component.
- *
- * @class SelectableIcon
- * @memberof moonstone/SelectableIcon
- * @extends moonstone/SelectableIcon.SelectableIconBase
- * @mixes moonstone/SelectableIcon.SelectableIconDecorator
- * @ui
- * @public
- */
-const Selectable = SelectableDecorator(SelectableIconBase);
-
-export default Selectable;
+export default SelectableIconBase;
 export {
-	Selectable,
-	SelectableIconBase,
-	SelectableDecorator
+	SelectableIconBase as Selectable,
+	SelectableIconBase
 };

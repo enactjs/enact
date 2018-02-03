@@ -1,9 +1,9 @@
 // Checkbox.less
 //
-@import "../styles/text.less";
-@import "../styles/skin.less";
+@import '../styles/text.less';
+@import '../styles/skin.less';
 
-.toggleIcon {
+.checkbox {
 	@size: @moon-checkbox-size;
 
 	width: @size;
@@ -48,7 +48,7 @@
 }
 
 .focus({
-	.toggleIcon {
+	.checkbox {
 		// Skin colors
 		.applySkins({
 			&:not([disabled]) {
@@ -61,7 +61,7 @@
 
 .muted({
 	.focus({
-		.toggleIcon {
+		.checkbox {
 			// Skin colors
 			.applySkins({
 				background-color: @moon-checkbox-bg-color;
