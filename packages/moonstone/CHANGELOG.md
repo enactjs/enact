@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [1.13.3] - 2017-01-16
+## [unreleased]
 
 ### Deprecated
 
@@ -10,8 +10,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/DaySelector` component
 - `moonstone/EditableIntegerPicker` component
 - `moonstone/GridListImageItem` component
+
+## [1.13.3] - 2017-01-16
 
 ### Fixed
 
