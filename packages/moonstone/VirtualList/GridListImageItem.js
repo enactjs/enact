@@ -25,13 +25,17 @@ const defaultPlaceholder =
 	'4NCg==';
 
 /**
- * {@link moonstone/VirtualList.GridListImageItemBase} is a stateless
- * GridListImageItem with Moonstone styling applied.
+ * {@link moonstone/VirtualList.GridListImageItemBase} is a stateless GridListImageItem with
+ * Moonstone styling applied.
+ *
+ * *Deprecated* in favor of [moonstone/GridListImageItem.GridListImageItemBase]{@link moonstone/GridListImageItem.GridListImageItemBase}.
+ * Will be removed in 2.0.0.
  *
  * @class GridListImageItemBase
  * @memberof moonstone/VirtualList
  * @ui
  * @public
+ * @deprecated replaced by [moonstone/GridListImageItem.GridListImageItemBase]{@link moonstone/GridListImageItem.GridListImageItemBase}
  */
 const GridListImageItemBase = kind({
 	name: 'GridListImageItem',
@@ -173,6 +177,9 @@ const GridListImageItemBase = kind({
  * {@link moonstone/VirtualList.GridListImageItem} is a GridListImageItem with
  * Moonstone styling, Spottable applied.
  *
+ * *Deprecated* in favor of [moonstone/GridListImageItem.GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem}.
+ * Will be removed in 2.0.0.
+ *
  * Usage:
  * ```
  * <GridListImageItem source="http://placehold.it/300x300/9037ab/ffffff&text=Image0" caption="image0" subCaption="sub-image0" />
@@ -184,6 +191,7 @@ const GridListImageItemBase = kind({
  * @see moonstone/VirtualList.GridListImageItemBase
  * @ui
  * @public
+ * @deprecated replaced by [moonstone/GridListImageItem.GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem}
  */
 const GridListImageItem = MarqueeController(
 	{marqueeOnFocus: true},
