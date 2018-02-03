@@ -31,17 +31,6 @@ const DaySelectorCheckboxBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * The handler to run when the component is toggled.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {String} event.selected - Selected value of item.
-		 * @param {*} event.value - Value passed from `value` prop.
-		 * @public
-		 */
-		onToggle: PropTypes.func,
-
-		/**
 		 * Sets whether this control is in the "on" or "off" state. `true` for on, `false` for "off".
 		 *
 		 * @type {Boolean}
