@@ -4,20 +4,17 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Added
-
-- `moonstone/DaySelector` component
-
-## [1.13.3] - 2017-01-16
-
 ### Deprecated
 
 - `moonstone/VirtualGridList.GridListImageItem`, will be replaced by `moonstone/GridListImageItem` property in 2.0.0
 
 ### Added
 
+- `moonstone/DaySelector` component
 - `moonstone/EditableIntegerPicker` component
 - `moonstone/GridListImageItem` component
+
+## [1.13.3] - 2017-01-16
 
 ### Fixed
 
