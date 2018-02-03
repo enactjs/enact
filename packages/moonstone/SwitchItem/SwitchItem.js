@@ -39,7 +39,7 @@ const SwitchItemBase = kind({
 	},
 
 	render: (props) => (
-		<ToggleItem iconPosition="after" {...props} toggleIcon={CustomizedSwitch} />
+		<ToggleItem iconPosition="after" {...props} iconComponent={CustomizedSwitch} />
 	)
 });
 

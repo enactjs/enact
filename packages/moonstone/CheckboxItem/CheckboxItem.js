@@ -25,7 +25,7 @@ const CheckboxItemBase = kind({
 	name: 'CheckboxItem',
 
 	render: (props) => (
-		<ToggleItem {...props} toggleIcon={Checkbox} />
+		<ToggleItem {...props} iconComponent={Checkbox} />
 	)
 });
 

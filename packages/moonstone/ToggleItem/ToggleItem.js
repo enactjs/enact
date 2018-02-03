@@ -17,6 +17,7 @@ import ToggleIcon from '@enact/ui/ToggleIcon';
 import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
+import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 
 import SlotItem from '../SlotItem';
 import Touchable from '@enact/ui/Touchable';
@@ -37,17 +38,22 @@ const ToggleItemBase = kind({
 		 * The string to be displayed as the main content of the toggle item.
 		 *
 		 * @type {String}
+		 * @required
 		 * @public
 		 */
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * The ToggleIcon you wish to display.
+		 * The Icon to render in this item. This component receives the `selected` prop and value,
+		 * and must therefore respond to it in some way. It is recommended to use the
+		 * [ToggleIcon]{@link ui/ToggleIcon} for this.
 		 *
-		 * @type {Object}
+		 * @type {String|Component}
+		 * @default null
+		 * @required
 		 * @public
 		 */
-		toggleIcon: PropTypes.func.isRequired,
+		iconComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -70,15 +76,6 @@ const ToggleItemBase = kind({
 		 * @public
 		 */
 		disabled: PropTypes.bool,
-
-		/**
-		 * Icon property accepts a string or an Icon component.
-		 *
-		 * @type {String|Component}
-		 * @default null
-		 * @public
-		 */
-		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
 		 * Specifies on which side (`before` or `after`) of the text the icon appears.
@@ -155,9 +152,8 @@ const ToggleItemBase = kind({
 	},
 
 	render: ({css, children, iconAfter, iconBefore, onToggle, selected, ...rest}) => {
-		delete rest.icon;
+		delete rest.iconComponent;
 		delete rest.iconPosition;
-		delete rest.toggleIcon;
 		delete rest.value;
 
 		return (
@@ -187,6 +183,8 @@ const ToggleItemBase = kind({
  */
 const ToggleItemDecorator = compose(
 	Pure,
+	RemeasurableDecorator({trigger: 'selected'}),
+	Touchable,
 	Toggleable
 );
 

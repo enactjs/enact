@@ -30,14 +30,9 @@ import componentCss from './SelectableIcon.less';
 const SelectableIconBase = kind({
 	name: 'SelectableIcon',
 
-	styles: {
-		css: componentCss,
-		className: 'selectableIcon'
-	},
-
 	render: (props) => {
 		return (
-			<ToggleIcon {...props} css={componentCss} iconClasses={componentCss.dot} iconComponent={Icon}>circle</ToggleIcon>
+			<ToggleIcon {...props} css={componentCss} iconComponent={Icon}>circle</ToggleIcon>
 		);
 	}
 });

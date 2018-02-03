@@ -4,35 +4,43 @@
 @import '../styles/variables.less';
 @import '../styles/skin.less';
 
-.selectableIcon {
-	.dot{
+.toggleIcon {
+	.icon {
 		@dot-size: @moon-selectable-item-indicator-size - 3px * 2;
-		
+
 		font-size: @dot-size;
 		text-align: left;
 		width: @moon-selectable-item-indicator-width;
 		margin: 0;
 	}
-	
+
 	&:not(.selected) {
 		display: none;
 	}
+
 	// Skin colors
 	.applySkins({
-		.dot{
-			color: @moon-accent;
-		}
+		color: @moon-accent;
 	});
 }
 
-.muted({
-	.selectableIcon {
+// Icon inherits its color. .toggleIcon (a wrapper for icon) above sets itself to a color.
+// Reset the color of .toggleIcon to whatever this element's parent is instead of imposing a
+// specific color. (Reset the line above to natural inherited color.)
+.focus({
+	.toggleIcon {
 		.applySkins({
-			.focus({
-				.dot{
-					color: @moon-accent;
-				}
-			});
+			color: inherit;
 		});
 	}
+});
+
+.muted({
+	.focus({
+		.toggleIcon {
+			.applySkins({
+				color: @moon-accent;
+			});
+		}
+	});
 });

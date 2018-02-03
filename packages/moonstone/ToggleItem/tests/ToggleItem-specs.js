@@ -4,26 +4,29 @@ import {mount} from 'enzyme';
 import sinon from 'sinon';
 
 import ToggleItem, {ToggleItemBase} from '../ToggleItem';
+import Icon from '../../Icon';
 
 const tap = (node) => {
 	node.simulate('mousedown');
 	node.simulate('mouseup');
 };
 
+const CustomIcon = (props) => <Icon {...props}>star</Icon>;
+
 describe('ToggleItem Specs', () => {
 
 	it('should call onToggle, onClick, or both when clicked', function () {
 		const handleToggle = sinon.spy();
 		const subject = mount(
-			<ToggleItemBase onToggle={handleToggle} icon="star">
+			<ToggleItemBase onToggle={handleToggle} iconComponent={CustomIcon}>
 				Toggle Item
 			</ToggleItemBase>
 		);
 
 		tap(subject);
 
-		const expected = true;
-		const actual = handleToggle.calledOnce;
+		const expected = 1;
+		const actual = handleToggle.callCount;
 
 		expect(expected).to.equal(actual);
 	});
@@ -31,15 +34,15 @@ describe('ToggleItem Specs', () => {
 	it('should call onClick when clicked', function () {
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<ToggleItemBase onClick={handleClick} icon="star">
+			<ToggleItemBase onClick={handleClick} iconComponent={CustomIcon}>
 				Toggle Item
 			</ToggleItemBase>
 		);
 
 		subject.simulate('click');
 
-		const expected = true;
-		const actual = handleClick.calledOnce;
+		const expected = 1;
+		const actual = handleClick.callCount;
 
 		expect(expected).to.equal(actual);
 	});
@@ -47,14 +50,14 @@ describe('ToggleItem Specs', () => {
 	it('should call onTap when tapped', function () {
 		const handleTap = sinon.spy();
 		const subject = mount(
-			<ToggleItem onTap={handleTap} icon="star">
+			<ToggleItem onTap={handleTap} iconComponent={CustomIcon}>
 				Toggle Item
 			</ToggleItem>
 		);
 
 		tap(subject);
-		const expected = true;
-		const actual = handleTap.calledOnce;
+		const expected = 1;
+		const actual = handleTap.callCount;
 
 		expect(expected).to.equal(actual);
 	});
@@ -62,15 +65,15 @@ describe('ToggleItem Specs', () => {
 	it('should call both onToggle and onTap when tapped', function () {
 		const handleBoth = sinon.spy();
 		const subject = mount(
-			<ToggleItem onTap={handleBoth} onToggle={handleBoth} icon="star">
+			<ToggleItem onTap={handleBoth} onToggle={handleBoth} iconComponent={CustomIcon}>
 				Toggle Item
 			</ToggleItem>
 		);
 
 		tap(subject);
 
-		const expected = true;
-		const actual = handleBoth.calledTwice;
+		const expected = 2;
+		const actual = handleBoth.callCount;
 
 		expect(expected).to.equal(actual);
 	});
