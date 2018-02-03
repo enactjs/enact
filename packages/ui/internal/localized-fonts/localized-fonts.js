@@ -59,7 +59,7 @@ function fontGenerator (locale) {
 		language = matchLang && matchLang[1],
 		matchReg = locale.match(/\b([A-Z]{2}|[0-9]{3})\b/),
 		region = matchReg && matchReg[1],
-		styleId = 'enact-localization-font-override';
+		styleId = 'localized-fonts';
 
 	let fontDefinitionCss = '';
 
@@ -70,7 +70,7 @@ function fontGenerator (locale) {
 		for (let lang in fonts) {
 			fontDefinitionCss += buildFontSet(fontName, fonts, lang);
 
-			// Set up the override so "Moonstone LG Display" becomes the local-specific font.
+			// Set up the override for locale-specific font.
 			// la = language, re = region; `la-RE`
 			const [la, re] = lang.split('-');
 			if (la === language) {
@@ -105,7 +105,7 @@ function fontGenerator (locale) {
  * Generates locale-specific font rules allowing any locale to have its own custom font. Each
  * locale-font from the configuration block (defined in this file) is generated at run-time. If the
  * locale you're currently in is in the locale-font list an additional `@font-face` rule will be
- * generated that will override the standard "Moonstone LG Display" font.
+ * generated that will override the standard font.
  *
  * In addition to the standard override-font being generated, named region-specific fonts are also
  * generated. This lets you incorporate language specific fonts when you're outside of one of those
@@ -116,21 +116,21 @@ function fontGenerator (locale) {
  *
  * ```css
  * &#64;font-face {
- * 	font-family: 'Moonstone LG Display ur';
+ * 	font-family: 'Custom Font ur';
  * 	font-weight: 500;
- * 	src: local('LG Display_Urdu');
+ * 	src: local('CustomFont_Urdu');
  * 	unicode-range: U+0600-U+06FF, U+FE70-U+FEFE, U+FB50-U+FDFF;
  * }
  * &#64;font-face {
- * 	font-family: 'Moonstone LG Display ur Bold';
+ * 	font-family: 'Custom Font ur Bold';
  * 	font-weight: 700;
- * 	src: local('LG Display_Urdu');
+ * 	src: local('CustomFont_Urdu');
  * 	unicode-range: U+0600-U+06FF, U+FE70-U+FEFE, U+FB50-U+FDFF;
  * }
  * &#64;font-face {
- * 	font-family: 'Moonstone LG Display ur Light';
+ * 	font-family: 'Custom Font ur Light';
  * 	font-weight: 300;
- * 	src: local('LG Display_Urdu');
+ * 	src: local('CustomFont_Urdu');
  * 	unicode-range: U+0600-U+06FF, U+FE70-U+FEFE, U+FB50-U+FDFF;
  * }
  * ```
