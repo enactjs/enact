@@ -6,8 +6,6 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
-import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {on, off} from '@enact/core/dispatcher';
@@ -154,19 +152,10 @@ class Scrollable extends Component {
 		verticalScrollbar: 'auto'
 	}
 
-	static childContextTypes = {
-		...contextTypesResize,
-		...contextTypesState
-	}
-
-	static contextTypes = contextTypesState
-
 	constructor (props) {
 		super(props);
 
 		this.state = {
-			rtl: false,
-			remeasure: false,
 			isHorizontalScrollbarVisible: props.horizontalScrollbar === 'visible',
 			isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
 		};
@@ -189,25 +178,6 @@ class Scrollable extends Component {
 
 	// component life cycle
 
-	getChildContext () {
-		return {
-			invalidateBounds: this.enqueueForceUpdate,
-			Subscriber: this.publisher.getSubscriber()
-		};
-	}
-
-	componentWillMount () {
-		this.publisher = Publisher.create('resize', this.context.Subscriber);
-		this.publisher.publish({
-			remeasure: false
-		});
-
-		if (this.context.Subscriber) {
-			this.context.Subscriber.subscribe('resize', this.handleSubscription);
-			this.context.Subscriber.subscribe('i18n', this.handleSubscription);
-		}
-	}
-
 	componentDidMount () {
 		const bounds = this.getScrollBounds();
 
@@ -223,7 +193,7 @@ class Scrollable extends Component {
 		this.deferScrollTo = true;
 	}
 
-	componentDidUpdate (prevProps, prevState) {
+	componentDidUpdate () {
 		// Need to sync calculated client size if it is different from the real size
 		if (this.childRef.syncClientSize) {
 			const {isVerticalScrollbarVisible, isHorizontalScrollbarVisible} = this.state;
@@ -250,16 +220,6 @@ class Scrollable extends Component {
 				this.scrollTo(this.scrollToInfo);
 			}
 		}
-
-		// publish container resize changes
-		const horizontal = this.state.isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
-		const vertical = this.state.isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
-		if (horizontal || vertical) {
-			this.publisher.publish({
-				horizontal,
-				vertical
-			});
-		}
 	}
 
 	componentWillUnmount () {
@@ -276,22 +236,6 @@ class Scrollable extends Component {
 			containerRef.removeEventListener('wheel', this.onWheel);
 		}
 		off('keydown', this.onKeyDown);
-
-		if (this.context.Subscriber) {
-			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
-			this.context.Subscriber.unsubscribe('i18n', this.handleSubscription);
-		}
-	}
-
-	handleSubscription = ({channel, message}) => {
-		if (channel === 'i18n') {
-			const {rtl} = message;
-			if (rtl !== this.state.rtl) {
-				this.setState({rtl});
-			}
-		} else if (channel === 'resize') {
-			this.publisher.publish(message);
-		}
 	}
 
 	// status

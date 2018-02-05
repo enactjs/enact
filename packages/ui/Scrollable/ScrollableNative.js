@@ -6,8 +6,6 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
-import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
@@ -151,9 +149,6 @@ class ScrollableNative extends Component {
 		verticalScrollbar: 'auto'
 	}
 
-	static childContextTypes = contextTypesResize
-	static contextTypes = contextTypesRtl
-
 	constructor (props) {
 		super(props);
 
@@ -179,12 +174,6 @@ class ScrollableNative extends Component {
 	}
 
 	// component life cycle
-
-	getChildContext () {
-		return {
-			invalidateBounds: this.enqueueForceUpdate
-		};
-	}
 
 	componentDidMount () {
 		const bounds = this.getScrollBounds();
