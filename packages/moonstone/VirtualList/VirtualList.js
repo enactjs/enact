@@ -76,26 +76,25 @@ const VirtualList = kind({
 		itemSize: PropTypes.number.isRequired
 
 		/**
-		 * The callback function which is called for linking scrollTo function.
-		 * You should specify a callback function as the value of this prop
-		 * to use scrollTo feature.
+		 * A callback function that receives a reference to the `scrollTo` feature. Once received,
+		 * the `scrollTo` method can be called as an imperative interface.
 		 *
-		 * The scrollTo function passed to the parent component accepts below as an argument.
-		 * - {position: {x, y}} - You can set a pixel value for x and/or y position
-		 * - {align} - You can set one of values below for align
+		 * The `scrollTo` function accepts the following paramaters:
+		 * - {position: {x, y}} - Pixel value for x and/or y position
+		 * - {align} - Where the scroll area should be aligned. Values are:
 		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
 		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
-		 * - {index} - You can set an index of specific item. (`0` or positive integer)
-		 *   This option is available only for `VirtualList` kind.
-		 * - {node} - You can set a node to scroll
-		 * - {animate} - When `true`, scroll occurs with animation.
-		 *   Set it to `false` if you want scrolling without animation.
+		 * - {index} - Index of specific item. (`0` or positive integer)
+		 * - {node} - Node to scroll into view
+		 * - {animate} - When `true`, scroll occurs with animation. When `false`, no
+		 *   animation occurs.
 		 * - {indexToFocus} - Deprecated: Use `focus` instead.
-		 * - {focus} - Set `true` if you want the item to be focused after scroll.
-		 *   This option is only valid when you scroll by `index` or `node`.
+		 * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
+		 *   by `index` or `node`.
+		 * > Note: Only specify one of: `position`, `align`, `index` or `node`
 		 *
 		 * Example:
-		 * ````
+		 * ```
 		 *	// If you set cbScrollTo prop like below;
 		 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
 		 *	// You can simply call like below;
@@ -293,25 +292,25 @@ const VirtualGridList = kind({
 		itemSize: gridListItemSizeShape.isRequired
 
 		/**
-		 * The callback function which is called for linking scrollTo function.
-		 * You should specify a callback function as the value of this prop
-		 * to use scrollTo feature.
+		 * A callback function that receives a reference to the `scrollTo` feature. Once received,
+		 * the `scrollTo` method can be called as an imperative interface.
 		 *
-		 * The scrollTo function passed to the parent component accepts below as an argument.
-		 * - {position: {x, y}} - You can set a pixel value for x and/or y position
-		 * - {align} - You can set one of values below for align
+		 * The `scrollTo` function accepts the following paramaters:
+		 * - {position: {x, y}} - Pixel value for x and/or y position
+		 * - {align} - Where the scroll area should be aligned. Values are:
 		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
 		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
-		 * - {index} - You can set an index of specific item. (`0` or positive integer)
-		 *   This option is available only for `VirtualList` kind.
-		 * - {node} - You can set a node to scroll
-		 * - {animate} - When `true`, scroll occurs with animation.
-		 *   Set it to `false` if you want scrolling without animation.
+		 * - {index} - Index of specific item. (`0` or positive integer)
+		 * - {node} - Node to scroll into view
+		 * - {animate} - When `true`, scroll occurs with animation. When `false`, no
+		 *   animation occurs.
 		 * - {indexToFocus} - Deprecated: Use `focus` instead.
-		 * - {focus} - Set `true` if you want the item to be focused after scroll.
-		 *   This option is only valid when you scroll by `index` or `node`.
+		 * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
+		 *   by `index` or `node`.
+		 * > Note: Only specify one of: `position`, `align`, `index` or `node`
 		 *
 		 * Example:
+		 * ```
 		 *	// If you set cbScrollTo prop like below;
 		 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
 		 *	// You can simply call like below;
