@@ -87,6 +87,7 @@ class ScrollableNative extends UiScrollableNative {
 	isWheeling = false
 
 	// spotlight
+	animateOnFocus = false
 	lastFocusedItem = null
 	lastScrollPositionOnFocus = null
 	indexToFocus = null

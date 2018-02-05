@@ -313,7 +313,6 @@ class Scrollable extends Component {
 	isDragging = false
 	deferScrollTo = true
 	pageDistance = 0
-	isWheeling = false
 	isFitClientSize = false
 	isUpdatedScrollThumb = false
 
@@ -523,7 +522,6 @@ class Scrollable extends Component {
 			}
 
 			if (delta !== 0) {
-				this.isWheeling = true;
 				this.scrollToAccumulatedTarget(delta, canScrollVertically);
 			}
 		}
@@ -731,7 +729,6 @@ class Scrollable extends Component {
 		this.animator.stop();
 		this.isScrollAnimationTargetAccumulated = false;
 		this.startHidingThumb();
-		this.isWheeling = false;
 		if (this.scrolling) {
 			this.scrolling = false;
 			this.doScrollStop();

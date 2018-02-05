@@ -83,6 +83,9 @@ class Scrollable extends UiScrollable {
 		}
 	}
 
+	// status
+	isWheeling = false
+
 	// spotlight
 	animateOnFocus = false
 	lastFocusedItem = null
