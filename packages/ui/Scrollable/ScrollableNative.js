@@ -1,7 +1,7 @@
 /*
- * Exports the {@link moonstone/Scroller.ScrollableNative} Higher-order Component (HOC) and
- * the {@link moonstone/Scroller.dataIndexAttribute} constant.
- * The default export is {@link moonstone/Scroller.ScrollableNative}.
+ * Exports the {@link ui/Scroller.ScrollableNative} Higher-order Component (HOC) and
+ * the {@link ui/Scroller.dataIndexAttribute} constant.
+ * The default export is {@link ui/Scroller.ScrollableNative}.
  */
 
 import clamp from 'ramda/src/clamp';
@@ -32,7 +32,7 @@ const
 	scrollStopWaiting = 200;
 
 /**
- * {@link moonstone/Scroller.ScrollableNative} is a Higher-order Component
+ * {@link ui/Scroller.ScrollableNative} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
  *
  * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
@@ -41,14 +41,14 @@ const
  * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
  *
  * @class ScrollableNative
- * @memberof moonstone/Scroller
+ * @memberof ui/Scroller
  * @hoc
  * @private
  */
 class ScrollableNative extends Component {
 	static displayName = 'ui:ScrollableNative'
 
-	static propTypes = /** @lends moonstone/Scroller.ScrollableNative.prototype */ {
+	static propTypes = /** @lends ui/Scroller.ScrollableNative.prototype */ {
 		/**
 		 * The callback function which is called for linking scrollTo function.
 		 * You should specify a callback function as the value of this prop
@@ -98,7 +98,7 @@ class ScrollableNative extends Component {
 		onScroll: PropTypes.func,
 
 		/**
-		 * Called when scrollbar visability changes
+		 * Called when scrollbar visibility changes
 		 *
 		 * @type {Function}
 		 * @public
@@ -771,10 +771,10 @@ class ScrollableNative extends Component {
 					scrollTop: this.scrollTop
 				};
 
-			if (curHorizontalScrollbarVisible) {
+			if (curHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
 				this.horizontalScrollbarRef.update(updatedBounds);
 			}
-			if (curVerticalScrollbarVisible) {
+			if (curVerticalScrollbarVisible && this.verticalScrollbarRef) {
 				this.verticalScrollbarRef.update(updatedBounds);
 			}
 			return true;

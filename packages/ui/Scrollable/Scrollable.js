@@ -1,7 +1,7 @@
 /*
- * Exports the {@link moonstone/Scroller.Scrollable} Higher-order Component (HOC) and
- * the {@link moonstone/Scroller.dataIndexAttribute} constant.
- * The default export is {@link moonstone/Scroller.Scrollable}.
+ * Exports the {@link ui/Scroller.Scrollable} Higher-order Component (HOC) and
+ * the {@link ui/Scroller.dataIndexAttribute} constant.
+ * The default export is {@link ui/Scroller.Scrollable}.
  */
 
 import clamp from 'ramda/src/clamp';
@@ -34,7 +34,7 @@ const
 	epsilon = 1;
 
 /**
- * {@link moonstone/Scroller.Scrollable} is a Higher-order Component
+ * {@link ui/Scroller.Scrollable} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
  *
  * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
@@ -44,14 +44,14 @@ const
  * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
  *
  * @class Scrollable
- * @memberof moonstone/Scroller
+ * @memberof ui/Scroller
  * @hoc
  * @private
  */
 class Scrollable extends Component {
 	static displayName = 'ui:Scrollable'
 
-	static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
+	static propTypes = /** @lends ui/Scroller.Scrollable.prototype */ {
 		/**
 		 * The callback function which is called for linking scrollTo function.
 		 * You should specify a callback function as the value of this prop
@@ -966,7 +966,6 @@ class Scrollable extends Component {
 			scrollableClasses = classNames(css.scrollable, className);
 
 		delete rest.cbScrollTo;
-		delete rest.focusableScrollbar;
 		delete rest.horizontalScrollbar;
 		delete rest.onScroll;
 		delete rest.onScrollbarVisibilityChange;
