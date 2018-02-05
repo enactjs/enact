@@ -7,10 +7,12 @@
  * @module moonstone/VirtualList
  */
 
+import {gridListItemSizeShape} from '@enact/ui/VirtualList/VirtualListNative.js';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {VirtualListBaseNative as UiVirtualListBaseNative, gridListItemSizeShape} from '@enact/ui/VirtualList/VirtualListNative.js';
+
+import {VirtualListBaseNative} from './VirtualListBase';
 
 /**
  * {@link moonstone/VirtualList.VirtualListNative} is a VirtualList with Moonstone styling.
@@ -110,7 +112,7 @@ const VirtualListNative = kind({
 		 */
 	},
 
-	render: (props) => <UiVirtualListBaseNative {...props} />
+	render: (props) => <VirtualListBaseNative {...props} />
 });
 
 /**
@@ -211,7 +213,7 @@ const VirtualGridListNative = kind({
 		 */
 	},
 
-	render: (props) => <UiVirtualListBaseNative {...props} />
+	render: (props) => <VirtualListBaseNative {...props} />
 });
 
 export default VirtualListNative;

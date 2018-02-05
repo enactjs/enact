@@ -125,6 +125,15 @@ class Scrollable extends Component {
 		onScrollStop: PropTypes.func,
 
 		/**
+		 * Scrollable CSS style.
+		 * Should be defined because we manuplate style prop in render().
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		style: PropTypes.object,
+
+		/**
 		 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
 		 * `'visible'`, and `'hidden'`.
 		 *
@@ -133,7 +142,7 @@ class Scrollable extends Component {
 		 * @public
 		 */
 		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
-		wrapped: PropTypes.element
+		wrapped: PropTypes.func
 	}
 
 	static defaultProps = {
@@ -163,6 +172,7 @@ class Scrollable extends Component {
 		};
 
 		this.initChildRef = this.initRef('childRef');
+		this.initContainerRef = this.initRef('containerRef');
 
 		this.verticalScrollbarProps = {
 			ref: this.initRef('verticalScrollbarRef'),
@@ -257,9 +267,7 @@ class Scrollable extends Component {
 	}
 
 	componentWillUnmount () {
-		const
-			{containerRef} = this,
-			childContainerRef = this.childRef.containerRef;
+		const {containerRef} = this;
 
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
 		if (this.animator.isAnimating()) {
@@ -270,10 +278,6 @@ class Scrollable extends Component {
 		if (containerRef && containerRef.removeEventListener) {
 			// FIXME `onWheel` doesn't work on the v8 snapshot.
 			containerRef.removeEventListener('wheel', this.onWheel);
-		}
-		if (childContainerRef && childContainerRef.removeEventListener) {
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
-			childContainerRef.removeEventListener('focusin', this.onFocus);
 		}
 		off('keydown', this.onKeyDown);
 
@@ -303,7 +307,6 @@ class Scrollable extends Component {
 	isDragging = false
 	deferScrollTo = true
 	pageDistance = 0
-	isWheeling = false
 	isFitClientSize = false
 	isUpdatedScrollThumb = false
 
@@ -343,6 +346,7 @@ class Scrollable extends Component {
 
 	// component info
 	childRef = null
+	containerRef = null
 
 	// scroll animator
 	animator = new ScrollAnimator()
@@ -512,7 +516,6 @@ class Scrollable extends Component {
 			}
 
 			if (delta !== 0) {
-				this.isWheeling = true;
 				this.scrollToAccumulatedTarget(delta, canScrollVertically);
 			}
 		}
@@ -720,7 +723,6 @@ class Scrollable extends Component {
 		this.animator.stop();
 		this.isScrollAnimationTargetAccumulated = false;
 		this.startHidingThumb();
-		this.isWheeling = false;
 		if (this.scrolling) {
 			this.scrolling = false;
 			this.doScrollStop();
@@ -843,12 +845,6 @@ class Scrollable extends Component {
 		}
 	}
 
-	alertThumb () {
-		const bounds = this.getScrollBounds();
-		this.showThumb(bounds);
-		this.startHidingThumb();
-	}
-
 	updateScrollbars = () => {
 		const
 			{horizontalScrollbar, verticalScrollbar} = this.props,
@@ -965,7 +961,7 @@ class Scrollable extends Component {
 
 	render () {
 		const
-			{className, wrapped: Wrapped, ...rest} = this.props,
+			{className, wrapped: Wrapped, style, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			scrollableClasses = classNames(css.scrollable, className);
 
@@ -976,11 +972,14 @@ class Scrollable extends Component {
 		delete rest.onScrollbarVisibilityChange;
 		delete rest.onScrollStart;
 		delete rest.onScrollStop;
-		delete rest.style;
 		delete rest.verticalScrollbar;
 
 		return (
-			<div className={scrollableClasses}>
+			<div
+				className={scrollableClasses}
+				ref={this.initContainerRef}
+				style={style}
+			>
 				<div className={css.container}>
 					<Wrapped
 						{...rest}
