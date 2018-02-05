@@ -7,7 +7,7 @@ import {forward} from '@enact/core/handle';
 const defaultConfig = {};
 
 const VoiceControlDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {voiceIntent, voiceHandler} = config;
+	const {voiceIntent, voiceHandler, voiceParams} = config;
 
 	return class extends React.Component {
 		static displayName = 'VoiceControlDecorator'
@@ -22,7 +22,8 @@ const VoiceControlDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		onVoice = (e) => {
-			forward(voiceHandler, e, this.props);
+			const params = voiceParams || e;
+			forward(voiceHandler, params, this.props);
 			// this.props[voiceHandler](ev);
 		}
 
