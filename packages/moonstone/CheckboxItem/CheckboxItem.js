@@ -14,6 +14,8 @@ import Skinnable from '../Skinnable';
 import {ToggleItemBase} from '../ToggleItem';
 import Checkbox from '../Checkbox';
 
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
+
 /**
  * {@link moonstone/CheckboxItem.CheckboxItemBase} is a component that
  * is an Item that is Toggleable. It has two states: `true` (selected) & `false`
@@ -126,10 +128,16 @@ const CheckboxItemBase = kind({
  * @public
  */
 const CheckboxItem = Pure(
-	Toggleable(
-		{prop: 'selected'},
-		Skinnable(
-			CheckboxItemBase
+	VoiceControlDecorator({
+		voiceSlot: [
+			{voiceIntent: 'check', voiceHandler: 'onToggle', voiceParams: {selected: true}},
+			{voiceIntent: 'uncheck', voiceHandler: 'onToggle', voiceParams: {selected: false}}
+		]},
+		Toggleable(
+			{prop: 'selected'},
+			Skinnable(
+				CheckboxItemBase
+			)
 		)
 	)
 );
