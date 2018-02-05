@@ -125,6 +125,15 @@ class Scrollable extends Component {
 		onScrollStop: PropTypes.func,
 
 		/**
+		 * Scrollable CSS style.
+		 * Should be defined because we manuplate style prop in render().
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		style: PropTypes.object,
+
+		/**
 		 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
 		 * `'visible'`, and `'hidden'`.
 		 *

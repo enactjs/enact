@@ -122,6 +122,15 @@ class ScrollableNative extends Component {
 		onScrollStop: PropTypes.func,
 
 		/**
+		 * Scrollable CSS style.
+		 * Should be defined because we manuplate style prop in render().
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		style: PropTypes.object,
+
+		/**
 		 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
 		 * `'visible'`, and `'hidden'`.
 		 *
@@ -829,7 +838,7 @@ class ScrollableNative extends Component {
 
 	render () {
 		const
-			{className, wrapped: Wrapped, ...rest} = this.props,
+			{className, wrapped: Wrapped, style, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			scrollableClasses = classNames(css.scrollable, className);
 
@@ -845,6 +854,7 @@ class ScrollableNative extends Component {
 			<div
 				className={scrollableClasses}
 				containerRef={this.initContainerRef}
+				style={style}
 			>
 				<div className={css.container}>
 					<Wrapped

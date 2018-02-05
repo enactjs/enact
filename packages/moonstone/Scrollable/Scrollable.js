@@ -66,16 +66,7 @@ class Scrollable extends UiScrollable {
 		 * @type {Boolean}
 		 * @public
 		 */
-		focusableScrollbar: PropTypes.bool,
-
-		/**
-		 * Scrollable CSS style.
-		 * Should be defined because we manuplate style prop in render().
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		style: PropTypes.object
+		focusableScrollbar: PropTypes.bool
 	}
 
 	constructor (props) {
