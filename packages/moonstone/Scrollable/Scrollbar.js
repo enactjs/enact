@@ -185,6 +185,15 @@ class ScrollbarBase extends UiScrollbarBase {
 		this.updateButtons(bounds);
 	}
 
+	showThumb () {
+		this.hideThumbJob.stop();
+		this.thumbRef.classList.add(css.thumbShown);
+	}
+
+	hideThumb () {
+		this.thumbRef.classList.remove(css.thumbShown);
+	}
+
 	isThumbFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
 
 	handlePrevScroll = (ev) => {

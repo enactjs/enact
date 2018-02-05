@@ -134,11 +134,11 @@ class ScrollbarBase extends PureComponent {
 		this.hideThumbJob.start();
 	}
 
-	hideThumb = () => {
+	hideThumb () {
 		this.thumbRef.classList.remove(css.thumbShown);
 	}
 
-	hideThumbJob = new Job(this.hideThumb, thumbHidingDelay);
+	hideThumbJob = new Job(this.hideThumb.bind(this), thumbHidingDelay);
 
 	calculateMetrics = () => {
 		const trackSize = this.containerRef[this.props.vertical ? 'clientHeight' : 'clientWidth'];
