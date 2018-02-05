@@ -10,6 +10,7 @@
  * @exports ButtonDecorator
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
@@ -91,6 +92,7 @@ const ButtonBase = kind({
 		 * @type {Boolean}
 		 * @default false
 		 * @public
+		 * @deprecated
 		 */
 		noAnimation: PropTypes.bool
 	},
@@ -101,11 +103,16 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({backgroundOpacity, color, noAnimation, styler}) => styler.append(
-			backgroundOpacity,
-			color,
-			{noAnimation}
-		)
+		className: ({backgroundOpacity, color, noAnimation, styler}) => {
+			if (noAnimation) {
+				deprecate({name: 'noAnimation', since: '2.0.0', message: '`noAnimation` is deprecated', until: '2.1.0'});
+			}
+
+			return styler.append(
+				backgroundOpacity,
+				color
+			);
+		}
 	},
 
 	render: ({css, ...rest}) => {
