@@ -220,6 +220,17 @@ class Scrollable extends UiScrollable {
 		}
 	}
 
+	getPageDirection = (keyCode) => {
+		const
+			isRtl = this.context.rtl,
+			{direction, isPageUp} = this,
+			isVertical = (direction === 'vertical' || direction === 'both');
+
+		return isPageUp(keyCode) ?
+			(isVertical && 'up' || isRtl && 'right' || 'left') :
+			(isVertical && 'down' || isRtl && 'left' || 'right');
+	}
+
 	scrollByPage = (keyCode) => {
 		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
 		// scroller as a plain container

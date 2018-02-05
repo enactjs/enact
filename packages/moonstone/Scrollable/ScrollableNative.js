@@ -238,6 +238,17 @@ class ScrollableNative extends UiScrollableNative {
 		}
 	}
 
+	getPageDirection = (keyCode) => {
+		const
+			isRtl = this.context.rtl,
+			{direction} = this,
+			isVertical = (direction === 'vertical' || direction === 'both');
+
+		return this.isPageUp(keyCode) ?
+			(isVertical && 'up' || isRtl && 'right' || 'left') :
+			(isVertical && 'down' || isRtl && 'left' || 'right');
+	}
+
 	scrollByPage = (keyCode) => {
 		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
 		// scroller as a plain container
@@ -398,7 +409,6 @@ class ScrollableNative extends UiScrollableNative {
 
 		delete rest.cbScrollTo;
 		delete rest.className;
-		delete rest.focusableScrollbar;
 		delete rest.horizontalScrollbar;
 		delete rest.onScroll;
 		delete rest.onScrollbarVisibilityChange;

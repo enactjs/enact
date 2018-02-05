@@ -419,17 +419,6 @@ class ScrollableNative extends Component {
 		this.scrollStopJob.start();
 	}
 
-	getPageDirection = (keyCode) => {
-		const
-			isRtl = this.context.rtl,
-			{direction} = this,
-			isVertical = (direction === 'vertical' || direction === 'both');
-
-		return this.isPageUp(keyCode) ?
-			(isVertical && 'up' || isRtl && 'right' || 'left') :
-			(isVertical && 'down' || isRtl && 'left' || 'right');
-	}
-
 	getEndPoint = (direction, oSpotBounds, viewportBounds) => {
 		let oPoint = {};
 
