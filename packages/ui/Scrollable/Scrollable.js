@@ -291,6 +291,18 @@ class Scrollable extends Component {
 	// scroll animator
 	animator = new ScrollAnimator()
 
+	clampScrollPosition () {
+		const bounds = this.getScrollBounds();
+
+		if (this.scrollTop > bounds.maxTop) {
+			this.scrollTop = bounds.maxTop;
+		}
+
+		if (this.scrollLeft > bounds.maxLeft) {
+			this.scrollLeft = bounds.maxLeft;
+		}
+	}
+
 	// handle an input event
 
 	dragStart (e) {
@@ -345,18 +357,6 @@ class Scrollable extends Component {
 			return false;
 		} else {
 			return true;
-		}
-	}
-
-	clampScrollPosition () {
-		const bounds = this.getScrollBounds();
-
-		if (this.scrollTop > bounds.maxTop) {
-			this.scrollTop = bounds.maxTop;
-		}
-
-		if (this.scrollLeft > bounds.maxLeft) {
-			this.scrollLeft = bounds.maxLeft;
 		}
 	}
 

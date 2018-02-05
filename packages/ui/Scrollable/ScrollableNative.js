@@ -204,6 +204,8 @@ class ScrollableNative extends Component {
 			this.isFitClientSize = (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) && this.childRef.isSameTotalItemSizeWithClient();
 		}
 
+		this.clampScrollPosition();
+
 		this.direction = this.childRef.props.direction;
 		this.updateEventListeners();
 		if (!this.isFitClientSize) {
@@ -285,6 +287,18 @@ class ScrollableNative extends Component {
 
 	// browser native scrolling
 	resetPosition = null // prevent auto-scroll on focus by Spotlight
+
+	clampScrollPosition () {
+		const bounds = this.getScrollBounds();
+
+		if (this.scrollTop > bounds.maxTop) {
+			this.scrollTop = bounds.maxTop;
+		}
+
+		if (this.scrollLeft > bounds.maxLeft) {
+			this.scrollLeft = bounds.maxLeft;
+		}
+	}
 
 	calculateDistanceByWheel (deltaMode, delta, maxPixel) {
 		if (deltaMode === 0) {
