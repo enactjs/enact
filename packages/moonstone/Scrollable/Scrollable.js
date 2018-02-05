@@ -150,7 +150,7 @@ class Scrollable extends UiScrollable {
 
 			if (delta !== 0) {
 				this.isWheeling = true;
-				// this.childRef.setContainerDisabled(true);
+				this.childRef.setContainerDisabled(true);
 				this.scrollToAccumulatedTarget(delta, canScrollVertically);
 			}
 		}
