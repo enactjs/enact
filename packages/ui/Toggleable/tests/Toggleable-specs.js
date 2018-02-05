@@ -365,7 +365,7 @@ describe('Toggleable', () => {
 		expect(actual).to.have.property(expected);
 	});
 
-	it('should not update \'selected\' with new custom defaultProp when not controlled', function () {
+	it('should not update \'selected\' with custom prop and new defaultProp when not controlled', function () {
 		const Component = Toggleable({prop: 'active'}, DivComponent);
 		const subject = mount(
 			<Component defaultActive />
