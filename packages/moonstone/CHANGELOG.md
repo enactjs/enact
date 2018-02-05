@@ -11,7 +11,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/Marquee` to do less-costly calculations during measurement and optimized the applied styles
-- `moonstone/MoonstoneDecorator` root node to fill the entire space available, which simplifies positioning and sizing for child elements (previously always measured 0 in height)
 
 ### Fixed
 
