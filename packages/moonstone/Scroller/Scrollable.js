@@ -112,7 +112,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * You should specify a callback function as the value of this prop
 			 * to use scrollTo feature.
 			 *
-			 * The scrollTo function passed to the parent component requires below as an argument.
+			 * The scrollTo function passed to the parent component accepts below as an argument.
 			 * - {position: {x, y}} - You can set a pixel value for x and/or y position
 			 * - {align} - You can set one of values below for align
 			 *   `'left'`, `'right'`, `'top'`, `'bottom'`,

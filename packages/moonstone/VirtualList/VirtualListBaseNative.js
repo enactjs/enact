@@ -61,7 +61,7 @@ class VirtualListCoreNative extends Component {
 
 	static propTypes = /** @lends moonstone/VirtualList.VirtualListCoreNative.prototype */ {
 		/**
-		 * The render function for an item of the list which passes below parameters.
+		 * The render function for an item of the list which receives below parameters.
 		 * NOTICE: The list does NOT always call this function whenever its render function is called
 		 * due to performance optimization.
 		 *
@@ -74,11 +74,15 @@ class VirtualListCoreNative extends Component {
 		 * - `key` MUST be passed as a prop for DOM recycling.
 		 * Data manipulation can be done in this function.
 		 *
-		 * Usage:
+		* Usage:
 		 * ```
-		 * renderItem = ({data, index, ...rest}) => (
-		 * 		<MyComponent index={index} {...rest} />
-		 * )
+		 * renderItem = ({index, ...rest}) => {
+		 *		delete rest.data;
+		 *
+		 * 		return (
+		 *			<MyComponent index={index} {...rest} />
+		 *		);
+		 * }
 		 * ```
 		 *
 		 * @type {Function}

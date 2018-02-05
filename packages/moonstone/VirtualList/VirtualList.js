@@ -26,7 +26,7 @@ const VirtualList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 		/**
-		 * The render function for an item of the list which passes below parameters.
+		 * The render function for an item of the list which receives below parameters.
 		 * NOTICE: The list does NOT always call this function whenever its render function is called
 		 * due to performance optimization.
 		 *
@@ -41,9 +41,13 @@ const VirtualList = kind({
 		 *
 		 * Usage:
 		 * ```
-		 * renderItem = ({data, index, ...rest}) => (
-		 * 		<MyComponent index={index} {...rest} />
-		 * )
+		 * renderItem = ({index, ...rest}) => {
+		 *		delete rest.data;
+		 *
+		 * 		return (
+		 *			<MyComponent index={index} {...rest} />
+		 *		);
+		 * }
 		 * ```
 		 *
 		 * @name component
@@ -75,7 +79,7 @@ const VirtualList = kind({
 		 * You should specify a callback function as the value of this prop
 		 * to use scrollTo feature.
 		 *
-		 * The scrollTo function passed to the parent component requires below as an argument.
+		 * The scrollTo function passed to the parent component accepts below as an argument.
 		 * - {position: {x, y}} - You can set a pixel value for x and/or y position
 		 * - {align} - You can set one of values below for align
 		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
@@ -238,7 +242,7 @@ const VirtualGridList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
 		/**
-		 * The render function for an item of the list which passes below parameters.
+		 * The render function for an item of the list which receives below parameters.
 		 * NOTICE: The list does NOT always call this function whenever its render function is called
 		 * due to performance optimization.
 		 *
@@ -253,9 +257,13 @@ const VirtualGridList = kind({
 		 *
 		 * Usage:
 		 * ```
-		 * renderItem = ({data, index, ...rest}) => (
-		 * 		<MyComponent index={index} {...rest} />
-		 * )
+		 * renderItem = ({index, ...rest}) => {
+		 *		delete rest.data;
+		 *
+		 * 		return (
+		 *			<MyComponent index={index} {...rest} />
+		 *		);
+		 * }
 		 * ```
 		 *
 		 * @name component
@@ -286,7 +294,7 @@ const VirtualGridList = kind({
 		 * You should specify a callback function as the value of this prop
 		 * to use scrollTo feature.
 		 *
-		 * The scrollTo function passed to the parent component requires below as an argument.
+		 * The scrollTo function passed to the parent component accepts below as an argument.
 		 * - {position: {x, y}} - You can set a pixel value for x and/or y position
 		 * - {align} - You can set one of values below for align
 		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,

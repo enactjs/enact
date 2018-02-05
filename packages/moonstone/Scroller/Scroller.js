@@ -520,7 +520,7 @@ const Scroller = SpotlightContainerDecorator(
  * You should specify a callback function as the value of this prop
  * to use scrollTo feature.
  *
- * The scrollTo function passed to the parent component requires below as an argument.
+ * The scrollTo function passed to the parent component accepts below as an argument.
  * - {position: {x, y}} - You can set a pixel value for x and/or y position
  * - {align} - You can set one of values below for align
  *   `'left'`, `'right'`, `'top'`, `'bottom'`,
@@ -599,6 +599,7 @@ const Scroller = SpotlightContainerDecorator(
 /**
  * Called when scrolling
  * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+ * It is not recommended to set this prop since it can cause performance degradation.
  *
  * @name onScroll
  * @type {Function}
