@@ -14,7 +14,6 @@ import Skinnable from '../Skinnable';
 import {ToggleItemBase} from '../ToggleItem';
 import Checkbox from '../Checkbox';
 
-import VoiceControl from '@enact/webos/VoiceControl';
 import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
 
 /**
@@ -129,7 +128,11 @@ const CheckboxItemBase = kind({
  * @public
  */
 const CheckboxItem = Pure(
-	VoiceControlDecorator({voiceIntent: 'check', voiceHandler: 'onToggle', voiceParams: {selected: true}},
+	VoiceControlDecorator({
+		voiceSlot: [
+			{voiceIntent: 'check', voiceHandler: 'onToggle', voiceParams: {selected: true}},
+			{voiceIntent: 'uncheck', voiceHandler: 'onToggle', voiceParams: {selected: false}}
+		]},
 		Toggleable(
 			{prop: 'selected'},
 			Skinnable(
@@ -139,94 +142,5 @@ const CheckboxItem = Pure(
 	)
 );
 
-class VoiceCheckboxItem extends React.Component {
-	static propTypes = {
-		onToggle: PropTypes.func,
-		selected: PropTypes.bool,
-		voiceDisabled: PropTypes.bool
-	}
-
-	static defaultProps = {
-		voiceDisabled: false
-	}
-
-	constructor (props) {
-		super(props);
-		this.state = {
-			selected: typeof this.props.selected === 'boolean' ? this.props.selected : false
-		};
-	}
-
-	componentDidMount () {
-		if (!this.props.voiceDisabled) {
-			this.addVoice();
-		}
-	}
-
-	componentWillUnmount () {
-		this.removeVoice();
-	}
-
-	componentWillReceiveProps (nextProps) {
-		if (!this.props.voiceDisabled && nextProps.voiceDisabled) {
-			this.removeVoice();
-		} else if (this.props.voiceDisabled && !nextProps.voiceDisabled) {
-			this.addVoice();
-		}
-
-		if (!this.props.selected && nextProps.selected) {
-			this.setState({selected: true});
-		} else if (this.props.selected && !nextProps.selected) {
-			this.setState({selected: false});
-		}
-	}
-
-	addVoice = () => {
-		const {children} = this.props;
-
-		this.voiceList = VoiceControl.addList([
-			{
-				voiceIntent: 'check',
-				voiceLabel: children,
-				onVoice: () => {
-					if (!this.state.selected) {
-						this.setState({selected: true});
-					}
-				}
-			},
-			{
-				voiceIntent: 'uncheck',
-				voiceLabel: children,
-				onVoice: () => {
-					if (this.state.selected) {
-						this.setState({selected: false});
-					}
-				}
-			}
-		]);
-	}
-
-	handleToggle = (e) => {
-		this.setState({
-			selected: e.selected
-		});
-	}
-
-	removeVoice = () => {
-		VoiceControl.removeList(this.voiceList);
-	}
-
-	render () {
-		const props = {...this.props};
-		delete props.onToggle;
-		delete props.selected;
-		delete props.voiceDisabled;
-
-		return (
-			<CheckboxItem {...props} selected={this.state.selected} onToggle={this.handleToggle} />
-		);
-	}
-}
-
 export default CheckboxItem;
-export {CheckboxItem, CheckboxItemBase, VoiceCheckboxItem};
+export {CheckboxItem, CheckboxItemBase};

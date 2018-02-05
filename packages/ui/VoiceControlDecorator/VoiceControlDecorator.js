@@ -4,10 +4,12 @@ import PropTypes from 'prop-types';
 import {VoiceControl} from '@enact/webos/VoiceControl/VoiceControl';
 import {forward} from '@enact/core/handle';
 
-const defaultConfig = {};
+const defaultConfig = {
+	voiceSlot: []
+};
 
 const VoiceControlDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {voiceIntent, voiceHandler, voiceParams} = config;
+	const {voiceSlot} = config;
 
 	return class extends React.Component {
 		static displayName = 'VoiceControlDecorator'
@@ -18,34 +20,37 @@ const VoiceControlDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			this.voiceID = VoiceControl.generateID();
-		}
-
-		onVoice = (e) => {
-			const params = voiceParams || e;
-			forward(voiceHandler, params, this.props);
-			// this.props[voiceHandler](ev);
+			this.voiceList = [];
 		}
 
 		componentDidMount () {
 			const {voiceLabel} = this.props;
 
-			VoiceControl.add({
-				voiceID: this.voiceID,
-				voiceIntent: voiceIntent,
-				voiceLabel: voiceLabel,
-				onVoice: this.onVoice
-			});
+			if (voiceSlot.length > 0) {
+				let list = [];
+				for (let t in voiceSlot) {
+					const {voiceIntent, voiceHandler, voiceParams} = voiceSlot[t];
+					list.push({
+						voiceIntent: voiceIntent,
+						voiceLabel: voiceLabel,
+						onVoice: (e) => {
+							const params = voiceParams || e;
+							forward(voiceHandler, params, this.props);
+						}
+					});
+				}
+				this.voiceList = VoiceControl.addList(list);
+			}
 		}
 
 		componentWillUnmount () {
-			VoiceControl.remove(this.voiceID);
+			if (this.voiceList.length > 0) {
+				VoiceControl.removeList(this.voiceList);
+			}
 		}
 
 		render () {
 			const props = {...this.props};
-			props[voiceHandler] = this.onVoice;
-
 			delete props.voiceLabel;
 
 			return (
