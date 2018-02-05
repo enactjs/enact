@@ -11,6 +11,7 @@ import {VirtualListBase as UiVirtualListCore} from '@enact/ui/VirtualList/Virtua
 import {VirtualListBaseNative as UiVirtualListCoreNative} from '@enact/ui/VirtualList/VirtualListBaseNative';
 
 import {dataIndexAttribute, Scrollable} from '../Scrollable';
+import ScrollableNative from '../Scrollable/ScrollableNative';
 
 import css from '@enact/ui/VirtualList/ListItem.less';
 
@@ -665,14 +666,14 @@ const VirtualListSelector = (type, UiComponent) => (
 	}
 );
 
-const VirtualListCoreJS = (props) => {
-	const Wrapped = VirtualListSelector('JS', UiVirtualListCore);
+const ScrollableVirtualList = (type, baseComponent) => (props) => {
+	const
+		Wrapped = VirtualListSelector(type, baseComponent),
+		ScrollableComponent = (type === 'js') ? Scrollable : ScrollableNative;
 	return (
-		<Scrollable wrapped={Wrapped} {...props} />
+		<ScrollableComponent wrapped={Wrapped} {...props} />
 	);
 };
-const VirtualListCoreNative = VirtualListSelector('Native', UiVirtualListCoreNative);
-
 
 /**
  * {@link moonstone/VirtualList.VirtualListBase} is a base component for
@@ -686,7 +687,7 @@ const VirtualListCoreNative = VirtualListSelector('Native', UiVirtualListCoreNat
  * @ui
  * @private
  */
-const VirtualListBase = SpotlightContainerDecorator(
+const VirtualListGenerator = (type, baseComponent) => SpotlightContainerDecorator(
 	{
 		enterTo: 'last-focused',
 		/*
@@ -720,8 +721,11 @@ const VirtualListBase = SpotlightContainerDecorator(
 		preserveId: true,
 		restrict: 'self-first'
 	},
-	VirtualListCoreJS
+	ScrollableVirtualList(type, baseComponent)
 );
 
+const VirtualListBase = VirtualListGenerator('js', UiVirtualListCore);
+const VirtualListBaseNative = VirtualListGenerator('Native', UiVirtualListCoreNative);
+
 export default VirtualListBase;
-export {VirtualListBase, VirtualListCoreJS as VirtualListCore};
+export {VirtualListBase, VirtualListBase as VirtualListCore, VirtualListBaseNative};

@@ -73,6 +73,7 @@ class ScrollbarBase extends PureComponent {
 	}
 
 	static defaultProps = {
+		cbAlertThumb: nop,
 		corner: false,
 		vertical: true
 	}

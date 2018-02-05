@@ -125,6 +125,15 @@ class Scrollable extends Component {
 		onScrollStop: PropTypes.func,
 
 		/**
+		 * Scrollable CSS style.
+		 * Should be defined because we manuplate style prop in render().
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		style: PropTypes.object,
+
+		/**
 		 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
 		 * `'visible'`, and `'hidden'`.
 		 *
@@ -133,7 +142,7 @@ class Scrollable extends Component {
 		 * @public
 		 */
 		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
-		wrapped: PropTypes.element
+		wrapped: PropTypes.func
 	}
 
 	static defaultProps = {
@@ -163,6 +172,7 @@ class Scrollable extends Component {
 		};
 
 		this.initChildRef = this.initRef('childRef');
+		this.initContainerRef = this.initRef('containerRef');
 
 		this.verticalScrollbarProps = {
 			ref: this.initRef('verticalScrollbarRef'),
@@ -339,6 +349,7 @@ class Scrollable extends Component {
 
 	// component info
 	childRef = null
+	containerRef = null
 
 	// scroll animator
 	animator = new ScrollAnimator()
@@ -824,12 +835,6 @@ class Scrollable extends Component {
 		}
 	}
 
-	alertThumb () {
-		const bounds = this.getScrollBounds();
-		this.showThumb(bounds);
-		this.startHidingThumb();
-	}
-
 	updateScrollbars = () => {
 		const
 			{horizontalScrollbar, verticalScrollbar} = this.props,
@@ -961,7 +966,10 @@ class Scrollable extends Component {
 		delete rest.verticalScrollbar;
 
 		return (
-			<div className={scrollableClasses}>
+			<div
+				className={scrollableClasses}
+				containerRef={this.initContainerRef}
+			>
 				<div className={css.container}>
 					<Wrapped
 						{...rest}
