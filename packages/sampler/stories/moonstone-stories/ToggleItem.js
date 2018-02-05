@@ -2,19 +2,23 @@ import icons from './icons';
 import ToggleItem from '@enact/moonstone/ToggleItem';
 import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select, text} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('ToggleItem', ItemBase, Item, ToggleItem);
 
-storiesOf('ToggleItem')
-	.addWithInfo(
-		' ',
-		'The basic ToggleItem',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'ToggleItem',
+		withInfo({
+			propTables: [Config],
+			text: 'The basic ToggleItem'
+		})(() => (
 			<ToggleItem
 				icon={select('icon', icons, 'lock')}
 				iconPosition={select('iconPosition', ['before', 'after'], 'before')}
@@ -24,6 +28,5 @@ storiesOf('ToggleItem')
 			>
 				{text('children', 'Toggle Item')}
 			</ToggleItem>
-		),
-		{propTables: [Config]}
+		))
 	);

@@ -24,11 +24,13 @@ import ToggleItem from '@enact/moonstone/ToggleItem';
 import Scroller from '@enact/moonstone/Scroller';
 import Slider from '@enact/moonstone/Slider';
 import Spotlight from '@enact/spotlight';
+import ri from '@enact/ui/resolution';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select} from '@storybook/addon-knobs';
 
 const Container = SpotlightContainerDecorator(
 	{enterTo: 'last-focused'},
@@ -36,17 +38,17 @@ const Container = SpotlightContainerDecorator(
 );
 
 const style = {
-	container: {
-		width: '300px',
+	container: () => ({
+		width: ri.unit(300, 'rem'),
 		border: '1px dashed red',
-		margin: '0 12px',
-		padding: '12px'
-	},
-	fittedContainer: {
+		margin: '0 ' + ri.unit(12, 'rem'),
+		padding: ri.unit(12, 'rem')
+	}),
+	fittedContainer: () => ({
 		border: '1px dashed blue',
-		margin: '0 12px',
-		padding: '12px'
-	},
+		margin: '0 ' + ri.unit(12, 'rem'),
+		padding: ri.unit(12, 'rem')
+	}),
 	flexBox: {
 		display: 'flex'
 	},
@@ -180,8 +182,8 @@ class PopupFocusTest extends React.Component {
 	}
 }
 
-storiesOf('Spotlight')
-	.addWithInfo(
+storiesOf('Spotlight', module)
+	.add(
 		'Multiple Buttons',
 		() => (
 			<div>
@@ -197,7 +199,7 @@ storiesOf('Spotlight')
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Multiple Containers',
 		() => (
 			<div>
@@ -209,7 +211,7 @@ storiesOf('Spotlight')
 					to the pointer (in the direction specified by the key) will be spotted.
 				</p>
 				<div style={style.flexBox}>
-					<Container style={style.container}>
+					<Container style={style.container()}>
 						<Item>1</Item>
 						<Item>2</Item>
 						<Item>3</Item>
@@ -217,7 +219,7 @@ storiesOf('Spotlight')
 						<div>Non-spottable content 2</div>
 						<div>Non-spottable content 3</div>
 					</Container>
-					<Container style={style.container}>
+					<Container style={style.container()}>
 						<div>Non-spottable content A</div>
 						<div>Non-spottable content B</div>
 						<div>Non-spottable content C</div>
@@ -229,7 +231,7 @@ storiesOf('Spotlight')
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Nested Containers',
 		() => (
 			<div>
@@ -240,9 +242,9 @@ storiesOf('Spotlight')
 					result in the last-focused item being spotted.
 				</p>
 				<div style={style.flexBox}>
-					<Container style={style.fittedContainer} >
+					<Container style={style.fittedContainer()} >
 						<Item>Item in a container</Item>
-						<Container style={style.fittedContainer} >
+						<Container style={style.fittedContainer()} >
 							<Item>Item in a nested container</Item>
 						</Container>
 					</Container>
@@ -250,7 +252,7 @@ storiesOf('Spotlight')
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Directional Events',
 		() => (
 			<div>
@@ -271,13 +273,13 @@ storiesOf('Spotlight')
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Disappearing Spottable',
 		() => (
 			<DisappearTest />
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Popup Navigation',
 		() => (
 			<PopupFocusTest
@@ -289,7 +291,7 @@ storiesOf('Spotlight')
 			/>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Kitchen Sink',
 		() => (
 			<div>

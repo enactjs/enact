@@ -1,7 +1,8 @@
 import Button from '@enact/moonstone/Button';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select, text} from '@storybook/addon-knobs';
 import css from './Button.less';
 
 // Set up some defaults for info and knobs
@@ -11,8 +12,8 @@ const prop = {
 	tallText:{'ิ้  ไั  ஒ  து': 'ิ้  ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'}
 };
 
-storiesOf('Button')
-	.addWithInfo(
+storiesOf('Button', module)
+	.add(
 		'with long text',
 		() => (
 			<Button
@@ -28,7 +29,7 @@ storiesOf('Button')
 			</Button>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with tall characters',
 		() => (
 			<Button
@@ -44,7 +45,7 @@ storiesOf('Button')
 			</Button>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'to validate minWidth with a single character',
 		() => (
 			<Button
@@ -60,7 +61,7 @@ storiesOf('Button')
 			</Button>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'to test if the parent element\'s background causes occlusion',
 		() => (
 			<div className={css.bgColor}>
@@ -73,7 +74,7 @@ storiesOf('Button')
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with tap area displayed',
 		() => (
 			<div>
@@ -103,4 +104,3 @@ storiesOf('Button')
 			</div>
 		)
 	);
-

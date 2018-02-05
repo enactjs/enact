@@ -252,6 +252,7 @@ const DatePickerBase = kind({
 							case 'd':
 								return (
 									<DateComponentRangePicker
+										className={css.day}
 										key="day-picker"
 										label={noLabels ? null : $L('day')}
 										max={maxDays}
@@ -269,6 +270,7 @@ const DatePickerBase = kind({
 							case 'm':
 								return (
 									<DateComponentRangePicker
+										className={css.month}
 										key="month-picker"
 										label={noLabels ? null : $L('month')}
 										max={maxMonths}

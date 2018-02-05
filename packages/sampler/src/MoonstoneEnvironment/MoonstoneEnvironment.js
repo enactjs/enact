@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 import {Panels, Panel, Header} from '@enact/moonstone/Panels';
-import {boolean, select} from '@kadira/storybook-addon-knobs';
+import {boolean, select} from '@storybook/addon-knobs';
 
 import css from './MoonstoneEnvironment.less';
 
@@ -64,21 +64,6 @@ const locales = {
 	'en-JP': 'en-JP - English, custom Japanese font'
 };
 
-// Keys for `backgroundLabels` and `backgrounds` must be kept in sync
-const backgroundLabels = {
-	'': 'Default',
-	'backgroundColorful1': 'Reddish Image Background',
-	'backgroundColorful2': 'Greenish Image Background',
-	'backgroundColorful3': 'Bluish Image Background'
-};
-
-const backgrounds = {
-	'': {},
-	'backgroundColorful1': {background: '#804 url("http://lorempixel.com/720/480/abstract/2/") no-repeat center/cover'},
-	'backgroundColorful2': {background: '#2b6 url("http://lorempixel.com/720/480/abstract/9/") no-repeat center/cover'},
-	'backgroundColorful3': {background: '#026 url("http://lorempixel.com/720/480/abstract/7/") no-repeat center/cover'}
-};
-
 const skins = {
 	dark: 'Dark',
 	light: 'Light'
@@ -113,7 +98,6 @@ const StorybookDecorator = (story, config) => {
 			locale={select('locale', locales, getPropFromURL('locale', 'en-US'))}
 			textSize={boolean('large text', (getPropFromURL('large text') === 'true')) ? 'large' : 'normal'}
 			highContrast={boolean('high contrast', (getPropFromURL('high contrast') === 'true'))}
-			style={backgrounds[select('background', backgroundLabels, getPropFromURL('background'))]}
 			skin={select('skin', skins, getPropFromURL('skin'))}
 		>
 			{sample}
@@ -130,7 +114,6 @@ const FullscreenStorybookDecorator = (story, config) => {
 			locale={select('locale', locales, getPropFromURL('locale', 'en-US'))}
 			textSize={boolean('large text', (getPropFromURL('large text') === 'true')) ? 'large' : 'normal'}
 			highContrast={boolean('high contrast', (getPropFromURL('high contrast') === 'true'))}
-			style={backgrounds[select('background', backgroundLabels, getPropFromURL('background'))]}
 			skin={select('skin', skins, getPropFromURL('skin'))}
 		>
 			{sample}

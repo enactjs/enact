@@ -106,8 +106,12 @@ class FloatingLayerBase extends React.Component {
 	constructor (props) {
 		super(props);
 		this.node = null;
-		if (props.open && props.onOpen) {
-			props.onOpen({});
+	}
+
+	componentDidMount () {
+		const {open, onOpen} = this.props;
+		if (open && onOpen) {
+			onOpen({});
 		}
 	}
 
@@ -122,8 +126,6 @@ class FloatingLayerBase extends React.Component {
 
 		if (scrimType === 'none') {
 			if (!prevProps.open && open) {
-				// Attach click event handler asynchronously to make sure the event responsible for opening
-				// won't be closed by other click event listeners attached to the dispatcher.
 				on('click', this.handleClick);
 			} else if (prevProps.open && !open) {
 				off('click', this.handleClick);
@@ -157,10 +159,10 @@ class FloatingLayerBase extends React.Component {
 	}
 
 	renderNode () {
-		const {floatLayerClassName} = this.props;
+		const {floatLayerClassName, open} = this.props;
 		const floatingLayer = this.context.getFloatingLayer();
 
-		if (!this.node && floatingLayer) {
+		if (!this.node && floatingLayer && open) {
 			invariant(
 				this.context.getFloatingLayer,
 				'FloatingLayer cannot be used outside the subtree of a FloatingLayerDecorator'
