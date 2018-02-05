@@ -12,6 +12,7 @@ import css from '@enact/ui/Scrollable/Scrollable.less';
 import scrollbarCss from './Scrollbar.less';
 
 const
+	paginationPageMultiplier = 0.8,
 	reverseDirections = {
 		'left': 'right',
 		'up': 'down',
@@ -73,7 +74,11 @@ class Scrollable extends UiScrollable {
 		super(props);
 
 		this.verticalScrollbarProps.cbAlertThumb = this.alertThumbAfterRendered;
+		this.verticalScrollbarProps.onNextScroll = this.onScrollbarButtonClick;
+		this.verticalScrollbarProps.onPrevScroll = this.onScrollbarButtonClick;
 		this.horizontalScrollbarProps.cbAlertThumb = this.alertThumbAfterRendered;
+		this.horizontalScrollbarProps.onNextScroll = this.onScrollbarButtonClick;
+		this.horizontalScrollbarProps.onPrevScroll = this.onScrollbarButtonClick;
 	}
 
 	componentDidUpdate (prevProps, prevState) {
@@ -302,6 +307,21 @@ class Scrollable extends UiScrollable {
 		if ((this.isPageUp(e.keyCode) || this.isPageDown(e.keyCode)) && !e.repeat && this.hasFocus()) {
 			this.scrollByPage(e.keyCode);
 		}
+	}
+
+	onScrollbarButtonClick = ({isPreviousScrollButton, isVerticalScrollBar}) => {
+		const
+			bounds = this.getScrollBounds(),
+			pageDistance = (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
+			delta = isPreviousScrollButton ? -pageDistance : pageDistance,
+			direction = Math.sign(delta);
+
+		if (direction !== this.pageDirection) {
+			this.isScrollAnimationTargetAccumulated = false;
+			this.pageDirection = direction;
+		}
+
+		this.scrollToAccumulatedTarget(delta, isVerticalScrollBar);
 	}
 
 	stop () {

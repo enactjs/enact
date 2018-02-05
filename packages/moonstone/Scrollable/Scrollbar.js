@@ -5,12 +5,11 @@ import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import classNames from 'classnames';
 import DisappearSpotlightDecorator from '@enact/moonstone/internal/DisappearSpotlightDecorator';
 import {is} from '@enact/core/keymap';
-import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import React from 'react';
 import Spotlight from '@enact/spotlight';
-import ri from '@enact/ui/resolution';
 
+import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
 import ScrollButton from './ScrollButton';
 import ScrollThumb from '@enact/ui/Scrollable/ScrollThumb';
 
@@ -18,7 +17,6 @@ import css from './Scrollbar.less';
 
 const
 	nop = () => {},
-	minThumbSize = 18, // Size in pixels
 	prepareButton = (isPrev) => (isVertical) => {
 		let direction;
 
@@ -32,21 +30,8 @@ const
 	},
 	preparePrevButton = prepareButton(true),
 	prepareNextButton = prepareButton(false),
-	thumbHidingDelay = 400, /* in milliseconds */
 	isPageUp = is('pageUp'),
 	isPageDown = is('pageDown');
-
-/*
- * Set CSS Varaible value.
- *
- * @method
- * @param {Node} element - Node.
- * @param {String} variable - CSS Variable property.
- * @param {String} value - CSS Variable value.
- */
-const setCSSVariable = (element, variable, value) => {
-	element.style.setProperty(variable, value);
-};
 
 /**
  * {@link moonstone/Scroller.Scrollbar} is a Scrollbar with Moonstone styling.
@@ -57,7 +42,7 @@ const setCSSVariable = (element, variable, value) => {
  * @ui
  * @private
  */
-class ScrollbarBase extends PureComponent {
+class ScrollbarBase extends UiScrollbarBase {
 	static displayName = 'Scrollbar'
 
 	static propTypes = /** @lends moonstone/Scroller.Scrollbar.prototype */ {
@@ -68,22 +53,6 @@ class ScrollbarBase extends PureComponent {
 		 * @public
 		 */
 		announce: PropTypes.func,
-
-		/**
-		 * The callback function which is called for linking alertThumb function.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		cbAlertThumb: PropTypes.func,
-
-		/**
-		 * If `true`, add the corner between vertical and horizontal scrollbars.
-		 *
-		 * @type {Booelan}
-		 * @public
-		 */
-		corner: PropTypes.bool,
 
 		/**
 		 * Specifies to reflect scrollbar's disabled property to the paging controls.
@@ -124,31 +93,12 @@ class ScrollbarBase extends PureComponent {
 		 * @type {Function}
 		 * @private
 		 */
-		onPrevSpotlightDisappear: PropTypes.func,
-
-		/**
-		 * Exposes this instance as the provider for its imperative API
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		setApiProvider: PropTypes.func,
-
-		/**
-		 * If `true`, the scrollbar will be oriented vertically.
-		 *
-		 * @type {Boolean}
-		 * @default true
-		 * @public
-		 */
-		vertical: PropTypes.bool
+		onPrevSpotlightDisappear: PropTypes.func
 	}
 
 	static defaultProps = {
-		corner: false,
 		onNextScroll: nop,
-		onPrevScroll: nop,
-		vertical: true
+		onPrevScroll: nop
 	}
 
 	constructor (props) {
@@ -160,38 +110,21 @@ class ScrollbarBase extends PureComponent {
 		};
 
 		this.initAnnounceRef = this.initRef('announceRef');
-		this.initContainerRef = this.initRef('containerRef');
-		this.initThumbRef = this.initRef('thumbRef');
-
-		if (props.setApiProvider) {
-			props.setApiProvider(this);
-		}
 	}
 
 	componentDidMount () {
-		const {containerRef} = this;
-
-		this.calculateMetrics();
-		this.prevButtonNodeRef = containerRef.children[0];
-		this.nextButtonNodeRef = containerRef.children[2];
-	}
-
-	componentDidUpdate () {
-		this.calculateMetrics();
-		this.props.cbAlertThumb();
+		super.componentDidMount();
+		this.prevButtonNodeRef = this.containerRef.children[0];
+		this.nextButtonNodeRef = this.containerRef.children[2];
 	}
 
 	componentWillUnmount () {
-		this.hideThumbJob.stop();
+		super.componentWillUnmount();
 		this.setIgnoreMode(false); // To remove event handler
 	}
 
-	minThumbSizeRatio = 0
 	pressed = false
-	ignoreMode = false
 	// component refs
-	containerRef = null
-	thumbRef = null
 	prevButtonNodeRef = null
 	nextButtonNodeRef = null
 
@@ -247,20 +180,8 @@ class ScrollbarBase extends PureComponent {
 		}
 	}
 
-	update = (bounds) => {
-		const
-			{vertical} = this.props,
-			{clientWidth, clientHeight, scrollWidth, scrollHeight, scrollLeft, scrollTop} = bounds,
-			clientSize = vertical ? clientHeight : clientWidth,
-			scrollSize = vertical ? scrollHeight : scrollWidth,
-			scrollOrigin = vertical ? scrollTop : scrollLeft,
-
-			thumbSizeRatioBase = (clientSize / scrollSize),
-			scrollThumbPositionRatio = (scrollOrigin / (scrollSize - clientSize)),
-			scrollThumbSizeRatio = Math.max(this.minThumbSizeRatio, Math.min(1, thumbSizeRatioBase));
-
-		setCSSVariable(this.thumbRef, '--scrollbar-size-ratio', scrollThumbSizeRatio);
-		setCSSVariable(this.thumbRef, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
+	update (bounds) {
+		super.update(bounds);
 		this.updateButtons(bounds);
 	}
 
@@ -269,28 +190,11 @@ class ScrollbarBase extends PureComponent {
 		this.thumbRef.classList.add(css.thumbShown);
 	}
 
-	startHidingThumb () {
-		this.hideThumbJob.start();
-	}
-
-	hideThumb = () => {
+	hideThumb () {
 		this.thumbRef.classList.remove(css.thumbShown);
 	}
 
 	isThumbFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
-
-	hideThumbJob = new Job(this.hideThumb, thumbHidingDelay);
-
-	calculateMetrics = () => {
-		const trackSize = this.containerRef[this.props.vertical ? 'clientHeight' : 'clientWidth'];
-		this.minThumbSizeRatio = ri.scale(minThumbSize) / trackSize;
-	}
-
-	initRef (prop) {
-		return (ref) => {
-			this[prop] = ref;
-		};
-	}
 
 	handlePrevScroll = (ev) => {
 		const {onPrevScroll, vertical} = this.props;

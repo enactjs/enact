@@ -176,16 +176,12 @@ class Scrollable extends Component {
 
 		this.verticalScrollbarProps = {
 			ref: this.initRef('verticalScrollbarRef'),
-			vertical: true,
-			onPrevScroll: this.onScrollbarButtonClick,
-			onNextScroll: this.onScrollbarButtonClick
+			vertical: true
 		};
 
 		this.horizontalScrollbarProps = {
 			ref: this.initRef('horizontalScrollbarRef'),
-			vertical: false,
-			onPrevScroll: this.onScrollbarButtonClick,
-			onNextScroll: this.onScrollbarButtonClick
+			vertical: false
 		};
 
 		props.cbScrollTo(this.scrollTo);
@@ -562,21 +558,6 @@ class Scrollable extends Component {
 		if ((this.isPageUp(e.keyCode) || this.isPageDown(e.keyCode)) && !e.repeat) {
 			this.scrollByPage(e.keyCode);
 		}
-	}
-
-	onScrollbarButtonClick = ({isPreviousScrollButton, isVerticalScrollBar}) => {
-		const
-			bounds = this.getScrollBounds(),
-			pageDistance = (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
-			delta = isPreviousScrollButton ? -pageDistance : pageDistance,
-			direction = Math.sign(delta);
-
-		if (direction !== this.pageDirection) {
-			this.isScrollAnimationTargetAccumulated = false;
-			this.pageDirection = direction;
-		}
-
-		this.scrollToAccumulatedTarget(delta, isVerticalScrollBar);
 	}
 
 	scrollToAccumulatedTarget = (delta, vertical) => {
