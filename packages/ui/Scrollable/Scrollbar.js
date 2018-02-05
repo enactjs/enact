@@ -10,6 +10,7 @@ import ScrollThumb from './ScrollThumb';
 import css from './Scrollbar.less';
 
 const
+	nop = () => {},
 	minThumbSize = 18, // Size in pixels
 	thumbHidingDelay = 400; /* in milliseconds */
 
@@ -108,7 +109,7 @@ class ScrollbarBase extends PureComponent {
 	containerRef = null
 	thumbRef = null
 
-	update = (bounds) => {
+	update (bounds) {
 		const
 			{vertical} = this.props,
 			{clientWidth, clientHeight, scrollWidth, scrollHeight, scrollLeft, scrollTop} = bounds,
