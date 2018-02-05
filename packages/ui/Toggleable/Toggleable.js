@@ -189,7 +189,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleToggle = this.handle(
 			forProp('disabled', false),
-			forward(toggleProp),
+			(toggleProp ? forward(toggleProp) : null),
 			this.forwardWithState(toggle),
 			() => this.updateActive(!this.state.active)
 		)
