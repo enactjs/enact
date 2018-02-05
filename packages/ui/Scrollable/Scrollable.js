@@ -970,7 +970,7 @@ class Scrollable extends Component {
 
 	render () {
 		const
-			{className, wrapped: Wrapped, ...rest} = this.props,
+			{className, wrapped: Wrapped, style, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			scrollableClasses = classNames(css.scrollable, className);
 
@@ -981,13 +981,13 @@ class Scrollable extends Component {
 		delete rest.onScrollbarVisibilityChange;
 		delete rest.onScrollStart;
 		delete rest.onScrollStop;
-		delete rest.style;
 		delete rest.verticalScrollbar;
 
 		return (
 			<div
 				className={scrollableClasses}
 				containerRef={this.initContainerRef}
+				style={style}
 			>
 				<div className={css.container}>
 					<Wrapped
