@@ -1,4 +1,4 @@
-import {Scroller as UiScroller, ScrollerBase as UiScrollerBase} from '@enact/moonstone/Scroller';
+import {Scroller as UiScroller, ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import Scroller from '@enact/moonstone/Scroller';
 import ri from '@enact/ui/resolution';
 import React from 'react';
