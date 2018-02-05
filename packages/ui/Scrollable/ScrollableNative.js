@@ -853,7 +853,7 @@ class ScrollableNative extends Component {
 		return (
 			<div
 				className={scrollableClasses}
-				containerRef={this.initContainerRef}
+				ref={this.initContainerRef}
 				style={style}
 			>
 				<div className={css.container}>
