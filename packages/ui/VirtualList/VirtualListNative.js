@@ -2,6 +2,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import ScrollableNative from '../Scrollable/ScrollableNative';
 import VirtualListBaseNative, {gridListItemSizeShape} from './VirtualListBaseNative';
 
 /**
@@ -102,7 +103,7 @@ const VirtualListNative = kind({
 		 */
 	},
 
-	render: (props) => <VirtualListBaseNative {...props} />
+	render: (props) => <ScrollableNative wrapped={VirtualListBaseNative} {...props} />
 });
 
 /**
@@ -203,7 +204,7 @@ const VirtualGridListNative = kind({
 		 */
 	},
 
-	render: (props) => <VirtualListBaseNative {...props} />
+	render: (props) => <ScrollableNative wrapped={VirtualListBaseNative} {...props} />
 });
 
 export default VirtualListNative;

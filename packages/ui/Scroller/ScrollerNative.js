@@ -4,10 +4,12 @@
  * The default export is {@link ui/Scroller.ScrollerNative}.
  */
 
+import React from 'react';
+
 import ScrollableNative from '../Scrollable/ScrollableNative';
 import {ScrollerBase} from './Scroller';
 
-const ScrollerNativeBase = ScrollerBase;
+const ScrollerBaseNative = ScrollerBase;
 
 /**
  * {@link ui/Scroller.ScrollerNative} is a Scroller with ui styling,
@@ -25,10 +27,7 @@ const ScrollerNativeBase = ScrollerBase;
  * @ui
  * @private
  */
-const ScrollerNative = kind({
-	name: 'ui:ScrollerNative',
-	render: (props) => <ScrollableNative wrapped={ScrollerBase} {...props} />
-});
+const ScrollerNative = (props) => (<ScrollableNative wrapped={ScrollerBase} {...props} />);
 
 // Docs for ScrollerNative
 /**
@@ -138,4 +137,4 @@ const ScrollerNative = kind({
  */
 
 export default ScrollerNative;
-export {ScrollerNative, ScrollerNativeBase};
+export {ScrollerNative, ScrollerBaseNative};

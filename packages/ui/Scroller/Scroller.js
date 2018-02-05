@@ -8,7 +8,6 @@
 
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
-import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -70,8 +69,6 @@ class ScrollerBase extends Component {
 	componentDidUpdate () {
 		this.calculateMetrics();
 	}
-
-
 
 	scrollBounds = {
 		clientWidth: 0,
@@ -233,21 +230,18 @@ class ScrollerBase extends Component {
 
 	render () {
 		const
-			{className, style} = this.props,
-			props = Object.assign({}, this.props),
+			{className, style, ...rest} = this.props,
 			mergedStyle = Object.assign({}, style, {
 				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
 				overflowY: this.isVertical() ? 'auto' : 'hidden'
 			});
 
-		delete props.cbScrollTo;
-		delete props.className;
-		delete props.direction;
-		delete props.style;
+		delete rest.cbScrollTo;
+		delete rest.direction;
 
 		return (
 			<div
-				{...props}
+				{...rest}
 				className={classNames(className, css.hideNativeScrollbar)}
 				onKeyDown={this.onKeyDown}
 				ref={this.initRef}
@@ -272,10 +266,7 @@ class ScrollerBase extends Component {
  * @ui
  * @public
  */
-const Scroller = kind({
-	name: 'ui:Scroller',
-	render: (props) => <Scrollable wrapped={ScrollerBase} {...props} />
-});
+const Scroller = (props) => (<Scrollable wrapped={ScrollerBase} {...props} />);
 
 // Docs for Scroller
 /**
