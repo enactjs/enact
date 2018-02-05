@@ -70,7 +70,11 @@ const ExpandableListBase = kind({
 		 * strings is provided, the strings will be used in the generated components as the readable
 		 * text. If an array of objects is provided, each object will be spread onto the generated
 		 * component with no interpretation. You'll be responsible for setting properties like
-		 * `disabled`, `className`, and setting the text content using the `children` key.
+		 * `disabled`, `className`, and setting the content using `children`.
+		 *
+		 * NOTE: When providing an array of objects be sure a unique `key` is assigned to each
+		 * item. [Read about keys](https://reactjs.org/docs/lists-and-keys.html#keys) for more
+		 * information.
 		 *
 		 * @type {String[]|Object[]}
 		 * @required
@@ -78,7 +82,9 @@ const ExpandableListBase = kind({
 		 */
 		children: PropTypes.oneOfType([
 			PropTypes.arrayOf(PropTypes.string),
-			PropTypes.arrayOf(PropTypes.object)
+			PropTypes.arrayOf(PropTypes.shape({
+				key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
+			}))
 		]).isRequired,
 
 		/**

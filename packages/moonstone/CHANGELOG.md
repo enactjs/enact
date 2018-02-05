@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/Marquee` to do less-costly calculations during measurement and optimized the applied styles
+- `moonstone/ExpandableList` to require a unique key for each object type data
 
 ### Fixed
 
