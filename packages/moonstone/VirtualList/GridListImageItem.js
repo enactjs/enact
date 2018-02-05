@@ -96,6 +96,7 @@ const GridListImageItemBase = kind({
 		 * ```
 		 *
 		 * @type {Function}
+		 * @public
 		 */
 		selectionOverlay: PropTypes.func,
 
@@ -187,6 +188,7 @@ const GridListImageItemBase = kind({
  *
  * @class GridListImageItem
  * @memberof moonstone/VirtualList
+ * @mixes moonstone/Marquee.MarqueeController
  * @mixes spotlight.Spottable
  * @see moonstone/VirtualList.GridListImageItemBase
  * @ui

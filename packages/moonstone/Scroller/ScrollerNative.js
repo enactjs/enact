@@ -34,32 +34,35 @@ const ScrollerNative = SpotlightContainerDecorator(
 
 // Docs for ScrollerNative
 /**
- * The callback function which is called for linking scrollTo function.
- * You should specify a callback function as the value of this prop
- * to use scrollTo feature.
+ * A callback function that receives a reference to the `scrollTo` feature. Once received,
+ * the `scrollTo` method can be called as an imperative interface.
  *
- * The scrollTo function passed to the parent component requires below as an argument.
- * - {position: {x, y}} - You can set a pixel value for x and/or y position
- * - {align} - You can set one of values below for align
+ * The `scrollTo` function accepts the following paramaters:
+ * - {position: {x, y}} - Pixel value for x and/or y position
+ * - {align} - Where the scroll area should be aligned. Values are:
  *   `'left'`, `'right'`, `'top'`, `'bottom'`,
  *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
- * - {index} - You can set an index of specific item. (`0` or positive integer)
- *   This option is available for only VirtualList kind.
- * - {node} - You can set a node to scroll
- * - {animate} - When `true`, scroll occurs with animation.
- *   Set it to `false`, if you want scrolling without animation.
- * - {indexToFocus} - Deprecated: Use `focus` insead.
- * - {focus} - Set it `true`, if you want the item to be focused after scroll.
- *   This option is only valid when you scroll by `index` or `node`.
+ * - {index} - Index of specific item. (`0` or positive integer)
+ *   This option is available for only `VirtualList` kind.
+ * - {node} - Node to scroll into view
+ * - {animate} - When `true`, scroll occurs with animation. When `false`, no
+ *   animation occurs.
+ * - {indexToFocus} - Deprecated: Use `focus` instead.
+ * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
+ *   by `index` or `node`.
+ * > Note: Only specify one of: `position`, `align`, `index` or `node`
  *
- * @name cbScrollTo
- * @type {Function}
- * @memberof moonstone/Scroller.ScrollerNative
- * @example
+ * Example:
+ * ```
  *	// If you set cbScrollTo prop like below;
  *	cbScrollTo: (fn) => {this.scrollTo = fn;}
  *	// You can simply call like below;
  *	this.scrollTo({align: 'top'}); // scroll to the top
+ * ```
+ *
+ * @name cbScrollTo
+ * @type {Function}
+ * @memberof moonstone/Scroller.ScrollerNative
  * @instance
  * @public
  */
@@ -100,6 +103,9 @@ const ScrollerNative = SpotlightContainerDecorator(
 
 /**
  * Called when scrolling
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+ * It is not recommended to set this prop since it can cause performance degradation. Use
+ * `onScrollStart` or `onScrollStop` instead.
  *
  * @name onScroll
  * @type {Function}
@@ -110,6 +116,7 @@ const ScrollerNative = SpotlightContainerDecorator(
 
 /**
  * Called when scroll starts
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
  *
  * @name onScrollStart
  * @type {Function}
@@ -120,6 +127,7 @@ const ScrollerNative = SpotlightContainerDecorator(
 
 /**
  * Called when scroll stops
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
  *
  * @name onScrollStop
  * @type {Function}
