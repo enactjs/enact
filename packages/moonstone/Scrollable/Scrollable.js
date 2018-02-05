@@ -11,6 +11,26 @@ import Scrollbar from './Scrollbar';
 import css from '@enact/ui/Scrollable/Scrollable.less';
 import scrollbarCss from './Scrollbar.less';
 
+const
+	reverseDirections = {
+		'left': 'right',
+		'up': 'down',
+		'right': 'left',
+		'down': 'up'
+	};
+
+/**
+ * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
+ * which indicates the index of an item in {@link moonstone/VirtualList.VirtualList}
+ * or {@link moonstone/VirtualList.VirtualGridList}.
+ *
+ * @constant dataIndexAttribute
+ * @memberof moonstone/Scroller
+ * @type {String}
+ * @private
+ */
+const dataIndexAttribute = 'data-index';
+
 const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 	{
 		navigableFilter: (elem, {focusableScrollbar}) => {
@@ -34,26 +54,6 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 		);
 	}
 );
-
-/**
- * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
- * which indicates the index of an item in {@link moonstone/VirtualList.VirtualList}
- * or {@link moonstone/VirtualList.VirtualGridList}.
- *
- * @constant dataIndexAttribute
- * @memberof moonstone/Scroller
- * @type {String}
- * @private
- */
-const dataIndexAttribute = 'data-index';
-
-const
-	reverseDirections = {
-		'left': 'right',
-		'up': 'down',
-		'right': 'left',
-		'down': 'up'
-	};
 
 class Scrollable extends UiScrollable {
 	static displayName = 'Scrollable'
@@ -82,6 +82,19 @@ class Scrollable extends UiScrollable {
 			this.updateScrollOnFocus();
 		}
 	}
+
+	componentWillUnmount () {
+		const childContainerRef = this.childRef.containerRef;
+
+		super.componentWillUnmount();
+		if (childContainerRef && childContainerRef.removeEventListener) {
+			// FIXME `onFocus` doesn't work on the v8 snapshot.
+			childContainerRef.removeEventListener('focusin', this.onFocus);
+		}
+	}
+
+	// status
+	isWheeling = false
 
 	// spotlight
 	animateOnFocus = false
@@ -137,7 +150,7 @@ class Scrollable extends UiScrollable {
 
 			if (delta !== 0) {
 				this.isWheeling = true;
-				// this.childRef.setContainerDisabled(true);
+				this.childRef.setContainerDisabled(true);
 				this.scrollToAccumulatedTarget(delta, canScrollVertically);
 			}
 		}

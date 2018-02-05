@@ -263,9 +263,7 @@ class Scrollable extends Component {
 	}
 
 	componentWillUnmount () {
-		const
-			{containerRef} = this,
-			childContainerRef = this.childRef.containerRef;
+		const {containerRef} = this;
 
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
 		if (this.animator.isAnimating()) {
@@ -276,10 +274,6 @@ class Scrollable extends Component {
 		if (containerRef && containerRef.removeEventListener) {
 			// FIXME `onWheel` doesn't work on the v8 snapshot.
 			containerRef.removeEventListener('wheel', this.onWheel);
-		}
-		if (childContainerRef && childContainerRef.removeEventListener) {
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
-			childContainerRef.removeEventListener('focusin', this.onFocus);
 		}
 		off('keydown', this.onKeyDown);
 
@@ -309,7 +303,6 @@ class Scrollable extends Component {
 	isDragging = false
 	deferScrollTo = true
 	pageDistance = 0
-	isWheeling = false
 	isFitClientSize = false
 	isUpdatedScrollThumb = false
 
@@ -519,7 +512,6 @@ class Scrollable extends Component {
 			}
 
 			if (delta !== 0) {
-				this.isWheeling = true;
 				this.scrollToAccumulatedTarget(delta, canScrollVertically);
 			}
 		}
@@ -712,7 +704,6 @@ class Scrollable extends Component {
 		this.animator.stop();
 		this.isScrollAnimationTargetAccumulated = false;
 		this.startHidingThumb();
-		this.isWheeling = false;
 		if (this.scrolling) {
 			this.scrolling = false;
 			this.doScrollStop();
