@@ -325,8 +325,9 @@ const VirtualGridList = kind({
 		 */
 
 		/**
-		 * Data for passing it through `component` prop.
-		 * NOTICE: For performance reason, changing this prop does NOT always cause redraw items.
+		 * Data for passing through to the `component` prop.
+		 * NOTICE: For performance reason, changing this prop does NOT always cause the list to
+		 * redraw its items.
 		 *
 		 * @name data
 		 * @type {Any}
