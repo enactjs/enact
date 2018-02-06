@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import {childrenEquals} from '@enact/core/util';
 // import Slottable from '@enact/ui/Slottable';
+import UiItemOverlay from '@enact/ui/ItemOverlay';
 import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 import Toggleable from '@enact/ui/Toggleable';
 import Pure from '@enact/ui/internal/Pure';
@@ -13,7 +14,7 @@ import Spottable from '@enact/spotlight/Spottable';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import {ItemBase} from './Item';
+import Item from './Item';
 // import Overlay from './Overlay';
 
 import componentCss from './Item.less';
@@ -66,9 +67,10 @@ const ItemOverlayBase = kind({
 	render: ({css, ...rest}) => {
 		delete rest.autoHide;
 		return (
-			<ItemBase
+			<UiItemOverlay
 				{...rest}
 				css={css}
+				itemComponent={Item}
 			/>
 		);
 	}

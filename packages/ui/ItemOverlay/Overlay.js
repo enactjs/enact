@@ -76,7 +76,12 @@ const Overlay = kind({
 	}
 });
 
-export default Overlay;
+export default 'address';
 export {
-	Overlay
+	'address'
 };
+
+// export default Overlay;
+// export {
+// 	Overlay
+// };

@@ -2,21 +2,21 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import compose from 'ramda/src/compose';
-import {childrenEquals} from '@enact/core/util';
+// import compose from 'ramda/src/compose';
+// import {childrenEquals} from '@enact/core/util';
 import Slottable from '@enact/ui/Slottable';
-import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
-import Toggleable from '@enact/ui/Toggleable';
-import Pure from '@enact/ui/internal/Pure';
-import Spottable from '@enact/spotlight/Spottable';
+// import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
+// import Toggleable from '@enact/ui/Toggleable';
+// import Pure from '@enact/ui/internal/Pure';
+// import Spottable from '@enact/spotlight/Spottable';
 
-import {MarqueeDecorator} from '../Marquee';
-import Skinnable from '../Skinnable';
+// import {MarqueeDecorator} from '../Marquee';
+// import Skinnable from '../Skinnable';
 
-import {ItemBase} from './Item';
-import Overlay from './Overlay';
+import Item from '../Item';
+// import Overlay from './Overlay';
 
-import componentCss from './Item.less';
+import componentCss from './ItemOverlay.less';
 
 /**
  * A moonstone-styled ItemOverlay without any behavior.
@@ -54,32 +54,34 @@ const ItemOverlayBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		css: PropTypes.object,
+
+		itemComponent: PropTypes.func
 	},
 
 	styles: {
 		css: componentCss,
 		className: 'itemOverlay',
-		publicClassNames: 'itemOverlay'
+		publicClassNames: true
 	},
 
 	computed: {
-		overlayBefore: ({overlayBefore, css, autoHide}) => ( overlayBefore ?
-			<Overlay className={css.before} hidden={autoHide === 'before' || autoHide === 'both'}>
+		overlayBefore: ({overlayBefore, css, autoHide, styler}) => ( overlayBefore ?
+			<div className={styler.join(css.before, {hidden: (autoHide === 'before' || autoHide === 'both')})}>
 				{overlayBefore}
-			</Overlay> : null
+			</div> : null
 		),
-		overlayAfter: ({overlayAfter, css, autoHide}) => ( overlayAfter ?
-			<Overlay className={css.after} hidden={autoHide === 'after' || autoHide === 'both'}>
+		overlayAfter: ({overlayAfter, css, autoHide, styler}) => ( overlayAfter ?
+			<div className={styler.join(css.after, {hidden: (autoHide === 'after' || autoHide === 'both')})}>
 				{overlayAfter}
-			</Overlay> : null
+			</div> : null
 		)
 	},
 
 	render: (props) => {
 		delete props.autoHide;
 		return (
-			<ItemBase
+			<Item
 				{...props}
 				css={props.css}
 			/>
@@ -124,7 +126,7 @@ const ItemOverlayDecorator = Slottable({slots: ['overlayAfter', 'overlayBefore']
  */
 const ItemOverlay = ItemOverlayDecorator(ItemOverlayBase);
 
-export default ItemOverlayBase;
+export default ItemOverlay;
 export {
 	ItemOverlay,
 	ItemOverlayBase,

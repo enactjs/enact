@@ -55,7 +55,7 @@ const Overlay = kind({
 	}
 });
 
-export default Overlay;
-export {
-	Overlay
-};
+// export default Overlay;
+// export {
+// 	Overlay
+// };
