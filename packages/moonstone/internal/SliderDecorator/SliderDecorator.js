@@ -10,6 +10,7 @@ import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import Spotlight from '@enact/spotlight';
 import clamp from 'ramda/src/clamp';
+import equals from 'ramda/src/equals';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {forward} from '@enact/core/handle';
@@ -282,6 +283,15 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				validateRange(backgroundProgress, 0, 1, SliderDecoratorClass.displayName,
 					'backgroundProgress', 'min', 'max');
 			}
+		}
+
+		shouldComponentUpdate (nextProps, nextState) {
+			const {focused, ...rest} = this.state;
+			const {focused: nextFocused, ...nextRest} = nextState;
+			return !(focused !== nextFocused &&
+				!this.props.tooltip &&
+				equals(this.props, nextProps) &&
+				equals(rest, nextRest));
 		}
 
 		componentDidUpdate () {

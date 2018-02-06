@@ -3,6 +3,7 @@ import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
 import {childrenEquals} from '@enact/core/util';
 import {isRtlText} from '@enact/i18n/util';
+import equals from 'ramda/src/equals';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
@@ -302,6 +303,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else if (next.disabled && this.isHovered && marqueeOn === 'focus' && this.sync) {
 				this.context.enter(this);
 			}
+		}
+
+		shouldComponentUpdate (nextProps, nextState) {
+			return (
+				!childrenEquals(this.props.children, nextProps.children) ||
+				(invalidateProps && didPropChange(invalidateProps, this.props, nextProps)) ||
+				!equals(this.state, nextState)
+			);
 		}
 
 		componentDidUpdate () {

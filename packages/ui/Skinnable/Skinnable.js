@@ -10,6 +10,8 @@
  * @public
  */
 
+import {childrenEquals} from '@enact/core/util';
+import equals from 'ramda/src/equals';
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
 import {contextTypes as stateContextTypes, Publisher, Subscription} from '@enact/core/internal/PubSub';
@@ -126,6 +128,16 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 				const skin = this.determineSkin(nextProps.skin, this.state.skin);
 				this.updateSkin(skin);
 			}
+		}
+
+		shouldComponentUpdate (nextProps, nextState) {
+			const {children, ...rest} = this.props;
+			const {children: nextChildren, ...nextRest} = nextProps;
+			return (
+				!equals(rest, nextRest) ||
+				!childrenEquals(children, nextChildren) ||
+				!equals(this.state, nextState)
+			);
 		}
 
 		componentWillUnmount () {
