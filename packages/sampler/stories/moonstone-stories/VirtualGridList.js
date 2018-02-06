@@ -1,7 +1,6 @@
 import {VirtualGridList as UiVirtualGridList} from '@enact/ui/VirtualList';
-import {VirtualGridList} from '@enact/moonstone/VirtualList';
+import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
 import GridListImageItem from '@enact/ui/VirtualList/GridListImageItem';
-import VirtualListBase from '@enact/ui/VirtualList/VirtualListBase';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -56,7 +55,6 @@ storiesOf('UI', module)
 				data={items}
 				dataSize={number('dataSize', items.length)}
 				direction={select('direction', prop.direction, 'vertical')}
-				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 				itemSize={{
 					minWidth: ri.scale(number('minWidth', 180)),
 					minHeight: ri.scale(number('minHeight', 270))

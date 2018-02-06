@@ -1,7 +1,6 @@
 import Item from '@enact/moonstone/Item';
 import {VirtualList as UiVirtualList} from '@enact/ui/VirtualList';
-import VirtualList from '@enact/moonstone/VirtualList';
-import VirtualListBase from '@enact/moonstone/VirtualList/VirtualListBase';
+import {VirtualList, VirtualListBase} from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -48,7 +47,6 @@ storiesOf('UI', module)
 					component={renderItem(itemSize)}
 					data={items}
 					dataSize={number('dataSize', items.length)}
-					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}

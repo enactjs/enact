@@ -28,7 +28,6 @@ storiesOf('UI', module)
 		})(() => (
 			<UiScroller
 				direction={select('direction', prop.direction, 'both')}
-				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}

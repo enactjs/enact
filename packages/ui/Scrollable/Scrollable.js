@@ -1,20 +1,25 @@
-/*
- * Exports the {@link ui/Scroller.Scrollable} Higher-order Component (HOC) and
- * the {@link ui/Scroller.dataIndexAttribute} constant.
- * The default export is {@link ui/Scroller.Scrollable}.
+/**
+ * Provides unstyled scrollable components and behaviors to be customized by a theme or application.
+ *
+ * @module ui/Scrollable
+ * @exports Scrollable
+ * @exports constants
+ * @exports ScrollableBase
  */
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
 import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
+import kind from '@enact/core/kind';
 import {on, off} from '@enact/core/dispatcher';
 import {perfNow} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import ri from '@enact/ui/resolution';
+
+import {contextTypes as contextTypesResize} from '../Resizable';
+import ri from '../resolution';
 
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
@@ -27,48 +32,60 @@ const
 	forwardScrollStop = forward('onScrollStop');
 
 const
-	calcVelocity = (d, dt) => (d && dt) ? d / dt : 0,
-	nop = () => {},
-	holdTime = 50,
-	paginationPageMultiplier = 0.8,
-	epsilon = 1;
+	constants = {
+		animationDuration: 1000,
+		calcVelocity: (d, dt) => (d && dt) ? d / dt : 0,
+		epsilon: 1,
+		holdTime: 50,
+		isPageDown: is('pageDown'),
+		isPageUp: is('pageUp'),
+		nop: () => {},
+		paginationPageMultiplier: 0.8,
+		scrollWheelPageMultiplierForMaxPixel: 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
+	},
+	{
+		animationDuration,
+		calcVelocity,
+		epsilon,
+		holdTime,
+		isPageDown,
+		isPageUp,
+		nop,
+		paginationPageMultiplier,
+		scrollWheelPageMultiplierForMaxPixel
+	} = constants;
 
 /**
- * {@link ui/Scroller.Scrollable} is a Higher-order Component
- * that applies a Scrollable behavior to its wrapped component.
+ * [ScrollableBase]{@link ui/Scrollable.ScrollableBase} is a base component for
+ * [Scrollable]{@link ui/Scrollable.Scrollable}.
  *
- * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
- * and also catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, `onWheel` and `onKeyDown` events
- * from its wrapped component for scrolling behaviors.
- *
- * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
- *
- * @class Scrollable
- * @memberof ui/Scroller
- * @hoc
+ * @class ScrollableBase
+ * @memberof ui/Scrollable
+ * @ui
  * @private
  */
-class Scrollable extends Component {
-	static displayName = 'ui:Scrollable'
+class ScrollableBase extends Component {
+	static displayName = 'ui:ScrollableBase'
 
-	static propTypes = /** @lends ui/Scroller.Scrollable.prototype */ {
+	static propTypes = /** @lends ui/Scrollable.ScrollableBase.prototype */ {
 		/**
-		 * The callback function which is called for linking scrollTo function.
-		 * You should specify a callback function as the value of this prop
-		 * to use scrollTo feature.
+		 * A callback function that receives a reference to the `scrollTo` feature. Once received,
+		 * the `scrollTo` method can be called as an imperative interface.
 		 *
-		 * The scrollTo function passed to the parent component requires below as an argument.
-		 * - {position: {x, y}} - You can set a pixel value for x and/or y position
-		 * - {align} - You can set one of values below for align
+		 * The `scrollTo` function accepts the following paramaters:
+		 * - {position: {x, y}} - Pixel value for x and/or y position
+		 * - {align} - Where the scroll area should be aligned. Values are:
 		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
 		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
-		 * - {index} - You can set an index of specific item. (`0` or positive integer)
-		 *   This option is available for only VirtualList kind.
-		 * - {node} - You can set a node to scroll
-		 * - {animate} - When `true`, scroll occurs with animation.
-		 *   Set it to `false`, if you want scrolling without animation.
-		 * - {focus} - Set it `true`, if you want the item to be focused after scroll.
-		 *   This option is only valid when you scroll by `index` or `node`.
+		 * - {index} - Index of specific item. (`0` or positive integer)
+		 *   This option is available for only `VirtualList` kind.
+		 * - {node} - Node to scroll into view
+		 * - {animate} - When `true`, scroll occurs with animation. When `false`, no
+		 *   animation occurs.
+		 * - {indexToFocus} - Deprecated: Use `focus` instead.
+		 * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
+		 *   by `index` or `node`.
+		 * > Note: Only specify one of: `position`, `align`, `index` or `node`
 		 *
 		 * Example:
 		 * ```
@@ -94,6 +111,9 @@ class Scrollable extends Component {
 
 		/**
 		 * Called when scrolling
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * It is not recommended to set this prop since it can cause performance degradation. Use
+		 * `onScrollStart` or `onScrollStop` instead.
 		 *
 		 * @type {Function}
 		 * @public
@@ -110,6 +130,7 @@ class Scrollable extends Component {
 
 		/**
 		 * Called when scroll starts
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
 		 *
 		 * @type {Function}
 		 * @public
@@ -118,6 +139,7 @@ class Scrollable extends Component {
 
 		/**
 		 * Called when scroll stops
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
 		 *
 		 * @type {Function}
 		 * @public
@@ -142,15 +164,22 @@ class Scrollable extends Component {
 		 * @public
 		 */
 		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
+
+		/**
+		 * A component to make scrollable.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		wrapped: PropTypes.func
 	}
 
 	static defaultProps = {
 		cbScrollTo: nop,
+		horizontalScrollbar: 'auto',
 		onScroll: nop,
 		onScrollStart: nop,
 		onScrollStop: nop,
-		horizontalScrollbar: 'auto',
 		verticalScrollbar: 'auto'
 	}
 
@@ -187,14 +216,10 @@ class Scrollable extends Component {
 		props.cbScrollTo(this.scrollTo);
 	}
 
-	getChildContext () {
-		return {
-			invalidateBounds: this.enqueueForceUpdate,
-			Subscriber: this.publisher.getSubscriber()
-		};
-	}
-
-	// component life cycle
+	getChildContext = () => ({
+		invalidateBounds: this.enqueueForceUpdate,
+		Subscriber: this.publisher.getSubscriber()
+	})
 
 	componentWillMount () {
 		this.publisher = Publisher.create('resize', this.context.Subscriber);
@@ -213,9 +238,9 @@ class Scrollable extends Component {
 
 		this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 		this.direction = this.childRef.props.direction;
-		this.updateEventListeners();
 		this.updateScrollbars();
 
+		this.updateEventListeners();
 		on('keydown', this.onKeyDown);
 	}
 
@@ -263,24 +288,26 @@ class Scrollable extends Component {
 	}
 
 	componentWillUnmount () {
-		const {containerRef} = this;
-
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
 		if (this.animator.isAnimating()) {
 			this.doScrollStop();
 			this.animator.stop();
 		}
 
-		if (containerRef && containerRef.removeEventListener) {
-			// FIXME `onWheel` doesn't work on the v8 snapshot.
-			containerRef.removeEventListener('wheel', this.onWheel);
-		}
-		off('keydown', this.onKeyDown);
-
 		if (this.context.Subscriber) {
 			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
 			this.context.Subscriber.unsubscribe('i18n', this.handleSubscription);
 		}
+
+		this.removeEventListeners();
+		off('keydown', this.onKeyDown);
+	}
+
+	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
+	// state member.
+	enqueueForceUpdate = () => {
+		this.childRef.calculateMetrics();
+		this.forceUpdate();
 	}
 
 	handleSubscription = ({channel, message}) => {
@@ -294,6 +321,22 @@ class Scrollable extends Component {
 		}
 	}
 
+	clampScrollPosition () {
+		const bounds = this.getScrollBounds();
+
+		if (this.scrollTop > bounds.maxTop) {
+			this.scrollTop = bounds.maxTop;
+		}
+
+		if (this.scrollLeft > bounds.maxLeft) {
+			this.scrollLeft = bounds.maxLeft;
+		}
+	}
+
+	// constants
+	pixelPerLine = 39
+	scrollWheelMultiplierForDeltaPixel = 1.5 // The ratio of wheel 'delta' units to pixels scrolled.
+
 	// status
 	direction = 'vertical'
 	isScrollAnimationTargetAccumulated = false
@@ -305,14 +348,6 @@ class Scrollable extends Component {
 	pageDistance = 0
 	isFitClientSize = false
 	isUpdatedScrollThumb = false
-
-	// constants
-	animationDuration = 1000
-	scrollWheelMultiplierForDeltaPixel = 1.5 // The ratio of wheel 'delta' units to pixels scrolled.
-	scrollWheelPageMultiplierForMaxPixel = 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
-	pixelPerLine = 39
-	isPageUp = is('pageUp')
-	isPageDown = is('pageDown')
 
 	// drag info
 	dragInfo = {
@@ -346,18 +381,6 @@ class Scrollable extends Component {
 
 	// scroll animator
 	animator = new ScrollAnimator()
-
-	clampScrollPosition () {
-		const bounds = this.getScrollBounds();
-
-		if (this.scrollTop > bounds.maxTop) {
-			this.scrollTop = bounds.maxTop;
-		}
-
-		if (this.scrollLeft > bounds.maxLeft) {
-			this.scrollLeft = bounds.maxLeft;
-		}
-	}
 
 	// handle an input event
 
@@ -414,18 +437,6 @@ class Scrollable extends Component {
 		} else {
 			return true;
 		}
-	}
-
-	calculateDistanceByWheel (deltaMode, delta, maxPixel) {
-		if (deltaMode === 0) {
-			delta = clamp(-maxPixel, maxPixel, ri.scale(delta * this.scrollWheelMultiplierForDeltaPixel));
-		} else if (deltaMode === 1) { // line; firefox
-			delta = clamp(-maxPixel, maxPixel, ri.scale(delta * this.pixelPerLine * this.scrollWheelMultiplierForDeltaPixel));
-		} else if (deltaMode === 2) { // page
-			delta = delta < 0 ? -maxPixel : maxPixel;
-		}
-
-		return delta;
 	}
 
 	// mouse event handler for JS scroller
@@ -485,6 +496,18 @@ class Scrollable extends Component {
 		this.onMouseUp();
 	}
 
+	calculateDistanceByWheel (deltaMode, delta, maxPixel) {
+		if (deltaMode === 0) {
+			delta = clamp(-maxPixel, maxPixel, ri.scale(delta * this.scrollWheelMultiplierForDeltaPixel));
+		} else if (deltaMode === 1) { // line; firefox
+			delta = clamp(-maxPixel, maxPixel, ri.scale(delta * this.pixelPerLine * this.scrollWheelMultiplierForDeltaPixel));
+		} else if (deltaMode === 2) { // page
+			delta = delta < 0 ? -maxPixel : maxPixel;
+		}
+
+		return delta;
+	}
+
 	onWheel = (e) => {
 		e.preventDefault();
 		if (!this.isDragging) {
@@ -499,9 +522,9 @@ class Scrollable extends Component {
 				direction;
 
 			if (canScrollVertically) {
-				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * this.scrollWheelPageMultiplierForMaxPixel);
+				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 			} else if (canScrollHorizontally) {
-				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * this.scrollWheelPageMultiplierForMaxPixel);
+				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 			}
 
 			direction = Math.sign(delta);
@@ -525,13 +548,13 @@ class Scrollable extends Component {
 		const
 			bounds = this.getScrollBounds(),
 			canScrollVertically = this.canScrollVertically(bounds),
-			pageDistance = this.isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance;
+			pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance;
 
 		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 	}
 
 	onKeyDown = (e) => {
-		if ((this.isPageUp(e.keyCode) || this.isPageDown(e.keyCode)) && !e.repeat) {
+		if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && !e.repeat) {
 			this.scrollByPage(e.keyCode);
 		}
 	}
@@ -592,7 +615,7 @@ class Scrollable extends Component {
 
 	// scroll start/stop
 
-	start ({targetX, targetY, animate = true, duration = this.animationDuration}) {
+	start ({targetX, targetY, animate = true, duration = animationDuration}) {
 		const {scrollLeft, scrollTop} = this;
 		const bounds = this.getScrollBounds();
 
@@ -868,26 +891,22 @@ class Scrollable extends Component {
 		}
 	}
 
-	updateEventListeners = () => {
-		const
-			{containerRef} = this,
-			childContainerRef = this.childRef.containerRef;
+	updateEventListeners () {
+		const {containerRef} = this;
 
 		if (containerRef && containerRef.addEventListener) {
 			// FIXME `onWheel` doesn't work on the v8 snapshot.
 			containerRef.addEventListener('wheel', this.onWheel);
 		}
-		if (childContainerRef && childContainerRef.addEventListener) {
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
-			childContainerRef.addEventListener('focusin', this.onFocus);
-		}
 	}
 
-	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
-	// state member.
-	enqueueForceUpdate = () => {
-		this.childRef.calculateMetrics();
-		this.forceUpdate();
+	removeEventListeners () {
+		const {containerRef} = this;
+
+		if (containerRef && containerRef.removeEventListener) {
+			// FIXME `onWheel` doesn't work on the v8 snapshot.
+			containerRef.removeEventListener('wheel', this.onWheel);
+		}
 	}
 
 	// render
@@ -907,7 +926,7 @@ class Scrollable extends Component {
 
 	render () {
 		const
-			{className, wrapped: Wrapped, style, ...rest} = this.props,
+			{className, style, wrapped: Wrapped, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			scrollableClasses = classNames(css.scrollable, className);
 
@@ -941,5 +960,23 @@ class Scrollable extends Component {
 	}
 }
 
+/**
+ * [Scrollable]{@link ui/Scrollable.Scrollable} is a Higher-order Component
+ * that applies a Scrollable behavior to its wrapped component.
+ *
+ * @class Scrollable
+ * @memberof ui/Scrollable
+ * @ui
+ * @private
+ */
+const Scrollable = (WrappedComponent) => (kind({
+	name: 'ui:Scrollable',
+	render: (props) => (<ScrollableBase wrapped={WrappedComponent} {...props} />)
+}));
+
 export default Scrollable;
-export {Scrollable};
+export {
+	Scrollable,
+	constants,
+	ScrollableBase
+};

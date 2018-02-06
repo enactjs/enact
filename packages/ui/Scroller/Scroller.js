@@ -1,9 +1,9 @@
 /**
- * Exports the {@link ui/Scroller.Scroller} and
- * {@link ui/Scroller.ScrollerBase} components.
- * The default export is {@link ui/Scroller.Scroller}.
+ * Provides unstyled scroller components and behaviors to be customized by a theme or application.
  *
  * @module ui/Scroller
+ * @exports Scroller
+ * @exports ScrollerBase
  */
 
 import classNames from 'classnames';
@@ -11,20 +11,13 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
+import css from './Scroller.less';
 import Scrollable from '../Scrollable';
 
-import css from './Scroller.less';
-
-const
-	reverseDirections = {
-		'left': 'right',
-		'right': 'left'
-	};
-
 /**
- * {@link ui/Scroller.ScrollerBase} is a base component for Scroller.
- * In most circumstances, you will want to use the SpotlightContainerDecorator and Scrollable version:
- * {@link ui/Scroller.Scroller}
+ * [ScrollerBase]{@link ui/Scroller.ScrollerBase} is a base component for Scroller.
+ * In most circumstances, you will want to use the Scrollable version:
+ * [Scroller]{@link ui/Scroller.Scroller}
  *
  * @class ScrollerBase
  * @memberof ui/Scroller
@@ -92,8 +85,7 @@ class ScrollerBase extends Component {
 
 	// for Scrollable
 	setScrollPosition (x, y) {
-		const
-			node = this.containerRef;
+		const node = this.containerRef;
 
 		if (this.isVertical()) {
 			node.scrollTop = y;
@@ -130,75 +122,6 @@ class ScrollerBase extends Component {
 			width: nodeWidth,
 			height: nodeHeight
 		};
-	}
-
-	/**
-	 * Returns the first spotlight container between `node` and the scroller
-	 *
-	 * @param {Node} node A DOM node
-	 *
-	 * @returns {Node|Null} Spotlight container for `node`
-	 * @private
-	 */
-	getSpotlightContainerForNode = (node) => {
-		do {
-			if (node.dataset.containerId) {
-				return node;
-			}
-		} while ((node = node.parentNode) && node !== this.containerRef);
-	}
-
-	/**
-	 * Calculates the "focus bounds" of a node. If the node is within a spotlight container, that
-	 * container is scrolled into view rather than just the element.
-	 *
-	 * @param {Node} node Focused node
-	 *
-	 * @returns {Object} Bounds as returned by `getBoundingClientRect`
-	 * @private
-	 */
-	getFocusedItemBounds = (node) => {
-		node = this.getSpotlightContainerForNode(node) || node;
-		return node.getBoundingClientRect();
-	}
-
-	getNextEndPoint = (direction, oSpotBounds) => {
-		const bounds = this.getScrollBounds();
-
-		let oPoint = {};
-		switch (direction) {
-			case 'up':
-				oPoint.x = oSpotBounds.left;
-				oPoint.y = oSpotBounds.top - bounds.clientHeight;
-				break;
-			case 'left':
-				oPoint.x = oSpotBounds.left - bounds.clientWidth;
-				oPoint.y = oSpotBounds.top;
-				break;
-			case 'down':
-				oPoint.x = oSpotBounds.left;
-				oPoint.y = oSpotBounds.top + oSpotBounds.height + bounds.clientHeight;
-				break;
-			case 'right':
-				oPoint.x = oSpotBounds.left + oSpotBounds.width + bounds.clientWidth;
-				oPoint.y = oSpotBounds.top;
-				break;
-		}
-		return oPoint;
-	}
-
-	scrollToBoundary = (direction) => {
-		const
-			{scrollBounds, scrollPos} = this,
-			isVerticalDirection = (direction === 'up' || direction === 'down');
-
-		if (isVerticalDirection) {
-			if (scrollPos.top > 0 && scrollPos.top < scrollBounds.maxTop) {
-				this.props.cbScrollTo({align: direction === 'up' ? 'top' : 'bottom'});
-			}
-		} else if (scrollPos.left > 0 && scrollPos.left < scrollBounds.maxLeft) {
-			this.props.cbScrollTo({align: this.context.rtl ? reverseDirections[direction] : direction});
-		}
 	}
 
 	isVertical = () => {
@@ -252,8 +175,7 @@ class ScrollerBase extends Component {
 }
 
 /**
- * {@link ui/Scroller.Scroller} is a Scroller with ui styling,
- * SpotlightContainerDecorator and Scrollable applied.
+ * [Scroller]{@link ui/Scroller.Scroller} is a scroller.
  *
  * Usage:
  * ```
@@ -262,121 +184,14 @@ class ScrollerBase extends Component {
  *
  * @class Scroller
  * @memberof ui/Scroller
- * @see ui/Scroller.ScrollerBase
+ * @mixes ui/Scrollable.Scrollable
  * @ui
  * @public
  */
-const Scroller = (props) => (<Scrollable wrapped={ScrollerBase} {...props} />);
-
-// Docs for Scroller
-/**
- * The callback function which is called for linking scrollTo function.
- * You should specify a callback function as the value of this prop
- * to use scrollTo feature.
- *
- * The scrollTo function passed to the parent component requires below as an argument.
- * - {position: {x, y}} - You can set a pixel value for x and/or y position
- * - {align} - You can set one of values below for align
- *   `'left'`, `'right'`, `'top'`, `'bottom'`,
- *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
- * - {index} - You can set an index of specific item. (`0` or positive integer)
- *   This option is available only for `VirtualList` kind.
- * - {node} - You can set a node to scroll
- * - {animate} - When `true`, scroll occurs with animation.
- *   Set it to `false` if you want scrolling without animation.
- * - {focus} - Set `true` if you want the item to be focused after scroll.
- *   This option is only valid when you scroll by `index` or `node`.
- *
- * Example:
- * ```
- *	// If you set cbScrollTo prop like below;
- *	cbScrollTo: (fn) => {this.scrollTo = fn;}
- *	// You can simply call like below;
- *	this.scrollTo({align: 'top'}); // scroll to the top
- * ```
- *
- * @name cbScrollTo
- * @type {Function}
- * @memberof ui/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
- * not move focus to the scrollbar controls.
- *
- * @name focusableScrollbar
- * @type {Boolean}
- * @memberof ui/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * Direction of the scroller; valid values are `'both'`, `'horizontal'`, and `'vertical'`.
- *
- * @name direction
- * @type {String}
- * @default 'both'
- * @memberof ui/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
- * `'visible'`, and `'hidden'`.
- *
- * @name horizontalScrollbar
- * @type {String}
- * @default 'auto'
- * @memberof ui/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * Called when scrolling
- *
- * @name onScroll
- * @type {Function}
- * @memberof ui/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * Called when scroll starts
- *
- * @name onScrollStart
- * @type {Function}
- * @memberof ui/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * Called when scroll stops
- *
- * @name onScrollStop
- * @type {Function}
- * @memberof ui/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
- * `'visible'`, and `'hidden'`.
- *
- * @name verticalScrollbar
- * @type {String}
- * @default 'auto'
- * @memberof ui/Scroller.Scroller
- * @instance
- * @public
- */
+const Scroller = Scrollable(ScrollerBase);
 
 export default Scroller;
-export {Scroller, ScrollerBase};
+export {
+	Scroller,
+	ScrollerBase
+};

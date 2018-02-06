@@ -1,32 +1,46 @@
+/**
+ * Provides Moonstone-themed scrollable components and behaviors.
+ *
+ * @module moonstone/Scrollable
+ * @exports Scrollable
+ * @exports dataIndexAttribute
+ */
+
 import classNames from 'classnames';
+import css from '@enact/ui/Scrollable/Scrollable.less';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
+import kind from '@enact/core/kind';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Scrollable as UiScrollable} from '@enact/ui/Scrollable';
+import {ScrollableBase as UiScrollableBase, constants} from '@enact/ui/Scrollable';
 
 import Scrollbar from './Scrollbar';
-
-import css from '@enact/ui/Scrollable/Scrollable.less';
 import scrollbarCss from './Scrollbar.less';
 
 const
-	paginationPageMultiplier = 0.8,
+	{
+		animationDuration,
+		isPageDown,
+		isPageUp,
+		paginationPageMultiplier,
+		scrollWheelPageMultiplierForMaxPixel
+	} = constants,
 	reverseDirections = {
-		'left': 'right',
-		'up': 'down',
-		'right': 'left',
-		'down': 'up'
+		down: 'up',
+		left: 'right',
+		right: 'left',
+		up: 'down'
 	};
 
 /**
- * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
+ * [dataIndexAttribute]{@link moonstone/Scrollable.dataIndexAttribute} is the name of a custom attribute
  * which indicates the index of an item in {@link moonstone/VirtualList.VirtualList}
  * or {@link moonstone/VirtualList.VirtualGridList}.
  *
  * @constant dataIndexAttribute
- * @memberof moonstone/Scroller
+ * @memberof moonstone/Scrollable
  * @type {String}
  * @private
  */
@@ -56,10 +70,21 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 	}
 );
 
-class Scrollable extends UiScrollable {
-	static displayName = 'Scrollable'
 
-	static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
+/**
+ * [ScrollableBase]{@link moonstone/Scrollable.ScrollableBase} is a base component for
+ * [Scrollable]{@link moostone/Scrollable.Scrollable}.
+ *
+ * @class ScrollableBase
+ * @extends ui/Scrollable.ScrollableBase
+ * @memberof moostone/Scrollable
+ * @ui
+ * @private
+ */
+class ScrollableBase extends UiScrollableBase {
+	static displayName = 'ScrollableBase'
+
+	static propTypes = /** @lends moonstone/Scrollable.ScrollableBase.prototype */ {
 		/**
 		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
 		 * not move focus to the scrollbar controls.
@@ -83,18 +108,9 @@ class Scrollable extends UiScrollable {
 
 	componentDidUpdate (prevProps, prevState) {
 		super.componentDidUpdate(prevProps, prevState);
+
 		if (this.scrollToInfo === null) {
 			this.updateScrollOnFocus();
-		}
-	}
-
-	componentWillUnmount () {
-		const childContainerRef = this.childRef.containerRef;
-
-		super.componentWillUnmount();
-		if (childContainerRef && childContainerRef.removeEventListener) {
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
-			childContainerRef.removeEventListener('focusin', this.onFocus);
 		}
 	}
 
@@ -137,9 +153,9 @@ class Scrollable extends UiScrollable {
 				direction;
 
 			if (canScrollVertically) {
-				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * this.scrollWheelPageMultiplierForMaxPixel);
+				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 			} else if (canScrollHorizontally) {
-				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * this.scrollWheelPageMultiplierForMaxPixel);
+				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 			}
 
 			direction = Math.sign(delta);
@@ -171,8 +187,8 @@ class Scrollable extends UiScrollable {
 				this.start({
 					targetX: left,
 					targetY: top,
-					animate: (this.animationDuration > 0) && this.animateOnFocus,
-					duration: this.animationDuration
+					animate: (animationDuration > 0) && this.animateOnFocus,
+					duration: animationDuration
 				});
 			}
 			this.lastFocusedItem = item;
@@ -228,7 +244,7 @@ class Scrollable extends UiScrollable {
 	getPageDirection = (keyCode) => {
 		const
 			isRtl = this.context.rtl,
-			{direction, isPageUp} = this,
+			{direction} = this,
 			isVertical = (direction === 'vertical' || direction === 'both');
 
 		return isPageUp(keyCode) ?
@@ -270,7 +286,7 @@ class Scrollable extends UiScrollable {
 			bounds = this.getScrollBounds(),
 			canScrollVertically = this.canScrollVertically(bounds),
 			childRef = this.childRef,
-			pageDistance = this.isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
+			pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
 			spotItem = Spotlight.getCurrent();
 
 		if (!Spotlight.getPointerMode() && spotItem) {
@@ -328,7 +344,7 @@ class Scrollable extends UiScrollable {
 
 	onKeyDown = (e) => {
 		this.animateOnFocus = true;
-		if ((this.isPageUp(e.keyCode) || this.isPageDown(e.keyCode)) && !e.repeat && this.hasFocus()) {
+		if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && !e.repeat && this.hasFocus()) {
 			this.scrollByPage(e.keyCode);
 		}
 	}
@@ -371,6 +387,7 @@ class Scrollable extends UiScrollable {
 	scrollTo = (opt) => {
 		if (!this.deferScrollTo) {
 			const {left, top} = this.getPositionForScrollTo(opt);
+
 			this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
 			this.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
 			this.scrollToInfo = null;
@@ -386,6 +403,7 @@ class Scrollable extends UiScrollable {
 
 	alertThumb () {
 		const bounds = this.getScrollBounds();
+
 		this.showThumb(bounds);
 		this.startHidingThumb();
 	}
@@ -422,6 +440,28 @@ class Scrollable extends UiScrollable {
 
 		// update `scrollHeight`
 		this.bounds.scrollHeight = this.getScrollBounds().scrollHeight;
+	}
+
+	updateEventListeners () {
+		const childContainerRef = this.childRef.containerRef;
+
+		super.updateEventListeners();
+
+		if (childContainerRef && childContainerRef.addEventListener) {
+			// FIXME `onFocus` doesn't work on the v8 snapshot.
+			childContainerRef.addEventListener('focusin', this.onFocus);
+		}
+	}
+
+	removeEventListeners () {
+		const childContainerRef = this.childRef.containerRef;
+
+		super.removeEventListeners();
+
+		if (childContainerRef && childContainerRef.removeEventListener) {
+			// FIXME `onFocus` doesn't work on the v8 snapshot.
+			childContainerRef.removeEventListener('focusin', this.onFocus);
+		}
 	}
 
 	render () {
@@ -461,5 +501,22 @@ class Scrollable extends UiScrollable {
 	}
 }
 
+/**
+ * [Scrollable]{@link moostone/Scrollable.Scrollable} is a Higher-order Component
+ * that applies a Scrollable behavior to its wrapped component.
+ *
+ * @class Scrollable
+ * @memberof moonstone/Scrollable
+ * @ui
+ * @private
+ */
+const Scrollable = (WrappedComponent) => (kind({
+	name: 'Scrollable',
+	render: (props) => (<ScrollableBase wrapped={WrappedComponent} {...props} />)
+}));
+
 export default Scrollable;
-export {dataIndexAttribute, Scrollable};
+export {
+	Scrollable,
+	dataIndexAttribute
+};
