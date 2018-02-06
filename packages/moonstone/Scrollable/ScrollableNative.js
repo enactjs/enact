@@ -1,23 +1,27 @@
 import classNames from 'classnames';
+import css from '@enact/ui/Scrollable/Scrollable.less';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {ScrollableNative as UiScrollableNative} from '@enact/ui/Scrollable/ScrollableNative';
+import {ScrollableNative as UiScrollableNative, constants} from '@enact/ui/Scrollable/ScrollableNative';
 
 import Scrollbar from './Scrollbar';
-
-import css from '@enact/ui/Scrollable/Scrollable.less';
 import scrollbarCss from './Scrollbar.less';
 
 const
-	paginationPageMultiplier = 0.8,
+	{
+		isPageDown,
+		isPageUp,
+		paginationPageMultiplier,
+		scrollWheelPageMultiplierForMaxPixel
+	} = constants,
 	reverseDirections = {
-		'left': 'right',
-		'up': 'down',
-		'right': 'left',
-		'down': 'up'
+		down: 'up',
+		left: 'right',
+		right: 'left',
+		up: 'down'
 	};
 
 /**
@@ -83,18 +87,9 @@ class ScrollableNative extends UiScrollableNative {
 
 	componentDidUpdate (prevProps, prevState) {
 		super.componentDidUpdate(prevProps, prevState);
+
 		if (this.scrollToInfo === null) {
 			this.updateScrollOnFocus();
-		}
-	}
-
-	componentWillUnmount () {
-		const childContainerRef = this.childRef.containerRef;
-
-		super.componentWillUnmount();
-		if (childContainerRef && childContainerRef.removeEventListener) {
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
-			childContainerRef.removeEventListener('focusin', this.onFocus);
 		}
 	}
 
@@ -108,10 +103,27 @@ class ScrollableNative extends UiScrollableNative {
 	indexToFocus = null
 	nodeToFocus = null
 
+	// browser native scrolling
+	resetPosition = null // prevent auto-scroll on focus by Spotlight
+
 	onMouseDown = () => {
 		super.onMouseDown();
 		this.lastFocusedItem = null;
 		this.childRef.setContainerDisabled(false);
+	}
+
+	onMouseOver = () => {
+		this.resetPosition = this.childRef.containerRef.scrollTop;
+	}
+
+	onMouseMove = () => {
+		if (this.resetPosition !== null) {
+			const childContainerRef = this.childRef.containerRef;
+			childContainerRef.style.scrollBehavior = null;
+			childContainerRef.scrollTop = this.resetPosition;
+			childContainerRef.style.scrollBehavior = 'smooth';
+			this.resetPosition = null;
+		}
 	}
 
 	/*
@@ -151,7 +163,7 @@ class ScrollableNative extends UiScrollableNative {
 				// Not to check if e.target is a descendant of a wrapped component which may have a lot of nodes in it.
 				if ((horizontalScrollbarRef && horizontalScrollbarRef.containerRef.contains(e.target)) ||
 					(verticalScrollbarRef && verticalScrollbarRef.containerRef.contains(e.target))) {
-					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * this.scrollWheelPageMultiplierForMaxPixel);
+					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
 				}
 			} else {
@@ -163,7 +175,7 @@ class ScrollableNative extends UiScrollableNative {
 					this.childRef.setContainerDisabled(true);
 					this.isWheeling = true;
 				}
-				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * this.scrollWheelPageMultiplierForMaxPixel);
+				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				needToHideThumb = !delta;
 			} else {
 				needToHideThumb = true;
@@ -184,6 +196,14 @@ class ScrollableNative extends UiScrollableNative {
 
 		if (needToHideThumb) {
 			this.startHidingThumb();
+		}
+	}
+
+	start (targetX, targetY, animate = true) {
+		super.start(targetX, targetY, animate);
+
+		if (!animate) {
+			this.focusOnItem();
 		}
 	}
 
@@ -249,7 +269,7 @@ class ScrollableNative extends UiScrollableNative {
 			{direction} = this,
 			isVertical = (direction === 'vertical' || direction === 'both');
 
-		return this.isPageUp(keyCode) ?
+		return isPageUp(keyCode) ?
 			(isVertical && 'up' || isRtl && 'right' || 'left') :
 			(isVertical && 'down' || isRtl && 'left' || 'right');
 	}
@@ -288,7 +308,7 @@ class ScrollableNative extends UiScrollableNative {
 			bounds = this.getScrollBounds(),
 			canScrollVertically = this.canScrollVertically(bounds),
 			childRef = this.childRef,
-			pageDistance = this.isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
+			pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
 			spotItem = Spotlight.getCurrent();
 
 		if (!Spotlight.getPointerMode() && spotItem) {
@@ -349,7 +369,7 @@ class ScrollableNative extends UiScrollableNative {
 
 	onKeyDown = (e) => {
 		this.animateOnFocus = true;
-		if (this.isPageUp(e.keyCode) || this.isPageDown(e.keyCode)) {
+		if (isPageUp(e.keyCode) || isPageDown(e.keyCode)) {
 			e.preventDefault();
 			if (!e.repeat && this.hasFocus()) {
 				this.scrollByPage(e.keyCode);
@@ -396,6 +416,7 @@ class ScrollableNative extends UiScrollableNative {
 	scrollTo = (opt) => {
 		if (!this.deferScrollTo) {
 			const {left, top} = this.getPositionForScrollTo(opt);
+
 			this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
 			this.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
 			this.scrollToInfo = null;
@@ -411,6 +432,7 @@ class ScrollableNative extends UiScrollableNative {
 
 	alertThumb () {
 		const bounds = this.getScrollBounds();
+
 		this.showThumb(bounds);
 		this.startHidingThumb();
 	}
@@ -443,6 +465,28 @@ class ScrollableNative extends UiScrollableNative {
 
 		// update `scrollHeight`
 		this.bounds.scrollHeight = this.getScrollBounds().scrollHeight;
+	}
+
+	updateEventListeners () {
+		const childContainerRef = this.childRef.containerRef;
+
+		super.updateEventListeners();
+
+		if (childContainerRef && childContainerRef.addEventListener) {
+			// FIXME `onFocus` doesn't work on the v8 snapshot.
+			childContainerRef.addEventListener('focusin', this.onFocus);
+		}
+	}
+
+	removeEventListeners () {
+		const childContainerRef = this.childRef.containerRef;
+
+		super.removeEventListeners();
+
+		if (childContainerRef && childContainerRef.removeEventListener) {
+			// FIXME `onFocus` doesn't work on the v8 snapshot.
+			childContainerRef.removeEventListener('focusin', this.onFocus);
+		}
 	}
 
 	render () {

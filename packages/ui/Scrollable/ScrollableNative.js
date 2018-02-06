@@ -26,10 +26,24 @@ const
 	forwardScrollStop = forward('onScrollStop');
 
 const
-	nop = () => {},
-	paginationPageMultiplier = 0.8,
-	epsilon = 1,
-	scrollStopWaiting = 200;
+	constants = {
+		epsilon: 1,
+		isPageDown: is('pageDown'),
+		isPageUp: is('pageUp'),
+		nop: () => {},
+		paginationPageMultiplier: 0.8,
+		scrollStopWaiting: 200,
+		scrollWheelPageMultiplierForMaxPixel: 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
+	},
+	{
+		epsilon,
+		isPageDown,
+		isPageUp,
+		nop,
+		paginationPageMultiplier,
+		scrollStopWaiting,
+		scrollWheelPageMultiplierForMaxPixel
+	} = constants;
 
 /**
  * {@link ui/Scroller.ScrollableNative} is a Higher-order Component
@@ -139,15 +153,22 @@ class ScrollableNative extends Component {
 		 * @public
 		 */
 		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
+
+		/**
+		 * TBD
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		wrapped: PropTypes.func
 	}
 
 	static defaultProps = {
 		cbScrollTo: nop,
+		horizontalScrollbar: 'auto',
 		onScroll: nop,
 		onScrollStart: nop,
 		onScrollStop: nop,
-		horizontalScrollbar: 'auto',
 		verticalScrollbar: 'auto'
 	}
 
@@ -184,14 +205,10 @@ class ScrollableNative extends Component {
 		props.cbScrollTo(this.scrollTo);
 	}
 
-	getChildContext () {
-		return {
-			invalidateBounds: this.enqueueForceUpdate,
-			Subscriber: this.publisher.getSubscriber()
-		};
-	}
-
-	// component life cycle
+	getChildContext = () => ({
+		invalidateBounds: this.enqueueForceUpdate,
+		Subscriber: this.publisher.getSubscriber()
+	})
 
 	componentWillMount () {
 		this.publisher = Publisher.create('resize', this.context.Subscriber);
@@ -205,14 +222,14 @@ class ScrollableNative extends Component {
 		}
 	}
 
-	componentDidMount (prevProps, prevState) {
+	componentDidMount () {
 		const bounds = this.getScrollBounds();
 
 		this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 		this.direction = this.childRef.props.direction;
-		this.updateEventListeners();
 		this.updateScrollbars();
 
+		this.updateEventListeners();
 		on('keydown', this.onKeyDown);
 	}
 
@@ -258,35 +275,26 @@ class ScrollableNative extends Component {
 	}
 
 	componentWillUnmount () {
-		const
-			{containerRef} = this,
-			childContainerRef = this.childRef.containerRef;
-
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
 		if (this.scrolling) {
 			this.doScrollStop();
 		}
 		this.scrollStopJob.stop();
 
-		if (containerRef && containerRef.removeEventListener) {
-			// FIXME `onWheel` doesn't work on the v8 snapshot.
-			containerRef.removeEventListener('wheel', this.onWheel);
-		}
-		if (childContainerRef && childContainerRef.removeEventListener) {
-			// FIXME `onScroll` doesn't work on the v8 snapshot.
-			childContainerRef.removeEventListener('scroll', this.onScroll, {capture: true});
-			// FIXME `onMouseOver` doesn't work on the v8 snapshot.
-			childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
-			// FIXME `onMouseMove` doesn't work on the v8 snapshot.
-			childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
-		}
-
-		off('keydown', this.onKeyDown);
-
 		if (this.context.Subscriber) {
 			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
 			this.context.Subscriber.unsubscribe('i18n', this.handleSubscription);
 		}
+
+		this.removeEventListeners();
+		off('keydown', this.onKeyDown);
+	}
+
+	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
+	// state member.
+	enqueueForceUpdate = () => {
+		this.childRef.calculateMetrics();
+		this.forceUpdate();
 	}
 
 	handleSubscription = ({channel, message}) => {
@@ -299,13 +307,9 @@ class ScrollableNative extends Component {
 			this.publisher.publish(message);
 		}
 	}
-
 	// constants
-	scrollWheelMultiplierForDeltaPixel = 1.5 // The ratio of wheel 'delta' units to pixels scrolled.
-	scrollWheelPageMultiplierForMaxPixel = 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	pixelPerLine = 39
-	isPageUp = is('pageUp')
-	isPageDown = is('pageDown')
+	scrollWheelMultiplierForDeltaPixel = 1.5 // The ratio of wheel 'delta' units to pixels scrolled.
 
 	// status
 	direction = 'vertical'
@@ -339,8 +343,11 @@ class ScrollableNative extends Component {
 	childRef = null
 	containerRef = null
 
-	// browser native scrolling
-	resetPosition = null // prevent auto-scroll on focus by Spotlight
+	// event handler for browser native scroll
+
+	onMouseDown = () => {
+		this.isScrollAnimationTargetAccumulated = false;
+	}
 
 	calculateDistanceByWheel (deltaMode, delta, maxPixel) {
 		if (deltaMode === 0) {
@@ -352,26 +359,6 @@ class ScrollableNative extends Component {
 		}
 
 		return delta;
-	}
-
-	// event handler for browser native scroll
-
-	onMouseDown = () => {
-		this.isScrollAnimationTargetAccumulated = false;
-	}
-
-	onMouseOver = () => {
-		this.resetPosition = this.childRef.containerRef.scrollTop;
-	}
-
-	onMouseMove = () => {
-		if (this.resetPosition !== null) {
-			const childContainerRef = this.childRef.containerRef;
-			childContainerRef.style.scrollBehavior = null;
-			childContainerRef.scrollTop = this.resetPosition;
-			childContainerRef.style.scrollBehavior = 'smooth';
-			this.resetPosition = null;
-		}
 	}
 
 	/*
@@ -390,7 +377,6 @@ class ScrollableNative extends Component {
 			delta = 0,
 			needToHideThumb = false;
 
-		this.lastFocusedItem = null;
 		if (typeof window !== 'undefined') {
 			window.document.activeElement.blur();
 		}
@@ -406,7 +392,7 @@ class ScrollableNative extends Component {
 				// Not to check if e.target is a descendant of a wrapped component which may have a lot of nodes in it.
 				if ((horizontalScrollbarRef && horizontalScrollbarRef.containerRef.contains(e.target)) ||
 					(verticalScrollbarRef && verticalScrollbarRef.containerRef.contains(e.target))) {
-					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * this.scrollWheelPageMultiplierForMaxPixel);
+					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
 				}
 			} else {
@@ -414,7 +400,7 @@ class ScrollableNative extends Component {
 			}
 		} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
 			if (eventDelta < 0 && this.scrollLeft > 0 || eventDelta > 0 && this.scrollLeft < bounds.maxLeft) {
-				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * this.scrollWheelPageMultiplierForMaxPixel);
+				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				needToHideThumb = !delta;
 			} else {
 				needToHideThumb = true;
@@ -468,13 +454,13 @@ class ScrollableNative extends Component {
 		const
 			bounds = this.getScrollBounds(),
 			canScrollVertically = this.canScrollVertically(bounds),
-			pageDistance = this.isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance;
+			pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance;
 
 		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 	}
 
 	onKeyDown = (e) => {
-		if (this.isPageUp(e.keyCode) || this.isPageDown(e.keyCode)) {
+		if (isPageUp(e.keyCode) || isPageDown(e.keyCode)) {
 			e.preventDefault();
 			if (!e.repeat) {
 				this.scrollByPage(e.keyCode);
@@ -571,7 +557,6 @@ class ScrollableNative extends Component {
 			childContainerRef.style.scrollBehavior = null;
 			this.childRef.scrollToPosition(targetX, targetY);
 			childContainerRef.style.scrollBehavior = 'smooth';
-			this.focusOnItem();
 		}
 	}
 
@@ -787,7 +772,7 @@ class ScrollableNative extends Component {
 		}
 	}
 
-	updateEventListeners = () => {
+	updateEventListeners () {
 		const
 			{containerRef} = this,
 			childContainerRef = this.childRef.containerRef;
@@ -799,8 +784,6 @@ class ScrollableNative extends Component {
 		if (childContainerRef && childContainerRef.addEventListener) {
 			// FIXME `onScroll` doesn't work on the v8 snapshot.
 			childContainerRef.addEventListener('scroll', this.onScroll, {capture: true});
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
-			childContainerRef.addEventListener('focusin', this.onFocus);
 			// FIXME `onMouseOver` doesn't work on the v8 snapshot.
 			childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
 			// FIXME `onMouseMove` doesn't work on the v8 snapshot.
@@ -810,11 +793,23 @@ class ScrollableNative extends Component {
 		childContainerRef.style.scrollBehavior = 'smooth';
 	}
 
-	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
-	// state member.
-	enqueueForceUpdate = () => {
-		this.childRef.calculateMetrics();
-		this.forceUpdate();
+	removeEventListeners () {
+		const
+			{containerRef} = this,
+			childContainerRef = this.childRef.containerRef;
+
+		if (containerRef && containerRef.removeEventListener) {
+			// FIXME `onWheel` doesn't work on the v8 snapshot.
+			containerRef.removeEventListener('wheel', this.onWheel);
+		}
+		if (childContainerRef && childContainerRef.removeEventListener) {
+			// FIXME `onScroll` doesn't work on the v8 snapshot.
+			childContainerRef.removeEventListener('scroll', this.onScroll, {capture: true});
+			// FIXME `onMouseOver` doesn't work on the v8 snapshot.
+			childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
+			// FIXME `onMouseMove` doesn't work on the v8 snapshot.
+			childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
+		}
 	}
 
 	// render
@@ -827,7 +822,7 @@ class ScrollableNative extends Component {
 
 	render () {
 		const
-			{className, wrapped: Wrapped, style, ...rest} = this.props,
+			{className, style, wrapped: Wrapped, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			scrollableClasses = classNames(css.scrollable, className);
 
@@ -861,4 +856,4 @@ class ScrollableNative extends Component {
 }
 
 export default ScrollableNative;
-export {ScrollableNative};
+export {ScrollableNative, constants};

@@ -1,19 +1,18 @@
 import $L from '@enact/moonstone/internal/$L';
-import {off, on} from '@enact/core/dispatcher';
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import classNames from 'classnames';
 import DisappearSpotlightDecorator from '@enact/moonstone/internal/DisappearSpotlightDecorator';
 import {is} from '@enact/core/keymap';
+import {off, on} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React from 'react';
+import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
+import ScrollThumb from '@enact/ui/Scrollable/ScrollThumb';
 import Spotlight from '@enact/spotlight';
 
-import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
-import ScrollButton from './ScrollButton';
-import ScrollThumb from '@enact/ui/Scrollable/ScrollThumb';
-
 import css from './Scrollbar.less';
+import ScrollButton from './ScrollButton';
 
 const
 	nop = () => {},
@@ -114,16 +113,19 @@ class ScrollbarBase extends UiScrollbarBase {
 
 	componentDidMount () {
 		super.componentDidMount();
+
 		this.prevButtonNodeRef = this.containerRef.children[0];
 		this.nextButtonNodeRef = this.containerRef.children[2];
 	}
 
 	componentWillUnmount () {
 		super.componentWillUnmount();
+
 		this.setIgnoreMode(false); // To remove event handler
 	}
 
 	pressed = false
+
 	// component refs
 	prevButtonNodeRef = null
 	nextButtonNodeRef = null

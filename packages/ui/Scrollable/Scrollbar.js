@@ -5,9 +5,8 @@ import PropTypes from 'prop-types';
 import React, {PureComponent} from 'react';
 import ri from '@enact/ui/resolution';
 
-import ScrollThumb from './ScrollThumb';
-
 import css from './Scrollbar.less';
+import ScrollThumb from './ScrollThumb';
 
 const
 	nop = () => {},
@@ -36,7 +35,7 @@ const setCSSVariable = (element, variable, value) => {
  * @private
  */
 class ScrollbarBase extends PureComponent {
-	static displayName = 'Scrollbar'
+	static displayName = 'ui:Scrollbar'
 
 	static propTypes = /** @lends ui/Scroller.Scrollbar.prototype */ {
 		/**
@@ -105,6 +104,7 @@ class ScrollbarBase extends PureComponent {
 
 	minThumbSizeRatio = 0
 	ignoreMode = false
+
 	// component refs
 	containerRef = null
 	thumbRef = null
