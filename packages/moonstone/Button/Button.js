@@ -8,6 +8,7 @@
  * @module moonstone/Button
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import factory from '@enact/core/factory';
 import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
@@ -127,6 +128,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			 * @type {Boolean}
 			 * @default false
 			 * @public
+			 * @deprecated
 			 */
 			noAnimation: PropTypes.bool,
 
@@ -189,10 +191,16 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 		},
 
 		computed: {
-			className: ({backgroundOpacity, color, minWidth, noAnimation, pressed, selected, small, styler}) => styler.append(
-				{pressed, small, minWidth, noAnimation, selected},
-				backgroundOpacity, color
-			),
+			className: ({backgroundOpacity, color, minWidth, noAnimation, pressed, selected, small, styler}) => {
+				if (noAnimation) {
+					deprecate({name: 'noAnimation', since: '1.14.0', message: '`noAnimation` is deprecated', until: '2.0.0'});
+				}
+
+				return styler.append(
+					{pressed, small, minWidth, selected},
+					backgroundOpacity, color
+				);
+			},
 			icon: ({icon, small}) =>
 				(typeof icon === 'string' ? <Icon className={css.icon} small={small}>{icon}</Icon> : icon)
 		},

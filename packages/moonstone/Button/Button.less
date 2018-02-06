@@ -150,11 +150,9 @@
 		.focus({
 			&.pressed,
 			&:active {
-				&:not(.noAnimation) {
-					.bg {
-						-webkit-animation-name: expand;
-						animation-name: expand;
-					}
+				.bg {
+					-webkit-animation-name: expand;
+					animation-name: expand;
 				}
 			}
 		});
@@ -210,32 +208,6 @@
 				.bg {
 					background-color: @moon-spotlight-border-color;
 				}
-
-				&.pressed,
-				&:active {
-					&.noAnimation {
-						.bg {
-							background-color: @moon-button-bg-color;
-							border-color: @moon-spotlight-border-color;
-						}
-
-						&.translucent .bg {
-							background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
-						}
-
-						&.lightTranslucent .bg {
-							background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
-						}
-
-						&.transparent {
-							color: @moon-button-transparent-active-text-color;
-
-							.bg {
-								background-color: transparent;
-							}
-						}
-					}
-				}
 			});
 		}
 
@@ -252,15 +224,6 @@
 				.bg {
 					border-color: @moon-active-spotlight-border-color;
 					background-color: @moon-spotlight-border-color;
-				}
-
-				&.pressed,
-				&:active {
-					&.noAnimation {
-						.bg {
-							border-color: @moon-active-spotlight-border-color;
-						}
-					}
 				}
 			});
 		}
@@ -312,15 +275,6 @@
 
 					.bg {
 						background-color: transparent;
-					}
-				}
-
-				&.pressed,
-				&:active {
-					&.noAnimation {
-						.bg {
-							border-color: transparent;
-						}
 					}
 				}
 			});
