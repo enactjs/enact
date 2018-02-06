@@ -64,13 +64,12 @@ const ItemOverlayBase = kind({
 		publicClassNames: 'itemOverlay'
 	},
 
-	render: ({css, ...rest}) => {
-		delete rest.autoHide;
+	render: (props) => {
 		return (
 			<UiItemOverlay
-				{...rest}
+				{...props}
+				component={Item}
 				css={css}
-				itemComponent={Item}
 			/>
 		);
 	}

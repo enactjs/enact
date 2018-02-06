@@ -1,36 +1,45 @@
-// This is a sub-component to moonstone/Item, so it does not have a @module declaration
+/**
+ * Provides an unstyled item component that accepts multiple positions of children, using the usual
+ * `children` prop, as well as two additional props: `overlayBefore`, and `overlayAfter`.
+ * It is able to be customized by a theme or application.
+ *
+ * @module ui/ItemOverlay
+ * @exports ItemOverlay
+ * @exports ItemOverlayBase
+ * @exports ItemOverlayDecorator
+ */
+
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-// import compose from 'ramda/src/compose';
-// import {childrenEquals} from '@enact/core/util';
 import Slottable from '@enact/ui/Slottable';
-// import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
-// import Toggleable from '@enact/ui/Toggleable';
-// import Pure from '@enact/ui/internal/Pure';
-// import Spottable from '@enact/spotlight/Spottable';
-
-// import {MarqueeDecorator} from '../Marquee';
-// import Skinnable from '../Skinnable';
-
-import Item from '../Item';
-// import Overlay from './Overlay';
 
 import componentCss from './ItemOverlay.less';
 
 /**
- * A moonstone-styled ItemOverlay without any behavior.
+ * A ui-styled ItemOverlay without any behavior.
  *
  * @class ItemOverlayBase
- * @memberof moonstone/Item
- * @extends moonstone/Item.ItemBase
+ * @memberof ui/ItemOverlay
+ * @extends ui/ItemOverlay.ItemOverlayBase
  * @ui
  * @public
  */
 const ItemOverlayBase = kind({
 	name: 'ItemOverlay',
 
-	propTypes: /** @lends moonstone/Item.ItemOverlayBase.prototype */ {
+	propTypes: /** @lends ui/ItemOverlay.ItemOverlayBase.prototype */ {
+		/**
+		 * The type of component to use to render the item. Must be a custom component as it needs
+		 * to accept the following props: `overlayBefore`, `overlayAfter`, and `css`.
+		 * A derivitive of [Item]{@link ui/Item.Item} is recommended.
+		 *
+		 * @type {Component}
+		 * @required
+		 * @public
+		 */
+		component: PropTypes.func.isRequired,
+
 		/**
 		 * Controls the visibility state of the overlays. One, both, or neither overlay can be
 		 * shown when the item is focused. Choosing `'after'` will leave `overlayBefore` visible
@@ -54,9 +63,7 @@ const ItemOverlayBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object,
-
-		itemComponent: PropTypes.func
+		css: PropTypes.object
 	},
 
 	styles: {
@@ -78,33 +85,30 @@ const ItemOverlayBase = kind({
 		)
 	},
 
-	render: (props) => {
-		delete props.autoHide;
+	render: ({component: Component, css, ...rest}) => {
+		delete rest.autoHide;
 		return (
-			<Item
-				{...props}
-				css={props.css}
+			<Component
+				{...rest}
+				css={css}
 			/>
 		);
 	}
 });
 
 /**
- * Moonstone-specific item with overlay behaviors to apply to [Item]{@link moonstone/ItemOverlay.ItemOverlayBase}.
+ * ui-specific item with overlay behaviors to apply to [ItemOverlay]{@link ui/ItemOverlay.ItemOverlayBase}.
  *
  * @class ItemOverlayDecorator
- * @memberof moonstone/Item
- * @mixes spotlight.Spottable
- * @mixes moonstone/Marquee.MarqueeDecorator
- * @mixes moonstone/Skinnable
- * @mixes ui/Toggleable
- * @ui
+ * @memberof ui/Item
+ * @mixes ui/Slottable.Slottable
+ * @hoc
  * @public
  */
 const ItemOverlayDecorator = Slottable({slots: ['overlayAfter', 'overlayBefore']});
 
 /**
- * A Moonstone-styled item with built-in support for overlays.
+ * A ui-styled item with built-in support for overlays.
  *
  * ```
  *	<ItemOverlay autoHide="both">
@@ -118,9 +122,9 @@ const ItemOverlayDecorator = Slottable({slots: ['overlayAfter', 'overlayBefore']
  * ```
  *
  * @class ItemOverlay
- * @memberof moonstone/Item
- * @extends moonstone/Item.ItemOverlayBase
- * @mixes moonstone/Item.ItemOverlayDecorator
+ * @memberof ui/Item
+ * @extends ui/Item.ItemOverlayBase
+ * @mixes ui/Item.ItemOverlayDecorator
  * @ui
  * @public
  */
