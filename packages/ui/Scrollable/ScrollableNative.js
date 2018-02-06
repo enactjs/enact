@@ -1,13 +1,13 @@
 /*
- * Exports the {@link moonstone/Scroller.ScrollableNative} Higher-order Component (HOC) and
- * the {@link moonstone/Scroller.dataIndexAttribute} constant.
- * The default export is {@link moonstone/Scroller.ScrollableNative}.
+ * Exports the {@link ui/Scroller.ScrollableNative} Higher-order Component (HOC) and
+ * the {@link ui/Scroller.dataIndexAttribute} constant.
+ * The default export is {@link ui/Scroller.ScrollableNative}.
  */
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
-import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
+import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
@@ -32,7 +32,7 @@ const
 	scrollStopWaiting = 200;
 
 /**
- * {@link moonstone/Scroller.ScrollableNative} is a Higher-order Component
+ * {@link ui/Scroller.ScrollableNative} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
  *
  * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
@@ -41,14 +41,14 @@ const
  * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
  *
  * @class ScrollableNative
- * @memberof moonstone/Scroller
+ * @memberof ui/Scroller
  * @hoc
  * @private
  */
 class ScrollableNative extends Component {
 	static displayName = 'ui:ScrollableNative'
 
-	static propTypes = /** @lends moonstone/Scroller.ScrollableNative.prototype */ {
+	static propTypes = /** @lends ui/Scroller.ScrollableNative.prototype */ {
 		/**
 		 * The callback function which is called for linking scrollTo function.
 		 * You should specify a callback function as the value of this prop
@@ -98,7 +98,7 @@ class ScrollableNative extends Component {
 		onScroll: PropTypes.func,
 
 		/**
-		 * Called when scrollbar visability changes
+		 * Called when scrollbar visibility changes
 		 *
 		 * @type {Function}
 		 * @public
@@ -151,13 +151,19 @@ class ScrollableNative extends Component {
 		verticalScrollbar: 'auto'
 	}
 
-	static childContextTypes = contextTypesResize
-	static contextTypes = contextTypesRtl
+	static childContextTypes = {
+		...contextTypesResize,
+		...contextTypesState
+	}
+
+	static contextTypes = contextTypesState
 
 	constructor (props) {
 		super(props);
 
 		this.state = {
+			rtl: false,
+			remeasure: false,
 			isHorizontalScrollbarVisible: props.horizontalScrollbar === 'visible',
 			isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
 		};
@@ -178,15 +184,28 @@ class ScrollableNative extends Component {
 		props.cbScrollTo(this.scrollTo);
 	}
 
-	// component life cycle
-
 	getChildContext () {
 		return {
-			invalidateBounds: this.enqueueForceUpdate
+			invalidateBounds: this.enqueueForceUpdate,
+			Subscriber: this.publisher.getSubscriber()
 		};
 	}
 
-	componentDidMount () {
+	// component life cycle
+
+	componentWillMount () {
+		this.publisher = Publisher.create('resize', this.context.Subscriber);
+		this.publisher.publish({
+			remeasure: false
+		});
+
+		if (this.context.Subscriber) {
+			this.context.Subscriber.subscribe('resize', this.handleSubscription);
+			this.context.Subscriber.subscribe('i18n', this.handleSubscription);
+		}
+	}
+
+	componentDidMount (prevProps, prevState) {
 		const bounds = this.getScrollBounds();
 
 		this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
@@ -201,7 +220,7 @@ class ScrollableNative extends Component {
 		this.deferScrollTo = true;
 	}
 
-	componentDidUpdate () {
+	componentDidUpdate (prevProps, prevState) {
 		// Need to sync calculated client size if it is different from the real size
 		if (this.childRef.syncClientSize) {
 			const {isVerticalScrollbarVisible, isHorizontalScrollbarVisible} = this.state;
@@ -225,6 +244,16 @@ class ScrollableNative extends Component {
 			if (!this.deferScrollTo) {
 				this.scrollTo(this.scrollToInfo);
 			}
+		}
+
+		// publish container resize changes
+		const horizontal = this.state.isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
+		const vertical = this.state.isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
+		if (horizontal || vertical) {
+			this.publisher.publish({
+				horizontal,
+				vertical
+			});
 		}
 	}
 
@@ -253,6 +282,22 @@ class ScrollableNative extends Component {
 		}
 
 		off('keydown', this.onKeyDown);
+
+		if (this.context.Subscriber) {
+			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
+			this.context.Subscriber.unsubscribe('i18n', this.handleSubscription);
+		}
+	}
+
+	handleSubscription = ({channel, message}) => {
+		if (channel === 'i18n') {
+			const {rtl} = message;
+			if (rtl !== this.state.rtl) {
+				this.setState({rtl});
+			}
+		} else if (channel === 'resize') {
+			this.publisher.publish(message);
+		}
 	}
 
 	// constants
@@ -413,41 +458,6 @@ class ScrollableNative extends Component {
 
 		this.startHidingThumb();
 		this.scrollStopJob.start();
-	}
-
-	getPageDirection = (keyCode) => {
-		const
-			isRtl = this.context.rtl,
-			{direction} = this,
-			isVertical = (direction === 'vertical' || direction === 'both');
-
-		return this.isPageUp(keyCode) ?
-			(isVertical && 'up' || isRtl && 'right' || 'left') :
-			(isVertical && 'down' || isRtl && 'left' || 'right');
-	}
-
-	getEndPoint = (direction, oSpotBounds, viewportBounds) => {
-		let oPoint = {};
-
-		switch (direction) {
-			case 'up':
-				oPoint.x = oSpotBounds.left + oSpotBounds.width / 2;
-				oPoint.y = viewportBounds.top;
-				break;
-			case 'left':
-				oPoint.x = viewportBounds.left;
-				oPoint.y = oSpotBounds.top;
-				break;
-			case 'down':
-				oPoint.x = oSpotBounds.left + oSpotBounds.width / 2;
-				oPoint.y = viewportBounds.top + viewportBounds.height;
-				break;
-			case 'right':
-				oPoint.x = viewportBounds.left + viewportBounds.width;
-				oPoint.y = oSpotBounds.top;
-				break;
-		}
-		return oPoint;
 	}
 
 	scrollByPage = (keyCode) => {
@@ -752,10 +762,10 @@ class ScrollableNative extends Component {
 					scrollTop: this.scrollTop
 				};
 
-			if (curHorizontalScrollbarVisible) {
+			if (curHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
 				this.horizontalScrollbarRef.update(updatedBounds);
 			}
-			if (curVerticalScrollbarVisible) {
+			if (curVerticalScrollbarVisible && this.verticalScrollbarRef) {
 				this.verticalScrollbarRef.update(updatedBounds);
 			}
 			return true;

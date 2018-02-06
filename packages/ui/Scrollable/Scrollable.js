@@ -1,7 +1,7 @@
 /*
- * Exports the {@link moonstone/Scroller.Scrollable} Higher-order Component (HOC) and
- * the {@link moonstone/Scroller.dataIndexAttribute} constant.
- * The default export is {@link moonstone/Scroller.Scrollable}.
+ * Exports the {@link ui/Scroller.Scrollable} Higher-order Component (HOC) and
+ * the {@link ui/Scroller.dataIndexAttribute} constant.
+ * The default export is {@link ui/Scroller.Scrollable}.
  */
 
 import clamp from 'ramda/src/clamp';
@@ -34,7 +34,7 @@ const
 	epsilon = 1;
 
 /**
- * {@link moonstone/Scroller.Scrollable} is a Higher-order Component
+ * {@link ui/Scroller.Scrollable} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
  *
  * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
@@ -44,14 +44,14 @@ const
  * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
  *
  * @class Scrollable
- * @memberof moonstone/Scroller
+ * @memberof ui/Scroller
  * @hoc
  * @private
  */
 class Scrollable extends Component {
 	static displayName = 'ui:Scrollable'
 
-	static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
+	static propTypes = /** @lends ui/Scroller.Scrollable.prototype */ {
 		/**
 		 * The callback function which is called for linking scrollTo function.
 		 * You should specify a callback function as the value of this prop
@@ -187,14 +187,14 @@ class Scrollable extends Component {
 		props.cbScrollTo(this.scrollTo);
 	}
 
-	// component life cycle
-
 	getChildContext () {
 		return {
 			invalidateBounds: this.enqueueForceUpdate,
 			Subscriber: this.publisher.getSubscriber()
 		};
 	}
+
+	// component life cycle
 
 	componentWillMount () {
 		this.publisher = Publisher.create('resize', this.context.Subscriber);
@@ -347,6 +347,18 @@ class Scrollable extends Component {
 	// scroll animator
 	animator = new ScrollAnimator()
 
+	clampScrollPosition () {
+		const bounds = this.getScrollBounds();
+
+		if (this.scrollTop > bounds.maxTop) {
+			this.scrollTop = bounds.maxTop;
+		}
+
+		if (this.scrollLeft > bounds.maxLeft) {
+			this.scrollLeft = bounds.maxLeft;
+		}
+	}
+
 	// handle an input event
 
 	dragStart (e) {
@@ -401,18 +413,6 @@ class Scrollable extends Component {
 			return false;
 		} else {
 			return true;
-		}
-	}
-
-	clampScrollPosition () {
-		const bounds = this.getScrollBounds();
-
-		if (this.scrollTop > bounds.maxTop) {
-			this.scrollTop = bounds.maxTop;
-		}
-
-		if (this.scrollLeft > bounds.maxLeft) {
-			this.scrollLeft = bounds.maxLeft;
 		}
 	}
 
@@ -515,41 +515,6 @@ class Scrollable extends Component {
 				this.scrollToAccumulatedTarget(delta, canScrollVertically);
 			}
 		}
-	}
-
-	getPageDirection = (keyCode) => {
-		const
-			isRtl = this.context.rtl,
-			{direction, isPageUp} = this,
-			isVertical = (direction === 'vertical' || direction === 'both');
-
-		return isPageUp(keyCode) ?
-			(isVertical && 'up' || isRtl && 'right' || 'left') :
-			(isVertical && 'down' || isRtl && 'left' || 'right');
-	}
-
-	getEndPoint = (direction, oSpotBounds, viewportBounds) => {
-		let oPoint = {};
-
-		switch (direction) {
-			case 'up':
-				oPoint.x = oSpotBounds.left + oSpotBounds.width / 2;
-				oPoint.y = viewportBounds.top;
-				break;
-			case 'left':
-				oPoint.x = viewportBounds.left;
-				oPoint.y = oSpotBounds.top;
-				break;
-			case 'down':
-				oPoint.x = oSpotBounds.left + oSpotBounds.width / 2;
-				oPoint.y = viewportBounds.top + viewportBounds.height;
-				break;
-			case 'right':
-				oPoint.x = viewportBounds.left + viewportBounds.width;
-				oPoint.y = oSpotBounds.top;
-				break;
-		}
-		return oPoint;
 	}
 
 	scrollByPage = (keyCode) => {
@@ -947,7 +912,6 @@ class Scrollable extends Component {
 			scrollableClasses = classNames(css.scrollable, className);
 
 		delete rest.cbScrollTo;
-		delete rest.focusableScrollbar;
 		delete rest.horizontalScrollbar;
 		delete rest.onScroll;
 		delete rest.onScrollbarVisibilityChange;
