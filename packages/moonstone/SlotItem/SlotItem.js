@@ -124,7 +124,7 @@ const SlotItemDecorator = compose(
  */
 const SlotItem = SlotItemDecorator(SlotItemBase);
 
-export default SlotItemBase;
+export default SlotItem;
 export {
 	SlotItem,
 	SlotItemBase,
