@@ -197,7 +197,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 				}
 
 				return styler.append(
-					{pressed, small, minWidth, selected},
+					{pressed, small, minWidth, noAnimation, selected},
 					backgroundOpacity, color
 				);
 			},

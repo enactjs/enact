@@ -150,9 +150,11 @@
 		.focus({
 			&.pressed,
 			&:active {
-				.bg {
-					-webkit-animation-name: expand;
-					animation-name: expand;
+				&:not(.noAnimation) {
+					.bg {
+						-webkit-animation-name: expand;
+						animation-name: expand;
+					}
 				}
 			}
 		});
