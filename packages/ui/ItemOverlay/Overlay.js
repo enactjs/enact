@@ -6,17 +6,18 @@ import PropTypes from 'prop-types';
 import componentCss from './Overlay.less';
 
 /**
- * An unstyled component to overlay content, typically icons on an [Item]{@link ui/Item.ItemOverlay}.
+ * An unstyled component to overlay content, typically icons on an
+ * [ItemOverlay]{@link ui/ItemOverlay.ItemOverlay}.
  *
  * @class Overlay
  * @memberof ui/Item
  * @ui
- * @public
+ * @private
  */
 const Overlay = kind({
 	name: 'ui:Overlay',
 
-	propTypes: /** @lends ui/Item.Overlay.prototype */ {
+	propTypes: /** @lends ui/ItemOverlay.Overlay.prototype */ {
 		/**
 		 * The contents of this overlay component. Without `children`, this component will output no
 		 * DOM, so it doesn't interfere with layouts in case of this being blank.

@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import {childrenEquals} from '@enact/core/util';
-// import Slottable from '@enact/ui/Slottable';
+import Slottable from '@enact/ui/Slottable';
 import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 import Toggleable from '@enact/ui/Toggleable';
 import Pure from '@enact/ui/internal/Pure';
@@ -14,7 +14,7 @@ import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import {ItemBase} from './Item';
-// import Overlay from './Overlay';
+import Overlay from './Overlay';
 
 import componentCss from './Item.less';
 
@@ -63,12 +63,25 @@ const ItemOverlayBase = kind({
 		publicClassNames: 'itemOverlay'
 	},
 
-	render: ({css, ...rest}) => {
-		delete rest.autoHide;
+	computed: {
+		overlayBefore: ({overlayBefore, css, autoHide}) => ( overlayBefore ?
+			<Overlay className={css.before} hidden={autoHide === 'before' || autoHide === 'both'}>
+				{overlayBefore}
+			</Overlay> : null
+		),
+		overlayAfter: ({overlayAfter, css, autoHide}) => ( overlayAfter ?
+			<Overlay className={css.after} hidden={autoHide === 'after' || autoHide === 'both'}>
+				{overlayAfter}
+			</Overlay> : null
+		)
+	},
+
+	render: (props) => {
+		delete props.autoHide;
 		return (
 			<ItemBase
-				{...rest}
-				css={css}
+				{...props}
+				css={props.css}
 			/>
 		);
 	}
@@ -79,28 +92,14 @@ const ItemOverlayBase = kind({
  *
  * @class ItemOverlayDecorator
  * @memberof moonstone/Item
- * @mixes ui/Toggleable
  * @mixes spotlight.Spottable
- * @mixes ui/Remeasurable.RemeasurableDecorator
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes moonstone/Skinnable
+ * @mixes ui/Toggleable
  * @ui
  * @public
  */
-const ItemOverlayDecorator = compose(
-	Pure(
-		{propComparators: {
-			overlayBefore: childrenEquals,
-			overlayAfter: childrenEquals
-		}}),
-	Toggleable(
-		{prop: 'remeasure', activate: 'onFocus', deactivate: 'onBlur', toggle: null}
-	),
-	Spottable,
-	RemeasurableDecorator({trigger: 'remeasure'}),
-	MarqueeDecorator({className: componentCss.content, invalidateProps: ['inline', 'autoHide', 'remeasure']}),
-	Skinnable
-);
+const ItemOverlayDecorator = Slottable({slots: ['overlayAfter', 'overlayBefore']});
 
 /**
  * A Moonstone-styled item with built-in support for overlays.

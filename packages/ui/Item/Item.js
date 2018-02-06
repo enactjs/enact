@@ -79,7 +79,7 @@ const ItemBase = kind({
 		inline: PropTypes.bool,
 
 		/**
-		 * Overlay for content to be applied after content.
+		 * An additional component, like a slot, inserted after the `children` content.
 		 *
 		 * @type {Node}
 		 * @public
@@ -87,7 +87,7 @@ const ItemBase = kind({
 		overlayAfter: PropTypes.node,
 
 		/**
-		 * Overlay for content to be applied before content.
+		 * An additional component, like a slot, inserted before the `children` content.
 		 *
 		 * @type {Node}
 		 * @public

@@ -1,6 +1,6 @@
 // This is a sub-component to moonstone/Item, so it does not have a @module declaration
 import kind from '@enact/core/kind';
-import UIOverlay from '@enact/ui/Item/Overlay';
+import UiOverlay from '@enact/ui/ItemOverlay/Overlay';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -43,13 +43,13 @@ const Overlay = kind({
 		publicClassNames: ['overlay', 'hidden']
 	},
 
-	render: ({css, ...rest}) => {
-		if (!rest.children) return null;
+	render: (props) => {
+		if (!props.children) return null;	// Duplicated functionality, but this saves a little runtime
 
 		return (
-			<UIOverlay
-				{...rest}
-				css={css}
+			<UiOverlay
+				{...props}
+				css={props.css}
 			/>
 		);
 	}
