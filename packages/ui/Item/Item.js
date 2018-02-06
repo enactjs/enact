@@ -103,7 +103,7 @@ const ItemBase = kind({
 	styles: {
 		css: componentCss,
 		className: 'item',
-		publicClassNams: true
+		publicClassNames: true
 	},
 
 	computed: {

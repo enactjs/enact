@@ -111,7 +111,6 @@ const ItemOverlayDecorator = compose(
 	),
 	Spottable,
 	RemeasurableDecorator({trigger: 'remeasure'}),
-	// ItemDecorator,
 	MarqueeDecorator({className: componentCss.content, invalidateProps: ['inline', 'autoHide', 'remeasure']}),
 	Skinnable
 );

@@ -181,7 +181,8 @@ const ButtonBase = kind({
 });
 
 /**
- * Adds touch support to the component it wraps.
+ * [ButtonDecorator]{@link ui/Button.ButtonDecorator} adds touch support to a
+ * [Button]{@link ui/Button.Button}
  *
  * @hoc
  * @memberof ui/Button
