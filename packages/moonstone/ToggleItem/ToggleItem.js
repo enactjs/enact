@@ -148,7 +148,7 @@ const ToggleItemBase = kind({
 		iconBefore: ({iconClasses, selected, icon, iconPosition}) => {
 			if (iconPosition === 'before') {
 				return (
-					<ToggleIcon slot="overlayBefore" className={iconClasses} selected={selected}>
+					<ToggleIcon slot="slotBefore" className={iconClasses} selected={selected}>
 						{icon}
 					</ToggleIcon>
 				);
@@ -157,7 +157,7 @@ const ToggleItemBase = kind({
 		iconAfter: ({iconClasses, selected, icon, iconPosition}) => {
 			if (iconPosition === 'after') {
 				return (
-					<ToggleIcon slot="overlayAfter" className={iconClasses} selected={selected}>
+					<ToggleIcon slot="slotAfter" className={iconClasses} selected={selected}>
 						{icon}
 					</ToggleIcon>
 				);

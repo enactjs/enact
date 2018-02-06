@@ -1,6 +1,6 @@
 /**
  * Provides Moonstone-themed item component that accepts multiple positions of children, using the
- * usual `children` prop, as well as two additional props: `overlayBefore`, and `overlayAfter`.
+ * usual `children` prop, as well as two additional props: `slotBefore`, and `slotAfter`.
  * It is able to be customized by a theme or application.
  *
  * @module moonstone/SlotItem
@@ -23,7 +23,7 @@ import Spottable from '@enact/spotlight/Spottable';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import Item from '../Item';
+import {ItemBase} from '../Item';
 
 import componentCss from './SlotItem.less';
 
@@ -64,7 +64,7 @@ const SlotItemBase = kind({
 		return (
 			<UiSlotItemBase
 				{...props}
-				component={Item}
+				component={ItemBase}
 				css={props.css}
 			/>
 		);
@@ -89,8 +89,8 @@ const SlotItemDecorator = compose(
 	UiSlotItemDecorator,
 	Pure(
 		{propComparators: {
-			overlayBefore: childrenEquals,
-			overlayAfter: childrenEquals
+			slotBefore: childrenEquals,
+			slotAfter: childrenEquals
 		}}),
 	Toggleable(
 		{prop: 'remeasure', activate: 'onFocus', deactivate: 'onBlur', toggle: null}
@@ -106,12 +106,12 @@ const SlotItemDecorator = compose(
  *
  * ```
  *	<SlotItem autoHide="both">
- *		<overlayBefore>
+ *		<slotBefore>
  *			<Icon>flag</Icon>
  *			<Icon>star</Icon>
- *		</overlayBefore>
+ *		</slotBefore>
  *		An Item that will show some icons before and after this text when spotted
- *		<Icon slot="overlayAfter">trash</Icon>
+ *		<Icon slot="slotAfter">trash</Icon>
  *	</SlotItem>
  * ```
  *

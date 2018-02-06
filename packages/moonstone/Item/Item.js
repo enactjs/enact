@@ -78,7 +78,7 @@ const ItemBase = kind({
 const ItemDecorator = compose(
 	Pure,
 	Spottable,
-	MarqueeDecorator({className: componentCss.content, invalidateProps: ['inline', 'autoHide', 'remeasure']}),
+	MarqueeDecorator({invalidateProps: ['inline', 'autoHide', 'remeasure']}),
 	Skinnable
 );
 

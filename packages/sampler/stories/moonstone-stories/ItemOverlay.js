@@ -25,12 +25,12 @@ storiesOf('Moonstone', module)
 				autoHide={nullify(select('autoHide', prop.autoHide, 'after'))}
 				disabled={boolean('disabled', false)}
 			>
-				<Icon slot="overlayBefore">star</Icon>
+				<Icon slot="slotBefore">star</Icon>
 				{text('children', 'Hello Item')}
-				<overlayAfter>
+				<slotAfter>
 					<Icon>lock</Icon>
 					<Icon>flag</Icon>
-				</overlayAfter>
+				</slotAfter>
 			</SlotItem>
 		))
 	);

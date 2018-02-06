@@ -84,7 +84,7 @@ const ItemBase = kind({
 		 * @type {Node}
 		 * @public
 		 */
-		overlayAfter: PropTypes.node,
+		slotAfter: PropTypes.node,
 
 		/**
 		 * An additional component, like a slot, inserted before the `children` content.
@@ -92,7 +92,7 @@ const ItemBase = kind({
 		 * @type {Node}
 		 * @public
 		 */
-		overlayBefore: PropTypes.node
+		slotBefore: PropTypes.node
 	},
 
 	defaultProps: {
@@ -110,7 +110,7 @@ const ItemBase = kind({
 		className: ({inline, styler}) => styler.append({inline})
 	},
 
-	render: ({component: Component, disabled, overlayBefore, overlayAfter, children, ...rest}) => {
+	render: ({component: Component, disabled, slotBefore, slotAfter, children, ...rest}) => {
 		delete rest.inline;
 
 		return (
@@ -119,9 +119,9 @@ const ItemBase = kind({
 				aria-disabled={disabled}
 				disabled={disabled}
 			>
-				{overlayBefore}
+				{slotBefore}
 				{children}
-				{overlayAfter}
+				{slotAfter}
 			</Component>
 		);
 	}

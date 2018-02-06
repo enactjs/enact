@@ -4,8 +4,8 @@
 @import "../styles/text.less";
 
 // Defined so we don't repeat rules.
-@overlay-hidden: {
-	.overlay.hidden {
+@slot-hidden: {
+	.slot.hidden {
 		display: none;
 	}
 };
@@ -16,7 +16,7 @@
 		flex: 1 1 auto;
 	}
 
-	.overlay {
+	.slot {
 		line-height: 1;
 		white-space: nowrap;
 
@@ -58,16 +58,14 @@
 	// Spottable but not focused
 	.spottable({
 		&:not(:focus) {
-			@overlay-hidden();
+			@slot-hidden();
 		}
 	});
-	.disabled(@overlay-hidden);
-
-	// .locale-japanese-line-break();
+	.disabled(@slot-hidden);
 }
 
 .muted({
 	.slotItem {
-		.focus(@overlay-hidden);
+		.focus(@slot-hidden);
 	}
 });

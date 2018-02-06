@@ -1,6 +1,6 @@
 /**
  * Provides an unstyled item component that accepts multiple positions of children, using the usual
- * `children` prop, as well as two additional props: `overlayBefore`, and `overlayAfter`.
+ * `children` prop, as well as two additional props: `slotBefore`, and `slotAfter`.
  * It is able to be customized by a theme or application.
  *
  * @module ui/SlotItem
@@ -31,7 +31,7 @@ const SlotItemBase = kind({
 	propTypes: /** @lends ui/SlotItem.SlotItemBase.prototype */ {
 		/**
 		 * The type of component to use to render the item. Must be a custom component as it needs
-		 * to accept the following props: `overlayBefore`, `overlayAfter`, and `css`.
+		 * to accept the following props: `slotBefore`, `slotAfter`, and `css`.
 		 * A derivitive of [Item]{@link ui/Item.Item} is recommended.
 		 *
 		 * @type {Component}
@@ -41,11 +41,11 @@ const SlotItemBase = kind({
 		component: PropTypes.func.isRequired,
 
 		/**
-		 * Controls the visibility state of the overlays. One, both, or neither overlay can be
-		 * shown when the item is focused. Choosing `'after'` will leave `overlayBefore` visible
-		 * at all times; only `overlayAfter` will have its visibility toggled on focus.  Valid
-		 * values are `'before'`, `'after'` and `'both'`. Omitting the property will result in
-		 * no-auto-hiding for either overlay. They will both be present regardless of focus.
+		 * Controls the visibility state of the slots. One, both, or neither slot can be
+		 * shown when the item is focused. Choosing `'slotAfter'` will leave `slotBefore` visible
+		 * at all times; only `slotAfter` will have its visibility toggled on focus.  Valid
+		 * values are `'slotBefore'`, `'slotAfter'` and `'both'`. Omitting the property will result in
+		 * no-auto-hiding for either slot. They will both be present regardless of focus.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -73,14 +73,14 @@ const SlotItemBase = kind({
 	},
 
 	computed: {
-		overlayBefore: ({overlayBefore, autoHide, styler}) => ( overlayBefore ?
-			<div className={styler.join('overlay', 'before', {hidden: (autoHide === 'before' || autoHide === 'both')})}>
-				{overlayBefore}
+		slotBefore: ({slotBefore, autoHide, styler}) => ( slotBefore ?
+			<div className={styler.join('slot', 'before', {hidden: (autoHide === 'before' || autoHide === 'both')})}>
+				{slotBefore}
 			</div> : null
 		),
-		overlayAfter: ({overlayAfter, autoHide, styler}) => ( overlayAfter ?
-			<div className={styler.join('overlay', 'after', {hidden: (autoHide === 'after' || autoHide === 'both')})}>
-				{overlayAfter}
+		slotAfter: ({slotAfter, autoHide, styler}) => ( slotAfter ?
+			<div className={styler.join('slot', 'after', {hidden: (autoHide === 'after' || autoHide === 'both')})}>
+				{slotAfter}
 			</div> : null
 		)
 	},
@@ -97,7 +97,7 @@ const SlotItemBase = kind({
 });
 
 /**
- * ui-specific item with overlay behaviors to apply to [SlotItem]{@link ui/SlotItem.SlotItemBase}.
+ * ui-specific item with slot behaviors to apply to [SlotItem]{@link ui/SlotItem.SlotItemBase}.
  *
  * @class SlotItemDecorator
  * @memberof ui/SlotItem
@@ -105,19 +105,19 @@ const SlotItemBase = kind({
  * @hoc
  * @public
  */
-const SlotItemDecorator = Slottable({slots: ['overlayAfter', 'overlayBefore']});
+const SlotItemDecorator = Slottable({slots: ['slotAfter', 'slotBefore']});
 
 /**
- * A ui-styled item with built-in support for overlays.
+ * A ui-styled item with built-in support for slots.
  *
  * ```
  *	<SlotItem autoHide="both">
- *		<overlayBefore>
+ *		<slotBefore>
  *			<Icon>flag</Icon>
  *			<Icon>star</Icon>
- *		</overlayBefore>
- *		An Item that will show some icons before and after this text when spotted
- *		<Icon slot="overlayAfter">trash</Icon>
+ *		</slotBefore>
+ *		An Item that will show some icons slotBefore and slotAfter this text when spotted
+ *		<Icon slot="slotAfter">trash</Icon>
  *	</SlotItem>
  * ```
  *
