@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import {childrenEquals} from '@enact/core/util';
 // import Slottable from '@enact/ui/Slottable';
-import UiItemOverlay from '@enact/ui/ItemOverlay';
+import {ItemOverlayBase as UiItemOverlayBase, ItemOverlayDecorator as UiItemOverlayDecorator} from '@enact/ui/ItemOverlay';
 import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 import Toggleable from '@enact/ui/Toggleable';
 import Pure from '@enact/ui/internal/Pure';
@@ -66,10 +66,10 @@ const ItemOverlayBase = kind({
 
 	render: (props) => {
 		return (
-			<UiItemOverlay
+			<UiItemOverlayBase
 				{...props}
 				component={Item}
-				css={css}
+				css={props.css}
 			/>
 		);
 	}
@@ -89,6 +89,7 @@ const ItemOverlayBase = kind({
  * @public
  */
 const ItemOverlayDecorator = compose(
+	UiItemOverlayDecorator,
 	Pure(
 		{propComparators: {
 			overlayBefore: childrenEquals,
