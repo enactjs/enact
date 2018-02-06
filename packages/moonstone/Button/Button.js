@@ -10,7 +10,6 @@
  * @exports ButtonDecorator
  */
 
-import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
@@ -84,17 +83,7 @@ const ButtonBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object,
-
-		/**
-		 * Disables the `pressed` animation.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 * @deprecated
-		 */
-		noAnimation: PropTypes.bool
+		css: PropTypes.object
 	},
 
 	styles: {
@@ -103,22 +92,15 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({backgroundOpacity, color, noAnimation, styler}) => {
-			if (noAnimation) {
-				deprecate({name: 'noAnimation', since: '2.0.0', message: '`noAnimation` is deprecated', until: '2.1.0'});
-			}
-
-			return styler.append(
-				backgroundOpacity,
-				color
-			);
-		}
+		className: ({backgroundOpacity, color, styler}) => styler.append(
+			backgroundOpacity,
+			color
+		)
 	},
 
 	render: ({css, ...rest}) => {
 		delete rest.backgroundOpacity;
 		delete rest.color;
-		delete rest.noAnimation;
 
 		return (
 			<UiButtonBase
