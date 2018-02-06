@@ -9,13 +9,18 @@ const defaultConfig = {
 };
 
 const VoiceControlDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {voiceSlot} = config;
-
 	return class extends React.Component {
 		static displayName = 'VoiceControlDecorator'
 
 		static propTypes = {
-			voiceLabel: PropTypes.string
+			voiceDisabled: PropTypes.bool,
+			voiceLabel: PropTypes.string,
+			voiceSlot: PropTypes.array
+		}
+
+		static defaultProps = {
+			voiceDisabled: false,
+			voiceSlot: []
 		}
 
 		constructor (props) {
@@ -24,18 +29,25 @@ const VoiceControlDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			const {voiceLabel} = this.props;
+			const voiceSlot = config.voiceSlot.concat(this.props.voiceSlot);
 
-			if (voiceSlot.length > 0) {
-				let list = [];
+			if (!this.props.voiceDisabled && voiceSlot.length > 0) {
+				const list = [];
 				for (let t in voiceSlot) {
-					const {voiceIntent, voiceHandler, voiceParams} = voiceSlot[t];
+					const {voiceIntent, voiceLabel, voiceHandler, voiceParams} = voiceSlot[t];
+
 					list.push({
 						voiceIntent: voiceIntent,
-						voiceLabel: voiceLabel,
+						voiceLabel: voiceLabel || this.props.voiceLabel,
 						onVoice: (e) => {
 							const params = voiceParams || e;
-							forward(voiceHandler, params, this.props);
+							const type = typeof voiceHandler;
+
+							if (type === 'string') {
+								forward(voiceHandler, params, this.props);
+							} else if (type === 'function') {
+								voiceHandler(params);
+							}
 						}
 					});
 				}
@@ -44,14 +56,16 @@ const VoiceControlDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			if (this.voiceList.length > 0) {
+			if (!this.props.voiceDisabled && this.voiceList.length > 0) {
 				VoiceControl.removeList(this.voiceList);
 			}
 		}
 
 		render () {
 			const props = {...this.props};
+			delete props.voiceDisabled;
 			delete props.voiceLabel;
+			delete props.voiceSlot;
 
 			return (
 				<Wrapped {...props} />
