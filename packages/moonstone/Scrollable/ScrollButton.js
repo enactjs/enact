@@ -1,9 +1,10 @@
-import $L from '@enact/moonstone/internal/$L';
-import IconButton from '@enact/moonstone/IconButton';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Toggleable from '@enact/ui/Toggleable';
+
+import $L from '../internal/$L';
+import IconButton from '../IconButton';
 
 import css from './Scrollbar.less';
 

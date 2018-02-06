@@ -3,7 +3,8 @@ import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {PureComponent} from 'react';
-import ri from '@enact/ui/resolution';
+
+import ri from '../resolution';
 
 import css from './Scrollbar.less';
 import ScrollThumb from './ScrollThumb';

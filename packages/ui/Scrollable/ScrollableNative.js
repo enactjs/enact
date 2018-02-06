@@ -6,7 +6,6 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
 import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
@@ -15,11 +14,12 @@ import kind from '@enact/core/kind';
 import {on, off} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import ri from '@enact/ui/resolution';
 
-import Scrollbar from './Scrollbar';
+import {contextTypes as contextTypesResize} from '../Resizable';
+import ri from '../resolution';
 
 import css from './Scrollable.less';
+import Scrollbar from './Scrollbar';
 
 const
 	forwardScroll = forward('onScroll'),

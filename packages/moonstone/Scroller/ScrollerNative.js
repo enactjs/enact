@@ -4,9 +4,10 @@
  * The default export is {@link moonstone/Scroller.ScrollerNative}.
  */
 
-import {ScrollableNative} from '@enact/moonstone/Scrollable/ScrollableNative';
-import {ScrollerBase as ScrollerBaseNative} from '@enact/moonstone/Scroller';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+
+import {ScrollableNative} from '../Scrollable/ScrollableNative';
+import {ScrollerBase as ScrollerBaseNative} from '../Scroller';
 
 /**
  * {@link moonstone/Scroller.ScrollerNative} is a Scroller with Moonstone styling,

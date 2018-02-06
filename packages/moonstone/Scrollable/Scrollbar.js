@@ -1,8 +1,6 @@
-import $L from '@enact/moonstone/internal/$L';
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import classNames from 'classnames';
-import DisappearSpotlightDecorator from '@enact/moonstone/internal/DisappearSpotlightDecorator';
 import {is} from '@enact/core/keymap';
 import {off, on} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
@@ -10,6 +8,9 @@ import React from 'react';
 import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
 import ScrollThumb from '@enact/ui/Scrollable/ScrollThumb';
 import Spotlight from '@enact/spotlight';
+
+import $L from '../internal/$L';
+import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator';
 
 import css from './Scrollbar.less';
 import ScrollButton from './ScrollButton';

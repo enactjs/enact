@@ -113,7 +113,8 @@ class VirtualListBase extends Component {
 
 		/**
 		 * Data for passing it through `component` prop.
-		 * NOTICE: For performance reason, changing this prop does NOT always cause redraw items.
+		 * NOTICE: For performance reason, changing this prop does NOT always cause the list to
+		 * redraw its items.
 		 *
 		 * @type {Any}
 		 * @default []
