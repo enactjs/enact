@@ -30,13 +30,13 @@ const allowedHoldKeys = Object.keys(defaultHoldConfig);
  * @private
  * @memberof ui/Touchable
  */
-const config = {};
+let config = {};
 
 // map-friendly clone method
 const clone = o => Object.assign({}, o);
 
 // Merges two configuation objects while retaining only the allowed keys
-const mergeConfig = (current, update, allowed) => {
+const mergeGestureConfig = (current, update, allowed) => {
 	const cfg = {...current, ...update};
 
 	Object.keys(cfg).forEach(key => {
@@ -46,6 +46,19 @@ const mergeConfig = (current, update, allowed) => {
 	});
 
 	return cfg;
+};
+
+// Merges the current global config with the provided `cfg` and returns the result
+const mergeConfig = (cfg) => {
+	const merged = {
+		drag: mergeGestureConfig(config.drag, cfg.drag, allowedDragKeys),
+		flick: mergeGestureConfig(config.flick, cfg.flick, allowedFlickKeys),
+		hold: mergeGestureConfig(config.hold, cfg.hold, allowedHoldKeys)
+	};
+
+	merged.hold.events = merged.hold.events.map(clone);
+
+	return merged;
 };
 
 /**
@@ -96,27 +109,13 @@ const mergeConfig = (current, update, allowed) => {
  * @memberof ui/Touchable
  */
 const configure = (cfg) => {
-	if (cfg.drag) {
-		config.drag = mergeConfig(config.drag, cfg.drag, allowedDragKeys);
-	}
-
-	if (cfg.flick) {
-		config.flick = mergeConfig(config.flick, cfg.flick, allowedFlickKeys);
-	}
-
-	if (cfg.hold) {
-		config.hold = mergeConfig(config.hold, cfg.hold, allowedHoldKeys);
-
-		// deeply clone the array to avoid allowing the config to be mutated directly
-		if (cfg.hold.events) {
-			config.hold.events = config.hold.events.map(clone);
-		}
-	}
+	config = mergeConfig(cfg);
 };
 
 const getConfig = () => config;
 
 const resetDefaultConfig = () => configure({
+	drag: defaultDragConfig,
 	hold: defaultHoldConfig,
 	flick: defaultFlickConfig
 });
@@ -127,5 +126,6 @@ export default configure;
 export {
 	configure,
 	getConfig,
+	mergeConfig,
 	resetDefaultConfig
 };

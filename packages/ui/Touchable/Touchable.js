@@ -15,7 +15,7 @@ import platform from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {configure, getConfig} from './config';
+import {configure, mergeConfig} from './config';
 import {activate, deactivate, pause, States} from './state';
 import {block, unblock, isNotBlocked} from './block';
 
@@ -173,12 +173,18 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			noResume: false
 		}
 
-		constructor () {
+		constructor (props) {
 			super();
 
 			this.state = {
 				active: States.Inactive
 			};
+
+			this.config = mergeConfig({
+				drag: props.dragConfig,
+				flick: props.flickConfig,
+				hold: props.holdConfig
+			});
 		}
 
 		componentDidMount () {
@@ -194,6 +200,12 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				this.deactivate();
 				this.hold.end();
 			}
+
+			this.config = mergeConfig({
+				drag: nextProps.dragConfig,
+				flick: nextProps.flickConfig,
+				hold: nextProps.holdConfig
+			});
 		}
 
 		componentWillUnmount () {
@@ -277,7 +289,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		startGesture = (ev, props) => {
 			const coords = getEventCoordinates(ev);
-			const {hold, flick, drag} = getConfig();
+			let {hold, flick, drag} = this.config;
 
 			this.hold.begin(hold, props, coords);
 			this.flick.begin(flick, props, coords);
@@ -452,6 +464,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.addHandlers(props);
 
+			delete props.dragConfig;
+			delete props.flickConfig;
 			delete props.holdConfig;
 			delete props.noResume;
 			delete props.onDown;

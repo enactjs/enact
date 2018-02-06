@@ -81,7 +81,7 @@ storiesOf('Touchable', module)
 			</TouchableDiv>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with drag handlers',
 		() => (
 			<TouchableDiv

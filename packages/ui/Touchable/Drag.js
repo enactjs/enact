@@ -1,5 +1,4 @@
 import clamp from 'ramda/src/clamp';
-import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 
 const Tracking = {
@@ -60,7 +59,7 @@ class Drag {
 		return false;
 	}
 
-	begin = (defaultConfig, {dragConfig, noResume, onDrag, onDragEnd, onDragStart}, coords, node) => {
+	begin = (config, {noResume, onDrag, onDragEnd, onDragStart}, coords, node) => {
 		if (!onDrag && !onDragStart && !onDragEnd) return;
 
 		const {x, y} = coords;
@@ -70,8 +69,7 @@ class Drag {
 		this.startY = y;
 
 		this.dragConfig = {
-			...defaultConfig,
-			...dragConfig,
+			...config,
 			node,
 			onDragStart,
 			onDragEnd,
