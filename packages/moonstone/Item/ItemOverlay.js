@@ -4,7 +4,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import {childrenEquals} from '@enact/core/util';
-// import Slottable from '@enact/ui/Slottable';
 import {ItemOverlayBase as UiItemOverlayBase, ItemOverlayDecorator as UiItemOverlayDecorator} from '@enact/ui/ItemOverlay';
 import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 import Toggleable from '@enact/ui/Toggleable';
@@ -15,7 +14,6 @@ import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import Item from './Item';
-// import Overlay from './Overlay';
 
 import componentCss from './Item.less';
 
@@ -24,7 +22,7 @@ import componentCss from './Item.less';
  *
  * @class ItemOverlayBase
  * @memberof moonstone/Item
- * @extends moonstone/Item.ItemBase
+ * @extends moonstone/Item.Item
  * @ui
  * @public
  */
@@ -32,18 +30,6 @@ const ItemOverlayBase = kind({
 	name: 'ItemOverlay',
 
 	propTypes: /** @lends moonstone/Item.ItemOverlayBase.prototype */ {
-		/**
-		 * Controls the visibility state of the overlays. One, both, or neither overlay can be
-		 * shown when the item is focused. Choosing `'after'` will leave `overlayBefore` visible
-		 * at all times; only `overlayAfter` will have its visibility toggled on focus.  Valid
-		 * values are `'before'`, `'after'` and `'both'`. Omitting the property will result in
-		 * no-auto-hiding for either overlay. They will both be present regardless of focus.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		autoHide: PropTypes.node,
-
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
@@ -80,12 +66,13 @@ const ItemOverlayBase = kind({
  *
  * @class ItemOverlayDecorator
  * @memberof moonstone/Item
+ * @mixes ui/ItemOverlay.ItemOverlayDecorator
  * @mixes ui/Toggleable
  * @mixes spotlight.Spottable
  * @mixes ui/Remeasurable.RemeasurableDecorator
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes moonstone/Skinnable
- * @ui
+ * @hoc
  * @public
  */
 const ItemOverlayDecorator = compose(

@@ -21,7 +21,6 @@ import componentCss from './ItemOverlay.less';
  *
  * @class ItemOverlayBase
  * @memberof ui/ItemOverlay
- * @extends ui/ItemOverlay.ItemOverlayBase
  * @ui
  * @public
  */
@@ -73,13 +72,13 @@ const ItemOverlayBase = kind({
 	},
 
 	computed: {
-		overlayBefore: ({overlayBefore, css, autoHide, styler}) => ( overlayBefore ?
-			<div className={styler.join(css.before, {hidden: (autoHide === 'before' || autoHide === 'both')})}>
+		overlayBefore: ({overlayBefore, autoHide, styler}) => ( overlayBefore ?
+			<div className={styler.join('overlay', 'before', {hidden: (autoHide === 'before' || autoHide === 'both')})}>
 				{overlayBefore}
 			</div> : null
 		),
-		overlayAfter: ({overlayAfter, css, autoHide, styler}) => ( overlayAfter ?
-			<div className={styler.join(css.after, {hidden: (autoHide === 'after' || autoHide === 'both')})}>
+		overlayAfter: ({overlayAfter, autoHide, styler}) => ( overlayAfter ?
+			<div className={styler.join('overlay', 'after', {hidden: (autoHide === 'after' || autoHide === 'both')})}>
 				{overlayAfter}
 			</div> : null
 		)
@@ -100,7 +99,7 @@ const ItemOverlayBase = kind({
  * ui-specific item with overlay behaviors to apply to [ItemOverlay]{@link ui/ItemOverlay.ItemOverlayBase}.
  *
  * @class ItemOverlayDecorator
- * @memberof ui/Item
+ * @memberof ui/ItemOverlay
  * @mixes ui/Slottable.Slottable
  * @hoc
  * @public
@@ -122,9 +121,9 @@ const ItemOverlayDecorator = Slottable({slots: ['overlayAfter', 'overlayBefore']
  * ```
  *
  * @class ItemOverlay
- * @memberof ui/Item
- * @extends ui/Item.ItemOverlayBase
- * @mixes ui/Item.ItemOverlayDecorator
+ * @memberof ui/ItemOverlay
+ * @extends ui/ItemOverlay.ItemOverlayBase
+ * @mixes ui/ItemOverlay.ItemOverlayDecorator
  * @ui
  * @public
  */
