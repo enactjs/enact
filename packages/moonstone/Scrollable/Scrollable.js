@@ -1,6 +1,4 @@
 import classNames from 'classnames';
-import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
-import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
@@ -72,21 +70,8 @@ class Scrollable extends UiScrollable {
 		focusableScrollbar: PropTypes.bool
 	}
 
-	static childContextTypes = {
-		...contextTypesResize,
-		...contextTypesState
-	}
-
-	static contextTypes = contextTypesState
-
 	constructor (props) {
 		super(props);
-
-		this.state = {
-			...super.state,
-			rtl: false,
-			remeasure: false
-		};
 
 		this.verticalScrollbarProps.cbAlertThumb = this.alertThumbAfterRendered;
 		this.verticalScrollbarProps.onNextScroll = this.onScrollbarButtonClick;
@@ -96,39 +81,10 @@ class Scrollable extends UiScrollable {
 		this.horizontalScrollbarProps.onPrevScroll = this.onScrollbarButtonClick;
 	}
 
-	getChildContext () {
-		return {
-			invalidateBounds: this.enqueueForceUpdate,
-			Subscriber: this.publisher.getSubscriber()
-		};
-	}
-
-	componentWillMount () {
-		this.publisher = Publisher.create('resize', this.context.Subscriber);
-		this.publisher.publish({
-			remeasure: false
-		});
-
-		if (this.context.Subscriber) {
-			this.context.Subscriber.subscribe('resize', this.handleSubscription);
-			this.context.Subscriber.subscribe('i18n', this.handleSubscription);
-		}
-	}
-
 	componentDidUpdate (prevProps, prevState) {
 		super.componentDidUpdate(prevProps, prevState);
 		if (this.scrollToInfo === null) {
 			this.updateScrollOnFocus();
-		}
-
-		// publish container resize changes
-		const horizontal = this.state.isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
-		const vertical = this.state.isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
-		if (horizontal || vertical) {
-			this.publisher.publish({
-				horizontal,
-				vertical
-			});
 		}
 	}
 
@@ -139,22 +95,6 @@ class Scrollable extends UiScrollable {
 		if (childContainerRef && childContainerRef.removeEventListener) {
 			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			childContainerRef.removeEventListener('focusin', this.onFocus);
-		}
-
-		if (this.context.Subscriber) {
-			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
-			this.context.Subscriber.unsubscribe('i18n', this.handleSubscription);
-		}
-	}
-
-	handleSubscription = ({channel, message}) => {
-		if (channel === 'i18n') {
-			const {rtl} = message;
-			if (rtl !== this.state.rtl) {
-				this.setState({rtl});
-			}
-		} else if (channel === 'resize') {
-			this.publisher.publish(message);
 		}
 	}
 
@@ -294,6 +234,30 @@ class Scrollable extends UiScrollable {
 		return isPageUp(keyCode) ?
 			(isVertical && 'up' || isRtl && 'right' || 'left') :
 			(isVertical && 'down' || isRtl && 'left' || 'right');
+	}
+
+	getEndPoint = (direction, oSpotBounds, viewportBounds) => {
+		let oPoint = {};
+
+		switch (direction) {
+			case 'up':
+				oPoint.x = oSpotBounds.left + oSpotBounds.width / 2;
+				oPoint.y = viewportBounds.top;
+				break;
+			case 'left':
+				oPoint.x = viewportBounds.left;
+				oPoint.y = oSpotBounds.top;
+				break;
+			case 'down':
+				oPoint.x = oSpotBounds.left + oSpotBounds.width / 2;
+				oPoint.y = viewportBounds.top + viewportBounds.height;
+				break;
+			case 'right':
+				oPoint.x = viewportBounds.left + viewportBounds.width;
+				oPoint.y = oSpotBounds.top;
+				break;
+		}
+		return oPoint;
 	}
 
 	scrollByPage = (keyCode) => {
