@@ -35,8 +35,8 @@ const
 
 /**
  * [dataIndexAttribute]{@link moonstone/Scrollable.dataIndexAttribute} is the name of a custom attribute
- * which indicates the index of an item in {@link moonstone/VirtualList.VirtualList}
- * or {@link moonstone/VirtualList.VirtualGridList}.
+ * which indicates the index of an item in [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative}
+ * or [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative}.
  *
  * @constant dataIndexAttribute
  * @memberof moonstone/Scrollable
@@ -71,11 +71,11 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 
 /**
  * [ScrollableBaseNative]{@link moonstone/Scrollable.ScrollableBaseNative} is a base component for
- * [ScrollableNative]{@link moostone/Scrollable.ScrollableNative}.
+ * [ScrollableNative]{@link moonstone/Scrollable.ScrollableNative}.
  *
  * @class ScrollableBaseNative
  * @extends ui/Scrollable.ScrollableBaseNative
- * @memberof moostone/Scrollable
+ * @memberof moonstone/Scrollable
  * @ui
  * @private
  */
@@ -551,7 +551,7 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
  * that applies a Scrollable behavior to its wrapped component.
  *
  * @class ScrollableNative
- * @memberof moostone/Scrollable
+ * @memberof moonstone/Scrollable
  * @ui
  * @private
  */

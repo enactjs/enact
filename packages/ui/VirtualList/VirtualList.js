@@ -40,7 +40,7 @@ const gridListItemSizeShape = PropTypes.shape({
  * @class VirtualListBase
  * @memberof ui/VirtualList
  * @ui
- * @private
+ * @public
  */
 class VirtualListBase extends Component {
 	static displayName = 'ui:VirtualListBase'
@@ -746,7 +746,7 @@ class VirtualListBase extends Component {
  * @class VirtualList
  * @extends ui/VirtualList.VirtualListBase
  * @memberof ui/VirtualList
- * @mixes ui/Scrollable
+ * @mixes ui/Scrollable.Scrollable
  * @ui
  * @public
  */
@@ -758,7 +758,7 @@ const VirtualList = Scrollable(VirtualListBase);
  * @class VirtualGridList
  * @extends ui/VirtualList.VirtualListBase
  * @memberof ui/VirtualList
- * @mixes ui/Scrollable
+ * @mixes ui/Scrollable.Scrollable
  * @ui
  * @public
  */

@@ -46,6 +46,7 @@ const
  * [Scrollbar]{@link moonstone/Scrollable.Scrollbar} with Moonstone styling.
  *
  * @class ScrollbarBase
+ * @extends ui/Scrollable.ScrollbarBase
  * @memberof moonstone/Scrollable
  * @ui
  * @private

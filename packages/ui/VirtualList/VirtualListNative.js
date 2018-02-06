@@ -21,10 +21,10 @@ const nop = () => {};
 
 /**
  * [gridListItemSizeShape]{@link ui/VirtualList.gridListItemSizeShape} is the shape for the grid list item size
- * in a list for [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
+ * in a list for [VirtualGridListNative]{@link ui/VirtualList.VirtualGridListNative}.
  *
  * @typedef {Object} gridListItemSizeShape
- * @memberof ui/VirtualListNative
+ * @memberof ui/VirtualList
  * @property {Number} minWidth - The minimum width of the grid list item.
  * @property {Number} minHeight - The minimum height of the grid list item.
  */
@@ -39,7 +39,7 @@ const gridListItemSizeShape = PropTypes.shape({
  * {@link ui/VirtualList.VirtualGridListNative}.
  *
  * @class VirtualListBaseNative
- * @memberof ui/VirtualListNative
+ * @memberof ui/VirtualList
  * @ui
  * @private
  */
@@ -736,8 +736,7 @@ class VirtualListBaseNative extends Component {
  * [VirtualListNative]{@link ui/VirtualList.VirtualListNative} is a scrollable virtual list component with touch support.
  *
  * @class VirtualListNative
- * @extends ui/VirtualList.VirtualListBaseNative
- * @memberof ui/VirtualList.VirtualListNative
+ * @memberof ui/VirtualList
  * @mixes ui/Scrollable.ScrollableNative
  * @ui
  * @public
@@ -748,8 +747,7 @@ const VirtualListNative = ScrollableNative(VirtualListBaseNative);
  * [VirtualGridListNative]{@link ui/VirtualList.VirtualGridListNative} is a scrollable virtual list component with touch support.
  *
  * @class VirtualGridListNative
- * @extends ui/VirtualList.VirtualListBaseNative
- * @memberof ui/VirtualList.VirtualListNative
+ * @memberof ui/VirtualList
  * @mixes ui/Scrollable.ScrollableNative
  * @ui
  * @public

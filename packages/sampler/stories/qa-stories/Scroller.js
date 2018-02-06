@@ -1,6 +1,6 @@
 import Button from '@enact/moonstone/Button';
 import ExpandableList from '@enact/moonstone/ExpandableList';
-import Scroller from '@enact/ui/Scroller';
+import Scroller from '@enact/moonstone/Scroller';
 import Item from '@enact/moonstone/Item';
 import ri from '@enact/ui/resolution';
 import Group from '@enact/ui/Group';

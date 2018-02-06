@@ -123,4 +123,6 @@ class ScrollAnimator {
 }
 
 export default ScrollAnimator;
-export {ScrollAnimator};
+export {
+	ScrollAnimator
+};

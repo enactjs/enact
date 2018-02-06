@@ -61,7 +61,7 @@ const
 class ScrollableBaseNative extends Component {
 	static displayName = 'ui:ScrollableNative'
 
-	static propTypes = /** @lends ui/Scrollable.ScrollableNative.prototype */ {
+	static propTypes = /** @lends ui/Scrollable.ScrollableBaseNative.prototype */ {
 		/**
 		 * A callback function that receives a reference to the `scrollTo` feature. Once received,
 		 * the `scrollTo` method can be called as an imperative interface.

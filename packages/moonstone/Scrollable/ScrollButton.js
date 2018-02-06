@@ -1,7 +1,7 @@
 /**
  * Provides Moonstone-themed scroll button components and behaviors.
  *
- * @module moontone/Scrollable
+ * @module moonstone/Scrollable
  * @exports ScrollButton
  * @exports ScrollButtonBase
  */

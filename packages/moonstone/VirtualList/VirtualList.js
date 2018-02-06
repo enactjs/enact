@@ -42,7 +42,6 @@ const
  * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
  *
  * @class VirtualListBase
- * @extends ui/VirtualList.VirtualListBase
  * @memberof moonstone/VirtualList
  * @ui
  * @private
@@ -716,7 +715,6 @@ const VirtualListGenerator = (type, baseComponent) => SpotlightContainerDecorato
  * a scrollable and spottable virtual list component with Moonstone styling.
  *
  * @class VirtualList
- * @extends moonstone/VirtualList.VirtualListBase
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable.Scrollable
  * @ui
@@ -729,7 +727,6 @@ const VirtualList = VirtualListGenerator('JS', UiVirtualListBase);
  * a scrollable and spottable virtual grid list component with Moonstone styling.
  *
  * @class VirtualGridList
- * @extends moonstone/VirtualList.VirtualListBase
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable.Scrollable
  * @ui
@@ -742,7 +739,6 @@ const VirtualGridList = VirtualList;
  * a scrollable and spottable virtual list component with Moonstone styling.
  *
  * @class VirtualListNative
- * @extends moonstone/VirtualList.VirtualListBaseNative
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable.ScrollableNative
  * @ui
@@ -755,7 +751,6 @@ const VirtualListNative = VirtualListGenerator('Native', UiVirtualListBaseNative
  * a scrollable and spottable virtual grid list component with Moonstone styling.
  *
  * @class VirtualGridListNative
- * @extends moonstone/VirtualList.VirtualListBaseNative
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable.ScrollableNative
  * @ui

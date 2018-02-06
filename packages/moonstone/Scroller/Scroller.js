@@ -1,7 +1,7 @@
 /**
  * Provides Moonstone-themed scroller components and behaviors.
  *
- * @module moostone/Scroller
+ * @module moonstone/Scroller
  * @exports Scroller
  * @exports ScrollerBase
  */
