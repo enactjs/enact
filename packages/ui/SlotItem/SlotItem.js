@@ -12,7 +12,8 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Slottable from '@enact/ui/Slottable';
+
+import Slottable from '../Slottable';
 
 import componentCss from './SlotItem.less';
 
@@ -132,6 +133,6 @@ const SlotItem = SlotItemDecorator(SlotItemBase);
 export default SlotItem;
 export {
 	SlotItem,
-	// SlotItemBase,
+	SlotItemBase,
 	SlotItemDecorator
 };
