@@ -1,10 +1,13 @@
 /* eslint-disable enact/prop-types */
+/* eslint-disable react/jsx-no-bind */
+
 import React from 'react';
 import {shallow, mount} from 'enzyme';
 import sinon from 'sinon';
 
 import Touchable from '../Touchable';
 import {activate, deactivate} from '../state';
+import {configure, getConfig, resetDefaultConfig} from '../config';
 
 describe('Touchable', () => {
 	const DivComponent = ({onMouseDown, onMouseLeave, onMouseUp}) => {
@@ -21,6 +24,10 @@ describe('Touchable', () => {
 	const preventDefault = (ev) => ev.preventDefault();
 
 	describe('config', () => {
+
+		beforeEach(resetDefaultConfig);
+		afterEach(resetDefaultConfig);
+
 		it('should pass active state to the wrapped component when activeProp is configured', function () {
 			const Component = Touchable({activeProp: 'pressed'}, DivComponent);
 			const subject = shallow(
@@ -33,6 +40,68 @@ describe('Touchable', () => {
 
 			expect(actual).to.equal(expected);
 		});
+
+		it('should merge configurations', function () {
+			configure({
+				flick: {
+					maxMoves: 10
+				}
+			});
+
+			const expected = 10;
+			const actual = getConfig().flick.maxMoves;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should omit unsupported configurations', function () {
+			configure({
+				flick: {
+					notSupported: 10
+				}
+			});
+
+			// eslint-disable-next-line no-undefined
+			const expected = undefined;
+			const actual = getConfig().flick.notSupported;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should not update config when local object is mutated', function () {
+			const cfg = {
+				flick: {
+					maxMoves: 10
+				}
+			};
+
+			configure(cfg);
+			cfg.flick.maxMoves = 20;
+
+			const expected = 10;
+			const actual = getConfig().flick.maxMoves;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should not update config when local hold.events array is mutated', function () {
+			const cfg = {
+				hold: {
+					events: [
+						{name: 'hold', time: 600}
+					]
+				}
+			};
+
+			configure(cfg);
+			cfg.hold.events[0].time = 2000;
+
+			const expected = 600;
+			const actual = getConfig().hold.events[0].time;
+
+			expect(actual).to.equal(expected);
+		});
+
 	});
 
 	describe('#onDown', () => {

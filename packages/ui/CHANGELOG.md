@@ -4,17 +4,24 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
-### Deprecated
+### Changed
+
+- `ui/Repeater` and `ui/Group` to require a unique key for each object type data
+- `ui/Toggleable` to use `'selected'` as its default `prop`, rather than `'active'`, since `'selected'` is by far the most common use case
+- `ui/Touchable` to use global gesture configuration with instance override rather than component-level configuration via HOC configs with instance override
+
+## [2.0.0-alpha.3] - 2018-01-18
 
 ### Added
 
+- `ui/Layout` debugging aid for help with complex layouts. Simply include the `"debug"` className in your app and everything below it will show debugging lines
+- `ui/Button`, `ui/Icon`, and `ui/IconButton` components to support reuse by themes
 - `ui/Touchable` support for flick gestures
 
-### Changed
+### Fixed
 
 - `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
-
-### Fixed
+- `ui/Layout` prop `align` to support setting horizontal and vertical alignment in one prop, separated by a space
 
 ## [2.0.0-alpha.2] - 2017-08-29
 
@@ -32,6 +39,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 ## Removed
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
+
+## [1.13.3] - 2017-01-16
+
+No significant changes.
 
 ## [1.13.2] - 2017-12-14
 

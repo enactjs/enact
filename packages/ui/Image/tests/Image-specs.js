@@ -1,6 +1,6 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
-import {Image, ImageBase} from '../Image';
+import ImageBase from '../Image';
 import css from '../Image.less';
 
 const src = {
@@ -12,7 +12,7 @@ const src = {
 describe('Image Specs', () => {
 	it('should only have image class without sizing', function () {
 		const image = mount(
-			<Image src={src} sizing="none" />
+			<ImageBase src={src} sizing="none" />
 		);
 
 		const expected = css.image;
@@ -23,7 +23,7 @@ describe('Image Specs', () => {
 
 	it('should have class for fill', function () {
 		const image = mount(
-			<Image src={src} sizing="fill" />
+			<ImageBase src={src} sizing="fill" />
 		);
 
 		const expected = true;
@@ -34,7 +34,7 @@ describe('Image Specs', () => {
 
 	it('should have class for fit', function () {
 		const image = mount(
-			<Image src={src} sizing="fit" />
+			<ImageBase src={src} sizing="fit" />
 		);
 
 		const expected = true;
