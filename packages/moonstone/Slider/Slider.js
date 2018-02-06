@@ -10,12 +10,12 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
+import Touchable from '@enact/ui/Touchable';
 import Spottable from '@enact/spotlight/Spottable';
 
 import SliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
 import Skinnable from '../Skinnable';
-import Touchable from '../internal/Touchable';
 
 import {SliderBarFactory} from './SliderBar';
 import SliderTooltip from './SliderTooltip';

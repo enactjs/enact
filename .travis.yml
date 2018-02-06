@@ -1,9 +1,9 @@
 language: node_js
 node_js:
-    - "node"
+    - "6"
 sudo: false
 install:
-    - npm install -g enyojs/enact-dev#develop
+    - npm install -g enyojs/enact-cli#develop
     - npm install
     - npm run bootstrap
 script:

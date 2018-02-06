@@ -4,13 +4,13 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ## [unreleased]
 
-### Deprecated
-
-### Added
-
 ### Changed
 
-### Fixed
+- samples to be organized by library and removed background selector
+
+## [2.0.0-alpha.3] - 2018-01-18
+
+No significant changes.
 
 ## [2.0.0-alpha.2] - 2017-08-29
 
@@ -19,6 +19,12 @@ No significant changes.
 ## [2.0.0-alpha.1] - 2017-08-27
 
 No significant changes.
+
+## [1.13.3] - 2017-01-16
+
+### Fixed
+
+- Several samples that would not rescale correctly when the viewport was resized
 
 ## [1.13.2] - 2017-12-14
 

@@ -1,5 +1,7 @@
 /**
- * Exports the {@link ui/Touchable.Touchable} Higher-order Component (HOC).
+ * Provides the [Touchable]{@link ui/Touchable.Touchable} Higher-order Component (HOC) to add
+ * gesture support to components and the [configure()]{@link ui/Touchable.configure} method for
+ * configuring gestures for the application.
  *
  * @module ui/Touchable
  */
@@ -13,6 +15,7 @@ import platform from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import {configure, getConfig} from './config';
 import {activate, deactivate, pause, States} from './state';
 import {block, unblock, isNotBlocked} from './block';
 
@@ -75,57 +78,7 @@ const defaultConfig = {
 	 * @default null
 	 * @memberof ui/Touchable.Touchable.defaultConfig
 	 */
-	activeProp: null,
-
-	dragConfig: {
-		constrain: 'window',
-		constrainBoxSizing: 'border-box',
-		global: false,
-		moveTolerance: 16
-	},
-
-	/**
-	 * Configures the behavior of the flick gesture. It accepts the following parameters
-	 *
-	 * * `maxDuration` - The amount of time, in milliseconds, to complete a flick gesture before it
-	 *   is cancelled. Defaults to 250.
-	 * * `maxMoves` - The number of moves tracked to determine if a flick occurred. Defaults to `5`.
-	 * * `minVelocity` - The minimum threshold, measured as the change in pixels over the change in
-	 *   time per move, that must be exceeded to generate a `onFlick` event.
-	 *
-	 * @type {Object}
-	 * @memberof ui/Touchable.Touchable.defaultConfig
-	 */
-	flickConfig: {
-		maxDuration: 250,
-		maxMoves: 5,
-		minVelocity: 0.1
-	},
-
-	/**
-	 * Configures the behavior of the hold gesture. It accepts the following parameters
-	 *
-	 * * `cancelOnMove` - When `true`, the hold is cancelled when moving beyond the `moveTolerance`.
-	 *   Defaults to `false`
-	 * * `moveTolerance` - The number of pixels from the start position of the hold that the pointer
-	 *   may move before cancelling the hold. Ignored when `cancelOnMove` is `false`. Defaults to
-	 *   `16`.
-	 * * `frequency` - The time, in milliseconds, to poll for hold events. Defaults to `200`.
-	 * * `events` - An array of `onHold` events which each contain a `name` and `time`. The `time`
-	 *   controls the amount of time that must pass before this `onHold` event is fired and should
-	 *   be a multiple of `frequency`.
-	 *
-	 * @type {Object}
-	 * @memberof ui/Touchable.Touchable.defaultConfig
-	 */
-	holdConfig: {
-		cancelOnMove: false,
-		moveTolerance: 16,
-		frequency: 200,
-		events: [
-			{name: 'hold', time: 200}
-		]
-	}
+	activeProp: null
 };
 
 /**
@@ -140,10 +93,7 @@ const defaultConfig = {
  */
 const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 	const {
-		activeProp,
-		dragConfig: defaultDragConfig,
-		flickConfig: defaultFlickConfig,
-		holdConfig: defaultHoldConfig
+		activeProp
 	} = config;
 
 	return class extends React.Component {
@@ -327,10 +277,11 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		startGesture = (ev, props) => {
 			const coords = getEventCoordinates(ev);
+			const {hold, flick, drag} = getConfig();
 
-			this.hold.begin(defaultHoldConfig, props, coords, this.target);
-			this.flick.begin(defaultFlickConfig, props, coords, this.target);
-			this.drag.begin(defaultDragConfig, props, coords, this.target);
+			this.hold.begin(hold, props, coords);
+			this.flick.begin(flick, props, coords);
+			this.drag.begin(drag, props, coords, this.target);
 
 			return true;
 		}
@@ -523,5 +474,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 export default Touchable;
 export {
+	configure,
 	Touchable
 };

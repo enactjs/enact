@@ -420,16 +420,18 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{Number}			Distance to travel in pixels
 		 */
 		calculateDistance (node) {
-			const rect = node.getBoundingClientRect();
-			const distance = Math.floor(Math.abs(node.scrollWidth - rect.width));
-
+			const distance = Math.ceil(node.scrollWidth - node.clientWidth);
 			return distance;
 		}
 
 		/*
-		 * Calculates the text overflow to use to correctly render the ellipsis. If the distance is
-		 * exactly 0, then the ellipsis is most likely hiding the content, and marquee does not need
-		 * to animate.
+		 * A custom overflow-determining method to reflect real-world truncation/ellipsis
+		 * calculation. This catches an edge case that the browser typically does not, where the
+		 * size of the text area is the same size as the container (zero distance difference), but
+		 * the browser still inserts an ellipsis due to a non-visible part of the last glyph's
+		 * render box overflowing the parent container size.
+		 * This scenario should not induce a marquee animation or ellipsis, so we directly set
+		 * Marquee to not use an ellipsis, and instead just clip the non-visible part of the glyph.
 		 *
 		 * @param	{Number}	distance	Amount of overflow in pixels
 		 * @returns	{String}				text-overflow value
