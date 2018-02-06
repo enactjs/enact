@@ -48,7 +48,7 @@ const
  * @private
  */
 const VirtualListBase = (type, UiComponent) => (
-	class VirtualListBase extends UiComponent {
+	class VirtualListCore extends UiComponent {
 		static displayName = 'VirtualListBase'
 
 		static propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
@@ -718,7 +718,7 @@ const VirtualListGenerator = (type, baseComponent) => SpotlightContainerDecorato
  * @class VirtualList
  * @extends moonstone/VirtualList.VirtualListBase
  * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable
+ * @mixes moonstone/Scrollable.Scrollable
  * @ui
  * @public
  */
@@ -731,7 +731,7 @@ const VirtualList = VirtualListGenerator('JS', UiVirtualListBase);
  * @class VirtualGridList
  * @extends moonstone/VirtualList.VirtualListBase
  * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable
+ * @mixes moonstone/Scrollable.Scrollable
  * @ui
  * @public
  */
@@ -744,7 +744,7 @@ const VirtualGridList = VirtualList;
  * @class VirtualListNative
  * @extends moonstone/VirtualList.VirtualListBaseNative
  * @memberof moonstone/VirtualList
- * @mixes moonstone/ScrollableNative
+ * @mixes moonstone/Scrollable.ScrollableNative
  * @ui
  * @public
  */
@@ -757,7 +757,7 @@ const VirtualListNative = VirtualListGenerator('Native', UiVirtualListBaseNative
  * @class VirtualGridListNative
  * @extends moonstone/VirtualList.VirtualListBaseNative
  * @memberof moonstone/VirtualList
- * @mixes moonstone/ScrollableNative
+ * @mixes moonstone/Scrollable.ScrollableNative
  * @ui
  * @public
  */

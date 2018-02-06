@@ -1,3 +1,11 @@
+/**
+ * Provides unstyled scroll bar components and behaviors to be customized by a theme or application.
+ *
+ * @module ui/Scrollable
+ * @exports Scrollbar
+ * @exports ScrollbarBase
+ */
+
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
@@ -27,18 +35,17 @@ const setCSSVariable = (element, variable, value) => {
 };
 
 /**
- * {@link ui/Scroller.Scrollbar} is a Scrollbar.
- * It is used in {@link ui/Scrollable.Scrollable}.
+ * [ScrollbarBase]{@link ui/Scrollable.ScrollbarBase} is a base component for Scrollbar.
  *
- * @class Scrollbar
- * @memberof ui/Scroller
+ * @class ScrollbarBase
+ * @memberof ui/Scrollable
  * @ui
  * @private
  */
 class ScrollbarBase extends PureComponent {
 	static displayName = 'ui:Scrollbar'
 
-	static propTypes = /** @lends ui/Scroller.Scrollbar.prototype */ {
+	static propTypes = /** @lends ui/Scrollable.ScrollbarBase.prototype */ {
 		/**
 		 * The callback function which is called for linking alertThumb function.
 		 *
@@ -174,6 +181,15 @@ class ScrollbarBase extends PureComponent {
 	}
 }
 
+/**
+ * [Scrollbar]{@link ui/Scrollable.Scrollbar} is a scrollbar.
+ * It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
+ *
+ * @class Scrollbar
+ * @memberof ui/Scrollable
+ * @ui
+ * @private
+ */
 const Scrollbar = ApiDecorator(
 	{api: ['containerRef', 'hideThumb', 'showThumb', 'startHidingThumb', 'update']},
 	ScrollbarBase

@@ -1,3 +1,11 @@
+/**
+ * Provides Moonstone-themed scroll bar components and behaviors.
+ *
+ * @module moonstone/Scrollable
+ * @exports Scrollbar
+ * @exports ScrollbarBase
+ */
+
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import classNames from 'classnames';
@@ -34,18 +42,18 @@ const
 	isPageDown = is('pageDown');
 
 /**
- * {@link moonstone/Scroller.Scrollbar} is a Scrollbar with Moonstone styling.
- * It is used in {@link moonstone/Scrollable.Scrollable}.
+ * [ScrollbarBase]{@link moonstone/Scrollable.ScrollbarBase} is a base component for
+ * [Scrollbar]{@link moonstone/Scrollable.Scrollbar} with Moonstone styling.
  *
- * @class Scrollbar
- * @memberof moonstone/Scroller
+ * @class ScrollbarBase
+ * @memberof moonstone/Scrollable
  * @ui
  * @private
  */
 class ScrollbarBase extends UiScrollbarBase {
 	static displayName = 'Scrollbar'
 
-	static propTypes = /** @lends moonstone/Scroller.Scrollbar.prototype */ {
+	static propTypes = /** @lends moonstone/Scrollable.ScrollbarBase.prototype */ {
 		/**
 		 * Can be called to alert the user for accessibility notifications.
 		 *
@@ -311,6 +319,15 @@ class ScrollbarBase extends UiScrollbarBase {
 	}
 }
 
+/**
+ * [Scrollbar]{@link moonstone/Scrollable.Scrollbar} is a Scrollbar with Moonstone styling.
+ * It is used in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
+ *
+ * @class Scrollbar
+ * @memberof moonstone/Scrollable
+ * @ui
+ * @private
+ */
 const Scrollbar = ApiDecorator(
 	{api: ['containerRef', 'hideThumb', 'isThumbFocused', 'showThumb', 'startHidingThumb', 'update']},
 	DisappearSpotlightDecorator(

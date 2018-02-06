@@ -1,3 +1,11 @@
+/**
+ * Provides Moonstone-themed scrollable native components and behaviors.
+ *
+ * @module moonstone/Scrollable
+ * @exports ScrollableNative
+ * @exports dataIndexAttribute
+ */
+
 import classNames from 'classnames';
 import css from '@enact/ui/Scrollable/Scrollable.less';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
@@ -26,12 +34,12 @@ const
 	};
 
 /**
- * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
+ * [dataIndexAttribute]{@link moonstone/Scrollable.dataIndexAttribute} is the name of a custom attribute
  * which indicates the index of an item in {@link moonstone/VirtualList.VirtualList}
  * or {@link moonstone/VirtualList.VirtualGridList}.
  *
  * @constant dataIndexAttribute
- * @memberof moonstone/Scroller
+ * @memberof moonstone/Scrollable
  * @type {String}
  * @private
  */
@@ -61,10 +69,20 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 	}
 );
 
+/**
+ * [ScrollableBaseNative]{@link moonstone/Scrollable.ScrollableBaseNative} is a base component for
+ * [ScrollableNative]{@link moostone/Scrollable.ScrollableNative}.
+ *
+ * @class ScrollableBaseNative
+ * @extends ui/Scrollable.ScrollableBaseNative
+ * @memberof moostone/Scrollable
+ * @ui
+ * @private
+ */
 class ScrollableBaseNative extends UiScrollableBaseNative {
 	static displayName = 'ScrollableBaseNative'
 
-	static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
+	static propTypes = /** @lends moonstone/Scrollable.ScrollableBaseNative.prototype */ {
 		/**
 		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
 		 * not move focus to the scrollbar controls.
@@ -528,10 +546,22 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
 	}
 }
 
+/**
+ * [ScrollableNative]{@link moonstone/Scrollable.ScrollableNative} is a Higher-order Component
+ * that applies a Scrollable behavior to its wrapped component.
+ *
+ * @class ScrollableNative
+ * @memberof moostone/Scrollable
+ * @ui
+ * @private
+ */
 const ScrollableNative = (WrappedComponent) => (kind({
 	name: 'ScrollableNative',
 	render: (props) => (<ScrollableBaseNative wrapped={WrappedComponent} {...props} />)
 }));
 
 export default ScrollableNative;
-export {dataIndexAttribute, ScrollableNative};
+export {
+	ScrollableNative,
+	dataIndexAttribute
+};

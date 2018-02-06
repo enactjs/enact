@@ -1,7 +1,10 @@
-/*
- * Exports the {@link ui/Scroller.ScrollableNative} Higher-order Component (HOC) and
- * the {@link ui/Scroller.dataIndexAttribute} constant.
- * The default export is {@link ui/Scroller.ScrollableNative}.
+/**
+ * Provides unstyled scrollable native components and behaviors to be customized by a theme or application.
+ *
+ * @module ui/Scrollable
+ * @exports ScrollableNative
+ * @exports constants
+ * @exports ScrollableBaseNative
  */
 
 import clamp from 'ramda/src/clamp';
@@ -47,40 +50,36 @@ const
 	} = constants;
 
 /**
- * {@link ui/Scroller.ScrollableNative} is a Higher-order Component
- * that applies a Scrollable behavior to its wrapped component.
+ * [ScrollableBaseNative]{@link ui/Scrollable.ScrollableBaseNative} is a base component for
+ * [ScrollableNative]{@link ui/Scrollable.ScrollableNative}.
  *
- * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
- * and also catches `onWheel`, `onScroll` and `onKeyDown` events from its wrapped component for scrolling behaviors.
- *
- * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
- *
- * @class ScrollableNative
- * @memberof ui/Scroller
- * @hoc
+ * @class ScrollableBaseNative
+ * @memberof ui/Scrollable
+ * @ui
  * @private
  */
 class ScrollableBaseNative extends Component {
 	static displayName = 'ui:ScrollableNative'
 
-	static propTypes = /** @lends ui/Scroller.ScrollableNative.prototype */ {
+	static propTypes = /** @lends ui/Scrollable.ScrollableNative.prototype */ {
 		/**
-		 * The callback function which is called for linking scrollTo function.
-		 * You should specify a callback function as the value of this prop
-		 * to use scrollTo feature.
+		 * A callback function that receives a reference to the `scrollTo` feature. Once received,
+		 * the `scrollTo` method can be called as an imperative interface.
 		 *
-		 * The scrollTo function passed to the parent component requires below as an argument.
-		 * - {position: {x, y}} - You can set a pixel value for x and/or y position
-		 * - {align} - You can set one of values below for align
+		 * The `scrollTo` function accepts the following paramaters:
+		 * - {position: {x, y}} - Pixel value for x and/or y position
+		 * - {align} - Where the scroll area should be aligned. Values are:
 		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
 		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
-		 * - {index} - You can set an index of specific item. (`0` or positive integer)
-		 *   This option is available for only VirtualList kind.
-		 * - {node} - You can set a node to scroll
-		 * - {animate} - When `true`, scroll occurs with animation.
-		 *   Set it to `false`, if you want scrolling without animation.
-		 * - {focus} - Set it `true`, if you want the item to be focused after scroll.
-		 *   This option is only valid when you scroll by `index` or `node`.
+		 * - {index} - Index of specific item. (`0` or positive integer)
+		 *   This option is available for only `VirtualList` kind.
+		 * - {node} - Node to scroll into view
+		 * - {animate} - When `true`, scroll occurs with animation. When `false`, no
+		 *   animation occurs.
+		 * - {indexToFocus} - Deprecated: Use `focus` instead.
+		 * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
+		 *   by `index` or `node`.
+		 * > Note: Only specify one of: `position`, `align`, `index` or `node`
 		 *
 		 * Example:
 		 * ```
@@ -106,6 +105,9 @@ class ScrollableBaseNative extends Component {
 
 		/**
 		 * Called when scrolling
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * It is not recommended to set this prop since it can cause performance degradation. Use
+		 * `onScrollStart` or `onScrollStop` instead.
 		 *
 		 * @type {Function}
 		 * @public
@@ -122,6 +124,7 @@ class ScrollableBaseNative extends Component {
 
 		/**
 		 * Called when scroll starts
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
 		 *
 		 * @type {Function}
 		 * @public
@@ -130,6 +133,7 @@ class ScrollableBaseNative extends Component {
 
 		/**
 		 * Called when scroll stops
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
 		 *
 		 * @type {Function}
 		 * @public
@@ -156,7 +160,7 @@ class ScrollableBaseNative extends Component {
 		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
 		/**
-		 * TBD
+		 * A component to make scrollable.
 		 *
 		 * @type {Function}
 		 * @public
@@ -856,6 +860,15 @@ class ScrollableBaseNative extends Component {
 	}
 }
 
+/**
+ * [ScrollableNative]{@link ui/Scrollable.ScrollableNative} is a Higher-order Component
+ * that applies a Scrollable behavior to its wrapped component.
+ *
+ * @class ScrollableNative
+ * @memberof ui/Scrollable
+ * @ui
+ * @private
+ */
 const ScrollableNative = (WrappedComponent) => (kind({
 	name: 'ui:ScrollableNative',
 	render: (props) => (<ScrollableBaseNative wrapped={WrappedComponent} {...props} />)

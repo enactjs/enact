@@ -1,9 +1,9 @@
 /**
- * Exports the {@link moonstone/Scroller.Scroller} and
- * {@link moonstone/Scroller.ScrollerBase} components.
- * The default export is {@link moonstone/Scroller.Scroller}.
+ * Provides Moonstone-themed scroller components and behaviors.
  *
- * @module moonstone/Scroller
+ * @module moostone/Scroller
+ * @exports Scroller
+ * @exports ScrollerBase
  */
 
 import {forward} from '@enact/core/handle';
@@ -23,11 +23,12 @@ const
 	};
 
 /**
- * {@link moonstone/Scroller.ScrollerBase} is a base component for Scroller.
+ * [ScrollerBase]{@link moonstone/Scroller.ScrollerBase} is a base component for Scroller.
  * In most circumstances, you will want to use the SpotlightContainerDecorator and Scrollable version:
- * {@link moonstone/Scroller.Scroller}
+ * [Scroller]{@link moonstone/Scroller.Scroller}
  *
  * @class ScrollerBase
+ * @extends ui/Scroller.ScrollerBase
  * @memberof moonstone/Scroller
  * @ui
  * @public
@@ -305,7 +306,7 @@ class ScrollerBase extends UiScrollerBase {
 }
 
 /**
- * {@link moonstone/Scroller.Scroller} is a Scroller with Moonstone styling,
+ * [Scroller]{@link moonstone/Scroller.Scroller} is a Scroller with Moonstone styling,
  * SpotlightContainerDecorator and Scrollable applied.
  *
  * Usage:
@@ -316,7 +317,6 @@ class ScrollerBase extends UiScrollerBase {
  * @class Scroller
  * @memberof moonstone/Scroller
  * @mixes moonstone/Scroller.Scrollable
- * @see moonstone/Scroller.ScrollerBase
  * @ui
  * @public
  */
@@ -324,139 +324,6 @@ const Scroller = SpotlightContainerDecorator(
 	{restrict: 'self-first'},
 	Scrollable(ScrollerBase)
 );
-
-/**
- * {@link moonstone/Scroller.Scroller} is a Scroller with Moonstone styling,
- * SpotlightContainerDecorator and Scrollable applied.
- *
- * Usage:
- * ```
- * <Scroller>Scroll me.</Scroller>
- * ```
- *
- * @class Scroller
- * @memberof moonstone/Scroller
- * @mixes moonstone/Scroller.Scrollable
- * @see moonstone/Scroller.ScrollerBase
- * @ui
- * @public
- */
-// const Scroller = SpotlightContainerDecorator(
-// 	{restrict: 'self-first'},
-// 	Scrollable(
-// 		ScrollerBase
-// 	)
-// );
-
-// Docs for Scroller
-/**
- * The callback function which is called for linking scrollTo function.
- * You should specify a callback function as the value of this prop
- * to use scrollTo feature.
- *
- * The scrollTo function passed to the parent component requires below as an argument.
- * - {position: {x, y}} - You can set a pixel value for x and/or y position
- * - {align} - You can set one of values below for align
- *   `'left'`, `'right'`, `'top'`, `'bottom'`,
- *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
- * - {index} - You can set an index of specific item. (`0` or positive integer)
- *   This option is available only for `VirtualList` kind.
- * - {node} - You can set a node to scroll
- * - {animate} - When `true`, scroll occurs with animation.
- *   Set it to `false` if you want scrolling without animation.
- * - {focus} - Set `true` if you want the item to be focused after scroll.
- *   This option is only valid when you scroll by `index` or `node`.
- *
- * Example:
- * ```
- *	// If you set cbScrollTo prop like below;
- *	cbScrollTo: (fn) => {this.scrollTo = fn;}
- *	// You can simply call like below;
- *	this.scrollTo({align: 'top'}); // scroll to the top
- * ```
- *
- * @name cbScrollTo
- * @type {Function}
- * @memberof moonstone/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
- * not move focus to the scrollbar controls.
- *
- * @name focusableScrollbar
- * @type {Boolean}
- * @memberof moonstone/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * Direction of the scroller; valid values are `'both'`, `'horizontal'`, and `'vertical'`.
- *
- * @name direction
- * @type {String}
- * @default 'both'
- * @memberof moonstone/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
- * `'visible'`, and `'hidden'`.
- *
- * @name horizontalScrollbar
- * @type {String}
- * @default 'auto'
- * @memberof moonstone/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * Called when scrolling
- *
- * @name onScroll
- * @type {Function}
- * @memberof moonstone/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * Called when scroll starts
- *
- * @name onScrollStart
- * @type {Function}
- * @memberof moonstone/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * Called when scroll stops
- *
- * @name onScrollStop
- * @type {Function}
- * @memberof moonstone/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
- * `'visible'`, and `'hidden'`.
- *
- * @name verticalScrollbar
- * @type {String}
- * @default 'auto'
- * @memberof moonstone/Scroller.Scroller
- * @instance
- * @public
- */
 
 export default Scroller;
 export {
