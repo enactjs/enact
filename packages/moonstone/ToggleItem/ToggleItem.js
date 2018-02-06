@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import Toggleable from '@enact/ui/Toggleable';
 
-import {ItemOverlay} from '../Item';
+import SlotItem from '../SlotItem';
 
 import ToggleIcon from './ToggleIcon';
 
@@ -172,7 +172,7 @@ const ToggleItemBase = kind({
 		delete rest.value;
 
 		return (
-			<ItemOverlay
+			<SlotItem
 				role="checkbox"
 				{...rest}
 				aria-checked={selected}
@@ -181,7 +181,7 @@ const ToggleItemBase = kind({
 				{iconBefore}
 				{children}
 				{iconAfter}
-			</ItemOverlay>
+			</SlotItem>
 		);
 	}
 });

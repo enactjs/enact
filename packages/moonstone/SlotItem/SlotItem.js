@@ -1,10 +1,20 @@
-// This is a sub-component to moonstone/Item, so it does not have a @module declaration
+/**
+ * Provides Moonstone-themed item component that accepts multiple positions of children, using the
+ * usual `children` prop, as well as two additional props: `overlayBefore`, and `overlayAfter`.
+ * It is able to be customized by a theme or application.
+ *
+ * @module moonstone/SlotItem
+ * @exports SlotItem
+ * @exports SlotItemBase
+ * @exports SlotItemDecorator
+ */
+
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import {childrenEquals} from '@enact/core/util';
-import {ItemOverlayBase as UiItemOverlayBase, ItemOverlayDecorator as UiItemOverlayDecorator} from '@enact/ui/ItemOverlay';
+import {SlotItemBase as UiSlotItemBase, SlotItemDecorator as UiSlotItemDecorator} from '@enact/ui/SlotItem';
 import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 import Toggleable from '@enact/ui/Toggleable';
 import Pure from '@enact/ui/internal/Pure';
@@ -13,30 +23,30 @@ import Spottable from '@enact/spotlight/Spottable';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import Item from './Item';
+import Item from '../Item';
 
-import componentCss from './Item.less';
+import componentCss from './SlotItem.less';
 
 /**
- * A moonstone-styled ItemOverlay without any behavior.
+ * A moonstone-styled SlotItem without any behavior.
  *
- * @class ItemOverlayBase
+ * @class SlotItemBase
  * @memberof moonstone/Item
  * @extends moonstone/Item.Item
  * @ui
  * @public
  */
-const ItemOverlayBase = kind({
-	name: 'ItemOverlay',
+const SlotItemBase = kind({
+	name: 'SlotItem',
 
-	propTypes: /** @lends moonstone/Item.ItemOverlayBase.prototype */ {
+	propTypes: /** @lends moonstone/Item.SlotItemBase.prototype */ {
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
 		 *
 		 * The following classes are supported:
 		 *
-		 * * `itemOverlay` - The root class name
+		 * * `slotItem` - The root class name
 		 *
 		 * @type {Object}
 		 * @public
@@ -46,13 +56,13 @@ const ItemOverlayBase = kind({
 
 	styles: {
 		css: componentCss,
-		className: 'itemOverlay',
-		publicClassNames: 'itemOverlay'
+		className: 'slotItem',
+		publicClassNames: 'slotItem'
 	},
 
 	render: (props) => {
 		return (
-			<UiItemOverlayBase
+			<UiSlotItemBase
 				{...props}
 				component={Item}
 				css={props.css}
@@ -62,11 +72,11 @@ const ItemOverlayBase = kind({
 });
 
 /**
- * Moonstone-specific item with overlay behaviors to apply to [Item]{@link moonstone/ItemOverlay.ItemOverlayBase}.
+ * Moonstone-specific item with overlay behaviors to apply to [Item]{@link moonstone/SlotItem.SlotItemBase}.
  *
- * @class ItemOverlayDecorator
+ * @class SlotItemDecorator
  * @memberof moonstone/Item
- * @mixes ui/ItemOverlay.ItemOverlayDecorator
+ * @mixes ui/SlotItem.SlotItemDecorator
  * @mixes ui/Toggleable
  * @mixes spotlight.Spottable
  * @mixes ui/Remeasurable.RemeasurableDecorator
@@ -75,8 +85,8 @@ const ItemOverlayBase = kind({
  * @hoc
  * @public
  */
-const ItemOverlayDecorator = compose(
-	UiItemOverlayDecorator,
+const SlotItemDecorator = compose(
+	UiSlotItemDecorator,
 	Pure(
 		{propComparators: {
 			overlayBefore: childrenEquals,
@@ -95,28 +105,28 @@ const ItemOverlayDecorator = compose(
  * A Moonstone-styled item with built-in support for overlays.
  *
  * ```
- *	<ItemOverlay autoHide="both">
+ *	<SlotItem autoHide="both">
  *		<overlayBefore>
  *			<Icon>flag</Icon>
  *			<Icon>star</Icon>
  *		</overlayBefore>
  *		An Item that will show some icons before and after this text when spotted
  *		<Icon slot="overlayAfter">trash</Icon>
- *	</ItemOverlay>
+ *	</SlotItem>
  * ```
  *
- * @class ItemOverlay
+ * @class SlotItem
  * @memberof moonstone/Item
- * @extends moonstone/Item.ItemOverlayBase
- * @mixes moonstone/Item.ItemOverlayDecorator
+ * @extends moonstone/Item.SlotItemBase
+ * @mixes moonstone/Item.SlotItemDecorator
  * @ui
  * @public
  */
-const ItemOverlay = ItemOverlayDecorator(ItemOverlayBase);
+const SlotItem = SlotItemDecorator(SlotItemBase);
 
-export default ItemOverlayBase;
+export default SlotItemBase;
 export {
-	ItemOverlay,
-	ItemOverlayBase,
-	ItemOverlayDecorator
+	SlotItem,
+	SlotItemBase,
+	SlotItemDecorator
 };

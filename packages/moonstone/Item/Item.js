@@ -8,9 +8,6 @@
  * @exports Item
  * @exports ItemBase
  * @exports ItemDecorator
- * @exports ItemOverlay
- * @exports ItemOverlayBase
- * @exports ItemOverlayDecorator
  */
 import UiItem from '@enact/ui/Item';
 import kind from '@enact/core/kind';
@@ -22,8 +19,6 @@ import Spottable from '@enact/spotlight/Spottable';
 
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
-
-import {ItemOverlay, ItemOverlayBase, ItemOverlayDecorator} from './ItemOverlay';
 
 import componentCss from './Item.less';
 
@@ -108,8 +103,5 @@ export default Item;
 export {
 	Item,
 	ItemBase,
-	ItemDecorator,
-	ItemOverlay,
-	ItemOverlayBase,
-	ItemOverlayDecorator
+	ItemDecorator
 };

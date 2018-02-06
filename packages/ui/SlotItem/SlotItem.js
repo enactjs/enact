@@ -3,10 +3,10 @@
  * `children` prop, as well as two additional props: `overlayBefore`, and `overlayAfter`.
  * It is able to be customized by a theme or application.
  *
- * @module ui/ItemOverlay
- * @exports ItemOverlay
- * @exports ItemOverlayBase
- * @exports ItemOverlayDecorator
+ * @module ui/SlotItem
+ * @exports SlotItem
+ * @exports SlotItemBase
+ * @exports SlotItemDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -14,20 +14,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
 
-import componentCss from './ItemOverlay.less';
+import componentCss from './SlotItem.less';
 
 /**
- * A ui-styled ItemOverlay without any behavior.
+ * A ui-styled SlotItem without any behavior.
  *
- * @class ItemOverlayBase
- * @memberof ui/ItemOverlay
+ * @class SlotItemBase
+ * @memberof ui/SlotItem
  * @ui
  * @public
  */
-const ItemOverlayBase = kind({
-	name: 'ItemOverlay',
+const SlotItemBase = kind({
+	name: 'SlotItem',
 
-	propTypes: /** @lends ui/ItemOverlay.ItemOverlayBase.prototype */ {
+	propTypes: /** @lends ui/SlotItem.SlotItemBase.prototype */ {
 		/**
 		 * The type of component to use to render the item. Must be a custom component as it needs
 		 * to accept the following props: `overlayBefore`, `overlayAfter`, and `css`.
@@ -57,7 +57,7 @@ const ItemOverlayBase = kind({
 		 *
 		 * The following classes are supported:
 		 *
-		 * * `itemOverlay` - The root class name
+		 * * `slotItem` - The root class name
 		 *
 		 * @type {Object}
 		 * @public
@@ -67,7 +67,7 @@ const ItemOverlayBase = kind({
 
 	styles: {
 		css: componentCss,
-		className: 'itemOverlay',
+		className: 'slotItem',
 		publicClassNames: true
 	},
 
@@ -96,42 +96,42 @@ const ItemOverlayBase = kind({
 });
 
 /**
- * ui-specific item with overlay behaviors to apply to [ItemOverlay]{@link ui/ItemOverlay.ItemOverlayBase}.
+ * ui-specific item with overlay behaviors to apply to [SlotItem]{@link ui/SlotItem.SlotItemBase}.
  *
- * @class ItemOverlayDecorator
- * @memberof ui/ItemOverlay
+ * @class SlotItemDecorator
+ * @memberof ui/SlotItem
  * @mixes ui/Slottable.Slottable
  * @hoc
  * @public
  */
-const ItemOverlayDecorator = Slottable({slots: ['overlayAfter', 'overlayBefore']});
+const SlotItemDecorator = Slottable({slots: ['overlayAfter', 'overlayBefore']});
 
 /**
  * A ui-styled item with built-in support for overlays.
  *
  * ```
- *	<ItemOverlay autoHide="both">
+ *	<SlotItem autoHide="both">
  *		<overlayBefore>
  *			<Icon>flag</Icon>
  *			<Icon>star</Icon>
  *		</overlayBefore>
  *		An Item that will show some icons before and after this text when spotted
  *		<Icon slot="overlayAfter">trash</Icon>
- *	</ItemOverlay>
+ *	</SlotItem>
  * ```
  *
- * @class ItemOverlay
- * @memberof ui/ItemOverlay
- * @extends ui/ItemOverlay.ItemOverlayBase
- * @mixes ui/ItemOverlay.ItemOverlayDecorator
+ * @class SlotItem
+ * @memberof ui/SlotItem
+ * @extends ui/SlotItem.SlotItemBase
+ * @mixes ui/SlotItem.SlotItemDecorator
  * @ui
  * @public
  */
-const ItemOverlay = ItemOverlayDecorator(ItemOverlayBase);
+const SlotItem = SlotItemDecorator(SlotItemBase);
 
-export default ItemOverlay;
+export default SlotItem;
 export {
-	ItemOverlay,
-	ItemOverlayBase,
-	ItemOverlayDecorator
+	SlotItem,
+	// SlotItemBase,
+	SlotItemDecorator
 };
