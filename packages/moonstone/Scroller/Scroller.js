@@ -461,5 +461,5 @@ const Scroller = SpotlightContainerDecorator(
 export default Scroller;
 export {
 	Scroller,
-	Scroller as ScrollerBase
+	ScrollerBase
 };

@@ -1,5 +1,5 @@
-import {ScrollerNative as UiScroller, ScrollerBaseNative as UiScrollerBase} from '@enact/ui/Scroller/ScrollerNative';
-import {ScrollerNative as Scroller} from '@enact/moonstone/Scroller/ScrollerNative';
+import {Scroller as UiScroller, ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
+import Scroller from '@enact/moonstone/Scroller';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
