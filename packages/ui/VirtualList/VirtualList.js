@@ -1,8 +1,11 @@
-/*
- * Exports the {@link moonstone/VirtualList.VirtualListBase} and
- * {@link moonstone/VirtualList.VirtualListCore} components and the
- * {@link moonstone/VirtualList.gridListItemSizeShape} validator. The default
- * export is {@link moonstone/VirtualList.VirtualListBase}.
+/**
+ * Provides unstyled virtual list components and behaviors to be customized by a theme or application.
+ *
+ * @module ui/VirtualList
+ * @exports VirtualList
+ * @exports VirtualGridList
+ * @exports VirtualListBase
+ * @exports gridListItemSizeShape
  */
 
 import classNames from 'classnames';
@@ -16,10 +19,11 @@ import css from './ListItem.less';
 const nop = () => {};
 
 /**
- * The shape for the grid list item size in a list for {@link moonstone/VirtualList.listItemSizeShape}.
+ * [gridListItemSizeShape]{@link ui/VirtualList.gridListItemSizeShape} is the shape for the grid list item size
+ * in a list for [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
  *
  * @typedef {Object} gridListItemSizeShape
- * @memberof moonstone/VirtualList
+ * @memberof ui/VirtualList
  * @property {Number} minWidth - The minimum width of the grid list item.
  * @property {Number} minHeight - The minimum height of the grid list item.
  */
@@ -29,24 +33,44 @@ const gridListItemSizeShape = PropTypes.shape({
 });
 
 /**
- * {@link moonstone/VirtualList.VirtualListBase} is a base component for
- * {@link moonstone/VirtualList.VirtualList} and
- * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
+ * [VirtualListBase]{@link ui/VirtualList.VirtualListBase} is a base component for
+ * [VirtualList]{@link ui/VirtualList.VirtualList} and
+ * [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
  *
- * @class VirtualListCore
- * @memberof moonstone/VirtualList
+ * @class VirtualListBase
+ * @memberof ui/VirtualList
  * @ui
  * @private
  */
 class VirtualListBase extends Component {
 	static displayName = 'ui:VirtualListBase'
 
-	static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
+	static propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
 		/**
-		 * The render function for an item of the list.
-		 * `index` is for accessing the index of the item.
-		 * `key` MUST be passed as a prop for DOM recycling.
+		 * The `render` function for an item of the list receives the following parameters:
+		 * - `data` is for accessing the supplied `data` property of the list.
+		 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
+		 * is parameters due to performance optimizations
+		 * - `data-index` is required for Spotlight 5-way navigation.  Pass to the root element in
+		 *   the component.
+		 * - `index` is the index number of the componet to render
+		 * - `key` MUST be passed as a prop to the root element in the component for DOM recycling.
+		 *
 		 * Data manipulation can be done in this function.
+		 *
+		 * > NOTE: The list does NOT always render a component whenever its render function is called
+		 * due to performance optimization.
+		 *
+		 * Usage:
+		 * ```
+		 * renderItem = ({index, ...rest}) => {
+		 *		delete rest.data;
+		 *
+		 *		return (
+		 *			<MyComponent index={index} {...rest} />
+		 *		);
+		 * }
+		 * ```
 		 *
 		 * @type {Function}
 		 * @public
@@ -57,7 +81,7 @@ class VirtualListBase extends Component {
 		 * Size of an item for the list; valid values are either a number for `VirtualList`
 		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
 		 *
-		 * @type {Number|moonstone/VirtualList.gridListItemSizeShape}
+		 * @type {Number|ui/VirtualList.gridListItemSizeShape}
 		 * @public
 		 */
 		itemSize: PropTypes.oneOfType([
@@ -88,8 +112,8 @@ class VirtualListBase extends Component {
 		}),
 
 		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
+		 * Data for passing it through `component` prop.
+		 * NOTICE: For performance reason, changing this prop does NOT always cause redraw items.
 		 *
 		 * @type {Any}
 		 * @default []
@@ -715,13 +739,34 @@ class VirtualListBase extends Component {
 	}
 }
 
-
+/**
+ * [VirtualList]{@link ui/VirtualList} is a scrollable virtual list component with touch support.
+ *
+ * @class VirtualList
+ * @extends ui/VirtualList.VirtualListBase
+ * @memberof ui/VirtualList
+ * @mixes ui/Scrollable
+ * @ui
+ * @public
+ */
 const VirtualList = Scrollable(VirtualListBase);
+
+/**
+ * [VirtualGridList]{@link ui/VirtualList.VirtualGridList} is a scrollable virtual grid list component with touch support.
+ *
+ * @class VirtualGridList
+ * @extends ui/VirtualList.VirtualListBase
+ * @memberof ui/VirtualList
+ * @mixes ui/Scrollable
+ * @ui
+ * @public
+ */
+const VirtualGridList = VirtualList;
 
 export default VirtualList;
 export {
 	VirtualList,
-	VirtualList as VirtualGridList,
+	VirtualGridList,
 	VirtualListBase,
 	gridListItemSizeShape
 };

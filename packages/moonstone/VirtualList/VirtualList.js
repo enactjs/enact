@@ -1,3 +1,15 @@
+/**
+ * Provides Moonstone-themed virtual list components and behaviors.
+ *
+ * @module moonstone/VirtualList
+ * @exports VirtualList
+ * @exports VirtualGridList
+ * @exports VirtualListBase
+ * @exports VirtualListNative
+ * @exports VirtualGridListNative
+ * @exports VirtualListBaseNative
+ */
+
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import css from '@enact/ui/VirtualList/ListItem.less';
@@ -25,17 +37,21 @@ const
 	isUp = is('up');
 
 /**
- * {@link moonstone/VirtualList.VirtualListSpotlightManager} is the class to manager the Spotlight in VirtualList.
+ * [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} is a base component for
+ * [VirtualList]{@link moonstone/VirtualList.VirtualList} and
+ * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
  *
- * @class VirtualListSpotlightManager
+ * @class VirtualListBase
+ * @extends ui/VirtualList.VirtualListBase
  * @memberof moonstone/VirtualList
+ * @ui
  * @private
  */
 const VirtualListBase = (type, UiComponent) => (
-	class VirtualListCore extends UiComponent {
+	class VirtualListBase extends UiComponent {
 		static displayName = 'VirtualListBase'
 
-		static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
+		static propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 			/**
 			 * Spotlight container Id
 			 *
@@ -658,18 +674,6 @@ const ScrollableVirtualList = (type, baseComponent) => {
 	return ScrollableComponent(VirtualListBase(type, baseComponent));
 };
 
-/**
- * {@link moonstone/VirtualList.VirtualListBase} is a base component for
- * {@link moonstone/VirtualList.VirtualList} and
- * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
- *
- * @class VirtualListBase
- * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable
- * @mixes spotlight/SpotlightContainerDecorator
- * @ui
- * @private
- */
 const VirtualListGenerator = (type, baseComponent) => SpotlightContainerDecorator(
 	{
 		enterTo: 'last-focused',
@@ -707,16 +711,64 @@ const VirtualListGenerator = (type, baseComponent) => SpotlightContainerDecorato
 	ScrollableVirtualList(type, baseComponent)
 );
 
-const
-	VirtualList = VirtualListGenerator('JS', UiVirtualListBase),
-	VirtualListNative = VirtualListGenerator('Native', UiVirtualListBaseNative);
+/**
+ * [VirtualList]{@link moonstone/VirtualList} is
+ * a scrollable and spottable virtual list component with Moonstone styling.
+ *
+ * @class VirtualList
+ * @extends moonstone/VirtualList.VirtualListBase
+ * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable
+ * @ui
+ * @public
+ */
+const VirtualList = VirtualListGenerator('JS', UiVirtualListBase);
+
+/**
+ * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList} is
+ * a scrollable and spottable virtual grid list component with Moonstone styling.
+ *
+ * @class VirtualGridList
+ * @extends moonstone/VirtualList.VirtualListBase
+ * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable
+ * @ui
+ * @public
+ */
+const VirtualGridList = VirtualList;
+
+/**
+ * [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative} is
+ * a scrollable and spottable virtual list component with Moonstone styling.
+ *
+ * @class VirtualListNative
+ * @extends moonstone/VirtualList.VirtualListBaseNative
+ * @memberof moonstone/VirtualList
+ * @mixes moonstone/ScrollableNative
+ * @ui
+ * @public
+ */
+const VirtualListNative = VirtualListGenerator('Native', UiVirtualListBaseNative);
+
+/**
+ * [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative} is
+ * a scrollable and spottable virtual grid list component with Moonstone styling.
+ *
+ * @class VirtualGridListNative
+ * @extends moonstone/VirtualList.VirtualListBaseNative
+ * @memberof moonstone/VirtualList
+ * @mixes moonstone/ScrollableNative
+ * @ui
+ * @public
+ */
+const VirtualGridListNative = VirtualListNative;
 
 export default VirtualList;
 export {
 	VirtualList,
-	VirtualList as VirtualGridList,
+	VirtualGridList,
 	VirtualListNative,
-	VirtualListNative as VirtualGridListNative,
+	VirtualGridListNative,
 	UiVirtualListBase as VirtualListBase,
 	UiVirtualListBaseNative as VirtualListBaseNative
 };
