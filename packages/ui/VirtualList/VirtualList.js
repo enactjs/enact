@@ -1,395 +1,728 @@
-/**
- * Exports the {@link moonstone/VirtualList.VirtualList},
- * {@link moonstone/VirtualList.VirtualGridList}, and
- * {@link moonstone/VirtualList.GridListImageItem} components.
- * The default export is {@link moonstone/VirtualList.VirtualList}.
- *
- * @module moonstone/VirtualList
+/*
+ * Exports the {@link moonstone/VirtualList.VirtualListBase} and
+ * {@link moonstone/VirtualList.VirtualListCore} components and the
+ * {@link moonstone/VirtualList.gridListItemSizeShape} validator. The default
+ * export is {@link moonstone/VirtualList.VirtualListBase}.
  */
 
-import kind from '@enact/core/kind';
-import React from 'react';
+import classNames from 'classnames';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import PropTypes from 'prop-types';
-
+import React, {Component} from 'react';
 import Scrollable from '../Scrollable';
-import VirtualListBase, {gridListItemSizeShape} from './VirtualListBase';
+
+import css from './ListItem.less';
+
+const nop = () => {};
 
 /**
- * {@link moonstone/VirtualList.VirtualList} is a VirtualList with Moonstone styling.
+ * The shape for the grid list item size in a list for {@link moonstone/VirtualList.listItemSizeShape}.
  *
- * @class VirtualList
+ * @typedef {Object} gridListItemSizeShape
+ * @memberof moonstone/VirtualList
+ * @property {Number} minWidth - The minimum width of the grid list item.
+ * @property {Number} minHeight - The minimum height of the grid list item.
+ */
+const gridListItemSizeShape = PropTypes.shape({
+	minWidth: PropTypes.number.isRequired,
+	minHeight: PropTypes.number.isRequired
+});
+
+/**
+ * {@link moonstone/VirtualList.VirtualListBase} is a base component for
+ * {@link moonstone/VirtualList.VirtualList} and
+ * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
+ *
+ * @class VirtualListCore
  * @memberof moonstone/VirtualList
  * @ui
- * @public
+ * @private
  */
-const VirtualList = kind({
-	name: 'ui:VirtualList',
+class VirtualListBase extends Component {
+	static displayName = 'ui:VirtualListBase'
 
-	propTypes: /** @lends moonstone/VirtualList.VirtualList.prototype */ {
+	static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
 		/**
 		 * The render function for an item of the list.
 		 * `index` is for accessing the index of the item.
 		 * `key` MUST be passed as a prop for DOM recycling.
 		 * Data manipulation can be done in this function.
 		 *
-		 * @name component
 		 * @type {Function}
-		 * @required
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
 		 * @public
 		 */
+		component: PropTypes.func.isRequired,
 
 		/**
-		 * Size of an item for the VirtualList; valid value is a number.
-		 * If the direction for the list is vertical, itemSize means the height of an item.
-		 * For horizontal, it means the width of an item.
+		 * Size of an item for the list; valid values are either a number for `VirtualList`
+		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
 		 *
-		 * Usage:
-		 * ```
-		 * <VirtualList itemSize={ri.scale(72)}/>
-		 * ```
-		 *
-		 * @type {Number}
-		 * @required
+		 * @type {Number|moonstone/VirtualList.gridListItemSizeShape}
 		 * @public
 		 */
-		itemSize: PropTypes.number.isRequired
+		itemSize: PropTypes.oneOfType([
+			PropTypes.number,
+			gridListItemSizeShape
+		]).isRequired,
 
 		/**
-		 * The callback function which is called for linking scrollTo function.
-		 * You should specify a callback function as the value of this prop
-		 * to use scrollTo feature.
+		 * Callback method of scrollTo.
+		 * Normally, `Scrollable` should set this value.
 		 *
-		 * The scrollTo function passed to the parent component requires below as an argument.
-		 * - {position: {x, y}} - You can set a pixel value for x and/or y position
-		 * - {align} - You can set one of values below for align
-		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
-		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
-		 * - {index} - You can set an index of specific item. (`0` or positive integer)
-		 *   This option is available only for `VirtualList` kind.
-		 * - {node} - You can set a node to scroll
-		 * - {animate} - When `true`, scroll occurs with animation.
-		 *   Set it to `false` if you want scrolling without animation.
-		 * - {focus} - Set `true` if you want the item to be focused after scroll.
-		 *   This option is only valid when you scroll by `index` or `node`.
-		 *
-		 * Example:
-		 * ````
-		 *	// If you set cbScrollTo prop like below;
-		 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
-		 *	// You can simply call like below;
-		 *	this.scrollTo({align: 'top'}); // scroll to the top
-		 * ```
-		 *
-		 * @name cbScrollTo
 		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
+		 * @private
+		 */
+		cbScrollTo: PropTypes.func,
+
+		/**
+		 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
+		 *
+		 * @type {Object}
+		 * @property {Number} clientWidth - The client width of the list.
+		 * @property {Number} clientHeight - The client height of the list.
 		 * @public
 		 */
+		clientSize: PropTypes.shape({
+			clientWidth: PropTypes.number.isRequired,
+			clientHeight:  PropTypes.number.isRequired
+		}),
 
 		/**
 		 * Data for the list.
 		 * Check mutation of this and determine whether the list should update or not.
 		 *
-		 * @name data
 		 * @type {Any}
 		 * @default []
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
 		 * @public
 		 */
+		data: PropTypes.any,
 
 		/**
 		 * Size of the data.
 		 *
-		 * @name dataSize
 		 * @type {Number}
 		 * @default 0
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
 		 * @public
 		 */
+		dataSize: PropTypes.number,
 
 		/**
 		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
 		 *
-		 * @name direction
 		 * @type {String}
 		 * @default 'vertical'
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
 		 * @public
 		 */
+		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
-		 * not move focus to the scrollbar controls.
+		 * Number of spare DOM node.
+		 * `3` is good for the default value experimentally and
+		 * this value is highly recommended not to be changed by developers.
 		 *
-		 * @name focusableScrollbar
+		 * @type {Number}
+		 * @default 3
+		 * @private
+		 */
+		overhang: PropTypes.number,
+
+		/**
+		 * It scrolls by page when 'true', by item when 'false'
+		 *
 		 * @type {Boolean}
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
+		 * @default false
+		 * @private
 		 */
-
-		/**
-		 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
-		 * `'visible'`, and `'hidden'`.
-		 *
-		 * @name horizontalScrollbar
-		 * @type {String}
-		 * @default 'auto'
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Called when scrolling
-		 *
-		 * @name onScroll
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Called when scroll starts
-		 *
-		 * @name onScrollStart
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Called when scroll stops
-		 *
-		 * @name onScrollStop
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
+		pageScroll: PropTypes.bool,
 
 		/**
 		 * Spacing between items.
 		 *
-		 * @name spacing
 		 * @type {Number}
 		 * @default 0
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
 		 * @public
 		 */
+		spacing: PropTypes.number
+	}
 
-		/**
-		 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
-		 * `'visible'`, and `'hidden'`.
-		 *
-		 * @name verticalScrollbar
-		 * @type {String}
-		 * @default 'auto'
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-	},
+	static contextTypes = contextTypes
 
-	render: (props) => <Scrollable wrapped={VirtualListBase} {...props} />
-});
+	static defaultProps = {
+		cbScrollTo: nop,
+		data: [],
+		dataSize: 0,
+		direction: 'vertical',
+		overhang: 3,
+		pageScroll: false,
+		spacing: 0
+	}
 
-/**
- * {@link moonstone/VirtualList.VirtualGridList} is a VirtualGridList with Moonstone styling.
- *
- * @class VirtualGridList
- * @memberof moonstone/VirtualList
- * @ui
- * @public
- */
-const VirtualGridList = kind({
-	name: 'ui:VirtualGridList',
+	constructor (props) {
+		super(props);
 
-	propTypes: /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
-		/**
-		 * The render function for an item of the list.
-		 * `index` is for accessing the index of the item.
-		 * `key` MUST be passed as a prop for DOM recycling.
-		 * Data manipulation can be done in this function.
-		 *
-		 * @name component
-		 * @type {Function}
-		 * @required
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
+		this.state = {firstIndex: 0, numOfItems: 0};
+		this.initContainerRef = this.initRef('containerRef');
+	}
 
-		/**
-		 * Size of an item for the VirtualGridList; valid value is an object that has `minWidth`
-		 * and `minHeight` as properties.
-		 *
-		 * Usage:
-		 * ```
-		 * <VirtualGridList itemSize={{minWidth: ri.scale(180), minHeight: ri.scale(270)}}/>
-		 * ```
-		 *
-		 * @type {moonstone/VirtualList.gridListItemSizeShape}
-		 * @required
-		 * @public
-		 */
-		itemSize: gridListItemSizeShape.isRequired
+	componentWillMount () {
+		if (this.props.clientSize) {
+			this.calculateMetrics(this.props);
+			this.updateStatesAndBounds(this.props);
+		}
+	}
 
-		/**
-		 * The callback function which is called for linking scrollTo function.
-		 * You should specify a callback function as the value of this prop
-		 * to use scrollTo feature.
-		 *
-		 * The scrollTo function passed to the parent component requires below as an argument.
-		 * - {position: {x, y}} - You can set a pixel value for x and/or y position
-		 * - {align} - You can set one of values below for align
-		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
-		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
-		 * - {index} - You can set an index of specific item. (`0` or positive integer)
-		 *   This option is available only for `VirtualList` kind.
-		 * - {node} - You can set a node to scroll
-		 * - {animate} - When `true`, scroll occurs with animation.
-		 *   Set it to `false` if you want scrolling without animation.
-		 * - {focus} - Set `true` if you want the item to be focused after scroll.
-		 *   This option is only valid when you scroll by `index` or `node`.
-		 *
-		 * Example:
-		 *	// If you set cbScrollTo prop like below;
-		 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
-		 *	// You can simply call like below;
-		 *	this.scrollTo({align: 'top'}); // scroll to the top
-		 * ```
-		 *
-		 * @name cbScrollTo
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
+	// Calculate metrics for VirtualList after the 1st render to know client W/H.
+	// We separate code related with data due to re use it when data changed.
+	componentDidMount () {
+		const containerNode = this.containerRef;
 
-		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
-		 *
-		 * @name data
-		 * @type {Any}
-		 * @default []
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
+		if (!this.props.clientSize) {
+			this.calculateMetrics(this.props);
+			this.updateStatesAndBounds(this.props);
+		}
 
-		/**
-		 * Size of the data.
-		 *
-		 * @name dataSize
-		 * @type {Number}
-		 * @default 0
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
+		// prevent native scrolling by Spotlight
+		this.preventScroll = () => {
+			containerNode.scrollTop = 0;
+			containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
+		};
 
-		/**
-		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
-		 *
-		 * @name direction
-		 * @type {String}
-		 * @default 'vertical'
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
+		if (containerNode && containerNode.addEventListener) {
+			containerNode.addEventListener('scroll', this.preventScroll);
+		}
+	}
 
-		/**
-		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
-		 * not move focus to the scrollbar controls.
-		 *
-		 * @name focusableScrollbar
-		 * @type {Boolean}
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
+	// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
+	// Calling setState within componentWillReceivePropswill not trigger an additional render.
+	componentWillReceiveProps (nextProps) {
+		const
+			{dataSize, direction, itemSize, overhang, spacing} = this.props,
+			hasMetricsChanged = (
+				direction !== nextProps.direction ||
+				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
+				overhang !== nextProps.overhang ||
+				spacing !== nextProps.spacing
+			),
+			hasDataChanged = (dataSize !== nextProps.dataSize);
 
-		/**
-		 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
-		 * `'visible'`, and `'hidden'`.
-		 *
-		 * @name horizontalScrollbar
-		 * @type {String}
-		 * @default 'auto'
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
+		if (hasMetricsChanged) {
+			this.calculateMetrics(nextProps);
+			this.updateStatesAndBounds(nextProps);
+		} else if (hasDataChanged) {
+			this.updateStatesAndBounds(nextProps);
+		}
+	}
 
-		/**
-		 * Called when scrolling
-		 *
-		 * @name onScroll
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
+	componentWillUnmount () {
+		const containerNode = this.containerRef;
 
-		/**
-		 * Called when scroll starts
-		 *
-		 * @name onScrollStart
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
+		// remove a function for preventing native scrolling by Spotlight
+		if (containerNode && containerNode.removeEventListener) {
+			containerNode.removeEventListener('scroll', this.preventScroll);
+		}
+	}
 
-		/**
-		 * Called when scroll stops
-		 *
-		 * @name onScrollStop
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
+	scrollBounds = {
+		clientWidth: 0,
+		clientHeight: 0,
+		scrollWidth: 0,
+		scrollHeight: 0,
+		maxLeft: 0,
+		maxTop: 0
+	}
 
-		/**
-		 * Spacing between items.
-		 *
-		 * @name spacing
-		 * @type {Number}
-		 * @default 0
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
+	moreInfo = {
+		firstVisibleIndex: null,
+		lastVisibleIndex: null
+	}
 
-		/**
-		 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
-		 * `'visible'`, and `'hidden'`.
-		 *
-		 * @name verticalScrollbar
-		 * @type {String}
-		 * @default 'auto'
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
-	},
+	primary = null
+	secondary = null
 
-	render: (props) => <Scrollable wrapped={VirtualListBase} {...props} />
-});
+	isPrimaryDirectionVertical = true
+	isItemSized = false
+
+	dimensionToExtent = 0
+	threshold = 0
+	maxFirstIndex = 0
+	curDataSize = 0
+	cc = []
+	scrollPosition = 0
+	updateFrom = null
+	updateTo = null
+
+	containerRef = null
+
+	isVertical = () => this.isPrimaryDirectionVertical
+
+	isHorizontal = () => !this.isPrimaryDirectionVertical
+
+	getScrollBounds = () => this.scrollBounds
+
+	getMoreInfo = () => this.moreInfo
+
+	getGridPosition (index) {
+		const
+			{dimensionToExtent, primary, secondary} = this,
+			primaryPosition = Math.floor(index / dimensionToExtent) * primary.gridSize,
+			secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
+
+		return {primaryPosition, secondaryPosition};
+	}
+
+	getItemPosition = (index, stickTo = 'start') => {
+		const
+			{primary} = this,
+			position = this.getGridPosition(index),
+			offset = (stickTo === 'start') ? 0 : primary.clientSize - primary.itemSize;
+
+		position.primaryPosition -= offset;
+
+		return this.gridPositionToItemPosition(position);
+	}
+
+	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) =>
+		(this.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
+
+	getClientSize = (node) => ({
+		clientWidth: node.clientWidth,
+		clientHeight: node.clientHeight
+	})
+
+	calculateMetrics (props) {
+		const
+			{clientSize, direction, itemSize, spacing} = props,
+			node = this.containerRef;
+
+		if (!clientSize && !node) {
+			return;
+		}
+
+		const
+			{clientWidth, clientHeight} = (clientSize || this.getClientSize(node)),
+			heightInfo = {
+				clientSize: clientHeight,
+				minItemSize: itemSize.minHeight || null,
+				itemSize: itemSize
+			},
+			widthInfo = {
+				clientSize: clientWidth,
+				minItemSize: itemSize.minWidth || null,
+				itemSize: itemSize
+			};
+		let primary, secondary, dimensionToExtent, thresholdBase;
+
+		this.isPrimaryDirectionVertical = (direction === 'vertical');
+
+		if (this.isPrimaryDirectionVertical) {
+			primary = heightInfo;
+			secondary = widthInfo;
+		} else {
+			primary = widthInfo;
+			secondary = heightInfo;
+		}
+		dimensionToExtent = 1;
+
+		this.isItemSized = (primary.minItemSize && secondary.minItemSize);
+
+		if (this.isItemSized) {
+			// the number of columns is the ratio of the available width plus the spacing
+			// by the minimum item width plus the spacing
+			dimensionToExtent = Math.max(Math.floor((secondary.clientSize + spacing) / (secondary.minItemSize + spacing)), 1);
+			// the actual item width is a ratio of the remaining width after all columns
+			// and spacing are accounted for and the number of columns that we know we should have
+			secondary.itemSize = Math.floor((secondary.clientSize - (spacing * (dimensionToExtent - 1))) / dimensionToExtent);
+			// the actual item height is related to the item width
+			primary.itemSize = Math.floor(primary.minItemSize * (secondary.itemSize / secondary.minItemSize));
+		}
+
+		primary.gridSize = primary.itemSize + spacing;
+		secondary.gridSize = secondary.itemSize + spacing;
+		thresholdBase = primary.gridSize * 2;
+
+		this.threshold = {min: -Infinity, max: thresholdBase, base: thresholdBase};
+		this.dimensionToExtent = dimensionToExtent;
+
+		this.primary = primary;
+		this.secondary = secondary;
+
+		// reset
+		this.scrollPosition = 0;
+		// eslint-disable-next-line react/no-direct-mutation-state
+		this.state.firstIndex = 0;
+		// eslint-disable-next-line react/no-direct-mutation-state
+		this.state.numOfItems = 0;
+	}
+
+	updateStatesAndBounds (props) {
+		const
+			{dataSize, overhang} = props,
+			{firstIndex} = this.state,
+			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
+			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
+			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
+			dataSizeDiff = dataSize - this.curDataSize;
+		let newFirstIndex = firstIndex;
+
+		this.maxFirstIndex = Math.ceil((dataSize - numOfItems) / dimensionToExtent) * dimensionToExtent;
+		this.curDataSize = dataSize;
+		this.updateFrom = null;
+		this.updateTo = null;
+
+		// reset children
+		this.cc = [];
+		this.calculateScrollBounds(props);
+		this.updateMoreInfo(dataSize, scrollPosition);
+
+		newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
+
+		this.setState({firstIndex: newFirstIndex, numOfItems});
+	}
+
+	calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff) {
+		const
+			{overhang} = props,
+			{firstIndex} = this.state,
+			{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, scrollPosition, threshold} = this,
+			{gridSize} = primary;
+		let newFirstIndex = firstIndex;
+
+		if (wasFirstIndexMax && dataSizeDiff > 0) { // If dataSize increased from bottom, we need adjust firstIndex
+			// If this is a gridlist and dataSizeDiff is smaller than 1 line, we are adjusting firstIndex without threshold change.
+			if (dimensionToExtent > 1 &&  dataSizeDiff < dimensionToExtent) {
+				newFirstIndex = maxFirstIndex;
+			} else { // For other bottom adding case, we need to update firstIndex and threshold.
+				const
+					maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
+					maxOfMin = maxPos - threshold.base,
+					numOfUpperLine = Math.floor(overhang / 2),
+					firstIndexFromPosition = Math.floor(scrollPosition / gridSize),
+					expectedFirstIndex = Math.max(0, firstIndexFromPosition - numOfUpperLine);
+
+				// To navigate with 5way, we need to adjust firstIndex to the next line
+				// since at the bottom we have num of overhang lines for upper side but none for bottom side
+				// So we add numOfUpperLine at the top and rest lines at the bottom
+				newFirstIndex = Math.min(maxFirstIndex, expectedFirstIndex * dimensionToExtent);
+
+				// We need to update threshold also since we moved the firstIndex
+				threshold.max = Math.min(maxPos, threshold.max + gridSize);
+				threshold.min = Math.min(maxOfMin, threshold.max - gridSize);
+			}
+		} else { // Other cases, we can keep the min value between firstIndex and maxFirstIndex. No need to change threshold
+			newFirstIndex = Math.min(firstIndex, maxFirstIndex);
+		}
+
+		return newFirstIndex;
+	}
+
+	calculateScrollBounds (props) {
+		const
+			{clientSize} = props,
+			node = this.containerRef;
+
+		if (!clientSize && !node) {
+			return;
+		}
+
+		const
+			{scrollBounds, isPrimaryDirectionVertical} = this,
+			{clientWidth, clientHeight} = clientSize || this.getClientSize(node);
+		let maxPos;
+
+		scrollBounds.clientWidth = clientWidth;
+		scrollBounds.clientHeight = clientHeight;
+		scrollBounds.scrollWidth = this.getScrollWidth();
+		scrollBounds.scrollHeight = this.getScrollHeight();
+		scrollBounds.maxLeft = Math.max(0, scrollBounds.scrollWidth - clientWidth);
+		scrollBounds.maxTop = Math.max(0, scrollBounds.scrollHeight - clientHeight);
+
+		// correct position
+		maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
+
+		this.syncThreshold(maxPos);
+
+		if (this.scrollPosition > maxPos) {
+			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
+		}
+	}
+
+	updateMoreInfo (dataSize, primaryPosition) {
+		const
+			{dimensionToExtent, moreInfo} = this,
+			{itemSize, gridSize, clientSize} = this.primary;
+
+		if (dataSize <= 0) {
+			moreInfo.firstVisibleIndex = null;
+			moreInfo.lastVisibleIndex = null;
+		} else {
+			moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - itemSize) / gridSize) + 1) * dimensionToExtent;
+			moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * dimensionToExtent - 1);
+		}
+	}
+
+	syncThreshold (maxPos) {
+		const {threshold} = this;
+
+		if (threshold.max > maxPos) {
+			if (maxPos < threshold.base) {
+				threshold.max = threshold.base;
+				threshold.min = -Infinity;
+			} else {
+				threshold.max = maxPos;
+				threshold.min = maxPos - threshold.base;
+			}
+		}
+	}
+
+	setScrollPosition (x, y, dirX, dirY) {
+		const
+			{dataSize} = this.props,
+			{firstIndex, numOfItems} = this.state,
+			{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds} = this,
+			{gridSize} = this.primary,
+			maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
+			minOfMax = threshold.base,
+			maxOfMin = maxPos - threshold.base;
+		let delta, numOfGridLines, newFirstIndex = firstIndex, pos, dir = 0;
+
+		if (isPrimaryDirectionVertical) {
+			pos = y;
+			dir = dirY;
+		} else {
+			pos = x;
+			dir = dirX;
+		}
+
+		if (dir === 1 && pos > threshold.max) {
+			delta = pos - threshold.max;
+			numOfGridLines = Math.ceil(delta / gridSize); // how many lines should we add
+			threshold.max = Math.min(maxPos, threshold.max + numOfGridLines * gridSize);
+			threshold.min = Math.min(maxOfMin, threshold.max - gridSize);
+			newFirstIndex += numOfGridLines * dimensionToExtent;
+		} else if (dir === -1 && pos < threshold.min) {
+			delta = threshold.min - pos;
+			numOfGridLines = Math.ceil(delta / gridSize);
+			threshold.max = Math.max(minOfMax, threshold.min - (numOfGridLines * gridSize - gridSize));
+			threshold.min = (threshold.max > minOfMax) ? threshold.max - gridSize : -Infinity;
+			newFirstIndex -= numOfGridLines * dimensionToExtent;
+		}
+
+		if (threshold.min === -Infinity) {
+			newFirstIndex = 0;
+		} else {
+			newFirstIndex = Math.min(maxFirstIndex, newFirstIndex);
+			newFirstIndex = Math.max(0, newFirstIndex);
+		}
+
+		this.syncThreshold(maxPos);
+		this.scrollPosition = pos;
+		this.updateMoreInfo(dataSize, pos);
+
+		if (firstIndex !== newFirstIndex) {
+			this.setState({firstIndex: newFirstIndex});
+		} else {
+			this.positionItems({updateFrom: firstIndex, updateTo: firstIndex + numOfItems});
+		}
+	}
+
+	applyStyleToExistingNode = (index, ...rest) => {
+		const
+			{numOfItems} = this.state,
+			node = this.containerRef.children[index % numOfItems];
+
+		if (node) {
+			this.composeStyle(node.style, ...rest);
+		}
+	}
+
+	applyStyleToNewNode = (index, ...rest) => {
+		const
+			{component, data} = this.props,
+			{numOfItems} = this.state,
+			key = index % numOfItems,
+			itemElement = component({
+				data,
+				index,
+				key
+			}),
+			style = {};
+
+		this.composeStyle(style, ...rest);
+
+		this.cc[key] = React.cloneElement(itemElement, {
+			className: classNames(css.listItem, itemElement.props.className),
+			style: {...itemElement.props.style, ...style}
+		});
+	}
+
+	applyStyleToHideNode = (index) => {
+		const
+			key = index % this.state.numOfItems,
+			style = {display: 'none'},
+			attributes = {key, style};
+
+		this.cc[key] = (<div {...attributes} />);
+	}
+
+	positionItems ({updateFrom, updateTo}) {
+		const
+			{dataSize} = this.props,
+			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition} = this;
+		let
+			{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom),
+			hideTo = 0,
+			width, height;
+
+		primaryPosition -= scrollPosition;
+		width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
+		height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
+
+		if (updateTo > dataSize) {
+			hideTo = updateTo;
+			updateTo = dataSize;
+		}
+
+		// positioning items
+		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
+			if (this.updateFrom === null || this.updateTo === null || this.updateFrom > i || this.updateTo <= i) {
+				this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
+			} else {
+				this.applyStyleToExistingNode(i, width, height, primaryPosition, secondaryPosition);
+			}
+
+			if (++j === dimensionToExtent) {
+				secondaryPosition = 0;
+				primaryPosition += primary.gridSize;
+				j = 0;
+			} else {
+				secondaryPosition += secondary.gridSize;
+			}
+		}
+
+		for (let i = updateTo; i < hideTo; i++) {
+			this.applyStyleToHideNode(i);
+		}
+
+		this.updateFrom = updateFrom;
+		this.updateTo = updateTo;
+	}
+
+	composeStyle (style, width, height, ...rest) {
+		if (this.isItemSized) {
+			style.width = width;
+			style.height = height;
+		}
+		style.position = 'absolute';
+		this.composeTransform(style, ...rest);
+	}
+
+	getXY = (primaryPosition, secondaryPosition) => {
+		const rtlDirection = this.context.rtl ? -1 : 1;
+		return (this.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
+	}
+
+	composeTransform (style, primaryPosition, secondaryPosition = 0) {
+		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
+
+		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
+	}
+
+	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
+
+	getScrollWidth = () => (this.isPrimaryDirectionVertical ? this.scrollBounds.clientWidth : this.getVirtualScrollDimension())
+
+	getVirtualScrollDimension = () => {
+		const
+			{dimensionToExtent, primary, curDataSize} = this,
+			{spacing} = this.props;
+
+		return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
+	}
+
+	isSameTotalItemSizeWithClient = () => {
+		const
+			node = this.containerRef,
+			{clientWidth, clientHeight} = this.props.clientSize || this.getClientSize(node);
+
+		return (this.getVirtualScrollDimension() <= (this.isPrimaryDirectionVertical ? clientHeight : clientWidth));
+	}
+
+	syncClientSize = () => {
+		const
+			{props} = this,
+			node = this.containerRef;
+
+		if (!props.clientSize && !node) {
+			return false;
+		}
+
+		const
+			{clientWidth, clientHeight} = props.clientSize || this.getClientSize(node),
+			{scrollBounds} = this;
+
+		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
+			this.calculateMetrics(props);
+			this.updateStatesAndBounds(props);
+			return true;
+		}
+
+		return false;
+	}
+
+	// override
+	onKeyDown = () => {}
+
+	// render
+
+	initRef (prop) {
+		return (ref) => {
+			this[prop] = ref;
+		};
+	}
+
+	renderChildren = () => {
+		const cc = this.cc;
+		return cc.length ? cc : null;
+	}
+
+	render () {
+		const
+			{...rest} = this.props,
+			{firstIndex, numOfItems} = this.state,
+			{primary} = this;
+
+		delete rest.cbScrollTo;
+		delete rest.clientSize;
+		delete rest.component;
+		delete rest.data;
+		delete rest.dataSize;
+		delete rest.direction;
+		delete rest.itemSize;
+		delete rest.nodeIndexToBeFocused;
+		delete rest.overhang;
+		delete rest.pageScroll;
+		delete rest.spacing;
+
+		if (primary) {
+			this.positionItems({updateFrom: firstIndex, updateTo: firstIndex + numOfItems});
+		}
+
+		return (
+			<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
+				{this.renderChildren()}
+			</div>
+		);
+	}
+}
+
+
+const VirtualList = Scrollable(VirtualListBase);
 
 export default VirtualList;
-export {VirtualList, VirtualListBase, VirtualGridList, gridListItemSizeShape};
+export {
+	VirtualList,
+	VirtualList as VirtualGridList,
+	VirtualListBase,
+	gridListItemSizeShape
+};
 export * from './GridListImageItem';

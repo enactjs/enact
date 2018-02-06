@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
-import {VirtualListBase} from '@enact/ui/VirtualList/VirtualListBase';
+import {VirtualListBase} from '@enact/ui/VirtualList';
 
 import css from './VirtualFlexList.less';
 import Positionable from './Positionable';
