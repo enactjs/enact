@@ -6,8 +6,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
-- `moonstone/Button` prop `noAnimation`
-
 ### Added
 
 ### Changed

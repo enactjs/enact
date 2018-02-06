@@ -31,7 +31,6 @@ storiesOf('Moonstone', module)
 				color={nullify(select('color', ['', 'red', 'green', 'yellow', 'blue'], ''))}
 				disabled={boolean('disabled', Config.defaultProps.disabled)}
 				icon={nullify(select('icon', prop.icons, Config.defaultProps.icon))}
-				noAnimation={nullify(boolean('noAnimation', false))}
 				minWidth={nullify(boolean('minWidth', Config.defaultProps.minWidth))}
 				selected={nullify(boolean('selected', false))}
 				small={nullify(boolean('small', Config.defaultProps.small))}
