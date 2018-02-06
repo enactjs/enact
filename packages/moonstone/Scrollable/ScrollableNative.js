@@ -1,11 +1,12 @@
 import classNames from 'classnames';
 import css from '@enact/ui/Scrollable/Scrollable.less';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
+import kind from '@enact/core/kind';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {ScrollableNative as UiScrollableNative, constants} from '@enact/ui/Scrollable/ScrollableNative';
+import {ScrollableBaseNative as UiScrollableBaseNative, constants} from '@enact/ui/Scrollable/ScrollableNative';
 
 import Scrollbar from './Scrollbar';
 import scrollbarCss from './Scrollbar.less';
@@ -60,8 +61,8 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 	}
 );
 
-class ScrollableNative extends UiScrollableNative {
-	static displayName = 'ScrollableNative'
+class ScrollableBaseNative extends UiScrollableBaseNative {
+	static displayName = 'ScrollableBaseNative'
 
 	static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
 		/**
@@ -526,6 +527,11 @@ class ScrollableNative extends UiScrollableNative {
 		);
 	}
 }
+
+const ScrollableNative = (WrappedComponent) => (kind({
+	name: 'ScrollableNative',
+	render: (props) => (<ScrollableBaseNative wrapped={WrappedComponent} {...props} />)
+}));
 
 export default ScrollableNative;
 export {dataIndexAttribute, ScrollableNative};

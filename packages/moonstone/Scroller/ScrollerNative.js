@@ -4,13 +4,9 @@
  * The default export is {@link moonstone/Scroller.ScrollerNative}.
  */
 
-import React from 'react';
+import {ScrollableNative} from '@enact/ui/Scrollable/ScrollableNative';
+import {ScrollerBaseNative} from '@enact/ui/Scroller/ScrollerNative';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-
-import {ScrollableNative as UiScrollableNative} from '@enact/ui/Scrollable/ScrollableNative';
-import {ScrollerBaseNative as UiScrollerBaseNative} from '@enact/ui/Scroller/ScrollerNative';
-
-const ScrollerBaseNative = UiScrollerBaseNative;
 
 /**
  * {@link moonstone/Scroller.ScrollerNative} is a Scroller with Moonstone styling,
@@ -28,8 +24,10 @@ const ScrollerBaseNative = UiScrollerBaseNative;
  * @ui
  * @private
  */
-const ScrollerNativeCore = (props) => (<UiScrollableNative wrapped={ScrollerBaseNative} {...props} />);
-const ScrollerNative = SpotlightContainerDecorator({restrict: 'self-first'}, ScrollerNativeCore);
+const ScrollerNative = SpotlightContainerDecorator(
+	{restrict: 'self-first'},
+	ScrollableNative(ScrollerBaseNative)
+);
 
 // Docs for ScrollerNative
 /**
@@ -139,4 +137,7 @@ const ScrollerNative = SpotlightContainerDecorator({restrict: 'self-first'}, Scr
  */
 
 export default ScrollerNative;
-export {ScrollerNative, ScrollerBaseNative};
+export {
+	ScrollerNative,
+	ScrollerBaseNative
+};

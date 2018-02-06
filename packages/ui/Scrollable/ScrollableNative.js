@@ -11,6 +11,7 @@ import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
+import kind from '@enact/core/kind';
 import {on, off} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -59,7 +60,7 @@ const
  * @hoc
  * @private
  */
-class ScrollableNative extends Component {
+class ScrollableBaseNative extends Component {
 	static displayName = 'ui:ScrollableNative'
 
 	static propTypes = /** @lends ui/Scroller.ScrollableNative.prototype */ {
@@ -855,5 +856,14 @@ class ScrollableNative extends Component {
 	}
 }
 
+const ScrollableNative = (WrappedComponent) => (kind({
+	name: 'ui:ScrollableNative',
+	render: (props) => (<ScrollableBaseNative wrapped={WrappedComponent} {...props} />)
+}));
+
 export default ScrollableNative;
-export {ScrollableNative, constants};
+export {
+	ScrollableNative,
+	constants,
+	ScrollableBaseNative
+};

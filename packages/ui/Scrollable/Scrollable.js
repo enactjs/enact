@@ -10,6 +10,7 @@ import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
 import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
+import kind from '@enact/core/kind';
 import {on, off} from '@enact/core/dispatcher';
 import {perfNow} from '@enact/core/util';
 import PropTypes from 'prop-types';
@@ -65,8 +66,8 @@ const
  * @hoc
  * @private
  */
-class Scrollable extends Component {
-	static displayName = 'ui:Scrollable'
+class ScrollableBase extends Component {
+	static displayName = 'ui:ScrollableBase'
 
 	static propTypes = /** @lends ui/Scroller.Scrollable.prototype */ {
 		/**
@@ -955,5 +956,14 @@ class Scrollable extends Component {
 	}
 }
 
+const Scrollable = (WrappedComponent) => (kind({
+	name: 'ui:Scrollable',
+	render: (props) => (<ScrollableBase wrapped={WrappedComponent} {...props} />)
+}));
+
 export default Scrollable;
-export {Scrollable, constants};
+export {
+	Scrollable,
+	constants,
+	ScrollableBase
+};

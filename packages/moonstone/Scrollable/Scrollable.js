@@ -1,11 +1,12 @@
 import classNames from 'classnames';
 import css from '@enact/ui/Scrollable/Scrollable.less';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
+import kind from '@enact/core/kind';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Scrollable as UiScrollable, constants} from '@enact/ui/Scrollable';
+import {ScrollableBase as UiScrollableBase, constants} from '@enact/ui/Scrollable';
 
 import Scrollbar from './Scrollbar';
 import scrollbarCss from './Scrollbar.less';
@@ -61,8 +62,8 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 	}
 );
 
-class Scrollable extends UiScrollable {
-	static displayName = 'Scrollable'
+class ScrollableBase extends UiScrollableBase {
+	static displayName = 'ScrollableBase'
 
 	static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
 		/**
@@ -480,6 +481,11 @@ class Scrollable extends UiScrollable {
 		);
 	}
 }
+
+const Scrollable = (WrappedComponent) => (kind({
+	name: 'Scrollable',
+	render: (props) => (<ScrollableBase wrapped={WrappedComponent} {...props} />)
+}));
 
 export default Scrollable;
 export {dataIndexAttribute, Scrollable};
