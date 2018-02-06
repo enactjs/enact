@@ -20,7 +20,7 @@ import css from './ScrollThumb.less';
  * @private
  */
 const ScrollThumb = kind({
-	name: 'ScrollThumb',
+	name: 'ui:ScrollThumb',
 
 	propTypes: /** @lends ui/Scrollable.ScrollThumb.prototype */ {
 		/**
