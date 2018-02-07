@@ -76,23 +76,7 @@ const ItemBase = kind({
 		 * @default false
 		 * @public
 		 */
-		inline: PropTypes.bool,
-
-		/**
-		 * An additional component, like a slot, inserted after the `children` content.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		slotAfter: PropTypes.node,
-
-		/**
-		 * An additional component, like a slot, inserted before the `children` content.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		slotBefore: PropTypes.node
+		inline: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -110,7 +94,7 @@ const ItemBase = kind({
 		className: ({inline, styler}) => styler.append({inline})
 	},
 
-	render: ({component: Component, disabled, slotBefore, slotAfter, children, ...rest}) => {
+	render: ({component: Component, disabled, children, ...rest}) => {
 		delete rest.inline;
 
 		return (
@@ -119,9 +103,7 @@ const ItemBase = kind({
 				aria-disabled={disabled}
 				disabled={disabled}
 			>
-				{slotBefore}
 				{children}
-				{slotAfter}
 			</Component>
 		);
 	}
