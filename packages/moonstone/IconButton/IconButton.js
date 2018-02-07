@@ -83,6 +83,7 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @type {Boolean}
 			 * @default true
 			 * @public
+			 * @deprecated
 			 */
 			noAnimation: PropTypes.bool,
 
@@ -124,7 +125,6 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		defaultProps: {
-			noAnimation: true,
 			small: false
 		},
 
