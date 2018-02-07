@@ -10,7 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
-- `moonstone/Button` prop `noAnimation`
+- `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`
 
 ### Changed
 

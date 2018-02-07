@@ -80,25 +80,12 @@ const IconButtonBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Disables the `pressed` animation
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noAnimation: PropTypes.bool,
-
-		/**
 		 * An optional node to receive the tooltip from `TooltipDecorator`.
 		 *
 		 * @type {Node}
 		 * @private
 		 */
 		tooltipNode: PropTypes.node
-	},
-
-	defaultProps: {
-		noAnimation: false
 	},
 
 	styles: {
