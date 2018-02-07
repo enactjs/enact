@@ -3,7 +3,6 @@
  *
  * @module ui/Icon
  * @exports Icon
- * @exports IconBase
  */
 
 import kind from '@enact/core/kind';
