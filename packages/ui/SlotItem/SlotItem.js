@@ -44,16 +44,16 @@ const SlotItemBase = kind({
 		/**
 		 * Controls the visibility state of the slots.
 		 *
-		 * One, both, or neither slot can be shown. Choosing `'after'`
-		 * will leave `slotBefore` visible at all times; only `slotAfter` will have its visibility
-		 * toggled.  Valid values are `'before'`, `'after'` and `'both'`. Omitting the
-		 * property will result in no-auto-hiding for either slot so they will both be present.
+		 * One, both, or neither slot can be shown. Choosing `'after'` will leave `slotBefore`
+		 * visible at all times; only `slotAfter` will have its visibility toggled.  Valid values
+		 * are `'before'`, `'after'` and `'both'`. Omitting the property will result in
+		 * no-auto-hiding for either slot so they will both be present.
 		 *
 		 * In order for `autoHide` to have a visual affect, the `hidden` class must be tied to
 		 * another condition such as focus.
 		 *
 		 * ```
-		 * .slot.hidden:focus {
+		 * .slot.hidden:not(:focus) {
 		 *   display: none;
 		 * }
 		 * ```
