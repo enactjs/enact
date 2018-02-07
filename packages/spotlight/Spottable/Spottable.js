@@ -191,12 +191,14 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 				// if spotlight didn't move, find something else to spot starting from here
 				const current = Spotlight.getCurrent();
-				if (!Spotlight.getPointerMode() && (!current || this.node === current)) {
+				if (!current || this.node === current) {
 					this.node.blur();
 
-					getContainersForNode(this.node).reverse().reduce((found, id) => {
-						return found || Spotlight.focus(id);
-					}, false);
+					if (!Spotlight.getPointerMode()) {
+						getContainersForNode(this.node).reverse().reduce((found, id) => {
+							return found || Spotlight.focus(id);
+						}, false);
+					}
 				}
 			}
 
