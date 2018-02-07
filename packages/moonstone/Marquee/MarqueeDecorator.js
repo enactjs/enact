@@ -614,7 +614,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forwardBlur(ev, this.props);
 			if (this.isFocused) {
 				this.isFocused = false;
-				if (!this.sync) {
+				if (!this.sync &&
+						!(this.isHovered && (this.props.disabled || this.props.marqueeOn === 'hover'))) {
 					this.cancelAnimation();
 				}
 			}
