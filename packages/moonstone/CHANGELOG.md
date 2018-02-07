@@ -19,6 +19,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` to work focus option in scrollTo api
 - `moonstone/ExpandableSpotlightDecorator` to not spot the title upon collapse when in `pointerMode`
 - `moonstone/Spinner` to not unpause Spotlight unless it was the one to pause it
+- `moonstone/Marquee` to stop when becoming disabled
 
 ## [2.0.0-alpha.3] - 2018-01-18
 
@@ -27,7 +28,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/MoonstoneDecorator` root node to fill the entire space available, which simplifies positioning and sizing for child elements (previously always measured 0 in height)
 - `moonstone/VirtualList` to prevent infinite function call when a size of contents is slightly longer than a client size without a scrollbar
 - `moonstone/VirtualList` to sync scroll position when clientSize changed
-- `moonstone/Marquee` to stop when becoming disabled
 
 ### Removed
 
