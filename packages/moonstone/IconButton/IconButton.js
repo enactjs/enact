@@ -125,6 +125,7 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		defaultProps: {
+			noAnimation: true,
 			small: false
 		},
 
