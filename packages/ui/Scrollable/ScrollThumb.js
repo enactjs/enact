@@ -1,3 +1,10 @@
+/**
+ * Provides unstyled scroll thumb components and behaviors to be customized by a theme or application.
+ *
+ * @module ui/Scrollable
+ * @exports ScrollThumb
+ */
+
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -5,17 +12,17 @@ import PropTypes from 'prop-types';
 import css from './ScrollThumb.less';
 
 /**
- * {@link moonstone/Scroller.ScrollThumb} is a stateless ScrollThumb with Moonstone styling applied.
+ * [ScrollThumb]{@link ui/Scrollable.ScrollThumb} is a stateless ScrollThumb.
  *
  * @class ScrollThumb
- * @memberof moonstone/Scroller
+ * @memberof ui/Scrollable
  * @ui
  * @private
  */
 const ScrollThumb = kind({
-	name: 'ScrollThumb',
+	name: 'ui:ScrollThumb',
 
-	propTypes: /** @lends moonstone/Scroller.ScrollThumb.prototype */ {
+	propTypes: /** @lends ui/Scrollable.ScrollThumb.prototype */ {
 		/**
 		 * The function to pass a wrapped ref.
 		 *

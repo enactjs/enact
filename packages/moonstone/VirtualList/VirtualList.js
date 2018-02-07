@@ -1,395 +1,770 @@
 /**
- * Exports the {@link moonstone/VirtualList.VirtualList},
- * {@link moonstone/VirtualList.VirtualGridList}, and
- * {@link moonstone/VirtualList.GridListImageItem} components.
- * The default export is {@link moonstone/VirtualList.VirtualList}.
+ * Provides Moonstone-themed virtual list components and behaviors.
  *
  * @module moonstone/VirtualList
+ * @exports VirtualList
+ * @exports VirtualGridList
+ * @exports VirtualListBase
+ * @exports VirtualListNative
+ * @exports VirtualGridListNative
+ * @exports VirtualListBaseNative
  */
 
-import {gridListItemSizeShape} from '@enact/ui/VirtualList/VirtualListBase';
-import kind from '@enact/core/kind';
+import clamp from 'ramda/src/clamp';
+import classNames from 'classnames';
+import css from '@enact/ui/VirtualList/ListItem.less';
+import {forward} from '@enact/core/handle';
+import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Spotlight, {getDirection} from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import Spottable from '@enact/spotlight/Spottable';
+import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
+import {VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList/VirtualListNative';
 
-import {VirtualListBase} from './VirtualListBase';
+import {Scrollable, dataIndexAttribute} from '../Scrollable';
+import ScrollableNative from '../Scrollable/ScrollableNative';
+
+const SpotlightPlaceholder = Spottable('div');
+
+const
+	dataContainerDisabledAttribute = 'data-container-disabled',
+	forwardKeyDown = forward('onKeyDown'),
+	isDown = is('down'),
+	isLeft = is('left'),
+	isRight = is('right'),
+	isUp = is('up');
 
 /**
- * {@link moonstone/VirtualList.VirtualList} is a VirtualList with Moonstone styling.
+ * [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} is a base component for
+ * [VirtualList]{@link moonstone/VirtualList.VirtualList} and
+ * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
+ *
+ * @class VirtualListBase
+ * @memberof moonstone/VirtualList
+ * @ui
+ * @private
+ */
+const VirtualListBase = (type, UiComponent) => (
+	class VirtualListCore extends UiComponent {
+		static displayName = 'VirtualListBase'
+
+		static propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
+			/**
+			 * Spotlight container Id
+			 *
+			 * @type {String}
+			 * @private
+			 */
+			'data-container-id': PropTypes.string // eslint-disable-line react/sort-prop-types
+		}
+
+		constructor (props) {
+			super(props);
+
+			this.initItemContainerRef = this.initRef('itemContainerRef');
+		}
+
+		componentDidUpdate () {
+			this.restoreFocus();
+		}
+
+		componentWillUnmount () {
+			if (this.setContainerDisabled) {
+				this.setContainerDisabled(false);
+			}
+		}
+
+		isScrolledBy5way = false
+		lastFocusedIndex = null
+		nodeIndexToBeFocused = null
+		preservedIndex = null
+		restoreLastFocused = false
+
+		itemContainerRef = null
+
+		setContainerDisabled = (bool) => {
+			const containerNode = (type === 'Native') ? this.containerRef : this.contentRef;
+
+			if (containerNode) {
+				containerNode.setAttribute(dataContainerDisabledAttribute, bool);
+
+				if (bool) {
+					document.addEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
+				} else {
+					document.removeEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
+				}
+			}
+		}
+
+		/**
+		 * Handle a Page up/down key with disabled items
+		 */
+
+		findSpottableItem = (indexFrom, indexTo) => {
+			const
+				{data, dataSize} = this.props,
+				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
+				safeIndexTo = clamp(-1, dataSize, indexTo),
+				delta = (indexFrom < indexTo) ? 1 : -1;
+
+			if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
+				return -1;
+			}
+
+			if (safeIndexFrom !== safeIndexTo) {
+				for (let i = safeIndexFrom; i !== safeIndexTo; i += delta) {
+					if (data[i] && data[i].disabled === false) {
+						return i;
+					}
+				}
+			}
+
+			return -1;
+		}
+
+		getIndexToScrollDisabled = (direction, currentIndex) => {
+			const
+				{data, dataSize, spacing} = this.props,
+				{dimensionToExtent, primary, findSpottableItem} = this,
+				{firstVisibleIndex, lastVisibleIndex} = this.moreInfo,
+				numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent),
+				isPageDown = (direction === 'down' || direction === 'right') ? 1 : -1;
+			let candidateIndex = -1;
+
+			/* First, find a spottable item in this page */
+			if (isPageDown === 1) { // Page Down
+				if ((lastVisibleIndex - (lastVisibleIndex % dimensionToExtent || dimensionToExtent)) >= currentIndex) {
+					candidateIndex = findSpottableItem(
+						lastVisibleIndex,
+						currentIndex - (currentIndex % dimensionToExtent) + dimensionToExtent - 1
+					);
+				}
+			} else if (firstVisibleIndex + dimensionToExtent <= currentIndex) { // Page Up
+				candidateIndex = findSpottableItem(
+					firstVisibleIndex,
+					currentIndex - (currentIndex % dimensionToExtent)
+				);
+			}
+
+			/* Second, find a spottable item in the next page */
+			if (candidateIndex === -1) {
+				if (isPageDown === 1) { // Page Down
+					candidateIndex = findSpottableItem(lastVisibleIndex + numOfItemsInPage, lastVisibleIndex);
+				} else { // Page Up
+					candidateIndex = findSpottableItem(firstVisibleIndex - numOfItemsInPage, firstVisibleIndex);
+				}
+			}
+
+			/* Last, find a spottable item in a whole data */
+			if (candidateIndex === -1) {
+				if (isPageDown === 1) { // Page Down
+					candidateIndex = findSpottableItem(lastVisibleIndex + numOfItemsInPage + 1, dataSize);
+				} else { // Page Up
+					candidateIndex = findSpottableItem(firstVisibleIndex - numOfItemsInPage - 1, -1);
+				}
+			}
+
+			/* For grid lists, find the nearest item from the current item */
+			if (candidateIndex !== -1) {
+				const
+					currentPosInExtent = currentIndex % dimensionToExtent,
+					firstIndexInExtent = candidateIndex - (candidateIndex % dimensionToExtent),
+					lastIndexInExtent = clamp(firstIndexInExtent, dataSize - 1, firstIndexInExtent + dimensionToExtent);
+				let
+					minDistance = dimensionToExtent,
+					distance,
+					index;
+				for (let i = firstIndexInExtent; i <= lastIndexInExtent; ++i) {
+					if (data[i] && !data[i].disabled) {
+						distance = Math.abs(currentPosInExtent - i % dimensionToExtent);
+						if (distance < minDistance) {
+							minDistance = distance;
+							index = i;
+						}
+					}
+				}
+
+				return index;
+			} else {
+				return -1;
+			}
+		}
+
+		getIndexToScroll = (direction, currentIndex) => {
+			const
+				{dataSize, spacing} = this.props,
+				{dimensionToExtent, primary} = this,
+				numOfItemsInPage = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent,
+				factor = (direction === 'down' || direction === 'right') ? 1 : -1;
+			let indexToScroll = currentIndex + factor * numOfItemsInPage;
+
+			if (indexToScroll < 0) {
+				indexToScroll = currentIndex % dimensionToExtent;
+			} else if (indexToScroll >= dataSize) {
+				indexToScroll = dataSize - dataSize % dimensionToExtent + currentIndex % dimensionToExtent;
+				if (indexToScroll >= dataSize) {
+					indexToScroll = dataSize - 1;
+				}
+			}
+
+			return indexToScroll === currentIndex ? -1 : indexToScroll;
+		}
+
+		scrollToNextItem = ({direction, focusedItem}) => {
+			const
+				{data} = this.props,
+				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
+				{firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
+			let indexToScroll = -1;
+
+			if (Array.isArray(data) && data.some((item) => item.disabled)) {
+				indexToScroll = this.getIndexToScrollDisabled(direction, focusedIndex);
+			} else {
+				indexToScroll = this.getIndexToScroll(direction, focusedIndex);
+			}
+
+			if (indexToScroll !== -1) {
+				const
+					isRtl = this.context.rtl,
+					isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right');
+
+				if (type === 'JS') {
+					// To prevent item positioning issue, make all items to be rendered.
+					this.updateFrom = null;
+					this.updateTo = null;
+				}
+
+				if (firstVisibleIndex <= indexToScroll && indexToScroll <= lastVisibleIndex) {
+					const node = this.containerRef.querySelector(`[data-index='${indexToScroll}'].spottable`);
+
+					if (node) {
+						Spotlight.focus(node);
+					}
+				} else {
+					// Scroll to the next spottable item without animation
+					if (!Spotlight.isPaused()) {
+						Spotlight.pause();
+					}
+					focusedItem.blur();
+				}
+				this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
+				this.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
+			}
+
+			return true;
+		}
+
+		/**
+		 * Handle `onKeyDown` event
+		 */
+
+		setRestrict = (bool) => {
+			Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
+		}
+
+		setSpotlightContainerRestrict = (keyCode, target) => {
+			const
+				{dataSize} = this.props,
+				{isPrimaryDirectionVertical, dimensionToExtent} = this,
+				index = Number.parseInt(target.getAttribute(dataIndexAttribute)),
+				canMoveBackward = index >= dimensionToExtent,
+				canMoveForward = index < (dataSize - (((dataSize - 1) % dimensionToExtent) + 1));
+			let isSelfOnly = false;
+
+			if (isPrimaryDirectionVertical) {
+				if (isUp(keyCode) && canMoveBackward || isDown(keyCode) && canMoveForward) {
+					isSelfOnly = true;
+				}
+			} else if (isLeft(keyCode) && canMoveBackward || isRight(keyCode) && canMoveForward) {
+				isSelfOnly = true;
+			}
+
+			this.setRestrict(isSelfOnly);
+		}
+
+		jumpToSpottableItem = (keyCode, target) => {
+			const
+				{cbScrollTo, data, dataSize} = this.props,
+				{firstIndex, numOfItems} = this.state,
+				{isPrimaryDirectionVertical} = this,
+				rtl = this.context.rtl,
+				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
+
+			if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled) {
+				return false;
+			}
+
+			const
+				isForward = (
+					isPrimaryDirectionVertical && isDown(keyCode) ||
+					!isPrimaryDirectionVertical && (!rtl && isRight(keyCode) || rtl && isLeft(keyCode)) ||
+					null
+				),
+				isBackward = (
+					isPrimaryDirectionVertical && isUp(keyCode) ||
+					!isPrimaryDirectionVertical && (!rtl && isLeft(keyCode) || rtl && isRight(keyCode)) ||
+					null
+				);
+
+			let nextIndex = -1;
+
+			if (isForward) {
+				// See if the next item is spottable then delegate scroll to onFocus handler
+				if (currentIndex < dataSize - 1 && !data[currentIndex + 1].disabled) {
+					return false;
+				}
+
+				for (let i = currentIndex + 2; i < dataSize; i++) {
+					if (!data[i].disabled) {
+						nextIndex = i;
+						break;
+					}
+				}
+
+				// If there is no item which could get focus forward,
+				// we need to set restriction option to `self-first`.
+				if (nextIndex === -1) {
+					this.setRestrict(false);
+				}
+			} else if (isBackward) {
+				// See if the next item is spottable then delegate scroll to onFocus handler
+				if (currentIndex > 0 && !data[currentIndex - 1].disabled) {
+					return false;
+				}
+
+				for (let i = currentIndex - 2; i >= 0; i--) {
+					if (!data[i].disabled) {
+						nextIndex = i;
+						break;
+					}
+				}
+
+				// If there is no item which could get focus backward,
+				// we need to set restriction option to `self-first`.
+				if (nextIndex === -1) {
+					this.setRestrict(false);
+				}
+			} else {
+				return false;
+			}
+
+			if (nextIndex !== -1 && (firstIndex > nextIndex || nextIndex >= firstIndex + numOfItems)) {
+				// When changing from "pointer" mode to "5way key" mode,
+				// a pointer is hidden and a last focused item get focused after 30ms.
+				// To make sure the item to be blurred after that, we used 50ms.
+				setTimeout(() => {
+					target.blur();
+				}, 50);
+
+				this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
+
+				if (!Spotlight.isPaused()) {
+					Spotlight.pause();
+				}
+
+				cbScrollTo({
+					index: nextIndex,
+					stickTo: isForward ? 'end' : 'start'
+				});
+				return true;
+			}
+
+			return false;
+		}
+
+		onKeyDown = (e) => {
+			const {keyCode, target} = e;
+
+			this.isScrolledBy5way = false;
+			if (getDirection(keyCode)) {
+				if (type === 'Native') {
+					e.preventDefault();
+				}
+				this.setSpotlightContainerRestrict(keyCode, target);
+				this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, target);
+			}
+			forwardKeyDown(e, this.props);
+		}
+
+		/**
+		 * Handle global `onKeyDown` event
+		 */
+
+		handleGlobalKeyDown = () => {
+			this.setContainerDisabled(false);
+		}
+
+		/**
+		 * Focus on the Node of the VirtualList item
+		 */
+
+		focusOnNode = (node) => {
+			if (node) {
+				Spotlight.focus(node);
+			}
+		}
+
+		focusOnItem = (index) => {
+			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
+
+			if (Spotlight.isPaused()) {
+				Spotlight.resume();
+				if (type === 'JS') {
+					this.forceUpdate();
+				}
+			}
+			this.focusOnNode(item);
+			this.nodeIndexToBeFocused = null;
+		}
+
+		initItemRef = (ref, index) => {
+			if (ref) {
+				if (type === 'JS') {
+					this.focusOnItem(index);
+				} else if (type === 'Native') {
+					// If focusing the item of VirtuallistNative, `onFocus` in Scrollable will be called.
+					// Then VirtualListNative tries to scroll again differently from VirtualList.
+					// So we would like to skip `focus` handling when focusing the item as a workaround.
+					this.isScrolledByJump = true;
+					this.focusOnItem(index);
+					this.isScrolledByJump = false;
+				}
+			}
+		}
+
+		focusByIndex = (index) => {
+			// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
+			setTimeout(() => {
+				this.focusOnItem(index);
+			}, 0);
+		}
+
+		/**
+		 * Manage a placeholder
+		 */
+
+		isNeededScrollingPlaceholder = () => this.nodeIndexToBeFocused != null && Spotlight.isPaused();
+
+		handlePlaceholderFocus = (ev) => {
+			const placeholder = ev.currentTarget;
+
+			if (placeholder) {
+				const index = placeholder.dataset.index;
+
+				if (index) {
+					this.preservedIndex = parseInt(index);
+					this.restoreLastFocused = true;
+				}
+			}
+		}
+
+		/**
+		 * Restore the focus of VirtualList
+		 */
+
+		isPlaceholderFocused = () => {
+			const current = Spotlight.getCurrent();
+
+			if (current && current.dataset.vlPlaceholder && this.containerRef.contains(current)) {
+				return true;
+			}
+
+			return false;
+		}
+
+		restoreFocus = () => {
+			if (
+				this.restoreLastFocused &&
+				!this.isPlaceholderFocused()
+			) {
+				const
+					containerId = this.props['data-container-id'],
+					node = this.containerRef.querySelector(
+						`[data-container-id="${containerId}"] [data-index="${this.preservedIndex}"]`
+					);
+
+				if (node) {
+					// if we're supposed to restore focus and virtual list has positioned a set of items
+					// that includes lastFocusedIndex, clear the indicator
+					this.restoreLastFocused = false;
+
+					// try to focus the last focused item
+					const foundLastFocused = Spotlight.focus(node);
+
+					// but if that fails (because it isn't found or is disabled), focus the container so
+					// spotlight isn't lost
+					if (!foundLastFocused) {
+						this.restoreLastFocused = true;
+						Spotlight.focus(containerId);
+					}
+				}
+			}
+		}
+
+		/**
+		 * calculator
+		 */
+
+		calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
+			const
+				{lastFocusedIndex, pageScroll} = this.props,
+				{numOfItems} = this.state,
+				{primary} = this,
+				offsetToClientEnd = primary.clientSize - primary.itemSize,
+				focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
+
+			if (!isNaN(focusedIndex)) {
+				let gridPosition = this.getGridPosition(focusedIndex);
+
+				if (numOfItems > 0 && focusedIndex % numOfItems !== lastFocusedIndex % numOfItems) {
+					const node = this.getItemNode(this.lastFocusedIndex);
+					if (node) {
+						node.blur();
+					}
+				}
+
+				if (primary.clientSize >= primary.itemSize) {
+					if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
+						gridPosition.primaryPosition -= pageScroll ? 0 : offsetToClientEnd;
+					} else if (gridPosition.primaryPosition >= scrollPosition) { // inside of client
+						gridPosition.primaryPosition = scrollPosition;
+					} else { // backward over
+						gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
+					}
+				}
+
+				// Since the result is used as a target position to be scrolled,
+				// scrondaryPosition should be 0 here.
+				gridPosition.secondaryPosition = 0;
+
+				return this.gridPositionToItemPosition(gridPosition);
+			}
+		}
+
+		/**
+		 * setter/getter
+		 */
+
+		shouldPreventScrollByFocus = () => ((type === 'Native') ? (this.isScrolledBy5way) : (this.isScrolledBy5way || this.isScrolledByJump))
+
+		getNodeIndexToBeFocused = () => this.nodeIndexToBeFocused
+
+		setNodeIndexToBeFocused = (param) => {
+			this.nodeIndexToBeFocused = param;
+		}
+
+		setLastFocusedIndex = (param) => {
+			this.lastFocusedIndex = param;
+		}
+
+		/**
+		 * override
+		 */
+
+		updateStatesAndBounds (props) {
+			const
+				{dataSize, overhang} = props,
+				{firstIndex} = this.state,
+				{dimensionToExtent, primary, moreInfo, scrollPosition, preservedIndex} = this,
+				numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
+				wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
+				dataSizeDiff = dataSize - this.curDataSize;
+			let newFirstIndex = firstIndex;
+
+			this.maxFirstIndex = Math.ceil((dataSize - numOfItems) / dimensionToExtent) * dimensionToExtent;
+			this.curDataSize = dataSize;
+			this.updateFrom = null;
+			this.updateTo = null;
+
+			// reset children
+			this.cc = [];
+			this.calculateScrollBounds(props);
+			this.updateMoreInfo(dataSize, scrollPosition);
+
+			if (this.restoreLastFocused &&
+				numOfItems > 0 &&
+				(preservedIndex < dataSize) &&
+				(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
+				// If we need to restore last focus and the index is beyond the screen,
+				// we call `scrollTo` to create DOM for it.
+				this.props.cbScrollTo({index: preservedIndex, animate: false});
+			} else {
+				newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
+			}
+
+			this.setState({firstIndex: newFirstIndex, numOfItems});
+		}
+
+		applyStyleToExistingNode = (index, ...rest) => {
+			const node = this.getItemNode(index);
+
+			if (node) {
+				this.composeStyle(node.style, ...rest);
+			}
+		}
+
+		applyStyleToNewNode = (index, ...rest) => {
+			const
+				{component, data} = this.props,
+				{numOfItems} = this.state,
+				{getNodeIndexToBeFocused, initItemRef} = this,
+				key = index % numOfItems,
+				itemElement = component({
+					data,
+					[dataIndexAttribute]: index,
+					index,
+					key
+				}),
+				style = {};
+
+			this.composeStyle(style, ...rest);
+
+			this.cc[key] = React.cloneElement(itemElement, {
+				ref: (index === getNodeIndexToBeFocused()) ? (ref) => initItemRef(ref, index) : null,
+				className: classNames(css.listItem, itemElement.props.className),
+				style: {...itemElement.props.style, ...style}
+			});
+		}
+
+		applyStyleToHideNode = (index) => {
+			const
+				key = index % this.state.numOfItems,
+				style = {display: 'none'},
+				attributes = {[dataIndexAttribute]: index, key, style};
+
+			this.cc[key] = (<div {...attributes} />);
+		}
+
+		getItemNode = (index) => {
+			const ref = this.itemContainerRef;
+			return ref ? ref.children[index % this.state.numOfItems] : null;
+		}
+
+		/**
+		 * render
+		 */
+
+		renderChildren = () => {
+			const
+				{cc, primary} = this,
+				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
+
+			return [
+				cc.length ? <div key="0" ref={this.initItemContainerRef}>{cc}</div> : null,
+				primary ?
+					null :
+					<SpotlightPlaceholder
+						data-index={0}
+						data-vl-placeholder
+						key="1"
+						onFocus={this.handlePlaceholderFocus}
+						role="region"
+					/>,
+				needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
+			];
+		}
+	}
+);
+
+const ScrollableVirtualList = (type, baseComponent) => {
+	const ScrollableComponent = (type === 'JS') ? Scrollable : ScrollableNative;
+	return ScrollableComponent(VirtualListBase(type, baseComponent));
+};
+
+const VirtualListGenerator = (type, baseComponent) => SpotlightContainerDecorator(
+	{
+		enterTo: 'last-focused',
+		/*
+		 * Returns the data-index as the key for last focused
+		 */
+		lastFocusedPersist: (node) => {
+			const indexed = node.dataset.index ? node : node.closest('[data-index]');
+			if (indexed) {
+				return {
+					container: false,
+					element: true,
+					key: indexed.dataset.index
+				};
+			}
+		},
+		/*
+		 * Restores the data-index into the placeholder if its the only element. Tries to find a
+		 * matching child otherwise.
+		 */
+		lastFocusedRestore: ({key}, all) => {
+			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
+				all[0].dataset.index = key;
+
+				return all[0];
+			}
+
+			return all.reduce((focused, node) => {
+				return focused || node.dataset.index === key && node;
+			}, null);
+		},
+		preserveId: true,
+		restrict: 'self-first'
+	},
+	ScrollableVirtualList(type, baseComponent)
+);
+
+/**
+ * [VirtualList]{@link moonstone/VirtualList} is
+ * a scrollable and spottable virtual list component with Moonstone styling.
  *
  * @class VirtualList
  * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable.Scrollable
  * @ui
  * @public
  */
-const VirtualList = kind({
-	name: 'VirtualList',
-
-	propTypes: /** @lends moonstone/VirtualList.VirtualList.prototype */ {
-		/**
-		 * The render function for an item of the list.
-		 * `index` is for accessing the index of the item.
-		 * `key` MUST be passed as a prop for DOM recycling.
-		 * Data manipulation can be done in this function.
-		 *
-		 * @name component
-		 * @type {Function}
-		 * @required
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Size of an item for the VirtualList; valid value is a number.
-		 * If the direction for the list is vertical, itemSize means the height of an item.
-		 * For horizontal, it means the width of an item.
-		 *
-		 * Usage:
-		 * ```
-		 * <VirtualList itemSize={ri.scale(72)}/>
-		 * ```
-		 *
-		 * @type {Number}
-		 * @required
-		 * @public
-		 */
-		itemSize: PropTypes.number.isRequired
-
-		/**
-		 * The callback function which is called for linking scrollTo function.
-		 * You should specify a callback function as the value of this prop
-		 * to use scrollTo feature.
-		 *
-		 * The scrollTo function passed to the parent component requires below as an argument.
-		 * - {position: {x, y}} - You can set a pixel value for x and/or y position
-		 * - {align} - You can set one of values below for align
-		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
-		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
-		 * - {index} - You can set an index of specific item. (`0` or positive integer)
-		 *   This option is available only for `VirtualList` kind.
-		 * - {node} - You can set a node to scroll
-		 * - {animate} - When `true`, scroll occurs with animation.
-		 *   Set it to `false` if you want scrolling without animation.
-		 * - {focus} - Set `true` if you want the item to be focused after scroll.
-		 *   This option is only valid when you scroll by `index` or `node`.
-		 *
-		 * Example:
-		 * ````
-		 *	// If you set cbScrollTo prop like below;
-		 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
-		 *	// You can simply call like below;
-		 *	this.scrollTo({align: 'top'}); // scroll to the top
-		 * ```
-		 *
-		 * @name cbScrollTo
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
-		 *
-		 * @name data
-		 * @type {Any}
-		 * @default []
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Size of the data.
-		 *
-		 * @name dataSize
-		 * @type {Number}
-		 * @default 0
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
-		 *
-		 * @name direction
-		 * @type {String}
-		 * @default 'vertical'
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
-		 * not move focus to the scrollbar controls.
-		 *
-		 * @name focusableScrollbar
-		 * @type {Boolean}
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
-		 * `'visible'`, and `'hidden'`.
-		 *
-		 * @name horizontalScrollbar
-		 * @type {String}
-		 * @default 'auto'
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Called when scrolling
-		 *
-		 * @name onScroll
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Called when scroll starts
-		 *
-		 * @name onScrollStart
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Called when scroll stops
-		 *
-		 * @name onScrollStop
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Spacing between items.
-		 *
-		 * @name spacing
-		 * @type {Number}
-		 * @default 0
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
-		 * `'visible'`, and `'hidden'`.
-		 *
-		 * @name verticalScrollbar
-		 * @type {String}
-		 * @default 'auto'
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-	},
-
-	render: (props) => <VirtualListBase {...props} />
-});
+const VirtualList = VirtualListGenerator('JS', UiVirtualListBase);
 
 /**
- * {@link moonstone/VirtualList.VirtualGridList} is a VirtualGridList with Moonstone styling.
+ * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList} is
+ * a scrollable and spottable virtual grid list component with Moonstone styling.
  *
  * @class VirtualGridList
  * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable.Scrollable
  * @ui
  * @public
  */
-const VirtualGridList = kind({
-	name: 'VirtualGridList',
+const VirtualGridList = VirtualList;
 
-	propTypes: /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
-		/**
-		 * The render function for an item of the list.
-		 * `index` is for accessing the index of the item.
-		 * `key` MUST be passed as a prop for DOM recycling.
-		 * Data manipulation can be done in this function.
-		 *
-		 * @name component
-		 * @type {Function}
-		 * @required
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
+/**
+ * [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative} is
+ * a scrollable and spottable virtual list component with Moonstone styling.
+ *
+ * @class VirtualListNative
+ * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable.ScrollableNative
+ * @ui
+ * @public
+ */
+const VirtualListNative = VirtualListGenerator('Native', UiVirtualListBaseNative);
 
-		/**
-		 * Size of an item for the VirtualGridList; valid value is an object that has `minWidth`
-		 * and `minHeight` as properties.
-		 *
-		 * Usage:
-		 * ```
-		 * <VirtualGridList itemSize={{minWidth: ri.scale(180), minHeight: ri.scale(270)}}/>
-		 * ```
-		 *
-		 * @type {moonstone/VirtualList.gridListItemSizeShape}
-		 * @required
-		 * @public
-		 */
-		itemSize: gridListItemSizeShape.isRequired
-
-		/**
-		 * The callback function which is called for linking scrollTo function.
-		 * You should specify a callback function as the value of this prop
-		 * to use scrollTo feature.
-		 *
-		 * The scrollTo function passed to the parent component requires below as an argument.
-		 * - {position: {x, y}} - You can set a pixel value for x and/or y position
-		 * - {align} - You can set one of values below for align
-		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
-		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
-		 * - {index} - You can set an index of specific item. (`0` or positive integer)
-		 *   This option is available only for `VirtualList` kind.
-		 * - {node} - You can set a node to scroll
-		 * - {animate} - When `true`, scroll occurs with animation.
-		 *   Set it to `false` if you want scrolling without animation.
-		 * - {focus} - Set `true` if you want the item to be focused after scroll.
-		 *   This option is only valid when you scroll by `index` or `node`.
-		 *
-		 * Example:
-		 *	// If you set cbScrollTo prop like below;
-		 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
-		 *	// You can simply call like below;
-		 *	this.scrollTo({align: 'top'}); // scroll to the top
-		 * ```
-		 *
-		 * @name cbScrollTo
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
-		 *
-		 * @name data
-		 * @type {Any}
-		 * @default []
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Size of the data.
-		 *
-		 * @name dataSize
-		 * @type {Number}
-		 * @default 0
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
-		 *
-		 * @name direction
-		 * @type {String}
-		 * @default 'vertical'
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
-		 * not move focus to the scrollbar controls.
-		 *
-		 * @name focusableScrollbar
-		 * @type {Boolean}
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
-		 * `'visible'`, and `'hidden'`.
-		 *
-		 * @name horizontalScrollbar
-		 * @type {String}
-		 * @default 'auto'
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Called when scrolling
-		 *
-		 * @name onScroll
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Called when scroll starts
-		 *
-		 * @name onScrollStart
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Called when scroll stops
-		 *
-		 * @name onScrollStop
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Spacing between items.
-		 *
-		 * @name spacing
-		 * @type {Number}
-		 * @default 0
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
-		 * `'visible'`, and `'hidden'`.
-		 *
-		 * @name verticalScrollbar
-		 * @type {String}
-		 * @default 'auto'
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
-	},
-
-	render: (props) => <VirtualListBase {...props} />
-});
+/**
+ * [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative} is
+ * a scrollable and spottable virtual grid list component with Moonstone styling.
+ *
+ * @class VirtualGridListNative
+ * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable.ScrollableNative
+ * @ui
+ * @public
+ */
+const VirtualGridListNative = VirtualListNative;
 
 export default VirtualList;
-export {VirtualList, VirtualGridList};
+export {
+	VirtualList,
+	VirtualGridList,
+	VirtualListNative,
+	VirtualGridListNative,
+	UiVirtualListBase as VirtualListBase,
+	UiVirtualListBaseNative as VirtualListBaseNative
+};
 export * from '@enact/ui/VirtualList/GridListImageItem';
