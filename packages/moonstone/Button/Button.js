@@ -193,7 +193,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 		computed: {
 			className: ({backgroundOpacity, color, minWidth, noAnimation, pressed, selected, small, styler}) => {
 				if (noAnimation) {
-					deprecate({name: 'noAnimation', since: '1.14.0', message: '`noAnimation` is deprecated', until: '2.0.0'});
+					deprecate({name: 'noAnimation', since: '1.14.0', until: '2.0.0'});
 				}
 
 				return styler.append(
