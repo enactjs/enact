@@ -767,4 +767,4 @@ export {
 	UiVirtualListBase as VirtualListBase,
 	UiVirtualListBaseNative as VirtualListBaseNative
 };
-export * from '@enact/ui/VirtualList/GridListImageItem';
+export * from './GridListImageItem';
