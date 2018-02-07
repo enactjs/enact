@@ -28,10 +28,41 @@ const VoiceControlDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.voiceList = [];
 		}
 
+		componentWillReceiveProps (nextProps) {
+			if (!this.props.voiceDisabled && nextProps.voiceDisabled) {
+				this.removeVoiceControl();
+			} else if (this.props.voiceDisabled && !nextProps.voiceDisabled) {
+				this.addVoiceControl();
+			}
+		}
+
 		componentDidMount () {
+			if (!this.props.voiceDisabled) {
+				this.addVoiceControl();
+			}
+		}
+
+		componentWillUnmount () {
+			if (!this.props.voiceDisabled) {
+				this.removeVoiceControl();
+			}
+		}
+
+		render () {
+			const props = {...this.props};
+			delete props.voiceDisabled;
+			delete props.voiceLabel;
+			delete props.voiceSlot;
+
+			return (
+				<Wrapped {...props} />
+			);
+		}
+
+		addVoiceControl = () => {
 			const voiceSlot = config.voiceSlot.concat(this.props.voiceSlot);
 
-			if (!this.props.voiceDisabled && voiceSlot.length > 0) {
+			if (voiceSlot.length > 0) {
 				const list = [];
 				for (let t in voiceSlot) {
 					const {voiceIntent, voiceLabel, voiceHandler, voiceParams} = voiceSlot[t];
@@ -55,21 +86,10 @@ const VoiceControlDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		componentWillUnmount () {
-			if (!this.props.voiceDisabled && this.voiceList.length > 0) {
+		removeVoiceControl = () => {
+			if (this.voiceList.length > 0) {
 				VoiceControl.removeList(this.voiceList);
 			}
-		}
-
-		render () {
-			const props = {...this.props};
-			delete props.voiceDisabled;
-			delete props.voiceLabel;
-			delete props.voiceSlot;
-
-			return (
-				<Wrapped {...props} />
-			);
 		}
 	};
 });
