@@ -1,5 +1,7 @@
 /**
- * Provides Moonstone-themed icon button components and behaviors.
+ * An [Icon]{@link moonstone/Icon.Icon} that acts like a [Button]{@link moonstone/Button.Button}.
+ * You may specify an image or a font-based icon by setting the `children` to either the path
+ * to the image or a string from an [iconList]{@link moonstone/Icon.IconBase.iconList}.
  *
  * @example
  * <IconButton small>plus</IconButton>
@@ -11,7 +13,7 @@
  */
 
 import kind from '@enact/core/kind';
-import {IconButtonBase as UiIconButtonBase} from '@enact/ui/IconButton';
+import {IconButtonBase as UiIconButtonBase, IconButtonDecorator as UiIconButtonDecorator} from '@enact/ui/IconButton';
 import Pure from '@enact/ui/internal/Pure';
 import Touchable from '@enact/ui/Touchable';
 import Spottable from '@enact/spotlight/Spottable';
@@ -133,7 +135,7 @@ const IconButtonBase = kind({
  * @hoc
  * @memberof moonstone/IconButton
  * @mixes moonstone/TooltipDecorator.TooltipDecorator
- * @mixes ui/Touchable.Touchable
+ * @mixes ui/IconButton.IconButtonDecorator
  * @mixes spotlight/Spottable.Spottable
  * @mixes ui/Skinnable.Skinnable
  * @public
@@ -141,16 +143,14 @@ const IconButtonBase = kind({
 const IconButtonDecorator = compose(
 	Pure,
 	TooltipDecorator({tooltipDestinationProp: 'tooltipNode'}),
-	Touchable,
+	UiIconButtonDecorator,
 	Spottable,
 	Skinnable
 );
 
 /**
- * An {@link moonstone/Icon.Icon} that acts like a button.  You may specify an image or a font-based
- * icon by setting the children to either the path to the image or a string from the
- * [IconList]{@link moonstone/Icon.IconList}. `IconButton` does not have `Marquee` or `Uppercase`
- * like `Button` has, as it should not contain text.
+ * `IconButton` does not have `Marquee` or `Uppercase` like `Button` has, as it should not contain
+ * text.
  *
  * Usage:
  * ```
