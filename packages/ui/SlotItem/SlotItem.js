@@ -59,6 +59,10 @@ const SlotItemBase = kind({
 		 * The following classes are supported:
 		 *
 		 * * `slotItem` - The root class name
+		 * * `slot` - Applied to both slots
+		 * * `after` - Applied to the slot that falls after the content
+		 * * `before` - Applied to the slot that falls before the content
+		 * * `hidden` - Applied to a slot when that slot is supposed to be hidden, according to `autoHide` prop
 		 *
 		 * @type {Object}
 		 * @public

@@ -31,15 +31,16 @@ import componentCss from './SlotItem.less';
  * A moonstone-styled SlotItem without any behavior.
  *
  * @class SlotItemBase
- * @memberof moonstone/Item
- * @extends moonstone/Item.Item
+ * @memberof moonstone/SlotItem
+ * @extends ui/SlotItem.SlotItemBase
+ * @mixes moonstone/Item.ItemBase
  * @ui
  * @public
  */
 const SlotItemBase = kind({
 	name: 'SlotItem',
 
-	propTypes: /** @lends moonstone/Item.SlotItemBase.prototype */ {
+	propTypes: /** @lends moonstone/SlotItem.SlotItemBase.prototype */ {
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
@@ -75,7 +76,7 @@ const SlotItemBase = kind({
  * Moonstone-specific item with overlay behaviors to apply to [Item]{@link moonstone/SlotItem.SlotItemBase}.
  *
  * @class SlotItemDecorator
- * @memberof moonstone/Item
+ * @memberof moonstone/SlotItem
  * @mixes ui/SlotItem.SlotItemDecorator
  * @mixes ui/Toggleable
  * @mixes spotlight.Spottable
@@ -116,9 +117,9 @@ const SlotItemDecorator = compose(
  * ```
  *
  * @class SlotItem
- * @memberof moonstone/Item
- * @extends moonstone/Item.SlotItemBase
- * @mixes moonstone/Item.SlotItemDecorator
+ * @memberof moonstone/SlotItem
+ * @extends moonstone/SlotItem.SlotItemBase
+ * @mixes moonstone/SlotItem.SlotItemDecorator
  * @ui
  * @public
  */
