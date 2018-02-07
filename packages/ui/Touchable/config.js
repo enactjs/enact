@@ -1,24 +1,6 @@
-const defaultDragConfig = {
-	constrain: 'window',
-	constrainBoxSizing: 'border-box',
-	global: false,
-	moveTolerance: 16
-};
-
-const defaultFlickConfig = {
-	maxDuration: 250,
-	maxMoves: 5,
-	minVelocity: 0.1
-};
-
-const defaultHoldConfig = {
-	cancelOnMove: false,
-	moveTolerance: 16,
-	frequency: 200,
-	events: [
-		{name: 'hold', time: 200}
-	]
-};
+import {defaultDragConfig} from './Drag.js';
+import {defaultFlickConfig} from './Flick.js';
+import {defaultHoldConfig} from './Hold.js';
 
 const allowedDragKeys = Object.keys(defaultDragConfig);
 const allowedFlickKeys = Object.keys(defaultFlickConfig);
@@ -81,6 +63,14 @@ const mergeConfig = (cfg) => {
  * Each type of gesture has its own set of configuration properties grouped within a separate object
  * keyed by the name of the gesture. Partial configurations may be passed and will be merged with
  * the current configuration.
+ *
+ * `drag`
+ *
+ *   * `constrain` -
+ *   * `constrainBoxSizing` -
+ *   * `global` -
+ *   * `moveTolerance` - The number of pixels from the start position of the drag that the pointer
+ *     may move before cancelling the drag.
  *
  * `flick`
  *

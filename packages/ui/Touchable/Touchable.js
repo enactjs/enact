@@ -19,8 +19,8 @@ import {configure, mergeConfig} from './config';
 import {activate, deactivate, pause, States} from './state';
 import {block, unblock, isNotBlocked} from './block';
 
-import Drag from './Drag';
-import Flick from './Flick';
+import {Drag, dragConfigPropType} from './Drag';
+import {Flick, flickConfigPropType} from './Flick';
 import {Hold, holdConfigPropType} from './Hold';
 
 const getEventCoordinates = (ev) => {
@@ -84,7 +84,7 @@ const defaultConfig = {
 /**
  * {@link ui/Touchable.Touchable} is a Higher-order Component that provides a consistent set of
  * pointer events -- `onDown`, `onUp`, and `onTap` -- across mouse and touch interfaces along with
- * support for common gestures including `onFlick`, `onHold`, and `onHoldPulse`.
+ * support for common gestures including `onFlick`, `onDrag`, onHold`, and `onHoldPulse`.
  *
  * @class Touchable
  * @memberof ui/Touchable
@@ -110,8 +110,27 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * Instance-specific overrides of the component `holdConfig`
+			 * Instance-specific overrides of the drag configuration
 			 *
+			 * @see ui/Touchable.config
+			 * @type {Object}
+			 * @public
+			 */
+			dragConfig: dragConfigPropType,
+
+			/**
+			 * Instance-specific overrides of the flick configuration
+			 *
+			 * @see ui/Touchable.config
+			 * @type {Object}
+			 * @public
+			 */
+			flickConfig: flickConfigPropType,
+
+			/**
+			 * Instance-specific overrides of the hold configuration
+			 *
+			 * @see ui/Touchable.config
 			 * @type {Object}
 			 * @public
 			 */

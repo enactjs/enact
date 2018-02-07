@@ -1,4 +1,5 @@
 import {Job} from '@enact/core/util';
+import PropTypes from 'prop-types';
 
 class Flick {
 	constructor () {
@@ -89,7 +90,21 @@ class Flick {
 	}
 }
 
+const defaultFlickConfig = {
+	maxDuration: 250,
+	maxMoves: 5,
+	minVelocity: 0.1
+};
+
+const flickConfigPropType = PropTypes.shape({
+	maxDuration: PropTypes.number,
+	maxMoves: PropTypes.number,
+	maxVelocity: PropTypes.number
+});
+
 export default Flick;
 export {
-	Flick
+	defaultFlickConfig,
+	Flick,
+	flickConfigPropType
 };

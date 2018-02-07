@@ -110,7 +110,7 @@ class Drag {
 		if (!this.isDragging()) return;
 
 		const {onDragEnd} = this.dragConfig;
-		if (onDragEnd) {
+		if (onDragEnd && this.tracking === Tracking.Active) {
 			onDragEnd();
 		}
 
@@ -136,20 +136,23 @@ class Drag {
 
 }
 
+const defaultDragConfig = {
+	constrain: 'window',
+	constrainBoxSizing: 'border-box',
+	global: false,
+	moveTolerance: 16
+};
+
 const dragConfigPropType = PropTypes.shape({
-	cancelOnMove: PropTypes.bool,
-	events: PropTypes.arrayOf(
-		PropTypes.shape({
-			name: PropTypes.string,
-			time: PropTypes.number
-		})
-	),
-	frequency: PropTypes.number,
+	constrain: PropTypes.string,
+	constrainBoxSizing: PropTypes.string,
+	global: PropTypes.bool,
 	moveTolerance: PropTypes.number
 });
 
 export default Drag;
 export {
+	defaultDragConfig,
 	Drag,
 	dragConfigPropType
 };

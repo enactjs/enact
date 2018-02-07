@@ -134,6 +134,15 @@ class Hold {
 	}
 }
 
+const defaultHoldConfig = {
+	cancelOnMove: false,
+	events: [
+		{name: 'hold', time: 200}
+	],
+	frequency: 200,
+	moveTolerance: 16
+};
+
 const holdConfigPropType = PropTypes.shape({
 	cancelOnMove: PropTypes.bool,
 	events: PropTypes.arrayOf(
@@ -148,6 +157,7 @@ const holdConfigPropType = PropTypes.shape({
 
 export default Hold;
 export {
+	defaultHoldConfig,
 	Hold,
 	holdConfigPropType
 };
