@@ -78,6 +78,7 @@ class Flick {
 				// generate the flick using the start event so it has those coordinates
 				// this.sendFlick(ti.startEvent, x, y, v);
 				this.onFlick({
+					type: 'onFlick',
 					direction: vertical ? 'vertical' : 'horizontal',
 					velocityX: x,
 					velocityY: y,

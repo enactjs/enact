@@ -155,7 +155,68 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			onDown: PropTypes.func,
 
 			/**
+			 * Event handler for a drag gesture
+			 *
+ 			 * Event payload includes:
+			 *
+			 * * `type` - Type of event, `"onDrag"`
+			 * * `x` - Horizontal position of the drag, relative to the viewport
+			 * * `y` - Vertical position of the drag, relative to the viewport
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onDrag: PropTypes.func,
+
+			/**
+			 * Event handler for end of a drag gesture
+			 *
+ 			 * Event payload includes:
+			 *
+			 * * `type` - Type of event, `"onDragEnd"`
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onDragEnd: PropTypes.func,
+
+			/**
+			 * Event handler for the start of a drag gesture
+			 *
+ 			 * Event payload includes:
+			 *
+			 * * `type` - Type of event, `"onDragStart"`
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onDragStart: PropTypes.func,
+
+			/**
+			 * Event handler for a flick gesture
+			 *
+			 * Event payload includes:
+			 *
+			 * * `type` - Type of event, `"onFlick"`
+			 * * `direction` - Primary direction of the flick, either `"horizontal"` or `"vertical"`
+			 * * `velocity` - Velocity of flick
+			 * * `velocityX` - Velocity of flick along te horizontal axis
+			 * * `velocityY` - Velocity of flick along te vertical axis
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onFlick: PropTypes.func,
+
+			/**
 			 * Event handler for hold events
+			 *
+			 * Event payload includes:
+			 *
+			 * * `type` - Type of event, `"onFlick"`
+			 * * `name` - The name of the hold as configured in the events list
+			 * * `time` - Time, in milliseconds, configured for this hold which may vary slightly
+			 *            from time since the hold began
 			 *
 			 * @type {Function}
 			 * @public
@@ -164,6 +225,11 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 			/**
 			 * Event handler for hold pulse events
+			 *
+			 * Event payload includes:
+			 *
+			 * * `type` - Type of event, `"onHold"`
+			 * * `time` - Time, in milliseconds, since the hold began
 			 *
 			 * @type {Function}
 			 * @public

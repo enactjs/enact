@@ -94,7 +94,9 @@ class Drag {
 				this.tracking = Tracking.Active;
 
 				if (onDragStart) {
-					onDragStart();
+					onDragStart({
+						type: 'onDragStart'
+					});
 				}
 			} else {
 				return;
@@ -102,7 +104,10 @@ class Drag {
 		}
 
 		if (onDrag && this.tracking === Tracking.Active && this.updatePosition(coords)) {
-			onDrag(coords);
+			onDrag({
+				type: 'onDrag',
+				...coords
+			});
 		}
 	}
 
@@ -111,7 +116,7 @@ class Drag {
 
 		const {onDragEnd} = this.dragConfig;
 		if (onDragEnd && this.tracking === Tracking.Active) {
-			onDragEnd();
+			onDragEnd({type: 'onDragEnd'});
 		}
 
 		this.tracking = Tracking.Untracked;

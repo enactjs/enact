@@ -120,14 +120,20 @@ class Hold {
 		let n = this.next;
 		while (n && n.time <= holdTime) {
 			this.pulsing = true;
-			if (onHold) onHold(n);
+			if (onHold) {
+				onHold({
+					type: 'onHold',
+					...n
+				});
+			}
 			n = this.next = this.holdConfig.events && this.holdConfig.events.shift();
 		}
 
 		if (this.pulsing) {
 			if (onHoldPulse) {
 				onHoldPulse({
-					holdTime
+					type: 'onHoldPulse',
+					time: holdTime
 				});
 			}
 		}
