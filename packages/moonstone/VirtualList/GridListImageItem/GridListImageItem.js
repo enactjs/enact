@@ -112,7 +112,7 @@ const GridListImageItemBase = kind({
 });
 
 /**
- * Moonstone-specific button behaviors to apply to
+ * Moonstone-specific GridListImageItem behaviors to apply to
  * [GridListImageItem]{@link moonstone/VirtualList.GridListImageItemBase}.
  *
  * @hoc

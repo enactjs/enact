@@ -1,5 +1,6 @@
 import {VirtualGridList as UiVirtualGridList} from '@enact/ui/VirtualList';
 import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
+import {GridListImageItem as UiGridListImageItem} from '@enact/ui/VirtualList';
 import {GridListImageItem} from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import React from 'react';
@@ -18,6 +19,19 @@ const
 		direction: {'horizontal': 'horizontal', 'vertical': 'vertical'}
 	},
 	items = [],
+	// eslint-disable-next-line enact/prop-types
+	uiRenderItem = ({data, index, ...rest}) => {
+		const {text, subText, source} = data[index];
+
+		return (
+			<UiGridListImageItem
+				{...rest}
+				caption={text}
+				source={source}
+				subCaption={subText}
+			/>
+		);
+	},
 	// eslint-disable-next-line enact/prop-types
 	renderItem = ({data, index, ...rest}) => {
 		const {text, subText, source} = data[index];
@@ -51,7 +65,7 @@ storiesOf('UI', module)
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<UiVirtualGridList
-				component={renderItem}
+				component={uiRenderItem}
 				data={items}
 				dataSize={number('dataSize', items.length)}
 				direction={select('direction', prop.direction, 'vertical')}

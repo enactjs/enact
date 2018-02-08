@@ -12,6 +12,7 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
+import compose from 'ramda/src/compose';
 import css from '@enact/ui/VirtualList/ListItem.less';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
@@ -26,7 +27,41 @@ import {VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/Virtua
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
-const SpotlightPlaceholder = Spottable('div');
+const
+	SpotlightPlaceholder = Spottable('div'),
+	SpotlightContainerConfig = {
+		enterTo: 'last-focused',
+		/*
+		 * Returns the data-index as the key for last focused
+		 */
+		lastFocusedPersist: (node) => {
+			const indexed = node.dataset.index ? node : node.closest('[data-index]');
+			if (indexed) {
+				return {
+					container: false,
+					element: true,
+					key: indexed.dataset.index
+				};
+			}
+		},
+		/*
+		 * Restores the data-index into the placeholder if its the only element. Tries to find a
+		 * matching child otherwise.
+		 */
+		lastFocusedRestore: ({key}, all) => {
+			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
+				all[0].dataset.index = key;
+
+				return all[0];
+			}
+
+			return all.reduce((focused, node) => {
+				return focused || node.dataset.index === key && node;
+			}, null);
+		},
+		preserveId: true,
+		restrict: 'self-first'
+	};
 
 const
 	dataContainerDisabledAttribute = 'data-container-disabled',
@@ -668,46 +703,34 @@ const VirtualListBase = (type, UiComponent) => (
 	}
 );
 
-const ScrollableVirtualList = (type, baseComponent) => {
-	const ScrollableComponent = (type === 'JS') ? Scrollable : ScrollableNative;
-	return ScrollableComponent(VirtualListBase(type, baseComponent));
-};
+/**
+ * Moonstone-specific VirtualList behavior to apply to
+ * [VirtualList]{@link moonstone/VirtualList.VirtualList} and [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
+ *
+ * @hoc
+ * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable.Scrollable
+ * @ui
+ * @private
+ */
+const VirtualListDecorator = compose(
+	SpotlightContainerDecorator(SpotlightContainerConfig),
+	Scrollable
+);
 
-const VirtualListGenerator = (type, baseComponent) => SpotlightContainerDecorator(
-	{
-		enterTo: 'last-focused',
-		/*
-		 * Returns the data-index as the key for last focused
-		 */
-		lastFocusedPersist: (node) => {
-			const indexed = node.dataset.index ? node : node.closest('[data-index]');
-			if (indexed) {
-				return {
-					container: false,
-					element: true,
-					key: indexed.dataset.index
-				};
-			}
-		},
-		/*
-		 * Restores the data-index into the placeholder if its the only element. Tries to find a
-		 * matching child otherwise.
-		 */
-		lastFocusedRestore: ({key}, all) => {
-			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
-				all[0].dataset.index = key;
-
-				return all[0];
-			}
-
-			return all.reduce((focused, node) => {
-				return focused || node.dataset.index === key && node;
-			}, null);
-		},
-		preserveId: true,
-		restrict: 'self-first'
-	},
-	ScrollableVirtualList(type, baseComponent)
+/**
+ * Moonstone-specific VirtualList native behavior to apply to
+ * [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative} and [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative}.
+ *
+ * @hoc
+ * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable.ScrollableNative
+ * @ui
+ * @private
+ */
+const VirtualListNativeDecorator = compose(
+	SpotlightContainerDecorator(SpotlightContainerConfig),
+	ScrollableNative
 );
 
 /**
@@ -720,7 +743,7 @@ const VirtualListGenerator = (type, baseComponent) => SpotlightContainerDecorato
  * @ui
  * @public
  */
-const VirtualList = VirtualListGenerator('JS', UiVirtualListBase);
+const VirtualList = VirtualListDecorator(VirtualListBase('JS', UiVirtualListBase));
 
 /**
  * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList} is
@@ -744,7 +767,7 @@ const VirtualGridList = VirtualList;
  * @ui
  * @public
  */
-const VirtualListNative = VirtualListGenerator('Native', UiVirtualListBaseNative);
+const VirtualListNative = VirtualListNativeDecorator(VirtualListBase('Native', UiVirtualListBaseNative));
 
 /**
  * [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative} is
