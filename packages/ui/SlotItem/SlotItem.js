@@ -30,18 +30,6 @@ const SlotItemBase = kind({
 
 	propTypes: /** @lends ui/SlotItem.SlotItemBase.prototype */ {
 		/**
-		 * The type of component to use to render the item.
-		 *
-		 * Must be a custom component as it needs to accept the following props: `slotBefore`,
-		 * `slotAfter`, and `css`. A derivative of [Item]{@link ui/Item.Item} is recommended.
-		 *
-		 * @type {Component}
-		 * @required
-		 * @public
-		 */
-		component: PropTypes.func.isRequired,
-
-		/**
 		 * Controls the visibility state of the slots.
 		 *
 		 * One, both, or neither slot can be shown. Choosing `'after'` will leave `slotBefore`
@@ -62,6 +50,17 @@ const SlotItemBase = kind({
 		 * @public
 		 */
 		autoHide: PropTypes.oneOf(['after', 'before', 'both']),
+
+		/**
+		 * The type of component to use to render the item.
+		 *
+		 * A derivative of [Item]{@link ui/Item.Item} is recommended.
+		 *
+		 * @type {Component}
+		 * @default 'div'
+		 * @public
+		 */
+		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -90,10 +89,29 @@ const SlotItemBase = kind({
 		 * @default 'flex'
 		 * @public
 		 */
-		layout: PropTypes.oneOf(['flex'])
+		layout: PropTypes.oneOf(['flex']),
+
+		/**
+		 * A way to insert an element after the `children` content. If nothing is specified,
+		 * nothing, not even an empty container, is rendered in this place.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		slotAfter: PropTypes.node,
+
+		/**
+		 * A way to insert an element before the `children` content. If nothing is specified,
+		 * nothing, not even an empty container, is rendered in this place.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		slotBefore: PropTypes.node
 	},
 
 	defaultProps: {
+		component: 'div',
 		layout: 'flex'
 	},
 
@@ -105,26 +123,25 @@ const SlotItemBase = kind({
 
 	computed: {
 		className: ({layout, styler}) => styler.append(layout),
-		slotBefore: ({slotBefore, autoHide, styler}) => ( slotBefore ?
+		slotBefore: ({slotBefore, autoHide, styler}) => (slotBefore ?
 			<div className={styler.join('slot', 'before', {hidden: (autoHide === 'before' || autoHide === 'both')})}>
 				{slotBefore}
 			</div> : null
 		),
-		slotAfter: ({slotAfter, autoHide, styler}) => ( slotAfter ?
+		slotAfter: ({slotAfter, autoHide, styler}) => (slotAfter ?
 			<div className={styler.join('slot', 'after', {hidden: (autoHide === 'after' || autoHide === 'both')})}>
 				{slotAfter}
 			</div> : null
 		)
 	},
 
-	render: ({children, component: Component, css, slotAfter, slotBefore, ...rest}) => {
+	render: ({children, component: Component, slotAfter, slotBefore, ...rest}) => {
 		delete rest.autoHide;
 		delete rest.layout;
 
 		return (
 			<Component
 				{...rest}
-				css={css}
 			>
 				{slotBefore}
 				{children}
