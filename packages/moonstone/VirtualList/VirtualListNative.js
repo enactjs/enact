@@ -5,4 +5,4 @@ export {
 	VirtualListNative,
 	VirtualGridListNative
 };
-export * from '@enact/ui/VirtualList/GridListImageItem';
+export * from './GridListImageItem';
