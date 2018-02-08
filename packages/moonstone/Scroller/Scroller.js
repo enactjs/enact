@@ -6,6 +6,7 @@
  * @exports ScrollerBase
  */
 
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {forward} from '@enact/core/handle';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
@@ -36,9 +37,13 @@ const
 class ScrollerBase extends UiScrollerBase {
 	static displayName = 'ScrollerBase'
 
+	static contextTypes = contextTypes
+
 	componentWillUnmount () {
 		this.setContainerDisabled(false);
 	}
+
+	getRtlPositionX = (x) => (this.context.rtl ? this.scrollBounds.maxLeft - x : x)
 
 	/**
 	 * Returns the first spotlight container between `node` and the scroller

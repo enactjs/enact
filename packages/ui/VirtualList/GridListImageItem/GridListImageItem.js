@@ -6,8 +6,8 @@
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import Icon from '../../Icon';
 import Image from '../../Image';
@@ -15,7 +15,7 @@ import Image from '../../Image';
 import componentCss from './GridListImageItem.less';
 
 /**
- * [GridListImageItem]{@link ui/VirtualList.GridListImageItemBase} is a stateless image item.
+ * [GridListImageItem]{@link ui/VirtualList.GridListImageItem} is a stateless image item.
  *
  * @class GridListImageItem
  * @memberof ui/VirtualList
@@ -25,7 +25,7 @@ import componentCss from './GridListImageItem.less';
 const GridListImageItem = kind({
 	name: 'ui:GridListImageItem',
 
-	propTypes: /** @lends ui/VirtualList.GridListImageItemBase.prototype */ {
+	propTypes: /** @lends ui/VirtualList.GridListImageItem.prototype */ {
 		/**
 		 * The absolute URL path to the image.
 		 *
@@ -124,6 +124,7 @@ const GridListImageItem = kind({
 		 * ```
 		 *
 		 * @type {Function}
+		 * @public
 		 */
 		selectionOverlay: PropTypes.func,
 

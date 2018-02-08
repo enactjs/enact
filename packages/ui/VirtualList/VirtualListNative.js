@@ -9,7 +9,6 @@
  */
 
 import classNames from 'classnames';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -178,8 +177,6 @@ class VirtualListBaseNative extends Component {
 		 */
 		spacing: PropTypes.number
 	}
-
-	static contextTypes = contextTypes
 
 	static defaultProps = {
 		cbScrollTo: nop,
@@ -612,7 +609,7 @@ class VirtualListBaseNative extends Component {
 	scrollToPosition (x, y) {
 		const node = this.containerRef;
 
-		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
+		node.scrollTo(x, y);
 	}
 
 	composeStyle (style, width, height, primaryPosition, secondaryPosition) {
@@ -625,7 +622,7 @@ class VirtualListBaseNative extends Component {
 		style.position = 'absolute';
 
 		/* FIXME: RTL / this calculation only works for Chrome */
-		style.transform = 'translate(' + (this.context.rtl ? -x : x) + 'px,' + y + 'px)';
+		style.transform = 'translate(' + x + 'px,' + y + 'px)';
 	}
 
 	getXY = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})

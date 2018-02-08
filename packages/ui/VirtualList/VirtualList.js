@@ -9,7 +9,6 @@
  */
 
 import classNames from 'classnames';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Scrollable from '../Scrollable';
@@ -170,8 +169,6 @@ class VirtualListBase extends Component {
 		spacing: PropTypes.number
 	}
 
-	static contextTypes = contextTypes
-
 	static defaultProps = {
 		cbScrollTo: nop,
 		data: [],
@@ -199,21 +196,9 @@ class VirtualListBase extends Component {
 	// Calculate metrics for VirtualList after the 1st render to know client W/H.
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
-		const containerNode = this.containerRef;
-
 		if (!this.props.clientSize) {
 			this.calculateMetrics(this.props);
 			this.updateStatesAndBounds(this.props);
-		}
-
-		// prevent native scrolling by Spotlight
-		this.preventScroll = () => {
-			containerNode.scrollTop = 0;
-			containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
-		};
-
-		if (containerNode && containerNode.addEventListener) {
-			containerNode.addEventListener('scroll', this.preventScroll);
 		}
 	}
 
@@ -641,15 +626,12 @@ class VirtualListBase extends Component {
 		this.composeTransform(style, ...rest);
 	}
 
-	getXY = (primaryPosition, secondaryPosition) => {
-		const rtlDirection = this.context.rtl ? -1 : 1;
-		return (this.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
-	}
+	getXY = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
 	composeTransform (style, primaryPosition, secondaryPosition = 0) {
 		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
 
-		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
+		style.transform = 'translate3d(' + x + 'px,' + y + 'px, 0)';
 	}
 
 	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
