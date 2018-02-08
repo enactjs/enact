@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import css from '@enact/ui/Scrollable/Scrollable.less';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import kind from '@enact/core/kind';
+import {animationDuration} from '@enact/ui/Scrollable/ScrollAnimator';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import PropTypes from 'prop-types';
@@ -21,7 +22,6 @@ import scrollbarCss from './Scrollbar.less';
 
 const
 	{
-		animationDuration,
 		isPageDown,
 		isPageUp,
 		paginationPageMultiplier,

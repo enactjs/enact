@@ -515,13 +515,11 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
 			scrollableClasses = classNames(css.scrollable, className);
 
 		delete rest.cbScrollTo;
-		delete rest.className;
 		delete rest.horizontalScrollbar;
 		delete rest.onScroll;
 		delete rest.onScrollbarVisibilityChange;
 		delete rest.onScrollStart;
 		delete rest.onScrollStop;
-		delete rest.style;
 		delete rest.verticalScrollbar;
 
 		return (

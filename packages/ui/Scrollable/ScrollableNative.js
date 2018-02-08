@@ -59,7 +59,7 @@ const
  * @private
  */
 class ScrollableBaseNative extends Component {
-	static displayName = 'ui:ScrollableNative'
+	static displayName = 'ui:ScrollableBaseNative'
 
 	static propTypes = /** @lends ui/Scrollable.ScrollableBaseNative.prototype */ {
 		/**
@@ -722,6 +722,7 @@ class ScrollableBaseNative extends Component {
 			if (this.props.onScrollbarVisibilityChange) {
 				this.props.onScrollbarVisibilityChange();
 			}
+
 			// one or both scrollbars have changed visibility
 			this.setState({
 				isHorizontalScrollbarVisible: curHorizontalScrollbarVisible,
