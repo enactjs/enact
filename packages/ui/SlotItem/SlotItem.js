@@ -39,7 +39,7 @@ const SlotItemBase = kind({
 		 * @required
 		 * @public
 		 */
-		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+		component: PropTypes.func.isRequired,
 
 		/**
 		 * Controls the visibility state of the slots.
