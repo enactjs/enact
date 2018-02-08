@@ -234,7 +234,7 @@ class ScrollableBaseNative extends Component {
 		this.direction = this.childRef.props.direction;
 		this.updateScrollbars();
 
-		this.updateEventListeners();
+		this.addEventListeners();
 		on('keydown', this.onKeyDown);
 	}
 
@@ -257,7 +257,7 @@ class ScrollableBaseNative extends Component {
 		}
 
 		this.direction = this.childRef.props.direction;
-		this.updateEventListeners();
+		this.addEventListeners();
 		if (!this.isFitClientSize) {
 			this.updateScrollbars();
 		}
@@ -777,21 +777,19 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
-	updateEventListeners () {
+	addEventListeners () {
 		const
 			{containerRef} = this,
 			childContainerRef = this.childRef.containerRef;
 
 		if (containerRef && containerRef.addEventListener) {
-			// FIXME `onWheel` doesn't work on the v8 snapshot.
+			// FIXME event handlers don't work on the v8 snapshot.
 			containerRef.addEventListener('wheel', this.onWheel);
 		}
 		if (childContainerRef && childContainerRef.addEventListener) {
-			// FIXME `onScroll` doesn't work on the v8 snapshot.
+			// FIXME event handlers don't work on the v8 snapshot.
 			childContainerRef.addEventListener('scroll', this.onScroll, {capture: true});
-			// FIXME `onMouseOver` doesn't work on the v8 snapshot.
 			childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
-			// FIXME `onMouseMove` doesn't work on the v8 snapshot.
 			childContainerRef.addEventListener('mousemove', this.onMouseMove, {capture: true});
 		}
 

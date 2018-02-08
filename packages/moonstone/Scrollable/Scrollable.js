@@ -441,10 +441,10 @@ class ScrollableBase extends UiScrollableBase {
 		this.bounds.scrollHeight = this.getScrollBounds().scrollHeight;
 	}
 
-	updateEventListeners () {
+	addEventListeners () {
 		const childContainerRef = this.childRef.containerRef;
 
-		super.updateEventListeners();
+		super.addEventListeners();
 
 		if (childContainerRef && childContainerRef.addEventListener) {
 			// FIXME `onFocus` doesn't work on the v8 snapshot.

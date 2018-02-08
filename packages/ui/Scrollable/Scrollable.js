@@ -27,6 +27,23 @@ import Scrollbar from './Scrollbar';
 import css from './Scrollable.less';
 
 const
+	/*
+	 * Pointer events are supported from Chromium 55, Edge 16 and IE 11.
+	 * For Chromium before 55, Firefox (default) and Safari, we still need mouse events.
+	*/
+	usePointerEvents = window.PointerEvent ? true : false,
+	// If pointer events are not supported and the platform is webOS, we need to add touch events.
+	useTouchEvents = (!usePointerEvents && window.PalmSystem) ? true : false,
+	// event names
+	pointerEventsPrefix = usePointerEvents ? 'pointer' : 'mouse',
+	eventNamePointerDown = pointerEventsPrefix + 'down',
+	eventNamePointerLeave = pointerEventsPrefix + 'leave',
+	eventNamePointerMove = pointerEventsPrefix + 'move',
+	eventNamePointerUp = pointerEventsPrefix + 'up',
+	// DOM events
+	forwardPointerMove = forward('onPointerMove'),
+	forwardPointerUp = forward('onPointerUp'),
+	// Generated events
 	forwardScroll = forward('onScroll'),
 	forwardScrollStart = forward('onScrollStart'),
 	forwardScrollStop = forward('onScrollStop');
@@ -214,6 +231,8 @@ class ScrollableBase extends Component {
 		};
 
 		props.cbScrollTo(this.scrollTo);
+
+		this.bindEventHandlers();
 	}
 
 	getChildContext = () => ({
@@ -240,7 +259,7 @@ class ScrollableBase extends Component {
 		this.direction = this.childRef.props.direction;
 		this.updateScrollbars();
 
-		this.updateEventListeners();
+		this.addEventListeners();
 		on('keydown', this.onKeyDown);
 	}
 
@@ -265,7 +284,7 @@ class ScrollableBase extends Component {
 		this.clampScrollPosition();
 
 		this.direction = this.childRef.props.direction;
-		this.updateEventListeners();
+		this.addEventListeners();
 		if (!this.isFitClientSize) {
 			this.updateScrollbars();
 		}
@@ -350,6 +369,7 @@ class ScrollableBase extends Component {
 	isUpdatedScrollThumb = false
 
 	// drag info
+	pointerId = 0
 	dragInfo = {
 		t: 0,
 		clientX: 0,
@@ -439,15 +459,19 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	// mouse event handler for JS scroller
+	// pointer event handler for JS scroller
 
-	onMouseDown = (e) => {
+	onPointerDown (e) {
 		this.animator.stop();
+		/* for mouse/touch events, pointerId will be undefined always and it works also. */
+		this.pointerId = e.pointerId;
 		this.dragStart(e);
+		forward('onMouseDown', e);
 	}
 
-	onMouseMove = (e) => {
-		if (this.isDragging) {
+	onPointerMove (e) {
+		/* for mouse/touch events, pointerId will be undefined always and it works also. */
+		if (e.pointerId === this.pointerId && this.isDragging) {
 			const
 				{dx, dy} = this.drag(e),
 				bounds = this.getScrollBounds();
@@ -462,10 +486,12 @@ class ScrollableBase extends Component {
 			this.showThumb(bounds);
 			this.scroll(this.scrollLeft - dx, this.scrollTop - dy);
 		}
+		forward('onMouseMove', e);
 	}
 
-	onMouseUp = (e) => {
-		if (this.isDragging) {
+	onPointerUp (e) {
+		/* for mouse/touch events, pointerId will be undefined always and it works also. */
+		if (e.pointerId === this.pointerId && this.isDragging) {
 			this.dragStop(e);
 
 			if (!this.isFlicking()) {
@@ -489,11 +515,34 @@ class ScrollableBase extends Component {
 				});
 			}
 		}
+		forward('onMouseUp', e);
 	}
 
-	onMouseLeave = (e) => {
-		this.onMouseMove(e);
-		this.onMouseUp();
+	onPointerLeave (e) {
+		if (e.target === this.containerRef) {
+			this.onPointerUp(e);
+			forward('onMouseLeave', e);
+		}
+	}
+
+	addPointerIdForTouch (touchObj) {
+		touchObj.pointerId = touchObj.identifier;
+		return touchObj;
+	}
+
+	onTouchStart (e) {
+		this.onPointerDown(this.addPointerIdForTouch(e.changedTouches[0]));
+		forward('onTouchStart', e);
+	}
+
+	onTouchMove (e) {
+		this.onPointerMove(this.addPointerIdForTouch(e.changedTouches[0]));
+		forward('onTouchMove', e);
+	}
+
+	onTouchEnd (e) {
+		this.onPointerUp(this.addPointerIdForTouch(e.changedTouches[0]));
+		forward('onTouchEnd', e);
 	}
 
 	calculateDistanceByWheel (deltaMode, delta, maxPixel) {
@@ -508,7 +557,7 @@ class ScrollableBase extends Component {
 		return delta;
 	}
 
-	onWheel = (e) => {
+	onWheel (e) {
 		e.preventDefault();
 		if (!this.isDragging) {
 			const
@@ -891,12 +940,36 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	updateEventListeners () {
+	bindEventHandlers () {
+		// FIXME event handlers don't work on the v8 snapshot.
+		this.onPointerDown = this.onPointerDown.bind(this);
+		this.onPointerLeave = this.onPointerLeave.bind(this);
+		this.onPointerMove = this.onPointerMove.bind(this);
+		this.onPointerUp = this.onPointerUp.bind(this);
+		this.onWheel = this.onWheel.bind(this);
+
+		if (useTouchEvents) {
+			this.onTouchStart = this.onTouchStart.bind(this);
+			this.onTouchMove = this.onTouchMove.bind(this);
+			this.onTouchEnd = this.onTouchEnd.bind(this);
+		}
+	}
+
+	addEventListeners () {
 		const {containerRef} = this;
 
 		if (containerRef && containerRef.addEventListener) {
-			// FIXME `onWheel` doesn't work on the v8 snapshot.
+			// FIXME event handlers don't work on the v8 snapshot.
+			containerRef.addEventListener(eventNamePointerDown, this.onPointerDown);
+			containerRef.addEventListener(eventNamePointerLeave, this.onPointerLeave);
+			containerRef.addEventListener(eventNamePointerMove, this.onPointerMove);
+			containerRef.addEventListener(eventNamePointerUp, this.onPointerUp);
 			containerRef.addEventListener('wheel', this.onWheel);
+			if (useTouchEvents) {
+				containerRef.addEventListener('touchstart', this.onTouchStart);
+				containerRef.addEventListener('touchmove', this.onTouchMove);
+				containerRef.addEventListener('touchend', this.onTouchEnd);
+			}
 		}
 	}
 
@@ -904,8 +977,17 @@ class ScrollableBase extends Component {
 		const {containerRef} = this;
 
 		if (containerRef && containerRef.removeEventListener) {
-			// FIXME `onWheel` doesn't work on the v8 snapshot.
+			// FIXME event handlers don't work on the v8 snapshot.
+			containerRef.removeEventListener(eventNamePointerDown, this.onPointerDown);
+			containerRef.removeEventListener(eventNamePointerLeave, this.onPointerLeave);
+			containerRef.removeEventListener(eventNamePointerMove, this.onPointerMove);
+			containerRef.removeEventListener(eventNamePointerUp, this.onPointerUp);
 			containerRef.removeEventListener('wheel', this.onWheel);
+			if (useTouchEvents) {
+				containerRef.removeEventListener('touchstart', this.onTouchStart);
+				containerRef.removeEventListener('touchmove', this.onTouchMove);
+				containerRef.removeEventListener('touchend', this.onTouchEnd);
+			}
 		}
 	}
 
