@@ -278,6 +278,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				on('touchend', this.handleGlobalUp, document);
 			}
 			on('mouseup', this.handleGlobalUp, document);
+			on('mousemove', this.handleGlobalMove, document);
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -302,6 +303,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				off('touchend', this.handleGlobalUp, document);
 			}
 			off('mouseup', this.handleGlobalUp, document);
+			off('mousemove', this.handleGlobalMove, document);
 		}
 
 		target = null
@@ -529,6 +531,10 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.isTracking,
 			this.deactivate
 		).finally(this.endGesture)
+
+		handleGlobalMove = this.handle(
+			this.moveGesture
+		)
 
 		addHandlers (props) {
 			props.onMouseDown = this.handleMouseDown;

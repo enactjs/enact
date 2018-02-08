@@ -86,7 +86,6 @@ storiesOf('Touchable', module)
 		() => (
 			<TouchableDiv
 				dragConfig={{
-					constrain: select('dragConfig.constrain', [null, 'window', '.outer'], null),
 					global: boolean('dragConfig.global', false),
 					moveTolerance: number('dragConfig.moveTolerance', 16)
 				}}

@@ -98,12 +98,8 @@ class Drag {
 						type: 'onDragStart'
 					});
 				}
-			} else {
-				return;
 			}
-		}
-
-		if (onDrag && this.tracking === Tracking.Active && this.updatePosition(coords)) {
+		} else if (onDrag && this.tracking === Tracking.Active && this.updatePosition(coords)) {
 			onDrag({
 				type: 'onDrag',
 				...coords
@@ -115,7 +111,7 @@ class Drag {
 		if (!this.isDragging()) return;
 
 		const {onDragEnd} = this.dragConfig;
-		if (onDragEnd && this.tracking === Tracking.Active) {
+		if (onDragEnd && this.tracking !== Tracking.Untracked) {
 			onDragEnd({type: 'onDragEnd'});
 		}
 
