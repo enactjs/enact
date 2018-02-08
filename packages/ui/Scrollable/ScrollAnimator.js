@@ -35,6 +35,9 @@ const
 		}
 	},
 
+	animationDuration = 1000,
+	calcVelocity = (d, dt) => (d && dt) ? d / dt : 0,
+
 	// for simulate()
 	frameTime = 16.0,         // time for one frame
 	maxVelocity = 100,        // speed cap
@@ -124,5 +127,7 @@ class ScrollAnimator {
 
 export default ScrollAnimator;
 export {
-	ScrollAnimator
+	ScrollAnimator,
+	animationDuration,
+	calcVelocity
 };

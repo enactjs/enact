@@ -2,9 +2,11 @@
  * Provides unstyled scrollable components and behaviors to be customized by a theme or application.
  *
  * @module ui/Scrollable
- * @exports Scrollable
- * @exports constants
- * @exports ScrollableBase
+ * @exports Scrollable,
+ * @exports ScrollableNative,
+ * @exports constants,
+ * @exports ScrollableBase,
+ * @exports ScrollableBaseNative
  */
 
 import clamp from 'ramda/src/clamp';
@@ -12,6 +14,7 @@ import classNames from 'classnames';
 import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
+import {Job} from '@enact/core/util';
 import kind from '@enact/core/kind';
 import {on, off} from '@enact/core/dispatcher';
 import {perfNow} from '@enact/core/util';
@@ -21,10 +24,9 @@ import React, {Component} from 'react';
 import {contextTypes as contextTypesResize} from '../Resizable';
 import ri from '../resolution';
 
-import ScrollAnimator from './ScrollAnimator';
-import Scrollbar from './Scrollbar';
-
 import css from './Scrollable.less';
+import ScrollAnimator, {animationDuration, calcVelocity} from './ScrollAnimator';
+import Scrollbar from './Scrollbar';
 
 const
 	forwardScroll = forward('onScroll'),
@@ -33,25 +35,23 @@ const
 
 const
 	constants = {
-		animationDuration: 1000,
-		calcVelocity: (d, dt) => (d && dt) ? d / dt : 0,
 		epsilon: 1,
 		holdTime: 50,
 		isPageDown: is('pageDown'),
 		isPageUp: is('pageUp'),
 		nop: () => {},
 		paginationPageMultiplier: 0.8,
+		scrollStopWaiting: 200,
 		scrollWheelPageMultiplierForMaxPixel: 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	},
 	{
-		animationDuration,
-		calcVelocity,
 		epsilon,
 		holdTime,
 		isPageDown,
 		isPageUp,
 		nop,
 		paginationPageMultiplier,
+		scrollStopWaiting,
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
 
@@ -156,6 +156,14 @@ class ScrollableBase extends Component {
 		style: PropTypes.object,
 
 		/**
+		 * Specifies how to scroll depending on JavaScript or Native
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		type: PropTypes.oneOf(['JS', 'Native']),
+
+		/**
 		 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
 		 * `'visible'`, and `'hidden'`.
 		 *
@@ -200,6 +208,15 @@ class ScrollableBase extends Component {
 			isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
 		};
 
+		this.onMouseOver = this.onMouseOver.bind(this);
+		this.onMouseDown = this.onMouseDown.bind(this);
+		this.onMouseMove = this.onMouseMove.bind(this);
+		this.onMouseUp = this.onMouseUp.bind(this);
+		this.onMouseLeave = this.onMouseLeave.bind(this);
+		this.onWheel = this.onWheel.bind(this);
+		this.onScroll = this.onScroll.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
+
 		this.initChildRef = this.initRef('childRef');
 		this.initContainerRef = this.initRef('containerRef');
 
@@ -212,6 +229,16 @@ class ScrollableBase extends Component {
 			ref: this.initRef('horizontalScrollbarRef'),
 			vertical: false
 		};
+
+		if (props.type === 'Native') {
+			const self = this;
+
+			this.scrollStopJob = new Job(function () {
+				self.isScrollAnimationTargetAccumulated = false;
+				self.scrolling = false;
+				self.doScrollStop();
+			}, scrollStopWaiting);
+		}
 
 		props.cbScrollTo(this.scrollTo);
 	}
@@ -249,6 +276,8 @@ class ScrollableBase extends Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
+		const {type} = this.props;
+
 		// Need to sync calculated client size if it is different from the real size
 		if (this.childRef.syncClientSize) {
 			const {isVerticalScrollbarVisible, isHorizontalScrollbarVisible} = this.state;
@@ -262,7 +291,9 @@ class ScrollableBase extends Component {
 			this.isFitClientSize = (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) && this.childRef.isSameTotalItemSizeWithClient();
 		}
 
-		this.clampScrollPosition();
+		if (type === 'JS') {
+			this.clampScrollPosition();
+		}
 
 		this.direction = this.childRef.props.direction;
 		this.updateEventListeners();
@@ -288,10 +319,19 @@ class ScrollableBase extends Component {
 	}
 
 	componentWillUnmount () {
+		const {type} = this.props;
+
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
-		if (this.animator.isAnimating()) {
-			this.doScrollStop();
-			this.animator.stop();
+		if (type === 'JS') {
+			if (this.animator.isAnimating()) {
+				this.doScrollStop();
+				this.animator.stop();
+			}
+		} else if (type === 'Native') {
+			if (this.scrolling) {
+				this.doScrollStop();
+			}
+			this.scrollStopJob.stop();
 		}
 
 		if (this.context.Subscriber) {
@@ -340,24 +380,11 @@ class ScrollableBase extends Component {
 	// status
 	direction = 'vertical'
 	isScrollAnimationTargetAccumulated = false
-	wheelDirection = 0
 	pageDirection = 0
-	isFirstDragging = false
-	isDragging = false
 	deferScrollTo = true
 	pageDistance = 0
 	isFitClientSize = false
 	isUpdatedScrollThumb = false
-
-	// drag info
-	dragInfo = {
-		t: 0,
-		clientX: 0,
-		clientY: 0,
-		dx: 0,
-		dy: 0,
-		dt: 0
-	}
 
 	// bounds info
 	bounds = {
@@ -369,20 +396,60 @@ class ScrollableBase extends Component {
 		maxLeft: 0
 	}
 
+	// JS
+	wheelDirection = 0
+	animator = new ScrollAnimator()
+
+	// Native
+	scrollStopJob = null
+
 	// scroll info
 	scrolling = false
 	scrollLeft = 0
 	scrollTop = 0
 	scrollToInfo = null
 
+	// dragging info
+	isDragging = false
+	isFirstDragging = false
+	dragInfo = {
+		t: 0,
+		clientX: 0,
+		clientY: 0,
+		dx: 0,
+		dy: 0,
+		dt: 0
+	}
+
 	// component info
 	childRef = null
 	containerRef = null
 
-	// scroll animator
-	animator = new ScrollAnimator()
+	scrollToAccumulatedTarget = (delta, vertical) => {
+		const {type} = this.props;
 
-	// handle an input event
+		if (!this.isScrollAnimationTargetAccumulated) {
+			this.accumulatedTargetX = this.scrollLeft;
+			this.accumulatedTargetY = this.scrollTop;
+			this.isScrollAnimationTargetAccumulated = true;
+		}
+
+		if (vertical) {
+			this.accumulatedTargetY += delta;
+		} else {
+			this.accumulatedTargetX += delta;
+		}
+
+		if (type === 'JS') {
+			this.start({
+				targetX: this.accumulatedTargetX,
+				targetY: this.accumulatedTargetY,
+				animate: true
+			});
+		} else if (type === 'Native') {
+			this.start(this.accumulatedTargetX, this.accumulatedTargetY);
+		}
+	}
 
 	dragStart (e) {
 		const d = this.dragInfo;
@@ -441,13 +508,24 @@ class ScrollableBase extends Component {
 
 	// mouse event handler for JS scroller
 
-	onMouseDown = (e) => {
-		this.animator.stop();
-		this.dragStart(e);
+	onMouseOver () {
 	}
 
-	onMouseMove = (e) => {
-		if (this.isDragging) {
+	onMouseDown (e) {
+		const {type} = this.props;
+
+		if (type === 'JS') {
+			this.animator.stop();
+			this.dragStart(e);
+		} else if (type === 'Native') {
+			this.isScrollAnimationTargetAccumulated = false;
+		}
+	}
+
+	onMouseMove (e) {
+		const {type} = this.props;
+
+		if (type === 'JS' && this.isDragging) {
 			const
 				{dx, dy} = this.drag(e),
 				bounds = this.getScrollBounds();
@@ -464,8 +542,10 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	onMouseUp = (e) => {
-		if (this.isDragging) {
+	onMouseUp (e) {
+		const {type} = this.props;
+
+		if (type === 'JS' && this.isDragging) {
 			this.dragStop(e);
 
 			if (!this.isFlicking()) {
@@ -491,9 +571,13 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	onMouseLeave = (e) => {
-		this.onMouseMove(e);
-		this.onMouseUp();
+	onMouseLeave (e) {
+		const {type} = this.props;
+
+		if (type === 'JS') {
+			this.onMouseMove(e);
+			this.onMouseUp();
+		}
 	}
 
 	calculateDistanceByWheel (deltaMode, delta, maxPixel) {
@@ -508,9 +592,40 @@ class ScrollableBase extends Component {
 		return delta;
 	}
 
-	onWheel = (e) => {
-		e.preventDefault();
-		if (!this.isDragging) {
+	onWheel (e) {
+		const {type} = this.props;
+
+		if (type === 'JS') {
+			e.preventDefault();
+			if (!this.isDragging) {
+				const
+					bounds = this.getScrollBounds(),
+					canScrollHorizontally = this.canScrollHorizontally(bounds),
+					canScrollVertically = this.canScrollVertically(bounds),
+					eventDeltaMode = e.deltaMode,
+					eventDelta = (-e.wheelDeltaY || e.deltaY);
+				let
+					delta = 0,
+					direction;
+
+				if (canScrollVertically) {
+					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
+				} else if (canScrollHorizontally) {
+					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
+				}
+
+				direction = Math.sign(delta);
+
+				if (direction !== this.wheelDirection) {
+					this.isScrollAnimationTargetAccumulated = false;
+					this.wheelDirection = direction;
+				}
+
+				if (delta !== 0) {
+					this.scrollToAccumulatedTarget(delta, canScrollVertically);
+				}
+			}
+		} else if (type === 'Native') {
 			const
 				bounds = this.getScrollBounds(),
 				canScrollHorizontally = this.canScrollHorizontally(bounds),
@@ -519,24 +634,84 @@ class ScrollableBase extends Component {
 				eventDelta = (-e.wheelDeltaY || e.deltaY);
 			let
 				delta = 0,
-				direction;
+				needToHideThumb = false;
 
-			if (canScrollVertically) {
-				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
-			} else if (canScrollHorizontally) {
-				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
+			if (typeof window !== 'undefined') {
+				window.document.activeElement.blur();
 			}
 
-			direction = Math.sign(delta);
+			this.showThumb(bounds);
 
-			if (direction !== this.wheelDirection) {
-				this.isScrollAnimationTargetAccumulated = false;
-				this.wheelDirection = direction;
+			// FIXME This routine is a temporary support for horizontal wheel scroll.
+			// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
+			if (canScrollVertically) { // This routine handles wheel events on scrollbars for vertical scroll.
+				if (eventDelta < 0 && this.scrollTop > 0 || eventDelta > 0 && this.scrollTop < bounds.maxTop) {
+					const {horizontalScrollbarRef, verticalScrollbarRef} = this;
+
+					// Not to check if e.target is a descendant of a wrapped component which may have a lot of nodes in it.
+					if ((horizontalScrollbarRef && horizontalScrollbarRef.containerRef.contains(e.target)) ||
+						(verticalScrollbarRef && verticalScrollbarRef.containerRef.contains(e.target))) {
+						delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
+						needToHideThumb = !delta;
+					}
+				} else {
+					needToHideThumb = true;
+				}
+			} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
+				if (eventDelta < 0 && this.scrollLeft > 0 || eventDelta > 0 && this.scrollLeft < bounds.maxLeft) {
+					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
+					needToHideThumb = !delta;
+				} else {
+					needToHideThumb = true;
+				}
 			}
 
 			if (delta !== 0) {
+				/* prevent native scrolling feature for vertical direction */
+				e.preventDefault();
+				const direction = Math.sign(delta);
+				// Not to accumulate scroll position if wheel direction is different from hold direction
+				if (direction !== this.pageDirection) {
+					this.isScrollAnimationTargetAccumulated = false;
+					this.pageDirection = direction;
+				}
 				this.scrollToAccumulatedTarget(delta, canScrollVertically);
 			}
+
+			if (needToHideThumb) {
+				this.startHidingThumb();
+			}
+		}
+	}
+
+	onScroll (e) {
+		const {type} = this.props;
+
+		if (type === 'JS' && !this.animator.isAnimating() && this.childRef && this.childRef.containerRef) {
+			this.childRef.containerRef.scrollTop = this.scrollTop;
+			this.childRef.containerRef.scrollLeft = this.scrollLeft;
+		} else if (type === 'Native') {
+			const
+				bounds = this.getScrollBounds(),
+				canScrollHorizontally = this.canScrollHorizontally(bounds);
+			let
+				{scrollLeft, scrollTop} = e.target;
+
+			if (!this.scrolling) {
+				this.scrolling = true;
+				this.showThumb(this.getScrollBounds());
+				this.doScrollStart();
+			}
+
+			if (this.context.rtl && canScrollHorizontally) {
+				/* FIXME: RTL / this calculation only works for Chrome */
+				scrollLeft = bounds.maxLeft - scrollLeft;
+			}
+
+			this.scroll(scrollLeft, scrollTop);
+
+			this.startHidingThumb();
+			this.scrollStopJob.start();
 		}
 	}
 
@@ -553,30 +728,21 @@ class ScrollableBase extends Component {
 		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 	}
 
-	onKeyDown = (e) => {
-		if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && !e.repeat) {
-			this.scrollByPage(e.keyCode);
-		}
-	}
+	onKeyDown (e) {
+		const {type} = this.props;
 
-	scrollToAccumulatedTarget = (delta, vertical) => {
-		if (!this.isScrollAnimationTargetAccumulated) {
-			this.accumulatedTargetX = this.scrollLeft;
-			this.accumulatedTargetY = this.scrollTop;
-			this.isScrollAnimationTargetAccumulated = true;
+		if (type === 'JS') {
+			if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && !e.repeat) {
+				this.scrollByPage(e.keyCode);
+			}
+		} else if (type === 'Native') {
+			if (isPageUp(e.keyCode) || isPageDown(e.keyCode)) {
+				e.preventDefault();
+				if (!e.repeat) {
+					this.scrollByPage(e.keyCode);
+				}
+			}
 		}
-
-		if (vertical) {
-			this.accumulatedTargetY = this.accumulatedTargetY + delta;
-		} else {
-			this.accumulatedTargetX = this.accumulatedTargetX + delta;
-		}
-
-		this.start({
-			targetX: this.accumulatedTargetX,
-			targetY: this.accumulatedTargetY,
-			animate: true
-		});
 	}
 
 	// call scroll callbacks
@@ -616,38 +782,64 @@ class ScrollableBase extends Component {
 	// scroll start/stop
 
 	start ({targetX, targetY, animate = true, duration = animationDuration}) {
-		const {scrollLeft, scrollTop} = this;
-		const bounds = this.getScrollBounds();
+		const {type} = this.props;
 
-		this.animator.stop();
-		if (!this.scrolling) {
-			this.scrolling = true;
-			this.doScrollStart();
-		}
+		if (type === 'JS') {
+			const {scrollLeft, scrollTop} = this;
+			const bounds = this.getScrollBounds();
 
-		if (Math.abs(bounds.maxLeft - targetX) < epsilon) {
-			targetX = bounds.maxLeft;
-		}
-		if (Math.abs(bounds.maxTop - targetY) < epsilon) {
-			targetY = bounds.maxTop;
-		}
+			this.animator.stop();
+			if (!this.scrolling) {
+				this.scrolling = true;
+				this.doScrollStart();
+			}
 
-		this.showThumb(bounds);
+			if (Math.abs(bounds.maxLeft - targetX) < epsilon) {
+				targetX = bounds.maxLeft;
+			}
+			if (Math.abs(bounds.maxTop - targetY) < epsilon) {
+				targetY = bounds.maxTop;
+			}
 
-		if (animate) {
-			this.animator.animate(this.scrollAnimation({
-				sourceX: scrollLeft,
-				sourceY: scrollTop,
-				targetX,
-				targetY,
-				duration
-			}));
-		} else {
+			this.showThumb(bounds);
+
+			if (animate) {
+				this.animator.animate(this.scrollAnimation({
+					sourceX: scrollLeft,
+					sourceY: scrollTop,
+					targetX,
+					targetY,
+					duration
+				}));
+			} else {
+				targetX = clamp(0, bounds.maxLeft, targetX);
+				targetY = clamp(0, bounds.maxTop, targetY);
+
+				this.scroll(targetX, targetY);
+				this.stop();
+			}
+		} else if (type === 'Native') {
+			const
+				bounds = this.getScrollBounds(),
+				childContainerRef = this.childRef.containerRef;
+
 			targetX = clamp(0, bounds.maxLeft, targetX);
 			targetY = clamp(0, bounds.maxTop, targetY);
 
-			this.scroll(targetX, targetY);
-			this.stop();
+			if ((bounds.maxLeft - targetX) < epsilon) {
+				targetX = bounds.maxLeft;
+			}
+			if ((bounds.maxTop - targetY) < epsilon) {
+				targetY = bounds.maxTop;
+			}
+
+			if (animate) {
+				this.childRef.scrollToPosition(targetX, targetY);
+			} else {
+				childContainerRef.style.scrollBehavior = null;
+				this.childRef.scrollToPosition(targetX, targetY);
+				childContainerRef.style.scrollBehavior = 'smooth';
+			}
 		}
 	}
 
@@ -671,6 +863,7 @@ class ScrollableBase extends Component {
 	}
 
 	scroll = (left, top) => {
+		const {type} = this.props;
 		let
 			dirX = 0,
 			dirY = 0;
@@ -684,8 +877,15 @@ class ScrollableBase extends Component {
 			this.setScrollTop(top);
 		}
 
-		this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, dirX, dirY);
-		this.doScrolling();
+		if (type === 'JS') {
+			this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, dirX, dirY);
+			this.doScrolling();
+		} else if (type === 'Native') {
+			if (this.childRef.setScrollPosition) {
+				this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, dirX, dirY);
+			}
+			this.doScrolling();
+		}
 	}
 
 	stop () {
@@ -892,20 +1092,59 @@ class ScrollableBase extends Component {
 	}
 
 	updateEventListeners () {
-		const {containerRef} = this;
+		const {type} = this.props;
 
-		if (containerRef && containerRef.addEventListener) {
-			// FIXME `onWheel` doesn't work on the v8 snapshot.
-			containerRef.addEventListener('wheel', this.onWheel);
+		if (type === 'JS') {
+			const {containerRef} = this;
+
+			if (containerRef && containerRef.addEventListener) {
+				// FIXME `onWheel` doesn't work on the v8 snapshot.
+				containerRef.addEventListener('wheel', this.onWheel);
+			}
+		} else if (type === 'Native') {
+			const
+				{containerRef} = this,
+				childContainerRef = this.childRef.containerRef;
+
+			if (containerRef && containerRef.addEventListener) {
+				// FIXME `onWheel` doesn't work on the v8 snapshot.
+				containerRef.addEventListener('wheel', this.onWheel);
+			}
+			if (childContainerRef && childContainerRef.addEventListener) {
+				// FIXME `onScroll` doesn't work on the v8 snapshot.
+				childContainerRef.addEventListener('scroll', this.onScroll, {capture: true});
+				// FIXME `onMouseOver` doesn't work on the v8 snapshot.
+				childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
+				// FIXME `onMouseMove` doesn't work on the v8 snapshot.
+				childContainerRef.addEventListener('mousemove', this.onMouseMove, {capture: true});
+			}
+
+			childContainerRef.style.scrollBehavior = 'smooth';
 		}
 	}
 
 	removeEventListeners () {
-		const {containerRef} = this;
+		const
+			{type} = this.props,
+			{containerRef} = this;
+
 
 		if (containerRef && containerRef.removeEventListener) {
 			// FIXME `onWheel` doesn't work on the v8 snapshot.
 			containerRef.removeEventListener('wheel', this.onWheel);
+		}
+
+		if (type === 'Native') {
+			const childContainerRef = this.childRef.containerRef;
+
+			if (childContainerRef && childContainerRef.removeEventListener) {
+				// FIXME `onScroll` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('scroll', this.onScroll, {capture: true});
+				// FIXME `onMouseOver` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
+				// FIXME `onMouseMove` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
+			}
 		}
 	}
 
@@ -917,16 +1156,9 @@ class ScrollableBase extends Component {
 		};
 	}
 
-	handleScroll = () => {
-		if (!this.animator.isAnimating() && this.childRef && this.childRef.containerRef) {
-			this.childRef.containerRef.scrollTop = this.scrollTop;
-			this.childRef.containerRef.scrollLeft = this.scrollLeft;
-		}
-	}
-
 	render () {
 		const
-			{className, style, wrapped: Wrapped, ...rest} = this.props,
+			{className, style, type, wrapped: Wrapped, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			scrollableClasses = classNames(css.scrollable, className);
 
@@ -949,8 +1181,9 @@ class ScrollableBase extends Component {
 						{...rest}
 						cbScrollTo={this.scrollTo}
 						className={css.content}
-						onScroll={this.handleScroll}
+						onScroll={type === 'JS' ? this.onScroll : null}
 						ref={this.initChildRef}
+						type={type}
 					/>
 					{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 				</div>
@@ -971,12 +1204,28 @@ class ScrollableBase extends Component {
  */
 const Scrollable = (WrappedComponent) => (kind({
 	name: 'ui:Scrollable',
-	render: (props) => (<ScrollableBase wrapped={WrappedComponent} {...props} />)
+	render: (props) => (<ScrollableBase type="JS" wrapped={WrappedComponent} {...props} />)
+}));
+
+/**
+ * [ScrollableNative]{@link ui/Scrollable.ScrollableNative} is a Higher-order Component
+ * that applies a Scrollable behavior to its wrapped component.
+ *
+ * @class ScrollableNative
+ * @memberof ui/Scrollable
+ * @ui
+ * @private
+ */
+const ScrollableNative = (WrappedComponent) => (kind({
+	name: 'ui:ScrollableNative',
+	render: (props) => (<ScrollableBase type="Native" wrapped={WrappedComponent} {...props} />)
 }));
 
 export default Scrollable;
 export {
 	Scrollable,
+	ScrollableNative,
 	constants,
-	ScrollableBase
+	ScrollableBase,
+	ScrollableBase as ScrollableBaseNative
 };

@@ -4,6 +4,8 @@
  * @module ui/Scroller
  * @exports Scroller
  * @exports ScrollerBase
+ * @exports ScrollerBaseNative
+ * @exports ScrollerNative
  */
 
 import classNames from 'classnames';
@@ -12,7 +14,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
 import css from './Scroller.less';
-import Scrollable from '../Scrollable';
+import Scrollable, {ScrollableNative} from '../Scrollable';
 
 /**
  * [ScrollerBase]{@link ui/Scroller.ScrollerBase} is a base component for Scroller.
@@ -46,7 +48,15 @@ class ScrollerBase extends Component {
 		 * @default 'both'
 		 * @public
 		 */
-		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+		/**
+		 * Specifies how to scroll depending on JavaScript or Native
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		type: PropTypes.oneOf(['JS', 'Native'])
 	}
 
 	static contextTypes = contextTypes
@@ -161,6 +171,7 @@ class ScrollerBase extends Component {
 
 		delete rest.cbScrollTo;
 		delete rest.direction;
+		delete rest.type;
 
 		return (
 			<div
@@ -190,8 +201,26 @@ class ScrollerBase extends Component {
  */
 const Scroller = Scrollable(ScrollerBase);
 
+/**
+ * [ScrollerNative]{@link ui/Scroller.ScrollerNative} is a native scroller.
+ *
+ * Usage:
+ * ```
+ * <ScrollerNative>Scroll me.</ScrollerNative>
+ * ```
+ *
+ * @class ScrollerNative
+ * @memberof ui/Scroller
+ * @mixes ui/Scrollable.ScrollableNative
+ * @ui
+ * @public
+ */
+const ScrollerNative = ScrollableNative(ScrollerBase);
+
 export default Scroller;
 export {
 	Scroller,
-	ScrollerBase
+	ScrollerBase,
+	ScrollerBase as ScrollerBaseNative,
+	ScrollerNative
 };

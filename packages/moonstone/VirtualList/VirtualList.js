@@ -24,8 +24,7 @@ import Spottable from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import {VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList/VirtualListNative';
 
-import {Scrollable, dataIndexAttribute} from '../Scrollable';
-import ScrollableNative from '../Scrollable/ScrollableNative';
+import {Scrollable, ScrollableNative, dataIndexAttribute} from '../Scrollable';
 
 const
 	SpotlightPlaceholder = Spottable('div'),
@@ -81,7 +80,7 @@ const
  * @ui
  * @private
  */
-const VirtualListBase = (type, UiComponent) => (
+const VirtualListBase = (UiComponent) => (
 	class VirtualListCore extends UiComponent {
 		static displayName = 'VirtualListBase'
 
@@ -92,7 +91,15 @@ const VirtualListBase = (type, UiComponent) => (
 			 * @type {String}
 			 * @private
 			 */
-			'data-container-id': PropTypes.string // eslint-disable-line react/sort-prop-types
+			'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types,
+
+			/**
+			 * Specifies how to scroll depending on JavaScript or Native
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			type: PropTypes.oneOf(['JS', 'Native'])
 		}
 
 		constructor (props) {
@@ -120,7 +127,9 @@ const VirtualListBase = (type, UiComponent) => (
 		itemContainerRef = null
 
 		setContainerDisabled = (bool) => {
-			const containerNode = (type === 'Native') ? this.containerRef : this.contentRef;
+			const
+				{type} = this.props,
+				containerNode = (type === 'Native') ? this.containerRef : this.contentRef;
 
 			if (containerNode) {
 				containerNode.setAttribute(dataContainerDisabledAttribute, bool);
@@ -249,7 +258,7 @@ const VirtualListBase = (type, UiComponent) => (
 
 		scrollToNextItem = ({direction, focusedItem}) => {
 			const
-				{data} = this.props,
+				{data, type} = this.props,
 				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
 				{firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
 			let indexToScroll = -1;
@@ -410,7 +419,9 @@ const VirtualListBase = (type, UiComponent) => (
 		}
 
 		onKeyDown = (e) => {
-			const {keyCode, target} = e;
+			const
+				{type} = this.props,
+				{keyCode, target} = e;
 
 			this.isScrolledBy5way = false;
 			if (getDirection(keyCode)) {
@@ -442,7 +453,9 @@ const VirtualListBase = (type, UiComponent) => (
 		}
 
 		focusOnItem = (index) => {
-			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
+			const
+				{type} = this.props,
+				item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
 
 			if (Spotlight.isPaused()) {
 				Spotlight.resume();
@@ -456,6 +469,8 @@ const VirtualListBase = (type, UiComponent) => (
 
 		initItemRef = (ref, index) => {
 			if (ref) {
+				const {type} = this.props;
+
 				if (type === 'JS') {
 					this.focusOnItem(index);
 				} else if (type === 'Native') {
@@ -582,7 +597,7 @@ const VirtualListBase = (type, UiComponent) => (
 		 * setter/getter
 		 */
 
-		shouldPreventScrollByFocus = () => ((type === 'Native') ? (this.isScrolledBy5way) : (this.isScrolledBy5way || this.isScrolledByJump))
+		shouldPreventScrollByFocus = () => ((this.props.type === 'Native') ? (this.isScrolledBy5way) : (this.isScrolledBy5way || this.isScrolledByJump))
 
 		getNodeIndexToBeFocused = () => this.nodeIndexToBeFocused
 
@@ -636,13 +651,13 @@ const VirtualListBase = (type, UiComponent) => (
 			const node = this.getItemNode(index);
 
 			if (node) {
-				this.composeStyle(node.style, ...rest);
+				this.composeStyleJS(node.style, ...rest);
 			}
 		}
 
 		applyStyleToNewNode = (index, ...rest) => {
 			const
-				{component, data} = this.props,
+				{component, data, type} = this.props,
 				{numOfItems} = this.state,
 				{getNodeIndexToBeFocused, initItemRef} = this,
 				key = index % numOfItems,
@@ -654,7 +669,11 @@ const VirtualListBase = (type, UiComponent) => (
 				}),
 				style = {};
 
-			this.composeStyle(style, ...rest);
+			if (type === 'JS') {
+				this.composeStyleJS(style, ...rest);
+			} else if (type === 'Native') {
+				this.composeStyleNative(style, ...rest);
+			}
 
 			this.cc[key] = React.cloneElement(itemElement, {
 				ref: (index === getNodeIndexToBeFocused()) ? (ref) => initItemRef(ref, index) : null,
@@ -715,7 +734,8 @@ const VirtualListBase = (type, UiComponent) => (
  */
 const VirtualListDecorator = compose(
 	SpotlightContainerDecorator(SpotlightContainerConfig),
-	Scrollable
+	Scrollable,
+	VirtualListBase
 );
 
 /**
@@ -730,7 +750,8 @@ const VirtualListDecorator = compose(
  */
 const VirtualListNativeDecorator = compose(
 	SpotlightContainerDecorator(SpotlightContainerConfig),
-	ScrollableNative
+	ScrollableNative,
+	VirtualListBase
 );
 
 /**
@@ -743,7 +764,7 @@ const VirtualListNativeDecorator = compose(
  * @ui
  * @public
  */
-const VirtualList = VirtualListDecorator(VirtualListBase('JS', UiVirtualListBase));
+const VirtualList = VirtualListDecorator(UiVirtualListBase);
 
 /**
  * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList} is
@@ -767,7 +788,7 @@ const VirtualGridList = VirtualList;
  * @ui
  * @public
  */
-const VirtualListNative = VirtualListNativeDecorator(VirtualListBase('Native', UiVirtualListBaseNative));
+const VirtualListNative = VirtualListNativeDecorator(UiVirtualListBaseNative);
 
 /**
  * [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative} is

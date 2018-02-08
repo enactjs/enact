@@ -4,6 +4,8 @@
  * @module moonstone/Scroller
  * @exports Scroller
  * @exports ScrollerBase
+ * @exports ScrollerBaseNative
+ * @exports ScrollerNative
  */
 
 import {forward} from '@enact/core/handle';
@@ -12,7 +14,7 @@ import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import {Spotlight, getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
-import Scrollable from '../Scrollable';
+import Scrollable, {ScrollableNative} from '../Scrollable';
 
 const
 	dataContainerDisabledAttribute = 'data-container-disabled',
@@ -294,6 +296,7 @@ class ScrollerBase extends UiScrollerBase {
 			{keyCode, target} = ev,
 			direction = getDirection(keyCode);
 
+		super.onKeyDown(ev);
 		if (!ev.repeat) {
 			this.isScrolledToBoundary = false;
 		}
@@ -316,7 +319,7 @@ class ScrollerBase extends UiScrollerBase {
  *
  * @class Scroller
  * @memberof moonstone/Scroller
- * @mixes moonstone/Scroller.Scrollable
+ * @mixes moonstone/Scrollable.Scrollable
  * @ui
  * @public
  */
@@ -325,8 +328,30 @@ const Scroller = SpotlightContainerDecorator(
 	Scrollable(ScrollerBase)
 );
 
+/**
+ * [ScrollerNative]{@link moonstone/Scroller.ScrollerNative} is a Scroller with Moonstone styling,
+ * SpotlightContainerDecorator and Scrollable applied.
+ *
+ * Usage:
+ * ```
+ * <ScrollerNative>Scroll me.</ScrollerNative>
+ * ```
+ *
+ * @class ScrollerNative
+ * @memberof moonstone/Scroller
+ * @mixes moonstone/Scrollable.ScrollableNative
+ * @ui
+ * @public
+ */
+const ScrollerNative = SpotlightContainerDecorator(
+	{restrict: 'self-first'},
+	ScrollableNative(ScrollerBase)
+);
+
 export default Scroller;
 export {
 	Scroller,
-	ScrollerBase
+	ScrollerBase,
+	ScrollerBase as ScrollerBaseNative,
+	ScrollerNative
 };
