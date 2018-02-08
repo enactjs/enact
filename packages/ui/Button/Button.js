@@ -190,7 +190,7 @@ const ButtonBase = kind({
 const ButtonDecorator = Touchable({activeProp: 'pressed'});
 
 /**
- * A is minimally-styled button component with touch support.
+ * A minimally-styled button component with touch support.
  *
  * @class Button
  * @extends ui/Button.ButtonBase
