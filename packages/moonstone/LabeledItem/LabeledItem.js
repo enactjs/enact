@@ -26,7 +26,7 @@ const Controller = MarqueeController(
 	)
 );
 
-import css from './LabeledItem.less';
+import componentCss from './LabeledItem.less';
 
 /**
  * {@link moonstone/LabeledItem.LabeledItemBase} is a focusable Moonstone-styled component
@@ -51,6 +51,20 @@ const LabeledItemBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `icon` - Applied to the icon
+		 * * `label` - Applied to the label
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
+
+		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
@@ -69,33 +83,25 @@ const LabeledItemBase = kind({
 		/**
 		 * Icon to be displayed next to the title text.
 		 *
-		 * @type {Node}
+		 * @type {String}
 		 * @public
 		 */
-		titleIcon: PropTypes.node
+		titleIcon: PropTypes.string
 	},
 
 	styles: {
-		css,
-		className: 'labeleditem'
+		css: componentCss,
+		className: 'labeleditem',
+		publicClassNames: 'icon label'
 	},
 
-	computed: {
-		label: ({disabled, label}) => (
-			typeof label === 'string' ? <MarqueeText disabled={disabled} className={css.label}>{label}</MarqueeText> : label
-		),
-		titleIcon: ({titleIcon}) => (
-			typeof titleIcon === 'string' ? <Icon small className={css.icon}>{titleIcon}</Icon> : titleIcon
-		)
-	},
-
-	render: ({children, disabled, label, titleIcon, ...rest}) => (
+	render: ({children, css, disabled, label, titleIcon, ...rest}) => (
 		<Controller disabled={disabled} {...rest}>
 			<div className={css.text}>
 				<MarqueeText disabled={disabled} className={css.title}>{children}</MarqueeText>
-				{titleIcon || null}
+				{titleIcon ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
 			</div>
-			{label || null}
+			{label ? <MarqueeText disabled={disabled} className={css.label}>{label}</MarqueeText> : null}
 		</Controller>
 	)
 });

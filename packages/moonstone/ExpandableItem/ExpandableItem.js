@@ -16,9 +16,7 @@ import PropTypes from 'prop-types';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
-import Icon from '../Icon';
 import LabeledItem from '../LabeledItem';
-import {MarqueeText} from '../Marquee';
 
 import Expandable from './Expandable';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
@@ -286,9 +284,8 @@ const ExpandableItemBase = kind({
 
 	computed: {
 		label: ({label, noneText}) => (label || noneText),
-		labelClassName: ({showLabel, styler}) => (styler.append(css.label, css[showLabel])),
+		labeledItemClassName: ({showLabel, styler}) => (styler.append(css.labeleditem, css[showLabel])),
 		open: ({disabled, open}) => (open && !disabled),
-		titleIcon: () => (<Icon small className={css.icon}>arrowlargedown</Icon>),
 		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
 	},
 
@@ -299,7 +296,7 @@ const ExpandableItemBase = kind({
 		handleLabelKeyDown,
 		handleOpen,
 		label,
-		labelClassName,
+		labeledItemClassName,
 		open,
 		onHide,
 		onShow,
@@ -310,7 +307,6 @@ const ExpandableItemBase = kind({
 		setContainerNode,
 		spotlightDisabled,
 		title,
-		titleIcon,
 		transitionSpotlightDisabled,
 		...rest
 	}) => {
@@ -334,9 +330,11 @@ const ExpandableItemBase = kind({
 			>
 				<LabeledItem
 					{...ariaProps}
+					css={css}
+					className={labeledItemClassName}
 					data-expandable-label
 					disabled={disabled}
-					label={<MarqueeText disabled={disabled} className={labelClassName}>{label}</MarqueeText>}
+					label={label}
 					onTap={handleOpen}
 					onKeyDown={handleLabelKeyDown}
 					onSpotlightDisappear={onSpotlightDisappear}
@@ -344,7 +342,7 @@ const ExpandableItemBase = kind({
 					onSpotlightRight={onSpotlightRight}
 					onSpotlightUp={onSpotlightUp}
 					spotlightDisabled={spotlightDisabled}
-					titleIcon={titleIcon}
+					titleIcon="arrowlargedown"
 				>{title}</LabeledItem>
 				<ExpandableTransitionContainer
 					data-expandable-container
