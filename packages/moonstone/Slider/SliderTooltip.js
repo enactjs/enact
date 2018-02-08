@@ -1,4 +1,6 @@
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import ilib from '@enact/i18n';
+import NumFmt from '@enact/i18n/ilib/lib/NumFmt';
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -38,6 +40,8 @@ class SliderTooltipBase extends React.Component {
 		* @private
 		*/
 		knobAfterMidpoint: PropTypes.bool,
+
+		percent: PropTypes.bool,
 
 		/**
 		 * The proportion of progress across the bar. Should be a number between 0 and 1.
@@ -83,16 +87,35 @@ class SliderTooltipBase extends React.Component {
 
 	constructor (props) {
 		super(props);
+
+		if (props.percent) {
+			this.initI18n();
+		}
 	}
 
-	getArrowAnchor = () => {
+	componentWillUpdate (nextProps) {
+		if (nextProps.percent) {
+			this.initI18n();
+		}
+	}
+
+	initI18n = () => {
+		const locale = ilib.getLocale();
+
+		if (this.locale !== locale && typeof window === 'object') {
+			this.locale = locale;
+			this.numFmt = new NumFmt({type: 'percentage', useNative: false});
+		}
+	}
+
+	getArrowAnchor () {
 		const {knobAfterMidpoint, vertical} = this.props;
 
 		if (vertical) return 'middle';
 		return knobAfterMidpoint ? 'left' : 'right';
 	}
 
-	getClassName = () => {
+	getClassName () {
 		const {className, forceSide, side, vertical} = this.props;
 		const cx = classNames.bind(css);
 		return cx(css.tooltip, css[side], className, {
@@ -102,7 +125,7 @@ class SliderTooltipBase extends React.Component {
 		});
 	}
 
-	getDirection = () => {
+	getDirection () {
 		const {forceSide, side, vertical} = this.props;
 		let dir = 'right';
 		if (vertical) {
@@ -126,7 +149,7 @@ class SliderTooltipBase extends React.Component {
 
 	render () {
 		const props = Object.assign({}, this.props);
-		const {children, ...rest} = props;
+		const {children, percent, ...rest} = props;
 		delete rest.className;
 		delete rest.knobAfterMidpoint;
 		delete rest.forceSide;
@@ -141,7 +164,7 @@ class SliderTooltipBase extends React.Component {
 				direction={this.getDirection()}
 				{...rest}
 			>
-				{children}
+				{percent ? this.numFmt.format(children) : children}
 			</Tooltip>
 		);
 	}

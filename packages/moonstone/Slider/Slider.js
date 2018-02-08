@@ -383,7 +383,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		computed: {
 			children: ({children, max, min, tooltip, tooltipAsPercent, value}) => {
 				if (!tooltip || children) return children;
-				return tooltipAsPercent ? Math.floor(computeProportionProgress({value, max, min}) * 100) + '%' : value;
+				return tooltipAsPercent ? Math.floor(computeProportionProgress({value, max, min}) * 100) : value;
 			},
 			className: ({activateOnFocus, active, noFill, pressed, vertical, styler}) => styler.append({
 				activateOnFocus,
@@ -396,7 +396,33 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, children, disabled, focused, inputRef, knobAfterMidpoint, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
+		render: ({
+			backgroundProgress,
+			children,
+			disabled,
+			focused,
+			inputRef,
+			knobAfterMidpoint,
+			max,
+			min,
+			onBlur,
+			onChange,
+			onKeyDown,
+			onMouseMove,
+			onMouseUp,
+			proportionProgress,
+			scrubbing,
+			sliderBarRef,
+			sliderRef,
+			step,
+			tooltip,
+			tooltipAsPercent,
+			tooltipForceSide,
+			tooltipSide,
+			value,
+			vertical,
+			...rest
+		}) => {
 			delete rest.activateOnFocus;
 			delete rest.active;
 			delete rest.detachedKnob;
@@ -406,7 +432,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			delete rest.onIncrement;
 			delete rest.onKnobMove;
 			delete rest.pressed;
-			delete rest.tooltipAsPercent;
 
 			let tooltipComponent = null;
 
@@ -418,6 +443,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				tooltipComponent = <SliderTooltip
 					knobAfterMidpoint={knobAfterMidpoint}
 					forceSide={tooltipForceSide}
+					percent={tooltipAsPercent}
 					proportion={proportionProgress}
 					side={tooltipSide}
 					vertical={vertical}
