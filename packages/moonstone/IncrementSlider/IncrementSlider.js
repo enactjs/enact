@@ -24,6 +24,8 @@ import SliderDecorator from '../internal/SliderDecorator';
 import IncrementSliderButton from './IncrementSliderButton';
 import componentCss from './IncrementSlider.less';
 
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
+
 const isDown = is('down');
 const isLeft = is('left');
 const isRight = is('right');
@@ -619,13 +621,50 @@ const IncrementSliderFactory = factory((config) => {
 	return Pure(
 		IdProvider(
 			{generateProp: null, prefix: 's_'},
-			SliderDecorator(
-				DisappearSpotlightDecorator(
-					{events: {
-						onIncrementSpotlightDisappear: `.${componentCss.decrementButton}`,
-						onDecrementSpotlightDisappear: `.${componentCss.incrementButton}`
-					}},
-					Base
+			VoiceControlDecorator(
+				{
+					voiceSlot: [
+						{voiceIntent: 'slider', voiceHandler: 'onChange'},
+						{
+							voiceIntent: 'increase',
+							voiceHandler: (e, props) => {
+								const step = props.step || 1;
+								const max = props.max || 100;
+								const changeValue = props.value + step;
+								const value = changeValue > max ? max : changeValue;
+
+								if (props.onChange) {
+									props.onChange({
+										value: value
+									});
+								}
+							}
+						},
+						{
+							voiceIntent: 'decrease',
+							voiceHandler: (e, props) => {
+								const step = props.step || 1;
+								const min = props.min || 0;
+								const changeValue = props.value - step;
+								const value = changeValue < min ? min : changeValue;
+
+								if (props.onChange) {
+									props.onChange({
+										value: value
+									});
+								}
+							}
+						}
+					]
+				},
+				SliderDecorator(
+					DisappearSpotlightDecorator(
+						{events: {
+							onIncrementSpotlightDisappear: `.${componentCss.decrementButton}`,
+							onDecrementSpotlightDisappear: `.${componentCss.incrementButton}`
+						}},
+						Base
+					)
 				)
 			)
 		)
