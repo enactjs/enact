@@ -650,6 +650,7 @@ class ScrollableBase extends UiScrollableBase {
 						className={css.content}
 						onScroll={type === 'JS' ? this.handleScroll : null}
 						ref={this.initChildRef}
+						type={type}
 					/>
 					{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 				</div>
