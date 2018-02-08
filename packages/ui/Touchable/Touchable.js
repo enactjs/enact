@@ -112,7 +112,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * Instance-specific overrides of the drag configuration
 			 *
-			 * @see ui/Touchable.config
+			 * @see ui/Touchable.configure
 			 * @type {Object}
 			 * @public
 			 */
@@ -121,7 +121,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * Instance-specific overrides of the flick configuration
 			 *
-			 * @see ui/Touchable.config
+			 * @see ui/Touchable.configure
 			 * @type {Object}
 			 * @public
 			 */
@@ -130,7 +130,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * Instance-specific overrides of the hold configuration
 			 *
-			 * @see ui/Touchable.config
+			 * @see ui/Touchable.configure
 			 * @type {Object}
 			 * @public
 			 */
