@@ -30,6 +30,18 @@ const SlotItemBase = kind({
 
 	propTypes: /** @lends ui/SlotItem.SlotItemBase.prototype */ {
 		/**
+		 * The type of component to use to render the item.
+		 *
+		 * This component will receive the `inline` prop and any additional unhandled props provided
+		 * to `SlotItem`. A derivative of [Item]{@link ui/Item.Item} is recommended.
+		 *
+		 * @type {Component}
+		 * @required
+		 * @public
+		 */
+		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+
+		/**
 		 * Controls the visibility state of the slots.
 		 *
 		 * One, both, or neither slot can be shown. Choosing `'after'` will leave `slotBefore`
@@ -52,17 +64,6 @@ const SlotItemBase = kind({
 		autoHide: PropTypes.oneOf(['after', 'before', 'both']),
 
 		/**
-		 * The type of component to use to render the item.
-		 *
-		 * A derivative of [Item]{@link ui/Item.Item} is recommended.
-		 *
-		 * @type {Component}
-		 * @default 'div'
-		 * @public
-		 */
-		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-
-		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
 		 *
@@ -79,6 +80,15 @@ const SlotItemBase = kind({
 		 * @public
 		 */
 		css: PropTypes.object,
+
+		/**
+		 * Applies inline styling to the component.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		inline: PropTypes.bool,
 
 		/**
 		 * The layout technique for `SlotItem`.
@@ -114,7 +124,7 @@ const SlotItemBase = kind({
 	},
 
 	defaultProps: {
-		component: 'div',
+		inline: false,
 		layout: 'flex'
 	},
 
@@ -125,7 +135,7 @@ const SlotItemBase = kind({
 	},
 
 	computed: {
-		className: ({layout, styler}) => styler.append(layout),
+		className: ({inline, layout, styler}) => styler.append(layout, {inline}),
 		slotBefore: ({slotBefore, autoHide, styler}) => (slotBefore ?
 			<div className={styler.join('slot', 'before', {hidden: (autoHide === 'before' || autoHide === 'both')})}>
 				{slotBefore}
@@ -138,13 +148,14 @@ const SlotItemBase = kind({
 		)
 	},
 
-	render: ({children, component: Component, slotAfter, slotBefore, ...rest}) => {
+	render: ({children, component: Component, inline, slotAfter, slotBefore, ...rest}) => {
 		delete rest.autoHide;
 		delete rest.layout;
 
 		return (
 			<Component
 				{...rest}
+				inline={inline}
 			>
 				{slotBefore}
 				{children}
