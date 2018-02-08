@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import {IconBase as Icon} from '../Icon';
+import Icon from '../Icon';
 
 describe('Icon Specs', () => {
 	it('should merge author styles with src', function () {

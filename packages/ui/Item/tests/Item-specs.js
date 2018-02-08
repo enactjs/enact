@@ -33,20 +33,6 @@ describe('Item', () => {
 	});
 
 	describe('events', () => {
-		it('should call onClick when clicked', function () {
-			const handleClick = sinon.spy();
-			const item = mount(
-				<Item onClick={handleClick}>I am a normal Item</Item>
-			);
-
-			item.simulate('click');
-
-			const expected = true;
-			const actual = handleClick.called;
-
-			expect(actual).to.equal(expected);
-		});
-
 		it('should call onTap when tapped', function () {
 			const handleClick = sinon.spy();
 			const item = mount(
@@ -56,20 +42,6 @@ describe('Item', () => {
 			tap(item);
 
 			const expected = true;
-			const actual = handleClick.called;
-
-			expect(actual).to.equal(expected);
-		});
-
-		it('should not call onClick when clicked and disabled', function () {
-			const handleClick = sinon.spy();
-			const item = mount(
-				<Item disabled onClick={handleClick}>I am a disabled Item</Item>
-			);
-
-			item.simulate('click');
-
-			const expected = false;
 			const actual = handleClick.called;
 
 			expect(actual).to.equal(expected);
