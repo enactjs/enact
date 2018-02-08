@@ -41,6 +41,13 @@ class SliderTooltipBase extends React.Component {
 		*/
 		knobAfterMidpoint: PropTypes.bool,
 
+		/**
+		 * When true, value will be formatted using [Number Formatter from i18n]{@link i18n/ilib/lib/NumFmt.NumFmt}
+		 * to display percentage values.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
 		percent: PropTypes.bool,
 
 		/**
