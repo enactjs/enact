@@ -726,7 +726,8 @@ const VirtualListBase = (UiComponent) => (
  */
 const VirtualListDecorator = compose(
 	SpotlightContainerDecorator(SpotlightContainerConfig),
-	Scrollable
+	Scrollable,
+	VirtualListBase
 );
 
 /**
@@ -741,7 +742,8 @@ const VirtualListDecorator = compose(
  */
 const VirtualListNativeDecorator = compose(
 	SpotlightContainerDecorator(SpotlightContainerConfig),
-	ScrollableNative
+	ScrollableNative,
+	VirtualListBase
 );
 
 /**
@@ -754,7 +756,7 @@ const VirtualListNativeDecorator = compose(
  * @ui
  * @public
  */
-const VirtualList = VirtualListDecorator(VirtualListBase(UiVirtualListBase));
+const VirtualList = VirtualListDecorator(UiVirtualListBase);
 
 /**
  * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList} is
@@ -778,7 +780,7 @@ const VirtualGridList = VirtualList;
  * @ui
  * @public
  */
-const VirtualListNative = VirtualListNativeDecorator(VirtualListBase(UiVirtualListBaseNative));
+const VirtualListNative = VirtualListNativeDecorator(UiVirtualListBaseNative);
 
 /**
  * [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative} is

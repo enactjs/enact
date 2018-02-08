@@ -163,6 +163,7 @@ class ScrollerBase extends Component {
 
 		delete rest.cbScrollTo;
 		delete rest.direction;
+		delete rest.type;
 
 		return (
 			<div
