@@ -13,12 +13,12 @@ class Drag {
 	isDragging = () => this.dragConfig != null
 
 	setContainerBounds = (node) => {
-		const {constrain, constrainBoxSizing} = this.dragConfig;
+		const {global: isGlobal, boxSizing} = this.dragConfig;
 		let bounds = null;
 
-		if (!constrain || !node) return;
+		if (!node) return;
 
-		if (constrain === 'window') {
+		if (isGlobal) {
 			bounds = {
 				minX: 0,
 				minY: 0,
@@ -29,7 +29,7 @@ class Drag {
 			bounds = node.getBoundingClientRect();
 
 			// adjust for padding when using content-box
-			if (constrainBoxSizing === 'content-box') {
+			if (boxSizing === 'content-box') {
 				const computedStyle = window.getComputedStyle(node);
 				bounds = {
 					minX: bounds.left + parseInt(computedStyle.paddingLeft),
@@ -142,15 +142,13 @@ class Drag {
 }
 
 const defaultDragConfig = {
-	constrain: 'window',
-	constrainBoxSizing: 'border-box',
+	boxSizing: 'border-box',
 	global: false,
 	moveTolerance: 16
 };
 
 const dragConfigPropType = PropTypes.shape({
-	constrain: PropTypes.string,
-	constrainBoxSizing: PropTypes.string,
+	boxSizing: PropTypes.string,
 	global: PropTypes.bool,
 	moveTolerance: PropTypes.number
 });

@@ -66,9 +66,14 @@ const mergeConfig = (cfg) => {
  *
  * `drag`
  *
- *   * `constrain` -
- *   * `constrainBoxSizing` -
- *   * `global` -
+ *   * `constrain` - The node that establishes the bounds of the drag.
+ *     * When unset - Use the bounds of the component
+ *     * `'window'` - Use the interior of the viewport
+ *     * A string selector - Use the bounds of the first ancestor that matches the selector
+ *   * `constrainBoxSizing` - The part of the component's box model is used as the bounds of the
+ *     constrain. `border-box`, the default, includes the padding and border but excludes the
+ *     margin. `content-box` excludes the padding, border, and margin.
+ *   * `global` - When `true`, drag gestures will continue when leaving the bounds of the component
  *   * `moveTolerance` - The number of pixels from the start position of the drag that the pointer
  *     may move before cancelling the drag.
  *

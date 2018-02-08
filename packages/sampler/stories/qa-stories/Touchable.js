@@ -3,7 +3,7 @@ import React from 'react';
 import Touchable from '@enact/ui/Touchable';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, number} from '@storybook/addon-knobs';
+import {boolean, number, select} from '@storybook/addon-knobs';
 
 const TouchableDiv = Touchable('div');
 
@@ -86,6 +86,7 @@ storiesOf('Touchable', module)
 		() => (
 			<TouchableDiv
 				dragConfig={{
+					constrain: select('dragConfig.constrain', [null, 'window', '.outer'], null),
 					global: boolean('dragConfig.global', false),
 					moveTolerance: number('dragConfig.moveTolerance', 16)
 				}}
@@ -96,8 +97,8 @@ storiesOf('Touchable', module)
 				disabled={boolean('disabled')}
 				style={{border: '2px dashed #888', width: 500, height: 500}}
 			>
-				Drag within this component. Setting <code>noResume</code> to <code>false</code>
-				should prevent drag from resuming when re-entering this component after leaving.
+				Drag within this component. Setting <code>noResume</code> to <code>false</code> should
+				prevent drag from resuming when re-entering this component after leaving.
 			</TouchableDiv>
 		)
 	);
