@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
 import css from './Scroller.less';
-import Scrollable from '../Scrollable';
+import Scrollable, {ScrollableNative} from '../Scrollable';
 
 /**
  * [ScrollerBase]{@link ui/Scroller.ScrollerBase} is a base component for Scroller.
@@ -190,8 +190,26 @@ class ScrollerBase extends Component {
  */
 const Scroller = Scrollable(ScrollerBase);
 
+/**
+ * [ScrollerNative]{@link ui/Scroller.ScrollerNative} is a native scroller.
+ *
+ * Usage:
+ * ```
+ * <ScrollerNative>Scroll me.</ScrollerNative>
+ * ```
+ *
+ * @class ScrollerNative
+ * @memberof ui/Scroller
+ * @mixes ui/Scrollable.ScrollableNative
+ * @ui
+ * @public
+ */
+const ScrollerNative = ScrollableNative(ScrollerBase);
+
 export default Scroller;
 export {
 	Scroller,
-	ScrollerBase
+	ScrollerBase,
+	ScrollerBase as ScrollerBaseNative,
+	ScrollerNative
 };

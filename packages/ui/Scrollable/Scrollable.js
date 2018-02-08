@@ -1030,7 +1030,6 @@ class ScrollableBase extends Component {
 		delete rest.onScrollbarVisibilityChange;
 		delete rest.onScrollStart;
 		delete rest.onScrollStop;
-		delete rest.type;
 		delete rest.verticalScrollbar;
 
 		return (
