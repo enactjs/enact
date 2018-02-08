@@ -21,6 +21,8 @@ import {SliderBarFactory} from './SliderBar';
 import SliderTooltip from './SliderTooltip';
 import componentCss from './Slider.less';
 
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
+
 const isActive = (ev, props) => props.active || props.activateOnFocus || props.detachedKnob;
 const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
 const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
@@ -486,10 +488,47 @@ const SliderFactory = factory(css => {
 	 */
 	return Pure(
 		Spottable(
-			SliderDecorator(
-				Pressable(
-					Skinnable(
-						Base
+			VoiceControlDecorator(
+				{
+					voiceSlot: [
+						{voiceIntent: 'slider', voiceHandler: 'onChange'},
+						{
+							voiceIntent: 'increase',
+							voiceHandler: (e, props) => {
+								const step = props.step || 1;
+								const max = props.max || 100;
+								const changeValue = props.value + step;
+								const value = changeValue > max ? max : changeValue;
+
+								if (props.onChange) {
+									props.onChange({
+										value: value
+									});
+								}
+							}
+						},
+						{
+							voiceIntent: 'decrease',
+							voiceHandler: (e, props) => {
+								const step = props.step || 1;
+								const min = props.min || 0;
+								const changeValue = props.value - step;
+								const value = changeValue < min ? min : changeValue;
+
+								if (props.onChange) {
+									props.onChange({
+										value: value
+									});
+								}
+							}
+						}
+					]
+				},
+				SliderDecorator(
+					Pressable(
+						Skinnable(
+							Base
+						)
 					)
 				)
 			)

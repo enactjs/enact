@@ -14,7 +14,7 @@ const VoiceControl = (function () {
 
 		console.log('VoiceControl>handleVoice>', voiceIntent, voiceLabel, e);
 
-		if (intentArray.length > 0) {
+		if (voiceLabel && intentArray.length > 0) {
 			let labelIndex = getIndex(intentArray, 'voiceLabel', voiceLabel);
 
 			if (labelIndex > -1) { // execute onVoice handler
@@ -23,7 +23,10 @@ const VoiceControl = (function () {
 					// test
 					if (voiceIntent === 'input') {
 						e.value = 'text inputed!!!';
+					} else if (voiceIntent === 'slider') {
+						e.value = 50;
 					}
+
 					tObj.onVoice(e);
 					console.log('VoiceControl>handleVoice>execute!!!!!!>', voiceIntent, voiceLabel, labelIndex, e);
 				}
