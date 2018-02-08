@@ -14,8 +14,7 @@ import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
-import constants from '@enact/ui/Scrollable/constants';
+import {ScrollableBase as UiScrollableBase, constants} from '@enact/ui/Scrollable';
 
 import Scrollbar from './Scrollbar';
 import scrollbarCss from './Scrollbar.less';
@@ -217,6 +216,11 @@ class ScrollableBase extends UiScrollableBase {
 				}
 			}
 		} else if (type === 'Native') {
+			/*
+			 * wheel event handler;
+			 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot suppor this
+			 * - for vertical scroll, supports wheel action on scrollbars only
+			 */
 			const
 				bounds = this.getScrollBounds(),
 				canScrollHorizontally = this.canScrollHorizontally(bounds),
@@ -288,12 +292,10 @@ class ScrollableBase extends UiScrollableBase {
 	start ({targetX, targetY, animate = true}) {
 		const {type} = this.props;
 
-		if (type === 'JS') {
-			super.start({targetX, targetY, animate});
+		super.start({targetX, targetY, animate});
 
-			if (!animate) {
-				this.focusOnItem();
-			}
+		if (type === 'JS' && !animate) {
+			this.focusOnItem();
 		}
 	}
 
@@ -540,8 +542,6 @@ class ScrollableBase extends UiScrollableBase {
 	}
 
 	scrollTo = (opt) => {
-		const {type} = this.props;
-
 		if (!this.deferScrollTo) {
 			const {left, top} = this.getPositionForScrollTo(opt);
 

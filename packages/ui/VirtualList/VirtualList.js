@@ -127,12 +127,12 @@ class VirtualListBase extends Component {
 		data: PropTypes.any,
 
 		/**
-		 * Spotlight container Id
+		 * Spotlight container Id for VirtualListNative
 		 *
 		 * @type {String}
 		 * @private
 		 */
-		'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types // Native
+		'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types
 
 		/**
 		 * Size of the data.
@@ -199,6 +199,8 @@ class VirtualListBase extends Component {
 
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContainerRef = this.initRef('containerRef');
+		
+		this.didScroll = this.setScrollPosition;
 	}
 
 	componentWillMount () {
@@ -299,16 +301,21 @@ class VirtualListBase extends Component {
 	dimensionToExtent = 0
 	threshold = 0
 	maxFirstIndex = 0
-	lastFirstIndex = 0 // Native
 	curDataSize = 0
 	cc = []
 	scrollPosition = 0
-	updateFrom = null // JS
-	updateTo = null // JS
-	isScrolledByJump = false // Native
-	containerClass = null // Native
+	
+	// JS
+	updateFrom = null
+	updateTo = null
+	
+	// Native
+	lastFirstIndex = 0
+	isScrolledByJump = false
+	containerClass = null
 
-	contentRef = null // Native
+	contentRef = null
+	
 	containerRef = null
 
 	isVertical = () => this.isPrimaryDirectionVertical
@@ -477,7 +484,7 @@ class VirtualListBase extends Component {
 
 	calculateScrollBounds (props) {
 		const
-			{clientSize} = props,
+			{clientSize, type} = props,
 			node = this.containerRef;
 
 		if (!clientSize && !node) {
@@ -504,6 +511,10 @@ class VirtualListBase extends Component {
 		if (this.scrollPosition > maxPos) {
 			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
 		}
+		
+		if (type === 'Native') {
+			this.containerClass = (isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
+		}
 	}
 
 	updateMoreInfo (dataSize, primaryPosition) {
@@ -520,7 +531,6 @@ class VirtualListBase extends Component {
 		}
 	}
 
-	// Native
 	setContainerSize = () => {
 		if (this.contentRef) {
 			this.contentRef.style.width = this.scrollBounds.scrollWidth + 'px';
@@ -593,7 +603,6 @@ class VirtualListBase extends Component {
 		}
 	}
 
-	// JS
 	applyStyleToExistingNode = (index, ...rest) => {
 		const
 			{numOfItems} = this.state,
@@ -732,7 +741,6 @@ class VirtualListBase extends Component {
 		}
 	}
 
-	// Native
 	scrollToPosition (x, y) {
 		const node = this.containerRef;
 
