@@ -2,10 +2,13 @@
  * Provides unstyled virtual list components and behaviors to be customized by a theme or application.
  *
  * @module ui/VirtualList
- * @exports VirtualList
- * @exports VirtualGridList
- * @exports VirtualListBase
- * @exports gridListItemSizeShape
+ * @exports VirtualList,
+ * @exports gridListItemSizeShape,
+ * @exports VirtualGridList,
+ * @exports VirtualGridListNative,
+ * @exports VirtualListBase,
+ * @exports VirtualListBaseNative,
+ * @exports VirtualListNative
  */
 
 import classNames from 'classnames';

@@ -4,6 +4,8 @@
  * @module ui/Scroller
  * @exports Scroller
  * @exports ScrollerBase
+ * @exports ScrollerBaseNative
+ * @exports ScrollerNative
  */
 
 import classNames from 'classnames';

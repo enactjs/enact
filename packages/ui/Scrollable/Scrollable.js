@@ -2,9 +2,11 @@
  * Provides unstyled scrollable components and behaviors to be customized by a theme or application.
  *
  * @module ui/Scrollable
- * @exports Scrollable
- * @exports constants
- * @exports ScrollableBase
+ * @exports Scrollable,
+ * @exports ScrollableNative,
+ * @exports constants,
+ * @exports ScrollableBase,
+ * @exports ScrollableBaseNative
  */
 
 import clamp from 'ramda/src/clamp';

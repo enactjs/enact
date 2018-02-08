@@ -4,6 +4,8 @@
  * @module moonstone/Scroller
  * @exports Scroller
  * @exports ScrollerBase
+ * @exports ScrollerBaseNative
+ * @exports ScrollerNative
  */
 
 import {forward} from '@enact/core/handle';
@@ -316,7 +318,7 @@ class ScrollerBase extends UiScrollerBase {
  *
  * @class Scroller
  * @memberof moonstone/Scroller
- * @mixes moonstone/Scroller.Scrollable
+ * @mixes moonstone/Scrollable.Scrollable
  * @ui
  * @public
  */
@@ -336,7 +338,7 @@ const Scroller = SpotlightContainerDecorator(
  *
  * @class ScrollerNative
  * @memberof moonstone/Scroller
- * @mixes moonstone/Scroller.ScrollableNative
+ * @mixes moonstone/Scrollable.ScrollableNative
  * @ui
  * @public
  */
