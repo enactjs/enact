@@ -11,7 +11,6 @@ import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
-import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import kind from '@enact/core/kind';
 import {on, off} from '@enact/core/dispatcher';
@@ -19,10 +18,12 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
 import {contextTypes as contextTypesResize} from '../Resizable';
-import ri from '../resolution';
 
+import constants from './constants';
 import css from './Scrollable.less';
+import Draggable from './Draggable';
 import Scrollbar from './Scrollbar';
+import ScrollStrategyNative from './ScrollStrategyNative';
 
 const
 	forwardScroll = forward('onScroll'),
@@ -30,23 +31,11 @@ const
 	forwardScrollStop = forward('onScrollStop');
 
 const
-	constants = {
-		epsilon: 1,
-		isPageDown: is('pageDown'),
-		isPageUp: is('pageUp'),
-		nop: () => {},
-		paginationPageMultiplier: 0.8,
-		scrollStopWaiting: 200,
-		scrollWheelPageMultiplierForMaxPixel: 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
-	},
 	{
 		epsilon,
-		isPageDown,
-		isPageUp,
 		nop,
 		paginationPageMultiplier,
-		scrollStopWaiting,
-		scrollWheelPageMultiplierForMaxPixel
+		scrollStopWaiting
 	} = constants;
 
 /**
@@ -319,9 +308,9 @@ class ScrollableBaseNative extends Component {
 	// status
 	direction = 'vertical'
 	isScrollAnimationTargetAccumulated = false
+	pageDirection = 0
 	deferScrollTo = true
 	pageDistance = 0
-	pageDirection = 0
 	isFitClientSize = false
 	isUpdatedScrollThumb = false
 
@@ -347,147 +336,6 @@ class ScrollableBaseNative extends Component {
 	// component info
 	childRef = null
 	containerRef = null
-
-	// event handler for browser native scroll
-
-	onMouseDown = () => {
-		this.isScrollAnimationTargetAccumulated = false;
-	}
-
-	calculateDistanceByWheel (deltaMode, delta, maxPixel) {
-		if (deltaMode === 0) {
-			delta = clamp(-maxPixel, maxPixel, ri.scale(delta * this.scrollWheelMultiplierForDeltaPixel));
-		} else if (deltaMode === 1) { // line; firefox
-			delta = clamp(-maxPixel, maxPixel, ri.scale(delta * this.pixelPerLine * this.scrollWheelMultiplierForDeltaPixel));
-		} else if (deltaMode === 2) { // page
-			delta = delta < 0 ? -maxPixel : maxPixel;
-		}
-
-		return delta;
-	}
-
-	/*
-	 * wheel event handler;
-	 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot suppor this
-	 * - for vertical scroll, supports wheel action on scrollbars only
-	 */
-	onWheel = (e) => {
-		const
-			bounds = this.getScrollBounds(),
-			canScrollHorizontally = this.canScrollHorizontally(bounds),
-			canScrollVertically = this.canScrollVertically(bounds),
-			eventDeltaMode = e.deltaMode,
-			eventDelta = (-e.wheelDeltaY || e.deltaY);
-		let
-			delta = 0,
-			needToHideThumb = false;
-
-		if (typeof window !== 'undefined') {
-			window.document.activeElement.blur();
-		}
-
-		this.showThumb(bounds);
-
-		// FIXME This routine is a temporary support for horizontal wheel scroll.
-		// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
-		if (canScrollVertically) { // This routine handles wheel events on scrollbars for vertical scroll.
-			if (eventDelta < 0 && this.scrollTop > 0 || eventDelta > 0 && this.scrollTop < bounds.maxTop) {
-				const {horizontalScrollbarRef, verticalScrollbarRef} = this;
-
-				// Not to check if e.target is a descendant of a wrapped component which may have a lot of nodes in it.
-				if ((horizontalScrollbarRef && horizontalScrollbarRef.containerRef.contains(e.target)) ||
-					(verticalScrollbarRef && verticalScrollbarRef.containerRef.contains(e.target))) {
-					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
-					needToHideThumb = !delta;
-				}
-			} else {
-				needToHideThumb = true;
-			}
-		} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
-			if (eventDelta < 0 && this.scrollLeft > 0 || eventDelta > 0 && this.scrollLeft < bounds.maxLeft) {
-				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
-				needToHideThumb = !delta;
-			} else {
-				needToHideThumb = true;
-			}
-		}
-
-		if (delta !== 0) {
-			/* prevent native scrolling feature for vertical direction */
-			e.preventDefault();
-			const direction = Math.sign(delta);
-			// Not to accumulate scroll position if wheel direction is different from hold direction
-			if (direction !== this.pageDirection) {
-				this.isScrollAnimationTargetAccumulated = false;
-				this.pageDirection = direction;
-			}
-			this.scrollToAccumulatedTarget(delta, canScrollVertically);
-		}
-
-		if (needToHideThumb) {
-			this.startHidingThumb();
-		}
-	}
-
-	onScroll = (e) => {
-		const
-			bounds = this.getScrollBounds(),
-			canScrollHorizontally = this.canScrollHorizontally(bounds);
-		let
-			{scrollLeft, scrollTop} = e.target;
-
-		if (!this.scrolling) {
-			this.scrollStartOnScroll();
-		}
-
-		if (this.context.rtl && canScrollHorizontally) {
-			/* FIXME: RTL / this calculation only works for Chrome */
-			scrollLeft = bounds.maxLeft - scrollLeft;
-		}
-
-		this.scroll(scrollLeft, scrollTop);
-
-		this.startHidingThumb();
-		this.scrollStopJob.start();
-	}
-
-	scrollByPage = (keyCode) => {
-		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
-		// scroller as a plain container
-		if (!this.state.isVerticalScrollbarVisible) return;
-
-		const
-			bounds = this.getScrollBounds(),
-			canScrollVertically = this.canScrollVertically(bounds),
-			pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance;
-
-		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically);
-	}
-
-	onKeyDown = (e) => {
-		if (isPageUp(e.keyCode) || isPageDown(e.keyCode)) {
-			e.preventDefault();
-			if (!e.repeat) {
-				this.scrollByPage(e.keyCode);
-			}
-		}
-	}
-
-	scrollToAccumulatedTarget = (delta, vertical) => {
-		if (!this.isScrollAnimationTargetAccumulated) {
-			this.accumulatedTargetX = this.scrollLeft;
-			this.accumulatedTargetY = this.scrollTop;
-			this.isScrollAnimationTargetAccumulated = true;
-		}
-
-		if (vertical) {
-			this.accumulatedTargetY += delta;
-		} else {
-			this.accumulatedTargetX += delta;
-		}
-
-		this.start(this.accumulatedTargetX, this.accumulatedTargetY);
-	}
 
 	// call scroll callbacks
 
@@ -541,7 +389,7 @@ class ScrollableBaseNative extends Component {
 
 	// scroll start
 
-	start (targetX, targetY, animate = true) {
+	start ({targetX, targetY, animate = true}) {
 		const
 			bounds = this.getScrollBounds(),
 			childContainerRef = this.childRef.containerRef;
@@ -652,11 +500,11 @@ class ScrollableBaseNative extends Component {
 		if (!this.deferScrollTo) {
 			const {left, top} = this.getPositionForScrollTo(opt);
 			this.scrollToInfo = null;
-			this.start(
-				(left !== null) ? left : this.scrollLeft,
-				(top !== null) ? top : this.scrollTop,
-				opt.animate
-			);
+			this.start({
+				targetX: (left !== null) ? left : this.scrollLeft,
+				targetY: (top !== null) ? top : this.scrollTop,
+				animate: opt.animate
+			});
 		} else {
 			this.scrollToInfo = opt;
 		}
@@ -861,6 +709,8 @@ class ScrollableBaseNative extends Component {
 	}
 }
 
+const StrategyScrollableBaseNative = Draggable(ScrollStrategyNative(ScrollableBaseNative));
+
 /**
  * [ScrollableNative]{@link ui/Scrollable.ScrollableNative} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
@@ -872,12 +722,13 @@ class ScrollableBaseNative extends Component {
  */
 const ScrollableNative = (WrappedComponent) => (kind({
 	name: 'ui:ScrollableNative',
-	render: (props) => (<ScrollableBaseNative wrapped={WrappedComponent} {...props} />)
+	render: (props) => (<StrategyScrollableBaseNative wrapped={WrappedComponent} {...props} />)
 }));
 
 export default ScrollableNative;
 export {
 	ScrollableNative,
 	constants,
-	ScrollableBaseNative
+	ScrollableBaseNative,
+	StrategyScrollableBaseNative
 };

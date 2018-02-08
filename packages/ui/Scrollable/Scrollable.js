@@ -11,19 +11,19 @@ import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
-import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import {on, off} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
 import {contextTypes as contextTypesResize} from '../Resizable';
-import ri from '../resolution';
 
+import constants from './constants';
 import css from './Scrollable.less';
 import Draggable from './Draggable';
 import ScrollAnimator, {animationDuration} from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
+import ScrollStrategyJS from './ScrollStrategyJS';
 
 const
 	forwardScroll = forward('onScroll'),
@@ -31,21 +31,10 @@ const
 	forwardScrollStop = forward('onScrollStop');
 
 const
-	constants = {
-		epsilon: 1,
-		isPageDown: is('pageDown'),
-		isPageUp: is('pageUp'),
-		nop: () => {},
-		paginationPageMultiplier: 0.8,
-		scrollWheelPageMultiplierForMaxPixel: 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
-	},
 	{
 		epsilon,
-		isPageDown,
-		isPageUp,
 		nop,
-		paginationPageMultiplier,
-		scrollWheelPageMultiplierForMaxPixel
+		paginationPageMultiplier
 	} = constants;
 
 /**
@@ -91,6 +80,15 @@ class ScrollableBase extends Component {
 		 * @public
 		 */
 		cbScrollTo: PropTypes.func,
+
+		/**
+		 * The Current status of dragging
+		 *
+		 * @type {Booelan}
+		 * @default false
+		 * @private
+		 */
+		dragging: PropTypes.bool,
 
 		/**
 		 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
@@ -169,6 +167,7 @@ class ScrollableBase extends Component {
 
 	static defaultProps = {
 		cbScrollTo: nop,
+		dragging: false,
 		horizontalScrollbar: 'auto',
 		onScroll: nop,
 		onScrollStart: nop,
@@ -362,93 +361,6 @@ class ScrollableBase extends Component {
 
 	// scroll animator
 	animator = new ScrollAnimator()
-
-	// handle an input event
-
-
-
-	calculateDistanceByWheel (deltaMode, delta, maxPixel) {
-		if (deltaMode === 0) {
-			delta = clamp(-maxPixel, maxPixel, ri.scale(delta * this.scrollWheelMultiplierForDeltaPixel));
-		} else if (deltaMode === 1) { // line; firefox
-			delta = clamp(-maxPixel, maxPixel, ri.scale(delta * this.pixelPerLine * this.scrollWheelMultiplierForDeltaPixel));
-		} else if (deltaMode === 2) { // page
-			delta = delta < 0 ? -maxPixel : maxPixel;
-		}
-
-		return delta;
-	}
-
-	onWheel = (e) => {
-		e.preventDefault();
-		if (!this.props.dragging) {
-			const
-				bounds = this.getScrollBounds(),
-				canScrollHorizontally = this.canScrollHorizontally(bounds),
-				canScrollVertically = this.canScrollVertically(bounds),
-				eventDeltaMode = e.deltaMode,
-				eventDelta = (-e.wheelDeltaY || e.deltaY);
-			let
-				delta = 0,
-				direction;
-
-			if (canScrollVertically) {
-				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
-			} else if (canScrollHorizontally) {
-				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
-			}
-
-			direction = Math.sign(delta);
-
-			if (direction !== this.wheelDirection) {
-				this.isScrollAnimationTargetAccumulated = false;
-				this.wheelDirection = direction;
-			}
-
-			if (delta !== 0) {
-				this.scrollToAccumulatedTarget(delta, canScrollVertically);
-			}
-		}
-	}
-
-	scrollByPage = (keyCode) => {
-		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
-		// scroller as a plain container
-		if (!this.state.isVerticalScrollbarVisible) return;
-
-		const
-			bounds = this.getScrollBounds(),
-			canScrollVertically = this.canScrollVertically(bounds),
-			pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance;
-
-		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically);
-	}
-
-	onKeyDown = (e) => {
-		if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && !e.repeat) {
-			this.scrollByPage(e.keyCode);
-		}
-	}
-
-	scrollToAccumulatedTarget = (delta, vertical) => {
-		if (!this.isScrollAnimationTargetAccumulated) {
-			this.accumulatedTargetX = this.scrollLeft;
-			this.accumulatedTargetY = this.scrollTop;
-			this.isScrollAnimationTargetAccumulated = true;
-		}
-
-		if (vertical) {
-			this.accumulatedTargetY = this.accumulatedTargetY + delta;
-		} else {
-			this.accumulatedTargetX = this.accumulatedTargetX + delta;
-		}
-
-		this.start({
-			targetX: this.accumulatedTargetX,
-			targetY: this.accumulatedTargetY,
-			animate: true
-		});
-	}
 
 	// call scroll callbacks
 
@@ -831,7 +743,7 @@ class ScrollableBase extends Component {
 	}
 }
 
-const DraggableScrollableBase = Draggable(Scrollable);
+const StrategyScrollableBase = Draggable(ScrollStrategyJS(ScrollableBase));
 /**
  * [Scrollable]{@link ui/Scrollable.Scrollable} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
@@ -843,7 +755,7 @@ const DraggableScrollableBase = Draggable(Scrollable);
  */
 const Scrollable = (WrappedComponent) => (kind({
 	name: 'ui:Scrollable',
-	render: (props) => (<DraggableScrollableBase wrapped={WrappedComponent} {...props} />)
+	render: (props) => (<StrategyScrollableBase wrapped={WrappedComponent} {...props} />)
 }));
 
 export default Scrollable;
@@ -851,5 +763,5 @@ export {
 	Scrollable,
 	constants,
 	ScrollableBase,
-	DraggableScrollableBase
+	StrategyScrollableBase
 };
