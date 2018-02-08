@@ -130,8 +130,32 @@ const CheckboxItemBase = kind({
 const CheckboxItem = Pure(
 	VoiceControlDecorator({
 		voiceSlot: [
-			{voiceIntent: 'check', voiceHandler: 'onToggle', voiceParams: {selected: true}},
-			{voiceIntent: 'uncheck', voiceHandler: 'onToggle', voiceParams: {selected: false}}
+			{
+				voiceIntent: 'check',
+				voiceHandler: (e, props) => {
+					if (props.onToggle) {
+						props.onToggle(e);
+					} else if (props.onClick) {
+						if (!props.selected) {
+							props.onClick(e);
+						}
+					}
+				},
+				voiceParams: {selected: true}
+			},
+			{
+				voiceIntent: 'uncheck',
+				voiceHandler: (e, props) => {
+					if (props.onToggle) {
+						props.onToggle(e);
+					} else if (props.onClick) {
+						if (props.selected) {
+							props.onClick(e);
+						}
+					}
+				},
+				voiceParams: {selected: false}
+			}
 		]},
 		Toggleable(
 			{prop: 'selected'},

@@ -66,18 +66,19 @@ const VoiceControlDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				const list = [];
 				for (let t in voiceSlot) {
 					const {voiceIntent, voiceLabel, voiceHandler, voiceParams} = voiceSlot[t];
+					const self = this;
 
 					list.push({
 						voiceIntent: voiceIntent,
-						voiceLabel: voiceLabel || this.props.voiceLabel,
+						voiceLabel: voiceLabel || this.props.voiceLabel || this.props.children,
 						onVoice: (e) => {
 							const params = voiceParams || e;
 							const type = typeof voiceHandler;
 
 							if (type === 'string') {
-								forward(voiceHandler, params, this.props);
+								forward(voiceHandler, params, self.props);
 							} else if (type === 'function') {
-								voiceHandler(params);
+								voiceHandler(params, self.props);
 							}
 						}
 					});
