@@ -155,8 +155,13 @@ class ScrollableBase extends Component {
 		 */
 		style: PropTypes.object,
 
-		// TBD
-		type: PropTypes.String,
+		/**
+		 * Specifies how to scroll depending on JavaScript or Native
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		type: PropTypes.oneOf(['JS', 'Native']),
 
 		/**
 		 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
@@ -202,6 +207,15 @@ class ScrollableBase extends Component {
 			isHorizontalScrollbarVisible: props.horizontalScrollbar === 'visible',
 			isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
 		};
+
+		this.onMouseOver = this.onMouseOver.bind(this);
+		this.onMouseDown = this.onMouseDown.bind(this);
+		this.onMouseMove = this.onMouseMove.bind(this);
+		this.onMouseUp = this.onMouseUp.bind(this);
+		this.onMouseLeave = this.onMouseLeave.bind(this);
+		this.onWheel = this.onWheel.bind(this);
+		this.onScroll = this.onScroll.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
 
 		this.initChildRef = this.initRef('childRef');
 		this.initContainerRef = this.initRef('containerRef');
@@ -494,13 +508,24 @@ class ScrollableBase extends Component {
 
 	// mouse event handler for JS scroller
 
-	onMouseDown = (e) => {
-		this.animator.stop();
-		this.dragStart(e);
+	onMouseOver () {
 	}
 
-	onMouseMove = (e) => {
-		if (this.isDragging) {
+	onMouseDown (e) {
+		const {type} = this.props;
+
+		if (type === 'JS') {
+			this.animator.stop();
+			this.dragStart(e);
+		} else if (type === 'Native') {
+			this.isScrollAnimationTargetAccumulated = false;
+		}
+	}
+
+	onMouseMove (e) {
+		const {type} = this.props;
+
+		if (type === 'JS' && this.isDragging) {
 			const
 				{dx, dy} = this.drag(e),
 				bounds = this.getScrollBounds();
@@ -517,8 +542,10 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	onMouseUp = (e) => {
-		if (this.isDragging) {
+	onMouseUp (e) {
+		const {type} = this.props;
+
+		if (type === 'JS' && this.isDragging) {
 			this.dragStop(e);
 
 			if (!this.isFlicking()) {
@@ -544,16 +571,12 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	onMouseLeave = (e) => {
-		this.onMouseMove(e);
-		this.onMouseUp();
-	}
-
-	onMouseDown = () => {
+	onMouseLeave (e) {
 		const {type} = this.props;
 
-		if (type === 'Native') {
-			this.isScrollAnimationTargetAccumulated = false;
+		if (type === 'JS') {
+			this.onMouseMove(e);
+			this.onMouseUp();
 		}
 	}
 
@@ -569,7 +592,7 @@ class ScrollableBase extends Component {
 		return delta;
 	}
 
-	onWheel = (e) => {
+	onWheel (e) {
 		const {type} = this.props;
 
 		if (type === 'JS') {
@@ -661,7 +684,7 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	onScroll = (e) => {
+	onScroll (e) {
 		const {type} = this.props;
 
 		if (type === 'JS' && !this.animator.isAnimating() && this.childRef && this.childRef.containerRef) {
@@ -705,7 +728,7 @@ class ScrollableBase extends Component {
 		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 	}
 
-	onKeyDown = (e) => {
+	onKeyDown (e) {
 		const {type} = this.props;
 
 		if (type === 'JS') {

@@ -48,7 +48,15 @@ class ScrollerBase extends Component {
 		 * @default 'both'
 		 * @public
 		 */
-		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+		/**
+		 * Specifies how to scroll depending on JavaScript or Native
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		type: PropTypes.oneOf(['JS', 'Native'])
 	}
 
 	static contextTypes = contextTypes

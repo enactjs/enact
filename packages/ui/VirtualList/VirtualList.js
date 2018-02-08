@@ -179,7 +179,15 @@ class VirtualListBase extends Component {
 		 * @default 0
 		 * @public
 		 */
-		spacing: PropTypes.number
+		spacing: PropTypes.number,
+
+		/**
+		 * Specifies how to scroll depending on JavaScript or Native
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		type: PropTypes.oneOf(['JS', 'Native'])
 	}
 
 	static contextTypes = contextTypes
@@ -199,7 +207,7 @@ class VirtualListBase extends Component {
 
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContainerRef = this.initRef('containerRef');
-		
+
 		this.didScroll = this.setScrollPosition;
 	}
 
@@ -214,7 +222,6 @@ class VirtualListBase extends Component {
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
 		const {type} = this.props;
-
 
 		if (!this.props.clientSize) {
 			this.calculateMetrics(this.props);
@@ -304,18 +311,18 @@ class VirtualListBase extends Component {
 	curDataSize = 0
 	cc = []
 	scrollPosition = 0
-	
+
 	// JS
 	updateFrom = null
 	updateTo = null
-	
+
 	// Native
 	lastFirstIndex = 0
 	isScrolledByJump = false
 	containerClass = null
 
 	contentRef = null
-	
+
 	containerRef = null
 
 	isVertical = () => this.isPrimaryDirectionVertical
@@ -511,7 +518,7 @@ class VirtualListBase extends Component {
 		if (this.scrollPosition > maxPos) {
 			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
 		}
-		
+
 		if (type === 'Native') {
 			this.containerClass = (isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
 		}

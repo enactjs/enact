@@ -296,6 +296,7 @@ class ScrollerBase extends UiScrollerBase {
 			{keyCode, target} = ev,
 			direction = getDirection(keyCode);
 
+		super.onKeyDown(ev);
 		if (!ev.repeat) {
 			this.isScrolledToBoundary = false;
 		}

@@ -91,7 +91,15 @@ const VirtualListBase = (UiComponent) => (
 			 * @type {String}
 			 * @private
 			 */
-			'data-container-id': PropTypes.string // eslint-disable-line react/sort-prop-types
+			'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types,
+
+			/**
+			 * Specifies how to scroll depending on JavaScript or Native
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			type: PropTypes.oneOf(['JS', 'Native'])
 		}
 
 		constructor (props) {

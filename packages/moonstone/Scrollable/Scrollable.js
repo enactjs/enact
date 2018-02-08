@@ -90,7 +90,15 @@ class ScrollableBase extends UiScrollableBase {
 		 * @type {Boolean}
 		 * @public
 		 */
-		focusableScrollbar: PropTypes.bool
+		focusableScrollbar: PropTypes.bool,
+
+		/**
+		 * Specifies how to scroll depending on JavaScript or Native
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		type: PropTypes.oneOf(['JS', 'Native'])
 	}
 
 	constructor (props) {
@@ -122,8 +130,42 @@ class ScrollableBase extends UiScrollableBase {
 	indexToFocus = null
 	nodeToFocus = null
 
-	// browser native scrolling
-	resetPosition = null // prevent auto-scroll on focus by Spotlight // Native
+	// Native
+	resetPosition = null // prevent auto-scroll on focus by Spotlight
+
+	onMouseOver = (e) => {
+		const {type} = this.props;
+
+		super.onMouseOver(e);
+		if (type === 'Native') {
+			this.resetPosition = this.childRef.containerRef.scrollTop;
+		}
+	}
+
+	onMouseDown = (e) => {
+		const {type} = this.props;
+
+		super.onMouseDown(e);
+		if (type === 'Native') {
+			this.lastFocusedItem = null;
+			this.childRef.setContainerDisabled(false);
+		}
+	}
+
+	onMouseMove = (e) => {
+		const {type} = this.props;
+
+		if (type === 'Native') {
+			if (this.resetPosition !== null) {
+				const childContainerRef = this.childRef.containerRef;
+				childContainerRef.style.scrollBehavior = null;
+				childContainerRef.scrollTop = this.resetPosition;
+				childContainerRef.style.scrollBehavior = 'smooth';
+				this.resetPosition = null;
+			}
+		}
+		super.onMouseMove(e);
+	}
 
 	onMouseUp = (e) => {
 		const {type} = this.props;
@@ -136,41 +178,12 @@ class ScrollableBase extends UiScrollableBase {
 					focusedItem.blur();
 				}
 			}
-			// FIX ME: we should check the super call is working
-			super.onMouseUp(e);
 		}
+		super.onMouseUp(e);
 	}
 
-	onMouseDown = () => {
-		const {type} = this.props;
-
-		if (type === 'Native') {
-			super.onMouseDown();
-			this.lastFocusedItem = null;
-			this.childRef.setContainerDisabled(false);
-		}
-	}
-
-	onMouseOver = () => {
-		const {type} = this.props;
-
-		if (type === 'Native') {
-			this.resetPosition = this.childRef.containerRef.scrollTop;
-		}
-	}
-
-	onMouseMove = () => {
-		const {type} = this.props;
-
-		if (type === 'Native') {
-			if (this.resetPosition !== null) {
-				const childContainerRef = this.childRef.containerRef;
-				childContainerRef.style.scrollBehavior = null;
-				childContainerRef.scrollTop = this.resetPosition;
-				childContainerRef.style.scrollBehavior = 'smooth';
-				this.resetPosition = null;
-			}
-		}
+	onMouseLeave = (e) => {
+		super.onMouseLeave(e);
 	}
 
 	onWheel = (e) => {
@@ -482,7 +495,7 @@ class ScrollableBase extends UiScrollableBase {
 			if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && !e.repeat && this.hasFocus()) {
 				this.scrollByPage(e.keyCode);
 			}
-		} else if (type ==='Native') {
+		} else if (type === 'Native') {
 			if (isPageUp(e.keyCode) || isPageDown(e.keyCode)) {
 				e.preventDefault();
 				if (!e.repeat && this.hasFocus()) {
