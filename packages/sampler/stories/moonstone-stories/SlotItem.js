@@ -8,7 +8,7 @@ import {withInfo} from '@storybook/addon-info';
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('ItemOverlay', SlotItem);
+const Config = mergeComponentMetadata('SlotItem', SlotItem);
 
 const prop = {
 	autoHide: [null, 'after', 'before', 'both']

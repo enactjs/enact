@@ -10,8 +10,8 @@
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import Slottable from '../Slottable';
 
@@ -81,9 +81,10 @@ const SlotItemBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Choose an alternate layout technique for `SlotItem`. "flex" is applied as a default and
-		 * gives basic flex support to the wrapping elements. This may be set to `null` to define
-		 * your own layout method.
+		 * The layout technique for `SlotItem`.
+		 *
+		 * `"flex"` is applied as a default and gives basic flex support to the wrapping elements.
+		 * This may be set to `null` to define your own layout method.
 		 *
 		 * @type {String}
 		 * @default 'flex'
@@ -92,8 +93,9 @@ const SlotItemBase = kind({
 		layout: PropTypes.oneOf(['flex']),
 
 		/**
-		 * A way to insert an element after the `children` content. If nothing is specified,
-		 * nothing, not even an empty container, is rendered in this place.
+		 * Nodes to be inserted after `children` and hidden using `autoHide`.
+		 *
+		 * If nothing is specified, nothing, not even an empty container, is rendered in this place.
 		 *
 		 * @type {Node}
 		 * @public
@@ -101,8 +103,9 @@ const SlotItemBase = kind({
 		slotAfter: PropTypes.node,
 
 		/**
-		 * A way to insert an element before the `children` content. If nothing is specified,
-		 * nothing, not even an empty container, is rendered in this place.
+		 * Nodes to be inserted before `children` and hidden using `autoHide`.
+		 *
+		 * If nothing is specified, nothing, not even an empty container, is rendered in this place.
 		 *
 		 * @type {Node}
 		 * @public

@@ -10,20 +10,19 @@
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
+import {childrenEquals} from '@enact/core/util';
+import Spottable from '@enact/spotlight/Spottable';
+import Pure from '@enact/ui/internal/Pure';
+import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
+import {SlotItemBase as UiSlotItemBase, SlotItemDecorator as UiSlotItemDecorator} from '@enact/ui/SlotItem';
+import Toggleable from '@enact/ui/Toggleable';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {childrenEquals} from '@enact/core/util';
-import {SlotItemBase as UiSlotItemBase, SlotItemDecorator as UiSlotItemDecorator} from '@enact/ui/SlotItem';
-import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
-import Toggleable from '@enact/ui/Toggleable';
-import Pure from '@enact/ui/internal/Pure';
-import Spottable from '@enact/spotlight/Spottable';
-
-import {MarqueeDecorator} from '../Marquee';
-import Skinnable from '../Skinnable';
+import React from 'react';
 
 import {ItemBase} from '../Item';
+import {MarqueeDecorator} from '../Marquee';
+import Skinnable from '../Skinnable';
 
 import componentCss from './SlotItem.less';
 

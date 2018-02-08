@@ -8,8 +8,8 @@
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import Touchable from '../Touchable';
 
