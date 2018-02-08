@@ -471,11 +471,13 @@ class ScrollableBase extends UiScrollableBase {
 			scrollableClasses = classNames(css.scrollable, className);
 
 		delete rest.cbScrollTo;
+		delete rest.dragging;
 		delete rest.horizontalScrollbar;
 		delete rest.onScroll;
 		delete rest.onScrollbarVisibilityChange;
 		delete rest.onScrollStart;
 		delete rest.onScrollStop;
+		delete rest.type;
 		delete rest.verticalScrollbar;
 
 		return (
@@ -512,7 +514,7 @@ class ScrollableBase extends UiScrollableBase {
  */
 const Scrollable = (WrappedComponent) => (kind({
 	name: 'Scrollable',
-	render: (props) => (<ScrollableBase wrapped={WrappedComponent} {...props} />)
+	render: (props) => (<ScrollableBase type="JS" wrapped={WrappedComponent} {...props} />)
 }));
 
 export default Scrollable;

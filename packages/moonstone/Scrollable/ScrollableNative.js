@@ -516,11 +516,13 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
 			scrollableClasses = classNames(css.scrollable, className);
 
 		delete rest.cbScrollTo;
+		delete rest.dragging;
 		delete rest.horizontalScrollbar;
 		delete rest.onScroll;
 		delete rest.onScrollbarVisibilityChange;
 		delete rest.onScrollStart;
 		delete rest.onScrollStop;
+		delete rest.type;
 		delete rest.verticalScrollbar;
 
 		return (
@@ -556,7 +558,7 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
  */
 const ScrollableNative = (WrappedComponent) => (kind({
 	name: 'ScrollableNative',
-	render: (props) => (<ScrollableBaseNative wrapped={WrappedComponent} {...props} />)
+	render: (props) => (<ScrollableBaseNative type="Native" wrapped={WrappedComponent} {...props} />)
 }));
 
 export default ScrollableNative;
