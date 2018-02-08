@@ -79,7 +79,22 @@ const SlotItemBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		css: PropTypes.object,
+
+		/**
+		 * Choose an alternate layout technique for `SlotItem`. "flex" is applied as a default and
+		 * gives basic flex support to the wrapping elements. This may be set to `null` to define
+		 * your own layout method.
+		 *
+		 * @type {String}
+		 * @default 'flex'
+		 * @public
+		 */
+		layout: PropTypes.oneOf(['flex'])
+	},
+
+	defaultProps: {
+		layout: 'flex'
 	},
 
 	styles: {
@@ -89,6 +104,7 @@ const SlotItemBase = kind({
 	},
 
 	computed: {
+		className: ({layout, styler}) => styler.append(layout),
 		slotBefore: ({slotBefore, autoHide, styler}) => ( slotBefore ?
 			<div className={styler.join('slot', 'before', {hidden: (autoHide === 'before' || autoHide === 'both')})}>
 				{slotBefore}
@@ -103,6 +119,7 @@ const SlotItemBase = kind({
 
 	render: ({children, component: Component, css, slotAfter, slotBefore, ...rest}) => {
 		delete rest.autoHide;
+		delete rest.layout;
 
 		return (
 			<Component
