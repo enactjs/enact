@@ -7,11 +7,8 @@ import constants from './constants';
 
 const
 	{
-		epsilon,
 		isPageDown,
 		isPageUp,
-		nop,
-		paginationPageMultiplier,
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
 

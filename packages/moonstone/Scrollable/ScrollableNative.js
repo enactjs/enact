@@ -14,7 +14,8 @@ import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {ScrollableBaseNative as UiScrollableBaseNative, constants} from '@enact/ui/Scrollable/ScrollableNative';
+import {ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
+import constants from '@enact/ui/Scrollable/constants';
 
 import Scrollbar from './Scrollbar';
 import scrollbarCss from './Scrollbar.less';

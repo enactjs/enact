@@ -17,6 +17,8 @@ const ScrollStrategyJS = hoc((config, Wrapped) => {
 	return class extends Component {
 		static displayName = 'ScrollStrategyJS'
 
+		wheelDirection = 0
+
 		scrollToAccumulatedTarget = (delta, vertical) => {
 			if (!this.isScrollAnimationTargetAccumulated) {
 				this.accumulatedTargetX = this.scrollLeft;
