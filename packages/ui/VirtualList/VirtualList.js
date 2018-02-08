@@ -320,7 +320,6 @@ class VirtualListBase extends Component {
 	lastFirstIndex = 0
 	isScrolledByJump = false
 	containerClass = null
-
 	contentRef = null
 
 	containerRef = null

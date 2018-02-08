@@ -641,7 +641,6 @@ class ScrollableBase extends UiScrollableBase {
 			scrollableClasses = classNames(css.scrollable, className);
 
 		delete rest.cbScrollTo;
-		delete rest.dragging;
 		delete rest.horizontalScrollbar;
 		delete rest.onScroll;
 		delete rest.onScrollbarVisibilityChange;

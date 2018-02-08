@@ -1163,7 +1163,6 @@ class ScrollableBase extends Component {
 			scrollableClasses = classNames(css.scrollable, className);
 
 		delete rest.cbScrollTo;
-		delete rest.dragging;
 		delete rest.horizontalScrollbar;
 		delete rest.onScroll;
 		delete rest.onScrollbarVisibilityChange;
