@@ -3,7 +3,7 @@ import React from 'react';
 import Touchable from '@enact/ui/Touchable';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, number, select} from '@storybook/addon-knobs';
+import {boolean, number} from '@storybook/addon-knobs';
 
 const TouchableDiv = Touchable('div');
 
