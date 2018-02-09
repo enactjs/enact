@@ -13,9 +13,9 @@ import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
+import hocFactory from '@enact/core/hoc/hocFactory';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
-import kind from '@enact/core/kind';
 import {on, off} from '@enact/core/dispatcher';
 import {perfNow} from '@enact/core/util';
 import PropTypes from 'prop-types';
@@ -145,6 +145,14 @@ class ScrollableBase extends Component {
 		 * @public
 		 */
 		onScrollStop: PropTypes.func,
+
+		/**
+		 * Called when rendering Scrollable to render children
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		render: PropTypes.func,
 
 		/**
 		 * Scrollable CSS style.
@@ -1158,7 +1166,7 @@ class ScrollableBase extends Component {
 
 	render () {
 		const
-			{className, style, type, wrapped: Wrapped, ...rest} = this.props,
+			{className, style, type, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			scrollableClasses = classNames(css.scrollable, className);
 
@@ -1177,14 +1185,14 @@ class ScrollableBase extends Component {
 				style={style}
 			>
 				<div className={css.container}>
-					<Wrapped
-						{...rest}
-						cbScrollTo={this.scrollTo}
-						className={css.content}
-						onScroll={type === 'JS' ? this.onScroll : null}
-						ref={this.initChildRef}
-						type={type}
-					/>
+					{this.props.render({
+						...rest,
+						cbScrollTo: this.scrollTo,
+						className: css.content,
+						onScroll: type === 'JS' ? this.onScroll : null,
+						ref: this.initChildRef,
+						type
+					})}
 					{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 				</div>
 				{isHorizontalScrollbarVisible ? <Scrollbar {...this.horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
@@ -1202,10 +1210,10 @@ class ScrollableBase extends Component {
  * @ui
  * @private
  */
-const Scrollable = (WrappedComponent) => (kind({
+const Scrollable = hocFactory(ScrollableBase, {
 	name: 'ui:Scrollable',
-	render: (props) => (<ScrollableBase type="JS" wrapped={WrappedComponent} {...props} />)
-}));
+	type: 'JS'
+});
 
 /**
  * [ScrollableNative]{@link ui/Scrollable.ScrollableNative} is a Higher-order Component
@@ -1216,10 +1224,10 @@ const Scrollable = (WrappedComponent) => (kind({
  * @ui
  * @private
  */
-const ScrollableNative = (WrappedComponent) => (kind({
-	name: 'ui:ScrollableNative',
-	render: (props) => (<ScrollableBase type="Native" wrapped={WrappedComponent} {...props} />)
-}));
+const ScrollableNative = hocFactory(ScrollableBase, {
+	name: 'ScrollableNative',
+	type: 'Native'
+});
 
 export default Scrollable;
 export {
