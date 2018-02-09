@@ -15,6 +15,7 @@ import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import kind from '@enact/core/kind';
 import {on, off} from '@enact/core/dispatcher';
+import {perfNow} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -31,7 +32,10 @@ const
 
 const
 	constants = {
+		calcVelocity: (d, dt) => (d && dt) ? d / dt : 0,
 		epsilon: 1,
+		flickMultiplier: 10,
+		holdTime: 50,
 		isPageDown: is('pageDown'),
 		isPageUp: is('pageUp'),
 		nop: () => {},
@@ -40,7 +44,10 @@ const
 		scrollWheelPageMultiplierForMaxPixel: 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	},
 	{
+		calcVelocity,
 		epsilon,
+		flickMultiplier,
+		holdTime,
 		isPageDown,
 		isPageUp,
 		nop,
@@ -208,6 +215,8 @@ class ScrollableBaseNative extends Component {
 		};
 
 		props.cbScrollTo(this.scrollTo);
+
+		this.bindEventHandlers();
 	}
 
 	getChildContext = () => ({
@@ -319,6 +328,8 @@ class ScrollableBaseNative extends Component {
 	// status
 	direction = 'vertical'
 	isScrollAnimationTargetAccumulated = false
+	isFirstDragging = false
+	isDragging = false
 	deferScrollTo = true
 	pageDistance = 0
 	pageDirection = 0
@@ -328,8 +339,20 @@ class ScrollableBaseNative extends Component {
 	// event handlers
 	eventHandlers = {}
 
+	// drag info
+	dragInfo = {
+		t: 0,
+		clientX: 0,
+		clientY: 0,
+		dx: 0,
+		dy: 0,
+		dt: 0
+	}
+
 	// bounds info
 	bounds = {
+		scrollX: 0,
+		scrollY: 0,
 		clientWidth: 0,
 		clientHeight: 0,
 		scrollWidth: 0,
@@ -348,10 +371,117 @@ class ScrollableBaseNative extends Component {
 	childRef = null
 	containerRef = null
 
+	// handle an input event
+
+	dragStart (e) {
+		const
+			{clientX, clientY} = e,
+			d = this.dragInfo;
+
+		this.isDragging = true;
+		this.isFirstDragging = true;
+		d.scrollX = this.scrollLeft;
+		d.scrollY = this.scrollTop;
+		d.t = perfNow();
+		d.clientX = clientX;
+		d.clientY = clientY;
+		d.dx = d.dy = 0;
+	}
+
+	drag (e) {
+		const
+			{direction} = this,
+			t = perfNow(),
+			d = this.dragInfo;
+
+		if (direction === 'horizontal' || direction === 'both') {
+			d.dx = e.clientX - d.clientX;
+			d.clientX = e.clientX;
+			d.scrollX -= d.dx;
+		} else {
+			d.dx = 0;
+		}
+
+		if (direction === 'vertical' || direction === 'both') {
+			d.dy = e.clientY - d.clientY;
+			d.clientY = e.clientY;
+			d.scrollY -= d.dy;
+		} else {
+			d.dy = 0;
+		}
+
+		d.t = t;
+
+		return {scrollX: d.scrollX, scrollY: d.scrollY};
+	}
+
+	dragStop () {
+		const
+			d = this.dragInfo,
+			t = perfNow();
+
+		d.dt = t - d.t;
+		this.isDragging = false;
+	}
+
+	isFlicking () {
+		const d = this.dragInfo;
+
+		if (d.dt > holdTime) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	calculateDistanceByFlick (delta, time) {
+		const v = calcVelocity(-delta, time);
+		return Math.sign(v) * flickMultiplier * v * v;
+	}
+
+	scrollByFlick () {
+		const {dt, dx, dy, scrollX, scrollY} = this.dragInfo;
+		this.start(
+			scrollX + this.calculateDistanceByFlick(dx, dt),
+			scrollY + this.calculateDistanceByFlick(dy, dt),
+			true
+		);
+	}
+
 	// event handler for browser native scroll
 
-	onMouseDown = () => {
+	onMouseDown (e) {
+		this.stopScrolling();
+		this.dragStart(e);
+
+		// Note: this code is to stop scrolling on mouse down. NOT TO SCROLL.
 		this.isScrollAnimationTargetAccumulated = false;
+	}
+
+	onMouseMove (e) {
+		if (this.isDragging) {
+			const {scrollX, scrollY} = this.drag(e);
+			this.start(scrollX, scrollY, false);
+		}
+	}
+
+	onMouseUp (e) {
+		if (this.isDragging) {
+			this.dragStop(e);
+
+			if (!this.isFlicking()) {
+				// Chromium ignores when target position is as same as the current position.
+				this.stopScrolling();
+			} else {
+				this.scrollByFlick();
+			}
+		}
+	}
+
+	onMouseLeave (e) {
+		if (e.target === this.containerRef) {
+			this.onMouseUp(e);
+		}
 	}
 
 	calculateDistanceByWheel (deltaMode, delta, maxPixel) {
@@ -371,7 +501,7 @@ class ScrollableBaseNative extends Component {
 	 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot suppor this
 	 * - for vertical scroll, supports wheel action on scrollbars only
 	 */
-	onWheel = (e) => {
+	onWheel (e) {
 		const
 			bounds = this.getScrollBounds(),
 			canScrollHorizontally = this.canScrollHorizontally(bounds),
@@ -429,7 +559,7 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
-	onScroll = (e) => {
+	onScroll (e) {
 		const
 			bounds = this.getScrollBounds(),
 			canScrollHorizontally = this.canScrollHorizontally(bounds);
@@ -563,6 +693,10 @@ class ScrollableBaseNative extends Component {
 			this.childRef.scrollToPosition(targetX, targetY);
 			childContainerRef.style.scrollBehavior = 'smooth';
 		}
+	}
+
+	stopScrolling () {
+		this.start(this.scrollLeft + 0.1, this.scrollTop + 0.1, false);
 	}
 
 	scroll = (left, top) => {
@@ -777,6 +911,16 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	bindEventHandlers () {
+		// FIXME event handlers don't work on the v8 snapshot.
+		this.onMouseDown = this.onMouseDown.bind(this);
+		this.onMouseLeave = this.onMouseLeave.bind(this);
+		this.onMouseMove = this.onMouseMove.bind(this);
+		this.onMouseUp = this.onMouseUp.bind(this);
+		this.onWheel = this.onWheel.bind(this);
+		this.onScroll = this.onScroll.bind(this);
+	}
+
 	addEventListeners () {
 		const
 			{containerRef} = this,
@@ -784,13 +928,15 @@ class ScrollableBaseNative extends Component {
 
 		if (containerRef && containerRef.addEventListener) {
 			// FIXME event handlers don't work on the v8 snapshot.
+			containerRef.addEventListener('mousedown', this.onMouseDown);
+			containerRef.addEventListener('mouseleave', this.onMouseLeave);
+			containerRef.addEventListener('mousemove', this.onMouseMove);
+			containerRef.addEventListener('mouseup', this.onMouseUp);
 			containerRef.addEventListener('wheel', this.onWheel);
 		}
 		if (childContainerRef && childContainerRef.addEventListener) {
 			// FIXME event handlers don't work on the v8 snapshot.
 			childContainerRef.addEventListener('scroll', this.onScroll, {capture: true});
-			childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
-			childContainerRef.addEventListener('mousemove', this.onMouseMove, {capture: true});
 		}
 
 		childContainerRef.style.scrollBehavior = 'smooth';
@@ -803,15 +949,15 @@ class ScrollableBaseNative extends Component {
 
 		if (containerRef && containerRef.removeEventListener) {
 			// FIXME `onWheel` doesn't work on the v8 snapshot.
+			containerRef.removeEventListener('mousedown', this.onMouseDown);
+			containerRef.removeEventListener('mouseleave', this.onMouseLeave);
+			containerRef.removeEventListener('mousemove', this.onMouseMove);
+			containerRef.removeEventListener('mouseup', this.onMouseUp);
 			containerRef.removeEventListener('wheel', this.onWheel);
 		}
 		if (childContainerRef && childContainerRef.removeEventListener) {
-			// FIXME `onScroll` doesn't work on the v8 snapshot.
+			// FIXME event handlers don't work on the v8 snapshot.
 			childContainerRef.removeEventListener('scroll', this.onScroll, {capture: true});
-			// FIXME `onMouseOver` doesn't work on the v8 snapshot.
-			childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
-			// FIXME `onMouseMove` doesn't work on the v8 snapshot.
-			childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
 		}
 	}
 

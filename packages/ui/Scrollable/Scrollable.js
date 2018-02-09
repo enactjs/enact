@@ -31,18 +31,15 @@ const
 	 * Pointer events are supported from Chromium 55, Edge 16 and IE 11.
 	 * For Chromium before 55, Firefox (default) and Safari, we still need mouse events.
 	*/
-	usePointerEvents = window.PointerEvent ? true : false,
+	usePointerEvents = !!(window.PointerEvent),
 	// If pointer events are not supported and the platform is webOS, we need to add touch events.
-	useTouchEvents = (!usePointerEvents && window.PalmSystem) ? true : false,
+	useTouchEvents = (window.PalmSystem && !usePointerEvents),
 	// event names
 	pointerEventsPrefix = usePointerEvents ? 'pointer' : 'mouse',
 	eventNamePointerDown = pointerEventsPrefix + 'down',
 	eventNamePointerLeave = pointerEventsPrefix + 'leave',
 	eventNamePointerMove = pointerEventsPrefix + 'move',
 	eventNamePointerUp = pointerEventsPrefix + 'up',
-	// DOM events
-	forwardPointerMove = forward('onPointerMove'),
-	forwardPointerUp = forward('onPointerUp'),
 	// Generated events
 	forwardScroll = forward('onScroll'),
 	forwardScrollStart = forward('onScrollStart'),
@@ -466,7 +463,6 @@ class ScrollableBase extends Component {
 		/* for mouse/touch events, pointerId will be undefined always and it works also. */
 		this.pointerId = e.pointerId;
 		this.dragStart(e);
-		forward('onMouseDown', e);
 	}
 
 	onPointerMove (e) {
@@ -484,9 +480,11 @@ class ScrollableBase extends Component {
 				this.isFirstDragging = false;
 			}
 			this.showThumb(bounds);
-			this.scroll(this.scrollLeft - dx, this.scrollTop - dy);
+			this.scroll({
+				targetX: this.scrollLeft - dx,
+				targetY: this.scrollTop - dy
+			});
 		}
-		forward('onMouseMove', e);
 	}
 
 	onPointerUp (e) {
@@ -515,13 +513,11 @@ class ScrollableBase extends Component {
 				});
 			}
 		}
-		forward('onMouseUp', e);
 	}
 
 	onPointerLeave (e) {
 		if (e.target === this.containerRef) {
 			this.onPointerUp(e);
-			forward('onMouseLeave', e);
 		}
 	}
 
@@ -532,17 +528,14 @@ class ScrollableBase extends Component {
 
 	onTouchStart (e) {
 		this.onPointerDown(this.addPointerIdForTouch(e.changedTouches[0]));
-		forward('onTouchStart', e);
 	}
 
 	onTouchMove (e) {
 		this.onPointerMove(this.addPointerIdForTouch(e.changedTouches[0]));
-		forward('onTouchMove', e);
 	}
 
 	onTouchEnd (e) {
 		this.onPointerUp(this.addPointerIdForTouch(e.changedTouches[0]));
-		forward('onTouchEnd', e);
 	}
 
 	calculateDistanceByWheel (deltaMode, delta, maxPixel) {

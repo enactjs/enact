@@ -125,8 +125,14 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
 	// browser native scrolling
 	resetPosition = null // prevent auto-scroll on focus by Spotlight
 
-	onMouseDown = () => {
-		super.onMouseDown();
+	scrollByFlick () {
+		this.childRef.setContainerDisabled(true);
+		super.scrollByFlick();
+	}
+
+	onMouseDown (e) {
+		super.onMouseDown(e);
+
 		this.lastFocusedItem = null;
 		this.childRef.setContainerDisabled(false);
 	}
@@ -135,8 +141,10 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
 		this.resetPosition = this.childRef.containerRef.scrollTop;
 	}
 
-	onMouseMove = () => {
-		if (this.resetPosition !== null) {
+	onMouseMove (e) {
+		super.onMouseMove(e);
+
+		if (!this.isDragging && this.resetPosition !== null) {
 			const childContainerRef = this.childRef.containerRef;
 			childContainerRef.style.scrollBehavior = null;
 			childContainerRef.scrollTop = this.resetPosition;
@@ -492,8 +500,9 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
 		super.addEventListeners();
 
 		if (childContainerRef && childContainerRef.addEventListener) {
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
+			// FIXME event handlers don't work on the v8 snapshot.
 			childContainerRef.addEventListener('focusin', this.onFocus);
+			childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
 		}
 	}
 
@@ -503,8 +512,9 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
 		super.removeEventListeners();
 
 		if (childContainerRef && childContainerRef.removeEventListener) {
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
+			// FIXME event handlers don't work on the v8 snapshot.
 			childContainerRef.removeEventListener('focusin', this.onFocus);
+			childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
 		}
 	}
 
