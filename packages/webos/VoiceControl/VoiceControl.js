@@ -15,6 +15,10 @@ const VoiceControl = (function () {
 		console.log('VoiceControl>handleVoice>', voiceIntent, voiceLabel, e);
 
 		if (voiceLabel && intentArray.length > 0) {
+			if (voiceLabel.toLowerCase) {
+				voiceLabel = voiceLabel.toLowerCase();
+			}
+
 			let labelIndex = getIndex(intentArray, 'voiceLabel', voiceLabel);
 
 			if (labelIndex > -1) { // execute onVoice handler
