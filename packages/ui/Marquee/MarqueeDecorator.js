@@ -27,6 +27,15 @@ const defaultConfig = {
 	blur: 'onBlur',
 
 	/**
+	 * Optional CSS class name to customize the marquee `component`
+	 *
+	 * @type {String}
+	 * @default null
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
+	 */
+	className: null,
+
+	/**
 	 * The base marquee component wrapping the content.
 	 *
 	 * @type {Component}
@@ -34,15 +43,6 @@ const defaultConfig = {
 	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	component: Marquee,
-
-	/**
-	 * Optional CSS class name map to pass to the {@link ui/Marquee.Marquee} instance
-	 *
-	 * @type {Object}
-	 * @default null
-	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
-	 */
-	css: null,
 
 	/**
 	 * Property containing the callback to start the animation when `marqueeOn` is `'hover'`
@@ -117,7 +117,7 @@ const TimerState = {
  * @public
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {blur, css, component: MarqueeComponent, enter, focus, invalidateProps, leave} = config;
+	const {blur, className: configClassName, component: MarqueeComponent, enter, focus, invalidateProps, leave} = config;
 
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
@@ -712,8 +712,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					<MarqueeComponent
 						alignment={alignment}
 						animating={this.state.animating}
+						className={configClassName}
 						clientRef={this.cacheNode}
-						css={css}
 						distance={this.distance}
 						onMarqueeComplete={this.handleMarqueeComplete}
 						overflow={this.state.overflow}
