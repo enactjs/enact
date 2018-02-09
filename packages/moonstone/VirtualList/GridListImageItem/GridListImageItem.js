@@ -1,5 +1,5 @@
 /**
- * Provides Moostone-themed grid list image item components and behaviors.
+ * Provides Moonstone-themed grid list image item components and behaviors.
  *
  * @module moonstone/VirtualList
  * @exports GridListIamgeItem
@@ -8,8 +8,8 @@
 import compose from 'ramda/src/compose';
 import {GridListImageItem as UiGridListImageItem} from '@enact/ui/VirtualList';
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../../Icon';
@@ -83,6 +83,7 @@ const GridListImageItemBase = kind({
 		 * ```
 		 *
 		 * @type {Function}
+		 * @public
 		 */
 		selectionOverlay: PropTypes.func
 	},
@@ -113,7 +114,7 @@ const GridListImageItemBase = kind({
 
 /**
  * Moonstone-specific GridListImageItem behaviors to apply to
- * [GridListImageItem]{@link moonstone/VirtualList.GridListImageItemBase}.
+ * [GridListImageItem]{@link moonstone/VirtualList.GridListImageItem}.
  *
  * @hoc
  * @memberof moonstone/VirtualList
@@ -139,7 +140,7 @@ const GridListImageItemDecorator = compose(
  *
  * @class GridListImageItem
  * @memberof moonstone/VirtualList
- * @mixes spotlight.Spottable
+ * @mixes moonstone/VirtualList.GridListImageItemDecorator
  * @see moonstone/VirtualList.GridListImageItemBase
  * @ui
  * @public

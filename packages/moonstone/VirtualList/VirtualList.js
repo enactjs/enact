@@ -13,6 +13,7 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import compose from 'ramda/src/compose';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import css from '@enact/ui/VirtualList/ListItem.less';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
@@ -95,10 +96,30 @@ const VirtualListBase = (type, UiComponent) => (
 			'data-container-id': PropTypes.string // eslint-disable-line react/sort-prop-types
 		}
 
+		static contextTypes = contextTypes
+
 		constructor (props) {
 			super(props);
 
 			this.initItemContainerRef = this.initRef('itemContainerRef');
+		}
+
+		componentDidMount () {
+			super.componentDidMount();
+
+			if (type == 'JS') {
+				const containerNode = this.containerRef;
+
+				// prevent native scrolling by Spotlight
+				this.preventScroll = () => {
+					containerNode.scrollTop = 0;
+					containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
+				};
+
+				if (containerNode && containerNode.addEventListener) {
+					containerNode.addEventListener('scroll', this.preventScroll);
+				}
+			}
 		}
 
 		componentDidUpdate () {
@@ -672,9 +693,20 @@ const VirtualListBase = (type, UiComponent) => (
 			this.cc[key] = (<div {...attributes} />);
 		}
 
+		getXY = (primaryPosition, secondaryPosition) => {
+			const rtlDirection = this.context.rtl ? -1 : 1;
+			return (this.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
+		}
+
 		getItemNode = (index) => {
 			const ref = this.itemContainerRef;
 			return ref ? ref.children[index % this.state.numOfItems] : null;
+		}
+
+		scrollToPosition (x, y) {
+			const node = this.containerRef;
+
+			node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 		}
 
 		/**
