@@ -31,7 +31,7 @@ import MarqueeDecorator from './MarqueeDecorator';
  * @ui
  * @public
  */
-const Marquee = MarqueeDecorator(MarqueeBase);
+const Marquee = MarqueeDecorator({component: MarqueeBase}, 'div');
 
 export default MarqueeDecorator;
 export {
