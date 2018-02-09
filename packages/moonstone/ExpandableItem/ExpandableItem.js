@@ -21,6 +21,8 @@ import LabeledItem from '../LabeledItem';
 import Expandable from './Expandable';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
 
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
+
 const isUp = is('up');
 const isDown = is('down');
 
@@ -377,7 +379,15 @@ const ExpandableItemBase = kind({
  * @public
  */
 const ExpandableItem = Expandable(
-	ExpandableItemBase
+	VoiceControlDecorator(
+		{
+			voiceSlot: [
+				{voiceIntent: 'open', voiceHandler: 'onOpen'},
+				{voiceIntent: 'close', voiceHandler: 'onClose'}
+			]
+		},
+		ExpandableItemBase
+	)
 );
 
 export default ExpandableItem;

@@ -20,6 +20,8 @@ import RadioItem from '../RadioItem';
 
 import css from './ExpandableList.less';
 
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
+
 const compareChildren = (a, b) => {
 	if (!a || !b || a.length !== b.length) return false;
 
@@ -373,9 +375,17 @@ const ExpandableList = Pure(
 		children: compareChildren
 	}},
 	Expandable(
-		Changeable(
-			{change: 'onSelect', prop: 'selected'},
-			ExpandableListBase
+		VoiceControlDecorator(
+			{
+				voiceSlot: [
+					{voiceIntent: 'open', voiceHandler: 'onOpen'},
+					{voiceIntent: 'close', voiceHandler: 'onClose'}
+				]
+			},
+			Changeable(
+				{change: 'onSelect', prop: 'selected'},
+				ExpandableListBase
+			)
 		)
 	)
 );
