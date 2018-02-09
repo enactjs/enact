@@ -1,13 +1,18 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import sinon from 'sinon';
-import {ItemBase} from '../Item';
+import Item from '../Item';
+
+const tap = (node) => {
+	node.simulate('mousedown');
+	node.simulate('mouseup');
+};
 
 describe('Item', () => {
 
 	it('should create an Item that is enabled by default', function () {
 		const item = mount(
-			<ItemBase>I am an Item</ItemBase>
+			<Item>I am an Item</Item>
 		);
 
 		const expected = 0;
@@ -18,23 +23,23 @@ describe('Item', () => {
 
 	it('should have \'disabled\' HTML attribute when \'disabled=true\'', function () {
 		const item = mount(
-			<ItemBase disabled>I am a disabled Item</ItemBase>
+			<Item disabled>I am a disabled Item</Item>
 		);
 
 		const expected = 1;
-		const actual = item.find({disabled: true}).length;
+		const actual = item.find('div[disabled=true]').length;
 
 		expect(actual).to.equal(expected);
 	});
 
 	describe('events', () => {
-		it('should call onClick when not disabled', function () {
+		it('should call onTap when tapped', function () {
 			const handleClick = sinon.spy();
 			const item = mount(
-				<ItemBase onClick={handleClick}>I am a disabled Item</ItemBase>
+				<Item onTap={handleClick}>I am a normal Item</Item>
 			);
 
-			item.simulate('click');
+			tap(item);
 
 			const expected = true;
 			const actual = handleClick.called;
@@ -42,13 +47,13 @@ describe('Item', () => {
 			expect(actual).to.equal(expected);
 		});
 
-		it('should not call onClick when disabled', function () {
+		it('should not call onTap when tapped and disabled', function () {
 			const handleClick = sinon.spy();
 			const item = mount(
-				<ItemBase disabled onClick={handleClick}>I am a disabled Item</ItemBase>
+				<Item disabled onTap={handleClick}>I am a disabled Item</Item>
 			);
 
-			item.simulate('click');
+			tap(item);
 
 			const expected = false;
 			const actual = handleClick.called;
@@ -56,4 +61,5 @@ describe('Item', () => {
 			expect(actual).to.equal(expected);
 		});
 	});
+
 });

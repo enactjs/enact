@@ -1,6 +1,5 @@
 // Spinner.less
 //
-@import "../styles/mixins.less";
 @import "../styles/text.less";
 @import "../styles/variables.less";
 @import "../styles/skin.less";
@@ -98,8 +97,6 @@
 
 .spinner {
 	line-height: @moon-body-line-height;
-	position: relative;
-	display: inline-block;
 
 	.ballDecorator {
 		border-radius: (@moon-spinner-size / 2);
@@ -160,16 +157,6 @@
 		max-width: 348px;
 	}
 
-	// centered
-	&.centered {
-		margin: 0;
-		margin-left: 50%;
-		position: absolute;
-		top: 50%;
-		-webkit-transform: translateX(-50%) translateY(-50%);
-		transform: translateX(-50%) translateY(-50%);
-	}
-
 	&.content {
 		padding: ((@moon-button-height - @moon-spinner-size) / 2);
 	}
@@ -177,21 +164,6 @@
 	&.running .ball {
 		-webkit-animation-play-state: running;
 		animation-play-state: running;
-	}
-
-	:global(.enact-locale-right-to-left) & {
-		// This allows for the spinner to spin in a counter-clockwise direction in RTL mode
-		// .-spinner-ball-decorator {
-		// 	-webkit-transform: scaleX(-1);
-		// }
-
-		// centered
-		&.centered {
-			margin: 0;
-			margin-right: 50%;
-			-webkit-transform: translateX(50%) translateY(-50%);
-			transform: translateX(50%) translateY(-50%);
-		}
 	}
 
 	// Skin colors
@@ -227,23 +199,6 @@
 }
 
 .spinnerContainer {
-	// When `blockClickOn='container'` && `centered={false}`, there is a container div that should have
-	// `display: inline-block;` to match SpinnerBase's .spinner
-	display: inline-block;
-
-	// When `blockClickOn='container'` && `centered`, the container div should have 'display:block' for
-	// the spinner to be centered in the container correctly.
-	&.centered {
-		display: block;
-	}
-
-	// Scrim will fill up to the first ancestor element with absolute or relative position.
-	// Parent needs to have absolute or relative position for scrim to block as expected.
-	.blockClickOn {
-		position: absolute;
-		.position(0);
-	}
-
 	// Skin colors
 	.applySkins({
 		.blockClickOn {

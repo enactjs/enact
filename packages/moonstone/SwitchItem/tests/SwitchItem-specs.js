@@ -1,11 +1,10 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import SwitchItem from '../SwitchItem';
-import SwitchCss from '../../Switch/Switch.less';
 
 describe('SwitchItem Specs', () => {
 
-	it('should contain Switch Icon', function () {
+	it('should contain a Switch', function () {
 
 		const switchItem = mount(
 			<SwitchItem>
@@ -13,10 +12,8 @@ describe('SwitchItem Specs', () => {
 			</SwitchItem>
 		);
 
-		const IconComponent = switchItem.find('Icon');
-
-		const expected = SwitchCss.icon;
-		const actual = IconComponent.prop('className');
+		const expected = 1;
+		const actual = switchItem.find('Switch').length;
 
 		expect(actual).to.equal(expected);
 	});

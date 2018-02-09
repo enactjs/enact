@@ -13,9 +13,8 @@
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
-import {ButtonBase as UiButtonBase} from '@enact/ui/Button';
+import {ButtonBase as UiButtonBase, ButtonDecorator as UiButtonDecorator} from '@enact/ui/Button';
 import Pure from '@enact/ui/internal/Pure';
-import Touchable from '@enact/ui/Touchable';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
@@ -131,7 +130,7 @@ const ButtonBase = kind({
  * @mixes i18n/Uppercase.Uppercase
  * @mixes moonstone/TooltipDecorator.TooltipDecorator
  * @mixes moonstone/Marquee.MarqueeDecorator
- * @mixes ui/Touchable.Touchable
+ * @mixes ui/Button.ButtonDecorator
  * @mixes spotlight/Spottable.Spottable
  * @mixes ui/Skinnable.Skinnable
  * @public
@@ -141,7 +140,7 @@ const ButtonDecorator = compose(
 	Uppercase,
 	TooltipDecorator,
 	MarqueeDecorator({css: componentCss}),
-	Touchable,
+	UiButtonDecorator,
 	Spottable,
 	Skinnable
 );

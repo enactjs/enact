@@ -4,8 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
-### Fixed
+### Changed
 
+- `ui/Repeater` and `ui/Group` to require a unique key for each object type data
+- `ui/Toggleable` to use `'selected'` as its default `prop`, rather than `'active'`, since `'selected'` is by far the most common use case
 - `ui/Touchable` to use global gesture configuration with instance override rather than component-level configuration via HOC configs with instance override
 
 ## [2.0.0-alpha.3] - 2018-01-18
