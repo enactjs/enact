@@ -576,16 +576,29 @@ const VirtualListBase = (type, UiComponent) => (
 
 				if (numOfItems > 0 && focusedIndex % numOfItems !== this.lastFocusedIndex % numOfItems) {
 					const node = this.getItemNode(this.lastFocusedIndex);
+
 					if (node) {
 						node.blur();
 					}
+				}
+				if (type === 'JS') {
+					this.nodeIndexToBeFocused = null;
+					this.lastFocusedIndex = focusedIndex;
+				} else if (type === 'Native') {
+					this.lastFocusedIndex = focusedIndex;
 				}
 
 				if (primary.clientSize >= primary.itemSize) {
 					if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
 						gridPosition.primaryPosition -= pageScroll ? 0 : offsetToClientEnd;
 					} else if (gridPosition.primaryPosition >= scrollPosition) { // inside of client
-						gridPosition.primaryPosition = scrollPosition;
+						if (type === 'JS') {
+							gridPosition.primaryPosition = scrollPosition;
+						} else {
+							// This code uses the trick to change the target position slightly which will not affect the actual result
+							// since a browser ignore `scrollTo` method if the target position is same as the current position.
+							gridPosition.primaryPosition = scrollPosition + (this.scrollPosition === scrollPosition ? 0.1 : 0);
+						}
 					} else { // backward over
 						gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
 					}
