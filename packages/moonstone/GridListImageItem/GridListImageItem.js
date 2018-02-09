@@ -1,21 +1,21 @@
 /**
  * Provides Moonstone-themed grid list image item components and behaviors.
  *
- * @module moonstone/VirtualList
+ * @module moonstone/GridListImageItem
  * @exports GridListIamgeItem
  */
 
 import compose from 'ramda/src/compose';
-import {GridListImageItem as UiGridListImageItem} from '@enact/ui/VirtualList';
+import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Spottable from '@enact/spotlight/Spottable';
 
-import Icon from '../../Icon';
-import Image from '../../Image';
-import {MarqueeController, MarqueeText} from '../../Marquee';
-import Skinnable from '../../Skinnable';
+import Icon from '../Icon';
+import Image from '../Image';
+import {MarqueeController, MarqueeText} from '../Marquee';
+import Skinnable from '../Skinnable';
 
 import componentCss from './GridListImageItem.less';
 
@@ -33,14 +33,14 @@ const
  * A Moonstone-themed grid list image item without any behavior.
  *
  * @class GridListImageItemBase
- * @memberof moonstone/VirtualList
+ * @memberof moonstone/GridListImageItem
  * @ui
  * @public
  */
 const GridListImageItemBase = kind({
 	name: 'GridListImageItem',
 
-	propTypes: /** @lends moonstone/VirtualList.GridListImageItemBase.prototype */ {
+	propTypes: /** @lends moonstone/GridListImageItem.GridListImageItemBase.prototype */ {
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
@@ -114,10 +114,10 @@ const GridListImageItemBase = kind({
 
 /**
  * Moonstone-specific GridListImageItem behaviors to apply to
- * [GridListImageItem]{@link moonstone/VirtualList.GridListImageItem}.
+ * [GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem}.
  *
  * @hoc
- * @memberof moonstone/VirtualList
+ * @memberof moonstone/GridListImageItem
  * @mixes moonstone/Marquee.MarqueeController
  * @mixes spotlight/Spottable.Spottable
  * @mixes ui/Skinnable.Skinnable
@@ -130,7 +130,7 @@ const GridListImageItemDecorator = compose(
 );
 
 /**
- * [GridListImageItem]{@link moonstone/VirtualList.GridListImageItem} is a GridListImageItem with
+ * [GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem} is a GridListImageItem with
  * Moonstone styling, Spottable applied.
  *
  * Usage:
@@ -139,9 +139,9 @@ const GridListImageItemDecorator = compose(
  * ```
  *
  * @class GridListImageItem
- * @memberof moonstone/VirtualList
- * @mixes moonstone/VirtualList.GridListImageItemDecorator
- * @see moonstone/VirtualList.GridListImageItemBase
+ * @memberof moonstone/GridListImageItem
+ * @mixes moonstone/GridListImageItem.GridListImageItemDecorator
+ * @see moonstone/GridListImageItem.GridListImageItemBase
  * @ui
  * @public
  */

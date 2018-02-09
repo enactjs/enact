@@ -1,7 +1,7 @@
 /**
  * Provides unstyled grid list image item components and behaviors to be customized by a theme or application.
  *
- * @module ui/VirtualList
+ * @module ui/GridListImageItem
  * @exports GridListIamgeItem
  */
 
@@ -9,23 +9,23 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Icon from '../../Icon';
-import Image from '../../Image';
+import Icon from '../Icon';
+import Image from '../Image';
 
 import componentCss from './GridListImageItem.less';
 
 /**
- * [GridListImageItem]{@link ui/VirtualList.GridListImageItem} is a stateless image item.
+ * [GridListImageItem]{@link ui/GridListImageItem.GridListImageItem} is a stateless image item.
  *
  * @class GridListImageItem
- * @memberof ui/VirtualList
+ * @memberof ui/GridListImageItem
  * @ui
  * @public
  */
 const GridListImageItem = kind({
 	name: 'ui:GridListImageItem',
 
-	propTypes: /** @lends ui/VirtualList.GridListImageItem.prototype */ {
+	propTypes: /** @lends ui/GridListImageItem.GridListImageItem.prototype */ {
 		/**
 		 * The absolute URL path to the image.
 		 *
@@ -91,7 +91,7 @@ const GridListImageItem = kind({
 		imageComponent: PropTypes.func,
 
 		/**
-		 * Placeholder image used while [source]{@link ui/VirtualList.GridListImageItem#source}
+		 * Placeholder image used while [source]{@link ui/GridListImageItem.GridListImageItem#source}
 		 * is loaded.
 		 *
 		 * @type {String}

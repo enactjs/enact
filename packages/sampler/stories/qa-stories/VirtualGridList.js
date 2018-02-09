@@ -1,5 +1,5 @@
 import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
-import GridListImageItem from '@enact/ui/VirtualList';
+import GridListImageItem from '@enact/moonstone/GridListImageItem';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';

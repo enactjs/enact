@@ -13,6 +13,7 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import compose from 'ramda/src/compose';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import css from '@enact/ui/VirtualList/ListItem.less';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
@@ -95,10 +96,30 @@ const VirtualListBase = (type, UiComponent) => (
 			'data-container-id': PropTypes.string // eslint-disable-line react/sort-prop-types
 		}
 
+		static contextTypes = contextTypes
+
 		constructor (props) {
 			super(props);
 
 			this.initItemContainerRef = this.initRef('itemContainerRef');
+		}
+
+		componentDidMount () {
+			super.componentDidMount();
+
+			if (type == 'JS') {
+				const containerNode = this.containerRef;
+
+				// prevent native scrolling by Spotlight
+				this.preventScroll = () => {
+					containerNode.scrollTop = 0;
+					containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
+				};
+
+				if (containerNode && containerNode.addEventListener) {
+					containerNode.addEventListener('scroll', this.preventScroll);
+				}
+			}
 		}
 
 		componentDidUpdate () {
@@ -120,7 +141,7 @@ const VirtualListBase = (type, UiComponent) => (
 		itemContainerRef = null
 
 		setContainerDisabled = (bool) => {
-			const containerNode = (type === 'Native') ? this.containerRef : this.contentRef;
+			const containerNode = (type === 'JS') ? this.containerRef : this.contentRef;
 
 			if (containerNode) {
 				containerNode.setAttribute(dataContainerDisabledAttribute, bool);
@@ -544,7 +565,7 @@ const VirtualListBase = (type, UiComponent) => (
 
 		calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
 			const
-				{lastFocusedIndex, pageScroll} = this.props,
+				{pageScroll} = this.props,
 				{numOfItems} = this.state,
 				{primary} = this,
 				offsetToClientEnd = primary.clientSize - primary.itemSize,
@@ -553,18 +574,31 @@ const VirtualListBase = (type, UiComponent) => (
 			if (!isNaN(focusedIndex)) {
 				let gridPosition = this.getGridPosition(focusedIndex);
 
-				if (numOfItems > 0 && focusedIndex % numOfItems !== lastFocusedIndex % numOfItems) {
+				if (numOfItems > 0 && focusedIndex % numOfItems !== this.lastFocusedIndex % numOfItems) {
 					const node = this.getItemNode(this.lastFocusedIndex);
+
 					if (node) {
 						node.blur();
 					}
+				}
+				if (type === 'JS') {
+					this.nodeIndexToBeFocused = null;
+					this.lastFocusedIndex = focusedIndex;
+				} else if (type === 'Native') {
+					this.lastFocusedIndex = focusedIndex;
 				}
 
 				if (primary.clientSize >= primary.itemSize) {
 					if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
 						gridPosition.primaryPosition -= pageScroll ? 0 : offsetToClientEnd;
 					} else if (gridPosition.primaryPosition >= scrollPosition) { // inside of client
-						gridPosition.primaryPosition = scrollPosition;
+						if (type === 'JS') {
+							gridPosition.primaryPosition = scrollPosition;
+						} else {
+							// This code uses the trick to change the target position slightly which will not affect the actual result
+							// since a browser ignore `scrollTo` method if the target position is same as the current position.
+							gridPosition.primaryPosition = scrollPosition + (this.scrollPosition === scrollPosition ? 0.1 : 0);
+						}
 					} else { // backward over
 						gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
 					}
@@ -672,9 +706,20 @@ const VirtualListBase = (type, UiComponent) => (
 			this.cc[key] = (<div {...attributes} />);
 		}
 
+		getXY = (primaryPosition, secondaryPosition) => {
+			const rtlDirection = this.context.rtl ? -1 : 1;
+			return (this.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
+		}
+
 		getItemNode = (index) => {
 			const ref = this.itemContainerRef;
 			return ref ? ref.children[index % this.state.numOfItems] : null;
+		}
+
+		scrollToPosition (x, y) {
+			const node = this.containerRef;
+
+			node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 		}
 
 		/**
