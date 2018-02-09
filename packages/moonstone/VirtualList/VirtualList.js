@@ -141,7 +141,7 @@ const VirtualListBase = (type, UiComponent) => (
 		itemContainerRef = null
 
 		setContainerDisabled = (bool) => {
-			const containerNode = (type === 'Native') ? this.containerRef : this.contentRef;
+			const containerNode = (type === 'JS') ? this.containerRef : this.contentRef;
 
 			if (containerNode) {
 				containerNode.setAttribute(dataContainerDisabledAttribute, bool);
