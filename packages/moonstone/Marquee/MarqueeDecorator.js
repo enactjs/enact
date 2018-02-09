@@ -307,9 +307,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		shouldComponentUpdate (nextProps, nextState) {
 			return (
-				!childrenEquals(this.props.children, nextProps.children) ||
+				!equals(this.state, nextState) ||
 				(invalidateProps && didPropChange(invalidateProps, this.props, nextProps)) ||
-				!equals(this.state, nextState)
+				!childrenEquals(this.props.children, nextProps.children)
 			);
 		}
 

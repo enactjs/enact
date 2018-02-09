@@ -134,9 +134,9 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 			const {children, ...rest} = this.props;
 			const {children: nextChildren, ...nextRest} = nextProps;
 			return (
+				!equals(this.state, nextState) ||
 				!equals(rest, nextRest) ||
-				!childrenEquals(children, nextChildren) ||
-				!equals(this.state, nextState)
+				!childrenEquals(children, nextChildren)
 			);
 		}
 
