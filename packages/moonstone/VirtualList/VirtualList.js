@@ -565,7 +565,7 @@ const VirtualListBase = (type, UiComponent) => (
 
 		calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
 			const
-				{lastFocusedIndex, pageScroll} = this.props,
+				{pageScroll} = this.props,
 				{numOfItems} = this.state,
 				{primary} = this,
 				offsetToClientEnd = primary.clientSize - primary.itemSize,
@@ -574,7 +574,7 @@ const VirtualListBase = (type, UiComponent) => (
 			if (!isNaN(focusedIndex)) {
 				let gridPosition = this.getGridPosition(focusedIndex);
 
-				if (numOfItems > 0 && focusedIndex % numOfItems !== lastFocusedIndex % numOfItems) {
+				if (numOfItems > 0 && focusedIndex % numOfItems !== this.lastFocusedIndex % numOfItems) {
 					const node = this.getItemNode(this.lastFocusedIndex);
 					if (node) {
 						node.blur();
