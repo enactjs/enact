@@ -620,11 +620,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleBlur = (ev) => {
-			this.isFocused = false;
-			if (!this.sync) {
-				this.cancelAnimation();
-			}
 			forwardBlur(ev, this.props);
+			if (this.isFocused) {
+				this.isFocused = false;
+				if (!this.sync &&
+						!(this.isHovered && (this.props.disabled || this.props.marqueeOn === 'hover'))) {
+					this.cancelAnimation();
+				}
+			}
 		}
 
 		handleEnter = (ev) => {
@@ -692,7 +695,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (marqueeOnFocus && !disabled) {
 				rest[focus] = this.handleFocus;
-				rest[blur] = this.handleBlur;
 			}
 
 			// TODO: cancel others on hover
@@ -719,7 +721,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			return (
-				<Wrapped {...rest} disabled={disabled}>
+				<Wrapped {...rest} onBlur={this.handleBlur} disabled={disabled}>
 					<Marquee
 						alignment={alignment}
 						animating={this.state.animating}

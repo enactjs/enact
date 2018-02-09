@@ -1,6 +1,5 @@
 import Icon from '@enact/moonstone/Icon';
-import Item, {ItemBase, ItemOverlay} from '@enact/moonstone/Item';
-import OverlayDecorator from '@enact/moonstone/Item/OverlayDecorator';
+import SlotItem from '@enact/moonstone/SlotItem';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {boolean, select, text} from '@storybook/addon-knobs';
@@ -9,8 +8,7 @@ import {withInfo} from '@storybook/addon-info';
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Overlay = OverlayDecorator('div');
-const Config = mergeComponentMetadata('ItemOverlay', ItemBase, Item, Overlay);
+const Config = mergeComponentMetadata('SlotItem', SlotItem);
 
 const prop = {
 	autoHide: [null, 'after', 'before', 'both']
@@ -18,21 +16,21 @@ const prop = {
 
 storiesOf('Moonstone', module)
 	.add(
-		'Item.ItemOverlay',
+		'SlotItem',
 		withInfo({
 			propTables: [Config],
-			text: 'Basic usage of ItemOverlay'
+			text: 'Basic usage of SlotItem'
 		})(() => (
-			<ItemOverlay
+			<SlotItem
 				autoHide={nullify(select('autoHide', prop.autoHide, 'after'))}
 				disabled={boolean('disabled', false)}
 			>
-				<Icon slot="overlayBefore">star</Icon>
+				<Icon slot="slotBefore">star</Icon>
 				{text('children', 'Hello Item')}
-				<overlayAfter>
+				<slotAfter>
 					<Icon>lock</Icon>
 					<Icon>flag</Icon>
-				</overlayAfter>
-			</ItemOverlay>
+				</slotAfter>
+			</SlotItem>
 		))
 	);

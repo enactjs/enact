@@ -1,17 +1,22 @@
-// ItemOverlay.less
+// Item.less
 //
-@import "../styles/mixins.less";
 @import "../styles/variables.less";
+@import "../styles/text.less";
 
 // Defined so we don't repeat rules.
-@overlay-hidden: {
-	.overlay.hidden {
+@slot-hidden: {
+	.slot.hidden {
 		display: none;
 	}
 };
 
-.item {
-	.overlay {
+.slotItem {
+	// Apply to the marquee content area to tell it to expand to the available width of the container
+	.content {
+		flex: 1 1 auto;
+	}
+
+	.slot {
 		line-height: 1;
 		white-space: nowrap;
 
@@ -53,14 +58,14 @@
 	// Spottable but not focused
 	.spottable({
 		&:not(:focus) {
-			@overlay-hidden();
+			@slot-hidden();
 		}
 	});
-	.disabled(@overlay-hidden);
+	.disabled(@slot-hidden);
 }
 
 .muted({
-	.item {
-		.focus(@overlay-hidden);
+	.slotItem {
+		.focus(@slot-hidden);
 	}
 });

@@ -20,6 +20,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableSpotlightDecorator` to not spot the title upon collapse when in `pointerMode`
 - `moonstone/Spinner` to not unpause Spotlight unless it was the one to pause it
 - `moonstone/Input`, `moonstone/MarqueeDecorator`, and `moonstone/Slider` to prevent unnecessary updates
+- `moonstone/Marquee` to stop when becoming disabled
 
 ## [2.0.0-alpha.3] - 2018-01-18
 
