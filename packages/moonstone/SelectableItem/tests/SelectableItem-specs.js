@@ -12,7 +12,7 @@ describe('SelectableItem Specs', () => {
 		);
 
 		const expected = 0;
-		const actual = selectableItem.find(`.${css.selected}`).length
+		const actual = selectableItem.find(`.${css.selected}`).length;
 
 		expect(actual).to.equal(expected);
 	});
@@ -25,7 +25,7 @@ describe('SelectableItem Specs', () => {
 		);
 
 		const expected = 1;
-		const actual = selectableItem.find(`.${css.selected}`).length
+		const actual = selectableItem.find(`.${css.selected}`).length;
 
 		expect(actual).to.equal(expected);
 	});

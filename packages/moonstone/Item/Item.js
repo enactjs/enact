@@ -8,9 +8,6 @@
  * @exports Item
  * @exports ItemBase
  * @exports ItemDecorator
- * @exports ItemOverlay
- * @exports ItemOverlayBase
- * @exports ItemOverlayDecorator
  */
 import UiItem from '@enact/ui/Item';
 import kind from '@enact/core/kind';

@@ -153,6 +153,7 @@ const ToggleItemBase = kind({
 		return (
 			<SlotItem
 				role="checkbox"
+				css={css}
 				{...rest}
 				aria-checked={selected}
 				onTap={onToggle}
