@@ -96,6 +96,14 @@ class ScrollbarBase extends PureComponent {
 		disabled: PropTypes.bool,
 
 		/**
+		 * Called when the scroll thumb is hidden immediately when scroll button is disabled.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		hideOppositeThumb: PropTypes.func,
+
+		/**
 		 * Called when the scrollbar's down/right button is pressed.
 		 *
 		 * @type {Function}
@@ -147,6 +155,7 @@ class ScrollbarBase extends PureComponent {
 
 	static defaultProps = {
 		corner: false,
+		hideOppositeThumb: nop,
 		onNextScroll: nop,
 		onPrevScroll: nop,
 		vertical: true
@@ -217,7 +226,7 @@ class ScrollbarBase extends PureComponent {
 	updateButtons = (bounds) => {
 		const
 			{prevButtonNodeRef, nextButtonNodeRef} = this,
-			{vertical} = this.props,
+			{hideOppositeThumb, vertical} = this.props,
 			currentPos = vertical ? bounds.scrollTop : bounds.scrollLeft,
 			maxPos = vertical ? bounds.maxTop : bounds.maxLeft,
 			shouldDisablePrevButton = currentPos <= 0,
@@ -225,6 +234,11 @@ class ScrollbarBase extends PureComponent {
 			   browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
 			shouldDisableNextButton = maxPos - currentPos <= 1,
 			spotItem = Spotlight.getCurrent();
+
+		if (currentPos <= 0 || currentPos >= maxPos) {
+			// If there is an opposite scrollbar with different direction, the scroll thumb in it should be also hidden
+			hideOppositeThumb();
+		}
 
 		this.setState((prevState) => {
 			const
