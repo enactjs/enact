@@ -4,18 +4,18 @@ import Spinner from '../Spinner';
 import css from '../Spinner.less';
 
 describe('Spinner Specs', () => {
-	it('should have not have MarqueeText as a child when Spinner has no children', function () {
+	it('should have not have Marquee as a child when Spinner has no children', function () {
 		const spinner = mount(
 			<Spinner />
 		);
 
 		const expected = false;
-		const actual = spinner.find('MarqueeText').exists();
+		const actual = spinner.find('Marquee').exists();
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have MarqueeText as a child when Spinner has children', function () {
+	it('should have Marquee as a child when Spinner has children', function () {
 		const spinner = mount(
 			<Spinner>
 				Loading...
@@ -23,7 +23,7 @@ describe('Spinner Specs', () => {
 		);
 
 		const expected = true;
-		const actual = spinner.find('MarqueeText').exists();
+		const actual = spinner.find('Marquee').exists();
 
 		expect(actual).to.equal(expected);
 	});
