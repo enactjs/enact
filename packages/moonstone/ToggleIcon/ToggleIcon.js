@@ -14,16 +14,13 @@
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
-// import PropTypes from 'prop-types';
-import compose from 'ramda/src/compose';
 import Pure from '@enact/ui/internal/Pure';
 import UiToggleIcon from '@enact/ui/ToggleIcon';
+import compose from 'ramda/src/compose';
+import React from 'react';
 
 import Icon from '../Icon';
 import Skinnable from '../Skinnable';
-
-// import componentCss from './ToggleIcon.less';
 
 /**
  * Renders a check mark in a shape which supports a Boolean state.

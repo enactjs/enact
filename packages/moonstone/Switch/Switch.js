@@ -8,13 +8,11 @@
  * @module moonstone/Switch
  * @exports Switch
  * @exports SwitchBase
- * @exports SwitchDecorator
  */
 
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Icon from '@enact/ui/Icon';
 
 import ToggleIcon from '../ToggleIcon';
 
@@ -23,40 +21,52 @@ import componentCss from './Switch.less';
 /**
  * Renders the base level DOM structure of the component.
  *
- * @class SwitchBase
+ * @class Switch
  * @memberof moonstone/Switch
- * @extends ui/ToggleIcon.ToggleIcon
+ * @extends moonstone/ToggleIcon.ToggleIcon
  * @ui
  * @public
  */
 const SwitchBase = kind({
 	name: 'Switch',
 
-	propTypes: /** @lends moonstone/Switch.SwitchBase.prototype */ {
+	propTypes: /** @lends moonstone/Switch.Switch.prototype */ {
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `toggleIcon` - The root class name
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
+
 		/**
 		 * Sets whether this control is animated during change.
 		 *
 		 * @type {Boolean}
-		 * @default true
+		 * @default false
 		 * @public
 		 */
-		animated: PropTypes.bool
+		noAnimation: PropTypes.bool
 	},
 
 	defaultProps: {
-		animated: true
+		noAnimation: false
 	},
 
 	styles: {
 		css: componentCss,
-		className: 'switch',
-		publicClassNames: ['switch']
+		publicClassNames: ['toggleIcon']
 	},
 
 	computed: {
-		className: ({animated, styler}) => styler.append(
-			{animated}
-		)
+		className: ({noAnimation, styler}) => styler.append({
+			animated: !noAnimation
+		})
 	},
 
 	render: (props) => {
@@ -66,7 +76,6 @@ const SwitchBase = kind({
 			<ToggleIcon
 				{...props}
 				css={props.css}
-				iconComponent={Icon}
 			>
 				circle
 			</ToggleIcon>
