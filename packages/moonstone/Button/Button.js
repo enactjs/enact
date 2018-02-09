@@ -82,16 +82,7 @@ const ButtonBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object,
-
-		/**
-		 * Disables the `pressed` animation.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noAnimation: PropTypes.bool
+		css: PropTypes.object
 	},
 
 	styles: {
@@ -100,17 +91,15 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({backgroundOpacity, color, noAnimation, styler}) => styler.append(
+		className: ({backgroundOpacity, color, styler}) => styler.append(
 			backgroundOpacity,
-			color,
-			{noAnimation}
+			color
 		)
 	},
 
 	render: ({css, ...rest}) => {
 		delete rest.backgroundOpacity;
 		delete rest.color;
-		delete rest.noAnimation;
 
 		return (
 			<UiButtonBase

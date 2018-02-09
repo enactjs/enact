@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+### Removed
+
+- `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`
+
 ### Changed
 
 - `moonstone/Marquee` to do less-costly calculations during measurement and optimized the applied styles
