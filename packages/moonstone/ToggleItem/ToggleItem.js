@@ -12,7 +12,6 @@
 import kind from '@enact/core/kind';
 import Pure from '@enact/ui/internal/Pure';
 import Toggleable from '@enact/ui/Toggleable';
-import ToggleIcon from '@enact/ui/ToggleIcon';
 import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -20,7 +19,6 @@ import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 import Touchable from '@enact/ui/Touchable';
 
 import SlotItem from '../SlotItem';
-import Touchable from '@enact/ui/Touchable';
 
 /**
  * A moonstone-styled toggle item without any behavior.
@@ -131,21 +129,17 @@ const ToggleItemBase = kind({
 	},
 
 	computed: {
-		iconBefore: ({icon, iconClasses, iconPosition, selected}) => {
+		iconBefore: ({css, disabled, iconComponent: IconComponent, selected, iconPosition}) => {
 			if (iconPosition === 'before') {
 				return (
-					<ToggleIcon slot="slotBefore" className={iconClasses} selected={selected}>
-						{icon}
-					</ToggleIcon>
+					<IconComponent css={css} disabled={disabled} slot="slotBefore" selected={selected} />
 				);
 			}
 		},
-		iconAfter: ({icon, iconClasses, iconPosition, selected}) => {
+		iconAfter: ({css, disabled, iconComponent: IconComponent, selected, iconPosition}) => {
 			if (iconPosition === 'after') {
 				return (
-					<ToggleIcon slot="slotAfter" className={iconClasses} selected={selected}>
-						{icon}
-					</ToggleIcon>
+					<IconComponent css={css} disabled={disabled} slot="slotAfter" selected={selected} />
 				);
 			}
 		}
@@ -159,7 +153,6 @@ const ToggleItemBase = kind({
 		return (
 			<SlotItem
 				role="checkbox"
-				css={css}
 				{...rest}
 				aria-checked={selected}
 				onTap={onToggle}

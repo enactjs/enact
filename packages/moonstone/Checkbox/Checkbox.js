@@ -11,8 +11,10 @@
 
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import ToggleIcon from '../ToggleIcon';
+import Icon from '@enact/ui/Icon';
 
 import componentCss from './Checkbox.less';
 
