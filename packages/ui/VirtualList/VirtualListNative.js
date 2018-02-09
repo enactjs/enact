@@ -607,9 +607,7 @@ class VirtualListBaseNative extends Component {
 	}
 
 	scrollToPosition (x, y) {
-		const node = this.containerRef;
-
-		node.scrollTo(x, y);
+		this.containerRef.scrollTo(x, y);
 	}
 
 	composeStyle (style, width, height, primaryPosition, secondaryPosition) {

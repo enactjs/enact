@@ -631,7 +631,7 @@ class VirtualListBase extends Component {
 	composeTransform (style, primaryPosition, secondaryPosition = 0) {
 		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
 
-		style.transform = 'translate3d(' + x + 'px,' + y + 'px, 0)';
+		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
 	}
 
 	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
