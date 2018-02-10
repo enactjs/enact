@@ -14,19 +14,32 @@ import ToggleItem from '../ToggleItem';
 
 import componentCss from './RadioItem.less';
 
+const StyledToggleIcon = (props) => <ToggleIcon {...props} css={componentCss} />;
+
 /**
  * Renders an `Item` with a radio-dot component. Useful to show a selected state on an Item.
  *
- * @class RadioItemBase
+ * @class RadioItem
  * @memberof moonstone/RadioItem
+ * @extends moonstone/ToggleItem.ToggleItem
  * @ui
  * @public
  */
 const RadioItemBase = kind({
 	name: 'RadioItem',
 
-	render: ({...rest}) => (
-		<ToggleItem {...rest} css={componentCss} iconComponent={ToggleIcon} />
+	styles: {
+		css: componentCss,
+		className: 'radioItem',
+		publicClassNames: ['radioItem']
+	},
+
+	render: (props) => (
+		<ToggleItem
+			{...props}
+			css={props.css}
+			iconComponent={StyledToggleIcon}
+		/>
 	)
 });
 

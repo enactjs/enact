@@ -129,17 +129,17 @@ const ToggleItemBase = kind({
 	},
 
 	computed: {
-		iconBefore: ({css, disabled, iconComponent: IconComponent, selected, iconPosition}) => {
+		iconBefore: ({disabled, iconComponent: IconComponent, selected, iconPosition}) => {
 			if (iconPosition === 'before') {
 				return (
-					<IconComponent css={css} disabled={disabled} slot="slotBefore" selected={selected} />
+					<IconComponent disabled={disabled} slot="slotBefore" selected={selected} />
 				);
 			}
 		},
-		iconAfter: ({css, disabled, iconComponent: IconComponent, selected, iconPosition}) => {
+		iconAfter: ({disabled, iconComponent: IconComponent, selected, iconPosition}) => {
 			if (iconPosition === 'after') {
 				return (
-					<IconComponent css={css} disabled={disabled} slot="slotAfter" selected={selected} />
+					<IconComponent disabled={disabled} slot="slotAfter" selected={selected} />
 				);
 			}
 		}
