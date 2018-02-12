@@ -1,10 +1,3 @@
-/**
- * Provides unstyled scroll thumb components and behaviors to be customized by a theme or application.
- *
- * @module ui/Scrollable
- * @exports ScrollThumb
- */
-
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -12,7 +5,7 @@ import PropTypes from 'prop-types';
 import css from './ScrollThumb.less';
 
 /**
- * [ScrollThumb]{@link ui/Scrollable.ScrollThumb} is a stateless ScrollThumb.
+ * A basic scroll thumb without any behavior.
  *
  * @class ScrollThumb
  * @memberof ui/Scrollable

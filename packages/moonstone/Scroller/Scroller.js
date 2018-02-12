@@ -24,7 +24,7 @@ const
 	};
 
 /**
- * [ScrollerBase]{@link moonstone/Scroller.ScrollerBase} is a base component for Scroller.
+ * A moonstone-styled base component for Scroller{@link moonstone/Scroller.Scroller}.
  * In most circumstances, you will want to use the SpotlightContainerDecorator and Scrollable version:
  * [Scroller]{@link moonstone/Scroller.Scroller}
  *
@@ -311,8 +311,7 @@ class ScrollerBase extends UiScrollerBase {
 }
 
 /**
- * [Scroller]{@link moonstone/Scroller.Scroller} is a Scroller with Moonstone styling,
- * SpotlightContainerDecorator and Scrollable applied.
+ * A moonstone-styled Scroller, SpotlightContainerDecorator and Scrollable applied.
  *
  * Usage:
  * ```

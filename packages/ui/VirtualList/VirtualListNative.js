@@ -1,13 +1,3 @@
-/**
- * Provides unstyled virtual list components and behaviors to be customized by a theme or application.
- *
- * @module ui/VirtualListNative
- * @exports VirtualListNative
- * @exports VirtualGridListNative
- * @exports VirtualListBaseNative
- * @exports gridListItemSizeShape
- */
-
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -19,7 +9,7 @@ import cssItem from './ListItem.less';
 const nop = () => {};
 
 /**
- * [gridListItemSizeShape]{@link ui/VirtualList.gridListItemSizeShape} is the shape for the grid list item size
+ * The shape for the grid list item size
  * in a list for [VirtualGridListNative]{@link ui/VirtualList.VirtualGridListNative}.
  *
  * @typedef {Object} gridListItemSizeShape
@@ -33,9 +23,8 @@ const gridListItemSizeShape = PropTypes.shape({
 });
 
 /**
- * {@link ui/VirtualList.VirtualListBaseNative} is a base component for
- * {@link ui/VirtualList.VirtualListNative} and
- * {@link ui/VirtualList.VirtualGridListNative}.
+ * A basic base component for
+ * {@link ui/VirtualList.VirtualListNative} and {@link ui/VirtualList.VirtualGridListNative}.
  *
  * @class VirtualListBaseNative
  * @memberof ui/VirtualList
@@ -728,7 +717,7 @@ class VirtualListBaseNative extends Component {
 }
 
 /**
- * [VirtualListNative]{@link ui/VirtualList.VirtualListNative} is a scrollable virtual list component with touch support.
+ * A basic scrollable virtual native list component with touch support.
  *
  * @class VirtualListNative
  * @memberof ui/VirtualList
@@ -739,7 +728,7 @@ class VirtualListBaseNative extends Component {
 const VirtualListNative = ScrollableNative(VirtualListBaseNative);
 
 /**
- * [VirtualGridListNative]{@link ui/VirtualList.VirtualGridListNative} is a scrollable virtual list component with touch support.
+ * A basic scrollable virtual grid native list component with touch support.
  *
  * @class VirtualGridListNative
  * @memberof ui/VirtualList

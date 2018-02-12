@@ -1,10 +1,3 @@
-/**
- * Provides unstyled grid list image item components and behaviors to be customized by a theme or application.
- *
- * @module ui/VirtualList
- * @exports GridListIamgeItem
- */
-
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -15,7 +8,7 @@ import Image from '../../Image';
 import componentCss from './GridListImageItem.less';
 
 /**
- * [GridListImageItem]{@link ui/VirtualList.GridListImageItem} is a stateless image item.
+ * A basic grid list image item without any behavior.
  *
  * @class GridListImageItem
  * @memberof ui/VirtualList

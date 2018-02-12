@@ -18,7 +18,7 @@ import css from './ListItem.less';
 const nop = () => {};
 
 /**
- * [gridListItemSizeShape]{@link ui/VirtualList.gridListItemSizeShape} is the shape for the grid list item size
+ * The shape for the grid list item size
  * in a list for [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
  *
  * @typedef {Object} gridListItemSizeShape
@@ -32,9 +32,8 @@ const gridListItemSizeShape = PropTypes.shape({
 });
 
 /**
- * [VirtualListBase]{@link ui/VirtualList.VirtualListBase} is a base component for
- * [VirtualList]{@link ui/VirtualList.VirtualList} and
- * [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
+ * A basic base component for
+ * [VirtualList]{@link ui/VirtualList.VirtualList} and [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
  *
  * @class VirtualListBase
  * @memberof ui/VirtualList
@@ -723,7 +722,7 @@ class VirtualListBase extends Component {
 }
 
 /**
- * [VirtualList]{@link ui/VirtualList} is a scrollable virtual list component with touch support.
+ * A basic scrollable virtual list component with touch support.
  *
  * @class VirtualList
  * @extends ui/VirtualList.VirtualListBase
@@ -735,7 +734,7 @@ class VirtualListBase extends Component {
 const VirtualList = Scrollable(VirtualListBase);
 
 /**
- * [VirtualGridList]{@link ui/VirtualList.VirtualGridList} is a scrollable virtual grid list component with touch support.
+ * A basic scrollable virtual grid list component with touch support.
  *
  * @class VirtualGridList
  * @extends ui/VirtualList.VirtualListBase

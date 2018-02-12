@@ -30,7 +30,7 @@ const
 	);
 
 /**
- * A Moonstone-themed grid list image item without any behavior.
+ * A moonstone-styled base component for [GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem}.
  *
  * @class GridListImageItemBase
  * @memberof moonstone/GridListImageItem
@@ -130,8 +130,7 @@ const GridListImageItemDecorator = compose(
 );
 
 /**
- * [GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem} is a GridListImageItem with
- * Moonstone styling, Spottable applied.
+ * A moonstone-styled grid list image item, Spottable applied.
  *
  * Usage:
  * ```

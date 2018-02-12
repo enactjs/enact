@@ -5,6 +5,7 @@
  * @exports Scrollable
  * @exports constants
  * @exports ScrollableBase
+ * @private
  */
 
 import clamp from 'ramda/src/clamp';
@@ -56,8 +57,7 @@ const
 	} = constants;
 
 /**
- * [ScrollableBase]{@link ui/Scrollable.ScrollableBase} is a base component for
- * [Scrollable]{@link ui/Scrollable.Scrollable}.
+ * A basic base component for [Scrollable]{@link ui/Scrollable.Scrollable}.
  *
  * @class ScrollableBase
  * @memberof ui/Scrollable
@@ -961,8 +961,7 @@ class ScrollableBase extends Component {
 }
 
 /**
- * [Scrollable]{@link ui/Scrollable.Scrollable} is a Higher-order Component
- * that applies a Scrollable behavior to its wrapped component.
+ * A Higher-order Component that applies a Scrollable behavior to its wrapped component.
  *
  * @class Scrollable
  * @memberof ui/Scrollable

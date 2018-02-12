@@ -15,7 +15,7 @@ import Image from '../Image';
 import componentCss from './GridListImageItem.less';
 
 /**
- * [GridListImageItem]{@link ui/GridListImageItem.GridListImageItem} is a stateless image item.
+ * A basic grid list image item without any behavior.
  *
  * @class GridListImageItem
  * @memberof ui/GridListImageItem

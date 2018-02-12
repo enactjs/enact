@@ -1,12 +1,3 @@
-/**
- * Provides unstyled scrollable native components and behaviors to be customized by a theme or application.
- *
- * @module ui/Scrollable
- * @exports ScrollableNative
- * @exports constants
- * @exports ScrollableBaseNative
- */
-
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
@@ -50,8 +41,7 @@ const
 	} = constants;
 
 /**
- * [ScrollableBaseNative]{@link ui/Scrollable.ScrollableBaseNative} is a base component for
- * [ScrollableNative]{@link ui/Scrollable.ScrollableNative}.
+ * A basic base component for [ScrollableNative]{@link ui/Scrollable.ScrollableNative}.
  *
  * @class ScrollableBaseNative
  * @memberof ui/Scrollable
@@ -861,8 +851,7 @@ class ScrollableBaseNative extends Component {
 }
 
 /**
- * [ScrollableNative]{@link ui/Scrollable.ScrollableNative} is a Higher-order Component
- * that applies a Scrollable behavior to its wrapped component.
+ * A Higher-order Component that applies a Scrollable behavior to its wrapped component.
  *
  * @class ScrollableNative
  * @memberof ui/Scrollable

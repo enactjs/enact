@@ -1,11 +1,3 @@
-/**
- * Provides Moonstone-themed scroll bar components and behaviors.
- *
- * @module moonstone/Scrollable
- * @exports Scrollbar
- * @exports ScrollbarBase
- */
-
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import classNames from 'classnames';
@@ -42,8 +34,7 @@ const
 	isPageDown = is('pageDown');
 
 /**
- * [ScrollbarBase]{@link moonstone/Scrollable.ScrollbarBase} is a base component for
- * [Scrollbar]{@link moonstone/Scrollable.Scrollbar} with Moonstone styling.
+ * A moonstone-styled base component for [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
  *
  * @class ScrollbarBase
  * @extends ui/Scrollable.ScrollbarBase
@@ -321,8 +312,7 @@ class ScrollbarBase extends UiScrollbarBase {
 }
 
 /**
- * [Scrollbar]{@link moonstone/Scrollable.Scrollbar} is a Scrollbar with Moonstone styling.
- * It is used in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
+ * A moonstone-styled scroll bar. It is used in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
  *
  * @class Scrollbar
  * @memberof moonstone/Scrollable

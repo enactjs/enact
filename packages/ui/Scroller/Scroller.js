@@ -14,7 +14,7 @@ import css from './Scroller.less';
 import Scrollable from '../Scrollable';
 
 /**
- * [ScrollerBase]{@link ui/Scroller.ScrollerBase} is a base component for Scroller.
+ * A basic base component for Scroller{@link ui/Scroller.Scroller}.
  * In most circumstances, you will want to use the Scrollable version:
  * [Scroller]{@link ui/Scroller.Scroller}
  *
@@ -172,7 +172,7 @@ class ScrollerBase extends Component {
 }
 
 /**
- * [Scroller]{@link ui/Scroller.Scroller} is a scroller.
+ * A basic scroller, [Scrollable]{@link ui/Scrollable.Scrollable} applied.
  *
  * Usage:
  * ```

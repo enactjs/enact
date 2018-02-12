@@ -1,10 +1,3 @@
-/**
- * Provides scroll animator.
- *
- * @module ui/Scrollable
- * @exports ScrollAnimator
- */
-
 import clamp from 'ramda/src/clamp';
 import {perfNow} from '@enact/core/util';
 
@@ -43,8 +36,7 @@ const
 	clampVelocity = clamp(-maxVelocity, maxVelocity);
 
 /**
- * {@link ui/Scrollable.ScrollAnimator} is the class to scroll a list or a scroller with
- * animation.
+ * The class to scroll a list or a scroller with animation.
  *
  * @class ScrollAnimator
  * @memberof ui/Scrollable

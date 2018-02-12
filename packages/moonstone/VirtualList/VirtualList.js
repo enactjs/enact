@@ -73,9 +73,8 @@ const
 	isUp = is('up');
 
 /**
- * [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} is a base component for
- * [VirtualList]{@link moonstone/VirtualList.VirtualList} and
- * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
+ * A moonstone-styled base component for
+ * [VirtualList]{@link moonstone/VirtualList.VirtualList} and [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
  *
  * @class VirtualListBase
  * @memberof moonstone/VirtualList
@@ -779,8 +778,7 @@ const VirtualListNativeDecorator = compose(
 );
 
 /**
- * [VirtualList]{@link moonstone/VirtualList} is
- * a scrollable and spottable virtual list component with Moonstone styling.
+ * A moonstone-styled scrollable and spottable virtual list component.
  *
  * @class VirtualList
  * @memberof moonstone/VirtualList
@@ -791,8 +789,7 @@ const VirtualListNativeDecorator = compose(
 const VirtualList = VirtualListDecorator(VirtualListBase('JS', UiVirtualListBase));
 
 /**
- * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList} is
- * a scrollable and spottable virtual grid list component with Moonstone styling.
+ * A moonstone-styled scrollable and spottable virtual grid list component.
  *
  * @class VirtualGridList
  * @memberof moonstone/VirtualList
@@ -803,8 +800,7 @@ const VirtualList = VirtualListDecorator(VirtualListBase('JS', UiVirtualListBase
 const VirtualGridList = VirtualList;
 
 /**
- * [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative} is
- * a scrollable and spottable virtual list component with Moonstone styling.
+ * A moonstone-styled scrollable and spottable virtual native list component.
  *
  * @class VirtualListNative
  * @memberof moonstone/VirtualList
@@ -815,8 +811,7 @@ const VirtualGridList = VirtualList;
 const VirtualListNative = VirtualListNativeDecorator(VirtualListBase('Native', UiVirtualListBaseNative));
 
 /**
- * [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative} is
- * a scrollable and spottable virtual grid list component with Moonstone styling.
+ * A moonstone-styled scrollable and spottable virtual grid native list component.
  *
  * @class VirtualGridListNative
  * @memberof moonstone/VirtualList

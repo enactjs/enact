@@ -4,6 +4,7 @@
  * @module moonstone/Scrollable
  * @exports Scrollable
  * @exports dataIndexAttribute
+ * @private
  */
 
 import classNames from 'classnames';
@@ -35,9 +36,8 @@ const
 	};
 
 /**
- * [dataIndexAttribute]{@link moonstone/Scrollable.dataIndexAttribute} is the name of a custom attribute
- * which indicates the index of an item in [VirtualList]{@link moonstone/VirtualList.VirtualList}
- * or [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
+ * The name of a custom attribute which indicates the index of an item in
+ * [VirtualList]{@link moonstone/VirtualList.VirtualList} or [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
  *
  * @constant dataIndexAttribute
  * @memberof moonstone/Scrollable
@@ -71,8 +71,7 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 );
 
 /**
- * [ScrollableBase]{@link moonstone/Scrollable.ScrollableBase} is a base component for
- * [Scrollable]{@link moonstone/Scrollable.Scrollable}.
+ * A moonstone-styled base component for [Scrollable]{@link moonstone/Scrollable.Scrollable}.
  *
  * @class ScrollableBase
  * @extends ui/Scrollable.ScrollableBase
@@ -501,8 +500,7 @@ class ScrollableBase extends UiScrollableBase {
 }
 
 /**
- * [Scrollable]{@link moonstone/Scrollable.Scrollable} is a Higher-order Component
- * that applies a Scrollable behavior to its wrapped component.
+ * A Higher-order Component that applies a Scrollable behavior to its wrapped component.
  *
  * @class Scrollable
  * @memberof moonstone/Scrollable

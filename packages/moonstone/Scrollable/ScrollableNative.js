@@ -1,11 +1,3 @@
-/**
- * Provides Moonstone-themed scrollable native components and behaviors.
- *
- * @module moonstone/Scrollable
- * @exports ScrollableNative
- * @exports dataIndexAttribute
- */
-
 import classNames from 'classnames';
 import css from '@enact/ui/Scrollable/Scrollable.less';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
@@ -34,9 +26,8 @@ const
 	};
 
 /**
- * [dataIndexAttribute]{@link moonstone/Scrollable.dataIndexAttribute} is the name of a custom attribute
- * which indicates the index of an item in [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative}
- * or [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative}.
+ * The name of a custom attribute which indicates the index of an item in
+ * [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative} or [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative}.
  *
  * @constant dataIndexAttribute
  * @memberof moonstone/Scrollable
@@ -70,8 +61,7 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 );
 
 /**
- * [ScrollableBaseNative]{@link moonstone/Scrollable.ScrollableBaseNative} is a base component for
- * [ScrollableNative]{@link moonstone/Scrollable.ScrollableNative}.
+ * A moonstone-styled base component for [ScrollableNative]{@link moonstone/Scrollable.ScrollableNative}.
  *
  * @class ScrollableBaseNative
  * @extends ui/Scrollable.ScrollableBaseNative
@@ -547,8 +537,7 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
 }
 
 /**
- * [ScrollableNative]{@link moonstone/Scrollable.ScrollableNative} is a Higher-order Component
- * that applies a Scrollable behavior to its wrapped component.
+ * A Higher-order Component that applies a Scrollable behavior to its wrapped component.
  *
  * @class ScrollableNative
  * @memberof moonstone/Scrollable

@@ -1,10 +1,3 @@
-/**
- * Provides Moonstone-themed grid list image item components and behaviors.
- *
- * @module moonstone/VirtualList
- * @exports GridListIamgeItem
- */
-
 import compose from 'ramda/src/compose';
 import {GridListImageItem as UiGridListImageItem} from '@enact/ui/VirtualList';
 import kind from '@enact/core/kind';
@@ -30,7 +23,7 @@ const
 	);
 
 /**
- * A Moonstone-themed grid list image item without any behavior.
+ * A moonstone-styled base component for [GridListImageItem]{@link moonstone/VirtualList.GridListImageItem}.
  *
  * @class GridListImageItemBase
  * @memberof moonstone/VirtualList
@@ -130,8 +123,7 @@ const GridListImageItemDecorator = compose(
 );
 
 /**
- * [GridListImageItem]{@link moonstone/VirtualList.GridListImageItem} is a GridListImageItem with
- * Moonstone styling, Spottable applied.
+ * A moonstone-styled grid list image item, Spottable applied.
  *
  * Usage:
  * ```

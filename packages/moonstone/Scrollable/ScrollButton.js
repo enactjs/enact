@@ -1,11 +1,3 @@
-/**
- * Provides Moonstone-themed scroll button components and behaviors.
- *
- * @module moonstone/Scrollable
- * @exports ScrollButton
- * @exports ScrollButtonBase
- */
-
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -24,8 +16,7 @@ const classNameMap = {
 };
 
 /**
- * [ScrollButtonBase]{@link moonstone/Scrollable.ScrollButtonBase} is the base implementation for
- * [ScrollButton]{@link moonstone/Scrollable.ScrollButton}.
+ * A moonstone-styled base component for [ScrollButton]{@link moonstone/Scrollable.ScrollButton}.
  *
  * @class ScrollButtonBase
  * @memberof moonstone/Scrollable
@@ -115,7 +106,7 @@ const ScrollButtonBase = kind({
 
 
 /**
- * [ScrollButton]{@link moonstone/Scrollable.ScrollButton} is an [IconButton]{@link moonstone/IconButton.IconButton} used within
+ * An [IconButton]{@link moonstone/IconButton.IconButton} used within
  * a [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
  *
  * @class ScrollButton

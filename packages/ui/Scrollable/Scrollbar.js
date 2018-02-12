@@ -1,11 +1,3 @@
-/**
- * Provides unstyled scroll bar components and behaviors to be customized by a theme or application.
- *
- * @module ui/Scrollable
- * @exports Scrollbar
- * @exports ScrollbarBase
- */
-
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
@@ -35,7 +27,7 @@ const setCSSVariable = (element, variable, value) => {
 };
 
 /**
- * [ScrollbarBase]{@link ui/Scrollable.ScrollbarBase} is a base component for Scrollbar.
+ * A basic base component for [Scrollbar]{@link ui/Scrollable.Scrollbar.
  *
  * @class ScrollbarBase
  * @memberof ui/Scrollable
@@ -182,8 +174,7 @@ class ScrollbarBase extends PureComponent {
 }
 
 /**
- * [Scrollbar]{@link ui/Scrollable.Scrollbar} is a scrollbar.
- * It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
+ * A basic scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
  *
  * @class Scrollbar
  * @memberof ui/Scrollable

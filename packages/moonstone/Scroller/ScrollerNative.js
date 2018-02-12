@@ -1,19 +1,10 @@
-/**
- * Provides Moonstone-themed scroller native components and behaviors.
- *
- * @module moonstone/Scroller
- * @exports ScrollerNative
- * @exports ScrollerBaseNative
- */
-
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import {ScrollableNative} from '../Scrollable/ScrollableNative';
 import {ScrollerBase as ScrollerBaseNative} from '../Scroller';
 
 /**
- * [ScrollerNative]{@link moonstone/Scroller.ScrollerNative} is a Scroller with Moonstone styling,
- * SpotlightContainerDecorator and Scrollable applied.
+ * A moonstone-styled native Scroller, SpotlightContainerDecorator and Scrollable applied.
  *
  * Usage:
  * ```
