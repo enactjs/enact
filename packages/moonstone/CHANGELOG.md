@@ -6,6 +6,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
+- `moonstone/VirtualFlexList` and it will be replaced by `ui/VirtualFlexList`
+
 ### Added
 
 ### Removed
