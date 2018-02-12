@@ -3,7 +3,6 @@
  *
  * @module ui/Icon
  * @exports Icon
- * @exports IconBase
  */
 
 import kind from '@enact/core/kind';
@@ -49,15 +48,14 @@ const isSingleCharacter = function (c) {
 };
 
 /**
- * [IconBase]{@link ui/Icon.IconBase} is a basic icon component structure without any behaviors
- * applied to it.
+ * A basic icon component structure without any behaviors applied to it.
  *
  * @class IconBase
  * @memberof ui/Icon
  * @ui
  * @public
  */
-const IconBase = kind({
+const Icon = kind({
 	name: 'ui:Icon',
 
 	propTypes: /** @lends ui/Icon.IconBase.prototype */ {
@@ -201,18 +199,7 @@ const IconBase = kind({
 	}
 });
 
-/**
- * [Icon]{@link ui/Icon.Icon} is a minimally-styled icon component
- *
- * @class Icon
- * @extends ui/Icon.IconBase
- * @memberof ui/Icon
- * @ui
- * @public
- */
-
-export default IconBase;
+export default Icon;
 export {
-	IconBase as Icon,
-	IconBase
+	Icon
 };

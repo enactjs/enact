@@ -8,15 +8,22 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+### Removed
+
+- `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`
+
 ### Changed
 
 - `moonstone/Marquee` to do less-costly calculations during measurement and optimized the applied styles
+- `moonstone/ExpandableList` to require a unique key for each object type data
 
 ### Fixed
 
 - `moonstone/VirtualList` to render properly with fiber reconciler
 - `moonstone/VirtualList` to work focus option in scrollTo api
 - `moonstone/ExpandableSpotlightDecorator` to not spot the title upon collapse when in `pointerMode`
+- `moonstone/Spinner` to not unpause Spotlight unless it was the one to pause it
+- `moonstone/Marquee` to stop when becoming disabled
 
 ## [2.0.0-alpha.3] - 2018-01-18
 

@@ -56,25 +56,25 @@
  * @module core/handle
  */
 
-import allPass from 'ramda/src/allPass';
-import always from 'ramda/src/always';
-import compose from 'ramda/src/compose';
 import cond from 'ramda/src/cond';
 import curry from 'ramda/src/curry';
-import identity from 'ramda/src/identity';
-import ifElse from 'ramda/src/ifElse';
-import isType from 'ramda/src/is';
-import map from 'ramda/src/map';
-import T from 'ramda/src/T';
 
 import {is} from '../keymap';
 
-// Ensures that everything passed to `allPass` is a function so that if null values are passed they
-// do not impede the event flow
-const makeSafeHandler = ifElse(isType(Function), identity, always(T));
-
 // Accepts an array of handlers, sanitizes them, and returns a handler function
-const makeHandler = compose(allPass, map(makeSafeHandler));
+// compose(allPass, map(makeSafeHandler));
+const makeHandler = (handlers) => (...args) => {
+	for (let i = 0; i < handlers.length; i++) {
+		const fn = handlers[i];
+		if (typeof fn !== 'function' || fn(...args)) {
+			continue;
+		}
+
+		return false;
+	}
+
+	return true;
+};
 
 /**
  * Allows generating event handlers by chaining input functions to filter or short-circuit the
