@@ -1,0 +1,41 @@
+@import "../styles/variables.less";
+
+.pictureInGraphic {
+	display: block;
+	padding: 0px;
+	border-color: transparent;
+	border-width: 3px;
+	border-style: solid;
+
+	.video {
+		display: block;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+	}
+
+	.image {
+		display: block;
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+	}
+
+	.textOverlay {
+		display: block;
+		position: absolute;
+		width: 100%;
+		bottom: 6px;
+		left: 0px;
+		color: white;
+		font-size: 21px;
+		line-height: normal;
+		font-family: @moon-font-family-bold;
+		&.ipChannel {
+			color: #f58220;
+		}
+	}
+}
