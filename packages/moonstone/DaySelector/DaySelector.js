@@ -81,6 +81,7 @@ const DaySelectorBase = kind({
 				{...rest}
 				childComponent={DaySelectorItem}
 				childSelect="onToggle"
+				disabled={disabled}
 				itemProps={{className: componentCss.daySelectorItem, disabled}}
 				onSelect={onSelect}
 				select="multiple"
