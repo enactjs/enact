@@ -718,6 +718,9 @@ class VirtualListBaseNative extends Component {
 
 /**
  * A basic scrollable virtual native list component with touch support.
+ * For smooth native scrolling, web engine with below Chromium 61, should be launched
+ * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
+ * The one with Chromium 61 or above, is launched to support it by default.
  *
  * @class VirtualListNative
  * @memberof ui/VirtualList
@@ -729,6 +732,9 @@ const VirtualListNative = ScrollableNative(VirtualListBaseNative);
 
 /**
  * A basic scrollable virtual grid native list component with touch support.
+ * For smooth native scrolling, web engine with below Chromium 61, should be launched
+ * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
+ * The one with Chromium 61 or above, is launched to support it by default.
  *
  * @class VirtualGridListNative
  * @memberof ui/VirtualList
