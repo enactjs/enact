@@ -192,10 +192,12 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 
 		computed: {
 			className: ({backgroundOpacity, className, color, minWidth, noAnimation, pressed, selected, small, styler}) => {
-				const isIconButton = className ? className.includes('IconButton') : false;
-				// Deprecate `noAnimation` except for `IconButton`, because it is used as a defaultProp.
-				if (noAnimation && !isIconButton) {
-					deprecate({name: 'noAnimation', since: '1.14.0', until: '2.0.0'});
+				if (__DEV__) {
+					const isIconButton = className ? (className.indexOf('IconButton') !== -1) : false;
+					// Deprecate `noAnimation` except for `IconButton`, because it is used as a defaultProp.
+					if (noAnimation && !isIconButton) {
+						deprecate({name: 'noAnimation', since: '1.14.0', until: '2.0.0'});
+					}
 				}
 
 				return styler.append(
