@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- Internal method used by many components that used to prevent re-renders when they were necessary
+
 ## [1.13.3] - 2017-01-16
 
 No significant changes.
