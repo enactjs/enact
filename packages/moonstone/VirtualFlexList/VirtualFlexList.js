@@ -225,7 +225,7 @@ class VirtualFlexList extends Component {
 	constructor (props) {
 		super(props);
 
-		deprecate({name: 'VirtualFlexList', since: '1.14.0', message: 'Will be replaced by `ui/VirtualFlexList`', until: '2.0.0'});
+		deprecate({name: 'VirtualFlexList', since: '1.14.0', message: 'Will be removed', until: '2.0.0'});
 
 		this.state = {
 			x: props.x,
