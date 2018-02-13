@@ -126,7 +126,14 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
 	resetPosition = null // prevent auto-scroll on focus by Spotlight
 
 	scrollByFlick () {
+		const focusedItem = Spotlight.getCurrent();
+
+		if (focusedItem) {
+			focusedItem.blur();
+		}
+
 		this.childRef.setContainerDisabled(true);
+
 		super.scrollByFlick();
 	}
 
@@ -138,15 +145,14 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
 	}
 
 	onMouseOver = () => {
-		this.resetPosition = this.childRef.containerRef.scrollTop;
+		this.resetPosition = (this.scrolling) ? null : this.childRef.containerRef.scrollTop;
 	}
 
 	onMouseMove (e) {
 		super.onMouseMove(e);
 
 		if (!this.isDragging && this.resetPosition !== null) {
-			const childContainerRef = this.childRef.containerRef;
-			childContainerRef.style.scrollBehavior = null;
+			const childContainerRef = this.childRef.containerRef; childContainerRef.style.scrollBehavior = null;
 			childContainerRef.scrollTop = this.resetPosition;
 			childContainerRef.style.scrollBehavior = 'smooth';
 			this.resetPosition = null;
@@ -419,7 +425,7 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
 		this.scrollToAccumulatedTarget(delta, isVerticalScrollBar);
 	}
 
-	scrollStopOnScroll = () => {
+	scrollStopOnScroll () {
 		super.scrollStopOnScroll();
 
 		this.childRef.setContainerDisabled(false);

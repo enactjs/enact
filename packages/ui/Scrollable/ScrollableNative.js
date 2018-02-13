@@ -34,7 +34,7 @@ const
 	constants = {
 		calcVelocity: (d, dt) => (d && dt) ? d / dt : 0,
 		epsilon: 1,
-		flickMultiplier: 10,
+		flickMultiplier: 2,
 		holdTime: 50,
 		isPageDown: is('pageDown'),
 		isPageUp: is('pageUp'),
@@ -374,17 +374,15 @@ class ScrollableBaseNative extends Component {
 	// handle an input event
 
 	dragStart (e) {
-		const
-			{clientX, clientY} = e,
-			d = this.dragInfo;
+		const d = this.dragInfo;
 
 		this.isDragging = true;
 		this.isFirstDragging = true;
 		d.scrollX = this.scrollLeft;
 		d.scrollY = this.scrollTop;
 		d.t = perfNow();
-		d.clientX = clientX;
-		d.clientY = clientY;
+		d.clientX = e.clientX;
+		d.clientY = e.clientY;
 		d.dx = d.dy = 0;
 	}
 
@@ -641,7 +639,7 @@ class ScrollableBaseNative extends Component {
 		this.doScrollStart();
 	}
 
-	scrollStopOnScroll = () => {
+	scrollStopOnScroll () {
 		this.isScrollAnimationTargetAccumulated = false;
 		this.scrolling = false;
 		this.doScrollStop();

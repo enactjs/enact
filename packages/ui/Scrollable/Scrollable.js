@@ -456,6 +456,25 @@ class ScrollableBase extends Component {
 		}
 	}
 
+	scrollByFlick () {
+		const
+			d = this.dragInfo,
+			target = this.animator.simulate(
+				this.scrollLeft,
+				this.scrollTop,
+				calcVelocity(-d.dx, d.dt),
+				calcVelocity(-d.dy, d.dt)
+			);
+
+		this.isScrollAnimationTargetAccumulated = false;
+		this.start({
+			targetX: target.targetX,
+			targetY: target.targetY,
+			animate: true,
+			duration: target.duration
+		});
+	}
+
 	// pointer event handler for JS scroller
 
 	onPointerDown (e) {
@@ -480,10 +499,7 @@ class ScrollableBase extends Component {
 				this.isFirstDragging = false;
 			}
 			this.showThumb(bounds);
-			this.scroll({
-				targetX: this.scrollLeft - dx,
-				targetY: this.scrollTop - dy
-			});
+			this.scroll(this.scrollLeft - dx, this.scrollTop - dy);
 		}
 	}
 
@@ -495,22 +511,7 @@ class ScrollableBase extends Component {
 			if (!this.isFlicking()) {
 				this.stop();
 			} else {
-				const
-					d = this.dragInfo,
-					target = this.animator.simulate(
-						this.scrollLeft,
-						this.scrollTop,
-						calcVelocity(-d.dx, d.dt),
-						calcVelocity(-d.dy, d.dt)
-					);
-
-				this.isScrollAnimationTargetAccumulated = false;
-				this.start({
-					targetX: target.targetX,
-					targetY: target.targetY,
-					animate: true,
-					duration: target.duration
-				});
+				this.scrollByFlick();
 			}
 		}
 	}

@@ -192,6 +192,7 @@ class VirtualListBaseNative extends Component {
 		super(props);
 
 		this.state = {firstIndex: 0, numOfItems: 0};
+		this.initContentRef = this.initRef('contentRef');
 		this.initContainerRef = this.initRef('containerRef');
 	}
 
