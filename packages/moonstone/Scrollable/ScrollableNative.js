@@ -152,7 +152,8 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
 		super.onMouseMove(e);
 
 		if (!this.isDragging && this.resetPosition !== null) {
-			const childContainerRef = this.childRef.containerRef; childContainerRef.style.scrollBehavior = null;
+			const childContainerRef = this.childRef.containerRef;
+			childContainerRef.style.scrollBehavior = null;
 			childContainerRef.scrollTop = this.resetPosition;
 			childContainerRef.style.scrollBehavior = 'smooth';
 			this.resetPosition = null;
