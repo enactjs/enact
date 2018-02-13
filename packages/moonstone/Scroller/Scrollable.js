@@ -1104,7 +1104,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		updateScrollThumbSize = (forceUpdate = false) => {
+		updateScrollThumbSize = (force = false) => {
 			const
 				{horizontalScrollbar, verticalScrollbar} = this.props,
 				bounds = this.getScrollBounds(),
@@ -1113,7 +1113,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				curHorizontalScrollbarVisible = (horizontalScrollbar === 'auto') ? canScrollHorizontally : horizontalScrollbar === 'visible',
 				curVerticalScrollbarVisible = (verticalScrollbar === 'auto') ? canScrollVertically : verticalScrollbar === 'visible';
 
-			if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible || forceUpdate) {
+			if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible || force) {
 				// no visibility change but need to notify whichever scrollbars are visible of the
 				// updated bounds and scroll position
 				const
@@ -1123,10 +1123,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						scrollTop: this.scrollTop
 					};
 
-				if ((curHorizontalScrollbarVisible || forceUpdate) && this.horizontalScrollbarRef) {
+				if ((curHorizontalScrollbarVisible || force) && this.horizontalScrollbarRef) {
 					this.horizontalScrollbarRef.update(updatedBounds);
 				}
-				if ((curVerticalScrollbarVisible || forceUpdate) && this.verticalScrollbarRef) {
+				if ((curVerticalScrollbarVisible || force) && this.verticalScrollbarRef) {
 					this.verticalScrollbarRef.update(updatedBounds);
 				}
 				return true;
