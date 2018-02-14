@@ -70,7 +70,7 @@ const SwitchBase = kind({
 	},
 
 	render: (props) => {
-		delete props.animated;
+		delete props.noAnimation;
 
 		return (
 			<ToggleIcon

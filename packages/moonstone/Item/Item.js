@@ -9,7 +9,7 @@
  * @exports ItemBase
  * @exports ItemDecorator
  */
-import UiItem from '@enact/ui/Item';
+import {ItemBase as UiItemBase, ItemDecorator as UiItemDecorator} from '@enact/ui/Item';
 import kind from '@enact/core/kind';
 import compose from 'ramda/src/compose';
 import React from 'react';
@@ -56,7 +56,7 @@ const ItemBase = kind({
 
 	render: ({css, ...rest}) => {
 		return (
-			<UiItem
+			<UiItemBase
 				{...rest}
 				css={css}
 			/>
@@ -77,8 +77,9 @@ const ItemBase = kind({
  */
 const ItemDecorator = compose(
 	Pure,
+	UiItemDecorator,
 	Spottable,
-	MarqueeDecorator({className: componentCss.content, invalidateProps: ['inline', 'autoHide', 'remeasure']}),
+	MarqueeDecorator({invalidateProps: ['inline', 'autoHide']}),
 	Skinnable
 );
 
