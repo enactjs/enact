@@ -9,16 +9,17 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 
-import ToggleItem from '../ToggleItem';
 import FormCheckbox from '../FormCheckbox';
+import ToggleItem from '../ToggleItem';
 
 import componentCss from './FormCheckboxItem.less';
 
 /**
  * Renders a form item with a checkbox component. Useful to show a selected state on an item inside a form.
  *
- * @class CheckboxItemBase
+ * @class FormCheckboxItem
  * @memberof moonstone/FormCheckboxItem
+ * @extends moonstone/ToggleItem.ToggleItem
  * @ui
  * @public
  */
@@ -27,11 +28,16 @@ const FormCheckboxItemBase = kind({
 
 	styles: {
 		css: componentCss,
-		className: 'toggleItem'
+		className: 'formCheckboxItem',
+		publicClassNames: ['formCheckboxItem']
 	},
 
 	render: (props) => (
-		<ToggleItem {...props} css={componentCss} iconComponent={FormCheckbox} />
+		<ToggleItem
+			{...props}
+			css={props.css}
+			iconComponent={FormCheckbox}
+		/>
 	)
 });
 

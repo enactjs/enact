@@ -13,12 +13,12 @@ import ToggleItem from '../ToggleItem';
 
 import SelectableIcon from './SelectableIcon';
 
-import componentCss from './SelectableIcon.less';
+import componentCss from './SelectableItem.less';
 
 /**
  * Renders an item with a circle shaped component. Useful to show a selected state on an item.
  *
- * @class SelectableItemBase
+ * @class SelectableItem
  * @memberof moonstone/SelectableItem
  * @extends moonstone/ToggleItem.ToggleItem
  * @ui
@@ -27,8 +27,18 @@ import componentCss from './SelectableIcon.less';
 const SelectableItemBase = kind({
 	name: 'SelectableItem',
 
+	styles: {
+		css: componentCss,
+		className: 'selectableItem',
+		publicClassNames: ['selectableItem']
+	},
+
 	render: (props) => (
-		<ToggleItem {...props} css={componentCss} iconComponent={SelectableIcon} />
+		<ToggleItem
+			{...props}
+			css={props.css}
+			iconComponent={SelectableIcon}
+		/>
 	)
 });
 

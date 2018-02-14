@@ -60,7 +60,8 @@ const SwitchBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['toggleIcon']
+		className: 'switch',
+		publicClassNames: ['switch']
 	},
 
 	computed: {

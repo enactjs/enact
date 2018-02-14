@@ -46,11 +46,12 @@ const FormCheckboxBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['toggleIcon']
+		className: 'formCheckbox',
+		publicClassNames: ['formCheckbox']
 	},
 
 	render: (props) => (
-		<ToggleIcon {...props} css={componentCss}>check</ToggleIcon>
+		<ToggleIcon {...props} css={props.css}>check</ToggleIcon>
 	)
 });
 

@@ -4,28 +4,40 @@
  * @module moonstone/CheckboxItem
  * @exports CheckboxItem
  * @exports CheckboxItemBase
- * @exports CheckboxItemDecorator
  */
 
 import kind from '@enact/core/kind';
 import React from 'react';
 
-import ToggleItem from '../ToggleItem';
 import Checkbox from '../Checkbox';
+import ToggleItem from '../ToggleItem';
+
+import componentCss from './CheckboxItem.less';
 
 /**
  * Renders an item with a checkbox component. Useful to show a selected state on an item.
  *
- * @class CheckboxItemBase
+ * @class CheckboxItem
  * @memberof moonstone/CheckboxItem
+ * @extends moonstone/ToggleItem.ToggleItem
  * @ui
  * @public
  */
 const CheckboxItemBase = kind({
 	name: 'CheckboxItem',
 
+	styles: {
+		css: componentCss,
+		className: 'checkboxItem',
+		publicClassNames: ['checkboxItem']
+	},
+
 	render: (props) => (
-		<ToggleItem {...props} iconComponent={Checkbox} />
+		<ToggleItem
+			{...props}
+			css={props.css}
+			iconComponent={Checkbox}
+		/>
 	)
 });
 

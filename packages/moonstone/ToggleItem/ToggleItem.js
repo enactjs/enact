@@ -20,6 +20,8 @@ import Touchable from '@enact/ui/Touchable';
 
 import SlotItem from '../SlotItem';
 
+import componentCss from './ToggleItem.less';
+
 /**
  * A moonstone-styled toggle item without any behavior.
  *
@@ -59,7 +61,7 @@ const ToggleItemBase = kind({
 		 *
 		 * The following classes are supported:
 		 *
-		 * * `selected` - Applied to a `selected` toggle item
+		 * * `toggleItem` - The root class name
 		 *
 		 * @type {Object}
 		 * @public
@@ -126,6 +128,12 @@ const ToggleItemBase = kind({
 		iconPosition: 'before',
 		selected: false,
 		value: null
+	},
+
+	styles: {
+		css: componentCss,
+		className: 'toggleItem',
+		publicClassNames: ['toggleItem']
 	},
 
 	computed: {
