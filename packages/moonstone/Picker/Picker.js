@@ -17,6 +17,7 @@ import {validateRange} from '../internal/validators';
 
 import PickerCore, {PickerItem} from '../internal/Picker';
 import SpottablePicker from './SpottablePicker';
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
 
 /**
  * The base component for {@link moonstone/Picker.Picker}. This version is not spottable.
@@ -216,10 +217,24 @@ const PickerBase = kind({
  */
 const Picker = Pure(
 	Changeable(
-		MarqueeController(
-			{marqueeOnFocus: true},
-			SpottablePicker(
-				PickerBase
+		VoiceControlDecorator(
+			{
+				voiceSlot: [
+					{voiceIntent: 'pick', voiceHandler: (e, props) => {
+						const index = Array.isArray(props.children) ? props.children.indexOf(e.value) : -1;
+						if (index > -1 && props.onChange) {
+							props.onChange({
+								value: index
+							});
+						}
+					}}
+				]
+			},
+			MarqueeController(
+				{marqueeOnFocus: true},
+				SpottablePicker(
+					PickerBase
+				)
 			)
 		)
 	)

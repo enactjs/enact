@@ -29,6 +29,8 @@ const VoiceControl = (function () {
 						e.value = 'text inputed!!!';
 					} else if (voiceIntent === 'slider') {
 						e.value = 50;
+					} else if (voiceIntent === 'pick') {
+						e.value = 'e';
 					}
 
 					tObj.onVoice(e);
