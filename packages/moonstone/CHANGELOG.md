@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
+- `moonstone/VirtualFlexList` to be replaced by `ui/VirtualFlexList`
 - `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`
 
 ### Changed
