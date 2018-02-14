@@ -96,7 +96,7 @@ const SlotItemDecorator = compose(
 	Toggleable(
 		{prop: 'remeasure', activate: 'onFocus', deactivate: 'onBlur', toggle: null}
 	),
-	UiItemDecorator,
+	UiItemDecorator, // (Touchable)
 	Spottable,
 	RemeasurableDecorator({trigger: 'remeasure'}),
 	MarqueeDecorator({className: componentCss.content, invalidateProps: ['inline', 'autoHide', 'remeasure']}),
