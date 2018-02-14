@@ -97,13 +97,6 @@ const handledMediaEventsMap = {
 	waiting         : 'onWaiting'
 };
 
-// List custom events that aren't standard to React. These will be directly added to the video
-// element and props matching their name will be executed as callback functions when the event fires.
-// "umsmediainfo" prop function will execute when the "umsmediainfo" event happens.
-const handledCustomMediaEventsMap = {
-	'umsmediainfo'  : 'onUMSMediaInfo'
-};
-
 // provide forwarding of events on media controls
 const forwardControlsAvailable = forward('onControlsAvailable');
 const forwardBackwardButtonClick = forwardWithPrevent('onBackwardButtonClick');
@@ -219,6 +212,19 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		containerId: PropTypes.string,
+
+		/**
+		 * A event map object for custom media events. List custom events that aren't standard to
+		 * React. These will be directly added to the video element and props matching their name
+		 * will be executed as callback functions when the event fires.
+		 *
+		 * Example: {'umsmediainfo': 'onUMSMediaInfo'}
+		 * "onUMSMediaInfo" prop function will execute when the "umsmediainfo" event happens.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		customMediaEventsMap: PropTypes.object,
 
 		/**
 		 * Removes interactive capability from this component. This includes, but is not limited to,
@@ -720,8 +726,8 @@ const VideoPlayerBase = class extends React.Component {
 			this.handledMediaEvents[eventName] = this.handleEvent;
 		}
 		// Generate event handling forwarders for the custom events too
-		for (let eventName in handledCustomMediaEventsMap) {
-			const propName = handledCustomMediaEventsMap[eventName];
+		for (let eventName in props.customMediaEventsMap) {
+			const propName = props.customMediaEventsMap[eventName];
 			const forwardEvent = forward(propName);
 			this.handledCustomMediaForwards[eventName] = ev => forwardEvent(ev, this.props);
 		}
@@ -1988,9 +1994,10 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.videoPath;
 
 		// Remove the events we manually added so they aren't added twice or fail.
-		for (let eventName in handledCustomMediaEventsMap) {
-			delete rest[handledCustomMediaEventsMap[eventName]];
+		for (let eventName in rest.customMediaEventsMap) {
+			delete rest[rest.customMediaEventsMap[eventName]];
 		}
+		delete rest.customMediaEventsMap;
 
 		// Handle some cases when the "more" button is pressed
 		const moreDisabled = !(this.state.more);
