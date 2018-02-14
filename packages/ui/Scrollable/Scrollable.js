@@ -33,7 +33,7 @@ const
 	*/
 	usePointerEvents = !!(window.PointerEvent),
 	// If pointer events are not supported and the platform is webOS, we need to add touch events.
-	useTouchEvents = (window.PalmSystem && !usePointerEvents),
+	useTouchEvents = !usePointerEvents,
 	// event names
 	pointerEventsPrefix = usePointerEvents ? 'pointer' : 'mouse',
 	eventNamePointerDown = pointerEventsPrefix + 'down',
