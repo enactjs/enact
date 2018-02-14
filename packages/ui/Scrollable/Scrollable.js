@@ -5,7 +5,6 @@
  * @exports Scrollable
  * @exports constants
  * @exports ScrollableBase
- * @private
  */
 
 import clamp from 'ramda/src/clamp';

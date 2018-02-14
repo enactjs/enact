@@ -16,7 +16,7 @@ import {ScrollerBase as ScrollerBaseNative} from '../Scroller';
  *
  * @class ScrollerNative
  * @memberof moonstone/Scroller
- * @mixes moonstone/Scroller.ScrollableNative
+ * @mixes moonstone/Scrollable.ScrollableNative
  * @ui
  * @public
  */

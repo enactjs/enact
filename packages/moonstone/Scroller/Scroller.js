@@ -320,7 +320,7 @@ class ScrollerBase extends UiScrollerBase {
  *
  * @class Scroller
  * @memberof moonstone/Scroller
- * @mixes moonstone/Scroller.Scrollable
+ * @mixes moonstone/Scrollable.Scrollable
  * @ui
  * @public
  */
