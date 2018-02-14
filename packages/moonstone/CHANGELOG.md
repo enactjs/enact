@@ -6,8 +6,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
-- `moonstone/VirtualGridList.GridListImageItem`, will be replaced by `moonstone/GridListImageItem` property in 2.0.0
-- `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`, will no longer be supported in 2.0.0
+- `moonstone/VirtualFlexList` to be replaced by `ui/VirtualFlexList` in 2.0.0
+- `moonstone/VirtualGridList.GridListImageItem` to be replaced by `moonstone/GridListImageItem` property in 2.0.0
+- `moonstone/Button` and `moonstone/IconButton` prop `noAnimation` to be removed in 2.0.0
 
 ### Added
 
