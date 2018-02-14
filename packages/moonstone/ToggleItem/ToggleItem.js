@@ -11,12 +11,9 @@
 
 import kind from '@enact/core/kind';
 import Pure from '@enact/ui/internal/Pure';
-import Toggleable from '@enact/ui/Toggleable';
 import React from 'react';
 import PropTypes from 'prop-types';
-import compose from 'ramda/src/compose';
-import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
-import Touchable from '@enact/ui/Touchable';
+import UiToggleItem from '@enact/ui/ToggleItem';
 
 import SlotItem from '../SlotItem';
 
@@ -46,7 +43,7 @@ const ToggleItemBase = kind({
 		/**
 		 * The Icon to render in this item. This component receives the `selected` prop and value,
 		 * and must therefore respond to it in some way. It is recommended to use the
-		 * [ToggleIcon]{@link ui/ToggleIcon} for this.
+		 * [ToggleIcon]{@link moonstone/ToggleIcon} for this.
 		 *
 		 * @type {String|Component}
 		 * @default null
@@ -66,68 +63,7 @@ const ToggleItemBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object,
-
-		/**
-		 * Applies a disabled visual state to the toggle item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		disabled: PropTypes.bool,
-
-		/**
-		 * Specifies on which side (`before` or `after`) of the text the icon appears.
-		 *
-		 * @type {String}
-		 * @default 'before'
-		 * @public
-		 */
-		iconPosition: PropTypes.oneOf(['before', 'after']),
-
-		/**
-		 * The handler to run when the toggle item is toggled. Developers should
-		 * generally use `onToggle` instead.
-		 *
-		 * @type {Function}
-		 */
-		onTap: PropTypes.func,
-
-		/**
-		 * The handler to run when the toggle item is toggled.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {String} event.selected - Selected value of item.
-		 * @param {*} event.value - Value passed from `value` prop.
-		 * @public
-		 */
-		onToggle: PropTypes.func,
-
-		/**
-		 * Applies the provided `icon` when the this is `true`.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		selected: PropTypes.bool,
-
-		/**
-		 * The value that will be sent to the `onToggle` handler.
-		 * @type {*}
-		 * @default null
-		 * @public
-		 */
-		value: PropTypes.any
-	},
-
-	defaultProps: {
-		disabled: false,
-		iconPosition: 'before',
-		selected: false,
-		value: null
+		css: PropTypes.object
 	},
 
 	styles: {
@@ -136,40 +72,15 @@ const ToggleItemBase = kind({
 		publicClassNames: ['toggleItem']
 	},
 
-	computed: {
-		iconBefore: ({disabled, iconComponent: IconComponent, selected, iconPosition}) => {
-			if (iconPosition === 'before') {
-				return (
-					<IconComponent disabled={disabled} slot="slotBefore" selected={selected} />
-				);
-			}
-		},
-		iconAfter: ({disabled, iconComponent: IconComponent, selected, iconPosition}) => {
-			if (iconPosition === 'after') {
-				return (
-					<IconComponent disabled={disabled} slot="slotAfter" selected={selected} />
-				);
-			}
-		}
-	},
-
-	render: ({css, children, iconAfter, iconBefore, onToggle, selected, ...rest}) => {
-		delete rest.iconComponent;
-		delete rest.iconPosition;
-		delete rest.value;
+	render: (props) => {
 
 		return (
-			<SlotItem
+			<UiToggleItem
+				component={SlotItem}
 				role="checkbox"
-				css={css}
-				{...rest}
-				aria-checked={selected}
-				onTap={onToggle}
-			>
-				{iconBefore}
-				{children}
-				{iconAfter}
-			</SlotItem>
+				{...props}
+				css={props.css}
+			/>
 		);
 	}
 });
@@ -179,16 +90,10 @@ const ToggleItemBase = kind({
  *
  * @class ToggleItemDecorator
  * @memberof moonstone/ToggleItem
- * @mixes ui/Toggleable.Toggleable
  * @hoc
  * @public
  */
-const ToggleItemDecorator = compose(
-	Pure,
-	RemeasurableDecorator({trigger: 'selected'}),
-	Touchable,
-	Toggleable
-);
+const ToggleItemDecorator = Pure;
 
 /**
  * A Moonstone-styled item with built-in support for toggling, marqueed text, and `Spotlight` focus.

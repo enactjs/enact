@@ -5,6 +5,10 @@ import sinon from 'sinon';
 
 import ToggleItem, {ToggleItemBase} from '../ToggleItem';
 import Icon from '../../Icon';
+import SlotItem from '../../SlotItem';
+import Item from '../../Item';
+
+const SlottedItem = (props) => <SlotItem {...props} component={Item} />;
 
 const tap = (node) => {
 	node.simulate('mousedown');
@@ -18,7 +22,7 @@ describe('ToggleItem Specs', () => {
 	it('should call onToggle, onClick, or both when clicked', function () {
 		const handleToggle = sinon.spy();
 		const subject = mount(
-			<ToggleItemBase onToggle={handleToggle} iconComponent={CustomIcon}>
+			<ToggleItemBase component={SlottedItem} onToggle={handleToggle} iconComponent={CustomIcon}>
 				Toggle Item
 			</ToggleItemBase>
 		);
@@ -34,7 +38,7 @@ describe('ToggleItem Specs', () => {
 	it('should call onClick when clicked', function () {
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<ToggleItemBase onClick={handleClick} iconComponent={CustomIcon}>
+			<ToggleItemBase component={SlottedItem} onClick={handleClick} iconComponent={CustomIcon}>
 				Toggle Item
 			</ToggleItemBase>
 		);
@@ -50,7 +54,7 @@ describe('ToggleItem Specs', () => {
 	it('should call onTap when tapped', function () {
 		const handleTap = sinon.spy();
 		const subject = mount(
-			<ToggleItem onTap={handleTap} iconComponent={CustomIcon}>
+			<ToggleItem component={SlottedItem} onTap={handleTap} iconComponent={CustomIcon}>
 				Toggle Item
 			</ToggleItem>
 		);
@@ -65,7 +69,7 @@ describe('ToggleItem Specs', () => {
 	it('should call both onToggle and onTap when tapped', function () {
 		const handleBoth = sinon.spy();
 		const subject = mount(
-			<ToggleItem onTap={handleBoth} onToggle={handleBoth} iconComponent={CustomIcon}>
+			<ToggleItem component={SlottedItem} onTap={handleBoth} onToggle={handleBoth} iconComponent={CustomIcon}>
 				Toggle Item
 			</ToggleItem>
 		);
