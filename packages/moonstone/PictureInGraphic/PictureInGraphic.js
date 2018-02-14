@@ -33,6 +33,7 @@ class PictureInGraphicBase extends React.Component {
 		pigHeight: PropTypes.number,
 		pigWidth: PropTypes.number,
 		placeholder: PropTypes.string,
+		spotlightDisabled: PropTypes.bool,
 		textOverlayContent: PropTypes.string
 	}
 
@@ -42,7 +43,8 @@ class PictureInGraphicBase extends React.Component {
 		imageOverlaySrc: '',
 		isIpChannel: false,
 		pigWidth: 320,
-		pigHeight: 186
+		pigHeight: 186,
+		spotlightDisabled: false
 	}
 
 	constructor (props) {
@@ -106,41 +108,43 @@ class PictureInGraphicBase extends React.Component {
 	}
 
 	handleClick = () => {
-		const {sourceType, source} = this.props;
-		let id = '';
+		if (!this.props.spotlightDisabled) {
+			const {sourceType, source} = this.props;
+			let id = '';
 
-		if (sourceType === 'broadcast') {
-			id = 'com.webos.app.livetv';
-		} else if (sourceType === 'externalInput') {
-			switch (source) {
-				case 'HDMI_1':
-					id = 'com.webos.app.hdmi1';
-					break;
-				case 'HDMI_2':
-					id = 'com.webos.app.hdmi2';
-					break;
-				case 'HDMI_3':
-					id = 'com.webos.app.hdmi3';
-					break;
-				case 'HDMI_4':
-					id = 'com.webos.app.hdmi4';
-					break;
-				case 'COMPONENT':
-					id = 'com.webos.app.externalinput.component';
-					break;
-				case 'AV_1':
-					id = 'com.webos.app.externalinput.av1';
-					break;
-				case 'AV_2':
-					id = 'com.webos.app.externalinput.av2';
-					break;
+			if (sourceType === 'broadcast') {
+				id = 'com.webos.app.livetv';
+			} else if (sourceType === 'externalInput') {
+				switch (source) {
+					case 'HDMI_1':
+						id = 'com.webos.app.hdmi1';
+						break;
+					case 'HDMI_2':
+						id = 'com.webos.app.hdmi2';
+						break;
+					case 'HDMI_3':
+						id = 'com.webos.app.hdmi3';
+						break;
+					case 'HDMI_4':
+						id = 'com.webos.app.hdmi4';
+						break;
+					case 'COMPONENT':
+						id = 'com.webos.app.externalinput.component';
+						break;
+					case 'AV_1':
+						id = 'com.webos.app.externalinput.av1';
+						break;
+					case 'AV_2':
+						id = 'com.webos.app.externalinput.av2';
+						break;
+				}
 			}
+			launchApp(id);
 		}
-		launchApp(id);
 	};
 
 	render = () => {
-		const {source, sourceType, placeholder, imageOverlayShowing, imageOverlaySrc, textOverlayContent, captionComponent, isIpChannel, pigWidth, pigHeight, ...rest} = this.props;
+		const {source, sourceType, placeholder, imageOverlayShowing, imageOverlaySrc, textOverlayContent, captionComponent, isIpChannel, pigWidth, pigHeight, spotlightDisabled, ...rest} = this.props;
 		const textOverlayClassName = classNames(css.textOverlay, isIpChannel ? css.ipChannel : null);
 		const pigStyle = {width: ri.scale(pigWidth) + 'px', height: ri.scale(pigHeight) + 'px'};
 		const containerWidth = {width: ri.scale(pigWidth) + 'px'};
@@ -150,7 +154,7 @@ class PictureInGraphicBase extends React.Component {
 
 		return (
 			<div {...rest} style={containerWidth}>
-				<SpottableItem className={css['pictureInGraphic']} style={pigStyle} onClick={this.handleClick}>
+				<SpottableItem className={css['pictureInGraphic']} style={pigStyle} onClick={this.handleClick} spotlightDisabled={spotlightDisabled}>
 					<video
 						className={css.video}
 						autoPlay

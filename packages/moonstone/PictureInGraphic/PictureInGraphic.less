@@ -1,4 +1,5 @@
-@import "../styles/variables.less";
+@import '../styles/text.less';
+@import '../styles/mixins.less';
 
 .pictureInGraphic {
 	display: block;
@@ -25,15 +26,16 @@
 	}
 
 	.textOverlay {
+		.moon-font('MuseoSans', 'Moonstone LG Display Light');
+		font-size: 21px;
+		font-weight: 900;
+		line-height: normal;
 		display: block;
 		position: absolute;
 		width: 100%;
 		bottom: 6px;
 		left: 0px;
 		color: white;
-		font-size: 21px;
-		line-height: normal;
-		font-family: @moon-font-family-bold;
 		&.ipChannel {
 			color: #f58220;
 		}
