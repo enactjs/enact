@@ -310,7 +310,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
 			if (!this.isFitClientSize) {
+				// Update scrollbar visibility, scroll button disable/enable status and scroll thumb size
 				this.updateScrollbars();
+			} else {
+				// Update only scroll button disable/enable status and scroll thumb size
+				// If updating scrollbar visibility with setState, it is possible to generate infinite loop call
+				this.updateScrollThumbSize(true);
 			}
 
 			if (this.scrollToInfo !== null) {
@@ -1099,7 +1104,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		updateScrollThumbSize = () => {
+		updateScrollThumbSize = (force = false) => {
 			const
 				{horizontalScrollbar, verticalScrollbar} = this.props,
 				bounds = this.getScrollBounds(),
@@ -1108,7 +1113,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				curHorizontalScrollbarVisible = (horizontalScrollbar === 'auto') ? canScrollHorizontally : horizontalScrollbar === 'visible',
 				curVerticalScrollbarVisible = (verticalScrollbar === 'auto') ? canScrollVertically : verticalScrollbar === 'visible';
 
-			if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
+			if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible || force) {
 				// no visibility change but need to notify whichever scrollbars are visible of the
 				// updated bounds and scroll position
 				const
@@ -1118,10 +1123,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						scrollTop: this.scrollTop
 					};
 
-				if (curHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
+				if ((curHorizontalScrollbarVisible || force) && this.horizontalScrollbarRef) {
 					this.horizontalScrollbarRef.update(updatedBounds);
 				}
-				if (curVerticalScrollbarVisible && this.verticalScrollbarRef) {
+				if ((curVerticalScrollbarVisible || force) && this.verticalScrollbarRef) {
 					this.verticalScrollbarRef.update(updatedBounds);
 				}
 				return true;
