@@ -47,7 +47,8 @@ const CheckboxBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['toggleIcon']
+		ClassName: 'checkbox',
+		publicClassNames: ['checkbox']
 	},
 
 	render: (props) => {

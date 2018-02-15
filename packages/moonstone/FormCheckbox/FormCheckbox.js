@@ -36,7 +36,7 @@ const FormCheckboxBase = kind({
 		 *
 		 * The following classes are supported:
 		 *
-		 * * `toggleIcon` - The root class name
+		 * * `formCheckbox` - The root class name
 		 *
 		 * @type {Object}
 		 * @public

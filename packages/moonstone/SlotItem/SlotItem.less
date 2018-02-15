@@ -17,7 +17,10 @@
 	}
 
 	.slot {
-		line-height: 1;
+		// line-height: 0; Tells the container that it should attempt to be 0 px tall, and its
+		// contents push it to be taller. The container is therefore its minimum height (according
+		// to the content) and can be perfectly vertically centered.
+		line-height: 0;
 		white-space: nowrap;
 
 		&.before,

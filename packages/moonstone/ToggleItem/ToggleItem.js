@@ -76,9 +76,9 @@ const ToggleItemBase = kind({
 
 		return (
 			<UiToggleItem
-				component={SlotItem}
 				role="checkbox"
 				{...props}
+				component={SlotItem}
 				css={props.css}
 			/>
 		);
