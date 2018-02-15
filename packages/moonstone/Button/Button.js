@@ -9,7 +9,7 @@
  */
 
 import deprecate from '@enact/core/internal/deprecate';
-import factory from '@enact/core/factory';
+import {privateFactory as factory} from '@enact/core/factory';
 import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';

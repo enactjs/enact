@@ -8,7 +8,7 @@
  * @exports IconButtonFactory
  */
 
-import factory from '@enact/core/factory';
+import {privateFactory as factory} from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 import Pressable from '@enact/ui/Pressable';

@@ -4,7 +4,7 @@
  * @module moonstone/Slider
  */
 
-import factory from '@enact/core/factory';
+import {privateFactory as factory} from '@enact/core/factory';
 import {forKey, forProp, forward, handle, oneOf, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';

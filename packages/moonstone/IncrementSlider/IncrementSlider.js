@@ -5,7 +5,7 @@
  */
 
 import {extractAriaProps} from '@enact/core/util';
-import factory from '@enact/core/factory';
+import {privateFactory as factory} from '@enact/core/factory';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';

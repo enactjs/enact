@@ -4,6 +4,8 @@
  * @module core/factory
  */
 
+import deprecate from '@enact/core/internal/deprecate';
+
 import css from './css';
 
 /**
@@ -34,7 +36,7 @@ const feature = function (prop, fn, defaultConfig, config) {
  * names are joined together with a space.
  *
  * ```
- * import factory from '@enact/core/factory';
+ * import {privateFactory as factory} from '@enact/core/factory';
  * import kind from '@enact/core/kind';
  *
  * import componentCss from './Button.less';
@@ -77,6 +79,7 @@ const feature = function (prop, fn, defaultConfig, config) {
  * @method factory
  * @memberof core/factory
  * @public
+ * @deprecated
  */
 const factory = (defaultConfig, fn) => (config) => {
 	let componentConfig = defaultConfig;
@@ -94,5 +97,10 @@ const factory = (defaultConfig, fn) => (config) => {
 	});
 };
 
-export default factory;
-export {factory};
+const depFactory = deprecate(factory, {name: 'factory', since: '1.14.0', until: '2.0.0'});
+
+export default depFactory;
+export {
+	depFactory as factory,
+	factory as privateFactory
+};
