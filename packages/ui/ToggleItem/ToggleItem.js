@@ -14,11 +14,25 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 
+import ComponentOverride from '../ComponentOverride';
 import Toggleable from '../Toggleable';
 import {RemeasurableDecorator} from '../Remeasurable';
 import Touchable from '../Touchable';
 
 import componentCss from './ToggleItem.less';
+
+// eslint-disable-next-line
+const iconCreator = (position) => ({disabled, iconComponent, selected, iconPosition}) => {
+	if (iconPosition === position) {
+		return (
+			<ComponentOverride
+				component={iconComponent}
+				disabled={disabled}
+				selected={selected}
+			/>
+		);
+	}
+};
 
 /**
  * A minimally styled toggle item without any behavior, ripe for extension.
@@ -61,7 +75,7 @@ const ToggleItemBase = kind({
 		 * @required
 		 * @public
 		 */
-		iconComponent: PropTypes.func.isRequired,
+		iconComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -145,23 +159,11 @@ const ToggleItemBase = kind({
 	},
 
 	computed: {
-		iconBefore: ({disabled, iconComponent: IconComponent, selected, iconPosition}) => {
-			if (iconPosition === 'before') {
-				return (
-					<IconComponent disabled={disabled} slot="slotBefore" selected={selected} />
-				);
-			}
-		},
-		iconAfter: ({disabled, iconComponent: IconComponent, selected, iconPosition}) => {
-			if (iconPosition === 'after') {
-				return (
-					<IconComponent disabled={disabled} slot="slotAfter" selected={selected} />
-				);
-			}
-		}
+		slotBefore: iconCreator('before'),
+		slotAfter: iconCreator('after')
 	},
 
-	render: ({component: Component, css, children, iconAfter, iconBefore, onToggle, selected, ...rest}) => {
+	render: ({component: Component, css, children, onToggle, selected, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.iconPosition;
 		delete rest.value;
@@ -169,14 +171,12 @@ const ToggleItemBase = kind({
 		return (
 			<Component
 				role="checkbox"
-				css={css}
 				{...rest}
+				css={css}
 				aria-checked={selected}
 				onTap={onToggle}
 			>
-				{iconBefore}
 				{children}
-				{iconAfter}
 			</Component>
 		);
 	}

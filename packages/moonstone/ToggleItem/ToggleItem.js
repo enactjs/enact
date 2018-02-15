@@ -45,12 +45,12 @@ const ToggleItemBase = kind({
 		 * and must therefore respond to it in some way. It is recommended to use the
 		 * [ToggleIcon]{@link moonstone/ToggleIcon} for this.
 		 *
-		 * @type {String|Component}
+		 * @type {Component}
 		 * @default null
 		 * @required
 		 * @public
 		 */
-		iconComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+		iconComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the

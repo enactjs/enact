@@ -14,8 +14,6 @@ import ToggleItem from '../ToggleItem';
 
 import componentCss from './SwitchItem.less';
 
-const StyledSwitch = (props) => <Switch {...props} css={componentCss} />;
-
 /**
  * Renders an item with a switch component. Useful to show an on/off state.
  *
@@ -38,7 +36,9 @@ const SwitchItemBase = kind({
 		<ToggleItem
 			{...props}
 			css={props.css}
-			iconComponent={StyledSwitch}
+			iconComponent={
+				<Switch className={componentCss.switch} />
+			}
 			iconPosition="after"
 		/>
 	)
