@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import factory from '../factory';
+import {privateFactory as factory} from '../factory';
 
 describe('factory', () => {
 

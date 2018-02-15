@@ -4,7 +4,7 @@
  * @module core/factory
  */
 
-import deprecate from '@enact/core/internal/deprecate';
+import deprecate from '../internal/deprecate';
 
 import css from './css';
 
@@ -97,10 +97,10 @@ const factory = (defaultConfig, fn) => (config) => {
 	});
 };
 
-const depFactory = deprecate(factory, {name: 'factory', since: '1.14.0', until: '2.0.0'});
+const deprecatedFactory = deprecate(factory, {name: 'factory', since: '1.14.0', until: '2.0.0'});
 
-export default depFactory;
+export default deprecatedFactory;
 export {
-	depFactory as factory,
+	deprecatedFactory as factory,
 	factory as privateFactory
 };
