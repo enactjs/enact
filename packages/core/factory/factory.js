@@ -36,7 +36,7 @@ const feature = function (prop, fn, defaultConfig, config) {
  * names are joined together with a space.
  *
  * ```
- * import {privateFactory as factory} from '@enact/core/factory';
+ * import factory from '@enact/core/factory';
  * import kind from '@enact/core/kind';
  *
  * import componentCss from './Button.less';

@@ -4,6 +4,7 @@
  * @module moonstone/IncrementSlider
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import {extractAriaProps} from '@enact/core/util';
 import {privateFactory as factory} from '@enact/core/factory';
 import {is} from '@enact/core/keymap';
@@ -29,7 +30,7 @@ const isLeft = is('left');
 const isRight = is('right');
 const isUp = is('up');
 
-const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
+const PrivateIncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	const Slider = Pressable(Spottable(Skinnable(SliderBaseFactory({css}))));
 
 	/**
@@ -598,8 +599,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 });
 
-const IncrementSliderFactory = factory((config) => {
-	const Base = IncrementSliderBaseFactory(config);
+const PrivateIncrementSliderFactory = factory((config) => {
+	const Base = PrivateIncrementSliderBaseFactory(config);
 
 	/**
 	 * {@link moonstone/IncrementSlider.IncrementSlider} is an IncrementSlider with
@@ -632,8 +633,10 @@ const IncrementSliderFactory = factory((config) => {
 	);
 });
 
-const IncrementSliderBase = IncrementSliderBaseFactory();
-const IncrementSlider = IncrementSliderFactory();
+const IncrementSliderFactory = deprecate(PrivateIncrementSliderFactory, {name: 'IncrementSliderFactory', since: '1.14.0', until: '2.0.0'});
+const IncrementSliderBaseFactory = deprecate(PrivateIncrementSliderBaseFactory, {name: 'IncrementSliderBaseFactory', since: '1.14.0', until: '2.0.0'});
+const IncrementSliderBase = PrivateIncrementSliderBaseFactory();
+const IncrementSlider = PrivateIncrementSliderFactory();
 
 export default IncrementSlider;
 export {
