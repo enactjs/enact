@@ -19,7 +19,7 @@ import IdProvider from '../internal/IdProvider';
 import $L from '../internal/$L';
 import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator';
 import Skinnable from '../Skinnable';
-import {SliderBaseFactory} from '../Slider';
+import {PrivateSliderBaseFactory as SliderBaseFactory} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
 
 import IncrementSliderButton from './IncrementSliderButton';

@@ -312,4 +312,4 @@ const ButtonBase = PrivateButtonBaseFactory();
 const Button = PrivateButtonFactory();
 
 export default Button;
-export {Button, ButtonBase, ButtonBaseFactory, ButtonFactory};
+export {Button, ButtonBase, ButtonBaseFactory, ButtonFactory, PrivateButtonBaseFactory};

@@ -506,6 +506,7 @@ const Slider = PrivateSliderFactory();
 export default Slider;
 export {
 	PrivateSliderFactory,
+	PrivateSliderBaseFactory,
 	Slider,
 	SliderBase,
 	SliderBaseFactory,

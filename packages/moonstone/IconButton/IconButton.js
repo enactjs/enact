@@ -17,7 +17,7 @@ import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {ButtonBaseFactory} from '../Button';
+import {PrivateButtonBaseFactory as ButtonBaseFactory} from '../Button';
 import Icon from '../Icon';
 import {TooltipDecorator} from '../TooltipDecorator';
 import Skinnable from '../Skinnable';
@@ -182,7 +182,7 @@ const PrivateIconButtonFactory = factory(({css}) => {
 				{release: ['onMouseUp', 'onMouseLeave', 'onBlur']},
 				Spottable(
 					Skinnable(
-						IconButtonBaseFactory({css})
+						PrivateIconButtonBaseFactory({css})
 					)
 				)
 			)
