@@ -21,7 +21,7 @@ regardless of platform.
 
 ### Application Structure
 
->***The framework team strongly encourages the use of the [`enact cli`](https://github.com/enyojs/enact-cli) tools to
+>***The framework team strongly encourages the use of the [`enact cli`](https://github.com/enactjs/cli) tools to
 create, test, and deploy Enact applications.***
 
 Source files are generally arranged in the project like so:
