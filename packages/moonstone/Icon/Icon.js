@@ -5,8 +5,6 @@
  * @module moonstone/Icon
  */
 
-// test
-
 import kind from '@enact/core/kind';
 import ri from '@enact/ui/resolution';
 import Pure from '@enact/ui/internal/Pure';
