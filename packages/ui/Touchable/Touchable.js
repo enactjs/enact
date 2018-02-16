@@ -259,7 +259,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		constructor (props) {
-			super();
+			super(props);
 
 			this.state = {
 				active: States.Inactive

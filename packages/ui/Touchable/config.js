@@ -66,7 +66,7 @@ const mergeConfig = (cfg) => {
  *
  * `drag`
  *
- *   * `boxSizing` - The part of the component's box model is used as the bounds of the constrain.
+ *   * `boxSizing` - The part of the component's box model is used as the bounds of the constraint.
  *     Only applies when `global` is `false`.
  *     * `'border-box'` - the default, includes the padding and border but excludes the margin.
  *     * `'content-box'` - excludes the padding, border, and margin.
