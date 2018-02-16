@@ -31,6 +31,9 @@ const SwitchBase = kind({
 	name: 'Switch',
 
 	propTypes: /** @lends moonstone/Switch.Switch.prototype */ {
+		children: PropTypes.string,
+		css: PropTypes.object,
+
 		/**
 		 * Sets whether this control is animated during change.
 		 *
@@ -42,6 +45,7 @@ const SwitchBase = kind({
 	},
 
 	defaultProps: {
+		children: 'circle',
 		noAnimation: false
 	},
 
@@ -55,15 +59,15 @@ const SwitchBase = kind({
 		})
 	},
 
-	render: (props) => {
-		delete props.noAnimation;
+	render: ({children, css, ...rest}) => {
+		delete rest.noAnimation;
 
 		return (
 			<ToggleIcon
-				{...props}
-				css={props.css}
+				{...rest}
+				css={css}
 			>
-				circle
+				{children}
 			</ToggleIcon>
 		);
 	}

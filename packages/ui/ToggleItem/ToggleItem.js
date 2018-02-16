@@ -22,14 +22,16 @@ import Touchable from '../Touchable';
 import componentCss from './ToggleItem.less';
 
 // eslint-disable-next-line
-const iconCreator = (position) => ({disabled, iconComponent, selected, iconPosition}) => {
+const iconCreator = (position) => ({disabled, icon, iconComponent, selected, iconPosition}) => {
 	if (iconPosition === position) {
 		return (
 			<ComponentOverride
 				component={iconComponent}
 				disabled={disabled}
 				selected={selected}
-			/>
+			>
+				{icon}
+			</ComponentOverride>
 		);
 	}
 };
@@ -98,6 +100,16 @@ const ToggleItemBase = kind({
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * An optional prop that lets you override the icon of the `iconComponent` component.
+		 * This accepts any string that the [Icon]{@link ui/Icon.Icon} component supports, provided
+		 * the recomendations of `iconComponent` are followed.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		icon: PropTypes.string,
 
 		/**
 		 * Specifies on which side (`before` or `after`) of the text the icon appears.
