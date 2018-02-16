@@ -8,13 +8,12 @@
 
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import ToggleIcon from '../ToggleIcon';
 import ToggleItem from '../ToggleItem';
 
 import componentCss from './RadioItem.less';
-
-const StyledToggleIcon = (props) => <ToggleIcon {...props} css={componentCss} />;
 
 /**
  * Renders an `Item` with a radio-dot component. Useful to show a selected state on an Item.
@@ -28,6 +27,21 @@ const StyledToggleIcon = (props) => <ToggleIcon {...props} css={componentCss} />
 const RadioItemBase = kind({
 	name: 'RadioItem',
 
+	propTypes: /** @lends moonstone/Checkbox.Checkbox.prototype */ {
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `radioItem` - The root class name
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object
+	},
+
 	styles: {
 		css: componentCss,
 		className: 'radioItem',
@@ -38,7 +52,9 @@ const RadioItemBase = kind({
 		<ToggleItem
 			{...props}
 			css={props.css}
-			iconComponent={StyledToggleIcon}
+			iconComponent={
+				<ToggleIcon css={componentCss} />
+			}
 		/>
 	)
 });

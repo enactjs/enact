@@ -32,19 +32,6 @@ const SwitchBase = kind({
 
 	propTypes: /** @lends moonstone/Switch.Switch.prototype */ {
 		/**
-		 * Customizes the component by mapping the supplied collection of CSS class names to the
-		 * corresponding internal Elements and states of this component.
-		 *
-		 * The following classes are supported:
-		 *
-		 * * `toggleIcon` - The root class name
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		css: PropTypes.object,
-
-		/**
 		 * Sets whether this control is animated during change.
 		 *
 		 * @type {Boolean}

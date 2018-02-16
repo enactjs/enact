@@ -10,7 +10,6 @@
  */
 
 import kind from '@enact/core/kind';
-import PropTypes from 'prop-types';
 import React from 'react';
 
 import ToggleIcon from '../ToggleIcon';
@@ -29,25 +28,8 @@ import componentCss from './FormCheckbox.less';
 const FormCheckboxBase = kind({
 	name: 'FormCheckbox',
 
-	propTypes: /** @lends moonstone/FormCheckbox.FormCheckbox.prototype */ {
-		/**
-		 * Customizes the component by mapping the supplied collection of CSS class names to the
-		 * corresponding internal Elements and states of this component.
-		 *
-		 * The following classes are supported:
-		 *
-		 * * `formCheckbox` - The root class name
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		css: PropTypes.object
-	},
-
 	styles: {
-		css: componentCss,
-		className: 'formCheckbox',
-		publicClassNames: ['formCheckbox']
+		css: componentCss
 	},
 
 	render: (props) => (

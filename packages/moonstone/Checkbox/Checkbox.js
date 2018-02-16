@@ -11,7 +11,6 @@
 
 import kind from '@enact/core/kind';
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import ToggleIcon from '../ToggleIcon';
 import Icon from '@enact/ui/Icon';
@@ -30,25 +29,8 @@ import componentCss from './Checkbox.less';
 const CheckboxBase = kind({
 	name: 'Checkbox',
 
-	propTypes: /** @lends moonstone/Checkbox.Checkbox.prototype */ {
-		/**
-		 * Customizes the component by mapping the supplied collection of CSS class names to the
-		 * corresponding internal Elements and states of this component.
-		 *
-		 * The following classes are supported:
-		 *
-		 * * `toggleIcon` - The root class name
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		css: PropTypes.object
-	},
-
 	styles: {
-		css: componentCss,
-		ClassName: 'checkbox',
-		publicClassNames: ['checkbox']
+		css: componentCss
 	},
 
 	render: (props) => {
