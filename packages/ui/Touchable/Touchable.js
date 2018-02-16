@@ -533,6 +533,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		).finally(this.endGesture)
 
 		handleGlobalMove = this.handle(
+			this.isTracking,
+			({target}) => !this.target.contains(target),
 			this.moveGesture
 		)
 
