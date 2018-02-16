@@ -9,6 +9,7 @@
 
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import ToggleIcon from '../ToggleIcon';
 
@@ -26,9 +27,17 @@ import componentCss from './SelectableIcon.less';
 const SelectableIconBase = kind({
 	name: 'SelectableIcon',
 
-	render: (props) => {
+	propTypes: {
+		children: PropTypes.string
+	},
+
+	defaultProps: {
+		children: 'circle'
+	},
+
+	render: ({children, ...rest}) => {
 		return (
-			<ToggleIcon {...props} css={componentCss}>circle</ToggleIcon>
+			<ToggleIcon {...rest} css={componentCss}>{children}</ToggleIcon>
 		);
 	}
 });

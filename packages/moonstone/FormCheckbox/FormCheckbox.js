@@ -11,6 +11,7 @@
 
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import ToggleIcon from '../ToggleIcon';
 
@@ -28,12 +29,21 @@ import componentCss from './FormCheckbox.less';
 const FormCheckboxBase = kind({
 	name: 'FormCheckbox',
 
+	propTypes: {
+		children: PropTypes.string,
+		css: PropTypes.object
+	},
+
+	defaultProps: {
+		children: 'check'
+	},
+
 	styles: {
 		css: componentCss
 	},
 
-	render: (props) => (
-		<ToggleIcon {...props} css={props.css}>check</ToggleIcon>
+	render: ({children, css, ...rest}) => (
+		<ToggleIcon {...rest} css={css}>{children}</ToggleIcon>
 	)
 });
 

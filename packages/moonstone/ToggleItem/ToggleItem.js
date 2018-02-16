@@ -63,7 +63,17 @@ const ToggleItemBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		css: PropTypes.object,
+
+		/**
+		 * An optional prop that lets you override the icon of the `iconComponent` component.
+		 * This accepts any string that the [Icon]{@link moonstone/Icon.Icon} component supports,
+		 * provided the recomendations of `iconComponent` are followed.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		icon: PropTypes.string
 	},
 
 	styles: {

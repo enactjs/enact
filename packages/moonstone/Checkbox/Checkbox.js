@@ -11,6 +11,7 @@
 
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import ToggleIcon from '../ToggleIcon';
 import Icon from '@enact/ui/Icon';
@@ -29,18 +30,27 @@ import componentCss from './Checkbox.less';
 const CheckboxBase = kind({
 	name: 'Checkbox',
 
+	propTypes: {
+		children: PropTypes.string,
+		css: PropTypes.object
+	},
+
+	defaultProps: {
+		children: 'check'
+	},
+
 	styles: {
 		css: componentCss
 	},
 
-	render: (props) => {
+	render: ({children, css, ...rest}) => {
 		return (
 			<ToggleIcon
-				{...props}
-				css={props.css}
+				{...rest}
+				css={css}
 				iconComponent={Icon}
 			>
-				check
+				{children}
 			</ToggleIcon>
 		);
 	}
