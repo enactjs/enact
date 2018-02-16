@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Touchable` support for drag gesture
+
 ## [2.0.0-alpha.4] - 2018-02-13
 
 ### Added
@@ -18,7 +24,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/Touchable` support for flick and hold gestures
 - `ui/Layout` debugging aid for help with complex layouts. Simply include the `"debug"` className in your app and everything below it will show debugging lines
 - `ui/Button`, `ui/Icon`, and `ui/IconButton` components to support reuse by themes
 - `ui/Touchable` support for flick gestures
