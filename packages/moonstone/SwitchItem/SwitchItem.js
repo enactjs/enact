@@ -27,7 +27,7 @@ import componentCss from './SwitchItem.less';
 const SwitchItemBase = kind({
 	name: 'SwitchItem',
 
-	propTypes: /** @lends moonstone/Checkbox.Checkbox.prototype */ {
+	propTypes: /** @lends moonstone/SwitchItem.SwitchItem.prototype */ {
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.

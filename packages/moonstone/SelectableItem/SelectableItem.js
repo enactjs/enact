@@ -28,7 +28,7 @@ import componentCss from './SelectableItem.less';
 const SelectableItemBase = kind({
 	name: 'SelectableItem',
 
-	propTypes: /** @lends moonstone/Checkbox.Checkbox.prototype */ {
+	propTypes: /** @lends moonstone/SelectableItem.SelectableItem.prototype */ {
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
