@@ -1,4 +1,3 @@
-import deprecate from '@enact/core/internal/deprecate';
 import {privateFactory as factory} from '@enact/core/factory';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -8,7 +7,7 @@ import {
 	computeKnobTransform
 } from '../internal/SliderDecorator/util';
 
-const PrivateSliderBarFactory = factory(({css}) => {
+const SliderBarFactory = factory(({css}) => {
 
 	/**
 	 * {@link moonstone/Slider.SliderBar} is private.
@@ -109,7 +108,5 @@ const PrivateSliderBarFactory = factory(({css}) => {
 	};
 });
 
-const SliderBarFactory = deprecate(PrivateSliderBarFactory, {name: 'SliderBarFactory', since: '1.14.0', until: '2.0.0'});
-
 export default SliderBarFactory;
-export {PrivateSliderBarFactory, SliderBarFactory};
+export {SliderBarFactory};

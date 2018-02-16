@@ -18,7 +18,7 @@ import SliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
 import Skinnable from '../Skinnable';
 
-import {PrivateSliderBarFactory as SliderBarFactory} from './SliderBar';
+import SliderBarFactory from './SliderBar';
 import SliderTooltip from './SliderTooltip';
 import componentCss from './Slider.less';
 

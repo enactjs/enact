@@ -158,7 +158,8 @@ const CountableDivAsDataNumber = CountableAsDataNumber('div');
 
 ## Adding Design-Time Customizations to Components
 
-`factory() is deprecated and will be removed in 2.0`
+> NOTE: `factory()` is deprecated and will be removed in 2.0
+
 While many of our components are easily configured using properties, we've found that sometimes an app
 needs the more flexibility. Generally, this type of customization isn't variable at
 run-time and is primarily used to adjust the visual design of a component. To support this use case,

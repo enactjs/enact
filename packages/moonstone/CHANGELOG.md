@@ -9,7 +9,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualFlexList` to be replaced by `ui/VirtualFlexList` in 2.0.0
 - `moonstone/VirtualGridList.GridListImageItem` to be replaced by `moonstone/GridListImageItem` property in 2.0.0
 - `moonstone/Button` and `moonstone/IconButton` prop `noAnimation` to be removed in 2.0.0
-- `moonstone/ButtonFactory`, `moonstone/ButtonBaseFactory`, `moonstone/IconButtonFactory`, `moonstone/IconButtonBaseFactory`, `moonstone/IncrementSliderFactory`, `moonstone/IncrementSliderBaseFactory`, `moonstone/SliderFactory`, `moonstone/SliderBaseFactory`, and `moonstone/SliderBarFactory`, to be removed in 2.0.0
+- `moonstone/Button.ButtonFactory`, `moonstone/Button.ButtonBaseFactory`, `moonstone/IconButton.IconButtonFactory`, `moonstone/IconButton.IconButtonBaseFactory`, `moonstone/IncrementSlider.IncrementSliderFactory`, `moonstone/IncrementSlider.IncrementSliderBaseFactory`, `moonstone/Slider.SliderFactory`, and `moonstone/Slider.SliderBaseFactory`, to be removed in 2.0.0
 
 ### Added
 
