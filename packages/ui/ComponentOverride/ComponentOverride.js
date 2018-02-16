@@ -1,6 +1,8 @@
 /**
  * Provides a utility component that either clones or creates a component instance based on the
- * incoming `component` prop value.
+ * incoming `component` prop value. This allows you to supply JSX to component used in your prop to
+ * add your own custom properties. They'll get mixed onto the component when it's used in the parent
+ * component.
  *
  * @module ui/ComponentOverride
  */
@@ -15,7 +17,7 @@ import React from 'react';
  * remaining props specified.
  *
  * ```
- * const LabeledIconButton = ({iconComponent = IconButton, label, ...rest}) => {
+ * const LabeledIconButton = ({iconComponent, label, ...rest}) => {
  *   return (
  *     <div {...rest}>
  *       <ComponentOverride
@@ -28,21 +30,20 @@ import React from 'react';
  * };
  *
  * // Usage
- * <LabeledIconButton
- *   label="Home"
- * /> // would use <IconButton icon="house" />
  *
+ * // Only the props defined by LabeledIconButton will be passed to CustomIcon
  * <LabeledIconButton
  *   label="Home"
  *   iconComponent={CustomIcon}
- * /> // would use <CustomIcon icon="house" />
+ * />
  *
+ * // The color prop along with props defined by LabeledIconButton will be passed to CustomIcon
  * <LabeledIconButton
  *   label="Home"
  *   iconComponent={
  *     <CustomIcon color="green" />
  *   }
- * /> // would use <CustomIcon color="green" icon="house" />
+ * />
  * ```
  *
  * @class
