@@ -641,7 +641,7 @@ const VideoPlayerBase = class extends React.Component {
 		tooltipHideDelay: PropTypes.number,
 
 		/**
-		 * [video description]
+		 * A type of video component.
 		 *
 		 * @type {Component}
 		 * @default 'video'
