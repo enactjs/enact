@@ -38,6 +38,7 @@ import MediaSlider from './MediaSlider';
 import FeedbackContent from './FeedbackContent';
 import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
+import Video from './Video';
 
 import css from './VideoPlayer.less';
 
@@ -68,34 +69,6 @@ const keyMap = {
 // const HAVE_CURRENT_DATA = 2;  // data for the current playback position is available, but not enough data to play next frame/millisecond
 // const HAVE_FUTURE_DATA  = 3;  // data for the current and at least the next frame is available
 const HAVE_ENOUGH_DATA  = 4;  // enough data available to start playing
-
-
-// Set-up event forwarding map. These are all of the supported media events
-const handledMediaEventsMap = {
-	abort           : 'onAbort',
-	canplay         : 'onCanPlay',
-	canplaythrough  : 'onCanPlayThrough',
-	durationchange  : 'onDurationChange',
-	emptied         : 'onEmptied',
-	encrypted       : 'onEncrypted',
-	ended           : 'onEnded',
-	error           : 'onError',
-	loadeddata      : 'onLoadedData',
-	loadedmetadata  : 'onLoadedMetadata',
-	loadstart       : 'onLoadStart',
-	pause           : 'onPause',
-	play            : 'onPlay',
-	playing         : 'onPlaying',
-	progress        : 'onProgress',
-	ratechange      : 'onRateChange',
-	seeked          : 'onSeeked',
-	seeking         : 'onSeeking',
-	stalled         : 'onStalled',
-	suspend         : 'onSuspend',
-	timeupdate      : 'onTimeUpdate',
-	volumechange    : 'onVolumeChange',
-	waiting         : 'onWaiting'
-};
 
 // provide forwarding of events on media controls
 const forwardControlsAvailable = forward('onControlsAvailable');
@@ -212,19 +185,6 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		containerId: PropTypes.string,
-
-		/**
-		 * A event map object for custom media events. List custom events that aren't standard to
-		 * React. These will be directly added to the video element and props matching their name
-		 * will be executed as callback functions when the event fires.
-		 *
-		 * Example: {'umsmediainfo': 'onUMSMediaInfo'}
-		 * "onUMSMediaInfo" prop function will execute when the "umsmediainfo" event happens.
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		customMediaEventsMap: PropTypes.object,
 
 		/**
 		 * Removes interactive capability from this component. This includes, but is not limited to,
@@ -678,7 +638,16 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 3000
 		 * @public
 		 */
-		tooltipHideDelay: PropTypes.number
+		tooltipHideDelay: PropTypes.number,
+
+		/**
+		 * [video description]
+		 *
+		 * @type {Component}
+		 * @default 'video'
+		 * @public
+		 */
+		video: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
 	}
 
 	static defaultProps = {
@@ -695,7 +664,8 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		titleHideDelay: 5000,
-		tooltipHideDelay: 3000
+		tooltipHideDelay: 3000,
+		video: Video
 	}
 
 	constructor (props) {
@@ -703,9 +673,6 @@ const VideoPlayerBase = class extends React.Component {
 
 		// Internal State
 		this.video = null;
-		this.handledMediaForwards = {};
-		this.handledMediaEvents = {};
-		this.handledCustomMediaForwards = {};
 		this.pulsedPlaybackRate = null;
 		this.pulsedPlaybackState = null;
 		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
@@ -718,19 +685,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.sliderKnobProportion = 0;
 
 		this.initI18n();
-
-		// Generate event handling forwarders and a smooth block to pass to <Video>
-		for (let key in handledMediaEventsMap) {
-			const eventName = handledMediaEventsMap[key];
-			this.handledMediaForwards[eventName] = forward(eventName);
-			this.handledMediaEvents[eventName] = this.handleEvent;
-		}
-		// Generate event handling forwarders for the custom events too
-		for (let eventName in props.customMediaEventsMap) {
-			const propName = props.customMediaEventsMap[eventName];
-			const forwardEvent = forward(propName);
-			this.handledCustomMediaForwards[eventName] = ev => forwardEvent(ev, this.props);
-		}
 
 		// Re-render-necessary State
 		this.state = {
@@ -771,7 +725,6 @@ const VideoPlayerBase = class extends React.Component {
 		on('keypress', this.activityDetected);
 		on('keydown', this.handleGlobalKeyDown);
 		on('keyup', this.handleKeyUp);
-		this.attachCustomMediaEvents();
 		this.startDelayedFeedbackHide();
 		this.calculateMaxComponentCount();
 	}
@@ -878,7 +831,6 @@ const VideoPlayerBase = class extends React.Component {
 		off('keypress', this.activityDetected);
 		off('keydown', this.handleGlobalKeyDown);
 		off('keyup', this.handleKeyUp);
-		this.detachCustomMediaEvents();
 		this.stopRewindJob();
 		this.stopAutoCloseTimeout();
 		this.stopDelayedTitleHide();
@@ -931,18 +883,6 @@ const VideoPlayerBase = class extends React.Component {
 			this.locale = locale;
 
 			this.durfmt = new DurationFmt({length: 'medium', style: 'clock', useNative: false});
-		}
-	}
-
-	attachCustomMediaEvents = () => {
-		for (let eventName in this.handledCustomMediaForwards) {
-			on(eventName, this.handledCustomMediaForwards[eventName], this.video);
-		}
-	}
-
-	detachCustomMediaEvents = () => {
-		for (let eventName in this.handledCustomMediaForwards) {
-			off(eventName, this.handledCustomMediaForwards[eventName], this.video);
 		}
 	}
 
@@ -1269,26 +1209,8 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Media Interaction Methods
 	//
-	updateMainState = () => {
-		const el = this.video;
-		const updatedState = {
-			// Standard video properties
-			currentTime: el.currentTime,
-			duration: el.duration,
-			buffered: el.buffered,
-			paused: el.playbackRate !== 1 || el.paused,
-			muted: el.muted,
-			volume: el.volume,
-			playbackRate: el.playbackRate,
-			readyState: el.readyState,
-
-			// Non-standard state computed from properties
-			proportionLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration,
-			proportionPlayed: el.currentTime / el.duration || 0,
-			error: el.networkState === el.NETWORK_NO_SOURCE,
-			loading: el.readyState < el.HAVE_ENOUGH_DATA,
-			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime
-		};
+	updateMainState = (states) => {
+		const updatedState = Object.assign({}, states);
 
 		// If there's an error, we're obviously not loading, no matter what the readyState is.
 		if (updatedState.error) updatedState.loading = false;
@@ -1300,7 +1222,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		const isRewind = this.prevCommand === 'rewind' || this.prevCommand === 'slowRewind';
 		const isForward = this.prevCommand === 'fastForward' || this.prevCommand === 'slowForward';
-		if (this.props.pauseAtEnd && (el.currentTime === 0 && isRewind || el.currentTime === el.duration && isForward)) {
+		if (this.props.pauseAtEnd && (updatedState.currentTime === 0 && isRewind || updatedState.currentTime === updatedState.duration && isForward)) {
 			this.pause();
 		}
 
@@ -1691,19 +1613,14 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleEvent = (ev) => {
-		this.updateMainState();
+		const {mediaStates, ...rest} = ev;
+		this.updateMainState(mediaStates);
 		if (ev.type === 'onLoadStart') {
-			this.handleLoadStart(ev);
+			this.handleLoadStart(rest);
 		}
 
 		if (ev.type === 'play') {
 			this.mayRenderBottomControls();
-		}
-		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
-		const fwd = this.handledMediaForwards[handledMediaEventsMap[ev.type]];
-		if (fwd) {
-			ev = this.addStateToEvent(ev);
-			fwd(ev, this.props);
 		}
 	}
 
@@ -1965,6 +1882,7 @@ const VideoPlayerBase = class extends React.Component {
 			thumbnailComponent,
 			thumbnailSrc,
 			title,
+			video: VideoComponent,
 			...rest} = this.props;
 
 		delete rest.announce;
@@ -1993,12 +1911,6 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.tooltipHideDelay;
 		delete rest.videoPath;
 
-		// Remove the events we manually added so they aren't added twice or fail.
-		for (let eventName in rest.customMediaEventsMap) {
-			delete rest[rest.customMediaEventsMap[eventName]];
-		}
-		delete rest.customMediaEventsMap;
-
 		// Handle some cases when the "more" button is pressed
 		const moreDisabled = !(this.state.more);
 		const controlsAriaProps = this.getControlsAriaProps();
@@ -2014,16 +1926,16 @@ const VideoPlayerBase = class extends React.Component {
 				style={style}
 			>
 				{/* Video Section */}
-				<video
+				<VideoComponent
 					{...rest}
 					autoPlay={!noAutoPlay}
 					className={css.video}
 					controls={false}
 					ref={this.setVideoRef}
-					{...this.handledMediaEvents}
+					onUpdate={this.handleEvent}
 				>
 					{source}
-				</video>
+				</VideoComponent>
 
 				<Overlay
 					bottomControlsVisible={this.state.mediaControlsVisible}
