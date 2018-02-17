@@ -1212,6 +1212,8 @@ const VideoPlayerBase = class extends React.Component {
 	updateMainState = (states) => {
 		const updatedState = Object.assign({}, states);
 
+		updatedState.sliderTooltipTime = this.sliderScrubbing ? (this.sliderKnobProportion * this.video.duration) : this.video.currentTime;
+
 		// If there's an error, we're obviously not loading, no matter what the readyState is.
 		if (updatedState.error) updatedState.loading = false;
 

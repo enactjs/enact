@@ -124,8 +124,7 @@ class Video extends React.Component {
 			proportionLoaded: this.video.buffered.length && this.video.buffered.end(this.video.buffered.length - 1) / this.video.duration,
 			proportionPlayed: this.video.currentTime / this.video.duration || 0,
 			error: this.video.networkState === this.video.NETWORK_NO_SOURCE,
-			loading: this.video.readyState < this.video.HAVE_ENOUGH_DATA,
-			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * this.video.duration) : this.video.currentTime
+			loading: this.video.readyState < this.video.HAVE_ENOUGH_DATA
 		};
 
 		forward('onUpdate', {...ev, mediaStates: {...updatedState}}, this.props);
