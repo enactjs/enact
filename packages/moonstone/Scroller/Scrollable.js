@@ -294,24 +294,18 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		componentDidUpdate (prevProps, prevState) {
 			// Need to sync calculated client size if it is different from the real size
 			if (this.childRef.syncClientSize) {
-				const {isVerticalScrollbarVisible, isHorizontalScrollbarVisible} = this.state;
 				// If we actually synced, we need to reset scroll position.
 				if (this.childRef.syncClientSize()) {
 					this.setScrollLeft(0);
 					this.setScrollTop(0);
 				}
-				// Need to check item total size is same with client size when scrollbar is visible
-				// By hiding scrollbar again, infinite function call maybe happens
-				this.isFitClientSize = (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) && this.childRef.isSameTotalItemSizeWithClient();
 			}
 
 			this.clampScrollPosition();
 
 			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
-			if (!this.isFitClientSize) {
-				this.updateScrollbars();
-			}
+			this.updateScrollbars();
 
 			if (this.scrollToInfo !== null) {
 				if (!this.deferScrollTo) {
@@ -380,7 +374,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		deferScrollTo = true
 		pageDistance = 0
 		isWheeling = false
-		isFitClientSize = false
 		isUpdatedScrollThumb = false
 
 		// drag info

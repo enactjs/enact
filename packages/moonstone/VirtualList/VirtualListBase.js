@@ -1103,14 +1103,6 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	isSameTotalItemSizeWithClient = () => {
-		const
-			node = this.containerRef,
-			{clientWidth, clientHeight} = this.props.clientSize || this.getClientSize(node);
-
-		return (this.getVirtualScrollDimension() <= (this.isPrimaryDirectionVertical ? clientHeight : clientWidth));
-	}
-
 	syncClientSize = () => {
 		const
 			{props} = this,
