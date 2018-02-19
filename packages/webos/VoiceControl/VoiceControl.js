@@ -31,6 +31,8 @@ const VoiceControl = (function () {
 						e.value = 50;
 					} else if (voiceIntent === 'pick') {
 						e.value = 'e';
+					} else if (voiceIntent === 'settime') {
+						e.timestamp = '1519018883980';
 					}
 
 					tObj.onVoice(e);
