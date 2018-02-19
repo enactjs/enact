@@ -2,7 +2,7 @@ import {VirtualGridList} from '@enact/moonstone/VirtualList';
 import GridListImageItem from '@enact/moonstone/VirtualList/GridListImageItem';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import ri from '@enact/ui/resolution';
-import React from 'react';
+import React, {Component} from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {boolean, number, select} from '@storybook/addon-knobs';
@@ -43,6 +43,33 @@ for (let i = 0; i < 1000; i++) {
 	items.push({text, subText, source});
 }
 
+class VirtualGridListWrapper extends Component {
+	getScrollDistance = (getScrollDistance) => {
+		window.getScrollDistance = getScrollDistance;
+	}
+	render = () => (
+		<VirtualGridList
+			ref = {(ref) =>{window.ref = ref;}}
+			cbScrollDistance={this.getScrollDistance}
+			component={renderItem}
+			data={items}
+			dataSize={number('dataSize', items.length)}
+			direction={select('direction', prop.direction, 'vertical')}
+			focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+			itemSize={{
+				minWidth: ri.scale(number('minWidth', 180)),
+				minHeight: ri.scale(number('minHeight', 270))
+			}}
+			onScrollStart={action('onScrollStart')}
+			onScrollStop={action('onScrollStop')}
+			spacing={ri.scale(number('spacing', 20))}
+			style={{
+				height: ri.unit(549, 'rem')
+			}}
+		/>
+	)
+}
+
 storiesOf('Moonstone', module)
 	.add(
 		'VirtualList.VirtualGridList',
@@ -50,22 +77,6 @@ storiesOf('Moonstone', module)
 			propTables: [Config],
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
-			<VirtualGridList
-				component={renderItem}
-				data={items}
-				dataSize={number('dataSize', items.length)}
-				direction={select('direction', prop.direction, 'vertical')}
-				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
-				itemSize={{
-					minWidth: ri.scale(number('minWidth', 180)),
-					minHeight: ri.scale(number('minHeight', 270))
-				}}
-				onScrollStart={action('onScrollStart')}
-				onScrollStop={action('onScrollStop')}
-				spacing={ri.scale(number('spacing', 20))}
-				style={{
-					height: ri.unit(549, 'rem')
-				}}
-			/>
+			<VirtualGridListWrapper />
 		))
 	);
