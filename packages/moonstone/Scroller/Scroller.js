@@ -493,19 +493,16 @@ const Scroller = SpotlightContainerDecorator(
  *   This option is available for only VirtualList kind.
  * - {node} - You can set a node to scroll
  *
- * Example:
- * ```
+ * @name cbScrollDistance
+ * @type {Function}
+ * @memberof moonstone/Scroller.Scroller
+ * @example
  *	// If you set cbScrollDistance prop like below;
  *	cbScrollDistance: (fn) => {this.getScrollDistance = fn;}
  *	// You can simply call like below;
  *	const {left, top} = this.getScrollDistance({align: 'top'});
  *  // or
  *  const {left, top} = this.getScrollDistance({index: 100});
- * ```
- *
- * @name cbScrollDistance
- * @type {Function}
- * @memberof moonstone/Scroller.Scroller
  * @instance
  * @public
  */
