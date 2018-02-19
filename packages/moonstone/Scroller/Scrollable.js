@@ -137,36 +137,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			cbScrollDistance: PropTypes.func,
 
 			/**
-			 * The callback function which is called for linking scrollTo function.
-			 * You should specify a callback function as the value of this prop
-			 * to use scrollTo feature.
-			 *
-			 * The scrollTo function passed to the parent component requires below as an argument.
-			 * - {position: {x, y}} - You can set a pixel value for x and/or y position
-			 * - {align} - You can set one of values below for align
-			 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
-			 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
-			 * - {index} - You can set an index of specific item. (`0` or positive integer)
-			 *   This option is available for only VirtualList kind.
-			 * - {node} - You can set a node to scroll
-			 * - {animate} - When `true`, scroll occurs with animation.
-			 *   Set it to `false`, if you want scrolling without animation.
-			 * - {focus} - Set it `true`, if you want the item to be focused after scroll.
-			 *   This option is only valid when you scroll by `index` or `node`.
-			 *
-			 * Example:
-			 * ```
-			 *	// If you set cbScrollTo prop like below;
-			 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
-			 *	// You can simply call like below;
-			 *	this.scrollTo({align: 'top'}); // scroll to the top
-			 * ```
-			 * @type {Function}
-			 * @public
-			 */
-			cbScrollTo: PropTypes.func,
-
-			/**
 			 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
 			 * not move focus to the scrollbar controls.
 			 *
@@ -239,7 +209,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		static defaultProps = {
 			cbScrollDistance: nop,
-			cbScrollTo: nop,
 			onScroll: nop,
 			onScrollStart: nop,
 			onScrollStop: nop,
@@ -284,7 +253,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			};
 
 			props.cbScrollDistance(this.getScrollDistance);
-			props.cbScrollTo(this.scrollTo);
 		}
 
 		// component life cycle
@@ -976,23 +944,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scrollTo API
 
-		getScrollDistance = (opt) => {
-			if (this.childRef) {
-				const distance = this.getPositionForScrollTo(opt);
-
-				if (distance.left === null) {
-					distance.left = this.scrollLeft;
-				}
-				if (distance.top === null) {
-					distance.top = this.scrollTop;
-				}
-
-				return distance;
-			} else {
-				return {left: null, top: null};
-			}
-		}
-
 		getPositionForScrollTo = (opt) => {
 			const
 				bounds = this.getScrollBounds(),
@@ -1052,6 +1003,23 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			return {left, top};
+		}
+
+		getScrollDistance = (opt) => {
+			if (this.childRef && !this.deferScrollTo) {
+				const distance = this.getPositionForScrollTo(opt);
+
+				if (distance.left === null) {
+					distance.left = this.scrollLeft;
+				}
+				if (distance.top === null) {
+					distance.top = this.scrollTop;
+				}
+
+				return distance;
+			} else {
+				return {left: null, top: null};
+			}
 		}
 
 		scrollTo = (opt) => {
@@ -1270,7 +1238,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				scrollableClasses = classNames(css.scrollable, className);
 
 			delete props.cbScrollDistance;
-			delete props.cbScrollTo;
 			delete props.className;
 			delete props.focusableScrollbar;
 			delete props.horizontalScrollbar;

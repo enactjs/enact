@@ -56,32 +56,32 @@ const VirtualList = kind({
 		itemSize: PropTypes.number.isRequired
 
 		/**
-		 * The callback function which is called for linking scrollTo function.
+		 * The callback function to get scroll top, left values.
+		 * The callback function should be called after being rendered.
+		 * If not, it will return `'{left: null, top: null}'`.
 		 * You should specify a callback function as the value of this prop
-		 * to use scrollTo feature.
+		 * to use getScrollDistance feature.
 		 *
-		 * The scrollTo function passed to the parent component requires below as an argument.
+		 * The getScrollDistance function passed to the parent component requires below as an argument.
 		 * - {position: {x, y}} - You can set a pixel value for x and/or y position
 		 * - {align} - You can set one of values below for align
 		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
 		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
 		 * - {index} - You can set an index of specific item. (`0` or positive integer)
-		 *   This option is available only for `VirtualList` kind.
+		 *   This option is available for only VirtualList kind.
 		 * - {node} - You can set a node to scroll
-		 * - {animate} - When `true`, scroll occurs with animation.
-		 *   Set it to `false` if you want scrolling without animation.
-		 * - {focus} - Set `true` if you want the item to be focused after scroll.
-		 *   This option is only valid when you scroll by `index` or `node`.
 		 *
 		 * Example:
-		 * ````
-		 *	// If you set cbScrollTo prop like below;
-		 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
+		 * ```
+		 *	// If you set cbScrollDistance prop like below;
+		 *	cbScrollDistance: (fn) => {this.getScrollDistance = fn;}
 		 *	// You can simply call like below;
-		 *	this.scrollTo({align: 'top'}); // scroll to the top
+		 *	const {left, top} = this.getScrollDistance({align: 'top'});
+		 *  // or
+		 *  const {left, top} = this.getScrollDistance({index: 100});
 		 * ```
 		 *
-		 * @name cbScrollTo
+		 * @name getScrollDistance
 		 * @type {Function}
 		 * @memberof moonstone/VirtualList.VirtualList
 		 * @instance
@@ -244,31 +244,32 @@ const VirtualGridList = kind({
 		itemSize: gridListItemSizeShape.isRequired
 
 		/**
-		 * The callback function which is called for linking scrollTo function.
+		 * The callback function to get scroll top, left values.
+		 * The callback function should be called after being rendered.
+		 * If not, it will return `'{left: null, top: null}'`.
 		 * You should specify a callback function as the value of this prop
-		 * to use scrollTo feature.
+		 * to use getScrollDistance feature.
 		 *
-		 * The scrollTo function passed to the parent component requires below as an argument.
+		 * The getScrollDistance function passed to the parent component requires below as an argument.
 		 * - {position: {x, y}} - You can set a pixel value for x and/or y position
 		 * - {align} - You can set one of values below for align
 		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
 		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
 		 * - {index} - You can set an index of specific item. (`0` or positive integer)
-		 *   This option is available only for `VirtualList` kind.
+		 *   This option is available for only VirtualList kind.
 		 * - {node} - You can set a node to scroll
-		 * - {animate} - When `true`, scroll occurs with animation.
-		 *   Set it to `false` if you want scrolling without animation.
-		 * - {focus} - Set `true` if you want the item to be focused after scroll.
-		 *   This option is only valid when you scroll by `index` or `node`.
 		 *
 		 * Example:
-		 *	// If you set cbScrollTo prop like below;
-		 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
+		 * ```
+		 *	// If you set cbScrollDistance prop like below;
+		 *	cbScrollDistance: (fn) => {this.getScrollDistance = fn;}
 		 *	// You can simply call like below;
-		 *	this.scrollTo({align: 'top'}); // scroll to the top
+		 *	const {left, top} = this.getScrollDistance({align: 'top'});
+		 *  // or
+		 *  const {left, top} = this.getScrollDistance({index: 100});
 		 * ```
 		 *
-		 * @name cbScrollTo
+		 * @name cbScrollDistance
 		 * @type {Function}
 		 * @memberof moonstone/VirtualList.VirtualGridList
 		 * @instance

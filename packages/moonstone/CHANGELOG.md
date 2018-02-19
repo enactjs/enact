@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
+- `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` prop `cbScrollTo` to be replaced by `cbScrollDistance`
 - `moonstone/VirtualFlexList` to be replaced by `ui/VirtualFlexList`
 - `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`
 
