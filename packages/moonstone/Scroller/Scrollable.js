@@ -260,6 +260,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			};
 
 			props.cbScrollTo(this.scrollTo);
+			if (props.cbScrollTo) {
+				deprecate({name: 'cbScrollTo', since: '1.14.0', until: '2.0.0'});
+			}
 		}
 
 		// component life cycle
