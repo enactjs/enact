@@ -134,6 +134,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 *	this.scrollTo({align: 'top'}); // scroll to the top
 			 * ```
 			 * @type {Function}
+			 * @deprecated will be removed in 2.0.0
 			 * @public
 			 */
 			cbScrollTo: PropTypes.func,
