@@ -139,6 +139,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			cbScrollTo: PropTypes.func,
 
 			/**
+			 * Size of the data.
+			 *
+			 * @type {Number}
+			 * @default 0
+			 * @public
+			 */
+			dataSize: PropTypes.number,
+
+			/**
 			 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
 			 * not move focus to the scrollbar controls.
 			 *
@@ -299,6 +308,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps, prevState) {
+			const
+				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+				{dataSize} = this.props;
+
 			// Need to sync calculated client size if it is different from the real size
 			if (this.childRef.syncClientSize) {
 				this.childRef.syncClientSize();
@@ -308,7 +321,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
-			this.updateScrollbars();
+			if (!(
+				dataSize === prevProps.dataSize &&
+				(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
+			)) {
+				this.updateScrollbars();
+			}
 
 			if (this.scrollToInfo !== null) {
 				if (!this.deferScrollTo) {
@@ -319,8 +337,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			// publish container resize changes
-			const horizontal = this.state.isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
-			const vertical = this.state.isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
+			const horizontal = isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
+			const vertical = isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
 			if (horizontal || vertical) {
 				this.publisher.publish({
 					horizontal,
