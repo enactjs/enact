@@ -221,7 +221,7 @@ const TimePicker = Pure(
 		VoiceControlDecorator({
 			voiceSlot: [
 				{
-					voiceIntent: 'settime',
+					voiceIntent: 'set_time',
 					voiceHandler: (e, props) => {
 						let {timestamp} = e;
 						if (timestamp && props.onChange) {
