@@ -214,8 +214,8 @@ const PrivateIconButtonFactory = factory(({css}) => {
  */
 const IconButton = PrivateIconButtonFactory();
 
-const IconButtonFactory = deprecate(PrivateIconButtonFactory, {name: 'IconButtonFactory', since: '1.14.0', until: '2.0.0'});
-const IconButtonBaseFactory = deprecate(PrivateIconButtonBaseFactory, {name: 'IconButtonBaseFactory', since: '1.14.0', until: '2.0.0'});
+const IconButtonFactory = deprecate(PrivateIconButtonFactory, {name: 'moonstone/IconButton.IconButtonFactory', since: '1.14.0', until: '2.0.0'});
+const IconButtonBaseFactory = deprecate(PrivateIconButtonBaseFactory, {name: 'moonstone/IconButton.IconButtonBaseFactory', since: '1.14.0', until: '2.0.0'});
 
 export default IconButton;
 export {

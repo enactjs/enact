@@ -498,8 +498,8 @@ const PrivateSliderFactory = factory(css => {
 	);
 });
 
-const SliderFactory = deprecate(PrivateSliderFactory, {name: 'SliderFactory', since: '1.14.0', until: '2.0.0'});
-const SliderBaseFactory = deprecate(PrivateSliderBaseFactory, {name: 'SliderBaseFactory', since: '1.14.0', until: '2.0.0'});
+const SliderFactory = deprecate(PrivateSliderFactory, {name: 'moonstone/Slider.SliderFactory', since: '1.14.0', until: '2.0.0'});
+const SliderBaseFactory = deprecate(PrivateSliderBaseFactory, {name: 'moonstone/Slider.SliderBaseFactory', since: '1.14.0', until: '2.0.0'});
 const SliderBase = PrivateSliderBaseFactory();
 const Slider = PrivateSliderFactory();
 

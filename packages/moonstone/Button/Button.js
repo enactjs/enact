@@ -306,8 +306,8 @@ const PrivateButtonFactory = factory(css => {
 	return MoonstoneButton;
 });
 
-const ButtonBaseFactory = deprecate(PrivateButtonBaseFactory, {name: 'ButtonBaseFactory', since: '1.14.0', until: '2.0.0'});
-const ButtonFactory = deprecate(PrivateButtonFactory, {name: 'ButtonFactory', since: '1.14.0', until: '2.0.0'});
+const ButtonBaseFactory = deprecate(PrivateButtonBaseFactory, {name: 'moonstone/Button.ButtonBaseFactory', since: '1.14.0', until: '2.0.0'});
+const ButtonFactory = deprecate(PrivateButtonFactory, {name: 'moonstone/Button.ButtonFactory', since: '1.14.0', until: '2.0.0'});
 const ButtonBase = PrivateButtonBaseFactory();
 const Button = PrivateButtonFactory();
 
