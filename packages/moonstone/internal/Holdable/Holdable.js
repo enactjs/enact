@@ -1,5 +1,5 @@
 import hoc from '@enact/core/hoc';
-import Holdable from '@enact/ui/Holdable';
+import {privateHoldable as Holdable} from '@enact/ui/Holdable';
 
 /**
  * Default config for {@link moonstone/internal/Holdable.Holdable}

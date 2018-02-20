@@ -4,6 +4,7 @@
  * @module ui/Holdable
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import {off, on, once} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
@@ -126,6 +127,7 @@ const defaultConfig = {
  * @memberof ui/Holdable
  * @hoc
  * @public
+ * @deprecated since 1.14.0
  */
 const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const {frequency, events, endHold, moveTolerance, resume} = config;
@@ -374,5 +376,10 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	};
 });
 
-export default HoldableHOC;
-export {HoldableHOC as Holdable};
+const deprecatedHoldableHOC = deprecate(HoldableHOC, {name: 'Holdable', since: '1.14.0', until: '2.0.0'});
+
+export default deprecatedHoldableHOC;
+export {
+	deprecatedHoldableHOC as Holdable,
+	HoldableHOC as privateHoldable
+};
