@@ -68,7 +68,7 @@ const defaultConfig = {
  * @memberof ui/Pressable
  * @hoc
  * @public
- * @deprecated since 1.14.0
+ * @deprecated since 1.14.0. Will be replaced by `ui/Touchable` in 2.0.0
  */
 const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const {depress, release, prop, leave} = config;
@@ -204,7 +204,7 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	};
 });
 
-const deprecatedPressableHOC = deprecate(PressableHOC, {name: 'Pressable', since: '1.14.0', until: '2.0.0'});
+const deprecatedPressableHOC = deprecate(PressableHOC, {name: 'ui/Pressable', since: '1.14.0', until: '2.0.0', replacedBy: 'ui/Touchable'});
 
 export default deprecatedPressableHOC;
 export {

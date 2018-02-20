@@ -127,7 +127,7 @@ const defaultConfig = {
  * @memberof ui/Holdable
  * @hoc
  * @public
- * @deprecated since 1.14.0
+ * @deprecated since 1.14.0. Will be replaced by `ui/Touchable` in 2.0.0
  */
 const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const {frequency, events, endHold, moveTolerance, resume} = config;
@@ -376,7 +376,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	};
 });
 
-const deprecatedHoldableHOC = deprecate(HoldableHOC, {name: 'Holdable', since: '1.14.0', until: '2.0.0'});
+const deprecatedHoldableHOC = deprecate(HoldableHOC, {name: 'ui/Holdable', since: '1.14.0', until: '2.0.0', replacedBy: 'ui/Touchable'});
 
 export default deprecatedHoldableHOC;
 export {
