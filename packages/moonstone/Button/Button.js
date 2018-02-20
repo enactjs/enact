@@ -9,7 +9,7 @@
  */
 
 import deprecate from '@enact/core/internal/deprecate';
-import factory from '@enact/core/factory';
+import {privateFactory as factory} from '@enact/core/factory';
 import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
@@ -47,8 +47,9 @@ import componentCss from './Button.less';
  * @memberof moonstone/Button
  * @factory
  * @public
+ * @deprecated
  */
-const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
+const PrivateButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 
 	/**
 	 * {@link moonstone/Button.ButtonBase} is a stateless Button with Moonstone styling
@@ -243,9 +244,10 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
  * @memberof moonstone/Button
  * @factory
  * @public
+ * @deprecated
  */
-const ButtonFactory = factory(css => {
-	const Base = ButtonBaseFactory(css);
+const PrivateButtonFactory = factory(css => {
+	const Base = PrivateButtonBaseFactory(css);
 	/**
 	 * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
 	 * Pressable applied.  If the Button's child component is text, it will be uppercased unless
@@ -304,8 +306,10 @@ const ButtonFactory = factory(css => {
 	return MoonstoneButton;
 });
 
-const ButtonBase = ButtonBaseFactory();
-const Button = ButtonFactory();
+const ButtonBaseFactory = deprecate(PrivateButtonBaseFactory, {name: 'ButtonBaseFactory', since: '1.14.0', until: '2.0.0'});
+const ButtonFactory = deprecate(PrivateButtonFactory, {name: 'ButtonFactory', since: '1.14.0', until: '2.0.0'});
+const ButtonBase = PrivateButtonBaseFactory();
+const Button = PrivateButtonFactory();
 
 export default Button;
-export {Button, ButtonBase, ButtonBaseFactory, ButtonFactory};
+export {Button, ButtonBase, ButtonBaseFactory, ButtonFactory, PrivateButtonBaseFactory};
