@@ -11,7 +11,7 @@
  */
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
-import UiItem from '@enact/ui/Item';
+import {ItemBase as UiItemBase, ItemDecorator as UiItemDecorator} from '@enact/ui/Item';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -56,7 +56,7 @@ const ItemBase = kind({
 
 	render: ({css, ...rest}) => {
 		return (
-			<UiItem
+			<UiItemBase
 				{...rest}
 				css={css}
 			/>
@@ -77,6 +77,7 @@ const ItemBase = kind({
  */
 const ItemDecorator = compose(
 	Pure,
+	UiItemDecorator,
 	Spottable,
 	MarqueeDecorator({invalidateProps: ['inline', 'autoHide']}),
 	Skinnable

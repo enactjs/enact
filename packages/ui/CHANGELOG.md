@@ -4,6 +4,16 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/Touchable` support for drag gesture
+
+## [2.0.0-alpha.4] - 2018-02-13
+
+### Added
+
+- `ui/BodyText`, `ui/Image`, `ui/Item`, `ui/ProgressBar`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleIcon` components as unstyled base components to support UI libraries
+
 ### Changed
 
 - `ui/Repeater` and `ui/Group` to require a unique key for each object type data

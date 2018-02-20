@@ -1,4 +1,5 @@
 import {Job} from '@enact/core/util';
+import PropTypes from 'prop-types';
 
 class Flick {
 	constructor () {
@@ -77,6 +78,7 @@ class Flick {
 				// generate the flick using the start event so it has those coordinates
 				// this.sendFlick(ti.startEvent, x, y, v);
 				this.onFlick({
+					type: 'onFlick',
 					direction: vertical ? 'vertical' : 'horizontal',
 					velocityX: x,
 					velocityY: y,
@@ -89,7 +91,21 @@ class Flick {
 	}
 }
 
+const defaultFlickConfig = {
+	maxDuration: 250,
+	maxMoves: 5,
+	minVelocity: 0.1
+};
+
+const flickConfigPropType = PropTypes.shape({
+	maxDuration: PropTypes.number,
+	maxMoves: PropTypes.number,
+	maxVelocity: PropTypes.number
+});
+
 export default Flick;
 export {
-	Flick
+	defaultFlickConfig,
+	Flick,
+	flickConfigPropType
 };
