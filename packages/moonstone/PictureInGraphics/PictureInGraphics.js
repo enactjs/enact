@@ -12,9 +12,9 @@ import Skinnable from '../Skinnable';
 import {ItemBase} from '../Item';
 import {MarqueeController, MarqueeText} from '../Marquee';
 
-import {subscribeVideoState, launchApp} from '@enact/webos/PictureInGraphic';
+import {subscribeVideoState, launchApp} from '@enact/webos/PictureInGraphics';
 
-import css from './PictureInGraphic.less';
+import css from './PictureInGraphics.less';
 
 const defaultPlaceholder =
 	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
@@ -22,7 +22,7 @@ const defaultPlaceholder =
 	'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
 	'4NCg==';
 
-class PictureInGraphicBase extends React.Component {
+class PictureInGraphicsBase extends React.Component {
 	static propTypes = {
 		source: PropTypes.string.isRequired,
 		sourceType: PropTypes.oneOf(['broadcast', 'externalInput']).isRequired,
@@ -154,7 +154,7 @@ class PictureInGraphicBase extends React.Component {
 
 		return (
 			<div {...rest} style={containerWidth}>
-				<SpottableItem className={css['pictureInGraphic']} style={pigStyle} onClick={this.handleClick} spotlightDisabled={spotlightDisabled}>
+				<SpottableItem className={css['pictureInGraphics']} style={pigStyle} onClick={this.handleClick} spotlightDisabled={spotlightDisabled}>
 					<video
 						className={css.video}
 						autoPlay
@@ -190,10 +190,10 @@ const SpottableItem =  MarqueeController(
 	)
 );
 
-const PictureInGraphic = Slottable(
+const PictureInGraphics = Slottable(
 	{slots: ['captionComponent']},
-	PictureInGraphicBase
+	PictureInGraphicsBase
 );
 
-export default PictureInGraphic;
-export {PictureInGraphic, PictureInGraphicBase};
+export default PictureInGraphics;
+export {PictureInGraphics, PictureInGraphicsBase};
