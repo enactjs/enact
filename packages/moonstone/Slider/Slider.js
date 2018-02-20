@@ -8,7 +8,7 @@ import deprecate from '@enact/core/internal/deprecate';
 import {privateFactory as factory} from '@enact/core/factory';
 import {forKey, forProp, forward, handle, oneOf, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import Pressable from '@enact/ui/Pressable';
+import {privatePressable as Pressable} from '@enact/ui/Pressable';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';

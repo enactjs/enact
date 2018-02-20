@@ -1,6 +1,6 @@
 import hoc from '@enact/core/hoc';
 import Spottable from '@enact/spotlight/Spottable';
-import Pressable from '@enact/ui/Pressable';
+import {privatePressable as Pressable} from '@enact/ui/Pressable';
 import React from 'react';
 import PropTypes from 'prop-types';
 

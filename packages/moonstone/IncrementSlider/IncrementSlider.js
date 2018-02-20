@@ -9,7 +9,7 @@ import {extractAriaProps} from '@enact/core/util';
 import {privateFactory as factory} from '@enact/core/factory';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
-import Pressable from '@enact/ui/Pressable';
+import {privatePressable as Pressable} from '@enact/ui/Pressable';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
