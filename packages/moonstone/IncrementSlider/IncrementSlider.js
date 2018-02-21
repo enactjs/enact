@@ -9,7 +9,7 @@ import {extractAriaProps} from '@enact/core/util';
 import {privateFactory as factory} from '@enact/core/factory';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
-import Pressable from '@enact/ui/Pressable';
+import {privatePressable as Pressable} from '@enact/ui/Pressable';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
@@ -633,8 +633,8 @@ const PrivateIncrementSliderFactory = factory((config) => {
 	);
 });
 
-const IncrementSliderFactory = deprecate(PrivateIncrementSliderFactory, {name: 'IncrementSliderFactory', since: '1.14.0', until: '2.0.0'});
-const IncrementSliderBaseFactory = deprecate(PrivateIncrementSliderBaseFactory, {name: 'IncrementSliderBaseFactory', since: '1.14.0', until: '2.0.0'});
+const IncrementSliderFactory = deprecate(PrivateIncrementSliderFactory, {name: 'moonstone/IncrementSlider.IncrementSliderFactory', since: '1.14.0', until: '2.0.0'});
+const IncrementSliderBaseFactory = deprecate(PrivateIncrementSliderBaseFactory, {name: 'moonstone/IncrementSlider.IncrementSliderBaseFactory', since: '1.14.0', until: '2.0.0'});
 const IncrementSliderBase = PrivateIncrementSliderBaseFactory();
 const IncrementSlider = PrivateIncrementSliderFactory();
 

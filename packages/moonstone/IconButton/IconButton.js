@@ -12,7 +12,7 @@ import deprecate from '@enact/core/internal/deprecate';
 import {privateFactory as factory} from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
-import Pressable from '@enact/ui/Pressable';
+import {privatePressable as Pressable} from '@enact/ui/Pressable';
 import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -214,8 +214,8 @@ const PrivateIconButtonFactory = factory(({css}) => {
  */
 const IconButton = PrivateIconButtonFactory();
 
-const IconButtonFactory = deprecate(PrivateIconButtonFactory, {name: 'IconButtonFactory', since: '1.14.0', until: '2.0.0'});
-const IconButtonBaseFactory = deprecate(PrivateIconButtonBaseFactory, {name: 'IconButtonBaseFactory', since: '1.14.0', until: '2.0.0'});
+const IconButtonFactory = deprecate(PrivateIconButtonFactory, {name: 'moonstone/IconButton.IconButtonFactory', since: '1.14.0', until: '2.0.0'});
+const IconButtonBaseFactory = deprecate(PrivateIconButtonBaseFactory, {name: 'moonstone/IconButton.IconButtonBaseFactory', since: '1.14.0', until: '2.0.0'});
 
 export default IconButton;
 export {

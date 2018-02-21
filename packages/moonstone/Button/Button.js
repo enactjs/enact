@@ -14,7 +14,7 @@ import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
-import Pressable from '@enact/ui/Pressable';
+import {privatePressable as Pressable} from '@enact/ui/Pressable';
 import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -306,8 +306,8 @@ const PrivateButtonFactory = factory(css => {
 	return MoonstoneButton;
 });
 
-const ButtonBaseFactory = deprecate(PrivateButtonBaseFactory, {name: 'ButtonBaseFactory', since: '1.14.0', until: '2.0.0'});
-const ButtonFactory = deprecate(PrivateButtonFactory, {name: 'ButtonFactory', since: '1.14.0', until: '2.0.0'});
+const ButtonBaseFactory = deprecate(PrivateButtonBaseFactory, {name: 'moonstone/Button.ButtonBaseFactory', since: '1.14.0', until: '2.0.0'});
+const ButtonFactory = deprecate(PrivateButtonFactory, {name: 'moonstone/Button.ButtonFactory', since: '1.14.0', until: '2.0.0'});
 const ButtonBase = PrivateButtonBaseFactory();
 const Button = PrivateButtonFactory();
 

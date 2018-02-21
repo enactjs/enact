@@ -1,6 +1,6 @@
 import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
-import Pressable from '@enact/ui/Pressable';
+import {privatePressable as Pressable} from '@enact/ui/Pressable';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';

@@ -97,7 +97,7 @@ const factory = (defaultConfig, fn) => (config) => {
 	});
 };
 
-const deprecatedFactory = deprecate(factory, {name: 'factory', since: '1.14.0', until: '2.0.0'});
+const deprecatedFactory = deprecate(factory, {name: 'core/factory', since: '1.14.0', until: '2.0.0'});
 
 export default deprecatedFactory;
 export {

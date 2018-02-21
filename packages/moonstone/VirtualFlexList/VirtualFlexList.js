@@ -124,7 +124,7 @@ const itemsShape = PropTypes.oneOfType([
  * @class VirtualFlexList
  * @memberof moonstone/VirtualFlexList
  * @ui
- * @deprecated will be removed in 2.0.0
+ * @deprecated since 1.14.0. Will be replaced by `ui/VirtualFlexList` in 2.0.0
  * @public
  */
 class VirtualFlexList extends Component {
@@ -225,7 +225,7 @@ class VirtualFlexList extends Component {
 	constructor (props) {
 		super(props);
 
-		deprecate({name: 'VirtualFlexList', since: '1.14.0', until: '2.0.0'});
+		deprecate({name: 'moonstone/VirtualFlexList', since: '1.14.0', until: '2.0.0', replacedBy: 'ui/VirtualFlexList'});
 
 		this.state = {
 			x: props.x,

@@ -8,7 +8,7 @@ import deprecate from '@enact/core/internal/deprecate';
 import {privateFactory as factory} from '@enact/core/factory';
 import {forKey, forProp, forward, handle, oneOf, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import Pressable from '@enact/ui/Pressable';
+import {privatePressable as Pressable} from '@enact/ui/Pressable';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
@@ -498,8 +498,8 @@ const PrivateSliderFactory = factory(css => {
 	);
 });
 
-const SliderFactory = deprecate(PrivateSliderFactory, {name: 'SliderFactory', since: '1.14.0', until: '2.0.0'});
-const SliderBaseFactory = deprecate(PrivateSliderBaseFactory, {name: 'SliderBaseFactory', since: '1.14.0', until: '2.0.0'});
+const SliderFactory = deprecate(PrivateSliderFactory, {name: 'moonstone/Slider.SliderFactory', since: '1.14.0', until: '2.0.0'});
+const SliderBaseFactory = deprecate(PrivateSliderBaseFactory, {name: 'moonstone/Slider.SliderBaseFactory', since: '1.14.0', until: '2.0.0'});
 const SliderBase = PrivateSliderBaseFactory();
 const Slider = PrivateSliderFactory();
 

@@ -6,6 +6,7 @@
  * @module ui/Pressable
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
@@ -67,6 +68,7 @@ const defaultConfig = {
  * @memberof ui/Pressable
  * @hoc
  * @public
+ * @deprecated since 1.14.0. Will be replaced by `ui/Touchable` in 2.0.0
  */
 const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const {depress, release, prop, leave} = config;
@@ -202,5 +204,10 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	};
 });
 
-export default PressableHOC;
-export {PressableHOC as Pressable};
+const deprecatedPressableHOC = deprecate(PressableHOC, {name: 'ui/Pressable', since: '1.14.0', until: '2.0.0', replacedBy: 'ui/Touchable'});
+
+export default deprecatedPressableHOC;
+export {
+	deprecatedPressableHOC as Pressable,
+	PressableHOC as privatePressable
+};

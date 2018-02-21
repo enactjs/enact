@@ -1,9 +1,10 @@
+import deprecate from '@enact/core/internal/deprecate';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Overlay from './Overlay';
+import {privateOverlay as Overlay} from './Overlay';
 
 import css from './Overlay.less';
 
@@ -17,6 +18,7 @@ import css from './Overlay.less';
  * @memberof moonstone/Item
  * @hoc
  * @public
+ * @deprecated since 1.14.0. Will be removed in 2.0.0
  */
 const OverlayDecorator = hoc((config, Wrapped) => {
 	return kind({
@@ -75,5 +77,13 @@ const OverlayDecorator = hoc((config, Wrapped) => {
 	});
 });
 
-export default OverlayDecorator;
-export {OverlayDecorator};
+const deprecatedOverlayDecorator = deprecate(
+	OverlayDecorator,
+	{name: 'moonstone/Item.OverlayDecorator', since: '1.14.0', until: '2.0.0'}
+);
+
+export default deprecatedOverlayDecorator;
+export {
+	deprecatedOverlayDecorator as OverlayDecorator,
+	OverlayDecorator as privateOverlayDecorator
+};

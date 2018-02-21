@@ -1,5 +1,5 @@
 import Button from '@enact/moonstone/Button';
-import Holdable from '@enact/ui/Holdable';
+import {privateHoldable as Holdable} from '@enact/ui/Holdable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {boolean, select, text} from '@kadira/storybook-addon-knobs';
@@ -67,4 +67,3 @@ storiesOf('Holdable')
 			</ResumeHoldButton>
 		)
 	);
-
