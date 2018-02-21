@@ -19,6 +19,7 @@ import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React from 'react';
+import {Scrollable as UiScrollable} from '@enact/ui/Scrollable';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Spottable from '@enact/spotlight/Spottable';
@@ -759,7 +760,8 @@ const VirtualListBase = (type, UiComponent) => (
  */
 const VirtualListDecorator = compose(
 	SpotlightContainerDecorator(SpotlightContainerConfig),
-	Scrollable
+	Scrollable,
+	UiScrollable
 );
 
 /**
