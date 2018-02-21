@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import compose from 'ramda/src/compose';
 import css from '@enact/ui/Scrollable/Scrollable.less';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
-import {ScrollableNative as UiScrollableNative} from '@enact/ui/Scrollable/ScrollableNative';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import PropTypes from 'prop-types';
@@ -63,13 +62,14 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 
 
 /**
- * A Higher-order Component that applies a moonstone themed scrollable native behavior upon UiScrollableNative
+ * A Higher-order Component that applies a Scrollable native behavior to its wrapped component.
  *
- * @class ScrollableNativeDecorator
+ * @class ScrollableNative
+ * @memberof moonstone/Scrollable
  * @ui
  * @private
  */
-const ScrollableNativeDecorator = (Wrapped) => (
+const ScrollableNative = (Wrapped) => (
 	class ScrollableBaseNative extends Component {
 		static displayName = 'ScrollableBaseNative'
 
@@ -133,7 +133,7 @@ const ScrollableNativeDecorator = (Wrapped) => (
 
 		onMouseDown = () => {
 			this.lastFocusedItem = null;
-			this.uiScrollableRef.childRef.setContainerDisabled(false);
+			this.childRef.setContainerDisabled(false);
 		}
 
 		onMouseOver = () => {
@@ -180,7 +180,7 @@ const ScrollableNativeDecorator = (Wrapped) => (
 					const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiScrollableRef;
 
 					if (!this.isWheeling) {
-						this.uiScrollableRef.childRef.setContainerDisabled(true);
+						this.childRef.setContainerDisabled(true);
 						this.isWheeling = true;
 					}
 
@@ -196,7 +196,7 @@ const ScrollableNativeDecorator = (Wrapped) => (
 			} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
 				if (eventDelta < 0 && this.uiScrollableRef.scrollLeft > 0 || eventDelta > 0 && this.uiScrollableRef.scrollLeft < bounds.maxLeft) {
 					if (!this.isWheeling) {
-						this.uiScrollableRef.childRef.setContainerDisabled(true);
+						this.childRef.setContainerDisabled(true);
 						this.isWheeling = true;
 					}
 					delta = this.uiScrollableRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
@@ -246,8 +246,8 @@ const ScrollableNativeDecorator = (Wrapped) => (
 		}
 
 		onFocus = (e) => {
-			const shouldPreventScrollByFocus = this.uiScrollableRef.childRef.shouldPreventScrollByFocus ?
-				this.uiScrollableRef.childRef.shouldPreventScrollByFocus() :
+			const shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
+				this.childRef.shouldPreventScrollByFocus() :
 				false;
 
 			if (!Spotlight.getPointerMode()) {
@@ -257,7 +257,7 @@ const ScrollableNativeDecorator = (Wrapped) => (
 			if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode())) {
 				const
 					item = e.target,
-					positionFn = this.uiScrollableRef.childRef.calculatePositionOnFocus,
+					positionFn = this.childRef.calculatePositionOnFocus,
 					spotItem = Spotlight.getCurrent();
 
 				if (item && item === spotItem && positionFn) {
@@ -266,8 +266,8 @@ const ScrollableNativeDecorator = (Wrapped) => (
 
 					const focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 					if (!isNaN(focusedIndex)) {
-						this.uiScrollableRef.childRef.setNodeIndexToBeFocused(null);
-						this.uiScrollableRef.childRef.setLastFocusedIndex(focusedIndex);
+						this.childRef.setNodeIndexToBeFocused(null);
+						this.childRef.setLastFocusedIndex(focusedIndex);
 					}
 
 					// If scroll animation is ongoing, we need to pass last target position to
@@ -280,8 +280,8 @@ const ScrollableNativeDecorator = (Wrapped) => (
 
 					this.startScrollOnFocus(pos, item);
 				}
-			} else if (this.uiScrollableRef.childRef.setLastFocusedIndex) {
-				this.uiScrollableRef.childRef.setLastFocusedIndex(e.target);
+			} else if (this.childRef.setLastFocusedIndex) {
+				this.childRef.setLastFocusedIndex(e.target);
 			}
 		}
 
@@ -350,13 +350,13 @@ const ScrollableNativeDecorator = (Wrapped) => (
 					spotItemBounds = spotItem.getBoundingClientRect(),
 					endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
 					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId),
-					scrollFn = childRef.scrollToNextPage || childRef.scrollToNextItem;
+					scrollFn = this.childRef.scrollToNextPage || this.childRef.scrollToNextItem;
 
 				// If there is no next spottable DOM elements, scroll one page with animation
 				if (!next) {
 					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 				// If there is a next spottable DOM element vertically or horizontally, focus it without animation
-				} else if (next !== spotItem && childRef.scrollToNextPage) {
+				} else if (next !== spotItem && this.childRef.scrollToNextPage) {
 					this.animateOnFocus = false;
 					Spotlight.focus(next);
 				// If a next spottable DOM element is equals to the current spottable item, we need to find a next item
@@ -414,9 +414,8 @@ const ScrollableNativeDecorator = (Wrapped) => (
 		}
 
 		scrollStopOnScroll = () => {
-			const {childRef} = this.uiScrollableRef;
-			childRef.setContainerDisabled(false);
-			this.focusOnItem(childRef);
+			this.childRef.setContainerDisabled(false);
+			this.focusOnItem(this.childRef);
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 			this.isWheeling = false;
@@ -468,7 +467,7 @@ const ScrollableNativeDecorator = (Wrapped) => (
 		updateScrollOnFocus () {
 			const
 				focusedItem = Spotlight.getCurrent(),
-				{containerRef, calculatePositionOnFocus} = this.uiScrollableRef.childRef;
+				{containerRef} = this.uiScrollableRef.childRef;
 
 			if (focusedItem && containerRef && containerRef.contains(focusedItem)) {
 				const
@@ -476,7 +475,7 @@ const ScrollableNativeDecorator = (Wrapped) => (
 						previousScrollHeight: this.uiScrollableRef.bounds.scrollHeight,
 						scrollTop: this.uiScrollableRef.scrollTop
 					},
-					pos = calculatePositionOnFocus({item: focusedItem, scrollInfo});
+					pos = this.childRef.calculatePositionOnFocus({item: focusedItem, scrollInfo});
 
 				if (pos && (pos.left !== this.uiScrollableRef.scrollLeft || pos.top !== this.uiScrollableRef.scrollTop)) {
 					this.uiScrollableRef.start(pos.left, pos.top, false);
@@ -488,29 +487,37 @@ const ScrollableNativeDecorator = (Wrapped) => (
 		}
 
 		updateEventListeners = () => {
-			const childContainerRef = this.uiScrollableRef.childRef.containerRef;
+			if (this.uiScrollableRef && this.uiScrollableRef.childRef) {
+				const childContainerRef = this.uiScrollableRef.childRef.containerRef;
 
-			if (childContainerRef && childContainerRef.addEventListener) {
-				// FIXME `onMouseOver` doesn't work on the v8 snapshot.
-				childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
-				// FIXME `onMouseMove` doesn't work on the v8 snapshot.
-				childContainerRef.addEventListener('mousemove', this.onMouseMove, {capture: true});
-				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.addEventListener('focusin', this.onFocus);
+				if (childContainerRef && childContainerRef.addEventListener) {
+					// FIXME `onMouseOver` doesn't work on the v8 snapshot.
+					childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
+					// FIXME `onMouseMove` doesn't work on the v8 snapshot.
+					childContainerRef.addEventListener('mousemove', this.onMouseMove, {capture: true});
+					// FIXME `onFocus` doesn't work on the v8 snapshot.
+					childContainerRef.addEventListener('focusin', this.onFocus);
+				}
 			}
 		}
 
 		removeEventListeners = () => {
-			const childContainerRef = this.uiScrollableRef.childRef.containerRef;
+			if (this.uiScrollableRef && this.uiScrollableRef.childRef) {
+				const childContainerRef = this.uiScrollableRef.childRef.containerRef;
 
-			if (childContainerRef && childContainerRef.removeEventListener) {
-				// FIXME `onMouseOver` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
-				// FIXME `onMouseMove` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
-				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('focusin', this.onFocus);
+				if (childContainerRef && childContainerRef.removeEventListener) {
+					// FIXME `onMouseOver` doesn't work on the v8 snapshot.
+					childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
+					// FIXME `onMouseMove` doesn't work on the v8 snapshot.
+					childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
+					// FIXME `onFocus` doesn't work on the v8 snapshot.
+					childContainerRef.removeEventListener('focusin', this.onFocus);
+				}
 			}
+		}
+
+		initChildRef = (ref) => {
+			this.childRef = ref;
 		}
 
 		render () {
@@ -519,6 +526,7 @@ const ScrollableNativeDecorator = (Wrapped) => (
 			return (
 				<Wrapped
 					{...rest}
+					ref={this.initChildRef}
 					scrollbarComponent={Scrollbar}
 					wrapperContainer={ScrollableSpotlightContainer}
 					wrapperProps={{
@@ -529,19 +537,6 @@ const ScrollableNativeDecorator = (Wrapped) => (
 			);
 		}
 	}
-);
-
-/**
- * A Higher-order Component that applies a Scrollable native behavior to its wrapped component.
- *
- * @class ScrollableNative
- * @memberof moonstone/Scrollable
- * @ui
- * @private
- */
-const ScrollableNative = compose(
-	ScrollableNativeDecorator,
-	UiScrollableNative
 );
 
 export default ScrollableNative;

@@ -32,6 +32,22 @@ const gridListItemSizeShape = PropTypes.shape({
 });
 
 /**
+ * The context propTypes required by VirtualList. This should be set as the `childContextTypes` of a
+ * themed component so that the methods from themed component can be called.
+ *
+ * @private
+ */
+const contextTypes = {
+	applyStyleToExistingNode: PropTypes.func,
+	applyStyleToHideNode: PropTypes.func,
+	applyStyleToNewNode: PropTypes.func,
+	getXY: PropTypes.func,
+	initVirtualList: PropTypes.func,
+	renderChildren: PropTypes.func,
+	updateStatesAndBounds: PropTypes.func
+};
+
+/**
  * A basic base component for
  * [VirtualList]{@link ui/VirtualList.VirtualList} and [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
  *
@@ -178,17 +194,25 @@ class VirtualListBase extends Component {
 		spacing: 0
 	}
 
-	constructor (props) {
-		super(props);
+	static contextTypes = contextTypes
+
+	constructor (props, context) {
+		super(props, context);
 
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContainerRef = this.initRef('containerRef');
+
+		if (context.initVirtualList) {
+			context.initVirtualList(this);
+		}
 	}
 
 	componentWillMount () {
 		if (this.props.clientSize) {
+			const updateStatesAndBounds = this.context.updateStatesAndBounds || this.updateStatesAndBounds;
+
 			this.calculateMetrics(this.props);
-			this.updateStatesAndBounds(this.props);
+			updateStatesAndBounds(this.props);
 		}
 	}
 
@@ -196,8 +220,10 @@ class VirtualListBase extends Component {
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
 		if (!this.props.clientSize) {
+			const updateStatesAndBounds = this.context.updateStatesAndBounds || this.updateStatesAndBounds;
+
 			this.calculateMetrics(this.props);
-			this.updateStatesAndBounds(this.props);
+			updateStatesAndBounds(this.props);
 		}
 	}
 
@@ -212,13 +238,14 @@ class VirtualListBase extends Component {
 				overhang !== nextProps.overhang ||
 				spacing !== nextProps.spacing
 			),
-			hasDataChanged = (dataSize !== nextProps.dataSize);
+			hasDataChanged = (dataSize !== nextProps.dataSize),
+			updateStatesAndBounds = this.context.updateStatesAndBounds || this.updateStatesAndBounds;
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(nextProps);
+			updateStatesAndBounds(nextProps);
 		} else if (hasDataChanged) {
-			this.updateStatesAndBounds(nextProps);
+			updateStatesAndBounds(nextProps);
 		}
 	}
 
@@ -576,7 +603,10 @@ class VirtualListBase extends Component {
 	positionItems ({updateFrom, updateTo}) {
 		const
 			{dataSize} = this.props,
-			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition} = this;
+			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition} = this,
+			applyStyleToNewNode = this.context.applyStyleToNewNode || this.applyStyleToNewNode,
+			applyStyleToExistingNode = this.context.applyStyleToExistingNode || this.applyStyleToExistingNode,
+			applyStyleToHideNode = this.context.applyStyleToHideNode || this.applyStyleToHideNode;
 		let
 			{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom),
 			hideTo = 0,
@@ -594,9 +624,9 @@ class VirtualListBase extends Component {
 		// positioning items
 		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
 			if (this.updateFrom === null || this.updateTo === null || this.updateFrom > i || this.updateTo <= i) {
-				this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
+				applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
 			} else {
-				this.applyStyleToExistingNode(i, width, height, primaryPosition, secondaryPosition);
+				applyStyleToExistingNode(i, width, height, primaryPosition, secondaryPosition);
 			}
 
 			if (++j === dimensionToExtent) {
@@ -609,7 +639,7 @@ class VirtualListBase extends Component {
 		}
 
 		for (let i = updateTo; i < hideTo; i++) {
-			this.applyStyleToHideNode(i);
+			applyStyleToHideNode(i);
 		}
 
 		this.updateFrom = updateFrom;
@@ -628,7 +658,9 @@ class VirtualListBase extends Component {
 	getXY = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
 	composeTransform (style, primaryPosition, secondaryPosition = 0) {
-		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
+		const
+			getXY = this.context.getXY || this.getXY,
+			{x, y} = getXY(primaryPosition, secondaryPosition);
 
 		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
 	}
@@ -667,16 +699,15 @@ class VirtualListBase extends Component {
 			{scrollBounds} = this;
 
 		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
+			const updateStatesAndBounds = this.context.updateStatesAndBounds || this.updateStatesAndBounds;
+
 			this.calculateMetrics(props);
-			this.updateStatesAndBounds(props);
+			updateStatesAndBounds(props);
 			return true;
 		}
 
 		return false;
 	}
-
-	// override
-	onKeyDown = () => {}
 
 	// render
 
@@ -695,7 +726,8 @@ class VirtualListBase extends Component {
 		const
 			{...rest} = this.props,
 			{firstIndex, numOfItems} = this.state,
-			{primary} = this;
+			{primary} = this,
+			renderChildren = this.context.renderChildren || this.renderChildren;
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
@@ -714,8 +746,8 @@ class VirtualListBase extends Component {
 		}
 
 		return (
-			<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
-				{this.renderChildren()}
+			<div {...rest} ref={this.initContainerRef}>
+				{renderChildren()}
 			</div>
 		);
 	}
@@ -750,6 +782,7 @@ export {
 	VirtualList,
 	VirtualGridList,
 	VirtualListBase,
+	contextTypes,
 	gridListItemSizeShape
 };
 export * from './GridListImageItem';

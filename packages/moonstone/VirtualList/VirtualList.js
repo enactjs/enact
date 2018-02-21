@@ -18,12 +18,14 @@ import css from '@enact/ui/VirtualList/ListItem.less';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {Component} from 'react';
+import {Scrollable as UiScrollable} from '@enact/ui/Scrollable';
+import {ScrollableNative as UiScrollableNative} from '@enact/ui/Scrollable/ScrollableNative';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Spottable from '@enact/spotlight/Spottable';
-import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
-import {VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList/VirtualListNative';
+import {VirtualListBase as UiVirtualListBase, contextTypes as contextTypesVirtaulList} from '@enact/ui/VirtualList';
+import {VirtualListBaseNative as UiVirtualListBaseNative, contextTypes as contextTypesVirtaulListNative} from '@enact/ui/VirtualList/VirtualListNative';
 
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -73,19 +75,19 @@ const
 	isUp = is('up');
 
 /**
- * A moonstone-styled base component for
+ * A moonstone-styled decorator component for
  * [VirtualList]{@link moonstone/VirtualList.VirtualList} and [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
  *
- * @class VirtualListBase
+ * @class SpottableVirtualListDecorator
  * @memberof moonstone/VirtualList
  * @ui
  * @private
  */
-const VirtualListBase = (type, UiComponent) => (
-	class VirtualListCore extends UiComponent {
-		static displayName = 'VirtualListBase'
+const SpottableVirtualListDecorator = (type) => (Wrapped) => (
+	class VirtualListCore extends Component {
+		static displayName = 'SpottlableVirtualListDecorator'
 
-		static propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
+		static propTypes = /** @lends moonstone/VirtualList.SpottableVirtualListDecorator.prototype */ {
 			/**
 			 * Spotlight container Id
 			 *
@@ -96,27 +98,44 @@ const VirtualListBase = (type, UiComponent) => (
 		}
 
 		static contextTypes = contextTypes
+		static childContextTypes = (type === 'JS') ? contextTypesVirtaulList : contextTypesVirtaulListNative
 
-		constructor (props) {
-			super(props);
+		getChildContext () {
+			return (type === 'JS') ? {
+				applyStyleToExistingNode: this.applyStyleToExistingNode,
+				applyStyleToHideNode: this.applyStyleToHideNode,
+				applyStyleToNewNode: this.applyStyleToNewNode,
+				getXY: this.getXY,
+				initVirtualList: this.initVirtualList,
+				renderChildren: this.renderChildren,
+				updateStatesAndBounds: this.updateStatesAndBounds
+			} : {
+				applyStyleToHideNode: this.applyStyleToHideNode,
+				applyStyleToNewNode: this.applyStyleToNewNode,
+				getXY: this.getXY,
+				initVirtualList: this.initVirtualList,
+				renderChildren: this.renderChildren,
+				updateStatesAndBounds: this.updateStatesAndBounds
+			};
+		}
 
-			this.initItemContainerRef = this.initRef('itemContainerRef');
+		initVirtualList = (uiVirtualListRef) => {
+			this.uiVirtualListRef = uiVirtualListRef;
 		}
 
 		componentDidMount () {
-			super.componentDidMount();
-
 			if (type == 'JS') {
-				const containerNode = this.containerRef;
+				const containerNode = this.uiVirtualListRef.containerRef;
 
 				// prevent native scrolling by Spotlight
 				this.preventScroll = () => {
 					containerNode.scrollTop = 0;
-					containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
+					containerNode.scrollLeft = this.uiVirtualListRef.context.rtl ? containerNode.scrollWidth : 0;
 				};
 
 				if (containerNode && containerNode.addEventListener) {
 					containerNode.addEventListener('scroll', this.preventScroll);
+					containerNode.addEventListener('keydown', this.onKeyDown);
 				}
 			}
 		}
@@ -140,7 +159,7 @@ const VirtualListBase = (type, UiComponent) => (
 		itemContainerRef = null
 
 		setContainerDisabled = (bool) => {
-			const containerNode = (type === 'JS') ? this.containerRef : this.contentRef;
+			const containerNode = (type === 'JS') ? this.uiVirtualListRef.containerRef : this.uiVirtualListRef.contentRef;
 
 			if (containerNode) {
 				containerNode.setAttribute(dataContainerDisabledAttribute, bool);
@@ -182,8 +201,8 @@ const VirtualListBase = (type, UiComponent) => (
 		getIndexToScrollDisabled = (direction, currentIndex) => {
 			const
 				{data, dataSize, spacing} = this.props,
-				{dimensionToExtent, primary, findSpottableItem} = this,
-				{firstVisibleIndex, lastVisibleIndex} = this.moreInfo,
+				{dimensionToExtent, primary, findSpottableItem} = this.uiVirtualListRef,
+				{firstVisibleIndex, lastVisibleIndex} = this.uiVirtualListRef.moreInfo,
 				numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent),
 				isPageDown = (direction === 'down' || direction === 'right') ? 1 : -1;
 			let candidateIndex = -1;
@@ -250,7 +269,7 @@ const VirtualListBase = (type, UiComponent) => (
 		getIndexToScroll = (direction, currentIndex) => {
 			const
 				{dataSize, spacing} = this.props,
-				{dimensionToExtent, primary} = this,
+				{dimensionToExtent, primary} = this.uiVirtualListRef,
 				numOfItemsInPage = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent,
 				factor = (direction === 'down' || direction === 'right') ? 1 : -1;
 			let indexToScroll = currentIndex + factor * numOfItemsInPage;
@@ -271,7 +290,7 @@ const VirtualListBase = (type, UiComponent) => (
 			const
 				{data} = this.props,
 				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
-				{firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
+				{firstVisibleIndex, lastVisibleIndex} = this.uiVirtualListRef.moreInfo;
 			let indexToScroll = -1;
 
 			if (Array.isArray(data) && data.some((item) => item.disabled)) {
@@ -282,17 +301,17 @@ const VirtualListBase = (type, UiComponent) => (
 
 			if (indexToScroll !== -1) {
 				const
-					isRtl = this.context.rtl,
+					isRtl = this.uiVirtualListRef.context.rtl,
 					isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right');
 
 				if (type === 'JS') {
 					// To prevent item positioning issue, make all items to be rendered.
-					this.updateFrom = null;
-					this.updateTo = null;
+					this.uiVirtualListRef.updateFrom = null;
+					this.uiVirtualListRef.updateTo = null;
 				}
 
 				if (firstVisibleIndex <= indexToScroll && indexToScroll <= lastVisibleIndex) {
-					const node = this.containerRef.querySelector(`[data-index='${indexToScroll}'].spottable`);
+					const node = this.uiVirtualListRef.containerRef.querySelector(`[data-index='${indexToScroll}'].spottable`);
 
 					if (node) {
 						Spotlight.focus(node);
@@ -322,7 +341,7 @@ const VirtualListBase = (type, UiComponent) => (
 		setSpotlightContainerRestrict = (keyCode, target) => {
 			const
 				{dataSize} = this.props,
-				{isPrimaryDirectionVertical, dimensionToExtent} = this,
+				{isPrimaryDirectionVertical, dimensionToExtent} = this.uiVirtualListRef,
 				index = Number.parseInt(target.getAttribute(dataIndexAttribute)),
 				canMoveBackward = index >= dimensionToExtent,
 				canMoveForward = index < (dataSize - (((dataSize - 1) % dimensionToExtent) + 1));
@@ -342,9 +361,9 @@ const VirtualListBase = (type, UiComponent) => (
 		jumpToSpottableItem = (keyCode, target) => {
 			const
 				{cbScrollTo, data, dataSize} = this.props,
-				{firstIndex, numOfItems} = this.state,
-				{isPrimaryDirectionVertical} = this,
-				rtl = this.context.rtl,
+				{firstIndex, numOfItems} = this.uiVirtualListRef.state,
+				{isPrimaryDirectionVertical} = this.uiVirtualListRef,
+				rtl = this.uiVirtualListRef.context.rtl,
 				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
 
 			if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled) {
@@ -462,7 +481,7 @@ const VirtualListBase = (type, UiComponent) => (
 		}
 
 		focusOnItem = (index) => {
-			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
+			const item = this.uiVirtualListRef.containerRef.querySelector(`[data-index='${index}'].spottable`);
 
 			if (Spotlight.isPaused()) {
 				Spotlight.resume();
@@ -536,7 +555,7 @@ const VirtualListBase = (type, UiComponent) => (
 			) {
 				const
 					containerId = this.props['data-container-id'],
-					node = this.containerRef.querySelector(
+					node = this.uiVirtualListRef.containerRef.querySelector(
 						`[data-container-id="${containerId}"] [data-index="${this.preservedIndex}"]`
 					);
 
@@ -562,16 +581,16 @@ const VirtualListBase = (type, UiComponent) => (
 		 * calculator
 		 */
 
-		calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
+		calculatePositionOnFocus = ({item, scrollPosition = this.uiVirtualListRef.scrollPosition}) => {
 			const
 				{pageScroll} = this.props,
-				{numOfItems} = this.state,
-				{primary} = this,
+				{numOfItems} = this.uiVirtualListRef.state,
+				{primary} = this.uiVirtualListRef,
 				offsetToClientEnd = primary.clientSize - primary.itemSize,
 				focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
 			if (!isNaN(focusedIndex)) {
-				let gridPosition = this.getGridPosition(focusedIndex);
+				let gridPosition = this.uiVirtualListRef.getGridPosition(focusedIndex);
 
 				if (numOfItems > 0 && focusedIndex % numOfItems !== this.lastFocusedIndex % numOfItems) {
 					const node = this.getItemNode(this.lastFocusedIndex);
@@ -596,7 +615,7 @@ const VirtualListBase = (type, UiComponent) => (
 						} else {
 							// This code uses the trick to change the target position slightly which will not affect the actual result
 							// since a browser ignore `scrollTo` method if the target position is same as the current position.
-							gridPosition.primaryPosition = scrollPosition + (this.scrollPosition === scrollPosition ? 0.1 : 0);
+							gridPosition.primaryPosition = scrollPosition + (this.uiVirtualListRef.scrollPosition === scrollPosition ? 0.1 : 0);
 						}
 					} else { // backward over
 						gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
@@ -607,7 +626,7 @@ const VirtualListBase = (type, UiComponent) => (
 				// scrondaryPosition should be 0 here.
 				gridPosition.secondaryPosition = 0;
 
-				return this.gridPositionToItemPosition(gridPosition);
+				return this.uiVirtualListRef.gridPositionToItemPosition(gridPosition);
 			}
 		}
 
@@ -631,25 +650,26 @@ const VirtualListBase = (type, UiComponent) => (
 		 * override
 		 */
 
-		updateStatesAndBounds (props) {
+		updateStatesAndBounds = (props) => {
 			const
 				{dataSize, overhang} = props,
-				{firstIndex} = this.state,
-				{dimensionToExtent, primary, moreInfo, scrollPosition, preservedIndex} = this,
+				{firstIndex} = this.uiVirtualListRef.state,
+				{dimensionToExtent, primary, moreInfo, scrollPosition} = this.uiVirtualListRef,
+				{preservedIndex} = this,
 				numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
-				wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
-				dataSizeDiff = dataSize - this.curDataSize;
+				wasFirstIndexMax = ((this.uiVirtualListRef.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.uiVirtualListRef.maxFirstIndex)),
+				dataSizeDiff = dataSize - this.uiVirtualListRef.curDataSize;
 			let newFirstIndex = firstIndex;
 
-			this.maxFirstIndex = Math.ceil((dataSize - numOfItems) / dimensionToExtent) * dimensionToExtent;
-			this.curDataSize = dataSize;
-			this.updateFrom = null;
-			this.updateTo = null;
+			this.uiVirtualListRef.maxFirstIndex = Math.ceil((dataSize - numOfItems) / dimensionToExtent) * dimensionToExtent;
+			this.uiVirtualListRef.curDataSize = dataSize;
+			this.uiVirtualListRef.updateFrom = null;
+			this.uiVirtualListRef.updateTo = null;
 
 			// reset children
-			this.cc = [];
-			this.calculateScrollBounds(props);
-			this.updateMoreInfo(dataSize, scrollPosition);
+			this.uiVirtualListRef.cc = [];
+			this.uiVirtualListRef.calculateScrollBounds(props);
+			this.uiVirtualListRef.updateMoreInfo(dataSize, scrollPosition);
 
 			if (this.restoreLastFocused &&
 				numOfItems > 0 &&
@@ -657,26 +677,26 @@ const VirtualListBase = (type, UiComponent) => (
 				(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
 				// If we need to restore last focus and the index is beyond the screen,
 				// we call `scrollTo` to create DOM for it.
-				this.props.cbScrollTo({index: preservedIndex, animate: false});
+				props.cbScrollTo({index: preservedIndex, animate: false});
 			} else {
-				newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
+				newFirstIndex = this.uiVirtualListRef.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
 			}
 
-			this.setState({firstIndex: newFirstIndex, numOfItems});
+			this.uiVirtualListRef.setState({firstIndex: newFirstIndex, numOfItems});
 		}
 
 		applyStyleToExistingNode = (index, ...rest) => {
 			const node = this.getItemNode(index);
 
 			if (node) {
-				this.composeStyle(node.style, ...rest);
+				this.uiVirtualListRef.composeStyle(node.style, ...rest);
 			}
 		}
 
 		applyStyleToNewNode = (index, ...rest) => {
 			const
 				{component, data} = this.props,
-				{numOfItems} = this.state,
+				{numOfItems} = this.uiVirtualListRef.state,
 				{getNodeIndexToBeFocused, initItemRef} = this,
 				key = index % numOfItems,
 				itemElement = component({
@@ -687,9 +707,9 @@ const VirtualListBase = (type, UiComponent) => (
 				}),
 				style = {};
 
-			this.composeStyle(style, ...rest);
+			this.uiVirtualListRef.composeStyle(style, ...rest);
 
-			this.cc[key] = React.cloneElement(itemElement, {
+			this.uiVirtualListRef.cc[key] = React.cloneElement(itemElement, {
 				ref: (index === getNodeIndexToBeFocused()) ? (ref) => initItemRef(ref, index) : null,
 				className: classNames(css.listItem, itemElement.props.className),
 				style: {...itemElement.props.style, ...style}
@@ -698,27 +718,30 @@ const VirtualListBase = (type, UiComponent) => (
 
 		applyStyleToHideNode = (index) => {
 			const
-				key = index % this.state.numOfItems,
+				key = index % this.uiVirtualListRef.state.numOfItems,
 				style = {display: 'none'},
 				attributes = {[dataIndexAttribute]: index, key, style};
 
-			this.cc[key] = (<div {...attributes} />);
+			this.uiVirtualListRef.cc[key] = (<div {...attributes} />);
 		}
 
 		getXY = (primaryPosition, secondaryPosition) => {
-			const rtlDirection = this.context.rtl ? -1 : 1;
-			return (this.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
+			const rtlDirection = this.uiVirtualListRef.context.rtl ? -1 : 1;
+			return (this.uiVirtualListRef.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
 		}
 
 		getItemNode = (index) => {
 			const ref = this.itemContainerRef;
-			return ref ? ref.children[index % this.state.numOfItems] : null;
+			return ref ? ref.children[index % this.uiVirtualListRef.state.numOfItems] : null;
 		}
 
 		scrollToPosition (x, y) {
 			const node = this.containerRef;
-
 			node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
+		}
+
+		initItemContainerRef = (ref) => {
+			this.itemContainerRef = ref;
 		}
 
 		/**
@@ -727,7 +750,7 @@ const VirtualListBase = (type, UiComponent) => (
 
 		renderChildren = () => {
 			const
-				{cc, primary} = this,
+				{cc, primary} = this.uiVirtualListRef,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
 			return [
@@ -744,6 +767,12 @@ const VirtualListBase = (type, UiComponent) => (
 				needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
 			];
 		}
+
+		render () {
+			return (
+				<Wrapped {...this.props} />
+			);
+		}
 	}
 );
 
@@ -759,7 +788,9 @@ const VirtualListBase = (type, UiComponent) => (
  */
 const VirtualListDecorator = compose(
 	SpotlightContainerDecorator(SpotlightContainerConfig),
-	Scrollable
+	Scrollable,
+	SpottableVirtualListDecorator('JS'),
+	UiScrollable
 );
 
 /**
@@ -774,7 +805,9 @@ const VirtualListDecorator = compose(
  */
 const VirtualListNativeDecorator = compose(
 	SpotlightContainerDecorator(SpotlightContainerConfig),
-	ScrollableNative
+	ScrollableNative,
+	SpottableVirtualListDecorator('Native'),
+	UiScrollableNative
 );
 
 /**
@@ -786,7 +819,7 @@ const VirtualListNativeDecorator = compose(
  * @ui
  * @public
  */
-const VirtualList = VirtualListDecorator(VirtualListBase('JS', UiVirtualListBase));
+const VirtualList = VirtualListDecorator(UiVirtualListBase);
 
 /**
  * A moonstone-styled scrollable and spottable virtual grid list component.
@@ -811,7 +844,7 @@ const VirtualGridList = VirtualList;
  * @ui
  * @public
  */
-const VirtualListNative = VirtualListNativeDecorator(VirtualListBase('Native', UiVirtualListBaseNative));
+const VirtualListNative = VirtualListNativeDecorator(UiVirtualListBaseNative);
 
 /**
  * A moonstone-styled scrollable and spottable virtual grid native list component.

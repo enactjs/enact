@@ -239,6 +239,8 @@ const ScrollableNative = hoc((config, Wrapped) => (
 				vertical: false
 			};
 
+			props.cbScrollTo(context.scrollTo || this.scrollTo);
+
 			if (context.initialize) {
 				context.initialize(this);
 			}

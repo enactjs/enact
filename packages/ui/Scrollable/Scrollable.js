@@ -255,7 +255,7 @@ const Scrollable = hoc((config, Wrapped) => (
 				vertical: false
 			};
 
-			props.cbScrollTo(this.scrollTo);
+			props.cbScrollTo(context.scrollTo || this.scrollTo);
 
 			if (context.initialize) {
 				context.initialize(this);
@@ -951,7 +951,6 @@ const Scrollable = hoc((config, Wrapped) => (
 
 		updateEventListeners () {
 			const {containerRef} = this;
-
 			if (containerRef && containerRef.addEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
 				containerRef.addEventListener('wheel', this.onWheel);
