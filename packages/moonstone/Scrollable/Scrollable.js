@@ -97,7 +97,6 @@ const Scrollable = (Wrapped) => (
 		getChildContext () {
 			return {
 				initialize: this.initialize,
-				onFocus: this.onFocus,
 				onKeyDown: this.onKeyDown,
 				onMouseUp: this.onMouseUp,
 				onWheel: this.onWheel,
@@ -233,7 +232,7 @@ const Scrollable = (Wrapped) => (
 
 		getPageDirection = (keyCode) => {
 			const
-				isRtl = this.context.rtl,
+				isRtl = this.uiScrollableRef.context.rtl,
 				{direction} = this.uiScrollableRef,
 				isVertical = (direction === 'vertical' || direction === 'both');
 
@@ -435,7 +434,7 @@ const Scrollable = (Wrapped) => (
 
 			if (childContainerRef && childContainerRef.addEventListener) {
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.addEventListener('focusin', this.uiScrollableRef.onFocus);
+				childContainerRef.addEventListener('focusin', this.onFocus);
 			}
 		}
 
@@ -444,7 +443,7 @@ const Scrollable = (Wrapped) => (
 
 			if (childContainerRef && childContainerRef.removeEventListener) {
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('focusin', this.uiScrollableRef.onFocus);
+				childContainerRef.removeEventListener('focusin', this.onFocus);
 			}
 		}
 

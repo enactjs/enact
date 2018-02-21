@@ -64,7 +64,6 @@ const
  */
 const contextTypes = {
 	initialize: PropTypes.func,
-	onFocus: PropTypes.func,
 	onKeyDown: PropTypes.func,
 	onMouseUp: PropTypes.func,
 	onWheel: PropTypes.func,
@@ -82,8 +81,8 @@ const contextTypes = {
  * @ui
  * @private
  */
-const Scrollable = hoc((config, Wrapped) => {
-	return class ScrollableBase extends Component {
+const Scrollable = hoc((config, Wrapped) => (
+	class ScrollableBase extends Component {
 		static displayName = 'ui:Scrollable'
 
 		static propTypes = /** @lends ui/Scrollable.Scrollable.prototype */ {
@@ -166,7 +165,7 @@ const Scrollable = hoc((config, Wrapped) => {
 			onScrollStop: PropTypes.func,
 
 			/**
-			 * Scrollbar component
+			 * Component for scrollbar
 			 *
 			 * @type {Function}
 			 * @public
@@ -234,7 +233,7 @@ const Scrollable = hoc((config, Wrapped) => {
 		}
 
 		constructor (props, context) {
-			super(props);
+			super(props, context);
 
 			this.state = {
 				rtl: false,
@@ -592,12 +591,6 @@ const Scrollable = hoc((config, Wrapped) => {
 				if (delta !== 0) {
 					this.scrollToAccumulatedTarget(delta, canScrollVertically);
 				}
-			}
-		}
-
-		onFocus = (e) => {
-			if (this.context.onFocus) {
-				this.context.onFocus(e);
 			}
 		}
 
@@ -1036,7 +1029,7 @@ const Scrollable = hoc((config, Wrapped) => {
 			);
 		}
 	}
-});
+));
 
 export default Scrollable;
 export {
