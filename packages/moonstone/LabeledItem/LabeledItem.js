@@ -4,7 +4,6 @@
  * @module moonstone/LabeledItem
  */
 
-import {childrenEquals} from '@enact/core/util';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -83,10 +82,10 @@ const LabeledItemBase = kind({
 		/**
 		 * Icon to be displayed next to the title text.
 		 *
-		 * @type {String}
+		 * @type {String|Object}
 		 * @public
 		 */
-		titleIcon: PropTypes.string
+		titleIcon: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	styles: {
@@ -99,18 +98,14 @@ const LabeledItemBase = kind({
 		<Controller disabled={disabled} {...rest}>
 			<div className={css.text}>
 				<MarqueeText disabled={disabled} className={css.title}>{children}</MarqueeText>
-				{titleIcon ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
+				{(titleIcon != null) ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
 			</div>
-			{label ? <MarqueeText disabled={disabled} className={css.label}>{label}</MarqueeText> : null}
+			{(label != null) ? <MarqueeText disabled={disabled} className={css.label}>{label}</MarqueeText> : null}
 		</Controller>
 	)
 });
 
 const LabeledItem = Pure(
-	{propComparators: {
-		label: childrenEquals,
-		titleIcon: childrenEquals
-	}},
 	Skinnable(
 		LabeledItemBase
 	)

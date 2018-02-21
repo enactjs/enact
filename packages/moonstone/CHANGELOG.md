@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/ExpandableItem` to be more performant when animating
+
 ## [2.0.0-alpha.4] - 2018-02-13
 
 ### Removed
@@ -29,7 +35,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/MoonstoneDecorator` root node to fill the entire space available, which simplifies positioning and sizing for child elements (previously always measured 0 in height)
 - `moonstone/VirtualList` to prevent infinite function call when a size of contents is slightly longer than a client size without a scrollbar
 - `moonstone/VirtualList` to sync scroll position when clientSize changed
-- `moonstone/ExpandableItem` and `moonstone/ExpandableList` to be more performant when animating.
 
 ### Removed
 
