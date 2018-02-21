@@ -5,6 +5,7 @@
  */
 
 import {childrenEquals} from '@enact/core/util';
+import deprecate from '@enact/core/internal/deprecate';
 import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -17,7 +18,7 @@ import Spottable from '@enact/spotlight/Spottable';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import OverlayDecorator from './OverlayDecorator';
+import {privateOverlayDecorator as OverlayDecorator} from './OverlayDecorator';
 
 import css from './Item.less';
 
@@ -152,6 +153,7 @@ const Item = Pure(
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @ui
  * @public
+ * @deprecated since 1.14.0. Will be replace by `ui/SlotItem` in 2.0.0
  */
 const ItemOverlay = Slottable(
 	{slots: ['overlayAfter', 'overlayBefore']},
@@ -178,9 +180,12 @@ const ItemOverlay = Slottable(
 	)
 );
 
+const deprecatedItemOverlay = deprecate(ItemOverlay, {name: 'moonstone/Item.ItemOverlay', since: '1.14.0', until: '2.0.0', replacedBy: 'ui/SlotItem'});
+
 export default Item;
 export {
 	Item,
 	ItemBase,
-	ItemOverlay
+	deprecatedItemOverlay as ItemOverlay,
+	ItemOverlay as privateItemOverlay
 };

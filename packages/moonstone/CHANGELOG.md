@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualGridList.GridListImageItem` to be replaced by `moonstone/GridListImageItem` property in 2.0.0
 - `moonstone/Button` and `moonstone/IconButton` prop `noAnimation` to be removed in 2.0.0
 - `moonstone/Button.ButtonFactory`, `moonstone/Button.ButtonBaseFactory`, `moonstone/IconButton.IconButtonFactory`, `moonstone/IconButton.IconButtonBaseFactory`, `moonstone/IncrementSlider.IncrementSliderFactory`, `moonstone/IncrementSlider.IncrementSliderBaseFactory`, `moonstone/Slider.SliderFactory`, and `moonstone/Slider.SliderBaseFactory`, to be removed in 2.0.0
+- `moonstone/Item.ItemOverlay` to be replaced by `ui/SlotItem` in 2.0.0
+- `moonstone/Item.Overlay` and `moonstone/Item.OverlayDecorator` to be removed in 2.0.0
 
 ### Added
 

@@ -1,3 +1,4 @@
+import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -13,6 +14,7 @@ import css from './Overlay.less';
  * @memberof moonstone/Item
  * @ui
  * @public
+ * @deprecated since 1.14.0. Will be removed in 2.0.0
  */
 const OverlayBase = kind({
 	name: 'Overlay',
@@ -55,8 +57,13 @@ const Overlay = Pure(
 	OverlayBase
 );
 
-export default Overlay;
+const deprecatedOverlayBase = deprecate(Overlay, {name: 'moonstone/Item.OverlayBase', since: '1.14.0', until: '2.0.0'});
+const deprecatedOverlay = deprecate(Overlay, {name: 'moonstone/Item.Overlay', since: '1.14.0', until: '2.0.0'});
+
+export default deprecatedOverlay;
 export {
-	Overlay,
-	OverlayBase
+	deprecatedOverlay as Overlay,
+	Overlay as privateOverlay,
+	deprecatedOverlayBase as OverlayBase,
+	OverlayBase as privateOverlayBase
 };

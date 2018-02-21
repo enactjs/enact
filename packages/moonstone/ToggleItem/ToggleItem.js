@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import Toggleable from '@enact/ui/Toggleable';
 
-import {ItemOverlay} from '../Item';
+import {privateItemOverlay as ItemOverlay} from '../Item';
 
 import ToggleIcon from './ToggleIcon';
 

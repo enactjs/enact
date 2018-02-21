@@ -1,6 +1,6 @@
 import Icon from '@enact/moonstone/Icon';
-import Item, {ItemBase, ItemOverlay} from '@enact/moonstone/Item';
-import OverlayDecorator from '@enact/moonstone/Item/OverlayDecorator';
+import Item, {ItemBase, privateItemOverlay as ItemOverlay} from '@enact/moonstone/Item';
+import {privateOverlayDecorator as OverlayDecorator} from '@enact/moonstone/Item/OverlayDecorator';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {boolean, select, text} from '@kadira/storybook-addon-knobs';
