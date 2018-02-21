@@ -1,0 +1,35 @@
+// ExpandableItem.less
+//
+
+.expandableItem {
+	.labeleditem {
+		&.always,
+		&.auto {
+			.label {
+				display: block;
+			}
+		}
+
+		&.never {
+			.label {
+				display: none;
+			}
+		}
+
+		.icon {
+			will-change: transform;
+		}
+	}
+
+	&[open] {
+		.auto {
+			.label {
+				display: none;
+			}
+		}
+
+		.icon {
+			transform: scaleY(-1);
+		}
+	}
+}

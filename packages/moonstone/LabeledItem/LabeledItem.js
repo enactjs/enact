@@ -25,7 +25,7 @@ const Controller = MarqueeController(
 	)
 );
 
-import css from './LabeledItem.less';
+import componentCss from './LabeledItem.less';
 
 /**
  * {@link moonstone/LabeledItem.LabeledItemBase} is a focusable Moonstone-styled component
@@ -48,6 +48,20 @@ const LabeledItemBase = kind({
 		 * @public
 		 */
 		children: PropTypes.node.isRequired,
+
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `icon` - Applied to the icon
+		 * * `label` - Applied to the label
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
 
 		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
@@ -75,11 +89,12 @@ const LabeledItemBase = kind({
 	},
 
 	styles: {
-		css,
-		className: 'labeleditem'
+		css: componentCss,
+		className: 'labeleditem',
+		publicClassNames: 'icon label'
 	},
 
-	render: ({children, disabled, label, titleIcon, ...rest}) => (
+	render: ({children, css, disabled, label, titleIcon, ...rest}) => (
 		<Controller disabled={disabled} {...rest}>
 			<div className={css.text}>
 				<MarqueeText disabled={disabled} className={css.title}>{children}</MarqueeText>
