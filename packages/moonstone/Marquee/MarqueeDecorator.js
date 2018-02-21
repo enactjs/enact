@@ -289,7 +289,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillReceiveProps (next) {
 			const {marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
 			this.validateTextDirection(next);
-			if ((!equals(this.props.children, next.children)) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
+			if ((!childrenEquals(this.props.children, next.children)) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
 				// restart marqueeOn="render" marquees or synced marquees that were animating
 				this.forceRestartMarquee = next.marqueeOn === 'render' || (
 					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)
