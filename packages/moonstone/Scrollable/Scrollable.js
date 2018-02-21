@@ -122,16 +122,16 @@ class ScrollableBase extends UiScrollableBase {
 	indexToFocus = null
 	nodeToFocus = null
 
-	onMouseUp = (e) => {
-		if (this.isDragging && this.isFlicking()) {
-			const focusedItem = Spotlight.getCurrent();
+	scrollByFlick () {
+		const focusedItem = Spotlight.getCurrent();
 
-			if (focusedItem) {
-				focusedItem.blur();
-			}
+		if (focusedItem) {
+			focusedItem.blur();
 		}
-		// FIX ME: we should check the super call is working
-		super.onMouseUp(e);
+
+		this.childRef.setContainerDisabled(true);
+
+		super.scrollByFlick();
 	}
 
 	onWheel = (e) => {
@@ -440,10 +440,10 @@ class ScrollableBase extends UiScrollableBase {
 		this.bounds.scrollHeight = this.getScrollBounds().scrollHeight;
 	}
 
-	updateEventListeners () {
+	addEventListeners () {
 		const childContainerRef = this.childRef.containerRef;
 
-		super.updateEventListeners();
+		super.addEventListeners();
 
 		if (childContainerRef && childContainerRef.addEventListener) {
 			// FIXME `onFocus` doesn't work on the v8 snapshot.

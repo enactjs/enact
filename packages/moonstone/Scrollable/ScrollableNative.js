@@ -115,18 +115,33 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
 	// browser native scrolling
 	resetPosition = null // prevent auto-scroll on focus by Spotlight
 
-	onMouseDown = () => {
-		super.onMouseDown();
+	scrollByFlick () {
+		const focusedItem = Spotlight.getCurrent();
+
+		if (focusedItem) {
+			focusedItem.blur();
+		}
+
+		this.childRef.setContainerDisabled(true);
+
+		super.scrollByFlick();
+	}
+
+	onMouseDown (e) {
+		super.onMouseDown(e);
+
 		this.lastFocusedItem = null;
 		this.childRef.setContainerDisabled(false);
 	}
 
 	onMouseOver = () => {
-		this.resetPosition = this.childRef.containerRef.scrollTop;
+		this.resetPosition = (this.scrolling) ? null : this.childRef.containerRef.scrollTop;
 	}
 
-	onMouseMove = () => {
-		if (this.resetPosition !== null) {
+	onMouseMove (e) {
+		super.onMouseMove(e);
+
+		if (!this.isDragging && this.resetPosition !== null) {
 			const childContainerRef = this.childRef.containerRef;
 			childContainerRef.style.scrollBehavior = null;
 			childContainerRef.scrollTop = this.resetPosition;
@@ -401,7 +416,7 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
 		this.scrollToAccumulatedTarget(delta, isVerticalScrollBar);
 	}
 
-	scrollStopOnScroll = () => {
+	scrollStopOnScroll () {
 		super.scrollStopOnScroll();
 
 		this.childRef.setContainerDisabled(false);
@@ -476,14 +491,15 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
 		this.bounds.scrollHeight = this.getScrollBounds().scrollHeight;
 	}
 
-	updateEventListeners () {
+	addEventListeners () {
 		const childContainerRef = this.childRef.containerRef;
 
-		super.updateEventListeners();
+		super.addEventListeners();
 
 		if (childContainerRef && childContainerRef.addEventListener) {
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
+			// FIXME event handlers don't work on the v8 snapshot.
 			childContainerRef.addEventListener('focusin', this.onFocus);
+			childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
 		}
 	}
 
@@ -493,8 +509,9 @@ class ScrollableBaseNative extends UiScrollableBaseNative {
 		super.removeEventListeners();
 
 		if (childContainerRef && childContainerRef.removeEventListener) {
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
+			// FIXME event handlers don't work on the v8 snapshot.
 			childContainerRef.removeEventListener('focusin', this.onFocus);
+			childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
 		}
 	}
 

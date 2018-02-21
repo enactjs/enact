@@ -132,6 +132,7 @@ const VirtualListBase = (type, UiComponent) => (
 		}
 
 		isScrolledBy5way = false
+		isScrolledByJump = false
 		lastFocusedIndex = null
 		nodeIndexToBeFocused = null
 		preservedIndex = null
@@ -615,7 +616,7 @@ const VirtualListBase = (type, UiComponent) => (
 		 * setter/getter
 		 */
 
-		shouldPreventScrollByFocus = () => ((type === 'Native') ? (this.isScrolledBy5way) : (this.isScrolledBy5way || this.isScrolledByJump))
+		shouldPreventScrollByFocus = () => ((type === 'Native') ? (this.isScrolledBy5way || this.isScrolledByJump) : (this.isScrolledBy5way))
 
 		getNodeIndexToBeFocused = () => this.nodeIndexToBeFocused
 
