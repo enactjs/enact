@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/VirtualGridList` to show or hide the scrollbars in it properly
+
 ## [2.0.0-alpha.4] - 2018-02-13
 
 ### Removed
