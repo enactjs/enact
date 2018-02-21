@@ -4,7 +4,7 @@
  * included by external developers.
  */
 // eslint-disable-next-line no-var
-var uiFontGenerator = require('@enact/ui/FontGenerator');
+var {addLocalizedFont, generateFontRules} = require('@enact/ui/internal/localized-fonts');
 
 const fontName = 'Moonstone LG Display';
 
@@ -72,22 +72,8 @@ const fonts = {
 // Duplications and alternate locale names
 fonts['zh-TW'] = fonts['zh-HK'];
 
-let previousLocale = null;
+addLocalizedFont(fontName, fonts);
 
-/**
- * @name fontGenerator
- * @memberof moonstone/MoonstoneDecorator
- * @param {String} locale Locale string
- * @returns {undefined|String} In a non-browser environment, returns the style CSS tag, otherwise undefined.
- * @private
- */
-function fontGenerator (locale) {
-	// If the locale is the same as the last time this ran, bail out and don't bother to recompile this again.
-	if (locale === previousLocale) return;
-
-	previousLocale = locale;
-	return uiFontGenerator({fonts, fontName, locale});
-}
-
-module.exports = fontGenerator;
-module.exports.fontGenerator = fontGenerator;
+module.exports = generateFontRules;
+module.exports.fontGenerator = generateFontRules;
+module.exports.generateFontRules = generateFontRules;
