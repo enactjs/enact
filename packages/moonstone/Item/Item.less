@@ -7,10 +7,6 @@
 	.moon-text-base(@moon-item-font-size);
 	.moon-spotlight-padding(@moon-item-vertical-padding);
 
-	width: 100%;
-	box-sizing: border-box;
-	display: flex;
-	align-items: center;
 	line-height: @moon-item-line-height;
 	position: relative;
 	color: inherit;
@@ -20,16 +16,8 @@
 		line-height: @moon-item-line-height-large;
 	});
 
-	// Apply to the content area to tell it to expand to the available width of the container
-	.content {
-		flex: 1 1 auto;
-	}
-
 	&.inline {
-		display: inline-flex;
-		vertical-align: top;
 		max-width: 240px;
-		box-sizing: border-box;
 	}
 
 	.locale-japanese-line-break();

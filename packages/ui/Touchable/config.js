@@ -1,21 +1,9 @@
+import {defaultDragConfig} from './Drag.js';
+import {defaultFlickConfig} from './Flick.js';
+import {defaultHoldConfig} from './Hold.js';
 
-const defaultFlickConfig = {
-	maxDuration: 250,
-	maxMoves: 5,
-	minVelocity: 0.1
-};
-
+const allowedDragKeys = Object.keys(defaultDragConfig);
 const allowedFlickKeys = Object.keys(defaultFlickConfig);
-
-const defaultHoldConfig = {
-	cancelOnMove: false,
-	moveTolerance: 16,
-	frequency: 200,
-	events: [
-		{name: 'hold', time: 200}
-	]
-};
-
 const allowedHoldKeys = Object.keys(defaultHoldConfig);
 
 /**
@@ -24,13 +12,13 @@ const allowedHoldKeys = Object.keys(defaultHoldConfig);
  * @private
  * @memberof ui/Touchable
  */
-const config = {};
+let config = {};
 
 // map-friendly clone method
 const clone = o => Object.assign({}, o);
 
 // Merges two configuation objects while retaining only the allowed keys
-const mergeConfig = (current, update, allowed) => {
+const mergeGestureConfig = (current, update, allowed) => {
 	const cfg = {...current, ...update};
 
 	Object.keys(cfg).forEach(key => {
@@ -40,6 +28,19 @@ const mergeConfig = (current, update, allowed) => {
 	});
 
 	return cfg;
+};
+
+// Merges the current global config with the provided `cfg` and returns the result
+const mergeConfig = (cfg) => {
+	const merged = {
+		drag: mergeGestureConfig(config.drag, cfg.drag, allowedDragKeys),
+		flick: mergeGestureConfig(config.flick, cfg.flick, allowedFlickKeys),
+		hold: mergeGestureConfig(config.hold, cfg.hold, allowedHoldKeys)
+	};
+
+	merged.hold.events = merged.hold.events.map(clone);
+
+	return merged;
 };
 
 /**
@@ -62,6 +63,16 @@ const mergeConfig = (current, update, allowed) => {
  * Each type of gesture has its own set of configuration properties grouped within a separate object
  * keyed by the name of the gesture. Partial configurations may be passed and will be merged with
  * the current configuration.
+ *
+ * `drag`
+ *
+ *   * `boxSizing` - The part of the component's box model is used as the bounds of the constraint.
+ *     Only applies when `global` is `false`.
+ *     * `'border-box'` - the default, includes the padding and border but excludes the margin.
+ *     * `'content-box'` - excludes the padding, border, and margin.
+ *   * `global` - When `true`, drag gestures will continue when leaving the bounds of the component.
+ *   * `moveTolerance` - The number of pixels from the start position of the drag that the pointer
+ *     may move before cancelling the drag. Defaults to `16`.
  *
  * `flick`
  *
@@ -90,23 +101,13 @@ const mergeConfig = (current, update, allowed) => {
  * @memberof ui/Touchable
  */
 const configure = (cfg) => {
-	if (cfg.flick) {
-		config.flick = mergeConfig(config.flick, cfg.flick, allowedFlickKeys);
-	}
-
-	if (cfg.hold) {
-		config.hold = mergeConfig(config.hold, cfg.hold, allowedHoldKeys);
-
-		// deeply clone the array to avoid allowing the config to be mutated directly
-		if (cfg.hold.events) {
-			config.hold.events = config.hold.events.map(clone);
-		}
-	}
+	config = mergeConfig(cfg);
 };
 
-const getConfig  = () => config;
+const getConfig = () => config;
 
 const resetDefaultConfig = () => configure({
+	drag: defaultDragConfig,
 	hold: defaultHoldConfig,
 	flick: defaultFlickConfig
 });
@@ -117,5 +118,6 @@ export default configure;
 export {
 	configure,
 	getConfig,
+	mergeConfig,
 	resetDefaultConfig
 };

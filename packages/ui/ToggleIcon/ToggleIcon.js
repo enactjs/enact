@@ -13,7 +13,6 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
-
 import Toggleable from '../Toggleable';
 import Touchable from '../Touchable';
 
@@ -65,6 +64,14 @@ const ToggleIconBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
+		* CSS classes to be used on the Icon component
+		*
+		* @type {String}
+		* @public
+		*/
+		iconClasses: PropTypes.string,
+
+		/**
 		 * The component used to render the icon.
 		 *
 		 * @type {Component}
@@ -96,15 +103,17 @@ const ToggleIconBase = kind({
 	},
 
 	computed: {
-		className: ({selected, styler}) => styler.append({selected})
+		className: ({selected, styler}) => styler.append({selected}),
+		iconClassName: ({iconClasses, css}) => iconClasses ? `${css.icon} ${iconClasses}` : css.icon
 	},
 
-	render: ({children, css, iconComponent: IconComponent, ...rest}) => {
+	render: ({children, iconComponent: IconComponent, iconClassName, ...rest}) => {
 		delete rest.selected;
+		delete rest.iconClasses;
 
 		return (
 			<div {...rest}>
-				<IconComponent className={css.icon}>{children}</IconComponent>
+				<IconComponent className={iconClassName}>{children}</IconComponent>
 			</div>
 		);
 	}

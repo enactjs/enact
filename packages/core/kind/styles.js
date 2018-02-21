@@ -42,16 +42,18 @@ import {addInternalProp} from './util';
  * @private
  */
 const styles = (cfg, optProps) => {
-	const {className, prop = 'className', style} = cfg;
-	let {publicClassNames: allowedClassNames, css} = cfg;
+	const {className, css: configCss, prop = 'className', style} = cfg;
+	let {publicClassNames: allowedClassNames} = cfg;
 
-	if (css && allowedClassNames === true) {
-		allowedClassNames = Object.keys(css);
+	if (configCss && allowedClassNames === true) {
+		allowedClassNames = Object.keys(configCss);
 	} else if (typeof allowedClassNames === 'string') {
 		allowedClassNames = allowedClassNames.split(/\s+/);
 	}
 
 	const renderStyles = (props) => {
+		let css = configCss;
+
 		if (style) {
 			props.style = Object.assign({}, style, props.style);
 		}
