@@ -15,6 +15,7 @@ import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
 import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 import {SlotItemBase as UiSlotItemBase, SlotItemDecorator as UiSlotItemDecorator} from '@enact/ui/SlotItem';
+import {ItemDecorator as UiItemDecorator} from '@enact/ui/Item';
 import Toggleable from '@enact/ui/Toggleable';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -57,7 +58,7 @@ const SlotItemBase = kind({
 	styles: {
 		css: componentCss,
 		className: 'slotItem',
-		publicClassNames: 'slotItem'
+		publicClassNames: ['slotItem']
 	},
 
 	render: (props) => {
@@ -95,6 +96,7 @@ const SlotItemDecorator = compose(
 	Toggleable(
 		{prop: 'remeasure', activate: 'onFocus', deactivate: 'onBlur', toggle: null}
 	),
+	UiItemDecorator, // (Touchable)
 	Spottable,
 	RemeasurableDecorator({trigger: 'remeasure'}),
 	MarqueeDecorator({className: componentCss.content, invalidateProps: ['inline', 'autoHide', 'remeasure']}),
