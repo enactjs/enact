@@ -1,6 +1,8 @@
 import classNames from 'classnames';
+import compose from 'ramda/src/compose';
 import css from '@enact/ui/Scrollable/Scrollable.less';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
+import {ScrollableNative as UiScrollableNative} from '@enact/ui/Scrollable/ScrollableNative';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import PropTypes from 'prop-types';
@@ -61,14 +63,13 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 
 
 /**
- * A Higher-order Component that applies a Scrollable behavior to its wrapped component.
+ * A Higher-order Component that applies a moonstone themed scrollable native behavior upon UiScrollableNative
  *
- * @class ScrollableNative
- * @memberof moonstone/Scrollable
+ * @class ScrollableNativeDecorator
  * @ui
  * @private
  */
-const ScrollableNative = (Wrapped) => (
+const ScrollableNativeDecorator = (Wrapped) => (
 	class ScrollableBaseNative extends Component {
 		static displayName = 'ScrollableBaseNative'
 
@@ -528,6 +529,19 @@ const ScrollableNative = (Wrapped) => (
 			);
 		}
 	}
+);
+
+/**
+ * A Higher-order Component that applies a Scrollable native behavior to its wrapped component.
+ *
+ * @class ScrollableNative
+ * @memberof moonstone/Scrollable
+ * @ui
+ * @private
+ */
+const ScrollableNative = compose(
+	ScrollableNativeDecorator,
+	UiScrollableNative
 );
 
 export default ScrollableNative;
