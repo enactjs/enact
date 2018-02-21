@@ -268,7 +268,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.deferScrollTo = true;
 		}
 
-		componentDidUpdate () {
+		componentDidUpdate (prevProps, prevState) {
+			const
+				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+				{dataSize} = this.props;
+
 			// Need to sync calculated client size if it is different from the real size
 			if (this.childRef.syncClientSize) {
 				// If we actually synced, we need to reset scroll position.
@@ -280,7 +284,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
-			this.updateScrollbars();
+			if (!(
+				dataSize === prevProps.dataSize &&
+				(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
+			)) {
+				this.updateScrollbars();
+			}
 
 			if (this.scrollToInfo !== null) {
 				if (!this.deferScrollTo) {

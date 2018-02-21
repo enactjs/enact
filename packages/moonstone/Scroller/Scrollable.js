@@ -301,6 +301,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps, prevState) {
+			const
+				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+				{dataSize} = this.props;
+
 			// Need to sync calculated client size if it is different from the real size
 			if (this.childRef.syncClientSize) {
 				// If we actually synced, we need to reset scroll position.
@@ -314,10 +318,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
-
 			if (!(
-				this.props.dataSize === prevProps.dataSize &&
-				(this.state.isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || this.state.isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
+				dataSize === prevProps.dataSize &&
+				(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
 			)) {
 				this.updateScrollbars();
 			}
@@ -331,8 +334,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			// publish container resize changes
-			const horizontal = this.state.isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
-			const vertical = this.state.isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
+			const horizontal = isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
+			const vertical = isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
 			if (horizontal || vertical) {
 				this.publisher.publish({
 					horizontal,
