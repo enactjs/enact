@@ -65,7 +65,7 @@ class VirtualListBase extends Component {
 		 * - `data` is for accessing the supplied `data` property of the list.
 		 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
 		 * is parameters due to performance optimizations
-		 * - `data-index` is required for Spotlight 5-way navigation.  Pass to the root element in
+		 * - `data-index` is required for Spotlight 5-way navigation. Pass to the root element in
 		 *   the component.
 		 * - `index` is the index number of the componet to render
 		 * - `key` MUST be passed as a prop to the root element in the component for DOM recycling.
@@ -122,7 +122,7 @@ class VirtualListBase extends Component {
 		 */
 		clientSize: PropTypes.shape({
 			clientWidth: PropTypes.number.isRequired,
-			clientHeight:  PropTypes.number.isRequired
+			clientHeight: PropTypes.number.isRequired
 		}),
 
 		/**
@@ -246,15 +246,6 @@ class VirtualListBase extends Component {
 			updateStatesAndBounds(nextProps);
 		} else if (hasDataChanged) {
 			updateStatesAndBounds(nextProps);
-		}
-	}
-
-	componentWillUnmount () {
-		const containerNode = this.containerRef;
-
-		// remove a function for preventing native scrolling by Spotlight
-		if (containerNode && containerNode.removeEventListener) {
-			containerNode.removeEventListener('scroll', this.preventScroll);
 		}
 	}
 
@@ -425,7 +416,7 @@ class VirtualListBase extends Component {
 
 		if (wasFirstIndexMax && dataSizeDiff > 0) { // If dataSize increased from bottom, we need adjust firstIndex
 			// If this is a gridlist and dataSizeDiff is smaller than 1 line, we are adjusting firstIndex without threshold change.
-			if (dimensionToExtent > 1 &&  dataSizeDiff < dimensionToExtent) {
+			if (dimensionToExtent > 1 && dataSizeDiff < dimensionToExtent) {
 				newFirstIndex = maxFirstIndex;
 			} else { // For other bottom adding case, we need to update firstIndex and threshold.
 				const

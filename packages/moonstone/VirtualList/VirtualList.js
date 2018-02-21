@@ -124,7 +124,7 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 		}
 
 		componentDidMount () {
-			if (type == 'JS') {
+			if (type === 'JS') {
 				const containerNode = this.uiVirtualListRef.containerRef;
 
 				// prevent native scrolling by Spotlight
@@ -148,9 +148,19 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 			if (this.setContainerDisabled) {
 				this.setContainerDisabled(false);
 			}
+
+			if (type === 'JS') {
+				const containerNode = this.containerRef;
+
+				// remove a function for preventing native scrolling by Spotlight
+				if (containerNode && containerNode.removeEventListener) {
+					containerNode.removeEventListener('scroll', this.preventScroll);
+				}
+			}
 		}
 
 		isScrolledBy5way = false
+		isScrolledByJump = false
 		lastFocusedIndex = null
 		nodeIndexToBeFocused = null
 		preservedIndex = null
@@ -201,7 +211,8 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 		getIndexToScrollDisabled = (direction, currentIndex) => {
 			const
 				{data, dataSize, spacing} = this.props,
-				{dimensionToExtent, primary, findSpottableItem} = this.uiVirtualListRef,
+				{dimensionToExtent, primary} = this.uiVirtualListRef,
+				{findSpottableItem} = this,
 				{firstVisibleIndex, lastVisibleIndex} = this.uiVirtualListRef.moreInfo,
 				numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent),
 				isPageDown = (direction === 'down' || direction === 'right') ? 1 : -1;
@@ -634,7 +645,7 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 		 * setter/getter
 		 */
 
-		shouldPreventScrollByFocus = () => ((type === 'Native') ? (this.isScrolledBy5way) : (this.isScrolledBy5way || this.isScrolledByJump))
+		shouldPreventScrollByFocus = () => ((type === 'JS') ? (this.isScrolledBy5way) : (this.isScrolledBy5way || this.isScrolledByJump))
 
 		getNodeIndexToBeFocused = () => this.nodeIndexToBeFocused
 
