@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/BodyText`, `ui/Image`, `ui/Item`, `ui/ProgressBar`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleIcon` components as unstyled base components to support UI libraries
+- `ui/SlotItem` Adds the ability to `slotBefore` and `slotAfter` to an Item
 
 ### Changed
 
