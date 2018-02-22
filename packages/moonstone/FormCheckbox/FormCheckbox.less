@@ -5,7 +5,8 @@
 @import "../styles/text.less";
 @import "../styles/skin.less";
 
-.formCheckbox {
+// Interally theme our implementation using published classes from ToggleItem and ToggleIcon
+.toggleIcon {
 	width: @moon-formcheckbox-size;
 	height: @moon-formcheckbox-size;
 	border-radius: (@moon-formcheckbox-size / 2);
@@ -49,7 +50,7 @@
 }
 
 .focus({
-	.formCheckbox {
+	.toggleIcon {
 		// Skin colors
 		.applySkins({
 			&:not([disabled]) {
@@ -65,7 +66,7 @@
 
 .muted({
 	.focus({
-		.formCheckbox {
+		.toggleIcon {
 			.applySkins({
 				&:not([disabled]) {
 					background-color: @moon-formcheckbox-bg-color;

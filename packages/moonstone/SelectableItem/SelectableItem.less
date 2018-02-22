@@ -1,38 +1,3 @@
-// SelectableItem.less
-//
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/skin.less';
-
 .selectableItem {
-	.dot {
-		@dot-size: @moon-selectable-item-indicator-size - 3px * 2;
-
-		font-size: @dot-size;
-		text-align: left;
-		width: @moon-selectable-item-indicator-width;
-
-		&:not(.selected) {
-			display: none;
-		}
-	}
-
-	// Skin colors
-	.applySkins({
-		.dot {
-			color: @moon-accent;
-		}
-	});
+	/* Placeholder for CSS overrides */
 }
-
-.muted({
-	.selectableItem {
-		.applySkins({
-			.focus({
-				.dot {
-					color: @moon-accent;
-				}
-			});
-		});
-	}
-});

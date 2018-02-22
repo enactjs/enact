@@ -1,18 +1,26 @@
-// ItemOverlay.less
+// Item.less
 //
-@import "../styles/mixins.less";
 @import "../styles/variables.less";
+@import "../styles/text.less";
 
 // Defined so we don't repeat rules.
-@overlay-hidden: {
-	.overlay.hidden {
+@slot-hidden: {
+	.slot.hidden {
 		display: none;
 	}
 };
 
-.item {
-	.overlay {
-		line-height: 1;
+.slotItem {
+	// Apply to the marquee content area to tell it to expand to the available width of the container
+	.content {
+		flex: 1 1 auto;
+	}
+
+	.slot {
+		// line-height: 0; Tells the container that it should attempt to be 0 px tall, and its
+		// contents push it to be taller. The container is therefore its minimum height (according
+		// to the content) and can be perfectly vertically centered.
+		line-height: 0;
 		white-space: nowrap;
 
 		&.before,
@@ -53,14 +61,14 @@
 	// Spottable but not focused
 	.spottable({
 		&:not(:focus) {
-			@overlay-hidden();
+			@slot-hidden();
 		}
 	});
-	.disabled(@overlay-hidden);
+	.disabled(@slot-hidden);
 }
 
 .muted({
-	.item {
-		.focus(@overlay-hidden);
+	.slotItem {
+		.focus(@slot-hidden);
 	}
 });
