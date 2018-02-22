@@ -119,10 +119,6 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 			};
 		}
 
-		initVirtualList = (uiVirtualListRef) => {
-			this.uiVirtualListRef = uiVirtualListRef;
-		}
-
 		componentDidMount () {
 			if (type === 'JS') {
 				const containerNode = this.uiVirtualListRef.containerRef;
@@ -168,6 +164,10 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 
 		itemContainerRef = null
 
+		initVirtualList = (uiVirtualListRef) => {
+			this.uiVirtualListRef = uiVirtualListRef;
+		}
+
 		setContainerDisabled = (bool) => {
 			const containerNode = (type === 'JS') ? this.uiVirtualListRef.containerRef : this.uiVirtualListRef.contentRef;
 
@@ -188,7 +188,7 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 
 		findSpottableItem = (indexFrom, indexTo) => {
 			const
-				{data, dataSize} = this.props,
+				{data, dataSize} = this.uiVirtualListRef.props,
 				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
 				safeIndexTo = clamp(-1, dataSize, indexTo),
 				delta = (indexFrom < indexTo) ? 1 : -1;
@@ -210,7 +210,7 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 
 		getIndexToScrollDisabled = (direction, currentIndex) => {
 			const
-				{data, dataSize, spacing} = this.props,
+				{data, dataSize, spacing} = this.uiVirtualListRef.props,
 				{dimensionToExtent, primary} = this.uiVirtualListRef,
 				{findSpottableItem} = this,
 				{firstVisibleIndex, lastVisibleIndex} = this.uiVirtualListRef.moreInfo,
@@ -279,7 +279,7 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 
 		getIndexToScroll = (direction, currentIndex) => {
 			const
-				{dataSize, spacing} = this.props,
+				{dataSize, spacing} = this.uiVirtualListRef.props,
 				{dimensionToExtent, primary} = this.uiVirtualListRef,
 				numOfItemsInPage = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent,
 				factor = (direction === 'down' || direction === 'right') ? 1 : -1;
@@ -299,7 +299,7 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 
 		scrollToNextItem = ({direction, focusedItem}) => {
 			const
-				{data} = this.props,
+				{data} = this.uiVirtualListRef.props,
 				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
 				{firstVisibleIndex, lastVisibleIndex} = this.uiVirtualListRef.moreInfo;
 			let indexToScroll = -1;
@@ -335,7 +335,7 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 					focusedItem.blur();
 				}
 				this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
-				this.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
+				this.uiVirtualListRef.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
 			}
 
 			return true;
@@ -351,7 +351,7 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 
 		setSpotlightContainerRestrict = (keyCode, target) => {
 			const
-				{dataSize} = this.props,
+				{dataSize} = this.uiVirtualListRef.props,
 				{isPrimaryDirectionVertical, dimensionToExtent} = this.uiVirtualListRef,
 				index = Number.parseInt(target.getAttribute(dataIndexAttribute)),
 				canMoveBackward = index >= dimensionToExtent,
@@ -371,7 +371,7 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 
 		jumpToSpottableItem = (keyCode, target) => {
 			const
-				{cbScrollTo, data, dataSize} = this.props,
+				{cbScrollTo, data, dataSize} = this.uiVirtualListRef.props,
 				{firstIndex, numOfItems} = this.uiVirtualListRef.state,
 				{isPrimaryDirectionVertical} = this.uiVirtualListRef,
 				rtl = this.uiVirtualListRef.context.rtl,
@@ -594,7 +594,7 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 
 		calculatePositionOnFocus = ({item, scrollPosition = this.uiVirtualListRef.scrollPosition}) => {
 			const
-				{pageScroll} = this.props,
+				{pageScroll} = this.uiVirtualListRef.props,
 				{numOfItems} = this.uiVirtualListRef.state,
 				{primary} = this.uiVirtualListRef,
 				offsetToClientEnd = primary.clientSize - primary.itemSize,
@@ -663,7 +663,7 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 
 		updateStatesAndBounds = (props) => {
 			const
-				{dataSize, overhang} = props,
+				{dataSize, overhang} = props, // eslint-disable-line enact/prop-types
 				{firstIndex} = this.uiVirtualListRef.state,
 				{dimensionToExtent, primary, moreInfo, scrollPosition} = this.uiVirtualListRef,
 				{preservedIndex} = this,
@@ -706,7 +706,7 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 
 		applyStyleToNewNode = (index, ...rest) => {
 			const
-				{component, data} = this.props,
+				{component, data} = this.uiVirtualListRef.props,
 				{numOfItems} = this.uiVirtualListRef.state,
 				{getNodeIndexToBeFocused, initItemRef} = this,
 				key = index % numOfItems,

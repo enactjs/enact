@@ -1,13 +1,11 @@
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
-import classNames from 'classnames';
 import compose from 'ramda/src/compose';
 import {is} from '@enact/core/keymap';
 import {off, on} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {Scrollbar as UiScrollbar} from '@enact/ui/Scrollable/Scrollbar';
-import ScrollThumb from '@enact/ui/Scrollable/ScrollThumb';
 import Spotlight from '@enact/spotlight';
 
 import $L from '../internal/$L';
@@ -175,7 +173,7 @@ const SpottableScrollbarDecorator = (Wrapped) => (
 		updateButtons = (bounds) => {
 			const
 				{prevButtonNodeRef, nextButtonNodeRef} = this,
-				{vertical} = this.props,
+				{vertical} = this.uiScrollbarRef.props,
 				currentPos = vertical ? bounds.scrollTop : bounds.scrollLeft,
 				maxPos = vertical ? bounds.maxTop : bounds.maxLeft,
 				shouldDisablePrevButton = currentPos <= 0,
@@ -222,7 +220,9 @@ const SpottableScrollbarDecorator = (Wrapped) => (
 		isThumbFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
 
 		handlePrevScroll = (ev) => {
-			const {onPrevScroll, vertical} = this.props;
+			const
+				{onPrevScroll} = this.props,
+				{vertical} = this.uiScrollbarRef.props;
 
 			onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
 			if (this.announceRef) {
@@ -231,7 +231,9 @@ const SpottableScrollbarDecorator = (Wrapped) => (
 		}
 
 		handleNextScroll = (ev) => {
-			const {onNextScroll, vertical} = this.props;
+			const
+				{onNextScroll} = this.props,
+				{vertical} = this.uiScrollbarRef.props;
 
 			onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
 			if (this.announceRef) {
@@ -240,7 +242,9 @@ const SpottableScrollbarDecorator = (Wrapped) => (
 		}
 
 		handlePrevHoldPulse = (ev) => {
-			const {onPrevScroll, vertical} = this.props;
+			const
+				{onPrevScroll} = this.props,
+				{vertical} = this.uiScrollbarRef.props;
 
 			if (!this.ignoreMode) {
 				onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
@@ -248,7 +252,9 @@ const SpottableScrollbarDecorator = (Wrapped) => (
 		}
 
 		handleNextHoldPulse = (ev) => {
-			const {onNextScroll, vertical} = this.props;
+			const
+				{onNextScroll} = this.props,
+				{vertical} = this.uiScrollbarRef.props;
 
 			if (!this.ignoreMode) {
 				onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
@@ -284,12 +290,12 @@ const SpottableScrollbarDecorator = (Wrapped) => (
 		initRef (name) {
 			return (ref) => {
 				this[name] = ref;
-			}
+			};
 		}
 
-		renderChildren = (thumb) => {
+		renderChildren = (thumb, vertical) => {
 			const
-				{disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, vertical} = this.props,
+				{disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear} = this.props,
 				{prevButtonDisabled, nextButtonDisabled} = this.state,
 				prevIcon = preparePrevButton(vertical),
 				nextIcon = prepareNextButton(vertical);
@@ -349,9 +355,7 @@ const SpottableScrollbarDecorator = (Wrapped) => (
  * @private
  */
 const ScrollbarDecorator = compose(
-	ApiDecorator(
-		{api: ['isThumbFocused', 'showThumb', 'startHidingThumb', 'update']
-	}),
+	ApiDecorator({api: ['isThumbFocused', 'showThumb', 'startHidingThumb', 'update']}),
 	DisappearSpotlightDecorator(
 		{events: {
 			onNextSpotlightDisappear: '[data-scroll-button="previous"]',
@@ -369,7 +373,7 @@ const ScrollbarDecorator = compose(
  * @ui
  * @private
  */
- const Scrollbar = ScrollbarDecorator(UiScrollbar);
+const Scrollbar = ScrollbarDecorator(UiScrollbar);
 
 export default Scrollbar;
 export {

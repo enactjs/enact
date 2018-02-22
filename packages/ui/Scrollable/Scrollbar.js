@@ -9,7 +9,6 @@ import componentCss from './Scrollbar.less';
 import ScrollThumb from './ScrollThumb';
 
 const
-	nop = () => {},
 	minThumbSize = 18, // Size in pixels
 	thumbHidingDelay = 400; /* in milliseconds */
 
@@ -171,7 +170,7 @@ class Scrollbar extends PureComponent {
 		return (
 			<div ref={this.initContainerRef} className={containerClassName}>
 				{this.props.render ?
-					this.props.render(this.renderThumb()) :
+					this.props.render(this.renderThumb(), vertical) :
 					this.renderThumb()
 				}
 			</div>

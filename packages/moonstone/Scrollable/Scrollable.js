@@ -7,9 +7,6 @@
  * @private
  */
 
-import classNames from 'classnames';
-import compose from 'ramda/src/compose';
-import css from '@enact/ui/Scrollable/Scrollable.less';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
@@ -25,8 +22,7 @@ const
 		animationDuration,
 		isPageDown,
 		isPageUp,
-		paginationPageMultiplier,
-		scrollWheelPageMultiplierForMaxPixel
+		paginationPageMultiplier
 	} = constants,
 	reverseDirections = {
 		down: 'up',
@@ -108,6 +104,12 @@ const Scrollable = (Wrapped) => (
 			};
 		}
 
+		componentDidUpdate () {
+			if (this.uiScrollableRef.scrollToInfo === null) {
+				this.updateScrollOnFocus();
+			}
+		}
+
 		// status
 		isWheeling = false
 
@@ -130,15 +132,9 @@ const Scrollable = (Wrapped) => (
 			this.uiScrollableRef = uiScrollableRef;
 		}
 
-		componentDidUpdate () {
-			if (this.uiScrollableRef.scrollToInfo === null) {
-				this.updateScrollOnFocus();
-			}
-		}
-
 		// TBD
 
-		onMouseUp = (e) => {
+		onMouseUp = () => {
 			if (this.uiScrollableRef.isDragging && this.uiScrollableRef.isFlicking()) {
 				const focusedItem = Spotlight.getCurrent();
 
@@ -188,8 +184,8 @@ const Scrollable = (Wrapped) => (
 			const
 				{isDragging, animator, direction} = this.uiScrollableRef,
 				shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
-				this.childRef.shouldPreventScrollByFocus() :
-				false;
+					this.childRef.shouldPreventScrollByFocus() :
+					false;
 
 			if (this.isWheeling) {
 				this.uiScrollableRef.stop();

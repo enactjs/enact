@@ -1,7 +1,27 @@
+import compose from 'ramda/src/compose';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import {ScrollerBase as UiScrollerBaseNative} from '@enact/ui/Scroller';
+import {ScrollableNative as UiScrollableNative} from '@enact/ui/Scrollable/ScrollableNative';
 
 import {ScrollableNative} from '../Scrollable/ScrollableNative';
-import {ScrollerBase as ScrollerBaseNative} from '../Scroller';
+import {SpottableScrollerDecorator} from './Scroller';
+
+/**
+ * Moonstone-specific Scroller native behavior to apply to ScrollerNative.
+ *
+ * @hoc
+ * @memberof moonstone/Scroller
+ * @mixes moonstone/Scrollable.ScrollableNative
+ * @mixes ui/Scrollable.ScrollableNative
+ * @ui
+ * @private
+ */
+const ScrollerNativeDecorator = compose(
+	SpotlightContainerDecorator({restrict: 'self-first'}),
+	ScrollableNative,
+	SpottableScrollerDecorator,
+	UiScrollableNative,
+);
 
 /**
  * A moonstone-styled native Scroller, SpotlightContainerDecorator and Scrollable applied.
@@ -20,13 +40,10 @@ import {ScrollerBase as ScrollerBaseNative} from '../Scroller';
  * @ui
  * @public
  */
-const ScrollerNative = SpotlightContainerDecorator(
-	{restrict: 'self-first'},
-	ScrollableNative(ScrollerBaseNative)
-);
+const ScrollerNative = ScrollerNativeDecorator(UiScrollerBaseNative);
 
 export default ScrollerNative;
 export {
 	ScrollerNative,
-	ScrollerBaseNative
+	ScrollerNativeDecorator
 };

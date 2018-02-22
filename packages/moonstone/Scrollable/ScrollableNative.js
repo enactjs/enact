@@ -1,6 +1,3 @@
-import classNames from 'classnames';
-import compose from 'ramda/src/compose';
-import css from '@enact/ui/Scrollable/Scrollable.less';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
@@ -100,6 +97,12 @@ const ScrollableNative = (Wrapped) => (
 			};
 		}
 
+		componentDidUpdate () {
+			if (this.uiScrollableRef.scrollToInfo === null) {
+				this.updateScrollOnFocus();
+			}
+		}
+
 		// status
 		isWheeling = false
 
@@ -123,12 +126,6 @@ const ScrollableNative = (Wrapped) => (
 
 			this.initContainerRef = uiScrollableRef.initContainerRef;
 			this.uiScrollableRef = uiScrollableRef;
-		}
-
-		componentDidUpdate () {
-			if (this.uiScrollableRef.scrollToInfo === null) {
-				this.updateScrollOnFocus();
-			}
 		}
 
 		onMouseDown = () => {
@@ -348,7 +345,7 @@ const ScrollableNative = (Wrapped) => (
 					rDirection = reverseDirections[direction],
 					viewportBounds = this.uiScrollableRef.containerRef.getBoundingClientRect(),
 					spotItemBounds = spotItem.getBoundingClientRect(),
-					endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
+					endPoint = this.getEndPoint(direction, spotItemBounds, viewportBounds),
 					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId),
 					scrollFn = this.childRef.scrollToNextPage || this.childRef.scrollToNextItem;
 
