@@ -18,6 +18,7 @@ import css from './SliderTooltip.less';
  * @public
  */
 class SliderTooltipBase extends React.Component {
+	static displayName = 'SliderTooltip'
 
 	static propTypes = /** @lends moonstone/Slider.SliderTooltip.prototype */{
 		/**
