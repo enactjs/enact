@@ -193,9 +193,7 @@ function removeLocalizedFont (name) {
 	}
 }
 
-export default generateFontRules;
-export {
-	addLocalizedFont,
-	generateFontRules,
-	removeLocalizedFont
-};
+module.exports = generateFontRules;
+module.exports.generateFontRules = generateFontRules;
+module.exports.addLocalizedFont = addLocalizedFont;
+module.exports.removeLocalizedFont = removeLocalizedFont;
