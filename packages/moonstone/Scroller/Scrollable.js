@@ -134,6 +134,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 *	this.scrollTo({align: 'top'}); // scroll to the top
 			 * ```
 			 * @type {Function}
+			 * @deprecated will be removed in 2.0.0
 			 * @public
 			 */
 			cbScrollTo: PropTypes.func,
@@ -260,6 +261,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			};
 
 			props.cbScrollTo(this.scrollTo);
+			if (props.cbScrollTo) {
+				deprecate({name: 'cbScrollTo', since: '1.14.0', until: '2.0.0'});
+			}
 		}
 
 		// component life cycle
