@@ -5,13 +5,14 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ## [2.0.0-alpha.4] - 2018-02-13
 
 ### Added
-- `moonstone/SlotItem` replaces `moonstone/Item.ItemOverlay`. Extends `ui/SlotItem`
+
+- `moonstone/SlotItem` replacing `moonstone/Item.ItemOverlay`
 
 ### Removed
 
 - `moonstone/VirtualFlexList` to be replaced by `ui/VirtualFlexList`
 - `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`
- - `moonstone/Item.OverlayDecorator`, `moonstone/Item.Overlay` `moonstone/Item.ItemOverlay` to be replaced by `SlotItem`
+- `moonstone/Item.OverlayDecorator`, `moonstone/Item.Overlay`, and `moonstone/Item.ItemOverlay` to be replaced by `moonstone/SlotItem`
 
 ### Changed
 
