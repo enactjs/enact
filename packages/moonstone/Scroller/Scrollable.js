@@ -143,7 +143,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * @default 0
 			 * @public
 			 */
-			// dataSize: PropTypes.number,
+			dataSize: PropTypes.number,
 
 			/**
 			 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
@@ -318,12 +318,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
-			// if (!(
-			// 	dataSize === prevProps.dataSize &&
-			// 	(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
-			// )) {
+			if (!(
+				dataSize === prevProps.dataSize &&
+				(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
+			)) {
 				this.updateScrollbars();
-			// }
+			}
 
 			if (this.scrollToInfo !== null) {
 				if (!this.deferScrollTo) {
