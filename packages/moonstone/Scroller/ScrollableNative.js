@@ -293,7 +293,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
-			if (!(
+			if (!this.deferScrollTo && !(
 				dataSize === prevProps.dataSize &&
 				(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
 			)) {
