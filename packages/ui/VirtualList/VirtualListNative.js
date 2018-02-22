@@ -387,7 +387,7 @@ class VirtualListBaseNative extends Component {
 		this.state.numOfItems = 0;
 	}
 
-	updateStatesAndBounds (props) {
+	updateStatesAndBounds = (props) => {
 		const
 			{dataSize, overhang} = props,
 			{firstIndex} = this.state,

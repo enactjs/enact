@@ -1,4 +1,3 @@
-import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
@@ -6,7 +5,7 @@ import React, {PureComponent} from 'react';
 
 import ri from '../resolution';
 
-import css from './Scrollbar.less';
+import componentCss from './Scrollbar.less';
 import ScrollThumb from './ScrollThumb';
 
 const
@@ -27,25 +26,17 @@ const setCSSVariable = (element, variable, value) => {
 };
 
 /**
- * A basic base component for [Scrollbar]{@link ui/Scrollable.Scrollbar.
+ * A basic scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
  *
- * @class ScrollbarBase
+ * @class Scrollbar
  * @memberof ui/Scrollable
  * @ui
  * @private
  */
-class ScrollbarBase extends PureComponent {
+class Scrollbar extends PureComponent {
 	static displayName = 'ui:Scrollbar'
 
 	static propTypes = /** @lends ui/Scrollable.ScrollbarBase.prototype */ {
-		/**
-		 * The callback function which is called for linking alertThumb function.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		cbAlertThumb: PropTypes.func,
-
 		/**
 		 * If `true`, add the corner between vertical and horizontal scrollbars.
 		 *
@@ -55,12 +46,25 @@ class ScrollbarBase extends PureComponent {
 		corner: PropTypes.bool,
 
 		/**
-		 * Exposes this instance as the provider for its imperative API
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `scrollbar` - The scrollbar component class
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
+
+		/**
+		 * Render function for children
 		 *
 		 * @type {Function}
 		 * @private
 		 */
-		setApiProvider: PropTypes.func,
+		render: PropTypes.func,
 
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
@@ -73,8 +77,8 @@ class ScrollbarBase extends PureComponent {
 	}
 
 	static defaultProps = {
-		cbAlertThumb: nop,
 		corner: false,
+		css: componentCss,
 		vertical: true
 	}
 
@@ -83,10 +87,6 @@ class ScrollbarBase extends PureComponent {
 
 		this.initContainerRef = this.initRef('containerRef');
 		this.initThumbRef = this.initRef('thumbRef');
-
-		if (props.setApiProvider) {
-			props.setApiProvider(this);
-		}
 	}
 
 	componentDidMount () {
@@ -95,7 +95,6 @@ class ScrollbarBase extends PureComponent {
 
 	componentDidUpdate () {
 		this.calculateMetrics();
-		this.props.cbAlertThumb();
 	}
 
 	componentWillUnmount () {
@@ -109,7 +108,7 @@ class ScrollbarBase extends PureComponent {
 	containerRef = null
 	thumbRef = null
 
-	update (bounds) {
+	update = (bounds) => {
 		const
 			{vertical} = this.props,
 			{clientWidth, clientHeight, scrollWidth, scrollHeight, scrollLeft, scrollTop} = bounds,
@@ -127,7 +126,7 @@ class ScrollbarBase extends PureComponent {
 
 	showThumb () {
 		this.hideThumbJob.stop();
-		this.thumbRef.classList.add(css.thumbShown);
+		this.thumbRef.classList.add(this.props.css.thumbShown);
 	}
 
 	startHidingThumb () {
@@ -135,7 +134,7 @@ class ScrollbarBase extends PureComponent {
 	}
 
 	hideThumb () {
-		this.thumbRef.classList.remove(css.thumbShown);
+		this.thumbRef.classList.remove(this.props.css.thumbShown);
 	}
 
 	hideThumbJob = new Job(this.hideThumb.bind(this), thumbHidingDelay);
@@ -151,9 +150,17 @@ class ScrollbarBase extends PureComponent {
 		};
 	}
 
+	renderThumb = () => (
+		<ScrollThumb
+			getScrollThumbRef={this.initThumbRef}
+			key="thumb"
+			vertical={this.props.vertical}
+		/>
+	);
+
 	render () {
 		const
-			{className, corner, vertical} = this.props,
+			{className, corner, css, vertical} = this.props,
 			containerClassName = classNames(
 				className,
 				css.scrollbar,
@@ -163,31 +170,16 @@ class ScrollbarBase extends PureComponent {
 
 		return (
 			<div ref={this.initContainerRef} className={containerClassName}>
-				<ScrollThumb
-					className={css.scrollThumb}
-					getScrollThumbRef={this.initThumbRef}
-					vertical={vertical}
-				/>
+				{this.props.render ?
+					this.props.render(this.renderThumb()) :
+					this.renderThumb()
+				}
 			</div>
 		);
 	}
 }
 
-/**
- * A basic scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
- *
- * @class Scrollbar
- * @memberof ui/Scrollable
- * @ui
- * @private
- */
-const Scrollbar = ApiDecorator(
-	{api: ['containerRef', 'hideThumb', 'showThumb', 'startHidingThumb', 'update']},
-	ScrollbarBase
-);
-
 export default Scrollbar;
 export {
-	Scrollbar,
-	ScrollbarBase
+	Scrollbar
 };

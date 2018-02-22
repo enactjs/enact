@@ -78,7 +78,7 @@ const
  * A moonstone-styled decorator component for
  * [VirtualList]{@link moonstone/VirtualList.VirtualList} and [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
  *
- * @class SpottableVirtualListDecorator
+ * @hoc
  * @memberof moonstone/VirtualList
  * @ui
  * @private
@@ -794,6 +794,7 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
  * @hoc
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable.Scrollable
+ * @mixes ui/Scrollable.Scrollable
  * @ui
  * @private
  */
@@ -811,6 +812,7 @@ const VirtualListDecorator = compose(
  * @hoc
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable.ScrollableNative
+ * @mixes ui/Scrollable.ScrollableNative
  * @ui
  * @private
  */
@@ -827,6 +829,7 @@ const VirtualListNativeDecorator = compose(
  * @class VirtualList
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable.Scrollable
+ * @mixes ui/Scrollable.Scrollable
  * @ui
  * @public
  */
@@ -838,6 +841,7 @@ const VirtualList = VirtualListDecorator(UiVirtualListBase);
  * @class VirtualGridList
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable.Scrollable
+ * @mixes ui/Scrollable.Scrollable
  * @ui
  * @public
  */
@@ -852,6 +856,7 @@ const VirtualGridList = VirtualList;
  * @class VirtualListNative
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable.ScrollableNative
+ * @mixes ui/Scrollable.ScrollableNative
  * @ui
  * @public
  */
@@ -866,6 +871,7 @@ const VirtualListNative = VirtualListNativeDecorator(UiVirtualListBaseNative);
  * @class VirtualGridListNative
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable.ScrollableNative
+ * @mixes ui/Scrollable.ScrollableNative
  * @ui
  * @public
  */

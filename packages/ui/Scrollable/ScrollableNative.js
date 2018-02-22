@@ -201,6 +201,7 @@ const ScrollableNative = hoc((config, Wrapped) => (
 			onScroll: nop,
 			onScrollStart: nop,
 			onScrollStop: nop,
+			scrollbarComponent: Scrollbar,
 			verticalScrollbar: 'auto',
 			wrapperContainer: 'div',
 			wrapperProps: {}

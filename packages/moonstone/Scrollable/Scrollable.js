@@ -406,7 +406,7 @@ const Scrollable = (Wrapped) => (
 		updateScrollOnFocus () {
 			const
 				focusedItem = Spotlight.getCurrent(),
-				{containerRef, calculatePositionOnFocus} = this.uiScrollableRef.childRef;
+				{containerRef} = this.uiScrollableRef.childRef;
 
 			if (focusedItem && containerRef && containerRef.contains(focusedItem)) {
 				const
@@ -414,7 +414,7 @@ const Scrollable = (Wrapped) => (
 						previousScrollHeight: this.uiScrollableRef.bounds.scrollHeight,
 						scrollTop: this.uiScrollableRef.scrollTop
 					},
-					pos = calculatePositionOnFocus({item: focusedItem, scrollInfo});
+					pos = this.childRef.calculatePositionOnFocus({item: focusedItem, scrollInfo});
 
 				if (pos && (pos.left !== this.uiScrollableRef.scrollLeft || pos.top !== this.uiScrollableRef.scrollTop)) {
 					this.uiScrollableRef.start({
