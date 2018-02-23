@@ -15,6 +15,8 @@ import Skinnable from '../Skinnable';
 
 import css from './RadioItem.less';
 
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
+
 /**
  * {@link moonstone/RadioItem.RadioItemBase} is a component that
  * combines a Toggleable radio selector and an Item. It has two selected states
@@ -128,10 +130,40 @@ const RadioItemBase = kind({
  * @public
  */
 const RadioItem = Pure(
-	Toggleable(
-		{prop: 'selected'},
-		Skinnable(
-			RadioItemBase
+	VoiceControlDecorator({
+		voiceSlot: [
+			{
+				voiceIntent: 'CheckItemRequest',
+				voiceHandler: (e, props) => {
+					let obj = {};
+					let status = e['Slot2'];
+					let selected;
+					if (status === 'checked') {
+						selected = true;
+					} else if (status === 'unchecked') {
+						selected = false;
+					} else if (status === 'toggle') {
+						selected = !props.selected;
+					} else {
+						return;
+					}
+					obj.selected = selected;
+
+					if (props.onToggle) {
+						props.onToggle(obj);
+					} else if (props.onClick) {
+						if (props.selected !== selected) {
+							props.onClick(obj);
+						}
+					}
+				}
+			}
+		]},
+		Toggleable(
+			{prop: 'selected'},
+			Skinnable(
+				RadioItemBase
+			)
 		)
 	)
 );

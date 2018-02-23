@@ -26,6 +26,8 @@ import Skinnable from '../Skinnable';
 
 import componentCss from './Button.less';
 
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
+
 /**
  * {@link moonstone/Button.ButtonBaseFactory} is Factory wrapper around {@link moonstone/Button.ButtonBase}
  * that allows overriding certain classes at design time. The following are properties of the `css`
@@ -269,15 +271,22 @@ const PrivateButtonFactory = factory(css => {
 	 * @public
 	 */
 	const MoonstoneButton = Pure(
-		Uppercase(
-			TooltipDecorator(
-				MarqueeDecorator(
-					{className: componentCss.marquee},
-					Pressable(
-						{release: ['onMouseUp', 'onMouseLeave', 'onBlur']},
-						Spottable(
-							Skinnable(
-								Base
+		VoiceControlDecorator(
+			{
+				voiceSlot:[
+					{voiceIntent: 'SelectRequest', voiceHandler: 'onClick'}
+				]
+			},
+			Uppercase(
+				TooltipDecorator(
+					MarqueeDecorator(
+						{className: componentCss.marquee},
+						Pressable(
+							{release: ['onMouseUp', 'onMouseLeave', 'onBlur']},
+							Spottable(
+								Skinnable(
+									Base
+								)
 							)
 						)
 					)

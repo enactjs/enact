@@ -17,6 +17,8 @@ import ToggleIcon from './ToggleIcon';
 
 import css from './ToggleItem.less';
 
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
+
 /**
  * {@link moonstone/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
  * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
@@ -200,9 +202,39 @@ const ToggleItemBase = kind({
  * @public
  */
 const ToggleItem = Pure(
-	Toggleable(
-		{prop: 'selected'},
-		ToggleItemBase
+	VoiceControlDecorator({
+		voiceSlot: [
+			{
+				voiceIntent: 'CheckItemRequest',
+				voiceHandler: (e, props) => {
+					let obj = {};
+					let status = e['Slot2'];
+					let selected;
+					if (status === 'checked') {
+						selected = true;
+					} else if (status === 'unchecked') {
+						selected = false;
+					} else if (status === 'toggle') {
+						selected = !props.selected;
+					} else {
+						return;
+					}
+					obj.selected = selected;
+
+					if (props.onToggle) {
+						props.onToggle(obj);
+					} else if (props.onClick) {
+						if (props.selected !== selected) {
+							props.onClick(obj);
+						}
+					}
+				}
+			}
+		]},
+		Toggleable(
+			{prop: 'selected'},
+			ToggleItemBase
+		)
 	)
 );
 

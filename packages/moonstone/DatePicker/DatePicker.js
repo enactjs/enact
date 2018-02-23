@@ -13,6 +13,8 @@ import Skinnable from '../Skinnable';
 
 import DatePickerBase from './DatePickerBase';
 
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
+
 const dateTimeConfig = {
 	customProps: function (i18n, value) {
 		const values = {
@@ -94,9 +96,22 @@ const dateTimeConfig = {
  */
 const DatePicker = Pure(
 	Skinnable(
-		DateTimeDecorator(
-			dateTimeConfig,
-			DatePickerBase
+		VoiceControlDecorator({
+			voiceSlot: [
+				{
+					voiceIntent: 'set_date',
+					voiceHandler: (e, props) => {
+						let {timestamp} = e;
+						if (timestamp && props.onChange) {
+							props.onChange({value: new Date(Number(timestamp))});
+						}
+					}
+				}
+			]},
+			DateTimeDecorator(
+				dateTimeConfig,
+				DatePickerBase
+			)
 		)
 	)
 );

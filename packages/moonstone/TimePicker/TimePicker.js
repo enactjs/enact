@@ -13,6 +13,8 @@ import Skinnable from '../Skinnable';
 
 import TimePickerBase from './TimePickerBase';
 
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
+
 /**
  * Converts a string representation of time into minutes
  *
@@ -216,9 +218,22 @@ const dateTimeConfig = {
  */
 const TimePicker = Pure(
 	Skinnable(
-		DateTimeDecorator(
-			dateTimeConfig,
-			TimePickerBase
+		VoiceControlDecorator({
+			voiceSlot: [
+				{
+					voiceIntent: 'set_time',
+					voiceHandler: (e, props) => {
+						let {timestamp} = e;
+						if (timestamp && props.onChange) {
+							props.onChange({value: new Date(Number(timestamp))});
+						}
+					}
+				}
+			]},
+			DateTimeDecorator(
+				dateTimeConfig,
+				TimePickerBase
+			)
 		)
 	)
 );

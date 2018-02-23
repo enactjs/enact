@@ -21,6 +21,8 @@ import css from './Input.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
 
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
+
 const calcAriaLabel = function (title, type, value = '') {
 	const hint = $L('Input field');
 
@@ -278,15 +280,31 @@ const InputBase = kind({
  * @ui
  * @public
  */
+
 const Input = Pure(
 	Subscription(
 		{channels: ['i18n'], mapMessageToProps: (channel, {rtl}) => ({rtl})},
-		Changeable(
-			InputSpotlightDecorator(
-				Skinnable(
-					InputBase
+			VoiceControlDecorator({
+				voiceSlot: [
+					{
+						voiceIntent: 'TextInputRequest',
+						voiceHandler: (e, props) => {
+							let obj = {};
+							let text = e['Slot2'];
+							obj.value = text;
+							if (props.onChange) {
+								props.onChange(obj);
+							}
+						}
+					}
+				]},
+				Changeable(
+					InputSpotlightDecorator(
+						Skinnable(
+							InputBase
+						)
+					)
 				)
-			)
 		)
 	)
 );

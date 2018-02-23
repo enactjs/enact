@@ -19,6 +19,8 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import css from './Scroller.less';
 import Scrollable from './Scrollable';
 
+import VoiceControl from '@enact/webos/VoiceControl';
+
 const
 	dataContainerDisabledAttribute = 'data-container-disabled',
 	epsilon = 1,
@@ -507,12 +509,61 @@ class ScrollerBase extends Component {
  * @ui
  * @public
  */
-const Scroller = SpotlightContainerDecorator(
+const ScrollerPure = SpotlightContainerDecorator(
 	{restrict: 'self-first'},
 	Scrollable(
 		ScrollerBase
 	)
 );
+
+class Scroller extends React.Component {
+	static propTypes = {
+		cbScrollTo: PropTypes.func
+	}
+
+	constructor (props) {
+		super(props);
+	}
+
+	componentDidMount () {
+		this.addVoice();
+	}
+
+	componentWillUnmount () {
+		this.removeVoice();
+	}
+
+	addVoice = () => {
+		this.voiceList = VoiceControl.addList([
+			{voiceIntent: 'scroller', voiceLabel: 'first', onVoice: () => this.scrollTo({align: 'top'})},
+			{voiceIntent: 'scroller', voiceLabel: 'last', onVoice: () => this.scrollTo({align: 'bottom'})},
+			{voiceIntent: 'scroller', voiceLabel: 'up', onVoice: null},
+			{voiceIntent: 'scroller', voiceLabel: 'down', onVoice: null}
+		]);
+	}
+
+	removeVoice = () => {
+		VoiceControl.removeList(this.voiceList);
+	}
+
+	cbScrollTo = (fn) => {
+		this.scrollTo = fn;
+
+		if (this.props.cbScrollTo) {
+			this.props.cbScrollTo(fn);
+		}
+	}
+
+	render () {
+		const props = {...this.props};
+		delete props.voiceLabel;
+		delete props.cbScrollTo;
+
+		return (
+			<ScrollerPure {...props} cbScrollTo={this.cbScrollTo} />
+		);
+	}
+}
 
 // Docs for Scroller
 /**
