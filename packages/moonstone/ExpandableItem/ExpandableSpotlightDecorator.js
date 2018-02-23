@@ -57,7 +57,15 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default true
 			 * @public
 			 */
-			open: PropTypes.bool
+			open: PropTypes.bool,
+
+			/**
+			 * Index or array of indices of the selected item(s)
+			 *
+			 * @type {Number|Number[]}
+			 * @public
+			 */
+			selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)])
 		}
 
 		static defaultProps = {
@@ -69,7 +77,15 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.containerNode.contains(current) || document.activeElement === document.body) {
 				const contents = this.containerNode.querySelector('[data-expandable-container]');
 				if (contents && !this.props.noAutoFocus && !contents.contains(current)) {
-					Spotlight.focus(contents.dataset.containerId);
+					const selected = this.props.selected ? this.props.selected : 0;
+					const selectedIndex = Array.isArray(selected) && selected.length ? selected[0] : selected;
+					const selectedNode = contents.querySelector('[data-index="' + selectedIndex + '"]');
+
+					if (selectedNode) {
+						Spotlight.focus(selectedNode);
+					} else {
+						Spotlight.focus(contents.dataset.containerId);
+					}
 				}
 			}
 		}
