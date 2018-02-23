@@ -220,9 +220,7 @@ class ScrollbarBase extends Component {
 	isOneOfScrollButtonsFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
 
 	handlePrevScroll = (ev) => {
-		const
-			{onPrevScroll} = this.props,
-			{vertical} = this.props;
+		const {onPrevScroll, vertical} = this.props;
 
 		onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
 		if (this.announceRef) {
@@ -231,9 +229,7 @@ class ScrollbarBase extends Component {
 	}
 
 	handleNextScroll = (ev) => {
-		const
-			{onNextScroll} = this.props,
-			{vertical} = this.props;
+		const {onNextScroll, vertical} = this.props;
 
 		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
 		if (this.announceRef) {
@@ -242,9 +238,7 @@ class ScrollbarBase extends Component {
 	}
 
 	handlePrevHoldPulse = (ev) => {
-		const
-			{onPrevScroll} = this.props,
-			{vertical} = this.props;
+		const {onPrevScroll, vertical} = this.props;
 
 		if (!this.ignoreMode) {
 			onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
@@ -252,9 +246,7 @@ class ScrollbarBase extends Component {
 	}
 
 	handleNextHoldPulse = (ev) => {
-		const
-			{onNextScroll} = this.props,
-			{vertical} = this.props;
+		const {onNextScroll, vertical} = this.props;
 
 		if (!this.ignoreMode) {
 			onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
