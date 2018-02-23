@@ -123,16 +123,16 @@ class Scrollbar extends PureComponent {
 		setCSSVariable(this.thumbRef, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
 	}
 
-	showThumb () {
+	showThumb = () => {
 		this.hideThumbJob.stop();
 		this.thumbRef.classList.add(this.props.css.thumbShown);
 	}
 
-	startHidingThumb () {
+	startHidingThumb = () => {
 		this.hideThumbJob.start();
 	}
 
-	hideThumb () {
+	hideThumb = () => {
 		this.thumbRef.classList.remove(this.props.css.thumbShown);
 	}
 
@@ -170,7 +170,12 @@ class Scrollbar extends PureComponent {
 		return (
 			<div ref={this.initContainerRef} className={containerClassName}>
 				{render ?
-					render(this.renderThumb(), vertical) :
+					render({
+						thumb: this.renderThumb(),
+						update: this.update,
+						showThumb: this.showThumb,
+						startHidingThumb: this.startHidingThumb
+					}) :
 					this.renderThumb()
 				}
 			</div>
