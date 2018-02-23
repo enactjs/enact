@@ -284,7 +284,7 @@ const ExpandableItemBase = kind({
 
 	computed: {
 		label: ({label, noneText}) => (label || noneText),
-		labeledItemClassName: ({showLabel, styler}) => (styler.append(css.labeleditem, css[showLabel])),
+		labeledItemClassName: ({showLabel, styler}) => (styler.append(css.labeledItem, css[showLabel])),
 		open: ({disabled, open}) => (open && !disabled),
 		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
 	},
