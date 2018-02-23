@@ -55,6 +55,7 @@ const LabeledItemBase = kind({
 		 *
 		 * The following classes are supported:
 		 *
+		 * * `labeledItem` - The root class name
 		 * * `icon` - Applied to the icon
 		 * * `label` - Applied to the label
 		 *
@@ -90,12 +91,12 @@ const LabeledItemBase = kind({
 
 	styles: {
 		css: componentCss,
-		className: 'labeleditem',
-		publicClassNames: 'icon label'
+		className: 'labeledItem',
+		publicClassNames: ['labeledItem', 'icon', 'label']
 	},
 
 	render: ({children, css, disabled, label, titleIcon, ...rest}) => (
-		<Controller disabled={disabled} {...rest}>
+		<Controller disabled={disabled} {...rest} css={css}>
 			<div className={css.text}>
 				<MarqueeText disabled={disabled} className={css.title}>{children}</MarqueeText>
 				{(titleIcon != null) ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
