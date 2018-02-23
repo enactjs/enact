@@ -117,7 +117,7 @@ how to use it.
 | `ScrollStrategy` | use `Scrollable` HOC | |
 | `ScrollThumb` | | internal usage<sup>2</sup> |
 | `SelectableItem` | `SelectableItem` | |
-| `SimpleIntegerPicker` | `RangePicker` | use `joined=true` |
+| `SimpleIntegerPicker` | `EditableIntegerPicker` | |
 | `SimplePicker` | `Picker` | |
 | `Slider` | `Slider` (and `IncrementSlider` for jump buttons) | |
 | `Spinner` | `Spinner` | |

@@ -10,7 +10,7 @@ if (typeof window === 'object') {
 
 setOptions({
 	name: 'ENACT SAMPLER',
-	url: 'http://nebula.lgsvl.com/enyojs/enact-docs/develop/',
+	url: 'http://enactjs.com/',
 	goFullScreen: false,
 	showLeftPanel: true,
 	showDownPanel: true,

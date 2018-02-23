@@ -59,10 +59,30 @@ class VirtualListCore extends Component {
 
 	static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
 		/**
-		 * The render function for an item of the list.
-		 * `index` is for accessing the index of the item.
-		 * `key` MUST be passed as a prop for DOM recycling.
+		 * The `render` function for an item of the list receives the following parameters:
+		 * - `data` is for accessing the supplied `data` property of the list.
+		 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
+		 * is parameters due to performance optimizations
+		 * - `data-index` is required for Spotlight 5-way navigation.  Pass to the root element in
+		 *   the component.
+		 * - `index` is the index number of the componet to render
+		 * - `key` MUST be passed as a prop to the root element in the component for DOM recycling.
+		 *
 		 * Data manipulation can be done in this function.
+		 *
+		 * > NOTE: The list does NOT always render a component whenever its render function is called
+		 * due to performance optimization.
+		 *
+		 * Usage:
+		 * ```
+		 * renderItem = ({index, ...rest}) => {
+		 *		delete rest.data;
+		 *
+		 *		return (
+		 *			<MyComponent index={index} {...rest} />
+		 *		);
+		 * }
+		 * ```
 		 *
 		 * @type {Function}
 		 * @public
@@ -104,8 +124,8 @@ class VirtualListCore extends Component {
 		}),
 
 		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
+		 * Data for passing it through `component` prop.
+		 * NOTICE: For performance reason, changing this prop does NOT always cause redraw items.
 		 *
 		 * @type {Any}
 		 * @default []

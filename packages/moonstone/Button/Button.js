@@ -8,12 +8,13 @@
  * @module moonstone/Button
  */
 
-import factory from '@enact/core/factory';
+import deprecate from '@enact/core/internal/deprecate';
+import {privateFactory as factory} from '@enact/core/factory';
 import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
-import Pressable from '@enact/ui/Pressable';
+import {privatePressable as Pressable} from '@enact/ui/Pressable';
 import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -46,8 +47,9 @@ import componentCss from './Button.less';
  * @memberof moonstone/Button
  * @factory
  * @public
+ * @deprecated
  */
-const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
+const PrivateButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 
 	/**
 	 * {@link moonstone/Button.ButtonBase} is a stateless Button with Moonstone styling
@@ -127,6 +129,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			 * @type {Boolean}
 			 * @default false
 			 * @public
+			 * @deprecated
 			 */
 			noAnimation: PropTypes.bool,
 
@@ -189,10 +192,20 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 		},
 
 		computed: {
-			className: ({backgroundOpacity, color, minWidth, noAnimation, pressed, selected, small, styler}) => styler.append(
-				{pressed, small, minWidth, noAnimation, selected},
-				backgroundOpacity, color
-			),
+			className: ({backgroundOpacity, className, color, minWidth, noAnimation, pressed, selected, small, styler}) => {
+				if (__DEV__) {
+					const isIconButton = className ? (className.indexOf('IconButton') !== -1) : false;
+					// Deprecate `noAnimation` except for `IconButton`, because it is used as a defaultProp.
+					if (noAnimation && !isIconButton) {
+						deprecate({name: 'noAnimation', since: '1.14.0', until: '2.0.0'});
+					}
+				}
+
+				return styler.append(
+					{pressed, small, minWidth, noAnimation, selected},
+					backgroundOpacity, color
+				);
+			},
 			icon: ({icon, small}) =>
 				(typeof icon === 'string' ? <Icon className={css.icon} small={small}>{icon}</Icon> : icon)
 		},
@@ -231,9 +244,10 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
  * @memberof moonstone/Button
  * @factory
  * @public
+ * @deprecated
  */
-const ButtonFactory = factory(css => {
-	const Base = ButtonBaseFactory(css);
+const PrivateButtonFactory = factory(css => {
+	const Base = PrivateButtonBaseFactory(css);
 	/**
 	 * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
 	 * Pressable applied.  If the Button's child component is text, it will be uppercased unless
@@ -292,8 +306,10 @@ const ButtonFactory = factory(css => {
 	return MoonstoneButton;
 });
 
-const ButtonBase = ButtonBaseFactory();
-const Button = ButtonFactory();
+const ButtonBaseFactory = deprecate(PrivateButtonBaseFactory, {name: 'moonstone/Button.ButtonBaseFactory', since: '1.14.0', until: '2.0.0'});
+const ButtonFactory = deprecate(PrivateButtonFactory, {name: 'moonstone/Button.ButtonFactory', since: '1.14.0', until: '2.0.0'});
+const ButtonBase = PrivateButtonBaseFactory();
+const Button = PrivateButtonFactory();
 
 export default Button;
-export {Button, ButtonBase, ButtonBaseFactory, ButtonFactory};
+export {Button, ButtonBase, ButtonBaseFactory, ButtonFactory, PrivateButtonBaseFactory};
