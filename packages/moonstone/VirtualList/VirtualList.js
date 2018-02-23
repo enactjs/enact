@@ -16,6 +16,7 @@ import compose from 'ramda/src/compose';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import css from '@enact/ui/VirtualList/ListItem.less';
 import {forward} from '@enact/core/handle';
+import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -83,8 +84,8 @@ const
  * @ui
  * @private
  */
-const SpottableVirtualListDecorator = (type) => (Wrapped) => (
-	class VirtualListCore extends Component {
+const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
+	class SpottableVirtualList extends Component {
 		static displayName = 'SpottlableVirtualListDecorator'
 
 		static propTypes = /** @lends moonstone/VirtualList.SpottableVirtualListDecorator.prototype */ {
@@ -785,17 +786,16 @@ const SpottableVirtualListDecorator = (type) => (Wrapped) => (
 			);
 		}
 	}
-);
+));
 
 /**
  * Moonstone-specific VirtualList behavior to apply to
  * [VirtualList]{@link moonstone/VirtualList.VirtualList} and [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
  *
- * @hoc
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable.Scrollable
  * @mixes ui/Scrollable.Scrollable
- * @ui
+ * @hoc
  * @private
  */
 const VirtualListDecorator = compose(
@@ -809,11 +809,10 @@ const VirtualListDecorator = compose(
  * Moonstone-specific VirtualList native behavior to apply to
  * [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative} and [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative}.
  *
- * @hoc
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable.ScrollableNative
  * @mixes ui/Scrollable.ScrollableNative
- * @ui
+ * @hoc
  * @private
  */
 const VirtualListNativeDecorator = compose(

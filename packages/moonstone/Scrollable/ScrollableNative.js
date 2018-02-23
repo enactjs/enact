@@ -1,9 +1,10 @@
+import {constants, contextTypes} from '@enact/ui/Scrollable/ScrollableNative';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
-import Spotlight from '@enact/spotlight';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import {constants, contextTypes} from '@enact/ui/Scrollable/ScrollableNative';
+import Spotlight from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import Scrollbar from './Scrollbar';
 import scrollbarCss from './Scrollbar.less';
@@ -61,14 +62,13 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 /**
  * A Higher-order Component that applies a Scrollable native behavior to its wrapped component.
  *
- * @class ScrollableNative
  * @memberof moonstone/Scrollable
- * @ui
+ * @hoc
  * @private
  */
-const ScrollableNative = (Wrapped) => (
+const ScrollableNative = hoc((confog, Wrapped) => (
 	class ScrollableBaseNative extends Component {
-		static displayName = 'ScrollableBaseNative'
+		static displayName = 'ScrollableNative'
 
 		static propTypes = /** @lends moonstone/Scrollable.ScrollableBaseNative.prototype */ {
 			/**
@@ -534,7 +534,7 @@ const ScrollableNative = (Wrapped) => (
 			);
 		}
 	}
-);
+));
 
 export default ScrollableNative;
 export {

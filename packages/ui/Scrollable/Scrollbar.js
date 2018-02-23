@@ -159,7 +159,7 @@ class Scrollbar extends PureComponent {
 
 	render () {
 		const
-			{className, corner, css, vertical} = this.props,
+			{className, corner, css, render, vertical} = this.props,
 			containerClassName = classNames(
 				className,
 				css.scrollbar,
@@ -169,8 +169,8 @@ class Scrollbar extends PureComponent {
 
 		return (
 			<div ref={this.initContainerRef} className={containerClassName}>
-				{this.props.render ?
-					this.props.render(this.renderThumb(), vertical) :
+				{render ?
+					render(this.renderThumb(), vertical) :
 					this.renderThumb()
 				}
 			</div>

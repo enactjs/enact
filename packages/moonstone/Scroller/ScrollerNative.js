@@ -9,11 +9,10 @@ import {SpottableScrollerDecorator} from './Scroller';
 /**
  * Moonstone-specific Scroller native behavior to apply to ScrollerNative.
  *
- * @hoc
  * @memberof moonstone/Scroller
  * @mixes moonstone/Scrollable.ScrollableNative
  * @mixes ui/Scrollable.ScrollableNative
- * @ui
+ * @hoc
  * @private
  */
 const ScrollerNativeDecorator = compose(

@@ -1,6 +1,7 @@
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import compose from 'ramda/src/compose';
+import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {off, on} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
@@ -35,14 +36,13 @@ const
 /**
  * A moonstone-styled HoC for [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
  *
- * @hoc
  * @memberof moonstone/Scrollable
- * @ui
+ * @hoc
  * @private
  */
-const SpottableScrollbarDecorator = (Wrapped) => (
-	class ScrollbarBase extends Component {
-		static displayName = 'Scrollbar'
+const SpottableScrollbarDecorator = hoc((config, Wrapped) => (
+	class SpottableScrollbar extends Component {
+		static displayName = 'SpottableScrollbarDecorator'
 
 		static propTypes = /** @lends moonstone/Scrollable.ScrollbarBase.prototype */ {
 			/**
@@ -151,6 +151,8 @@ const SpottableScrollbarDecorator = (Wrapped) => (
 		// component refs
 		prevButtonNodeRef = null
 		nextButtonNodeRef = null
+		uiScrollbarRef = null
+		announceRef = null
 
 		setPressStatus = (isPressed) => {
 			this.pressed = isPressed;
@@ -217,7 +219,7 @@ const SpottableScrollbarDecorator = (Wrapped) => (
 			this.uiScrollbarRef.startHidingThumb();
 		}
 
-		isThumbFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
+		isOneOfScrollButtonsFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
 
 		handlePrevScroll = (ev) => {
 			const
@@ -345,17 +347,16 @@ const SpottableScrollbarDecorator = (Wrapped) => (
 			);
 		}
 	}
-);
+));
 /**
  * A moonstone-styled scroll bar. It is used in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
  *
- * @hoc
  * @memberof moonstone/Scrollable
- * @ui
+ * @hoc
  * @private
  */
 const ScrollbarDecorator = compose(
-	ApiDecorator({api: ['isThumbFocused', 'showThumb', 'startHidingThumb', 'update']}),
+	ApiDecorator({api: ['isOneOfScrollButtonsFocused', 'showThumb', 'startHidingThumb', 'update']}),
 	DisappearSpotlightDecorator(
 		{events: {
 			onNextSpotlightDisappear: '[data-scroll-button="previous"]',

@@ -11,6 +11,7 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {contextTypes as contextTypesScroller, ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import {forward} from '@enact/core/handle';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
+import hoc from '@enact/core/hoc';
 import React, {Component} from 'react';
 import {Scrollable as UiScrollable} from '@enact/ui/Scrollable';
 import {Spotlight, getDirection} from '@enact/spotlight';
@@ -32,12 +33,11 @@ const
  * [Scroller]{@link moonstone/Scroller.Scroller}
  *
  * @hoc
- * @ui
  * @private
  */
-const SpottableScrollerDecorator = (Wrapped) => (
-	class ScrollerBase extends Component {
-		static displayName = 'ScrollerBase'
+const SpottableScrollerDecorator = hoc((config, Wrapped) => (
+	class SpottableScroller extends Component {
+		static displayName = 'SpottableScrollerDecorator'
 
 		static contextTypes = contextTypes
 		static childContextTypes = contextTypesScroller
@@ -326,20 +326,19 @@ const SpottableScrollerDecorator = (Wrapped) => (
 
 		render () {
 			return (
-				<Wrapped onKeyDown={this.onKeyDown} {...this.props} />
+				<Wrapped {...this.props} onKeyDown={this.onKeyDown} />
 			);
 		}
 	}
-);
+));
 
 /**
  * Moonstone-specific Scroller behavior to apply to [Scroller]{@link moonstone/Scroller.Scroller}.
  *
- * @hoc
  * @memberof moonstone/Scroller
  * @mixes moonstone/Scrollable.Scrollable
  * @mixes ui/Scrollable.Scrollable
- * @ui
+ * @hoc
  * @private
  */
 const ScrollerDecorator = compose(

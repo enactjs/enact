@@ -7,12 +7,13 @@
  * @private
  */
 
+import {constants, contextTypes} from '@enact/ui/Scrollable';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
-import Spotlight from '@enact/spotlight';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import {constants, contextTypes} from '@enact/ui/Scrollable';
+import Spotlight from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import Scrollbar from './Scrollbar';
 import scrollbarCss from './Scrollbar.less';
@@ -69,14 +70,13 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 /**
  * A Higher-order Component that applies a Scrollable behavior to its wrapped component.
  *
- * @class Scrollable
  * @memberof moonstone/Scrollable
- * @ui
+ * @hoc
  * @private
  */
-const Scrollable = (Wrapped) => (
+const Scrollable = hoc((config, Wrapped) => (
 	class ScrollableBase extends Component {
-		static displayName = 'ScrollableBase'
+		static displayName = 'Scrollable'
 
 		static propTypes = /** @lends moonstone/Scrollable.ScrollableBase.prototype */ {
 			/**
@@ -132,8 +132,6 @@ const Scrollable = (Wrapped) => (
 			this.uiScrollableRef = uiScrollableRef;
 		}
 
-		// TBD
-
 		onMouseUp = () => {
 			if (this.uiScrollableRef.isDragging && this.uiScrollableRef.isFlicking()) {
 				const focusedItem = Spotlight.getCurrent();
@@ -148,8 +146,8 @@ const Scrollable = (Wrapped) => (
 			const
 				{verticalScrollbarRef, horizontalScrollbarRef} = this.uiScrollableRef,
 				focusedItem = Spotlight.getCurrent(),
-				isVerticalScrollButtonFocused = verticalScrollbarRef && verticalScrollbarRef.isThumbFocused(),
-				isHorizontalScrollButtonFocused = horizontalScrollbarRef && horizontalScrollbarRef.isThumbFocused();
+				isVerticalScrollButtonFocused = verticalScrollbarRef && verticalScrollbarRef.isOneOfScrollButtonsFocused(),
+				isHorizontalScrollButtonFocused = horizontalScrollbarRef && horizontalScrollbarRef.isOneOfScrollButtonsFocused();
 
 			if (focusedItem && !isVerticalScrollButtonFocused && !isHorizontalScrollButtonFocused) {
 				focusedItem.blur();
@@ -468,7 +466,7 @@ const Scrollable = (Wrapped) => (
 			);
 		}
 	}
-);
+));
 
 export default Scrollable;
 export {
