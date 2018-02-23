@@ -2,11 +2,11 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [1.14.0] - 2017-02-23
 
 ### Deprecated
 
-- `ui/Holdable` and `ui/Pressable` to be replaced by `ui/Touchable` in 2.0.0
+- `ui/Holdable` and `ui/Pressable`, to be replaced by `ui/Touchable` in 2.0.0
 
 ## [1.13.3] - 2017-01-16
 
