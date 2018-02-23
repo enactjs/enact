@@ -19,6 +19,7 @@ import {perfNow, Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import {platform} from '@enact/core/platform';
 import {is} from '@enact/core/keymap';
+import Media from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
 import Spotlight from '@enact/spotlight';
@@ -38,7 +39,6 @@ import MediaSlider from './MediaSlider';
 import FeedbackContent from './FeedbackContent';
 import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
-import Video from './Video';
 
 import css from './VideoPlayer.less';
 
@@ -177,6 +177,15 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		backwardIcon: PropTypes.string,
+
+		/**
+		 * A type of video component.
+		 *
+		 * @type {Component}
+		 * @default 'video'
+		 * @public
+		 */
+		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
 		 * Specifies the spotlight container ID for the player
@@ -638,20 +647,12 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 3000
 		 * @public
 		 */
-		tooltipHideDelay: PropTypes.number,
-
-		/**
-		 * A type of video component.
-		 *
-		 * @type {Component}
-		 * @default 'video'
-		 * @public
-		 */
-		video: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
+		tooltipHideDelay: PropTypes.number
 	}
 
 	static defaultProps = {
 		autoCloseTimeout: 5000,
+		component: 'video',
 		feedbackHideDelay: 3000,
 		initialJumpDelay: 400,
 		jumpBy: 30,
@@ -664,8 +665,7 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		titleHideDelay: 5000,
-		tooltipHideDelay: 3000,
-		video: Video
+		tooltipHideDelay: 3000
 	}
 
 	constructor (props) {
@@ -1615,13 +1615,15 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleEvent = (ev) => {
-		const {mediaStates, ...rest} = ev;
+		const {mediaStates, type} = ev;
+
 		this.updateMainState(mediaStates);
-		if (ev.type === 'onLoadStart') {
-			this.handleLoadStart(rest);
+
+		if (type === 'onLoadStart') {
+			this.handleLoadStart();
 		}
 
-		if (ev.type === 'play') {
+		if (type === 'play') {
 			this.mayRenderBottomControls();
 		}
 	}
@@ -1884,7 +1886,6 @@ const VideoPlayerBase = class extends React.Component {
 			thumbnailComponent,
 			thumbnailSrc,
 			title,
-			video: VideoComponent,
 			...rest} = this.props;
 
 		delete rest.announce;
@@ -1928,7 +1929,7 @@ const VideoPlayerBase = class extends React.Component {
 				style={style}
 			>
 				{/* Video Section */}
-				<VideoComponent
+				<Media
 					{...rest}
 					autoPlay={!noAutoPlay}
 					className={css.video}
@@ -1937,7 +1938,7 @@ const VideoPlayerBase = class extends React.Component {
 					onUpdate={this.handleEvent}
 				>
 					{source}
-				</VideoComponent>
+				</Media>
 
 				<Overlay
 					bottomControlsVisible={this.state.mediaControlsVisible}

@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import {forward} from '@enact/core/handle';
 import {on, off} from '@enact/core/dispatcher';
 
-// Set-up event forwarding map. These are all of the supported media events
+/**
+ * Event forwarding map for all of the supported media events. See https://reactjs.org/docs/events.html#media-events
+ *
+ * @type {Object}
+ */
 const handledMediaEventsMap = {
 	abort           : 'onAbort',
 	canplay         : 'onCanPlay',
@@ -30,11 +34,28 @@ const handledMediaEventsMap = {
 	waiting         : 'onWaiting'
 };
 
-class Video extends React.Component {
-	static propTypes = /** @lends moonstone/VideoPlayer.Video.prototype */ {
+/**
+ * {@link moonstone/Media.Media} is a class representation of HTML5 media element.
+ *
+ * @class Media
+ * @memberof ui/Media
+ * @ui
+ * @public
+ */
+class Media extends React.Component {
+	static propTypes = /** @lends moonstone/Media.Media.prototype */ {
+		/**
+		 * A type of media component.
+		 *
+		 * @type {Component}
+		 * @required
+		 * @public
+		 */
+		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+
 		/**
 		 * A event map object for custom media events. List custom events that aren't standard to
-		 * React. These will be directly added to the video element and props matching their name
+		 * React. These will be directly added to the media element and props matching their name
 		 * will be executed as callback functions when the event fires.
 		 *
 		 * Example: {'umsmediainfo': 'onUMSMediaInfo'}
@@ -46,7 +67,7 @@ class Video extends React.Component {
 		customMediaEventsMap: PropTypes.object,
 
 		/**
-		 * A event map object for HTML5 video events.
+		 * A event map object for media events.
 		 *
 		 * @type {Object}
 		 * @public
@@ -56,6 +77,24 @@ class Video extends React.Component {
 
 		/**
 		 * A function to be run when media is updated.
+		 *
+		 * The event will include the following properties:
+		 *
+		 * A set of standard HTMLMediaElement properties
+		 * * currentTime
+		 * * duration
+		 * * buffered
+		 * * paused
+		 * * muted
+		 * * volume
+		 * * playbackRate
+		 * * readyState
+		 *
+		 * Non-standard computed properties
+		 * * proportionLoaded
+		 * * proportionPlayed
+		 * * error
+		 * * loading
 		 *
 		 * @type {Function}
 		 */
@@ -98,88 +137,73 @@ class Video extends React.Component {
 
 	attachCustomMediaEvents = () => {
 		for (let eventName in this.handledCustomMediaForwards) {
-			on(eventName, this.handledCustomMediaForwards[eventName], this.video);
+			on(eventName, this.handledCustomMediaForwards[eventName], this.media);
 		}
 	}
 
 	detachCustomMediaEvents = () => {
 		for (let eventName in this.handledCustomMediaForwards) {
-			off(eventName, this.handledCustomMediaForwards[eventName], this.video);
+			off(eventName, this.handledCustomMediaForwards[eventName], this.media);
 		}
 	}
 
 	handleEvent = (ev) => {
 		const updatedState = {
-			// Standard video properties
-			currentTime: this.video.currentTime,
-			duration: this.video.duration,
-			buffered: this.video.buffered,
-			paused: this.video.playbackRate !== 1 || this.video.paused,
-			muted: this.video.muted,
-			volume: this.video.volume,
-			playbackRate: this.video.playbackRate,
-			readyState: this.video.readyState,
+			// Standard media properties
+			currentTime: this.media.currentTime,
+			duration: this.media.duration,
+			buffered: this.media.buffered,
+			paused: this.media.playbackRate !== 1 || this.media.paused,
+			muted: this.media.muted,
+			volume: this.media.volume,
+			playbackRate: this.media.playbackRate,
+			readyState: this.media.readyState,
 
 			// Non-standard state computed from properties
-			proportionLoaded: this.video.buffered.length && this.video.buffered.end(this.video.buffered.length - 1) / this.video.duration,
-			proportionPlayed: this.video.currentTime / this.video.duration || 0,
-			error: this.video.networkState === this.video.NETWORK_NO_SOURCE,
-			loading: this.video.readyState < this.video.HAVE_ENOUGH_DATA
+			proportionLoaded: this.media.buffered.length && this.media.buffered.end(this.media.buffered.length - 1) / this.media.duration,
+			proportionPlayed: this.media.currentTime / this.media.duration || 0,
+			error: this.media.networkState === this.media.NETWORK_NO_SOURCE,
+			loading: this.media.readyState < this.media.HAVE_ENOUGH_DATA
 		};
 
-		forward('onUpdate', {...ev, mediaStates: {...updatedState}}, this.props);
-
-		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
-		const fwd = this.handledMediaForwards[handledMediaEventsMap[ev.type]];
-		if (fwd) {
-			// TODO: clean this up. we don't want a duplicate of `getMediaState()` here.
-			fwd({
-				type: ev.type,
-				currentTime       : updatedState.currentTime,
-				duration          : updatedState.duration,
-				paused            : updatedState.paused,
-				playbackRate      : updatedState.playbackRate,
-				proportionLoaded  : updatedState.proportionLoaded,
-				proportionPlayed  : updatedState.proportionPlayed
-			}, this.props);
-		}
+		forward('onUpdate', {...ev, mediaStates: updatedState}, this.props);
 	}
 
-	videoRef = (node) => {
-		this.video = node;
+	mediaRef = (node) => {
+		this.media = node;
 	}
 
 	play = () => {
-		this.video.play();
+		this.media.play();
 	}
 
 	pause = () => {
-		this.video.pause();
+		this.media.pause();
 	}
 
 	load = () => {
-		this.video.load();
+		this.media.load();
 	}
 
 	get currentTime ()  {
-		return this.video.currentTime;
+		return this.media.currentTime;
 	}
 
 	set currentTime (currentTime) {
-		this.video.currentTime = currentTime;
+		this.media.currentTime = currentTime;
 	}
 
 	get duration () {
-		return this.video.duration;
+		return this.media.duration;
 	}
 
 	get playbackRate () {
-		return this.video.playbackRate;
+		return this.media.playbackRate;
 	}
 
 	set playbackRate (playbackRate) {
 		// ReactDOM throws error for setting negative value for playbackRate
-		this.video.playbackRate = playbackRate < 0 ? 0 : playbackRate;
+		this.media.playbackRate = playbackRate < 0 ? 0 : playbackRate;
 	}
 
 	render () {
@@ -187,24 +211,24 @@ class Video extends React.Component {
 		delete props.mediaEventsMap;
 		delete props.onUpdate;
 
+		const {customMediaEventsMap, component: Component, ...rest} = props;
 		// Remove the events we manually added so they aren't added twice or fail.
-		for (let eventName in props.customMediaEventsMap) {
-			delete props[props.customMediaEventsMap[eventName]];
+		for (let eventName in customMediaEventsMap) {
+			delete rest[customMediaEventsMap[eventName]];
 		}
-		delete props.customMediaEventsMap;
 
 		return (
-			<video
-				{...props}
-				ref={this.videoRef}
+			<Component
+				{...rest}
+				ref={this.mediaRef}
 				{...this.handledMediaEvents}
 			/>
 		);
 	}
 }
 
-export default Video;
+export default Media;
 export {
 	handledMediaEventsMap,
-	Video
+	Media
 };
