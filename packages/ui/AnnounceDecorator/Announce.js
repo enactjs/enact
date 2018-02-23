@@ -85,11 +85,15 @@ const Announce = class extends React.Component {
 	}
 
 	render () {
-		const props = Object.assign({}, this.props);
-		delete props.timeout;
+		const {initRef, ...rest} = this.props;
+		delete rest.timeout;
+
+		if (initRef) {
+			initRef({ref: this});
+		}
 
 		return (
-			<span ref={this.setAlertRef} role="alert" {...props} />
+			<span ref={this.setAlertRef} role="alert" {...rest} />
 		);
 	}
 };

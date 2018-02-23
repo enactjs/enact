@@ -113,10 +113,6 @@ class ScrollButtonsBase extends Component {
 			prevButtonDisabled: true,
 			nextButtonDisabled: true
 		};
-
-		this.initAnnounceRef = this.initRef('announceRef');
-		this.initPrevButtonNodeRef = this.initRef('prevButtonNodeRef');
-		this.initNextButtonNodeRef = this.initRef('nextButtonNodeRef');
 	}
 
 	componentWillUnmount () {
@@ -185,11 +181,6 @@ class ScrollButtonsBase extends Component {
 		}
 	}
 
-	update (bounds) {
-		this.uiUpdate(bounds);
-		this.updateButtons(bounds);
-	}
-
 	isOneOfScrollButtonsFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
 
 	handlePrevScroll = (ev) => {
@@ -252,12 +243,6 @@ class ScrollButtonsBase extends Component {
 		}
 	}
 
-	initRef (name) {
-		return (ref) => {
-			this[name] = ref;
-		};
-	}
-
 	render () {
 		const
 			{disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, render, vertical} = this.props,
@@ -277,10 +262,12 @@ class ScrollButtonsBase extends Component {
 				onKeyUp={this.releaseButton}
 				onMouseDown={this.depressButton}
 				onSpotlightDisappear={onPrevSpotlightDisappear}
-				ref={this.initPrevButtonNodeRef}
-			>
-				{prevIcon}
-			</ScrollButton>,
+				render={(ref) => { // eslint-disable-line react/jsx-no-bind
+					this.initPrevButtonNodeRef = ref;
+
+					return prevIcon;
+				}}
+			/>,
 			render({
 				isOneOfScrollButtonsFocused: this.isOneOfScrollButtonsFocused,
 				updateButtons: this.updateButtons
@@ -296,11 +283,20 @@ class ScrollButtonsBase extends Component {
 				onKeyUp={this.releaseButton}
 				onMouseDown={this.depressButton}
 				onSpotlightDisappear={onNextSpotlightDisappear}
-				ref={this.initNextButtonNodeRef}
-			>
-				{nextIcon}
-			</ScrollButton>,
-			<Announce key="3" ref={this.initAnnounceRef} />
+				render={(ref) => { // eslint-disable-line react/jsx-no-bind
+					this.initNextButtonNodeRef = ref;
+
+					return nextIcon;
+				}}
+			/>,
+			<Announce
+				key="3"
+				initRef={(ref) => { // eslint-disable-line react/jsx-no-bind
+					this.initAnnounceRef = ref;
+
+					return nextIcon;
+				}}
+			/>
 		]);
 	}
 }

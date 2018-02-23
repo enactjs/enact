@@ -59,7 +59,9 @@ const ScrollButtonBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		disabled: PropTypes.bool
+		disabled: PropTypes.bool,
+
+		render: PropTypes.func
 	},
 
 	styles: {
@@ -87,7 +89,7 @@ const ScrollButtonBase = kind({
 		className: ({direction, styler}) => styler.append(classNameMap[direction])
 	},
 
-	render: ({children, disabled, ...rest}) => {
+	render: ({disabled, render, ...rest}) => {
 		delete rest.active;
 		delete rest.direction;
 
@@ -98,7 +100,7 @@ const ScrollButtonBase = kind({
 				disabled={disabled}
 				small
 			>
-				{children}
+				{render({ref: this})}
 			</IconButton>
 		);
 	}
