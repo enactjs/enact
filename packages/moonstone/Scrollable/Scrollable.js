@@ -78,7 +78,7 @@ const Scrollable = hoc((config, Wrapped) => (
 	class ScrollableBase extends Component {
 		static displayName = 'Scrollable'
 
-		static propTypes = /** @lends moonstone/Scrollable.ScrollableBase.prototype */ {
+		static propTypes = /** @lends moonstone/Scrollable.Scrollable.prototype */ {
 			/**
 			 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
 			 * not move focus to the scrollbar controls.
