@@ -33,10 +33,11 @@ const
 	isPageDown = is('pageDown');
 
 /**
- * A moonstone-styled HoC for [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
+ * A moonstone-styled component for [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
  *
+ * @class ScrollbarBase
  * @memberof moonstone/Scrollable
- * @hoc
+ * @ui
  * @private
  */
 class ScrollbarBase extends Component {
