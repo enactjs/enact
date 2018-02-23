@@ -163,9 +163,9 @@ class ScrollbarBase extends PureComponent {
 			<div ref={this.initContainerRef} className={containerClassName}>
 				{render({
 					getScrollThumbRef: this.initThumbRef,
-					update: this.update,
+					showThumb: this.showThumb,
 					startHidingThumb: this.startHidingThumb,
-					showThumb: this.showThumb
+					update: this.update
 				})}
 			</div>
 		);
@@ -173,17 +173,27 @@ class ScrollbarBase extends PureComponent {
 }
 
 class Scrollbar extends Component {
+	static propTypes = {
+		render: PropTypes.func,
+		vertical: PropTypes.bool
+	}
+
 	render () {
 		const {vertical} = this.props;
 
 		return (
-			<ScrollbarBase {...this.props} render={(props) => (
-				<ScrollThumb
-					{...props}
-					key="thumb"
-					vertical={vertical}
-				/>
-			)} />
+			<ScrollbarBase
+				{...this.props}
+				render={({getScrollThumbRef}) => { // eslint-disable-line react/jsx-no-bind
+					return (
+						<ScrollThumb
+							getScrollThumbRef={getScrollThumbRef}
+							key="thumb"
+							vertical={vertical}
+						/>
+					);
+				}}
+			/>
 		);
 	}
 }
@@ -194,13 +204,3 @@ export {
 	ScrollbarBase,
 	ScrollThumb
 };
-
-// {render ?
-// 	render({
-// 		thumb: this.renderThumb(),
-// 		update: this.update,
-// 		showThumb: this.showThumb,
-// 		startHidingThumb: this.startHidingThumb
-// 	}) :
-// 	this.renderThumb()
-// }
