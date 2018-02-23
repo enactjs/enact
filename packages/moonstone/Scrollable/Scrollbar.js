@@ -1,18 +1,17 @@
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
-import classNames from 'classnames';
+import compose from 'ramda/src/compose';
 import {is} from '@enact/core/keymap';
 import {off, on} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
-import React from 'react';
-import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
-import ScrollThumb from '@enact/ui/Scrollable/ScrollThumb';
+import React, {Component} from 'react';
+import {Scrollbar as UiScrollbar} from '@enact/ui/Scrollable/Scrollbar';
 import Spotlight from '@enact/spotlight';
 
 import $L from '../internal/$L';
 import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator';
 
-import css from './Scrollbar.less';
+import componentCss from './Scrollbar.less';
 import ScrollButton from './ScrollButton';
 
 const
@@ -34,16 +33,15 @@ const
 	isPageDown = is('pageDown');
 
 /**
- * A moonstone-styled base component for [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
+ * A moonstone-styled component for [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
  *
  * @class ScrollbarBase
- * @extends ui/Scrollable.ScrollbarBase
  * @memberof moonstone/Scrollable
  * @ui
  * @private
  */
-class ScrollbarBase extends UiScrollbarBase {
-	static displayName = 'Scrollbar'
+class ScrollbarBase extends Component {
+	static displayName = 'ScrollbarBase'
 
 	static propTypes = /** @lends moonstone/Scrollable.ScrollbarBase.prototype */ {
 		/**
@@ -53,6 +51,14 @@ class ScrollbarBase extends UiScrollbarBase {
 		 * @public
 		 */
 		announce: PropTypes.func,
+
+		/**
+		 * The callback function which is called for linking alertThumb function.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		cbAlertThumb: PropTypes.func,
 
 		/**
 		 * Specifies to reflect scrollbar's disabled property to the paging controls.
@@ -93,10 +99,28 @@ class ScrollbarBase extends UiScrollbarBase {
 		 * @type {Function}
 		 * @private
 		 */
-		onPrevSpotlightDisappear: PropTypes.func
+		onPrevSpotlightDisappear: PropTypes.func,
+
+		/**
+		 * Exposes this instance as the provider for its imperative API
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		setApiProvider: PropTypes.func,
+
+		/**
+		 * If `true`, the scrollbar will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		vertical: PropTypes.bool
 	}
 
 	static defaultProps = {
+		cbAlertThumb: nop,
 		onNextScroll: nop,
 		onPrevScroll: nop
 	}
@@ -110,18 +134,19 @@ class ScrollbarBase extends UiScrollbarBase {
 		};
 
 		this.initAnnounceRef = this.initRef('announceRef');
+		this.initPrevButtonNodeRef = this.initRef('prevButtonNodeRef');
+		this.initNextButtonNodeRef = this.initRef('nextButtonNodeRef');
+
+		if (props.setApiProvider) {
+			props.setApiProvider(this);
+		}
 	}
 
-	componentDidMount () {
-		super.componentDidMount();
-
-		this.prevButtonNodeRef = this.containerRef.children[0];
-		this.nextButtonNodeRef = this.containerRef.children[2];
+	componentDidUpdate () {
+		this.props.cbAlertThumb();
 	}
 
 	componentWillUnmount () {
-		super.componentWillUnmount();
-
 		this.setIgnoreMode(false); // To remove event handler
 	}
 
@@ -130,6 +155,10 @@ class ScrollbarBase extends UiScrollbarBase {
 	// component refs
 	prevButtonNodeRef = null
 	nextButtonNodeRef = null
+	announceRef = null
+	showThumb = null
+	startHidingThumb = null
+	uiUpdate = null
 
 	setPressStatus = (isPressed) => {
 		this.pressed = isPressed;
@@ -184,20 +213,11 @@ class ScrollbarBase extends UiScrollbarBase {
 	}
 
 	update (bounds) {
-		super.update(bounds);
+		this.uiUpdate(bounds);
 		this.updateButtons(bounds);
 	}
 
-	showThumb () {
-		this.hideThumbJob.stop();
-		this.thumbRef.classList.add(css.thumbShown);
-	}
-
-	hideThumb () {
-		this.thumbRef.classList.remove(css.thumbShown);
-	}
-
-	isThumbFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
+	isOneOfScrollButtonsFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
 
 	handlePrevScroll = (ev) => {
 		const {onPrevScroll, vertical} = this.props;
@@ -259,57 +279,84 @@ class ScrollbarBase extends UiScrollbarBase {
 		}
 	}
 
+	initRef (name) {
+		return (ref) => {
+			this[name] = ref;
+		};
+	}
+
 	render () {
 		const
-			{className, corner, disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, vertical} = this.props,
+			{disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
-			containerClassName = classNames(
-				className,
-				css.scrollbar,
-				corner ? css.corner : null,
-				vertical ? css.vertical : css.horizontal
-			),
 			prevIcon = preparePrevButton(vertical),
 			nextIcon = prepareNextButton(vertical);
 
 		return (
-			<div ref={this.initContainerRef} className={containerClassName}>
-				<ScrollButton
-					data-scroll-button="previous"
-					direction={vertical ? 'up' : 'left'}
-					disabled={disabled || prevButtonDisabled}
-					onClick={this.handlePrevScroll}
-					onHoldPulse={this.handlePrevHoldPulse}
-					onKeyDown={this.depressButton}
-					onKeyUp={this.releaseButton}
-					onMouseDown={this.depressButton}
-					onSpotlightDisappear={onPrevSpotlightDisappear}
-				>
-					{prevIcon}
-				</ScrollButton>
-				<ScrollThumb
-					className={css.scrollThumb}
-					getScrollThumbRef={this.initThumbRef}
-					vertical={vertical}
-				/>
-				<ScrollButton
-					data-scroll-button="next"
-					direction={vertical ? 'down' : 'right'}
-					disabled={disabled || nextButtonDisabled}
-					onClick={this.handleNextScroll}
-					onHoldPulse={this.handleNextHoldPulse}
-					onKeyDown={this.depressButton}
-					onKeyUp={this.releaseButton}
-					onMouseDown={this.depressButton}
-					onSpotlightDisappear={onNextSpotlightDisappear}
-				>
-					{nextIcon}
-				</ScrollButton>
-				<Announce ref={this.initAnnounceRef} />
-			</div>
+			<UiScrollbar
+				{...this.props}
+				css={componentCss}
+				render={({thumb, update, showThumb, startHidingThumb}) => { // eslint-disable-line react/jsx-no-bind
+					this.uiUpdate = update;
+					this.showThumb = showThumb;
+					this.startHidingThumb = startHidingThumb;
+
+					return ([
+						<ScrollButton
+							key="0"
+							data-scroll-button="previous"
+							direction={vertical ? 'up' : 'left'}
+							disabled={disabled || prevButtonDisabled}
+							onClick={this.handlePrevScroll}
+							onHoldPulse={this.handlePrevHoldPulse}
+							onKeyDown={this.depressButton}
+							onKeyUp={this.releaseButton}
+							onMouseDown={this.depressButton}
+							onSpotlightDisappear={onPrevSpotlightDisappear}
+							ref={this.initPrevButtonNodeRef}
+						>
+							{prevIcon}
+						</ScrollButton>,
+						thumb,
+						<ScrollButton
+							key="2"
+							data-scroll-button="next"
+							direction={vertical ? 'down' : 'right'}
+							disabled={disabled || nextButtonDisabled}
+							onClick={this.handleNextScroll}
+							onHoldPulse={this.handleNextHoldPulse}
+							onKeyDown={this.depressButton}
+							onKeyUp={this.releaseButton}
+							onMouseDown={this.depressButton}
+							onSpotlightDisappear={onNextSpotlightDisappear}
+							ref={this.initNextButtonNodeRef}
+						>
+							{nextIcon}
+						</ScrollButton>,
+						<Announce key="3" ref={this.initAnnounceRef} />
+					]);
+				}}
+			/>
 		);
 	}
 }
+
+/**
+ * A moonstone-styled scroll bar. It is used in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
+ *
+ * @memberof moonstone/Scrollable
+ * @hoc
+ * @private
+ */
+const ScrollbarDecorator = compose(
+	ApiDecorator({api: ['isOneOfScrollButtonsFocused', 'showThumb', 'startHidingThumb', 'update']}),
+	DisappearSpotlightDecorator(
+		{events: {
+			onNextSpotlightDisappear: '[data-scroll-button="previous"]',
+			onPrevSpotlightDisappear: '[data-scroll-button="next"]'
+		}}
+	)
+);
 
 /**
  * A moonstone-styled scroll bar. It is used in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
@@ -319,19 +366,10 @@ class ScrollbarBase extends UiScrollbarBase {
  * @ui
  * @private
  */
-const Scrollbar = ApiDecorator(
-	{api: ['containerRef', 'hideThumb', 'isThumbFocused', 'showThumb', 'startHidingThumb', 'update']},
-	DisappearSpotlightDecorator(
-		{events: {
-			onNextSpotlightDisappear: '[data-scroll-button="previous"]',
-			onPrevSpotlightDisappear: '[data-scroll-button="next"]'
-		}},
-		ScrollbarBase
-	)
-);
+const Scrollbar = ScrollbarDecorator(ScrollbarBase);
 
 export default Scrollbar;
 export {
 	Scrollbar,
-	ScrollbarBase
+	ScrollbarDecorator
 };

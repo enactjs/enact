@@ -14,6 +14,16 @@ import css from './Scroller.less';
 import Scrollable from '../Scrollable';
 
 /**
+ * The context propTypes required by Scroller. This should be set as the `childContextTypes` of a
+ * themed component so that the methods from themed component can be called.
+ *
+ * @private
+ */
+const contextTypes = {
+	getUiScrollerRef: PropTypes.func
+};
+
+/**
  * A basic base component for Scroller{@link ui/Scroller.Scroller}.
  * In most circumstances, you will want to use the Scrollable version:
  * [Scroller]{@link ui/Scroller.Scroller}
@@ -52,6 +62,16 @@ class ScrollerBase extends Component {
 		direction: 'both'
 	}
 
+	static contextTypes = contextTypes
+
+	constructor (props, context) {
+		super(props, context);
+
+		if (context.getUiScrollerRef) {
+			context.getUiScrollerRef(this);
+		}
+	}
+
 	componentDidMount () {
 		this.calculateMetrics();
 	}
@@ -73,8 +93,6 @@ class ScrollerBase extends Component {
 		top: 0,
 		left: 0
 	}
-
-	isScrolledToBoundary = false
 
 	getScrollBounds = () => this.scrollBounds
 
@@ -141,9 +159,6 @@ class ScrollerBase extends Component {
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
 	}
 
-	// override
-	onKeyDown = () => {}
-
 	initRef = (ref) => {
 		this.containerRef = ref;
 	}
@@ -163,7 +178,6 @@ class ScrollerBase extends Component {
 			<div
 				{...rest}
 				className={classNames(className, css.hideNativeScrollbar)}
-				onKeyDown={this.onKeyDown}
 				ref={this.initRef}
 				style={mergedStyle}
 			/>
@@ -190,5 +204,6 @@ const Scroller = Scrollable(ScrollerBase);
 export default Scroller;
 export {
 	Scroller,
-	ScrollerBase
+	ScrollerBase,
+	contextTypes
 };

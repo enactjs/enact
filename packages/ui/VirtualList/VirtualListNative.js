@@ -1,3 +1,13 @@
+/**
+ * Provides unstyled virtual list native components and behaviors to be customized by a theme or application.
+ *
+ * @module ui/VirtualList
+ * @exports VirtualListNative
+ * @exports VirtualGridListNative
+ * @exports VirtualListBaseNative
+ * @exports gridListItemSizeShape
+ */
+
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -23,6 +33,21 @@ const gridListItemSizeShape = PropTypes.shape({
 });
 
 /**
+ * The context propTypes required by VirtualListNative. This should be set as the `childContextTypes` of a
+ * themed component so that the methods from themed component can be called.
+ *
+ * @private
+ */
+const contextTypes = {
+	applyStyleToHideNode: PropTypes.func,
+	applyStyleToNewNode: PropTypes.func,
+	getXY: PropTypes.func,
+	initVirtualList: PropTypes.func,
+	renderChildren: PropTypes.func,
+	updateStatesAndBounds: PropTypes.func
+};
+
+/**
  * A basic base component for
  * {@link ui/VirtualList.VirtualListNative} and {@link ui/VirtualList.VirtualGridListNative}.
  *
@@ -40,7 +65,7 @@ class VirtualListBaseNative extends Component {
 		 * - `data` is for accessing the supplied `data` property of the list.
 		 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
 		 * is parameters due to performance optimizations
-		 * - `data-index` is required for Spotlight 5-way navigation.  Pass to the root element in
+		 * - `data-index` is required for Spotlight 5-way navigation. Pass to the root element in
 		 *   the component.
 		 * - `index` is the index number of the componet to render
 		 * - `key` MUST be passed as a prop to the root element in the component for DOM recycling.
@@ -97,11 +122,11 @@ class VirtualListBaseNative extends Component {
 		 */
 		clientSize: PropTypes.shape({
 			clientWidth: PropTypes.number.isRequired,
-			clientHeight:  PropTypes.number.isRequired
+			clientHeight: PropTypes.number.isRequired
 		}),
 
 		/**
-		 * Data for passing through to the `component` prop.
+		 * Data for passing it through `component` prop.
 		 * NOTICE: For performance reason, changing this prop does NOT always cause the list to
 		 * redraw its items.
 		 *
@@ -110,14 +135,6 @@ class VirtualListBaseNative extends Component {
 		 * @public
 		 */
 		data: PropTypes.any,
-
-		/**
-		 * Spotlight container Id
-		 *
-		 * @type {String}
-		 * @private
-		 */
-		'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types
 
 		/**
 		 * Size of the data.
@@ -177,17 +194,26 @@ class VirtualListBaseNative extends Component {
 		spacing: 0
 	}
 
-	constructor (props) {
-		super(props);
+	static contextTypes = contextTypes
+
+	constructor (props, context) {
+		super(props, context);
 
 		this.state = {firstIndex: 0, numOfItems: 0};
+		this.initContentRef = this.initRef('contentRef');
 		this.initContainerRef = this.initRef('containerRef');
+
+		if (context.initVirtualList) {
+			context.initVirtualList(this);
+		}
 	}
 
 	componentWillMount () {
 		if (this.props.clientSize) {
+			const updateStatesAndBounds = this.context.updateStatesAndBounds || this.updateStatesAndBounds;
+
 			this.calculateMetrics(this.props);
-			this.updateStatesAndBounds(this.props);
+			updateStatesAndBounds(this.props);
 		}
 	}
 
@@ -195,8 +221,10 @@ class VirtualListBaseNative extends Component {
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
 		if (!this.props.clientSize) {
+			const updateStatesAndBounds = this.context.updateStatesAndBounds || this.updateStatesAndBounds;
+
 			this.calculateMetrics(this.props);
-			this.updateStatesAndBounds(this.props);
+			updateStatesAndBounds(this.props);
 		}
 		this.setContainerSize();
 	}
@@ -212,14 +240,15 @@ class VirtualListBaseNative extends Component {
 				overhang !== nextProps.overhang ||
 				spacing !== nextProps.spacing
 			),
-			hasDataChanged = (dataSize !== nextProps.dataSize);
+			hasDataChanged = (dataSize !== nextProps.dataSize),
+			updateStatesAndBounds = this.context.updateStatesAndBounds || this.updateStatesAndBounds;
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(nextProps);
+			updateStatesAndBounds(nextProps);
 			this.setContainerSize();
 		} else if (hasDataChanged) {
-			this.updateStatesAndBounds(nextProps);
+			updateStatesAndBounds(nextProps);
 			this.setContainerSize();
 		}
 	}
@@ -260,7 +289,6 @@ class VirtualListBaseNative extends Component {
 	isVertical = () => this.isPrimaryDirectionVertical
 
 	isHorizontal = () => !this.isPrimaryDirectionVertical
-
 
 	getScrollBounds = () => this.scrollBounds
 
@@ -359,7 +387,7 @@ class VirtualListBaseNative extends Component {
 		this.state.numOfItems = 0;
 	}
 
-	updateStatesAndBounds (props) {
+	updateStatesAndBounds = (props) => {
 		const
 			{dataSize, overhang} = props,
 			{firstIndex} = this.state,
@@ -392,7 +420,7 @@ class VirtualListBaseNative extends Component {
 
 		if (wasFirstIndexMax && dataSizeDiff > 0) { // If dataSize increased from bottom, we need adjust firstIndex
 			// If this is a gridlist and dataSizeDiff is smaller than 1 line, we are adjusting firstIndex without threshold change.
-			if (dimensionToExtent > 1 &&  dataSizeDiff < dimensionToExtent) {
+			if (dimensionToExtent > 1 && dataSizeDiff < dimensionToExtent) {
 				newFirstIndex = maxFirstIndex;
 			} else { // For other bottom adding case, we need to update firstIndex and threshold.
 				const
@@ -547,6 +575,7 @@ class VirtualListBaseNative extends Component {
 			key = index % this.state.numOfItems,
 			style = {display: 'none'},
 			attributes = {key, style};
+
 		this.cc[key] = (<div {...attributes} />);
 	}
 
@@ -556,7 +585,9 @@ class VirtualListBaseNative extends Component {
 			{firstIndex, numOfItems} = this.state,
 			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc} = this,
 			diff = firstIndex - this.lastFirstIndex,
-			updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems;
+			updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems,
+			applyStyleToNewNode = this.context.applyStyleToNewNode || this.applyStyleToNewNode,
+			applyStyleToHideNode = this.context.applyStyleToHideNode || this.applyStyleToHideNode;
 		let
 			hideTo = 0,
 			updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0) ? firstIndex + numOfItems : this.lastFirstIndex;
@@ -577,7 +608,7 @@ class VirtualListBaseNative extends Component {
 
 		// positioning items
 		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
-			this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
+			applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
 
 			if (++j === dimensionToExtent) {
 				secondaryPosition = 0;
@@ -589,7 +620,7 @@ class VirtualListBaseNative extends Component {
 		}
 
 		for (let i = updateTo; i < hideTo; i++) {
-			this.applyStyleToHideNode(i);
+			applyStyleToHideNode(i);
 		}
 
 		this.lastFirstIndex = firstIndex;
@@ -600,7 +631,9 @@ class VirtualListBaseNative extends Component {
 	}
 
 	composeStyle (style, width, height, primaryPosition, secondaryPosition) {
-		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
+		const
+			getXY = this.context.getXY || this.getXY,
+			{x, y} = getXY(primaryPosition, secondaryPosition);
 
 		if (this.isItemSized) {
 			style.width = width;
@@ -688,7 +721,8 @@ class VirtualListBaseNative extends Component {
 		const
 			{className, style, ...rest} = this.props,
 			{primary} = this,
-			mergedClasses = classNames(css.list, this.containerClass, className);
+			mergedClasses = classNames(css.list, this.containerClass, className),
+			renderChildren = this.context.renderChildren || this.renderChildren;
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
@@ -708,8 +742,8 @@ class VirtualListBaseNative extends Component {
 
 		return (
 			<div className={mergedClasses} ref={this.initContainerRef} style={style}>
-				<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContentRef}>
-					{this.renderChildren()}
+				<div {...rest} ref={this.initContentRef}>
+					{renderChildren()}
 				</div>
 			</div>
 		);
@@ -749,6 +783,7 @@ export {
 	VirtualListNative,
 	VirtualGridListNative,
 	VirtualListBaseNative,
+	contextTypes,
 	gridListItemSizeShape
 };
 export * from './GridListImageItem';
