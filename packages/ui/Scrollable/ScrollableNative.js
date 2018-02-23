@@ -150,6 +150,14 @@ const ScrollableNative = hoc((config, Wrapped) => (
 			onScrollStop: PropTypes.func,
 
 			/**
+			 * Render function for Scrollable
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			render: PropTypes.func,
+
+			/**
 			 * Component for scrollbar
 			 *
 			 * @type {Function}
@@ -174,25 +182,7 @@ const ScrollableNative = hoc((config, Wrapped) => (
 			 * @default 'auto'
 			 * @public
 			 */
-			verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
-
-			/**
-			 * The element for wrapper container
-			 *
-			 * @type {String | Function}
-			 * @default 'div'
-			 * @public
-			 */
-			wrapperContainer: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-
-			/**
-			 * The props for wrapper container
-			 *
-			 * @type {Object}
-			 * @default {}
-			 * @public
-			 */
-			wrapperProps: PropTypes.object
+			verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 		}
 
 		static defaultProps = {
@@ -202,9 +192,7 @@ const ScrollableNative = hoc((config, Wrapped) => (
 			onScrollStart: nop,
 			onScrollStop: nop,
 			scrollbarComponent: Scrollbar,
-			verticalScrollbar: 'auto',
-			wrapperContainer: 'div',
-			wrapperProps: {}
+			verticalScrollbar: 'auto'
 		}
 
 		static childContextTypes = {
@@ -866,11 +854,8 @@ const ScrollableNative = hoc((config, Wrapped) => (
 			};
 		}
 
-		render () {
-			const
-				{className, scrollbarComponent: ScrollbarComponent, style, wrapperContainer: WrapperContainer, wrapperProps, ...rest} = this.props,
-				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-				scrollableClasses = classNames(css.scrollable, className);
+		renderChildren = (rest, ScrollbarComponent) => {
+			const {isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state;
 
 			delete rest.cbScrollTo;
 			delete rest.horizontalScrollbar;
@@ -880,28 +865,42 @@ const ScrollableNative = hoc((config, Wrapped) => (
 			delete rest.onScrollStop;
 			delete rest.verticalScrollbar;
 
-			if (WrapperContainer === 'div') {
-				wrapperProps.ref = this.initContainerRef;
-			}
+			return ([
+				<div key="0" className={css.container}>
+					<Wrapped
+						{...rest}
+						cbScrollTo={this.context.scrollTo || this.scrollTo}
+						className={css.content}
+						onScroll={this.handleScroll}
+						ref={this.initChildRef}
+					/>
+					{isVerticalScrollbarVisible ? <ScrollbarComponent {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
+				</div>,
+				isHorizontalScrollbarVisible ? <ScrollbarComponent {...this.horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null
+			]);
+		}
+
+		render () {
+			const
+				{className, scrollbarComponent: ScrollbarComponent, render, style, ...rest} = this.props,
+				scrollableClasses = classNames(css.scrollable, className),
+				children = this.renderChildren(rest, ScrollbarComponent);
 
 			return (
-				<WrapperContainer
-					{...wrapperProps}
-					className={scrollableClasses}
-					style={style}
-				>
-					<div className={css.container}>
-						<Wrapped
-							{...rest}
-							cbScrollTo={this.context.scrollTo || this.scrollTo}
-							className={css.content}
-							onScroll={this.handleScroll}
-							ref={this.initChildRef}
-						/>
-						{isVerticalScrollbarVisible ? <ScrollbarComponent {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
+				render ?
+					render({
+						initContainerRef: this.initContainerRef,
+						children,
+						className: scrollableClasses,
+						style
+					}) :
+					<div
+						className={scrollableClasses}
+						ref={this.initContainerRef}
+						style={style}
+					>
+						{children}
 					</div>
-					{isHorizontalScrollbarVisible ? <ScrollbarComponent {...this.horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
-				</WrapperContainer>
 			);
 		}
 	}

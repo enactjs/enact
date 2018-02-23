@@ -124,7 +124,6 @@ const ScrollableNative = hoc((confog, Wrapped) => (
 			uiScrollableRef.horizontalScrollbarProps.onNextScroll = this.onScrollbarButtonClick;
 			uiScrollableRef.horizontalScrollbarProps.onPrevScroll = this.onScrollbarButtonClick;
 
-			this.initContainerRef = uiScrollableRef.initContainerRef;
 			this.uiScrollableRef = uiScrollableRef;
 		}
 
@@ -525,10 +524,17 @@ const ScrollableNative = hoc((confog, Wrapped) => (
 					{...rest}
 					ref={this.initChildRef}
 					scrollbarComponent={Scrollbar}
-					wrapperContainer={ScrollableSpotlightContainer}
-					wrapperProps={{
-						containerRef: this.initContainerRef,
-						focusableScrollbar
+					render={({initContainerRef, children, className, style}) => { // eslint-disable-line react/jsx-no-bind
+						return (
+							<ScrollableSpotlightContainer
+								className={className}
+								containerRef={initContainerRef}
+								focusableScrollbar={focusableScrollbar}
+								style={style}
+							>
+								{children}
+							</ScrollableSpotlightContainer>
+						);
 					}}
 				/>
 			);
