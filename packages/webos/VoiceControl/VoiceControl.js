@@ -1,47 +1,34 @@
 /* eslint no-console: ["error", {allow: ["log"]}] */
-import LS2Request from '../LS2Request';
-
 const VoiceControl = (function () {
 	let _initialized = false;
 	let voiceArray = [];
 	let lastID = -1;
 
-	// this handler check matched item with voice info(voiceIntent, voiceLabel)
-	// and execute onVoice handler of matched item
-	function handleVoice (e) {
-		let {voiceIntent, voiceLabel} = e;
+	function handleVoice (str) {
+		let result = JSON.parse(str);
+		let obj = result[0];
+		let voiceIntent = obj['Intent'];
+		let voiceLabel = obj['Slot1'];
 		let intentArray = getArray(voiceArray, 'voiceIntent', voiceIntent);
 
-		console.log('VoiceControl>handleVoice>', voiceIntent, voiceLabel, e);
-
-		if (voiceLabel && intentArray.length > 0) {
-			if (voiceLabel.toLowerCase) {
-				voiceLabel = voiceLabel.toLowerCase();
-			}
-
-			let labelIndex = getIndex(intentArray, 'voiceLabel', voiceLabel);
-
-			if (labelIndex > -1) { // execute onVoice handler
-				let tObj = intentArray[labelIndex];
-				if (tObj.onVoice && (typeof tObj.onVoice === 'function')) {
-					// test
-					if (voiceIntent === 'input') {
-						e.value = 'text inputed!!!';
-					} else if (voiceIntent === 'slider') {
-						e.value = 50;
-					} else if (voiceIntent === 'pick') {
-						e.value = 'e';
-					} else if (voiceIntent === 'set_time') {
-						e.timestamp = '1519018883980';
-					} else if (voiceIntent === 'set_date') {
-						e.timestamp = '1519018883980';
+		if (intentArray.length > 0) {
+			if (voiceLabel) {
+				let labelIndex = getIndex(intentArray, 'voiceLabel', voiceLabel);
+				if (labelIndex > -1) { // execute onVoice handler
+					let tObj = intentArray[labelIndex];
+					if (tObj.onVoice && (typeof tObj.onVoice === 'function')) {
+						tObj.onVoice(obj);
+						console.log('VoiceControl>handleVoice>voiceLabel exist!!!!!!>', voiceIntent, voiceLabel, obj);
 					}
-
-					tObj.onVoice(e);
-					console.log('VoiceControl>handleVoice>execute!!!!!!>', voiceIntent, voiceLabel, labelIndex, e);
+				} else {
+					console.log('VoiceControl>handleVoice>voiceLabel is exist, but not matched!!!!!!>', voiceIntent, voiceLabel, obj);
 				}
-			} else { // find dom node with text string (this feature will be covered with Web Engine)
-				clickDOM(voiceLabel);
+			} else {
+				let tObj = intentArray[0];
+				if (tObj.onVoice && (typeof tObj.onVoice === 'function')) {
+					tObj.onVoice(obj);
+					console.log('VoiceControl>handleVoice>voiceLabel is not exist!!!!!!>', voiceIntent, voiceLabel, obj);
+				}
 			}
 		}
 	}
@@ -58,61 +45,7 @@ const VoiceControl = (function () {
 					voiceLabel: str
 				});
 			} else if (params.event === 'start') {
-				showToastPopup(); // this feature is not fixed by UX
-			}
-		}
-	}
-
-	function showToastPopup () {
-		if (voiceArray.length > 0) {
-			let str = '';
-
-			for (let i in voiceArray) {
-				if (voiceArray[i]['voiceLabel']) {
-					str += voiceArray[i]['voiceLabel'] + ' | ';
-				}
-			}
-
-			new LS2Request().send({
-				service: 'luna://com.webos.notification',
-				method: 'createToast',
-				parameters: {
-					'sourceId': 'com.palm.voicecontrol',
-					'message': str,
-					'noaction': false
-				},
-				onSuccess: function (res) {
-					console.log('onSuccess', res);
-				},
-				onFailure: function (err) {
-					console.log('onFailure', err);
-				}
-			});
-		}
-	}
-
-	// this feature will be cover by Web Engine
-	function clickDOM (label) {
-		let nodes = document.querySelectorAll('.spottable');
-		let texts = [];
-
-		for (let t in nodes) {
-			let node = nodes[t];
-			let ariaLabel = node.getAttribute && node.getAttribute('aria-label');
-			let textContent = node.textContent;
-			let text = ariaLabel || textContent;
-
-			if (text) {
-				texts.push(text.toLowerCase());
-			}
-		}
-
-		for (let i = 0; i < texts.length; i++) {
-			let text = texts[i];
-			if (text && text.indexOf(label.toLowerCase()) > -1) {
-				nodes[i].click();
-				console.log('VoiceControl>clickDOM>execute!!!!!!>', text);
-				return;
+				// showToastPopup();
 			}
 		}
 	}
@@ -134,6 +67,32 @@ const VoiceControl = (function () {
 			}
 		}
 		return result;
+	}
+
+	function getJsonData (array) {
+		let result = [];
+		for (let i = 0; i < array.length; i++) {
+			let obj = array[i];
+			let index = hasProp(result, 'Intent', obj.voiceIntent);
+			if (index === -1) {
+				result.push({
+					'Intent': obj.voiceIntent,
+					'Values': [obj.voiceLabel]
+				});
+			} else {
+				result[index]['Values'].push(obj.voiceLabel);
+			}
+		}
+		return JSON.stringify(result);
+	}
+
+	function hasProp (array, prop, value) {
+		for (let i = 0; i < array.length; i++) {
+			if (array[i][prop] === value) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	const exports = {
@@ -212,14 +171,30 @@ const VoiceControl = (function () {
 			console.log('VoiceControl>traceLabel>' + '\n' + str);
 		},
 
-		simulateVoice: function (obj) {
-			console.log('VoiceControl>simulateOnVoice>', obj);
-			handleVoice(obj);
+		traceJsonData: function () {
+			console.log('traceJsonData>', getJsonData(voiceArray));
 		},
 
-		simulateClick: function (label) {
-			console.log('VoiceControl>simulateOnClick>', label);
-			clickDOM(label);
+		simulateVoice: function (str) {
+			console.log('VoiceControl>simulateOnVoice>', str);
+			handleVoice(str);
+		},
+
+		simulateJson: function (type) {
+			let str = '';
+			if (type === 'button') {
+				str = '[{"Intent": "SelectRequest","Slot1": "A"}]';
+			} else if (type === 'checkbox') {
+				str = '[{"Intent": "CheckItemRequest","Slot1": "BB", "Slot2": "checked"}]';
+			} else if (type === 'radioitem') {
+				str = '[{"Intent": "CheckItemRequest","Slot1": "b", "Slot2": "checked"}]';
+			} else if (type === 'toggleitem') {
+				str = '[{"Intent": "CheckItemRequest","Slot1": "Energy Saver", "Slot2": "unchecked"}]';
+			} else if (type === 'input') {
+				str = '[{"Intent": "TextInputRequest","Slot1": "TV Name", "Slot2": "this is good!!!"}]';
+			}
+			console.log('simulateJson>', str, JSON.parse(str));
+			handleVoice(str);
 		}
 	};
 	return exports;

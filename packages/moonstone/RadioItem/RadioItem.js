@@ -133,30 +133,30 @@ const RadioItem = Pure(
 	VoiceControlDecorator({
 		voiceSlot: [
 			{
-				voiceIntent: 'select',
+				voiceIntent: 'CheckItemRequest',
 				voiceHandler: (e, props) => {
+					let obj = {};
+					let status = e['Slot2'];
+					let selected;
+					if (status === 'checked') {
+						selected = true;
+					} else if (status === 'unchecked') {
+						selected = false;
+					} else if (status === 'toggle') {
+						selected = !props.selected;
+					} else {
+						return;
+					}
+					obj.selected = selected;
+
 					if (props.onToggle) {
-						props.onToggle(e);
+						props.onToggle(obj);
 					} else if (props.onClick) {
-						if (!props.selected) {
-							props.onClick(e);
+						if (props.selected !== selected) {
+							props.onClick(obj);
 						}
 					}
-				},
-				voiceParams: {selected: true}
-			},
-			{
-				voiceIntent: 'deselect',
-				voiceHandler: (e, props) => {
-					if (props.onToggle) {
-						props.onToggle(e);
-					} else if (props.onClick) {
-						if (props.selected) {
-							props.onClick(e);
-						}
-					}
-				},
-				voiceParams: {selected: false}
+				}
 			}
 		]},
 		Toggleable(

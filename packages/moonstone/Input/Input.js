@@ -286,7 +286,17 @@ const Input = Pure(
 		{channels: ['i18n'], mapMessageToProps: (channel, {rtl}) => ({rtl})},
 			VoiceControlDecorator({
 				voiceSlot: [
-					{voiceIntent: 'input', voiceHandler: 'onChange'}
+					{
+						voiceIntent: 'TextInputRequest',
+						voiceHandler: (e, props) => {
+							let obj = {};
+							let text = e['Slot2'];
+							obj.value = text;
+							if (props.onChange) {
+								props.onChange(obj);
+							}
+						}
+					}
 				]},
 				Changeable(
 					InputSpotlightDecorator(
