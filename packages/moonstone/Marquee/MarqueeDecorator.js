@@ -3,10 +3,10 @@ import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
 import {childrenEquals} from '@enact/core/util';
 import {isRtlText} from '@enact/i18n/util';
-import equals from 'ramda/src/equals';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
+import shallowEqual from 'recompose/shallowEqual';
 
 import Marquee from './Marquee';
 import {contextTypes} from './MarqueeController';
@@ -307,8 +307,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		shouldComponentUpdate (nextProps, nextState) {
 			return (
-				!equals(this.state, nextState) ||
-				!equals(this.props, nextProps) ||
+				!shallowEqual(this.state, nextState) ||
+				!shallowEqual(this.props, nextProps) ||
 				(invalidateProps && didPropChange(invalidateProps, this.props, nextProps))
 			);
 		}
