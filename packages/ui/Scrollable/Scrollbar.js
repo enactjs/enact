@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import React, {PureComponent, Component} from 'react';
 
 import ri from '../resolution';
 
@@ -32,7 +32,7 @@ const setCSSVariable = (element, variable, value) => {
  * @ui
  * @private
  */
-class Scrollbar extends PureComponent {
+class ScrollbarBase extends PureComponent {
 	static displayName = 'ui:Scrollbar'
 
 	static propTypes = /** @lends ui/Scrollable.ScrollbarBase.prototype */ {
@@ -149,14 +149,6 @@ class Scrollbar extends PureComponent {
 		};
 	}
 
-	renderThumb = () => (
-		<ScrollThumb
-			getScrollThumbRef={this.initThumbRef}
-			key="thumb"
-			vertical={this.props.vertical}
-		/>
-	);
-
 	render () {
 		const
 			{className, corner, css, render, vertical} = this.props,
@@ -169,21 +161,46 @@ class Scrollbar extends PureComponent {
 
 		return (
 			<div ref={this.initContainerRef} className={containerClassName}>
-				{render ?
-					render({
-						thumb: this.renderThumb(),
-						update: this.update,
-						showThumb: this.showThumb,
-						startHidingThumb: this.startHidingThumb
-					}) :
-					this.renderThumb()
-				}
+				{render({
+					getScrollThumbRef: this.initThumbRef,
+					update: this.update,
+					startHidingThumb: this.startHidingThumb,
+					showThumb: this.showThumb
+				})}
 			</div>
+		);
+	}
+}
+
+class Scrollbar extends Component {
+	render () {
+		const {vertical} = this.props;
+
+		return (
+			<ScrollbarBase {...this.props} render={(props) => (
+				<ScrollThumb
+					{...props}
+					key="thumb"
+					vertical={vertical}
+				/>
+			)} />
 		);
 	}
 }
 
 export default Scrollbar;
 export {
-	Scrollbar
+	Scrollbar,
+	ScrollbarBase,
+	ScrollThumb
 };
+
+// {render ?
+// 	render({
+// 		thumb: this.renderThumb(),
+// 		update: this.update,
+// 		showThumb: this.showThumb,
+// 		startHidingThumb: this.startHidingThumb
+// 	}) :
+// 	this.renderThumb()
+// }

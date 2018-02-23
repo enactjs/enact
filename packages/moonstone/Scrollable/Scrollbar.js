@@ -5,7 +5,7 @@ import {is} from '@enact/core/keymap';
 import {off, on} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import {Scrollbar as UiScrollbar} from '@enact/ui/Scrollable/Scrollbar';
+import {ScrollbarBase as UiScrollbarBase, ScrollThumb as UiScrollThumb} from '@enact/ui/Scrollable/Scrollbar';
 import Spotlight from '@enact/spotlight';
 
 import $L from '../internal/$L';
@@ -40,8 +40,8 @@ const
  * @ui
  * @private
  */
-class ScrollbarBase extends Component {
-	static displayName = 'ScrollbarBase'
+class ScrollButtons extends Component {
+	static displayName = 'ScrollButtons'
 
 	static propTypes = /** @lends moonstone/Scrollable.ScrollbarBase.prototype */ {
 		/**
@@ -101,13 +101,7 @@ class ScrollbarBase extends Component {
 		 */
 		onPrevSpotlightDisappear: PropTypes.func,
 
-		/**
-		 * Exposes this instance as the provider for its imperative API
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		setApiProvider: PropTypes.func,
+		render: PropTypes.func,
 
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
@@ -136,10 +130,6 @@ class ScrollbarBase extends Component {
 		this.initAnnounceRef = this.initRef('announceRef');
 		this.initPrevButtonNodeRef = this.initRef('prevButtonNodeRef');
 		this.initNextButtonNodeRef = this.initRef('nextButtonNodeRef');
-
-		if (props.setApiProvider) {
-			props.setApiProvider(this);
-		}
 	}
 
 	componentDidUpdate () {
@@ -287,57 +277,48 @@ class ScrollbarBase extends Component {
 
 	render () {
 		const
-			{disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, vertical} = this.props,
+			{disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, render, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			prevIcon = preparePrevButton(vertical),
 			nextIcon = prepareNextButton(vertical);
 
-		return (
-			<UiScrollbar
-				{...this.props}
-				css={componentCss}
-				render={({thumb, update, showThumb, startHidingThumb}) => { // eslint-disable-line react/jsx-no-bind
-					this.uiUpdate = update;
-					this.showThumb = showThumb;
-					this.startHidingThumb = startHidingThumb;
-
-					return ([
-						<ScrollButton
-							key="0"
-							data-scroll-button="previous"
-							direction={vertical ? 'up' : 'left'}
-							disabled={disabled || prevButtonDisabled}
-							onClick={this.handlePrevScroll}
-							onHoldPulse={this.handlePrevHoldPulse}
-							onKeyDown={this.depressButton}
-							onKeyUp={this.releaseButton}
-							onMouseDown={this.depressButton}
-							onSpotlightDisappear={onPrevSpotlightDisappear}
-							ref={this.initPrevButtonNodeRef}
-						>
-							{prevIcon}
-						</ScrollButton>,
-						thumb,
-						<ScrollButton
-							key="2"
-							data-scroll-button="next"
-							direction={vertical ? 'down' : 'right'}
-							disabled={disabled || nextButtonDisabled}
-							onClick={this.handleNextScroll}
-							onHoldPulse={this.handleNextHoldPulse}
-							onKeyDown={this.depressButton}
-							onKeyUp={this.releaseButton}
-							onMouseDown={this.depressButton}
-							onSpotlightDisappear={onNextSpotlightDisappear}
-							ref={this.initNextButtonNodeRef}
-						>
-							{nextIcon}
-						</ScrollButton>,
-						<Announce key="3" ref={this.initAnnounceRef} />
-					]);
-				}}
-			/>
-		);
+		return ([
+			<ScrollButton
+				key="0"
+				data-scroll-button="previous"
+				direction={vertical ? 'up' : 'left'}
+				disabled={disabled || prevButtonDisabled}
+				onClick={this.handlePrevScroll}
+				onHoldPulse={this.handlePrevHoldPulse}
+				onKeyDown={this.depressButton}
+				onKeyUp={this.releaseButton}
+				onMouseDown={this.depressButton}
+				onSpotlightDisappear={onPrevSpotlightDisappear}
+				ref={this.initPrevButtonNodeRef}
+			>
+				{prevIcon}
+			</ScrollButton>,
+			render({
+				isOneOfScrollButtonsFocused: this.isOneOfScrollButtonsFocused,
+				updateButtons: this.updateButtons
+			}),
+			<ScrollButton
+				key="2"
+				data-scroll-button="next"
+				direction={vertical ? 'down' : 'right'}
+				disabled={disabled || nextButtonDisabled}
+				onClick={this.handleNextScroll}
+				onHoldPulse={this.handleNextHoldPulse}
+				onKeyDown={this.depressButton}
+				onKeyUp={this.releaseButton}
+				onMouseDown={this.depressButton}
+				onSpotlightDisappear={onNextSpotlightDisappear}
+				ref={this.initNextButtonNodeRef}
+			>
+				{nextIcon}
+			</ScrollButton>,
+			<Announce key="3" ref={this.initAnnounceRef} />
+		]);
 	}
 }
 
@@ -348,7 +329,7 @@ class ScrollbarBase extends Component {
  * @hoc
  * @private
  */
-const ScrollbarDecorator = compose(
+const DisappearSpotlightScrollButtons = compose(
 	ApiDecorator({api: ['isOneOfScrollButtonsFocused', 'showThumb', 'startHidingThumb', 'update']}),
 	DisappearSpotlightDecorator(
 		{events: {
@@ -356,7 +337,7 @@ const ScrollbarDecorator = compose(
 			onPrevSpotlightDisappear: '[data-scroll-button="next"]'
 		}}
 	)
-);
+)(ScrollButtons);
 
 /**
  * A moonstone-styled scroll bar. It is used in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
@@ -366,10 +347,54 @@ const ScrollbarDecorator = compose(
  * @ui
  * @private
  */
-const Scrollbar = ScrollbarDecorator(ScrollbarBase);
+// const Scrollbar = ScrollbarDecorator(ScrollbarBase);
+
+class Scrollbar extends Component {
+	static propTypes = {
+		corner: PropTypes.bool,
+		vertical: PropTypes.bool
+	}
+	render () {
+		const {corner, vertical, ...restForScrollButtons} = this.props;
+
+		return (
+			<UiScrollbarBase
+				corner={corner}
+				css={componentCss}
+				vertical={vertical}
+				render={({update: uiUpdate, startHidingThumb, showThumb, ...restForThumb}) => { // eslint-disable-line react/jsx-no-bind
+					this.uiUpdate = uiUpdate;
+					this.startHidingThumb = startHidingThumb;
+					this.showThumb = showThumb;
+
+					return (
+						<DisappearSpotlightScrollButtons
+							{...restForScrollButtons}
+							vertical={vertical}
+							render={({isOneOfScrollButtonsFocused, updateButtons}) => { // eslint-disable-line react/jsx-no-bind
+								this.isOneOfScrollButtonsFocused = isOneOfScrollButtonsFocused;
+								this.update = (bounds) => {
+									updateButtons(bounds);
+									this.uiUpdate(bounds);
+								};
+
+								return (
+									<UiScrollThumb
+										{...restForThumb}
+										key="thumb"
+										vertical={vertical}
+									/>
+								);
+							}}
+						/>
+					);
+				}}
+			/>
+		);
+	}
+}
 
 export default Scrollbar;
 export {
-	Scrollbar,
-	ScrollbarDecorator
+	Scrollbar
 };
