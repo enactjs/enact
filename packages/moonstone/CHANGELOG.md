@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `moonstone/ContextualPopupDecorator` to change `enterTo` to `default-element`
+
 ## [2.0.0-alpha.4] - 2018-02-13
 
 ### Added
