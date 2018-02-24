@@ -2,11 +2,17 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
-
-### Deprecated
+## [2.0.0-alpha.4] - 2018-02-13
 
 ### Added
+
+- `moonstone/SlotItem` replacing `moonstone/Item.ItemOverlay`
+
+### Removed
+
+- `moonstone/VirtualFlexList` to be replaced by `ui/VirtualFlexList`
+- `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`
+- `moonstone/Item.OverlayDecorator`, `moonstone/Item.Overlay`, and `moonstone/Item.ItemOverlay` to be replaced by `moonstone/SlotItem`
 
 ### Changed
 
@@ -16,7 +22,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VirtualList` to render properly with fiber reconciler
-- `moonstone/VirtualList` to work focus option in scrollTo api
+- `moonstone/VirtualList` focus option in scrollTo api
 - `moonstone/ExpandableSpotlightDecorator` to not spot the title upon collapse when in `pointerMode`
 - `moonstone/Spinner` to not unpause Spotlight unless it was the one to pause it
 - `moonstone/Marquee` to stop when becoming disabled

@@ -8,103 +8,73 @@
  * @module moonstone/Switch
  * @exports Switch
  * @exports SwitchBase
- * @exports SwitchDecorator
  */
 
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import ToggleIcon from '@enact/ui/ToggleIcon';
-import compose from 'ramda/src/compose';
-import Pure from '@enact/ui/internal/Pure';
 
-import Icon from '../Icon';
-import Skinnable from '../Skinnable';
+import ToggleIcon from '../ToggleIcon';
 
 import componentCss from './Switch.less';
 
 /**
  * Renders the base level DOM structure of the component.
  *
- * @class SwitchBase
+ * @class Switch
  * @memberof moonstone/Switch
- * @extends ui/ToggleIcon.ToggleIcon
+ * @extends moonstone/ToggleIcon.ToggleIcon
  * @ui
  * @public
  */
 const SwitchBase = kind({
 	name: 'Switch',
 
-	propTypes: /** @lends moonstone/Switch.SwitchBase.prototype */ {
+	propTypes: /** @lends moonstone/Switch.Switch.prototype */ {
+		children: PropTypes.string,
+		css: PropTypes.object,
+
 		/**
 		 * Sets whether this control is animated during change.
 		 *
 		 * @type {Boolean}
-		 * @default true
+		 * @default false
 		 * @public
 		 */
-		animated: PropTypes.bool
+		noAnimation: PropTypes.bool
 	},
 
 	defaultProps: {
-		animated: true
+		children: 'circle',
+		noAnimation: false
 	},
 
 	styles: {
-		css: componentCss,
-		className: 'switch',
-		publicClassNames: ['switch']
+		css: componentCss
 	},
 
 	computed: {
-		className: ({animated, styler}) => styler.append(
-			{animated}
-		)
+		className: ({noAnimation, styler}) => styler.append({
+			animated: !noAnimation
+		})
 	},
 
-	render: (props) => {
-		delete props.animated;
+	render: ({children, css, ...rest}) => {
+		delete rest.noAnimation;
 
 		return (
 			<ToggleIcon
-				{...props}
-				css={props.css}
-				iconComponent={Icon}
+				{...rest}
+				css={css}
 			>
-				circle
+				{children}
 			</ToggleIcon>
 		);
 	}
 });
 
-/**
- * Moonstone-specific behaviors to apply to `SwitchBase`.
- *
- * @hoc
- * @memberof moonstone/Switch
- * @mixes moonstone/Skinnable.Skinnable
- * @public
- */
-const SwitchDecorator = compose(
-	Pure,
-	Skinnable
-);
-
-/**
- * A fully functional, ready-to-use, toggle-switch component.
- *
- * @class Switch
- * @memberof moonstone/Switch
- * @extends moonstone/Switch.SwitchBase
- * @mixes moonstone/Switch.SwitchDecorator
- * @ui
- * @public
- */
-const Switch = SwitchDecorator(SwitchBase);
-
-export default Switch;
+export default SwitchBase;
 export {
-	Switch,
-	SwitchBase,
-	SwitchDecorator
+	SwitchBase as Switch,
+	SwitchBase
 };
