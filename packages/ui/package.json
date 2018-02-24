@@ -27,10 +27,10 @@
   "eslintConfig": {
     "extends": "enact/strict"
   },
-  "dependencies": {
+"dependencies": {
     "@enact/core": "^2.0.0-alpha.3",
-    "@enact/i18n": "^2.0.0-alpha.3",
     "classnames": "^2.2.5",
+    "direction": "^1.0.1",
     "invariant": "^2.2.2",
     "prop-types": "^15.6.0",
     "ramda": "^0.24.1",

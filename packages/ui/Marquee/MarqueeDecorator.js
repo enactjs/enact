@@ -1,12 +1,12 @@
+import direction from 'direction';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
 import {childrenEquals} from '@enact/core/util';
-import {isRtlText} from '@enact/i18n/util';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Marquee from './Marquee';
+import Marquee from './MarqueeBase';
 import {contextTypes} from './MarqueeController';
 
 /**
@@ -79,7 +79,19 @@ const defaultConfig = {
 	 * @default 'onMouseLeave'
 	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
-	leave: 'onMouseLeave'
+	leave: 'onMouseLeave',
+
+	/**
+	 * A function that determines the text directionality of a string.
+	 *
+	 * Returns:
+	 * * `'rtl'` if the text should marquee to the right
+	 * * `'ltr'` if the text should marquee to the left
+	 *
+	 * @type {Function}
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
+	 */
+	marqueeDirection: (str) => direction(str) === 'rtl' ? 'rtl' : 'ltr'
 };
 
 /**
@@ -117,7 +129,7 @@ const TimerState = {
  * @public
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {blur, className: configClassName, component: MarqueeComponent, enter, focus, invalidateProps, leave} = config;
+	const {blur, className: configClassName, component: MarqueeComponent, enter, focus, invalidateProps, leave, marqueeDirection} = config;
 
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
@@ -654,7 +666,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (forceDirection) {
 				rtl = forceDirection === 'rtl';
 			} else if (this.node) {
-				rtl = isRtlText(this.node.textContent);
+				rtl = marqueeDirection(this.node.textContent) === 'rtl';
 				this.textDirectionValidated = true;
 			}
 

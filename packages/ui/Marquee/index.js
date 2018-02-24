@@ -17,7 +17,7 @@
 // This file avoids circular dependencies between Marquee.js (which would normally import its
 // decorator) and MarqueeDecorator (which needs to import Marquee.js).
 
-import MarqueeBase from './Marquee';
+import MarqueeBase from './MarqueeBase';
 import {MarqueeController, contextTypes as controlContextTypes} from './MarqueeController';
 import MarqueeDecorator from './MarqueeDecorator';
 

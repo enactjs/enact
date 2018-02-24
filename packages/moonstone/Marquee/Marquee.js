@@ -9,13 +9,20 @@
  * @exports MarqueeDecorator
  */
 
+import hoc from '@enact/core/hoc';
+import {isRtlText} from '@enact/i18n/util';
 import {
 	controlContextTypes,
-	Marquee,
 	MarqueeBase,
 	MarqueeController,
-	MarqueeDecorator
+	MarqueeDecorator as UiMarqueeDecorator
 } from '@enact/ui/Marquee';
+
+const MarqueeDecorator = hoc({
+	marqueeDirection: (str) => isRtlText(str) ? 'rtl' : 'ltr'
+}, UiMarqueeDecorator);
+
+const Marquee = MarqueeDecorator(MarqueeBase, 'div');
 
 export default Marquee;
 export {

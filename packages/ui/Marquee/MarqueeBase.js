@@ -148,9 +148,9 @@ const MarqueeBase = kind({
 		}
 	},
 
-	render: ({children, className, clientClassName, clientRef, clientStyle, onMarqueeComplete}) => {
+	render: ({children, className, clientClassName, clientRef, clientStyle, onMarqueeComplete, ...rest}) => {
 		return (
-			<div className={className}>
+			<div {...rest} className={className}>
 				<div
 					className={clientClassName}
 					ref={clientRef}
@@ -165,4 +165,6 @@ const MarqueeBase = kind({
 });
 
 export default MarqueeBase;
-export {MarqueeBase as Marquee, MarqueeBase};
+export {
+	MarqueeBase
+};
