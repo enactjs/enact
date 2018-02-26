@@ -1,4 +1,4 @@
-# @enact/webos
+# @enact/webos [![npm (scoped)](https://img.shields.io/npm/v/@enact/webos.svg?style=flat-square)](https://www.npmjs.com/package/@enact/webos)
 
 > `@enact/webos` contains utility functions for working with webOS devices
 

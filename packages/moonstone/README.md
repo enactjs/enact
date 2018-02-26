@@ -1,4 +1,4 @@
-# @enact/moonstone
+# @enact/moonstone [![npm (scoped)](https://img.shields.io/npm/v/@enact/moonstone.svg?style=flat-square)](https://www.npmjs.com/package/@enact/moonstone)
 
 > `@enact/moonstone` contains the set of reusable components for an Enact-based application
 targeting smart TVs.

@@ -1,4 +1,4 @@
-# @enact/ui
+# @enact/ui [![npm (scoped)](https://img.shields.io/npm/v/@enact/ui.svg?style=flat-square)](https://www.npmjs.com/package/@enact/ui)
 
 > `@enact/ui` contains the set of unstyled, reusabled components for an Enact-based application.
 
