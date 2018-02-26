@@ -227,13 +227,14 @@ class VirtualListCore extends Component {
 				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
 				overhang !== nextProps.overhang ||
 				spacing !== nextProps.spacing
-			),
-			hasDataChanged = (dataSize !== nextProps.dataSize);
+			);
+
+		this.hasDataChanged = (dataSize !== nextProps.dataSize);
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
 			this.updateStatesAndBounds(nextProps);
-		} else if (hasDataChanged) {
+		} else if (this.hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
 		}
 	}
@@ -277,6 +278,7 @@ class VirtualListCore extends Component {
 	threshold = 0
 	maxFirstIndex = 0
 	curDataSize = 0
+	hasDataChanged = false
 	cc = []
 	scrollPosition = 0
 	updateFrom = null

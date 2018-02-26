@@ -219,14 +219,15 @@ class VirtualListCoreNative extends Component {
 				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
 				overhang !== nextProps.overhang ||
 				spacing !== nextProps.spacing
-			),
-			hasDataChanged = (dataSize !== nextProps.dataSize);
+			);
+
+		this.hasDataChanged = (dataSize !== nextProps.dataSize);
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
 			this.updateStatesAndBounds(nextProps);
 			this.setContainerSize();
-		} else if (hasDataChanged) {
+		} else if (this.hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
 			this.setContainerSize();
 		}
@@ -265,6 +266,7 @@ class VirtualListCoreNative extends Component {
 	maxFirstIndex = 0
 	lastFirstIndex = 0
 	curDataSize = 0
+	hasDataChanged = false
 	cc = []
 	scrollPosition = 0
 	isScrolledBy5way = false
