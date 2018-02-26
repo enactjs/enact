@@ -238,13 +238,14 @@ class VirtualListBase extends Component {
 				overhang !== nextProps.overhang ||
 				spacing !== nextProps.spacing
 			),
-			hasDataChanged = (dataSize !== nextProps.dataSize),
 			updateStatesAndBounds = this.context.updateStatesAndBounds || this.updateStatesAndBounds;
+
+		this.hasDataSizeChanged = (dataSize !== nextProps.dataSize);
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
 			updateStatesAndBounds(nextProps);
-		} else if (hasDataChanged) {
+		} else if (this.hasDataSizeChanged) {
 			updateStatesAndBounds(nextProps);
 		}
 	}
@@ -273,6 +274,7 @@ class VirtualListBase extends Component {
 	threshold = 0
 	maxFirstIndex = 0
 	curDataSize = 0
+	hasDataSizeChanged = false
 	cc = []
 	scrollPosition = 0
 	updateFrom = null
@@ -666,14 +668,6 @@ class VirtualListBase extends Component {
 			{spacing} = this.props;
 
 		return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
-	}
-
-	isSameTotalItemSizeWithClient = () => {
-		const
-			node = this.containerRef,
-			{clientWidth, clientHeight} = this.props.clientSize || this.getClientSize(node);
-
-		return (this.getVirtualScrollDimension() <= (this.isPrimaryDirectionVertical ? clientHeight : clientWidth));
 	}
 
 	syncClientSize = () => {

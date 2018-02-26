@@ -240,14 +240,15 @@ class VirtualListBaseNative extends Component {
 				overhang !== nextProps.overhang ||
 				spacing !== nextProps.spacing
 			),
-			hasDataChanged = (dataSize !== nextProps.dataSize),
 			updateStatesAndBounds = this.context.updateStatesAndBounds || this.updateStatesAndBounds;
+
+		this.hasDataSizeChanged = (dataSize !== nextProps.dataSize);
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
 			updateStatesAndBounds(nextProps);
 			this.setContainerSize();
-		} else if (hasDataChanged) {
+		} else if (this.hasDataSizeChanged) {
 			updateStatesAndBounds(nextProps);
 			this.setContainerSize();
 		}
@@ -278,6 +279,7 @@ class VirtualListBaseNative extends Component {
 	maxFirstIndex = 0
 	lastFirstIndex = 0
 	curDataSize = 0
+	hasDataSizeChanged = false
 	cc = []
 	scrollPosition = 0
 	isScrolledByJump = false
@@ -671,14 +673,6 @@ class VirtualListBaseNative extends Component {
 			{spacing} = this.props;
 
 		return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
-	}
-
-	isSameTotalItemSizeWithClient = () => {
-		const
-			node = this.containerRef,
-			{clientWidth, clientHeight} = this.props.clientSize || this.getClientSize(node);
-
-		return (this.getVirtualScrollDimension() <= (this.isPrimaryDirectionVertical ? clientHeight : clientWidth));
 	}
 
 	syncClientSize = () => {
