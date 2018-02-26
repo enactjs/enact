@@ -7,6 +7,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/ExpandableSpotlightDecorator` to focus the selected index as the default focus target.
+- `moonstone/ExpandableList` to add HOC prameter for finding selcted node.
+- `moonstone/Expandable` to add HOC prop.
 
 ## [2.0.0-alpha.4] - 2018-02-13
 

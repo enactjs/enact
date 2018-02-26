@@ -34,7 +34,7 @@ const defaultConfig = {
  * @private
  */
 const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {noPointerMode} = config;
+	const {getSelectedNode, noPointerMode} = config;
 
 	return class extends React.Component {
 		static displayName = 'ExpandableSpotlightDecorator'
@@ -76,11 +76,8 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const current = Spotlight.getCurrent();
 			if (this.containerNode.contains(current) || document.activeElement === document.body) {
 				const contents = this.containerNode.querySelector('[data-expandable-container]');
+				const selectedNode = getSelectedNode ? getSelectedNode(contents, this.props.selected) : null;
 				if (contents && !this.props.noAutoFocus && !contents.contains(current)) {
-					const selected = this.props.selected ? this.props.selected : 0;
-					const selectedIndex = Array.isArray(selected) && selected.length ? selected[0] : selected;
-					const selectedNode = contents.querySelector('[data-index="' + selectedIndex + '"]');
-
 					if (selectedNode) {
 						Spotlight.focus(selectedNode);
 					} else {
