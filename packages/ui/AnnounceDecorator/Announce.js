@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 /**
@@ -33,10 +33,18 @@ import PropTypes from 'prop-types';
  * @memberof ui/AnnounceDecorator
  * @public
  */
-const Announce = class extends React.Component {
+const Announce = class extends Component {
 	static displayName = 'Announce'
 
 	static propTypes = /** @lends ui/AnnounceDecorator.Announce.prototype */ {
+		/**
+		 * Initialize a referenced instance
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		setRef: PropTypes.func,
+
 		/**
 		 * Time, in milliseconds, to wait to remove the alert message. Subsequent updates to the
 		 * message before the timeout are ignored.
@@ -53,6 +61,16 @@ const Announce = class extends React.Component {
 		// how frequently we should allow alerting. Should also consider if this timeout should be
 		// "global" such that multiple instances of Announce respect each other.
 		timeout: 500
+	}
+
+	constructor (props) {
+		const {setRef} = props;
+
+		super();
+
+		if (setRef) {
+			setRef(this);
+		}
 	}
 
 	componentWillUnmount () {
@@ -85,15 +103,13 @@ const Announce = class extends React.Component {
 	}
 
 	render () {
-		const {setRef, ...rest} = this.props;
-		delete rest.timeout;
+		const props = Object.assign({}, this.props);
 
-		if (setRef) {
-			setRef({ref: this});
-		}
+		delete props.setRef;
+		delete props.timeout;
 
 		return (
-			<span ref={this.setAlertRef} role="alert" {...rest} />
+			<span {...props} ref={this.setAlertRef} role="alert" />
 		);
 	}
 };

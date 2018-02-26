@@ -49,35 +49,33 @@ class Scrollbar extends Component {
 			<UiScrollbarBase
 				corner={corner}
 				css={componentCss}
-				vertical={vertical}
-				render={({setRef: setScrollThumbRef, showThumb, startHidingThumb, update: uiUpdate}) => { // eslint-disable-line react/jsx-no-bind
+				setRef={({showThumb, startHidingThumb, update: uiUpdate}) => { // eslint-disable-line react/jsx-no-bind
 					this.showThumb = showThumb;
 					this.startHidingThumb = startHidingThumb;
 					this.uiUpdate = uiUpdate;
-
-					return (
-						<ScrollButtons
-							{...rest}
-							vertical={vertical}
-							render={({isOneOfScrollButtonsFocused, updateButtons}) => { // eslint-disable-line react/jsx-no-bind
-								this.isOneOfScrollButtonsFocused = isOneOfScrollButtonsFocused;
-								this.update = (bounds) => {
-									updateButtons(bounds);
-									this.uiUpdate(bounds);
-								};
-
-								return (
-									<ScrollThumb
-										cbAlertThumb={cbAlertThumb}
-										setRef={setScrollThumbRef}
-										key="thumb"
-										vertical={vertical}
-									/>
-								);
-							}}
-						/>
-					);
 				}}
+				vertical={vertical}
+				render={({setScrollThumbRef: setScrollThumbRef}) => ( // eslint-disable-line react/jsx-no-bind
+					<ScrollButtons
+						{...rest}
+						setRef={({isOneOfScrollButtonsFocused, updateButtons}) => { // eslint-disable-line react/jsx-no-bind
+							this.isOneOfScrollButtonsFocused = isOneOfScrollButtonsFocused;
+							this.update = (bounds) => {
+								updateButtons(bounds);
+								this.uiUpdate(bounds);
+							};
+						}}
+						vertical={vertical}
+						render={() => ( // eslint-disable-line react/jsx-no-bind
+							<ScrollThumb
+								cbAlertThumb={cbAlertThumb}
+								key="thumb"
+								setRef={setScrollThumbRef}
+								vertical={vertical}
+							/>
+						)}
+					/>
+				)}
 			/>
 		);
 	}

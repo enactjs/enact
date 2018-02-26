@@ -28,20 +28,20 @@ const ScrollButtonBase = kind({
 
 	propTypes: /** @lends moonstone/Scrollable.ScrollButtonBase.prototype */ {
 		/**
+		 * Name of icon
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		children: PropTypes.string.isRequired,
+
+		/**
 		 * Scroll direction for this button (down, left, right, or up)
 		 *
 		 * @type {String}
 		 * @public
 		 */
 		direction: PropTypes.oneOf(['down', 'left', 'right', 'up']).isRequired,
-
-		/**
-		 * Render function for children
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		render: PropTypes.func.isRequired,
 
 		/**
 		 * When `true`, the `aria-label` is set.
@@ -87,7 +87,7 @@ const ScrollButtonBase = kind({
 		className: ({direction, styler}) => styler.append(classNameMap[direction])
 	},
 
-	render: ({disabled, render, ...rest}) => {
+	render: ({children, disabled, ...rest}) => {
 		delete rest.active;
 		delete rest.direction;
 
@@ -98,7 +98,7 @@ const ScrollButtonBase = kind({
 				disabled={disabled}
 				small
 			>
-				{render({ref: this})}
+				{children}
 			</IconButton>
 		);
 	}

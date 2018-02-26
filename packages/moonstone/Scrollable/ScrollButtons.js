@@ -3,6 +3,7 @@ import {is} from '@enact/core/keymap';
 import {off, on} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import RefDecorator from '@enact/ui/Scrollable/RefDecorator';
 import Spotlight from '@enact/spotlight';
 
 import $L from '../internal/$L';
@@ -25,9 +26,13 @@ const
 	},
 	preparePrevButton = prepareButton(true),
 	prepareNextButton = prepareButton(false),
+	dataScrollButton = 'data-scroll-button',
 	isPageUp = is('pageUp'),
-	isPageDown = is('pageDown');
-
+	isPageDown = is('pageDown'),
+	isPrevButton = (element) => element && element.getAttribute(dataScrollButton) === 'previous',
+	isNextButton = (element) => element && element.getAttribute(dataScrollButton) === 'next',
+	getPrevButton = (containerId) => (document.querySelector(`[data-container-id="${containerId}"] [data-scroll-button="previous"]`)),
+	getNextButton = (containerId) => (document.querySelector(`[data-container-id="${containerId}"] [data-scroll-button="next"]`));
 /**
  * A moonstone-styled component for [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
  *
@@ -125,15 +130,9 @@ class ScrollButtonsBase extends Component {
 		this.setIgnoreMode(false); // To remove event handler
 	}
 
+	ignoreMode = false
 	pressed = false
-
-	// component refs
-	prevButtonNodeRef = null
-	nextButtonNodeRef = null
-	announceRef = null
-	showThumb = null
-	startHidingThumb = null
-	uiUpdate = null
+	announce = null
 
 	setPressStatus = (isPressed) => {
 		this.pressed = isPressed;
@@ -155,7 +154,6 @@ class ScrollButtonsBase extends Component {
 
 	updateButtons = (bounds) => {
 		const
-			{prevButtonNodeRef, nextButtonNodeRef} = this,
 			{vertical} = this.props,
 			currentPos = vertical ? bounds.scrollTop : bounds.scrollLeft,
 			maxPos = vertical ? bounds.maxTop : bounds.maxLeft,
@@ -180,21 +178,25 @@ class ScrollButtonsBase extends Component {
 		});
 
 		if (this.pressed && (
-			shouldDisablePrevButton && spotItem === prevButtonNodeRef ||
-			shouldDisableNextButton && spotItem === nextButtonNodeRef
+			shouldDisablePrevButton && spotItem && isPrevButton(spotItem) ||
+			shouldDisableNextButton && spotItem && isNextButton(spotItem)
 		)) {
 			this.setIgnoreMode(true);
 		}
 	}
 
-	isOneOfScrollButtonsFocused = () => Spotlight.getCurrent() === this.prevButtonNodeRef || Spotlight.getCurrent() === this.nextButtonNodeRef
+	isOneOfScrollButtonsFocused = () => {
+		const current = Spotlight.getCurrent();
+
+		return isPrevButton(current) || isNextButton(current);
+	}
 
 	handlePrevScroll = (ev) => {
 		const {onPrevScroll, vertical} = this.props;
 
 		onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
-		if (this.announceRef) {
-			this.announceRef.announce(vertical ? $L('UP') : $L('LEFT'));
+		if (this.announce) {
+			this.announce(vertical ? $L('UP') : $L('LEFT'));
 		}
 	}
 
@@ -202,8 +204,8 @@ class ScrollButtonsBase extends Component {
 		const {onNextScroll, vertical} = this.props;
 
 		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
-		if (this.announceRef) {
-			this.announceRef.announce(vertical ? $L('DOWN') : $L('RIGHT'));
+		if (this.announce) {
+			this.announce(vertical ? $L('DOWN') : $L('RIGHT'));
 		}
 	}
 
@@ -229,20 +231,20 @@ class ScrollButtonsBase extends Component {
 
 	releaseButton = (ev) => {
 		const
-			{prevButtonNodeRef, nextButtonNodeRef} = this,
-			{prevButtonDisabled, nextButtonDisabled} = this.state;
+			{prevButtonDisabled, nextButtonDisabled} = this.state,
+			containerId = Spotlight.getActiveContainer();
 
 		this.setPressStatus(false);
 		this.setIgnoreMode(false);
 		if (isPageUp(ev.keyCode)) {
-			if (ev.target === nextButtonNodeRef && !prevButtonDisabled) {
-				Spotlight.focus(prevButtonNodeRef);
+			if (isNextButton(ev.target) && !prevButtonDisabled) {
+				Spotlight.focus(getPrevButton(containerId));
 			} else {
 				this.handlePrevScroll(ev);
 			}
 		} else if (isPageDown(ev.keyCode)) {
-			if (ev.target === prevButtonNodeRef && !nextButtonDisabled) {
-				Spotlight.focus(nextButtonNodeRef);
+			if (isPrevButton(ev.target) && !nextButtonDisabled) {
+				Spotlight.focus(getNextButton(containerId));
 			} else {
 				this.handleNextScroll(ev);
 			}
@@ -251,59 +253,50 @@ class ScrollButtonsBase extends Component {
 
 	render () {
 		const
-			{disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, render, vertical} = this.props,
+			{disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, render, vertical, ...rest} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			prevIcon = preparePrevButton(vertical),
 			nextIcon = prepareNextButton(vertical);
 
-		return ([
-			<ScrollButton
-				key="0"
-				data-scroll-button="previous"
-				direction={vertical ? 'up' : 'left'}
-				disabled={disabled || prevButtonDisabled}
-				onClick={this.handlePrevScroll}
-				onHoldPulse={this.handlePrevHoldPulse}
-				onKeyDown={this.depressButton}
-				onKeyUp={this.releaseButton}
-				onMouseDown={this.depressButton}
-				onSpotlightDisappear={onPrevSpotlightDisappear}
-				render={(ref) => { // eslint-disable-line react/jsx-no-bind
-					this.initPrevButtonNodeRef = ref;
-
-					return prevIcon;
-				}}
-			/>,
-			render({
-				isOneOfScrollButtonsFocused: this.isOneOfScrollButtonsFocused,
-				updateButtons: this.updateButtons
-			}),
-			<ScrollButton
-				key="2"
-				data-scroll-button="next"
-				direction={vertical ? 'down' : 'right'}
-				disabled={disabled || nextButtonDisabled}
-				onClick={this.handleNextScroll}
-				onHoldPulse={this.handleNextHoldPulse}
-				onKeyDown={this.depressButton}
-				onKeyUp={this.releaseButton}
-				onMouseDown={this.depressButton}
-				onSpotlightDisappear={onNextSpotlightDisappear}
-				render={(ref) => { // eslint-disable-line react/jsx-no-bind
-					this.initNextButtonNodeRef = ref;
-
-					return nextIcon;
-				}}
-			/>,
-			<Announce
-				key="3"
-				initRef={(ref) => { // eslint-disable-line react/jsx-no-bind
-					this.initAnnounceRef = ref;
-
-					return nextIcon;
-				}}
-			/>
-		]);
+		return (
+			<RefDecorator {...rest} context={this}>
+				<ScrollButton
+					key="0"
+					data-scroll-button="previous"
+					direction={vertical ? 'up' : 'left'}
+					disabled={disabled || prevButtonDisabled}
+					onClick={this.handlePrevScroll}
+					onHoldPulse={this.handlePrevHoldPulse}
+					onKeyDown={this.depressButton}
+					onKeyUp={this.releaseButton}
+					onMouseDown={this.depressButton}
+					onSpotlightDisappear={onPrevSpotlightDisappear}
+				>
+					{prevIcon}
+				</ScrollButton>
+				{render()}
+				<ScrollButton
+					key="2"
+					data-scroll-button="next"
+					direction={vertical ? 'down' : 'right'}
+					disabled={disabled || nextButtonDisabled}
+					onClick={this.handleNextScroll}
+					onHoldPulse={this.handleNextHoldPulse}
+					onKeyDown={this.depressButton}
+					onKeyUp={this.releaseButton}
+					onMouseDown={this.depressButton}
+					onSpotlightDisappear={onNextSpotlightDisappear}
+				>
+					{nextIcon}
+				</ScrollButton>
+				<Announce
+					key="3"
+					setRef={({announce}) => { // eslint-disable-line react/jsx-no-bind
+						this.announce = announce;
+					}}
+				/>
+			</RefDecorator>
+		);
 	}
 }
 

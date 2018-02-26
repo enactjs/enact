@@ -6,6 +6,7 @@ import React, {PureComponent, Component} from 'react';
 import ri from '../resolution';
 
 import componentCss from './Scrollbar.less';
+import RefDecorator from './RefDecorator';
 import ScrollThumb from './ScrollThumb';
 
 const
@@ -85,7 +86,7 @@ class ScrollbarBase extends PureComponent {
 		super(props);
 
 		this.setContainerRef = this.setRef('containerRef');
-		this.setThumbRef = this.setRef('thumbRef');
+		this.setScrollThumbRef = this.setRef('thumbRef');
 	}
 
 	componentDidMount () {
@@ -151,7 +152,7 @@ class ScrollbarBase extends PureComponent {
 
 	render () {
 		const
-			{className, corner, css, render, vertical} = this.props,
+			{className, corner, css, render, vertical, ...rest} = this.props,
 			containerClassName = classNames(
 				className,
 				css.scrollbar,
@@ -161,12 +162,9 @@ class ScrollbarBase extends PureComponent {
 
 		return (
 			<div className={containerClassName} ref={this.setContainerRef}>
-				{render({
-					setRef: this.setThumbRef,
-					showThumb: this.showThumb,
-					startHidingThumb: this.startHidingThumb,
-					update: this.update
-				})}
+				<RefDecorator {...rest} context={this} >
+					{render({setScrollThumbRef: this.setScrollThumbRef})}
+				</RefDecorator>
 			</div>
 		);
 	}
@@ -181,8 +179,14 @@ class ScrollbarBase extends PureComponent {
  * @private
  */
 class Scrollbar extends Component {
-	static propTypes = {
-		render: PropTypes.func,
+	static propTypes = /** @lends moonstone/Scrollable.Scrollbar.prototype */ {
+		/**
+		 * If `true`, the scrollbar will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
 		vertical: PropTypes.bool
 	}
 
@@ -192,10 +196,15 @@ class Scrollbar extends Component {
 		return (
 			<ScrollbarBase
 				{...this.props}
-				render={({setRef}) => { // eslint-disable-line react/jsx-no-bind
+				setRef={({showThumb, startHidingThumb, update: uiUpdate}) => { // eslint-disable-line react/jsx-no-bind
+					this.showThumb = showThumb;
+					this.startHidingThumb = startHidingThumb;
+					this.update = uiUpdate;
+				}}
+				render={({setScrollThumbRef}) => { // eslint-disable-line react/jsx-no-bind
 					return (
 						<ScrollThumb
-							setRef={setRef}
+							setRef={setScrollThumbRef}
 							key="thumb"
 							vertical={vertical}
 						/>
