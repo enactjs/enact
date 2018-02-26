@@ -21,6 +21,8 @@ import OverlayDecorator from './OverlayDecorator';
 
 import css from './Item.less';
 
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
+
 /**
  * {@link moonstone/Item.ItemBase} is a Moonstone-styled control that can display
  * simple text or a set of controls. Most developers will want to use the spottable
@@ -122,10 +124,17 @@ const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidat
  * @public
  */
 const Item = Pure(
-	Spottable(
-		ItemMarqueeDecorator(
-			Skinnable(
-				ItemBase
+	VoiceControlDecorator(
+		{
+			voiceSlot:[
+				{voiceIntent: 'ClickRequest', voiceHandler: 'onClick'}
+			]
+		},
+		Spottable(
+			ItemMarqueeDecorator(
+				Skinnable(
+					ItemBase
+				)
 			)
 		)
 	)

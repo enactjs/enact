@@ -23,6 +23,8 @@ import Skinnable from '../Skinnable';
 
 import componentCss from './IconButton.less';
 
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
+
 /**
  * A Factory wrapper around {@link moonstone/IconButton.IconButtonBase} that allows overriding
  * certain classes of the base `IconButton` component at design time.
@@ -173,12 +175,19 @@ const IconButtonBase = IconButtonBaseFactory();
  */
 const IconButtonFactory = factory(({css}) => {
 	return Pure(
-		TooltipDecorator({tooltipDestinationProp: 'tooltipNode'},
-			Pressable(
-				{release: ['onMouseUp', 'onMouseLeave', 'onBlur']},
-				Spottable(
-					Skinnable(
-						IconButtonBaseFactory({css})
+		VoiceControlDecorator(
+			{
+				voiceSlot:[
+					{voiceIntent: 'ClickRequest', voiceHandler: 'onClick'}
+				]
+			},
+			TooltipDecorator({tooltipDestinationProp: 'tooltipNode'},
+				Pressable(
+					{release: ['onMouseUp', 'onMouseLeave', 'onBlur']},
+					Spottable(
+						Skinnable(
+							IconButtonBaseFactory({css})
+						)
 					)
 				)
 			)

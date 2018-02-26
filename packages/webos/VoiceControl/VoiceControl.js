@@ -182,15 +182,15 @@ const VoiceControl = (function () {
 
 		simulateJson: function (type) {
 			let str = '';
-			if (type === 'button') {
-				str = '[{"Intent": "SelectRequest","Slot1": "A"}]';
-			} else if (type === 'checkbox') {
+			if (type === 'Button') {
+				str = '[{"Intent": "ClickRequest","Slot1": "A"}]';
+			} else if (type === 'CheckboxItem') {
 				str = '[{"Intent": "CheckItemRequest","Slot1": "BB", "Slot2": "checked"}]';
-			} else if (type === 'radioitem') {
+			} else if (type === 'Radioitem') {
 				str = '[{"Intent": "CheckItemRequest","Slot1": "b", "Slot2": "checked"}]';
-			} else if (type === 'toggleitem') {
+			} else if (type === 'Toggleitem') {
 				str = '[{"Intent": "CheckItemRequest","Slot1": "Energy Saver", "Slot2": "unchecked"}]';
-			} else if (type === 'input') {
+			} else if (type === 'Input') {
 				str = '[{"Intent": "TextInputRequest","Slot1": "TV Name", "Slot2": "this is good!!!"}]';
 			}
 			console.log('simulateJson>', str, JSON.parse(str));

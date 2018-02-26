@@ -15,6 +15,8 @@ import Skinnable from '../Skinnable';
 
 import css from './ToggleButton.less';
 
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
+
 /**
  * {@link moonstone/ToggleButton.ToggleButtonBase} is a stateless [Button]{@link moonstone/Button.Button}
  * that can be toggled by changing its `selected` property
@@ -174,10 +176,34 @@ const ToggleButtonBase = kind({
  * @public
  */
 const ToggleButton = Pure(
-	Toggleable(
-		{prop: 'selected', toggle: 'onClick'},
-		Skinnable(
-			ToggleButtonBase
+	VoiceControlDecorator({
+		voiceSlot: [
+			{
+				voiceIntent: 'CheckItemRequest',
+				voiceHandler: (e, props) => {
+					let status = e['Slot2'];
+					let selected;
+					if (status === 'checked') {
+						selected = true;
+					} else if (status === 'unchecked') {
+						selected = false;
+					} else if (status === 'toggle') {
+						selected = !props.selected;
+					} else {
+						return;
+					}
+
+					if (props.onClick && (props.selected !== selected)) {
+						props.onClick();
+					}
+				}
+			}
+		]},
+		Toggleable(
+			{prop: 'selected', toggle: 'onClick'},
+			Skinnable(
+				ToggleButtonBase
+			)
 		)
 	)
 );

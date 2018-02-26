@@ -260,7 +260,7 @@ const ButtonFactory = factory(css => {
 		VoiceControlDecorator(
 			{
 				voiceSlot:[
-					{voiceIntent: 'SelectRequest', voiceHandler: 'onClick'}
+					{voiceIntent: 'ClickRequest', voiceHandler: 'onClick'}
 				]
 			},
 			Uppercase(

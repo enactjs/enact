@@ -17,6 +17,8 @@ import Skinnable from '../Skinnable';
 
 import css from './FormCheckboxItem.less';
 
+import VoiceControlDecorator from '@enact/ui/VoiceControlDecorator';
+
 /**
  * [FormCheckboxItemBase]{@link moonstone/FormCheckboxItem.FormCheckboxItemBase} is a stateless
  * component that is an extension of [Item]{@link moonstone/Item} that supports
@@ -140,10 +142,40 @@ const FormCheckboxItemBase = kind({
  * @public
  */
 const FormCheckboxItem = Pure(
-	Toggleable(
-		{prop: 'selected'},
-		Skinnable(
-			FormCheckboxItemBase
+	VoiceControlDecorator({
+		voiceSlot: [
+			{
+				voiceIntent: 'CheckItemRequest',
+				voiceHandler: (e, props) => {
+					let obj = {};
+					let status = e['Slot2'];
+					let selected;
+					if (status === 'checked') {
+						selected = true;
+					} else if (status === 'unchecked') {
+						selected = false;
+					} else if (status === 'toggle') {
+						selected = !props.selected;
+					} else {
+						return;
+					}
+					obj.selected = selected;
+
+					if (props.onToggle) {
+						props.onToggle(obj);
+					} else if (props.onClick) {
+						if (props.selected !== selected) {
+							props.onClick(obj);
+						}
+					}
+				}
+			}
+		]},
+		Toggleable(
+			{prop: 'selected'},
+			Skinnable(
+				FormCheckboxItemBase
+			)
 		)
 	)
 );
