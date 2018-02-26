@@ -30,9 +30,8 @@ const
 	isPageUp = is('pageUp'),
 	isPageDown = is('pageDown'),
 	isPrevButton = (element) => element && element.getAttribute(dataScrollButton) === 'previous',
-	isNextButton = (element) => element && element.getAttribute(dataScrollButton) === 'next',
-	getPrevButton = (containerId) => (document.querySelector(`[data-container-id="${containerId}"] [data-scroll-button="previous"]`)),
-	getNextButton = (containerId) => (document.querySelector(`[data-container-id="${containerId}"] [data-scroll-button="next"]`));
+	isNextButton = (element) => element && element.getAttribute(dataScrollButton) === 'next';
+
 /**
  * A moonstone-styled component for [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
  *
@@ -133,6 +132,14 @@ class ScrollButtonsBase extends Component {
 	ignoreMode = false
 	pressed = false
 	announce = null
+
+	// elements
+
+	prevButton = null
+	nextButton = null
+
+	getPrevButton = (containerId) => (prevButton ? prevButton : (document.querySelector(`[data-container-id="${containerId}"] [data-scroll-button="previous"]`)))
+	getNextButton = (containerId) => (nextButton ? nextButton : (document.querySelector(`[data-container-id="${containerId}"] [data-scroll-button="next"]`)))
 
 	setPressStatus = (isPressed) => {
 		this.pressed = isPressed;
@@ -291,7 +298,7 @@ class ScrollButtonsBase extends Component {
 				</ScrollButton>
 				<Announce
 					key="3"
-					setRef={({announce}) => { // eslint-disable-line react/jsx-no-bind
+					ref={({announce}) => { // eslint-disable-line react/jsx-no-bind
 						this.announce = announce;
 					}}
 				/>
