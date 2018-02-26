@@ -102,14 +102,11 @@ const DaySelectorItemBase = kind({
 	},
 
 	computed: {
-		className: ({selected, styler}) => styler.append({selected}),
-		icon: ({selected, disabled}) => (
-			<DaySelectorCheckbox selected={selected} disabled={disabled} />
-		)
+		className: ({selected, styler}) => styler.append({selected})
 	},
 
 	render: (props) => (
-		<ToggleItemBase {...props} />
+		<ToggleItemBase {...props} iconComponent={DaySelectorCheckbox} />
 	)
 });
 
