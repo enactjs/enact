@@ -1546,7 +1546,7 @@ const VideoPlayerBase = class extends React.Component {
 	})
 
 	/**
-	 * Returns a proxy to the underlying <video> node currently used by the VideoPlayer
+	 * Returns a proxy to the underlying `<video>` node currently used by the VideoPlayer
 	 *
 	 * @function
 	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
