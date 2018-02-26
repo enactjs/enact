@@ -1,8 +1,10 @@
 import EditableIntegerPicker, {EditableIntegerPickerBase} from '@enact/moonstone/EditableIntegerPicker';
 import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, number, text, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, number, text, select} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
@@ -15,11 +17,14 @@ const prop = {
 	width: [null, 'small', 'medium', 'large']
 };
 
-storiesOf('EditableIntegerPicker')
-	.addWithInfo(
-		' ',
-		'Basic usage of EditableIntegerPicker',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'EditableIntegerPicker',
+
+		withInfo({
+			propTables: [Config],
+			text: 'Basic usage of EditableIntegerPicker'
+		})(() => (
 			<EditableIntegerPicker
 				decrementIcon={nullify(select('decrementIcon', ['', ...decrementIcons]))}
 				defaultValue={20}
@@ -37,6 +42,5 @@ storiesOf('EditableIntegerPicker')
 				width={nullify(select('width', prop.width,  prop.width[2]))}
 				wrap={nullify(boolean('wrap', false))}
 			/>
-		),
-		{propTables: [Config]}
+		))
 	);
