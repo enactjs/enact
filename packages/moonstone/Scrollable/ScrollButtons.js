@@ -138,8 +138,8 @@ class ScrollButtonsBase extends Component {
 	prevButton = null
 	nextButton = null
 
-	getPrevButton = (containerId) => (prevButton ? prevButton : (document.querySelector(`[data-container-id="${containerId}"] [data-scroll-button="previous"]`)))
-	getNextButton = (containerId) => (nextButton ? nextButton : (document.querySelector(`[data-container-id="${containerId}"] [data-scroll-button="next"]`)))
+	getPrevButton = (containerId) => (this.prevButton ? this.prevButton : (document.querySelector(`[data-container-id="${containerId}"] [data-scroll-button="previous"]`)))
+	getNextButton = (containerId) => (this.nextButton ? this.nextButton : (document.querySelector(`[data-container-id="${containerId}"] [data-scroll-button="next"]`)))
 
 	setPressStatus = (isPressed) => {
 		this.pressed = isPressed;

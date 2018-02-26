@@ -86,7 +86,6 @@ const Announce = class extends React.Component {
 
 	render () {
 		const props = Object.assign({}, this.props);
-
 		delete props.timeout;
 
 		return (
