@@ -229,12 +229,12 @@ class VirtualListCore extends Component {
 				spacing !== nextProps.spacing
 			);
 
-		this.hasDataChanged = (dataSize !== nextProps.dataSize);
+		this.hasDataSizeChanged = (dataSize !== nextProps.dataSize);
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
 			this.updateStatesAndBounds(nextProps);
-		} else if (this.hasDataChanged) {
+		} else if (this.hasDataSizeChanged) {
 			this.updateStatesAndBounds(nextProps);
 		}
 	}
@@ -278,7 +278,7 @@ class VirtualListCore extends Component {
 	threshold = 0
 	maxFirstIndex = 0
 	curDataSize = 0
-	hasDataChanged = false
+	hasDataSizeChanged = false
 	cc = []
 	scrollPosition = 0
 	updateFrom = null
