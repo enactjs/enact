@@ -2,7 +2,6 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
-import Toggleable from '@enact/ui/Toggleable';
 
 import {ToggleItemBase} from '../ToggleItem';
 import DaySelectorCheckbox from './DaySelectorCheckbox';
@@ -102,14 +101,11 @@ const DaySelectorItemBase = kind({
 	},
 
 	computed: {
-		className: ({selected, styler}) => styler.append({selected}),
-		icon: ({selected, disabled}) => (
-			<DaySelectorCheckbox selected={selected} disabled={disabled} />
-		)
+		className: ({selected, styler}) => styler.append({selected})
 	},
 
 	render: (props) => (
-		<ToggleItemBase {...props} />
+		<ToggleItemBase {...props} iconComponent={DaySelectorCheckbox} />
 	)
 });
 
@@ -124,18 +120,14 @@ const DaySelectorItemBase = kind({
  *
  * @class DaySelectorItem
  * @extends moonstone/DaySelector.DaySelectorItemBase
- * @mixes ui/Toggleable,Toggleable
  * @mixes ui/Skinnable.Skinnable
  * @memberof moonstone/DaySelector
  * @ui
  * @private
  */
 const DaySelectorItem = Pure(
-	Toggleable(
-		{prop: 'selected'},
-		Skinnable(
-			DaySelectorItemBase
-		)
+	Skinnable(
+		DaySelectorItemBase
 	)
 );
 
