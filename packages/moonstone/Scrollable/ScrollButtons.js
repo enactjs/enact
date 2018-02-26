@@ -41,6 +41,14 @@ class ScrollButtonsBase extends Component {
 
 	static propTypes = /** @lends moonstone/Scrollable.ScrollButtonsBase.prototype */ {
 		/**
+		 * Render function for children
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		render: PropTypes.func.isRequired,
+
+		/**
 		 * Can be called to alert the user for accessibility notifications.
 		 *
 		 * @type {Function}
@@ -88,8 +96,6 @@ class ScrollButtonsBase extends Component {
 		 * @private
 		 */
 		onPrevSpotlightDisappear: PropTypes.func,
-
-		render: PropTypes.func,
 
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
@@ -304,8 +310,9 @@ class ScrollButtonsBase extends Component {
 /**
  * A moonstone-styled scroll bar. It is used in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
  *
+ * @class ScrollButtons
  * @memberof moonstone/Scrollable
- * @hoc
+ * @ui
  * @private
  */
 const ScrollButtons = DisappearSpotlightDecorator(

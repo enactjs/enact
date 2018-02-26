@@ -15,9 +15,30 @@ import ScrollThumb from './ScrollThumb';
  * @private
  */
 class Scrollbar extends Component {
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Scrollable.Scrlllbar.prototype */ {
+		/**
+		 * The callback function which is called for linking alertThumb function.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		cbAlertThumb: PropTypes.func,
+
+		/**
+		 * If `true`, add the corner between vertical and horizontal scrollbars.
+		 *
+		 * @type {Booelan}
+		 * @public
+		 */
 		corner: PropTypes.bool,
+
+		/**
+		 * If `true`, the scrollbar will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
 		vertical: PropTypes.bool
 	}
 
@@ -29,7 +50,7 @@ class Scrollbar extends Component {
 				corner={corner}
 				css={componentCss}
 				vertical={vertical}
-				render={({getScrollThumbRef, showThumb, startHidingThumb, update: uiUpdate}) => { // eslint-disable-line react/jsx-no-bind
+				render={({setRef: setScrollThumbRef, showThumb, startHidingThumb, update: uiUpdate}) => { // eslint-disable-line react/jsx-no-bind
 					this.showThumb = showThumb;
 					this.startHidingThumb = startHidingThumb;
 					this.uiUpdate = uiUpdate;
@@ -48,7 +69,7 @@ class Scrollbar extends Component {
 								return (
 									<ScrollThumb
 										cbAlertThumb={cbAlertThumb}
-										getScrollThumbRef={getScrollThumbRef}
+										setRef={setScrollThumbRef}
 										key="thumb"
 										vertical={vertical}
 									/>

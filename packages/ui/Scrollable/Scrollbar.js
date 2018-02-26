@@ -27,7 +27,7 @@ const setCSSVariable = (element, variable, value) => {
 /**
  * A basic scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
  *
- * @class Scrollbar
+ * @class ScrollbarBase
  * @memberof ui/Scrollable
  * @ui
  * @private
@@ -36,6 +36,14 @@ class ScrollbarBase extends PureComponent {
 	static displayName = 'ui:Scrollbar'
 
 	static propTypes = /** @lends ui/Scrollable.ScrollbarBase.prototype */ {
+		/**
+		 * Render function for children
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		render: PropTypes.func.isRequired,
+
 		/**
 		 * If `true`, add the corner between vertical and horizontal scrollbars.
 		 *
@@ -58,14 +66,6 @@ class ScrollbarBase extends PureComponent {
 		css: PropTypes.object,
 
 		/**
-		 * Render function for children
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		render: PropTypes.func,
-
-		/**
 		 * If `true`, the scrollbar will be oriented vertically.
 		 *
 		 * @type {Boolean}
@@ -84,8 +84,8 @@ class ScrollbarBase extends PureComponent {
 	constructor (props) {
 		super(props);
 
-		this.initContainerRef = this.initRef('containerRef');
-		this.initThumbRef = this.initRef('thumbRef');
+		this.setContainerRef = this.setRef('containerRef');
+		this.setThumbRef = this.setRef('thumbRef');
 	}
 
 	componentDidMount () {
@@ -103,7 +103,7 @@ class ScrollbarBase extends PureComponent {
 	minThumbSizeRatio = 0
 	ignoreMode = false
 
-	// component refs
+	// refs
 	containerRef = null
 	thumbRef = null
 
@@ -143,7 +143,7 @@ class ScrollbarBase extends PureComponent {
 		this.minThumbSizeRatio = ri.scale(minThumbSize) / trackSize;
 	}
 
-	initRef (prop) {
+	setRef (prop) {
 		return (ref) => {
 			this[prop] = ref;
 		};
@@ -160,9 +160,9 @@ class ScrollbarBase extends PureComponent {
 			);
 
 		return (
-			<div ref={this.initContainerRef} className={containerClassName}>
+			<div className={containerClassName} ref={this.setContainerRef}>
 				{render({
-					getScrollThumbRef: this.initThumbRef,
+					setRef: this.setThumbRef,
 					showThumb: this.showThumb,
 					startHidingThumb: this.startHidingThumb,
 					update: this.update
@@ -172,6 +172,14 @@ class ScrollbarBase extends PureComponent {
 	}
 }
 
+/**
+ * A basic scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
+ *
+ * @class Scrollbar
+ * @memberof ui/Scrollable
+ * @ui
+ * @private
+ */
 class Scrollbar extends Component {
 	static propTypes = {
 		render: PropTypes.func,
@@ -184,10 +192,10 @@ class Scrollbar extends Component {
 		return (
 			<ScrollbarBase
 				{...this.props}
-				render={({getScrollThumbRef}) => { // eslint-disable-line react/jsx-no-bind
+				render={({setRef}) => { // eslint-disable-line react/jsx-no-bind
 					return (
 						<ScrollThumb
-							getScrollThumbRef={getScrollThumbRef}
+							setRef={setRef}
 							key="thumb"
 							vertical={vertical}
 						/>

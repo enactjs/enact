@@ -22,7 +22,7 @@ const ScrollThumb = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		getScrollThumbRef: PropTypes.func,
+		setRef: PropTypes.func,
 
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
@@ -34,7 +34,7 @@ const ScrollThumb = kind({
 	},
 
 	defaultProps: {
-		getScrollThumbRef: null,
+		setRef: null,
 		vertical: true
 	},
 
@@ -47,10 +47,10 @@ const ScrollThumb = kind({
 		className: ({vertical, styler}) => styler.append({vertical})
 	},
 
-	render: ({getScrollThumbRef, ...rest}) => {
+	render: ({setRef, ...rest}) => {
 		delete rest.vertical;
 
-		return <div {...rest} ref={getScrollThumbRef} />;
+		return <div {...rest} ref={setRef} />;
 	}
 });
 

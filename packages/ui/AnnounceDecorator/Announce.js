@@ -85,11 +85,11 @@ const Announce = class extends React.Component {
 	}
 
 	render () {
-		const {initRef, ...rest} = this.props;
+		const {setRef, ...rest} = this.props;
 		delete rest.timeout;
 
-		if (initRef) {
-			initRef({ref: this});
+		if (setRef) {
+			setRef({ref: this});
 		}
 
 		return (
