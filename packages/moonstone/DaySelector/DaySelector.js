@@ -4,11 +4,12 @@
  * @module moonstone/DaySelector
  */
 
-import kind from '@enact/core/kind';
-import Group from '@enact/ui/Group';
 import Changeable from '@enact/ui/Changeable';
-import Pure from '@enact/ui/internal/Pure';
+import compose from 'ramda/src/compose';
+import Group from '@enact/ui/Group';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 
 import Skinnable from '../Skinnable';
@@ -115,16 +116,12 @@ const DaySelectorBase = kind({
  * @public
  */
 
-const DaySelector = Pure(
-	Changeable(
-		{change: 'onSelect', prop: 'selected'},
-		DaySelectorDecorator(
-			Skinnable(
-				DaySelectorBase
-			)
-		)
-	)
-);
+const DaySelector = compose(
+	Pure,
+	Changeable({change: 'onSelect', prop: 'selected'}),
+	DaySelectorDecorator,
+	Skinnable
+)(DaySelectorBase);
 
 export default DaySelector;
 export {
