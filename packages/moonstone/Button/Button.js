@@ -65,7 +65,7 @@ const ButtonBase = kind({
 		 * standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`.
 		 *
 		 * @type {String}
-		 * @private
+		 * @public
 		 */
 		color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
 
