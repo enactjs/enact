@@ -247,13 +247,14 @@ class VirtualListCore extends Component {
 				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
 				overhang !== nextProps.overhang ||
 				spacing !== nextProps.spacing
-			),
-			hasDataChanged = (dataSize !== nextProps.dataSize);
+			);
+
+		this.hasDataSizeChanged = (dataSize !== nextProps.dataSize);
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
 			this.updateStatesAndBounds(nextProps);
-		} else if (hasDataChanged) {
+		} else if (this.hasDataSizeChanged) {
 			this.updateStatesAndBounds(nextProps);
 		}
 	}
@@ -297,6 +298,7 @@ class VirtualListCore extends Component {
 	threshold = 0
 	maxFirstIndex = 0
 	curDataSize = 0
+	hasDataSizeChanged = false
 	cc = []
 	scrollPosition = 0
 	updateFrom = null
@@ -1121,14 +1123,6 @@ class VirtualListCore extends Component {
 				document.removeEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
 			}
 		}
-	}
-
-	isSameTotalItemSizeWithClient = () => {
-		const
-			node = this.containerRef,
-			{clientWidth, clientHeight} = this.props.clientSize || this.getClientSize(node);
-
-		return (this.getVirtualScrollDimension() <= (this.isPrimaryDirectionVertical ? clientHeight : clientWidth));
 	}
 
 	syncClientSize = () => {
