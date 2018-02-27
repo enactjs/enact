@@ -12,6 +12,8 @@ import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import Touchable from '@enact/ui/Touchable';
 import Spottable from '@enact/spotlight/Spottable';
+import ilib from '@enact/i18n';
+import NumFmt from '@enact/i18n/ilib/lib/NumFmt';
 
 import SliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
@@ -24,6 +26,23 @@ import componentCss from './Slider.less';
 const isActive = (ev, props) => props.active || props.activateOnFocus || props.detachedKnob;
 const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
 const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
+
+const memoize = (fn) => {
+	let cache = {};
+	return (...args) => {
+		let n = args[0];
+		if (n in cache) {
+			return cache[n];
+		} else {
+			let result = fn(n);
+			cache[n] = result;
+			return result;
+		}
+	};
+};
+
+const memoizedPercentFormatter = memoize(() => new NumFmt({type: 'percentage', useNative: false}));
+const getFormatter = () => memoizedPercentFormatter(ilib.getLocale());
 
 const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	const SliderBar = SliderBarFactory({css});
@@ -383,7 +402,13 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		computed: {
 			children: ({children, max, min, tooltip, tooltipAsPercent, value}) => {
 				if (!tooltip || children) return children;
-				return tooltipAsPercent ? Math.floor(computeProportionProgress({value, max, min}) * 100) : value;
+
+				if (tooltipAsPercent) {
+					const percent = Math.floor(computeProportionProgress({value, max, min}) * 100);
+					return getFormatter().format(percent);
+				}
+
+				return value;
 			},
 			className: ({activateOnFocus, active, noFill, pressed, vertical, styler}) => styler.append({
 				activateOnFocus,
@@ -396,33 +421,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({
-			backgroundProgress,
-			children,
-			disabled,
-			focused,
-			inputRef,
-			knobAfterMidpoint,
-			max,
-			min,
-			onBlur,
-			onChange,
-			onKeyDown,
-			onMouseMove,
-			onMouseUp,
-			proportionProgress,
-			scrubbing,
-			sliderBarRef,
-			sliderRef,
-			step,
-			tooltip,
-			tooltipAsPercent,
-			tooltipForceSide,
-			tooltipSide,
-			value,
-			vertical,
-			...rest
-		}) => {
+		render: ({backgroundProgress, children, disabled, focused, inputRef, knobAfterMidpoint, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			delete rest.activateOnFocus;
 			delete rest.active;
 			delete rest.detachedKnob;
@@ -432,6 +431,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			delete rest.onIncrement;
 			delete rest.onKnobMove;
 			delete rest.pressed;
+			delete rest.tooltipAsPercent;
 
 			let tooltipComponent = null;
 
@@ -443,7 +443,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				tooltipComponent = <SliderTooltip
 					knobAfterMidpoint={knobAfterMidpoint}
 					forceSide={tooltipForceSide}
-					percent={tooltipAsPercent}
 					proportion={proportionProgress}
 					side={tooltipSide}
 					vertical={vertical}
