@@ -61,14 +61,14 @@ const TouchableDiv = Touchable('div');
  * @private
  */
 const contextTypes = {
+	addEventListeners: PropTypes.func,
 	initialize: PropTypes.func,
-	onKeyDown: PropTypes.func,
 	onFlick: PropTypes.func,
+	onKeyDown: PropTypes.func,
 	onWheel: PropTypes.func,
 	removeEventListeners: PropTypes.func,
 	scrollTo: PropTypes.func,
-	stop: PropTypes.func,
-	addEventListeners: PropTypes.func
+	stop: PropTypes.func
 };
 
 /**
