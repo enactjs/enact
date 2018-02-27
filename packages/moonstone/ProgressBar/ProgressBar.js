@@ -94,7 +94,9 @@ const ProgressBarBase = kind({
 	},
 
 	render: ({css, progress, percentageTooltip, vertical, ...rest}) => {
+		delete rest.emphasized;
 		let tooltipComponent = null;
+
 
 		if (percentageTooltip) {
 			const percentageText = (progress * 100) + '%';
