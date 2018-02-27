@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Removed
+
+- `moonstone/VirtualGridList.GridListImageItem` in favor of `moonstone/GridListImageItem`
+
 ### Fixed
 
 - `moonstone/VirtualGridList` to show or hide the scrollbars in it properly
@@ -44,7 +48,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
-- `moonstone/VirtualGridList.GridListImageItem` in favor of `moonstone/GridListImageItem`
 - `moonstone/Scroller` and `moonstone/VirtualList` option `indexToFocus` in `scrollTo` method which is deprecated from 1.2.0
 - `moonstone/Scroller` props `horizontal` and `vertical` which are deprecated from 1.3.0 and replaced with `direction` prop
 

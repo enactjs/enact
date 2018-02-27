@@ -6,7 +6,6 @@
  * @module moonstone/GridListImageItem
  */
 
-import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -26,16 +25,15 @@ const defaultPlaceholder =
 	'4NCg==';
 
 /**
- * {@link moonstone/GridListImageItemBase} is a stateless
+ * {@link moonstone/GridListImageItem.GridListImageItemBase} is a stateless
  * GridListImageItem with Moonstone styling applied.
  *
  * @class GridListImageItemBase
  * @memberof moonstone/GridListImageItem
  * @ui
  * @public
- * @deprecated since 1.14.0. Replaced by [moonstone/GridListImageItem.GridListImageItemBase]{@link moonstone/GridListImageItem.GridListImageItemBase}
  */
-const GridListImageItemBase = deprecate(kind({
+const GridListImageItemBase = kind({
 	name: 'GridListImageItem',
 
 	propTypes: /** @lends moonstone/GridListImageItem.GridListImageItemBase.prototype */ {
@@ -57,7 +55,7 @@ const GridListImageItemBase = deprecate(kind({
 		caption: PropTypes.string,
 
 		/**
-		 * Placeholder image used while [source]{@link moonstone/VirtualList.GridListImageItemBase#source}
+		 * Placeholder image used while [source]{@link moonstone/GridListImage.GridListImageItemBase#source}
 		 * is loaded.
 		 *
 		 * @type {String}
@@ -170,11 +168,10 @@ const GridListImageItemBase = deprecate(kind({
 			</div>
 		);
 	}
-}), {name: 'moonstone/VirtualList.GridListImageItemBase', since: '1.14.0', until: '2.0.0', replacedBy: 'moonstone/GridListImageItemBase'});
+});
 
 /**
- * {@link moonstone/GridListImageItem} is a GridListImageItem with
- * Moonstone styling, Spottable applied.
+ * {@link moonstone/GridListImageItem} with Moonstone styling, Spottable, and Marquee applied.
  *
  * Usage:
  * ```
@@ -185,19 +182,14 @@ const GridListImageItemBase = deprecate(kind({
  * @memberof moonstone/GridListImageItem
  * @mixes moonstone/Marquee.MarqueeController
  * @mixes spotlight/Spottable
- * @see moonstone/GridListImageItem.GridListImageItemBase
  * @ui
  * @public
- * @deprecated since 1.14.0. Replaced by [moonstone/GridListImageItem.GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem}
  */
 const GridListImageItem = MarqueeController(
 	{marqueeOnFocus: true},
 	Spottable(
 		Skinnable(
-			deprecate(
-				GridListImageItemBase,
-				{name: 'moonstone/VirtualList.GridListImageItem', since: '1.14.0', until: '2.0.0', replacedBy: 'moonstone/GridListImageItem'}
-			)
+			GridListImageItemBase,
 		)
 	)
 );
