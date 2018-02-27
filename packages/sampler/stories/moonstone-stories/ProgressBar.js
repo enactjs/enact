@@ -18,6 +18,7 @@ storiesOf('Moonstone', module)
 		})(() => (
 			<ProgressBar
 				backgroundProgress={number('backgroundProgress', 0.5, {range: true, min: 0, max: 1, step: 0.01})}
+				emphasized={boolean('emphasized', false)}
 				percentageTooltip={boolean('percentageTooltip', false)}
 				progress={number('progress', 0.4, {range: true, min: 0, max: 1, step: 0.01})}
 				vertical={boolean('vertical', false)}

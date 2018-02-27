@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `ui/ProgressBar` support for `tooltip` and `emphasized`
+
 ### Fixed
 
 - `moonstone/VirtualGridList` to show or hide the scrollbars in it properly

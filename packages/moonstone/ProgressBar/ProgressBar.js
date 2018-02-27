@@ -47,6 +47,12 @@ const ProgressBarBase = kind({
 		 */
 		css: PropTypes.object,
 
+		/**
+		 * When `true`, adds an `emphasized` class to the progress bar.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
 		emphasized: PropTypes.bool,
 
 		/**
@@ -81,6 +87,10 @@ const ProgressBarBase = kind({
 	styles: {
 		css: componentCss,
 		publicClassNames: ['progressBar']
+	},
+
+	computed: {
+		className: ({emphasized, styler}) => styler.append({emphasized})
 	},
 
 	render: ({css, progress, percentageTooltip, vertical, ...rest}) => {
