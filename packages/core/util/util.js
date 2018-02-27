@@ -133,7 +133,7 @@ const extractAriaProps = function (props) {
 	return aria;
 };
 
-/*
+/**
  * Accepts a `contextTypes` object and a component, then matches those contextTypes with incoming
  * props on the component, and sends them to context on that component for children to to access.
  *
@@ -218,14 +218,37 @@ const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
 	return css;
 };
 
+/**
+ * Creates a function that memoizes the result of `fn`.
+ *
+ * @method
+ * @memberof core/util
+ * @param {Function} fn The function to have its output memoized.
+ * @returns {Function} Returns the new memoized function.
+ */
+const memoize = (fn) => {
+	let cache = {};
+	return (...args) => {
+		let n = args[0];
+		if (n in cache) {
+			return cache[n];
+		} else {
+			let result = fn(n);
+			cache[n] = result;
+			return result;
+		}
+	};
+};
+
 export {
 	cap,
 	childrenEquals,
-	coerceFunction,
 	coerceArray,
+	coerceFunction,
 	extractAriaProps,
 	isRenderable,
 	Job,
+	memoize,
 	mergeClassNameMaps,
 	perfNow,
 	withContextFromProps

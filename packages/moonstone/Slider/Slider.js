@@ -7,6 +7,7 @@
 import factory from '@enact/core/factory';
 import {forKey, forProp, forward, handle, oneOf, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
+import {memoize} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
@@ -27,22 +28,8 @@ const isActive = (ev, props) => props.active || props.activateOnFocus || props.d
 const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
 const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
 
-const memoize = (fn) => {
-	let cache = {};
-	return (...args) => {
-		let n = args[0];
-		if (n in cache) {
-			return cache[n];
-		} else {
-			let result = fn(n);
-			cache[n] = result;
-			return result;
-		}
-	};
-};
-
-const memoizedPercentFormatter = memoize(() => new NumFmt({type: 'percentage', useNative: false}));
-const getFormatter = () => memoizedPercentFormatter(ilib.getLocale());
+// memoize percent formatter for each locale so that we only instantiate NumFmt when locale changes
+const memoizedPercentFormatter = memoize((/* locale */) => new NumFmt({type: 'percentage', useNative: false}));
 
 const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	const SliderBar = SliderBarFactory({css});
@@ -404,8 +391,10 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				if (!tooltip || children) return children;
 
 				if (tooltipAsPercent) {
+					const formatter = memoizedPercentFormatter(ilib.getLocale());
 					const percent = Math.floor(computeProportionProgress({value, max, min}) * 100);
-					return getFormatter().format(percent);
+
+					return formatter.format(percent);
 				}
 
 				return value;
