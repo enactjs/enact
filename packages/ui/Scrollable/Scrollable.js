@@ -15,12 +15,12 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {on, off} from '@enact/core/dispatcher';
-import {perfNow} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
 import {contextTypes as contextTypesResize} from '../Resizable';
 import ri from '../resolution';
+import Touchable from '../Touchable';
 
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
@@ -35,9 +35,7 @@ const
 const
 	constants = {
 		animationDuration: 1000,
-		calcVelocity: (d, dt) => (d && dt) ? d / dt : 0,
 		epsilon: 1,
-		holdTime: 50,
 		isPageDown: is('pageDown'),
 		isPageUp: is('pageUp'),
 		nop: () => {},
@@ -46,15 +44,15 @@ const
 	},
 	{
 		animationDuration,
-		calcVelocity,
 		epsilon,
-		holdTime,
 		isPageDown,
 		isPageUp,
 		nop,
 		paginationPageMultiplier,
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
+
+const TouchableDiv = Touchable('div');
 
 /**
  * The context propTypes required by Scrollable. This should be set as the `childContextTypes` of a
@@ -65,12 +63,12 @@ const
 const contextTypes = {
 	initialize: PropTypes.func,
 	onKeyDown: PropTypes.func,
-	onMouseUp: PropTypes.func,
+	onFlick: PropTypes.func,
 	onWheel: PropTypes.func,
 	removeEventListeners: PropTypes.func,
 	scrollTo: PropTypes.func,
 	stop: PropTypes.func,
-	updateEventListeners: PropTypes.func
+	addEventListeners: PropTypes.func
 };
 
 /**
@@ -274,7 +272,7 @@ const Scrollable = hoc((config, Wrapped) => (
 			this.direction = this.childRef.props.direction;
 			this.updateScrollbars();
 
-			this.updateEventListeners();
+			this.addEventListeners();
 			on('keydown', this.context.onKeyDown || this.onKeyDown);
 		}
 
@@ -299,7 +297,7 @@ const Scrollable = hoc((config, Wrapped) => (
 			this.clampScrollPosition();
 
 			this.direction = this.childRef.props.direction;
-			this.updateEventListeners();
+			this.addEventListeners();
 			if (
 				hasDataSizeChanged === false &&
 				(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
@@ -382,21 +380,10 @@ const Scrollable = hoc((config, Wrapped) => (
 		isScrollAnimationTargetAccumulated = false
 		wheelDirection = 0
 		pageDirection = 0
-		isFirstDragging = false
 		isDragging = false
 		deferScrollTo = true
 		pageDistance = 0
 		isUpdatedScrollThumb = false
-
-		// drag info
-		dragInfo = {
-			t: 0,
-			clientX: 0,
-			clientY: 0,
-			dx: 0,
-			dy: 0,
-			dt: 0
-		}
 
 		// bounds info
 		bounds = {
@@ -421,122 +408,57 @@ const Scrollable = hoc((config, Wrapped) => (
 		// scroll animator
 		animator = new ScrollAnimator()
 
-		// handle an input event
+		// drag/flick event handlers for JS scroller
 
-		dragStart (e) {
-			const d = this.dragInfo;
-
+		onDragStart = () => {
+			this.stop();
 			this.isDragging = true;
-			this.isFirstDragging = true;
-			d.t = perfNow();
-			d.clientX = e.clientX;
-			d.clientY = e.clientY;
-			d.dx = d.dy = 0;
 		}
 
-		drag (e) {
-			const
-				{direction} = this,
-				t = perfNow(),
-				d = this.dragInfo;
-
-			if (direction === 'horizontal' || direction === 'both') {
-				d.dx = e.clientX - d.clientX;
-				d.clientX = e.clientX;
+		onDrag = (e) => {
+			if (!this.scrolling) {
+				this.scrolling = true;
+				this.doScrollStart();
+				this.dragStartX = this.scrollLeft + e.x;
+				this.dragStartY = this.scrollTop + e.y;
 			} else {
-				d.dx = 0;
-			}
-
-			if (direction === 'vertical' || direction === 'both') {
-				d.dy = e.clientY - d.clientY;
-				d.clientY = e.clientY;
-			} else {
-				d.dy = 0;
-			}
-
-			d.t = t;
-
-			return {dx: d.dx, dy: d.dy};
-		}
-
-		dragStop () {
-			const
-				d = this.dragInfo,
-				t = perfNow();
-
-			d.dt = t - d.t;
-			this.isDragging = false;
-		}
-
-		isFlicking () {
-			const d = this.dragInfo;
-
-			if (d.dt > holdTime) {
-				return false;
-			} else {
-				return true;
-			}
-		}
-
-		// mouse event handler for JS scroller
-
-		onMouseDown = (e) => {
-			this.animator.stop();
-			this.dragStart(e);
-		}
-
-		onMouseMove = (e) => {
-			if (this.isDragging) {
 				const
-					{dx, dy} = this.drag(e),
-					bounds = this.getScrollBounds();
+					targetX = (this.direction !== 'horizontal') ? 0 : this.dragStartX - e.x, // 'vertical' or 'both'
+					targetY = (this.direction !== 'vertical') ? 0 : this.dragStartY - e.y; // 'horizontal' or 'both'
 
-				if (this.isFirstDragging) {
-					if (!this.scrolling) {
-						this.scrolling = true;
-						this.doScrollStart();
-					}
-					this.isFirstDragging = false;
-				}
-				this.showThumb(bounds);
-				this.scroll(this.scrollLeft - dx, this.scrollTop - dy);
+				this.showThumb(this.getScrollBounds());
+				this.scroll(targetX, targetY);
 			}
 		}
 
-		onMouseUp = (e) => {
-			if (this.context.onMouseUp) {
-				this.context.onMouseUp();
-			}
+		onDragEnd = () => {
+			this.isDragging = false;
 
-			if (this.isDragging) {
-				this.dragStop(e);
+			if (this.flickTarget) {
+				const {targetX, targetY, duration} = this.flickTarget;
 
-				if (!this.isFlicking()) {
-					this.stop();
-				} else {
-					const
-						d = this.dragInfo,
-						target = this.animator.simulate(
-							this.scrollLeft,
-							this.scrollTop,
-							calcVelocity(-d.dx, d.dt),
-							calcVelocity(-d.dy, d.dt)
-						);
+				this.isScrollAnimationTargetAccumulated = false;
+				this.start({targetX, targetY, animate: true, duration});
 
-					this.isScrollAnimationTargetAccumulated = false;
-					this.start({
-						targetX: target.targetX,
-						targetY: target.targetY,
-						animate: true,
-						duration: target.duration
-					});
-				}
+				this.flickTarget = null;
+			} else {
+				this.stop();
 			}
 		}
 
-		onMouseLeave = (e) => {
-			this.onMouseMove(e);
-			this.onMouseUp();
+		onFlick = (e) => {
+			const isVertical = e.direction === 'vertical';
+
+			this.flickTarget = this.animator.simulate(
+				this.scrollLeft,
+				this.scrollTop,
+				isVertical ? 0 : -e.velocityX,
+				isVertical ? -e.velocityY : 0
+			);
+
+			if (this.context.onFlick) {
+				this.context.onFlick();
+			}
 		}
 
 		calculateDistanceByWheel (deltaMode, delta, maxPixel) {
@@ -942,15 +864,15 @@ const Scrollable = hoc((config, Wrapped) => (
 			}
 		}
 
-		updateEventListeners () {
+		addEventListeners () {
 			const {containerRef} = this;
 			if (containerRef && containerRef.addEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
 				containerRef.addEventListener('wheel', this.onWheel);
 			}
 
-			if (this.context.updateEventListeners) {
-				this.context.updateEventListeners();
+			if (this.context.addEventListeners) {
+				this.context.addEventListeners();
 			}
 		}
 
@@ -994,7 +916,14 @@ const Scrollable = hoc((config, Wrapped) => (
 			delete rest.verticalScrollbar;
 
 			return ([
-				<div key="0" className={css.container}>
+				<TouchableDiv
+					key="0"
+					className={css.container}
+					onDrag={this.onDrag}
+					onDragEnd={this.onDragEnd}
+					onDragStart={this.onDragStart}
+					onFlick={this.onFlick}
+				>
 					<Wrapped
 						{...rest}
 						cbScrollTo={this.context.scrollTo || this.scrollTo}
@@ -1003,7 +932,7 @@ const Scrollable = hoc((config, Wrapped) => (
 						ref={this.initChildRef}
 					/>
 					{isVerticalScrollbarVisible ? <ScrollbarComponent {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
-				</div>,
+				</TouchableDiv>,
 				isHorizontalScrollbarVisible ? <ScrollbarComponent {...this.horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null
 			]);
 		}
