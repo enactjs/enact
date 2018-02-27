@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/GridListImageItem` to display correctly
+
 ## [1.14.0] - 2017-02-23
 
 ### Deprecated
