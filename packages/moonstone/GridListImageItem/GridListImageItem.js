@@ -172,7 +172,7 @@ const GridListImageItemBase = kind({
 
 /**
  * {@link moonstone/GridListImageItem.GridListImageItem} is a GridListImageItem with
- * Moonstone styling, Spottable, Marquee and Skinnable applied.
+ * Moonstone styling, Marquee and Spottable applied.
  *
  * Usage:
  * ```
@@ -182,8 +182,8 @@ const GridListImageItemBase = kind({
  * @class GridListImageItem
  * @memberof moonstone/GridListImageItem
  * @mixes moonstone/Marquee.MarqueeController
+ * @mixes moonstone/Skinnable.Skinnable
  * @mixes spotlight/Spottable.Spottable
- * @mixes ui/Skinnable.Skinnable
  * @ui
  * @public
  */
