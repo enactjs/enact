@@ -2,6 +2,8 @@
  * Exports the {@link moonstone/GridListImageItem.GridListImageItem} and
  * {@link moonstone/GridListImageItem.GridListImageItemBase} components. The default export is
  * {@link moonstone/GridListImageItem.GridListImageItem}.
+ *
+ * @module moonstone/GridListImageItem
  */
 
 import kind from '@enact/core/kind';
