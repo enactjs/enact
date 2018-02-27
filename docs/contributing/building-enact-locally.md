@@ -9,7 +9,7 @@ To get started, clone Enact from GitHub, install dependencies and connect the mo
 
 ```shell
 # clone the repo!
-git clone git@github.com:enyojs/enact.git
+git clone git@github.com:enactjs/enact.git
 # move in
 cd enact
 # we're using git flow so develop is our working branch

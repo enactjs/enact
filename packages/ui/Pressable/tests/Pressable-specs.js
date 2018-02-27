@@ -3,7 +3,7 @@ import React from 'react';
 import {shallow, mount} from 'enzyme';
 import sinon from 'sinon';
 
-import Pressable from '../Pressable';
+import {privatePressable as Pressable} from '../Pressable';
 
 describe('Pressable', () => {
 	const DivComponent = () => <div>Toggle</div>;

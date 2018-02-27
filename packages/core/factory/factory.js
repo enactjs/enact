@@ -4,6 +4,8 @@
  * @module core/factory
  */
 
+import deprecate from '../internal/deprecate';
+
 import css from './css';
 
 /**
@@ -77,6 +79,7 @@ const feature = function (prop, fn, defaultConfig, config) {
  * @method factory
  * @memberof core/factory
  * @public
+ * @deprecated
  */
 const factory = (defaultConfig, fn) => (config) => {
 	let componentConfig = defaultConfig;
@@ -94,5 +97,10 @@ const factory = (defaultConfig, fn) => (config) => {
 	});
 };
 
-export default factory;
-export {factory};
+const deprecatedFactory = deprecate(factory, {name: 'core/factory', since: '1.14.0', until: '2.0.0'});
+
+export default deprecatedFactory;
+export {
+	deprecatedFactory as factory,
+	factory as privateFactory
+};

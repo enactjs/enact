@@ -7,6 +7,9 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - Internal method used by many components that used to prevent re-renders when they were necessary
+### Deprecated
+
+- `ui/Holdable` and `ui/Pressable` to be replaced by `ui/Touchable` in 2.0.0
 
 ## [1.13.3] - 2017-01-16
 

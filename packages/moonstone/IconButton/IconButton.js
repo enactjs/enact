@@ -8,15 +8,16 @@
  * @exports IconButtonFactory
  */
 
-import factory from '@enact/core/factory';
+import deprecate from '@enact/core/internal/deprecate';
+import {privateFactory as factory} from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
-import Pressable from '@enact/ui/Pressable';
+import {privatePressable as Pressable} from '@enact/ui/Pressable';
 import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {ButtonBaseFactory} from '../Button';
+import {PrivateButtonBaseFactory as ButtonBaseFactory} from '../Button';
 import Icon from '../Icon';
 import {TooltipDecorator} from '../TooltipDecorator';
 import Skinnable from '../Skinnable';
@@ -31,8 +32,9 @@ import componentCss from './IconButton.less';
  * @memberof moonstone/IconButton
  * @factory
  * @public
+ * @deprecated
  */
-const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
+const PrivateIconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 	const Button = ButtonBaseFactory({css});
 	return kind({
 		name: 'IconButton',
@@ -161,7 +163,7 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
  * @ui
  * @public
  */
-const IconButtonBase = IconButtonBaseFactory();
+const IconButtonBase = PrivateIconButtonBaseFactory();
 
 /**
  * A Factory wrapper around {@link moonstone/IconButton.IconButton} that allows overriding certain
@@ -171,15 +173,16 @@ const IconButtonBase = IconButtonBaseFactory();
  * @memberof moonstone/IconButton
  * @factory
  * @public
+ * @deprecated
  */
-const IconButtonFactory = factory(({css}) => {
+const PrivateIconButtonFactory = factory(({css}) => {
 	return Pure(
 		TooltipDecorator({tooltipDestinationProp: 'tooltipNode'},
 			Pressable(
 				{release: ['onMouseUp', 'onMouseLeave', 'onBlur']},
 				Spottable(
 					Skinnable(
-						IconButtonBaseFactory({css})
+						PrivateIconButtonBaseFactory({css})
 					)
 				)
 			)
@@ -209,7 +212,10 @@ const IconButtonFactory = factory(({css}) => {
  * @ui
  * @public
  */
-const IconButton = IconButtonFactory();
+const IconButton = PrivateIconButtonFactory();
+
+const IconButtonFactory = deprecate(PrivateIconButtonFactory, {name: 'moonstone/IconButton.IconButtonFactory', since: '1.14.0', until: '2.0.0'});
+const IconButtonBaseFactory = deprecate(PrivateIconButtonBaseFactory, {name: 'moonstone/IconButton.IconButtonBaseFactory', since: '1.14.0', until: '2.0.0'});
 
 export default IconButton;
 export {
