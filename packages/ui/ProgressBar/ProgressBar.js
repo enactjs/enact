@@ -93,7 +93,7 @@ const ProgressBar = kind({
 		progressCssProp: ({vertical}) => (vertical ? 'height' : 'width')
 	},
 
-	render: ({backgroundProgress, css, progress, progressCssProp, ...rest}) => {
+	render: ({backgroundProgress, children, css, progress, progressCssProp, ...rest}) => {
 		delete rest.vertical;
 
 		if (__DEV__) {
@@ -105,6 +105,7 @@ const ProgressBar = kind({
 			<div role="progressbar" {...rest}>
 				<div className={css.load} style={{[progressCssProp]: progressToPercent(backgroundProgress)}} />
 				<div className={css.fill} style={{[progressCssProp]: progressToPercent(progress)}} />
+				{children}
 			</div>
 		);
 	}

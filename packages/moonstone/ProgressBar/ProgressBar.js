@@ -18,6 +18,7 @@ import compose from 'ramda/src/compose';
 import React from 'react';
 
 import Skinnable from '../Skinnable';
+import {SliderTooltip} from '../Slider';
 
 import componentCss from './ProgressBar.less';
 
@@ -44,7 +45,37 @@ const ProgressBarBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		css: PropTypes.object,
+
+		emphasized: PropTypes.bool,
+
+		/**
+		 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
+		 * properties.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		percentageTooltip: PropTypes.bool,
+
+		/**
+		 * The proportion of the filled portion of the progress bar. Valid values are
+		 * between `0` and `1`.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		progress: PropTypes.number,
+
+		/**
+		 * If `true` the progress bar will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		vertical: PropTypes.bool
 	},
 
 	styles: {
@@ -52,12 +83,30 @@ const ProgressBarBase = kind({
 		publicClassNames: ['progressBar']
 	},
 
-	render: (props) => {
+	render: ({css, progress, percentageTooltip, vertical, ...rest}) => {
+		let tooltipComponent = null;
+
+		if (percentageTooltip) {
+			const percentageText = (progress * 100) + '%';
+			const tooltipPosition = vertical ? {top: '0', transform: 'translate(-1rem, -50%)'} : {left: `${percentageText}`, bottom: '1rem'};
+
+			tooltipComponent = <SliderTooltip
+				style={tooltipPosition}
+				vertical={vertical}
+			>
+				{percentageText}
+			</SliderTooltip>;
+		}
+
 		return (
 			<UiProgressBar
-				{...props}
-				css={props.css}
-			/>
+				{...rest}
+				css={css}
+				progress={progress}
+				vertical={vertical}
+			>
+				{tooltipComponent}
+			</UiProgressBar>
 		);
 	}
 });
