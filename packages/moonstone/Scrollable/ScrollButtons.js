@@ -245,13 +245,13 @@ class ScrollButtonsBase extends Component {
 		this.setIgnoreMode(false);
 		if (isPageUp(ev.keyCode)) {
 			if (isNextButton(ev.target) && !prevButtonDisabled) {
-				Spotlight.focus(getPrevButton(containerId));
+				Spotlight.focus(this.getPrevButton(containerId));
 			} else {
 				this.handlePrevScroll(ev);
 			}
 		} else if (isPageDown(ev.keyCode)) {
 			if (isPrevButton(ev.target) && !nextButtonDisabled) {
-				Spotlight.focus(getNextButton(containerId));
+				Spotlight.focus(this.getNextButton(containerId));
 			} else {
 				this.handleNextScroll(ev);
 			}
@@ -298,8 +298,10 @@ class ScrollButtonsBase extends Component {
 				</ScrollButton>
 				<Announce
 					key="3"
-					ref={({announce}) => { // eslint-disable-line react/jsx-no-bind
-						this.announce = announce;
+					ref={(ref) => { // eslint-disable-line react/jsx-no-bind
+						if (ref) {
+							this.announce = ref.announce;
+						}
 					}}
 				/>
 			</RefDecorator>
