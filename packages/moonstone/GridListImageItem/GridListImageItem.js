@@ -1,9 +1,7 @@
 /**
- * Exports the {@link moonstone/GridListImageItem} and
- * {@link moonstone/GridListImageItemBase} components. The default export is
- * {@link moonstone/GridListImageItem}.
- *
- * @module moonstone/GridListImageItem
+ * Exports the {@link moonstone/GridListImageItem.GridListImageItem} and
+ * {@link moonstone/GridListImageItem.GridListImageItemBase} components. The default export is
+ * {@link moonstone/GridListImageItem.GridListImageItem}.
  */
 
 import kind from '@enact/core/kind';
@@ -25,8 +23,8 @@ const defaultPlaceholder =
 	'4NCg==';
 
 /**
- * {@link moonstone/GridListImageItem.GridListImageItemBase} is a stateless
- * GridListImageItem with Moonstone styling applied.
+ * {@link moonstone/GridListImageItem.GridListImageItemBase} is a stateless GridListImageItem with
+ * Moonstone styling applied.
  *
  * @class GridListImageItemBase
  * @memberof moonstone/GridListImageItem
@@ -55,7 +53,7 @@ const GridListImageItemBase = kind({
 		caption: PropTypes.string,
 
 		/**
-		 * Placeholder image used while [source]{@link moonstone/GridListImage.GridListImageItemBase#source}
+		 * Placeholder image used while [source]{@link moonstone/GridListImageItem.GridListImageItemBase#source}
 		 * is loaded.
 		 *
 		 * @type {String}
@@ -171,7 +169,8 @@ const GridListImageItemBase = kind({
 });
 
 /**
- * {@link moonstone/GridListImageItem} with Moonstone styling, Spottable, and Marquee applied.
+ * {@link moonstone/GridListImageItem.GridListImageItem} is a GridListImageItem with
+ * Moonstone styling, Spottable, Marquee and Skinnable applied.
  *
  * Usage:
  * ```
@@ -181,7 +180,8 @@ const GridListImageItemBase = kind({
  * @class GridListImageItem
  * @memberof moonstone/GridListImageItem
  * @mixes moonstone/Marquee.MarqueeController
- * @mixes spotlight/Spottable
+ * @mixes spotlight/Spottable.Spottable
+ * @mixes ui/Skinnable.Skinnable
  * @ui
  * @public
  */
