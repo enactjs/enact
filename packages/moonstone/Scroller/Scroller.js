@@ -518,7 +518,9 @@ const ScrollerPure = SpotlightContainerDecorator(
 
 class Scroller extends React.Component {
 	static propTypes = {
-		cbScrollTo: PropTypes.func
+		cbScrollTo: PropTypes.func,
+		direction: PropTypes.string,
+		voiceLabel: PropTypes.string
 	}
 
 	constructor (props) {
@@ -533,12 +535,62 @@ class Scroller extends React.Component {
 		this.removeVoice();
 	}
 
+	move = (type) => {
+		if (type === 'previous') {
+			// TBD: page up(or wheel up) move using by internal method
+			console.log('page up !!!!!!');
+		} else if (type === 'next') {
+			// TBD: page down(or wheel down) move using by internal method
+			console.log('page down !!!!!!');
+		}
+	}
+
 	addVoice = () => {
 		this.voiceList = VoiceControl.addList([
-			{voiceIntent: 'scroller', voiceLabel: 'first', onVoice: () => this.scrollTo({align: 'top'})},
-			{voiceIntent: 'scroller', voiceLabel: 'last', onVoice: () => this.scrollTo({align: 'bottom'})},
-			{voiceIntent: 'scroller', voiceLabel: 'up', onVoice: null},
-			{voiceIntent: 'scroller', voiceLabel: 'down', onVoice: null}
+			{
+				voiceIntent: 'ScrollRequest',
+				voiceLabel: this.props.voiceLabel,
+				onVoice: (e) => {
+					let direction = this.props.direction || 'both';
+					let action = e['Slot2'];
+					let align;
+
+					switch (action) {
+						case 'Up':
+							if (direction !== 'horizontal') this.move('previous');
+							break;
+						case 'Down':
+							if (direction !== 'horizontal') this.move('next');
+							break;
+						case 'Left':
+							if (direction !== 'vertical') this.move('previous');
+							break;
+						case 'Right':
+							if (direction !== 'vertical') this.move('next');
+							break;
+						case 'Begin':
+							if (direction === 'vertical') {
+								align = 'top';
+							} else if (direction === 'horizontal') {
+								align = 'left';
+							} else {
+								align = 'topleft';
+							}
+							this.scrollTo({align: align});
+							break;
+						case 'End':
+							if (direction === 'vertical') {
+								align = 'bottom';
+							} else if (direction === 'horizontal') {
+								align = 'right';
+							} else {
+								align = 'bottomright';
+							}
+							this.scrollTo({align: align});
+							break;
+					}
+				}
+			}
 		]);
 	}
 
@@ -556,8 +608,8 @@ class Scroller extends React.Component {
 
 	render () {
 		const props = {...this.props};
-		delete props.voiceLabel;
 		delete props.cbScrollTo;
+		delete props.voiceLabel;
 
 		return (
 			<ScrollerPure {...props} cbScrollTo={this.cbScrollTo} />

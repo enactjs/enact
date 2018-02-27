@@ -77,7 +77,7 @@ const VoiceControl = (function () {
 			if (index === -1) {
 				result.push({
 					'Intent': obj.voiceIntent,
-					'Values': [obj.voiceLabel]
+					'Values': obj.voiceLabel ? [obj.voiceLabel] : []
 				});
 			} else {
 				result[index]['Values'].push(obj.voiceLabel);
@@ -192,6 +192,8 @@ const VoiceControl = (function () {
 				str = '[{"Intent": "CheckItemRequest","Slot1": "Energy Saver", "Slot2": "unchecked"}]';
 			} else if (type === 'Input') {
 				str = '[{"Intent": "TextInputRequest","Slot1": "TV Name", "Slot2": "this is good!!!"}]';
+			} else if (type === 'Scroller') {
+				str = '[{"Intent": "ScrollRequest", "Slot1": "hello", "Slot2": "End"}]';
 			}
 			console.log('simulateJson>', str, JSON.parse(str));
 			handleVoice(str);
