@@ -2,15 +2,15 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
-## [unreleased]
-
-### Deprecated
-
-### Added
+## [2.0.0-alpha.4] - 2018-02-13
 
 ### Changed
 
-### Fixed
+- `core/kind` to always return a component rather than either a component or an SFC depending upon the configuration
+
+## [2.0.0-alpha.3] - 2018-01-18
+
+No significant changes.
 
 ## [2.0.0-alpha.2] - 2017-08-29
 
@@ -19,6 +19,18 @@ No significant changes.
 ## [2.0.0-alpha.1] - 2017-08-27
 
 No significant changes.
+
+## [1.14.0] - 2017-02-23
+
+### Deprecated
+
+- `core/factory`, to be removed in 2.0.0
+
+## [1.13.3] - 2017-01-16
+
+### Fixed
+
+- `core/kind` and `core/hoc` public documentation to be visible
 
 ## [1.13.2] - 2017-12-14
 

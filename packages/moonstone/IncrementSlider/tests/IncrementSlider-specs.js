@@ -93,7 +93,7 @@ describe('IncrementSlider Specs', () => {
 		);
 
 		const expected = true;
-		const actual = incrementSlider.find(`.${css.decrementButton}`).prop('disabled');
+		const actual = incrementSlider.find(`IconButton.${css.decrementButton}`).prop('disabled');
 
 		expect(actual).to.equal(expected);
 	});
@@ -107,7 +107,7 @@ describe('IncrementSlider Specs', () => {
 		);
 
 		const expected = true;
-		const actual = incrementSlider.find(`.${css.incrementButton}`).prop('disabled');
+		const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('disabled');
 
 		expect(actual).to.equal(expected);
 	});
@@ -214,7 +214,7 @@ describe('IncrementSlider Specs', () => {
 		);
 
 		const expected = '10 press ok button to decrease the value';
-		const actual = incrementSlider.find(`.${css.decrementButton}`).prop('aria-label');
+		const actual = incrementSlider.find(`IconButton.${css.decrementButton}`).prop('aria-label');
 
 		expect(actual).to.equal(expected);
 	});
@@ -225,7 +225,7 @@ describe('IncrementSlider Specs', () => {
 		);
 
 		const expected = null;
-		const actual = incrementSlider.find(`.${css.decrementButton}`).prop('aria-label');
+		const actual = incrementSlider.find(`IconButton.${css.decrementButton}`).prop('aria-label');
 
 		expect(actual).to.equal(expected);
 	});
@@ -236,7 +236,7 @@ describe('IncrementSlider Specs', () => {
 		);
 
 		const expected = '10 press ok button to increase the value';
-		const actual = incrementSlider.find(`.${css.incrementButton}`).prop('aria-label');
+		const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('aria-label');
 
 		expect(actual).to.equal(expected);
 	});
@@ -247,7 +247,7 @@ describe('IncrementSlider Specs', () => {
 		);
 
 		const expected = null;
-		const actual = incrementSlider.find(`.${css.incrementButton}`).prop('aria-label');
+		const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('aria-label');
 
 		expect(actual).to.equal(expected);
 	});

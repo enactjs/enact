@@ -1,28 +1,30 @@
 /**
- * Exports the {@link moonstone/ProgressBar.ProgressBar} component.
+ * Provides Moonstone-themed progress bar component.
+ *
+ * @example
+ * <ProgressBar progress={0.5} backgroundProgress={0.75} />
  *
  * @module moonstone/ProgressBar
+ * @exports ProgressBar
+ * @exports ProgressBarBase
+ * @exports ProgressBarDecorator
  */
 
 import kind from '@enact/core/kind';
-import clamp from 'ramda/src/clamp';
-import React from 'react';
-import PropTypes from 'prop-types';
+import UiProgressBar from '@enact/ui/ProgressBar';
 import Pure from '@enact/ui/internal/Pure';
+import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
+import React from 'react';
 
-import {validateRange} from '../internal/validators';
 import Skinnable from '../Skinnable';
 
-import css from './ProgressBar.less';
-
-const progressToPercent = (value) => (clamp(0, 1, value) * 100) + '%';
+import componentCss from './ProgressBar.less';
 
 /**
- * {@link moonstone/ProgressBar.ProgressBar} is a component that can display the progress of a
- * process in a horizontal or vertical bar. A secondary progress indicator can be displayed, which
- * is different than the primary progress indicator i.e. to indicate background loading progress.
+ * Renders a moonstone-styled ProgressBar.
  *
- * @class ProgressBar
+ * @class ProgressBarBase
  * @memberof moonstone/ProgressBar
  * @ui
  * @public
@@ -30,79 +32,65 @@ const progressToPercent = (value) => (clamp(0, 1, value) * 100) + '%';
 const ProgressBarBase = kind({
 	name: 'ProgressBar',
 
-	propTypes: /** @lends moonstone/ProgressBar.ProgressBar.prototype */ {
+	propTypes: /** @lends moonstone/ProgressBar.ProgressBarBase.prototype */ {
 		/**
-		* The proportion of the loaded portion of the progress bar. Valid values are
-		* between `0` and `1`.
-		*
-		* @type {Number}
-		* @default 0
-		* @public
-		*/
-		backgroundProgress: PropTypes.number,
-
-		/**
-		* The proportion of the filled portion of the progress bar. Valid values are
-		* between `0` and `1`.
-		*
-		* @type {Number}
-		* @default 0
-		* @public
-		*/
-		progress: PropTypes.number,
-
-		/**
-		* If `true` the progress bar will be oriented vertically.
-		*
-		* @type {Boolean}
-		* @default false
-		* @public
-		*/
-		vertical: PropTypes.bool
-	},
-
-	defaultProps: {
-		backgroundProgress: 0,
-		progress: 0,
-		vertical: false
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `progressBar` - The root component class
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object
 	},
 
 	styles: {
-		css,
-		className: 'progressBar'
+		css: componentCss,
+		publicClassNames: ['progressBar']
 	},
 
-	computed: {
-		className: ({vertical, styler}) => styler.append({vertical}),
-		progress: ({progress}) => progressToPercent(progress),
-		backgroundProgress: ({backgroundProgress}) => progressToPercent(backgroundProgress),
-		progressCssProp: ({vertical}) => (vertical ? 'height' : 'width'),
-		validate: ({backgroundProgress, progress}) => {
-			if (__DEV__) {
-				validateRange(backgroundProgress, 0, 1, 'ProgressBar', 'backgroundProgress', 'min', 'max');
-				validateRange(progress, 0, 1, 'ProgressBar', 'progress', 'min', 'max');
-			}
-		}
-	},
-
-	render: ({backgroundProgress, progress, progressCssProp, ...rest}) => {
-		delete rest.validate;
-		delete rest.vertical;
-
+	render: (props) => {
 		return (
-			<div role="progressbar" {...rest}>
-				<div className={css.load} style={{[progressCssProp]: backgroundProgress}} />
-				<div className={css.fill} style={{[progressCssProp]: progress}} />
-			</div>
+			<UiProgressBar
+				{...props}
+				css={props.css}
+			/>
 		);
 	}
 });
 
-const ProgressBar = Pure(
-	Skinnable(
-		ProgressBarBase
-	)
+/**
+ * Moonstone-specific behaviors to apply to [ProgressBar]{@link moonstone/ProgressBar.ProgressBarBase}.
+ *
+ * @hoc
+ * @memberof moonstone/ProgressBar
+ * @mixes ui/Skinnable.Skinnable
+ * @public
+ */
+const ProgressBarDecorator = compose(
+	Pure,
+	Skinnable
 );
 
+/**
+ * The ready-to-use Moonstone-styled ProgressBar.
+ *
+ * @class ProgressBar
+ * @memberof moonstone/ProgressBar
+ * @extends moonstone/ProgressBar.ProgressBarBase
+ * @mixes moonstone/ProgressBar.ProgressBarDecorator
+ * @ui
+ * @public
+ */
+const ProgressBar = ProgressBarDecorator(ProgressBarBase);
+
+
 export default ProgressBar;
-export {ProgressBar, ProgressBarBase};
+export {
+	ProgressBar,
+	ProgressBarBase,
+	ProgressBarDecorator
+};

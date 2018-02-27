@@ -1,10 +1,14 @@
 import Button from '@enact/moonstone/Button';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, number} from '@kadira/storybook-addon-knobs';
+import Touchable from '@enact/ui/Touchable';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, number} from '@storybook/addon-knobs';
 
-storiesOf('Touchable')
-	.addWithInfo(
+const TouchableDiv = Touchable('div');
+
+storiesOf('Touchable', module)
+	.add(
 		'with default hold events',
 		() => (
 			<Button
@@ -16,7 +20,7 @@ storiesOf('Touchable')
 			</Button>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with a custom longpress event and 1 second frequency',
 		() => (
 			<Button
@@ -35,7 +39,7 @@ storiesOf('Touchable')
 			</Button>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'that pauses the hold when moving beyond tolerance (16px)',
 		() => (
 			<Button
@@ -52,7 +56,7 @@ storiesOf('Touchable')
 			</Button>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'that does not resume when re-entering component',
 		() => (
 			<Button
@@ -61,9 +65,39 @@ storiesOf('Touchable')
 				onHoldPulse={action('onHoldPulse')}
 				disabled={boolean('disabled')}
 			>
-				Resumable
+				Not Resumable
 			</Button>
 		)
+	)
+	.add(
+		'with onFlick handler',
+		() => (
+			<TouchableDiv
+				onFlick={action('onFlick')}
+				disabled={boolean('disabled')}
+				style={{border: '2px dashed #888', width: 500, height: 500}}
+			>
+				Flick within this component
+			</TouchableDiv>
+		)
+	)
+	.add(
+		'with drag handlers',
+		() => (
+			<TouchableDiv
+				dragConfig={{
+					global: boolean('dragConfig.global', false),
+					moveTolerance: number('dragConfig.moveTolerance', 16)
+				}}
+				noResume={boolean('noResume', false)}
+				onDragStart={action('onDragStart')}
+				onDrag={action('onDrag')}
+				onDragEnd={action('onDragEnd')}
+				disabled={boolean('disabled')}
+				style={{border: '2px dashed #888', width: 500, height: 500}}
+			>
+				Drag within this component. Setting <code>noResume</code> to <code>false</code> should
+				prevent drag from resuming when re-entering this component after leaving.
+			</TouchableDiv>
+		)
 	);
-
-

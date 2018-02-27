@@ -1,5 +1,7 @@
 /**
- * Exports the {@link ui/Touchable.Touchable} Higher-order Component (HOC).
+ * Provides the [Touchable]{@link ui/Touchable.Touchable} Higher-order Component (HOC) to add
+ * gesture support to components and the [configure()]{@link ui/Touchable.configure} method for
+ * configuring gestures for the application.
  *
  * @module ui/Touchable
  */
@@ -13,8 +15,12 @@ import platform from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import {configure, mergeConfig} from './config';
 import {activate, deactivate, pause, States} from './state';
 import {block, unblock, isNotBlocked} from './block';
+
+import {Drag, dragConfigPropType} from './Drag';
+import {Flick, flickConfigPropType} from './Flick';
 import {Hold, holdConfigPropType} from './Hold';
 
 const getEventCoordinates = (ev) => {
@@ -30,7 +36,24 @@ const getEventCoordinates = (ev) => {
 // Establish a standard payload for onDown/onUp/onTap events and pass it along to a handler
 const makeTouchableEvent = (type, fn) => (ev, ...args) => {
 	const {target, currentTarget} = ev;
-	const payload = {type, target, currentTarget};
+	let {clientX, clientY, pageX, pageY} = ev;
+
+	if (ev.changedTouches) {
+		clientX = ev.changedTouches[0].clientX;
+		clientY = ev.changedTouches[0].clientY;
+		pageX = ev.changedTouches[0].pageX;
+		pageY = ev.changedTouches[0].pageY;
+	}
+
+	const payload = {
+		type,
+		target,
+		currentTarget,
+		clientX,
+		clientY,
+		pageX,
+		pageY
+	};
 
 	return fn(payload, ...args);
 };
@@ -39,6 +62,7 @@ const makeTouchableEvent = (type, fn) => (ev, ...args) => {
 const forwardDown = makeTouchableEvent('down', forwardWithPrevent('onDown'));
 const forwardUp = makeTouchableEvent('up', forwardWithPrevent('onUp'));
 const forwardTap = makeTouchableEvent('tap', forward('onTap'));
+const forwardMove = makeTouchableEvent('move', forward('onMove'));
 
 /**
  * Default config for {@link ui/Touchable.Touchable}.
@@ -54,38 +78,13 @@ const defaultConfig = {
 	 * @default null
 	 * @memberof ui/Touchable.Touchable.defaultConfig
 	 */
-	activeProp: null,
-
-	/**
-	 * Configures the behavior of the hold gesture. It accepts the following parameters
-	 *
-	 * * `cancelOnMove` - When `true`, the hold is cancelled when moving beyond the `moveTolerance`.
-	 *   Defaults to `false`
-	 * * `moveTolerance` - The number of pixels from the start position of the hold that the pointer
-	 *   may move before cancelling the hold. Ignored when `cancelOnMove` is `false`. Defaults to
-	 *   `16`.
-	 * * `frequency` - The time, in milliseconds, to poll for hold events. Defaults to `200`.
-	 * * `events` - An array of `onHold` events which each contain a `name` and `time`. The `time`
-	 *   controls the amount of time that must pass before this `onHold` event is fired and should
-	 *   be a multiple of `frequency`.
-	 *
-	 * @type {Object}
-	 * @memberof ui/Touchable.Touchable.defaultConfig
-	 */
-	holdConfig: {
-		cancelOnMove: false,
-		moveTolerance: 16,
-		frequency: 200,
-		events: [
-			{name: 'hold', time: 200}
-		]
-	}
+	activeProp: null
 };
 
 /**
  * {@link ui/Touchable.Touchable} is a Higher-order Component that provides a consistent set of
  * pointer events -- `onDown`, `onUp`, and `onTap` -- across mouse and touch interfaces along with
- * support for common gestures including `onHold` and `onHoldPulse`.
+ * support for common gestures including `onFlick`, `onDrag`, onHold`, and `onHoldPulse`.
  *
  * @class Touchable
  * @memberof ui/Touchable
@@ -94,8 +93,7 @@ const defaultConfig = {
  */
 const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 	const {
-		activeProp,
-		holdConfig: defaultHoldConfig
+		activeProp
 	} = config;
 
 	return class extends React.Component {
@@ -112,8 +110,27 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * Instance-specific overrides of the component `holdConfig`
+			 * Instance-specific overrides of the drag configuration
 			 *
+			 * @see ui/Touchable.configure
+			 * @type {Object}
+			 * @public
+			 */
+			dragConfig: dragConfigPropType,
+
+			/**
+			 * Instance-specific overrides of the flick configuration
+			 *
+			 * @see ui/Touchable.configure
+			 * @type {Object}
+			 * @public
+			 */
+			flickConfig: flickConfigPropType,
+
+			/**
+			 * Instance-specific overrides of the hold configuration
+			 *
+			 * @see ui/Touchable.configure
 			 * @type {Object}
 			 * @public
 			 */
@@ -138,7 +155,68 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			onDown: PropTypes.func,
 
 			/**
+			 * Event handler for a drag gesture
+			 *
+ 			 * Event payload includes:
+			 *
+			 * * `type` - Type of event, `"onDrag"`
+			 * * `x` - Horizontal position of the drag, relative to the viewport
+			 * * `y` - Vertical position of the drag, relative to the viewport
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onDrag: PropTypes.func,
+
+			/**
+			 * Event handler for end of a drag gesture
+			 *
+ 			 * Event payload includes:
+			 *
+			 * * `type` - Type of event, `"onDragEnd"`
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onDragEnd: PropTypes.func,
+
+			/**
+			 * Event handler for the start of a drag gesture
+			 *
+ 			 * Event payload includes:
+			 *
+			 * * `type` - Type of event, `"onDragStart"`
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onDragStart: PropTypes.func,
+
+			/**
+			 * Event handler for a flick gesture
+			 *
+			 * Event payload includes:
+			 *
+			 * * `type` - Type of event, `"onFlick"`
+			 * * `direction` - Primary direction of the flick, either `"horizontal"` or `"vertical"`
+			 * * `velocity` - Velocity of flick
+			 * * `velocityX` - Velocity of flick along te horizontal axis
+			 * * `velocityY` - Velocity of flick along te vertical axis
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onFlick: PropTypes.func,
+
+			/**
 			 * Event handler for hold events
+			 *
+			 * Event payload includes:
+			 *
+			 * * `type` - Type of event, `"onFlick"`
+			 * * `name` - The name of the hold as configured in the events list
+			 * * `time` - Time, in milliseconds, configured for this hold which may vary slightly
+			 *            from time since the hold began
 			 *
 			 * @type {Function}
 			 * @public
@@ -147,6 +225,11 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 			/**
 			 * Event handler for hold pulse events
+			 *
+			 * Event payload includes:
+			 *
+			 * * `type` - Type of event, `"onHold"`
+			 * * `time` - Time, in milliseconds, since the hold began
 			 *
 			 * @type {Function}
 			 * @public
@@ -175,12 +258,18 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			noResume: false
 		}
 
-		constructor () {
-			super();
+		constructor (props) {
+			super(props);
 
 			this.state = {
 				active: States.Inactive
 			};
+
+			this.config = mergeConfig({
+				drag: props.dragConfig,
+				flick: props.flickConfig,
+				hold: props.holdConfig
+			});
 		}
 
 		componentDidMount () {
@@ -189,6 +278,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				on('touchend', this.handleGlobalUp, document);
 			}
 			on('mouseup', this.handleGlobalUp, document);
+			on('mousemove', this.handleGlobalMove, document);
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -196,6 +286,12 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				this.deactivate();
 				this.hold.end();
 			}
+
+			this.config = mergeConfig({
+				drag: nextProps.dragConfig,
+				flick: nextProps.flickConfig,
+				hold: nextProps.holdConfig
+			});
 		}
 
 		componentWillUnmount () {
@@ -207,11 +303,16 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				off('touchend', this.handleGlobalUp, document);
 			}
 			off('mouseup', this.handleGlobalUp, document);
+			off('mousemove', this.handleGlobalMove, document);
 		}
 
 		target = null
 		handle = handle.bind(this)
+		drag = new Drag()
+		flick = new Flick()
 		hold = new Hold()
+
+		// State Management
 
 		setTarget = (target) => {
 			this.target = target;
@@ -271,33 +372,52 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		startHold = (ev, {holdConfig, noResume, onHold, onHoldPulse}) => {
-			if (onHold || onHoldPulse) {
-				this.hold.begin({
-					...defaultHoldConfig,
-					...holdConfig,
-					onHold,
-					onHoldPulse,
-					resume: !noResume
-				}, getEventCoordinates(ev));
-			}
+		// Gesture Support
+
+		startGesture = (ev, props) => {
+			const coords = getEventCoordinates(ev);
+			let {hold, flick, drag} = this.config;
+
+			this.hold.begin(hold, props, coords);
+			this.flick.begin(flick, props, coords);
+			this.drag.begin(drag, props, coords, this.target);
 
 			return true;
 		}
 
-		moveHold = (ev) => {
-			const {x, y} = getEventCoordinates(ev);
+		moveGesture = (ev) => {
+			const coords = getEventCoordinates(ev);
 
-			this.hold.move(x, y);
+			this.hold.move(coords);
+			this.flick.move(coords);
+			this.drag.move(coords);
 
 			return true;
 		}
 
-		enterHold = returnsTrue(this.hold.enter)
+		enterGesture = () => {
+			this.drag.enter();
+			this.hold.enter();
 
-		leaveHold = returnsTrue(this.hold.leave)
+			return true;
+		}
 
-		endHold = returnsTrue(this.hold.end)
+		leaveGesture = () => {
+			this.drag.leave();
+			this.hold.leave();
+
+			return true;
+		}
+
+		endGesture = () => {
+			this.hold.end();
+			this.flick.end();
+			this.drag.end();
+
+			return true;
+		}
+
+		// Event handler utilities
 
 		isTracking = () => {
 			// verify we had a target and the up target is still within the current node
@@ -313,16 +433,19 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return hasLeft && left > pageX || right < pageX || top > pageY || bottom < pageY;
 		}, true);
 
+		// Normalized handlers - Mouse and Touch events are mapped to these to trigger cross-type
+		// events and initiate gestures
+
 		handleDown = this.handle(
 			forProp('disabled', false),
 			forwardDown,
 			this.activate,
-			this.startHold
+			this.startGesture
 		)
 
 		handleUp = this.handle(
 			forProp('disabled', false),
-			this.endHold,
+			this.endGesture,
 			this.isTracking,
 			forwardUp,
 			forwardTap
@@ -331,19 +454,21 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		handleEnter = this.handle(
 			forProp('disabled', false),
 			forProp('noResume', false),
+			this.enterGesture,
 			this.isPaused,
-			this.activate,
-			this.enterHold
+			this.activate
 		)
 
 		handleLeave = this.handle(
 			forProp('disabled', false),
-			this.leaveHold,
+			this.leaveGesture,
 			oneOf(
 				[forProp('noResume', false), this.pause],
 				[returnsTrue, this.deactivate]
 			)
 		)
+
+		// Mouse event handlers
 
 		handleMouseDown = this.handle(
 			isNotBlocked,
@@ -358,7 +483,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleMouseMove = this.handle(
 			forward('onMouseMove'),
-			this.moveHold
+			this.moveGesture
 		)
 
 		handleMouseLeave = this.handle(
@@ -370,6 +495,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			forward('onMouseUp'),
 			this.handleUp
 		)
+
+		// Touch event handlers
 
 		handleTouchStart = this.handle(
 			forward('onTouchStart'),
@@ -385,10 +512,11 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			// detecting when the touch leaves the boundary. oneOf returns the value of whichever
 			// branch it follows so we append moveHold to either to handle moves that aren't
 			// entering or leaving
+			forwardMove,
 			oneOf(
 				[this.hasTouchLeftTarget, this.handleLeave],
 				[returnsTrue, this.handleEnter]
-			).finally(this.moveHold)
+			).finally(this.moveGesture)
 		)
 
 		handleTouchEnd = this.handle(
@@ -398,9 +526,16 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.handleUp
 		)
 
+		// Global touchend/mouseup event handler to deactivate the component
 		handleGlobalUp = this.handle(
 			this.isTracking,
 			this.deactivate
+		).finally(this.endGesture)
+
+		handleGlobalMove = this.handle(
+			this.isTracking,
+			({target}) => !this.target.contains(target),
+			this.moveGesture
 		)
 
 		addHandlers (props) {
@@ -422,8 +557,12 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.addHandlers(props);
 
+			delete props.dragConfig;
+			delete props.flickConfig;
+			delete props.holdConfig;
 			delete props.noResume;
 			delete props.onDown;
+			delete props.onFlick;
 			delete props.onHold;
 			delete props.onHoldPulse;
 			delete props.onTap;
@@ -442,5 +581,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 export default Touchable;
 export {
+	configure,
 	Touchable
 };

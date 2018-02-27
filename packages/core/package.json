@@ -1,6 +1,6 @@
 {
   "name": "@enact/core",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.4",
   "description": "Enact is an open source JavaScript framework containing everything you need to create a fast, scalable mobile or web application.",
   "main": "index.js",
   "scripts": {
@@ -28,12 +28,12 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "classnames": "~2.2.5",
-    "invariant": "~2.2.2",
-    "prop-types": "~15.6.0",
-    "ramda": "~0.24.1",
-    "react": "~15.6.1",
-    "react-dom": "~15.6.1",
-    "recompose": "^0.25.0"
+    "classnames": "^2.2.5",
+    "invariant": "^2.2.2",
+    "prop-types": "^15.6.0",
+    "ramda": "^0.24.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "recompose": "^0.26.0"
   }
 }

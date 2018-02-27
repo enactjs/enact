@@ -20,6 +20,7 @@ import {on, off} from '@enact/core/dispatcher';
 import {platform} from '@enact/core/platform';
 import {is} from '@enact/core/keymap';
 import Slottable from '@enact/ui/Slottable';
+import Touchable from '@enact/ui/Touchable';
 import Spotlight from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
@@ -28,9 +29,8 @@ import {toUpperCase} from '@enact/i18n/util';
 import $L from '../internal/$L';
 import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
-import Touchable from '../internal/Touchable';
 
-import {calcNumberValueOfPlaybackRate, secondsToTime} from './util';
+import {calcNumberValueOfPlaybackRate, compareSources, secondsToTime} from './util';
 import Overlay from './Overlay';
 import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
@@ -782,7 +782,8 @@ const VideoPlayerBase = class extends React.Component {
 
 		const {source} = this.props;
 		const {source: nextSource} = nextProps;
-		if (nextSource !== source && !equals(source, nextSource)) {
+
+		if (!compareSources(source, nextSource)) {
 			this.setState({currentTime: 0, buffered: 0, proportionPlayed: 0, proportionLoaded: 0});
 			this.reloadVideo();
 		}
@@ -791,9 +792,11 @@ const VideoPlayerBase = class extends React.Component {
 	shouldComponentUpdate (nextProps, nextState) {
 		const {source} = this.props;
 		const {source: nextSource} = nextProps;
-		if (nextSource !== source && !equals(source, nextSource)) {
+
+		if (!compareSources(source, nextSource)) {
 			return true;
 		}
+
 		if (
 			!this.state.miniFeedbackVisible && this.state.miniFeedbackVisible === nextState.miniFeedbackVisible &&
 			!this.state.mediaSliderVisible && this.state.mediaSliderVisible === nextState.mediaSliderVisible &&
@@ -835,7 +838,7 @@ const VideoPlayerBase = class extends React.Component {
 		const {source: prevSource} = prevProps;
 
 		// Detect a change to the video source and reload if necessary.
-		if (prevSource !== source && !equals(source, prevSource)) {
+		if (!compareSources(source, prevSource)) {
 			this.reloadVideo();
 		}
 
@@ -1275,7 +1278,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			// Non-standard state computed from properties
 			proportionLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration,
-			proportionPlayed: el.currentTime / el.duration,
+			proportionPlayed: el.currentTime / el.duration || 0,
 			error: el.networkState === el.NETWORK_NO_SOURCE,
 			loading: el.readyState < el.HAVE_ENOUGH_DATA,
 			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime
@@ -1543,7 +1546,7 @@ const VideoPlayerBase = class extends React.Component {
 	})
 
 	/**
-	 * Returns a proxy to the underlying <video> node currently used by the VideoPlayer
+	 * Returns a proxy to the underlying `<video>` node currently used by the VideoPlayer
 	 *
 	 * @function
 	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype

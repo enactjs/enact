@@ -3,8 +3,9 @@ import {VirtualGridList} from '@enact/moonstone/VirtualList';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import ri from '@enact/ui/resolution';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, number} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, number} from '@storybook/addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
@@ -12,7 +13,6 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('VirtualGridList', VirtualListCore, VirtualGridList);
 
 const
-	listStyle = {height: ri.scale(550) + 'px'},
 	items = [],
 	// eslint-disable-next-line enact/prop-types
 	renderItem = ({data, index, ...rest}) => {
@@ -39,8 +39,8 @@ for (let i = 0; i < 1000; i++) {
 	items.push({text, subText, source});
 }
 
-storiesOf('VirtualList.VirtualGridList')
-	.addWithInfo(
+storiesOf('VirtualList.VirtualGridList', module)
+	.add(
 		'Horizontal VirtualGridList',
 		() => (
 			<VirtualGridList
@@ -49,11 +49,16 @@ storiesOf('VirtualList.VirtualGridList')
 				dataSize={number('dataSize', items.length)}
 				direction="horizontal"
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
-				itemSize={{minWidth: ri.scale(number('minWidth', 180)), minHeight: ri.scale(number('minHeight', 270))}}
+				itemSize={{
+					minWidth: ri.scale(number('minWidth', 180)),
+					minHeight: ri.scale(number('minHeight', 270))
+				}}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				spacing={ri.scale(number('spacing', 20))}
-				style={listStyle}
+				spacing={ri.scale(number('spacing', 18))}
+				style={{
+					height: ri.unit(552, 'rem')
+				}}
 			/>
 		),
 		{propTables: [Config]}

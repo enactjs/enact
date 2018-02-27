@@ -56,25 +56,25 @@
  * @module core/handle
  */
 
-import allPass from 'ramda/src/allPass';
-import always from 'ramda/src/always';
-import compose from 'ramda/src/compose';
 import cond from 'ramda/src/cond';
 import curry from 'ramda/src/curry';
-import identity from 'ramda/src/identity';
-import ifElse from 'ramda/src/ifElse';
-import isType from 'ramda/src/is';
-import map from 'ramda/src/map';
-import T from 'ramda/src/T';
 
 import {is} from '../keymap';
 
-// Ensures that everything passed to `allPass` is a function so that if null values are passed they
-// do not impede the event flow
-const makeSafeHandler = ifElse(isType(Function), identity, always(T));
-
 // Accepts an array of handlers, sanitizes them, and returns a handler function
-const makeHandler = compose(allPass, map(makeSafeHandler));
+// compose(allPass, map(makeSafeHandler));
+const makeHandler = (handlers) => (...args) => {
+	for (let i = 0; i < handlers.length; i++) {
+		const fn = handlers[i];
+		if (typeof fn !== 'function' || fn(...args)) {
+			continue;
+		}
+
+		return false;
+	}
+
+	return true;
+};
 
 /**
  * Allows generating event handlers by chaining input functions to filter or short-circuit the
@@ -435,13 +435,12 @@ const forProp = handle.forProp = curry((prop, value, ev, props) => {
  * );
  * ```
  *
- * @method   forProp
+ * @method   log
  * @memberof core/handle
- * @param    {String}    prop   Name of property on props object
- * @param    {*}         value  Value of property
- * @param    {Object}    ev     Event
- * @param    {Object}    props  Props object
- * @returns  {Boolean}          Event handler
+ * @param    {String}     message  Custom message
+ * @param    {Object}     ev       Event
+ * @param    {...*}       [args]   Any args passed are logged
+ * @returns  {Boolean}             Always returns `true`
  */
 const log = handle.log = curry((message, ev, ...args) => {
 	if (__DEV__) {

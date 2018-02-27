@@ -2,6 +2,54 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.0.0-alpha.4] - 2018-02-13
+
+### Removed
+
+- `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`
+
+### Added
+
+- `ui/BodyText`, `ui/Image`, `ui/Item`, `ui/ProgressBar`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleIcon` components as unstyled base components to support UI libraries
+
+### Changed
+
+- `core/kind` to always return a component rather than either a component or an SFC depending upon the configuration
+- `moonstone/Marquee` to do less-costly calculations during measurement and optimized the applied styles
+- `moonstone/ExpandableList` to require a unique key for each object type data
+- samples to be organized by library and removed background selector
+- `ui/Repeater` and `ui/Group` to require a unique key for each object type data
+- `ui/Toggleable` to use `'selected'` as its default `prop`, rather than `'active'`, since `'selected'` is by far the most common use case
+- `ui/Touchable` to use global gesture configuration with instance override rather than component-level configuration via HOC configs with instance override
+
+### Fixed
+
+- `moonstone/VirtualList` to render properly with fiber reconciler
+- `moonstone/VirtualList` focus option in scrollTo api
+- `moonstone/ExpandableSpotlightDecorator` to not spot the title upon collapse when in `pointerMode`
+- `moonstone/Spinner` to not unpause Spotlight unless it was the one to pause it
+- `moonstone/Marquee` to stop when becoming disabled
+- `spotlight/Spottable` to not remove `tabindex` from unspottable components to allow blur events to propagate as expected when a component becomes disabled
+
+## [2.0.0-alpha.3] - 2018-01-18
+
+### Added
+
+- `ui/Button`, `ui/Icon`, and `ui/IconButton` components to support reuse by themes
+- `ui/Touchable` support for flick gestures
+
+### Fixed
+
+- `moonstone/MoonstoneDecorator` root node to fill the entire space available, which simplifies positioning and sizing for child elements (previously always measured 0 in height)
+- `moonstone/VirtualList` to prevent infinite function call when a size of contents is slightly longer than a client size without a scrollbar
+- `moonstone/VirtualList` to sync scroll position when clientSize changed
+- `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
+
+### Removed
+
+- `moonstone/Scroller` and `moonstone/VirtualList` option `indexToFocus` in `scrollTo` method which is deprecated from 1.2.0
+- `moonstone/Scroller` props `horizontal` and `vertical` which are deprecated from 1.3.0 and replaced with `direction` prop
+
 ## [2.0.0-alpha.2] - 2017-08-29
 
 ## Added
@@ -22,6 +70,34 @@ The following is a curated list of changes in the Enact project, newest changes 
 ## Removed
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
+
+## [1.14.0] - 2017-02-23
+
+### Deprecated
+
+- `core/factory`, to be removed in 2.0.0
+- `moonstone/VirtualFlexList`, to be replaced by `ui/VirtualFlexList` in 2.0.0
+- `moonstone/VirtualGridList.GridListImageItem`, to be replaced by `moonstone/GridListImageItem` in 2.0.0
+- `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`, to be removed in 2.0.0
+- `moonstone/Button.ButtonFactory`, `moonstone/Button.ButtonBaseFactory`, `moonstone/IconButton.IconButtonFactory`, `moonstone/IconButton.IconButtonBaseFactory`, `moonstone/IncrementSlider.IncrementSliderFactory`, `moonstone/IncrementSlider.IncrementSliderBaseFactory`, `moonstone/Slider.SliderFactory`, and `moonstone/Slider.SliderBaseFactory`, to be removed in 2.0.0
+- `moonstone/Item.ItemOverlay`, to be replaced by `ui/SlotItem` in 2.0.0
+- `moonstone/Item.Overlay` and `moonstone/Item.OverlayDecorator`, to be removed in 2.0.0
+- `ui/Holdable` and `ui/Pressable`, to be replaced by `ui/Touchable` in 2.0.0
+
+### Added
+
+- `moonstone/DaySelector` component
+- `moonstone/EditableIntegerPicker` component
+- `moonstone/GridListImageItem` component
+
+## [1.13.3] - 2017-01-16
+
+### Fixed
+
+- `core/kind` and `core/hoc` public documentation to be visible
+- `moonstone/TimePicker` to not read out meridiem label when meridiem picker gets a focus
+- `moonstone/Scroller` to correctly update scrollbars when the scroller's contents change
+- Several samples that would not rescale correctly when the viewport was resized
 
 ## [1.13.2] - 2017-12-14
 
@@ -937,10 +1013,10 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ## [1.0.0-alpha.3] - 2016-11-8
 
-> Note: For those who are using `eslint-config-enact` for in-editor linting, there have been some important changes and reinstallation is necessary. Refer to [https://github.com/enyojs/eslint-config-enact/](https://github.com/enyojs/eslint-config-enact/) for install instructions or reinstall via:
+> Note: For those who are using `eslint-config-enact` for in-editor linting, there have been some important changes and reinstallation is necessary. Refer to [https://github.com/enactjs/eslint-config-enact/](https://github.com/enactjs/eslint-config-enact/) for install instructions or reinstall via:
 >
 > ```
-> npm install -g eslint eslint-plugin-react eslint-plugin-babel babel-eslint enyojs/eslint-plugin-enact enyojs/eslint-config-enact
+> npm install -g eslint eslint-plugin-react eslint-plugin-babel babel-eslint enactjs/eslint-plugin-enact enactjs/eslint-config-enact
 > ```
 >
 >If you don't use in-editor linting or use a different linting configuration, you can safely ignore this notice.

@@ -7,7 +7,6 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
-import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import hoc from '@enact/core/hoc';
@@ -108,23 +107,23 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
 			/**
-			 * The callback function which is called for linking scrollTo function.
-			 * You should specify a callback function as the value of this prop
-			 * to use scrollTo feature.
+			 * A callback function that receives a reference to the `scrollTo` feature. Once received,
+			 * the `scrollTo` method can be called as an imperative interface.
 			 *
-			 * The scrollTo function passed to the parent component requires below as an argument.
-			 * - {position: {x, y}} - You can set a pixel value for x and/or y position
-			 * - {align} - You can set one of values below for align
+			 * The `scrollTo` function accepts the following paramaters:
+			 * - {position: {x, y}} - Pixel value for x and/or y position
+			 * - {align} - Where the scroll area should be aligned. Values are:
 			 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
 			 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
-			 * - {index} - You can set an index of specific item. (`0` or positive integer)
-			 *   This option is available for only VirtualList kind.
-			 * - {node} - You can set a node to scroll
-			 * - {animate} - When `true`, scroll occurs with animation.
-			 *   Set it to `false`, if you want scrolling without animation.
-			 * - {indexToFocus} - Deprecated: Use `focus` insead.
-			 * - {focus} - Set it `true`, if you want the item to be focused after scroll.
-			 *   This option is only valid when you scroll by `index` or `node`.
+			 * - {index} - Index of specific item. (`0` or positive integer)
+			 *   This option is available for only `VirtualList` kind.
+			 * - {node} - Node to scroll into view
+			 * - {animate} - When `true`, scroll occurs with animation. When `false`, no
+			 *   animation occurs.
+			 * - {indexToFocus} - Deprecated: Use `focus` instead.
+			 * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
+			 *   by `index` or `node`.
+			 * > Note: Only specify one of: `position`, `align`, `index` or `node`
 			 *
 			 * Example:
 			 * ```
@@ -159,6 +158,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			/**
 			 * Called when scrolling
+			 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+			 * It is not recommended to set this prop since it can cause performance degradation. Use
+			 * `onScrollStart` or `onScrollStop` instead.
 			 *
 			 * @type {Function}
 			 * @public
@@ -169,12 +171,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * Called when scrollbar visibility changes
 			 *
 			 * @type {Function}
-			 * @public
+			 * @private
 			 */
 			onScrollbarVisibilityChange: PropTypes.func,
 
 			/**
 			 * Called when scroll starts
+			 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
 			 *
 			 * @type {Function}
 			 * @public
@@ -183,6 +186,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			/**
 			 * Called when scroll stops
+			 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
 			 *
 			 * @type {Function}
 			 * @public
@@ -294,22 +298,30 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps, prevState) {
+			const
+				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+				{hasDataSizeChanged} = this.childRef;
+
 			// Need to sync calculated client size if it is different from the real size
 			if (this.childRef.syncClientSize) {
-				const {isVerticalScrollbarVisible, isHorizontalScrollbarVisible} = this.state;
 				// If we actually synced, we need to reset scroll position.
 				if (this.childRef.syncClientSize()) {
 					this.setScrollLeft(0);
 					this.setScrollTop(0);
 				}
-				// Need to check item total size is same with client size when scrollbar is visible
-				// By hiding scrollbar again, infinite function call maybe happens
-				this.isFitClientSize = (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) && this.childRef.isSameTotalItemSizeWithClient();
 			}
+
+			this.clampScrollPosition();
 
 			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
-			if (!this.isFitClientSize) {
+			if (
+				hasDataSizeChanged === false &&
+				(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
+			) {
+				this.deferScrollTo = false;
+				this.isUpdatedScrollThumb = this.updateScrollThumbSize();
+			} else {
 				this.updateScrollbars();
 			}
 
@@ -322,8 +334,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			// publish container resize changes
-			const horizontal = this.state.isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
-			const vertical = this.state.isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
+			const horizontal = isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
+			const vertical = isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
 			if (horizontal || vertical) {
 				this.publisher.publish({
 					horizontal,
@@ -380,7 +392,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		deferScrollTo = true
 		pageDistance = 0
 		isWheeling = false
-		isFitClientSize = false
 		isUpdatedScrollThumb = false
 
 		// drag info
@@ -476,6 +487,18 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				return false;
 			} else {
 				return true;
+			}
+		}
+
+		clampScrollPosition () {
+			const bounds = this.getScrollBounds();
+
+			if (this.scrollTop > bounds.maxTop) {
+				this.scrollTop = bounds.maxTop;
+			}
+
+			if (this.scrollLeft > bounds.maxLeft) {
+				this.scrollLeft = bounds.maxLeft;
 			}
 		}
 
@@ -996,17 +1019,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollTo = (opt) => {
 			if (!this.deferScrollTo) {
 				const {left, top} = this.getPositionForScrollTo(opt);
-				this.indexToFocus = null;
-				this.nodeToFocus = null;
-				this.scrollToInfo = null;
-
-				if (typeof opt.indexToFocus === 'number') {
-					this.indexToFocus = opt.indexToFocus;
-					deprecate({name: 'indexToFocus', since: '1.2.0', message: 'Use `focus` instead', until: '2.0.0'});
-				}
-
-				this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : this.indexToFocus;
+				this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
 				this.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
+				this.scrollToInfo = null;
 				this.start({
 					targetX: (left !== null) ? left : this.scrollLeft,
 					targetY: (top !== null) ? top : this.scrollTop,

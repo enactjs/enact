@@ -8,7 +8,6 @@
 
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
-import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import PropTypes from 'prop-types';
@@ -44,7 +43,7 @@ class ScrollerBase extends Component {
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * Callback method of scrollTo.
+		 * Callback method of `scrollTo`.
 		 * Normally, `Scrollable` should set this value.
 		 *
 		 * @type {Function}
@@ -59,46 +58,13 @@ class ScrollerBase extends Component {
 		 * @default 'both'
 		 * @public
 		 */
-		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
-
-		/**
-		 * Specifies how to horizontally scroll. Acceptable values are `'auto'`, `'default'` ,
-		 * `'hidden'`, and `'scroll'`.
-		 *
-		 * @type {String}
-		 * @default 'auto'
-		 * @deprecated replaced by `direction`
-		 * @public
-		 */
-		horizontal: PropTypes.oneOf(['auto', 'hidden', 'scroll']),
-
-		/**
-		 * Specifies how to vertically scroll. Acceptable values are `'auto'`, `'auto'` ,
-		 * `'hidden'`, and `'scroll'`.
-		 *
-		 * @type {String}
-		 * @default 'auto'
-		 * @deprecated replaced by `direction`
-		 * @public
-		 */
-		vertical: PropTypes.oneOf(['auto', 'hidden', 'scroll'])
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
 	}
 
 	static contextTypes = contextTypes
 
 	static defaultProps = {
 		direction: 'both'
-	}
-
-	constructor (props) {
-		super(props);
-
-		if (props.horizontal) {
-			deprecate({name: 'horizontal', since: '1.3.0', message: 'Use `direction` instead', until: '2.0.0'});
-		}
-		if (props.vertical) {
-			deprecate({name: 'vertical', since: '1.3.0', message: 'Use `direction` instead', until: '2.0.0'});
-		}
 	}
 
 	componentDidMount () {
@@ -405,13 +371,11 @@ class ScrollerBase extends Component {
 	}
 
 	isVertical = () => {
-		const {vertical, direction} = this.props;
-		return vertical ? (vertical !== 'hidden') : (direction !== 'horizontal');
+		return (this.props.direction !== 'horizontal');
 	}
 
 	isHorizontal = () => {
-		const {horizontal, direction} = this.props;
-		return horizontal ? (horizontal !== 'hidden') : (direction !== 'vertical');
+		return (this.props.direction !== 'vertical');
 	}
 
 	calculateMetrics () {
@@ -475,9 +439,7 @@ class ScrollerBase extends Component {
 		delete props.cbScrollTo;
 		delete props.className;
 		delete props.direction;
-		delete props.horizontal;
 		delete props.style;
-		delete props.vertical;
 
 		return (
 			<div
@@ -516,23 +478,23 @@ const Scroller = SpotlightContainerDecorator(
 
 // Docs for Scroller
 /**
- * The callback function which is called for linking scrollTo function.
- * You should specify a callback function as the value of this prop
- * to use scrollTo feature.
+ * A callback function that receives a reference to the `scrollTo` feature. Once received,
+ * the `scrollTo` method can be called as an imperative interface.
  *
- * The scrollTo function passed to the parent component requires below as an argument.
- * - {position: {x, y}} - You can set a pixel value for x and/or y position
- * - {align} - You can set one of values below for align
+ * The `scrollTo` function accepts the following paramaters:
+ * - {position: {x, y}} - Pixel value for x and/or y position
+ * - {align} - Where the scroll area should be aligned. Values are:
  *   `'left'`, `'right'`, `'top'`, `'bottom'`,
  *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
- * - {index} - You can set an index of specific item. (`0` or positive integer)
- *   This option is available only for `VirtualList` kind.
- * - {node} - You can set a node to scroll
- * - {animate} - When `true`, scroll occurs with animation.
- *   Set it to `false` if you want scrolling without animation.
+ * - {index} - Index of specific item. (`0` or positive integer)
+ *   This option is available for only `VirtualList` kind.
+ * - {node} - Node to scroll into view
+ * - {animate} - When `true`, scroll occurs with animation. When `false`, no
+ *   animation occurs.
  * - {indexToFocus} - Deprecated: Use `focus` instead.
- * - {focus} - Set `true` if you want the item to be focused after scroll.
- *   This option is only valid when you scroll by `index` or `node`.
+ * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
+ *   by `index` or `node`.
+ * > Note: Only specify one of: `position`, `align`, `index` or `node`
  *
  * Example:
  * ```
@@ -572,19 +534,6 @@ const Scroller = SpotlightContainerDecorator(
  */
 
 /**
- * Specifies how to horizontally scroll. Acceptable values are `'auto'`, `'default'` ,
- * `'hidden'`, and `'scroll'`.
- *
- * @name horizontal
- * @type {String}
- * @default 'auto'
- * @memberof moonstone/Scroller.Scroller
- * @instance
- * @deprecated replaced by `direction`
- * @public
- */
-
-/**
  * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
  * `'visible'`, and `'hidden'`.
  *
@@ -598,6 +547,9 @@ const Scroller = SpotlightContainerDecorator(
 
 /**
  * Called when scrolling
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+ * It is not recommended to set this prop since it can cause performance degradation. Use
+ * `onScrollStart` or `onScrollStop` instead.
  *
  * @name onScroll
  * @type {Function}
@@ -608,6 +560,7 @@ const Scroller = SpotlightContainerDecorator(
 
 /**
  * Called when scroll starts
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
  *
  * @name onScrollStart
  * @type {Function}
@@ -618,24 +571,12 @@ const Scroller = SpotlightContainerDecorator(
 
 /**
  * Called when scroll stops
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
  *
  * @name onScrollStop
  * @type {Function}
  * @memberof moonstone/Scroller.Scroller
  * @instance
- * @public
- */
-
-/**
- * Specifies how to vertically scroll. Acceptable values are `'auto'`, `'auto'` ,
- * `'hidden'`, and `'scroll'`.
- *
- * @name vertical
- * @type {String}
- * @default 'auto'
- * @memberof moonstone/Scroller.Scroller
- * @instance
- * @deprecated replaced by `direction`
  * @public
  */
 

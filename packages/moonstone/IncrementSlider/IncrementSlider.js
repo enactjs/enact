@@ -4,22 +4,23 @@
  * @module moonstone/IncrementSlider
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import {extractAriaProps} from '@enact/core/util';
-import factory from '@enact/core/factory';
+import {privateFactory as factory} from '@enact/core/factory';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
+import Touchable from '@enact/ui/Touchable';
 import Spottable from '@enact/spotlight/Spottable';
 
 import IdProvider from '../internal/IdProvider';
 import $L from '../internal/$L';
 import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator';
 import Skinnable from '../Skinnable';
-import {SliderBaseFactory} from '../Slider';
+import {PrivateSliderBaseFactory as SliderBaseFactory} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
-import Touchable from '../internal/Touchable';
 
 import IncrementSliderButton from './IncrementSliderButton';
 import componentCss from './IncrementSlider.less';
@@ -29,7 +30,7 @@ const isLeft = is('left');
 const isRight = is('right');
 const isUp = is('up');
 
-const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
+const PrivateIncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	const Slider = Touchable({activeProp: 'pressed'}, Spottable(Skinnable(SliderBaseFactory({css}))));
 
 	/**
@@ -598,8 +599,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 });
 
-const IncrementSliderFactory = factory((config) => {
-	const Base = IncrementSliderBaseFactory(config);
+const PrivateIncrementSliderFactory = factory((config) => {
+	const Base = PrivateIncrementSliderBaseFactory(config);
 
 	/**
 	 * {@link moonstone/IncrementSlider.IncrementSlider} is an IncrementSlider with
@@ -632,8 +633,10 @@ const IncrementSliderFactory = factory((config) => {
 	);
 });
 
-const IncrementSliderBase = IncrementSliderBaseFactory();
-const IncrementSlider = IncrementSliderFactory();
+const IncrementSliderFactory = deprecate(PrivateIncrementSliderFactory, {name: 'moonstone/IncrementSlider.IncrementSliderFactory', since: '1.14.0', until: '2.0.0'});
+const IncrementSliderBaseFactory = deprecate(PrivateIncrementSliderBaseFactory, {name: 'moonstone/IncrementSlider.IncrementSliderBaseFactory', since: '1.14.0', until: '2.0.0'});
+const IncrementSliderBase = PrivateIncrementSliderBaseFactory();
+const IncrementSlider = PrivateIncrementSliderFactory();
 
 export default IncrementSlider;
 export {

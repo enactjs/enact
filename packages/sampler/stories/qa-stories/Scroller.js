@@ -5,8 +5,9 @@ import Item from '@enact/moonstone/Item';
 import ri from '@enact/ui/resolution';
 import Group from '@enact/ui/Group';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select} from '@storybook/addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 
@@ -19,24 +20,15 @@ const
 	prop = {
 		direction: ['both', 'horizontal', 'vertical'],
 		horizontalScrollbar: ['auto', 'hidden', 'visible']
-	},
-	style = {
-		horizontalScroller: {
-			width: '100%'
-		},
-		horizontalContent: {
-			width: ri.scale(4200) + 'px',
-			padding: '1px'
-		}
 	};
 
-storiesOf('Scroller')
-	.addWithInfo(
+storiesOf('Scroller', module)
+	.add(
 		'List of things',
 		() => (
 			<Scroller
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
-				style={{height: '600px'}}
+				style={{height: ri.unit(600, 'rem')}}
 			>
 				<Group childComponent={Item}>
 					{itemData}
@@ -44,12 +36,12 @@ storiesOf('Scroller')
 			</Scroller>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'With ExpandableList',
 		() => (
 			<Scroller
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
-				style={{height: '600px'}}
+				style={{height: ri.unit(600, 'rem')}}
 			>
 				<ExpandableList
 					closeOnSelect
@@ -60,7 +52,7 @@ storiesOf('Scroller')
 			</Scroller>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Horizontal scroll',
 		() => (
 			<Scroller
@@ -69,9 +61,16 @@ storiesOf('Scroller')
 				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				style={style.horizontalScroller}
+				style={{
+					width: '100%'
+				}}
 			>
-				<div style={style.horizontalContent}>
+				<div
+					style={{
+						width: ri.unit(4200, 'rem'),
+						padding: '1px'
+					}}
+				>
 					{[...Array(20)].map((x, i) => (
 						<Button key={i + 1}>
 							Button {i + 1}

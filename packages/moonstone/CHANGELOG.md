@@ -4,24 +4,49 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Deprecated
+### Fixed
+
+- `moonstone/VirtualGridList` to show or hide the scrollbars in it properly
+
+## [2.0.0-alpha.4] - 2018-02-13
 
 ### Added
 
 - `moonstone/GridListImageItem` to be a top-level Moonstone component
+- `moonstone/SlotItem` replacing `moonstone/Item.ItemOverlay`
+
+### Removed
+
+- `moonstone/VirtualFlexList` to be replaced by `ui/VirtualFlexList`
+- `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`
+- `moonstone/Item.OverlayDecorator`, `moonstone/Item.Overlay`, and `moonstone/Item.ItemOverlay` to be replaced by `moonstone/SlotItem`
 
 ### Changed
 
-- `moonstone/MoonstoneDecorator` root node to fill the entire space available, which simplifies positioning and sizing for child elements (previously always measured 0 in height)
+- `moonstone/Marquee` to do less-costly calculations during measurement and optimized the applied styles
+- `moonstone/ExpandableList` to require a unique key for each object type data
 
 ### Fixed
 
+- `moonstone/VirtualList` to render properly with fiber reconciler
+- `moonstone/VirtualList` focus option in scrollTo api
+- `moonstone/ExpandableSpotlightDecorator` to not spot the title upon collapse when in `pointerMode`
+- `moonstone/Spinner` to not unpause Spotlight unless it was the one to pause it
+- `moonstone/Marquee` to stop when becoming disabled
+
+## [2.0.0-alpha.3] - 2018-01-18
+
+### Fixed
+
+- `moonstone/MoonstoneDecorator` root node to fill the entire space available, which simplifies positioning and sizing for child elements (previously always measured 0 in height)
 - `moonstone/VirtualList` to prevent infinite function call when a size of contents is slightly longer than a client size without a scrollbar
 - `moonstone/VirtualList` to sync scroll position when clientSize changed
 
 ### Removed
 
 - `moonstone/VirtualGridList.GridListImageItem` in favor of `moonstone/GridListImageItem`
+- `moonstone/Scroller` and `moonstone/VirtualList` option `indexToFocus` in `scrollTo` method which is deprecated from 1.2.0
+- `moonstone/Scroller` props `horizontal` and `vertical` which are deprecated from 1.3.0 and replaced with `direction` prop
 
 ## [2.0.0-alpha.2] - 2017-08-29
 
@@ -32,6 +57,30 @@ No significant changes.
 ### Changed
 
 - `moonstone/Button`, `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/IconButton`, `moonstone/IncrementSlider`, `moonstone/Item`, `moonstone/Picker`, and `moonstone/RangePicker`, `moonstone/Switch` and `moonstone/VideoPlayer` to use `ui/Touchable`
+
+## [1.14.0] - 2017-02-23
+
+### Deprecated
+
+- `moonstone/VirtualFlexList`, to be replaced by `ui/VirtualFlexList` in 2.0.0
+- `moonstone/VirtualGridList.GridListImageItem`, to be replaced by `moonstone/GridListImageItem` in 2.0.0
+- `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`, to be removed in 2.0.0
+- `moonstone/Button.ButtonFactory`, `moonstone/Button.ButtonBaseFactory`, `moonstone/IconButton.IconButtonFactory`, `moonstone/IconButton.IconButtonBaseFactory`, `moonstone/IncrementSlider.IncrementSliderFactory`, `moonstone/IncrementSlider.IncrementSliderBaseFactory`, `moonstone/Slider.SliderFactory`, and `moonstone/Slider.SliderBaseFactory`, to be removed in 2.0.0
+- `moonstone/Item.ItemOverlay`, to be replaced by `ui/SlotItem` in 2.0.0
+- `moonstone/Item.Overlay` and `moonstone/Item.OverlayDecorator`, to be removed in 2.0.0
+
+### Added
+
+- `moonstone/DaySelector` component
+- `moonstone/EditableIntegerPicker` component
+- `moonstone/GridListImageItem` component
+
+## [1.13.3] - 2017-01-16
+
+### Fixed
+
+- `moonstone/TimePicker` to not read out meridiem label when meridiem picker gets a focus
+- `moonstone/Scroller` to correctly update scrollbars when the scroller's contents change
 
 ## [1.13.2] - 2017-12-14
 

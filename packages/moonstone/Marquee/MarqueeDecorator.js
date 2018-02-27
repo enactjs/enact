@@ -420,16 +420,18 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{Number}			Distance to travel in pixels
 		 */
 		calculateDistance (node) {
-			const rect = node.getBoundingClientRect();
-			const distance = Math.floor(Math.abs(node.scrollWidth - rect.width));
-
+			const distance = Math.ceil(node.scrollWidth - node.clientWidth);
 			return distance;
 		}
 
 		/*
-		 * Calculates the text overflow to use to correctly render the ellipsis. If the distance is
-		 * exactly 0, then the ellipsis is most likely hiding the content, and marquee does not need
-		 * to animate.
+		 * A custom overflow-determining method to reflect real-world truncation/ellipsis
+		 * calculation. This catches an edge case that the browser typically does not, where the
+		 * size of the text area is the same size as the container (zero distance difference), but
+		 * the browser still inserts an ellipsis due to a non-visible part of the last glyph's
+		 * render box overflowing the parent container size.
+		 * This scenario should not induce a marquee animation or ellipsis, so we directly set
+		 * Marquee to not use an ellipsis, and instead just clip the non-visible part of the glyph.
 		 *
 		 * @param	{Number}	distance	Amount of overflow in pixels
 		 * @returns	{String}				text-overflow value
@@ -609,11 +611,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleBlur = (ev) => {
-			this.isFocused = false;
-			if (!this.sync) {
-				this.cancelAnimation();
-			}
 			forwardBlur(ev, this.props);
+			if (this.isFocused) {
+				this.isFocused = false;
+				if (!this.sync &&
+						!(this.isHovered && (this.props.disabled || this.props.marqueeOn === 'hover'))) {
+					this.cancelAnimation();
+				}
+			}
 		}
 
 		handleEnter = (ev) => {
@@ -681,7 +686,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (marqueeOnFocus && !disabled) {
 				rest[focus] = this.handleFocus;
-				rest[blur] = this.handleBlur;
 			}
 
 			// TODO: cancel others on hover
@@ -708,7 +712,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			return (
-				<Wrapped {...rest} disabled={disabled}>
+				<Wrapped {...rest} onBlur={this.handleBlur} disabled={disabled}>
 					<Marquee
 						alignment={alignment}
 						animating={this.state.animating}
