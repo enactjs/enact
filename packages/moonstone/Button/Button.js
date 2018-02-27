@@ -14,9 +14,11 @@ import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
 import {ButtonBase as UiButtonBase, ButtonDecorator as UiButtonDecorator} from '@enact/ui/Button';
+import ComponentCollection from '@enact/ui/internal/ComponentCollection';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
+import equals from 'ramda/src/equals';
 import React from 'react';
 
 import Icon from '../Icon';
@@ -82,7 +84,29 @@ const ButtonBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		css: PropTypes.object,
+
+		/**
+		 * An array of data to be mapped onto the `childComponent`. This supports two data types.
+		 * If an array of strings is provided, the strings will be used in the generated
+		 * `childComponent` as the readable text. If an array of objects is provided, each object
+		 * will be spread onto the generated `childComponent` with no interpretation. You'll be
+		 * responsible for setting properties like `disabled`, `className`, and setting the text
+		 * content using the `children` key.
+		 *
+		 * @type {String[]|Object[]}
+		 * @required
+		 * @public
+		 */
+		renderChildren: PropTypes.oneOfType([
+			PropTypes.arrayOf(PropTypes.string),
+			PropTypes.arrayOf(PropTypes.shape({
+				childComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+				children: PropTypes.array,
+				childProp: PropTypes.string,
+				itemProps: PropTypes.object
+			}))
+		])
 	},
 
 	styles: {
@@ -97,16 +121,21 @@ const ButtonBase = kind({
 		)
 	},
 
-	render: ({css, ...rest}) => {
+	render: ({children, css, renderChildren, ...rest}) => {
 		delete rest.backgroundOpacity;
 		delete rest.color;
 
+		const components = renderChildren && renderChildren.length ?
+			<ComponentCollection>{renderChildren}</ComponentCollection> :
+			children;
 		return (
 			<UiButtonBase
 				{...rest}
 				css={css}
 				iconComponent={Icon}
-			/>
+			>
+				{components}
+			</UiButtonBase>
 		);
 	}
 });
@@ -125,7 +154,7 @@ const ButtonBase = kind({
  * @public
  */
 const ButtonDecorator = compose(
-	Pure,
+	Pure({propComparators: {renderChildren: (a, b) => equals(a, b)}}),
 	Uppercase,
 	TooltipDecorator,
 	MarqueeDecorator({className: componentCss.marquee}),

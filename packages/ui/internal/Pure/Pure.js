@@ -6,7 +6,7 @@
  * @private
  */
 
-import {childrenEquals} from '@enact/core/util';
+// import {childrenEquals} from '@enact/core/util';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
@@ -24,8 +24,8 @@ const defaultConfig = {
 	 * @memberof ui/internal/Pure.Pure.defaultConfig
 	 */
 	propComparators: {
-		'*': (a, b) => a === b,
-		children: childrenEquals
+		'*': (a, b) => a === b
+		// children: childrenEquals
 	}
 };
 
