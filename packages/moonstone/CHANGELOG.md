@@ -21,8 +21,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`
 - `moonstone/Item.OverlayDecorator`, `moonstone/Item.Overlay`, and `moonstone/Item.ItemOverlay` to be replaced by `moonstone/SlotItem`
 
-- `moonstone/Slider/SliderTooltip` property `percentage` to display and format percentage number values
-
 ### Changed
 
 - `moonstone/Marquee` to do less-costly calculations during measurement and optimized the applied styles
