@@ -2,6 +2,11 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+- `core/util.memoize` method to memoize functions
+
 ## [2.0.0-alpha.4] - 2018-02-13
 
 ### Changed

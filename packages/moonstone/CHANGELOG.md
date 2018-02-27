@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VirtualGridList` to show or hide the scrollbars in it properly
+- `moonstone/Slider` to correctly show localized percentage value in tooltip when `tooltipAsPercent` is true
 
 ## [2.0.0-alpha.4] - 2018-02-13
 
