@@ -182,7 +182,6 @@ const GridListImageItemBase = kind({
  * @mixes moonstone/Marquee.MarqueeController
  * @mixes spotlight/Spottable.Spottable
  * @mixes ui/Skinnable.Skinnable
- * @see moonstone/GridListImageItem.GridListImageItemBase
  * @ui
  * @public
  */
