@@ -1,7 +1,7 @@
 import {memoize} from '..';
 
 describe('memoize', function () {
-	it.only('should memoize function', function () {
+	it('should memoize function', function () {
 		const obj = {},
 			testMethod = key => {
 				obj[key] = (obj[key] || 0) + 1;
