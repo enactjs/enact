@@ -16,7 +16,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/GridListImageItem` to be a top-level Moonstone component
 - `moonstone/SlotItem` replacing `moonstone/Item.ItemOverlay`
 
 ### Removed
