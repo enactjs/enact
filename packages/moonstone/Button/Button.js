@@ -59,7 +59,7 @@ const ButtonBase = kind({
 		]),
 
 		/**
-		 * The color of the underline beneath button's content.
+		 * The color of the underline beneath button's content. Used for `IconButton`.
 		 *
 		 * Accepts one of the following color names, which correspond with the colored buttons on a
 		 * standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`.

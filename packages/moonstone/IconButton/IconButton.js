@@ -113,7 +113,6 @@ const IconButtonBase = kind({
 	}
 });
 
-
 /**
  * Moonstone-specific button behaviors to apply to
  * [IconButton]{@link moonstone/IconButton.IconButtonBase}.

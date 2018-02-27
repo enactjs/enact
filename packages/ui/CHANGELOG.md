@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/BodyText`, `ui/Image`, `ui/Item`, `ui/ProgressBar`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleIcon` components as unstyled base components to support UI libraries
+- `ui/SlotItem` with the properties of `slotBefore` and `slotAfter` so we can easily add things like icons to an item
 
 ### Changed
 
@@ -53,6 +54,12 @@ The following is a curated list of changes in the Enact ui module, newest change
 ## Removed
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
+
+## [1.14.0] - 2017-02-23
+
+### Deprecated
+
+- `ui/Holdable` and `ui/Pressable`, to be replaced by `ui/Touchable` in 2.0.0
 
 ## [1.13.3] - 2017-01-16
 
