@@ -26,10 +26,30 @@ const VirtualList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 		/**
-		 * The render function for an item of the list.
-		 * `index` is for accessing the index of the item.
-		 * `key` MUST be passed as a prop for DOM recycling.
+		 * The `render` function for an item of the list receives the following parameters:
+		 * - `data` is for accessing the supplied `data` property of the list.
+		 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
+		 * is parameters due to performance optimizations
+		 * - `data-index` is required for Spotlight 5-way navigation.  Pass to the root element in
+		 *   the component.
+		 * - `index` is the index number of the componet to render
+		 * - `key` MUST be passed as a prop to the root element in the component for DOM recycling.
+		 *
 		 * Data manipulation can be done in this function.
+		 *
+		 * > NOTE: The list does NOT always render a component whenever its render function is called
+		 * due to performance optimization.
+		 *
+		 * Usage:
+		 * ```
+		 * renderItem = ({index, ...rest}) => {
+		 *		delete rest.data;
+		 *
+		 *		return (
+		 *			<MyComponent index={index} {...rest} />
+		 *		);
+		 * }
+		 * ```
 		 *
 		 * @name component
 		 * @type {Function}
@@ -56,25 +76,25 @@ const VirtualList = kind({
 		itemSize: PropTypes.number.isRequired
 
 		/**
-		 * The callback function which is called for linking scrollTo function.
-		 * You should specify a callback function as the value of this prop
-		 * to use scrollTo feature.
+		 * A callback function that receives a reference to the `scrollTo` feature. Once received,
+		 * the `scrollTo` method can be called as an imperative interface.
 		 *
-		 * The scrollTo function passed to the parent component requires below as an argument.
-		 * - {position: {x, y}} - You can set a pixel value for x and/or y position
-		 * - {align} - You can set one of values below for align
+		 * The `scrollTo` function accepts the following paramaters:
+		 * - {position: {x, y}} - Pixel value for x and/or y position
+		 * - {align} - Where the scroll area should be aligned. Values are:
 		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
 		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
-		 * - {index} - You can set an index of specific item. (`0` or positive integer)
-		 *   This option is available only for `VirtualList` kind.
-		 * - {node} - You can set a node to scroll
-		 * - {animate} - When `true`, scroll occurs with animation.
-		 *   Set it to `false` if you want scrolling without animation.
-		 * - {focus} - Set `true` if you want the item to be focused after scroll.
-		 *   This option is only valid when you scroll by `index` or `node`.
+		 * - {index} - Index of specific item. (`0` or positive integer)
+		 * - {node} - Node to scroll into view
+		 * - {animate} - When `true`, scroll occurs with animation. When `false`, no
+		 *   animation occurs.
+		 * - {indexToFocus} - Deprecated: Use `focus` instead.
+		 * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
+		 *   by `index` or `node`.
+		 * > Note: Only specify one of: `position`, `align`, `index` or `node`
 		 *
 		 * Example:
-		 * ````
+		 * ```
 		 *	// If you set cbScrollTo prop like below;
 		 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
 		 *	// You can simply call like below;
@@ -89,8 +109,9 @@ const VirtualList = kind({
 		 */
 
 		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
+		 * Data for passing through to the `component` prop.
+		 * NOTICE: For performance reason, changing this prop does NOT always cause the list to
+		 * redraw its items.
 		 *
 		 * @name data
 		 * @type {Any}
@@ -147,6 +168,9 @@ const VirtualList = kind({
 
 		/**
 		 * Called when scrolling
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * It is not recommended to set this prop since it can cause performance degradation. Use
+		 * `onScrollStart` or `onScrollStop` instead.
 		 *
 		 * @name onScroll
 		 * @type {Function}
@@ -157,6 +181,8 @@ const VirtualList = kind({
 
 		/**
 		 * Called when scroll starts
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`
 		 *
 		 * @name onScrollStart
 		 * @type {Function}
@@ -167,6 +193,8 @@ const VirtualList = kind({
 
 		/**
 		 * Called when scroll stops
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`
 		 *
 		 * @name onScrollStop
 		 * @type {Function}
@@ -215,10 +243,30 @@ const VirtualGridList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
 		/**
-		 * The render function for an item of the list.
-		 * `index` is for accessing the index of the item.
-		 * `key` MUST be passed as a prop for DOM recycling.
+		 * The `render` function for an item of the list receives the following parameters:
+		 * - `data` is for accessing the supplied `data` property of the list.
+		 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
+		 * is parameters due to performance optimizations
+		 * - `data-index` is required for Spotlight 5-way navigation.  Pass to the root element in
+		 *   the component.
+		 * - `index` is the index number of the componet to render
+		 * - `key` MUST be passed as a prop to the root element in the component for DOM recycling.
+		 *
 		 * Data manipulation can be done in this function.
+		 *
+		 * > NOTE: The list does NOT always render a component whenever its render function is called
+		 * due to performance optimization.
+		 *
+		 * Usage:
+		 * ```
+		 * renderItem = ({index, ...rest}) => {
+		 *		delete rest.data;
+		 *
+		 *		return (
+		 *			<MyComponent index={index} {...rest} />
+		 *		);
+		 * }
+		 * ```
 		 *
 		 * @name component
 		 * @type {Function}
@@ -244,24 +292,25 @@ const VirtualGridList = kind({
 		itemSize: gridListItemSizeShape.isRequired
 
 		/**
-		 * The callback function which is called for linking scrollTo function.
-		 * You should specify a callback function as the value of this prop
-		 * to use scrollTo feature.
+		 * A callback function that receives a reference to the `scrollTo` feature. Once received,
+		 * the `scrollTo` method can be called as an imperative interface.
 		 *
-		 * The scrollTo function passed to the parent component requires below as an argument.
-		 * - {position: {x, y}} - You can set a pixel value for x and/or y position
-		 * - {align} - You can set one of values below for align
+		 * The `scrollTo` function accepts the following paramaters:
+		 * - {position: {x, y}} - Pixel value for x and/or y position
+		 * - {align} - Where the scroll area should be aligned. Values are:
 		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
 		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
-		 * - {index} - You can set an index of specific item. (`0` or positive integer)
-		 *   This option is available only for `VirtualList` kind.
-		 * - {node} - You can set a node to scroll
-		 * - {animate} - When `true`, scroll occurs with animation.
-		 *   Set it to `false` if you want scrolling without animation.
-		 * - {focus} - Set `true` if you want the item to be focused after scroll.
-		 *   This option is only valid when you scroll by `index` or `node`.
+		 * - {index} - Index of specific item. (`0` or positive integer)
+		 * - {node} - Node to scroll into view
+		 * - {animate} - When `true`, scroll occurs with animation. When `false`, no
+		 *   animation occurs.
+		 * - {indexToFocus} - Deprecated: Use `focus` instead.
+		 * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
+		 *   by `index` or `node`.
+		 * > Note: Only specify one of: `position`, `align`, `index` or `node`
 		 *
 		 * Example:
+		 * ```
 		 *	// If you set cbScrollTo prop like below;
 		 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
 		 *	// You can simply call like below;
@@ -276,8 +325,9 @@ const VirtualGridList = kind({
 		 */
 
 		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
+		 * Data for passing through to the `component` prop.
+		 * NOTICE: For performance reason, changing this prop does NOT always cause the list to
+		 * redraw its items.
 		 *
 		 * @name data
 		 * @type {Any}
@@ -334,6 +384,9 @@ const VirtualGridList = kind({
 
 		/**
 		 * Called when scrolling
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * It is not recommended to set this prop since it can cause performance degradation. Use
+		 * `onScrollStart` or `onScrollStop` instead.
 		 *
 		 * @name onScroll
 		 * @type {Function}
@@ -344,6 +397,8 @@ const VirtualGridList = kind({
 
 		/**
 		 * Called when scroll starts
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`
 		 *
 		 * @name onScrollStart
 		 * @type {Function}
@@ -354,6 +409,8 @@ const VirtualGridList = kind({
 
 		/**
 		 * Called when scroll stops
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`
 		 *
 		 * @name onScrollStop
 		 * @type {Function}

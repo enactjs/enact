@@ -6,6 +6,7 @@
  * Not a jsdoc module def on purpose. Exported elsewhere.
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -25,15 +26,16 @@ const defaultPlaceholder =
 	'4NCg==';
 
 /**
- * {@link moonstone/VirtualList.GridListImageItemBase} is a stateless
- * GridListImageItem with Moonstone styling applied.
+ * {@link moonstone/VirtualList.GridListImageItemBase} is a stateless GridListImageItem with
+ * Moonstone styling applied.
  *
  * @class GridListImageItemBase
  * @memberof moonstone/VirtualList
  * @ui
  * @public
+ * @deprecated since 1.14.0. Replaced by [moonstone/GridListImageItem.GridListImageItemBase]{@link moonstone/GridListImageItem.GridListImageItemBase}
  */
-const GridListImageItemBase = kind({
+const GridListImageItemBase = deprecate(kind({
 	name: 'GridListImageItem',
 
 	propTypes: /** @lends moonstone/VirtualList.GridListImageItemBase.prototype */ {
@@ -92,6 +94,7 @@ const GridListImageItemBase = kind({
 		 * ```
 		 *
 		 * @type {Function}
+		 * @public
 		 */
 		selectionOverlay: PropTypes.func,
 
@@ -167,7 +170,7 @@ const GridListImageItemBase = kind({
 			</div>
 		);
 	}
-});
+}), {name: 'moonstone/VirtualList.GridListImageItemBase', since: '1.14.0', until: '2.0.0', replacedBy: 'moonstone/GridListImageItemBase'});
 
 /**
  * {@link moonstone/VirtualList.GridListImageItem} is a GridListImageItem with
@@ -180,16 +183,21 @@ const GridListImageItemBase = kind({
  *
  * @class GridListImageItem
  * @memberof moonstone/VirtualList
+ * @mixes moonstone/Marquee.MarqueeController
  * @mixes spotlight.Spottable
  * @see moonstone/VirtualList.GridListImageItemBase
  * @ui
  * @public
+ * @deprecated since 1.14.0. Replaced by [moonstone/GridListImageItem.GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem}
  */
 const GridListImageItem = MarqueeController(
 	{marqueeOnFocus: true},
 	Spottable(
 		Skinnable(
-			GridListImageItemBase
+			deprecate(
+				GridListImageItemBase,
+				{name: 'moonstone/VirtualList.GridListImageItem', since: '1.14.0', until: '2.0.0', replacedBy: 'moonstone/GridListImageItem'}
+			)
 		)
 	)
 );

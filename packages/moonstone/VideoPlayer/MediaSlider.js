@@ -3,7 +3,7 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {SliderFactory} from '../Slider';
+import {PrivateSliderFactory as SliderFactory} from '../Slider';
 
 import css from './VideoPlayer.less';
 
