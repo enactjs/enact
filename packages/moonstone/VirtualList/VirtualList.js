@@ -691,10 +691,8 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 				}
 				if (type === 'JS') {
 					this.nodeIndexToBeFocused = null;
-					this.lastFocusedIndex = focusedIndex;
-				} else if (type === 'Native') {
-					this.lastFocusedIndex = focusedIndex;
 				}
+				this.lastFocusedIndex = focusedIndex;
 
 				if (primary.clientSize >= primary.itemSize) {
 					if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
@@ -720,25 +718,11 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 			}
 		}
 
-		/**
-		 * setter/getter
-		 */
-
 		shouldPreventScrollByFocus = () => ((type === 'JS') ? (this.isScrolledBy5way) : (this.isScrolledBy5way || this.isScrolledByJump))
-
-		getNodeIndexToBeFocused = () => this.nodeIndexToBeFocused
-
-		setNodeIndexToBeFocused = (param) => {
-			this.nodeIndexToBeFocused = param;
-		}
 
 		setLastFocusedIndex = (param) => {
 			this.lastFocusedIndex = param;
 		}
-
-		/**
-		 * override
-		 */
 
 		updateStatesAndBounds = (props) => {
 			const
@@ -787,7 +771,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 			const
 				{component, data} = this.props,
 				{numOfItems} = this.uiVirtualListRef.state,
-				{getNodeIndexToBeFocused, initItemRef} = this,
+				{nodeIndexToBeFocused, initItemRef} = this,
 				key = index % numOfItems,
 				itemElement = component({
 					data,
@@ -800,7 +784,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 			this.uiVirtualListRef.composeStyle(style, ...rest);
 
 			this.uiVirtualListRef.cc[key] = React.cloneElement(itemElement, {
-				ref: (index === getNodeIndexToBeFocused()) ? (ref) => initItemRef(ref, index) : null,
+				ref: (index === nodeIndexToBeFocused) ? (ref) => initItemRef(ref, index) : null,
 				className: classNames(css.listItem, itemElement.props.className),
 				style: {...itemElement.props.style, ...style}
 			});
