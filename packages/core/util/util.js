@@ -15,6 +15,8 @@ import unless from 'ramda/src/unless';
 import useWith from 'ramda/src/useWith';
 import when from 'ramda/src/when';
 
+import deprecate from '../internal/deprecate';
+
 import Job from './Job';
 
 const orderedKeys = map(when(React.isValidElement, prop('key')));
@@ -147,9 +149,12 @@ const perfNow = function () {
 	}
 };
 
+const deprecatedChildrenEquals = deprecate(childrenEquals, {name: 'core/util.childrenEquals', since: '1.15.0', until: '2.0.0'});
+
 export {
 	cap,
-	childrenEquals,
+	deprecatedChildrenEquals as childrenEquals,
+	childrenEquals as privateChildrenEquals,
 	coerceFunction,
 	coerceArray,
 	Job,

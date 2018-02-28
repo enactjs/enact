@@ -5,7 +5,7 @@
 // Using string refs from the source code of ReactTransitionGroup
 /* eslint-disable react/no-string-refs */
 
-import {childrenEquals} from '@enact/core/util';
+import {privateChildrenEquals as childrenEquals} from '@enact/core/util';
 import compose from 'ramda/src/compose';
 import eqBy from 'ramda/src/eqBy';
 import findIndex from 'ramda/src/findIndex';

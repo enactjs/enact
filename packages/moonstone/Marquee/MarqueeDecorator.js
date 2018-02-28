@@ -1,7 +1,7 @@
 import deprecate from '@enact/core/internal/deprecate';
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
-import {childrenEquals} from '@enact/core/util';
+import {privateChildrenEquals as childrenEquals} from '@enact/core/util';
 import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
