@@ -34,6 +34,7 @@ const orderedEquals = useWith(equals, [orderedKeys, orderedKeys]);
  * @param  {Boolean}	[ordered]	`true` to require the same order
  *
  * @returns {Boolean}				`true` if the children are the same
+ * @deprecated since 1.15.0. Will be removed in 2.0.0
  */
 const childrenEquals = (prev, next, ordered = false) => {
 	const prevChildren = React.Children.toArray(prev);
