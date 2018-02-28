@@ -205,7 +205,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 				// prevent native scrolling by Spotlight
 				this.preventScroll = () => {
 					containerNode.scrollTop = 0;
-					containerNode.scrollLeft = this.uiVirtualListRef.context.rtl ? containerNode.scrollWidth : 0;
+					containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
 				};
 
 				if (containerNode && containerNode.addEventListener) {
@@ -391,7 +391,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 
 			if (indexToScroll !== -1) {
 				const
-					isRtl = this.uiVirtualListRef.context.rtl,
+					isRtl = this.context.rtl,
 					isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right');
 
 				if (type === 'JS') {
@@ -453,7 +453,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 				{cbScrollTo, data, dataSize} = this.props,
 				{firstIndex, numOfItems} = this.uiVirtualListRef.state,
 				{isPrimaryDirectionVertical} = this.uiVirtualListRef,
-				rtl = this.uiVirtualListRef.context.rtl,
+				rtl = this.context.rtl,
 				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
 
 			if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled) {
@@ -800,7 +800,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 		}
 
 		getXY = (primaryPosition, secondaryPosition) => {
-			const rtlDirection = this.uiVirtualListRef.context.rtl ? -1 : 1;
+			const rtlDirection = this.context.rtl ? -1 : 1;
 			return (this.uiVirtualListRef.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
 		}
 
