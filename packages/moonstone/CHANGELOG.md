@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Button` text is now properly centered
+
 ## [2.0.0-alpha.4] - 2018-02-13
 
 ### Added
@@ -26,7 +32,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableSpotlightDecorator` to not spot the title upon collapse when in `pointerMode`
 - `moonstone/Spinner` to not unpause Spotlight unless it was the one to pause it
 - `moonstone/Marquee` to stop when becoming disabled
-- `moonstone/Button` text is now properly centered
 
 ## [2.0.0-alpha.3] - 2018-01-18
 
