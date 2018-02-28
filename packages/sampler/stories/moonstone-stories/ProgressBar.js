@@ -21,6 +21,7 @@ storiesOf('Moonstone', module)
 				emphasized={boolean('emphasized', false)}
 				percentageTooltip={boolean('percentageTooltip', false)}
 				progress={number('progress', 0.4, {range: true, min: 0, max: 1, step: 0.01})}
+				tooltipForceSide={boolean('tooltipForceSide', false)}
 				vertical={boolean('vertical', false)}
 				disabled={nullify(boolean('disabled', false))}
 			/>

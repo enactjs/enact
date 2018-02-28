@@ -18,7 +18,7 @@ import compose from 'ramda/src/compose';
 import React from 'react';
 
 import Skinnable from '../Skinnable';
-import {SliderTooltip} from '../Slider';
+import {ProgressBarTooltip} from '../TooltipDecorator';
 
 import componentCss from './ProgressBar.less';
 
@@ -75,6 +75,17 @@ const ProgressBarBase = kind({
 		progress: PropTypes.number,
 
 		/**
+		 * Setting to `true` overrides the natural tooltip position
+		 * for `vertical` progress bar to the left. This may be useful
+		 * if you have a static layout that have the progress bar at
+		 * the right edge of the container.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		tooltipForceSide: PropTypes.bool,
+
+		/**
 		 * If `true` the progress bar will be oriented vertically.
 		 *
 		 * @type {Boolean}
@@ -93,21 +104,33 @@ const ProgressBarBase = kind({
 		className: ({emphasized, styler}) => styler.append({emphasized})
 	},
 
-	render: ({css, progress, percentageTooltip, vertical, ...rest}) => {
+	render: ({css, progress, percentageTooltip, tooltipForceSide, vertical, ...rest}) => {
 		delete rest.emphasized;
 		let tooltipComponent = null;
 
 
 		if (percentageTooltip) {
-			const percentageText = (progress * 100) + '%';
-			const tooltipPosition = vertical ? {top: '0', transform: 'translate(-1rem, -50%)'} : {left: `${percentageText}`, bottom: '1rem'};
+			const progressAfterMidpoint = progress > 0.5;
+			const percentageText = parseInt(progress * 100) + '%';
+			const tooltipVerticalPosition = tooltipForceSide ? {transform: 'translate(-95%, -3rem)'} : {transform: 'translate(0, -3rem)'};
+			const tooltipHorizontalPosition = progressAfterMidpoint ? {
+				left: `${(parseInt(progress * 100) - 5.5) + '%'}`,
+				bottom: '1rem'
+			} : {
+				left: `${percentageText}`,
+				bottom: '1rem'
+			};
+			const tooltipPosition = vertical ? tooltipVerticalPosition : tooltipHorizontalPosition;
 
-			tooltipComponent = <SliderTooltip
+			tooltipComponent = <ProgressBarTooltip
+				forceSide={tooltipForceSide}
+				knobAfterMidpoint={progressAfterMidpoint}
+				side="top"
 				style={tooltipPosition}
 				vertical={vertical}
 			>
 				{percentageText}
-			</SliderTooltip>;
+			</ProgressBarTooltip>;
 		}
 
 		return (

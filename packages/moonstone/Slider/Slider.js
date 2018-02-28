@@ -19,7 +19,7 @@ import {computeProportionProgress} from '../internal/SliderDecorator/util';
 import Skinnable from '../Skinnable';
 
 import SliderBarFactory from './SliderBar';
-import SliderTooltip from './SliderTooltip';
+import {ProgressBarTooltip} from '../TooltipDecorator';
 import componentCss from './Slider.less';
 
 const isActive = (ev, props) => props.active || props.activateOnFocus || props.detachedKnob;
@@ -416,7 +416,7 @@ const PrivateSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				tooltipComponent = children;
 			} else if (focused) {
 				// only display tooltip when `focused`
-				tooltipComponent = <SliderTooltip
+				tooltipComponent = <ProgressBarTooltip
 					knobAfterMidpoint={knobAfterMidpoint}
 					forceSide={tooltipForceSide}
 					proportion={proportionProgress}
@@ -424,7 +424,7 @@ const PrivateSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 					vertical={vertical}
 				>
 					{children}
-				</SliderTooltip>;
+				</ProgressBarTooltip>;
 			}
 
 			return (
@@ -510,6 +510,5 @@ export {
 	Slider,
 	SliderBase,
 	SliderBaseFactory,
-	SliderFactory,
-	SliderTooltip
+	SliderFactory
 };

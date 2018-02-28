@@ -51,5 +51,12 @@
 				transform: translate((54px + @offset-large), -50%);
 			});
 		}
+
+		// top side
+		&.top,
+		:global(.enact-locale-right-to-left) &.before.ignoreLocale,
+		:global(.enact-locale-right-to-left) &.after {
+			transform: translate(0, -150%);
+		}
 	}
 }
