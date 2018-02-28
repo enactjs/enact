@@ -9,6 +9,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Marquee.Marquee`, to be moved to `moonstone/Marquee.MarqueeBase` in 2.0.0
 - `moonstone/Marquee.MarqueeText`, to be moved to `moonstone/Marquee.Marquee` in 2.0.0
 
+### Fixed
+
+- `moonstone/GridListImageItem` to display correctly
+
 ## [1.14.0] - 2017-02-23
 
 ### Deprecated
