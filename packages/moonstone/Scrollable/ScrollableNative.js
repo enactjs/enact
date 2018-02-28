@@ -411,13 +411,15 @@ const ScrollableNative = hoc((confog, Wrapped) => (
 
 		scrollStopOnScroll = () => {
 			this.childRef.setContainerDisabled(false);
-			this.focusOnItem(this.childRef);
+			this.focusOnItem();
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 			this.isWheeling = false;
 		}
 
-		focusOnItem (childRef) {
+		focusOnItem () {
+			const childRef = this.childRef;
+
 			if (this.indexToFocus !== null && typeof childRef.focusByIndex === 'function') {
 				childRef.focusByIndex(this.indexToFocus);
 				this.indexToFocus = null;
