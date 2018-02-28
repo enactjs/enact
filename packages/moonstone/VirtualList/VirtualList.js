@@ -31,6 +31,8 @@ import {VirtualListBaseNative as UiVirtualListBaseNative, contextTypes as contex
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
+const nop = () => {};
+
 const
 	SpotlightPlaceholder = Spottable('div'),
 	SpotlightContainerConfig = {
@@ -176,6 +178,16 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 			spacing: PropTypes.number
 		}
 
+		static defaultProps = {
+			cbScrollTo: nop,
+			data: [],
+			dataSize: 0,
+			direction: 'vertical',
+			overhang: 3,
+			pageScroll: false,
+			spacing: 0
+		}
+
 		static contextTypes = contextTypes
 		static childContextTypes = (type === 'JS') ? contextTypesVirtaulList : contextTypesVirtaulListNative
 
@@ -225,11 +237,12 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 			}
 
 			if (type === 'JS') {
-				const containerNode = this.containerRef;
+				const containerNode = this.uiVirtualListRef.containerRef;
 
 				// remove a function for preventing native scrolling by Spotlight
 				if (containerNode && containerNode.removeEventListener) {
 					containerNode.removeEventListener('scroll', this.preventScroll);
+					containerNode.removeEventListener('keydown', this.onKeyDown);
 				}
 			}
 		}
