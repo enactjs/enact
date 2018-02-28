@@ -295,7 +295,11 @@ const ScrollableNative = hoc((config, Wrapped) => (
 
 			if (this.scrollToInfo !== null) {
 				if (!this.deferScrollTo) {
-					this.scrollTo(this.scrollToInfo);
+					if (this.context.scrollTo) {
+						this.context.scrollTo(this.scrollToInfo);
+					} else {
+						this.scrollTo(this.scrollToInfo);
+					}
 				}
 			}
 
