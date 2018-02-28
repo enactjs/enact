@@ -139,9 +139,11 @@ class Scrollbar extends PureComponent {
 	hideThumbJob = new Job(this.hideThumb.bind(this), thumbHidingDelay);
 
 	calculateMetrics = () => {
-		const trackSize = this.containerRef[this.props.vertical ? 'clientHeight' : 'clientWidth'];
+		const trackSize = this.getContainerRef()[this.props.vertical ? 'clientHeight' : 'clientWidth'];
 		this.minThumbSizeRatio = ri.scale(minThumbSize) / trackSize;
 	}
+
+	getContainerRef = () => (this.containerRef)
 
 	initRef (prop) {
 		return (ref) => {
@@ -171,6 +173,7 @@ class Scrollbar extends PureComponent {
 			<div ref={this.initContainerRef} className={containerClassName}>
 				{render ?
 					render({
+						getContainerRef: this.getContainerRef,
 						thumb: this.renderThumb(),
 						update: this.update,
 						showThumb: this.showThumb,

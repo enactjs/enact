@@ -425,8 +425,8 @@ const ScrollableNative = hoc((config, Wrapped) => (
 					const {horizontalScrollbarRef, verticalScrollbarRef} = this;
 
 					// Not to check if e.target is a descendant of a wrapped component which may have a lot of nodes in it.
-					if ((horizontalScrollbarRef && horizontalScrollbarRef.containerRef.contains(e.target)) ||
-						(verticalScrollbarRef && verticalScrollbarRef.containerRef.contains(e.target))) {
+					if ((horizontalScrollbarRef && horizontalScrollbarRef.getContainerRef().contains(e.target)) ||
+						(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(e.target))) {
 						delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 						needToHideThumb = !delta;
 					}

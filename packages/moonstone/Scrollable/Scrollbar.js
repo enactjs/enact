@@ -296,7 +296,8 @@ class ScrollbarBase extends Component {
 			<UiScrollbar
 				{...this.props}
 				css={componentCss}
-				render={({thumb, update, showThumb, startHidingThumb}) => { // eslint-disable-line react/jsx-no-bind
+				render={({getContainerRef, thumb, update, showThumb, startHidingThumb}) => { // eslint-disable-line react/jsx-no-bind
+					this.getContainerRef = getContainerRef;
 					this.uiUpdate = update;
 					this.showThumb = showThumb;
 					this.startHidingThumb = startHidingThumb;
@@ -349,7 +350,7 @@ class ScrollbarBase extends Component {
  * @private
  */
 const ScrollbarDecorator = compose(
-	ApiDecorator({api: ['isOneOfScrollButtonsFocused', 'showThumb', 'startHidingThumb', 'update']}),
+	ApiDecorator({api: ['getContainerRef', 'isOneOfScrollButtonsFocused', 'showThumb', 'startHidingThumb', 'update']}),
 	DisappearSpotlightDecorator(
 		{events: {
 			onNextSpotlightDisappear: '[data-scroll-button="previous"]',
