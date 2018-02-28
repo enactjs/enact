@@ -58,6 +58,7 @@
 	margin: 6px;
 	border: @moon-input-border-width solid transparent;
 	box-sizing: border-box;
+	z-index: 2;
 
 	.input,
 	.iconBefore,
@@ -154,6 +155,13 @@
 		right: auto;
 		transform: translate(-100%, -100%) translateX(-@moon-input-tooltip-offset);
 	}
+}
+
+.isolatingScrim {
+	position: fixed;
+	.position(0);
+	background-color: fade(black, 30%);
+	z-index: 1;
 }
 
 .muted({

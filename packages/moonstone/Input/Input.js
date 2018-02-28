@@ -235,29 +235,31 @@ const InputBase = kind({
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, type, value, ...rest}) => {
+	render: ({dir, disabled, focused, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, type, value, ...rest}) => {
 		delete rest.dismissOnEnter;
-		delete rest.focused;
 		delete rest.invalid;
 		delete rest.invalidMessage;
 		delete rest.rtl;
 
 		return (
-			<div {...rest} disabled={disabled}>
-				<InputDecoratorIcon position="before">{iconBefore}</InputDecoratorIcon>
-				<input
-					aria-disabled={disabled}
-					className={css.input}
-					dir={dir}
-					disabled={disabled}
-					onChange={onChange}
-					placeholder={placeholder}
-					type={type}
-					value={value}
-				/>
-				<InputDecoratorIcon position="after">{iconAfter}</InputDecoratorIcon>
-				{invalidTooltip}
-			</div>
+			<React.Fragment>
+				<div className={css.isolatingScrim} style={{display: (focused ? 'block' : 'none')}} />
+				<div {...rest} disabled={disabled}>
+					<InputDecoratorIcon position="before">{iconBefore}</InputDecoratorIcon>
+					<input
+						aria-disabled={disabled}
+						className={css.input}
+						dir={dir}
+						disabled={disabled}
+						onChange={onChange}
+						placeholder={placeholder}
+						type={type}
+						value={value}
+					/>
+					<InputDecoratorIcon position="after">{iconAfter}</InputDecoratorIcon>
+					{invalidTooltip}
+				</div>
+			</React.Fragment>
 		);
 	}
 });
