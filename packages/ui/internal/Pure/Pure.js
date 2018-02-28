@@ -29,7 +29,7 @@ const defaultConfig = {
 
 /**
  * Implements `shouldComponentUpdate` based on property change determination. By default, props are
- * compared for strict equality.
+ * shallowly compared for strict equality
  *
  * Custom comparators can be provided via the `propComparators` config property which accepts an
  * object mapping property names to comparator functions. To override the default comparator, use
