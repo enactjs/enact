@@ -1,4 +1,4 @@
-import factory from '@enact/core/factory';
+import {privateFactory as factory} from '@enact/core/factory';
 import React from 'react';
 import PropTypes from 'prop-types';
 

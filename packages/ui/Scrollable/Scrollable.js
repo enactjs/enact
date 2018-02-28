@@ -142,7 +142,7 @@ const Scrollable = hoc((config, Wrapped) => (
 			 * Called when scrollbar visibility changes
 			 *
 			 * @type {Function}
-			 * @public
+			 * @private
 			 */
 			onScrollbarVisibilityChange: PropTypes.func,
 
