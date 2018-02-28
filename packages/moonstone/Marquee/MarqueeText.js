@@ -8,6 +8,7 @@ import MarqueeDecorator from './MarqueeDecorator';
  * @ui
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @public
+ * @deprecated since 1.15.0. Will be moved to {@link moonstone/Marquee.Marquee} in 2.0.0
  */
 const MarqueeText = MarqueeDecorator('div');
 MarqueeText.displayName = 'MarqueeText';

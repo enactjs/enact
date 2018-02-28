@@ -22,6 +22,7 @@ const animated = css.text + ' ' + css.animate;
  * @memberof moonstone/Marquee
  * @ui
  * @public
+ * @deprecated since 1.15.0. Will be moved to {@link moonstone/Marquee.MarqueeBase} in 2.0.0
  */
 const MarqueeBase = kind({
 	name: 'Marquee',

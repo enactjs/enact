@@ -15,6 +15,8 @@ import unless from 'ramda/src/unless';
 import useWith from 'ramda/src/useWith';
 import when from 'ramda/src/when';
 
+import deprecate from '../internal/deprecate';
+
 import Job from './Job';
 
 const orderedKeys = map(when(React.isValidElement, prop('key')));
@@ -32,6 +34,7 @@ const orderedEquals = useWith(equals, [orderedKeys, orderedKeys]);
  * @param  {Boolean}	[ordered]	`true` to require the same order
  *
  * @returns {Boolean}				`true` if the children are the same
+ * @deprecated since 1.15.0. Will be removed in 2.0.0
  */
 const childrenEquals = (prev, next, ordered = false) => {
 	const prevChildren = React.Children.toArray(prev);
@@ -147,9 +150,12 @@ const perfNow = function () {
 	}
 };
 
+const deprecatedChildrenEquals = deprecate(childrenEquals, {name: 'core/util.childrenEquals', since: '1.15.0', until: '2.0.0'});
+
 export {
 	cap,
-	childrenEquals,
+	deprecatedChildrenEquals as childrenEquals,
+	childrenEquals as privateChildrenEquals,
 	coerceFunction,
 	coerceArray,
 	Job,
