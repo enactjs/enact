@@ -1,7 +1,6 @@
 import deprecate from '@enact/core/internal/deprecate';
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
-import {childrenEquals} from '@enact/core/util';
 import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -288,7 +287,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillReceiveProps (next) {
 			const {marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
 			this.validateTextDirection(next);
-			if ((!childrenEquals(this.props.children, next.children)) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
+			if ((this.props.children !== next.children) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
 				// restart marqueeOn="render" marquees or synced marquees that were animating
 				this.forceRestartMarquee = next.marqueeOn === 'render' || (
 					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)

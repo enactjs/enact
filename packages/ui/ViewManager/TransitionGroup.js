@@ -5,20 +5,57 @@
 // Using string refs from the source code of ReactTransitionGroup
 /* eslint-disable react/no-string-refs */
 
-import {childrenEquals} from '@enact/core/util';
 import compose from 'ramda/src/compose';
 import eqBy from 'ramda/src/eqBy';
+import equals from 'ramda/src/equals';
 import findIndex from 'ramda/src/findIndex';
 import {forward} from '@enact/core/handle';
 import identity from 'ramda/src/identity';
 import lte from 'ramda/src/lte';
+import map from 'ramda/src/map';
 import prop from 'ramda/src/prop';
 import propEq from 'ramda/src/propEq';
 import React from 'react';
 import PropTypes from 'prop-types';
 import remove from 'ramda/src/remove';
+import sort from 'ramda/src/sort';
 import unionWith from 'ramda/src/unionWith';
 import useWith from 'ramda/src/useWith';
+import when from 'ramda/src/when';
+
+const orderedKeys = map(when(React.isValidElement, prop('key')));
+const unorderedKeys = compose(sort((a, b) => a - b), orderedKeys);
+const unorderedEquals = useWith(equals, [unorderedKeys, unorderedKeys]);
+const orderedEquals = useWith(equals, [orderedKeys, orderedKeys]);
+
+/**
+ * Compares the keys of two sets of children and returns `true` if they are equal.
+ *
+ * @method
+ * @memberof core/util
+ * @param  {Node[]}		prev		Array of children
+ * @param  {Node[]}		next		Array of children
+ * @param  {Boolean}	[ordered]	`true` to require the same order
+ *
+ * @returns {Boolean}				`true` if the children are the same
+ */
+const childrenEquals = (prev, next, ordered = false) => {
+	const prevChildren = React.Children.toArray(prev);
+	const nextChildren = React.Children.toArray(next);
+
+	if (prevChildren.length !== nextChildren.length) {
+		return false;
+	} else if (prevChildren.length === 1 && nextChildren.length === 1) {
+		const c1 = prevChildren[0];
+		const c2 = nextChildren[0];
+
+		return equals(c1, c2);
+	} else if (ordered) {
+		return orderedEquals(prevChildren, nextChildren);
+	} else {
+		return unorderedEquals(prevChildren, nextChildren);
+	}
+};
 
 /**
  * Returns the index of a child in an array found by `key` matching
