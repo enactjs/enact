@@ -10,7 +10,7 @@ describe('ProgressBar Specs', () => {
 		);
 
 		const expected = 1;
-		const actual = progressBar.find('SliderTooltip').length;
+		const actual = progressBar.find('ProgressBarTooltip').length;
 
 		expect(actual).to.equal(expected);
 	});
