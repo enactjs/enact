@@ -4,7 +4,7 @@
  * @module moonstone/Item
  */
 
-import {childrenEquals} from '@enact/core/util';
+import {privateChildrenEquals as childrenEquals} from '@enact/core/util';
 import deprecate from '@enact/core/internal/deprecate';
 import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
