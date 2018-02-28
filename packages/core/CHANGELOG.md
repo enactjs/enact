@@ -26,6 +26,12 @@ No significant changes.
 
 No significant changes.
 
+## [1.14.0] - 2017-02-23
+
+### Deprecated
+
+- `core/factory`, to be removed in 2.0.0
+
 ## [1.13.3] - 2017-01-16
 
 ### Fixed

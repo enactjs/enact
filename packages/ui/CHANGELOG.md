@@ -2,17 +2,28 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Touchable` support for drag gesture
+
 ## [2.0.0-alpha.4] - 2018-02-13
 
 ### Added
 
 - `ui/BodyText`, `ui/Image`, `ui/Item`, `ui/ProgressBar`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleIcon` components as unstyled base components to support UI libraries
+- `ui/SlotItem` with the properties of `slotBefore` and `slotAfter` so we can easily add things like icons to an item
 
 ### Changed
 
 - `ui/Repeater` and `ui/Group` to require a unique key for each object type data
 - `ui/Toggleable` to use `'selected'` as its default `prop`, rather than `'active'`, since `'selected'` is by far the most common use case
 - `ui/Touchable` to use global gesture configuration with instance override rather than component-level configuration via HOC configs with instance override
+
+### Fixed
+
+- `ui/ViewManager` to suppress `enteringProp` for views that are rendered at mount
 
 ## [2.0.0-alpha.3] - 2018-01-18
 
@@ -43,6 +54,12 @@ The following is a curated list of changes in the Enact ui module, newest change
 ## Removed
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
+
+## [1.14.0] - 2017-02-23
+
+### Deprecated
+
+- `ui/Holdable` and `ui/Pressable`, to be replaced by `ui/Touchable` in 2.0.0
 
 ## [1.13.3] - 2017-01-16
 

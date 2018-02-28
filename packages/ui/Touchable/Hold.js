@@ -120,19 +120,34 @@ class Hold {
 		let n = this.next;
 		while (n && n.time <= holdTime) {
 			this.pulsing = true;
-			if (onHold) onHold(n);
+			if (onHold) {
+				onHold({
+					type: 'onHold',
+					...n
+				});
+			}
 			n = this.next = this.holdConfig.events && this.holdConfig.events.shift();
 		}
 
 		if (this.pulsing) {
 			if (onHoldPulse) {
 				onHoldPulse({
-					holdTime
+					type: 'onHoldPulse',
+					time: holdTime
 				});
 			}
 		}
 	}
 }
+
+const defaultHoldConfig = {
+	cancelOnMove: false,
+	events: [
+		{name: 'hold', time: 200}
+	],
+	frequency: 200,
+	moveTolerance: 16
+};
 
 const holdConfigPropType = PropTypes.shape({
 	cancelOnMove: PropTypes.bool,
@@ -148,6 +163,7 @@ const holdConfigPropType = PropTypes.shape({
 
 export default Hold;
 export {
+	defaultHoldConfig,
 	Hold,
 	holdConfigPropType
 };
