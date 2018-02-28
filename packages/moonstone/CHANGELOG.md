@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [1.15.0] - 2018-02-28
 
 ### Deprecated
 
@@ -13,7 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/GridListImageItem` to display correctly
 
-## [1.14.0] - 2017-02-23
+## [1.14.0] - 2018-02-23
 
 ### Deprecated
 
@@ -30,7 +30,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/EditableIntegerPicker` component
 - `moonstone/GridListImageItem` component
 
-## [1.13.3] - 2017-01-16
+## [1.13.3] - 2018-01-16
 
 ### Fixed
 
