@@ -2,7 +2,17 @@
  * Provides Moonstone-themed icon components and behaviors.
  *
  * @example
- * <Icon>flag</Icon>
+ * <div>
+ *   <Icon>closex</Icon>
+ *   <Icon>search</Icon>
+ *   <Icon>rollforward</Icon>
+ *   <Icon>arrowshrinkright</Icon>
+ *   <br />
+ *   <Icon small>flag</Icon>
+ *   <Icon small>funnel</Icon>
+ *   <Icon small>trash</Icon>
+ *   <Icon small>star</Icon>
+ * </div>
  *
  * @module moonstone/Icon
  * @exports Icon
