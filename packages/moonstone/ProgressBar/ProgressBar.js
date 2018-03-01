@@ -106,13 +106,16 @@ const ProgressBarBase = kind({
 
 	render: ({css, progress, percentageTooltip, tooltipForceSide, vertical, ...rest}) => {
 		delete rest.emphasized;
+
 		let tooltipComponent = null;
 
 		if (percentageTooltip) {
 			const progressAfterMidpoint = progress > 0.5;
 			const progressPercentage = parseInt(progress * 100);
 			const percentageText = `${progressPercentage}%`;
-			const tooltipVerticalPosition = tooltipForceSide ? {transform: 'translate(-95%, -3rem)'} : {transform: 'translate(0, -3rem)'};
+			const tooltipVerticalPosition = {
+				transform: `translate(${tooltipForceSide ? '-95%' : '0'}, -3rem)`
+			};
 			const tooltipHorizontalPosition = progressAfterMidpoint ? {
 				right: `${100 - progressPercentage}%`,
 				bottom: '1rem'
