@@ -439,4 +439,3 @@ const VirtualGridListNative = kind({
 
 export default VirtualListNative;
 export {VirtualListNative, VirtualGridListNative};
-export * from './GridListImageItem';
