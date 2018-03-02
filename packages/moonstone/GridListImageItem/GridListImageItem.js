@@ -120,7 +120,7 @@ const GridListImageItemBase = kind({
  * @memberof moonstone/GridListImageItem
  * @mixes moonstone/Marquee.MarqueeController
  * @mixes spotlight/Spottable.Spottable
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const GridListImageItemDecorator = compose(
@@ -130,7 +130,7 @@ const GridListImageItemDecorator = compose(
 );
 
 /**
- * A moonstone-styled grid list image item, Spottable applied.
+ * A moonstone-styled grid list image item, Marquee and Spottable applied.
  *
  * Usage:
  * ```

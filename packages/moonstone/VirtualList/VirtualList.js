@@ -870,4 +870,3 @@ export {
 	UiVirtualListBase as VirtualListBase,
 	UiVirtualListBaseNative as VirtualListBaseNative
 };
-export * from './GridListImageItem';
