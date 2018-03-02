@@ -181,8 +181,8 @@ const ScrollableNative = hoc((confog, Wrapped) => (
 					}
 
 					// Not to check if e.target is a descendant of a wrapped component which may have a lot of nodes in it.
-					if ((horizontalScrollbarRef && horizontalScrollbarRef.containerRef.contains(e.target)) ||
-						(verticalScrollbarRef && verticalScrollbarRef.containerRef.contains(e.target))) {
+					if ((horizontalScrollbarRef && horizontalScrollbarRef.getContainerRef().contains(e.target)) ||
+						(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(e.target))) {
 						delta = this.uiScrollableRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 						needToHideThumb = !delta;
 					}
@@ -259,12 +259,6 @@ const ScrollableNative = hoc((confog, Wrapped) => (
 				if (item && item === spotItem && positionFn) {
 					const lastPos = this.lastScrollPositionOnFocus;
 					let pos;
-
-					const focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
-					if (!isNaN(focusedIndex)) {
-						this.childRef.setNodeIndexToBeFocused(null);
-						this.childRef.setLastFocusedIndex(focusedIndex);
-					}
 
 					// If scroll animation is ongoing, we need to pass last target position to
 					// determine correct scroll position.
@@ -411,13 +405,15 @@ const ScrollableNative = hoc((confog, Wrapped) => (
 
 		scrollStopOnScroll = () => {
 			this.childRef.setContainerDisabled(false);
-			this.focusOnItem(this.childRef);
+			this.focusOnItem();
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 			this.isWheeling = false;
 		}
 
-		focusOnItem (childRef) {
+		focusOnItem () {
+			const childRef = this.childRef;
+
 			if (this.indexToFocus !== null && typeof childRef.focusByIndex === 'function') {
 				childRef.focusByIndex(this.indexToFocus);
 				this.indexToFocus = null;

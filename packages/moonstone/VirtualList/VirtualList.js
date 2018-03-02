@@ -88,92 +88,14 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 	class SpottableVirtualList extends Component {
 		static displayName = 'SpottlableVirtualListDecorator'
 
-		static propTypes = /** @lends moonstone/VirtualList.SpottableVirtualListDecorator.prototype */ {
-			/**
-			 * The `render` function for an item of the list receives the following parameters:
-			 * - `data` is for accessing the supplied `data` property of the list.
-			 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
-			 * is parameters due to performance optimizations
-			 * - `data-index` is required for Spotlight 5-way navigation. Pass to the root element in
-			 *   the component.
-			 * - `index` is the index number of the componet to render
-			 * - `key` MUST be passed as a prop to the root element in the component for DOM recycling.
-			 *
-			 * Data manipulation can be done in this function.
-			 *
-			 * > NOTE: The list does NOT always render a component whenever its render function is called
-			 * due to performance optimization.
-			 *
-			 * Usage:
-			 * ```
-			 * renderItem = ({index, ...rest}) => {
-			 *		delete rest.data;
-			 *
-			 *		return (
-			 *			<MyComponent index={index} {...rest} />
-			 *		);
-			 * }
-			 * ```
-			 *
-			 * @type {Function}
-			 * @public
-			 */
-			component: PropTypes.func.isRequired,
-
-			/**
-			 * Callback method of scrollTo.
-			 * Normally, `Scrollable` should set this value.
-			 *
-			 * @type {Function}
-			 * @private
-			 */
-			cbScrollTo: PropTypes.func,
-
+		static propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 			/**
 			 * Spotlight container Id
 			 *
 			 * @type {String}
 			 * @private
 			 */
-			'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types
-
-			/**
-			 * Data for passing it through `component` prop.
-			 * NOTICE: For performance reason, changing this prop does NOT always cause the list to
-			 * redraw its items.
-			 *
-			 * @type {Any}
-			 * @default []
-			 * @public
-			 */
-			data: PropTypes.any,
-
-			/**
-			 * Size of the data.
-			 *
-			 * @type {Number}
-			 * @default 0
-			 * @public
-			 */
-			dataSize: PropTypes.number,
-
-			/**
-			 * It scrolls by page when 'true', by item when 'false'
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @private
-			 */
-			pageScroll: PropTypes.bool,
-
-			/**
-			 * Spacing between items.
-			 *
-			 * @type {Number}
-			 * @default 0
-			 * @public
-			 */
-			spacing: PropTypes.number
+			'data-container-id': PropTypes.string // eslint-disable-line react/sort-prop-types
 		}
 
 		static contextTypes = contextTypes
@@ -205,7 +127,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 				// prevent native scrolling by Spotlight
 				this.preventScroll = () => {
 					containerNode.scrollTop = 0;
-					containerNode.scrollLeft = this.uiVirtualListRef.context.rtl ? containerNode.scrollWidth : 0;
+					containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
 				};
 
 				if (containerNode && containerNode.addEventListener) {
@@ -225,11 +147,12 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 			}
 
 			if (type === 'JS') {
-				const containerNode = this.containerRef;
+				const containerNode = this.uiVirtualListRef.containerRef;
 
 				// remove a function for preventing native scrolling by Spotlight
 				if (containerNode && containerNode.removeEventListener) {
 					containerNode.removeEventListener('scroll', this.preventScroll);
+					containerNode.removeEventListener('keydown', this.onKeyDown);
 				}
 			}
 		}
@@ -267,7 +190,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 
 		findSpottableItem = (indexFrom, indexTo) => {
 			const
-				{data, dataSize} = this.props,
+				{data, dataSize} = this.uiVirtualListRef.props,
 				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
 				safeIndexTo = clamp(-1, dataSize, indexTo),
 				delta = (indexFrom < indexTo) ? 1 : -1;
@@ -289,7 +212,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 
 		getIndexToScrollDisabled = (direction, currentIndex) => {
 			const
-				{data, dataSize, spacing} = this.props,
+				{data, dataSize, spacing} = this.uiVirtualListRef.props,
 				{dimensionToExtent, primary} = this.uiVirtualListRef,
 				{findSpottableItem} = this,
 				{firstVisibleIndex, lastVisibleIndex} = this.uiVirtualListRef.moreInfo,
@@ -358,7 +281,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 
 		getIndexToScroll = (direction, currentIndex) => {
 			const
-				{dataSize, spacing} = this.props,
+				{dataSize, spacing} = this.uiVirtualListRef.props,
 				{dimensionToExtent, primary} = this.uiVirtualListRef,
 				numOfItemsInPage = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent,
 				factor = (direction === 'down' || direction === 'right') ? 1 : -1;
@@ -378,7 +301,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 
 		scrollToNextItem = ({direction, focusedItem}) => {
 			const
-				{data} = this.props,
+				{data} = this.uiVirtualListRef.props,
 				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
 				{firstVisibleIndex, lastVisibleIndex} = this.uiVirtualListRef.moreInfo;
 			let indexToScroll = -1;
@@ -391,7 +314,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 
 			if (indexToScroll !== -1) {
 				const
-					isRtl = this.uiVirtualListRef.context.rtl,
+					isRtl = this.context.rtl,
 					isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right');
 
 				if (type === 'JS') {
@@ -414,7 +337,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 					focusedItem.blur();
 				}
 				this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
-				this.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
+				this.uiVirtualListRef.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
 			}
 
 			return true;
@@ -430,7 +353,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 
 		setSpotlightContainerRestrict = (keyCode, target) => {
 			const
-				{dataSize} = this.props,
+				{dataSize} = this.uiVirtualListRef.props,
 				{isPrimaryDirectionVertical, dimensionToExtent} = this.uiVirtualListRef,
 				index = Number.parseInt(target.getAttribute(dataIndexAttribute)),
 				canMoveBackward = index >= dimensionToExtent,
@@ -450,10 +373,10 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 
 		jumpToSpottableItem = (keyCode, target) => {
 			const
-				{cbScrollTo, data, dataSize} = this.props,
+				{cbScrollTo, data, dataSize} = this.uiVirtualListRef.props,
 				{firstIndex, numOfItems} = this.uiVirtualListRef.state,
 				{isPrimaryDirectionVertical} = this.uiVirtualListRef,
-				rtl = this.uiVirtualListRef.context.rtl,
+				rtl = this.context.rtl,
 				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
 
 			if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled) {
@@ -673,7 +596,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 
 		calculatePositionOnFocus = ({item, scrollPosition = this.uiVirtualListRef.scrollPosition}) => {
 			const
-				{pageScroll} = this.props,
+				{pageScroll} = this.uiVirtualListRef.props,
 				{numOfItems} = this.uiVirtualListRef.state,
 				{primary} = this.uiVirtualListRef,
 				offsetToClientEnd = primary.clientSize - primary.itemSize,
@@ -691,10 +614,8 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 				}
 				if (type === 'JS') {
 					this.nodeIndexToBeFocused = null;
-					this.lastFocusedIndex = focusedIndex;
-				} else if (type === 'Native') {
-					this.lastFocusedIndex = focusedIndex;
 				}
+				this.lastFocusedIndex = focusedIndex;
 
 				if (primary.clientSize >= primary.itemSize) {
 					if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
@@ -720,25 +641,11 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 			}
 		}
 
-		/**
-		 * setter/getter
-		 */
-
 		shouldPreventScrollByFocus = () => ((type === 'JS') ? (this.isScrolledBy5way) : (this.isScrolledBy5way || this.isScrolledByJump))
-
-		getNodeIndexToBeFocused = () => this.nodeIndexToBeFocused
-
-		setNodeIndexToBeFocused = (param) => {
-			this.nodeIndexToBeFocused = param;
-		}
 
 		setLastFocusedIndex = (param) => {
 			this.lastFocusedIndex = param;
 		}
-
-		/**
-		 * override
-		 */
 
 		updateStatesAndBounds = (props) => {
 			const
@@ -785,9 +692,9 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 
 		applyStyleToNewNode = (index, ...rest) => {
 			const
-				{component, data} = this.props,
+				{component, data} = this.uiVirtualListRef.props,
 				{numOfItems} = this.uiVirtualListRef.state,
-				{getNodeIndexToBeFocused, initItemRef} = this,
+				{nodeIndexToBeFocused, initItemRef} = this,
 				key = index % numOfItems,
 				itemElement = component({
 					data,
@@ -800,7 +707,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 			this.uiVirtualListRef.composeStyle(style, ...rest);
 
 			this.uiVirtualListRef.cc[key] = React.cloneElement(itemElement, {
-				ref: (index === getNodeIndexToBeFocused()) ? (ref) => initItemRef(ref, index) : null,
+				ref: (index === nodeIndexToBeFocused) ? (ref) => initItemRef(ref, index) : null,
 				className: classNames(css.listItem, itemElement.props.className),
 				style: {...itemElement.props.style, ...style}
 			});
@@ -816,7 +723,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 		}
 
 		getXY = (primaryPosition, secondaryPosition) => {
-			const rtlDirection = this.uiVirtualListRef.context.rtl ? -1 : 1;
+			const rtlDirection = this.context.rtl ? -1 : 1;
 			return (this.uiVirtualListRef.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
 		}
 
