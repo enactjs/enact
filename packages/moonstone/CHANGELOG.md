@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Button` text is now properly centered
+- `moonstone/Button` text to be properly centered
 
 ## [2.0.0-alpha.4] - 2018-02-13
 
