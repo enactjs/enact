@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ## [unreleased]
 
+### Added
+
+- `core/util.memoize` method to memoize functions
+
 ### Removed
 
 - `core/util.childrenEquals` which was no longer supported by React 16

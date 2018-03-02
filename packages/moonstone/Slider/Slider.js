@@ -8,11 +8,14 @@ import deprecate from '@enact/core/internal/deprecate';
 import {privateFactory as factory} from '@enact/core/factory';
 import {forKey, forProp, forward, handle, oneOf, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
+import {memoize} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import Touchable from '@enact/ui/Touchable';
 import Spottable from '@enact/spotlight/Spottable';
+import ilib from '@enact/i18n';
+import NumFmt from '@enact/i18n/ilib/lib/NumFmt';
 
 import SliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
@@ -25,6 +28,9 @@ import componentCss from './Slider.less';
 const isActive = (ev, props) => props.active || props.activateOnFocus || props.detachedKnob;
 const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
 const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
+
+// memoize percent formatter for each locale so that we only instantiate NumFmt when locale changes
+const memoizedPercentFormatter = memoize((/* locale */) => new NumFmt({type: 'percentage', useNative: false}));
 
 const PrivateSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	const SliderBar = SliderBarFactory({css});
@@ -384,7 +390,15 @@ const PrivateSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		computed: {
 			children: ({children, max, min, tooltip, tooltipAsPercent, value}) => {
 				if (!tooltip || children) return children;
-				return tooltipAsPercent ? Math.floor(computeProportionProgress({value, max, min}) * 100) + '%' : value;
+
+				if (tooltipAsPercent) {
+					const formatter = memoizedPercentFormatter(ilib.getLocale());
+					const percent = Math.floor(computeProportionProgress({value, max, min}) * 100);
+
+					return formatter.format(percent);
+				}
+
+				return value;
 			},
 			className: ({activateOnFocus, active, noFill, pressed, vertical, styler}) => styler.append({
 				activateOnFocus,
