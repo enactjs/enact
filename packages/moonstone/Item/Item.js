@@ -9,6 +9,7 @@
  * @exports ItemBase
  * @exports ItemDecorator
  */
+
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 import {ItemBase as UiItemBase, ItemDecorator as UiItemDecorator} from '@enact/ui/Item';

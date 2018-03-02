@@ -13,8 +13,8 @@ import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
 import {ItemBase} from '../Item';
+import {Marquee, MarqueeController} from '../Marquee';
 import Skinnable from '../Skinnable';
-import {MarqueeController, MarqueeText} from '../Marquee';
 
 const Controller = MarqueeController(
 	{marqueeOnFocus: true},
@@ -82,10 +82,10 @@ const LabeledItemBase = kind({
 	render: ({children, disabled, label, titleIcon, ...rest}) => (
 		<Controller disabled={disabled} {...rest}>
 			<div className={css.text}>
-				<MarqueeText disabled={disabled} className={css.title}>{children}</MarqueeText>
+				<Marquee disabled={disabled} className={css.title}>{children}</Marquee>
 				{(titleIcon != null) ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
 			</div>
-			{(label != null) ? <MarqueeText disabled={disabled} className={css.label}>{label}</MarqueeText> : null}
+			{(label != null) ? <Marquee disabled={disabled} className={css.label}>{label}</Marquee> : null}
 		</Controller>
 	)
 });

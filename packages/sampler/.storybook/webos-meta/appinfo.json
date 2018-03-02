@@ -12,6 +12,7 @@
 	"transparent": false,
 	"visible": true,
 	"uiRevision": 2,
+	"useNativeScroll": true,
 	"class": {
 		"hidden": false
 	},
