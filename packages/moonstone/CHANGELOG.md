@@ -4,10 +4,21 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Removed
+
+- `moonstone/Marquee.MarqueeText` to be replaced by `moonstone/Marquee.Marquee`
+
+### Changed
+
+- `moonstone/Marquee.Marquee` to be `moonstone/Marquee.MarqueeBase`
+- `moonstone/VirtualGridList.GridListImageItem` in favor of `moonstone/GridListImageItem`
+
 ### Fixed
 
 - `moonstone/VirtualGridList` to show or hide the scrollbars in it properly
 - `moonstone/Slider` to correctly show localized percentage value in tooltip when `tooltipAsPercent` is true
+- `moonstone/VirtualGridList` to show or hide its scrollbars properly
+- `moonstone/Button` text to be properly centered
 
 ## [2.0.0-alpha.4] - 2018-02-13
 
@@ -33,6 +44,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableSpotlightDecorator` to not spot the title upon collapse when in `pointerMode`
 - `moonstone/Spinner` to not unpause Spotlight unless it was the one to pause it
 - `moonstone/Marquee` to stop when becoming disabled
+- `moonstone/Input`, `moonstone/MarqueeDecorator`, and `moonstone/Slider` to prevent unnecessary focus-based updates
 
 ## [2.0.0-alpha.3] - 2018-01-18
 
@@ -57,7 +69,18 @@ No significant changes.
 
 - `moonstone/Button`, `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/IconButton`, `moonstone/IncrementSlider`, `moonstone/Item`, `moonstone/Picker`, and `moonstone/RangePicker`, `moonstone/Switch` and `moonstone/VideoPlayer` to use `ui/Touchable`
 
-## [1.14.0] - 2017-02-23
+## [1.15.0] - 2018-02-28
+
+### Deprecated
+
+- `moonstone/Marquee.Marquee`, to be moved to `moonstone/Marquee.MarqueeBase` in 2.0.0
+- `moonstone/Marquee.MarqueeText`, to be moved to `moonstone/Marquee.Marquee` in 2.0.0
+
+### Fixed
+
+- `moonstone/GridListImageItem` to display correctly
+
+## [1.14.0] - 2018-02-23
 
 ### Deprecated
 
@@ -74,7 +97,7 @@ No significant changes.
 - `moonstone/EditableIntegerPicker` component
 - `moonstone/GridListImageItem` component
 
-## [1.13.3] - 2017-01-16
+## [1.13.3] - 2018-01-16
 
 ### Fixed
 

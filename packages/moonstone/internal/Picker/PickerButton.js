@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import Touchable from '@enact/ui/Touchable';
 
-import {contextTypes} from '../../Marquee/MarqueeController';
+import {controlContextTypes} from '../../Marquee';
 import Icon from '../../Icon';
 import IconButton from '../../IconButton';
 import {withSkinnableProps} from '../../Skinnable';
@@ -48,7 +48,7 @@ const PickerButtonBase = kind({
 		spotlightDisabled: PropTypes.bool
 	},
 
-	contextTypes: contextTypes,
+	contextTypes: controlContextTypes,
 
 	styles: {
 		css

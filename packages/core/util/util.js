@@ -4,53 +4,11 @@
  * @module core/util
  */
 import always from 'ramda/src/always';
-import compose from 'ramda/src/compose';
-import equals from 'ramda/src/equals';
 import isType from 'ramda/src/is';
-import map from 'ramda/src/map';
-import prop from 'ramda/src/prop';
-import React from 'react';
-import sort from 'ramda/src/sort';
 import unless from 'ramda/src/unless';
-import useWith from 'ramda/src/useWith';
-import when from 'ramda/src/when';
 import withContext from 'recompose/withContext';
 
 import Job from './Job';
-
-const orderedKeys = map(when(React.isValidElement, prop('key')));
-const unorderedKeys = compose(sort((a, b) => a - b), orderedKeys);
-const unorderedEquals = useWith(equals, [unorderedKeys, unorderedKeys]);
-const orderedEquals = useWith(equals, [orderedKeys, orderedKeys]);
-
-/**
- * Compares the keys of two sets of children and returns `true` if they are equal.
- *
- * @method
- * @memberof core/util
- * @param  {Node[]}		prev		Array of children
- * @param  {Node[]}		next		Array of children
- * @param  {Boolean}	[ordered]	`true` to require the same order
- *
- * @returns {Boolean}				`true` if the children are the same
- */
-const childrenEquals = (prev, next, ordered = false) => {
-	const prevChildren = React.Children.toArray(prev);
-	const nextChildren = React.Children.toArray(next);
-
-	if (prevChildren.length !== nextChildren.length) {
-		return false;
-	} else if (prevChildren.length === 1 && nextChildren.length === 1) {
-		const c1 = prevChildren[0];
-		const c2 = nextChildren[0];
-
-		return equals(c1, c2);
-	} else if (ordered) {
-		return orderedEquals(prevChildren, nextChildren);
-	} else {
-		return unorderedEquals(prevChildren, nextChildren);
-	}
-};
 
 /**
  * Capitalizes a given string (not locale aware).
@@ -242,7 +200,6 @@ const memoize = (fn) => {
 
 export {
 	cap,
-	childrenEquals,
 	coerceArray,
 	coerceFunction,
 	extractAriaProps,
