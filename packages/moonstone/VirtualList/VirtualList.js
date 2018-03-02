@@ -88,7 +88,7 @@ const SpottableVirtualListDecorator = (type) => hoc((config, Wrapped) => (
 	class SpottableVirtualList extends Component {
 		static displayName = 'SpottlableVirtualListDecorator'
 
-		static propTypes = /** @lends moonstone/VirtualList.SpottableVirtualListDecorator.prototype */ {
+		static propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 			/**
 			 * Spotlight container Id
 			 *
