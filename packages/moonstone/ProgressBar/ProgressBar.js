@@ -62,7 +62,7 @@ const ProgressBarBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		percentageTooltip: PropTypes.bool,
+		tooltip: PropTypes.bool,
 
 		/**
 		 * The proportion of the filled portion of the progress bar. Valid values are
@@ -101,48 +101,49 @@ const ProgressBarBase = kind({
 	},
 
 	computed: {
-		className: ({emphasized, styler}) => styler.append({emphasized})
+		className: ({emphasized, styler}) => styler.append({emphasized}),
+		tooltipComponent: ({progress, tooltip, tooltipForceSide, vertical}) => {
+			if (tooltip) {
+				const progressAfterMidpoint = progress > 0.5;
+				const progressPercentage = parseInt(progress * 100);
+				const percentageText = `${progressPercentage}%`;
+				const tooltipVerticalPosition = {
+					transform: `translate(${tooltipForceSide ? '-95%' : '0'}, -3rem)`
+				};
+				const tooltipHorizontalPosition = progressAfterMidpoint ? {
+					right: `${100 - progressPercentage}%`,
+					bottom: '1rem'
+				} : {
+					left: percentageText,
+					bottom: '1rem'
+				};
+
+				const tooltipPosition = vertical ? tooltipVerticalPosition : tooltipHorizontalPosition;
+
+				return (
+					<ProgressBarTooltip
+						forceSide={tooltipForceSide}
+						knobAfterMidpoint={progressAfterMidpoint}
+						side="top"
+						style={tooltipPosition}
+						vertical={vertical}
+					>
+						{percentageText}
+					</ProgressBarTooltip>
+				);
+			} else {
+				return null;
+			}
+		}
 	},
 
-	render: ({css, progress, percentageTooltip, tooltipForceSide, vertical, ...rest}) => {
+	render: ({css, tooltipComponent, ...rest}) => {
 		delete rest.emphasized;
-
-		let tooltipComponent = null;
-
-		if (percentageTooltip) {
-			const progressAfterMidpoint = progress > 0.5;
-			const progressPercentage = parseInt(progress * 100);
-			const percentageText = `${progressPercentage}%`;
-			const tooltipVerticalPosition = {
-				transform: `translate(${tooltipForceSide ? '-95%' : '0'}, -3rem)`
-			};
-			const tooltipHorizontalPosition = progressAfterMidpoint ? {
-				right: `${100 - progressPercentage}%`,
-				bottom: '1rem'
-			} : {
-				left: percentageText,
-				bottom: '1rem'
-			};
-
-			const tooltipPosition = vertical ? tooltipVerticalPosition : tooltipHorizontalPosition;
-
-			tooltipComponent = <ProgressBarTooltip
-				forceSide={tooltipForceSide}
-				knobAfterMidpoint={progressAfterMidpoint}
-				side="top"
-				style={tooltipPosition}
-				vertical={vertical}
-			>
-				{percentageText}
-			</ProgressBarTooltip>;
-		}
 
 		return (
 			<UiProgressBar
 				{...rest}
 				css={css}
-				progress={progress}
-				vertical={vertical}
 			>
 				{tooltipComponent}
 			</UiProgressBar>

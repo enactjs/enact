@@ -41,6 +41,14 @@ const ProgressBar = kind({
 		backgroundProgress: PropTypes.number,
 
 		/**
+		 * The contents to be displayed with progress bar.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		children: PropTypes.node,
+
+		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
 		 *
