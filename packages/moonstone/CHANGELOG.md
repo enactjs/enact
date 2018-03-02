@@ -7,6 +7,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Button` text to be properly centered
+### Removed
+
+- `moonstone/VirtualGridList.GridListImageItem` in favor of `moonstone/GridListImageItem`
+
+### Fixed
+
+- `moonstone/VirtualGridList` to show or hide the scrollbars in it properly
 
 ## [2.0.0-alpha.4] - 2018-02-13
 
@@ -56,7 +63,35 @@ No significant changes.
 
 - `moonstone/Button`, `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/IconButton`, `moonstone/IncrementSlider`, `moonstone/Item`, `moonstone/Picker`, and `moonstone/RangePicker`, `moonstone/Switch` and `moonstone/VideoPlayer` to use `ui/Touchable`
 
-## [1.13.3] - 2017-01-16
+## [1.15.0] - 2018-02-28
+
+### Deprecated
+
+- `moonstone/Marquee.Marquee`, to be moved to `moonstone/Marquee.MarqueeBase` in 2.0.0
+- `moonstone/Marquee.MarqueeText`, to be moved to `moonstone/Marquee.Marquee` in 2.0.0
+
+### Fixed
+
+- `moonstone/GridListImageItem` to display correctly
+
+## [1.14.0] - 2018-02-23
+
+### Deprecated
+
+- `moonstone/VirtualFlexList`, to be replaced by `ui/VirtualFlexList` in 2.0.0
+- `moonstone/VirtualGridList.GridListImageItem`, to be replaced by `moonstone/GridListImageItem` in 2.0.0
+- `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`, to be removed in 2.0.0
+- `moonstone/Button.ButtonFactory`, `moonstone/Button.ButtonBaseFactory`, `moonstone/IconButton.IconButtonFactory`, `moonstone/IconButton.IconButtonBaseFactory`, `moonstone/IncrementSlider.IncrementSliderFactory`, `moonstone/IncrementSlider.IncrementSliderBaseFactory`, `moonstone/Slider.SliderFactory`, and `moonstone/Slider.SliderBaseFactory`, to be removed in 2.0.0
+- `moonstone/Item.ItemOverlay`, to be replaced by `ui/SlotItem` in 2.0.0
+- `moonstone/Item.Overlay` and `moonstone/Item.OverlayDecorator`, to be removed in 2.0.0
+
+### Added
+
+- `moonstone/DaySelector` component
+- `moonstone/EditableIntegerPicker` component
+- `moonstone/GridListImageItem` component
+
+## [1.13.3] - 2018-01-16
 
 ### Fixed
 

@@ -1,9 +1,9 @@
-/*
- * Exports the {@link moonstone/VirtualList.GridListImageItem} and
- * {@link moonstone/VirtualList.GridListImageItemBase} components. The default export is
- * {@link moonstone/VirtualList.GridListImageItem}.
+/**
+ * Exports the {@link moonstone/GridListImageItem.GridListImageItem} and
+ * {@link moonstone/GridListImageItem.GridListImageItemBase} components. The default export is
+ * {@link moonstone/GridListImageItem.GridListImageItem}.
  *
- * Not a jsdoc module def on purpose. Exported elsewhere.
+ * @module moonstone/GridListImageItem
  */
 
 import kind from '@enact/core/kind';
@@ -25,18 +25,18 @@ const defaultPlaceholder =
 	'4NCg==';
 
 /**
- * {@link moonstone/VirtualList.GridListImageItemBase} is a stateless
- * GridListImageItem with Moonstone styling applied.
+ * {@link moonstone/GridListImageItem.GridListImageItemBase} is a stateless GridListImageItem with
+ * Moonstone styling applied.
  *
  * @class GridListImageItemBase
- * @memberof moonstone/VirtualList
+ * @memberof moonstone/GridListImageItem
  * @ui
  * @public
  */
 const GridListImageItemBase = kind({
 	name: 'GridListImageItem',
 
-	propTypes: /** @lends moonstone/VirtualList.GridListImageItemBase.prototype */ {
+	propTypes: /** @lends moonstone/GridListImageItem.GridListImageItemBase.prototype */ {
 		/**
 		 * The absolute URL path to the image.
 		 *
@@ -55,7 +55,7 @@ const GridListImageItemBase = kind({
 		caption: PropTypes.string,
 
 		/**
-		 * Placeholder image used while [source]{@link moonstone/VirtualList.GridListImageItemBase#source}
+		 * Placeholder image used while [source]{@link moonstone/GridListImageItem.GridListImageItemBase#source}
 		 * is loaded.
 		 *
 		 * @type {String}
@@ -92,6 +92,7 @@ const GridListImageItemBase = kind({
 		 * ```
 		 *
 		 * @type {Function}
+		 * @public
 		 */
 		selectionOverlay: PropTypes.func,
 
@@ -170,8 +171,8 @@ const GridListImageItemBase = kind({
 });
 
 /**
- * {@link moonstone/VirtualList.GridListImageItem} is a GridListImageItem with
- * Moonstone styling, Spottable applied.
+ * {@link moonstone/GridListImageItem.GridListImageItem} is a GridListImageItem with
+ * Moonstone styling, Marquee and Spottable applied.
  *
  * Usage:
  * ```
@@ -179,9 +180,10 @@ const GridListImageItemBase = kind({
  * ```
  *
  * @class GridListImageItem
- * @memberof moonstone/VirtualList
- * @mixes spotlight.Spottable
- * @see moonstone/VirtualList.GridListImageItemBase
+ * @memberof moonstone/GridListImageItem
+ * @mixes moonstone/Marquee.MarqueeController
+ * @mixes moonstone/Skinnable.Skinnable
+ * @mixes spotlight/Spottable.Spottable
  * @ui
  * @public
  */
@@ -189,7 +191,7 @@ const GridListImageItem = MarqueeController(
 	{marqueeOnFocus: true},
 	Spottable(
 		Skinnable(
-			GridListImageItemBase
+			GridListImageItemBase,
 		)
 	)
 );
