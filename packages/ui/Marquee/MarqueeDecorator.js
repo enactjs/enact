@@ -605,9 +605,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.validateTextDirection(this.props);
 		}
 
-		handleMarqueeComplete = (ev) => {
+		handleMarqueeComplete = () => {
 			this.resetAnimation();
-			ev.stopPropagation();
 		}
 
 		handleFocus = (ev) => {

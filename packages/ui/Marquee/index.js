@@ -22,7 +22,7 @@ import {MarqueeController, contextTypes as controlContextTypes} from './MarqueeC
 import MarqueeDecorator from './MarqueeDecorator';
 
 /**
- * [Marquee]{@link ui/Marquee.Marquee} is minimally-styled marquee component.
+ * A minimally-styled marquee component.
  *
  * @class Marquee
  * @extends ui/Marquee.MarqueeBase

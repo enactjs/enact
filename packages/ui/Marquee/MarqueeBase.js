@@ -1,4 +1,5 @@
 import kind from '@enact/core/kind';
+import {forward, handle, stopPropagation} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -6,9 +7,13 @@ import css from './Marquee.less';
 
 const animated = css.text + ' ' + css.animate;
 
+const isEventSource = (ev) => ev.target === ev.currentTarget;
+
 /**
- * {@link ui/Marquee.MarqueeBase} is a container element which implements a text cut-off followed by
- * an ellipsis character.
+ * Marquees the children of the component
+ *
+ * Generally, you would use {@link ui/Marquee.Marquee} which wraps this component with
+ * {@link ui/Marquee.MarqueeDecorator} which automates the necessary calculations.
  *
  * @class MarqueeBase
  * @memberof ui/Marquee
@@ -16,12 +21,18 @@ const animated = css.text + ' ' + css.animate;
  * @public
  */
 const MarqueeBase = kind({
-	name: 'Marquee',
+	name: 'ui:Marquee',
 
 	propTypes: /** @lends ui/Marquee.MarqueeBase.prototype */ {
 
 		/**
-		 * Text alignment value of the marquee. Valid values are `'left'`, `'right'` and `'center'`.
+		 * Text alignment value of the marquee.
+		 *
+		 * Valid values are:
+		 *
+		 * * `'left'`,
+		 * * `'right'`, and
+		 * * `'center'`
 		 *
 		 * @type {String}
 		 * @public
@@ -37,8 +48,8 @@ const MarqueeBase = kind({
 		animating: PropTypes.bool,
 
 		/**
-		 * `children` is the text or a set of components that should be scrolled by the
-		 * {@link ui/Marquee.MarqueeBase} component.
+		 * The text or a set of components that should be marqueed
+		 *
 		 * This prop may be empty in some cases, which is OK.
 		 *
 		 * @type {Node|Node[]}
@@ -70,8 +81,9 @@ const MarqueeBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Distance to animate the marquee which is generally the width of the text minus the
-		 * width of the container.
+		 * Distance to animate the marquee
+		 *
+		 * Usually, the `distance` is the width of the text minus the width of the container
 		 *
 		 * @type {Number}
 		 * @public
@@ -79,7 +91,7 @@ const MarqueeBase = kind({
 		distance: PropTypes.number,
 
 		/**
-		 * Callback function for when the marquee completes its animation
+		 * Called when the marquee completes its animation
 		 *
 		 * @type {Function}
 		 * @public
@@ -122,6 +134,14 @@ const MarqueeBase = kind({
 		publicClassNames: true
 	},
 
+	handlers: {
+		onMarqueeComplete: handle(
+			isEventSource,
+			stopPropagation,
+			(ev, props) => forward('onMarqueeComplete', {type: 'onMarqueeComplete'}, props)
+		)
+	},
+
 	computed: {
 		clientClassName: ({animating}) => animating ? animated : css.text,
 		clientStyle: ({alignment, animating, distance, overflow, rtl, speed}) => {
@@ -148,9 +168,17 @@ const MarqueeBase = kind({
 		}
 	},
 
-	render: ({children, className, clientClassName, clientRef, clientStyle, onMarqueeComplete, ...rest}) => {
+	render: ({children, clientClassName, clientRef, clientStyle, onMarqueeComplete, ...rest}) => {
+		delete rest.alignment;
+		delete rest.animating;
+		delete rest.distance;
+		delete rest.onMarqueeComplete;
+		delete rest.overflow;
+		delete rest.rtl;
+		delete rest.speed;
+
 		return (
-			<div {...rest} className={className}>
+			<div {...rest}>
 				<div
 					className={clientClassName}
 					ref={clientRef}
