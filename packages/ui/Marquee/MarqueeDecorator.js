@@ -2,7 +2,6 @@ import direction from 'direction';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
-import {childrenEquals} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -296,7 +295,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillReceiveProps (next) {
 			const {marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
 			this.validateTextDirection(next);
-			if ((!childrenEquals(this.props.children, next.children)) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
+			if ((this.props.children !== next.children) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
 				// restart marqueeOn="render" marquees or synced marquees that were animating
 				this.forceRestartMarquee = next.marqueeOn === 'render' || (
 					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)
