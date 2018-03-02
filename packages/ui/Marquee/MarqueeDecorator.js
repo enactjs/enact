@@ -5,7 +5,7 @@ import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Marquee from './MarqueeBase';
+import MarqueeBase from './MarqueeBase';
 import {contextTypes} from './MarqueeController';
 
 /**
@@ -41,7 +41,7 @@ const defaultConfig = {
 	 * @default ui/Marquee.Marquee
 	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
-	component: Marquee,
+	component: MarqueeBase,
 
 	/**
 	 * Property containing the callback to start the animation when `marqueeOn` is `'hover'`
@@ -137,7 +137,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardLeave = forward(leave);
 
 	return class extends React.Component {
-		static displayName = 'MarqueeDecorator'
+		static displayName = 'ui:MarqueeDecorator'
 
 		static contextTypes = {
 			...contextTypes,

@@ -33,7 +33,7 @@ import MarqueeDecorator from './MarqueeDecorator';
  */
 const Marquee = MarqueeDecorator({component: MarqueeBase}, 'div');
 
-export default MarqueeDecorator;
+export default Marquee;
 export {
 	controlContextTypes,
 	Marquee,

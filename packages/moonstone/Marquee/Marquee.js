@@ -22,7 +22,7 @@ const MarqueeDecorator = hoc({
 	marqueeDirection: (str) => isRtlText(str) ? 'rtl' : 'ltr'
 }, UiMarqueeDecorator);
 
-const Marquee = MarqueeDecorator(MarqueeBase, 'div');
+const Marquee = MarqueeDecorator('div');
 
 export default Marquee;
 export {
