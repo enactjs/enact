@@ -10,7 +10,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/VirtualGridList` to show or hide the scrollbars in it properly
+- `moonstone/VirtualGridList` to show or hide its scrollbars properly
+- `moonstone/Button` text to be properly centered
 
 ## [2.0.0-alpha.4] - 2018-02-13
 
