@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/Touchable` support for drag gesture
+- `ui/Marquee` component
 
 ## [2.0.0-alpha.4] - 2018-02-13
 

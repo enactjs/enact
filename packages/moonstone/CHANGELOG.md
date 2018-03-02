@@ -6,6 +6,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
+- `moonstone/Marquee.MarqueeText` to be replaced by `moonstone/Marquee.Marquee`
+
+### Changed
+
+- `moonstone/Marquee.Marquee` to be `moonstone/Marquee.MarqueeBase`
 - `moonstone/VirtualGridList.GridListImageItem` in favor of `moonstone/GridListImageItem`
 
 ### Fixed

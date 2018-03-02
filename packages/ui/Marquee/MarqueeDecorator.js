@@ -1,19 +1,18 @@
-import deprecate from '@enact/core/internal/deprecate';
-import hoc from '@enact/core/hoc';
+import direction from 'direction';
 import {forward} from '@enact/core/handle';
-import {isRtlText} from '@enact/i18n/util';
-import React from 'react';
-import PropTypes from 'prop-types';
+import hoc from '@enact/core/hoc';
 import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
+import PropTypes from 'prop-types';
+import React from 'react';
 
-import Marquee from './Marquee';
+import MarqueeBase from './MarqueeBase';
 import {contextTypes} from './MarqueeController';
 
 /**
- * Default configuration parameters for {@link moonstone/Marquee.MarqueeDecorator}
+ * Default configuration parameters for {@link ui/Marquee.MarqueeDecorator}
  *
  * @type {Object}
- * @memberof moonstone/Marquee.MarqueeDecorator
+ * @memberof ui/Marquee.MarqueeDecorator
  * @hocconfig
  */
 const defaultConfig = {
@@ -22,25 +21,34 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onBlur'
-	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	blur: 'onBlur',
 
 	/**
-	 * Optional CSS class to apply to the marqueed element
+	 * Optional CSS class name to customize the marquee `component`
 	 *
 	 * @type {String}
 	 * @default null
-	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	className: null,
+
+	/**
+	 * The base marquee component wrapping the content.
+	 *
+	 * @type {Component}
+	 * @default ui/Marquee.Marquee
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
+	 */
+	component: MarqueeBase,
 
 	/**
 	 * Property containing the callback to start the animation when `marqueeOn` is `'hover'`
 	 *
 	 * @type {String}
 	 * @default 'onMouseEnter'
-	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	enter: 'onMouseEnter',
 
@@ -49,7 +57,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onFocus'
-	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	focus: 'onFocus',
 
@@ -59,7 +67,7 @@ const defaultConfig = {
 	*
 	* @type {Array}
 	* @default ['remeasure']
-	* @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	* @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	*/
 	invalidateProps: ['remeasure'],
 
@@ -68,9 +76,21 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onMouseLeave'
-	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
-	leave: 'onMouseLeave'
+	leave: 'onMouseLeave',
+
+	/**
+	 * A function that determines the text directionality of a string.
+	 *
+	 * Returns:
+	 * * `'rtl'` if the text should marquee to the right
+	 * * `'ltr'` if the text should marquee to the left
+	 *
+	 * @type {Function}
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
+	 */
+	marqueeDirection: (str) => direction(str) === 'rtl' ? 'rtl' : 'ltr'
 };
 
 /**
@@ -99,16 +119,17 @@ const TimerState = {
 };
 
 /**
- * {@link moonstone/Marquee.MarqueeDecorator} is a Higher-order Component which makes
+ * {@link ui/Marquee.MarqueeDecorator} is a Higher-order Component which makes
  * the Wrapped component's children marquee.
  *
  * @class MarqueeDecorator
- * @memberof moonstone/Marquee
+ * @memberof ui/Marquee
  * @hoc
  * @public
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {blur, className: marqueeClassName, enter, focus, invalidateProps, leave} = config;
+	const {blur, className: configClassName, component: MarqueeComponent, enter, focus, invalidateProps, leave, marqueeDirection} = config;
+
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
 	const forwardFocus = forward(focus);
@@ -116,14 +137,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardLeave = forward(leave);
 
 	return class extends React.Component {
-		static displayName = 'MarqueeDecorator'
+		static displayName = 'ui:MarqueeDecorator'
 
 		static contextTypes = {
 			...contextTypes,
 			...stateContextTypes
 		}
 
-		static propTypes = /** @lends moonstone/Marquee.MarqueeDecorator.prototype */ {
+		static propTypes = /** @lends ui/Marquee.MarqueeDecorator.prototype */ {
 			/**
 			 * Text alignment value of the marquee. Valid values are `'left'`, `'right'` and `'center'`.
 			 *
@@ -158,15 +179,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			forceDirection: PropTypes.oneOf(['rtl', 'ltr']),
-
-			/**
-			 * When `true`, the contents will be centered regardless of the text directionality.
-			 *
-			 * @type {Boolean}
-			 * @public
-			 * @deprecated replaced by `alignment`
-			 */
-			marqueeCentered: PropTypes.bool,
 
 			/**
 			 * Number of milliseconds to wait before starting marquee when `marqueeOn` is `'hover'` or
@@ -256,10 +268,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.timerState = TimerState.CLEAR;
 
 			this.invalidateMetrics();
-
-			if (this.props.marqueeCentered) {
-				deprecate({name: 'marqueeCentered', since: '1.7.0', message: 'Use `alignment` instead', until: '2.0.0'});
-			}
 		}
 
 		componentWillMount () {
@@ -596,9 +604,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.validateTextDirection(this.props);
 		}
 
-		handleMarqueeComplete = (ev) => {
+		handleMarqueeComplete = () => {
 			this.resetAnimation();
-			ev.stopPropagation();
 		}
 
 		handleFocus = (ev) => {
@@ -657,7 +664,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (forceDirection) {
 				rtl = forceDirection === 'rtl';
 			} else if (this.node) {
-				rtl = isRtlText(this.node.textContent);
+				rtl = marqueeDirection(this.node.textContent) === 'rtl';
 				this.textDirectionValidated = true;
 			}
 
@@ -712,10 +719,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			return (
 				<Wrapped {...rest} onBlur={this.handleBlur} disabled={disabled}>
-					<Marquee
+					<MarqueeComponent
 						alignment={alignment}
 						animating={this.state.animating}
-						className={marqueeClassName}
+						className={configClassName}
 						clientRef={this.cacheNode}
 						distance={this.distance}
 						onMarqueeComplete={this.handleMarqueeComplete}
@@ -724,7 +731,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						speed={marqueeSpeed}
 					>
 						{children}
-					</Marquee>
+					</MarqueeComponent>
 				</Wrapped>
 			);
 		}
@@ -756,4 +763,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default MarqueeDecorator;
-export {MarqueeDecorator};
+export {
+	MarqueeDecorator
+};
