@@ -4,6 +4,7 @@ import hoc from '@enact/core/hoc';
 import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
 import PropTypes from 'prop-types';
 import React from 'react';
+import shallowEqual from 'recompose/shallowEqual';
 
 import MarqueeBase from './MarqueeBase';
 import {contextTypes} from './MarqueeController';
@@ -309,6 +310,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else if (next.disabled && this.isHovered && marqueeOn === 'focus' && this.sync) {
 				this.context.enter(this);
 			}
+		}
+
+		shouldComponentUpdate (nextProps, nextState) {
+			return (
+				!shallowEqual(this.state, nextState) ||
+				!shallowEqual(this.props, nextProps)
+			);
 		}
 
 		componentDidUpdate () {
