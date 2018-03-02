@@ -95,12 +95,12 @@ const Scrollable = hoc((config, Wrapped) => (
 			return {
 				initialize: this.initialize,
 				onKeyDown: this.onKeyDown,
-				onMouseUp: this.onMouseUp,
+				onFlick: this.onFlick,
 				onWheel: this.onWheel,
 				removeEventListeners: this.removeEventListeners,
 				scrollTo: this.scrollTo,
 				stop: this.stop,
-				updateEventListeners: this.updateEventListeners
+				addEventListeners: this.addEventListeners
 			};
 		}
 
@@ -131,14 +131,14 @@ const Scrollable = hoc((config, Wrapped) => (
 			this.uiScrollableRef = uiScrollableRef;
 		}
 
-		onMouseUp = () => {
-			if (this.uiScrollableRef.isDragging && this.uiScrollableRef.isFlicking()) {
-				const focusedItem = Spotlight.getCurrent();
+		onFlick = () => {
+			const focusedItem = Spotlight.getCurrent();
 
-				if (focusedItem) {
-					focusedItem.blur();
-				}
+			if (focusedItem) {
+				focusedItem.blur();
 			}
+
+			this.childRef.setContainerDisabled(true);
 		}
 
 		onWheel = (delta) => {
@@ -418,7 +418,7 @@ const Scrollable = hoc((config, Wrapped) => (
 			this.uiScrollableRef.bounds.scrollHeight = this.uiScrollableRef.getScrollBounds().scrollHeight;
 		}
 
-		updateEventListeners = () => {
+		addEventListeners = () => {
 			if (this.uiScrollableRef && this.uiScrollableRef.childRef) {
 				const childContainerRef = this.uiScrollableRef.childRef.containerRef;
 
