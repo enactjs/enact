@@ -1,5 +1,5 @@
 import kind from '@enact/core/kind';
-import {forward, handle, stopPropagation} from '@enact/core/handle';
+import {forward, handle, stop} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -137,7 +137,7 @@ const MarqueeBase = kind({
 	handlers: {
 		onMarqueeComplete: handle(
 			isEventSource,
-			stopPropagation,
+			stop,
 			(ev, props) => forward('onMarqueeComplete', {type: 'onMarqueeComplete'}, props)
 		)
 	},
