@@ -4,7 +4,7 @@
  * The default export is {@link moonstone/Scroller.Scrollable}.
  */
 
-import clamp from 'ramda/src/clamp';
+import clamp from '@enact/core/internal/fp/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
 import {forward} from '@enact/core/handle';

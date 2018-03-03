@@ -7,8 +7,8 @@
  * @exports ProgressBar
  */
 
+import clamp from '@enact/core/internal/fp/clamp';
 import kind from '@enact/core/kind';
-import clamp from 'ramda/src/clamp';
 import PropTypes from 'prop-types';
 import React from 'react';
 

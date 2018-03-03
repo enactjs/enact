@@ -10,7 +10,6 @@ import {forward, forwardWithPrevent, forProp, handle, oneOf, preventDefault, ret
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
-import complement from 'ramda/src/complement';
 import platform from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -22,6 +21,8 @@ import {block, unblock, isNotBlocked} from './block';
 import {Drag, dragConfigPropType} from './Drag';
 import {Flick, flickConfigPropType} from './Flick';
 import {Hold, holdConfigPropType} from './Hold';
+
+const complement = (fn) => (...args) => !fn(...args);
 
 const getEventCoordinates = (ev) => {
 	let {clientX: x, clientY: y, type} = ev;

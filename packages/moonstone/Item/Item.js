@@ -10,12 +10,12 @@
  * @exports ItemDecorator
  */
 
+import compose from '@enact/core/internal/fp/compose';
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 import {ItemBase as UiItemBase, ItemDecorator as UiItemDecorator} from '@enact/ui/Item';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
-import compose from 'ramda/src/compose';
 import React from 'react';
 
 import {MarqueeDecorator} from '../Marquee';

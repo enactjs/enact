@@ -11,10 +11,10 @@
  * @exports icons
  */
 
+import compose from '@enact/core/internal/fp/compose';
 import kind from '@enact/core/kind';
 import UiIcon from '@enact/ui/Icon';
 import Pure from '@enact/ui/internal/Pure';
-import compose from 'ramda/src/compose';
 import React from 'react';
 
 import Skinnable from '../Skinnable';

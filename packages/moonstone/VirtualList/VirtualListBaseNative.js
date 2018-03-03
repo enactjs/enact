@@ -5,7 +5,7 @@
  * export is {@link moonstone/VirtualList.VirtualListBaseNative}.
  */
 
-import clamp from 'ramda/src/clamp';
+import clamp from '@enact/core/internal/fp/clamp';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {forward} from '@enact/core/handle';

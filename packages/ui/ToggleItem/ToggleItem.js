@@ -9,10 +9,10 @@
  * @exports ToggleItemDecorator
  */
 
+import compose from '@enact/core/internal/fp/compose';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import compose from 'ramda/src/compose';
 
 import ComponentOverride from '../ComponentOverride';
 import Toggleable from '../Toggleable';

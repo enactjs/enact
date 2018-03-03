@@ -13,10 +13,10 @@
  * @exports ToggleIconDecorator
  */
 
+import compose from '@enact/core/internal/fp/compose';
 import kind from '@enact/core/kind';
 import Pure from '@enact/ui/internal/Pure';
 import UiToggleIcon from '@enact/ui/ToggleIcon';
-import compose from 'ramda/src/compose';
 import React from 'react';
 
 import Icon from '../Icon';

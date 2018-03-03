@@ -1,5 +1,5 @@
 import {forward} from '@enact/core/handle';
-import clamp from 'ramda/src/clamp';
+import clamp from '@enact/core/internal/fp/clamp';
 import equals from 'ramda/src/equals';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';

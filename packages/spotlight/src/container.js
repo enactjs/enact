@@ -9,9 +9,8 @@ import and from 'ramda/src/and';
 import concat from 'ramda/src/concat';
 import {coerceArray} from '@enact/core/util';
 import intersection from 'ramda/src/intersection';
-import last from 'ramda/src/last';
 
-import {matchSelector} from './utils';
+import {last, matchSelector} from './utils';
 
 const containerAttribute = 'data-container-id';
 const containerConfigs   = new Map();

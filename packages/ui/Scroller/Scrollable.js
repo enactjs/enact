@@ -4,7 +4,7 @@
  * The default export is {@link ui/Scroller.Scrollable}.
  */
 
-import clamp from 'ramda/src/clamp';
+import clamp from '@enact/core/internal/fp/clamp';
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
