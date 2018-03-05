@@ -349,9 +349,9 @@ const SpottableScrollable = SpotlightContainerDecorator({restrict: 'self-first'}
 const Scroller = (props) => (
 	<SpottableScrollable
 		{...props}
-		render={// eslint-disable-line react/jsx-no-bind
-			(scrollerProps) => (<ScrollerBase {...scrollerProps} />)
-		}
+		render={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
+			<ScrollerBase {...scrollerProps} />
+		)}
 	/>
 );
 

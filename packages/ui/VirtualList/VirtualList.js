@@ -740,9 +740,9 @@ const VirtualList = (props) => (
 			<VirtualListBase
 				{...virtualListProps}
 				componentHidden={(componentProps) => (<div {...componentProps} />)} // eslint-disable-line react/jsx-no-bind
-				render={// eslint-disable-line react/jsx-no-bind
-					({cc, initItemContainerRef}) => (cc.length ? <div key="0" ref={initItemContainerRef}>{cc}</div> : null)
-				}
+				render={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+					cc.length ? <div key="0" ref={initItemContainerRef}>{cc}</div> : null
+				)}
 			/>
 		)}
 	/>

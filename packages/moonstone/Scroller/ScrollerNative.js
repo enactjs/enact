@@ -27,9 +27,9 @@ const SpottableScrollableNative = SpotlightContainerDecorator({restrict: 'self-f
 const ScrollerNative = (props) => (
 	<SpottableScrollableNative
 		{...props}
-		render={// eslint-disable-line react/jsx-no-bind
-			(scrollerProps) => (<UiScrollerBaseNative {...scrollerProps} />)
-		}
+		render={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
+			<UiScrollerBaseNative {...scrollerProps} />
+		)}
 	/>
 );
 
