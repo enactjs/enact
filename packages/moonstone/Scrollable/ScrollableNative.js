@@ -107,7 +107,7 @@ class ScrollableNative extends Component {
 	}
 
 	componentDidUpdate () {
-		if (this.uiScrollableRef.scrollToInfo === null) {
+		if (this.uiRef.scrollToInfo === null) {
 			this.updateScrollOnFocus();
 		}
 	}
@@ -131,12 +131,12 @@ class ScrollableNative extends Component {
 	}
 
 	onMouseOver = () => {
-		this.resetPosition = this.uiScrollableRef.childRef.containerRef.scrollTop;
+		this.resetPosition = this.uiRef.childRef.containerRef.scrollTop;
 	}
 
 	onMouseMove = () => {
 		if (this.resetPosition !== null) {
-			const childContainerRef = this.uiScrollableRef.childRef.containerRef;
+			const childContainerRef = this.uiRef.childRef.containerRef;
 			childContainerRef.style.scrollBehavior = null;
 			childContainerRef.scrollTop = this.resetPosition;
 			childContainerRef.style.scrollBehavior = 'smooth';
@@ -151,9 +151,9 @@ class ScrollableNative extends Component {
 	 */
 	onWheel = (e) => {
 		const
-			bounds = this.uiScrollableRef.getScrollBounds(),
-			canScrollHorizontally = this.uiScrollableRef.canScrollHorizontally(bounds),
-			canScrollVertically = this.uiScrollableRef.canScrollVertically(bounds),
+			bounds = this.uiRef.getScrollBounds(),
+			canScrollHorizontally = this.uiRef.canScrollHorizontally(bounds),
+			canScrollVertically = this.uiRef.canScrollVertically(bounds),
 			eventDeltaMode = e.deltaMode,
 			eventDelta = (-e.wheelDeltaY || e.deltaY);
 		let
@@ -165,13 +165,13 @@ class ScrollableNative extends Component {
 			window.document.activeElement.blur();
 		}
 
-		this.uiScrollableRef.showThumb(bounds);
+		this.uiRef.showThumb(bounds);
 
 		// FIXME This routine is a temporary support for horizontal wheel scroll.
 		// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
 		if (canScrollVertically) { // This routine handles wheel events on scrollbars for vertical scroll.
-			if (eventDelta < 0 && this.uiScrollableRef.scrollTop > 0 || eventDelta > 0 && this.uiScrollableRef.scrollTop < bounds.maxTop) {
-				const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiScrollableRef;
+			if (eventDelta < 0 && this.uiRef.scrollTop > 0 || eventDelta > 0 && this.uiRef.scrollTop < bounds.maxTop) {
+				const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef;
 
 				if (!this.isWheeling) {
 					this.childRef.setContainerDisabled(true);
@@ -181,19 +181,19 @@ class ScrollableNative extends Component {
 				// Not to check if e.target is a descendant of a wrapped component which may have a lot of nodes in it.
 				if ((horizontalScrollbarRef && horizontalScrollbarRef.getContainerRef().contains(e.target)) ||
 					(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(e.target))) {
-					delta = this.uiScrollableRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
+					delta = this.uiRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
 				}
 			} else {
 				needToHideThumb = true;
 			}
 		} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
-			if (eventDelta < 0 && this.uiScrollableRef.scrollLeft > 0 || eventDelta > 0 && this.uiScrollableRef.scrollLeft < bounds.maxLeft) {
+			if (eventDelta < 0 && this.uiRef.scrollLeft > 0 || eventDelta > 0 && this.uiRef.scrollLeft < bounds.maxLeft) {
 				if (!this.isWheeling) {
 					this.childRef.setContainerDisabled(true);
 					this.isWheeling = true;
 				}
-				delta = this.uiScrollableRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
+				delta = this.uiRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				needToHideThumb = !delta;
 			} else {
 				needToHideThumb = true;
@@ -205,15 +205,15 @@ class ScrollableNative extends Component {
 			e.preventDefault();
 			const direction = Math.sign(delta);
 			// Not to accumulate scroll position if wheel direction is different from hold direction
-			if (direction !== this.uiScrollableRef.pageDirection) {
-				this.uiScrollableRef.isScrollAnimationTargetAccumulated = false;
-				this.uiScrollableRef.pageDirection = direction;
+			if (direction !== this.uiRef.pageDirection) {
+				this.uiRef.isScrollAnimationTargetAccumulated = false;
+				this.uiRef.pageDirection = direction;
 			}
-			this.uiScrollableRef.scrollToAccumulatedTarget(delta, canScrollVertically);
+			this.uiRef.scrollToAccumulatedTarget(delta, canScrollVertically);
 		}
 
 		if (needToHideThumb) {
-			this.uiScrollableRef.startHidingThumb();
+			this.uiRef.startHidingThumb();
 		}
 	}
 
@@ -229,10 +229,10 @@ class ScrollableNative extends Component {
 		if (pos) {
 			const
 				{top, left} = pos,
-				bounds = this.uiScrollableRef.getScrollBounds();
+				bounds = this.uiRef.getScrollBounds();
 
-			if ((bounds.maxTop > 0 && top !== this.uiScrollableRef.scrollTop) || (bounds.maxLeft > 0 && left !== this.uiScrollableRef.scrollLeft)) {
-				this.uiScrollableRef.start(left, top, this.animateOnFocus);
+			if ((bounds.maxTop > 0 && top !== this.uiRef.scrollTop) || (bounds.maxLeft > 0 && left !== this.uiRef.scrollLeft)) {
+				this.uiRef.start(left, top, this.animateOnFocus);
 			}
 			this.lastFocusedItem = item;
 			this.lastScrollPositionOnFocus = pos;
@@ -260,8 +260,8 @@ class ScrollableNative extends Component {
 
 				// If scroll animation is ongoing, we need to pass last target position to
 				// determine correct scroll position.
-				if (this.uiScrollableRef.scrolling && lastPos) {
-					pos = positionFn({item, scrollPosition: (this.uiScrollableRef.direction !== 'horizontal') ? lastPos.top : lastPos.left});
+				if (this.uiRef.scrolling && lastPos) {
+					pos = positionFn({item, scrollPosition: (this.uiRef.direction !== 'horizontal') ? lastPos.top : lastPos.left});
 				} else {
 					pos = positionFn({item});
 				}
@@ -275,8 +275,8 @@ class ScrollableNative extends Component {
 
 	getPageDirection = (keyCode) => {
 		const
-			isRtl = this.uiScrollableRef.context.rtl,
-			{direction} = this.uiScrollableRef,
+			isRtl = this.uiRef.context.rtl,
+			{direction} = this.uiRef,
 			isVertical = (direction === 'vertical' || direction === 'both');
 
 		return isPageUp(keyCode) ?
@@ -311,13 +311,13 @@ class ScrollableNative extends Component {
 	scrollByPage = (keyCode) => {
 		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
 		// scroller as a plain container
-		if (!this.uiScrollableRef.state.isVerticalScrollbarVisible) return;
+		if (!this.uiRef.state.isVerticalScrollbarVisible) return;
 
 		const
-			{childRef, scrollToAccumulatedTarget} = this.uiScrollableRef,
-			bounds = this.uiScrollableRef.getScrollBounds(),
-			canScrollVertically = this.uiScrollableRef.canScrollVertically(bounds),
-			pageDistance = isPageUp(keyCode) ? (this.uiScrollableRef.pageDistance * -1) : this.uiScrollableRef.pageDistance,
+			{childRef, scrollToAccumulatedTarget} = this.uiRef,
+			bounds = this.uiRef.getScrollBounds(),
+			canScrollVertically = this.uiRef.canScrollVertically(bounds),
+			pageDistance = isPageUp(keyCode) ? (this.uiRef.pageDistance * -1) : this.uiRef.pageDistance,
 			spotItem = Spotlight.getCurrent();
 
 		if (!Spotlight.getPointerMode() && spotItem) {
@@ -334,7 +334,7 @@ class ScrollableNative extends Component {
 				),
 				direction = this.getPageDirection(keyCode),
 				rDirection = reverseDirections[direction],
-				viewportBounds = this.uiScrollableRef.containerRef.getBoundingClientRect(),
+				viewportBounds = this.uiRef.containerRef.getBoundingClientRect(),
 				spotItemBounds = spotItem.getBoundingClientRect(),
 				endPoint = this.getEndPoint(direction, spotItemBounds, viewportBounds),
 				next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId),
@@ -373,7 +373,7 @@ class ScrollableNative extends Component {
 			current = document.querySelector(`[data-container-id="${containerId}"]`);
 		}
 
-		return current && this.uiScrollableRef.containerRef.contains(current);
+		return current && this.uiRef.containerRef.contains(current);
 	}
 
 	onKeyDown = (e) => {
@@ -388,17 +388,17 @@ class ScrollableNative extends Component {
 
 	onScrollbarButtonClick = ({isPreviousScrollButton, isVerticalScrollBar}) => {
 		const
-			bounds = this.uiScrollableRef.getScrollBounds(),
+			bounds = this.uiRef.getScrollBounds(),
 			pageDistance = (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
 			delta = isPreviousScrollButton ? -pageDistance : pageDistance,
 			direction = Math.sign(delta);
 
-		if (direction !== this.uiScrollableRef.pageDirection) {
-			this.uiScrollableRef.isScrollAnimationTargetAccumulated = false;
-			this.uiScrollableRef.pageDirection = direction;
+		if (direction !== this.uiRef.pageDirection) {
+			this.uiRef.isScrollAnimationTargetAccumulated = false;
+			this.uiRef.pageDirection = direction;
 		}
 
-		this.uiScrollableRef.scrollToAccumulatedTarget(delta, isVerticalScrollBar);
+		this.uiRef.scrollToAccumulatedTarget(delta, isVerticalScrollBar);
 	}
 
 	scrollStopOnScroll = () => {
@@ -423,33 +423,33 @@ class ScrollableNative extends Component {
 	}
 
 	scrollTo = (opt) => {
-		if (!this.uiScrollableRef.deferScrollTo) {
-			const {left, top} = this.uiScrollableRef.getPositionForScrollTo(opt);
+		if (!this.uiRef.deferScrollTo) {
+			const {left, top} = this.uiRef.getPositionForScrollTo(opt);
 
 			this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
 			this.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
-			this.uiScrollableRef.scrollToInfo = null;
-			this.uiScrollableRef.start(
-				(left !== null) ? left : this.uiScrollableRef.scrollLeft,
-				(top !== null) ? top : this.uiScrollableRef.scrollTop,
+			this.uiRef.scrollToInfo = null;
+			this.uiRef.start(
+				(left !== null) ? left : this.uiRef.scrollLeft,
+				(top !== null) ? top : this.uiRef.scrollTop,
 				opt.animate
 			);
 		} else {
-			this.uiScrollableRef.scrollToInfo = opt;
+			this.uiRef.scrollToInfo = opt;
 		}
 	}
 
 	alertThumb () {
-		const bounds = this.uiScrollableRef.getScrollBounds();
+		const bounds = this.uiRef.getScrollBounds();
 
-		this.uiScrollableRef.showThumb(bounds);
-		this.uiScrollableRef.startHidingThumb();
+		this.uiRef.showThumb(bounds);
+		this.uiRef.startHidingThumb();
 	}
 
 	alertThumbAfterRendered = () => {
 		const spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem && this.uiScrollableRef && this.uiScrollableRef.childRef.containerRef.contains(spotItem) && this.isUpdatedScrollThumb) {
+		if (!Spotlight.getPointerMode() && spotItem && this.uiRef && this.uiRef.childRef.containerRef.contains(spotItem) && this.isUpdatedScrollThumb) {
 			this.alertThumb();
 		}
 	}
@@ -457,28 +457,28 @@ class ScrollableNative extends Component {
 	updateScrollOnFocus () {
 		const
 			focusedItem = Spotlight.getCurrent(),
-			{containerRef} = this.uiScrollableRef.childRef;
+			{containerRef} = this.uiRef.childRef;
 
 		if (focusedItem && containerRef && containerRef.contains(focusedItem)) {
 			const
 				scrollInfo = {
-					previousScrollHeight: this.uiScrollableRef.bounds.scrollHeight,
-					scrollTop: this.uiScrollableRef.scrollTop
+					previousScrollHeight: this.uiRef.bounds.scrollHeight,
+					scrollTop: this.uiRef.scrollTop
 				},
 				pos = this.childRef.calculatePositionOnFocus({item: focusedItem, scrollInfo});
 
-			if (pos && (pos.left !== this.uiScrollableRef.scrollLeft || pos.top !== this.uiScrollableRef.scrollTop)) {
-				this.uiScrollableRef.start(pos.left, pos.top, false);
+			if (pos && (pos.left !== this.uiRef.scrollLeft || pos.top !== this.uiRef.scrollTop)) {
+				this.uiRef.start(pos.left, pos.top, false);
 			}
 		}
 
 		// update `scrollHeight`
-		this.uiScrollableRef.bounds.scrollHeight = this.uiScrollableRef.getScrollBounds().scrollHeight;
+		this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 	}
 
 	updateEventListeners = () => {
-		if (this.uiScrollableRef && this.uiScrollableRef.childRef) {
-			const childContainerRef = this.uiScrollableRef.childRef.containerRef;
+		if (this.uiRef && this.uiRef.childRef) {
+			const childContainerRef = this.uiRef.childRef.containerRef;
 
 			if (childContainerRef && childContainerRef.addEventListener) {
 				// FIXME `onMouseOver` doesn't work on the v8 snapshot.
@@ -492,8 +492,8 @@ class ScrollableNative extends Component {
 	}
 
 	removeEventListeners = () => {
-		if (this.uiScrollableRef && this.uiScrollableRef.childRef) {
-			const childContainerRef = this.uiScrollableRef.childRef.containerRef;
+		if (this.uiRef && this.uiRef.childRef) {
+			const childContainerRef = this.uiRef.childRef.containerRef;
 
 			if (childContainerRef && childContainerRef.removeEventListener) {
 				// FIXME `onMouseOver` doesn't work on the v8 snapshot.
@@ -510,8 +510,8 @@ class ScrollableNative extends Component {
 		this.childRef = ref;
 	}
 
-	initUiScrollableRef = (ref) => {
-		this.uiScrollableRef = ref;
+	initUiRef = (ref) => {
+		this.uiRef = ref;
 	}
 
 	render () {
@@ -528,11 +528,10 @@ class ScrollableNative extends Component {
 				scrollStopOnScroll={this.scrollStopOnScroll}
 				start={this.start}
 				updateEventListeners={this.updateEventListeners}
-				childRef={this.initChildRef}
-				ref={this.initUiScrollableRef}
+				ref={this.initUiRef}
 				render={({
 					css, className, initContainerRef, style, childComponentProps, scrollTo,
-					initChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,
+					initUiChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,
 					verticalScrollbarProps, horizontalScrollbarProps
 				}) => ( // eslint-disable-line react/jsx-no-bind
 					<ScrollableSpotlightContainer
@@ -546,10 +545,8 @@ class ScrollableNative extends Component {
 								...childComponentProps,
 								cbScrollTo: this.scrollTo,
 								className: css.content,
-								ref: (ref) => {
-									initChildRef(ref);
-									this.initChildRef(ref);
-								}
+								initUiChildRef: initUiChildRef,
+								ref: this.initChildRef
 							})}
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>

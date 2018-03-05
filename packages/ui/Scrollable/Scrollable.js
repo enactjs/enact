@@ -969,10 +969,17 @@ class ScrollableBase extends Component {
 
 		delete rest.cbScrollTo;
 		delete rest.horizontalScrollbar;
+		delete rest.onKeyDown;
+		delete rest.onMouseUp;
 		delete rest.onScroll;
 		delete rest.onScrollbarVisibilityChange;
 		delete rest.onScrollStart;
 		delete rest.onScrollStop;
+		delete rest.onWheel;
+		delete rest.removeEventListeners;
+		delete rest.scrollTo;
+		delete rest.stop;
+		delete rest.updateEventListeners;
 		delete rest.verticalScrollbar;
 
 		return render({
@@ -982,7 +989,7 @@ class ScrollableBase extends Component {
 			style,
 			childComponentProps: rest,
 			handleScroll: this.handleScroll,
-			initChildRef: this.initChildRef,
+			initUiChildRef: this.initChildRef,
 			isVerticalScrollbarVisible,
 			isHorizontalScrollbarVisible,
 			verticalScrollbarProps: this.verticalScrollbarProps,
@@ -1007,16 +1014,12 @@ class Scrollable extends Component {
 	render () {
 		const {render, ...rest} = this.props;
 
-		delete rest.removeEventListeners;
-		delete rest.scrollTo;
-		delete rest.updateEventListeners;
-
 		return (
 			<ScrollableBase
 				{...rest}
 				render={({
 					css, className, initContainerRef, style, childComponentProps, scrollTo,
-					handleScroll, initChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,
+					handleScroll, initUiChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,
 					verticalScrollbarProps, horizontalScrollbarProps
 				}) => (
 					<div
@@ -1030,7 +1033,7 @@ class Scrollable extends Component {
 								cbScrollTo: scrollTo,
 								className: css.content,
 								onScroll: handleScroll,
-								ref: initChildRef
+								ref: initUiChildRef
 							})}
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>

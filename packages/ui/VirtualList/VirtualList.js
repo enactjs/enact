@@ -693,17 +693,21 @@ class VirtualListBase extends Component {
 			{firstIndex, numOfItems} = this.state,
 			{cc, primary} = this;
 
+		delete rest.applyStyleToExistingNode;
+		delete rest.applyStyleToHideNode;
+		delete rest.applyStyleToNewNode;
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
 		delete rest.component;
 		delete rest.data;
 		delete rest.dataSize;
 		delete rest.direction;
+		delete rest.getXY;
 		delete rest.itemSize;
-		delete rest.nodeIndexToBeFocused;
 		delete rest.overhang;
 		delete rest.pageScroll;
 		delete rest.spacing;
+		delete rest.updateStatesAndBounds;
 
 		if (primary) {
 			this.positionItems({updateFrom: firstIndex, updateTo: firstIndex + numOfItems});
@@ -758,4 +762,3 @@ export {
 	VirtualListBase,
 	gridListItemSizeShape
 };
-export * from './GridListImageItem';

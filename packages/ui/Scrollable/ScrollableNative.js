@@ -531,7 +531,9 @@ class ScrollableBaseNative extends Component {
 	}
 
 	scrollStopOnScroll = () => {
-		this.props.scrollStopOnScroll();
+		if (this.props.scrollStopOnScroll) {
+			this.props.scrollStopOnScroll();
+		}
 		this.isScrollAnimationTargetAccumulated = false;
 		this.scrolling = false;
 		this.doScrollStop();
@@ -857,10 +859,18 @@ class ScrollableBaseNative extends Component {
 
 		delete rest.cbScrollTo;
 		delete rest.horizontalScrollbar;
+		delete rest.onKeyDown;
+		delete rest.onMouseDown;
 		delete rest.onScroll;
 		delete rest.onScrollbarVisibilityChange;
 		delete rest.onScrollStart;
 		delete rest.onScrollStop;
+		delete rest.onWheel;
+		delete rest.removeEventListeners;
+		delete rest.scrollStopOnScroll;
+		delete rest.scrollTo;
+		delete rest.start;
+		delete rest.updateEventListeners;
 		delete rest.verticalScrollbar;
 
 		return render({

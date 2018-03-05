@@ -99,25 +99,6 @@ class VirtualListBase extends Component {
 
 	static contextTypes = contextTypes
 
-	/*getChildContext () {
-		return (type === 'JS') ? {
-			applyStyleToExistingNode: this.applyStyleToExistingNode,
-			applyStyleToHideNode: this.applyStyleToHideNode,
-			applyStyleToNewNode: this.applyStyleToNewNode,
-			getXY: this.getXY,
-			initVirtualList: this.initVirtualList,
-			renderChildren: this.renderChildren,
-			updateStatesAndBounds: this.updateStatesAndBounds
-		} : {
-			applyStyleToHideNode: this.applyStyleToHideNode,
-			applyStyleToNewNode: this.applyStyleToNewNode,
-			getXY: this.getXY,
-			initVirtualList: this.initVirtualList,
-			renderChildren: this.renderChildren,
-			updateStatesAndBounds: this.updateStatesAndBounds
-		};
-	}*/
-
 	componentDidMount () {
 		if (this.props.type === 'JS') {
 			const containerNode = this.uiVirtualListRef.containerRef;
@@ -163,10 +144,6 @@ class VirtualListBase extends Component {
 	restoreLastFocused = false
 
 	itemContainerRef = null
-
-	initVirtualList = (uiVirtualListRef) => {
-		this.uiVirtualListRef = uiVirtualListRef;
-	}
 
 	setContainerDisabled = (bool) => {
 		const containerNode = (this.props.type === 'JS') ? this.uiVirtualListRef.containerRef : this.uiVirtualListRef.contentRef;
@@ -741,19 +718,18 @@ class VirtualListBase extends Component {
 		this.itemContainerRef = ref;
 	}
 
-	initUiVirtualListRef = (ref) => {
-		this.uiVirtualListRef = ref;
-	}
-
 	render () {
 		const
-			{render, ...rest} = this.props,
+			{render, initUiChildRef, ...rest} = this.props,
 			needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
 		return (
 			<UiVirtualListBase
 				{...rest}
-				ref={(ref) => {this.initUiVirtualListRef(ref); this.props.initChildRef(ref);}}
+				ref={(ref) => {
+					this.uiVirtualListRef = ref;
+					initUiChildRef(ref);
+				}}
 				applyStyleToExistingNode={this.applyStyleToExistingNode}
 				applyStyleToHideNode={this.applyStyleToHideNode}
 				applyStyleToNewNode={this.applyStyleToNewNode}
@@ -772,7 +748,9 @@ class VirtualListBase extends Component {
 	}
 }
 
-const SpottableScrollable = SpotlightContainerDecorator(SpotlightContainerConfig, Scrollable);
+const
+	SpottableScrollable = SpotlightContainerDecorator(SpotlightContainerConfig, Scrollable),
+	SpottableScrollableNative = SpotlightContainerDecorator(SpotlightContainerConfig, ScrollableNative);
 
 /**
  * A moonstone-styled scrollable and spottable virtual list component.
@@ -838,7 +816,7 @@ const VirtualGridList = VirtualList;
  * @public
  */
 const VirtualListNative = (props) => (
-	<ScrollableNative
+	<SpottableScrollableNative
 		{...props}
 		render={(props) => (
 			<SpottableVirtualListBase

@@ -697,17 +697,21 @@ class VirtualListBaseNative extends Component {
 			{cc, primary} = this,
 			mergedClasses = classNames(css.list, this.containerClass, className);
 
+		delete rest.applyStyleToExistingNode;
+		delete rest.applyStyleToHideNode;
+		delete rest.applyStyleToNewNode;
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
 		delete rest.component;
 		delete rest.data;
 		delete rest.dataSize;
 		delete rest.direction;
+		delete rest.getXY;
 		delete rest.itemSize;
-		delete rest.nodeIndexToBeFocused;
 		delete rest.overhang;
 		delete rest.pageScroll;
 		delete rest.spacing;
+		delete rest.updateStatesAndBounds;
 
 		if (primary) {
 			this.positionItems();
@@ -768,4 +772,3 @@ export {
 	VirtualListBaseNative,
 	gridListItemSizeShape
 };
-export * from './GridListImageItem';

@@ -106,7 +106,7 @@ class Scrollable extends Component {
 	}
 
 	componentDidUpdate () {
-		if (this.uiScrollableRef.scrollToInfo === null) {
+		if (this.uiRef.scrollToInfo === null) {
 			this.updateScrollOnFocus();
 		}
 	}
@@ -122,7 +122,7 @@ class Scrollable extends Component {
 	nodeToFocus = null
 
 	onMouseUp = () => {
-		if (this.uiScrollableRef.isDragging && this.uiScrollableRef.isFlicking()) {
+		if (this.uiRef.isDragging && this.uiRef.isFlicking()) {
 			const focusedItem = Spotlight.getCurrent();
 
 			if (focusedItem) {
@@ -133,7 +133,7 @@ class Scrollable extends Component {
 
 	onWheel = (delta) => {
 		const
-			{verticalScrollbarRef, horizontalScrollbarRef} = this.uiScrollableRef,
+			{verticalScrollbarRef, horizontalScrollbarRef} = this.uiRef,
 			focusedItem = Spotlight.getCurrent(),
 			isVerticalScrollButtonFocused = verticalScrollbarRef && verticalScrollbarRef.isOneOfScrollButtonsFocused(),
 			isHorizontalScrollButtonFocused = horizontalScrollbarRef && horizontalScrollbarRef.isOneOfScrollButtonsFocused();
@@ -152,10 +152,10 @@ class Scrollable extends Component {
 		if (pos) {
 			const
 				{top, left} = pos,
-				bounds = this.uiScrollableRef.getScrollBounds();
+				bounds = this.uiRef.getScrollBounds();
 
-			if ((bounds.maxTop > 0 && top !== this.uiScrollableRef.scrollTop) || (bounds.maxLeft > 0 && left !== this.uiScrollableRef.scrollLeft)) {
-				this.uiScrollableRef.start({
+			if ((bounds.maxTop > 0 && top !== this.uiRef.scrollTop) || (bounds.maxLeft > 0 && left !== this.uiRef.scrollLeft)) {
+				this.uiRef.start({
 					targetX: left,
 					targetY: top,
 					animate: (animationDuration > 0) && this.animateOnFocus,
@@ -169,13 +169,13 @@ class Scrollable extends Component {
 
 	onFocus = (e) => {
 		const
-			{isDragging, animator, direction} = this.uiScrollableRef,
+			{isDragging, animator, direction} = this.uiRef,
 			shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
 				this.childRef.shouldPreventScrollByFocus() :
 				false;
 
 		if (this.isWheeling) {
-			this.uiScrollableRef.stop();
+			this.uiRef.stop();
 			this.animateOnFocus = false;
 		}
 
@@ -210,8 +210,8 @@ class Scrollable extends Component {
 
 	getPageDirection = (keyCode) => {
 		const
-			isRtl = this.uiScrollableRef.context.rtl,
-			{direction} = this.uiScrollableRef,
+			isRtl = this.uiRef.context.rtl,
+			{direction} = this.uiRef,
 			isVertical = (direction === 'vertical' || direction === 'both');
 
 		return isPageUp(keyCode) ?
@@ -246,13 +246,13 @@ class Scrollable extends Component {
 	scrollByPage = (keyCode) => {
 		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
 		// scroller as a plain container
-		if (!this.uiScrollableRef.state.isVerticalScrollbarVisible) return;
+		if (!this.uiRef.state.isVerticalScrollbarVisible) return;
 
 		const
-			{childRef, containerRef, scrollToAccumulatedTarget} = this.uiScrollableRef,
-			bounds = this.uiScrollableRef.getScrollBounds(),
-			canScrollVertically = this.uiScrollableRef.canScrollVertically(bounds),
-			pageDistance = isPageUp(keyCode) ? (this.uiScrollableRef.pageDistance * -1) : this.uiScrollableRef.pageDistance,
+			{childRef, containerRef, scrollToAccumulatedTarget} = this.uiRef,
+			bounds = this.uiRef.getScrollBounds(),
+			canScrollVertically = this.uiRef.canScrollVertically(bounds),
+			pageDistance = isPageUp(keyCode) ? (this.uiRef.pageDistance * -1) : this.uiRef.pageDistance,
 			spotItem = Spotlight.getCurrent();
 
 		if (!Spotlight.getPointerMode() && spotItem) {
@@ -305,7 +305,7 @@ class Scrollable extends Component {
 			current = document.querySelector(`[data-container-id="${containerId}"]`);
 		}
 
-		return current && this.uiScrollableRef.containerRef.contains(current);
+		return current && this.uiRef.containerRef.contains(current);
 	}
 
 	onKeyDown = (e) => {
@@ -317,17 +317,17 @@ class Scrollable extends Component {
 
 	onScrollbarButtonClick = ({isPreviousScrollButton, isVerticalScrollBar}) => {
 		const
-			bounds = this.uiScrollableRef.getScrollBounds(),
+			bounds = this.uiRef.getScrollBounds(),
 			pageDistance = (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
 			delta = isPreviousScrollButton ? -pageDistance : pageDistance,
 			direction = Math.sign(delta);
 
-		if (direction !== this.uiScrollableRef.pageDirection) {
-			this.uiScrollableRef.isScrollAnimationTargetAccumulated = false;
-			this.uiScrollableRef.pageDirection = direction;
+		if (direction !== this.uiRef.pageDirection) {
+			this.uiRef.isScrollAnimationTargetAccumulated = false;
+			this.uiRef.pageDirection = direction;
 		}
 
-		this.uiScrollableRef.scrollToAccumulatedTarget(delta, isVerticalScrollBar);
+		this.uiRef.scrollToAccumulatedTarget(delta, isVerticalScrollBar);
 	}
 
 	stop = () => {
@@ -351,33 +351,33 @@ class Scrollable extends Component {
 	}
 
 	scrollTo = (opt) => {
-		if (!this.uiScrollableRef.deferScrollTo) {
-			const {left, top} = this.uiScrollableRef.getPositionForScrollTo(opt);
+		if (!this.uiRef.deferScrollTo) {
+			const {left, top} = this.uiRef.getPositionForScrollTo(opt);
 
 			this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
 			this.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
-			this.uiScrollableRef.scrollToInfo = null;
-			this.uiScrollableRef.start({
-				targetX: (left !== null) ? left : this.uiScrollableRef.scrollLeft,
-				targetY: (top !== null) ? top : this.uiScrollableRef.scrollTop,
+			this.uiRef.scrollToInfo = null;
+			this.uiRef.start({
+				targetX: (left !== null) ? left : this.uiRef.scrollLeft,
+				targetY: (top !== null) ? top : this.uiRef.scrollTop,
 				animate: opt.animate
 			});
 		} else {
-			this.uiScrollableRef.scrollToInfo = opt;
+			this.uiRef.scrollToInfo = opt;
 		}
 	}
 
 	alertThumb = () => {
-		const bounds = this.uiScrollableRef.getScrollBounds();
+		const bounds = this.uiRef.getScrollBounds();
 
-		this.uiScrollableRef.showThumb(bounds);
-		this.uiScrollableRef.startHidingThumb();
+		this.uiRef.showThumb(bounds);
+		this.uiRef.startHidingThumb();
 	}
 
 	alertThumbAfterRendered () {
 		const spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem && this.uiScrollableRef && this.uiScrollableRef.childRef.containerRef.contains(spotItem) && this.isUpdatedScrollThumb) {
+		if (!Spotlight.getPointerMode() && spotItem && this.uiRef && this.uiRef.childRef.containerRef.contains(spotItem) && this.isUpdatedScrollThumb) {
 			this.alertThumb();
 		}
 	}
@@ -385,18 +385,18 @@ class Scrollable extends Component {
 	updateScrollOnFocus () {
 		const
 			focusedItem = Spotlight.getCurrent(),
-			{containerRef} = this.uiScrollableRef.childRef;
+			{containerRef} = this.uiRef.childRef;
 
 		if (focusedItem && containerRef && containerRef.contains(focusedItem)) {
 			const
 				scrollInfo = {
-					previousScrollHeight: this.uiScrollableRef.bounds.scrollHeight,
-					scrollTop: this.uiScrollableRef.scrollTop
+					previousScrollHeight: this.uiRef.bounds.scrollHeight,
+					scrollTop: this.uiRef.scrollTop
 				},
 				pos = this.childRef.calculatePositionOnFocus({item: focusedItem, scrollInfo});
 
-			if (pos && (pos.left !== this.uiScrollableRef.scrollLeft || pos.top !== this.uiScrollableRef.scrollTop)) {
-				this.uiScrollableRef.start({
+			if (pos && (pos.left !== this.uiRef.scrollLeft || pos.top !== this.uiRef.scrollTop)) {
+				this.uiRef.start({
 					targetX: pos.left,
 					targetY: pos.top,
 					animate: false
@@ -405,12 +405,12 @@ class Scrollable extends Component {
 		}
 
 		// update `scrollHeight`
-		this.uiScrollableRef.bounds.scrollHeight = this.uiScrollableRef.getScrollBounds().scrollHeight;
+		this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 	}
 
 	updateEventListeners = () => {
-		if (this.uiScrollableRef && this.uiScrollableRef.childRef) {
-			const childContainerRef = this.uiScrollableRef.childRef.containerRef;
+		if (this.uiRef && this.uiRef.childRef) {
+			const childContainerRef = this.uiRef.childRef.containerRef;
 
 			if (childContainerRef && childContainerRef.addEventListener) {
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
@@ -420,8 +420,8 @@ class Scrollable extends Component {
 	}
 
 	removeEventListeners = () => {
-		if (this.uiScrollableRef && this.uiScrollableRef.childRef) {
-			const childContainerRef = this.uiScrollableRef.childRef.containerRef;
+		if (this.uiRef && this.uiRef.childRef) {
+			const childContainerRef = this.uiRef.childRef.containerRef;
 
 			if (childContainerRef && childContainerRef.removeEventListener) {
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
@@ -436,9 +436,9 @@ class Scrollable extends Component {
 		}
 	}
 
-	initUiScrollableRef = (ref) => {
+	initUiRef = (ref) => {
 		if (ref) {
-			this.uiScrollableRef = ref;
+			this.uiRef = ref;
 		}
 	}
 
@@ -455,10 +455,10 @@ class Scrollable extends Component {
 				scrollTo={this.scrollTo}
 				stop={this.stop}
 				updateEventListeners={this.updateEventListeners}
-				ref={this.initUiScrollableRef}
+				ref={this.initUiRef}
 				render={({
 					css, className, initContainerRef, style, childComponentProps,
-					handleScroll, initChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,
+					handleScroll, initUiChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,
 					verticalScrollbarProps, horizontalScrollbarProps
 				}) => ( // eslint-disable-line react/jsx-no-bind
 					<ScrollableSpotlightContainer
@@ -473,7 +473,7 @@ class Scrollable extends Component {
 								cbScrollTo: this.scrollTo,
 								className: css.content,
 								onScroll: handleScroll,
-								initChildRef: initChildRef,
+								initUiChildRef,
 								ref: this.initChildRef
 							})}
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}

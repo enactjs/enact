@@ -173,6 +173,8 @@ class ScrollbarBase extends PureComponent {
 				vertical ? css.vertical : css.horizontal
 			);
 
+		delete rest.setRef;
+
 		return (
 			<div {...rest} className={containerClassName} ref={this.setContainerRef}>
 				{render({
