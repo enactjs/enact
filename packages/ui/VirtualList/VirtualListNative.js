@@ -538,6 +538,14 @@ class VirtualListBaseNative extends Component {
 		}
 	}
 
+	getItemNode = (index) => {
+		const
+			{numOfItems} = this.state,
+			ref = this.itemContainerRef;
+
+		return ref ? ref.children[index % numOfItems] : null;
+	}
+
 	applyStyleToNewNode = (index, ...rest) => {
 		const
 			{component, data} = this.props,

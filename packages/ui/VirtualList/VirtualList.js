@@ -540,10 +540,16 @@ class VirtualListBase extends Component {
 		}
 	}
 
-	applyStyleToExistingNode = (index, ...rest) => {
+	getItemNode = (index) => {
 		const
 			{numOfItems} = this.state,
-			node = this.itemContainerRef.children[index % numOfItems];
+			ref = this.itemContainerRef;
+
+		return ref ? ref.children[index % numOfItems] : null;
+	}
+
+	applyStyleToExistingNode = (index, ...rest) => {
+		const node = this.getItemNode(index);
 
 		if (node) {
 			this.composeStyle(node.style, ...rest);
@@ -715,9 +721,13 @@ class VirtualListBase extends Component {
 
 		return (
 			<div {...rest} ref={this.initContainerRef}>
-				{render({cc, initItemContainerRef: (ref) => { // eslint-disable-line react/jsx-no-bind
-					this.itemContainerRef = ref;
-				}, primary})}
+				{render({
+					cc,
+					initItemContainerRef: (ref) => { // eslint-disable-line react/jsx-no-bind
+						this.itemContainerRef = ref;
+					},
+					primary
+				})}
 			</div>
 		);
 	}
