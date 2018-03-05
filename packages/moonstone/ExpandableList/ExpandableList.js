@@ -382,7 +382,7 @@ const ExpandableList = Pure(
 		{getSelectedNode: (node, {selected}) => {
 			const _selected = selected ? selected : 0;
 			const selectedIndex = Array.isArray(_selected) && _selected.length ? _selected[0] : _selected;
-			const selectedNode = node.querySelector('[data-index="' + selectedIndex + '"]');
+			const selectedNode = node ? node.querySelector('[data-index="' + selectedIndex + '"]') : null;
 			return selectedNode;
 		}},
 		Changeable(
