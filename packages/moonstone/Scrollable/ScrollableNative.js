@@ -530,7 +530,7 @@ class ScrollableNative extends Component {
 				updateEventListeners={this.updateEventListeners}
 				ref={this.initUiRef}
 				render={({
-					css, className, initContainerRef, style, childComponentProps, scrollTo,
+					css, className, initContainerRef, style, childComponentProps,
 					initUiChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,
 					verticalScrollbarProps, horizontalScrollbarProps
 				}) => ( // eslint-disable-line react/jsx-no-bind
@@ -545,7 +545,7 @@ class ScrollableNative extends Component {
 								...childComponentProps,
 								cbScrollTo: this.scrollTo,
 								className: css.content,
-								initUiChildRef: initUiChildRef,
+								initUiChildRef,
 								ref: this.initChildRef
 							})}
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}

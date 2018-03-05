@@ -879,8 +879,7 @@ class ScrollableBaseNative extends Component {
 			className: scrollableClasses,
 			style,
 			childComponentProps: rest,
-			scrollTo: this.scrollTo,
-			initChildRef: this.initChildRef,
+			initUiChildRef: this.initChildRef,
 			isVerticalScrollbarVisible,
 			isHorizontalScrollbarVisible,
 			verticalScrollbarProps: this.verticalScrollbarProps,
@@ -910,7 +909,7 @@ class ScrollableNative extends Component {
 				{...rest}
 				render={({
 					css, className, initContainerRef, style, childComponentProps, scrollTo,
-					initChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,
+					initUiChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,
 					verticalScrollbarProps, horizontalScrollbarProps
 				}) => (
 					<div
@@ -923,7 +922,7 @@ class ScrollableNative extends Component {
 								...childComponentProps,
 								cbScrollTo: scrollTo,
 								className: css.content,
-								ref: initChildRef
+								ref: initUiChildRef
 							})}
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>

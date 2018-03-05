@@ -720,11 +720,12 @@ class VirtualListBase extends Component {
 
 	render () {
 		const
-			{render, initUiChildRef, ...rest} = this.props,
-			needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
+			{render, initUiChildRef, type, ...rest} = this.props,
+			needsScrollingPlaceholder = this.isNeededScrollingPlaceholder(),
+			UiBase = (type === 'JS') ? UiVirtualListBase : UiVirtualListBaseNative;
 
 		return (
-			<UiVirtualListBase
+			<UiBase
 				{...rest}
 				ref={(ref) => {
 					this.uiVirtualListRef = ref;
@@ -789,7 +790,6 @@ const VirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
 	/>
 );
 
-
 /**
  * A moonstone-styled scrollable and spottable virtual grid list component.
  *
@@ -819,7 +819,7 @@ const VirtualListNative = (props) => (
 	<SpottableScrollableNative
 		{...props}
 		render={(props) => (
-			<SpottableVirtualListBase
+			<VirtualListBase
 				{...props}
 				type="Native"
 				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => (
