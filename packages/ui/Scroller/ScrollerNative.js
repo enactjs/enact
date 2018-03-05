@@ -24,7 +24,7 @@ const ScrollerNative = (props) => (
 	<ScrollableNative
 		{...props}
 		render={ // eslint-disable-line react/jsx-no-bind
-			(props) => (<ScrollerBaseNative {...props} />)
+			(scrollerProps) => (<ScrollerBaseNative {...scrollerProps} />)
 		}
 	/>
 );

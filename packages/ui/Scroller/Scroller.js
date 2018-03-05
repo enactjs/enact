@@ -185,7 +185,7 @@ const Scroller = (props) => (
 	<Scrollable
 		{...props}
 		render={ // eslint-disable-line react/jsx-no-bind
-			(props) => (<ScrollerBase {...props} />)
+			(scrollerProps) => (<ScrollerBase {...scrollerProps} />)
 		}
 	/>
 );
