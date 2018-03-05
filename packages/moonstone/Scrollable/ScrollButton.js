@@ -31,7 +31,7 @@ const ScrollButtonBase = kind({
 		 * Name of icon
 		 *
 		 * @type {String}
-		 * @private
+		 * @public
 		 */
 		children: PropTypes.string.isRequired,
 
