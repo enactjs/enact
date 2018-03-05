@@ -981,7 +981,6 @@ class ScrollableBase extends Component {
 			className: scrollableClasses,
 			style,
 			childComponentProps: rest,
-			scrollTo: this.scrollTo,
 			handleScroll: this.handleScroll,
 			initChildRef: this.initChildRef,
 			isVerticalScrollbarVisible,
@@ -1007,6 +1006,10 @@ class Scrollable extends Component {
 
 	render () {
 		const {render, ...rest} = this.props;
+
+		delete rest.removeEventListeners;
+		delete rest.scrollTo;
+		delete rest.updateEventListeners;
 
 		return (
 			<ScrollableBase

@@ -57,8 +57,6 @@ class Scrollbar extends Component {
 	render () {
 		const {corner, vertical} = this.props;
 
-		delete rest.cbAlertThumb;
-
 		return (
 			<UiScrollbarBase
 				corner={corner}

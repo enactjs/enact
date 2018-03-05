@@ -735,6 +735,8 @@ class VirtualListBase extends Component {
 		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 	}
 
+	getScrollBounds = () => this.uiVirtualListRef.getScrollBounds()
+
 	initItemContainerRef = (ref) => {
 		this.itemContainerRef = ref;
 	}
@@ -751,7 +753,7 @@ class VirtualListBase extends Component {
 		return (
 			<UiVirtualListBase
 				{...rest}
-				ref={this.initUiVirtualListRef}
+				ref={(ref) => {this.initUiVirtualListRef(ref); this.props.initChildRef(ref);}}
 				applyStyleToExistingNode={this.applyStyleToExistingNode}
 				applyStyleToHideNode={this.applyStyleToHideNode}
 				applyStyleToNewNode={this.applyStyleToNewNode}
@@ -770,7 +772,7 @@ class VirtualListBase extends Component {
 	}
 }
 
-const SpottableVirtualListBase = SpotlightContainerDecorator(SpotlightContainerConfig, VirtualListBase);
+const SpottableScrollable = SpotlightContainerDecorator(SpotlightContainerConfig, Scrollable);
 
 /**
  * A moonstone-styled scrollable and spottable virtual list component.
@@ -782,11 +784,11 @@ const SpottableVirtualListBase = SpotlightContainerDecorator(SpotlightContainerC
  * @ui
  * @public
  */
-const VirtualList = (props) => (
-	<Scrollable
+const VirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
+	<SpottableScrollable
 		{...props}
-		render={(props) => (
-			<SpottableVirtualListBase
+		render={(props) => ( // eslint-disable-line react/jsx-no-bind
+			<VirtualListBase
 				{...props}
 				type="JS"
 				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => (

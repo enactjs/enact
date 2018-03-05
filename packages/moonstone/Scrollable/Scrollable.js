@@ -431,11 +431,15 @@ class Scrollable extends Component {
 	}
 
 	initChildRef = (ref) => {
-		this.childRef = ref;
+		if (ref) {
+			this.childRef = ref;
+		}
 	}
 
 	initUiScrollableRef = (ref) => {
-		this.uiScrollableRef = ref;
+		if (ref) {
+			this.uiScrollableRef = ref;
+		}
 	}
 
 	render () {
@@ -451,10 +455,9 @@ class Scrollable extends Component {
 				scrollTo={this.scrollTo}
 				stop={this.stop}
 				updateEventListeners={this.updateEventListeners}
-				childRef={this.initChildRef}
 				ref={this.initUiScrollableRef}
 				render={({
-					css, className, initContainerRef, style, childComponentProps, scrollTo,
+					css, className, initContainerRef, style, childComponentProps,
 					handleScroll, initChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,
 					verticalScrollbarProps, horizontalScrollbarProps
 				}) => ( // eslint-disable-line react/jsx-no-bind
@@ -470,10 +473,8 @@ class Scrollable extends Component {
 								cbScrollTo: this.scrollTo,
 								className: css.content,
 								onScroll: handleScroll,
-								ref: (ref) => {
-									initChildRef(ref);
-									this.initChildRef(ref);
-								}
+								initChildRef: initChildRef,
+								ref: this.initChildRef
 							})}
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
