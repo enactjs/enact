@@ -75,6 +75,8 @@ class VirtualListBase extends Component {
 		 */
 		component: PropTypes.func.isRequired,
 
+		componentHidden: PropTypes.func.isRequired,
+
 		/**
 		 * Size of an item for the list; valid values are either a number for `VirtualList`
 		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
@@ -86,12 +88,6 @@ class VirtualListBase extends Component {
 			PropTypes.number,
 			gridListItemSizeShape
 		]).isRequired,
-
-		applyStyleToExistingNode: PropTypes.func,
-
-		applyStyleToHideNode: PropTypes.func,
-
-		applyStyleToNewNode: PropTypes.func,
 
 		/**
 		 * Callback method of scrollTo.
@@ -547,7 +543,7 @@ class VirtualListBase extends Component {
 	applyStyleToExistingNode = (index, ...rest) => {
 		const
 			{numOfItems} = this.state,
-			node = this.containerRef.children[index % numOfItems];
+			node = this.itemContainerRef.children[index % numOfItems];
 
 		if (node) {
 			this.composeStyle(node.style, ...rest);
@@ -576,20 +572,21 @@ class VirtualListBase extends Component {
 
 	applyStyleToHideNode = (index) => {
 		const
+			{componentHidden} = this.props,
 			key = index % this.state.numOfItems,
 			style = {display: 'none'},
-			attributes = {key, style};
+			itemElement = componentHidden({
+				key,
+				style
+			});
 
-		this.cc[key] = (<div {...attributes} />);
+		this.cc[key] = itemElement;
 	}
 
 	positionItems ({updateFrom, updateTo}) {
 		const
 			{dataSize} = this.props,
-			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition} = this,
-			applyStyleToNewNode = this.props.applyStyleToNewNode || this.applyStyleToNewNode,
-			applyStyleToExistingNode = this.props.applyStyleToExistingNode || this.applyStyleToExistingNode,
-			applyStyleToHideNode = this.props.applyStyleToHideNode || this.applyStyleToHideNode;
+			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition} = this;
 		let
 			{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom),
 			hideTo = 0,
@@ -607,9 +604,9 @@ class VirtualListBase extends Component {
 		// positioning items
 		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
 			if (this.updateFrom === null || this.updateTo === null || this.updateFrom > i || this.updateTo <= i) {
-				applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
+				this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
 			} else {
-				applyStyleToExistingNode(i, width, height, primaryPosition, secondaryPosition);
+				this.applyStyleToExistingNode(i, width, height, primaryPosition, secondaryPosition);
 			}
 
 			if (++j === dimensionToExtent) {
@@ -622,7 +619,7 @@ class VirtualListBase extends Component {
 		}
 
 		for (let i = updateTo; i < hideTo; i++) {
-			applyStyleToHideNode(i);
+			this.applyStyleToHideNode(i);
 		}
 
 		this.updateFrom = updateFrom;
@@ -698,12 +695,10 @@ class VirtualListBase extends Component {
 			{firstIndex, numOfItems} = this.state,
 			{cc, primary} = this;
 
-		delete rest.applyStyleToExistingNode;
-		delete rest.applyStyleToHideNode;
-		delete rest.applyStyleToNewNode;
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
 		delete rest.component;
+		delete rest.componentHidden;
 		delete rest.data;
 		delete rest.dataSize;
 		delete rest.direction;
@@ -720,7 +715,9 @@ class VirtualListBase extends Component {
 
 		return (
 			<div {...rest} ref={this.initContainerRef}>
-				{render({cc, primary})}
+				{render({cc, initItemContainerRef: (ref) => { // eslint-disable-line react/jsx-no-bind
+					this.itemContainerRef = ref;
+				}, primary})}
 			</div>
 		);
 	}
@@ -742,8 +739,9 @@ const VirtualList = (props) => (
 		render={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
 				{...virtualListProps}
+				componentHidden={(componentProps) => (<div {...componentProps} />)} // eslint-disable-line react/jsx-no-bind
 				render={// eslint-disable-line react/jsx-no-bind
-					({cc}) => (cc.length ? cc : null)
+					({cc, initItemContainerRef}) => (cc.length ? <div key="0" ref={initItemContainerRef}>{cc}</div> : null)
 				}
 			/>
 		)}

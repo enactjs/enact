@@ -85,6 +85,14 @@ class VirtualListBase extends Component {
 
 	static propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 		/**
+		 * The `render` function for an item of the list
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		component: PropTypes.func.isRequired,
+
+		/**
 		 * Spotlight container Id
 		 *
 		 * @type {String}
@@ -665,46 +673,6 @@ class VirtualListBase extends Component {
 		this.uiVirtualListRef.setState({firstIndex: newFirstIndex, numOfItems});
 	}
 
-	applyStyleToExistingNode = (index, ...rest) => {
-		const node = this.getItemNode(index);
-
-		if (node) {
-			this.uiVirtualListRef.composeStyle(node.style, ...rest);
-		}
-	}
-
-	applyStyleToNewNode = (index, ...rest) => {
-		const
-			{component, data} = this.uiVirtualListRef.props,
-			{numOfItems} = this.uiVirtualListRef.state,
-			{nodeIndexToBeFocused, initItemRef} = this,
-			key = index % numOfItems,
-			itemElement = component({
-				data,
-				[dataIndexAttribute]: index,
-				index,
-				key
-			}),
-			style = {};
-
-		this.uiVirtualListRef.composeStyle(style, ...rest);
-
-		this.uiVirtualListRef.cc[key] = React.cloneElement(itemElement, {
-			ref: (index === nodeIndexToBeFocused) ? (ref) => initItemRef(ref, index) : null,
-			className: classNames(css.listItem, itemElement.props.className),
-			style: {...itemElement.props.style, ...style}
-		});
-	}
-
-	applyStyleToHideNode = (index) => {
-		const
-			key = index % this.uiVirtualListRef.state.numOfItems,
-			style = {display: 'none'},
-			attributes = {[dataIndexAttribute]: index, key, style};
-
-		this.uiVirtualListRef.cc[key] = (<div {...attributes} />);
-	}
-
 	getXY = (primaryPosition, secondaryPosition) => {
 		const rtlDirection = this.context.rtl ? -1 : 1;
 		return (this.uiVirtualListRef.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
@@ -728,26 +696,36 @@ class VirtualListBase extends Component {
 
 	render () {
 		const
-			{render, initUiChildRef, type, ...rest} = this.props,
+			{component, initUiChildRef, render, type, ...rest} = this.props,
+			{nodeIndexToBeFocused} = this,
 			needsScrollingPlaceholder = this.isNeededScrollingPlaceholder(),
 			UiBase = (type === 'JS') ? UiVirtualListBase : UiVirtualListBaseNative;
 
 		return (
 			<UiBase
 				{...rest}
-				applyStyleToExistingNode={this.applyStyleToExistingNode}
-				applyStyleToHideNode={this.applyStyleToHideNode}
-				applyStyleToNewNode={this.applyStyleToNewNode}
+				component={({index, ...itemRest}) => ( // eslint-disable-line react/jsx-no-bind
+					component({
+						... itemRest,
+						index, ref: (index === nodeIndexToBeFocused) ? (ref) => this.initItemRef(ref, index) : null
+					})
+				)}
+				componentHidden={({index, ...props}) => (<div {...props} data-index={index} index={index} />)} // eslint-disable-line react/jsx-no-bind
 				getXY={this.getXY}
 				ref={(ref) => { // eslint-disable-line react/jsx-no-bind
 					this.uiVirtualListRef = ref;
 					initUiChildRef(ref);
 				}}
 				updateStatesAndBounds={this.updateStatesAndBound}
-				render={(props) => { // eslint-disable-line react/jsx-no-bind
+				render={({initItemContainerRef, ...props}) => { // eslint-disable-line react/jsx-no-bind
 					return render({
 						...props,
-						initItemContainerRef: this.initItemContainerRef,
+						initItemContainerRef: (ref) => { // eslint-disable-line react/jsx-no-bind
+							this.initItemContainerRef(ref);
+							if (initItemContainerRef) {
+								initItemContainerRef(ref);
+							}
+						},
 						handlePlaceholderFocus: this.handlePlaceholderFocus,
 						needsScrollingPlaceholder: needsScrollingPlaceholder
 					});

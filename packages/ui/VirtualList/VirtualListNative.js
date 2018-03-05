@@ -76,6 +76,8 @@ class VirtualListBaseNative extends Component {
 		 */
 		component: PropTypes.func.isRequired,
 
+		componentHidden: PropTypes.func.isRequired,
+
 		/**
 		 * Size of an item for the list; valid values are either a number for `VirtualList`
 		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
@@ -87,10 +89,6 @@ class VirtualListBaseNative extends Component {
 			PropTypes.number,
 			gridListItemSizeShape
 		]).isRequired,
-
-		applyStyleToHideNode: PropTypes.func,
-
-		applyStyleToNewNode: PropTypes.func,
 
 		/**
 		 * Callback method of scrollTo.
@@ -563,11 +561,15 @@ class VirtualListBaseNative extends Component {
 
 	applyStyleToHideNode = (index) => {
 		const
+			{componentHidden} = this.props,
 			key = index % this.state.numOfItems,
 			style = {display: 'none'},
-			attributes = {key, style};
+			itemElement = componentHidden({
+				key,
+				style
+			});
 
-		this.cc[key] = (<div {...attributes} />);
+		this.cc[key] = itemElement;
 	}
 
 	positionItems () {
@@ -576,9 +578,7 @@ class VirtualListBaseNative extends Component {
 			{firstIndex, numOfItems} = this.state,
 			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc} = this,
 			diff = firstIndex - this.lastFirstIndex,
-			updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems,
-			applyStyleToNewNode = this.props.applyStyleToNewNode || this.applyStyleToNewNode,
-			applyStyleToHideNode = this.props.applyStyleToHideNode || this.applyStyleToHideNode;
+			updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems;
 		let
 			hideTo = 0,
 			updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0) ? firstIndex + numOfItems : this.lastFirstIndex;
@@ -599,7 +599,7 @@ class VirtualListBaseNative extends Component {
 
 		// positioning items
 		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
-			applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
+			this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
 
 			if (++j === dimensionToExtent) {
 				secondaryPosition = 0;
@@ -611,7 +611,7 @@ class VirtualListBaseNative extends Component {
 		}
 
 		for (let i = updateTo; i < hideTo; i++) {
-			applyStyleToHideNode(i);
+			this.applyStyleToHideNode(i);
 		}
 
 		this.lastFirstIndex = firstIndex;
@@ -697,16 +697,14 @@ class VirtualListBaseNative extends Component {
 
 	render () {
 		const
-			{className, style, render, ...rest} = this.props,
+			{className, render, style, ...rest} = this.props,
 			{cc, primary} = this,
 			mergedClasses = classNames(css.list, this.containerClass, className);
 
-		delete rest.applyStyleToExistingNode;
-		delete rest.applyStyleToHideNode;
-		delete rest.applyStyleToNewNode;
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
 		delete rest.component;
+		delete rest.componentHidden;
 		delete rest.data;
 		delete rest.dataSize;
 		delete rest.direction;
@@ -749,6 +747,7 @@ const VirtualListNative = (props) => (
 		render={(virtualListProps) => (// eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...virtualListProps}
+				componentHidden={(componentProps) => (<div {...componentProps} />)} // eslint-disable-line react/jsx-no-bind
 				render={({cc}) => (cc.length ? cc : null)} // eslint-disable-line react/jsx-no-bind
 			/>
 		)}
