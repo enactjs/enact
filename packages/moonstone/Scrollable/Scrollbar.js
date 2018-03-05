@@ -55,7 +55,7 @@ class Scrollbar extends Component {
 	}
 
 	render () {
-		const {corner, vertical} = this.props;
+		const {corner, vertical, ...rest} = this.props;
 
 		return (
 			<UiScrollbarBase
@@ -74,6 +74,7 @@ class Scrollbar extends Component {
 				vertical={vertical}
 				render={({setScrollThumbRef}) => ( // eslint-disable-line react/jsx-no-bind
 					<ScrollButtons
+						{...rest}
 						setRef={(ref) => { // eslint-disable-line react/jsx-no-bind
 							if (ref) {
 								const {isOneOfScrollButtonsFocused, updateButtons} = ref;
