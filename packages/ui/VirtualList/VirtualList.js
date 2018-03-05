@@ -171,8 +171,7 @@ class VirtualListBase extends Component {
 		applyStyleToHideNode: PropTypes.func,
 		applyStyleToNewNode: PropTypes.func,
 		getXY: PropTypes.func,
-		initVirtualList: PropTypes.func,
-		renderChildren: PropTypes.func,
+		render: PropTypes.func,
 		updateStatesAndBounds: PropTypes.func
 	}
 
@@ -688,17 +687,11 @@ class VirtualListBase extends Component {
 		};
 	}
 
-	renderChildren = () => {
-		const cc = this.cc;
-		return cc.length ? cc : null;
-	}
-
 	render () {
 		const
-			{...rest} = this.props,
+			{render, ...rest} = this.props,
 			{firstIndex, numOfItems} = this.state,
-			{primary} = this,
-			renderChildren = this.props.renderChildren || this.renderChildren;
+			{cc, primary} = this;
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
@@ -718,7 +711,7 @@ class VirtualListBase extends Component {
 
 		return (
 			<div {...rest} ref={this.initContainerRef}>
-				{renderChildren()}
+				{render({cc, primary})}
 			</div>
 		);
 	}
@@ -734,7 +727,17 @@ class VirtualListBase extends Component {
  * @ui
  * @public
  */
-const VirtualList = Scrollable(VirtualListBase);
+const VirtualList = (props) => (
+	<Scrollable
+		{...props}
+		render={(props) => (
+			<VirtualListBase
+				{...props}
+				render={({cc}) => (cc.length ? cc : null)}
+			/>
+		)}
+	/>
+);
 
 /**
  * A basic scrollable virtual grid list component with touch support.

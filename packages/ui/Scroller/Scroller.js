@@ -199,7 +199,9 @@ class ScrollerBase extends Component {
  * @ui
  * @public
  */
-const Scroller = Scrollable(ScrollerBase);
+const Scroller = (props) => (
+	<div />
+);
 
 export default Scroller;
 export {

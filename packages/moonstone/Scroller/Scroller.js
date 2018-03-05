@@ -343,9 +343,7 @@ const SpottableScrollerDecorator = hoc((config, Wrapped) => (
  */
 const ScrollerDecorator = compose(
 	SpotlightContainerDecorator({restrict: 'self-first'}),
-	Scrollable,
-	SpottableScrollerDecorator,
-	UiScrollable,
+	SpottableScrollerDecorator
 );
 
 /**
@@ -362,7 +360,11 @@ const ScrollerDecorator = compose(
  * @ui
  * @public
  */
-const Scroller = ScrollerDecorator(UiScrollerBase);
+const ScrollerChild = ScrollerDecorator(UiScrollerBase);
+
+const Scroller = (props) => (
+	<div />
+);
 
 export default Scroller;
 export {
