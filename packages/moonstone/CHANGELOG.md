@@ -6,11 +6,19 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
+- `moonstone/Marquee.MarqueeText` to be replaced by `moonstone/Marquee.Marquee`
+
+### Changed
+
+- `moonstone/Marquee.Marquee` to be `moonstone/Marquee.MarqueeBase`
 - `moonstone/VirtualGridList.GridListImageItem` in favor of `moonstone/GridListImageItem`
 
 ### Fixed
 
 - `moonstone/VirtualGridList` to show or hide the scrollbars in it properly
+- `moonstone/Slider` to correctly show localized percentage value in tooltip when `tooltipAsPercent` is true
+- `moonstone/VirtualGridList` to show or hide its scrollbars properly
+- `moonstone/Button` text to be properly centered
 
 ## [2.0.0-alpha.4] - 2018-02-13
 
@@ -36,6 +44,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableSpotlightDecorator` to not spot the title upon collapse when in `pointerMode`
 - `moonstone/Spinner` to not unpause Spotlight unless it was the one to pause it
 - `moonstone/Marquee` to stop when becoming disabled
+- `moonstone/Input`, `moonstone/MarqueeDecorator`, and `moonstone/Slider` to prevent unnecessary focus-based updates
 
 ## [2.0.0-alpha.3] - 2018-01-18
 

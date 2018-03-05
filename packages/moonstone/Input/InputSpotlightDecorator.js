@@ -155,10 +155,9 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		blur = () => {
-			this.setState({
-				focused: null,
-				node: null
-			});
+			this.setState((state) => (
+				state.focused || state.node ? {focused: null, node: null} : null)
+			);
 		}
 
 		focusDecorator = (decorator) => {

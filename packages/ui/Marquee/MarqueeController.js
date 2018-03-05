@@ -13,7 +13,7 @@ const STATE = {
 /**
  * Context propTypes for MarqueeController
  *
- * @memberof moonstone/Marquee.Marquee
+ * @memberof ui/Marquee.MarqueeController
  * @private
  */
 const contextTypes = {
@@ -22,7 +22,7 @@ const contextTypes = {
 	 * set to `marqueeOn='focus'`)
 	 *
 	 * @type {Function}
-	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 * @memberof ui/Marquee.MarqueeController.contextTypes
 	 */
 	cancel: PropTypes.func,
 
@@ -30,7 +30,7 @@ const contextTypes = {
 	 * Called by Marquee instances when marqueeing has completed
 	 *
 	 * @type {Function}
-	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 * @memberof ui/Marquee.MarqueeController.contextTypes
 	 */
 	complete: PropTypes.func,
 
@@ -38,7 +38,7 @@ const contextTypes = {
 	 * Called by Marquee instances when hovered
 	 *
 	 * @type {Function}
-	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 * @memberof ui/Marquee.MarqueeController.contextTypes
 	 */
 	enter: PropTypes.func,
 
@@ -46,7 +46,7 @@ const contextTypes = {
 	 * Called by Marquee instances when unhovered
 	 *
 	 * @type {Function}
-	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 * @memberof ui/Marquee.MarqueeController.contextTypes
 	 */
 	leave: PropTypes.func,
 
@@ -54,7 +54,7 @@ const contextTypes = {
 	 * Called to register a Marquee instance to be synchronized
 	 *
 	 * @type {Function}
-	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 * @memberof ui/Marquee.MarqueeController.contextTypes
 	 */
 	register: PropTypes.func,
 
@@ -64,7 +64,7 @@ const contextTypes = {
 	 * the function can return `true` to mark itself complete.
 	 *
 	 * @type {Function}
-	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 * @memberof ui/Marquee.MarqueeController.contextTypes
 	 */
 	start: PropTypes.func,
 
@@ -72,17 +72,17 @@ const contextTypes = {
 	 * Called to unregister a synchronized Marquee instance
 	 *
 	 * @type {Function}
-	 * @memberof moonstone/Marquee.Marquee.contextTypes
+	 * @memberof ui/Marquee.MarqueeController.contextTypes
 	 */
 	unregister: PropTypes.func
 };
 
 
 /**
- * Default configuration parameters for {@link moonstone/Marquee.MarqueeController}
+ * Default configuration parameters for {@link ui/Marquee.MarqueeController}
  *
  * @type {Object}
- * @memberof moonstone/Marquee.MarqueeController
+ * @memberof ui/Marquee.MarqueeController
  * @hocconfig
  */
 const defaultConfig = {
@@ -93,17 +93,16 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
-	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
+	 * @memberof ui/Marquee.MarqueeController.defaultConfig
 	 */
 	marqueeOnFocus: false
 };
 
 /**
- * {@link moonstone/Marquee.MarqueeController} is a Higher-order Component which will synchronize
+ * {@link ui/Marquee.MarqueeController} is a Higher-order Component which will synchronize
  * contained Marquee's.
  *
- * @class MarqueeController
- * @memberof moonstone/Marquee
+ * @memberof ui/Marquee
  * @hoc
  * @public
  */
@@ -361,10 +360,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				props = {
 					...this.props,
 					onBlur: this.handleBlur,
-					onFocus: this.handleFocus,
-					// When picker button becomes disabled, it doesn't fire blur, but does fire
-					// `onSpotlightDisappear`.  We should investigate why `onBlur` does not fire
-					onSpotlightDisappear: this.handleBlur
+					onFocus: this.handleFocus
 				};
 			}
 

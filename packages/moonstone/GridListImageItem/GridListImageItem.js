@@ -13,8 +13,8 @@ import React from 'react';
 import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
-import Image from '../Image';
-import {MarqueeController, MarqueeText} from '../Marquee';
+import {Image} from '../Image';
+import {Marquee, MarqueeController} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import componentCss from './GridListImageItem.less';
@@ -26,7 +26,7 @@ const
 	'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
 	'4NCg==',
 	captionComponent = (props) => (
-		<MarqueeText alignment="center" marqueeOn="hover" {...props} />
+		<Marquee alignment="center" marqueeOn="hover" {...props} />
 	);
 
 /**
