@@ -734,10 +734,12 @@ class VirtualListBase extends Component {
 const VirtualList = (props) => (
 	<Scrollable
 		{...props}
-		render={(props) => (
+		render={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
-				{...props}
-				render={({cc}) => (cc.length ? cc : null)}
+				{...virtualListProps}
+				render={ // eslint-disable-line react/jsx-no-bind
+					({cc}) => (cc.length ? cc : null)
+				}
 			/>
 		)}
 	/>
