@@ -735,14 +735,14 @@ class VirtualListBase extends Component {
 		return (
 			<UiBase
 				{...rest}
-				ref={(ref) => { // eslint-disable-line react/jsx-no-bind
-					this.uiVirtualListRef = ref;
-					initUiChildRef(ref);
-				}}
 				applyStyleToExistingNode={this.applyStyleToExistingNode}
 				applyStyleToHideNode={this.applyStyleToHideNode}
 				applyStyleToNewNode={this.applyStyleToNewNode}
 				getXY={this.getXY}
+				ref={(ref) => { // eslint-disable-line react/jsx-no-bind
+					this.uiVirtualListRef = ref;
+					initUiChildRef(ref);
+				}}
 				updateStatesAndBounds={this.updateStatesAndBound}
 				render={(props) => { // eslint-disable-line react/jsx-no-bind
 					return render({
