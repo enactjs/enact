@@ -32,22 +32,6 @@ const gridListItemSizeShape = PropTypes.shape({
 });
 
 /**
- * The context propTypes required by VirtualList. This should be set as the `childContextTypes` of a
- * themed component so that the methods from themed component can be called.
- *
- * @private
- */
-const contextTypes = {
-	applyStyleToExistingNode: PropTypes.func,
-	applyStyleToHideNode: PropTypes.func,
-	applyStyleToNewNode: PropTypes.func,
-	getXY: PropTypes.func,
-	initVirtualList: PropTypes.func,
-	renderChildren: PropTypes.func,
-	updateStatesAndBounds: PropTypes.func
-};
-
-/**
  * A basic base component for
  * [VirtualList]{@link ui/VirtualList.VirtualList} and [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
  *
@@ -181,7 +165,15 @@ class VirtualListBase extends Component {
 		 * @default 0
 		 * @public
 		 */
-		spacing: PropTypes.number
+		spacing: PropTypes.number,
+
+		applyStyleToExistingNode: PropTypes.func,
+		applyStyleToHideNode: PropTypes.func,
+		applyStyleToNewNode: PropTypes.func,
+		getXY: PropTypes.func,
+		initVirtualList: PropTypes.func,
+		renderChildren: PropTypes.func,
+		updateStatesAndBounds: PropTypes.func
 	}
 
 	static defaultProps = {
@@ -194,22 +186,16 @@ class VirtualListBase extends Component {
 		spacing: 0
 	}
 
-	static contextTypes = contextTypes
-
-	constructor (props, context) {
-		super(props, context);
+	constructor (props) {
+		super(props);
 
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContainerRef = this.initRef('containerRef');
-
-		if (context.initVirtualList) {
-			context.initVirtualList(this);
-		}
 	}
 
 	componentWillMount () {
 		if (this.props.clientSize) {
-			const updateStatesAndBounds = this.context.updateStatesAndBounds || this.updateStatesAndBounds;
+			const updateStatesAndBounds = this.props.updateStatesAndBounds || this.updateStatesAndBounds;
 
 			this.calculateMetrics(this.props);
 			updateStatesAndBounds(this.props);
@@ -220,7 +206,7 @@ class VirtualListBase extends Component {
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
 		if (!this.props.clientSize) {
-			const updateStatesAndBounds = this.context.updateStatesAndBounds || this.updateStatesAndBounds;
+			const updateStatesAndBounds = this.props.updateStatesAndBounds || this.updateStatesAndBounds;
 
 			this.calculateMetrics(this.props);
 			updateStatesAndBounds(this.props);
@@ -238,7 +224,7 @@ class VirtualListBase extends Component {
 				overhang !== nextProps.overhang ||
 				spacing !== nextProps.spacing
 			),
-			updateStatesAndBounds = this.context.updateStatesAndBounds || this.updateStatesAndBounds;
+			updateStatesAndBounds = this.props.updateStatesAndBounds || this.updateStatesAndBounds;
 
 		this.hasDataSizeChanged = (dataSize !== nextProps.dataSize);
 
@@ -597,9 +583,9 @@ class VirtualListBase extends Component {
 		const
 			{dataSize} = this.props,
 			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition} = this,
-			applyStyleToNewNode = this.context.applyStyleToNewNode || this.applyStyleToNewNode,
-			applyStyleToExistingNode = this.context.applyStyleToExistingNode || this.applyStyleToExistingNode,
-			applyStyleToHideNode = this.context.applyStyleToHideNode || this.applyStyleToHideNode;
+			applyStyleToNewNode = this.props.applyStyleToNewNode || this.applyStyleToNewNode,
+			applyStyleToExistingNode = this.props.applyStyleToExistingNode || this.applyStyleToExistingNode,
+			applyStyleToHideNode = this.props.applyStyleToHideNode || this.applyStyleToHideNode;
 		let
 			{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom),
 			hideTo = 0,
@@ -652,7 +638,7 @@ class VirtualListBase extends Component {
 
 	composeTransform (style, primaryPosition, secondaryPosition = 0) {
 		const
-			getXY = this.context.getXY || this.getXY,
+			getXY = this.props.getXY || this.getXY,
 			{x, y} = getXY(primaryPosition, secondaryPosition);
 
 		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
@@ -684,7 +670,7 @@ class VirtualListBase extends Component {
 			{scrollBounds} = this;
 
 		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
-			const updateStatesAndBounds = this.context.updateStatesAndBounds || this.updateStatesAndBounds;
+			const updateStatesAndBounds = this.props.updateStatesAndBounds || this.updateStatesAndBounds;
 
 			this.calculateMetrics(props);
 			updateStatesAndBounds(props);
@@ -712,7 +698,7 @@ class VirtualListBase extends Component {
 			{...rest} = this.props,
 			{firstIndex, numOfItems} = this.state,
 			{primary} = this,
-			renderChildren = this.context.renderChildren || this.renderChildren;
+			renderChildren = this.props.renderChildren || this.renderChildren;
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
@@ -767,7 +753,6 @@ export {
 	VirtualList,
 	VirtualGridList,
 	VirtualListBase,
-	contextTypes,
 	gridListItemSizeShape
 };
 export * from './GridListImageItem';
