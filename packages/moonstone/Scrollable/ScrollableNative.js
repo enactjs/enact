@@ -530,7 +530,7 @@ class ScrollableNative extends Component {
 				start={this.start}
 				updateEventListeners={this.updateEventListeners}
 				render={({ // eslint-disable-line react/jsx-no-bind
-					css, className, initContainerRef, style, childComponentProps,
+					componentCss, className, initContainerRef, style, childComponentProps,
 					initUiChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,
 					verticalScrollbarProps, horizontalScrollbarProps
 				}) => (
@@ -540,11 +540,11 @@ class ScrollableNative extends Component {
 						focusableScrollbar={focusableScrollbar}
 						style={style}
 					>
-						<div className={css.container}>
+						<div className={componentCss.container}>
 							{render({
 								...childComponentProps,
 								cbScrollTo: this.scrollTo,
-								className: css.content,
+								className: componentCss.content,
 								initUiChildRef,
 								ref: this.initChildRef
 							})}
