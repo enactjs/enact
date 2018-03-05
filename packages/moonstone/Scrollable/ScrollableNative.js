@@ -523,17 +523,17 @@ class ScrollableNative extends Component {
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
 				onWheel={this.onWheel}
+				ref={this.initUiRef}
 				removeEventListeners={this.removeEventListeners}
-				scrollTo={this.scrollTo}
 				scrollStopOnScroll={this.scrollStopOnScroll}
+				scrollTo={this.scrollTo}
 				start={this.start}
 				updateEventListeners={this.updateEventListeners}
-				ref={this.initUiRef}
-				render={({
+				render={({ // eslint-disable-line react/jsx-no-bind
 					css, className, initContainerRef, style, childComponentProps,
 					initUiChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,
 					verticalScrollbarProps, horizontalScrollbarProps
-				}) => ( // eslint-disable-line react/jsx-no-bind
+				}) => (
 					<ScrollableSpotlightContainer
 						className={className}
 						containerRef={initContainerRef}

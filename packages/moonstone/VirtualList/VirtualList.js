@@ -12,15 +12,12 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import compose from 'ramda/src/compose';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import css from '@enact/ui/VirtualList/ListItem.less';
 import {forward} from '@enact/core/handle';
-import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import {ScrollableNative as UiScrollableNative} from '@enact/ui/Scrollable/ScrollableNative';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Spottable from '@enact/spotlight/Spottable';
@@ -94,6 +91,17 @@ class VirtualListBase extends Component {
 		 * @private
 		 */
 		'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types,
+
+		initUiChildRef: PropTypes.func,
+
+		/**
+		 * Component for child
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		render: PropTypes.func,
+
 		type: PropTypes.string
 	}
 
@@ -727,7 +735,7 @@ class VirtualListBase extends Component {
 		return (
 			<UiBase
 				{...rest}
-				ref={(ref) => {
+				ref={(ref) => { // eslint-disable-line react/jsx-no-bind
 					this.uiVirtualListRef = ref;
 					initUiChildRef(ref);
 				}}
@@ -736,7 +744,7 @@ class VirtualListBase extends Component {
 				applyStyleToNewNode={this.applyStyleToNewNode}
 				getXY={this.getXY}
 				updateStatesAndBounds={this.updateStatesAndBound}
-				render={(props) => {
+				render={(props) => { // eslint-disable-line react/jsx-no-bind
 					return render({
 						...props,
 						initItemContainerRef: this.initItemContainerRef,
@@ -766,11 +774,11 @@ const
 const VirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
 	<SpottableScrollable
 		{...props}
-		render={(props) => ( // eslint-disable-line react/jsx-no-bind
+		render={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
-				{...props}
+				{...virtualListProps}
 				type="JS"
-				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => (
+				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initItemContainerRef}>{cc}</div> : null,
 						primary ?
@@ -818,11 +826,11 @@ const VirtualGridList = VirtualList;
 const VirtualListNative = (props) => (
 	<SpottableScrollableNative
 		{...props}
-		render={(props) => (
+		render={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
-				{...props}
+				{...virtualListProps}
 				type="Native"
-				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => (
+				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initItemContainerRef}>{cc}</div> : null,
 						primary ?

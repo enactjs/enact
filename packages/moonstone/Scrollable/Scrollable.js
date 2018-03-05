@@ -451,16 +451,16 @@ class Scrollable extends Component {
 				onKeyDown={this.onKeyDown}
 				onMouseUp={this.onMouseUp}
 				onWheel={this.onWheel}
+				ref={this.initUiRef}
 				removeEventListeners={this.removeEventListeners}
 				scrollTo={this.scrollTo}
 				stop={this.stop}
 				updateEventListeners={this.updateEventListeners}
-				ref={this.initUiRef}
-				render={({
+				render={({ // eslint-disable-line react/jsx-no-bind
 					css, className, initContainerRef, style, childComponentProps,
 					handleScroll, initUiChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,
 					verticalScrollbarProps, horizontalScrollbarProps
-				}) => ( // eslint-disable-line react/jsx-no-bind
+				}) => (
 					<ScrollableSpotlightContainer
 						className={className}
 						containerRef={initContainerRef}
@@ -472,8 +472,8 @@ class Scrollable extends Component {
 								...childComponentProps,
 								cbScrollTo: this.scrollTo,
 								className: css.content,
-								onScroll: handleScroll,
 								initUiChildRef,
+								onScroll: handleScroll,
 								ref: this.initChildRef
 							})}
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}

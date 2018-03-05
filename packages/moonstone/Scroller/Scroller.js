@@ -35,6 +35,10 @@ const
 class ScrollerBase extends Component {
 	static displayName = 'ScrollerBase'
 
+	static propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
+		initUiChildRef: PropTypes.func
+	}
+
 	static contextTypes = contextTypes
 
 	componentWillUnmount () {
