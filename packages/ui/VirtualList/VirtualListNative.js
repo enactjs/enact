@@ -88,6 +88,10 @@ class VirtualListBaseNative extends Component {
 			gridListItemSizeShape
 		]).isRequired,
 
+		applyStyleToHideNode: PropTypes.func,
+
+		applyStyleToNewNode: PropTypes.func,
+
 		/**
 		 * Callback method of scrollTo.
 		 * Normally, `Scrollable` should set this value.
@@ -139,6 +143,8 @@ class VirtualListBaseNative extends Component {
 		 */
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
+		getXY: PropTypes.func,
+
 		/**
 		 * Number of spare DOM node.
 		 * `3` is good for the default value experimentally and
@@ -159,6 +165,8 @@ class VirtualListBaseNative extends Component {
 		 */
 		pageScroll: PropTypes.bool,
 
+		render: PropTypes.func,
+
 		/**
 		 * Spacing between items.
 		 *
@@ -168,10 +176,6 @@ class VirtualListBaseNative extends Component {
 		 */
 		spacing: PropTypes.number,
 
-		applyStyleToHideNode: PropTypes.func,
-		applyStyleToNewNode: PropTypes.func,
-		getXY: PropTypes.func,
-		render: PropTypes.func,
 		updateStatesAndBounds: PropTypes.func
 	}
 
@@ -742,10 +746,10 @@ class VirtualListBaseNative extends Component {
 const VirtualListNative = (props) => (
 	<ScrollableNative
 		{...props}
-		render={(props) => (
+		render={(virtualListProps) => (// eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
-				{...props}
-				render={({cc}) => (cc.length ? cc : null)}
+				{...virtualListProps}
+				render={({cc}) => (cc.length ? cc : null)} // eslint-disable-line react/jsx-no-bind
 			/>
 		)}
 	/>

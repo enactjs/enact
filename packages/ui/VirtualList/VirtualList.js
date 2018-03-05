@@ -87,6 +87,12 @@ class VirtualListBase extends Component {
 			gridListItemSizeShape
 		]).isRequired,
 
+		applyStyleToExistingNode: PropTypes.func,
+
+		applyStyleToHideNode: PropTypes.func,
+
+		applyStyleToNewNode: PropTypes.func,
+
 		/**
 		 * Callback method of scrollTo.
 		 * Normally, `Scrollable` should set this value.
@@ -138,6 +144,8 @@ class VirtualListBase extends Component {
 		 */
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
+		getXY: PropTypes.func,
+
 		/**
 		 * Number of spare DOM node.
 		 * `3` is good for the default value experimentally and
@@ -158,6 +166,8 @@ class VirtualListBase extends Component {
 		 */
 		pageScroll: PropTypes.bool,
 
+		render: PropTypes.func,
+
 		/**
 		 * Spacing between items.
 		 *
@@ -167,11 +177,6 @@ class VirtualListBase extends Component {
 		 */
 		spacing: PropTypes.number,
 
-		applyStyleToExistingNode: PropTypes.func,
-		applyStyleToHideNode: PropTypes.func,
-		applyStyleToNewNode: PropTypes.func,
-		getXY: PropTypes.func,
-		render: PropTypes.func,
 		updateStatesAndBounds: PropTypes.func
 	}
 
@@ -737,7 +742,7 @@ const VirtualList = (props) => (
 		render={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
 				{...virtualListProps}
-				render={ // eslint-disable-line react/jsx-no-bind
+				render={// eslint-disable-line react/jsx-no-bind
 					({cc}) => (cc.length ? cc : null)
 				}
 			/>
