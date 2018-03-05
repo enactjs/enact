@@ -10,6 +10,7 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import {forward} from '@enact/core/handle';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
+import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {Spotlight, getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
