@@ -14,16 +14,6 @@ import css from './Scroller.less';
 import Scrollable from '../Scrollable';
 
 /**
- * The context propTypes required by Scroller. This should be set as the `childContextTypes` of a
- * themed component so that the methods from themed component can be called.
- *
- * @private
- */
-const contextTypes = {
-	getUiScrollerRef: PropTypes.func
-};
-
-/**
  * A basic base component for Scroller{@link ui/Scroller.Scroller}.
  * In most circumstances, you will want to use the Scrollable version:
  * [Scroller]{@link ui/Scroller.Scroller}
@@ -60,16 +50,6 @@ class ScrollerBase extends Component {
 
 	static defaultProps = {
 		direction: 'both'
-	}
-
-	static contextTypes = contextTypes
-
-	constructor (props, context) {
-		super(props, context);
-
-		if (context.getUiScrollerRef) {
-			context.getUiScrollerRef(this);
-		}
 	}
 
 	componentDidMount () {
@@ -165,7 +145,7 @@ class ScrollerBase extends Component {
 
 	render () {
 		const
-			{className, style, ...rest} = this.props,
+			{children, className, style, ...rest} = this.props,
 			mergedStyle = Object.assign({}, style, {
 				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
 				overflowY: this.isVertical() ? 'auto' : 'hidden'
@@ -180,7 +160,9 @@ class ScrollerBase extends Component {
 				className={classNames(className, css.hideNativeScrollbar)}
 				ref={this.initRef}
 				style={mergedStyle}
-			/>
+			>
+				{children}
+			</div>
 		);
 	}
 }
@@ -200,12 +182,16 @@ class ScrollerBase extends Component {
  * @public
  */
 const Scroller = (props) => (
-	<div />
+	<Scrollable
+		{...props}
+		render={ // eslint-disable-line react/jsx-no-bind
+			(props) => (<ScrollerBase {...props} />)
+		}
+	/>
 );
 
 export default Scroller;
 export {
 	Scroller,
-	ScrollerBase,
-	contextTypes
+	ScrollerBase
 };

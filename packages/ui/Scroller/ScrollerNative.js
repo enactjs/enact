@@ -1,3 +1,5 @@
+import React from 'react';
+
 import ScrollableNative from '../Scrollable/ScrollableNative';
 import {ScrollerBase as ScrollerBaseNative} from './Scroller';
 
@@ -18,7 +20,14 @@ import {ScrollerBase as ScrollerBaseNative} from './Scroller';
  * @ui
  * @public
  */
-const ScrollerNative = ScrollableNative(ScrollerBaseNative);
+const ScrollerNative = (props) => (
+	<ScrollableNative
+		{...props}
+		render={ // eslint-disable-line react/jsx-no-bind
+			(props) => (<ScrollerBaseNative {...props} />)
+		}
+	/>
+);
 
 export default ScrollerNative;
 export {

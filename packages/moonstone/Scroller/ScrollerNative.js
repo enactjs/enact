@@ -1,26 +1,11 @@
-import compose from 'ramda/src/compose';
+import React from 'react';
+
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import {ScrollerBase as UiScrollerBaseNative} from '@enact/ui/Scroller';
-import {ScrollableNative as UiScrollableNative} from '@enact/ui/Scrollable/ScrollableNative';
+import {ScrollerBaseNative as UiScrollerBaseNative} from '@enact/ui/Scroller';
 
 import {ScrollableNative} from '../Scrollable/ScrollableNative';
-import {SpottableScrollerDecorator} from './Scroller';
 
-/**
- * Moonstone-specific Scroller native behavior to apply to ScrollerNative.
- *
- * @memberof moonstone/Scroller
- * @mixes moonstone/Scrollable.ScrollableNative
- * @mixes ui/Scrollable.ScrollableNative
- * @hoc
- * @private
- */
-const ScrollerNativeDecorator = compose(
-	SpotlightContainerDecorator({restrict: 'self-first'}),
-	ScrollableNative,
-	SpottableScrollerDecorator,
-	UiScrollableNative,
-);
+const SpottableScrollableNative = SpotlightContainerDecorator({restrict: 'self-first'}, ScrollableNative);
 
 /**
  * A moonstone-styled native Scroller, SpotlightContainerDecorator and Scrollable applied.
@@ -39,10 +24,16 @@ const ScrollerNativeDecorator = compose(
  * @ui
  * @public
  */
-const ScrollerNative = ScrollerNativeDecorator(UiScrollerBaseNative);
+const ScrollerNative = (props) => (
+	<SpottableScrollableNative
+		{...props}
+		render={ // eslint-disable-line react/jsx-no-bind
+			(props) => (<UiScrollerBaseNative {...props} />)
+		}
+	/>
+);
 
 export default ScrollerNative;
 export {
-	ScrollerNative,
-	ScrollerNativeDecorator
+	ScrollerNative
 };
