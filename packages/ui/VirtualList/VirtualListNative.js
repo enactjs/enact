@@ -33,21 +33,6 @@ const gridListItemSizeShape = PropTypes.shape({
 });
 
 /**
- * The context propTypes required by VirtualListNative. This should be set as the `childContextTypes` of a
- * themed component so that the methods from themed component can be called.
- *
- * @private
- */
-const contextTypes = {
-	applyStyleToHideNode: PropTypes.func,
-	applyStyleToNewNode: PropTypes.func,
-	getXY: PropTypes.func,
-	initVirtualList: PropTypes.func,
-	renderChildren: PropTypes.func,
-	updateStatesAndBounds: PropTypes.func
-};
-
-/**
  * A basic base component for
  * {@link ui/VirtualList.VirtualListNative} and {@link ui/VirtualList.VirtualGridListNative}.
  *
@@ -181,7 +166,13 @@ class VirtualListBaseNative extends Component {
 		 * @default 0
 		 * @public
 		 */
-		spacing: PropTypes.number
+		spacing: PropTypes.number,
+
+		applyStyleToHideNode: PropTypes.func,
+		applyStyleToNewNode: PropTypes.func,
+		getXY: PropTypes.func,
+		render: PropTypes.func,
+		updateStatesAndBounds: PropTypes.func
 	}
 
 	static defaultProps = {
@@ -194,23 +185,17 @@ class VirtualListBaseNative extends Component {
 		spacing: 0
 	}
 
-	static contextTypes = contextTypes
-
-	constructor (props, context) {
-		super(props, context);
+	constructor (props) {
+		super(props);
 
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContentRef = this.initRef('contentRef');
 		this.initContainerRef = this.initRef('containerRef');
-
-		if (context.initVirtualList) {
-			context.initVirtualList(this);
-		}
 	}
 
 	componentWillMount () {
 		if (this.props.clientSize) {
-			const updateStatesAndBounds = this.context.updateStatesAndBounds || this.updateStatesAndBounds;
+			const updateStatesAndBounds = this.props.updateStatesAndBounds || this.updateStatesAndBounds;
 
 			this.calculateMetrics(this.props);
 			updateStatesAndBounds(this.props);
@@ -221,7 +206,7 @@ class VirtualListBaseNative extends Component {
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
 		if (!this.props.clientSize) {
-			const updateStatesAndBounds = this.context.updateStatesAndBounds || this.updateStatesAndBounds;
+			const updateStatesAndBounds = this.props.updateStatesAndBounds || this.updateStatesAndBounds;
 
 			this.calculateMetrics(this.props);
 			updateStatesAndBounds(this.props);
@@ -240,7 +225,7 @@ class VirtualListBaseNative extends Component {
 				overhang !== nextProps.overhang ||
 				spacing !== nextProps.spacing
 			),
-			updateStatesAndBounds = this.context.updateStatesAndBounds || this.updateStatesAndBounds;
+			updateStatesAndBounds = this.props.updateStatesAndBounds || this.updateStatesAndBounds;
 
 		this.hasDataSizeChanged = (dataSize !== nextProps.dataSize);
 
@@ -588,8 +573,8 @@ class VirtualListBaseNative extends Component {
 			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc} = this,
 			diff = firstIndex - this.lastFirstIndex,
 			updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems,
-			applyStyleToNewNode = this.context.applyStyleToNewNode || this.applyStyleToNewNode,
-			applyStyleToHideNode = this.context.applyStyleToHideNode || this.applyStyleToHideNode;
+			applyStyleToNewNode = this.props.applyStyleToNewNode || this.applyStyleToNewNode,
+			applyStyleToHideNode = this.props.applyStyleToHideNode || this.applyStyleToHideNode;
 		let
 			hideTo = 0,
 			updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0) ? firstIndex + numOfItems : this.lastFirstIndex;
@@ -634,7 +619,7 @@ class VirtualListBaseNative extends Component {
 
 	composeStyle (style, width, height, primaryPosition, secondaryPosition) {
 		const
-			getXY = this.context.getXY || this.getXY,
+			getXY = this.props.getXY || this.getXY,
 			{x, y} = getXY(primaryPosition, secondaryPosition);
 
 		if (this.isItemSized) {
@@ -706,17 +691,11 @@ class VirtualListBaseNative extends Component {
 		};
 	}
 
-	renderChildren = () => {
-		const cc = this.cc;
-		return cc.length ? cc : null;
-	}
-
 	render () {
 		const
-			{className, style, ...rest} = this.props,
-			{primary} = this,
-			mergedClasses = classNames(css.list, this.containerClass, className),
-			renderChildren = this.context.renderChildren || this.renderChildren;
+			{className, style, render, ...rest} = this.props,
+			{cc, primary} = this,
+			mergedClasses = classNames(css.list, this.containerClass, className);
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
@@ -737,7 +716,7 @@ class VirtualListBaseNative extends Component {
 		return (
 			<div className={mergedClasses} ref={this.initContainerRef} style={style}>
 				<div {...rest} ref={this.initContentRef}>
-					{renderChildren()}
+					{render({cc, primary})}
 				</div>
 			</div>
 		);
@@ -756,7 +735,17 @@ class VirtualListBaseNative extends Component {
  * @ui
  * @public
  */
-const VirtualListNative = ScrollableNative(VirtualListBaseNative);
+const VirtualListNative = (props) => (
+	<ScrollableNative
+		{...props}
+		render={(props) => (
+			<VirtualListBaseNative
+				{...props}
+				render={({cc}) => (cc.length ? cc : null)}
+			/>
+		)}
+	/>
+);
 
 /**
  * A basic scrollable virtual grid native list component with touch support.
@@ -777,7 +766,6 @@ export {
 	VirtualListNative,
 	VirtualGridListNative,
 	VirtualListBaseNative,
-	contextTypes,
 	gridListItemSizeShape
 };
 export * from './GridListImageItem';

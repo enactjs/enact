@@ -453,7 +453,6 @@ class Scrollable extends Component {
 				updateEventListeners={this.updateEventListeners}
 				childRef={this.initChildRef}
 				ref={this.initUiScrollableRef}
-				scrollbarComponent={Scrollbar}
 				render={({
 					css, className, initContainerRef, style, childComponentProps, scrollTo,
 					handleScroll, initChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,

@@ -222,7 +222,7 @@ class ScrollableBase extends Component {
 			vertical: false
 		};
 
-		props.cbScrollTo(this.scrollTo);
+		props.cbScrollTo(props.scrollTo || this.scrollTo);
 	}
 
 	getChildContext = () => ({

@@ -20,12 +20,12 @@ import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import {ScrollableNative as UiScrollableNative} from '@enact/ui/Scrollable/ScrollableNative';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Spottable from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import {VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList/VirtualListNative';
-import {ScrollableNative as UiScrollableNative} from '@enact/ui/Scrollable/ScrollableNative';
 
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -773,23 +773,6 @@ class VirtualListBase extends Component {
 const SpottableVirtualListBase = SpotlightContainerDecorator(SpotlightContainerConfig, VirtualListBase);
 
 /**
- * Moonstone-specific VirtualList native behavior to apply to
- * [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative} and [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative}.
- *
- * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable.ScrollableNative
- * @mixes ui/Scrollable.ScrollableNative
- * @hoc
- * @private
-
-const VirtualListNativeDecorator = compose(
-	SpotlightContainerDecorator(SpotlightContainerConfig),
-	ScrollableNative,
-	SpottableVirtualListDecorator('Native'),
-	UiScrollableNative
-);*/
-
-/**
  * A moonstone-styled scrollable and spottable virtual list component.
  *
  * @class VirtualList
@@ -852,7 +835,32 @@ const VirtualGridList = VirtualList;
  * @ui
  * @public
  */
-//const VirtualListNative = VirtualListNativeDecorator(UiVirtualListBaseNative);
+const VirtualListNative = (props) => (
+	<ScrollableNative
+		{...props}
+		render={(props) => (
+			<SpottableVirtualListBase
+				{...props}
+				type="Native"
+				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => (
+					[
+						cc.length ? <div key="0" ref={initItemContainerRef}>{cc}</div> : null,
+						primary ?
+							null :
+							<SpotlightPlaceholder
+								data-index={0}
+								data-vl-placeholder
+								key="1"
+								onFocus={handlePlaceholderFocus}
+								role="region"
+							/>,
+						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
+					]
+				)}
+			/>
+		)}
+	/>
+);
 
 /**
  * A moonstone-styled scrollable and spottable virtual grid native list component.
@@ -867,14 +875,14 @@ const VirtualGridList = VirtualList;
  * @ui
  * @public
  */
-//const VirtualGridListNative = VirtualListNative;
+const VirtualGridListNative = VirtualListNative;
 
 export default VirtualList;
 export {
 	VirtualList,
 	VirtualGridList,
-	//VirtualListNative,
-	//VirtualGridListNative,
+	VirtualListNative,
+	VirtualGridListNative,
 	UiVirtualListBase as VirtualListBase,
 	UiVirtualListBaseNative as VirtualListBaseNative
 };
