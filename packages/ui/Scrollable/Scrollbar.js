@@ -214,8 +214,9 @@ class Scrollbar extends Component {
 				{...this.props}
 				ref={(ref) => { // eslint-disable-line react/jsx-no-bind
 					if (ref) {
-						const {showThumb, startHidingThumb, update: uiUpdate} = ref;
+						const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = ref;
 
+						this.getContainerRef = getContainerRef;
 						this.showThumb = showThumb;
 						this.startHidingThumb = startHidingThumb;
 						this.update = uiUpdate;
