@@ -14,6 +14,17 @@ import PropTypes from 'prop-types';
  */
 const defaultConfig = {
 	/**
+	 * If this function is defined, it will be used for finding the selected node.
+	 * Or, the first item is focused basically when picker is opened.
+	 *
+	 * @type {Function}
+	 * @default null
+	 * @memberof moonstone/ExpandableItem.ExpandableSpotlightDecorator.defaultConfig
+	 * @private
+	 */
+	getSelectedNode: null,
+
+	/**
 	 * When `true` and used in conjunction with `noAutoFocus` when `false`, the contents of the
 	 * container will receive spotlight focus expanded, even in pointer mode.
 	 *
