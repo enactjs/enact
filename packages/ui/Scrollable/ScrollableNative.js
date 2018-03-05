@@ -102,6 +102,10 @@ class ScrollableBaseNative extends Component {
 		 */
 		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
+		onKeyDown: PropTypes.func,
+
+		onMouseDown: PropTypes.func,
+
 		/**
 		 * Called when scrolling
 		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
@@ -139,6 +143,10 @@ class ScrollableBaseNative extends Component {
 		 */
 		onScrollStop: PropTypes.func,
 
+		onWheel: PropTypes.func,
+
+		removeEventListeners: PropTypes.func,
+
 		/**
 		 * Render function for Scrollable
 		 *
@@ -146,6 +154,12 @@ class ScrollableBaseNative extends Component {
 		 * @public
 		 */
 		render: PropTypes.func,
+
+		scrollStopOnScroll: PropTypes.func,
+
+		scrollTo: PropTypes.func,
+
+		start: PropTypes.func,
 
 		/**
 		 * Scrollable CSS style.
@@ -156,6 +170,8 @@ class ScrollableBaseNative extends Component {
 		 */
 		style: PropTypes.object,
 
+		updateEventListeners: PropTypes.func,
+
 		/**
 		 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
 		 * `'visible'`, and `'hidden'`.
@@ -164,16 +180,7 @@ class ScrollableBaseNative extends Component {
 		 * @default 'auto'
 		 * @public
 		 */
-		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
-
-		onKeyDown: PropTypes.func,
-		onMouseDown: PropTypes.func,
-		onWheel: PropTypes.func,
-		removeEventListeners: PropTypes.func,
-		scrollTo: PropTypes.func,
-		scrollStopOnScroll: PropTypes.func,
-		start: PropTypes.func,
-		updateEventListeners: PropTypes.func
+		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 	}
 
 	static defaultProps = {
@@ -191,7 +198,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	static contextTypes = {
-		...contextTypesState,
+		...contextTypesState
 	}
 
 	constructor (props) {
@@ -874,7 +881,7 @@ class ScrollableBaseNative extends Component {
 		delete rest.verticalScrollbar;
 
 		return render({
-			css,
+			componentCss: css,
 			initContainerRef: this.initContainerRef,
 			className: scrollableClasses,
 			style,
@@ -907,8 +914,8 @@ class ScrollableNative extends Component {
 		return (
 			<ScrollableBaseNative
 				{...rest}
-				render={({
-					css, className, initContainerRef, style, childComponentProps, scrollTo,
+				render={({ // eslint-disable-line react/jsx-no-bind
+					componentCss, className, initContainerRef, style, childComponentProps, scrollTo,
 					initUiChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,
 					verticalScrollbarProps, horizontalScrollbarProps
 				}) => (
@@ -917,11 +924,11 @@ class ScrollableNative extends Component {
 						ref={initContainerRef}
 						style={style}
 					>
-						<div className={css.container}>
+						<div className={componentCss.container}>
 							{render({
 								...childComponentProps,
 								cbScrollTo: scrollTo,
-								className: css.content,
+								className: componentCss.content,
 								ref: initUiChildRef
 							})}
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
