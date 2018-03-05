@@ -27,9 +27,12 @@ import Scrollbar from './Scrollbar';
 import css from './Scrollable.less';
 
 const
+	forwardKeyDown = forward('onKeyDown'),
+	forwardMouseUp = forward('onMouseUp'),
 	forwardScroll = forward('onScroll'),
 	forwardScrollStart = forward('onScrollStart'),
-	forwardScrollStop = forward('onScrollStop');
+	forwardScrollStop = forward('onScrollStop'),
+	forwardWheel = forward('onWheel');
 
 const
 	constants = {
@@ -228,7 +231,7 @@ class ScrollableBase extends Component {
 			vertical: false
 		};
 
-		props.cbScrollTo(props.scrollTo || this.scrollTo);
+		props.cbScrollTo(this.scrollTo);
 	}
 
 	getChildContext = () => ({
@@ -256,7 +259,7 @@ class ScrollableBase extends Component {
 		this.updateScrollbars();
 
 		this.updateEventListeners();
-		on('keydown', this.props.onKeyDown || this.onKeyDown);
+		on('keydown', this.onKeyDown);
 	}
 
 	componentWillUpdate () {
@@ -325,7 +328,7 @@ class ScrollableBase extends Component {
 		}
 
 		this.removeEventListeners();
-		off('keydown', this.props.onKeyDown || this.onKeyDown);
+		off('keydown', this.onKeyDown);
 	}
 
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
@@ -489,8 +492,10 @@ class ScrollableBase extends Component {
 	}
 
 	onMouseUp = (e) => {
-		if (this.props.onMouseUp) {
-			this.props.onMouseUp();
+		const {onMouseUp} = this.props;
+
+		if (onMouseUp) {
+			forwardMouseUp(e, this.props);
 		}
 
 		if (this.isDragging) {
@@ -563,7 +568,7 @@ class ScrollableBase extends Component {
 			}
 
 			if (this.props.onWheel) {
-				this.props.onWheel(delta);
+				forwardWheel(delta, this.props);
 			}
 
 			if (delta !== 0) {
@@ -586,7 +591,11 @@ class ScrollableBase extends Component {
 	}
 
 	onKeyDown = (e) => {
-		if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && !e.repeat) {
+		const {onKeyDown} = this.props;
+
+		if (onKeyDown) {
+			forwardKeyDown(e, this.props);
+		} else if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && !e.repeat) {
 			this.scrollByPage(e.keyCode);
 		}
 	}
@@ -721,6 +730,8 @@ class ScrollableBase extends Component {
 	}
 
 	stop () {
+		const {stop} = this.props;
+
 		this.animator.stop();
 		this.isScrollAnimationTargetAccumulated = false;
 		this.startHidingThumb();
@@ -729,8 +740,8 @@ class ScrollableBase extends Component {
 			this.doScrollStop();
 		}
 
-		if (this.props.stop) {
-			this.props.stop();
+		if (stop) {
+			stop();
 		}
 	}
 
@@ -798,7 +809,11 @@ class ScrollableBase extends Component {
 	}
 
 	scrollTo = (opt) => {
-		if (!this.deferScrollTo) {
+		const {scrollTo} = this.props;
+
+		if (scrollTo) {
+			scrollTo(opt);
+		} else if (!this.deferScrollTo) {
 			const {left, top} = this.getPositionForScrollTo(opt);
 			this.scrollToInfo = null;
 			this.start({
@@ -989,17 +1004,18 @@ class ScrollableBase extends Component {
 		delete rest.verticalScrollbar;
 
 		return render({
-			componentCss: css,
-			initContainerRef: this.initContainerRef,
-			className: scrollableClasses,
-			style,
 			childComponentProps: rest,
+			className: scrollableClasses,
+			componentCss: css,
 			handleScroll: this.handleScroll,
+			horizontalScrollbarProps: this.horizontalScrollbarProps,
+			initContainerRef: this.initContainerRef,
 			initUiChildRef: this.initChildRef,
-			isVerticalScrollbarVisible,
 			isHorizontalScrollbarVisible,
-			verticalScrollbarProps: this.verticalScrollbarProps,
-			horizontalScrollbarProps: this.horizontalScrollbarProps
+			isVerticalScrollbarVisible,
+			scrollTo: this.scrollTo,
+			style,
+			verticalScrollbarProps: this.verticalScrollbarProps
 		});
 	}
 }
@@ -1024,9 +1040,18 @@ class Scrollable extends Component {
 			<ScrollableBase
 				{...rest}
 				render={({ // eslint-disable-line react/jsx-no-bind
-					componentCss, className, initContainerRef, style, childComponentProps, scrollTo,
-					handleScroll, initUiChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,
-					verticalScrollbarProps, horizontalScrollbarProps
+					childComponentProps,
+					className,
+					componentCss,
+					handleScroll,
+					horizontalScrollbarProps,
+					initContainerRef,
+					initUiChildRef,
+					isHorizontalScrollbarVisible,
+					isVerticalScrollbarVisible,
+					scrollTo,
+					style,
+					verticalScrollbarProps
 				}) => (
 					<div
 						className={className}

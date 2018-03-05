@@ -25,9 +25,11 @@ import css from './Scrollable.less';
 import Scrollbar from './Scrollbar';
 
 const
+	forwardKeyDown = forward('onKeyDown'),
 	forwardScroll = forward('onScroll'),
 	forwardScrollStart = forward('onScrollStart'),
-	forwardScrollStop = forward('onScrollStop');
+	forwardScrollStop = forward('onScrollStop'),
+	forwardWheel = forward('onWheel');
 
 const
 	constants = {
@@ -252,7 +254,7 @@ class ScrollableBaseNative extends Component {
 		this.updateScrollbars();
 
 		this.updateEventListeners();
-		on('keydown', this.props.onKeyDown || this.onKeyDown);
+		on('keydown', this.onKeyDown);
 	}
 
 	componentWillUpdate () {
@@ -319,7 +321,7 @@ class ScrollableBaseNative extends Component {
 		}
 
 		this.removeEventListeners();
-		off('keydown', this.props.onKeyDown || this.onKeyDown);
+		off('keydown', this.onKeyDown);
 	}
 
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
@@ -403,6 +405,7 @@ class ScrollableBaseNative extends Component {
 	 */
 	onWheel = (e) => {
 		const
+			{onWheel} = this.props,
 			bounds = this.getScrollBounds(),
 			canScrollHorizontally = this.canScrollHorizontally(bounds),
 			canScrollVertically = this.canScrollVertically(bounds),
@@ -411,6 +414,11 @@ class ScrollableBaseNative extends Component {
 		let
 			delta = 0,
 			needToHideThumb = false;
+
+		if (onWheel) {
+			forwardWheel(e, this.props);
+			return;
+		}
 
 		this.showThumb(bounds);
 
@@ -491,7 +499,11 @@ class ScrollableBaseNative extends Component {
 	}
 
 	onKeyDown = (e) => {
-		if (isPageUp(e.keyCode) || isPageDown(e.keyCode)) {
+		const {onKeyDown} = this.props;
+
+		if (onKeyDown) {
+			forwardKeyDown(e, this.props);
+		} else if (isPageUp(e.keyCode) || isPageDown(e.keyCode)) {
 			e.preventDefault();
 			if (!e.repeat) {
 				this.scrollByPage(e.keyCode);
@@ -817,7 +829,7 @@ class ScrollableBaseNative extends Component {
 
 		if (containerRef && containerRef.addEventListener) {
 			// FIXME `onWheel` doesn't work on the v8 snapshot.
-			containerRef.addEventListener('wheel', this.props.onWheel || this.onWheel);
+			containerRef.addEventListener('wheel', this.onWheel);
 		}
 		if (childContainerRef && childContainerRef.addEventListener) {
 			// FIXME `onScroll` doesn't work on the v8 snapshot.
@@ -838,7 +850,7 @@ class ScrollableBaseNative extends Component {
 
 		if (containerRef && containerRef.removeEventListener) {
 			// FIXME `onWheel` doesn't work on the v8 snapshot.
-			containerRef.removeEventListener('wheel', this.props.onWheel || this.onWheel);
+			containerRef.removeEventListener('wheel', this.onWheel);
 		}
 		if (childContainerRef && childContainerRef.removeEventListener) {
 			// FIXME `onScroll` doesn't work on the v8 snapshot.
@@ -915,9 +927,17 @@ class ScrollableNative extends Component {
 			<ScrollableBaseNative
 				{...rest}
 				render={({ // eslint-disable-line react/jsx-no-bind
-					componentCss, className, initContainerRef, style, childComponentProps, scrollTo,
-					initUiChildRef, isVerticalScrollbarVisible, isHorizontalScrollbarVisible,
-					verticalScrollbarProps, horizontalScrollbarProps
+					childComponentProps,
+					className,
+					componentCss,
+					horizontalScrollbarProps,
+					initContainerRef,
+					initUiChildRef,
+					isHorizontalScrollbarVisible,
+					isVerticalScrollbarVisible,
+					scrollTo,
+					style,
+					verticalScrollbarProps
 				}) => (
 					<div
 						className={className}
