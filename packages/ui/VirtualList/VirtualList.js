@@ -583,7 +583,7 @@ class VirtualListBase extends Component {
 
 		this.cc[key] = componentHidden({
 			key,
-			style: style = {display: 'none'}
+			style: {display: 'none'}
 		});
 	}
 
