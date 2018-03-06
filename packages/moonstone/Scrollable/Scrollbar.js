@@ -61,7 +61,7 @@ class Scrollbar extends Component {
 			<UiScrollbarBase
 				corner={corner}
 				css={componentCss}
-				setRef={(ref) => { // eslint-disable-line react/jsx-no-bind
+				ref={(ref) => { // eslint-disable-line react/jsx-no-bind
 					if (ref) {
 						const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = ref;
 
@@ -75,7 +75,7 @@ class Scrollbar extends Component {
 				render={({setScrollThumbRef}) => ( // eslint-disable-line react/jsx-no-bind
 					<ScrollButtons
 						{...rest}
-						setRef={(ref) => { // eslint-disable-line react/jsx-no-bind
+						ref={(ref) => { // eslint-disable-line react/jsx-no-bind
 							if (ref) {
 								const {isOneOfScrollButtonsFocused, updateButtons} = ref;
 

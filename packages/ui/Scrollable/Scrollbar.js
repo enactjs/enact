@@ -66,14 +66,6 @@ class ScrollbarBase extends PureComponent {
 		css: PropTypes.object,
 
 		/**
-		 * Called when the component contructed
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		setRef: PropTypes.func,
-
-		/**
 		 * If `true`, the scrollbar will be oriented vertically.
 		 *
 		 * @type {Boolean}
@@ -94,10 +86,6 @@ class ScrollbarBase extends PureComponent {
 
 		this.setContainerRef = this.setRef('containerRef');
 		this.setScrollThumbRef = this.setRef('thumbRef');
-
-		if (props.setRef) {
-			props.setRef(this);
-		}
 	}
 
 	componentDidMount () {
