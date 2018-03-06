@@ -71,7 +71,39 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
 
-## [1.13.3] - 2017-01-16
+## [1.15.0] - 2018-02-28
+
+### Deprecated
+
+- `core/util/childrenEquals`, to be removed in 2.0.0
+- `moonstone/Marquee.Marquee`, to be moved to `moonstone/Marquee.MarqueeBase` in 2.0.0
+- `moonstone/Marquee.MarqueeText`, to be moved to `moonstone/Marquee.Marquee` in 2.0.0
+
+### Fixed
+
+- `moonstone/GridListImageItem` to display correctly
+- Internal method used by many components that sometimes prevented re-renders when they were needed
+
+## [1.14.0] - 2018-02-23
+
+### Deprecated
+
+- `core/factory`, to be removed in 2.0.0
+- `moonstone/VirtualFlexList`, to be replaced by `ui/VirtualFlexList` in 2.0.0
+- `moonstone/VirtualGridList.GridListImageItem`, to be replaced by `moonstone/GridListImageItem` in 2.0.0
+- `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`, to be removed in 2.0.0
+- `moonstone/Button.ButtonFactory`, `moonstone/Button.ButtonBaseFactory`, `moonstone/IconButton.IconButtonFactory`, `moonstone/IconButton.IconButtonBaseFactory`, `moonstone/IncrementSlider.IncrementSliderFactory`, `moonstone/IncrementSlider.IncrementSliderBaseFactory`, `moonstone/Slider.SliderFactory`, and `moonstone/Slider.SliderBaseFactory`, to be removed in 2.0.0
+- `moonstone/Item.ItemOverlay`, to be replaced by `ui/SlotItem` in 2.0.0
+- `moonstone/Item.Overlay` and `moonstone/Item.OverlayDecorator`, to be removed in 2.0.0
+- `ui/Holdable` and `ui/Pressable`, to be replaced by `ui/Touchable` in 2.0.0
+
+### Added
+
+- `moonstone/DaySelector` component
+- `moonstone/EditableIntegerPicker` component
+- `moonstone/GridListImageItem` component
+
+## [1.13.3] - 2018-01-16
 
 ### Fixed
 
@@ -994,10 +1026,10 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ## [1.0.0-alpha.3] - 2016-11-8
 
-> Note: For those who are using `eslint-config-enact` for in-editor linting, there have been some important changes and reinstallation is necessary. Refer to [https://github.com/enyojs/eslint-config-enact/](https://github.com/enyojs/eslint-config-enact/) for install instructions or reinstall via:
+> Note: For those who are using `eslint-config-enact` for in-editor linting, there have been some important changes and reinstallation is necessary. Refer to [https://github.com/enactjs/eslint-config-enact/](https://github.com/enactjs/eslint-config-enact/) for install instructions or reinstall via:
 >
 > ```
-> npm install -g eslint eslint-plugin-react eslint-plugin-babel babel-eslint enyojs/eslint-plugin-enact enyojs/eslint-config-enact
+> npm install -g eslint eslint-plugin-react eslint-plugin-babel babel-eslint enactjs/eslint-plugin-enact enactjs/eslint-config-enact
 > ```
 >
 >If you don't use in-editor linting or use a different linting configuration, you can safely ignore this notice.

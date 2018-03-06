@@ -30,11 +30,13 @@
   "dependencies": {
     "@enact/core": "^2.0.0-alpha.4",
     "classnames": "^2.2.5",
+    "direction": "^1.0.1",
     "invariant": "^2.2.2",
     "prop-types": "^15.6.0",
     "ramda": "^0.24.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "recompose": "^0.26.0",
     "warning": "^3.0.0"
   }
 }
