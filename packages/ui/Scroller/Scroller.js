@@ -27,8 +27,6 @@ class ScrollerBase extends Component {
 	static displayName = 'ui:ScrollerBase'
 
 	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
-		children: PropTypes.node.isRequired,
-
 		/**
 		 * Callback method of scrollTo.
 		 * Normally, `Scrollable` should set this value.
@@ -145,7 +143,7 @@ class ScrollerBase extends Component {
 
 	render () {
 		const
-			{children, className, style, ...rest} = this.props,
+			{className, style, ...rest} = this.props,
 			mergedStyle = Object.assign({}, style, {
 				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
 				overflowY: this.isVertical() ? 'auto' : 'hidden'
@@ -160,9 +158,7 @@ class ScrollerBase extends Component {
 				className={classNames(className, css.hideNativeScrollbar)}
 				ref={this.initRef}
 				style={mergedStyle}
-			>
-				{children}
-			</div>
+			/>
 		);
 	}
 }
