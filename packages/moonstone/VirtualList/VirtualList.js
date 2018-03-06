@@ -11,9 +11,7 @@
  */
 
 import clamp from 'ramda/src/clamp';
-import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
-import css from '@enact/ui/VirtualList/ListItem.less';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
