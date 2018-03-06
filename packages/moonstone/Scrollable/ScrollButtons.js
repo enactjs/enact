@@ -98,7 +98,7 @@ class ScrollButtonsBase extends Component {
 		onPrevSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * Called when the component contructed
+		 * Called when the component constructed
 		 *
 		 * @type {Function}
 		 * @private
