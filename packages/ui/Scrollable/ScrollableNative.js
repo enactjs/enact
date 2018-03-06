@@ -371,12 +371,9 @@ class ScrollableBaseNative extends Component {
 
 	// event handler for browser native scroll
 
-	onMouseDown = () => {
+	onMouseDown = (ev) => {
 		this.isScrollAnimationTargetAccumulated = false;
-
-		if (this.props.onMouseDown) {
-			this.props.onMouseDown();
-		}
+		forward('onMouseDown', ev, this.props);
 	}
 
 	calculateDistanceByWheel (deltaMode, delta, maxPixel) {

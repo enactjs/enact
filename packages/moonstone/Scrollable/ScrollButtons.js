@@ -1,4 +1,5 @@
 import {Announce} from '@enact/ui/AnnounceDecorator';
+import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {is} from '@enact/core/keymap';
 import {off, on} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
@@ -98,12 +99,13 @@ class ScrollButtonsBase extends Component {
 		onPrevSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * Called when the component constructed
+		 * Registers the ScrollButtons component with an
+		 * {@link core/internal/ApiDecorator.ApiDecorator}.
 		 *
 		 * @type {Function}
 		 * @private
 		 */
-		setRef: PropTypes.func,
+		setApiProvider: PropTypes.func,
 
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
@@ -128,8 +130,8 @@ class ScrollButtonsBase extends Component {
 			nextButtonDisabled: true
 		};
 
-		if (props.setRef) {
-			props.setRef(this);
+		if (props.setApiProvider) {
+			props.setApiProvider(this);
 		}
 	}
 
@@ -328,12 +330,15 @@ class ScrollButtonsBase extends Component {
  * @ui
  * @private
  */
-const ScrollButtons = DisappearSpotlightDecorator(
-	{events: {
-		onNextSpotlightDisappear: '[data-scroll-button="previous"]',
-		onPrevSpotlightDisappear: '[data-scroll-button="next"]'
-	}}
-)(ScrollButtonsBase);
+const ScrollButtons = ApiDecorator(
+	{api: ['isOneOfScrollButtonsFocused', 'updateButtons']},
+	DisappearSpotlightDecorator(
+		{events: {
+			onNextSpotlightDisappear: '[data-scroll-button="previous"]',
+			onPrevSpotlightDisappear: '[data-scroll-button="next"]'
+		}}
+	)(ScrollButtonsBase)
+);
 
 export default ScrollButtons;
 export {

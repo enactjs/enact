@@ -1,5 +1,4 @@
 import React from 'react';
-
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import {ScrollerBaseNative as UiScrollerBaseNative} from '@enact/ui/Scroller';
 
