@@ -2,6 +2,14 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `moonstone/ExpandableSpotlightDecorator` to add `getSelectedNode` variable from config to focus the selected index as the default focus
+- `moonstone/ExpandableList` to add HOC prameter for finding selcted node
+- `moonstone/Expandable` to add HOC prop. If `getSelectedNode` is defined in config, it will be used for finding selected node in `ExpandableSpotlightDecorator`
+
 ## [2.0.0-alpha.4] - 2018-02-13
 
 ### Added

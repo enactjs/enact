@@ -14,6 +14,17 @@ import PropTypes from 'prop-types';
  */
 const defaultConfig = {
 	/**
+	 * If this function is defined, it will be used for finding the selected node.
+	 * Or, the first item is focused basically when picker is opened.
+	 *
+	 * @type {Function}
+	 * @default null
+	 * @memberof moonstone/ExpandableItem.ExpandableSpotlightDecorator.defaultConfig
+	 * @private
+	 */
+	getSelectedNode: null,
+
+	/**
 	 * When `true` and used in conjunction with `noAutoFocus` when `false`, the contents of the
 	 * container will receive spotlight focus expanded, even in pointer mode.
 	 *
@@ -34,7 +45,7 @@ const defaultConfig = {
  * @private
  */
 const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {noPointerMode} = config;
+	const {getSelectedNode, noPointerMode} = config;
 
 	return class extends React.Component {
 		static displayName = 'ExpandableSpotlightDecorator'
@@ -68,8 +79,13 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const current = Spotlight.getCurrent();
 			if (this.containerNode.contains(current) || document.activeElement === document.body) {
 				const contents = this.containerNode.querySelector('[data-expandable-container]');
+				const selectedNode = getSelectedNode ? getSelectedNode(contents, this.props) : null;
 				if (contents && !this.props.noAutoFocus && !contents.contains(current)) {
-					Spotlight.focus(contents.dataset.containerId);
+					if (selectedNode) {
+						Spotlight.focus(selectedNode);
+					} else {
+						Spotlight.focus(contents.dataset.containerId);
+					}
 				}
 			}
 		}
