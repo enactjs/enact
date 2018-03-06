@@ -423,23 +423,11 @@ class ScrollableNative extends Component {
 	}
 
 	scrollTo = (opt) => {
-		if (!this.uiRef.deferScrollTo) {
-			const {left, top} = this.uiRef.getPositionForScrollTo(opt);
-
-			this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
-			this.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
-			this.uiRef.scrollToInfo = null;
-			this.uiRef.start(
-				(left !== null) ? left : this.uiRef.scrollLeft,
-				(top !== null) ? top : this.uiRef.scrollTop,
-				opt.animate
-			);
-		} else {
-			this.uiRef.scrollToInfo = opt;
-		}
+		this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
+		this.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
 	}
 
-	alertThumb () {
+	alertThumb = () => {
 		const bounds = this.uiRef.getScrollBounds();
 
 		this.uiRef.showThumb(bounds);
