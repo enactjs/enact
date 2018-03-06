@@ -717,16 +717,16 @@ const
  * @ui
  * @public
  */
-const VirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
+const VirtualList = ({role, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 	<SpottableScrollable
-		{...props}
-		render={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
+		{...rest}
+		render={(props) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
-				{...virtualListProps}
+				{...props}
 				type="JS"
 				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
-						cc.length ? <div key="0" ref={initItemContainerRef}>{cc}</div> : null,
+						cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
 						primary ?
 							null :
 							<SpotlightPlaceholder
@@ -769,16 +769,16 @@ const VirtualGridList = VirtualList;
  * @ui
  * @public
  */
-const VirtualListNative = (props) => (
+const VirtualListNative = ({role, ...rest}) => (
 	<SpottableScrollableNative
-		{...props}
-		render={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
+		{...rest}
+		render={(props) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
-				{...virtualListProps}
+				{...props}
 				type="Native"
 				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
-						cc.length ? <div key="0" ref={initItemContainerRef}>{cc}</div> : null,
+						cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
 						primary ?
 							null :
 							<SpotlightPlaceholder
