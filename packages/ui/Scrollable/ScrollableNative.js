@@ -893,16 +893,17 @@ class ScrollableBaseNative extends Component {
 		delete rest.verticalScrollbar;
 
 		return render({
-			componentCss: css,
-			initContainerRef: this.initContainerRef,
-			className: scrollableClasses,
-			style,
 			childComponentProps: rest,
+			className: scrollableClasses,
+			componentCss: css,
+			horizontalScrollbarProps: this.horizontalScrollbarProps,
+			initContainerRef: this.initContainerRef,
 			initUiChildRef: this.initChildRef,
-			isVerticalScrollbarVisible,
 			isHorizontalScrollbarVisible,
-			verticalScrollbarProps: this.verticalScrollbarProps,
-			horizontalScrollbarProps: this.horizontalScrollbarProps
+			isVerticalScrollbarVisible,
+			scrollTo: this.scrollTo,
+			style,
+			verticalScrollbarProps: this.verticalScrollbarProps
 		});
 	}
 }

@@ -197,10 +197,8 @@ class VirtualListBaseNative extends Component {
 
 	componentWillMount () {
 		if (this.props.clientSize) {
-			const updateStatesAndBounds = this.props.updateStatesAndBounds || this.updateStatesAndBounds;
-
 			this.calculateMetrics(this.props);
-			updateStatesAndBounds(this.props);
+			this.updateStatesAndBounds(this.props);
 		}
 	}
 
@@ -208,10 +206,8 @@ class VirtualListBaseNative extends Component {
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
 		if (!this.props.clientSize) {
-			const updateStatesAndBounds = this.props.updateStatesAndBounds || this.updateStatesAndBounds;
-
 			this.calculateMetrics(this.props);
-			updateStatesAndBounds(this.props);
+			this.updateStatesAndBounds(this.props);
 		}
 		this.setContainerSize();
 	}
@@ -226,17 +222,16 @@ class VirtualListBaseNative extends Component {
 				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
 				overhang !== nextProps.overhang ||
 				spacing !== nextProps.spacing
-			),
-			updateStatesAndBounds = this.props.updateStatesAndBounds || this.updateStatesAndBounds;
+			);
 
 		this.hasDataSizeChanged = (dataSize !== nextProps.dataSize);
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
-			updateStatesAndBounds(nextProps);
+			this.updateStatesAndBounds(nextProps);
 			this.setContainerSize();
 		} else if (this.hasDataSizeChanged) {
-			updateStatesAndBounds(nextProps);
+			this.updateStatesAndBounds(nextProps);
 			this.setContainerSize();
 		}
 	}
@@ -378,7 +373,7 @@ class VirtualListBaseNative extends Component {
 
 	updateStatesAndBounds = (props) => {
 		const
-			{dataSize, overhang} = props,
+			{dataSize, overhang, updateStatesAndBounds} = props,
 			{firstIndex} = this.state,
 			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
@@ -394,7 +389,14 @@ class VirtualListBaseNative extends Component {
 		this.calculateScrollBounds(props);
 		this.updateMoreInfo(dataSize, scrollPosition);
 
-		newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
+		if (!(updateStatesAndBounds && updateStatesAndBounds({
+			cbScrollTo: props.cbScrollTo,
+			numOfItems,
+			dataSize,
+			moreInfo
+		}))) {
+			newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
+		}
 
 		this.setState({firstIndex: newFirstIndex, numOfItems});
 	}

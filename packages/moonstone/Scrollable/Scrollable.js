@@ -351,20 +351,8 @@ class Scrollable extends Component {
 	}
 
 	scrollTo = (opt) => {
-		if (!this.uiRef.deferScrollTo) {
-			const {left, top} = this.uiRef.getPositionForScrollTo(opt);
-
-			this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
-			this.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
-			this.uiRef.scrollToInfo = null;
-			this.uiRef.start({
-				targetX: (left !== null) ? left : this.uiRef.scrollLeft,
-				targetY: (top !== null) ? top : this.uiRef.scrollTop,
-				animate: opt.animate
-			});
-		} else {
-			this.uiRef.scrollToInfo = opt;
-		}
+		this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
+		this.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
 	}
 
 	alertThumb = () => {
@@ -466,6 +454,7 @@ class Scrollable extends Component {
 					initUiChildRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
+					scrollTo,
 					style,
 					verticalScrollbarProps
 				}) => (
@@ -478,7 +467,7 @@ class Scrollable extends Component {
 						<div className={componentCss.container}>
 							{render({
 								...childComponentProps,
-								cbScrollTo: this.scrollTo,
+								cbScrollTo: scrollTo,
 								className: componentCss.content,
 								initUiChildRef,
 								onScroll: handleScroll,

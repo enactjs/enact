@@ -636,26 +636,8 @@ class VirtualListBase extends Component {
 		this.lastFocusedIndex = param;
 	}
 
-	updateStatesAndBounds = (props) => {
-		const
-			{dataSize, overhang} = props, // eslint-disable-line enact/prop-types
-			{firstIndex} = this.uiRef.state,
-			{dimensionToExtent, primary, moreInfo, scrollPosition} = this.uiRef,
-			{preservedIndex} = this,
-			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
-			wasFirstIndexMax = ((this.uiRef.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.uiRef.maxFirstIndex)),
-			dataSizeDiff = dataSize - this.uiRef.curDataSize;
-		let newFirstIndex = firstIndex;
-
-		this.uiRef.maxFirstIndex = Math.ceil((dataSize - numOfItems) / dimensionToExtent) * dimensionToExtent;
-		this.uiRef.curDataSize = dataSize;
-		this.uiRef.updateFrom = null;
-		this.uiRef.updateTo = null;
-
-		// reset children
-		this.uiRef.cc = [];
-		this.uiRef.calculateScrollBounds(props);
-		this.uiRef.updateMoreInfo(dataSize, scrollPosition);
+	updateStatesAndBounds = ({cbScrollTo, dataSize, moreInfo, numOfItems}) => {
+		const {preservedIndex} = this;
 
 		if (this.restoreLastFocused &&
 			numOfItems > 0 &&
@@ -663,12 +645,12 @@ class VirtualListBase extends Component {
 			(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
 			// If we need to restore last focus and the index is beyond the screen,
 			// we call `scrollTo` to create DOM for it.
-			props.cbScrollTo({index: preservedIndex, animate: false});
-		} else {
-			newFirstIndex = this.uiRef.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
-		}
+			cbScrollTo({index: preservedIndex, animate: false});
 
-		this.uiRef.setState({firstIndex: newFirstIndex, numOfItems});
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	getXY = (primaryPosition, secondaryPosition) => {

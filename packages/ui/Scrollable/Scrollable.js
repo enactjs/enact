@@ -811,10 +811,11 @@ class ScrollableBase extends Component {
 	scrollTo = (opt) => {
 		const {scrollTo} = this.props;
 
-		if (scrollTo) {
-			scrollTo(opt);
-		} else if (!this.deferScrollTo) {
+		if (!this.deferScrollTo) {
 			const {left, top} = this.getPositionForScrollTo(opt);
+			if (scrollTo) {
+				scrollTo(opt);
+			}
 			this.scrollToInfo = null;
 			this.start({
 				targetX: (left !== null) ? left : this.scrollLeft,
