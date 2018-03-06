@@ -13,6 +13,8 @@ import PropTypes from 'prop-types';
 import {forward} from '@enact/core/handle';
 import {on, off} from '@enact/core/dispatcher';
 
+import readyState from './readyState';
+
 /**
  * Event forwarding map for all of the supported media events. See https://reactjs.org/docs/events.html#media-events
  *
@@ -242,5 +244,6 @@ class Media extends React.Component {
 export default Media;
 export {
 	handledMediaEventsMap,
+	readyState,
 	Media
 };

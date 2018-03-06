@@ -19,7 +19,7 @@ import {perfNow, Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import {platform} from '@enact/core/platform';
 import {is} from '@enact/core/keymap';
-import Media from '@enact/ui/Media';
+import Media, {readyState} from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
 import Spotlight from '@enact/spotlight';
@@ -60,15 +60,6 @@ const keyMap = {
 	'REWIND': 412,
 	'FASTFORWARD': 417
 };
-
-// Video ReadyStates
-// - Commented are currently unused.
-//
-// const HAVE_NOTHING      = 0;  // no information whether or not the audio/video is ready
-// const HAVE_METADATA     = 1;  // metadata for the audio/video is ready
-// const HAVE_CURRENT_DATA = 2;  // data for the current playback position is available, but not enough data to play next frame/millisecond
-// const HAVE_FUTURE_DATA  = 3;  // data for the current and at least the next frame is available
-const HAVE_ENOUGH_DATA  = 4;  // enough data available to start playing
 
 // provide forwarding of events on media controls
 const forwardControlsAvailable = forward('onControlsAvailable');
@@ -1059,7 +1050,7 @@ const VideoPlayerBase = class extends React.Component {
 			if (this.showMiniFeedback && (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider)) {
 				this.setState({
 					mediaSliderVisible: shouldShowSlider,
-					miniFeedbackVisible: !(this.state.readyState < HAVE_ENOUGH_DATA || !this.state.duration || this.state.error)
+					miniFeedbackVisible: !(this.state.readyState < readyState.HAVE_ENOUGH_DATA || !this.state.duration || this.state.error)
 				});
 			}
 		}
