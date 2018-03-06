@@ -54,7 +54,7 @@ const handledMediaEventsMap = {
  * @class Media
  * @memberof ui/Media
  * @ui
- * @public
+ * @private
  */
 class Media extends React.Component {
 	static propTypes = /** @lends ui/Media.Media.prototype */ {
