@@ -657,7 +657,7 @@ class VirtualListBase extends Component {
 
 	scrollToPosition (x, y) {
 		const node = this.containerRef;
-		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
+		node.scrollTo((this.context.rtl && !this.uiRef.isPrimaryDirectionVertical) ? this.uiRef.scrollBounds.maxLeft - x : x, y);
 	}
 
 	getScrollBounds = () => this.uiRef.getScrollBounds()
