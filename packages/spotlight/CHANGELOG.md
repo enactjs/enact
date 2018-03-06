@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `spotlight/Pause` module which acts as a semaphore for spotlight pause state
+
 ## [2.0.0-alpha.4] - 2018-02-13
 
 ### Fixed
