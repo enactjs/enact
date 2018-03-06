@@ -592,7 +592,7 @@ class VirtualListBase extends Component {
 			let gridPosition = this.uiRef.getGridPosition(focusedIndex);
 
 			if (numOfItems > 0 && focusedIndex % numOfItems !== this.lastFocusedIndex % numOfItems) {
-				const node = this.getItemNode(this.lastFocusedIndex);
+				const node = this.uiRef.getItemNode(this.lastFocusedIndex);
 
 				if (node) {
 					node.blur();
@@ -662,6 +662,10 @@ class VirtualListBase extends Component {
 
 	getScrollBounds = () => this.uiRef.getScrollBounds()
 
+	getComponentProps = (index) => (
+		(index === this.nodeIndexToBeFocused) ? {ref: (ref) => this.initItemRef(ref, index)} : {}
+	)
+
 	render () {
 		const
 			{component, initUiChildRef, render, type, ...rest} = this.props,
@@ -676,16 +680,15 @@ class VirtualListBase extends Component {
 					component({
 						... itemRest,
 						[dataIndexAttribute]: index,
-						index,
-						ref: (index === nodeIndexToBeFocused) ? (ref) => this.initItemRef(ref, index) : null
+						index
 					})
 				)}
+				getComponentProps={this.getComponentProps}
 				getXY={this.getXY}
 				ref={(ref) => { // eslint-disable-line react/jsx-no-bind
 					if (ref) {
 						this.uiRef = ref;
 						initUiChildRef(ref);
-						this.getItemNode = ref.getItemNode;
 					}
 				}}
 				updateStatesAndBounds={this.updateStatesAndBound}

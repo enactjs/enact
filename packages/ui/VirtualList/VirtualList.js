@@ -138,6 +138,8 @@ class VirtualListBase extends Component {
 		 */
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
+		getComponentProps: PropTypes.func,
+
 		getXY: PropTypes.func,
 
 		/**
@@ -556,7 +558,7 @@ class VirtualListBase extends Component {
 
 	applyStyleToNewNode = (index, ...rest) => {
 		const
-			{component, data} = this.props,
+			{component, getComponentProps, data} = this.props,
 			{numOfItems} = this.state,
 			key = index % numOfItems,
 			itemElement = component({
@@ -564,11 +566,13 @@ class VirtualListBase extends Component {
 				index,
 				key
 			}),
-			style = {};
+			style = {},
+			componentProps = getComponentProps && getComponentProps(index) || {};
 
 		this.composeStyle(style, ...rest);
 
 		this.cc[key] = React.cloneElement(itemElement, {
+			...componentProps,
 			className: classNames(css.listItem, itemElement.props.className),
 			style: {...itemElement.props.style, ...style}
 		});
@@ -695,6 +699,7 @@ class VirtualListBase extends Component {
 		delete rest.data;
 		delete rest.dataSize;
 		delete rest.direction;
+		delete rest.getComponentProps;
 		delete rest.getXY;
 		delete rest.itemSize;
 		delete rest.overhang;
