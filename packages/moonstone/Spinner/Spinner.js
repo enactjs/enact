@@ -16,7 +16,6 @@ import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import compose from 'ramda/src/compose';
 import React from 'react';
-import Spotlight from '@enact/spotlight';
 import Pause from '@enact/spotlight/Pause';
 import UiSpinnerBase from '@enact/ui/Spinner';
 
