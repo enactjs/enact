@@ -1,5 +1,4 @@
 import kind from '@enact/core/kind';
-
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -19,7 +18,7 @@ import css from './SliderTooltip.less';
 const SliderTooltipBase = kind({
 	name: 'SliderTooltip',
 
-	propTypes: /** @lends moonstone/Slider.SliderTooltip.prototype */{
+	propTypes: /** @lends moonstone/Slider.SliderTooltip.prototype */ {
 		/**
 		 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale changes
 		 * for `vertical` sliders. This may be useful if you have a static layout that does not
@@ -122,6 +121,7 @@ const SliderTooltipBase = kind({
 		delete rest.proportion;
 		delete rest.side;
 		delete rest.vertical;
+
 		return (
 			<Tooltip {...rest}>
 				{children}

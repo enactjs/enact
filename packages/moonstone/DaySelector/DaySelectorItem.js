@@ -1,7 +1,6 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Pure from '@enact/ui/internal/Pure';
 
 import ToggleItem from '../ToggleItem';
 

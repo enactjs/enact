@@ -1,7 +1,6 @@
 /**
- * Exports the {@link moonstone/VirtualList.VirtualList},
- * {@link moonstone/VirtualList.VirtualGridList}, and
- * {@link moonstone/VirtualList.GridListImageItem} components.
+ * Exports the {@link moonstone/VirtualList.VirtualList} and
+ * {@link moonstone/VirtualList.VirtualGridList}
  * The default export is {@link moonstone/VirtualList.VirtualList}.
  *
  * @module moonstone/VirtualList
@@ -448,4 +447,3 @@ const VirtualGridList = kind({
 
 export default VirtualList;
 export {VirtualList, VirtualGridList};
-export * from './GridListImageItem';

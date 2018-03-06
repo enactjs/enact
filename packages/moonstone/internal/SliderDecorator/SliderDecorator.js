@@ -13,6 +13,7 @@ import clamp from 'ramda/src/clamp';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {forward} from '@enact/core/handle';
+import shallowEqual from 'recompose/shallowEqual';
 
 import $L from '../$L';
 import {validateRange} from '../validators';
@@ -282,6 +283,16 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				validateRange(backgroundProgress, 0, 1, SliderDecoratorClass.displayName,
 					'backgroundProgress', 'min', 'max');
 			}
+		}
+
+		shouldComponentUpdate (nextProps, nextState) {
+			const {focused, ...rest} = this.state;
+			const {focused: nextFocused, ...nextRest} = nextState;
+			return !(focused !== nextFocused &&
+				!this.props.tooltip &&
+				shallowEqual(this.props, nextProps) &&
+				shallowEqual(rest, nextRest)
+			);
 		}
 
 		componentDidUpdate () {
