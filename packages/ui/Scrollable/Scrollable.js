@@ -927,7 +927,7 @@ class ScrollableBase extends Component {
 		}
 
 		if (this.props.updateEventListeners) {
-			this.props.updateEventListeners();
+			this.props.updateEventListeners(this.childRef.containerRef);
 		}
 	}
 
@@ -940,7 +940,7 @@ class ScrollableBase extends Component {
 		}
 
 		if (this.props.removeEventListeners) {
-			this.props.removeEventListeners();
+			this.props.removeEventListeners(this.childRef.containerRef);
 		}
 	}
 

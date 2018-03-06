@@ -821,7 +821,7 @@ class ScrollableBaseNative extends Component {
 		childContainerRef.style.scrollBehavior = 'smooth';
 
 		if (this.props.updateEventListeners) {
-			this.props.updateEventListeners();
+			this.props.updateEventListeners(childContainerRef);
 		}
 	}
 
@@ -840,7 +840,7 @@ class ScrollableBaseNative extends Component {
 		}
 
 		if (this.props.removeEventListeners) {
-			this.props.removeEventListeners();
+			this.props.removeEventListeners(childContainerRef);
 		}
 	}
 

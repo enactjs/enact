@@ -396,25 +396,17 @@ class Scrollable extends Component {
 		this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 	}
 
-	updateEventListeners = () => {
-		if (this.uiRef && this.uiRef.childRef) {
-			const childContainerRef = this.uiRef.childRef.containerRef;
-
-			if (childContainerRef && childContainerRef.addEventListener) {
-				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.addEventListener('focusin', this.onFocus);
-			}
+	updateEventListeners = (childContainerRef) => {
+		if (childContainerRef && childContainerRef.addEventListener) {
+			// FIXME `onFocus` doesn't work on the v8 snapshot.
+			childContainerRef.addEventListener('focusin', this.onFocus);
 		}
 	}
 
-	removeEventListeners = () => {
-		if (this.uiRef && this.uiRef.childRef) {
-			const childContainerRef = this.uiRef.childRef.containerRef;
-
-			if (childContainerRef && childContainerRef.removeEventListener) {
-				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('focusin', this.onFocus);
-			}
+	removeEventListeners = (childContainerRef) => {
+		if (childContainerRef && childContainerRef.removeEventListener) {
+			// FIXME `onFocus` doesn't work on the v8 snapshot.
+			childContainerRef.removeEventListener('focusin', this.onFocus);
 		}
 	}
 
