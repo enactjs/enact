@@ -181,6 +181,12 @@ class Media extends React.Component {
 		};
 
 		forward('onUpdate', {...ev, mediaStates: updatedState}, this.props);
+
+		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
+		const fwd = this.handledMediaForwards[handledMediaEventsMap[ev.type]];
+		if (fwd) {
+			fwd(ev, this.props);
+		}
 	}
 
 	mediaRef = (node) => {
