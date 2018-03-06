@@ -1200,10 +1200,26 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Media Interaction Methods
 	//
-	updateMainState = (states) => {
-		const updatedState = Object.assign({}, states);
+	updateMainState = () => {
+		const el = this.video.getNode();
+		const updatedState = {
+			// Standard media properties
+			currentTime: el.currentTime,
+			duration: el.duration,
+			buffered: el.buffered,
+			paused: el.playbackRate !== 1 || el.paused,
+			muted: el.muted,
+			volume: el.volume,
+			playbackRate: el.playbackRate,
+			readyState: el.readyState,
 
-		updatedState.sliderTooltipTime = this.sliderScrubbing ? (this.sliderKnobProportion * this.video.duration) : this.video.currentTime;
+			// Non-standard state computed from properties
+			proportionLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration,
+			proportionPlayed: el.currentTime / el.duration || 0,
+			error: el.networkState === el.NETWORK_NO_SOURCE,
+			loading: el.readyState < el.HAVE_ENOUGH_DATA,
+			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime
+		};
 
 		// If there's an error, we're obviously not loading, no matter what the readyState is.
 		if (updatedState.error) updatedState.loading = false;
@@ -1215,7 +1231,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		const isRewind = this.prevCommand === 'rewind' || this.prevCommand === 'slowRewind';
 		const isForward = this.prevCommand === 'fastForward' || this.prevCommand === 'slowForward';
-		if (this.props.pauseAtEnd && (updatedState.currentTime === 0 && isRewind || updatedState.currentTime === updatedState.duration && isForward)) {
+		if (this.props.pauseAtEnd && (el.currentTime === 0 && isRewind || el.currentTime === el.duration && isForward)) {
 			this.pause();
 		}
 
@@ -1609,15 +1625,13 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleEvent = (ev) => {
-		const {mediaStates, type} = ev;
+		this.updateMainState();
 
-		this.updateMainState(mediaStates);
-
-		if (type === 'onLoadStart') {
+		if (ev.type === 'onLoadStart') {
 			this.handleLoadStart();
 		}
 
-		if (type === 'play') {
+		if (ev.type === 'play') {
 			this.mayRenderBottomControls();
 		}
 	}

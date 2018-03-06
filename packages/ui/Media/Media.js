@@ -90,27 +90,10 @@ class Media extends React.Component {
 		mediaEventsMap: PropTypes.object,
 
 		/**
-		 * A function to be run when media is updated.
-		 *
-		 * The event will include the following properties:
-		 *
-		 * A set of standard HTMLMediaElement properties
-		 * * currentTime
-		 * * duration
-		 * * buffered
-		 * * paused
-		 * * muted
-		 * * volume
-		 * * playbackRate
-		 * * readyState
-		 *
-		 * Non-standard computed properties
-		 * * proportionLoaded
-		 * * proportionPlayed
-		 * * error
-		 * * loading
+		 * A function to be run when media updates.
 		 *
 		 * @type {Function}
+		 * @public
 		 */
 		onUpdate: PropTypes.func
 	}
@@ -121,6 +104,8 @@ class Media extends React.Component {
 
 	constructor (props) {
 		super(props);
+
+		this.media = null;
 
 		this.handledMediaForwards = {};
 		this.handledMediaEvents = {};
@@ -162,25 +147,7 @@ class Media extends React.Component {
 	}
 
 	handleEvent = (ev) => {
-		const updatedState = {
-			// Standard media properties
-			currentTime: this.media.currentTime,
-			duration: this.media.duration,
-			buffered: this.media.buffered,
-			paused: this.media.playbackRate !== 1 || this.media.paused,
-			muted: this.media.muted,
-			volume: this.media.volume,
-			playbackRate: this.media.playbackRate,
-			readyState: this.media.readyState,
-
-			// Non-standard state computed from properties
-			proportionLoaded: this.media.buffered.length && this.media.buffered.end(this.media.buffered.length - 1) / this.media.duration,
-			proportionPlayed: this.media.currentTime / this.media.duration || 0,
-			error: this.media.networkState === this.media.NETWORK_NO_SOURCE,
-			loading: this.media.readyState < this.media.HAVE_ENOUGH_DATA
-		};
-
-		forward('onUpdate', {...ev, mediaStates: updatedState}, this.props);
+		forward('onUpdate', ev, this.props);
 
 		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
 		const fwd = this.handledMediaForwards[handledMediaEventsMap[ev.type]];
@@ -193,15 +160,19 @@ class Media extends React.Component {
 		this.media = node;
 	}
 
-	play = () => {
+	getNode () {
+		return this.media;
+	}
+
+	play () {
 		this.media.play();
 	}
 
-	pause = () => {
+	pause () {
 		this.media.pause();
 	}
 
-	load = () => {
+	load () {
 		this.media.load();
 	}
 
