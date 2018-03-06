@@ -628,7 +628,7 @@ class VirtualListBaseNative extends Component {
 	composeStyle (style, width, height, primaryPosition, secondaryPosition) {
 		const
 			getXY = this.props.getXY || this.getXY,
-			{x, y} = getXY(primaryPosition, secondaryPosition);
+			{x, y} = getXY(this.isPrimaryDirectionVertical, primaryPosition, secondaryPosition);
 
 		if (this.isItemSized) {
 			style.width = width;
@@ -640,7 +640,7 @@ class VirtualListBaseNative extends Component {
 		style.transform = 'translate(' + x + 'px,' + y + 'px)';
 	}
 
-	getXY = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
+	getXY = (isPrimaryDirectionVertical, primaryPosition, secondaryPosition) => (isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
 	updateMoreInfo (dataSize, primaryPosition) {
 		const
