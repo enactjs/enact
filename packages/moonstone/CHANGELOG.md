@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Marquee.Marquee` to be `moonstone/Marquee.MarqueeBase`
 - `moonstone/VirtualGridList.GridListImageItem` in favor of `moonstone/GridListImageItem`
+- `moonstone/ContextualPopupDecorator` not to remember the last focus
 
 ### Fixed
 
