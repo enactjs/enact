@@ -14,16 +14,6 @@ import css from './Scroller.less';
 import Scrollable from '../Scrollable';
 
 /**
- * The context propTypes required by Scroller. This should be set as the `childContextTypes` of a
- * themed component so that the methods from themed component can be called.
- *
- * @private
- */
-const contextTypes = {
-	getUiScrollerRef: PropTypes.func
-};
-
-/**
  * A basic base component for Scroller{@link ui/Scroller.Scroller}.
  * In most circumstances, you will want to use the Scrollable version:
  * [Scroller]{@link ui/Scroller.Scroller}
@@ -37,8 +27,6 @@ class ScrollerBase extends Component {
 	static displayName = 'ui:ScrollerBase'
 
 	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
-		children: PropTypes.node.isRequired,
-
 		/**
 		 * Callback method of scrollTo.
 		 * Normally, `Scrollable` should set this value.
@@ -60,16 +48,6 @@ class ScrollerBase extends Component {
 
 	static defaultProps = {
 		direction: 'both'
-	}
-
-	static contextTypes = contextTypes
-
-	constructor (props, context) {
-		super(props, context);
-
-		if (context.getUiScrollerRef) {
-			context.getUiScrollerRef(this);
-		}
 	}
 
 	componentDidMount () {
@@ -199,11 +177,17 @@ class ScrollerBase extends Component {
  * @ui
  * @public
  */
-const Scroller = Scrollable(ScrollerBase);
+const Scroller = (props) => (
+	<Scrollable
+		{...props}
+		render={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
+			<ScrollerBase {...scrollerProps} />
+		)}
+	/>
+);
 
 export default Scroller;
 export {
 	Scroller,
-	ScrollerBase,
-	contextTypes
+	ScrollerBase
 };
