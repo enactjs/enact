@@ -2,6 +2,7 @@ import {getContainersForNode, setContainerLastFocusedElement} from '@enact/spotl
 import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import Spotlight from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
@@ -65,6 +66,8 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			noAutoFocus: false
 		}
 
+		paused = new Pause()
+
 		highlightContents = () => {
 			const current = Spotlight.getCurrent();
 			if (this.containerNode.contains(current) || document.activeElement === document.body) {
@@ -110,19 +113,9 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 
-		pause = () => {
-			if (!Spotlight.isPaused()) {
-				this.paused = true;
-				Spotlight.pause();
-			}
-		}
+		pause = () => this.paused.pause()
 
-		resume = () => {
-			if (this.paused) {
-				this.paused = false;
-				Spotlight.resume();
-			}
-		}
+		resume = () => this.paused.resume()
 
 		handle = handle.bind(this)
 

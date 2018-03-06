@@ -6,6 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import Spotlight from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 
 import css from './Panels.less';
 
@@ -66,13 +67,19 @@ const ViewportBase = class extends React.Component {
 		noAnimation: false
 	}
 
+	constructor () {
+		super();
+
+		this.paused = new Pause();
+	}
+
 	componentDidMount () {
 		// eslint-disable-next-line react/no-find-dom-node
 		this.node = ReactDOM.findDOMNode(this);
 	}
 
 	componentWillUnmount () {
-		Spotlight.resume();
+		this.paused.resume()
 	}
 
 	addTransitioningClass = () => {
@@ -91,19 +98,9 @@ const ViewportBase = class extends React.Component {
 		return true;
 	}
 
-	pause = () => {
-		if (!Spotlight.isPaused()) {
-			this.paused = true;
-			Spotlight.pause();
-		}
-	}
+	pause = () => this.paused.pause()
 
-	resume = () => {
-		if (this.paused) {
-			this.paused = false;
-			Spotlight.resume();
-		}
-	}
+	resume = () => this.paused.resume()
 
 	handle = handle.bind(this)
 
