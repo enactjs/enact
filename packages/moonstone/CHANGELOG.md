@@ -4,11 +4,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Changed
-
-- `moonstone/ExpandableSpotlightDecorator` to add `getSelectedNode` variable from config to focus the selected index as the default focus
-- `moonstone/ExpandableList` to add HOC prameter for finding selcted node
-- `moonstone/Expandable` to add HOC prop. If `getSelectedNode` is defined in config, it will be used for finding selected node in `ExpandableSpotlightDecorator`
 ### Removed
 
 - `moonstone/Marquee.MarqueeText` to be replaced by `moonstone/Marquee.Marquee`
@@ -17,6 +12,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Marquee.Marquee` to be `moonstone/Marquee.MarqueeBase`
 - `moonstone/VirtualGridList.GridListImageItem` in favor of `moonstone/GridListImageItem`
+- `moonstone/ExpandableSpotlightDecorator` to add `getSelectedNode` variable from config to focus the selected index as the default focus
+- `moonstone/ExpandableList` to add HOC prameter for finding selcted node
+- `moonstone/Expandable` to add HOC prop. If `getSelectedNode` is defined in config, it will be used for finding selected node in `ExpandableSpotlightDecorator`
 
 ### Fixed
 
