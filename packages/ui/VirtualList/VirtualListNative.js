@@ -76,8 +76,6 @@ class VirtualListBaseNative extends Component {
 		 */
 		component: PropTypes.func.isRequired,
 
-		componentHidden: PropTypes.func.isRequired,
-
 		/**
 		 * Size of an item for the list; valid values are either a number for `VirtualList`
 		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
@@ -570,16 +568,8 @@ class VirtualListBaseNative extends Component {
 	}
 
 	applyStyleToHideNode = (index) => {
-		const
-			{componentHidden} = this.props,
-			key = index % this.state.numOfItems,
-			style = {display: 'none'},
-			itemElement = componentHidden({
-				key,
-				style
-			});
-
-		this.cc[key] = itemElement;
+		const key = index % this.state.numOfItems;
+		this.cc[key] = <div key={key} style={{display: 'none'}} />;
 	}
 
 	positionItems () {
@@ -714,7 +704,6 @@ class VirtualListBaseNative extends Component {
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
 		delete rest.component;
-		delete rest.componentHidden;
 		delete rest.data;
 		delete rest.dataSize;
 		delete rest.direction;
@@ -757,7 +746,6 @@ const VirtualListNative = (props) => (
 		render={(virtualListProps) => (// eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...virtualListProps}
-				componentHidden={(componentProps) => (<div {...componentProps} />)} // eslint-disable-line react/jsx-no-bind
 				render={({cc}) => (cc.length ? cc : null)} // eslint-disable-line react/jsx-no-bind
 			/>
 		)}
