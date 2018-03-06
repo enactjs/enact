@@ -678,7 +678,9 @@ class VirtualListBase extends Component {
 				component={({index, ...itemRest}) => ( // eslint-disable-line react/jsx-no-bind
 					component({
 						... itemRest,
-						index, ref: (index === nodeIndexToBeFocused) ? (ref) => this.initItemRef(ref, index) : null
+						[dataIndexAttribute]: index,
+						index,
+						ref: (index === nodeIndexToBeFocused) ? (ref) => this.initItemRef(ref, index) : null
 					})
 				)}
 				componentHidden={({index, ...props}) => (<div {...props} data-index={index} index={index} />)} // eslint-disable-line react/jsx-no-bind
