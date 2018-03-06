@@ -1532,14 +1532,17 @@ const VideoPlayerBase = class extends React.Component {
 		this.playbackRate = rate = String(rate);
 		const pbNumber = calcNumberValueOfPlaybackRate(rate);
 
-		// Set native playback rate
-		this.video.playbackRate = pbNumber;
-
 		if (!platform.webos) {
+			// ReactDOM throws error for setting negative value for playbackRate
+			this.video.playbackRate = pbNumber < 0 ? 0 : pbNumber;
+
 			// For supporting cross browser behavior
 			if (pbNumber < 0) {
 				this.beginRewind();
 			}
+		} else {
+			// Set native playback rate
+			this.video.playbackRate = pbNumber;
 		}
 	}
 

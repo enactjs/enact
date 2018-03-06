@@ -216,8 +216,7 @@ class Media extends React.Component {
 	}
 
 	set playbackRate (playbackRate) {
-		// ReactDOM throws error for setting negative value for playbackRate
-		this.media.playbackRate = playbackRate < 0 ? 0 : playbackRate;
+		this.media.playbackRate = playbackRate;
 	}
 
 	render () {
