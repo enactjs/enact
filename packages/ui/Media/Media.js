@@ -1,3 +1,13 @@
+/**
+ * Provides a represetation of HTMLMediaElement component with an ability to attach a custom event
+ * handler.
+ *
+ * @module ui/Media
+ * @exports handledMediaEventsMap
+ * @exports readyState
+ * @exports Media
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import {forward} from '@enact/core/handle';
@@ -6,7 +16,9 @@ import {on, off} from '@enact/core/dispatcher';
 /**
  * Event forwarding map for all of the supported media events. See https://reactjs.org/docs/events.html#media-events
  *
- * @type {Object}
+ * @typedef {Object} handledMediaEventsMap
+ * @memberof ui/Media
+ * @public
  */
 const handledMediaEventsMap = {
 	abort           : 'onAbort',
@@ -35,7 +47,7 @@ const handledMediaEventsMap = {
 };
 
 /**
- * {@link moonstone/Media.Media} is a class representation of HTML5 media element.
+ * {@link ui/Media.Media} is a class representation of HTMLMediaElement.
  *
  * @class Media
  * @memberof ui/Media
@@ -43,7 +55,7 @@ const handledMediaEventsMap = {
  * @public
  */
 class Media extends React.Component {
-	static propTypes = /** @lends moonstone/Media.Media.prototype */ {
+	static propTypes = /** @lends ui/Media.Media.prototype */ {
 		/**
 		 * A type of media component.
 		 *
@@ -71,7 +83,7 @@ class Media extends React.Component {
 		 *
 		 * @type {Object}
 		 * @public
-		 * @default handledMediaEventsMap
+		 * @default {@link ui/Media.handledMediaEventsMap}
 		 */
 		mediaEventsMap: PropTypes.object,
 
