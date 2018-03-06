@@ -139,6 +139,8 @@ class VirtualListBaseNative extends Component {
 		 */
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
+		getComponentProps: PropTypes.func,
+
 		getXY: PropTypes.func,
 
 		/**
@@ -548,7 +550,7 @@ class VirtualListBaseNative extends Component {
 
 	applyStyleToNewNode = (index, ...rest) => {
 		const
-			{component, data} = this.props,
+			{component, getComponentProps, data} = this.props,
 			{numOfItems} = this.state,
 			key = index % numOfItems,
 			itemElement = component({
@@ -556,11 +558,13 @@ class VirtualListBaseNative extends Component {
 				index,
 				key
 			}),
-			style = {};
+			style = {},
+			componentProps = getComponentProps && getComponentProps(index) || {};
 
 		this.composeStyle(style, ...rest);
 
 		this.cc[key] = React.cloneElement(itemElement, {
+			...componentProps,
 			className: classNames(cssItem.listItem, itemElement.props.className),
 			['data-preventscrollonfocus']: true, // Added this attribute to prevent scroll on focus by browser
 			style: {...itemElement.props.style, ...style}
@@ -707,6 +711,7 @@ class VirtualListBaseNative extends Component {
 		delete rest.data;
 		delete rest.dataSize;
 		delete rest.direction;
+		delete rest.getComponentProps;
 		delete rest.getXY;
 		delete rest.itemSize;
 		delete rest.overhang;
