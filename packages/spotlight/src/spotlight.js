@@ -121,6 +121,7 @@ const Spotlight = (function () {
 	let _initialized = false;
 	let _pause = false;
 	let _duringFocusChange = false;
+	let _enabled = true;
 
 	/*
 	 * Whether a 5-way directional key is being held.
@@ -151,6 +152,10 @@ const Spotlight = (function () {
 	* protected methods
 	*/
 
+	function isPaused () {
+		return _pause || !_enabled;
+	}
+
 	function preventDefault (evt) {
 		evt.preventDefault();
 		evt.stopPropagation();
@@ -158,7 +163,7 @@ const Spotlight = (function () {
 	}
 
 	function shouldPreventNavigation () {
-		return (!getAllContainerIds().length || _pause);
+		return (!getAllContainerIds().length || isPaused());
 	}
 
 	function getCurrent () {
@@ -199,7 +204,7 @@ const Spotlight = (function () {
 
 		_duringFocusChange = true;
 
-		if (_pause) {
+		if (isPaused()) {
 			silentFocus();
 			_duringFocusChange = false;
 			return true;
@@ -367,7 +372,7 @@ const Spotlight = (function () {
 			return;
 		}
 
-		if (!_pause && !_pointerMoveDuringKeyPress) {
+		if (!isPaused() && !_pointerMoveDuringKeyPress) {
 			if (getCurrent()) {
 				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
 			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
@@ -527,7 +532,7 @@ const Spotlight = (function () {
 			if (getContainerConfig(containerId)) {
 				removeContainer(containerId);
 				if (getLastContainer() === containerId) {
-					Spotlight.setActiveContainer(null);
+					setLastContainer(rootContainerId);
 				}
 				return true;
 			}
@@ -542,6 +547,8 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		disableSelector: function (containerId) {
+			if (!_enabled) return;
+
 			if (isContainer(containerId)) {
 				configureContainer(containerId, {selectorDisabled: false});
 				return true;
@@ -558,12 +565,22 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		enableSelector: function (containerId) {
+			if (!_enabled) return;
+
 			if (isContainer(containerId)) {
 				configureContainer(containerId, {selectorDisabled: false});
 				return true;
 			}
 
 			return false;
+		},
+
+		enable: function () {
+			_enabled = true;
+		},
+
+		disable: function () {
+			_enabled = false;
 		},
 
 		/**
@@ -573,6 +590,8 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		pause: function () {
+			if (!_enabled) return;
+
 			_pause = true;
 		},
 
@@ -583,6 +602,8 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		resume: function () {
+			if (!_enabled) return;
+
 			_pause = false;
 		},
 
@@ -600,6 +621,8 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		focus: function (elem) {
+			if (!_enabled) return;
+
 			let target = elem;
 			let wasContainerId = false;
 
@@ -640,6 +663,8 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		move: function (direction, selector) {
+			if (!_enabled) return;
+
 			direction = direction.toLowerCase();
 			if (direction !== 'up' && direction !== 'down' && direction !== 'left' && direction !== 'right') {
 				return false;
@@ -666,7 +691,11 @@ const Spotlight = (function () {
 		 * @returns {undefined}
 		 * @public
 		 */
-		setDefaultContainer,
+		setDefaultContainer: function (containerId) {
+			if (!_enabled) return;
+
+			setDefaultContainer(containerId);
+		},
 
 		/**
 		 * Gets the currently active container.
@@ -686,6 +715,8 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		setActiveContainer: function (containerId) {
+			if (!_enabled) return;
+
 			setLastContainer(containerId || rootContainerId);
 		},
 
@@ -706,7 +737,11 @@ const Spotlight = (function () {
 		 *	spotlight manages focus change behaviors.
 		 * @public
 		 */
-		setPointerMode,
+		setPointerMode: function (pointerMode) {
+			if (!_enabled) return;
+
+			return setPointerMode(pointerMode);
+		},
 
 		/**
 		 * Gets the muted mode value of a spottable element.
@@ -729,9 +764,7 @@ const Spotlight = (function () {
 		 * @returns {Boolean} `true` if Spotlight is currently paused.
 		 * @public
 		 */
-		isPaused: function () {
-			return _pause;
-		},
+		isPaused,
 
 		/**
 		 * Determines whether an element is spottable.

@@ -91,18 +91,32 @@ const ViewportBase = class extends React.Component {
 		return true;
 	}
 
+	pause = () => {
+		if (!Spotlight.isPaused()) {
+			this.paused = true;
+			Spotlight.pause();
+		}
+	}
+
+	resume = () => {
+		if (this.paused) {
+			this.paused = false;
+			Spotlight.resume();
+		}
+	}
+
 	handle = handle.bind(this)
 
 	handleTransition = this.handle(
 		forward('onTransition'),
 		this.removeTransitioningClass,
-		Spotlight.resume
+		this.resume
 	)
 
 	handleWillTransition = this.handle(
 		forward('onWillTransition'),
 		this.addTransitioningClass,
-		Spotlight.pause
+		this.pause
 	)
 
 	mapChildren = (children, generateId) => React.Children.map(children, (child, index) => {

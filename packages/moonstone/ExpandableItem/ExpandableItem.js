@@ -8,12 +8,10 @@
  */
 
 import {extractAriaProps} from '@enact/core/util';
-import {forward, handle} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import LabeledItem from '../LabeledItem';
@@ -256,23 +254,13 @@ const ExpandableItemBase = kind({
 		handleOpen: (ev, {disabled, onClose, onOpen, open}) => {
 			// When disabled, don't attach an event
 			if (!disabled) {
-				Spotlight.pause();
-
 				if (open) {
 					onClose(ev);
 				} else {
 					onOpen(ev);
 				}
 			}
-		},
-		onHide: handle(
-			forward('onHide'),
-			Spotlight.resume
-		),
-		onShow: handle(
-			forward('onShow'),
-			Spotlight.resume
-		)
+		}
 	},
 
 	computed: {
