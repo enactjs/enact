@@ -635,12 +635,12 @@ class VirtualListBase extends Component {
 		this.composeTransform(style, ...rest);
 	}
 
-	getXY = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
+	getXY = (isPrimaryDirectionVertical, primaryPosition, secondaryPosition) => (isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
 	composeTransform (style, primaryPosition, secondaryPosition = 0) {
 		const
 			getXY = this.props.getXY || this.getXY,
-			{x, y} = getXY(primaryPosition, secondaryPosition);
+			{x, y} = getXY(this.isPrimaryDirectionVertical, primaryPosition, secondaryPosition);
 
 		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
 	}

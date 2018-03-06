@@ -650,9 +650,9 @@ class VirtualListBase extends Component {
 		}
 	}
 
-	getXY = (primaryPosition, secondaryPosition) => {
+	getXY = (isPrimaryDirectionVertical, primaryPosition, secondaryPosition) => {
 		const rtlDirection = this.context.rtl ? -1 : 1;
-		return (this.uiRef.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
+		return (isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
 	}
 
 	scrollToPosition (x, y) {
