@@ -789,6 +789,7 @@ class ScrollableBase extends Component {
 
 		if (!this.deferScrollTo) {
 			const {left, top} = this.getPositionForScrollTo(opt);
+
 			if (scrollTo) {
 				scrollTo(opt);
 			}

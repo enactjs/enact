@@ -362,7 +362,7 @@ class Scrollable extends Component {
 		this.uiRef.startHidingThumb();
 	}
 
-	alertThumbAfterRendered () {
+	alertThumbAfterRendered = () => {
 		const spotItem = Spotlight.getCurrent();
 
 		if (!Spotlight.getPointerMode() && spotItem && this.uiRef && this.uiRef.childRef.containerRef.contains(spotItem) && this.isUpdatedScrollThumb) {

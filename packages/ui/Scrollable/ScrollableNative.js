@@ -219,7 +219,7 @@ class ScrollableBaseNative extends Component {
 			vertical: false
 		};
 
-		props.cbScrollTo(props.scrollTo || this.scrollTo);
+		props.cbScrollTo(this.scrollTo);
 	}
 
 	getChildContext = () => ({
@@ -676,8 +676,14 @@ class ScrollableBaseNative extends Component {
 	}
 
 	scrollTo = (opt) => {
+		const {scrollTo} = this.props;
+
 		if (!this.deferScrollTo) {
 			const {left, top} = this.getPositionForScrollTo(opt);
+
+			if (scrollTo) {
+				scrollTo(opt);
+			}
 			this.scrollToInfo = null;
 			this.start(
 				(left !== null) ? left : this.scrollLeft,
