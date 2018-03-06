@@ -146,7 +146,6 @@ describe('Input Specs', () => {
 	});
 
 	it('Should pause spotlight when input has focus', () => {
-		const pauseSpy = sinon.spy(Spotlight, 'pause');
 		const subject = mount(
 			<Input />
 		);
@@ -154,14 +153,12 @@ describe('Input Specs', () => {
 		subject.simulate('mouseDown');
 
 		const expected = true;
-		const actual = pauseSpy.calledOnce;
+		const actual = Spotlight.isPaused();
 
-		Spotlight.pause.restore();
 		expect(actual).to.equal(expected);
 	});
 
 	it('Should resume spotlight on unmount', () => {
-		const resumeSpy = sinon.spy(Spotlight, 'resume');
 		const subject = mount(
 			<Input />
 		);
@@ -169,10 +166,9 @@ describe('Input Specs', () => {
 		subject.simulate('mouseDown');
 		subject.unmount();
 
-		const expected = true;
-		const actual = resumeSpy.calledOnce;
+		const expected = false;
+		const actual = Spotlight.isPaused();
 
-		Spotlight.resume.restore();
 		expect(actual).to.equal(expected);
 	});
 
