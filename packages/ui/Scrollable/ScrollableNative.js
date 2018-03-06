@@ -282,11 +282,7 @@ class ScrollableBaseNative extends Component {
 
 		if (this.scrollToInfo !== null) {
 			if (!this.deferScrollTo) {
-				if (this.props.scrollTo) {
-					this.props.scrollTo(this.scrollToInfo);
-				} else {
-					this.scrollTo(this.scrollToInfo);
-				}
+				this.scrollTo(this.scrollToInfo);
 			}
 		}
 
