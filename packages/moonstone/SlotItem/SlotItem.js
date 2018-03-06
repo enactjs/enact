@@ -10,7 +10,6 @@
  */
 
 import kind from '@enact/core/kind';
-import {childrenEquals} from '@enact/core/util';
 import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
 import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
@@ -88,11 +87,7 @@ const SlotItemBase = kind({
  */
 const SlotItemDecorator = compose(
 	UiSlotItemDecorator,
-	Pure(
-		{propComparators: {
-			slotBefore: childrenEquals,
-			slotAfter: childrenEquals
-		}}),
+	Pure,
 	Toggleable(
 		{prop: 'remeasure', activate: 'onFocus', deactivate: 'onBlur', toggle: null}
 	),

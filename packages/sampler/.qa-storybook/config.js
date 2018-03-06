@@ -5,7 +5,7 @@ const stories = require.context('../stories/qa-stories', true, /.js$/);
 
 setOptions({
 	name: 'ENACT SAMPLER',
-	url: 'http://nebula.lgsvl.com/enyojs/enact-docs/develop/',
+	url: 'http://enactjs.com/',
 	goFullScreen: false,
 	showStoriesPanel: true,
 	showAddonPanel: true,
