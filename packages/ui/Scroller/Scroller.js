@@ -27,6 +27,8 @@ class ScrollerBase extends Component {
 	static displayName = 'ui:ScrollerBase'
 
 	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
+		children: PropTypes.node.isRequired,
+
 		/**
 		 * Callback method of scrollTo.
 		 * Normally, `Scrollable` should set this value.
