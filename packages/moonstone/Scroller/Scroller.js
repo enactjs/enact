@@ -357,5 +357,6 @@ const Scroller = (props) => (
 
 export default Scroller;
 export {
-	Scroller
+	Scroller,
+	ScrollerBase
 };

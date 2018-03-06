@@ -1,7 +1,7 @@
 import React from 'react';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import {ScrollerBaseNative as UiScrollerBaseNative} from '@enact/ui/Scroller';
 
+import {ScrollerBase as ScrollerBaseNative} from './Scroller';
 import {ScrollableNative} from '../Scrollable/ScrollableNative';
 
 const SpottableScrollableNative = SpotlightContainerDecorator({restrict: 'self-first'}, ScrollableNative);
@@ -27,7 +27,7 @@ const ScrollerNative = (props) => (
 	<SpottableScrollableNative
 		{...props}
 		render={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
-			<UiScrollerBaseNative {...scrollerProps} />
+			<ScrollerBaseNative {...scrollerProps} />
 		)}
 	/>
 );
