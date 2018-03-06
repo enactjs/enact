@@ -23,6 +23,7 @@ import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
 import Spotlight from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
+import Pause from '@enact/spotlight/Pause';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 import {toUpperCase} from '@enact/i18n/util';
 
@@ -726,6 +727,8 @@ const VideoPlayerBase = class extends React.Component {
 			this.handledCustomMediaForwards[eventName] = ev => forwardEvent(ev, this.props);
 		}
 
+		this.paused = new Pause();
+
 		// Re-render-necessary State
 		this.state = {
 			announce: AnnounceState.READY,
@@ -1196,7 +1199,7 @@ const VideoPlayerBase = class extends React.Component {
 				!this.state.mediaControlsVisible &&
 				!this.props.disabled &&
 				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
-			Spotlight.pause();
+			this.paused.pause();
 			this.startListeningForPulses(ev.keyCode);
 		}
 		return true;
@@ -1243,7 +1246,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (!this.props.no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			this.stopListeningForPulses();
-			Spotlight.resume();
+			this.paused.resume();
 		}
 	}
 

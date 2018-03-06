@@ -95,6 +95,8 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		highlight = (callback) => {
+			if (Spotlight.isPaused()) return;
+
 			const {open} = this.props;
 			const pointerMode = Spotlight.getPointerMode();
 			const changePointerMode = pointerMode && (noPointerMode || !open);

@@ -5,6 +5,7 @@ import {is} from '@enact/core/keymap';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {getDirection, Spotlight} from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 import Spottable from '@enact/spotlight/Spottable';
 
 const preventSpotlightNavigation = (ev) => {
@@ -109,6 +110,8 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				node: null
 			};
 
+			this.paused = new Pause();
+
 			if (props.noDecorator) {
 				deprecate({name: 'noDecorator', since: '1.3.0', replacedBy: 'autoFocus'});
 			}
@@ -132,9 +135,9 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			}
 
 			if (this.state.focused === 'input') {
-				Spotlight.pause();
+				this.paused.pause();
 			} else if (prevState.focused === 'input') {
-				Spotlight.resume();
+				this.paused.resume();
 			}
 		}
 

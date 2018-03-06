@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import Spottable from '@enact/spotlight/Spottable';
+import Pause from '@enact/spotlight/Pause';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import {dataIndexAttribute, ScrollableNative} from '../Scroller/ScrollableNative';
@@ -207,6 +208,7 @@ class VirtualListCoreNative extends Component {
 	constructor (props) {
 		super(props);
 
+		this.paused = new Pause();
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContentRef = this.initRef('contentRef');
 		this.initContainerRef = this.initRef('containerRef');
@@ -660,9 +662,7 @@ class VirtualListCoreNative extends Component {
 	focusOnItem = (index) => {
 		const item = this.contentRef.querySelector(`[data-index='${index}'].spottable`);
 
-		if (Spotlight.isPaused()) {
-			Spotlight.resume();
-		}
+		this.paused.resume();
 		this.focusOnNode(item);
 		this.nodeIndexToBeFocused = null;
 	}
@@ -986,10 +986,7 @@ class VirtualListCoreNative extends Component {
 					Spotlight.focus(node);
 				}
 			} else {
-				// Scroll to the next spottable item without animation
-				if (!Spotlight.isPaused()) {
-					Spotlight.pause();
-				}
+				this.paused.pause();
 				focusedItem.blur();
 			}
 			this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
@@ -1074,10 +1071,7 @@ class VirtualListCoreNative extends Component {
 			}, 50);
 
 			this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
-
-			if (!Spotlight.isPaused()) {
-				Spotlight.pause();
-			}
+			this.paused.pause();
 
 			cbScrollTo({
 				index: nextIndex,

@@ -29,7 +29,7 @@ class Pause {
 export default Pause;
 export {
 	Pause,
-	isPause,
+	isPaused,
 	pause,
 	resume
 };
