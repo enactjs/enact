@@ -543,11 +543,9 @@ class VirtualListBase extends Component {
 	}
 
 	getItemNode = (index) => {
-		const
-			{numOfItems} = this.state,
-			ref = this.itemContainerRef;
+		const ref = this.itemContainerRef;
 
-		return ref ? ref.children[index % numOfItems] : null;
+		return ref ? ref.children[index % this.state.numOfItems] : null;
 	}
 
 	applyStyleToExistingNode = (index, ...rest) => {
@@ -581,14 +579,12 @@ class VirtualListBase extends Component {
 	applyStyleToHideNode = (index) => {
 		const
 			{componentHidden} = this.props,
-			key = index % this.state.numOfItems,
-			style = {display: 'none'},
-			itemElement = componentHidden({
-				key,
-				style
-			});
+			key = index % this.state.numOfItems;
 
-		this.cc[key] = itemElement;
+		this.cc[key] = componentHidden({
+			key,
+			style: style = {display: 'none'}
+		});
 	}
 
 	positionItems ({updateFrom, updateTo}) {
