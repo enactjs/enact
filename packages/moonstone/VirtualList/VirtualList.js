@@ -669,7 +669,6 @@ class VirtualListBase extends Component {
 	render () {
 		const
 			{component, initUiChildRef, render, type, ...rest} = this.props,
-			{nodeIndexToBeFocused} = this,
 			needsScrollingPlaceholder = this.isNeededScrollingPlaceholder(),
 			UiBase = (type === 'JS') ? UiVirtualListBase : UiVirtualListBaseNative;
 
