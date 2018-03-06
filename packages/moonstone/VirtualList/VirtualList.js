@@ -691,12 +691,11 @@ class VirtualListBase extends Component {
 					}
 				}}
 				updateStatesAndBounds={this.updateStatesAndBound}
-				render={({initItemContainerRef, ...props}) => { // eslint-disable-line react/jsx-no-bind
+				render={(props) => { // eslint-disable-line react/jsx-no-bind
 					return render({
 						...props,
-						initItemContainerRef: initItemContainerRef,
 						handlePlaceholderFocus: this.handlePlaceholderFocus,
-						needsScrollingPlaceholder: needsScrollingPlaceholder
+						needsScrollingPlaceholder
 					});
 				}}
 			/>
