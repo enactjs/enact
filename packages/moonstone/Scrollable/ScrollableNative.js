@@ -149,13 +149,13 @@ class ScrollableNative extends Component {
 	 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot suppor this
 	 * - for vertical scroll, supports wheel action on scrollbars only
 	 */
-	onWheel = (e) => {
+	onWheel = (ev) => {
 		const
 			bounds = this.uiRef.getScrollBounds(),
 			canScrollHorizontally = this.uiRef.canScrollHorizontally(bounds),
 			canScrollVertically = this.uiRef.canScrollVertically(bounds),
-			eventDeltaMode = e.deltaMode,
-			eventDelta = (-e.wheelDeltaY || e.deltaY);
+			eventDeltaMode = ev.deltaMode,
+			eventDelta = (-ev.wheelDeltaY || ev.deltaY);
 		let
 			delta = 0,
 			needToHideThumb = false;
@@ -178,9 +178,9 @@ class ScrollableNative extends Component {
 					this.isWheeling = true;
 				}
 
-				// Not to check if e.target is a descendant of a wrapped component which may have a lot of nodes in it.
-				if ((horizontalScrollbarRef && horizontalScrollbarRef.getContainerRef().contains(e.target)) ||
-					(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(e.target))) {
+				// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
+				if ((horizontalScrollbarRef && horizontalScrollbarRef.getContainerRef().contains(ev.target)) ||
+					(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(ev.target))) {
 					delta = this.uiRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
 				}
@@ -202,7 +202,7 @@ class ScrollableNative extends Component {
 
 		if (delta !== 0) {
 			/* prevent native scrolling feature for vertical direction */
-			e.preventDefault();
+			ev.preventDefault();
 			const direction = Math.sign(delta);
 			// Not to accumulate scroll position if wheel direction is different from hold direction
 			if (direction !== this.uiRef.pageDirection) {
@@ -239,7 +239,7 @@ class ScrollableNative extends Component {
 		}
 	}
 
-	onFocus = (e) => {
+	onFocus = (ev) => {
 		const shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
 			this.childRef.shouldPreventScrollByFocus() :
 			false;
@@ -250,7 +250,7 @@ class ScrollableNative extends Component {
 
 		if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode())) {
 			const
-				item = e.target,
+				item = ev.target,
 				positionFn = this.childRef.calculatePositionOnFocus,
 				spotItem = Spotlight.getCurrent();
 
@@ -269,7 +269,7 @@ class ScrollableNative extends Component {
 				this.startScrollOnFocus(pos, item);
 			}
 		} else if (this.childRef.setLastFocusedIndex) {
-			this.childRef.setLastFocusedIndex(e.target);
+			this.childRef.setLastFocusedIndex(ev.target);
 		}
 	}
 
@@ -376,12 +376,12 @@ class ScrollableNative extends Component {
 		return current && this.uiRef.containerRef.contains(current);
 	}
 
-	onKeyDown = (e) => {
+	onKeyDown = (ev) => {
 		this.animateOnFocus = true;
-		if (isPageUp(e.keyCode) || isPageDown(e.keyCode)) {
-			e.preventDefault();
-			if (!e.repeat && this.hasFocus()) {
-				this.scrollByPage(e.keyCode);
+		if (isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) {
+			ev.preventDefault();
+			if (!ev.repeat && this.hasFocus()) {
+				this.scrollByPage(ev.keyCode);
 			}
 		}
 	}

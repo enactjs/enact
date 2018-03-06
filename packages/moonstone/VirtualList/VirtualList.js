@@ -63,7 +63,6 @@ const
 
 const
 	dataContainerDisabledAttribute = 'data-container-disabled',
-	forwardKeyDown = forward('onKeyDown'),
 	isDown = is('down'),
 	isLeft = is('left'),
 	isRight = is('right'),
@@ -448,18 +447,18 @@ class VirtualListBase extends Component {
 		return false;
 	}
 
-	onKeyDown = (e) => {
-		const {keyCode, target} = e;
+	onKeyDown = (ev) => {
+		const {keyCode, target} = ev;
 
 		this.isScrolledBy5way = false;
 		if (getDirection(keyCode)) {
 			if (this.props.type === 'Native') {
-				e.preventDefault();
+				ev.preventDefault();
 			}
 			this.setSpotlightContainerRestrict(keyCode, target);
 			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, target);
 		}
-		forwardKeyDown(e, this.props);
+		forward('onKeyDown', ev, this.props);
 	}
 
 	/**

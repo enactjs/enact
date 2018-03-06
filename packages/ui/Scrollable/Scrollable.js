@@ -27,14 +27,6 @@ import Scrollbar from './Scrollbar';
 import css from './Scrollable.less';
 
 const
-	forwardKeyDown = forward('onKeyDown'),
-	forwardMouseUp = forward('onMouseUp'),
-	forwardScroll = forward('onScroll'),
-	forwardScrollStart = forward('onScrollStart'),
-	forwardScrollStop = forward('onScrollStop'),
-	forwardWheel = forward('onWheel');
-
-const
 	constants = {
 		animationDuration: 1000,
 		calcVelocity: (d, dt) => (d && dt) ? d / dt : 0,
@@ -318,7 +310,7 @@ class ScrollableBase extends Component {
 	componentWillUnmount () {
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
 		if (this.animator.isAnimating()) {
-			this.doScrollStop();
+			this.forwardScrollEvent('onScrollStop');
 			this.animator.stop();
 		}
 
@@ -411,33 +403,33 @@ class ScrollableBase extends Component {
 
 	// handle an input event
 
-	dragStart (e) {
+	dragStart (ev) {
 		const d = this.dragInfo;
 
 		this.isDragging = true;
 		this.isFirstDragging = true;
 		d.t = perfNow();
-		d.clientX = e.clientX;
-		d.clientY = e.clientY;
+		d.clientX = ev.clientX;
+		d.clientY = ev.clientY;
 		d.dx = d.dy = 0;
 	}
 
-	drag (e) {
+	drag (ev) {
 		const
 			{direction} = this,
 			t = perfNow(),
 			d = this.dragInfo;
 
 		if (direction === 'horizontal' || direction === 'both') {
-			d.dx = e.clientX - d.clientX;
-			d.clientX = e.clientX;
+			d.dx = ev.clientX - d.clientX;
+			d.clientX = ev.clientX;
 		} else {
 			d.dx = 0;
 		}
 
 		if (direction === 'vertical' || direction === 'both') {
-			d.dy = e.clientY - d.clientY;
-			d.clientY = e.clientY;
+			d.dy = ev.clientY - d.clientY;
+			d.clientY = ev.clientY;
 		} else {
 			d.dy = 0;
 		}
@@ -468,21 +460,21 @@ class ScrollableBase extends Component {
 
 	// mouse event handler for JS scroller
 
-	onMouseDown = (e) => {
+	onMouseDown = (ev) => {
 		this.animator.stop();
-		this.dragStart(e);
+		this.dragStart(ev);
 	}
 
-	onMouseMove = (e) => {
+	onMouseMove = (ev) => {
 		if (this.isDragging) {
 			const
-				{dx, dy} = this.drag(e),
+				{dx, dy} = this.drag(ev),
 				bounds = this.getScrollBounds();
 
 			if (this.isFirstDragging) {
 				if (!this.scrolling) {
 					this.scrolling = true;
-					this.doScrollStart();
+					this.forwardScrollEvent('onScrollStart');
 				}
 				this.isFirstDragging = false;
 			}
@@ -491,15 +483,11 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	onMouseUp = (e) => {
-		const {onMouseUp} = this.props;
-
-		if (onMouseUp) {
-			forwardMouseUp(e, this.props);
-		}
+	onMouseUp = (ev) => {
+		forward('onMouseUp', ev, this.props);
 
 		if (this.isDragging) {
-			this.dragStop(e);
+			this.dragStop(ev);
 
 			if (!this.isFlicking()) {
 				this.stop();
@@ -524,8 +512,8 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	onMouseLeave = (e) => {
-		this.onMouseMove(e);
+	onMouseLeave = (ev) => {
+		this.onMouseMove(ev);
 		this.onMouseUp();
 	}
 
@@ -541,15 +529,15 @@ class ScrollableBase extends Component {
 		return delta;
 	}
 
-	onWheel = (e) => {
-		e.preventDefault();
+	onWheel = (ev) => {
+		ev.preventDefault();
 		if (!this.isDragging) {
 			const
 				bounds = this.getScrollBounds(),
 				canScrollHorizontally = this.canScrollHorizontally(bounds),
 				canScrollVertically = this.canScrollVertically(bounds),
-				eventDeltaMode = e.deltaMode,
-				eventDelta = (-e.wheelDeltaY || e.deltaY);
+				eventDeltaMode = ev.deltaMode,
+				eventDelta = (-ev.wheelDeltaY || ev.deltaY);
 			let
 				delta = 0,
 				direction;
@@ -567,9 +555,7 @@ class ScrollableBase extends Component {
 				this.wheelDirection = direction;
 			}
 
-			if (this.props.onWheel) {
-				forwardWheel(delta, this.props);
-			}
+			forward('onWheel', {delta}, this.props);
 
 			if (delta !== 0) {
 				this.scrollToAccumulatedTarget(delta, canScrollVertically);
@@ -590,13 +576,11 @@ class ScrollableBase extends Component {
 		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 	}
 
-	onKeyDown = (e) => {
-		const {onKeyDown} = this.props;
-
-		if (onKeyDown) {
-			forwardKeyDown(e, this.props);
-		} else if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && !e.repeat) {
-			this.scrollByPage(e.keyCode);
+	onKeyDown = (ev) => {
+		if (this.props.onKeyDown) {
+			forward('onKeyDown', ev, this.props);
+		} else if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) && !ev.repeat) {
+			this.scrollByPage(ev.keyCode);
 		}
 	}
 
@@ -622,16 +606,8 @@ class ScrollableBase extends Component {
 
 	// call scroll callbacks
 
-	doScrollStart () {
-		forwardScrollStart({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
-	}
-
-	doScrolling () {
-		forwardScroll({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
-	}
-
-	doScrollStop () {
-		forwardScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
+	forwardScrollEvent (type) {
+		forward(type, {scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
 	}
 
 	// update scroll position
@@ -663,7 +639,7 @@ class ScrollableBase extends Component {
 		this.animator.stop();
 		if (!this.scrolling) {
 			this.scrolling = true;
-			this.doScrollStart();
+			this.forwardScrollEvent('onScrollStart');
 		}
 
 		if (Math.abs(bounds.maxLeft - targetX) < epsilon) {
@@ -726,7 +702,7 @@ class ScrollableBase extends Component {
 		}
 
 		this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, dirX, dirY);
-		this.doScrolling();
+		this.forwardScrollEvent('onScroll');
 	}
 
 	stop () {
@@ -737,7 +713,7 @@ class ScrollableBase extends Component {
 		this.startHidingThumb();
 		if (this.scrolling) {
 			this.scrolling = false;
-			this.doScrollStop();
+			this.forwardScrollEvent('onScrollStop');
 		}
 
 		if (stop) {

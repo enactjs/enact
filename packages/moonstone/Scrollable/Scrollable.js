@@ -131,7 +131,7 @@ class Scrollable extends Component {
 		}
 	}
 
-	onWheel = (delta) => {
+	onWheel = ({delta}) => {
 		const
 			{verticalScrollbarRef, horizontalScrollbarRef} = this.uiRef,
 			focusedItem = Spotlight.getCurrent(),
@@ -167,7 +167,7 @@ class Scrollable extends Component {
 		}
 	}
 
-	onFocus = (e) => {
+	onFocus = (ev) => {
 		const
 			{isDragging, animator, direction} = this.uiRef,
 			shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
@@ -185,7 +185,7 @@ class Scrollable extends Component {
 
 		if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || isDragging)) {
 			const
-				item = e.target,
+				item = ev.target,
 				positionFn = this.childRef.calculatePositionOnFocus,
 				spotItem = Spotlight.getCurrent();
 
@@ -204,7 +204,7 @@ class Scrollable extends Component {
 				this.startScrollOnFocus(pos, item);
 			}
 		} else if (this.childRef.setLastFocusedIndex) {
-			this.childRef.setLastFocusedIndex(e.target);
+			this.childRef.setLastFocusedIndex(ev.target);
 		}
 	}
 
@@ -308,10 +308,10 @@ class Scrollable extends Component {
 		return current && this.uiRef.containerRef.contains(current);
 	}
 
-	onKeyDown = (e) => {
+	onKeyDown = (ev) => {
 		this.animateOnFocus = true;
-		if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && !e.repeat && this.hasFocus()) {
-			this.scrollByPage(e.keyCode);
+		if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) && !ev.repeat && this.hasFocus()) {
+			this.scrollByPage(ev.keyCode);
 		}
 	}
 
