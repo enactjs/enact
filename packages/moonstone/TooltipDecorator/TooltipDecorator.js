@@ -9,7 +9,7 @@
 import {contextTypes} from '@enact/core/internal/PubSub';
 import hoc from '@enact/core/hoc';
 import FloatingLayer from '@enact/ui/FloatingLayer';
-import {forward, handle, forProp} from '@enact/core/handle';
+import {forProp} from '@enact/core/handle';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
@@ -162,40 +162,48 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			this.hasTooltipText = !!this.props.tooltipText;
+			if (this.hasTooltipText) {
+				this.TOOLTIP_HEIGHT = ri.scale(18); // distance between client and tooltip's label
 
-			this.TOOLTIP_HEIGHT = ri.scale(18); // distance between client and tooltip's label
-
-			this.state = {
-				showing: false,
-				tooltipDirection: null,
-				arrowAnchor: null,
-				position: {top: 0, left: 0}
-			};
+				this.state = {
+					showing: false,
+					tooltipDirection: null,
+					arrowAnchor: null,
+					position: {top: 0, left: 0}
+				};
+			}
 		}
 
 		componentWillMount () {
-			if (this.context.Subscriber) {
-				this.context.Subscriber.subscribe('i18n', this.handleLocaleChange);
+			if (this.hasTooltipText) {
+				if (this.context.Subscriber) {
+					this.context.Subscriber.subscribe('i18n', this.handleLocaleChange);
+				}
 			}
 		}
 
 		componentWillUnmount () {
-			if (currentTooltip === this) {
-				currentTooltip = null;
-				this.showTooltipJob.stop();
-			}
+			if (this.hasTooltipText) {
+				if (currentTooltip === this) {
+					currentTooltip = null;
+					this.showTooltipJob.stop();
+				}
 
-			if (this.props.disabled) {
-				off('keydown', this.handleKeyDown);
-			}
+				if (this.props.disabled) {
+					off('keydown', this.handleKeyDown);
+				}
 
-			if (this.context.Subscriber) {
-				this.context.Subscriber.unsubscribe('i18n', this.handleLocaleChange);
+				if (this.context.Subscriber) {
+					this.context.Subscriber.unsubscribe('i18n', this.handleLocaleChange);
+				}
 			}
 		}
 
 		handleLocaleChange = ({message: {rtl}}) => {
-			this.rtlLocale = rtl;
+			if (this.hasTooltipText) {
+				this.rtlLocale = rtl;
+			}
 		}
 
 		setTooltipLayout () {
@@ -251,7 +259,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				tooltipDirection = tooltipDirection === 'left' ? 'right' : 'left';
 			}
 
-			// Flip tooltip if it overlows towards the tooltip direction
+				// Flip tooltip if it overlows towards the tooltip direction
 			if (overflow.isOverTop && tooltipDirection === 'above') {
 				tooltipDirection = 'below';
 			} else if (overflow.isOverBottom && tooltipDirection === 'below') {
@@ -331,9 +339,9 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		})
 
 		showTooltip = (client) => {
-			const {tooltipDelay, tooltipText} = this.props;
+			const {tooltipDelay} = this.props;
 
-			if (tooltipText) {
+			if (this.hasTooltipText) {
 				this.clientRef = client;
 				currentTooltip = this;
 				this.showTooltipJob.startAfter(tooltipDelay);
@@ -341,7 +349,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		hideTooltip = () => {
-			if (this.props.tooltipText) {
+			if (this.hasTooltipText) {
 				this.clientRef = null;
 				currentTooltip = null;
 				this.showTooltipJob.stop();
@@ -349,43 +357,55 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handle = handle.bind(this)
-
-		handleKeyDown = this.handle(
-			forProp('disabled', true),
-			() => {
+		handleKeyDown = () => {
+			if (this.hasTooltipText) {
+				forProp('disabled', true);
 				this.hideTooltip();
 				off('keydown', this.handleKeyDown);
 			}
-		);
+		}
 
-		handleMouseOver = this.handle(
-			forward('onMouseOver'),
-			forProp('disabled', true),
-			(ev) => {
+		handleMouseOver = (ev) => {
+			// eslint-disable-next-line enact/prop-types
+			this.checkAndForward(this.props.onMouseOver);
+			if (this.hasTooltipText) {
+				forProp('disabled', true);
 				this.showTooltip(ev.target);
 				on('keydown', this.handleKeyDown);
 			}
-		)
+		}
 
-		handleMouseOut = this.handle(
-			forward('onMouseOut'),
-			forProp('disabled', true),
-			() => {
+		handleMouseOut = () => {
+			// eslint-disable-next-line enact/prop-types
+			this.checkAndForward(this.props.onMouseOut);
+			if (this.hasTooltipText) {
+				forProp('disabled', true);
 				this.hideTooltip();
 				off('keydown', this.handleKeyDown);
 			}
-		)
+		}
 
-		handleFocus = this.handle(
-			forward('onFocus'),
-			({target}) => this.showTooltip(target)
-		)
+		handleFocus = ({target}) => {
+			// eslint-disable-next-line enact/prop-types
+			this.checkAndForward(this.props.onFocus);
+			if (this.hasTooltipText) {
+				this.showTooltip(target);
+			}
+		}
 
-		handleBlur = this.handle(
-			forward('onBlur'),
-			this.hideTooltip
-		)
+		handleBlur = () => {
+			// eslint-disable-next-line enact/prop-types
+			this.checkAndForward(this.props.onBlur);
+			if (this.hasTooltipText) {
+				this.hideTooltip();
+			}
+		}
+
+		checkAndForward (eventCallback) {
+			if (eventCallback) {
+				eventCallback();
+			}
+		}
 
 		getTooltipRef = (node) => {
 			this.tooltipRef = node;
