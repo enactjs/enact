@@ -4,7 +4,14 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import {ScrollerBase as ScrollerBaseNative} from './Scroller';
 import {ScrollableNative} from '../Scrollable/ScrollableNative';
 
-const SpottableScrollableNative = SpotlightContainerDecorator({restrict: 'self-first'}, ScrollableNative);
+const ScrollableScrollerNative = (props) => (
+	<ScrollableNative
+		{...props}
+		render={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
+			<ScrollerBaseNative {...scrollerProps} />
+		)}
+	/>
+);
 
 /**
  * A moonstone-styled native Scroller, SpotlightContainerDecorator and Scrollable applied.
@@ -23,14 +30,7 @@ const SpottableScrollableNative = SpotlightContainerDecorator({restrict: 'self-f
  * @ui
  * @public
  */
-const ScrollerNative = (props) => (
-	<SpottableScrollableNative
-		{...props}
-		render={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
-			<ScrollerBaseNative {...scrollerProps} />
-		)}
-	/>
-);
+const ScrollerNative = SpotlightContainerDecorator({restrict: 'self-first'}, ScrollableScrollerNative);
 
 export default ScrollerNative;
 export {
