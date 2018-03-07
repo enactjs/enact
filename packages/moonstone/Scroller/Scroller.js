@@ -330,7 +330,14 @@ class ScrollerBase extends Component {
 	}
 }
 
-const SpottableScrollable = SpotlightContainerDecorator({restrict: 'self-first'}, Scrollable);
+const ScrollableScroller = (props) => (
+	<Scrollable
+		{...props}
+		render={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
+			<ScrollerBase {...scrollerProps} />
+		)}
+	/>
+);
 
 /**
  * A moonstone-styled Scroller, SpotlightContainerDecorator and Scrollable applied.
@@ -346,14 +353,7 @@ const SpottableScrollable = SpotlightContainerDecorator({restrict: 'self-first'}
  * @ui
  * @public
  */
-const Scroller = (props) => (
-	<SpottableScrollable
-		{...props}
-		render={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
-			<ScrollerBase {...scrollerProps} />
-		)}
-	/>
-);
+const Scroller = SpotlightContainerDecorator({restrict: 'self-first'}, ScrollableScroller);
 
 export default Scroller;
 export {
