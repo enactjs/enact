@@ -4,6 +4,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/Slider` property `aria-label` to override value string to read
+- `moonstone/IncrementSlider` property `aria-label` to override value string to read
+- `moonstone/IncrementSlider` property `decButtonAriaLabel` to override decrementer hint string to read
+- `moonstone/IncrementSlider` property `incButtonAriaLabel` to override incrementer hint string to read
+
 ### Fixed
 
 - `moonstone/VirtualGridList` to show or hide the scrollbars in it properly

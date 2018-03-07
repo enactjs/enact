@@ -72,13 +72,23 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/internal/SliderDecorator.SliderDecorator.prototype */{
 			/**
+			 * Overrides value string to read for the slider. It is mapping to `aria-valuetext` internally.
+			 * By default, `aria-valuetext` is set to the current value. This should only be used
+			 * when the parent controls the value of the slider directly through the props.
+			 *
+			 * @type {String|Number}
+			 * @public
+			 */
+			'aria-label': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+			/**
 			 * Overrides the `aria-valuetext` for the slider. By default, `aria-valuetext` is set
 			 * to the current value. This should only be used when the parent controls the value of
 			 * the slider directly through the props.
 			 *
 			 * @type {String|Number}
 			 * @memberof moonstone/internal/SliderDecorator.SliderDecorator.prototype
-			 * @public
+			 * @private
 			 */
 			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
@@ -232,7 +242,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				value = props.defaultValue || 0;
 			}
 
-			const valueText = props['aria-valuetext'] != null ? props['aria-valuetext'] : value;
+			// const valueText = props['aria-valuetext'] != null ? props['aria-valuetext'] : value;
+			const propText = props['aria-valuetext'] || props['aria-label'];
+			const valueText = propText != null ? propText : value;
 
 			this.state = {
 				active: false,
@@ -261,7 +273,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const {'aria-valuetext': ariaValueText, backgroundProgress, max, min, step, value} = nextProps;
+			const
+				{'aria-valuetext': ariaValueTextProp, 'aria-label': ariaLabelProp, backgroundProgress, max, min, step, value} = nextProps,
+				ariaValueText = ariaValueTextProp || ariaLabelProp;
 
 			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value) || (ariaValueText !== this.state.valueText)) {
 				this.normalizeBounds(nextProps);
@@ -305,7 +319,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		updateValueJob = new Job((value) => {
-			const valueText = this.props['aria-valuetext'] != null ? this.props['aria-valuetext'] : value;
+			// const valueText = this.props['aria-valuetext'] != null ? this.props['aria-valuetext'] : value;
+			const propText = this.props['aria-valuetext'] || this.props['aria-label'];
+			const valueText = propText != null ? propText : value;
 			this.inputNode.value = value;
 			if (this.state.controlled) {
 				// FIXME: Temporarily store value for mouse down to properly fire `onChange` for controlled slider.
@@ -495,7 +511,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleActivate = () => {
-			const {'aria-valuetext': ariaValueText, detachedKnob, disabled, vertical} = this.props;
+			const
+				{'aria-valuetext': ariaValueTextProp, 'aria-label': ariaLabelProp, detachedKnob, disabled, vertical} = this.props,
+				ariaValueText = ariaValueTextProp || ariaLabelProp;
 
 			if (disabled) return;
 
@@ -592,6 +610,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			const props = Object.assign({}, this.props);
 			delete props.knobStep;
+			delete props['aria-label'];
 
 			return (
 				<Wrapped

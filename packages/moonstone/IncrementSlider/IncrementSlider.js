@@ -60,13 +60,23 @@ const PrivateIncrementSliderBaseFactory = factory({css: componentCss}, ({css}) =
 			'aria-hidden': PropTypes.bool,
 
 			/**
+			 * Overrides value string to read for the slider. It is mapping to `aria-valuetext` internally.
+			 * By default, `aria-valuetext` is set to the current value. This should only be used
+			 * when the parent controls the value of the slider directly through the props.
+			 *
+			 * @type {String|Number}
+			 * @public
+			 */
+			'aria-label': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+			/**
 			 * Overrides the `aria-valuetext` for the slider. By default, `aria-valuetext` is set
 			 * to the current value. This should only be used when the parent controls the value of
 			 * the slider directly through the props.
 			 *
 			 * @type {String|Number}
 			 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
-			 * @public
+			 * @private
 			 */
 			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
@@ -95,6 +105,14 @@ const PrivateIncrementSliderBaseFactory = factory({css: componentCss}, ({css}) =
 			 * @type {String|Node}
 			 */
 			children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+
+			/**
+			* Overrides hint string to read for the decrementer. Without a custom string, the default is used.
+			*
+			* @default 'press ok button to decrease the value'
+			* @type {String}
+			*/
+			decButtonAriaLabel: PropTypes.string,
 
 			/**
 			 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
@@ -138,6 +156,14 @@ const PrivateIncrementSliderBaseFactory = factory({css: componentCss}, ({css}) =
 			 * @private
 			 */
 			id: PropTypes.string,
+
+			/**
+			* Overrides hint string to read for the incrementer. Without a custom string, the default is used.
+			*
+			* @default 'press ok button to increase the value'
+			* @type {String}
+			*/
+			incButtonAriaLabel: PropTypes.string,
 
 			/**
 			 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -398,6 +424,8 @@ const PrivateIncrementSliderBaseFactory = factory({css: componentCss}, ({css}) =
 
 		defaultProps: {
 			backgroundProgress: 0,
+			decButtonAriaLabel: $L('press ok button to decrease the value'),
+			incButtonAriaLabel: $L('press ok button to increase the value'),
 			knobAfterMidpoint: false,
 			max: 100,
 			min: 0,
@@ -477,8 +505,8 @@ const PrivateIncrementSliderBaseFactory = factory({css: componentCss}, ({css}) =
 			incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
 			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
-			decrementAriaLabel: ({'aria-valuetext': valueText, disabled, min, value}) => !(disabled || value <= min) ? (`${valueText != null ? valueText : value} ${$L('press ok button to decrease the value')}`) : null,
-			incrementAriaLabel: ({'aria-valuetext': valueText, disabled, max, value}) => !(disabled || value >= max) ? (`${valueText != null ? valueText : value} ${$L('press ok button to increase the value')}`) : null
+			decrementAriaLabel: ({'aria-valuetext': valueText, decButtonAriaLabel, disabled, min, value}) => !(disabled || value <= min) ? (`${valueText != null ? valueText : value} ${decButtonAriaLabel}`) : null,
+			incrementAriaLabel: ({'aria-valuetext': valueText, disabled, incButtonAriaLabel, max, value}) => !(disabled || value >= max) ? (`${valueText != null ? valueText : value} ${incButtonAriaLabel}`) : null
 		},
 
 		render: ({active,
@@ -525,6 +553,8 @@ const PrivateIncrementSliderBaseFactory = factory({css: componentCss}, ({css}) =
 			...rest
 		}) => {
 			const ariaProps = extractAriaProps(rest);
+			delete rest.decButtonAriaLabel;
+			delete rest.incButtonAriaLabel;
 			delete rest.onSpotlightDown;
 			delete rest.onSpotlightLeft;
 			delete rest.onSpotlightRight;
