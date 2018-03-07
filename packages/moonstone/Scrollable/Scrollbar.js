@@ -49,7 +49,7 @@ class Scrollbar extends Component {
 	}
 
 	componentDidUpdate () {
-		if (this.props) {
+		if (this.props.cbAlertThumb) {
 			this.props.cbAlertThumb();
 		}
 	}
