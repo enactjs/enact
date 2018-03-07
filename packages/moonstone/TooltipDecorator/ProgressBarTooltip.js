@@ -53,9 +53,9 @@ const ProgressBarTooltipBase = kind({
 
 		/**
 		 * Specify where the tooltip should appear in relation to the progress bar/slider bar. Options are
-		 * `'before'`, `'after'`, and `'top'`. `before` renders above a `horizontal` progress bar/slider and to the
-		 * left of a `vertical` progress bar/slider. `after` renders below a `horizontal` progress bar/slider and to the
-		 * right of a `vertical` progress bar/slider. `top` renders above a `horizontal` and `vertical` progress bar/slider.
+		 * `'before'` and `'after'`. `before` renders above a `horizontal` progress bar/slider and to the
+		 * left of a `vertical` progress bar/slider. `after` renders below a `horizontal` progress bar/slider
+		 * and to the right of a `vertical` progress bar/slider.
 		 * In the `vertical` case, the rendering position is automatically reversed when rendering in an RTL locale.
 		 * This can be overridden by using the [tooltipForceSide]{@link moonstone/Slider.Slider#tooltipForceSide} prop.
 		 *
@@ -63,7 +63,7 @@ const ProgressBarTooltipBase = kind({
 		 * @default 'before'
 		 * @public
 		 */
-		side: PropTypes.oneOf(['before', 'after', 'top']),
+		side: PropTypes.oneOf(['before', 'after']),
 
 		/**
 		 * If `true` the progress bar/slider will be oriented vertically.
@@ -91,19 +91,16 @@ const ProgressBarTooltipBase = kind({
 
 	computed: {
 		className: ({forceSide, side, vertical, styler}) => styler.append({ignoreLocale: forceSide, vertical, horizontal: !vertical}, side),
-		arrowAnchor: ({forceSide, knobAfterMidpoint, side, vertical}) => {
-			if (vertical && side === 'top') return forceSide ? 'left' : 'right';
+		arrowAnchor: ({knobAfterMidpoint, vertical}) => {
 			if (vertical) return 'middle';
 			return knobAfterMidpoint ? 'left' : 'right';
 		},
 		direction: ({forceSide, side, vertical}, context) => {
 			let dir = 'right';
 			if (vertical) {
-				if (side === 'top') {
-					dir = 'above';
-				} else if (
+				if (
 					// LTR before (Both force and nonforce cases)
-					(!context.rtl && side === 'before') ||
+					(!context.rtl && !forceSide && side === 'before') ||
 					// RTL after
 					(context.rtl && !forceSide && side === 'after') ||
 					// RTL before FORCE
@@ -114,7 +111,7 @@ const ProgressBarTooltipBase = kind({
 					dir = 'right';
 				}
 			} else {
-				dir = (side === 'before' || side === 'top' ? 'above' : 'below');
+				dir = (side === 'before' ? 'above' : 'below');
 			}
 			return dir;
 		}
