@@ -134,10 +134,6 @@ class VirtualListBase extends Component {
 	}
 
 	componentWillUnmount () {
-		if (this.setContainerDisabled) {
-			this.setContainerDisabled(false);
-		}
-
 		if (this.props.type === 'JS') {
 			const containerNode = this.uiRef.containerRef;
 
@@ -147,6 +143,8 @@ class VirtualListBase extends Component {
 				containerNode.removeEventListener('keydown', this.onKeyDown);
 			}
 		}
+
+		this.setContainerDisabled(false);
 	}
 
 	isScrolledBy5way = false
@@ -540,7 +538,7 @@ class VirtualListBase extends Component {
 	isPlaceholderFocused = () => {
 		const current = Spotlight.getCurrent();
 
-		if (current && current.dataset.vlPlaceholder && this.containerRef.contains(current)) {
+		if (current && current.dataset.vlPlaceholder && this.uiRef.containerRef.contains(current)) {
 			return true;
 		}
 

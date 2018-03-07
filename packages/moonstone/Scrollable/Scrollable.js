@@ -128,15 +128,12 @@ class Scrollable extends Component {
 			if (focusedItem) {
 				focusedItem.blur();
 			}
+			this.childRef.setContainerDisabled(true);
 		}
 	}
 
-	onWheel = ({delta}) => {
-		const
-			{verticalScrollbarRef, horizontalScrollbarRef} = this.uiRef,
-			focusedItem = Spotlight.getCurrent(),
-			isVerticalScrollButtonFocused = verticalScrollbarRef && verticalScrollbarRef.isOneOfScrollButtonsFocused(),
-			isHorizontalScrollButtonFocused = horizontalScrollbarRef && horizontalScrollbarRef.isOneOfScrollButtonsFocused();
+	onWheel = ({delta, isHorizontalScrollButtonFocused, isVerticalScrollButtonFocused}) => {
+		const focusedItem = Spotlight.getCurrent();
 
 		if (focusedItem && !isVerticalScrollButtonFocused && !isHorizontalScrollButtonFocused) {
 			focusedItem.blur();
@@ -335,6 +332,7 @@ class Scrollable extends Component {
 		this.focusOnItem();
 		this.lastFocusedItem = null;
 		this.lastScrollPositionOnFocus = null;
+		this.isWheeling = false;
 	}
 
 	focusOnItem () {

@@ -196,9 +196,7 @@ class ScrollableBase extends Component {
 		...contextTypesState
 	}
 
-	static contextTypes = {
-		...contextTypesState
-	}
+	static contextTypes = contextTypesState
 
 	constructor (props) {
 		super(props);
@@ -248,9 +246,9 @@ class ScrollableBase extends Component {
 
 		this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 		this.direction = this.childRef.props.direction;
+		this.updateEventListeners();
 		this.updateScrollbars();
 
-		this.updateEventListeners();
 		on('keydown', this.onKeyDown);
 	}
 
@@ -310,13 +308,14 @@ class ScrollableBase extends Component {
 			this.animator.stop();
 		}
 
+		this.removeEventListeners();
+		off('keydown', this.onKeyDown);
+
 		if (this.context.Subscriber) {
 			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
 			this.context.Subscriber.unsubscribe('i18n', this.handleSubscription);
 		}
 
-		this.removeEventListeners();
-		off('keydown', this.onKeyDown);
 	}
 
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
@@ -527,13 +526,16 @@ class ScrollableBase extends Component {
 
 	onWheel = (ev) => {
 		ev.preventDefault();
+
 		if (!this.isDragging) {
 			const
 				bounds = this.getScrollBounds(),
 				canScrollHorizontally = this.canScrollHorizontally(bounds),
 				canScrollVertically = this.canScrollVertically(bounds),
 				eventDeltaMode = ev.deltaMode,
-				eventDelta = (-ev.wheelDeltaY || ev.deltaY);
+				eventDelta = (-ev.wheelDeltaY || ev.deltaY),
+				isVerticalScrollButtonFocused = this.verticalScrollbarRef && this.verticalScrollbarRef.isThumbFocused(),
+				isHorizontalScrollButtonFocused = this.horizontalScrollbarRef && this.horizontalScrollbarRef.isThumbFocused();
 			let
 				delta = 0,
 				direction;
@@ -551,7 +553,7 @@ class ScrollableBase extends Component {
 				this.wheelDirection = direction;
 			}
 
-			forward('onWheel', {delta}, this.props);
+			forward('onWheel', {delta, isHorizontalScrollButtonFocused, isVerticalScrollButtonFocused}, this.props);
 
 			if (delta !== 0) {
 				this.scrollToAccumulatedTarget(delta, canScrollVertically);
@@ -707,13 +709,12 @@ class ScrollableBase extends Component {
 		this.animator.stop();
 		this.isScrollAnimationTargetAccumulated = false;
 		this.startHidingThumb();
+		if (stop) {
+			stop();
+		}
 		if (this.scrolling) {
 			this.scrolling = false;
 			this.forwardScrollEvent('onScrollStop');
-		}
-
-		if (stop) {
-			stop();
 		}
 	}
 
@@ -781,10 +782,10 @@ class ScrollableBase extends Component {
 	}
 
 	scrollTo = (opt) => {
-		const {scrollTo} = this.props;
-
 		if (!this.deferScrollTo) {
-			const {left, top} = this.getPositionForScrollTo(opt);
+			const
+				{left, top} = this.getPositionForScrollTo(opt),
+				{scrollTo} = this.props;
 
 			if (scrollTo) {
 				scrollTo(opt);

@@ -192,9 +192,7 @@ class ScrollableBaseNative extends Component {
 		...contextTypesState
 	}
 
-	static contextTypes = {
-		...contextTypesState
-	}
+	static contextTypes = contextTypesState
 
 	constructor (props) {
 		super(props);
@@ -244,9 +242,9 @@ class ScrollableBaseNative extends Component {
 
 		this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 		this.direction = this.childRef.props.direction;
+		this.updateEventListeners();
 		this.updateScrollbars();
 
-		this.updateEventListeners();
 		on('keydown', this.onKeyDown);
 	}
 
@@ -669,10 +667,11 @@ class ScrollableBaseNative extends Component {
 	}
 
 	scrollTo = (opt) => {
-		const {scrollTo} = this.props;
 
 		if (!this.deferScrollTo) {
-			const {left, top} = this.getPositionForScrollTo(opt);
+			const
+				{left, top} = this.getPositionForScrollTo(opt),
+				{scrollTo} = this.props;
 
 			if (scrollTo) {
 				scrollTo(opt);
