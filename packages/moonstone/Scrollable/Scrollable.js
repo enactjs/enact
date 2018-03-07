@@ -132,10 +132,13 @@ class Scrollable extends Component {
 		}
 	}
 
-	onWheel = ({delta, isHorizontalScrollButtonFocused, isVerticalScrollButtonFocused}) => {
-		const focusedItem = Spotlight.getCurrent();
+	onWheel = ({delta, horizontalScrollbarRef, verticalScrollbarRef}) => {
+		const
+			focusedItem = Spotlight.getCurrent(),
+			isHorizontalScrollButtonFocused = horizontalScrollbarRef && horizontalScrollbarRef.isOneOfScrollButtonsFocused(),
+			isVerticalScrollButtonFocused = verticalScrollbarRef && verticalScrollbarRef.isOneOfScrollButtonsFocused();
 
-		if (focusedItem && !isVerticalScrollButtonFocused && !isHorizontalScrollButtonFocused) {
+		if (focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
 			focusedItem.blur();
 		}
 

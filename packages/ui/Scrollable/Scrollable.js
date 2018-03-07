@@ -529,13 +529,12 @@ class ScrollableBase extends Component {
 
 		if (!this.isDragging) {
 			const
+				{verticalScrollbarRef, horizontalScrollbarRef} = this,
 				bounds = this.getScrollBounds(),
 				canScrollHorizontally = this.canScrollHorizontally(bounds),
 				canScrollVertically = this.canScrollVertically(bounds),
 				eventDeltaMode = ev.deltaMode,
-				eventDelta = (-ev.wheelDeltaY || ev.deltaY),
-				isVerticalScrollButtonFocused = this.verticalScrollbarRef && this.verticalScrollbarRef.isThumbFocused(),
-				isHorizontalScrollButtonFocused = this.horizontalScrollbarRef && this.horizontalScrollbarRef.isThumbFocused();
+				eventDelta = (-ev.wheelDeltaY || ev.deltaY);
 			let
 				delta = 0,
 				direction;
@@ -553,7 +552,7 @@ class ScrollableBase extends Component {
 				this.wheelDirection = direction;
 			}
 
-			forward('onWheel', {delta, isHorizontalScrollButtonFocused, isVerticalScrollButtonFocused}, this.props);
+			forward('onWheel', {delta, horizontalScrollbarRef, verticalScrollbarRef}, this.props);
 
 			if (delta !== 0) {
 				this.scrollToAccumulatedTarget(delta, canScrollVertically);
