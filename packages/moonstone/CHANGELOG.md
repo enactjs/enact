@@ -4,9 +4,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Fixed
-
-- `moonstone/ExpandableItem` to be more performant when animating
 ### Removed
 
 - `moonstone/Marquee.MarqueeText` to be replaced by `moonstone/Marquee.Marquee`
@@ -23,6 +20,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` to correctly show localized percentage value in tooltip when `tooltipAsPercent` is true
 - `moonstone/VirtualGridList` to show or hide its scrollbars properly
 - `moonstone/Button` text to be properly centered
+- `moonstone/ExpandableItem` to be more performant when animating
 
 ## [2.0.0-alpha.4] - 2018-02-13
 
