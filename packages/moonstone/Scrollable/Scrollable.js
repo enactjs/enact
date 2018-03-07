@@ -115,7 +115,6 @@ class Scrollable extends Component {
 	isWheeling = false
 
 	// spotlight
-	animateOnFocus = false
 	lastFocusedItem = null
 	lastScrollPositionOnFocus = null
 	indexToFocus = null
