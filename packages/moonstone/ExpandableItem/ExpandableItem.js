@@ -283,8 +283,9 @@ const ExpandableItemBase = kind({
 	},
 
 	computed: {
+		className: ({open, styler}) => (styler.append({open})),
 		label: ({label, noneText}) => (label || noneText),
-		labeledItemClassName: ({showLabel, styler}) => (styler.append(css.labeledItem, css[showLabel])),
+		labeledItemClassName: ({showLabel, styler}) => (styler.join(css.labeledItem, css[showLabel])),
 		open: ({disabled, open}) => (open && !disabled),
 		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
 	},
@@ -325,7 +326,6 @@ const ExpandableItemBase = kind({
 				{...rest}
 				aria-disabled={disabled}
 				disabled={disabled}
-				open={open}
 				ref={setContainerNode}
 			>
 				<LabeledItem

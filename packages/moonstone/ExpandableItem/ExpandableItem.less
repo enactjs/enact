@@ -21,15 +21,17 @@
 		}
 	}
 
-	&[open] {
-		.auto {
-			.label {
-				display: none;
+	&.open {
+		.labeledItem {
+			&.auto {
+				.label {
+					display: none;
+				}
 			}
-		}
 
-		.icon {
-			transform: scaleY(-1);
+			.icon {
+				transform: scaleY(-1);
+			}
 		}
 	}
 }
