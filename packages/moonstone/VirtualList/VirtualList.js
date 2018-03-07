@@ -690,7 +690,7 @@ class VirtualListBase extends Component {
 						initUiChildRef(ref);
 					}
 				}}
-				updateStatesAndBounds={this.updateStatesAndBound}
+				updateStatesAndBounds={this.updateStatesAndBounds}
 				render={(props) => { // eslint-disable-line react/jsx-no-bind
 					return render({
 						...props,
