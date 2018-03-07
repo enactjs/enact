@@ -64,7 +64,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 			Cancelable(
 				{component: 'span', onCancel: handleCancel},
 				ExpandableSpotlightDecorator(
-					{noPointerMode: config.noPointerMode, getSelectedNode: config.getSelectedNode},
+					{noPointerMode: config.noPointerMode, getChildFocusTarget: config.getSelectedNode},
 					Wrapped
 				)
 			)

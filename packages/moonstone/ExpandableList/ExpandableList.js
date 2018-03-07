@@ -379,9 +379,8 @@ const ExpandableList = Pure(
 		children: compareChildren
 	}},
 	Expandable(
-		{getSelectedNode: (node, {selected}) => {
-			const _selected = selected ? selected : 0;
-			const selectedIndex = Array.isArray(_selected) && _selected.length ? _selected[0] : _selected;
+		{getSelectedNode: (node, {selected = 0}) => {
+			const selectedIndex = Array.isArray(selected) && selected.length ? selected[0] : selected;
 			const selectedNode = node ? node.querySelector('[data-index="' + selectedIndex + '"]') : null;
 			return selectedNode;
 		}},
