@@ -195,7 +195,7 @@ There are some special cases that appear within the Enact framework. One example
 Errors in documentation can prevent the doc tool from correctly generating our docs. Always run the `parse` command over the documentation to be sure there are no parse warnings. To do this, follow these steps:
 
 ```bash
-git clone git@github.com:enyojs/enact-docs.git
+git clone git@github.com:enactjs/enact-docs.git
 cd enact-docs
 npm install
 rm -rf node_modules/enact

@@ -1,6 +1,6 @@
-# @enact/core
+# @enact/core [![npm (scoped)](https://img.shields.io/npm/v/@enact/core.svg?style=flat-square)](https://www.npmjs.com/package/@enact/core)
 
-> `@enact/core` contains the set of basic building blocks for an Enact-based application.
+> The set of essential building blocks for an Enact-based application.
 
 Enact core provides several abstractions to be used with React-based applications.  These include `core/kind`, a
 factory for stateless functional components (SFC's), `core/jobs`, a smart wrapper for `window.setTimeout`,
