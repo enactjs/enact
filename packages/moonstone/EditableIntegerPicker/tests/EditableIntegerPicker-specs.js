@@ -3,6 +3,8 @@ import {mount} from 'enzyme';
 import EditableIntegerPicker from '../EditableIntegerPicker';
 import Spotlight from '@enact/spotlight';
 
+const isPaused = () => Spotlight.isPaused() ? 'paused' : 'not paused';
+
 const tap = (node) => {
 	node.simulate('mousedown');
 	node.simulate('mouseup');
@@ -122,8 +124,8 @@ describe('EditableIntegerPicker', () => {
 		const input = node.querySelector('input');
 		input.focus();
 
-		const expected = true;
-		const actual = Spotlight.isPaused();
+		const expected = 'paused';
+		const actual = isPaused();
 
 		Spotlight.resume();
 		node.parentNode.removeChild(node);
@@ -144,8 +146,8 @@ describe('EditableIntegerPicker', () => {
 		input.focus();
 		input.blur();
 
-		const expected = false;
-		const actual = Spotlight.isPaused();
+		const expected = 'not paused';
+		const actual = isPaused();
 
 		node.parentNode.removeChild(node);
 

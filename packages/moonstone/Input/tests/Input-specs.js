@@ -4,6 +4,8 @@ import sinon from 'sinon';
 import Input from '../Input';
 import Spotlight from '@enact/spotlight';
 
+const isPaused = () => Spotlight.isPaused() ? 'paused' : 'not paused';
+
 describe('Input Specs', () => {
 	it('should have an input element', () => {
 		const subject = mount(
@@ -152,8 +154,8 @@ describe('Input Specs', () => {
 
 		subject.simulate('mouseDown');
 
-		const expected = true;
-		const actual = Spotlight.isPaused();
+		const expected = 'paused';
+		const actual = isPaused();
 
 		expect(actual).to.equal(expected);
 	});
@@ -166,8 +168,8 @@ describe('Input Specs', () => {
 		subject.simulate('mouseDown');
 		subject.unmount();
 
-		const expected = false;
-		const actual = Spotlight.isPaused();
+		const expected = 'not paused';
+		const actual = isPaused();
 
 		expect(actual).to.equal(expected);
 	});
