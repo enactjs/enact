@@ -48,12 +48,14 @@ const ProgressBarBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, adds an `emphasized` class to the progress bar.
+		 * The proportion of the filled portion of the progress bar. Valid values are
+		 * between `0` and `1`.
 		 *
-		 * @type {Boolean}
+		 * @type {Number}
+		 * @default 0
 		 * @public
 		 */
-		emphasized: PropTypes.bool,
+		progress: PropTypes.number,
 
 		/**
 		 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
@@ -63,16 +65,6 @@ const ProgressBarBase = kind({
 		 * @public
 		 */
 		tooltip: PropTypes.bool,
-
-		/**
-		 * The proportion of the filled portion of the progress bar. Valid values are
-		 * between `0` and `1`.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		progress: PropTypes.number,
 
 		/**
 		 * Setting to `true` overrides the natural tooltip position
@@ -97,11 +89,10 @@ const ProgressBarBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['progressBar']
+		publicClassNames: ['progressBar', 'fill', 'load']
 	},
 
 	computed: {
-		className: ({emphasized, styler}) => styler.append({emphasized}),
 		tooltipComponent: ({progress, tooltip, tooltipForceSide, vertical}) => {
 			if (tooltip) {
 				const progressAfterMidpoint = progress > 0.5;
@@ -139,7 +130,8 @@ const ProgressBarBase = kind({
 	},
 
 	render: ({css, tooltipComponent, ...rest}) => {
-		delete rest.emphasized;
+		delete rest.tooltip;
+		delete rest.tooltipForceSide;
 
 		return (
 			<UiProgressBar
