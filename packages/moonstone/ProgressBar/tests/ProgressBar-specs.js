@@ -14,15 +14,4 @@ describe('ProgressBar Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
-
-	it('should set emphasized class when emphasized is true', function () {
-		const progressBar = mount(
-			<ProgressBar emphasized />
-		);
-
-		const expected = 1;
-		const actual = progressBar.find(`div.${css.emphasized}`).length;
-
-		expect(actual).to.equal(expected);
-	});
 });
