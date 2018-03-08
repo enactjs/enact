@@ -19,6 +19,8 @@ import LabeledItem from '../LabeledItem';
 import Expandable from './Expandable';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
 
+import css from './ExpandableItem.less';
+
 const isUp = is('up');
 const isDown = is('down');
 
@@ -263,17 +265,16 @@ const ExpandableItemBase = kind({
 		}
 	},
 
+	styles: {
+		css,
+		className: 'expandableItem'
+	},
+
 	computed: {
-		label: ({disabled, label, noneText, open, showLabel}) => {
-			const isOpen = open && !disabled;
-			if (showLabel === 'always' || (!isOpen && showLabel !== 'never')) {
-				return label || noneText;
-			} else {
-				return null;
-			}
-		},
+		className: ({open, styler}) => (styler.append({open})),
+		label: ({label, noneText}) => (label || noneText),
+		labeledItemClassName: ({showLabel, styler}) => (styler.join(css.labeledItem, css[showLabel])),
 		open: ({disabled, open}) => (open && !disabled),
-		titleIcon: ({disabled, open}) => (open && !disabled ? 'arrowlargeup' : 'arrowlargedown'),
 		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
 	},
 
@@ -284,6 +285,7 @@ const ExpandableItemBase = kind({
 		handleLabelKeyDown,
 		handleOpen,
 		label,
+		labeledItemClassName,
 		open,
 		onHide,
 		onShow,
@@ -294,7 +296,6 @@ const ExpandableItemBase = kind({
 		setContainerNode,
 		spotlightDisabled,
 		title,
-		titleIcon,
 		transitionSpotlightDisabled,
 		...rest
 	}) => {
@@ -313,11 +314,12 @@ const ExpandableItemBase = kind({
 				{...rest}
 				aria-disabled={disabled}
 				disabled={disabled}
-				open={open}
 				ref={setContainerNode}
 			>
 				<LabeledItem
 					{...ariaProps}
+					css={css}
+					className={labeledItemClassName}
 					data-expandable-label
 					disabled={disabled}
 					label={label}
@@ -328,7 +330,7 @@ const ExpandableItemBase = kind({
 					onSpotlightRight={onSpotlightRight}
 					onSpotlightUp={onSpotlightUp}
 					spotlightDisabled={spotlightDisabled}
-					titleIcon={titleIcon}
+					titleIcon="arrowlargedown"
 				>{title}</LabeledItem>
 				<ExpandableTransitionContainer
 					data-expandable-container
