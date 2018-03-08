@@ -6,10 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/Slider` property `aria-label` to override value string to read
-- `moonstone/IncrementSlider` property `aria-label` to override value string to read
-- `moonstone/IncrementSlider` property `decButtonAriaLabel` to override decrementer hint string to read
-- `moonstone/IncrementSlider` property `incButtonAriaLabel` to override incrementer hint string to read
+- `moonstone/IncrementSlider` properties `incrementAriaLabel` and `decrementAriaLabel` to configure the label set on each button
 
 ### Fixed
 
