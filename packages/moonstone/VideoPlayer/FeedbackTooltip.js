@@ -57,10 +57,8 @@ const FeedbackTooltipBase = kind({
 		playbackState: PropTypes.oneOf(Object.keys(states)),
 
 		/**
-		 * This component will be used instead of the built-in version.
-		 * The internal thumbnail class will be added to this component, however, it's the
-		 * responsibility of the developer to include this class in their implementation, if
-		 * appropriate for their application. This component follows the same rules as the built-in
+		 * This component will be used instead of the built-in version. The internal thumbnail style
+		 * will not be applied to this component. This component follows the same rules as the built-in
 		 * version; hiding and showing according to the state of `noFeedback`.
 		 *
 		 * @type {Node}
@@ -120,7 +118,7 @@ const FeedbackTooltipBase = kind({
 			// the other being the thumbnail and time are visible.
 			if (noFeedback) {
 				if (ThumbnailComponent) {
-					return <ThumbnailComponent className={css.thumbnail} />;
+					return ThumbnailComponent;
 				} else if (thumbnailSrc) {
 					return (
 						<div className={css.thumbnail}>
