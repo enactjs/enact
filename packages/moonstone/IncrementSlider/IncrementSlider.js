@@ -60,23 +60,13 @@ const PrivateIncrementSliderBaseFactory = factory({css: componentCss}, ({css}) =
 			'aria-hidden': PropTypes.bool,
 
 			/**
-			 * Overrides value string to read for the slider. It is mapping to `aria-valuetext` internally.
-			 * By default, `aria-valuetext` is set to the current value. This should only be used
-			 * when the parent controls the value of the slider directly through the props.
-			 *
-			 * @type {String|Number}
-			 * @public
-			 */
-			'aria-label': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-
-			/**
 			 * Overrides the `aria-valuetext` for the slider. By default, `aria-valuetext` is set
 			 * to the current value. This should only be used when the parent controls the value of
 			 * the slider directly through the props.
 			 *
 			 * @type {String|Number}
 			 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
-			 * @private
+			 * @public
 			 */
 			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
