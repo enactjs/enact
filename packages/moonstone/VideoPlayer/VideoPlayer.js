@@ -1195,6 +1195,7 @@ const VideoPlayerBase = class extends React.Component {
 		if (!this.props.no5WayJump &&
 				!this.state.mediaControlsVisible &&
 				!this.props.disabled &&
+				!this.state.mediaControlsDisabled &&
 				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			Spotlight.pause();
 			this.startListeningForPulses(ev.keyCode);
@@ -1213,7 +1214,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleKeyUp = (ev) => {
-		if (this.props.disabled) {
+		if (this.props.disabled || this.state.mediaControlsDisabled) {
 			return;
 		}
 		const {PLAY, PAUSE, REWIND, FASTFORWARD} = keyMap;
