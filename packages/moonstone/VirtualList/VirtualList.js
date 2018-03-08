@@ -730,7 +730,6 @@ const VirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
 		render={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseJS
 				{...virtualListProps}
-				type="JS"
 				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initItemContainerRef}>{cc}</div> : null,
@@ -782,7 +781,6 @@ const VirtualListNative = (props) => (
 		render={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...virtualListProps}
-				type="Native"
 				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initItemContainerRef}>{cc}</div> : null,
