@@ -97,10 +97,11 @@ const PrivateIncrementSliderBaseFactory = factory({css: componentCss}, ({css}) =
 			children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 			/**
-			* Overrides hint string to read for the decrementer. Without a custom string, the default is used.
+			* Sets the hint string read when focusing the decrement button.
 			*
 			* @default 'press ok button to decrease the value'
 			* @type {String}
+			* @public
 			*/
 			decrementAriaLabel: PropTypes.string,
 
@@ -148,10 +149,11 @@ const PrivateIncrementSliderBaseFactory = factory({css: componentCss}, ({css}) =
 			id: PropTypes.string,
 
 			/**
-			* Overrides hint string to read for the incrementer. Without a custom string, the default is used.
+			* Sets the hint string read when focusing the increment button.
 			*
 			* @default 'press ok button to increase the value'
 			* @type {String}
+			* @public
 			*/
 			incrementAriaLabel: PropTypes.string,
 
