@@ -762,17 +762,25 @@ const VideoPlayerBase = class extends React.Component {
 		on('keyup', this.handleKeyUp);
 		this.attachCustomMediaEvents();
 		this.startDelayedFeedbackHide();
-		this.calculateMaxComponentCount();
+		this.calculateMaxComponentCount(
+			countReactChildren(this.props.leftComponents),
+			countReactChildren(this.props.rightComponents),
+			countReactChildren(this.props.children)
+		);
 	}
 
 	componentWillReceiveProps (nextProps) {
 		// Detect if the number of components has changed
+		const leftCount = countReactChildren(nextProps.leftComponents),
+			rightCount = countReactChildren(nextProps.rightComponents),
+			childrenCount = countReactChildren(nextProps.children);
+
 		if (
-			React.Children.count(this.props.leftComponents) !== React.Children.count(nextProps.leftComponents) ||
-			React.Children.count(this.props.rightComponents) !== React.Children.count(nextProps.rightComponents) ||
-			React.Children.count(this.props.children) !== React.Children.count(nextProps.children)
+			countReactChildren(this.props.leftComponents) !== leftCount ||
+			countReactChildren(this.props.rightComponents) !== rightCount ||
+			countReactChildren(this.props.children) !== childrenCount
 		) {
-			this.calculateMaxComponentCount();
+			this.calculateMaxComponentCount(leftCount, rightCount, childrenCount);
 		}
 
 		const {source} = this.props;
@@ -899,11 +907,7 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	calculateMaxComponentCount = () => {
-		let leftCount = countReactChildren(this.props.leftComponents),
-			rightCount = countReactChildren(this.props.rightComponents),
-			childrenCount = countReactChildren(this.props.children);
-
+	calculateMaxComponentCount = (leftCount, rightCount, childrenCount) => {
 		// If the "more" button is present, automatically add it to the right's count.
 		if (childrenCount) {
 			rightCount += 1;
