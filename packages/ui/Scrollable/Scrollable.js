@@ -248,6 +248,8 @@ class ScrollableBase extends Component {
 		this.direction = this.childRef.props.direction;
 		this.updateEventListeners();
 		this.updateScrollbars();
+
+		on('keydown', this.onKeyDown);
 	}
 
 	componentWillUpdate () {
@@ -307,6 +309,7 @@ class ScrollableBase extends Component {
 		}
 
 		this.removeEventListeners();
+		off('keydown', this.onKeyDown);
 
 		if (this.context.Subscriber) {
 			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
@@ -575,10 +578,6 @@ class ScrollableBase extends Component {
 			forward('onKeyDown', ev, this.props);
 		} else if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) && !ev.repeat) {
 			this.scrollByPage(ev.keyCode);
-
-			ev.preventDefault();
-			ev.stopPropagation();
-			ev.stopImmediatePropagation();
 		}
 	}
 
@@ -927,8 +926,6 @@ class ScrollableBase extends Component {
 		if (this.props.updateEventListeners) {
 			this.props.updateEventListeners(this.childRef.containerRef);
 		}
-
-		document.body.addEventListener('keydown', this.onKeyDown);
 	}
 
 	removeEventListeners () {
@@ -942,8 +939,6 @@ class ScrollableBase extends Component {
 		if (this.props.removeEventListeners) {
 			this.props.removeEventListeners(this.childRef.containerRef);
 		}
-
-		document.body.removeEventListener('keydown', this.onKeyDown);
 	}
 
 	// render

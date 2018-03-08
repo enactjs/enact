@@ -311,10 +311,6 @@ class Scrollable extends Component {
 		this.animateOnFocus = true;
 		if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) && !ev.repeat && this.hasFocus()) {
 			this.scrollByPage(ev.keyCode);
-
-			ev.preventDefault();
-			ev.stopPropagation();
-			ev.stopImmediatePropagation();
 		}
 	}
 
