@@ -779,6 +779,7 @@ const VideoPlayerBase = class extends React.Component {
 		const {source: nextSource} = nextProps;
 
 		if (!compareSources(source, nextSource)) {
+			this.firstPlayReadFlag = true;
 			this.setState({currentTime: 0, buffered: 0, proportionPlayed: 0, proportionLoaded: 0});
 			this.reloadVideo();
 		}
