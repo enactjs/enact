@@ -66,7 +66,9 @@ const
 	isDown = is('down'),
 	isLeft = is('left'),
 	isRight = is('right'),
-	isUp = is('up');
+	isUp = is('up'),
+	JS = 'JS',
+	Native = 'Native';
 
 /**
  * A moonstone-styled decorator component for
@@ -77,7 +79,10 @@ const
  * @ui
  * @private
  */
-	class VirtualListBase extends Component {
+const VirtualListBase = (type) => {
+	const UiBase = (type === JS) ? UiVirtualListBase : UiVirtualListBaseNative;
+
+	return class VirtualListCore extends Component {
 		static displayName = 'VirtualListBase'
 
 		static propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
@@ -105,15 +110,13 @@ const
 			 * @type {Function}
 			 * @public
 			 */
-			render: PropTypes.func,
-
-			type: PropTypes.string
+			render: PropTypes.func
 		}
 
 		static contextTypes = contextTypes
 
 		componentDidMount () {
-			if (this.props.type === 'JS') {
+			if (type === JS) {
 				const containerNode = this.uiRef.containerRef;
 
 				// prevent native scrolling by Spotlight
@@ -134,7 +137,7 @@ const
 		}
 
 		componentWillUnmount () {
-			if (this.props.type === 'JS') {
+			if (type === JS) {
 				const containerNode = this.uiRef.containerRef;
 
 				// remove a function for preventing native scrolling by Spotlight
@@ -155,7 +158,7 @@ const
 		restoreLastFocused = false
 
 		setContainerDisabled = (bool) => {
-			const containerNode = (this.props.type === 'JS') ? this.uiRef.containerRef : this.uiRef.contentRef;
+			const containerNode = (type === JS) ? this.uiRef.containerRef : this.uiRef.contentRef;
 
 			if (containerNode) {
 				containerNode.setAttribute(dataContainerDisabledAttribute, bool);
@@ -301,7 +304,7 @@ const
 					isRtl = this.context.rtl,
 					isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right');
 
-				if (this.props.type === 'JS') {
+				if (type === JS) {
 					// To prevent item positioning issue, make all items to be rendered.
 					this.uiRef.updateFrom = null;
 					this.uiRef.updateTo = null;
@@ -450,7 +453,7 @@ const
 
 			this.isScrolledBy5way = false;
 			if (getDirection(keyCode)) {
-				if (this.props.type === 'Native') {
+				if (type === Native) {
 					ev.preventDefault();
 				}
 				this.setSpotlightContainerRestrict(keyCode, target);
@@ -482,7 +485,7 @@ const
 
 			if (Spotlight.isPaused()) {
 				Spotlight.resume();
-				if (this.props.type === 'JS') {
+				if (type === JS) {
 					this.forceUpdate();
 				}
 			}
@@ -492,9 +495,9 @@ const
 
 		initItemRef = (ref, index) => {
 			if (ref) {
-				if (this.props.type === 'JS') {
+				if (type === JS) {
 					this.focusOnItem(index);
-				} else if (this.props.type === 'Native') {
+				} else if (type === Native) {
 					// If focusing the item of VirtuallistNative, `onFocus` in Scrollable will be called.
 					// Then VirtualListNative tries to scroll again differently from VirtualList.
 					// So we would like to skip `focus` handling when focusing the item as a workaround.
@@ -596,7 +599,7 @@ const
 						node.blur();
 					}
 				}
-				if (this.props.type === 'JS') {
+				if (type === JS) {
 					this.nodeIndexToBeFocused = null;
 				}
 				this.lastFocusedIndex = focusedIndex;
@@ -605,7 +608,7 @@ const
 					if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
 						gridPosition.primaryPosition -= pageScroll ? 0 : offsetToClientEnd;
 					} else if (gridPosition.primaryPosition >= scrollPosition) { // inside of client
-						if (this.props.type === 'JS') {
+						if (type === JS) {
 							gridPosition.primaryPosition = scrollPosition;
 						} else {
 							// This code uses the trick to change the target position slightly which will not affect the actual result
@@ -625,7 +628,7 @@ const
 			}
 		}
 
-		shouldPreventScrollByFocus = () => ((this.props.type === 'JS') ? (this.isScrolledBy5way) : (this.isScrolledBy5way || this.isScrolledByJump))
+		shouldPreventScrollByFocus = () => ((type === JS) ? (this.isScrolledBy5way) : (this.isScrolledBy5way || this.isScrolledByJump))
 
 		setLastFocusedIndex = (param) => {
 			this.lastFocusedIndex = param;
@@ -666,9 +669,8 @@ const
 
 		render () {
 			const
-				{component, initUiChildRef, render, type, ...rest} = this.props,
-				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder(),
-				UiBase = (type === 'JS') ? UiVirtualListBase : UiVirtualListBaseNative;
+				{component, initUiChildRef, render, ...rest} = this.props,
+				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
 			return (
 				<UiBase
@@ -699,15 +701,20 @@ const
 				/>
 			);
 		}
-	}
+	};
+};
+
+const VirtualListBaseJS = VirtualListBase(JS);
+
+const VirtualListBaseNative = VirtualListBase(Native);
+
 
 const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 	<Scrollable
 		{...rest}
 		render={(props) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBase
+			<VirtualListBaseJS
 				{...props}
-				type="JS"
 				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
@@ -732,9 +739,8 @@ const ScrollableVirtualListNative = ({role, ...rest}) => (
 	<ScrollableNative
 		{...rest}
 		render={(props) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBase
+			<VirtualListBaseNative
 				{...props}
-				type="Native"
 				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
