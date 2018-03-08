@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/ExpandableItem` to be more performant when animating
+
 ## [2.0.0-alpha.5] - 2018-03-07
 
 ### Removed
