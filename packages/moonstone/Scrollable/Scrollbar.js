@@ -1,12 +1,10 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
-import {ScrollThumb as UiScrollThumb} from '@enact/ui/Scrollable/Scrollbar';
 
 import componentCss from './Scrollbar.less';
 import ScrollButtons from './ScrollButtons';
-
-const nop = () => {};
+import ScrollThumb from './ScrollThumb';
 
 /**
  * A moonstone-styled scroll bar. It is used in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
@@ -44,18 +42,8 @@ class Scrollbar extends Component {
 		vertical: PropTypes.bool
 	}
 
-	static defaultPros = {
-		cbAlertThumb: nop
-	}
-
-	componentDidUpdate () {
-		if (this.props.cbAlertThumb) {
-			this.props.cbAlertThumb();
-		}
-	}
-
 	render () {
-		const {corner, vertical, ...rest} = this.props;
+		const {cbAlertThumb, corner, vertical, ...rest} = this.props;
 
 		return (
 			<UiScrollbarBase
@@ -88,7 +76,8 @@ class Scrollbar extends Component {
 						}}
 						vertical={vertical}
 						render={() => ( // eslint-disable-line react/jsx-no-bind
-							<UiScrollThumb
+							<ScrollThumb
+								cbAlertThumb={cbAlertThumb}
 								key="thumb"
 								setRef={setScrollThumbRef}
 								vertical={vertical}
