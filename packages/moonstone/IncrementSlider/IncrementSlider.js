@@ -414,8 +414,6 @@ const PrivateIncrementSliderBaseFactory = factory({css: componentCss}, ({css}) =
 
 		defaultProps: {
 			backgroundProgress: 0,
-			decrementAriaLabel: $L('press ok button to decrease the value'),
-			incrementAriaLabel: $L('press ok button to increase the value'),
 			knobAfterMidpoint: false,
 			max: 100,
 			min: 0,
@@ -495,8 +493,24 @@ const PrivateIncrementSliderBaseFactory = factory({css: componentCss}, ({css}) =
 			incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
 			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
-			decrementAriaLabel: ({'aria-valuetext': valueText, decrementAriaLabel, disabled, min, value}) => !(disabled || value <= min) ? (`${valueText != null ? valueText : value} ${decrementAriaLabel}`) : null,
-			incrementAriaLabel: ({'aria-valuetext': valueText, incrementAriaLabel, disabled, max, value}) => !(disabled || value >= max) ? (`${valueText != null ? valueText : value} ${incrementAriaLabel}`) : null
+			decrementAriaLabel: ({'aria-valuetext': valueText, decrementAriaLabel, disabled, min, value}) => {
+				if (decrementAriaLabel == null) {
+					decrementAriaLabel = $L('press ok button to decrease the value');
+				}
+
+				return !(disabled || value <= min) ?
+					`${valueText != null ? valueText : value} ${decrementAriaLabel}` :
+					null;
+			},
+			incrementAriaLabel: ({'aria-valuetext': valueText, incrementAriaLabel, disabled, max, value}) => {
+				if (incrementAriaLabel == null) {
+					incrementAriaLabel = $L('press ok button to increase the value');
+				}
+
+				return !(disabled || value >= max) ?
+					`${valueText != null ? valueText : value} ${incrementAriaLabel}` :
+					null;
+			}
 		},
 
 		render: ({active,
