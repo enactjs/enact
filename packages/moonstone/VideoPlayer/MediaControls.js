@@ -7,6 +7,8 @@ import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlig
 import $L from '../internal/$L';
 import IconButton from '../IconButton';
 
+import {countReactChildren} from './util';
+
 import css from './VideoPlayer.less';
 
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
@@ -384,7 +386,7 @@ const MediaControls = kind({
 				</div>
 				<div className={css.rightComponents}>
 					{rightComponents}
-					{React.Children.count(children) ? (
+					{countReactChildren(children) ? (
 						<MediaButton
 							aria-label={moreIconLabel}
 							backgroundOpacity="translucent"

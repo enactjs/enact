@@ -30,7 +30,7 @@ import $L from '../internal/$L';
 import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
 
-import {calcNumberValueOfPlaybackRate, compareSources, secondsToTime} from './util';
+import {calcNumberValueOfPlaybackRate, compareSources, countReactChildren, secondsToTime} from './util';
 import Overlay from './Overlay';
 import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
@@ -128,9 +128,6 @@ const AnnounceState = {
 	// All announcements have been made
 	DONE: 4
 };
-
-// Safely count the children nodes and exclude null & undefined values for an accurate count of real children
-const countReactChildren = (children) => React.Children.toArray(children).filter(n => n != null).length;
 
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
