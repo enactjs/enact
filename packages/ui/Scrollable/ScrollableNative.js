@@ -244,8 +244,6 @@ class ScrollableBaseNative extends Component {
 		this.direction = this.childRef.props.direction;
 		this.updateEventListeners();
 		this.updateScrollbars();
-
-		on('keydown', this.onKeyDown);
 	}
 
 	componentWillUpdate () {
@@ -308,7 +306,6 @@ class ScrollableBaseNative extends Component {
 		}
 
 		this.removeEventListeners();
-		off('keydown', this.onKeyDown);
 	}
 
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
@@ -489,6 +486,10 @@ class ScrollableBaseNative extends Component {
 			if (!ev.repeat) {
 				this.scrollByPage(ev.keyCode);
 			}
+
+			ev.preventDefault();
+			ev.stopPropagation();
+			ev.stopImmediatePropagation();
 		}
 	}
 
@@ -821,6 +822,8 @@ class ScrollableBaseNative extends Component {
 		if (this.props.updateEventListeners) {
 			this.props.updateEventListeners(childContainerRef);
 		}
+
+		document.body.addEventListener('keydown', this.onKeyDown);
 	}
 
 	removeEventListeners () {
@@ -840,6 +843,8 @@ class ScrollableBaseNative extends Component {
 		if (this.props.removeEventListeners) {
 			this.props.removeEventListeners(childContainerRef);
 		}
+
+		document.body.removeEventListener('keydown', this.onKeyDown);
 	}
 
 	// render
