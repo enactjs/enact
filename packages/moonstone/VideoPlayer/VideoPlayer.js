@@ -438,6 +438,14 @@ const VideoPlayerBase = class extends React.Component {
 		noSlider: PropTypes.bool,
 
 		/**
+		 * Removes spinner while loading.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		noSpinner: PropTypes.bool,
+
+		/**
 		 * Function executed when the user clicks the Backward button. Is passed
 		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
 		 *
@@ -1942,6 +1950,7 @@ const VideoPlayerBase = class extends React.Component {
 			jumpButtonsDisabled,
 			jumpForwardIcon,
 			leftComponents,
+			loading,
 			moreButtonCloseLabel,
 			moreButtonDisabled,
 			moreButtonLabel,
@@ -1950,6 +1959,7 @@ const VideoPlayerBase = class extends React.Component {
 			noMiniFeedback,
 			noRateButtons,
 			noSlider,
+			noSpinner,
 			pauseIcon,
 			playIcon,
 			rateButtonsDisabled,
@@ -1968,7 +1978,6 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.initialJumpDelay;
 		delete rest.jumpBy;
 		delete rest.jumpDelay;
-		delete rest.loading;
 		delete rest.miniFeedbackHideDelay;
 		delete rest.no5WayJump;
 		delete rest.onBackwardButtonClick;
@@ -2023,7 +2032,7 @@ const VideoPlayerBase = class extends React.Component {
 					bottomControlsVisible={this.state.mediaControlsVisible}
 					onClick={this.onVideoClick}
 				>
-					{this.state.loading || this.props.loading ? <Spinner centered /> : null}
+					{!noSpinner && (this.state.loading || loading) ? <Spinner centered /> : null}
 				</Overlay>
 
 				{this.state.bottomControlsRendered ?
@@ -2132,7 +2141,6 @@ const VideoPlayerBase = class extends React.Component {
 					// This captures spotlight focus for use with 5-way.
 					// It's non-visible but lives at the top of the VideoPlayer.
 					className={css.controlsHandleAbove}
-					onClick={this.showControls}
 					onKeyDown={this.handleKeyDown}
 					onSpotlightDown={this.showControls}
 					spotlightDisabled={this.state.mediaControlsVisible || spotlightDisabled}
