@@ -2,10 +2,10 @@
  * Provides unstyled virtual list components and behaviors to be customized by a theme or application.
  *
  * @module ui/VirtualList
- * @exports VirtualList
- * @exports VirtualGridList
- * @exports VirtualListBase
  * @exports gridListItemSizeShape
+ * @exports VirtualGridList
+ * @exports VirtualList
+ * @exports VirtualListBase
  */
 
 import classNames from 'classnames';
@@ -25,6 +25,7 @@ const nop = () => {};
  * @memberof ui/VirtualList
  * @property {Number} minWidth - The minimum width of the grid list item.
  * @property {Number} minHeight - The minimum height of the grid list item.
+ * @private
  */
 const gridListItemSizeShape = PropTypes.shape({
 	minWidth: PropTypes.number.isRequired,
@@ -38,21 +39,23 @@ const gridListItemSizeShape = PropTypes.shape({
  * @class VirtualListBase
  * @memberof ui/VirtualList
  * @ui
- * @public
+ * @private
  */
 class VirtualListBase extends Component {
 	static displayName = 'ui:VirtualListBase'
 
-	static propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
+	static propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 		/**
 		 * The `render` function for an item of the list receives the following parameters:
 		 * - `data` is for accessing the supplied `data` property of the list.
 		 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
-		 * is parameters due to performance optimizations
-		 * - `data-index` is required for Spotlight 5-way navigation. Pass to the root element in
+		 * is parameters due to performance optimizations.
+		 *
+		 * @param {Object} event
+		 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in
 		 *   the component.
-		 * - `index` is the index number of the componet to render
-		 * - `key` MUST be passed as a prop to the root element in the component for DOM recycling.
+		 * @param {Number} event.index The index number of the componet to render
+		 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
 		 *
 		 * Data manipulation can be done in this function.
 		 *
@@ -92,7 +95,7 @@ class VirtualListBase extends Component {
 		 * Normally, `Scrollable` should set this value.
 		 *
 		 * @type {Function}
-		 * @private
+		 * @public
 		 */
 		cbScrollTo: PropTypes.func,
 
@@ -130,7 +133,11 @@ class VirtualListBase extends Component {
 		dataSize: PropTypes.number,
 
 		/**
-		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
+		 * Direction of the list.
+		 *
+		 * Valid values are:
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
 		 *
 		 * @type {String}
 		 * @default 'vertical'
@@ -138,6 +145,12 @@ class VirtualListBase extends Component {
 		 */
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
+		/**
+		 * Return the props for the item of a list.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		getComponentProps: PropTypes.func,
 
 		/**
@@ -152,7 +165,7 @@ class VirtualListBase extends Component {
 		overhang: PropTypes.number,
 
 		/**
-		 * It scrolls by page when 'true', by item when 'false'
+		 * It scrolls by page when 'true', by item when 'false'.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -160,8 +173,21 @@ class VirtualListBase extends Component {
 		 */
 		pageScroll: PropTypes.bool,
 
+		/**
+		 * Render function.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		render: PropTypes.func,
 
+		/**
+		 * 'true' if rtl, 'false' if ltr.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
 		rtl: PropTypes.bool,
 
 		/**
@@ -173,6 +199,12 @@ class VirtualListBase extends Component {
 		 */
 		spacing: PropTypes.number,
 
+		/**
+		 * Called to execute additional logic in a theme component when updating states and bounds.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		updateStatesAndBounds: PropTypes.func
 	}
 
@@ -727,12 +759,12 @@ class VirtualListBase extends Component {
 }
 
 /**
- * A basic scrollable virtual list component with touch support.
+ * A unstyled scrollable virtual list component with touch support.
  *
  * @class VirtualList
- * @extends ui/VirtualList.VirtualListBase
  * @memberof ui/VirtualList
- * @mixes ui/Scrollable.Scrollable
+ * @extends ui/Scrollable.Scrollable
+ * @extends ui/VirtualList.VirtualListBase
  * @ui
  * @public
  */
@@ -751,11 +783,11 @@ const VirtualList = (props) => (
 );
 
 /**
- * A basic scrollable virtual grid list component with touch support.
+ * A unstyled scrollable virtual grid list component with touch support.
  *
  * @class VirtualGridList
- * @extends ui/VirtualList.VirtualListBase
  * @memberof ui/VirtualList
+ * @extends ui/VirtualList.VirtualListBase
  * @mixes ui/Scrollable.Scrollable
  * @ui
  * @public
@@ -764,8 +796,8 @@ const VirtualGridList = VirtualList;
 
 export default VirtualList;
 export {
-	VirtualList,
+	gridListItemSizeShape,
 	VirtualGridList,
-	VirtualListBase,
-	gridListItemSizeShape
+	VirtualList,
+	VirtualListBase
 };

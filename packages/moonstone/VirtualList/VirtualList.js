@@ -2,12 +2,12 @@
  * Provides Moonstone-themed virtual list components and behaviors.
  *
  * @module moonstone/VirtualList
- * @exports VirtualList
  * @exports VirtualGridList
- * @exports VirtualListBase
- * @exports VirtualListNative
  * @exports VirtualGridListNative
+ * @exports VirtualList
+ * @exports VirtualListBase
  * @exports VirtualListBaseNative
+ * @exports VirtualListNative
  */
 
 import clamp from 'ramda/src/clamp';
@@ -24,8 +24,17 @@ import {VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/Virtua
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
+/**
+ * A spottable div element.
+ *
+ * @class VirtualListBase
+ * @memberof moonstone/VirtualList
+ * @ui
+ * @private
+ */
+const SpotlightPlaceholder = Spottable('div');
+
 const
-	SpotlightPlaceholder = Spottable('div'),
 	SpotlightContainerConfig = {
 		enterTo: 'last-focused',
 		/*
@@ -58,9 +67,7 @@ const
 		},
 		preserveId: true,
 		restrict: 'self-first'
-	};
-
-const
+	},
 	dataContainerDisabledAttribute = 'data-container-disabled',
 	isDown = is('down'),
 	isLeft = is('left'),
@@ -70,11 +77,13 @@ const
 	Native = 'Native';
 
 /**
- * A moonstone-styled decorator component for
+ * A moonstone-styled base component for
  * [VirtualList]{@link moonstone/VirtualList.VirtualList} and [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
  *
- * @hoc
+ * @class VirtualListBase
  * @memberof moonstone/VirtualList
+ * @extends ui/VirtualList.VirtualListBase
+ * @extends ui/VirtualList.VirtualListBaseNative
  * @ui
  * @private
  */
@@ -101,6 +110,12 @@ const VirtualListBase = (type) => {
 			 */
 			'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types,
 
+			/**
+			 * The reference of [VirtualList]{@link ui/VirtualList.VirtualList}
+			 *
+			 * @type {Object}
+			 * @private
+			 */
 			initUiChildRef: PropTypes.func,
 
 			/**
@@ -111,6 +126,13 @@ const VirtualListBase = (type) => {
 			 */
 			render: PropTypes.func,
 
+			/**
+			 * 'true' if rtl, 'false' if ltr.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @private
+			 */
 			rtl: PropTypes.bool
 		}
 
@@ -696,7 +718,6 @@ const VirtualListBaseJS = VirtualListBase(JS);
 
 const VirtualListBaseNative = VirtualListBase(Native);
 
-
 const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 	<Scrollable
 		{...rest}
@@ -750,65 +771,69 @@ const ScrollableVirtualListNative = ({role, ...rest}) => (
 );
 
 /**
- * A moonstone-styled scrollable and spottable virtual list component.
+ * A Moonstone-styled scrollable and spottable virtual list component.
  *
  * @class VirtualList
  * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable.Scrollable
- * @mixes ui/Scrollable.Scrollable
+ * @mixes moonstone/Scrollable.SpotlightContainerDecorator
+ * @extends moonstone/VirtualList.SpotlightPlaceholder
+ * @extends moonstone/VirtualList.VirtualListBase
  * @ui
  * @public
  */
 const VirtualList = SpotlightContainerDecorator(SpotlightContainerConfig, ScrollableVirtualList);
 
 /**
- * A moonstone-styled scrollable and spottable virtual native list component.
+ * A Moonstone-styled scrollable and spottable virtual native list component.
  * For smooth native scrolling, web engine with below Chromium 61, should be launched
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
  *
  * @class VirtualListNative
  * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable.ScrollableNative
- * @mixes ui/Scrollable.ScrollableNative
+ * @mixes moonstone/Scrollable.SpotlightContainerDecorator
+ * @extends moonstone/VirtualList.SpotlightPlaceholder
+ * @extends moonstone/VirtualList.VirtualListBase
  * @ui
- * @public
+ * @private
  */
 const VirtualListNative = SpotlightContainerDecorator(SpotlightContainerConfig, ScrollableVirtualListNative);
 
 /**
- * A moonstone-styled scrollable and spottable virtual grid list component.
+ * A Moonstone-styled scrollable and spottable virtual grid list component.
  *
  * @class VirtualGridList
  * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable.Scrollable
- * @mixes ui/Scrollable.Scrollable
+ * @mixes moonstone/Scrollable.SpotlightContainerDecorator
+ * @extends moonstone/VirtualList.SpotlightPlaceholder
+ * @extends moonstone/VirtualList.VirtualListBase
  * @ui
  * @public
  */
 const VirtualGridList = VirtualList;
 
 /**
- * A moonstone-styled scrollable and spottable virtual grid native list component.
+ * A Moonstone-styled scrollable and spottable virtual grid native list component.
  * For smooth native scrolling, web engine with below Chromium 61, should be launched
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
  *
  * @class VirtualGridListNative
  * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable.ScrollableNative
- * @mixes ui/Scrollable.ScrollableNative
+ * @mixes moonstone/Scrollable.SpotlightContainerDecorator
+ * @extends moonstone/VirtualList.SpotlightPlaceholder
+ * @extends moonstone/VirtualList.VirtualListBase
  * @ui
- * @public
+ * @private
  */
 const VirtualGridListNative = VirtualListNative;
 
 export default VirtualList;
 export {
-	VirtualList,
-	VirtualGridList,
-	VirtualListNative,
-	VirtualGridListNative,
 	UiVirtualListBase as VirtualListBase,
-	UiVirtualListBaseNative as VirtualListBaseNative
+	UiVirtualListBaseNative as VirtualListBaseNative,
+	VirtualGridList,
+	VirtualGridListNative,
+	VirtualList,
+	VirtualListNative
 };
