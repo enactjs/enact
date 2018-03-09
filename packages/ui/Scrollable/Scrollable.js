@@ -63,6 +63,14 @@ class ScrollableBase extends Component {
 
 	static propTypes = /** @lends ui/Scrollable.Scrollable.prototype */ {
 		/**
+		 * Render function.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		containerRenderer: PropTypes.func.isRequired,
+
+		/**
 		 * Called when adding additional event listeners in a themed component.
 		 *
 		 * @type {Function}
@@ -230,14 +238,6 @@ class ScrollableBase extends Component {
 		 * @private
 		 */
 		removeEventListeners: PropTypes.func,
-
-		/**
-		 * Render function.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		render: PropTypes.func,
 
 		/**
 		 * Called to execute additional logic in a themed component when scrollTo is called.
@@ -1069,7 +1069,7 @@ class ScrollableBase extends Component {
 
 	render () {
 		const
-			{className, render, style, ...rest} = this.props,
+			{className, containerRenderer, style, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl} = this.state,
 			scrollableClasses = classNames(css.scrollable, className);
 
@@ -1088,10 +1088,8 @@ class ScrollableBase extends Component {
 		delete rest.stop;
 		delete rest.verticalScrollbar;
 
-		rest.rtl = rtl;
-
-		return render({
-			childComponentProps: rest,
+		return containerRenderer({
+			childComponentProps: {...rest, rtl},
 			className: scrollableClasses,
 			componentCss: css,
 			handleScroll: this.handleScroll,
@@ -1126,16 +1124,16 @@ class Scrollable extends Component {
 		 * @type {Function}
 		 * @private
 		 */
-		render: PropTypes.func
+		childRenderer: PropTypes.func.isRequired
 	}
 
 	render () {
-		const {render, ...rest} = this.props;
+		const {childRenderer, ...rest} = this.props;
 
 		return (
 			<ScrollableBase
 				{...rest}
-				render={({ // eslint-disable-line react/jsx-no-bind
+				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
 					childComponentProps,
 					className,
 					componentCss,
@@ -1155,7 +1153,7 @@ class Scrollable extends Component {
 						style={style}
 					>
 						<div className={componentCss.container}>
-							{render({
+							{childRenderer({
 								...childComponentProps,
 								cbScrollTo: scrollTo,
 								className: componentCss.content,

@@ -352,7 +352,7 @@ class ScrollerBase extends Component {
 const ScrollableScroller = (props) => (
 	<Scrollable
 		{...props}
-		render={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
 			<ScrollerBase {...scrollerProps} />
 		)}
 	/>

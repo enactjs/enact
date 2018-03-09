@@ -108,6 +108,14 @@ const VirtualListBase = (type) => {
 			component: PropTypes.func.isRequired,
 
 			/**
+			 * The render function for the items.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			itemsRenderer: PropTypes.func.isRequired,
+
+			/**
 			 * Spotlight container Id.
 			 *
 			 * @type {String}
@@ -123,14 +131,6 @@ const VirtualListBase = (type) => {
 			 * @private
 			 */
 			initUiChildRef: PropTypes.func,
-
-			/**
-			 * Render function.
-			 *
-			 * @type {Function}
-			 * @private
-			 */
-			render: PropTypes.func,
 
 			/**
 			 * `true` if rtl, `false` if ltr.
@@ -705,7 +705,7 @@ const VirtualListBase = (type) => {
 
 		render () {
 			const
-				{component, render, ...rest} = this.props,
+				{component, itemsRenderer, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
 			delete rest.initUiChildRef;
@@ -723,8 +723,8 @@ const VirtualListBase = (type) => {
 					getComponentProps={this.getComponentProps}
 					ref={this.initUiRef}
 					updateStatesAndBounds={this.updateStatesAndBounds}
-					render={(props) => { // eslint-disable-line react/jsx-no-bind
-						return render({
+					itemsRenderer={(props) => { // eslint-disable-line react/jsx-no-bind
+						return itemsRenderer({
 							...props,
 							handlePlaceholderFocus: this.handlePlaceholderFocus,
 							needsScrollingPlaceholder
@@ -763,10 +763,10 @@ const VirtualListBaseNative = VirtualListBase(Native);
 const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 	<Scrollable
 		{...rest}
-		render={(props) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseJS
 				{...props}
-				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
+				itemsRenderer={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
 						primary ?
@@ -799,10 +799,10 @@ ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.p
 const ScrollableVirtualListNative = ({role, ...rest}) => (
 	<ScrollableNative
 		{...rest}
-		render={(props) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...props}
-				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
+				itemsRenderer={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
 						primary ?

@@ -72,6 +72,14 @@ class ScrollableNative extends Component {
 
 	static propTypes = /** @lends moonstone/Scrollable.ScrollableBaseNative.prototype */ {
 		/**
+		 * Render function.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		childRenderer: PropTypes.func.isRequired,
+
+		/**
 		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
 		 * not move focus to the scrollbar controls.
 		 *
@@ -79,15 +87,7 @@ class ScrollableNative extends Component {
 		 * @default false
 		 * @public
 		 */
-		focusableScrollbar: PropTypes.bool,
-
-		/**
-		 * Render function.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		render: PropTypes.func
+		focusableScrollbar: PropTypes.bool
 	}
 
 	static defaultProps = {
@@ -496,7 +496,7 @@ class ScrollableNative extends Component {
 	}
 
 	render () {
-		const {focusableScrollbar, render, ...rest} = this.props;
+		const {focusableScrollbar, childRenderer, ...rest} = this.props;
 
 		return (
 			<UiScrollableBaseNative
@@ -510,7 +510,7 @@ class ScrollableNative extends Component {
 				scrollStopOnScroll={this.scrollStopOnScroll}
 				scrollTo={this.scrollTo}
 				start={this.start}
-				render={({ // eslint-disable-line react/jsx-no-bind
+				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
 					childComponentProps,
 					className,
 					componentCss,
@@ -530,7 +530,7 @@ class ScrollableNative extends Component {
 						style={style}
 					>
 						<div className={componentCss.container}>
-							{render({
+							{childRenderer({
 								...childComponentProps,
 								cbScrollTo: scrollTo,
 								className: componentCss.content,

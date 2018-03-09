@@ -42,6 +42,14 @@ class ScrollButtonsBase extends Component {
 
 	static propTypes = /** @lends moonstone/Scrollable.ScrollButtons.prototype */ {
 		/**
+		 * The render function for thumb.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		thumbRenderer: PropTypes.func.isRequired,
+
+		/**
 		 * Called to alert the user for accessibility notifications.
 		 *
 		 * @type {Function}
@@ -89,14 +97,6 @@ class ScrollButtonsBase extends Component {
 		 * @private
 		 */
 		onPrevSpotlightDisappear: PropTypes.func,
-
-		/**
-		 * Render function.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		render: PropTypes.func,
 
 		/**
 		 * Registers the ScrollButtons component with an
@@ -283,7 +283,7 @@ class ScrollButtonsBase extends Component {
 
 	render () {
 		const
-			{disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, render, vertical} = this.props,
+			{disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, thumbRenderer, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			prevIcon = preparePrevButton(vertical),
 			nextIcon = prepareNextButton(vertical);
@@ -304,7 +304,7 @@ class ScrollButtonsBase extends Component {
 			>
 				{prevIcon}
 			</ScrollButton>,
-			render(),
+			thumbRenderer(),
 			<ScrollButton
 				key="nextButton"
 				data-scroll-button="next"

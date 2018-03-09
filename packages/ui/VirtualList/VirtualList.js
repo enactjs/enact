@@ -91,6 +91,14 @@ class VirtualListBase extends Component {
 		]).isRequired,
 
 		/**
+		 * The render function for the items.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		itemsRenderer: PropTypes.func.isRequired,
+
+		/**
 		 * Callback method of scrollTo.
 		 * Normally, `[Scrollable]{@link ui/Scrollable.Scrollable}` should set this value.
 		 *
@@ -172,14 +180,6 @@ class VirtualListBase extends Component {
 		 * @private
 		 */
 		pageScroll: PropTypes.bool,
-
-		/**
-		 * Render function.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		render: PropTypes.func,
 
 		/**
 		 * `true` if rtl, `false` if ltr.
@@ -720,7 +720,7 @@ class VirtualListBase extends Component {
 
 	render () {
 		const
-			{render, ...rest} = this.props,
+			{itemsRenderer, ...rest} = this.props,
 			{firstIndex, numOfItems} = this.state,
 			{cc, primary} = this;
 
@@ -744,7 +744,7 @@ class VirtualListBase extends Component {
 
 		return (
 			<div {...rest} ref={this.initContainerRef}>
-				{render({
+				{itemsRenderer({
 					cc,
 					initItemContainerRef: (ref) => { // eslint-disable-line react/jsx-no-bind
 						this.itemContainerRef = ref;
@@ -769,10 +769,10 @@ class VirtualListBase extends Component {
 const VirtualList = (props) => (
 	<Scrollable
 		{...props}
-		render={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
 				{...virtualListProps}
-				render={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
 					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
 				)}
 			/>

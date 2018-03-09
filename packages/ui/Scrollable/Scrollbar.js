@@ -38,6 +38,14 @@ class ScrollbarBase extends PureComponent {
 
 	static propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
 		/**
+		 * The render function for child.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		childRenderer: PropTypes.func.isRequired,
+
+		/**
 		 * If `true`, add the corner between vertical and horizontal scrollbars.
 		 *
 		 * @type {Booelan}
@@ -58,14 +66,6 @@ class ScrollbarBase extends PureComponent {
 		 * @public
 		 */
 		css: PropTypes.object,
-
-		/**
-		 * Render function.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		render: PropTypes.func,
 
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
@@ -155,7 +155,7 @@ class ScrollbarBase extends PureComponent {
 
 	render () {
 		const
-			{className, corner, css, render, vertical, ...rest} = this.props,
+			{childRenderer, className, corner, css, vertical, ...rest} = this.props,
 			containerClassName = classNames(
 				className,
 				css.scrollbar,
@@ -167,7 +167,7 @@ class ScrollbarBase extends PureComponent {
 
 		return (
 			<div {...rest} className={containerClassName} ref={this.setContainerRef}>
-				{render({
+				{childRenderer({
 					getContainerRef: this.getContainerRef,
 					setScrollThumbRef: this.setScrollThumbRef
 				})}
@@ -218,7 +218,7 @@ class Scrollbar extends Component {
 			<ScrollbarBase
 				{...this.props}
 				ref={this.setApi}
-				render={({setScrollThumbRef}) => { // eslint-disable-line react/jsx-no-bind
+				childRenderer={({setScrollThumbRef}) => { // eslint-disable-line react/jsx-no-bind
 					return (
 						<ScrollThumb
 							setRef={setScrollThumbRef}

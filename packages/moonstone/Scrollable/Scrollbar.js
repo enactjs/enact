@@ -81,12 +81,12 @@ class Scrollbar extends Component {
 				css={componentCss}
 				ref={this.initScrollbarRef}
 				vertical={vertical}
-				render={({setScrollThumbRef}) => ( // eslint-disable-line react/jsx-no-bind
+				childRenderer={({setScrollThumbRef}) => ( // eslint-disable-line react/jsx-no-bind
 					<ScrollButtons
 						{...rest}
 						ref={this.initScrollButtonsRef}
 						vertical={vertical}
-						render={() => ( // eslint-disable-line react/jsx-no-bind
+						thumbRenderer={() => ( // eslint-disable-line react/jsx-no-bind
 							<ScrollThumb
 								cbAlertThumb={cbAlertThumb}
 								key="thumb"

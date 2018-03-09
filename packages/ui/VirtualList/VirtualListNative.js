@@ -82,6 +82,14 @@ class VirtualListBaseNative extends Component {
 		]).isRequired,
 
 		/**
+		 * The render function for the items.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		itemsRenderer: PropTypes.func.isRequired,
+
+		/**
 		 * Callback method of scrollTo.
 		 * Normally, [ScrollableNative]{@link ui/Scrollable.ScrollableNative} should set this value.
 		 *
@@ -163,14 +171,6 @@ class VirtualListBaseNative extends Component {
 		 * @private
 		 */
 		pageScroll: PropTypes.bool,
-
-		/**
-		 * Render function.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		render: PropTypes.func,
 
 		/**
 		 * `true` if rtl, `false` if ltr.
@@ -726,7 +726,7 @@ class VirtualListBaseNative extends Component {
 
 	render () {
 		const
-			{className, render, style, ...rest} = this.props,
+			{className, itemsRenderer, style, ...rest} = this.props,
 			{cc, primary} = this,
 			mergedClasses = classNames(css.list, this.containerClass, className);
 
@@ -751,7 +751,7 @@ class VirtualListBaseNative extends Component {
 		return (
 			<div className={mergedClasses} ref={this.initContainerRef} style={style}>
 				<div {...rest} ref={this.initContentRef}>
-					{render({cc, primary})}
+					{itemsRenderer({cc, primary})}
 				</div>
 			</div>
 		);
@@ -774,10 +774,10 @@ class VirtualListBaseNative extends Component {
 const VirtualListNative = (props) => (
 	<ScrollableNative
 		{...props}
-		render={(virtualListProps) => (// eslint-disable-line react/jsx-no-bind
+		childRenderer={(virtualListProps) => (// eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...virtualListProps}
-				render={({cc}) => (cc.length ? cc : null)} // eslint-disable-line react/jsx-no-bind
+				itemsRenderer={({cc}) => (cc.length ? cc : null)} // eslint-disable-line react/jsx-no-bind
 			/>
 		)}
 	/>
