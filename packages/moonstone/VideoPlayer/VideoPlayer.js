@@ -334,6 +334,14 @@ const VideoPlayerBase = class extends React.Component {
 		loading: PropTypes.bool,
 
 		/**
+		 * An object containing properties to be passed to media controls component.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		mediaControlsProps: PropTypes.Object,
+
+		/**
 		 * Amount of time (in milliseconds), after the last user action, that the `miniFeedback`
 		 * will automatically hide.
 		 * Setting this to 0 or `null` disables `miniFeedbackHideDelay`; `miniFeedback` will always
@@ -441,7 +449,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * Removes spinner while loading.
 		 *
 		 * @type {Boolean}
-		 * @private
+		 * @public
 		 */
 		noSpinner: PropTypes.bool,
 
@@ -1951,6 +1959,7 @@ const VideoPlayerBase = class extends React.Component {
 			jumpForwardIcon,
 			leftComponents,
 			loading,
+			mediaControlsProps,
 			moreButtonCloseLabel,
 			moreButtonDisabled,
 			moreButtonLabel,
@@ -2099,6 +2108,7 @@ const VideoPlayerBase = class extends React.Component {
 							</MediaSlider>}
 
 							<MediaControls
+								{...mediaControlsProps}
 								backwardIcon={backwardIcon}
 								forwardIcon={forwardIcon}
 								jumpBackwardIcon={jumpBackwardIcon}
