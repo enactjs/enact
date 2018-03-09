@@ -1,11 +1,3 @@
-/**
- * Provides unstyled native scroller components and behaviors to be customized by a theme or application.
- *
- * @module ui/Scroller
- * @exports ScrollerBaseNative
- * @exports ScrollerNative
- * @private
- */
 import React from 'react';
 
 import ScrollableNative from '../Scrollable/ScrollableNative';

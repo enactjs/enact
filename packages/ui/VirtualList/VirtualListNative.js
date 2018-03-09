@@ -1,13 +1,3 @@
-/**
- * Provides unstyled virtual list native components and behaviors to be customized by a theme or application.
- *
- * @module ui/VirtualList
- * @exports gridListItemSizeShape
- * @exports VirtualGridListNative
- * @exports VirtualListBaseNative
- * @exports VirtualListNative
- */
-
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';

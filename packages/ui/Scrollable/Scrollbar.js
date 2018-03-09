@@ -1,11 +1,3 @@
-/**
- * Provides unstyled scrollbar to be customized by a theme or application.
- *
- * @module ui/Scrollbar
- * @exports Scrollbar
- * @exports ScrollbarBase
- */
-
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';

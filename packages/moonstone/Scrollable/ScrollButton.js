@@ -1,11 +1,3 @@
-/**
- * Provides a Moonstone-themed scroll button in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
- *
- * @module moonstone/ScrollButton
- * @exports ScrollButton
- * @exports ScrollButtonBase
- */
-
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';

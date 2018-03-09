@@ -1,13 +1,3 @@
-/**
- * Provides unstyled scrollable native components and behaviors to be customized by a theme or application.
- *
- * @module ui/Scrollable
- * @exports constants
- * @exports ScrollableBaseNative
- * @exports ScrollableNative
- * @private
- */
-
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';

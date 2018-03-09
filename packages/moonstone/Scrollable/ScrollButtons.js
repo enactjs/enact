@@ -1,11 +1,3 @@
-/**
- * Provides Moonstone-themed scroll buttons in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
- *
- * @module moonstone/ScrollButtons
- * @exports ScrollButtons
- * @exports ScrollButtonsBase
- */
-
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {is} from '@enact/core/keymap';

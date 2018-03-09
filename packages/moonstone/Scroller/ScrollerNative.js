@@ -1,11 +1,3 @@
-/**
- * Provides Moonstone-themed native scroller components and behaviors.
- *
- * @module moonstone/Scroller
- * @exports ScrollerBaseNative
- * @exports ScrollerNative
- */
-
 import React from 'react';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 

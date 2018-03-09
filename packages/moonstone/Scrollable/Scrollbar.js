@@ -1,11 +1,3 @@
-/**
- * Provides Moonstone-themed scrollbar.
- *
- * @module moonstone/Scrollbar
- * @exports Scrollbar
- * @exports ScrollbarBase
- */
-
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';

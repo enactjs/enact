@@ -1,12 +1,3 @@
-/**
- * Provides Moonstone-themed scrollable native components and behaviors.
- *
- * @module moonstone/Scrollable
- * @exports dataIndexAttribute
- * @exports ScrollableNative
- * @private
- */
-
 import {constants, ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import PropTypes from 'prop-types';

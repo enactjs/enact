@@ -1,11 +1,3 @@
-/**
- * Provides a Moonstone-themed scroll thumb.
- *
- * @module moonstone/ScrollThumb
- * @exports ScrollThumb
- * @exports ScrollThumbBase
- */
-
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {ScrollThumb as UiScrollThumb} from '@enact/ui/Scrollable/Scrollbar';

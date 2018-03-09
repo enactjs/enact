@@ -1,11 +1,3 @@
-/**
- * Provides unstyled scroll thumb to be customized by a theme or application.
- *
- * @module ui/ScrollThumb
- * @exports ScrollThumb
- * @exports ScrollThumbBase
- */
-
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
