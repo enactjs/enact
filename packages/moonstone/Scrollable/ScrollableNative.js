@@ -526,6 +526,7 @@ class ScrollableNative extends Component {
 					initUiChildRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
+					scrollTo,
 					style,
 					verticalScrollbarProps
 				}) => (
@@ -538,7 +539,7 @@ class ScrollableNative extends Component {
 						<div className={componentCss.container}>
 							{render({
 								...childComponentProps,
-								cbScrollTo: this.scrollTo,
+								cbScrollTo: scrollTo,
 								className: componentCss.content,
 								initUiChildRef,
 								ref: this.initChildRef

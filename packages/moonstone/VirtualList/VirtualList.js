@@ -128,6 +128,12 @@ const VirtualListBase = (type) => {
 					containerNode.addEventListener('scroll', this.preventScroll);
 					containerNode.addEventListener('keydown', this.onKeyDown);
 				}
+			} else {
+				const contentNode = this.uiRef.contentRef;
+
+				if (contentNode && contentNode.addEventListener) {
+					contentNode.addEventListener('keydown', this.onKeyDown);
+				}
 			}
 		}
 
@@ -143,6 +149,12 @@ const VirtualListBase = (type) => {
 				if (containerNode && containerNode.removeEventListener) {
 					containerNode.removeEventListener('scroll', this.preventScroll);
 					containerNode.removeEventListener('keydown', this.onKeyDown);
+				}
+			} else {
+				const contentNode = this.uiRef.contentRef;
+
+				if (contentNode && contentNode.removeEventListener) {
+					contentNode.removeEventListener('keydown', this.onKeyDown);
 				}
 			}
 
