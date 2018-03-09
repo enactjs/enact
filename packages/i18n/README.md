@@ -1,4 +1,4 @@
-# @enact/i18n
+# @enact/i18n [![npm (scoped)](https://img.shields.io/npm/v/@enact/i18n.svg?style=flat-square)](https://www.npmjs.com/package/@enact/i18n)
 
 > Internationalization library based on iLib.
 
