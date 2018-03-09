@@ -273,16 +273,6 @@ class ExpandableInputBase extends React.Component {
 		}
 	}
 
-	handleMouseDown = (ev) => {
-		// if the contained <input> has focus, prevent onClicks so that clicking on the LabeledItem
-		// doesn't open the expandable immediately after blurring the <input> closed it.
-		if (ev.currentTarget.contains(document.activeElement)) {
-			ev.preventDefault();
-		}
-
-		forwardMouseDown(ev);
-	}
-
 	handleInputMouseDown = (ev) => {
 		// prevent onMouseDown events from the <input> itself from bubbling up to be prevented by
 		// handleMouseDown
@@ -333,7 +323,6 @@ class ExpandableInputBase extends React.Component {
 				disabled={disabled}
 				label={this.calcLabel()}
 				onClose={this.handleClose}
-				onMouseDown={this.handleMouseDown}
 				onSpotlightDisappear={onSpotlightDisappear}
 				showLabel={type === 'password' ? 'never' : 'auto'}
 				spotlightDisabled={spotlightDisabled}

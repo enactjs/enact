@@ -127,17 +127,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			// * current is neither the previous nor current node
 			if (current && prev && current !== this.state.node && current !== prev) {
 				this.blur();
-				return;
-			}
-
-			if (this.state.node) {
-				this.state.node.focus();
-			}
-
-			if (this.state.focused === 'input') {
-				this.paused.pause();
-			} else if (prevState.focused === 'input') {
-				this.paused.resume();
 			}
 		}
 
@@ -145,7 +134,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			if (this.state.focused === 'input') {
 				const {onSpotlightDisappear} = this.props;
 
-				Spotlight.resume();
+				this.paused.resume();
 
 				if (onSpotlightDisappear) {
 					onSpotlightDisappear();
@@ -154,13 +143,25 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		focus = (focused, node) => {
-			this.setState({focused, node});
+			this.setState({focused, node}, () => {
+				if (this.state.node) {
+					this.state.node.focus();
+				}
+
+				if (this.state.focused === 'input') {
+					this.paused.pause();
+				} else {
+					this.paused.resume();
+				}
+			});
 		}
 
 		blur = () => {
+			this.paused.resume();
+
 			this.setState((state) => (
-				state.focused || state.node ? {focused: null, node: null} : null)
-			);
+				state.focused || state.node ? {focused: null, node: null} : null
+			));
 		}
 
 		focusDecorator = (decorator) => {
@@ -261,7 +262,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					}
 
 					preventSpotlightNavigation(ev);
-					Spotlight.resume();
+					this.paused.resume();
 
 					// Move spotlight in the keypress direction, if there is no other spottable elements,
 					// focus `InputDecorator` instead
