@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
-import {Image} from '../Image';
+import {ImageBase as Image} from '../Image';
 import {Marquee, MarqueeController} from '../Marquee';
 import Skinnable from '../Skinnable';
 
