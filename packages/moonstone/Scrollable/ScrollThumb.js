@@ -1,3 +1,11 @@
+/**
+ * Provides Moonstone-themed scroll thumb.
+ *
+ * @module moonstone/ScrollThumb
+ * @exports ScrollThumb
+ * @exports ScrollThumbBase
+ */
+
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {ScrollThumb as UiScrollThumb} from '@enact/ui/Scrollable/Scrollbar';
@@ -5,10 +13,11 @@ import {ScrollThumb as UiScrollThumb} from '@enact/ui/Scrollable/Scrollbar';
 const nop = () => {};
 
 /**
- * A moonstone themed scroll thumb with moonstone behavior
+ * A Moonstone-themed scroll thumb with moonstone behavior
  *
  * @class ScrollThumb
  * @memberof moonstone/Scrollable
+ * @extends ui/Scrollable/ScrollThumb
  * @ui
  * @private
  */
@@ -44,5 +53,6 @@ class ScrollThumb extends Component {
 
 export default ScrollThumb;
 export {
-	ScrollThumb
+	ScrollThumb,
+	ScrollThumb as ScrollThumbBase
 };

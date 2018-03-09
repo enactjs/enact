@@ -1,13 +1,22 @@
+/**
+ * Provides Moonstone-themed scrollbar.
+ *
+ * @module moonstone/Scrollbar
+ * @exports Scrollbar
+ * @exports ScrollbarBase
+ */
+
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
 
-import componentCss from './Scrollbar.less';
 import ScrollButtons from './ScrollButtons';
 import ScrollThumb from './ScrollThumb';
 
+import componentCss from './Scrollbar.less';
+
 /**
- * A moonstone-styled scroll bar. It is used in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
+ * A Moonstone-styled scroll bar. It is used in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
  *
  * @class Scrollbar
  * @memberof moonstone/Scrollable
@@ -15,7 +24,7 @@ import ScrollThumb from './ScrollThumb';
  * @private
  */
 class Scrollbar extends Component {
-	static propTypes = /** @lends moonstone/Scrollable.Scrlllbar.prototype */ {
+	static propTypes = /** @lends moonstone/Scrollable.Scrollbar.prototype */ {
 		/**
 		 * The callback function which is called for linking alertThumb function.
 		 *
@@ -28,6 +37,7 @@ class Scrollbar extends Component {
 		 * If `true`, add the corner between vertical and horizontal scrollbars.
 		 *
 		 * @type {Booelan}
+		 * @default false
 		 * @public
 		 */
 		corner: PropTypes.bool,
@@ -40,6 +50,11 @@ class Scrollbar extends Component {
 		 * @public
 		 */
 		vertical: PropTypes.bool
+	}
+
+	static defaultProps = {
+		corner: false,
+		vertical: true
 	}
 
 	render () {
@@ -92,5 +107,6 @@ class Scrollbar extends Component {
 
 export default Scrollbar;
 export {
-	Scrollbar
+	Scrollbar,
+	Scrollbar as ScrollbarBase
 };

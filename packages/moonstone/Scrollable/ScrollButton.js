@@ -1,3 +1,11 @@
+/**
+ * Provides a Moonstone-themed scroll button in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
+ *
+ * @module moonstone/ScrollButton
+ * @exports ScrollButton
+ * @exports ScrollButtonBase
+ */
+
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -24,9 +32,9 @@ const classNameMap = {
  * @private
  */
 const ScrollButtonBase = kind({
-	name: 'ScrollButton',
+	name: 'ScrollButtonBase',
 
-	propTypes: /** @lends moonstone/Scrollable.ScrollButtonBase.prototype */ {
+	propTypes: /** @lends moonstone/Scrollable.ScrollButton.prototype */ {
 		/**
 		 * Name of icon
 		 *
@@ -36,7 +44,13 @@ const ScrollButtonBase = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * Scroll direction for this button (down, left, right, or up)
+		 * Scroll direction for this button.
+		 *
+		 * Valid values are:
+		 * * `'down'`,
+		 * * `'left'`,
+		 * * `'right'`, and
+		 * * `'up'`.
 		 *
 		 * @type {String}
 		 * @public
@@ -111,6 +125,7 @@ const ScrollButtonBase = kind({
  *
  * @class ScrollButton
  * @memberof moonstone/Scrollable
+ * @mixins ui/Toggleable
  * @ui
  * @private
  */

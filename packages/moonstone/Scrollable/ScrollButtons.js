@@ -1,3 +1,11 @@
+/**
+ * Provides Moonstone-themed scroll buttons in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
+ *
+ * @module moonstone/ScrollButtons
+ * @exports ScrollButtons
+ * @exports ScrollButtonsBase
+ */
+
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {is} from '@enact/core/keymap';
@@ -30,7 +38,7 @@ const
 	isPageDown = is('pageDown');
 
 /**
- * A moonstone-styled component for [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
+ * A moonstone-styled base component for [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
  *
  * @class ScrollButtonsBase
  * @memberof moonstone/Scrollable
@@ -40,15 +48,7 @@ const
 class ScrollButtonsBase extends Component {
 	static displayName = 'ScrollButtonsBase'
 
-	static propTypes = /** @lends moonstone/Scrollable.ScrollButtonsBase.prototype */ {
-		/**
-		 * Render function for children
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		render: PropTypes.func.isRequired,
-
+	static propTypes = /** @lends moonstone/Scrollable.ScrollButtons.prototype */ {
 		/**
 		 * Can be called to alert the user for accessibility notifications.
 		 *
@@ -97,6 +97,14 @@ class ScrollButtonsBase extends Component {
 		 * @private
 		 */
 		onPrevSpotlightDisappear: PropTypes.func,
+
+		/**
+		 * Render function for children
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		render: PropTypes.func,
 
 		/**
 		 * Registers the ScrollButtons component with an
@@ -327,6 +335,8 @@ class ScrollButtonsBase extends Component {
  *
  * @class ScrollButtons
  * @memberof moonstone/Scrollable
+ * @mixins ui/AnnounceDecorator
+ * @mixins moonstone/internal/DisappearSpotlightDecorator
  * @ui
  * @private
  */

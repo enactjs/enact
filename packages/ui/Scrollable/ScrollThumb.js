@@ -1,3 +1,11 @@
+/**
+ * Provides unstyled scroll thumb to be customized by a theme or application.
+ *
+ * @module ui/ScrollThumb
+ * @exports ScrollThumb
+ * @exports ScrollThumbBase
+ */
+
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -5,7 +13,7 @@ import PropTypes from 'prop-types';
 import css from './ScrollThumb.less';
 
 /**
- * A basic scroll thumb without any behavior.
+ * A unstyled scroll thumb without any behavior.
  *
  * @class ScrollThumb
  * @memberof ui/Scrollable
@@ -20,6 +28,7 @@ const ScrollThumb = kind({
 		 * The function to pass a wrapped ref.
 		 *
 		 * @type {Function}
+		 * @default null
 		 * @public
 		 */
 		setRef: PropTypes.func,
@@ -28,6 +37,7 @@ const ScrollThumb = kind({
 		 * If `true`, the scrollbar will be oriented vertically.
 		 *
 		 * @type {Boolean}
+		 * @default true
 		 * @public
 		 */
 		vertical: PropTypes.bool
@@ -56,5 +66,6 @@ const ScrollThumb = kind({
 
 export default ScrollThumb;
 export {
-	ScrollThumb
+	ScrollThumb,
+	ScrollThumb as ScrollThumbBase
 };

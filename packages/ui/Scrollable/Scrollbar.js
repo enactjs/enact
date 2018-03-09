@@ -1,3 +1,11 @@
+/**
+ * Provides unstyled scrollbar to be customized by a theme or application.
+ *
+ * @module ui/Scrollbar
+ * @exports Scrollbar
+ * @exports ScrollbarBase
+ */
+
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
@@ -5,8 +13,9 @@ import React, {PureComponent, Component} from 'react';
 
 import ri from '../resolution';
 
-import componentCss from './Scrollbar.less';
 import ScrollThumb from './ScrollThumb';
+
+import componentCss from './Scrollbar.less';
 
 const
 	minThumbSize = 18, // Size in pixels
@@ -25,7 +34,7 @@ const setCSSVariable = (element, variable, value) => {
 };
 
 /**
- * A basic scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
+ * A unstyled base component for a scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
  *
  * @class ScrollbarBase
  * @memberof ui/Scrollable
@@ -37,17 +46,10 @@ class ScrollbarBase extends PureComponent {
 
 	static propTypes = /** @lends ui/Scrollable.ScrollbarBase.prototype */ {
 		/**
-		 * Render function for children
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		render: PropTypes.func.isRequired,
-
-		/**
 		 * If `true`, add the corner between vertical and horizontal scrollbars.
 		 *
 		 * @type {Booelan}
+		 * @default false
 		 * @public
 		 */
 		corner: PropTypes.bool,
@@ -64,6 +66,14 @@ class ScrollbarBase extends PureComponent {
 		 * @public
 		 */
 		css: PropTypes.object,
+
+		/**
+		 * Render function for children.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		render: PropTypes.func,
 
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
@@ -175,7 +185,7 @@ class ScrollbarBase extends PureComponent {
 }
 
 /**
- * A basic scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
+ * A unstyled scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
  *
  * @class Scrollbar
  * @memberof ui/Scrollable
