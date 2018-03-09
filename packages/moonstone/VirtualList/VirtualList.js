@@ -643,7 +643,7 @@ const VirtualListBase = (type) => {
 				(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
 				// If we need to restore last focus and the index is beyond the screen,
 				// we call `scrollTo` to create DOM for it.
-				cbScrollTo({index: preservedIndex, animate: false});
+				cbScrollTo({index: preservedIndex, animate: false, focus: true});
 
 				return true;
 			} else {
