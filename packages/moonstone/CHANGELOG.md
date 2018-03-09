@@ -4,9 +4,18 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/VideoPlayer` properties `noSpinner` and `mediaControlsProps`
+
+### Changed
+
+- `moonstone/VideoPlayer` to disable play/pause button when media controls are disabled
+
 ### Fixed
 
 - `moonstone/ExpandableItem` to be more performant when animating
+- `moonstone/VideoPlayer` to correctly adjust spaces when number of components change in `leftComponents` and `rightComponents`
 
 ## [2.0.0-alpha.5] - 2018-03-07
 
