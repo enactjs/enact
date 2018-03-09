@@ -610,7 +610,7 @@ const Spotlight = (function () {
 					target = getTargetByContainer(elem);
 					wasContainerId = true;
 				} else {
-					target = getTargetBySelector(elem);
+					target = getTargetBySelector(`[data-spotlight-id="${elem}"], ${elem}`);
 				}
 			}
 
@@ -720,7 +720,7 @@ const Spotlight = (function () {
 				return false;
 			}
 
-			return matchSelector('[data-container-muted="true"] .' + spottableClass, elem);
+			return matchSelector('[data-spotlight-container-muted="true"] .' + spottableClass, elem);
 		},
 
 		/**

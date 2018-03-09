@@ -69,7 +69,7 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.containerNode.contains(current) || document.activeElement === document.body) {
 				const contents = this.containerNode.querySelector('[data-expandable-container]');
 				if (contents && !this.props.noAutoFocus && !contents.contains(current)) {
-					Spotlight.focus(contents.dataset.containerId);
+					Spotlight.focus(contents.dataset.spotlightId);
 				}
 			}
 		}

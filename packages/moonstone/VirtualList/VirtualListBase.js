@@ -23,7 +23,7 @@ import css from './ListItem.less';
 const SpotlightPlaceholder = Spottable('div');
 
 const
-	dataContainerDisabledAttribute = 'data-container-disabled',
+	dataContainerDisabledAttribute = 'data-spotlight-container-disabled',
 	forwardKeyDown = forward('onKeyDown'),
 	nop = () => {},
 	isDown = is('down'),
@@ -139,7 +139,7 @@ class VirtualListCore extends Component {
 		 * @type {String}
 		 * @private
 		 */
-		'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types
+		'data-spotlight-id': PropTypes.string, // eslint-disable-line react/sort-prop-types
 
 		/**
 		 * Size of the data.
@@ -344,9 +344,9 @@ class VirtualListCore extends Component {
 			this.restoreLastFocused &&
 			!this.isPlaceholderFocused()
 		) {
-			const containerId = this.props['data-container-id'];
+			const containerId = this.props['data-spotlight-id'];
 			const node = this.containerRef.querySelector(
-				`[data-container-id="${containerId}"] [data-index="${this.preservedIndex}"]`
+				`[data-spotlight-id="${containerId}"] [data-index="${this.preservedIndex}"]`
 			);
 
 			if (node) {
@@ -831,7 +831,7 @@ class VirtualListCore extends Component {
 	}
 
 	setRestrict = (bool) => {
-		Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
+		Spotlight.set(this.props['data-spotlight-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
 	}
 
 	setSpotlightContainerRestrict = (keyCode, target) => {

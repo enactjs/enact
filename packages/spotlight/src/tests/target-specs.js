@@ -61,7 +61,7 @@ const scenarios = {
 				someSpottables(3),
 				container({
 					[containerAttribute]: 'third-container',
-					'data-container-disabled': true,
+					'data-spotlight-container-disabled': true,
 					children: join(
 						someSpottables(4),
 						node({id: 'child-of-third'})

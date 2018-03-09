@@ -107,7 +107,7 @@ const ViewportBase = class extends React.Component {
 
 	mapChildren = (children, generateId) => React.Children.map(children, (child, index) => {
 		return React.cloneElement(child, {
-			containerId: child.props.containerId || generateId(index, 'panel-container', Spotlight.remove),
+			spotlightId: child.props.spotlightId || generateId(index, 'panel-container', Spotlight.remove),
 			'data-index': index
 		});
 	})

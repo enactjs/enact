@@ -13,11 +13,12 @@ import last from 'ramda/src/last';
 
 import {matchSelector} from './utils';
 
-const containerAttribute = 'data-container-id';
+const containerAttribute = 'data-spotlight-id';
 const containerConfigs   = new Map();
-const containerKey       = 'containerId';
+const containerKey       = 'spotlightId';
+const disabledKey        = 'spotlightContainerDisabled';
 const containerPrefix    = 'container-';
-const containerSelector  = `[${containerAttribute}]`;
+const containerSelector  = '[data-spotlight-container]';
 const rootContainerId    = 'spotlightRootDecorator';
 const reverseDirections = {
 	'left': 'right',
@@ -174,7 +175,7 @@ const isContainer = (nodeOrId) => {
  */
 const isContainerEnabled = (node) => {
 	return mapContainers(node, container => {
-		return container.dataset.containerDisabled !== 'true';
+		return container.dataset[disabledKey] !== 'true';
 	}).reduce(and, true);
 };
 
@@ -292,7 +293,7 @@ const getSpottableDescendants = (containerId) => {
 	const subContainerSelector = getSubContainerSelector(node);
 	const candidates = querySelector(
 		node,
-		`${spottableSelector}, ${getContainerSelector(node)} ${containerSelector}:not([data-container-disabled="true"])`,
+		`${spottableSelector}, ${getContainerSelector(node)} ${containerSelector}:not([data-spotlight-container-disabled="true"])`,
 		`${subContainerSelector} ${spottableSelector}, ${subContainerSelector} ${containerSelector}`
 	);
 
@@ -547,7 +548,7 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	const containerNode = getContainerNode(containerId);
-	if (containerNode !== document && containerNode.dataset.containerDisabled === 'true') {
+	if (containerNode !== document && containerNode.dataset[disabledKey] === 'true') {
 		return false;
 	}
 

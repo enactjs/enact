@@ -612,10 +612,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				}
 				const
 					containerId = (
-						// ScrollerNative has a containerId on containerRef
-						childRef.containerRef.dataset.containerId ||
-						// VirtualListNative has a containerId on contentRef
-						childRef.contentRef.dataset.containerId
+						// ScrollerNative has a spotlightId on containerRef
+						childRef.containerRef.dataset.spotlightId ||
+						// VirtualListNative has a spotlightId on contentRef
+						childRef.contentRef.dataset.spotlightId
 					),
 					direction = this.getPageDirection(keyCode),
 					rDirection = reverseDirections[direction],
@@ -655,7 +655,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			if (!current || Spotlight.getPointerMode()) {
 				const containerId = Spotlight.getActiveContainer();
-				current = document.querySelector(`[data-container-id="${containerId}"]`);
+				current = document.querySelector(`[data-spotlight-id="${containerId}"]`);
 			}
 
 			return current && this.containerRef.contains(current);
