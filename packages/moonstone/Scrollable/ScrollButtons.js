@@ -30,7 +30,7 @@ const
 	isPageDown = is('pageDown');
 
 /**
- * A moonstone-styled component for [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
+ * A Moonstone-styled base component for [ScrollButtons]{@link moonstone/Scrollable.ScrollButtons}.
  *
  * @class ScrollButtonsBase
  * @memberof moonstone/Scrollable
@@ -40,17 +40,17 @@ const
 class ScrollButtonsBase extends Component {
 	static displayName = 'ScrollButtonsBase'
 
-	static propTypes = /** @lends moonstone/Scrollable.ScrollButtonsBase.prototype */ {
+	static propTypes = /** @lends moonstone/Scrollable.ScrollButtons.prototype */ {
 		/**
-		 * Render function for children
+		 * The render function for thumb.
 		 *
 		 * @type {Function}
 		 * @private
 		 */
-		render: PropTypes.func.isRequired,
+		thumbRenderer: PropTypes.func.isRequired,
 
 		/**
-		 * Can be called to alert the user for accessibility notifications.
+		 * Called to alert the user for accessibility notifications.
 		 *
 		 * @type {Function}
 		 * @public
@@ -263,9 +263,27 @@ class ScrollButtonsBase extends Component {
 		}
 	}
 
+	initAnnounceRef = (ref) => {
+		if (ref) {
+			this.announce = ref.announce;
+		}
+	}
+
+	initNextButtonRef = (ref) => {
+		if (ref) {
+			this.nextButtonElement = ref;
+		}
+	}
+
+	initPrevButtonRef = (ref) => {
+		if (ref) {
+			this.prevButtonElement = ref;
+		}
+	}
+
 	render () {
 		const
-			{disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, render, vertical} = this.props,
+			{disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, thumbRenderer, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			prevIcon = preparePrevButton(vertical),
 			nextIcon = prepareNextButton(vertical);
@@ -282,15 +300,11 @@ class ScrollButtonsBase extends Component {
 				onKeyUp={this.releaseButton}
 				onMouseDown={this.depressButton}
 				onSpotlightDisappear={onPrevSpotlightDisappear}
-				ref={(ref) => { // eslint-disable-line react/jsx-no-bind
-					if (ref) {
-						this.prevButtonElement = ref;
-					}
-				}}
+				ref={this.initPrevButtonRef}
 			>
 				{prevIcon}
 			</ScrollButton>,
-			render(),
+			thumbRenderer(),
 			<ScrollButton
 				key="nextButton"
 				data-scroll-button="next"
@@ -302,31 +316,26 @@ class ScrollButtonsBase extends Component {
 				onKeyUp={this.releaseButton}
 				onMouseDown={this.depressButton}
 				onSpotlightDisappear={onNextSpotlightDisappear}
-				ref={(ref) => { // eslint-disable-line react/jsx-no-bind
-					if (ref) {
-						this.nextButtonElement = ref;
-					}
-				}}
+				ref={this.initNextButtonRef}
 			>
 				{nextIcon}
 			</ScrollButton>,
 			<Announce
 				key="announce"
-				ref={(ref) => { // eslint-disable-line react/jsx-no-bind
-					if (ref) {
-						this.announce = ref.announce;
-					}
-				}}
+				ref={this.initAnnounceRef}
 			/>
 		];
 	}
 }
 
 /**
- * A moonstone-styled scroll bar. It is used in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
+ * A Moonstone-styled scroll buttons. It is used in [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
  *
  * @class ScrollButtons
  * @memberof moonstone/Scrollable
+ * @mixins ui/ApiDecorator
+ * @mixins moonstone/internal/DisappearSpotlightDecorator
+ * @extends moonstone/Scrollable.ScrollButtonsBase
  * @ui
  * @private
  */

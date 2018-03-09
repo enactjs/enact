@@ -1,13 +1,3 @@
-/**
- * Provides unstyled scrollable native components and behaviors to be customized by a theme or application.
- *
- * @module ui/Scrollable
- * @exports ScrollableNative
- * @exports constants
- * @exports ScrollableBaseNative
- * @private
- */
-
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
@@ -21,8 +11,9 @@ import React, {Component} from 'react';
 import {contextTypes as contextTypesResize} from '../Resizable';
 import ri from '../resolution';
 
-import css from './Scrollable.less';
 import Scrollbar from './Scrollbar';
+
+import css from './Scrollable.less';
 
 const
 	constants = {
@@ -45,9 +36,9 @@ const
 	} = constants;
 
 /**
- * A Higher-order Component that applies a ScrollableNative behavior to its wrapped component.
+ * An unstyled native component that passes scrollable behavior information as its render prop's arguments.
  *
- * @class ScrollableNative
+ * @class ScrollableBaseNative
  * @memberof ui/Scrollable
  * @ui
  * @private
@@ -55,7 +46,23 @@ const
 class ScrollableBaseNative extends Component {
 	static displayName = 'ui:ScrollableNative'
 
-	static propTypes = /** @lends ui/Scrollable.ScrollableBaseNative.prototype */ {
+	static propTypes = /** @lends ui/Scrollable.ScrollableNative.prototype */ {
+		/**
+		 * Render function.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		containerRenderer: PropTypes.func.isRequired,
+
+		/**
+		 * Called when adding additional event listeners in a themed component.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		addEventListeners: PropTypes.func,
+
 		/**
 		 * A callback function that receives a reference to the `scrollTo` feature. Once received,
 		 * the `scrollTo` method can be called as an imperative interface.
@@ -82,14 +89,19 @@ class ScrollableBaseNative extends Component {
 		 *	// You can simply call like below;
 		 *	this.scrollTo({align: 'top'}); // scroll to the top
 		 * ```
+		 *
 		 * @type {Function}
 		 * @public
 		 */
 		cbScrollTo: PropTypes.func,
 
 		/**
-		 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
-		 * `'visible'`, and `'hidden'`.
+		 * Specifies how to show horizontal scrollbar.
+		 *
+		 * Valid values are:
+		 * * `'auto'`,
+		 * * `'visible'`, and
+		 * * `'hidden'`.
 		 *
 		 * @type {String}
 		 * @default 'auto'
@@ -97,23 +109,39 @@ class ScrollableBaseNative extends Component {
 		 */
 		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
+		/**
+		 * Called when pressing a key.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		onKeyDown: PropTypes.func,
 
+		/**
+		 * Called when trigerring a mouseup event.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		onMouseDown: PropTypes.func,
 
 		/**
-		 * Called when scrolling
-		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
-		 * It is not recommended to set this prop since it can cause performance degradation. Use
-		 * `onScrollStart` or `onScrollStop` instead.
+		 * Called when scrolling.
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+		 * It is not recommended to set this prop since it can cause performance degradation.
+		 * Use `onScrollStart` or `onScrollStop` instead.
 		 *
 		 * @type {Function}
+		 * @param {Object} event
+		 * @param {Number} event.scrollLeft Scroll left value.
+		 * @param {Number} event.scrollTop Scroll top value.
+		 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
 		 * @public
 		 */
 		onScroll: PropTypes.func,
 
 		/**
-		 * Called when scrollbar visibility changes
+		 * Called when scrollbar visibility changes.
 		 *
 		 * @type {Function}
 		 * @private
@@ -121,55 +149,120 @@ class ScrollableBaseNative extends Component {
 		onScrollbarVisibilityChange: PropTypes.func,
 
 		/**
-		 * Called when scroll starts
-		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * Called when scroll starts.
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+		 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
+		 *
+		 * Example:
+		 * ```
+		 * onScrollStart = ({scrollLeft, scrollTop, moreInfo}) => {
+    	 *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+    	 *     // do something with firstVisibleIndex and lastVisibleIndex
+		 * }
+		 *
+		 * render = () => (
+		 *     <VirtualList
+		 *         ...
+		 *         onScrollStart={this.onScrollStart}
+		 *         ...
+		 *     />
+		 * )
+		 * ```
 		 *
 		 * @type {Function}
+		 * @param {Object} event
+		 * @param {Number} event.scrollLeft Scroll left value.
+		 * @param {Number} event.scrollTop Scroll top value.
+		 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
 		 * @public
 		 */
 		onScrollStart: PropTypes.func,
 
 		/**
-		 * Called when scroll stops
-		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * Called when scroll stops.
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+		 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
+		 *
+		 * Example:
+		 * ```
+		 * onScrollStop = ({scrollLeft, scrollTop, moreInfo}) => {
+    	 *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+    	 *     // do something with firstVisibleIndex and lastVisibleIndex
+		 * }
+		 *
+		 * render = () => (
+		 *     <VirtualList
+		 *         ...
+		 *         onScrollStop={this.onScrollStop}
+		 *         ...
+		 *     />
+		 * )
+		 * ```
 		 *
 		 * @type {Function}
+		 * @param {Object} event
+		 * @param {Number} event.scrollLeft Scroll left value.
+		 * @param {Number} event.scrollTop Scroll top value.
+		 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
 		 * @public
 		 */
 		onScrollStop: PropTypes.func,
 
+		/**
+		 * Called when wheeling.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		onWheel: PropTypes.func,
 
+		/**
+		 * Called when removing additional event listeners in a theme component.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		removeEventListeners: PropTypes.func,
 
 		/**
-		 * Render function for Scrollable
+		 * Called to execute additional logic in a themed component after scrolling.
 		 *
 		 * @type {Function}
-		 * @public
+		 * @private
 		 */
-		render: PropTypes.func,
-
 		scrollStopOnScroll: PropTypes.func,
 
+		/**
+		 * Called to execute additional logic in a themed component when scrollTo is called.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		scrollTo: PropTypes.func,
 
+		/**
+		 * Called to execute additional logic in a themed component when scroll starts.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		start: PropTypes.func,
 
 		/**
-		 * Scrollable CSS style.
-		 * Should be defined because we manuplate style prop in render().
+		 * ScrollableNative CSS style.
+		 * Should be defined because we manipulate style prop in render().
 		 *
 		 * @type {Object}
 		 * @public
 		 */
 		style: PropTypes.object,
 
-		updateEventListeners: PropTypes.func,
-
 		/**
-		 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
-		 * `'visible'`, and `'hidden'`.
+		 * Specifies how to show vertical scrollbar.
+		 * Valid values are:
+		 * * `'auto'`,
+		 * * `'visible'`, and
+		 * * `'hidden'`.
 		 *
 		 * @type {String}
 		 * @default 'auto'
@@ -192,9 +285,7 @@ class ScrollableBaseNative extends Component {
 		...contextTypesState
 	}
 
-	static contextTypes = {
-		...contextTypesState
-	}
+	static contextTypes = contextTypesState
 
 	constructor (props) {
 		super(props);
@@ -206,17 +297,14 @@ class ScrollableBaseNative extends Component {
 			isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
 		};
 
-		this.initChildRef = this.initRef('childRef');
-		this.initContainerRef = this.initRef('containerRef');
-
-		this.verticalScrollbarProps = {
-			ref: this.initRef('verticalScrollbarRef'),
-			vertical: true
+		this.horizontalScrollbarProps = {
+			ref: this.initHorizontalScrollbarRef,
+			vertical: false
 		};
 
-		this.horizontalScrollbarProps = {
-			ref: this.initRef('horizontalScrollbarRef'),
-			vertical: false
+		this.verticalScrollbarProps = {
+			ref: this.initVerticalScrollbarRef,
+			vertical: true
 		};
 
 		props.cbScrollTo(this.scrollTo);
@@ -244,9 +332,9 @@ class ScrollableBaseNative extends Component {
 
 		this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 		this.direction = this.childRef.props.direction;
+		this.addEventListeners();
 		this.updateScrollbars();
 
-		this.updateEventListeners();
 		on('keydown', this.onKeyDown);
 	}
 
@@ -269,7 +357,7 @@ class ScrollableBaseNative extends Component {
 		}
 
 		this.direction = this.childRef.props.direction;
-		this.updateEventListeners();
+		this.addEventListeners();
 		if (
 			hasDataSizeChanged === false &&
 			(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
@@ -282,11 +370,7 @@ class ScrollableBaseNative extends Component {
 
 		if (this.scrollToInfo !== null) {
 			if (!this.deferScrollTo) {
-				if (this.props.scrollTo) {
-					this.props.scrollTo(this.scrollToInfo);
-				} else {
-					this.scrollTo(this.scrollToInfo);
-				}
+				this.scrollTo(this.scrollToInfo);
 			}
 		}
 
@@ -334,6 +418,7 @@ class ScrollableBaseNative extends Component {
 			this.publisher.publish(message);
 		}
 	}
+
 	// constants
 	pixelPerLine = 39
 	scrollWheelMultiplierForDeltaPixel = 1.5 // The ratio of wheel 'delta' units to pixels scrolled.
@@ -463,7 +548,7 @@ class ScrollableBaseNative extends Component {
 			this.scrollStartOnScroll();
 		}
 
-		if (this.context.rtl && canScrollHorizontally) {
+		if (this.state.rtl && canScrollHorizontally) {
 			/* FIXME: RTL / this calculation only works for Chrome */
 			scrollLeft = bounds.maxLeft - scrollLeft;
 		}
@@ -673,10 +758,10 @@ class ScrollableBaseNative extends Component {
 	}
 
 	scrollTo = (opt) => {
-		const {scrollTo} = this.props;
-
 		if (!this.deferScrollTo) {
-			const {left, top} = this.getPositionForScrollTo(opt);
+			const
+				{left, top} = this.getPositionForScrollTo(opt),
+				{scrollTo} = this.props;
 
 			if (scrollTo) {
 				scrollTo(opt);
@@ -807,7 +892,7 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
-	updateEventListeners () {
+	addEventListeners () {
 		const
 			{containerRef} = this,
 			childContainerRef = this.childRef.containerRef;
@@ -823,8 +908,8 @@ class ScrollableBaseNative extends Component {
 
 		childContainerRef.style.scrollBehavior = 'smooth';
 
-		if (this.props.updateEventListeners) {
-			this.props.updateEventListeners(childContainerRef);
+		if (this.props.addEventListeners) {
+			this.props.addEventListeners(childContainerRef);
 		}
 	}
 
@@ -849,18 +934,37 @@ class ScrollableBaseNative extends Component {
 
 	// render
 
-	initRef = (prop) => {
-		return (ref) => {
-			this[prop] = ref;
-		};
+	initChildRef = (ref) => {
+		if (ref) {
+			this.childRef = ref;
+		}
+	}
+
+	initContainerRef = (ref) => {
+		if (ref) {
+			this.containerRef = ref;
+		}
+	}
+
+	initHorizontalScrollbarRef = (ref) => {
+		if (ref) {
+			this.horizontalScrollbarRef = ref;
+		}
+	}
+
+	initVerticalScrollbarRef = (ref) => {
+		if (ref) {
+			this.verticalScrollbarRef = ref;
+		}
 	}
 
 	render () {
 		const
-			{className, render, style, ...rest} = this.props,
-			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+			{className, containerRenderer, style, ...rest} = this.props,
+			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl} = this.state,
 			scrollableClasses = classNames(css.scrollable, className);
 
+		delete rest.addEventListeners;
 		delete rest.cbScrollTo;
 		delete rest.horizontalScrollbar;
 		delete rest.onKeyDown;
@@ -874,11 +978,10 @@ class ScrollableBaseNative extends Component {
 		delete rest.scrollStopOnScroll;
 		delete rest.scrollTo;
 		delete rest.start;
-		delete rest.updateEventListeners;
 		delete rest.verticalScrollbar;
 
-		return render({
-			childComponentProps: rest,
+		return containerRenderer({
+			childComponentProps: {...rest, rtl},
 			className: scrollableClasses,
 			componentCss: css,
 			horizontalScrollbarProps: this.horizontalScrollbarProps,
@@ -893,26 +996,35 @@ class ScrollableBaseNative extends Component {
 	}
 }
 
+/**
+ * An unstyled native component that provides horizontal and vertical scrollbars and makes a render prop element scrollable.
+ *
+ * @class ScrollableNative
+ * @memberof ui/ScrollableNative
+ * @extends ui/Scrollable.ScrollableBaseNative
+ * @ui
+ * @private
+ */
 class ScrollableNative extends Component {
 	static displayName = 'ui:ScrollableNative'
 
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Scrollable.ScrollableNative.prototype */ {
 		/**
-		 * Component for child
+		 * Render function.
 		 *
 		 * @type {Function}
-		 * @public
+		 * @private
 		 */
-		render: PropTypes.func
+		childRenderer: PropTypes.func
 	}
 
 	render () {
-		const {render, ...rest} = this.props;
+		const {childRenderer, ...rest} = this.props;
 
 		return (
 			<ScrollableBaseNative
 				{...rest}
-				render={({ // eslint-disable-line react/jsx-no-bind
+				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
 					childComponentProps,
 					className,
 					componentCss,
@@ -931,7 +1043,7 @@ class ScrollableNative extends Component {
 						style={style}
 					>
 						<div className={componentCss.container}>
-							{render({
+							{childRenderer({
 								...childComponentProps,
 								cbScrollTo: scrollTo,
 								className: componentCss.content,
@@ -949,7 +1061,7 @@ class ScrollableNative extends Component {
 
 export default ScrollableNative;
 export {
-	ScrollableNative,
+	constants,
 	ScrollableBaseNative,
-	constants
+	ScrollableNative
 };

@@ -1,16 +1,7 @@
-/**
- * Provides unstyled virtual list native components and behaviors to be customized by a theme or application.
- *
- * @module ui/VirtualList
- * @exports VirtualListNative
- * @exports VirtualGridListNative
- * @exports VirtualListBaseNative
- * @exports gridListItemSizeShape
- */
-
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
 import css from './VirtualListNative.less';
@@ -26,6 +17,7 @@ const nop = () => {};
  * @memberof ui/VirtualList
  * @property {Number} minWidth - The minimum width of the grid list item.
  * @property {Number} minHeight - The minimum height of the grid list item.
+ * @public
  */
 const gridListItemSizeShape = PropTypes.shape({
 	minWidth: PropTypes.number.isRequired,
@@ -44,16 +36,17 @@ const gridListItemSizeShape = PropTypes.shape({
 class VirtualListBaseNative extends Component {
 	static displayName = 'ui:VirtualListBaseNative'
 
-	static propTypes = /** @lends ui/VirtualList.VirtualListBaseNative.prototype */ {
+	static propTypes = /** @lends ui/VirtualList.VirtualListNative.prototype */ {
 		/**
 		 * The `render` function for an item of the list receives the following parameters:
 		 * - `data` is for accessing the supplied `data` property of the list.
 		 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
-		 * is parameters due to performance optimizations
-		 * - `data-index` is required for Spotlight 5-way navigation. Pass to the root element in
-		 *   the component.
-		 * - `index` is the index number of the componet to render
-		 * - `key` MUST be passed as a prop to the root element in the component for DOM recycling.
+		 * is parameters due to performance optimizations.
+		 *
+		 * @param {Object} event
+		 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
+		 * @param {Number} event.index The index number of the componet to render
+		 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
 		 *
 		 * Data manipulation can be done in this function.
 		 *
@@ -89,8 +82,16 @@ class VirtualListBaseNative extends Component {
 		]).isRequired,
 
 		/**
+		 * The render function for the items.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		itemsRenderer: PropTypes.func.isRequired,
+
+		/**
 		 * Callback method of scrollTo.
-		 * Normally, `Scrollable` should set this value.
+		 * Normally, [ScrollableNative]{@link ui/Scrollable.ScrollableNative} should set this value.
 		 *
 		 * @type {Function}
 		 * @private
@@ -131,7 +132,11 @@ class VirtualListBaseNative extends Component {
 		dataSize: PropTypes.number,
 
 		/**
-		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
+		 * Direction of the list.
+		 *
+		 * Valid values are:
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
 		 *
 		 * @type {String}
 		 * @default 'vertical'
@@ -139,9 +144,13 @@ class VirtualListBaseNative extends Component {
 		 */
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
+		/**
+		 * Called to get the props for list items.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		getComponentProps: PropTypes.func,
-
-		getXY: PropTypes.func,
 
 		/**
 		 * Number of spare DOM node.
@@ -155,7 +164,7 @@ class VirtualListBaseNative extends Component {
 		overhang: PropTypes.number,
 
 		/**
-		 * It scrolls by page when 'true', by item when 'false'
+		 * It scrolls by page when `true`, by item when `false`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -163,7 +172,13 @@ class VirtualListBaseNative extends Component {
 		 */
 		pageScroll: PropTypes.bool,
 
-		render: PropTypes.func,
+		/**
+		 * `true` if rtl, `false` if ltr.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
 
 		/**
 		 * Spacing between items.
@@ -174,6 +189,12 @@ class VirtualListBaseNative extends Component {
 		 */
 		spacing: PropTypes.number,
 
+		/**
+		 * Called to execute additional logic in a themed component when updating states and bounds.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		updateStatesAndBounds: PropTypes.func
 	}
 
@@ -191,8 +212,6 @@ class VirtualListBaseNative extends Component {
 		super(props);
 
 		this.state = {firstIndex: 0, numOfItems: 0};
-		this.initContentRef = this.initRef('contentRef');
-		this.initContainerRef = this.initRef('containerRef');
 	}
 
 	componentWillMount () {
@@ -622,13 +641,13 @@ class VirtualListBaseNative extends Component {
 	}
 
 	scrollToPosition (x, y) {
-		this.containerRef.scrollTo(x, y);
+		this.containerRef.scrollTo(
+			(this.props.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y
+		);
 	}
 
 	composeStyle (style, width, height, primaryPosition, secondaryPosition) {
-		const
-			getXY = this.props.getXY || this.getXY,
-			{x, y} = getXY(this.isPrimaryDirectionVertical, primaryPosition, secondaryPosition);
+		const {x, y} = this.getXY(this.isPrimaryDirectionVertical, primaryPosition, secondaryPosition);
 
 		if (this.isItemSized) {
 			style.width = width;
@@ -637,7 +656,7 @@ class VirtualListBaseNative extends Component {
 		style.position = 'absolute';
 
 		/* FIXME: RTL / this calculation only works for Chrome */
-		style.transform = 'translate(' + x + 'px,' + y + 'px)';
+		style.transform = 'translate(' + (this.props.rtl ? -x : x) + 'px,' + y + 'px)';
 	}
 
 	getXY = (isPrimaryDirectionVertical, primaryPosition, secondaryPosition) => (isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
@@ -693,15 +712,21 @@ class VirtualListBaseNative extends Component {
 
 	// render
 
-	initRef (prop) {
-		return (ref) => {
-			this[prop] = ref;
-		};
+	initContainerRef = (ref) => {
+		if (ref) {
+			this.containerRef = ref;
+		}
+	}
+
+	initContentRef = (ref) => {
+		if (ref) {
+			this.contentRef = ref;
+		}
 	}
 
 	render () {
 		const
-			{className, render, style, ...rest} = this.props,
+			{className, itemsRenderer, style, ...rest} = this.props,
 			{cc, primary} = this,
 			mergedClasses = classNames(css.list, this.containerClass, className);
 
@@ -712,10 +737,10 @@ class VirtualListBaseNative extends Component {
 		delete rest.dataSize;
 		delete rest.direction;
 		delete rest.getComponentProps;
-		delete rest.getXY;
 		delete rest.itemSize;
 		delete rest.overhang;
 		delete rest.pageScroll;
+		delete rest.rtl;
 		delete rest.spacing;
 		delete rest.updateStatesAndBounds;
 
@@ -726,7 +751,7 @@ class VirtualListBaseNative extends Component {
 		return (
 			<div className={mergedClasses} ref={this.initContainerRef} style={style}>
 				<div {...rest} ref={this.initContentRef}>
-					{render({cc, primary})}
+					{itemsRenderer({cc, primary})}
 				</div>
 			</div>
 		);
@@ -734,47 +759,49 @@ class VirtualListBaseNative extends Component {
 }
 
 /**
- * A basic scrollable virtual native list component with touch support.
+ * An unstyled scrollable virtual native list component with touch support.
  * For smooth native scrolling, web engine with below Chromium 61, should be launched
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
  *
  * @class VirtualListNative
  * @memberof ui/VirtualList
- * @mixes ui/Scrollable.ScrollableNative
+ * @extends ui/Scrollable.ScrollableNative
+ * @extends ui/VirtualList.VirtualListBaseNative
  * @ui
- * @public
+ * @private
  */
 const VirtualListNative = (props) => (
 	<ScrollableNative
 		{...props}
-		render={(virtualListProps) => (// eslint-disable-line react/jsx-no-bind
+		childRenderer={(virtualListProps) => (// eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...virtualListProps}
-				render={({cc}) => (cc.length ? cc : null)} // eslint-disable-line react/jsx-no-bind
+				itemsRenderer={({cc}) => (cc.length ? cc : null)} // eslint-disable-line react/jsx-no-bind
 			/>
 		)}
 	/>
 );
 
 /**
- * A basic scrollable virtual grid native list component with touch support.
+ * An unstyled scrollable virtual grid native list component with touch support.
  * For smooth native scrolling, web engine with below Chromium 61, should be launched
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
  *
  * @class VirtualGridListNative
  * @memberof ui/VirtualList
- * @mixes ui/Scrollable.ScrollableNative
+ * @extends ui/Scrollable.ScrollableNative
+ * @extends ui/VirtualList.VirtualListBaseNative
  * @ui
- * @public
+ * @private
  */
 const VirtualGridListNative = VirtualListNative;
 
 export default VirtualListNative;
 export {
-	VirtualListNative,
+	gridListItemSizeShape,
 	VirtualGridListNative,
 	VirtualListBaseNative,
-	gridListItemSizeShape
+	VirtualListNative
 };

@@ -10,11 +10,12 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import css from './Scroller.less';
 import Scrollable from '../Scrollable';
 
+import css from './Scroller.less';
+
 /**
- * A basic base component for Scroller{@link ui/Scroller.Scroller}.
+ * An unstyled base component for Scroller{@link ui/Scroller.Scroller}.
  * In most circumstances, you will want to use the Scrollable version:
  * [Scroller]{@link ui/Scroller.Scroller}
  *
@@ -26,7 +27,9 @@ import Scrollable from '../Scrollable';
 class ScrollerBase extends Component {
 	static displayName = 'ui:ScrollerBase'
 
-	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
+	static propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
+		children: PropTypes.node.isRequired,
+
 		/**
 		 * Callback method of scrollTo.
 		 * Normally, `Scrollable` should set this value.
@@ -37,13 +40,26 @@ class ScrollerBase extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
-		 * Direction of the scroller; valid values are `'both'`, `'horizontal'`, and `'vertical'`.
+		 * Direction of the scroller.
+		 *
+		 * Valid values are:
+		 * * `'both'`,
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
 		 *
 		 * @type {String}
 		 * @default 'both'
 		 * @public
 		 */
-		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+		/**
+		 * `true` if rtl, `false` if ltr.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool
 	}
 
 	static defaultProps = {
@@ -74,7 +90,7 @@ class ScrollerBase extends Component {
 
 	getScrollBounds = () => this.scrollBounds
 
-	getRtlPositionX = (x) => x
+	getRtlPositionX = (x) => (this.props.rtl ? this.uiRef.scrollBounds.maxLeft - x : x)
 
 	// for Scrollable
 	setScrollPosition (x, y) {
@@ -137,8 +153,10 @@ class ScrollerBase extends Component {
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
 	}
 
-	initRef = (ref) => {
-		this.containerRef = ref;
+	initContainerRef = (ref) => {
+		if (ref) {
+			this.containerRef = ref;
+		}
 	}
 
 	render () {
@@ -151,12 +169,13 @@ class ScrollerBase extends Component {
 
 		delete rest.cbScrollTo;
 		delete rest.direction;
+		delete rest.rtl;
 
 		return (
 			<div
 				{...rest}
 				className={classNames(className, css.hideNativeScrollbar)}
-				ref={this.initRef}
+				ref={this.initContainerRef}
 				style={mergedStyle}
 			/>
 		);
@@ -164,7 +183,7 @@ class ScrollerBase extends Component {
 }
 
 /**
- * A basic scroller, [Scrollable]{@link ui/Scrollable.Scrollable} applied.
+ * An unstyled scroller.
  *
  * Usage:
  * ```
@@ -173,14 +192,15 @@ class ScrollerBase extends Component {
  *
  * @class Scroller
  * @memberof ui/Scroller
- * @mixes ui/Scrollable.Scrollable
+ * @extends ui/Scrollable.Scrollable
+ * @extends ui/Scrollable.ScrollerBase
  * @ui
  * @public
  */
 const Scroller = (props) => (
 	<Scrollable
 		{...props}
-		render={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
 			<ScrollerBase {...scrollerProps} />
 		)}
 	/>

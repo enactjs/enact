@@ -5,12 +5,13 @@ import React, {PureComponent, Component} from 'react';
 
 import ri from '../resolution';
 
-import componentCss from './Scrollbar.less';
 import ScrollThumb from './ScrollThumb';
+
+import componentCss from './Scrollbar.less';
 
 const
 	minThumbSize = 18, // Size in pixels
-	thumbHidingDelay = 400; /* in milliseconds */
+	thumbHidingDelay = 400; // in milliseconds
 
 /*
  * Set CSS Varaible value.
@@ -25,7 +26,7 @@ const setCSSVariable = (element, variable, value) => {
 };
 
 /**
- * A basic scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
+ * An unstyled base component for a scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
  *
  * @class ScrollbarBase
  * @memberof ui/Scrollable
@@ -35,19 +36,20 @@ const setCSSVariable = (element, variable, value) => {
 class ScrollbarBase extends PureComponent {
 	static displayName = 'ui:Scrollbar'
 
-	static propTypes = /** @lends ui/Scrollable.ScrollbarBase.prototype */ {
+	static propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
 		/**
-		 * Render function for children
+		 * The render function for child.
 		 *
 		 * @type {Function}
 		 * @private
 		 */
-		render: PropTypes.func.isRequired,
+		childRenderer: PropTypes.func.isRequired,
 
 		/**
 		 * If `true`, add the corner between vertical and horizontal scrollbars.
 		 *
 		 * @type {Booelan}
+		 * @default false
 		 * @public
 		 */
 		corner: PropTypes.bool,
@@ -153,7 +155,7 @@ class ScrollbarBase extends PureComponent {
 
 	render () {
 		const
-			{className, corner, css, render, vertical, ...rest} = this.props,
+			{childRenderer, className, corner, css, vertical, ...rest} = this.props,
 			containerClassName = classNames(
 				className,
 				css.scrollbar,
@@ -165,7 +167,7 @@ class ScrollbarBase extends PureComponent {
 
 		return (
 			<div {...rest} className={containerClassName} ref={this.setContainerRef}>
-				{render({
+				{childRenderer({
 					getContainerRef: this.getContainerRef,
 					setScrollThumbRef: this.setScrollThumbRef
 				})}
@@ -175,7 +177,7 @@ class ScrollbarBase extends PureComponent {
 }
 
 /**
- * A basic scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
+ * An unstyled scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
  *
  * @class Scrollbar
  * @memberof ui/Scrollable
@@ -194,23 +196,29 @@ class Scrollbar extends Component {
 		vertical: PropTypes.bool
 	}
 
+	static defaultProps = {
+		vertical: true
+	}
+
+	setApi = (ref) => {
+		if (ref) {
+			const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = ref;
+
+			this.getContainerRef = getContainerRef;
+			this.showThumb = showThumb;
+			this.startHidingThumb = startHidingThumb;
+			this.update = uiUpdate;
+		}
+	}
+
 	render () {
 		const {vertical} = this.props;
 
 		return (
 			<ScrollbarBase
 				{...this.props}
-				ref={(ref) => { // eslint-disable-line react/jsx-no-bind
-					if (ref) {
-						const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = ref;
-
-						this.getContainerRef = getContainerRef;
-						this.showThumb = showThumb;
-						this.startHidingThumb = startHidingThumb;
-						this.update = uiUpdate;
-					}
-				}}
-				render={({setScrollThumbRef}) => { // eslint-disable-line react/jsx-no-bind
+				ref={this.setApi}
+				childRenderer={({setScrollThumbRef}) => { // eslint-disable-line react/jsx-no-bind
 					return (
 						<ScrollThumb
 							setRef={setScrollThumbRef}

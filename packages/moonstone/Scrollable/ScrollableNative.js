@@ -1,12 +1,3 @@
-/**
- * Provides Moonstone-themed scrollable native components and behaviors.
- *
- * @module moonstone/Scrollable
- * @exports ScrollableNative
- * @exports dataIndexAttribute
- * @private
- */
-
 import {constants, ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import PropTypes from 'prop-types';
@@ -68,10 +59,12 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 
 
 /**
- * A Higher-order Component that applies a Scrollable native behavior to its wrapped component.
+ * A Moonstone-styled native component that provides horizontal and vertical scrollbars.
  *
+ * @class Scrollable
  * @memberof moonstone/Scrollable
- * @hoc
+ * @extends ui/Scrollable.ScrollableBaseNative
+ * @ui
  * @private
  */
 class ScrollableNative extends Component {
@@ -79,21 +72,26 @@ class ScrollableNative extends Component {
 
 	static propTypes = /** @lends moonstone/Scrollable.ScrollableBaseNative.prototype */ {
 		/**
+		 * Render function.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		childRenderer: PropTypes.func.isRequired,
+
+		/**
 		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
 		 * not move focus to the scrollbar controls.
 		 *
 		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
-		focusableScrollbar: PropTypes.bool,
+		focusableScrollbar: PropTypes.bool
+	}
 
-		/**
-		 * Component for child
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		render: PropTypes.func
+	static defaultProps = {
+		focusableScrollbar: false
 	}
 
 	constructor (props) {
@@ -116,7 +114,6 @@ class ScrollableNative extends Component {
 	isWheeling = false
 
 	// spotlight
-	animateOnFocus = false
 	lastFocusedItem = null
 	lastScrollPositionOnFocus = null
 	indexToFocus = null
@@ -275,7 +272,7 @@ class ScrollableNative extends Component {
 
 	getPageDirection = (keyCode) => {
 		const
-			isRtl = this.uiRef.context.rtl,
+			isRtl = this.uiRef.state.rtl,
 			{direction} = this.uiRef,
 			isVertical = (direction === 'vertical' || direction === 'both');
 
@@ -437,7 +434,7 @@ class ScrollableNative extends Component {
 	alertThumbAfterRendered = () => {
 		const spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem && this.uiRef && this.uiRef.childRef.containerRef.contains(spotItem) && this.isUpdatedScrollThumb) {
+		if (!Spotlight.getPointerMode() && spotItem && this.uiRef && this.uiRef.childRef.containerRef.contains(spotItem) && this.uiRef.isUpdatedScrollThumb) {
 			this.alertThumb();
 		}
 	}
@@ -464,7 +461,7 @@ class ScrollableNative extends Component {
 		this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 	}
 
-	updateEventListeners = (childContainerRef) => {
+	addEventListeners = (childContainerRef) => {
 		if (childContainerRef && childContainerRef.addEventListener) {
 			// FIXME `onMouseOver` doesn't work on the v8 snapshot.
 			childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
@@ -487,19 +484,24 @@ class ScrollableNative extends Component {
 	}
 
 	initChildRef = (ref) => {
-		this.childRef = ref;
+		if (ref) {
+			this.childRef = ref;
+		}
 	}
 
 	initUiRef = (ref) => {
-		this.uiRef = ref;
+		if (ref) {
+			this.uiRef = ref;
+		}
 	}
 
 	render () {
-		const {focusableScrollbar, render, ...rest} = this.props;
+		const {focusableScrollbar, childRenderer, ...rest} = this.props;
 
 		return (
 			<UiScrollableBaseNative
 				{...rest}
+				addEventListeners={this.addEventListeners}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
 				onWheel={this.onWheel}
@@ -508,8 +510,7 @@ class ScrollableNative extends Component {
 				scrollStopOnScroll={this.scrollStopOnScroll}
 				scrollTo={this.scrollTo}
 				start={this.start}
-				updateEventListeners={this.updateEventListeners}
-				render={({ // eslint-disable-line react/jsx-no-bind
+				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
 					childComponentProps,
 					className,
 					componentCss,
@@ -518,6 +519,7 @@ class ScrollableNative extends Component {
 					initUiChildRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
+					scrollTo,
 					style,
 					verticalScrollbarProps
 				}) => (
@@ -528,9 +530,9 @@ class ScrollableNative extends Component {
 						style={style}
 					>
 						<div className={componentCss.container}>
-							{render({
+							{childRenderer({
 								...childComponentProps,
-								cbScrollTo: this.scrollTo,
+								cbScrollTo: scrollTo,
 								className: componentCss.content,
 								initUiChildRef,
 								ref: this.initChildRef
@@ -547,6 +549,6 @@ class ScrollableNative extends Component {
 
 export default ScrollableNative;
 export {
-	ScrollableNative,
-	dataIndexAttribute
+	dataIndexAttribute,
+	ScrollableNative
 };

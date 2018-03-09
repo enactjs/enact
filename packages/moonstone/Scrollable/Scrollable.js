@@ -2,8 +2,8 @@
  * Provides Moonstone-themed scrollable components and behaviors.
  *
  * @module moonstone/Scrollable
- * @exports Scrollable
  * @exports dataIndexAttribute
+ * @exports Scrollable
  * @private
  */
 
@@ -67,10 +67,12 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 );
 
 /**
- * A Higher-order Component that applies a Scrollable behavior to its wrapped component.
+ * A Moonstone-styled component that provides horizontal and vertical scrollbars.
  *
+ * @class Scrollable
  * @memberof moonstone/Scrollable
- * @hoc
+ * @extends ui/Scrollable.ScrollableBase
+ * @ui
  * @private
  */
 class Scrollable extends Component {
@@ -78,21 +80,26 @@ class Scrollable extends Component {
 
 	static propTypes = /** @lends moonstone/Scrollable.Scrollable.prototype */ {
 		/**
+		 * Render function.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		childRenderer: PropTypes.func.isRequired,
+
+		/**
 		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
 		 * not move focus to the scrollbar controls.
 		 *
 		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
-		focusableScrollbar: PropTypes.bool,
+		focusableScrollbar: PropTypes.bool
+	}
 
-		/**
-		 * Component for child
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		render: PropTypes.func
+	static defaultProps = {
+		focusableScrollbar: false
 	}
 
 	constructor (props) {
@@ -115,7 +122,6 @@ class Scrollable extends Component {
 	isWheeling = false
 
 	// spotlight
-	animateOnFocus = false
 	lastFocusedItem = null
 	lastScrollPositionOnFocus = null
 	indexToFocus = null
@@ -128,17 +134,17 @@ class Scrollable extends Component {
 			if (focusedItem) {
 				focusedItem.blur();
 			}
+			this.childRef.setContainerDisabled(true);
 		}
 	}
 
-	onWheel = ({delta}) => {
+	onWheel = ({delta, horizontalScrollbarRef, verticalScrollbarRef}) => {
 		const
-			{verticalScrollbarRef, horizontalScrollbarRef} = this.uiRef,
 			focusedItem = Spotlight.getCurrent(),
-			isVerticalScrollButtonFocused = verticalScrollbarRef && verticalScrollbarRef.isOneOfScrollButtonsFocused(),
-			isHorizontalScrollButtonFocused = horizontalScrollbarRef && horizontalScrollbarRef.isOneOfScrollButtonsFocused();
+			isHorizontalScrollButtonFocused = horizontalScrollbarRef && horizontalScrollbarRef.isOneOfScrollButtonsFocused(),
+			isVerticalScrollButtonFocused = verticalScrollbarRef && verticalScrollbarRef.isOneOfScrollButtonsFocused();
 
-		if (focusedItem && !isVerticalScrollButtonFocused && !isHorizontalScrollButtonFocused) {
+		if (focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
 			focusedItem.blur();
 		}
 
@@ -210,7 +216,7 @@ class Scrollable extends Component {
 
 	getPageDirection = (keyCode) => {
 		const
-			isRtl = this.uiRef.context.rtl,
+			isRtl = this.uiRef.state.rtl,
 			{direction} = this.uiRef,
 			isVertical = (direction === 'vertical' || direction === 'both');
 
@@ -335,6 +341,7 @@ class Scrollable extends Component {
 		this.focusOnItem();
 		this.lastFocusedItem = null;
 		this.lastScrollPositionOnFocus = null;
+		this.isWheeling = false;
 	}
 
 	focusOnItem () {
@@ -365,7 +372,7 @@ class Scrollable extends Component {
 	alertThumbAfterRendered = () => {
 		const spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem && this.uiRef && this.uiRef.childRef.containerRef.contains(spotItem) && this.isUpdatedScrollThumb) {
+		if (!Spotlight.getPointerMode() && spotItem && this.uiRef && this.uiRef.childRef.containerRef.contains(spotItem) && this.uiRef.isUpdatedScrollThumb) {
 			this.alertThumb();
 		}
 	}
@@ -396,7 +403,7 @@ class Scrollable extends Component {
 		this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 	}
 
-	updateEventListeners = (childContainerRef) => {
+	addEventListeners = (childContainerRef) => {
 		if (childContainerRef && childContainerRef.addEventListener) {
 			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			childContainerRef.addEventListener('focusin', this.onFocus);
@@ -423,11 +430,12 @@ class Scrollable extends Component {
 	}
 
 	render () {
-		const {focusableScrollbar, render, ...rest} = this.props;
+		const {focusableScrollbar, childRenderer, ...rest} = this.props;
 
 		return (
 			<UiScrollableBase
 				{...rest}
+				addEventListeners={this.addEventListeners}
 				onKeyDown={this.onKeyDown}
 				onMouseUp={this.onMouseUp}
 				onWheel={this.onWheel}
@@ -435,8 +443,7 @@ class Scrollable extends Component {
 				removeEventListeners={this.removeEventListeners}
 				scrollTo={this.scrollTo}
 				stop={this.stop}
-				updateEventListeners={this.updateEventListeners}
-				render={({ // eslint-disable-line react/jsx-no-bind
+				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
 					childComponentProps,
 					className,
 					componentCss,
@@ -457,7 +464,7 @@ class Scrollable extends Component {
 						style={style}
 					>
 						<div className={componentCss.container}>
-							{render({
+							{childRenderer({
 								...childComponentProps,
 								cbScrollTo: scrollTo,
 								className: componentCss.content,
@@ -477,6 +484,6 @@ class Scrollable extends Component {
 
 export default Scrollable;
 export {
-	Scrollable,
-	dataIndexAttribute
+	dataIndexAttribute,
+	Scrollable
 };

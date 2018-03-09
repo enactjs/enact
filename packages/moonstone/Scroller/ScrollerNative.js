@@ -1,13 +1,21 @@
 import React from 'react';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import {ScrollerBaseNative as UiScrollerBaseNative} from '@enact/ui/Scroller';
 
 import {ScrollableNative} from '../Scrollable/ScrollableNative';
 
-const SpottableScrollableNative = SpotlightContainerDecorator({restrict: 'self-first'}, ScrollableNative);
+import {ScrollerBase as ScrollerBaseNative} from './Scroller';
+
+const ScrollableScrollerNative = (props) => (
+	<ScrollableNative
+		{...props}
+		childRenderer={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
+			<ScrollerBaseNative {...scrollerProps} />
+		)}
+	/>
+);
 
 /**
- * A moonstone-styled native Scroller, SpotlightContainerDecorator and Scrollable applied.
+ * A Moonstone-styled native Scroller, SpotlightContainerDecorator and Scrollable applied.
  * For smooth native scrolling, web engine with below Chromium 61, should be launched
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
@@ -19,20 +27,16 @@ const SpottableScrollableNative = SpotlightContainerDecorator({restrict: 'self-f
  *
  * @class ScrollerNative
  * @memberof moonstone/Scroller
- * @mixes moonstone/Scrollable.ScrollableNative
+ * @mixes spotlight/SpotlightContainerDecorator
+ * @extends moonstone/Scrollable.ScrollableNative
+ * @extends moonstone/Scroller.ScrollerBase
  * @ui
- * @public
+ * @private
  */
-const ScrollerNative = (props) => (
-	<SpottableScrollableNative
-		{...props}
-		render={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
-			<UiScrollerBaseNative {...scrollerProps} />
-		)}
-	/>
-);
+const ScrollerNative = SpotlightContainerDecorator({restrict: 'self-first'}, ScrollableScrollerNative);
 
 export default ScrollerNative;
 export {
+	ScrollerBaseNative,
 	ScrollerNative
 };

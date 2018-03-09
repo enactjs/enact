@@ -2,15 +2,16 @@
  * Provides unstyled virtual list components and behaviors to be customized by a theme or application.
  *
  * @module ui/VirtualList
- * @exports VirtualList
- * @exports VirtualGridList
- * @exports VirtualListBase
  * @exports gridListItemSizeShape
+ * @exports VirtualGridList
+ * @exports VirtualList
+ * @exports VirtualListBase
  */
 
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+
 import Scrollable from '../Scrollable';
 
 import css from './ListItem.less';
@@ -25,6 +26,7 @@ const nop = () => {};
  * @memberof ui/VirtualList
  * @property {Number} minWidth - The minimum width of the grid list item.
  * @property {Number} minHeight - The minimum height of the grid list item.
+ * @public
  */
 const gridListItemSizeShape = PropTypes.shape({
 	minWidth: PropTypes.number.isRequired,
@@ -38,21 +40,22 @@ const gridListItemSizeShape = PropTypes.shape({
  * @class VirtualListBase
  * @memberof ui/VirtualList
  * @ui
- * @public
+ * @private
  */
 class VirtualListBase extends Component {
 	static displayName = 'ui:VirtualListBase'
 
-	static propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
+	static propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 		/**
 		 * The `render` function for an item of the list receives the following parameters:
 		 * - `data` is for accessing the supplied `data` property of the list.
 		 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
-		 * is parameters due to performance optimizations
-		 * - `data-index` is required for Spotlight 5-way navigation. Pass to the root element in
-		 *   the component.
-		 * - `index` is the index number of the componet to render
-		 * - `key` MUST be passed as a prop to the root element in the component for DOM recycling.
+		 * is parameters due to performance optimizations.
+		 *
+		 * @param {Object} event
+		 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
+		 * @param {Number} event.index The index number of the componet to render
+		 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
 		 *
 		 * Data manipulation can be done in this function.
 		 *
@@ -88,8 +91,16 @@ class VirtualListBase extends Component {
 		]).isRequired,
 
 		/**
+		 * The render function for the items.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		itemsRenderer: PropTypes.func.isRequired,
+
+		/**
 		 * Callback method of scrollTo.
-		 * Normally, `Scrollable` should set this value.
+		 * Normally, `[Scrollable]{@link ui/Scrollable.Scrollable}` should set this value.
 		 *
 		 * @type {Function}
 		 * @private
@@ -130,7 +141,11 @@ class VirtualListBase extends Component {
 		dataSize: PropTypes.number,
 
 		/**
-		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
+		 * Direction of the list.
+		 *
+		 * Valid values are:
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
 		 *
 		 * @type {String}
 		 * @default 'vertical'
@@ -138,9 +153,13 @@ class VirtualListBase extends Component {
 		 */
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
+		/**
+		 * Called to get the props for list items.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		getComponentProps: PropTypes.func,
-
-		getXY: PropTypes.func,
 
 		/**
 		 * Number of spare DOM node.
@@ -154,7 +173,7 @@ class VirtualListBase extends Component {
 		overhang: PropTypes.number,
 
 		/**
-		 * It scrolls by page when 'true', by item when 'false'
+		 * It scrolls by page when `true`, by item when `false`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -162,7 +181,13 @@ class VirtualListBase extends Component {
 		 */
 		pageScroll: PropTypes.bool,
 
-		render: PropTypes.func,
+		/**
+		 * `true` if rtl, `false` if ltr.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
 
 		/**
 		 * Spacing between items.
@@ -173,6 +198,12 @@ class VirtualListBase extends Component {
 		 */
 		spacing: PropTypes.number,
 
+		/**
+		 * Called to execute additional logic in a themed component when updating states and bounds.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		updateStatesAndBounds: PropTypes.func
 	}
 
@@ -190,7 +221,6 @@ class VirtualListBase extends Component {
 		super(props);
 
 		this.state = {firstIndex: 0, numOfItems: 0};
-		this.initContainerRef = this.initRef('containerRef');
 	}
 
 	componentWillMount () {
@@ -635,12 +665,13 @@ class VirtualListBase extends Component {
 		this.composeTransform(style, ...rest);
 	}
 
-	getXY = (isPrimaryDirectionVertical, primaryPosition, secondaryPosition) => (isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
+	getXY = (isPrimaryDirectionVertical, primaryPosition, secondaryPosition) => {
+		const rtlDirection = this.props.rtl ? -1 : 1;
+		return (isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
+	}
 
 	composeTransform (style, primaryPosition, secondaryPosition = 0) {
-		const
-			getXY = this.props.getXY || this.getXY,
-			{x, y} = getXY(this.isPrimaryDirectionVertical, primaryPosition, secondaryPosition);
+		const {x, y} = this.getXY(this.isPrimaryDirectionVertical, primaryPosition, secondaryPosition);
 
 		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
 	}
@@ -681,15 +712,15 @@ class VirtualListBase extends Component {
 
 	// render
 
-	initRef (prop) {
-		return (ref) => {
-			this[prop] = ref;
-		};
+	initContainerRef = (ref) => {
+		if (ref) {
+			this.containerRef = ref;
+		}
 	}
 
 	render () {
 		const
-			{render, ...rest} = this.props,
+			{itemsRenderer, ...rest} = this.props,
 			{firstIndex, numOfItems} = this.state,
 			{cc, primary} = this;
 
@@ -700,10 +731,10 @@ class VirtualListBase extends Component {
 		delete rest.dataSize;
 		delete rest.direction;
 		delete rest.getComponentProps;
-		delete rest.getXY;
 		delete rest.itemSize;
 		delete rest.overhang;
 		delete rest.pageScroll;
+		delete rest.rtl;
 		delete rest.spacing;
 		delete rest.updateStatesAndBounds;
 
@@ -713,7 +744,7 @@ class VirtualListBase extends Component {
 
 		return (
 			<div {...rest} ref={this.initContainerRef}>
-				{render({
+				{itemsRenderer({
 					cc,
 					initItemContainerRef: (ref) => { // eslint-disable-line react/jsx-no-bind
 						this.itemContainerRef = ref;
@@ -726,22 +757,22 @@ class VirtualListBase extends Component {
 }
 
 /**
- * A basic scrollable virtual list component with touch support.
+ * An unstyled scrollable virtual list component with touch support.
  *
  * @class VirtualList
- * @extends ui/VirtualList.VirtualListBase
  * @memberof ui/VirtualList
- * @mixes ui/Scrollable.Scrollable
+ * @extends ui/Scrollable.Scrollable
+ * @extends ui/VirtualList.VirtualListBase
  * @ui
  * @public
  */
 const VirtualList = (props) => (
 	<Scrollable
 		{...props}
-		render={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
 				{...virtualListProps}
-				render={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
 					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
 				)}
 			/>
@@ -750,12 +781,12 @@ const VirtualList = (props) => (
 );
 
 /**
- * A basic scrollable virtual grid list component with touch support.
+ * An unstyled scrollable virtual grid list component with touch support.
  *
  * @class VirtualGridList
- * @extends ui/VirtualList.VirtualListBase
  * @memberof ui/VirtualList
- * @mixes ui/Scrollable.Scrollable
+ * @extends ui/Scrollable.Scrollable
+ * @extends ui/VirtualList.VirtualListBase
  * @ui
  * @public
  */
@@ -763,8 +794,8 @@ const VirtualGridList = VirtualList;
 
 export default VirtualList;
 export {
-	VirtualList,
+	gridListItemSizeShape,
 	VirtualGridList,
-	VirtualListBase,
-	gridListItemSizeShape
+	VirtualList,
+	VirtualListBase
 };

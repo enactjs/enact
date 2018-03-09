@@ -2,16 +2,15 @@
  * Provides Moonstone-themed virtual list components and behaviors.
  *
  * @module moonstone/VirtualList
- * @exports VirtualList
  * @exports VirtualGridList
- * @exports VirtualListBase
- * @exports VirtualListNative
  * @exports VirtualGridListNative
+ * @exports VirtualList
+ * @exports VirtualListBase
  * @exports VirtualListBaseNative
+ * @exports VirtualListNative
  */
 
 import clamp from 'ramda/src/clamp';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
@@ -25,8 +24,9 @@ import {VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/Virtua
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
+const SpotlightPlaceholder = Spottable('div');
+
 const
-	SpotlightPlaceholder = Spottable('div'),
 	SpotlightContainerConfig = {
 		enterTo: 'last-focused',
 		/*
@@ -59,9 +59,7 @@ const
 		},
 		preserveId: true,
 		restrict: 'self-first'
-	};
-
-const
+	},
 	dataContainerDisabledAttribute = 'data-container-disabled',
 	isDown = is('down'),
 	isLeft = is('left'),
@@ -70,15 +68,6 @@ const
 	JS = 'JS',
 	Native = 'Native';
 
-/**
- * A moonstone-styled decorator component for
- * [VirtualList]{@link moonstone/VirtualList.VirtualList} and [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
- *
- * @hoc
- * @memberof moonstone/VirtualList
- * @ui
- * @private
- */
 const VirtualListBase = (type) => {
 	const UiBase = (type === JS) ? UiVirtualListBase : UiVirtualListBaseNative;
 
@@ -87,7 +76,31 @@ const VirtualListBase = (type) => {
 
 		static propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 			/**
-			 * The `render` function for an item of the list
+			 * The `render` function for an item of the list receives the following parameters:
+			 * - `data` is for accessing the supplied `data` property of the list.
+			 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
+			 * is parameters due to performance optimizations.
+			 *
+			 * @param {Object} event
+			 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
+			 * @param {Number} event.index The index number of the componet to render
+			 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
+			 *
+			 * Data manipulation can be done in this function.
+			 *
+			 * > NOTE: The list does NOT always render a component whenever its render function is called
+			 * due to performance optimization.
+			 *
+			 * Usage:
+			 * ```
+			 * renderItem = ({index, ...rest}) => {
+			 *		delete rest.data;
+			 *
+			 *		return (
+			 *			<MyComponent index={index} {...rest} />
+			 *		);
+			 * }
+			 * ```
 			 *
 			 * @type {Function}
 			 * @public
@@ -95,25 +108,39 @@ const VirtualListBase = (type) => {
 			component: PropTypes.func.isRequired,
 
 			/**
-			 * Spotlight container Id
+			 * The render function for the items.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			itemsRenderer: PropTypes.func.isRequired,
+
+			/**
+			 * Spotlight container Id.
 			 *
 			 * @type {String}
 			 * @private
 			 */
 			'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types,
 
+			/**
+			 * Passes the instance of [VirtualList]{@link ui/VirtualList.VirtualList}.
+			 *
+			 * @type {Object}
+			 * @param {Object} ref
+			 * @private
+			 */
 			initUiChildRef: PropTypes.func,
 
 			/**
-			 * Component for child
+			 * `true` if rtl, `false` if ltr.
+			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
 			 *
-			 * @type {Function}
-			 * @public
+			 * @type {Boolean}
+			 * @private
 			 */
-			render: PropTypes.func
+			rtl: PropTypes.bool
 		}
-
-		static contextTypes = contextTypes
 
 		componentDidMount () {
 			if (type === JS) {
@@ -122,12 +149,18 @@ const VirtualListBase = (type) => {
 				// prevent native scrolling by Spotlight
 				this.preventScroll = () => {
 					containerNode.scrollTop = 0;
-					containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
+					containerNode.scrollLeft = this.props.rtl ? containerNode.scrollWidth : 0;
 				};
 
 				if (containerNode && containerNode.addEventListener) {
 					containerNode.addEventListener('scroll', this.preventScroll);
 					containerNode.addEventListener('keydown', this.onKeyDown);
+				}
+			} else {
+				const contentNode = this.uiRef.contentRef;
+
+				if (contentNode && contentNode.addEventListener) {
+					contentNode.addEventListener('keydown', this.onKeyDown);
 				}
 			}
 		}
@@ -137,10 +170,6 @@ const VirtualListBase = (type) => {
 		}
 
 		componentWillUnmount () {
-			if (this.setContainerDisabled) {
-				this.setContainerDisabled(false);
-			}
-
 			if (type === JS) {
 				const containerNode = this.uiRef.containerRef;
 
@@ -149,7 +178,15 @@ const VirtualListBase = (type) => {
 					containerNode.removeEventListener('scroll', this.preventScroll);
 					containerNode.removeEventListener('keydown', this.onKeyDown);
 				}
+			} else {
+				const contentNode = this.uiRef.contentRef;
+
+				if (contentNode && contentNode.removeEventListener) {
+					contentNode.removeEventListener('keydown', this.onKeyDown);
+				}
 			}
+
+			this.setContainerDisabled(false);
 		}
 
 		isScrolledBy5way = false
@@ -303,7 +340,7 @@ const VirtualListBase = (type) => {
 
 			if (indexToScroll !== -1) {
 				const
-					isRtl = this.context.rtl,
+					isRtl = this.props.rtl,
 					isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right');
 
 				if (type === JS) {
@@ -365,7 +402,7 @@ const VirtualListBase = (type) => {
 				{cbScrollTo, data, dataSize} = this.uiRef.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
 				{isPrimaryDirectionVertical} = this.uiRef,
-				rtl = this.context.rtl,
+				rtl = this.props.rtl,
 				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
 
 			if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled) {
@@ -543,7 +580,7 @@ const VirtualListBase = (type) => {
 		isPlaceholderFocused = () => {
 			const current = Spotlight.getCurrent();
 
-			if (current && current.dataset.vlPlaceholder && this.containerRef.contains(current)) {
+			if (current && current.dataset.vlPlaceholder && this.uiRef.containerRef.contains(current)) {
 				return true;
 			}
 
@@ -645,22 +682,12 @@ const VirtualListBase = (type) => {
 				(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
 				// If we need to restore last focus and the index is beyond the screen,
 				// we call `scrollTo` to create DOM for it.
-				cbScrollTo({index: preservedIndex, animate: false});
+				cbScrollTo({index: preservedIndex, animate: false, focus: true});
 
 				return true;
 			} else {
 				return false;
 			}
-		}
-
-		getXY = (isPrimaryDirectionVertical, primaryPosition, secondaryPosition) => {
-			const rtlDirection = this.context.rtl ? -1 : 1;
-			return (isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
-		}
-
-		scrollToPosition (x, y) {
-			const node = this.containerRef;
-			node.scrollTo((this.context.rtl && !this.uiRef.isPrimaryDirectionVertical) ? this.uiRef.scrollBounds.maxLeft - x : x, y);
 		}
 
 		getScrollBounds = () => this.uiRef.getScrollBounds()
@@ -669,10 +696,19 @@ const VirtualListBase = (type) => {
 			(index === this.nodeIndexToBeFocused) ? {ref: (ref) => this.initItemRef(ref, index)} : {}
 		)
 
+		initUiRef = (ref) => {
+			if (ref) {
+				this.uiRef = ref;
+				this.props.initUiChildRef(ref);
+			}
+		}
+
 		render () {
 			const
-				{component, initUiChildRef, render, ...rest} = this.props,
+				{component, itemsRenderer, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
+
+			delete rest.initUiChildRef;
 
 			return (
 				<UiBase
@@ -685,16 +721,10 @@ const VirtualListBase = (type) => {
 						})
 					)}
 					getComponentProps={this.getComponentProps}
-					getXY={this.getXY}
-					ref={(ref) => { // eslint-disable-line react/jsx-no-bind
-						if (ref) {
-							this.uiRef = ref;
-							initUiChildRef(ref);
-						}
-					}}
-					updateStatesAndBounds={this.updateStatesAndBound}
-					render={(props) => { // eslint-disable-line react/jsx-no-bind
-						return render({
+					ref={this.initUiRef}
+					updateStatesAndBounds={this.updateStatesAndBounds}
+					itemsRenderer={(props) => { // eslint-disable-line react/jsx-no-bind
+						return itemsRenderer({
 							...props,
 							handlePlaceholderFocus: this.handlePlaceholderFocus,
 							needsScrollingPlaceholder
@@ -706,33 +736,39 @@ const VirtualListBase = (type) => {
 	};
 };
 
+/**
+ * A Moonstone-styled base component for [VirtualList]{@link moonstone/VirtualList.VirtualList} and
+ * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
+ *
+ * @class VirtualListBaseJS
+ * @memberof moonstone/VirtualList
+ * @extends ui/VirtualList.VirtualListBase
+ * @ui
+ * @private
+ */
 const VirtualListBaseJS = VirtualListBase(JS);
 
+/**
+ * A Moonstone-styled base component for [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative} and
+ * [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative}.
+ *
+ * @class VirtualListBaseNative
+ * @memberof moonstone/VirtualList
+ * @extends ui/VirtualList.VirtualListBaseNative
+ * @ui
+ * @private
+ */
 const VirtualListBaseNative = VirtualListBase(Native);
 
-const
-	SpottableScrollable = SpotlightContainerDecorator(SpotlightContainerConfig, Scrollable),
-	SpottableScrollableNative = SpotlightContainerDecorator(SpotlightContainerConfig, ScrollableNative);
-
-/**
- * A moonstone-styled scrollable and spottable virtual list component.
- *
- * @class VirtualList
- * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable.Scrollable
- * @mixes ui/Scrollable.Scrollable
- * @ui
- * @public
- */
-const VirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
-	<SpottableScrollable
-		{...props}
-		render={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
+const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
+	<Scrollable
+		{...rest}
+		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseJS
-				{...virtualListProps}
-				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
+				{...props}
+				itemsRenderer={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
-						cc.length ? <div key="0" ref={initItemContainerRef}>{cc}</div> : null,
+						cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
 						primary ?
 							null :
 							<SpotlightPlaceholder
@@ -750,78 +786,112 @@ const VirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
 	/>
 );
 
+ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
+	/**
+	 * Aria role.
+	 *
+	 * @type {String}
+	 * @private
+	 */
+	role: PropTypes.string
+};
+
+const ScrollableVirtualListNative = ({role, ...rest}) => (
+	<ScrollableNative
+		{...rest}
+		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
+			<VirtualListBaseNative
+				{...props}
+				itemsRenderer={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
+					[
+						cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
+						primary ?
+							null :
+							<SpotlightPlaceholder
+								data-index={0}
+								data-vl-placeholder
+								key="1"
+								onFocus={handlePlaceholderFocus}
+								role="region"
+							/>,
+						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
+					]
+				)}
+			/>
+		)}
+	/>
+);
+
+ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListNative.prototype */ {
+	/**
+	 * Aria role.
+	 *
+	 * @type {String}
+	 * @private
+	 */
+	role: PropTypes.string
+};
+
 /**
- * A moonstone-styled scrollable and spottable virtual grid list component.
+ * A Moonstone-styled scrollable and spottable virtual list component.
  *
- * @class VirtualGridList
+ * @class VirtualList
  * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable.Scrollable
- * @mixes ui/Scrollable.Scrollable
+ * @mixes moonstone/Scrollable.SpotlightContainerDecorator
+ * @extends moonstone/VirtualList.VirtualListBaseJS
  * @ui
  * @public
  */
-const VirtualGridList = VirtualList;
+const VirtualList = SpotlightContainerDecorator(SpotlightContainerConfig, ScrollableVirtualList);
 
 /**
- * A moonstone-styled scrollable and spottable virtual native list component.
+ * A Moonstone-styled scrollable and spottable virtual native list component.
  * For smooth native scrolling, web engine with below Chromium 61, should be launched
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
  *
  * @class VirtualListNative
  * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable.ScrollableNative
- * @mixes ui/Scrollable.ScrollableNative
+ * @mixes moonstone/Scrollable.SpotlightContainerDecorator
+ * @extends moonstone/VirtualList.VirtualListBaseNative
+ * @ui
+ * @private
+ */
+const VirtualListNative = SpotlightContainerDecorator(SpotlightContainerConfig, ScrollableVirtualListNative);
+
+/**
+ * A Moonstone-styled scrollable and spottable virtual grid list component.
+ *
+ * @class VirtualGridList
+ * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable.SpotlightContainerDecorator
+ * @extends moonstone/VirtualList.VirtualListBaseJS
  * @ui
  * @public
  */
-const VirtualListNative = (props) => (
-	<SpottableScrollableNative
-		{...props}
-		render={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBaseNative
-				{...virtualListProps}
-				render={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
-					[
-						cc.length ? <div key="0" ref={initItemContainerRef}>{cc}</div> : null,
-						primary ?
-							null :
-							<SpotlightPlaceholder
-								data-index={0}
-								data-vl-placeholder
-								key="1"
-								onFocus={handlePlaceholderFocus}
-								role="region"
-							/>,
-						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
-					]
-				)}
-			/>
-		)}
-	/>
-);
+const VirtualGridList = VirtualList;
 
 /**
- * A moonstone-styled scrollable and spottable virtual grid native list component.
+ * A Moonstone-styled scrollable and spottable virtual grid native list component.
  * For smooth native scrolling, web engine with below Chromium 61, should be launched
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
  *
  * @class VirtualGridListNative
  * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable.ScrollableNative
- * @mixes ui/Scrollable.ScrollableNative
+ * @mixes moonstone/Scrollable.SpotlightContainerDecorator
+ * @extends moonstone/VirtualList.VirtualListBaseNative
  * @ui
- * @public
+ * @private
  */
 const VirtualGridListNative = VirtualListNative;
 
 export default VirtualList;
 export {
-	VirtualList,
 	VirtualGridList,
-	VirtualListNative,
 	VirtualGridListNative,
-	UiVirtualListBase as VirtualListBase,
-	UiVirtualListBaseNative as VirtualListBaseNative
+	VirtualList,
+	VirtualListBaseJS as VirtualListBase,
+	VirtualListBaseNative as VirtualListBaseNative,
+	VirtualListNative
 };

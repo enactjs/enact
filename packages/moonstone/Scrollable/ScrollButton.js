@@ -9,14 +9,14 @@ import IconButton from '../IconButton';
 import css from './Scrollbar.less';
 
 const classNameMap = {
-	up: css.scrollbarUpButton,
 	down: css.scrollbarBottomButton,
 	left: css.scrollbarLeftButton,
-	right: css.scrollbarRightButton
+	right: css.scrollbarRightButton,
+	up: css.scrollbarUpButton
 };
 
 /**
- * A moonstone-styled base component for [ScrollButton]{@link moonstone/Scrollable.ScrollButton}.
+ * A Moonstone-styled base component for [ScrollButton]{@link moonstone/Scrollable.ScrollButton}.
  *
  * @class ScrollButtonBase
  * @memberof moonstone/Scrollable
@@ -24,9 +24,9 @@ const classNameMap = {
  * @private
  */
 const ScrollButtonBase = kind({
-	name: 'ScrollButton',
+	name: 'ScrollButtonBase',
 
-	propTypes: /** @lends moonstone/Scrollable.ScrollButtonBase.prototype */ {
+	propTypes: /** @lends moonstone/Scrollable.ScrollButton.prototype */ {
 		/**
 		 * Name of icon
 		 *
@@ -36,7 +36,13 @@ const ScrollButtonBase = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * Scroll direction for this button (down, left, right, or up)
+		 * Scroll direction for this button.
+		 *
+		 * Valid values are:
+		 * * `'down'`,
+		 * * `'left'`,
+		 * * `'right'`, and
+		 * * `'up'`.
 		 *
 		 * @type {String}
 		 * @public
@@ -68,8 +74,8 @@ const ScrollButtonBase = kind({
 	},
 
 	computed: {
-		'aria-label': ({active, direction}) => {
-			if (!active) {
+		'aria-label': ({disabled, direction}) => {
+			if (disabled) {
 				return null;
 			}
 
@@ -111,6 +117,8 @@ const ScrollButtonBase = kind({
  *
  * @class ScrollButton
  * @memberof moonstone/Scrollable
+ * @mixins ui/Toggleable
+ * @extends moonstone/Scrollable.ScrollButtonBase
  * @ui
  * @private
  */
