@@ -24,14 +24,6 @@ import {VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/Virtua
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
-/**
- * A spottable div element.
- *
- * @class VirtualListBase
- * @memberof moonstone/VirtualList
- * @ui
- * @private
- */
 const SpotlightPlaceholder = Spottable('div');
 
 const
@@ -76,17 +68,6 @@ const
 	JS = 'JS',
 	Native = 'Native';
 
-/**
- * A moonstone-styled base component for
- * [VirtualList]{@link moonstone/VirtualList.VirtualList} and [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
- *
- * @class VirtualListBase
- * @memberof moonstone/VirtualList
- * @extends ui/VirtualList.VirtualListBase
- * @extends ui/VirtualList.VirtualListBaseNative
- * @ui
- * @private
- */
 const VirtualListBase = (type) => {
 	const UiBase = (type === JS) ? UiVirtualListBase : UiVirtualListBaseNative;
 
@@ -95,7 +76,31 @@ const VirtualListBase = (type) => {
 
 		static propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 			/**
-			 * The `render` function for an item of the list
+			 * The `render` function for an item of the list receives the following parameters:
+			 * - `data` is for accessing the supplied `data` property of the list.
+			 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
+			 * is parameters due to performance optimizations.
+			 *
+			 * @param {Object} event
+			 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
+			 * @param {Number} event.index The index number of the componet to render
+			 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
+			 *
+			 * Data manipulation can be done in this function.
+			 *
+			 * > NOTE: The list does NOT always render a component whenever its render function is called
+			 * due to performance optimization.
+			 *
+			 * Usage:
+			 * ```
+			 * renderItem = ({index, ...rest}) => {
+			 *		delete rest.data;
+			 *
+			 *		return (
+			 *			<MyComponent index={index} {...rest} />
+			 *		);
+			 * }
+			 * ```
 			 *
 			 * @type {Function}
 			 * @public
@@ -103,7 +108,7 @@ const VirtualListBase = (type) => {
 			component: PropTypes.func.isRequired,
 
 			/**
-			 * Spotlight container Id
+			 * Spotlight container Id.
 			 *
 			 * @type {String}
 			 * @private
@@ -111,26 +116,27 @@ const VirtualListBase = (type) => {
 			'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types,
 
 			/**
-			 * The reference of [VirtualList]{@link ui/VirtualList.VirtualList}
+			 * Passes the instance of [VirtualList]{@link ui/VirtualList.VirtualList}.
 			 *
 			 * @type {Object}
+			 * @param {Object} ref
 			 * @private
 			 */
 			initUiChildRef: PropTypes.func,
 
 			/**
-			 * Component for child
+			 * Render function.
 			 *
 			 * @type {Function}
-			 * @public
+			 * @private
 			 */
 			render: PropTypes.func,
 
 			/**
-			 * 'true' if rtl, 'false' if ltr.
+			 * `true` if rtl, `false` if ltr.
+			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @private
 			 */
 			rtl: PropTypes.bool
@@ -726,8 +732,28 @@ const VirtualListBase = (type) => {
 	};
 };
 
+/**
+ * A Moonstone-styled base component for [VirtualList]{@link moonstone/VirtualList.VirtualList} and
+ * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
+ *
+ * @class VirtualListBaseJS
+ * @memberof moonstone/VirtualList
+ * @extends ui/VirtualList.VirtualListBase
+ * @ui
+ * @private
+ */
 const VirtualListBaseJS = VirtualListBase(JS);
 
+/**
+ * A Moonstone-styled base component for [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative} and
+ * [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative}.
+ *
+ * @class VirtualListBaseNative
+ * @memberof moonstone/VirtualList
+ * @extends ui/VirtualList.VirtualListBaseNative
+ * @ui
+ * @private
+ */
 const VirtualListBaseNative = VirtualListBase(Native);
 
 const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
@@ -756,6 +782,16 @@ const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line reac
 	/>
 );
 
+ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
+	/**
+	 * Aria role.
+	 *
+	 * @type {String}
+	 * @private
+	 */
+	role: PropTypes.string
+};
+
 const ScrollableVirtualListNative = ({role, ...rest}) => (
 	<ScrollableNative
 		{...rest}
@@ -782,14 +818,23 @@ const ScrollableVirtualListNative = ({role, ...rest}) => (
 	/>
 );
 
+ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListNative.prototype */ {
+	/**
+	 * Aria role.
+	 *
+	 * @type {String}
+	 * @private
+	 */
+	role: PropTypes.string
+};
+
 /**
  * A Moonstone-styled scrollable and spottable virtual list component.
  *
  * @class VirtualList
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable.SpotlightContainerDecorator
- * @extends moonstone/VirtualList.SpotlightPlaceholder
- * @extends moonstone/VirtualList.VirtualListBase
+ * @extends moonstone/VirtualList.VirtualListBaseJS
  * @ui
  * @public
  */
@@ -804,8 +849,7 @@ const VirtualList = SpotlightContainerDecorator(SpotlightContainerConfig, Scroll
  * @class VirtualListNative
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable.SpotlightContainerDecorator
- * @extends moonstone/VirtualList.SpotlightPlaceholder
- * @extends moonstone/VirtualList.VirtualListBase
+ * @extends moonstone/VirtualList.VirtualListBaseNative
  * @ui
  * @private
  */
@@ -817,8 +861,7 @@ const VirtualListNative = SpotlightContainerDecorator(SpotlightContainerConfig, 
  * @class VirtualGridList
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable.SpotlightContainerDecorator
- * @extends moonstone/VirtualList.SpotlightPlaceholder
- * @extends moonstone/VirtualList.VirtualListBase
+ * @extends moonstone/VirtualList.VirtualListBaseJS
  * @ui
  * @public
  */
@@ -833,8 +876,7 @@ const VirtualGridList = VirtualList;
  * @class VirtualGridListNative
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable.SpotlightContainerDecorator
- * @extends moonstone/VirtualList.SpotlightPlaceholder
- * @extends moonstone/VirtualList.VirtualListBase
+ * @extends moonstone/VirtualList.VirtualListBaseNative
  * @ui
  * @private
  */
@@ -842,10 +884,10 @@ const VirtualGridListNative = VirtualListNative;
 
 export default VirtualList;
 export {
-	UiVirtualListBase as VirtualListBase,
-	UiVirtualListBaseNative as VirtualListBaseNative,
 	VirtualGridList,
 	VirtualGridListNative,
 	VirtualList,
+	VirtualListBaseJS as VirtualListBase,
+	VirtualListBaseNative as VirtualListBaseNative,
 	VirtualListNative
 };

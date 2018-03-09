@@ -11,6 +11,7 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+
 import Scrollable from '../Scrollable';
 
 import css from './ListItem.less';
@@ -25,7 +26,7 @@ const nop = () => {};
  * @memberof ui/VirtualList
  * @property {Number} minWidth - The minimum width of the grid list item.
  * @property {Number} minHeight - The minimum height of the grid list item.
- * @private
+ * @public
  */
 const gridListItemSizeShape = PropTypes.shape({
 	minWidth: PropTypes.number.isRequired,
@@ -52,8 +53,7 @@ class VirtualListBase extends Component {
 		 * is parameters due to performance optimizations.
 		 *
 		 * @param {Object} event
-		 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in
-		 *   the component.
+		 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
 		 * @param {Number} event.index The index number of the componet to render
 		 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
 		 *
@@ -92,10 +92,10 @@ class VirtualListBase extends Component {
 
 		/**
 		 * Callback method of scrollTo.
-		 * Normally, `Scrollable` should set this value.
+		 * Normally, `[Scrollable]{@link ui/Scrollable.Scrollable}` should set this value.
 		 *
 		 * @type {Function}
-		 * @public
+		 * @private
 		 */
 		cbScrollTo: PropTypes.func,
 
@@ -146,7 +146,7 @@ class VirtualListBase extends Component {
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * Return the props for the item of a list.
+		 * Called to get the props for list items.
 		 *
 		 * @type {Function}
 		 * @private
@@ -165,7 +165,7 @@ class VirtualListBase extends Component {
 		overhang: PropTypes.number,
 
 		/**
-		 * It scrolls by page when 'true', by item when 'false'.
+		 * It scrolls by page when `true`, by item when `false`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -182,10 +182,9 @@ class VirtualListBase extends Component {
 		render: PropTypes.func,
 
 		/**
-		 * 'true' if rtl, 'false' if ltr.
+		 * `true` if rtl, `false` if ltr.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @private
 		 */
 		rtl: PropTypes.bool,
@@ -200,7 +199,7 @@ class VirtualListBase extends Component {
 		spacing: PropTypes.number,
 
 		/**
-		 * Called to execute additional logic in a theme component when updating states and bounds.
+		 * Called to execute additional logic in a themed component when updating states and bounds.
 		 *
 		 * @type {Function}
 		 * @private
@@ -759,7 +758,7 @@ class VirtualListBase extends Component {
 }
 
 /**
- * A unstyled scrollable virtual list component with touch support.
+ * An unstyled scrollable virtual list component with touch support.
  *
  * @class VirtualList
  * @memberof ui/VirtualList
@@ -783,12 +782,12 @@ const VirtualList = (props) => (
 );
 
 /**
- * A unstyled scrollable virtual grid list component with touch support.
+ * An unstyled scrollable virtual grid list component with touch support.
  *
  * @class VirtualGridList
  * @memberof ui/VirtualList
+ * @extends ui/Scrollable.Scrollable
  * @extends ui/VirtualList.VirtualListBase
- * @mixes ui/Scrollable.Scrollable
  * @ui
  * @public
  */

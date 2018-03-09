@@ -42,7 +42,7 @@ const
  */
 const dataIndexAttribute = 'data-index';
 
-const ScrollableSpotlightContainerDecorator = SpotlightContainerDecorator(
+const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 	{
 		navigableFilter: (elem, {focusableScrollbar}) => {
 			if (
@@ -67,12 +67,10 @@ const ScrollableSpotlightContainerDecorator = SpotlightContainerDecorator(
 );
 
 /**
- * A Moonstone-styled component that provides horizontal and vertical scrollbars and makes a render prop element scrollable.
+ * A Moonstone-styled component that provides horizontal and vertical scrollbars.
  *
  * @class Scrollable
  * @memberof moonstone/Scrollable
- * @extends moonstone/Scrollable.Scrollbar
- * @extends spotlight/SpotlightContainerDecorator
  * @extends ui/Scrollable.ScrollableBase
  * @ui
  * @private
@@ -405,7 +403,7 @@ class Scrollable extends Component {
 		this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 	}
 
-	updateEventListeners = (childContainerRef) => {
+	addEventListeners = (childContainerRef) => {
 		if (childContainerRef && childContainerRef.addEventListener) {
 			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			childContainerRef.addEventListener('focusin', this.onFocus);
@@ -437,6 +435,7 @@ class Scrollable extends Component {
 		return (
 			<UiScrollableBase
 				{...rest}
+				addEventListeners={this.addEventListeners}
 				onKeyDown={this.onKeyDown}
 				onMouseUp={this.onMouseUp}
 				onWheel={this.onWheel}
@@ -444,7 +443,6 @@ class Scrollable extends Component {
 				removeEventListeners={this.removeEventListeners}
 				scrollTo={this.scrollTo}
 				stop={this.stop}
-				updateEventListeners={this.updateEventListeners}
 				render={({ // eslint-disable-line react/jsx-no-bind
 					childComponentProps,
 					className,
@@ -459,7 +457,7 @@ class Scrollable extends Component {
 					style,
 					verticalScrollbarProps
 				}) => (
-					<ScrollableSpotlightContainerDecorator
+					<ScrollableSpotlightContainer
 						className={className}
 						containerRef={initContainerRef}
 						focusableScrollbar={focusableScrollbar}
@@ -477,7 +475,7 @@ class Scrollable extends Component {
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
 						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} {...this.scrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
-					</ScrollableSpotlightContainerDecorator>
+					</ScrollableSpotlightContainer>
 				)}
 			/>
 		);

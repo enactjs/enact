@@ -21,9 +21,10 @@ import React, {Component} from 'react';
 import {contextTypes as contextTypesResize} from '../Resizable';
 import ri from '../resolution';
 
-import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
+
+import css from './Scrollable.less';
 
 const
 	constants = {
@@ -50,7 +51,7 @@ const
 	} = constants;
 
 /**
- * A unstyled component that passes scrollable behavior information as its render prop's arguments.
+ * An unstyled component that passes scrollable behavior information as its render prop's arguments.
  *
  * @class ScrollableBase
  * @memberof ui/Scrollable
@@ -60,7 +61,15 @@ const
 class ScrollableBase extends Component {
 	static displayName = 'ui:ScrollableBase'
 
-	static propTypes = /** @lends ui/Scrollable.ScrollableBase.prototype */ {
+	static propTypes = /** @lends ui/Scrollable.Scrollable.prototype */ {
+		/**
+		 * Called when adding additional event listeners in a themed component.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		addEventListeners: PropTypes.func,
+
 		/**
 		 * A callback function that receives a reference to the `scrollTo` feature. Once received,
 		 * the `scrollTo` method can be called as an imperative interface.
@@ -149,6 +158,23 @@ class ScrollableBase extends Component {
 		/**
 		 * Called when scroll starts.
 		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+		 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
+		 *
+		 * Example:
+		 * ```
+		 * onScrollStart = ({scrollLeft, scrollTop, moreInfo}) => {
+    	 *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+    	 *     // do something with firstVisibleIndex and lastVisibleIndex
+		 * }
+		 *
+		 * render = () => (
+		 *     <VirtualList
+		 *         ...
+		 *         onScrollStart={this.onScrollStart}
+		 *         ...
+		 *     />
+		 * )
+		 * ```
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -162,6 +188,23 @@ class ScrollableBase extends Component {
 		/**
 		 * Called when scroll stops.
 		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+		 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
+		 *
+		 * Example:
+		 * ```
+		 * onScrollStop = ({scrollLeft, scrollTop, moreInfo}) => {
+    	 *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+    	 *     // do something with firstVisibleIndex and lastVisibleIndex
+		 * }
+		 *
+		 * render = () => (
+		 *     <VirtualList
+		 *         ...
+		 *         onScrollStop={this.onScrollStop}
+		 *         ...
+		 *     />
+		 * )
+		 * ```
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -181,7 +224,7 @@ class ScrollableBase extends Component {
 		onWheel: PropTypes.func,
 
 		/**
-		 * Called when removing additional event listeners in a theme component.
+		 * Called when removing additional event listeners in a themed component.
 		 *
 		 * @type {Function}
 		 * @private
@@ -197,7 +240,7 @@ class ScrollableBase extends Component {
 		render: PropTypes.func,
 
 		/**
-		 * Called to execute additional logic in a theme component when prop's cbScrollTo called.
+		 * Called to execute additional logic in a themed component when scrollTo is called.
 		 *
 		 * @type {Function}
 		 * @private
@@ -205,7 +248,7 @@ class ScrollableBase extends Component {
 		scrollTo: PropTypes.func,
 
 		/**
-		 * Called to execute additional logic in a theme component when stopping scrolling.
+		 * Called to execute additional logic in a themed component when scroll stops.
 		 *
 		 * @type {Function}
 		 * @private
@@ -213,21 +256,13 @@ class ScrollableBase extends Component {
 		stop: PropTypes.func,
 
 		/**
-		 * ScrollableBase CSS style.
-		 * Should be defined because we manuplate style prop in render().
+		 * Scrollable CSS style.
+		 * Should be defined because we manipulate style prop in render().
 		 *
 		 * @type {Object}
-		 * @private
+		 * @public
 		 */
 		style: PropTypes.object,
-
-		/**
-		 * Called when adding additional event listeners in a theme component.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		updateEventListeners: PropTypes.func,
 
 		/**
 		 * Specifies how to show vertical scrollbar.
@@ -307,7 +342,7 @@ class ScrollableBase extends Component {
 
 		this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 		this.direction = this.childRef.props.direction;
-		this.updateEventListeners();
+		this.addEventListeners();
 		this.updateScrollbars();
 
 		on('keydown', this.onKeyDown);
@@ -334,7 +369,7 @@ class ScrollableBase extends Component {
 		this.clampScrollPosition();
 
 		this.direction = this.childRef.props.direction;
-		this.updateEventListeners();
+		this.addEventListeners();
 		if (
 			hasDataSizeChanged === false &&
 			(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
@@ -977,15 +1012,15 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	updateEventListeners () {
+	addEventListeners () {
 		const {containerRef} = this;
 		if (containerRef && containerRef.addEventListener) {
 			// FIXME `onWheel` doesn't work on the v8 snapshot.
 			containerRef.addEventListener('wheel', this.onWheel);
 		}
 
-		if (this.props.updateEventListeners) {
-			this.props.updateEventListeners(this.childRef.containerRef);
+		if (this.props.addEventListeners) {
+			this.props.addEventListeners(this.childRef.containerRef);
 		}
 	}
 
@@ -1023,6 +1058,7 @@ class ScrollableBase extends Component {
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl} = this.state,
 			scrollableClasses = classNames(css.scrollable, className);
 
+		delete rest.addEventListeners;
 		delete rest.cbScrollTo;
 		delete rest.horizontalScrollbar;
 		delete rest.onKeyDown;
@@ -1035,7 +1071,6 @@ class ScrollableBase extends Component {
 		delete rest.removeEventListeners;
 		delete rest.scrollTo;
 		delete rest.stop;
-		delete rest.updateEventListeners;
 		delete rest.verticalScrollbar;
 
 		rest.rtl = rtl;
@@ -1058,12 +1093,11 @@ class ScrollableBase extends Component {
 }
 
 /**
- * A unstyled component that provides horizontal and vertical scrollbars and makes a render prop element scrollable.
+ * An unstyled component that provides horizontal and vertical scrollbars and makes a render prop element scrollable.
  *
  * @class Scrollable
  * @memberof ui/Scrollable
  * @extends ui/Scrollable.ScrollableBase
- * @extends ui/Scrollable.Scrollbar
  * @ui
  * @private
  */

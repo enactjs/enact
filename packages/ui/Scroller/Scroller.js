@@ -15,7 +15,7 @@ import Scrollable from '../Scrollable';
 import css from './Scroller.less';
 
 /**
- * A basic base component for Scroller{@link ui/Scroller.Scroller}.
+ * An unstyled base component for Scroller{@link ui/Scroller.Scroller}.
  * In most circumstances, you will want to use the Scrollable version:
  * [Scroller]{@link ui/Scroller.Scroller}
  *
@@ -40,9 +40,10 @@ class ScrollerBase extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
-		 * Direction of the list.
+		 * Direction of the scroller.
 		 *
 		 * Valid values are:
+		 * * `'both'`,
 		 * * `'horizontal'`, and
 		 * * `'vertical'`.
 		 *
@@ -53,18 +54,16 @@ class ScrollerBase extends Component {
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
-		 * 'true' if rtl, 'false' if ltr.
+		 * `true` if rtl, `false` if ltr.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @private
 		 */
 		rtl: PropTypes.bool
 	}
 
 	static defaultProps = {
-		direction: 'both',
-		rtl: false
+		direction: 'both'
 	}
 
 	componentDidMount () {
@@ -182,7 +181,7 @@ class ScrollerBase extends Component {
 }
 
 /**
- * A unstyled scroller.
+ * An unstyled scroller.
  *
  * Usage:
  * ```
