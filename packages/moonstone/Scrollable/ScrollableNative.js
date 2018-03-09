@@ -493,11 +493,15 @@ class ScrollableNative extends Component {
 	}
 
 	initChildRef = (ref) => {
-		this.childRef = ref;
+		if (ref) {
+			this.childRef = ref;
+		}
 	}
 
 	initUiRef = (ref) => {
-		this.uiRef = ref;
+		if (ref) {
+			this.uiRef = ref;
+		}
 	}
 
 	render () {

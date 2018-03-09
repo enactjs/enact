@@ -154,7 +154,9 @@ class ScrollerBase extends Component {
 	}
 
 	initContainerRef = (ref) => {
-		this.containerRef = ref;
+		if (ref) {
+			this.containerRef = ref;
+		}
 	}
 
 	render () {

@@ -271,9 +271,9 @@ class ScrollButtonsBase extends Component {
 		}
 	}
 
-	initPrevButtonRef = (ref) => {
+	initAnnounceRef = (ref) => {
 		if (ref) {
-			this.prevButtonElement = ref;
+			this.announce = ref.announce;
 		}
 	}
 
@@ -283,9 +283,9 @@ class ScrollButtonsBase extends Component {
 		}
 	}
 
-	initAnnounceRef = (ref) => {
+	initPrevButtonRef = (ref) => {
 		if (ref) {
-			this.announce = ref.announce;
+			this.prevButtonElement = ref;
 		}
 	}
 
