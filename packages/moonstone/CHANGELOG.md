@@ -4,6 +4,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Removed
+
+- `moonstone/Slider` exports `SliderFactory` and `SliderBaseFactory` replaced by the new CSS override feature supported via the `moonstone/Slider.SliderBase` `css` prop
+- `moonstone/IncrementSlider` exports `IncrementSliderFactory` and `IncrementSliderBaseFactory` replaced by the new CSS override feature supported via the `moonstone/IncrementSlider.IncrementSliderBase` `css` prop
+
 ### Fixed
 
 - `moonstone/ExpandableItem` to be more performant when animating
