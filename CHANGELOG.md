@@ -149,11 +149,6 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/Scroller` and other scrolling components to show scroll thumb properly when scroll position reaches the top or the bottom by paging controls
 - `spotlight` to guard against accessing unconfigured container configurations
 - `ui/ViewManager` to revert 1.13.0 fix for lifecycle timing when entering a view
-## [unreleased]
-
-### Fixed
-
-- `moonstone/Slider` to handle updates to its `value` prop correctly 
 
 ## [1.13.1] - 2017-12-06
 

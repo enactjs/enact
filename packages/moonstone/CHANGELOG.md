@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ExpandableItem` to be more performant when animating
+- `moonstone/Slider` to handle updates to its `value` prop correctly
 
 ## [2.0.0-alpha.5] - 2018-03-07
 
@@ -38,9 +39,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualFlexList` to be replaced by `ui/VirtualFlexList`
 - `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`
 - `moonstone/Item.OverlayDecorator`, `moonstone/Item.Overlay`, and `moonstone/Item.ItemOverlay` to be replaced by `moonstone/SlotItem`
-- `moonstone/Scrollable` to not show scroll thumb when only child item is updated
-- `moonstone/Scrollbar` to show its thumb properly when scroll position reaches the top or the bottom by paging controls
-- `moonstone/Slider` to handle updates to its `value` prop correctly
 
 ### Changed
 
