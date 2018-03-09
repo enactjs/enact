@@ -1,8 +1,17 @@
+/**
+ * Provides Moonstone-themed native scroller components and behaviors.
+ *
+ * @module moonstone/Scroller
+ * @exports ScrollerBaseNative
+ * @exports ScrollerNative
+ */
+
 import React from 'react';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
-import {ScrollerBase as ScrollerBaseNative} from './Scroller';
 import {ScrollableNative} from '../Scrollable/ScrollableNative';
+
+import {ScrollerBase as ScrollerBaseNative} from './Scroller';
 
 const ScrollableScrollerNative = (props) => (
 	<ScrollableNative
@@ -26,13 +35,16 @@ const ScrollableScrollerNative = (props) => (
  *
  * @class ScrollerNative
  * @memberof moonstone/Scroller
- * @mixes moonstone/Scrollable.ScrollableNative
+ * @mixes spotlight/SpotlightContainerDecorator
+ * @extends moonstone/Scrollable.ScrollableNative
+ * @extends moonstone/Scroller.ScrollerBase
  * @ui
- * @public
+ * @private
  */
 const ScrollerNative = SpotlightContainerDecorator({restrict: 'self-first'}, ScrollableScrollerNative);
 
 export default ScrollerNative;
 export {
+	ScrollerBase as ScrollerBaseNative,
 	ScrollerNative
 };

@@ -25,19 +25,34 @@ const
 	};
 
 /**
- * A moonstone-styled Higher-ordered Component for Scroller{@link moonstone/Scroller.Scroller}.
+ * A moonstone-styled base component for Scroller{@link moonstone/Scroller.Scroller}.
  * In most circumstances, you will want to use the SpotlightContainerDecorator and Scrollable version:
  * [Scroller]{@link moonstone/Scroller.Scroller}
  *
- * @hoc
- * @private
+ * @class ScrollerBase
+ * @memberof moonstone/Scroller
+ * @ui
+ * @public
  */
 class ScrollerBase extends Component {
 	static displayName = 'ScrollerBase'
 
-	static propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
+	static propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
+		/**
+		 * The reference of [Scroller]{@link ui/Scroller.Scroller}
+		 *
+		 * @type {Object}
+		 * @private
+		 */
 		initUiChildRef: PropTypes.func,
 
+		/**
+		 * 'true' if rtl, 'false' if ltr.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
 		rtl: PropTypes.bool
 	}
 
@@ -347,7 +362,9 @@ const ScrollableScroller = (props) => (
  *
  * @class Scroller
  * @memberof moonstone/Scroller
- * @mixes moonstone/Scroller.ScrollerDecorator
+ * @mixes moonstone/Scroller.SpotlightContainerDecorator
+ * @extends moonstone/Scrollable.Scrollable
+ * @extends moonstone/Scroller.ScrollerBase
  * @ui
  * @public
  */
