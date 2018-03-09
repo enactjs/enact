@@ -141,8 +141,6 @@ class VirtualListBaseNative extends Component {
 
 		getComponentProps: PropTypes.func,
 
-		getXY: PropTypes.func,
-
 		/**
 		 * Number of spare DOM node.
 		 * `3` is good for the default value experimentally and
@@ -164,6 +162,8 @@ class VirtualListBaseNative extends Component {
 		pageScroll: PropTypes.bool,
 
 		render: PropTypes.func,
+
+		rtl: PropTypes.bool,
 
 		/**
 		 * Spacing between items.
@@ -622,13 +622,13 @@ class VirtualListBaseNative extends Component {
 	}
 
 	scrollToPosition (x, y) {
-		this.containerRef.scrollTo(x, y);
+		this.containerRef.scrollTo(
+			(this.props.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y
+		);
 	}
 
 	composeStyle (style, width, height, primaryPosition, secondaryPosition) {
-		const
-			getXY = this.props.getXY || this.getXY,
-			{x, y} = getXY(this.isPrimaryDirectionVertical, primaryPosition, secondaryPosition);
+		const {x, y} = this.getXY(this.isPrimaryDirectionVertical, primaryPosition, secondaryPosition);
 
 		if (this.isItemSized) {
 			style.width = width;
@@ -637,7 +637,7 @@ class VirtualListBaseNative extends Component {
 		style.position = 'absolute';
 
 		/* FIXME: RTL / this calculation only works for Chrome */
-		style.transform = 'translate(' + x + 'px,' + y + 'px)';
+		style.transform = 'translate(' + (this.props.rtl ? -x : x) + 'px,' + y + 'px)';
 	}
 
 	getXY = (isPrimaryDirectionVertical, primaryPosition, secondaryPosition) => (isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
@@ -712,10 +712,10 @@ class VirtualListBaseNative extends Component {
 		delete rest.dataSize;
 		delete rest.direction;
 		delete rest.getComponentProps;
-		delete rest.getXY;
 		delete rest.itemSize;
 		delete rest.overhang;
 		delete rest.pageScroll;
+		delete rest.rtl;
 		delete rest.spacing;
 		delete rest.updateStatesAndBounds;
 

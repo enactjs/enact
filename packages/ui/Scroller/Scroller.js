@@ -45,7 +45,9 @@ class ScrollerBase extends Component {
 		 * @default 'both'
 		 * @public
 		 */
-		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+		rtl: PropTypes.bool
 	}
 
 	static defaultProps = {
@@ -76,7 +78,7 @@ class ScrollerBase extends Component {
 
 	getScrollBounds = () => this.scrollBounds
 
-	getRtlPositionX = (x) => x
+	getRtlPositionX = (x) => (this.props.rtl ? this.uiRef.scrollBounds.maxLeft - x : x)
 
 	// for Scrollable
 	setScrollPosition (x, y) {
@@ -153,6 +155,7 @@ class ScrollerBase extends Component {
 
 		delete rest.cbScrollTo;
 		delete rest.direction;
+		delete rest.rtl;
 
 		return (
 			<div

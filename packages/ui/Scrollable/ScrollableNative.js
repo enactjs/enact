@@ -328,6 +328,7 @@ class ScrollableBaseNative extends Component {
 			this.publisher.publish(message);
 		}
 	}
+
 	// constants
 	pixelPerLine = 39
 	scrollWheelMultiplierForDeltaPixel = 1.5 // The ratio of wheel 'delta' units to pixels scrolled.
@@ -457,7 +458,7 @@ class ScrollableBaseNative extends Component {
 			this.scrollStartOnScroll();
 		}
 
-		if (this.context.rtl && canScrollHorizontally) {
+		if (this.state.rtl && canScrollHorizontally) {
 			/* FIXME: RTL / this calculation only works for Chrome */
 			scrollLeft = bounds.maxLeft - scrollLeft;
 		}
@@ -853,7 +854,7 @@ class ScrollableBaseNative extends Component {
 	render () {
 		const
 			{className, render, style, ...rest} = this.props,
-			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl} = this.state,
 			scrollableClasses = classNames(css.scrollable, className);
 
 		delete rest.cbScrollTo;
@@ -871,6 +872,8 @@ class ScrollableBaseNative extends Component {
 		delete rest.start;
 		delete rest.updateEventListeners;
 		delete rest.verticalScrollbar;
+
+		rest.rtl = rtl;
 
 		return render({
 			childComponentProps: rest,
