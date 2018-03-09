@@ -1,10 +1,19 @@
+/**
+ * Provides unstyled native scroller components and behaviors to be customized by a theme or application.
+ *
+ * @module ui/Scroller
+ * @exports ScrollerBaseNative
+ * @exports ScrollerNative
+ * @private
+ */
 import React from 'react';
 
 import ScrollableNative from '../Scrollable/ScrollableNative';
+
 import {ScrollerBase as ScrollerBaseNative} from './Scroller';
 
 /**
- * A basic native scroller, [ScrollableNative]{@link ui/Scrollable.ScrollableNative} applied.
+ * A unstyled native scroller, [ScrollableNative]{@link ui/Scrollable.ScrollableNative} applied.
  * For smooth native scrolling, web engine with below Chromium 61, should be launched
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
@@ -16,9 +25,10 @@ import {ScrollerBase as ScrollerBaseNative} from './Scroller';
  *
  * @class ScrollerNative
  * @memberof ui/Scroller
- * @mixes ui/Scrollable.ScrollableNative
+ * @extends ui/Scrollable.ScrollableNative
+ * @extends ui/Scrollable.ScrollerBase
  * @ui
- * @public
+ * @private
  */
 const ScrollerNative = (props) => (
 	<ScrollableNative
@@ -31,6 +41,6 @@ const ScrollerNative = (props) => (
 
 export default ScrollerNative;
 export {
-	ScrollerNative,
-	ScrollerBaseNative
+	ScrollerBaseNative,
+	ScrollerNative
 };

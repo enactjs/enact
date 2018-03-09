@@ -10,8 +10,9 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import css from './Scroller.less';
 import Scrollable from '../Scrollable';
+
+import css from './Scroller.less';
 
 /**
  * A basic base component for Scroller{@link ui/Scroller.Scroller}.
@@ -26,7 +27,7 @@ import Scrollable from '../Scrollable';
 class ScrollerBase extends Component {
 	static displayName = 'ui:ScrollerBase'
 
-	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
+	static propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
 		children: PropTypes.node.isRequired,
 
 		/**
@@ -39,7 +40,11 @@ class ScrollerBase extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
-		 * Direction of the scroller; valid values are `'both'`, `'horizontal'`, and `'vertical'`.
+		 * Direction of the list.
+		 *
+		 * Valid values are:
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
 		 *
 		 * @type {String}
 		 * @default 'both'
@@ -47,11 +52,19 @@ class ScrollerBase extends Component {
 		 */
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
+		/**
+		 * 'true' if rtl, 'false' if ltr.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
 		rtl: PropTypes.bool
 	}
 
 	static defaultProps = {
-		direction: 'both'
+		direction: 'both',
+		rtl: false
 	}
 
 	componentDidMount () {
@@ -169,7 +182,7 @@ class ScrollerBase extends Component {
 }
 
 /**
- * A basic scroller, [Scrollable]{@link ui/Scrollable.Scrollable} applied.
+ * A unstyled scroller.
  *
  * Usage:
  * ```
@@ -178,7 +191,8 @@ class ScrollerBase extends Component {
  *
  * @class Scroller
  * @memberof ui/Scroller
- * @mixes ui/Scrollable.Scrollable
+ * @extends ui/Scrollable.Scrollable
+ * @extends ui/Scrollable.ScrollerBase
  * @ui
  * @public
  */
