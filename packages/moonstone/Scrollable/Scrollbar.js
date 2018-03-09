@@ -57,6 +57,29 @@ class Scrollbar extends Component {
 		vertical: true
 	}
 
+	initScrollbarRef = (ref) => {
+		if (ref) {
+			const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = ref;
+
+			this.getContainerRef = getContainerRef;
+			this.showThumb = showThumb;
+			this.startHidingThumb = startHidingThumb;
+			this.uiUpdate = uiUpdate;
+		}
+	}
+
+	initScrollButtonsRef = (ref) => {
+		if (ref) {
+			const {isOneOfScrollButtonsFocused, updateButtons} = ref;
+
+			this.isOneOfScrollButtonsFocused = isOneOfScrollButtonsFocused;
+			this.update = (bounds) => {
+				updateButtons(bounds);
+				this.uiUpdate(bounds);
+			};
+		}
+	}
+
 	render () {
 		const {cbAlertThumb, corner, vertical, ...rest} = this.props;
 
@@ -64,31 +87,12 @@ class Scrollbar extends Component {
 			<UiScrollbarBase
 				corner={corner}
 				css={componentCss}
-				ref={(ref) => { // eslint-disable-line react/jsx-no-bind
-					if (ref) {
-						const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = ref;
-
-						this.getContainerRef = getContainerRef;
-						this.showThumb = showThumb;
-						this.startHidingThumb = startHidingThumb;
-						this.uiUpdate = uiUpdate;
-					}
-				}}
+				ref={this.initScrollbarRef}
 				vertical={vertical}
 				render={({setScrollThumbRef}) => ( // eslint-disable-line react/jsx-no-bind
 					<ScrollButtons
 						{...rest}
-						ref={(ref) => { // eslint-disable-line react/jsx-no-bind
-							if (ref) {
-								const {isOneOfScrollButtonsFocused, updateButtons} = ref;
-
-								this.isOneOfScrollButtonsFocused = isOneOfScrollButtonsFocused;
-								this.update = (bounds) => {
-									updateButtons(bounds);
-									this.uiUpdate(bounds);
-								};
-							}
-						}}
+						ref={this.initScrollButtonsRef}
 						vertical={vertical}
 						render={() => ( // eslint-disable-line react/jsx-no-bind
 							<ScrollThumb

@@ -696,10 +696,19 @@ const VirtualListBase = (type) => {
 			(index === this.nodeIndexToBeFocused) ? {ref: (ref) => this.initItemRef(ref, index)} : {}
 		)
 
+		initUiRef = (ref) => {
+			if (ref) {
+				this.uiRef = ref;
+				this.props.initUiChildRef(ref);
+			}
+		}
+
 		render () {
 			const
-				{component, initUiChildRef, render, ...rest} = this.props,
+				{component, render, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
+
+			delete rest.initUiChildRef;
 
 			return (
 				<UiBase
@@ -712,12 +721,7 @@ const VirtualListBase = (type) => {
 						})
 					)}
 					getComponentProps={this.getComponentProps}
-					ref={(ref) => { // eslint-disable-line react/jsx-no-bind
-						if (ref) {
-							this.uiRef = ref;
-							initUiChildRef(ref);
-						}
-					}}
+					ref={this.initUiRef}
 					updateStatesAndBounds={this.updateStatesAndBounds}
 					render={(props) => { // eslint-disable-line react/jsx-no-bind
 						return render({

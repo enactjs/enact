@@ -153,7 +153,7 @@ class ScrollerBase extends Component {
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
 	}
 
-	initRef = (ref) => {
+	initContainerRef = (ref) => {
 		this.containerRef = ref;
 	}
 
@@ -173,7 +173,7 @@ class ScrollerBase extends Component {
 			<div
 				{...rest}
 				className={classNames(className, css.hideNativeScrollbar)}
-				ref={this.initRef}
+				ref={this.initContainerRef}
 				style={mergedStyle}
 			/>
 		);

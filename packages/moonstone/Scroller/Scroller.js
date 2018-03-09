@@ -327,17 +327,21 @@ class ScrollerBase extends Component {
 		}
 	}
 
+	initUiRef = (ref) => {
+		this.uiRef = ref;
+		this.props.initUiChildRef(ref);
+	}
+
 	render () {
-		const {initUiChildRef, ...rest} = this.props;
+		const props = Object.assign({}, this.props);
+
+		delete props.initUiChildRef;
 
 		return (
 			<UiScrollerBase
-				{...rest}
+				{...props}
 				onKeyDown={this.onKeyDown}
-				ref={(ref) => {
-					this.uiRef = ref;
-					initUiChildRef(ref);
-				}}
+				ref={this.initUiRef}
 			/>
 		);
 	}

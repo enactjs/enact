@@ -208,22 +208,24 @@ class Scrollbar extends Component {
 		vertical: true
 	}
 
+	setApi = (ref) => {
+		if (ref) {
+			const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = ref;
+
+			this.getContainerRef = getContainerRef;
+			this.showThumb = showThumb;
+			this.startHidingThumb = startHidingThumb;
+			this.update = uiUpdate;
+		}
+	}
+
 	render () {
 		const {vertical} = this.props;
 
 		return (
 			<ScrollbarBase
 				{...this.props}
-				ref={(ref) => { // eslint-disable-line react/jsx-no-bind
-					if (ref) {
-						const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = ref;
-
-						this.getContainerRef = getContainerRef;
-						this.showThumb = showThumb;
-						this.startHidingThumb = startHidingThumb;
-						this.update = uiUpdate;
-					}
-				}}
+				ref={this.setApi}
 				render={({setScrollThumbRef}) => { // eslint-disable-line react/jsx-no-bind
 					return (
 						<ScrollThumb

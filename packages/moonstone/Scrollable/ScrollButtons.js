@@ -271,6 +271,24 @@ class ScrollButtonsBase extends Component {
 		}
 	}
 
+	initPrevButtonRef = (ref) => {
+		if (ref) {
+			this.prevButtonElement = ref;
+		}
+	}
+
+	initNextButtonRef = (ref) => {
+		if (ref) {
+			this.nextButtonElement = ref;
+		}
+	}
+
+	initAnnounceRef = (ref) => {
+		if (ref) {
+			this.announce = ref.announce;
+		}
+	}
+
 	render () {
 		const
 			{disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, render, vertical} = this.props,
@@ -290,11 +308,7 @@ class ScrollButtonsBase extends Component {
 				onKeyUp={this.releaseButton}
 				onMouseDown={this.depressButton}
 				onSpotlightDisappear={onPrevSpotlightDisappear}
-				ref={(ref) => { // eslint-disable-line react/jsx-no-bind
-					if (ref) {
-						this.prevButtonElement = ref;
-					}
-				}}
+				ref={this.initPrevButtonRef}
 			>
 				{prevIcon}
 			</ScrollButton>,
@@ -310,21 +324,13 @@ class ScrollButtonsBase extends Component {
 				onKeyUp={this.releaseButton}
 				onMouseDown={this.depressButton}
 				onSpotlightDisappear={onNextSpotlightDisappear}
-				ref={(ref) => { // eslint-disable-line react/jsx-no-bind
-					if (ref) {
-						this.nextButtonElement = ref;
-					}
-				}}
+				ref={this.initNextButtonRef}
 			>
 				{nextIcon}
 			</ScrollButton>,
 			<Announce
 				key="announce"
-				ref={(ref) => { // eslint-disable-line react/jsx-no-bind
-					if (ref) {
-						this.announce = ref.announce;
-					}
-				}}
+				ref={this.initAnnounceRef}
 			/>
 		];
 	}
