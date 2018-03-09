@@ -21,10 +21,9 @@ import React, {Component} from 'react';
 import {contextTypes as contextTypesResize} from '../Resizable';
 import ri from '../resolution';
 
+import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
-
-import css from './Scrollable.less';
 
 const
 	constants = {
@@ -51,9 +50,9 @@ const
 	} = constants;
 
 /**
- * A Higher-order Component that applies a Scrollable behavior to its wrapped component.
+ * A unstyled component that passes scrollable behavior information as its render prop's arguments.
  *
- * @class Scrollable
+ * @class ScrollableBase
  * @memberof ui/Scrollable
  * @ui
  * @private
@@ -61,7 +60,7 @@ const
 class ScrollableBase extends Component {
 	static displayName = 'ui:ScrollableBase'
 
-	static propTypes = /** @lends ui/Scrollable.Scrollable.prototype */ {
+	static propTypes = /** @lends ui/Scrollable.ScrollableBase.prototype */ {
 		/**
 		 * A callback function that receives a reference to the `scrollTo` feature. Once received,
 		 * the `scrollTo` method can be called as an imperative interface.
@@ -88,14 +87,19 @@ class ScrollableBase extends Component {
 		 *	// You can simply call like below;
 		 *	this.scrollTo({align: 'top'}); // scroll to the top
 		 * ```
+		 *
 		 * @type {Function}
 		 * @public
 		 */
 		cbScrollTo: PropTypes.func,
 
 		/**
-		 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
-		 * `'visible'`, and `'hidden'`.
+		 * Specifies how to show horizontal scrollbar.
+		 *
+		 * Valid values are:
+		 * * `'auto'`,
+		 * * `'visible'`, and
+		 * * `'hidden'`.
 		 *
 		 * @type {String}
 		 * @default 'auto'
@@ -103,23 +107,39 @@ class ScrollableBase extends Component {
 		 */
 		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
+		/**
+		 * Called when pressing a key.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		onKeyDown: PropTypes.func,
 
+		/**
+		 * Called when trigerring a mouseup event.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		onMouseUp: PropTypes.func,
 
 		/**
-		 * Called when scrolling
-		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
-		 * It is not recommended to set this prop since it can cause performance degradation. Use
-		 * `onScrollStart` or `onScrollStop` instead.
+		 * Called when scrolling.
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+		 * It is not recommended to set this prop since it can cause performance degradation.
+		 * Use `onScrollStart` or `onScrollStop` instead.
 		 *
 		 * @type {Function}
+		 * @param {Object} event
+		 * @param {Number} event.scrollLeft Scroll left value.
+		 * @param {Number} event.scrollTop Scroll top value.
+		 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
 		 * @public
 		 */
 		onScroll: PropTypes.func,
 
 		/**
-		 * Called when scrollbar visibility changes
+		 * Called when scrollbar visibility changes.
 		 *
 		 * @type {Function}
 		 * @private
@@ -127,53 +147,94 @@ class ScrollableBase extends Component {
 		onScrollbarVisibilityChange: PropTypes.func,
 
 		/**
-		 * Called when scroll starts
-		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * Called when scroll starts.
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
 		 *
 		 * @type {Function}
+		 * @param {Object} event
+		 * @param {Number} event.scrollLeft Scroll left value.
+		 * @param {Number} event.scrollTop Scroll top value.
+		 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
 		 * @public
 		 */
 		onScrollStart: PropTypes.func,
 
 		/**
-		 * Called when scroll stops
-		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * Called when scroll stops.
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
 		 *
 		 * @type {Function}
+		 * @param {Object} event
+		 * @param {Number} event.scrollLeft Scroll left value.
+		 * @param {Number} event.scrollTop Scroll top value.
+		 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
 		 * @public
 		 */
 		onScrollStop: PropTypes.func,
 
+		/**
+		 * Called when wheeling.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		onWheel: PropTypes.func,
 
+		/**
+		 * Called when removing additional event listeners in a theme component.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		removeEventListeners: PropTypes.func,
 
 		/**
-		 * Render function for Scrollable
+		 * Render function.
 		 *
 		 * @type {Function}
-		 * @public
+		 * @private
 		 */
 		render: PropTypes.func,
 
+		/**
+		 * Called to execute additional logic in a theme component when prop's cbScrollTo called.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		scrollTo: PropTypes.func,
 
+		/**
+		 * Called to execute additional logic in a theme component when stopping scrolling.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		stop: PropTypes.func,
 
 		/**
-		 * Scrollable CSS style.
+		 * ScrollableBase CSS style.
 		 * Should be defined because we manuplate style prop in render().
 		 *
 		 * @type {Object}
-		 * @public
+		 * @private
 		 */
 		style: PropTypes.object,
 
+		/**
+		 * Called when adding additional event listeners in a theme component.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		updateEventListeners: PropTypes.func,
 
 		/**
-		 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
-		 * `'visible'`, and `'hidden'`.
+		 * Specifies how to show vertical scrollbar.
+		 * Valid values are:
+		 * * `'auto'`,
+		 * * `'visible'`, and
+		 * * `'hidden'`.
 		 *
 		 * @type {String}
 		 * @default 'auto'
@@ -994,15 +1055,25 @@ class ScrollableBase extends Component {
 	}
 }
 
+/**
+ * A unstyled component that provides horizontal and vertical scrollbars and makes a render prop element scrollable.
+ *
+ * @class Scrollable
+ * @memberof ui/Scrollable
+ * @extends ui/Scrollable.ScrollableBase
+ * @extends ui/Scrollable.Scrollbar
+ * @ui
+ * @private
+ */
 class Scrollable extends Component {
 	static displayName = 'ui:Scrollable'
 
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Scrollable.Scrollable.prototype */ {
 		/**
-		 * Component for child
+		 * Render function.
 		 *
 		 * @type {Function}
-		 * @public
+		 * @private
 		 */
 		render: PropTypes.func
 	}
@@ -1052,7 +1123,7 @@ class Scrollable extends Component {
 
 export default Scrollable;
 export {
+	constants,
 	Scrollable,
-	ScrollableBase,
-	constants
+	ScrollableBase
 };

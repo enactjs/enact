@@ -2,9 +2,9 @@
  * Provides unstyled scrollable native components and behaviors to be customized by a theme or application.
  *
  * @module ui/Scrollable
- * @exports ScrollableNative
  * @exports constants
  * @exports ScrollableBaseNative
+ * @exports ScrollableNative
  * @private
  */
 
@@ -45,9 +45,9 @@ const
 	} = constants;
 
 /**
- * A Higher-order Component that applies a ScrollableNative behavior to its wrapped component.
+ * A unstyled native component that passes scrollable behavior information as its render prop's arguments.
  *
- * @class ScrollableNative
+ * @class ScrollableBaseNative
  * @memberof ui/Scrollable
  * @ui
  * @private
@@ -82,14 +82,19 @@ class ScrollableBaseNative extends Component {
 		 *	// You can simply call like below;
 		 *	this.scrollTo({align: 'top'}); // scroll to the top
 		 * ```
+		 *
 		 * @type {Function}
 		 * @public
 		 */
 		cbScrollTo: PropTypes.func,
 
 		/**
-		 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
-		 * `'visible'`, and `'hidden'`.
+		 * Specifies how to show horizontal scrollbar.
+		 *
+		 * Valid values are:
+		 * * `'auto'`,
+		 * * `'visible'`, and
+		 * * `'hidden'`.
 		 *
 		 * @type {String}
 		 * @default 'auto'
@@ -97,23 +102,39 @@ class ScrollableBaseNative extends Component {
 		 */
 		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
+		/**
+		 * Called when pressing a key.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		onKeyDown: PropTypes.func,
 
+		/**
+		 * Called when trigerring a mouseup event.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		onMouseDown: PropTypes.func,
 
 		/**
-		 * Called when scrolling
-		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
-		 * It is not recommended to set this prop since it can cause performance degradation. Use
-		 * `onScrollStart` or `onScrollStop` instead.
+		 * Called when scrolling.
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+		 * It is not recommended to set this prop since it can cause performance degradation.
+		 * Use `onScrollStart` or `onScrollStop` instead.
 		 *
 		 * @type {Function}
+		 * @param {Object} event
+		 * @param {Number} event.scrollLeft Scroll left value.
+		 * @param {Number} event.scrollTop Scroll top value.
+		 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
 		 * @public
 		 */
 		onScroll: PropTypes.func,
 
 		/**
-		 * Called when scrollbar visibility changes
+		 * Called when scrollbar visibility changes.
 		 *
 		 * @type {Function}
 		 * @private
@@ -121,43 +142,81 @@ class ScrollableBaseNative extends Component {
 		onScrollbarVisibilityChange: PropTypes.func,
 
 		/**
-		 * Called when scroll starts
-		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * Called when scroll starts.
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
 		 *
 		 * @type {Function}
+		 * @param {Object} event
+		 * @param {Number} event.scrollLeft Scroll left value.
+		 * @param {Number} event.scrollTop Scroll top value.
+		 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
 		 * @public
 		 */
 		onScrollStart: PropTypes.func,
 
 		/**
-		 * Called when scroll stops
-		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`
+		 * Called when scroll stops.
+		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
 		 *
 		 * @type {Function}
+		 * @param {Object} event
+		 * @param {Number} event.scrollLeft Scroll left value.
+		 * @param {Number} event.scrollTop Scroll top value.
+		 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
 		 * @public
 		 */
 		onScrollStop: PropTypes.func,
 
+		/**
+		 * Called when wheeling.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		onWheel: PropTypes.func,
 
+		/**
+		 * Called when removing additional event listeners in a theme component.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		removeEventListeners: PropTypes.func,
 
 		/**
-		 * Render function for Scrollable
+		 * Render function.
 		 *
 		 * @type {Function}
-		 * @public
+		 * @private
 		 */
 		render: PropTypes.func,
 
+		/**
+		 * Called to execute additional logic in a theme component after scrolling.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		scrollStopOnScroll: PropTypes.func,
 
+		/**
+		 * Called to execute additional logic in a theme component when prop's cbScrollTo called.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		scrollTo: PropTypes.func,
 
+		/**
+		 * Called to execute additional logic in a theme component when starting scrolling.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		start: PropTypes.func,
 
 		/**
-		 * Scrollable CSS style.
+		 * ScrollableBaseNative CSS style.
 		 * Should be defined because we manuplate style prop in render().
 		 *
 		 * @type {Object}
@@ -165,11 +224,20 @@ class ScrollableBaseNative extends Component {
 		 */
 		style: PropTypes.object,
 
+		/**
+		 * Called when adding additional event listeners in a theme component.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		updateEventListeners: PropTypes.func,
 
 		/**
-		 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
-		 * `'visible'`, and `'hidden'`.
+		 * Specifies how to show vertical scrollbar.
+		 * Valid values are:
+		 * * `'auto'`,
+		 * * `'visible'`, and
+		 * * `'hidden'`.
 		 *
 		 * @type {String}
 		 * @default 'auto'
@@ -888,15 +956,25 @@ class ScrollableBaseNative extends Component {
 	}
 }
 
+/**
+ * A unstyled native component that provides horizontal and vertical scrollbars and makes a render prop element scrollable.
+ *
+ * @class ScrollableNative
+ * @memberof ui/ScrollableNative
+ * @extends ui/Scrollable.ScrollableBaseNative
+ * @extends ui/Scrollable.Scrollbar
+ * @ui
+ * @private
+ */
 class ScrollableNative extends Component {
 	static displayName = 'ui:ScrollableNative'
 
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Scrollable.ScrollableNative.prototype */ {
 		/**
-		 * Component for child
+		 * Render function.
 		 *
 		 * @type {Function}
-		 * @public
+		 * @private
 		 */
 		render: PropTypes.func
 	}
@@ -944,7 +1022,7 @@ class ScrollableNative extends Component {
 
 export default ScrollableNative;
 export {
-	ScrollableNative,
+	constants,
 	ScrollableBaseNative,
-	constants
+	ScrollableNative
 };

@@ -42,7 +42,7 @@ const
  */
 const dataIndexAttribute = 'data-index';
 
-const ScrollableSpotlightContainer = SpotlightContainerDecorator(
+const ScrollableSpotlightContainerDecorator = SpotlightContainerDecorator(
 	{
 		navigableFilter: (elem, {focusableScrollbar}) => {
 			if (
@@ -68,10 +68,14 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 
 
 /**
- * A Higher-order Component that applies a Scrollable native behavior to its wrapped component.
+ * A Moonstone-styled native component that provides horizontal and vertical scrollbars and makes a render prop element scrollable.
  *
+ * @class Scrollable
  * @memberof moonstone/Scrollable
- * @hoc
+ * @extends moonstone/Scrollable.Scrollbar
+ * @extends spotlight/SpotlightContainerDecorator
+ * @extends ui/Scrollable.ScrollableBaseNative
+ * @ui
  * @private
  */
 class ScrollableNative extends Component {
@@ -83,17 +87,22 @@ class ScrollableNative extends Component {
 		 * not move focus to the scrollbar controls.
 		 *
 		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
 		focusableScrollbar: PropTypes.bool,
 
 		/**
-		 * Component for child
+		 * Render function.
 		 *
 		 * @type {Function}
-		 * @public
+		 * @private
 		 */
 		render: PropTypes.func
+	}
+
+	static defaultProps = {
+		focusableScrollbar: false
 	}
 
 	constructor (props) {
@@ -520,7 +529,7 @@ class ScrollableNative extends Component {
 					style,
 					verticalScrollbarProps
 				}) => (
-					<ScrollableSpotlightContainer
+					<ScrollableSpotlightContainerDecorator
 						className={className}
 						containerRef={initContainerRef}
 						focusableScrollbar={focusableScrollbar}
@@ -537,7 +546,7 @@ class ScrollableNative extends Component {
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
 						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} {...this.scrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
-					</ScrollableSpotlightContainer>
+					</ScrollableSpotlightContainerDecorator>
 				)}
 			/>
 		);
@@ -546,6 +555,6 @@ class ScrollableNative extends Component {
 
 export default ScrollableNative;
 export {
-	ScrollableNative,
-	dataIndexAttribute
+	dataIndexAttribute,
+	ScrollableNative
 };
