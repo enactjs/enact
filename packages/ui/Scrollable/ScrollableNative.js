@@ -307,17 +307,14 @@ class ScrollableBaseNative extends Component {
 			isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
 		};
 
-		this.initChildRef = this.initRef('childRef');
-		this.initContainerRef = this.initRef('containerRef');
-
-		this.verticalScrollbarProps = {
-			ref: this.initRef('verticalScrollbarRef'),
-			vertical: true
+		this.horizontalScrollbarProps = {
+			ref: this.initHorizontalScrollbarRef,
+			vertical: false
 		};
 
-		this.horizontalScrollbarProps = {
-			ref: this.initRef('horizontalScrollbarRef'),
-			vertical: false
+		this.verticalScrollbarProps = {
+			ref: this.initVerticalScrollbarRef,
+			vertical: true
 		};
 
 		props.cbScrollTo(this.scrollTo);
@@ -947,10 +944,28 @@ class ScrollableBaseNative extends Component {
 
 	// render
 
-	initRef = (prop) => {
-		return (ref) => {
-			this[prop] = ref;
-		};
+	initChildRef = (ref) => {
+		if (ref) {
+			this.childRef = ref;
+		}
+	}
+
+	initContainerRef = (ref) => {
+		if (ref) {
+			this.containerRef = ref;
+		}
+	}
+
+	initHorizontalScrollbarRef = (ref) => {
+		if (ref) {
+			this.horizontalScrollbarRef = ref;
+		}
+	}
+
+	initVerticalScrollbarRef = (ref) => {
+		if (ref) {
+			this.verticalScrollbarRef = ref;
+		}
 	}
 
 	render () {

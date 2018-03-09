@@ -222,8 +222,6 @@ class VirtualListBaseNative extends Component {
 		super(props);
 
 		this.state = {firstIndex: 0, numOfItems: 0};
-		this.initContentRef = this.initRef('contentRef');
-		this.initContainerRef = this.initRef('containerRef');
 	}
 
 	componentWillMount () {
@@ -724,10 +722,16 @@ class VirtualListBaseNative extends Component {
 
 	// render
 
-	initRef (prop) {
-		return (ref) => {
-			this[prop] = ref;
-		};
+	containerRef = (ref) => {
+		if (ref) {
+			this.containerRef = ref;
+		}
+	}
+
+	contentRef = (ref) => {
+		if (ref) {
+			this.contentRef = ref;
+		}
 	}
 
 	render () {
