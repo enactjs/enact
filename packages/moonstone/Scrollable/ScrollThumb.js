@@ -1,5 +1,5 @@
 /**
- * Provides Moonstone-themed scroll thumb.
+ * Provides a Moonstone-themed scroll thumb.
  *
  * @module moonstone/ScrollThumb
  * @exports ScrollThumb
@@ -13,7 +13,7 @@ import {ScrollThumb as UiScrollThumb} from '@enact/ui/Scrollable/Scrollbar';
 const nop = () => {};
 
 /**
- * A Moonstone-themed scroll thumb with moonstone behavior
+ * A Moonstone-styled scroll thumb with moonstone behavior
  *
  * @class ScrollThumb
  * @memberof moonstone/Scrollable
@@ -24,7 +24,7 @@ const nop = () => {};
 class ScrollThumb extends Component {
 	static propTypes = /** @lends moonstone/Scrollable.ScrollThumb.prototype */ {
 		/**
-		 * The callback function which is called for linking alertThumb function.
+		 * Called when [ScrollThumb]{@link moonstone/Scrollable.ScrollThumb} is updated.
 		 *
 		 * @type {Function}
 		 * @private
@@ -32,14 +32,12 @@ class ScrollThumb extends Component {
 		cbAlertThumb: PropTypes.func
 	}
 
-	static defaultPros = {
+	static defaultProps = {
 		cbAlertThumb: nop
 	}
 
 	componentDidUpdate () {
-		if (this.props.cbAlertThumb) {
-			this.props.cbAlertThumb();
-		}
+		this.props.cbAlertThumb();
 	}
 
 	render () {

@@ -38,7 +38,7 @@ const
 	isPageDown = is('pageDown');
 
 /**
- * A moonstone-styled base component for [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
+ * A Moonstone-styled base component for [ScrollButtons]{@link moonstone/Scrollable.ScrollButtons}.
  *
  * @class ScrollButtonsBase
  * @memberof moonstone/Scrollable
@@ -50,7 +50,7 @@ class ScrollButtonsBase extends Component {
 
 	static propTypes = /** @lends moonstone/Scrollable.ScrollButtons.prototype */ {
 		/**
-		 * Can be called to alert the user for accessibility notifications.
+		 * Called to alert the user for accessibility notifications.
 		 *
 		 * @type {Function}
 		 * @public
@@ -99,7 +99,7 @@ class ScrollButtonsBase extends Component {
 		onPrevSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * Render function for children
+		 * Render function.
 		 *
 		 * @type {Function}
 		 * @private
@@ -331,12 +331,13 @@ class ScrollButtonsBase extends Component {
 }
 
 /**
- * A moonstone-styled scroll bar. It is used in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
+ * A Moonstone-styled scroll buttons. It is used in [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
  *
  * @class ScrollButtons
  * @memberof moonstone/Scrollable
- * @mixins ui/AnnounceDecorator
+ * @mixins ui/ApiDecorator
  * @mixins moonstone/internal/DisappearSpotlightDecorator
+ * @extends moonstone/Scrollable.ScrollButtonsBase
  * @ui
  * @private
  */

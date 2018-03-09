@@ -19,7 +19,7 @@ import componentCss from './Scrollbar.less';
 
 const
 	minThumbSize = 18, // Size in pixels
-	thumbHidingDelay = 400; /* in milliseconds */
+	thumbHidingDelay = 400; // in milliseconds
 
 /*
  * Set CSS Varaible value.
@@ -34,7 +34,7 @@ const setCSSVariable = (element, variable, value) => {
 };
 
 /**
- * A unstyled base component for a scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
+ * An unstyled base component for a scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
  *
  * @class ScrollbarBase
  * @memberof ui/Scrollable
@@ -44,7 +44,7 @@ const setCSSVariable = (element, variable, value) => {
 class ScrollbarBase extends PureComponent {
 	static displayName = 'ui:Scrollbar'
 
-	static propTypes = /** @lends ui/Scrollable.ScrollbarBase.prototype */ {
+	static propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
 		/**
 		 * If `true`, add the corner between vertical and horizontal scrollbars.
 		 *
@@ -68,7 +68,7 @@ class ScrollbarBase extends PureComponent {
 		css: PropTypes.object,
 
 		/**
-		 * Render function for children.
+		 * Render function.
 		 *
 		 * @type {Function}
 		 * @private
@@ -185,7 +185,7 @@ class ScrollbarBase extends PureComponent {
 }
 
 /**
- * A unstyled scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
+ * An unstyled scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
  *
  * @class Scrollbar
  * @memberof ui/Scrollable
@@ -202,6 +202,10 @@ class Scrollbar extends Component {
 		 * @public
 		 */
 		vertical: PropTypes.bool
+	}
+
+	static defaultProps = {
+		vertical: true
 	}
 
 	render () {

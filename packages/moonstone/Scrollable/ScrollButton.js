@@ -17,14 +17,14 @@ import IconButton from '../IconButton';
 import css from './Scrollbar.less';
 
 const classNameMap = {
-	up: css.scrollbarUpButton,
 	down: css.scrollbarBottomButton,
 	left: css.scrollbarLeftButton,
-	right: css.scrollbarRightButton
+	right: css.scrollbarRightButton,
+	up: css.scrollbarUpButton
 };
 
 /**
- * A moonstone-styled base component for [ScrollButton]{@link moonstone/Scrollable.ScrollButton}.
+ * A Moonstone-styled base component for [ScrollButton]{@link moonstone/Scrollable.ScrollButton}.
  *
  * @class ScrollButtonBase
  * @memberof moonstone/Scrollable
@@ -126,6 +126,7 @@ const ScrollButtonBase = kind({
  * @class ScrollButton
  * @memberof moonstone/Scrollable
  * @mixins ui/Toggleable
+ * @extends moonstone/Scrollable.ScrollButtonBase
  * @ui
  * @private
  */

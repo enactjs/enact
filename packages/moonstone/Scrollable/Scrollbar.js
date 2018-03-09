@@ -26,7 +26,7 @@ import componentCss from './Scrollbar.less';
 class Scrollbar extends Component {
 	static propTypes = /** @lends moonstone/Scrollable.Scrollbar.prototype */ {
 		/**
-		 * The callback function which is called for linking alertThumb function.
+		 * Called when [ScrollThumb]{@link moonstone/Scrollable.ScrollThumb} is updated.
 		 *
 		 * @type {Function}
 		 * @private

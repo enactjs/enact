@@ -12,8 +12,10 @@ import PropTypes from 'prop-types';
 
 import css from './ScrollThumb.less';
 
+const nop = () => {};
+
 /**
- * A unstyled scroll thumb without any behavior.
+ * An unstyled scroll thumb without any behavior.
  *
  * @class ScrollThumb
  * @memberof ui/Scrollable
@@ -28,7 +30,6 @@ const ScrollThumb = kind({
 		 * The function to pass a wrapped ref.
 		 *
 		 * @type {Function}
-		 * @default null
 		 * @public
 		 */
 		setRef: PropTypes.func,
@@ -44,7 +45,7 @@ const ScrollThumb = kind({
 	},
 
 	defaultProps: {
-		setRef: null,
+		setRef: nop,
 		vertical: true
 	},
 
