@@ -19,6 +19,14 @@ class SliderBar extends React.Component {
 	static displayName = 'SliderBar'
 
 	static propTypes = /** @lends moonstone/Slider.SliderBar.prototype */{
+
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
 		css: PropTypes.object,
 
 		/**

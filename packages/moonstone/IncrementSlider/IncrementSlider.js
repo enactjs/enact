@@ -100,6 +100,13 @@ const IncrementSliderBase = kind({
 		 */
 		children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
 		css: PropTypes.object,
 
 		/**
