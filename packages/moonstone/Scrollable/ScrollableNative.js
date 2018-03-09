@@ -283,7 +283,7 @@ class ScrollableNative extends Component {
 
 	getPageDirection = (keyCode) => {
 		const
-			isRtl = this.uiRef.context.rtl,
+			isRtl = this.uiRef.state.rtl,
 			{direction} = this.uiRef,
 			isVertical = (direction === 'vertical' || direction === 'both');
 

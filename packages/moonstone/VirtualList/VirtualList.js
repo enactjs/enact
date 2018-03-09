@@ -11,7 +11,6 @@
  */
 
 import clamp from 'ramda/src/clamp';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
@@ -110,10 +109,10 @@ const VirtualListBase = (type) => {
 			 * @type {Function}
 			 * @public
 			 */
-			render: PropTypes.func
-		}
+			render: PropTypes.func,
 
-		static contextTypes = contextTypes
+			rtl: PropTypes.bool
+		}
 
 		componentDidMount () {
 			if (type === JS) {
@@ -122,7 +121,7 @@ const VirtualListBase = (type) => {
 				// prevent native scrolling by Spotlight
 				this.preventScroll = () => {
 					containerNode.scrollTop = 0;
-					containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
+					containerNode.scrollLeft = this.props.rtl ? containerNode.scrollWidth : 0;
 				};
 
 				if (containerNode && containerNode.addEventListener) {
@@ -301,7 +300,7 @@ const VirtualListBase = (type) => {
 
 			if (indexToScroll !== -1) {
 				const
-					isRtl = this.context.rtl,
+					isRtl = this.props.rtl,
 					isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right');
 
 				if (type === JS) {
@@ -363,7 +362,7 @@ const VirtualListBase = (type) => {
 				{cbScrollTo, data, dataSize} = this.uiRef.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
 				{isPrimaryDirectionVertical} = this.uiRef,
-				rtl = this.context.rtl,
+				rtl = this.props.rtl,
 				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
 
 			if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled) {
@@ -643,22 +642,12 @@ const VirtualListBase = (type) => {
 				(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
 				// If we need to restore last focus and the index is beyond the screen,
 				// we call `scrollTo` to create DOM for it.
-				cbScrollTo({index: preservedIndex, animate: false});
+				cbScrollTo({index: preservedIndex, animate: false, focus: true});
 
 				return true;
 			} else {
 				return false;
 			}
-		}
-
-		getXY = (isPrimaryDirectionVertical, primaryPosition, secondaryPosition) => {
-			const rtlDirection = this.context.rtl ? -1 : 1;
-			return (isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
-		}
-
-		scrollToPosition (x, y) {
-			const node = this.containerRef;
-			node.scrollTo((this.context.rtl && !this.uiRef.isPrimaryDirectionVertical) ? this.uiRef.scrollBounds.maxLeft - x : x, y);
 		}
 
 		getScrollBounds = () => this.uiRef.getScrollBounds()
@@ -683,7 +672,6 @@ const VirtualListBase = (type) => {
 						})
 					)}
 					getComponentProps={this.getComponentProps}
-					getXY={this.getXY}
 					ref={(ref) => { // eslint-disable-line react/jsx-no-bind
 						if (ref) {
 							this.uiRef = ref;

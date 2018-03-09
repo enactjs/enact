@@ -1020,7 +1020,7 @@ class ScrollableBase extends Component {
 	render () {
 		const
 			{className, render, style, ...rest} = this.props,
-			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl} = this.state,
 			scrollableClasses = classNames(css.scrollable, className);
 
 		delete rest.cbScrollTo;
@@ -1037,6 +1037,8 @@ class ScrollableBase extends Component {
 		delete rest.stop;
 		delete rest.updateEventListeners;
 		delete rest.verticalScrollbar;
+
+		rest.rtl = rtl;
 
 		return render({
 			childComponentProps: rest,

@@ -6,7 +6,6 @@
  * @exports ScrollerBase
  */
 
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import {forward} from '@enact/core/handle';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
@@ -37,18 +36,16 @@ class ScrollerBase extends Component {
 	static displayName = 'ScrollerBase'
 
 	static propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
-		initUiChildRef: PropTypes.func
-	}
+		initUiChildRef: PropTypes.func,
 
-	static contextTypes = contextTypes
+		rtl: PropTypes.bool
+	}
 
 	componentWillUnmount () {
 		this.setContainerDisabled(false);
 	}
 
 	isScrolledToBoundary = false
-
-	getRtlPositionX = (x) => (this.context.rtl ? this.uiRef.scrollBounds.maxLeft - x : x)
 
 	/**
 	 * Returns the first spotlight container between `node` and the scroller
@@ -194,11 +191,12 @@ class ScrollerBase extends Component {
 			this.uiRef.scrollPos.top = this.calculateScrollTop(item, itemTop, itemHeight, scrollInfo, scrollPosition);
 		} else if (this.uiRef.isHorizontal()) {
 			const
+				{rtl} = this.props,
 				{clientWidth} = this.uiRef.scrollBounds,
-				rtlDirection = this.context.rtl ? -1 : 1,
+				rtlDirection = rtl ? -1 : 1,
 				{left: containerLeft} = this.uiRef.containerRef.getBoundingClientRect(),
 				scrollLastPosition = scrollPosition ? scrollPosition : this.uiRef.scrollPos.left,
-				currentScrollLeft = this.context.rtl ? (this.uiRef.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
+				currentScrollLeft = rtl ? (this.uiRef.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
 				// calculation based on client position
 				newItemLeft = this.uiRef.containerRef.scrollLeft + (itemLeft - containerLeft);
 
@@ -293,7 +291,7 @@ class ScrollerBase extends Component {
 				this.uiRef.props.cbScrollTo({align: direction === 'up' ? 'top' : 'bottom'});
 			}
 		} else if (scrollPos.left > 0 && scrollPos.left < scrollBounds.maxLeft) {
-			this.uiRef.props.cbScrollTo({align: this.context.rtl ? reverseDirections[direction] : direction});
+			this.uiRef.props.cbScrollTo({align: this.props.rtl ? reverseDirections[direction] : direction});
 		}
 	}
 

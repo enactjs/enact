@@ -140,8 +140,6 @@ class VirtualListBase extends Component {
 
 		getComponentProps: PropTypes.func,
 
-		getXY: PropTypes.func,
-
 		/**
 		 * Number of spare DOM node.
 		 * `3` is good for the default value experimentally and
@@ -163,6 +161,8 @@ class VirtualListBase extends Component {
 		pageScroll: PropTypes.bool,
 
 		render: PropTypes.func,
+
+		rtl: PropTypes.bool,
 
 		/**
 		 * Spacing between items.
@@ -635,12 +635,13 @@ class VirtualListBase extends Component {
 		this.composeTransform(style, ...rest);
 	}
 
-	getXY = (isPrimaryDirectionVertical, primaryPosition, secondaryPosition) => (isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
+	getXY = (isPrimaryDirectionVertical, primaryPosition, secondaryPosition) => {
+		const rtlDirection = this.props.rtl ? -1 : 1;
+		return (isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
+	}
 
 	composeTransform (style, primaryPosition, secondaryPosition = 0) {
-		const
-			getXY = this.props.getXY || this.getXY,
-			{x, y} = getXY(this.isPrimaryDirectionVertical, primaryPosition, secondaryPosition);
+		const {x, y} = this.getXY(this.isPrimaryDirectionVertical, primaryPosition, secondaryPosition);
 
 		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
 	}
@@ -700,10 +701,10 @@ class VirtualListBase extends Component {
 		delete rest.dataSize;
 		delete rest.direction;
 		delete rest.getComponentProps;
-		delete rest.getXY;
 		delete rest.itemSize;
 		delete rest.overhang;
 		delete rest.pageScroll;
+		delete rest.rtl;
 		delete rest.spacing;
 		delete rest.updateStatesAndBounds;
 
