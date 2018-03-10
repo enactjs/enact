@@ -97,7 +97,7 @@ const SliderBase = kind({
 		 * corresponding internal Elements and states of this component.
 		 *
 		 * @type {Object}
-		 * @public
+		 * @private
 		 */
 		css: PropTypes.object,
 
@@ -355,8 +355,8 @@ const SliderBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: true,
-		className: 'slider'
+		className: 'slider',
+		publicClassNames: true
 	},
 
 	handlers: {

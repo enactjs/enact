@@ -24,6 +24,13 @@ class SliderBar extends React.Component {
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
 		 *
+		 *  The following classes are supported:
+		 *
+		 * * `sliderBar` - The root class name
+		 * * `load` - The background progress bar node
+		 * * `fill` - The progress bar node
+		 * * `knob` - The knob node
+		 *
 		 * @type {Object}
 		 * @public
 		 */

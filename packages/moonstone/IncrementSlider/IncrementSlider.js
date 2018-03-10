@@ -105,7 +105,7 @@ const IncrementSliderBase = kind({
 		 * corresponding internal Elements and states of this component.
 		 *
 		 * @type {Object}
-		 * @public
+		 * @private
 		 */
 		css: PropTypes.object,
 
@@ -481,7 +481,8 @@ const IncrementSliderBase = kind({
 
 	styles: {
 		css: componentCss,
-		className: 'incrementSlider'
+		className: 'incrementSlider',
+		publicClassNames: true
 	},
 
 	computed: {
