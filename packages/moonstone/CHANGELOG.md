@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ExpandableItem` to be more performant when animating
+- `moonstone/GridListImageItem` to hide overlay checkmark icon on focus when unselected
 - `moonstone/GridListImageItem` to use `ui/GridListImageItem`
 - `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` components to use their base UI components
 
