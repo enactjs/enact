@@ -1,7 +1,7 @@
 import clamp from 'ramda/src/clamp';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import {Children, PureComponent} from 'react';
 import Spotlight from '@enact/spotlight';
 
 import {dataIndexAttribute} from '../Scrollable';
@@ -20,7 +20,32 @@ const SpotlightVirtualListWithDisabledItemsDecoratorBase = (type) => {
 			/**
 			 * TBD
 			 */
+			data: PropTypes.any,
+
+			/**
+			 * TBD
+			 */
 			render: PropTypes.func
+		}
+
+		static childContextTypes = {
+			disabledItems: PropTypes.bool,
+			getComponentProps: PropTypes.func,
+			initMoonChildRef: PropTypes.func,
+			initUiChildRef: PropTypes.func,
+			jumpToSpottableItem: PropTypes.func,
+			scrollToNextItem: PropTypes.func
+		}
+
+		getChildContext () {
+			return {
+				disabledItems: true,
+				getComponentProps: this.getComponentProps,
+				initMoonChildRef: this.initMoonChildRef,
+				initUiChildRef: this.initUiChildRef,
+				jumpToSpottableItem: this.jumpToSpottableItem,
+				scrollToNextItem: this.scrollToNextItem
+			};
 		}
 
 		moonChildRef = null
@@ -74,7 +99,8 @@ const SpotlightVirtualListWithDisabledItemsDecoratorBase = (type) => {
 
 		findSpottableItem = (indexFrom, indexTo) => {
 			const
-				{data, dataSize} = this.uiChildRef.props,
+				{data} = this.props,
+				{dataSize} = this.uiChildRef.props,
 				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
 				safeIndexTo = clamp(-1, dataSize, indexTo),
 				delta = (indexFrom < indexTo) ? 1 : -1;
@@ -96,7 +122,8 @@ const SpotlightVirtualListWithDisabledItemsDecoratorBase = (type) => {
 
 		getIndexToScrollDisabled = (direction, currentIndex) => {
 			const
-				{data, dataSize, spacing} = this.uiChildRef.props,
+				{data} = this.props,
+				{dataSize, spacing} = this.uiChildRef.props,
 				{dimensionToExtent, primary} = this.uiChildRef,
 				{findSpottableItem} = this,
 				{firstVisibleIndex, lastVisibleIndex} = this.uiChildRef.moreInfo,
@@ -208,7 +235,8 @@ const SpotlightVirtualListWithDisabledItemsDecoratorBase = (type) => {
 
 		jumpToSpottableItem = ({keyCode, rtl, setRestrict, target}) => {
 			const
-				{cbScrollTo, data, dataSize} = this.uiChildRef.props,
+				{data} = this.props,
+				{cbScrollTo, dataSize} = this.uiChildRef.props,
 				{firstIndex, numOfItems} = this.uiChildRef.state,
 				{isPrimaryDirectionVertical} = this.uiChildRef,
 				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
@@ -308,17 +336,7 @@ const SpotlightVirtualListWithDisabledItemsDecoratorBase = (type) => {
 		}
 
 		render () {
-			const {render, ...rest} = this.props;
-
-			return render({
-				...rest,
-				disabledItems: true,
-				getComponentProps: this.getComponentProps,
-				initMoonChildRef: this.initMoonChildRef,
-				initUiChildRef: this.initUiChildRef,
-				jumpToSpottableItem: this.jumpToSpottableItem,
-				scrollToNextItem: this.scrollToNextItem
-			});
+			return Children.only(this.props.children);
 		}
 	};
 };

@@ -556,89 +556,139 @@ const VirtualListBaseJS = VirtualListBase(JS);
  */
 const VirtualListBaseNative = VirtualListBase(Native);
 
-const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
-	<Scrollable
-		{...rest}
-		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBaseJS
-				{...props}
-				disabledItems={rest.disabledItems}
-				itemsRenderer={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
-					[
-						cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
-						primary ?
-							null :
-							<SpotlightPlaceholder
-								data-index={0}
-								data-vl-placeholder
-								key="1"
-								onFocus={handlePlaceholderFocus}
-								role="region"
-							/>,
-						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
-					]
+class ScrollableVirtualList extends Component {
+	static propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
+		/**
+		 * TBD
+		 */
+		disabledItems: PropTypes.bool,
+
+		/**
+		 * Aria role.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		role: PropTypes.string
+	}
+
+	static contextTypes = {
+		disabledItems: PropTypes.bool,
+		getComponentProps: PropTypes.func,
+		initMoonChildRef: PropTypes.func,
+		initUiChildRef: PropTypes.func,
+		jumpToSpottableItem: PropTypes.func,
+		scrollToNextItem: PropTypes.func
+	}
+
+	render () {
+		const
+			{role, ...rest} = this.props,
+			context = {
+				disabledItems: this.context.disabledItems,
+				getComponentProps: this.context.getComponentProps,
+				initMoonChildRef: this.context.initMoonChildRef,
+				initUiChildRef: this.context.initUiChildRef,
+				jumpToSpottableItem: this.context.jumpToSpottableItem,
+				scrollToNextItem: this.context.scrollToNextItem
+			};
+
+		return (
+			<Scrollable
+				{...rest}
+				{...context}
+				childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
+					<VirtualListBaseJS
+						{...props}
+						disabledItems={context.disabledItems}
+						itemsRenderer={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
+							[
+								cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
+								primary ?
+									null :
+									<SpotlightPlaceholder
+										data-index={0}
+										data-vl-placeholder
+										key="1"
+										onFocus={handlePlaceholderFocus}
+										role="region"
+									/>,
+								needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
+							]
+						)}
+					/>
 				)}
 			/>
-		)}
-	/>
-);
+		);
+	}
+}
 
-ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
-	/**
-	 * TBD
-	 */
-	disabledItems: PropTypes.bool,
+class ScrollableVirtualListNative extends Component {
+	static propTypes = /** @lends moonstone/VirtualList.VirtualListNative.prototype */ {
+		/**
+		 * TBD
+		 */
+		disabledItems: PropTypes.bool,
 
-	/**
-	 * Aria role.
-	 *
-	 * @type {String}
-	 * @private
-	 */
-	role: PropTypes.string
-};
+		/**
+		 * Aria role.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		role: PropTypes.string
+	}
 
-const ScrollableVirtualListNative = ({role, ...rest}) => (
-	<ScrollableNative
-		{...rest}
-		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBaseNative
-				{...props}
-				disabledItems={rest.disabledItems}
-				itemsRenderer={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
-					[
-						cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
-						primary ?
-							null :
-							<SpotlightPlaceholder
-								data-index={0}
-								data-vl-placeholder
-								key="1"
-								onFocus={handlePlaceholderFocus}
-								role="region"
-							/>,
-						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
-					]
+	static contextTypes = {
+		disabledItems: PropTypes.bool,
+		getComponentProps: PropTypes.func,
+		initMoonChildRef: PropTypes.func,
+		initUiChildRef: PropTypes.func,
+		jumpToSpottableItem: PropTypes.func,
+		scrollToNextItem: PropTypes.func
+	}
+
+	render () {
+		const
+			{role, ...rest} = this.props,
+			context = {
+				disabledItems: this.context.disabledItems,
+				getComponentProps: this.context.getComponentProps,
+				initMoonChildRef: this.context.initMoonChildRef,
+				initUiChildRef: this.context.initUiChildRef,
+				jumpToSpottableItem: this.context.jumpToSpottableItem,
+				scrollToNextItem: this.context.scrollToNextItem
+			};
+
+		return (
+			<ScrollableNative
+				{...rest}
+				{...context}
+				childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
+					<VirtualListBaseNative
+						{...props}
+						disabledItems={context.disabledItems}
+						itemsRenderer={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
+							[
+								cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
+								primary ?
+									null :
+									<SpotlightPlaceholder
+										data-index={0}
+										data-vl-placeholder
+										key="1"
+										onFocus={handlePlaceholderFocus}
+										role="region"
+									/>,
+								needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
+							]
+						)}
+					/>
 				)}
 			/>
-		)}
-	/>
-);
-
-ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListNative.prototype */ {
-	/**
-	 * TBD
-	 */
-	disabledItems: PropTypes.bool,
-
-	/**
-	 * Aria role.
-	 *
-	 * @type {String}
-	 * @private
-	 */
-	role: PropTypes.string
-};
+		);
+	}
+}
 
 /**
  * A Moonstone-styled scrollable and spottable virtual list component.

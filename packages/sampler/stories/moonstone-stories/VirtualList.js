@@ -68,24 +68,20 @@ storiesOf('Moonstone', module)
 		})(() => {
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
-				<SpotlightVirtualListWithDisabledItemsDecorator
-					data={items}
-					render={(props) => ( // eslint-disable-line react/jsx-no-bind
-						<VirtualList
-							{...props}
-							component={renderItem(itemSize)}
-							dataSize={number('dataSize', items.length)}
-							focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
-							itemSize={itemSize}
-							onScrollStart={action('onScrollStart')}
-							onScrollStop={action('onScrollStop')}
-							spacing={ri.scale(number('spacing', 0))}
-							style={{
-								height: ri.unit(552, 'rem')
-							}}
-						/>
-					)}
-				/>
+				<SpotlightVirtualListWithDisabledItemsDecorator data={items}>
+					<VirtualList
+						component={renderItem(itemSize)}
+						dataSize={number('dataSize', items.length)}
+						focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+						itemSize={itemSize}
+						onScrollStart={action('onScrollStart')}
+						onScrollStop={action('onScrollStop')}
+						spacing={ri.scale(number('spacing', 0))}
+						style={{
+							height: ri.unit(552, 'rem')
+						}}
+					/>
+				</SpotlightVirtualListWithDisabledItemsDecorator>
 			);
 		})
 	);
