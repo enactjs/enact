@@ -185,7 +185,7 @@ class ScrollbarBase extends PureComponent {
  * @private
  */
 class Scrollbar extends Component {
-	static propTypes = /** @lends moonstone/Scrollable.Scrollbar.prototype */ {
+	static propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
 		 *

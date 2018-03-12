@@ -1117,7 +1117,7 @@ class ScrollableBase extends Component {
 class Scrollable extends Component {
 	static displayName = 'ui:Scrollable'
 
-	static propTypes = /** @lends moonstone/Scrollable.Scrollable.prototype */ {
+	static propTypes = /** @lends ui/Scrollable.Scrollable.prototype */ {
 		/**
 		 * Render function.
 		 *

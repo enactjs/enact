@@ -61,8 +61,8 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 /**
  * A Moonstone-styled native component that provides horizontal and vertical scrollbars.
  *
- * @class Scrollable
- * @memberof moonstone/Scrollable
+ * @class ScrollableNative
+ * @memberof moonstone/ScrollableNative
  * @extends ui/Scrollable.ScrollableBaseNative
  * @ui
  * @private
@@ -70,7 +70,7 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 class ScrollableNative extends Component {
 	static displayName = 'ScrollableNative'
 
-	static propTypes = /** @lends moonstone/Scrollable.ScrollableBaseNative.prototype */ {
+	static propTypes = /** @lends moonstone/ScrollableNative.ScrollableNative.prototype */ {
 		/**
 		 * Render function.
 		 *

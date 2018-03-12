@@ -39,14 +39,14 @@ const
  * An unstyled native component that passes scrollable behavior information as its render prop's arguments.
  *
  * @class ScrollableBaseNative
- * @memberof ui/Scrollable
+ * @memberof ui/ScrollableNative
  * @ui
  * @private
  */
 class ScrollableBaseNative extends Component {
 	static displayName = 'ui:ScrollableNative'
 
-	static propTypes = /** @lends ui/Scrollable.ScrollableNative.prototype */ {
+	static propTypes = /** @lends ui/ScrollableNative.ScrollableNative.prototype */ {
 		/**
 		 * Render function.
 		 *
@@ -1008,7 +1008,7 @@ class ScrollableBaseNative extends Component {
 class ScrollableNative extends Component {
 	static displayName = 'ui:ScrollableNative'
 
-	static propTypes = /** @lends moonstone/Scrollable.ScrollableNative.prototype */ {
+	static propTypes = /** @lends ui/ScrollableNative.ScrollableNative.prototype */ {
 		/**
 		 * Render function.
 		 *
