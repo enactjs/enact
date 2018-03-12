@@ -1,12 +1,17 @@
+@import '../styles/skin.less';
 @import '../styles/text.less';
 @import '../styles/mixins.less';
 
+@moon-pig-width:      320px;
+@moon-pig-height:     180px;
+@moon-pig-border-width: 6px;
+@moon-pig-border-width: 6px;
+@moon-pig-overlay-text-padding: 9px;
+
 .pictureInGraphics {
 	display: block;
-	padding: 0px;
-	border-color: transparent;
-	border-width: 3px;
-	border-style: solid;
+	padding: 0;
+	width: @moon-pig-width + (@moon-pig-border-width * 2);
 
 	.video {
 		display: block;
@@ -25,6 +30,18 @@
 		margin: 0;
 	}
 
+	.videoContainer {
+		border-width: @moon-pig-border-width;
+		border-style: solid;
+		width: @moon-pig-width;
+		height: @moon-pig-height;
+		position: relative;
+	}
+
+	.captionContainer {
+		padding: 0 @moon-pig-border-width;
+	}
+
 	.textOverlay {
 		.moon-font('MuseoSans', 'Moonstone LG Display Light');
 		font-size: 21px;
@@ -32,12 +49,34 @@
 		line-height: normal;
 		display: block;
 		position: absolute;
-		width: 100%;
-		bottom: 6px;
+		width: @moon-pig-width - (@moon-pig-overlay-text-padding * 2);
+		padding: 0px @moon-pig-overlay-text-padding @moon-pig-overlay-text-padding;
+		bottom: 0px;
 		left: 0px;
 		color: white;
 		&.ipChannel {
 			color: #f58220;
 		}
 	}
+
+	:global(.enact-locale-right-to-left) & {
+		.textOverlay,
+		.image {
+			right: 0px;
+			left: auto;
+		}
+	}
+
+	.applySkins({
+		.videoContainer {
+			border-color: transparent;
+		}
+		.focus({
+			background-color: transparent;
+			color: inherit;
+			.videoContainer {
+				background-color: @moon-spotlight-border-color;
+			}
+		});
+	});
 }
