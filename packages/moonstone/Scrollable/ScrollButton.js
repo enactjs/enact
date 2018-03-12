@@ -9,25 +9,24 @@ import IconButton from '../IconButton';
 import css from './Scrollbar.less';
 
 const classNameMap = {
-	up: css.scrollbarUpButton,
 	down: css.scrollbarBottomButton,
 	left: css.scrollbarLeftButton,
-	right: css.scrollbarRightButton
+	right: css.scrollbarRightButton,
+	up: css.scrollbarUpButton
 };
 
 /**
- * {@link moonstone/Scroller.ScrollButtonBase} is the base implementation for
- * {@link moonstone/Scroller.ScrollButton}.
+ * A Moonstone-styled base component for [ScrollButton]{@link moonstone/Scrollable.ScrollButton}.
  *
  * @class ScrollButtonBase
- * @memberof moonstone/Scroller
+ * @memberof moonstone/Scrollable
  * @ui
  * @private
  */
 const ScrollButtonBase = kind({
-	name: 'ScrollButton',
+	name: 'ScrollButtonBase',
 
-	propTypes: /** @lends moonstone/Scroller.ScrollButtonBase.prototype */ {
+	propTypes: /** @lends moonstone/Scrollable.ScrollButton.prototype */ {
 		/**
 		 * Name of icon
 		 *
@@ -37,7 +36,13 @@ const ScrollButtonBase = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * Scroll direction for this button (down, left, right, or up)
+		 * Scroll direction for this button.
+		 *
+		 * Valid values are:
+		 * * `'down'`,
+		 * * `'left'`,
+		 * * `'right'`, and
+		 * * `'up'`.
 		 *
 		 * @type {String}
 		 * @public
@@ -69,8 +74,8 @@ const ScrollButtonBase = kind({
 	},
 
 	computed: {
-		'aria-label': ({active, direction}) => {
-			if (!active) {
+		'aria-label': ({disabled, direction}) => {
+			if (disabled) {
 				return null;
 			}
 
@@ -107,11 +112,13 @@ const ScrollButtonBase = kind({
 
 
 /**
- * {@link moonstone/Scroller.ScrollButton} is an {@link moonstone/IconButton.IconButton} used within
- * a {@link moonstone/Scroller.Scrollbar}.
+ * An [IconButton]{@link moonstone/IconButton.IconButton} used within
+ * a [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
  *
  * @class ScrollButton
- * @memberof moonstone/Scroller
+ * @memberof moonstone/Scrollable
+ * @mixins ui/Toggleable
+ * @extends moonstone/Scrollable.ScrollButtonBase
  * @ui
  * @private
  */

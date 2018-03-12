@@ -2,12 +2,16 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [2.0.0-alpha.5] - 2018-03-07
 
 ### Added
 
 - `ui/Touchable` support for drag gesture
 - `ui/Marquee` component
+- `ui/GridListImageItem` component
+
+### Changed
+- `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` components as unstyled base components to support UI libraries
 
 ## [2.0.0-alpha.4] - 2018-02-13
 

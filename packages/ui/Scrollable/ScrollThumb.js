@@ -4,37 +4,40 @@ import PropTypes from 'prop-types';
 
 import css from './ScrollThumb.less';
 
+const nop = () => {};
+
 /**
- * {@link moonstone/Scroller.ScrollThumb} is a stateless ScrollThumb with Moonstone styling applied.
+ * An unstyled scroll thumb without any behavior.
  *
  * @class ScrollThumb
- * @memberof moonstone/Scroller
+ * @memberof ui/Scrollable
  * @ui
  * @private
  */
 const ScrollThumb = kind({
-	name: 'ScrollThumb',
+	name: 'ui:ScrollThumb',
 
-	propTypes: /** @lends moonstone/Scroller.ScrollThumb.prototype */ {
+	propTypes: /** @lends ui/Scrollable.ScrollThumb.prototype */ {
 		/**
 		 * The function to pass a wrapped ref.
 		 *
 		 * @type {Function}
 		 * @public
 		 */
-		getScrollThumbRef: PropTypes.func,
+		setRef: PropTypes.func,
 
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
 		 *
 		 * @type {Boolean}
+		 * @default true
 		 * @public
 		 */
 		vertical: PropTypes.bool
 	},
 
 	defaultProps: {
-		getScrollThumbRef: null,
+		setRef: nop,
 		vertical: true
 	},
 
@@ -47,14 +50,15 @@ const ScrollThumb = kind({
 		className: ({vertical, styler}) => styler.append({vertical})
 	},
 
-	render: ({getScrollThumbRef, ...rest}) => {
+	render: ({setRef, ...rest}) => {
 		delete rest.vertical;
 
-		return <div {...rest} ref={getScrollThumbRef} />;
+		return <div {...rest} ref={setRef} />;
 	}
 });
 
 export default ScrollThumb;
 export {
-	ScrollThumb
+	ScrollThumb,
+	ScrollThumb as ScrollThumbBase
 };

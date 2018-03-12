@@ -1,6 +1,7 @@
-import GridListImageItem from '@enact/moonstone/GridListImageItem';
-import {VirtualGridList} from '@enact/moonstone/VirtualList';
-import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
+import {VirtualGridList as UiVirtualGridList} from '@enact/ui/VirtualList';
+import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
+import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
+import {GridListImageItem} from '@enact/moonstone/GridListImageItem';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -11,13 +12,26 @@ import {withInfo} from '@storybook/addon-info';
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('VirtualGridList', VirtualListCore, VirtualGridList);
+const Config = mergeComponentMetadata('VirtualGridList', VirtualListBase, VirtualGridList);
 
 const
 	prop = {
 		direction: {'horizontal': 'horizontal', 'vertical': 'vertical'}
 	},
 	items = [],
+	// eslint-disable-next-line enact/prop-types
+	uiRenderItem = ({data, index, ...rest}) => {
+		const {text, subText, source} = data[index];
+
+		return (
+			<UiGridListImageItem
+				{...rest}
+				caption={text}
+				source={source}
+				subCaption={subText}
+			/>
+		);
+	},
 	// eslint-disable-next-line enact/prop-types
 	renderItem = ({data, index, ...rest}) => {
 		const {text, subText, source} = data[index];
@@ -42,6 +56,32 @@ for (let i = 0; i < 1000; i++) {
 
 	items.push({text, subText, source});
 }
+
+storiesOf('UI', module)
+	.add(
+		'VirtualList.VirtualGridList',
+		withInfo({
+			propTables: [Config],
+			text: 'Basic usage of VirtualGridList'
+		})(() => (
+			<UiVirtualGridList
+				component={uiRenderItem}
+				data={items}
+				dataSize={number('dataSize', items.length)}
+				direction={select('direction', prop.direction, 'vertical')}
+				itemSize={{
+					minWidth: ri.scale(number('minWidth', 180)),
+					minHeight: ri.scale(number('minHeight', 270))
+				}}
+				onScrollStart={action('onScrollStart')}
+				onScrollStop={action('onScrollStop')}
+				spacing={ri.scale(number('spacing', 20))}
+				style={{
+					height: ri.unit(549, 'rem')
+				}}
+			/>
+		))
+	);
 
 storiesOf('Moonstone', module)
 	.add(
