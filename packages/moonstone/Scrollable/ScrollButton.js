@@ -65,7 +65,15 @@ const ScrollButtonBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		disabled: PropTypes.bool
+		disabled: PropTypes.bool,
+
+		/**
+		 * When `true`, it is selected or hovered.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		selected: PropTypes.bool
 	},
 
 	styles: {
@@ -96,6 +104,7 @@ const ScrollButtonBase = kind({
 	render: ({children, disabled, ...rest}) => {
 		delete rest.active;
 		delete rest.direction;
+		delete rest.selected;
 
 		return (
 			<IconButton
@@ -123,7 +132,7 @@ const ScrollButtonBase = kind({
  * @private
  */
 const ScrollButton = Toggleable(
-	{activate: 'onFocus', deactivate: 'onBlur', prop: 'hover', toggle: null},
+	{activate: 'onFocus', deactivate: 'onBlur', toggle: null},
 	ScrollButtonBase
 );
 
