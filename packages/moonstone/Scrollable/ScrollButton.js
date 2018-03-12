@@ -28,7 +28,7 @@ const ScrollButtonBase = kind({
 
 	propTypes: /** @lends moonstone/Scrollable.ScrollButton.prototype */ {
 		/**
-		 * Name of icon
+		 * Name of icon.
 		 *
 		 * @type {String}
 		 * @public
@@ -59,7 +59,7 @@ const ScrollButtonBase = kind({
 		active: PropTypes.bool,
 
 		/**
-		 * When `true`, the component is shown as disabled and does not generate `onClick`
+		 * When `true`, the component is shown as disabled and does not generate `onClick`.
 		 * [events]{@glossary event}.
 		 *
 		 * @type {Boolean}
