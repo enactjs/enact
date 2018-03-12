@@ -24,14 +24,14 @@ const
 		};
 
 		return (
-			<Item {...rest} style={itemStyle}>
-				{data[index]}
+			<Item {...rest} disabled={data[index].disabled} style={itemStyle}>
+				{data[index].content}
 			</Item>
 		);
 	};
 
 for (let i = 0; i < 1000; i++) {
-	items.push('Item ' + ('00' + i).slice(-3));
+	items.push({content: 'Item ' + ('00' + i).slice(-3), disabled: !(i % 3) || 20 < i && i < 40});
 }
 
 storiesOf('UI', module)
