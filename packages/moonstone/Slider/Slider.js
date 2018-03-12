@@ -33,8 +33,8 @@ const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
 const memoizedPercentFormatter = memoize((/* locale */) => new NumFmt({type: 'percentage', useNative: false}));
 
 /**
- * {@link moonstone/Slider.SliderBase} is a stateless Slider. In most circumstances, you will want
- * to use the stateful version: {@link moonstone/Slider.Slider}
+ * A stateless range-selection input. In most circumstances, you will want to use the stateful
+ * version: {@link moonstone/Slider.Slider}.
  *
  * @class SliderBase
  * @memberof moonstone/Slider
@@ -496,8 +496,7 @@ const SliderDecorator = compose(
 );
 
 /**
- * {@link moonstone/Slider.Slider} is a Slider with Moonstone styling, Spottable, Touchable and
- * SliderDecorator applied.
+ * Range-selection input with Moonstone styling, Spottable, Touchable and SliderDecorator applied.
  *
  * By default, `Slider` maintains the state of its `value` property. Supply the `defaultValue`
  * property to control its initial value. If you wish to directly control updates to the

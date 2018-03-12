@@ -8,7 +8,7 @@ import {
 
 
 /**
- * {@link moonstone/Slider.SliderBar} is private.
+ * The componenrt used to establish the DOM and structure of the Slider.
  *
  * @class SliderBar
  * @memberof moonstone/Slider

@@ -8,7 +8,7 @@ import Slider from '../Slider';
 import css from './VideoPlayer.less';
 
 /**
- * MediaSlider {@link moonstone/VideoPlayer}.
+ * MediaSlider for {@link moonstone/VideoPlayer}.
  *
  * @class MediaSlider
  * @memberof moonstone/VideoPlayer

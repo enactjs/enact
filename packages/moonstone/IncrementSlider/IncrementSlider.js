@@ -1,5 +1,5 @@
 /**
- * Exports the {@link moonstone/IncrementSlider.IncrementSlider} component.
+ * An interactive numeric range picker with increment decrement
  *
  * @module moonstone/IncrementSlider
  */
@@ -39,10 +39,8 @@ const Slider = Touchable(
 );
 
 /**
- * {@link moonstone/IncrementSlider.IncrementSliderBase} is a stateless Slider
- * with IconButtons to increment and decrement the value. In most circumstances,
- * you will want to use the stateful version:
- * {@link moonstone/IncrementSlider.IncrementSlider}
+ * A stateless Slider with IconButtons to increment and decrement the value. In most circumstances,
+ * you will want to use the stateful version: {@link moonstone/IncrementSlider.IncrementSlider}.
  *
  * @class IncrementSliderBase
  * @memberof moonstone/IncrementSlider
