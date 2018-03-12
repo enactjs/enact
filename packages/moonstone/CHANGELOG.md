@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/ProgressBar` support for `tooltip`, `tooltipForceSide` and `emphasized`
+- `moonstone/ProgressBar` support for `tooltip` and `tooltipForceSide`
 
 ### Fixed
 

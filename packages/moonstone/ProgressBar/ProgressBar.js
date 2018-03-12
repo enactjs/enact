@@ -89,7 +89,7 @@ const ProgressBarBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['progressBar', 'fill', 'load']
+		publicClassNames: ['progressBar']
 	},
 
 	computed: {

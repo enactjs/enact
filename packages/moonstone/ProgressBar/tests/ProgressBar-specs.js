@@ -13,4 +13,18 @@ describe('ProgressBar Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
+
+	it('should have tooltip show progress as percentage', function () {
+		const progressBar = mount(
+			<ProgressBar
+				tooltip
+				progress={0.6}
+			/>
+		);
+
+		const expected = '60%';
+		const actual = progressBar.find('ProgressBarTooltip').text();
+
+		expect(actual).to.equal(expected);
+	});
 });
