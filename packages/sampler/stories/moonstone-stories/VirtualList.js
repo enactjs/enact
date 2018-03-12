@@ -7,6 +7,7 @@ import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {boolean, number} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
+import SpotlightVirtualListWithDisabledItemsDecorator from '@enact/moonstone/VirtualList/SpotlightVirtualListWithDisabledItemsDecorator';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
@@ -16,7 +17,7 @@ const Config = mergeComponentMetadata('VirtualList', VirtualListBase, VirtualLis
 const
 	items = [],
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderItem = (size) => ({data, index, ...rest}) => {
+	renderItem = (size) => ({index, ...rest}) => {
 		const itemStyle = {
 			height: size + 'px',
 			borderBottom: ri.unit(3, 'rem') + ' solid #202328',
@@ -24,8 +25,8 @@ const
 		};
 
 		return (
-			<Item {...rest} disabled={data[index].disabled} style={itemStyle}>
-				{data[index].content}
+			<Item {...rest} disabled={items[index].disabled} style={itemStyle}>
+				{items[index].content}
 			</Item>
 		);
 	};
@@ -45,7 +46,6 @@ storiesOf('UI', module)
 			return (
 				<UiVirtualList
 					component={renderItem(itemSize)}
-					data={items}
 					dataSize={number('dataSize', items.length)}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
@@ -68,18 +68,23 @@ storiesOf('Moonstone', module)
 		})(() => {
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
-				<VirtualList
-					component={renderItem(itemSize)}
+				<SpotlightVirtualListWithDisabledItemsDecorator
 					data={items}
-					dataSize={number('dataSize', items.length)}
-					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
-					itemSize={itemSize}
-					onScrollStart={action('onScrollStart')}
-					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', 0))}
-					style={{
-						height: ri.unit(552, 'rem')
-					}}
+					render={(props) => ( // eslint-disable-line react/jsx-no-bind
+						<VirtualList
+							{...props}
+							component={renderItem(itemSize)}
+							dataSize={number('dataSize', items.length)}
+							focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+							itemSize={itemSize}
+							onScrollStart={action('onScrollStart')}
+							onScrollStop={action('onScrollStop')}
+							spacing={ri.scale(number('spacing', 0))}
+							style={{
+								height: ri.unit(552, 'rem')
+							}}
+						/>
+					)}
 				/>
 			);
 		})

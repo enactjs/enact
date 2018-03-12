@@ -10,7 +10,6 @@
  * @exports VirtualListNative
  */
 
-import clamp from 'ramda/src/clamp';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
@@ -124,6 +123,11 @@ const VirtualListBase = (type) => {
 			'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types,
 
 			/**
+			 * TBD
+			 */
+			disabledItems: PropTypes.bool,
+
+			/**
 			 * Passes the instance of [VirtualList]{@link ui/VirtualList.VirtualList}.
 			 *
 			 * @type {Object}
@@ -131,6 +135,11 @@ const VirtualListBase = (type) => {
 			 * @private
 			 */
 			initUiChildRef: PropTypes.func,
+
+			/**
+			 * TBD
+			 */
+			jumpToSpottableItem: PropTypes.func,
 
 			/**
 			 * `true` if rtl, `false` if ltr.
@@ -210,99 +219,28 @@ const VirtualListBase = (type) => {
 			}
 		}
 
-		/**
-		 * Handle a Page up/down key with disabled items
-		 */
-
-		findSpottableItem = (indexFrom, indexTo) => {
-			const
-				{data, dataSize} = this.uiRef.props,
-				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
-				safeIndexTo = clamp(-1, dataSize, indexTo),
-				delta = (indexFrom < indexTo) ? 1 : -1;
-
-			if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
-				return -1;
-			}
-
-			if (safeIndexFrom !== safeIndexTo) {
-				for (let i = safeIndexFrom; i !== safeIndexTo; i += delta) {
-					if (data[i] && data[i].disabled === false) {
-						return i;
-					}
-				}
-			}
-
-			return -1;
+		setRestrict = (bool) => {
+			Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
 		}
 
-		getIndexToScrollDisabled = (direction, currentIndex) => {
+		setSpotlightContainerRestrict = (keyCode, target) => {
 			const
-				{data, dataSize, spacing} = this.uiRef.props,
-				{dimensionToExtent, primary} = this.uiRef,
-				{findSpottableItem} = this,
-				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo,
-				numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent),
-				isPageDown = (direction === 'down' || direction === 'right') ? 1 : -1;
-			let candidateIndex = -1;
+				{dataSize} = this.uiRef.props,
+				{isPrimaryDirectionVertical, dimensionToExtent} = this.uiRef,
+				index = Number.parseInt(target.getAttribute(dataIndexAttribute)),
+				canMoveBackward = index >= dimensionToExtent,
+				canMoveForward = index < (dataSize - (((dataSize - 1) % dimensionToExtent) + 1));
+			let isSelfOnly = false;
 
-			/* First, find a spottable item in this page */
-			if (isPageDown === 1) { // Page Down
-				if ((lastVisibleIndex - (lastVisibleIndex % dimensionToExtent || dimensionToExtent)) >= currentIndex) {
-					candidateIndex = findSpottableItem(
-						lastVisibleIndex,
-						currentIndex - (currentIndex % dimensionToExtent) + dimensionToExtent - 1
-					);
+			if (isPrimaryDirectionVertical) {
+				if (isUp(keyCode) && canMoveBackward || isDown(keyCode) && canMoveForward) {
+					isSelfOnly = true;
 				}
-			} else if (firstVisibleIndex + dimensionToExtent <= currentIndex) { // Page Up
-				candidateIndex = findSpottableItem(
-					firstVisibleIndex,
-					currentIndex - (currentIndex % dimensionToExtent)
-				);
+			} else if (isLeft(keyCode) && canMoveBackward || isRight(keyCode) && canMoveForward) {
+				isSelfOnly = true;
 			}
 
-			/* Second, find a spottable item in the next page */
-			if (candidateIndex === -1) {
-				if (isPageDown === 1) { // Page Down
-					candidateIndex = findSpottableItem(lastVisibleIndex + numOfItemsInPage, lastVisibleIndex);
-				} else { // Page Up
-					candidateIndex = findSpottableItem(firstVisibleIndex - numOfItemsInPage, firstVisibleIndex);
-				}
-			}
-
-			/* Last, find a spottable item in a whole data */
-			if (candidateIndex === -1) {
-				if (isPageDown === 1) { // Page Down
-					candidateIndex = findSpottableItem(lastVisibleIndex + numOfItemsInPage + 1, dataSize);
-				} else { // Page Up
-					candidateIndex = findSpottableItem(firstVisibleIndex - numOfItemsInPage - 1, -1);
-				}
-			}
-
-			/* For grid lists, find the nearest item from the current item */
-			if (candidateIndex !== -1) {
-				const
-					currentPosInExtent = currentIndex % dimensionToExtent,
-					firstIndexInExtent = candidateIndex - (candidateIndex % dimensionToExtent),
-					lastIndexInExtent = clamp(firstIndexInExtent, dataSize - 1, firstIndexInExtent + dimensionToExtent);
-				let
-					minDistance = dimensionToExtent,
-					distance,
-					index;
-				for (let i = firstIndexInExtent; i <= lastIndexInExtent; ++i) {
-					if (data[i] && !data[i].disabled) {
-						distance = Math.abs(currentPosInExtent - i % dimensionToExtent);
-						if (distance < minDistance) {
-							minDistance = distance;
-							index = i;
-						}
-					}
-				}
-
-				return index;
-			} else {
-				return -1;
-			}
+			this.setRestrict(isSelfOnly);
 		}
 
 		getIndexToScroll = (direction, currentIndex) => {
@@ -327,16 +265,11 @@ const VirtualListBase = (type) => {
 
 		scrollToNextItem = ({direction, focusedItem}) => {
 			const
-				{data} = this.uiRef.props,
 				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
 				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo;
 			let indexToScroll = -1;
 
-			if (Array.isArray(data) && data.some((item) => item.disabled)) {
-				indexToScroll = this.getIndexToScrollDisabled(direction, focusedIndex);
-			} else {
-				indexToScroll = this.getIndexToScroll(direction, focusedIndex);
-			}
+			indexToScroll = this.getIndexToScroll(direction, focusedIndex, this.uiRef);
 
 			if (indexToScroll !== -1) {
 				const
@@ -369,134 +302,21 @@ const VirtualListBase = (type) => {
 			return true;
 		}
 
-		/**
-		 * Handle `onKeyDown` event
-		 */
-
-		setRestrict = (bool) => {
-			Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
-		}
-
-		setSpotlightContainerRestrict = (keyCode, target) => {
-			const
-				{dataSize} = this.uiRef.props,
-				{isPrimaryDirectionVertical, dimensionToExtent} = this.uiRef,
-				index = Number.parseInt(target.getAttribute(dataIndexAttribute)),
-				canMoveBackward = index >= dimensionToExtent,
-				canMoveForward = index < (dataSize - (((dataSize - 1) % dimensionToExtent) + 1));
-			let isSelfOnly = false;
-
-			if (isPrimaryDirectionVertical) {
-				if (isUp(keyCode) && canMoveBackward || isDown(keyCode) && canMoveForward) {
-					isSelfOnly = true;
-				}
-			} else if (isLeft(keyCode) && canMoveBackward || isRight(keyCode) && canMoveForward) {
-				isSelfOnly = true;
-			}
-
-			this.setRestrict(isSelfOnly);
-		}
-
-		jumpToSpottableItem = (keyCode, target) => {
-			const
-				{cbScrollTo, data, dataSize} = this.uiRef.props,
-				{firstIndex, numOfItems} = this.uiRef.state,
-				{isPrimaryDirectionVertical} = this.uiRef,
-				rtl = this.props.rtl,
-				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
-
-			if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled) {
-				return false;
-			}
-
-			const
-				isForward = (
-					isPrimaryDirectionVertical && isDown(keyCode) ||
-					!isPrimaryDirectionVertical && (!rtl && isRight(keyCode) || rtl && isLeft(keyCode)) ||
-					null
-				),
-				isBackward = (
-					isPrimaryDirectionVertical && isUp(keyCode) ||
-					!isPrimaryDirectionVertical && (!rtl && isLeft(keyCode) || rtl && isRight(keyCode)) ||
-					null
-				);
-
-			let nextIndex = -1;
-
-			if (isForward) {
-				// See if the next item is spottable then delegate scroll to onFocus handler
-				if (currentIndex < dataSize - 1 && !data[currentIndex + 1].disabled) {
-					return false;
-				}
-
-				for (let i = currentIndex + 2; i < dataSize; i++) {
-					if (!data[i].disabled) {
-						nextIndex = i;
-						break;
-					}
-				}
-
-				// If there is no item which could get focus forward,
-				// we need to set restriction option to `self-first`.
-				if (nextIndex === -1) {
-					this.setRestrict(false);
-				}
-			} else if (isBackward) {
-				// See if the next item is spottable then delegate scroll to onFocus handler
-				if (currentIndex > 0 && !data[currentIndex - 1].disabled) {
-					return false;
-				}
-
-				for (let i = currentIndex - 2; i >= 0; i--) {
-					if (!data[i].disabled) {
-						nextIndex = i;
-						break;
-					}
-				}
-
-				// If there is no item which could get focus backward,
-				// we need to set restriction option to `self-first`.
-				if (nextIndex === -1) {
-					this.setRestrict(false);
-				}
-			} else {
-				return false;
-			}
-
-			if (nextIndex !== -1 && (firstIndex > nextIndex || nextIndex >= firstIndex + numOfItems)) {
-				// When changing from "pointer" mode to "5way key" mode,
-				// a pointer is hidden and a last focused item get focused after 30ms.
-				// To make sure the item to be blurred after that, we used 50ms.
-				setTimeout(() => {
-					target.blur();
-				}, 50);
-
-				this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
-
-				if (!Spotlight.isPaused()) {
-					Spotlight.pause();
-				}
-
-				cbScrollTo({
-					index: nextIndex,
-					stickTo: isForward ? 'end' : 'start'
-				});
-				return true;
-			}
-
-			return false;
-		}
-
 		onKeyDown = (ev) => {
 			const {keyCode, target} = ev;
 
 			this.isScrolledBy5way = false;
-			if (getDirection(keyCode)) {
+			if (this.props.disabledItems && getDirection(keyCode)) {
 				if (type === Native) {
 					ev.preventDefault();
 				}
 				this.setSpotlightContainerRestrict(keyCode, target);
-				this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, target);
+				this.isScrolledBy5way = this.props.jumpToSpottableItem({
+					keyCode,
+					rtl: this.props.rtl,
+					setRestrict: this.setRestrict,
+					target
+				});
 			}
 			forward('onKeyDown', ev, this.props);
 		}
@@ -513,12 +333,6 @@ const VirtualListBase = (type) => {
 		 * Focus on the Node of the VirtualList item
 		 */
 
-		focusOnNode = (node) => {
-			if (node) {
-				Spotlight.focus(node);
-			}
-		}
-
 		focusOnItem = (index) => {
 			const item = this.uiRef.containerRef.querySelector(`[data-index='${index}'].spottable`);
 
@@ -530,21 +344,6 @@ const VirtualListBase = (type) => {
 			}
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
-		}
-
-		initItemRef = (ref, index) => {
-			if (ref) {
-				if (type === JS) {
-					this.focusOnItem(index);
-				} else if (type === Native) {
-					// If focusing the item of VirtuallistNative, `onFocus` in Scrollable will be called.
-					// Then VirtualListNative tries to scroll again differently from VirtualList.
-					// So we would like to skip `focus` handling when focusing the item as a workaround.
-					this.isScrolledByJump = true;
-					this.focusOnItem(index);
-					this.isScrolledByJump = false;
-				}
-			}
 		}
 
 		focusByIndex = (index) => {
@@ -692,10 +491,6 @@ const VirtualListBase = (type) => {
 
 		getScrollBounds = () => this.uiRef.getScrollBounds()
 
-		getComponentProps = (index) => (
-			(index === this.nodeIndexToBeFocused) ? {ref: (ref) => this.initItemRef(ref, index)} : {}
-		)
-
 		initUiRef = (ref) => {
 			if (ref) {
 				this.uiRef = ref;
@@ -708,7 +503,9 @@ const VirtualListBase = (type) => {
 				{component, itemsRenderer, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
+			delete rest.disabledItems;
 			delete rest.initUiChildRef;
+			delete rest.jumpToSpottableItem;
 
 			return (
 				<UiBase
@@ -720,7 +517,6 @@ const VirtualListBase = (type) => {
 							index
 						})
 					)}
-					getComponentProps={this.getComponentProps}
 					ref={this.initUiRef}
 					updateStatesAndBounds={this.updateStatesAndBounds}
 					itemsRenderer={(props) => { // eslint-disable-line react/jsx-no-bind
@@ -766,6 +562,7 @@ const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line reac
 		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseJS
 				{...props}
+				disabledItems={rest.disabledItems}
 				itemsRenderer={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
@@ -788,6 +585,11 @@ const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line reac
 
 ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 	/**
+	 * TBD
+	 */
+	disabledItems: PropTypes.bool,
+
+	/**
 	 * Aria role.
 	 *
 	 * @type {String}
@@ -802,6 +604,7 @@ const ScrollableVirtualListNative = ({role, ...rest}) => (
 		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...props}
+				disabledItems={rest.disabledItems}
 				itemsRenderer={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
@@ -823,6 +626,11 @@ const ScrollableVirtualListNative = ({role, ...rest}) => (
 );
 
 ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListNative.prototype */ {
+	/**
+	 * TBD
+	 */
+	disabledItems: PropTypes.bool,
+
 	/**
 	 * Aria role.
 	 *

@@ -125,6 +125,11 @@ class ScrollableBase extends Component {
 		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
 		/**
+		 * TBD
+		 */
+		initUiChildRef: PropTypes.func,
+
+		/**
 		 * Called when pressing a key.
 		 *
 		 * @type {Function}
@@ -1038,7 +1043,13 @@ class ScrollableBase extends Component {
 
 	initChildRef = (ref) => {
 		if (ref) {
+			const {initUiChildRef} = this.props;
+
 			this.childRef = ref;
+			if (initUiChildRef) {
+				initUiChildRef(ref);
+			}
+
 		}
 	}
 

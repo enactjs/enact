@@ -88,6 +88,11 @@ class Scrollable extends Component {
 		childRenderer: PropTypes.func.isRequired,
 
 		/**
+		 * TBD
+		 */
+		disabledItems: PropTypes.bool,
+
+		/**
 		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
 		 * not move focus to the scrollbar controls.
 		 *
@@ -95,7 +100,17 @@ class Scrollable extends Component {
 		 * @default false
 		 * @public
 		 */
-		focusableScrollbar: PropTypes.bool
+		focusableScrollbar: PropTypes.bool,
+
+		/**
+		 * TBD
+		 */
+		initMoonChildRef: PropTypes.func,
+
+		/**
+		 * TBD
+		 */
+		scrollToNextItem: PropTypes.func
 	}
 
 	static defaultProps = {
@@ -269,6 +284,7 @@ class Scrollable extends Component {
 
 			const
 				// VirtualList and Scroller have a containerId on containerRef
+				{disabledItems} = this.props,
 				containerId = childRef.containerRef.dataset.containerId,
 				direction = this.getPageDirection(keyCode),
 				rDirection = reverseDirections[direction],
@@ -276,7 +292,7 @@ class Scrollable extends Component {
 				spotItemBounds = spotItem.getBoundingClientRect(),
 				endPoint = this.getEndPoint(direction, spotItemBounds, viewportBounds),
 				next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId),
-				scrollFn = this.childRef.scrollToNextPage || this.childRef.scrollToNextItem;
+				scrollFn = this.childRef.scrollToNextPage || disabledItems ? this.props.scrollToNextItem : this.childRef.scrollToNextItem;
 
 			// If there is no next spottable DOM elements, scroll one page with animation
 			if (!next) {
@@ -287,7 +303,12 @@ class Scrollable extends Component {
 				Spotlight.focus(next);
 			// If a next spottable DOM element is equals to the current spottable item, we need to find a next item
 			} else {
-				const nextPage = scrollFn({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
+				const nextPage = scrollFn({
+					direction,
+					reverseDirection: rDirection,
+					focusedItem: spotItem,
+					containerId
+				});
 
 				// If finding a next spottable item in a Scroller, focus it
 				if (typeof nextPage === 'object') {
@@ -417,9 +438,14 @@ class Scrollable extends Component {
 		}
 	}
 
-	initChildRef = (ref) => {
+	initMoonChildRef = (ref) => {
 		if (ref) {
+			const {initMoonChildRef} = this.props;
+
 			this.childRef = ref;
+			if (initMoonChildRef) {
+				initMoonChildRef(ref);
+			}
 		}
 	}
 
@@ -431,6 +457,10 @@ class Scrollable extends Component {
 
 	render () {
 		const {focusableScrollbar, childRenderer, ...rest} = this.props;
+
+		delete rest.disabledItems;
+		delete rest.initMoonChildRef;
+		delete rest.scrollToNextItem;
 
 		return (
 			<UiScrollableBase
@@ -470,7 +500,7 @@ class Scrollable extends Component {
 								className: componentCss.content,
 								initUiChildRef,
 								onScroll: handleScroll,
-								ref: this.initChildRef
+								ref: this.initMoonChildRef
 							})}
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
