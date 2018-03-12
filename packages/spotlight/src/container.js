@@ -5,10 +5,7 @@
  * @private
  */
 
-import and from 'ramda/src/and';
-import concat from 'ramda/src/concat';
 import {coerceArray} from '@enact/core/util';
-import intersection from 'ramda/src/intersection';
 
 import {last, matchSelector} from './utils';
 
@@ -174,7 +171,7 @@ const isContainer = (nodeOrId) => {
 const isContainerEnabled = (node) => {
 	return mapContainers(node, container => {
 		return container.dataset.containerDisabled !== 'true';
-	}).reduce(and, true);
+	}).reduce((a, b) => a && b, true);
 };
 
 /**
@@ -324,7 +321,7 @@ const getDeepSpottableDescendants = (containerId, excludedContainers) => {
 
 			return [n];
 		})
-		.reduce(concat, []);
+		.reduce((a, b) => b ? a.concat(b) : a, []);
 };
 
 /**
@@ -866,7 +863,16 @@ function setLastContainerFromTarget (current, target) {
 	const targetContainers = getContainersForNode(target);
 	const targetInnerContainer = last(targetContainers);
 
-	const sharedContainer = last(intersection(currentContainers, targetContainers));
+	// find the "lowest" shared container between the target and current container list
+	const sharedContainer = targetContainers.reduceRight((result, targetId) => {
+		if (result == null) {
+			if (currentContainers.indexOf(targetId) !== -1) {
+				result = targetId;
+			}
+		}
+
+		return result;
+	}, null);
 
 	if (sharedContainer || !currentContainerConfig || currentContainerConfig.restrict !== 'self-only') {
 		// If the target shares a container with the current container stack or the current

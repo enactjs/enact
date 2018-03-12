@@ -51,7 +51,6 @@ const coerceFunction = function (fn) {
  *	const returnsArg = coerceArray([0]); // [0]
  *	const returnsObjArg = coerceArray({0: 'zeroth', length: 1});
  * ```
- * @see http://ramdajs.com/docs/#isArrayLike
  * @method
  * @memberof core/util
  * @param {*} array Array or value

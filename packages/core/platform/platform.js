@@ -6,7 +6,10 @@
  * @module core/platform
  */
 
-import uniq from 'ramda/src/uniq';
+const uniq = list => list.reduce((result, v) => {
+	if (result.indexOf(v) === -1) result.push(v);
+	return result;
+}, []);
 
 const hasGesture = () => {
 	return Boolean(
