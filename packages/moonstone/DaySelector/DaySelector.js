@@ -4,17 +4,17 @@
  * @module moonstone/DaySelector
  */
 
-import Changeable from '@enact/ui/Changeable';
-import compose from 'ramda/src/compose';
-import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
-import PropTypes from 'prop-types';
+import Changeable from '@enact/ui/Changeable';
+import Group from '@enact/ui/Group';
 import Pure from '@enact/ui/internal/Pure';
+import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import React from 'react';
 
 import Skinnable from '../Skinnable';
 
-import DaySelectorDecorator from './DaySelectorDecorator';
+import Decorator from './DaySelectorDecorator';
 import DaySelectorItem from './DaySelectorItem';
 
 import componentCss from './DaySelector.less';
@@ -92,13 +92,20 @@ const DaySelectorBase = kind({
 	}
 });
 
+// documented in ./DaySelectorDecorator.js
+const DaySelectorDecorator = compose(
+	Pure,
+	Changeable({change: 'onSelect', prop: 'selected'}),
+	Decorator,
+	Skinnable
+);
+
 /**
  * A component that allows the user to choose day(s) of the week.
  *
  * @class DaySelector
  * @extends moonstone/DaySelector.DaySelectorBase
- * @mixes ui/Changeable.Changeable
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/DaySelector.DaySelectorDecorator
  * @memberof moonstone/DaySelector
  * @ui
  * @public
@@ -116,15 +123,11 @@ const DaySelectorBase = kind({
  * @public
  */
 
-const DaySelector = compose(
-	Pure,
-	Changeable({change: 'onSelect', prop: 'selected'}),
-	DaySelectorDecorator,
-	Skinnable
-)(DaySelectorBase);
+const DaySelector = DaySelectorDecorator(DaySelectorBase);
 
 export default DaySelector;
 export {
 	DaySelector,
-	DaySelectorBase
+	DaySelectorBase,
+	DaySelectorDecorator
 };
