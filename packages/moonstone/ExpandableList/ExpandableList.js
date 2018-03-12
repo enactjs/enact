@@ -388,7 +388,10 @@ const ExpandableList = Pure(
 						selectedIndex = selected[0];
 					}
 
-					const selectedNode = node && node.querySelector(`[data-index="${selectedIndex}"]`);
+					let selectedNode = null;
+					if (node) {
+						selectedNode = node.querySelector(`[data-index="${selectedIndex}"]`);
+					}
 
 					return selectedNode;
 				}
