@@ -731,6 +731,7 @@ class VirtualListBase extends Component {
 		delete rest.dataSize;
 		delete rest.direction;
 		delete rest.getComponentProps;
+		delete rest.isDisabledItem;
 		delete rest.itemSize;
 		delete rest.overhang;
 		delete rest.pageScroll;
