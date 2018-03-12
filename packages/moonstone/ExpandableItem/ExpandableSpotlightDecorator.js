@@ -14,8 +14,11 @@ import PropTypes from 'prop-types';
  */
 const defaultConfig = {
 	/**
-	 * If this function is defined, it will be used for finding the selected node.
-	 * Or, the first item is focused basically when picker is opened.
+	 * Returns the child -- either a node or a CSS selector -- to focus after expanding.
+	 *
+	 * If this function is defined, it will be passed the container node and the current set of
+	 * props and should return either a node or a CSS selector to be passed to
+	 * {@link spotlight/Spotlight.focus}.
 	 *
 	 * @type {Function}
 	 * @default null
@@ -79,13 +82,19 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const current = Spotlight.getCurrent();
 			if (this.containerNode.contains(current) || document.activeElement === document.body) {
 				const contents = this.containerNode.querySelector('[data-expandable-container]');
-				const selectedNode = getChildFocusTarget ? getChildFocusTarget(contents, this.props) : null;
 				if (contents && !this.props.noAutoFocus && !contents.contains(current)) {
-					let fucused = false;
-					if (selectedNode) {
-						fucused = Spotlight.focus(selectedNode);
+					let focused = false;
+
+					// Attempt to retrieve the Expandable-configured child focus target
+					if (getChildFocusTarget) {
+						const selectedNode = getChildFocusTarget(contents, this.props);
+
+						if (selectedNode) {
+							focused = Spotlight.focus(selectedNode);
+						}
 					}
-					if (!fucused) {
+
+					if (!focused) {
 						Spotlight.focus(contents.dataset.containerId);
 					}
 				}

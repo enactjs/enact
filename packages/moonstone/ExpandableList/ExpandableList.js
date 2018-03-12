@@ -378,14 +378,21 @@ const ExpandableList = Pure(
 	{propComparators: {
 		children: compareChildren
 	}},
-	Expandable(
-		{getSelectedNode: (node, {selected = 0}) => {
-			const selectedIndex = Array.isArray(selected) && selected.length ? selected[0] : selected;
-			const selectedNode = node ? node.querySelector('[data-index="' + selectedIndex + '"]') : null;
-			return selectedNode;
-		}},
-		Changeable(
-			{change: 'onSelect', prop: 'selected'},
+	Changeable(
+		{change: 'onSelect', prop: 'selected'},
+		Expandable(
+			{
+				getChildFocusTarget: (node, {selected = 0}) => {
+					let selectedIndex = selected;
+					if (Array.isArray(selected) && selected.length) {
+						selectedIndex = selected[0];
+					}
+
+					const selectedNode = node && node.querySelector(`[data-index="${selectedIndex}"]`);
+
+					return selectedNode;
+				}
+			},
 			ExpandableListBase
 		)
 	)
