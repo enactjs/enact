@@ -2,11 +2,15 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
-## [unreleased]
+## [2.0.0-alpha.5] - 2018-03-07
 
 ### Removed
 
 - `core/util.childrenEquals` which was no longer supported by React 16
+
+### Added
+
+- `core/util.memoize` method to optimize the execution of expensive functions
 
 ## [2.0.0-alpha.4] - 2018-02-13
 

@@ -1,22 +1,23 @@
 /**
- * Exports the {@link ui/Scroller.Scroller} and
- * {@link ui/Scroller.ScrollerBase} components.
- * The default export is {@link ui/Scroller.Scroller}.
+ * Provides unstyled scroller components and behaviors to be customized by a theme or application.
  *
  * @module ui/Scroller
+ * @exports Scroller
+ * @exports ScrollerBase
  */
 
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
+import Scrollable from '../Scrollable';
+
 import css from './Scroller.less';
-import Scrollable from './Scrollable';
 
 /**
- * {@link ui/Scroller.ScrollerBase} is a base component for Scroller.
- * In most circumstances, you will want to use Scrollable version:
- * {@link ui/Scroller.Scroller}
+ * An unstyled base component for Scroller{@link ui/Scroller.Scroller}.
+ * In most circumstances, you will want to use the Scrollable version:
+ * [Scroller]{@link ui/Scroller.Scroller}
  *
  * @class ScrollerBase
  * @memberof ui/Scroller
@@ -24,9 +25,9 @@ import Scrollable from './Scrollable';
  * @public
  */
 class ScrollerBase extends Component {
-	static displayName = 'Scroller'
+	static displayName = 'ui:ScrollerBase'
 
-	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
+	static propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
 		children: PropTypes.node.isRequired,
 
 		/**
@@ -39,25 +40,30 @@ class ScrollerBase extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
-		 * Direction of the scroller; valid values are `'both'`, `'horizontal'`, and `'vertical'`.
+		 * Direction of the scroller.
+		 *
+		 * Valid values are:
+		 * * `'both'`,
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
 		 *
 		 * @type {String}
 		 * @default 'both'
 		 * @public
 		 */
-		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
-	}
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
-	static contextTypes = {
+		/**
+		 * `true` if rtl, `false` if ltr.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
 		rtl: PropTypes.bool
 	}
 
 	static defaultProps = {
 		direction: 'both'
-	}
-
-	constructor (props) {
-		super(props);
 	}
 
 	componentDidMount () {
@@ -84,12 +90,11 @@ class ScrollerBase extends Component {
 
 	getScrollBounds = () => this.scrollBounds
 
-	getRtlPositionX = (x) => (this.context.rtl ? this.scrollBounds.maxLeft - x : x)
+	getRtlPositionX = (x) => (this.props.rtl ? this.uiRef.scrollBounds.maxLeft - x : x)
 
 	// for Scrollable
 	setScrollPosition (x, y) {
-		const
-			node = this.containerRef;
+		const node = this.containerRef;
 
 		if (this.isVertical()) {
 			node.scrollTop = y;
@@ -99,6 +104,17 @@ class ScrollerBase extends Component {
 			node.scrollLeft = this.getRtlPositionX(x);
 			this.scrollPos.left = x;
 		}
+	}
+
+	// for ScrollableNative
+	scrollToPosition (x, y) {
+		this.containerRef.scrollTo(this.getRtlPositionX(x), y);
+	}
+
+	// for ScrollableNative
+	didScroll (x, y) {
+		this.scrollPos.left = x;
+		this.scrollPos.top = y;
 	}
 
 	getNodePosition = (node) => {
@@ -118,13 +134,11 @@ class ScrollerBase extends Component {
 	}
 
 	isVertical = () => {
-		const {direction} = this.props;
-		return (direction !== 'horizontal');
+		return (this.props.direction !== 'horizontal');
 	}
 
 	isHorizontal = () => {
-		const {direction} = this.props;
-		return (direction !== 'vertical');
+		return (this.props.direction !== 'vertical');
 	}
 
 	calculateMetrics () {
@@ -139,29 +153,29 @@ class ScrollerBase extends Component {
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
 	}
 
-	initRef = (ref) => {
-		this.containerRef = ref;
+	initContainerRef = (ref) => {
+		if (ref) {
+			this.containerRef = ref;
+		}
 	}
 
 	render () {
 		const
-			{className, style} = this.props,
-			props = Object.assign({}, this.props),
+			{className, style, ...rest} = this.props,
 			mergedStyle = Object.assign({}, style, {
 				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
 				overflowY: this.isVertical() ? 'auto' : 'hidden'
 			});
 
-		delete props.cbScrollTo;
-		delete props.className;
-		delete props.direction;
-		delete props.style;
+		delete rest.cbScrollTo;
+		delete rest.direction;
+		delete rest.rtl;
 
 		return (
 			<div
-				{...props}
+				{...rest}
 				className={classNames(className, css.hideNativeScrollbar)}
-				ref={this.initRef}
+				ref={this.initContainerRef}
 				style={mergedStyle}
 			/>
 		);
@@ -169,7 +183,7 @@ class ScrollerBase extends Component {
 }
 
 /**
- * {@link ui/Scroller.Scroller} is a Scroller with Scrollable applied.
+ * An unstyled scroller.
  *
  * Usage:
  * ```
@@ -178,85 +192,22 @@ class ScrollerBase extends Component {
  *
  * @class Scroller
  * @memberof ui/Scroller
- * @mixes ui/Scroller.Scrollable
- * @see ui/Scroller.ScrollerBase
+ * @extends ui/Scrollable.Scrollable
+ * @extends ui/Scrollable.ScrollerBase
  * @ui
  * @public
  */
-const Scroller = Scrollable(ScrollerBase);
-
-// Docs for Scroller
-/**
- * The callback function which is called for linking scrollTo function.
- * You should specify a callback function as the value of this prop
- * to use scrollTo feature.
- *
- * The scrollTo function passed to the parent component requires below as an argument.
- * - {position: {x, y}} - You can set a pixel value for x and/or y position
- * - {align} - You can set one of values below for align
- *   `'left'`, `'right'`, `'top'`, `'bottom'`,
- *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
- * - {index} - You can set an index of specific item. (`0` or positive integer)
- *   This option is available only for `VirtualList` kind.
- * - {node} - You can set a node to scroll
- * - {animate} - When `true`, scroll occurs with animation.
- *   Set it to `false` if you want scrolling without animation.
- *
- * Example:
- * ```
- *	// If you set cbScrollTo prop like below;
- *	cbScrollTo: (fn) => {this.scrollTo = fn;}
- *	// You can simply call like below;
- *	this.scrollTo({align: 'top'}); // scroll to the top
- * ```
- *
- * @name cbScrollTo
- * @type {Function}
- * @memberof ui/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * Direction of the scroller; valid values are `'both'`, `'horizontal'`, and `'vertical'`.
- *
- * @name direction
- * @type {String}
- * @default 'both'
- * @memberof ui/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * Called when scrolling
- *
- * @name onScroll
- * @type {Function}
- * @memberof ui/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * Called when scroll starts
- *
- * @name onScrollStart
- * @type {Function}
- * @memberof ui/Scroller.Scroller
- * @instance
- * @public
- */
-
-/**
- * Called when scroll stops
- *
- * @name onScrollStop
- * @type {Function}
- * @memberof ui/Scroller.Scroller
- * @instance
- * @public
- */
+const Scroller = (props) => (
+	<Scrollable
+		{...props}
+		childRenderer={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
+			<ScrollerBase {...scrollerProps} />
+		)}
+	/>
+);
 
 export default Scroller;
-export {Scroller, ScrollerBase};
+export {
+	Scroller,
+	ScrollerBase
+};
