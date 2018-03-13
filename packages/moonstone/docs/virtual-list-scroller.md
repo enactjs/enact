@@ -10,10 +10,9 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
 *   At least four props below are required to show a list properly.
 
-    *   `data`: Data for the list.
-
+    *   `data`: Data for passing through to the `component` prop. For performance reason, changing this prop does NOT always cause the list to redraw its items.
     *   `dataSize`: Size of the data. A list does not check the size of `data` prop. dataSize prop is the only value to count items in a list.
-    *   `itemSize`: Size of an item for the list. This is a required prop, and you will get an error when you build an app in dev mode without it.
+    *   `itemSize`: Size of an item for the list. This is a required prop, and you will get an error when you build an app in dev mode without it. For the VirtualList, valid value is a number. For the VirtualGridList, valid value is an object that has `minWidth` and `minHeight` as properties.
     *   `component`: The render function for an item of the list.
     *   Example
 
@@ -47,7 +46,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
 ### Common rules of Items for VirtualList/VirtualGridList
 
-*   A renderer for an item should be specified in `component` prop in VirtualList.
+*   A renderer for an item should be specified in `component` prop in VirtualList as a function.
 *   VirtualList passes `data`, `index`, `data-index`, and `key` to the `component` function.
 *   Be sure you are passing `{...rest}` to the item component for reusing DOM.
 *   VirtualList will automatically give proper className for items.
