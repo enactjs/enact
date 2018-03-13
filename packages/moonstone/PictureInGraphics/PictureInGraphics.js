@@ -26,20 +26,20 @@ class PictureInGraphicsBase extends React.Component {
 	static propTypes = {
 		source: PropTypes.node.isRequired,
 		captionComponent: PropTypes.node,
-		imageOverlayShowing: PropTypes.bool,
 		imageOverlaySrc: PropTypes.string,
-		isIpChannel: PropTypes.bool,
+		noImageOverlayShowing: PropTypes.bool,
+		onLoadedMetadata: PropTypes.func,
+		onVideoClick: PropTypes.func,
 		placeholder: PropTypes.string,
 		spotlightDisabled: PropTypes.bool,
+		textOverlayColor: PropTypes.string,
 		textOverlayContent: PropTypes.string
 	}
 
 	static defaultProps = {
-		imageOverlayShowing: false,
+		noImageOverlayShowing: true,
 		placeholder: defaultPlaceholder,
-		imageOverlaySrc: '',
-		isIpChannel: false,
-		spotlightDisabled: false
+		imageOverlaySrc: ''
 	}
 
 	constructor (props) {
@@ -75,16 +75,27 @@ class PictureInGraphicsBase extends React.Component {
 	};
 
 	render () {
-		const {className, source, placeholder, imageOverlayShowing, imageOverlaySrc, textOverlayContent, captionComponent, isIpChannel, spotlightDisabled, ...rest} = this.props;
-		const containerClassName = classNames(className, css['pictureInGraphics']);
-		const textOverlayClassName = classNames(css.textOverlay, isIpChannel ? css.ipChannel : null);
+		const {
+			className,
+			source,
+			placeholder,
+			noImageOverlayShowing,
+			imageOverlaySrc,
+			textOverlayContent,
+			captionComponent,
+			spotlightDisabled,
+			textOverlayColor,
+			...rest} = this.props;
 
 		delete rest.onLoadedMetadata;
-		delete rest.onReceivedVideoState;
+		delete rest.onVideoClick;
+
+		const containerClassName = classNames(className, css.pictureInGraphics);
+		const textOverlayStyle = {color: textOverlayColor};
 
 		return (
-			<Container className={containerClassName} spotlightDisabled={spotlightDisabled}>
-				<div className={css['videoContainer']} onClick={this.handleClick} >
+			<Container {...rest} className={containerClassName} spotlightDisabled={spotlightDisabled}>
+				<div className={css.videoContainer} onClick={this.handleClick} >
 					<video
 						className={css.video}
 						autoPlay
@@ -94,15 +105,15 @@ class PictureInGraphicsBase extends React.Component {
 					>
 						{source}
 					</video>
-					{imageOverlayShowing ?
+					{!noImageOverlayShowing ?
 						<div>
 							<Image placeholder={placeholder} className={css.image} src={imageOverlaySrc} />
-							{textOverlayContent ? (<MarqueeText alignment="center" className={textOverlayClassName}>{textOverlayContent}</MarqueeText>) : null}
+							{textOverlayContent ? (<MarqueeText alignment="center" className={css.textOverlay} style={textOverlayStyle}>{textOverlayContent}</MarqueeText>) : null}
 						</div> :
 						null
 					}
 				</div>
-				<div className={css['captionContainer']}>
+				<div className={css.captionContainer}>
 					{captionComponent}
 				</div>
 			</Container>
