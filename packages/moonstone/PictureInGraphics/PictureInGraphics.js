@@ -9,12 +9,11 @@ import {forward} from '@enact/core/handle';
 
 import Image from '../Image';
 import Skinnable from '../Skinnable';
-import {ItemBase} from '../Item';
 import {MarqueeController, MarqueeText} from '../Marquee';
 
 import css from './PictureInGraphics.less';
 
-const Container = MarqueeController({marqueeOnFocus: true}, Spottable(ItemBase));
+const Container = MarqueeController({marqueeOnFocus: true}, Spottable('div'));
 
 const defaultPlaceholder =
 	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
@@ -24,21 +23,73 @@ const defaultPlaceholder =
 
 class PictureInGraphicsBase extends React.Component {
 	static propTypes = {
+		/**
+		 * Any children `<source>` tag elements will
+		 * be sent directly to the `<video>` element as video sources.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
 		source: PropTypes.node.isRequired,
+		/**
+		 * Component is displayed below video area.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
 		captionComponent: PropTypes.node,
-		imageOverlayShowing: PropTypes.bool,
+		/**
+		 * Image path for image overlay
+		 *
+		 * @type {String}
+		 * @public
+		 */
 		imageOverlaySrc: PropTypes.string,
+		/**
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onLoadedMetadata: PropTypes.func,
+		/**
+		 * It is called when video area is clicked.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onVideoClick: PropTypes.func,
+		/**
+		 * Placeholder for image overlay
+		 *
+		 * @type {String}
+		 * @public
+		 */
 		placeholder: PropTypes.string,
+		/**
+		 * When `true`, spotlight is disabled and onVideoClick event does not occur.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
 		spotlightDisabled: PropTypes.bool,
+		/**
+		 * Font color of text overlay. It is a hexadecimal string.
+		 *
+		 * @type {String}
+		 * @public
+		 */
 		textOverlayColor: PropTypes.string,
+		/**
+		 * Text of text overlay
+		 *
+		 * @type {String}
+		 * @public
+		 */
 		textOverlayContent: PropTypes.string
 	}
 
 	static defaultProps = {
-		placeholder: defaultPlaceholder,
-		imageOverlaySrc: ''
+		placeholder: defaultPlaceholder
 	}
 
 	constructor (props) {
@@ -78,7 +129,6 @@ class PictureInGraphicsBase extends React.Component {
 			className,
 			source,
 			placeholder,
-			imageOverlayShowing,
 			imageOverlaySrc,
 			textOverlayContent,
 			captionComponent,
@@ -104,13 +154,8 @@ class PictureInGraphicsBase extends React.Component {
 					>
 						{source}
 					</video>
-					{imageOverlayShowing ?
-						<div>
-							<Image placeholder={placeholder} className={css.image} src={imageOverlaySrc} />
-							{textOverlayContent ? (<MarqueeText alignment="center" className={css.textOverlay} style={textOverlayStyle}>{textOverlayContent}</MarqueeText>) : null}
-						</div> :
-						null
-					}
+					{imageOverlaySrc ? <Image placeholder={placeholder} className={css.image} src={imageOverlaySrc} /> : null}
+					{textOverlayContent ? (<MarqueeText alignment="center" className={css.textOverlay} style={textOverlayStyle}>{textOverlayContent}</MarqueeText>) : null}
 				</div>
 				<div className={css.captionContainer}>
 					{captionComponent}
