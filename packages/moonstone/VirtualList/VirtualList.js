@@ -30,7 +30,7 @@ const VirtualList = kind({
 		 * - `data` is for accessing the supplied `data` property of the list.
 		 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
 		 * this parameter due to performance optimizations
-		 * - `data-index` is required for Spotlight 5-way navigation.  Pass to the root element in
+		 * - `data-index` is required for Spotlight 5-way navigation. Pass to the root element in
 		 *   the component.
 		 * - `index` is the index number of the component to render
 		 * - `key` MUST be passed as a prop to the root element in the component for DOM recycling.
@@ -247,7 +247,7 @@ const VirtualGridList = kind({
 		 * - `data` is for accessing the supplied `data` property of the list.
 		 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
 		 * this parameter due to performance optimizations
-		 * - `data-index` is required for Spotlight 5-way navigation.  Pass to the root element in
+		 * - `data-index` is required for Spotlight 5-way navigation. Pass to the root element in
 		 *   the component.
 		 * - `index` is the index number of the component to render
 		 * - `key` MUST be passed as a prop to the root element in the component for DOM recycling.
