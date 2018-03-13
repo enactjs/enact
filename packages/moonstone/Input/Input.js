@@ -173,6 +173,15 @@ const InputBase = kind({
 		rtl: PropTypes.bool,
 
 		/**
+		 * Applies the `small` CSS class to the [InputBase]{@link moonstone/Input.InputBase}
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		small: PropTypes.bool,
+
+		/**
 		 * The type of input. Accepted values correspond to the standard HTML5 input types.
 		 *
 		 * @type {String}
@@ -219,7 +228,7 @@ const InputBase = kind({
 			const title = (value == null || value === '') ? placeholder : '';
 			return calcAriaLabel(title, type, value);
 		},
-		className: ({focused, invalid, styler}) => styler.append({focused, invalid}),
+		className: ({focused, invalid, small, styler}) => styler.append({focused, invalid, small}),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
 		invalidTooltip: ({invalid, invalidMessage, rtl}) => {
 			if (invalid && invalidMessage) {
@@ -241,6 +250,7 @@ const InputBase = kind({
 		delete rest.invalid;
 		delete rest.invalidMessage;
 		delete rest.rtl;
+		delete rest.small;
 
 		return (
 			<div {...rest} disabled={disabled}>

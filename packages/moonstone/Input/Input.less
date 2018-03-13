@@ -54,17 +54,34 @@
 .decorator {
 	display: inline-flex;
 	position: relative;
-	padding: 3px 30px;
+	padding: @moon-input-padding @moon-input-padding-side;
 	border-radius: 1008px;
-	margin: 6px;
+	margin: 0 @moon-input-border-width;
 	border: @moon-input-border-width solid transparent;
 	box-sizing: border-box;
+	vertical-align: middle;
 
 	.input,
 	.iconBefore,
 	.iconAfter {
-		line-height: 57px;
-		height: 57px;
+		line-height: @moon-input-height;
+		height: @moon-input-height;
+		vertical-align: middle;
+	}
+
+	&.small {
+		.iconBefore,
+		.iconAfter {
+			font-size: @moon-input-icon-small-size;
+			line-height: @moon-input-small-height;
+			height: @moon-input-small-height;
+		}
+
+		.input {
+			font-size: @moon-input-small-font-size;
+			height: @moon-input-small-height;
+			vertical-align: middle;
+		}
 	}
 
 	.iconBefore,
@@ -73,11 +90,11 @@
 	}
 
 	.iconAfter {
-		.padding-start-end(18px, 0);
+		.padding-start-end(@moon-input-border-padding-offset, 0);
 	}
 
 	.iconBefore {
-		.padding-start-end(0, 18px);
+		.padding-start-end(0, @moon-input-border-padding-offset);
 	}
 
 	// RIGBY NOTE: multiline is a NOT YET IMPLEMENTED feature that combines <input> and <textarea>

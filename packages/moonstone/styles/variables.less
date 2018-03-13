@@ -180,6 +180,19 @@
 @moon-icon-tap-area-offset: -(@moon-button-border-width + (@moon-button-small-tap-area-height - @moon-button-small-height) / 2);
 @moon-icon-margin: 12px;
 
+// Input
+// ---------------------------------------
+@moon-input-padding: 3px;
+@moon-input-padding-side: (@moon-input-padding * 10);
+@moon-input-border-width: (@moon-input-padding * 2);
+@moon-input-height: 60px;
+@moon-input-tooltip-offset: @moon-input-border-width + @moon-tooltip-point-width;
+@moon-input-border-padding-offset: ((@moon-input-border-width * 2) + (@moon-input-padding * 2));
+@moon-input-height: (@moon-button-height - @moon-input-border-padding-offset);
+@moon-input-small-height: (@moon-button-small-height - @moon-input-border-padding-offset);
+@moon-input-small-font-size: @moon-button-small-font-size;
+@moon-input-icon-small-size: @moon-icon-button-small-size;
+
 // Items
 // ---------------------------------------
 @moon-item-height: 60px;
@@ -219,12 +232,6 @@
 @moon-toggle-button-switch-border-width: 3px;
 @moon-toggle-button-switch-width: 15px;
 @moon-toggle-button-text-switch-gutter: 18px;
-
-// Input
-// ---------------------------------------
-@moon-input-border-width: 6px;
-@moon-input-height: 60px;
-@moon-input-tooltip-offset: @moon-input-border-width + @moon-tooltip-point-width;
 
 // Panels
 // ---------------------------------------

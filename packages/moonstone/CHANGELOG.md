@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/Input` support for `small` prop
+
 ### Fixed
 
 - `moonstone/ExpandableItem` to be more performant when animating
