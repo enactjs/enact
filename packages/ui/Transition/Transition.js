@@ -42,13 +42,24 @@ const TransitionBase = kind({
 		childRef: PropTypes.func,
 
 		/**
-		 * Specifies the height of the transition when `type` is set to `'clip'`.
+		 * The height of the transition when `type` is set to `'clip'`, used when direction is
+		 * 'left' or 'right'.
 		 *
 		 * @type {Number}
 		 * @default null
 		 * @public
 		 */
 		clipHeight: PropTypes.number,
+
+		/**
+		 * The width of the transition when `type` is set to `'clip'`, used when direction is 'left'
+		 * or 'right'.
+		 *
+		 * @type {Number}
+		 * @default null
+		 * @public
+		 */
+		clipWidth: PropTypes.number,
 
 		/**
 		 * Sets the direction of transition. Where the component will move *to*; the destination.
@@ -141,43 +152,49 @@ const TransitionBase = kind({
 			timingFunction && css[timingFunction],
 			css[type]
 		),
-		style: ({clipHeight, type, visible, style}) => type === 'clip' ? {
-			...style,
-			height: visible ? clipHeight : null,
-			overflow: 'hidden'
-		} : style,
+		innerStyle: ({clipWidth, direction, type}) => {
+			if (type === 'clip' && (direction === 'left' || direction === 'right')) {
+				return {
+					width: clipWidth
+				};
+			}
+		},
+		style: ({clipHeight, direction, type, visible, style}) => {
+			if (type === 'clip') {
+				style = {
+					...style,
+					overflow: 'hidden'
+				};
+
+				if (visible && (direction === 'up' || direction === 'down')) {
+					style.height = clipHeight;
+				}
+			}
+
+			return style;
+		},
 		childRef: ({childRef, noAnimation, children}) => (noAnimation || !children) ? null : childRef
 	},
 
-	render: ({childRef, children, noAnimation, type, visible, ...rest}) => {
+	render: ({childRef, children, innerStyle, noAnimation, visible, ...rest}) => {
 		delete rest.clipHeight;
+		delete rest.clipWidth;
 		delete rest.direction;
 		delete rest.duration;
 		delete rest.timingFunction;
+		delete rest.type;
 
 		if (noAnimation && !visible) {
 			return null;
 		}
 
-		if (type === 'slide') {
-			return (
-				<div className={css.transitionFrame}>
-					<div {...rest} ref={childRef}>
-						{children}
-					</div>
-				</div>
-			);
-		} else {
-			// The following node, which is required for supporting the `clip` transition, was
-			// removed due to prevent a change to the DOM structure too late for testing in the
-			// current release cycle. This can be restored during 2.x -BS 2017-11-14
-			// <div className={css.inner}>{children}</div>
-			return (
-				<div {...rest} ref={childRef}>
+		return (
+			<div {...rest}>
+				<div className={css.inner} style={innerStyle} ref={childRef}>
 					{children}
 				</div>
-			);
-		}
+			</div>
+		);
 	}
 });
 
@@ -201,15 +218,6 @@ class Transition extends React.Component {
 
 	static propTypes = /** @lends ui/Transition.Transition.prototype */ {
 		children: PropTypes.node.isRequired,
-
-		/**
-		 * The height of the transition when `type` is set to `'clip'`.
-		 *
-		 * @type {Number}
-		 * @default null
-		 * @public
-		 */
-		clipHeight: PropTypes.number,
 
 		/**
 		 * The direction of transition (i.e. where the component will move *to*; the destination).
@@ -384,9 +392,11 @@ class Transition extends React.Component {
 	measureInner = () => {
 		if (this.childNode) {
 			const initialHeight = this.childNode.scrollHeight;
-			if (initialHeight !== this.state.initialHeight) {
+			const initialWidth = this.childNode.scrollWidth;
+			if (initialHeight !== this.state.initialHeight || initialWidth !== this.state.initialWidth) {
 				this.setState({
 					initialHeight,
+					initialWidth,
 					renderState: TRANSITION_STATE.READY
 				});
 			}
@@ -420,6 +430,7 @@ class Transition extends React.Component {
 					childRef={this.childRef}
 					visible={visible}
 					clipHeight={this.state.initialHeight}
+					clipWidth={this.state.initialWidth}
 					onTransitionEnd={this.handleTransitionEnd}
 				/>
 			);
