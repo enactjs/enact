@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Transition` animation for `clip` for "up", "left", and "right" directions. This includes a DOM addition to the Transition markup.
 
+### Deprecated
+
+- `ui/Transition` decorator's `clipHeight` prop in 2.0.0 as it was not used, due to it being overwritten automatically
+
 ## [2.0.0-alpha.5] - 2018-03-07
 
 ### Added
