@@ -56,8 +56,9 @@
  * @module core/handle
  */
 
-import cond from 'ramda/src/cond';
-import curry from 'ramda/src/curry';
+import curry from '../internal/fp/curry';
+import curry2 from '../internal/fp/curry2';
+import curry3 from '../internal/fp/curry3';
 
 import {is} from '../keymap';
 
@@ -140,7 +141,15 @@ const handle = function (...handlers) {
  *                          conditions and, if it passes, onto the provided handler.
  */
 const oneOf = handle.oneOf = function (...handlers) {
-	return handle.call(this, cond(handlers));
+	return handle.call(this, function (...args) {
+		for (let i = 0; i < handlers.length; i++) {
+			if (handlers[i][0](...args)) {
+				return handlers[i][1](...args);
+			}
+		}
+
+		return false;
+	});
 };
 
 /**
@@ -197,7 +206,7 @@ const returnsTrue = handle.returnsTrue = function (handler) {
  * @returns  {Boolean}                Always returns `true`
  * @private
  */
-const callOnEvent = handle.callOnEvent = curry((methodName, ev) => {
+const callOnEvent = handle.callOnEvent = curry2((methodName, ev) => {
 	if (ev[methodName]) {
 		ev[methodName]();
 	} else if (ev.nativeEvent && ev.nativeEvent[methodName]) {
@@ -227,7 +236,7 @@ const callOnEvent = handle.callOnEvent = curry((methodName, ev) => {
  * @param    {Object}      ev     Event
  * @returns  {Boolean}            Returns `true` if `prop` on `event` strictly equals `value`
  */
-const forEventProp = handle.forEventProp = curry((prop, value, ev) => {
+const forEventProp = handle.forEventProp = curry3((prop, value, ev) => {
 	return ev[prop] === value;
 });
 
@@ -252,7 +261,7 @@ const forEventProp = handle.forEventProp = curry((prop, value, ev) => {
  * @param    {Object}    props  Props object
  * @returns  {Boolean}          Always returns `true`
  */
-const forward = handle.forward = curry((name, ev, props) => {
+const forward = handle.forward = curry3((name, ev, props) => {
 	const fn = props && props[name];
 	if (typeof fn === 'function') {
 		fn(ev);
@@ -302,7 +311,7 @@ const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
  * @param    {Object}    props  Props object
  * @returns  {Boolean}          Returns `true` if default action is prevented
  */
-const forwardWithPrevent = handle.forwardWithPrevent = curry((name, ev, props) => {
+const forwardWithPrevent = handle.forwardWithPrevent = curry3((name, ev, props) => {
 	let prevented = false;
 	const wrappedEvent = Object.assign({}, ev, {
 		preventDefault: () => {
@@ -393,7 +402,7 @@ const forKeyCode = handle.forKeyCode = forEventProp('keyCode');
  * @returns  {Boolean}          Returns `true` if `event.keyCode` is mapped to `name`
  * @see      core/keymap
  */
-const forKey = handle.forKey = curry((name, ev) => {
+const forKey = handle.forKey = curry2((name, ev) => {
 	return is(name, ev.keyCode);
 });
 
@@ -442,7 +451,7 @@ const forProp = handle.forProp = curry((prop, value, ev, props) => {
  * @param    {...*}       [args]   Any args passed are logged
  * @returns  {Boolean}             Always returns `true`
  */
-const log = handle.log = curry((message, ev, ...args) => {
+const log = handle.log = curry2((message, ev, ...args) => {
 	if (__DEV__) {
 		// eslint-disable-next-line no-console
 		console.log(message, ev, ...args);

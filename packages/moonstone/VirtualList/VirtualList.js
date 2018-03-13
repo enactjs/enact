@@ -10,7 +10,7 @@
  * @exports VirtualListNative
  */
 
-import clamp from 'ramda/src/clamp';
+import clamp from '@enact/core/internal/fp/clamp';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';

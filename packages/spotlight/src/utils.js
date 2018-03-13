@@ -1,4 +1,4 @@
-import curry from 'ramda/src/curry';
+import curry2 from '@enact/core/internal/fp/curry2';
 
 import {getContainerNode} from './container';
 
@@ -16,7 +16,7 @@ if (typeof window === 'object') {
 		elementMatchesSelector;
 }
 
-const matchSelector = curry((selector, elem) => {
+const matchSelector = curry2((selector, elem) => {
 	if (typeof selector === 'string') {
 		return elementMatchesSelector.call(elem, selector);
 	} else if (typeof selector === 'object' && selector.length) {
@@ -73,11 +73,11 @@ const testIntersection = (type, containerRect, elementRect) => {
 	return true;
 };
 
-const intersects = curry((containerRect, elementRect) => {
+const intersects = curry2((containerRect, elementRect) => {
 	return testIntersection('intersects', containerRect, elementRect);
 });
 
-const contains = curry((containerRect, elementRect) => {
+const contains = curry2((containerRect, elementRect) => {
 	return testIntersection('contains', containerRect, elementRect);
 });
 
@@ -163,6 +163,12 @@ function getContainerRect (containerId) {
 	return getRect(containerNode);
 }
 
+function last (list) {
+	if (list && Array.isArray(list)) {
+		return list[list.length - 1];
+	}
+}
+
 export {
 	contains,
 	getContainerRect,
@@ -170,6 +176,7 @@ export {
 	getRect,
 	getRects,
 	intersects,
+	last,
 	matchSelector,
 	parseSelector
 };

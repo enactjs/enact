@@ -17,7 +17,6 @@
  */
 
 import {is} from '@enact/core/keymap';
-import last from 'ramda/src/last';
 
 import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
@@ -63,6 +62,7 @@ import {
 } from './target';
 
 import {
+	last,
 	matchSelector,
 	parseSelector
 } from './utils';

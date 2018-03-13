@@ -1,4 +1,4 @@
-import clamp from 'ramda/src/clamp';
+import clamp from '@enact/core/internal/fp/clamp';
 
 const computeProportionProgress = ({value, max, min}) => (value - min) / (max - min);
 const computeBarTransform = (_proportion = 0, vertical) => {

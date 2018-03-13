@@ -10,11 +10,11 @@
  * @exports ProgressBarDecorator
  */
 
+import compose from '@enact/core/internal/fp/compose';
 import kind from '@enact/core/kind';
 import UiProgressBar from '@enact/ui/ProgressBar';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
-import compose from 'ramda/src/compose';
 import React from 'react';
 
 import Skinnable from '../Skinnable';

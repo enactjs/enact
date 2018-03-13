@@ -4,7 +4,7 @@
  * @module core/dispatcher
  */
 
-import curry from 'ramda/src/curry';
+import curry from '../internal/fp/curry2';
 
 import getListeners from './listeners';
 

@@ -10,11 +10,11 @@
  * @exports BodyTextDecorator
  */
 
+import compose from '@enact/core/internal/fp/compose';
 import kind from '@enact/core/kind';
 import UiBodyText from '@enact/ui/BodyText';
 import React from 'react';
 import PropTypes from 'prop-types';
-import compose from 'ramda/src/compose';
 import Pure from '@enact/ui/internal/Pure';
 
 import Skinnable from '../Skinnable';

@@ -10,11 +10,12 @@
  * @exports SpinnerBase
  * @exports SpinnerDecorator
  */
+
+import compose from '@enact/core/internal/fp/compose';
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
-import compose from 'ramda/src/compose';
 import React from 'react';
 import Spotlight from '@enact/spotlight';
 import UiSpinnerBase from '@enact/ui/Spinner';

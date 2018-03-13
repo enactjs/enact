@@ -16,7 +16,8 @@
  * @module core/keymap
  */
 
-import curry from 'ramda/src/curry';
+import curry2 from '../internal/fp/curry2';
+import curry3 from '../internal/fp/curry3';
 
 /**
  * The singleton map of names to keyCodes. If a name doesn't have any keyCodes mapped to it, it will
@@ -50,7 +51,7 @@ const toLowerCase = (name) => name ? name.toLowerCase() : '';
  * @returns {undefined}
  * @private
  */
-const forEachObj = curry(function (fn, set) {
+const forEachObj = curry2(function (fn, set) {
 	Object.keys(set).forEach(name => fn(name, set[name]));
 });
 
@@ -66,7 +67,7 @@ const forEachObj = curry(function (fn, set) {
  * @returns {undefined}
  * @private
  */
-const oneOrArray = curry(function (fn, name, keyCode) {
+const oneOrArray = curry3(function (fn, name, keyCode) {
 	if (Array.isArray(keyCode)) {
 		keyCode.forEach(fn(name));
 	} else {
@@ -85,7 +86,7 @@ const oneOrArray = curry(function (fn, name, keyCode) {
  * @returns {undefined}
  * @private
  */
-const addOne = curry(function (name, keyCode) {
+const addOne = curry2(function (name, keyCode) {
 	name = toLowerCase(name);
 	if (name in map) {
 		const index = map[name].indexOf(keyCode);
@@ -108,7 +109,7 @@ const addOne = curry(function (name, keyCode) {
  * @returns {undefined}
  * @private
  */
-const removeOne = curry(function (name, keyCode) {
+const removeOne = curry2(function (name, keyCode) {
 	name = toLowerCase(name);
 	if (name in map) {
 		const keys = map[name];
@@ -182,7 +183,7 @@ const removeAll = forEachObj(remove);
  * @returns {Boolean}            `true` if `keyCode` is mapped to `name`
  * @public
  */
-const is = curry(function (name, keyCode) {
+const is = curry2(function (name, keyCode) {
 	name = toLowerCase(name);
 	return name in map && map[name].indexOf(keyCode) >= 0;
 });

@@ -1,4 +1,4 @@
-import clamp from 'ramda/src/clamp';
+import clamp from '@enact/core/internal/fp/clamp';
 import {perfNow} from '@enact/core/util';
 
 const

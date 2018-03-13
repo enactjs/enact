@@ -1,4 +1,4 @@
-import clamp from 'ramda/src/clamp';
+import clamp from '@enact/core/internal/fp/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';

@@ -10,13 +10,13 @@
  * @exports ButtonDecorator
  */
 
+import compose from '@enact/core/internal/fp/compose';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
 import {ButtonBase as UiButtonBase, ButtonDecorator as UiButtonDecorator} from '@enact/ui/Button';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
-import compose from 'ramda/src/compose';
 import React from 'react';
 
 import Icon from '../Icon';

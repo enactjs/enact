@@ -5,7 +5,7 @@
  * @exports GridListIamgeItem
  */
 
-import compose from 'ramda/src/compose';
+import compose from '@enact/core/internal/fp/compose';
 import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';

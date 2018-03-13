@@ -5,23 +5,23 @@
 // Using string refs from the source code of ReactTransitionGroup
 /* eslint-disable react/no-string-refs */
 
-import compose from 'ramda/src/compose';
+import compose from '@enact/core/internal/fp/compose';
+import {forward} from '@enact/core/handle';
+import PropTypes from 'prop-types';
 import eqBy from 'ramda/src/eqBy';
 import equals from 'ramda/src/equals';
 import findIndex from 'ramda/src/findIndex';
-import {forward} from '@enact/core/handle';
 import identity from 'ramda/src/identity';
 import lte from 'ramda/src/lte';
 import map from 'ramda/src/map';
 import prop from 'ramda/src/prop';
 import propEq from 'ramda/src/propEq';
-import React from 'react';
-import PropTypes from 'prop-types';
 import remove from 'ramda/src/remove';
 import sort from 'ramda/src/sort';
 import unionWith from 'ramda/src/unionWith';
 import useWith from 'ramda/src/useWith';
 import when from 'ramda/src/when';
+import React from 'react';
 
 const orderedKeys = map(when(React.isValidElement, prop('key')));
 const unorderedKeys = compose(sort((a, b) => a - b), orderedKeys);

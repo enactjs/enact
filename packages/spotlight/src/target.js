@@ -1,5 +1,3 @@
-import last from 'ramda/src/last';
-
 import {
 	getAllContainerIds,
 	getContainerConfig,
@@ -22,6 +20,7 @@ import {
 	getRect,
 	getRects,
 	intersects,
+	last,
 	parseSelector
 } from './utils';
 

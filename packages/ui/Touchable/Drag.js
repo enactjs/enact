@@ -1,4 +1,4 @@
-import clamp from 'ramda/src/clamp';
+import clamp from '@enact/core/internal/fp/clamp';
 import PropTypes from 'prop-types';
 
 const Tracking = {

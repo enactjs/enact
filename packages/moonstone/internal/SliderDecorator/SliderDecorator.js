@@ -5,11 +5,11 @@
  * @private
  */
 
-import {contextTypes} from '@enact/core/internal/PubSub';
 import hoc from '@enact/core/hoc';
+import clamp from '@enact/core/internal/fp/clamp';
+import {contextTypes} from '@enact/core/internal/PubSub';
 import {Job} from '@enact/core/util';
 import Spotlight from '@enact/spotlight';
-import clamp from 'ramda/src/clamp';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {forward} from '@enact/core/handle';

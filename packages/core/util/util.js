@@ -3,9 +3,6 @@
  *
  * @module core/util
  */
-import always from 'ramda/src/always';
-import isType from 'ramda/src/is';
-import unless from 'ramda/src/unless';
 import withContext from 'recompose/withContext';
 
 import Job from './Job';
@@ -35,7 +32,15 @@ const cap = function (str) {
  * @memberof core/util
  * @param {*} arg Function or value
  */
-const coerceFunction = unless(isType(Function), always);
+const coerceFunction = function (fn) {
+	if (typeof fn === 'function') {
+		return fn;
+	}
+
+	return function () {
+		return fn;
+	};
+};
 
 /**
  * If `arg` is array-like, return it. Otherwise returns a single element array containing `arg`
@@ -46,7 +51,6 @@ const coerceFunction = unless(isType(Function), always);
  *	const returnsArg = coerceArray([0]); // [0]
  *	const returnsObjArg = coerceArray({0: 'zeroth', length: 1});
  * ```
- * @see http://ramdajs.com/docs/#isArrayLike
  * @method
  * @memberof core/util
  * @param {*} array Array or value

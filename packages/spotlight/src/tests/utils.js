@@ -1,8 +1,6 @@
-import R from 'ramda';
-
 import {containerAttribute} from '../container';
 
-const join = R.unapply(R.join('\n'));
+const join = (...lines) => lines.join('\n');
 
 const testScenario = (scenario, callback) => () => {
 	const rootId = 'test-root';
@@ -61,10 +59,10 @@ const container = (props) => node({
 	...coerceProps(props)
 });
 
-const someNodes = R.useWith(R.compose(R.join('\n'), R.map), [R.identity, R.range(0)]);
-const someSpottables = someNodes(spottable);
-const someContainers = someNodes(container);
-const someSpottablesAndContainers = R.converge(R.concat, [someSpottables, someContainers]);
+const someNodes = (fn, length) => Array.from({length}, (v, i) => fn(i)).join('\n');
+const someSpottables = (length) => someNodes(spottable, length);
+const someContainers = (length) => someNodes(container, length);
+const someSpottablesAndContainers = (length) => someSpottables(length) + someContainers(length);
 
 export {
 	container,

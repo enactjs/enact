@@ -2,7 +2,7 @@
  * Exports a number of methods for use with {@link ui/ViewManager}.
  */
 
-import curry from 'ramda/src/curry';
+import curry from '@enact/core/internal/fp/curry';
 
 export const transform = curry((action, spec, {node}) => {
 	const current = node.style.transform;
