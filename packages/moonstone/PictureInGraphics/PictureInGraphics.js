@@ -26,8 +26,8 @@ class PictureInGraphicsBase extends React.Component {
 	static propTypes = {
 		source: PropTypes.node.isRequired,
 		captionComponent: PropTypes.node,
+		imageOverlayShowing: PropTypes.bool,
 		imageOverlaySrc: PropTypes.string,
-		noImageOverlayShowing: PropTypes.bool,
 		onLoadedMetadata: PropTypes.func,
 		onVideoClick: PropTypes.func,
 		placeholder: PropTypes.string,
@@ -37,7 +37,6 @@ class PictureInGraphicsBase extends React.Component {
 	}
 
 	static defaultProps = {
-		noImageOverlayShowing: true,
 		placeholder: defaultPlaceholder,
 		imageOverlaySrc: ''
 	}
@@ -79,7 +78,7 @@ class PictureInGraphicsBase extends React.Component {
 			className,
 			source,
 			placeholder,
-			noImageOverlayShowing,
+			imageOverlayShowing,
 			imageOverlaySrc,
 			textOverlayContent,
 			captionComponent,
@@ -105,7 +104,7 @@ class PictureInGraphicsBase extends React.Component {
 					>
 						{source}
 					</video>
-					{!noImageOverlayShowing ?
+					{imageOverlayShowing ?
 						<div>
 							<Image placeholder={placeholder} className={css.image} src={imageOverlaySrc} />
 							{textOverlayContent ? (<MarqueeText alignment="center" className={css.textOverlay} style={textOverlayStyle}>{textOverlayContent}</MarqueeText>) : null}
