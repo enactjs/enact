@@ -208,6 +208,7 @@ class Transition extends React.Component {
 		 * @type {Number}
 		 * @default null
 		 * @public
+		 * @deprecated
 		 */
 		clipHeight: PropTypes.number,
 
