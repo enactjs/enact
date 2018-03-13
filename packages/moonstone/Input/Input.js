@@ -173,7 +173,7 @@ const InputBase = kind({
 		rtl: PropTypes.bool,
 
 		/**
-		 * Applies the `small` CSS class to the [InputBase]{@link moonstone/Input.InputBase}
+		 * Applies the `small` CSS class.
 		 *
 		 * @type {Boolean}
 		 * @default false
