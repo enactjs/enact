@@ -123,7 +123,7 @@ const ScrollButtonBase = kind({
  * @private
  */
 const ScrollButton = Toggleable(
-	{activate: 'onFocus', deactivate: 'onBlur', prop: 'hover', toggle: null},
+	{activate: 'onFocus', deactivate: 'onBlur', toggle: null},
 	ScrollButtonBase
 );
 
