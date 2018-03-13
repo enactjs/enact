@@ -74,8 +74,8 @@ const ScrollButtonBase = kind({
 	},
 
 	computed: {
-		'aria-label': ({disabled, direction}) => {
-			if (disabled) {
+		'aria-label': ({active, direction}) => {
+			if (active) {
 				return null;
 			}
 
