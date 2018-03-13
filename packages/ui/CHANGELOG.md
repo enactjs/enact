@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+- `ui/Transition` property `clipHeight`
+
 ## [1.15.0] - 2018-02-28
 
 ### Fixed
