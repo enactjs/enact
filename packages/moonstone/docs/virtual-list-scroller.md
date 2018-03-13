@@ -12,8 +12,12 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
     *   `data`: Data for passing through to the `component` prop. For performance reason, changing this prop does NOT always cause the list to redraw its items.
     *   `dataSize`: Size of the data. A list does not check the size of `data` prop. dataSize prop is the only value to count items in a list.
-    *   `itemSize`: Size of an item for the list. This is a required prop, and you will get an error when you build an app in dev mode without it. For the VirtualList, valid value is a number. For the VirtualGridList, valid value is an object that has `minWidth` and `minHeight` as properties.
-    *   `component`: The render function for an item of the list.
+    *   `itemSize`: Size of an item for the list. You will get an error when you build an app in dev mode without it. For the VirtualList, valid value is a number. For the VirtualGridList, valid value is an object that has `minWidth` and `minHeight` as properties.
+    *   `component`: The render function for an item of the list. The list does NOT always render a component whenever its render function is called due to performance optimization.
+        * `data` is for accessing the supplied `data` property of the list. In most cases, it is recommended to use data from redux store instead of using this parameter due to performance optimizations.
+        * `data-index` is required for Spotlight 5-way navigation. Pass to the root element in the component.
+        * `index` is the index number of the component to render
+        * `key` MUST be passed as a prop to the root element in the component for DOM recycling.
     *   Example
 
         ```
@@ -32,7 +36,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
         />
         ```
 
-*   If you want to provide spacing or other numeric properties, you have to specify them surrounded by braces, not by quotes.
+*   If you want to provide spacing or other numeric properties, you have to specify them as a number surrounded by braces, not as a string by quotes.
 
     ```
     <VirtualList
@@ -211,7 +215,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     this.scrollTo({node: childNode, focus: true}); // Scroller only; scroll to the child node and focus on the node.
     ```
 
-## Event Callbacks for VirtualList/VirtualGridList and Scroller
+## Event Callbacks for VirtualList, VirtualGridList and Scroller
 
 *   You can specify callback functions for scroll events.
 *   When you scroll on a list or a scroller, `onScrollStart`, `onScroll`, and `onScrollStop` events fire.
