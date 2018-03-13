@@ -1,8 +1,8 @@
 import Item from '@enact/moonstone/Item';
 import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList/VirtualListBase';
-import {VirtualListBase} from '@enact/moonstone/VirtualList/VirtualListBase';
+import VirtualListBase from '@enact/moonstone/VirtualList/VirtualListBase';
 import {VirtualList as UiVirtualList} from '@enact/ui/VirtualList';
-import {VirtualList} from '@enact/moonstone/VirtualList';
+import VirtualList from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';

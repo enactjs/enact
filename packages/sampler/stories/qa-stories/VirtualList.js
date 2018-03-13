@@ -1,5 +1,7 @@
 import SwitchItem from '@enact/moonstone/SwitchItem';
-import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
+import VirtualList from '@enact/moonstone/VirtualList';
+import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList/VirtualListBase';
+import VirtualListBase from '@enact/moonstone/VirtualList/VirtualListBase';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -10,7 +12,7 @@ import {boolean, number} from '@storybook/addon-knobs';
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('VirtualList', VirtualListBase, VirtualList);
+const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBase, UiVirtualListBase);
 
 const
 	style = {
