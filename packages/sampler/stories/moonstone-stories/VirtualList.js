@@ -24,7 +24,7 @@ const
 		};
 
 		return (
-			<Item {...rest} disabled={items[index].disabled} style={itemStyle}>
+			<Item {...rest} style={itemStyle}>
 				{items[index].content}
 			</Item>
 		);
@@ -44,7 +44,10 @@ storiesOf('UI', module)
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
 				<UiVirtualList
-					component={renderItem(itemSize)}
+					component={{
+						isDisabledItem: (index) => (items[index].disabled),
+						itemRenderer: renderItem(itemSize)
+					}}
 					dataSize={number('dataSize', items.length)}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
@@ -68,10 +71,12 @@ storiesOf('Moonstone', module)
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
 				<VirtualList
-					component={renderItem(itemSize)}
+					component={{
+						isDisabledItem: (index) => (items[index].disabled),
+						itemRenderer: renderItem(itemSize)
+					}}
 					dataSize={number('dataSize', items.length)}
 					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
-					isDisabledItem={(index) => (items[index].disabled)}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}

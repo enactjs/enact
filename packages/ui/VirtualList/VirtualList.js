@@ -76,7 +76,7 @@ class VirtualListBase extends Component {
 		 * @type {Function}
 		 * @public
 		 */
-		component: PropTypes.func.isRequired,
+		component: PropTypes.object.isRequired,
 
 		/**
 		 * Size of an item for the list; valid values are either a number for `VirtualList`
@@ -591,11 +591,18 @@ class VirtualListBase extends Component {
 			{component, getComponentProps, data} = this.props,
 			{numOfItems} = this.state,
 			key = index % numOfItems,
-			itemElement = component({
-				data,
-				index,
-				key
-			}),
+			itemElement = (typeof component === 'function') ?
+				component({
+					data,
+					index,
+					key
+				}) :
+				component.itemRenderer({
+					data,
+					disabled: component.isDisabledItem(index),
+					index,
+					key
+				}),
 			style = {},
 			componentProps = getComponentProps && getComponentProps(index) || {};
 

@@ -105,7 +105,7 @@ const VirtualListBase = (type) => {
 			 * @type {Function}
 			 * @public
 			 */
-			component: PropTypes.func.isRequired,
+			component: PropTypes.object.isRequired,
 
 			/**
 			 * The render function for the items.
@@ -216,7 +216,7 @@ const VirtualListBase = (type) => {
 
 		findSpottableItem = (indexFrom, indexTo) => {
 			const
-				{dataSize, isDisabledItem} = this.uiRef.props,
+				{dataSize, component: {isDisabledItem}} = this.uiRef.props,
 				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
 				safeIndexTo = clamp(-1, dataSize, indexTo),
 				delta = (indexFrom < indexTo) ? 1 : -1;
@@ -238,7 +238,7 @@ const VirtualListBase = (type) => {
 
 		getIndexToScrollDisabled = (direction, currentIndex) => {
 			const
-				{dataSize, isDisabledItem, spacing} = this.uiRef.props,
+				{dataSize, component: {isDisabledItem}, spacing} = this.uiRef.props,
 				{dimensionToExtent, primary} = this.uiRef,
 				{findSpottableItem} = this,
 				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo,
@@ -327,7 +327,7 @@ const VirtualListBase = (type) => {
 
 		scrollToNextItem = ({direction, focusedItem}) => {
 			const
-				{isDisabledItem} = this.uiRef.props,
+				{component: {isDisabledItem}} = this.uiRef.props,
 				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
 				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo;
 			let indexToScroll = -1;
@@ -399,7 +399,7 @@ const VirtualListBase = (type) => {
 
 		jumpToSpottableItem = (keyCode, target) => {
 			const
-				{cbScrollTo, dataSize, isDisabledItem} = this.uiRef.props,
+				{cbScrollTo, dataSize, component: {isDisabledItem}} = this.uiRef.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
 				{isPrimaryDirectionVertical} = this.uiRef,
 				rtl = this.props.rtl,
@@ -713,13 +713,26 @@ const VirtualListBase = (type) => {
 			return (
 				<UiBase
 					{...rest}
-					component={({index, ...itemRest}) => ( // eslint-disable-line react/jsx-no-bind
-						component({
-							... itemRest,
-							[dataIndexAttribute]: index,
-							index
-						})
-					)}
+					component={
+						(typeof component === 'function') ?
+							({index, ...itemRest}) => ( // eslint-disable-line react/jsx-no-bind
+								component({
+									... itemRest,
+									[dataIndexAttribute]: index,
+									index
+								})
+							) :
+							{
+								isDisabledItem: component.isDisabledItem,
+								itemRenderer: ({index, ...itemRest}) => ( // eslint-disable-line react/jsx-no-bind
+									component.itemRenderer({
+										... itemRest,
+										[dataIndexAttribute]: index,
+										index
+									})
+								)
+							}
+					}
 					getComponentProps={this.getComponentProps}
 					ref={this.initUiRef}
 					updateStatesAndBounds={this.updateStatesAndBounds}
