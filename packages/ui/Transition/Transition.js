@@ -152,14 +152,27 @@ const TransitionBase = kind({
 			timingFunction && css[timingFunction],
 			css[type]
 		),
-		innerStyle: ({clipWidth, direction, type}) => (type === 'clip' && (direction === 'left' || direction === 'right')) ? {
-			width: clipWidth
-		} : null,
-		style: ({clipHeight, direction, type, visible, style}) => (type === 'clip') ? {
-			...style,
-			height: (visible && (direction === 'up' || direction === 'down')) ? clipHeight : (style && style.height), // use existing height if present and we didn't pass the earlier test
-			overflow: 'hidden'
-		} : style,
+		innerStyle: ({clipWidth, direction, type}) => {
+			if (type === 'clip' && (direction === 'left' || direction === 'right')) {
+				return {
+					width: clipWidth
+				};
+			}
+		},
+		style: ({clipHeight, direction, type, visible, style}) => {
+			if (type === 'clip') {
+				style = {
+					...style,
+					overflow: 'hidden'
+				};
+
+				if (visible && (direction === 'up' || direction === 'down')) {
+					style.height = clipHeight;
+				}
+			}
+
+			return style;
+		},
 		childRef: ({childRef, noAnimation, children}) => (noAnimation || !children) ? null : childRef
 	},
 
@@ -205,16 +218,6 @@ class Transition extends React.Component {
 
 	static propTypes = /** @lends ui/Transition.Transition.prototype */ {
 		children: PropTypes.node.isRequired,
-
-		/**
-		 * The height of the transition when `type` is set to `'clip'`, used when direction is
-		 * 'left' or 'right'.
-		 *
-		 * @type {Number}
-		 * @default null
-		 * @deprecated Removed in 2.0.0 since it ignored anyway.
-		 * @public
-		 */
 
 		/**
 		 * The direction of transition (i.e. where the component will move *to*; the destination).
