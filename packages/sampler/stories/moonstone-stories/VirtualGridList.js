@@ -1,5 +1,7 @@
 import {VirtualGridList as UiVirtualGridList} from '@enact/ui/VirtualList';
-import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
+import {VirtualGridList} from '@enact/moonstone/VirtualList';
+import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList/VirtualListBase';
+import {VirtualListBase} from '@enact/moonstone/VirtualList/VirtualListBase';
 import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
 import {GridListImageItem} from '@enact/moonstone/GridListImageItem';
 import ri from '@enact/ui/resolution';
@@ -12,7 +14,7 @@ import {withInfo} from '@storybook/addon-info';
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('VirtualGridList', VirtualListBase, VirtualGridList);
+const Config = mergeComponentMetadata('VirtualGridList', VirtualGridList, VirtualListBase, UiVirtualListBase);
 
 const
 	prop = {
