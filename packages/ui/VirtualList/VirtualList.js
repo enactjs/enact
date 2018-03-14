@@ -2,9 +2,12 @@
  * Provides unstyled virtual list components and behaviors to be customized by a theme or application.
  *
  * @module ui/VirtualList
+ * @exports gridListImageSizeShape
  * @exports VirtualGridList
  * @exports VirtualGridListNative
  * @exports VirtualList
+ * @exports VirtualListBase
+ * @exports VirtualListBaseNative
  * @exports VirtualListNative
  */
 
@@ -12,8 +15,8 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {gridListItemSizeShape, ScrollableVirtualList} from './VirtualListBase';
-import {ScrollableVirtualListNative} from './VirtualListBaseNative';
+import {gridListItemSizeShape, ScrollableVirtualList, VirtualListBase} from './VirtualListBase';
+import {ScrollableVirtualListNative, VirtualListBaseNative} from './VirtualListBaseNative';
 
 /**
  * An unstyled scrollable virtual list component with touch support.
@@ -165,8 +168,11 @@ const VirtualGridListNative = kind({
 
 export default VirtualList;
 export {
+	gridListItemSizeShape,
 	VirtualGridList,
 	VirtualGridListNative,
 	VirtualList,
+	VirtualListBase,
+	VirtualListBaseNative,
 	VirtualListNative
 };

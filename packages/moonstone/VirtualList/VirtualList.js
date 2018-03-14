@@ -5,15 +5,17 @@
  * @exports VirtualGridList
  * @exports VirtualGridListNative
  * @exports VirtualList
+ * @exports VirtualListBase
+ * @exports VirtualListBaseNative
  * @exports VirtualListNative
  */
 
-import {gridListItemSizeShape} from '@enact/ui/VirtualList/VirtualListBase';
+import {gridListItemSizeShape} from '@enact/ui/VirtualList';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {SpottableVirtualList, SpottableVirtualListNative} from './VirtualListBase';
+import {SpottableVirtualList, SpottableVirtualListNative, VirtualListBase, VirtualListBaseNative} from './VirtualListBase';
 
 /**
  * A Moonstone-styled scrollable and spottable virtual list component.
@@ -169,5 +171,7 @@ export {
 	VirtualGridList,
 	VirtualGridListNative,
 	VirtualList,
+	VirtualListBase,
+	VirtualListBaseNative,
 	VirtualListNative
 };
