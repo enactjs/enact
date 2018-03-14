@@ -54,7 +54,7 @@
 .decorator {
 	display: inline-flex;
 	position: relative;
-	padding: @moon-input-padding @moon-input-padding-side;
+	padding: @moon-input-padding (@moon-input-height / 2);
 	border-radius: 1008px;
 	margin: 0 @moon-input-border-width;
 	border: @moon-input-border-width solid transparent;
@@ -70,6 +70,8 @@
 	}
 
 	&.small {
+		padding: @moon-input-padding (@moon-input-small-height / 2);
+
 		.iconBefore,
 		.iconAfter {
 			font-size: @moon-input-icon-small-size;
@@ -80,7 +82,6 @@
 		.input {
 			font-size: @moon-input-small-font-size;
 			height: @moon-input-small-height;
-			vertical-align: middle;
 		}
 	}
 
