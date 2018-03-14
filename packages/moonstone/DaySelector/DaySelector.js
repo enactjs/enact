@@ -111,6 +111,8 @@ const DaySelectorDecorator = compose(
  * @public
  */
 
+const DaySelector = DaySelectorDecorator(DaySelectorBase);
+
 /**
  * Use long day names (Sunday, Monday..) for labels
  *
@@ -122,8 +124,6 @@ const DaySelectorDecorator = compose(
  * @default false
  * @public
  */
-
-const DaySelector = DaySelectorDecorator(DaySelectorBase);
 
 export default DaySelector;
 export {
