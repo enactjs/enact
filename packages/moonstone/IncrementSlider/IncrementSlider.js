@@ -99,7 +99,7 @@ const PrivateIncrementSliderBaseFactory = factory({css: componentCss}, ({css}) =
 			/**
 			 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
 			 * supported. Without a custom icon, the default is used, and is automatically changed when
-			 * [vertical]{moonstone/IncrementSlider#vertical} is changed.
+			 * [vertical]{@link moonstone/IncrementSlider#vertical} is changed.
 			 *
 			 * @type {String}
 			 * @public
@@ -142,7 +142,7 @@ const PrivateIncrementSliderBaseFactory = factory({css: componentCss}, ({css}) =
 			/**
 			 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
 			 * supported. Without a custom icon, the default is used, and is automatically changed when
-			 * [vertical]{moonstone/IncrementSlider#vertical} is changed.
+			 * [vertical]{@link moonstone/IncrementSlider#vertical} is changed.
 			 *
 			 * @type {String}
 			 * @public

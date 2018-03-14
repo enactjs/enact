@@ -2,7 +2,7 @@
 title: Enyo to Enact Component Map
 ---
 
-> **Enact version**: 1.0.0
+## Enact 1.x
 
 ### Utilities
 |Enyo   |Enact  |Notes  |
