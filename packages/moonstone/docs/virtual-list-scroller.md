@@ -215,7 +215,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     this.scrollTo({node: childNode, focus: true}); // Scroller only; scroll to the child node and focus on the node.
     ```
 
-## Event Callbacks for VirtualList, VirtualGridList, and Scroller
+## Event Callbacks for VirtualList, VirtualGridList and Scroller
 
 *   You can specify callback functions for scroll events.
 *   When you scroll on a list or a scroller, `onScrollStart`, `onScroll`, and `onScrollStop` events fire.
