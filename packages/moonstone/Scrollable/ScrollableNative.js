@@ -6,6 +6,7 @@ import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import Scrollbar from './Scrollbar';
+
 import scrollbarCss from './Scrollbar.less';
 
 const
@@ -21,17 +22,6 @@ const
 		right: 'left',
 		up: 'down'
 	};
-
-/**
- * The name of a custom attribute which indicates the index of an item in
- * [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative} or [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative}.
- *
- * @constant dataIndexAttribute
- * @memberof moonstone/Scrollable
- * @type {String}
- * @private
- */
-const dataIndexAttribute = 'data-index';
 
 const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 	{
@@ -549,6 +539,5 @@ class ScrollableNative extends Component {
 
 export default ScrollableNative;
 export {
-	dataIndexAttribute,
 	ScrollableNative
 };
