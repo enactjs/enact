@@ -1,7 +1,6 @@
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Toggleable from '@enact/ui/Toggleable';
 
 import $L from '../internal/$L';
 import IconButton from '../IconButton';
@@ -16,15 +15,17 @@ const classNameMap = {
 };
 
 /**
- * A Moonstone-styled base component for [ScrollButton]{@link moonstone/Scrollable.ScrollButton}.
+ * An [IconButton]{@link moonstone/IconButton.IconButton} used within
+ * a [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
  *
- * @class ScrollButtonBase
+ * @class ScrollButton
  * @memberof moonstone/Scrollable
+ * @extends moonstone/IconButton.IconButton
  * @ui
  * @private
  */
-const ScrollButtonBase = kind({
-	name: 'ScrollButtonBase',
+const ScrollButton = kind({
+	name: 'ScrollButton',
 
 	propTypes: /** @lends moonstone/Scrollable.ScrollButton.prototype */ {
 		/**
@@ -110,25 +111,7 @@ const ScrollButtonBase = kind({
 	}
 });
 
-
-/**
- * An [IconButton]{@link moonstone/IconButton.IconButton} used within
- * a [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
- *
- * @class ScrollButton
- * @memberof moonstone/Scrollable
- * @mixins ui/Toggleable
- * @extends moonstone/Scrollable.ScrollButtonBase
- * @ui
- * @private
- */
-const ScrollButton = Toggleable(
-	{activate: 'onFocus', deactivate: 'onBlur', toggle: null},
-	ScrollButtonBase
-);
-
 export default ScrollButton;
 export {
-	ScrollButton,
-	ScrollButtonBase
+	ScrollButton
 };
