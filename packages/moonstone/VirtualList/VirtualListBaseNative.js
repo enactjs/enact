@@ -64,10 +64,10 @@ class VirtualListCoreNative extends Component {
 		 * The `render` function for an item of the list receives the following parameters:
 		 * - `data` is for accessing the supplied `data` property of the list.
 		 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
-		 * is parameters due to performance optimizations
-		 * - `data-index` is required for Spotlight 5-way navigation.  Pass to the root element in
+		 * this parameter due to performance optimizations
+		 * - `data-index` is required for Spotlight 5-way navigation. Pass to the root element in
 		 *   the component.
-		 * - `index` is the index number of the componet to render
+		 * - `index` is the index number of the component to render
 		 * - `key` MUST be passed as a prop to the root element in the component for DOM recycling.
 		 *
 		 * Data manipulation can be done in this function.
