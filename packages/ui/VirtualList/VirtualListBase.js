@@ -1,26 +1,22 @@
-/*
- * Exports the {@link ui/VirtualList.VirtualListBase} and
- * {@link ui/VirtualList.VirtualListCore} components and the
- * {@link ui/VirtualList.gridListItemSizeShape} validator. The default
- * export is {@link ui/VirtualList.VirtualListBase}.
- */
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
+import Scrollable from '../Scrollable';
 
 import css from './ListItem.less';
 
 const nop = () => {};
 
 /**
- * The shape for the grid list item size in a list for {@link ui/VirtualList.listItemSizeShape}.
+ * The shape for the grid list item size
+ * in a list for [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
  *
  * @typedef {Object} gridListItemSizeShape
  * @memberof ui/VirtualList
  * @property {Number} minWidth - The minimum width of the grid list item.
  * @property {Number} minHeight - The minimum height of the grid list item.
+ * @public
  */
 const gridListItemSizeShape = PropTypes.shape({
 	minWidth: PropTypes.number.isRequired,
@@ -28,24 +24,44 @@ const gridListItemSizeShape = PropTypes.shape({
 });
 
 /**
- * {@link ui/VirtualList.VirtualListBase} is a base component for
- * {@link ui/VirtualList.VirtualList} and
- * {@link ui/VirtualList.VirtualGridList} with Scrollable applied.
+ * A basic base component for
+ * [VirtualList]{@link ui/VirtualList.VirtualList} and [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
  *
- * @class VirtualListCore
+ * @class VirtualListBase
  * @memberof ui/VirtualList
  * @ui
  * @private
  */
-class VirtualListCore extends Component {
-	static displayName = 'VirtualListBase'
+class VirtualListBase extends Component {
+	static displayName = 'ui:VirtualListBase'
 
-	static propTypes = /** @lends ui/VirtualList.VirtualListCore.prototype */ {
+	static propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 		/**
-		 * The render function for an item of the list.
-		 * `index` is for accessing the index of the item.
-		 * `key` MUST be passed as a prop for DOM recycling.
+		 * The `render` function for an item of the list receives the following parameters:
+		 * - `data` is for accessing the supplied `data` property of the list.
+		 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
+		 * is parameters due to performance optimizations.
+		 *
+		 * @param {Object} event
+		 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
+		 * @param {Number} event.index The index number of the componet to render
+		 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
+		 *
 		 * Data manipulation can be done in this function.
+		 *
+		 * > NOTE: The list does NOT always render a component whenever its render function is called
+		 * due to performance optimization.
+		 *
+		 * Usage:
+		 * ```
+		 * renderItem = ({index, ...rest}) => {
+		 *		delete rest.data;
+		 *
+		 *		return (
+		 *			<MyComponent index={index} {...rest} />
+		 *		);
+		 * }
+		 * ```
 		 *
 		 * @type {Function}
 		 * @public
@@ -57,7 +73,7 @@ class VirtualListCore extends Component {
 		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
 		 *
 		 * @type {Number|ui/VirtualList.gridListItemSizeShape}
-		 * @public
+		 * @private
 		 */
 		itemSize: PropTypes.oneOfType([
 			PropTypes.number,
@@ -65,8 +81,16 @@ class VirtualListCore extends Component {
 		]).isRequired,
 
 		/**
+		 * The render function for the items.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		itemsRenderer: PropTypes.func.isRequired,
+
+		/**
 		 * Callback method of scrollTo.
-		 * Normally, `Scrollable` should set this value.
+		 * Normally, `[Scrollable]{@link ui/Scrollable.Scrollable}` should set this value.
 		 *
 		 * @type {Function}
 		 * @private
@@ -83,12 +107,13 @@ class VirtualListCore extends Component {
 		 */
 		clientSize: PropTypes.shape({
 			clientWidth: PropTypes.number.isRequired,
-			clientHeight:  PropTypes.number.isRequired
+			clientHeight: PropTypes.number.isRequired
 		}),
 
 		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
+		 * Data for passing it through `component` prop.
+		 * NOTICE: For performance reason, changing this prop does NOT always cause the list to
+		 * redraw its items.
 		 *
 		 * @type {Any}
 		 * @default []
@@ -106,13 +131,25 @@ class VirtualListCore extends Component {
 		dataSize: PropTypes.number,
 
 		/**
-		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
+		 * Direction of the list.
+		 *
+		 * Valid values are:
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
 		 *
 		 * @type {String}
 		 * @default 'vertical'
 		 * @public
 		 */
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+		/**
+		 * Called to get the props for list items.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		getComponentProps: PropTypes.func,
 
 		/**
 		 * Number of spare DOM node.
@@ -126,17 +163,38 @@ class VirtualListCore extends Component {
 		overhang: PropTypes.number,
 
 		/**
+		 * It scrolls by page when `true`, by item when `false`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		pageScroll: PropTypes.bool,
+
+		/**
+		 * `true` if rtl, `false` if ltr.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * Spacing between items.
 		 *
 		 * @type {Number}
 		 * @default 0
 		 * @public
 		 */
-		spacing: PropTypes.number
-	}
+		spacing: PropTypes.number,
 
-	static contextTypes = {
-		rtl: PropTypes.bool
+		/**
+		 * Called to execute additional logic in a themed component when updating states and bounds.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		updateStatesAndBounds: PropTypes.func
 	}
 
 	static defaultProps = {
@@ -145,6 +203,7 @@ class VirtualListCore extends Component {
 		dataSize: 0,
 		direction: 'vertical',
 		overhang: 3,
+		pageScroll: false,
 		spacing: 0
 	}
 
@@ -152,7 +211,6 @@ class VirtualListCore extends Component {
 		super(props);
 
 		this.state = {firstIndex: 0, numOfItems: 0};
-		this.initContainerRef = this.initRef('containerRef');
 	}
 
 	componentWillMount () {
@@ -181,13 +239,14 @@ class VirtualListCore extends Component {
 				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
 				overhang !== nextProps.overhang ||
 				spacing !== nextProps.spacing
-			),
-			hasDataChanged = (dataSize !== nextProps.dataSize);
+			);
+
+		this.hasDataSizeChanged = (dataSize !== nextProps.dataSize);
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
 			this.updateStatesAndBounds(nextProps);
-		} else if (hasDataChanged) {
+		} else if (this.hasDataSizeChanged) {
 			this.updateStatesAndBounds(nextProps);
 		}
 	}
@@ -216,6 +275,7 @@ class VirtualListCore extends Component {
 	threshold = 0
 	maxFirstIndex = 0
 	curDataSize = 0
+	hasDataSizeChanged = false
 	cc = []
 	scrollPosition = 0
 	updateFrom = null
@@ -242,10 +302,9 @@ class VirtualListCore extends Component {
 
 	getItemPosition = (index, stickTo = 'start') => {
 		const
-			{itemSize} = this.props,
 			{primary} = this,
 			position = this.getGridPosition(index),
-			offset = ((itemSize instanceof Object) || stickTo === 'start') ? 0 : primary.clientSize - primary.itemSize;
+			offset = (stickTo === 'start') ? 0 : primary.clientSize - primary.itemSize;
 
 		position.primaryPosition -= offset;
 
@@ -255,12 +314,10 @@ class VirtualListCore extends Component {
 	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) =>
 		(this.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
 
-	getClientSize = (node) => {
-		return {
-			clientWidth: node.clientWidth,
-			clientHeight: node.clientHeight
-		};
-	}
+	getClientSize = (node) => ({
+		clientWidth: node.clientWidth,
+		clientHeight: node.clientHeight
+	})
 
 	calculateMetrics (props) {
 		const
@@ -327,32 +384,72 @@ class VirtualListCore extends Component {
 		this.state.numOfItems = 0;
 	}
 
-	updateStatesAndBounds (props) {
+	updateStatesAndBounds = (props) => {
 		const
-			{dataSize, overhang} = props,
+			{dataSize, overhang, updateStatesAndBounds} = props,
 			{firstIndex} = this.state,
 			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
-			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex));
+			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
+			dataSizeDiff = dataSize - this.curDataSize;
 		let newFirstIndex = firstIndex;
 
-		this.maxFirstIndex = dataSize - numOfItems;
+		this.maxFirstIndex = Math.ceil((dataSize - numOfItems) / dimensionToExtent) * dimensionToExtent;
 		this.curDataSize = dataSize;
 		this.updateFrom = null;
 		this.updateTo = null;
 
 		// reset children
 		this.cc = [];
+		this.calculateScrollBounds(props);
+		this.updateMoreInfo(dataSize, scrollPosition);
 
-		if (wasFirstIndexMax) {
-			newFirstIndex = this.maxFirstIndex;
-		} else {
-			newFirstIndex = Math.min(firstIndex, this.maxFirstIndex);
+		if (!(updateStatesAndBounds && updateStatesAndBounds({
+			cbScrollTo: props.cbScrollTo,
+			numOfItems,
+			dataSize,
+			moreInfo
+		}))) {
+			newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
 		}
 
 		this.setState({firstIndex: newFirstIndex, numOfItems});
-		this.calculateScrollBounds(props);
-		this.updateMoreInfo(dataSize, scrollPosition);
+	}
+
+	calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff) {
+		const
+			{overhang} = props,
+			{firstIndex} = this.state,
+			{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, scrollPosition, threshold} = this,
+			{gridSize} = primary;
+		let newFirstIndex = firstIndex;
+
+		if (wasFirstIndexMax && dataSizeDiff > 0) { // If dataSize increased from bottom, we need adjust firstIndex
+			// If this is a gridlist and dataSizeDiff is smaller than 1 line, we are adjusting firstIndex without threshold change.
+			if (dimensionToExtent > 1 && dataSizeDiff < dimensionToExtent) {
+				newFirstIndex = maxFirstIndex;
+			} else { // For other bottom adding case, we need to update firstIndex and threshold.
+				const
+					maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
+					maxOfMin = maxPos - threshold.base,
+					numOfUpperLine = Math.floor(overhang / 2),
+					firstIndexFromPosition = Math.floor(scrollPosition / gridSize),
+					expectedFirstIndex = Math.max(0, firstIndexFromPosition - numOfUpperLine);
+
+				// To navigate with 5way, we need to adjust firstIndex to the next line
+				// since at the bottom we have num of overhang lines for upper side but none for bottom side
+				// So we add numOfUpperLine at the top and rest lines at the bottom
+				newFirstIndex = Math.min(maxFirstIndex, expectedFirstIndex * dimensionToExtent);
+
+				// We need to update threshold also since we moved the firstIndex
+				threshold.max = Math.min(maxPos, threshold.max + gridSize);
+				threshold.min = Math.min(maxOfMin, threshold.max - gridSize);
+			}
+		} else { // Other cases, we can keep the min value between firstIndex and maxFirstIndex. No need to change threshold
+			newFirstIndex = Math.min(firstIndex, maxFirstIndex);
+		}
+
+		return newFirstIndex;
 	}
 
 	calculateScrollBounds (props) {
@@ -382,7 +479,7 @@ class VirtualListCore extends Component {
 		this.syncThreshold(maxPos);
 
 		if (this.scrollPosition > maxPos) {
-			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}});
+			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
 		}
 	}
 
@@ -422,9 +519,8 @@ class VirtualListCore extends Component {
 			{gridSize} = this.primary,
 			maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
 			minOfMax = threshold.base,
-			maxOfMin = maxPos - minOfMax;
-		let
-			delta, numOfGridLines, newFirstIndex = firstIndex, pos, dir = 0;
+			maxOfMin = maxPos - threshold.base;
+		let delta, numOfGridLines, newFirstIndex = firstIndex, pos, dir = 0;
 
 		if (isPrimaryDirectionVertical) {
 			pos = y;
@@ -439,13 +535,20 @@ class VirtualListCore extends Component {
 			numOfGridLines = Math.ceil(delta / gridSize); // how many lines should we add
 			threshold.max = Math.min(maxPos, threshold.max + numOfGridLines * gridSize);
 			threshold.min = Math.min(maxOfMin, threshold.max - gridSize);
-			newFirstIndex = Math.min(maxFirstIndex, (dimensionToExtent * Math.ceil(firstIndex / dimensionToExtent)) + (numOfGridLines * dimensionToExtent));
+			newFirstIndex += numOfGridLines * dimensionToExtent;
 		} else if (dir === -1 && pos < threshold.min) {
 			delta = threshold.min - pos;
 			numOfGridLines = Math.ceil(delta / gridSize);
 			threshold.max = Math.max(minOfMax, threshold.min - (numOfGridLines * gridSize - gridSize));
 			threshold.min = (threshold.max > minOfMax) ? threshold.max - gridSize : -Infinity;
-			newFirstIndex = Math.max(0, (dimensionToExtent * Math.ceil(firstIndex / dimensionToExtent)) - (numOfGridLines * dimensionToExtent));
+			newFirstIndex -= numOfGridLines * dimensionToExtent;
+		}
+
+		if (threshold.min === -Infinity) {
+			newFirstIndex = 0;
+		} else {
+			newFirstIndex = Math.min(maxFirstIndex, newFirstIndex);
+			newFirstIndex = Math.max(0, newFirstIndex);
 		}
 
 		this.syncThreshold(maxPos);
@@ -459,10 +562,14 @@ class VirtualListCore extends Component {
 		}
 	}
 
+	getItemNode = (index) => {
+		const ref = this.itemContainerRef;
+
+		return ref ? ref.children[index % this.state.numOfItems] : null;
+	}
+
 	applyStyleToExistingNode = (index, ...rest) => {
-		const
-			{numOfItems} = this.state,
-			node = this.containerRef.children[index % numOfItems];
+		const node = this.getItemNode(index);
 
 		if (node) {
 			this.composeStyle(node.style, ...rest);
@@ -471,36 +578,48 @@ class VirtualListCore extends Component {
 
 	applyStyleToNewNode = (index, ...rest) => {
 		const
-			{component, data} = this.props,
+			{component, getComponentProps, data} = this.props,
 			{numOfItems} = this.state,
 			key = index % numOfItems,
 			itemElement = component({
 				data,
-				[dataIndexAttribute]: index,
 				index,
 				key
 			}),
-			style = {};
+			style = {},
+			componentProps = getComponentProps && getComponentProps(index) || {};
 
 		this.composeStyle(style, ...rest);
 
 		this.cc[key] = React.cloneElement(itemElement, {
+			...componentProps,
 			className: classNames(css.listItem, itemElement.props.className),
 			style: {...itemElement.props.style, ...style}
 		});
 	}
 
-	positionItems ({updateFrom, updateTo}) {
-		const {isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition} = this;
+	applyStyleToHideNode = (index) => {
+		const key = index % this.state.numOfItems;
+		this.cc[key] = <div key={key} style={{display: 'none'}} />;
+	}
 
-		// we only calculate position of the first child
+	positionItems ({updateFrom, updateTo}) {
+		const
+			{dataSize} = this.props,
+			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition} = this;
 		let
 			{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom),
+			hideTo = 0,
 			width, height;
 
 		primaryPosition -= scrollPosition;
 		width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
 		height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
+
+		if (updateTo > dataSize) {
+			hideTo = updateTo;
+			updateTo = dataSize;
+		}
 
 		// positioning items
 		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
@@ -519,6 +638,10 @@ class VirtualListCore extends Component {
 			}
 		}
 
+		for (let i = updateTo; i < hideTo; i++) {
+			this.applyStyleToHideNode(i);
+		}
+
 		this.updateFrom = updateFrom;
 		this.updateTo = updateTo;
 	}
@@ -528,16 +651,17 @@ class VirtualListCore extends Component {
 			style.width = width;
 			style.height = height;
 		}
+		style.position = 'absolute';
 		this.composeTransform(style, ...rest);
 	}
 
-	getXY = (primaryPosition, secondaryPosition) => {
-		const rtlDirection = this.context.rtl ? -1 : 1;
-		return (this.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
+	getXY = (isPrimaryDirectionVertical, primaryPosition, secondaryPosition) => {
+		const rtlDirection = this.props.rtl ? -1 : 1;
+		return (isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
 	}
 
 	composeTransform (style, primaryPosition, secondaryPosition = 0) {
-		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
+		const {x, y} = this.getXY(this.isPrimaryDirectionVertical, primaryPosition, secondaryPosition);
 
 		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
 	}
@@ -560,7 +684,7 @@ class VirtualListCore extends Component {
 			node = this.containerRef;
 
 		if (!props.clientSize && !node) {
-			return;
+			return false;
 		}
 
 		const
@@ -570,65 +694,75 @@ class VirtualListCore extends Component {
 		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
 			this.calculateMetrics(props);
 			this.updateStatesAndBounds(props);
+			return true;
 		}
+
+		return false;
 	}
 
 	// render
 
-	initRef (prop) {
-		return (ref) => {
-			this[prop] = ref;
-		};
-	}
-
-	renderCalculate () {
-		const
-			{dataSize} = this.props,
-			{firstIndex, numOfItems} = this.state,
-			max = Math.min(dataSize, firstIndex + numOfItems);
-
-		this.positionItems({updateFrom: firstIndex, updateTo: max});
+	initContainerRef = (ref) => {
+		if (ref) {
+			this.containerRef = ref;
+		}
 	}
 
 	render () {
 		const
-			props = Object.assign({}, this.props),
-			{primary, cc} = this;
+			{itemsRenderer, ...rest} = this.props,
+			{firstIndex, numOfItems} = this.state,
+			{cc, primary} = this;
 
-		delete props.cbScrollTo;
-		delete props.clientSize;
-		delete props.component;
-		delete props.data;
-		delete props.dataSize;
-		delete props.direction;
-		delete props.itemSize;
-		delete props.overhang;
-		delete props.spacing;
+		delete rest.cbScrollTo;
+		delete rest.clientSize;
+		delete rest.component;
+		delete rest.data;
+		delete rest.dataSize;
+		delete rest.direction;
+		delete rest.getComponentProps;
+		delete rest.itemSize;
+		delete rest.overhang;
+		delete rest.pageScroll;
+		delete rest.rtl;
+		delete rest.spacing;
+		delete rest.updateStatesAndBounds;
 
 		if (primary) {
-			this.renderCalculate();
+			this.positionItems({updateFrom: firstIndex, updateTo: firstIndex + numOfItems});
 		}
 
 		return (
-			<div {...props} ref={this.initContainerRef}>
-				{cc}
+			<div {...rest} ref={this.initContainerRef}>
+				{itemsRenderer({
+					cc,
+					initItemContainerRef: (ref) => { // eslint-disable-line react/jsx-no-bind
+						this.itemContainerRef = ref;
+					},
+					primary
+				})}
 			</div>
 		);
 	}
 }
 
-/**
- * {@link ui/VirtualList.VirtualListBase} is a base component for
- * {@link ui/VirtualList.VirtualList} and
- * {@link ui/VirtualList.VirtualGridList} with Scrollable applied.
- *
- * @class VirtualListBase
- * @memberof ui/VirtualList
- * @mixes ui/Scrollable
- * @ui
- * @private
- */
-const VirtualListBase = Scrollable(VirtualListCore);
+const ScrollableVirtualList = (props) => (
+	<Scrollable
+		{...props}
+		childRenderer={(virtualListProps) => (// eslint-disable-line react/jsx-no-bind
+			<VirtualListBase
+				{...virtualListProps}
+				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
+				)}
+			/>
+		)}
+	/>
+);
 
 export default VirtualListBase;
-export {gridListItemSizeShape, VirtualListCore, VirtualListBase};
+export {
+	gridListItemSizeShape,
+	ScrollableVirtualList,
+	VirtualListBase
+};

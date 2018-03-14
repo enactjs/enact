@@ -20,7 +20,7 @@ import Spotlight from '@enact/spotlight';
 import UiSpinnerBase from '@enact/ui/Spinner';
 
 import $L from '../internal/$L';
-import {MarqueeText} from '../Marquee';
+import Marquee from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import componentCss from './Spinner.less';
@@ -62,9 +62,9 @@ const SpinnerCore = kind({
 				<div className={`${css.ball} ${css.ball3}`} />
 			</div>
 			{children ?
-				<MarqueeText className={css.client} marqueeOn="render" alignment="center">
+				<Marquee className={css.client} marqueeOn="render" alignment="center">
 					{children}
-				</MarqueeText> :
+				</Marquee> :
 				null
 			}
 		</div>

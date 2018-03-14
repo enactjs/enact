@@ -51,7 +51,7 @@ const defaultConfig = {
 	openProp: 'selected'
 };
 
-const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'last-focused', preserveId: true}, ContextualPopup);
+const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'default-element', preserveId: true}, ContextualPopup);
 
 /**
  * {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} is a Higher-order Component

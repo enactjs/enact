@@ -1,6 +1,4 @@
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-
+/* Scrollable.less */
 .scrollableFill {
 	position: relative;
 	width: 100%;
@@ -21,7 +19,10 @@
 		flex: auto;
 		[data-container-muted="true"]::before {
 			position: absolute;
-			.position(0);
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
 			content: '';
 			z-index: 10;
 		}
