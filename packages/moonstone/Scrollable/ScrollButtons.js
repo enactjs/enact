@@ -28,14 +28,14 @@ const
 	isPageUp = is('pageUp'),
 	isPageDown = is('pageDown');
 
- /**
-  * A Moonstone-styled scroll buttons. It is used in [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
-  *
-  * @class ScrollButtons
-  * @memberof moonstone/Scrollable
-  * @ui
-  * @private
-  */
+/**
+ * A Moonstone-styled scroll buttons. It is used in [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
+ *
+ * @class ScrollButtons
+ * @memberof moonstone/Scrollable
+ * @ui
+ * @private
+ */
 class ScrollButtons extends Component {
 	static displayName = 'ScrollButtons'
 
