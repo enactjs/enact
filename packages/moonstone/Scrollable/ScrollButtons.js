@@ -1,12 +1,13 @@
 import {Announce} from '@enact/ui/AnnounceDecorator';
+import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {is} from '@enact/core/keymap';
 import {off, on} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
 import Spotlight from '@enact/spotlight';
 
 import $L from '../internal/$L';
+import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator';
 
 import ScrollButton from './ScrollButton';
 
@@ -29,15 +30,15 @@ const
 	isPageDown = is('pageDown');
 
 /**
- * A Moonstone-styled scroll buttons. It is used in [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
+ * A Moonstone-styled base component for [ScrollButtons]{@link moonstone/Scrollable.ScrollButtons}.
  *
- * @class ScrollButtons
+ * @class ScrollButtonsBase
  * @memberof moonstone/Scrollable
  * @ui
  * @private
  */
-class ScrollButtons extends Component {
-	static displayName = 'ScrollButtons'
+class ScrollButtonsBase extends Component {
+	static displayName = 'ScrollButtonsBase'
 
 	static propTypes = /** @lends moonstone/Scrollable.ScrollButtons.prototype */ {
 		/**
@@ -98,6 +99,15 @@ class ScrollButtons extends Component {
 		onPrevSpotlightDisappear: PropTypes.func,
 
 		/**
+		 * Registers the ScrollButtons component with an
+		 * {@link core/internal/ApiDecorator.ApiDecorator}.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		setApiProvider: PropTypes.func,
+
+		/**
 		 * If `true`, the scrollbar will be oriented vertically.
 		 *
 		 * @type {Boolean}
@@ -119,6 +129,10 @@ class ScrollButtons extends Component {
 			prevButtonDisabled: true,
 			nextButtonDisabled: true
 		};
+
+		if (props.setApiProvider) {
+			props.setApiProvider(this);
+		}
 	}
 
 	componentWillUnmount () {
@@ -131,8 +145,8 @@ class ScrollButtons extends Component {
 
 	// elements
 
-	prevButtonNodeRef = null
-	nextButtonNodeRef = null
+	prevButtonElement = null
+	nextButtonElement = null
 
 	setPressStatus = (isPressed) => {
 		this.pressed = isPressed;
@@ -178,8 +192,8 @@ class ScrollButtons extends Component {
 		});
 
 		if (this.pressed && (
-			shouldDisablePrevButton && spotItem && spotItem === this.prevButtonNodeRef ||
-			shouldDisableNextButton && spotItem && spotItem === this.nextButtonNodeRef
+			shouldDisablePrevButton && spotItem && spotItem === this.prevButtonElement ||
+			shouldDisableNextButton && spotItem && spotItem === this.nextButtonElement
 		)) {
 			this.setIgnoreMode(true);
 		}
@@ -188,7 +202,7 @@ class ScrollButtons extends Component {
 	isOneOfScrollButtonsFocused = () => {
 		const current = Spotlight.getCurrent();
 
-		return current === this.prevButtonNodeRef || current === this.nextButtonNodeRef;
+		return current === this.prevButtonElement || current === this.nextButtonElement;
 	}
 
 	handlePrevScroll = (ev) => {
@@ -235,14 +249,14 @@ class ScrollButtons extends Component {
 		this.setPressStatus(false);
 		this.setIgnoreMode(false);
 		if (isPageUp(ev.keyCode)) {
-			if (ev.target === this.nextButtonNodeRef && !prevButtonDisabled) {
-				Spotlight.focus(this.prevButtonNodeRef);
+			if (ev.target === this.nextButtonElement && !prevButtonDisabled) {
+				Spotlight.focus(this.prevButtonElement);
 			} else {
 				this.handlePrevScroll(ev);
 			}
 		} else if (isPageDown(ev.keyCode)) {
-			if (ev.target === this.prevButtonNodeRef && !nextButtonDisabled) {
-				Spotlight.focus(this.nextButtonNodeRef);
+			if (ev.target === this.prevButtonElement && !nextButtonDisabled) {
+				Spotlight.focus(this.nextButtonElement);
 			} else {
 				this.handleNextScroll(ev);
 			}
@@ -257,13 +271,13 @@ class ScrollButtons extends Component {
 
 	initNextButtonRef = (ref) => {
 		if (ref) {
-			this.nextButtonNodeRef = ReactDOM.findDOMNode(ref); // eslint-disable-line react/no-find-dom-node
+			this.nextButtonElement = ref;
 		}
 	}
 
 	initPrevButtonRef = (ref) => {
 		if (ref) {
-			this.prevButtonNodeRef = ReactDOM.findDOMNode(ref); // eslint-disable-line react/no-find-dom-node
+			this.prevButtonElement = ref;
 		}
 	}
 
@@ -314,7 +328,29 @@ class ScrollButtons extends Component {
 	}
 }
 
+/**
+ * A Moonstone-styled scroll buttons. It is used in [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
+ *
+ * @class ScrollButtons
+ * @memberof moonstone/Scrollable
+ * @mixins ui/ApiDecorator
+ * @mixins moonstone/internal/DisappearSpotlightDecorator
+ * @extends moonstone/Scrollable.ScrollButtonsBase
+ * @ui
+ * @private
+ */
+const ScrollButtons = ApiDecorator(
+	{api: ['isOneOfScrollButtonsFocused', 'updateButtons']},
+	DisappearSpotlightDecorator(
+		{events: {
+			onNextSpotlightDisappear: '[data-scroll-button="previous"]',
+			onPrevSpotlightDisappear: '[data-scroll-button="next"]'
+		}}
+	)(ScrollButtonsBase)
+);
+
 export default ScrollButtons;
 export {
-	ScrollButtons
+	ScrollButtons,
+	ScrollButtonsBase
 };
