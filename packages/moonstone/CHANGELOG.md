@@ -9,6 +9,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` exports `SliderFactory` and `SliderBaseFactory`
 - `moonstone/IncrementSlider` exports `IncrementSliderFactory` and `IncrementSliderBaseFactory`
 
+### Changed
+
+- `moonstone/RadioItem` icon size and selected style
+
 ### Fixed
 
 - `moonstone/ExpandableItem` to be more performant when animating

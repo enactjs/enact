@@ -2,10 +2,30 @@
 //
 @import "../styles/variables.less";
 @import "../styles/skin.less";
+@import "../styles/mixins.less";
 
 // Public
 .radioItem {
 	/* Available for customization */
+	.focus({
+		.toggleIcon.selected {
+			.icon::before {
+				content: "";
+				position: absolute;
+				.position(@moon-radio-item-indicator-border);
+				border-radius: 24px;
+			}
+		}
+	});
+	.applySkins({
+		.focus({
+			.toggleIcon.selected {
+				.icon::before {
+					background-color: @moon-radio-item-indicator-border-color;
+				}
+			}
+		});
+	});
 }
 
 // Interally theme our implementation using published classes from ToggleItem and ToggleIcon
