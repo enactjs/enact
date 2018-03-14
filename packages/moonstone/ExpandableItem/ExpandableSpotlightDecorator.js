@@ -66,7 +66,7 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			noAutoFocus: false
 		}
 
-		paused = new Pause()
+		paused = new Pause('ExpandableItem')
 
 		highlightContents = () => {
 			const current = Spotlight.getCurrent();

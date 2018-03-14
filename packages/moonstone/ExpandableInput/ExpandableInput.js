@@ -7,19 +7,19 @@
  */
 
 import Changeable from '@enact/ui/Changeable';
-import {forward} from '@enact/core/handle';
-import {is} from '@enact/core/keymap';
+import {forKey, forward, oneOf, preventDefault, stopImmediate} from '@enact/core/handle';
 import deprecate from '@enact/core/internal/deprecate';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
+import Spotlight from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 
 import {calcAriaLabel, Input} from '../Input';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 
 import css from './ExpandableInput.less';
-
-const forwardMouseDown = forward('onMouseDown');
 
 /**
  * {@link moonstone/ExpandableInput.ExpandableInputBase} is a stateless component that
@@ -185,13 +185,21 @@ class ExpandableInputBase extends React.Component {
 	constructor (props) {
 		super();
 
+		this.paused = new Pause('ExpandableInput');
 		this.state = {
-			initialValue: props.value
+			initialValue: props.value,
+			pointer: false
 		};
 
 		if (props.onInputChange) {
 			deprecate({name: 'onInputChange', since: '1.0.0', message: 'Use `onChange` instead', until: '2.0.0'});
 		}
+	}
+
+	componentDidMount () {
+		// Need a deep DOM reference to manage focus
+		// eslint-disable-next-line react/no-find-dom-node
+		this.node = ReactDOM.findDOMNode(this);
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -228,60 +236,34 @@ class ExpandableInputBase extends React.Component {
 		}
 	}
 
-	handleInputKeyDown = (ev) => {
-		const keyCode = ev.keyCode;
+	resetValue = () => {
+		this.paused.resume();
+		forward('onChange', {
+			value: this.state.initialValue
+		}, this.props);
+	}
 
-		const isCancel = is('cancel', keyCode);
-		const isEnter = is('enter', keyCode);
-		const isUpDown = is('up', keyCode) || is('down', keyCode);
-		const {onSpotlightLeft, onSpotlightRight} = this.props;
+	handleInputKeyDown = oneOf(
+		// prevent Enter onKeyPress which would re-open the expandable when the label
+		// receives focus
+		[forKey('enter'), preventDefault],
+		// prevent Spotlight handling up/down since closing the expandable will spot the label
+		[forKey('up'), stopImmediate],
+		[forKey('down'), stopImmediate],
+		[forKey('left'), forward('onSpotlightLeft')],
+		[forKey('right'), forward('onSpotlightRight')],
+		[forKey('cancel'), this.resetValue]
+	).bind(this)
 
-		if (isEnter) {
-			// prevent Enter onKeyPress which would re-open the expandable when the label
-			// receives focus
-			ev.preventDefault();
-		} else if (isUpDown) {
-			// prevent Spotlight handling up/down since closing the expandable will spot the label
-			ev.nativeEvent.stopImmediatePropagation();
-		} else if (is('left', keyCode) && onSpotlightLeft) {
-			onSpotlightLeft(ev);
-		} else if (is('right', keyCode) && onSpotlightRight) {
-			onSpotlightRight(ev);
-		}
+	handleActivate = () => {
+		this.paused.pause();
+	}
 
-		if (isCancel) {
-			forward('onChange', {
-				value: this.state.initialValue
-			}, this.props);
-		} else if (isUpDown || isEnter && ev.currentTarget !== ev.target) {
+	handleDeactivate = () => {
+		if (!this.state.pointer && this.paused.isPaused()) {
+			this.paused.resume();
 			this.fireCloseEvent();
 		}
-	}
-
-	handleInputBlur = (ev) => {
-		// this avoids firing a close on blur when tapping the label in touch mode which momentarily
-		// focused the component for feedback
-		if (ev.relatedTarget && ev.relatedTarget.dataset.expandableLabel) {
-			return;
-		}
-
-		// if `open` is `false`, the contained <input> has lost focus due to 5-way navigation
-		// in `handleInputKeyDown`, where the `fireCloseEvent` method has already been called
-		// verify the expandable is open before calling that method again.
-		if (this.props.open) {
-			this.fireCloseEvent();
-		}
-	}
-
-	handleInputMouseDown = (ev) => {
-		// prevent onMouseDown events from the <input> itself from bubbling up to be prevented by
-		// handleMouseDown
-		ev.stopPropagation();
-	}
-
-	handleClose = () => {
-		this.fireCloseEvent();
-		// not forwarding event because this is being done in fireCloseEvent
 	}
 
 	handleChange = (val) => {
@@ -297,6 +279,14 @@ class ExpandableInputBase extends React.Component {
 		}
 	}
 
+	handleDown = () => {
+		this.setState(({pointer}) => !pointer ? {pointer: true} : null);
+	}
+
+	handleUp = () => {
+		this.setState(({pointer}) => pointer ? {pointer: false} : null);
+	}
+
 	calcClassName = (className) => (className ? `${css.expandableInput} ${className}` : css.expandableInput)
 
 	render () {
@@ -305,13 +295,14 @@ class ExpandableInputBase extends React.Component {
 			disabled,
 			iconAfter,
 			iconBefore,
-			onSpotlightDisappear,
+			open,
 			placeholder,
 			spotlightDisabled,
 			type,
 			value,
 			...rest
 		} = this.props;
+
 		delete rest.onChange;
 		delete rest.onInputChange;
 
@@ -322,8 +313,10 @@ class ExpandableInputBase extends React.Component {
 				className={this.calcClassName(className)}
 				disabled={disabled}
 				label={this.calcLabel()}
-				onClose={this.handleClose}
-				onSpotlightDisappear={onSpotlightDisappear}
+				onDown={this.handleDown}
+				onUp={this.handleUp}
+				onMouseLeave={this.handleUp}
+				open={open}
 				showLabel={type === 'password' ? 'never' : 'auto'}
 				spotlightDisabled={spotlightDisabled}
 			>
@@ -334,13 +327,12 @@ class ExpandableInputBase extends React.Component {
 					dismissOnEnter
 					iconAfter={iconAfter}
 					iconBefore={iconBefore}
-					onBlur={this.handleInputBlur}
+					onActivate={this.handleActivate}
 					onChange={this.handleChange}
+					onDeactivate={this.handleDeactivate}
 					onKeyDown={this.handleInputKeyDown}
-					onMouseDown={this.handleInputMouseDown}
-					onSpotlightDisappear={onSpotlightDisappear}
 					placeholder={placeholder}
-					spotlightDisabled={spotlightDisabled}
+					spotlightDisabled={spotlightDisabled || !open}
 					type={type}
 					value={value}
 				/>

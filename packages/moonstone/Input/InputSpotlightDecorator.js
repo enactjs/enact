@@ -83,6 +83,9 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			 */
 			noDecorator: PropTypes.bool,
 
+			onActivate: PropTypes.func,
+			onDeactivate: PropTypes.func,
+
 			/**
 			 * The handler to run when the component is removed while retaining focus.
 			 *
@@ -118,16 +121,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		componentDidUpdate (_, prevState) {
-			const current = Spotlight.getCurrent();
-			const {node: prev} = prevState;
-
-			// do not steal focus if has moved elsewhere by verifying:
-			// * Something has focus, and
-			// * Input had focus before (this.state.node is null until the input is focused), and
-			// * current is neither the previous nor current node
-			if (current && prev && current !== this.state.node && current !== prev) {
-				this.blur();
-			}
+			this.updateFocus(prevState);
 		}
 
 		componentWillUnmount () {
@@ -142,23 +136,30 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		focus = (focused, node) => {
-			this.setState({focused, node}, () => {
-				if (this.state.node) {
+		updateFocus = (prevState) => {
+			if (this.state.node) {
+				if (Spotlight.getCurrent() !== this.state.node) {
 					this.state.node.focus();
 				}
+			}
 
-				if (this.state.focused === 'input') {
-					this.paused.pause();
-				} else {
-					this.paused.resume();
+			const focusChanged = this.state.focused !== prevState.focused;
+			if (focusChanged && this.state.focused === 'input') {
+				forward('onActivate', {type: 'onActivate'}, this.props);
+				this.paused.pause();
+			} else {
+				if (focusChanged && prevState.focused === 'input') {
+					forward('onDeactivate', {type: 'onDeactivate'}, this.props);
 				}
-			});
+				this.paused.resume();
+			}
+		}
+
+		focus = (focused, node) => {
+			this.setState({focused, node});
 		}
 
 		blur = () => {
-			this.paused.resume();
-
 			this.setState((state) => (
 				state.focused || state.node ? {focused: null, node: null} : null
 			));

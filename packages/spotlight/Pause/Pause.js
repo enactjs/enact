@@ -53,6 +53,26 @@ function isPaused () {
  * @public
  */
 class Pause {
+
+	constructor (name) {
+		this.name = name;
+	}
+
+	toString () {
+		return `Pause<${this.name}>`;
+	}
+
+	/**
+	 * Returns `true` when Spotlight is paused by this instance
+	 *
+	 * @returns {Boolean}
+	 * @memberof spotlight/Pause.Pause
+	 * @public
+	 */
+	isPaused () {
+		return paused === this;
+	}
+
 	/**
 	 * Pauses spotlight if not currently paused
 	 *
@@ -74,7 +94,7 @@ class Pause {
 	 * @public
 	 */
 	resume () {
-		if (paused === this) {
+		if (this.isPaused()) {
 			resume();
 
 			return true;
