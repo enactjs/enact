@@ -124,7 +124,7 @@ class VirtualListCore extends Component {
 		}),
 
 		/**
-		 Data for passing through to the `component` prop.
+		 * Data for passing through to the `component` prop.
 		 * NOTICE: For performance reason, changing this prop does NOT always cause redraw items.
 		 *
 		 * @type {Any}
