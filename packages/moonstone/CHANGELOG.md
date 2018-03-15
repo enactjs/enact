@@ -32,6 +32,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Marquee.Marquee` to be `moonstone/Marquee.MarqueeBase`
 - `moonstone/ContextualPopupDecorator` to not restore last-focused child
+- `moonstone/ExpandableList` to restore focus to the first selected item after opening
 
 ### Fixed
 
