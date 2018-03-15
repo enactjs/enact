@@ -244,17 +244,16 @@ const InputBase = kind({
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, type, value, ...rest}) => {
+	render: ({dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, ...rest}) => {
 		delete rest.dismissOnEnter;
 		delete rest.focused;
 		delete rest.invalid;
 		delete rest.invalidMessage;
 		delete rest.rtl;
-		delete rest.small;
 
 		return (
 			<div {...rest} disabled={disabled}>
-				<InputDecoratorIcon position="before">{iconBefore}</InputDecoratorIcon>
+				<InputDecoratorIcon position="before" small={small}>{iconBefore}</InputDecoratorIcon>
 				<input
 					aria-disabled={disabled}
 					className={css.input}
@@ -265,7 +264,7 @@ const InputBase = kind({
 					type={type}
 					value={value}
 				/>
-				<InputDecoratorIcon position="after">{iconAfter}</InputDecoratorIcon>
+				<InputDecoratorIcon position="after" small={small}>{iconAfter}</InputDecoratorIcon>
 				{invalidTooltip}
 			</div>
 		);
