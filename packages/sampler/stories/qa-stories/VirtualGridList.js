@@ -44,11 +44,11 @@ storiesOf('VirtualList.VirtualGridList', module)
 		'Horizontal VirtualGridList',
 		() => (
 			<VirtualGridList
-				component={renderItem}
 				data={items}
 				dataSize={number('dataSize', items.length)}
 				direction="horizontal"
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+				itemRenderer={renderItem}
 				itemSize={{
 					minWidth: ri.scale(number('minWidth', 180)),
 					minHeight: ri.scale(number('minHeight', 270))

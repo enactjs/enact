@@ -14,21 +14,21 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
     *   `dataSize`: Size of the data. A list does not check the size of `data` prop. dataSize prop is the only value to count items in a list.
     *   `itemSize`: Size of an item for the list. This is a required prop, and you will get an error when you build an app in dev mode without it.
-    *   `component`: The render function for an item of the list.
+    *   `itemRenderer`: The render function for an item of the list.
     *   Example
 
         ```
         <VirtualList
-        	component={this.renderItem}
-        	data={data}
-        	dataSize={data.length}
+            data={data}
+            dataSize={data.length}
+        	itemRenderer={this.renderItem}
         	itemSize={ri.scale(72)}
         />
 
         <VirtualGridList
-        	component={this.renderItem}
-        	data={data}
-        	dataSize={data.length}
+            data={data}
+            dataSize={data.length}
+        	itemRenderer={this.renderItem}
         	itemSize={{minWidth: ri.scale(90), minHeight: ri.scale(135)}}
         />
         ```
@@ -37,9 +37,9 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
     ```
     <VirtualList
-    	component={this.renderItem}
-    	data={data}
-    	dataSize={data.length} //<-- numeric property
+        data={data}
+        dataSize={data.length} //<-- numeric property
+    	itemRenderer={this.renderItem}
     	itemSize={ri.scale(72)} //<-- numeric property
     	spacing={ri.scale(10)} //<-- numeric property
     />
@@ -47,13 +47,13 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
 ### Common rules of Items for VirtualList/VirtualGridList
 
-*   A renderer for an item should be specified in `component` prop in VirtualList.
-*   VirtualList passes `data`, `index`, `data-index`, and `key` to the `component` function.
-*   Be sure you are passing `{...rest}` to the item component for reusing DOM.
+*   A renderer for an item should be specified in `itemRenderer` prop in VirtualList.
+*   VirtualList passes `data`, `index`, `data-index`, and `key` to the `itemRenderer` function.
+*   Be sure you are passing `{...rest}` to the item itemRenderer for reusing DOM.
 *   VirtualList will automatically give proper className for items.
-*   Be sure to compose `className` prop when you make customized item component.
-*   Make sure you are not using an inline function for `component`.
-*   If you want to scroll the list via 5-way navigation on the certain component in an item, you should pass `data-index` prop.
+*   Be sure to compose `className` prop when you make customized item itemRenderer.
+*   Make sure you are not using an inline function for `itemRenderer`.
+*   If you want to scroll the list via 5-way navigation on the certain itemRenderer in an item, you should pass `data-index` prop.
 *   Example:
 
     ```
@@ -69,9 +69,9 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     render = () => {
     	return (
     		<VirtualList
-    			component={this.renderItem}
-    			data={data}
-    			dataSize={data.length}
+                data={data}
+                dataSize={data.length}
+    			itemRenderer={this.renderItem}
     			itemSize={this.itemSize}
     		/>
     	);
@@ -103,7 +103,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
 ### Items for VirtualGridList
 
-*   `GridListImageItem` components can be used as items of `VirtualGridList`. They have Moonstone styling applied and have a placeholder image as a background.
+*   `GridListImageItem` itemRenderers can be used as items of `VirtualGridList`. They have Moonstone styling applied and have a placeholder image as a background.
 
 *   `caption` and `subCaption` are supported.
 
@@ -162,14 +162,14 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     *   The callback function is called just once when a list or a scroller is created to prevent repeated calls when a list or a scroller is updated.
     *   Do not change `cbScrollTo` prop after a list or a scroller is mounted. It does not have any effect.
 *   The binding of a callback function
-    *   Please make sure the context of a callback function is properly bound. In general, your app component instance would be the right one.
+    *   Please make sure the context of a callback function is properly bound. In general, your app itemRenderer instance would be the right one.
     *   We recommend to use ECMAScript 2015 (a.k.a ECMAScript 6 or ES6) arrow functions to handle binding.
         *   [https://googlechrome.github.io/samples/arrows-es6/](https://googlechrome.github.io/samples/arrows-es6/)
         *   [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
 *   Example:
 
     ```
-    class SampleApp extends React.Component {
+    class SampleApp extends React.itemRenderer {
     	constructor (props) {
     		super(props);
 
@@ -189,9 +189,9 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     		return (
     			<VirtualList
     				cbScrollTo={this.getScrollTo} // pass callback function
-    				component={this.renderItem}
-    				data={data}
-    				dataSize={data.length}
+                    data={data}
+                    dataSize={data.length}
+    				itemRenderer={this.renderItem}
     				itemSize={this.itemSize}
     			/>
     		);

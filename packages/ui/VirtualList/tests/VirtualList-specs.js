@@ -78,9 +78,9 @@ describe('VirtualList', () => {
 		const subject = mount(
 			<VirtualList
 				clientSize={clientSize}
-				component={renderItem}
 				data={items}
 				dataSize={dataSize}
+				itemRenderer={renderItem}
 				itemSize={30}
 			/>
 		);
@@ -95,9 +95,9 @@ describe('VirtualList', () => {
 		const subject = mount(
 			<VirtualList
 				clientSize={clientSize}
-				component={renderItem}
 				data={items}
 				dataSize={dataSize}
+				itemRenderer={renderItem}
 				itemSize={30}
 			/>
 		);
@@ -114,9 +114,9 @@ describe('VirtualList', () => {
 				<VirtualList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
-					component={renderItem}
 					data={items}
 					dataSize={dataSize}
+					itemRenderer={renderItem}
 					itemSize={30}
 					onScrollStop={handlerOnScrollStop}
 				/>
@@ -135,10 +135,10 @@ describe('VirtualList', () => {
 				<VirtualList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
-					component={renderItem}
 					data={items}
 					dataSize={dataSize}
 					direction="horizontal"
+					itemRenderer={renderItem}
 					itemSize={30}
 					onScrollStop={handlerOnScrollStop}
 				/>
@@ -157,9 +157,9 @@ describe('VirtualList', () => {
 				<VirtualList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
-					component={renderItem}
 					data={items}
 					dataSize={dataSize}
+					itemRenderer={renderItem}
 					itemSize={30}
 					onScrollStop={handlerOnScrollStop}
 				/>
@@ -179,9 +179,9 @@ describe('VirtualList', () => {
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
-						component={renderItem}
 						data={items}
 						dataSize={dataSize}
+						itemRenderer={renderItem}
 						itemSize={30}
 						onScrollStart={handlerOnScrollStart}
 					/>
@@ -200,9 +200,9 @@ describe('VirtualList', () => {
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
-						component={renderItem}
 						data={items}
 						dataSize={dataSize}
+						itemRenderer={renderItem}
 						itemSize={30}
 						onScroll={handlerOnScroll}
 					/>
@@ -221,9 +221,9 @@ describe('VirtualList', () => {
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
-						component={renderItem}
 						data={items}
 						dataSize={dataSize}
+						itemRenderer={renderItem}
 						itemSize={30}
 						onScrollStop={handlerOnScrollStop}
 					/>
@@ -246,9 +246,9 @@ describe('VirtualList', () => {
 			const subject = mount(
 				<VirtualList
 					clientSize={clientSize}
-					component={renderItem}
 					data={itemArray}
 					dataSize={itemArray.length}
+					itemRenderer={renderItem}
 					itemSize={30}
 				/>
 			);

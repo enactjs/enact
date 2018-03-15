@@ -66,7 +66,7 @@ class VirtualListBase extends Component {
 		 * @type {Function}
 		 * @public
 		 */
-		component: PropTypes.func.isRequired,
+		itemRenderer: PropTypes.func.isRequired,
 
 		/**
 		 * Size of an item for the list; valid values are either a number for `VirtualList`
@@ -111,7 +111,7 @@ class VirtualListBase extends Component {
 		}),
 
 		/**
-		 * Data for passing it through `component` prop.
+		 * Data for passing it through `itemRenderer` prop.
 		 * NOTICE: For performance reason, changing this prop does NOT always cause the list to
 		 * redraw its items.
 		 *
@@ -578,10 +578,10 @@ class VirtualListBase extends Component {
 
 	applyStyleToNewNode = (index, ...rest) => {
 		const
-			{component, getComponentProps, data} = this.props,
+			{itemRenderer, getComponentProps, data} = this.props,
 			{numOfItems} = this.state,
 			key = index % numOfItems,
-			itemElement = component({
+			itemElement = itemRenderer({
 				data,
 				index,
 				key
@@ -716,11 +716,11 @@ class VirtualListBase extends Component {
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
-		delete rest.component;
 		delete rest.data;
 		delete rest.dataSize;
 		delete rest.direction;
 		delete rest.getComponentProps;
+		delete rest.itemRenderer;
 		delete rest.itemSize;
 		delete rest.overhang;
 		delete rest.pageScroll;
