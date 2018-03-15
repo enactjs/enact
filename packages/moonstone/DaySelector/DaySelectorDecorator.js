@@ -19,14 +19,15 @@ const SELECTED_DAY_TYPES = {
 };
 
 /**
- * A component that allows the user to choose day(s) of the week.
+ * Moonstone-specific behaviors to apply to
+ * [DaySelector]{@link moonstone/DaySelector.DaySelectorBase}.
  *
  * @hoc DaySelectorDecorator
  * @memberof moonstone/DaySelector
  * @mixes ui/Changeable.Changeable
  * @mixes ui/Skinnable.Skinnable
  * @ui
- * @private
+ * @public
  */
 const DaySelectorDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {

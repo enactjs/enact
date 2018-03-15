@@ -491,7 +491,7 @@ const SliderDecorator = compose(
 	Pure,
 	Spottable,
 	InternalSliderDecorator,
-	Touchable,
+	Touchable({activeProp: 'pressed'}),
 	Skinnable
 );
 
