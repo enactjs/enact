@@ -149,6 +149,7 @@ const Scrollbar = ApiDecorator(
 		ScrollbarBase
 	)
 );
+Scrollbar.displayName = 'Scrollbar';
 
 export default Scrollbar;
 export {
