@@ -5,8 +5,12 @@
 @import "../styles/text.less";
 @import "../styles/skin.less";
 
+@toggle-icon-outline-color: #666666;
+@toggle-icon-outline-size: 3px;
+
 // Interally theme our implementation using published classes from ToggleItem and ToggleIcon
 .toggleIcon {
+	box-shadow: inset 0 0 0 @toggle-icon-outline-size @toggle-icon-outline-color;
 	width: @moon-formcheckbox-size;
 	height: @moon-formcheckbox-size;
 	border-radius: (@moon-formcheckbox-size / 2);
@@ -53,6 +57,8 @@
 	.toggleIcon {
 		// Skin colors
 		.applySkins({
+			box-shadow: none;
+
 			&:not([disabled]) {
 				background-color: @moon-spotlight-color;
 
@@ -68,6 +74,8 @@
 	.focus({
 		.toggleIcon {
 			.applySkins({
+				box-shadow: none;
+
 				&:not([disabled]) {
 					background-color: @moon-formcheckbox-bg-color;
 				}
