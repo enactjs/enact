@@ -11,7 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `moonstone/RadioItem` icon size and selected style
+- `moonstone/RadioItem` dot size and added an inner-dot to selected-focused state, matching latest GUI designs
 
 ### Fixed
 
