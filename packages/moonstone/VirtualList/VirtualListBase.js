@@ -4,7 +4,6 @@ import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Spottable from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 
@@ -13,22 +12,21 @@ import ScrollableNative from '../Scrollable/ScrollableNative';
 
 const SpotlightPlaceholder = Spottable('div');
 
-const
-	SpotlightContainerConfig = {
+const configureSpotlight = (containerId, instance) => {
+	Spotlight.set(containerId, {
 		enterTo: 'last-focused',
 		/*
 		 * Returns the data-index as the key for last focused
 		 */
-		lastFocusedPersist: (node) => {
-			const indexed = node.dataset.index ? node : node.closest('[data-index]');
-			if (indexed) {
+		lastFocusedPersist: function () {
+			if (this.lastFocusedIndex != null) {
 				return {
 					container: false,
 					element: true,
-					key: indexed.dataset.index
+					key: this.lastFocusedIndex
 				};
 			}
-		},
+		}.bind(instance),
 		/*
 		 * Restores the data-index into the placeholder if its the only element. Tries to find a
 		 * matching child otherwise.
@@ -43,10 +41,11 @@ const
 			return all.reduce((focused, node) => {
 				return focused || node.dataset.index === key && node;
 			}, null);
-		},
-		preserveId: true,
-		restrict: 'self-first'
-	},
+		}
+	});
+};
+
+const
 	dataContainerDisabledAttribute = 'data-container-disabled',
 	isDown = is('down'),
 	isLeft = is('left'),
@@ -108,7 +107,7 @@ const VirtualListBaseFactory = (type) => {
 			 * @type {String}
 			 * @private
 			 */
-			'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types,
+			containerId: PropTypes.string,
 
 			/**
 			 * Passes the instance of [VirtualList]{@link ui/VirtualList.VirtualList}.
@@ -127,6 +126,15 @@ const VirtualListBaseFactory = (type) => {
 			 * @private
 			 */
 			rtl: PropTypes.bool
+		}
+
+		constructor (props) {
+			super(props);
+
+			const {containerId} = props;
+			if (containerId) {
+				configureSpotlight(containerId, this);
+			}
 		}
 
 		componentDidMount () {
@@ -149,6 +157,12 @@ const VirtualListBaseFactory = (type) => {
 				if (contentNode && contentNode.addEventListener) {
 					contentNode.addEventListener('keydown', this.onKeyDown);
 				}
+			}
+		}
+
+		componentWillReceiveProps (nextProps) {
+			if (nextProps.containerId && nextProps.containerId !== this.props.containerId) {
+				configureSpotlight(nextProps.containerId, this);
 			}
 		}
 
@@ -184,7 +198,8 @@ const VirtualListBaseFactory = (type) => {
 		restoreLastFocused = false
 
 		setContainerDisabled = (bool) => {
-			const containerNode = (type === JS) ? this.uiRef.containerRef : this.uiRef.contentRef;
+			const {containerId} = this.props;
+			const containerNode = document.querySelector(`[data-container-id="${containerId}"]`);
 
 			if (containerNode) {
 				containerNode.setAttribute(dataContainerDisabledAttribute, bool);
@@ -361,7 +376,7 @@ const VirtualListBaseFactory = (type) => {
 		 */
 
 		setRestrict = (bool) => {
-			Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
+			Spotlight.set(this.props.containerId, {restrict: (bool) ? 'self-only' : 'self-first'});
 		}
 
 		setSpotlightContainerRestrict = (keyCode, target) => {
@@ -580,7 +595,7 @@ const VirtualListBaseFactory = (type) => {
 				!this.isPlaceholderFocused()
 			) {
 				const
-					containerId = this.props['data-container-id'],
+					{containerId} = this.props,
 					node = this.uiRef.containerRef.querySelector(
 						`[data-container-id="${containerId}"] [data-index="${this.preservedIndex}"]`
 					);
@@ -695,6 +710,7 @@ const VirtualListBaseFactory = (type) => {
 				{component, itemsRenderer, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
+			delete rest.containerId;
 			delete rest.initUiChildRef;
 
 			return (
@@ -819,14 +835,10 @@ ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.Virtual
 	role: PropTypes.string
 };
 
-const SpottableVirtualList = SpotlightContainerDecorator(SpotlightContainerConfig, ScrollableVirtualList);
-
-const SpottableVirtualListNative = SpotlightContainerDecorator(SpotlightContainerConfig, ScrollableVirtualListNative);
-
 export default VirtualListBase;
 export {
-	SpottableVirtualList,
-	SpottableVirtualListNative,
+	ScrollableVirtualList,
+	ScrollableVirtualListNative,
 	VirtualListBase,
 	VirtualListBaseNative
 };

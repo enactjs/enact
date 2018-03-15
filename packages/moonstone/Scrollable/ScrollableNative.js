@@ -23,41 +23,24 @@ const
 		up: 'down'
 	};
 
-const ScrollableSpotlightContainer = SpotlightContainerDecorator(
-	{
-		navigableFilter: (elem, {focusableScrollbar}) => {
-			if (
-				!focusableScrollbar &&
-				!Spotlight.getPointerMode() &&
-				// ignore containers passed as their id
-				typeof elem !== 'string' &&
-				elem.classList.contains(scrollbarCss.scrollButton)
-			) {
-				return false;
-			}
-		},
-		overflow: true
-	},
-	({containerRef, ...rest}) => {
-		delete rest.focusableScrollbar;
-
-		return (
-			<div ref={containerRef} {...rest} />
-		);
+const navigableFilter = (elem) => {
+	if (
+		!Spotlight.getPointerMode() &&
+		// ignore containers passed as their id
+		typeof elem !== 'string' &&
+		elem.classList.contains(scrollbarCss.scrollButton)
+	) {
+		return false;
 	}
-);
+};
 
+const configureSpotlightContainer = ({'data-container-id': containerId, focusableScrollbar}) => {
+	Spotlight.set(containerId, {
+		navigableFilter: focusableScrollbar ? null : navigableFilter
+	});
+};
 
-/**
- * A Moonstone-styled native component that provides horizontal and vertical scrollbars.
- *
- * @class ScrollableNative
- * @memberof moonstone/ScrollableNative
- * @extends ui/Scrollable.ScrollableBaseNative
- * @ui
- * @private
- */
-class ScrollableNative extends Component {
+class ScrollableBaseNative extends Component {
 	static displayName = 'ScrollableNative'
 
 	static propTypes = /** @lends moonstone/ScrollableNative.ScrollableNative.prototype */ {
@@ -68,6 +51,15 @@ class ScrollableNative extends Component {
 		 * @private
 		 */
 		childRenderer: PropTypes.func.isRequired,
+
+		/**
+		 * This is passed onto the wrapped component to allow
+		 * it to customize the spotlight container for its use case.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		'data-container-id': PropTypes.string,
 
 		/**
 		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
@@ -92,6 +84,12 @@ class ScrollableNative extends Component {
 			onNextScroll: this.onScrollbarButtonClick,
 			onPrevScroll: this.onScrollbarButtonClick
 		};
+
+		configureSpotlightContainer(props);
+	}
+
+	componentWillReceiveProps (nextProps) {
+		configureSpotlightContainer(nextProps);
 	}
 
 	componentDidUpdate () {
@@ -486,7 +484,9 @@ class ScrollableNative extends Component {
 	}
 
 	render () {
-		const {focusableScrollbar, childRenderer, ...rest} = this.props;
+		const {childRenderer, 'data-container-id': containerId, ...rest} = this.props;
+
+		delete rest.focusableScrollbar;
 
 		return (
 			<UiScrollableBaseNative
@@ -513,10 +513,10 @@ class ScrollableNative extends Component {
 					style,
 					verticalScrollbarProps
 				}) => (
-					<ScrollableSpotlightContainer
+					<div
 						className={className}
-						containerRef={initContainerRef}
-						focusableScrollbar={focusableScrollbar}
+						data-container-id={containerId}
+						ref={initContainerRef}
 						style={style}
 					>
 						<div className={componentCss.container}>
@@ -524,20 +524,41 @@ class ScrollableNative extends Component {
 								...childComponentProps,
 								cbScrollTo: scrollTo,
 								className: componentCss.content,
+								containerId,
 								initUiChildRef,
 								ref: this.initChildRef
 							})}
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
 						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} {...this.scrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
-					</ScrollableSpotlightContainer>
+					</div>
 				)}
 			/>
 		);
 	}
 }
 
+/**
+ * A Moonstone-styled native component that provides horizontal and vertical scrollbars.
+ *
+ * @class ScrollableNative
+ * @memberof moonstone/ScrollableNative
+ * @mixes spotlight/SpotlightContainerDecorator
+ * @extends ui/Scrollable.ScrollableBaseNative
+ * @ui
+ * @private
+ */
+const ScrollableNative = SpotlightContainerDecorator(
+	{
+		overflow: true,
+		preserveId: true,
+		restrict: 'self-first'
+	},
+	ScrollableBaseNative
+);
+
 export default ScrollableNative;
 export {
+	ScrollableBaseNative,
 	ScrollableNative
 };

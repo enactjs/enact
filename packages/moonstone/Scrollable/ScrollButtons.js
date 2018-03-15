@@ -292,6 +292,7 @@ class ScrollButtonsBase extends Component {
 			<ScrollButton
 				key="prevButton"
 				data-scroll-button="previous"
+				data-spotlight-overflow="ignore"
 				direction={vertical ? 'up' : 'left'}
 				disabled={disabled || prevButtonDisabled}
 				onClick={this.handlePrevScroll}
@@ -308,6 +309,7 @@ class ScrollButtonsBase extends Component {
 			<ScrollButton
 				key="nextButton"
 				data-scroll-button="next"
+				data-spotlight-overflow="ignore"
 				direction={vertical ? 'down' : 'right'}
 				disabled={disabled || nextButtonDisabled}
 				onClick={this.handleNextScroll}

@@ -43,29 +43,22 @@ const
  */
 const dataIndexAttribute = 'data-index';
 
-const ScrollableSpotlightContainer = SpotlightContainerDecorator(
-	{
-		navigableFilter: (elem, {focusableScrollbar}) => {
-			if (
-				!focusableScrollbar &&
-				!Spotlight.getPointerMode() &&
-				// ignore containers passed as their id
-				typeof elem !== 'string' &&
-				elem.classList.contains(scrollbarCss.scrollButton)
-			) {
-				return false;
-			}
-		},
-		overflow: true
-	},
-	({containerRef, ...rest}) => {
-		delete rest.focusableScrollbar;
-
-		return (
-			<div ref={containerRef} {...rest} />
-		);
+const navigableFilter = (elem) => {
+	if (
+		!Spotlight.getPointerMode() &&
+		// ignore containers passed as their id
+		typeof elem !== 'string' &&
+		elem.classList.contains(scrollbarCss.scrollButton)
+	) {
+		return false;
 	}
-);
+};
+
+const configureSpotlightContainer = ({'data-container-id': containerId, focusableScrollbar}) => {
+	Spotlight.set(containerId, {
+		navigableFilter: focusableScrollbar ? null : navigableFilter
+	});
+};
 
 /**
  * A Moonstone-styled component that provides horizontal and vertical scrollbars.
@@ -76,7 +69,7 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
  * @ui
  * @private
  */
-class Scrollable extends Component {
+class ScrollableBase extends Component {
 	static displayName = 'Scrollable'
 
 	static propTypes = /** @lends moonstone/Scrollable.Scrollable.prototype */ {
@@ -87,6 +80,15 @@ class Scrollable extends Component {
 		 * @private
 		 */
 		childRenderer: PropTypes.func.isRequired,
+
+		/**
+		 * This is passed onto the wrapped component to allow
+		 * it to customize the spotlight container for its use case.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		'data-container-id': PropTypes.string,
 
 		/**
 		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
@@ -111,6 +113,12 @@ class Scrollable extends Component {
 			onNextScroll: this.onScrollbarButtonClick,
 			onPrevScroll: this.onScrollbarButtonClick
 		};
+
+		configureSpotlightContainer(props);
+	}
+
+	componentWillReceiveProps (nextProps) {
+		configureSpotlightContainer(nextProps);
 	}
 
 	componentDidUpdate () {
@@ -431,7 +439,9 @@ class Scrollable extends Component {
 	}
 
 	render () {
-		const {focusableScrollbar, childRenderer, ...rest} = this.props;
+		const {childRenderer, 'data-container-id': containerId, ...rest} = this.props;
+
+		delete rest.focusableScrollbar;
 
 		return (
 			<UiScrollableBase
@@ -458,10 +468,10 @@ class Scrollable extends Component {
 					style,
 					verticalScrollbarProps
 				}) => (
-					<ScrollableSpotlightContainer
+					<div
 						className={className}
-						containerRef={initContainerRef}
-						focusableScrollbar={focusableScrollbar}
+						data-container-id={containerId}
+						ref={initContainerRef}
 						style={style}
 					>
 						<div className={componentCss.container}>
@@ -469,6 +479,7 @@ class Scrollable extends Component {
 								...childComponentProps,
 								cbScrollTo: scrollTo,
 								className: componentCss.content,
+								containerId,
 								initUiChildRef,
 								onScroll: handleScroll,
 								ref: this.initChildRef
@@ -476,15 +487,25 @@ class Scrollable extends Component {
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
 						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} {...this.scrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
-					</ScrollableSpotlightContainer>
+					</div>
 				)}
 			/>
 		);
 	}
 }
 
+const Scrollable = SpotlightContainerDecorator(
+	{
+		overflow: true,
+		preserveId: true,
+		restrict: 'self-first'
+	},
+	ScrollableBase
+);
+
 export default Scrollable;
 export {
 	dataIndexAttribute,
-	Scrollable
+	Scrollable,
+	ScrollableBase
 };
