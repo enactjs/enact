@@ -208,7 +208,7 @@ class VirtualListCoreNative extends Component {
 	constructor (props) {
 		super(props);
 
-		this.paused = new Pause();
+		this.paused = new Pause('VirtualListBaseNative');
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContentRef = this.initRef('contentRef');
 		this.initContainerRef = this.initRef('containerRef');

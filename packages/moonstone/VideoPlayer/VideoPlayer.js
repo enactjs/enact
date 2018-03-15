@@ -727,7 +727,7 @@ const VideoPlayerBase = class extends React.Component {
 			this.handledCustomMediaForwards[eventName] = ev => forwardEvent(ev, this.props);
 		}
 
-		this.paused = new Pause();
+		this.paused = new Pause('VideoPlayer');
 
 		// Re-render-necessary State
 		this.state = {

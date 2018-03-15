@@ -78,7 +78,7 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			this.paused = new Pause();
+			this.paused = new Pause('EditableIntegerPickerDecorator');
 			this.state = {
 				isActive: false,
 				value: props.value

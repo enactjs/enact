@@ -167,7 +167,7 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 		constructor () {
 			super();
 
-			this.paused = new Pause();
+			this.paused = new Pause('Spinner');
 		}
 
 		componentWillMount () {

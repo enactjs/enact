@@ -5,8 +5,8 @@
  * ```
  * import Pause from '@enact/spotlight/Pause';
  *
- * const paused1 = new Pause();
- * const paused2 = new Pause();
+ * const paused1 = new Pause('paused 1');
+ * const paused2 = new Pause('paused 2');
  *
  * // pauses spotlight
  * paused1.pause();

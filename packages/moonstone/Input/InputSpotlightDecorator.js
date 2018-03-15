@@ -113,7 +113,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				node: null
 			};
 
-			this.paused = new Pause();
+			this.paused = new Pause('InputSpotlightDecorator');
 
 			if (props.noDecorator) {
 				deprecate({name: 'noDecorator', since: '1.3.0', replacedBy: 'autoFocus'});

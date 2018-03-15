@@ -205,7 +205,7 @@ class VirtualListCore extends Component {
 	constructor (props) {
 		super(props);
 
-		this.paused = new Pause();
+		this.paused = new Pause('VirtualListBase');
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContainerRef = this.initRef('containerRef');
 		this.initItemContainerRef = this.initRef('itemContainerRef');

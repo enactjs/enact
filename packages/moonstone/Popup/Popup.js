@@ -325,7 +325,7 @@ class Popup extends React.Component {
 
 	constructor (props) {
 		super(props);
-		this.paused = new Pause();
+		this.paused = new Pause('Popup');
 		this.state = {
 			floatLayerOpen: this.props.open,
 			popupOpen: this.props.noAnimation,

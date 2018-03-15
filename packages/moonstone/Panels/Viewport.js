@@ -70,7 +70,7 @@ const ViewportBase = class extends React.Component {
 	constructor () {
 		super();
 
-		this.paused = new Pause();
+		this.paused = new Pause('Viewport');
 	}
 
 	componentDidMount () {
