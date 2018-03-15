@@ -38,6 +38,7 @@
 @moon-clock-top-font-size:          66px;
 @moon-clock-bottom-font-size:       27px;
 @moon-calendar-day-small-font-size: 24px;
+@moon-input-small-font-size:        24px;
 
 @moon-non-latin-superscript-text-size:  24px;
 @moon-non-latin-large-text-size:        48px;
@@ -186,10 +187,8 @@
 @moon-input-border-width: @moon-button-border-width;
 @moon-input-tooltip-offset: (@moon-input-border-width + @moon-tooltip-point-width);
 @moon-input-icon-spacing: 18px;
-@moon-input-border-padding-offset: ((@moon-input-border-width * 2) + (@moon-input-padding * 2));
-@moon-input-height: (@moon-button-height - @moon-input-border-padding-offset);
-@moon-input-small-height: (@moon-button-small-height - @moon-input-border-padding-offset);
-@moon-input-small-font-size: @moon-button-small-font-size;
+@moon-input-height: (@moon-button-height - ((@moon-input-border-width * 2) + (@moon-input-padding * 2)));
+@moon-input-small-height: (@moon-button-small-height - (@moon-input-border-width * 2));
 
 // Items
 // ---------------------------------------
