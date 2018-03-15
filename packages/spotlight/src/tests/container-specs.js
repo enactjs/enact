@@ -337,7 +337,7 @@ describe('container', () => {
 
 		it('should return true for nodes that have the container attribute', () => {
 			const div = document.createElement('div');
-			div.setAttribute(containerAttribute, 'my-container');
+			div.setAttribute('data-spotlight-container', 'my-container');
 
 			const expected = true;
 			const actual = isContainer(div);
