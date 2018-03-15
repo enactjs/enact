@@ -25,7 +25,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/GridListImageItem` component
 
 ### Changed
-- `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` components as unstyled base components to support UI libraries
+- `ui/VirtualList.VirtualList`, `ui/VirtualList.VirtualGridList`, and `ui/Scroller` components as unstyled base components to support UI libraries
 
 ## [2.0.0-alpha.4] - 2018-02-13
 

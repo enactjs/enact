@@ -15,7 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `moonstone/VirtualList` and `moonstone/VirtualGridList` prop `component` to be replaced by `itemRenderer`
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
 
 ### Fixed
 
