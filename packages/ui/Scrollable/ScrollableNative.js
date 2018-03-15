@@ -141,14 +141,6 @@ class ScrollableBaseNative extends Component {
 		onScroll: PropTypes.func,
 
 		/**
-		 * Called when scrollbar visibility changes.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onScrollbarVisibilityChange: PropTypes.func,
-
-		/**
 		 * Called when scroll starts.
 		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
 		 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
@@ -834,9 +826,6 @@ class ScrollableBaseNative extends Component {
 			);
 
 		if (isVisibilityChanged) {
-			if (this.props.onScrollbarVisibilityChange) {
-				this.props.onScrollbarVisibilityChange();
-			}
 			// one or both scrollbars have changed visibility
 			this.setState({
 				isHorizontalScrollbarVisible: curHorizontalScrollbarVisible,
@@ -970,7 +959,6 @@ class ScrollableBaseNative extends Component {
 		delete rest.onKeyDown;
 		delete rest.onMouseDown;
 		delete rest.onScroll;
-		delete rest.onScrollbarVisibilityChange;
 		delete rest.onScrollStart;
 		delete rest.onScrollStop;
 		delete rest.onWheel;
