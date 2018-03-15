@@ -15,6 +15,7 @@ import {Spotlight, getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import Scrollable from '../Scrollable';
+import ScrollableNative from '../Scrollable/ScrollableNative';
 
 const
 	dataContainerDisabledAttribute = 'data-container-disabled',
@@ -358,6 +359,15 @@ const ScrollableScroller = (props) => (
 	/>
 );
 
+const ScrollableScrollerNative = (props) => (
+	<ScrollableNative
+		{...props}
+		childRenderer={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
+			<ScrollerBase {...scrollerProps} />
+		)}
+	/>
+);
+
 /**
  * A Moonstone-styled Scroller, SpotlightContainerDecorator and Scrollable applied.
  *
@@ -376,8 +386,30 @@ const ScrollableScroller = (props) => (
  */
 const Scroller = SpotlightContainerDecorator({restrict: 'self-first'}, ScrollableScroller);
 
+/**
+ * A Moonstone-styled native Scroller, SpotlightContainerDecorator and Scrollable applied.
+ * For smooth native scrolling, web engine with below Chromium 61, should be launched
+ * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
+ * The one with Chromium 61 or above, is launched to support it by default.
+ *
+ * Usage:
+ * ```
+ * <ScrollerNative>Scroll me.</ScrollerNative>
+ * ```
+ *
+ * @class ScrollerNative
+ * @memberof moonstone/Scroller
+ * @mixes spotlight/SpotlightContainerDecorator
+ * @extends moonstone/Scrollable.ScrollableNative
+ * @extends moonstone/Scroller.ScrollerBase
+ * @ui
+ * @private
+ */
+const ScrollerNative = SpotlightContainerDecorator({restrict: 'self-first'}, ScrollableScrollerNative);
+
 export default Scroller;
 export {
 	Scroller,
-	ScrollerBase
+	ScrollerBase,
+	ScrollerNative
 };
