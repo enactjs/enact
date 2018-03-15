@@ -105,7 +105,7 @@ const querySelector = (node, includeSelector, excludeSelector) => {
  * @private
  */
 const isContainerNode = (node) => {
-	return node && node.dataset && containerKey in node.dataset;
+	return node && node.dataset && 'spotlightContainer' in node.dataset;
 };
 
 /**
