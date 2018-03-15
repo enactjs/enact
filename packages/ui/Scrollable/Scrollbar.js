@@ -167,7 +167,7 @@ class ScrollbarBase extends PureComponent {
 		return (
 			<div {...rest} className={containerClassName} ref={this.initContainerRef}>
 				{childRenderer({
-					initContainerRef: this.initContainerRef,
+					getContainerRef: this.getContainerRef,
 					initScrollThumbRef: this.initScrollThumbRef
 				})}
 			</div>

@@ -75,9 +75,9 @@ class ScrollbarBase extends Component {
 
 	initScrollbarRef = (ref) => {
 		if (ref) {
-			const {initContainerRef, showThumb, startHidingThumb, update: uiUpdate} = ref;
+			const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = ref;
 
-			this.getContainerRef = initContainerRef;
+			this.getContainerRef = getContainerRef;
 			this.showThumb = showThumb;
 			this.startHidingThumb = startHidingThumb;
 			this.uiUpdate = uiUpdate;
@@ -149,6 +149,7 @@ const Scrollbar = ApiDecorator(
 		ScrollbarBase
 	)
 );
+Scrollbar.displayName = 'Scrollbar';
 
 export default Scrollbar;
 export {
