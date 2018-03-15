@@ -14,6 +14,20 @@ import PropTypes from 'prop-types';
  */
 const defaultConfig = {
 	/**
+	 * Returns the child -- either a node or a CSS selector -- to focus after expanding.
+	 *
+	 * If this function is defined, it will be passed the container node and the current set of
+	 * props and should return either a node or a CSS selector to be passed to
+	 * {@link spotlight/Spotlight.focus}.
+	 *
+	 * @type {Function}
+	 * @default null
+	 * @memberof moonstone/ExpandableItem.ExpandableSpotlightDecorator.defaultConfig
+	 * @private
+	 */
+	getChildFocusTarget: null,
+
+	/**
 	 * When `true` and used in conjunction with `noAutoFocus` when `false`, the contents of the
 	 * container will receive spotlight focus expanded, even in pointer mode.
 	 *
@@ -34,7 +48,7 @@ const defaultConfig = {
  * @private
  */
 const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {noPointerMode} = config;
+	const {getChildFocusTarget, noPointerMode} = config;
 
 	return class extends React.Component {
 		static displayName = 'ExpandableSpotlightDecorator'
@@ -69,7 +83,20 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.containerNode.contains(current) || document.activeElement === document.body) {
 				const contents = this.containerNode.querySelector('[data-expandable-container]');
 				if (contents && !this.props.noAutoFocus && !contents.contains(current)) {
-					Spotlight.focus(contents.dataset.spotlightId);
+					let focused = false;
+
+					// Attempt to retrieve the Expandable-configured child focus target
+					if (getChildFocusTarget) {
+						const selectedNode = getChildFocusTarget(contents, this.props);
+
+						if (selectedNode) {
+							focused = Spotlight.focus(selectedNode);
+						}
+					}
+
+					if (!focused) {
+						Spotlight.focus(contents.dataset.spotlightId);
+					}
 				}
 			}
 		}

@@ -32,6 +32,20 @@ const handleCancel = function (props) {
  */
 const defaultConfig = {
 	/**
+	 * Returns the child -- either a node or a CSS selector -- to focus after expanding.
+	 *
+	 * If this function is defined, it will be passed the container node and the current set of
+	 * props and should return either a node or a CSS selector to be passed to
+	 * {@link spotlight/Spotlight.focus}.
+	 *
+	 * @type {Function}
+	 * @default null
+	 * @memberof moonstone/ExpandableItem.Expandable.defaultConfig
+	 * @private
+	 */
+	getChildFocusTarget: null,
+
+	/**
 	 * When `true` and used in conjunction with `noAutoFocus` when `false`, the contents of the
 	 * container will receive spotlight focus expanded, even in pointer mode.
 	 *
@@ -64,7 +78,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 			Cancelable(
 				{component: 'span', onCancel: handleCancel},
 				ExpandableSpotlightDecorator(
-					{noPointerMode: config.noPointerMode},
+					{noPointerMode: config.noPointerMode, getChildFocusTarget: config.getChildFocusTarget},
 					Wrapped
 				)
 			)

@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/IncrementSlider` properties `incrementAriaLabel` and `decrementAriaLabel` to configure the label set on each button
+
 ### Removed
 
 - `moonstone/Slider` exports `SliderFactory` and `SliderBaseFactory`
@@ -15,6 +19,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/GridListImageItem` to hide overlay checkmark icon on focus when unselected
 - `moonstone/GridListImageItem` to use `ui/GridListImageItem`
 - `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` components to use their base UI components
+- `moonstone/Slider` to highlight knob when selected
 
 ## [2.0.0-alpha.5] - 2018-03-07
 
@@ -27,6 +32,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Marquee.Marquee` to be `moonstone/Marquee.MarqueeBase`
 - `moonstone/ContextualPopupDecorator` to not restore last-focused child
+- `moonstone/ExpandableList` to restore focus to the first selected item after opening
 
 ### Fixed
 

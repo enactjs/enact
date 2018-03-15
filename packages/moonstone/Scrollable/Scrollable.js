@@ -15,6 +15,7 @@ import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import Scrollbar from './Scrollbar';
+
 import scrollbarCss from './Scrollbar.less';
 
 const
