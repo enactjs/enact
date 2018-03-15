@@ -8,6 +8,7 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
@@ -87,6 +88,7 @@ class VirtualListCoreNative extends Component {
 		 * ```
 		 *
 		 * @type {Function}
+		 * @deprecated will be replaced by `itemRenderer` in 2.0.0
 		 * @public
 		 */
 		component: PropTypes.func.isRequired,
@@ -635,6 +637,8 @@ class VirtualListCoreNative extends Component {
 				key
 			}),
 			style = {};
+
+		deprecate({name: 'component', replacedBy: 'itemRenderer', until: '2.0.0'});
 
 		this.composeStyle(style, ...rest);
 
