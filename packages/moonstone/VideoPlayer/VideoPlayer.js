@@ -1949,10 +1949,10 @@ const VideoPlayerBase = class extends React.Component {
 					{...rest}
 					autoPlay={!noAutoPlay}
 					className={css.video}
-					controls={false}
 					component={videoComponent}
-					ref={this.setVideoRef}
+					controls={false}
 					onUpdate={this.handleEvent}
+					ref={this.setVideoRef}
 				>
 					{source}
 				</Media>
