@@ -13,8 +13,6 @@ import PropTypes from 'prop-types';
 import {forward} from '@enact/core/handle';
 import {on, off} from '@enact/core/dispatcher';
 
-import readyState from './readyState';
-
 /**
  * Event forwarding map for all of the supported media events. See https://reactjs.org/docs/events.html#media-events
  *
@@ -188,12 +186,24 @@ class Media extends React.Component {
 		return this.media.duration;
 	}
 
+	get error () {
+		return this.media.networkState === this.media.NETWORK_NO_SOURCE;
+	}
+
+	get loading () {
+		return this.media.readyState < this.media.HAVE_ENOUGH_DATA;
+	}
+
 	get playbackRate () {
 		return this.media.playbackRate;
 	}
 
 	set playbackRate (playbackRate) {
 		this.media.playbackRate = playbackRate;
+	}
+
+	get proportionLoaded () {
+		return this.media.buffered.length && this.media.buffered.end(this.media.buffered.length - 1) / this.media.duration;
 	}
 
 	render () {
@@ -220,6 +230,5 @@ class Media extends React.Component {
 export default Media;
 export {
 	handledMediaEventsMap,
-	readyState,
 	Media
 };

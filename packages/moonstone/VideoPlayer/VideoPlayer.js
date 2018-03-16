@@ -19,7 +19,7 @@ import {perfNow, Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import {platform} from '@enact/core/platform';
 import {is} from '@enact/core/keymap';
-import Media, {readyState} from '@enact/ui/Media';
+import Media from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
 import Spotlight from '@enact/spotlight';
@@ -1206,10 +1206,10 @@ const VideoPlayerBase = class extends React.Component {
 			playbackRate: el.playbackRate,
 
 			// Non-standard state computed from properties
-			proportionLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration,
+			proportionLoaded: el.proportionLoaded,
 			proportionPlayed: el.currentTime / el.duration || 0,
-			error: el.networkState === el.NETWORK_NO_SOURCE,
-			loading: el.readyState < readyState.HAVE_ENOUGH_DATA,
+			error: el.error,
+			loading: el.loading,
 			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime
 		};
 
