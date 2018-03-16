@@ -29,6 +29,7 @@ storiesOf('Moonstone', module)
 				invalid={boolean('invalid', false)}
 				invalidMessage={nullify(text('invalidMessage'))}
 				placeholder={text('placeholder')}
+				small={boolean('small', false)}
 				type={text('type')}
 			/>
 		))
