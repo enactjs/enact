@@ -147,7 +147,7 @@ class Media extends React.Component {
 	}
 
 	handleEvent = (ev) => {
-		forward('onUpdate', ev, this.props);
+		forward('onUpdate', {type: 'onUpdate'}, this.props);
 
 		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
 		const fwd = this.handledMediaForwards[handledMediaEventsMap[ev.type]];

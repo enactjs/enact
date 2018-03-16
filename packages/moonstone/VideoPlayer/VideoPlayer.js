@@ -170,15 +170,6 @@ const VideoPlayerBase = class extends React.Component {
 		backwardIcon: PropTypes.string,
 
 		/**
-		 * A type of video component.
-		 *
-		 * @type {Component}
-		 * @default 'video'
-		 * @public
-		 */
-		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-
-		/**
 		 * Specifies the spotlight container ID for the player
 		 *
 		 * @type {String}
@@ -638,12 +629,21 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 3000
 		 * @public
 		 */
-		tooltipHideDelay: PropTypes.number
+		tooltipHideDelay: PropTypes.number,
+
+		/**
+		 * A type of video component. By default we use `<video>`, an HTMLVideoElement and expects any
+		 * other custom components to have a similar API structures.
+		 *
+		 * @type {Component}
+		 * @default 'video'
+		 * @public
+		 */
+		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
 	}
 
 	static defaultProps = {
 		autoCloseTimeout: 5000,
-		component: 'video',
 		feedbackHideDelay: 3000,
 		initialJumpDelay: 400,
 		jumpBy: 30,
@@ -656,7 +656,8 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		titleHideDelay: 5000,
-		tooltipHideDelay: 3000
+		tooltipHideDelay: 3000,
+		videoComponent: 'video'
 	}
 
 	constructor (props) {
@@ -1894,6 +1895,7 @@ const VideoPlayerBase = class extends React.Component {
 			thumbnailComponent,
 			thumbnailSrc,
 			title,
+			videoComponent,
 			...rest} = this.props;
 
 		delete rest.announce;
@@ -1942,6 +1944,7 @@ const VideoPlayerBase = class extends React.Component {
 					autoPlay={!noAutoPlay}
 					className={css.video}
 					controls={false}
+					component={videoComponent}
 					ref={this.setVideoRef}
 					onUpdate={this.handleEvent}
 				>
