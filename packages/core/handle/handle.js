@@ -63,17 +63,26 @@ import {is} from '../keymap';
 
 // Accepts an array of handlers, sanitizes them, and returns a handler function
 // compose(allPass, map(makeSafeHandler));
-const makeHandler = (handlers) => (...args) => {
-	for (let i = 0; i < handlers.length; i++) {
-		const fn = handlers[i];
-		if (typeof fn !== 'function' || fn(...args)) {
-			continue;
+const makeHandler = (handlers) => {
+	// allowing shadowing here to provide a meaningful function name in dev tools
+	// eslint-disable-next-line no-shadow
+	return function handle (...args) {
+		for (let i = 0; i < handlers.length; i++) {
+			const fn = handlers[i];
+			if (typeof fn !== 'function' || fn.apply(this, args)) {
+				continue;
+			}
+
+			return false;
 		}
 
-		return false;
-	}
+		return true;
+	};
+};
 
-	return true;
+// Loose check to determine if obj is component-ish if it has both props and context members
+const hasPropsAndContext = (obj) => {
+	return obj && obj.hasOwnProperty && obj.hasOwnProperty('props') && obj.hasOwnProperty('context');
 };
 
 /**
@@ -92,29 +101,47 @@ const makeHandler = (handlers) => (...args) => {
  */
 const handle = function (...handlers) {
 	const h = makeHandler(handlers);
-	h.displayName = 'handle';
 
-	const fn = (ev, props, context) => {
+	// In order to support binding either handle (handle.bind(this)) or a handler
+	// (a = handle(), a.bind(this)), we cache `this` here and use is as the fallback for props and
+	// context if fn() doesn't have its own `this`.
+	const _outer = this;
+
+	const fn = function (ev, props, context) {
+		let caller = null;
+
 		// if handle() was bound to a class, use its props and context. otherwise, we accept
 		// incoming props/context as would be provided by computed/handlers from kind()
-		if (this) {
+		if (hasPropsAndContext(this)) {
+			caller = this;
 			props = this.props;
 			context = this.context;
+		} else if (hasPropsAndContext(_outer)) {
+			caller = _outer;
+			props = _outer.props;
+			context = _outer.context;
 		}
 
-		return h(ev, props, context);
+		return h.call(caller, ev, props, context);
 	};
 
-	fn.finally = (cleanup) => (...args) => {
-		let result = false;
+	fn.finally = function (cleanup) {
+		return function (ev, props, context) {
+			let result = false;
 
-		try {
-			result = fn(...args);
-		} finally {
-			cleanup(...args);
-		}
+			if (hasPropsAndContext(this)) {
+				props = this.props;
+				context = this.context;
+			}
 
-		return result;
+			try {
+				result = fn.call(this, ev, props, context);
+			} finally {
+				cleanup.call(this, ev, props, context);
+			}
+
+			return result;
+		};
 	};
 
 	return fn;
