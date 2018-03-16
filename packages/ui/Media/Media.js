@@ -194,6 +194,10 @@ class Media extends React.Component {
 		return this.media.readyState < this.media.HAVE_ENOUGH_DATA;
 	}
 
+	get paused () {
+		return this.media.paused;
+	}
+
 	get playbackRate () {
 		return this.media.playbackRate;
 	}
@@ -204,6 +208,10 @@ class Media extends React.Component {
 
 	get proportionLoaded () {
 		return this.media.buffered.length && this.media.buffered.end(this.media.buffered.length - 1) / this.media.duration;
+	}
+
+	get proportionPlayed () {
+		return this.media.currentTime / this.media.duration;
 	}
 
 	render () {

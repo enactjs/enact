@@ -632,8 +632,23 @@ const VideoPlayerBase = class extends React.Component {
 		tooltipHideDelay: PropTypes.number,
 
 		/**
-		 * A type of video component. By default we use `<video>`, an HTMLVideoElement and expects any
-		 * other custom components to have a similar API structures.
+		 * A type of video component. By default we use `<video>`, an HTMLVideoElement, and expects
+		 * other custom video components to have a similar API structure.
+		 *
+		 * Note: If you desire to use a custom video component, you MUST provide the following APIs:
+		 *
+		 * {Number} currentTime - Playback index of the media in seconds
+		 * {Number} duration - Media's entire duration in seconds
+		 * {Boolean} error - True if video playback has errored.
+		 * {Boolean} loading - True if video playback is loading.
+		 * {Boolean} paused - Playing vs paused state. `true` means the media is paused
+		 * {Number} playbackRate - Current playback rate, as a number
+		 * {Number} proportionLoaded - A value between `0` and `1` representing the proportion of the media that has loaded
+		 * {Number} proportionPlayed - A value between `0` and `1` representing the proportion of the media that has already been shown
+		 *
+		 * play() - plays a video
+		 * pause() - pauses a video
+		 * load() - loads a video
 		 *
 		 * @type {Component}
 		 * @default 'video'
@@ -1197,7 +1212,7 @@ const VideoPlayerBase = class extends React.Component {
 	// Media Interaction Methods
 	//
 	updateMainState = () => {
-		const el = this.video.getNode();
+		const el = this.video;
 		const updatedState = {
 			// Standard media properties
 			currentTime: el.currentTime,
@@ -1207,7 +1222,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			// Non-standard state computed from properties
 			proportionLoaded: el.proportionLoaded,
-			proportionPlayed: el.currentTime / el.duration || 0,
+			proportionPlayed: el.proportionPlayed || 0,
 			error: el.error,
 			loading: el.loading,
 			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime
