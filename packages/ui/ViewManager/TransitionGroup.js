@@ -28,11 +28,10 @@ const unorderedKeys = compose(sort((a, b) => a - b), orderedKeys);
 const unorderedEquals = useWith(equals, [unorderedKeys, unorderedKeys]);
 const orderedEquals = useWith(equals, [orderedKeys, orderedKeys]);
 
-/**
+/*
  * Compares the keys of two sets of children and returns `true` if they are equal.
  *
  * @method
- * @memberof core/util
  * @param  {Node[]}		prev		Array of children
  * @param  {Node[]}		next		Array of children
  * @param  {Boolean}	[ordered]	`true` to require the same order
