@@ -46,7 +46,7 @@ describe('VirtualList', () => {
 		};
 		renderItem = ({data, index, ...rest}) => {	// eslint-disable-line enact/display-name, enact/prop-types
 			return (
-				<div {...rest}>
+				<div {...rest} id={'item' + index}>
 					{data[index].name}
 				</div>
 			);
@@ -86,7 +86,7 @@ describe('VirtualList', () => {
 		);
 
 		const expected = 'Account 0';
-		const actual = subject.find('[data-index]').at(0).text();
+		const actual = subject.find('#item0').text();
 
 		expect(actual).to.equal(expected);
 	});
@@ -103,25 +103,7 @@ describe('VirtualList', () => {
 		);
 
 		const expected = 27; // 720 / 30 + 3
-		const actual = subject.find('[data-index]').length;
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should render only one scrollbar', () => {
-		const subject = mount(
-			<VirtualList
-				clientSize={clientSize}
-				component={renderItem}
-				data={items}
-				dataSize={dataSize}
-				verticalScrollbar="visible"
-				itemSize={30}
-			/>
-		);
-
-		const expected = 1;
-		const actual = subject.find('Scrollbar').length;
+		const actual = subject.childAt(0).text().split('Account').length - 1;
 
 		expect(actual).to.equal(expected);
 	});
@@ -276,7 +258,7 @@ describe('VirtualList', () => {
 
 			setTimeout(() => {
 				const expected = itemArray[0].name;
-				const actual = subject.find('[data-index]').at(0).text();
+				const actual = subject.find('#item0').text();
 
 				expect(actual).to.equal(expected);
 				done();

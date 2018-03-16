@@ -36,11 +36,10 @@ const
 	clampVelocity = clamp(-maxVelocity, maxVelocity);
 
 /**
- * {@link moonstone/Scroller.ScrollAnimator} is the class to scroll a list or a scroller with
- * animation.
+ * The class to scroll a list or a scroller with animation.
  *
  * @class ScrollAnimator
- * @memberof moonstone/Scroller
+ * @memberof ui/Scrollable
  * @private
  */
 class ScrollAnimator {
@@ -52,7 +51,7 @@ class ScrollAnimator {
 	 *	`'linear'`, `'ease-in'`, `'ease-out'`, or `'ease-in-out'`, or null. If `null`, defaults to
 	 *	`'ease-out'`.
 	 * @constructor
-	 * @memberof moonstone/Scroller.ScrollAnimator
+	 * @memberof ui/Scrollable.ScrollAnimator
 	 */
 	constructor (type) {
 		this.timingFunction = timingFunctions[type || this.type];
@@ -116,4 +115,6 @@ class ScrollAnimator {
 }
 
 export default ScrollAnimator;
-export {ScrollAnimator};
+export {
+	ScrollAnimator
+};
