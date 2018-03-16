@@ -1,5 +1,4 @@
 import kind from '@enact/core/kind';
-
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -123,6 +122,7 @@ const ProgressBarTooltipBase = kind({
 		delete rest.proportion;
 		delete rest.side;
 		delete rest.vertical;
+
 		return (
 			<Tooltip {...rest}>
 				{children}

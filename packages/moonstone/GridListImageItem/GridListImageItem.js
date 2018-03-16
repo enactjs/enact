@@ -1,33 +1,36 @@
 /**
- * Exports the {@link moonstone/GridListImageItem.GridListImageItem} and
- * {@link moonstone/GridListImageItem.GridListImageItemBase} components. The default export is
- * {@link moonstone/GridListImageItem}.
+ * Provides Moonstone-themed grid list image item components and behaviors.
  *
  * @module moonstone/GridListImageItem
+ * @exports GridListIamgeItem
  */
 
+import compose from 'ramda/src/compose';
+import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
-import {Image} from '../Image';
-import {MarqueeController, MarqueeText} from '../Marquee';
+import {ImageBase as Image} from '../Image';
+import {Marquee, MarqueeController} from '../Marquee';
+import Skinnable from '../Skinnable';
 
-import css from './GridListImageItem.less';
+import componentCss from './GridListImageItem.less';
 
-const defaultPlaceholder =
+const
+	defaultPlaceholder =
 	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
-	'9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48cmVjdCB3aWR0aD0iMTAw' +
-	'JSIgaGVpZ2h0PSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IGZpbGw6ICNhYW' +
-	'E7IiAvPjxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjEwMCUiIHkyPSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0' +
-	'OyBzdHJva2Utd2lkdGg6IDE7IiAvPjxsaW5lIHgxPSIxMDAlIiB5MT0iMCIgeDI9IjAiIHkyPSIxMDAlIiBzdH' +
-	'lsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IiAvPjwvc3ZnPg==';
+	'9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
+	'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
+	'4NCg==',
+	captionComponent = (props) => (
+		<Marquee alignment="center" marqueeOn="hover" {...props} />
+	);
 
 /**
- * {@link moonstone/GridListImageItem.GridListImageItemBase} is a stateless
- * GridListImageItem with Moonstone styling applied.
+ * A moonstone-styled base component for [GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem}.
  *
  * @class GridListImageItemBase
  * @memberof moonstone/GridListImageItem
@@ -39,12 +42,21 @@ const GridListImageItemBase = kind({
 
 	propTypes: /** @lends moonstone/GridListImageItem.GridListImageItemBase.prototype */ {
 		/**
-		 * The primary caption to be displayed with the image.
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
 		 *
-		 * @type {String}
+		 * The following classes are supported:
+		 *
+		 * * `icon` - The icon component class for default selection overlay
+		 * * `image` - The image component class
+		 * * `selected` - Applied when `selected` prop is `true`
+		 * * `caption` - The caption component class
+		 * * `subCaption` - The subCaption component class
+		 *
+		 * @type {Object}
 		 * @public
 		 */
-		caption: PropTypes.string,
+		css: PropTypes.object,
 
 		/**
 		 * When `true`, applies a selected visual effect to the image, but only if `selectionOverlayShowing`
@@ -57,80 +69,68 @@ const GridListImageItemBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * When `true`, a selection overlay with a centered icon is shown. When `selected` is true,
-		 * a check mark is shown.
+		 * The custom selection overlay component to render. A component can be a stateless functional
+		 * component, `kind()` or React component. The following is an example with custom selection
+		 * overlay kind.
 		 *
-		 * @type {Boolean}
-		 * @default false
+		 * Example Usage:
+		 * ```
+		 * const SelectionOverlay = kind({
+		 * 	render: () => <div>custom overlay</div>
+		 * });
+		 *
+		 * <GridListImageItem selectionOverlay={SelectionOverlay} />
+		 * ```
+		 *
+		 * @type {Function}
 		 * @public
 		 */
-		selectionOverlayShowing: PropTypes.bool,
-
-		/**
-		 * The absolute URL path to the image.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		source: PropTypes.string,
-
-		/**
-		 * The second caption line to be displayed with the image.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		subCaption: PropTypes.string
-	},
-
-	defaultProps: {
-		selected: false,
-		selectionOverlayShowing: false
+		selectionOverlay: PropTypes.func
 	},
 
 	styles: {
-		css,
-		className: 'gridListImageItem'
+		css: componentCss,
+		publicClassNames: ['icon', 'image', 'selected', 'caption', 'subCaption']
 	},
 
-	computed: {
-		className: ({caption, selected, styler, subCaption}) => styler.append(
-			{selected},
-			caption ? 'useCaption' : null,
-			subCaption ? 'useSubCaption' : null
-		)
-	},
-
-	render: ({caption, source, subCaption, selectionOverlayShowing, ...rest}) => {
-		if (selectionOverlayShowing) {
+	render: ({css, selectionOverlay, ...rest}) => {
+		if (selectionOverlay) {
 			rest['role'] = 'checkbox';
 			rest['aria-checked'] = rest.selected;
 		}
 
-		delete rest.selected;
-
 		return (
-			<div {...rest}>
-				<Image className={css.image} placeholder={defaultPlaceholder} src={source} />
-				{
-					selectionOverlayShowing ? (
-						<div className={css.overlayContainer}>
-							<div className={css.overlayComponent}>
-								<Icon className={css.icon}>check</Icon>
-							</div>
-						</div>
-					) : null
-				}
-				{caption ? (<MarqueeText className={css.caption} marqueeOn="hover">{caption}</MarqueeText>) : null}
-				{subCaption ? (<MarqueeText className={css.subCaption} marqueeOn="hover">{subCaption}</MarqueeText>) : null}
-			</div>
+			<UiGridListImageItem
+				{...rest}
+				captionComponent={captionComponent}
+				css={css}
+				iconComponent={Icon}
+				imageComponent={Image}
+				placeholder={defaultPlaceholder}
+			/>
 		);
 	}
 });
 
 /**
- * {@link moonstone/GridListImageItem} is a GridListImageItem with
- * Moonstone styling, Spottable applied.
+ * Moonstone-specific GridListImageItem behaviors to apply to
+ * [GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem}.
+ *
+ * @hoc
+ * @memberof moonstone/GridListImageItem
+ * @mixes moonstone/Marquee.MarqueeController
+ * @mixes spotlight/Spottable.Spottable
+ * @mixes moonstone/Skinnable.Skinnable
+ * @public
+ */
+const GridListImageItemDecorator = compose(
+	MarqueeController({marqueeOnFocus: true}),
+	Spottable,
+	Skinnable
+);
+
+/**
+ * A moonstone-styled grid list image item, Marquee and Spottable applied.
  *
  * Usage:
  * ```
@@ -139,17 +139,16 @@ const GridListImageItemBase = kind({
  *
  * @class GridListImageItem
  * @memberof moonstone/GridListImageItem
- * @mixes spotlight/Spottable
+ * @mixes moonstone/GridListImageItem.GridListImageItemDecorator
  * @see moonstone/GridListImageItem.GridListImageItemBase
  * @ui
  * @public
  */
-const GridListImageItem = MarqueeController(
-	{marqueeOnFocus: true},
-	Spottable(
-		GridListImageItemBase
-	)
-);
+const GridListImageItem = GridListImageItemDecorator(GridListImageItemBase);
 
 export default GridListImageItem;
-export {GridListImageItem, GridListImageItemBase};
+export {
+	GridListImageItem,
+	GridListImageItemBase,
+	GridListImageItemDecorator
+};

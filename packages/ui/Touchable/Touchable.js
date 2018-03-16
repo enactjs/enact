@@ -186,6 +186,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
  			 * Event payload includes:
 			 *
 			 * * `type` - Type of event, `"onDragStart"`
+			 * * `x` - Horizontal position of the drag, relative to the viewport
+			 * * `y` - Vertical position of the drag, relative to the viewport
 			 *
 			 * @type {Function}
 			 * @public

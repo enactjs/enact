@@ -4,9 +4,29 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Removed
+
+- `ui/Transition` property `clipHeight`
+
+### Added
+
+- `ui/Scrollable` support for scrolling by touch
+
+### Fixed
+
+- `ui/Transition` animation for `clip` for "up", "left", and "right" directions. This includes a DOM addition to the Transition markup.
+
+## [2.0.0-alpha.5] - 2018-03-07
+
 ### Added
 
 - `ui/Touchable` support for drag gesture
+- `ui/Marquee` component
+- `ui/GridListImageItem` component
+
+### Changed
+
+- `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` components as unstyled base components to support UI libraries
 
 ## [2.0.0-alpha.4] - 2018-02-13
 
@@ -55,13 +75,19 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
 
-## [1.14.0] - 2017-02-23
+## [1.15.0] - 2018-02-28
+
+### Fixed
+
+- Internal method used by many components that sometimes prevented re-renders when they were needed
+
+## [1.14.0] - 2018-02-23
 
 ### Deprecated
 
 - `ui/Holdable` and `ui/Pressable`, to be replaced by `ui/Touchable` in 2.0.0
 
-## [1.13.3] - 2017-01-16
+## [1.13.3] - 2018-01-16
 
 No significant changes.
 

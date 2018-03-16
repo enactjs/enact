@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
+## [2.0.0-alpha.5] - 2018-03-07
+
+No significant changes.
+
 ## [2.0.0-alpha.4] - 2018-02-13
 
 No significant changes.
@@ -18,11 +22,15 @@ No significant changes.
 
 No significant changes.
 
-## [1.14.0] - 2017-02-23
+## [1.15.0] - 2018-02-28
 
 No significant changes.
 
-## [1.13.3] - 2017-01-16
+## [1.14.0] - 2018-02-23
+
+No significant changes.
+
+## [1.13.3] - 2018-01-16
 
 No significant changes.
 
@@ -40,9 +48,7 @@ No significant changes.
 
 ## [1.12.2] - 2017-11-15
 
-### Fixed
-
-- `ui/Transition` to revert 1.12.1 change to support `clip` transition-type directions and endering optimizations
+No significant changes.
 
 ## [1.12.1] - 2017-11-07
 
