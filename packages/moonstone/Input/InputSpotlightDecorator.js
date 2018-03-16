@@ -83,7 +83,23 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			 */
 			noDecorator: PropTypes.bool,
 
+
+			/**
+			 * The handler to run when the internal input is focused
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
 			onActivate: PropTypes.func,
+
+			/**
+			 * The handler to run when the internal input loses focus
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
 			onDeactivate: PropTypes.func,
 
 			/**
@@ -310,6 +326,8 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		render () {
 			const props = Object.assign({}, this.props);
 			delete props.autoFocus;
+			delete props.onActivate;
+			delete props.onDeactivate;
 			delete props.noDecorator;
 
 			return (

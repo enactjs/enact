@@ -54,6 +54,17 @@ function isPaused () {
  */
 class Pause {
 
+	/**
+	 * Accepts a name for the instance
+	 *
+	 * The `name` is not used but may be useful for debugging which instance has currently paused
+	 * Spotlight.
+	 *
+	 * @param {String} name The name of the pause instance
+	 * @memberof spotlight/Pause.Pause
+	 * @constructor
+	 * @public
+	 */
 	constructor (name) {
 		this.name = name;
 	}
@@ -100,7 +111,7 @@ class Pause {
 			return true;
 		}
 
-		return true;
+		return false;
 	}
 }
 

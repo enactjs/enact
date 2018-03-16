@@ -10,10 +10,8 @@ import Changeable from '@enact/ui/Changeable';
 import {forKey, forward, oneOf, preventDefault, stopImmediate} from '@enact/core/handle';
 import deprecate from '@enact/core/internal/deprecate';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
-import Spotlight from '@enact/spotlight';
 import Pause from '@enact/spotlight/Pause';
 
 import {calcAriaLabel, Input} from '../Input';
@@ -186,20 +184,14 @@ class ExpandableInputBase extends React.Component {
 		super();
 
 		this.paused = new Pause('ExpandableInput');
+		this.pointer = false;
 		this.state = {
-			initialValue: props.value,
-			pointer: false
+			initialValue: props.value
 		};
 
 		if (props.onInputChange) {
 			deprecate({name: 'onInputChange', since: '1.0.0', message: 'Use `onChange` instead', until: '2.0.0'});
 		}
-	}
-
-	componentDidMount () {
-		// Need a deep DOM reference to manage focus
-		// eslint-disable-next-line react/no-find-dom-node
-		this.node = ReactDOM.findDOMNode(this);
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -260,8 +252,7 @@ class ExpandableInputBase extends React.Component {
 	}
 
 	handleDeactivate = () => {
-		if (!this.state.pointer && this.paused.isPaused()) {
-			this.paused.resume();
+		if (this.paused.resume() && !this.pointer) {
 			this.fireCloseEvent();
 		}
 	}
@@ -280,11 +271,11 @@ class ExpandableInputBase extends React.Component {
 	}
 
 	handleDown = () => {
-		this.setState(({pointer}) => !pointer ? {pointer: true} : null);
+		this.pointer = true;
 	}
 
 	handleUp = () => {
-		this.setState(({pointer}) => pointer ? {pointer: false} : null);
+		this.pointer = false;
 	}
 
 	calcClassName = (className) => (className ? `${css.expandableInput} ${className}` : css.expandableInput)
@@ -313,8 +304,7 @@ class ExpandableInputBase extends React.Component {
 				className={this.calcClassName(className)}
 				disabled={disabled}
 				label={this.calcLabel()}
-				onDown={this.handleDown}
-				onUp={this.handleUp}
+				onMouseDown={this.handleDown}
 				onMouseLeave={this.handleUp}
 				open={open}
 				showLabel={type === 'password' ? 'never' : 'auto'}
