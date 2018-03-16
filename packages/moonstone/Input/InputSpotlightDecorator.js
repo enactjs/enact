@@ -141,10 +141,10 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
+			this.paused.resume();
+
 			if (this.state.focused === 'input') {
 				const {onSpotlightDisappear} = this.props;
-
-				this.paused.resume();
 
 				if (onSpotlightDisappear) {
 					onSpotlightDisappear();

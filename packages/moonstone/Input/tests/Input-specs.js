@@ -147,7 +147,7 @@ describe('Input Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should pause spotlight when input has focus', () => {
+	it('should pause spotlight when input has focus', () => {
 		const subject = mount(
 			<Input />
 		);
@@ -157,10 +157,12 @@ describe('Input Specs', () => {
 		const expected = 'paused';
 		const actual = isPaused();
 
+		Spotlight.resume();
+
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should resume spotlight on unmount', () => {
+	it('should resume spotlight on unmount', () => {
 		const subject = mount(
 			<Input />
 		);
@@ -170,6 +172,8 @@ describe('Input Specs', () => {
 
 		const expected = 'not paused';
 		const actual = isPaused();
+
+		Spotlight.resume();
 
 		expect(actual).to.equal(expected);
 	});
