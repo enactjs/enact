@@ -681,16 +681,12 @@ const VideoPlayerBase = class extends React.Component {
 		// Re-render-necessary State
 		this.state = {
 			announce: AnnounceState.READY,
-			buffered: 0,
 			currentTime: 0,
 			duration: 0,
 			error: false,
 			loading: false,
-			muted: !!props.muted,
 			paused: props.noAutoPlay,
 			playbackRate: 1,
-			readyState: 0,
-			volume: 1,
 			titleOffsetHeight: 0,
 			bottomOffsetHeight: 0,
 
@@ -735,7 +731,7 @@ const VideoPlayerBase = class extends React.Component {
 		const {source: nextSource} = nextProps;
 
 		if (!compareSources(source, nextSource)) {
-			this.setState({currentTime: 0, buffered: 0, proportionPlayed: 0, proportionLoaded: 0});
+			this.setState({currentTime: 0, proportionPlayed: 0, proportionLoaded: 0});
 			this.reloadVideo();
 		}
 	}
@@ -753,7 +749,6 @@ const VideoPlayerBase = class extends React.Component {
 			!this.state.mediaSliderVisible && this.state.mediaSliderVisible === nextState.mediaSliderVisible &&
 			this.state.loading === nextState.loading && this.props.loading === nextProps.loading &&
 			(
-				this.state.buffered !== nextState.buffered ||
 				this.state.currentTime !== nextState.currentTime ||
 				this.state.proportionPlayed !== nextState.proportionPlayed ||
 				this.state.sliderTooltipTime !== nextState.sliderTooltipTime
@@ -1051,7 +1046,7 @@ const VideoPlayerBase = class extends React.Component {
 			if (this.showMiniFeedback && (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider)) {
 				this.setState({
 					mediaSliderVisible: shouldShowSlider,
-					miniFeedbackVisible: !(this.state.readyState < readyState.HAVE_ENOUGH_DATA || !this.state.duration || this.state.error)
+					miniFeedbackVisible: !(this.state.loading || !this.state.duration || this.state.error)
 				});
 			}
 		}
@@ -1207,18 +1202,14 @@ const VideoPlayerBase = class extends React.Component {
 			// Standard media properties
 			currentTime: el.currentTime,
 			duration: el.duration,
-			buffered: el.buffered,
 			paused: el.playbackRate !== 1 || el.paused,
-			muted: el.muted,
-			volume: el.volume,
 			playbackRate: el.playbackRate,
-			readyState: el.readyState,
 
 			// Non-standard state computed from properties
 			proportionLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration,
 			proportionPlayed: el.currentTime / el.duration || 0,
 			error: el.networkState === el.NETWORK_NO_SOURCE,
-			loading: el.readyState < el.HAVE_ENOUGH_DATA,
+			loading: el.readyState < readyState.HAVE_ENOUGH_DATA,
 			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime
 		};
 
