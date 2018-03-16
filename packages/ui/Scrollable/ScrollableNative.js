@@ -464,6 +464,8 @@ class ScrollableBaseNative extends Component {
 
 	// event handler for browser native scroll
 
+	getRtlX = (x) => (this.state.rtl ? -x : x)
+
 	onMouseDown = (ev) => {
 		this.isScrollAnimationTargetAccumulated = false;
 		this.stop();
@@ -472,10 +474,6 @@ class ScrollableBaseNative extends Component {
 
 	onTouchStart = () => {
 		this.isTouching = true;
-	}
-
-	onTouchEnd = () => {
-		this.isTouching = false;
 	}
 
 	onDragStart = (ev) => {
@@ -489,11 +487,9 @@ class ScrollableBaseNative extends Component {
 
 	onDrag = (ev) => {
 		if (!this.isTouching) {
-
-			this.showThumb(this.getScrollBounds());
 			this.start(
-				(this.direction !== 'horizontal') ? 0 : this.dragStartX - ev.x, // 'vertical' or 'both'
-				(this.direction !== 'vertical') ? 0 : this.dragStartY - ev.y, // 'horizontal' or 'both'
+				(this.direction === 'vertical') ? 0 : this.dragStartX - this.getRtlX(ev.x), // 'horizontal' or 'both'
+				(this.direction === 'horizontal') ? 0 : this.dragStartY - ev.y, // 'vertical' or 'both'
 				false
 			);
 		}
@@ -510,6 +506,7 @@ class ScrollableBaseNative extends Component {
 				this.stop();
 			}
 		}
+		this.isTouching = false;
 		this.isDragging = false;
 		this.flickTarget = null;
 	}
@@ -521,7 +518,7 @@ class ScrollableBaseNative extends Component {
 			this.flickTarget = this.animator.simulate(
 				this.scrollLeft,
 				this.scrollTop,
-				isVertical ? 0 : -ev.velocityX,
+				isVertical ? 0 : this.getRtlX(-ev.velocityX),
 				isVertical ? -ev.velocityY : 0
 			);
 
@@ -1078,8 +1075,7 @@ class ScrollableBaseNative extends Component {
 				onDragEnd: this.onDragEnd,
 				onDragStart: this.onDragStart,
 				onFlick: this.onFlick,
-				onTouchStart: this.onTouchStart,
-				onTouchEnd: this.onTouchEnd
+				onTouchStart: this.onTouchStart
 			},
 			verticalScrollbarProps: this.verticalScrollbarProps
 		});

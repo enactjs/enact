@@ -478,29 +478,26 @@ class ScrollableBase extends Component {
 
 	// drag/flick event handlers
 
+	getRtlX = (x) => (this.state.rtl ? -x : x)
+
 	onMouseDown = (ev) => {
 		this.stop();
 		forward('onMouseDown', ev, this.props);
 	}
 
-	onDragStart = () => {
+	onDragStart = (ev) => {
 		this.stop();
 		this.isDragging = true;
+		this.dragStartX = this.scrollLeft + ev.x;
+		this.dragStartY = this.scrollTop + ev.y;
 	}
 
 	onDrag = (ev) => {
-		if (!this.scrolling) {
-			this.scrolling = true;
-			this.forwardScrollEvent('onScrollStart');
-			this.dragStartX = this.scrollLeft + ev.x;
-			this.dragStartY = this.scrollTop + ev.y;
-		} else {
-			this.showThumb(this.getScrollBounds());
-			this.scroll(
-				(this.direction !== 'horizontal') ? 0 : this.dragStartX - ev.x, // 'vertical' or 'both'
-				(this.direction !== 'vertical') ? 0 : this.dragStartY - ev.y // 'horizontal' or 'both'
-			);
-		}
+		this.start({
+			targetX: (this.direction === 'vertical') ? 0 : this.dragStartX - this.getRtlX(ev.x), // 'horizontal' or 'both'
+			targetY: (this.direction === 'horizontal') ? 0 : this.dragStartY - ev.y, // 'vertical' or 'both'
+			animate: false
+		});
 	}
 
 	onDragEnd = () => {
@@ -524,7 +521,7 @@ class ScrollableBase extends Component {
 		this.flickTarget = this.animator.simulate(
 			this.scrollLeft,
 			this.scrollTop,
-			isVertical ? 0 : -ev.velocityX,
+			isVertical ? 0 : this.getRtlX(-ev.velocityX),
 			isVertical ? -ev.velocityY : 0
 		);
 
