@@ -478,8 +478,54 @@ const log = handle.log = curry((message, ev, ...args) => {
 	return true;
 });
 
+/**
+ * Invokes a method by name on the component to which {@link core/handle.handle} is bound.
+ *
+ * If the methods exists on the object, it is called with the event, props, and context and its
+ * return value is returned.
+ *
+ * If the method does not exist or handle isn't bound to an instance, it returns `false`.
+ *
+ * ```
+ * import {call, handle, forProp} from '@enact/core/handle';
+ *
+ * const incrementIfEnabled = handle(
+ *   forProp('disabled', false),
+ *   call('increment')
+ * );
+ *
+ * class Counter extends React.Component {
+ *   constructor () {
+ *     super();
+ *
+ *     this.handleIncrement = incrementIfEnabled.bind(this);
+ *   }
+ *
+ *   render () {
+ *     // ...
+ *   }
+ * }
+ * ```
+ *
+ * @method   call
+ * @memberof core/handle
+ * @param    {String}     method  Name of method
+ * @returns  {Boolean}            Returns the value returned by `method`, or `false` if the method
+ *                                does not exist
+ */
+const call = function (method) {
+	return function (...args) {
+		if (this && this[method]) {
+			return this[method](...args);
+		}
+
+		return false;
+	};
+};
+
 export default handle;
 export {
+	call,
 	callOnEvent,
 	forward,
 	forwardWithPrevent,
