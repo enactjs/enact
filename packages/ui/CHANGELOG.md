@@ -10,7 +10,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
-- `ui/VirtualList` and `ui/VirtualGridList` prop `component` to be replaced by `itemRenderer`
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
 
 ### Fixed
 
@@ -25,7 +25,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/GridListImageItem` component
 
 ### Changed
-- `ui/VirtualList.VirtualList`, `ui/VirtualList.VirtualGridList`, and `ui/Scroller` components as unstyled base components to support UI libraries
+- `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` components as unstyled base components to support UI libraries
 
 ## [2.0.0-alpha.4] - 2018-02-13
 
