@@ -104,12 +104,12 @@ const ToggleItemBase = kind({
 		/**
 		 * An optional prop that lets you override the icon of the `iconComponent` component.
 		 * This accepts any string that the [Icon]{@link ui/Icon.Icon} component supports, provided
-		 * the recomendations of `iconComponent` are followed.
+		 * the recommendations of `iconComponent` are followed.
 		 *
-		 * @type {String}
+		 * @type {String|Object}
 		 * @public
 		 */
-		icon: PropTypes.string,
+		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
 		 * Specifies on which side (`before` or `after`) of the text the icon appears.
