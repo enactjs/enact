@@ -27,6 +27,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/GridListImageItem` to use `ui/GridListImageItem`
 - `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` components to use their base UI components
 - `moonstone/Slider` to highlight knob when selected
+- `moonstone/Slider` to handle updates to its `value` prop correctly
 
 ## [2.0.0-alpha.5] - 2018-03-07
 
