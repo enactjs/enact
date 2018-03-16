@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 - `core/factory` module replaced by the `css` override feature
 
+### Added
+
+- `core/handle.call` to invoke a named method on a bound handler
+
 ## [2.0.0-alpha.5] - 2018-03-07
 
 ### Removed
