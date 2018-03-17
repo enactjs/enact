@@ -2,7 +2,7 @@ import {Header} from '@enact/moonstone/Panels';
 import SwitchItem from '@enact/moonstone/SwitchItem';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {text} from '@storybook/addon-knobs';
+import {boolean, text} from '@storybook/addon-knobs';
 
 storiesOf('Header', module)
 	.add(
@@ -10,6 +10,7 @@ storiesOf('Header', module)
 		() => (
 			<Header
 				casing="preserve"
+				inputMode={boolean('inputMode', false)}
 				type="compact"
 				title={text('title', 'Title')}
 				titleBelow={text('titleBelow', 'כתוביות למט')}
@@ -21,6 +22,7 @@ storiesOf('Header', module)
 		() => (
 			<Header
 				casing="preserve"
+				inputMode={boolean('inputMode', false)}
 				type="compact"
 				title={text('title', 'Title')}
 				titleBelow={text('titleBelow', 'This is a header sample with long titleBelow text and header components to test positioning of header components.')}
@@ -35,6 +37,7 @@ storiesOf('Header', module)
 		() => (
 			<Header
 				casing="preserve"
+				inputMode={boolean('inputMode', false)}
 				title={text('title', 'Title')}
 				titleBelow={text('titleBelow', 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 				subTitleBelow={text('subTitleBelow', 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}

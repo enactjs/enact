@@ -31,4 +31,29 @@ describe('Header Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it('should have input when inputMode is true', function () {
+		const header = mount(
+			<Header inputMode>
+				<title>Header</title>
+			</Header>
+		);
+
+		const expected = 1;
+		const actual = header.find('input').length;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should render with title as placeholder when inputMode is true', function () {
+		const header = mount(
+			<Header inputMode>
+				<title>Header</title>
+			</Header>
+		);
+
+		const expected = 'Header';
+		const actual = header.find('input').prop('placeholder');
+
+		expect(actual).to.equal(expected);
+	});
 });

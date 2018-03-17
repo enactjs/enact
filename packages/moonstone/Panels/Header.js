@@ -8,6 +8,7 @@ import Slottable from '@enact/ui/Slottable';
 
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
+import Input from '../Input';
 
 import css from './Header.less';
 
@@ -73,6 +74,15 @@ const HeaderBase = kind({
 		 * @public
 		 */
 		fullBleed: PropTypes.bool,
+
+		/**
+		 * When `true`, uses input as title of the header
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		inputMode: PropTypes.bool,
 
 		/**
 		 * Determines what triggers the header content to start its animation. Valid values are
@@ -164,7 +174,7 @@ const HeaderBase = kind({
 		}
 	},
 
-	render: ({casing, children, direction, marqueeOn, preserveCase, subTitleBelowComponent, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+	render: ({casing, children, direction, inputMode, marqueeOn, subTitleBelowComponent, preserveCase, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.fullBleed;
 		delete rest.subTitleBelow;
 		delete rest.titleBelow;
@@ -172,8 +182,9 @@ const HeaderBase = kind({
 		switch (type) {
 			case 'compact': return (
 				<Layout component="header" aria-label={title} {...rest} align="end">
+					{inputMode ? <Input autoFocus className={css.inputTitle} placeholder={title} /> : null}
 					<Cell component={CompactTitle} title={title} titleBelow={titleBelowComponent} marqueeOn={marqueeOn} forceDirection={direction}>
-						<UppercaseH1 casing={casing} className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
+						{inputMode ? null : <UppercaseH1 casing={casing} className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>}
 						{titleBelowComponent}
 					</Cell>
 					<Cell shrink component="nav" className={css.headerComponents}>{children}</Cell>
@@ -191,9 +202,13 @@ const HeaderBase = kind({
 			// );
 			case 'standard': return (
 				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
-					<Cell component={HeaderH1} casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn={marqueeOn}>
-						{title}
-					</Cell>
+					{inputMode ? (
+						<Input autoFocus className={css.inputTitle} placeholder={title} />
+					) : (
+						<Cell component={HeaderH1} casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn={marqueeOn}>
+							{title}
+						</Cell>
+					)}
 					<Cell shrink size={78}>
 						<Layout align="end">
 							<Cell>

@@ -23,12 +23,15 @@
 	// }
 
 	// Remove the built-in h1 and h2 margins
+	.inputTitle,
+	.inputTitle > input,
 	.title,
 	.titleBelow,
 	.subTitleBelow {
 		margin: 0;
 	}
 
+	.inputTitle > input,
 	.title {
 		.moon-header-text();
 	}
@@ -40,6 +43,17 @@
 
 	.subTitleBelow {
 		.moon-header-sub-title-below();
+	}
+
+	.inputTitle {
+		background-color: transparent;
+		padding: 0;
+		border-radius: 0;
+		border: none;
+
+		input {
+			text-indent: 0;
+		}
 	}
 
 	.headerComponents {
@@ -54,10 +68,15 @@
 	&.standard {
 		height: @moon-header-height-medium;
 
+		.inputTitle > input,
 		.title {
 			line-height: @moon-medium-header-line-height;
 
 			.moon-locale-non-latin({line-height: @moon-non-latin-medium-header-line-height;});
+		}
+
+		.inputTitle > input {
+			height: @moon-medium-header-line-height;
 		}
 
 		.titleBelow,
@@ -70,6 +89,7 @@
 	&.compact {
 		height: @moon-header-height-small;
 
+		.inputTitle > input,
 		.title {
 			font-size: @moon-small-header-font-size;
 			display: inline;
@@ -91,6 +111,19 @@
 		color: @moon-header-text-color;
 		border-top-color: @moon-header-border-color;
 		border-bottom-color: @moon-header-bottom-border-color;
+
+		.inputTitle {
+
+			&:focus {
+				color: @moon-header-text-color;
+				border-color: transparent;
+				background-color: transparent;
+			}
+
+			input {
+				color: @moon-header-text-color;
+			}
+		}
 
 		&.fullBleed {
 			border-color: @moon-header-full-bleed-border-color;
