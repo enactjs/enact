@@ -219,6 +219,18 @@ describe('IncrementSlider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it('should set decrementButton "aria-label" to decrementAriaLabel', function () {
+		const label = 'decrement aria label';
+		const incrementSlider = mount(
+			<IncrementSlider value={10} decrementAriaLabel={label} />
+		);
+
+		const expected = `10 ${label}`;
+		const actual = incrementSlider.find(`IconButton.${css.decrementButton}`).prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
 	it('should not set decrementButton "aria-label" when decrementButton is disabled', function () {
 		const incrementSlider = mount(
 			<IncrementSlider disabled value={10} />
@@ -236,6 +248,18 @@ describe('IncrementSlider Specs', () => {
 		);
 
 		const expected = '10 press ok button to increase the value';
+		const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set incrementButton "aria-label" to incrementAriaLabel', function () {
+		const label = 'increment aria label';
+		const incrementSlider = mount(
+			<IncrementSlider value={10} incrementAriaLabel={label} />
+		);
+
+		const expected = `10 ${label}`;
 		const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('aria-label');
 
 		expect(actual).to.equal(expected);

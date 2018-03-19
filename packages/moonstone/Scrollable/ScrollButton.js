@@ -1,7 +1,6 @@
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Toggleable from '@enact/ui/Toggleable';
 
 import $L from '../internal/$L';
 import IconButton from '../IconButton';
@@ -9,27 +8,28 @@ import IconButton from '../IconButton';
 import css from './Scrollbar.less';
 
 const classNameMap = {
-	up: css.scrollbarUpButton,
 	down: css.scrollbarBottomButton,
 	left: css.scrollbarLeftButton,
-	right: css.scrollbarRightButton
+	right: css.scrollbarRightButton,
+	up: css.scrollbarUpButton
 };
 
 /**
- * {@link moonstone/Scroller.ScrollButtonBase} is the base implementation for
- * {@link moonstone/Scroller.ScrollButton}.
+ * An [IconButton]{@link moonstone/IconButton.IconButton} used within
+ * a [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
  *
- * @class ScrollButtonBase
- * @memberof moonstone/Scroller
+ * @class ScrollButton
+ * @memberof moonstone/Scrollable
+ * @extends moonstone/IconButton.IconButton
  * @ui
  * @private
  */
-const ScrollButtonBase = kind({
+const ScrollButton = kind({
 	name: 'ScrollButton',
 
-	propTypes: /** @lends moonstone/Scroller.ScrollButtonBase.prototype */ {
+	propTypes: /** @lends moonstone/Scrollable.ScrollButton.prototype */ {
 		/**
-		 * Name of icon
+		 * Name of icon.
 		 *
 		 * @type {String}
 		 * @public
@@ -37,7 +37,13 @@ const ScrollButtonBase = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * Scroll direction for this button (down, left, right, or up)
+		 * Scroll direction for this button.
+		 *
+		 * Valid values are:
+		 * * `'down'`,
+		 * * `'left'`,
+		 * * `'right'`, and
+		 * * `'up'`.
 		 *
 		 * @type {String}
 		 * @public
@@ -54,7 +60,7 @@ const ScrollButtonBase = kind({
 		active: PropTypes.bool,
 
 		/**
-		 * When `true`, the component is shown as disabled and does not generate `onClick`
+		 * When `true`, the component is shown as disabled and does not generate `onClick`.
 		 * [events]{@glossary event}.
 		 *
 		 * @type {Boolean}
@@ -70,7 +76,7 @@ const ScrollButtonBase = kind({
 
 	computed: {
 		'aria-label': ({active, direction}) => {
-			if (!active) {
+			if (active) {
 				return null;
 			}
 
@@ -105,23 +111,7 @@ const ScrollButtonBase = kind({
 	}
 });
 
-
-/**
- * {@link moonstone/Scroller.ScrollButton} is an {@link moonstone/IconButton.IconButton} used within
- * a {@link moonstone/Scroller.Scrollbar}.
- *
- * @class ScrollButton
- * @memberof moonstone/Scroller
- * @ui
- * @private
- */
-const ScrollButton = Toggleable(
-	{activate: 'onFocus', deactivate: 'onBlur', toggle: null},
-	ScrollButtonBase
-);
-
 export default ScrollButton;
 export {
-	ScrollButton,
-	ScrollButtonBase
+	ScrollButton
 };
