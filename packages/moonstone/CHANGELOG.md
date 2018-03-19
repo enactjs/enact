@@ -20,6 +20,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/FormCheckbox` to have a small border around the circle, according to new GUI designs
 - `moonstone/RadioItem` dot size and added an inner-dot to selected-focused state, according to new GUI designs
 
+### Changed
+
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
+
 ### Fixed
 
 - `moonstone/ExpandableItem` to be more performant when animating

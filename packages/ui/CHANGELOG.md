@@ -12,6 +12,11 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Scrollable` support for scrolling by touch
 
+### Changed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
+
+
 ### Fixed
 
 - `ui/Transition` animation for `clip` for "up", "left", and "right" directions. This includes a DOM addition to the Transition markup.
