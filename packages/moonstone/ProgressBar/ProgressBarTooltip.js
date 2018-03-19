@@ -8,18 +8,19 @@ import Tooltip from './Tooltip';
 import css from './ProgressBarTooltip.less';
 
 /**
- * {@link moonstone/TooltipDecorator.ProgressBarTooltip} is a stateless Tooltip specifically for
- * Progress Bar and Slider.
+ * A {@link moonstone/TooltipDecorator.Tooltip} specifically adapted for use with
+ * {@link moonstone/IncrementSlider.IncrementSlider}, {@link moonstone/ProgressBar.ProgressBar},
+ * or {@link moonstone/Slider.Slider}.
  *
  * @class ProgressBarTooltip
- * @memberof moonstone/TooltipDecorator
+ * @memberof moonstone/ProgressBar
  * @ui
  * @public
  */
 const ProgressBarTooltipBase = kind({
 	name: 'ProgressBarTooltip',
 
-	propTypes: /** @lends moonstone/TooltipDecorator.ProgressBarTooltip.prototype */{
+	propTypes: /** @lends moonstone/ProgressBar.ProgressBarTooltip.prototype */{
 		/**
 		 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale changes
 		 * for `vertical` progress bars/sliders. This may be useful if you have a static layout that does not

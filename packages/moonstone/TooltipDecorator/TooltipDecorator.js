@@ -17,7 +17,6 @@ import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
 
 import {Tooltip, TooltipBase} from './Tooltip';
-import {ProgressBarTooltip, ProgressBarTooltipBase} from './ProgressBarTooltip';
 
 let currentTooltip; // needed to know whether or not we should stop a showing job when unmounting
 
@@ -470,4 +469,4 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default TooltipDecorator;
-export {ProgressBarTooltip, ProgressBarTooltipBase, TooltipDecorator, Tooltip, TooltipBase};
+export {TooltipDecorator, Tooltip, TooltipBase};

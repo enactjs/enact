@@ -18,7 +18,7 @@ import React from 'react';
 
 import InternalSliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
-import {ProgressBarTooltip} from '../TooltipDecorator';
+import {ProgressBarTooltip} from '../ProgressBar';
 import Skinnable from '../Skinnable';
 
 import SliderBar from './SliderBar';
@@ -512,9 +512,23 @@ const SliderDecorator = compose(
  */
 const Slider = SliderDecorator(SliderBase);
 
+/**
+ * A {@link moonstone/TooltipDecorator.Tooltip} specifically adapted for use with
+ * {@link moonstone/IncrementSlider.IncrementSlider}, {@link moonstone/ProgressBar.ProgressBar},
+ * or {@link moonstone/Slider.Slider}.
+ *
+ * See {@link moonstone/ProgressBar.ProgressBarTooltip}
+ *
+ * @class SliderTooltip
+ * @memberof moonstone/Slider
+ * @ui
+ * @public
+ */
+
 export default Slider;
 export {
 	Slider,
 	SliderBase,
-	SliderDecorator
+	SliderDecorator,
+	ProgressBarTooltip as SliderTooltip
 };

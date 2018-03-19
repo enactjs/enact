@@ -17,6 +17,7 @@ import React from 'react';
 import IdProvider from '../internal/IdProvider';
 import $L from '../internal/$L';
 import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator';
+import {ProgressBarTooltip} from '../ProgressBar';
 import Skinnable from '../Skinnable';
 import {SliderBase} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
@@ -674,9 +675,23 @@ const IncrementSliderDecorator = compose(
  */
 const IncrementSlider = IncrementSliderDecorator(IncrementSliderBase);
 
+/**
+ * A {@link moonstone/TooltipDecorator.Tooltip} specifically adapted for use with
+ * {@link moonstone/IncrementSlider.IncrementSlider}, {@link moonstone/ProgressBar.ProgressBar},
+ * or {@link moonstone/Slider.Slider}.
+ *
+ * See {@link moonstone/ProgressBar.ProgressBarTooltip}
+ *
+ * @class IncrementSliderTooltip
+ * @memberof moonstone/IncrementSlider
+ * @ui
+ * @public
+ */
+
 export default IncrementSlider;
 export {
 	IncrementSlider,
 	IncrementSliderBase,
-	IncrementSliderDecorator
+	IncrementSliderDecorator,
+	ProgressBarTooltip as IncrementSliderTooltip
 };
