@@ -4,7 +4,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
-### Deprecated
+### Removed
 
 - `spotlight/SpotlightContainerDecorator` prop `containerId`, to be replaced by `spotlightId`
 

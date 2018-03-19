@@ -7,7 +7,6 @@
  * @module spotlight/SpotlightContainerDecorator
  */
 
-import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
@@ -24,25 +23,6 @@ import Spotlight from '../src/spotlight';
 const spotlightDefaultClass = 'spottable-default';
 const enterEvent = 'onMouseEnter';
 const leaveEvent = 'onMouseLeave';
-
-const getDeprecatedProp = (prop, config) => {
-	const getter = deprecate((props) => props[prop], config);
-
-	return (props) => {
-		if (prop in props) {
-			return getter(prop);
-		}
-	};
-};
-
-const getContainerId = getDeprecatedProp('containerId', {
-	name: 'containerId',
-	since: '2.0.0',
-	until: '3.0.0',
-	replacedBy: 'spotlightId'
-});
-
-const getSpotlightId = (props) => props.spotlightId || getContainerId(props);
 
 /**
  * Default config for {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
@@ -141,15 +121,6 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.prototype */ {
 			/**
-			 * Specifies the container id. If the value is `null`, an id will be generated.
-			 *
-			 * @type {String}
-			 * @deprecated Since 2.0. Replaced by spotlightId
-			 * @public
-			 */
-			containerId: PropTypes.string,
-
-			/**
 			 * When `true`, controls in the container cannot be navigated.
 			 *
 			 * @type {Boolean}
@@ -200,7 +171,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			const id = getSpotlightId(props);
+			const id = props.spotlightId;
 			this.state = {
 				id: Spotlight.add(id)
 			};
@@ -220,9 +191,9 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const prevId = getSpotlightId(this.props);
+			const prevId = this.props.spotlightId;
 
-			let id = getSpotlightId(nextProps);
+			let id = nextProps.spotlightId;
 			if (prevId !== id) {
 				Spotlight.remove(prevId);
 				id = Spotlight.add(id);
