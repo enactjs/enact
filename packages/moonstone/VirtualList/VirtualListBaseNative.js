@@ -47,6 +47,12 @@ const gridListItemSizeShape = PropTypes.shape({
 	minHeight: PropTypes.number.isRequired
 });
 
+// utility to only warn once per app for component deprecation
+const deprecateComponent = deprecate(
+	() => {},
+	{name: 'component', replacedBy: 'itemRenderer', until: '2.0.0'}
+);
+
 /**
  * {@link moonstone/VirtualList.VirtualListBaseNative} is a base component for
  * {@link moonstone/VirtualList.VirtualList} and
@@ -638,7 +644,7 @@ class VirtualListCoreNative extends Component {
 			}),
 			style = {};
 
-		deprecate({name: 'component', replacedBy: 'itemRenderer', until: '2.0.0'});
+		deprecateComponent();
 
 		this.composeStyle(style, ...rest);
 
