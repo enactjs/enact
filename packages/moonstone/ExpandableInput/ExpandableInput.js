@@ -306,6 +306,7 @@ class ExpandableInputBase extends React.Component {
 				label={this.calcLabel()}
 				onMouseDown={this.handleDown}
 				onMouseLeave={this.handleUp}
+				onMouseUp={this.handleUp}
 				open={open}
 				showLabel={type === 'password' ? 'never' : 'auto'}
 				spotlightDisabled={spotlightDisabled}
