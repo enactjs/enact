@@ -158,10 +158,6 @@ class Media extends React.Component {
 		this.media = node;
 	}
 
-	getNode () {
-		return this.media;
-	}
-
 	play () {
 		this.media.play();
 	}
