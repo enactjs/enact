@@ -76,7 +76,26 @@ const HeaderBase = kind({
 		fullBleed: PropTypes.bool,
 
 		/**
-		 * When `true`, uses input as title of the header
+		 * When `true`, focusing title directly via 5-way will forward the focus onto the <input> when `inputMode` is `true`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		inputAutoFocus: PropTypes.bool,
+
+		/**
+		 * When `true`, blurs the input when the "enter" key is pressed when `inputMode` is `true`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		inputDismissOnEnter: PropTypes.bool,
+
+		/**
+		 * When `true`, uses input as the title only in type `standard`.
+		 * There is no effect on type `compact`
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -174,7 +193,7 @@ const HeaderBase = kind({
 		}
 	},
 
-	render: ({casing, children, direction, inputMode, marqueeOn, subTitleBelowComponent, preserveCase, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+	render: ({casing, children, direction, inputAutoFocus, inputDismissOnEnter, inputMode, marqueeOn, subTitleBelowComponent, preserveCase, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.fullBleed;
 		delete rest.subTitleBelow;
 		delete rest.titleBelow;
@@ -182,9 +201,8 @@ const HeaderBase = kind({
 		switch (type) {
 			case 'compact': return (
 				<Layout component="header" aria-label={title} {...rest} align="end">
-					{inputMode ? <Input autoFocus className={css.inputTitle} placeholder={title} /> : null}
 					<Cell component={CompactTitle} title={title} titleBelow={titleBelowComponent} marqueeOn={marqueeOn} forceDirection={direction}>
-						{inputMode ? null : <UppercaseH1 casing={casing} className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>}
+						<UppercaseH1 casing={casing} className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
 						{titleBelowComponent}
 					</Cell>
 					<Cell shrink component="nav" className={css.headerComponents}>{children}</Cell>
@@ -203,7 +221,7 @@ const HeaderBase = kind({
 			case 'standard': return (
 				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
 					{inputMode ? (
-						<Input autoFocus className={css.inputTitle} placeholder={title} />
+						<Input autoFocus={inputAutoFocus} dismissOnEnter={inputDismissOnEnter} className={css.inputTitle} placeholder={title} />
 					) : (
 						<Cell component={HeaderH1} casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn={marqueeOn}>
 							{title}

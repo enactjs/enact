@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/IncrementSlider` properties `incrementAriaLabel` and `decrementAriaLabel` to configure the label set on each button
 - `moonstone/Input` support for `small` prop
+- `moonstone/Panels.Header` support for `inputMode`, `inputAutoFocus`, and `inputDismissOnEnter` props
 
 ### Changed
 
