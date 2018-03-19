@@ -95,7 +95,8 @@ class Drag {
 
 				if (onDragStart) {
 					onDragStart({
-						type: 'onDragStart'
+						type: 'onDragStart',
+						...coords
 					});
 				}
 			}

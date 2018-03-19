@@ -53,7 +53,7 @@ class VirtualListBaseNative extends Component {
 		 * @type {Function}
 		 * @public
 		 */
-		component: PropTypes.func.isRequired,
+		itemRenderer: PropTypes.func.isRequired,
 
 		/**
 		 * Size of an item for the list; valid values are either a number for `VirtualList`
@@ -98,7 +98,7 @@ class VirtualListBaseNative extends Component {
 		}),
 
 		/**
-		 * Data for passing it through `component` prop.
+		 * Data for passing it through `itemRenderer` prop.
 		 * NOTICE: For performance reason, changing this prop does NOT always cause the list to
 		 * redraw its items.
 		 *
@@ -555,10 +555,10 @@ class VirtualListBaseNative extends Component {
 
 	applyStyleToNewNode = (index, ...rest) => {
 		const
-			{component, getComponentProps, data} = this.props,
+			{itemRenderer, getComponentProps, data} = this.props,
 			{numOfItems} = this.state,
 			key = index % numOfItems,
-			itemElement = component({
+			itemElement = itemRenderer({
 				data,
 				index,
 				key
@@ -710,19 +710,25 @@ class VirtualListBaseNative extends Component {
 		}
 	}
 
+	initItemContainerRef = (ref) => {
+		if (ref) {
+			this.itemContainerRef = ref;
+		}
+	}
+
 	render () {
 		const
 			{className, itemsRenderer, style, ...rest} = this.props,
-			{cc, primary} = this,
+			{cc, initItemContainerRef, primary} = this,
 			mergedClasses = classNames(css.list, this.containerClass, className);
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
-		delete rest.component;
 		delete rest.data;
 		delete rest.dataSize;
 		delete rest.direction;
 		delete rest.getComponentProps;
+		delete rest.itemRenderer;
 		delete rest.itemSize;
 		delete rest.overhang;
 		delete rest.pageScroll;
@@ -737,7 +743,7 @@ class VirtualListBaseNative extends Component {
 		return (
 			<div className={mergedClasses} ref={this.initContainerRef} style={style}>
 				<div {...rest} ref={this.initContentRef}>
-					{itemsRenderer({cc, primary})}
+					{itemsRenderer({cc, initItemContainerRef, primary})}
 				</div>
 			</div>
 		);
@@ -747,10 +753,13 @@ class VirtualListBaseNative extends Component {
 const ScrollableVirtualListNative = (props) => (
 	<ScrollableNative
 		{...props}
-		childRenderer={(virtualListProps) => (// eslint-disable-line react/jsx-no-bind
+		childRenderer={({initUiChildRef, ...virtualListProps}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...virtualListProps}
-				itemsRenderer={({cc}) => (cc.length ? cc : null)} // eslint-disable-line react/jsx-no-bind
+				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
+				)}
+				ref={initUiChildRef}
 			/>
 		)}
 	/>
