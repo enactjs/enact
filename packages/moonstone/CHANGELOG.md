@@ -4,14 +4,21 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Added
-
-- `moonstone/IncrementSlider` properties `incrementAriaLabel` and `decrementAriaLabel` to configure the label set on each button
-
 ### Removed
 
 - `moonstone/Slider` exports `SliderFactory` and `SliderBaseFactory`
 - `moonstone/IncrementSlider` exports `IncrementSliderFactory` and `IncrementSliderBaseFactory`
+
+### Added
+
+- `moonstone/IncrementSlider` properties `incrementAriaLabel` and `decrementAriaLabel` to configure the label set on each button
+- `moonstone/Input` support for `small` prop
+
+### Changed
+
+- `moonstone/Input` input `height`, `vertical-align`, and `margins`. Please verify your layouts to ensure everything lines up correctly; this change may require removal of old sizing and positioning CSS which is no longer necessary.
+- `moonstone/FormCheckbox` to have a small border around the circle, according to new GUI designs
+- `moonstone/RadioItem` dot size and added an inner-dot to selected-focused state, according to new GUI designs
 
 ### Fixed
 
@@ -19,7 +26,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/GridListImageItem` to hide overlay checkmark icon on focus when unselected
 - `moonstone/GridListImageItem` to use `ui/GridListImageItem`
 - `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` components to use their base UI components
+- `moonstone/VirtualList` to show the selected state on hovered paging controls properly
 - `moonstone/Slider` to highlight knob when selected
+- `moonstone/Slider` to handle updates to its `value` prop correctly
 
 ## [2.0.0-alpha.5] - 2018-03-07
 

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import Touchable from '@enact/ui/Touchable';
 
 import Scrollbar from './Scrollbar';
 
@@ -22,6 +23,8 @@ const
 		right: 'left',
 		up: 'down'
 	};
+
+const TouchableDiv = Touchable('div');
 
 const navigableFilter = (elem) => {
 	if (
@@ -190,9 +193,9 @@ class ScrollableBaseNative extends Component {
 			ev.preventDefault();
 			const direction = Math.sign(delta);
 			// Not to accumulate scroll position if wheel direction is different from hold direction
-			if (direction !== this.uiRef.pageDirection) {
+			if (direction !== this.uiRef.wheelDirection) {
 				this.uiRef.isScrollAnimationTargetAccumulated = false;
-				this.uiRef.pageDirection = direction;
+				this.uiRef.wheelDirection = direction;
 			}
 			this.uiRef.scrollToAccumulatedTarget(delta, canScrollVertically);
 		}
@@ -378,9 +381,9 @@ class ScrollableBaseNative extends Component {
 			delta = isPreviousScrollButton ? -pageDistance : pageDistance,
 			direction = Math.sign(delta);
 
-		if (direction !== this.uiRef.pageDirection) {
+		if (direction !== this.uiRef.wheelDirection) {
 			this.uiRef.isScrollAnimationTargetAccumulated = false;
-			this.uiRef.pageDirection = direction;
+			this.uiRef.wheelDirection = direction;
 		}
 
 		this.uiRef.scrollToAccumulatedTarget(delta, isVerticalScrollBar);
@@ -449,24 +452,20 @@ class ScrollableBaseNative extends Component {
 		this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 	}
 
+	// FIXME setting event handlers directly to work on the V8 snapshot.
 	addEventListeners = (childContainerRef) => {
 		if (childContainerRef && childContainerRef.addEventListener) {
-			// FIXME `onMouseOver` doesn't work on the v8 snapshot.
 			childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
-			// FIXME `onMouseMove` doesn't work on the v8 snapshot.
 			childContainerRef.addEventListener('mousemove', this.onMouseMove, {capture: true});
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			childContainerRef.addEventListener('focusin', this.onFocus);
 		}
 	}
 
+	// FIXME setting event handlers directly to work on the V8 snapshot.
 	removeEventListeners = (childContainerRef) => {
 		if (childContainerRef && childContainerRef.removeEventListener) {
-			// FIXME `onMouseOver` doesn't work on the v8 snapshot.
 			childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
-			// FIXME `onMouseMove` doesn't work on the v8 snapshot.
 			childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			childContainerRef.removeEventListener('focusin', this.onFocus);
 		}
 	}
@@ -511,6 +510,7 @@ class ScrollableBaseNative extends Component {
 					isVerticalScrollbarVisible,
 					scrollTo,
 					style,
+					touchableProps,
 					verticalScrollbarProps
 				}) => (
 					<div
@@ -520,14 +520,16 @@ class ScrollableBaseNative extends Component {
 						style={style}
 					>
 						<div className={componentCss.container}>
-							{childRenderer({
-								...childComponentProps,
-								cbScrollTo: scrollTo,
-								className: componentCss.content,
-								containerId,
-								initUiChildRef,
-								ref: this.initChildRef
-							})}
+							<TouchableDiv {...touchableProps}>
+								{childRenderer({
+									...childComponentProps,
+									cbScrollTo: scrollTo,
+									className: componentCss.scrollableFill,
+									containerId,
+									initUiChildRef,
+									ref: this.initChildRef
+								})}
+							</TouchableDiv>
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
 						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} {...this.scrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
