@@ -95,7 +95,7 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					}
 
 					if (!focused) {
-						Spotlight.focus(contents.dataset.containerId);
+						Spotlight.focus(contents.dataset.spotlightId);
 					}
 				}
 			}

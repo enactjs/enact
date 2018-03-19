@@ -47,7 +47,7 @@ const
 		preserveId: true,
 		restrict: 'self-first'
 	},
-	dataContainerDisabledAttribute = 'data-container-disabled',
+	dataContainerDisabledAttribute = 'data-spotlight-container-disabled',
 	isDown = is('down'),
 	isLeft = is('left'),
 	isRight = is('right'),
@@ -108,7 +108,7 @@ const VirtualListBaseFactory = (type) => {
 			 * @type {String}
 			 * @private
 			 */
-			'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types,
+			'data-spotlight-id': PropTypes.string, // eslint-disable-line react/sort-prop-types,
 
 			/**
 			 * Passes the instance of [VirtualList]{@link ui/VirtualList.VirtualList}.
@@ -361,7 +361,7 @@ const VirtualListBaseFactory = (type) => {
 		 */
 
 		setRestrict = (bool) => {
-			Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
+			Spotlight.set(this.props['data-spotlight-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
 		}
 
 		setSpotlightContainerRestrict = (keyCode, target) => {
@@ -580,9 +580,9 @@ const VirtualListBaseFactory = (type) => {
 				!this.isPlaceholderFocused()
 			) {
 				const
-					containerId = this.props['data-container-id'],
+					containerId = this.props['data-spotlight-id'],
 					node = this.uiRef.containerRef.querySelector(
-						`[data-container-id="${containerId}"] [data-index="${this.preservedIndex}"]`
+						`[data-spotlight-id="${containerId}"] [data-index="${this.preservedIndex}"]`
 					);
 
 				if (node) {

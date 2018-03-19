@@ -32,12 +32,12 @@
 
 // Muted elements
 .muted(@rules; @target) when (isruleset(@rules)) and (@target = parent) {
-	[data-container-muted="true"] {
+	[data-spotlight-container-muted="true"] {
 		@rules();
 	}
 }
 .muted(@rules) when (isruleset(@rules)) {
-	&[data-container-muted="true"] {
+	&[data-spotlight-container-muted="true"] {
 		@rules();
 	}
 }
