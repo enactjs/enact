@@ -8,6 +8,7 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
@@ -45,6 +46,12 @@ const gridListItemSizeShape = PropTypes.shape({
 	minWidth: PropTypes.number.isRequired,
 	minHeight: PropTypes.number.isRequired
 });
+
+// utility to only warn once per app for component deprecation
+const deprecateComponent = deprecate(
+	() => {},
+	{name: 'component', replacedBy: 'itemRenderer', until: '2.0.0'}
+);
 
 /**
  * {@link moonstone/VirtualList.VirtualListBaseNative} is a base component for
@@ -87,6 +94,7 @@ class VirtualListCoreNative extends Component {
 		 * ```
 		 *
 		 * @type {Function}
+		 * @deprecated will be replaced by `itemRenderer` in 2.0.0
 		 * @public
 		 */
 		component: PropTypes.func.isRequired,
@@ -635,6 +643,8 @@ class VirtualListCoreNative extends Component {
 				key
 			}),
 			style = {};
+
+		deprecateComponent();
 
 		this.composeStyle(style, ...rest);
 
