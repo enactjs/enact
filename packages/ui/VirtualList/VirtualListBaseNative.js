@@ -710,10 +710,16 @@ class VirtualListBaseNative extends Component {
 		}
 	}
 
+	initItemContainerRef = (ref) => {
+		if (ref) {
+			this.itemContainerRef = ref;
+		}
+	}
+
 	render () {
 		const
 			{className, itemsRenderer, style, ...rest} = this.props,
-			{cc, primary} = this,
+			{cc, initItemContainerRef, primary} = this,
 			mergedClasses = classNames(css.list, this.containerClass, className);
 
 		delete rest.cbScrollTo;
@@ -737,7 +743,7 @@ class VirtualListBaseNative extends Component {
 		return (
 			<div className={mergedClasses} ref={this.initContainerRef} style={style}>
 				<div {...rest} ref={this.initContentRef}>
-					{itemsRenderer({cc, primary})}
+					{itemsRenderer({cc, initItemContainerRef, primary})}
 				</div>
 			</div>
 		);
@@ -747,10 +753,13 @@ class VirtualListBaseNative extends Component {
 const ScrollableVirtualListNative = (props) => (
 	<ScrollableNative
 		{...props}
-		childRenderer={(virtualListProps) => (// eslint-disable-line react/jsx-no-bind
+		childRenderer={({initUiChildRef, ...virtualListProps}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...virtualListProps}
-				itemsRenderer={({cc}) => (cc.length ? cc : null)} // eslint-disable-line react/jsx-no-bind
+				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
+				)}
+				ref={initUiChildRef}
 			/>
 		)}
 	/>

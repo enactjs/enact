@@ -708,11 +708,17 @@ class VirtualListBase extends Component {
 		}
 	}
 
+	initItemContainerRef = (ref) => {
+		if (ref) {
+			this.itemContainerRef = ref;
+		}
+	}
+
 	render () {
 		const
 			{itemsRenderer, ...rest} = this.props,
 			{firstIndex, numOfItems} = this.state,
-			{cc, primary} = this;
+			{cc, initItemContainerRef, primary} = this;
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
@@ -734,13 +740,7 @@ class VirtualListBase extends Component {
 
 		return (
 			<div {...rest} ref={this.initContainerRef}>
-				{itemsRenderer({
-					cc,
-					initItemContainerRef: (ref) => { // eslint-disable-line react/jsx-no-bind
-						this.itemContainerRef = ref;
-					},
-					primary
-				})}
+				{itemsRenderer({cc, initItemContainerRef, primary})}
 			</div>
 		);
 	}
@@ -749,12 +749,13 @@ class VirtualListBase extends Component {
 const ScrollableVirtualList = (props) => (
 	<Scrollable
 		{...props}
-		childRenderer={(virtualListProps) => (// eslint-disable-line react/jsx-no-bind
+		childRenderer={({initUiChildRef, ...virtualListProps}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
 				{...virtualListProps}
 				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
 					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
 				)}
+				ref={initUiChildRef}
 			/>
 		)}
 	/>
