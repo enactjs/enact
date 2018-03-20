@@ -556,7 +556,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		/**
 		 * Any children `<source>` tag elements of [VideoPlayer]{@link moonstone/VideoPlayer} will
-		 * be sent directly to the `<video>` element as video sources.
+		 * be sent directly to the `videoComponent` as video sources.
 		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
 		 *
 		 * @type {Node}
@@ -632,23 +632,28 @@ const VideoPlayerBase = class extends React.Component {
 		tooltipHideDelay: PropTypes.number,
 
 		/**
-		 * A type of video component. By default we use `<video>`, an HTMLVideoElement, and expects
-		 * other custom video components to have a similar API structure.
+		 * Video component to use. The default (`'video'`) renders an `HTMLVideoElement`. Custom
+		 * video components must have a similar API structure, exposing the following APIs:
 		 *
-		 * Note: If you desire to use a custom video component, you MUST provide the following APIs:
+		 * Properties:
+		 * * `currentTime` {Number} - Playback index of the media in seconds
+		 * * `duration` {Number} - Media's entire duration in seconds
+		 * * `error` {Boolean} - `true` if video playback has errored.
+		 * * `loading` {Boolean} - `true` if video playback is loading.
+		 * * `paused` {Boolean} - Playing vs paused state. `true` means the media is paused
+		 * * `playbackRate` {Number} - Current playback rate, as a number
+		 * * `proportionLoaded` {Number} - A value between `0` and `1`
+		 *	representing the proportion of the media that has loaded
+		 * * `proportionPlayed` {Number} - A value between `0` and `1` representing the
+		 *	proportion of the media that has already been shown
 		 *
-		 * {Number} currentTime - Playback index of the media in seconds
-		 * {Number} duration - Media's entire duration in seconds
-		 * {Boolean} error - True if video playback has errored.
-		 * {Boolean} loading - True if video playback is loading.
-		 * {Boolean} paused - Playing vs paused state. `true` means the media is paused
-		 * {Number} playbackRate - Current playback rate, as a number
-		 * {Number} proportionLoaded - A value between `0` and `1` representing the proportion of the media that has loaded
-		 * {Number} proportionPlayed - A value between `0` and `1` representing the proportion of the media that has already been shown
+		 * Methods:
+		 * * `play()` - play video
+		 * * `pause()` - pause video
+		 * * `load()` - load video
 		 *
-		 * play() - plays a video
-		 * pause() - pauses a video
-		 * load() - loads a video
+		 * The [`source`]{@link moonstone/VideoPlayer.VideoPlayerBase.source} property is passed to the video
+		 * component as a child node.
 		 *
 		 * @type {Component}
 		 * @default 'video'
