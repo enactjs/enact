@@ -177,6 +177,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 *
 			 * @type {String}
 			 * @public
+			 * @default 'horizontal'
 			 */
 			orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 

@@ -234,6 +234,7 @@ const SliderBase = kind({
 		 * down. Must be either `'horizontal'` or `'vertical'`.
 		 *
 		 * @type {String}
+		 * @default 'horizontal'
 		 * @public
 		 */
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
