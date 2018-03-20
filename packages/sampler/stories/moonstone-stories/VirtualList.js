@@ -2,7 +2,7 @@ import Item from '@enact/moonstone/Item';
 import {VirtualList as UiVirtualList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
-import React from 'react';
+import React, {Component} from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {boolean, number} from '@storybook/addon-knobs';
@@ -13,27 +13,58 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBase, UiVirtualListBase);
 
+window.items = [];
+
 const
-	items = [],
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderItem = (size) => ({data, index, ...rest}) => {
+	renderItem = ({data, index, ...rest}) => {
 		const itemStyle = {
-			height: size + 'px',
+			height: ri.scale(number('itemSize', 72)) + 'px',
 			borderBottom: ri.unit(3, 'rem') + ' solid #202328',
 			boxSizing: 'border-box'
 		};
 
 		return (
 			<Item {...rest} style={itemStyle}>
-				{data[index]}
+				{window.items[index]}
 			</Item>
 		);
 	};
 
 for (let i = 0; i < 1000; i++) {
-	items.push('Item ' + ('00' + i).slice(-3));
+	window.items.push('Item ' + ('00' + i).slice(-3));
 }
 
+class App extends Component {
+	constructor () {
+		super();
+
+		this.cnt = 0;
+
+		setInterval(() => {
+			window.items[2] = '' + this.cnt++;
+			this.forceUpdate();
+		}, 1000);
+	}
+	render () {
+		const itemSize = ri.scale(number('itemSize', 72));
+
+		return (
+			<UiVirtualList
+				component={renderItem}
+				data={window.items}
+				dataSize={number('dataSize', window.items.length)}
+				itemSize={itemSize}
+				onScrollStart={action('onScrollStart')}
+				onScrollStop={action('onScrollStop')}
+				spacing={ri.scale(number('spacing', 0))}
+				style={{
+					height: ri.unit(552, 'rem')
+				}}
+			/>
+		);
+	}
+}
 storiesOf('UI', module)
 	.add(
 		'VirtualList',
@@ -41,21 +72,7 @@ storiesOf('UI', module)
 			propTables: [Config],
 			text: 'Basic usage of VirtualList'
 		})(() => {
-			const itemSize = ri.scale(number('itemSize', 72));
-			return (
-				<UiVirtualList
-					component={renderItem(itemSize)}
-					data={items}
-					dataSize={number('dataSize', items.length)}
-					itemSize={itemSize}
-					onScrollStart={action('onScrollStart')}
-					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', 0))}
-					style={{
-						height: ri.unit(552, 'rem')
-					}}
-				/>
-			);
+			return <App />;
 		})
 	);
 
@@ -66,21 +83,6 @@ storiesOf('Moonstone', module)
 			propTables: [Config],
 			text: 'Basic usage of VirtualList'
 		})(() => {
-			const itemSize = ri.scale(number('itemSize', 72));
-			return (
-				<VirtualList
-					component={renderItem(itemSize)}
-					data={items}
-					dataSize={number('dataSize', items.length)}
-					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
-					itemSize={itemSize}
-					onScrollStart={action('onScrollStart')}
-					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', 0))}
-					style={{
-						height: ri.unit(552, 'rem')
-					}}
-				/>
-			);
+			return <App />;
 		})
 	);
