@@ -16,6 +16,7 @@ import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
+import ri from '@enact/ui/resolution';
 
 import Skinnable from '../Skinnable';
 import {ProgressBarTooltip} from './ProgressBarTooltip';
@@ -100,15 +101,15 @@ const ProgressBarBase = kind({
 				const percentageText = `${progressPercentage}%`;
 				const tooltipVerticalPosition = {
 					top: `${100 - progressPercentage}%`,
-					right: tooltipForceSide ? 'auto' : '-1.5rem',
-					left: tooltipForceSide ? '3rem' : null
+					right: tooltipForceSide ? 'auto' : ri.unit(-36, 'rem'),
+					left: tooltipForceSide ? ri.unit(72, 'rem') : null
 				};
 				const tooltipHorizontalPosition = progressAfterMidpoint ? {
 					right: `${100 - progressPercentage}%`,
-					bottom: '1rem'
+					bottom: ri.unit(24, 'rem')
 				} : {
 					left: percentageText,
-					bottom: '1rem'
+					bottom: ri.unit(24, 'rem')
 				};
 
 				const tooltipPosition = vertical ? tooltipVerticalPosition : tooltipHorizontalPosition;
