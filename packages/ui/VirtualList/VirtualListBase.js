@@ -38,16 +38,10 @@ class VirtualListBase extends Component {
 	static propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 		/**
 		 * The `render` function for an item of the list receives the following parameters:
-		 * - `data` is for accessing the supplied `data` property of the list.
-		 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
-		 * is parameters due to performance optimizations.
-		 *
 		 * @param {Object} event
 		 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
 		 * @param {Number} event.index The index number of the componet to render
 		 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
-		 *
-		 * Data manipulation can be done in this function.
 		 *
 		 * > NOTE: The list does NOT always render a component whenever its render function is called
 		 * due to performance optimization.
@@ -55,8 +49,6 @@ class VirtualListBase extends Component {
 		 * Usage:
 		 * ```
 		 * renderItem = ({index, ...rest}) => {
-		 *		delete rest.data;
-		 *
 		 *		return (
 		 *			<MyComponent index={index} {...rest} />
 		 *		);
@@ -109,17 +101,6 @@ class VirtualListBase extends Component {
 			clientWidth: PropTypes.number.isRequired,
 			clientHeight: PropTypes.number.isRequired
 		}),
-
-		/**
-		 * Data for passing it through `itemRenderer` prop.
-		 * NOTICE: For performance reason, changing this prop does NOT always cause the list to
-		 * redraw its items.
-		 *
-		 * @type {Any}
-		 * @default []
-		 * @public
-		 */
-		data: PropTypes.any,
 
 		/**
 		 * Size of the data.
@@ -199,7 +180,6 @@ class VirtualListBase extends Component {
 
 	static defaultProps = {
 		cbScrollTo: nop,
-		data: [],
 		dataSize: 0,
 		direction: 'vertical',
 		overhang: 3,
@@ -578,11 +558,10 @@ class VirtualListBase extends Component {
 
 	applyStyleToNewNode = (index, ...rest) => {
 		const
-			{itemRenderer, getComponentProps, data} = this.props,
+			{itemRenderer, getComponentProps} = this.props,
 			{numOfItems} = this.state,
 			key = index % numOfItems,
 			itemElement = itemRenderer({
-				data,
 				index,
 				key
 			}),
@@ -722,7 +701,6 @@ class VirtualListBase extends Component {
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
-		delete rest.data;
 		delete rest.dataSize;
 		delete rest.direction;
 		delete rest.getComponentProps;

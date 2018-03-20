@@ -15,7 +15,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Changed
 
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
-
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `data` to be removed
 
 ### Fixed
 

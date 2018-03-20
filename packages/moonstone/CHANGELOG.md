@@ -22,10 +22,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ContextualPopup` prop `popupContainerId` to `popupSpotlightId`
 - `moonstone/Popup` prop `containerId` to `spotlightId`
 - `moonstone/VideoPlayer` prop `containerId` to `spotlightId`
-
-### Changed
-
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `data` to be removed
 
 ### Fixed
 

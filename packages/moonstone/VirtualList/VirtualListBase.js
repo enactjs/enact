@@ -120,6 +120,14 @@ const VirtualListBaseFactory = (type) => {
 			initUiChildRef: PropTypes.func,
 
 			/**
+			 * Check if the item with index is disabled
+			 *
+			 * @param {Number} index
+			 * @private
+			 */
+			isDisabledItem: PropTypes.func,
+
+			/**
 			 * `true` if rtl, `false` if ltr.
 			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
 			 *
@@ -203,7 +211,7 @@ const VirtualListBaseFactory = (type) => {
 
 		findSpottableItem = (indexFrom, indexTo) => {
 			const
-				{data, dataSize} = this.uiRef.props,
+				{dataSize, isDisabledItem} = this.uiRef.props,
 				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
 				safeIndexTo = clamp(-1, dataSize, indexTo),
 				delta = (indexFrom < indexTo) ? 1 : -1;
@@ -214,7 +222,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (safeIndexFrom !== safeIndexTo) {
 				for (let i = safeIndexFrom; i !== safeIndexTo; i += delta) {
-					if (data[i] && data[i].disabled === false) {
+					if (isDisabledItem(i) === false) {
 						return i;
 					}
 				}
@@ -225,7 +233,7 @@ const VirtualListBaseFactory = (type) => {
 
 		getIndexToScrollDisabled = (direction, currentIndex) => {
 			const
-				{data, dataSize, spacing} = this.uiRef.props,
+				{dataSize, isDisabledItem, spacing} = this.uiRef.props,
 				{dimensionToExtent, primary} = this.uiRef,
 				{findSpottableItem} = this,
 				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo,
@@ -277,7 +285,7 @@ const VirtualListBaseFactory = (type) => {
 					distance,
 					index;
 				for (let i = firstIndexInExtent; i <= lastIndexInExtent; ++i) {
-					if (data[i] && !data[i].disabled) {
+					if (isDisabledItem(i)) {
 						distance = Math.abs(currentPosInExtent - i % dimensionToExtent);
 						if (distance < minDistance) {
 							minDistance = distance;
@@ -314,12 +322,12 @@ const VirtualListBaseFactory = (type) => {
 
 		scrollToNextItem = ({direction, focusedItem}) => {
 			const
-				{data} = this.uiRef.props,
+				{isDisabledItem} = this.uiRef.props,
 				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
 				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo;
 			let indexToScroll = -1;
 
-			if (Array.isArray(data) && data.some((item) => item.disabled)) {
+			if (isDisabledItem) {
 				indexToScroll = this.getIndexToScrollDisabled(direction, focusedIndex);
 			} else {
 				indexToScroll = this.getIndexToScroll(direction, focusedIndex);
@@ -386,13 +394,13 @@ const VirtualListBaseFactory = (type) => {
 
 		jumpToSpottableItem = (keyCode, target) => {
 			const
-				{cbScrollTo, data, dataSize} = this.uiRef.props,
+				{cbScrollTo, dataSize, isDisabledItem} = this.uiRef.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
 				{isPrimaryDirectionVertical} = this.uiRef,
 				rtl = this.props.rtl,
 				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
 
-			if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled) {
+			if (!isDisabledItem || isDisabledItem(currentIndex)) {
 				return false;
 			}
 
@@ -412,12 +420,12 @@ const VirtualListBaseFactory = (type) => {
 
 			if (isForward) {
 				// See if the next item is spottable then delegate scroll to onFocus handler
-				if (currentIndex < dataSize - 1 && !data[currentIndex + 1].disabled) {
+				if (currentIndex < dataSize - 1 && !isDisabledItem(currentIndex + 1).disabled) {
 					return false;
 				}
 
 				for (let i = currentIndex + 2; i < dataSize; i++) {
-					if (!data[i].disabled) {
+					if (!isDisabledItem(i)) {
 						nextIndex = i;
 						break;
 					}
@@ -430,12 +438,12 @@ const VirtualListBaseFactory = (type) => {
 				}
 			} else if (isBackward) {
 				// See if the next item is spottable then delegate scroll to onFocus handler
-				if (currentIndex > 0 && !data[currentIndex - 1].disabled) {
+				if (currentIndex > 0 && !isDisabledItem(currentIndex - 1)) {
 					return false;
 				}
 
 				for (let i = currentIndex - 2; i >= 0; i--) {
-					if (!data[i].disabled) {
+					if (!isDisabledItem(i)) {
 						nextIndex = i;
 						break;
 					}
@@ -696,6 +704,7 @@ const VirtualListBaseFactory = (type) => {
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
 			delete rest.initUiChildRef;
+			delete rest.isDisabledItem;
 
 			return (
 				<UiBase
