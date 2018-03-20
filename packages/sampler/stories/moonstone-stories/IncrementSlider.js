@@ -28,12 +28,12 @@ storiesOf('Moonstone', module)
 				min={number('min', IncrementSliderBase.defaultProps.min)}
 				noFill={boolean('noFill', false)}
 				onChange={action('onChange')}
+				orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
 				step={number('step', IncrementSliderBase.defaultProps.step)}
 				tooltip={nullify(boolean('tooltip', false))}
 				tooltipAsPercent={nullify(boolean('tooltipAsPercent', false))}
 				tooltipForceSide={nullify(boolean('tooltipForceSide', false))}
 				tooltipSide={select('tooltipSide', ['before', 'after'], 'after')}
-				vertical={nullify(boolean('vertical', false))}
 			/>
 		))
 	);

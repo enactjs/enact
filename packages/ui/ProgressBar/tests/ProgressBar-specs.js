@@ -28,7 +28,7 @@ describe('ProgressBar Specs', () => {
 		const progressBar = mount(
 			<ProgressBar
 				progress={0.5}
-				vertical
+				orientation="vertical"
 			/>
 		);
 
@@ -40,7 +40,7 @@ describe('ProgressBar Specs', () => {
 			<ProgressBar
 				progress={0.5}
 				backgroundProgress={0.75}
-				vertical
+				orientation="vertical"
 			/>
 		);
 

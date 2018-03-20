@@ -18,7 +18,7 @@ import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
 const
-	dataContainerDisabledAttribute = 'data-container-disabled',
+	dataContainerDisabledAttribute = 'data-spotlight-container-disabled',
 	epsilon = 1,
 	reverseDirections = {
 		left: 'right',
@@ -73,7 +73,7 @@ class ScrollerBase extends Component {
 	 */
 	getSpotlightContainerForNode = (node) => {
 		do {
-			if (node.dataset.containerId) {
+			if (node.dataset.spotlightId && node.dataset.spotlightContainer) {
 				return node;
 			}
 		} while ((node = node.parentNode) && node !== this.uiRef.containerRef);

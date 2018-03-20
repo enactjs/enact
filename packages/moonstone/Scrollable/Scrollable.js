@@ -272,7 +272,7 @@ class Scrollable extends Component {
 
 			const
 				// VirtualList and Scroller have a containerId on containerRef
-				containerId = childRef.containerRef.dataset.containerId,
+				containerId = childRef.containerRef.dataset.spotlightId,
 				direction = this.getPageDirection(keyCode),
 				rDirection = reverseDirections[direction],
 				viewportBounds = containerRef.getBoundingClientRect(),
@@ -311,7 +311,7 @@ class Scrollable extends Component {
 
 		if (!current || Spotlight.getPointerMode()) {
 			const containerId = Spotlight.getActiveContainer();
-			current = document.querySelector(`[data-container-id="${containerId}"]`);
+			current = document.querySelector(`[data-spotlight-id="${containerId}"]`);
 		}
 
 		return current && this.uiRef.containerRef.contains(current);

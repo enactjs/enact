@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import compose from 'ramda/src/compose';
 import React from 'react';
-import Spotlight from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 import UiSpinnerBase from '@enact/ui/Spinner';
 
 import $L from '../internal/$L';
@@ -164,11 +164,17 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 			blockClickOn: PropTypes.oneOf(['screen', 'container', null])
 		}
 
+		constructor () {
+			super();
+
+			this.paused = new Pause('Spinner');
+		}
+
 		componentWillMount () {
 			const {blockClickOn} = this.props;
 
 			if (blockClickOn === 'screen') {
-				Spotlight.pause();
+				this.paused.pause();
 			}
 		}
 
@@ -176,7 +182,7 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 			const {blockClickOn} = this.props;
 
 			if (blockClickOn === 'screen') {
-				Spotlight.resume();
+				this.paused.resume();
 			}
 		}
 

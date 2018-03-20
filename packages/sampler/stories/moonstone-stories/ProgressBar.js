@@ -1,7 +1,7 @@
 import ProgressBar, {ProgressBarBase} from '@enact/moonstone/ProgressBar';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {boolean, number} from '@storybook/addon-knobs';
+import {boolean, number, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
@@ -19,8 +19,9 @@ storiesOf('Moonstone', module)
 				backgroundProgress={number('backgroundProgress', 0.5, {range: true, min: 0, max: 1, step: 0.01})}
 				tooltip={boolean('tooltip', false)}
 				progress={number('progress', 0.4, {range: true, min: 0, max: 1, step: 0.01})}
+				orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
 				tooltipForceSide={boolean('tooltipForceSide', false)}
-				vertical={boolean('vertical', false)}
+				disabled={nullify(boolean('disabled', false))}
 			/>
 		))
 	);
