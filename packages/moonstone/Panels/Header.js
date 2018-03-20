@@ -76,15 +76,6 @@ const HeaderBase = kind({
 		fullBleed: PropTypes.bool,
 
 		/**
-		 * When `true`, focusing title directly via 5-way will forward the focus onto the <input> when `inputMode` is `true`.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		inputAutoFocus: PropTypes.bool,
-
-		/**
 		 * When `true`, blurs the input when the "enter" key is pressed when `inputMode` is `true`.
 		 *
 		 * @type {Boolean}
@@ -193,7 +184,7 @@ const HeaderBase = kind({
 		}
 	},
 
-	render: ({casing, children, direction, inputAutoFocus, inputDismissOnEnter, inputMode, marqueeOn, subTitleBelowComponent, preserveCase, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+	render: ({casing, children, direction, inputDismissOnEnter, inputMode, marqueeOn, preserveCase, subTitleBelowComponent, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.fullBleed;
 		delete rest.subTitleBelow;
 		delete rest.titleBelow;
@@ -221,7 +212,7 @@ const HeaderBase = kind({
 			case 'standard': return (
 				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
 					{inputMode ? (
-						<Input autoFocus={inputAutoFocus} dismissOnEnter={inputDismissOnEnter} className={css.inputTitle} placeholder={title} />
+						<Input dismissOnEnter={inputDismissOnEnter} className={css.inputTitle} placeholder={title} />
 					) : (
 						<Cell component={HeaderH1} casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn={marqueeOn}>
 							{title}

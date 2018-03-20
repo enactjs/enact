@@ -10,7 +10,6 @@ storiesOf('Header', module)
 		() => (
 			<Header
 				casing="preserve"
-				inputMode={boolean('inputMode', false)}
 				type="compact"
 				title={text('title', 'Title')}
 				titleBelow={text('titleBelow', 'כתוביות למט')}
@@ -22,7 +21,6 @@ storiesOf('Header', module)
 		() => (
 			<Header
 				casing="preserve"
-				inputMode={boolean('inputMode', false)}
 				type="compact"
 				title={text('title', 'Title')}
 				titleBelow={text('titleBelow', 'This is a header sample with long titleBelow text and header components to test positioning of header components.')}
@@ -37,6 +35,7 @@ storiesOf('Header', module)
 		() => (
 			<Header
 				casing="preserve"
+				inputDismissOnEnter={boolean('inputDismissOnEnter', false)}
 				inputMode={boolean('inputMode', false)}
 				title={text('title', 'Title')}
 				titleBelow={text('titleBelow', 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
@@ -44,5 +43,18 @@ storiesOf('Header', module)
 			>
 				<SwitchItem>{'On / Off'}</SwitchItem>
 			</Header>
+		)
+	)
+	.add(
+		'Tall text and headerComponent in inputMode',
+		() => (
+			<Header
+				casing="preserve"
+				inputDismissOnEnter={boolean('inputDismissOnEnter', true)}
+				inputMode={boolean('inputMode', true)}
+				title={text('title', 'ิ้  ไั  ஒ  து': 'ิ้  ไั  ஒ  த')}
+				titleBelow={text('titleBelow', 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
+				subTitleBelow={text('subTitleBelow', 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
+			/>
 		)
 	);
