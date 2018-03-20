@@ -141,7 +141,7 @@ const Router = class extends React.Component {
 				return React.createElement(route.$component, {
 					...route.$props,
 					key: 'view$/' + subPath,
-					containerId: `panel-${subPath.replace(/\//g, '-')}`
+					spotlightId: `panel-${subPath.replace(/\//g, '-')}`
 				});
 			}
 

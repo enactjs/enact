@@ -47,7 +47,7 @@ const
 		preserveId: true,
 		restrict: 'self-first'
 	},
-	dataContainerDisabledAttribute = 'data-container-disabled',
+	dataContainerDisabledAttribute = 'data-spotlight-container-disabled',
 	isDown = is('down'),
 	isLeft = is('left'),
 	isRight = is('right'),
@@ -92,7 +92,7 @@ const VirtualListBaseFactory = (type) => {
 			 * @type {Function}
 			 * @public
 			 */
-			component: PropTypes.func.isRequired,
+			itemRenderer: PropTypes.func.isRequired,
 
 			/**
 			 * The render function for the items.
@@ -108,7 +108,7 @@ const VirtualListBaseFactory = (type) => {
 			 * @type {String}
 			 * @private
 			 */
-			'data-container-id': PropTypes.string, // eslint-disable-line react/sort-prop-types,
+			'data-spotlight-id': PropTypes.string, // eslint-disable-line react/sort-prop-types,
 
 			/**
 			 * Passes the instance of [VirtualList]{@link ui/VirtualList.VirtualList}.
@@ -361,7 +361,7 @@ const VirtualListBaseFactory = (type) => {
 		 */
 
 		setRestrict = (bool) => {
-			Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
+			Spotlight.set(this.props['data-spotlight-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
 		}
 
 		setSpotlightContainerRestrict = (keyCode, target) => {
@@ -580,9 +580,9 @@ const VirtualListBaseFactory = (type) => {
 				!this.isPlaceholderFocused()
 			) {
 				const
-					containerId = this.props['data-container-id'],
+					containerId = this.props['data-spotlight-id'],
 					node = this.uiRef.containerRef.querySelector(
-						`[data-container-id="${containerId}"] [data-index="${this.preservedIndex}"]`
+						`[data-spotlight-id="${containerId}"] [data-index="${this.preservedIndex}"]`
 					);
 
 				if (node) {
@@ -692,7 +692,7 @@ const VirtualListBaseFactory = (type) => {
 
 		render () {
 			const
-				{component, itemsRenderer, ...rest} = this.props,
+				{itemRenderer, itemsRenderer, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
 			delete rest.initUiChildRef;
@@ -700,14 +700,14 @@ const VirtualListBaseFactory = (type) => {
 			return (
 				<UiBase
 					{...rest}
-					component={({index, ...itemRest}) => ( // eslint-disable-line react/jsx-no-bind
-						component({
+					getComponentProps={this.getComponentProps}
+					itemRenderer={({index, ...itemRest}) => ( // eslint-disable-line react/jsx-no-bind
+						itemRenderer({
 							... itemRest,
 							[dataIndexAttribute]: index,
 							index
 						})
 					)}
-					getComponentProps={this.getComponentProps}
 					ref={this.initUiRef}
 					updateStatesAndBounds={this.updateStatesAndBounds}
 					itemsRenderer={(props) => { // eslint-disable-line react/jsx-no-bind

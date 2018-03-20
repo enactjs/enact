@@ -214,14 +214,6 @@ const VideoPlayerBase = class extends React.Component {
 		backwardIcon: PropTypes.string,
 
 		/**
-		 * Specifies the spotlight container ID for the player
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		containerId: PropTypes.string,
-
-		/**
 		 * Removes interactive capability from this component. This includes, but is not limited to,
 		 * key-press events, most clickable buttons, and prevents the showing of the controls.
 		 *
@@ -615,6 +607,14 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		spotlightDisabled: PropTypes.bool,
+
+		/**
+		 * Specifies the spotlight container ID for the player
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		spotlightId: PropTypes.string,
 
 		/**
 		 * This component will be used instead of the built-in version.
@@ -1936,7 +1936,6 @@ const VideoPlayerBase = class extends React.Component {
 			backwardIcon,
 			children,
 			className,
-			containerId,
 			disabled,
 			forwardIcon,
 			infoComponents,
@@ -1958,6 +1957,7 @@ const VideoPlayerBase = class extends React.Component {
 			rightComponents,
 			source,
 			spotlightDisabled,
+			spotlightId,
 			style,
 			thumbnailComponent,
 			thumbnailSrc,
@@ -2002,11 +2002,11 @@ const VideoPlayerBase = class extends React.Component {
 		return (
 			<RootContainer
 				className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')}
-				containerId={containerId}
 				onClick={this.activityDetected}
 				onKeyDown={this.activityDetected}
 				ref={this.setPlayerRef}
 				spotlightDisabled={spotlightDisabled}
+				spotlightId={spotlightId}
 				style={style}
 			>
 				{/* Video Section */}

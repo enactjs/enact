@@ -162,6 +162,14 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			popupClassName: PropTypes.string,
 
 			/**
+			 * An object containing properties to be passed to popup component.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
+			popupProps: PropTypes.object,
+
+			/**
 			 * A custom container ID to use with Spotlight.
 			 *
 			 * The spotlight container for the popup isn't created until it is open. To configure
@@ -171,15 +179,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {String}
 			 * @public
 			 */
-			popupContainerId: PropTypes.string,
-
-			/**
-			 * An object containing properties to be passed to popup component.
-			 *
-			 * @type {Object}
-			 * @public
-			 */
-			popupProps: PropTypes.object,
+			popupSpotlightId: PropTypes.string,
 
 			/**
 			 * When `true`, current locale is RTL
@@ -232,7 +232,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				arrowPosition: {top: 0, left: 0},
 				containerPosition: {top: 0, left: 0},
-				containerId: Spotlight.add(this.props.popupContainerId),
+				containerId: Spotlight.add(this.props.popupSpotlightId),
 				activator: null
 			};
 
@@ -524,7 +524,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				rest.skin = skin;
 			}
 
-			delete rest.popupContainerId;
+			delete rest.popupSpotlightId;
 			delete rest.rtl;
 
 			if (openProp) rest[openProp] = open;
@@ -541,8 +541,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							arrowPosition={this.state.arrowPosition}
 							containerPosition={this.state.containerPosition}
 							containerRef={this.getContainerNode}
-							containerId={this.state.containerId}
 							skin={skin}
+							spotlightId={this.state.containerId}
 							spotlightRestrict={spotlightRestrict}
 						>
 							<PopupComponent {...popupPropsRef} />
