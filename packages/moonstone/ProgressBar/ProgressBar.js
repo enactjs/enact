@@ -18,7 +18,7 @@ import compose from 'ramda/src/compose';
 import React from 'react';
 
 import Skinnable from '../Skinnable';
-import {ProgressBarTooltip} from '../TooltipDecorator';
+import {ProgressBarTooltip} from './ProgressBarTooltip';
 
 import componentCss from './ProgressBar.less';
 
@@ -174,5 +174,6 @@ export default ProgressBar;
 export {
 	ProgressBar,
 	ProgressBarBase,
-	ProgressBarDecorator
+	ProgressBarDecorator,
+	ProgressBarTooltip
 };

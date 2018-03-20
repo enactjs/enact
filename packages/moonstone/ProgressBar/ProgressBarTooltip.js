@@ -3,7 +3,7 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Tooltip from './Tooltip';
+import Tooltip from '../TooltipDecorator/Tooltip';
 
 import css from './ProgressBarTooltip.less';
 
