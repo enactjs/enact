@@ -3,9 +3,9 @@
  * Exports the {@link ui/internal/Pure.Pure} Higher-order Component (HOC).
  *
  * @module ui/internal/Pure
+ * @private
  */
 
-import {childrenEquals} from '@enact/core/util';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
@@ -23,15 +23,13 @@ const defaultConfig = {
 	 * @memberof ui/internal/Pure.Pure.defaultConfig
 	 */
 	propComparators: {
-		'*': (a, b) => a === b,
-		children: childrenEquals
+		'*': (a, b) => a === b
 	}
 };
 
 /**
  * Implements `shouldComponentUpdate` based on property change determination. By default, props are
- * compared for strict equality except children which are compared using
- * {@link core/util.childrenEquals}.
+ * shallowly compared for strict equality
  *
  * Custom comparators can be provided via the `propComparators` config property which accepts an
  * object mapping property names to comparator functions. To override the default comparator, use

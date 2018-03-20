@@ -4,7 +4,30 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Removed
+
+- `spotlight/SpotlightContainerDecorator` prop `containerId`, to be replaced by `spotlightId`
+- `spotlight/Pause` module which acts as a semaphore for spotlight pause state
+
+### Added
+
+- `spotlight/Spottable` prop `spotlightId` to simplify focusing components
+
+### Changed
+
+- `spotlight/Spotlight.focus` to support focusing by `spotlightId`
+- `spotlight` container attributes `data-container-disabled` and `data-container-muted` to be `data-spotlight-container-disabled` and `data-spotlight-container-muted`, respectively
+
+## [2.0.0-alpha.5] - 2018-03-07
+
+No significant changes.
+
+## [2.0.0-alpha.4] - 2018-02-13
+
+### Fixed
+
 - `spotlight/Spottable` to not remove `tabindex` from unspottable components to allow blur events to propagate as expected when a component becomes disabled
+- `spotlight/Spottable` to prevent unnecessary updates due to focus changes
 
 ## [2.0.0-alpha.3] - 2018-01-18
 
@@ -18,7 +41,15 @@ No significant changes.
 
 No significant changes.
 
-## [1.13.3] - 2017-01-16
+## [1.15.0] - 2018-02-28
+
+No significant changes.
+
+## [1.14.0] - 2018-02-23
+
+No significant changes.
+
+## [1.13.3] - 2018-01-16
 
 No significant changes.
 

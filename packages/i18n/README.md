@@ -1,6 +1,6 @@
-# @enact/i18n
+# @enact/i18n [![npm (scoped)](https://img.shields.io/npm/v/@enact/i18n.svg?style=flat-square)](https://www.npmjs.com/package/@enact/i18n)
 
-> Enact library for internationalization
+> Internationalization library based on iLib.
 
 `@enact/i18n` provides a decorator that can be used to wrap a root component in a React (or Enact) application.
 This decorator provides a context to child components that can be used to determine locale text directionality

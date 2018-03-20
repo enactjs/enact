@@ -24,6 +24,7 @@ import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
 import Spotlight from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
+import Pause from '@enact/spotlight/Pause';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 import {toUpperCase} from '@enact/i18n/util';
 
@@ -168,14 +169,6 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		backwardIcon: PropTypes.string,
-
-		/**
-		 * Specifies the spotlight container ID for the player
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		containerId: PropTypes.string,
 
 		/**
 		 * Removes interactive capability from this component. This includes, but is not limited to,
@@ -573,6 +566,14 @@ const VideoPlayerBase = class extends React.Component {
 		spotlightDisabled: PropTypes.bool,
 
 		/**
+		 * Specifies the spotlight container ID for the player
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		spotlightId: PropTypes.string,
+
+		/**
 		 * This component will be used instead of the built-in version.
 		 * The internal thumbnail class will be added to this component, however, it's the
 		 * responsibility of the developer to include this class in their implementation, if
@@ -697,6 +698,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.sliderKnobProportion = 0;
 
 		this.initI18n();
+
+		this.paused = new Pause('VideoPlayer');
 
 		// Re-render-necessary State
 		this.state = {
@@ -1149,7 +1152,7 @@ const VideoPlayerBase = class extends React.Component {
 				!this.state.mediaControlsVisible &&
 				!this.props.disabled &&
 				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
-			Spotlight.pause();
+			this.paused.pause();
 			this.startListeningForPulses(ev.keyCode);
 		}
 		return true;
@@ -1196,7 +1199,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (!this.props.no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			this.stopListeningForPulses();
-			Spotlight.resume();
+			this.paused.resume();
 		}
 	}
 
@@ -1495,7 +1498,7 @@ const VideoPlayerBase = class extends React.Component {
 	})
 
 	/**
-	 * Returns a proxy to the underlying <video> node currently used by the VideoPlayer
+	 * Returns a proxy to the underlying `<video>` node currently used by the VideoPlayer
 	 *
 	 * @function
 	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
@@ -1880,7 +1883,6 @@ const VideoPlayerBase = class extends React.Component {
 			backwardIcon,
 			children,
 			className,
-			containerId,
 			disabled,
 			forwardIcon,
 			infoComponents,
@@ -1902,6 +1904,7 @@ const VideoPlayerBase = class extends React.Component {
 			rightComponents,
 			source,
 			spotlightDisabled,
+			spotlightId,
 			style,
 			thumbnailComponent,
 			thumbnailSrc,
@@ -1942,11 +1945,11 @@ const VideoPlayerBase = class extends React.Component {
 		return (
 			<RootContainer
 				className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')}
-				containerId={containerId}
 				onClick={this.activityDetected}
 				onKeyDown={this.activityDetected}
 				ref={this.setPlayerRef}
 				spotlightDisabled={spotlightDisabled}
+				spotlightId={spotlightId}
 				style={style}
 			>
 				{/* Video Section */}

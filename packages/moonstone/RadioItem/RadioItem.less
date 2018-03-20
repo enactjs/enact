@@ -2,30 +2,57 @@
 //
 @import "../styles/variables.less";
 @import "../styles/skin.less";
+@import "../styles/mixins.less";
 
+// Public
 .radioItem {
-	.dot {
+	/* Available for customization */
+}
+
+// Interally theme our implementation using published classes from ToggleItem and ToggleIcon
+.toggleIcon {
+	.icon {
 		width: (@moon-radio-item-indicator-size - 2 * @moon-radio-item-indicator-border);
 		height: (@moon-radio-item-indicator-size - 2 * @moon-radio-item-indicator-border);
 		border-width: @moon-radio-item-indicator-border;
 		border-style: solid;
 		border-radius: (@moon-radio-item-indicator-size / 2);
 		flex-shrink: 0;
+		margin-right: 0;
+		margin-left: 0;
 
-		&:not(.selected) {
-			visibility: visible;
+		&::before {
+			content: "";
+			position: absolute;
+			.position(@moon-radio-item-indicator-border);
+			border-radius: 24px;
 		}
 	}
 
 	// Skin colors
 	.applySkins({
-		.dot {
+		.icon {
 			background-color: @moon-radio-item-indicator-color;
 			border-color: @moon-radio-item-indicator-border-color;
+		}
 
-			&.selected {
+		&.selected {
+			.icon {
 				background-color: @moon-spotlight-color;
 			}
 		}
 	});
 }
+
+// When a parent is focused
+.focus({
+	.toggleIcon {
+		.applySkins({
+			&.selected {
+				.icon::before {
+					background-color: @moon-radio-item-indicator-border-color;
+				}
+			}
+		});
+	}
+});

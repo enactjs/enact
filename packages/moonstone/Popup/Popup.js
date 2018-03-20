@@ -12,6 +12,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Spotlight, {getDirection} from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Transition from '@enact/ui/Transition';
 import {forward} from '@enact/core/handle';
@@ -30,7 +31,7 @@ const TransitionContainer = SpotlightContainerDecorator(
 );
 
 const getContainerNode = (containerId) => {
-	return document.querySelector(`[data-container-id='${containerId}']`);
+	return document.querySelector(`[data-spotlight-id='${containerId}']`);
 };
 
 const forwardHide = forward('onHide');
@@ -56,15 +57,6 @@ const PopupBase = kind({
 		 * @public
 		 */
 		children: PropTypes.node.isRequired,
-
-		/**
-		 * Specifies the container id.
-		 *
-		 * @type {String}
-		 * @default null
-		 * @public
-		 */
-		containerId: PropTypes.string,
 
 		/**
 		 * When `true`, the popup will not animate on/off screen.
@@ -118,6 +110,15 @@ const PopupBase = kind({
 		showCloseButton: PropTypes.bool,
 
 		/**
+		 * Specifies the container id.
+		 *
+		 * @type {String}
+		 * @default null
+		 * @public
+		 */
+		spotlightId: PropTypes.string,
+
+		/**
 		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
 		 * can be either `'none'`, `'self-first'`, or `'self-only'`.
 		 *
@@ -159,19 +160,19 @@ const PopupBase = kind({
 		}
 	},
 
-	render: ({closeButton, children, containerId, noAnimation, open, onHide, onShow, spotlightRestrict, ...rest}) => {
+	render: ({closeButton, children, noAnimation, open, onHide, onShow, spotlightId, spotlightRestrict, ...rest}) => {
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
 		return (
 			<TransitionContainer
 				className={css.popupTransitionContainer}
-				containerId={containerId}
 				direction="down"
 				duration="short"
 				noAnimation={noAnimation}
 				onHide={onHide}
 				onShow={onShow}
 				spotlightDisabled={!open}
+				spotlightId={spotlightId}
 				spotlightRestrict={spotlightRestrict}
 				type="slide"
 				visible={open}
@@ -324,6 +325,7 @@ class Popup extends React.Component {
 
 	constructor (props) {
 		super(props);
+		this.paused = new Pause('Popup');
 		this.state = {
 			floatLayerOpen: this.props.open,
 			popupOpen: this.props.noAnimation,
@@ -360,7 +362,7 @@ class Popup extends React.Component {
 	componentDidUpdate (prevProps, prevState) {
 		if (this.props.open !== prevProps.open) {
 			if (!this.props.noAnimation) {
-				Spotlight.pause();
+				this.paused.pause();
 			} else if (this.props.open) {
 				forwardShow({}, this.props);
 				on('keydown', this.handleKeyDown);
@@ -421,8 +423,8 @@ class Popup extends React.Component {
 			activator: null
 		});
 
-		if (ev.target.getAttribute('data-container-id') === this.state.containerId) {
-			Spotlight.resume();
+		if (ev.target.getAttribute('data-spotlight-id') === this.state.containerId) {
+			this.paused.resume();
 
 			if (!this.props.open) {
 				off('keydown', this.handleKeyDown);
@@ -434,8 +436,8 @@ class Popup extends React.Component {
 	handlePopupShow = (ev) => {
 		forwardShow(ev, this.props);
 
-		if (ev.target.getAttribute('data-container-id') === this.state.containerId) {
-			Spotlight.resume();
+		if (ev.target.getAttribute('data-spotlight-id') === this.state.containerId) {
+			this.paused.resume();
 
 			if (this.props.open) {
 				on('keydown', this.handleKeyDown);
@@ -487,11 +489,11 @@ class Popup extends React.Component {
 			>
 				<SkinnedPopupBase
 					{...rest}
-					containerId={this.state.containerId}
-					open={this.state.popupOpen}
 					onCloseButtonClick={onClose}
 					onHide={this.handlePopupHide}
+					spotlightId={this.state.containerId}
 					onShow={this.handlePopupShow}
+					open={this.state.popupOpen}
 					spotlightRestrict="self-only"
 				/>
 			</FloatingLayer>

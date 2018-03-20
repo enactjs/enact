@@ -4,6 +4,22 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ## [unreleased]
 
+### Removed
+
+- `core/factory` module replaced by the `css` override feature
+
+## [2.0.0-alpha.5] - 2018-03-07
+
+### Removed
+
+- `core/util.childrenEquals` which was no longer supported by React 16
+
+### Added
+
+- `core/util.memoize` method to optimize the execution of expensive functions
+
+## [2.0.0-alpha.4] - 2018-02-13
+
 ### Changed
 
 - `core/kind` to always return a component rather than either a component or an SFC depending upon the configuration
@@ -20,7 +36,19 @@ No significant changes.
 
 No significant changes.
 
-## [1.13.3] - 2017-01-16
+## [1.15.0] - 2018-02-28
+
+### Deprecated
+
+- `core/util/childrenEquals`, to be removed in 2.0.0
+
+## [1.14.0] - 2018-02-23
+
+### Deprecated
+
+- `core/factory`, to be removed in 2.0.0
+
+## [1.13.3] - 2018-01-16
 
 ### Fixed
 

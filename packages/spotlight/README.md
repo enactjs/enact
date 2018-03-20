@@ -1,8 +1,8 @@
-# Spotlight
+# @enact/spotlight [![npm (scoped)](https://img.shields.io/npm/v/@enact/spotlight.svg?style=flat-square)](https://www.npmjs.com/package/@enact/spotlight)
 
-> An extensible library for 5-way navigation and focus control
+> An extensible library for 5-way navigation and focus control.
 
-Spotlight is an extensible utility that enables users to navigate
+An extensible utility that enables users to navigate
 applications using a keyboard or television remote control.  Responding to input
 from the **UP**, **DOWN**, **LEFT**, **RIGHT**, and **RETURN** keys, Spotlight
 provides a navigation experience that compares favorably to that of a

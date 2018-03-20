@@ -3,14 +3,12 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {SliderFactory} from '../Slider';
+import Slider from '../Slider';
 
 import css from './VideoPlayer.less';
 
-const Slider = SliderFactory({css});
-
 /**
- * MediaSlider {@link moonstone/VideoPlayer}.
+ * MediaSlider for {@link moonstone/VideoPlayer}.
  *
  * @class MediaSlider
  * @memberof moonstone/VideoPlayer
@@ -104,6 +102,7 @@ const MediaSliderBase = kind({
 					{...rest}
 					aria-hidden="true"
 					className={sliderClassName}
+					css={css}
 					detachedKnob
 					knobStep={0.05}
 					max={1}
