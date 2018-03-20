@@ -8,9 +8,10 @@ import Tooltip from '../TooltipDecorator/Tooltip';
 import css from './ProgressBarTooltip.less';
 
 /**
- * A {@link moonstone/TooltipDecorator.Tooltip} specifically adapted for use with
- * {@link moonstone/IncrementSlider.IncrementSlider}, {@link moonstone/ProgressBar.ProgressBar},
- * or {@link moonstone/Slider.Slider}.
+ * A [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} specifically adapted for use with
+ * [IncrementSlider]{@link moonstone/IncrementSlider.IncrementSlider},
+ * [ProgressBar]{@link moonstone/ProgressBar.ProgressBar}, or
+ * [Slider]{@link moonstone/Slider.Slider}.
  *
  * @class ProgressBarTooltip
  * @memberof moonstone/ProgressBar

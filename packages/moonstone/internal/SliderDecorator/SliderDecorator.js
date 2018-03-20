@@ -55,10 +55,10 @@ const forwardMouseMove = forward('onMouseMove');
 const forwardMouseUp = forward('onMouseUp');
 
 /**
- * {@link moonstone/internal/SliderDecorator.SliderDecorator} is a Higher-order Component that
- * provides common functionality for slider-like components. Essentially, this HOC implements a
- * performant value updating mechanism while supporting different modes such as increment mode
- * (enabled via the `increment` config), which generates increment and decrement buttons.
+ * A Higher-order Component that provides common functionality for slider-like components.
+ * Essentially, this HOC implements a performant value updating mechanism while supporting different
+ * modes such as increment mode (enabled via the `increment` config), which generates increment and
+ * decrement buttons.
  *
  * @class SliderDecorator
  * @memberof moonstone/internal/SliderDecorator
