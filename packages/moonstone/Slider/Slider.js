@@ -26,8 +26,8 @@ import SliderTooltip from './SliderTooltip';
 import componentCss from './Slider.less';
 
 const isActive = (ev, props) => props.active || props.activateOnFocus || props.detachedKnob;
-const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
-const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
+const isIncrement = (ev, props) => forKey((props.orientation === 'vertical') ? 'up' : 'right', ev);
+const isDecrement = (ev, props) => forKey((props.orientation === 'vertical') ? 'down' : 'left', ev);
 
 // memoize percent formatter for each locale so that we only instantiate NumFmt when locale changes
 const memoizedPercentFormatter = memoize((/* locale */) => new NumFmt({type: 'percentage', useNative: false}));
@@ -230,6 +230,16 @@ const SliderBase = kind({
 		onMouseMove: PropTypes.func,
 
 		/**
+		 * Sets the orientation of the slider, whether the slider moves left and right or up and
+		 * down. Must be either `'horizontal'` or `'vertical'`.
+		 *
+		 * @type {String}
+		 * @default 'horizontal'
+		 * @public
+		 */
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+
+		/**
 		 * When `true`, a pressed visual effect is applied
 		 *
 		 * @type {Boolean}
@@ -321,15 +331,7 @@ const SliderBase = kind({
 		 * @default 0
 		 * @public
 		 */
-		value: PropTypes.number,
-
-		/**
-		 * If `true` the slider will be oriented vertically.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		vertical: PropTypes.bool
+		value: PropTypes.number
 	},
 
 	defaultProps: {
@@ -343,14 +345,14 @@ const SliderBase = kind({
 		min: 0,
 		noFill: false,
 		onChange: () => {}, // needed to ensure the base input element is mutable if no change handler is provided
+		orientation: 'horizontal',
 		pressed: false,
 		step: 1,
 		tooltip: false,
 		tooltipAsPercent: false,
 		tooltipForceSide: false,
 		tooltipSide: 'before',
-		value: 0,
-		vertical: false
+		value: 0
 	},
 
 	styles: {
@@ -407,18 +409,19 @@ const SliderBase = kind({
 
 			return value;
 		},
-		className: ({activateOnFocus, active, noFill, pressed, vertical, styler}) => styler.append({
-			activateOnFocus,
-			active,
-			noFill,
-			pressed,
-			vertical,
-			horizontal: !vertical
-		}),
+		className: ({activateOnFocus, active, noFill, orientation, pressed, styler}) => styler.append(
+			orientation,
+			{
+				activateOnFocus,
+				active,
+				noFill,
+				pressed
+			}
+		),
 		proportionProgress: computeProportionProgress
 	},
 
-	render: ({backgroundProgress, children, css, disabled, focused, inputRef, knobAfterMidpoint, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
+	render: ({backgroundProgress, children, css, disabled, focused, inputRef, knobAfterMidpoint, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, orientation, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, ...rest}) => {
 		delete rest.activateOnFocus;
 		delete rest.active;
 		delete rest.detachedKnob;
@@ -440,9 +443,9 @@ const SliderBase = kind({
 			tooltipComponent = <SliderTooltip
 				knobAfterMidpoint={knobAfterMidpoint}
 				forceSide={tooltipForceSide}
+				orientation={orientation}
 				proportion={proportionProgress}
 				side={tooltipSide}
-				vertical={vertical}
 			>
 				{children}
 			</SliderTooltip>;
@@ -460,10 +463,10 @@ const SliderBase = kind({
 			>
 				<SliderBar
 					css={css}
+					orientation={orientation}
 					proportionBackgroundProgress={backgroundProgress}
 					proportionProgress={proportionProgress}
 					ref={sliderBarRef}
-					vertical={vertical}
 					scrubbing={scrubbing}
 				>
 					{tooltipComponent}
@@ -479,8 +482,8 @@ const SliderBase = kind({
 					step={step}
 					onChange={onChange}
 					onMouseMove={onMouseMove}
+					orient={orientation}
 					value={value}
-					orient={vertical ? 'vertical' : 'horizontal'}
 				/>
 			</div>
 		);

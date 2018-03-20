@@ -41,6 +41,17 @@ const SliderTooltipBase = kind({
 		knobAfterMidpoint: PropTypes.bool,
 
 		/**
+		 * Sets the orientation of the tooltip based on the orientation of the Slider, 'vertical'
+		 * sends the tooltip to one of the sides, 'horizontal'  positions it above the Slider.
+		 * Must be either `'horizontal'` or `'vertical'`.
+		 *
+		 * @type {String}
+		 * @default 'horizontal'
+		 * @public
+		 */
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+
+		/**
 		 * The proportion of progress across the bar. Should be a number between 0 and 1.
 		 *
 		 * @type {Number}
@@ -61,23 +72,15 @@ const SliderTooltipBase = kind({
 		 * @default 'before'
 		 * @public
 		 */
-		side: PropTypes.oneOf(['before', 'after']),
-
-		/**
-		 * If `true` the slider will be oriented vertically.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		vertical: PropTypes.bool
+		side: PropTypes.oneOf(['before', 'after'])
 	},
 
 	defaultProps: {
 		knobAfterMidpoint: false,
 		forceSide: false,
+		orientation: 'horizontal',
 		proportion: 0,
-		side: 'before',
-		vertical: false
+		side: 'before'
 	},
 
 	styles: {
@@ -88,14 +91,14 @@ const SliderTooltipBase = kind({
 	contextTypes,
 
 	computed: {
-		className: ({forceSide, side, vertical, styler}) => styler.append({ignoreLocale: forceSide, vertical, horizontal: !vertical}, side),
-		arrowAnchor: ({knobAfterMidpoint, vertical}) => {
-			if (vertical) return 'middle';
+		className: ({forceSide, orientation, side, styler}) => styler.append(orientation, {ignoreLocale: forceSide}, side),
+		arrowAnchor: ({knobAfterMidpoint, orientation}) => {
+			if (orientation === 'vertical') return 'middle';
 			return knobAfterMidpoint ? 'left' : 'right';
 		},
-		direction: ({forceSide, side, vertical}, context) => {
+		direction: ({forceSide, orientation, side}, context) => {
 			let dir = 'right';
-			if (vertical) {
+			if (orientation === 'vertical') {
 				if (
 					// LTR before (Both force and nonforce cases)
 					(!context.rtl && side === 'before') ||
@@ -118,9 +121,9 @@ const SliderTooltipBase = kind({
 	render: ({children, ...rest}) => {
 		delete rest.knobAfterMidpoint;
 		delete rest.forceSide;
+		delete rest.orientation;
 		delete rest.proportion;
 		delete rest.side;
-		delete rest.vertical;
 
 		return (
 			<Tooltip {...rest}>

@@ -320,6 +320,16 @@ const IncrementSliderBase = kind({
 		onSpotlightUp: PropTypes.func,
 
 		/**
+		 * Sets the orientation of the slider, whether the slider moves left and right or up and
+		 * down. Must be either `'horizontal'` or `'vertical'`.
+		 *
+		 * @type {String}
+		 * @default 'horizontal'
+		 * @public
+		 */
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+
+		/**
 		 * `scrubbing` only has an effect with a detachedKnob, and is a performance optimization
 		 * to not allow re-assignment of the knob's value (and therefore position) during direct
 		 * user interaction.
@@ -414,15 +424,7 @@ const IncrementSliderBase = kind({
 		* @default 0
 		* @public
 		*/
-		value: PropTypes.number,
-
-		/**
-		* If `true` the increment slider will be oriented vertically.
-		*
-		* @type {Boolean}
-		* @public
-		*/
-		vertical: PropTypes.bool
+		value: PropTypes.number
 	},
 
 	defaultProps: {
@@ -431,49 +433,49 @@ const IncrementSliderBase = kind({
 		max: 100,
 		min: 0,
 		noFill: false,
+		orientation: 'horizontal',
 		spotlightDisabled: false,
 		step: 1,
 		tooltip: false,
 		tooltipAsPercent: false,
 		tooltipForceSide: false,
 		tooltipSide: 'before',
-		value: 0,
-		vertical: false
+		value: 0
 	},
 
 	handlers: {
-		handleDecrementKeyDown: (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, vertical}) => {
+		handleDecrementKeyDown: (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, orientation}) => {
 			const {keyCode} = ev;
 
 			if (isLeft(keyCode) && onSpotlightLeft) {
 				onSpotlightLeft(ev);
 			} else if (isDown(keyCode) && onSpotlightDown) {
 				onSpotlightDown(ev);
-			} else if (isRight(keyCode) && onSpotlightRight && vertical) {
+			} else if (isRight(keyCode) && onSpotlightRight && orientation === 'vertical') {
 				onSpotlightRight(ev);
-			} else if (isUp(keyCode) && onSpotlightUp && !vertical) {
+			} else if (isUp(keyCode) && onSpotlightUp && orientation !== 'vertical') {
 				onSpotlightUp(ev);
 			}
 		},
-		handleIncrementKeyDown: (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, vertical}) => {
+		handleIncrementKeyDown: (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, orientation}) => {
 			const {keyCode} = ev;
 
 			if (isRight(keyCode) && onSpotlightRight) {
 				onSpotlightRight(ev);
 			} else if (isUp(keyCode) && onSpotlightUp) {
 				onSpotlightUp(ev);
-			} else if (isLeft(keyCode) && onSpotlightLeft && vertical) {
+			} else if (isLeft(keyCode) && onSpotlightLeft && orientation === 'vertical') {
 				onSpotlightLeft(ev);
-			} else if (isDown(keyCode) && onSpotlightDown && !vertical) {
+			} else if (isDown(keyCode) && onSpotlightDown && orientation !== 'vertical') {
 				onSpotlightDown(ev);
 			}
 		},
-		handleSliderKeyDown: (ev, {min, max, value, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, vertical}) => {
+		handleSliderKeyDown: (ev, {min, max, value, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, orientation}) => {
 			const {keyCode} = ev;
 			const isMin = value <= min;
 			const isMax = value >= max;
 
-			if (vertical) {
+			if (orientation === 'vertical') {
 				if (isLeft(keyCode) && onSpotlightLeft) {
 					onSpotlightLeft(ev);
 				} else if (isRight(keyCode) && onSpotlightRight) {
@@ -504,9 +506,9 @@ const IncrementSliderBase = kind({
 	computed: {
 		decrementDisabled: ({disabled, min, value}) => disabled || value <= min,
 		incrementDisabled: ({disabled, max, value}) => disabled || value >= max,
-		incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
-		decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
-		incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
+		incrementSliderClasses: ({orientation, styler}) => styler.append(orientation),
+		decrementIcon: ({decrementIcon, orientation}) => (decrementIcon || ((orientation === 'vertical') ? 'arrowlargedown' : 'arrowlargeleft')),
+		incrementIcon: ({incrementIcon, orientation}) => (incrementIcon || ((orientation === 'vertical') ? 'arrowlargeup' : 'arrowlargeright')),
 		decrementAriaLabel: ({'aria-valuetext': valueText, decrementAriaLabel, disabled, min, value}) => {
 			if (decrementAriaLabel == null) {
 				decrementAriaLabel = $L('press ok button to decrease the value');
@@ -558,6 +560,7 @@ const IncrementSliderBase = kind({
 		onIncrement,
 		onIncrementSpotlightDisappear,
 		onSpotlightDisappear,
+		orientation,
 		scrubbing,
 		sliderBarRef,
 		sliderRef,
@@ -568,7 +571,6 @@ const IncrementSliderBase = kind({
 		tooltipForceSide,
 		tooltipSide,
 		value,
-		vertical,
 		...rest
 	}) => {
 		const ariaProps = extractAriaProps(rest);
@@ -613,6 +615,7 @@ const IncrementSliderBase = kind({
 					onIncrement={onIncrement}
 					onKeyDown={handleSliderKeyDown}
 					onSpotlightDisappear={onSpotlightDisappear}
+					orientation={orientation}
 					scrubbing={scrubbing}
 					sliderBarRef={sliderBarRef}
 					sliderRef={sliderRef}
@@ -623,7 +626,6 @@ const IncrementSliderBase = kind({
 					tooltipForceSide={tooltipForceSide}
 					tooltipSide={tooltipSide}
 					value={value}
-					vertical={vertical}
 				>
 					{children}
 				</Slider>

@@ -320,7 +320,7 @@ describe('Slider Specs', () => {
 	it('should set "aria-valuetext" to hint string when knob is active and vertical is true', function () {
 		const Comp = SliderDecorator(SliderBase);
 		const slider = mount(
-			<Comp vertical />
+			<Comp orientation="vertical" />
 		);
 
 		slider.find('Slider').prop('onActivate')();

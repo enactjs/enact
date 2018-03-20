@@ -7,10 +7,12 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Removed
 
 - `ui/Transition` property `clipHeight`
+- `ui/ProgressBar` property `vertical` and replaced it with `orientation`
 
 ### Added
 
 - `ui/Scrollable` support for scrolling by touch
+- `ui/ProgressBar` property orientation to accept orientation strings like "vertical" and "horizontal"
 
 ### Changed
 
