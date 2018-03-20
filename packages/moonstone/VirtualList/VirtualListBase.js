@@ -46,7 +46,7 @@ const configureSpotlight = (containerId, instance) => {
 };
 
 const
-	dataContainerDisabledAttribute = 'data-container-disabled',
+	dataContainerDisabledAttribute = 'data-spotlight-container-disabled',
 	isDown = is('down'),
 	isLeft = is('left'),
 	isRight = is('right'),
@@ -91,7 +91,7 @@ const VirtualListBaseFactory = (type) => {
 			 * @type {Function}
 			 * @public
 			 */
-			component: PropTypes.func.isRequired,
+			itemRenderer: PropTypes.func.isRequired,
 
 			/**
 			 * The render function for the items.
@@ -597,7 +597,7 @@ const VirtualListBaseFactory = (type) => {
 				const
 					{containerId} = this.props,
 					node = this.uiRef.containerRef.querySelector(
-						`[data-container-id="${containerId}"] [data-index="${this.preservedIndex}"]`
+						`[data-spotlight-id="${containerId}"] [data-index="${this.preservedIndex}"]`
 					);
 
 				if (node) {
@@ -707,7 +707,7 @@ const VirtualListBaseFactory = (type) => {
 
 		render () {
 			const
-				{component, itemsRenderer, ...rest} = this.props,
+				{itemRenderer, itemsRenderer, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
 			delete rest.containerId;
@@ -716,14 +716,14 @@ const VirtualListBaseFactory = (type) => {
 			return (
 				<UiBase
 					{...rest}
-					component={({index, ...itemRest}) => ( // eslint-disable-line react/jsx-no-bind
-						component({
+					getComponentProps={this.getComponentProps}
+					itemRenderer={({index, ...itemRest}) => ( // eslint-disable-line react/jsx-no-bind
+						itemRenderer({
 							... itemRest,
 							[dataIndexAttribute]: index,
 							index
 						})
 					)}
-					getComponentProps={this.getComponentProps}
 					ref={this.initUiRef}
 					updateStatesAndBounds={this.updateStatesAndBounds}
 					itemsRenderer={(props) => { // eslint-disable-line react/jsx-no-bind

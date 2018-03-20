@@ -1,4 +1,5 @@
 import curry from 'ramda/src/curry';
+import warning from 'warning';
 
 import {getContainerNode} from './container';
 
@@ -28,16 +29,19 @@ const matchSelector = curry((selector, elem) => {
 });
 
 function parseSelector (selector) {
-	let result;
-	if (typeof selector === 'string') {
-		result = [].slice.call(document.querySelectorAll(selector));
-	} else if (typeof selector === 'object' && selector.length) {
-		result = [].slice.call(selector);
-	} else if (typeof selector === 'object' && selector.nodeType === 1) {
-		result = [selector];
-	} else {
-		result = [];
+	let result = [];
+	try {
+		if (typeof selector === 'string') {
+			result = [].slice.call(document.querySelectorAll(selector));
+		} else if (typeof selector === 'object' && selector.length) {
+			result = [].slice.call(selector);
+		} else if (typeof selector === 'object' && selector.nodeType === 1) {
+			result = [selector];
+		}
+	} catch (ex) {
+		warning(true, `parseSelector failed for selector: ${selector}`);
 	}
+
 	return result;
 }
 
