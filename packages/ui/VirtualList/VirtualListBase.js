@@ -251,6 +251,13 @@ class VirtualListBase extends Component {
 		}
 	}
 
+	componentWillUpdate (nextProps, nextState) {
+		if (this.state.firstIndex === nextState.firstIndex) {
+			this.updateFrom = null;
+			this.updateTo = null;
+		}
+	}
+
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,
