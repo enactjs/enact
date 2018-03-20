@@ -49,7 +49,8 @@ const ProgressBar = kind({
 		 * * `progressBar` - The root component class
 		 * * `fill` - The foreground node of the progress bar
 		 * * `load` - The background node of the progress bar
-		 * * `vertical` - Applied when `vertical` prop is `true`
+		 * * `horizontal` - Applied when `orientation` is `'horizontal'`
+		 * * `vertical` - Applied when `orientation` is `'vertical'`
 		 *
 		 * @type {Object}
 		 * @public
@@ -62,6 +63,7 @@ const ProgressBar = kind({
 		 * Must be either `'horizontal'` or `'vertical'`.
 		 *
 		 * @type {String}
+		 * @default 'horizontal'
 		 * @public
 		 */
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
