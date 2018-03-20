@@ -77,9 +77,9 @@ const SliderTooltipBase = kind({
 	defaultProps: {
 		knobAfterMidpoint: false,
 		forceSide: false,
+		orientation: 'horizontal',
 		proportion: 0,
-		side: 'before',
-		vertical: false
+		side: 'before'
 	},
 
 	styles: {
