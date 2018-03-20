@@ -1,4 +1,5 @@
 import kind from '@enact/core/kind';
+import Touchable from '@enact/ui/Touchable';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -38,7 +39,11 @@ const OverlayBase = kind({
 	}
 });
 
-const Overlay = onlyUpdateForKeys(['bottomControlsVisible', 'children'])(OverlayBase);
+const Overlay = onlyUpdateForKeys(['bottomControlsVisible', 'children'])(
+	Touchable(
+		OverlayBase
+	)
+);
 
 export default Overlay;
 export {

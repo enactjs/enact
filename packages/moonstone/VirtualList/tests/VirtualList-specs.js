@@ -79,15 +79,15 @@ describe('VirtualList', () => {
 		const subject = mount(
 			<VirtualList
 				clientSize={clientSize}
-				component={renderItem}
 				data={items}
 				dataSize={dataSize}
+				itemRenderer={renderItem}
 				itemSize={30}
 			/>
 		);
 
 		const expected = 'Account 0';
-		const actual = subject.find('VirtualListCore').children().at(0).text();
+		const actual = subject.find('[data-index]').at(0).text();
 
 		expect(actual).to.equal(expected);
 	});
@@ -96,15 +96,15 @@ describe('VirtualList', () => {
 		const subject = mount(
 			<VirtualList
 				clientSize={clientSize}
-				component={renderItem}
 				data={items}
 				dataSize={dataSize}
+				itemRenderer={renderItem}
 				itemSize={30}
 			/>
 		);
 
 		const expected = 27; // 720 / 30 + 3
-		const actual = subject.find('VirtualListCore').children().length;
+		const actual = subject.find('Item[data-index]').length;
 
 		expect(actual).to.equal(expected);
 	});
@@ -113,10 +113,10 @@ describe('VirtualList', () => {
 		const subject = mount(
 			<VirtualList
 				clientSize={clientSize}
-				component={renderItem}
 				data={items}
 				dataSize={dataSize}
 				direction="horizontal"
+				itemRenderer={renderItem}
 				itemSize={30}
 			/>
 		);
@@ -133,9 +133,9 @@ describe('VirtualList', () => {
 				<VirtualList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
-					component={renderItem}
 					data={items}
 					dataSize={dataSize}
+					itemRenderer={renderItem}
 					itemSize={30}
 					onScrollStop={handlerOnScrollStop}
 				/>
@@ -154,10 +154,10 @@ describe('VirtualList', () => {
 				<VirtualList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
-					component={renderItem}
 					data={items}
 					dataSize={dataSize}
 					direction="horizontal"
+					itemRenderer={renderItem}
 					itemSize={30}
 					onScrollStop={handlerOnScrollStop}
 				/>
@@ -176,9 +176,9 @@ describe('VirtualList', () => {
 				<VirtualList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
-					component={renderItem}
 					data={items}
 					dataSize={dataSize}
+					itemRenderer={renderItem}
 					itemSize={30}
 					onScrollStop={handlerOnScrollStop}
 				/>
@@ -198,9 +198,9 @@ describe('VirtualList', () => {
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
-						component={renderItem}
 						data={items}
 						dataSize={dataSize}
+						itemRenderer={renderItem}
 						itemSize={30}
 						onScrollStart={handlerOnScrollStart}
 					/>
@@ -219,9 +219,9 @@ describe('VirtualList', () => {
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
-						component={renderItem}
 						data={items}
 						dataSize={dataSize}
+						itemRenderer={renderItem}
 						itemSize={30}
 						onScroll={handlerOnScroll}
 					/>
@@ -240,9 +240,9 @@ describe('VirtualList', () => {
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
-						component={renderItem}
 						data={items}
 						dataSize={dataSize}
+						itemRenderer={renderItem}
 						itemSize={30}
 						onScrollStop={handlerOnScrollStop}
 					/>
@@ -265,9 +265,9 @@ describe('VirtualList', () => {
 			const subject = mount(
 				<VirtualList
 					clientSize={clientSize}
-					component={renderItem}
 					data={itemArray}
 					dataSize={itemArray.length}
+					itemRenderer={renderItem}
 					itemSize={30}
 				/>
 			);
@@ -277,7 +277,7 @@ describe('VirtualList', () => {
 
 			setTimeout(() => {
 				const expected = itemArray[0].name;
-				const actual = subject.find('VirtualListCore').children().at(0).text();
+				const actual = subject.find('[data-index]').at(0).text();
 
 				expect(actual).to.equal(expected);
 				done();

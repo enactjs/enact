@@ -18,7 +18,9 @@
  *     // since it doesn't return `true`, no further input functions would be called after this one
  *     console.log('The Enter key was pressed down');
  *   }
- * );
+ * ).finally(() => {
+ * 	 console.log('This will log at the end no matter what happens within the handler above')
+ * });
  * ```
  *
  * `handle()` can also be bound to a component instance which allows it to access the instance
@@ -54,29 +56,33 @@
  * @module core/handle
  */
 
-import allPass from 'ramda/src/allPass';
-import always from 'ramda/src/always';
-import compose from 'ramda/src/compose';
 import cond from 'ramda/src/cond';
 import curry from 'ramda/src/curry';
-import identity from 'ramda/src/identity';
-import ifElse from 'ramda/src/ifElse';
-import isType from 'ramda/src/is';
-import map from 'ramda/src/map';
-import T from 'ramda/src/T';
 
 import {is} from '../keymap';
 
-// Ensures that everything passed to `allPass` is a function so that if null values are passed they
-// do not impede the event flow
-const makeSafeHandler = ifElse(isType(Function), identity, always(T));
-
 // Accepts an array of handlers, sanitizes them, and returns a handler function
-const makeHandler = compose(allPass, map(makeSafeHandler));
+// compose(allPass, map(makeSafeHandler));
+const makeHandler = (handlers) => (...args) => {
+	for (let i = 0; i < handlers.length; i++) {
+		const fn = handlers[i];
+		if (typeof fn !== 'function' || fn(...args)) {
+			continue;
+		}
+
+		return false;
+	}
+
+	return true;
+};
 
 /**
  * Allows generating event handlers by chaining input functions to filter or short-circuit the
  * handling flow. Any input function that returns a falsey value will stop the chain.
+ *
+ * The returned handler function has a `finally()` member that accepts a function and returns a new
+ * handler function. The accepted function is called once the original handler completes regardless
+ * of the returned value.
  *
  * @method   handle
  * @memberof core/handle
@@ -88,7 +94,7 @@ const handle = function (...handlers) {
 	const h = makeHandler(handlers);
 	h.displayName = 'handle';
 
-	return (ev, props, context) => {
+	const fn = (ev, props, context) => {
 		// if handle() was bound to a class, use its props and context. otherwise, we accept
 		// incoming props/context as would be provided by computed/handlers from kind()
 		if (this) {
@@ -98,6 +104,20 @@ const handle = function (...handlers) {
 
 		return h(ev, props, context);
 	};
+
+	fn.finally = (cleanup) => (...args) => {
+		let result = false;
+
+		try {
+			result = fn(...args);
+		} finally {
+			cleanup(...args);
+		}
+
+		return result;
+	};
+
+	return fn;
 };
 
 /**
@@ -120,7 +140,42 @@ const handle = function (...handlers) {
  *                          conditions and, if it passes, onto the provided handler.
  */
 const oneOf = handle.oneOf = function (...handlers) {
-	return cond(handlers);
+	return handle.call(this, cond(handlers));
+};
+
+/**
+ * A function that always returns `true`. Optionally accepts a `handler` function which is called
+ * before returning `true`.
+ *
+ * ```
+ * // Used to coerce an existing function into a handler change
+ * const coercedHandler = handle(
+ *   returnsTrue(doesSomething),
+ *   willAlwaysBeCalled
+ * );
+ *
+ * // Used to emulate if/else blocks with `oneOf`
+ * const ifElseHandler = oneOf(
+ * 	[forKey('enter'), handleEnter],
+ * 	[returnsTrue, handleOtherwise]
+ * );
+ * ```
+ *
+ * @method   returnsTrue
+ * @memberof core/handle
+ * @param    {[Function]}  handler  Handler function called before returning `true`
+ * @returns  {Function}	   A function that returns true
+ */
+const returnsTrue = handle.returnsTrue = function (handler) {
+	if (handler) {
+		return function (...args) {
+			handler(...args);
+
+			return true;
+		};
+	}
+
+	return true;
 };
 
 /**
@@ -409,6 +464,7 @@ export {
 	log,
 	oneOf,
 	preventDefault,
+	returnsTrue,
 	stop,
 	stopImmediate
 };

@@ -3,7 +3,7 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {MarqueeText} from '../Marquee';
+import Marquee from '../Marquee';
 
 import css from './VideoPlayer.less';
 
@@ -99,9 +99,9 @@ const MediaTitleBase = kind({
 
 		return (
 			<div {...rest} id={id}>
-				<MarqueeText id={id + '_title'} className={titleClassName} marqueeOn="render">
+				<Marquee id={id + '_title'} className={titleClassName} marqueeOn="render">
 					{title}
-				</MarqueeText>
+				</Marquee>
 				<div id={id + '_info'} className={childrenClassName}>  {/* tabIndex={-1} */}
 					{children}
 				</div>

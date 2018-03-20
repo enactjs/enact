@@ -22,7 +22,7 @@ describe('SpotlightContainerDecorator', () => {
 		const Component = SpotlightContainerDecorator(Div);
 
 		const subject = mount(
-			<Component containerId="test-container" />
+			<Component spotlightId="test-container" />
 		);
 
 		subject.find(Div).prop('onMouseEnter')();
@@ -38,13 +38,13 @@ describe('SpotlightContainerDecorator', () => {
 
 		const node = document.createElement('div');
 		const subject = mount(
-			<Component containerId="outer-container">
-				<Component containerId="inner-container" />
+			<Component spotlightId="outer-container">
+				<Component spotlightId="inner-container" />
 			</Component>,
 			{attachTo: node}
 		);
 
-		const selector = '[data-container-id="inner-container"]';
+		const selector = 'div[data-spotlight-id="inner-container"]';
 		const innerWrapper = subject.find(selector);
 		const innerNode = node.querySelector(selector);
 
@@ -65,14 +65,14 @@ describe('SpotlightContainerDecorator', () => {
 
 		const node = document.createElement('div');
 		const subject = mount(
-			<Component containerId="outer-container">
-				<Component containerId="inner-container" />
-				<Component containerId="self-only-container" />
+			<Component spotlightId="outer-container">
+				<Component spotlightId="inner-container" />
+				<Component spotlightId="self-only-container" />
 			</Component>,
 			{attachTo: node}
 		);
 
-		const selector = '[data-container-id="inner-container"]';
+		const selector = 'div[data-spotlight-id="inner-container"]';
 		const innerWrapper = subject.find(selector);
 		const innerNode = node.querySelector(selector);
 

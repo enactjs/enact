@@ -54,32 +54,48 @@ describe('EditableIntegerPicker', () => {
 	});
 
 	it('should disable input when blurred', function () {
+		const node = document.body.appendChild(document.createElement('div'));
 		const picker = mount(
-			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />
+			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />,
+			{attachTo: node}
 		);
 
 		picker.find('PickerItem').simulate('click', {target: {type: 'click'}});
-		const input = picker.find('input').first();
-		input.node.focus();
-		input.simulate('blur');
+
+		const input = node.querySelector('input');
+		input.focus();
+		input.blur();
+
+		picker.update();
+
 		const expected = 0;
 		const actual = picker.find('input').length;
+
+		node.parentNode.removeChild(node);
 
 		expect(actual).to.equal(expected);
 	});
 
 	it('should take value inputted and navigate to the value on blur', function () {
+		const node = document.body.appendChild(document.createElement('div'));
 		const picker = mount(
-			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />
+			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />,
+			{attachTo: node}
 		);
 
 		picker.find('PickerItem').simulate('click', {target: {type: 'click'}});
-		const input = picker.find('input').first();
-		input.node.focus();
-		input.node.value = 38;
-		input.simulate('blur');
+
+		const input = node.querySelector('input');
+		input.focus();
+		input.value = 38;
+		input.blur();
+
+		picker.update();
+
 		const expected = 38;
 		const actual = parseInt(picker.find('PickerItem').first().text());
+
+		node.parentNode.removeChild(node);
 
 		expect(actual).to.equal(expected);
 	});
@@ -97,34 +113,46 @@ describe('EditableIntegerPicker', () => {
 	});
 
 	it('should pause the spotlight when input is focused', function () {
+		const node = document.body.appendChild(document.createElement('div'));
 		const pauseSpy = sinon.spy(Spotlight, 'pause');
 		const picker = mount(
-			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />
+			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />,
+			{attachTo: node}
 		);
 
 		picker.simulate('keyDown', {keyCode: 50});
-		const input = picker.find('input').first();
-		input.node.focus();
+		const input = node.querySelector('input');
+		input.focus();
+
 		const expected = true;
 		const actual = pauseSpy.calledOnce;
+
 		Spotlight.pause.restore();
+		node.parentNode.removeChild(node);
+
 		expect(actual).to.equal(expected);
 	});
 
 	it('should resume the spotlight when input is blurred', function () {
 		const resumeSpy = sinon.spy(Spotlight, 'resume');
+		const node = document.body.appendChild(document.createElement('div'));
 		const picker = mount(
-			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />
+			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />,
+			{attachTo: node}
 		);
 
 		picker.find('PickerItem').simulate('click', {target: {type: 'click'}});
-		const input = picker.find('input').first();
 
-		input.node.focus();
-		input.simulate('blur');
+		const input = node.querySelector('input');
+		input.focus();
+		input.blur();
+
 		const expected = true;
 		const actual = resumeSpy.calledOnce;
+
 		Spotlight.resume.restore();
+		node.parentNode.removeChild(node);
+
 		expect(actual).to.equal(expected);
 	});
 

@@ -4,7 +4,9 @@ import equals from 'ramda/src/equals';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import Touchable from '@enact/ui/Touchable';
 import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import Spotlight, {getDirection} from '@enact/spotlight';
@@ -23,6 +25,8 @@ const isDown = is('down');
 const isLeft = is('left');
 const isRight = is('right');
 const isUp = is('up');
+
+const Div = Touchable('div');
 
 const PickerViewManager = shouldUpdate((props, nextProps) => {
 	return (
@@ -52,8 +56,6 @@ const forwardBlur = forward('onBlur'),
 	forwardFocus = forward('onFocus'),
 	forwardKeyDown = forward('onKeyDown'),
 	forwardKeyUp = forward('onKeyUp'),
-	forwardMouseDown = forward('onMouseDown'),
-	forwardMouseUp = forward('onMouseUp'),
 	forwardWheel = forward('onWheel');
 
 /**
@@ -213,22 +215,6 @@ const PickerBase = class extends React.Component {
 		onIncrementSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * Initiate the pressed state
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onMouseDown: PropTypes.func,
-
-		/**
-		 * End the pressed state
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onMouseUp: PropTypes.func,
-
-		/**
 		 * The handler to run prior to focus leaving the picker when the 5-way down key is pressed.
 		 *
 		 * @type {Function}
@@ -273,17 +259,6 @@ const PickerBase = class extends React.Component {
 		 * @public
 		 */
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
-
-		/**
-		 * Which button (increment, decrement, or neither) is pressed
-		 *
-		 * @type {Number|null}
-		 * @public
-		 */
-		pressed: PropTypes.oneOfType([
-			PropTypes.number,
-			PropTypes.bool
-		]),
 
 		/**
 		 * When `true`, the picker buttons operate in the reverse direction such that pressing
@@ -365,7 +340,8 @@ const PickerBase = class extends React.Component {
 		this.state = {
 			// Set to `true` onFocus and `false` onBlur to prevent setting aria-valuetext (which
 			// will notify the user) when the component does not have focus
-			active: false
+			active: false,
+			pressed: 0
 		};
 
 		this.initContainerRef = this.initRef('containerRef');
@@ -474,36 +450,33 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
-	handleDown = (dir) => {
-		const {joined, onMouseDown} = this.props;
-		if (joined && onMouseDown) {
-			onMouseDown({pressed: dir});
+	handleDown = (pressed) => {
+		const {joined} = this.props;
+		if (joined) {
+			this.setState({pressed});
 		}
 	}
 
-	emulateMouseUp = new Job((ev) => forwardMouseUp(ev, this.props), 175)
+	emulateMouseUp = new Job(() => {
+		this.setState({
+			pressed: 0
+		});
+	}, 175)
 
-	handleUp = (ev) => {
-		// Attach handleUp to the container and forward mouseUp if one of the Picker buttons was pressed
-		if (this.pickerButtonPressed) {
-			forwardMouseUp(ev, this.props);
-			this.pickerButtonPressed = false;
+	handleUp = () => {
+		const {joined} = this.props;
+		if (joined && this.pickerButtonPressed) {
+			this.emulateMouseUp.start();
 		}
 	}
 
-	handleDecDown = (ev) => {
-		if (ev) {
-			forwardMouseDown(ev, this.props);
-			this.pickerButtonPressed = true;
-		}
+	handleDecDown = () => {
+		this.pickerButtonPressed = true;
 		this.handleDecrement();
 	}
 
-	handleIncDown = (ev) => {
-		if (ev) {
-			forwardMouseDown(ev, this.props);
-			this.pickerButtonPressed = true;
-		}
+	handleIncDown = () => {
+		this.pickerButtonPressed = true;
 		this.handleIncrement();
 	}
 
@@ -658,7 +631,8 @@ const PickerBase = class extends React.Component {
 	}
 
 	determineClasses (decrementerDisabled, incrementerDisabled) {
-		const {joined, orientation, pressed, width} = this.props;
+		const {joined, orientation, width} = this.props;
+		const {pressed} = this.state;
 		return [
 			css.picker,
 			css[orientation],
@@ -713,7 +687,10 @@ const PickerBase = class extends React.Component {
 
 	initRef (prop) {
 		return (ref) => {
-			this[prop] = ref;
+			// need a way, for now, to get a DOM node ref ~and~ use onUp. Likely should rework the
+			// wheel handler to avoid this requirement
+			// eslint-disable-next-line react/no-find-dom-node
+			this[prop] = ref && ReactDOM.findDOMNode(ref);
 		};
 	}
 
@@ -742,13 +719,10 @@ const PickerBase = class extends React.Component {
 		delete rest.max;
 		delete rest.min;
 		delete rest.onChange;
-		delete rest.onMouseDown;
-		delete rest.onMouseUp;
 		delete rest.onPickerSpotlightDown;
 		delete rest.onPickerSpotlightLeft;
 		delete rest.onPickerSpotlightRight;
 		delete rest.onPickerSpotlightUp;
-		delete rest.pressed;
 		delete rest.reverse;
 		delete rest.value;
 		delete rest.wrap;
@@ -777,7 +751,7 @@ const PickerBase = class extends React.Component {
 		const incrementerAriaControls = !decrementerDisabled ? id : null;
 
 		return (
-			<div
+			<Div
 				{...rest}
 				aria-controls={joined ? id : null}
 				aria-disabled={disabled}
@@ -788,7 +762,7 @@ const PickerBase = class extends React.Component {
 				onFocus={this.handleFocus}
 				onKeyDown={this.handleKeyDown}
 				onKeyUp={this.handleKeyUp}
-				onMouseUp={this.handleUp}
+				onUp={this.handleUp}
 				ref={this.initContainerRef}
 			>
 				<PickerButton
@@ -799,10 +773,11 @@ const PickerBase = class extends React.Component {
 					hidden={reachedEnd}
 					icon={incrementIcon}
 					joined={joined}
+					onDown={this.handleIncDown}
 					onHoldPulse={this.handleIncDown}
 					onKeyDown={this.handleIncKeyDown}
-					onMouseDown={this.handleIncDown}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}
+					onTap={this.handleIncClick}
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
@@ -833,13 +808,15 @@ const PickerBase = class extends React.Component {
 					hidden={reachedStart}
 					icon={decrementIcon}
 					joined={joined}
+					onDown={this.handleDecDown}
 					onHoldPulse={this.handleDecDown}
 					onKeyDown={this.handleDecKeyDown}
-					onMouseDown={this.handleDecDown}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
+					onTap={this.handleDecClick}
+					onUp={this.handleUp}
 					spotlightDisabled={spotlightDisabled}
 				/>
-			</div>
+			</Div>
 		);
 	}
 };

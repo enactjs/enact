@@ -1,7 +1,9 @@
 import DatePicker, {DatePickerBase} from '@enact/moonstone/DatePicker';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, text} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
@@ -9,11 +11,13 @@ import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('DatePicker', DatePickerBase, DatePicker);
 removeProps(Config, 'year defaultOpen day maxDays maxMonths month onChangeDate onChangeMonth onChangeYear order');
 
-storiesOf('DatePicker')
-	.addWithInfo(
-		' ',
-		'The basic DatePicker',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'DatePicker',
+		withInfo({
+			propTables: [Config],
+			text: 'The basic DatePicker'
+		})(() => (
 			<DatePicker
 				title={text('title', 'Date')}
 				noLabels={nullify(boolean('noLabels', false))}
@@ -22,6 +26,5 @@ storiesOf('DatePicker')
 				onOpen={action('onOpen')}
 				onClose={action('onClose')}
 			/>
-		),
-		{propTables: [Config]}
+		))
 	);

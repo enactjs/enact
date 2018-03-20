@@ -1,19 +1,19 @@
-import {MarqueeText} from '@enact/moonstone/Marquee';
+import Marquee from '@enact/moonstone/Marquee';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
-import {boolean, number, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {boolean, number, select, text} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 
-storiesOf('Marquee')
-	.addWithInfo(
-		' ',
-		'The basic MarqueeText',
-		() => {
+storiesOf('Moonstone', module)
+	.add(
+		'Marquee',
+		withInfo('The basic MarqueeText')(() => {
 			const disabled = nullify(boolean('disabled', false));
 			return (
 				<section>
-					<MarqueeText
+					<Marquee
 						alignment={nullify(select('alignment', [null, 'left', 'right', 'center']))}
 						disabled={disabled}
 						forceDirection={nullify(select('forceDirection', [null, 'rtl', 'ltr']))}
@@ -26,9 +26,9 @@ storiesOf('Marquee')
 						style={{width: '400px'}}
 					>
 						{text('children', 'The quick brown fox jumped over the lazy dog. The bean bird flies at sundown.')}
-					</MarqueeText>
-					{disabled ? <p style={{fontSize: '70%', fontStyle: 'italic'}}><sup>*</sup>MarqueeText does not visually respond to <code>disabled</code> state.</p> : <p />}
+					</Marquee>
+					{disabled ? <p style={{fontSize: '70%', fontStyle: 'italic'}}><sup>*</sup>Marquee does not visually respond to <code>disabled</code> state.</p> : <p />}
 				</section>
 			);
-		}
+		})
 	);

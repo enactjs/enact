@@ -20,6 +20,7 @@ import {on, off} from '@enact/core/dispatcher';
 import {platform} from '@enact/core/platform';
 import {is} from '@enact/core/keymap';
 import Slottable from '@enact/ui/Slottable';
+import Touchable from '@enact/ui/Touchable';
 import Spotlight from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
@@ -29,7 +30,7 @@ import $L from '../internal/$L';
 import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
 
-import {calcNumberValueOfPlaybackRate, secondsToTime} from './util';
+import {calcNumberValueOfPlaybackRate, compareSources, secondsToTime} from './util';
 import Overlay from './Overlay';
 import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
@@ -40,7 +41,7 @@ import Times from './Times';
 
 import css from './VideoPlayer.less';
 
-const SpottableDiv = Spottable('div');
+const SpottableDiv = Touchable(Spottable('div'));
 const RootContainer = SpotlightContainerDecorator('div');
 const ControlsContainer = SpotlightContainerDecorator(
 	{
@@ -210,14 +211,6 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		backwardIcon: PropTypes.string,
-
-		/**
-		 * Specifies the spotlight container ID for the player
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		containerId: PropTypes.string,
 
 		/**
 		 * Removes interactive capability from this component. This includes, but is not limited to,
@@ -615,6 +608,14 @@ const VideoPlayerBase = class extends React.Component {
 		spotlightDisabled: PropTypes.bool,
 
 		/**
+		 * Specifies the spotlight container ID for the player
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		spotlightId: PropTypes.string,
+
+		/**
 		 * This component will be used instead of the built-in version.
 		 * The internal thumbnail class will be added to this component, however, it's the
 		 * responsibility of the developer to include this class in their implementation, if
@@ -781,7 +782,8 @@ const VideoPlayerBase = class extends React.Component {
 
 		const {source} = this.props;
 		const {source: nextSource} = nextProps;
-		if (nextSource !== source && !equals(source, nextSource)) {
+
+		if (!compareSources(source, nextSource)) {
 			this.setState({currentTime: 0, buffered: 0, proportionPlayed: 0, proportionLoaded: 0});
 			this.reloadVideo();
 		}
@@ -790,9 +792,11 @@ const VideoPlayerBase = class extends React.Component {
 	shouldComponentUpdate (nextProps, nextState) {
 		const {source} = this.props;
 		const {source: nextSource} = nextProps;
-		if (nextSource !== source && !equals(source, nextSource)) {
+
+		if (!compareSources(source, nextSource)) {
 			return true;
 		}
+
 		if (
 			!this.state.miniFeedbackVisible && this.state.miniFeedbackVisible === nextState.miniFeedbackVisible &&
 			!this.state.mediaSliderVisible && this.state.mediaSliderVisible === nextState.mediaSliderVisible &&
@@ -834,7 +838,7 @@ const VideoPlayerBase = class extends React.Component {
 		const {source: prevSource} = prevProps;
 
 		// Detect a change to the video source and reload if necessary.
-		if (prevSource !== source && !equals(source, prevSource)) {
+		if (!compareSources(source, prevSource)) {
 			this.reloadVideo();
 		}
 
@@ -1274,7 +1278,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			// Non-standard state computed from properties
 			proportionLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration,
-			proportionPlayed: el.currentTime / el.duration,
+			proportionPlayed: el.currentTime / el.duration || 0,
 			error: el.networkState === el.NETWORK_NO_SOURCE,
 			loading: el.readyState < el.HAVE_ENOUGH_DATA,
 			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime
@@ -1929,7 +1933,6 @@ const VideoPlayerBase = class extends React.Component {
 			backwardIcon,
 			children,
 			className,
-			containerId,
 			disabled,
 			forwardIcon,
 			infoComponents,
@@ -1951,6 +1954,7 @@ const VideoPlayerBase = class extends React.Component {
 			rightComponents,
 			source,
 			spotlightDisabled,
+			spotlightId,
 			style,
 			thumbnailComponent,
 			thumbnailSrc,
@@ -1995,11 +1999,11 @@ const VideoPlayerBase = class extends React.Component {
 		return (
 			<RootContainer
 				className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')}
-				containerId={containerId}
 				onClick={this.activityDetected}
 				onKeyDown={this.activityDetected}
 				ref={this.setPlayerRef}
 				spotlightDisabled={spotlightDisabled}
+				spotlightId={spotlightId}
 				style={style}
 			>
 				{/* Video Section */}

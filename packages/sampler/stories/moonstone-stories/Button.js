@@ -1,8 +1,10 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select, text} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 import nullify from '../../src/utils/nullify.js';
@@ -15,23 +17,24 @@ const prop = {
 	icons: ['', ...Object.keys(icons)]
 };
 
-storiesOf('Button')
-	.addWithInfo(
-		' ',
-		'The basic Button',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'Button',
+		withInfo({
+			propTables: [Config],
+			text: 'The basic Button'
+		})(() => (
 			<Button
 				onClick={action('onClick')}
 				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
 				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
-				disabled={boolean('disabled', ButtonBase.defaultProps.disabled)}
-				icon={nullify(select('icon', prop.icons))}
-				minWidth={nullify(boolean('minWidth', ButtonBase.defaultProps.minWidth))}
+				disabled={boolean('disabled', Config.defaultProps.disabled)}
+				icon={nullify(select('icon', prop.icons, Config.defaultProps.icon))}
+				minWidth={nullify(boolean('minWidth', Config.defaultProps.minWidth))}
 				selected={nullify(boolean('selected', false))}
-				small={nullify(boolean('small', ButtonBase.defaultProps.small))}
+				small={nullify(boolean('small', Config.defaultProps.small))}
 			>
 				{text('children', 'click me')}
 			</Button>
-		),
-		{propTables: [Config]}
+		))
 	);

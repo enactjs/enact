@@ -2,7 +2,98 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [1.13.3] - 2017-01-16
+## [unreleased]
+
+### Removed
+
+- `ui/Transition` property `clipHeight`
+
+### Added
+
+- `ui/Scrollable` support for scrolling by touch
+
+### Changed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
+
+
+### Fixed
+
+- `ui/Transition` animation for `clip` for "up", "left", and "right" directions. This includes a DOM addition to the Transition markup.
+- `ui/ComponentOverride` and `ui/ToggleItem` to accept HTML DOM node tag names as strings for its `component` property
+
+## [2.0.0-alpha.5] - 2018-03-07
+
+### Added
+
+- `ui/Touchable` support for drag gesture
+- `ui/Marquee` component
+- `ui/GridListImageItem` component
+
+### Changed
+
+- `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` components as unstyled base components to support UI libraries
+
+## [2.0.0-alpha.4] - 2018-02-13
+
+### Added
+
+- `ui/BodyText`, `ui/Image`, `ui/Item`, `ui/ProgressBar`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleIcon` components as unstyled base components to support UI libraries
+- `ui/SlotItem` with the properties of `slotBefore` and `slotAfter` so we can easily add things like icons to an item
+
+### Changed
+
+- `ui/Repeater` and `ui/Group` to require a unique key for each object type data
+- `ui/Toggleable` to use `'selected'` as its default `prop`, rather than `'active'`, since `'selected'` is by far the most common use case
+- `ui/Touchable` to use global gesture configuration with instance override rather than component-level configuration via HOC configs with instance override
+
+### Fixed
+
+- `ui/ViewManager` to suppress `enteringProp` for views that are rendered at mount
+
+## [2.0.0-alpha.3] - 2018-01-18
+
+### Added
+
+- `ui/Layout` debugging aid for help with complex layouts. Simply include the `"debug"` className in your app and everything below it will show debugging lines
+- `ui/Button`, `ui/Icon`, and `ui/IconButton` components to support reuse by themes
+- `ui/Touchable` support for flick gestures
+
+### Fixed
+
+- `ui/resolution` to measure the App's rendering area instead of the entire window, and now factors-in the height as well
+- `ui/Layout` prop `align` to support setting horizontal and vertical alignment in one prop, separated by a space
+
+## [2.0.0-alpha.2] - 2017-08-29
+
+## Added
+
+- `ui/Scroller` and `ui/VirtualList`
+
+## [2.0.0-alpha.1] - 2017-08-27
+
+## Added
+
+- `ui/Layout` which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
+- `ui/Touchable` to support consistent mouse and touch events along with hold gesture
+
+## Removed
+
+- `ui/Holdable` and `ui/Pressable` which were replaced by `ui/Touchable`
+
+## [1.15.0] - 2018-02-28
+
+### Fixed
+
+- Internal method used by many components that sometimes prevented re-renders when they were needed
+
+## [1.14.0] - 2018-02-23
+
+### Deprecated
+
+- `ui/Holdable` and `ui/Pressable`, to be replaced by `ui/Touchable` in 2.0.0
+
+## [1.13.3] - 2018-01-16
 
 No significant changes.
 

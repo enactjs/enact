@@ -155,6 +155,14 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			spotlightDisabled: PropTypes.bool,
 
 			/**
+			 * Used to identify this component within the Spotlight system
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			spotlightId: PropTypes.string,
+
+			/**
 			 * The tabIndex of the component. This value will default to -1 if left
 			 * unset and the control is spottable.
 			 *
@@ -166,10 +174,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			this.isFocused = false;
 			this.isHovered = false;
-			this.state = {
-				spotted: false
-			};
 		}
 
 		componentDidMount () {
@@ -178,8 +184,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			// if the component is spotted and became disabled,
-			if (this.state.spotted && (
+			// if the component is focused and became disabled,
+			if (this.isFocused && (
 				(!prevProps.disabled && this.props.disabled) ||
 				(!prevProps.spotlightDisabled && this.props.spotlightDisabled)
 			)) {
@@ -191,12 +197,14 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 				// if spotlight didn't move, find something else to spot starting from here
 				const current = Spotlight.getCurrent();
-				if (!Spotlight.getPointerMode() && (!current || this.node === current)) {
+				if (!current || this.node === current) {
 					this.node.blur();
 
-					getContainersForNode(this.node).reverse().reduce((found, id) => {
-						return found || Spotlight.focus(id);
-					}, false);
+					if (!Spotlight.getPointerMode()) {
+						getContainersForNode(this.node).reverse().reduce((found, id) => {
+							return found || Spotlight.focus(id);
+						}, false);
+					}
 				}
 			}
 
@@ -224,7 +232,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			if (this.state.spotted) {
+			if (this.isFocused) {
 				forward('onSpotlightDisappear', null, this.props);
 			}
 			if (lastSelectTarget === this) {
@@ -299,7 +307,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleBlur = (ev) => {
 			if (ev.currentTarget === ev.target) {
-				this.setState({spotted: false});
+				this.isFocused = false;
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
@@ -311,7 +319,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleFocus = (ev) => {
 			if (ev.currentTarget === ev.target) {
-				this.setState({spotted: true});
+				this.isFocused = true;
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
@@ -332,7 +340,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {disabled, spotlightDisabled, ...rest} = this.props;
+			const {disabled, spotlightDisabled, spotlightId, ...rest} = this.props;
 			const spottable = !disabled && !spotlightDisabled;
 			let tabIndex = rest.tabIndex;
 
@@ -342,7 +350,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.onSpotlightRight;
 			delete rest.onSpotlightUp;
 
-			if (tabIndex == null && spottable) {
+			if (tabIndex == null) {
 				tabIndex = -1;
 			}
 
@@ -352,6 +360,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				} else {
 					rest.className = spottableClass;
 				}
+			}
+
+			if (spotlightId) {
+				rest['data-spotlight-id'] = spotlightId;
 			}
 
 			return (

@@ -1,16 +1,16 @@
 import configure from '../src/configure';
-import { setOptions } from '@kadira/storybook-addon-options';
+import {setOptions} from '@storybook/addon-options';
 
 const stories = require.context('../stories/qa-stories', true, /.js$/);
 
 setOptions({
 	name: 'ENACT SAMPLER',
-	url: 'http://nebula.lgsvl.com/enyojs/enact-docs/develop/',
+	url: 'http://enactjs.com/',
 	goFullScreen: false,
-	showLeftPanel: true,
-	showDownPanel: true,
+	showStoriesPanel: true,
+	showAddonPanel: true,
 	showSearchBox: false,
-	downPanelInRight: false,
+	addonPanelInRight: false,
 });
 
 configure(stories, module);

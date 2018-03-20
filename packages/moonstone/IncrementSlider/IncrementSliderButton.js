@@ -1,17 +1,13 @@
-import Holdable from '../internal/Holdable';
 import kind from '@enact/core/kind';
 import IconButton from '../IconButton';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const HoldableIconButton = Holdable(IconButton);
-
 /**
- * {@link moonstone/IncrementSlider.IncrementSliderButton} is an
- * {@link moonstone/IconButton.IconButton} customized for
- * {@link moonstone/IncrementSlider.IncrementSlider}. It is optimized to only update when `disabled`
- * is changed to minimize unnecessary render cycles.
+ * An [IconButton]{@link moonstone/IconButton.IconButton} customized for
+ * [IncrementSlider]{@link moonstone/IncrementSlider.IncrementSlider}. It is optimized to only
+ * update when `disabled` is changed to minimize unnecessary render cycles.
  *
  * @class IncrementSliderButton
  * @memberof moonstone/IncrementSlider
@@ -23,17 +19,17 @@ const IncrementSliderButtonBase = kind({
 	name: 'IncrementSliderButton',
 
 	propTypes: /** @lends moonstone/IncrementSlider.IncrementSliderButton.prototype */ {
-		onClick: PropTypes.func
+		onTap: PropTypes.func
 	},
 
-	render: ({onClick, ...rest}) => {
+	render: ({onTap, ...rest}) => {
 		return (
-			<HoldableIconButton
+			<IconButton
 				{...rest}
 				backgroundOpacity="transparent"
-				onClick={onClick}
-				onHold={onClick}
-				onHoldPulse={onClick}
+				onTap={onTap}
+				onHold={onTap}
+				onHoldPulse={onTap}
 				small
 			/>
 		);

@@ -299,7 +299,7 @@ const ExpandablePickerBase = kind({
 					{children}
 				</Picker>
 				<IconButton
-					onClick={onChange}
+					onTap={onChange}
 					onSpotlightDisappear={onSpotlightDisappear}
 					onSpotlightDown={onSpotlightDown}
 					onSpotlightLeft={rtl ? onSpotlightLeft : null}

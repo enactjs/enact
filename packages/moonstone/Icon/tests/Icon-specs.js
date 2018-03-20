@@ -1,5 +1,5 @@
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import {IconBase as Icon} from '../Icon';
 
 describe('Icon Specs', () => {
@@ -57,22 +57,6 @@ describe('Icon Specs', () => {
 		const actual = icon.text().codePointAt();
 
 		expect(actual).to.equal(expected);
-	});
-
-	it('should merge author styles with src', function () {
-		const src = 'images/icon.png';
-		const icon = shallow(
-			<Icon style={{color: 'green'}}>
-				{src}
-			</Icon>
-		);
-
-		const expected = {
-			color: 'green',
-			backgroundImage: `url(${src})`
-		};
-		const actual = icon.prop('style');
-		expect(actual).to.deep.equal(expected);
 	});
 });
 

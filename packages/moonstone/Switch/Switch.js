@@ -1,25 +1,29 @@
 /**
- * Contains the declaration for the {@link moonstone/Switch.Switch} component.
+ * Provides Moonstone-themed pill-shaped toggle switch component with interactive togglable
+ * capabilities.
+ *
+ * @example
+ * <Switch />
  *
  * @module moonstone/Switch
+ * @exports Switch
+ * @exports SwitchBase
  */
 
 import kind from '@enact/core/kind';
-import {handle, forward} from '@enact/core/handle';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Icon from '../Icon';
-import Skinnable from '../Skinnable';
+import ToggleIcon from '../ToggleIcon';
 
-import css from './Switch.less';
+import componentCss from './Switch.less';
 
 /**
- * {@link moonstone/Switch.Switch} represents a Boolean state, and looks like a switch in
- * either the 'on' or 'off' positions.
+ * Renders the base level DOM structure of the component.
  *
  * @class Switch
  * @memberof moonstone/Switch
+ * @extends moonstone/ToggleIcon.ToggleIcon
  * @ui
  * @public
  */
@@ -27,86 +31,50 @@ const SwitchBase = kind({
 	name: 'Switch',
 
 	propTypes: /** @lends moonstone/Switch.Switch.prototype */ {
+		children: PropTypes.string,
+		css: PropTypes.object,
+
 		/**
 		 * Sets whether this control is animated during change.
 		 *
 		 * @type {Boolean}
-		 * @default true
-		 * @public
-		 */
-		animated: PropTypes.bool,
-
-		/**
-		 * Sets whether this control is disabled, and non-interactive
-		 *
-		 * @type {Boolean}
 		 * @default false
 		 * @public
 		 */
-		disabled: PropTypes.bool,
-
-		/**
-		 * The handler to run when the component is toggled.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {String} event.selected - Selected value of item.
-		 * @param {*} event.value - Value passed from `value` prop.
-		 * @public
-		 */
-		onToggle: PropTypes.func,
-
-		/**
-		 * Sets whether this control is in the "on" or "off" state. `true` for on, `false` for "off".
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		selected: PropTypes.bool
+		noAnimation: PropTypes.bool
 	},
 
 	defaultProps: {
-		animated: true,
-		selected: false,
-		disabled: false
+		children: 'circle',
+		noAnimation: false
 	},
 
 	styles: {
-		css,
-		className: 'switch'
-	},
-
-	handlers: {
-		onToggle: handle(
-			forward('onClick'),
-			(ev, {selected, onToggle}) => {
-				if (onToggle) {
-					onToggle({selected: !selected});
-				}
-			}
-		)
+		css: componentCss
 	},
 
 	computed: {
-		className: ({animated, selected, styler}) => styler.append(
-			{animated, selected}
-		)
+		className: ({noAnimation, styler}) => styler.append({
+			animated: !noAnimation
+		})
 	},
 
-	render: ({onToggle, ...rest}) => {
-		delete rest.animated;
-		delete rest.selected;
+	render: ({children, css, ...rest}) => {
+		delete rest.noAnimation;
 
 		return (
-			<span {...rest} onClick={onToggle}>
-				<Icon className={css.icon}>circle</Icon>
-			</span>
+			<ToggleIcon
+				{...rest}
+				css={css}
+			>
+				{children}
+			</ToggleIcon>
 		);
 	}
 });
 
-const Switch = Skinnable(SwitchBase);
-
-export default Switch;
-export {Switch, SwitchBase};
+export default SwitchBase;
+export {
+	SwitchBase as Switch,
+	SwitchBase
+};

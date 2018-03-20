@@ -1,9 +1,10 @@
 // Checkbox.less
 //
-@import '../styles/text.less';
-@import '../styles/skin.less';
+@import "../styles/text.less";
+@import "../styles/skin.less";
 
-.checkbox {
+// Interally theme our implementation using published classes from ToggleItem and ToggleIcon
+.toggleIcon {
 	@size: @moon-checkbox-size;
 
 	width: @size;
@@ -13,7 +14,6 @@
 	.icon {
 		visibility: hidden;
 		margin: 0;
-		vertical-align: top;
 		line-height: @size;
 		width: @size;
 		height: @size;
@@ -49,7 +49,7 @@
 }
 
 .focus({
-	.checkbox {
+	.toggleIcon {
 		// Skin colors
 		.applySkins({
 			&:not([disabled]) {
@@ -62,7 +62,7 @@
 
 .muted({
 	.focus({
-		.checkbox {
+		.toggleIcon {
 			// Skin colors
 			.applySkins({
 				background-color: @moon-checkbox-bg-color;
