@@ -211,7 +211,8 @@ const VirtualListBaseFactory = (type) => {
 
 		findSpottableItem = (indexFrom, indexTo) => {
 			const
-				{dataSize, isDisabledItem} = this.uiRef.props,
+				{isDisabledItem} = this.props,
+				{dataSize} = this.uiRef.props,
 				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
 				safeIndexTo = clamp(-1, dataSize, indexTo),
 				delta = (indexFrom < indexTo) ? 1 : -1;
@@ -233,7 +234,8 @@ const VirtualListBaseFactory = (type) => {
 
 		getIndexToScrollDisabled = (direction, currentIndex) => {
 			const
-				{dataSize, isDisabledItem, spacing} = this.uiRef.props,
+				{isDisabledItem} = this.props,
+				{dataSize, spacing} = this.uiRef.props,
 				{dimensionToExtent, primary} = this.uiRef,
 				{findSpottableItem} = this,
 				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo,
@@ -322,7 +324,7 @@ const VirtualListBaseFactory = (type) => {
 
 		scrollToNextItem = ({direction, focusedItem}) => {
 			const
-				{isDisabledItem} = this.uiRef.props,
+				{isDisabledItem} = this.props,
 				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
 				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo;
 			let indexToScroll = -1;
@@ -394,7 +396,8 @@ const VirtualListBaseFactory = (type) => {
 
 		jumpToSpottableItem = (keyCode, target) => {
 			const
-				{cbScrollTo, dataSize, isDisabledItem} = this.uiRef.props,
+				{isDisabledItem} = this.props,
+				{cbScrollTo, dataSize} = this.uiRef.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
 				{isPrimaryDirectionVertical} = this.uiRef,
 				rtl = this.props.rtl,
@@ -420,7 +423,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (isForward) {
 				// See if the next item is spottable then delegate scroll to onFocus handler
-				if (currentIndex < dataSize - 1 && !isDisabledItem(currentIndex + 1).disabled) {
+				if (currentIndex < dataSize - 1 && !isDisabledItem(currentIndex + 1)) {
 					return false;
 				}
 
