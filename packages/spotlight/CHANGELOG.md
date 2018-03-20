@@ -4,12 +4,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
-### Added
-
-- `spotlight/Pause` module which acts as a semaphore for spotlight pause state
 ### Removed
 
 - `spotlight/SpotlightContainerDecorator` prop `containerId`, to be replaced by `spotlightId`
+- `spotlight/Pause` module which acts as a semaphore for spotlight pause state
 
 ### Added
 
