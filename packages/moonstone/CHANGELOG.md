@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/VideoPlayer` property `component` to handle custom video element
 - `moonstone/IncrementSlider` properties `incrementAriaLabel` and `decrementAriaLabel` to configure the label set on each button
 - `moonstone/Input` support for `small` prop
 
