@@ -82,7 +82,6 @@ class SliderList extends React.Component {
 					onChange={this.handleChange}
 					step={1}
 					tooltip={false}
-					vertical={false}
 					value={this.state.value}
 				/>
 				<VirtualList

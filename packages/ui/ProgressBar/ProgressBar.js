@@ -57,6 +57,16 @@ const ProgressBar = kind({
 		css: PropTypes.object,
 
 		/**
+		 * Sets the orientation of the slider, whether the progress-bar depicts its progress value
+		 * in a left and right orientation or up and down onientation.
+		 * Must be either `'horizontal'` or `'vertical'`.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+
+		/**
 		 * The proportion of the filled portion of the progress bar. Valid values are
 		 * between `0` and `1`.
 		 *
@@ -64,22 +74,12 @@ const ProgressBar = kind({
 		 * @default 0
 		 * @public
 		 */
-		progress: PropTypes.number,
-
-		/**
-		 * If `true` the progress bar will be oriented vertically.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		vertical: PropTypes.bool
+		progress: PropTypes.number
 	},
 
 	defaultProps: {
 		backgroundProgress: 0,
-		progress: 0,
-		vertical: false
+		progress: 0
 	},
 
 	styles: {
@@ -89,12 +89,12 @@ const ProgressBar = kind({
 	},
 
 	computed: {
-		className: ({vertical, styler}) => styler.append({vertical}),
-		progressCssProp: ({vertical}) => (vertical ? 'height' : 'width')
+		className: ({orientation, styler}) => styler.append(orientation),
+		progressCssProp: ({orientation}) => ((orientation === 'vertical') ? 'height' : 'width')
 	},
 
 	render: ({backgroundProgress, css, progress, progressCssProp, ...rest}) => {
-		delete rest.vertical;
+		delete rest.orientation;
 
 		if (__DEV__) {
 			validateRange(backgroundProgress, 0, 1, 'ProgressBar', 'backgroundProgress', 'min', 'max');
