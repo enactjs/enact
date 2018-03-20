@@ -12,8 +12,8 @@ import ScrollableNative from '../Scrollable/ScrollableNative';
 
 const SpotlightPlaceholder = Spottable('div');
 
-const configureSpotlight = (containerId, instance) => {
-	Spotlight.set(containerId, {
+const configureSpotlight = (spotlightId, instance) => {
+	Spotlight.set(spotlightId, {
 		enterTo: 'last-focused',
 		/*
 		 * Returns the data-index as the key for last focused
@@ -102,14 +102,6 @@ const VirtualListBaseFactory = (type) => {
 			itemsRenderer: PropTypes.func.isRequired,
 
 			/**
-			 * Spotlight container Id.
-			 *
-			 * @type {String}
-			 * @private
-			 */
-			containerId: PropTypes.string,
-
-			/**
 			 * Passes the instance of [VirtualList]{@link ui/VirtualList.VirtualList}.
 			 *
 			 * @type {Object}
@@ -125,15 +117,23 @@ const VirtualListBaseFactory = (type) => {
 			 * @type {Boolean}
 			 * @private
 			 */
-			rtl: PropTypes.bool
+			rtl: PropTypes.bool,
+
+			/**
+			 * Spotlight container Id.
+			 *
+			 * @type {String}
+			 * @private
+			 */
+			spotlightId: PropTypes.string
 		}
 
 		constructor (props) {
 			super(props);
 
-			const {containerId} = props;
-			if (containerId) {
-				configureSpotlight(containerId, this);
+			const {spotlightId} = props;
+			if (spotlightId) {
+				configureSpotlight(spotlightId, this);
 			}
 		}
 
@@ -161,8 +161,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			if (nextProps.containerId && nextProps.containerId !== this.props.containerId) {
-				configureSpotlight(nextProps.containerId, this);
+			if (nextProps.spotlightId && nextProps.spotlightId !== this.props.spotlightId) {
+				configureSpotlight(nextProps.spotlightId, this);
 			}
 		}
 
@@ -198,8 +198,8 @@ const VirtualListBaseFactory = (type) => {
 		restoreLastFocused = false
 
 		setContainerDisabled = (bool) => {
-			const {containerId} = this.props;
-			const containerNode = document.querySelector(`[data-container-id="${containerId}"]`);
+			const {spotlightId} = this.props;
+			const containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 
 			if (containerNode) {
 				containerNode.setAttribute(dataContainerDisabledAttribute, bool);
@@ -376,7 +376,7 @@ const VirtualListBaseFactory = (type) => {
 		 */
 
 		setRestrict = (bool) => {
-			Spotlight.set(this.props.containerId, {restrict: (bool) ? 'self-only' : 'self-first'});
+			Spotlight.set(this.props.spotlightId, {restrict: (bool) ? 'self-only' : 'self-first'});
 		}
 
 		setSpotlightContainerRestrict = (keyCode, target) => {
@@ -595,9 +595,9 @@ const VirtualListBaseFactory = (type) => {
 				!this.isPlaceholderFocused()
 			) {
 				const
-					{containerId} = this.props,
+					{spotlightId} = this.props,
 					node = this.uiRef.containerRef.querySelector(
-						`[data-spotlight-id="${containerId}"] [data-index="${this.preservedIndex}"]`
+						`[data-spotlight-id="${spotlightId}"] [data-index="${this.preservedIndex}"]`
 					);
 
 				if (node) {
@@ -612,7 +612,7 @@ const VirtualListBaseFactory = (type) => {
 					// spotlight isn't lost
 					if (!foundLastFocused) {
 						this.restoreLastFocused = true;
-						Spotlight.focus(containerId);
+						Spotlight.focus(spotlightId);
 					}
 				}
 			}
@@ -710,7 +710,7 @@ const VirtualListBaseFactory = (type) => {
 				{itemRenderer, itemsRenderer, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
-			delete rest.containerId;
+			delete rest.spotlightId;
 			delete rest.initUiChildRef;
 
 			return (

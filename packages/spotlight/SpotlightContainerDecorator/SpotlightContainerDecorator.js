@@ -203,7 +203,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				Spotlight.remove(prevId);
 				id = Spotlight.add(id);
 
-				this.setState(add(nextProps));
+				this.setState(add({spotlightId: id}));
 			}
 		}
 

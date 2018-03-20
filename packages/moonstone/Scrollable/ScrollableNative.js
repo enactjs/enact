@@ -37,8 +37,8 @@ const navigableFilter = (elem) => {
 	}
 };
 
-const configureSpotlightContainer = ({'data-container-id': containerId, focusableScrollbar}) => {
-	Spotlight.set(containerId, {
+const configureSpotlightContainer = ({'data-spotlight-id': spotlightId, focusableScrollbar}) => {
+	Spotlight.set(spotlightId, {
 		navigableFilter: focusableScrollbar ? null : navigableFilter
 	});
 };
@@ -55,6 +55,8 @@ class ScrollableBaseNative extends Component {
 		 */
 		childRenderer: PropTypes.func.isRequired,
 
+		'data-spotlight-container': PropTypes.bool,
+
 		/**
 		 * This is passed onto the wrapped component to allow
 		 * it to customize the spotlight container for its use case.
@@ -62,7 +64,7 @@ class ScrollableBaseNative extends Component {
 		 * @type {String}
 		 * @private
 		 */
-		'data-container-id': PropTypes.string,
+		'data-spotlight-id': PropTypes.string,
 
 		/**
 		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
@@ -314,7 +316,7 @@ class ScrollableBaseNative extends Component {
 				return;
 			}
 			const
-				containerId = (
+				spotlightId = (
 					// ScrollerNative has a spotlightId on containerRef
 					childRef.containerRef.dataset.spotlightId ||
 					// VirtualListNative has a spotlightId on contentRef
@@ -325,7 +327,7 @@ class ScrollableBaseNative extends Component {
 				viewportBounds = this.uiRef.containerRef.getBoundingClientRect(),
 				spotItemBounds = spotItem.getBoundingClientRect(),
 				endPoint = this.getEndPoint(direction, spotItemBounds, viewportBounds),
-				next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId),
+				next = getTargetByDirectionFromPosition(rDirection, endPoint, spotlightId),
 				scrollFn = this.childRef.scrollToNextPage || this.childRef.scrollToNextItem;
 
 			// If there is no next spottable DOM elements, scroll one page with animation
@@ -337,7 +339,7 @@ class ScrollableBaseNative extends Component {
 				Spotlight.focus(next);
 			// If a next spottable DOM element is equals to the current spottable item, we need to find a next item
 			} else {
-				const nextPage = scrollFn({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
+				const nextPage = scrollFn({direction, reverseDirection: rDirection, focusedItem: spotItem, spotlightId});
 
 				// If finding a next spottable item in a Scroller, focus it
 				if (typeof nextPage === 'object') {
@@ -357,8 +359,8 @@ class ScrollableBaseNative extends Component {
 		let current = Spotlight.getCurrent();
 
 		if (!current || Spotlight.getPointerMode()) {
-			const containerId = Spotlight.getActiveContainer();
-			current = document.querySelector(`[data-spotlight-id="${containerId}"]`);
+			const spotlightId = Spotlight.getActiveContainer();
+			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 		}
 
 		return current && this.uiRef.containerRef.contains(current);
@@ -483,7 +485,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	render () {
-		const {childRenderer, 'data-container-id': containerId, ...rest} = this.props;
+		const {childRenderer, 'data-spotlight-container': spotlightContainer, 'data-spotlight-id': spotlightId, ...rest} = this.props;
 
 		delete rest.focusableScrollbar;
 
@@ -515,7 +517,8 @@ class ScrollableBaseNative extends Component {
 				}) => (
 					<div
 						className={className}
-						data-container-id={containerId}
+						data-spotlight-container={spotlightContainer}
+						data-spotlight-id={spotlightId}
 						ref={initContainerRef}
 						style={style}
 					>
@@ -525,7 +528,7 @@ class ScrollableBaseNative extends Component {
 									...childComponentProps,
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
-									containerId,
+									spotlightId,
 									initUiChildRef,
 									ref: this.initChildRef
 								})}
