@@ -79,6 +79,7 @@ const ProgressBar = kind({
 
 	defaultProps: {
 		backgroundProgress: 0,
+		orientation: 'horizontal',
 		progress: 0
 	},
 
