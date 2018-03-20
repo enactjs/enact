@@ -3,9 +3,7 @@
  * handler.
  *
  * @module ui/Media
- * @exports handledMediaEventsMap
- * @exports readyState
- * @exports Media
+ * @private
  */
 
 import React from 'react';

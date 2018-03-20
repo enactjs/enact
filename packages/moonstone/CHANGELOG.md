@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/VideoPlayer` property `component` to handle custom video element
+
 ### Removed
 
 - `moonstone/Button` and `moonstone/IconButton` prop `noAnimation`
