@@ -73,7 +73,7 @@ const VirtualGridList = kind({
 		 *
 		 * Usage:
 		 * ```
-		 * <VirtualGridListNative
+		 * <VirtualGridList
 		 * 	itemSize={{
 		 * 		minWidth: ri.scale(180),
 		 * 		minHeight: ri.scale(270)
