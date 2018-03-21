@@ -2,18 +2,12 @@
  * Exports the {@link ui/ViewManager.View} component.
  */
 
-import {Job} from '@enact/core/util';
+import {perfNow, Job} from '@enact/core/util';
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 
 import {shape} from './Arranger';
-
-// Isomorphic guards
-const nop = function () {};
-const isBrowser = typeof window === 'object';
-const cancelAnimationFrame = isBrowser ? window.cancelAnimationFrame.bind(window) : nop;
-const requestAnimationFrame = isBrowser ? window.requestAnimationFrame.bind(window) : nop;
-const now = isBrowser ? window.performance.now.bind(window.performance) : nop;
 
 /**
  * A `View` wraps a set of children for {@link ui/ViewManager.ViewManager}.
@@ -26,14 +20,14 @@ const now = isBrowser ? window.performance.now.bind(window.performance) : nop;
 class View extends React.Component {
 
 	static propTypes = /** @lends ui/ViewManager.View.prototype */ {
-		children: React.PropTypes.node.isRequired,
+		children: PropTypes.node.isRequired,
 
 		/**
 		 * Time in milliseconds to complete a transition
 		 *
 		 * @type {Number}
 		 */
-		duration: React.PropTypes.number.isRequired,
+		duration: PropTypes.number.isRequired,
 
 		/**
 		 * Arranger to control the animation
@@ -43,13 +37,21 @@ class View extends React.Component {
 		arranger: shape,
 
 		/**
+		 * An object containing properties to be passed to each child.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		childProps: PropTypes.object,
+
+		/**
 		 * Time, in milliseconds, to wait after a view has entered to inform it by passing the
 		 * `enteringProp` as false.
 		 *
 		 * @type {Number}
 		 * @default 0
 		 */
-		enteringDelay: React.PropTypes.number,
+		enteringDelay: PropTypes.number,
 
 		/**
 		 * Name of the property to pass to the wrapped view to indicate when it is entering the
@@ -61,14 +63,21 @@ class View extends React.Component {
 		 *
 		 * @type {String}
 		 */
-		enteringProp: React.PropTypes.string,
+		enteringProp: PropTypes.string,
 
 		/**
 		 * Index of the currently 'active' view.
 		 *
 		 * @type {Number}
 		 */
-		index: React.PropTypes.number,
+		index: PropTypes.number,
+
+		/**
+		 * Indicates if a view is currently leaving.
+		 *
+		 * @type {Boolean}
+		 */
+		leaving: PropTypes.bool,
 
 		/**
 		 * Indicates if the transition should be animated
@@ -76,14 +85,14 @@ class View extends React.Component {
 		 * @type {Boolean}
 		 * @default true
 		 */
-		noAnimation: React.PropTypes.bool,
+		noAnimation: PropTypes.bool,
 
 		/**
 		 * Index of the previously 'active' view.
 		 *
 		 * @type {Number}
 		 */
-		previousIndex: React.PropTypes.number,
+		previousIndex: PropTypes.number,
 
 		/**
 		 * Indicates if the transition should be reversed. The effect depends on how the provided
@@ -92,7 +101,7 @@ class View extends React.Component {
 		 * @type {Boolean}
 		 * @default false
 		 */
-		reverseTransition: React.PropTypes.bool
+		reverseTransition: PropTypes.bool
 	}
 
 	static defaultProps = {
@@ -104,13 +113,21 @@ class View extends React.Component {
 		this.animation = null;
 		this._raf = null;
 		this.state = {
-			entering: true
+			entering: false
 		};
 	}
 
 	componentWillReceiveProps (nextProps) {
 		// changeDirection let's us know we need to switch mid-transition
 		this.changeDirection = this.animation ? this.props.reverseTransition !== nextProps.reverseTransition : false;
+	}
+
+	shouldComponentUpdate (nextProps) {
+		if (nextProps.leaving) {
+			return false;
+		}
+
+		return true;
 	}
 
 	componentWillUnmount () {
@@ -120,7 +137,7 @@ class View extends React.Component {
 
 	cancelAnimationFrame () {
 		if (this._raf) {
-			cancelAnimationFrame(this._raf);
+			if (typeof window !== 'undefined') window.cancelAnimationFrame(this._raf);
 			this._raf = null;
 		}
 	}
@@ -140,9 +157,9 @@ class View extends React.Component {
 		}
 	}
 
-	componentDidAppear () {
+	setEntering () {
 		this.setState({
-			entering: false
+			entering: true
 		});
 	}
 
@@ -151,6 +168,8 @@ class View extends React.Component {
 	// will not be called on the initial render of a TransitionGroup.
 	componentWillEnter (callback) {
 		const {arranger, reverseTransition} = this.props;
+		this.setEntering();
+
 		if (arranger) {
 			this.prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
 		} else {
@@ -162,7 +181,9 @@ class View extends React.Component {
 		const {enteringDelay, enteringProp} = this.props;
 
 		if (enteringProp) {
-			this.enteringJob.startAfter(enteringDelay);
+			// FIXME: `startRafAfter` is a temporary solution using rAF. We need a better way to handle
+			// transition cycle and component life cycle to be in sync. See ENYO-4835.
+			this.enteringJob.startRafAfter(enteringDelay);
 		}
 	}
 
@@ -199,10 +220,12 @@ class View extends React.Component {
 	 */
 	prepareTransition = (arranger, callback, noAnimation) => {
 		const {duration, index, previousIndex, reverseTransition} = this.props;
-		const startTime = now();
-		const endTime = startTime + duration;
 		/* eslint react/no-find-dom-node: "off" */
 		const node = ReactDOM.findDOMNode(this);
+
+		const currentTime = perfNow();
+		let startTime = currentTime;
+		let endTime = startTime + duration;
 
 		// disable animation when the instance or props flag is true
 		noAnimation = noAnimation || this.props.noAnimation;
@@ -241,17 +264,19 @@ class View extends React.Component {
 			}
 		};
 
-		let initialTime = 0;
 
 		// When a new transition is initiated mid-transition, adjust time to account for the current
 		// percent complete.
 		if (this.animation && this.changeDirection) {
 			const a = this.animation;
 			const percentComplete = (a.time - a.start) / (a.end - a.start);
-			initialTime = (endTime - startTime) * (1 - percentComplete);
+			const delta = (endTime - startTime) * (1 - percentComplete);
+
+			startTime -= delta;
+			endTime -= delta;
 		}
 
-		this.transition(startTime, endTime, initialTime, fn);
+		this.transition(startTime, endTime, currentTime, fn);
 	}
 
 	/**
@@ -270,9 +295,9 @@ class View extends React.Component {
 		a.end = end;
 		a.time = time;
 
-		if (callback(start, end, time)) {
-			this._raf = requestAnimationFrame(() => {
-				const current = now();
+		if (callback(start, end, time) && typeof window !== 'undefined') {
+			this._raf = window.requestAnimationFrame(() => {
+				const current = perfNow();
 				this.transition(start, end, current, callback);
 			});
 		} else {
@@ -281,10 +306,15 @@ class View extends React.Component {
 	}
 
 	render () {
-		const {enteringProp, children} = this.props;
+		const {enteringProp, children, childProps} = this.props;
 
-		if (enteringProp) {
-			return React.cloneElement(children, {[enteringProp]: this.state.entering});
+		if (enteringProp || childProps) {
+			const props = Object.assign({}, childProps);
+			if (enteringProp) {
+				props[enteringProp] = this.state.entering;
+			}
+
+			return React.cloneElement(children, props);
 		} else {
 			return React.Children.only(children);
 		}

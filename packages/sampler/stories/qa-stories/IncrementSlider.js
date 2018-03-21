@@ -1,11 +1,9 @@
 import IncrementSliderDelayValue from './components/IncrementSliderDelayValue';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
-import {withKnobs} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
 
-storiesOf('IncrementSlider')
-	.addDecorator(withKnobs)
-	.addWithInfo(
+storiesOf('IncrementSlider', module)
+	.add(
 		'PLAT-28221',
 		() => (
 			<div>

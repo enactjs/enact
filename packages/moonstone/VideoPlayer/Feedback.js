@@ -1,6 +1,7 @@
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import FeedbackIcon from './FeedbackIcon';
 import states from './FeedbackIcons.js';
@@ -20,7 +21,7 @@ const FeedbackBase = kind({
 	name: 'Feedback',
 
 	propTypes: /** @lends moonstone/VideoPlayer.Feedback.prototype */ {
-		children: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+		children: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 		/**
 		 * Refers to one of the following possible media playback states.
@@ -35,7 +36,7 @@ const FeedbackBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		playbackState: React.PropTypes.oneOf(Object.keys(states)),
+		playbackState: PropTypes.oneOf(Object.keys(states)),
 
 		/**
 		 * If the current `playbackState` allows this component's visibility to be changed,
@@ -47,7 +48,7 @@ const FeedbackBase = kind({
 		 * @default true
 		 * @public
 		 */
-		visible: React.PropTypes.bool
+		visible: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -60,12 +61,12 @@ const FeedbackBase = kind({
 	},
 
 	computed: {
-		className: ({playbackState: s, styler, visible}) => styler.append({hidden: !visible && states[s] && states[s].allowHide}),
+		className: ({styler, visible}) => styler.append({hidden: !visible}),
 		children: ({children, playbackState: s}) => {
 			if (states[s]) {
 				// Working with a known state, treat `children` as playbackRate
 				if (states[s].message && children !== 1) {	// `1` represents a playback rate of 1:1
-					return children.toString().replace(/^\-/, '') + states[s].message;
+					return children.toString().replace(/^-/, '') + states[s].message;
 				}
 			} else {
 				// Custom Message
@@ -78,9 +79,9 @@ const FeedbackBase = kind({
 		delete rest.visible;
 		return (
 			<div {...rest}>
-				{states[playbackState].position === 'before' ? <FeedbackIcon>{playbackState}</FeedbackIcon> : null}
+				{states[playbackState] && states[playbackState].position === 'before' ? <FeedbackIcon>{playbackState}</FeedbackIcon> : null}
 				{children ? <div className={css.message}>{children}</div> : null}
-				{states[playbackState].position === 'after' ? <FeedbackIcon>{playbackState}</FeedbackIcon> : null}
+				{states[playbackState] && states[playbackState].position === 'after' ? <FeedbackIcon>{playbackState}</FeedbackIcon> : null}
 			</div>
 		);
 	}

@@ -1,9 +1,10 @@
 import React from 'react';
-import {shallow} from 'enzyme';
-import {ExpandableInputBase} from '../ExpandableInput';
+import sinon from 'sinon';
+import {mount, shallow} from 'enzyme';
+import {ExpandableInput, ExpandableInputBase} from '../ExpandableInput';
 
-describe('ExpandableInput', () => {
-	const inputHint = ' input field';
+describe('ExpandableInputBase', () => {
+	const inputHint = ' Input field';
 	describe('#aria-label', () => {
 		it('should use title, value, and input hint', function () {
 			const subject = shallow(
@@ -94,5 +95,24 @@ describe('ExpandableInput', () => {
 
 			expect(actual).to.equal(expected);
 		});
+	});
+});
+
+describe('ExpandableInput', () => {
+	it('should pass onChange callback to input', () => {
+		const handleChange = sinon.spy();
+		const value = 'input string';
+		const evt = {target: {value: value}};
+
+		const subject = mount(
+			<ExpandableInput title="Item" open onChange={handleChange} />
+		);
+
+		subject.find('input').simulate('change', evt);
+
+		const expected = value;
+		const actual = handleChange.firstCall.args[0].value;
+
+		expect(actual).to.equal(expected);
 	});
 });

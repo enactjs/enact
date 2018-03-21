@@ -1,23 +1,26 @@
+import classnames from 'classnames';
 import {forward, handle} from '@enact/core/handle';
-import kind from '@enact/core/kind';
 import ViewManager, {shape} from '@enact/ui/ViewManager';
 import invariant from 'invariant';
 import React from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import Spotlight from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 
-import IdProvider from './IdProvider';
 import css from './Panels.less';
 
 /**
  * The container for a set of Panels
  *
  * @class Viewport
+ * @memberof moonstone/Panels
  * @private
  */
-const ViewportBase = kind({
-	name: 'Viewport',
+const ViewportBase = class extends React.Component {
+	static displayName = 'Viewport'
 
-	propTypes: /** @lends Viewport.prototype */ {
+	static propTypes = /** @lends moonstone/Panels.Viewport.prototype */ {
 
 		/**
 		 * A function that generates a globally-unique identifier for a panel index
@@ -25,7 +28,7 @@ const ViewportBase = kind({
 		 * @type {Function}
 		 * @required
 		 */
-		generateId: React.PropTypes.func.isRequired,
+		generateId: PropTypes.func.isRequired,
 
 		/**
 		 * Set of functions that control how the panels are transitioned into and out of the
@@ -40,7 +43,7 @@ const ViewportBase = kind({
 		 *
 		 * @type {Panel}
 		 */
-		children: React.PropTypes.node,
+		children: PropTypes.node,
 
 		/**
 		 * Index of the active panel
@@ -48,7 +51,7 @@ const ViewportBase = kind({
 		 * @type {Number}
 		 * @default 0
 		 */
-		index: React.PropTypes.number,
+		index: PropTypes.number,
 
 		/**
 		 * Disable panel transitions
@@ -56,38 +59,79 @@ const ViewportBase = kind({
 		 * @type {Boolean}
 		 * @default false
 		 */
-		noAnimation: React.PropTypes.bool
-	},
+		noAnimation: PropTypes.bool
+	}
 
-	defaultProps: {
+	static defaultProps = {
 		index: 0,
 		noAnimation: false
-	},
+	}
 
-	styles: {
-		css,
-		className: 'viewport'
-	},
+	constructor () {
+		super();
 
-	handlers: {
-		onTransition: handle(forward('onTransition'), Spotlight.resume),
-		onWillTransition: handle(forward('onWillTransition'), Spotlight.pause)
-	},
+		this.paused = new Pause('Viewport');
+	}
 
-	computed: {
-		children: ({children, generateId}) => React.Children.map(children, (child, index) => {
-			return React.cloneElement(child, {
-				containerId: child.props.containerId || generateId(index),
-				'data-index': index
-			});
-		}),
-		enteringProp: ({noAnimation}) => noAnimation ? null : 'hideChildren'
-	},
+	componentDidMount () {
+		// eslint-disable-next-line react/no-find-dom-node
+		this.node = ReactDOM.findDOMNode(this);
+	}
 
-	render: ({arranger, children, enteringProp, index, noAnimation, ...rest}) => {
-		delete rest.generateId;
+	componentWillUnmount () {
+		this.paused.resume()
+	}
 
-		const count = React.Children.count(children);
+	addTransitioningClass = () => {
+		if (this.node) {
+			this.node.classList.add(css.transitioning);
+		}
+
+		return true;
+	}
+
+	removeTransitioningClass = () => {
+		if (this.node) {
+			this.node.classList.remove(css.transitioning);
+		}
+
+		return true;
+	}
+
+	pause = () => this.paused.pause()
+
+	resume = () => this.paused.resume()
+
+	handle = handle.bind(this)
+
+	handleTransition = this.handle(
+		forward('onTransition'),
+		this.removeTransitioningClass,
+		this.resume
+	)
+
+	handleWillTransition = this.handle(
+		forward('onWillTransition'),
+		this.addTransitioningClass,
+		this.pause
+	)
+
+	mapChildren = (children, generateId) => React.Children.map(children, (child, index) => {
+		return React.cloneElement(child, {
+			spotlightId: child.props.spotlightId || generateId(index, 'panel-container', Spotlight.remove),
+			'data-index': index
+		});
+	})
+
+	getEnteringProp = (noAnimation) => noAnimation ? null : 'hideChildren'
+
+	render () {
+		const {arranger, children, generateId, index, noAnimation, ...rest} = this.props;
+		const enteringProp = this.getEnteringProp(noAnimation);
+		const mappedChildren = this.mapChildren(children, generateId);
+		const className = classnames(css.viewport, rest.className);
+
+		const count = React.Children.count(mappedChildren);
 		invariant(
 			index === 0 && count === 0 || index < count,
 			`Panels index, ${index}, is invalid for number of children, ${count}`
@@ -97,23 +141,24 @@ const ViewportBase = kind({
 			<ViewManager
 				{...rest}
 				arranger={arranger}
+				className={className}
 				component="main"
 				duration={250}
-				enteringDelay={100}
+				enteringDelay={100} // TODO: Can we remove this?
 				enteringProp={enteringProp}
 				index={index}
 				noAnimation={noAnimation}
+				onTransition={this.handleTransition}
+				onWillTransition={this.handleWillTransition}
 			>
-				{children}
+				{mappedChildren}
 			</ViewManager>
 		);
 	}
-});
+};
 
-const Viewport = IdProvider(
-	{onUnmount: Spotlight.remove, prefix: 'panel-container-'},
+export default ViewportBase;
+export {
+	ViewportBase as Viewport,
 	ViewportBase
-);
-
-export default Viewport;
-export {Viewport, ViewportBase};
+};

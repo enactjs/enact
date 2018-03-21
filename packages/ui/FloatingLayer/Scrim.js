@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './Scrim.less';
 
@@ -68,7 +69,7 @@ class Scrim extends React.Component {
 		 * @default `translucent`
 		 * @public
 		 */
-		type: React.PropTypes.oneOf(['transparent', 'translucent'])
+		type: PropTypes.oneOf(['transparent', 'translucent'])
 	}
 
 	static defaultProps = {

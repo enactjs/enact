@@ -5,19 +5,56 @@
 // Using string refs from the source code of ReactTransitionGroup
 /* eslint-disable react/no-string-refs */
 
-import {childrenEquals} from '@enact/core/util';
 import compose from 'ramda/src/compose';
 import eqBy from 'ramda/src/eqBy';
+import equals from 'ramda/src/equals';
 import findIndex from 'ramda/src/findIndex';
 import {forward} from '@enact/core/handle';
 import identity from 'ramda/src/identity';
 import lte from 'ramda/src/lte';
+import map from 'ramda/src/map';
 import prop from 'ramda/src/prop';
 import propEq from 'ramda/src/propEq';
 import React from 'react';
+import PropTypes from 'prop-types';
 import remove from 'ramda/src/remove';
+import sort from 'ramda/src/sort';
 import unionWith from 'ramda/src/unionWith';
 import useWith from 'ramda/src/useWith';
+import when from 'ramda/src/when';
+
+const orderedKeys = map(when(React.isValidElement, prop('key')));
+const unorderedKeys = compose(sort((a, b) => a - b), orderedKeys);
+const unorderedEquals = useWith(equals, [unorderedKeys, unorderedKeys]);
+const orderedEquals = useWith(equals, [orderedKeys, orderedKeys]);
+
+/*
+ * Compares the keys of two sets of children and returns `true` if they are equal.
+ *
+ * @method
+ * @param  {Node[]}		prev		Array of children
+ * @param  {Node[]}		next		Array of children
+ * @param  {Boolean}	[ordered]	`true` to require the same order
+ *
+ * @returns {Boolean}				`true` if the children are the same
+ */
+const childrenEquals = (prev, next, ordered = false) => {
+	const prevChildren = React.Children.toArray(prev);
+	const nextChildren = React.Children.toArray(next);
+
+	if (prevChildren.length !== nextChildren.length) {
+		return false;
+	} else if (prevChildren.length === 1 && nextChildren.length === 1) {
+		const c1 = prevChildren[0];
+		const c2 = nextChildren[0];
+
+		return equals(c1, c2);
+	} else if (ordered) {
+		return orderedEquals(prevChildren, nextChildren);
+	} else {
+		return unorderedEquals(prevChildren, nextChildren);
+	}
+};
 
 /**
  * Returns the index of a child in an array found by `key` matching
@@ -88,14 +125,14 @@ const forwardOnWillTransition = forward('onWillTransition');
 
 class TransitionGroup extends React.Component {
 	static propTypes = /** @lends ui/ViewManager.TransitionGroup.prototype */ {
-		children: React.PropTypes.node.isRequired,
+		children: PropTypes.node.isRequired,
 
 		/**
 		 * Adapts children to be compatible with TransitionGroup
 		 *
 		 * @type {Function}
 		 */
-		childFactory: React.PropTypes.func,
+		childFactory: PropTypes.func,
 
 		/**
 		 * Type of component wrapping the children. May be a DOM node or a custom React component.
@@ -103,49 +140,56 @@ class TransitionGroup extends React.Component {
 		 * @type {String|Component}
 		 * @default 'div'
 		 */
-		component: React.PropTypes.any,
+		component: PropTypes.any,
+
+		/**
+		 * Current Index the ViewManager is on
+		 *
+		 * @type {Number}
+		 */
+		currentIndex: PropTypes.number,
 
 		/**
 		 * Called when each view is rendered during initial construction.
 		 *
 		 * @type {Function}
 		 */
-		onAppear: React.PropTypes.func,
+		onAppear: PropTypes.func,
 
 		/**
 		 * Called when each view completes its transition into the viewport.
 		 *
 		 * @type {Function}
 		 */
-		onEnter: React.PropTypes.func,
+		onEnter: PropTypes.func,
 
 		/**
 		 * Called when each view completes its transition out of the viewport.
 		 *
 		 * @type {Function}
 		 */
-		onLeave: React.PropTypes.func,
+		onLeave: PropTypes.func,
 
 		/**
 		 * Called when each view completes its transition within the viewport.
 		 *
 		 * @type {Function}
 		 */
-		onStay: React.PropTypes.func,
+		onStay: PropTypes.func,
 
 		/**
 		 * Called once when all views have completed their transition.
 		 *
 		 * @type {Function}
 		 */
-		onTransition: React.PropTypes.func,
+		onTransition: PropTypes.func,
 
 		/**
 		 * Called once before views begin their transition.
 		 *
 		 * @type {Function}
 		 */
-		onWillTransition: React.PropTypes.func,
+		onWillTransition: PropTypes.func,
 
 		/**
 		 * Maximum number of rendered children. Used to limit how many visible transitions are
@@ -156,7 +200,7 @@ class TransitionGroup extends React.Component {
 		 * @type {Number}
 		 * @default 2
 		 */
-		size: React.PropTypes.number
+		size: PropTypes.number
 	}
 
 	static defaultProps = {
@@ -193,8 +237,7 @@ class TransitionGroup extends React.Component {
 			let children = mergeChildren(nextChildMapping, prevChildMapping);
 
 			// drop children exceeding allowed size
-			const drop = children.length - nextProps.size;
-			const dropped = drop > 0 ? children.splice(drop) : null;
+			const dropped = children.length > nextProps.size ? children.splice(nextProps.size) : null;
 
 			this.setState({
 				children
@@ -389,9 +432,11 @@ class TransitionGroup extends React.Component {
 		// support wrapping arbitrary children with a component that supports the necessary
 		// lifecycle methods to animate transitions
 		const childrenToRender = this.state.children.map(child => {
+			const isLeaving = child.props['data-index'] !== this.props.currentIndex && typeof child.props['data-index'] !== 'undefined';
+
 			return React.cloneElement(
 				this.props.childFactory(child),
-				{key: child.key, ref: child.key}
+				{key: child.key, ref: child.key, leaving: isLeaving}
 			);
 		});
 
@@ -399,7 +444,9 @@ class TransitionGroup extends React.Component {
 		const props = Object.assign({}, this.props);
 		delete props.size;
 		delete props.childFactory;
+		delete props.currentIndex;
 		delete props.component;
+		delete props.onAppear;
 		delete props.onAppear;
 		delete props.onEnter;
 		delete props.onLeave;

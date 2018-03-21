@@ -2,6 +2,7 @@ import hoc from '@enact/core/hoc';
 import invariant from 'invariant';
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {Router, propTypes, toSegments} from './Router';
 
@@ -56,7 +57,7 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 			 *
 			 * @type {Function}
 			 */
-			[navigate]: React.PropTypes.func
+			[navigate]: PropTypes.func
 		},
 
 		handlers: {

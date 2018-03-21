@@ -6,7 +6,8 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
 
 import Popup from '../Popup';
@@ -39,15 +40,12 @@ const NotificationBase = kind({
 		]).isRequired,
 
 		/**
-		 * The element(s) to be displayed in the body of the Notification.
+		 * The contents to be displayed in the body of the Notification.
 		 *
 		 * @type {Node}
 		 * @public
 		 */
-		children: PropTypes.oneOfType([
-			PropTypes.arrayOf(PropTypes.element),
-			PropTypes.element
-		]),
+		children: PropTypes.node,
 
 		/**
 		 * When `true`, the popup will not close when the user presses `ESC` key.
@@ -84,7 +82,7 @@ const NotificationBase = kind({
 		 * @default 'transparent'
 		 * @public
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none'])
+		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none'])
 	},
 
 	defaultProps: {
@@ -106,7 +104,7 @@ const NotificationBase = kind({
 			}
 		},
 		buttons: ({buttons}) => React.Children.map(buttons, (button) => {
-			if (!button.props.small) {
+			if (button && button.props && !button.props.small) {
 				return React.cloneElement(button, {small: true});
 			} else {
 				return button;

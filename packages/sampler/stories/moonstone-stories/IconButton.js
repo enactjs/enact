@@ -1,40 +1,43 @@
 import IconButton, {IconButtonBase} from '@enact/moonstone/IconButton';
 import icons from './icons';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select, text} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 // import icons
-import fwd from '../../images/icon-fwd-btn.png';
-import play from '../../images/icon-play-btn.png';
-import rew from '../../images/icon-rew-btn.png';
+import docs from '../../images/icon-enact-docs.png';
+import factory from '../../images/icon-enact-factory.svg';
+import logo from '../../images/icon-enact-logo.svg';
 
 const Config = mergeComponentMetadata('IconButton', IconButtonBase, IconButton);
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'transparent': 'transparent'}
+	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent']
 };
 
-storiesOf('IconButton')
-	.addDecorator(withKnobs)
-	.addWithInfo(
-		' ',
-		'The basic IconButton',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'IconButton',
+		withInfo({
+			propTables: [Config],
+			text: 'The basic IconButton'
+		})(() => (
 			<IconButton
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
 				color={nullify(select('color', [null, 'red', 'green', 'yellow', 'blue']))}
-				disabled={nullify(boolean('disabled', false))}
+				disabled={boolean('disabled', false)}
 				selected={nullify(boolean('selected', false))}
 				small={boolean('small', false)}
+				tooltipText={nullify(text('tooltipText', ''))}
 			>
-				{select('src', ['', fwd, play, rew], '') + select('icon', ['', ...icons], 'plus') + text('custom icon', '')}
+				{select('src', ['', docs, factory, logo], '') + select('icon', ['', ...icons], 'plus') + text('custom icon', '')}
 			</IconButton>
-		),
-		{propTables: [Config]}
+		))
 	);

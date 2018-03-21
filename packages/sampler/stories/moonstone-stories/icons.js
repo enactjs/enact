@@ -13,7 +13,8 @@ const decrementIcons = [
 	'pausejumpbackward',
 	'jumpbackward',
 	'rollbackward',
-	'arrowshrink'
+	'arrowshrink',
+	'back15'
 ];
 
 const incrementIcons = [
@@ -24,14 +25,16 @@ const incrementIcons = [
 	'pausejumpforward',
 	'jumpforward',
 	'rollforward',
-	'arrowextend'
+	'arrowextend',
+	'forward15'
 ];
 
 const listIcons = [
 	'denselist',
 	'bulletlist',
 	'list',
-	'drawer'
+	'drawer',
+	'playlist'
 ];
 
 const mediaIcons = [
@@ -46,7 +49,27 @@ const mediaIcons = [
 	'pauseforward',
 	'pausebackward',
 	'pausejumpforward',
-	'pausejumpbackward'
+	'pausejumpbackward',
+	'resumeplay',
+	'image',
+	'audio',
+	'music',
+	'languages',
+	'cc',
+	'ccon',
+	'ccoff',
+	'sub',
+	'recordings',
+	'livezoom',
+	'liveplayback',
+	'liveplaybackoff',
+	'repeat',
+	'repeatoff',
+	'series',
+	'repeatdownload',
+	'view360',
+	'view360off',
+	'info'
 ];
 
 const arrowIcons = [

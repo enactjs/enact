@@ -1,6 +1,6 @@
-# @enact/i18n
+# @enact/i18n [![npm (scoped)](https://img.shields.io/npm/v/@enact/i18n.svg?style=flat-square)](https://www.npmjs.com/package/@enact/i18n)
 
-> Enact library for internationalization
+> Internationalization library based on iLib.
 
 `@enact/i18n` provides a decorator that can be used to wrap a root component in a React (or Enact) application.
 This decorator provides a context to child components that can be used to determine locale text directionality
@@ -56,7 +56,7 @@ This module is built upon the [iLib](http://docs.jedlsoft.com/ilib/jsdoc/) libra
 Unless otherwise specified, all content, including all source code files and
 documentation files in this repository are:
 
-Copyright (c) 2016-2017 LG Electronics
+Copyright (c) 2016-2018 LG Electronics
 
 Unless otherwise specified or set forth in the NOTICE file, all content,
 including all source code files and documentation files in this repository are:

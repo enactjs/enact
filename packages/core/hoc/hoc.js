@@ -1,15 +1,32 @@
+/**
+ * Provides the {@link core/hoc.hoc} method to create Higher-Order Components (HOCs).
+ *
+ * @module core/hoc
+ */
+
 import {isRenderable} from '../util';
+import mergeDeepWithKey from 'ramda/src/mergeDeepWithKey';
+
+const mergeFn = (key, defaultValue, userValue) => {
+	// eslint-disable-next-line no-undefined
+	if (userValue === undefined) {
+		return defaultValue;
+	}
+
+	return userValue;
+};
 
 /**
  * Constructs a Higher-order Component using an optional set of default configuration parameters and
- * a factory method that acceps instance configuration paramters and a component to wrap. The
+ * a factory method that accepts instance configuration parameters and a component to wrap. The
  * returned function can accept:
- * 	* an instance config and a component constructor to wrap and return a renderable component, or
- * 	* an instance config only and return a decorator function expecting a component constructor
- * 	  (like the next bullet), or
- * 	* a component constructor and return a renderable component
+ *	* an instance config and a component constructor to wrap and return a renderable component, or
+ *	* an instance config only and return a decorator function expecting a component constructor
+ *	(like the next bullet), or
+ *	* a component constructor and return a renderable component
  *
- * @example
+ * Example:
+ * ```
  *	const Countable = hoc({prop: 'data-count'}, (config, Wrapped) => {
  *		return class extends React.Component {
  *			constructor (props) {
@@ -32,11 +49,15 @@ import {isRenderable} from '../util';
  *	const CountableAsDataNumber({prop: 'data-number'});
  *	const CountableDiv('div');
  *	const CountableDivAsDataNumber = CountableAsDataNumber('div');
+ * ```
  *
+ * @function
  * @param  {Object} defaultConfig Set of default configuration parameters
  * @param  {Function} hawk        Higher-order component
  *
  * @returns {Function}             HoC Decorator
+ * @memberof core/hoc
+ * @public
  */
 const hoc = (defaultConfig, hawk) => {
 
@@ -52,7 +73,7 @@ const hoc = (defaultConfig, hawk) => {
 		if (isRenderable(config)) {
 			return factory(defaults, config);
 		} else {
-			const cfg = Object.assign({}, defaults, config);
+			const cfg = mergeDeepWithKey(mergeFn, defaults, config);
 			if (isRenderable(maybeWrapped)) {
 				return factory(cfg, maybeWrapped);
 			} else {

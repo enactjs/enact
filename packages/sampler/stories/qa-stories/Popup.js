@@ -1,12 +1,15 @@
 import Button from '@enact/moonstone/Button';
 import Popup from '@enact/moonstone/Popup';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, text, select} from '@storybook/addon-knobs';
 
-storiesOf('Popup')
-	.addDecorator(withKnobs)
-	.addWithInfo(
+const Container = SpotlightContainerDecorator('div');
+
+storiesOf('Popup', module)
+	.add(
 		'using spotlightRestrict',
 		() => (
 			<div>
@@ -28,9 +31,10 @@ storiesOf('Popup')
 				>
 					<div>{text('children', 'Hello Popup')}</div>
 					<br />
-					<Button>Button</Button>
+					<Container>
+						<Button>Button</Button>
+					</Container>
 				</Popup>
 			</div>
 		)
 	);
-

@@ -14,22 +14,22 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
     *   `dataSize`: Size of the data. A list does not check the size of `data` prop. dataSize prop is the only value to count items in a list.
     *   `itemSize`: Size of an item for the list. This is a required prop, and you will get an error when you build an app in dev mode without it.
-    *   `component`: The render function for an item of the list.
+    *   `itemRenderer`: The render function for an item of the list.
     *   Example
 
         ```
         <VirtualList
-        	data={data}
-        	dataSize={data.length}
-        	itemSize={ri.scale(72)}
-        	component={this.renderItem}
+            data={data}
+            dataSize={data.length}
+            itemRenderer={this.renderItem}
+            itemSize={ri.scale(72)}
         />
 
         <VirtualGridList
-        	data={data}
-        	dataSize={data.length}
-        	itemSize={{minWidth: ri.scale(90), minHeight: ri.scale(135)}}
-        	component={this.renderItem}
+            data={data}
+            dataSize={data.length}
+            itemRenderer={this.renderItem}
+            itemSize={{minWidth: ri.scale(90), minHeight: ri.scale(135)}}
         />
         ```
 
@@ -37,49 +37,43 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
     ```
     <VirtualList
-    	data={data}
-    	dataSize={data.length} //<-- numeric property
-    	itemSize={ri.scale(72)} //<-- numeric property
-    	component={this.renderItem}
+        data={data}
+        dataSize={data.length} //<-- numeric property
+        itemRenderer={this.renderItem}
+        itemSize={ri.scale(72)} //<-- numeric property
         spacing={ri.scale(10)} //<-- numeric property
     />
     ```
 
 ### Common rules of Items for VirtualList/VirtualGridList
 
-*   A renderer for an item should be specified in `component` prop in VirtualList.
-*   VirtualList passes `data`, `index`, `key` to the `component` function.
-*   Be sure you are passing `key={key}` to the item component for reusing DOM.
-*   Items should have `position: absolute;` and `display: block` style for showing properly.
-*   Make sure you are not using an inline function for `component`.
-*   If you are using an item component which has `@enact/spotlight.Spottable` hoc, Spotlight will enable items and you can navigate them with 5-way key.
+*   A renderer for an item should be specified in `itemRenderer` prop in VirtualList.
+*   VirtualList passes `data`, `index`, `data-index`, and `key` to the `itemRenderer` function.
+*   Be sure you are passing `{...rest}` to the item component for reusing DOM.
+*   VirtualList will automatically give proper className for items.
+*   Be sure to compose `className` prop when you make customized item component.
+*   Make sure you are not using an inline function for `itemRenderer`.
+*   If you want to scroll the list via 5-way navigation on the certain component in an item, you should pass `data-index` prop.
 *   Example:
 
     ```
-    //.less
-    .listItem {
-        ...
-        position: absolute;
-        ...
-    }
-
     //.js
-    renderItem = ({data, index, key}) => {
-    	return (
-    		<div key={key} className={css.listItem]>
-    			{data[index].name}
-    		</div>
-    	);
+    renderItem = ({data, index, ...rest}) => {
+        return (
+            <div {...rest}>
+                {data[index].name}
+            </div>
+        );
     }
     ...
     render = () => {
         return (
             <VirtualList
-    			data={data}
-    			dataSize={data.length}
-    			itemSize={this.itemSize}
-    			component={this.renderItem}
-    		/>
+                data={data}
+                dataSize={data.length}
+                itemRenderer={this.renderItem}
+                itemSize={this.itemSize}
+            />
         );
     }
     ```
@@ -89,27 +83,27 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     ```
     //MyListItem.js
     const MyListItem = kind({
-    	.....
-    	render = ({...rest}) => { //<-- should pass props
-    		return (
-    			<div {...rest}>
-    				...
-    			</div>
-    		);
-    	}
+        .....
+        render = (props) => { //<-- should pass props
+            return (
+                <div {...props}>
+                    ...
+                </div>
+            );
+        }
     });
 
     //app.js
-    renderItem = ({data, index, key}) => {
-    	return (
-    		<MyListItem data={data} index={index} key={key} />
-    	);
+    renderItem = ({data, index, ...rest}) => {
+        return (
+            <MyListItem index={index} {...rest} />
+        );
     }
     ```
 
 ### Items for VirtualGridList
 
-*   `VirtualList.GridListImageItem` can be used as items of VirtualGridList. It has Moonstone styling applied and has a placeholder image as a background.
+*   `GridListImageItem` components can be used as items of `VirtualGridList`. They have Moonstone styling applied and have a placeholder image as a background.
 
 *   `caption` and `subCaption` are supported.
 
@@ -121,15 +115,15 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 *   Example:
 
     ```
-    renderItem = ({data, index, key}) => {
+    renderItem = ({data, index, ...rest}) => {
         const {text, subText, source} = data[index];
         return (
             <GridListImageItem
+                {...rest}
                 caption={text}
-                key={key}
+                className={css.item}
                 source={source}
                 subCaption={subText}
-                className={css.item}
             />
         );
     };
@@ -140,24 +134,23 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 ### Basic usage of Scroller
 
 *   Make sure you specify width and height of Scroller.
-*   For now, `'auto'`, `'hidden'` values for `horizontal` and `vertical` are only valid in Scroller.
+*   You can specify the scrollable direction with `direction` props. Valid values are `both`, `horizontal`, and `vertical`.
 *   Example:
 
     ```
     //.less
     .scroller {
-    	height: 550px;
-    	width: 480px;
+        height: 550px;
+        width: 480px;
     }
 
     //.js
     <Scroller
-        horizontal="auto"
-        vertical="auto"
         className={css.scroller}
+        direction="both"
     >
         <div className={css.content}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br /> 
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
         </div>
     </Scroller>
     ```
@@ -177,32 +170,32 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
     ```
     class SampleApp extends React.Component {
-    	constructor (props) {
-    		super(props);
+        constructor (props) {
+            super(props);
 
-    		this.y = 0;
-    	}
-    	...
-    	getScrollTo = (scrollTo) => { // callback function to get scrollTo method; arrow function (ES6) is recommended to make sure `this` binding.
-    		this.scrollTo = scrollTo;
-    	}
-    	...
-    	doSomething = () => {
-    		...
-    		this.scrollTo({position: {y: this.y + offset}, animate: true}); // call the function of SampleApp, not a list.
-    	}
-    	...
-    	render = () => {
-    	    return (
-    			<VirtualList
-    				cbScrollTo={this.getScrollTo} // pass callback function
-    				data={data}
-    				dataSize={data.length}
-    				itemSize={this.itemSize}
-    				component={this.renderItem}
-    			/>
-    	    );
-    	}
+            this.y = 0;
+        }
+        ...
+        getScrollTo = (scrollTo) => { // callback function to get scrollTo method; arrow function (ES6) is recommended to make sure `this` binding.
+            this.scrollTo = scrollTo;
+        }
+        ...
+        doSomething = () => {
+            ...
+            this.scrollTo({position: {y: this.y + offset}, animate: true}); // call the function of SampleApp, not a list.
+        }
+        ...
+        render = () => {
+            return (
+                <VirtualList
+                    cbScrollTo={this.getScrollTo} // pass callback function
+                    data={data}
+                    dataSize={data.length}
+                    itemRenderer={this.renderItem}
+                    itemSize={this.itemSize}
+                />
+            );
+        }
     }
     ```
 
@@ -213,15 +206,18 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     this.scrollTo({position: {x: 100, y: 200}); // scroll to (100px, 200px) position; animation is enabled if omitted
     this.scrollTo({align: 'bottom'}); // scroll to the bottom
     this.scrollTo({align: 'lefttop'}); // scroll to the left top position; identical to {position: {x: 0, y:0}}
-    this.scrollTo({index: 20}); // VirtualList/VirtualGridList only; scroll to the 21th item; index is counting from 0
+    this.scrollTo({index: 20}); // VirtualList/VirtualGridList only; scroll to the 21st item; index is counting from 0
+    this.scrollTo({index: 20, focus: true}); // VirtualList/VirtualGridList only; scroll to the 21st item and focus on the item
     this.scrollTo({node: childNode}); // Scroller only; scroll to the child node.
+    this.scrollTo({node: childNode, focus: true}); // Scroller only; scroll to the child node and focus on the node.
     ```
 
 ## Event Callbacks for VirtualList/VirtualGridList and Scroller
 
 *   You can specify callback functions for scroll events.
 *   When you scroll on a list or a scroller, `onScrollStart`, `onScroll`, and `onScrollStop` events fire.
-*   Each event sends an object with `scrollLeft` and `scrollTop` properties in it.
+*   Each event sends an object with `scrollLeft`, `scrollTop`, and `moreInfo` properties in it.
+*   For VirtualList/VirtualGridList, `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`.
 *   It is recommended not to call `setState()` in `onScroll` event callback.
 *   Example:
 
@@ -229,24 +225,24 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     //app.js
     ...
     handlerOnScrollStart = () => {
-    	this.setState({message: 'startScroll'});
+        this.setState({message: 'startScroll'});
     }
-    handlerOnScroll = (e) => {
-    	this.y = e.scrollTop;
+    handlerOnScroll = ({scrollTop}) => {
+        this.y = scrollTop;
     }
-    handlerOnScrollStop = (e) => {
-    	this.y = e.scrollTop;
-    	this.setState({message: 'scrollStopped'});
+    handlerOnScrollStop = ({scrollTop}) => {
+        this.y = scrollTop;
+        this.setState({message: 'scrollStopped'});
     }
     ...
     render = () => {
-    	return (
-    		<VirtualList
-    			...
-    			onScrollStart={this.handlerOnScrollStart}
-    			onScroll={this.handlerOnScroll}
-    			onScrollStop={this.handlerOnScrollStop}
-    		/>
-    	);
+        return (
+            <VirtualList
+                ...
+                onScrollStart={this.handlerOnScrollStart}
+                onScroll={this.handlerOnScroll}
+                onScrollStop={this.handlerOnScrollStop}
+            />
+        );
     }
     ```

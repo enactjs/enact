@@ -80,6 +80,23 @@ DigitalStorageUnit.ratios = {
     "petabyte": [ 12,  9.007199255e15, 1.125899907e15, 8.796093022e12, 1.099511628e12, 8589934592,     1073741824,     8388608,         1048576,         8192,            1024,            8,               1               ]
 };
 
+DigitalStorageUnit.bitSystem = {
+    "bit":      1,
+    "kilobit":  3,
+    "megabit":  5,
+    "gigabit":  7,
+    "terabit":  9,
+    "petabit":  11
+};
+DigitalStorageUnit.byteSystem = {
+    "byte":     2,
+    "kilobyte": 4,
+    "megabyte": 6,
+    "gigabyte": 8,
+    "terabyte": 10,
+    "petabyte": 12
+};
+
 /**
  * Return the type of this measurement. Examples are "mass",
  * "length", "speed", etc. Measurements can only be converted
@@ -124,7 +141,6 @@ DigitalStorageUnit.prototype.convert = function(to) {
  * measure in the other system, in this case, mph. The formatted result should
  * appear as "37.3 mph". 
  * 
- * @abstract
  * @param {string} locale current locale string
  * @returns {Measurement} a new instance that is converted to locale
  */
@@ -149,18 +165,22 @@ DigitalStorageUnit.prototype.localize = function(locale) {
  * right level
  */
 DigitalStorageUnit.prototype.scale = function(measurementsystem) {
+    var mSystem;
+    if (this.unit in DigitalStorageUnit.bitSystem) {
+    	mSystem = DigitalStorageUnit.bitSystem;
+    } else {
+    	mSystem = DigitalStorageUnit.byteSystem;
+    }
     
-    var fromRow = DigitalStorageUnit.ratios[this.unit];    
     var dStorage = this.amount;
     var munit = this.unit;
-    var i;
+    var fromRow = DigitalStorageUnit.ratios[this.unit];
     
     dStorage = 18446744073709551999;
-    for (var m in DigitalStorageUnit.ratios) {
-    	i = DigitalStorageUnit.ratios[m][0];
-        var tmp = this.amount * fromRow[i];
+    for (var m in mSystem) {
+    	var tmp = this.amount * fromRow[mSystem[m]];
         if (tmp >= 1 && tmp < dStorage) {
-	        dStorage = tmp;
+        	dStorage = tmp;
 	        munit = m;
         }
     }
@@ -168,7 +188,7 @@ DigitalStorageUnit.prototype.scale = function(measurementsystem) {
     return new DigitalStorageUnit({
 		unit: munit,
 		amount: dStorage
-    });    
+    });
 };
 
 DigitalStorageUnit.aliases = {

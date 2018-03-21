@@ -8,7 +8,9 @@
 	@keyframes fadeIn {
 		from {
 			opacity: 0;
-		} to {
+		}
+
+		to {
 			opacity: 1;
 		}
 	}
@@ -20,40 +22,51 @@
 		white-space: nowrap;
 	}
 
-	svg {
-		position: absolute;
-	}
-
-	line {
-		stroke: @bg-color;
-		stroke-width: 3px;
-	}
-
-	circle {
-		fill: @bg-color;
-	}
-
 	.hintDialog {
 		position: fixed;
 		opacity: 0;
 		animation: fadeIn ease-in 1;
 		animation-fill-mode: forwards;
 		animation-duration: 1s;
+		direction: ltr;
+
+		.pointer {
+			background-color: @bg-color;
+			height: 201;
+			position: absolute;
+			text-align: center;
+			transform-origin: top center;
+			width: 3px;
+
+			.pointerIcon {
+				@iconSize: 12px;
+
+				bottom: 0;
+				color: @bg-color;
+				font-size: (@iconSize * 2);
+				width: @iconSize;
+				height: @iconSize;
+				line-height: @iconSize;
+				margin: 0;
+				position: absolute;
+				transform: translate(-50%, 50%);
+			}
+		}
 
 		&:nth-of-type(1) {
 			animation-delay: 0.1s;
 		}
+
 		&:nth-of-type(2) {
 			animation-delay: 0.6s;
 		}
+
 		&:nth-of-type(3) {
 			animation-delay: 1.2s;
 		}
+
 		&:nth-of-type(4) {
 			animation-delay: 1.8s;
-		}
-		&:nth-of-type(5) {
-			animation-delay: 2.4s;
 		}
 	}
 

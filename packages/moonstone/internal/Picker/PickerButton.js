@@ -1,38 +1,97 @@
-import Holdable from '@enact/ui/Holdable';
+import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
-import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
+import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
+import Touchable from '@enact/ui/Touchable';
 
+import {controlContextTypes} from '../../Marquee';
 import Icon from '../../Icon';
 import IconButton from '../../IconButton';
+import {withSkinnableProps} from '../../Skinnable';
+
+import css from './Picker.less';
+
+const JoinedPickerButtonBase = kind({
+	name: 'JoinedPickerButtonBase',
+
+	propTypes: {
+		disabled: PropTypes.bool,
+		icon: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.object
+		])
+	},
+
+	render: ({disabled, icon, ...rest}) => (
+		<span {...rest} disabled={disabled}>
+			<Icon className={css.icon} disabled={disabled} small>{icon}</Icon>
+		</span>
+	)
+});
+
+const JoinedPickerButton = Touchable(JoinedPickerButtonBase);
 
 const PickerButtonBase = kind({
 	name: 'PickerButton',
 
 	propTypes: {
-		disabled: React.PropTypes.bool,
-		icon: React.PropTypes.oneOfType([
-			React.PropTypes.string,
-			React.PropTypes.object
+		disabled: PropTypes.bool,
+		hidden: PropTypes.bool,
+		icon: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.object
 		]),
-		joined: React.PropTypes.bool,
-		onSpotlightDisappear: React.PropTypes.func,
-		spotlightDisabled: React.PropTypes.bool
+		joined: PropTypes.bool,
+		onSpotlightDisappear: PropTypes.func,
+		skin: PropTypes.string,
+		spotlightDisabled: PropTypes.bool
+	},
+
+	contextTypes: controlContextTypes,
+
+	styles: {
+		css
+	},
+
+	handlers: {
+		onMouseEnter: handle(
+			forward('onMouseEnter'),
+			(ev, props, context) => {
+				if (context.enter) {
+					context.enter(null);
+				}
+			}
+		),
+		onMouseLeave: handle(
+			forward('onMouseLeave'),
+			(ev, props, context) => {
+				if (context.leave) {
+					context.leave(null);
+				}
+			}
+		)
+	},
+
+	computed: {
+		className: ({hidden, styler}) => styler.append({
+			hidden
+		})
 	},
 
 	render: ({disabled, icon, joined, ...rest}) => {
 		if (joined) {
+			delete rest.hidden;
 			delete rest.onSpotlightDisappear;
+			delete rest.skin;
 			delete rest.spotlightDisabled;
 
 			return (
-				<span {...rest} disabled={disabled}>
-					<Icon disabled={disabled}>{icon}</Icon>
-				</span>
+				<JoinedPickerButton {...rest} icon={icon} disabled={disabled} />
 			);
 		} else {
 			return (
-				<IconButton {...rest} backgroundOpacity="transparent" disabled={disabled}>
+				<IconButton {...rest} backgroundOpacity="transparent" disabled={disabled} small>
 					{icon}
 				</IconButton>
 			);
@@ -40,9 +99,8 @@ const PickerButtonBase = kind({
 	}
 });
 
-const PickerButton = Holdable(
-	{resume: true, endHold: 'onLeave'},
-	onlyUpdateForKeys(['aria-label', 'disabled', 'icon', 'joined', 'onMouseUp', 'spotlightDisabled'])(
+const PickerButton = Pure(
+	withSkinnableProps(
 		PickerButtonBase
 	)
 );

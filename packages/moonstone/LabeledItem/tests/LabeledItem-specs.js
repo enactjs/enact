@@ -1,14 +1,14 @@
 import React from 'react';
-import {mount} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 
 import LabeledItem from '../LabeledItem';
 import css from '../LabeledItem.less';
 
 describe('LabeledItem Specs', () => {
 
-	const labelClass = '.' + css.label;
+	const labelClass = 'div.' + css.label;
 
-	it('should render a label (\<div\>) by default', function () {
+	it('should render a label (<div>) by default', function () {
 		const item = mount(
 			<LabeledItem label="The Label">I am a labeledItem</LabeledItem>
 		);
@@ -44,7 +44,7 @@ describe('LabeledItem Specs', () => {
 	});
 
 	it('should have \'disabled\' HTML attribute when \'disabled=true\'', function () {
-		const item = mount(
+		const item = shallow(
 			<LabeledItem disabled>I am a disabled labeledItem</LabeledItem>
 		);
 

@@ -1,6 +1,6 @@
-# @enact/core
+# @enact/core [![npm (scoped)](https://img.shields.io/npm/v/@enact/core.svg?style=flat-square)](https://www.npmjs.com/package/@enact/core)
 
-> `@enact/core` contains the set of basic building blocks for an Enact-based application.
+> The set of essential building blocks for an Enact-based application.
 
 Enact core provides several abstractions to be used with React-based applications.  These include `core/kind`, a
 factory for stateless functional components (SFC's), `core/jobs`, a smart wrapper for `window.setTimeout`,
@@ -24,7 +24,7 @@ npm test
 
 Unless otherwise specified, all content, including all source code files and documentation files in this repository are:
 
-Copyright (c) 2012-2017 LG Electronics
+Copyright (c) 2012-2018 LG Electronics
 
 Unless otherwise specified or set forth in the NOTICE file, all content, including all source code files and documentation files in this repository are: Licensed under the Apache License, Version 2.0 (the "License"); you may not use this content except in compliance with the License. You may obtain a copy of the License at
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * {@link ui/AnnounceDecorator.Announce} provides an imperative API, `announce`, to alert the user
@@ -44,7 +45,7 @@ const Announce = class extends React.Component {
 		 * @default 500
 		 * @public
 		 */
-		timeout: React.PropTypes.number
+		timeout: PropTypes.number
 	}
 
 	static defaultProps = {
@@ -73,7 +74,7 @@ const Announce = class extends React.Component {
 	 * @public
 	 */
 	announce = (message) => {
-		if (this.alert && !this.alertTimeout) {
+		if (this.alert && !this.alertTimeout && message) {
 			this.alert.setAttribute('aria-label', message);
 			this.alertTimeout = setTimeout(this.resetAlert, this.props.timeout);
 		}

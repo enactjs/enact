@@ -1,15 +1,15 @@
 /**
- * Exports the {@link moonstone/TimePicker.TimePicker},
- * {@link moonstone/TimePicker.TimePickerBase}, and
- * {@link moonstone/TimePicker.TimePickerController} components.
+ * Exports the {@link moonstone/TimePicker.TimePicker} component
  *
  * @module moonstone/TimePicker
  */
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
+import Pure from '@enact/ui/internal/Pure';
 
 import DateTimeDecorator from '../internal/DateTimeDecorator';
+import Skinnable from '../Skinnable';
 
 import TimePickerBase from './TimePickerBase';
 
@@ -32,6 +32,7 @@ const toMinutes = (time) => {
  * Converts the `start` and `end` string representations (e.g. '12:00') into a numerical
  * representation.
  *
+ * @param	{Object}	options			Time options
  * @param	{String}	options.start	Start time of meridiem
  * @param	{String}	options.end		End time of meridiem
  *
@@ -64,36 +65,12 @@ const indexOfMeridiem = (time, meridiems) => {
 	return -1;
 };
 
-/**
- * {@link moonstone/TimePicker.TimePicker} allows the selection (or simply display) of a hour,
- * month, and meridiem.
- *
- * Set the [value]{@link moonstone/TimePicker.TimePicker#value} property to a standard JavaScript
- * {@glossary Date} object to initialize the picker.
- *
- * By default, `TimePicker` maintains the state of its `value` property. Supply the
- * `defaultValue` property to control its initial value. If you wish to directly control updates
- * to the component, supply a value to `value` at creation time and update it in response to
- * `onChange` events.
- *
- * `TimePicker` is an expandable component and it maintains its open/closed state by default. The
- * initial state can be supplied using `defaultOpen`. In order to directly control the open/closed
- * state, supply a value for `open` at creation time and update its value in response to
- * `onClose`/`onOpen` events.
- *
- * @class TimePicker
- * @memberof moonstone/TimePicker
- * @mixes ui/Toggleable.Toggleable
- * @mixes ui/RadioDecorator.RadioDecorator
- * @mixes ui/Changeable.Changeable
- * @ui
- * @public
- */
-const TimePicker = DateTimeDecorator({
+const dateTimeConfig = {
 	customProps: function (i18n, value) {
 		let values = {
 			// i18n props
 			meridiems: i18n.meridiemLabels,
+			meridiemLabel: null,
 
 			// date components
 			hour: 12,
@@ -101,12 +78,20 @@ const TimePicker = DateTimeDecorator({
 			meridiem: 0
 		};
 
+		if (i18n.meridiemEnabled) {
+			if (values.meridiems.length > 2) {
+				values.meridiemLabel = `${values.meridiems[0]} / ${values.meridiems[1]} ...`;
+			} else {
+				values.meridiemLabel = values.meridiems.join(' / ');
+			}
+		}
+
 		if (value) {
-			values.hour = value.getHours();
-			values.minute = value.getMinutes();
 			if (i18n.meridiemEnabled) {
 				values.meridiem = indexOfMeridiem(value, i18n.meridiemRanges);
 			}
+			values.hour = value.getHours();
+			values.minute = value.getMinutes();
 		}
 
 		return values;
@@ -202,8 +187,82 @@ const TimePicker = DateTimeDecorator({
 			order
 		};
 	}
-}, TimePickerBase);
+};
 
+/**
+ * {@link moonstone/TimePicker.TimePicker} allows the selection (or simply display) of a hour,
+ * month, and meridiem.
+ *
+ * Set the [value]{@link moonstone/TimePicker.TimePicker#value} property to a standard JavaScript
+ * {@glossary Date} object to initialize the picker.
+ *
+ * By default, `TimePicker` maintains the state of its `value` property. Supply the
+ * `defaultValue` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `value` at creation time and update it in response to
+ * `onChange` events.
+ *
+ * `TimePicker` is an expandable component and it maintains its open/closed state by default. The
+ * initial state can be supplied using `defaultOpen`. In order to directly control the open/closed
+ * state, supply a value for `open` at creation time and update its value in response to
+ * `onClose`/`onOpen` events.
+ *
+ * @class TimePicker
+ * @memberof moonstone/TimePicker
+ * @mixes ui/Toggleable.Toggleable
+ * @mixes ui/RadioDecorator.RadioDecorator
+ * @mixes ui/Changeable.Changeable
+ * @ui
+ * @public
+ */
+const TimePicker = Pure(
+	Skinnable(
+		DateTimeDecorator(
+			dateTimeConfig,
+			TimePickerBase
+		)
+	)
+);
+
+/**
+ * The primary text of the item.
+ *
+ * @name title
+ * @memberof moonstone/TimePicker.TimePicker
+ * @instance
+ * @type {String}
+ * @required
+ * @public
+ */
+
+/**
+ * When `true`, omits the labels below the pickers
+ *
+ * @name noLabels
+ * @memberof moonstone/TimePicker.TimePicker
+ * @instance
+ * @type {Boolean}
+ * @public
+ */
+
+/**
+ * Callback to be called when a condition occurs which should cause the expandable to close
+ *
+ * @name onClose
+ * @memberof moonstone/TimePicker.TimePicker
+ * @instance
+ * @type {Function}
+ * @public
+ */
+
+/**
+ * The selected date
+ *
+ * @name value
+ * @memberof moonstone/TimePicker.TimePicker
+ * @instance
+ * @type {Date}
+ * @public
+ */
 
 export default TimePicker;
 export {TimePicker, TimePickerBase};

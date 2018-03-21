@@ -1,3 +1,15 @@
+// Disabled elements
+.disabled(@rules; @target) when (isruleset(@rules)) and (@target = parent) {
+	[disabled] {
+		@rules();
+	}
+}
+.disabled(@rules) when (isruleset(@rules)) {
+	&[disabled] {
+		@rules();
+	}
+}
+
 .enact-composite() {
 	-webkit-transform: translateZ(0);
 	-ms-transform: translateZ(0);
@@ -18,6 +30,16 @@
 }
 
 // Applies RTL-compatible start and end margins to a selector
+.margin-start-end(@start; @end; @target) when (@target = parent) {
+    margin-left: @start;
+    margin-right: @end;
+
+    :global(.enact-locale-right-to-left)& {
+        margin-left: @end;
+        margin-right: @start;
+    }
+}
+
 .margin-start-end (@start, @end) {
 	margin-left: @start;
 	margin-right: @end;
@@ -29,6 +51,16 @@
 }
 
 // Applies RTL-compatible start and end padding to a selector
+.padding-start-end(@start; @end; @target) when (@target = parent) {
+    padding-left: @start;
+    padding-right: @end;
+
+    :global(.enact-locale-right-to-left)& {
+        padding-left: @end;
+        padding-right: @start;
+    }
+}
+
 .padding-start-end (@start, @end) {
 	padding-left: @start;
 	padding-right: @end;
@@ -38,6 +70,36 @@
 		padding-right: @start;
 	}
 }
+
+// NOTE: Until we are able to automatically remove these JSDoc-style comments, they should remain LESS-commented
+// /**
+//  * Removes the margin from the appropriate side of the child components that touch the edges of the
+//  * component this is applied to. This respects both LTR and RTL modes.
+//  */
+.remove-margin-on-edge-children() {
+	> :first-child {
+		-webkit-margin-start: 0;
+	}
+
+	> :last-child {
+		-webkit-margin-end: 0;
+	}
+}
+
+// /**
+//  * Removes the padding from the appropriate side of the child components that touch the edges of the
+//  * component this is applied to. This respects both LTR and RTL modes.
+//  */
+.remove-padding-on-edge-children() {
+	> :first-child {
+		-webkit-padding-start: 0;
+	}
+
+	> :last-child {
+		-webkit-padding-end: 0;
+	}
+}
+
 
 .full-screen-video-player() {
 	position: static !important;

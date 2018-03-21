@@ -5,24 +5,15 @@
  * @private
  */
 
-import Cancelable from '@enact/ui/Cancelable';
 import Changeable from '@enact/ui/Changeable';
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import hoc from '@enact/core/hoc';
 import ilib from '@enact/i18n';
-import RadioDecorator from '@enact/ui/RadioDecorator';
 import React from 'react';
-import Toggleable from '@enact/ui/Toggleable';
+import PropTypes from 'prop-types';
+import {Subscription} from '@enact/core/internal/PubSub';
 
-const CancelableDecorator = Cancelable({
-	component: 'span',
-	onCancel: function (props) {
-		if (props.open) {
-			props.onClose();
-			return true;
-		}
-	}
-});
+import {Expandable} from '../../ExpandableItem';
 
 /**
  * {@link moonstone/internal/DateTimeDecorator.DateTimeDecorator} provides common behavior for
@@ -39,8 +30,6 @@ const CancelableDecorator = Cancelable({
 const DateTimeDecorator = hoc((config, Wrapped) => {
 	const {customProps, defaultOrder, handlers, i18n} = config;
 
-	const Component = CancelableDecorator(Wrapped);
-
 	const Decorator = class extends React.Component {
 		static displayName = 'DateTimeDecorator'
 
@@ -51,7 +40,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			 * @type {Function}
 			 * @public
 			 */
-			onChange: React.PropTypes.func,
+			onChange: PropTypes.func,
 
 			/**
 			 * When `true`, the date picker is expanded to select a new date.
@@ -59,7 +48,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			 * @type {Boolean}
 			 * @public
 			 */
-			open: React.PropTypes.bool,
+			open: PropTypes.bool,
 
 			/**
 			 * The selected date
@@ -67,7 +56,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			 * @type {Date}
 			 * @public
 			 */
-			value: React.PropTypes.instanceOf(Date)
+			value: PropTypes.instanceOf(Date)
 		}
 
 		constructor (props) {
@@ -84,20 +73,6 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 				Object.keys(handlers).forEach(name => {
 					this.handlers[name] = this.handlePickerChange.bind(this, handlers[name]);
 				});
-			}
-		}
-
-		componentWillUpdate () {
-			// check for a new locale when updating
-			this.initI18n();
-		}
-
-		initI18n () {
-			const locale = ilib.getLocale();
-
-			if (i18n && this.locale !== locale && typeof window === 'object') {
-				this.locale = locale;
-				this.i18nContext = i18n();
 			}
 		}
 
@@ -122,6 +97,20 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 				this.setState({
 					value: newValue
 				});
+			}
+		}
+
+		componentWillUpdate () {
+			// check for a new locale when updating
+			this.initI18n();
+		}
+
+		initI18n () {
+			const locale = ilib.getLocale();
+
+			if (i18n && this.locale !== locale && typeof window === 'object') {
+				this.locale = locale;
+				this.i18nContext = i18n();
 			}
 		}
 
@@ -160,6 +149,10 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		 * @returns {Number}			Updated internal value
 		 */
 		updateValue = (value) => {
+			const {day, month, year} = value;
+			const maxDays = value.cal.getMonLength(month, year);
+			value.day = (day <= maxDays) ? day : maxDays;
+
 			const date = DateFactory(value);
 			const newValue = date.getTimeExtended();
 			const changed =	this.props.value == null || this.props.value !== newValue;
@@ -227,12 +220,11 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			}
 
 			return (
-				<Component
+				<Wrapped
 					{...this.props}
 					{...props}
 					{...this.handlers}
 					label={label}
-					onCancel={this.handleCancel}
 					order={order}
 					value={value}
 				/>
@@ -240,10 +232,9 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 	};
 
-	return Toggleable(
-		{toggle: null, activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
-		RadioDecorator(
-			{activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
+	return Subscription(
+		{channels: ['i18n'], mapMessageToProps: (channel, {rtl}) => ({rtl})},
+		Expandable(
 			Changeable(
 				Decorator
 			)

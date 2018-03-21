@@ -5,15 +5,27 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
+import Touchable from '@enact/ui/Touchable';
+import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
-import Item from '../Item';
-import {MarqueeController, MarqueeText} from '../Marquee';
+import {ItemBase} from '../Item';
+import {Marquee, MarqueeController} from '../Marquee';
+import Skinnable from '../Skinnable';
 
-const Controller = MarqueeController(Item);
+const Controller = MarqueeController(
+	{marqueeOnFocus: true},
+	Touchable(
+		Spottable(
+			ItemBase
+		)
+	)
+);
 
-import css from './LabeledItem.less';
+import componentCss from './LabeledItem.less';
 
 /**
  * {@link moonstone/LabeledItem.LabeledItemBase} is a focusable Moonstone-styled component
@@ -38,6 +50,29 @@ const LabeledItemBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `labeledItem` - The root class name
+		 * * `icon` - Applied to the icon
+		 * * `label` - Applied to the label
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
+
+		/**
+		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		disabled: PropTypes.bool,
+
+		/**
 		 * The label to be displayed along with the text.
 		 *
 		 * @type {Node}
@@ -48,27 +83,34 @@ const LabeledItemBase = kind({
 		/**
 		 * Icon to be displayed next to the title text.
 		 *
-		 * @type {String}
+		 * @type {String|Object}
 		 * @public
 		 */
-		titleIcon: PropTypes.string
+		titleIcon: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	styles: {
-		css,
-		className: 'labeleditem'
+		css: componentCss,
+		className: 'labeledItem',
+		publicClassNames: ['labeledItem', 'icon', 'label']
 	},
 
-	render: ({children, label, titleIcon, ...rest}) => (
-		<Controller {...rest}>
+	render: ({children, css, disabled, label, titleIcon, ...rest}) => (
+		<Controller disabled={disabled} {...rest} css={css}>
 			<div className={css.text}>
-				<MarqueeText className={css.title}>{children}</MarqueeText>
+				<Marquee disabled={disabled} className={css.title}>{children}</Marquee>
 				{(titleIcon != null) ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
 			</div>
-			{(label != null) ? <MarqueeText className={css.label}>{label}</MarqueeText> : null}
+			{(label != null) ? <Marquee disabled={disabled} className={css.label}>{label}</Marquee> : null}
 		</Controller>
 	)
 });
 
-export default LabeledItemBase;
-export {LabeledItemBase as LabeledItem, LabeledItemBase};
+const LabeledItem = Pure(
+	Skinnable(
+		LabeledItemBase
+	)
+);
+
+export default LabeledItem;
+export {LabeledItem, LabeledItemBase};

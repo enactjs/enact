@@ -1,108 +1,106 @@
 /**
- * Exports the {@link moonstone/Image.Image} component.
+ * Provides Moonstone-themed Image component that supports multiple resolution sources.
+ *
+ * @example
+ * <Image src="https://dummyimage.com/64/e048e0/0011ff" style={{height: 64, width: 64}} />
  *
  * @module moonstone/Image
+ * @exports Image
+ * @exports ImageBase
+ * @exports ImageDecorator
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
-import {selectSrc} from '@enact/ui/resolution';
+import UiImage from '@enact/ui/Image';
+import Pure from '@enact/ui/internal/Pure';
+import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
+import React from 'react';
 
-import css from './Image.less';
+import Skinnable from '../Skinnable';
+
+import componentCss from './Image.less';
 
 /**
- * {@link moonstone/Image.Image} is a component designed to display images
- * conditionally based on screen size. This component has a default size but should have a size
- * specified for its particular usage using a CSS `className` or inline `style`.
+ * A Moonstone-styled image component without any behavior
  *
- * Usage:
- *
- * ```
- *const src = {
- *  'hd': 'http://lorempixel.com/64/64/city/1/',
- *  'fhd': 'http://lorempixel.com/128/128/city/1/',
- *  'uhd': 'http://lorempixel.com/256/256/city/1/'
- *};
- *
- * <Image className={css.myImage} src={src} sizing={'fill'} />
- * ```
- *
- * > If you need a naturally sized image, you can use the native `<img>` element instead.
- *
- * @class Image
+ * @class ImageBase
  * @memberof moonstone/Image
  * @ui
  * @public
  */
-
 const ImageBase = kind({
 	name: 'Image',
 
-	propTypes: /** @lends moonstone/Image.Image.prototype */ {
+	propTypes: /** @lends moonstone/Image.ImageBase.prototype */ {
 		/**
-		 * String value or Object of values used to determine which image will appear on
-		 * a specific screenSize.
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
 		 *
-		 * @type {String | Object}
-		 * @required
+		 * The following classes are supported:
+		 *
+		 * * `image` - The root component class for Image
+		 *
+		 * @type {Object}
 		 * @public
 		 */
-		src: PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]).isRequired,
-
-		/**
-		 * A placeholder image to be displayed before the image is loaded.
-		 * For performance purposes, it should be pre-loaded or be a data url.
-		 *
-		 * @type {String}
-		 * @default ''
-		 * @public
-		 */
-		placeholder: PropTypes.string,
-
-		/**
-		 * Used to set the `background-size` of an Image.
-		 *
-		 * * `'fill'` - sets `background-size: cover`
-		 * * `'fit'` - sets `background-size: contain`
-		 * * `'none'` - uses the image's natural size
-		 *
-		 * @type {String}
-		 * @default 'fill'
-		 * @public
-		 */
-		sizing: PropTypes.oneOf(['fit', 'fill', 'none'])
-	},
-
-	defaultProps: {
-		placeholder: '',
-		sizing: 'fill'
+		css: PropTypes.object
 	},
 
 	styles: {
-		css,
-		className: 'image'
+		css: componentCss,
+		publicClassNames: ['image']
 	},
 
-	computed: {
-		bgImage: ({src, placeholder}) => {
-			const imageSrc = selectSrc(src);
-			return placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
-		},
-		className: ({className, sizing, styler}) => {
-			return sizing !== 'none' ? styler.append(sizing) : className;
-		}
-	},
-
-	render: ({bgImage, style, ...rest}) => {
-		delete rest.placeholder;
-		delete rest.sizing;
-		delete rest.src;
-
+	render: ({css, ...rest}) => {
 		return (
-			<div role="img" {...rest} style={{...style, backgroundImage: bgImage}} />
+			<UiImage
+				{...rest}
+				css={css}
+			/>
 		);
 	}
 });
 
-export default ImageBase;
-export {ImageBase as Image, ImageBase};
+/**
+ * Moonstone-specific behaviors to apply to [Image]{@link moonstone/Image.ImageBase}.
+ *
+ * @hoc
+ * @memberof moonstone/Image
+ * @mixes ui/Skinnable.Skinnable
+ * @public
+ */
+const ImageDecorator = compose(
+	Pure,
+	Skinnable
+);
+
+/**
+ * A Moonstone-styled image component
+ *
+ * ```
+ * <Image
+ *   src={{
+ *     'hd': 'https://dummyimage.com/64/e048e0/0011ff',
+ *     'fhd': 'https://dummyimage.com/128/e048e0/0011ff',
+ *     'uhd': 'https://dummyimage.com/256/e048e0/0011ff'
+ *   }}
+ * >
+ * ```
+ *
+ * @class Image
+ * @memberof moonstone/Image
+ * @extends moonstone/Image.ImageBase
+ * @mixes moonstone/Image.ImageDecorator
+ * @ui
+ * @public
+ */
+const Image = ImageDecorator(ImageBase);
+
+
+export default Image;
+export {
+	Image,
+	ImageBase,
+	ImageDecorator
+};

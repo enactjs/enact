@@ -38,7 +38,12 @@ const distributeChild = (child, index, slots, props) => {
 	} else if (hasSlot(slot = child.type.defaultSlot)) {
 		c = child;
 	} else if (hasSlot(slot = child.type)) {
-		c = child.props.children;
+		const propNames = Object.keys(child.props);
+		if (propNames.length === 1 && propNames[0] === 'children') {
+			c = child.props.children;
+		} else {
+			c = child;
+		}
 	}
 
 	if (c) {

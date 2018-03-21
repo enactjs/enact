@@ -4,15 +4,17 @@
  * @module moonstone/DayPicker
  */
 
-import $L from '@enact/i18n/$L';
 import Changeable from '@enact/ui/Changeable';
 import {coerceArray} from '@enact/core/util';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 import {forward} from '@enact/core/handle';
-import ilib from '@enact/i18n';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
+import {Subscription} from '@enact/core/internal/PubSub';
 
+import $L from '../internal/$L';
 import {Expandable} from '../ExpandableItem';
 import {ExpandableListBase} from '../ExpandableList';
 
@@ -56,6 +58,14 @@ const DayPickerBase = class extends React.Component {
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * Current locale for DayPicker
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		locale: PropTypes.string,
 
 		/**
 		 * Callback to be called when a condition occurs which should cause the expandable to close
@@ -114,27 +124,30 @@ const DayPickerBase = class extends React.Component {
 		this.longDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 		this.shortDayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-		this.initIlib();
+		this.initIlib(props.locale);
 	}
 
-	componentWillUpdate () {
-		this.initIlib();
+	componentWillReceiveProps (nextProps) {
+		this.initIlib(nextProps.locale);
 	}
 
-	initIlib () {
-		const locale = ilib.getLocale();
+	initIlib (locale) {
 		if (this.locale !== locale && typeof window === 'object') {
 			this.locale = locale;
 
 			const df = new DateFmt({length: 'full'});
 			const sdf = new DateFmt({length: 'long'});
-			const li = new LocaleInfo(ilib.getLocale());
+			const li = new LocaleInfo(locale);
 			const daysOfWeek = df.getDaysOfWeek();
 			const days = sdf.getDaysOfWeek();
 
 			this.firstDayOfWeek = li.getFirstDayOfWeek();
-			this.weekEndStart = li.getWeekEndStart ? li.getWeekEndStart() : this.weekEndStart;
-			this.weekEndEnd = li.getWeekEndEnd ? li.getWeekEndEnd() : this.weekEndEnd;
+			this.weekEndStart = li.getWeekEndStart ? this.adjustWeekends(li.getWeekEndStart()) : this.weekEndStart;
+			this.weekEndEnd = li.getWeekEndEnd ? this.adjustWeekends(li.getWeekEndEnd()) : this.weekEndEnd;
+
+			// clone the name arrays
+			this.longDayNames = this.longDayNames.slice();
+			this.shortDayNames = this.shortDayNames.slice();
 
 			for (let i = 0; i < 7; i++) {
 				const index = (i + this.firstDayOfWeek) % 7;
@@ -207,39 +220,35 @@ const DayPickerBase = class extends React.Component {
 		}
 	}
 
-	adjustSelection (selected, amount) {
-		if (selected != null && amount !== 0) {
-			selected = selected.map(day => (day - amount + 7) % 7);
-		}
-
-		return selected;
+	adjustWeekends (day) {
+		return ((day - this.firstDayOfWeek + 7) % 7);
 	}
 
 	handleSelect = ({selected}) => {
-		const adjusted = this.adjustSelection(selected, -this.firstDayOfWeek);
-		forwardSelect({selected: adjusted}, this.props);
+		forwardSelect({selected: selected}, this.props);
 	}
 
 	render () {
 		const
-			{selected, title} = this.props,
+			{title, ...rest} = this.props,
 			type = this.calcSelectedDayType(this.props.selected),
-			label = this.getSelectedDayString(type, this.shortDayNames),
-			adjustSelected = this.adjustSelection(selected, this.firstDayOfWeek);
-		let ariaLabel = null;
+			label = this.getSelectedDayString(type, this.shortDayNames);
 
+		delete rest.locale;
+
+		let ariaLabel = null;
 		if (type === SELECTED_DAY_TYPES.SELECTED_DAYS) {
 			ariaLabel = `${title} ${this.getSelectedDayString(type, this.longDayNames)}`;
 		}
 
 		return (
 			<ExpandableListBase
-				{...this.props}
+				{...rest}
 				aria-label={ariaLabel}
 				label={label}
 				onSelect={this.handleSelect}
 				select="multiple"
-				selected={adjustSelected}
+				title={title}
 			>
 				{this.longDayNames}
 			</ExpandableListBase>
@@ -252,11 +261,15 @@ const DayPickerBase = class extends React.Component {
  * {@link moonstone/DayPicker.DayPicker} is a component that
  * allows the user to choose day(s) of the week.
  *
- * As a form component, `DayPicker` can operate in either a controlled or uncontrolled manner. To
- * make the component controlled, you must supply `selected` at creation time and update the value
- * in response to `onChange` events.  If `selected` is not supplied, it will be uncontrolled and
- * Enact will maintain changes to the to component. For uncontrolled operation, you can control the
- * starting value using `defaultSelected`.
+ * By default, `DayPicker` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onChange` events.
+ *
+ * `DayPicker` is an expandable component and it maintains its open/closed state by default. The
+ * initial state can be supplied using `defaultOpen`. In order to directly control the open/closed
+ * state, supply a value for `open` at creation time and update its value in response to
+ * `onClose`/`OnOpen` events.
  *
  * @class DayPicker
  * @memberof moonstone/DayPicker
@@ -265,10 +278,15 @@ const DayPickerBase = class extends React.Component {
  * @ui
  * @public
  */
-const DayPicker = Expandable(
-	Changeable(
-		{prop: 'selected', change: 'onSelect'},
-		DayPickerBase
+const DayPicker = Pure(
+	Expandable(
+		Changeable(
+			{prop: 'selected', change: 'onSelect'},
+			Subscription(
+				{channels: ['i18n'], mapMessageToProps: (channel, {locale}) => ({locale})},
+				DayPickerBase
+			)
+		)
 	)
 );
 

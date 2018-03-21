@@ -1,28 +1,23 @@
+import deprecate from '@enact/core/internal/deprecate';
+import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import {spottableClass} from '@enact/spotlight/Spottable';
+import SpotlightContainerDecorator, {spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Panel.less';
 
-const spotPanel = (node) => {
-	if (node && !Spotlight.getCurrent()) {
-		const {containerId} = node.dataset;
-
-		// set the default element so that we can try to spot the container and let it fall through
-		// to the default element if there isn't a lastFocusedElement/Index
-		const body = node.querySelector(`section .${spottableClass}`);
-		const header = node.querySelector(`header .${spottableClass}`);
-		const defaultElement = body || header;
-
-		Spotlight.set(containerId, {defaultElement});
-		Spotlight.focus(containerId);
-	}
-};
-
 let panelId = 0;
+
+// Called when `noAutoFocus` is true. Warns the first time and returns the new `autoFocus` value
+const adaptToAutoFocus = deprecate(() => 'none', {
+	name: 'noAutoFocus',
+	since: '1.3.0',
+	until: '2.0.0',
+	replacedBy: 'autoFocus'
+});
 
 /**
 * {@link moonstone/Panels.Panel} is the default kind for controls created inside a
@@ -48,7 +43,22 @@ const PanelBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		'aria-label': React.PropTypes.string,
+		'aria-label': PropTypes.string,
+
+		/**
+		 * Sets the strategy used to automatically focus an element within the panel upon render.
+		 *
+		 * * "none" - Automatic focus is disabled
+		 * * "last-focused" - The element last focused in the panel with be restored
+		 * * "default-element" - The first spottable component within the body will be focused
+		 * * Custom Selector - A custom CSS selector may also be provided which will be used to find
+		 *   the target within the Panel
+		 *
+		 * @type {String}
+		 * @default 'last-focused'
+		 * @public
+		 */
+		autoFocus: PropTypes.string,
 
 		/**
 		 * Header for the panel. This is usually passed by the {@link ui/Slottable.Slottable} API by
@@ -57,7 +67,7 @@ const PanelBase = kind({
 		 * @type {Header}
 		 * @public
 		 */
-		header: React.PropTypes.node,
+		header: PropTypes.node,
 
 		/**
 		 * When `true`, only the `header` is rendered and the body components are not. Setting to
@@ -72,11 +82,24 @@ const PanelBase = kind({
 		 * @default false
 		 * @public
 		 */
-		hideChildren: React.PropTypes.bool
+		hideChildren: PropTypes.bool,
+
+		/**
+		 * When `true`, the contents of the Panel will not receive spotlight focus after being
+		 * rendered.
+		 *
+		 * @deprecated Replaced by `autoFocus="none"`
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noAutoFocus: PropTypes.bool
 	},
 
 	defaultProps: {
-		hideChildren: false
+		autoFocus: 'last-focused',
+		hideChildren: false,
+		noAutoFocus: false
 	},
 
 	styles: {
@@ -84,14 +107,54 @@ const PanelBase = kind({
 		className: 'panel'
 	},
 
+	handlers: {
+		onScroll: handle(
+			forward('onScroll'),
+			({currentTarget}) => {
+				currentTarget.scrollTop = 0;
+				currentTarget.scrollLeft = 0;
+			}
+		),
+		spotOnRender: (node, {autoFocus}) => {
+			if (node && !Spotlight.getCurrent()) {
+				const {spotlightId} = node.dataset;
+				const config = {
+					enterTo: 'last-focused'
+				};
+
+				if (autoFocus !== 'last-focused') {
+					config.enterTo = 'default-element';
+
+					if (autoFocus !== 'default-element') {
+						config.defaultElement = autoFocus;
+					}
+				}
+
+				Spotlight.set(spotlightId, config);
+				Spotlight.focus(spotlightId);
+			}
+		}
+	},
+
 	computed: {
-		// In order to spot the body components, we defer spotting until !hideChildren. If the Panel
-		// opts out of hideChildren support by explicitly setting it to false, it'll spot on first
-		// render.
-		spotOnRender: ({hideChildren}) => hideChildren ? null : spotPanel,
+		spotOnRender: ({autoFocus, hideChildren, noAutoFocus, spotOnRender}) => {
+			if (noAutoFocus) {
+				autoFocus = adaptToAutoFocus();
+			}
+
+			// In order to spot the body components, we defer spotting until !hideChildren. If the
+			// Panel opts out of hideChildren support by explicitly setting it to false, it'll spot
+			// on first render.
+			if (hideChildren || autoFocus === 'none') {
+				return null;
+			}
+
+			return spotOnRender;
+		},
 		children: ({children, hideChildren}) => hideChildren ? null : children,
-		bodyClassName: ({hideChildren, styler}) => styler.join({
+		bodyClassName: ({header, hideChildren, styler}) => styler.join({
 			body: true,
+			noHeader: !header,
 			visible: !hideChildren
 		}),
 		// nulling headerId prevents the aria-labelledby relationship which is necessary to allow
@@ -101,7 +164,9 @@ const PanelBase = kind({
 	},
 
 	render: ({bodyClassName, children, header, headerId, spotOnRender, ...rest}) => {
+		delete rest.autoFocus;
 		delete rest.hideChildren;
+		delete rest.noAutoFocus;
 
 		return (
 			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender}>
@@ -113,7 +178,13 @@ const PanelBase = kind({
 });
 
 const Panel = SpotlightContainerDecorator(
-	{enterTo: 'last-focused', preserveId: true},
+	{
+		// prefer any spottable within the panel body for first render
+		continue5WayHold: true,
+		defaultElement: [`.${spotlightDefaultClass}`, `.${css.body} *`],
+		enterTo: 'last-focused',
+		preserveId: true
+	},
 	Slottable(
 		{slots: ['header']},
 		PanelBase

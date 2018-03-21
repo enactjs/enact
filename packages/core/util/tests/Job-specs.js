@@ -79,4 +79,25 @@ describe('Job', function () {
 			j.throttle(value);
 		});
 	});
+
+	describe('#idle', function () {
+		it('should start job', function (done) {
+			const j = new Job(done, 10);
+			j.idle();
+		});
+
+		it('should pass args to fn', function (done) {
+			const value = 'argument';
+			const fn = function (arg) {
+				if (arg === value) {
+					done();
+				} else {
+					done(new Error('fn did not receive argument'));
+				}
+			};
+
+			const j = new Job(fn, 10);
+			j.idle(value);
+		});
+	});
 });

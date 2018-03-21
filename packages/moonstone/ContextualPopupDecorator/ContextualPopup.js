@@ -1,8 +1,10 @@
-import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
+import $L from '../internal/$L';
 import IconButton from '../IconButton';
+import Skinnable from '../Skinnable';
 
 import css from './ContextualPopup.less';
 
@@ -43,6 +45,11 @@ const ContextualPopupArrow = kind({
 	)
 });
 
+const ContextualPopupRoot = Skinnable(
+	{defaultSkin: 'light'},
+	'div'
+);
+
 /**
  * {@link moonstone/ContextualPopupDecorator.ContextualPopup} is a modal component that
  * appears in context to an activator.
@@ -63,7 +70,7 @@ const ContextualPopupBase = kind({
 		 * @public
 		 */
 		children: PropTypes.oneOfType([
-			PropTypes.arrayOf(React.PropTypes.element),
+			PropTypes.arrayOf(PropTypes.element),
 			PropTypes.element
 		]).isRequired,
 
@@ -74,10 +81,10 @@ const ContextualPopupBase = kind({
 		 * @public
 		 */
 		arrowPosition: PropTypes.shape({
-			top: React.PropTypes.number,
-			bottom: React.PropTypes.number,
-			left: React.PropTypes.number,
-			right: React.PropTypes.number
+			top: PropTypes.number,
+			bottom: PropTypes.number,
+			left: PropTypes.number,
+			right: PropTypes.number
 		}),
 
 		/**
@@ -87,10 +94,10 @@ const ContextualPopupBase = kind({
 		 * @public
 		 */
 		containerPosition: PropTypes.shape({
-			top: React.PropTypes.number,
-			bottom: React.PropTypes.number,
-			left: React.PropTypes.number,
-			right: React.PropTypes.number
+			top: PropTypes.number,
+			bottom: PropTypes.number,
+			left: PropTypes.number,
+			right: PropTypes.number
 		}),
 
 		/**
@@ -135,7 +142,7 @@ const ContextualPopupBase = kind({
 
 	styles: {
 		css,
-		className: 'contextualPopup container moon-neutral'
+		className: 'container'
 	},
 
 	computed: {
@@ -147,7 +154,7 @@ const ContextualPopupBase = kind({
 						className={css.closeButton}
 						backgroundOpacity="transparent"
 						small
-						onClick={onCloseButtonClick}
+						onTap={onCloseButtonClick}
 						aria-label={$L('Close')}
 					>
 						closex
@@ -157,18 +164,18 @@ const ContextualPopupBase = kind({
 		}
 	},
 
-	render: ({arrowPosition, containerPosition, containerRef, className, children, closeButton, direction, ...rest}) => {
+	render: ({arrowPosition, containerPosition, containerRef, children, className, closeButton, direction, ...rest}) => {
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
 
 		return (
-			<div aria-live="off" role="alert" {...rest} className={css.contextualPopup}>
+			<ContextualPopupRoot aria-live="off" role="alert" {...rest} className={css.contextualPopup}>
 				<div className={className} style={containerPosition} ref={containerRef}>
 					{children}
 					{closeButton}
 				</div>
 				<ContextualPopupArrow direction={direction} style={arrowPosition} />
-			</div>
+			</ContextualPopupRoot>
 		);
 	}
 });

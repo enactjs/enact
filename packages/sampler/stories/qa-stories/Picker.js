@@ -1,9 +1,11 @@
 import Picker from '@enact/moonstone/Picker';
 import {icons} from '@enact/moonstone/Icon';
 import PickerAddRemove from './components/PickerAddRemove';
+import PickerRTL from './components/PickerRTL';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select} from '@storybook/addon-knobs';
 import nullify from '../../src/utils/nullify.js';
 
 const prop = {
@@ -37,12 +39,19 @@ const pickerList = {
 	oneAirport: [
 		'San Francisco Airport Terminal Gate 1'
 	],
-	emptyList: []
+	emptyList: [],
+	orderedList: [
+		'A',
+		'B',
+		'C',
+		'D',
+		'E',
+		'F'
+	]
 };
 
-storiesOf('Picker')
-	.addDecorator(withKnobs)
-	.addWithInfo(
+storiesOf('Picker', module)
+	.add(
 		'with long text',
 		() => (
 			<Picker
@@ -60,7 +69,7 @@ storiesOf('Picker')
 			</Picker>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with tall characters',
 		() => (
 			<Picker
@@ -78,7 +87,7 @@ storiesOf('Picker')
 			</Picker>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with a default value',
 		() => (
 			<Picker
@@ -97,7 +106,7 @@ storiesOf('Picker')
 			</Picker>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with no items (PLAT-30963)',
 		() => (
 			<Picker
@@ -115,7 +124,7 @@ storiesOf('Picker')
 			</Picker>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with one item',
 		() => (
 			<Picker
@@ -133,7 +142,7 @@ storiesOf('Picker')
 			</Picker>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with item add/remove (ENYO-2448)',
 		() => (
 			<PickerAddRemove
@@ -146,5 +155,19 @@ storiesOf('Picker')
 			>
 				{pickerList.emptyList}
 			</PickerAddRemove>
+		)
+	)
+	.add(
+		'RTL Layout (PLAT-28123)',
+		() => (
+			<PickerRTL
+				width={select('width', prop.width, 'medium')}
+				wrap={boolean('wrap')}
+				joined={boolean('joined')}
+				noAnimation={boolean('noAnimation')}
+				disabled={boolean('disabled')}
+			>
+				{pickerList.orderedList}
+			</PickerRTL>
 		)
 	);

@@ -1,7 +1,8 @@
 import RadioItem from '@enact/moonstone/RadioItem';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean} from '@storybook/addon-knobs';
 
 const radioData = {
 	longTextWithSpace : ['FirstLongTextWithSpace FirstLongTextWithSpace FirstLongTextWithSpace FirstLongTextWithSpace', 'SecondLongTextWithSpace SecondLongTextWithSpace SecondLongTextWithSpace SecondLongTextWithSpace'],
@@ -10,9 +11,8 @@ const radioData = {
 	rightToLeft : ['صباح الخير', 'مساء الخير']
 };
 
-storiesOf('RadioItem')
-	.addDecorator(withKnobs)
-	.addWithInfo(
+storiesOf('RadioItem', module)
+	.add(
 		'with long text and spaces',
 		() => (
 			<div>
@@ -33,7 +33,7 @@ storiesOf('RadioItem')
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with long text and no spaces',
 		() => (
 			<div>
@@ -54,7 +54,7 @@ storiesOf('RadioItem')
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with tall characters',
 		() => (
 			<div>
@@ -75,7 +75,7 @@ storiesOf('RadioItem')
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with right to left text',
 		() => (
 			<div>
@@ -96,7 +96,7 @@ storiesOf('RadioItem')
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'selected by default',
 		() => (
 			<div>

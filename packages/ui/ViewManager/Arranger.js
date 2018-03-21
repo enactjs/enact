@@ -3,7 +3,7 @@
  * note: not jsdoc on purpose
  */
 
-import React from 'react';
+import PropTypes from 'prop-types';
 import {accelerate, clearTransform, compose, reverse, slideInPartial, slideOutPartial} from './arrange';
 
 /**
@@ -51,7 +51,7 @@ export const SlideBottomArranger = SlideArranger({enter: 'top', leave: 'bottom'}
  * @memberof ui/ViewManager
  * @private
  */
-export const shape = React.PropTypes.shape({
-	enter: React.PropTypes.func,
-	leave: React.PropTypes.func
+export const shape = PropTypes.shape({
+	enter: PropTypes.func,
+	leave: PropTypes.func
 });

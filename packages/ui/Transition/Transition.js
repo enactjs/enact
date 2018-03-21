@@ -7,7 +7,10 @@
 
 import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import {Job} from '@enact/core/util';
+import {contextTypes} from '@enact/core/internal/PubSub';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './Transition.less';
 
@@ -39,13 +42,24 @@ const TransitionBase = kind({
 		childRef: PropTypes.func,
 
 		/**
-		 * Specifies the height of the transition when `type` is set to `'clip'`.
+		 * The height of the transition when `type` is set to `'clip'`, used when direction is
+		 * 'left' or 'right'.
 		 *
 		 * @type {Number}
 		 * @default null
 		 * @public
 		 */
 		clipHeight: PropTypes.number,
+
+		/**
+		 * The width of the transition when `type` is set to `'clip'`, used when direction is 'left'
+		 * or 'right'.
+		 *
+		 * @type {Number}
+		 * @default null
+		 * @public
+		 */
+		clipWidth: PropTypes.number,
 
 		/**
 		 * Sets the direction of transition. Where the component will move *to*; the destination.
@@ -79,14 +93,22 @@ const TransitionBase = kind({
 
 		/**
 		 * Customize the transition timing function.
-		 * Supported functions are: linear, ease. ease-in-out is the default when none others are
-		 * specified.
+		 * Supported function names are: `ease`, `ease-in`, `ease-out`, `ease-in-out`, `ease-in-quart`,
+		 * `ease-out-quart`, and `linear`.
 		 *
 		 * @type {String}
 		 * @default 'ease-in-out'
 		 * @public
 		 */
-		timingFunction: PropTypes.oneOf(['ease-in-out', 'ease', 'linear']),
+		timingFunction: PropTypes.oneOf([
+			'ease',
+			'ease-in',
+			'ease-out',
+			'ease-in-out',
+			'ease-in-quart',
+			'ease-out-quart',
+			'linear'
+		]),
 
 		/**
 		 * Choose how you'd like the transition to affect the content.
@@ -130,39 +152,49 @@ const TransitionBase = kind({
 			timingFunction && css[timingFunction],
 			css[type]
 		),
-		style: ({clipHeight, type, visible, style}) => type === 'clip' ? {
-			...style,
-			height: visible ? clipHeight : null,
-			overflow: 'hidden'
-		} : style,
+		innerStyle: ({clipWidth, direction, type}) => {
+			if (type === 'clip' && (direction === 'left' || direction === 'right')) {
+				return {
+					width: clipWidth
+				};
+			}
+		},
+		style: ({clipHeight, direction, type, visible, style}) => {
+			if (type === 'clip') {
+				style = {
+					...style,
+					overflow: 'hidden'
+				};
+
+				if (visible && (direction === 'up' || direction === 'down')) {
+					style.height = clipHeight;
+				}
+			}
+
+			return style;
+		},
 		childRef: ({childRef, noAnimation, children}) => (noAnimation || !children) ? null : childRef
 	},
 
-	render: ({childRef, children, noAnimation, type, visible, ...rest}) => {
+	render: ({childRef, children, innerStyle, noAnimation, visible, ...rest}) => {
 		delete rest.clipHeight;
+		delete rest.clipWidth;
 		delete rest.direction;
 		delete rest.duration;
 		delete rest.timingFunction;
+		delete rest.type;
 
 		if (noAnimation && !visible) {
 			return null;
 		}
 
-		if (type === 'slide') {
-			return (
-				<div className={css.transitionFrame}>
-					<div {...rest} ref={childRef}>
-						{children}
-					</div>
-				</div>
-			);
-		} else {
-			return (
-				<div {...rest} ref={childRef}>
+		return (
+			<div {...rest}>
+				<div className={css.inner} style={innerStyle} ref={childRef}>
 					{children}
 				</div>
-			);
-		}
+			</div>
+		);
 	}
 });
 
@@ -181,17 +213,11 @@ const TRANSITION_STATE = {
  * @public
  */
 class Transition extends React.Component {
+
+	static contextTypes = contextTypes
+
 	static propTypes = /** @lends ui/Transition.Transition.prototype */ {
 		children: PropTypes.node.isRequired,
-
-		/**
-		 * The height of the transition when `type` is set to `'clip'`.
-		 *
-		 * @type {Number}
-		 * @default null
-		 * @public
-		 */
-		clipHeight: PropTypes.number,
 
 		/**
 		 * The direction of transition (i.e. where the component will move *to*; the destination).
@@ -222,14 +248,31 @@ class Transition extends React.Component {
 		onHide: PropTypes.func,
 
 		/**
-		 * The transition timing function.
-		 * Supported functions are: `'linear'`, `'ease'` and `'ease-in-out'`
+		 * A function to run after transition for showing is finished.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onShow: PropTypes.func,
+
+		/**
+		 * Customize the transition timing function.
+		 * Supported function names are: `ease`, `ease-in`, `ease-out`, `ease-in-out`, `ease-in-quart`,
+		 * `ease-out-quart`, and `linear`.
 		 *
 		 * @type {String}
 		 * @default 'ease-in-out'
 		 * @public
 		 */
-		timingFunction: PropTypes.oneOf(['ease-in-out', 'ease', 'linear']),
+		timingFunction: PropTypes.oneOf([
+			'ease',
+			'ease-in',
+			'ease-out',
+			'ease-in-out',
+			'ease-in-quart',
+			'ease-out-quart',
+			'linear'
+		]),
 
 		/**
 		 * How the transition affects the content.
@@ -268,6 +311,18 @@ class Transition extends React.Component {
 		};
 	}
 
+	componentDidMount () {
+		if (!this.props.visible) {
+			this.measuringJob.idle();
+		} else {
+			this.measureInner();
+		}
+
+		if (this.context.Subscriber) {
+			this.context.Subscriber.subscribe('resize', this.handleResize);
+		}
+	}
+
 	componentWillReceiveProps (nextProps) {
 		if (nextProps.visible && this.state.renderState === TRANSITION_STATE.INIT) {
 			this.setState({
@@ -281,29 +336,67 @@ class Transition extends React.Component {
 		return (this.state.initialHeight === nextState.initialHeight) || this.props.visible || nextProps.visible;
 	}
 
+	componentWillUpdate (nextProps, nextState) {
+		if (nextState.renderState === TRANSITION_STATE.MEASURE) {
+			this.measuringJob.stop();
+		}
+	}
+
 	componentDidUpdate (prevProps, prevState) {
 		const {visible} = this.props;
 		const {initialHeight, renderState} = this.state;
 
-		// Checking that something changed that wasn't the visibility or the initialHeight state
-		if (visible === prevProps.visible && initialHeight === prevState.initialHeight && renderState !== TRANSITION_STATE.INIT) {
+		// Checking that something changed that wasn't the visibility
+		// or the initialHeight state or checking if component should be visible but doesn't have a height
+		if ((visible === prevProps.visible &&
+			initialHeight === prevState.initialHeight &&
+			renderState !== TRANSITION_STATE.INIT) ||
+			(initialHeight == null && visible)) {
 			this.measureInner();
 		}
 	}
 
-	hideDidFinish = (ev) => {
+	componentWillUnmount () {
+		this.measuringJob.stop();
+		if (this.context.Subscriber) {
+			this.context.Subscriber.unsubscribe('resize', this.handleResize);
+		}
+	}
+
+	measuringJob = new Job(() => {
+		this.setState({
+			renderState: TRANSITION_STATE.MEASURE
+		});
+	})
+
+	handleResize = () => {
+		// @TODO oddly, using the setState callback is required here to ensure that the bounds
+		// are remeasured in a separate tick
+		this.setState({
+			initialHeight: null
+		}, this.measureInner);
+	}
+
+	handleTransitionEnd = (ev) => {
 		forwardTransitionEnd(ev, this.props);
-		if (!this.props.visible && this.props.onHide) {
-			this.props.onHide();
+
+		if (ev.target === this.childNode) {
+			if (!this.props.visible && this.props.onHide) {
+				this.props.onHide(ev);
+			} else if (this.props.visible && this.props.onShow) {
+				this.props.onShow(ev);
+			}
 		}
 	}
 
 	measureInner = () => {
 		if (this.childNode) {
 			const initialHeight = this.childNode.scrollHeight;
-			if (initialHeight !== this.state.initialHeight) {
+			const initialWidth = this.childNode.scrollWidth;
+			if (initialHeight !== this.state.initialHeight || initialWidth !== this.state.initialWidth) {
 				this.setState({
 					initialHeight,
+					initialWidth,
 					renderState: TRANSITION_STATE.READY
 				});
 			}
@@ -312,15 +405,13 @@ class Transition extends React.Component {
 
 	childRef = (node) => {
 		this.childNode = node;
-		// this accounts for open at construction or when we need to measure before opening
-		if (this.state.initialHeight == null) {
-			this.measureInner();
-		}
 	}
 
 	render () {
 		let {visible, ...props} = this.props;
 		delete props.onHide;
+		delete props.onShow;
+		delete props.textSize;
 
 		switch (this.state.renderState) {
 			// If we are deferring children, don't render any
@@ -339,7 +430,8 @@ class Transition extends React.Component {
 					childRef={this.childRef}
 					visible={visible}
 					clipHeight={this.state.initialHeight}
-					onTransitionEnd={this.hideDidFinish}
+					clipWidth={this.state.initialWidth}
+					onTransitionEnd={this.handleTransitionEnd}
 				/>
 			);
 		}

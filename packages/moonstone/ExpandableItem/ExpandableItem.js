@@ -10,16 +10,21 @@
 import {extractAriaProps} from '@enact/core/util';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import LabeledItem from '../LabeledItem';
 
 import Expandable from './Expandable';
-import ExpandableContainer from './ExpandableContainer';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
+
+import css from './ExpandableItem.less';
 
 const isUp = is('up');
 const isDown = is('down');
+
+const ContainerDiv = SpotlightContainerDecorator({continue5WayHold: true}, 'div');
 
 /**
  * {@link moonstone/ExpandableItem.ExpandableItemBase} is a stateless component that
@@ -106,12 +111,28 @@ const ExpandableItemBase = kind({
 		onClose: PropTypes.func,
 
 		/**
+		 * Callback to be called when the expandable closes
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onHide: PropTypes.func,
+
+		/**
 		 * Callback to be called when a condition occurs which should cause the expandable to open
 		 *
 		 * @type {Function}
 		 * @public
 		 */
 		onOpen: PropTypes.func,
+
+		/**
+		 * Callback to be called when the expandable opens
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onShow: PropTypes.func,
 
 		/**
 		 * The handler to run when the component is removed while retaining focus.
@@ -123,6 +144,42 @@ const ExpandableItemBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way down key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDown: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightLeft: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightRight: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way up key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightUp: PropTypes.func,
+
+		/**
 		 * When `true`, the control is rendered in the expanded state, with the contents visible
 		 *
 		 * @type {Boolean}
@@ -130,6 +187,14 @@ const ExpandableItemBase = kind({
 		 * @public
 		 */
 		open: PropTypes.bool,
+
+		/**
+		 * Sets a reference to the root container node of the ExpandableItem
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		setContainerNode: PropTypes.func,
 
 		/**
 		 * Controls when `label` is shown.
@@ -164,8 +229,8 @@ const ExpandableItemBase = kind({
 	},
 
 	handlers: {
-		handleKeyDown: (ev, {autoClose, lockBottom, onClose}) => {
-			if (autoClose || lockBottom) {
+		handleKeyDown: (ev, {autoClose, lockBottom, onClose, onSpotlightDown}) => {
+			if (autoClose || lockBottom || onSpotlightDown) {
 				const {keyCode, target} = ev;
 				// Basing first/last child on the parent of the target to support both the use
 				// case here in which the children of the container are spottable and the
@@ -174,9 +239,18 @@ const ExpandableItemBase = kind({
 				if (autoClose && isUp(keyCode) && target.parentNode.firstChild === target && onClose) {
 					onClose();
 					ev.nativeEvent.stopImmediatePropagation();
-				} else if (lockBottom && isDown(keyCode) && target.parentNode.lastChild === target) {
-					ev.nativeEvent.stopImmediatePropagation();
+				} else if (isDown(keyCode) && target.parentNode.lastChild === target) {
+					if (lockBottom) {
+						ev.nativeEvent.stopImmediatePropagation();
+					} else if (onSpotlightDown) {
+						onSpotlightDown(ev);
+					}
 				}
+			}
+		},
+		handleLabelKeyDown: (ev, {onSpotlightDown, open}) => {
+			if (isDown(ev.keyCode) && !open && onSpotlightDown) {
+				onSpotlightDown(ev);
 			}
 		},
 		handleOpen: (ev, {disabled, onClose, onOpen, open}) => {
@@ -191,62 +265,91 @@ const ExpandableItemBase = kind({
 		}
 	},
 
+	styles: {
+		css,
+		className: 'expandableItem'
+	},
+
 	computed: {
-		label: ({disabled, label, noneText, open, showLabel}) => {
-			const isOpen = open && !disabled;
-			if (showLabel === 'always' || (!isOpen && showLabel !== 'never')) {
-				return label || noneText;
-			} else {
-				return null;
-			}
-		},
+		className: ({open, styler}) => (styler.append({open})),
+		label: ({label, noneText}) => (label || noneText),
+		labeledItemClassName: ({showLabel, styler}) => (styler.join(css.labeledItem, css[showLabel])),
 		open: ({disabled, open}) => (open && !disabled),
-		titleIcon: ({open}) => (open ? 'arrowlargeup' : 'arrowlargedown'),
 		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
 	},
 
-	render: ({children, disabled, handleKeyDown, handleOpen, label, open, onSpotlightDisappear, spotlightDisabled, title, titleIcon, transitionSpotlightDisabled, ...rest}) => {
+	render: ({
+		children,
+		disabled,
+		handleKeyDown,
+		handleLabelKeyDown,
+		handleOpen,
+		label,
+		labeledItemClassName,
+		open,
+		onHide,
+		onShow,
+		onSpotlightDisappear,
+		onSpotlightLeft,
+		onSpotlightRight,
+		onSpotlightUp,
+		setContainerNode,
+		spotlightDisabled,
+		title,
+		transitionSpotlightDisabled,
+		...rest
+	}) => {
 		delete rest.autoClose;
 		delete rest.lockBottom;
 		delete rest.noneText;
 		delete rest.onClose;
 		delete rest.onOpen;
+		delete rest.onSpotlightDown;
 		delete rest.showLabel;
 
 		const ariaProps = extractAriaProps(rest);
 
 		return (
-			<ExpandableContainer
+			<ContainerDiv
 				{...rest}
 				aria-disabled={disabled}
 				disabled={disabled}
-				open={open}
-				spotlightDisabled={spotlightDisabled}
+				ref={setContainerNode}
 			>
 				<LabeledItem
 					{...ariaProps}
+					css={css}
+					className={labeledItemClassName}
+					data-expandable-label
 					disabled={disabled}
 					label={label}
-					onClick={handleOpen}
+					onTap={handleOpen}
+					onKeyDown={handleLabelKeyDown}
 					onSpotlightDisappear={onSpotlightDisappear}
+					onSpotlightLeft={onSpotlightLeft}
+					onSpotlightRight={onSpotlightRight}
+					onSpotlightUp={onSpotlightUp}
 					spotlightDisabled={spotlightDisabled}
-					titleIcon={titleIcon}
+					titleIcon="arrowlargedown"
 				>{title}</LabeledItem>
 				<ExpandableTransitionContainer
 					data-expandable-container
 					duration="short"
+					timingFunction="ease-out-quart"
+					onHide={onHide}
 					onKeyDown={handleKeyDown}
+					onShow={onShow}
 					spotlightDisabled={transitionSpotlightDisabled}
 					type="clip"
+					direction="down"
 					visible={open}
 				>
 					{children}
 				</ExpandableTransitionContainer>
-			</ExpandableContainer>
+			</ContainerDiv>
 		);
 	}
 });
-
 
 /**
  * {@link moonstone/ExpandableItem.ExpandableItem} renders a
@@ -263,7 +366,9 @@ const ExpandableItemBase = kind({
  * @mixes moonstone/ExpandableItem.Expandable
  * @public
  */
-const ExpandableItem = Expandable(ExpandableItemBase);
+const ExpandableItem = Expandable(
+	ExpandableItemBase
+);
 
 export default ExpandableItem;
 export {

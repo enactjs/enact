@@ -1,5 +1,6 @@
 /* globals console */
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
+/* eslint-disable react/jsx-no-bind */
 
 import React from 'react';
 import {shallow, mount} from 'enzyme';
@@ -8,29 +9,31 @@ import sinon from 'sinon';
 
 describe('Router', () => {
 
+	const View = () => <button />;
+
 	// the internal representation of
 	// <Router>
-	// 	<Route path="app" component="button">
-	// 		<Route path="home" component="button" />
-	// 		<Route path="settings" component="button" />
+	// 	<Route path="app" component={View}>
+	// 		<Route path="home" component={View} />
+	// 		<Route path="settings" component={View} />
 	// 	</Route>
-	// 	<Route path="admin" component="button" />
+	// 	<Route path="admin" component={View} />
 	// </Router>
 	const routes = {
 		app: {
-			$component: 'button',
+			$component: View,
 			$props: {},
 			home: {
-				$component: 'button',
+				$component: View,
 				$props: {}
 			},
 			settings: {
-				$component: 'button',
+				$component: View,
 				$props: {}
 			}
 		},
 		admin: {
-			$component: 'button',
+			$component: View,
 			$props: {}
 		}
 	};
@@ -41,7 +44,7 @@ describe('Router', () => {
 		);
 
 		const expected = 1;
-		const actual = subject.find('button').length;
+		const actual = subject.find(View).length;
 
 		expect(actual).to.equal(expected);
 	});
@@ -52,7 +55,7 @@ describe('Router', () => {
 		);
 
 		const expected = 2;
-		const actual = subject.find('button').length;
+		const actual = subject.find(View).length;
 
 		expect(actual).to.equal(expected);
 	});
@@ -63,7 +66,7 @@ describe('Router', () => {
 		);
 
 		const expected = 2;
-		const actual = subject.find('button').length;
+		const actual = subject.find(View).length;
 
 		expect(actual).to.equal(expected);
 	});
@@ -105,16 +108,16 @@ describe('Router', () => {
 	it('should compile children into route object', function () {
 		const subject = mount(
 			<Router path="/app">
-				<Route path="app" component="button">
-					<Route path="home" component="button" />
-					<Route path="settings" component="button" />
+				<Route path="app" component={View}>
+					<Route path="home" component={View} />
+					<Route path="settings" component={View} />
 				</Route>
-				<Route path="admin" component="button" />
+				<Route path="admin" component={View} />
 			</Router>
 		);
 
 		const expected = JSON.stringify(routes);
-		const actual = JSON.stringify(subject.get(0).routes);
+		const actual = JSON.stringify(subject.instance().routes);
 
 		expect(actual).to.equal(expected);
 	});
@@ -122,16 +125,16 @@ describe('Router', () => {
 	it('should render an array of components matching the {path} using JSX routes', function () {
 		const subject = mount(
 			<Router path="/app/home">
-				<Route path="app" component="button">
-					<Route path="home" component="button" />
-					<Route path="settings" component="button" />
+				<Route path="app" component={View}>
+					<Route path="home" component={View} />
+					<Route path="settings" component={View} />
 				</Route>
-				<Route path="admin" component="button" />
+				<Route path="admin" component={View} />
 			</Router>
 		);
 
 		const expected = 2;
-		const actual = subject.find('button').length;
+		const actual = subject.find(View).length;
 
 		expect(actual).to.equal(expected);
 	});
@@ -139,23 +142,26 @@ describe('Router', () => {
 	it('should render a different component when the routes change for the same {path}', function () {
 		const subject = mount(
 			<Router path="/app">
-				<Route path="app" component="button">
-					<Route path="home" component="button" />
-					<Route path="settings" component="button" />
+				<Route path="app" component={View}>
+					<Route path="home" component={View} />
+					<Route path="settings" component={View} />
 				</Route>
-				<Route path="admin" component="button" />
+				<Route path="admin" component={View} />
 			</Router>
 		);
+
+		const NewView = () => <span />;
 
 		subject.setProps({
 			path: '/app',
 			children: [
-				<Route path="app" component="span" />
+				<Route path="app" component={NewView} />
 			]
 		});
+		subject.update();
 
-		const expected = 'span';
-		const actual = subject.childAt(0).type();
+		const expected = NewView;
+		const actual = subject.childAt(0).childAt(0).type();
 
 		expect(actual).to.equal(expected);
 	});
@@ -167,11 +173,11 @@ describe('Router', () => {
 
 		const subject = mount(
 			<Router path="/does/not/exist">
-				<Route path="app" component="button">
-					<Route path="home" component="button" />
-					<Route path="settings" component="button" />
+				<Route path="app" component={View}>
+					<Route path="home" component={View} />
+					<Route path="settings" component={View} />
 				</Route>
-				<Route path="admin" component="button" />
+				<Route path="admin" component={View} />
 			</Router>
 		);
 
@@ -188,11 +194,11 @@ describe('Router', () => {
 
 		const subject = mount(
 			<Router path="/app/home/other">
-				<Route path="app" component="button">
-					<Route path="home" component="button" />
-					<Route path="settings" component="button" />
+				<Route path="app" component={View}>
+					<Route path="home" component={View} />
+					<Route path="settings" component={View} />
 				</Route>
-				<Route path="admin" component="button" />
+				<Route path="admin" component={View} />
 			</Router>
 		);
 

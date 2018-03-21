@@ -4,52 +4,26 @@ import Spinner from '../Spinner';
 import css from '../Spinner.less';
 
 describe('Spinner Specs', () => {
-	it('should have not have MarqueeText as a child when Spinner has no children', function () {
+	it('should have not have client node when Spinner has no children', function () {
 		const spinner = mount(
 			<Spinner />
 		);
 
-		const expected = true;
-		const actual = spinner.find('MarqueeText').isEmpty();
+		const expected = false;
+		const actual = spinner.find(`div.${css.client}`).exists();
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have MarqueeText as a child when Spinner has children', function () {
+	it('should have a client node when Spinner has children', function () {
 		const spinner = mount(
 			<Spinner>
 				Loading...
 			</Spinner>
 		);
 
-		const expected = false;
-		const actual = spinner.find('MarqueeText').isEmpty();
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should have transparent class when transparent prop equals true', function () {
-		const spinner = mount(
-			<Spinner transparent>
-				Loading...
-			</Spinner>
-		);
-
 		const expected = true;
-		const actual = spinner.find(`.${css.spinner}`).hasClass(css.transparent);
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should have centered class when centered prop equals true', function () {
-		const spinner = mount(
-			<Spinner centered>
-				Loading...
-			</Spinner>
-		);
-
-		const expected = true;
-		const actual = spinner.find(`.${css.spinner}`).hasClass(css.centered);
+		const actual = spinner.find(`div.${css.client}`).exists();
 
 		expect(actual).to.equal(expected);
 	});
@@ -62,18 +36,20 @@ describe('Spinner Specs', () => {
 		);
 
 		const expected = true;
-		const actual = spinner.find(`.${css.spinner}`).hasClass(css.content);
+		const actual = spinner.find(`div.${css.spinner}`).hasClass(css.content);
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not have content class when Spinner has no children', function () {
+	it('should have transparent class when transparent prop equals true', function () {
 		const spinner = mount(
-			<Spinner />
+			<Spinner transparent>
+				Loading...
+			</Spinner>
 		);
 
-		const expected = false;
-		const actual = spinner.find(`.${css.spinner}`).hasClass(css.content);
+		const expected = true;
+		const actual = spinner.find(`div.${css.spinner}`).hasClass(css.transparent);
 
 		expect(actual).to.equal(expected);
 	});
@@ -96,43 +72,6 @@ describe('Spinner Specs', () => {
 
 		const expected = 'off';
 		const actual = spinner.find(`div.${css.spinner}`).prop('aria-live');
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should have no scrim class when blockClickOn prop equals container', function () {
-		const spinner = mount(
-			<Spinner blockClickOn="container" />
-		);
-
-		const expected = true;
-		const actual = spinner.find(`.${css.scrim}`).isEmpty();
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should have scrim class when blockClickOn prop equals container and when scrim prop equals true', function () {
-		const spinner = mount(
-			<Spinner blockClickOn="container" scrim />
-		);
-
-		const expected = false;
-		const actual = spinner.find(`.${css.scrim}`).isEmpty();
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should have FloatingLayer when blockClickOn prop equals screen', function () {
-		const div = document.createElement('div');
-		div.setAttribute('id', 'floatLayer');
-		document.body.appendChild(div);
-
-		const spinner = mount(
-			<Spinner blockClickOn="screen" />
-		);
-
-		const expected = false;
-		const actual = spinner.find('FloatingLayer').isEmpty();
 
 		expect(actual).to.equal(expected);
 	});

@@ -142,10 +142,10 @@ var Name = function (name, options) {
 
 	this.locale = this.locale || new Locale();
 	
-	isAlpha._init(sync, this.loadParams, /** @type {function()|undefined} */ ilib.bind(this, function() {
-		isIdeo._init(sync, this.loadParams, /** @type {function()|undefined} */ ilib.bind(this, function() {
-			isPunct._init(sync, this.loadParams, /** @type {function()|undefined} */ ilib.bind(this, function() {
-				isSpace._init(sync, this.loadParams, /** @type {function()|undefined} */ ilib.bind(this, function() {
+	isAlpha._init(sync, this.loadParams, ilib.bind(this, function() {
+		isIdeo._init(sync, this.loadParams, ilib.bind(this, function() {
+			isPunct._init(sync, this.loadParams, ilib.bind(this, function() {
+				isSpace._init(sync, this.loadParams, ilib.bind(this, function() {
 					Utils.loadData({
 						object: Name, 
 						locale: this.locale, 
@@ -262,48 +262,48 @@ Name.defaultInfo = ilib.data.name ||  {
 		"von den": 1,
 		"van": 1,
 		"van der": 1,
-        "van de": 1,
-        "van den": 1,
-        "de": 1,
-        "di": 1,
+		"van de": 1,
+		"van den": 1,
+		"de": 1,
+		"di": 1,
 		"la": 1,
 		"lo": 1,
-        "des": 1,
-        "le": 1,
-        "les": 1,
+		"des": 1,
+		"le": 1,
+		"les": 1,
 		"du": 1,
-        "de la": 1,
-        "del": 1,
-        "de los": 1,
-        "de las": 1
+		"de la": 1,
+		"del": 1,
+		"de los": 1,
+		"de las": 1
 	},
 	"prefixes": [
-		"doctor",
-		"dr",
-		"mr",
-		"mrs",
-		"ms",
-		"mister",
-		"madame",
-		"madamoiselle",
-		"miss",
-		"monsieur",
-		"señor",
+        "doctor",
+        "dr",
+        "mr",
+        "mrs",
+        "ms",
+        "mister",
+        "madame",
+        "madamoiselle",
+        "miss",
+        "monsieur",
+        "señor",
         "señora",
         "señorita"
 	],
 	"suffixes": [
-		",",
-		"junior",
-		"jr",
-		"senior",
-		"sr",
-		"i",
-		"ii",
-		"iii",
-		"esq",
-		"phd",
-		"md"
+        ",",
+        "junior",
+        "jr",
+        "senior",
+        "sr",
+        "i",
+        "ii",
+        "iii",
+        "esq",
+        "phd",
+        "md"
 	],
     "patronymicName":[ ],
     "familyNames":[ ]
@@ -712,7 +712,7 @@ Name.prototype = {
         var prop;
         for (prop in this) {
 
-            if (this[prop] !== undefined && typeof (this[prop]) === 'object' && this[prop] instanceof Array) {
+            if (this[prop] !== undefined && typeof (this[prop]) === 'object' && ilib.isArray(this[prop])) {
 
                 this[prop] = this._joinArrayOrString(this[prop]);
             }
@@ -1239,7 +1239,7 @@ Name.prototype = {
                     parts = name.trim().split(' ');
                 } else {
                     // already split
-                    parts = /** @type Array */ this.familyName;
+                    parts = this.familyName;
                 }
 
                 auxillaries = this._findPrefix(parts, this.info.auxillaries, false);

@@ -8,6 +8,6 @@
  *
 */
 
-const nullify = (v) => !v ? null : v;
+const nullify = (v) => !v ? void 0 : v;
 
 export default nullify;

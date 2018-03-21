@@ -1,22 +1,29 @@
 /**
- * Exports the {@link moonstone/VirtualList.VirtualList},
- * {@link moonstone/VirtualList.VirtualGridList}, and
- * {@link moonstone/VirtualList.GridListImageItem} components.
- * The default export is {@link moonstone/VirtualList.VirtualList}.
+ * Provides Moonstone-themed virtual list components and behaviors.
  *
  * @module moonstone/VirtualList
+ * @exports VirtualGridList
+ * @exports VirtualGridListNative
+ * @exports VirtualList
+ * @exports VirtualListBase
+ * @exports VirtualListBaseNative
+ * @exports VirtualListNative
  */
 
+import {gridListItemSizeShape} from '@enact/ui/VirtualList';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 
-import VirtualListBase, {gridListItemSizeShape} from './VirtualListBase';
+import {SpottableVirtualList, SpottableVirtualListNative, VirtualListBase, VirtualListBaseNative} from './VirtualListBase';
 
 /**
- * {@link moonstone/VirtualList.VirtualList} is a VirtualList with Moonstone styling.
+ * A Moonstone-styled scrollable and spottable virtual list component.
  *
  * @class VirtualList
  * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable.SpotlightContainerDecorator
+ * @extends moonstone/VirtualList.VirtualListBase
  * @ui
  * @public
  */
@@ -25,27 +32,13 @@ const VirtualList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 		/**
-		 * The render function for an item of the list.
-		 * `index` is for accessing the index of the item.
-		 * `key` MUST be passed as a prop for DOM recycling.
-		 * Data manipulation can be done in this function.
-		 *
-		 * @name component
-		 * @type {Function}
-		 * @required
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
 		 * Size of an item for the VirtualList; valid value is a number.
 		 * If the direction for the list is vertical, itemSize means the height of an item.
 		 * For horizontal, it means the width of an item.
 		 *
 		 * Usage:
 		 * ```
-		 * <VirtualList itemSize={ri.scale(72)}/>
+		 * <VirtualList itemSize={ri.scale(72)} />
 		 * ```
 		 *
 		 * @type {Number}
@@ -53,61 +46,20 @@ const VirtualList = kind({
 		 * @public
 		 */
 		itemSize: PropTypes.number.isRequired
-
-		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
-		 *
-		 * @name data
-		 * @type {Any}
-		 * @default []
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Size of the data.
-		 *
-		 * @name dataSize
-		 * @type {Number}
-		 * @default 0
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
-		 *
-		 * @name direction
-		 * @type {String}
-		 * @default 'vertical'
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Spacing between items.
-		 *
-		 * @name spacing
-		 * @type {Number}
-		 * @default 0
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @instance
-		 * @public
-		 */
 	},
 
-	render: (props) => <VirtualListBase {...props} />
+	render: (props) => (
+		<SpottableVirtualList {...props} />
+	)
 });
 
 /**
- * {@link moonstone/VirtualList.VirtualGridList} is a VirtualGridList with Moonstone styling.
+ * A Moonstone-styled scrollable and spottable virtual grid list component.
  *
  * @class VirtualGridList
  * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable.SpotlightContainerDecorator
+ * @extends moonstone/VirtualList.VirtualListBase
  * @ui
  * @public
  */
@@ -116,83 +68,110 @@ const VirtualGridList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
 		/**
-		 * The render function for an item of the list.
-		 * `index` is for accessing the index of the item.
-		 * `key` MUST be passed as a prop for DOM recycling.
-		 * Data manipulation can be done in this function.
+		 * Size of an item for the VirtualGridList; valid value is an object that has `minWidth`
+		 * and `minHeight` as properties.
 		 *
-		 * @name component
-		 * @type {Function}
+		 * Usage:
+		 * ```
+		 * <VirtualGridList itemSize={{minWidth: ri.scale(180), minHeight: ri.scale(270)}} />
+		 * ```
+		 *
+		 * @type {ui/VirtualList.gridListItemSizeShape}
 		 * @required
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
 		 * @public
 		 */
+		itemSize: gridListItemSizeShape.isRequired
+	},
 
+	render: (props) => (
+		<SpottableVirtualList {...props} />
+	)
+});
+
+
+/**
+ * A Moonstone-styled scrollable and spottable virtual native list component.
+ * For smooth native scrolling, web engine with below Chromium 61, should be launched
+ * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
+ * The one with Chromium 61 or above, is launched to support it by default.
+ *
+ * @class VirtualListNative
+ * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable.SpotlightContainerDecorator
+ * @extends moonstone/VirtualList.VirtualListBaseNative
+ * @ui
+ * @private
+ */
+const VirtualListNative = kind({
+	name: 'VirtualListNative',
+
+	propTypes: /** @lends moonstone/VirtualList.VirtualListNative.prototype */ {
+		/**
+		 * Size of an item for the VirtualList; valid value is a number.
+		 * If the direction for the list is vertical, itemSize means the height of an item.
+		 * For horizontal, it means the width of an item.
+		 *
+		 * Usage:
+		 * ```
+		 * <VirtualListNative itemSize={ri.scale(72)} />
+		 * ```
+		 *
+		 * @type {Number}
+		 * @required
+		 * @public
+		 */
+		itemSize: PropTypes.number.isRequired
+	},
+
+	render: (props) => (
+		<SpottableVirtualListNative {...props} />
+	)
+});
+
+/**
+ * A Moonstone-styled scrollable and spottable virtual grid native list component.
+ * For smooth native scrolling, web engine with below Chromium 61, should be launched
+ * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
+ * The one with Chromium 61 or above, is launched to support it by default.
+ *
+ * @class VirtualGridListNative
+ * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable.SpotlightContainerDecorator
+ * @extends moonstone/VirtualList.VirtualListBaseNative
+ * @ui
+ * @private
+ */
+const VirtualGridListNative = kind({
+	name: 'VirtualGridListNative',
+
+	propTypes: /** @lends moonstone/VirtualList.VirtualGridListNative.prototype */ {
 		/**
 		 * Size of an item for the VirtualGridList; valid value is an object that has `minWidth`
 		 * and `minHeight` as properties.
 		 *
 		 * Usage:
 		 * ```
-		 * <VirtualGridList itemSize={{minWidth: ri.scale(180), minHeight: ri.scale(270)}}/>
+		 * <VirtualGridListNative itemSize={{minWidth: ri.scale(180), minHeight: ri.scale(270)}} />
 		 * ```
 		 *
-		 * @type {moonstone/VirtualList.gridListItemSizeShape}
+		 * @type {ui/VirtualList.gridListItemSizeShape}
 		 * @required
 		 * @public
 		 */
 		itemSize: gridListItemSizeShape.isRequired
-
-		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
-		 *
-		 * @name data
-		 * @type {Any}
-		 * @default []
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Size of the data.
-		 *
-		 * @name dataSize
-		 * @type {Number}
-		 * @default 0
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
-		 *
-		 * @name direction
-		 * @type {String}
-		 * @default 'vertical'
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
-
-		/**
-		 * Spacing between items.
-		 *
-		 * @name spacing
-		 * @type {Number}
-		 * @default 0
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @instance
-		 * @public
-		 */
 	},
 
-	render: (props) => <VirtualListBase {...props} pageScroll />
+	render: (props) => (
+		<SpottableVirtualListNative {...props} />
+	)
 });
 
 export default VirtualList;
-export {VirtualList, VirtualGridList};
-export * from './GridListImageItem';
+export {
+	VirtualGridList,
+	VirtualGridListNative,
+	VirtualList,
+	VirtualListBase,
+	VirtualListBaseNative,
+	VirtualListNative
+};

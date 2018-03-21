@@ -1,9 +1,12 @@
+import icons from './icons';
 import VideoPlayer, {VideoPlayerBase} from '@enact/moonstone/VideoPlayer';
 import IconButton from '@enact/moonstone/IconButton';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, number, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, number, select, text} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
@@ -41,6 +44,7 @@ const prop = {
 		'onBackwardButtonClick',
 		'onCanPlay',
 		'onCanPlayThrough',
+		'onControlsAvailable',
 		'onDurationChange',
 		'onEmptied',
 		'onEncrypted',
@@ -59,78 +63,116 @@ const prop = {
 		'onProgress',
 		'onRateChange',
 		'onSeeked',
+		'onSeekFailed',
 		'onSeeking',
 		'onStalled',
 		'onSuspend',
-		'onTimeUpdate',
+		// 'onTimeUpdate',	// Disabled due to Storybook Actions-reporting having an adverse effect on VideoPlayer performance. Uncomment to view this event.
 		'onUMSMediaInfo',	// Custom webOS media event
 		'onVolumeChange',
 		'onWaiting'
 	]
 };
 
-let videoSource = {};
+const videoSources = {};
 for (let index = 0; index < prop.videos.length; index++) {
 	if (index != null && prop.videos[index]) {
-		videoSource[prop.videos[index].source] = prop.videoTitles[index];
+		videoSources[prop.videos[index].source] = prop.videoTitles[index];
 	}
 }
+
+const matchPoster = (src) => {
+	for (let index = 0; index < prop.videos.length; index += 1) {
+		if (prop.videos[index].source === src) {
+			return prop.videos[index].poster;
+		}
+	}
+	return '';
+};
 
 prop.eventActions = {};
 prop.events.forEach( (ev) => {
 	prop.eventActions[ev] = action(ev);
 });
 
-storiesOf('VideoPlayer')
-	.addDecorator(withKnobs)
-	.addWithInfo(
-		' ',
-		'The basic VideoPlayer',
-		() => (
-			<div
-				style={{
-					transformOrigin: 'top',
-					transform: 'scale(' + number('video scale', 1, {range: true, min: 0.05, max: 1, step: 0.01}) + ')',
-					outline: 'teal dashed 1px',
-					position: 'relative'
-				}}
-			>
-				<label
+storiesOf('Moonstone', module)
+	.add(
+		'VideoPlayer',
+		withInfo({
+			propTables: [Config],
+			text: 'The basic VideoPlayer'
+		})(() => {
+			const videoSource = select('source', videoSources, prop.videos[0].source);
+			const poster = matchPoster(videoSource);
+			return (
+				<div
 					style={{
+						transformOrigin: 'top',
+						transform: 'scale(' + number('video scale', 1, {range: true, min: 0.05, max: 1, step: 0.01}) + ')',
 						outline: 'teal dashed 1px',
-						backgroundColor: 'rgba(0, 128, 128, 0.5)',
-						color: '#0bb',
-						position: 'absolute',
-						transform: 'translateY(-100%)',
-						borderBottomWidth: 0,
-						padding: '0.1em 1em',
-						fontWeight: 100,
-						fontStyle: 'italic',
-						fontSize: '16px'
+						height: '70vh'
 					}}
-				>VideoPlayer Edge</label>
-				<VideoPlayer
-					autoCloseTimeout={number('autoCloseTimeout', 7000)}
-					loop={boolean('loop', true)}
-					muted={boolean('muted', true)}
-					noAutoPlay={boolean('noAutoPlay', false)}
-					noJumpButtons={boolean('noJumpButtons', false)}
-					noRateButtons={boolean('noRateButtons', false)}
-					noSlider={boolean('noSlider', false)}
-					poster={prop.videos[0].poster}
-					title={text('title', 'Moonstone VideoPlayer Sample Video')}
-					titleHideDelay={number('titleHideDelay', 4000)}
-					{...prop.eventActions}
 				>
-					<source src={select('source', videoSource, prop.videos[0].source)} type="video/mp4" />
-					<infoComponents>A video about some things happening to and around some characters. Very exciting stuff.</infoComponents>
-					<leftComponents><IconButton backgroundOpacity="translucent">fullscreen</IconButton></leftComponents>
-					<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
+					<label
+						style={{
+							outline: 'teal dashed 1px',
+							backgroundColor: 'rgba(0, 128, 128, 0.5)',
+							color: '#0bb',
+							position: 'absolute',
+							transform: 'translateY(-100%)',
+							borderBottomWidth: 0,
+							padding: '0.1em 1em',
+							fontWeight: 100,
+							fontStyle: 'italic',
+							fontSize: '16px'
+						}}
+					>VideoPlayer Edge</label>
+					<VideoPlayer
+						autoCloseTimeout={number('autoCloseTimeout', 7000)}
+						backwardIcon={select('backwardIcon', icons, 'backward')}
+						disabled={boolean('disabled', false)}
+						feedbackHideDelay={number('feedbackHideDelay', 3000)}
+						forwardIcon={select('forwardIcon', icons, 'forward')}
+						initialJumpDelay={number('initialJumpDelay', 400)}
+						jumpBackwardIcon={select('jumpBackwardIcon', icons, 'skipbackward')}
+						jumpForwardIcon={select('jumpForwardIcon', icons, 'skipforward')}
+						jumpButtonsDisabled={boolean('jumpButtonsDisabled', false)}
+						jumpDelay={number('jumpDelay', 200)}
+						rateButtonsDisabled={boolean('rateButtonsDisabled', false)}
+						loop={boolean('loop', true)}
+						miniFeedbackHideDelay={number('miniFeedbackHideDelay', 2000)}
+						moreButtonCloseLabel={text('moreButtonCloseLabel')}
+						moreButtonDisabled={boolean('moreButtonDisabled', false)}
+						moreButtonLabel={text('moreButtonLabel')}
+						muted={boolean('muted', true)}
+						no5WayJump={boolean('no5WayJump', false)}
+						noAutoPlay={boolean('noAutoPlay', false)}
+						noJumpButtons={boolean('noJumpButtons', false)}
+						noMiniFeedback={boolean('noMiniFeedback', false)}
+						noRateButtons={boolean('noRateButtons', false)}
+						noSlider={boolean('noSlider', false)}
+						pauseAtEnd={boolean('pauseAtEnd', false)}
+						pauseIcon={select('pauseIcon', icons, 'pause')}
+						playIcon={select('playIcon', icons, 'play')}
+						poster={poster}
+						seekDisabled={boolean('seekDisabled', false)}
+						spotlightDisabled={boolean('spotlightDisabled', false)}
+						thumbnailSrc={poster}
+						thumbnailUnavailable={boolean('thumbnailUnavailable', false)}
+						tooltipHideDelay={number('tooltipHideDelay', 3000)}
+						title={text('title', 'Moonstone VideoPlayer Sample Video')}
+						titleHideDelay={number('titleHideDelay', 4000)}
+						{...prop.eventActions}
+					>
+						<source src={videoSource} type="video/mp4" />
+						<infoComponents>A video about some things happening to and around some characters. Very exciting stuff.</infoComponents>
+						<leftComponents><IconButton backgroundOpacity="translucent">fullscreen</IconButton></leftComponents>
+						<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
 
-					<Button backgroundOpacity="translucent">Add To Favorites</Button>
-					<IconButton backgroundOpacity="translucent">star</IconButton>
-				</VideoPlayer>
-			</div>
-		),
-		{propTables: [Config]}
+						<Button backgroundOpacity="translucent">Add To Favorites</Button>
+						<IconButton backgroundOpacity="translucent">star</IconButton>
+					</VideoPlayer>
+				</div>
+			);
+		})
 	);

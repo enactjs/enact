@@ -1,7 +1,6 @@
 import Button from '@enact/moonstone/Button';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
-import {withKnobs} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
 
 class TooltipTest extends React.Component {
 	constructor (props) {
@@ -34,9 +33,8 @@ class TooltipTest extends React.Component {
 	}
 }
 
-storiesOf('Tooltip')
-	.addDecorator(withKnobs)
-	.addWithInfo(
+storiesOf('Tooltip', module)
+	.add(
 		'that shows after Button is unmounted (ENYO-3809)',
 		() => (
 			<TooltipTest />

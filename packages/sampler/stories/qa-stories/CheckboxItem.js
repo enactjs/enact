@@ -1,8 +1,9 @@
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
 import Group from '@enact/ui/Group';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, text, select} from '@storybook/addon-knobs';
 
 const prop = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -11,9 +12,8 @@ const prop = {
 	rtlText: 'هناك حقيقة مثبتة منذ زمن طويل وهي'
 };
 
-storiesOf('CheckboxItem')
-	.addDecorator(withKnobs)
-	.addWithInfo(
+storiesOf('CheckboxItem', module)
+	.add(
 		'with long text',
 		() => (
 			<CheckboxItem
@@ -25,7 +25,7 @@ storiesOf('CheckboxItem')
 			</CheckboxItem>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with tall characters',
 		() => (
 			<CheckboxItem
@@ -37,7 +37,7 @@ storiesOf('CheckboxItem')
 			</CheckboxItem>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with extra spacing',
 		() => (
 			<CheckboxItem
@@ -49,7 +49,7 @@ storiesOf('CheckboxItem')
 			</CheckboxItem>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with right to left text',
 		() => (
 			<CheckboxItem
@@ -61,7 +61,7 @@ storiesOf('CheckboxItem')
 			</CheckboxItem>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'that is grouped',
 		() => (
 			<Group

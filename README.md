@@ -1,4 +1,4 @@
-# Enact
+# Enact [![Travis](https://img.shields.io/travis/enactjs/enact.svg?style=flat-square)](https://travis-ci.org/enactjs/enact) [![license](https://img.shields.io/github/license/enactjs/enact.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0) [![Gitter](https://img.shields.io/gitter/room/EnactJS/Lobby.svg?style=flat-square)](https://gitter.im/EnactJS/Lobby)
 
 > A mono-repo containing Enact framework modules
 
@@ -19,7 +19,7 @@ npm run bootstrap
 Unless otherwise specified, all content, including all source code files and
 documentation files in this repository are:
 
-Copyright (c) 2012-2017 LG Electronics
+Copyright (c) 2012-2018 LG Electronics
 
 Unless otherwise specified or set forth in the NOTICE file, all content,
 including all source code files and documentation files in this repository are:

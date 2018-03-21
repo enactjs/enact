@@ -1,6 +1,10 @@
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {shape} from '@enact/ui/ViewManager';
+
+import IdProvider from '../internal/IdProvider';
+import Skinnable from '../Skinnable';
 
 import ApplicationCloseButton from './ApplicationCloseButton';
 import CancelDecorator from './CancelDecorator';
@@ -13,65 +17,112 @@ import css from './Panels.less';
  *
  * @class Panels
  * @memberof moonstone/Panels
+ * @ui
+ * @public
  */
 const PanelsBase = kind({
 	name: 'Panels',
 
 	propTypes: /** @lends moonstone/Panels.Panels.prototype */ {
 		/**
+		 * Function that generates unique identifiers for Panel instances
+		 *
+		 * @type {Function}
+		 * @required
+		 * @private
+		 */
+		generateId: PropTypes.func.isRequired,
+
+		/**
 		 * Set of functions that control how the panels are transitioned into and out of the
 		 * viewport
 		 *
 		 * @type {Arranger}
+		 * @public
 		 */
 		arranger: shape,
+
+		/**
+		 * An object containing properties to be passed to each child. `aria-owns` will be added or
+		 * updated to this object to add the close button to the accessibility tree of each panel.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		childProps: PropTypes.object,
 
 		/**
 		 * Panels to be rendered
 		 *
 		 * @type {Panel}
+		 * @public
 		 */
-		children: React.PropTypes.node,
+		children: PropTypes.node,
+
+		/**
+		 * The background-color opacity of the application close button; valid values are `'opaque'`,
+		 * `'translucent'`, `'lightTranslucent'`, and `'transparent'`.
+		 *
+		 * @type {String}
+		 * @default 'transparent'
+		 * @public
+		 */
+		closeButtonBackgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'lightTranslucent', 'transparent']),
+
+		/**
+		 * Unique identifier for the Panels instance
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		id: PropTypes.string,
 
 		/**
 		 * Index of the active panel
 		 *
 		 * @type {Number}
 		 * @default 0
+		 * @public
 		 */
-		index: React.PropTypes.number,
+		index: PropTypes.number,
 
 		/**
 		 * When `false`, panel transitions are disabled
 		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @public
 		 */
-		noAnimation: React.PropTypes.bool,
+		noAnimation: PropTypes.bool,
 
 		/**
 		 * When `true`, application close button does not show on the top right corner
 		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @public
 		 */
-		noCloseButton: React.PropTypes.bool,
+		noCloseButton: PropTypes.bool,
 
 		/**
 		 * A function to run when app close button is clicked
+		 *
 		 * @type {Function}
+		 * @public
 		 */
-		onApplicationClose: React.PropTypes.func,
+		onApplicationClose: PropTypes.func,
 
 		/**
 		 * Callback to handle cancel/back key events
 		 *
 		 * @type {Function}
+		 * @public
 		 */
-		onBack: React.PropTypes.func
+		onBack: PropTypes.func
 	},
 
 	defaultProps: {
+		closeButtonBackgroundOpacity: 'transparent',
 		index: 0,
 		noAnimation: false,
 		noCloseButton: false
@@ -86,16 +137,41 @@ const PanelsBase = kind({
 		className: ({noCloseButton, styler}) => styler.append({
 			hasCloseButton: !noCloseButton
 		}),
-		applicationCloseButton: ({noCloseButton, onApplicationClose}) => {
+		applicationCloseButton: ({closeButtonBackgroundOpacity, id, noCloseButton, onApplicationClose}) => {
 			if (!noCloseButton) {
+				const closeId = id ? `${id}_close` : null;
+
 				return (
-					<ApplicationCloseButton onApplicationClose={onApplicationClose} />
+					<ApplicationCloseButton
+						backgroundOpacity={closeButtonBackgroundOpacity}
+						className={css.close}
+						id={closeId}
+						onApplicationClose={onApplicationClose}
+					/>
 				);
 			}
+		},
+		childProps: ({childProps, id, noCloseButton}) => {
+			if (noCloseButton || !id) {
+				return childProps;
+			}
+
+			const updatedChildProps = Object.assign({}, childProps);
+			const closeId = `${id}_close`;
+			const owns = updatedChildProps['aria-owns'];
+
+			if (owns) {
+				updatedChildProps['aria-owns'] = `${owns} ${closeId}`;
+			} else {
+				updatedChildProps['aria-owns'] = closeId;
+			}
+
+			return updatedChildProps;
 		}
 	},
 
-	render: ({noAnimation, arranger, children, index, applicationCloseButton, ...rest}) => {
+	render: ({noAnimation, arranger, childProps, children, generateId, index, applicationCloseButton, ...rest}) => {
+		delete rest.closeButtonBackgroundOpacity;
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
 		delete rest.onBack;
@@ -103,7 +179,13 @@ const PanelsBase = kind({
 		return (
 			<div {...rest}>
 				{applicationCloseButton}
-				<Viewport noAnimation={noAnimation} arranger={arranger} index={index}>
+				<Viewport
+					arranger={arranger}
+					childProps={childProps}
+					generateId={generateId}
+					index={index}
+					noAnimation={noAnimation}
+				>
 					{children}
 				</Viewport>
 			</div>
@@ -111,7 +193,14 @@ const PanelsBase = kind({
 	}
 });
 
-const Panels = CancelDecorator({cancel: 'onBack'}, PanelsBase);
+const Panels = CancelDecorator(
+	{cancel: 'onBack'},
+	IdProvider(
+		Skinnable(
+			PanelsBase
+		)
+	)
+);
 
 export default Panels;
 export {Panels, PanelsBase};

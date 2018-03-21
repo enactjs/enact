@@ -1,9 +1,9 @@
 // Button.less
 //
-@import '../styles/mixins.less';
-@import '../styles/colors.less';
-@import '../styles/variables.less';
-@import '../styles/text.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/text.less";
+@import "../styles/skin.less";
 
 // Local scope for some math variables
 & {
@@ -34,22 +34,13 @@
 
 .button {
 	.moon-large-button-text();
-	position: relative;
-	overflow: visible;
 	height: @moon-button-height;
 	line-height: (@moon-button-height - (2 * @moon-button-border-width));
 	border-radius: @moon-button-border-radius;
-	cursor: pointer;
-	white-space: nowrap;
-	display: inline-block;
-	width: auto;
 	min-width: @moon-button-height;
 	max-width: 300px;
 	padding: 0 @moon-button-h-padding;
 	margin: 0 @moon-button-h-margin;
-	color: @moon-button-text-color;
-	box-sizing: border-box;
-	z-index: 0;
 	text-align: center;
 	vertical-align: middle;
 	.moon-taparea(@moon-button-height);
@@ -57,17 +48,14 @@
 	.moon-custom-text({
 		font-size: @moon-button-large-font-size-large;
 		height: @moon-button-height-large;
+		min-width: @moon-button-height-large;
 		line-height: (@moon-button-height-large - (2 * @moon-button-border-width));
 	});
 
 	.bg {
-		.position(0);
-		position: absolute;
-		content: '';
 		background-color: inherit;
-		z-index: -1;
-		background-color: @moon-button-background-color;
-		border: @moon-button-border-width solid transparent;
+		border-width: @moon-button-border-width;
+		border-style: solid;
 		border-radius: @moon-button-border-radius;
 
 		transform: translateZ(0);
@@ -80,22 +68,12 @@
 		animation-timing-function: ease-out;
 	}
 
-	.marquee {
-		flex-grow: 1;
-		text-align: center;
-	}
-
 	.client {
 		padding: @moon-button-border-width;	// We match the amount removed by the line-height above, so the text doesn't overlap the border
-		display: flex;
-		align-items: center;
-		box-sizing: border-box;
-		height: 100%;
-		position: relative;
 
 		// Colored under-bar
 		&::before {
-			content: '';
+			content: "";
 			position: absolute;
 			min-width: 24px;
 			height: 6px;
@@ -109,17 +87,14 @@
 			-webkit-margin-start: 0;
 		}
 	}
-	&.red .client::before {
-		background-color: @moon-remote-button-red-color;
-	}
-	&.green .client::before {
-		background-color: @moon-remote-button-green-color;
-	}
-	&.yellow .client::before {
-		background-color: @moon-remote-button-yellow-color;
-	}
-	&.blue .client::before {
-		background-color: @moon-remote-button-blue-color;
+
+	//**
+	//* The marquee container of the client area. Added by {@link moonstone/MarqueeDecorator}.
+	//* @public
+	//*/
+	.marquee {
+		flex-grow: 1;
+		text-align: center;
 	}
 
 	&.minWidth {
@@ -142,7 +117,12 @@
 		.moon-custom-text({
 			font-size: @moon-button-small-font-size-large;
 			height: @moon-button-small-height-large;
+			min-width: @moon-button-small-height-large;
 			line-height: (@moon-button-small-height-large - (2 * @moon-button-border-width));
+
+			&.minWidth {
+				min-width: @moon-button-small-min-width;
+			}
 		});
 
 		.client::before {
@@ -152,114 +132,143 @@
 		}
 	}
 
-	&.translucent .bg {
-		background-color: fade(@moon-button-background-color, @moon-button-translucent-opacity);
-	}
-
-	&.transparent .bg {
-		background-color: transparent;
-	}
-
 	// Button-non-disabled rules
 	&:not([disabled]) {
-		&.pressed,
-		&:global(.spottable):active {
-			.bg {
-				-webkit-animation-name: expand;
-				animation-name: expand;
+		.focus({
+			&.pressed,
+			&:active {
+				.bg {
+					-webkit-animation-name: expand;
+					animation-name: expand;
+				}
 			}
-		}
-
-		&:global(.spottable):focus {
-			background-color: transparent;
-
-			.bg {
-				background-color: @moon-spotlight-border-color;
-				color: @moon-spotlight-text-color;
-			}
-		}
+		});
 	}
 
-	// Disable animation for Picker button spottable and disabled.
-	&:global(.spottableDisabled) {
-		&.pressed,
-		&:global(.spottable):active {
-			.bg {
-				-webkit-animation-name: none;
-				animation-name: none;
-			}
-		}
-	}
-
-	// 'Selected' state
-	&.selected {
-		.bg {
-			border-color: @moon-spotlight-border-color;
-		}
-
-		// 'Selected+Focus' state, seen in grouped buttons
-		&:global(.spottable):focus {
-			color: @moon-spotlight-text-color;
-
-			.bg {
-				border-color: @moon-active-spotlight-border-color;
-				background-color: @moon-spotlight-border-color;
-			}
-		}
-	}
-
-	&[disabled] {
-		cursor: default;
-	}
-
-	:global(.moon-neutral) & {
-		color: @moon-neutral-button-text-color;
+	// Skin colors
+	.applySkins({
+		color: @moon-button-text-color;
 
 		.bg {
-			background-color: @moon-neutral-button-bg-color;
+			background-color: @moon-button-bg-color;
+			border-color: transparent;
 		}
 
 		&.translucent .bg {
-			background-color: fade(@moon-neutral-button-bg-color, @moon-button-translucent-opacity);
+			background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
 		}
 
-		&.transparent .bg {
-			background-color: transparent;
+		&.lightTranslucent .bg {
+			background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
 		}
 
-		* {
-			color: inherit;
-		}
-
-		&[disabled],
-		&:global(.disabled) {
-			color: @moon-neutral-button-disabled-text-color;
+		&.transparent {
+			color: @moon-text-color;
 
 			.bg {
-				background-color: @moon-neutral-button-disabled-bg-color;
-			}
-		}
-	}
-}
-
-[data-container-muted='true'] {
-	.button {
-		&:global(.spottable):focus {
-			background-color: transparent;
-			color: @moon-button-text-color;
-
-			.bg {
-				background-color: @moon-button-background-color;
+				background-color: transparent;
 			}
 		}
 
-		&.selected {
-			// 'Selected+Focus' state, seen in grouped buttons
-			&:global(.spottable):focus {
+		&.red .client::before {
+			background-color: @moon-remote-button-red-color;
+		}
+		&.green .client::before {
+			background-color: @moon-remote-button-green-color;
+		}
+		&.yellow .client::before {
+			background-color: @moon-remote-button-yellow-color;
+		}
+		&.blue .client::before {
+			background-color: @moon-remote-button-blue-color;
+		}
+
+		&:not([disabled]) {
+			.focus({
+				color: @moon-spotlight-text-color;
+				background-color: transparent;
+
 				.bg {
-					border-color: @moon-spotlight-border-color;
+					background-color: @moon-spotlight-border-color;
 				}
-			}
+			});
 		}
-	}
+
+		// 'Selected' state
+		&.selected {
+			.bg {
+				border-color: @moon-spotlight-border-color;
+			}
+
+			// 'Selected+Focus' state, seen in grouped buttons
+			.focus({
+				color: @moon-spotlight-text-color;
+
+				.bg {
+					border-color: @moon-active-spotlight-border-color;
+					background-color: @moon-spotlight-border-color;
+				}
+			});
+		}
+
+		.disabled({
+			&.translucent,
+			&.transparent {
+				opacity: @moon-disabled-translucent-opacity;
+			}
+		});
+	});
 }
+
+.muted({
+	.button {
+		// Button-non-disabled rules
+		&:not([disabled]) {
+			.focus({
+				&.pressed {
+					.bg {
+						-webkit-animation-name: none;
+						animation-name: none;
+					}
+				}
+			});
+		}
+
+		// Skin colors
+		.applySkins({
+			.focus({
+				background-color: transparent;
+				color: @moon-button-text-color;
+
+				.bg {
+					background-color: @moon-button-bg-color;
+				}
+
+				&.translucent .bg {
+					background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+				}
+
+				&.lightTranslucent .bg {
+					background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
+				}
+
+				&.transparent {
+					color: @moon-text-color;
+
+					.bg {
+						background-color: transparent;
+					}
+				}
+			});
+
+			&.selected {
+				// 'Selected+Focus' state, seen in grouped buttons
+				.focus({
+					.bg {
+						border-color: @moon-spotlight-border-color;
+					}
+				});
+			}
+		});
+	}
+});

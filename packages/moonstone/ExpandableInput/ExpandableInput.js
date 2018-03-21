@@ -7,14 +7,17 @@
  */
 
 import Changeable from '@enact/ui/Changeable';
-import {forward} from '@enact/core/handle';
-import {is} from '@enact/core/keymap';
+import {forKey, forward, oneOf, preventDefault, stopImmediate} from '@enact/core/handle';
+import deprecate from '@enact/core/internal/deprecate';
 import React from 'react';
+import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
+import Pause from '@enact/spotlight/Pause';
 
 import {calcAriaLabel, Input} from '../Input';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 
-const forwardMouseDown = forward('onMouseDown');
+import css from './ExpandableInput.less';
 
 /**
  * {@link moonstone/ExpandableInput.ExpandableInputBase} is a stateless component that
@@ -36,7 +39,7 @@ class ExpandableInputBase extends React.Component {
 		 * @required
 		 * @public
 		 */
-		title: React.PropTypes.string.isRequired,
+		title: PropTypes.string.isRequired,
 
 		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
@@ -44,7 +47,7 @@ class ExpandableInputBase extends React.Component {
 		 * @type {Boolean}
 		 * @public
 		 */
-		disabled: React.PropTypes.bool,
+		disabled: PropTypes.bool,
 
 		/**
 		 * The icon to be placed at the end of the input.
@@ -53,7 +56,7 @@ class ExpandableInputBase extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		iconAfter: React.PropTypes.string,
+		iconAfter: PropTypes.string,
 
 		/**
 		 * The icon to be placed at the beginning of the input.
@@ -62,7 +65,7 @@ class ExpandableInputBase extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		iconBefore: React.PropTypes.string,
+		iconBefore: PropTypes.string,
 
 		/**
 		 * Text to display when no `value` is set.
@@ -70,7 +73,7 @@ class ExpandableInputBase extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		noneText: React.PropTypes.string,
+		noneText: PropTypes.string,
 
 		/**
 		 * The handler to run when the expandable value is changed.
@@ -79,7 +82,7 @@ class ExpandableInputBase extends React.Component {
 		 * @param {Object} event
 		 * @public
 		 */
-		onChange: React.PropTypes.func,
+		onChange: PropTypes.func,
 
 		/**
 		 * Callback to be called when a condition occurs which should cause the expandable to close
@@ -88,15 +91,18 @@ class ExpandableInputBase extends React.Component {
 		 * @param {Object} event
 		 * @public
 		 */
-		onClose: React.PropTypes.func,
+		onClose: PropTypes.func,
 
 		/**
-		 * The handler to run when the input value is changed.
+		 * This handler will be fired as `onChange`. `onInputChange` is deprecated and will be removed
+		 * in a future update.
 		 *
 		 * @type {Function}
+		 * @param {Object} event
+		 * @deprecated replaced by `onChange`
 		 * @public
 		 */
-		onInputChange: React.PropTypes.func,
+		onInputChange: PropTypes.func,
 
 		/**
 		 * The handler to run when the component is removed while retaining focus.
@@ -105,7 +111,25 @@ class ExpandableInputBase extends React.Component {
 		 * @param {Object} event
 		 * @public
 		 */
-		onSpotlightDisappear: React.PropTypes.func,
+		onSpotlightDisappear: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightLeft: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightRight: PropTypes.func,
 
 		/**
 		 * When `true`, the control is rendered in the expanded state, with the contents visible
@@ -113,7 +137,7 @@ class ExpandableInputBase extends React.Component {
 		 * @type {Boolean}
 		 * @public
 		 */
-		open: React.PropTypes.bool,
+		open: PropTypes.bool,
 
 		/**
 		 * The placeholder text to display.
@@ -122,7 +146,7 @@ class ExpandableInputBase extends React.Component {
 		 * @see moonstone/Input.Input#placeholder
 		 * @public
 		 */
-		placeholder: React.PropTypes.string,
+		placeholder: PropTypes.string,
 
 		/**
 		 * When `true`, the component cannot be navigated using spotlight.
@@ -131,7 +155,7 @@ class ExpandableInputBase extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		spotlightDisabled: React.PropTypes.bool,
+		spotlightDisabled: PropTypes.bool,
 
 		/**
 		 * The type of input. Accepted values correspond to the standard HTML5 input types.
@@ -140,7 +164,7 @@ class ExpandableInputBase extends React.Component {
 		 * @see moonstone/Input.Input#type
 		 * @public
 		 */
-		type: React.PropTypes.string,
+		type: PropTypes.string,
 
 		/**
 		 * The value of the input.
@@ -149,7 +173,7 @@ class ExpandableInputBase extends React.Component {
 		 * @see moonstone/Input.Input#value
 		 * @public
 		 */
-		value: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
+		value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 	}
 
 	static defaultProps = {
@@ -159,9 +183,15 @@ class ExpandableInputBase extends React.Component {
 	constructor (props) {
 		super();
 
+		this.paused = new Pause('ExpandableInput');
+		this.pointer = false;
 		this.state = {
 			initialValue: props.value
 		};
+
+		if (props.onInputChange) {
+			deprecate({name: 'onInputChange', since: '1.0.0', message: 'Use `onChange` instead', until: '2.0.0'});
+		}
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -190,101 +220,108 @@ class ExpandableInputBase extends React.Component {
 		}
 	}
 
-	fireChangeEvent = () => {
-		const {onChange, onClose, value} = this.props;
+	fireCloseEvent = () => {
+		const {onClose} = this.props;
 
 		if (onClose) {
 			onClose();
 		}
+	}
 
+	resetValue = () => {
+		this.paused.resume();
+		forward('onChange', {
+			value: this.state.initialValue
+		}, this.props);
+	}
+
+	handleInputKeyDown = oneOf(
+		// prevent Enter onKeyPress which would re-open the expandable when the label
+		// receives focus
+		[forKey('enter'), preventDefault],
+		// prevent Spotlight handling up/down since closing the expandable will spot the label
+		[forKey('up'), stopImmediate],
+		[forKey('down'), stopImmediate],
+		[forKey('left'), forward('onSpotlightLeft')],
+		[forKey('right'), forward('onSpotlightRight')],
+		[forKey('cancel'), this.resetValue]
+	).bind(this)
+
+	handleActivate = () => {
+		this.paused.pause();
+	}
+
+	handleDeactivate = () => {
+		if (this.paused.resume() && !this.pointer) {
+			this.fireCloseEvent();
+		}
+	}
+
+	handleChange = (val) => {
+		const {onChange, onInputChange} = this.props;
+
+		// handler that fires `onChange` and `onInputChange` in `Input`'s' `onChange`.
 		if (onChange) {
-			onChange({value});
+			onChange(val);
+		}
+
+		if (onInputChange) {
+			onInputChange(val);
 		}
 	}
 
-	handleInputKeyDown = (ev) => {
-		const keyCode = ev.keyCode;
-
-		const isCancel = is('cancel', keyCode);
-		const isEnter = is('enter', keyCode);
-		const isUpDown = is('up', keyCode) || is('down', keyCode);
-
-		if (isEnter) {
-			// prevent Enter onKeyPress which would re-open the expandable when the label
-			// receives focus
-			ev.preventDefault();
-		} else if (isUpDown) {
-			// prevent Spotlight handling up/down since closing the expandable will spot the label
-			ev.nativeEvent.stopImmediatePropagation();
-		}
-
-		if (isCancel) {
-			forward('onChange', {
-				value: this.state.initialValue
-			}, this.props);
-		} else if (isEnter || isUpDown) {
-			this.fireChangeEvent();
-		}
+	handleDown = () => {
+		this.pointer = true;
 	}
 
-	handleInputBlur = () => {
-		// if `open` is `false`, the contained <input> has lost focus due to 5-way navigation
-		// in `handleInputKeyDown`, where the `fireChangeEvent` method has already been called
-		// verify the expandable is open before calling that method again.
-		if (this.props.open) {
-			this.fireChangeEvent();
-		}
+	handleUp = () => {
+		this.pointer = false;
 	}
 
-	handleMouseDown = (ev) => {
-		// if the contained <input> has focus, prevent onClicks so that clicking on the LabeledItem
-		// doesn't open the expandable immediately after blurring the <input> closed it.
-		if (ev.currentTarget.contains(document.activeElement)) {
-			ev.preventDefault();
-		}
-
-		forwardMouseDown(ev);
-	}
-
-	handleInputMouseDown = (ev) => {
-		// prevent onMouseDown events from the <input> itself from bubbling up to be prevented by
-		// handleMouseDown
-		ev.stopPropagation();
-	}
-
-	handleClose = () => {
-		this.fireChangeEvent();
-		// not forwarding event because this is being done in fireChangeEvent
-	}
+	calcClassName = (className) => (className ? `${css.expandableInput} ${className}` : css.expandableInput)
 
 	render () {
-		const {disabled, iconAfter, iconBefore, onChange, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
+		const {
+			className,
+			disabled,
+			iconAfter,
+			iconBefore,
+			open,
+			placeholder,
+			spotlightDisabled,
+			type,
+			value,
+			...rest
+		} = this.props;
+
 		delete rest.onChange;
+		delete rest.onInputChange;
 
 		return (
 			<ExpandableItemBase
 				{...rest}
 				aria-label={this.calcAriaLabel()}
+				className={this.calcClassName(className)}
 				disabled={disabled}
 				label={this.calcLabel()}
-				noPointerMode
-				onClose={this.handleClose}
-				onMouseDown={this.handleMouseDown}
-				onSpotlightDisappear={onSpotlightDisappear}
+				onMouseDown={this.handleDown}
+				onMouseLeave={this.handleUp}
+				onMouseUp={this.handleUp}
+				open={open}
 				showLabel={type === 'password' ? 'never' : 'auto'}
 				spotlightDisabled={spotlightDisabled}
 			>
 				<Input
+					autoFocus
+					className={css.decorator}
 					disabled={disabled}
 					dismissOnEnter
 					iconAfter={iconAfter}
 					iconBefore={iconBefore}
-					noDecorator
-					onBlur={this.handleInputBlur}
-					onChange={onChange}
+					onActivate={this.handleActivate}
+					onChange={this.handleChange}
+					onDeactivate={this.handleDeactivate}
 					onKeyDown={this.handleInputKeyDown}
-					onMouseDown={this.handleInputMouseDown}
-					onSpotlightDisappear={onSpotlightDisappear}
 					placeholder={placeholder}
 					spotlightDisabled={spotlightDisabled}
 					type={type}
@@ -316,9 +353,12 @@ class ExpandableInputBase extends React.Component {
  * @ui
  * @public
  */
-const ExpandableInput = Expandable(
-	Changeable(
-		ExpandableInputBase
+const ExpandableInput = Pure(
+	Expandable(
+		{noPointerMode: true},
+		Changeable(
+			ExpandableInputBase
+		)
 	)
 );
 

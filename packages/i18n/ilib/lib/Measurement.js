@@ -92,7 +92,6 @@ Measurement.prototype = {
 	 * static call {@link Measurement.getAvailableUnits}
 	 * to find out what units this version of ilib supports.
 	 * 
-	 * @abstract
 	 * @return {string} the name of the type of this measurement
 	 */
 	getMeasure: function() {},
@@ -102,7 +101,6 @@ Measurement.prototype = {
 	 * measurement unit. Measurements can only be converted
 	 * to measurements of the same type.<p>
 	 * 
-	 * @abstract
 	 * @param {string} to The name of the units to convert to
 	 * @return {Measurement|undefined} the converted measurement
 	 * or undefined if the requested units are for a different
@@ -110,7 +108,7 @@ Measurement.prototype = {
 	 */
 	convert: function(to) {},     
         
-        /**
+    /**
 	 * Scale the measurement unit to an acceptable level. The scaling
 	 * happens so that the integer part of the amount is as small as
 	 * possible without being below zero. This will result in the 
@@ -118,7 +116,6 @@ Measurement.prototype = {
 	 * fractions. Measurements can only be scaled to other measurements 
 	 * of the same type.
 	 * 
-	 * @abstract
 	 * @param {string=} measurementsystem system to use (uscustomary|imperial|metric),
 	 * or undefined if the system can be inferred from the current measure
 	 * @return {Measurement} a new instance that is scaled to the 
@@ -133,7 +130,6 @@ Measurement.prototype = {
 	 * measure in the other system, in this case, mph. The formatted result should
 	 * appear as "37.3 mph". 
 	 * 
-	 * @abstract
 	 * @param {string} locale current locale string
 	 * @returns {Measurement} a new instance that is converted to locale
 	 */

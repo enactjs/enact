@@ -2,30 +2,32 @@ import Icon from '@enact/moonstone/Icon';
 import Divider from '@enact/moonstone/Divider';
 import iconNames from './icons';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {boolean, select, text} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 // import icons
-import fwd from '../../images/icon-fwd-btn.png';
-import play from '../../images/icon-play-btn.png';
-import rew from '../../images/icon-rew-btn.png';
+import docs from '../../images/icon-enact-docs.png';
+import factory from '../../images/icon-enact-factory.svg';
+import logo from '../../images/icon-enact-logo.svg';
 
-storiesOf('Icon')
-	.addDecorator(withKnobs)
-	.addWithInfo(
-		' ',
-		'Basic usage of Icon',
-		() => (
-			<div>
-				<Icon
-					small={boolean('small', false)}
-				>
-					{select('src', ['', fwd, play, rew], '') + select('icon', ['', ...iconNames], 'plus') + text('custom icon', '')}
-				</Icon>
-				<br />
-				<br />
-				<Divider>All Icons</Divider>
-				{iconNames.map((icon, index) => <Icon key={index}>{icon}</Icon>)}
-			</div>
-		)
+storiesOf('Moonstone', module)
+	.add(
+		'Icon',
+		withInfo('Basic usage of Icon')(() => {
+			const small = boolean('small', false);
+			return (
+				<div>
+					<Icon
+						small={small}
+					>
+						{select('src', ['', docs, factory, logo], '') + select('icon', ['', ...iconNames], 'plus') + text('custom icon', '')}
+					</Icon>
+					<br />
+					<br />
+					<Divider>All Icons</Divider>
+					{iconNames.map((icon, index) => <Icon key={index} small={small} title={icon}>{icon}</Icon>)}
+				</div>
+			);
+		})
 	);

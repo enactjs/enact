@@ -1,8 +1,12 @@
 import {on, off} from '@enact/core/dispatcher';
+import invariant from 'invariant';
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
+
 import Cancelable from '../Cancelable';
 
+import {contextTypes} from './FloatingLayerDecorator';
 import Scrim from './Scrim';
 
 /**
@@ -17,6 +21,8 @@ import Scrim from './Scrim';
 class FloatingLayerBase extends React.Component {
 	static displayName = 'FloatingLayer'
 
+	static contextTypes = contextTypes
+
 	static propTypes = /** @lends ui/FloatingLayer.FloatingLayerBase.prototype */ {
 		/**
 		 * CSS classes for FloatingLayer.
@@ -25,7 +31,7 @@ class FloatingLayerBase extends React.Component {
 		 * @default 'enact-fit enact-clip enact-untouchable'
 		 * @public
 		 */
-		floatLayerClassName: React.PropTypes.string,
+		floatLayerClassName: PropTypes.string,
 
 		/**
 		 * Element id for floating layer.
@@ -34,7 +40,7 @@ class FloatingLayerBase extends React.Component {
 		 * @default 'floatLayer'
 		 * @public
 		 */
-		floatLayerId: React.PropTypes.string,
+		floatLayerId: PropTypes.string,
 
 		/**
 		 * When `true`, FloatingLayer will not hide when the user presses `ESC` key.
@@ -43,7 +49,7 @@ class FloatingLayerBase extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		noAutoDismiss: React.PropTypes.bool,
+		noAutoDismiss: PropTypes.bool,
 
 		/**
 		 * A function to be run when floating layer is closed.
@@ -51,7 +57,7 @@ class FloatingLayerBase extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onClose: React.PropTypes.func,
+		onClose: PropTypes.func,
 
 		/**
 		 * A function to be run when `ESC` key is pressed. The function will only invoke if
@@ -60,7 +66,7 @@ class FloatingLayerBase extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onDismiss: React.PropTypes.func,
+		onDismiss: PropTypes.func,
 
 		/**
 		 * A function to be run when floating layer is opened. It will only be invoked for the first render.
@@ -68,7 +74,7 @@ class FloatingLayerBase extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onOpen: React.PropTypes.func,
+		onOpen: PropTypes.func,
 
 		/**
 		 * When `true`, the floating layer and its components will be rendered.
@@ -77,7 +83,7 @@ class FloatingLayerBase extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		open: React.PropTypes.bool,
+		open: PropTypes.bool,
 
 		/**
 		 * The scrim type. It can be either `'transparent'`, `'translucent'`, or `'none'`.
@@ -86,7 +92,7 @@ class FloatingLayerBase extends React.Component {
 		 * @default 'translucent'
 		 * @public
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none'])
+		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none'])
 	}
 
 	static defaultProps = {
@@ -100,31 +106,48 @@ class FloatingLayerBase extends React.Component {
 	constructor (props) {
 		super(props);
 		this.node = null;
-		this.floatLayer = null;
 	}
 
 	componentDidMount () {
-		if (this.props.open) {
-			this.renderFloatingLayer(this.props);
+		const {open, onOpen} = this.props;
+		if (open && onOpen) {
+			onOpen({});
 		}
 	}
 
-	componentWillReceiveProps (nextProps) {
-		if (nextProps.open) {
-			this.renderFloatingLayer(nextProps, this.props.open);
-		} else {
-			this.closeFloatingLayer();
+	componentDidUpdate (prevProps) {
+		const {open, onClose, onOpen, scrimType} = this.props;
+
+		if (prevProps.open && !open && onClose) {
+			onClose({});
+		} else if (!prevProps.open && open && onOpen) {
+			onOpen({});
+		}
+
+		if (scrimType === 'none') {
+			if (!prevProps.open && open) {
+				on('click', this.handleClick);
+			} else if (prevProps.open && !open) {
+				off('click', this.handleClick);
+			}
 		}
 	}
 
 	componentWillUnmount () {
-		this.closeFloatingLayer();
+		this.node = null;
+		off('click', this.handleClick);
 	}
 
 	handleClick = () => {
 		if (!this.props.noAutoDismiss && this.props.open && this.props.onDismiss) {
-			this.props.onDismiss();
+			this.props.onDismiss({});
 		}
+	}
+
+	handleScroll = (ev) => {
+		const {currentTarget} = ev;
+		currentTarget.scrollTop = 0;
+		currentTarget.scrollLeft = 0;
 	}
 
 	stopPropagation = (ev) => {
@@ -135,72 +158,59 @@ class FloatingLayerBase extends React.Component {
 		}
 	}
 
-	closeFloatingLayer () {
-		if (this.node) {
-			ReactDOM.unmountComponentAtNode(this.node);
-			document.getElementById(this.props.floatLayerId).removeChild(this.node);
-
-			if (this.props.onClose) {
-				this.props.onClose();
-			}
-		}
-		this.floatLayer = null;
-		this.node = null;
-
-		off('click', this.handleClick);
-	}
-
 	renderNode () {
-		const {floatLayerClassName, floatLayerId} = this.props;
+		const {floatLayerClassName, open} = this.props;
+		const floatingLayer = this.context.getFloatingLayer();
 
-		if (!this.node) {
+		if (!this.node && floatingLayer && open) {
+			invariant(
+				this.context.getFloatingLayer,
+				'FloatingLayer cannot be used outside the subtree of a FloatingLayerDecorator'
+			);
+
 			this.node = document.createElement('div');
-			document.getElementById(floatLayerId).appendChild(this.node);
+			floatingLayer.appendChild(this.node);
+			on('scroll', this.handleScroll, this.node);
 		}
 
-		this.node.className = floatLayerClassName;
-		this.node.style.zIndex = 100;
+		if (this.node) {
+			this.node.className = floatLayerClassName;
+			this.node.style.zIndex = 100;
+		}
 
 		return this.node;
 	}
 
-	renderFloatingLayer ({children, onOpen, scrimType, ...rest}, isOpened = false) {
+	render () {
+		const props = Object.assign({}, this.props);
+		const {children, open, scrimType, ...rest} = props;
+
 		delete rest.floatLayerClassName;
 		delete rest.floatLayerId;
 		delete rest.noAutoDismiss;
 		delete rest.onClose;
 		delete rest.onDismiss;
-		delete rest.open;
+		delete rest.onOpen;
 
 		const node = this.renderNode();
-		this.floatLayer = ReactDOM.unstable_renderSubtreeIntoContainer(
-			this,
-			<div {...rest}>
-				{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
-				{React.cloneElement(children, {onClick: this.stopPropagation})}
-			</div>,
-			node
+
+		return (
+			open && node ?
+				ReactDOM.createPortal(
+					<div {...rest}>
+						{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
+						{React.cloneElement(children, {onClick: this.stopPropagation})}
+					</div>,
+					node
+				) :
+				null
 		);
-
-		if (!isOpened) {
-			if (onOpen) {
-				onOpen();
-			}
-
-			if (scrimType === 'none') {
-				on('click', this.handleClick);
-			}
-		}
-	}
-
-	render () {
-		return null;
 	}
 }
 
 const handleCancel = (props) => {
 	if (props.open && !props.noAutoDismiss && props.onDismiss) {
-		props.onDismiss();
+		props.onDismiss({});
 		return true;
 	}
 };

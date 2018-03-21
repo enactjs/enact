@@ -32,6 +32,7 @@ TimeZone.js
 GregorianCal.js
 JSUtils.js
 Utils.js
+ISet.js
 */
 
 // !data dateformats sysres
@@ -52,6 +53,8 @@ var IString = require("./IString.js");
 var ResBundle = require("./ResBundle.js");
 var TimeZone = require("./TimeZone.js");
 var GregorianCal = require("./GregorianCal.js");
+
+var ISet = require("./ISet.js");
 
 /**
  * @class
@@ -145,7 +148,12 @@ var GregorianCal = require("./GregorianCal.js");
  * <li><i>y</i> - format only the year
  * </ul>
  * Default components, if this property is not specified, is "dmy". This property may be specified
- * but has no affect if the current formatter is for times only.
+ * but has no affect if the current formatter is for times only.<p>
+ * 
+ * As of ilib 12.0, you can now pass ICU style skeletons in this option similar to the ones you 
+ * get from <a href="http://icu-project.org/apiref/icu4c432/classDateTimePatternGenerator.html#aa30c251609c1eea5ad60c95fc497251e">DateTimePatternGenerator.getSkeleton()</a>. 
+ * It will not extract the length from the skeleton so you still need to pass the length property, 
+ * but it will extract the date components.
  * 
  * <li><i>time</i> - This property gives which components of a time format to use. The time will be formatted 
  * correctly for the locale with only the time components requested. For example, a clock might only display 
@@ -179,7 +187,12 @@ var GregorianCal = require("./GregorianCal.js");
  * of minutes to exceed 59 if, for example, you were displaying the length of
  * a movie of 198 minutes.<p>
  * 
- * Default value if this property is not specified is "hma".
+ * Default value if this property is not specified is "hma".<p>
+ * 
+ * As of ilib 12.0, you can now pass ICU style skeletons in this option similar to the ones you 
+ * get from <a href="http://icu-project.org/apiref/icu4c432/classDateTimePatternGenerator.html#aa30c251609c1eea5ad60c95fc497251e">DateTimePatternGenerator.getSkeleton()</a>. 
+ * It will not extract the length from the skeleton so you still need to pass the length property, 
+ * but it will extract the time components.
  * 
  * <li><i>clock</i> - specify that the time formatter should use a 12 or 24 hour clock. 
  * Valid values are "12" and "24".<p>
@@ -338,35 +351,50 @@ var DateFmt = function(options) {
 		
 		if (options.date) {
 			arr = options.date.split("");
-			arr.sort(function (left, right) {
-				return (left < right) ? -1 : ((right < left) ? 1 : 0);
-			});
+			var dateComps = new ISet();
 			bad = false;
 			for (i = 0; i < arr.length; i++) {
-				if (arr[i] !== 'd' && arr[i] !== 'm' && arr[i] !== 'y' && arr[i] !== 'w' && arr[i] !== 'n') {
-					bad = true;
-					break;
+				var c = arr[i].toLowerCase();
+				if (c === "e") c = "w"; // map ICU -> ilib
+				if (c !== 'd' && c !== 'm' && c !== 'y' && c !== 'w' && c !== 'n') {
+					// ignore time components and the era
+					if (c !== 'h' && c !== 'm'  && c !== 's' && c !== 'a' && c !== 'z' && c !== 'g') {
+    					bad = true;
+    					break;
+					}
+				} else {
+    				dateComps.add(c);
 				}
 			}
 			if (!bad) {
-				this.dateComponents = arr.join("");
+				var comps = dateComps.asArray().sort(function (left, right) {
+					return (left < right) ? -1 : ((right < left) ? 1 : 0);
+				});
+				this.dateComponents = comps.join("");
 			}
 		}
 
 		if (options.time) {
 			arr = options.time.split("");
-			arr.sort(function (left, right) {
-				return (left < right) ? -1 : ((right < left) ? 1 : 0);
-			});
+			var timeComps = new ISet();
 			this.badTime = false;
 			for (i = 0; i < arr.length; i++) {
-				if (arr[i] !== 'h' && arr[i] !== 'm' && arr[i] !== 's' && arr[i] !== 'a' && arr[i] !== 'z') {
-					this.badTime = true;
-					break;
+				var c = arr[i].toLowerCase();
+				if (c !== 'h' && c !== 'm' && c !== 's' && c !== 'a' && c !== 'z') {
+					// ignore the date components
+					if (c !== 'd' && c !== 'm' && c !== 'y' && c !== 'w' && c !== 'e' && c !== 'n' && c !== 'g') {
+    					this.badTime = true;
+    					break;
+					}
+				} else {
+					timeComps.add(c);
 				}
 			}
 			if (!this.badTime) {
-				this.timeComponents = arr.join("");
+				var comps = timeComps.asArray().sort(function (left, right) {
+					return (left < right) ? -1 : ((right < left) ? 1 : 0);
+				});
+				this.timeComponents = comps.join("");
 			}
 		}
 		
@@ -512,8 +540,6 @@ DateFmt.lenmap = {
 	"f": "full"
 };
 
-DateFmt.zeros = "0000";
-
 DateFmt.defaultFmt = {
 	"gregorian": {
 		"order": "{date} {time}",
@@ -621,18 +647,38 @@ DateFmt.getMeridiemsRange = function (options) {
 DateFmt.prototype = {
 	/**
 	 * @protected
+	 * @param {string|{
+	 * 		order:(string|{
+	 * 			s:string,
+	 * 			m:string,
+	 * 			l:string,
+	 * 			f:string
+	 * 		}),
+	 * 		date:Object.<string, (string|{
+	 * 			s:string,
+	 * 			m:string,
+	 * 			l:string,
+	 * 			f:string
+	 * 		})>,
+	 * 		time:Object.<string,Object.<string,(string|{
+	 * 			s:string,
+	 * 			m:string,
+	 * 			l:string,
+	 * 			f:string
+	 * 		})>>,
+	 * 		range:Object.<string, (string|{
+	 * 			s:string,
+	 * 			m:string,
+	 * 			l:string,
+	 * 			f:string
+	 * 		})>
+	 * 	}} formats
 	 */
 	_initTemplate: function (formats) {
 		if (formats[this.calName]) {
-			/** 
-			 * @private
-			 * @type {{order:(string|{s:string,m:string,l:string,f:string}),date:Object.<string, (string|{s:string,m:string,l:string,f:string})>,time:Object.<string,(string|{s:string,m:string,l:string,f:string})>,range:Object.<string, (string|{s:string,m:string,l:string,f:string})>}}
-			 */
-			this.formats = formats[this.calName];
-			if (typeof(this.formats) === "string") {
-				// alias to another calendar type
-				this.formats = formats[this.formats];
-			}
+			var name = formats[this.calName];
+			// may be an alias to another calendar type
+			this.formats = (typeof(name) === "string") ? formats[name] : name;
 			
 			this.template = "";
 			
@@ -770,7 +816,32 @@ DateFmt.prototype = {
 		}
 		return arr;
 	},
-                          
+    
+	/**
+	 * @protected
+	 * @param {Object.<string, (string|{s:string,m:string,l:string,f:string})>} obj Object to search
+	 * @param {string} components Format components to search
+	 * @param {string} length Length of the requested format
+	 * @return {string|undefined} the requested format
+	 */
+	_getFormatInternal: function getFormatInternal(obj, components, length) {
+		if (typeof(components) !== 'undefined' && obj && obj[components]) {
+			return this._getLengthFormat(obj[components], length);
+		}
+		return undefined;
+	},
+
+	// stand-alone of m (month) is l
+	// stand-alone of d (day) is a
+	// stand-alone of w (weekday) is e
+	// stand-alone of y (year) is r
+	_standAlones: {
+		"m": "l",
+		"d": "a",
+		"w": "e",
+		"y": "r"
+	},
+	
 	/**
 	 * @protected
 	 * @param {Object.<string, (string|{s:string,m:string,l:string,f:string})>} obj Object to search
@@ -779,10 +850,16 @@ DateFmt.prototype = {
 	 * @return {string|undefined} the requested format
 	 */
 	_getFormat: function getFormat(obj, components, length) {
-		if (typeof(components) !== 'undefined' && obj && obj[components]) {
-			return this._getLengthFormat(obj[components], length);
+		// handle some special cases for stand-alone formats
+		if (components && this._standAlones[components]) {
+    		var tmp = this._getFormatInternal(obj, this._standAlones[components], length);
+    		if (tmp) {
+    			return tmp;
+    		}
 		}
-		return undefined;
+		
+		// if no stand-alone format is available, fall back to the regular format
+		return this._getFormatInternal(obj, components, length);
 	},
 
 	/**
@@ -1091,25 +1168,8 @@ DateFmt.prototype = {
 	toString: function() {
 		return this.getTemplate();
 	},
-	
-	/*
-	 * @private
-	 * Left pad the str to the given length of digits with zeros
-	 * @param {string} str the string to pad
-	 * @param {number} length the desired total length of the output string, padded 
-	 */
-	_pad: function (str, length) {
-		if (typeof(str) !== 'string') {
-			str = "" + str;
-		}
-		var start = 0;
-		if (str.charAt(0) === '-') {
-			start++;
-		}
-		return (str.length >= length+start) ? str : str.substring(0, start) + DateFmt.zeros.substring(0,length-str.length+start) + str.substring(start);
-	},
-	
-	/*
+		
+	/**
 	 * @private
 	 * Format a date according to a sequence of components. 
 	 * @param {IDate} date a date/time object to format
@@ -1124,20 +1184,20 @@ DateFmt.prototype = {
 					str += (date.day || 1);
 					break;
 				case 'dd':
-					str += this._pad(date.day || "1", 2);
+					str += JSUtils.pad(date.day || "1", 2);
 					break;
 				case 'yy':
 					temp = "" + ((date.year || 0) % 100);
-					str += this._pad(temp, 2);
+					str += JSUtils.pad(temp, 2);
 					break;
 				case 'yyyy':
-					str += this._pad(date.year || "0", 4);
+					str += JSUtils.pad(date.year || "0", 4);
 					break;
 				case 'M':
 					str += (date.month || 1);
 					break;
 				case 'MM':
-					str += this._pad(date.month || "1", 2);
+					str += JSUtils.pad(date.month || "1", 2);
 					break;
 				case 'h':
 					temp = (date.hour || 0) % 12;
@@ -1151,7 +1211,7 @@ DateFmt.prototype = {
 					if (temp == 0) {
 						temp = "12";
 					}
-					str += this._pad(temp, 2);
+					str += JSUtils.pad(temp, 2);
 					break;
 				/*
 				case 'j':
@@ -1160,7 +1220,7 @@ DateFmt.prototype = {
 					break;
 				case 'jj':
 					temp = (date.hour || 0) % 12 + 1;
-					str += this._pad(temp, 2);
+					str += JSUtils.pad(temp, 2);
 					break;
 				*/
 				case 'K':
@@ -1169,59 +1229,67 @@ DateFmt.prototype = {
 					break;
 				case 'KK':
 					temp = (date.hour || 0) % 12;
-					str += this._pad(temp, 2);
+					str += JSUtils.pad(temp, 2);
 					break;
 
 				case 'H':
 					str += (date.hour || "0");
 					break;
 				case 'HH':
-					str += this._pad(date.hour || "0", 2);
+					str += JSUtils.pad(date.hour || "0", 2);
 					break;
 				case 'k':
 					str += (date.hour == 0 ? "24" : date.hour);
 					break;
 				case 'kk':
 					temp = (date.hour == 0 ? "24" : date.hour);
-					str += this._pad(temp, 2);
+					str += JSUtils.pad(temp, 2);
 					break;
 
 				case 'm':
 					str += (date.minute || "0");
 					break;
 				case 'mm':
-					str += this._pad(date.minute || "0", 2);
+					str += JSUtils.pad(date.minute || "0", 2);
 					break;
 				case 's':
-					str += (date.minute || "0");
+					str += (date.second || "0");
 					break;
 				case 'ss':
-					str += this._pad(date.second || "0", 2);
+					str += JSUtils.pad(date.second || "0", 2);
 					break;
 				case 'S':
 					str += (date.millisecond || "0");
 					break;
 				case 'SSS':
-					str += this._pad(date.millisecond || "0", 3);
+					str += JSUtils.pad(date.millisecond || "0", 3);
 					break;
 
 				case 'N':
 				case 'NN':
 				case 'MMM':
 				case 'MMMM':
+				case 'L':
+				case 'LL':
+				case 'LLL':
+				case 'LLLL':
 					key = templateArr[i] + (date.month || 1);
 					str += (this.sysres.getString(undefined, key + "-" + this.calName) || this.sysres.getString(undefined, key));
 					break;
-
+					
 				case 'E':
 				case 'EE':
 				case 'EEE':
 				case 'EEEE':
+				case 'c':
+				case 'cc':
+				case 'ccc':
+				case 'cccc':
 					key = templateArr[i] + date.getDayOfWeek();
 					//console.log("finding " + key + " in the resources");
 					str += (this.sysres.getString(undefined, key + "-" + this.calName) || this.sysres.getString(undefined, key));
 					break;
-					
+
 				case 'a':
 					switch (this.meridiems) {
 					case "chinese":
@@ -1266,17 +1334,17 @@ DateFmt.prototype = {
 					str += date.getWeekOfYear();
 					break;
 				case 'ww':
-					str += this._pad(date.getWeekOfYear(), 2);
+					str += JSUtils.pad(date.getWeekOfYear(), 2);
 					break;
 
 				case 'D':
 					str += date.getDayOfYear();
 					break;
 				case 'DD':
-					str += this._pad(date.getDayOfYear(), 2);
+					str += JSUtils.pad(date.getDayOfYear(), 2);
 					break;
 				case 'DDD':
-					str += this._pad(date.getDayOfYear(), 3);
+					str += JSUtils.pad(date.getDayOfYear(), 3);
 					break;
 				case 'W':
 					str += date.getWeekOfMonth(this.locale);

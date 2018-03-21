@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import kind from '@enact/core/kind';
 
@@ -24,7 +25,7 @@ const TimesBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		formatter: React.PropTypes.object.isRequired,
+		formatter: PropTypes.object.isRequired,
 
 		/**
 		 * The current time in seconds of the video source.
@@ -33,7 +34,7 @@ const TimesBase = kind({
 		 * @default 0
 		 * @public
 		 */
-		current: React.PropTypes.number,
+		current: PropTypes.number,
 
 		/**
 		 * The total time (duration) in seconds of the loaded video source.
@@ -42,7 +43,7 @@ const TimesBase = kind({
 		 * @default 0
 		 * @public
 		 */
-		total: React.PropTypes.number
+		total: PropTypes.number
 	},
 
 	defaultProps: {

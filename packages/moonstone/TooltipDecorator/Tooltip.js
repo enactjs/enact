@@ -1,6 +1,9 @@
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import Skinnable from '../Skinnable';
 
 import TooltipLabel from './TooltipLabel';
 import css from './Tooltip.less';
@@ -93,7 +96,7 @@ const TooltipBase = kind({
 
 	computed: {
 		arrowType: ({arrowAnchor}) => (arrowAnchor === 'center' || arrowAnchor === 'middle') ?
-				'M0,5C0,4,1,3,3,2.5C1,2,0,1,0,0V5Z' : 'M0,5C0,3,1,0,3,0H0V5Z',
+			'M0,5C0,4,1,3,3,2.5C1,2,0,1,0,0V5Z' : 'M0,5C0,3,1,0,3,0H0V5Z',
 		className: ({direction, arrowAnchor, styler}) => styler.append(direction, `${arrowAnchor}Arrow`),
 		style: ({position, style}) => {
 			return {
@@ -124,7 +127,7 @@ const TooltipBase = kind({
 /**
  * {@link moonstone/TooltipDecorator.Tooltip} is a tooltip component with Moonstone styling
  * applied. If the Tooltip's child component is text, it will be uppercased unless
- * `preserveCase` is set.
+ * `casing` is set.
  *
  * @class Tooltip
  * @memberof moonstone/TooltipDecorator
@@ -132,7 +135,7 @@ const TooltipBase = kind({
  * @ui
  * @public
  */
-const Tooltip = Uppercase(TooltipBase);
+const Tooltip = Skinnable(Uppercase(TooltipBase));
 
 export default Tooltip;
 export {Tooltip, TooltipBase};

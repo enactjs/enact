@@ -159,5 +159,5 @@ iLib provides the locale-specific features of i18n. If you wish to learn about s
 <a name="7"></a>
 ## Sample
 
-A sample i18n app is available [here](https://github.com/enyojs/enact-samples/tree/master/pattern-locale-switching).
+A sample i18n app is available [here](https://github.com/enactjs/samples/tree/master/pattern-locale-switching).
 

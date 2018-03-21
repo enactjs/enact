@@ -7,7 +7,7 @@ import css from '../MoonstoneDecorator.less';
 
 describe('MoonstoneDecorator', () => {
 
-	const AppRoot = (props) => <app {...props} />;
+	const AppRoot = (props) => <div data-app {...props} />;
 
 	it('should add base moonstone classes to wrapped component', function () {
 		const config = {ri: false, i18n: false, spotlight: false, float: false, overlay: false};
@@ -18,10 +18,10 @@ describe('MoonstoneDecorator', () => {
 
 		Spotlight.terminate();
 
-		const appRoot = subject.find('app');
+		const appRoot = subject.find('[data-app]');
 
 		const expected = true;
-		const actual = appRoot.hasClass(css.moon) && appRoot.hasClass(css.bg);
+		const actual = appRoot.hasClass('moonstone') && appRoot.hasClass(css.bg);
 
 		expect(actual).to.equal(expected);
 	});
@@ -35,7 +35,7 @@ describe('MoonstoneDecorator', () => {
 
 		Spotlight.terminate();
 
-		const appRoot = subject.find('app');
+		const appRoot = subject.find('[data-app]');
 
 		const expected = true;
 		const actual = appRoot.hasClass('author-class');
@@ -43,7 +43,7 @@ describe('MoonstoneDecorator', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not add .moon class to wrapped component when float is enabled', function () {
+	it('should not add .moonstone class to wrapped component when float is enabled', function () {
 		const config = {ri: false, i18n: false, spotlight: false, float: true, overlay: false};
 		const App = MoonstoneDecorator(config, AppRoot);
 		const subject = mount(
@@ -52,10 +52,10 @@ describe('MoonstoneDecorator', () => {
 
 		Spotlight.terminate();
 
-		const appRoot = subject.find('app');
+		const appRoot = subject.find('[data-app]');
 
 		const expected = false;
-		const actual = appRoot.hasClass(css.moon);
+		const actual = appRoot.hasClass('moonstone');
 
 		expect(actual).to.equal(expected);
 	});
@@ -69,7 +69,7 @@ describe('MoonstoneDecorator', () => {
 
 		Spotlight.terminate();
 
-		const appRoot = subject.find('app');
+		const appRoot = subject.find('[data-app]');
 
 		const expected = false;
 		const actual = appRoot.hasClass(css.bg);

@@ -1,20 +1,19 @@
 import BodyText from '@enact/moonstone/BodyText';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
-import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {text, boolean} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 
-storiesOf('BodyText')
-	.addDecorator(withKnobs)
-	.addWithInfo(
-		' ',
-		'The basic BodyText',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'BodyText',
+		withInfo('The basic BodyText')(() => (
 			<BodyText
 				centered={nullify(boolean('centered', false))}
 			>
 				{text('children', 'This is Body Text')}
 			</BodyText>
-		)
+		))
 	);

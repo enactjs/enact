@@ -1,8 +1,9 @@
 import SelectableItem from '@enact/moonstone/SelectableItem';
 import Group from '@enact/ui/Group';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, text, select} from '@storybook/addon-knobs';
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -13,9 +14,8 @@ const inputData = {
 	normalText : 'Selectable Item'
 };
 
-storiesOf('SelectableItem')
-	.addDecorator(withKnobs)
-	.addWithInfo(
+storiesOf('SelectableItem', module)
+	.add(
 		'with long text',
 		() => (
 			<div>
@@ -36,7 +36,7 @@ storiesOf('SelectableItem')
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with tall characters',
 		() => (
 			<SelectableItem
@@ -48,7 +48,7 @@ storiesOf('SelectableItem')
 			</SelectableItem>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with right to left text',
 		() => (
 			<SelectableItem
@@ -60,7 +60,7 @@ storiesOf('SelectableItem')
 			</SelectableItem>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with extra spacing',
 		() => (
 			<SelectableItem
@@ -72,7 +72,7 @@ storiesOf('SelectableItem')
 			</SelectableItem>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with default selected',
 		() => (
 			<SelectableItem
@@ -85,7 +85,7 @@ storiesOf('SelectableItem')
 			</SelectableItem>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'that is grouped',
 		() => (
 			<Group

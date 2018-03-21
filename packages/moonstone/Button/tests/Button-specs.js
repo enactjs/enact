@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import sinon from 'sinon';
-import {Button, ButtonBase} from '../Button';
+import Button from '../Button';
 
 describe('Button', () => {
 
@@ -18,47 +18,13 @@ describe('Button', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not convert text content when preserveCase=true', function () {
-		let msg = 'Hello Button!';
-		const button = mount(
-			<Button preserveCase>{msg}</Button>
-		);
-
-		const expected = msg;
-		const actual = button.text();
-
-		expect(actual).to.equal(expected);
-	});
-
 	it('should have \'disabled\' HTML attribute when \'disabled\' prop is provided', function () {
 		const button = mount(
 			<Button disabled>I am a disabled Button</Button>
 		);
 
-		const expected = 1;
-		const actual = button.find({disabled: true}).length;
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should not add "aria-pressed" when "selected" is omitted', function () {
-		const button = mount(
-			<ButtonBase>Text</ButtonBase>
-		);
-
-		const expected = false;
-		const actual = 'aria-pressed' in button.find({role: 'button'}).props();
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should set "aria-pressed" to the value of "selected"', function () {
-		const button = mount(
-			<ButtonBase selected={false}>Text</ButtonBase>
-		);
-
-		const expected = false;
-		const actual = button.find({role: 'button'}).prop('aria-pressed');
+		const expected = true;
+		const actual = button.find('div').at(0).prop('disabled');
 
 		expect(actual).to.equal(expected);
 	});

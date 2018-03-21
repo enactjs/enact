@@ -58,8 +58,12 @@ describe('Transition Specs', () => {
 	];
 
 	const timingFunctionCombination = [
-		[css['ease-in-out'], 'ease-in-out'],
 		[css.ease, 'ease'],
+		[css['ease-in'], 'ease-in'],
+		[css['ease-out'], 'ease-out'],
+		[css['ease-in-out'], 'ease-in-out'],
+		[css['ease-in-quart'], 'ease-in-quart'],
+		[css['ease-out-quart'], 'ease-out-quart'],
 		[css.linear, 'linear']
 	];
 
@@ -71,7 +75,7 @@ describe('Transition Specs', () => {
 
 	propStyleCombination.forEach(([prop, val]) => {
 		val.forEach(([key, value]) => {
-			it(`should apply classes for ${prop}={${value}}`, function () {
+			it(`should apply classes for ${prop}="${value}"`, function () {
 				const propValue = {
 					[prop]: value
 				};
@@ -80,7 +84,7 @@ describe('Transition Specs', () => {
 				);
 
 				const expected = key;
-				const actual = wrapped.childAt(0).prop('className');
+				const actual = wrapped.find('div').at(0).prop('className');
 
 				expect(actual).to.contain(expected);
 			});

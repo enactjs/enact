@@ -2,17 +2,17 @@ import ExpandableItem from '@enact/moonstone/ExpandableItem';
 import Icon from '@enact/moonstone/Icon';
 import Item from '@enact/moonstone/Item';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean, select, text} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 
-storiesOf('ExpandableItem')
-	.addDecorator(withKnobs)
-	.addWithInfo(
-		' ',
-		'Basic usage of ExpandableItem',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'ExpandableItem',
+		withInfo('Basic usage of ExpandableItem')(() => (
 			<ExpandableItem
 				autoClose={nullify(boolean('autoClose', false))}
 				disabled={boolean('disabled', false)}
@@ -31,5 +31,5 @@ storiesOf('ExpandableItem')
 					<Icon>star</Icon> You could include other components as well <Icon>star</Icon>
 				</Item>
 			</ExpandableItem>
-		)
+		))
 	);

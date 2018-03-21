@@ -29,7 +29,7 @@ function isNonLatinLocale (spec) {
 
 	// We use the non-latin fonts for these languages (even though their scripts are technically
 	// considered latin)
-	const nonLatinLanguageOverrides = ['en-JP'];
+	const nonLatinLanguageOverrides =  ['vi', 'en-JP'];
 	// We use the latin fonts (with non-Latin fallback) for these languages (even though their
 	// scripts are non-latin)
 	const latinLanguageOverrides = ['ko', 'ha'];
@@ -80,6 +80,8 @@ const updateLocale = function (locale) {
 	if (ilib._load) ilib._load.manifest = undefined;
 	// remove the cache of the platform name to allow transition between snapshot and browser
 	delete ilib._platform;
+	// load any external ilib data
+	ilib.data = global.ilibData || ilib.data;
 	// ilib handles falsy values and automatically uses local locale when encountered which
 	// is expected and desired
 	ilib.setLocale(locale);

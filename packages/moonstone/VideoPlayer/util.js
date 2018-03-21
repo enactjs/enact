@@ -2,20 +2,6 @@
 //
 
 /**
- * What time is it right this moment
- *
- * @return {Number} Current time in miliseconds.
- * @private
- */
-const getNow = function () {
-	if (typeof window === 'object') {
-		return window.performance.now();
-	} else {
-		return Date.now();
-	}
-};
-
-/**
  * Create a time object (hour, minute, second) from an amount of seconds
  *
  * @param  {Number|String} value A duration of time represented in seconds
@@ -55,16 +41,26 @@ const secondsToPeriod = (seconds) => {
  * @param {DurationFmt} durfmt An instance of a {@link i18n/ilib/lib/DurationFmt.DurationFmt} object
  *                             from iLib confugured to display time used by the {@Link VideoPlayer}
  *                             component.
+ * @param  {Object} config Additional configuration object that includes `includeHour`.
  *
  * @return {String}      Formatted duration string
  * @private
  */
-const secondsToTime = (seconds, durfmt) => {
+const secondsToTime = (seconds, durfmt, config) => {
+	const includeHour = config && config.includeHour;
+
 	if (durfmt) {
-		return durfmt.format(parseTime(seconds)).toString();
+		const parsedTime = parseTime(seconds);
+		const timeString = durfmt.format(parsedTime).toString();
+
+		if (includeHour && !parsedTime.hour) {
+			return '00:' + timeString;
+		} else {
+			return timeString;
+		}
 	}
 
-	return '00:00';
+	return includeHour ? '00:00:00' : '00:00';
 };
 
 /**
@@ -77,10 +73,31 @@ const calcNumberValueOfPlaybackRate = (rate) => {
 	return (pbArray.length > 1) ? parseInt(pbArray[0]) / parseInt(pbArray[1]) : parseInt(rate);
 };
 
+/**
+ * Compares two source(s) of a video, mainly `src` and `type`.
+ *
+ * @param {Object|Array} source Source node(s)
+ * @param {Object|Array} nextSource Source node(s)
+ * @return {Boolean} true if two sources are the same
+ * @private
+ */
+const compareSources = (source, nextSource) => {
+	if (Array.isArray(source) !== Array.isArray(nextSource)) {
+		return false;
+	} else if (Array.isArray(source) && Array.isArray(nextSource)) {
+		return source.every((src, i) => {
+			return src.props.src === nextSource[i].props.src && src.props.type === nextSource[i].props.type;
+		});
+	} else if (nextSource.props.src === source.props.src && nextSource.props.type === source.props.type) {
+		return true;
+	} else {
+		return false;
+	}
+};
 
 export {
 	calcNumberValueOfPlaybackRate,
-	getNow,
+	compareSources,
 	parseTime,
 	secondsToPeriod,
 	secondsToTime

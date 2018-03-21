@@ -3,8 +3,8 @@ import {Icon, icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import Button from '@enact/moonstone/Button';
 import Image from '@enact/moonstone/Image';
-import {storiesOf} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {boolean, select, text} from '@storybook/addon-knobs';
 
 const iconNames = ['', ...Object.keys(icons)];
 
@@ -16,9 +16,8 @@ const inputData = {
 	normalText : 'Item with text that is spottable'
 };
 
-storiesOf('Item')
-	.addDecorator(withKnobs)
-	.addWithInfo(
+storiesOf('Item', module)
+	.add(
 		'with long text',
 		() => (
 			<Item
@@ -28,7 +27,7 @@ storiesOf('Item')
 			</Item>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with tall characters',
 		() => (
 			<Item
@@ -38,7 +37,7 @@ storiesOf('Item')
 			</Item>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with extra spaces',
 		() => (
 			<Item
@@ -48,7 +47,7 @@ storiesOf('Item')
 			</Item>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'integrated with other components',
 		() => (
 			<Item
@@ -64,7 +63,7 @@ storiesOf('Item')
 			</Item>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'sample for spotability test',
 		() => (
 			<div>
@@ -80,7 +79,7 @@ storiesOf('Item')
 					<Icon
 						small={boolean('small')}
 					>
-						{select('iconBefore', ['', ...iconNames], 'plus')}
+						{select('iconBefore', iconNames, 'plus')}
 					</Icon>
 
 					{text('Text with icon at start', 'Item with text that is spottable with an icon (at the start of the string)')}
@@ -90,7 +89,7 @@ storiesOf('Item')
 					<Icon
 						small={boolean('small')}
 					>
-						{select('iconAfter', ['', ...iconNames], 'pauseforward')}
+						{select('iconAfter', iconNames, 'pauseforward')}
 					</Icon>
 				</Item>
 				<Item>

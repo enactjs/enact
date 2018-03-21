@@ -17,8 +17,17 @@ const computeKnobTransform = (_proportion, vertical, node) => {
 	}
 };
 
+const parseNumber = (value) => {
+	const parseFn = (value % 1 !== 0) ? parseFloat : parseInt;
+	return parseFn(value);
+};
+
+const getDecimalDigits = (value) => (value % 1 !== 0) ? (value + '').split('.')[1].length : 0;
+
 export {
 	computeProportionProgress,
 	computeBarTransform,
-	computeKnobTransform
+	computeKnobTransform,
+	getDecimalDigits,
+	parseNumber
 };

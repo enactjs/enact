@@ -1,6 +1,8 @@
 import kind from '@enact/core/kind';
+import Touchable from '@enact/ui/Touchable';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './VideoPlayer.less';
 
@@ -18,7 +20,8 @@ const OverlayBase = kind({
 	name: 'Overlay',
 
 	propTypes: /** @lends moonstone/VideoPlayer.Overlay.prototype */ {
-		children: React.PropTypes.node
+		bottomControlsVisible: PropTypes.bool,
+		children: PropTypes.node
 	},
 
 	styles: {
@@ -26,12 +29,21 @@ const OverlayBase = kind({
 		className: 'overlay'
 	},
 
-	render: (props) => (
-		<div {...props} />
-	)
+	computed: {
+		className: ({bottomControlsVisible, styler}) => styler.append({['high-contrast-scrim']: bottomControlsVisible})
+	},
+
+	render: (props) => {
+		delete props.bottomControlsVisible;
+		return <div {...props} />;
+	}
 });
 
-const Overlay = onlyUpdateForKeys(['children'])(OverlayBase);
+const Overlay = onlyUpdateForKeys(['bottomControlsVisible', 'children'])(
+	Touchable(
+		OverlayBase
+	)
+);
 
 export default Overlay;
 export {
