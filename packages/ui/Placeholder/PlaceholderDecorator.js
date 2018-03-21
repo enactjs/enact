@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * Default config for [PlaceholderDecorator]{@link ui/Placeholder.PlaceholderDecorator}
+ * Default config for {@link ui/Placeholder.PlaceholderDecorator}
  *
  * @memberof ui/Placeholder.PlaceholderDecorator
  * @hocconfig
@@ -43,7 +43,7 @@ const contextTypes = {
 };
 
 /**
- * [PlaceholderDecorator]{@link ui/Placeholder.PlaceholderDecorator} is a Higher-order Component that can be used that
+ * {@link ui/Placeholder.PlaceholderDecorator} is a Higher-order Component that can be used that
  * a container notify the Wrapped component when scrolling.
  *
  * Containers must provide `registerPlaceholder`, `unregisterPlaceholder`, and `invalidateBounds` methods via React's context for

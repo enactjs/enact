@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom';
 import {contextTypes} from './PlaceholderDecorator';
 
 /**
- * Default config for [PlaceholderControllerDecorator]{@link ui/Placeholder.PlaceholderControllerDecorator}
+ * Default config for {@link ui/Placeholder.PlaceholderControllerDecorator}
  *
  * @memberof ui/Placeholder.PlaceholderControllerDecorator
  * @hocconfig
@@ -37,7 +37,7 @@ const defaultConfig = {
 };
 
 /**
- * [PlaceholderControllerDecorator]{@link ui/Placeholder.PlaceholderControllerDecorator} is a Higher-order Component that can make
+ * {@link ui/Placeholder.PlaceholderControllerDecorator} is a Higher-order Component that can make
  * placeholders rendered or not rendered depending on `'scrollTop'` from the `'onScroll'`'s parameter.
  *
  * @class PlaceholderControllerDecorator
