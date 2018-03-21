@@ -4,6 +4,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/VideoPlayer` property `noMoreButtonColor`
+
+## [unreleased]
+
 ### Removed
 
 - `moonstone/Slider` exports `SliderFactory` and `SliderBaseFactory`

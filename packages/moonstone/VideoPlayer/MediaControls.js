@@ -140,6 +140,14 @@ const MediaControls = kind({
 		noJumpButtons: PropTypes.bool,
 
 		/**
+		 * Removes blue underline color in more button.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		noMoreButtonColor: PropTypes.bool,
+
+		/**
 		 * Removes the "rate" buttons. The buttons that change the playback rate of the video.
 		 * Double speed, half speed, reverse 4x speed, etc.
 		 *
@@ -334,12 +342,13 @@ const MediaControls = kind({
 			jumpButtonsDisabled,
 			jumpForwardIcon,
 			leftComponents,
-			moreButtonDisabled,
 			mediaDisabled,
+			moreButtonDisabled,
 			moreDisabled,
 			moreIcon,
 			moreIconLabel,
 			noJumpButtons,
+			noMoreButtonColor,
 			noRateButtons,
 			onBackwardButtonClick,
 			onForwardButtonClick,
@@ -387,8 +396,10 @@ const MediaControls = kind({
 					{React.Children.count(children) ? (
 						<MediaButton
 							aria-label={moreIconLabel}
+							data-more-button
 							backgroundOpacity="translucent"
 							className={css.moreButton}
+							color={noMoreButtonColor ? null : 'blue'}
 							disabled={moreButtonDisabled}
 							onTap={onToggleMore}
 							tooltipProps={{role: 'dialog'}}

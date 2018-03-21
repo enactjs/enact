@@ -55,6 +55,7 @@ const ControlsContainer = SpotlightContainerDecorator(
 
 // Keycode map for webOS TV
 const keyMap = {
+	'BLUE': 406,
 	'PLAY': 415,
 	'STOP': 413,
 	'PAUSE': 19,
@@ -370,6 +371,14 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		noMiniFeedback: PropTypes.bool,
+
+		/**
+		 * Removes blue underline color in more button.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		noMoreButtonColor: PropTypes.bool,
 
 		/**
 		 * Removes the "rate" buttons. The buttons that change the playback rate of the video.
@@ -1172,7 +1181,7 @@ const VideoPlayerBase = class extends React.Component {
 		if (this.props.disabled) {
 			return;
 		}
-		const {PLAY, PAUSE, REWIND, FASTFORWARD} = keyMap;
+		const {PLAY, PAUSE, REWIND, FASTFORWARD, BLUE} = keyMap;
 
 		switch (ev.keyCode) {
 			case PLAY:
@@ -1195,6 +1204,11 @@ const VideoPlayerBase = class extends React.Component {
 					this.fastForward();
 				}
 				break;
+			case BLUE:
+				if (this.state.bottomControlsRendered && !this.props.noMoreButtonColor && !this.props.moreButtonDisabled) {
+					Spotlight.focus(this.player.querySelector('[data-more-button]'));
+					this.toggleMore();
+				}
 		}
 
 		if (!this.props.no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
@@ -1809,6 +1823,10 @@ const VideoPlayerBase = class extends React.Component {
 		() => this.jump(this.props.jumpBy)
 	)
 	onMoreClick = () => {
+		this.toggleMore();
+	}
+
+	toggleMore () {
 		if (this.state.more) {
 			this.moreInProgress = false;
 			this.startAutoCloseTimeout();	// Restore the timer since we are leaving "more.
@@ -1896,6 +1914,7 @@ const VideoPlayerBase = class extends React.Component {
 			noAutoPlay,
 			noJumpButtons,
 			noMiniFeedback,
+			noMoreButtonColor,
 			noRateButtons,
 			noSlider,
 			pauseIcon,
@@ -2048,6 +2067,7 @@ const VideoPlayerBase = class extends React.Component {
 								moreButtonLabel={moreButtonLabel}
 								moreDisabled={moreDisabled}
 								noJumpButtons={noJumpButtons}
+								noMoreButtonColor={noMoreButtonColor}
 								noRateButtons={noRateButtons}
 								onBackwardButtonClick={this.onBackward}
 								onClick={this.resetAutoTimeout}
