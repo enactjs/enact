@@ -73,7 +73,12 @@ const VirtualGridList = kind({
 		 *
 		 * Usage:
 		 * ```
-		 * <VirtualGridList itemSize={{minWidth: ri.scale(180), minHeight: ri.scale(270)}} />
+		 * <VirtualGridListNative
+		 * 	itemSize={{
+		 * 		minWidth: ri.scale(180),
+		 * 		minHeight: ri.scale(270)
+		 * 	}}
+		 * />
 		 * ```
 		 *
 		 * @type {ui/VirtualList.gridListItemSizeShape}
@@ -150,7 +155,12 @@ const VirtualGridListNative = kind({
 		 *
 		 * Usage:
 		 * ```
-		 * <VirtualGridListNative itemSize={{minWidth: ri.scale(180), minHeight: ri.scale(270)}} />
+		 * <VirtualGridListNative
+		 * 	itemSize={{
+		 * 		minWidth: ri.scale(180),
+		 * 		minHeight: ri.scale(270)
+		 * 	}}
+		 * />
 		 * ```
 		 *
 		 * @type {ui/VirtualList.gridListItemSizeShape}
