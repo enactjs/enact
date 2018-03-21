@@ -763,6 +763,7 @@ const PickerBase = class extends React.Component {
 				onKeyDown={this.handleKeyDown}
 				onKeyUp={this.handleKeyUp}
 				onUp={this.handleUp}
+				onMouseLeave={this.handleUp}
 				ref={this.initContainerRef}
 			>
 				<PickerButton
