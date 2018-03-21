@@ -104,7 +104,7 @@ const ProgressBar = kind({
 		progressCssProp: ({orientation}) => ((orientation === 'vertical') ? 'height' : 'width')
 	},
 
-	render: ({backgroundProgress, css, progress, progressCssProp, ...rest}) => {
+	render: ({backgroundProgress, children, css, progress, progressCssProp, ...rest}) => {
 		delete rest.orientation;
 
 		if (__DEV__) {
