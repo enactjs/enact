@@ -8,7 +8,7 @@ We provide `iLib` for use through our `i18n` module.
 
 We will cover a good deal of how to use `iLib` inside your `Enact` app below, but we will not cover everything.
 
-If you wish to learn more about `ilib` checkout their [github](https://github.com/iLib-js/iLib) and [docs](https://github.com/iLib-js/iLib/blob/master/doc/index.md).
+If you wish to learn more about `ilib` checkout their [github](https://github.com/iLib-js/iLib) and [docs](https://github.com/iLib-js/iLib/blob/master/docs/index.md).
 
 ## Accessing iLib from Enact
 
@@ -18,7 +18,7 @@ library that wraps `iLib`'s functionality for easy access from Enact apps.
 
 You can use it like this:
 
-```javascript 
+```javascript
 import DateFmt from 'ilib/DateFmt';
 
 const formatter = new DateFmt({

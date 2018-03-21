@@ -8,6 +8,7 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
@@ -46,6 +47,12 @@ const gridListItemSizeShape = PropTypes.shape({
 	minHeight: PropTypes.number.isRequired
 });
 
+// utility to only warn once per app for component deprecation
+const deprecateComponent = deprecate(
+	() => {},
+	{name: 'component', replacedBy: 'itemRenderer', until: '2.0.0'}
+);
+
 /**
  * {@link moonstone/VirtualList.VirtualListBaseNative} is a base component for
  * {@link moonstone/VirtualList.VirtualList} and
@@ -64,10 +71,10 @@ class VirtualListCoreNative extends Component {
 		 * The `render` function for an item of the list receives the following parameters:
 		 * - `data` is for accessing the supplied `data` property of the list.
 		 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
-		 * is parameters due to performance optimizations
-		 * - `data-index` is required for Spotlight 5-way navigation.  Pass to the root element in
+		 * this parameter due to performance optimizations
+		 * - `data-index` is required for Spotlight 5-way navigation. Pass to the root element in
 		 *   the component.
-		 * - `index` is the index number of the componet to render
+		 * - `index` is the index number of the component to render
 		 * - `key` MUST be passed as a prop to the root element in the component for DOM recycling.
 		 *
 		 * Data manipulation can be done in this function.
@@ -87,6 +94,7 @@ class VirtualListCoreNative extends Component {
 		 * ```
 		 *
 		 * @type {Function}
+		 * @deprecated will be replaced by `itemRenderer` in 2.0.0
 		 * @public
 		 */
 		component: PropTypes.func.isRequired,
@@ -635,6 +643,8 @@ class VirtualListCoreNative extends Component {
 				key
 			}),
 			style = {};
+
+		deprecateComponent();
 
 		this.composeStyle(style, ...rest);
 

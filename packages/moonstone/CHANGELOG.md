@@ -9,6 +9,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Marquee.Marquee`, to be moved to `moonstone/Marquee.MarqueeBase` in 2.0.0
 - `moonstone/Marquee.MarqueeText`, to be moved to `moonstone/Marquee.Marquee` in 2.0.0
 - `moonstone/Slider.SliderTooltip`, to be moved to `moonstone/Tooltip.ProgressBarTooltip` in 2.0.0
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `component`, to be replaced by `itemRenderer` in 2.0.0
 
 ### Fixed
 
