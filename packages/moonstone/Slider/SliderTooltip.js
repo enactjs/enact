@@ -132,7 +132,7 @@ const SliderTooltipBase = kind({
 	}
 });
 
-const deprecatedSliderTooltipBase = deprecate(SliderTooltipBase, {name: 'moonstone/Slider.SliderTooltip', since: '1.15.0', until: '2.0.0', message: 'Use `moonstone/Tooltip.ProgressBarTooltip` instead when using 2.0.0'});
+const deprecatedSliderTooltipBase = deprecate(SliderTooltipBase, {name: 'moonstone/Slider.SliderTooltip', since: '1.15.0', until: '2.0.0', message: 'Use `moonstone/ProgressBar.ProgressBarTooltip` instead when using 2.0.0'});
 
 export default deprecatedSliderTooltipBase;
 export {
