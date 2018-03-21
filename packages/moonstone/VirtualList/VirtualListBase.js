@@ -61,7 +61,7 @@ const VirtualListBaseFactory = (type) => {
 	return class VirtualListCore extends Component {
 		static displayName = 'VirtualListBase'
 
-		static propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
+		static propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 			/**
 			 * The `render` function for an item of the list receives the following parameters:
 			 * - `data` is for accessing the supplied `data` property of the list.
