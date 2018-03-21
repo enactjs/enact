@@ -41,6 +41,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` to highlight knob when selected
 - `moonstone/Slider` to handle updates to its `value` prop correctly
 - `moonstone/ToggleItem` to accept HTML DOM node tag names as strings for its `component` property
+- `moonstone/Panels.ActivityPanels` to correctly lay out the existing panel after adding additional panels
 
 ## [2.0.0-alpha.5] - 2018-03-07
 
