@@ -532,6 +532,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
+			this.isScrolledByJump = false;
 		}
 
 		initItemRef = (ref, index) => {
@@ -544,7 +545,6 @@ const VirtualListBaseFactory = (type) => {
 					// So we would like to skip `focus` handling when focusing the item as a workaround.
 					this.isScrolledByJump = true;
 					this.focusOnItem(index);
-					this.isScrolledByJump = false;
 				}
 			}
 		}
@@ -685,6 +685,7 @@ const VirtualListBaseFactory = (type) => {
 				// If we need to restore last focus and the index is beyond the screen,
 				// we call `scrollTo` to create DOM for it.
 				cbScrollTo({index: preservedIndex, animate: false, focus: true});
+				this.isScrolledByJump = true;
 
 				return true;
 			} else {
