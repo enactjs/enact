@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
-- `moonstone/Slider.SliderTooltip`, to be moved to `moonstone/Tooltip.ProgressBarTooltip` in 2.0.0
+- `moonstone/Slider.SliderTooltip`, to be moved to `moonstone/ProgressBar.ProgressBarTooltip` in 2.0.0
 
 ## [1.15.0] - 2018-02-28
 
