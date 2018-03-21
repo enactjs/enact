@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * Default config for {@link ui/Placeholder.PlaceholderDecorator}
+ * Default config for [PlaceholderDecorator]{@link ui/Placeholder.PlaceholderDecorator}
  *
  * @memberof ui/Placeholder.PlaceholderDecorator
  * @hocconfig
