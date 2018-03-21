@@ -19,7 +19,7 @@ import {computeProportionProgress} from '../internal/SliderDecorator/util';
 import Skinnable from '../Skinnable';
 
 import SliderBarFactory from './SliderBar';
-import {privateSliderTooltip as SliderTooltip} from './SliderTooltip';
+import SliderTooltip from './SliderTooltip';
 import componentCss from './Slider.less';
 
 const isActive = (ev, props) => props.active || props.activateOnFocus || props.detachedKnob;

@@ -1,4 +1,3 @@
-import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 
 import {contextTypes} from '@enact/i18n/I18nDecorator';
@@ -16,7 +15,6 @@ import css from './SliderTooltip.less';
  * @memberof moonstone/Slider
  * @ui
  * @public
- * @deprecated
  */
 const SliderTooltipBase = kind({
 	name: 'SliderTooltip',
@@ -132,11 +130,5 @@ const SliderTooltipBase = kind({
 	}
 });
 
-const deprecatedSliderTooltipBase = deprecate(SliderTooltipBase, {name: 'moonstone/Slider.SliderTooltip', since: '1.15.0', until: '2.0.0', message: 'Use `moonstone/Tooltip.ProgressBarTooltip` instead when using 2.0.0'});
-
-export default deprecatedSliderTooltipBase;
-export {
-	deprecatedSliderTooltipBase as SliderTooltipBase,
-	SliderTooltipBase as privateSliderTooltip,
-	SliderTooltipBase as privateSliderTooltipBase
-};
+export default SliderTooltipBase;
+export {SliderTooltipBase, SliderTooltipBase as SliderTooltip};
