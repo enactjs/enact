@@ -41,6 +41,14 @@ const ProgressBar = kind({
 		backgroundProgress: PropTypes.number,
 
 		/**
+		 * The contents to be displayed with progress bar.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		children: PropTypes.node,
+
+		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
 		 *
@@ -96,7 +104,7 @@ const ProgressBar = kind({
 		progressCssProp: ({orientation}) => ((orientation === 'vertical') ? 'height' : 'width')
 	},
 
-	render: ({backgroundProgress, css, progress, progressCssProp, ...rest}) => {
+	render: ({backgroundProgress, children, css, progress, progressCssProp, ...rest}) => {
 		delete rest.orientation;
 
 		if (__DEV__) {
@@ -108,6 +116,7 @@ const ProgressBar = kind({
 			<div role="progressbar" {...rest}>
 				<div className={css.load} style={{[progressCssProp]: progressToPercent(backgroundProgress)}} />
 				<div className={css.fill} style={{[progressCssProp]: progressToPercent(progress)}} />
+				{children}
 			</div>
 		);
 	}

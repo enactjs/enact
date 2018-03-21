@@ -18,10 +18,10 @@ import React from 'react';
 
 import InternalSliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
+import {ProgressBarTooltip} from '../ProgressBar';
 import Skinnable from '../Skinnable';
 
 import SliderBar from './SliderBar';
-import SliderTooltip from './SliderTooltip';
 
 import componentCss from './Slider.less';
 
@@ -440,7 +440,7 @@ const SliderBase = kind({
 			tooltipComponent = children;
 		} else if (focused) {
 			// only display tooltip when `focused`
-			tooltipComponent = <SliderTooltip
+			tooltipComponent = <ProgressBarTooltip
 				knobAfterMidpoint={knobAfterMidpoint}
 				forceSide={tooltipForceSide}
 				orientation={orientation}
@@ -448,7 +448,7 @@ const SliderBase = kind({
 				side={tooltipSide}
 			>
 				{children}
-			</SliderTooltip>;
+			</ProgressBarTooltip>;
 		}
 
 		return (
@@ -515,10 +515,23 @@ const SliderDecorator = compose(
  */
 const Slider = SliderDecorator(SliderBase);
 
+/**
+ * A {@link moonstone/TooltipDecorator.Tooltip} specifically adapted for use with
+ * {@link moonstone/IncrementSlider.IncrementSlider}, {@link moonstone/ProgressBar.ProgressBar},
+ * or {@link moonstone/Slider.Slider}.
+ *
+ * See {@link moonstone/ProgressBar.ProgressBarTooltip}
+ *
+ * @class SliderTooltip
+ * @memberof moonstone/Slider
+ * @ui
+ * @public
+ */
+
 export default Slider;
 export {
 	Slider,
 	SliderBase,
 	SliderDecorator,
-	SliderTooltip
+	ProgressBarTooltip as SliderTooltip
 };

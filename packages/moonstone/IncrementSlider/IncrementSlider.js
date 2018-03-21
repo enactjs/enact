@@ -17,6 +17,7 @@ import React from 'react';
 import IdProvider from '../internal/IdProvider';
 import $L from '../internal/$L';
 import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator';
+import {ProgressBarTooltip} from '../ProgressBar';
 import Skinnable from '../Skinnable';
 import {SliderBase} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
@@ -660,8 +661,7 @@ const IncrementSliderDecorator = compose(
 );
 
 /**
- * {@link moonstone/IncrementSlider.IncrementSlider} is an IncrementSlider with
- * Moonstone styling and SliderDecorator applied with IconButtons to
+ * An IncrementSlider with Moonstone styling and SliderDecorator applied with IconButtons to
  * increment and decrement the value.
  *
  * By default, `IncrementSlider` maintains the state of its `value` property. Supply the
@@ -676,9 +676,24 @@ const IncrementSliderDecorator = compose(
  */
 const IncrementSlider = IncrementSliderDecorator(IncrementSliderBase);
 
+/**
+ * A [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} specifically adapted for use with
+ * [IncrementSlider]{@link moonstone/IncrementSlider.IncrementSlider},
+ * [ProgressBar]{@link moonstone/ProgressBar.ProgressBar}, or
+ * [Slider]{@link moonstone/Slider.Slider}.
+ *
+ * See {@link moonstone/ProgressBar.ProgressBarTooltip}
+ *
+ * @class IncrementSliderTooltip
+ * @memberof moonstone/IncrementSlider
+ * @ui
+ * @public
+ */
+
 export default IncrementSlider;
 export {
 	IncrementSlider,
 	IncrementSliderBase,
-	IncrementSliderDecorator
+	IncrementSliderDecorator,
+	ProgressBarTooltip as IncrementSliderTooltip
 };

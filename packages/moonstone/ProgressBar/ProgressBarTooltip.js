@@ -5,23 +5,26 @@ import PropTypes from 'prop-types';
 
 import Tooltip from '../TooltipDecorator/Tooltip';
 
-import css from './SliderTooltip.less';
+import css from './ProgressBarTooltip.less';
 
 /**
- * {@link moonstone/Slider.SliderTooltip} is a stateless Tooltip specifically for Slider.
+ * A [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} specifically adapted for use with
+ * [IncrementSlider]{@link moonstone/IncrementSlider.IncrementSlider},
+ * [ProgressBar]{@link moonstone/ProgressBar.ProgressBar}, or
+ * [Slider]{@link moonstone/Slider.Slider}.
  *
- * @class SliderTooltip
- * @memberof moonstone/Slider
+ * @class ProgressBarTooltip
+ * @memberof moonstone/ProgressBar
  * @ui
  * @public
  */
-const SliderTooltipBase = kind({
-	name: 'SliderTooltip',
+const ProgressBarTooltipBase = kind({
+	name: 'ProgressBarTooltip',
 
-	propTypes: /** @lends moonstone/Slider.SliderTooltip.prototype */ {
+	propTypes: /** @lends moonstone/ProgressBar.ProgressBarTooltip.prototype */{
 		/**
 		 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale changes
-		 * for `vertical` sliders. This may be useful if you have a static layout that does not
+		 * for `vertical` ProgressBars/Sliders. This may be useful if you have a static layout that does not
 		 * automatically reverse when in an RTL language.
 		 *
 		 * @type {Boolean}
@@ -61,12 +64,12 @@ const SliderTooltipBase = kind({
 		proportion: PropTypes.number,
 
 		/**
-		 * Specify where the tooltip should appear in relation to the Slider bar. Options are
-		 * `'before'` and `'after'`. `before` renders above a `horizontal` slider and to the
-		 * left of a `vertical` Slider. `after` renders below a `horizontal` slider and to the
-		 * right of a `vertical` Slider. In the `vertical` case, the rendering position is
-		 * automatically reversed when rendering in an RTL locale. This can be overridden by
-		 * using the [tooltipForceSide]{@link moonstone/Slider.Slider#tooltipForceSide} prop.
+		 * Specify where the tooltip should appear in relation to the ProgressBar/Slider bar. Options are
+		 * `'before'` and `'after'`. `before` renders above a `horizontal` ProgressBar/Slider and to the
+		 * left of a `vertical` ProgressBar/Slider. `after` renders below a `horizontal` ProgressBar/Slider
+		 * and to the right of a `vertical` ProgressBar/Slider.
+		 * In the `vertical` case, the rendering position is automatically reversed when rendering in an RTL locale.
+		 * This can be overridden by using the [tooltipForceSide]{@link moonstone/Slider.Slider#tooltipForceSide} prop.
 		 *
 		 * @type {String}
 		 * @default 'before'
@@ -101,7 +104,7 @@ const SliderTooltipBase = kind({
 			if (orientation === 'vertical') {
 				if (
 					// LTR before (Both force and nonforce cases)
-					(!context.rtl && side === 'before') ||
+					(!context.rtl && !forceSide && side === 'before') ||
 					// RTL after
 					(context.rtl && !forceSide && side === 'after') ||
 					// RTL before FORCE
@@ -133,5 +136,5 @@ const SliderTooltipBase = kind({
 	}
 });
 
-export default SliderTooltipBase;
-export {SliderTooltipBase, SliderTooltipBase as SliderTooltip};
+export default ProgressBarTooltipBase;
+export {ProgressBarTooltipBase, ProgressBarTooltipBase as ProgressBarTooltip};
