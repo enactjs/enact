@@ -58,6 +58,7 @@ const ItemBase = kind({
 	render: ({css, ...rest}) => {
 		return (
 			<UiItemBase
+				data-voice-intent='ClickRequest'
 				{...rest}
 				css={css}
 			/>
