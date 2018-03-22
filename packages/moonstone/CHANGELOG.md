@@ -26,6 +26,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ContextualPopup` prop `popupContainerId` to `popupSpotlightId`
 - `moonstone/Popup` prop `containerId` to `spotlightId`
 - `moonstone/VideoPlayer` prop `containerId` to `spotlightId`
+- `moonstone/styles/colors.less`
+- `moonstone/styles/colors-light.less`
 
 ### Changed
 
