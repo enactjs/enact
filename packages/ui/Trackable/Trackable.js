@@ -2,6 +2,7 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 
 import {updatePosition, setContainerBounds, setPositionFromValue, startTrack, stopTrack} from './state';
@@ -34,15 +35,15 @@ const Trackable = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'Trackable';
 
 		static propTypes = {
-			constrain: React.PropTypes.oneOf(['body', 'container', 'window']),
-			constrainBoxSizing: React.PropTypes.oneOf(['border-box', 'content-box']),
-			disabled: React.PropTypes.bool,
-			horizontal: React.PropTypes.bool,
-			onTrack: React.PropTypes.func,
-			onTrackEnd: React.PropTypes.func,
-			onTrackStart: React.PropTypes.func,
-			value: React.PropTypes.number,
-			vertical: React.PropTypes.bool
+			constrain: PropTypes.oneOf(['body', 'container', 'window']),
+			constrainBoxSizing: PropTypes.oneOf(['border-box', 'content-box']),
+			disabled: PropTypes.bool,
+			horizontal: PropTypes.bool,
+			onTrack: PropTypes.func,
+			onTrackEnd: PropTypes.func,
+			onTrackStart: PropTypes.func,
+			value: PropTypes.number,
+			vertical: PropTypes.bool
 		}
 
 		static defaultProps = {

@@ -1,12 +1,13 @@
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const BarBase = kind({
 	name: 'Bar',
 
 	propTypes: {
-		value: React.PropTypes.number,
-		vertical: React.PropTypes.bool
+		value: PropTypes.number,
+		vertical: PropTypes.bool
 	},
 
 	computed: {

@@ -1,6 +1,7 @@
 import Trackable from '@enact/ui/Trackable';
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './Slider.less';
 
@@ -8,10 +9,10 @@ const KnobBase = kind({
 	name: 'Knob',
 
 	propTypes: {
-		percentX: React.PropTypes.number,
-		percentY: React.PropTypes.number,
-		x: React.PropTypes.number,
-		y: React.PropTypes.number
+		percentX: PropTypes.number,
+		percentY: PropTypes.number,
+		x: PropTypes.number,
+		y: PropTypes.number
 	},
 
 	styles: {
