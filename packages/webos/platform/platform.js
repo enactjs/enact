@@ -75,7 +75,7 @@ function detect () {
  * @type {object}
  * @property {?boolean} tv - Set true for LG webOS SmartTV
  * @property {?boolean} watch - Set true for LG webOS SmartWatch
- * @property {?boolean} open - Set true for Open webOS
+ * @property {?boolean} open - Set true for webOS OSE
  * @property {?boolean} legacy - Set true for legacy webOS (Palm and HP hardware)
  * @property {?boolean} unknown - Set true for any unknown system
  *
