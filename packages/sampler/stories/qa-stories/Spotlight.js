@@ -81,7 +81,7 @@ class DisappearTest extends React.Component {
 	}
 
 	resetFocus = () => {
-		Spotlight.focus('[data-component-id="restoreButton"]');
+		Spotlight.focus('restoreButton');
 	}
 
 	startTimer = () => {
@@ -108,7 +108,7 @@ class DisappearTest extends React.Component {
 					</Button>
 				) : null}
 				<Button
-					data-component-id="restoreButton"
+					spotlightId="restoreButton"
 					onClick={this.restoreButton}
 				>
 					Restore Button

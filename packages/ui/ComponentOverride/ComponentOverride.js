@@ -52,7 +52,7 @@ import React from 'react';
  * @public
  */
 const ComponentOverride = ({component, ...props}) => component ? (
-	typeof component === 'function' && React.createElement(component, props) ||
+	(typeof component === 'function' || typeof component === 'string') && React.createElement(component, props) ||
 	React.isValidElement(component) && React.cloneElement(component, props)
 ) : null;
 

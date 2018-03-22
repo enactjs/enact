@@ -6,21 +6,62 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
-- `moonstone/Marquee.MarqueeText` to be replaced by `moonstone/Marquee.Marquee`
+- `moonstone/Slider` exports `SliderFactory` and `SliderBaseFactory`
+- `moonstone/IncrementSlider` exports `IncrementSliderFactory` and `IncrementSliderBaseFactory`
+- `moonstone/ProgressBar`, `moonstone/Slider`, `moonstone/Slider.SliderTooltip`, `moonstone/IncrementSlider` components' `vertical` property and replaced it with `orientation`
+
+### Added
+
+- `moonstone/VideoPlayer` property `component` to handle custom video element
+- `moonstone/IncrementSlider` properties `incrementAriaLabel` and `decrementAriaLabel` to configure the label set on each button
+- `moonstone/Input` support for `small` prop
+- `moonstone/ProgressBar` support for `tooltip` and `tooltipForceSide`
+- `moonstone/ProgressBar`, `moonstone/Slider`, `moonstone/Slider.SliderTooltip`, `moonstone/IncrementSlider` property `orientation` to accept orientation strings like "vertical" and "horizontal" (replaced old `vertical` prop)
+
+### Changed
+
+- `moonstone/Input` input `height`, `vertical-align`, and `margins`. Please verify your layouts to ensure everything lines up correctly; this change may require removal of old sizing and positioning CSS which is no longer necessary.
+- `moonstone/FormCheckbox` to have a small border around the circle, according to new GUI designs
+- `moonstone/RadioItem` dot size and added an inner-dot to selected-focused state, according to new GUI designs
+- `moonstone/ContextualPopup` prop `popupContainerId` to `popupSpotlightId`
+- `moonstone/Popup` prop `containerId` to `spotlightId`
+- `moonstone/VideoPlayer` prop `containerId` to `spotlightId`
+
+### Changed
+
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
+
+### Fixed
+
+- `moonstone/ExpandableItem` to be more performant when animating
+- `moonstone/GridListImageItem` to hide overlay checkmark icon on focus when unselected
+- `moonstone/GridListImageItem` to use `ui/GridListImageItem`
+- `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` components to use their base UI components
+- `moonstone/VirtualList` to show the selected state on hovered paging controls properly
+- `moonstone/Slider` to highlight knob when selected
+- `moonstone/Slider` to handle updates to its `value` prop correctly
+- `moonstone/ToggleItem` to accept HTML DOM node tag names as strings for its `component` property
+
+## [2.0.0-alpha.5] - 2018-03-07
+
+### Removed
+
+- `moonstone/Marquee.MarqueeText`, replaced by `moonstone/Marquee.Marquee`
+- `moonstone/VirtualGridList.GridListImageItem`, replaced by `moonstone/GridListImageItem`
 
 ### Changed
 
 - `moonstone/Marquee.Marquee` to be `moonstone/Marquee.MarqueeBase`
-- `moonstone/VirtualGridList.GridListImageItem` in favor of `moonstone/GridListImageItem`
-- `moonstone/ContextualPopupDecorator` not to remember the last focus
+- `moonstone/ContextualPopupDecorator` to not restore last-focused child
+- `moonstone/ExpandableList` to restore focus to the first selected item after opening
 
 ### Fixed
 
-- `moonstone/VirtualGridList` to show or hide the scrollbars in it properly
 - `moonstone/Slider` to correctly show localized percentage value in tooltip when `tooltipAsPercent` is true
 - `moonstone/VirtualGridList` to show or hide its scrollbars properly
 - `moonstone/Button` text to be properly centered
 - `moonstone/styles/colors.less`
+- `moonstone/Input` to not clip some glyphs at the start of the value
 
 ## [2.0.0-alpha.4] - 2018-02-13
 
@@ -50,16 +91,18 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [2.0.0-alpha.3] - 2018-01-18
 
+### Removed
+
+- `moonstone/Scroller` and `moonstone/VirtualList` option `indexToFocus` in `scrollTo` method which is deprecated from 1.2.0
+- `moonstone/Scroller` props `horizontal` and `vertical` which are deprecated from 1.3.0 and replaced with `direction` prop
+- `moonstone/Button` exports `ButtonFactory` and `ButtonBaseFactory`
+- `moonstone/IconButton` exports `IconButtonFactory` and `IconButtonBaseFactory`
+
 ### Fixed
 
 - `moonstone/MoonstoneDecorator` root node to fill the entire space available, which simplifies positioning and sizing for child elements (previously always measured 0 in height)
 - `moonstone/VirtualList` to prevent infinite function call when a size of contents is slightly longer than a client size without a scrollbar
 - `moonstone/VirtualList` to sync scroll position when clientSize changed
-
-### Removed
-
-- `moonstone/Scroller` and `moonstone/VirtualList` option `indexToFocus` in `scrollTo` method which is deprecated from 1.2.0
-- `moonstone/Scroller` props `horizontal` and `vertical` which are deprecated from 1.3.0 and replaced with `direction` prop
 
 ## [2.0.0-alpha.2] - 2017-08-29
 

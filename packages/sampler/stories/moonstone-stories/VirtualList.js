@@ -1,6 +1,6 @@
 import Item from '@enact/moonstone/Item';
-import VirtualList from '@enact/moonstone/VirtualList';
-import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
+import {VirtualList as UiVirtualList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
+import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -11,7 +11,7 @@ import {withInfo} from '@storybook/addon-info';
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('VirtualList', VirtualListCore, VirtualList);
+const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBase, UiVirtualListBase);
 
 const
 	items = [],
@@ -34,6 +34,31 @@ for (let i = 0; i < 1000; i++) {
 	items.push('Item ' + ('00' + i).slice(-3));
 }
 
+storiesOf('UI', module)
+	.add(
+		'VirtualList',
+		withInfo({
+			propTables: [Config],
+			text: 'Basic usage of VirtualList'
+		})(() => {
+			const itemSize = ri.scale(number('itemSize', 72));
+			return (
+				<UiVirtualList
+					data={items}
+					dataSize={number('dataSize', items.length)}
+					itemRenderer={renderItem(itemSize)}
+					itemSize={itemSize}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
+					spacing={ri.scale(number('spacing', 0))}
+					style={{
+						height: ri.unit(552, 'rem')
+					}}
+				/>
+			);
+		})
+	);
+
 storiesOf('Moonstone', module)
 	.add(
 		'VirtualList',
@@ -44,10 +69,10 @@ storiesOf('Moonstone', module)
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
 				<VirtualList
-					component={renderItem(itemSize)}
 					data={items}
 					dataSize={number('dataSize', items.length)}
 					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}

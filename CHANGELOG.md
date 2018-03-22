@@ -2,6 +2,31 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.0.0-alpha.5] - 2018-03-07
+
+### Removed
+
+- `core/util.childrenEquals` which was no longer supported by React 16
+- `moonstone/Marquee.MarqueeText`, replaced by `moonstone/Marquee.Marquee`
+- `moonstone/VirtualGridList.GridListImageItem`, replaced by `moonstone/GridListImageItem`
+
+### Added
+
+- `core/util.memoize` method to optimize the execution of expensive functions
+- `ui/Touchable` support for drag gesture
+- `ui/Marquee` component
+
+### Changed
+
+- `moonstone/Marquee.Marquee` to be `moonstone/Marquee.MarqueeBase`
+- `moonstone/ContextualPopupDecorator` to not restore last-focused child
+
+### Fixed
+
+- `moonstone/Slider` to correctly show localized percentage value in tooltip when `tooltipAsPercent` is true
+- `moonstone/VirtualGridList` to show or hide its scrollbars properly
+- `moonstone/Button` text to be properly centered
+
 ## [2.0.0-alpha.4] - 2018-02-13
 
 ### Removed
