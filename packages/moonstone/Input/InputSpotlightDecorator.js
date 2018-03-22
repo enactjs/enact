@@ -160,14 +160,14 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			}
 
 			const focusChanged = this.state.focused !== prevState.focused;
-			if (focusChanged && this.state.focused === 'input') {
-				forward('onActivate', {type: 'onActivate'}, this.props);
-				this.paused.pause();
-			} else {
-				if (focusChanged && prevState.focused === 'input') {
+			if (focusChanged) {
+				if (this.state.focused === 'input') {
+					forward('onActivate', {type: 'onActivate'}, this.props);
+					this.paused.pause();
+				} else if (prevState.focused === 'input') {
 					forward('onDeactivate', {type: 'onDeactivate'}, this.props);
+					this.paused.resume();
 				}
-				this.paused.resume();
 			}
 		}
 
