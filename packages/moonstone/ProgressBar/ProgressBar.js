@@ -49,6 +49,17 @@ const ProgressBarBase = kind({
 		css: PropTypes.object,
 
 		/**
+		 * Sets the orientation of the slider, whether the progress-bar depicts its progress value
+		 * in a left and right orientation or up and down onientation.
+		 * Must be either `'horizontal'` or `'vertical'`.
+		 *
+		 * @type {String}
+		 * @default 'horizontal'
+		 * @public
+		 */
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+
+		/**
 		 * The proportion of the filled portion of the progress bar. Valid values are
 		 * between `0` and `1`.
 		 *
@@ -76,16 +87,7 @@ const ProgressBarBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		tooltipForceSide: PropTypes.bool,
-
-		/**
-		 * If `true` the progress bar will be oriented vertically.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		vertical: PropTypes.bool
+		tooltipForceSide: PropTypes.bool
 	},
 
 	styles: {
@@ -94,7 +96,7 @@ const ProgressBarBase = kind({
 	},
 
 	computed: {
-		tooltipComponent: ({progress, tooltip, tooltipForceSide, vertical}) => {
+		tooltipComponent: ({progress, tooltip, tooltipForceSide, orientation}) => {
 			if (tooltip) {
 				const progressAfterMidpoint = progress > 0.5;
 				const progressPercentage = Math.min(parseInt(progress * 100), 100);
@@ -112,14 +114,14 @@ const ProgressBarBase = kind({
 					bottom: ri.unit(24, 'rem')
 				};
 
-				const tooltipPosition = vertical ? tooltipVerticalPosition : tooltipHorizontalPosition;
+				const tooltipPosition = orientation === 'vertical' ? tooltipVerticalPosition : tooltipHorizontalPosition;
 
 				return (
 					<ProgressBarTooltip
 						forceSide={tooltipForceSide}
 						knobAfterMidpoint={progressAfterMidpoint}
 						style={tooltipPosition}
-						vertical={vertical}
+						orientation={orientation}
 					>
 						{percentageText}
 					</ProgressBarTooltip>
