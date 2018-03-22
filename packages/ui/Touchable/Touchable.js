@@ -78,9 +78,7 @@ const defaultConfig = {
 	 * @default null
 	 * @memberof ui/Touchable.Touchable.defaultConfig
 	 */
-	activeProp: null,
-
-	handlers: false
+	activeProp: null
 };
 
 /**
@@ -95,8 +93,7 @@ const defaultConfig = {
  */
 const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 	const {
-		activeProp,
-		handlers
+		activeProp
 	} = config;
 
 	return class extends React.Component {
@@ -560,11 +557,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			const props = Object.assign({}, this.props);
 
-			if (handlers) {
-				props[handlers] = this.addHandlers(props);
-			} else {
-				this.addHandlers(props);
-			}
+			this.addHandlers(props);
 
 			delete props.dragConfig;
 			delete props.flickConfig;
