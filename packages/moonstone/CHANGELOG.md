@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/VideoPlayer` property `noMoreButtonColor`
+- `moonstone/VideoPlayer` property `moreButtonColor`
 
 ## [unreleased]
 

@@ -107,6 +107,15 @@ const MediaControls = kind({
 		moreButtonCloseLabel: PropTypes.string,
 
 		/**
+		 * The color of the underline beneath more icon button.
+		 *
+		 * @type {String}
+		 * @default 'blue'
+		 * @public
+		 */
+		moreButtonColor: PropTypes.string,
+
+		/**
 		 * Sets the `disabled` state on the media "more" button.
 		 *
 		 * @type {Boolean}
@@ -138,14 +147,6 @@ const MediaControls = kind({
 		 * @public
 		 */
 		noJumpButtons: PropTypes.bool,
-
-		/**
-		 * Removes blue underline color in more button.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		noMoreButtonColor: PropTypes.bool,
 
 		/**
 		 * Removes the "rate" buttons. The buttons that change the playback rate of the video.
@@ -304,6 +305,7 @@ const MediaControls = kind({
 		forwardIcon: 'forward',
 		jumpBackwardIcon: 'skipbackward',
 		jumpForwardIcon: 'skipforward',
+		moreButtonColor: 'blue',
 		pauseIcon: 'pause',
 		playIcon: 'play',
 		visible: true
@@ -343,12 +345,12 @@ const MediaControls = kind({
 			jumpForwardIcon,
 			leftComponents,
 			mediaDisabled,
+			moreButtonColor,
 			moreButtonDisabled,
 			moreDisabled,
 			moreIcon,
 			moreIconLabel,
 			noJumpButtons,
-			noMoreButtonColor,
 			noRateButtons,
 			onBackwardButtonClick,
 			onForwardButtonClick,
@@ -396,10 +398,9 @@ const MediaControls = kind({
 					{React.Children.count(children) ? (
 						<MediaButton
 							aria-label={moreIconLabel}
-							data-more-button
 							backgroundOpacity="translucent"
 							className={css.moreButton}
-							color={noMoreButtonColor ? null : 'blue'}
+							color={moreButtonColor}
 							disabled={moreButtonDisabled}
 							onTap={onToggleMore}
 							tooltipProps={{role: 'dialog'}}

@@ -55,6 +55,9 @@ const ControlsContainer = SpotlightContainerDecorator(
 
 // Keycode map for webOS TV
 const keyMap = {
+	'RED': 403,
+	'GREEN': 404,
+	'YELLOW': 405,
 	'BLUE': 406,
 	'PLAY': 415,
 	'STOP': 413,
@@ -310,6 +313,15 @@ const VideoPlayerBase = class extends React.Component {
 		moreButtonCloseLabel: PropTypes.string,
 
 		/**
+		 * The color of the underline beneath more icon button.
+		 *
+		 * @type {String}
+		 * @default 'blue'
+		 * @public
+		 */
+		moreButtonColor: PropTypes.string,
+
+		/**
 		 * This boolean sets the disabled state of the "More" button.
 		 *
 		 * @type {Boolean}
@@ -371,14 +383,6 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		noMiniFeedback: PropTypes.bool,
-
-		/**
-		 * Removes blue underline color in more button.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		noMoreButtonColor: PropTypes.bool,
 
 		/**
 		 * Removes the "rate" buttons. The buttons that change the playback rate of the video.
@@ -679,6 +683,7 @@ const VideoPlayerBase = class extends React.Component {
 		jumpBy: 30,
 		jumpDelay: 200,
 		miniFeedbackHideDelay: 2000,
+		moreButtonColor: 'blue',
 		playbackRateHash: {
 			fastForward: ['2', '4', '8', '16'],
 			rewind: ['-2', '-4', '-8', '-16'],
@@ -1178,10 +1183,13 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleKeyUp = (ev) => {
-		if (this.props.disabled) {
+		const {disabled, moreButtonColor, moreButtonDisabled, noRateButtons, no5WayJump, rateButtonsDisabled} = this.props;
+
+		if (disabled) {
 			return;
 		}
-		const {PLAY, PAUSE, REWIND, FASTFORWARD, BLUE} = keyMap;
+
+		const {PLAY, PAUSE, REWIND, FASTFORWARD, RED, GREEN, YELLOW, BLUE} = keyMap;
 
 		switch (ev.keyCode) {
 			case PLAY:
@@ -1193,25 +1201,30 @@ const VideoPlayerBase = class extends React.Component {
 				this.pause();
 				break;
 			case REWIND:
-				if (!this.props.noRateButtons && !this.props.rateButtonsDisabled) {
+				if (!noRateButtons && !rateButtonsDisabled) {
 					this.showMiniFeedback = true;
 					this.rewind();
 				}
 				break;
 			case FASTFORWARD:
-				if (!this.props.noRateButtons && !this.props.rateButtonsDisabled) {
+				if (!noRateButtons && !rateButtonsDisabled) {
 					this.showMiniFeedback = true;
 					this.fastForward();
 				}
 				break;
-			case BLUE:
-				if (this.state.bottomControlsRendered && !this.props.noMoreButtonColor && !this.props.moreButtonDisabled) {
-					Spotlight.focus(this.player.querySelector('[data-more-button]'));
-					this.toggleMore();
-				}
 		}
 
-		if (!this.props.no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
+		if (this.state.bottomControlsRendered && moreButtonColor && !moreButtonDisabled && (
+			ev.keyCode === RED && moreButtonColor === 'red' ||
+			ev.keyCode === GREEN && moreButtonColor === 'green' ||
+			ev.keyCode === YELLOW && moreButtonColor === 'yellow' ||
+			ev.keyCode === BLUE && moreButtonColor === 'blue'
+		)) {
+			Spotlight.focus(this.player.querySelector(`.${css.moreButton}`));
+			this.toggleMore();
+		}
+
+		if (!no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			this.stopListeningForPulses();
 			this.paused.resume();
 		}
@@ -1909,12 +1922,12 @@ const VideoPlayerBase = class extends React.Component {
 			jumpForwardIcon,
 			leftComponents,
 			moreButtonCloseLabel,
+			moreButtonColor,
 			moreButtonDisabled,
 			moreButtonLabel,
 			noAutoPlay,
 			noJumpButtons,
 			noMiniFeedback,
-			noMoreButtonColor,
 			noRateButtons,
 			noSlider,
 			pauseIcon,
@@ -2063,11 +2076,11 @@ const VideoPlayerBase = class extends React.Component {
 								leftComponents={leftComponents}
 								mediaDisabled={disabled || this.state.mediaControlsDisabled}
 								moreButtonCloseLabel={moreButtonCloseLabel}
+								moreButtonColor={moreButtonColor}
 								moreButtonDisabled={moreButtonDisabled}
 								moreButtonLabel={moreButtonLabel}
 								moreDisabled={moreDisabled}
 								noJumpButtons={noJumpButtons}
-								noMoreButtonColor={noMoreButtonColor}
 								noRateButtons={noRateButtons}
 								onBackwardButtonClick={this.onBackward}
 								onClick={this.resetAutoTimeout}
