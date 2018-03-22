@@ -19,6 +19,8 @@ import Scrollbar from './Scrollbar';
 
 import scrollbarCss from './Scrollbar.less';
 
+import VoiceControl from '@enact/webos/VoiceControl';
+
 const
 	{
 		animationDuration,
@@ -432,6 +434,11 @@ class Scrollable extends Component {
 		}
 	}
 
+	handleVoice = (e) => {
+		let {direction} = e;
+		if (direction === 'top' || direction === 'bottom') this.uiRef.scrollTo({align: direction});
+	}
+
 	render () {
 		const {focusableScrollbar, childRenderer, ...rest} = this.props;
 
@@ -481,6 +488,7 @@ class Scrollable extends Component {
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
 						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} {...this.scrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
+						<VoiceControl voiceIntent='ScrollRequest' voiceHandler={this.handleVoice} />
 					</ScrollableSpotlightContainer>
 				)}
 			/>
