@@ -24,14 +24,14 @@
 
 	// Remove the built-in h1 and h2 margins
 	.inputTitle,
-	.inputTitle > input,
+	.inputTitle .input,
 	.title,
 	.titleBelow,
 	.subTitleBelow {
 		margin: 0;
 	}
 
-	.inputTitle > input,
+	.inputTitle .input,
 	.title {
 		.moon-header-text();
 	}
@@ -46,7 +46,6 @@
 	}
 
 	.inputTitle {
-		background-color: transparent;
 		padding: 0;
 		border-radius: 0;
 		border: none;
@@ -68,14 +67,13 @@
 	&.standard {
 		height: @moon-header-height-medium;
 
-		.inputTitle > input,
 		.title {
 			line-height: @moon-medium-header-line-height;
 
 			.moon-locale-non-latin({line-height: @moon-non-latin-medium-header-line-height;});
 		}
 
-		.inputTitle > input {
+		.input {
 			height: @moon-medium-header-line-height;
 		}
 
@@ -89,7 +87,7 @@
 	&.compact {
 		height: @moon-header-height-small;
 
-		.inputTitle > input,
+		.input,
 		.title {
 			font-size: @moon-small-header-font-size;
 			display: inline;
@@ -113,18 +111,22 @@
 		border-bottom-color: @moon-header-bottom-border-color;
 
 		.inputTitle {
+			background-color: transparent;
 
-			&:focus {
-				background-color: @moon-header-input-bg-color;
-				input {
+			.focus({
+				background-color: transparent;
+
+				.input {
+					background-color: @moon-header-input-bg-color;
 					color: @moon-header-input-text-color;
+
 					.input-placeholder({
 						color: @moon-header-input-text-color;
 					});
 				}
-			}
+			});
 
-			input {
+			.input {
 				color: @moon-header-text-color;
 			}
 		}
@@ -142,6 +144,7 @@
 }
 
 :global(.hasCloseButton) .header.compact,
-:global(.hasCloseButton) .header.standard .title {
+:global(.hasCloseButton) .header.standard .title,
+:global(.hasCloseButton) .header.standard .inputTitle {
 	.padding-start-end(0, @moon-spotlight-outset + @moon-icon-button-small-size + @moon-spotlight-outset);
 }

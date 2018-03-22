@@ -212,7 +212,7 @@ const HeaderBase = kind({
 			case 'standard': return (
 				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
 					{inputMode ? (
-						<Input dismissOnEnter={inputDismissOnEnter} className={css.inputTitle} placeholder={title} />
+						<Input dismissOnEnter={inputDismissOnEnter} className={css.inputTitle} css={css} placeholder={title} />
 					) : (
 						<Cell component={HeaderH1} casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn={marqueeOn}>
 							{title}
