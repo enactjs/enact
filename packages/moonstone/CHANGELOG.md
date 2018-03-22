@@ -62,7 +62,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` to correctly show localized percentage value in tooltip when `tooltipAsPercent` is true
 - `moonstone/VirtualGridList` to show or hide its scrollbars properly
 - `moonstone/Button` text to be properly centered
-- `moonstone/styles/colors.less`
 - `moonstone/Input` to not clip some glyphs at the start of the value
 
 ## [2.0.0-alpha.4] - 2018-02-13
