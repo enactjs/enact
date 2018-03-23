@@ -2,6 +2,57 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.0.0-alpha.6] - 2018-03-22
+
+### Removed
+
+- `core/factory` module, replaced by the `css` override feature
+- `moonstone/Slider` exports `SliderFactory` and `SliderBaseFactory`
+- `moonstone/IncrementSlider` exports `IncrementSliderFactory` and `IncrementSliderBaseFactory`
+- `moonstone/ProgressBar`, `moonstone/Slider`, `moonstone/Slider.SliderTooltip`, `moonstone/IncrementSlider` components' `vertical` property and replaced it with `orientation`
+- `spotlight/SpotlightContainerDecorator` prop `containerId`, to be replaced by `spotlightId`
+- `ui/Transition` property `clipHeight`
+- `ui/ProgressBar` property `vertical` and replaced it with `orientation`
+
+### Added
+
+- `moonstone/VideoPlayer` property `component` to handle custom video element
+- `moonstone/IncrementSlider` properties `incrementAriaLabel` and `decrementAriaLabel` to configure the label set on each button
+- `moonstone/Input` support for `small` prop
+- `moonstone/ProgressBar` support for `tooltip` and `tooltipForceSide`
+- `moonstone/ProgressBar`, `moonstone/Slider`, `moonstone/Slider.SliderTooltip`, `moonstone/IncrementSlider` property `orientation` to accept orientation strings like "vertical" and "horizontal" (replaced old `vertical` prop)
+- `spotlight/Pause` module which acts as a semaphore for spotlight pause state
+- `spotlight/Spottable` prop `spotlightId` to simplify focusing components
+- `ui/Scrollable` support for scrolling by touch
+- `ui/ProgressBar` property `orientation` to accept orientation strings like `"vertical"` and `"horizontal"`
+
+### Changed
+
+- `moonstone/Input` input `height`, `vertical-align`, and `margins`. Please verify your layouts to ensure everything lines up correctly; this change may require removal of old sizing and positioning CSS which is no longer necessary.
+- `moonstone/FormCheckbox` to have a small border around the circle, according to new GUI designs
+- `moonstone/RadioItem` dot size and added an inner-dot to selected-focused state, according to new GUI designs
+- `moonstone/ContextualPopup` prop `popupContainerId` to `popupSpotlightId`
+- `moonstone/Popup` prop `containerId` to `spotlightId`
+- `moonstone/VideoPlayer` prop `containerId` to `spotlightId`
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
+- `spotlight/Spotlight.focus` to support focusing by `spotlightId`
+- `spotlight` container attributes `data-container-disabled` and `data-container-muted` to be `data-spotlight-container-disabled` and `data-spotlight-container-muted`, respectively
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
+
+### Fixed
+
+- `moonstone/ExpandableItem` to be more performant when animating
+- `moonstone/GridListImageItem` to hide overlay checkmark icon on focus when unselected
+- `moonstone/GridListImageItem` to use `ui/GridListImageItem`
+- `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` components to use their base UI components
+- `moonstone/VirtualList` to show the selected state on hovered paging controls properly
+- `moonstone/Slider` to highlight knob when selected
+- `moonstone/Slider` to handle updates to its `value` prop correctly
+- `moonstone/ToggleItem` to accept HTML DOM node tag names as strings for its `component` property
+- `moonstone/Popup` to properly pause and resume spotlight when animating
+- `ui/Transition` animation for `clip` for `"up"`, `"left"`, and `"right"` directions. This includes a DOM addition to the Transition markup.
+- `ui/ComponentOverride` and `ui/ToggleItem` to accept HTML DOM node tag names as strings for its `component` property
+
 ## [2.0.0-alpha.5] - 2018-03-07
 
 ### Removed

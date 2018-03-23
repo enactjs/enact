@@ -2,15 +2,15 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
+## [2.0.0-alpha.6] - 2018-03-22
 
 ### Removed
 
 - `spotlight/SpotlightContainerDecorator` prop `containerId`, to be replaced by `spotlightId`
-- `spotlight/Pause` module which acts as a semaphore for spotlight pause state
 
 ### Added
 
+- `spotlight/Pause` module which acts as a semaphore for spotlight pause state
 - `spotlight/Spottable` prop `spotlightId` to simplify focusing components
 
 ### Changed

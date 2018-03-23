@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [2.0.0-alpha.6] - 2018-03-22
 
 ### Added
 
@@ -32,9 +32,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ContextualPopup` prop `popupContainerId` to `popupSpotlightId`
 - `moonstone/Popup` prop `containerId` to `spotlightId`
 - `moonstone/VideoPlayer` prop `containerId` to `spotlightId`
-
-### Changed
-
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
 
 ### Fixed
@@ -47,6 +44,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` to highlight knob when selected
 - `moonstone/Slider` to handle updates to its `value` prop correctly
 - `moonstone/ToggleItem` to accept HTML DOM node tag names as strings for its `component` property
+- `moonstone/Popup` to properly pause and resume spotlight when animating
 
 ## [2.0.0-alpha.5] - 2018-03-07
 
