@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `data`, to be removed in 2.0.0
+
 ## [1.15.0] - 2018-02-28
 
 ### Deprecated
