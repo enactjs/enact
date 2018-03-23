@@ -234,7 +234,7 @@ describe('VirtualList', () => {
 	describe('Adding an item', () => {
 		it('should render an added item named \'Password 0\' as the first item', (done) => {
 			const itemArray = [{name: 'A'}, {name: 'B'}, {name: 'C'}];
-			const renderItemArray = ({index, ...rest}) => { // eslint-disable-line react/jsx-no-bind
+			const renderItemArray = ({index, ...rest}) => { // eslint-disable-line enact/display-name, enact/prop-types
 				return (
 					<div {...rest} id={'item' + index}>
 						{itemArray[index].name}
@@ -246,7 +246,7 @@ describe('VirtualList', () => {
 				<VirtualList
 					clientSize={clientSize}
 					dataSize={itemArray.length}
-					itemRenderer={renderItemArray}
+					itemRenderer={renderItemArray} // eslint-disable-line react/jsx-no-bind
 					itemSize={30}
 				/>
 			);
