@@ -18,6 +18,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to read out audio guidance every time `source` changes
 - `moonstone/VideoPlayer` to display custom thumbnail node
 - `moonstone/VideoPlayer` to hide more icon when right components are removed
+### [unreleased]
+
+### Fixed
+
+- `moonstone/Picker` to correctly update pressed state when dragging off buttons
 
 ## [2.0.0-alpha.6] - 2018-03-22
 
