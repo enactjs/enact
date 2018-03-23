@@ -4,23 +4,39 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/VideoPlayer` properties `noSpinner` and `mediaControlsProps`
+
+### Changed
+
+- `moonstone/VideoPlayer` to disable play/pause button when media controls are disabled
+
+## [2.0.0-alpha.6] - 2018-03-22
+
 ### Removed
 
 - `moonstone/Slider` exports `SliderFactory` and `SliderBaseFactory`
 - `moonstone/IncrementSlider` exports `IncrementSliderFactory` and `IncrementSliderBaseFactory`
+- `moonstone/ProgressBar`, `moonstone/Slider`, `moonstone/Slider.SliderTooltip`, `moonstone/IncrementSlider` components' `vertical` property and replaced it with `orientation`
 
 ### Added
 
+- `moonstone/VideoPlayer` property `component` to handle custom video element
 - `moonstone/IncrementSlider` properties `incrementAriaLabel` and `decrementAriaLabel` to configure the label set on each button
 - `moonstone/Input` support for `small` prop
-- `moonstone/VideoPlayer` properties `noSpinner` and `mediaControlsProps`
+- `moonstone/ProgressBar` support for `tooltip` and `tooltipForceSide`
+- `moonstone/ProgressBar`, `moonstone/Slider`, `moonstone/Slider.SliderTooltip`, `moonstone/IncrementSlider` property `orientation` to accept orientation strings like "vertical" and "horizontal" (replaced old `vertical` prop)
 
 ### Changed
 
 - `moonstone/Input` input `height`, `vertical-align`, and `margins`. Please verify your layouts to ensure everything lines up correctly; this change may require removal of old sizing and positioning CSS which is no longer necessary.
 - `moonstone/FormCheckbox` to have a small border around the circle, according to new GUI designs
 - `moonstone/RadioItem` dot size and added an inner-dot to selected-focused state, according to new GUI designs
-- `moonstone/VideoPlayer` to disable play/pause button when media controls are disabled
+- `moonstone/ContextualPopup` prop `popupContainerId` to `popupSpotlightId`
+- `moonstone/Popup` prop `containerId` to `spotlightId`
+- `moonstone/VideoPlayer` prop `containerId` to `spotlightId`
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
 
 ### Fixed
 
@@ -35,6 +51,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` to show the selected state on hovered paging controls properly
 - `moonstone/Slider` to highlight knob when selected
 - `moonstone/Slider` to handle updates to its `value` prop correctly
+- `moonstone/ToggleItem` to accept HTML DOM node tag names as strings for its `component` property
+- `moonstone/Popup` to properly pause and resume spotlight when animating
 
 ## [2.0.0-alpha.5] - 2018-03-07
 

@@ -25,4 +25,19 @@ storiesOf('ExpandableInput', module)
 				type={text('type')}
 			/>
 		)
+	)
+	.add(
+		'Multiple ExpandableInputs',
+		() => (
+			<div>
+				<ExpandableInput
+					title="ExpandableInput 1"
+					placeholder="ExpandableInput 1"
+				/>
+				<ExpandableInput
+					title="ExpandableInput 2"
+					placeholder="ExpandableInput 2"
+				/>
+			</div>
+		)
 	);

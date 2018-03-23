@@ -121,14 +121,6 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.prototype */ {
 			/**
-			 * Specifies the container id. If the value is `null`, an id will be generated.
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			containerId: PropTypes.string,
-
-			/**
 			 * When `true`, controls in the container cannot be navigated.
 			 *
 			 * @type {Boolean}
@@ -136,6 +128,16 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			spotlightDisabled: PropTypes.bool,
+
+			/**
+			 * Used to identify this component within the Spotlight system.
+			 *
+			 * If the value is `null`, an id will be generated.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			spotlightId: PropTypes.string,
 
 			/**
 			 * Whether or not the container is in muted mode.
@@ -169,8 +171,9 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
+			const id = props.spotlightId;
 			this.state = {
-				id: Spotlight.add(this.props.containerId)
+				id: Spotlight.add(id)
 			};
 		}
 
@@ -188,11 +191,15 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			if (this.props.containerId !== nextProps.containerId) {
-				Spotlight.remove(this.props.containerId);
-				Spotlight.add(nextProps.containerId);
+			const prevId = this.props.spotlightId;
+
+			let id = nextProps.spotlightId;
+			if (prevId !== id) {
+				Spotlight.remove(prevId);
+				id = Spotlight.add(id);
+
 				this.setState({
-					id: nextProps.containerId
+					id
 				});
 			}
 		}
@@ -229,13 +236,13 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleMouseLeave = (ev) => {
 			if (this.props.spotlightRestrict !== 'self-only') {
-				const parentContainer = ev.currentTarget.parentNode.closest('[data-container-id]');
+				const parentContainer = ev.currentTarget.parentNode.closest('[data-spotlight-container]');
 				let activeContainer = Spotlight.getActiveContainer();
 
 				// if this container is wrapped by another and this is the currently active
 				// container, move the active container to the parent
 				if (parentContainer && activeContainer === this.state.id) {
-					activeContainer = parentContainer.dataset.containerId;
+					activeContainer = parentContainer.dataset.spotlightId;
 					Spotlight.setActiveContainer(activeContainer);
 				}
 			}
@@ -245,21 +252,25 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			const {spotlightDisabled, spotlightMuted, ...rest} = this.props;
 			delete rest.containerId;
+			delete rest.spotlightId;
 			delete rest.spotlightRestrict;
 
-			rest['data-container-id'] = this.state.id;
+			rest['data-spotlight-container'] = true;
+			rest['data-spotlight-id'] = this.state.id;
 			rest[enterEvent] = this.handleMouseEnter;
 			rest[leaveEvent] = this.handleMouseLeave;
 
 			if (spotlightDisabled) {
-				rest['data-container-disabled'] = spotlightDisabled;
+				rest['data-spotlight-container-disabled'] = spotlightDisabled;
 			}
 
 			if (spotlightMuted) {
-				rest['data-container-muted'] = spotlightMuted;
+				rest['data-spotlight-container-muted'] = spotlightMuted;
 			}
 
-			return <Wrapped {...rest} />;
+			return (
+				<Wrapped {...rest} />
+			);
 		}
 	};
 });
