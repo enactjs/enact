@@ -531,7 +531,7 @@ const VirtualListBaseFactory = (type) => {
 		// JS only
 		setScrollPosition (x, y, dirX, dirY) {
 			if (this.contentRef) {
-				this.contentRef.style.transform = `translate3d(-${x}px, -${y}px, 0)`;
+				this.contentRef.style.transform = `translate3d(${this.props.rtl ? x : -x}px, -${y}px, 0)`;
 				this.didScroll(x, y, dirX, dirY);
 			}
 		}
@@ -591,14 +591,13 @@ const VirtualListBaseFactory = (type) => {
 			return ref ? ref.children[index % this.state.numOfItems] : null;
 		}
 
-
 		composeStyle (width, height, primaryPosition, secondaryPosition) {
 			const
 				{x, y} = this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition},
 				style = {
 					position: 'absolute',
 					/* FIXME: RTL / this calculation only works for Chrome */
-					transform: 'translate(' + (this.props.rtl ? -x : x) + 'px,' + y + 'px)'
+					transform: `translate(${this.props.rtl ? -x : x}px, ${y}px)`
 				};
 
 			if (this.isItemSized) {
