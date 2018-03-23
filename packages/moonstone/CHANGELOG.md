@@ -2,13 +2,13 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [2.0.0-alpha.6] - 2018-03-22
+## [unreleased]
 
 ### Added
 
 - `moonstone/VideoPlayer` property `moreButtonColor` to allow setting underline colors for more button
 
-## [unreleased]
+## [2.0.0-alpha.6] - 2018-03-22
 
 ### Removed
 
