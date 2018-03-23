@@ -12,6 +12,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VideoPlayer` to disable play/pause button when media controls are disabled
 
+### Fixed
+
+- `moonstone/VideoPlayer` to correctly adjust spaces when the number of components changes in `leftComponents` and `rightComponents`
+- `moonstone/VideoPlayer` to read out audio guidance every time `source` changes
+- `moonstone/VideoPlayer` to display custom thumbnail node
+- `moonstone/VideoPlayer` to hide more icon when right components are removed
+
 ## [2.0.0-alpha.6] - 2018-03-22
 
 ### Removed
@@ -41,10 +48,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ExpandableItem` to be more performant when animating
-- `moonstone/VideoPlayer` to correctly adjust spaces when the number of components changes in `leftComponents` and `rightComponents`
-- `moonstone/VideoPlayer` to read out audio guidance every time `source` changes
-- `moonstone/VideoPlayer` to display custom thumbnail node
-- `moonstone/VideoPlayer` to hide more icon when right components are removed
 - `moonstone/GridListImageItem` to hide overlay checkmark icon on focus when unselected
 - `moonstone/GridListImageItem` to use `ui/GridListImageItem`
 - `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` components to use their base UI components
