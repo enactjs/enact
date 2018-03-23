@@ -59,9 +59,9 @@ const VirtualListBaseFactory = (type) => {
 	const UiBase = (type === JS) ? UiVirtualListBase : UiVirtualListBaseNative;
 
 	return class VirtualListCore extends Component {
-		static displayName = 'VirtualListBase'
+		/* No displayName here. We set displayName to returned components of this factory function. */
 
-		static propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
+		static propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 			/**
 			 * The `render` function for an item of the list receives the following parameters:
 			 * - `data` is for accessing the supplied `data` property of the list.
@@ -138,9 +138,9 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentDidMount () {
-			if (type === JS) {
-				const containerNode = this.uiRef.containerRef;
+			const containerNode = this.uiRef.containerRef;
 
+			if (type === JS) {
 				// prevent native scrolling by Spotlight
 				this.preventScroll = () => {
 					containerNode.scrollTop = 0;
@@ -149,14 +149,11 @@ const VirtualListBaseFactory = (type) => {
 
 				if (containerNode && containerNode.addEventListener) {
 					containerNode.addEventListener('scroll', this.preventScroll);
-					containerNode.addEventListener('keydown', this.onKeyDown);
 				}
-			} else {
-				const contentNode = this.uiRef.contentRef;
+			}
 
-				if (contentNode && contentNode.addEventListener) {
-					contentNode.addEventListener('keydown', this.onKeyDown);
-				}
+			if (containerNode && containerNode.addEventListener) {
+				containerNode.addEventListener('keydown', this.onKeyDown);
 			}
 		}
 
@@ -165,20 +162,18 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentWillUnmount () {
-			if (type === JS) {
-				const containerNode = this.uiRef.containerRef;
+			const containerNode = this.uiRef.containerRef;
 
+			if (type === JS) {
 				// remove a function for preventing native scrolling by Spotlight
 				if (containerNode && containerNode.removeEventListener) {
 					containerNode.removeEventListener('scroll', this.preventScroll);
 					containerNode.removeEventListener('keydown', this.onKeyDown);
 				}
-			} else {
-				const contentNode = this.uiRef.contentRef;
+			}
 
-				if (contentNode && contentNode.removeEventListener) {
-					contentNode.removeEventListener('keydown', this.onKeyDown);
-				}
+			if (containerNode && containerNode.removeEventListener) {
+				containerNode.removeEventListener('keydown', this.onKeyDown);
 			}
 
 			this.setContainerDisabled(false);
@@ -192,10 +187,10 @@ const VirtualListBaseFactory = (type) => {
 		restoreLastFocused = false
 
 		setContainerDisabled = (bool) => {
-			const containerNode = (type === JS) ? this.uiRef.containerRef : this.uiRef.contentRef;
+			const contentNode = this.uiRef.contentRef;
 
-			if (containerNode) {
-				containerNode.setAttribute(dataContainerDisabledAttribute, bool);
+			if (contentNode) {
+				contentNode.setAttribute(dataContainerDisabledAttribute, bool);
 
 				if (bool) {
 					document.addEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
@@ -339,12 +334,6 @@ const VirtualListBaseFactory = (type) => {
 				const
 					isRtl = this.props.rtl,
 					isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right');
-
-				if (type === JS) {
-					// To prevent item positioning issue, make all items to be rendered.
-					this.uiRef.updateFrom = null;
-					this.uiRef.updateTo = null;
-				}
 
 				if (firstVisibleIndex <= indexToScroll && indexToScroll <= lastVisibleIndex) {
 					const node = this.uiRef.containerRef.querySelector(`[data-index='${indexToScroll}'].spottable`);
@@ -490,9 +479,7 @@ const VirtualListBaseFactory = (type) => {
 
 			this.isScrolledBy5way = false;
 			if (getDirection(keyCode)) {
-				if (type === Native) {
-					ev.preventDefault();
-				}
+				ev.preventDefault();
 				this.setSpotlightContainerRestrict(keyCode, target);
 				this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, target);
 			}
@@ -522,9 +509,6 @@ const VirtualListBaseFactory = (type) => {
 
 			if (Spotlight.isPaused()) {
 				Spotlight.resume();
-				if (type === JS) {
-					this.forceUpdate();
-				}
 			}
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
@@ -534,7 +518,7 @@ const VirtualListBaseFactory = (type) => {
 			if (ref) {
 				if (type === JS) {
 					this.focusOnItem(index);
-				} else if (type === Native) {
+				} else {
 					// If focusing the item of VirtuallistNative, `onFocus` in Scrollable will be called.
 					// Then VirtualListNative tries to scroll again differently from VirtualList.
 					// So we would like to skip `focus` handling when focusing the item as a workaround.
@@ -636,9 +620,7 @@ const VirtualListBaseFactory = (type) => {
 						node.blur();
 					}
 				}
-				if (type === JS) {
-					this.nodeIndexToBeFocused = null;
-				}
+				this.nodeIndexToBeFocused = null;
 				this.lastFocusedIndex = focusedIndex;
 
 				if (primary.clientSize >= primary.itemSize) {
@@ -746,6 +728,7 @@ const VirtualListBaseFactory = (type) => {
  * @private
  */
 const VirtualListBase = VirtualListBaseFactory(JS);
+VirtualListBase.displayName = 'VirtualListBase';
 
 /**
  * A Moonstone-styled base component for [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative} and
@@ -758,6 +741,7 @@ const VirtualListBase = VirtualListBaseFactory(JS);
  * @private
  */
 const VirtualListBaseNative = VirtualListBaseFactory(Native);
+VirtualListBaseNative.displayName = 'VirtualListBaseNative';
 
 const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 	<Scrollable
