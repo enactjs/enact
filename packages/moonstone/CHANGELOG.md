@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/VideoPlayer` properties `noSpinner` and `mediaControlsProps`
+- `moonstone/VideoPlayer` property `noSpinner` to allow apps to show/hide spinner while loading video
 
 ### Changed
 

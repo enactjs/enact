@@ -368,7 +368,7 @@ const MediaControls = kind({
 		delete rest.visible;
 
 		return (
-			<div {...rest}>
+			<div {...rest} data-media-controls>
 				<div className={css.leftComponents}>{leftComponents}</div>
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
