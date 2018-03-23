@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/VideoPlayer` property `moreButtonColor`
+- `moonstone/VideoPlayer` property `moreButtonColor` to allow setting underline colors for more button
 
 ## [unreleased]
 

@@ -53,19 +53,6 @@ const ControlsContainer = SpotlightContainerDecorator(
 	'div'
 );
 
-// Keycode map for webOS TV
-const keyMap = {
-	'RED': 403,
-	'GREEN': 404,
-	'YELLOW': 405,
-	'BLUE': 406,
-	'PLAY': 415,
-	'STOP': 413,
-	'PAUSE': 19,
-	'REWIND': 412,
-	'FASTFORWARD': 417
-};
-
 // provide forwarding of events on media controls
 const forwardControlsAvailable = forward('onControlsAvailable');
 const forwardBackwardButtonClick = forwardWithPrevent('onBackwardButtonClick');
@@ -319,7 +306,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 'blue'
 		 * @public
 		 */
-		moreButtonColor: PropTypes.string,
+		moreButtonColor: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
 
 		/**
 		 * This boolean sets the disabled state of the "More" button.
@@ -1189,37 +1176,23 @@ const VideoPlayerBase = class extends React.Component {
 			return;
 		}
 
-		const {PLAY, PAUSE, REWIND, FASTFORWARD, RED, GREEN, YELLOW, BLUE} = keyMap;
-
-		switch (ev.keyCode) {
-			case PLAY:
+		if (is('play', ev.keyCode)) {
+			this.showMiniFeedback = true;
+			this.play();
+		} else if (is('pause', ev.keyCode)) {
+			this.showMiniFeedback = true;
+			this.pause();
+		} else if (!noRateButtons && !rateButtonsDisabled) {
+			if (is('rewind', ev.keyCode)) {
 				this.showMiniFeedback = true;
-				this.play();
-				break;
-			case PAUSE:
+				this.rewind();
+			} else if (is('fastForward', ev.keyCode)) {
 				this.showMiniFeedback = true;
-				this.pause();
-				break;
-			case REWIND:
-				if (!noRateButtons && !rateButtonsDisabled) {
-					this.showMiniFeedback = true;
-					this.rewind();
-				}
-				break;
-			case FASTFORWARD:
-				if (!noRateButtons && !rateButtonsDisabled) {
-					this.showMiniFeedback = true;
-					this.fastForward();
-				}
-				break;
+				this.fastForward();
+			}
 		}
 
-		if (this.state.bottomControlsRendered && moreButtonColor && !moreButtonDisabled && (
-			ev.keyCode === RED && moreButtonColor === 'red' ||
-			ev.keyCode === GREEN && moreButtonColor === 'green' ||
-			ev.keyCode === YELLOW && moreButtonColor === 'yellow' ||
-			ev.keyCode === BLUE && moreButtonColor === 'blue'
-		)) {
+		if (this.state.bottomControlsRendered && moreButtonColor && !moreButtonDisabled && is(moreButtonColor, ev.keyCode)) {
 			Spotlight.focus(this.player.querySelector(`.${css.moreButton}`));
 			this.toggleMore();
 		}
