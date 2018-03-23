@@ -444,7 +444,6 @@ const SliderBase = kind({
 				knobAfterMidpoint={knobAfterMidpoint}
 				forceSide={tooltipForceSide}
 				orientation={orientation}
-				proportion={proportionProgress}
 				side={tooltipSide}
 			>
 				{children}
