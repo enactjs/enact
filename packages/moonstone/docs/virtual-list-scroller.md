@@ -8,7 +8,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
 ### Basic usage of VirtualList and VirtualGridList
 
-*   At least four props below are required to show a list properly.
+*   At least three props below are required to show a list properly.
 
     *   `dataSize`: Size of the data.
     *   `itemSize`: Size of an item for the list. This is a required prop, and you will get an error when you build an app in dev mode without it.
