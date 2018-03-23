@@ -31,30 +31,12 @@ storiesOf('ExpandableInput', module)
 		() => (
 			<div>
 				<ExpandableInput
-					disabled={boolean('disabled-1', false)}
-					iconAfter={select('iconAfter-1', iconNames)}
-					iconBefore={select('iconBefore-1', iconNames)}
-					noneText={text('noneText-1', 'nothing inputted')}
-					onChange={action('onChange')}
-					onClose={action('onClose')}
-					onOpen={action('onOpen')}
-					open={boolean('open-1', true)}
-					title={text('title-1', 'title')}
-					placeholder={text('placeholder-1', 'ExpandableInput 1')}
-					type={text('type-1')}
+					title="ExpandableInput 1"
+					placeholder="ExpandableInput 1"
 				/>
 				<ExpandableInput
-					disabled={boolean('disabled-2', false)}
-					iconAfter={select('iconAfter-2', iconNames)}
-					iconBefore={select('iconBefore-2', iconNames)}
-					noneText={text('noneText-2', 'nothing inputted')}
-					onChange={action('onChange')}
-					onClose={action('onClose')}
-					onOpen={action('onOpen')}
-					open={boolean('open-2', true)}
-					title={text('title-2', 'title')}
-					placeholder={text('placeholder-2', 'ExpandableInput 2')}
-					type={text('type-2')}
+					title="ExpandableInput 2"
+					placeholder="ExpandableInput 2"
 				/>
 			</div>
 		)
