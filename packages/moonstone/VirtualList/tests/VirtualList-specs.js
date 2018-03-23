@@ -264,7 +264,7 @@ describe('VirtualList', () => {
 				<VirtualList
 					clientSize={clientSize}
 					dataSize={itemArray.length}
-					itemRenderer={renderItemArray}
+					itemRenderer={renderItemArray} // eslint-disable-line react/jsx-no-bind
 					itemSize={30}
 				/>
 			);
