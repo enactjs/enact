@@ -45,7 +45,7 @@ describe('VirtualList', () => {
 			resultScrollLeft = e.scrollLeft;
 			resultScrollTop = e.scrollTop;
 		};
-		renderItem = ({index, ...rest}) => {	// eslint-disable-line enact/display-name, enact/prop-types
+		renderItem = ({index, ...rest}) => { // eslint-disable-line enact/display-name, enact/prop-types
 			return (
 				<Item {...rest}>
 					{items[index].name}
@@ -252,7 +252,7 @@ describe('VirtualList', () => {
 	describe('Adding an item', () => {
 		it('should render an added item named \'Password 0\' as the first item', (done) => {
 			const itemArray = [{name: 'A'}, {name: 'B'}, {name: 'C'}];
-			const renderItemArray = ({index, ...rest}) => { // eslint-disable-line react/jsx-no-bind
+			const renderItemArray = ({index, ...rest}) => { // eslint-disable-line enact/display-name, enact/prop-types, react/jsx-no-bind
 				return (
 					<div {...rest} id={'item' + index}>
 						{itemArray[index].name}
