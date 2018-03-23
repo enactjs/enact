@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `data` to be removed
+
 ## [2.0.0-alpha.6] - 2018-03-22
 
 ### Removed
@@ -27,7 +33,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Popup` prop `containerId` to `spotlightId`
 - `moonstone/VideoPlayer` prop `containerId` to `spotlightId`
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
-- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `data` to be removed
 
 ### Fixed
 
