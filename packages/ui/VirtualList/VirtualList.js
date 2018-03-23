@@ -15,8 +15,7 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {gridListItemSizeShape, ScrollableVirtualList, VirtualListBase} from './VirtualListBase';
-import {ScrollableVirtualListNative, VirtualListBaseNative} from './VirtualListBaseNative';
+import {gridListItemSizeShape, ScrollableVirtualList, ScrollableVirtualListNative, VirtualListBase, VirtualListBaseNative} from './VirtualListBase';
 
 /**
  * An unstyled scrollable virtual list component with touch support.
