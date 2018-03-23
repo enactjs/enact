@@ -101,20 +101,23 @@ const ProgressBarBase = kind({
 				const progressAfterMidpoint = progress > 0.5;
 				const progressPercentage = Math.min(parseInt(progress * 100), 100);
 				const percentageText = `${progressPercentage}%`;
-				const tooltipVerticalPosition = {
-					top: `${100 - progressPercentage}%`,
-					right: tooltipForceSide ? 'auto' : ri.unit(-36, 'rem'),
-					left: tooltipForceSide ? ri.unit(72, 'rem') : null
-				};
-				const tooltipHorizontalPosition = progressAfterMidpoint ? {
-					right: `${100 - progressPercentage}%`,
-					bottom: ri.unit(24, 'rem')
-				} : {
-					left: percentageText,
-					bottom: ri.unit(24, 'rem')
-				};
 
-				const tooltipPosition = orientation === 'vertical' ? tooltipVerticalPosition : tooltipHorizontalPosition;
+				let tooltipPosition;
+				if (orientation === 'vertical') {
+					tooltipPosition = {
+						top: `${100 - progressPercentage}%`,
+						right: tooltipForceSide ? 'auto' : ri.unit(ri.scale(-36), 'rem'),
+						left: tooltipForceSide ? ri.unit(ri.scale(72), 'rem') : null
+					};
+				} else {
+					tooltipPosition = progressAfterMidpoint ? {
+						right: `${100 - progressPercentage}%`,
+						bottom: ri.unit(ri.scale(24), 'rem')
+					} : {
+						left: percentageText,
+						bottom: ri.unit(ri.scale(24), 'rem')
+					};
+				}
 
 				return (
 					<ProgressBarTooltip
