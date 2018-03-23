@@ -31,7 +31,7 @@ const VirtualListBaseFactory = (type) => {
 	return class VirtualListCore extends Component {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
-		static propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
+		static propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
 			/**
 			 * The `render` function for an item of the list receives the following parameters:
 			 * - `data` is for accessing the supplied `data` property of the list.
@@ -217,7 +217,6 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		// Calculate metrics for VirtualList after the 1st render to know client W/H.
-		// We separate code related with data due to re use it when data changed.
 		componentDidMount () {
 			if (!this.props.clientSize) {
 				this.calculateMetrics(this.props);
@@ -523,9 +522,11 @@ const VirtualListBaseFactory = (type) => {
 
 		// Native only
 		scrollToPosition (x, y) {
-			this.containerRef.scrollTo(
-				(this.props.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y
-			);
+			if (this.containerRef) {
+				this.containerRef.scrollTo(
+					(this.props.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y
+				);
+			}
 		}
 
 		// JS only
@@ -597,7 +598,7 @@ const VirtualListBaseFactory = (type) => {
 				style = {
 					position: 'absolute',
 					/* FIXME: RTL / this calculation only works for Chrome */
-					transform: `translate(${this.props.rtl ? -x : x}px, ${y}px)`
+					transform: `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`
 				};
 
 			if (this.isItemSized) {
@@ -732,11 +733,21 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
+		mergeClasses = (className) => {
+			let containerClass = null;
+
+			if (type === Native) {
+				containerClass = (this.isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
+			}
+
+			return classNames(css.virtualList, containerClass, className);
+		}
+
 		render () {
 			const
 				{className, itemsRenderer, style, ...rest} = this.props,
 				{cc, initItemContainerRef, primary} = this,
-				mergedClasses = classNames(css.virtualList, this.containerClass, className);
+				containerClasses = this.mergeClasses(className);
 
 			delete rest.cbScrollTo;
 			delete rest.clientSize;
@@ -757,7 +768,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			return (
-				<div className={mergedClasses} ref={this.initContainerRef} style={style}>
+				<div className={containerClasses} ref={this.initContainerRef} style={style}>
 					<div {...rest} ref={this.initContentRef}>
 						{itemsRenderer({cc, initItemContainerRef, primary})}
 					</div>
@@ -781,7 +792,7 @@ VirtualListBase.displayName = 'ui:VirtualListBase';
 
 /**
  * A basic base component for
- * {@link ui/VirtualList.VirtualListNative} and {@link ui/VirtualList.VirtualGridListNative}.
+ * [VirtualListNative]{@link ui/VirtualList.VirtualListNative} and [VirtualGridListNative]{@link ui/VirtualList.VirtualGridListNative}.
  *
  * @class VirtualListBaseNative
  * @memberof ui/VirtualList
