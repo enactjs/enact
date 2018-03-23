@@ -278,7 +278,6 @@ const VirtualListBaseFactory = (type) => {
 		cc = []
 		scrollPosition = 0
 
-		containerClass = null // Native only
 		contentRef = null
 		containerRef = null
 
@@ -477,11 +476,6 @@ const VirtualListBaseFactory = (type) => {
 
 			if (this.scrollPosition > maxPos) {
 				this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
-			}
-
-			// Native only
-			if (type === Native) {
-				this.containerClass = (isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
 			}
 		}
 
