@@ -179,10 +179,10 @@ const VirtualListBaseFactory = (type) => {
 		restoreLastFocused = false
 
 		setContainerDisabled = (bool) => {
-			const containerNode = this.uiRef.containerRef;
+			const contentNode = this.uiRef.contentRef;
 
-			if (containerNode) {
-				containerNode.setAttribute(dataContainerDisabledAttribute, bool);
+			if (contentNode) {
+				contentNode.setAttribute(dataContainerDisabledAttribute, bool);
 
 				if (bool) {
 					document.addEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
@@ -498,6 +498,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (Spotlight.isPaused()) {
 				Spotlight.resume();
+				this.forceUpdate();
 			}
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
@@ -609,6 +610,7 @@ const VirtualListBaseFactory = (type) => {
 						node.blur();
 					}
 				}
+				this.nodeIndexToBeFocused = null;
 				this.lastFocusedIndex = focusedIndex;
 
 				if (primary.clientSize >= primary.itemSize) {

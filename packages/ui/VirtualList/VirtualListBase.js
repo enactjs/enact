@@ -31,7 +31,7 @@ const VirtualListBaseFactory = (type) => {
 	return class VirtualListCore extends Component {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
-		static propTypes = /** @lends ui/VirtualList.VirtualListNative.prototype */ {
+		static propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 			/**
 			 * The `render` function for an item of the list receives the following parameters:
 			 * - `data` is for accessing the supplied `data` property of the list.
@@ -86,7 +86,7 @@ const VirtualListBaseFactory = (type) => {
 
 			/**
 			 * Callback method of scrollTo.
-			 * Normally, [ScrollableNative]{@link ui/Scrollable.ScrollableNative} should set this value.
+			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
 			 *
 			 * @type {Function}
 			 * @private
@@ -273,7 +273,7 @@ const VirtualListBaseFactory = (type) => {
 		dimensionToExtent = 0
 		threshold = 0
 		maxFirstIndex = 0
-		lastFirstIndex = 0
+		prevFirstIndex = 0
 		curDataSize = 0
 		hasDataSizeChanged = false
 		cc = []
@@ -531,7 +531,7 @@ const VirtualListBaseFactory = (type) => {
 		// JS only
 		setScrollPosition (x, y, dirX, dirY) {
 			if (this.contentRef) {
-				this.contentRef.style.transform = 'translate3d(-' + x + 'px,-' + y + 'px,0)';
+				this.contentRef.style.transform = `translate3d(-${x}px, -${y}px, 0)`;
 				this.didScroll(x, y, dirX, dirY);
 			}
 		}
@@ -591,41 +591,40 @@ const VirtualListBaseFactory = (type) => {
 			return ref ? ref.children[index % this.state.numOfItems] : null;
 		}
 
-		getXY = (isPrimaryDirectionVertical, primaryPosition, secondaryPosition) => (isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
-		composeStyle (style, width, height, primaryPosition, secondaryPosition) {
-			const {x, y} = this.getXY(this.isPrimaryDirectionVertical, primaryPosition, secondaryPosition);
+		composeStyle (width, height, primaryPosition, secondaryPosition) {
+			const
+				{x, y} = this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition},
+				style = {
+					position: 'absolute',
+					/* FIXME: RTL / this calculation only works for Chrome */
+					transform: 'translate(' + (this.props.rtl ? -x : x) + 'px,' + y + 'px)'
+				};
 
 			if (this.isItemSized) {
 				style.width = width;
 				style.height = height;
 			}
-			style.position = 'absolute';
 
-			/* FIXME: RTL / this calculation only works for Chrome */
-			style.transform = 'translate(' + (this.props.rtl ? -x : x) + 'px,' + y + 'px)';
+			return style;
 		}
 
 		applyStyleToNewNode = (index, ...rest) => {
 			const
 				{itemRenderer, getComponentProps, data} = this.props,
-				{numOfItems} = this.state,
-				key = index % numOfItems,
+				key = index % this.state.numOfItems,
 				itemElement = itemRenderer({
 					data,
 					index,
 					key
 				}),
-				style = {},
 				componentProps = getComponentProps && getComponentProps(index) || {};
-
-			this.composeStyle(style, ...rest);
 
 			this.cc[key] = React.cloneElement(itemElement, {
 				...componentProps,
 				className: classNames(css.listItem, itemElement.props.className),
 				['data-preventscrollonfocus']: true, // Added this attribute to prevent scroll on focus by browser
-				style: {...itemElement.props.style, ...style}
+				style: {...itemElement.props.style, ...(this.composeStyle(...rest))}
 			});
 		}
 
@@ -639,11 +638,11 @@ const VirtualListBaseFactory = (type) => {
 				{dataSize} = this.props,
 				{firstIndex, numOfItems} = this.state,
 				{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc} = this,
-				diff = firstIndex - this.lastFirstIndex,
-				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems;
+				diff = firstIndex - this.prevFirstIndex,
+				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.prevFirstIndex + numOfItems;
 			let
 				hideTo = 0,
-				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0) ? firstIndex + numOfItems : this.lastFirstIndex;
+				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0) ? firstIndex + numOfItems : this.prevFirstIndex;
 
 			if (updateFrom >= updateTo) {
 				return;
@@ -676,7 +675,7 @@ const VirtualListBaseFactory = (type) => {
 				this.applyStyleToHideNode(i);
 			}
 
-			this.lastFirstIndex = firstIndex;
+			this.prevFirstIndex = firstIndex;
 		}
 
 		getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
@@ -738,7 +737,7 @@ const VirtualListBaseFactory = (type) => {
 			const
 				{className, itemsRenderer, style, ...rest} = this.props,
 				{cc, initItemContainerRef, primary} = this,
-				mergedClasses = classNames(css.list, this.containerClass, className);
+				mergedClasses = classNames(css.virtualList, this.containerClass, className);
 
 			delete rest.cbScrollTo;
 			delete rest.clientSize;

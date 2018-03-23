@@ -1,17 +1,15 @@
-.list {
+.virtualList {
 	position: relative;
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
 
 	&.vertical {
-		overflow-x: hidden;
 		overflow-y: scroll;
 	}
 
 	&.horizontal {
 		overflow-x: scroll;
-		overflow-y: hidden;
 	}
 
 	.listItem {
@@ -22,6 +20,6 @@
 	}
 }
 
-.list::-webkit-scrollbar {
+.virtualList::-webkit-scrollbar {
 	display: none;
 }
