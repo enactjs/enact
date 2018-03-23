@@ -1,6 +1,8 @@
 import {getContainersForNode, setContainerLastFocusedElement} from '@enact/spotlight/src/container';
+import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import Spotlight from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
@@ -78,6 +80,8 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			noAutoFocus: false
 		}
 
+		paused = new Pause('ExpandableItem')
+
 		highlightContents = () => {
 			const current = Spotlight.getCurrent();
 			if (this.containerNode.contains(current) || document.activeElement === document.body) {
@@ -118,6 +122,8 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		highlight = (callback) => {
+			if (Spotlight.isPaused()) return;
+
 			const {open} = this.props;
 			const pointerMode = Spotlight.getPointerMode();
 			const changePointerMode = pointerMode && (noPointerMode || !open);
@@ -135,7 +141,25 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+
+		pause = () => this.paused.pause()
+
+		resume = () => this.paused.resume()
+
+		handle = handle.bind(this)
+
+		handleClose = this.handle(
+			forward('onClose'),
+			this.pause
+		)
+
+		handleOpen = this.handle(
+			forward('onOpen'),
+			this.pause
+		)
+
 		handleHide = () => {
+			this.resume();
 			const pointerMode = Spotlight.getPointerMode();
 
 			if (!pointerMode || noPointerMode) {
@@ -145,6 +169,7 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleShow = () => {
+			this.resume();
 			this.highlight(this.highlightContents);
 		}
 
@@ -161,6 +186,8 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					{...props}
 					onHide={this.handleHide}
 					onShow={this.handleShow}
+					onOpen={this.handleOpen}
+					onClose={this.handleClose}
 					setContainerNode={this.setContainerNode}
 				/>
 			);

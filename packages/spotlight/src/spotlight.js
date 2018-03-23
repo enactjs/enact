@@ -21,6 +21,7 @@ import last from 'ramda/src/last';
 
 import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
+import {isPaused, pause, resume} from '../Pause';
 
 import {
 	addContainer,
@@ -119,7 +120,6 @@ const Spotlight = (function () {
 	/* private vars
 	*/
 	let _initialized = false;
-	let _pause = false;
 	let _duringFocusChange = false;
 
 	/*
@@ -158,7 +158,7 @@ const Spotlight = (function () {
 	}
 
 	function shouldPreventNavigation () {
-		return (!getAllContainerIds().length || _pause);
+		return isPaused() || getAllContainerIds().length === 0;
 	}
 
 	function getCurrent () {
@@ -199,7 +199,7 @@ const Spotlight = (function () {
 
 		_duringFocusChange = true;
 
-		if (_pause) {
+		if (isPaused()) {
 			silentFocus();
 			_duringFocusChange = false;
 			return true;
@@ -367,7 +367,7 @@ const Spotlight = (function () {
 			return;
 		}
 
-		if (!_pause && !_pointerMoveDuringKeyPress) {
+		if (!isPaused() && !_pointerMoveDuringKeyPress) {
 			if (getCurrent()) {
 				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
 			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
@@ -572,9 +572,7 @@ const Spotlight = (function () {
 		 * @returns {undefined}
 		 * @public
 		 */
-		pause: function () {
-			_pause = true;
-		},
+		pause,
 
 		/**
 		 * Resumes Spotlight
@@ -582,9 +580,7 @@ const Spotlight = (function () {
 		 * @returns {undefined}
 		 * @public
 		 */
-		resume: function () {
-			_pause = false;
-		},
+		resume,
 
 		// focus()
 		// focus(<containerId>)
@@ -734,9 +730,7 @@ const Spotlight = (function () {
 		 * @returns {Boolean} `true` if Spotlight is currently paused.
 		 * @public
 		 */
-		isPaused: function () {
-			return _pause;
-		},
+		isPaused,
 
 		/**
 		 * Determines whether an element is spottable.
