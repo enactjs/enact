@@ -6,13 +6,13 @@ const BarBase = kind({
 	name: 'Bar',
 
 	propTypes: {
-		value: PropTypes.number,
-		vertical: PropTypes.bool
+		orientation: PropTypes.string,
+		value: PropTypes.number
 	},
 
 	computed: {
-		style: ({value, vertical}) => {
-			const prop = vertical ? 'height' : 'width';
+		style: ({value, orientation}) => {
+			const prop = orientation === 'vertical' ? 'height' : 'width';
 			return {
 				[prop]: `${value * 100}%`
 			};
@@ -21,7 +21,7 @@ const BarBase = kind({
 
 	render: (props) => {
 		delete props.value;
-		delete props.vertical;
+		delete props.orientation;
 
 		return (
 			<div {...props} />
