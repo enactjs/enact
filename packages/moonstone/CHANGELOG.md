@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+### [unreleased]
+
+### Fixed
+
+- `moonstone/Picker` to correctly update pressed state when dragging off buttons
+
 ## [2.0.0-alpha.6] - 2018-03-22
 
 ### Removed
