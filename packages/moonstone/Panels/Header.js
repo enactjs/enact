@@ -168,11 +168,13 @@ const HeaderBase = kind({
 		titleOrInput: ({casing, headerInput, marqueeOn, preserveCase, title}) => {
 			if (headerInput) {
 				return (
-					<ComponentOverride
-						component={headerInput}
-						css={css}
-						placeholder={title}
-					/>
+					<Cell>
+						<ComponentOverride
+							component={headerInput}
+							css={css}
+							placeholder={title}
+						/>
+					</Cell>
 				);
 			} else {
 				return (
@@ -229,7 +231,7 @@ const HeaderBase = kind({
 });
 
 // Note that we only export this (even as HeaderBase).  HeaderBase is not useful on its own.
-const Header = Slottable({slots: ['subTitleBelow', /* 'titleAbove', */'title', 'titleBelow']}, Skinnable(HeaderBase));
+const Header = Slottable({slots: ['headerInput', 'subTitleBelow', /* 'titleAbove', */'title', 'titleBelow']}, Skinnable(HeaderBase));
 
 // Set up Header so when it's used in a slottable layout (like Panel), it is automatically
 // recognized as this specific slot.
