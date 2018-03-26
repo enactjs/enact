@@ -64,16 +64,11 @@ const VirtualListBaseFactory = (type) => {
 		static propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 			/**
 			 * The `render` function for an item of the list receives the following parameters:
-			 * - `data` is for accessing the supplied `data` property of the list.
-			 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
-			 * is parameters due to performance optimizations.
 			 *
 			 * @param {Object} event
 			 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
 			 * @param {Number} event.index The index number of the componet to render
 			 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
-			 *
-			 * Data manipulation can be done in this function.
 			 *
 			 * > NOTE: The list does NOT always render a component whenever its render function is called
 			 * due to performance optimization.
@@ -81,11 +76,11 @@ const VirtualListBaseFactory = (type) => {
 			 * Usage:
 			 * ```
 			 * renderItem = ({index, ...rest}) => {
-			 *		delete rest.data;
+			 * 	delete rest.data;
 			 *
-			 *		return (
-			 *			<MyComponent index={index} {...rest} />
-			 *		);
+			 * 	return (
+			 * 		<MyComponent index={index} {...rest} />
+			 * 	);
 			 * }
 			 * ```
 			 *
@@ -122,8 +117,24 @@ const VirtualListBaseFactory = (type) => {
 			/**
 			 * Check if the item with index is disabled
 			 *
+			 * Usage:
+			 * ```
+			 * isDisabledItem = (index) => (items[index].disabled)
+			 * render = () => {
+			 * 	return (
+			 * 		<VirtualList
+			 * 			dataSize={this.items.length}
+			 * 			isDisabledItem={isDisabledItem}
+			 * 			itemRenderer={this.renderItem}
+			 * 			itemSize={this.itemSize}
+			 * 		/>
+			 * 	);
+			 * }
+			 * ```
+			 *
+			 * @type {Function}
 			 * @param {Number} index
-			 * @private
+			 * @public
 			 */
 			isDisabledItem: PropTypes.func,
 

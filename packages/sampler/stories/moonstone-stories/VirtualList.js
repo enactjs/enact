@@ -15,7 +15,6 @@ const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBas
 
 const
 	items = [],
-	isDisabledItem = (index) => (items[index].disabled),
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderItem = (size) => ({index, ...rest}) => {
 		const itemStyle = {
@@ -71,7 +70,6 @@ storiesOf('Moonstone', module)
 				<VirtualList
 					dataSize={number('dataSize', items.length)}
 					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
-					isDisabledItem={isDisabledItem}
 					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
