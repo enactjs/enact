@@ -109,11 +109,15 @@ const MediaControls = kind({
 		/**
 		 * The color of the underline beneath more icon button.
 		 *
+		 * This property accepts one of the following color names, which correspond with the
+		 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
+		 *
 		 * @type {String}
+		 * @see {@link moonstone/IconButton.color}
 		 * @default 'blue'
 		 * @public
 		 */
-		moreButtonColor: PropTypes.string,
+		moreButtonColor: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
 
 		/**
 		 * Sets the `disabled` state on the media "more" button.

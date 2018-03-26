@@ -302,7 +302,11 @@ const VideoPlayerBase = class extends React.Component {
 		/**
 		 * The color of the underline beneath more icon button.
 		 *
+		 * This property accepts one of the following color names, which correspond with the
+		 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
+		 *
 		 * @type {String}
+		 * @see {@link moonstone/IconButton.color}
 		 * @default 'blue'
 		 * @public
 		 */
@@ -1192,7 +1196,8 @@ const VideoPlayerBase = class extends React.Component {
 			}
 		}
 
-		if (this.state.bottomControlsRendered && moreButtonColor && !moreButtonDisabled && is(moreButtonColor, ev.keyCode)) {
+		if (this.state.bottomControlsRendered && this.state.mediaControlsVisible &&
+			moreButtonColor && !moreButtonDisabled && is(moreButtonColor, ev.keyCode)) {
 			Spotlight.focus(this.player.querySelector(`.${css.moreButton}`));
 			this.toggleMore();
 		}
