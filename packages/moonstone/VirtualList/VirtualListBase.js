@@ -115,7 +115,7 @@ const VirtualListBaseFactory = (type) => {
 			initUiChildRef: PropTypes.func,
 
 			/**
-			 * Check if the item with index is disabled
+			 * The Function that returns `true` if the item at the index is disabled
 			 *
 			 * Usage:
 			 * ```
