@@ -179,7 +179,7 @@ const HeaderBase = kind({
 			} else {
 				return (
 					<Cell component={HeaderH1} casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn={marqueeOn}>
-						<UppercaseH1 casing={casing} className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
+						{title}
 					</Cell>
 				);
 			}
