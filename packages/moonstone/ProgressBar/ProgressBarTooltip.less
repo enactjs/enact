@@ -15,7 +15,7 @@
 
 		&.before {
 			top: 0;
-			transform: translateY(calc(-100% - var(--tooltip-calculated-offset)));
+			transform: translateY(~"calc(-100% - var(--tooltip-calculated-offset))");
 
 			.moon-custom-text({
 				bottom: ~"calc(var(--tooltip-calculated-offset) + " @offset-large ~")";
@@ -23,7 +23,7 @@
 		}
 		&.after {
 			bottom: 0;
-			transform: translateY(calc(100% + var(--tooltip-calculated-offset)));
+			transform: translateY(~"calc(100% + var(--tooltip-calculated-offset))");
 
 			.moon-custom-text({
 				top: ~"calc(var(--tooltip-calculated-offset) + " @offset-large ~")";
@@ -33,11 +33,11 @@
 		&.knobAfterMidpoint,
 		[data-knob-after-midpoint="true"] & {
 			&.before {
-				transform: translateX(-100%) translateY(calc(-100% - var(--tooltip-calculated-offset)));
+				transform: translateX(-100%) translateY(~"calc(-100% - var(--tooltip-calculated-offset))");
 			}
 
 			&.after {
-				transform: translateX(-100%) translateY(calc(100% + var(--tooltip-calculated-offset)));
+				transform: translateX(-100%) translateY(~"calc(100% + var(--tooltip-calculated-offset))");
 			}
 		}
 	}
@@ -50,7 +50,7 @@
 		:global(.enact-locale-right-to-left) &.before.ignoreLocale,
 		:global(.enact-locale-right-to-left) &.after {
 			right: 0;
-			transform: translate(calc(var(--tooltip-calculated-offset) * -1), 50%);
+			transform: translate(~"calc(var(--tooltip-calculated-offset) * -1)", 50%);
 
 			.moon-custom-text({
 				transform: translate(~"calc(var(--tooltip-calculated-offset) * -1 - " @offset-large ~")", 50%);
