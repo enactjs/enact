@@ -10,6 +10,8 @@ const adjustPath = (path) => {
 	return path;
 };
 
+// default handlers
+const failureHandler = ({errorText}) => console.error(errorText);
 const timeoutHandler = ({errorText}) => console.warn(errorText);
 
 export default class LS2Request {
@@ -31,6 +33,10 @@ export default class LS2Request {
 		subscribe = false,
 		timeout = 0
 	}) {
+		if (!onFailure && !onComplete) {
+			onFailure = failureHandler;
+		}
+
 		if (typeof window !== 'object' || !window.PalmServiceBridge) {
 			/* eslint no-unused-expressions: ["error", { "allowShortCircuit": true }]*/
 			onFailure && onFailure({errorCode: -1, errorText: 'PalmServiceBridge not found.', returnValue: false});
