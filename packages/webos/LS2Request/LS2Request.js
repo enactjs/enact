@@ -10,11 +10,14 @@ const adjustPath = (path) => {
 	return path;
 };
 
+const timeoutHandler = ({errorText}) => console.warn(errorText);
+
 export default class LS2Request {
 	constructor () {
 		this.bridge = null;
 		this.cancelled = false;
 		this.subscribe = false;
+		this.timer = null;
 	}
 
 	send ({
@@ -24,12 +27,14 @@ export default class LS2Request {
 		onSuccess = null,
 		onFailure = null,
 		onComplete = null,
-		subscribe = false
+		onTimeout = timeoutHandler,
+		subscribe = false,
+		timeout = 0
 	}) {
 		if (typeof window !== 'object' || !window.PalmServiceBridge) {
 			/* eslint no-unused-expressions: ["error", { "allowShortCircuit": true }]*/
-			onFailure && onFailure({errorCode:-1, errorText:'PalmServiceBridge not found.', returnValue: false});
-			onComplete && onComplete({errorCode:-1, errorText:'PalmServiceBridge not found.', returnValue: false});
+			onFailure && onFailure({errorCode: -1, errorText: 'PalmServiceBridge not found.', returnValue: false});
+			onComplete && onComplete({errorCode: -1, errorText: 'PalmServiceBridge not found.', returnValue: false});
 			console.error('PalmServiceBridge not found.');
 			return;
 		}
@@ -55,10 +60,22 @@ export default class LS2Request {
 		this.bridge.onservicecallback = this.callback.bind(this, onSuccess, onFailure, onComplete);
 		this.bridge.call(adjustPath(service) + method, JSON.stringify(parameters));
 
+		// timer will be cleared when the callback is run, so this should only fire if the timeout threshold is reached
+		this.timer = setTimeout(() => {
+			// only call onTimeout handler if there was a timeout threshold to beat
+			if (timeout) {
+				onTimeout({errorCode: -1, errorText: `LS2Request timed out after ${timeout} ms.`, returnValue: false});
+				// cancel the request
+				this.cancel();
+			}
+		}, timeout ? timeout : 0);
 		return this;
 	}
 
 	callback (onSuccess, onFailure, onComplete, msg) {
+		// remove any timeout handler
+		this.timer && clearTimeout(this.timer);
+
 		if (this.cancelled) {
 			return;
 		}

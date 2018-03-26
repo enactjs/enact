@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `onTimeout` and `timeout` props to `LS2Request`
+
 ## [2.0.0-alpha.6] - 2018-03-22
 
 No significant changes.
