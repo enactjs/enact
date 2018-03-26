@@ -306,7 +306,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
 		 *
 		 * @type {String}
-		 * @see {@link moonstone/IconButton.color}
+		 * @see {@link moonstone/IconButton.IconButtonBase.color}
 		 * @default 'blue'
 		 * @public
 		 */
