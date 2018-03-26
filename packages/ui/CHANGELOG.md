@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Removed
 
-- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `data`, to be removed
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `data`
 
 ## [2.0.0-alpha.6] - 2018-03-22
 
