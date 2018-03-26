@@ -5,10 +5,10 @@ import Uppercase from '@enact/i18n/Uppercase';
 import {isRtlText} from '@enact/i18n/util';
 import {Layout, Cell} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
+import ComponentOverride from '@enact/ui/ComponentOverride';
 
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
-import Input from '../Input';
 
 import css from './Header.less';
 
@@ -75,24 +75,7 @@ const HeaderBase = kind({
 		 */
 		fullBleed: PropTypes.bool,
 
-		/**
-		 * When `true`, blurs the input when the "enter" key is pressed when `inputMode` is `true`.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		inputDismissOnEnter: PropTypes.bool,
-
-		/**
-		 * When `true`, uses input as the title only in type `standard`.
-		 * There is no effect on type `compact`
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		inputMode: PropTypes.bool,
+		headerInput: PropTypes.node,
 
 		/**
 		 * Determines what triggers the header content to start its animation. Valid values are
@@ -181,11 +164,29 @@ const HeaderBase = kind({
 		},
 		subTitleBelowComponent: ({marqueeOn, subTitleBelow}) => {
 			return <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn}>{(subTitleBelow != null && subTitleBelow !== '') ? subTitleBelow : ' '}</MarqueeH2>;
+		},
+		titleOrInput: ({casing, headerInput, marqueeOn, preserveCase, title}) => {
+			if (headerInput) {
+				return (
+					<ComponentOverride
+						component={headerInput}
+						css={css}
+						placeholder={title}
+					/>
+				);
+			} else {
+				return (
+					<Cell component={HeaderH1} casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn={marqueeOn}>
+						<UppercaseH1 casing={casing} className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
+					</Cell>
+				);
+			}
 		}
 	},
 
-	render: ({casing, children, direction, inputDismissOnEnter, inputMode, marqueeOn, preserveCase, subTitleBelowComponent, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+	render: ({casing, children, direction, marqueeOn, preserveCase, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.fullBleed;
+		delete rest.headerInput;
 		delete rest.subTitleBelow;
 		delete rest.titleBelow;
 
@@ -211,13 +212,7 @@ const HeaderBase = kind({
 			// );
 			case 'standard': return (
 				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
-					{inputMode ? (
-						<Input dismissOnEnter={inputDismissOnEnter} className={css.inputTitle} css={css} placeholder={title} />
-					) : (
-						<Cell component={HeaderH1} casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn={marqueeOn}>
-							{title}
-						</Cell>
-					)}
+					{titleOrInput}
 					<Cell shrink size={78}>
 						<Layout align="end">
 							<Cell>

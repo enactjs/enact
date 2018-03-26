@@ -23,15 +23,15 @@
 	// }
 
 	// Remove the built-in h1 and h2 margins
-	.inputTitle,
-	.inputTitle .input,
+	.decorator,
+	.decorator .input,
 	.title,
 	.titleBelow,
 	.subTitleBelow {
 		margin: 0;
 	}
 
-	.inputTitle .input,
+	.decorator .input,
 	.title {
 		.moon-header-text();
 	}
@@ -45,7 +45,7 @@
 		.moon-header-sub-title-below();
 	}
 
-	.inputTitle {
+	.decorator {
 		padding: 0;
 		border-radius: 0;
 		border: none;
@@ -75,6 +75,7 @@
 
 		.input {
 			height: @moon-medium-header-line-height;
+			text-indent: 0.1em;
 		}
 
 		.titleBelow,
@@ -110,24 +111,26 @@
 		border-top-color: @moon-header-border-color;
 		border-bottom-color: @moon-header-bottom-border-color;
 
-		.inputTitle {
-			background-color: transparent;
-
-			.focus({
+		&.standard {
+			.decorator {
 				background-color: transparent;
 
-				.input {
-					background-color: @moon-header-input-bg-color;
-					color: @moon-header-input-text-color;
+				.focus({
+					background-color: transparent;
 
-					.input-placeholder({
+					.input {
+						background-color: @moon-header-input-bg-color;
 						color: @moon-header-input-text-color;
-					});
-				}
-			});
 
-			.input {
-				color: @moon-header-text-color;
+						.input-placeholder({
+							color: @moon-header-input-text-color;
+						});
+					}
+				});
+
+				.input {
+					color: @moon-header-text-color;
+				}
 			}
 		}
 
@@ -145,6 +148,6 @@
 
 :global(.hasCloseButton) .header.compact,
 :global(.hasCloseButton) .header.standard .title,
-:global(.hasCloseButton) .header.standard .inputTitle {
+:global(.hasCloseButton) .header.standard .decorator {
 	.padding-start-end(0, @moon-spotlight-outset + @moon-icon-button-small-size + @moon-spotlight-outset);
 }
