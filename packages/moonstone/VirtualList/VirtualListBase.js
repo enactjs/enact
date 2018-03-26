@@ -119,7 +119,7 @@ const VirtualListBaseFactory = (type) => {
 			 *
 			 * Usage:
 			 * ```
-			 * isDisabledItem = (index) => (items[index].disabled)
+			 * isDisabledItem = (index) => (this.items[index].disabled)
 			 * render = () => {
 			 * 	return (
 			 * 		<VirtualList
