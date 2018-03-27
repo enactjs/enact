@@ -108,7 +108,9 @@ const ProgressBarTooltipBase = kind({
 					// RTL after
 					(context.rtl && !forceSide && side === 'after') ||
 					// RTL before FORCE
-					(context.rtl && forceSide && side === 'before')
+					(context.rtl && forceSide && side === 'before') ||
+					// LTR before FORCE
+					(!context.rtl && forceSide && side === 'before')
 				) {
 					dir = 'left';
 				} else {
