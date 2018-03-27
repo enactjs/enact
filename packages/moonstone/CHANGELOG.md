@@ -10,7 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `isDisabledItem`, to be added to check if the item at the index is disabled
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `isItemDisabled`, which accepts a function that checks if the item at the supplied index is disabled
 
 ### Fixed
 
