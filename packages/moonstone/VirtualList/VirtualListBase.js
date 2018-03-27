@@ -242,7 +242,7 @@ const VirtualListBaseFactory = (type) => {
 
 		getIndexToScrollDisabled = (direction, currentIndex) => {
 			const
-				{isItemDisabled, itemSize} = this.props,
+				{isItemDisabled} = this.props,
 				{dataSize, spacing} = this.uiRef.props,
 				{dimensionToExtent, primary} = this.uiRef,
 				{findSpottableItem} = this,
