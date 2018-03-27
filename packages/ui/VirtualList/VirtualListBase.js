@@ -12,6 +12,35 @@ const
 	JS = 'JS',
 	Native = 'Native';
 
+class ScrollContent extends Component {
+	constructor (props) {
+		super(props);
+
+		this.state = {
+			height: 0,
+			scrollLeft: 0,
+			scrollTop: 0,
+			width: 0
+		};
+	}
+
+	render () {
+		const
+			{height, scrollLeft, scrollTop, width} = this.state,
+			style = {
+				height,
+				transform: `translate3d(${this.props.rtl ? scrollLeft : -scrollLeft}px, -${scrollTop}px, 0)`,
+				width
+			};
+
+		return (
+			<div {...this.props} style={style}>
+				{this.props.children}
+			</div>
+		);
+	}
+}
+
 /**
  * The shape for the grid list item size
  * in a list for [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
@@ -278,8 +307,11 @@ const VirtualListBaseFactory = (type) => {
 		cc = []
 		scrollPosition = 0
 
-		contentRef = null
+		scrollContentRef = null
 		containerRef = null
+
+		scrollLeft = 0
+		scrollTop = 0
 
 		isVertical = () => this.isPrimaryDirectionVertical
 
@@ -480,9 +512,11 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		setContainerSize = () => {
-			if (this.contentRef) {
-				this.contentRef.style.width = this.scrollBounds.scrollWidth + 'px';
-				this.contentRef.style.height = this.scrollBounds.scrollHeight + 'px';
+			if (this.scrollContentRef) {
+				this.scrollContentRef.setState({
+					width: this.scrollBounds.scrollWidth + 'px',
+					height: this.scrollBounds.scrollHeight + 'px'
+				});
 			}
 		}
 
@@ -525,8 +559,12 @@ const VirtualListBaseFactory = (type) => {
 
 		// JS only
 		setScrollPosition (x, y, dirX, dirY) {
-			if (this.contentRef) {
-				this.contentRef.style.transform = `translate3d(${this.props.rtl ? x : -x}px, -${y}px, 0)`;
+			if (this.scrollContentRef) {
+				this.scrollContentRef.setState({
+					scrollLeft: x,
+					scrollTop: y
+				});
+
 				this.didScroll(x, y, dirX, dirY);
 			}
 		}
@@ -715,9 +753,9 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		initContentRef = (ref) => {
+		initScrollContentRef = (ref) => {
 			if (ref) {
-				this.contentRef = ref;
+				this.scrollContentRef = ref;
 			}
 		}
 
@@ -763,9 +801,9 @@ const VirtualListBaseFactory = (type) => {
 
 			return (
 				<div className={containerClasses} ref={this.initContainerRef} style={style}>
-					<div {...rest} ref={this.initContentRef}>
+					<ScrollContent {...rest} ref={this.initScrollContentRef}>
 						{itemsRenderer({cc, initItemContainerRef, primary})}
-					</div>
+					</ScrollContent>
 				</div>
 			);
 		}

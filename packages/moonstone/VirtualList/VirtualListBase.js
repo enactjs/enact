@@ -3,6 +3,7 @@ import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Spottable from '@enact/spotlight/Spottable';
@@ -179,10 +180,10 @@ const VirtualListBaseFactory = (type) => {
 		restoreLastFocused = false
 
 		setContainerDisabled = (bool) => {
-			const contentNode = this.uiRef.contentRef;
+			const scrollContentNode = ReactDOM.findDOMNode(this.uiRef.scrollContentRef);
 
-			if (contentNode) {
-				contentNode.setAttribute(dataContainerDisabledAttribute, bool);
+			if (scrollContentNode) {
+				scrollContentNode.setAttribute(dataContainerDisabledAttribute, bool);
 
 				if (bool) {
 					document.addEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
