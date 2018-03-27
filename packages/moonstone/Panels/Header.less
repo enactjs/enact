@@ -34,6 +34,13 @@
 	.decorator .input,
 	.title {
 		.moon-header-text();
+		text-indent: 0.05em;  // Fix for characters like `j` being left-truncated because of being too close to the edce
+	}
+
+	.decorator {
+		padding: 0;
+		border-radius: 0;
+		border: none;
 	}
 
 	.titleBelow,
@@ -43,16 +50,6 @@
 
 	.subTitleBelow {
 		.moon-header-sub-title-below();
-	}
-
-	.decorator {
-		padding: 0;
-		border-radius: 0;
-		border: none;
-
-		input {
-			text-indent: 0;
-		}
 	}
 
 	.headerComponents {
@@ -68,19 +65,21 @@
 		height: @moon-header-height-medium;
 
 		.title {
+			// This `margin-top: -3px;` is intended to account for the height disparity and visual
+			// offset when switching between Header+Input and a Standard Header's title height.
+			// The height is determined by the line-height below, but we want to maintain that as a
+			// relative unit (`em`) rather than dictate specific pixels. The -3px offset may need to
+			// be updated or removed to accomodate taller glyphs.
+			margin-top: -3px;
 			line-height: @moon-medium-header-line-height;
 
 			.moon-locale-non-latin({line-height: @moon-non-latin-medium-header-line-height;});
 		}
 
-		.decorator {
+		.decorator,
+		.input {
 			height: 100%;
 			width: 100%;
-		}
-
-		.input {
-			height: @moon-medium-header-line-height;
-			text-indent: 0.1em;
 		}
 
 		.titleBelow,
