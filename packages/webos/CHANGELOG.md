@@ -6,8 +6,8 @@ The following is a curated list of changes in the Enact webos module, newest cha
 
 ### Added
 
-- `onTimeout` and `timeout` props to `LS2Request`
-- default `onFailure` and `onTimeout` handlers to `LS2Request`
+- `webos/LS2Request` props `onTimeout` and `timeout`
+- `webos/LS2Request` default `onFailure` and `onTimeout` handlers
 
 ## [2.0.0-alpha.6] - 2018-03-22
 

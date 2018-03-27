@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 /* global console */
+import {Job} from '@enact/core/util';
 
 const refs = {};
 
@@ -64,27 +65,27 @@ export default class LS2Request {
 		// eslint-disable-next-line no-undef
 		this.bridge = new PalmServiceBridge();
 		this.bridge.onservicecallback = this.callback.bind(this, onSuccess, onFailure, onComplete);
-		this.bridge.call(adjustPath(service) + method, JSON.stringify(parameters));
-
-		// timer will be cleared when the callback is run, so this should only fire if the timeout threshold is reached
-		this.timer = setTimeout(() => {
-			// only call onTimeout handler if there was a timeout threshold to beat
-			if (timeout) {
-				onTimeout({errorCode: -1, errorText: `LS2Request timed out after ${timeout} ms.`, returnValue: false});
+		if (timeout) {
+			// timer will be cleared when the callback is run, so this should only fire if the timeout threshold is reached
+			this.timer = new Job(() => {
+				onTimeout({errorCode: -2, errorText: `LS2Request timed out after ${timeout} ms.`, returnValue: false});
 				// cancel the request
 				this.cancel();
-			}
-		}, timeout ? timeout : 0);
+			}, timeout);
+			this.timer.start();
+		}
+		this.bridge.call(adjustPath(service) + method, JSON.stringify(parameters));
 		return this;
 	}
 
 	callback (onSuccess, onFailure, onComplete, msg) {
-		// remove any timeout handler
-		this.timer && clearTimeout(this.timer);
-
 		if (this.cancelled) {
 			return;
 		}
+
+		// remove any timeout handler
+		this.timer && this.timer.stop();
+
 		let parsedMsg;
 		try {
 			parsedMsg = JSON.parse(msg);
@@ -113,6 +114,9 @@ export default class LS2Request {
 	}
 
 	cancel () {
+		// remove any timeout handler
+		this.timer && this.timer.stop();
+
 		this.cancelled = true;
 		if (this.bridge) {
 			this.bridge.cancel();

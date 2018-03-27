@@ -2,13 +2,6 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
-
-### Added
-
-- `onTimeout` and `timeout` props to `webos/LS2Request`
-- default `onFailure` and `onTimeout` handlers to `webos/LS2Request`
-
 ## [2.0.0-alpha.6] - 2018-03-22
 
 ### Removed
