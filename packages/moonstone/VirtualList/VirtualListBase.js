@@ -405,7 +405,10 @@ const VirtualListBaseFactory = (type) => {
 				rtl = this.props.rtl,
 				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
 
-			if (!isItemDisabled || isItemDisabled(currentIndex)) {
+			if (
+				!isItemDisabled || // It is the case that there is no disabled items in a list.
+				isItemDisabled(currentIndex) // If the currnet index item is disabled, it means that all items in a list are disabled.
+			) {
 				return false;
 			}
 
