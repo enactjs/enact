@@ -3,7 +3,7 @@ import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
 import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
 import {GridListImageItem} from '@enact/moonstone/GridListImageItem';
 import ri from '@enact/ui/resolution';
-import React from 'react';
+import React, {Component} from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {boolean, number, select} from '@storybook/addon-knobs';
@@ -35,6 +35,8 @@ const
 	// eslint-disable-next-line enact/prop-types
 	renderItem = ({data, index, ...rest}) => {
 		const {text, subText, source} = data[index];
+
+		console.log('The item index rendered', index);
 
 		return (
 			<GridListImageItem
@@ -83,13 +85,22 @@ storiesOf('UI', module)
 		))
 	);
 
-storiesOf('Moonstone', module)
-	.add(
-		'VirtualList.VirtualGridList',
-		withInfo({
-			propTables: [Config],
-			text: 'Basic usage of VirtualGridList'
-		})(() => (
+class ControlledVirtualGridList extends Component {
+	constructor () {
+		super();
+
+		this.state = {
+			scrollTop: 0
+		};
+
+		setInterval(() => {
+			this.setState({
+				scrollTop: this.state.scrollTop + 100
+			});
+		}, 100);
+	}
+	render () {
+		return (
 			<VirtualGridList
 				data={items}
 				dataSize={number('dataSize', items.length)}
@@ -103,9 +114,22 @@ storiesOf('Moonstone', module)
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				spacing={ri.scale(number('spacing', 20))}
+				scrollTop={this.state.scrollTop}
 				style={{
 					height: ri.unit(549, 'rem')
 				}}
 			/>
+		);
+	}
+}
+
+storiesOf('Moonstone', module)
+	.add(
+		'VirtualList.VirtualGridList',
+		withInfo({
+			propTables: [Config],
+			text: 'Basic usage of VirtualGridList'
+		})(() => (
+			<ControlledVirtualGridList />
 		))
 	);
