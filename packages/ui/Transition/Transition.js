@@ -176,16 +176,25 @@ const TransitionBase = kind({
 		childRef: ({childRef, noAnimation, children}) => (noAnimation || !children) ? null : childRef
 	},
 
-	render: ({childRef, children, innerStyle, noAnimation, visible, ...rest}) => {
+	render: ({childRef, children, innerStyle, noAnimation, type, visible, ...rest}) => {
 		delete rest.clipHeight;
 		delete rest.clipWidth;
 		delete rest.direction;
 		delete rest.duration;
 		delete rest.timingFunction;
-		delete rest.type;
 
 		if (noAnimation && !visible) {
 			return null;
+		}
+
+		if (type === 'slide') {
+			return (
+				<div className={css.transitionFrame}>
+					<div {...rest} ref={childRef}>
+						{children}
+					</div>
+				</div>
+			);
 		}
 
 		return (

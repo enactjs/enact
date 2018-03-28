@@ -2,14 +2,14 @@
 //
 @import "../styles/mixins.less";
 
+.transitionFrame {
+	overflow: hidden;
+}
+
 .transition {
 	&.slide {
-		overflow: hidden;
-
-		.inner {
-			transition-property: transform;
-			will-change: transform;
-		}
+		transition-property: transform;
+		will-change: transform;
 	}
 
 	&.fade .inner {
@@ -18,7 +18,7 @@
 	}
 
 	&.shown {
-		&.slide .inner {
+		&.slide {
 			transform: translate3d(0, 0, 0);
 		}
 
@@ -36,19 +36,19 @@
 
 	&.hidden {
 		&.slide {
-			&.up .inner {
+			&.up {
 				transform: translateY(-100%);
 			}
 
-			&.right .inner {
+			&.right {
 				transform: translateX(100%);
 			}
 
-			&.down .inner {
+			&.down {
 				transform: translateY(100%);
 			}
 
-			&.left .inner {
+			&.left {
 				transform: translateX(-100%);
 			}
 		}
