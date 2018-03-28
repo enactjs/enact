@@ -14,7 +14,6 @@ function prioritize (priorities, targetEdge) {
 		if (destPriority.group.length) {
 			const destDistance = destPriority.distance;
 			const destDifference = destPriority.difference;
-			// let distance = destPriority.minDistance;
 			let distance = 0;
 			let target;
 
