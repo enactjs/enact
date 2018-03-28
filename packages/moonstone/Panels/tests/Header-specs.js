@@ -44,7 +44,7 @@ describe('Header Specs', () => {
 			</Header>
 		);
 
-		const expected = 2;
+		const expected = 1;
 		const actual = header.find('address');
 
 		expect(actual).to.have.length(expected);
