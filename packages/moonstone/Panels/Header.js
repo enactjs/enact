@@ -75,6 +75,24 @@ const HeaderBase = kind({
 		 */
 		fullBleed: PropTypes.bool,
 
+		/**
+		 * Converts the title text of a "standard" Header into an Input, which you provide through
+		 * this property. This is also a "slot" so it can be referred to as if it were JSX.
+		 *
+		 * Example:
+		 * ```
+		 *  <Header>
+		 *  	<title>Example Header Title</title>
+		 *  	<headerInput>
+		 *  		<Input dismissOnEnter />
+		 *  	</headerInput>
+		 *  	<titleBelow>The Adventure Continues</titleBelow>
+		 *  	<subTitleBelow>The rebels face attack by imperial forces on the ice planet</subTitleBelow>
+		 *  </Header>
+		 * ```
+		 *
+		 * @type {[type]}
+		 */
 		headerInput: PropTypes.node,
 
 		/**
@@ -101,14 +119,25 @@ const HeaderBase = kind({
 		preserveCase: PropTypes.bool,
 
 		/**
-		 * Sub-title displayed at the bottom of the panel
+		 * Sub-title displayed at the bottom of the panel. This is a "slot", so it can be used as a
+		 * tag-name inside this component, which improves readability.
 		 *
 		 * @type {String}
 		 */
 		subTitleBelow: PropTypes.string,
 
 		/**
-		 * Title of the header
+		 * Title of the header. This is a "slot", so it can be used as a tag-name inside this
+		 * component, which improves readability.
+		 *
+		 * Example:
+		 * ```
+		 *  <Header>
+		 *  	<title>Example Header Title</title>
+		 *  	<titleBelow>The Adventure Continues</titleBelow>
+		 *  	<subTitleBelow>The rebels face attack by imperial forces on the ice planet</subTitleBelow>
+		 *  </Header>
+		 * ```
 		 *
 		 * @type {String}
 		 */
@@ -122,7 +151,8 @@ const HeaderBase = kind({
 		// titleAbove: PropTypes.string,
 
 		/**
-		 * Text displayed below the title
+		 * Text displayed below the title. This is a "slot", so it can be used as a tag-name inside
+		 * this component, which improves readability.
 		 *
 		 * @type {String}
 		 */
