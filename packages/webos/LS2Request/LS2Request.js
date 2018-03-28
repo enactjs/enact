@@ -12,15 +12,20 @@ const adjustPath = (path) => {
 };
 
 // default handlers
-const failureHandler = ({errorText}) => console.error(errorText);
-const timeoutHandler = ({errorText}) => console.warn(errorText);
+const failureHandler = ({errorText}) => console.error(`LS2Request: ${errorText}`);
+const timeoutHandler = ({errorText}) => console.warn(`LS2Request: ${errorText}`);
 
 export default class LS2Request {
+	timeoutJob = new Job(({onTimeout, timeout}) => {
+		onTimeout({errorCode: -2, errorText: `Request timed out after ${timeout} ms.`, returnValue: false});
+		// cancel the request
+		this.cancel();
+	});
+
 	constructor () {
 		this.bridge = null;
 		this.cancelled = false;
 		this.subscribe = false;
-		this.timer = null;
 	}
 
 	send ({
@@ -65,16 +70,10 @@ export default class LS2Request {
 		// eslint-disable-next-line no-undef
 		this.bridge = new PalmServiceBridge();
 		this.bridge.onservicecallback = this.callback.bind(this, onSuccess, onFailure, onComplete);
-		if (timeout) {
-			// timer will be cleared when the callback is run, so this should only fire if the timeout threshold is reached
-			this.timer = new Job(() => {
-				onTimeout({errorCode: -2, errorText: `LS2Request timed out after ${timeout} ms.`, returnValue: false});
-				// cancel the request
-				this.cancel();
-			}, timeout);
-			this.timer.start();
-		}
 		this.bridge.call(adjustPath(service) + method, JSON.stringify(parameters));
+		if (timeout) {
+			this.timeoutJob.startAfter(timeout, {onTimeout, timeout});
+		}
 		return this;
 	}
 
@@ -83,8 +82,8 @@ export default class LS2Request {
 			return;
 		}
 
-		// remove any timeout handler
-		this.timer && this.timer.stop();
+		// remove timeout job
+		this.timeoutJob.stop();
 
 		let parsedMsg;
 		try {
@@ -114,8 +113,8 @@ export default class LS2Request {
 	}
 
 	cancel () {
-		// remove any timeout handler
-		this.timer && this.timer.stop();
+		// remove timeout job
+		this.timeoutJob.stop();
 
 		this.cancelled = true;
 		if (this.bridge) {
