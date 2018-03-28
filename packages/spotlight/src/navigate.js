@@ -1,5 +1,11 @@
 
-function prioritize (priorities) {
+const calcGroupId = (x, y) => y * 3 + x;
+const obliqueMinDistance = 1;
+const obliqueMultiplier = 5;
+const straightMinDistance = 0;
+const straightMultiplier = 1;
+
+function prioritize (priorities, targetEdge) {
 	const destGroup = [];
 
 	for (let index = 0; index < priorities.length; index++) {
@@ -8,13 +14,14 @@ function prioritize (priorities) {
 		if (destPriority.group.length) {
 			const destDistance = destPriority.distance;
 			const destDifference = destPriority.difference;
-			let difference = 0;
+			// let distance = destPriority.minDistance;
+			let distance = 0;
 			let target;
 
 			destPriority.group.sort(function (a, b) {
 				for (let i = 0; i < destDistance.length; i++) {
-					const distance = destDistance[i];
-					const delta = distance(a) - distance(b);
+					const calcDistance = destDistance[i];
+					const delta = calcDistance(a) - calcDistance(b);
 					if (delta) {
 						return delta;
 					}
@@ -24,10 +31,13 @@ function prioritize (priorities) {
 
 			target = destPriority.group[0];
 			for (let i = 0; i < destDifference.length; i++) {
-				difference += destDifference[i](target);
+				distance += destDifference[i](target);
 			}
 
-			destGroup.push({difference, target});
+			destGroup.push({
+				distance: Math.pow(destPriority.multiplier * (distance || destPriority.minDistance) / targetEdge, 2) + targetEdge,
+				target
+			});
 		}
 	}
 
@@ -36,7 +46,7 @@ function prioritize (priorities) {
 	}
 
 	destGroup.sort(function (a, b) {
-		return a.difference - b.difference;
+		return a.distance - b.distance;
 	});
 
 	return destGroup;
@@ -164,8 +174,6 @@ function generateDistancefunction (targetRect) {
 	};
 }
 
-const calcGroupId = (x, y) => y * 3 + x;
-
 function navigate (targetRect, direction, rects, config) {
 	if (!targetRect || !direction || !rects || !rects.length || !config) {
 		return null;
@@ -226,10 +234,11 @@ function navigate (targetRect, direction, rects, config) {
 		}
 	);
 
-	let priorities;
+	let priorities, targetEdge;
 
 	switch (direction) {
 		case 'left':
+			targetEdge = direction;
 			priorities = [
 				{
 					group: internalGroups[0].concat(internalGroups[3]).concat(internalGroups[6]),
@@ -240,7 +249,9 @@ function navigate (targetRect, direction, rects, config) {
 					],
 					difference: [
 						distanceFunction.nearTargetLeftIsBetter
-					]
+					],
+					minDistance: straightMinDistance,
+					multiplier: straightMultiplier
 				},
 				{
 					group: groups[3],
@@ -251,7 +262,9 @@ function navigate (targetRect, direction, rects, config) {
 					],
 					difference: [
 						distanceFunction.nearTargetLeftIsBetter
-					]
+					],
+					minDistance: straightMinDistance,
+					multiplier: straightMultiplier
 				},
 				{
 					group: groups[0],
@@ -263,7 +276,9 @@ function navigate (targetRect, direction, rects, config) {
 					difference: [
 						distanceFunction.nearTargetLeftIsBetter,
 						distanceFunction.nearTargetTopIsBetter
-					]
+					],
+					minDistance: obliqueMinDistance,
+					multiplier: obliqueMultiplier
 				},
 				{
 					group: groups[6],
@@ -275,11 +290,14 @@ function navigate (targetRect, direction, rects, config) {
 					difference: [
 						distanceFunction.nearTargetLeftIsBetter,
 						distanceFunction.nearTargetBottomIsBetter
-					]
+					],
+					minDistance: obliqueMinDistance,
+					multiplier: obliqueMultiplier
 				}
 			];
 			break;
 		case 'right':
+			targetEdge = direction;
 			priorities = [
 				{
 					group: internalGroups[2].concat(internalGroups[5]).concat(internalGroups[8]),
@@ -290,7 +308,9 @@ function navigate (targetRect, direction, rects, config) {
 					],
 					difference: [
 						distanceFunction.nearTargetRightIsBetter
-					]
+					],
+					minDistance: straightMinDistance,
+					multiplier: straightMultiplier
 				},
 				{
 					group: groups[5],
@@ -301,7 +321,9 @@ function navigate (targetRect, direction, rects, config) {
 					],
 					difference: [
 						distanceFunction.nearTargetRightIsBetter
-					]
+					],
+					minDistance: straightMinDistance,
+					multiplier: straightMultiplier
 				},
 				{
 					group: groups[2],
@@ -313,7 +335,9 @@ function navigate (targetRect, direction, rects, config) {
 					difference: [
 						distanceFunction.nearTargetRightIsBetter,
 						distanceFunction.nearTargetTopIsBetter
-					]
+					],
+					minDistance: obliqueMinDistance,
+					multiplier: obliqueMultiplier
 				},
 				{
 					group: groups[8],
@@ -325,11 +349,14 @@ function navigate (targetRect, direction, rects, config) {
 					difference: [
 						distanceFunction.nearTargetRightIsBetter,
 						distanceFunction.nearTargetBottomIsBetter
-					]
+					],
+					minDistance: obliqueMinDistance,
+					multiplier: obliqueMultiplier
 				}
 			];
 			break;
 		case 'up':
+			targetEdge = 'top';
 			priorities = [
 				{
 					group: internalGroups[0].concat(internalGroups[1]).concat(internalGroups[2]),
@@ -340,7 +367,9 @@ function navigate (targetRect, direction, rects, config) {
 					],
 					difference: [
 						distanceFunction.nearTargetTopIsBetter
-					]
+					],
+					minDistance: straightMinDistance,
+					multiplier: straightMultiplier
 				},
 				{
 					group: groups[1],
@@ -351,7 +380,9 @@ function navigate (targetRect, direction, rects, config) {
 					],
 					difference: [
 						distanceFunction.nearTargetTopIsBetter
-					]
+					],
+					minDistance: straightMinDistance,
+					multiplier: straightMultiplier
 				},
 				{
 					group: groups[0],
@@ -363,7 +394,9 @@ function navigate (targetRect, direction, rects, config) {
 					difference: [
 						distanceFunction.nearTargetTopIsBetter,
 						distanceFunction.nearTargetLeftIsBetter
-					]
+					],
+					minDistance: obliqueMinDistance,
+					multiplier: obliqueMultiplier
 				},
 				{
 					group: groups[2],
@@ -375,11 +408,14 @@ function navigate (targetRect, direction, rects, config) {
 					difference: [
 						distanceFunction.nearTargetTopIsBetter,
 						distanceFunction.nearTargetRightIsBetter
-					]
+					],
+					minDistance: obliqueMinDistance,
+					multiplier: obliqueMultiplier
 				}
 			];
 			break;
 		case 'down':
+			targetEdge = 'bottom';
 			priorities = [
 				{
 					group: internalGroups[6].concat(internalGroups[7]).concat(internalGroups[8]),
@@ -390,7 +426,9 @@ function navigate (targetRect, direction, rects, config) {
 					],
 					difference: [
 						distanceFunction.nearTargetBottomIsBetter
-					]
+					],
+					minDistance: straightMinDistance,
+					multiplier: straightMultiplier
 				},
 				{
 					group: groups[7],
@@ -401,7 +439,9 @@ function navigate (targetRect, direction, rects, config) {
 					],
 					difference: [
 						distanceFunction.nearTargetBottomIsBetter
-					]
+					],
+					minDistance: straightMinDistance,
+					multiplier: straightMultiplier
 				},
 				{
 					group: groups[6],
@@ -413,7 +453,9 @@ function navigate (targetRect, direction, rects, config) {
 					difference: [
 						distanceFunction.nearTargetBottomIsBetter,
 						distanceFunction.nearTargetLeftIsBetter
-					]
+					],
+					minDistance: obliqueMinDistance,
+					multiplier: obliqueMultiplier
 				},
 				{
 					group: groups[8],
@@ -425,7 +467,9 @@ function navigate (targetRect, direction, rects, config) {
 					difference: [
 						distanceFunction.nearTargetBottomIsBetter,
 						distanceFunction.nearTargetRightIsBetter
-					]
+					],
+					minDistance: obliqueMinDistance,
+					multiplier: obliqueMultiplier
 				}
 			];
 			break;
@@ -437,7 +481,7 @@ function navigate (targetRect, direction, rects, config) {
 		priorities.splice(2, 2);
 	}
 
-	let destGroup = prioritize(priorities);
+	const destGroup = prioritize(priorities, targetRect[targetEdge]);
 	if (!destGroup) {
 		return null;
 	}
