@@ -17,24 +17,35 @@ class ScrollContent extends Component {
 		super(props);
 
 		this.state = {
-			height: 0,
 			scrollLeft: 0,
-			scrollTop: 0,
-			width: 0
+			scrollTop: 0
+		};
+	}
+
+	componentWillReceiveProps (props) {
+		const {scrollLeft, scrollTop} = props;
+
+		this.state = {
+			scrollLeft,
+			scrollTop
 		};
 	}
 
 	render () {
 		const
-			{height, scrollLeft, scrollTop, width} = this.state,
+			{scrollHeight, scrollWidth, ...rest} = this.props,
+			{scrollLeft, scrollTop} = this.state,
 			style = {
-				height,
+				height: scrollHeight,
 				transform: `translate3d(${this.props.rtl ? scrollLeft : -scrollLeft}px, -${scrollTop}px, 0)`,
-				width
+				width: scrollWidth
 			};
 
+		delete rest.scrollLeft;
+		delete rest.scrollTop;
+
 		return (
-			<div {...this.props} style={style}>
+			<div {...rest} style={style}>
 				{this.props.children}
 			</div>
 		);
@@ -513,10 +524,8 @@ const VirtualListBaseFactory = (type) => {
 
 		setContainerSize = () => {
 			if (this.scrollContentRef) {
-				this.scrollContentRef.setState({
-					width: this.scrollBounds.scrollWidth + 'px',
-					height: this.scrollBounds.scrollHeight + 'px'
-				});
+				this.scrollWidth = this.scrollBounds.scrollWidth + 'px';
+				this.scrollHeight = this.scrollBounds.scrollHeight + 'px';
 			}
 		}
 
@@ -559,14 +568,10 @@ const VirtualListBaseFactory = (type) => {
 
 		// JS only
 		setScrollPosition (x, y, dirX, dirY) {
-			if (this.scrollContentRef) {
-				this.scrollContentRef.setState({
-					scrollLeft: x,
-					scrollTop: y
-				});
+			this.scrollLeft = x;
+			this.scrollTop = y;
 
-				this.didScroll(x, y, dirX, dirY);
-			}
+			this.didScroll(x, y, dirX, dirY);
 		}
 
 		didScroll (x, y, dirX, dirY) {
@@ -615,6 +620,11 @@ const VirtualListBaseFactory = (type) => {
 
 			if (firstIndex !== newFirstIndex) {
 				this.setState({firstIndex: newFirstIndex});
+			} else if (type === JS && this.scrollContentRef) {
+				this.scrollContentRef.setState({
+					scrollLeft: this.scrollLeft,
+					scrollTop: this.scrollTop
+				});
 			}
 		}
 
@@ -801,7 +811,13 @@ const VirtualListBaseFactory = (type) => {
 
 			return (
 				<div className={containerClasses} ref={this.initContainerRef} style={style}>
-					<ScrollContent {...rest} ref={this.initScrollContentRef}>
+					<ScrollContent {...rest}
+						ref={this.initScrollContentRef}
+						scrollHeight={this.scrollHeight}
+						scrollLeft={this.scrollLeft}
+						scrollTop={this.scrollTop}
+						scrollWidth={this.scrollWidth}
+					>
 						{itemsRenderer({cc, initItemContainerRef, primary})}
 					</ScrollContent>
 				</div>
