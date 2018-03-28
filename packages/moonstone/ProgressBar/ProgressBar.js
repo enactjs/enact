@@ -16,8 +16,10 @@ import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
+import ri from '@enact/ui/resolution';
 
 import Skinnable from '../Skinnable';
+import {ProgressBarTooltip} from './ProgressBarTooltip';
 
 import componentCss from './ProgressBar.less';
 
@@ -44,7 +46,48 @@ const ProgressBarBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		css: PropTypes.object,
+
+		/**
+		 * Sets the orientation of the slider, whether the progress-bar depicts its progress value
+		 * in a left and right orientation or up and down onientation.
+		 * Must be either `'horizontal'` or `'vertical'`.
+		 *
+		 * @type {String}
+		 * @default 'horizontal'
+		 * @public
+		 */
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+
+		/**
+		 * The proportion of the filled portion of the progress bar. Valid values are
+		 * between `0` and `1`.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		progress: PropTypes.number,
+
+		/**
+		 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
+		 * properties.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		tooltip: PropTypes.bool,
+
+		/**
+		 * Setting to `true` overrides the natural tooltip position
+		 * for `vertical` progress bar to the left. This may be useful
+		 * if you have a static layout that have the progress bar at
+		 * the right edge of the container.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		tooltipForceSide: PropTypes.bool
 	},
 
 	styles: {
@@ -52,12 +95,57 @@ const ProgressBarBase = kind({
 		publicClassNames: ['progressBar']
 	},
 
-	render: (props) => {
+	computed: {
+		tooltipComponent: ({progress, tooltip, tooltipForceSide, orientation}) => {
+			if (tooltip) {
+				const progressAfterMidpoint = progress > 0.5;
+				const progressPercentage = Math.min(parseInt(progress * 100), 100);
+				const percentageText = `${progressPercentage}%`;
+
+				let tooltipPosition;
+				if (orientation === 'vertical') {
+					tooltipPosition = {
+						top: `${100 - progressPercentage}%`,
+						right: tooltipForceSide ? 'auto' : ri.unit(ri.scale(-36), 'rem'),
+						left: tooltipForceSide ? ri.unit(ri.scale(72), 'rem') : null
+					};
+				} else {
+					tooltipPosition = progressAfterMidpoint ? {
+						right: `${100 - progressPercentage}%`,
+						bottom: ri.unit(ri.scale(24), 'rem')
+					} : {
+						left: percentageText,
+						bottom: ri.unit(ri.scale(24), 'rem')
+					};
+				}
+
+				return (
+					<ProgressBarTooltip
+						forceSide={tooltipForceSide}
+						knobAfterMidpoint={progressAfterMidpoint}
+						style={tooltipPosition}
+						orientation={orientation}
+					>
+						{percentageText}
+					</ProgressBarTooltip>
+				);
+			} else {
+				return null;
+			}
+		}
+	},
+
+	render: ({css, tooltipComponent, ...rest}) => {
+		delete rest.tooltip;
+		delete rest.tooltipForceSide;
+
 		return (
 			<UiProgressBar
-				{...props}
-				css={props.css}
-			/>
+				{...rest}
+				css={css}
+			>
+				{tooltipComponent}
+			</UiProgressBar>
 		);
 	}
 });
@@ -92,5 +180,6 @@ export default ProgressBar;
 export {
 	ProgressBar,
 	ProgressBarBase,
-	ProgressBarDecorator
+	ProgressBarDecorator,
+	ProgressBarTooltip
 };
