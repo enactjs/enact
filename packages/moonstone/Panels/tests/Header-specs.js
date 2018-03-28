@@ -31,28 +31,37 @@ describe('Header Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have input when inputMode is true', function () {
+	it('should inject a custom component when headerInput is used', function () {
+		// This just uses an <address> tag for easy discoverability. It should behave the same way
+		// as a moonstone/Input, the standard here, but that would require importing a diffenent
+		// component than what we're testing here.
 		const header = mount(
-			<Header inputMode>
+			<Header>
 				<title>Header</title>
+				<headerInput>
+					<address>An easy to find legal DOM node</address>
+				</headerInput>
 			</Header>
 		);
 
-		const expected = 1;
-		const actual = header.find('input').length;
+		const expected = 2;
+		const actual = header.find('address');
 
-		expect(actual).to.equal(expected);
+		expect(actual).to.have.length(expected);
 	});
 
-	it('should render with title as placeholder when inputMode is true', function () {
+	it('should render `title` as a `placeholder` attribute when headerInput is used', function () {
 		const header = mount(
-			<Header inputMode>
-				<title>Header</title>
+			<Header>
+				<title>Header Title</title>
+				<headerInput>
+					<address>An easy to find legal DOM node</address>
+				</headerInput>
 			</Header>
 		);
 
-		const expected = 'Header';
-		const actual = header.find('input').prop('placeholder');
+		const expected = 'Header Title';
+		const actual = header.find('address').prop('placeholder');
 
 		expect(actual).to.equal(expected);
 	});
