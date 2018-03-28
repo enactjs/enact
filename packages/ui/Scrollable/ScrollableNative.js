@@ -10,7 +10,9 @@ import React, {Component} from 'react';
 
 import {contextTypes as contextTypesResize} from '../Resizable';
 import ri from '../resolution';
+import Touchable from '../Touchable';
 
+import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
 
 import css from './Scrollable.less';
@@ -34,6 +36,8 @@ const
 		scrollStopWaiting,
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
+
+const TouchableDiv = Touchable('div');
 
 /**
  * An unstyled native component that passes scrollable behavior information as its render prop's arguments.
@@ -110,6 +114,14 @@ class ScrollableBaseNative extends Component {
 		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
 		/**
+		 * Called when flicking with a mouse or a touch screen.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onFlick: PropTypes.func,
+
+		/**
 		 * Called when pressing a key.
 		 *
 		 * @type {Function}
@@ -118,7 +130,7 @@ class ScrollableBaseNative extends Component {
 		onKeyDown: PropTypes.func,
 
 		/**
-		 * Called when trigerring a mouseup event.
+		 * Called when trigerring a mousedown event.
 		 *
 		 * @type {Function}
 		 * @private
@@ -139,14 +151,6 @@ class ScrollableBaseNative extends Component {
 		 * @public
 		 */
 		onScroll: PropTypes.func,
-
-		/**
-		 * Called when scrollbar visibility changes.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onScrollbarVisibilityChange: PropTypes.func,
 
 		/**
 		 * Called when scroll starts.
@@ -217,7 +221,7 @@ class ScrollableBaseNative extends Component {
 		onWheel: PropTypes.func,
 
 		/**
-		 * Called when removing additional event listeners in a theme component.
+		 * Called when removing additional event listeners in a themed component.
 		 *
 		 * @type {Function}
 		 * @private
@@ -392,13 +396,13 @@ class ScrollableBaseNative extends Component {
 		}
 		this.scrollStopJob.stop();
 
+		this.removeEventListeners();
+		off('keydown', this.onKeyDown);
+
 		if (this.context.Subscriber) {
 			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
 			this.context.Subscriber.unsubscribe('i18n', this.handleSubscription);
 		}
-
-		this.removeEventListeners();
-		off('keydown', this.onKeyDown);
 	}
 
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
@@ -424,15 +428,11 @@ class ScrollableBaseNative extends Component {
 	scrollWheelMultiplierForDeltaPixel = 1.5 // The ratio of wheel 'delta' units to pixels scrolled.
 
 	// status
+	deferScrollTo = true
 	direction = 'vertical'
 	isScrollAnimationTargetAccumulated = false
-	deferScrollTo = true
-	pageDistance = 0
-	pageDirection = 0
 	isUpdatedScrollThumb = false
-
-	// event handlers
-	eventHandlers = {}
+	pageDistance = 0
 
 	// bounds info
 	bounds = {
@@ -444,6 +444,11 @@ class ScrollableBaseNative extends Component {
 		maxLeft: 0
 	}
 
+	// wheel/drag/flick info
+	wheelDirection = 0
+	isDragging = false
+	isTouching = false
+
 	// scroll info
 	scrolling = false
 	scrollLeft = 0
@@ -454,11 +459,73 @@ class ScrollableBaseNative extends Component {
 	childRef = null
 	containerRef = null
 
+	// scroll animator
+	animator = new ScrollAnimator()
+
 	// event handler for browser native scroll
+
+	getRtlX = (x) => (this.state.rtl ? -x : x)
 
 	onMouseDown = (ev) => {
 		this.isScrollAnimationTargetAccumulated = false;
+		this.stop();
 		forward('onMouseDown', ev, this.props);
+	}
+
+	onTouchStart = () => {
+		this.isTouching = true;
+	}
+
+	onDragStart = (ev) => {
+		if (!this.isTouching) {
+			this.stop();
+			this.isDragging = true;
+			this.dragStartX = this.scrollLeft + this.getRtlX(ev.x);
+			this.dragStartY = this.scrollTop + ev.y;
+		}
+	}
+
+	onDrag = (ev) => {
+		if (!this.isTouching) {
+			this.start(
+				(this.direction === 'vertical') ? 0 : this.dragStartX - this.getRtlX(ev.x), // 'horizontal' or 'both'
+				(this.direction === 'horizontal') ? 0 : this.dragStartY - ev.y, // 'vertical' or 'both'
+				false
+			);
+		}
+	}
+
+	onDragEnd = () => {
+		if (!this.isTouching) {
+			if (this.flickTarget) {
+				const {targetX, targetY} = this.flickTarget;
+
+				this.isScrollAnimationTargetAccumulated = false;
+				this.start(targetX, targetY);
+			} else {
+				this.stop();
+			}
+		}
+		this.isTouching = false;
+		this.isDragging = false;
+		this.flickTarget = null;
+	}
+
+	onFlick = (ev) => {
+		if (!this.isTouching) {
+			const isVertical = ev.direction === 'vertical';
+
+			this.flickTarget = this.animator.simulate(
+				this.scrollLeft,
+				this.scrollTop,
+				isVertical ? 0 : this.getRtlX(-ev.velocityX),
+				isVertical ? -ev.velocityY : 0
+			);
+
+			if (this.props.onFlick) {
+				forward('onFlick', ev, this.props);
+			}
+		}
 	}
 
 	calculateDistanceByWheel (deltaMode, delta, maxPixel) {
@@ -479,61 +546,66 @@ class ScrollableBaseNative extends Component {
 	 * - for vertical scroll, supports wheel action on scrollbars only
 	 */
 	onWheel = (ev) => {
-		const
-			bounds = this.getScrollBounds(),
-			canScrollHorizontally = this.canScrollHorizontally(bounds),
-			canScrollVertically = this.canScrollVertically(bounds),
-			eventDeltaMode = ev.deltaMode,
-			eventDelta = (-ev.wheelDeltaY || ev.deltaY);
-		let
-			delta = 0,
-			needToHideThumb = false;
-
-		if (this.props.onWheel) {
-			forward('onWheel', ev, this.props);
-			return;
-		}
-
-		this.showThumb(bounds);
-
-		// FIXME This routine is a temporary support for horizontal wheel scroll.
-		// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
-		if (canScrollVertically) { // This routine handles wheel events on scrollbars for vertical scroll.
-			if (eventDelta < 0 && this.scrollTop > 0 || eventDelta > 0 && this.scrollTop < bounds.maxTop) {
-				const {horizontalScrollbarRef, verticalScrollbarRef} = this;
-
-				// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
-				if ((horizontalScrollbarRef && horizontalScrollbarRef.getContainerRef().contains(ev.target)) ||
-					(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(ev.target))) {
-					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
-					needToHideThumb = !delta;
-				}
-			} else {
-				needToHideThumb = true;
-			}
-		} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
-			if (eventDelta < 0 && this.scrollLeft > 0 || eventDelta > 0 && this.scrollLeft < bounds.maxLeft) {
-				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
-				needToHideThumb = !delta;
-			} else {
-				needToHideThumb = true;
-			}
-		}
-
-		if (delta !== 0) {
-			/* prevent native scrolling feature for vertical direction */
+		if (this.isDragging) {
+			/* prevent native scrolling feature during dragging */
 			ev.preventDefault();
-			const direction = Math.sign(delta);
-			// Not to accumulate scroll position if wheel direction is different from hold direction
-			if (direction !== this.pageDirection) {
-				this.isScrollAnimationTargetAccumulated = false;
-				this.pageDirection = direction;
-			}
-			this.scrollToAccumulatedTarget(delta, canScrollVertically);
-		}
+		} else {
+			const
+				bounds = this.getScrollBounds(),
+				canScrollHorizontally = this.canScrollHorizontally(bounds),
+				canScrollVertically = this.canScrollVertically(bounds),
+				eventDeltaMode = ev.deltaMode,
+				eventDelta = (-ev.wheelDeltaY || ev.deltaY);
+			let
+				delta = 0,
+				needToHideThumb = false;
 
-		if (needToHideThumb) {
-			this.startHidingThumb();
+			if (this.props.onWheel) {
+				forward('onWheel', ev, this.props);
+				return;
+			}
+
+			this.showThumb(bounds);
+
+			// FIXME This routine is a temporary support for horizontal wheel scroll.
+			// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
+			if (canScrollVertically) { // This routine handles wheel events on scrollbars for vertical scroll.
+				if (eventDelta < 0 && this.scrollTop > 0 || eventDelta > 0 && this.scrollTop < bounds.maxTop) {
+					const {horizontalScrollbarRef, verticalScrollbarRef} = this;
+
+					// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
+					if ((horizontalScrollbarRef && horizontalScrollbarRef.getContainerRef().contains(ev.target)) ||
+						(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(ev.target))) {
+						delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
+						needToHideThumb = !delta;
+					}
+				} else {
+					needToHideThumb = true;
+				}
+			} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
+				if (eventDelta < 0 && this.scrollLeft > 0 || eventDelta > 0 && this.scrollLeft < bounds.maxLeft) {
+					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
+					needToHideThumb = !delta;
+				} else {
+					needToHideThumb = true;
+				}
+			}
+
+			if (delta !== 0) {
+				/* prevent native scrolling feature for vertical direction */
+				ev.preventDefault();
+				const direction = Math.sign(delta);
+				// Not to accumulate scroll position if wheel direction is different from hold direction
+				if (direction !== this.wheelDirection) {
+					this.isScrollAnimationTargetAccumulated = false;
+					this.wheelDirection = direction;
+				}
+				this.scrollToAccumulatedTarget(delta, canScrollVertically);
+			}
+
+			if (needToHideThumb) {
+				this.startHidingThumb();
+			}
 		}
 	}
 
@@ -553,7 +625,7 @@ class ScrollableBaseNative extends Component {
 			scrollLeft = bounds.maxLeft - scrollLeft;
 		}
 
-		this.scroll(scrollLeft, scrollTop);
+		this.scrollOnScroll(scrollLeft, scrollTop);
 
 		this.startHidingThumb();
 		this.scrollStopJob.start();
@@ -622,6 +694,26 @@ class ScrollableBaseNative extends Component {
 		this.forwardScrollEvent('onScrollStop');
 	}
 
+	scrollOnScroll = (left, top) => {
+		let
+			dirHorizontal = 0,
+			dirVertical = 0;
+
+		if (left !== this.scrollLeft) {
+			dirHorizontal = Math.sign(left - this.scrollLeft);
+			this.setScrollLeft(left);
+		}
+		if (top !== this.scrollTop) {
+			dirVertical = Math.sign(top - this.scrollTop);
+			this.setScrollTop(top);
+		}
+
+		if (this.childRef.didScroll) {
+			this.childRef.didScroll(this.scrollLeft, this.scrollTop, dirHorizontal, dirVertical);
+		}
+		this.forwardScrollEvent('onScroll');
+	}
+
 	scrollStopJob = new Job(this.scrollStopOnScroll.bind(this), scrollStopWaiting);
 
 	// update scroll position
@@ -649,7 +741,8 @@ class ScrollableBaseNative extends Component {
 	start (targetX, targetY, animate = true) {
 		const
 			bounds = this.getScrollBounds(),
-			childContainerRef = this.childRef.containerRef;
+			childRef = this.childRef,
+			childContainerRef = childRef.containerRef;
 
 		targetX = clamp(0, bounds.maxLeft, targetX);
 		targetY = clamp(0, bounds.maxTop, targetY);
@@ -662,10 +755,10 @@ class ScrollableBaseNative extends Component {
 		}
 
 		if (animate) {
-			this.childRef.scrollToPosition(targetX, targetY);
+			childRef.scrollToPosition(targetX, targetY);
 		} else {
 			childContainerRef.style.scrollBehavior = null;
-			this.childRef.scrollToPosition(targetX, targetY);
+			childRef.scrollToPosition(targetX, targetY);
 			childContainerRef.style.scrollBehavior = 'smooth';
 		}
 
@@ -674,24 +767,14 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
-	scroll = (left, top) => {
-		let
-			dirHorizontal = 0,
-			dirVertical = 0;
+	stop () {
+		const
+			childRef = this.childRef,
+			childContainerRef = childRef.containerRef;
 
-		if (left !== this.scrollLeft) {
-			dirHorizontal = Math.sign(left - this.scrollLeft);
-			this.setScrollLeft(left);
-		}
-		if (top !== this.scrollTop) {
-			dirVertical = Math.sign(top - this.scrollTop);
-			this.setScrollTop(top);
-		}
-
-		if (this.childRef.didScroll) {
-			this.childRef.didScroll(this.scrollLeft, this.scrollTop, dirHorizontal, dirVertical);
-		}
-		this.forwardScrollEvent('onScroll');
+		childContainerRef.style.scrollBehavior = null;
+		childRef.scrollToPosition(this.scrollLeft + 0.1, this.scrollTop + 0.1);
+		childContainerRef.style.scrollBehavior = 'smooth';
 	}
 
 	// scrollTo API
@@ -834,9 +917,6 @@ class ScrollableBaseNative extends Component {
 			);
 
 		if (isVisibilityChanged) {
-			if (this.props.onScrollbarVisibilityChange) {
-				this.props.onScrollbarVisibilityChange();
-			}
 			// one or both scrollbars have changed visibility
 			this.setState({
 				isHorizontalScrollbarVisible: curHorizontalScrollbarVisible,
@@ -892,43 +972,42 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	// FIXME setting event handlers directly to work on the V8 snapshot.
 	addEventListeners () {
-		const
-			{containerRef} = this,
-			childContainerRef = this.childRef.containerRef;
+		const {childRef, containerRef} = this;
 
 		if (containerRef && containerRef.addEventListener) {
-			// FIXME `onWheel` doesn't work on the v8 snapshot.
 			containerRef.addEventListener('wheel', this.onWheel);
 		}
-		if (childContainerRef && childContainerRef.addEventListener) {
-			// FIXME `onScroll` doesn't work on the v8 snapshot.
-			childContainerRef.addEventListener('scroll', this.onScroll, {capture: true});
+
+		if (childRef && childRef.containerRef) {
+			if (childRef.containerRef.addEventListener) {
+				childRef.containerRef.addEventListener('scroll', this.onScroll, {capture: true});
+				childRef.containerRef.addEventListener('mousedown', this.onMouseDown);
+			}
+			this.childRef.containerRef.style.scrollBehavior = 'smooth';
 		}
 
-		childContainerRef.style.scrollBehavior = 'smooth';
-
 		if (this.props.addEventListeners) {
-			this.props.addEventListeners(childContainerRef);
+			this.props.addEventListeners(childRef.containerRef);
 		}
 	}
 
+	// FIXME setting event handlers directly to work on the V8 snapshot.
 	removeEventListeners () {
-		const
-			{containerRef} = this,
-			childContainerRef = this.childRef.containerRef;
+		const {childRef, containerRef} = this;
 
 		if (containerRef && containerRef.removeEventListener) {
-			// FIXME `onWheel` doesn't work on the v8 snapshot.
 			containerRef.removeEventListener('wheel', this.onWheel);
 		}
-		if (childContainerRef && childContainerRef.removeEventListener) {
-			// FIXME `onScroll` doesn't work on the v8 snapshot.
-			childContainerRef.removeEventListener('scroll', this.onScroll, {capture: true});
+
+		if (childRef && childRef.containerRef && childRef.containerRef.removeEventListener) {
+			childRef.containerRef.removeEventListener('scroll', this.onScroll, {capture: true});
+			childRef.containerRef.removeEventListener('mousedown', this.onMouseDown);
 		}
 
 		if (this.props.removeEventListeners) {
-			this.props.removeEventListeners(childContainerRef);
+			this.props.removeEventListeners(childRef.containerRef);
 		}
 	}
 
@@ -970,7 +1049,6 @@ class ScrollableBaseNative extends Component {
 		delete rest.onKeyDown;
 		delete rest.onMouseDown;
 		delete rest.onScroll;
-		delete rest.onScrollbarVisibilityChange;
 		delete rest.onScrollStart;
 		delete rest.onScrollStop;
 		delete rest.onWheel;
@@ -991,6 +1069,14 @@ class ScrollableBaseNative extends Component {
 			isVerticalScrollbarVisible,
 			scrollTo: this.scrollTo,
 			style,
+			touchableProps: {
+				className: css.content,
+				onDrag: this.onDrag,
+				onDragEnd: this.onDragEnd,
+				onDragStart: this.onDragStart,
+				onFlick: this.onFlick,
+				onTouchStart: this.onTouchStart
+			},
 			verticalScrollbarProps: this.verticalScrollbarProps
 		});
 	}
@@ -1035,6 +1121,7 @@ class ScrollableNative extends Component {
 					isVerticalScrollbarVisible,
 					scrollTo,
 					style,
+					touchableProps,
 					verticalScrollbarProps
 				}) => (
 					<div
@@ -1043,12 +1130,14 @@ class ScrollableNative extends Component {
 						style={style}
 					>
 						<div className={componentCss.container}>
-							{childRenderer({
-								...childComponentProps,
-								cbScrollTo: scrollTo,
-								className: componentCss.content,
-								ref: initUiChildRef
-							})}
+							<TouchableDiv {...touchableProps}>
+								{childRenderer({
+									...childComponentProps,
+									cbScrollTo: scrollTo,
+									className: componentCss.scrollableFill,
+									initUiChildRef
+								})}
+							</TouchableDiv>
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
 						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}

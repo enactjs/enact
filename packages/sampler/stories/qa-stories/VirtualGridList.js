@@ -1,4 +1,5 @@
 import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
+import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList/VirtualListBase';
 import GridListImageItem from '@enact/moonstone/GridListImageItem';
 import ri from '@enact/ui/resolution';
 import React from 'react';
@@ -9,7 +10,7 @@ import {boolean, number} from '@storybook/addon-knobs';
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('VirtualGridList', VirtualListBase, VirtualGridList);
+const Config = mergeComponentMetadata('VirtualGridList', VirtualGridList, VirtualListBase, UiVirtualListBase);
 
 const
 	items = [],
@@ -43,11 +44,11 @@ storiesOf('VirtualList.VirtualGridList', module)
 		'Horizontal VirtualGridList',
 		() => (
 			<VirtualGridList
-				component={renderItem}
 				data={items}
 				dataSize={number('dataSize', items.length)}
 				direction="horizontal"
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+				itemRenderer={renderItem}
 				itemSize={{
 					minWidth: ri.scale(number('minWidth', 180)),
 					minHeight: ri.scale(number('minHeight', 270))

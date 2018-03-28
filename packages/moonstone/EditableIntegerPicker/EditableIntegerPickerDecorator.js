@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Spotlight from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 
 addAll({
 	minus: [109,  189],
@@ -77,6 +78,7 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			this.paused = new Pause('EditableIntegerPickerDecorator');
 			this.state = {
 				isActive: false,
 				value: props.value
@@ -120,10 +122,10 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
 
 		freezeSpotlight = (freeze) => {
 			if (!freeze) {
-				Spotlight.resume();
+				this.paused.resume();
 				Spotlight.setPointerMode(this.pointerMode);
 			} else {
-				Spotlight.pause();
+				this.paused.pause();
 				// we temporarily set the pointer mode to false when the input field is enabled.
 				Spotlight.setPointerMode(false);
 			}

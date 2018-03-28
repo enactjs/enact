@@ -13,8 +13,10 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import Touchable from '@enact/ui/Touchable';
 
 import Scrollbar from './Scrollbar';
+
 import scrollbarCss from './Scrollbar.less';
 
 const
@@ -30,6 +32,8 @@ const
 		right: 'left',
 		up: 'down'
 	};
+
+const TouchableDiv = Touchable('div');
 
 /**
  * The name of a custom attribute which indicates the index of an item in
@@ -127,15 +131,14 @@ class Scrollable extends Component {
 	indexToFocus = null
 	nodeToFocus = null
 
-	onMouseUp = () => {
-		if (this.uiRef.isDragging && this.uiRef.isFlicking()) {
-			const focusedItem = Spotlight.getCurrent();
+	onFlick = () => {
+		const focusedItem = Spotlight.getCurrent();
 
-			if (focusedItem) {
-				focusedItem.blur();
-			}
-			this.childRef.setContainerDisabled(true);
+		if (focusedItem) {
+			focusedItem.blur();
 		}
+
+		this.childRef.setContainerDisabled(true);
 	}
 
 	onWheel = ({delta, horizontalScrollbarRef, verticalScrollbarRef}) => {
@@ -269,7 +272,7 @@ class Scrollable extends Component {
 
 			const
 				// VirtualList and Scroller have a containerId on containerRef
-				containerId = childRef.containerRef.dataset.containerId,
+				containerId = childRef.containerRef.dataset.spotlightId,
 				direction = this.getPageDirection(keyCode),
 				rDirection = reverseDirections[direction],
 				viewportBounds = containerRef.getBoundingClientRect(),
@@ -308,7 +311,7 @@ class Scrollable extends Component {
 
 		if (!current || Spotlight.getPointerMode()) {
 			const containerId = Spotlight.getActiveContainer();
-			current = document.querySelector(`[data-container-id="${containerId}"]`);
+			current = document.querySelector(`[data-spotlight-id="${containerId}"]`);
 		}
 
 		return current && this.uiRef.containerRef.contains(current);
@@ -328,9 +331,9 @@ class Scrollable extends Component {
 			delta = isPreviousScrollButton ? -pageDistance : pageDistance,
 			direction = Math.sign(delta);
 
-		if (direction !== this.uiRef.pageDirection) {
+		if (direction !== this.uiRef.wheelDirection) {
 			this.uiRef.isScrollAnimationTargetAccumulated = false;
-			this.uiRef.pageDirection = direction;
+			this.uiRef.wheelDirection = direction;
 		}
 
 		this.uiRef.scrollToAccumulatedTarget(delta, isVerticalScrollBar);
@@ -403,16 +406,16 @@ class Scrollable extends Component {
 		this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 	}
 
+	// FIXME setting event handlers directly to work on the V8 snapshot.
 	addEventListeners = (childContainerRef) => {
 		if (childContainerRef && childContainerRef.addEventListener) {
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			childContainerRef.addEventListener('focusin', this.onFocus);
 		}
 	}
 
+	// FIXME setting event handlers directly to work on the V8 snapshot.
 	removeEventListeners = (childContainerRef) => {
 		if (childContainerRef && childContainerRef.removeEventListener) {
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			childContainerRef.removeEventListener('focusin', this.onFocus);
 		}
 	}
@@ -436,8 +439,8 @@ class Scrollable extends Component {
 			<UiScrollableBase
 				{...rest}
 				addEventListeners={this.addEventListeners}
+				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
-				onMouseUp={this.onMouseUp}
 				onWheel={this.onWheel}
 				ref={this.initUiRef}
 				removeEventListeners={this.removeEventListeners}
@@ -455,6 +458,7 @@ class Scrollable extends Component {
 					isVerticalScrollbarVisible,
 					scrollTo,
 					style,
+					touchableProps,
 					verticalScrollbarProps
 				}) => (
 					<ScrollableSpotlightContainer
@@ -464,14 +468,16 @@ class Scrollable extends Component {
 						style={style}
 					>
 						<div className={componentCss.container}>
-							{childRenderer({
-								...childComponentProps,
-								cbScrollTo: scrollTo,
-								className: componentCss.content,
-								initUiChildRef,
-								onScroll: handleScroll,
-								ref: this.initChildRef
-							})}
+							<TouchableDiv {...touchableProps}>
+								{childRenderer({
+									...childComponentProps,
+									cbScrollTo: scrollTo,
+									className: componentCss.scrollableFill,
+									initUiChildRef,
+									onScroll: handleScroll,
+									ref: this.initChildRef
+								})}
+							</TouchableDiv>
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
 						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} {...this.scrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}

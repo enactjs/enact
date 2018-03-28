@@ -2,6 +2,27 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [2.0.0-alpha.6] - 2018-03-22
+
+### Removed
+
+- `ui/Transition` property `clipHeight`
+- `ui/ProgressBar` property `vertical` and replaced it with `orientation`
+
+### Added
+
+- `ui/Scrollable` support for scrolling by touch
+- `ui/ProgressBar` property `orientation` to accept orientation strings like `"vertical"` and `"horizontal"`
+
+### Changed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
+
+### Fixed
+
+- `ui/Transition` animation for `clip` for `"up"`, `"left"`, and `"right"` directions. This includes a DOM addition to the Transition markup.
+- `ui/ComponentOverride` and `ui/ToggleItem` to accept HTML DOM node tag names as strings for its `component` property
+
 ## [2.0.0-alpha.5] - 2018-03-07
 
 ### Added
@@ -11,6 +32,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/GridListImageItem` component
 
 ### Changed
+
 - `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` components as unstyled base components to support UI libraries
 
 ## [2.0.0-alpha.4] - 2018-02-13

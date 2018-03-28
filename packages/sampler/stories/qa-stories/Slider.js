@@ -82,11 +82,10 @@ class SliderList extends React.Component {
 					onChange={this.handleChange}
 					step={1}
 					tooltip={false}
-					vertical={false}
 					value={this.state.value}
 				/>
 				<VirtualList
-					component={this.renderItem(this.props.itemSize)}
+					itemRenderer={this.renderItem(this.props.itemSize)}
 					data={this.state.selectedItems}
 					dataSize={this.state.selectedItems.length}
 					itemSize={this.props.itemSize}

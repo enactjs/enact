@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import Touchable from '@enact/ui/Touchable';
 
 import Scrollbar from './Scrollbar';
+
 import scrollbarCss from './Scrollbar.less';
 
 const
@@ -22,16 +24,7 @@ const
 		up: 'down'
 	};
 
-/**
- * The name of a custom attribute which indicates the index of an item in
- * [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative} or [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative}.
- *
- * @constant dataIndexAttribute
- * @memberof moonstone/Scrollable
- * @type {String}
- * @private
- */
-const dataIndexAttribute = 'data-index';
+const TouchableDiv = Touchable('div');
 
 const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 	{
@@ -202,9 +195,9 @@ class ScrollableNative extends Component {
 			ev.preventDefault();
 			const direction = Math.sign(delta);
 			// Not to accumulate scroll position if wheel direction is different from hold direction
-			if (direction !== this.uiRef.pageDirection) {
+			if (direction !== this.uiRef.wheelDirection) {
 				this.uiRef.isScrollAnimationTargetAccumulated = false;
-				this.uiRef.pageDirection = direction;
+				this.uiRef.wheelDirection = direction;
 			}
 			this.uiRef.scrollToAccumulatedTarget(delta, canScrollVertically);
 		}
@@ -324,10 +317,10 @@ class ScrollableNative extends Component {
 			}
 			const
 				containerId = (
-					// ScrollerNative has a containerId on containerRef
-					childRef.containerRef.dataset.containerId ||
-					// VirtualListNative has a containerId on contentRef
-					childRef.contentRef.dataset.containerId
+					// ScrollerNative has a spotlightId on containerRef
+					childRef.containerRef.dataset.spotlightId ||
+					// VirtualListNative has a spotlightId on contentRef
+					childRef.contentRef.dataset.spotlightId
 				),
 				direction = this.getPageDirection(keyCode),
 				rDirection = reverseDirections[direction],
@@ -367,7 +360,7 @@ class ScrollableNative extends Component {
 
 		if (!current || Spotlight.getPointerMode()) {
 			const containerId = Spotlight.getActiveContainer();
-			current = document.querySelector(`[data-container-id="${containerId}"]`);
+			current = document.querySelector(`[data-spotlight-id="${containerId}"]`);
 		}
 
 		return current && this.uiRef.containerRef.contains(current);
@@ -390,9 +383,9 @@ class ScrollableNative extends Component {
 			delta = isPreviousScrollButton ? -pageDistance : pageDistance,
 			direction = Math.sign(delta);
 
-		if (direction !== this.uiRef.pageDirection) {
+		if (direction !== this.uiRef.wheelDirection) {
 			this.uiRef.isScrollAnimationTargetAccumulated = false;
-			this.uiRef.pageDirection = direction;
+			this.uiRef.wheelDirection = direction;
 		}
 
 		this.uiRef.scrollToAccumulatedTarget(delta, isVerticalScrollBar);
@@ -461,24 +454,20 @@ class ScrollableNative extends Component {
 		this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 	}
 
+	// FIXME setting event handlers directly to work on the V8 snapshot.
 	addEventListeners = (childContainerRef) => {
 		if (childContainerRef && childContainerRef.addEventListener) {
-			// FIXME `onMouseOver` doesn't work on the v8 snapshot.
 			childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
-			// FIXME `onMouseMove` doesn't work on the v8 snapshot.
 			childContainerRef.addEventListener('mousemove', this.onMouseMove, {capture: true});
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			childContainerRef.addEventListener('focusin', this.onFocus);
 		}
 	}
 
+	// FIXME setting event handlers directly to work on the V8 snapshot.
 	removeEventListeners = (childContainerRef) => {
 		if (childContainerRef && childContainerRef.removeEventListener) {
-			// FIXME `onMouseOver` doesn't work on the v8 snapshot.
 			childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
-			// FIXME `onMouseMove` doesn't work on the v8 snapshot.
 			childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			childContainerRef.removeEventListener('focusin', this.onFocus);
 		}
 	}
@@ -521,6 +510,7 @@ class ScrollableNative extends Component {
 					isVerticalScrollbarVisible,
 					scrollTo,
 					style,
+					touchableProps,
 					verticalScrollbarProps
 				}) => (
 					<ScrollableSpotlightContainer
@@ -530,13 +520,15 @@ class ScrollableNative extends Component {
 						style={style}
 					>
 						<div className={componentCss.container}>
-							{childRenderer({
-								...childComponentProps,
-								cbScrollTo: scrollTo,
-								className: componentCss.content,
-								initUiChildRef,
-								ref: this.initChildRef
-							})}
+							<TouchableDiv {...touchableProps}>
+								{childRenderer({
+									...childComponentProps,
+									cbScrollTo: scrollTo,
+									className: componentCss.scrollableFill,
+									initUiChildRef,
+									ref: this.initChildRef
+								})}
+							</TouchableDiv>
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
 						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} {...this.scrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
@@ -549,6 +541,5 @@ class ScrollableNative extends Component {
 
 export default ScrollableNative;
 export {
-	dataIndexAttribute,
 	ScrollableNative
 };

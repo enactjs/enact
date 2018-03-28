@@ -29,12 +29,12 @@ storiesOf('Moonstone', module)
 				noFill={boolean('noFill', false)}
 				onChange={action('onChange')}
 				onKnobMove={action('onKnobMove')}
+				orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
 				step={number('step', SliderBase.defaultProps.step)}
 				tooltip={nullify(boolean('tooltip', false))}
 				tooltipAsPercent={nullify(boolean('tooltipAsPercent', false))}
 				tooltipForceSide={nullify(boolean('tooltipForceSide', false))}
 				tooltipSide={select('tooltipSide', ['before', 'after'], 'after')}
-				vertical={nullify(boolean('vertical', false))}
 			/>
 		))
 	);

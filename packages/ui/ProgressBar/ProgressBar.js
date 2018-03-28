@@ -41,6 +41,14 @@ const ProgressBar = kind({
 		backgroundProgress: PropTypes.number,
 
 		/**
+		 * The contents to be displayed with progress bar.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		children: PropTypes.node,
+
+		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
 		 *
@@ -49,12 +57,24 @@ const ProgressBar = kind({
 		 * * `progressBar` - The root component class
 		 * * `fill` - The foreground node of the progress bar
 		 * * `load` - The background node of the progress bar
-		 * * `vertical` - Applied when `vertical` prop is `true`
+		 * * `horizontal` - Applied when `orientation` is `'horizontal'`
+		 * * `vertical` - Applied when `orientation` is `'vertical'`
 		 *
 		 * @type {Object}
 		 * @public
 		 */
 		css: PropTypes.object,
+
+		/**
+		 * Sets the orientation of the slider, whether the progress-bar depicts its progress value
+		 * in a left and right orientation or up and down onientation.
+		 * Must be either `'horizontal'` or `'vertical'`.
+		 *
+		 * @type {String}
+		 * @default 'horizontal'
+		 * @public
+		 */
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
 		 * The proportion of the filled portion of the progress bar. Valid values are
@@ -64,22 +84,13 @@ const ProgressBar = kind({
 		 * @default 0
 		 * @public
 		 */
-		progress: PropTypes.number,
-
-		/**
-		 * If `true` the progress bar will be oriented vertically.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		vertical: PropTypes.bool
+		progress: PropTypes.number
 	},
 
 	defaultProps: {
 		backgroundProgress: 0,
-		progress: 0,
-		vertical: false
+		orientation: 'horizontal',
+		progress: 0
 	},
 
 	styles: {
@@ -89,12 +100,12 @@ const ProgressBar = kind({
 	},
 
 	computed: {
-		className: ({vertical, styler}) => styler.append({vertical}),
-		progressCssProp: ({vertical}) => (vertical ? 'height' : 'width')
+		className: ({orientation, styler}) => styler.append(orientation),
+		progressCssProp: ({orientation}) => ((orientation === 'vertical') ? 'height' : 'width')
 	},
 
-	render: ({backgroundProgress, css, progress, progressCssProp, ...rest}) => {
-		delete rest.vertical;
+	render: ({backgroundProgress, children, css, progress, progressCssProp, ...rest}) => {
+		delete rest.orientation;
 
 		if (__DEV__) {
 			validateRange(backgroundProgress, 0, 1, 'ProgressBar', 'backgroundProgress', 'min', 'max');
@@ -105,6 +116,7 @@ const ProgressBar = kind({
 			<div role="progressbar" {...rest}>
 				<div className={css.load} style={{[progressCssProp]: progressToPercent(backgroundProgress)}} />
 				<div className={css.fill} style={{[progressCssProp]: progressToPercent(progress)}} />
+				{children}
 			</div>
 		);
 	}

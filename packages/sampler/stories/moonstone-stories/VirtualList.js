@@ -1,6 +1,6 @@
 import Item from '@enact/moonstone/Item';
-import {VirtualList as UiVirtualList} from '@enact/ui/VirtualList';
-import {VirtualList, VirtualListBase} from '@enact/moonstone/VirtualList';
+import {VirtualList as UiVirtualList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
+import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -11,7 +11,7 @@ import {withInfo} from '@storybook/addon-info';
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('VirtualList', VirtualListBase, VirtualList);
+const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBase, UiVirtualListBase);
 
 const
 	items = [],
@@ -44,9 +44,9 @@ storiesOf('UI', module)
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
 				<UiVirtualList
-					component={renderItem(itemSize)}
 					data={items}
 					dataSize={number('dataSize', items.length)}
+					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
@@ -69,10 +69,10 @@ storiesOf('Moonstone', module)
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
 				<VirtualList
-					component={renderItem(itemSize)}
 					data={items}
 					dataSize={number('dataSize', items.length)}
 					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}

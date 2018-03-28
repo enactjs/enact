@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [2.0.0-alpha.6] - 2018-03-22
+
+### Removed
+
+- `core/factory` module, replaced by the `css` override feature
+
 ## [2.0.0-alpha.5] - 2018-03-07
 
 ### Removed

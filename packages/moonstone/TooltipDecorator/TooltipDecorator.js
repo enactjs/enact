@@ -135,10 +135,10 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * The text to be displayed as the main content of the tooltip.
 			 *
-			 * @type {String}
+			 * @type {String|Node}}
 			 * @public
 			 */
-			tooltipText: PropTypes.string,
+			tooltipText: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 			/**
 			 * The width of tooltip content in pixels (px). If the content goes over the given width,

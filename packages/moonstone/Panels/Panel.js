@@ -117,7 +117,7 @@ const PanelBase = kind({
 		),
 		spotOnRender: (node, {autoFocus}) => {
 			if (node && !Spotlight.getCurrent()) {
-				const {containerId} = node.dataset;
+				const {spotlightId} = node.dataset;
 				const config = {
 					enterTo: 'last-focused'
 				};
@@ -130,8 +130,8 @@ const PanelBase = kind({
 					}
 				}
 
-				Spotlight.set(containerId, config);
-				Spotlight.focus(containerId);
+				Spotlight.set(spotlightId, config);
+				Spotlight.focus(spotlightId);
 			}
 		}
 	},
