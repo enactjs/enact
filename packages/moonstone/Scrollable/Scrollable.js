@@ -478,6 +478,7 @@ class Scrollable extends Component {
 					childComponentProps,
 					className,
 					componentCss,
+					controlled,
 					handleScroll,
 					horizontalScrollbarProps,
 					initContainerRef,
@@ -501,6 +502,7 @@ class Scrollable extends Component {
 									...childComponentProps,
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
+									controlled,
 									initUiChildRef,
 									onScroll: handleScroll,
 									ref: this.initChildRef
