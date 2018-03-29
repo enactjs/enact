@@ -133,7 +133,7 @@ class Scrollable extends Component {
 	nodeToFocus = null
 
 	onFlick = (ev) => {
-		if (this.childRef.uiRef.state.controlled) {
+		if (this.uiRef.state.controlled) {
 			forward('onFlick', ev, this.props);
 			return;
 		}
@@ -148,7 +148,7 @@ class Scrollable extends Component {
 	}
 
 	onWheel = (ev) => {
-		if (this.childRef.uiRef.state.controlled) {
+		if (this.uiRef.state.controlled) {
 			forward('onWheel', ev, this.props);
 			return;
 		}
@@ -189,7 +189,7 @@ class Scrollable extends Component {
 	}
 
 	onFocus = (ev) => {
-		if (this.childRef.uiRef.state.controlled) {
+		if (this.uiRef.state.controlled) {
 			forward('onFocus', ev, this.props);
 			return;
 		}
@@ -335,7 +335,7 @@ class Scrollable extends Component {
 	}
 
 	onKeyDown = (ev) => {
-		if (this.childRef.uiRef.state.controlled) {
+		if (this.uiRef.state.controlled) {
 			forward('onKeyDown', ev, this.props);
 			return;
 		}
@@ -347,7 +347,7 @@ class Scrollable extends Component {
 	}
 
 	onScrollbarButtonClick = (ev) => {
-		if (this.childRef.uiRef.state.controlled) {
+		if (this.uiRef.state.controlled) {
 			forward('onScrollbarButtonClick', ev, this.props);
 			return;
 		}

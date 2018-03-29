@@ -525,7 +525,7 @@ class ScrollableBase extends Component {
 	getRtlX = (x) => (this.state.rtl ? -x : x)
 
 	onMouseDown = (ev) => {
-		if (this.childRef.state.controlled) {
+		if (this.state.controlled) {
 			forward('onMouseDown', ev, this.props);
 			return;
 		}
@@ -535,7 +535,7 @@ class ScrollableBase extends Component {
 	}
 
 	onDragStart = (ev) => {
-		if (this.childRef.state.controlled) {
+		if (this.state.controlled) {
 			forward('onDragStart', ev, this.props);
 			return;
 		}
@@ -547,7 +547,7 @@ class ScrollableBase extends Component {
 	}
 
 	onDrag = (ev) => {
-		if (this.childRef.state.controlled) {
+		if (this.state.controlled) {
 			forward('onDrag', ev, this.props);
 			return;
 		}
@@ -560,7 +560,7 @@ class ScrollableBase extends Component {
 	}
 
 	onDragEnd = (ev) => {
-		if (this.childRef.state.controlled) {
+		if (this.state.controlled) {
 			forward('onDragEnd', ev, this.props);
 			return;
 		}
@@ -580,7 +580,7 @@ class ScrollableBase extends Component {
 	}
 
 	onFlick = (ev) => {
-		if (this.childRef.state.controlled) {
+		if (this.state.controlled) {
 			forward('onFlick', ev, this.props);
 			return;
 		}
@@ -612,7 +612,7 @@ class ScrollableBase extends Component {
 	}
 
 	onWheel = (ev) => {
-		if (this.childRef.state.controlled) {
+		if (this.state.controlled) {
 			forward('onWheel', ev, this.props);
 			return;
 		}
@@ -1076,7 +1076,7 @@ class ScrollableBase extends Component {
 	render () {
 		const
 			{className, containerRenderer, style, ...rest} = this.props,
-			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl} = this.state,
+			{controlled, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl} = this.state,
 			scrollableClasses = classNames(css.scrollable, className);
 
 		delete rest.addEventListeners;
@@ -1098,6 +1098,7 @@ class ScrollableBase extends Component {
 			childComponentProps: {...rest, rtl},
 			className: scrollableClasses,
 			componentCss: css,
+			controlled,
 			handleScroll: this.handleScroll,
 			horizontalScrollbarProps: this.horizontalScrollbarProps,
 			initContainerRef: this.initContainerRef,

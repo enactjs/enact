@@ -104,6 +104,11 @@ const VirtualListBaseFactory = (type) => {
 			itemsRenderer: PropTypes.func.isRequired,
 
 			/**
+			 * TBD
+			 */
+			controlled: PropTypes.bool,
+
+			/**
 			 * Spotlight container Id.
 			 *
 			 * @type {String}
@@ -465,7 +470,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		onKeyDown = (ev) => {
-			if (this.state.controlled) {
+			if (this.props.controlled) {
 				forward('onKeyDown', ev, this.props);
 				return;
 			}
