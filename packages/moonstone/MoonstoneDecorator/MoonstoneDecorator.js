@@ -94,6 +94,14 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			33, // channel up
 			34 // channel down
 		],
+		red: 403,
+		green: 404,
+		yellow: 405,
+		blue: 406,
+		play: 415,
+		pause: 19,
+		rewind: 412,
+		fastForward: 417,
 		pointerHide: 1537,
 		pointerShow: 1536
 	});

@@ -109,6 +109,19 @@ const MediaControls = kind({
 		moreButtonCloseLabel: PropTypes.string,
 
 		/**
+		 * The color of the underline beneath more icon button.
+		 *
+		 * This property accepts one of the following color names, which correspond with the
+		 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
+		 *
+		 * @type {String}
+		 * @see {@link moonstone/IconButton.IconButtonBase.color}
+		 * @default 'blue'
+		 * @public
+		 */
+		moreButtonColor: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
+
+		/**
 		 * Sets the `disabled` state on the media "more" button.
 		 *
 		 * @type {Boolean}
@@ -298,6 +311,7 @@ const MediaControls = kind({
 		forwardIcon: 'forward',
 		jumpBackwardIcon: 'skipbackward',
 		jumpForwardIcon: 'skipforward',
+		moreButtonColor: 'blue',
 		pauseIcon: 'pause',
 		playIcon: 'play',
 		visible: true
@@ -336,8 +350,9 @@ const MediaControls = kind({
 			jumpButtonsDisabled,
 			jumpForwardIcon,
 			leftComponents,
-			moreButtonDisabled,
 			mediaDisabled,
+			moreButtonColor,
+			moreButtonDisabled,
 			moreDisabled,
 			moreIcon,
 			moreIconLabel,
@@ -391,6 +406,7 @@ const MediaControls = kind({
 							aria-label={moreIconLabel}
 							backgroundOpacity="translucent"
 							className={css.moreButton}
+							color={moreButtonColor}
 							disabled={moreButtonDisabled}
 							onTap={onToggleMore}
 							tooltipProps={{role: 'dialog'}}

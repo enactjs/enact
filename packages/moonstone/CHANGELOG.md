@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/VideoPlayer` to disable play/pause button when media controls are disabled
+- `moonstone/VideoPlayer` property `moreButtonColor` to allow setting underline colors for more button
 
 ### Fixed
 
@@ -19,6 +20,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to display custom thumbnail node
 - `moonstone/VideoPlayer` to hide more icon when right components are removed
 - `moonstone/Picker` to correctly update pressed state when dragging off buttons
+- `moonstone/VirtualList` and `moonstone/VirtualGridList`, to show Spotlight properly while navigating them with page up and down keys
 
 ## [2.0.0-alpha.6] - 2018-03-22
 
