@@ -182,6 +182,7 @@ const TransitionBase = kind({
 		delete rest.direction;
 		delete rest.duration;
 		delete rest.timingFunction;
+		delete rest.type;
 
 		if (noAnimation && !visible) {
 			return null;
