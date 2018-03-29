@@ -726,6 +726,8 @@ const VideoPlayerBase = class extends React.Component {
 		if (props.setApiProvider) {
 			props.setApiProvider(this);
 		}
+
+		this.isCurrentVideoSource = true;
 	}
 
 	componentDidMount () {
@@ -757,6 +759,11 @@ const VideoPlayerBase = class extends React.Component {
 
 		const {source} = this.props;
 		const {source: nextSource} = nextProps;
+
+
+		if (compareSources(this.props.preloadSource, nextSource)) {
+			this.isCurrentVideoSource = !this.isCurrentVideoSource;
+		}
 
 		if (!compareSources(source, nextSource)) {
 			this.firstPlayReadFlag = true;
@@ -1901,6 +1908,7 @@ const VideoPlayerBase = class extends React.Component {
 			noSpinner,
 			pauseIcon,
 			playIcon,
+			preloadSource,
 			rateButtonsDisabled,
 			rightComponents,
 			source,
@@ -1941,6 +1949,30 @@ const VideoPlayerBase = class extends React.Component {
 		const moreDisabled = !(this.state.more);
 		const controlsAriaProps = this.getControlsAriaProps();
 
+		const playingProps = {
+			...rest,
+			autoPlay: !noAutoPlay,
+			className: css.video,
+			children: source,
+			component: videoComponent,
+			controls: false,
+			onUpdate: this.handleEvent,
+			ref: this.setVideoRef
+		};
+
+		const loadingProps = {
+			...rest,
+			autoPlay: false,
+			className: css.preloadVideo,
+			children: preloadSource,
+			component: videoComponent,
+			controls: false,
+			preload: 'auto'
+		};
+
+		const sourceProps = this.isCurrentVideoSource ? playingProps : loadingProps;
+		const preloadProps = this.isCurrentVideoSource ? loadingProps : playingProps;
+
 		return (
 			<RootContainer
 				className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')}
@@ -1953,16 +1985,15 @@ const VideoPlayerBase = class extends React.Component {
 			>
 				{/* Video Section */}
 				<Media
-					{...rest}
-					autoPlay={!noAutoPlay}
-					className={css.video}
-					component={videoComponent}
-					controls={false}
-					onUpdate={this.handleEvent}
-					ref={this.setVideoRef}
-				>
-					{source}
-				</Media>
+					{...sourceProps}
+				/>
+
+				{ preloadSource ?
+					<Media
+						{...preloadProps}
+					/> : null
+				}
+
 
 				<Overlay
 					bottomControlsVisible={this.state.mediaControlsVisible}
