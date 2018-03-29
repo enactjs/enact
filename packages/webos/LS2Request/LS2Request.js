@@ -1,5 +1,12 @@
 /* eslint-disable no-console */
 /* global console */
+/**
+ * Provides the {@link webos/LS2Request} class for making LS2 service requests
+ * on webOS platforms.
+ *
+ * @module webos/LS2Request
+ */
+
 import {Job} from '@enact/core/util';
 
 const refs = {};
@@ -27,6 +34,23 @@ export default class LS2Request {
 		this.subscribe = false;
 	}
 
+	/**
+	 * Send a request to an LS2 service method.
+	 *
+	 * @method
+	 * @memberof webos/LS2Request
+	 * @param {String} service The name of the LS2 service.  Do not include 'luna://'.
+	 * @param {String} method The name of the method.
+	 * @param {Object} parameters Any parameters required by the service method.
+	 * @param {Function} onSuccess The success handler for the request.
+	 * @param {Function} onFailure The failure handler for the request.
+	 * @param {Function} onComplete The handler to run when the request is completed, regardless of return status.
+	 * @param {Function} onTimeout The handler to run when the request times out.  Used in conjunction with `timeout`.
+	 * @param {Boolean} subscribe Subscribe to service methods that support subscription.
+	 * @param {Number} timeout The delay in milliseconds to wait for the request to return.
+	 * @returns {webos/LS2Request}
+	 * @public
+	 */
 	send ({
 		service = '',
 		method = '',
@@ -113,6 +137,14 @@ export default class LS2Request {
 		}
 	}
 
+	/**
+	 * Cancel the current LS2 request.
+	 *
+	 * @method
+	 * @memberof webos/LS2Request
+	 * @returns {undefined}
+	 * @public
+	 */
 	cancel () {
 		// remove timeout job
 		this.timeoutJob.stop();
