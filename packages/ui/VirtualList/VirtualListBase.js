@@ -13,6 +13,12 @@ const
 	Native = 'Native';
 
 class ScrollContent extends Component {
+	static propTypes = {
+		rtl: PropTypes.bool,
+		scrollHeight: PropTypes.number,
+		scrollWidth: PropTypes.number
+	}
+
 	constructor (props) {
 		super(props);
 
@@ -25,7 +31,7 @@ class ScrollContent extends Component {
 	componentWillReceiveProps (props) {
 		const {scrollLeft, scrollTop} = props;
 
-		this.state = {
+		this.state = { // eslint-disable-line react/no-direct-mutation-state
 			scrollLeft,
 			scrollTop
 		};
@@ -215,6 +221,16 @@ const VirtualListBaseFactory = (type) => {
 			 */
 			rtl: PropTypes.bool,
 
+			scrollLeft: PropTypes.oneOfType([
+				PropTypes.oneOf([null]),
+				PropTypes.number
+			]),
+
+			scrollTop: PropTypes.oneOfType([
+				PropTypes.oneOf([null]),
+				PropTypes.number
+			]),
+
 			/**
 			 * Spacing between items.
 			 *
@@ -318,8 +334,8 @@ const VirtualListBaseFactory = (type) => {
 					dirY = Math.sign(nextProps.scrollTop - this.scrollTop);
 
 				this.setScrollPosition(
-					typeof scrollLeft === 'number' ? scrollLeft : 0,
-					typeof scrollTop === 'number' ? scrollTop : 0,
+					typeof nextProps.scrollLeft === 'number' ? nextProps.scrollLeft : 0,
+					typeof nextProps.scrollTop === 'number' ? nextProps.scrollTop : 0,
 					dirX,
 					dirY
 				);

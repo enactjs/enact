@@ -2,6 +2,7 @@ import {VirtualGridList as UiVirtualGridList, VirtualListBase as UiVirtualListBa
 import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
 import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
 import {GridListImageItem} from '@enact/moonstone/GridListImageItem';
+import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
 import React, {Component} from 'react';
 import {storiesOf} from '@storybook/react';
@@ -35,8 +36,6 @@ const
 	// eslint-disable-next-line enact/prop-types
 	renderItem = ({data, index, ...rest}) => {
 		const {text, subText, source} = data[index];
-
-		// console.log('The item index rendered', index);
 
 		return (
 			<GridListImageItem
@@ -86,6 +85,10 @@ storiesOf('UI', module)
 	);
 
 class ControlledVirtualGridList extends Component {
+	static propTypes = {
+		controlled: PropTypes.bool
+	}
+
 	constructor () {
 		super();
 
@@ -95,11 +98,9 @@ class ControlledVirtualGridList extends Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		console.log('componentWillReceiveProps controlled', nextProps.controlled);
-
 		if (nextProps.controlled === true) {
 			this.interval = setInterval(() => {
-				this.state.scrollTop = this.state.scrollTop + 100;
+				this.state.scrollTop = this.state.scrollTop + 100; // eslint-disable-line react/no-direct-mutation-state
 				this.forceUpdate();
 			}, 1000);
 		} else {
@@ -124,18 +125,18 @@ class ControlledVirtualGridList extends Component {
 					minHeight: ri.scale(number('minHeight', 270))
 				}}
 
-				onKeyDown={() => console.log('onKeyDown')} // eslint-disable-line react/jsx-no-bind
-				onFocus={() => console.log('onFocus')} // eslint-disable-line react/jsx-no-bind
-				onFlick={() => console.log('onFlick')} // eslint-disable-line react/jsx-no-bind
-				onDragStart={() => console.log('onDragStart')} // eslint-disable-line react/jsx-no-bind
-				onDrag={() => console.log('onDrag')} // eslint-disable-line react/jsx-no-bind
-				onDragEnd={() => console.log('onDragEnd')} // eslint-disable-line react/jsx-no-bind
-				onMouseDown={() => console.log('onMouseDown')} // eslint-disable-line react/jsx-no-bind
-				onMouseMove={() => console.log('onMouseMove')} // eslint-disable-line react/jsx-no-bind
-				onMouseUp={() => console.log('onMouseUp')} // eslint-disable-line react/jsx-no-bind
-				onWheel={() => console.log('onWheel')} // eslint-disable-line react/jsx-no-bind
+				onKeyDown={() => console.log('onKeyDown')} // eslint-disable-line react/jsx-no-bind, no-console
+				onFocus={() => console.log('onFocus')} // eslint-disable-line react/jsx-no-bind, no-console
+				onFlick={() => console.log('onFlick')} // eslint-disable-line react/jsx-no-bind, no-console
+				onDragStart={() => console.log('onDragStart')} // eslint-disable-line react/jsx-no-bind, no-console
+				onDrag={() => console.log('onDrag')} // eslint-disable-line react/jsx-no-bind, no-console
+				onDragEnd={() => console.log('onDragEnd')} // eslint-disable-line react/jsx-no-bind, no-console
+				onMouseDown={() => console.log('onMouseDown')} // eslint-disable-line react/jsx-no-bind, no-console
+				onMouseMove={() => console.log('onMouseMove')} // eslint-disable-line react/jsx-no-bind, no-console
+				onMouseUp={() => console.log('onMouseUp')} // eslint-disable-line react/jsx-no-bind, no-console
+				onWheel={() => console.log('onWheel')} // eslint-disable-line react/jsx-no-bind, no-console
 
-				onScrollbarButtonClick={() => console.log('onScrollbarButtonClick')} // eslint-disable-line react/jsx-no-bind
+				onScrollbarButtonClick={() => console.log('onScrollbarButtonClick')} // eslint-disable-line react/jsx-no-bind, no-console
 
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
