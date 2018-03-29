@@ -839,7 +839,8 @@ const VirtualListBaseFactory = (type) => {
 
 			return (
 				<div className={containerClasses} ref={this.initContainerRef} style={style}>
-					<ScrollContent {...rest}
+					<ScrollContent
+						{...rest}
 						ref={this.initScrollContentRef}
 						scrollHeight={this.scrollHeight}
 						scrollLeft={this.scrollLeft}
