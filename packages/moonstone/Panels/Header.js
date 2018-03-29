@@ -202,7 +202,6 @@ const HeaderBase = kind({
 						<ComponentOverride
 							component={headerInput}
 							css={css}
-							placeholder={title}
 						/>
 					</Cell>
 				);
