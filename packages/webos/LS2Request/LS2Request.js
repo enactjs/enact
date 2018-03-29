@@ -24,7 +24,6 @@ export default class LS2Request {
 
 	constructor () {
 		this.bridge = null;
-		this.cancelled = false;
 		this.subscribe = false;
 	}
 
@@ -39,6 +38,8 @@ export default class LS2Request {
 		subscribe = false,
 		timeout = 0
 	}) {
+		this.cancelled = false;
+
 		if (!onFailure && !onComplete) {
 			onFailure = failureHandler;
 		}
