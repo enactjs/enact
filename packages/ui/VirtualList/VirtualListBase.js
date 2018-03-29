@@ -15,8 +15,27 @@ const
 class ScrollContent extends Component {
 	static propTypes = {
 		rtl: PropTypes.bool,
-		scrollHeight: PropTypes.number,
-		scrollWidth: PropTypes.number
+
+		/**
+		 * TBD
+		 */
+		scrollHeight: PropTypes.oneOfType([
+			PropTypes.number,
+			PropTypes.oneOf([null])
+		]),
+
+		/**
+		 * TBD
+		 */
+		scrollWidth: PropTypes.oneOfType([
+			PropTypes.number,
+			PropTypes.oneOf([null])
+		])
+	}
+
+	static defaultProps = {
+		scrollHeight: 0,
+		scrollWidth: 0
 	}
 
 	constructor (props) {
@@ -221,16 +240,6 @@ const VirtualListBaseFactory = (type) => {
 			 */
 			rtl: PropTypes.bool,
 
-			scrollLeft: PropTypes.oneOfType([
-				PropTypes.oneOf([null]),
-				PropTypes.number
-			]),
-
-			scrollTop: PropTypes.oneOfType([
-				PropTypes.oneOf([null]),
-				PropTypes.number
-			]),
-
 			/**
 			 * Spacing between items.
 			 *
@@ -256,22 +265,13 @@ const VirtualListBaseFactory = (type) => {
 			direction: 'vertical',
 			overhang: 3,
 			pageScroll: false,
-			scrollLeft: null,
-			scrollTop: null,
 			spacing: 0
 		}
 
 		constructor (props) {
-			let controlled = false;
-
 			super(props);
 
-			if (props.scrollLeft !== null  || props.scrollTop !== null) {
-				controlled = true;
-			}
-
 			this.state = {
-				controlled,
 				firstIndex: 0,
 				numOfItems: 0
 			};
@@ -314,30 +314,6 @@ const VirtualListBaseFactory = (type) => {
 			} else if (this.hasDataSizeChanged) {
 				this.updateStatesAndBounds(nextProps);
 				this.setContainerSize();
-			}
-
-			const {controlled} = this.state;
-			let nextControlled = false;
-
-			if (nextProps.scrollLeft !== null  || nextProps.scrollTop !== null) {
-				nextControlled = true;
-			}
-
-			if (nextControlled !== controlled) {
-				this.setState({controlled: nextControlled});
-			}
-
-			if (nextControlled) {
-				const
-					dirX = Math.sign(nextProps.scrollLeft - this.scrollLeft),
-					dirY = Math.sign(nextProps.scrollTop - this.scrollTop);
-
-				this.setScrollPosition(
-					typeof nextProps.scrollLeft === 'number' ? nextProps.scrollLeft : 0,
-					typeof nextProps.scrollTop === 'number' ? nextProps.scrollTop : 0,
-					dirX,
-					dirY
-				);
 			}
 		}
 

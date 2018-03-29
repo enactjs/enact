@@ -238,12 +238,28 @@ class ScrollableBase extends Component {
 		removeEventListeners: PropTypes.func,
 
 		/**
+		 * TBD
+		 */
+		scrollLeft: PropTypes.oneOfType([
+			PropTypes.number,
+			PropTypes.oneOf([null])
+		]),
+
+		/**
 		 * Called to execute additional logic in a themed component when scrollTo is called.
 		 *
 		 * @type {Function}
 		 * @private
 		 */
 		scrollTo: PropTypes.func,
+
+		/**
+		 * TBD
+		 */
+		scrollTop: PropTypes.oneOfType([
+			PropTypes.number,
+			PropTypes.oneOf([null])
+		]),
 
 		/**
 		 * Called to execute additional logic in a themed component when scroll stops.
@@ -282,6 +298,8 @@ class ScrollableBase extends Component {
 		onScroll: nop,
 		onScrollStart: nop,
 		onScrollStop: nop,
+		scrollLeft: null,
+		scrollTop: null,
 		verticalScrollbar: 'auto'
 	}
 
@@ -293,9 +311,16 @@ class ScrollableBase extends Component {
 	static contextTypes = contextTypesState
 
 	constructor (props) {
+		let controlled = false;
+
 		super(props);
 
+		if (props.scrollLeft !== null  || props.scrollTop !== null) {
+			controlled = true;
+		}
+
 		this.state = {
+			controlled,
 			rtl: false,
 			remeasure: false,
 			isHorizontalScrollbarVisible: props.horizontalScrollbar === 'visible',
@@ -343,6 +368,25 @@ class ScrollableBase extends Component {
 		on('keydown', this.onKeyDown);
 	}
 
+	componentWillReceiveProps (nextProps) {
+		const {controlled} = this.state;
+		let nextControlled = false;
+
+		if (nextProps.scrollLeft !== null  || nextProps.scrollTop !== null) {
+			nextControlled = true;
+		}
+
+		if (nextControlled !== controlled) {
+			this.setState({controlled: nextControlled});
+		}
+
+		if (nextControlled) {
+			this.scroll(
+				typeof nextProps.scrollLeft === 'number' ? nextProps.scrollLeft : 0,
+				typeof nextProps.scrollTop === 'number' ? nextProps.scrollTop : 0
+			);
+		}
+	}
 	componentWillUpdate () {
 		this.deferScrollTo = true;
 	}

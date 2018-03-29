@@ -138,8 +138,7 @@ class ControlledVirtualGridList extends Component {
 
 				onScrollbarButtonClick={() => console.log('onScrollbarButtonClick')} // eslint-disable-line react/jsx-no-bind, no-console
 
-				onScrollStart={action('onScrollStart')}
-				onScrollStop={action('onScrollStop')}
+				onScrollStop={({scrollTop}) => {this.state.scrollTop = scrollTop;}}
 				spacing={ri.scale(number('spacing', 20))}
 				scrollTop={controlled ? this.state.scrollTop : null}
 				style={{
