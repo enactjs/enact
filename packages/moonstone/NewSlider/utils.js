@@ -1,10 +1,22 @@
 import clamp from 'ramda/src/clamp';
-import {forKey, forProp, forward, handle, stopImmediate} from '@enact/core/handle';
+import {handle, stopImmediate} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 
-const validateStep = (step) => typeof step === 'number' && step || 0;
+const isNumber = (n) => typeof n === 'number' && !isNaN(n);
 
-const calcStep = (steps) => steps.map(validateStep).reduce((acc, v) => acc || v) || 1;
+const calcStep = (knobStep, step) => {
+	let s;
+
+	if (isNumber(knobStep)) {
+		s = knobStep;
+	} else if (isNumber(knobStep)) {
+		s = step;
+	}
+
+	// default to a step of 1 if neither are set or are set to 0
+	// otherwise, increment/decrement would be no-ops
+	return s || 1;
+};
 
 const calcPercent = (min, max, value) => {
 	if (value <= min) {
@@ -16,11 +28,6 @@ const calcPercent = (min, max, value) => {
 	}
 };
 
-const toggleActive = handle(
-	forKey('enter'),
-	forward('onActivate')
-);
-
 const isIncrement = ({keyCode}, {orientation}) => {
 	return orientation === 'vertical' ? is('up', keyCode) : is('right', keyCode);
 };
@@ -30,15 +37,16 @@ const isDecrement = ({keyCode}, {orientation}) => {
 };
 
 const handleChange = (direction) => (ev, {knobStep, max, min, onChange, step, value}) => {
-	const amount = calcStep([knobStep, step]) || 1;
 	onChange({
-		value: clamp(min, max, value + (amount * direction))
+		value: clamp(min, max, value + (calcStep(knobStep, step) * direction))
 	});
 
 	return true;
 };
 
-const isActive = forProp('active', true);
+const isActive = (ev, props) => {
+	return props.active || props.activateOnFocus || props.detachedKnob;
+};
 
 const handleIncrement = handle(
 	isActive,

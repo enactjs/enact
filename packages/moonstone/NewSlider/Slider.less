@@ -47,8 +47,7 @@
 			width: @moon-slider-knob-width;
 			// Vertically and horizontally center this knob.
 			// Using this method rather than -top -left so the knob is more intuitively customizable.
-			-webkit-transform: @moon-translate-center;
-			transform:         @moon-translate-center;
+			transform:         @moon-translate-center scale(@moon-slider-knob-resting-state-scale);
 			background-color: @moon-slider-knob-bg-color;
 			border-radius: (@moon-slider-knob-height / 2);
 			border: @moon-button-border-width solid transparent;
@@ -124,6 +123,7 @@
 	}
 
 	&:global(.spottable) {
+		&:focus.activateOnFocus,
 		&.active,
 		&.pressed {
 			.fill {
@@ -142,9 +142,10 @@
 		}
 
 		&.pressed,
+		&:focus.activateOnFocus,
 		&:focus.active {
 			.knob::before {
-				transform: @moon-translate-center scale(1.25);
+				transform: @moon-translate-center scale(1);
 			}
 		}
 
@@ -159,9 +160,24 @@
 			}
 		}
 	}
+
+	&.noFill {
+		.fill {
+			background-color: transparent;
+		}
+
+		.spottable({
+			&.active,
+			&.pressed {
+				.fill {
+					background-color: transparent;
+				}
+			}
+		});
+	}
 }
 
-[data-container-muted='true'] {
+[data-spotlight-container-muted='true'] {
 	.slider {
 		&:global(.spottable):focus {
 			.knob {
