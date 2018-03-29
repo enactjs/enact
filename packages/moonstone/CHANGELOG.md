@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Picker` to correctly update pressed state when dragging off buttons
+- `moonstone/Notification` to display when it's opened
 
 ## [2.0.0-alpha.6] - 2018-03-22
 
