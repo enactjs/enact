@@ -298,7 +298,6 @@ const VirtualListBaseFactory = (type) => {
 		componentWillReceiveProps (nextProps) {
 			const
 				{dataSize, direction, itemSize, overhang, spacing} = this.props,
-				// {controlled} = this.state,
 				hasMetricsChanged = (
 					direction !== nextProps.direction ||
 					((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||

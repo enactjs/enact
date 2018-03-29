@@ -180,7 +180,7 @@ const VirtualListBaseFactory = (type) => {
 		restoreLastFocused = false
 
 		setContainerDisabled = (bool) => {
-			const scrollContentNode = ReactDOM.findDOMNode(this.uiRef.scrollContentRef);
+			const scrollContentNode = ReactDOM.findDOMNode(this.uiRef.scrollContentRef); // eslint-disabled-line react/no-find-dom-node
 
 			if (scrollContentNode) {
 				scrollContentNode.setAttribute(dataContainerDisabledAttribute, bool);
