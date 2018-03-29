@@ -32,37 +32,21 @@ describe('Header Specs', () => {
 	});
 
 	it('should inject a custom component when headerInput is used', function () {
-		// This just uses an <address> tag for easy discoverability. It should behave the same way
+		// This just uses an <input> tag for easy discoverability. It should behave the same way
 		// as a moonstone/Input, the standard here, but that would require importing a diffenent
 		// component than what we're testing here.
 		const header = mount(
 			<Header>
 				<title>Header</title>
 				<headerInput>
-					<address>An easy to find legal DOM node</address>
+					<input placeholder="An easy to find legal DOM node" />
 				</headerInput>
 			</Header>
 		);
 
 		const expected = 1;
-		const actual = header.find('address');
+		const actual = header.find('input');
 
 		expect(actual).to.have.length(expected);
-	});
-
-	it('should render `title` as a `placeholder` attribute when headerInput is used', function () {
-		const header = mount(
-			<Header>
-				<title>Header Title</title>
-				<headerInput>
-					<address>An easy to find legal DOM node</address>
-				</headerInput>
-			</Header>
-		);
-
-		const expected = 'Header Title';
-		const actual = header.find('address').prop('placeholder');
-
-		expect(actual).to.equal(expected);
 	});
 });
