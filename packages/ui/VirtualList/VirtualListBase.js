@@ -240,8 +240,8 @@ const VirtualListBaseFactory = (type) => {
 			direction: 'vertical',
 			overhang: 3,
 			pageScroll: false,
-			scrollLeft: 0,
-			scrollTop: 0,
+			scrollLeft: null,
+			scrollTop: null,
 			spacing: 0
 		}
 
@@ -250,7 +250,7 @@ const VirtualListBaseFactory = (type) => {
 
 			super(props);
 
-			if (props.scrollLeft || props.scrollTop) {
+			if (props.scrollLeft !== null  || props.scrollTop !== null) {
 				controlled = true;
 			}
 
@@ -281,46 +281,48 @@ const VirtualListBaseFactory = (type) => {
 		// Calling setState within componentWillReceivePropswill not trigger an additional render.
 		componentWillReceiveProps (nextProps) {
 			const
-				{dataSize, direction, itemSize, overhang, scrollLeft, scrollTop, spacing} = this.props,
-				{controlled} = this.state,
+				{dataSize, direction, itemSize, overhang, spacing} = this.props,
+				// {controlled} = this.state,
 				hasMetricsChanged = (
 					direction !== nextProps.direction ||
 					((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
 					overhang !== nextProps.overhang ||
 					spacing !== nextProps.spacing
-				),
-				stateExtra = {},
-				dirX = Math.sign(nextProps.scrollLeft - this.scrollLeft),
-				dirY = Math.sign(nextProps.scrollTop - this.scrollTop);
+				);
 
 			this.hasDataSizeChanged = (dataSize !== nextProps.dataSize);
 
-			if ((nextProps.scrollLeft || nextProps.scrollTop) && !controlled) {
-				stateExtra.controlled = true;
-			} else if (!nextProps.scrollLeft && !nextProps.scrollTop && controlled) {
-				stateExtra.controlled = false;
-			}
-
-			this.scrollLeft = nextProps.scrollLeft;
-			this.scrollTop = nextProps.scrollTop;
-
 			if (hasMetricsChanged) {
 				this.calculateMetrics(nextProps);
-				this.updateStatesAndBounds(nextProps, stateExtra);
+				this.updateStatesAndBounds(nextProps);
 				this.setContainerSize();
 			} else if (this.hasDataSizeChanged) {
-				this.updateStatesAndBounds(nextProps, stateExtra);
+				this.updateStatesAndBounds(nextProps);
 				this.setContainerSize();
-			} else if (scrollLeft !== nextProps.scrollLeft || scrollTop !== nextProps.scrollTop) {
-				this.didScroll(
-					nextProps.scrollLeft,
-					nextProps.scrollTop,
+			}
+
+			const {controlled} = this.state;
+			let nextControlled = false;
+
+			if (nextProps.scrollLeft !== null  || nextProps.scrollTop !== null) {
+				nextControlled = true;
+			}
+
+			if (nextControlled !== controlled) {
+				this.setState({controlled: nextControlled});
+			}
+
+			if (nextControlled) {
+				const
+					dirX = Math.sign(nextProps.scrollLeft - this.scrollLeft),
+					dirY = Math.sign(nextProps.scrollTop - this.scrollTop);
+
+				this.setScrollPosition(
+					typeof scrollLeft === 'number' ? scrollLeft : 0,
+					typeof scrollTop === 'number' ? scrollTop : 0,
 					dirX,
-					dirY,
-					nextProps
+					dirY
 				);
-			} else if (stateExtra.controlled !== undefined && stateExtra.controlled !== this.state.controlled) {
-				// TBD
 			}
 		}
 
@@ -460,7 +462,7 @@ const VirtualListBaseFactory = (type) => {
 			this.state.numOfItems = 0;
 		}
 
-		updateStatesAndBounds = (props, stateExtra = {}) => {
+		updateStatesAndBounds = (props) => {
 			const
 				{dataSize, overhang, updateStatesAndBounds} = props,
 				{firstIndex} = this.state,
@@ -487,10 +489,7 @@ const VirtualListBaseFactory = (type) => {
 				newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
 			}
 
-			this.setState({
-				...stateExtra,
-				firstIndex: newFirstIndex, numOfItems
-			});
+			this.setState({firstIndex: newFirstIndex, numOfItems});
 		}
 
 		calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff) {

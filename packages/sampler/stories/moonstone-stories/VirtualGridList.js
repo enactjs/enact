@@ -36,7 +36,7 @@ const
 	renderItem = ({data, index, ...rest}) => {
 		const {text, subText, source} = data[index];
 
-		console.log('The item index rendered', index);
+		// console.log('The item index rendered', index);
 
 		return (
 			<GridListImageItem
@@ -92,14 +92,26 @@ class ControlledVirtualGridList extends Component {
 		this.state = {
 			scrollTop: 0
 		};
-
-		setInterval(() => {
-			this.setState({
-				scrollTop: this.state.scrollTop + 100
-			});
-		}, 100);
 	}
+
+	componentWillReceiveProps (nextProps) {
+		console.log('componentWillReceiveProps controlled', nextProps.controlled);
+
+		if (nextProps.controlled === true) {
+			this.interval = setInterval(() => {
+				this.state.scrollTop = this.state.scrollTop + 100;
+				this.forceUpdate();
+			}, 1000);
+		} else {
+			clearInterval(this.interval);
+		}
+	}
+
+	interval = null
+
 	render () {
+		const {controlled} = this.props;
+
 		return (
 			<VirtualGridList
 				data={items}
@@ -111,10 +123,24 @@ class ControlledVirtualGridList extends Component {
 					minWidth: ri.scale(number('minWidth', 180)),
 					minHeight: ri.scale(number('minHeight', 270))
 				}}
+
+				onKeyDown={() => console.log('onKeyDown')} // eslint-disable-line react/jsx-no-bind
+				onFocus={() => console.log('onFocus')} // eslint-disable-line react/jsx-no-bind
+				onFlick={() => console.log('onFlick')} // eslint-disable-line react/jsx-no-bind
+				onDragStart={() => console.log('onDragStart')} // eslint-disable-line react/jsx-no-bind
+				onDrag={() => console.log('onDrag')} // eslint-disable-line react/jsx-no-bind
+				onDragEnd={() => console.log('onDragEnd')} // eslint-disable-line react/jsx-no-bind
+				onMouseDown={() => console.log('onMouseDown')} // eslint-disable-line react/jsx-no-bind
+				onMouseMove={() => console.log('onMouseMove')} // eslint-disable-line react/jsx-no-bind
+				onMouseUp={() => console.log('onMouseUp')} // eslint-disable-line react/jsx-no-bind
+				onWheel={() => console.log('onWheel')} // eslint-disable-line react/jsx-no-bind
+
+				onScrollbarButtonClick={() => console.log('onScrollbarButtonClick')} // eslint-disable-line react/jsx-no-bind
+
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				spacing={ri.scale(number('spacing', 20))}
-				scrollTop={this.state.scrollTop}
+				scrollTop={controlled ? this.state.scrollTop : null}
 				style={{
 					height: ri.unit(549, 'rem')
 				}}
@@ -130,6 +156,8 @@ storiesOf('Moonstone', module)
 			propTables: [Config],
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
-			<ControlledVirtualGridList />
+			<ControlledVirtualGridList
+				controlled={nullify(boolean('controlled', false))}
+			/>
 		))
 	);

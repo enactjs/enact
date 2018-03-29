@@ -481,11 +481,21 @@ class ScrollableBase extends Component {
 	getRtlX = (x) => (this.state.rtl ? -x : x)
 
 	onMouseDown = (ev) => {
+		if (this.childRef.state.controlled) {
+			forward('onMouseDown', ev, this.props);
+			return;
+		}
+
 		this.stop();
 		forward('onMouseDown', ev, this.props);
 	}
 
 	onDragStart = (ev) => {
+		if (this.childRef.state.controlled) {
+			forward('onDragStart', ev, this.props);
+			return;
+		}
+
 		this.stop();
 		this.isDragging = true;
 		this.dragStartX = this.scrollLeft + this.getRtlX(ev.x);
@@ -493,6 +503,11 @@ class ScrollableBase extends Component {
 	}
 
 	onDrag = (ev) => {
+		if (this.childRef.state.controlled) {
+			forward('onDrag', ev, this.props);
+			return;
+		}
+
 		this.start({
 			targetX: (this.direction === 'vertical') ? 0 : this.dragStartX - this.getRtlX(ev.x), // 'horizontal' or 'both'
 			targetY: (this.direction === 'horizontal') ? 0 : this.dragStartY - ev.y, // 'vertical' or 'both'
@@ -500,7 +515,12 @@ class ScrollableBase extends Component {
 		});
 	}
 
-	onDragEnd = () => {
+	onDragEnd = (ev) => {
+		if (this.childRef.state.controlled) {
+			forward('onDragEnd', ev, this.props);
+			return;
+		}
+
 		this.isDragging = false;
 
 		if (this.flickTarget) {
@@ -516,6 +536,11 @@ class ScrollableBase extends Component {
 	}
 
 	onFlick = (ev) => {
+		if (this.childRef.state.controlled) {
+			forward('onFlick', ev, this.props);
+			return;
+		}
+
 		const isVertical = ev.direction === 'vertical';
 
 		this.flickTarget = this.animator.simulate(
@@ -543,6 +568,11 @@ class ScrollableBase extends Component {
 	}
 
 	onWheel = (ev) => {
+		if (this.childRef.state.controlled) {
+			forward('onWheel', ev, this.props);
+			return;
+		}
+
 		ev.preventDefault();
 
 		if (!this.isDragging) {

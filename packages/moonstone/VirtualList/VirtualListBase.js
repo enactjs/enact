@@ -465,6 +465,11 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		onKeyDown = (ev) => {
+			if (this.state.controlled) {
+				forward('onKeyDown', ev, this.props);
+				return;
+			}
+
 			const {keyCode, target} = ev;
 
 			this.isScrolledBy5way = false;
@@ -679,6 +684,19 @@ const VirtualListBaseFactory = (type) => {
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
 			delete rest.initUiChildRef;
+
+			delete rest.onKeyDown;
+			delete rest.onFocus;
+			delete rest.onFlick;
+			delete rest.onDragStart;
+			delete rest.onDrag;
+			delete rest.onDragEnd;
+			delete rest.onMouseDown;
+			delete rest.onMouseMove;
+			delete rest.onMouseUp;
+			delete rest.onWheel;
+
+			delete rest.onScrollbarButtonClick;
 
 			return (
 				<UiBase

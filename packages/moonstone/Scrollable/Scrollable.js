@@ -9,6 +9,7 @@
 
 import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
+import {forward} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
@@ -131,7 +132,12 @@ class Scrollable extends Component {
 	indexToFocus = null
 	nodeToFocus = null
 
-	onFlick = () => {
+	onFlick = (ev) => {
+		if (this.childRef.uiRef.state.controlled) {
+			forward('onFlick', ev, this.props);
+			return;
+		}
+
 		const focusedItem = Spotlight.getCurrent();
 
 		if (focusedItem) {
@@ -141,8 +147,14 @@ class Scrollable extends Component {
 		this.childRef.setContainerDisabled(true);
 	}
 
-	onWheel = ({delta, horizontalScrollbarRef, verticalScrollbarRef}) => {
+	onWheel = (ev) => {
+		if (this.childRef.uiRef.state.controlled) {
+			forward('onWheel', ev, this.props);
+			return;
+		}
+
 		const
+			{delta, horizontalScrollbarRef, verticalScrollbarRef} = ev,
 			focusedItem = Spotlight.getCurrent(),
 			isHorizontalScrollButtonFocused = horizontalScrollbarRef && horizontalScrollbarRef.isOneOfScrollButtonsFocused(),
 			isVerticalScrollButtonFocused = verticalScrollbarRef && verticalScrollbarRef.isOneOfScrollButtonsFocused();
@@ -177,6 +189,11 @@ class Scrollable extends Component {
 	}
 
 	onFocus = (ev) => {
+		if (this.childRef.uiRef.state.controlled) {
+			forward('onFocus', ev, this.props);
+			return;
+		}
+
 		const
 			{isDragging, animator, direction} = this.uiRef,
 			shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
@@ -318,14 +335,25 @@ class Scrollable extends Component {
 	}
 
 	onKeyDown = (ev) => {
+		if (this.childRef.uiRef.state.controlled) {
+			forward('onKeyDown', ev, this.props);
+			return;
+		}
+
 		this.animateOnFocus = true;
 		if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) && !ev.repeat && this.hasFocus()) {
 			this.scrollByPage(ev.keyCode);
 		}
 	}
 
-	onScrollbarButtonClick = ({isPreviousScrollButton, isVerticalScrollBar}) => {
+	onScrollbarButtonClick = (ev) => {
+		if (this.childRef.uiRef.state.controlled) {
+			forward('onScrollbarButtonClick', ev, this.props);
+			return;
+		}
+
 		const
+			{isPreviousScrollButton, isVerticalScrollBar} = ev,
 			bounds = this.uiRef.getScrollBounds(),
 			pageDistance = (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
 			delta = isPreviousScrollButton ? -pageDistance : pageDistance,
