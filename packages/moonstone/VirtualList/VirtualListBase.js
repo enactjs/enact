@@ -310,8 +310,8 @@ const VirtualListBaseFactory = (type) => {
 		scrollToNextItem = ({direction, focusedItem}) => {
 			const
 				{data} = this.uiRef.props,
-				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
-				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo;
+				{firstIndex, numOfItems} = this.uiRef.state,
+				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute));
 			let indexToScroll = -1;
 
 			if (Array.isArray(data) && data.some((item) => item.disabled)) {
@@ -325,7 +325,7 @@ const VirtualListBaseFactory = (type) => {
 					isRtl = this.props.rtl,
 					isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right');
 
-				if (firstVisibleIndex <= indexToScroll && indexToScroll <= lastVisibleIndex) {
+				if (firstIndex <= indexToScroll && indexToScroll < firstIndex + numOfItems) {
 					const node = this.uiRef.containerRef.querySelector(`[data-index='${indexToScroll}'].spottable`);
 
 					if (node) {
@@ -337,8 +337,8 @@ const VirtualListBaseFactory = (type) => {
 						Spotlight.pause();
 					}
 					focusedItem.blur();
+					this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
 				}
-				this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
 				this.uiRef.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
 			}
 

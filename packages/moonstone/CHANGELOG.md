@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Picker` to correctly update pressed state when dragging off buttons
 - `moonstone/Notification` to display when it's opened
+- `moonstone/VirtualList` and `moonstone/VirtualGridList`, to show Spotlight properly while navigating them with page up and down keys
 
 ## [2.0.0-alpha.6] - 2018-03-22
 
