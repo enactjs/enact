@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "enact clean",
-    "lint": "enact lint --framework",
+    "lint": "enact lint --strict",
     "test": "enact test start --single-run --browsers PhantomJS",
     "test-json": "enact test start --single-run --browsers PhantomJS --reporters json",
     "test-watch": "enact test start --browsers PhantomJS",

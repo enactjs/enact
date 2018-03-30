@@ -53,15 +53,6 @@ const ControlsContainer = SpotlightContainerDecorator(
 	'div'
 );
 
-// Keycode map for webOS TV
-const keyMap = {
-	'PLAY': 415,
-	'STOP': 413,
-	'PAUSE': 19,
-	'REWIND': 412,
-	'FASTFORWARD': 417
-};
-
 // provide forwarding of events on media controls
 const forwardControlsAvailable = forward('onControlsAvailable');
 const forwardBackwardButtonClick = forwardWithPrevent('onBackwardButtonClick');
@@ -307,6 +298,19 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		moreButtonCloseLabel: PropTypes.string,
+
+		/**
+		 * The color of the underline beneath more icon button.
+		 *
+		 * This property accepts one of the following color names, which correspond with the
+		 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
+		 *
+		 * @type {String}
+		 * @see {@link moonstone/IconButton.IconButtonBase.color}
+		 * @default 'blue'
+		 * @public
+		 */
+		moreButtonColor: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
 
 		/**
 		 * This boolean sets the disabled state of the "More" button.
@@ -670,6 +674,7 @@ const VideoPlayerBase = class extends React.Component {
 		jumpBy: 30,
 		jumpDelay: 200,
 		miniFeedbackHideDelay: 2000,
+		moreButtonColor: 'blue',
 		playbackRateHash: {
 			fastForward: ['2', '4', '8', '16'],
 			rewind: ['-2', '-4', '-8', '-16'],
@@ -1169,35 +1174,35 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleKeyUp = (ev) => {
-		if (this.props.disabled) {
+		const {disabled, moreButtonColor, moreButtonDisabled, noRateButtons, no5WayJump, rateButtonsDisabled} = this.props;
+
+		if (disabled) {
 			return;
 		}
-		const {PLAY, PAUSE, REWIND, FASTFORWARD} = keyMap;
 
-		switch (ev.keyCode) {
-			case PLAY:
+		if (is('play', ev.keyCode)) {
+			this.showMiniFeedback = true;
+			this.play();
+		} else if (is('pause', ev.keyCode)) {
+			this.showMiniFeedback = true;
+			this.pause();
+		} else if (!noRateButtons && !rateButtonsDisabled) {
+			if (is('rewind', ev.keyCode)) {
 				this.showMiniFeedback = true;
-				this.play();
-				break;
-			case PAUSE:
+				this.rewind();
+			} else if (is('fastForward', ev.keyCode)) {
 				this.showMiniFeedback = true;
-				this.pause();
-				break;
-			case REWIND:
-				if (!this.props.noRateButtons && !this.props.rateButtonsDisabled) {
-					this.showMiniFeedback = true;
-					this.rewind();
-				}
-				break;
-			case FASTFORWARD:
-				if (!this.props.noRateButtons && !this.props.rateButtonsDisabled) {
-					this.showMiniFeedback = true;
-					this.fastForward();
-				}
-				break;
+				this.fastForward();
+			}
 		}
 
-		if (!this.props.no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
+		if (this.state.bottomControlsRendered && this.state.mediaControlsVisible &&
+			moreButtonColor && !moreButtonDisabled && is(moreButtonColor, ev.keyCode)) {
+			Spotlight.focus(this.player.querySelector(`.${css.moreButton}`));
+			this.toggleMore();
+		}
+
+		if (!no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			this.stopListeningForPulses();
 			this.paused.resume();
 		}
@@ -1809,6 +1814,10 @@ const VideoPlayerBase = class extends React.Component {
 		() => this.jump(this.props.jumpBy)
 	)
 	onMoreClick = () => {
+		this.toggleMore();
+	}
+
+	toggleMore () {
 		if (this.state.more) {
 			this.moreInProgress = false;
 			this.startAutoCloseTimeout();	// Restore the timer since we are leaving "more.
@@ -1891,6 +1900,7 @@ const VideoPlayerBase = class extends React.Component {
 			jumpForwardIcon,
 			leftComponents,
 			moreButtonCloseLabel,
+			moreButtonColor,
 			moreButtonDisabled,
 			moreButtonLabel,
 			noAutoPlay,
@@ -2044,6 +2054,7 @@ const VideoPlayerBase = class extends React.Component {
 								leftComponents={leftComponents}
 								mediaDisabled={disabled || this.state.mediaControlsDisabled}
 								moreButtonCloseLabel={moreButtonCloseLabel}
+								moreButtonColor={moreButtonColor}
 								moreButtonDisabled={moreButtonDisabled}
 								moreButtonLabel={moreButtonLabel}
 								moreDisabled={moreDisabled}

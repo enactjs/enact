@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `moonstone/VideoPlayer` property `moreButtonColor` to allow setting underline colors for more button
+- `moonstone/Panels.Header` support for `headerInput` so the Header can be used as an Input. See documentation for usage examples.
+
+### Fixed
+
+- `moonstone/Picker` to correctly update pressed state when dragging off buttons
+- `moonstone/VirtualList` and `moonstone/VirtualGridList`, to show Spotlight properly while navigating them with page up and down keys
+
 ## [2.0.0-alpha.6] - 2018-03-22
 
 ### Removed
