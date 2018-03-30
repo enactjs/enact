@@ -27,18 +27,21 @@ const gridListItemSizeShape = PropTypes.shape({
 	minHeight: PropTypes.number.isRequired
 });
 
+/**
+ * The base version of the virtual list component.
+ *
+ * @class VirtualListBase
+ * @memberof ui/VirtualList
+ * @ui
+ * @public
+ */
 const VirtualListBaseFactory = (type) => {
 	return class VirtualListCore extends Component {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
 		static propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
 			/**
-			 * The `render` function for an item of the list receives the following parameters:
-			 *
-			 * @param {Object} event
-			 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
-			 * @param {Number} event.index The index number of the componet to render
-			 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
+			 * The `render` function called for each item in the list.
 			 *
 			 * > NOTE: The list does NOT always render a component whenever its render function is called
 			 * due to performance optimization.
@@ -46,13 +49,21 @@ const VirtualListBaseFactory = (type) => {
 			 * Usage:
 			 * ```
 			 * renderItem = ({index, ...rest}) => {
-			 *		return (
-			 *			<MyComponent index={index} {...rest} />
-			 *		);
+			 * 	delete rest.data;
+			 *
+			 * 	return (
+			 * 		<MyComponent index={index} {...rest} />
+			 * 	);
 			 * }
 			 * ```
 			 *
 			 * @type {Function}
+			 * @param {Object} event
+			 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
+			 * @param {Number} event.index The index number of the component to render
+			 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
+			 *
+			 * @required
 			 * @public
 			 */
 			itemRenderer: PropTypes.func.isRequired,
@@ -62,6 +73,7 @@ const VirtualListBaseFactory = (type) => {
 			 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
 			 *
 			 * @type {Number|ui/VirtualList.gridListItemSizeShape}
+			 * @required
 			 * @private
 			 */
 			itemSize: PropTypes.oneOfType([
@@ -73,6 +85,7 @@ const VirtualListBaseFactory = (type) => {
 			 * The render function for the items.
 			 *
 			 * @type {Function}
+			 * @required
 			 * @private
 			 */
 			itemsRenderer: PropTypes.func.isRequired,
