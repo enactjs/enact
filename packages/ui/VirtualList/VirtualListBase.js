@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import React, {Component, PureComponent} from 'react';
 
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -12,7 +12,7 @@ const
 	JS = 'JS',
 	Native = 'Native';
 
-class ScrollContent extends Component {
+class ScrollContent extends PureComponent {
 	static propTypes = {
 		rtl: PropTypes.bool,
 
