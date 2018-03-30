@@ -176,12 +176,95 @@ const VirtualGridListNative = kind({
 	)
 });
 
+/**
+ * A Moonstone-styled scrollable and spottable virtual list component.
+ *
+ * @class VirtualList
+ * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable.SpotlightContainerDecorator
+ * @extends moonstone/VirtualList.VirtualListBase
+ * @ui
+ * @public
+ */
+const VirtualListEasy = kind({
+	name: 'VirtualListEasy',
+
+	render: (props) => (
+		<VirtualList {...props} wrap />
+	)
+});
+
+/**
+ * A Moonstone-styled scrollable and spottable virtual grid list component.
+ *
+ * @class VirtualGridList
+ * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable.SpotlightContainerDecorator
+ * @extends moonstone/VirtualList.VirtualListBase
+ * @ui
+ * @public
+ */
+const VirtualGridListEasy = kind({
+	name: 'VirtualGridListEasy',
+
+	render: (props) => (
+		<VirtualGridList {...props} wrap />
+	)
+});
+
+
+/**
+ * A Moonstone-styled scrollable and spottable virtual native list component.
+ * For smooth native scrolling, web engine with below Chromium 61, should be launched
+ * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
+ * The one with Chromium 61 or above, is launched to support it by default.
+ *
+ * @class VirtualListNative
+ * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable.SpotlightContainerDecorator
+ * @extends moonstone/VirtualList.VirtualListBaseNative
+ * @ui
+ * @private
+ */
+const VirtualListNativeEasy = kind({
+	name: 'VirtualListNativeEasy',
+
+	render: (props) => (
+		<VirtualListNative {...props} wrap />
+	)
+});
+
+/**
+ * A Moonstone-styled scrollable and spottable virtual grid native list component.
+ * For smooth native scrolling, web engine with below Chromium 61, should be launched
+ * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
+ * The one with Chromium 61 or above, is launched to support it by default.
+ *
+ * @class VirtualGridListNative
+ * @memberof moonstone/VirtualList
+ * @mixes moonstone/Scrollable.SpotlightContainerDecorator
+ * @extends moonstone/VirtualList.VirtualListBaseNative
+ * @ui
+ * @private
+ */
+const VirtualGridListNativeEasy = kind({
+	name: 'VirtualGridListNativeEasy',
+
+	render: (props) => (
+		<VirtualGridListNative {...props} wrap />
+	)
+});
+
 export default VirtualList;
 export {
 	VirtualGridList,
+	VirtualGridListEasy,
 	VirtualGridListNative,
+	VirtualGridListNativeEasy,
 	VirtualList,
 	VirtualListBase,
 	VirtualListBaseNative,
-	VirtualListNative
+	VirtualListEasy,
+	VirtualListNative,
+	VirtualListNativeEasy
 };
