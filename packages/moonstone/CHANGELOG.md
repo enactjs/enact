@@ -9,6 +9,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` property `moreButtonColor` to allow setting underline colors for more button
 - `moonstone/Panels.Header` support for `headerInput` so the Header can be used as an Input. See documentation for usage examples.
 
+### Changed
+
+- `moonstone/ProgressBar` colors (affecting `moonstone/Slider` as well) for light and dark theme to match the latest designs and make them more visible when drawn over arbitrary background colors
+
 ### Fixed
 
 - `moonstone/Picker` to correctly update pressed state when dragging off buttons
