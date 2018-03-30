@@ -2,12 +2,6 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
-
-### Changed
-
-- `ui/Transition`'s outer container not to handle pointer events
-
 ## [2.0.0-alpha.6] - 2018-03-22
 
 ### Removed
