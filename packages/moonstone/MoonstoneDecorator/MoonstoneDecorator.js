@@ -17,11 +17,10 @@ import I18nFontDecorator from './I18nFontDecorator';
 import screenTypes from './screenTypes.json';
 import css from './MoonstoneDecorator.less';
 import {configure} from '@enact/ui/Touchable';
-import {contextTypes, Publisher} from '@enact/core/internal/PubSub';
-import PropTypes from 'prop-types';
-import Spotlight from '@enact/spotlight/src/spotlight';
-import {spottableClass} from '@enact/spotlight/Spottable';
-import {rootContainerId} from '@enact/spotlight/src/container';
+import {contextTypes} from '@enact/core/internal/PubSub';
+
+import Accessibility from './AccessibilityUtils';
+
 /**
  * Default config for {@link moonstone/MoonstoneDecorator.MoonstoneDecorator}.
  *
@@ -38,9 +37,7 @@ const defaultConfig = {
 	},
 	spotlight: true,
 	textSize: true,
-	skin: true,
-	dynamic: true,
-	screenTypes: null
+	skin: true
 };
 
 /**
@@ -63,7 +60,7 @@ const defaultConfig = {
  * @public
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {ri, i18n, float, noAutoFocus, overlay, skin, textSize, highContrast} = config;
+	const {ri, i18n, float, overlay, skin, textSize, highContrast} = config;
 
 	// Apply classes depending on screen type (overlay / fullscreen)
 	const bgClassName = 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
@@ -124,92 +121,25 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static childContextTypes = contextTypes
 
-		static propTypes =  /** @lends moonstone/MoonstoneDecorator.AccessibilityDecorator.prototype */ {
-			/**
-			 * Enables additional features to help users visually differentiate components.
-			 * The UI library will be responsible for using this information to adjust
-			 * the components' contrast to this preset.
-			 *
-			 * @type {Boolean}
-			 * @public
-			 */
-			highContrast: PropTypes.bool,
+		static propTypes =  Accessibility.accessibilityPropTypes;
 
-			/**
-			 * Set the goal size of the text. The UI library will be responsible for using this
-			 * information to adjust the components' text sizes to this preset.
-			 * Current presets are `'normal'` (default), and `'large'`.
-			 *
-			 * @type {String}
-			 * @default 'normal'
-			 * @public
-			 */
-			textSize: PropTypes.oneOf(['normal', 'large'])
-		}
-
-		static defaultProps = {
-			highContrast: false,
-			textSize: 'normal'
-		}
+		static defaultProps = Accessibility.defaultProps
 
 		getChildContext () {
 			return {
-				Subscriber: this.publisher.getSubscriber()
+				Subscriber: this.publisher.accessibility.getSubscriber()
 			};
 		}
 
 		componentWillMount () {
+			this.publisher = {};
 			if (textSize || highContrast) {
-				this.publisher = Publisher.create('resize', this.context.Subscriber);
+				this.publisher.accessibility = Accessibility.createResizePublisher(this.context.Subscriber);
 			}
-
-			if (typeof window === 'object') {
-				const palmSystem = window.PalmSystem;
-
-				Spotlight.initialize({
-					selector: '.' + spottableClass,
-					restrict: 'none'
-				});
-
-				Spotlight.set(rootContainerId, {
-					overflow: true
-				});
-
-				if (palmSystem && palmSystem.cursor) {
-					Spotlight.setPointerMode(palmSystem.cursor.visibility);
-				}
-			}
-		}
-
-		componentDidMount () {
-			if (!noAutoFocus) {
-				Spotlight.focus();
-			}
-			if (config.dynamic) window.addEventListener('resize', this.handleResize);
-			// eslint-disable-next-line react/no-find-dom-node
-			// this.rootNode = ReactDOM.findDOMNode(this);
 		}
 
 		componentDidUpdate (prevProps) {
-			if (prevProps.textSize !== this.props.textSize) {
-				this.publisher.publish({
-					horizontal: true,
-					vertical: true
-				});
-			}
-		}
-
-
-		componentWillUnmount () {
-			Spotlight.terminate();
-			if (config.dynamic) window.removeEventListener('resize', this.handleResize);
-		}
-
-		navigableFilter = (elem) => {
-			while (elem && elem !== document && elem.nodeType === 1) {
-				if (elem.getAttribute('data-container-disabled') === 'true') return false;
-				elem = elem.parentNode;
-			}
+			Accessibility.onTextSizeChange(this.props, prevProps, this.publisher);
 		}
 
 		render () {
@@ -222,8 +152,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			const {highContrast: contrast, textSize: size, ...props} = this.props;
-			const accessibilityClassName = contrast ? `enact-a11y-high-contrast enact-text-${size}` : `enact-text-${size}`;
-			const combinedClassName = className ? `${className} ${accessibilityClassName}` : accessibilityClassName;
+			const combinedClassName = Accessibility.createClassName(className, contrast, size);
 
 			return (
 				<App {...props} className={combinedClassName} />
