@@ -369,7 +369,7 @@ class Transition extends React.Component {
 			this.measureInner();
 		}
 
-		if (initialHeight === null && prevState.initialHeight === null) {
+		if (!this.childNode) {
 			if (!prevProps.visible && visible) {
 				forwardOnShow({}, this.props);
 			} else if (prevProps.visible && !visible) {
