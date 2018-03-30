@@ -731,7 +731,7 @@ VirtualListBase.displayName = 'VirtualListBase';
 const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'VirtualListBaseNative';
 
-const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
+const ScrollableVirtualList = ({...rest}) => ( // eslint-disable-line react/jsx-no-bind
 	<Scrollable
 		{...rest}
 		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
@@ -739,7 +739,7 @@ const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line reac
 				{...props}
 				itemsRenderer={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
-						cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
+						cc.length ? <div key="0" ref={initItemContainerRef} role="list">{cc}</div> : null,
 						primary ?
 							null :
 							<SpotlightPlaceholder
@@ -747,7 +747,6 @@ const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line reac
 								data-vl-placeholder
 								key="1"
 								onFocus={handlePlaceholderFocus}
-								role="region"
 							/>,
 						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
 					]
@@ -757,17 +756,7 @@ const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line reac
 	/>
 );
 
-ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
-	/**
-	 * Aria role.
-	 *
-	 * @type {String}
-	 * @private
-	 */
-	role: PropTypes.string
-};
-
-const ScrollableVirtualListNative = ({role, ...rest}) => (
+const ScrollableVirtualListNative = ({...rest}) => (
 	<ScrollableNative
 		{...rest}
 		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
@@ -775,7 +764,7 @@ const ScrollableVirtualListNative = ({role, ...rest}) => (
 				{...props}
 				itemsRenderer={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
-						cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
+						cc.length ? <div key="0" ref={initItemContainerRef} role="list">{cc}</div> : null,
 						primary ?
 							null :
 							<SpotlightPlaceholder
@@ -783,7 +772,6 @@ const ScrollableVirtualListNative = ({role, ...rest}) => (
 								data-vl-placeholder
 								key="1"
 								onFocus={handlePlaceholderFocus}
-								role="region"
 							/>,
 						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
 					]
@@ -792,16 +780,6 @@ const ScrollableVirtualListNative = ({role, ...rest}) => (
 		)}
 	/>
 );
-
-ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListNative.prototype */ {
-	/**
-	 * Aria role.
-	 *
-	 * @type {String}
-	 * @private
-	 */
-	role: PropTypes.string
-};
 
 const SpottableVirtualList = SpotlightContainerDecorator(SpotlightContainerConfig, ScrollableVirtualList);
 
