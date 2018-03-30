@@ -35,6 +35,14 @@ const defaultConfig = {
 	 */
 	notify: 'onScroll',
 
+	/**
+	 * Multiplier used with the Wrapped components height and width to determine the threshold for
+	 * replacing the placeholder component with the true component.
+	 *
+	 * @type {Number}
+	 * @default 1.5
+	 * @memberof ui/Placeholder.PlaceholderControllerDecorator.defaultConfig
+	 */
 	thresholdFactor: 1.5
 };
 
