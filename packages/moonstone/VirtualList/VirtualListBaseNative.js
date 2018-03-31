@@ -53,6 +53,11 @@ const deprecateComponent = deprecate(
 	{name: 'component', replacedBy: 'itemRenderer', until: '2.0.0'}
 );
 
+const deprecateData = deprecate(
+	() => {},
+	{name: 'data', until: '2.0.0'}
+);
+
 /**
  * {@link moonstone/VirtualList.VirtualListBaseNative} is a base component for
  * {@link moonstone/VirtualList.VirtualList} and
@@ -140,6 +145,7 @@ class VirtualListCoreNative extends Component {
 		 *
 		 * @type {Any}
 		 * @default []
+		 * @deprecated will be removed in 2.0.0
 		 * @public
 		 */
 		data: PropTypes.any,
@@ -645,6 +651,7 @@ class VirtualListCoreNative extends Component {
 			style = {};
 
 		deprecateComponent();
+		deprecateData();
 
 		this.composeStyle(style, ...rest);
 
