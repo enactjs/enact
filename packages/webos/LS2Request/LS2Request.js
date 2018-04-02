@@ -95,10 +95,10 @@ export default class LS2Request {
 		// eslint-disable-next-line no-undef
 		this.bridge = new PalmServiceBridge();
 		this.bridge.onservicecallback = this.callback.bind(this, onSuccess, onFailure, onComplete);
-		this.bridge.call(adjustPath(service) + method, JSON.stringify(parameters));
 		if (timeout) {
 			this.timeoutJob.startAfter(timeout, {onTimeout, timeout});
 		}
+		this.bridge.call(adjustPath(service) + method, JSON.stringify(parameters));
 		return this;
 	}
 
