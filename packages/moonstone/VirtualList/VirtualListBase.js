@@ -56,9 +56,10 @@ const
 	Native = 'Native';
 
 /**
- * The base version of the Moonstone virtual list component.
+ * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} and
+ * [VirtualListBaseNative]{@link moonstone/VirtualList.VirtualListBaseNative}.
  *
- * @class VirtualListBase
+ * @class VirtualListCore
  * @memberof moonstone/VirtualList
  * @ui
  * @public
@@ -69,7 +70,7 @@ const VirtualListBaseFactory = (type) => {
 	return class VirtualListCore extends Component {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
-		static propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
+		static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
 			/**
 			 * The `render` function called for each item in the list.
 			 *
@@ -751,7 +752,7 @@ const VirtualListBaseFactory = (type) => {
  * @memberof moonstone/VirtualList
  * @extends ui/VirtualList.VirtualListBase
  * @ui
- * @private
+ * @public
  */
 const VirtualListBase = VirtualListBaseFactory(JS);
 VirtualListBase.displayName = 'VirtualListBase';
@@ -764,7 +765,7 @@ VirtualListBase.displayName = 'VirtualListBase';
  * @memberof moonstone/VirtualList
  * @extends ui/VirtualList.VirtualListBaseNative
  * @ui
- * @private
+ * @public
  */
 const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'VirtualListBaseNative';
@@ -795,12 +796,12 @@ const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line reac
 	/>
 );
 
-ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
+ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 	/**
 	 * Aria role.
 	 *
 	 * @type {String}
-	 * @private
+	 * @public
 	 */
 	role: PropTypes.string
 };
@@ -831,12 +832,12 @@ const ScrollableVirtualListNative = ({role, ...rest}) => (
 	/>
 );
 
-ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListNative.prototype */ {
+ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListBaseNative.prototype */ {
 	/**
 	 * Aria role.
 	 *
 	 * @type {String}
-	 * @private
+	 * @public
 	 */
 	role: PropTypes.string
 };
