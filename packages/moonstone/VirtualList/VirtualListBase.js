@@ -765,7 +765,7 @@ VirtualListBase.displayName = 'VirtualListBase';
  * @memberof moonstone/VirtualList
  * @extends ui/VirtualList.VirtualListBaseNative
  * @ui
- * @public
+ * @private
  */
 const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'VirtualListBaseNative';
@@ -837,7 +837,7 @@ ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.Virtual
 	 * Aria role.
 	 *
 	 * @type {String}
-	 * @public
+	 * @private
 	 */
 	role: PropTypes.string
 };
