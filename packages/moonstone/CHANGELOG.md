@@ -4,15 +4,36 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/VideoPlayer` property `moreButtonColor` to allow setting underline colors for more button
+- `moonstone/Panels.Header` support for `headerInput` so the Header can be used as an Input. See documentation for usage examples.
+- `moonstone/ProgressBar` prop `tooltipSide` to configure tooltip position relative to the progress bar
+
+### Changed
+
+- `moonstone/ProgressBar` colors (affecting `moonstone/Slider` as well) for light and dark theme to match the latest designs and make them more visible when drawn over arbitrary background colors
+
+### Fixed
+
+- `moonstone/Picker` to correctly update pressed state when dragging off buttons
+- `moonstone/VirtualList` and `moonstone/VirtualGridList`, to show Spotlight properly while navigating them with page up and down keys
+
+## [2.0.0-alpha.6] - 2018-03-22
+
 ### Removed
 
 - `moonstone/Slider` exports `SliderFactory` and `SliderBaseFactory`
 - `moonstone/IncrementSlider` exports `IncrementSliderFactory` and `IncrementSliderBaseFactory`
+- `moonstone/ProgressBar`, `moonstone/Slider`, `moonstone/Slider.SliderTooltip`, `moonstone/IncrementSlider` components' `vertical` property and replaced it with `orientation`
 
 ### Added
 
+- `moonstone/VideoPlayer` property `component` to handle custom video element
 - `moonstone/IncrementSlider` properties `incrementAriaLabel` and `decrementAriaLabel` to configure the label set on each button
 - `moonstone/Input` support for `small` prop
+- `moonstone/ProgressBar` support for `tooltip` and `tooltipForceSide`
+- `moonstone/ProgressBar`, `moonstone/Slider`, `moonstone/Slider.SliderTooltip`, `moonstone/IncrementSlider` property `orientation` to accept orientation strings like "vertical" and "horizontal" (replaced old `vertical` prop)
 
 ### Changed
 
@@ -22,9 +43,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ContextualPopup` prop `popupContainerId` to `popupSpotlightId`
 - `moonstone/Popup` prop `containerId` to `spotlightId`
 - `moonstone/VideoPlayer` prop `containerId` to `spotlightId`
-
-### Changed
-
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
 
 ### Fixed
@@ -37,6 +55,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` to highlight knob when selected
 - `moonstone/Slider` to handle updates to its `value` prop correctly
 - `moonstone/ToggleItem` to accept HTML DOM node tag names as strings for its `component` property
+- `moonstone/Popup` to properly pause and resume spotlight when animating
 
 ## [2.0.0-alpha.5] - 2018-03-07
 

@@ -73,7 +73,7 @@ const GridListImageItemBase = kind({
 		 * component, `kind()` or React component. The following is an example with custom selection
 		 * overlay kind.
 		 *
-		 * Example Usage:
+		 * Usage:
 		 * ```
 		 * const SelectionOverlay = kind({
 		 * 	render: () => <div>custom overlay</div>
@@ -134,7 +134,11 @@ const GridListImageItemDecorator = compose(
  *
  * Usage:
  * ```
- * <GridListImageItem source="http://placehold.it/300x300/9037ab/ffffff&text=Image0" caption="image0" subCaption="sub-image0" />
+ * <GridListImageItem
+ * 	caption="image0"
+ * 	source="http://placehold.it/300x300/9037ab/ffffff&text=Image0"
+ * 	subCaption="sub-image0"
+ * />
  * ```
  *
  * @class GridListImageItem
