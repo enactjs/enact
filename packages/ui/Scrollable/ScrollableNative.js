@@ -1013,18 +1013,6 @@ class ScrollableBaseNative extends Component {
 
 	// render
 
-	initChildRef = (ref) => {
-		if (ref) {
-			this.childRef = ref;
-		}
-	}
-
-	initContainerRef = (ref) => {
-		if (ref) {
-			this.containerRef = ref;
-		}
-	}
-
 	initHorizontalScrollbarRef = (ref) => {
 		if (ref) {
 			this.horizontalScrollbarRef = ref;
@@ -1034,6 +1022,18 @@ class ScrollableBaseNative extends Component {
 	initVerticalScrollbarRef = (ref) => {
 		if (ref) {
 			this.verticalScrollbarRef = ref;
+		}
+	}
+
+	initUiChildRef = (ref) => {
+		if (ref) {
+			this.childRef = ref;
+		}
+	}
+
+	initUiContainerRef = (ref) => {
+		if (ref) {
+			this.containerRef = ref;
 		}
 	}
 
@@ -1063,8 +1063,8 @@ class ScrollableBaseNative extends Component {
 			className: scrollableClasses,
 			componentCss: css,
 			horizontalScrollbarProps: this.horizontalScrollbarProps,
-			initContainerRef: this.initContainerRef,
-			initUiChildRef: this.initChildRef,
+			initUiContainerRef: this.initUiContainerRef,
+			initUiChildRef: this.initUiChildRef,
 			isHorizontalScrollbarVisible,
 			isVerticalScrollbarVisible,
 			scrollTo: this.scrollTo,
@@ -1115,7 +1115,7 @@ class ScrollableNative extends Component {
 					className,
 					componentCss,
 					horizontalScrollbarProps,
-					initContainerRef,
+					initUiContainerRef,
 					initUiChildRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
@@ -1126,7 +1126,7 @@ class ScrollableNative extends Component {
 				}) => (
 					<div
 						className={className}
-						ref={initContainerRef}
+						ref={initUiContainerRef}
 						style={style}
 					>
 						<div className={componentCss.container}>
