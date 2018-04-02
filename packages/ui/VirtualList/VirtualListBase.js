@@ -721,7 +721,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		initItemContainerRef = (ref) => {
+		initUiItemContainerRef = (ref) => {
 			if (ref) {
 				this.itemContainerRef = ref;
 			}
@@ -740,7 +740,7 @@ const VirtualListBaseFactory = (type) => {
 		render () {
 			const
 				{className, itemsRenderer, style, ...rest} = this.props,
-				{cc, initItemContainerRef, primary} = this,
+				{cc, initUiItemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className);
 
 			delete rest.cbScrollTo;
@@ -764,7 +764,7 @@ const VirtualListBaseFactory = (type) => {
 			return (
 				<div className={containerClasses} ref={this.initContainerRef} style={style}>
 					<div {...rest} ref={this.initContentRef}>
-						{itemsRenderer({cc, initItemContainerRef, primary})}
+						{itemsRenderer({cc, initUiItemContainerRef, primary})}
 					</div>
 				</div>
 			);
@@ -802,8 +802,8 @@ const ScrollableVirtualList = (props) => (
 		childRenderer={({initUiChildRef, ...virtualListProps}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
 				{...virtualListProps}
-				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
+				itemsRenderer={({cc, initUiItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+					cc.length ? <div ref={initUiItemContainerRef}>{cc}</div> : null
 				)}
 				ref={initUiChildRef}
 			/>
@@ -817,8 +817,8 @@ const ScrollableVirtualListNative = (props) => (
 		childRenderer={({initUiChildRef, ...virtualListProps}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...virtualListProps}
-				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
+				itemsRenderer={({cc, initUiItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+					cc.length ? <div ref={initUiItemContainerRef}>{cc}</div> : null
 				)}
 				ref={initUiChildRef}
 			/>

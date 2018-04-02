@@ -504,8 +504,8 @@ class ScrollableNative extends Component {
 					className,
 					componentCss,
 					horizontalScrollbarProps,
-					initContainerRef,
 					initUiChildRef,
+					initUiContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
 					scrollTo,
@@ -515,7 +515,7 @@ class ScrollableNative extends Component {
 				}) => (
 					<ScrollableSpotlightContainer
 						className={className}
-						containerRef={initContainerRef}
+						containerRef={initUiContainerRef}
 						focusableScrollbar={focusableScrollbar}
 						style={style}
 					>
