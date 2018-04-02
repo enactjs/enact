@@ -6,6 +6,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/VideoPlayer` property `noSpinner` to allow apps to show/hide spinner while loading video
+
+### Changed
+
+- `moonstone/VideoPlayer` to disable play/pause button when media controls are disabled
 - `moonstone/VideoPlayer` property `moreButtonColor` to allow setting underline colors for more button
 - `moonstone/Panels.Header` support for `headerInput` so the Header can be used as an Input. See documentation for usage examples.
 - `moonstone/ProgressBar` prop `tooltipSide` to configure tooltip position relative to the progress bar
@@ -16,6 +21,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VideoPlayer` to correctly adjust spaces when the number of components changes in `leftComponents` and `rightComponents`
+- `moonstone/VideoPlayer` to read out audio guidance every time `source` changes
+- `moonstone/VideoPlayer` to display custom thumbnail node
+- `moonstone/VideoPlayer` to hide more icon when right components are removed
 - `moonstone/Picker` to correctly update pressed state when dragging off buttons
 - `moonstone/VirtualList` and `moonstone/VirtualGridList`, to show Spotlight properly while navigating them with page up and down keys
 
