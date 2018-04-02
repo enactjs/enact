@@ -1,15 +1,16 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames';
-import equals from 'ramda/src/equals';
 
+import Pure from '@enact/ui/internal/Pure';
+import {compareSources} from '@enact/moonstone/VideoPlayer/util';
+import Media from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Spottable from '@enact/spotlight/Spottable';
-import {forward} from '@enact/core/handle';
 
 import Image from '../Image';
 import Skinnable from '../Skinnable';
-import {MarqueeController, MarqueeText} from '../Marquee';
+import {MarqueeController, Marquee} from '../Marquee';
 
 import css from './PictureInGraphics.less';
 
@@ -32,13 +33,6 @@ class PictureInGraphicsBase extends React.Component {
 		 */
 		source: PropTypes.node.isRequired,
 		/**
-		 * Component is displayed below video area.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		captionComponent: PropTypes.node,
-		/**
 		 * Image path for image overlay
 		 *
 		 * @type {String}
@@ -50,14 +44,7 @@ class PictureInGraphicsBase extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onLoadedMetadata: PropTypes.func,
-		/**
-		 * It is called when video area is clicked.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onVideoClick: PropTypes.func,
+		noAutoPlay: PropTypes.bool,
 		/**
 		 * Placeholder for image overlay
 		 *
@@ -66,7 +53,7 @@ class PictureInGraphicsBase extends React.Component {
 		 */
 		placeholder: PropTypes.string,
 		/**
-		 * When `true`, spotlight is disabled and onVideoClick event does not occur.
+		 * When `true`, spotlight is disabled
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -85,11 +72,38 @@ class PictureInGraphicsBase extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		textOverlayContent: PropTypes.string
+		textOverlayContent: PropTypes.string,
+		/**
+		 * Video component to use. The default (`'video'`) renders an `HTMLVideoElement`. Custom
+		 * video components must have a similar API structure, exposing the following APIs:
+		 *
+		 * Properties:
+		 * * `currentTime` {Number} - Playback index of the media in seconds
+		 * * `duration` {Number} - Media's entire duration in seconds
+		 * * `error` {Boolean} - `true` if video playback has errored.
+		 * * `loading` {Boolean} - `true` if video playback is loading.
+		 * * `paused` {Boolean} - Playing vs paused state. `true` means the media is paused
+		 * * `playbackRate` {Number} - Current playback rate, as a number
+		 * * `proportionLoaded` {Number} - A value between `0` and `1`
+		 *	representing the proportion of the media that has loaded
+		 * * `proportionPlayed` {Number} - A value between `0` and `1` representing the
+		 *	proportion of the media that has already been shown
+		 *
+		 * Methods:
+		 * * `play()` - play video
+		 * * `pause()` - pause video
+		 * * `load()` - load video
+		 *
+		 * @type {Component}
+		 * @default 'video'
+		 * @public
+		 */
+		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
 	}
 
 	static defaultProps = {
-		placeholder: defaultPlaceholder
+		placeholder: defaultPlaceholder,
+		videoComponent: 'video'
 	}
 
 	constructor (props) {
@@ -105,24 +119,14 @@ class PictureInGraphicsBase extends React.Component {
 		const {source} = this.props;
 		const {source: prevSource} = prevProps;
 
-		if (prevSource !== source && !equals(source, prevSource)) {
+		if (!compareSources(source, prevSource)) {
 			this.video.load();
 		}
-	}
-
-	handleLoadedMetadata = (ev) => {
-		forward('onLoadedMetadata', ev, this.props);
 	}
 
 	setVideoRef = (video) => {
 		this.video = video;
 	}
-
-	handleClick = (ev) => {
-		if (!this.props.spotlightDisabled) {
-			forward('onVideoClick', ev, this.props);
-		}
-	};
 
 	render () {
 		const {
@@ -131,43 +135,39 @@ class PictureInGraphicsBase extends React.Component {
 			placeholder,
 			imageOverlaySrc,
 			textOverlayContent,
-			captionComponent,
 			spotlightDisabled,
 			textOverlayColor,
+			videoComponent,
+			noAutoPlay,
 			...rest} = this.props;
-
-		delete rest.onLoadedMetadata;
-		delete rest.onVideoClick;
 
 		const containerClassName = classNames(className, css.pictureInGraphics);
 		const textOverlayStyle = {color: textOverlayColor};
 
 		return (
-			<Container {...rest} className={containerClassName} spotlightDisabled={spotlightDisabled}>
-				<div className={css.videoContainer} onClick={this.handleClick} >
-					<video
-						className={css.video}
-						autoPlay
-						controls={false}
-						ref={this.setVideoRef}
-						onLoadedMetadata={this.handleLoadedMetadata}
-					>
-						{source}
-					</video>
-					{imageOverlaySrc ? <Image placeholder={placeholder} className={css.image} src={imageOverlaySrc} /> : null}
-					{textOverlayContent ? (<MarqueeText alignment="center" className={css.textOverlay} style={textOverlayStyle}>{textOverlayContent}</MarqueeText>) : null}
-				</div>
-				<div className={css.captionContainer}>
-					{captionComponent}
-				</div>
+			<Container className={containerClassName} spotlightDisabled={spotlightDisabled}>
+				<Media
+					{...rest}
+					autoPlay={!noAutoPlay}
+					className={css.video}
+					component={videoComponent}
+					controls={false}
+					ref={this.setVideoRef}
+				>
+					{source}
+				</Media>
+				{imageOverlaySrc ? <Image placeholder={placeholder} className={css.image} src={imageOverlaySrc} /> : null}
+				{textOverlayContent ? (<Marquee alignment="center" className={css.textOverlay} style={textOverlayStyle}>{textOverlayContent}</Marquee>) : null}
 			</Container>
 		);
 	}
 }
 
-const PictureInGraphics = Slottable(
-	{slots: ['captionComponent', 'source']},
-	Skinnable(PictureInGraphicsBase)
+const PictureInGraphics = Pure(
+	Slottable(
+		{slots: ['source']},
+		Skinnable(PictureInGraphicsBase)
+	)
 );
 
 export default PictureInGraphics;
