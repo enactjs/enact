@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
-import ScrollableChildAdpater from './ScrollableChildAdpater';
+import ScrollableChildProvider from './ScrollableChildProvider';
 
 import css from './VirtualList.less';
 
@@ -237,31 +237,42 @@ const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'ui:VirtualListBaseNative';
 
 const ScrollableVirtualList = (props) => (
-	<Scrollable
+	<ScrollableChildProvider
 		{...props}
-		childRenderer={({initUiChildRef, ...virtualListProps}) => ( // eslint-disable-line react/jsx-no-bind
-			<ScrollableChildAdpater
-				{...virtualListProps}
-				itemsRenderer={({cc, initUiItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initUiItemContainerRef}>{cc}</div> : null
+		render={({scrollableChildAdapter, ...vlbProps}) => ( // eslint-disable-line react/jsx-no-bind
+			<Scrollable
+				{...props}
+				scrollableChildAdapter={scrollableChildAdapter}
+				childRenderer={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
+					<VirtualListBase
+						{...virtualListProps}
+						{...vlbProps}
+						itemsRenderer={({cc, initUiItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+							cc.length ? <div ref={initUiItemContainerRef}>{cc}</div> : null
+						)}
+					/>
 				)}
-				ref={initUiChildRef}
-				render={(props) => (<VirtualListBase {...props} />)}
 			/>
 		)}
 	/>
 );
 
 const ScrollableVirtualListNative = (props) => (
-	<ScrollableNative
+	<ScrollableChildProvider
 		{...props}
-		childRenderer={({initUiChildRef, ...virtualListProps}) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBaseNative
-				{...virtualListProps}
-				itemsRenderer={({cc, initUiItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initUiItemContainerRef}>{cc}</div> : null
+		render={({scrollableChildAdapter, ...vlbProps}) => ( // eslint-disable-line react/jsx-no-bind
+			<ScrollableNative
+				{...props}
+				scrollableChildAdapter={scrollableChildAdapter}
+				childRenderer={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
+					<VirtualListBaseNative
+						{...virtualListProps}
+						{...vlbProps}
+						itemsRenderer={({cc, initUiItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+							cc.length ? <div ref={initUiItemContainerRef}>{cc}</div> : null
+						)}
+					/>
 				)}
-				ref={initUiChildRef}
 			/>
 		)}
 	/>

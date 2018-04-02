@@ -3,7 +3,7 @@ import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import ScrollableChildAdpater from '@enact/ui/VirtualList/ScrollableChildAdpater';
+import ScrollableChildProvider from '@enact/ui/VirtualList/ScrollableChildProvider';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Spottable from '@enact/spotlight/Spottable';
@@ -716,7 +716,7 @@ const VirtualListBaseFactory = (type) => {
 		initUiRef = (ref) => {
 			if (ref) {
 				this.uiRef = ref;
-				// this.props.initUiChildRef(ref);
+				this.props.initUiChildRef(ref);
 			}
 		}
 
@@ -780,30 +780,35 @@ const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'VirtualListBaseNative';
 
 const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
-	<Scrollable
+	<ScrollableChildProvider
 		{...rest}
-		childRenderer={({initUiChildRef, ...childRest}) => { // eslint-disable-line react/jsx-no-bind
-			return <ScrollableChildAdpater
-				{...childRest}
-				ref={initUiChildRef}
-				itemsRenderer={({cc, primary, needsScrollingPlaceholder, initUiItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
-					[
-						cc.length ? <div key="0" ref={initUiItemContainerRef} role={role}>{cc}</div> : null,
-						primary ?
-							null :
-							<SpotlightPlaceholder
-								data-index={0}
-								data-vl-placeholder
-								key="1"
-								onFocus={handlePlaceholderFocus}
-								role="region"
-							/>,
-						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
-					]
+		render={({scrollableChildAdapter, ...vlbProps}) => ( // eslint-disable-line react/jsx-no-bind
+			<Scrollable
+				{...rest}
+				scrollableChildAdapter={scrollableChildAdapter}
+				childRenderer={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
+					<VirtualListBase
+						{...virtualListProps}
+						{...vlbProps}
+						itemsRenderer={({cc, primary, needsScrollingPlaceholder, initUiItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
+							[
+								cc.length ? <div key="0" ref={initUiItemContainerRef} role={role}>{cc}</div> : null,
+								primary ?
+									null :
+									<SpotlightPlaceholder
+										data-index={0}
+										data-vl-placeholder
+										key="1"
+										onFocus={handlePlaceholderFocus}
+										role="region"
+									/>,
+								needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
+							]
+						)}
+					/>
 				)}
-				render={(props) => (<VirtualListBase {...props} />)}
 			/>
-		}}
+		)}
 	/>
 );
 

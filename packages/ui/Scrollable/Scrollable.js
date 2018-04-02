@@ -295,6 +295,8 @@ class ScrollableBase extends Component {
 	constructor (props) {
 		super(props);
 
+		this.providerRef = props.scrollableChildAdapter;
+
 		this.state = {
 			rtl: false,
 			remeasure: false,
@@ -321,6 +323,8 @@ class ScrollableBase extends Component {
 	})
 
 	componentWillMount () {
+		this.providerRef.componentWillMount();
+
 		this.publisher = Publisher.create('resize', this.context.Subscriber);
 		this.publisher.publish({
 			remeasure: false
@@ -333,14 +337,20 @@ class ScrollableBase extends Component {
 	}
 
 	componentDidMount () {
+		this.providerRef.componentDidMount();
+
 		const bounds = this.getScrollBounds();
 
 		this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
-		this.direction = this.childRef.props.direction;
+		this.direction = this.providerRef.props.direction;
 		this.addEventListeners();
 		this.updateScrollbars();
 
 		on('keydown', this.onKeyDown);
+	}
+
+	componentWillReceiveProps (nextProps) {
+		this.providerRef.componentWillReceiveProps(nextProps);
 	}
 
 	componentWillUpdate () {
@@ -350,12 +360,12 @@ class ScrollableBase extends Component {
 	componentDidUpdate (prevProps, prevState) {
 		const
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-			{hasDataSizeChanged} = this.childRef;
+			{hasDataSizeChanged} = this.providerRef;
 
 		// Need to sync calculated client size if it is different from the real size
-		if (this.childRef.syncClientSize) {
+		if (this.providerRef.syncClientSize) {
 			// If we actually synced, we need to reset scroll position.
-			if (this.childRef.syncClientSize()) {
+			if (this.providerRef.syncClientSize()) {
 				this.setScrollLeft(0);
 				this.setScrollTop(0);
 			}
@@ -363,7 +373,7 @@ class ScrollableBase extends Component {
 
 		this.clampScrollPosition();
 
-		this.direction = this.childRef.props.direction;
+		this.direction = this.providerRef.props.direction;
 		this.addEventListeners();
 		if (
 			hasDataSizeChanged === false &&
@@ -411,7 +421,7 @@ class ScrollableBase extends Component {
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
 	enqueueForceUpdate = () => {
-		this.childRef.calculateMetrics();
+		this.providerRef.calculateMetrics();
 		this.forceUpdate();
 	}
 
@@ -470,7 +480,7 @@ class ScrollableBase extends Component {
 	scrollToInfo = null
 
 	// component info
-	childRef = null
+	providerRef = null
 	containerRef = null
 
 	// scroll animator
@@ -716,7 +726,7 @@ class ScrollableBase extends Component {
 			this.setScrollTop(top);
 		}
 
-		this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, dirX, dirY);
+		this.providerRef.setScrollPosition(this.scrollLeft, this.scrollTop, dirX, dirY);
 		this.forwardScrollEvent('onScroll');
 	}
 
@@ -775,11 +785,11 @@ class ScrollableBase extends Component {
 					}
 				}
 			} else {
-				if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
-					itemPos = this.childRef.getItemPosition(opt.index, opt.stickTo);
+				if (typeof opt.index === 'number' && typeof this.providerRef.getItemPosition === 'function') {
+					itemPos = this.providerRef.getItemPosition(opt.index, opt.stickTo);
 				} else if (opt.node instanceof Object) {
-					if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
-						itemPos = this.childRef.getNodePosition(opt.node);
+					if (opt.node.nodeType === 1 && typeof this.providerRef.getNodePosition === 'function') {
+						itemPos = this.providerRef.getNodePosition(opt.node);
 					}
 				}
 				if (itemPos) {
@@ -917,14 +927,14 @@ class ScrollableBase extends Component {
 	// ref
 
 	getScrollBounds () {
-		if (typeof this.childRef.getScrollBounds === 'function') {
-			return this.childRef.getScrollBounds();
+		if (typeof this.providerRef.getScrollBounds === 'function') {
+			return this.providerRef.getScrollBounds();
 		}
 	}
 
 	getMoreInfo () {
-		if (typeof this.childRef.getMoreInfo === 'function') {
-			return this.childRef.getMoreInfo();
+		if (typeof this.providerRef.getMoreInfo === 'function') {
+			return this.providerRef.getMoreInfo();
 		}
 	}
 
@@ -1020,6 +1030,8 @@ class ScrollableBase extends Component {
 		delete rest.stop;
 		delete rest.verticalScrollbar;
 
+		delete rest.scrollableChildAdapter;
+
 		return containerRenderer({
 			childComponentProps: {...rest, rtl},
 			className: scrollableClasses,
@@ -1078,7 +1090,7 @@ class Scrollable extends Component {
 					componentCss,
 					handleScroll,
 					horizontalScrollbarProps,
-					initUiChildRef,
+					initUiproviderRef,
 					initUiContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
@@ -1098,7 +1110,7 @@ class Scrollable extends Component {
 									...childComponentProps,
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
-									initUiChildRef,
+									initUiproviderRef,
 									onScroll: handleScroll
 								})}
 							</TouchableDiv>

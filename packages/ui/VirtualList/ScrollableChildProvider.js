@@ -1,11 +1,5 @@
-import classNames from 'classnames';
+import {Component} from 'react';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
-
-import Scrollable from '../Scrollable';
-import ScrollableNative from '../Scrollable/ScrollableNative';
-
-import css from './VirtualList.less';
 
 const
 	nop = () => {},
@@ -27,8 +21,8 @@ const gridListItemSizeShape = PropTypes.shape({
 	minHeight: PropTypes.number.isRequired
 });
 
-const ScrollableChildAdapterFactory = (type) => {
-	return class VirtualListCore extends Component {
+const ScrollableChildProviderFactory = (type) => {
+	return class ScrollableChildProviderCore extends Component {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
 		static propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
@@ -82,7 +76,7 @@ const ScrollableChildAdapterFactory = (type) => {
 			 * @type {Function}
 			 * @private
 			 */
-			itemsRenderer: PropTypes.func.isRequired,
+			// itemsRenderer: PropTypes.func.isRequired,
 
 			/**
 			 * Callback method of scrollTo.
@@ -166,6 +160,11 @@ const ScrollableChildAdapterFactory = (type) => {
 			 * @private
 			 */
 			pageScroll: PropTypes.bool,
+
+			/**
+			 * TBD
+			 */
+			render: PropTypes.func,
 
 			/**
 			 * `true` if rtl, `false` if ltr.
@@ -613,29 +612,29 @@ const ScrollableChildAdapterFactory = (type) => {
 		}
 
 		render () {
-			const {render, ...rest} = this.props;
+			const {render} = this.props;
 
 			return (
 				render({
-					...rest,
 					dimensionToExtent: this.dimensionToExtent,
 					getGridPosition: this.getGridPosition,
 					isItemSized: this.isItemSized,
 					isPrimaryDirectionVertical: this.isPrimaryDirectionVertical,
 					primary: this.primary,
 					secondary: this.secondary,
-					setProvider: this.setProvider
+					setProvider: this.setProvider,
+					scrollableChildAdapter: this
 				})
 			);
 		}
 	};
 };
 
-const ScrollableChildAdpater = ScrollableChildAdapterFactory(JS);
-const ScrollableChildAdpaterNative = ScrollableChildAdapterFactory(Native);
+const ScrollableChildProvider = ScrollableChildProviderFactory(JS);
+const ScrollableChildProviderNative = ScrollableChildProviderFactory(Native);
 
-export default ScrollableChildAdpater;
+export default ScrollableChildProvider;
 export {
-	ScrollableChildAdpater,
-	ScrollableChildAdpaterNative
+	ScrollableChildProvider,
+	ScrollableChildProviderNative
 };
