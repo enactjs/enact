@@ -4,12 +4,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Fixed
-
-- `moonstone/Panels.ActivityPanels` to correctly lay out the existing panel after adding additional panels
-
-## [2.0.0-alpha.6]
-
 ### Removed
 
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `data`
@@ -25,9 +19,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `isItemDisabled`, which accepts a function that checks if the item at the supplied index is disabled
 - `moonstone/Panels.Header` support for `headerInput` so the Header can be used as an Input. See documentation for usage examples.
 - `moonstone/ProgressBar` prop `tooltipSide` to configure tooltip position relative to the progress bar
-
-### Changed
-
 - `moonstone/ProgressBar` colors (affecting `moonstone/Slider` as well) for light and dark theme to match the latest designs and make them more visible when drawn over arbitrary background colors
 
 ### Fixed
@@ -40,6 +31,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Notification` to display when it's opened
 - `moonstone/VirtualList` and `moonstone/VirtualGridList`, to show Spotlight properly while navigating them with page up and down keys
 - `moonstone/Input` to allow navigating via left or right to other components when the input is active and the selection is at start or end of the text, respectively
+- `moonstone/Panels.ActivityPanels` to correctly lay out the existing panel after adding additional panels
 
 ## [2.0.0-alpha.6] - 2018-03-22
 
