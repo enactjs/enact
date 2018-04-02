@@ -3,6 +3,7 @@ import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import ScrollableChildAdpater from '@enact/ui/VirtualList/ScrollableChildAdpater';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Spottable from '@enact/spotlight/Spottable';
@@ -715,7 +716,7 @@ const VirtualListBaseFactory = (type) => {
 		initUiRef = (ref) => {
 			if (ref) {
 				this.uiRef = ref;
-				this.props.initUiChildRef(ref);
+				// this.props.initUiChildRef(ref);
 			}
 		}
 
@@ -781,9 +782,10 @@ VirtualListBaseNative.displayName = 'VirtualListBaseNative';
 const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 	<Scrollable
 		{...rest}
-		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBase
-				{...props}
+		childRenderer={({initUiChildRef, ...childRest}) => { // eslint-disable-line react/jsx-no-bind
+			return <ScrollableChildAdpater
+				{...childRest}
+				ref={initUiChildRef}
 				itemsRenderer={({cc, primary, needsScrollingPlaceholder, initUiItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initUiItemContainerRef} role={role}>{cc}</div> : null,
@@ -799,8 +801,9 @@ const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line reac
 						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
 					]
 				)}
+				render={(props) => (<VirtualListBase {...props} />)}
 			/>
-		)}
+		}}
 	/>
 );
 
