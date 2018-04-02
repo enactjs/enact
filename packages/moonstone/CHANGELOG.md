@@ -32,6 +32,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` and `moonstone/VirtualGridList`, to show Spotlight properly while navigating them with page up and down keys
 - `moonstone/Input` to allow navigating via left or right to other components when the input is active and the selection is at start or end of the text, respectively
 - `moonstone/Panels.ActivityPanels` to correctly lay out the existing panel after adding additional panels
+- `moonstone/TimePickerBase` to show `meridiem` correctly in all locales
 
 ## [2.0.0-alpha.6] - 2018-03-22
 
