@@ -21,6 +21,12 @@ const adjustPath = (path) => {
 const failureHandler = ({errorText}) => console.error(`LS2Request: ${errorText}`);
 const timeoutHandler = ({errorText}) => console.warn(`LS2Request: ${errorText}`);
 
+/**
+ * A class for managing LS2 Requests
+ *
+ * @memberof webos/LS2Request
+ * @class
+ */
 export default class LS2Request {
 	timeoutJob = new Job(({onTimeout, timeout}) => {
 		onTimeout({errorCode: -2, errorText: `Request timed out after ${timeout} ms.`, returnValue: false});
@@ -31,7 +37,7 @@ export default class LS2Request {
 	/**
 	 * Create a new LS2 request
 	 *
-	 * @memberof webos/LS2Request
+	 * @memberof webos/LS2Request.LS2Request
 	 * @constructor
 	 */
 	constructor () {
@@ -43,7 +49,7 @@ export default class LS2Request {
 	 * Send a request to an LS2 service method.
 	 *
 	 * @method
-	 * @memberof webos/LS2Request
+	 * @memberof webos/LS2Request.LS2Request.prototype
 	 * @param {Object} options Options for the LS2 Request call
 	 * @param {String} options.service The name of the LS2 service.  Do not include 'luna://'.
 	 * @param {String} options.method The name of the method.
@@ -149,7 +155,7 @@ export default class LS2Request {
 	 * Cancel the current LS2 request.
 	 *
 	 * @method
-	 * @memberof webos/LS2Request
+	 * @memberof webos/LS2Request.LS2Request.prototype
 	 * @returns {undefined}
 	 * @public
 	 */
