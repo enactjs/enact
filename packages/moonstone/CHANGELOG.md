@@ -4,6 +4,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Fixed
+
+- `moonstone/Panels.ActivityPanels` to correctly lay out the existing panel after adding additional panels
+
+## [2.0.0-alpha.6]
+
 ### Removed
 
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `data`
