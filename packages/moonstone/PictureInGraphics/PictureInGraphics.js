@@ -14,8 +14,6 @@ import {MarqueeController, Marquee} from '../Marquee';
 
 import css from './PictureInGraphics.less';
 
-const Container = MarqueeController({marqueeOnFocus: true}, Spottable('div'));
-
 const defaultPlaceholder =
 	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
 	'9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
@@ -32,6 +30,7 @@ class PictureInGraphicsBase extends React.Component {
 		 * @public
 		 */
 		source: PropTypes.node.isRequired,
+
 		/**
 		 * Image path for image overlay
 		 *
@@ -39,12 +38,14 @@ class PictureInGraphicsBase extends React.Component {
 		 * @public
 		 */
 		imageOverlaySrc: PropTypes.string,
+
 		/**
 		 *
 		 * @type {Function}
 		 * @public
 		 */
 		noAutoPlay: PropTypes.bool,
+
 		/**
 		 * Placeholder for image overlay
 		 *
@@ -52,13 +53,7 @@ class PictureInGraphicsBase extends React.Component {
 		 * @public
 		 */
 		placeholder: PropTypes.string,
-		/**
-		 * When `true`, spotlight is disabled
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		spotlightDisabled: PropTypes.bool,
+
 		/**
 		 * Font color of text overlay. It is a hexadecimal string.
 		 *
@@ -66,6 +61,7 @@ class PictureInGraphicsBase extends React.Component {
 		 * @public
 		 */
 		textOverlayColor: PropTypes.string,
+
 		/**
 		 * Text of text overlay
 		 *
@@ -73,6 +69,7 @@ class PictureInGraphicsBase extends React.Component {
 		 * @public
 		 */
 		textOverlayContent: PropTypes.string,
+
 		/**
 		 * Video component to use. The default (`'video'`) renders an `HTMLVideoElement`. Custom
 		 * video components must have a similar API structure, exposing the following APIs:
@@ -135,7 +132,6 @@ class PictureInGraphicsBase extends React.Component {
 			placeholder,
 			imageOverlaySrc,
 			textOverlayContent,
-			spotlightDisabled,
 			textOverlayColor,
 			videoComponent,
 			noAutoPlay,
@@ -145,7 +141,7 @@ class PictureInGraphicsBase extends React.Component {
 		const textOverlayStyle = {color: textOverlayColor};
 
 		return (
-			<Container className={containerClassName} spotlightDisabled={spotlightDisabled}>
+			<div {...rest} className={containerClassName} >
 				<Media
 					{...rest}
 					autoPlay={!noAutoPlay}
@@ -158,15 +154,21 @@ class PictureInGraphicsBase extends React.Component {
 				</Media>
 				{imageOverlaySrc ? <Image placeholder={placeholder} className={css.image} src={imageOverlaySrc} /> : null}
 				{textOverlayContent ? (<Marquee alignment="center" className={css.textOverlay} style={textOverlayStyle}>{textOverlayContent}</Marquee>) : null}
-			</Container>
+			</div>
 		);
 	}
 }
 
 const PictureInGraphics = Pure(
-	Slottable(
-		{slots: ['source']},
-		Skinnable(PictureInGraphicsBase)
+	MarqueeController({marqueeOnFocus: true},
+		Spottable(
+			Slottable(
+				{slots: ['source']},
+				Skinnable(
+					PictureInGraphicsBase
+				)
+			)
+		)
 	)
 );
 
