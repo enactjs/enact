@@ -2,6 +2,7 @@ import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
+import ComponentOverride from '@enact/ui/ComponentOverride';
 
 import Image from '../Image';
 import Skinnable from '../Skinnable';
@@ -58,13 +59,16 @@ const FeedbackTooltipBase = kind({
 
 		/**
 		 * This component will be used instead of the built-in version. The internal thumbnail style
-		 * will not be applied to this component. This component follows the same rules as the built-in
+		 * will be applied to this component. This component follows the same rules as the built-in
 		 * version; hiding and showing according to the state of `noFeedback`.
 		 *
-		 * @type {Node}
+		 * This can be a tag name as a string, a rendered DOM node, a component, or a component
+		 * instance.
+		 *
+		 * @type {Component}
 		 * @public
 		 */
-		thumbnailComponent: PropTypes.node,
+		thumbnailComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.element, PropTypes.func]),
 
 		/**
 		 * `true` if Slider knob is scrubbing.
@@ -113,12 +117,15 @@ const FeedbackTooltipBase = kind({
 			hidden: !visible && states[s] && states[s].allowHide,
 			thumbnailDeactivated
 		}),
-		thumbnailComponent: ({noFeedback, thumbnailComponent: ThumbnailComponent, thumbnailSrc}) => {
+		thumbnailComponent: ({noFeedback, thumbnailComponent, thumbnailSrc}) => {
 			// noFeedback is effectively "tooltip mode", one mode being whether the time and icon are visible,
 			// the other being the thumbnail and time are visible.
 			if (noFeedback) {
-				if (ThumbnailComponent) {
-					return ThumbnailComponent;
+				if (thumbnailComponent) {
+					return <ComponentOverride
+						component={thumbnailComponent}
+						className={css.thumbnail}
+					/>;
 				} else if (thumbnailSrc) {
 					return (
 						<div className={css.thumbnail}>
