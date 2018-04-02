@@ -1,8 +1,7 @@
 /* eslint-disable no-console */
 /* global console */
 /**
- * Provides the {@link webos/LS2Request} class for making LS2 service requests
- * on webOS platforms.
+ * Provides a class for making LS2 service requests on webOS platforms.
  *
  * @module webos/LS2Request
  */
@@ -29,6 +28,12 @@ export default class LS2Request {
 		this.cancel();
 	});
 
+	/**
+	 * Create a new LS2 request
+	 *
+	 * @memberof webos/LS2Request
+	 * @constructor
+	 */
 	constructor () {
 		this.bridge = null;
 		this.subscribe = false;
@@ -39,15 +44,18 @@ export default class LS2Request {
 	 *
 	 * @method
 	 * @memberof webos/LS2Request
-	 * @param {String} service The name of the LS2 service.  Do not include 'luna://'.
-	 * @param {String} method The name of the method.
-	 * @param {Object} parameters Any parameters required by the service method.
-	 * @param {Function} onSuccess The success handler for the request.
-	 * @param {Function} onFailure The failure handler for the request.
-	 * @param {Function} onComplete The handler to run when the request is completed, regardless of return status.
-	 * @param {Function} onTimeout The handler to run when the request times out.  Used in conjunction with `timeout`.
-	 * @param {Boolean} subscribe Subscribe to service methods that support subscription.
-	 * @param {Number} timeout The delay in milliseconds to wait for the request to return.
+	 * @param {Object} options Options for the LS2 Request call
+	 * @param {String} options.service The name of the LS2 service.  Do not include 'luna://'.
+	 * @param {String} options.method The name of the method.
+	 * @param {Object} options.parameters Any parameters required by the service method.
+	 * @param {Function} options.onSuccess The success handler for the request.
+	 * @param {Function} options.onFailure The failure handler for the request.
+	 * @param {Function} options.onComplete The handler to run when the request
+	 *	is completed, regardless of return status.
+	 * @param {Function} options.onTimeout The handler to run when the request
+	 *	times out.  Used in conjunction with `timeout`.
+	 * @param {Boolean} options.subscribe Subscribe to service methods that support subscription.
+	 * @param {Number} options.timeout The delay in milliseconds to wait for the request to return.
 	 * @returns {webos/LS2Request}
 	 * @public
 	 */
