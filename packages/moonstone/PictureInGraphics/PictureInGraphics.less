@@ -2,7 +2,7 @@
 @import '../styles/text.less';
 @import '../styles/mixins.less';
 
-@moon-pig-width:      320px;
+@moon-pig-width:      321px;
 @moon-pig-height:     180px;
 @moon-pig-border-width: 6px;
 @moon-pig-overlay-text-margin-bottom: 9px;
@@ -22,32 +22,35 @@
 	}
 
 	.image {
+		box-sizing: border-box;
 		display: block;
 		position: absolute;
-		top: 0px;
-		left: 0px;
-		width: @moon-pig-width;
-		height: @moon-pig-height;
-		margin: @moon-pig-border-width;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		border: @moon-pig-border-width solid transparent;
+		margin: 0;
 	}
 
 	.textOverlay {
+		box-sizing: border-box;
 		.moon-font('MuseoSans', 'Moonstone LG Display Light');
 		font-size: 21px;
 		font-weight: 900;
 		line-height: normal;
 		display: block;
 		position: absolute;
-		width: @moon-pig-width;
-		margin: @moon-pig-border-width;
+		width: 100%;
+		padding: 0 @moon-pig-border-width @moon-pig-border-width;
 		bottom: @moon-pig-overlay-text-margin-bottom;
-		left: 0px;
+		left: 0;
 	}
 
 	:global(.enact-locale-right-to-left) & {
 		.textOverlay,
 		.image {
-			right: 0px;
+			right: 0;
 			left: auto;
 		}
 	}

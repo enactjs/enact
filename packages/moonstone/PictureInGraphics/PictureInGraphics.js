@@ -40,8 +40,10 @@ class PictureInGraphicsBase extends React.Component {
 		imageOverlaySrc: PropTypes.string,
 
 		/**
+		 * By default, the video will start playing immediately after it's loaded, unless this is set.
 		 *
 		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
 		noAutoPlay: PropTypes.bool,
