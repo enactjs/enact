@@ -918,7 +918,7 @@ class ScrollableBase extends Component {
 
 	// ref
 
-	getScrollBounds () {
+	getScrollBounds = () => {
 		if (typeof this.providerRef.getScrollBounds === 'function') {
 			return this.providerRef.getScrollBounds();
 		}

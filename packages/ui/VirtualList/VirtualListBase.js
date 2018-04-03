@@ -51,7 +51,7 @@ const VirtualListBaseFactory = (type) => {
 			return ref ? ref.children[index % this.state.numOfItems] : null;
 		}
 
-		composeStyle (width, height, primaryPosition, secondaryPosition) {
+		composeStyle (width, height, primaryPosition, secondaryPosition, index) {
 			const
 				{x, y} = this.props.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition},
 				style = {
@@ -64,6 +64,8 @@ const VirtualListBaseFactory = (type) => {
 				style.width = width;
 				style.height = height;
 			}
+
+			console.log('composeStyle', index, style)
 
 			return style;
 		}
@@ -83,7 +85,7 @@ const VirtualListBaseFactory = (type) => {
 				...componentProps,
 				className: classNames(css.listItem, itemElement.props.className),
 				['data-preventscrollonfocus']: true, // Added this attribute to prevent scroll on focus by browser
-				style: {...itemElement.props.style, ...(this.composeStyle(...rest))}
+				style: {...itemElement.props.style, ...(this.composeStyle(...rest, index))}
 			});
 		}
 

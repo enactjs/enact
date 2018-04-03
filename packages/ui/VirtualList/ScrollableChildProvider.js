@@ -206,6 +206,7 @@ const ScrollableChildProviderFactory = (type) => {
 			if (this.props.clientSize) {
 				this.calculateMetrics(this.props);
 				this.updateStatesAndBounds(this.props);
+				this.forceUpdate();
 			}
 		}
 
@@ -214,6 +215,8 @@ const ScrollableChildProviderFactory = (type) => {
 			if (!this.props.clientSize) {
 				this.calculateMetrics(this.props);
 				this.updateStatesAndBounds(this.props);
+				this.setContainerSize();
+				this.forceUpdate();
 			}
 			this.setContainerSize();
 		}
@@ -600,6 +603,7 @@ const ScrollableChildProviderFactory = (type) => {
 				this.calculateMetrics(props);
 				this.updateStatesAndBounds(props);
 				this.setContainerSize();
+				this.forceUpdate();
 				return true;
 			}
 
