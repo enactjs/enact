@@ -41,7 +41,7 @@ class PictureInGraphicsBase extends React.Component {
 
 		/**
 		 *
-		 * @type {Function}
+		 * @type {Boolean}
 		 * @public
 		 */
 		noAutoPlay: PropTypes.bool,
