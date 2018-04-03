@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `background` global knob to help visualize components over various background images
+
 ## [2.0.0-alpha.6] - 2018-03-22
 
 No significant changes.
