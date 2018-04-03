@@ -92,7 +92,7 @@ class Scrollable extends Component {
 		childRenderer: PropTypes.func.isRequired,
 
 		/**
-		 * Direction of the list.
+		 * Direction of the list or the scroller.
 		 *
 		 * Valid values are:
 		 * * `'horizontal'`, and

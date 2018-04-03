@@ -109,7 +109,7 @@ class ScrollableBase extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
-		 * Direction of the list.
+		 * Direction of the list or the scroller.
 		 *
 		 * Valid values are:
 		 * * `'horizontal'`, and
