@@ -20,6 +20,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Panels.Header` support for `headerInput` so the Header can be used as an Input. See documentation for usage examples.
 - `moonstone/ProgressBar` prop `tooltipSide` to configure tooltip position relative to the progress bar
 - `moonstone/ProgressBar` colors (affecting `moonstone/Slider` as well) for light and dark theme to match the latest designs and make them more visible when drawn over arbitrary background colors
+- `moonstone/VideoPlayer` property `title` to accept node type
 
 ### Fixed
 
