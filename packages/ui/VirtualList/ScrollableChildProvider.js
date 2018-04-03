@@ -374,7 +374,8 @@ const ScrollableChildProviderFactory = (type) => {
 
 		updateStatesAndBounds = (props) => {
 			const
-				{dataSize, overhang, updateStatesAndBounds} = props,
+				{dataSize, overhang} = props,
+				{updateStatesAndBounds} = this.virtualRepeaterRef.props,
 				{firstIndex} = this.virtualRepeaterRef ? this.virtualRepeaterRef.state : 0,
 				{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 				numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),

@@ -243,13 +243,14 @@ const ScrollableVirtualList = (props) => (
 			<Scrollable
 				{...props}
 				scrollableChildAdapter={scrollableChildAdapter}
-				childRenderer={(virtualListProps) => ( // eslint-disable-line react/jsx-no-bind
+				childRenderer={({initUiChildRef, ...virtualListProps}) => ( // eslint-disable-line react/jsx-no-bind
 					<VirtualListBase
 						{...virtualListProps}
 						{...vlbProps}
 						itemsRenderer={({cc, initUiItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
 							cc.length ? <div ref={initUiItemContainerRef}>{cc}</div> : null
 						)}
+						ref={initUiChildRef}
 					/>
 				)}
 			/>

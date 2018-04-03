@@ -323,8 +323,6 @@ class ScrollableBase extends Component {
 	})
 
 	componentWillMount () {
-		this.providerRef.componentWillMount();
-
 		this.publisher = Publisher.create('resize', this.context.Subscriber);
 		this.publisher.publish({
 			remeasure: false
@@ -337,8 +335,6 @@ class ScrollableBase extends Component {
 	}
 
 	componentDidMount () {
-		this.providerRef.componentDidMount();
-
 		const bounds = this.getScrollBounds();
 
 		this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
@@ -347,10 +343,6 @@ class ScrollableBase extends Component {
 		this.updateScrollbars();
 
 		on('keydown', this.onKeyDown);
-	}
-
-	componentWillReceiveProps (nextProps) {
-		this.providerRef.componentWillReceiveProps(nextProps);
 	}
 
 	componentWillUpdate () {
@@ -1090,7 +1082,7 @@ class Scrollable extends Component {
 					componentCss,
 					handleScroll,
 					horizontalScrollbarProps,
-					initUiproviderRef,
+					initUiChildRef,
 					initUiContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
@@ -1110,7 +1102,7 @@ class Scrollable extends Component {
 									...childComponentProps,
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
-									initUiproviderRef,
+									initUiChildRef,
 									onScroll: handleScroll
 								})}
 							</TouchableDiv>
