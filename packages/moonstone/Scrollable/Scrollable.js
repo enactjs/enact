@@ -92,6 +92,19 @@ class Scrollable extends Component {
 		childRenderer: PropTypes.func.isRequired,
 
 		/**
+		 * Direction of the list.
+		 *
+		 * Valid values are:
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
+		 *
+		 * @type {String}
+		 * @default 'vertical'
+		 * @public
+		 */
+		direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+		/**
 		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
 		 * not move focus to the scrollbar controls.
 		 *
@@ -103,6 +116,7 @@ class Scrollable extends Component {
 	}
 
 	static defaultProps = {
+		direction: 'vertical',
 		focusableScrollbar: false
 	}
 
@@ -178,7 +192,8 @@ class Scrollable extends Component {
 
 	onFocus = (ev) => {
 		const
-			{isDragging, animator, direction} = this.uiRef,
+			{direction} = this.props,
+			{isDragging, animator} = this.uiRef,
 			shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
 				this.childRef.shouldPreventScrollByFocus() :
 				false;
@@ -219,8 +234,8 @@ class Scrollable extends Component {
 
 	getPageDirection = (keyCode) => {
 		const
+			{direction} = this.props,
 			isRtl = this.uiRef.state.rtl,
-			{direction} = this.uiRef,
 			isVertical = (direction === 'vertical' || direction === 'both');
 
 		return isPageUp(keyCode) ?
