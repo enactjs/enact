@@ -20,7 +20,7 @@ import componentCss from './Scrollbar.less';
  * @private
  */
 class ScrollbarBase extends Component {
-	static displayName = 'ScrollerBase'
+	static displayName = 'ScrollbarBase'
 
 	static propTypes = /** @lends moonstone/Scrollable.Scrollbar.prototype */ {
 		/**

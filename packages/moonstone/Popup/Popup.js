@@ -12,6 +12,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Spotlight, {getDirection} from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Transition from '@enact/ui/Transition';
 import {forward} from '@enact/core/handle';
@@ -324,6 +325,7 @@ class Popup extends React.Component {
 
 	constructor (props) {
 		super(props);
+		this.paused = new Pause('Popup');
 		this.state = {
 			floatLayerOpen: this.props.open,
 			popupOpen: this.props.noAnimation,
@@ -360,7 +362,7 @@ class Popup extends React.Component {
 	componentDidUpdate (prevProps, prevState) {
 		if (this.props.open !== prevProps.open) {
 			if (!this.props.noAnimation) {
-				Spotlight.pause();
+				this.paused.pause();
 			} else if (this.props.open) {
 				forwardShow({}, this.props);
 				on('keydown', this.handleKeyDown);
@@ -421,8 +423,8 @@ class Popup extends React.Component {
 			activator: null
 		});
 
-		if (ev.target.getAttribute('data-spotlight-id') === this.state.containerId) {
-			Spotlight.resume();
+		if (ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
+			this.paused.resume();
 
 			if (!this.props.open) {
 				off('keydown', this.handleKeyDown);
@@ -434,8 +436,8 @@ class Popup extends React.Component {
 	handlePopupShow = (ev) => {
 		forwardShow(ev, this.props);
 
-		if (ev.target.getAttribute('data-spotlight-id') === this.state.containerId) {
-			Spotlight.resume();
+		if (ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
+			this.paused.resume();
 
 			if (this.props.open) {
 				on('keydown', this.handleKeyDown);

@@ -19,10 +19,12 @@ import {perfNow, Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import {platform} from '@enact/core/platform';
 import {is} from '@enact/core/keymap';
+import Media from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
 import Spotlight from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
+import Pause from '@enact/spotlight/Pause';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 import {toUpperCase} from '@enact/i18n/util';
 
@@ -30,7 +32,7 @@ import $L from '../internal/$L';
 import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
 
-import {calcNumberValueOfPlaybackRate, compareSources, secondsToTime} from './util';
+import {calcNumberValueOfPlaybackRate, compareSources, countReactChildren, secondsToTime} from './util';
 import Overlay from './Overlay';
 import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
@@ -50,59 +52,6 @@ const ControlsContainer = SpotlightContainerDecorator(
 	},
 	'div'
 );
-
-// Keycode map for webOS TV
-const keyMap = {
-	'PLAY': 415,
-	'STOP': 413,
-	'PAUSE': 19,
-	'REWIND': 412,
-	'FASTFORWARD': 417
-};
-
-// Video ReadyStates
-// - Commented are currently unused.
-//
-// const HAVE_NOTHING      = 0;  // no information whether or not the audio/video is ready
-// const HAVE_METADATA     = 1;  // metadata for the audio/video is ready
-// const HAVE_CURRENT_DATA = 2;  // data for the current playback position is available, but not enough data to play next frame/millisecond
-// const HAVE_FUTURE_DATA  = 3;  // data for the current and at least the next frame is available
-const HAVE_ENOUGH_DATA  = 4;  // enough data available to start playing
-
-
-// Set-up event forwarding map. These are all of the supported media events
-const handledMediaEventsMap = {
-	abort           : 'onAbort',
-	canplay         : 'onCanPlay',
-	canplaythrough  : 'onCanPlayThrough',
-	durationchange  : 'onDurationChange',
-	emptied         : 'onEmptied',
-	encrypted       : 'onEncrypted',
-	ended           : 'onEnded',
-	error           : 'onError',
-	loadeddata      : 'onLoadedData',
-	loadedmetadata  : 'onLoadedMetadata',
-	loadstart       : 'onLoadStart',
-	pause           : 'onPause',
-	play            : 'onPlay',
-	playing         : 'onPlaying',
-	progress        : 'onProgress',
-	ratechange      : 'onRateChange',
-	seeked          : 'onSeeked',
-	seeking         : 'onSeeking',
-	stalled         : 'onStalled',
-	suspend         : 'onSuspend',
-	timeupdate      : 'onTimeUpdate',
-	volumechange    : 'onVolumeChange',
-	waiting         : 'onWaiting'
-};
-
-// List custom events that aren't standard to React. These will be directly added to the video
-// element and props matching their name will be executed as callback functions when the event fires.
-// "umsmediainfo" prop function will execute when the "umsmediainfo" event happens.
-const handledCustomMediaEventsMap = {
-	'umsmediainfo'  : 'onUMSMediaInfo'
-};
 
 // provide forwarding of events on media controls
 const forwardControlsAvailable = forward('onControlsAvailable');
@@ -128,9 +77,6 @@ const AnnounceState = {
 	// All announcements have been made
 	DONE: 4
 };
-
-// Safely count the children nodes and exclude null & undefined values for an accurate count of real children
-const countReactChildren = (children) => React.Children.toArray(children).filter(n => n != null).length;
 
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
@@ -351,6 +297,19 @@ const VideoPlayerBase = class extends React.Component {
 		moreButtonCloseLabel: PropTypes.string,
 
 		/**
+		 * The color of the underline beneath more icon button.
+		 *
+		 * This property accepts one of the following color names, which correspond with the
+		 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
+		 *
+		 * @type {String}
+		 * @see {@link moonstone/IconButton.IconButtonBase.color}
+		 * @default 'blue'
+		 * @public
+		 */
+		moreButtonColor: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
+
+		/**
 		 * This boolean sets the disabled state of the "More" button.
 		 *
 		 * @type {Boolean}
@@ -431,6 +390,14 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		noSlider: PropTypes.bool,
+
+		/**
+		 * Removes spinner while loading.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		noSpinner: PropTypes.bool,
 
 		/**
 		 * Function executed when the user clicks the Backward button. Is passed
@@ -591,7 +558,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		/**
 		 * Any children `<source>` tag elements of [VideoPlayer]{@link moonstone/VideoPlayer} will
-		 * be sent directly to the `<video>` element as video sources.
+		 * be sent directly to the `videoComponent` as video sources.
 		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
 		 *
 		 * @type {Node}
@@ -616,10 +583,8 @@ const VideoPlayerBase = class extends React.Component {
 		spotlightId: PropTypes.string,
 
 		/**
-		 * This component will be used instead of the built-in version.
-		 * The internal thumbnail class will be added to this component, however, it's the
-		 * responsibility of the developer to include this class in their implementation, if
-		 * appropriate for their application. This component follows the same rules as the built-in
+		 * This component will be used instead of the built-in version. The internal thumbnail style
+		 * will not be applied to this component. This component follows the same rules as the built-in
 		 * version.
 		 *
 		 * @type {Node}
@@ -672,7 +637,37 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 3000
 		 * @public
 		 */
-		tooltipHideDelay: PropTypes.number
+		tooltipHideDelay: PropTypes.number,
+
+		/**
+		 * Video component to use. The default (`'video'`) renders an `HTMLVideoElement`. Custom
+		 * video components must have a similar API structure, exposing the following APIs:
+		 *
+		 * Properties:
+		 * * `currentTime` {Number} - Playback index of the media in seconds
+		 * * `duration` {Number} - Media's entire duration in seconds
+		 * * `error` {Boolean} - `true` if video playback has errored.
+		 * * `loading` {Boolean} - `true` if video playback is loading.
+		 * * `paused` {Boolean} - Playing vs paused state. `true` means the media is paused
+		 * * `playbackRate` {Number} - Current playback rate, as a number
+		 * * `proportionLoaded` {Number} - A value between `0` and `1`
+		 *	representing the proportion of the media that has loaded
+		 * * `proportionPlayed` {Number} - A value between `0` and `1` representing the
+		 *	proportion of the media that has already been shown
+		 *
+		 * Methods:
+		 * * `play()` - play video
+		 * * `pause()` - pause video
+		 * * `load()` - load video
+		 *
+		 * The [`source`]{@link moonstone/VideoPlayer.VideoPlayerBase.source} property is passed to the video
+		 * component as a child node.
+		 *
+		 * @type {Component}
+		 * @default 'video'
+		 * @public
+		 */
+		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
 	}
 
 	static defaultProps = {
@@ -682,6 +677,7 @@ const VideoPlayerBase = class extends React.Component {
 		jumpBy: 30,
 		jumpDelay: 200,
 		miniFeedbackHideDelay: 2000,
+		moreButtonColor: 'blue',
 		playbackRateHash: {
 			fastForward: ['2', '4', '8', '16'],
 			rewind: ['-2', '-4', '-8', '-16'],
@@ -689,7 +685,8 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		titleHideDelay: 5000,
-		tooltipHideDelay: 3000
+		tooltipHideDelay: 3000,
+		videoComponent: 'video'
 	}
 
 	constructor (props) {
@@ -697,9 +694,6 @@ const VideoPlayerBase = class extends React.Component {
 
 		// Internal State
 		this.video = null;
-		this.handledMediaForwards = {};
-		this.handledMediaEvents = {};
-		this.handledCustomMediaForwards = {};
 		this.pulsedPlaybackRate = null;
 		this.pulsedPlaybackState = null;
 		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
@@ -713,32 +707,17 @@ const VideoPlayerBase = class extends React.Component {
 
 		this.initI18n();
 
-		// Generate event handling forwarders and a smooth block to pass to <Video>
-		for (let key in handledMediaEventsMap) {
-			const eventName = handledMediaEventsMap[key];
-			this.handledMediaForwards[eventName] = forward(eventName);
-			this.handledMediaEvents[eventName] = this.handleEvent;
-		}
-		// Generate event handling forwarders for the custom events too
-		for (let eventName in handledCustomMediaEventsMap) {
-			const propName = handledCustomMediaEventsMap[eventName];
-			const forwardEvent = forward(propName);
-			this.handledCustomMediaForwards[eventName] = ev => forwardEvent(ev, this.props);
-		}
+		this.paused = new Pause('VideoPlayer');
 
 		// Re-render-necessary State
 		this.state = {
 			announce: AnnounceState.READY,
-			buffered: 0,
 			currentTime: 0,
 			duration: 0,
 			error: false,
 			loading: false,
-			muted: !!props.muted,
 			paused: props.noAutoPlay,
 			playbackRate: 1,
-			readyState: 0,
-			volume: 1,
 			titleOffsetHeight: 0,
 			bottomOffsetHeight: 0,
 
@@ -765,26 +744,34 @@ const VideoPlayerBase = class extends React.Component {
 		on('keypress', this.activityDetected);
 		on('keydown', this.handleGlobalKeyDown);
 		on('keyup', this.handleKeyUp);
-		this.attachCustomMediaEvents();
 		this.startDelayedFeedbackHide();
-		this.calculateMaxComponentCount();
+		this.calculateMaxComponentCount(
+			countReactChildren(this.props.leftComponents),
+			countReactChildren(this.props.rightComponents),
+			countReactChildren(this.props.children)
+		);
 	}
 
 	componentWillReceiveProps (nextProps) {
 		// Detect if the number of components has changed
+		const leftCount = countReactChildren(nextProps.leftComponents),
+			rightCount = countReactChildren(nextProps.rightComponents),
+			childrenCount = countReactChildren(nextProps.children);
+
 		if (
-			React.Children.count(this.props.leftComponents) !== React.Children.count(nextProps.leftComponents) ||
-			React.Children.count(this.props.rightComponents) !== React.Children.count(nextProps.rightComponents) ||
-			React.Children.count(this.props.children) !== React.Children.count(nextProps.children)
+			countReactChildren(this.props.leftComponents) !== leftCount ||
+			countReactChildren(this.props.rightComponents) !== rightCount ||
+			countReactChildren(this.props.children) !== childrenCount
 		) {
-			this.calculateMaxComponentCount();
+			this.calculateMaxComponentCount(leftCount, rightCount, childrenCount);
 		}
 
 		const {source} = this.props;
 		const {source: nextSource} = nextProps;
 
 		if (!compareSources(source, nextSource)) {
-			this.setState({currentTime: 0, buffered: 0, proportionPlayed: 0, proportionLoaded: 0});
+			this.firstPlayReadFlag = true;
+			this.setState({currentTime: 0, proportionPlayed: 0, proportionLoaded: 0});
 			this.reloadVideo();
 		}
 	}
@@ -802,7 +789,6 @@ const VideoPlayerBase = class extends React.Component {
 			!this.state.mediaSliderVisible && this.state.mediaSliderVisible === nextState.mediaSliderVisible &&
 			this.state.loading === nextState.loading && this.props.loading === nextProps.loading &&
 			(
-				this.state.buffered !== nextState.buffered ||
 				this.state.currentTime !== nextState.currentTime ||
 				this.state.proportionPlayed !== nextState.proportionPlayed ||
 				this.state.sliderTooltipTime !== nextState.sliderTooltipTime
@@ -872,7 +858,6 @@ const VideoPlayerBase = class extends React.Component {
 		off('keypress', this.activityDetected);
 		off('keydown', this.handleGlobalKeyDown);
 		off('keyup', this.handleKeyUp);
-		this.detachCustomMediaEvents();
 		this.stopRewindJob();
 		this.stopAutoCloseTimeout();
 		this.stopDelayedTitleHide();
@@ -903,11 +888,7 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	calculateMaxComponentCount = () => {
-		let leftCount = countReactChildren(this.props.leftComponents),
-			rightCount = countReactChildren(this.props.rightComponents),
-			childrenCount = countReactChildren(this.props.children);
-
+	calculateMaxComponentCount = (leftCount, rightCount, childrenCount) => {
 		// If the "more" button is present, automatically add it to the right's count.
 		if (childrenCount) {
 			rightCount += 1;
@@ -925,18 +906,6 @@ const VideoPlayerBase = class extends React.Component {
 			this.locale = locale;
 
 			this.durfmt = new DurationFmt({length: 'medium', style: 'clock', useNative: false});
-		}
-	}
-
-	attachCustomMediaEvents = () => {
-		for (let eventName in this.handledCustomMediaForwards) {
-			on(eventName, this.handledCustomMediaForwards[eventName], this.video);
-		}
-	}
-
-	detachCustomMediaEvents = () => {
-		for (let eventName in this.handledCustomMediaForwards) {
-			off(eventName, this.handledCustomMediaForwards[eventName], this.video);
 		}
 	}
 
@@ -1113,7 +1082,7 @@ const VideoPlayerBase = class extends React.Component {
 			if (this.showMiniFeedback && (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider)) {
 				this.setState({
 					mediaSliderVisible: shouldShowSlider,
-					miniFeedbackVisible: !(this.state.readyState < HAVE_ENOUGH_DATA || !this.state.duration || this.state.error)
+					miniFeedbackVisible: !(this.state.loading || !this.state.duration || this.state.error)
 				});
 			}
 		}
@@ -1195,8 +1164,9 @@ const VideoPlayerBase = class extends React.Component {
 		if (!this.props.no5WayJump &&
 				!this.state.mediaControlsVisible &&
 				!this.props.disabled &&
+				!this.state.mediaControlsDisabled &&
 				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
-			Spotlight.pause();
+			this.paused.pause();
 			this.startListeningForPulses(ev.keyCode);
 		}
 		return true;
@@ -1213,37 +1183,37 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleKeyUp = (ev) => {
-		if (this.props.disabled) {
+		const {disabled, moreButtonColor, moreButtonDisabled, noRateButtons, no5WayJump, rateButtonsDisabled} = this.props;
+
+		if (disabled || this.state.mediaControlsDisabled) {
 			return;
 		}
-		const {PLAY, PAUSE, REWIND, FASTFORWARD} = keyMap;
 
-		switch (ev.keyCode) {
-			case PLAY:
+		if (is('play', ev.keyCode)) {
+			this.showMiniFeedback = true;
+			this.play();
+		} else if (is('pause', ev.keyCode)) {
+			this.showMiniFeedback = true;
+			this.pause();
+		} else if (!noRateButtons && !rateButtonsDisabled) {
+			if (is('rewind', ev.keyCode)) {
 				this.showMiniFeedback = true;
-				this.play();
-				break;
-			case PAUSE:
+				this.rewind();
+			} else if (is('fastForward', ev.keyCode)) {
 				this.showMiniFeedback = true;
-				this.pause();
-				break;
-			case REWIND:
-				if (!this.props.noRateButtons && !this.props.rateButtonsDisabled) {
-					this.showMiniFeedback = true;
-					this.rewind();
-				}
-				break;
-			case FASTFORWARD:
-				if (!this.props.noRateButtons && !this.props.rateButtonsDisabled) {
-					this.showMiniFeedback = true;
-					this.fastForward();
-				}
-				break;
+				this.fastForward();
+			}
 		}
 
-		if (!this.props.no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
+		if (this.state.bottomControlsRendered && this.state.mediaControlsVisible &&
+			moreButtonColor && !moreButtonDisabled && is(moreButtonColor, ev.keyCode)) {
+			Spotlight.focus(this.player.querySelector(`.${css.moreButton}`));
+			this.toggleMore();
+		}
+
+		if (!no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			this.stopListeningForPulses();
-			Spotlight.resume();
+			this.paused.resume();
 		}
 	}
 
@@ -1266,21 +1236,17 @@ const VideoPlayerBase = class extends React.Component {
 	updateMainState = () => {
 		const el = this.video;
 		const updatedState = {
-			// Standard video properties
+			// Standard media properties
 			currentTime: el.currentTime,
 			duration: el.duration,
-			buffered: el.buffered,
 			paused: el.playbackRate !== 1 || el.paused,
-			muted: el.muted,
-			volume: el.volume,
 			playbackRate: el.playbackRate,
-			readyState: el.readyState,
 
 			// Non-standard state computed from properties
-			proportionLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration,
-			proportionPlayed: el.currentTime / el.duration || 0,
-			error: el.networkState === el.NETWORK_NO_SOURCE,
-			loading: el.readyState < el.HAVE_ENOUGH_DATA,
+			proportionLoaded: el.proportionLoaded,
+			proportionPlayed: el.proportionPlayed || 0,
+			error: el.error,
+			loading: el.loading,
 			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime
 		};
 
@@ -1611,14 +1577,17 @@ const VideoPlayerBase = class extends React.Component {
 		this.playbackRate = rate = String(rate);
 		const pbNumber = calcNumberValueOfPlaybackRate(rate);
 
-		// Set native playback rate
-		this.video.playbackRate = pbNumber;
-
 		if (!platform.webos) {
+			// ReactDOM throws error for setting negative value for playbackRate
+			this.video.playbackRate = pbNumber < 0 ? 0 : pbNumber;
+
 			// For supporting cross browser behavior
 			if (pbNumber < 0) {
 				this.beginRewind();
 			}
+		} else {
+			// Set native playback rate
+			this.video.playbackRate = pbNumber;
 		}
 	}
 
@@ -1686,18 +1655,13 @@ const VideoPlayerBase = class extends React.Component {
 
 	handleEvent = (ev) => {
 		this.updateMainState();
+
 		if (ev.type === 'onLoadStart') {
-			this.handleLoadStart(ev);
+			this.handleLoadStart();
 		}
 
 		if (ev.type === 'play') {
 			this.mayRenderBottomControls();
-		}
-		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
-		const fwd = this.handledMediaForwards[handledMediaEventsMap[ev.type]];
-		if (fwd) {
-			ev = this.addStateToEvent(ev);
-			fwd(ev, this.props);
 		}
 	}
 
@@ -1859,6 +1823,10 @@ const VideoPlayerBase = class extends React.Component {
 		() => this.jump(this.props.jumpBy)
 	)
 	onMoreClick = () => {
+		this.toggleMore();
+	}
+
+	toggleMore () {
 		if (this.state.more) {
 			this.moreInProgress = false;
 			this.startAutoCloseTimeout();	// Restore the timer since we are leaving "more.
@@ -1940,7 +1908,9 @@ const VideoPlayerBase = class extends React.Component {
 			jumpButtonsDisabled,
 			jumpForwardIcon,
 			leftComponents,
+			loading,
 			moreButtonCloseLabel,
+			moreButtonColor,
 			moreButtonDisabled,
 			moreButtonLabel,
 			noAutoPlay,
@@ -1948,6 +1918,7 @@ const VideoPlayerBase = class extends React.Component {
 			noMiniFeedback,
 			noRateButtons,
 			noSlider,
+			noSpinner,
 			pauseIcon,
 			playIcon,
 			rateButtonsDisabled,
@@ -1959,6 +1930,7 @@ const VideoPlayerBase = class extends React.Component {
 			thumbnailComponent,
 			thumbnailSrc,
 			title,
+			videoComponent,
 			...rest} = this.props;
 
 		delete rest.announce;
@@ -1967,7 +1939,6 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.initialJumpDelay;
 		delete rest.jumpBy;
 		delete rest.jumpDelay;
-		delete rest.loading;
 		delete rest.miniFeedbackHideDelay;
 		delete rest.no5WayJump;
 		delete rest.onBackwardButtonClick;
@@ -1987,11 +1958,6 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.tooltipHideDelay;
 		delete rest.videoPath;
 
-		// Remove the events we manually added so they aren't added twice or fail.
-		for (let eventName in handledCustomMediaEventsMap) {
-			delete rest[handledCustomMediaEventsMap[eventName]];
-		}
-
 		// Handle some cases when the "more" button is pressed
 		const moreDisabled = !(this.state.more);
 		const controlsAriaProps = this.getControlsAriaProps();
@@ -2007,22 +1973,23 @@ const VideoPlayerBase = class extends React.Component {
 				style={style}
 			>
 				{/* Video Section */}
-				<video
+				<Media
 					{...rest}
 					autoPlay={!noAutoPlay}
 					className={css.video}
+					component={videoComponent}
 					controls={false}
+					onUpdate={this.handleEvent}
 					ref={this.setVideoRef}
-					{...this.handledMediaEvents}
 				>
 					{source}
-				</video>
+				</Media>
 
 				<Overlay
 					bottomControlsVisible={this.state.mediaControlsVisible}
 					onClick={this.onVideoClick}
 				>
-					{this.state.loading || this.props.loading ? <Spinner centered /> : null}
+					{!noSpinner && (this.state.loading || loading) ? <Spinner centered /> : null}
 				</Overlay>
 
 				{this.state.bottomControlsRendered ?
@@ -2097,6 +2064,7 @@ const VideoPlayerBase = class extends React.Component {
 								leftComponents={leftComponents}
 								mediaDisabled={disabled || this.state.mediaControlsDisabled}
 								moreButtonCloseLabel={moreButtonCloseLabel}
+								moreButtonColor={moreButtonColor}
 								moreButtonDisabled={moreButtonDisabled}
 								moreButtonLabel={moreButtonLabel}
 								moreDisabled={moreDisabled}
@@ -2131,7 +2099,6 @@ const VideoPlayerBase = class extends React.Component {
 					// This captures spotlight focus for use with 5-way.
 					// It's non-visible but lives at the top of the VideoPlayer.
 					className={css.controlsHandleAbove}
-					onClick={this.showControls}
 					onKeyDown={this.handleKeyDown}
 					onSpotlightDown={this.showControls}
 					spotlightDisabled={this.state.mediaControlsVisible || spotlightDisabled}

@@ -17,7 +17,7 @@ import $L from '../internal/$L';
 import Skinnable from '../Skinnable';
 import Tooltip from '../TooltipDecorator/Tooltip';
 
-import css from './Input.less';
+import componentCss from './Input.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
 
@@ -46,6 +46,20 @@ const InputBase = kind({
 	name: 'Input',
 
 	propTypes: /** @lends moonstone/Input.InputBase.prototype */ {
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `decorator` - The root class name
+		 * * `input` - The <input> class name
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		css: PropTypes.object,
+
 		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
@@ -211,8 +225,9 @@ const InputBase = kind({
 	contextTypes,
 
 	styles: {
-		css,
-		className: 'decorator'
+		css: componentCss,
+		className: 'decorator',
+		publicClassNames: ['decorator', 'input']
 	},
 
 	handlers: {
@@ -230,7 +245,7 @@ const InputBase = kind({
 		},
 		className: ({focused, invalid, small, styler}) => styler.append({focused, invalid, small}),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
-		invalidTooltip: ({invalid, invalidMessage, rtl}) => {
+		invalidTooltip: ({css, invalid, invalidMessage, rtl}) => {
 			if (invalid && invalidMessage) {
 				const direction = rtl ? 'left' : 'right';
 				return (
@@ -244,7 +259,7 @@ const InputBase = kind({
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, ...rest}) => {
+	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, ...rest}) => {
 		delete rest.dismissOnEnter;
 		delete rest.focused;
 		delete rest.invalid;

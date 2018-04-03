@@ -77,7 +77,7 @@ describe('SliderBase Specs', () => {
 			);
 
 			const expected = 1;
-			const actual = sliderBase.find('SliderTooltip').length;
+			const actual = sliderBase.find('ProgressBarTooltip').length;
 
 			expect(actual).to.equal(expected);
 		});
@@ -88,7 +88,7 @@ describe('SliderBase Specs', () => {
 			);
 
 			const expected = 0;
-			const actual = sliderBase.find('SliderTooltip').length;
+			const actual = sliderBase.find('ProgressBarTooltip').length;
 
 			expect(actual).to.equal(expected);
 		});
@@ -102,7 +102,7 @@ describe('SliderBase Specs', () => {
 			);
 
 			const expected = customValue.toUpperCase();
-			const actual = sliderBase.find('SliderTooltip').text();
+			const actual = sliderBase.find('ProgressBarTooltip').text();
 
 			expect(actual).to.equal(expected);
 		});
@@ -116,7 +116,7 @@ describe('SliderBase Specs', () => {
 			);
 
 			const expected = 0;
-			const actual = sliderBase.find('SliderTooltip').length;
+			const actual = sliderBase.find('ProgressBarTooltip').length;
 
 			expect(actual).to.equal(expected);
 		});

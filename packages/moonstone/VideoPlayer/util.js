@@ -1,3 +1,4 @@
+import React from 'react';
 // VideoPlayer utils.js
 //
 
@@ -95,9 +96,20 @@ const compareSources = (source, nextSource) => {
 	}
 };
 
+/**
+ * Safely count the children nodes and exclude null & undefined values for an accurate count of
+ * real children
+ *
+ * @param {component} children React.Component or React.PureComponent
+ * @return {Number} Number of children nodes
+ * @private
+ */
+const countReactChildren = (children) => React.Children.toArray(children).filter(n => n != null).length;
+
 export {
 	calcNumberValueOfPlaybackRate,
 	compareSources,
+	countReactChildren,
 	parseTime,
 	secondsToPeriod,
 	secondsToTime

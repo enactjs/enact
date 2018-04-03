@@ -480,7 +480,7 @@ class ScrollableBaseNative extends Component {
 		if (!this.isTouching) {
 			this.stop();
 			this.isDragging = true;
-			this.dragStartX = this.scrollLeft + ev.x;
+			this.dragStartX = this.scrollLeft + this.getRtlX(ev.x);
 			this.dragStartY = this.scrollTop + ev.y;
 		}
 	}

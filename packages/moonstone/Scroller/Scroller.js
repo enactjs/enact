@@ -25,8 +25,8 @@ const
 	};
 
 /**
- * A Moonstone-styled base component for Scroller{@link moonstone/Scroller.Scroller}.
- * In most circumstances, you will want to use the Scrollable version:
+ * A Moonstone-styled base component for [Scroller]{@link moonstone/Scroller.Scroller}.
+ * In most circumstances, you will want to use the SpotlightContainerDecorator and Scrollable version:
  * [Scroller]{@link moonstone/Scroller.Scroller}
  *
  * @class ScrollerBase

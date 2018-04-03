@@ -1,11 +1,11 @@
 {
   "name": "enact-sampler",
-  "version": "2.0.0-alpha.5",
+  "version": "2.0.0-alpha.6",
   "description": "Component and QA samples for Enact",
   "private": true,
   "main": "index.js",
   "scripts": {
-    "lint": "enact lint --framework",
+    "lint": "enact lint --strict",
     "test": "echo \"No test suite\" && exit 0",
     "pack": "build-storybook -c .storybook -o dist",
     "pack-qa": "build-storybook -c .qa-storybook -o dist",
@@ -17,12 +17,12 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^2.0.0-alpha.5",
-    "@enact/i18n": "^2.0.0-alpha.5",
-    "@enact/moonstone": "^2.0.0-alpha.5",
-    "@enact/spotlight": "^2.0.0-alpha.5",
-    "@enact/ui": "^2.0.0-alpha.5",
-    "@enact/webos": "^2.0.0-alpha.5",
+    "@enact/core": "^2.0.0-alpha.6",
+    "@enact/i18n": "^2.0.0-alpha.6",
+    "@enact/moonstone": "^2.0.0-alpha.6",
+    "@enact/spotlight": "^2.0.0-alpha.6",
+    "@enact/ui": "^2.0.0-alpha.6",
+    "@enact/webos": "^2.0.0-alpha.6",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },
