@@ -1071,7 +1071,7 @@ class ScrollableBaseNative extends Component {
 		delete rest.verticalScrollbar;
 
 		return containerRenderer({
-			childComponentProps: {...rest, rtl},
+			childUiComponentProps: {...rest, rtl},
 			className: scrollableClasses,
 			componentCss: css,
 			horizontalScrollbarProps: this.horizontalScrollbarProps,
@@ -1123,7 +1123,7 @@ class ScrollableNative extends Component {
 			<ScrollableBaseNative
 				{...rest}
 				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
-					childComponentProps,
+					childUiComponentProps,
 					className,
 					componentCss,
 					horizontalScrollbarProps,
@@ -1144,7 +1144,7 @@ class ScrollableNative extends Component {
 						<div className={componentCss.container}>
 							<TouchableDiv {...touchableProps}>
 								{childRenderer({
-									...childComponentProps,
+									...childUiComponentProps,
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
 									initUiChildRef

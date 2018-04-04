@@ -462,7 +462,7 @@ class Scrollable extends Component {
 				scrollTo={this.scrollTo}
 				stop={this.stop}
 				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
-					childComponentProps,
+					childUiComponentProps,
 					className,
 					componentCss,
 					handleScroll,
@@ -485,7 +485,7 @@ class Scrollable extends Component {
 						<div className={componentCss.container}>
 							<TouchableDiv {...touchableProps}>
 								{childRenderer({
-									...childComponentProps,
+									...childUiComponentProps,
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
 									initUiChildRef,

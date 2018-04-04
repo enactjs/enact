@@ -516,7 +516,7 @@ class ScrollableNative extends Component {
 				scrollTo={this.scrollTo}
 				start={this.start}
 				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
-					childComponentProps,
+					childUiComponentProps,
 					className,
 					componentCss,
 					horizontalScrollbarProps,
@@ -538,7 +538,7 @@ class ScrollableNative extends Component {
 						<div className={componentCss.container}>
 							<TouchableDiv {...touchableProps}>
 								{childRenderer({
-									...childComponentProps,
+									...childUiComponentProps,
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
 									initUiChildRef,
