@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Removed
+
+- `moonstone/VirtualList.VirtualList` property `role="region"` in SpotlightPlaceholder
+
+### Added
+
+- `moonstone/VirtualList.VirtualList` and `ui/VirtualList.VirtualList` property `role="list"`
+
 ## [2.0.0-alpha.7 - 2018-04-03]
 
 ### Removed
