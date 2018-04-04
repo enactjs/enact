@@ -6,7 +6,7 @@
  * @module ui/Touchable
  */
 
-import {forward, forwardWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
+import {forward, forwardWithPrevent, forEventProp, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
@@ -475,6 +475,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		handleMouseDown = this.handle(
 			isNotBlocked,
 			forward('onMouseDown'),
+			forEventProp('button', 0),
 			this.handleDown
 		).finally(unblock)
 

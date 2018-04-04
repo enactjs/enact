@@ -6,21 +6,18 @@
 
 import {forKey, forProp, forward, forwardWithPrevent, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import {memoize} from '@enact/core/util';
-import ilib from '@enact/i18n';
-import NumFmt from '@enact/i18n/ilib/lib/NumFmt';
 import Changeable from '@enact/ui/Changeable';
 import ComponentOverride from '@enact/ui/ComponentOverride';
 import Spottable from '@enact/spotlight/Spottable';
 import Pause from '@enact/spotlight/Pause';
 import Slottable from '@enact/ui/Slottable';
-import Toggleable from '@enact/ui/Toggleable';
 import Touchable from '@enact/ui/Touchable';
 import PropTypes from 'prop-types';
 import anyPass from 'ramda/src/anyPass';
 import compose from 'ramda/src/compose';
 import React from 'react';
 
+import $L from '../internal/$L';
 import {ProgressBarTooltip} from '../ProgressBar';
 import Skinnable from '../Skinnable';
 
@@ -34,10 +31,6 @@ import {
 
 import componentCss from './Slider.less';
 
-const computeProportionProgress = ({value, max, min}) => (value - min) / (max - min);
-const memoizedPercentFormatter = memoize((/* locale */) => {
-	return new NumFmt({type: 'percentage', useNative: false});
-});
 
 
 /* ***************************************************
@@ -45,7 +38,6 @@ const memoizedPercentFormatter = memoize((/* locale */) => {
  * * consider multiple knob and bar support
  * * integration with IncrementSlider
  * * integration with MediaSlider
- * * ARIA parity
  *
  * ***************************************************/
 
@@ -216,29 +208,6 @@ const SliderBase = kind({
 		tooltip: PropTypes.bool,
 
 		/**
-		 * Converts the contents of the built-in tooltip to a percentage of the bar.
-		 * The percentage respects the min and max value props.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		tooltipAsPercent: PropTypes.bool,
-
-		/**
-		 * Specify where the tooltip should appear in relation to the Slider bar. Options are
-		 * `'before'` and `'after'`. `before` renders above a `horizontal` slider and to the
-		 * left of a `vertical` Slider. `after` renders below a `horizontal` slider and to the
-		 * right of a `vertical` Slider. In the `vertical` case, the rendering position is
-		 * automatically reversed when rendering in an RTL locale. This can be overridden by
-		 * using the [tooltipForceSide]{@link moonstone/Slider.Slider.tooltipForceSide} prop.
-		 *
-		 * @type {String}
-		 * @default 'before'
-		 * @public
-		 */
-		tooltipSide: PropTypes.string,
-
-		/**
 		 * The value of the slider.
 		 *
 		 * @type {Number}
@@ -287,18 +256,6 @@ const SliderBase = kind({
 	},
 
 	computed: {
-		children: ({children, max, min, tooltip, tooltipAsPercent, value}) => {
-			if (!tooltip || children) return children;
-
-			if (tooltipAsPercent) {
-				const formatter = memoizedPercentFormatter(ilib.getLocale());
-				const percent = Math.floor(computeProportionProgress({value, max, min}) * 100);
-
-				return formatter.format(percent);
-			}
-
-			return value;
-		},
 		className: ({activateOnFocus, active, disabled, noFill, orientation, pressed, styler}) => {
 			return styler.append(
 				orientation,
@@ -311,6 +268,7 @@ const SliderBase = kind({
 				}
 			);
 		},
+		tooltip: ({tooltip}) => tooltip === true ? ProgressBarTooltip : tooltip,
 		x: ({max, min, orientation, value}) => {
 			return orientation === 'horizontal' ? calcPercent(min, max, value) : 0;
 		},
@@ -319,30 +277,13 @@ const SliderBase = kind({
 		}
 	},
 
-	render: ({backgroundProgress, children, css, disabled, focused, knob, orientation, tooltip, tooltipSide, x, y, ...rest}) => {
+	render: ({backgroundProgress, css, disabled, focused, knob, orientation, tooltip, value, x, y, ...rest}) => {
 		delete rest.active;
 		delete rest.max;
 		delete rest.min;
 		delete rest.pressed;
-		delete rest.value;
 
 		const percent = orientation === 'horizontal' ? x : y;
-		let tooltipComponent;
-
-		// when `tooltip` is `false`, use custom tooltip provided in `children`
-		if (!tooltip) {
-			tooltipComponent = children;
-		} else if (focused) {
-			// only display tooltip when `focused`
-			tooltipComponent = <ProgressBarTooltip
-				knobAfterMidpoint={percent > 0.5}
-				orientation={orientation}
-				proportion={percent}
-				side={tooltipSide}
-			>
-				{children}
-			</ProgressBarTooltip>;
-		}
 
 		return (
 			<div {...rest} disabled={disabled}>
@@ -352,27 +293,54 @@ const SliderBase = kind({
 				</div>
 				<ComponentOverride
 					component={knob}
-					data-knob-after-midpoint={percent > 0.5}
 					disabled={disabled}
 					x={x}
 					y={y}
 				>
-					{tooltipComponent}
+					<ComponentOverride
+						component={tooltip}
+						orientation={orientation}
+						proportion={percent}
+						visible={focused}
+					>
+						{value}
+					</ComponentOverride>
 				</ComponentOverride>
 			</div>
 		);
 	}
 });
 
+
+// ARIA
+// * use aria-valuetext when set
+// * defaults to value
+// * onActivate, set to hint text
+// * on value change, reset to value or valuetext
+
+const useHintOnActivate = ({active}) => {
+	return {
+		useHintText: active
+	};
+};
+
+const toggleActivate = ({active}) => {
+	return {
+		active: !active
+	};
+};
+
 const PositionDecorator = (Wrapped) => class extends React.Component {
 	static displayName = 'PositionDecorator'
 
 	static propTypes = {
+		'aria-valuetext': PropTypes.oneOf([PropTypes.string, PropTypes.number]),
 		max: PropTypes.number,
 		min: PropTypes.number,
 		onChange: PropTypes.func,
 		orientation: PropTypes.string,
-		step: PropTypes.number
+		step: PropTypes.number,
+		value: PropTypes.number
 	}
 
 	static defaultProps = {
@@ -384,14 +352,51 @@ const PositionDecorator = (Wrapped) => class extends React.Component {
 		super();
 
 		this.paused = new Pause();
+		this.handleActivate = this.handleActivate.bind(this);
+		this.handleBlur = this.handleBlur.bind(this);
 		this.handleDown = this.handleDown.bind(this);
 		this.handleDrag = this.handleDrag.bind(this);
-		this.handleDragStart = this.handleDragStart.bind(this);
 		this.handleDragEnd = this.handleDragEnd.bind(this);
+		this.handleDragStart = this.handleDragStart.bind(this);
+		this.handleFocus = this.handleFocus.bind(this);
 		this.bounds = {};
 		this.dragConfig = {
 			global: true
 		};
+
+		this.state = {
+			active: false,
+			focused: false,
+			useHintText: false
+		};
+	}
+
+	componentWillReceiveProps (nextProps) {
+		if (this.props.value !== nextProps.value) {
+			this.setState({useHintText: false});
+		}
+	}
+
+	componentWillUnmount () {
+		this.paused.resume();
+	}
+
+	getValueText () {
+		const {'aria-valuetext': ariaValueText, orientation, value} = this.props;
+		const {useHintText} = this.state;
+
+		const verticalHint = $L('change a value with up down button');
+		const horizontalHint = $L('change a value with left right button');
+
+		if (useHintText) {
+			return orientation === 'horizontal' ? horizontalHint : verticalHint;
+		}
+
+		if (ariaValueText != null) {
+			return ariaValueText;
+		}
+
+		return value;
 	}
 
 	emitChangeForPosition (position) {
@@ -431,6 +436,16 @@ const PositionDecorator = (Wrapped) => class extends React.Component {
 		}
 	}
 
+	handleActivate () {
+		this.setState(toggleActivate);
+		this.setState(useHintOnActivate);
+	}
+
+	handleBlur (ev) {
+		forward('onBlur', ev, this.props);
+		this.setState({focused: false});
+	}
+
 	handleDown ({clientX, clientY, currentTarget}) {
 		this.updateBounds(currentTarget);
 
@@ -453,15 +468,26 @@ const PositionDecorator = (Wrapped) => class extends React.Component {
 		this.paused.resume();
 	}
 
+	handleFocus (ev) {
+		forward('onFocus', ev, this.props);
+		this.setState({focused: true});
+	}
+
 	render () {
 		return (
 			<Wrapped
+				focused={this.state.focused}
 				{...this.props}
+				active={this.state.active}
+				aria-valuetext={this.getValueText()}
 				dragConfig={this.dragConfig}
+				onActivate={this.handleActivate}
+				onBlur={this.handleBlur}
 				onDown={this.handleDown}
 				onDragStart={this.handleDragStart}
 				onDrag={this.handleDrag}
 				onDragEnd={this.handleDragEnd}
+				onFocus={this.handleFocus}
 			/>
 		);
 	}
@@ -470,13 +496,9 @@ const PositionDecorator = (Wrapped) => class extends React.Component {
 const SliderDecorator = compose(
 	Changeable,
 	PositionDecorator,
-	Toggleable({prop: 'focused', toggle: null, activate: 'onFocus', deactivate: 'onBlur'}),
-	Toggleable({prop: 'active', toggle: 'onActivate'}),
-	Touchable({
-		activeProp: 'pressed'
-	}),
+	Touchable({activeProp: 'pressed'}),
 	Spottable,
-	Slottable({slots: ['knob']}),
+	Slottable({slots: ['knob', 'tooltip']}),
 	Skinnable
 );
 
@@ -485,5 +507,6 @@ const Slider = SliderDecorator(SliderBase);
 export default Slider;
 export {
 	Slider,
-	SliderBase
+	SliderBase,
+	ProgressBarTooltip as SliderTooltip
 };
