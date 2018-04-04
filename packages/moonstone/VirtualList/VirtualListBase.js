@@ -52,7 +52,8 @@ const
 	isRight = is('right'),
 	isUp = is('up'),
 	JS = 'JS',
-	Native = 'Native';
+	Native = 'Native',
+	isItemDisabledDefault = () => (false);
 
 /**
  * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} and
@@ -165,7 +166,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		static defaultProps = {
-			isItemDisabled: () => (false),
+			isItemDisabled: isItemDisabledDefault,
 			wrap: false,
 			wrapAnimated: false
 		}
@@ -253,7 +254,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (safeIndexFrom !== safeIndexTo) {
 				for (let i = safeIndexFrom; i !== safeIndexTo; i += delta) {
-					if (isItemDisabled(i) === false) {
+					if (!isItemDisabled(i)) {
 						return i;
 					}
 				}
@@ -280,7 +281,7 @@ const VirtualListBaseFactory = (type) => {
 					startIndex = indexFrom - diffPosition + ((direction * diffPosition > 0) ? (direction * dimensionToExtent) : 0);
 
 				for (let i = startIndex; direction * (indexTo - i) > 0; i += delta) {
-					if (isItemDisabled(i) === false) {
+					if (!isItemDisabled(i)) {
 						return i;
 					}
 				}
@@ -320,7 +321,7 @@ const VirtualListBaseFactory = (type) => {
 				nearestIndex = -1;
 
 			for (let i = firstIndexInExtent; i < lastIndexInExtent; ++i) {
-				if (isItemDisabled(i) === false) {
+				if (!isItemDisabled(i)) {
 					distance = Math.abs(currentPosInExtent - i % dimensionToExtent);
 					if (distance < minDistance) {
 						minDistance = distance;
@@ -410,10 +411,10 @@ const VirtualListBaseFactory = (type) => {
 				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute));
 			let indexToScroll = -1;
 
-			if (isItemDisabled) {
-				indexToScroll = this.getIndexToScrollDisabled(direction, focusedIndex);
-			} else {
+			if (isItemDisabled === isItemDisabledDefault) {
 				indexToScroll = this.getIndexToScroll(direction, focusedIndex);
+			} else {
+				indexToScroll = this.getIndexToScrollDisabled(direction, focusedIndex);
 			}
 
 			if (indexToScroll !== -1) {
