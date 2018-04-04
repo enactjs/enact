@@ -8,26 +8,22 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
 ### Basic usage of VirtualList and VirtualGridList
 
-*   At least four props below are required to show a list properly.
+*   At least three props below are required to show a list properly.
 
-    *   `data`: Data for the list.
-
-    *   `dataSize`: Size of the data. A list does not check the size of `data` prop. dataSize prop is the only value to count items in a list.
+    *   `dataSize`: Size of the data.
     *   `itemSize`: Size of an item for the list. This is a required prop, and you will get an error when you build an app in dev mode without it.
     *   `itemRenderer`: The render function for an item of the list.
     *   Example
 
         ```
         <VirtualList
-            data={data}
-            dataSize={data.length}
+            dataSize={this.items.length}
             itemRenderer={this.renderItem}
             itemSize={ri.scale(72)}
         />
 
         <VirtualGridList
-            data={data}
-            dataSize={data.length}
+            dataSize={this.items.length}
             itemRenderer={this.renderItem}
             itemSize={{minWidth: ri.scale(90), minHeight: ri.scale(135)}}
         />
@@ -37,18 +33,33 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
     ```
     <VirtualList
-        data={data}
-        dataSize={data.length} //<-- numeric property
+        dataSize={this.items.length} //<-- numeric property
         itemRenderer={this.renderItem}
         itemSize={ri.scale(72)} //<-- numeric property
         spacing={ri.scale(10)} //<-- numeric property
     />
     ```
 
+*   If there are some disabled items in a list, we need to pass `isItemDisabled` prop as a function to check if the item at the index which is the first argument in the function is disabled. If the prop is not supplied, it assumes that no items are disabeld.
+
+    ```
+    isItemDisabled = (index) => (this.items[index].disabled)
+    render = () => {
+      return (
+          <VirtualList
+              dataSize={this.items.length}
+              isItemDisabled={isItemDisabled}
+              itemRenderer={this.renderItem}
+              itemSize={this.itemSize}
+          />
+      );
+    }
+    ```
+
 ### Common rules of Items for VirtualList/VirtualGridList
 
 *   A renderer for an item should be specified in `itemRenderer` prop in VirtualList.
-*   VirtualList passes `data`, `index`, `data-index`, and `key` to the `itemRenderer` function.
+*   VirtualList passes `index`, `data-index`, and `key` to the `itemRenderer` function.
 *   Be sure you are passing `{...rest}` to the item component for reusing DOM.
 *   VirtualList will automatically give proper className for items.
 *   Be sure to compose `className` prop when you make customized item component.
@@ -58,10 +69,12 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
     ```
     //.js
-    renderItem = ({data, index, ...rest}) => {
+    items = []
+    ...
+    renderItem = ({index, ...rest}) => {
         return (
             <div {...rest}>
-                {data[index].name}
+                {this.items[index].name}
             </div>
         );
     }
@@ -69,8 +82,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     render = () => {
         return (
             <VirtualList
-                data={data}
-                dataSize={data.length}
+                dataSize={this.items.length}
                 itemRenderer={this.renderItem}
                 itemSize={this.itemSize}
             />
@@ -94,7 +106,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     });
 
     //app.js
-    renderItem = ({data, index, ...rest}) => {
+    renderItem = ({index, ...rest}) => {
         return (
             <MyListItem index={index} {...rest} />
         );
@@ -115,8 +127,8 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 *   Example:
 
     ```
-    renderItem = ({data, index, ...rest}) => {
-        const {text, subText, source} = data[index];
+    renderItem = ({index, ...rest}) => {
+        const {text, subText, source} = this.items[index];
         return (
             <GridListImageItem
                 {...rest}
@@ -189,8 +201,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
             return (
                 <VirtualList
                     cbScrollTo={this.getScrollTo} // pass callback function
-                    data={data}
-                    dataSize={data.length}
+                    dataSize={this.items.length}
                     itemRenderer={this.renderItem}
                     itemSize={this.itemSize}
                 />
