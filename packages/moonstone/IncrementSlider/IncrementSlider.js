@@ -32,7 +32,7 @@ const isLeft = is('left');
 const isRight = is('right');
 const isUp = is('up');
 
-const Slider = Spottable(SliderBase);
+const Slider = Spottable(Skinnable(SliderBase));
 
 /**
  * A stateless Slider with IconButtons to increment and decrement the value. In most circumstances,
@@ -175,24 +175,6 @@ const IncrementSliderBase = kind({
 		incrementIcon: PropTypes.string,
 
 		/**
-		 * The method to run when the input mounts, giving a reference to the DOM.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		inputRef: PropTypes.func,
-
-		/**
-		* When not `vertical`, determines which side of the knob the tooltip appears on.
-		* When `false`, the tooltip will be on the left side, when `true`, the tooltip will
-		* be on the right.
-		*
-		* @type {String}
-		* @private
-		*/
-		knobAfterMidpoint: PropTypes.bool,
-
-		/**
 		 * The maximum value of the increment slider.
 		 *
 		 * @type {Number}
@@ -219,14 +201,6 @@ const IncrementSliderBase = kind({
 		noFill: PropTypes.bool,
 
 		/**
-		 * The handler when the knob is activated or deactivated by selecting it via 5-way
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onActivate: PropTypes.func,
-
-		/**
 		 * The handler to run when the value is changed.
 		 *
 		 * @type {Function}
@@ -237,30 +211,12 @@ const IncrementSliderBase = kind({
 		onChange: PropTypes.func,
 
 		/**
-		 * The handler to run when the value is decremented.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @public
-		 */
-		onDecrement: PropTypes.func,
-
-		/**
 		 * The handler to run when the decrement button becomes disabled
 		 *
 		 * @type {Function}
 		 * @private
 		 */
 		onDecrementSpotlightDisappear: PropTypes.func,
-
-		/**
-		 * The handler to run when the value is incremented.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @public
-		 */
-		onIncrement: PropTypes.func,
 
 		/**
 		 * The handler to run when the increment button becomes disabled
@@ -326,32 +282,6 @@ const IncrementSliderBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * `scrubbing` only has an effect with a detachedKnob, and is a performance optimization
-		 * to not allow re-assignment of the knob's value (and therefore position) during direct
-		 * user interaction.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		scrubbing: PropTypes.bool,
-
-		/**
-		 * The method to run when the slider bar component mounts, giving a reference to the DOM.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		sliderBarRef: PropTypes.func,
-
-		/**
-		 * The method to run when mounted, giving a reference to the DOM.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		sliderRef: PropTypes.func,
-
-		/**
 		 * When `true`, the component cannot be navigated using spotlight.
 		 *
 		 * @type {Boolean}
@@ -378,40 +308,6 @@ const IncrementSliderBase = kind({
 		 * @public
 		 */
 		tooltip: PropTypes.bool,
-
-		/**
-		 * Converts the contents of the built-in tooltip to a percentage of the bar.
-		 * The percentage respects the min and max value props.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		tooltipAsPercent: PropTypes.bool,
-
-		/**
-		 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale
-		 * changes for `vertical` sliders. This may be useful if you have a static layout that
-		 * does not automatically reverse when in an RTL language.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		tooltipForceSide: PropTypes.bool,
-
-		/**
-		 * Specify where the tooltip should appear in relation to the Slider bar. Options are
-		 * `'before'` and `'after'`. `before` renders above a `horizontal` slider and to the
-		 * left of a `vertical` Slider. `after` renders below a `horizontal` slider and to the
-		 * right of a `vertical` Slider. In the `vertical` case, the rendering position is
-		 * automatically reversed when rendering in an RTL locale. This can be overridden by
-		 * using the[tooltipForceSide]{@link moonstone/IncrementSlider.IncrementSlider.tooltipForceSide}
-		 * prop.
-		 *
-		 * @type {String}
-		 * @default 'before'
-		 * @public
-		 */
-		tooltipSide: PropTypes.oneOf(['before', 'after']),
 
 		/**
 		* The value of the increment slider.
@@ -502,9 +398,9 @@ const IncrementSliderBase = kind({
 	},
 
 	computed: {
+		className: ({orientation, styler}) => styler.append(orientation),
 		decrementDisabled: ({disabled, min, value}) => disabled || value <= min,
 		incrementDisabled: ({disabled, max, value}) => disabled || value >= max,
-		incrementSliderClasses: ({orientation, styler}) => styler.append(orientation),
 		decrementIcon: ({decrementIcon, orientation}) => (decrementIcon || ((orientation === 'vertical') ? 'arrowlargedown' : 'arrowlargeleft')),
 		incrementIcon: ({incrementIcon, orientation}) => (incrementIcon || ((orientation === 'vertical') ? 'arrowlargeup' : 'arrowlargeright')),
 		decrementAriaLabel: ({'aria-valuetext': valueText, decrementAriaLabel, disabled, min, value}) => {
@@ -545,13 +441,9 @@ const IncrementSliderBase = kind({
 		incrementAriaLabel,
 		incrementDisabled,
 		incrementIcon,
-		incrementSliderClasses,
-		inputRef,
-		knobAfterMidpoint,
 		max,
 		min,
 		noFill,
-		onActivate,
 		onChange,
 		onDecrement,
 		onDecrementSpotlightDisappear,
@@ -572,7 +464,7 @@ const IncrementSliderBase = kind({
 		delete rest.onSpotlightUp;
 
 		return (
-			<div {...rest} className={incrementSliderClasses}>
+			<div {...rest}>
 				<IncrementSliderButton
 					aria-controls={!incrementDisabled ? id : null}
 					aria-hidden={ariaHidden}
@@ -596,15 +488,10 @@ const IncrementSliderBase = kind({
 					disabled={disabled}
 					focused={focused}
 					id={id}
-					inputRef={inputRef}
-					knobAfterMidpoint={knobAfterMidpoint}
 					max={max}
 					min={min}
 					noFill={noFill}
-					onActivate={onActivate}
 					onChange={onChange}
-					onDecrement={onDecrement}
-					onIncrement={onIncrement}
 					onKeyDown={handleSliderKeyDown}
 					onSpotlightDisappear={onSpotlightDisappear}
 					orientation={orientation}
