@@ -54,25 +54,24 @@ const
 	JS = 'JS',
 	Native = 'Native';
 
+/**
+ * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} and
+ * [VirtualListBaseNative]{@link moonstone/VirtualList.VirtualListBaseNative}.
+ *
+ * @class VirtualListCore
+ * @memberof moonstone/VirtualList
+ * @ui
+ * @public
+ */
 const VirtualListBaseFactory = (type) => {
 	const UiBase = (type === JS) ? UiVirtualListBase : UiVirtualListBaseNative;
 
 	return class VirtualListCore extends Component {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
-		static propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
+		static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
 			/**
-			 * The `render` function for an item of the list receives the following parameters:
-			 * - `data` is for accessing the supplied `data` property of the list.
-			 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
-			 * is parameters due to performance optimizations.
-			 *
-			 * @param {Object} event
-			 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
-			 * @param {Number} event.index The index number of the componet to render
-			 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
-			 *
-			 * Data manipulation can be done in this function.
+			 * The `render` function called for each item in the list.
 			 *
 			 * > NOTE: The list does NOT always render a component whenever its render function is called
 			 * due to performance optimization.
@@ -80,15 +79,21 @@ const VirtualListBaseFactory = (type) => {
 			 * Usage:
 			 * ```
 			 * renderItem = ({index, ...rest}) => {
-			 *		delete rest.data;
+			 * 	delete rest.data;
 			 *
-			 *		return (
-			 *			<MyComponent index={index} {...rest} />
-			 *		);
+			 * 	return (
+			 * 		<MyComponent index={index} {...rest} />
+			 * 	);
 			 * }
 			 * ```
 			 *
 			 * @type {Function}
+			 * @param {Object} event
+			 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
+			 * @param {Number} event.index The index number of the component to render
+			 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
+			 *
+			 * @required
 			 * @public
 			 */
 			itemRenderer: PropTypes.func.isRequired,
@@ -97,6 +102,7 @@ const VirtualListBaseFactory = (type) => {
 			 * The render function for the items.
 			 *
 			 * @type {Function}
+			 * @required
 			 * @private
 			 */
 			itemsRenderer: PropTypes.func.isRequired,
@@ -119,6 +125,32 @@ const VirtualListBaseFactory = (type) => {
 			initUiChildRef: PropTypes.func,
 
 			/**
+			 * The Function that returns `true` if the item at the index is disabled.
+			 * It is used to navigate a list properly with 5 way keys, page up key,
+			 * and page down key. If it is not supplied, it assumes that no items are disabled.
+			 *
+			 * Usage:
+			 * ```
+			 * isItemDisabled = (index) => (this.items[index].disabled)
+			 * render = () => {
+			 * 	return (
+			 * 		<VirtualList
+			 * 			dataSize={this.items.length}
+			 * 			isItemDisabled={isItemDisabled}
+			 * 			itemRenderer={this.renderItem}
+			 * 			itemSize={this.itemSize}
+			 * 		/>
+			 * 	);
+			 * }
+			 * ```
+			 *
+			 * @type {Function}
+			 * @param {Number} index
+			 * @public
+			 */
+			isItemDisabled: PropTypes.func,
+
+			/**
 			 * `true` if rtl, `false` if ltr.
 			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
 			 *
@@ -133,6 +165,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		static defaultProps = {
+			isItemDisabled: () => (false),
 			wrap: false,
 			wrapAnimated: false
 		}
@@ -208,7 +241,8 @@ const VirtualListBaseFactory = (type) => {
 
 		findSpottableItem = (indexFrom, indexTo) => {
 			const
-				{data, dataSize} = this.uiRef.props,
+				{isItemDisabled} = this.props,
+				{dataSize} = this.uiRef.props,
 				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
 				safeIndexTo = clamp(-1, dataSize, indexTo),
 				delta = (indexFrom < indexTo) ? 1 : -1;
@@ -219,7 +253,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (safeIndexFrom !== safeIndexTo) {
 				for (let i = safeIndexFrom; i !== safeIndexTo; i += delta) {
-					if (data[i] && !data[i].disabled) {
+					if (isItemDisabled(i) === false) {
 						return i;
 					}
 				}
@@ -237,7 +271,7 @@ const VirtualListBaseFactory = (type) => {
 				-1 <= indexTo && indexTo <= dataSize &&
 				0 <= position && position < dimensionToExtent) {
 				const
-					{data} = this.uiRef.props,
+					{isItemDisabled} = this.props,
 					direction = (indexFrom < indexTo) ? 1 : -1,
 					delta = direction * dimensionToExtent,
 					diffPosition = (indexFrom % dimensionToExtent) - position,
@@ -245,8 +279,8 @@ const VirtualListBaseFactory = (type) => {
 					// When direction is -1 (backward) and diffPosition is negative, substract dimensionToExtent.
 					startIndex = indexFrom - diffPosition + ((direction * diffPosition > 0) ? (direction * dimensionToExtent) : 0);
 
-				for (let i = startIndex; direction * (indexTo - i) >= 0; i += delta) {
-					if (data[i] && !data[i].disabled) {
+				for (let i = startIndex; direction * (indexTo - i) > 0; i += delta) {
+					if (isItemDisabled(i) === false) {
 						return i;
 					}
 				}
@@ -274,7 +308,8 @@ const VirtualListBaseFactory = (type) => {
 
 		findNearestSpottableItemInExtent = (index, extentIndex) => {
 			const
-				{data, dataSize} = this.uiRef.props,
+				{isItemDisabled} = this.props,
+				{dataSize} = this.uiRef.props,
 				{dimensionToExtent} = this.uiRef,
 				currentPosInExtent = clamp(0, dataSize - 1, index) % dimensionToExtent,
 				firstIndexInExtent = clamp(0, this.getExtentIndex(dataSize - 1), extentIndex) * dimensionToExtent,
@@ -285,7 +320,7 @@ const VirtualListBaseFactory = (type) => {
 				nearestIndex = -1;
 
 			for (let i = firstIndexInExtent; i < lastIndexInExtent; ++i) {
-				if (data[i] && !data[i].disabled) {
+				if (isItemDisabled(i) === false) {
 					distance = Math.abs(currentPosInExtent - i % dimensionToExtent);
 					if (distance < minDistance) {
 						minDistance = distance;
@@ -370,12 +405,12 @@ const VirtualListBaseFactory = (type) => {
 
 		scrollToNextItem = ({direction, focusedItem}) => {
 			const
-				{data} = this.uiRef.props,
+				{isItemDisabled} = this.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
 				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute));
 			let indexToScroll = -1;
 
-			if (Array.isArray(data) && data.some((item) => item.disabled)) {
+			if (isItemDisabled) {
 				indexToScroll = this.getIndexToScrollDisabled(direction, focusedIndex);
 			} else {
 				indexToScroll = this.getIndexToScroll(direction, focusedIndex);
@@ -436,9 +471,9 @@ const VirtualListBaseFactory = (type) => {
 
 		jumpToSpottableItem = (keyCode, target) => {
 			const
-				{wrap, wrapAnimated} = this.props,
+				{isItemDisabled, wrap, wrapAnimated} = this.props,
 				{findSpottableExtent, findSpottableItem, getExtentIndex} = this,
-				{cbScrollTo, data, dataSize} = this.uiRef.props,
+				{cbScrollTo, dataSize} = this.uiRef.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
 				{dimensionToExtent, isPrimaryDirectionVertical} = this.uiRef,
 				rtl = this.props.rtl,
@@ -454,7 +489,8 @@ const VirtualListBaseFactory = (type) => {
 					null
 				);
 
-			if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled || (!isForward && !isBackward)) {
+			// If the currently focused item is disabled, we assume that all items in a list are disabled.
+			if (isItemDisabled(currentIndex) || (!isForward && !isBackward)) {
 				return false;
 			}
 
@@ -777,6 +813,7 @@ const VirtualListBaseFactory = (type) => {
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
 			delete rest.initUiChildRef;
+			delete rest.isItemDisabled;
 			delete rest.wrap;
 			delete rest.wrapAnimated;
 
@@ -814,7 +851,7 @@ const VirtualListBaseFactory = (type) => {
  * @memberof moonstone/VirtualList
  * @extends ui/VirtualList.VirtualListBase
  * @ui
- * @private
+ * @public
  */
 const VirtualListBase = VirtualListBaseFactory(JS);
 VirtualListBase.displayName = 'VirtualListBase';
@@ -858,12 +895,12 @@ const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line reac
 	/>
 );
 
-ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
+ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 	/**
 	 * Aria role.
 	 *
 	 * @type {String}
-	 * @private
+	 * @public
 	 */
 	role: PropTypes.string
 };
@@ -894,7 +931,7 @@ const ScrollableVirtualListNative = ({role, ...rest}) => (
 	/>
 );
 
-ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListNative.prototype */ {
+ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListBaseNative.prototype */ {
 	/**
 	 * Aria role.
 	 *

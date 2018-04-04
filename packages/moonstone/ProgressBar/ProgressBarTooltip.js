@@ -94,7 +94,7 @@ const ProgressBarTooltipBase = kind({
 	contextTypes,
 
 	computed: {
-		className: ({forceSide, orientation, side, styler}) => styler.append(orientation, {ignoreLocale: forceSide}, side),
+		className: ({forceSide, knobAfterMidpoint, orientation, side, styler}) => styler.append(orientation, {ignoreLocale: forceSide, knobAfterMidpoint}, side),
 		arrowAnchor: ({knobAfterMidpoint, orientation}) => {
 			if (orientation === 'vertical') return 'middle';
 			return knobAfterMidpoint ? 'left' : 'right';
@@ -108,7 +108,9 @@ const ProgressBarTooltipBase = kind({
 					// RTL after
 					(context.rtl && !forceSide && side === 'after') ||
 					// RTL before FORCE
-					(context.rtl && forceSide && side === 'before')
+					(context.rtl && forceSide && side === 'before') ||
+					// LTR before FORCE
+					(!context.rtl && forceSide && side === 'before')
 				) {
 					dir = 'left';
 				} else {
@@ -118,7 +120,11 @@ const ProgressBarTooltipBase = kind({
 				dir = (side === 'before' ? 'above' : 'below');
 			}
 			return dir;
-		}
+		},
+		style: ({proportion, style}) => ({
+			...style,
+			'--tooltip-progress-proportion': proportion
+		})
 	},
 
 	render: ({children, ...rest}) => {
