@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Changes
+
+- `moonstone/VideoPlayer` property `title` to accept node type
+
 ## [2.0.0-alpha.7 - 2018-04-03]
 
 ### Removed
