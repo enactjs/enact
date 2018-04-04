@@ -227,7 +227,6 @@ const SliderBase = kind({
 });
 
 const SliderDecorator = compose(
-	Changeable,
 	PositionDecorator,
 	Touchable({activeProp: 'pressed'})
 );

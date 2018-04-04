@@ -8,8 +8,10 @@ import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import {extractAriaProps} from '@enact/core/util';
 import Spottable from '@enact/spotlight/Spottable';
+import Changeable from '@enact/ui/Changeable';
+import Slottable from '@enact/ui/Slottable';
+import {handleChange} from '@enact/ui/Slider/utils';
 import Pure from '@enact/ui/internal/Pure';
-import Touchable from '@enact/ui/Touchable';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
@@ -20,7 +22,7 @@ import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator
 import {ProgressBarTooltip} from '../ProgressBar';
 import Skinnable from '../Skinnable';
 import {SliderBase} from '../Slider';
-import SliderDecorator from '../internal/SliderDecorator';
+import SliderBehaviorDecorator from '../Slider/SliderBehaviorDecorator';
 
 import IncrementSliderButton from './IncrementSliderButton';
 import componentCss from './IncrementSlider.less';
@@ -30,14 +32,7 @@ const isLeft = is('left');
 const isRight = is('right');
 const isUp = is('up');
 
-const Slider = Touchable(
-	{activeProp: 'pressed'},
-	Spottable(
-		Skinnable(
-			SliderBase
-		)
-	)
-);
+const Slider = Spottable(SliderBase);
 
 /**
  * A stateless Slider with IconButtons to increment and decrement the value. In most circumstances,
@@ -495,13 +490,15 @@ const IncrementSliderBase = kind({
 			} else if (isUp(keyCode) && onSpotlightUp) {
 				onSpotlightUp(ev);
 			}
-		}
+		},
+		onDecrement: handleChange(-1),
+		onIncrement: handleChange(1)
 	},
 
 	styles: {
 		css: componentCss,
 		className: 'incrementSlider',
-		publicClassNames: true
+		publicClassNames: ['incrementSlider']
 	},
 
 	computed: {
@@ -562,15 +559,9 @@ const IncrementSliderBase = kind({
 		onIncrementSpotlightDisappear,
 		onSpotlightDisappear,
 		orientation,
-		scrubbing,
-		sliderBarRef,
-		sliderRef,
 		spotlightDisabled,
 		step,
 		tooltip,
-		tooltipAsPercent,
-		tooltipForceSide,
-		tooltipSide,
 		value,
 		...rest
 	}) => {
@@ -617,15 +608,9 @@ const IncrementSliderBase = kind({
 					onKeyDown={handleSliderKeyDown}
 					onSpotlightDisappear={onSpotlightDisappear}
 					orientation={orientation}
-					scrubbing={scrubbing}
-					sliderBarRef={sliderBarRef}
-					sliderRef={sliderRef}
 					spotlightDisabled={spotlightDisabled}
 					step={step}
 					tooltip={tooltip}
-					tooltipAsPercent={tooltipAsPercent}
-					tooltipForceSide={tooltipForceSide}
-					tooltipSide={tooltipSide}
 					value={value}
 				>
 					{children}
@@ -650,14 +635,17 @@ const IncrementSliderBase = kind({
 
 const IncrementSliderDecorator = compose(
 	Pure,
+	Changeable,
 	IdProvider({generateProp: null, prefix: 's_'}),
-	SliderDecorator,
 	DisappearSpotlightDecorator({
 		events: {
 			onIncrementSpotlightDisappear: `.${componentCss.decrementButton}`,
 			onDecrementSpotlightDisappear: `.${componentCss.incrementButton}`
 		}
-	})
+	}),
+	SliderBehaviorDecorator,
+	Skinnable,
+	Slottable({slots: ['knob', 'tooltip']})
 );
 
 /**

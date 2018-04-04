@@ -36,7 +36,7 @@ const PositionDecorator = hoc((config, Wrapped) => {
 		}
 
 		emitChangeForPosition (x, y) {
-			const {max, min, onChange, orientation, step} = this.props;
+			const {max, min, orientation, step} = this.props;
 			const position = orientation === 'horizontal' ? x : y;
 
 			const percent = calcPercent(this.bounds.min, this.bounds.max, position);
@@ -52,10 +52,10 @@ const PositionDecorator = hoc((config, Wrapped) => {
 				}
 			}
 
-			onChange({
+			forward('onChange', {
 				type: 'onChange',
 				value
-			});
+			}, this.props);
 		}
 
 		updateBounds (node) {
