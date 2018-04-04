@@ -226,8 +226,8 @@ const VirtualGridListEasy = kind({
  * @ui
  * @private
  */
-const VirtualListNativeEasy = kind({
-	name: 'VirtualListNativeEasy',
+const VirtualListEasyNative = kind({
+	name: 'VirtualListEasyNative',
 
 	render: (props) => (
 		<VirtualListNative {...props} wrap />
@@ -247,8 +247,8 @@ const VirtualListNativeEasy = kind({
  * @ui
  * @private
  */
-const VirtualGridListNativeEasy = kind({
-	name: 'VirtualGridListNativeEasy',
+const VirtualGridListEasyNative = kind({
+	name: 'VirtualGridListEasyNative',
 
 	render: (props) => (
 		<VirtualGridListNative {...props} wrap />
@@ -259,12 +259,12 @@ export default VirtualList;
 export {
 	VirtualGridList,
 	VirtualGridListEasy,
+	VirtualGridListEasyNative,
 	VirtualGridListNative,
-	VirtualGridListNativeEasy,
 	VirtualList,
 	VirtualListBase,
 	VirtualListBaseNative,
 	VirtualListEasy,
-	VirtualListNative,
-	VirtualListNativeEasy
+	VirtualListEasyNative,
+	VirtualListNative
 };

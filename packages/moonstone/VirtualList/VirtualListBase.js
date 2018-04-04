@@ -228,6 +228,33 @@ const VirtualListBaseFactory = (type) => {
 			return -1;
 		}
 
+		findSpottableItemWithPositionInExtent = (indexFrom, indexTo, position) => {
+			const
+				{dataSize} = this.uiRef.props,
+				{dimensionToExtent} = this.uiRef;
+
+			if (0 <= indexFrom && indexFrom < dataSize &&
+				-1 <= indexTo && indexTo <= dataSize &&
+				0 <= position && position < dimensionToExtent) {
+				const
+					{data} = this.uiRef.props,
+					direction = (indexFrom < indexTo) ? 1 : -1,
+					delta = direction * dimensionToExtent,
+					diffPosition = (indexFrom % dimensionToExtent) - position,
+					// When direction is 1 (forward) and diffPosition is positive, add dimensionToExtent.
+					// When direction is -1 (backward) and diffPosition is negative, substract dimensionToExtent.
+					startIndex = indexFrom - diffPosition + ((direction * diffPosition > 0) ? (direction * dimensionToExtent) : 0);
+
+				for (let i = startIndex; direction * (indexTo - i) >= 0; i += delta) {
+					if (data[i] && !data[i].disabled) {
+						return i;
+					}
+				}
+			}
+
+			return -1;
+		}
+
 		findSpottableExtent = (indexFrom, isForward) => {
 			const
 				{dataSize} = this.uiRef.props,
@@ -410,19 +437,12 @@ const VirtualListBaseFactory = (type) => {
 		jumpToSpottableItem = (keyCode, target) => {
 			const
 				{wrap, wrapAnimated} = this.props,
-				{findNearestSpottableItemInExtent, findSpottableExtent, findSpottableItem, getExtentIndex} = this,
+				{findSpottableExtent, findSpottableItem, getExtentIndex} = this,
 				{cbScrollTo, data, dataSize} = this.uiRef.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
-				{isPrimaryDirectionVertical, dimensionToExtent} = this.uiRef,
+				{dimensionToExtent, isPrimaryDirectionVertical} = this.uiRef,
 				rtl = this.props.rtl,
-				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
-			let animate = true;
-
-			if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled) {
-				return false;
-			}
-
-			const
+				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute)),
 				isForward = (
 					isPrimaryDirectionVertical && isDown(keyCode) ||
 					!isPrimaryDirectionVertical && (!rtl && isRight(keyCode) || rtl && isLeft(keyCode)) ||
@@ -434,99 +454,106 @@ const VirtualListBaseFactory = (type) => {
 					null
 				);
 
-			let nextIndex = -1;
-
-			if (isForward) {
-				// See if the next item is spottable then delegate scroll to onFocus handler
-				if (!wrap && currentIndex < dataSize - dimensionToExtent && !data[currentIndex + dimensionToExtent].disabled) {
-					return false;
-				}
-
-				if (wrap && findSpottableExtent(currentIndex, true) === -1) {
-					const currentExtent = getExtentIndex(currentIndex);
-					const candidateExtent = getExtentIndex(findSpottableItem(0, dataSize));
-
-					if (currentExtent === candidateExtent) {
-						return false;
-					} else {
-						nextIndex = findNearestSpottableItemInExtent(currentIndex, candidateExtent);
-					}
-					animate = wrapAnimated;
-					// We need to blur the current focus immediately
-					// since it can be a very long scroll (from one edge to the other edge)
-					// and definitely it's not a case of changing "pointer" mode to "5way key" mode.
-					target.blur();
-				} else {
-					for (let i = currentIndex + 2; i < dataSize; i++) {
-						if (!data[i].disabled) {
-							nextIndex = i;
-							break;
-						}
-					}
-				}
-
-				// If there is no item which could get focus forward,
-				// we need to set restriction option to `self-first`.
-				if (nextIndex === -1) {
-					this.setRestrict(false);
-				}
-			} else if (isBackward) {
-				// See if the next item is spottable then delegate scroll to onFocus handler
-				if (!wrap && currentIndex >= dimensionToExtent && !data[currentIndex - dimensionToExtent].disabled) {
-					return false;
-				}
-
-				if (wrap && findSpottableExtent(currentIndex, false) === -1) {
-					const currentExtent = getExtentIndex(currentIndex);
-					const candidateExtent = getExtentIndex(findSpottableItem(dataSize - 1, -1));
-
-					if (currentExtent === candidateExtent) {
-						return false;
-					} else {
-						nextIndex = findNearestSpottableItemInExtent(currentIndex, candidateExtent);
-					}
-					animate = wrapAnimated;
-					// We need to blur the current focus immediately
-					// since it can be a very long scroll (from one edge to the other edge)
-					// and definitely it's not a case of changing "pointer" mode to "5way key" mode.
-					target.blur();
-				} else {
-					for (let i = currentIndex - 2; i >= 0; i--) {
-						if (!data[i].disabled) {
-							nextIndex = i;
-							break;
-						}
-					}
-				}
-
-				// If there is no item which could get focus backward,
-				// we need to set restriction option to `self-first`.
-				if (nextIndex === -1) {
-					this.setRestrict(false);
-				}
-			} else {
+			if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled || (!isForward && !isBackward)) {
 				return false;
 			}
 
-			if (nextIndex !== -1 && (firstIndex > nextIndex || nextIndex >= firstIndex + numOfItems)) {
-				// When changing from "pointer" mode to "5way key" mode,
-				// a pointer is hidden and a last focused item get focused after 30ms.
-				// To make sure the item to be blurred after that, we used 50ms.
-				setTimeout(() => {
-					target.blur();
-				}, 50);
+			const currentExtent = getExtentIndex(currentIndex);
+			let
+				nextIndex = -1,
+				animate = true,
+				isWrapped = false,
+				spottableExtent = -1;
 
-				this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
+			if (isForward) {
+				nextIndex = this.findSpottableItemWithPositionInExtent(currentIndex + 1, dataSize, currentIndex % dimensionToExtent);
+				if (nextIndex === -1) {
+					spottableExtent = findSpottableExtent(currentIndex, true);
+					if (spottableExtent === -1) {
+						if (wrap) {
+							const candidateExtent = getExtentIndex(findSpottableItem(0, dataSize));
 
-				if (!Spotlight.isPaused()) {
-					Spotlight.pause();
+							// If currentExtent is equal to candidateExtent,
+							// it means that the current extent is the only spottable extent.
+							// So we find nextIndex only when currentExtent is different from candidateExtent.
+							if (currentExtent !== candidateExtent) {
+								nextIndex = this.findNearestSpottableItemInExtent(currentIndex, candidateExtent);
+								animate = wrapAnimated;
+								isWrapped = true;
+							}
+						}
+
+						// If there is no item which could get focus forward,
+						// we need to set restriction option to `self-first`.
+						if (nextIndex === -1) {
+							this.setRestrict(false);
+						}
+					} else {
+						nextIndex = this.findNearestSpottableItemInExtent(currentIndex, spottableExtent);
+					}
+				}
+			} else { // isBackward
+				nextIndex = this.findSpottableItemWithPositionInExtent(currentIndex - 1, -1, currentIndex % dimensionToExtent);
+				if (nextIndex === -1) {
+					spottableExtent = findSpottableExtent(currentIndex, false);
+
+					if (spottableExtent === -1) {
+						if (wrap) {
+							const candidateExtent = getExtentIndex(findSpottableItem(dataSize - 1, -1));
+
+							// If currentExtent is equal to candidateExtent,
+							// it means that the current extent is the only spottable extent.
+							// So we find nextIndex only when currentExtent is different from candidateExtent.
+							if (currentExtent !== candidateExtent) {
+								nextIndex = this.findNearestSpottableItemInExtent(currentIndex, candidateExtent);
+								animate = wrapAnimated;
+								isWrapped = true;
+							}
+						}
+
+						// If there is no item which could get focus forward,
+						// we need to set restriction option to `self-first`.
+						if (nextIndex === -1) {
+							this.setRestrict(false);
+						}
+					} else {
+						nextIndex = this.findNearestSpottableItemInExtent(currentIndex, spottableExtent);
+					}
+				}
+			}
+
+			if (nextIndex !== -1) {
+				if (firstIndex <= nextIndex && nextIndex < firstIndex + numOfItems) {
+					this.focusOnItem(nextIndex);
+				} else {
+					if (isWrapped) {
+						// In case of 'wrapping-around',
+						// we need to blur the current focus immediately
+						// since it can be a very long scroll (from one edge to the other edge)
+						// and definitely it's not a case of changing "pointer" mode to "5way key" mode.
+						target.blur();
+					} else {
+						// When changing from "pointer" mode to "5way key" mode,
+						// a pointer is hidden and a last focused item get focused after 30ms.
+						// To make sure the item to be blurred after that, we used 50ms.
+						setTimeout(() => {
+							target.blur();
+						}, 50);
+					}
+
+					this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
+
+					if (!Spotlight.isPaused()) {
+						Spotlight.pause();
+					}
+
+					cbScrollTo({
+						index: nextIndex,
+						stickTo: isForward ? 'end' : 'start',
+						animate
+					});
 				}
 
-				cbScrollTo({
-					index: nextIndex,
-					stickTo: isForward ? 'end' : 'start',
-					animate: animate
-				});
 				return true;
 			}
 
