@@ -6,8 +6,9 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
-- `ui/Transition` property `children` not to be required
+- `ui/Transition` property `children` to not be required
 - `ui/Transition` to fire `onShow` and `onHide` even when there are no `children`
+
 ## [2.0.0-alpha.7 - 2018-04-03]
 
 ### Removed
