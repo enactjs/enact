@@ -74,17 +74,14 @@ const ProgressBarTooltipBase = kind({
 		 * @default 'before'
 		 * @public
 		 */
-		side: PropTypes.oneOf(['before', 'after']),
-
-		visible: PropTypes.bool
+		side: PropTypes.oneOf(['before', 'after'])
 	},
 
 	defaultProps: {
 		forceSide: false,
 		orientation: 'horizontal',
 		proportion: 0,
-		side: 'before',
-		visible: false
+		side: 'before'
 	},
 
 	styles: {
@@ -138,11 +135,7 @@ const ProgressBarTooltipBase = kind({
 		}
 	},
 
-	render: (props) => {
-		if (!props.visible) return null;
-
-		const {children, ...rest} = props;
-
+	render: ({children, ...rest}) => {
 		delete rest.forceSide;
 		delete rest.orientation;
 		delete rest.proportion;

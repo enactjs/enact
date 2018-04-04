@@ -438,7 +438,7 @@ const SliderBase = kind({
 		// when `tooltip` is `false`, use custom tooltip provided in `children`
 		if (!tooltip) {
 			tooltipComponent = children;
-		} else {
+		} else if (focused) {
 			// only display tooltip when `focused`
 			tooltipComponent = <ProgressBarTooltip
 				knobAfterMidpoint={knobAfterMidpoint}
@@ -446,7 +446,6 @@ const SliderBase = kind({
 				orientation={orientation}
 				proportion={proportionProgress}
 				side={tooltipSide}
-				visible={focused}
 			>
 				{children}
 			</ProgressBarTooltip>;

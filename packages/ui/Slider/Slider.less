@@ -1,0 +1,32 @@
+.slider {
+	position: relative;
+	height: 240px;
+	direction: ltr;
+
+	.bars {
+		position: absolute;
+
+		&:before {
+			content: '';
+			display: block;
+			height: 100%;
+			width: 100%;
+		}
+	}
+
+	.fill,
+	.load {
+		position: absolute;
+		pointer-events: none;
+		transform-origin: 0 0;
+		will-change: transform;
+	}
+
+	.knob,
+	&.horizontal,
+	&.pressed,
+	&.noFill,
+	&.vertical {
+		/* CSS Override */
+	}
+}

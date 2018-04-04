@@ -4,28 +4,23 @@
  * @module moonstone/Slider
  */
 
-import {forKey, forProp, forward, forwardWithPrevent, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import Changeable from '@enact/ui/Changeable';
-import Spottable from '@enact/spotlight/Spottable';
-import Slottable from '@enact/ui/Slottable';
-import UiSlider from '@enact/ui/Slider';
 import PropTypes from 'prop-types';
-import anyPass from 'ramda/src/anyPass';
 import compose from 'ramda/src/compose';
 import React from 'react';
 
-import {ProgressBarTooltip} from '../ProgressBar';
-import Skinnable from '../Skinnable';
+import Changeable from '../Changeable';
+import ComponentOverride from '../ComponentOverride';
+import Touchable from '../Touchable';
 
-import SliderBehaviorDecorator from './SliderBehaviorDecorator';
+import Bar from './Bar';
+import Knob from './Knob';
+import PositionDecorator from './PositionDecorator';
 import {
-	handleDecrement,
-	handleIncrement
+	calcPercent
 } from './utils';
 
 import componentCss from './Slider.less';
-
 
 
 /* ***************************************************
@@ -40,24 +35,6 @@ const SliderBase = kind({
 	name: 'Slider',
 
 	propTypes: {
-
-		/**
-		 * When `true`, the component may be manipulated via the directional input keys upon
-		 * receiving focus.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		activateOnFocus: PropTypes.bool,
-
-		/**
-		 * When `true`, the knob displays selected and can be moved using 5-way controls.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		active: PropTypes.bool,
-
 		/**
 		 * Background progress, as a proportion between `0` and `1`.
 		 *
@@ -84,13 +61,7 @@ const SliderBase = kind({
 		 */
 		disabled: PropTypes.bool,
 
-		/**
-		 * When `true`, the tooltip, if present, is shown
-		 * @type {Boolean}
-		 * @public
-		 */
-		focused: PropTypes.bool,
-		knob: PropTypes.node,
+		knobComponent: PropTypes.node,
 
 		/**
 		 * The amount to increment or decrement the position of the knob via 5-way controls.
@@ -132,14 +103,6 @@ const SliderBase = kind({
 		noFill: PropTypes.bool,
 
 		/**
-		 * The handler when the knob is activated or deactivated by selecting it via 5-way
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onActivate: PropTypes.func,
-
-		/**
 		 * The handler to run when the value is changed.
 		 *
 		 * @type {Function}
@@ -179,10 +142,10 @@ const SliderBase = kind({
 		 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
 		 * properties.
 		 *
-		 * @type {Boolean}
+		 * @type {Component}
 		 * @public
 		 */
-		tooltip: PropTypes.bool,
+		tooltipComponent: PropTypes.bool,
 
 		/**
 		 * The value of the slider.
@@ -197,70 +160,76 @@ const SliderBase = kind({
 	defaultProps: {
 		activateOnFocus: false,
 		active: false,
-		disabled: false
+		disabled: false,
+		knobComponent: Knob,
+		min: 0,
+		max: 100,
+		orientation: 'horizontal',
+		value: 0
 	},
 
 	styles: {
 		css: componentCss,
 		className: 'slider',
-		publicClassNames: ['slider']
-	},
-
-	handlers: {
-		onBlur: handle(
-			forward('onBlur'),
-			forProp('active', true),
-			forward('onActivate')
-		),
-		onKeyDown: handle(
-			forwardWithPrevent('onKeyDown'),
-			anyPass([
-				handleIncrement,
-				handleDecrement
-			])
-		),
-		onKeyUp: handle(
-			forwardWithPrevent('onKeyUp'),
-			forProp('activateOnFocus', false),
-			forKey('enter'),
-			forward('onActivate')
-		)
+		publicClassNames: true
 	},
 
 	computed: {
-		className: ({activateOnFocus, active, styler}) => styler.append({
-			activateOnFocus,
-			active
-		}),
-		tooltipComponent: ({focused, tooltip}) => {
-			if (!focused) return null;
-			if (tooltip === true) return ProgressBarTooltip;
-
-			return tooltip;
+		className: ({disabled, noFill, orientation, pressed, styler}) => {
+			return styler.append(
+				orientation,
+				{
+					disabled,
+					noFill,
+					pressed
+				}
+			);
+		},
+		x: ({max, min, orientation, value}) => {
+			return orientation === 'horizontal' ? calcPercent(min, max, value) : 0;
+		},
+		y: ({max, min, orientation, value}) => {
+			return orientation === 'vertical' ? calcPercent(min, max, value) : 0;
 		}
 	},
 
-	render: (props) => {
-		delete props.activateOnFocus;
-		delete props.active;
-		delete props.focused;
-		delete props.tooltip;
+	render: ({backgroundProgress, css, disabled, knobComponent, orientation, tooltipComponent, value, x, y, ...rest}) => {
+		delete rest.max;
+		delete rest.min;
+		delete rest.pressed;
+
+		const percent = orientation === 'horizontal' ? x : y;
 
 		return (
-			<UiSlider
-				{...props}
-				css={props.css}
-			/>
+			<div {...rest} disabled={disabled}>
+				<div className={css.bars}>
+					<Bar className={css.load} orientation={orientation} value={backgroundProgress} />
+					<Bar className={css.fill} orientation={orientation} value={percent} />
+				</div>
+				<ComponentOverride
+					className={css.knob}
+					component={knobComponent}
+					disabled={disabled}
+					x={x}
+					y={y}
+				>
+					<ComponentOverride
+						component={tooltipComponent}
+						orientation={orientation}
+						proportion={percent}
+					>
+						{value}
+					</ComponentOverride>
+				</ComponentOverride>
+			</div>
 		);
 	}
 });
 
 const SliderDecorator = compose(
 	Changeable,
-	SliderBehaviorDecorator,
-	Spottable,
-	Slottable({slots: ['knob', 'tooltip']}),
-	Skinnable
+	PositionDecorator,
+	Touchable({activeProp: 'pressed'})
 );
 
 const Slider = SliderDecorator(SliderBase);
@@ -269,6 +238,5 @@ export default Slider;
 export {
 	Slider,
 	SliderBase,
-	SliderDecorator,
-	ProgressBarTooltip as SliderTooltip
+	SliderDecorator
 };
