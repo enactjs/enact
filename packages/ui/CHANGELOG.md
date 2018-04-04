@@ -8,6 +8,15 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Transition` property `children` not to be required
 - `ui/Transition` to fire `onShow` and `onHide` even when there are no `children`
+## [2.0.0-alpha.7 - 2018-04-03]
+
+### Removed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `data`
+
+### Fixed
+
+- `ui/Scroller` horizontal scrolling in RTL locales
 
 ## [2.0.0-alpha.6] - 2018-03-22
 

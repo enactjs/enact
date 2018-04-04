@@ -16,7 +16,6 @@ import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
-import ri from '@enact/ui/resolution';
 
 import Skinnable from '../Skinnable';
 import {ProgressBarTooltip} from './ProgressBarTooltip';
@@ -87,7 +86,28 @@ const ProgressBarBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		tooltipForceSide: PropTypes.bool
+		tooltipForceSide: PropTypes.bool,
+
+		/**
+		 * Specify where the tooltip should appear in relation to the ProgressBar. Options are
+		 * `'before'` and `'after'`. `before` renders above a `horizontal` slider and to the
+		 * left of a `vertical` ProgressBar. `after` renders below a `horizontal` slider and to the
+		 * right of a `vertical` ProgressBar. In the `vertical` case, the rendering position is
+		 * automatically reversed when rendering in an RTL locale. This can be overridden by
+		 * using the [tooltipForceSide]{@link moonstone/ProgressBar.ProgressBar.tooltipForceSide}
+		 * prop.
+		 *
+		 * @type {String}
+		 * @default 'before'
+		 * @public
+		 */
+		tooltipSide: PropTypes.string
+	},
+
+	defaultProps: {
+		tooltip: false,
+		tooltipSide: 'before',
+		tooltipForceSide: false
 	},
 
 	styles: {
@@ -96,35 +116,19 @@ const ProgressBarBase = kind({
 	},
 
 	computed: {
-		tooltipComponent: ({progress, tooltip, tooltipForceSide, orientation}) => {
+		tooltipComponent: ({orientation, progress, tooltip, tooltipForceSide, tooltipSide}) => {
 			if (tooltip) {
 				const progressAfterMidpoint = progress > 0.5;
 				const progressPercentage = Math.min(parseInt(progress * 100), 100);
 				const percentageText = `${progressPercentage}%`;
 
-				let tooltipPosition;
-				if (orientation === 'vertical') {
-					tooltipPosition = {
-						top: `${100 - progressPercentage}%`,
-						right: tooltipForceSide ? 'auto' : ri.unit(ri.scale(-36), 'rem'),
-						left: tooltipForceSide ? ri.unit(ri.scale(72), 'rem') : null
-					};
-				} else {
-					tooltipPosition = progressAfterMidpoint ? {
-						right: `${100 - progressPercentage}%`,
-						bottom: ri.unit(ri.scale(24), 'rem')
-					} : {
-						left: percentageText,
-						bottom: ri.unit(ri.scale(24), 'rem')
-					};
-				}
-
 				return (
 					<ProgressBarTooltip
 						forceSide={tooltipForceSide}
 						knobAfterMidpoint={progressAfterMidpoint}
-						style={tooltipPosition}
+						proportion={progress}
 						orientation={orientation}
+						side={tooltipSide}
 					>
 						{percentageText}
 					</ProgressBarTooltip>
@@ -137,6 +141,7 @@ const ProgressBarBase = kind({
 
 	render: ({css, tooltipComponent, ...rest}) => {
 		delete rest.tooltip;
+		delete rest.tooltipSide;
 		delete rest.tooltipForceSide;
 
 		return (

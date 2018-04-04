@@ -27,23 +27,21 @@ const gridListItemSizeShape = PropTypes.shape({
 	minHeight: PropTypes.number.isRequired
 });
 
+/**
+ * The base version of the virtual list component.
+ *
+ * @class VirtualListBase
+ * @memberof ui/VirtualList
+ * @ui
+ * @public
+ */
 const VirtualListBaseFactory = (type) => {
 	return class VirtualListCore extends Component {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
 		static propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
 			/**
-			 * The `render` function for an item of the list receives the following parameters:
-			 * - `data` is for accessing the supplied `data` property of the list.
-			 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
-			 * is parameters due to performance optimizations.
-			 *
-			 * @param {Object} event
-			 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
-			 * @param {Number} event.index The index number of the componet to render
-			 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
-			 *
-			 * Data manipulation can be done in this function.
+			 * The `render` function called for each item in the list.
 			 *
 			 * > NOTE: The list does NOT always render a component whenever its render function is called
 			 * due to performance optimization.
@@ -51,15 +49,21 @@ const VirtualListBaseFactory = (type) => {
 			 * Usage:
 			 * ```
 			 * renderItem = ({index, ...rest}) => {
-			 *		delete rest.data;
+			 * 	delete rest.data;
 			 *
-			 *		return (
-			 *			<MyComponent index={index} {...rest} />
-			 *		);
+			 * 	return (
+			 * 		<MyComponent index={index} {...rest} />
+			 * 	);
 			 * }
 			 * ```
 			 *
 			 * @type {Function}
+			 * @param {Object} event
+			 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
+			 * @param {Number} event.index The index number of the component to render
+			 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
+			 *
+			 * @required
 			 * @public
 			 */
 			itemRenderer: PropTypes.func.isRequired,
@@ -69,6 +73,7 @@ const VirtualListBaseFactory = (type) => {
 			 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
 			 *
 			 * @type {Number|ui/VirtualList.gridListItemSizeShape}
+			 * @required
 			 * @private
 			 */
 			itemSize: PropTypes.oneOfType([
@@ -80,6 +85,7 @@ const VirtualListBaseFactory = (type) => {
 			 * The render function for the items.
 			 *
 			 * @type {Function}
+			 * @required
 			 * @private
 			 */
 			itemsRenderer: PropTypes.func.isRequired,
@@ -105,17 +111,6 @@ const VirtualListBaseFactory = (type) => {
 				clientWidth: PropTypes.number.isRequired,
 				clientHeight: PropTypes.number.isRequired
 			}),
-
-			/**
-			 * Data for passing it through `itemRenderer` prop.
-			 * NOTICE: For performance reason, changing this prop does NOT always cause the list to
-			 * redraw its items.
-			 *
-			 * @type {Any}
-			 * @default []
-			 * @public
-			 */
-			data: PropTypes.any,
 
 			/**
 			 * Size of the data.
@@ -195,7 +190,6 @@ const VirtualListBaseFactory = (type) => {
 
 		static defaultProps = {
 			cbScrollTo: nop,
-			data: [],
 			dataSize: 0,
 			direction: 'vertical',
 			overhang: 3,
@@ -605,10 +599,9 @@ const VirtualListBaseFactory = (type) => {
 
 		applyStyleToNewNode = (index, ...rest) => {
 			const
-				{itemRenderer, getComponentProps, data} = this.props,
+				{itemRenderer, getComponentProps} = this.props,
 				key = index % this.state.numOfItems,
 				itemElement = itemRenderer({
-					data,
 					index,
 					key
 				}),
@@ -745,7 +738,6 @@ const VirtualListBaseFactory = (type) => {
 
 			delete rest.cbScrollTo;
 			delete rest.clientSize;
-			delete rest.data;
 			delete rest.dataSize;
 			delete rest.direction;
 			delete rest.getComponentProps;
