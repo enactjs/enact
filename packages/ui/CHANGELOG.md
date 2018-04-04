@@ -4,6 +4,23 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Changed
+
+- `ui/Transition` property `children` to not be required
+- `ui/Transition` to fire `onShow` and `onHide` even when there are no `children`
+
+## [2.0.0-alpha.7 - 2018-04-03]
+
+### Removed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `data`
+
+### Fixed
+
+- `ui/Scroller` horizontal scrolling in RTL locales
+
+## [2.0.0-alpha.6] - 2018-03-22
+
 ### Removed
 
 - `ui/Transition` property `clipHeight`
@@ -12,16 +29,15 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/Scrollable` support for scrolling by touch
-- `ui/ProgressBar` property orientation to accept orientation strings like "vertical" and "horizontal"
+- `ui/ProgressBar` property `orientation` to accept orientation strings like `"vertical"` and `"horizontal"`
 
 ### Changed
 
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
 
-
 ### Fixed
 
-- `ui/Transition` animation for `clip` for "up", "left", and "right" directions. This includes a DOM addition to the Transition markup.
+- `ui/Transition` animation for `clip` for `"up"`, `"left"`, and `"right"` directions. This includes a DOM addition to the Transition markup.
 - `ui/ComponentOverride` and `ui/ToggleItem` to accept HTML DOM node tag names as strings for its `component` property
 
 ## [2.0.0-alpha.5] - 2018-03-07

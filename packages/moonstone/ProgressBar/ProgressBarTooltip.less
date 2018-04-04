@@ -4,39 +4,55 @@
 @import '../styles/text.less';
 
 .tooltip {
-	@offset-large: 0px;
+	--tooltip-progress-proportion: 0;
+	--tooltip-progress-percent: ~"calc(var(--tooltip-progress-proportion) * 100%)";
+	--tooltip-calculated-offset: ~"calc(var(--moon-tooltip-offset, 0px) + " @moon-tooltip-point-width ~")";
+
+	@offset-large: 0;
 
 	&.horizontal {
+		left: var(--tooltip-progress-percent);
+
 		&.before {
-			bottom: @moon-slider-tooltip-offset;
+			top: 0;
+			transform: translateY(~"calc(-100% - var(--tooltip-calculated-offset))");
 
 			.moon-custom-text({
-				bottom: (@moon-slider-tooltip-offset + @offset-large);
+				bottom: ~"calc(var(--tooltip-calculated-offset) + " @offset-large ~")";
 			});
 		}
 		&.after {
-			top: @moon-slider-tooltip-offset;
+			bottom: 0;
+			transform: translateY(~"calc(100% + var(--tooltip-calculated-offset))");
 
 			.moon-custom-text({
-				top: (@moon-slider-tooltip-offset + @offset-large);
+				top: ~"calc(var(--tooltip-calculated-offset) + " @offset-large ~")";
 			});
 		}
 
 		&.afterMidpoint {
-			transform: translateX(-100%);
+			&.before {
+				transform: translateX(-100%) translateY(~"calc(-100% - var(--tooltip-calculated-offset))");
+			}
+
+			&.after {
+				transform: translateX(-100%) translateY(~"calc(100% + var(--tooltip-calculated-offset))");
+			}
 		}
 	}
 
 	&.vertical {
+		bottom: var(--tooltip-progress-percent);
+
 		// Left side
 		&.before,
 		:global(.enact-locale-right-to-left) &.before.ignoreLocale,
 		:global(.enact-locale-right-to-left) &.after {
 			right: 0;
-			transform: translate(-54px, -50%);
+			transform: translate(~"calc(var(--tooltip-calculated-offset) * -1)", 50%);
 
 			.moon-custom-text({
-				transform: translate((-54px - @offset-large), -50%);
+				transform: translate(~"calc(var(--tooltip-calculated-offset) * -1 - " @offset-large ~")", 50%);
 			});
 		}
 
@@ -45,10 +61,10 @@
 		:global(.enact-locale-right-to-left) &.after.ignoreLocale,
 		:global(.enact-locale-right-to-left) &.before {
 			right: auto;
-			transform: translate(54px, -50%);
+			transform: translate(var(--tooltip-calculated-offset), 50%);
 
 			.moon-custom-text({
-				transform: translate((54px + @offset-large), -50%);
+				transform: translate(~"calc(var(--tooltip-calculated-offset) + " @offset-large ~")", 50%);
 			});
 		}
 	}

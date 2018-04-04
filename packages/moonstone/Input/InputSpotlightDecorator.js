@@ -160,14 +160,14 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			}
 
 			const focusChanged = this.state.focused !== prevState.focused;
-			if (focusChanged && this.state.focused === 'input') {
-				forward('onActivate', {type: 'onActivate'}, this.props);
-				this.paused.pause();
-			} else {
-				if (focusChanged && prevState.focused === 'input') {
+			if (focusChanged) {
+				if (this.state.focused === 'input') {
+					forward('onActivate', {type: 'onActivate'}, this.props);
+					this.paused.pause();
+				} else if (prevState.focused === 'input') {
 					forward('onDeactivate', {type: 'onDeactivate'}, this.props);
+					this.paused.resume();
 				}
-				this.paused.resume();
 			}
 		}
 
@@ -281,9 +281,12 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					preventSpotlightNavigation(ev);
 					this.paused.resume();
 
-					// Move spotlight in the keypress direction, if there is no other spottable elements,
-					// focus `InputDecorator` instead
-					if (!move(direction)) {
+					// Move spotlight in the keypress direction
+					if (move(direction)) {
+						// if successful, reset the internal state
+						this.blur();
+					} else {
+						// if there is no other spottable elements, focus `InputDecorator` instead
 						this.focusDecorator(currentTarget);
 					}
 				} else if (isLeft || isRight) {

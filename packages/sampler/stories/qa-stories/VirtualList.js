@@ -25,11 +25,11 @@ const
 	},
 	items = [],
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderItem = (size) => ({data, index, ...rest}) => {
+	renderItem = (size) => ({index, ...rest}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
 		return (
 			<StatefulSwitchItem  index={index} style={itemStyle} {...rest}>
-				{data[index].item}
+				{items[index].item}
 			</StatefulSwitchItem>
 		);
 	};
@@ -80,7 +80,6 @@ storiesOf('VirtualList', module)
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
 				<VirtualList
-					data={items}
 					dataSize={number('dataSize', items.length)}
 					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 					itemRenderer={renderItem(itemSize)}

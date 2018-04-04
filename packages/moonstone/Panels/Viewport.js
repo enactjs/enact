@@ -79,7 +79,7 @@ const ViewportBase = class extends React.Component {
 	}
 
 	componentWillUnmount () {
-		this.paused.resume()
+		this.paused.resume();
 	}
 
 	addTransitioningClass = () => {
@@ -117,10 +117,10 @@ const ViewportBase = class extends React.Component {
 	)
 
 	mapChildren = (children, generateId) => React.Children.map(children, (child, index) => {
-		return React.cloneElement(child, {
+		return child ? React.cloneElement(child, {
 			spotlightId: child.props.spotlightId || generateId(index, 'panel-container', Spotlight.remove),
 			'data-index': index
-		});
+		}) : null;
 	})
 
 	getEnteringProp = (noAnimation) => noAnimation ? null : 'hideChildren'

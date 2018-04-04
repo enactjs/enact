@@ -457,11 +457,13 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
-	emulateMouseUp = new Job(() => {
+	clearPressedState = () => {
 		this.setState({
 			pressed: 0
 		});
-	}, 175)
+	}
+
+	emulateMouseUp = new Job(this.clearPressedState, 175)
 
 	handleUp = () => {
 		const {joined} = this.props;
@@ -763,6 +765,7 @@ const PickerBase = class extends React.Component {
 				onKeyDown={this.handleKeyDown}
 				onKeyUp={this.handleKeyUp}
 				onUp={this.handleUp}
+				onMouseLeave={this.clearPressedState}
 				ref={this.initContainerRef}
 			>
 				<PickerButton
