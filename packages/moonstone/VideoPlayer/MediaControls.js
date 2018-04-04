@@ -237,14 +237,6 @@ const MediaControls = kind({
 		pauseIcon: PropTypes.string,
 
 		/**
-		 * A string thats sets the label for `pause`.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		pauseLabel: PropTypes.string,
-
-		/**
 		 * A string which is sent to the `play` icon of the player controls. This can be
 		 * anything that is accepted by {@link moonstone/Icon}. This will be temporarily replaced by
 		 * the [pauseIcon]{@link moonstone/VideoPlayer.MediaControls.pauseIcon} when the
@@ -255,14 +247,6 @@ const MediaControls = kind({
 		 * @public
 		 */
 		playIcon: PropTypes.string,
-
-		/**
-		 * A string thats sets the label for `play`.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		playLabel: PropTypes.string,
 
 		/**
 		 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
@@ -337,7 +321,7 @@ const MediaControls = kind({
 			}
 		},
 		playPauseIcon: ({paused, pauseIcon, playIcon}) => (paused ? playIcon : pauseIcon),
-		playPauseLabel: ({paused, pauseLabel, playLabel}) => (paused ? playLabel : pauseLabel)
+		playPauseLabel: ({paused}) => (paused ? $L('Play') : $L('Pause'))
 	},
 
 	render: (props) => {

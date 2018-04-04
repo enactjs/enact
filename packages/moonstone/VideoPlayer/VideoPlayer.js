@@ -149,16 +149,6 @@ const VideoPlayerBase = class extends React.Component {
 		autoCloseTimeout: PropTypes.number,
 
 		/**
-		 * A string which is sent to the `backward` icon of the player controls. This can be
-		 * anything that is accepted by {@link moonstone/Icon}.
-		 *
-		 * @type {String}
-		 * @default 'backward'
-		 * @public
-		 */
-		backwardIcon: PropTypes.string,
-
-		/**
 		 * Removes interactive capability from this component. This includes, but is not limited to,
 		 * key-press events, most clickable buttons, and prevents the showing of the controls.
 		 *
@@ -179,16 +169,6 @@ const VideoPlayerBase = class extends React.Component {
 		feedbackHideDelay: PropTypes.number,
 
 		/**
-		 * A string which is sent to the `forward` icon of the player controls. This can be anything
-		 * that is accepted by {@link moonstone/Icon}.
-		 *
-		 * @type {String}
-		 * @default 'forward'
-		 * @public
-		 */
-		forwardIcon: PropTypes.string,
-
-		/**
 		 * These components are placed into the slot to the left of the media controls.
 		 *
 		 * @type {Node}
@@ -205,24 +185,6 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		initialJumpDelay: PropTypes.number,
-
-		/**
-		 * A string which is sent to the `jumpBackward` icon of the player controls. This can be
-		 * anything that is accepted by {@link moonstone/Icon}.
-		 *
-		 * @type {String}
-		 * @default 'skipbackward'
-		 * @public
-		 */
-		jumpBackwardIcon: PropTypes.string,
-
-		/**
-		 * Sets the `disabled` state on the media "jump" buttons; the outer pair.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		jumpButtonsDisabled: PropTypes.bool,
 
 		/**
 		 * The number of seconds the player should skip forward or backward when a "jump" button is
@@ -243,16 +205,6 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		jumpDelay: PropTypes.number,
-
-		/**
-		 * A string which is sent to the `jumpForward` icon of the play controls. This can be
-		 * anything that is accepted by {@link moonstone/Icon}.
-		 *
-		 * @type {String}
-		 * @default 'skipforward'
-		 * @public
-		 */
-		jumpForwardIcon: PropTypes.string,
 
 		/**
 		 * These components are placed below the title. Typically these will be media descriptor
@@ -287,16 +239,6 @@ const VideoPlayerBase = class extends React.Component {
 		miniFeedbackHideDelay: PropTypes.number,
 
 		/**
-		 * The label for the "More" button for when the "More" tray is open.
-		 * This will show on the tooltip.
-		 *
-		 * @type {String}
-		 * @default 'Back'
-		 * @public
-		 */
-		moreButtonCloseLabel: PropTypes.string,
-
-		/**
 		 * The color of the underline beneath more icon button.
 		 *
 		 * This property accepts one of the following color names, which correspond with the
@@ -316,15 +258,6 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		moreButtonDisabled: PropTypes.bool,
-
-		/**
-		 * The label for the "More" button. This will show on the tooltip.
-		 *
-		 * @type {String}
-		 * @default 'More'
-		 * @public
-		 */
-		moreButtonLabel: PropTypes.string,
 
 		/**
 		 * Disable audio for this video. In a TV context, this is handled by the remote control,
@@ -353,15 +286,6 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		noAutoPlay: PropTypes.bool,
-
-		/**
-		 * Removes the "jump" buttons. The buttons that skip forward or backward in the video.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noJumpButtons: PropTypes.bool,
 
 		/**
 		 * Removes the mini feedback.
@@ -483,16 +407,6 @@ const VideoPlayerBase = class extends React.Component {
 		pauseAtEnd: PropTypes.bool,
 
 		/**
-		 * A string which is sent to the `pause` icon of the player controls. This can be anything
-		 * that is accepted by {@link moonstone/Icon}.
-		 *
-		 * @type {String}
-		 * @default 'pause'
-		 * @public
-		 */
-		pauseIcon: PropTypes.string,
-
-		/**
 		 * Mapping of playback rate names to playback rate values that may be set.
 		 *
 		 * @type {moonstone/VideoPlayer.playbackRateHash}
@@ -510,16 +424,6 @@ const VideoPlayerBase = class extends React.Component {
 			slowForward: PropTypes.arrayOf(PropTypes.string),
 			slowRewind: PropTypes.arrayOf(PropTypes.string)
 		}),
-
-		/**
-		 * A string which is sent to the `play` icon of the player controls. This can be anything
-		 * that is accepted by {@link moonstone/Icon}.
-		 *
-		 * @type {String}
-		 * @default 'play'
-		 * @public
-		 */
-		playIcon: PropTypes.string,
 
 		/**
 		 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
@@ -1898,29 +1802,17 @@ const VideoPlayerBase = class extends React.Component {
 
 	render () {
 		const {
-			backwardIcon,
 			children,
 			className,
 			disabled,
-			forwardIcon,
 			infoComponents,
-			jumpBackwardIcon,
-			jumpButtonsDisabled,
-			jumpForwardIcon,
 			leftComponents,
 			loading,
-			moreButtonCloseLabel,
-			moreButtonColor,
-			moreButtonDisabled,
-			moreButtonLabel,
 			noAutoPlay,
-			noJumpButtons,
 			noMiniFeedback,
 			noRateButtons,
 			noSlider,
 			noSpinner,
-			pauseIcon,
-			playIcon,
 			rateButtonsDisabled,
 			rightComponents,
 			source,
@@ -2056,19 +1948,9 @@ const VideoPlayerBase = class extends React.Component {
 							</MediaSlider>}
 
 							<MediaControls
-								backwardIcon={backwardIcon}
-								forwardIcon={forwardIcon}
-								jumpBackwardIcon={jumpBackwardIcon}
-								jumpButtonsDisabled={jumpButtonsDisabled}
-								jumpForwardIcon={jumpForwardIcon}
 								leftComponents={leftComponents}
 								mediaDisabled={disabled || this.state.mediaControlsDisabled}
-								moreButtonCloseLabel={moreButtonCloseLabel}
-								moreButtonColor={moreButtonColor}
-								moreButtonDisabled={moreButtonDisabled}
-								moreButtonLabel={moreButtonLabel}
 								moreDisabled={moreDisabled}
-								noJumpButtons={noJumpButtons}
 								noRateButtons={noRateButtons}
 								onBackwardButtonClick={this.onBackward}
 								onClick={this.resetAutoTimeout}
@@ -2079,10 +1961,6 @@ const VideoPlayerBase = class extends React.Component {
 								onPlayButtonClick={this.onPlay}
 								onToggleMore={this.onMoreClick}
 								paused={this.state.paused}
-								pauseIcon={pauseIcon}
-								pauseLabel={$L('Pause')}
-								playIcon={playIcon}
-								playLabel={$L('Play')}
 								rateButtonsDisabled={rateButtonsDisabled}
 								rightComponents={rightComponents}
 								showMoreComponents={this.state.more}
