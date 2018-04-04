@@ -4,17 +4,17 @@
  * @module moonstone/Slider
  */
 
-import factory from '@enact/core/factory';
 import {forKey, forward, handle, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import Pressable from '@enact/ui/Pressable';
-import React, {PropTypes} from 'react';
+import Touchable from '@enact/ui/Touchable';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';
 
 import SliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
 
-import {SliderBarFactory} from './SliderBar';
+import SliderBar from './SliderBar';
 import componentCss from './Slider.less';
 
 const isActive = (ev, props) => !(props.active || props.detachedKnob);
@@ -41,9 +41,9 @@ const handleActivate = handle(
 	stopImmediate
 );
 
-const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
-	const SliderBar = SliderBarFactory({css});
+const factory = (obj, fn) => (cfg = {}) => typeof obj === 'function' ? obj(cfg) : fn(cfg);
 
+const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	/**
 	 * {@link moonstone/Slider.SliderBase} is a stateless Slider. In most circumstances, you will want
 	 * to use the stateful version: {@link moonstone/Slider.Slider}
@@ -344,17 +344,17 @@ const SliderFactory = factory(css => {
 	const Base = SliderBaseFactory(css);
 
 	/**
-	 * {@link moonstone/Slider.Slider} is a Slider with Moonstone styling, Spottable, Pressable and
+	 * {@link moonstone/Slider.Slider} is a Slider with Moonstone styling, Spottable, Touchable and
 	 * SliderDecorator applied. It is a stateful Slider.
 	 *
 	 * @class Slider
 	 * @memberof moonstone/Slider
 	 * @mixes spotlight/Spottable
-	 * @mixes ui/Pressable
+	 * @mixes ui/Touchable
 	 * @ui
 	 * @public
 	 */
-	return Pressable(
+	return Touchable(
 		Spottable(
 			SliderDecorator(
 				Base

@@ -27,30 +27,6 @@ describe('Slider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not fire change if clicked but value has not changed', function () {
-		const handleChange = sinon.spy();
-		const value = 50;
-
-		const slider = mount(
-			<Slider
-				min={0}
-				max={100}
-				value={value}
-				step={1}
-				onChange={handleChange}
-			/>
-		);
-
-		slider.find(`.${css.input}`)
-			.simulate('mousedown', {value})
-			.simulate('change', {target: {value}})
-			.simulate('mouseup', {value});
-
-		const expected = false;
-		const actual = handleChange.called;
-		expect(actual).to.equal(expected);
-	});
-
 	it('should not fire change event more than once', function () {
 		const handleChange = sinon.spy();
 		const value = 25;
@@ -65,13 +41,10 @@ describe('Slider Specs', () => {
 			/>
 		);
 
-		slider.find(`.${css.input}`)
-			.simulate('mousedown', {value})
-			.simulate('change', {target: {value}})
-			.simulate('mouseup', {value});
+		slider.find(`.${css.input}`).simulate('change', {target: {value}});
 
-		const expected = 1;
-		const actual = handleChange.callCount;
+		const expected = true;
+		const actual = handleChange.calledOnce;
 
 		expect(actual).to.equal(expected);
 	});
@@ -90,10 +63,7 @@ describe('Slider Specs', () => {
 			/>
 		);
 
-		slider.find(`.${css.input}`)
-			.simulate('mousedown', {value})
-			.simulate('change', {target: {value}})
-			.simulate('mouseup', {value});
+		slider.find(`.${css.input}`).simulate('change', {target: {value}});
 
 		const expected = value;
 		const actual = handleChange.args[0][0].value;
@@ -309,7 +279,6 @@ describe('Slider Specs', () => {
 		);
 
 		slider.find('Slider').prop('onActivate')();
-		slider.update();
 
 		const expected = 'change a value with left right button';
 		const actual = slider.find('Slider').prop('aria-valuetext');
@@ -320,11 +289,10 @@ describe('Slider Specs', () => {
 	it('should set "aria-valuetext" to hint string when knob is active and vertical is true', function () {
 		const Comp = SliderDecorator(SliderBase);
 		const slider = mount(
-			<Comp orientation="vertical" />
+			<Comp vertical />
 		);
 
 		slider.find('Slider').prop('onActivate')();
-		slider.update();
 
 		const expected = 'change a value with up down button';
 		const actual = slider.find('Slider').prop('aria-valuetext');

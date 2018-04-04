@@ -1,19 +1,28 @@
-// Slider.less
-//
+@import '../styles/colors.less';
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
-@import '../styles/skin.less';
 
 .slider {
 	position: relative;
 	margin: 0 @moon-spotlight-outset;
 	height: 240px;	// Vertical sizing here. Being here instead of in .vertical requires less precedence when overriding the style from app-code.
+	direction: ltr;
+
+	.bars {
+		position: absolute;
+
+		&:before {
+			content: '';
+			display: block;
+			height: 100%;
+			width: 100%;
+			background-color: @moon-progress-bar-bg-color;
+		}
+	}
 
 	.fill,
 	.load {
-		height: 100%;
-		width: 100%;
 		position: absolute;
 		pointer-events: none;
 		transform-origin: 0 0;
@@ -21,19 +30,14 @@
 	}
 
 	.fill {
-		transition: background-color ease-out 100ms;
-		will-change: background-color;
+		background-color: @moon-progress-bar-fill-bg-color;
 	}
 
-	.sliderBar {
-		position: relative;
-		height: 100%;
-		width: 100%;
-		direction: ltr;	// Always arrange this according to LTR rules
+	.load {
+		background-color: @moon-progress-bar-loaded-bg-color;
 	}
 
 	.knob {
-		position: absolute;
 		will-change: transform;
 
 		&::before {
@@ -43,8 +47,8 @@
 			width: @moon-slider-knob-width;
 			// Vertically and horizontally center this knob.
 			// Using this method rather than -top -left so the knob is more intuitively customizable.
-			-webkit-transform: @moon-translate-center scale(@moon-slider-knob-resting-state-scale);
 			transform:         @moon-translate-center scale(@moon-slider-knob-resting-state-scale);
+			background-color: @moon-slider-knob-bg-color;
 			border-radius: (@moon-slider-knob-height / 2);
 			border: @moon-button-border-width solid transparent;
 			box-sizing: border-box;
@@ -59,106 +63,84 @@
 		}
 	}
 
-	.input {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		margin: 0;
-		background-color: transparent;
-		box-sizing: border-box;
-		-webkit-appearance: none;
-		opacity: 0;  // Allows the input to not issue a repaint when dragging the knob, but retains the size and position on screen
-
-		&::-webkit-slider-thumb {
-			height: @moon-slider-knob-height;
-			width: @moon-slider-knob-width;
-			// -webkit-appearance:none;
-			border-radius: @moon-slider-knob-width;
-			box-sizing: border-box;
-			visibility: hidden;
-
-			.moon-custom-text({
-				height: @moon-slider-knob-height-large;
-				width: @moon-slider-knob-width-large;
-				border-radius: @moon-slider-knob-width-large;
-			})
-		}
-
-		:global(.enact-locale-right-to-left) & {
-			direction: ltr;
-		}
+	.tooltip {
+		display: none;
 	}
 
 	&.horizontal {
 		@h-gap: (@moon-slider-knob-width / 2);
-		padding: ((@moon-slider-knob-height - @moon-slider-bar-height) / 2) @h-gap;
+		@v-gap: (@moon-slider-knob-height - @moon-slider-bar-height) / 2;
+		padding: @v-gap @h-gap;
 		height: @moon-slider-bar-height;
 
-		// .sliderBar {}
-		.knob {
-			top: 50%;
-			left: 0;
+		.bars {
+			.position(@v-gap, @h-gap);
 		}
-		.input {
-			padding: 0 @h-gap;
+
+		.knob {
+			margin-top: @moon-slider-bar-height / 2;
+		}
+
+		.fill,
+		.load {
+			top: 0;
+			height: @moon-slider-bar-height;
 		}
 
 		.moon-custom-text({
 			@h-gap-large: (@moon-slider-knob-width-large / 2);
 			padding: ((@moon-slider-knob-height-large - @moon-slider-bar-height) / 2) @h-gap-large;
-
-			.input {
-				padding: 0 @h-gap-large;
-			}
 		})
 	}
 
 	&.vertical {
+		@h-gap: (@moon-slider-knob-height - @moon-slider-bar-height) / 2;
 		@v-gap: (@moon-slider-knob-width / 2);
-		padding: @v-gap ((@moon-slider-knob-height - @moon-slider-bar-height) / 2);
+		padding: @v-gap @h-gap;
 		width: @moon-slider-bar-height;
 		min-height: 120px;
 		display: inline-block;
 		vertical-align: top;
 
-		.fill,
-		.load {
-			bottom: 0;
-			transform-origin: 0 100%; // the origin should be the bottom when vertical
-		}
-
-		.sliderBar {
-			bottom: 0;
+		.bars {
+			.position(@v-gap, @h-gap);
 		}
 
 		.knob {
-			top: 0;
-			left: 50%;
+			margin-left: @moon-slider-bar-height / 2;
 		}
 
-		.input {
-			transition: transform 1s ease;
-			padding: @v-gap 0;
-
-			// Special trickery for true vertical slider in all browsers. uses attribute `orient="vertical"` for FF.
-			writing-mode: bt-lr; /* IE */
-			-webkit-appearance: slider-vertical; /* WebKit */
-			opacity: 0.0001;	// This needs to be still visible to remain interactive, so we can't simply set visibility:hidden or display:none or even -webkit-appearance:none. This becomes effectively invisible with 0.0001
+		.fill,
+		.load {
+			width: @moon-slider-bar-height;
+			bottom: 0;
 		}
 
 		.moon-custom-text({
 			@v-gap-large: (@moon-slider-knob-width / 2);
 			padding: @v-gap-large ((@moon-slider-knob-height-large - @moon-slider-bar-height) / 2);
-
-			.input {
-				padding: @v-gap-large 0;
-			}
 		})
 	}
 
-	.spottable({
+	&:global(.spottable) {
+		&:focus.activateOnFocus,
+		&.active,
+		&.pressed {
+			.fill {
+				background-color: @moon-slider-spotlight-bar-color;
+			}
+		}
+
+		&.pressed,
+		&:focus {
+			.knob::before {
+				background-color: @moon-slider-spotlight-knob-color;
+			}
+			.tooltip {
+				display: block;
+			}
+		}
+
 		&.pressed,
 		&:focus.activateOnFocus,
 		&:focus.active {
@@ -166,117 +148,41 @@
 				transform: @moon-translate-center scale(1);
 			}
 		}
-	});
 
-	// Skin colors
-	.applySkins({
+		&:focus {
+			background-color: transparent;
+
+			&.active {
+				.knob::before {
+					background-color: @moon-slider-knob-bg-color;
+					border-color: @moon-slider-spotlight-knob-color;
+				}
+			}
+		}
+	}
+
+	&.noFill {
 		.fill {
-			background-color: @moon-progress-bar-fill-bg-color;
-		}
-
-		.load {
-			background-color: @moon-progress-bar-loaded-bg-color;
-		}
-
-		.sliderBar {
-			background-color: @moon-progress-bar-bg-color;
-		}
-
-		.knob::before {
-			background-color: @moon-slider-knob-bg-color;
+			background-color: transparent;
 		}
 
 		.spottable({
-			&:focus.activateOnFocus,
 			&.active,
 			&.pressed {
 				.fill {
-					background-color: @moon-slider-spotlight-bar-color;
-				}
-			}
-
-			&.pressed,
-			&:focus {
-				.knob::before {
-					background-color: @moon-slider-spotlight-knob-color;
-				}
-			}
-
-			&:focus {
-				background-color: transparent;
-
-				&.active {
-					.knob::before {
-						background-color: @moon-slider-knob-bg-color;
-						border-color: @moon-slider-spotlight-knob-color;
-					}
-				}
-			}
-		});
-
-		&.noFill {
-			.fill {
-				background-color: transparent;
-			}
-
-			.spottable({
-				&.active,
-				&.pressed {
-					.fill {
-						background-color: transparent;
-					}
-				}
-			});
-		}
-	});
-}
-
-.muted({
-	.slider {
-		.spottable({
-			&.pressed,
-			&:focus.active {
-				.knob::before {
-					transform: @moon-translate-center scale(@moon-slider-knob-resting-state-scale);
-				}
-			}
-		});
-
-		// Skin colors
-		.applySkins({
-			.focus({
-				.knob::before {
-					background-color: @moon-slider-knob-bg-color;
-				}
-			});
-
-			.spottable({
-				&.active,
-				&.pressed {
-					.fill {
-						background-color: @moon-progress-bar-fill-bg-color;
-					}
-				}
-
-				&.pressed,
-				&:focus {
-					.knob::before {
-						background-color: @moon-slider-knob-bg-color;
-					}
-				}
-
-				&:focus {
 					background-color: transparent;
-
-					&.active {
-						.knob::before {
-							background-color: @moon-slider-knob-bg-color;
-							border-color: @moon-slider-knob-bg-color;
-						}
-					}
 				}
-			});
-
+			}
 		});
 	}
-}, parent);
+}
+
+[data-spotlight-container-muted='true'] {
+	.slider {
+		&:global(.spottable):focus {
+			.knob {
+				background-color: @moon-slider-knob-bg-color;
+			}
+		}
+	}
+}

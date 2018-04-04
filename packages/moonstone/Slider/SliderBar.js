@@ -8,52 +8,28 @@ import {
 
 
 /**
- * The componenrt used to establish the DOM and structure of the Slider.
+ * {@link moonstone/Slider.SliderBar} is private.
  *
  * @class SliderBar
  * @memberof moonstone/Slider
  * @ui
  * @private
  */
-class SliderBar extends React.Component {
+
+const SliderBar = class extends React.Component {
 	static displayName = 'SliderBar'
 
 	static propTypes = /** @lends moonstone/Slider.SliderBar.prototype */{
-
-		/**
-		 * Customizes the component by mapping the supplied collection of CSS class names to the
-		 * corresponding internal Elements and states of this component.
-		 *
-		 *  The following classes are supported:
-		 *
-		 * * `sliderBar` - The root class name
-		 * * `load` - The background progress bar node
-		 * * `fill` - The progress bar node
-		 * * `knob` - The knob node
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		css: PropTypes.object,
-
 		/**
 		 * The slider can change its behavior to have the knob follow the cursor as it moves
 		 * across the slider, without applying the position. A click or drag behaves the same.
 		 * This is primarily used by media playback. Setting this to `true` enables this behavior.
 		 *
 		 * @type {Boolean}
+		 * @default false
 		 * @private
 		 */
 		detachedKnob: PropTypes.bool,
-
-		/**
-		 * Sets the orientation of the slider, whether the slider moves left and right or up and
-		 * down. Must be either `'horizontal'` or `'vertical'`.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
 		 * The background progress as a proportion.
@@ -77,9 +53,27 @@ class SliderBar extends React.Component {
 		 * user interaction.
 		 *
 		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
-		scrubbing: PropTypes.bool
+		scrubbing: PropTypes.bool,
+
+		/**
+		 * If `true` the slider will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		vertical: PropTypes.bool,
+
+		/**
+		 * Height, in standard CSS units, of the vertical slider. Only takes
+		 * effect on a vertical oriented slider, and will be `null` otherwise.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		verticalHeight: PropTypes.object
 	}
 
 	getBarNode = (node) => {
@@ -99,21 +93,19 @@ class SliderBar extends React.Component {
 	}
 
 	render () {
-		const {children, css, detachedKnob, orientation, proportionBackgroundProgress, proportionProgress, scrubbing, ...rest} = this.props;
+		const {children, detachedKnob, proportionBackgroundProgress, proportionProgress, scrubbing, vertical, ...rest} = this.props;
 
 		return (
 			<div {...rest} className={css.sliderBar} ref={this.getNode}>
-				<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionBackgroundProgress, (orientation === 'vertical'))}} />
-				<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, (orientation === 'vertical'))}} />
-				<div className={css.knob} ref={this.getKnobNode} style={(detachedKnob && !scrubbing) ? {transform: computeKnobTransform(proportionProgress, (orientation === 'vertical'), this.node)} : null}>
+				<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionBackgroundProgress, vertical)}} />
+				<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, vertical)}} />
+				<div className={css.knob} ref={this.getKnobNode} style={(detachedKnob && !scrubbing) ? {transform: computeKnobTransform(proportionProgress, vertical, this.node)} : null}>
 					{children}
 				</div>
 			</div>
 		);
 	}
-}
+};
 
 export default SliderBar;
-export {
-	SliderBar
-};
+export {SliderBar};
