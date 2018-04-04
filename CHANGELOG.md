@@ -2,12 +2,6 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
-
-### Changed
-
-- `moonstone/Scrollable/ScrollButtons` timing to read out audio guidance when key was held down.
-
 ## [2.0.0-alpha.7 - 2018-04-03]
 
 ### Removed

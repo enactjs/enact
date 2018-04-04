@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changes
 
+- `moonstone/Scrollable/ScrollButtons` timing to read out audio guidance when key was held down.
 - `moonstone/VideoPlayer` property `title` to accept node type
 
 ## [2.0.0-alpha.7 - 2018-04-03]
