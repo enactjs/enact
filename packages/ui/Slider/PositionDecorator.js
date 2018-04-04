@@ -39,7 +39,11 @@ const PositionDecorator = hoc((config, Wrapped) => {
 			const {max, min, orientation, step} = this.props;
 			const position = orientation === 'horizontal' ? x : y;
 
-			const percent = calcPercent(this.bounds.min, this.bounds.max, position);
+			let percent = calcPercent(this.bounds.min, this.bounds.max, position);
+			if (orientation === 'vertical') {
+				percent = 1 - percent;
+			}
+
 			let value = (max - min) * percent + min;
 
 			// adjust value for stepping

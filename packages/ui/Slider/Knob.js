@@ -20,7 +20,8 @@ const Knob = kind({
 	computed: {
 		style: ({style, x, y}) => ({
 			...style,
-			transform: `translate3d(${x * 100}%, ${y * 100}%, 0)`
+			left: x * 100 + '%',
+			top: (1 - y) * 100 + '%'
 		})
 	},
 
