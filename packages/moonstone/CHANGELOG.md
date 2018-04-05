@@ -6,11 +6,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
-- `moonstone/VirtualList.VirtualList` unnecessary property `role="region"` in `SpotlightPlaceholder`
+- `moonstone/VirtualList.VirtualList` prop `role="region"` to remove obsolete role in `SpotlightPlaceholder`
 
 ### Added
 
-- `moonstone/VirtualList.VirtualList` property `role="list"` to support semantic role. (Including support for X of Y feature)
+- `moonstone/VirtualList.VirtualList` prop `role="list"` to support for accessibility X of Y feature
 
 ### Changes
 

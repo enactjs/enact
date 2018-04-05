@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/VirtualList.VirtualList` property `role="list"` to support semantic role. (Including support for X of Y feature)
+- `ui/VirtualList.VirtualList` prop `role="list"` to support for accessibility X of Y feature
 
 ### Changed
 
