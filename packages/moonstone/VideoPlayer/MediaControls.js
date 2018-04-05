@@ -1,4 +1,4 @@
-import kind from '@enact/core/kind';
+import classnames from 'classnames/bind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -11,6 +11,7 @@ import {countReactChildren} from './util';
 
 import css from './VideoPlayer.less';
 
+const cn = classnames.bind(css);
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 const MediaButton = onlyUpdateForKeys([
 	'children',
@@ -25,12 +26,10 @@ const MediaButton = onlyUpdateForKeys([
  * @class MediaControls
  * @memberof moonstone/VideoPlayer
  * @ui
- * @private
+ * @public
  */
-const MediaControls = kind({
-	name: 'MediaControls',
-
-	propTypes: /** @lends moonstone/VideoPlayer.MediaControls.prototype */ {
+class MediaControls extends React.Component {
+	static propTypes = /** @lends moonstone/VideoPlayer.MediaControls.prototype */ {
 		/**
 		 * A string which is sent to the `backward` icon of the player controls. This can be
 		 * anything that is accepted by {@link moonstone/Icon}.
@@ -265,14 +264,6 @@ const MediaControls = kind({
 		rightComponents: PropTypes.node,
 
 		/**
-		 * `true` when more components are shown.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		showMoreComponents: PropTypes.bool,
-
-		/**
 		 * `true` controls are disabled from Spotlight.
 		 *
 		 * @type {Boolean}
@@ -288,9 +279,9 @@ const MediaControls = kind({
 		 * @public
 		 */
 		visible: PropTypes.bool
-	},
+	}
 
-	defaultProps: {
+	static defaultProps = {
 		backwardIcon: 'backward',
 		forwardIcon: 'forward',
 		jumpBackwardIcon: 'skipbackward',
@@ -299,35 +290,28 @@ const MediaControls = kind({
 		pauseIcon: 'pause',
 		playIcon: 'play',
 		visible: true
-	},
+	}
 
-	styles: {
-		css,
-		className: 'controlsFrame'
-	},
 
-	computed: {
-		centerClassName: ({showMoreComponents, styler}) => styler.join({
-			centerComponents: true,
-			more: showMoreComponents
-		}),
-		className: ({styler, visible}) => styler.append({hidden: !visible}),
-		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowshrinkleft' : 'ellipsis',
-		moreIconLabel: ({moreButtonCloseLabel, moreButtonLabel, showMoreComponents}) => {
-			if (showMoreComponents) {
-				return moreButtonCloseLabel != null ? moreButtonCloseLabel : $L('Back');
-			} else {
-				return moreButtonLabel != null ? moreButtonLabel : $L('More');
-			}
-		},
-		playPauseIcon: ({paused, pauseIcon, playIcon}) => (paused ? playIcon : pauseIcon),
-		playPauseLabel: ({paused}) => (paused ? $L('Play') : $L('Pause'))
-	},
+	constructor (props) {
+		super(props);
 
-	render: (props) => {
+		this.mediaControls = null;
+
+		this.state = {
+			showMoreComponents: false
+		};
+	}
+
+
+	getMediaControls = (node) => {
+		this.mediaControls = node;
+	}
+
+	render () {
+		const props = Object.assign({}, this.props);
 		const {
 			backwardIcon,
-			centerClassName,
 			children,
 			forwardIcon,
 			jumpBackwardIcon,
@@ -338,8 +322,6 @@ const MediaControls = kind({
 			moreButtonColor,
 			moreButtonDisabled,
 			moreDisabled,
-			moreIcon,
-			moreIconLabel,
 			noJumpButtons,
 			noRateButtons,
 			onBackwardButtonClick,
@@ -348,33 +330,40 @@ const MediaControls = kind({
 			onJumpForwardButtonClick,
 			onPlayButtonClick,
 			onToggleMore,
-			playPauseIcon,
-			playPauseLabel,
+			paused,
+			pauseIcon,
+			playIcon,
 			rateButtonsDisabled,
 			rightComponents,
 			spotlightDisabled,
+			visible,
 			...rest
 		} = props;
 
 		delete rest.moreButtonCloseLabel;
 		delete rest.moreButtonLabel;
-		delete rest.pauseIcon;
-		delete rest.paused;
-		delete rest.pauseLabel;
-		delete rest.playIcon;
-		delete rest.playLabel;
-		delete rest.showMoreComponents;
-		delete rest.visible;
+
+		let moreIconLabel, moreIcon;
+		if (this.state.showMoreComponents) {
+			moreIconLabel = $L('Back');
+			moreIcon = 'arrowshrinkleft';
+		} else {
+			moreIconLabel = $L('More');
+			moreIcon = 'ellipsis';
+		}
+
+		const className = cn('controlsFrame', {hidden: !visible}, rest.className);
+		const centerClassName = cn('centerComponents', {more: this.state.showMoreComponents});
 
 		return (
-			<div {...rest} data-media-controls>
+			<div {...rest} ref={this.getMediaControls} className={className} data-media-controls>
 				<div className={css.leftComponents}>{leftComponents}</div>
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
 						<Container className={css.mediaControls} spotlightDisabled={!moreDisabled || spotlightDisabled}>
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpBackwardIcon}</MediaButton>}
 							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{backwardIcon}</MediaButton>}
-							<MediaButton aria-label={playPauseLabel} className={spotlightDefaultClass} backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{playPauseIcon}</MediaButton>
+							<MediaButton aria-label={paused ? $L('Play') : $L('Pause')} className={spotlightDefaultClass} backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{paused ? playIcon : pauseIcon}</MediaButton>
 							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onForwardButtonClick} spotlightDisabled={spotlightDisabled}>{forwardIcon}</MediaButton>}
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpForwardIcon}</MediaButton>}
 						</Container>
@@ -404,7 +393,7 @@ const MediaControls = kind({
 			</div>
 		);
 	}
-});
+}
 
 export default MediaControls;
 export {MediaControls};
