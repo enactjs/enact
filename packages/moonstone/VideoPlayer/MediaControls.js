@@ -303,6 +303,41 @@ class MediaControls extends React.Component {
 		};
 	}
 
+	componentDidMount () {
+		this.calculateMaxComponentCount(
+			countReactChildren(this.props.leftComponents),
+			countReactChildren(this.props.rightComponents),
+			countReactChildren(this.props.children)
+		);
+	}
+
+	componentWillReceiveProps (nextProps) {
+		// Detect if the number of components has changed
+		const leftCount = countReactChildren(nextProps.leftComponents),
+			rightCount = countReactChildren(nextProps.rightComponents),
+			childrenCount = countReactChildren(nextProps.children);
+
+		if (
+			countReactChildren(this.props.leftComponents) !== leftCount ||
+			countReactChildren(this.props.rightComponents) !== rightCount ||
+			countReactChildren(this.props.children) !== childrenCount
+		) {
+			this.calculateMaxComponentCount(leftCount, rightCount, childrenCount);
+		}
+	}
+
+
+	calculateMaxComponentCount = (leftCount, rightCount, childrenCount) => {
+		// If the "more" button is present, automatically add it to the right's count.
+		if (childrenCount) {
+			rightCount += 1;
+		}
+
+		const max = Math.max(leftCount, rightCount);
+
+		this.mediaControls.style.setProperty('--moon-video-player-max-side-components', max);
+	}
+
 
 	getMediaControls = (node) => {
 		this.mediaControls = node;
