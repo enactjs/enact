@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/Panels` property `exitAppAriaLabel` to configure the label set on application close button 
+
 ### Changes
 
 - `moonstone/VideoPlayer` property `title` to accept node type
