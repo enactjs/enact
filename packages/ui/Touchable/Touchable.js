@@ -475,7 +475,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		handleMouseDown = this.handle(
 			isNotBlocked,
 			forward('onMouseDown'),
-			forEventProp('button', 0),
 			this.handleDown
 		).finally(unblock)
 
