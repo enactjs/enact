@@ -4,6 +4,14 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Removed
+
+- `moonstone/VirtualList.VirtualList` unnecessary property `role="region"` in `SpotlightPlaceholder`
+
+### Added
+
+- `moonstone/VirtualList.VirtualList` property `role="list"` to support semantic role. (Including support for X of Y feature)
+
 ### Changes
 
 - `moonstone/VideoPlayer` property `title` to accept node type
@@ -12,7 +20,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
-- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` property `data`
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `data` to eliminate the misunderstanding caused by the ambiguity of `data`
 
 ### Added
 
