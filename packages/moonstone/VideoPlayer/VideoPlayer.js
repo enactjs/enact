@@ -614,10 +614,10 @@ const VideoPlayerBase = class extends React.Component {
 		/**
 		 * Set a title for the video being played.
 		 *
-		 * @type {String}
+		 * @type {String|Node}
 		 * @public
 		 */
-		title: PropTypes.string,
+		title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 		/**
 		 * The amount of time in milliseconds that should pass before the title disappears from the

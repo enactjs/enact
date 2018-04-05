@@ -791,32 +791,70 @@ VirtualListBaseNative.displayName = 'ui:VirtualListBaseNative';
 const ScrollableVirtualList = (props) => (
 	<Scrollable
 		{...props}
-		childRenderer={({initUiChildRef, ...virtualListProps}) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
-				{...virtualListProps}
+				{...rest}
 				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
 					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
 				)}
-				ref={initUiChildRef}
+				ref={initChildRef}
 			/>
 		)}
 	/>
 );
 
+ScrollableVirtualList.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
+	/**
+	 * Direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'vertical'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+};
+
+ScrollableVirtualList.defaultProps = {
+	direction: 'vertical'
+};
+
 const ScrollableVirtualListNative = (props) => (
 	<ScrollableNative
 		{...props}
-		childRenderer={({initUiChildRef, ...virtualListProps}) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
-				{...virtualListProps}
+				{...rest}
 				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
 					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
 				)}
-				ref={initUiChildRef}
+				ref={initChildRef}
 			/>
 		)}
 	/>
 );
+
+ScrollableVirtualListNative.propTypes = /** @lends ui/VirtualList.VirtualListBaseNative.prototype */ {
+	/**
+	 * Direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'vertical'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+};
+
+ScrollableVirtualListNative.defaultProps = {
+	direction: 'vertical'
+};
 
 export default VirtualListBase;
 export {
