@@ -10,7 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/TimePickerBase` to show `meridiem` correctly in all locales
+- `moonstone/TimePicker` to show `meridiem` correctly in all locales
 
 ## [2.0.0-alpha.7 - 2018-04-03]
 
