@@ -82,7 +82,6 @@ class ScrollableNative extends Component {
 		 * * `'vertical'`.
 		 *
 		 * @type {String}
-		 * @default 'vertical'
 		 * @private
 		 */
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
