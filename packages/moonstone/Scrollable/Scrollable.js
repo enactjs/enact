@@ -193,7 +193,7 @@ class Scrollable extends Component {
 	onFocus = (ev) => {
 		const
 			{direction} = this.props,
-			{isDragging, animator} = this.uiRef,
+			{animator, isDragging} = this.uiRef,
 			shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
 				this.childRef.shouldPreventScrollByFocus() :
 				false;
