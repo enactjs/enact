@@ -44,6 +44,7 @@ class ScrollButtons extends Component {
 		 * The render function for thumb.
 		 *
 		 * @type {Function}
+		 * @required
 		 * @private
 		 */
 		thumbRenderer: PropTypes.func.isRequired,

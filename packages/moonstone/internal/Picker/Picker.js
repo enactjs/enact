@@ -75,6 +75,7 @@ const PickerBase = class extends React.Component {
 		 * Index for internal ViewManager
 		 *
 		 * @type {Number}
+		 * @required
 		 * @public
 		 */
 		index: PropTypes.number.isRequired,
@@ -83,6 +84,7 @@ const PickerBase = class extends React.Component {
 		 * The maximum value selectable by the picker (inclusive).
 		 *
 		 * @type {Number}
+		 * @required
 		 * @public
 		 */
 		max: PropTypes.number.isRequired,
@@ -91,6 +93,7 @@ const PickerBase = class extends React.Component {
 		 * The minimum value selectable by the picker (inclusive).
 		 *
 		 * @type {Number}
+		 * @required
 		 * @public
 		 */
 		min: PropTypes.number.isRequired,
