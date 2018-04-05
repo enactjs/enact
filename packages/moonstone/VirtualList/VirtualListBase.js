@@ -773,9 +773,9 @@ VirtualListBaseNative.displayName = 'VirtualListBaseNative';
 const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
 	<Scrollable
 		{...props}
-		childRenderer={(scrollableProps) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
-				{...scrollableProps}
+				{...childProps}
 				itemsRenderer={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initItemContainerRef} role="list">{cc}</div> : null,
@@ -798,9 +798,9 @@ const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-b
 const ScrollableVirtualListNative = (props) => (
 	<ScrollableNative
 		{...props}
-		childRenderer={(scrollableProps) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
-				{...scrollableProps}
+				{...childProps}
 				itemsRenderer={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initItemContainerRef} role="list">{cc}</div> : null,
