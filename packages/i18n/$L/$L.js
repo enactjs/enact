@@ -24,13 +24,15 @@ import IString from '../ilib/lib/IString';
  * @returns {ilib.IString} The translated string
  */
 function toIString (str) {
-	const rb = getResBundle();
-	const isObject = typeof str === 'object';
-	if (rb) {
-		return isObject ? rb.getString(str.value, str.key) : rb.getString(str);
-	}
+	return str;
 
-	return new IString(isObject ? str.value : str);
+	// const rb = getResBundle();
+	// const isObject = typeof str === 'object';
+	// if (rb) {
+	// 	return isObject ? rb.getString(str.value, str.key) : rb.getString(str);
+	// }
+
+	// return new IString(isObject ? str.value : str);
 }
 
 /**

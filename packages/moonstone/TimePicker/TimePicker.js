@@ -5,6 +5,7 @@
  */
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
+import ilibPromise from '@enact/i18n/src/promise';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
 import Pure from '@enact/ui/internal/Pure';
 
@@ -144,32 +145,34 @@ const dateTimeConfig = {
 			return value;
 		}
 	},
-	i18n: function () {
+	i18n: async function () {
 		// Filters used to extract the order of pickers from the ilib template
 		const includeMeridiem = /([khma])(?!\1)/ig;
 		const excludeMeridiem = /([khm])(?!\1)/ig;
 
 		// Label formatter
-		const formatter = new DateFmt({
-			type: 'time',
-			useNative: false,
-			timezone: 'local',
-			length: 'full',
-			date: 'dmwy'
-		});
+		const [formatter, merFormatter, li] = await Promise.all([
+			ilibPromise(DateFmt, {
+				type: 'time',
+				useNative: false,
+				timezone: 'local',
+				length: 'full',
+				date: 'dmwy'
+			}),
+			ilibPromise(DateFmt, {
+				template: 'a',
+				useNative: false,
+				timezone: 'local'
+			}),
+			ilibPromise(LocaleInfo, [undefined]) // eslint-disable-line no-undefined
+		]);
 
 		// Meridiem localization
-		const merFormatter = new DateFmt({
-			template: 'a',
-			useNative: false,
-			timezone: 'local'
-		});
 		const meridiems = merFormatter.getMeridiemsRange();
 		const meridiemRanges = meridiems.map(calcMeridiemRange);
 		const meridiemLabels = meridiems.map(obj => obj.name);
 
 		// Picker ordering
-		const li = new LocaleInfo();
 		const clockPref = li.getClock();
 		const meridiemEnabled = clockPref === '12';
 

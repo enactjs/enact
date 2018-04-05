@@ -42,12 +42,13 @@ function clearResBundle () {
 * @returns {String} Localized string.
 */
 function $L (str) {
-	const rb = getResBundle();
-	const isObject = typeof str === 'object';
-	if (!rb) {
-		return isObject ? str.value : str;
-	}
-	return isObject ? rb.getString(str.value, str.key).toString() : rb.getString(str).toString();
+	return str;
+	// const rb = getResBundle();
+	// const isObject = typeof str === 'object';
+	// if (!rb) {
+	// 	return isObject ? str.value : str;
+	// }
+	// return isObject ? rb.getString(str.value, str.key).toString() : rb.getString(str).toString();
 }
 
 export default $L;

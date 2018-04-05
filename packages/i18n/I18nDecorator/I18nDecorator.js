@@ -58,11 +58,13 @@ const IntlHoc = hoc((config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			const ilibLocale = ilib.getLocale();
-			const locale = props.locale && props.locale !== ilibLocale ? updateLocale(props.locale) : ilibLocale;
+
+			this.updateLocale(props.locale);
 
 			this.state = {
-				locale: locale
+				classes: '',
+				locale: null,
+				rtl: false
 			};
 		}
 
@@ -76,10 +78,14 @@ const IntlHoc = hoc((config, Wrapped) => {
 
 		componentWillMount () {
 			this.publisher = Publisher.create('i18n', this.context.Subscriber);
-			this.publisher.publish({
-				locale: this.state.locale,
-				rtl: isRtlLocale()
-			});
+
+			const {rtl, locale} = this.state;
+			if (locale) {
+				this.publisher.publish({
+					locale,
+					rtl
+				});
+			}
 		}
 
 		componentDidMount () {
@@ -113,20 +119,31 @@ const IntlHoc = hoc((config, Wrapped) => {
 		 * @returns	{undefined}
 		 * @public
 		 */
-		updateLocale = (newLocale) => {
-			const locale = updateLocale(newLocale);
-			this.setState({locale});
+		updateLocale = async (newLocale) => {
+			const locale = await updateLocale(newLocale);
+			const rtl = await isRtlLocale();
+			const classes = await getI18nClasses();
+
+			this.setState({
+				classes,
+				locale,
+				rtl
+			});
+
 			this.publisher.publish({
 				locale,
-				rtl: isRtlLocale()
+				rtl
 			});
 		}
 
 		render () {
+			if (!this.state.locale) return null;
+
 			const props = Object.assign({}, this.props);
-			let classes = getI18nClasses();
+
+			let classes = this.state.classes;
 			if (this.props.className) {
-				classes = this.props.className + ' ' + classes;
+				classes = this.props.className + ' ' + this.state.classes;
 			}
 
 			delete props.locale;

@@ -12,6 +12,7 @@ import ScriptInfo from '../ilib/lib/ScriptInfo';
 
 import {initCaseMappers} from '../src/case';
 import {setResBundleLocale} from '../src/resBundle';
+import ilibPromise from '../src/promise';
 
 /**
  * Tell whether or not the given locale is considered a non-Latin locale for webOS purposes. This
@@ -49,16 +50,42 @@ function isNonLatinLocale (spec) {
 	);
 }
 
+// ScriptInfo doesn't play well with async. If it doesn't need to fetch files, it just sets the
+// internal data and quietly returns without notifying anyone ...
+async function getScript (scriptName) {
+	return new Promise((resolve, reject) => {
+		let resolved = false;
+		const si = new ScriptInfo(scriptName, {
+			sync: false,
+			onLoad: (scriptInfo) => {
+				if (resolved) return;
+
+				if (scriptInfo) {
+					return void resolve(scriptInfo);
+				}
+
+				reject(scriptInfo);
+			}
+		});
+
+		if (si.info) {
+			resolved = true;
+			resolve(si);
+		}
+	});
+}
+
 /**
  * Returns `true` if current locale is a right-to-left locale
  *
  * @memberof i18n/locale
  * @returns {Boolean} `true` if current locale is a right-to-left locale
  */
-function isRtlLocale () {
-	const li = new LocaleInfo();
+async function isRtlLocale () {
+	// eslint-disable-next-line no-undefined
+	const li = await ilibPromise(LocaleInfo, [undefined]);
 	const scriptName = li.getScript();
-	const script = new ScriptInfo(scriptName);
+	const script = await getScript(scriptName);
 	return script.getScriptDirection() === 'rtl';
 }
 
@@ -74,7 +101,7 @@ function isRtlLocale () {
  * @param {String} locale Locale identifier
  * @returns {undefined}
  */
-const updateLocale = function (locale) {
+const updateLocale = async function (locale) {
 	// blow away the cache to force it to reload the manifest files for the new app
 	// eslint-disable-next-line no-undefined
 	if (ilib._load) ilib._load.manifest = undefined;
@@ -86,8 +113,10 @@ const updateLocale = function (locale) {
 	// is expected and desired
 	ilib.setLocale(locale);
 	const newLocale = ilib.getLocale();
+
 	// we supply whatever ilib determined was actually the locale based on what was passed in
-	setResBundleLocale(newLocale);
+	await setResBundleLocale(newLocale);
+
 	// Recreate the case mappers to use the just-recently-set locale
 	initCaseMappers();
 

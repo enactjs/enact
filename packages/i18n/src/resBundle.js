@@ -21,15 +21,25 @@ function getResBundle () {
  * @returns {ilib.ResBundle} New ilib.ResBundle
  */
 function createResBundle (locale) {
-	resBundle = new ResBundle({
-		locale: locale,
-		type: 'html',
-		name: 'strings',
-		sync: true,
-		lengthen: true		// if pseudo-localizing, this tells it to lengthen strings
-	});
+	return new Promise((resolve, reject) => {
+		// eslint-disable-next-line no-new
+		new ResBundle({
+			locale: locale,
+			type: 'html',
+			name: 'strings',
+			lengthen: true,		// if pseudo-localizing, this tells it to lengthen strings
+			sync: false,
+			onLoad: (bundle) => {
+				resBundle = bundle;
 
-	return resBundle;
+				if (bundle) {
+					resolve(bundle);
+				}
+
+				reject();
+			}
+		});
+	});
 }
 
 /**
@@ -46,8 +56,10 @@ function setResBundleLocale (spec) {
 	const locale = new Locale(spec);
 	const rb = getResBundle();
 	if (!rb || spec !== rb.getLocale().getSpec()) {
-		createResBundle(locale);
+		return createResBundle(locale);
 	}
+
+	return Promise.resolve(resBundle);
 }
 
 /**

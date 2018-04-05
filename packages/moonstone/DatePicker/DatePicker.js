@@ -6,6 +6,7 @@
  */
 
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
+import ilibPromise from '@enact/i18n/src/promise';
 import Pure from '@enact/ui/internal/Pure';
 
 import DateTimeDecorator from '../internal/DateTimeDecorator';
@@ -50,8 +51,8 @@ const dateTimeConfig = {
 			return value;
 		}
 	},
-	i18n: function () {
-		const formatter = new DateFmt({
+	i18n: async function () {
+		const formatter = await ilibPromise(DateFmt, {
 			date: 'dmwy',
 			length: 'full',
 			timezone: 'local',

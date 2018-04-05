@@ -1,8 +1,10 @@
 import {isNonLatinLocale, isRtlLocale} from '../locale';
 import LocaleInfo from '../ilib/lib/LocaleInfo';
+import ilibPromise from '../src/promise';
 
-function getI18nClasses () {
-	const li = new LocaleInfo(); // for the current locale
+async function getI18nClasses () {
+	// eslint-disable-next-line no-undefined
+	const li = await ilibPromise(LocaleInfo, [undefined]); // for the current locale
 	const locale = li.getLocale();
 	const base = 'enact-locale-';
 	const classes = [];
@@ -24,7 +26,8 @@ function getI18nClasses () {
 	}
 
 	// allow enyo to apply right-to-left styles to the app and widgets if necessary
-	if (isRtlLocale()) {
+	const rtl = await isRtlLocale();
+	if (rtl) {
 		classes.push(base + 'right-to-left');
 	}
 
