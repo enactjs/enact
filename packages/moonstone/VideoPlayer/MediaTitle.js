@@ -49,10 +49,10 @@ const MediaTitleBase = kind({
 		/**
 		 * A title string to identify the media's title.
 		 *
-		 * @type {String}
+		 * @type {String|Node}
 		 * @public
 		 */
-		title: PropTypes.string,
+		title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 		/**
 		 * Setting this to false effectively hides the entire component. Setting it to `false` after

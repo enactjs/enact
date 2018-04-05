@@ -92,7 +92,7 @@ class ScrollerBase extends Component {
 
 	getScrollBounds = () => this.scrollBounds
 
-	getRtlPositionX = (x) => (this.props.rtl ? this.uiRef.scrollBounds.maxLeft - x : x)
+	getRtlPositionX = (x) => (this.props.rtl ? this.scrollBounds.maxLeft - x : x)
 
 	// for Scrollable
 	setScrollPosition (x, y) {
