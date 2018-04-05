@@ -145,7 +145,7 @@ const SliderBase = kind({
 		 * @type {Component}
 		 * @public
 		 */
-		tooltipComponent: PropTypes.bool,
+		tooltipComponent: PropTypes.func,
 
 		/**
 		 * The value of the slider.
@@ -186,10 +186,14 @@ const SliderBase = kind({
 			);
 		},
 		x: ({max, min, orientation, value}) => {
-			return orientation === 'horizontal' ? calcPercent(min, max, value) : 0;
+			if (orientation === 'horizontal') {
+				return calcPercent(min, max, value);
+			}
 		},
 		y: ({max, min, orientation, value}) => {
-			return orientation === 'vertical' ? calcPercent(min, max, value) : 0;
+			if (orientation === 'vertical') {
+				return calcPercent(min, max, value);
+			}
 		}
 	},
 

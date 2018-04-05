@@ -12,6 +12,11 @@ const Knob = kind({
 		y: PropTypes.number
 	},
 
+	defaultProps: {
+		x: 0,
+		y: 1
+	},
+
 	styles: {
 		css,
 		className: 'knob'
@@ -20,8 +25,8 @@ const Knob = kind({
 	computed: {
 		style: ({style, x, y}) => ({
 			...style,
-			left: x * 100 + '%',
-			top: (1 - y) * 100 + '%'
+			'--ui-slider-knob-x': x,
+			'--ui-slider-knob-y': 1 - y
 		})
 	},
 

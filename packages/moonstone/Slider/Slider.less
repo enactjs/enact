@@ -41,7 +41,7 @@
 		--moon-tooltip-offset: @moon-slider-tooltip-offset;
 
 		position: absolute;
-		will-change: transform;
+		will-change: left, top;
 
 		&::before {
 			content: '';
@@ -81,7 +81,7 @@
 		}
 
 		.knob {
-			margin-top: @moon-slider-bar-height / 2;
+			left: ~"calc(" @h-gap ~"+ var(--ui-slider-knob-x) * (100% -" @h-gap * 2 ~"))";
 		}
 
 		.fill,
@@ -111,6 +111,7 @@
 
 		.knob {
 			margin-left: @moon-slider-bar-height / 2;
+			top: ~"calc(" @v-gap ~"+ var(--ui-slider-knob-y) * (100% -" @v-gap * 2 ~"))";
 		}
 
 		.fill,

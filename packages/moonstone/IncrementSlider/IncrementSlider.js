@@ -444,6 +444,7 @@ const IncrementSliderBase = kind({
 		max,
 		min,
 		noFill,
+		onActivate,
 		onChange,
 		onDecrement,
 		onDecrementSpotlightDisappear,
@@ -491,6 +492,7 @@ const IncrementSliderBase = kind({
 					max={max}
 					min={min}
 					noFill={noFill}
+					onActivate={onActivate}
 					onChange={onChange}
 					onKeyDown={handleSliderKeyDown}
 					onSpotlightDisappear={onSpotlightDisappear}
