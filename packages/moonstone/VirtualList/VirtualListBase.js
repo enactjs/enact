@@ -829,12 +829,29 @@ const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line reac
 
 ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 	/**
+	 * Direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'vertical'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+	/**
 	 * Aria role.
 	 *
 	 * @type {String}
 	 * @public
 	 */
 	role: PropTypes.string
+};
+
+ScrollableVirtualList.defaultProps = {
+	direction: 'vertical'
 };
 
 const ScrollableVirtualListNative = ({role, ...rest}) => (
@@ -865,12 +882,29 @@ const ScrollableVirtualListNative = ({role, ...rest}) => (
 
 ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListBaseNative.prototype */ {
 	/**
+	 * Direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'vertical'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+	/**
 	 * Aria role.
 	 *
 	 * @type {String}
 	 * @private
 	 */
 	role: PropTypes.string
+};
+
+ScrollableVirtualListNative.defaultProps = {
+	direction: 'vertical'
 };
 
 const SpottableVirtualList = SpotlightContainerDecorator(SpotlightContainerConfig, ScrollableVirtualList);

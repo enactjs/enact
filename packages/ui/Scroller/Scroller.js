@@ -29,7 +29,7 @@ import css from './Scroller.less';
 class ScrollerBase extends Component {
 	static displayName = 'ui:ScrollerBase'
 
-	static propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
+	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
 		children: PropTypes.node.isRequired,
 
 		/**
@@ -208,6 +208,26 @@ const Scroller = (props) => (
 	/>
 );
 
+Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
+	/**
+	 * Direction of the scroller.
+	 *
+	 * Valid values are:
+	 * * `'both'`,
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'both'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+};
+
+Scroller.defaultProps = {
+	direction: 'both'
+};
+
 /**
  * An unstyled native scroller, [ScrollableNative]{@link ui/Scrollable.ScrollableNative} applied.
  * For smooth native scrolling, web engine with below Chromium 61, should be launched
@@ -234,6 +254,26 @@ const ScrollerNative = (props) => (
 		)}
 	/>
 );
+
+ScrollerNative.propTypes = /** @lends ui/Scroller.ScrollerNative.prototype */ {
+	/**
+	 * Direction of the scroller.
+	 *
+	 * Valid values are:
+	 * * `'both'`,
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'both'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+};
+
+ScrollerNative.defaultProps = {
+	direction: 'both'
+};
 
 export default Scroller;
 export {

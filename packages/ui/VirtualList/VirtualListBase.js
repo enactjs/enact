@@ -803,6 +803,25 @@ const ScrollableVirtualList = (props) => (
 	/>
 );
 
+ScrollableVirtualList.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
+	/**
+	 * Direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'vertical'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+};
+
+ScrollableVirtualList.defaultProps = {
+	direction: 'vertical'
+};
+
 const ScrollableVirtualListNative = (props) => (
 	<ScrollableNative
 		{...props}
@@ -817,6 +836,25 @@ const ScrollableVirtualListNative = (props) => (
 		)}
 	/>
 );
+
+ScrollableVirtualListNative.propTypes = /** @lends ui/VirtualList.VirtualListBaseNative.prototype */ {
+	/**
+	 * Direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'vertical'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+};
+
+ScrollableVirtualListNative.defaultProps = {
+	direction: 'vertical'
+};
 
 export default VirtualListBase;
 export {
