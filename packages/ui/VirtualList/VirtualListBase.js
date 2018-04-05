@@ -714,7 +714,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		initUiItemContainerRef = (ref) => {
+		initItemContainerRef = (ref) => {
 			if (ref) {
 				this.itemContainerRef = ref;
 			}
@@ -733,7 +733,7 @@ const VirtualListBaseFactory = (type) => {
 		render () {
 			const
 				{className, itemsRenderer, style, ...rest} = this.props,
-				{cc, initUiItemContainerRef, primary} = this,
+				{cc, initItemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className);
 
 			delete rest.cbScrollTo;
@@ -756,7 +756,7 @@ const VirtualListBaseFactory = (type) => {
 			return (
 				<div className={containerClasses} ref={this.initContainerRef} style={style}>
 					<div {...rest} ref={this.initContentRef}>
-						{itemsRenderer({cc, initUiItemContainerRef, primary})}
+						{itemsRenderer({cc, initItemContainerRef, primary})}
 					</div>
 				</div>
 			);
@@ -791,11 +791,11 @@ VirtualListBaseNative.displayName = 'ui:VirtualListBaseNative';
 const ScrollableVirtualList = (props) => (
 	<Scrollable
 		{...props}
-		childRenderer={({initChildRef, ...scrollableProps}) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
-				{...scrollableProps}
-				itemsRenderer={({cc, initUiItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initUiItemContainerRef}>{cc}</div> : null
+				{...rest}
+				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
 				)}
 				ref={initChildRef}
 			/>
@@ -806,11 +806,11 @@ const ScrollableVirtualList = (props) => (
 const ScrollableVirtualListNative = (props) => (
 	<ScrollableNative
 		{...props}
-		childRenderer={({initChildRef, ...scrollableProps}) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
-				{...scrollableProps}
-				itemsRenderer={({cc, initUiItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initUiItemContainerRef}>{cc}</div> : null
+				{...rest}
+				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
 				)}
 				ref={initChildRef}
 			/>
