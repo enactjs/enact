@@ -359,6 +359,26 @@ const ScrollableScroller = (props) => (
 	/>
 );
 
+ScrollableScroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
+	/**
+	 * Direction of the scroller.
+	 *
+	 * Valid values are:
+	 * * `'both'`,
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'both'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+};
+
+ScrollableScroller.defaultProps = {
+	direction: 'both'
+};
+
 const ScrollableScrollerNative = (props) => (
 	<ScrollableNative
 		{...props}
@@ -367,6 +387,26 @@ const ScrollableScrollerNative = (props) => (
 		)}
 	/>
 );
+
+ScrollableScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototype */ {
+	/**
+	 * Direction of the scroller.
+	 *
+	 * Valid values are:
+	 * * `'both'`,
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'both'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+};
+
+ScrollableScrollerNative.defaultProps = {
+	direction: 'both'
+};
 
 /**
  * A Moonstone-styled Scroller, SpotlightContainerDecorator and Scrollable applied.
