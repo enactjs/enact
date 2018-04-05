@@ -202,8 +202,8 @@ class ScrollerBase extends Component {
 const Scroller = (props) => (
 	<Scrollable
 		{...props}
-		childRenderer={({initUiChildRef, ...scrollerProps}) => ( // eslint-disable-line react/jsx-no-bind
-			<ScrollerBase {...scrollerProps} ref={initUiChildRef} />
+		childRenderer={({initChildRef, ...scrollerProps}) => ( // eslint-disable-line react/jsx-no-bind
+			<ScrollerBase {...scrollerProps} ref={initChildRef} />
 		)}
 	/>
 );
@@ -229,8 +229,8 @@ const Scroller = (props) => (
 const ScrollerNative = (props) => (
 	<ScrollableNative
 		{...props}
-		childRenderer={({initUiChildRef, ...scrollerProps}) => ( // eslint-disable-line react/jsx-no-bind
-			<ScrollerBase {...scrollerProps} ref={initUiChildRef} />
+		childRenderer={({initChildRef, ...scrollerProps}) => ( // eslint-disable-line react/jsx-no-bind
+			<ScrollerBase {...scrollerProps} ref={initChildRef} />
 		)}
 	/>
 );

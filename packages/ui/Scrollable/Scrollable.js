@@ -110,16 +110,18 @@ class ScrollableBase extends Component {
 
 		/**
 		 * Direction of the list or the scroller.
+		 * `'both'` could be only used for[Scroller]{@link ui/Scroller.Scroller}.
 		 *
 		 * Valid values are:
+		 * * `'both'`,
 		 * * `'horizontal'`, and
 		 * * `'vertical'`.
 		 *
 		 * @type {String}
 		 * @default 'vertical'
-		 * @public
+		 * @private
 		 */
-		direction: PropTypes.oneOf(['horizontal', 'vertical']),
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
 		 * Specifies how to show horizontal scrollbar.
@@ -291,7 +293,6 @@ class ScrollableBase extends Component {
 
 	static defaultProps = {
 		cbScrollTo: nop,
-		direction: 'vertical',
 		horizontalScrollbar: 'auto',
 		onScroll: nop,
 		onScrollStart: nop,
@@ -978,6 +979,18 @@ class ScrollableBase extends Component {
 
 	// render
 
+	initChildRef = (ref) => {
+		if (ref) {
+			this.childRef = ref;
+		}
+	}
+
+	initContainerRef = (ref) => {
+		if (ref) {
+			this.containerRef = ref;
+		}
+	}
+
 	initHorizontalScrollbarRef = (ref) => {
 		if (ref) {
 			this.horizontalScrollbarRef = ref;
@@ -987,18 +1000,6 @@ class ScrollableBase extends Component {
 	initVerticalScrollbarRef = (ref) => {
 		if (ref) {
 			this.verticalScrollbarRef = ref;
-		}
-	}
-
-	initUiChildRef = (ref) => {
-		if (ref) {
-			this.childRef = ref;
-		}
-	}
-
-	initUiContainerRef = (ref) => {
-		if (ref) {
-			this.containerRef = ref;
 		}
 	}
 
@@ -1033,13 +1034,13 @@ class ScrollableBase extends Component {
 		delete rest.verticalScrollbar;
 
 		return containerRenderer({
-			childUiComponentProps: {...rest, rtl},
+			childComponentProps: {...rest, rtl},
 			className: scrollableClasses,
 			componentCss: css,
 			handleScroll: this.handleScroll,
 			horizontalScrollbarProps: this.horizontalScrollbarProps,
-			initUiChildRef: this.initUiChildRef,
-			initUiContainerRef: this.initUiContainerRef,
+			initChildRef: this.initChildRef,
+			initContainerRef: this.initContainerRef,
 			isHorizontalScrollbarVisible,
 			isVerticalScrollbarVisible,
 			scrollTo: this.scrollTo,
@@ -1085,13 +1086,13 @@ class Scrollable extends Component {
 			<ScrollableBase
 				{...rest}
 				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
-					childUiComponentProps,
+					childComponentProps,
 					className,
 					componentCss,
 					handleScroll,
 					horizontalScrollbarProps,
-					initUiChildRef,
-					initUiContainerRef,
+					initChildRef,
+					initContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
 					scrollTo,
@@ -1101,16 +1102,16 @@ class Scrollable extends Component {
 				}) => (
 					<div
 						className={className}
-						ref={initUiContainerRef}
+						ref={initContainerRef}
 						style={style}
 					>
 						<div className={componentCss.container}>
 							<TouchableDiv {...touchableProps}>
 								{childRenderer({
-									...childUiComponentProps,
+									...childComponentProps,
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
-									initUiChildRef,
+									initChildRef,
 									onScroll: handleScroll
 								})}
 							</TouchableDiv>

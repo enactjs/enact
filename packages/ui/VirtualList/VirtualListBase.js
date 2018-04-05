@@ -267,7 +267,7 @@ const VirtualListBaseFactory = (type) => {
 		threshold = 0
 		maxFirstIndex = 0
 		prevFirstIndex = 0
-		prevDataSize = 0
+		curDataSize = 0
 		hasDataSizeChanged = false
 		cc = []
 		scrollPosition = 0
@@ -383,11 +383,11 @@ const VirtualListBaseFactory = (type) => {
 				{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 				numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
 				wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
-				dataSizeDiff = dataSize - this.prevDataSize;
+				dataSizeDiff = dataSize - this.curDataSize;
 			let newFirstIndex = firstIndex;
 
 			this.maxFirstIndex = Math.ceil((dataSize - numOfItems) / dimensionToExtent) * dimensionToExtent;
-			this.prevDataSize = dataSize;
+			this.curDataSize = dataSize;
 
 			// reset children
 			this.cc = [];
@@ -671,10 +671,10 @@ const VirtualListBaseFactory = (type) => {
 
 		getVirtualScrollDimension = () => {
 			const
-				{dimensionToExtent, primary, prevDataSize} = this,
+				{dimensionToExtent, primary, curDataSize} = this,
 				{spacing} = this.props;
 
-			return (Math.ceil(prevDataSize / dimensionToExtent) * primary.gridSize) - spacing;
+			return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
 		}
 
 		syncClientSize = () => {
@@ -791,13 +791,13 @@ VirtualListBaseNative.displayName = 'ui:VirtualListBaseNative';
 const ScrollableVirtualList = (props) => (
 	<Scrollable
 		{...props}
-		childRenderer={({initUiChildRef, ...scrollableProps}) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={({initChildRef, ...scrollableProps}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
 				{...scrollableProps}
 				itemsRenderer={({cc, initUiItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
 					cc.length ? <div ref={initUiItemContainerRef}>{cc}</div> : null
 				)}
-				ref={initUiChildRef}
+				ref={initChildRef}
 			/>
 		)}
 	/>
@@ -806,13 +806,13 @@ const ScrollableVirtualList = (props) => (
 const ScrollableVirtualListNative = (props) => (
 	<ScrollableNative
 		{...props}
-		childRenderer={({initUiChildRef, ...scrollableProps}) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={({initChildRef, ...scrollableProps}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...scrollableProps}
 				itemsRenderer={({cc, initUiItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
 					cc.length ? <div ref={initUiItemContainerRef}>{cc}</div> : null
 				)}
-				ref={initUiChildRef}
+				ref={initChildRef}
 			/>
 		)}
 	/>

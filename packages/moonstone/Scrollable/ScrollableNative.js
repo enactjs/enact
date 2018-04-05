@@ -74,16 +74,18 @@ class ScrollableNative extends Component {
 
 		/**
 		 * Direction of the list or the scroller.
+		 * `'both'` could be only used for[Scroller]{@link ui/Scroller.Scroller}.
 		 *
 		 * Valid values are:
+		 * * `'both'`,
 		 * * `'horizontal'`, and
 		 * * `'vertical'`.
 		 *
 		 * @type {String}
 		 * @default 'vertical'
-		 * @public
+		 * @private
 		 */
-		direction: PropTypes.oneOf(['horizontal', 'vertical']),
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
 		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
@@ -97,7 +99,6 @@ class ScrollableNative extends Component {
 	}
 
 	static defaultProps = {
-		direction: 'vertical',
 		focusableScrollbar: false
 	}
 
@@ -516,12 +517,12 @@ class ScrollableNative extends Component {
 				scrollTo={this.scrollTo}
 				start={this.start}
 				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
-					childUiComponentProps,
+					childComponentProps: childUiComponentProps,
 					className,
 					componentCss,
 					horizontalScrollbarProps,
-					initUiChildRef,
-					initUiContainerRef,
+					initChildRef: initUiChildRef,
+					initContainerRef: initUiContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
 					scrollTo,
