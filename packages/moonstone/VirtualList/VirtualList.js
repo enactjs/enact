@@ -177,12 +177,11 @@ const VirtualGridListNative = kind({
 });
 
 /**
- * A Moonstone-styled scrollable and spottable virtual list component.
+ * A Moonstone-styled scrollable and spottable virtual list component for Easy TV.
  *
- * @class VirtualList
+ * @class VirtualListEasy
  * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable.SpotlightContainerDecorator
- * @extends moonstone/VirtualList.VirtualListBase
+ * @extends moonstone/VirtualList.VirtualList
  * @ui
  * @public
  */
@@ -195,12 +194,11 @@ const VirtualListEasy = kind({
 });
 
 /**
- * A Moonstone-styled scrollable and spottable virtual grid list component.
+ * A Moonstone-styled scrollable and spottable virtual grid list component for Easy TV.
  *
- * @class VirtualGridList
+ * @class VirtualGridListEasy
  * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable.SpotlightContainerDecorator
- * @extends moonstone/VirtualList.VirtualListBase
+ * @extends moonstone/VirtualList.VirtualGridList
  * @ui
  * @public
  */
@@ -214,15 +212,14 @@ const VirtualGridListEasy = kind({
 
 
 /**
- * A Moonstone-styled scrollable and spottable virtual native list component.
+ * A Moonstone-styled scrollable and spottable virtual native list component for Easy TV.
  * For smooth native scrolling, web engine with below Chromium 61, should be launched
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
  *
- * @class VirtualListNative
+ * @class VirtualListEasyNative
  * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable.SpotlightContainerDecorator
- * @extends moonstone/VirtualList.VirtualListBaseNative
+ * @extends moonstone/VirtualList.VirtualListNative
  * @ui
  * @private
  */
@@ -235,15 +232,14 @@ const VirtualListEasyNative = kind({
 });
 
 /**
- * A Moonstone-styled scrollable and spottable virtual grid native list component.
+ * A Moonstone-styled scrollable and spottable virtual grid native list component for Easy TV.
  * For smooth native scrolling, web engine with below Chromium 61, should be launched
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
  *
- * @class VirtualGridListNative
+ * @class VirtualGridListEasyNative
  * @memberof moonstone/VirtualList
- * @mixes moonstone/Scrollable.SpotlightContainerDecorator
- * @extends moonstone/VirtualList.VirtualListBaseNative
+ * @extends moonstone/VirtualList.VirtualGridListNative
  * @ui
  * @private
  */

@@ -160,8 +160,24 @@ const VirtualListBaseFactory = (type) => {
 			 */
 			rtl: PropTypes.bool,
 
+			/**
+			 * When `true`, if the spotlight focus is not able to move to the given direction anymore,
+			 * the spotlight focus moves to the other side in wraparound manner by 5-way keys.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @private
+			 */
 			wrap: PropTypes.bool,
 
+			/**
+			 * When `true`, if the spotlight focus moves in wraparound manner to the other side,
+			 * it scrolles with an animation.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @private
+			 */
 			wrapAnimated: PropTypes.bool
 		}
 
@@ -242,8 +258,7 @@ const VirtualListBaseFactory = (type) => {
 
 		findSpottableItem = (indexFrom, indexTo) => {
 			const
-				{isItemDisabled} = this.props,
-				{dataSize} = this.uiRef.props,
+				{dataSize, isItemDisabled} = this.props,
 				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
 				safeIndexTo = clamp(-1, dataSize, indexTo),
 				delta = (indexFrom < indexTo) ? 1 : -1;
@@ -265,7 +280,7 @@ const VirtualListBaseFactory = (type) => {
 
 		findSpottableItemWithPositionInExtent = (indexFrom, indexTo, position) => {
 			const
-				{dataSize} = this.uiRef.props,
+				{dataSize} = this.props,
 				{dimensionToExtent} = this.uiRef;
 
 			if (0 <= indexFrom && indexFrom < dataSize &&
@@ -292,7 +307,7 @@ const VirtualListBaseFactory = (type) => {
 
 		findSpottableExtent = (indexFrom, isForward) => {
 			const
-				{dataSize} = this.uiRef.props,
+				{dataSize} = this.props,
 				{dimensionToExtent} = this.uiRef,
 				{findSpottableItem, getExtentIndex} = this,
 				firstIndexInExtent = getExtentIndex(indexFrom) * dimensionToExtent;
@@ -309,8 +324,7 @@ const VirtualListBaseFactory = (type) => {
 
 		findNearestSpottableItemInExtent = (index, extentIndex) => {
 			const
-				{isItemDisabled} = this.props,
-				{dataSize} = this.uiRef.props,
+				{dataSize, isItemDisabled} = this.props,
 				{dimensionToExtent} = this.uiRef,
 				currentPosInExtent = clamp(0, dataSize - 1, index) % dimensionToExtent,
 				firstIndexInExtent = clamp(0, this.getExtentIndex(dataSize - 1), extentIndex) * dimensionToExtent,
@@ -335,7 +349,7 @@ const VirtualListBaseFactory = (type) => {
 
 		getIndexToScrollDisabled = (direction, currentIndex) => {
 			const
-				{dataSize, spacing} = this.uiRef.props,
+				{dataSize, spacing} = this.props,
 				{dimensionToExtent, primary} = this.uiRef,
 				{findSpottableItem} = this,
 				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo,
@@ -386,7 +400,7 @@ const VirtualListBaseFactory = (type) => {
 
 		getIndexToScroll = (direction, currentIndex) => {
 			const
-				{dataSize, spacing} = this.uiRef.props,
+				{dataSize, spacing} = this.props,
 				{dimensionToExtent, primary} = this.uiRef,
 				numOfItemsInPage = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent,
 				factor = (direction === 'down' || direction === 'right') ? 1 : -1;
@@ -436,7 +450,7 @@ const VirtualListBaseFactory = (type) => {
 					focusedItem.blur();
 					this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
 				}
-				this.uiRef.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
+				this.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
 			}
 
 			return true;
@@ -452,7 +466,7 @@ const VirtualListBaseFactory = (type) => {
 
 		setSpotlightContainerRestrict = (keyCode, target) => {
 			const
-				{dataSize} = this.uiRef.props,
+				{dataSize} = this.props,
 				{isPrimaryDirectionVertical, dimensionToExtent} = this.uiRef,
 				index = Number.parseInt(target.getAttribute(dataIndexAttribute)),
 				canMoveBackward = index >= dimensionToExtent,
@@ -472,9 +486,8 @@ const VirtualListBaseFactory = (type) => {
 
 		jumpToSpottableItem = (keyCode, target) => {
 			const
-				{isItemDisabled, wrap, wrapAnimated} = this.props,
+				{cbScrollTo, dataSize, isItemDisabled, wrap, wrapAnimated} = this.props,
 				{findSpottableExtent, findSpottableItem, getExtentIndex} = this,
-				{cbScrollTo, dataSize} = this.uiRef.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
 				{dimensionToExtent, isPrimaryDirectionVertical} = this.uiRef,
 				rtl = this.props.rtl,
@@ -729,7 +742,7 @@ const VirtualListBaseFactory = (type) => {
 
 		calculatePositionOnFocus = ({item, scrollPosition = this.uiRef.scrollPosition}) => {
 			const
-				{pageScroll} = this.uiRef.props,
+				{pageScroll} = this.props,
 				{numOfItems} = this.uiRef.state,
 				{primary} = this.uiRef,
 				offsetToClientEnd = primary.clientSize - primary.itemSize,
