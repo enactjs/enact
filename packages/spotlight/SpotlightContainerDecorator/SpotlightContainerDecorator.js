@@ -179,7 +179,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.state =add(props);
+			this.state = add(props);
 		}
 
 		componentWillMount () {
