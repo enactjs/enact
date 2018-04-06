@@ -1,13 +1,15 @@
 import ResBundle from '../ilib/lib/ResBundle';
 import Locale from '../ilib/lib/Locale';
 
+import ilibPromise from './promise';
+
 // The ilib.ResBundle for the active locale used by $L
 let resBundle;
 
 /**
  * Returns the current ilib.ResBundle
  *
- * @returns {ilib.ResBundle} Current ResBundle
+ * @returns {Promise} Resolves with the current ResBundle
  */
 function getResBundle () {
 	return resBundle;
@@ -18,7 +20,7 @@ function getResBundle () {
  *
  * @param  {ilib.Locale} locale Locale for ResBundle
  *
- * @returns {ilib.ResBundle} New ilib.ResBundle
+ * @returns {Promise} Resolves with a new ilib.ResBundle
  */
 function createResBundle (locale, options) {
 	return new Promise((resolve, reject) => {
@@ -46,8 +48,9 @@ function createResBundle (locale, options) {
 /**
  * Set the locale for the strings that $L loads. This may reload the
  * string resources if necessary.
+ *
  * @param {string} spec the locale specifier
- * @returns {undefined}
+ * @returns {Promise} Resolves with a new ilib.ResBundle
  */
 function setResBundleLocale (spec) {
 	// Load any ResBundle external data into cache.
@@ -55,12 +58,11 @@ function setResBundleLocale (spec) {
 	ResBundle.strings.cache = global.resBundleData || ResBundle.strings.cache;
 	// Get active bundle and if needed, (re)initialize.
 	const locale = new Locale(spec);
-	const rb = getResBundle();
-	if (!rb || spec !== rb.getLocale().getSpec()) {
-		return createResBundle(locale);
+	if (!resBundle || spec !== resBundle.getLocale().getSpec()) {
+		resBundle = createResBundle(locale);
 	}
 
-	return Promise.resolve(resBundle);
+	return resBundle;
 }
 
 /**

@@ -15,6 +15,15 @@ import '../src/glue';
 import {getResBundle} from '../src/resBundle';
 import IString from '../ilib/lib/IString';
 
+function getIStringFromBundle (rb, str) {
+	const isObject = typeof str === 'object';
+	if (rb) {
+		return isObject ? rb.getString(str.value, str.key) : rb.getString(str);
+	}
+
+	return new IString(isObject ? str.value : str);
+}
+
 /**
  * Maps a string or key/value object to a translated string for the current locale
  *
@@ -23,16 +32,10 @@ import IString from '../ilib/lib/IString';
  *
  * @returns {ilib.IString} The translated string
  */
-function toIString (str) {
-	return str;
+async function toIString (str) {
+	const rb = getResBundle();
 
-	// const rb = getResBundle();
-	// const isObject = typeof str === 'object';
-	// if (rb) {
-	// 	return isObject ? rb.getString(str.value, str.key) : rb.getString(str);
-	// }
-
-	// return new IString(isObject ? str.value : str);
+	return getIStringFromBundle(rb, str);
 }
 
 /**
@@ -44,11 +47,21 @@ function toIString (str) {
  * @returns {String} The translated string.
  */
 function $L (str) {
-	return String(toIString(str));
+	return str;
+}
+
+async function $$L (strings) {
+	const rb = await getResBundle();
+	return strings.reduce((result, str) => {
+		result[str] = String(getIStringFromBundle(rb, str));
+		return result;
+	}, {});
 }
 
 export default $L;
 export {
 	$L,
+	$$L,
+	getIStringFromBundle,
 	toIString
 };

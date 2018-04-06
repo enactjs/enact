@@ -1,12 +1,18 @@
 import kind from '@enact/core/kind';
+import {TextDecorator} from '@enact/i18n/Text';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import $L from '../internal/$L';
 import IconButton from '../IconButton';
 import Skinnable from '../Skinnable';
 
 import css from './ContextualPopup.less';
+
+const CloseButton = TextDecorator({
+	mapPropsToText: {
+		'aria-label': {text: 'Close', defaultText: ''}
+	}
+}, IconButton);
 
 /**
  * {@link moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopupArrow} is an SVG arrow for
@@ -151,15 +157,14 @@ const ContextualPopupBase = kind({
 		closeButton: ({showCloseButton, onCloseButtonClick}) => {
 			if (showCloseButton) {
 				return (
-					<IconButton
+					<CloseButton
 						className={css.closeButton}
 						backgroundOpacity="transparent"
 						small
 						onTap={onCloseButtonClick}
-						aria-label={$L('Close')}
 					>
 						closex
-					</IconButton>
+					</CloseButton>
 				);
 			}
 		}
