@@ -73,6 +73,20 @@ class ScrollableNative extends Component {
 		childRenderer: PropTypes.func.isRequired,
 
 		/**
+		 * Direction of the list or the scroller.
+		 * `'both'` could be only used for[Scroller]{@link moonstone/Scroller.Scroller}.
+		 *
+		 * Valid values are:
+		 * * `'both'`,
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+		/**
 		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
 		 * not move focus to the scrollbar controls.
 		 *
@@ -230,9 +244,11 @@ class ScrollableNative extends Component {
 	}
 
 	onFocus = (ev) => {
-		const shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
-			this.childRef.shouldPreventScrollByFocus() :
-			false;
+		const
+			{direction} = this.props,
+			shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
+				this.childRef.shouldPreventScrollByFocus() :
+				false;
 
 		if (!Spotlight.getPointerMode()) {
 			this.alertThumb();
@@ -251,7 +267,7 @@ class ScrollableNative extends Component {
 				// If scroll animation is ongoing, we need to pass last target position to
 				// determine correct scroll position.
 				if (this.uiRef.scrolling && lastPos) {
-					pos = positionFn({item, scrollPosition: (this.uiRef.direction !== 'horizontal') ? lastPos.top : lastPos.left});
+					pos = positionFn({item, scrollPosition: (direction !== 'horizontal') ? lastPos.top : lastPos.left});
 				} else {
 					pos = positionFn({item});
 				}
@@ -265,8 +281,8 @@ class ScrollableNative extends Component {
 
 	getPageDirection = (keyCode) => {
 		const
+			{direction} = this.props,
 			isRtl = this.uiRef.state.rtl,
-			{direction} = this.uiRef,
 			isVertical = (direction === 'vertical' || direction === 'both');
 
 		return isPageUp(keyCode) ?
@@ -504,8 +520,8 @@ class ScrollableNative extends Component {
 					className,
 					componentCss,
 					horizontalScrollbarProps,
-					initContainerRef,
-					initUiChildRef,
+					initChildRef: initUiChildRef,
+					initContainerRef: initUiContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
 					scrollTo,
@@ -515,7 +531,7 @@ class ScrollableNative extends Component {
 				}) => (
 					<ScrollableSpotlightContainer
 						className={className}
-						containerRef={initContainerRef}
+						containerRef={initUiContainerRef}
 						focusableScrollbar={focusableScrollbar}
 						style={style}
 					>
