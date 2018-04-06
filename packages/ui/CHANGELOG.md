@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/VirtualList.VirtualList` prop `role="list"` to support for accessibility X of Y feature
+- `ui/VirtualList.VirtualList` `role="list"`
 
 ### Changed
 
