@@ -2,8 +2,6 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import css from './Slider.less';
-
 const Knob = kind({
 	name: 'Knob',
 
@@ -15,11 +13,6 @@ const Knob = kind({
 	defaultProps: {
 		x: 0,
 		y: 1
-	},
-
-	styles: {
-		css,
-		className: 'knob'
 	},
 
 	computed: {

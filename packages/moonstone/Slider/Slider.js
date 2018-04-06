@@ -28,14 +28,8 @@ import componentCss from './Slider.less';
 
 /* ***************************************************
 
-  Still need to reconcile current API
    * consider multiple knob and bar support
-   * fix handling enter on increment slider buttons
    * integration with MediaSlider
-   * vertical orientation testing
-   * handling padding around slider in incrementslider
-   * off-axis knob positioning
-   * RTL testing
 
 ***************************************************/
 

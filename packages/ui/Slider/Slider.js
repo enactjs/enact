@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
 
-import Changeable from '../Changeable';
 import ComponentOverride from '../ComponentOverride';
 import Touchable from '../Touchable';
 
@@ -21,15 +20,6 @@ import {
 } from './utils';
 
 import componentCss from './Slider.less';
-
-
-/* ***************************************************
- * Still need to reconcile current API
- * * consider multiple knob and bar support
- * * integration with IncrementSlider
- * * integration with MediaSlider
- *
- * ***************************************************/
 
 const SliderBase = kind({
 	name: 'Slider',
