@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import Scrollable from '../Scrollable';
+import {Scrollable as ScrollableJS} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
 import css from './VirtualList.less';
@@ -35,7 +35,9 @@ const gridListItemSizeShape = PropTypes.shape({
  * @ui
  * @public
  */
-const VirtualListBaseFactory = (type) => {
+const VirtualListCoreFactory = (config) => {
+	const type = config.type;
+
 	return class VirtualListCore extends Component {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
@@ -771,39 +773,30 @@ const VirtualListBaseFactory = (type) => {
  * @class VirtualListBase
  * @memberof ui/VirtualList
  * @ui
- * @private
+ * @public
  */
-const VirtualListBase = VirtualListBaseFactory(JS);
-VirtualListBase.displayName = 'ui:VirtualListBase';
+const VirtualListBase = (props) => {
+	const
+		Scrollable = native ? ScrollableNative : ScrollableJS,
+		VirtualListCore = VirtualListCoreFactory({type: native ? Native : JS});
 
-/**
- * A basic base component for
- * [VirtualListNative]{@link ui/VirtualList.VirtualListNative} and [VirtualGridListNative]{@link ui/VirtualList.VirtualGridListNative}.
- *
- * @class VirtualListBaseNative
- * @memberof ui/VirtualList
- * @ui
- * @private
- */
-const VirtualListBaseNative = VirtualListBaseFactory(Native);
-VirtualListBaseNative.displayName = 'ui:VirtualListBaseNative';
+	return (
+		<Scrollable
+			{...props}
+			childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
+				<VirtualListBase
+					{...rest}
+					itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+						cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
+					)}
+					ref={initChildRef}
+				/>
+			)}
+		/>
+	);
+};
 
-const ScrollableVirtualList = (props) => (
-	<Scrollable
-		{...props}
-		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBase
-				{...rest}
-				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
-				)}
-				ref={initChildRef}
-			/>
-		)}
-	/>
-);
-
-ScrollableVirtualList.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
+VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
 	/**
 	 * Direction of the list.
 	 *
@@ -815,52 +808,29 @@ ScrollableVirtualList.propTypes = /** @lends ui/VirtualList.VirtualListBase.prot
 	 * @default 'vertical'
 	 * @public
 	 */
-	direction: PropTypes.oneOf(['horizontal', 'vertical'])
-};
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
-ScrollableVirtualList.defaultProps = {
-	direction: 'vertical'
-};
-
-const ScrollableVirtualListNative = (props) => (
-	<ScrollableNative
-		{...props}
-		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBaseNative
-				{...rest}
-				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
-				)}
-				ref={initChildRef}
-			/>
-		)}
-	/>
-);
-
-ScrollableVirtualListNative.propTypes = /** @lends ui/VirtualList.VirtualListBaseNative.prototype */ {
-	/**
-	 * Direction of the list.
+	*
+	 * JS or Native
 	 *
 	 * Valid values are:
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
+	 * * `true`, and
+	 * * `false`.
 	 *
-	 * @type {String}
-	 * @default 'vertical'
+	 * @type {Boolean}
+	 * @default 'false'
 	 * @public
-	 */
-	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+	 
+	native: PropTypes.bool
 };
 
-ScrollableVirtualListNative.defaultProps = {
-	direction: 'vertical'
+VirtualListBase.defaultProps = {
+	direction: 'vertical',
+	native: false
 };
 
 export default VirtualListBase;
 export {
 	gridListItemSizeShape,
-	ScrollableVirtualList,
-	ScrollableVirtualListNative,
-	VirtualListBase,
-	VirtualListBaseNative
+	VirtualListBase
 };

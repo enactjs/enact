@@ -8,7 +8,7 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import Spottable from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 
-import {Scrollable, dataIndexAttribute} from '../Scrollable';
+import {Scrollable as ScrollableJS, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
 const SpotlightPlaceholder = Spottable('div');
@@ -56,16 +56,17 @@ const
 	Native = 'Native';
 
 /**
- * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} and
- * [VirtualListBaseNative]{@link moonstone/VirtualList.VirtualListBaseNative}.
+ * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase}.
  *
- * @class VirtualListCore
+ * @class VirtualListCoreFactory
  * @memberof moonstone/VirtualList
  * @ui
  * @public
  */
-const VirtualListBaseFactory = (type) => {
-	const UiBase = (type === JS) ? UiVirtualListBase : UiVirtualListBaseNative;
+const VirtualListCoreFactory = (config) => {
+	const
+		type = config.type,
+		UiBase = config.UiBase;
 
 	return class VirtualListCore extends Component {
 		/* No displayName here. We set displayName to returned components of this factory function. */
@@ -775,6 +776,80 @@ const VirtualListBaseFactory = (type) => {
 	};
 };
 
+const ScrollableVirtualListCore = ({native, role, ...rest}) => {
+	const
+		Scrollable = native ? ScrollableNative : ScrollableJS,
+		UiBase = native ? UiVirtualListBaseNative : UiVirtualListBase,
+		VirtualListCore = VirtualListCoreFactory({type: native ? Native : JS, UiBase});
+	
+	return ( // eslint-disable-line react/jsx-no-bind
+		<Scrollable
+			{...rest}
+			childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
+				<VirtualListCore
+					{...props}
+					itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
+						[
+							cc.length ? <div key="0" ref={initUiItemContainerRef} role={role}>{cc}</div> : null,
+							primary ?
+								null :
+								<SpotlightPlaceholder
+									data-index={0}
+									data-vl-placeholder
+									key="1"
+									onFocus={handlePlaceholderFocus}
+									role="region"
+								/>,
+							needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
+						]
+					)}
+				/>
+			)}
+		/>
+	);
+};
+					
+ScrollableVirtualListCore.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
+	/**
+	 * Direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'vertical'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+	/**
+	 * JS or Native
+	 *
+	 * Valid values are:
+	 * * `true`, and
+	 * * `false`.
+	 *
+	 * @type {Boolean}
+	 * @default 'false'
+	 * @public
+	 */
+	native: PropTypes.bool
+
+	/**
+	 * Aria role.
+	 *
+	 * @type {String}
+	 * @public
+	 */
+	role: PropTypes.string
+};
+
+ScrollableVirtualListCore.defaultProps = {
+	direction: 'vertical',
+	native: false
+};
+
 /**
  * A Moonstone-styled base component for [VirtualList]{@link moonstone/VirtualList.VirtualList} and
  * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
@@ -784,137 +859,9 @@ const VirtualListBaseFactory = (type) => {
  * @extends ui/VirtualList.VirtualListBase
  * @ui
  * @public
- */
-const VirtualListBase = VirtualListBaseFactory(JS);
-VirtualListBase.displayName = 'VirtualListBase';
-
-/**
- * A Moonstone-styled base component for [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative} and
- * [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative}.
- *
- * @class VirtualListBaseNative
- * @memberof moonstone/VirtualList
- * @extends ui/VirtualList.VirtualListBaseNative
- * @ui
- * @private
- */
-const VirtualListBaseNative = VirtualListBaseFactory(Native);
-VirtualListBaseNative.displayName = 'VirtualListBaseNative';
-
-const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
-	<Scrollable
-		{...rest}
-		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBase
-				{...props}
-				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
-					[
-						cc.length ? <div key="0" ref={initUiItemContainerRef} role={role}>{cc}</div> : null,
-						primary ?
-							null :
-							<SpotlightPlaceholder
-								data-index={0}
-								data-vl-placeholder
-								key="1"
-								onFocus={handlePlaceholderFocus}
-								role="region"
-							/>,
-						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
-					]
-				)}
-			/>
-		)}
-	/>
-);
-
-ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
-	/**
-	 * Direction of the list.
-	 *
-	 * Valid values are:
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'vertical'
-	 * @public
-	 */
-	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-
-	/**
-	 * Aria role.
-	 *
-	 * @type {String}
-	 * @public
-	 */
-	role: PropTypes.string
-};
-
-ScrollableVirtualList.defaultProps = {
-	direction: 'vertical'
-};
-
-const ScrollableVirtualListNative = ({role, ...rest}) => (
-	<ScrollableNative
-		{...rest}
-		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBaseNative
-				{...props}
-				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
-					[
-						cc.length ? <div key="0" ref={initUiItemContainerRef} role={role}>{cc}</div> : null,
-						primary ?
-							null :
-							<SpotlightPlaceholder
-								data-index={0}
-								data-vl-placeholder
-								key="1"
-								onFocus={handlePlaceholderFocus}
-								role="region"
-							/>,
-						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
-					]
-				)}
-			/>
-		)}
-	/>
-);
-
-ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListBaseNative.prototype */ {
-	/**
-	 * Direction of the list.
-	 *
-	 * Valid values are:
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'vertical'
-	 * @public
-	 */
-	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-
-	/**
-	 * Aria role.
-	 *
-	 * @type {String}
-	 * @private
-	 */
-	role: PropTypes.string
-};
-
-ScrollableVirtualListNative.defaultProps = {
-	direction: 'vertical'
-};
-
-const SpottableVirtualList = SpotlightContainerDecorator(SpotlightContainerConfig, ScrollableVirtualList);
-
-const SpottableVirtualListNative = SpotlightContainerDecorator(SpotlightContainerConfig, ScrollableVirtualListNative);
+ */const VirtualListBase = SpotlightContainerDecorator(SpotlightContainerConfig, ScrollableVirtualList);
 
 export default VirtualListBase;
 export {
-	SpottableVirtualList,
-	SpottableVirtualListNative,
-	VirtualListBase,
-	VirtualListBaseNative
+	VirtualListBase
 };

@@ -6,7 +6,6 @@
  * @exports VirtualGridListNative
  * @exports VirtualList
  * @exports VirtualListBase
- * @exports VirtualListBaseNative
  * @exports VirtualListNative
  */
 
@@ -15,7 +14,7 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {SpottableVirtualList, SpottableVirtualListNative, VirtualListBase, VirtualListBaseNative} from './VirtualListBase';
+import VirtualListBase from './VirtualListBase';
 
 /**
  * A Moonstone-styled scrollable and spottable virtual list component.
@@ -49,7 +48,7 @@ const VirtualList = kind({
 	},
 
 	render: (props) => (
-		<SpottableVirtualList {...props} />
+		<VirtualListBase {...props} />
 	)
 });
 
@@ -89,7 +88,7 @@ const VirtualGridList = kind({
 	},
 
 	render: (props) => (
-		<SpottableVirtualList {...props} />
+		<VirtualListBase {...props} />
 	)
 });
 
@@ -129,7 +128,7 @@ const VirtualListNative = kind({
 	},
 
 	render: (props) => (
-		<SpottableVirtualListNative {...props} />
+		<VirtualListBase {...props} native />
 	)
 });
 
@@ -172,7 +171,7 @@ const VirtualGridListNative = kind({
 	},
 
 	render: (props) => (
-		<SpottableVirtualListNative {...props} />
+		<VirtualListBase {...props} native />
 	)
 });
 
@@ -182,6 +181,5 @@ export {
 	VirtualGridListNative,
 	VirtualList,
 	VirtualListBase,
-	VirtualListBaseNative,
 	VirtualListNative
 };
