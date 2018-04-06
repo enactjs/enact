@@ -195,7 +195,7 @@ const VirtualListBaseFactory = (type) => {
 			spacing: PropTypes.number,
 
 			/**
-			 * When `true`, if the spotlight focus is not able to move to the given direction anymore,
+			 * When it's `true` and the spotlight focus is not able to move to the given direction anymore,
 			 * the spotlight focus moves to the other side in wraparound manner by 5-way keys.
 			 *
 			 * @type {Boolean}
@@ -205,7 +205,7 @@ const VirtualListBaseFactory = (type) => {
 			wrap: PropTypes.bool,
 
 			/**
-			 * When `true`, if the spotlight focus moves in wraparound manner to the other side,
+			 * When it's `true` and the spotlight focus moves in wraparound manner to the other side,
 			 * it scrolles with an animation.
 			 *
 			 * @type {Boolean}
@@ -520,11 +520,9 @@ const VirtualListBaseFactory = (type) => {
 
 		jumpToSpottableItem = (keyCode, target) => {
 			const
-				{cbScrollTo, dataSize, isItemDisabled, wrap, wrapAnimated} = this.props,
-				{findSpottableExtent, findSpottableItem, getExtentIndex} = this,
+				{cbScrollTo, dataSize, isItemDisabled, rtl, wrap, wrapAnimated} = this.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
 				{dimensionToExtent, isPrimaryDirectionVertical} = this.uiRef,
-				rtl = this.props.rtl,
 				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute)),
 				isForward = (
 					isPrimaryDirectionVertical && isDown(keyCode) ||
@@ -538,11 +536,15 @@ const VirtualListBaseFactory = (type) => {
 				);
 
 			// If the currently focused item is disabled, we assume that all items in a list are disabled.
-			if (isItemDisabled(currentIndex) || (!isForward && !isBackward)) {
+			if (
+				(!wrap && isItemDisabled === isItemDisabledDefault) ||
+				isItemDisabled(currentIndex) ||
+				(!isForward && !isBackward)
+			) {
 				return false;
 			}
 
-			const currentExtent = getExtentIndex(currentIndex);
+			const currentExtent = this.getExtentIndex(currentIndex);
 			let
 				nextIndex = -1,
 				animate = true,
@@ -552,10 +554,10 @@ const VirtualListBaseFactory = (type) => {
 			if (isForward) {
 				nextIndex = this.findSpottableItemWithPositionInExtent(currentIndex + 1, dataSize, currentIndex % dimensionToExtent);
 				if (nextIndex === -1) {
-					spottableExtent = findSpottableExtent(currentIndex, true);
+					spottableExtent = this.findSpottableExtent(currentIndex, true);
 					if (spottableExtent === -1) {
 						if (wrap) {
-							const candidateExtent = getExtentIndex(findSpottableItem(0, dataSize));
+							const candidateExtent = this.getExtentIndex(this.findSpottableItem(0, dataSize));
 
 							// If currentExtent is equal to candidateExtent,
 							// it means that the current extent is the only spottable extent.
@@ -579,11 +581,11 @@ const VirtualListBaseFactory = (type) => {
 			} else { // isBackward
 				nextIndex = this.findSpottableItemWithPositionInExtent(currentIndex - 1, -1, currentIndex % dimensionToExtent);
 				if (nextIndex === -1) {
-					spottableExtent = findSpottableExtent(currentIndex, false);
+					spottableExtent = this.findSpottableExtent(currentIndex, false);
 
 					if (spottableExtent === -1) {
 						if (wrap) {
-							const candidateExtent = getExtentIndex(findSpottableItem(dataSize - 1, -1));
+							const candidateExtent = this.getExtentIndex(this.findSpottableItem(dataSize - 1, -1));
 
 							// If currentExtent is equal to candidateExtent,
 							// it means that the current extent is the only spottable extent.
@@ -610,6 +612,12 @@ const VirtualListBaseFactory = (type) => {
 				if (firstIndex <= nextIndex && nextIndex < firstIndex + numOfItems) {
 					this.focusOnItem(nextIndex);
 				} else {
+					this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
+
+					if (!Spotlight.isPaused()) {
+						Spotlight.pause();
+					}
+
 					if (isWrapped) {
 						// In case of 'wrapping-around',
 						// we need to blur the current focus immediately
@@ -623,12 +631,6 @@ const VirtualListBaseFactory = (type) => {
 						setTimeout(() => {
 							target.blur();
 						}, 50);
-					}
-
-					this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
-
-					if (!Spotlight.isPaused()) {
-						Spotlight.pause();
 					}
 
 					cbScrollTo({

@@ -190,7 +190,7 @@ class VirtualListEasy extends Component {
 
 	static propTypes = /** @lends moonstone/VirtualList.VirtualListEasy.prototype */ {
 		/**
-		 * When `true`, if the spotlight focus moves in wraparound manner to the other side,
+		 * When it's `true` and the spotlight focus moves in wraparound manner to the other side,
 		 * it scrolles with an animation.
 		 *
 		 * @type {Boolean}
@@ -223,7 +223,7 @@ class VirtualGridListEasy extends Component {
 
 	static propTypes = /** @lends moonstone/VirtualList.VirtualGridListEasy.prototype */ {
 		/**
-		 * When `true`, if the spotlight focus moves in wraparound manner to the other side,
+		 * When it's `true` and the spotlight focus moves in wraparound manner to the other side,
 		 * it scrolles with an animation.
 		 *
 		 * @type {Boolean}
@@ -259,7 +259,7 @@ class VirtualListEasyNative extends Component {
 
 	static propTypes = /** @lends moonstone/VirtualList.VirtualListEasyNative.prototype */ {
 		/**
-		 * When `true`, if the spotlight focus moves in wraparound manner to the other side,
+		 * When it's `true` and the spotlight focus moves in wraparound manner to the other side,
 		 * it scrolles with an animation.
 		 *
 		 * @type {Boolean}
@@ -295,7 +295,7 @@ class VirtualGridListEasyNative extends Component {
 
 	static propTypes = /** @lends moonstone/VirtualList.VirtualGridListEasyNative.prototype */ {
 		/**
-		 * When `true`, if the spotlight focus moves in wraparound manner to the other side,
+		 * When it's `true` and the spotlight focus moves in wraparound manner to the other side,
 		 * it scrolles with an animation.
 		 *
 		 * @type {Boolean}
