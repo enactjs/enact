@@ -32,6 +32,7 @@ const ItemBase = kind({
 		 * The node to be displayed as the main content of the item.
 		 *
 		 * @type {Node}
+		 * @required
 		 * @public
 		 */
 		children: PropTypes.node.isRequired,
