@@ -600,7 +600,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.video = null;
 		this.pulsedPlaybackRate = null;
 		this.pulsedPlaybackState = null;
-		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.showMiniFeedback = false;
 		this.speedIndex = 0;
@@ -914,13 +913,6 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	autoCloseJob = new Job(this.doAutoClose)
-
-	refocusMoreButton = () => {
-		// Readout 'more' or 'back' button explicitly.
-		let selectedButton = Spotlight.getCurrent();
-		selectedButton.blur();
-		selectedButton.focus();
-	}
 
 	startDelayedTitleHide = () => {
 		if (this.props.titleHideDelay) {
@@ -1697,28 +1689,21 @@ const VideoPlayerBase = class extends React.Component {
 		(ev, props) => forwardJumpForwardButtonClick(this.addStateToEvent(ev), props),
 		() => this.jump(this.props.jumpBy)
 	)
-	onMoreClick = () => {
-		this.toggleMore();
-	}
 
-	toggleMore () {
-		if (this.state.more) {
-			this.moreInProgress = false;
+	handleToggleMore = ({showMoreComponents}) => {
+		if (showMoreComponents) {
 			this.startAutoCloseTimeout();	// Restore the timer since we are leaving "more.
 			// Restore the title-hide now that we're finished with "more".
 			this.startDelayedTitleHide();
 		} else {
-			this.moreInProgress = true;
 			// Interrupt the title-hide since we don't want it hiding autonomously in "more".
 			this.stopDelayedTitleHide();
 		}
 
 		this.setState({
-			more: !this.state.more,
+			more: showMoreComponents,
 			titleVisible: true,
 			announce: this.state.announce < AnnounceState.INFO ? AnnounceState.INFO : AnnounceState.DONE
-		}, () => {
-			this.refocusMoreButton();
 		});
 	}
 
@@ -1930,11 +1915,10 @@ const VideoPlayerBase = class extends React.Component {
 								onJumpForwardButtonClick={this.onJumpForward}
 								onKeyDown={this.handleKeyDownFromControls}
 								onPlayButtonClick={this.onPlay}
-								onToggleMore={this.onMoreClick}
+								onToggleMore={this.handleToggleMore}
 								paused={this.state.paused}
 								rateButtonsDisabled={rateButtonsDisabled}
 								rightComponents={rightComponents}
-								showMoreComponents={this.state.more}
 								spotlightDisabled={!this.state.mediaControlsVisible || spotlightDisabled}
 								visible={this.state.mediaControlsVisible}
 							>

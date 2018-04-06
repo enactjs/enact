@@ -2,7 +2,9 @@ import classnames from 'classnames/bind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Spotlight from '@enact/spotlight';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
+import {forward} from '@enact/core/handle';
 
 import $L from '../internal/$L';
 import IconButton from '../IconButton';
@@ -19,6 +21,8 @@ const MediaButton = onlyUpdateForKeys([
 	'onClick',
 	'spotlightDisabled'
 ])(IconButton);
+
+const forwardToggleMore = forward('onToggleMore');
 
 /**
  * MediaControls {@link moonstone/VideoPlayer}.
@@ -326,6 +330,24 @@ class MediaControls extends React.Component {
 		}
 	}
 
+	componentDidUpdate (prevProps, prevState) {
+		if (this.state.showMoreComponents !== prevState.showMoreComponents) {
+			forwardToggleMore({showMoreComponents: this.state.showMoreComponents}, this.props);
+
+			// Readout 'more' or 'back' button explicitly.
+			let selectedButton = Spotlight.getCurrent();
+			selectedButton.blur();
+			selectedButton.focus();
+		}
+	}
+
+	handleMoreClick = () => {
+		this.setState((prevState) => {
+			return {
+				showMoreComponents: !prevState.showMoreComponents
+			};
+		});
+	}
 
 	calculateMaxComponentCount = (leftCount, rightCount, childrenCount) => {
 		// If the "more" button is present, automatically add it to the right's count.
@@ -364,7 +386,6 @@ class MediaControls extends React.Component {
 			onJumpBackwardButtonClick,
 			onJumpForwardButtonClick,
 			onPlayButtonClick,
-			onToggleMore,
 			paused,
 			pauseIcon,
 			playIcon,
@@ -377,6 +398,7 @@ class MediaControls extends React.Component {
 
 		delete rest.moreButtonCloseLabel;
 		delete rest.moreButtonLabel;
+		delete rest.onToggleMore;
 
 		let moreIconLabel, moreIcon;
 		if (this.state.showMoreComponents) {
@@ -416,7 +438,7 @@ class MediaControls extends React.Component {
 							className={css.moreButton}
 							color={moreButtonColor}
 							disabled={moreButtonDisabled}
-							onTap={onToggleMore}
+							onTap={this.handleMoreClick}
 							tooltipProps={{role: 'dialog'}}
 							tooltipText={moreIconLabel}
 							spotlightDisabled={spotlightDisabled}
