@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/VirtualList.VirtualList` `role="list"`
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` `role="list"`
 
 ### Changed
 
