@@ -5,6 +5,7 @@
  */
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
+import IString from '@enact/i18n/ilib/lib/IString';
 import ilibPromise from '@enact/i18n/src/promise';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
 import Pure from '@enact/ui/internal/Pure';
@@ -164,7 +165,8 @@ const dateTimeConfig = {
 				useNative: false,
 				timezone: 'local'
 			}),
-			ilibPromise(LocaleInfo, [undefined]) // eslint-disable-line no-undefined
+			ilibPromise(LocaleInfo, [undefined]), // eslint-disable-line no-undefined
+			new Promise(resolve => IString.loadPlurals(false, null, null, resolve))
 		]);
 
 		// Meridiem localization

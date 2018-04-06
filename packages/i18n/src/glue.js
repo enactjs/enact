@@ -22,7 +22,6 @@ import './dates';
 import ilib from '../ilib/lib/ilib';
 
 import Loader from './Loader';
-import {updateLocale} from '../locale';
 
 ilib.setLoaderCallback(new Loader());
 
@@ -30,7 +29,3 @@ if (typeof window === 'object' && typeof window.UILocale !== 'undefined') {
 	// this is a hack until GF-1581 is fixed
 	ilib.setLocale(window.UILocale);
 }
-
-// we go ahead and run this once during loading of iLib settings are valid
-// during the loads of later libraries.
-updateLocale(null, true);

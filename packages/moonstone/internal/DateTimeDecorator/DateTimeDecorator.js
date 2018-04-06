@@ -66,7 +66,11 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 
 			const initialValue = this.toTime(props.value);
 			const value = props.open && !initialValue ? Date.now() : initialValue;
-			this.state = {initialValue, value};
+			this.state = {
+				initialValue,
+				value,
+				i18n: null
+			};
 
 			this.handlers = {};
 			if (handlers) {
@@ -110,7 +114,12 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 
 			if (i18n && this.locale !== locale && typeof window === 'object') {
 				this.locale = locale;
-				this.i18nContext = i18n();
+
+				i18n().then(context => {
+					this.setState({
+						i18n: context
+					});
+				});
 			}
 		}
 
@@ -201,23 +210,24 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
+			if (!this.state.i18n) {
+				return (
+					<Wrapped
+						{...this.props}
+						disabled
+						order={[]}
+					/>
+				);
+			}
+
 			const value = this.toIDate(this.state.value);
 			// pickerValue is only set when cancelling to prevent the unexpected changing of the
 			// picker values before closing.
 			const pickerValue = this.state.pickerValue ? this.toIDate(this.state.pickerValue) : value;
 
-			let label = null;
-			let props = null;
-			let order = defaultOrder;
-
-			// Guard for isomorphic builds
-			if (this.i18nContext) {
-				if (value) {
-					label = this.i18nContext.formatter.format(value);
-				}
-				props = customProps(this.i18nContext, pickerValue, this.props);
-				order = this.i18nContext.order;
-			}
+			const label = value ? this.state.i18n.formatter.format(value) : null;
+			const props = customProps(this.state.i18n, pickerValue, this.props);
+			const order = this.state.i18n.order;
 
 			return (
 				<Wrapped

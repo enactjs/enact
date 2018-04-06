@@ -154,7 +154,7 @@ const IntlHoc = hoc(defaultConfig, (config, Wrapped) => {
 		 *
 		 * @param	{String}	newLocale	Locale identifier string
 		 *
-		 * @returns	{undefined}
+		 * @returns	{Promise}
 		 * @public
 		 */
 		updateLocale = async (newLocale) => {
