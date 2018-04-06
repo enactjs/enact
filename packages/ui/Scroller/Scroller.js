@@ -29,7 +29,7 @@ import css from './Scroller.less';
 class ScrollerBase extends Component {
 	static displayName = 'ui:ScrollerBase'
 
-	static propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
+	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
 		children: PropTypes.node.isRequired,
 
 		/**
@@ -92,7 +92,7 @@ class ScrollerBase extends Component {
 
 	getScrollBounds = () => this.scrollBounds
 
-	getRtlPositionX = (x) => (this.props.rtl ? this.uiRef.scrollBounds.maxLeft - x : x)
+	getRtlPositionX = (x) => (this.props.rtl ? this.scrollBounds.maxLeft - x : x)
 
 	// for Scrollable
 	setScrollPosition (x, y) {
@@ -202,11 +202,31 @@ class ScrollerBase extends Component {
 const Scroller = (props) => (
 	<Scrollable
 		{...props}
-		childRenderer={({initUiChildRef, ...scrollerProps}) => ( // eslint-disable-line react/jsx-no-bind
-			<ScrollerBase {...scrollerProps} ref={initUiChildRef} />
+		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
+			<ScrollerBase {...rest} ref={initChildRef} />
 		)}
 	/>
 );
+
+Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
+	/**
+	 * Direction of the scroller.
+	 *
+	 * Valid values are:
+	 * * `'both'`,
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'both'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+};
+
+Scroller.defaultProps = {
+	direction: 'both'
+};
 
 /**
  * An unstyled native scroller, [ScrollableNative]{@link ui/Scrollable.ScrollableNative} applied.
@@ -229,11 +249,31 @@ const Scroller = (props) => (
 const ScrollerNative = (props) => (
 	<ScrollableNative
 		{...props}
-		childRenderer={({initUiChildRef, ...scrollerProps}) => ( // eslint-disable-line react/jsx-no-bind
-			<ScrollerBase {...scrollerProps} ref={initUiChildRef} />
+		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
+			<ScrollerBase {...rest} ref={initChildRef} />
 		)}
 	/>
 );
+
+ScrollerNative.propTypes = /** @lends ui/Scroller.ScrollerNative.prototype */ {
+	/**
+	 * Direction of the scroller.
+	 *
+	 * Valid values are:
+	 * * `'both'`,
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'both'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+};
+
+ScrollerNative.defaultProps = {
+	direction: 'both'
+};
 
 export default Scroller;
 export {

@@ -84,6 +84,12 @@ class ScrollableBase extends Component {
 		 */
 		childRenderer: PropTypes.func.isRequired,
 
+		/**
+		 * This is set to `true` by SpotlightContainerDecorator
+		 *
+		 * @type {String}
+		 * @private
+		 */
 		'data-spotlight-container': PropTypes.bool,
 
 		/**
@@ -94,6 +100,20 @@ class ScrollableBase extends Component {
 		 * @private
 		 */
 		'data-spotlight-id': PropTypes.string,
+
+		/**
+		 * Direction of the list or the scroller.
+		 * `'both'` could be only used for[Scroller]{@link moonstone/Scroller.Scroller}.
+		 *
+		 * Valid values are:
+		 * * `'both'`,
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
 		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
@@ -188,7 +208,8 @@ class ScrollableBase extends Component {
 
 	onFocus = (ev) => {
 		const
-			{isDragging, animator, direction} = this.uiRef,
+			{direction} = this.props,
+			{animator, isDragging} = this.uiRef,
 			shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
 				this.childRef.shouldPreventScrollByFocus() :
 				false;
@@ -229,8 +250,8 @@ class ScrollableBase extends Component {
 
 	getPageDirection = (keyCode) => {
 		const
+			{direction} = this.props,
 			isRtl = this.uiRef.state.rtl,
-			{direction} = this.uiRef,
 			isVertical = (direction === 'vertical' || direction === 'both');
 
 		return isPageUp(keyCode) ?
@@ -464,8 +485,8 @@ class ScrollableBase extends Component {
 					componentCss,
 					handleScroll,
 					horizontalScrollbarProps,
-					initContainerRef,
-					initUiChildRef,
+					initChildRef: initUiChildRef,
+					initContainerRef: initUiContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
 					scrollTo,
@@ -477,7 +498,7 @@ class ScrollableBase extends Component {
 						className={className}
 						data-spotlight-container={spotlightContainer}
 						data-spotlight-id={spotlightId}
-						ref={initContainerRef}
+						ref={initUiContainerRef}
 						style={style}
 					>
 						<div className={componentCss.container}>
