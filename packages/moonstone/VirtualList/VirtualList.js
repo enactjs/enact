@@ -13,7 +13,7 @@
 import {gridListItemSizeShape} from '@enact/ui/VirtualList';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {Component} from 'react';
 
 import {SpottableVirtualList, SpottableVirtualListNative, VirtualListBase, VirtualListBaseNative} from './VirtualListBase';
 
@@ -185,13 +185,29 @@ const VirtualGridListNative = kind({
  * @ui
  * @public
  */
-const VirtualListEasy = kind({
-	name: 'VirtualListEasy',
+class VirtualListEasy extends Component {
+	static displayName = 'VirtualListEasy'
 
-	render: (props) => (
-		<VirtualList {...props} wrap />
-	)
-});
+	static propTypes = /** @lends moonstone/VirtualList.VirtualListEasy.prototype */ {
+		/**
+		 * When `true`, if the spotlight focus moves in wraparound manner to the other side,
+		 * it scrolles with an animation.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		wrapAnimated: PropTypes.bool
+	}
+
+	static defaultProps = {
+		wrapAnimated: false
+	}
+
+	render () {
+		return <VirtualList {...this.props} wrap />;
+	}
+}
 
 /**
  * A Moonstone-styled scrollable and spottable virtual grid list component for Easy TV.
@@ -202,14 +218,29 @@ const VirtualListEasy = kind({
  * @ui
  * @public
  */
-const VirtualGridListEasy = kind({
-	name: 'VirtualGridListEasy',
+class VirtualGridListEasy extends Component {
+	static displayName = 'VirtualGridListEasy'
 
-	render: (props) => (
-		<VirtualGridList {...props} wrap />
-	)
-});
+	static propTypes = /** @lends moonstone/VirtualList.VirtualGridListEasy.prototype */ {
+		/**
+		 * When `true`, if the spotlight focus moves in wraparound manner to the other side,
+		 * it scrolles with an animation.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		wrapAnimated: PropTypes.bool
+	}
 
+	static defaultProps = {
+		wrapAnimated: false
+	}
+
+	render () {
+		return <VirtualGridList {...this.props} wrap />;
+	}
+}
 
 /**
  * A Moonstone-styled scrollable and spottable virtual native list component for Easy TV.
@@ -223,13 +254,29 @@ const VirtualGridListEasy = kind({
  * @ui
  * @private
  */
-const VirtualListEasyNative = kind({
-	name: 'VirtualListEasyNative',
+class VirtualListEasyNative extends Component {
+	static displayName = 'VirtualListEasyNative'
 
-	render: (props) => (
-		<VirtualListNative {...props} wrap />
-	)
-});
+	static propTypes = /** @lends moonstone/VirtualList.VirtualListEasyNative.prototype */ {
+		/**
+		 * When `true`, if the spotlight focus moves in wraparound manner to the other side,
+		 * it scrolles with an animation.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		wrapAnimated: PropTypes.bool
+	}
+
+	static defaultProps = {
+		wrapAnimated: false
+	}
+
+	render () {
+		return <VirtualListNative {...this.props} wrap />;
+	}
+}
 
 /**
  * A Moonstone-styled scrollable and spottable virtual grid native list component for Easy TV.
@@ -243,13 +290,29 @@ const VirtualListEasyNative = kind({
  * @ui
  * @private
  */
-const VirtualGridListEasyNative = kind({
-	name: 'VirtualGridListEasyNative',
+class VirtualGridListEasyNative extends Component {
+	static displayName = 'VirtualGridListEasyNative'
 
-	render: (props) => (
-		<VirtualGridListNative {...props} wrap />
-	)
-});
+	static propTypes = /** @lends moonstone/VirtualList.VirtualGridListEasyNative.prototype */ {
+		/**
+		 * When `true`, if the spotlight focus moves in wraparound manner to the other side,
+		 * it scrolles with an animation.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		wrapAnimated: PropTypes.bool
+	}
+
+	static defaultProps = {
+		wrapAnimated: false
+	}
+
+	render () {
+		return <VirtualGridListNative {...this.props} wrap />;
+	}
+}
 
 export default VirtualList;
 export {
