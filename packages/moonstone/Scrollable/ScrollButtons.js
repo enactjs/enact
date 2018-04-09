@@ -192,22 +192,32 @@ class ScrollButtons extends Component {
 		return current === this.prevButtonNodeRef || current === this.nextButtonNodeRef;
 	}
 
+	handlePrevDown = () => {
+		const {vertical} = this.props;
+
+		if (this.announce) {
+			this.announce(vertical ? $L('UP') : $L('LEFT'));
+		}
+	}
+
+	handleNextDown = () => {
+		const {vertical} = this.props;
+
+		if (this.announce) {
+			this.announce(vertical ? $L('DOWN') : $L('RIGHT'));
+		}
+	}
+
 	handlePrevScroll = (ev) => {
 		const {onPrevScroll, vertical} = this.props;
 
 		onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
-		if (this.announce) {
-			this.announce(vertical ? $L('UP') : $L('LEFT'));
-		}
 	}
 
 	handleNextScroll = (ev) => {
 		const {onNextScroll, vertical} = this.props;
 
 		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
-		if (this.announce) {
-			this.announce(vertical ? $L('DOWN') : $L('RIGHT'));
-		}
 	}
 
 	handlePrevHoldPulse = (ev) => {
@@ -282,6 +292,7 @@ class ScrollButtons extends Component {
 				direction={vertical ? 'up' : 'left'}
 				disabled={disabled || prevButtonDisabled}
 				onClick={this.handlePrevScroll}
+				onDown={this.handlePrevDown}
 				onHoldPulse={this.handlePrevHoldPulse}
 				onKeyDown={this.depressButton}
 				onKeyUp={this.releaseButton}
@@ -298,6 +309,7 @@ class ScrollButtons extends Component {
 				direction={vertical ? 'down' : 'right'}
 				disabled={disabled || nextButtonDisabled}
 				onClick={this.handleNextScroll}
+				onDown={this.handleNextDown}
 				onHoldPulse={this.handleNextHoldPulse}
 				onKeyDown={this.depressButton}
 				onKeyUp={this.releaseButton}
