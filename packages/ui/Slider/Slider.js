@@ -15,11 +15,10 @@ import Touchable from '../Touchable';
 import Bar from './Bar';
 import Knob from './Knob';
 import PositionDecorator from './PositionDecorator';
-import {
-	calcPercent
-} from './utils';
 
 import componentCss from './Slider.less';
+
+import {calcPercent} from './utils';
 
 const SliderBase = kind({
 	name: 'Slider',
@@ -132,10 +131,10 @@ const SliderBase = kind({
 		 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
 		 * properties.
 		 *
-		 * @type {Component}
+		 * @type {Component|Element}
 		 * @public
 		 */
-		tooltipComponent: PropTypes.func,
+		tooltipComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 
 		/**
 		 * The value of the slider.
@@ -148,8 +147,6 @@ const SliderBase = kind({
 	},
 
 	defaultProps: {
-		activateOnFocus: false,
-		active: false,
 		disabled: false,
 		knobComponent: Knob,
 		min: 0,
@@ -175,24 +172,16 @@ const SliderBase = kind({
 				}
 			);
 		},
-		x: ({max, min, orientation, value}) => {
-			if (orientation === 'horizontal') {
-				return calcPercent(min, max, value);
-			}
-		},
-		y: ({max, min, orientation, value}) => {
-			if (orientation === 'vertical') {
-				return calcPercent(min, max, value);
-			}
-		}
+		percent: ({max, min, value}) => calcPercent(min, max, value)
 	},
 
-	render: ({backgroundProgress, css, disabled, knobComponent, orientation, tooltipComponent, value, x, y, ...rest}) => {
+	render: ({backgroundProgress, css, disabled, knobComponent, orientation, percent, tooltipComponent, value, ...rest}) => {
+		delete rest.knobStep;
 		delete rest.max;
 		delete rest.min;
+		delete rest.noFill;
 		delete rest.pressed;
-
-		const percent = orientation === 'horizontal' ? x : y;
+		delete rest.step;
 
 		return (
 			<div {...rest} disabled={disabled}>
@@ -204,17 +193,11 @@ const SliderBase = kind({
 					className={css.knob}
 					component={knobComponent}
 					disabled={disabled}
-					x={x}
-					y={y}
-				>
-					<ComponentOverride
-						component={tooltipComponent}
-						orientation={orientation}
-						proportion={percent}
-					>
-						{value}
-					</ComponentOverride>
-				</ComponentOverride>
+					orientation={orientation}
+					proportion={percent}
+					tooltipComponent={tooltipComponent}
+					value={value}
+				/>
 			</div>
 		);
 	}
@@ -229,6 +212,8 @@ const Slider = SliderDecorator(SliderBase);
 
 export default Slider;
 export {
+	Bar,
+	Knob,
 	Slider,
 	SliderBase,
 	SliderDecorator

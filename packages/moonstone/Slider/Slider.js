@@ -4,7 +4,7 @@
  * @module moonstone/Slider
  */
 
-import {forKey, forProp, forward, forwardWithPrevent, handle} from '@enact/core/handle';
+import {adjustEvent, forKey, forProp, forward, forwardWithPrevent, handle, oneOf, returnsTrue} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Changeable from '@enact/ui/Changeable';
 import Spottable from '@enact/spotlight/Spottable';
@@ -25,6 +25,30 @@ import {
 } from './utils';
 
 import componentCss from './Slider.less';
+
+const either = (a, b) => (...args) => a(...args) || b(...args);
+const atMinimum = (ev, {min, value}) => value <= min;
+const atMaximum = (ev, {max, value}) => value >= max;
+const forwardOnlyType = (type) => adjustEvent(() => ({type}), forward);
+
+const forwardSpotlightEvents = returnsTrue(oneOf(
+	[forKey('left'), handle(
+		either(forProp('orientation', 'vertical'), atMinimum),
+		forwardOnlyType('onSpotlightLeft')
+	)],
+	[forKey('right'), handle(
+		either(forProp('orientation', 'vertical'), atMaximum),
+		forwardOnlyType('onSpotlightRight')
+	)],
+	[forKey('down'), handle(
+		either(forProp('orientation', 'horizontal'), atMinimum),
+		forwardOnlyType('onSpotlightDown')
+	)],
+	[forKey('up'), handle(
+		either(forProp('orientation', 'horizontal'), atMaximum),
+		forwardOnlyType('onSpotlightUp')
+	)],
+));
 
 /* ***************************************************
 
@@ -176,10 +200,10 @@ const SliderBase = kind({
 		 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
 		 * properties.
 		 *
-		 * @type {Boolean}
+		 * @type {Boolean|Element|Function}
 		 * @public
 		 */
-		tooltip: PropTypes.bool,
+		tooltip: PropTypes.oneOfType([PropTypes.bool, PropTypes.object, PropTypes.func]),
 
 		/**
 		 * The value of the slider.
@@ -200,7 +224,7 @@ const SliderBase = kind({
 	styles: {
 		css: componentCss,
 		className: 'slider',
-		publicClassNames: ['slider']
+		publicClassNames: true
 	},
 
 	handlers: {
@@ -211,6 +235,7 @@ const SliderBase = kind({
 		),
 		onKeyDown: handle(
 			forwardWithPrevent('onKeyDown'),
+			forwardSpotlightEvents,
 			anyPass([
 				handleIncrement,
 				handleDecrement
@@ -230,23 +255,30 @@ const SliderBase = kind({
 			active
 		}),
 		tooltipComponent: ({focused, tooltip}) => {
-			if (!focused) return null;
-			if (tooltip === true) return ProgressBarTooltip;
+			if (tooltip === true) {
+				return (
+					<ProgressBarTooltip
+						visible={focused}
+					/>
+				);
+			}
 
 			return tooltip;
 		}
 	},
 
-	render: (props) => {
-		delete props.activateOnFocus;
-		delete props.active;
-		delete props.focused;
-		delete props.tooltip;
+	render: ({css, knob, ...rest}) => {
+		delete rest.activateOnFocus;
+		delete rest.active;
+		delete rest.focused;
+		delete rest.onActivate;
+		delete rest.tooltip;
 
 		return (
 			<UiSlider
-				{...props}
-				css={props.css}
+				{...rest}
+				css={css}
+				knobComponent={knob}
 			/>
 		);
 	}

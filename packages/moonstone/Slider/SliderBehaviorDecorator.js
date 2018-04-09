@@ -54,6 +54,7 @@ const SliderBehaviorDecorator = hoc((config, Wrapped) => {
 			this.handleFocus = this.handleFocus.bind(this);
 			this.bounds = {};
 
+
 			this.state = {
 				active: false,
 				focused: false,

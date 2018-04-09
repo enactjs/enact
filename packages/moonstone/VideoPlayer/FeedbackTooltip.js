@@ -9,6 +9,7 @@ import Skinnable from '../Skinnable';
 
 import FeedbackContent from './FeedbackContent';
 import states from './FeedbackIcons.js';
+import {secondsToTime} from './util';
 
 import css from './FeedbackTooltip.less';
 
@@ -113,6 +114,9 @@ const FeedbackTooltipBase = kind({
 	},
 
 	computed: {
+		children: ({children, duration, formatter}) => {
+			return secondsToTime(children * duration, formatter);
+		},
 		className: ({playbackState: s, thumbnailDeactivated, styler, visible}) => styler.append({
 			hidden: !visible && states[s] && states[s].allowHide,
 			thumbnailDeactivated
@@ -138,9 +142,12 @@ const FeedbackTooltipBase = kind({
 	},
 
 	render: ({children, noFeedback, playbackState, playbackRate, thumbnailComponent, ...rest}) => {
-		delete rest.visible;
+		delete rest.duration;
+		delete rest.formatter;
 		delete rest.thumbnailDeactivated;
 		delete rest.thumbnailSrc;
+		delete rest.visible;
+
 		return (
 			<div {...rest}>
 				{thumbnailComponent}
@@ -164,6 +171,8 @@ const FeedbackTooltip = onlyUpdateForKeys(
 		FeedbackTooltipBase
 	)
 );
+
+FeedbackTooltip.defaultSlot = 'tooltip';
 
 export default FeedbackTooltip;
 export {

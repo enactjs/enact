@@ -2,35 +2,50 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import ComponentOverride from '../ComponentOverride';
+
 const Knob = kind({
 	name: 'Knob',
 
 	propTypes: {
-		x: PropTypes.number,
-		y: PropTypes.number
-	},
-
-	defaultProps: {
-		x: 0,
-		y: 1
+		orientation: PropTypes.string,
+		proportion: PropTypes.number,
+		tooltipComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+		value: PropTypes.number
 	},
 
 	computed: {
-		style: ({style, x, y}) => ({
-			...style,
-			'--ui-slider-knob-x': x,
-			'--ui-slider-knob-y': 1 - y
-		})
+		style: ({orientation, proportion, style}) => {
+			let x = 0;
+			let y = 1;
+
+			if (orientation === 'horizontal') {
+				x = proportion;
+			} else if (orientation === 'vertical') {
+				y = proportion;
+			}
+
+			return {
+				...style,
+				'--ui-slider-knob-x': x,
+				'--ui-slider-knob-y': 1 - y
+			};
+		}
 	},
 
-	render: (props) => {
-		delete props.percentX;
-		delete props.percentY;
-		delete props.x;
-		delete props.y;
+	render: ({orientation, proportion, tooltipComponent, value, ...rest}) => {
+		delete rest.orientation;
 
 		return (
-			<div {...props} />
+			<div {...rest}>
+				<ComponentOverride
+					component={tooltipComponent}
+					orientation={orientation}
+					proportion={proportion}
+				>
+					{value}
+				</ComponentOverride>
+			</div>
 		);
 	}
 });

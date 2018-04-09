@@ -451,8 +451,15 @@ const log = handle.log = curry((message, ev, ...args) => {
 	return true;
 });
 
+const adjustEvent = handle.adjustEvent = curry(function (middleware, handler) {
+	return function (ev, ...args) {
+		return handler(middleware(ev, ...args), ...args);
+	};
+});
+
 export default handle;
 export {
+	adjustEvent,
 	callOnEvent,
 	forward,
 	forwardWithPrevent,

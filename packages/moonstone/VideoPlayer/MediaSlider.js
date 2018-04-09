@@ -1,7 +1,9 @@
 import kind from '@enact/core/kind';
-import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
+import {adjustEvent, handle, forKey, forward, oneOf, preventDefault} from '@enact/core/handle';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Knob} from '@enact/ui/Slider';
+import {calcPercent} from '@enact/ui/Slider/utils';
 
 import Slider from '../Slider';
 
@@ -103,7 +105,6 @@ const MediaSliderBase = kind({
 					aria-hidden="true"
 					className={sliderClassName}
 					css={css}
-					detachedKnob
 					knobStep={0.05}
 					max={1}
 					min={0}
@@ -114,7 +115,178 @@ const MediaSliderBase = kind({
 	}
 });
 
-const MediaSlider = onlyUpdateForKeys(['backgroundProgress', 'children', 'forcePressed', 'value', 'visible'])(MediaSliderBase);
+const MediaKnob = kind({
+	name: 'MediaKnob',
+
+	propTypes: {
+		proportion: PropTypes.number,
+		tracking: PropTypes.bool,
+		trackX: PropTypes.number,
+		value: PropTypes.number
+	},
+
+	render: ({proportion, tracking, trackX, value, ...rest}) => {
+		if (tracking) {
+			proportion = value = trackX;
+		}
+
+		return (
+			<Knob
+				{...rest}
+				value={value}
+				proportion={proportion}
+			/>
+		);
+	}
+});
+
+const decrement = (state) => {
+	if (state.tracking && state.x > 0) {
+		const x = Math.max(0, state.x - 0.05);
+
+		return {x};
+	}
+
+	return null;
+};
+
+const increment = (state) => {
+	if (state.tracking && state.x < 1) {
+		const x = Math.min(1, state.x + 0.05);
+
+		return {x};
+	}
+
+	return null;
+};
+
+const MediaSliderDecorator = (Wrapped) => class extends React.Component {
+	static displayName = 'MediaSliderDecorator'
+
+	static propTypes = {
+		value: PropTypes.number
+	}
+
+	constructor () {
+		super();
+
+		this.handleMouseEnter = this.handleMouseEnter.bind(this);
+		this.handleMouseLeave = this.handleMouseLeave.bind(this);
+		this.handleMouseMove = this.handleMouseMove.bind(this);
+
+		this.state = {
+			maxX: 0,
+			minX: 0,
+			tracking: false,
+			x: 0
+		};
+	}
+
+	getEventPayload = () => ({
+		value: this.state.x,
+		proportion: this.state.x
+	})
+
+	track (target) {
+		const bounds = target.getBoundingClientRect();
+
+		this.setState({
+			maxX: bounds.right,
+			minX: bounds.left,
+			tracking: true,
+			x: this.props.value
+		});
+	}
+
+	move (clientX) {
+		this.setState((state) => {
+			if (clientX >= state.minX && clientX <= state.maxX) {
+				return {
+					x: calcPercent(state.minX, state.maxX, clientX)
+				};
+			}
+		});
+	}
+
+	untrack () {
+		this.setState({
+			maxX: 0,
+			minX: 0,
+			tracking: false
+		});
+	}
+
+	handle = handle.bind(this)
+
+	handleBlur = this.handle(
+		forward('onBlur'),
+		() =>  this.untrack()
+	)
+
+	handleFocus = this.handle(
+		forward('onFocus'),
+		(ev) =>  this.track(ev.target)
+	)
+
+	handleLeft = this.handle(
+		() => this.state.tracking,
+		preventDefault,
+		adjustEvent(this.getEventPayload, forward('onKnobMove')),
+		() => this.setState(decrement)
+	)
+
+	handleRight = this.handle(
+		() => this.state.tracking,
+		preventDefault,
+		adjustEvent(this.getEventPayload, forward('onKnobMove')),
+		() => this.setState(increment)
+	)
+
+	handleKeyUp = this.handle(
+		forward('onKeyUp'),
+		() => this.state.tracking,
+		forKey('enter'),
+		adjustEvent(this.getEventPayload, forward('onChange'))
+	)
+
+	handleMouseEnter (ev) {
+		this.track(ev.currentTarget);
+		this.move(ev.clientX);
+	}
+
+	handleMouseLeave () {
+		this.untrack();
+	}
+
+	handleMouseMove (ev) {
+		this.move(ev.clientX);
+	}
+
+	render () {
+		const props = Object.assign({}, this.props);
+
+		delete props.onKnobMove;
+
+		return (
+			<Wrapped
+				{...props}
+				onBlur={this.handleBlur}
+				onFocus={this.handleFocus}
+				onSpotlightLeft={this.handleLeft}
+				onSpotlightRight={this.handleRight}
+				onKeyUp={this.handleKeyUp}
+				onMouseEnter={this.handleMouseEnter}
+				onMouseLeave={this.handleMouseLeave}
+				onMouseMove={this.handleMouseMove}
+				knob={
+					<MediaKnob tracking={this.state.tracking} trackX={this.state.x} />
+				}
+			/>
+		);
+	}
+};
+
+const MediaSlider = MediaSliderDecorator(MediaSliderBase);
 
 export default MediaSlider;
 export {

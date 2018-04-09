@@ -38,7 +38,8 @@ const isDecrement = ({keyCode}, {orientation}) => {
 
 const handleChange = (direction) => (ev, {knobStep, max, min, onChange, step, value}) => {
 	onChange({
-		value: clamp(min, max, value + (calcStep(knobStep, step) * direction))
+		value: clamp(min, max, value + (calcStep(knobStep, step) * direction)),
+		proportion: calcPercent(min, max, value)
 	});
 
 	return true;

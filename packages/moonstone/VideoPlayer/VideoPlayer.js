@@ -1694,8 +1694,7 @@ const VideoPlayerBase = class extends React.Component {
 		Spotlight.setPointerMode(false);
 
 		if (this.focusDefaultMediaControl()) {
-			ev.preventDefault();
-			ev.stopPropagation();
+			ev.nativeEvent.stopImmediatePropagation();
 		}
 	}
 
@@ -1734,7 +1733,7 @@ const VideoPlayerBase = class extends React.Component {
 	sliderTooltipTimeJob = new Job((time) => this.setState({sliderTooltipTime: time}), 20)
 
 	handleKnobMove = (ev) => {
-		this.sliderScrubbing = ev.detached;
+		this.sliderScrubbing = true;
 
 		// prevent announcing repeatedly when the knob is detached from the progress.
 		// TODO: fix Slider to not send onKnobMove when the knob hasn't, in fact, moved
@@ -1742,7 +1741,7 @@ const VideoPlayerBase = class extends React.Component {
 			this.sliderKnobProportion = ev.proportion;
 			const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
 
-			if (this.sliderScrubbing && !isNaN(seconds)) {
+			if (!isNaN(seconds)) {
 				this.sliderTooltipTimeJob.throttle(seconds);
 				const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
 
@@ -2043,6 +2042,8 @@ const VideoPlayerBase = class extends React.Component {
 								visible={this.state.mediaSliderVisible}
 							>
 								<FeedbackTooltip
+									duration={this.state.duration}
+									formatter={this.durfmt}
 									noFeedback={!this.state.feedbackIconVisible}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
 									playbackState={this.prevCommand}
@@ -2050,9 +2051,7 @@ const VideoPlayerBase = class extends React.Component {
 									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
 									visible={this.state.feedbackVisible}
-								>
-									{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
-								</FeedbackTooltip>
+								/>
 							</MediaSlider>}
 
 							<MediaControls
