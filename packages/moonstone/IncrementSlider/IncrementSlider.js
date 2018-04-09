@@ -128,6 +128,15 @@ const IncrementSliderBase = kind({
 		decrementIcon: PropTypes.string,
 
 		/**
+		* Sets the voice control string to decrement button.
+		*
+		* @default 'decrement'
+		* @type {String}
+		* @public
+		*/
+		decrementVoiceLabel: PropTypes.string,
+
+		/**
 		 * The slider can change its behavior to have the knob follow the cursor as it moves
 		 * across the slider, without applying the position. A click or drag behaves the same.
 		 * This is primarily used by media playback. Setting this to `true` enables this behavior.
@@ -178,6 +187,15 @@ const IncrementSliderBase = kind({
 		 * @public
 		 */
 		incrementIcon: PropTypes.string,
+
+		/**
+		* Sets the voice control string to increment button.
+		*
+		* @default 'increment'
+		* @type {String}
+		* @public
+		*/
+		incrementVoiceLabel: PropTypes.string,
 
 		/**
 		 * The method to run when the input mounts, giving a reference to the DOM.
@@ -430,6 +448,8 @@ const IncrementSliderBase = kind({
 
 	defaultProps: {
 		backgroundProgress: 0,
+		incrementVoiceLabel: $L('increment'), // need to translation
+		decrementVoiceLabel: $L('decrement'), // need to translation
 		knobAfterMidpoint: false,
 		max: 100,
 		min: 0,
@@ -538,6 +558,7 @@ const IncrementSliderBase = kind({
 		decrementAriaLabel,
 		decrementDisabled,
 		decrementIcon,
+		decrementVoiceLabel,
 		detachedKnob,
 		disabled,
 		focused,
@@ -549,6 +570,7 @@ const IncrementSliderBase = kind({
 		incrementDisabled,
 		incrementIcon,
 		incrementSliderClasses,
+		incrementVoiceLabel,
 		inputRef,
 		knobAfterMidpoint,
 		max,
@@ -592,6 +614,7 @@ const IncrementSliderBase = kind({
 					onKeyDown={handleDecrementKeyDown}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
+					webos-voice-label={decrementVoiceLabel}
 				>
 					{decrementIcon}
 				</IncrementSliderButton>
@@ -640,6 +663,7 @@ const IncrementSliderBase = kind({
 					onKeyDown={handleIncrementKeyDown}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
+					webos-voice-label={incrementVoiceLabel}
 				>
 					{incrementIcon}
 				</IncrementSliderButton>
