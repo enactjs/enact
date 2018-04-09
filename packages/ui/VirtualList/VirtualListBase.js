@@ -223,7 +223,7 @@ const VirtualListBaseFactory = (type) => {
 		// Calling setState within componentWillReceivePropswill not trigger an additional render.
 		componentWillReceiveProps (nextProps) {
 			const
-				{dataSize, direction, itemSize, overhang, spacing} = this.props,
+				{dataSize, direction, itemSize, overhang, rtl, spacing} = this.props,
 				hasMetricsChanged = (
 					direction !== nextProps.direction ||
 					((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
@@ -240,6 +240,8 @@ const VirtualListBaseFactory = (type) => {
 			} else if (this.hasDataSizeChanged) {
 				this.updateStatesAndBounds(nextProps);
 				this.setContainerSize();
+			} else if (rtl !== nextProps.rtl) {
+				this.cc = [];
 			}
 		}
 
