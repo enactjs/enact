@@ -522,6 +522,23 @@ const VideoPlayerBase = class extends React.Component {
 		playIcon: PropTypes.string,
 
 		/**
+		 * Play the preloaded source.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		playPreloadSource: PropTypes.bool,
+
+		/**
+		 * The video source to be preloaded. Expects a `<source>` node.
+		 *
+		 * @type {String|Node}
+		 * @public
+		 */
+		preloadSource:  PropTypes.node,
+
+		/**
 		 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
 		 *
 		 * @type {Boolean}
@@ -727,7 +744,18 @@ const VideoPlayerBase = class extends React.Component {
 			props.setApiProvider(this);
 		}
 
-		this.isCurrentVideoSource = true;
+		this.inactiveVideoProgress = 0;
+		this.inactiveCurrentTime = 0;
+		this.inactiveSliderTooltipTime = 0;
+		this.inactiveProportionLoaded = 0;
+		this.inactiveDuration = 0;
+		this.inactivePlaybackState = {
+			currentTime: 0,
+			duration: 0,
+			proportionLoaded: 0,
+			proportionPlayed: 0,
+			sliderTooltipTime: 0
+		};
 	}
 
 	componentDidMount () {
@@ -757,18 +785,29 @@ const VideoPlayerBase = class extends React.Component {
 			this.calculateMaxComponentCount(leftCount, rightCount, childrenCount);
 		}
 
-		const {source} = this.props;
-		const {source: nextSource} = nextProps;
-
-
-		if (compareSources(this.props.preloadSource, nextSource)) {
-			this.isCurrentVideoSource = !this.isCurrentVideoSource;
-		}
+		const {source, playPreloadSource} = this.props;
+		const {source: nextSource, playPreloadSource: nextPlayPreloadSource} = nextProps;
 
 		if (!compareSources(source, nextSource)) {
 			this.firstPlayReadFlag = true;
 			this.setState({currentTime: 0, proportionPlayed: 0, proportionLoaded: 0});
 			this.reloadVideo();
+		}
+
+		// To show the correct playback data when switching sources, set state with the cached playback state.
+		// Then cache the current playback state.
+		if (playPreloadSource !== nextPlayPreloadSource) {
+			this.pause();
+			this.setState({paused: true, ...this.inactivePlaybackState});
+			this.showControls();
+
+			this.inactivePlaybackState = {
+				currentTime: this.state.currentTime,
+				duration: this.state.duration,
+				proportionLoaded: this.state.proportionLoaded,
+				proportionPlayed: this.state.proportionPlayed,
+				sliderTooltipTime: this.state.sliderTooltipTime
+			};
 		}
 	}
 
@@ -1908,6 +1947,7 @@ const VideoPlayerBase = class extends React.Component {
 			noSpinner,
 			pauseIcon,
 			playIcon,
+			playPreloadSource,
 			preloadSource,
 			rateButtonsDisabled,
 			rightComponents,
@@ -1970,8 +2010,8 @@ const VideoPlayerBase = class extends React.Component {
 			preload: 'auto'
 		};
 
-		const sourceProps = this.isCurrentVideoSource ? playingProps : loadingProps;
-		const preloadProps = this.isCurrentVideoSource ? loadingProps : playingProps;
+		const sourceProps = playPreloadSource ? playingProps : loadingProps;
+		const preloadProps = playPreloadSource ? loadingProps : playingProps;
 
 		return (
 			<RootContainer
