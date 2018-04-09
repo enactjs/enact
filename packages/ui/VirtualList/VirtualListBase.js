@@ -795,7 +795,7 @@ const ScrollableVirtualList = (props) => (
 			<VirtualListBase
 				{...rest}
 				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
+					cc.length ? <div ref={initItemContainerRef} role="list">{cc}</div> : null
 				)}
 				ref={initChildRef}
 			/>
@@ -829,7 +829,7 @@ const ScrollableVirtualListNative = (props) => (
 			<VirtualListBaseNative
 				{...rest}
 				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
+					cc.length ? <div ref={initItemContainerRef} role="list">{cc}</div> : null
 				)}
 				ref={initChildRef}
 			/>
