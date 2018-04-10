@@ -24,6 +24,7 @@ const MediaTitleBase = kind({
 		 * in the forms `${id}_title` and `${id}_info`, respectively.
 		 *
 		 * @type {String}
+		 * @required
 		 * @public
 		 */
 		id: PropTypes.string.isRequired,

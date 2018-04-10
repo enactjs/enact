@@ -42,6 +42,7 @@ const Spinner = kind({
 		 * changes the rendering tree and where this is used.
 		 *
 		 * @type {Component}
+		 * @required
 		 * @public
 		 */
 		component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,

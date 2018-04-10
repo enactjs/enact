@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` `role="list"`
+
 ### Changed
 
 - `ui/Transition` property `children` to not be required
@@ -13,7 +17,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Removed
 
-- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `data`
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `data` to eliminate the misunderstanding caused by the ambiguity of `data`
 
 ### Fixed
 
