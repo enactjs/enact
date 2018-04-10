@@ -24,8 +24,10 @@
 	&.open {
 		.labeledItem {
 			&.auto {
-				.label {
-					display: none;
+				&:not([disabled]) {
+					.label {
+						display: none;
+					}
 				}
 			}
 
