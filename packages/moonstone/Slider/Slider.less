@@ -2,6 +2,7 @@
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
 .slider {
 	position: relative;
@@ -52,7 +53,7 @@
 				height: @moon-slider-knob-height-large;
 				width: @moon-slider-knob-width-large;
 				border-radius: (@moon-slider-knob-height-large / 2);
-			})
+			});
 		}
 	}
 
@@ -83,7 +84,7 @@
 		.moon-custom-text({
 			@h-gap-large: (@moon-slider-knob-width-large / 2);
 			padding: ((@moon-slider-knob-height-large - @moon-slider-bar-height) / 2) @h-gap-large;
-		})
+		});
 	}
 
 	&.vertical {
@@ -113,7 +114,7 @@
 		.moon-custom-text({
 			@v-gap-large: (@moon-slider-knob-width / 2);
 			padding: @v-gap-large ((@moon-slider-knob-height-large - @moon-slider-bar-height) / 2);
-		})
+		});
 	}
 
 	.spottable({
@@ -131,11 +132,11 @@
 				transform: @moon-translate-center scale(1);
 			}
 		}
-	})
+	});
 
 	.applySkins({
 		.bars {
-			&:before {
+			&::before {
 				background-color: @moon-progress-bar-bg-color;
 			}
 		}
@@ -175,7 +176,7 @@
 					}
 				}
 			}
-		})
+		});
 
 		&.noFill {
 			.fill {
@@ -191,7 +192,7 @@
 				}
 			});
 		}
-	})
+	});
 }
 
 .muted({
@@ -203,7 +204,7 @@
 						background-color: @moon-slider-knob-bg-color;
 					}
 				}
-			}
-		})
+			});
+		});
 	}
-})
+});
