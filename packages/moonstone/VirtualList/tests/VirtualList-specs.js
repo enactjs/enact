@@ -124,6 +124,44 @@ describe('VirtualList', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it('should set "aria-label" to previous scroll button', function () {
+		const label = 'custom button aria label';
+		const subject = mount(
+			<VirtualList
+				clientSize={clientSize}
+				dataSize={dataSize}
+				direction="horizontal"
+				itemRenderer={renderItem}
+				itemSize={30}
+				verticalScrollbarPreviousButtonAriaLabel={label}
+			/>
+		);
+
+		const expected = label;
+		const actual = subject.find('ScrollButton').first().prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "aria-label" to next scroll button', function () {
+		const label = 'custom button aria label';
+		const subject = mount(
+			<VirtualList
+				clientSize={clientSize}
+				dataSize={dataSize}
+				direction="horizontal"
+				itemRenderer={renderItem}
+				itemSize={30}
+				verticalScrollbarNextButtonAriaLabel={label}
+			/>
+		);
+
+		const expected = label;
+		const actual = subject.find('ScrollButton').last().prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
 	describe('ScrollTo', () => {
 		it('should scroll to the specific item of a given index with scrollTo', () => {
 			mount(

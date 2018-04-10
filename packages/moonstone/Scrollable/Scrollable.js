@@ -15,6 +15,8 @@ import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Touchable from '@enact/ui/Touchable';
 
+import $L from '../internal/$L';
+
 import Scrollbar from './Scrollbar';
 
 import scrollbarCss from './Scrollbar.less';
@@ -114,11 +116,51 @@ class Scrollable extends Component {
 		 * @default false
 		 * @public
 		 */
-		focusableScrollbar: PropTypes.bool
+		focusableScrollbar: PropTypes.bool,
+
+		/**
+		* Sets the hint string read when focusing the next button in the horizontal scroll bar.
+		*
+		* @type {String}
+		* @default 'scroll right'
+		* @public
+		*/
+		horizontalScrollbarNextButtonAriaLabel: PropTypes.string,
+
+		/**
+		* Sets the hint string read when focusing the previous button in the horizontal scroll bar.
+		*
+		* @type {String}
+		* @default 'scroll left'
+		* @public
+		*/
+		horizontalScrollbarPreviousButtonAriaLabel: PropTypes.string,
+
+		/**
+		* Sets the hint string read when focusing the next button in the vertical scroll bar.
+		*
+		* @type {String}
+		* @default 'scroll down'
+		* @public
+		*/
+		verticalScrollbarNextButtonAriaLabel: PropTypes.string,
+
+		/**
+		* Sets the hint string read when focusing the previous button in the vertical scroll bar.
+		*
+		* @type {String}
+		* @default 'scroll up'
+		* @public
+		*/
+		verticalScrollbarPreviousButtonAriaLabel: PropTypes.string
 	}
 
 	static defaultProps = {
-		focusableScrollbar: false
+		focusableScrollbar: false,
+		horizontalScrollbarNextButtonAriaLabel: $L('scroll right'),
+		horizontalScrollbarPreviousButtonAriaLabel: $L('scroll left'),
+		verticalScrollbarNextButtonAriaLabel: $L('scroll down'),
+		verticalScrollbarPreviousButtonAriaLabel: $L('scroll up')
 	}
 
 	constructor (props) {
@@ -449,7 +491,24 @@ class Scrollable extends Component {
 	}
 
 	render () {
-		const {focusableScrollbar, childRenderer, ...rest} = this.props;
+		const
+			{
+				focusableScrollbar,
+				childRenderer,
+				horizontalScrollbarNextButtonAriaLabel,
+				horizontalScrollbarPreviousButtonAriaLabel,
+				verticalScrollbarNextButtonAriaLabel,
+				verticalScrollbarPreviousButtonAriaLabel,
+				...rest
+			} = this.props,
+			horizontalScrollbarA11yProps = {
+				nextButtonAriaLabel: horizontalScrollbarNextButtonAriaLabel,
+				previousButtonAriaLabel: horizontalScrollbarPreviousButtonAriaLabel
+			},
+			verticalScrollbarA11yProps = {
+				nextButtonAriaLabel: verticalScrollbarNextButtonAriaLabel,
+				previousButtonAriaLabel: verticalScrollbarPreviousButtonAriaLabel
+			};
 
 		return (
 			<UiScrollableBase
@@ -494,9 +553,26 @@ class Scrollable extends Component {
 									ref: this.initChildRef
 								})}
 							</TouchableDiv>
-							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
+							{isVerticalScrollbarVisible ?
+								<Scrollbar
+									{...verticalScrollbarProps}
+									{...verticalScrollbarA11yProps}
+									{...this.scrollbarProps}
+									disabled={!isVerticalScrollbarVisible}
+								/> :
+								null
+							}
 						</div>
-						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} {...this.scrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
+						{isHorizontalScrollbarVisible ?
+							<Scrollbar
+								{...horizontalScrollbarProps}
+								{...horizontalScrollbarA11yProps}
+								{...this.scrollbarProps}
+								corner={isVerticalScrollbarVisible}
+								disabled={!isHorizontalScrollbarVisible}
+							/> :
+							null
+						}
 					</ScrollableSpotlightContainer>
 				)}
 			/>
