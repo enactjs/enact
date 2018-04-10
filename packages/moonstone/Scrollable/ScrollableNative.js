@@ -560,8 +560,8 @@ class ScrollableBaseNative extends Component {
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
 									initUiChildRef,
-									ref: this.initChildRef
-									spotlightId,
+									ref: this.initChildRef,
+									spotlightId
 								})}
 							</TouchableDiv>
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}

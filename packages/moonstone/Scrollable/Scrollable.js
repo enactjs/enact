@@ -509,8 +509,8 @@ class ScrollableBase extends Component {
 									className: componentCss.scrollableFill,
 									initUiChildRef,
 									onScroll: handleScroll,
-									ref: this.initChildRef
-									spotlightId,
+									ref: this.initChildRef,
+									spotlightId
 								})}
 							</TouchableDiv>
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
