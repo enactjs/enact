@@ -328,6 +328,14 @@ class MediaControls extends React.Component {
 		) {
 			this.calculateMaxComponentCount(leftCount, rightCount, childrenCount);
 		}
+
+		if (this.props.visible && !nextProps.visible) {
+			this.setState(() => {
+				return {
+					showMoreComponents: false
+				};
+			});
+		}
 	}
 
 	componentDidUpdate (prevProps, prevState) {
