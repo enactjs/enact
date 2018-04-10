@@ -142,14 +142,6 @@ class MediaControls extends React.Component {
 		moreButtonLabel: PropTypes.string,
 
 		/**
-		 * `true` disables more components when they are not in view.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		moreDisabled: PropTypes.bool,
-
-		/**
 		 * Removes the "jump" buttons. The buttons that skip forward or backward in the video.
 		 *
 		 * @type {Boolean}
@@ -386,7 +378,6 @@ class MediaControls extends React.Component {
 			mediaDisabled,
 			moreButtonColor,
 			moreButtonDisabled,
-			moreDisabled,
 			noJumpButtons,
 			noRateButtons,
 			onBackwardButtonClick,
@@ -425,14 +416,14 @@ class MediaControls extends React.Component {
 				<div className={css.leftComponents}>{leftComponents}</div>
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
-						<Container className={css.mediaControls} spotlightDisabled={!moreDisabled || spotlightDisabled}>
+						<Container className={css.mediaControls} spotlightDisabled={this.state.showMoreComponents || spotlightDisabled}>
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpBackwardIcon}</MediaButton>}
 							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{backwardIcon}</MediaButton>}
 							<MediaButton aria-label={paused ? $L('Play') : $L('Pause')} className={spotlightDefaultClass} backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{paused ? playIcon : pauseIcon}</MediaButton>
 							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onForwardButtonClick} spotlightDisabled={spotlightDisabled}>{forwardIcon}</MediaButton>}
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpForwardIcon}</MediaButton>}
 						</Container>
-						<Container className={css.moreControls} spotlightDisabled={moreDisabled || spotlightDisabled}>
+						<Container className={css.moreControls} spotlightDisabled={!this.state.showMoreComponents || spotlightDisabled}>
 							{children}
 						</Container>
 					</div>

@@ -1787,6 +1787,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.initialJumpDelay;
 		delete rest.jumpBy;
 		delete rest.jumpDelay;
+		delete rest.moreButtonColor;
 		delete rest.miniFeedbackHideDelay;
 		delete rest.no5WayJump;
 		delete rest.onBackwardButtonClick;
@@ -1806,8 +1807,6 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.tooltipHideDelay;
 		delete rest.videoPath;
 
-		// Handle some cases when the "more" button is pressed
-		const moreDisabled = !(this.state.more);
 		const controlsAriaProps = this.getControlsAriaProps();
 
 		return (
@@ -1906,7 +1905,6 @@ const VideoPlayerBase = class extends React.Component {
 							<MediaControls
 								leftComponents={leftComponents}
 								mediaDisabled={disabled || this.state.mediaControlsDisabled}
-								moreDisabled={moreDisabled}
 								noRateButtons={noRateButtons}
 								onBackwardButtonClick={this.onBackward}
 								onClick={this.resetAutoTimeout}
