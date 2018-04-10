@@ -36,14 +36,13 @@ const isDecrement = ({keyCode}, {orientation}) => {
 	return orientation === 'vertical' ? is('down', keyCode) : is('left', keyCode);
 };
 
-const handleChange = (direction) => (ev, {knobStep, max, min, onChange, step, value}) => {
-	onChange({
+const handleChange = (direction) => adjustEvent(
+	(ev, {knobStep, max, min, step, value}) => ({
 		value: clamp(min, max, value + (calcStep(knobStep, step) * direction)),
 		proportion: calcPercent(min, max, value)
-	});
-
-	return true;
-};
+	}),
+	forward('onChange')
+);
 
 const isActive = (ev, props) => {
 	return props.active || props.activateOnFocus || props.detachedKnob;

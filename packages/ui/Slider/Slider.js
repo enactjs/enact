@@ -50,7 +50,7 @@ const SliderBase = kind({
 		 */
 		disabled: PropTypes.bool,
 
-		knobComponent: PropTypes.node,
+		knobComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 
 		/**
 		 * The amount to increment or decrement the position of the knob via 5-way controls.
@@ -134,7 +134,7 @@ const SliderBase = kind({
 		 * @type {Component|Element}
 		 * @public
 		 */
-		tooltipComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+		tooltipComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 
 		/**
 		 * The value of the slider.

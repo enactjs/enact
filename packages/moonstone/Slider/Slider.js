@@ -197,7 +197,8 @@ const SliderBase = kind({
 	defaultProps: {
 		activateOnFocus: false,
 		active: false,
-		disabled: false
+		disabled: false,
+		value: 0
 	},
 
 	styles: {
