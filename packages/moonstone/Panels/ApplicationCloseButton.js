@@ -59,14 +59,14 @@ const ApplicationCloseButton = kind({
 	},
 
 	computed: {
-		exitAppAriaLabel: ({'aria-label': ariaLabel}) => (ariaLabel == null) ? $L('Exit app') : ariaLabel
+		closeButtonAriaLabel: ({'aria-label': ariaLabel}) => (ariaLabel == null) ? $L('Exit app') : ariaLabel
 	},
 
-	render: ({backgroundOpacity, exitAppAriaLabel, onApplicationClose, ...rest}) => {
+	render: ({backgroundOpacity, closeButtonAriaLabel, onApplicationClose, ...rest}) => {
 		return (
 			<IconButton
 				{...rest}
-				aria-label={exitAppAriaLabel}
+				aria-label={closeButtonAriaLabel}
 				backgroundOpacity={backgroundOpacity}
 				onTap={onApplicationClose}
 				small
