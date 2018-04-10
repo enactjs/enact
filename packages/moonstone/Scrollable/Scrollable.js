@@ -66,11 +66,11 @@ const configureSpotlightContainer = ({'data-spotlight-id': spotlightId, focusabl
 /**
  * A Moonstone-styled component that provides horizontal and vertical scrollbars.
  *
- * @class Scrollable
+ * @class ScrollableBase
  * @memberof moonstone/Scrollable
  * @extends ui/Scrollable.ScrollableBase
  * @ui
- * @private
+ * @public
  */
 class ScrollableBase extends Component {
 	static displayName = 'Scrollable'
@@ -87,7 +87,7 @@ class ScrollableBase extends Component {
 		/**
 		 * This is set to `true` by SpotlightContainerDecorator
 		 *
-		 * @type {String}
+		 * @type {Boolean}
 		 * @private
 		 */
 		'data-spotlight-container': PropTypes.bool,
@@ -507,10 +507,10 @@ class ScrollableBase extends Component {
 									...childComponentProps,
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
-									spotlightId,
 									initUiChildRef,
 									onScroll: handleScroll,
 									ref: this.initChildRef
+									spotlightId,
 								})}
 							</TouchableDiv>
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
@@ -523,6 +523,16 @@ class ScrollableBase extends Component {
 	}
 }
 
+/**
+ * A Moonstone-styled component that provides horizontal and vertical scrollbars.
+ *
+ * @class Scrollable
+ * @memberof moonstone/Scrollable
+ * @mixes spotlight/SpotlightContainerDecorator
+ * @extends moonstone/Scrollable.ScrollableBase
+ * @ui
+ * @public
+ */
 const Scrollable = SpotlightContainerDecorator(
 	{
 		overflow: true,

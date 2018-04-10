@@ -43,6 +43,15 @@ const configureSpotlightContainer = ({'data-spotlight-id': spotlightId, focusabl
 	});
 };
 
+/**
+ * A Moonstone-styled native component that provides horizontal and vertical scrollbars.
+ *
+ * @class ScrollableBaseNative
+ * @memberof moonstone/ScrollableNative
+ * @extends ui/Scrollable.ScrollableBaseNative
+ * @ui
+ * @private
+ */
 class ScrollableBaseNative extends Component {
 	static displayName = 'ScrollableNative'
 
@@ -58,7 +67,7 @@ class ScrollableBaseNative extends Component {
 		/**
 		 * This is set to `true` by SpotlightContainerDecorator
 		 *
-		 * @type {String}
+		 * @type {Boolean}
 		 * @private
 		 */
 		'data-spotlight-container': PropTypes.bool,
@@ -550,9 +559,9 @@ class ScrollableBaseNative extends Component {
 									...childComponentProps,
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
-									spotlightId,
 									initUiChildRef,
 									ref: this.initChildRef
+									spotlightId,
 								})}
 							</TouchableDiv>
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
@@ -566,12 +575,12 @@ class ScrollableBaseNative extends Component {
 }
 
 /**
- * A Moonstone-styled native component that provides horizontal and vertical scrollbars.
+ * A Moonstone-styled component that provides horizontal and vertical scrollbars.
  *
  * @class ScrollableNative
  * @memberof moonstone/ScrollableNative
  * @mixes spotlight/SpotlightContainerDecorator
- * @extends ui/Scrollable.ScrollableBaseNative
+ * @extends moonstone/Scrollable.ScrollableBaseNative
  * @ui
  * @private
  */
