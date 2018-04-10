@@ -368,7 +368,7 @@ const Scroller = (props) => (
 	<Scrollable
 		{...props}
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
-			delete scrollerProps.containerId;
+			delete scrollerProps.spotlightId;
 
 			return <ScrollerBase {...scrollerProps} />;
 		}}
@@ -417,7 +417,7 @@ const ScrollerNative = (props) => (
 	<ScrollableNative
 		{...props}
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
-			delete scrollerProps.containerId;
+			delete scrollerProps.spotlightId;
 
 			return <ScrollerBase {...scrollerProps} />;
 		}}

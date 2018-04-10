@@ -260,10 +260,12 @@ const VirtualListBaseFactory = (type) => {
 		restoreLastFocused = false
 
 		setContainerDisabled = (bool) => {
-			const contentNode = this.uiRef.contentRef;
+			const
+				{spotlightId} = this.props,
+				containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 
-			if (contentNode) {
-				contentNode.setAttribute(dataContainerDisabledAttribute, bool);
+			if (containerNode) {
+				containerNode.setAttribute(dataContainerDisabledAttribute, bool);
 
 				if (bool) {
 					document.addEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
