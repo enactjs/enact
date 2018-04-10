@@ -201,6 +201,14 @@ const IncrementSliderBase = kind({
 		noFill: PropTypes.bool,
 
 		/**
+		 * The handler when the knob is activated or deactivated by selecting it via 5-way
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onActivate: PropTypes.func,
+
+		/**
 		 * The handler to run when the value is changed.
 		 *
 		 * @type {Function}

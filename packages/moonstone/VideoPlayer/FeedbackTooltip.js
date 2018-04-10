@@ -27,6 +27,23 @@ const FeedbackTooltipBase = kind({
 
 	propTypes: /** @lends moonstone/VideoPlayer.FeedbackTooltip.prototype */ {
 		/**
+		 * Duration of the curent media in seconds
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		duration: PropTypes.number,
+
+		/**
+		 * Instance of `NumFmt` to format the time
+		 *
+		 * @type {Objct}
+		 * @public
+		 */
+		formatter: PropTypes.object,
+
+		/**
 		 * When `true`, only time would appear in tooltip.
 		 *
 		 * @type {Boolean}

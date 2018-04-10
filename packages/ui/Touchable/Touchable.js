@@ -6,7 +6,7 @@
  * @module ui/Touchable
  */
 
-import {forward, forwardWithPrevent, forEventProp, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
+import {forward, forwardWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';

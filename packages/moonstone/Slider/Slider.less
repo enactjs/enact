@@ -17,7 +17,6 @@
 			display: block;
 			height: 100%;
 			width: 100%;
-			background-color: @moon-progress-bar-bg-color;
 		}
 	}
 
@@ -27,14 +26,6 @@
 		pointer-events: none;
 		transform-origin: 0 0;
 		will-change: transform;
-	}
-
-	.fill {
-		background-color: @moon-progress-bar-fill-bg-color;
-	}
-
-	.load {
-		background-color: @moon-progress-bar-loaded-bg-color;
 	}
 
 	.knob {
@@ -51,7 +42,6 @@
 			// Vertically and horizontally center this knob.
 			// Using this method rather than -top -left so the knob is more intuitively customizable.
 			transform:         @moon-translate-center scale(@moon-slider-knob-resting-state-scale);
-			background-color: @moon-slider-knob-bg-color;
 			border-radius: (@moon-slider-knob-height / 2);
 			border: @moon-button-border-width solid transparent;
 			box-sizing: border-box;
@@ -126,20 +116,9 @@
 		})
 	}
 
-	&:global(.spottable) {
-		&:focus.activateOnFocus,
-		&.active,
-		&.pressed {
-			.fill {
-				background-color: @moon-slider-spotlight-bar-color;
-			}
-		}
-
+	.spottable({
 		&.pressed,
 		&:focus {
-			.knob::before {
-				background-color: @moon-slider-spotlight-knob-color;
-			}
 			.tooltip {
 				display: block;
 			}
@@ -152,41 +131,79 @@
 				transform: @moon-translate-center scale(1);
 			}
 		}
+	})
 
-		&:focus {
-			background-color: transparent;
-
-			&.active {
-				.knob::before {
-					background-color: @moon-slider-knob-bg-color;
-					border-color: @moon-slider-spotlight-knob-color;
-				}
+	.applySkins({
+		.bars {
+			&:before {
+				background-color: @moon-progress-bar-bg-color;
 			}
 		}
-	}
 
-	&.noFill {
 		.fill {
-			background-color: transparent;
+			background-color: @moon-progress-bar-fill-bg-color;
+		}
+
+		.load {
+			background-color: @moon-progress-bar-loaded-bg-color;
+		}
+
+		.knob {
+			background-color: @moon-slider-knob-bg-color;
 		}
 
 		.spottable({
+			&:focus.activateOnFocus,
 			&.active,
 			&.pressed {
 				.fill {
-					background-color: transparent;
+					background-color: @moon-slider-spotlight-bar-color;
 				}
 			}
-		});
-	}
+
+			&:focus {
+				background-color: transparent;
+
+				.knob::before {
+					background-color: @moon-slider-spotlight-knob-color;
+				}
+
+				&.active {
+					.knob::before {
+						background-color: @moon-slider-knob-bg-color;
+						border-color: @moon-slider-spotlight-knob-color;
+					}
+				}
+			}
+		})
+
+		&.noFill {
+			.fill {
+				background-color: transparent;
+			}
+
+			.spottable({
+				&.active,
+				&.pressed {
+					.fill {
+						background-color: transparent;
+					}
+				}
+			});
+		}
+	})
 }
 
-[data-spotlight-container-muted='true'] {
+.muted({
 	.slider {
-		&:global(.spottable):focus {
-			.knob {
-				background-color: @moon-slider-knob-bg-color;
+		.applySkins({
+			.spottable({
+				&:focus {
+					.knob {
+						background-color: @moon-slider-knob-bg-color;
+					}
+				}
 			}
-		}
+		})
 	}
-}
+})

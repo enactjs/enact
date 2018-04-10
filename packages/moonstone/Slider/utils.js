@@ -1,5 +1,5 @@
 import clamp from 'ramda/src/clamp';
-import {handle, stopImmediate} from '@enact/core/handle';
+import {adjustEvent, forKey, forProp, forward, handle, oneOf, returnsTrue, stopImmediate} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 
 const isNumber = (n) => typeof n === 'number' && !isNaN(n);
@@ -63,9 +63,34 @@ const handleDecrement = handle(
 	stopImmediate
 );
 
+const either = (a, b) => (...args) => a(...args) || b(...args);
+const atMinimum = (ev, {min, value}) => value <= min;
+const atMaximum = (ev, {max, value}) => value >= max;
+const forwardOnlyType = (type) => adjustEvent(() => ({type}), forward);
+
+const forwardSpotlightEvents = returnsTrue(oneOf(
+	[forKey('left'), handle(
+		either(forProp('orientation', 'vertical'), atMinimum),
+		forwardOnlyType('onSpotlightLeft')
+	)],
+	[forKey('right'), handle(
+		either(forProp('orientation', 'vertical'), atMaximum),
+		forwardOnlyType('onSpotlightRight')
+	)],
+	[forKey('down'), handle(
+		either(forProp('orientation', 'horizontal'), atMinimum),
+		forwardOnlyType('onSpotlightDown')
+	)],
+	[forKey('up'), handle(
+		either(forProp('orientation', 'horizontal'), atMaximum),
+		forwardOnlyType('onSpotlightUp')
+	)],
+));
+
 export {
 	calcPercent,
 	calcStep,
+	forwardSpotlightEvents,
 	handleChange,
 	handleDecrement,
 	handleIncrement,

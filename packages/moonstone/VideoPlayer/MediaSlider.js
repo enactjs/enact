@@ -1,5 +1,5 @@
 import kind from '@enact/core/kind';
-import {adjustEvent, handle, forKey, forward, oneOf, preventDefault} from '@enact/core/handle';
+import {adjustEvent, handle, forKey, forward, preventDefault} from '@enact/core/handle';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Knob} from '@enact/ui/Slider';

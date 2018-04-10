@@ -4,7 +4,7 @@
  * @module moonstone/Slider
  */
 
-import {adjustEvent, forKey, forProp, forward, forwardWithPrevent, handle, oneOf, returnsTrue} from '@enact/core/handle';
+import {forKey, forProp, forward, forwardWithPrevent, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Changeable from '@enact/ui/Changeable';
 import Spottable from '@enact/spotlight/Spottable';
@@ -20,43 +20,22 @@ import Skinnable from '../Skinnable';
 
 import SliderBehaviorDecorator from './SliderBehaviorDecorator';
 import {
+	forwardSpotlightEvents,
 	handleDecrement,
 	handleIncrement
 } from './utils';
 
 import componentCss from './Slider.less';
 
-const either = (a, b) => (...args) => a(...args) || b(...args);
-const atMinimum = (ev, {min, value}) => value <= min;
-const atMaximum = (ev, {max, value}) => value >= max;
-const forwardOnlyType = (type) => adjustEvent(() => ({type}), forward);
-
-const forwardSpotlightEvents = returnsTrue(oneOf(
-	[forKey('left'), handle(
-		either(forProp('orientation', 'vertical'), atMinimum),
-		forwardOnlyType('onSpotlightLeft')
-	)],
-	[forKey('right'), handle(
-		either(forProp('orientation', 'vertical'), atMaximum),
-		forwardOnlyType('onSpotlightRight')
-	)],
-	[forKey('down'), handle(
-		either(forProp('orientation', 'horizontal'), atMinimum),
-		forwardOnlyType('onSpotlightDown')
-	)],
-	[forKey('up'), handle(
-		either(forProp('orientation', 'horizontal'), atMaximum),
-		forwardOnlyType('onSpotlightUp')
-	)],
-));
-
-/* ***************************************************
-
-   * consider multiple knob and bar support
-   * integration with MediaSlider
-
-***************************************************/
-
+/**
+ * Range-selection input component
+ *
+ * @class Slider
+ * @memberof moonstone/Slider
+ * @mixes moonstone/Slider.SliderDecorator
+ * @ui
+ * @public
+ */
 const SliderBase = kind({
 	name: 'Slider',
 
@@ -284,6 +263,16 @@ const SliderBase = kind({
 	}
 });
 
+/**
+ * Moonstone-specific slider behaviors to apply to [Button]{@link moonstone/Slider.SliderBase}.
+ *
+ * @hoc
+ * @memberof moonstone/Slider
+ * @mixes ui/Changeable.Changeable
+ * @mixes spotlight/Spottable.Spottable
+ * @mixes ui/Skinnable.Skinnable
+ * @public
+ */
 const SliderDecorator = compose(
 	Changeable,
 	SliderBehaviorDecorator,
@@ -292,7 +281,34 @@ const SliderDecorator = compose(
 	Skinnable
 );
 
+/**
+ * Range-selection input with Moonstone styling, Spottable, Touchable and SliderDecorator applied.
+ *
+ * By default, `Slider` maintains the state of its `value` property. Supply the `defaultValue`
+ * property to control its initial value. If you wish to directly control updates to the
+ * component, supply a value to `value` at creation time and update it in response to `onChange`
+ * events.
+ *
+ * @class Slider
+ * @memberof moonstone/Slider
+ * @mixes moonstone/Slider.SliderDecorator
+ * @ui
+ * @public
+ */
 const Slider = SliderDecorator(SliderBase);
+
+/**
+ * A {@link moonstone/TooltipDecorator.Tooltip} specifically adapted for use with
+ * {@link moonstone/IncrementSlider.IncrementSlider}, {@link moonstone/ProgressBar.ProgressBar},
+ * or {@link moonstone/Slider.Slider}.
+ *
+ * See {@link moonstone/ProgressBar.ProgressBarTooltip}
+ *
+ * @class SliderTooltip
+ * @memberof moonstone/Slider
+ * @ui
+ * @public
+ */
 
 export default Slider;
 export {
