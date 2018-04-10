@@ -26,6 +26,8 @@ class View extends React.Component {
 		 * Time in milliseconds to complete a transition
 		 *
 		 * @type {Number}
+		 * @required
+		 * @public
 		 */
 		duration: PropTypes.number.isRequired,
 
@@ -33,6 +35,7 @@ class View extends React.Component {
 		 * Arranger to control the animation
 		 *
 		 * @type {Arranger}
+		 * @public
 		 */
 		arranger: shape,
 
@@ -50,6 +53,7 @@ class View extends React.Component {
 		 *
 		 * @type {Number}
 		 * @default 0
+		 * @public
 		 */
 		enteringDelay: PropTypes.number,
 
@@ -62,6 +66,7 @@ class View extends React.Component {
 		 * be notified of the change in transition.
 		 *
 		 * @type {String}
+		 * @public
 		 */
 		enteringProp: PropTypes.string,
 
@@ -84,6 +89,7 @@ class View extends React.Component {
 		 *
 		 * @type {Boolean}
 		 * @default true
+		 * @public
 		 */
 		noAnimation: PropTypes.bool,
 
