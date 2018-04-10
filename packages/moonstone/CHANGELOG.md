@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/Panels` property `exitAppAriaLabel` to configure the label set on application close button 
+- `moonstone/Panels` property `closeButtonAriaLabel` to configure the label set on application close button 
 
 ### Changes
 

@@ -3,7 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {shape} from '@enact/ui/ViewManager';
 
-import $L from '../internal/$L';
 import IdProvider from '../internal/IdProvider';
 import Skinnable from '../Skinnable';
 
@@ -61,6 +60,15 @@ const PanelsBase = kind({
 		children: PropTypes.node,
 
 		/**
+		* Sets the hint string read when focusing the application close button.
+		*
+		* @type {String}
+		* @default 'Exit app'
+		* @public
+		*/
+		closeButtonAriaLabel: PropTypes.string,
+
+		/**
 		 * The background-color opacity of the application close button; valid values are `'opaque'`,
 		 * `'translucent'`, `'lightTranslucent'`, and `'transparent'`.
 		 *
@@ -69,15 +77,6 @@ const PanelsBase = kind({
 		 * @public
 		 */
 		closeButtonBackgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'lightTranslucent', 'transparent']),
-
-		/**
-		* Sets the hint string read when focusing the application close button.
-		*
-		* @type {String}
-		* @default 'Exit app'
-		* @public
-		*/
-		exitAppAriaLabel: PropTypes.string,
 
 		/**
 		 * Unique identifier for the Panels instance
@@ -147,14 +146,13 @@ const PanelsBase = kind({
 		className: ({noCloseButton, styler}) => styler.append({
 			hasCloseButton: !noCloseButton
 		}),
-		exitAppAriaLabel: ({exitAppAriaLabel}) => (exitAppAriaLabel == null) ? $L('Exit app') : exitAppAriaLabel,
-		applicationCloseButton: ({closeButtonBackgroundOpacity, exitAppAriaLabel, id, noCloseButton, onApplicationClose}) => {
+		applicationCloseButton: ({closeButtonAriaLabel, closeButtonBackgroundOpacity, id, noCloseButton, onApplicationClose}) => {
 			if (!noCloseButton) {
 				const closeId = id ? `${id}_close` : null;
 
 				return (
 					<ApplicationCloseButton
-						aria-label={exitAppAriaLabel}
+						aria-label={closeButtonAriaLabel}
 						backgroundOpacity={closeButtonBackgroundOpacity}
 						className={css.close}
 						id={closeId}
@@ -184,7 +182,7 @@ const PanelsBase = kind({
 
 	render: ({noAnimation, arranger, childProps, children, generateId, index, applicationCloseButton, ...rest}) => {
 		delete rest.closeButtonBackgroundOpacity;
-		delete rest.exitAppAriaLabel;
+		delete rest.closeButtonAriaLabel;
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
 		delete rest.onBack;
