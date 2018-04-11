@@ -25,7 +25,7 @@ class A extends React.Component {
 		this.lastVisibleIndex = lastVisibleIndex;
 
 		setTimeout(() => {
-			this.forceUpdate()
+			this.forceUpdate();
 		}, 1);
 	}
 
