@@ -283,13 +283,51 @@ describe('VirtualList', () => {
 	});
 
 	describe('Scrollbar accessibility', () => {
-		it('should set "aria-label" to previous scroll button', function () {
+		it('should set "aria-label" to previous scroll button in the horizontal scrollbar', function () {
 			const label = 'custom button aria label';
 			const subject = mount(
 				<VirtualList
 					clientSize={clientSize}
 					dataSize={dataSize}
 					direction="horizontal"
+					itemRenderer={renderItem}
+					itemSize={30}
+					horizontalScrollbarPreviousButtonAriaLabel={label}
+				/>
+			);
+
+			const expected = label;
+			const actual = subject.find('ScrollButton').at(0).prop('aria-label');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should set "aria-label" to next scroll button in the horizontal scrollbar', function () {
+			const label = 'custom button aria label';
+			const subject = mount(
+				<VirtualList
+					clientSize={clientSize}
+					dataSize={dataSize}
+					direction="horizontal"
+					itemRenderer={renderItem}
+					itemSize={30}
+					horizontalScrollbarNextButtonAriaLabel={label}
+				/>
+			);
+
+			const expected = label;
+			const actual = subject.find('ScrollButton').at(1).prop('aria-label');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should set "aria-label" to previous scroll button in the vertical scrollbar', function () {
+			const label = 'custom button aria label';
+			const subject = mount(
+				<VirtualList
+					clientSize={clientSize}
+					dataSize={dataSize}
+					direction="vertical"
 					itemRenderer={renderItem}
 					itemSize={30}
 					verticalScrollbarPreviousButtonAriaLabel={label}
@@ -302,13 +340,13 @@ describe('VirtualList', () => {
 			expect(actual).to.equal(expected);
 		});
 
-		it('should set "aria-label" to next scroll button', function () {
+		it('should set "aria-label" to next scroll button in the vertical scrollbar', function () {
 			const label = 'custom button aria label';
 			const subject = mount(
 				<VirtualList
 					clientSize={clientSize}
 					dataSize={dataSize}
-					direction="horizontal"
+					direction="vertical"
 					itemRenderer={renderItem}
 					itemSize={30}
 					verticalScrollbarNextButtonAriaLabel={label}
