@@ -735,14 +735,6 @@ const VideoPlayerBase = class extends React.Component {
 		if (props.setApiProvider) {
 			props.setApiProvider(this);
 		}
-
-		this.inactivePlaybackState = {
-			currentTime: 0,
-			duration: 0,
-			proportionLoaded: 0,
-			proportionPlayed: 0,
-			sliderTooltipTime: 0
-		};
 	}
 
 	componentDidMount () {
@@ -788,22 +780,6 @@ const VideoPlayerBase = class extends React.Component {
 			this.setState({currentTime: 0, proportionPlayed: 0, proportionLoaded: 0});
 			this.reloadVideo();
 		}
-
-		// To show the correct playback data when switching sources, set state with the cached playback state.
-		// Then cache the current playback state.
-		// if (playPreloadSource !== nextPlayPreloadSource) {
-		// 	this.pause();
-		// 	this.setState({paused: true, ...this.inactivePlaybackState});
-		// 	this.showControls();
-
-		// 	this.inactivePlaybackState = {
-		// 		currentTime: this.state.currentTime,
-		// 		duration: this.state.duration,
-		// 		proportionLoaded: this.state.proportionLoaded,
-		// 		proportionPlayed: this.state.proportionPlayed,
-		// 		sliderTooltipTime: this.state.sliderTooltipTime
-		// 	};
-		// }
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
@@ -1990,10 +1966,11 @@ const VideoPlayerBase = class extends React.Component {
 		const playingProps = {
 			...rest,
 			autoPlay: this.preloadSourcePlaying ? false : !noAutoPlay,
-			// children: source,
+			children: this.preloadSourcePlaying ?  preloadSource : source,
+			className: this.preloadSourcePlaying ? css.preloadVideo : css.video,
 			component: videoComponent,
 			controls: false,
-			// preload: this.preloadSourcePlaying ? 'none' : 'auto',
+			preload: this.preloadSourcePlaying ? 'auto' : 'none',
 			onUpdate: this.handleEvent,
 			ref: this.setVideoRef
 		};
@@ -2001,18 +1978,14 @@ const VideoPlayerBase = class extends React.Component {
 		const loadingProps = {
 			...rest,
 			autoPlay: this.preloadSourcePlaying ? !noAutoPlay : false,
-			// children: preloadSource,
+			children: this.preloadSourcePlaying ? source : preloadSource,
+			className: this.preloadSourcePlaying ? css.video : css.preloadVideo,
 			component: videoComponent,
 			controls: false,
-			// preload: this.preloadSourcePlaying ? 'none' : 'auto',
 			onUpdate: this.handleEvent,
+			preload: this.preloadSourcePlaying ? 'none' : 'auto',
 			ref: this.setPreloadRef
 		};
-
-		// console.log(preloadSource.props);
-
-		// const sourceProps = this.preloadSourcePlaying ? playingProps : loadingProps;
-		// const preloadProps = this.preloadSourcePlaying ? loadingProps : playingProps;
 
 		return (
 			<RootContainer
@@ -2025,22 +1998,24 @@ const VideoPlayerBase = class extends React.Component {
 				style={style}
 			>
 				{/* Video Section */}
-				<Media
-					className={this.preloadSourcePlaying ? css.preloadVideo : css.video}
-					preload={this.preloadSourcePlaying ? 'auto' : 'none'}
-					{...playingProps}
-				>
-					{this.preloadSourcePlaying ?  preloadSource : source}
-				</Media>
 
-				<Media
-					className={this.preloadSourcePlaying ? css.video : css.preloadVideo}
-					preload={this.preloadSourcePlaying ? 'none' : 'auto'}
-					{...loadingProps}
-				>
-					{this.preloadSourcePlaying ? source : preloadSource}
-				</Media>
-
+				{this.props.preloadSource ?
+					<React.Fragment>
+						<Media {...playingProps} />
+						<Media {...loadingProps} />
+					</React.Fragment> :
+					<Media
+						{...rest}
+						autoPlay={!noAutoPlay}
+						className={css.video}
+						component={videoComponent}
+						controls={false}
+						onUpdate={this.handleEvent}
+						ref={this.setVideoRef}
+					>
+						{source}
+					</Media>
+				}
 
 				<Overlay
 					bottomControlsVisible={this.state.mediaControlsVisible}
