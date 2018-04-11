@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="list"`
+- `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` property 'horizontalScrollbarNextButtonAriaLabel', 'horizontalScrollbarPreviousButtonAriaLabel', 'verticalScrollbarNextButtonAriaLabel', and 'verticalScrollbarPreviousButtonAriaLabel' to configure the label set on scroll buttons in the scrollbars
 
 ### Changed
 
