@@ -16,6 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Scrollable/ScrollButtons` to read out out audio guidance when button down.
+- `moonstone/Notification` to position properly in RTL locales
 
 ## [2.0.0-alpha.7 - 2018-04-03]
 
