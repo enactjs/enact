@@ -21,18 +21,15 @@ storiesOf('Moonstone', module)
 			<Slider
 				activateOnFocus={boolean('activateOnFocus', false)}
 				backgroundProgress={number('backgroundProgress', SliderBase.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
-				detachedKnob={nullify(boolean('detachedKnob', false))}
 				disabled={boolean('disabled', false)}
 				knobStep={number('knobStep')}
 				max={number('max', SliderBase.defaultProps.max)}
 				min={number('min', SliderBase.defaultProps.min)}
 				noFill={boolean('noFill', false)}
 				onChange={action('onChange')}
-				onKnobMove={action('onKnobMove')}
 				orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
 				step={number('step', SliderBase.defaultProps.step)}
 				tooltip={nullify(boolean('tooltip', false))}
-				tooltipAsPercent={nullify(boolean('tooltipAsPercent', false))}
 				tooltipForceSide={nullify(boolean('tooltipForceSide', false))}
 				tooltipSide={select('tooltipSide', ['before', 'after'], 'after')}
 			/>

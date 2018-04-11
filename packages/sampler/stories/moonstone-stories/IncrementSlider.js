@@ -31,7 +31,6 @@ storiesOf('Moonstone', module)
 				orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
 				step={number('step', IncrementSliderBase.defaultProps.step)}
 				tooltip={nullify(boolean('tooltip', false))}
-				tooltipAsPercent={nullify(boolean('tooltipAsPercent', false))}
 				tooltipForceSide={nullify(boolean('tooltipForceSide', false))}
 				tooltipSide={select('tooltipSide', ['before', 'after'], 'after')}
 			/>
