@@ -10,6 +10,7 @@ const PositionDecorator = hoc((config, Wrapped) => {
 		static displayName = 'PositionDecorator'
 
 		static propTypes = {
+			disabled: PropTypes.bool,
 			max: PropTypes.number,
 			min: PropTypes.number,
 			onChange: PropTypes.func,
@@ -19,8 +20,11 @@ const PositionDecorator = hoc((config, Wrapped) => {
 		}
 
 		static defaultProps = {
+			disabled: false,
+			min: 0,
+			max: 100,
 			orientation: 'horizontal',
-			step: 1
+			value: 0
 		}
 
 		constructor () {
