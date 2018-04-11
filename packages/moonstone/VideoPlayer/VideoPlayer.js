@@ -522,15 +522,6 @@ const VideoPlayerBase = class extends React.Component {
 		playIcon: PropTypes.string,
 
 		/**
-		 * Play the preloaded source.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		playPreloadSource: PropTypes.bool,
-
-		/**
 		 * The video source to be preloaded. Expects a `<source>` node.
 		 *
 		 * @type {String|Node}
@@ -781,14 +772,15 @@ const VideoPlayerBase = class extends React.Component {
 			this.calculateMaxComponentCount(leftCount, rightCount, childrenCount);
 		}
 
-		const {source, playPreloadSource, preloadSource} = this.props;
-		const {source: nextSource, playPreloadSource: nextPlayPreloadSource} = nextProps;
+		const {source, preloadSource} = this.props;
+		const {source: nextSource} = nextProps;
 
-		if (compareSources(preloadSource, nextSource)) {
+		if (preloadSource && compareSources(preloadSource, nextSource)) {
 			this.preloadSourcePlaying = !this.preloadSourcePlaying;
 			const currentVideoSource = this.video;
 			this.video = this.preloadVideo;
 			this.preloadVideo = currentVideoSource;
+			this.preloadVideo.load();
 		}
 
 		if (!compareSources(source, nextSource)) {
@@ -1884,12 +1876,10 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	setVideoRef = (video) => {
-		console.log('setRef');
 		this.video = video;
 	}
 
 	setPreloadRef = (video) => {
-		console.log('setPreloadRef');
 		this.preloadVideo = video;
 	}
 
@@ -1956,7 +1946,6 @@ const VideoPlayerBase = class extends React.Component {
 			noSpinner,
 			pauseIcon,
 			playIcon,
-			playPreloadSource,
 			preloadSource,
 			rateButtonsDisabled,
 			rightComponents,
@@ -2004,7 +1993,7 @@ const VideoPlayerBase = class extends React.Component {
 			// children: source,
 			component: videoComponent,
 			controls: false,
-			preload: this.preloadSourcePlaying ? false : 'auto',
+			// preload: this.preloadSourcePlaying ? 'none' : 'auto',
 			onUpdate: this.handleEvent,
 			ref: this.setVideoRef
 		};
@@ -2015,7 +2004,7 @@ const VideoPlayerBase = class extends React.Component {
 			// children: preloadSource,
 			component: videoComponent,
 			controls: false,
-			preload: 'auto',
+			// preload: this.preloadSourcePlaying ? 'none' : 'auto',
 			onUpdate: this.handleEvent,
 			ref: this.setPreloadRef
 		};
@@ -2038,6 +2027,7 @@ const VideoPlayerBase = class extends React.Component {
 				{/* Video Section */}
 				<Media
 					className={this.preloadSourcePlaying ? css.preloadVideo : css.video}
+					preload={this.preloadSourcePlaying ? 'auto' : 'none'}
 					{...playingProps}
 				>
 					{this.preloadSourcePlaying ?  preloadSource : source}
@@ -2045,6 +2035,7 @@ const VideoPlayerBase = class extends React.Component {
 
 				<Media
 					className={this.preloadSourcePlaying ? css.video : css.preloadVideo}
+					preload={this.preloadSourcePlaying ? 'none' : 'auto'}
 					{...loadingProps}
 				>
 					{this.preloadSourcePlaying ? source : preloadSource}
