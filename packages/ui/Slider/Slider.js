@@ -12,7 +12,6 @@ import React from 'react';
 import ComponentOverride from '../ComponentOverride';
 import Touchable from '../Touchable';
 
-// import Bar from './Bar';
 import Knob from './Knob';
 import PositionDecorator from './PositionDecorator';
 
@@ -220,7 +219,6 @@ const Slider = SliderDecorator(SliderBase);
 
 export default Slider;
 export {
-	// Bar,
 	Knob,
 	Slider,
 	SliderBase,
