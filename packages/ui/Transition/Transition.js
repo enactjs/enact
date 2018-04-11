@@ -15,6 +15,8 @@ import PropTypes from 'prop-types';
 import css from './Transition.less';
 
 const forwardTransitionEnd = forward('onTransitionEnd');
+const forwardOnShow = forward('onShow');
+const forwardOnHide = forward('onHide');
 
 /**
  * {@link ui/Transition.TransitionBase} is a stateless component that allows for applying
@@ -29,8 +31,6 @@ const TransitionBase = kind({
 	name: 'TransitionBase',
 
 	propTypes: /** @lends ui/Transition.TransitionBase.prototype */ {
-		children: PropTypes.node.isRequired,
-
 		/**
 		 * Provide a function to get the reference to the child node (the one with the content) at
 		 * render time. Useful if you need to measure or interact with the node directly.
@@ -40,6 +40,14 @@ const TransitionBase = kind({
 		 * @public
 		 */
 		childRef: PropTypes.func,
+
+		/**
+		 * The node to be transitioned.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		children: PropTypes.node,
 
 		/**
 		 * The height of the transition when `type` is set to `'clip'`, used when direction is
@@ -217,7 +225,13 @@ class Transition extends React.Component {
 	static contextTypes = contextTypes
 
 	static propTypes = /** @lends ui/Transition.Transition.prototype */ {
-		children: PropTypes.node.isRequired,
+		/**
+		 * The node to be transitioned.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		children: PropTypes.node,
 
 		/**
 		 * The direction of transition (i.e. where the component will move *to*; the destination).
@@ -353,6 +367,14 @@ class Transition extends React.Component {
 			renderState !== TRANSITION_STATE.INIT) ||
 			(initialHeight == null && visible)) {
 			this.measureInner();
+		}
+
+		if (!this.childNode) {
+			if (!prevProps.visible && visible) {
+				forwardOnShow({}, this.props);
+			} else if (prevProps.visible && !visible) {
+				forwardOnHide({}, this.props);
+			}
 		}
 	}
 

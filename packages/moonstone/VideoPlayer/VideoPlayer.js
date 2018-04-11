@@ -32,7 +32,7 @@ import $L from '../internal/$L';
 import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
 
-import {calcNumberValueOfPlaybackRate, compareSources, secondsToTime} from './util';
+import {calcNumberValueOfPlaybackRate, compareSources, countReactChildren, secondsToTime} from './util';
 import Overlay from './Overlay';
 import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
@@ -77,9 +77,6 @@ const AnnounceState = {
 	// All announcements have been made
 	DONE: 4
 };
-
-// Safely count the children nodes and exclude null & undefined values for an accurate count of real children
-const countReactChildren = (children) => React.Children.toArray(children).filter(n => n != null).length;
 
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
@@ -395,6 +392,14 @@ const VideoPlayerBase = class extends React.Component {
 		noSlider: PropTypes.bool,
 
 		/**
+		 * Removes spinner while loading.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		noSpinner: PropTypes.bool,
+
+		/**
 		 * Function executed when the user clicks the Backward button. Is passed
 		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
 		 *
@@ -578,10 +583,8 @@ const VideoPlayerBase = class extends React.Component {
 		spotlightId: PropTypes.string,
 
 		/**
-		 * This component will be used instead of the built-in version.
-		 * The internal thumbnail class will be added to this component, however, it's the
-		 * responsibility of the developer to include this class in their implementation, if
-		 * appropriate for their application. This component follows the same rules as the built-in
+		 * This component will be used instead of the built-in version. The internal thumbnail style
+		 * will not be applied to this component. This component follows the same rules as the built-in
 		 * version.
 		 *
 		 * @type {Node}
@@ -611,10 +614,10 @@ const VideoPlayerBase = class extends React.Component {
 		/**
 		 * Set a title for the video being played.
 		 *
-		 * @type {String}
+		 * @type {String|Node}
 		 * @public
 		 */
-		title: PropTypes.string,
+		title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 		/**
 		 * The amount of time in milliseconds that should pass before the title disappears from the
@@ -742,23 +745,32 @@ const VideoPlayerBase = class extends React.Component {
 		on('keydown', this.handleGlobalKeyDown);
 		on('keyup', this.handleKeyUp);
 		this.startDelayedFeedbackHide();
-		this.calculateMaxComponentCount();
+		this.calculateMaxComponentCount(
+			countReactChildren(this.props.leftComponents),
+			countReactChildren(this.props.rightComponents),
+			countReactChildren(this.props.children)
+		);
 	}
 
 	componentWillReceiveProps (nextProps) {
 		// Detect if the number of components has changed
+		const leftCount = countReactChildren(nextProps.leftComponents),
+			rightCount = countReactChildren(nextProps.rightComponents),
+			childrenCount = countReactChildren(nextProps.children);
+
 		if (
-			React.Children.count(this.props.leftComponents) !== React.Children.count(nextProps.leftComponents) ||
-			React.Children.count(this.props.rightComponents) !== React.Children.count(nextProps.rightComponents) ||
-			React.Children.count(this.props.children) !== React.Children.count(nextProps.children)
+			countReactChildren(this.props.leftComponents) !== leftCount ||
+			countReactChildren(this.props.rightComponents) !== rightCount ||
+			countReactChildren(this.props.children) !== childrenCount
 		) {
-			this.calculateMaxComponentCount();
+			this.calculateMaxComponentCount(leftCount, rightCount, childrenCount);
 		}
 
 		const {source} = this.props;
 		const {source: nextSource} = nextProps;
 
 		if (!compareSources(source, nextSource)) {
+			this.firstPlayReadFlag = true;
 			this.setState({currentTime: 0, proportionPlayed: 0, proportionLoaded: 0});
 			this.reloadVideo();
 		}
@@ -876,11 +888,7 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	calculateMaxComponentCount = () => {
-		let leftCount = countReactChildren(this.props.leftComponents),
-			rightCount = countReactChildren(this.props.rightComponents),
-			childrenCount = countReactChildren(this.props.children);
-
+	calculateMaxComponentCount = (leftCount, rightCount, childrenCount) => {
 		// If the "more" button is present, automatically add it to the right's count.
 		if (childrenCount) {
 			rightCount += 1;
@@ -1156,6 +1164,7 @@ const VideoPlayerBase = class extends React.Component {
 		if (!this.props.no5WayJump &&
 				!this.state.mediaControlsVisible &&
 				!this.props.disabled &&
+				!this.state.mediaControlsDisabled &&
 				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			this.paused.pause();
 			this.startListeningForPulses(ev.keyCode);
@@ -1176,7 +1185,7 @@ const VideoPlayerBase = class extends React.Component {
 	handleKeyUp = (ev) => {
 		const {disabled, moreButtonColor, moreButtonDisabled, noRateButtons, no5WayJump, rateButtonsDisabled} = this.props;
 
-		if (disabled) {
+		if (disabled || this.state.mediaControlsDisabled) {
 			return;
 		}
 
@@ -1899,6 +1908,7 @@ const VideoPlayerBase = class extends React.Component {
 			jumpButtonsDisabled,
 			jumpForwardIcon,
 			leftComponents,
+			loading,
 			moreButtonCloseLabel,
 			moreButtonColor,
 			moreButtonDisabled,
@@ -1908,6 +1918,7 @@ const VideoPlayerBase = class extends React.Component {
 			noMiniFeedback,
 			noRateButtons,
 			noSlider,
+			noSpinner,
 			pauseIcon,
 			playIcon,
 			rateButtonsDisabled,
@@ -1928,7 +1939,6 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.initialJumpDelay;
 		delete rest.jumpBy;
 		delete rest.jumpDelay;
-		delete rest.loading;
 		delete rest.miniFeedbackHideDelay;
 		delete rest.no5WayJump;
 		delete rest.onBackwardButtonClick;
@@ -1979,7 +1989,7 @@ const VideoPlayerBase = class extends React.Component {
 					bottomControlsVisible={this.state.mediaControlsVisible}
 					onClick={this.onVideoClick}
 				>
-					{this.state.loading || this.props.loading ? <Spinner centered /> : null}
+					{!noSpinner && (this.state.loading || loading) ? <Spinner centered /> : null}
 				</Overlay>
 
 				{this.state.bottomControlsRendered ?
@@ -2089,7 +2099,6 @@ const VideoPlayerBase = class extends React.Component {
 					// This captures spotlight focus for use with 5-way.
 					// It's non-visible but lives at the top of the VideoPlayer.
 					className={css.controlsHandleAbove}
-					onClick={this.showControls}
 					onKeyDown={this.handleKeyDown}
 					onSpotlightDown={this.showControls}
 					spotlightDisabled={this.state.mediaControlsVisible || spotlightDisabled}

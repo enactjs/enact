@@ -39,6 +39,7 @@ const ExpandablePickerBase = kind({
 		 * Children from which to pick
 		 *
 		 * @type {Node}
+		 * @required
 		 * @public
 		 */
 		children: PropTypes.node.isRequired,

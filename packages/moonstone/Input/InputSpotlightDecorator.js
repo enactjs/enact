@@ -281,9 +281,12 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					preventSpotlightNavigation(ev);
 					this.paused.resume();
 
-					// Move spotlight in the keypress direction, if there is no other spottable elements,
-					// focus `InputDecorator` instead
-					if (!move(direction)) {
+					// Move spotlight in the keypress direction
+					if (move(direction)) {
+						// if successful, reset the internal state
+						this.blur();
+					} else {
+						// if there is no other spottable elements, focus `InputDecorator` instead
 						this.focusDecorator(currentTarget);
 					}
 				} else if (isLeft || isRight) {
