@@ -1,6 +1,7 @@
 import clamp from 'ramda/src/clamp';
 import {adaptEvent, forKey, forProp, forward, handle, oneOf, returnsTrue, stopImmediate} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
+import {calcPercent} from '@enact/ui/Slider/utils';
 
 const isNumber = (n) => typeof n === 'number' && !isNaN(n);
 
@@ -18,16 +19,6 @@ const calcStep = (knobStep, step) => {
 	return s || 1;
 };
 
-const calcPercent = (min, max, value) => {
-	if (value <= min) {
-		return 0;
-	} else if (value >= max) {
-		return 1;
-	} else {
-		return (value - min) / (max - min);
-	}
-};
-
 const isIncrement = ({keyCode}, {orientation}) => {
 	return orientation === 'vertical' ? is('up', keyCode) : is('right', keyCode);
 };
@@ -36,7 +27,7 @@ const isDecrement = ({keyCode}, {orientation}) => {
 	return orientation === 'vertical' ? is('down', keyCode) : is('left', keyCode);
 };
 
-const handleChange = (direction) => adaptEvent(
+const emitChange = (direction) => adaptEvent(
 	(ev, {knobStep, max, min, step, value}) => ({
 		value: clamp(min, max, value + (calcStep(knobStep, step) * direction)),
 		proportion: calcPercent(min, max, value)
@@ -51,14 +42,14 @@ const isActive = (ev, props) => {
 const handleIncrement = handle(
 	isActive,
 	isIncrement,
-	handleChange(1),
+	emitChange(1),
 	stopImmediate
 );
 
 const handleDecrement = handle(
 	isActive,
 	isDecrement,
-	handleChange(-1),
+	emitChange(-1),
 	stopImmediate
 );
 
@@ -87,11 +78,8 @@ const forwardSpotlightEvents = returnsTrue(oneOf(
 ));
 
 export {
-	calcPercent,
-	calcStep,
 	forwardSpotlightEvents,
-	handleChange,
+	emitChange,
 	handleDecrement,
-	handleIncrement,
-	isActive
+	handleIncrement
 };

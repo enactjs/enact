@@ -10,7 +10,6 @@ import {extractAriaProps} from '@enact/core/util';
 import Spottable from '@enact/spotlight/Spottable';
 import Changeable from '@enact/ui/Changeable';
 import Slottable from '@enact/ui/Slottable';
-import {handleChange} from '@enact/ui/Slider/utils';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -22,6 +21,7 @@ import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator
 import {ProgressBarTooltip} from '../ProgressBar';
 import Skinnable from '../Skinnable';
 import {SliderBase} from '../Slider';
+import {emitChange} from '../Slider/utils';
 import SliderBehaviorDecorator from '../Slider/SliderBehaviorDecorator';
 
 import IncrementSliderButton from './IncrementSliderButton';
@@ -395,8 +395,8 @@ const IncrementSliderBase = kind({
 				onSpotlightUp(ev);
 			}
 		},
-		onDecrement: handleChange(-1),
-		onIncrement: handleChange(1)
+		onDecrement: emitChange(-1),
+		onIncrement: emitChange(1)
 	},
 
 	styles: {
