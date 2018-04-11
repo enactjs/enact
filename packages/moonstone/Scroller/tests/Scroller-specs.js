@@ -76,6 +76,7 @@ describe('Scroller', () => {
 				<Scroller
 					horizontalScrollbar="visible"
 					verticalScrollbar="visible"
+					horizontalScrollbarPreviousButtonAriaLabel={label}
 				>
 					{contents}
 				</Scroller>
@@ -92,6 +93,7 @@ describe('Scroller', () => {
 			const subject = mount(
 				<Scroller
 					horizontalScrollbar="visible"
+					horizontalScrollbarNextButtonAriaLabel={label}
 					verticalScrollbar="visible"
 				>
 					{contents}
@@ -110,6 +112,7 @@ describe('Scroller', () => {
 				<Scroller
 					horizontalScrollbar="visible"
 					verticalScrollbar="visible"
+					verticalScrollbarPreviousButtonAriaLabel={label}
 				>
 					{contents}
 				</Scroller>
@@ -127,12 +130,13 @@ describe('Scroller', () => {
 				<Scroller
 					horizontalScrollbar="visible"
 					verticalScrollbar="visible"
+					verticalScrollbarNextButtonAriaLabel={label}
 				>
 					{contents}
 				</Scroller>
 			);
 
-			const expected = 'label';
+			const expected = label;
 			const actual = subject.find('ScrollButton').at(1).prop('aria-label');
 
 			expect(actual).to.equal(expected);
