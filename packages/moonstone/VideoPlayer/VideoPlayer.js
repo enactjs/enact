@@ -710,6 +710,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.id = this.generateId();
 		this.selectPlaybackRates('fastForward');
 		this.sliderKnobProportion = 0;
+		this.preloadSourcePlaying = false;
 
 		this.initI18n();
 
@@ -744,11 +745,6 @@ const VideoPlayerBase = class extends React.Component {
 			props.setApiProvider(this);
 		}
 
-		this.inactiveVideoProgress = 0;
-		this.inactiveCurrentTime = 0;
-		this.inactiveSliderTooltipTime = 0;
-		this.inactiveProportionLoaded = 0;
-		this.inactiveDuration = 0;
 		this.inactivePlaybackState = {
 			currentTime: 0,
 			duration: 0,
@@ -785,8 +781,15 @@ const VideoPlayerBase = class extends React.Component {
 			this.calculateMaxComponentCount(leftCount, rightCount, childrenCount);
 		}
 
-		const {source, playPreloadSource} = this.props;
+		const {source, playPreloadSource, preloadSource} = this.props;
 		const {source: nextSource, playPreloadSource: nextPlayPreloadSource} = nextProps;
+
+		if (compareSources(preloadSource, nextSource)) {
+			this.preloadSourcePlaying = !this.preloadSourcePlaying;
+			const currentVideoSource = this.video;
+			this.video = this.preloadVideo;
+			this.preloadVideo = currentVideoSource;
+		}
 
 		if (!compareSources(source, nextSource)) {
 			this.firstPlayReadFlag = true;
@@ -796,19 +799,19 @@ const VideoPlayerBase = class extends React.Component {
 
 		// To show the correct playback data when switching sources, set state with the cached playback state.
 		// Then cache the current playback state.
-		if (playPreloadSource !== nextPlayPreloadSource) {
-			this.pause();
-			this.setState({paused: true, ...this.inactivePlaybackState});
-			this.showControls();
+		// if (playPreloadSource !== nextPlayPreloadSource) {
+		// 	this.pause();
+		// 	this.setState({paused: true, ...this.inactivePlaybackState});
+		// 	this.showControls();
 
-			this.inactivePlaybackState = {
-				currentTime: this.state.currentTime,
-				duration: this.state.duration,
-				proportionLoaded: this.state.proportionLoaded,
-				proportionPlayed: this.state.proportionPlayed,
-				sliderTooltipTime: this.state.sliderTooltipTime
-			};
-		}
+		// 	this.inactivePlaybackState = {
+		// 		currentTime: this.state.currentTime,
+		// 		duration: this.state.duration,
+		// 		proportionLoaded: this.state.proportionLoaded,
+		// 		proportionPlayed: this.state.proportionPlayed,
+		// 		sliderTooltipTime: this.state.sliderTooltipTime
+		// 	};
+		// }
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
@@ -1881,7 +1884,13 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	setVideoRef = (video) => {
+		console.log('setRef');
 		this.video = video;
+	}
+
+	setPreloadRef = (video) => {
+		console.log('setPreloadRef');
+		this.preloadVideo = video;
 	}
 
 	setAnnounceRef = (node) => {
@@ -1991,27 +2000,30 @@ const VideoPlayerBase = class extends React.Component {
 
 		const playingProps = {
 			...rest,
-			autoPlay: !noAutoPlay,
-			className: css.video,
-			children: source,
+			autoPlay: this.preloadSourcePlaying ? false : !noAutoPlay,
+			// children: source,
 			component: videoComponent,
 			controls: false,
+			preload: this.preloadSourcePlaying ? false : 'auto',
 			onUpdate: this.handleEvent,
 			ref: this.setVideoRef
 		};
 
 		const loadingProps = {
 			...rest,
-			autoPlay: false,
-			className: css.preloadVideo,
-			children: preloadSource,
+			autoPlay: this.preloadSourcePlaying ? !noAutoPlay : false,
+			// children: preloadSource,
 			component: videoComponent,
 			controls: false,
-			preload: 'auto'
+			preload: 'auto',
+			onUpdate: this.handleEvent,
+			ref: this.setPreloadRef
 		};
 
-		const sourceProps = playPreloadSource ? playingProps : loadingProps;
-		const preloadProps = playPreloadSource ? loadingProps : playingProps;
+		// console.log(preloadSource.props);
+
+		// const sourceProps = this.preloadSourcePlaying ? playingProps : loadingProps;
+		// const preloadProps = this.preloadSourcePlaying ? loadingProps : playingProps;
 
 		return (
 			<RootContainer
@@ -2025,14 +2037,18 @@ const VideoPlayerBase = class extends React.Component {
 			>
 				{/* Video Section */}
 				<Media
-					{...sourceProps}
-				/>
+					className={this.preloadSourcePlaying ? css.preloadVideo : css.video}
+					{...playingProps}
+				>
+					{this.preloadSourcePlaying ?  preloadSource : source}
+				</Media>
 
-				{ preloadSource ?
-					<Media
-						{...preloadProps}
-					/> : null
-				}
+				<Media
+					className={this.preloadSourcePlaying ? css.video : css.preloadVideo}
+					{...loadingProps}
+				>
+					{this.preloadSourcePlaying ? source : preloadSource}
+				</Media>
 
 
 				<Overlay
