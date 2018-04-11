@@ -24,7 +24,9 @@ class A extends React.Component {
 		this.firstVisibleIndex = firstVisibleIndex;
 		this.lastVisibleIndex = lastVisibleIndex;
 
-		setTimeout(() => {this.forceUpdate()}, 1);
+		setTimeout(() => {
+			this.forceUpdate()
+		}, 1);
 	}
 
 	// eslint-disable-next-line enact/prop-types, enact/display-name
@@ -36,8 +38,13 @@ class A extends React.Component {
 		};
 
 		return (
-			<Item {...rest}
-				data-screen-index={(index >= this.firstVisibleIndex) ? index - this.firstVisibleIndex + 1 : null}
+			<Item
+				{...rest}
+				data-screen-index={
+					(index >= this.firstVisibleIndex && index <= this.firstVisibleIndex) ?
+						index - this.firstVisibleIndex + 1 :
+						null
+				}
 				style={itemStyle}
 			>
 				{items[index]}
