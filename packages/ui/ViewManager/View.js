@@ -35,6 +35,12 @@ class View extends React.Component {
 		 */
 		duration: PropTypes.number.isRequired,
 
+		/**
+		 * Set to `true` when the View should "appear" without transitioning into the viewport
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
 		appearing: PropTypes.bool,
 
 		/**
@@ -117,6 +123,7 @@ class View extends React.Component {
 	}
 
 	static defaultProps = {
+		appearing: false,
 		enteringDelay: 0
 	}
 
@@ -312,12 +319,12 @@ class View extends React.Component {
 	}
 
 	render () {
-		const {appearing, enteringProp, children, childProps} = this.props;
+		const {enteringProp, children, childProps} = this.props;
 
 		if (enteringProp || childProps) {
 			const props = Object.assign({}, childProps);
 			if (enteringProp) {
-				props[enteringProp] = !appearing && this.state.entering;
+				props[enteringProp] = this.state.entering;
 			}
 
 			return React.cloneElement(children, props);
