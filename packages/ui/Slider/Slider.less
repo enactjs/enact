@@ -1,18 +1,6 @@
 .slider {
 	position: relative;
-	height: 240px;
 	direction: ltr;
-
-	.bars {
-		position: absolute;
-
-		&:before {
-			content: '';
-			display: block;
-			height: 100%;
-			width: 100%;
-		}
-	}
 
 	.fill,
 	.load {
@@ -22,7 +10,12 @@
 		will-change: transform;
 	}
 
-	.knob,
+	.knob {
+		top: 50%;
+		left: 50%;
+	}
+
+	.bars,
 	&.horizontal,
 	&.pressed,
 	&.noFill,
