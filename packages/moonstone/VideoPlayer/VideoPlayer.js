@@ -2071,7 +2071,6 @@ const VideoPlayerBase = class extends React.Component {
 								noJumpButtons={noJumpButtons}
 								noRateButtons={noRateButtons}
 								onBackwardButtonClick={this.onBackward}
-								onClick={this.resetAutoTimeout}
 								onForwardButtonClick={this.onForward}
 								onJumpBackwardButtonClick={this.onJumpBackward}
 								onJumpForwardButtonClick={this.onJumpForward}
