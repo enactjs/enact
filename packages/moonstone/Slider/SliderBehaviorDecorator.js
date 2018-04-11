@@ -6,12 +6,6 @@ import React from 'react';
 
 import $L from '../internal/$L';
 
-// ARIA Requirements for Slider
-// * use aria-valuetext when set
-// * defaults to value
-// * onActivate, set to hint text
-// * on value change, reset to value or valuetext
-
 const useHintOnActivate = ({active}) => {
 	return {
 		useHintText: active
@@ -24,23 +18,27 @@ const toggleActivate = ({active}) => {
 	};
 };
 
+// Adds moonstone-specific slider behaviors
+// * aria-text handling
+//   * use aria-valuetext when set
+//   * defaults to value
+//   * onActivate, set to hint text
+//   * on value change, reset to value or valuetext
+// * Spotlight management
+//   * pause whend dragging to prevent spotlight from leaving when pointer enters another component
+// * managing focused state to show/hide tooltip
 const SliderBehaviorDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SliderBehaviorDecorator'
 
 		static propTypes = {
 			'aria-valuetext': PropTypes.oneOf([PropTypes.string, PropTypes.number]),
-			max: PropTypes.number,
-			min: PropTypes.number,
-			onChange: PropTypes.func,
 			orientation: PropTypes.string,
-			step: PropTypes.number,
 			value: PropTypes.number
 		}
 
 		static defaultProps = {
-			orientation: 'horizontal',
-			step: 1
+			orientation: 'horizontal'
 		}
 
 		constructor () {
@@ -53,7 +51,6 @@ const SliderBehaviorDecorator = hoc((config, Wrapped) => {
 			this.handleDragStart = this.handleDragStart.bind(this);
 			this.handleFocus = this.handleFocus.bind(this);
 			this.bounds = {};
-
 
 			this.state = {
 				active: false,

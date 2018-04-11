@@ -1,7 +1,11 @@
 /**
- * Exports the {@link moonstone/Slider.Slider} component.
+ * Provides unstyled slider components and behaviors to be customized by a theme or application.
  *
- * @module moonstone/Slider
+ * @module ui/Slider
+ * @exports Knob
+ * @exports Slider
+ * @exports SliderBase
+ * @exports SliderDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -19,8 +23,16 @@ import componentCss from './Slider.less';
 
 import {calcPercent} from './utils';
 
+/**
+ * An unstyled, sliding range-selection component
+ *
+ * @class Slider
+ * @memberof ui/Slider
+ * @ui
+ * @public
+ */
 const SliderBase = kind({
-	name: 'Slider',
+	name: 'ui:Slider',
 
 	propTypes: {
 		/**
@@ -36,8 +48,20 @@ const SliderBase = kind({
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
 		 *
+		 * The following classes are supported:
+		 *
+		 * * `slider` - The root component class
+		 * * `fill` - The progress bar node representing the `value`
+		 * * `load` - The progress bar node representing the `backgroundProgress`
+		 * * `knob` - The knob node
+		 * * `bars` - The parent node for the fill bar, load bar, and knob
+		 * * `horizontal` - Applied when `orientation` prop is `"horizontal"``
+		 * * `pressed` - Applied when `pressed` prop is `true`
+		 * * `noFill` - Applied when `noFill` prop is `true`
+		 * * `vertical` - Applied when `orientation` prop is `"vertical"`
+		 *
 		 * @type {Object}
-		 * @private
+		 * @public
 		 */
 		css: PropTypes.object,
 
@@ -45,17 +69,39 @@ const SliderBase = kind({
 		 * When `true`, the component is shown as disabled and does not generate events
 		 *
 		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
 		disabled: PropTypes.bool,
 
+		/**
+		 * Defines a custom knob component for the slider. By default, Slider will use it's own
+		 * implementation, {@link ui/Slider.Knob}.
+		 *
+		 * The following props are forwarded to the tooltip:
+		 *
+		 * * `className` - A `knob` class applied by the slider
+		 * * `disabled` - The value of `disabled` from the slider
+		 * * `orientation` - The value of `orientation` from the slider
+		 * * `proportion` - A number between 0 and 1 representing the proportion of the `value` in
+		 *   terms of `min` and `max`
+		 * * `tooltipComponent` - The value of `tooltipComponent` from the slider
+		 * * `value` - The value of `value` from the slider
+		 *
+		 * This prop accepts either a Component (e.g. `MyKnob`} which will be instantiated with
+		 * the above props or a component instance (e.g. `<MyKnob customProp="value" />`) which
+		 * will have its props merged with the above props.
+		 *
+		 * See {@link ui/ComponentOverride} for more information.
+		 *
+		 * @type {Component|Element}
+		 * @default {@link ui/Slider.Knob}
+		 * @public
+		 */
 		knobComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 
 		/**
 		 * The amount to increment or decrement the position of the knob via 5-way controls.
-		 * When `detachedKnob` is false, the knob must first be activated by selecting it. When
-		 * `detachedKnob` is true, the knob will respond to direction key presses without
-		 * activation.
 		 *
 		 * If not specified, `step` is used for the default value.
 		 *
@@ -83,9 +129,10 @@ const SliderBase = kind({
 		min: PropTypes.number,
 
 		/**
-		 * When `true`, the slider bar doesn't show a fill and doesn't highlight when spotted
+		 * When `true`, the slider bar doesn't show a fill and doesn't highlight when spotted.
 		 *
 		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
 		noFill: PropTypes.bool,
@@ -95,19 +142,21 @@ const SliderBase = kind({
 		 *
 		 * @type {Function}
 		 * @param {Object} event
-		 * @param {Number} event.value Value of the slider
+		 * @param {Number} event.value      Value of the slider
+		 * @param {Number} event.proportion Proportion of the value in terms of the min and max
+		 *                                  values
 		 * @public
 		 */
 		onChange: PropTypes.func,
 
 		/**
-		 * If `true` the slider will be oriented vertically.
+		 * The orientation of the slider, either `"horizontal"` or `"vertical"`.
 		 *
 		 * @type {Boolean}
-		 * @default false
+		 * @default "horizontal"
 		 * @public
 		 */
-		orientation: PropTypes.string,
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
 		 * When `true`, a pressed visual effect is applied
@@ -121,14 +170,25 @@ const SliderBase = kind({
 		 * The amount to increment or decrement the value.
 		 *
 		 * @type {Number}
-		 * @default 1
 		 * @public
 		 */
 		step: PropTypes.number,
 
 		/**
-		 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
-		 * properties.
+		 * Adds a tooltip to the slider using the provided component.
+		 *
+		 * The following props are forwarded to the tooltip:
+		 *
+		 * * `orientation` - The value of the `orientation` prop from the slider
+		 * * `proportion` - A number between 0 and 1 representing the proportion of the `value` in
+		 *   terms of `min` and `max`
+		 * * `children` - The `value` prop from the slider
+		 *
+		 * This prop accepts either a Component (e.g. `MyTooltip`} which will be instantiated with
+		 * the above props or a component instance (e.g. `<MyTooltip customProp="value" />`) which
+		 * will have its props merged with the above props.
+		 *
+		 * See {@link ui/ComponentOverride} for more information.
 		 *
 		 * @type {Component|Element}
 		 * @public
@@ -150,6 +210,7 @@ const SliderBase = kind({
 		knobComponent: Knob,
 		min: 0,
 		max: 100,
+		noFill: false,
 		orientation: 'horizontal',
 		value: 0
 	},
@@ -210,11 +271,29 @@ const SliderBase = kind({
 	}
 });
 
+/**
+ * Adds touch and drag support to a [SliderBase]{@link ui/Slider.SliderBase}.
+ *
+ * @hoc
+ * @memberof ui/Button
+ * @mixes ui/Touchable.Touchable
+ * @public
+ */
 const SliderDecorator = compose(
 	PositionDecorator,
 	Touchable({activeProp: 'pressed'})
 );
 
+/**
+ * A minimally-styled slider component with touch and drag support.
+ *
+ * @class Slider
+ * @extends ui/Slider.SliderBase
+ * @memberof ui/Slider
+ * @mixes ui/Slider.SliderDecorator
+ * @ui
+ * @public
+ */
 const Slider = SliderDecorator(SliderBase);
 
 export default Slider;

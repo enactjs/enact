@@ -51,6 +51,13 @@ const ProgressBarTooltipBase = kind({
 		 */
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
+		/**
+		 * Display the percentage instead of the value
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		percent: PropTypes.bool,
 
 		/**
@@ -76,12 +83,20 @@ const ProgressBarTooltipBase = kind({
 		 */
 		side: PropTypes.oneOf(['before', 'after']),
 
+		/**
+		 * Visibility of the tooltip
+		 *
+		 * @type {Boolea}
+		 * @default false
+		 * @public
+		 */
 		visible: PropTypes.bool
 	},
 
 	defaultProps: {
 		forceSide: false,
 		orientation: 'horizontal',
+		percent: false,
 		proportion: 0,
 		side: 'before',
 		visible: false
