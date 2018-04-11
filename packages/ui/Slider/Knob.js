@@ -14,25 +14,6 @@ const Knob = kind({
 		value: PropTypes.number
 	},
 
-	computed: {
-		style: ({orientation, proportion, style}) => {
-			let x = 0;
-			let y = 1;
-
-			if (orientation === 'horizontal') {
-				x = proportion;
-			} else if (orientation === 'vertical') {
-				y = proportion;
-			}
-
-			return {
-				...style,
-				'--ui-slider-knob-x': x,
-				'--ui-slider-knob-y': 1 - y
-			};
-		}
-	},
-
 	render: ({orientation, proportion, tooltipComponent, value, ...rest}) => {
 		delete rest.orientation;
 

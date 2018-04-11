@@ -12,7 +12,7 @@ import React from 'react';
 import ComponentOverride from '../ComponentOverride';
 import Touchable from '../Touchable';
 
-import Bar from './Bar';
+// import Bar from './Bar';
 import Knob from './Knob';
 import PositionDecorator from './PositionDecorator';
 
@@ -172,10 +172,18 @@ const SliderBase = kind({
 				}
 			);
 		},
-		percent: ({max, min, value}) => calcPercent(min, max, value)
+		percent: ({max, min, value}) => calcPercent(min, max, value),
+		style: ({backgroundProgress, max, min, style, value}) => {
+			return {
+				...style,
+				'--ui-slider-proportion-end': calcPercent(min, max, value),
+				'--ui-slider-proportion-end-background': backgroundProgress
+			};
+		}
 	},
 
-	render: ({backgroundProgress, css, disabled, knobComponent, orientation, percent, tooltipComponent, value, ...rest}) => {
+	render: ({css, disabled, knobComponent, orientation, percent, tooltipComponent, value, ...rest}) => {
+		delete rest.backgroundProgress;
 		delete rest.knobStep;
 		delete rest.max;
 		delete rest.min;
@@ -186,18 +194,18 @@ const SliderBase = kind({
 		return (
 			<div {...rest} disabled={disabled}>
 				<div className={css.bars}>
-					<Bar className={css.load} orientation={orientation} value={backgroundProgress} />
-					<Bar className={css.fill} orientation={orientation} value={percent} />
+					<div className={css.load} />
+					<div className={css.fill} />
+					<ComponentOverride
+						className={css.knob}
+						component={knobComponent}
+						disabled={disabled}
+						orientation={orientation}
+						proportion={percent}
+						tooltipComponent={tooltipComponent}
+						value={value}
+					/>
 				</div>
-				<ComponentOverride
-					className={css.knob}
-					component={knobComponent}
-					disabled={disabled}
-					orientation={orientation}
-					proportion={percent}
-					tooltipComponent={tooltipComponent}
-					value={value}
-				/>
 			</div>
 		);
 	}
@@ -212,7 +220,7 @@ const Slider = SliderDecorator(SliderBase);
 
 export default Slider;
 export {
-	Bar,
+	// Bar,
 	Knob,
 	Slider,
 	SliderBase,
