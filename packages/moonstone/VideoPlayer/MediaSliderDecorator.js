@@ -1,4 +1,4 @@
-import {adjustEvent, handle, forKey, forward, preventDefault} from '@enact/core/handle';
+import {adaptEvent, handle, forKey, forward, preventDefault} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {calcPercent} from '@enact/ui/Slider/utils';
 import PropTypes from 'prop-types';
@@ -108,14 +108,14 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 		handleLeft = this.handle(
 			() => this.state.tracking,
 			preventDefault,
-			adjustEvent(this.getEventPayload, forward('onKnobMove')),
+			adaptEvent(this.getEventPayload, forward('onKnobMove')),
 			() => this.setState(decrement)
 		)
 
 		handleRight = this.handle(
 			() => this.state.tracking,
 			preventDefault,
-			adjustEvent(this.getEventPayload, forward('onKnobMove')),
+			adaptEvent(this.getEventPayload, forward('onKnobMove')),
 			() => this.setState(increment)
 		)
 
@@ -123,7 +123,7 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 			forward('onKeyUp'),
 			() => this.state.tracking,
 			forKey('enter'),
-			adjustEvent(this.getEventPayload, forward('onChange'))
+			adaptEvent(this.getEventPayload, forward('onChange'))
 		)
 
 		handleMouseEnter (ev) {

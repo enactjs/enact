@@ -1,5 +1,5 @@
 import clamp from 'ramda/src/clamp';
-import {adjustEvent, forKey, forProp, forward, handle, oneOf, returnsTrue, stopImmediate} from '@enact/core/handle';
+import {adaptEvent, forKey, forProp, forward, handle, oneOf, returnsTrue, stopImmediate} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 
 const isNumber = (n) => typeof n === 'number' && !isNaN(n);
@@ -36,7 +36,7 @@ const isDecrement = ({keyCode}, {orientation}) => {
 	return orientation === 'vertical' ? is('down', keyCode) : is('left', keyCode);
 };
 
-const handleChange = (direction) => adjustEvent(
+const handleChange = (direction) => adaptEvent(
 	(ev, {knobStep, max, min, step, value}) => ({
 		value: clamp(min, max, value + (calcStep(knobStep, step) * direction)),
 		proportion: calcPercent(min, max, value)
@@ -65,7 +65,7 @@ const handleDecrement = handle(
 const either = (a, b) => (...args) => a(...args) || b(...args);
 const atMinimum = (ev, {min, value}) => value <= min;
 const atMaximum = (ev, {max, value}) => value >= max;
-const forwardOnlyType = (type) => adjustEvent(() => ({type}), forward);
+const forwardOnlyType = (type) => adaptEvent(() => ({type}), forward);
 
 const forwardSpotlightEvents = returnsTrue(oneOf(
 	[forKey('left'), handle(
