@@ -362,7 +362,7 @@ class ScrollableBaseNative extends Component {
 
 	componentDidUpdate (prevProps, prevState) {
 		const
-			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl} = this.state,
 			{hasDataSizeChanged} = this.childRef;
 
 		// Need to sync calculated client size if it is different from the real size
@@ -389,6 +389,8 @@ class ScrollableBaseNative extends Component {
 			if (!this.deferScrollTo) {
 				this.scrollTo(this.scrollToInfo);
 			}
+		} else if (rtl !== prevState.rtl) {
+			this.scrollTo({position: {x: this.scrollLeft, y: this.scrollTop}, animate: false});
 		}
 
 		// publish container resize changes
