@@ -9,6 +9,9 @@ import ReactDOM from 'react-dom';
 
 import {shape} from './Arranger';
 
+// If the View was "appearing", then entering will always be false and this will not result in a
+// re-render. If the view should enter, state.enter will be true and this will toggle it to false
+// causing a re-render.
 const clearEntering = ({entering}) => {
 	return entering ? {entering: false} : null;
 };
