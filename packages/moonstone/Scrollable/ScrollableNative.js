@@ -103,7 +103,7 @@ class ScrollableNative extends Component {
 		* Sets the hint string read when focusing the next button in the horizontal scroll bar.
 		*
 		* @type {String}
-		* @default 'scroll right'
+		* @default $('scroll right')
 		* @public
 		*/
 		horizontalScrollbarNextButtonAriaLabel: PropTypes.string,
@@ -112,7 +112,7 @@ class ScrollableNative extends Component {
 		* Sets the hint string read when focusing the previous button in the horizontal scroll bar.
 		*
 		* @type {String}
-		* @default 'scroll left'
+		* @default $('scroll left')
 		* @public
 		*/
 		horizontalScrollbarPreviousButtonAriaLabel: PropTypes.string,
@@ -121,7 +121,7 @@ class ScrollableNative extends Component {
 		* Sets the hint string read when focusing the next button in the vertical scroll bar.
 		*
 		* @type {String}
-		* @default 'scroll down'
+		* @default $('scroll down')
 		* @public
 		*/
 		verticalScrollbarNextButtonAriaLabel: PropTypes.string,
@@ -130,7 +130,7 @@ class ScrollableNative extends Component {
 		* Sets the hint string read when focusing the previous button in the vertical scroll bar.
 		*
 		* @type {String}
-		* @default 'scroll up'
+		* @default $('scroll up')
 		* @public
 		*/
 		verticalScrollbarPreviousButtonAriaLabel: PropTypes.string
@@ -546,8 +546,8 @@ class ScrollableNative extends Component {
 	render () {
 		const
 			{
-				focusableScrollbar,
 				childRenderer,
+				focusableScrollbar,
 				horizontalScrollbarNextButtonAriaLabel,
 				horizontalScrollbarPreviousButtonAriaLabel,
 				verticalScrollbarNextButtonAriaLabel,

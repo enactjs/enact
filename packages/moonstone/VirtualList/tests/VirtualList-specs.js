@@ -290,9 +290,9 @@ describe('VirtualList', () => {
 					clientSize={clientSize}
 					dataSize={dataSize}
 					direction="horizontal"
+					horizontalScrollbarPreviousButtonAriaLabel={label}
 					itemRenderer={renderItem}
 					itemSize={30}
-					horizontalScrollbarPreviousButtonAriaLabel={label}
 				/>
 			);
 
@@ -309,9 +309,9 @@ describe('VirtualList', () => {
 					clientSize={clientSize}
 					dataSize={dataSize}
 					direction="horizontal"
+					horizontalScrollbarNextButtonAriaLabel={label}
 					itemRenderer={renderItem}
 					itemSize={30}
-					horizontalScrollbarNextButtonAriaLabel={label}
 				/>
 			);
 

@@ -75,8 +75,8 @@ describe('Scroller', () => {
 			const subject = mount(
 				<Scroller
 					horizontalScrollbar="visible"
-					verticalScrollbar="visible"
 					horizontalScrollbarPreviousButtonAriaLabel={label}
+					verticalScrollbar="visible"
 				>
 					{contents}
 				</Scroller>
