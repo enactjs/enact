@@ -1963,7 +1963,7 @@ const VideoPlayerBase = class extends React.Component {
 		const moreDisabled = !(this.state.more);
 		const controlsAriaProps = this.getControlsAriaProps();
 
-		const playingProps = {
+		const initialPlayingProps = {
 			...rest,
 			autoPlay: this.preloadSourcePlaying ? false : !noAutoPlay,
 			children: this.preloadSourcePlaying ?  preloadSource : source,
@@ -1975,7 +1975,7 @@ const VideoPlayerBase = class extends React.Component {
 			ref: this.setVideoRef
 		};
 
-		const loadingProps = {
+		const initialLoadingProps = {
 			...rest,
 			autoPlay: this.preloadSourcePlaying ? !noAutoPlay : false,
 			children: this.preloadSourcePlaying ? source : preloadSource,
@@ -1998,11 +1998,10 @@ const VideoPlayerBase = class extends React.Component {
 				style={style}
 			>
 				{/* Video Section */}
-
 				{this.props.preloadSource ?
 					<React.Fragment>
-						<Media {...playingProps} />
-						<Media {...loadingProps} />
+						<Media {...initialPlayingProps} />
+						<Media {...initialLoadingProps} />
 					</React.Fragment> :
 					<Media
 						{...rest}
