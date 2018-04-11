@@ -61,6 +61,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/VideoPlayer` to disable play/pause button when media controls are disabled
+- `moonstone/VideoPlayer` property `preloadSource` to preload a video in the background
 - `moonstone/VideoPlayer` property `moreButtonColor` to allow setting underline colors for more button
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `isItemDisabled`, which accepts a function that checks if the item at the supplied index is disabled
 - `moonstone/Panels.Header` support for `headerInput` so the Header can be used as an Input. See documentation for usage examples.
