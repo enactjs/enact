@@ -106,6 +106,7 @@ const SliderBase = kind({
 		 * If not specified, `step` is used for the default value.
 		 *
 		 * @type {Number}
+		 * @default 1
 		 * @public
 		 */
 		knobStep: PropTypes.number,
@@ -208,6 +209,7 @@ const SliderBase = kind({
 	defaultProps: {
 		disabled: false,
 		knobComponent: Knob,
+		knobStep: 1,
 		min: 0,
 		max: 100,
 		noFill: false,

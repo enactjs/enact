@@ -164,6 +164,7 @@ const ProgressBarTooltipBase = kind({
 
 		delete rest.forceSide;
 		delete rest.orientation;
+		delete rest.percent;
 		delete rest.proportion;
 		delete rest.side;
 

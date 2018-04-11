@@ -123,16 +123,6 @@ const IncrementSliderBase = kind({
 		decrementIcon: PropTypes.string,
 
 		/**
-		 * The slider can change its behavior to have the knob follow the cursor as it moves
-		 * across the slider, without applying the position. A click or drag behaves the same.
-		 * This is primarily used by media playback. Setting this to `true` enables this behavior.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		detachedKnob: PropTypes.bool,
-
-		/**
 		 * When `true`, the component is shown as disabled and does not generate events
 		 *
 		 * @type {Boolean}
@@ -173,6 +163,17 @@ const IncrementSliderBase = kind({
 		 * @public
 		 */
 		incrementIcon: PropTypes.string,
+
+		/**
+		 * The amount to increment or decrement the position of the knob via 5-way controls.
+		 *
+		 * If not specified, `step` is used for the default value.
+		 *
+		 * @type {Number}
+		 * @default 1
+		 * @public
+		 */
+		knobStep: PropTypes.number,
 
 		/**
 		 * The maximum value of the increment slider.
@@ -329,7 +330,7 @@ const IncrementSliderBase = kind({
 
 	defaultProps: {
 		backgroundProgress: 0,
-		knobAfterMidpoint: false,
+		knobStep: 1,
 		max: 100,
 		min: 0,
 		noFill: false,
@@ -337,7 +338,6 @@ const IncrementSliderBase = kind({
 		spotlightDisabled: false,
 		step: 1,
 		tooltip: false,
-		tooltipAsPercent: false,
 		tooltipForceSide: false,
 		tooltipSide: 'before',
 		value: 0
@@ -439,7 +439,6 @@ const IncrementSliderBase = kind({
 		decrementAriaLabel,
 		decrementDisabled,
 		decrementIcon,
-		detachedKnob,
 		disabled,
 		focused,
 		handleDecrementKeyDown,
@@ -449,6 +448,7 @@ const IncrementSliderBase = kind({
 		incrementAriaLabel,
 		incrementDisabled,
 		incrementIcon,
+		knobStep,
 		max,
 		min,
 		noFill,
@@ -493,10 +493,10 @@ const IncrementSliderBase = kind({
 					aria-hidden={ariaHidden}
 					backgroundProgress={backgroundProgress}
 					className={css.slider}
-					detachedKnob={detachedKnob}
 					disabled={disabled}
 					focused={focused}
 					id={id}
+					knobStep={knobStep}
 					max={max}
 					min={min}
 					noFill={noFill}
