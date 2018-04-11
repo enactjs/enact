@@ -9,6 +9,10 @@ import ReactDOM from 'react-dom';
 
 import {shape} from './Arranger';
 
+const clearEntering = ({entering}) => {
+	return entering ? {entering: false} : null;
+};
+
 /**
  * A `View` wraps a set of children for {@link ui/ViewManager.ViewManager}.
  * It is not intended to be used directly
@@ -30,6 +34,8 @@ class View extends React.Component {
 		 * @public
 		 */
 		duration: PropTypes.number.isRequired,
+
+		appearing: PropTypes.bool,
 
 		/**
 		 * Arranger to control the animation
@@ -119,7 +125,7 @@ class View extends React.Component {
 		this.animation = null;
 		this._raf = null;
 		this.state = {
-			entering: true
+			entering: !props.appearing
 		};
 	}
 
@@ -149,9 +155,7 @@ class View extends React.Component {
 	}
 
 	enteringJob = new Job(() => {
-		this.setState({
-			entering: false
-		});
+		this.setState(clearEntering);
 	})
 
 	componentWillAppear (callback) {
@@ -164,9 +168,7 @@ class View extends React.Component {
 	}
 
 	componentDidAppear () {
-		this.setState({
-			entering: false
-		});
+		this.setState(clearEntering);
 	}
 
 	// This is called at the same time as componentDidMount() for components added to an existing
@@ -310,12 +312,12 @@ class View extends React.Component {
 	}
 
 	render () {
-		const {enteringProp, children, childProps} = this.props;
+		const {appearing, enteringProp, children, childProps} = this.props;
 
 		if (enteringProp || childProps) {
 			const props = Object.assign({}, childProps);
 			if (enteringProp) {
-				props[enteringProp] = this.state.entering;
+				props[enteringProp] = !appearing && this.state.entering;
 			}
 
 			return React.cloneElement(children, props);
