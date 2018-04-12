@@ -32,6 +32,7 @@ const ScrollButton = kind({
 		 * Name of icon.
 		 *
 		 * @type {String}
+		 * @required
 		 * @public
 		 */
 		children: PropTypes.string.isRequired,
@@ -46,6 +47,7 @@ const ScrollButton = kind({
 		 * * `'up'`.
 		 *
 		 * @type {String}
+		 * @required
 		 * @public
 		 */
 		direction: PropTypes.oneOf(['down', 'left', 'right', 'up']).isRequired,

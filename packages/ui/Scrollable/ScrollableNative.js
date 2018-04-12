@@ -55,6 +55,7 @@ class ScrollableBaseNative extends Component {
 		 * Render function.
 		 *
 		 * @type {Function}
+		 * @required
 		 * @private
 		 */
 		containerRenderer: PropTypes.func.isRequired,
