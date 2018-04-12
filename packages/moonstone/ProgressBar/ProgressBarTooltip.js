@@ -86,7 +86,7 @@ const ProgressBarTooltipBase = kind({
 		/**
 		 * Visibility of the tooltip
 		 *
-		 * @type {Boolea}
+		 * @type {Boolean}
 		 * @default false
 		 * @public
 		 */
