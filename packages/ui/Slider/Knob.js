@@ -65,13 +65,6 @@ const Knob = kind({
 		value: PropTypes.number
 	},
 
-	computed: {
-		style: ({proportion, style}) => ({
-			...style,
-			'--ui-slider-knob-proportion': proportion
-		})
-	},
-
 	render: ({orientation, proportion, tooltipComponent, value, ...rest}) => {
 		delete rest.orientation;
 

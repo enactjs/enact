@@ -236,10 +236,13 @@ const SliderBase = kind({
 		},
 		percent: ({max, min, value}) => calcPercent(min, max, value),
 		style: ({backgroundProgress, max, min, style, value}) => {
+			const proportion = calcPercent(min, max, value);
+
 			return {
 				...style,
-				'--ui-slider-proportion-end': calcPercent(min, max, value),
-				'--ui-slider-proportion-end-background': backgroundProgress
+				'--ui-slider-proportion-end': proportion,
+				'--ui-slider-proportion-end-background': backgroundProgress,
+				'--ui-slider-proportion-end-knob': proportion
 			};
 		}
 	},

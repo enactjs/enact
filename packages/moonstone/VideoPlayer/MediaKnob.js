@@ -15,22 +15,33 @@ const MediaKnob = kind({
 	name: 'MediaKnob',
 
 	propTypes: {
-		proportion: PropTypes.number,
-		tracking: PropTypes.bool,
-		trackX: PropTypes.number,
+		preview: PropTypes.bool,
+		previewProportion: PropTypes.number,
 		value: PropTypes.number
 	},
 
-	render: ({proportion, tracking, trackX, value, ...rest}) => {
-		if (tracking) {
-			proportion = value = trackX;
+	computed: {
+		style: ({style, preview, previewProportion}) => {
+			if (!preview) {
+				return style;
+			}
+
+			return {
+				...style,
+				'--ui-slider-proportion-end-knob': previewProportion
+			};
+		}
+	},
+
+	render: ({preview, previewProportion, value, ...rest}) => {
+		if (preview) {
+			value = previewProportion;
 		}
 
 		return (
 			<Knob
 				{...rest}
 				value={value}
-				proportion={proportion}
 			/>
 		);
 	}

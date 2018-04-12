@@ -1,4 +1,4 @@
-import {adaptEvent, handle, forKey, forward, preventDefault} from '@enact/core/handle';
+import {adaptEvent, handle, forKey, forward, oneOf, preventDefault} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {calcPercent} from '@enact/ui/Slider/utils';
 import PropTypes from 'prop-types';
@@ -47,8 +47,8 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 		constructor () {
 			super();
 
-			this.handleMouseEnter = this.handleMouseEnter.bind(this);
-			this.handleMouseLeave = this.handleMouseLeave.bind(this);
+			this.handleMouseOver = this.handleMouseOver.bind(this);
+			this.handleMouseOut = this.handleMouseOut.bind(this);
 			this.handleMouseMove = this.handleMouseMove.bind(this);
 
 			this.state = {
@@ -105,18 +105,15 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 			(ev) =>  this.track(ev.target)
 		)
 
-		handleLeft = this.handle(
+		handleKeyDown = this.handle(
+			forward('onKeyDown'),
 			() => this.state.tracking,
 			preventDefault,
 			adaptEvent(this.getEventPayload, forward('onKnobMove')),
-			() => this.setState(decrement)
-		)
-
-		handleRight = this.handle(
-			() => this.state.tracking,
-			preventDefault,
-			adaptEvent(this.getEventPayload, forward('onKnobMove')),
-			() => this.setState(increment)
+			oneOf(
+				[forKey('left'), () => this.setState(decrement)],
+				[forKey('right'), () => this.setState(increment)]
+			)
 		)
 
 		handleKeyUp = this.handle(
@@ -126,12 +123,20 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 			adaptEvent(this.getEventPayload, forward('onChange'))
 		)
 
-		handleMouseEnter (ev) {
+		handleMouseOver (ev) {
+			if (ev.currentTarget.contains(ev.relatedTarget)) {
+				return;
+			}
+
 			this.track(ev.currentTarget);
 			this.move(ev.clientX);
 		}
 
-		handleMouseLeave () {
+		handleMouseOut (ev) {
+			if (ev.currentTarget.contains(ev.relatedTarget)) {
+				return;
+			}
+
 			this.untrack();
 		}
 
@@ -148,15 +153,14 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 				<Wrapped
 					{...props}
 					knobComponent={
-						<MediaKnob tracking={this.state.tracking} trackX={this.state.x} />
+						<MediaKnob preview={this.state.tracking} previewProportion={this.state.x} />
 					}
 					onBlur={this.handleBlur}
 					onFocus={this.handleFocus}
-					onSpotlightLeft={this.handleLeft}
-					onSpotlightRight={this.handleRight}
+					onKeyDown={this.handleKeyDown}
 					onKeyUp={this.handleKeyUp}
-					onMouseEnter={this.handleMouseEnter}
-					onMouseLeave={this.handleMouseLeave}
+					onMouseOver={this.handleMouseOver}
+					onMouseOut={this.handleMouseOut}
 					onMouseMove={this.handleMouseMove}
 				/>
 			);
