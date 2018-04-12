@@ -308,15 +308,33 @@ const IncrementSliderBase = kind({
 		step: PropTypes.number,
 
 		/**
-		 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
-		 * properties.  A custom tooltip, which follows the knob, may be used instead by
-		 * supplying a component as a child of `IncrementSlider`. This property has no effect if
-		 * a custom tooltip is provided.
+		 * Enables the built-in tooltip
 		 *
-		 * @type {Boolean}
+		 * To customize the tooltip, pass either a custom Tooltip component or an instance of
+		 * [IncrementSliderTooltip]{@link moonstone/IncrementSlider.IncrementSliderTooltip} with
+		 * additional props configured.
+		 *
+		 * ```
+		 * <IncrementSlider
+		 *   tooltip={
+		 *     <IncrementSliderTooltip percent side="after" />
+		 *   }
+		 * />
+		 * ```
+		 *
+		 * The tooltip may also be passed as a child via the `"tooltip"` slot. See
+		 * [Slottable]{@link ui/Slottable} for more information on how slots can be used.
+		 *
+		 * ```
+		 * <IncrementSlider>
+		 *   <IncrementSliderTooltip percent side="after" />
+		 * </IncrementSlider>
+		 * ```
+		 *
+		 * @type {Boolean|Element|Function}
 		 * @public
 		 */
-		tooltip: PropTypes.bool,
+		tooltip: PropTypes.oneOfType([PropTypes.bool, PropTypes.object, PropTypes.func]),
 
 		/**
 		* The value of the increment slider.
@@ -338,8 +356,6 @@ const IncrementSliderBase = kind({
 		spotlightDisabled: false,
 		step: 1,
 		tooltip: false,
-		tooltipForceSide: false,
-		tooltipSide: 'before',
 		value: 0
 	},
 

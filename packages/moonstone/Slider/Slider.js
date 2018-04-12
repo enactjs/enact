@@ -9,8 +9,9 @@
 
 import {forKey, forProp, forward, forwardWithPrevent, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import Changeable from '@enact/ui/Changeable';
 import Spottable from '@enact/spotlight/Spottable';
+import ComponentOverride from '@enact/ui/ComponentOverride';
+import Changeable from '@enact/ui/Changeable';
 import Slottable from '@enact/ui/Slottable';
 import UiSlider from '@enact/ui/Slider';
 import PropTypes from 'prop-types';
@@ -91,8 +92,27 @@ const SliderBase = kind({
 		onActivate: PropTypes.func,
 
 		/**
-		 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
-		 * properties.
+		 * Enables the built-in tooltip
+		 *
+		 * To customize the tooltip, pass either a custom Tooltip component or an instance of
+		 * [SliderTooltip]{@link moonstone/Slider.SliderTooltip} with additional props configured.
+		 *
+		 * ```
+		 * <Slider
+		 *   tooltip={
+		 *     <SliderTooltip percent side="after" />
+		 *   }
+		 * />
+		 * ```
+		 *
+		 * The tooltip may also be passed as a child via the `"tooltip"` slot. See
+		 * [Slottable]{@link ui/Slottable} for more information on how slots can be used.
+		 *
+		 * ```
+		 * <Slider>
+		 *   <SliderTooltip percent side="after" />
+		 * </Slider>
+		 * ```
 		 *
 		 * @type {Boolean|Element|Function}
 		 * @public
@@ -140,30 +160,26 @@ const SliderBase = kind({
 			activateOnFocus,
 			active
 		}),
-		tooltipComponent: ({focused, tooltip}) => {
-			if (tooltip === true) {
-				return (
-					<ProgressBarTooltip
-						visible={focused}
-					/>
-				);
-			}
-
-			return tooltip;
-		}
+		tooltip: ({tooltip}) => tooltip === true ? ProgressBarTooltip : tooltip
 	},
 
-	render: (props) => {
-		delete props.activateOnFocus;
-		delete props.active;
-		delete props.focused;
-		delete props.onActivate;
-		delete props.tooltip;
+	render: ({css, focused, tooltip, ...rest}) => {
+		delete rest.activateOnFocus;
+		delete rest.active;
+		delete rest.focused;
+		delete rest.onActivate;
+		delete rest.tooltip;
 
 		return (
 			<UiSlider
-				{...props}
-				css={props.css}
+				{...rest}
+				css={css}
+				tooltipComponent={
+					<ComponentOverride
+						component={tooltip}
+						visible={focused}
+					/>
+				}
 			/>
 		);
 	}
