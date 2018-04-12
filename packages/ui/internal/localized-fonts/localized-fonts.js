@@ -54,8 +54,10 @@ const buildFontSet = function (fontName, fonts, strLang, bitDefault) {
 };
 
 function fontGenerator (locale, localeChanged) {
-	const styleId = 'localized-fonts';
-	let styleElem = document.getElementById(styleId);
+	const
+		isDocumentAccessible = typeof document !== 'undefined',
+		styleId = 'localized-fonts';
+	let styleElem = isDocumentAccessible && document.getElementById(styleId);
 
 	if (styleElem && !localeChanged) {
 		return;
@@ -87,7 +89,7 @@ function fontGenerator (locale, localeChanged) {
 		}
 	}
 
-	if (typeof document !== 'undefined') {
+	if (isDocumentAccessible) {
 		// Normal execution in a browser window
 		if (!styleElem) {
 			styleElem = document.createElement('style');
