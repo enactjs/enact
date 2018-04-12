@@ -4,6 +4,11 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/Slider` as an unstyled, base range selection component
+- `ui/Touchable` prop, `dragConfig.constrain`, to control the bounds for dragging
+
 ### Changed
 
 - `ui/Transition` property `children` to not be required

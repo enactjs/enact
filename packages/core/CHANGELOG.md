@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `core/handle.adaptEvent` to adapt event payload before passing to subsequent handler
+
 ## [2.0.0-alpha.7 - 2018-04-03]
 
 No significant changes.
