@@ -104,6 +104,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * The component to use to render popup.
 			 *
 			 * @type {Function}
+			 * @required
 			 * @public
 			 */
 			popupComponent: PropTypes.func.isRequired,

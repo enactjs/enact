@@ -54,6 +54,7 @@ const PopupBase = kind({
 		 * The contents to be displayed in the body of the popup.
 		 *
 		 * @type {Node}
+		 * @required
 		 * @public
 		 */
 		children: PropTypes.node.isRequired,
