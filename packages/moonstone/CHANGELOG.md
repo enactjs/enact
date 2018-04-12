@@ -19,6 +19,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scrollable/ScrollButtons` to read out out audio guidance when button down.
 - `moonstone/MoonstoneDecorator.I18nDecorator` to optimize localized font loading performance
 - `moonstone/styles/fonts.less` to remove specified unicode range definitions
+- `moonstone/ExpandableItem` to show label properly when open and disabled
 
 ## [2.0.0-alpha.7 - 2018-04-03]
 
