@@ -55,6 +55,7 @@ class ScrollableBaseNative extends Component {
 		 * Render function.
 		 *
 		 * @type {Function}
+		 * @required
 		 * @private
 		 */
 		containerRenderer: PropTypes.func.isRequired,
@@ -98,6 +99,20 @@ class ScrollableBaseNative extends Component {
 		 * @public
 		 */
 		cbScrollTo: PropTypes.func,
+
+		/**
+		 * Direction of the list or the scroller.
+		 * `'both'` could be only used for[Scroller]{@link ui/Scroller.Scroller}.
+		 *
+		 * Valid values are:
+		 * * `'both'`,
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
 		 * Specifies how to show horizontal scrollbar.
@@ -335,7 +350,6 @@ class ScrollableBaseNative extends Component {
 		const bounds = this.getScrollBounds();
 
 		this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
-		this.direction = this.childRef.props.direction;
 		this.addEventListeners();
 		this.updateScrollbars();
 
@@ -360,7 +374,6 @@ class ScrollableBaseNative extends Component {
 			}
 		}
 
-		this.direction = this.childRef.props.direction;
 		this.addEventListeners();
 		if (
 			hasDataSizeChanged === false &&
@@ -429,7 +442,6 @@ class ScrollableBaseNative extends Component {
 
 	// status
 	deferScrollTo = true
-	direction = 'vertical'
 	isScrollAnimationTargetAccumulated = false
 	isUpdatedScrollThumb = false
 	pageDistance = 0
@@ -480,16 +492,18 @@ class ScrollableBaseNative extends Component {
 		if (!this.isTouching) {
 			this.stop();
 			this.isDragging = true;
-			this.dragStartX = this.scrollLeft + ev.x;
+			this.dragStartX = this.scrollLeft + this.getRtlX(ev.x);
 			this.dragStartY = this.scrollTop + ev.y;
 		}
 	}
 
 	onDrag = (ev) => {
+		const {direction} = this.props;
+
 		if (!this.isTouching) {
 			this.start(
-				(this.direction === 'vertical') ? 0 : this.dragStartX - this.getRtlX(ev.x), // 'horizontal' or 'both'
-				(this.direction === 'horizontal') ? 0 : this.dragStartY - ev.y, // 'vertical' or 'both'
+				(direction === 'vertical') ? 0 : this.dragStartX - this.getRtlX(ev.x), // 'horizontal' or 'both'
+				(direction === 'horizontal') ? 0 : this.dragStartY - ev.y, // 'vertical' or 'both'
 				false
 			);
 		}
@@ -861,13 +875,12 @@ class ScrollableBaseNative extends Component {
 	}
 
 	canScrollHorizontally = (bounds) => {
-		const {direction} = this;
-
+		const {direction} = this.props;
 		return (direction === 'horizontal' || direction === 'both') && (bounds.scrollWidth > bounds.clientWidth) && !isNaN(bounds.scrollWidth);
 	}
 
 	canScrollVertically = (bounds) => {
-		const {direction} = this;
+		const {direction} = this.props;
 		return (direction === 'vertical' || direction === 'both') && (bounds.scrollHeight > bounds.clientHeight) && !isNaN(bounds.scrollHeight);
 	}
 
@@ -1064,7 +1077,7 @@ class ScrollableBaseNative extends Component {
 			componentCss: css,
 			horizontalScrollbarProps: this.horizontalScrollbarProps,
 			initContainerRef: this.initContainerRef,
-			initUiChildRef: this.initChildRef,
+			initChildRef: this.initChildRef,
 			isHorizontalScrollbarVisible,
 			isVerticalScrollbarVisible,
 			scrollTo: this.scrollTo,
@@ -1116,7 +1129,7 @@ class ScrollableNative extends Component {
 					componentCss,
 					horizontalScrollbarProps,
 					initContainerRef,
-					initUiChildRef,
+					initChildRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
 					scrollTo,
@@ -1135,7 +1148,7 @@ class ScrollableNative extends Component {
 									...childComponentProps,
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
-									initUiChildRef
+									initChildRef
 								})}
 							</TouchableDiv>
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}

@@ -15,8 +15,8 @@ const Config = mergeComponentMetadata('VirtualGridList', VirtualGridList, Virtua
 const
 	items = [],
 	// eslint-disable-next-line enact/prop-types
-	renderItem = ({data, index, ...rest}) => {
-		const {text, subText, source} = data[index];
+	renderItem = ({index, ...rest}) => {
+		const {text, subText, source} = items[index];
 
 		return (
 			<GridListImageItem
@@ -44,11 +44,10 @@ storiesOf('VirtualList.VirtualGridList', module)
 		'Horizontal VirtualGridList',
 		() => (
 			<VirtualGridList
-				component={renderItem}
-				data={items}
 				dataSize={number('dataSize', items.length)}
 				direction="horizontal"
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+				itemRenderer={renderItem}
 				itemSize={{
 					minWidth: ri.scale(number('minWidth', 180)),
 					minHeight: ri.scale(number('minHeight', 270))

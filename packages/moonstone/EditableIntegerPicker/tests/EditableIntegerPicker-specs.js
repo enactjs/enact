@@ -1,8 +1,9 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 import EditableIntegerPicker from '../EditableIntegerPicker';
 import Spotlight from '@enact/spotlight';
+
+const isPaused = () => Spotlight.isPaused() ? 'paused' : 'not paused';
 
 const tap = (node) => {
 	node.simulate('mousedown');
@@ -114,7 +115,6 @@ describe('EditableIntegerPicker', () => {
 
 	it('should pause the spotlight when input is focused', function () {
 		const node = document.body.appendChild(document.createElement('div'));
-		const pauseSpy = sinon.spy(Spotlight, 'pause');
 		const picker = mount(
 			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />,
 			{attachTo: node}
@@ -124,17 +124,16 @@ describe('EditableIntegerPicker', () => {
 		const input = node.querySelector('input');
 		input.focus();
 
-		const expected = true;
-		const actual = pauseSpy.calledOnce;
+		const expected = 'paused';
+		const actual = isPaused();
 
-		Spotlight.pause.restore();
+		Spotlight.resume();
 		node.parentNode.removeChild(node);
 
 		expect(actual).to.equal(expected);
 	});
 
 	it('should resume the spotlight when input is blurred', function () {
-		const resumeSpy = sinon.spy(Spotlight, 'resume');
 		const node = document.body.appendChild(document.createElement('div'));
 		const picker = mount(
 			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />,
@@ -147,10 +146,9 @@ describe('EditableIntegerPicker', () => {
 		input.focus();
 		input.blur();
 
-		const expected = true;
-		const actual = resumeSpy.calledOnce;
+		const expected = 'not paused';
+		const actual = isPaused();
 
-		Spotlight.resume.restore();
 		node.parentNode.removeChild(node);
 
 		expect(actual).to.equal(expected);

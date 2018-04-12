@@ -155,6 +155,14 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			spotlightDisabled: PropTypes.bool,
 
 			/**
+			 * Used to identify this component within the Spotlight system
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			spotlightId: PropTypes.string,
+
+			/**
 			 * The tabIndex of the component. This value will default to -1 if left
 			 * unset and the control is spottable.
 			 *
@@ -332,7 +340,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {disabled, spotlightDisabled, ...rest} = this.props;
+			const {disabled, spotlightDisabled, spotlightId, ...rest} = this.props;
 			const spottable = !disabled && !spotlightDisabled;
 			let tabIndex = rest.tabIndex;
 
@@ -352,6 +360,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				} else {
 					rest.className = spottableClass;
 				}
+			}
+
+			if (spotlightId) {
+				rest['data-spotlight-id'] = spotlightId;
 			}
 
 			return (

@@ -5,6 +5,7 @@ import {is} from '@enact/core/keymap';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {getDirection, Spotlight} from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 import Spottable from '@enact/spotlight/Spottable';
 
 const preventSpotlightNavigation = (ev) => {
@@ -82,6 +83,25 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			 */
 			noDecorator: PropTypes.bool,
 
+
+			/**
+			 * The handler to run when the internal input is focused
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onActivate: PropTypes.func,
+
+			/**
+			 * The handler to run when the internal input loses focus
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onDeactivate: PropTypes.func,
+
 			/**
 			 * The handler to run when the component is removed while retaining focus.
 			 *
@@ -109,43 +129,44 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				node: null
 			};
 
+			this.paused = new Pause('InputSpotlightDecorator');
+
 			if (props.noDecorator) {
 				deprecate({name: 'noDecorator', since: '1.3.0', replacedBy: 'autoFocus'});
 			}
 		}
 
 		componentDidUpdate (_, prevState) {
-			const current = Spotlight.getCurrent();
-			const {node: prev} = prevState;
-
-			// do not steal focus if has moved elsewhere by verifying:
-			// * Something has focus, and
-			// * Input had focus before (this.state.node is null until the input is focused), and
-			// * current is neither the previous nor current node
-			if (current && prev && current !== this.state.node && current !== prev) {
-				this.blur();
-				return;
-			}
-
-			if (this.state.node) {
-				this.state.node.focus();
-			}
-
-			if (this.state.focused === 'input') {
-				Spotlight.pause();
-			} else if (prevState.focused === 'input') {
-				Spotlight.resume();
-			}
+			this.updateFocus(prevState);
 		}
 
 		componentWillUnmount () {
+			this.paused.resume();
+
 			if (this.state.focused === 'input') {
 				const {onSpotlightDisappear} = this.props;
 
-				Spotlight.resume();
-
 				if (onSpotlightDisappear) {
 					onSpotlightDisappear();
+				}
+			}
+		}
+
+		updateFocus = (prevState) => {
+			if (this.state.node) {
+				if (Spotlight.getCurrent() !== this.state.node) {
+					this.state.node.focus();
+				}
+			}
+
+			const focusChanged = this.state.focused !== prevState.focused;
+			if (focusChanged) {
+				if (this.state.focused === 'input') {
+					forward('onActivate', {type: 'onActivate'}, this.props);
+					this.paused.pause();
+				} else if (prevState.focused === 'input') {
+					forward('onDeactivate', {type: 'onDeactivate'}, this.props);
+					this.paused.resume();
 				}
 			}
 		}
@@ -156,8 +177,8 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 		blur = () => {
 			this.setState((state) => (
-				state.focused || state.node ? {focused: null, node: null} : null)
-			);
+				state.focused || state.node ? {focused: null, node: null} : null
+			));
 		}
 
 		focusDecorator = (decorator) => {
@@ -258,11 +279,14 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					}
 
 					preventSpotlightNavigation(ev);
-					Spotlight.resume();
+					this.paused.resume();
 
-					// Move spotlight in the keypress direction, if there is no other spottable elements,
-					// focus `InputDecorator` instead
-					if (!move(direction)) {
+					// Move spotlight in the keypress direction
+					if (move(direction)) {
+						// if successful, reset the internal state
+						this.blur();
+					} else {
+						// if there is no other spottable elements, focus `InputDecorator` instead
 						this.focusDecorator(currentTarget);
 					}
 				} else if (isLeft || isRight) {
@@ -305,6 +329,8 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		render () {
 			const props = Object.assign({}, this.props);
 			delete props.autoFocus;
+			delete props.onActivate;
+			delete props.onDeactivate;
 			delete props.noDecorator;
 
 			return (

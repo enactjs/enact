@@ -5,6 +5,7 @@ import Uppercase from '@enact/i18n/Uppercase';
 import {isRtlText} from '@enact/i18n/util';
 import {Layout, Cell} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
+import ComponentOverride from '@enact/ui/ComponentOverride';
 
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
@@ -75,6 +76,26 @@ const HeaderBase = kind({
 		fullBleed: PropTypes.bool,
 
 		/**
+		 * Converts the title text of a "standard" Header into an Input, which you provide through
+		 * this property. This is also a "slot" so it can be referred to as if it were JSX.
+		 *
+		 * Example:
+		 * ```
+		 *  <Header>
+		 *  	<title>Example Header Title</title>
+		 *  	<headerInput>
+		 *  		<Input dismissOnEnter />
+		 *  	</headerInput>
+		 *  	<titleBelow>The Adventure Continues</titleBelow>
+		 *  	<subTitleBelow>The rebels face attack by imperial forces on the ice planet</subTitleBelow>
+		 *  </Header>
+		 * ```
+		 *
+		 * @type {[type]}
+		 */
+		headerInput: PropTypes.node,
+
+		/**
 		 * Determines what triggers the header content to start its animation. Valid values are
 		 * `'focus'`, `'hover'` and `'render'`. The default is `'hover'`.
 		 *
@@ -98,14 +119,25 @@ const HeaderBase = kind({
 		preserveCase: PropTypes.bool,
 
 		/**
-		 * Sub-title displayed at the bottom of the panel
+		 * Sub-title displayed at the bottom of the panel. This is a "slot", so it can be used as a
+		 * tag-name inside this component, which improves readability.
 		 *
 		 * @type {String}
 		 */
 		subTitleBelow: PropTypes.string,
 
 		/**
-		 * Title of the header
+		 * Title of the header. This is a "slot", so it can be used as a tag-name inside this
+		 * component, which improves readability.
+		 *
+		 * Example:
+		 * ```
+		 *  <Header>
+		 *  	<title>Example Header Title</title>
+		 *  	<titleBelow>The Adventure Continues</titleBelow>
+		 *  	<subTitleBelow>The rebels face attack by imperial forces on the ice planet</subTitleBelow>
+		 *  </Header>
+		 * ```
 		 *
 		 * @type {String}
 		 */
@@ -119,7 +151,8 @@ const HeaderBase = kind({
 		// titleAbove: PropTypes.string,
 
 		/**
-		 * Text displayed below the title
+		 * Text displayed below the title. This is a "slot", so it can be used as a tag-name inside
+		 * this component, which improves readability.
 		 *
 		 * @type {String}
 		 */
@@ -161,11 +194,30 @@ const HeaderBase = kind({
 		},
 		subTitleBelowComponent: ({marqueeOn, subTitleBelow}) => {
 			return <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn}>{(subTitleBelow != null && subTitleBelow !== '') ? subTitleBelow : ' '}</MarqueeH2>;
+		},
+		titleOrInput: ({casing, headerInput, marqueeOn, preserveCase, title}) => {
+			if (headerInput) {
+				return (
+					<Cell>
+						<ComponentOverride
+							component={headerInput}
+							css={css}
+						/>
+					</Cell>
+				);
+			} else {
+				return (
+					<Cell component={HeaderH1} casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn={marqueeOn}>
+						{title}
+					</Cell>
+				);
+			}
 		}
 	},
 
-	render: ({casing, children, direction, marqueeOn, preserveCase, subTitleBelowComponent, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+	render: ({casing, children, direction, marqueeOn, preserveCase, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.fullBleed;
+		delete rest.headerInput;
 		delete rest.subTitleBelow;
 		delete rest.titleBelow;
 
@@ -191,9 +243,7 @@ const HeaderBase = kind({
 			// );
 			case 'standard': return (
 				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
-					<Cell component={HeaderH1} casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn={marqueeOn}>
-						{title}
-					</Cell>
+					{titleOrInput}
 					<Cell shrink size={78}>
 						<Layout align="end">
 							<Cell>
@@ -210,7 +260,7 @@ const HeaderBase = kind({
 });
 
 // Note that we only export this (even as HeaderBase).  HeaderBase is not useful on its own.
-const Header = Slottable({slots: ['subTitleBelow', /* 'titleAbove', */'title', 'titleBelow']}, Skinnable(HeaderBase));
+const Header = Slottable({slots: ['headerInput', 'subTitleBelow', /* 'titleAbove', */'title', 'titleBelow']}, Skinnable(HeaderBase));
 
 // Set up Header so when it's used in a slottable layout (like Panel), it is automatically
 // recognized as this specific slot.

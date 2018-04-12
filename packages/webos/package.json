@@ -1,11 +1,11 @@
 {
   "name": "@enact/webos",
-  "version": "2.0.0-alpha.5",
+  "version": "2.0.0-alpha.7",
   "description": "webOS support library",
   "main": "index.js",
   "scripts": {
     "clean": "enact clean",
-    "lint": "enact lint --framework",
+    "lint": "enact lint --strict",
     "test": "echo \"No test suite\" && exit 0",
     "transpile": "enact transpile"
   },

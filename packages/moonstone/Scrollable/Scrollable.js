@@ -87,9 +87,24 @@ class Scrollable extends Component {
 		 * Render function.
 		 *
 		 * @type {Function}
+		 * @required
 		 * @private
 		 */
 		childRenderer: PropTypes.func.isRequired,
+
+		/**
+		 * Direction of the list or the scroller.
+		 * `'both'` could be only used for[Scroller]{@link moonstone/Scroller.Scroller}.
+		 *
+		 * Valid values are:
+		 * * `'both'`,
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
 		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
@@ -178,7 +193,8 @@ class Scrollable extends Component {
 
 	onFocus = (ev) => {
 		const
-			{isDragging, animator, direction} = this.uiRef,
+			{direction} = this.props,
+			{animator, isDragging} = this.uiRef,
 			shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
 				this.childRef.shouldPreventScrollByFocus() :
 				false;
@@ -219,8 +235,8 @@ class Scrollable extends Component {
 
 	getPageDirection = (keyCode) => {
 		const
+			{direction} = this.props,
 			isRtl = this.uiRef.state.rtl,
-			{direction} = this.uiRef,
 			isVertical = (direction === 'vertical' || direction === 'both');
 
 		return isPageUp(keyCode) ?
@@ -272,7 +288,7 @@ class Scrollable extends Component {
 
 			const
 				// VirtualList and Scroller have a containerId on containerRef
-				containerId = childRef.containerRef.dataset.containerId,
+				containerId = childRef.containerRef.dataset.spotlightId,
 				direction = this.getPageDirection(keyCode),
 				rDirection = reverseDirections[direction],
 				viewportBounds = containerRef.getBoundingClientRect(),
@@ -311,7 +327,7 @@ class Scrollable extends Component {
 
 		if (!current || Spotlight.getPointerMode()) {
 			const containerId = Spotlight.getActiveContainer();
-			current = document.querySelector(`[data-container-id="${containerId}"]`);
+			current = document.querySelector(`[data-spotlight-id="${containerId}"]`);
 		}
 
 		return current && this.uiRef.containerRef.contains(current);
@@ -452,8 +468,8 @@ class Scrollable extends Component {
 					componentCss,
 					handleScroll,
 					horizontalScrollbarProps,
-					initContainerRef,
-					initUiChildRef,
+					initChildRef: initUiChildRef,
+					initContainerRef: initUiContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
 					scrollTo,
@@ -463,7 +479,7 @@ class Scrollable extends Component {
 				}) => (
 					<ScrollableSpotlightContainer
 						className={className}
-						containerRef={initContainerRef}
+						containerRef={initUiContainerRef}
 						focusableScrollbar={focusableScrollbar}
 						style={style}
 					>

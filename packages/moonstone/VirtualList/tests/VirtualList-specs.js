@@ -45,10 +45,10 @@ describe('VirtualList', () => {
 			resultScrollLeft = e.scrollLeft;
 			resultScrollTop = e.scrollTop;
 		};
-		renderItem = ({data, index, ...rest}) => {	// eslint-disable-line enact/display-name, enact/prop-types
+		renderItem = ({index, ...rest}) => { // eslint-disable-line enact/display-name, enact/prop-types
 			return (
 				<Item {...rest}>
-					{data[index].name}
+					{items[index].name}
 				</Item>
 			);
 		};
@@ -79,9 +79,8 @@ describe('VirtualList', () => {
 		const subject = mount(
 			<VirtualList
 				clientSize={clientSize}
-				component={renderItem}
-				data={items}
 				dataSize={dataSize}
+				itemRenderer={renderItem}
 				itemSize={30}
 			/>
 		);
@@ -96,9 +95,8 @@ describe('VirtualList', () => {
 		const subject = mount(
 			<VirtualList
 				clientSize={clientSize}
-				component={renderItem}
-				data={items}
 				dataSize={dataSize}
+				itemRenderer={renderItem}
 				itemSize={30}
 			/>
 		);
@@ -113,10 +111,9 @@ describe('VirtualList', () => {
 		const subject = mount(
 			<VirtualList
 				clientSize={clientSize}
-				component={renderItem}
-				data={items}
 				dataSize={dataSize}
 				direction="horizontal"
+				itemRenderer={renderItem}
 				itemSize={30}
 			/>
 		);
@@ -133,9 +130,8 @@ describe('VirtualList', () => {
 				<VirtualList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
-					component={renderItem}
-					data={items}
 					dataSize={dataSize}
+					itemRenderer={renderItem}
 					itemSize={30}
 					onScrollStop={handlerOnScrollStop}
 				/>
@@ -154,10 +150,9 @@ describe('VirtualList', () => {
 				<VirtualList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
-					component={renderItem}
-					data={items}
 					dataSize={dataSize}
 					direction="horizontal"
+					itemRenderer={renderItem}
 					itemSize={30}
 					onScrollStop={handlerOnScrollStop}
 				/>
@@ -176,9 +171,8 @@ describe('VirtualList', () => {
 				<VirtualList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
-					component={renderItem}
-					data={items}
 					dataSize={dataSize}
+					itemRenderer={renderItem}
 					itemSize={30}
 					onScrollStop={handlerOnScrollStop}
 				/>
@@ -198,9 +192,8 @@ describe('VirtualList', () => {
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
-						component={renderItem}
-						data={items}
 						dataSize={dataSize}
+						itemRenderer={renderItem}
 						itemSize={30}
 						onScrollStart={handlerOnScrollStart}
 					/>
@@ -219,9 +212,8 @@ describe('VirtualList', () => {
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
-						component={renderItem}
-						data={items}
 						dataSize={dataSize}
+						itemRenderer={renderItem}
 						itemSize={30}
 						onScroll={handlerOnScroll}
 					/>
@@ -240,9 +232,8 @@ describe('VirtualList', () => {
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
-						component={renderItem}
-						data={items}
 						dataSize={dataSize}
+						itemRenderer={renderItem}
 						itemSize={30}
 						onScrollStop={handlerOnScrollStop}
 					/>
@@ -261,19 +252,25 @@ describe('VirtualList', () => {
 	describe('Adding an item', () => {
 		it('should render an added item named \'Password 0\' as the first item', (done) => {
 			const itemArray = [{name: 'A'}, {name: 'B'}, {name: 'C'}];
+			const renderItemArray = ({index, ...rest}) => { // eslint-disable-line enact/display-name, enact/prop-types, react/jsx-no-bind
+				return (
+					<div {...rest} id={'item' + index}>
+						{itemArray[index].name}
+					</div>
+				);
+			};
 
 			const subject = mount(
 				<VirtualList
 					clientSize={clientSize}
-					component={renderItem}
-					data={itemArray}
 					dataSize={itemArray.length}
+					itemRenderer={renderItemArray} // eslint-disable-line react/jsx-no-bind
 					itemSize={30}
 				/>
 			);
 
 			itemArray.unshift({name: 'Password 0'});
-			subject.setProps({data: itemArray, dataSize: itemArray.length});
+			subject.setProps({dataSize: itemArray.length});
 
 			setTimeout(() => {
 				const expected = itemArray[0].name;

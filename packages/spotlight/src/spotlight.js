@@ -21,6 +21,7 @@ import last from 'ramda/src/last';
 
 import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
+import {isPaused, pause, resume} from '../Pause';
 
 import {
 	addContainer,
@@ -119,7 +120,6 @@ const Spotlight = (function () {
 	/* private vars
 	*/
 	let _initialized = false;
-	let _pause = false;
 	let _duringFocusChange = false;
 
 	/*
@@ -158,7 +158,7 @@ const Spotlight = (function () {
 	}
 
 	function shouldPreventNavigation () {
-		return (!getAllContainerIds().length || _pause);
+		return isPaused() || getAllContainerIds().length === 0;
 	}
 
 	function getCurrent () {
@@ -199,7 +199,7 @@ const Spotlight = (function () {
 
 		_duringFocusChange = true;
 
-		if (_pause) {
+		if (isPaused()) {
 			silentFocus();
 			_duringFocusChange = false;
 			return true;
@@ -367,7 +367,7 @@ const Spotlight = (function () {
 			return;
 		}
 
-		if (!_pause && !_pointerMoveDuringKeyPress) {
+		if (!isPaused() && !_pointerMoveDuringKeyPress) {
 			if (getCurrent()) {
 				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
 			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
@@ -572,9 +572,7 @@ const Spotlight = (function () {
 		 * @returns {undefined}
 		 * @public
 		 */
-		pause: function () {
-			_pause = true;
-		},
+		pause,
 
 		/**
 		 * Resumes Spotlight
@@ -582,19 +580,19 @@ const Spotlight = (function () {
 		 * @returns {undefined}
 		 * @public
 		 */
-		resume: function () {
-			_pause = false;
-		},
+		resume,
 
 		// focus()
 		// focus(<containerId>)
 		// focus(<extSelector>)
 		/**
-		 * Focuses the specified element selector or container ID or the default container. If
-		 * Spotlight is in pointer mode, focus is not changed but `elem` will be set as the last
+		 * Focuses the specified component ID, container ID, element selector, or the default
+		 * container.
+		 *
+		 * If Spotlight is in pointer mode, focus is not changed but `elem` will be set as the last
 		 * focused element of its spotlight containers.
 		 *
-		 * @param {String|Object|undefined} elem Element selector or the container ID.
+		 * @param {String|Object|undefined} elem Component ID, container, ID or element selector.
 		 *	If not supplied, the default container will be focused.
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
 		 * @public
@@ -609,6 +607,9 @@ const Spotlight = (function () {
 				if (getContainerConfig(elem)) {
 					target = getTargetByContainer(elem);
 					wasContainerId = true;
+				} else if (/^[\w\d-]+$/.test(elem)) {
+					// support component IDs consisting of alphanumeric, dash, or underscore
+					target = getTargetBySelector(`[data-spotlight-id=${elem}]`);
 				} else {
 					target = getTargetBySelector(elem);
 				}
@@ -720,7 +721,7 @@ const Spotlight = (function () {
 				return false;
 			}
 
-			return matchSelector('[data-container-muted="true"] .' + spottableClass, elem);
+			return matchSelector('[data-spotlight-container-muted="true"] .' + spottableClass, elem);
 		},
 
 		/**
@@ -729,9 +730,7 @@ const Spotlight = (function () {
 		 * @returns {Boolean} `true` if Spotlight is currently paused.
 		 * @public
 		 */
-		isPaused: function () {
-			return _pause;
-		},
+		isPaused,
 
 		/**
 		 * Determines whether an element is spottable.

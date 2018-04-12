@@ -20,8 +20,8 @@ const
 	},
 	items = [],
 	// eslint-disable-next-line enact/prop-types
-	uiRenderItem = ({data, index, ...rest}) => {
-		const {text, subText, source} = data[index];
+	uiRenderItem = ({index, ...rest}) => {
+		const {text, subText, source} = items[index];
 
 		return (
 			<UiGridListImageItem
@@ -33,8 +33,8 @@ const
 		);
 	},
 	// eslint-disable-next-line enact/prop-types
-	renderItem = ({data, index, ...rest}) => {
-		const {text, subText, source} = data[index];
+	renderItem = ({index, ...rest}) => {
+		const {text, subText, source} = items[index];
 
 		return (
 			<GridListImageItem
@@ -65,10 +65,9 @@ storiesOf('UI', module)
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<UiVirtualGridList
-				component={uiRenderItem}
-				data={items}
 				dataSize={number('dataSize', items.length)}
 				direction={select('direction', prop.direction, 'vertical')}
+				itemRenderer={uiRenderItem}
 				itemSize={{
 					minWidth: ri.scale(number('minWidth', 180)),
 					minHeight: ri.scale(number('minHeight', 270))
@@ -91,11 +90,10 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<VirtualGridList
-				component={renderItem}
-				data={items}
 				dataSize={number('dataSize', items.length)}
 				direction={select('direction', prop.direction, 'vertical')}
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+				itemRenderer={renderItem}
 				itemSize={{
 					minWidth: ri.scale(number('minWidth', 180)),
 					minHeight: ri.scale(number('minHeight', 270))

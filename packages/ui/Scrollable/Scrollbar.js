@@ -41,6 +41,7 @@ class ScrollbarBase extends PureComponent {
 		 * The render function for child.
 		 *
 		 * @type {Function}
+		 * @required
 		 * @private
 		 */
 		childRenderer: PropTypes.func.isRequired,
@@ -81,13 +82,6 @@ class ScrollbarBase extends PureComponent {
 		corner: false,
 		css: componentCss,
 		vertical: true
-	}
-
-	constructor (props) {
-		super(props);
-
-		this.setContainerRef = this.setRef('containerRef');
-		this.setScrollThumbRef = this.setRef('thumbRef');
 	}
 
 	componentDidMount () {
@@ -147,10 +141,16 @@ class ScrollbarBase extends PureComponent {
 
 	getContainerRef = () => (this.containerRef)
 
-	setRef (prop) {
-		return (ref) => {
-			this[prop] = ref;
-		};
+	initContainerRef = (ref) => {
+		if (ref) {
+			this.containerRef = ref;
+		}
+	}
+
+	initScrollThumbRef = (ref) => {
+		if (ref) {
+			this.thumbRef = ref;
+		}
 	}
 
 	render () {
@@ -166,10 +166,10 @@ class ScrollbarBase extends PureComponent {
 		delete rest.setRef;
 
 		return (
-			<div {...rest} className={containerClassName} ref={this.setContainerRef}>
+			<div {...rest} className={containerClassName} ref={this.initContainerRef}>
 				{childRenderer({
 					getContainerRef: this.getContainerRef,
-					setScrollThumbRef: this.setScrollThumbRef
+					initScrollThumbRef: this.initScrollThumbRef
 				})}
 			</div>
 		);
@@ -218,11 +218,11 @@ class Scrollbar extends Component {
 			<ScrollbarBase
 				{...this.props}
 				ref={this.setApi}
-				childRenderer={({setScrollThumbRef}) => { // eslint-disable-line react/jsx-no-bind
+				childRenderer={({initScrollThumbRef}) => { // eslint-disable-line react/jsx-no-bind
 					return (
 						<ScrollThumb
-							setRef={setScrollThumbRef}
 							key="thumb"
+							setRef={initScrollThumbRef}
 							vertical={vertical}
 						/>
 					);

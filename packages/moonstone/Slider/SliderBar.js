@@ -47,6 +47,15 @@ class SliderBar extends React.Component {
 		detachedKnob: PropTypes.bool,
 
 		/**
+		 * Sets the orientation of the slider, whether the slider moves left and right or up and
+		 * down. Must be either `'horizontal'` or `'vertical'`.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+
+		/**
 		 * The background progress as a proportion.
 		 *
 		 * @type {Number}
@@ -70,24 +79,7 @@ class SliderBar extends React.Component {
 		 * @type {Boolean}
 		 * @public
 		 */
-		scrubbing: PropTypes.bool,
-
-		/**
-		 * If `true` the slider will be oriented vertically.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		vertical: PropTypes.bool,
-
-		/**
-		 * Height, in standard CSS units, of the vertical slider. Only takes
-		 * effect on a vertical oriented slider, and will be `null` otherwise.
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		verticalHeight: PropTypes.object
+		scrubbing: PropTypes.bool
 	}
 
 	getBarNode = (node) => {
@@ -107,13 +99,13 @@ class SliderBar extends React.Component {
 	}
 
 	render () {
-		const {children, css, detachedKnob, proportionBackgroundProgress, proportionProgress, scrubbing, vertical, ...rest} = this.props;
+		const {children, css, detachedKnob, orientation, proportionBackgroundProgress, proportionProgress, scrubbing, ...rest} = this.props;
 
 		return (
 			<div {...rest} className={css.sliderBar} ref={this.getNode}>
-				<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionBackgroundProgress, vertical)}} />
-				<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, vertical)}} />
-				<div className={css.knob} ref={this.getKnobNode} style={(detachedKnob && !scrubbing) ? {transform: computeKnobTransform(proportionProgress, vertical, this.node)} : null}>
+				<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionBackgroundProgress, (orientation === 'vertical'))}} />
+				<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, (orientation === 'vertical'))}} />
+				<div className={css.knob} ref={this.getKnobNode} style={(detachedKnob && !scrubbing) ? {transform: computeKnobTransform(proportionProgress, (orientation === 'vertical'), this.node)} : null}>
 					{children}
 				</div>
 			</div>

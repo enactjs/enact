@@ -75,6 +75,7 @@ const PickerBase = class extends React.Component {
 		 * Index for internal ViewManager
 		 *
 		 * @type {Number}
+		 * @required
 		 * @public
 		 */
 		index: PropTypes.number.isRequired,
@@ -83,6 +84,7 @@ const PickerBase = class extends React.Component {
 		 * The maximum value selectable by the picker (inclusive).
 		 *
 		 * @type {Number}
+		 * @required
 		 * @public
 		 */
 		max: PropTypes.number.isRequired,
@@ -91,6 +93,7 @@ const PickerBase = class extends React.Component {
 		 * The minimum value selectable by the picker (inclusive).
 		 *
 		 * @type {Number}
+		 * @required
 		 * @public
 		 */
 		min: PropTypes.number.isRequired,
@@ -457,11 +460,13 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
-	emulateMouseUp = new Job(() => {
+	clearPressedState = () => {
 		this.setState({
 			pressed: 0
 		});
-	}, 175)
+	}
+
+	emulateMouseUp = new Job(this.clearPressedState, 175)
 
 	handleUp = () => {
 		const {joined} = this.props;
@@ -763,6 +768,7 @@ const PickerBase = class extends React.Component {
 				onKeyDown={this.handleKeyDown}
 				onKeyUp={this.handleKeyUp}
 				onUp={this.handleUp}
+				onMouseLeave={this.clearPressedState}
 				ref={this.initContainerRef}
 			>
 				<PickerButton

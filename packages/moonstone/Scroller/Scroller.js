@@ -18,7 +18,7 @@ import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
 const
-	dataContainerDisabledAttribute = 'data-container-disabled',
+	dataContainerDisabledAttribute = 'data-spotlight-container-disabled',
 	epsilon = 1,
 	reverseDirections = {
 		left: 'right',
@@ -26,7 +26,7 @@ const
 	};
 
 /**
- * A Moonstone-styled base component for Scroller{@link moonstone/Scroller.Scroller}.
+ * A Moonstone-styled base component for [Scroller]{@link moonstone/Scroller.Scroller}.
  * In most circumstances, you will want to use the SpotlightContainerDecorator and Scrollable version:
  * [Scroller]{@link moonstone/Scroller.Scroller}
  *
@@ -73,7 +73,7 @@ class ScrollerBase extends Component {
 	 */
 	getSpotlightContainerForNode = (node) => {
 		do {
-			if (node.dataset.containerId) {
+			if (node.dataset.spotlightId && node.dataset.spotlightContainer) {
 				return node;
 			}
 		} while ((node = node.parentNode) && node !== this.uiRef.containerRef);
@@ -359,6 +359,26 @@ const ScrollableScroller = (props) => (
 	/>
 );
 
+ScrollableScroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
+	/**
+	 * Direction of the scroller.
+	 *
+	 * Valid values are:
+	 * * `'both'`,
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'both'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+};
+
+ScrollableScroller.defaultProps = {
+	direction: 'both'
+};
+
 const ScrollableScrollerNative = (props) => (
 	<ScrollableNative
 		{...props}
@@ -367,6 +387,26 @@ const ScrollableScrollerNative = (props) => (
 		)}
 	/>
 );
+
+ScrollableScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototype */ {
+	/**
+	 * Direction of the scroller.
+	 *
+	 * Valid values are:
+	 * * `'both'`,
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'both'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+};
+
+ScrollableScrollerNative.defaultProps = {
+	direction: 'both'
+};
 
 /**
  * A Moonstone-styled Scroller, SpotlightContainerDecorator and Scrollable applied.

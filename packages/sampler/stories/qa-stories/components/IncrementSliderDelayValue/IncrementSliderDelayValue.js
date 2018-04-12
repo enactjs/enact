@@ -13,8 +13,7 @@ class IncrementSliderDelayValue extends React.Component {
 		max: PropTypes.number,
 		min: PropTypes.number,
 		step: PropTypes.number,
-		value: PropTypes.number,
-		vertical: PropTypes.bool
+		value: PropTypes.number
 	}
 
 	static defaultProps = {
@@ -22,8 +21,7 @@ class IncrementSliderDelayValue extends React.Component {
 		max: 100,
 		min: 0,
 		step: 1,
-		value: 0,
-		vertical: false
+		value: 0
 	}
 
 	constructor (props) {

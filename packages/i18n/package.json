@@ -1,11 +1,11 @@
 {
   "name": "@enact/i18n",
   "main": "./src/index.js",
-  "version": "2.0.0-alpha.5",
+  "version": "2.0.0-alpha.7",
   "description": "Internationalization support for Enact using iLib",
   "scripts": {
     "clean": "enact clean",
-    "lint": "enact lint --framework",
+    "lint": "enact lint --strict",
     "test": "enact test start --single-run --browsers PhantomJS",
     "test-json": "enact test start --single-run --browsers PhantomJS --reporters json",
     "test-watch": "enact test start --browsers PhantomJS",
@@ -34,7 +34,7 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^2.0.0-alpha.5",
+    "@enact/core": "^2.0.0-alpha.7",
     "prop-types": "^15.6.0",
     "ramda": "^0.24.1",
     "react": "^16.2.0",
