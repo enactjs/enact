@@ -109,18 +109,14 @@ class Drag {
 				if (onDragStart) {
 					onDragStart({
 						type: 'onDragStart',
-						...coords,
-						dx,
-						dy
+						...coords
 					});
 				}
 			}
 		} else if (onDrag && this.tracking === Tracking.Active && this.updatePosition(coords)) {
 			onDrag({
 				type: 'onDrag',
-				...coords,
-				dx,
-				dy
+				...coords
 			});
 		}
 	}

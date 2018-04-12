@@ -44,6 +44,16 @@ const SliderBase = kind({
 	name: 'Slider',
 
 	propTypes: /** @lends moonstone/Slider.SliderBase.prototype */ {
+		/**
+		 * Overrides the `aria-valuetext` for the slider.
+		 *
+		 * By default, `aria-valuetext` is set to the current value. This should only be used when
+		 * the parent controls the value of the slider directly through the props.
+		 *
+		 * @type {String|Number}
+		 * @public
+		 */
+		'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 		/**
 		 * When `true`, the component may be manipulated via the directional input keys upon
@@ -186,7 +196,7 @@ const SliderBase = kind({
 });
 
 /**
- * Moonstone-specific slider behaviors to apply to [Button]{@link moonstone/Slider.SliderBase}.
+ * Moonstone-specific slider behaviors to apply to [SliderBase]{@link moonstone/Slider.SliderBase}.
  *
  * @hoc
  * @memberof moonstone/Slider

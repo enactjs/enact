@@ -19,14 +19,14 @@ const toggleActivate = ({active}) => {
 };
 
 // Adds moonstone-specific slider behaviors
-// * aria-text handling
+// * aria-valuetext handling
 //   * use aria-valuetext when set
-//   * defaults to value
+//   * defaults to current value
 //   * onActivate, set to hint text
-//   * on value change, reset to value or valuetext
-// * Spotlight management
-//   * pause whend dragging to prevent spotlight from leaving when pointer enters another component
-// * managing focused state to show/hide tooltip
+//   * on value change, reset to value or aria-valuetext
+// * Pause Spotlight when dragging to prevent spotlight from leaving when pointer enters another
+//   component
+// * Managing focused state to show/hide tooltip
 const SliderBehaviorDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SliderBehaviorDecorator'
