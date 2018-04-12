@@ -5,20 +5,19 @@ import sinon from 'sinon';
 import Slider from '../Slider';
 import css from '../Slider.less';
 
+const getNode = (slider) => slider.find(`div.${css.slider}`);
+
+const focus = (slider) => getNode(slider).simulate('focus');
+const blur = (slider) => getNode(slider).simulate('blur');
+const activate = (slider) => getNode(slider).simulate('keyup', {keyCode: 13});
+const keyDown = (keyCode) => (slider) => getNode(slider).simulate('keydown', {keyCode});
+
+const leftKeyDown = keyDown(37);
+const rightKeyDown = keyDown(39);
+const upKeyDown = keyDown(38);
+const downKeyDown = keyDown(40);
+
 describe('Slider', () => {
-
-	const getNode = (slider) => slider.find(`div.${css.slider}`);
-
-	const focus = (slider) => getNode(slider).simulate('focus');
-	const blur = (slider) => getNode(slider).simulate('blur');
-	const activate = (slider) => getNode(slider).simulate('keyup', {keyCode: 13});
-	const keyDown = (keyCode) => (slider) => getNode(slider).simulate('keydown', {keyCode});
-
-	const leftKeyDown = keyDown(37);
-	const rightKeyDown = keyDown(39);
-	const upKeyDown = keyDown(38);
-	const downKeyDown = keyDown(40);
-
 	const callCount = spy => {
 		switch (spy.callCount) {
 			case 0:

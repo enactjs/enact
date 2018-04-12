@@ -129,6 +129,7 @@ const ProgressBarBase = kind({
 						proportion={progress}
 						orientation={orientation}
 						side={tooltipSide}
+						visible
 					>
 						{percentageText}
 					</ProgressBarTooltip>

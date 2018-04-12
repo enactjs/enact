@@ -4,6 +4,7 @@
  * @module moonstone/IncrementSlider
  */
 
+import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import {extractAriaProps} from '@enact/core/util';
@@ -33,6 +34,8 @@ const isRight = is('right');
 const isUp = is('up');
 
 const Slider = Spottable(Skinnable(SliderBase));
+
+const forwardWithType = (type, props) => forward(type, {type}, props);
 
 /**
  * A stateless Slider with IconButtons to increment and decrement the value. In most circumstances,
@@ -236,6 +239,14 @@ const IncrementSliderBase = kind({
 		onIncrementSpotlightDisappear: PropTypes.func,
 
 		/**
+		 * The handler to run when the increment button becomes disabled
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onSpotlightDirection: PropTypes.func,
+
+		/**
 		 * The handler to run when the component is removed while retaining focus.
 		 *
 		 * @type {Function}
@@ -360,59 +371,32 @@ const IncrementSliderBase = kind({
 	},
 
 	handlers: {
-		handleDecrementKeyDown: (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, orientation}) => {
-			const {keyCode} = ev;
-
-			if (isLeft(keyCode) && onSpotlightLeft) {
-				onSpotlightLeft(ev);
-			} else if (isDown(keyCode) && onSpotlightDown) {
-				onSpotlightDown(ev);
-			} else if (isRight(keyCode) && onSpotlightRight && orientation === 'vertical') {
-				onSpotlightRight(ev);
-			} else if (isUp(keyCode) && onSpotlightUp && orientation !== 'vertical') {
-				onSpotlightUp(ev);
-			}
-		},
-		handleIncrementKeyDown: (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, orientation}) => {
-			const {keyCode} = ev;
-
-			if (isRight(keyCode) && onSpotlightRight) {
-				onSpotlightRight(ev);
-			} else if (isUp(keyCode) && onSpotlightUp) {
-				onSpotlightUp(ev);
-			} else if (isLeft(keyCode) && onSpotlightLeft && orientation === 'vertical') {
-				onSpotlightLeft(ev);
-			} else if (isDown(keyCode) && onSpotlightDown && orientation !== 'vertical') {
-				onSpotlightDown(ev);
-			}
-		},
-		handleSliderKeyDown: (ev, {min, max, value, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, orientation}) => {
-			const {keyCode} = ev;
-			const isMin = value <= min;
-			const isMax = value >= max;
-
-			if (orientation === 'vertical') {
-				if (isLeft(keyCode) && onSpotlightLeft) {
-					onSpotlightLeft(ev);
-				} else if (isRight(keyCode) && onSpotlightRight) {
-					onSpotlightRight(ev);
-				} else if (isDown(keyCode) && isMin && onSpotlightDown) {
-					onSpotlightDown(ev);
-				} else if (isUp(keyCode) && isMax && onSpotlightUp) {
-					onSpotlightUp(ev);
-				}
-			} else if (isLeft(keyCode) && isMin && onSpotlightLeft) {
-				onSpotlightLeft(ev);
-			} else if (isRight(keyCode) && isMax && onSpotlightRight) {
-				onSpotlightRight(ev);
-			} else if (isDown(keyCode) && onSpotlightDown) {
-				onSpotlightDown(ev);
-			} else if (isUp(keyCode) && onSpotlightUp) {
-				onSpotlightUp(ev);
-			}
-		},
 		onDecrement: emitChange(-1),
-		onIncrement: emitChange(1)
+		onIncrement: emitChange(1),
+		onKeyDown: (ev, props) => {
+			const {orientation} = props;
+
+			forward('onKeyDown', ev, props);
+
+			// if the source of the event is the slider, forward it along
+			if (ev.target.classList.contains(componentCss.slider)) {
+				forward('onSpotlightDirection', ev, props);
+				return;
+			}
+
+			const isIncrement = ev.target.classList.contains(componentCss.incrementButton);
+			const isDecrement = ev.target.classList.contains(componentCss.decrementButton);
+
+			if (isRight(ev.keyCode) && (isIncrement || orientation === 'vertical')) {
+				forwardWithType('onSpotlightRight', props);
+			} else if (isLeft(ev.keyCode) && (isDecrement || orientation === 'vertical')) {
+				forwardWithType('onSpotlightLeft', props);
+			} else if (isUp(ev.keyCode) && (isIncrement || orientation === 'horizontal')) {
+				forwardWithType('onSpotlightUp', props);
+			} else if (isDown(ev.keyCode) && (isDecrement || orientation === 'horizontal')) {
+				forwardWithType('onSpotlightDown', props);
+			}
+		}
 	},
 
 	styles: {
@@ -457,9 +441,6 @@ const IncrementSliderBase = kind({
 		decrementIcon,
 		disabled,
 		focused,
-		handleDecrementKeyDown,
-		handleIncrementKeyDown,
-		handleSliderKeyDown,
 		id,
 		incrementAriaLabel,
 		incrementDisabled,
@@ -483,6 +464,7 @@ const IncrementSliderBase = kind({
 		...rest
 	}) => {
 		const ariaProps = extractAriaProps(rest);
+		delete rest.onSpotlightDirection;
 		delete rest.onSpotlightDown;
 		delete rest.onSpotlightLeft;
 		delete rest.onSpotlightRight;
@@ -497,7 +479,6 @@ const IncrementSliderBase = kind({
 					className={css.decrementButton}
 					disabled={decrementDisabled}
 					onTap={onDecrement}
-					onKeyDown={handleDecrementKeyDown}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
 				>
@@ -518,7 +499,6 @@ const IncrementSliderBase = kind({
 					noFill={noFill}
 					onActivate={onActivate}
 					onChange={onChange}
-					onKeyDown={handleSliderKeyDown}
 					onSpotlightDisappear={onSpotlightDisappear}
 					orientation={orientation}
 					spotlightDisabled={spotlightDisabled}
@@ -535,7 +515,6 @@ const IncrementSliderBase = kind({
 					className={css.incrementButton}
 					disabled={incrementDisabled}
 					onTap={onIncrement}
-					onKeyDown={handleIncrementKeyDown}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
 				>
@@ -556,7 +535,7 @@ const IncrementSliderDecorator = compose(
 			onDecrementSpotlightDisappear: `.${componentCss.incrementButton}`
 		}
 	}),
-	SliderBehaviorDecorator,
+	SliderBehaviorDecorator({emitSpotlightEvents: 'onSpotlightDirection'}),
 	Skinnable,
 	Slottable({slots: ['knob', 'tooltip']})
 );

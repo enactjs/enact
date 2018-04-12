@@ -20,16 +20,30 @@ const toggleActivate = ({active}) => {
 	};
 };
 
+const defaultConfig = {
+	// FIXME: This is a compromise to maintain a single decorator for Slider and IncrementSlider
+	// that handles both a consolidated focus state and spotlight directional event mgmt. When this
+	// is unset (for Slider), this decorator will listen to onKeyDown and fire spotlight events.
+	// When set (for IncrementSlider), it specifies the event that is passed down to trigger
+	// spotlight events and also doesn't remove the spotlight directional callbacks from the props
+	// so the Wrapped component can fire them manually or use the callback for the default behavior.
+	emitSpotlightEvents: null
+};
+
 // Adds moonstone-specific slider behaviors
 // * aria-valuetext handling
 //   * use aria-valuetext when set
 //   * defaults to current value
 //   * onActivate, set to hint text
 //   * on value change, reset to value or aria-valuetext
-// * Pause Spotlight when dragging to prevent spotlight from leaving when pointer enters another
-//   component
+// * Spotlight
+//   * Pause Spotlight when dragging to prevent spotlight from leaving when pointer enters another
+//     component
+//   * Forward directional spotlight events from slider
 // * Managing focused state to show/hide tooltip
-const SliderBehaviorDecorator = hoc((config, Wrapped) => {
+const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
+	const {emitSpotlightEvents} = config;
+
 	return class extends React.Component {
 		static displayName = 'SliderBehaviorDecorator'
 
@@ -57,7 +71,7 @@ const SliderBehaviorDecorator = hoc((config, Wrapped) => {
 			this.handleDragEnd = this.handleDragEnd.bind(this);
 			this.handleDragStart = this.handleDragStart.bind(this);
 			this.handleFocus = this.handleFocus.bind(this);
-			this.handleKeyDown = this.handleKeyDown.bind(this);
+			this.handleSpotlightEvents = this.handleSpotlightEvents.bind(this);
 			this.bounds = {};
 
 			this.state = {
@@ -118,19 +132,28 @@ const SliderBehaviorDecorator = hoc((config, Wrapped) => {
 			this.setState({focused: true});
 		}
 
-		handleKeyDown (ev) {
-			forward('onKeyDown', ev, this.props);
+		handleSpotlightEvents (ev) {
+			if (!emitSpotlightEvents) {
+				forward('onKeyDown', ev, this.props);
+			}
+
 			forwardSpotlightEvents(ev, this.props);
 		}
 
 		render () {
 			const props = Object.assign({}, this.props);
 
-			// Remove spotlight props before hitting spottable since we've handled them uniquely
-			delete props.onSpotlightLeft;
-			delete props.onSpotlightRight;
-			delete props.onSpotlightUp;
-			delete props.onSpotlightDown;
+			if (!emitSpotlightEvents) {
+				// Remove spotlight props before hitting spottable since we've handled them uniquely
+				delete props.onSpotlightLeft;
+				delete props.onSpotlightRight;
+				delete props.onSpotlightUp;
+				delete props.onSpotlightDown;
+
+				props.onKeyDown = this.handleSpotlightEvents;
+			} else {
+				props[emitSpotlightEvents] = this.handleSpotlightEvents;
+			}
 
 			return (
 				<Wrapped
@@ -143,7 +166,6 @@ const SliderBehaviorDecorator = hoc((config, Wrapped) => {
 					onDragStart={this.handleDragStart}
 					onDragEnd={this.handleDragEnd}
 					onFocus={this.handleFocus}
-					onKeyDown={this.handleKeyDown}
 				/>
 			);
 		}
