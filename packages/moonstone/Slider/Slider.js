@@ -34,7 +34,7 @@ import componentCss from './Slider.less';
 /**
  * Range-selection input component
  *
- * @class Slider
+ * @class SliderBase
  * @extends ui/Slider.Slider
  * @memberof moonstone/Slider
  * @ui
@@ -43,7 +43,7 @@ import componentCss from './Slider.less';
 const SliderBase = kind({
 	name: 'Slider',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Slider.SliderBase.prototype */ {
 
 		/**
 		 * When `true`, the component may be manipulated via the directional input keys upon
@@ -220,9 +220,10 @@ const SliderDecorator = compose(
 const Slider = SliderDecorator(SliderBase);
 
 /**
- * A {@link moonstone/TooltipDecorator.Tooltip} specifically adapted for use with
- * {@link moonstone/IncrementSlider.IncrementSlider}, {@link moonstone/ProgressBar.ProgressBar},
- * or {@link moonstone/Slider.Slider}.
+ * A [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} specifically adapted for use with
+ * [IncrementSlider]{@link moonstone/IncrementSlider.IncrementSlider},
+ * [ProgressBar]{@link moonstone/ProgressBar.ProgressBar}, or
+ * [Slider]{@link moonstone/Slider.Slider}.
  *
  * See {@link moonstone/ProgressBar.ProgressBarTooltip}
  *

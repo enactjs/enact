@@ -26,7 +26,7 @@ import {calcPercent} from './utils';
 /**
  * An unstyled, sliding range-selection component
  *
- * @class Slider
+ * @class SliderBase
  * @memberof ui/Slider
  * @ui
  * @public
@@ -34,7 +34,7 @@ import {calcPercent} from './utils';
 const SliderBase = kind({
 	name: 'ui:Slider',
 
-	propTypes: {
+	propTypes: /** @lends ui/Slider.SliderBase.prototype */ {
 		/**
 		 * Background progress, as a proportion between `0` and `1`.
 		 *
@@ -277,7 +277,7 @@ const SliderBase = kind({
  * Adds touch and drag support to a [SliderBase]{@link ui/Slider.SliderBase}.
  *
  * @hoc
- * @memberof ui/Button
+ * @memberof ui/Slider
  * @mixes ui/Touchable.Touchable
  * @public
  */

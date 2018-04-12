@@ -15,7 +15,7 @@ import ComponentOverride from '../ComponentOverride';
 const Knob = kind({
 	name: 'Knob',
 
-	propTypes: {
+	propTypes: /** @lends ui/Slider.Knob.prototype */ {
 		/**
 		 * The orientation of the slider, either `"horizontal"` or `"vertical"`.
 		 *
