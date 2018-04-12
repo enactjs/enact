@@ -6,6 +6,8 @@ import React from 'react';
 
 import $L from '../internal/$L';
 
+import {forwardSpotlightEvents} from './utils';
+
 const useHintOnActivate = ({active}) => {
 	return {
 		useHintText: active
@@ -33,12 +35,17 @@ const SliderBehaviorDecorator = hoc((config, Wrapped) => {
 
 		static propTypes = {
 			'aria-valuetext': PropTypes.oneOf([PropTypes.string, PropTypes.number]),
+			max: PropTypes.number,
+			min: PropTypes.number,
 			orientation: PropTypes.string,
 			value: PropTypes.number
 		}
 
 		static defaultProps = {
-			orientation: 'horizontal'
+			max: 100,
+			min: 0,
+			orientation: 'horizontal',
+			value: 0
 		}
 
 		constructor () {
@@ -50,6 +57,7 @@ const SliderBehaviorDecorator = hoc((config, Wrapped) => {
 			this.handleDragEnd = this.handleDragEnd.bind(this);
 			this.handleDragStart = this.handleDragStart.bind(this);
 			this.handleFocus = this.handleFocus.bind(this);
+			this.handleKeyDown = this.handleKeyDown.bind(this);
 			this.bounds = {};
 
 			this.state = {
@@ -110,10 +118,23 @@ const SliderBehaviorDecorator = hoc((config, Wrapped) => {
 			this.setState({focused: true});
 		}
 
+		handleKeyDown (ev) {
+			forward('onKeyDown', ev, this.props);
+			forwardSpotlightEvents(ev, this.props);
+		}
+
 		render () {
+			const props = Object.assign({}, this.props);
+
+			// Remove spotlight props before hitting spottable since we've handled them uniquely
+			delete props.onSpotlightLeft;
+			delete props.onSpotlightRight;
+			delete props.onSpotlightUp;
+			delete props.onSpotlightDown;
+
 			return (
 				<Wrapped
-					{...this.props}
+					{...props}
 					active={this.state.active}
 					aria-valuetext={this.getValueText()}
 					focused={this.state.focused}
@@ -122,6 +143,7 @@ const SliderBehaviorDecorator = hoc((config, Wrapped) => {
 					onDragStart={this.handleDragStart}
 					onDragEnd={this.handleDragEnd}
 					onFocus={this.handleFocus}
+					onKeyDown={this.handleKeyDown}
 				/>
 			);
 		}

@@ -1,5 +1,5 @@
 import clamp from 'ramda/src/clamp';
-import {adaptEvent, forKey, forProp, forward, handle, oneOf, returnsTrue, stopImmediate} from '@enact/core/handle';
+import {adaptEvent, forKey, forProp, forward, handle, oneOf, stopImmediate} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {calcPercent} from '@enact/ui/Slider/utils';
 
@@ -56,9 +56,9 @@ const handleDecrement = handle(
 const either = (a, b) => (...args) => a(...args) || b(...args);
 const atMinimum = (ev, {min, value}) => value <= min;
 const atMaximum = (ev, {max, value}) => value >= max;
-const forwardOnlyType = (type) => adaptEvent(() => ({type}), forward);
+const forwardOnlyType = (type) => adaptEvent(() => ({type}), forward(type));
 
-const forwardSpotlightEvents = returnsTrue(oneOf(
+const forwardSpotlightEvents = oneOf(
 	[forKey('left'), handle(
 		either(forProp('orientation', 'vertical'), atMinimum),
 		forwardOnlyType('onSpotlightLeft')
@@ -75,7 +75,7 @@ const forwardSpotlightEvents = returnsTrue(oneOf(
 		either(forProp('orientation', 'horizontal'), atMaximum),
 		forwardOnlyType('onSpotlightUp')
 	)],
-));
+);
 
 export {
 	forwardSpotlightEvents,

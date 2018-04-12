@@ -24,7 +24,6 @@ import Skinnable from '../Skinnable';
 
 import SliderBehaviorDecorator from './SliderBehaviorDecorator';
 import {
-	forwardSpotlightEvents,
 	handleDecrement,
 	handleIncrement
 } from './utils';
@@ -151,7 +150,6 @@ const SliderBase = kind({
 		),
 		onKeyDown: handle(
 			forwardWithPrevent('onKeyDown'),
-			forwardSpotlightEvents,
 			anyPass([
 				handleIncrement,
 				handleDecrement
