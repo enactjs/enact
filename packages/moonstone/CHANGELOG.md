@@ -17,9 +17,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/TimePicker` to show `meridiem` correctly in all locales
 - `moonstone/Scrollable/ScrollButtons` to read out out audio guidance when button down.
+- `moonstone/ExpandableItem` to show label properly when open and disabled
 - `moonstone/MoonstoneDecorator.I18nDecorator` to optimize localized font loading performance
 - `moonstone/styles/fonts.less` to remove specified unicode range definitions
-- `moonstone/ExpandableItem` to show label properly when open and disabled
 
 ## [2.0.0-alpha.7 - 2018-04-03]
 
@@ -47,7 +47,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to display custom thumbnail node
 - `moonstone/VideoPlayer` to hide more icon when right components are removed
 - `moonstone/Picker` to correctly update pressed state when dragging off buttons
-- `moonstone/VirtualList` and `moonstone/VirtualGridList`, to show Spotlight properly while navigating them with page up and down keys
 - `moonstone/Notification` to display when it's opened
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to show Spotlight properly while navigating with page up and down keys
 - `moonstone/Input` to allow navigating via left or right to other components when the input is active and the selection is at start or end of the text, respectively
