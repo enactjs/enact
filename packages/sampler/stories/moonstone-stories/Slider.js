@@ -11,6 +11,7 @@ import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('Slider', SliderBase, Slider);
 removeProps(Config, 'defaultPressed pressed');
 
+// eslint-disable-next-line
 function SliderWithTooltip ({percent, side, forceSide, tooltip, ...rest}) {
 	return (
 		<Slider

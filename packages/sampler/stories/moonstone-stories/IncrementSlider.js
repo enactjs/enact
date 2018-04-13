@@ -11,6 +11,7 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('IncrementSlider', IncrementSliderBase, IncrementSlider);
 
+// eslint-disable-next-line
 function IncrementSliderWithTooltip ({percent, side, forceSide, tooltip, ...rest}) {
 	return (
 		<IncrementSlider {...rest}>
