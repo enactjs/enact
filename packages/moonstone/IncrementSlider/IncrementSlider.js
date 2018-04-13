@@ -230,6 +230,9 @@ const IncrementSliderBase = kind({
 		 */
 		onDecrementSpotlightDisappear: PropTypes.func,
 
+		onDragEnd: PropTypes.func,
+		onDragStart: PropTypes.func,
+
 		/**
 		 * The handler to run when the increment button becomes disabled
 		 *
@@ -453,6 +456,8 @@ const IncrementSliderBase = kind({
 		onChange,
 		onDecrement,
 		onDecrementSpotlightDisappear,
+		onDragEnd,
+		onDragStart,
 		onIncrement,
 		onIncrementSpotlightDisappear,
 		onSpotlightDisappear,
@@ -499,6 +504,8 @@ const IncrementSliderBase = kind({
 					noFill={noFill}
 					onActivate={onActivate}
 					onChange={onChange}
+					onDragEnd={onDragEnd}
+					onDragStart={onDragStart}
 					onSpotlightDisappear={onSpotlightDisappear}
 					orientation={orientation}
 					spotlightDisabled={spotlightDisabled}

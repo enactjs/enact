@@ -76,6 +76,7 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.state = {
 				active: false,
+				dragging: false,
 				focused: false,
 				useHintText: false
 			};
@@ -121,10 +122,12 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleDragStart () {
 			this.paused.pause();
+			this.setState({dragging: true});
 		}
 
 		handleDragEnd () {
 			this.paused.resume();
+			this.setState({dragging: false});
 		}
 
 		handleFocus (ev) {
@@ -160,7 +163,7 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					{...props}
 					active={this.state.active}
 					aria-valuetext={this.getValueText()}
-					focused={this.state.focused}
+					focused={this.state.focused || this.state.dragging}
 					onActivate={this.handleActivate}
 					onBlur={this.handleBlur}
 					onDragStart={this.handleDragStart}
