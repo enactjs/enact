@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 
 import {calcPercent} from './utils';
 
+import css from './Slider.less';
+
 const PositionDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'PositionDecorator'
@@ -41,9 +43,15 @@ const PositionDecorator = hoc((config, Wrapped) => {
 
 		emitChangeForPosition (x, y) {
 			const {max, min, orientation, step} = this.props;
-			const position = orientation === 'horizontal' ? x : y;
+			let position = x;
+			let offset = this.bounds.offsetX;
 
-			let percent = calcPercent(this.bounds.min, this.bounds.max, position);
+			if (orientation === 'vertical') {
+				position = y;
+				offset = this.bounds.offsetY;
+			}
+
+			let percent = calcPercent(this.bounds.min, this.bounds.max, position - offset);
 			if (orientation === 'vertical') {
 				percent = 1 - percent;
 			}
@@ -81,12 +89,27 @@ const PositionDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		handleDown ({clientX, clientY, currentTarget}) {
-			this.updateBounds(currentTarget);
+		updateOffset (clientX, clientY, target) {
+			this.bounds.offsetX = 0;
+			this.bounds.offsetY = 0;
 
+			const knob = target.closest(`.${css.knob}`);
+			if (knob) {
+				const rect = knob.getBoundingClientRect();
+				const centerX = rect.left + rect.width / 2;
+				const centerY = rect.top + rect.height / 2;
+
+				this.bounds.offsetX = clientX - centerX;
+				this.bounds.offsetY = clientY - centerY;
+			}
+		}
+
+		handleDown ({clientX, clientY, currentTarget, target}) {
 			// bail early for emulated mousedown events from key presses
 			if (typeof clientX === 'undefined' || typeof clientY === 'undefined') return;
 
+			this.updateBounds(currentTarget);
+			this.updateOffset(clientX, clientY, target);
 			this.emitChangeForPosition(clientX, clientY);
 		}
 
