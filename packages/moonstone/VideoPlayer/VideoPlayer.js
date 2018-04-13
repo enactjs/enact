@@ -702,6 +702,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.selectPlaybackRates('fastForward');
 		this.sliderKnobProportion = 0;
 		this.preloadSourcePlaying = false;
+		this.isPlayerMounted = false;
 
 		this.initI18n();
 
@@ -748,6 +749,7 @@ const VideoPlayerBase = class extends React.Component {
 			countReactChildren(this.props.rightComponents),
 			countReactChildren(this.props.children)
 		);
+		this.isPlayerMounted = true;
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -765,20 +767,24 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		const {source, preloadSource} = this.props;
-		const {source: nextSource} = nextProps;
+		const {source: nextSource, preloadSource: nextPreloadSource} = nextProps;
+		this.isVideoPreloaded = false;
 
 		if (preloadSource && compareSources(preloadSource, nextSource)) {
 			this.preloadSourcePlaying = !this.preloadSourcePlaying;
 			const currentVideoSource = this.video;
 			this.video = this.preloadVideo;
 			this.preloadVideo = currentVideoSource;
+			this.isVideoPreloaded = true;
+		}
+
+		if (nextPreloadSource) {
 			this.preloadVideo.load();
 		}
 
 		if (!compareSources(source, nextSource)) {
 			this.firstPlayReadFlag = true;
 			this.setState({currentTime: 0, proportionPlayed: 0, proportionLoaded: 0});
-			this.reloadVideo();
 		}
 	}
 
@@ -831,7 +837,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		// Detect a change to the video source and reload if necessary.
 		if (!compareSources(source, prevSource)) {
-			this.reloadVideo();
+			this.reloadVideo(this.isVideoPreloaded);
 		}
 
 		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
@@ -1293,11 +1299,12 @@ const VideoPlayerBase = class extends React.Component {
 		};
 	}
 
-	reloadVideo = () => {
+	reloadVideo = (preloaded) => {
 		// When changing a HTML5 video, you have to reload it.
 		this.stopListeningForPulses();
-
-		this.video.load();
+		if (!preloaded) {
+			this.video.load();
+		}
 		this.setState({
 			announce: AnnounceState.READY
 		});
@@ -1897,6 +1904,20 @@ const VideoPlayerBase = class extends React.Component {
 		return null;
 	}
 
+	// These methods are here because on webOS TVs we can't play a video until after second video
+	// player is loaded
+	onLoadStartInitialPlaying = () => {
+		if (this.isPlayerMounted && this.isVideoPreloaded) {
+			return this.preloadSourcePlaying ? this.video.play() : null;
+		}
+	}
+
+	onLoadStartIntialLoaded = () => {
+		if (this.isPlayerMounted && this.isVideoPreloaded) {
+			return this.preloadSourcePlaying ? null : this.video.play();
+		}
+	}
+
 	render () {
 		const {
 			backwardIcon,
@@ -1971,7 +1992,8 @@ const VideoPlayerBase = class extends React.Component {
 			component: videoComponent,
 			controls: false,
 			preload: this.preloadSourcePlaying ? 'auto' : 'none',
-			onUpdate: this.handleEvent,
+			onLoadStart: this.onLoadStartInitialPlaying,
+			onUpdate: this.preloadSourcePlaying ? null : this.handleEvent,
 			ref: this.setVideoRef
 		};
 
@@ -1982,7 +2004,8 @@ const VideoPlayerBase = class extends React.Component {
 			className: this.preloadSourcePlaying ? css.video : css.preloadVideo,
 			component: videoComponent,
 			controls: false,
-			onUpdate: this.handleEvent,
+			onLoadStart: this.onLoadStartIntialLoaded,
+			onUpdate: this.preloadSourcePlaying ? this.handleEvent : null,
 			preload: this.preloadSourcePlaying ? 'none' : 'auto',
 			ref: this.setPreloadRef
 		};
