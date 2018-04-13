@@ -13,17 +13,25 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/ProgressBar.ProgressBarTooltip` props `percent` to format the value as a percent and `visible` to control display of the tooltip
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="list"`
 
 ### Changed
 
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="region"` to remove obsolete role in `SpotlightPlaceholder`
 - `moonstone/VideoPlayer` property `title` to accept node type
 - `moonstone/IncrementSlider` and `moonstone/Slider` prop `tooltip` to support either a boolean for the default tooltip or an element or component for a custom tooltip
+
+### Fixed
+
+- `moonstone/TimePicker` to show `meridiem` correctly in all locales
+- `moonstone/Scrollable/ScrollButtons` to read out out audio guidance when button down.
+- `moonstone/ExpandableItem` to show label properly when open and disabled
 
 ## [2.0.0-alpha.7 - 2018-04-03]
 
 ### Removed
 
-- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` property `data`
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `data` to eliminate the misunderstanding caused by the ambiguity of `data`
 
 ### Added
 
