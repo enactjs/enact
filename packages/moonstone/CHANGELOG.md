@@ -14,6 +14,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/ProgressBar.ProgressBarTooltip` props `percent` to format the value as a percent and `visible` to control display of the tooltip
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="list"`
+- `moonstone/Panels` property `closeButtonAriaLabel` to configure the label set on application close button 
 
 ### Changed
 
