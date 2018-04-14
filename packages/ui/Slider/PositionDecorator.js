@@ -26,6 +26,7 @@ const PositionDecorator = hoc((config, Wrapped) => {
 			min: 0,
 			max: 100,
 			orientation: 'horizontal',
+			step: 1,
 			value: 0
 		}
 

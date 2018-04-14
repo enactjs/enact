@@ -44,7 +44,7 @@ storiesOf('Moonstone', module)
 				noFill={boolean('noFill', false)}
 				onChange={action('onChange')}
 				orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
-				step={number('step', 0)}
+				step={number('step', 1)}
 				tooltip={nullify(boolean('tooltip', false))}
 				percent={nullify(boolean('percent', false))}
 				side={nullify(select('side', ['before', 'after']))}

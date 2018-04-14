@@ -160,6 +160,7 @@ const SliderBase = kind({
 		 * The amount to increment or decrement the value.
 		 *
 		 * @type {Number}
+		 * @default 1
 		 * @public
 		 */
 		step: PropTypes.number,
