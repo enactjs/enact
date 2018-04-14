@@ -12,25 +12,13 @@ class Drag {
 
 	isDragging = () => this.dragConfig != null
 
-	getConstrainingNode (node, constraint) {
-		if (node) {
-			switch (constraint) {
-				case 'body':		return node.ownerDocument.body;
-				case 'container':	return node.offsetParent;
-				case 'self':		return node;
-				case 'window':		return window;
-				default:			return node.closest(constraint);
-			}
-		}
-	}
-
 	setContainerBounds = (node) => {
-		const {constraint, global: isGlobal, boxSizing} = this.dragConfig;
+		const {global: isGlobal, boxSizing} = this.dragConfig;
 		let bounds = null;
 
 		if (!node) return;
 
-		if (isGlobal || constraint === 'window') {
+		if (isGlobal) {
 			bounds = {
 				minX: 0,
 				minY: 0,
@@ -38,12 +26,11 @@ class Drag {
 				maxY: window.innerHeight
 			};
 		} else {
-			const constrainingNode = this.getConstrainingNode(node, constraint);
-			bounds = constrainingNode.getBoundingClientRect();
+			bounds = node.getBoundingClientRect();
 
 			// adjust for padding when using content-box
 			if (boxSizing === 'content-box') {
-				const computedStyle = window.getComputedStyle(constrainingNode);
+				const computedStyle = window.getComputedStyle(node);
 				bounds = {
 					minX: bounds.left + parseInt(computedStyle.paddingLeft),
 					minY: bounds.top + parseInt(computedStyle.paddingTop),
@@ -153,14 +140,12 @@ class Drag {
 
 const defaultDragConfig = {
 	boxSizing: 'border-box',
-	constraint: 'self',
 	global: false,
 	moveTolerance: 16
 };
 
 const dragConfigPropType = PropTypes.shape({
 	boxSizing: PropTypes.string,
-	constraint: PropTypes.string,
 	global: PropTypes.bool,
 	moveTolerance: PropTypes.number
 });

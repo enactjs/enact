@@ -70,12 +70,6 @@ const mergeConfig = (cfg) => {
  *     Only applies when `global` is `false`.
  *     * `'border-box'` - the default, includes the padding and border but excludes the margin.
  *     * `'content-box'` - excludes the padding, border, and margin.
- *   * `constrain` - Determines node to use as the boundary for dragging
- *     * `'body'` - the body node
- *     * `'conatiner'` - the offset parent of the wrapped node
- *     * `'self'` - the default, the wrapped node
- *     * `'window'` - the viewport
- *     * Any valid CSS selector - the closest ancestor matching the selector
  *   * `global` - When `true`, drag gestures will continue when leaving the bounds of the component.
  *   * `moveTolerance` - The number of pixels from the start position of the drag that the pointer
  *     may move before cancelling the drag. Defaults to `16`.
