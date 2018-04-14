@@ -23,6 +23,15 @@ const ApplicationCloseButton = kind({
 
 	propTypes: /** @lends moonstone/Panels.ApplicationCloseButton.prototype */ {
 		/**
+		* Sets the hint string read when focusing the application close button.
+		*
+		* @type {String}
+		* @default 'Exit app'
+		* @public
+		*/
+		'aria-label': PropTypes.string,
+
+		/**
 		 * The background-color opacity of this button; valid values are `'opaque'`, `'translucent'`,
 		 * `'lightTranslucent'` and `'transparent'`.
 		 *
@@ -49,11 +58,14 @@ const ApplicationCloseButton = kind({
 		className: 'applicationCloseButton'
 	},
 
+	computed: {
+		'aria-label': ({'aria-label': ariaLabel}) => ariaLabel == null ? $L('Exit app') : ariaLabel
+	},
+
 	render: ({backgroundOpacity, onApplicationClose, ...rest}) => {
 		return (
 			<IconButton
 				{...rest}
-				aria-label={$L('Exit app')}
 				backgroundOpacity={backgroundOpacity}
 				onTap={onApplicationClose}
 				small
