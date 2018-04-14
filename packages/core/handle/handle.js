@@ -463,7 +463,7 @@ const log = handle.log = curry((message, ev, ...args) => {
  * // calls the onChange callback with an event payload containing a type and value member
  * const incrementAndChange = adaptEvent(
  * 	(ev, props) => ({
- * 	  type: 'onChange'
+ * 	  type: 'onChange',
  * 	  value: props.value + 1
  * 	}),
  * 	forward('onChange')

@@ -1,16 +1,14 @@
 import clamp from 'ramda/src/clamp';
 import {adaptEvent, forKey, forProp, forward, handle, oneOf, stopImmediate} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
-import {calcPercent} from '@enact/ui/Slider/utils';
-
-const isNumber = (n) => typeof n === 'number' && !isNaN(n);
+import {calcProportion} from '@enact/ui/Slider/utils';
 
 const calcStep = (knobStep, step) => {
 	let s;
 
-	if (isNumber(knobStep)) {
+	if (knobStep != null) {
 		s = knobStep;
-	} else if (isNumber(knobStep)) {
+	} else if (step != null) {
 		s = step;
 	}
 
@@ -30,13 +28,13 @@ const isDecrement = ({keyCode}, {orientation}) => {
 const emitChange = (direction) => adaptEvent(
 	(ev, {knobStep, max, min, step, value}) => ({
 		value: clamp(min, max, value + (calcStep(knobStep, step) * direction)),
-		proportion: calcPercent(min, max, value)
+		proportion: calcProportion(min, max, value)
 	}),
 	forward('onChange')
 );
 
 const isActive = (ev, props) => {
-	return props.active || props.activateOnFocus || props.detachedKnob;
+	return props.active || props.activateOnFocus;
 };
 
 const handleIncrement = handle(

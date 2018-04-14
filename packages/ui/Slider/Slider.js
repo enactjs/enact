@@ -21,7 +21,7 @@ import PositionDecorator from './PositionDecorator';
 
 import componentCss from './Slider.less';
 
-import {calcPercent} from './utils';
+import {calcProportion} from './utils';
 
 /**
  * An unstyled, sliding range-selection component
@@ -66,7 +66,7 @@ const SliderBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, the component is shown as disabled and does not generate events
+		 * When `true`, the component is disabled and does not generate events
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -101,17 +101,6 @@ const SliderBase = kind({
 		knobComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 
 		/**
-		 * The amount to increment or decrement the position of the knob via 5-way controls.
-		 *
-		 * If not specified, `step` is used for the default value.
-		 *
-		 * @type {Number}
-		 * @default 1
-		 * @public
-		 */
-		knobStep: PropTypes.number,
-
-		/**
 		 * The maximum value of the slider.
 		 *
 		 * @type {Number}
@@ -130,7 +119,7 @@ const SliderBase = kind({
 		min: PropTypes.number,
 
 		/**
-		 * When `true`, the slider bar doesn't show a fill and doesn't highlight when spotted.
+		 * When `true`, the slider bar does not display filled.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -209,7 +198,6 @@ const SliderBase = kind({
 	defaultProps: {
 		disabled: false,
 		knobComponent: Knob,
-		knobStep: 1,
 		min: 0,
 		max: 100,
 		noFill: false,
@@ -234,9 +222,9 @@ const SliderBase = kind({
 				}
 			);
 		},
-		percent: ({max, min, value}) => calcPercent(min, max, value),
+		percent: ({max, min, value}) => calcProportion(min, max, value),
 		style: ({backgroundProgress, max, min, style, value}) => {
-			const proportion = calcPercent(min, max, value);
+			const proportion = calcProportion(min, max, value);
 
 			return {
 				...style,
@@ -249,7 +237,6 @@ const SliderBase = kind({
 
 	render: ({css, disabled, knobComponent, orientation, percent, tooltipComponent, value, ...rest}) => {
 		delete rest.backgroundProgress;
-		delete rest.knobStep;
 		delete rest.max;
 		delete rest.min;
 		delete rest.noFill;

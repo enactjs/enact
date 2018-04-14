@@ -93,6 +93,17 @@ const SliderBase = kind({
 		focused: PropTypes.bool,
 
 		/**
+		 * The amount to increment or decrement the position of the knob via 5-way controls.
+		 *
+		 * If not specified, `step` is used for the default value.
+		 *
+		 * @type {Number}
+		 * @default 1
+		 * @public
+		 */
+		knobStep: PropTypes.number,
+
+		/**
 		 * The handler when the knob is activated or deactivated by selecting it via 5-way
 		 *
 		 * @type {Function}
@@ -133,6 +144,7 @@ const SliderBase = kind({
 		activateOnFocus: false,
 		active: false,
 		disabled: false,
+		knobStep: 1,
 		value: 0
 	},
 
@@ -175,6 +187,7 @@ const SliderBase = kind({
 		delete rest.activateOnFocus;
 		delete rest.active;
 		delete rest.focused;
+		delete rest.knobStep;
 		delete rest.onActivate;
 		delete rest.tooltip;
 

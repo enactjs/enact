@@ -69,7 +69,6 @@ const MediaSliderBase = kind({
 					aria-hidden="true"
 					className={sliderClassName}
 					css={css}
-					knobStep={0.05}
 					max={1}
 					min={0}
 					step={0.00001}

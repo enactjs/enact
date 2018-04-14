@@ -3,7 +3,7 @@ import {forward} from '@enact/core/handle';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {calcPercent} from './utils';
+import {calcProportion} from './utils';
 
 import css from './Slider.less';
 
@@ -51,7 +51,7 @@ const PositionDecorator = hoc((config, Wrapped) => {
 				offset = this.bounds.offsetY;
 			}
 
-			let percent = calcPercent(this.bounds.min, this.bounds.max, position - offset);
+			let percent = calcProportion(this.bounds.min, this.bounds.max, position - offset);
 			if (orientation === 'vertical') {
 				percent = 1 - percent;
 			}

@@ -1,4 +1,4 @@
-const calcPercent = (min, max, value) => {
+const calcProportion = (min, max, value) => {
 	if (value <= min) {
 		return 0;
 	} else if (value >= max) {
@@ -9,5 +9,5 @@ const calcPercent = (min, max, value) => {
 };
 
 export {
-	calcPercent
+	calcProportion
 };

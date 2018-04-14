@@ -1,6 +1,6 @@
 import {adaptEvent, handle, forKey, forward, oneOf, preventDefault} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import {calcPercent} from '@enact/ui/Slider/utils';
+import {calcProportion} from '@enact/ui/Slider/utils';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -79,7 +79,7 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 			this.setState((state) => {
 				if (clientX >= state.minX && clientX <= state.maxX) {
 					return {
-						x: calcPercent(state.minX, state.maxX, clientX)
+						x: calcProportion(state.minX, state.maxX, clientX)
 					};
 				}
 			});
