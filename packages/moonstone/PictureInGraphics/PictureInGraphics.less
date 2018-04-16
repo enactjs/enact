@@ -4,7 +4,6 @@
 
 @moon-pig-width:      321px;
 @moon-pig-border-width: 6px;
-@moon-pig-overlay-text-margin-bottom: 9px;
 
 .pictureInGraphics {
 	display: block;
@@ -22,28 +21,40 @@
 
 	.image {
 		box-sizing: border-box;
+		background-origin: content-box;
 		display: block;
 		position: absolute;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
-		border: @moon-pig-border-width solid transparent;
+		padding: @moon-pig-border-width;
 		margin: 0;
 	}
 
 	.textOverlay {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		padding: @moon-pig-border-width * 3;
 		box-sizing: border-box;
 		.moon-font('MuseoSans', 'Moonstone LG Display Light');
-		font-size: 21px;
 		font-weight: 900;
 		line-height: normal;
-		display: block;
-		position: absolute;
-		width: 100%;
-		padding: 0 @moon-pig-border-width @moon-pig-border-width;
-		bottom: @moon-pig-overlay-text-margin-bottom;
-		left: 0;
+	}
+
+	&:not(:global(.spottable)) {
+		.image {
+			padding: 0;
+		}
+		.textOverlay {
+			padding: @moon-pig-border-width * 2;
+		}
 	}
 
 	:global(.enact-locale-right-to-left) & {
@@ -53,4 +64,9 @@
 			left: auto;
 		}
 	}
+}
+
+:not(:global(.spottable))&.pictureInGraphics {
+	padding: 0;
+	pointer-events: none;
 }

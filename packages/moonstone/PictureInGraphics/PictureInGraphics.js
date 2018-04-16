@@ -32,21 +32,13 @@ class PictureInGraphicsBase extends React.Component {
 		source: PropTypes.node.isRequired,
 
 		/**
-		 * Image path for image overlay
+		 * Image path for image overlay.
+		 * When image is displayed, video is not displayed even though it is playing.
 		 *
 		 * @type {String}
 		 * @public
 		 */
 		imageOverlaySrc: PropTypes.string,
-
-		/**
-		 * By default, the video will start playing immediately after it's loaded, unless this is set.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noAutoPlay: PropTypes.bool,
 
 		/**
 		 * Placeholder for image overlay
@@ -73,24 +65,28 @@ class PictureInGraphicsBase extends React.Component {
 		textOverlayContent: PropTypes.string,
 
 		/**
+		 * Font size of text overlay.
+		 * It is your responsibility to scale font size according to the resolution.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		textOverlayFontSize: PropTypes.string,
+
+		/**
+		 * Select the vertical alignment of text overlay.
+		 *
+		 * @type {String}
+		 * @default 'middle'
+		 * @public
+		 */
+		textOverlayVerticalAlign: PropTypes.oneOf(['top', 'middle', 'bottom']),
+
+		/**
 		 * Video component to use. The default (`'video'`) renders an `HTMLVideoElement`. Custom
 		 * video components must have a similar API structure, exposing the following APIs:
 		 *
-		 * Properties:
-		 * * `currentTime` {Number} - Playback index of the media in seconds
-		 * * `duration` {Number} - Media's entire duration in seconds
-		 * * `error` {Boolean} - `true` if video playback has errored.
-		 * * `loading` {Boolean} - `true` if video playback is loading.
-		 * * `paused` {Boolean} - Playing vs paused state. `true` means the media is paused
-		 * * `playbackRate` {Number} - Current playback rate, as a number
-		 * * `proportionLoaded` {Number} - A value between `0` and `1`
-		 *	representing the proportion of the media that has loaded
-		 * * `proportionPlayed` {Number} - A value between `0` and `1` representing the
-		 *	proportion of the media that has already been shown
-		 *
 		 * Methods:
-		 * * `play()` - play video
-		 * * `pause()` - pause video
 		 * * `load()` - load video
 		 *
 		 * @type {Component}
@@ -102,16 +98,13 @@ class PictureInGraphicsBase extends React.Component {
 
 	static defaultProps = {
 		placeholder: defaultPlaceholder,
+		textOverlayVerticalAlign: 'middle',
 		videoComponent: 'video'
 	}
 
 	constructor (props) {
 		super(props);
 		this.video = null;
-	}
-
-	componentDidMount () {
-		this.video.load();
 	}
 
 	componentDidUpdate (prevProps) {
@@ -135,18 +128,31 @@ class PictureInGraphicsBase extends React.Component {
 			imageOverlaySrc,
 			textOverlayContent,
 			textOverlayColor,
+			textOverlayFontSize,
+			textOverlayVerticalAlign,
 			videoComponent,
-			noAutoPlay,
 			...rest} = this.props;
 
 		const containerClassName = classNames(className, css.pictureInGraphics);
 		const textOverlayStyle = {color: textOverlayColor};
 
+		if (textOverlayVerticalAlign === 'top') {
+			textOverlayStyle['alignItems'] = 'flex-start';
+		} else if (textOverlayVerticalAlign === 'middle') {
+			textOverlayStyle['alignItems'] = 'center';
+		} else if (textOverlayVerticalAlign === 'bottom') {
+			textOverlayStyle['alignItems'] = 'flex-end';
+		}
+
+		if (textOverlayFontSize) {
+			textOverlayStyle['fontSize'] = textOverlayFontSize;
+		}
+
 		return (
 			<div {...rest} className={containerClassName} >
 				<Media
 					{...rest}
-					autoPlay={!noAutoPlay}
+					autoPlay
 					className={css.video}
 					component={videoComponent}
 					controls={false}
@@ -155,7 +161,7 @@ class PictureInGraphicsBase extends React.Component {
 					{source}
 				</Media>
 				{imageOverlaySrc ? <Image placeholder={placeholder} className={css.image} src={imageOverlaySrc} /> : null}
-				{textOverlayContent ? (<Marquee alignment="center" className={css.textOverlay} style={textOverlayStyle}>{textOverlayContent}</Marquee>) : null}
+				{textOverlayContent ? (<Marquee marqueeOn="render" alignment="center" className={css.textOverlay} style={textOverlayStyle}>{textOverlayContent}</Marquee>) : null}
 			</div>
 		);
 	}
