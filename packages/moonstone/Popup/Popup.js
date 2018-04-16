@@ -60,12 +60,12 @@ const PopupBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		* Sets the hint string read when focusing the popup close button.
-		*
-		* @type {String}
-		* @default 'Close'
-		* @public
-		*/
+		 * Sets the hint string read when focusing the popup close button.
+		 *
+		 * @type {String}
+		 * @default 'Close'
+		 * @public
+		 */
 		closeButtonAriaLabel: PropTypes.string,
 
 		/**
@@ -153,9 +153,9 @@ const PopupBase = kind({
 
 	computed: {
 		className: ({showCloseButton, styler}) => styler.append({reserveClose: showCloseButton}),
-		closeButton: ({closeButtonAriaLabel, showCloseButton, onCloseButtonClick}) => {
+		closeButton: ({closeButtonAriaLabel, onCloseButtonClick, showCloseButton}) => {
 			if (showCloseButton) {
-				const ariaLabel =  (closeButtonAriaLabel == null) ? $L('Close') : closeButtonAriaLabel;
+				const ariaLabel = (closeButtonAriaLabel == null) ? $L('Close') : closeButtonAriaLabel;
 
 				return (
 					<IconButton
@@ -230,12 +230,12 @@ class Popup extends React.Component {
 
 	static propTypes = /** @lends moonstone/Popup.Popup.prototype */ {
 		/**
-		* Sets the hint string read when focusing the popup close button.
-		*
-		* @type {String}
-		* @default 'Close'
-		* @public
-		*/
+		 * Sets the hint string read when focusing the popup close button.
+		 *
+		 * @type {String}
+		 * @default 'Close'
+		 * @public
+		 */
 		closeButtonAriaLabel: PropTypes.string,
 
 		/**
