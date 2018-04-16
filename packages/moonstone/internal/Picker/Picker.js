@@ -696,8 +696,8 @@ const PickerBase = class extends React.Component {
 	calcButtonLabel (next, valueText) {
 		const
 			{decrementAriaLabel, incrementAriaLabel, joined} = this.props,
-			nextItemAriaLabel = incrementAriaLabel ? incrementAriaLabel : $L('next item'),
-			previousItemAriaLabel = decrementAriaLabel ? decrementAriaLabel : $L('previous item');
+			nextItemAriaLabel = (incrementAriaLabel == null) ? $L('next item') : incrementAriaLabel,
+			previousItemAriaLabel = (decrementAriaLabel == null) ? $L('previous item') : decrementAriaLabel;
 
 		// no label is necessary when joined
 		if (!joined) {
@@ -718,7 +718,7 @@ const PickerBase = class extends React.Component {
 			{joinedArrowButtonAriaLabel, orientation} = this.props,
 			hint = orientation === 'horizontal' ? $L('change a value with left right button') : $L('change a value with up down button');
 
-		return `${valueText} ${(joinedArrowButtonAriaLabel || hint)}`;
+		return `${valueText} ${(joinedArrowButtonAriaLabel == null) ? hint : joinedArrowButtonAriaLabel}`;
 	}
 
 	initRef (prop) {

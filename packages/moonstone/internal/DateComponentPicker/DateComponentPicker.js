@@ -94,7 +94,7 @@ const DateComponentPickerBase = kind({
 		<DateComponentPickerChrome className={className} label={label}>
 			<Picker
 				{...rest}
-				accessibilityHint={hintAriaLabel || label}
+				accessibilityHint={(hintAriaLabel == null) ? label : hintAriaLabel}
 				index={value}
 				joined
 				max={max}

@@ -83,7 +83,7 @@ const DateComponentRangePickerBase = kind({
 		<DateComponentPickerChrome className={className} label={label}>
 			<RangePicker
 				{...rest}
-				accessibilityHint={hintAriaLabel || label}
+				accessibilityHint={(hintAriaLabel == null) ? label : hintAriaLabel}
 				joined
 				max={max}
 				min={min}
