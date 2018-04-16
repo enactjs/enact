@@ -89,6 +89,22 @@ const DatePickerBase = kind({
 		year: PropTypes.number.isRequired,
 
 		/**
+		 * Sets the hint string for day label read when focusing the day picker.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		dayAriaLabel: PropTypes.string,
+
+		/**
+		 * Sets the hint string read when focusing the joined picker.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		joinedArrowButtonAriaLabel: PropTypes.string,
+
+		/**
 		 * The maximum selectable `year` value
 		 *
 		 * @type {Number}
@@ -105,6 +121,14 @@ const DatePickerBase = kind({
 		 * @public
 		 */
 		minYear: PropTypes.number,
+
+		/**
+		 * Sets the hint string for month label read when focusing the month picker.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		monthAriaLabel: PropTypes.string,
 
 		/**
 		 * When `true`, omits the labels below the pickers
@@ -188,7 +212,15 @@ const DatePickerBase = kind({
 		 * @default false
 		 * @public
 		 */
-		spotlightDisabled: PropTypes.bool
+		spotlightDisabled: PropTypes.bool,
+
+		/**
+		 * Sets the hint string for year label read when focusing the year picker.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		yearAriaLabel: PropTypes.string
 	},
 
 	defaultProps: {
@@ -211,12 +243,15 @@ const DatePickerBase = kind({
 
 	render: ({
 		day,
+		dayAriaLabel,
 		handlePickerKeyDown,
+		joinedArrowButtonAriaLabel,
 		maxDays,
 		maxMonths,
 		maxYear,
 		minYear,
 		month,
+		monthAriaLabel,
 		noLabels,
 		onChangeDate,
 		onChangeMonth,
@@ -228,6 +263,7 @@ const DatePickerBase = kind({
 		rtl,
 		spotlightDisabled,
 		year,
+		yearAriaLabel,
 		...rest
 	}) => {
 
@@ -248,11 +284,14 @@ const DatePickerBase = kind({
 						const isLast = index === order.length - 1;
 						const isLeft = isFirst && !rtl || isLast && rtl;
 						const isRight = isFirst && rtl || isLast && !rtl;
+
 						switch (picker) {
 							case 'd':
 								return (
 									<DateComponentRangePicker
 										className={css.day}
+										hintAriaLabel={dayAriaLabel}
+										joinedArrowButtonAriaLabel={joinedArrowButtonAriaLabel}
 										key="day-picker"
 										label={noLabels ? null : $L('day')}
 										max={maxDays}
@@ -271,6 +310,8 @@ const DatePickerBase = kind({
 								return (
 									<DateComponentRangePicker
 										className={css.month}
+										hintAriaLabel={monthAriaLabel}
+										joinedArrowButtonAriaLabel={joinedArrowButtonAriaLabel}
 										key="month-picker"
 										label={noLabels ? null : $L('month')}
 										max={maxMonths}
@@ -289,6 +330,8 @@ const DatePickerBase = kind({
 								return (
 									<DateComponentRangePicker
 										className={css.year}
+										hintAriaLabel={yearAriaLabel}
+										joinedArrowButtonAriaLabel={joinedArrowButtonAriaLabel}
 										key="year-picker"
 										label={noLabels ? null : $L('year')}
 										max={maxYear}

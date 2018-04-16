@@ -111,6 +111,22 @@ const TimePickerBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
+		 * Sets the hint string for hour label read when focusing the hour picker.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		hourAriaLabel: PropTypes.string,
+
+		/**
+		 * Sets the hint string read when focusing the joined picker.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		joinedArrowButtonAriaLabel: PropTypes.string,
+
+		/**
 		 * The `meridiem` component of the time
 		 *
 		 * @type {Number}
@@ -136,6 +152,14 @@ const TimePickerBase = kind({
 		 * @public
 		 */
 		meridiems: PropTypes.arrayOf(PropTypes.string),
+
+		/**
+		 * Sets the hint string for minute label read when focusing the minute picker.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		minuteAriaLabel: PropTypes.string,
 
 		/**
 		 * When `true`, omits the labels below the pickers
@@ -247,11 +271,14 @@ const TimePickerBase = kind({
 		handlePickerKeyDown,
 		hasMeridiem,
 		hour,
+		hourAriaLabel,
+		joinedArrowButtonAriaLabel,
 		meridiem,
 		meridiemLabel,
 		meridiemPickerWidth,
 		meridiems,
 		minute,
+		minuteAriaLabel,
 		noLabels,
 		onChangeHour,
 		onChangeMeridiem,
@@ -293,6 +320,8 @@ const TimePickerBase = kind({
 									return (
 										<HourPicker
 											className={css.hourComponents}
+											hintAriaLabel={hourAriaLabel}
+											joinedArrowButtonAriaLabel={joinedArrowButtonAriaLabel}
 											key="hour-picker"
 											label={noLabels ? null : $L('hour')}
 											onChange={onChangeHour}
@@ -311,6 +340,8 @@ const TimePickerBase = kind({
 									return (
 										<DateComponentRangePicker
 											className={css.minutesComponents}
+											hintAriaLabel={minuteAriaLabel}
+											joinedArrowButtonAriaLabel={joinedArrowButtonAriaLabel}
 											key="minute-picker"
 											label={noLabels ? null : $L('minute')}
 											max={59}
@@ -319,8 +350,8 @@ const TimePickerBase = kind({
 											onSpotlightDisappear={onSpotlightDisappear}
 											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
 											onSpotlightRight={isRight ? onSpotlightRight : null}
-											spotlightDisabled={spotlightDisabled}
 											padded
+											spotlightDisabled={spotlightDisabled}
 											value={minute}
 											width={2}
 											wrap
@@ -331,6 +362,7 @@ const TimePickerBase = kind({
 										<DateComponentPicker
 											aria-valuetext={meridiems ? meridiems[meridiem] : null}
 											className={css.meridiemComponent}
+											joinedArrowButtonAriaLabel={joinedArrowButtonAriaLabel}
 											key="meridiem-picker"
 											label={noLabels ? null : meridiemLabel}
 											onChange={onChangeMeridiem}
