@@ -4,7 +4,7 @@ import {off, on} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import Spotlight from '@enact/spotlight';
+import Spotlight, {getDirection} from '@enact/spotlight';
 
 import $L from '../internal/$L';
 
@@ -97,6 +97,14 @@ class ScrollButtons extends Component {
 		 * @private
 		 */
 		onPrevSpotlightDisappear: PropTypes.func,
+
+		/**
+		 * `true` if rtl, `false` if ltr.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
 
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
@@ -236,8 +244,34 @@ class ScrollButtons extends Component {
 		}
 	}
 
-	depressButton = () => {
+	focusOnOppositeScrollButton = (ev, direction) => {
+		const buttonNode = (ev.target === this.nextButtonNodeRef) ? this.prevButtonNodeRef : this.nextButtonNodeRef;
+
+		ev.preventDefault();
+		ev.nativeEvent.stopPropagation();
+
+		if (!Spotlight.focus(buttonNode)) {
+			Spotlight.move(direction);
+		}
+	}
+
+	depressButton = (ev) => {
+		const
+			{rtl, vertical} = this.props,
+			{prevButtonDisabled, nextButtonDisabled} = this.state,
+			{keyCode, target} = ev,
+			direction = getDirection(keyCode),
+			fromNextToPrev = (vertical && direction === 'up') || (!vertical && direction === (rtl ? 'right' : 'left')),
+			fromPrevToNext = (vertical && direction === 'down') || (!vertical && direction === (rtl ? 'left' : 'right'));
+
 		this.setPressStatus(true);
+
+		// manually focus the opposite scroll button when 5way pressed
+		if ((fromNextToPrev && target === this.nextButtonNodeRef && !prevButtonDisabled) ||
+			(fromPrevToNext && target === this.prevButtonNodeRef && !nextButtonDisabled)) {
+			this.focusOnOppositeScrollButton(ev, direction);
+		}
+
 	}
 
 	releaseButton = (ev) => {

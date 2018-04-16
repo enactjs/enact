@@ -490,6 +490,7 @@ class ScrollableBase extends Component {
 					initContainerRef: initUiContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
+					rtl,
 					scrollTo,
 					style,
 					touchableProps,
@@ -511,12 +512,13 @@ class ScrollableBase extends Component {
 									initUiChildRef,
 									onScroll: handleScroll,
 									ref: this.initChildRef,
+									rtl,
 									spotlightId
 								})}
 							</TouchableDiv>
-							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
+							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} rtl={rtl} /> : null}
 						</div>
-						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} {...this.scrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
+						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} {...this.scrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} rtl={rtl} /> : null}
 					</div>
 				)}
 			/>

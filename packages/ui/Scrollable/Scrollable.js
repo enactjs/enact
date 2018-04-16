@@ -1032,7 +1032,7 @@ class ScrollableBase extends Component {
 		delete rest.verticalScrollbar;
 
 		return containerRenderer({
-			childComponentProps: {...rest, rtl},
+			childComponentProps: rest,
 			className: scrollableClasses,
 			componentCss: css,
 			handleScroll: this.handleScroll,
@@ -1041,6 +1041,7 @@ class ScrollableBase extends Component {
 			initContainerRef: this.initContainerRef,
 			isHorizontalScrollbarVisible,
 			isVerticalScrollbarVisible,
+			rtl,
 			scrollTo: this.scrollTo,
 			style,
 			touchableProps: {
@@ -1094,6 +1095,7 @@ class Scrollable extends Component {
 					initContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
+					rtl,
 					scrollTo,
 					style,
 					touchableProps,
@@ -1111,7 +1113,8 @@ class Scrollable extends Component {
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
 									initChildRef,
-									onScroll: handleScroll
+									onScroll: handleScroll,
+									rtl
 								})}
 							</TouchableDiv>
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
