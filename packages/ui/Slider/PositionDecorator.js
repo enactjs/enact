@@ -52,12 +52,12 @@ const PositionDecorator = hoc((config, Wrapped) => {
 				offset = this.bounds.offsetY;
 			}
 
-			let percent = calcProportion(this.bounds.min, this.bounds.max, position - offset);
+			let proportion = calcProportion(this.bounds.min, this.bounds.max, position - offset);
 			if (orientation === 'vertical') {
-				percent = 1 - percent;
+				proportion = 1 - proportion;
 			}
 
-			let value = (max - min) * percent + min;
+			let value = (max - min) * proportion + min;
 
 			// adjust value for stepping
 			if (step) {
@@ -71,7 +71,8 @@ const PositionDecorator = hoc((config, Wrapped) => {
 
 			forward('onChange', {
 				type: 'onChange',
-				value
+				value,
+				proportion
 			}, this.props);
 		}
 
