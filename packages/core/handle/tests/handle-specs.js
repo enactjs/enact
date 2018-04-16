@@ -1,6 +1,7 @@
 import sinon from 'sinon';
 import {
 	handle,
+	adaptEvent,
 	callOnEvent,
 	forEventProp,
 	forKeyCode,
@@ -456,6 +457,35 @@ describe('handle', () => {
 			const actual = handler.calledOnce;
 
 			expect(actual).to.equal(expected);
+		});
+	});
+
+	describe('#adaptEvent', () => {
+		it('should pass the adapted event payload to the provided handler', () => {
+			const handler = sinon.spy();
+			const onlyValue = ({value}) => ({value});
+			const ev = {
+				value: 1,
+				message: 'ok'
+			};
+
+			adaptEvent(onlyValue, handler)(ev);
+
+			const expected = {value: 1};
+			const actual = handler.firstCall.args[0];
+
+			expect(actual).to.deep.equal(expected);
+		});
+
+		it('should pass additional arguments to the provided handler', () => {
+			const handler = sinon.spy();
+			const returnOne = () => 1;
+			adaptEvent(returnOne, handler)(0, 2, 3);
+
+			const expected = [1, 2, 3];
+			const actual = handler.firstCall.args;
+
+			expect(actual).to.deep.equal(expected);
 		});
 	});
 });
