@@ -30,7 +30,6 @@ const Knob = kind({
 		 * and `max` props of the slider
 		 *
 		 * @type {Boolean}
-		 * @default "horizontal"
 		 * @public
 		 */
 		proportion: PropTypes.number,

@@ -41,6 +41,7 @@ const MediaKnob = kind({
 		return (
 			<Knob
 				{...rest}
+				proportion={value}
 				value={value}
 			/>
 		);

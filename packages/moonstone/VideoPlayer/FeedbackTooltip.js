@@ -76,6 +76,15 @@ const FeedbackTooltipBase = kind({
 		playbackState: PropTypes.oneOf(Object.keys(states)),
 
 		/**
+		 * A number between 0 and 1 representing the proportion of the `value` in terms of `min`
+		 * and `max` props of the slider
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		proportion: PropTypes.number,
+
+		/**
 		 * This component will be used instead of the built-in version. The internal thumbnail style
 		 * will be applied to this component. This component follows the same rules as the built-in
 		 * version; hiding and showing according to the state of `noFeedback`.
@@ -134,10 +143,13 @@ const FeedbackTooltipBase = kind({
 		children: ({children, duration, formatter}) => {
 			return secondsToTime(children * duration, formatter);
 		},
-		className: ({playbackState: s, thumbnailDeactivated, styler, visible}) => styler.append({
-			hidden: !visible && states[s] && states[s].allowHide,
-			thumbnailDeactivated
-		}),
+		className: ({playbackState: s, proportion, thumbnailDeactivated, styler, visible}) => {
+			return styler.append({
+				afterMidpoint: proportion > 0.5,
+				hidden: !visible && states[s] && states[s].allowHide,
+				thumbnailDeactivated
+			});
+		},
 		thumbnailComponent: ({noFeedback, thumbnailComponent, thumbnailSrc}) => {
 			// noFeedback is effectively "tooltip mode", one mode being whether the time and icon are visible,
 			// the other being the thumbnail and time are visible.
