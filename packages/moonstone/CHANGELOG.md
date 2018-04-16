@@ -8,9 +8,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="list"`
 - `moonstone/Panels` prop `closeButtonAriaLabel` to configure the aria-label set on application close button
-- `moonstone/Picker` props `decrementButtonAriaLabel`, `incrementButtonAriaLabel`, `joinedArrowButtonAriaLabel` to configure the aria-label set on picker
-- `moonstone/DatePicker` props `dayAriaLabel`, `joinedArrowButtonAriaLabel`, `monthAriaLabel`, `yearAriaLabel` to configure the aria-label set on date picker
-- `moonstone/TimePicker` props `hourAriaLabel`, `joinedArrowButtonAriaLabel`, `minuteAriaLabel` to configure the aria-label set on time picker
+- `moonstone/Picker` props `decrementAriaLabel`, `incrementAriaLabel`, `joinedArrowButtonAriaLabel` to configure the aria-label set on each button
+- `moonstone/DatePicker` props `dayAriaLabel`, `joinedArrowButtonAriaLabel`, `monthAriaLabel`, `yearAriaLabel` to configure the aria-label set on date pickers
+- `moonstone/TimePicker` props `hourAriaLabel`, `joinedArrowButtonAriaLabel`, `minuteAriaLabel` to configure the aria-label set on time pickers
 
 ### Changed
 

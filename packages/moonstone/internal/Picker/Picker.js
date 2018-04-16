@@ -140,7 +140,7 @@ const PickerBase = class extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		decrementButtonAriaLabel: PropTypes.string,
+		decrementAriaLabel: PropTypes.string,
 
 		/**
 		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
@@ -175,7 +175,7 @@ const PickerBase = class extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		incrementButtonAriaLabel: PropTypes.string,
+		incrementAriaLabel: PropTypes.string,
 
 		/**
 		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -695,9 +695,9 @@ const PickerBase = class extends React.Component {
 
 	calcButtonLabel (next, valueText) {
 		const
-			{decrementButtonAriaLabel, incrementButtonAriaLabel, joined} = this.props,
-			nextItemAriaLabel = incrementButtonAriaLabel ? incrementButtonAriaLabel : $L('next item'),
-			previousItemAriaLabel = decrementButtonAriaLabel ? decrementButtonAriaLabel : $L('previous item');
+			{decrementAriaLabel, incrementAriaLabel, joined} = this.props,
+			nextItemAriaLabel = incrementAriaLabel ? incrementAriaLabel : $L('next item'),
+			previousItemAriaLabel = decrementAriaLabel ? decrementAriaLabel : $L('previous item');
 
 		// no label is necessary when joined
 		if (!joined) {
@@ -750,9 +750,9 @@ const PickerBase = class extends React.Component {
 		} = this.props;
 
 		delete rest.accessibilityHint;
-		delete rest.decrementButtonAriaLabel;
+		delete rest.decrementAriaLabel;
 		delete rest.decrementIcon;
-		delete rest.incrementButtonAriaLabel;
+		delete rest.incrementAriaLabel;
 		delete rest.incrementIcon;
 		delete rest.joinedArrowButtonAriaLabel;
 		delete rest.max;
