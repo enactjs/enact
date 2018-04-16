@@ -208,6 +208,7 @@ describe('handle', () => {
 
 	it('should include object props as second arg when bound', function () {
 		const componentInstance = {
+			context: {},
 			props: {
 				value: 1
 			}
@@ -227,7 +228,8 @@ describe('handle', () => {
 		const componentInstance = {
 			context: {
 				value: 1
-			}
+			},
+			props: {}
 		};
 		const handler = sinon.spy();
 		const h = handle.bind(componentInstance);
@@ -383,6 +385,7 @@ describe('handle', () => {
 
 		it('should support bound handlers', () => {
 			const componentInstance = {
+				props: {},
 				context: {
 					value: 1
 				}
@@ -404,7 +407,8 @@ describe('handle', () => {
 			const componentInstance = {
 				props: {
 					value: 1
-				}
+				},
+				context: {}
 			};
 			const handler = sinon.spy();
 			const o = oneOf.bind(componentInstance);
@@ -421,6 +425,7 @@ describe('handle', () => {
 
 		it('should include object context as third arg when bound', function () {
 			const componentInstance = {
+				props: {},
 				context: {
 					value: 1
 				}

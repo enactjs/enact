@@ -33,7 +33,17 @@ const defaultConfig = {
 	 * @default onScroll
 	 * @memberof ui/Placeholder.PlaceholderControllerDecorator.defaultConfig
 	 */
-	notify: 'onScroll'
+	notify: 'onScroll',
+
+	/**
+	 * Multiplier used with the Wrapped components height and width to determine the threshold for
+	 * replacing the placeholder component with the true component.
+	 *
+	 * @type {Number}
+	 * @default 1.5
+	 * @memberof ui/Placeholder.PlaceholderControllerDecorator.defaultConfig
+	 */
+	thresholdFactor: 1.5
 };
 
 /**
@@ -46,7 +56,7 @@ const defaultConfig = {
  * @public
  */
 const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {bounds, notify} = config;
+	const {bounds, notify, thresholdFactor} = config;
 
 	return class extends React.Component {
 		static displayName = 'PlaceholderControllerDecorator'
@@ -128,8 +138,8 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.controlled.length === 0) return;
 
 			const {height, width} = this.bounds;
-			const topThreshold = (Math.floor(top / height) + 2) * height;
-			const leftThreshold = (Math.floor(left / width) + 2) * width;
+			const topThreshold = height * thresholdFactor + top;
+			const leftThreshold = width * thresholdFactor + left;
 
 			if (this.topThreshold < topThreshold || this.leftThreshold < leftThreshold) {
 				this.notifyAll(topThreshold, leftThreshold);
