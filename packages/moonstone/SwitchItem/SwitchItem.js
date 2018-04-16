@@ -50,7 +50,7 @@ const SwitchItemBase = kind({
 
 	render: (props) => (
 		<ToggleItem
-			webos-voice-intent="SelectToggleItem"
+			data-webos-voice-intent="SelectToggleItem"
 			{...props}
 			css={props.css}
 			iconComponent={

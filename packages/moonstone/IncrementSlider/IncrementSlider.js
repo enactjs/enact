@@ -614,7 +614,7 @@ const IncrementSliderBase = kind({
 					onKeyDown={handleDecrementKeyDown}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
-					webos-voice-label={decrementVoiceLabel}
+					data-webos-voice-label={decrementVoiceLabel}
 				>
 					{decrementIcon}
 				</IncrementSliderButton>
@@ -663,7 +663,7 @@ const IncrementSliderBase = kind({
 					onKeyDown={handleIncrementKeyDown}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
-					webos-voice-label={incrementVoiceLabel}
+					data-webos-voice-label={incrementVoiceLabel}
 				>
 					{incrementIcon}
 				</IncrementSliderButton>
