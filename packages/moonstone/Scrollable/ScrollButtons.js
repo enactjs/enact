@@ -255,7 +255,7 @@ class ScrollButtons extends Component {
 		}
 	}
 
-	depressButton = (ev) => {
+	handleSpotlight = (ev) => {
 		const
 			{rtl, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
@@ -264,14 +264,15 @@ class ScrollButtons extends Component {
 			fromNextToPrev = (vertical && direction === 'up') || (!vertical && direction === (rtl ? 'right' : 'left')),
 			fromPrevToNext = (vertical && direction === 'down') || (!vertical && direction === (rtl ? 'left' : 'right'));
 
-		this.setPressStatus(true);
-
 		// manually focus the opposite scroll button when 5way pressed
 		if ((fromNextToPrev && target === this.nextButtonNodeRef && !prevButtonDisabled) ||
 			(fromPrevToNext && target === this.prevButtonNodeRef && !nextButtonDisabled)) {
 			this.focusOnOppositeScrollButton(ev, direction);
 		}
+	}
 
+	depressButton = (ev) => {
+		this.setPressStatus(true);
 	}
 
 	releaseButton = (ev) => {
@@ -333,6 +334,9 @@ class ScrollButtons extends Component {
 				onKeyUp={this.releaseButton}
 				onMouseDown={this.depressButton}
 				onSpotlightDisappear={onPrevSpotlightDisappear}
+				onSpotlightDown={this.handleSpotlight}
+				onSpotlightLeft={this.handleSpotlight}
+				onSpotlightRight={this.handleSpotlight}
 				ref={this.initPrevButtonRef}
 			>
 				{prevIcon}
@@ -351,6 +355,9 @@ class ScrollButtons extends Component {
 				onKeyUp={this.releaseButton}
 				onMouseDown={this.depressButton}
 				onSpotlightDisappear={onNextSpotlightDisappear}
+				onSpotlightLeft={this.handleSpotlight}
+				onSpotlightRight={this.handleSpotlight}
+				onSpotlightUp={this.handleSpotlight}
 				ref={this.initNextButtonRef}
 			>
 				{nextIcon}
