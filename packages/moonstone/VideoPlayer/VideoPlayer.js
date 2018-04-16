@@ -1679,25 +1679,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.hideControls
 	)
 
-	handleSpotlightUpFromSlider = handle(
-		stopImmediate,
-		// FIXME: This is a workaround for a scenario in which Slider does not receive a blur event
-		// on 5-way up from it.
-		() => {
-			this.handleSliderBlur();
-			return true;
-		},
-		this.hideControls
-	);
-
-	handleSpotlightDownFromSlider = (ev) => {
-		Spotlight.setPointerMode(false);
-
-		if (this.focusDefaultMediaControl()) {
-			ev.nativeEvent.stopImmediatePropagation();
-		}
-	}
-
 	/**
 	 * Check for elements with the spotlightDefaultClass, in the following location order:
 	 * left components, right components, media controls or more controls (depending on which is
@@ -1794,6 +1775,17 @@ const VideoPlayerBase = class extends React.Component {
 			this.setState({
 				slider5WayPressed: true
 			}, this.slider5WayPressJob.start());
+		} else if (is('down', ev.keyCode)) {
+			Spotlight.setPointerMode(false);
+
+			if (this.focusDefaultMediaControl()) {
+				stopImmediate(ev);
+			}
+		} else if (is('up', ev.keyCode)) {
+			stopImmediate(ev);
+
+			this.handleSliderBlur();
+			this.hideControls();
 		}
 	}
 
@@ -2035,7 +2027,6 @@ const VideoPlayerBase = class extends React.Component {
 								onFocus={this.handleSliderFocus}
 								onKeyDown={this.handleSliderKeyDown}
 								onKnobMove={this.handleKnobMove}
-								onSpotlightDown={this.handleSpotlightDownFromSlider}
 								onSpotlightUp={this.handleSpotlightUpFromSlider}
 								spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
 								value={this.state.proportionPlayed}
