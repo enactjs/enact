@@ -7,11 +7,16 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` `role="list"`
+- `ui/Placeholder.PlaceholderControllerDecorator` config property `thresholdFactor`
 
 ### Changed
 
 - `ui/Transition` property `children` to not be required
 - `ui/Transition` to fire `onShow` and `onHide` even when there are no `children`
+
+### Fixed
+
+- `ui/ViewManager` to not initially pass the wrong value for `enteringProp` when a view initiates a transition into the viewport
 
 ## [2.0.0-alpha.7 - 2018-04-03]
 
