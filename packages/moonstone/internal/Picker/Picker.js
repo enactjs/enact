@@ -13,7 +13,6 @@ import Spotlight, {getDirection} from '@enact/spotlight';
 
 import Skinnable from '../../Skinnable';
 import {validateRange, validateStepped} from '../validators';
-import DisappearSpotlightDecorator from '../DisappearSpotlightDecorator';
 
 import IdProvider from '../IdProvider';
 import $L from '../$L';
@@ -830,13 +829,7 @@ const PickerBase = class extends React.Component {
 const Picker = IdProvider(
 	{generateProp: null, prefix: 'p_'},
 	Skinnable(
-		DisappearSpotlightDecorator(
-			{events: {
-				onDecrementSpotlightDisappear: `.${css.incrementer}`,
-				onIncrementSpotlightDisappear: `.${css.decrementer}`
-			}},
-			PickerBase
-		)
+		PickerBase
 	)
 );
 

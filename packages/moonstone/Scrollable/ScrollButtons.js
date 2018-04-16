@@ -73,15 +73,6 @@ class ScrollButtons extends Component {
 		 * @public
 		 */
 		onNextScroll: PropTypes.func,
-
-		/**
-		 * Called when the next button is disabled
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onNextSpotlightDisappear: PropTypes.func,
-
 		/**
 		 * Called when the scrollbar's up/left button is pressed.
 		 *
@@ -89,14 +80,6 @@ class ScrollButtons extends Component {
 		 * @public
 		 */
 		onPrevScroll: PropTypes.func,
-
-		/**
-		 * Called when the previous button is disabled
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onPrevSpotlightDisappear: PropTypes.func,
 
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
@@ -178,11 +161,20 @@ class ScrollButtons extends Component {
 			}
 		});
 
-		if (this.pressed && (
-			shouldDisablePrevButton && spotItem && spotItem === this.prevButtonNodeRef ||
-			shouldDisableNextButton && spotItem && spotItem === this.nextButtonNodeRef
-		)) {
-			this.setIgnoreMode(true);
+		if (shouldDisablePrevButton && spotItem === this.prevButtonNodeRef) {
+			if (this.pressed) {
+				this.setIgnoreMode(true);
+				this.buttonToFocus = this.nextButtonNodeRef;
+			} else {
+				Spotlight.focus(this.nextButtonNodeRef);
+			}
+		} else if (shouldDisableNextButton && spotItem === this.nextButtonNodeRef) {
+			if (this.pressed) {
+				this.setIgnoreMode(true);
+				this.buttonToFocus = this.prevButtonNodeRef;
+			} else {
+				Spotlight.focus(this.prevButtonNodeRef);
+			}
 		}
 	}
 
@@ -280,7 +272,7 @@ class ScrollButtons extends Component {
 
 	render () {
 		const
-			{disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, thumbRenderer, vertical} = this.props,
+			{disabled, thumbRenderer, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			prevIcon = preparePrevButton(vertical),
 			nextIcon = prepareNextButton(vertical);
@@ -297,7 +289,6 @@ class ScrollButtons extends Component {
 				onKeyDown={this.depressButton}
 				onKeyUp={this.releaseButton}
 				onMouseDown={this.depressButton}
-				onSpotlightDisappear={onPrevSpotlightDisappear}
 				ref={this.initPrevButtonRef}
 			>
 				{prevIcon}
@@ -314,7 +305,6 @@ class ScrollButtons extends Component {
 				onKeyDown={this.depressButton}
 				onKeyUp={this.releaseButton}
 				onMouseDown={this.depressButton}
-				onSpotlightDisappear={onNextSpotlightDisappear}
 				ref={this.initNextButtonRef}
 			>
 				{nextIcon}

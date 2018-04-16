@@ -1,4 +1,6 @@
 @import '../styles/variables.less';
+@import '../styles/mixins.less';
+@import '../styles/skin.less';
 
 .scrollbar {
 	background: inherit;
@@ -59,6 +61,12 @@
 		.scrollbarButtonNoCompositeLayer;
 		background-color: transparent;
 		margin: 0;
+		.applySkins({
+			.focus({
+				opacity: 1;
+				background-color: @moon-spotlight-border-color;
+			})
+		})
 	}
 
 	/* ScrollThumb */
