@@ -45,6 +45,7 @@ const DateComponentPickerBase = kind({
 		 * Sets the hint string read when focusing the picker.
 		 *
 		 * @type {String}
+		 * @default label
 		 * @public
 		 */
 		hintAriaLabel: PropTypes.string,

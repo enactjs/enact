@@ -92,6 +92,7 @@ const DatePickerBase = kind({
 		 * Sets the hint string for day label read when focusing the day picker.
 		 *
 		 * @type {String}
+		 * @default $L('day')
 		 * @public
 		 */
 		dayAriaLabel: PropTypes.string,
@@ -100,6 +101,7 @@ const DatePickerBase = kind({
 		 * Sets the hint string read when focusing the joined picker.
 		 *
 		 * @type {String}
+		 * @default $L('change a value with up down button')
 		 * @public
 		 */
 		joinedPickerAriaLabel: PropTypes.string,
@@ -126,6 +128,7 @@ const DatePickerBase = kind({
 		 * Sets the hint string for month label read when focusing the month picker.
 		 *
 		 * @type {String}
+		 * @default $L('month')
 		 * @public
 		 */
 		monthAriaLabel: PropTypes.string,
@@ -218,6 +221,7 @@ const DatePickerBase = kind({
 		 * Sets the hint string for year label read when focusing the year picker.
 		 *
 		 * @type {String}
+		 * @default $L('year')
 		 * @public
 		 */
 		yearAriaLabel: PropTypes.string
