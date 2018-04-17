@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 
 import {init, defineScreenTypes, getResolutionClasses} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
+import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
 
 import Skinnable from '../Skinnable';
 
@@ -63,9 +64,9 @@ const defaultConfig = {
  * @public
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	
-	const {ri, i18n, float, overlay, skin, textSize, highContrast} = config;
-	
+
+	const {ri, i18n, spotlight, float, noAutoFocus, overlay, skin, textSize, highContrast} = config;
+
 	if (ri.screenTypes) {
 		defineScreenTypes(ri.screenTypes);
 	}
@@ -82,6 +83,8 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			)
 		);
 	}
+
+	if (spotlight) App = SpotlightRootDecorator({noAutoFocus}, App);
 	if (float) App = FloatingLayerDecorator({wrappedClassName: bgClassName}, App);
 	// if (ri) App = ResolutionDecorator(ri, App);
 	if (skin) App = Skinnable({defaultSkin: 'dark'}, App);
