@@ -241,7 +241,16 @@ const VirtualListBaseFactory = (type) => {
 				this.updateStatesAndBounds(nextProps);
 				this.setContainerSize();
 			} else if (rtl !== nextProps.rtl) {
+				const
+					{scrollPosition} = this,
+					{x, y} = this.isPrimaryDirectionVertical ? {x: 0, y: scrollPosition} : {x: scrollPosition, y: 0};
+
 				this.cc = [];
+				if (type === Native) {
+					this.scrollToPosition(x, y, nextProps.rtl);
+				} else {
+					this.setScrollPosition(x, y, 0, 0, nextProps.rtl);
+				}
 			}
 		}
 
@@ -511,18 +520,18 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		// Native only
-		scrollToPosition (x, y) {
+		scrollToPosition (x, y, rtl = this.props.rtl) {
 			if (this.containerRef) {
 				this.containerRef.scrollTo(
-					(this.props.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y
+					(rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y
 				);
 			}
 		}
 
 		// JS only
-		setScrollPosition (x, y, dirX, dirY) {
+		setScrollPosition (x, y, dirX, dirY, rtl = this.props.rtl) {
 			if (this.contentRef) {
-				this.contentRef.style.transform = `translate3d(${this.props.rtl ? x : -x}px, -${y}px, 0)`;
+				this.contentRef.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
 				this.didScroll(x, y, dirX, dirY);
 			}
 		}
