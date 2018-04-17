@@ -239,7 +239,8 @@ const TimePickerBase = kind({
 	},
 
 	computed: {
-		hasMeridiem: ({order}) => order.indexOf('a') >= 0
+		hasMeridiem: ({order}) => order.indexOf('a') >= 0,
+		meridiemPickerWidth: ({meridiem, meridiems}) => meridiems[meridiem].length * 2
 	},
 
 	render: ({
@@ -248,6 +249,7 @@ const TimePickerBase = kind({
 		hour,
 		meridiem,
 		meridiemLabel,
+		meridiemPickerWidth,
 		meridiems,
 		minute,
 		noLabels,
@@ -338,7 +340,7 @@ const TimePickerBase = kind({
 											reverse
 											spotlightDisabled={spotlightDisabled}
 											value={meridiem}
-											width={4}
+											width={meridiemPickerWidth}
 											wrap
 										>
 											{meridiems}

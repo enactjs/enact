@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` `role="list"`
+- `ui/Placeholder.PlaceholderControllerDecorator` config property `thresholdFactor`
 
 ### Changed
 
@@ -16,6 +17,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to support RTL by dynamic language changes
+- `ui/ViewManager` to not initially pass the wrong value for `enteringProp` when a view initiates a transition into the viewport
 
 ## [2.0.0-alpha.7 - 2018-04-03]
 
