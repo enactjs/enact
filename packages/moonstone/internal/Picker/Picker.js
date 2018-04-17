@@ -205,7 +205,7 @@ const PickerBase = class extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		joinedArrowButtonAriaLabel: PropTypes.string,
+		joinedPickerAriaLabel: PropTypes.string,
 
 		/**
 		 * By default, the picker will animate transitions between items if it has a defined
@@ -715,10 +715,10 @@ const PickerBase = class extends React.Component {
 
 	calcJoinedLabel (valueText) {
 		const
-			{joinedArrowButtonAriaLabel, orientation} = this.props,
+			{joinedPickerAriaLabel, orientation} = this.props,
 			hint = orientation === 'horizontal' ? $L('change a value with left right button') : $L('change a value with up down button');
 
-		return `${valueText} ${(joinedArrowButtonAriaLabel == null) ? hint : joinedArrowButtonAriaLabel}`;
+		return `${valueText} ${(joinedPickerAriaLabel == null) ? hint : joinedPickerAriaLabel}`;
 	}
 
 	initRef (prop) {
@@ -754,7 +754,7 @@ const PickerBase = class extends React.Component {
 		delete rest.decrementIcon;
 		delete rest.incrementAriaLabel;
 		delete rest.incrementIcon;
-		delete rest.joinedArrowButtonAriaLabel;
+		delete rest.joinedPickerAriaLabel;
 		delete rest.max;
 		delete rest.min;
 		delete rest.onChange;

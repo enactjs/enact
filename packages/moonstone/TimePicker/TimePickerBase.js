@@ -124,7 +124,7 @@ const TimePickerBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		joinedArrowButtonAriaLabel: PropTypes.string,
+		joinedPickerAriaLabel: PropTypes.string,
 
 		/**
 		 * The `meridiem` component of the time
@@ -272,7 +272,7 @@ const TimePickerBase = kind({
 		hasMeridiem,
 		hour,
 		hourAriaLabel,
-		joinedArrowButtonAriaLabel,
+		joinedPickerAriaLabel,
 		meridiem,
 		meridiemLabel,
 		meridiemPickerWidth,
@@ -321,7 +321,7 @@ const TimePickerBase = kind({
 										<HourPicker
 											className={css.hourComponents}
 											hintAriaLabel={hourAriaLabel}
-											joinedArrowButtonAriaLabel={joinedArrowButtonAriaLabel}
+											joinedPickerAriaLabel={joinedPickerAriaLabel}
 											key="hour-picker"
 											label={noLabels ? null : $L('hour')}
 											onChange={onChangeHour}
@@ -341,7 +341,7 @@ const TimePickerBase = kind({
 										<DateComponentRangePicker
 											className={css.minutesComponents}
 											hintAriaLabel={minuteAriaLabel}
-											joinedArrowButtonAriaLabel={joinedArrowButtonAriaLabel}
+											joinedPickerAriaLabel={joinedPickerAriaLabel}
 											key="minute-picker"
 											label={noLabels ? null : $L('minute')}
 											max={59}
@@ -362,7 +362,7 @@ const TimePickerBase = kind({
 										<DateComponentPicker
 											aria-valuetext={meridiems ? meridiems[meridiem] : null}
 											className={css.meridiemComponent}
-											joinedArrowButtonAriaLabel={joinedArrowButtonAriaLabel}
+											joinedPickerAriaLabel={joinedPickerAriaLabel}
 											key="meridiem-picker"
 											label={noLabels ? null : meridiemLabel}
 											onChange={onChangeMeridiem}
