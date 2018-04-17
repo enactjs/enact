@@ -8,7 +8,9 @@ import {addAll} from '@enact/core/keymap';
 import hoc from '@enact/core/hoc';
 import I18nDecorator from '@enact/i18n/I18nDecorator';
 import React from 'react';
-import {ResolutionDecorator} from '@enact/ui/resolution';
+import ReactDOM from 'react-dom';
+
+import {ResolutionDecorator, init, defineScreenTypes, getResolutionClasses} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 
 import Skinnable from '../Skinnable';
@@ -37,7 +39,9 @@ const defaultConfig = {
 	},
 	spotlight: true,
 	textSize: true,
-	skin: true
+	skin: true,
+	dynamic: true,
+	screenTypes: null
 };
 
 /**
@@ -60,6 +64,10 @@ const defaultConfig = {
  * @public
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
+	if (config.screenTypes) {
+		defineScreenTypes(config.screenTypes);
+	}
+
 	const {ri, i18n, float, overlay, skin, textSize, highContrast} = config;
 
 	// Apply classes depending on screen type (overlay / fullscreen)
@@ -76,7 +84,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		);
 	}
 	if (float) App = FloatingLayerDecorator({wrappedClassName: bgClassName}, App);
-	if (ri) App = ResolutionDecorator(ri, App);
+	// if (ri) App = ResolutionDecorator(ri, App);
 	if (skin) App = Skinnable({defaultSkin: 'dark'}, App);
 
 	// add webOS-specific key maps
@@ -125,6 +133,14 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static defaultProps = Accessibility.defaultProps
 
+		constructor (props) {
+			super(props);
+			init();
+			this.state = {
+				resolutionClasses: ''
+			};
+		}
+
 		getChildContext () {
 			return {
 				Subscriber: this.publisher.accessibility.getSubscriber()
@@ -138,8 +154,35 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		componentDidMount () {
+			if (config.dynamic) window.addEventListener('resize', this.handleResize);
+			// eslint-disable-next-line react/no-find-dom-node
+			this.rootNode = ReactDOM.findDOMNode(this);
+		}
+
 		componentDidUpdate (prevProps) {
 			Accessibility.onTextSizeChange(this.props, prevProps, this.publisher);
+		}
+
+		componentWillUnmount () {
+			if (config.dynamic) window.removeEventListener('resize', this.handleResize);
+		}
+
+		handleResize = () => {
+			const classNames = this.didClassesChange();
+
+			if (classNames) {
+				this.setState({resolutionClasses: classNames});
+			}
+		}
+
+		didClassesChange () {
+			const prevClassNames = getResolutionClasses();
+			init({measurementNode: this.rootNode});
+			const classNames = getResolutionClasses();
+			if (prevClassNames !== classNames) {
+				return classNames;
+			}
 		}
 
 		render () {
@@ -154,8 +197,11 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {highContrast: contrast, textSize: size, ...props} = this.props;
 			const combinedClassName = Accessibility.createClassName(className, contrast, size);
 
+			let classes = getResolutionClasses();
+			if (combinedClassName) classes += (classes ? ' ' : '') + combinedClassName;
+
 			return (
-				<App {...props} className={combinedClassName} />
+				<App {...props} className={classes} />
 			);
 		}
 	};
