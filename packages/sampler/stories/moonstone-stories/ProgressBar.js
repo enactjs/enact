@@ -1,4 +1,4 @@
-import ProgressBar, {ProgressBarBase} from '@enact/moonstone/ProgressBar';
+import ProgressBar, {ProgressBarBase, ProgressBarTooltip} from '@enact/moonstone/ProgressBar';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {boolean, number, select} from '@storybook/addon-knobs';
@@ -9,6 +9,20 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('ProgressBar', ProgressBarBase, ProgressBar);
 
+// eslint-disable-next-line
+function ProgressBarWithTooltip ({percent, side, tooltip, ...rest}) {
+	return (
+		<ProgressBar {...rest}>
+			{tooltip ? (
+				<ProgressBarTooltip
+					percent={percent}
+					side={side}
+				/>
+			) : null}
+		</ProgressBar>
+	);
+}
+
 storiesOf('Moonstone', module)
 	.add(
 		'ProgressBar',
@@ -16,14 +30,13 @@ storiesOf('Moonstone', module)
 			propTables: [Config],
 			text: 'The basic ProgressBar'
 		})(() => (
-			<ProgressBar
+			<ProgressBarWithTooltip
 				backgroundProgress={number('backgroundProgress', 0.5, {range: true, min: 0, max: 1, step: 0.01})}
-				tooltip={boolean('tooltip', false)}
-				progress={number('progress', 0.4, {range: true, min: 0, max: 1, step: 0.01})}
-				orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
-				tooltipForceSide={boolean('tooltipForceSide', false)}
-				tooltipSide={select('tooltipSide', ['before', 'after'], 'before')}
 				disabled={nullify(boolean('disabled', false))}
+				orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
+				progress={number('progress', 0.4, {range: true, min: 0, max: 1, step: 0.01})}
+				side={nullify(select('side', ['after', 'before', 'left', 'right'], 'before'))}
+				tooltip={boolean('tooltip', false)}
 			/>
 		))
 	);
