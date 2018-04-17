@@ -212,10 +212,16 @@
 		}
 
 		.disabled({
-			&.translucent,
-			&.transparent {
-				opacity: @moon-disabled-translucent-opacity;
-			}
+			.focus({
+				&.translucent,
+				&.transparent {
+					opacity: 1;
+					div {
+						color: @moon-spotlight-text-color;
+						opacity: @moon-disabled-translucent-opacity;
+					}
+				}
+			});
 		});
 	});
 }
