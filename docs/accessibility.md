@@ -83,7 +83,7 @@ const App = (props) => {
 
 ### ui/AnnounceDecorator
 
-[ui/AnnounceDecorator](../../modules/ui/AnnounceDecorator/) provides a Higher-Order Component that adds the ability for the Wrapped component to notify the user of a state change. It provides a callback to the Wrapped component that can be called with a string which is inserted into a node with the [`alert` role](https://www.w3.org/TR/wai-aria/roles#alert) to notify the user.
+[ui/AnnounceDecorator](../../modules/ui/AnnounceDecorator/) provides a Higher-Order Component that adds the ability for the Wrapped component to notify the user of a state change. It provides a callback to the Wrapped component that can be called with a string which is inserted into a node with the [`alert` role](https://www.w3.org/TR/wai-aria/#alert) to notify the user.
 
 ```
 import AnnounceDecorator from '@enact/ui/AnnounceDecorator';

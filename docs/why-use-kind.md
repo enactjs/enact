@@ -72,7 +72,7 @@ Then, we get told we need to validate the type of `name` so that we don't get an
 in. `PropTypes` (import not shown) to the rescue:
 
 ```
-export default ({name, ...rest}) => (
+const Hooray = ({name, ...rest}) => (
 	<div {...rest}>Hooray, {name}!</div>
 );
 
@@ -199,7 +199,7 @@ name for our component.
 Sadly, nothing is free in this world. There are some downsides to `kind()` and it's important to be
 aware of them. First, there is some small overhead at app startup where the configuration is
 processed and the component is created. Second, there is some overhead during execution of the
-render method, though we have worked very heard to keep this minimal. Third, you do not have access
+render method, though we have worked very hard to keep this minimal. Third, you do not have access
 to React lifecycle methods with these components. If you do feel the need for this, it's a fairly
 simple matter to decompose a `kind()` component into a `React.Component`, or just wrap the kind with
 one of the existing HOCs from the `ui` library.
