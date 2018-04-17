@@ -10,7 +10,7 @@ import I18nDecorator from '@enact/i18n/I18nDecorator';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {ResolutionDecorator, init, defineScreenTypes, getResolutionClasses} from '@enact/ui/resolution';
+import {init, defineScreenTypes, getResolutionClasses} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 
 import Skinnable from '../Skinnable';
@@ -35,13 +35,12 @@ const defaultConfig = {
 	noAutoFocus: false,
 	overlay: false,
 	ri: {
-		screenTypes
+		screenTypes,
+		dynamic: true
 	},
 	spotlight: true,
 	textSize: true,
-	skin: true,
-	dynamic: true,
-	screenTypes: null
+	skin: true
 };
 
 /**
@@ -64,12 +63,12 @@ const defaultConfig = {
  * @public
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	if (config.screenTypes) {
-		defineScreenTypes(config.screenTypes);
-	}
-
+	
 	const {ri, i18n, float, overlay, skin, textSize, highContrast} = config;
-
+	
+	if (ri.screenTypes) {
+		defineScreenTypes(ri.screenTypes);
+	}
 	// Apply classes depending on screen type (overlay / fullscreen)
 	const bgClassName = 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
 
@@ -155,7 +154,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			if (config.dynamic) window.addEventListener('resize', this.handleResize);
+			if (ri.dynamic) window.addEventListener('resize', this.handleResize);
 			// eslint-disable-next-line react/no-find-dom-node
 			this.rootNode = ReactDOM.findDOMNode(this);
 		}
@@ -165,7 +164,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			if (config.dynamic) window.removeEventListener('resize', this.handleResize);
+			if (ri.dynamic) window.removeEventListener('resize', this.handleResize);
 		}
 
 		handleResize = () => {
