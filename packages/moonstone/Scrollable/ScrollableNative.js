@@ -100,13 +100,13 @@ class ScrollableNative extends Component {
 		focusableScrollbar: PropTypes.bool,
 
 		/**
-		* Sets the hint string read when focusing the next button in the horizontal scroll bar.
+		* Sets the hint string read when focusing the next button in the vertical scroll bar.
 		*
 		* @type {String}
-		* @default $L('scroll right')
+		* @default $L('scroll down')
 		* @public
 		*/
-		horizontalScrollbarNextButtonAriaLabel: PropTypes.string,
+		scrollDownAriaLabel: PropTypes.string,
 
 		/**
 		* Sets the hint string read when focusing the previous button in the horizontal scroll bar.
@@ -115,16 +115,16 @@ class ScrollableNative extends Component {
 		* @default $L('scroll left')
 		* @public
 		*/
-		horizontalScrollbarPreviousButtonAriaLabel: PropTypes.string,
+		scrollLeftAriaLabel: PropTypes.string,
 
 		/**
-		* Sets the hint string read when focusing the next button in the vertical scroll bar.
+		* Sets the hint string read when focusing the next button in the horizontal scroll bar.
 		*
 		* @type {String}
-		* @default $L('scroll down')
+		* @default $L('scroll right')
 		* @public
 		*/
-		verticalScrollbarNextButtonAriaLabel: PropTypes.string,
+		scrollRightAriaLabel: PropTypes.string,
 
 		/**
 		* Sets the hint string read when focusing the previous button in the vertical scroll bar.
@@ -133,15 +133,11 @@ class ScrollableNative extends Component {
 		* @default $L('scroll up')
 		* @public
 		*/
-		verticalScrollbarPreviousButtonAriaLabel: PropTypes.string
+		scrollUpAriaLabel: PropTypes.string
 	}
 
 	static defaultProps = {
-		focusableScrollbar: false,
-		horizontalScrollbarNextButtonAriaLabel: $L('scroll right'),
-		horizontalScrollbarPreviousButtonAriaLabel: $L('scroll left'),
-		verticalScrollbarNextButtonAriaLabel: $L('scroll down'),
-		verticalScrollbarPreviousButtonAriaLabel: $L('scroll up')
+		focusableScrollbar: false
 	}
 
 	constructor (props) {
@@ -548,20 +544,16 @@ class ScrollableNative extends Component {
 			{
 				childRenderer,
 				focusableScrollbar,
-				horizontalScrollbarNextButtonAriaLabel,
-				horizontalScrollbarPreviousButtonAriaLabel,
-				verticalScrollbarNextButtonAriaLabel,
-				verticalScrollbarPreviousButtonAriaLabel,
+				scrollRightAriaLabel,
+				scrollLeftAriaLabel,
+				scrollDownAriaLabel,
+				scrollUpAriaLabel,
 				...rest
 			} = this.props,
-			horizontalScrollbarA11yProps = {
-				nextButtonAriaLabel: horizontalScrollbarNextButtonAriaLabel,
-				previousButtonAriaLabel: horizontalScrollbarPreviousButtonAriaLabel
-			},
-			verticalScrollbarA11yProps = {
-				nextButtonAriaLabel: verticalScrollbarNextButtonAriaLabel,
-				previousButtonAriaLabel: verticalScrollbarPreviousButtonAriaLabel
-			};
+			downButtonAriaLabel = scrollDownAriaLabel == null ? $L('scroll down') : scrollDownAriaLabel,
+			upButtonAriaLabel = scrollUpAriaLabel == null ? $L('scroll up') : scrollUpAriaLabel,
+			rightButtonAriaLabel = scrollRightAriaLabel == null ? $L('scroll right') : scrollRightAriaLabel,
+			leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
 
 		return (
 			<UiScrollableBaseNative
@@ -608,9 +600,10 @@ class ScrollableNative extends Component {
 							{isVerticalScrollbarVisible ?
 								<Scrollbar
 									{...verticalScrollbarProps}
-									{...verticalScrollbarA11yProps}
 									{...this.scrollbarProps}
 									disabled={!isVerticalScrollbarVisible}
+									nextButtonAriaLabel={downButtonAriaLabel}
+									previousButtonAriaLabel={upButtonAriaLabel}
 								/> :
 								null
 							}
@@ -618,10 +611,11 @@ class ScrollableNative extends Component {
 						{isHorizontalScrollbarVisible ?
 							<Scrollbar
 								{...horizontalScrollbarProps}
-								{...horizontalScrollbarA11yProps}
 								{...this.scrollbarProps}
 								corner={isVerticalScrollbarVisible}
 								disabled={!isHorizontalScrollbarVisible}
+								nextButtonAriaLabel={rightButtonAriaLabel}
+								previousButtonAriaLabel={leftButtonAriaLabel}
 							/> :
 							null
 						}
