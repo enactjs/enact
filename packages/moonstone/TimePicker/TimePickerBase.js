@@ -114,7 +114,7 @@ const TimePickerBase = kind({
 		 * Sets the hint string for hour label read when focusing the hour picker.
 		 *
 		 * @type {String}
-		 * @default $L('hour')
+		 * @default 'hour'
 		 * @public
 		 */
 		hourAriaLabel: PropTypes.string,
@@ -123,7 +123,7 @@ const TimePickerBase = kind({
 		 * Sets the hint string read when focusing the joined picker.
 		 *
 		 * @type {String}
-		 * @default $L('change a value with up down button')
+		 * @default 'change a value with up down button'
 		 * @public
 		 */
 		joinedPickerAriaLabel: PropTypes.string,
@@ -159,7 +159,7 @@ const TimePickerBase = kind({
 		 * Sets the hint string for minute label read when focusing the minute picker.
 		 *
 		 * @type {String}
-		 * @default $L('minute')
+		 * @default 'minute'
 		 * @public
 		 */
 		minuteAriaLabel: PropTypes.string,

@@ -138,7 +138,7 @@ const PickerBase = class extends React.Component {
 		 * Sets the hint string read when focusing the decrement button.
 		 *
 		 * @type {String}
-		 * @default $L('previous item')
+		 * @default 'previous item'
 		 * @public
 		 */
 		decrementAriaLabel: PropTypes.string,
@@ -174,7 +174,7 @@ const PickerBase = class extends React.Component {
 		 * Sets the hint string read when focusing the increment button.
 		 *
 		 * @type {String}
-		 * @default $L('next item')
+		 * @default 'next item'
 		 * @public
 		 */
 		incrementAriaLabel: PropTypes.string,
@@ -205,7 +205,7 @@ const PickerBase = class extends React.Component {
 		 * Sets the hint string read when focusing the joined picker.
 		 *
 		 * @type {String}
-		 * @default $L('change a value with left right button')
+		 * @default 'change a value with left right button'
 		 * @public
 		 */
 		joinedPickerAriaLabel: PropTypes.string,
