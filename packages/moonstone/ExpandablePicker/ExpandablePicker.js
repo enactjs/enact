@@ -45,6 +45,23 @@ const ExpandablePickerBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * Sets the hint string read when focusing the check button.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		checkButtonAriaLabel: PropTypes.string,
+
+		/**
+		 * Sets the hint string read when focusing the decrement button.
+		 *
+		 * @type {String}
+		 * @default 'previous item'
+		 * @public
+		 */
+		decrementAriaLabel: PropTypes.string,
+
+		/**
 		 * A custom icon for the decrementer. All strings supported by [Icon]{Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
@@ -61,6 +78,15 @@ const ExpandablePickerBase = kind({
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * Sets the hint string read when focusing the increment button.
+		 *
+		 * @type {String}
+		 * @default 'next item'
+		 * @public
+		 */
+		incrementAriaLabel: PropTypes.string,
 
 		/**
 		 * A custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -83,6 +109,15 @@ const ExpandablePickerBase = kind({
 		 * @public
 		 */
 		joined: PropTypes.bool,
+
+		/**
+		 * Sets the hint string read when focusing the joined picker.
+		 *
+		 * @type {String}
+		 * @default 'change a value with left right button'
+		 * @public
+		 */
+		joinedPickerAriaLabel: PropTypes.string,
 
 		/**
 		 * By default, the picker will animate transitions between items if it has a defined
@@ -246,11 +281,15 @@ const ExpandablePickerBase = kind({
 
 	render: (props) => {
 		const {
+			checkButtonAriaLabel,
 			children,
+			decrementAriaLabel,
 			decrementIcon,
 			disabled,
+			incrementAriaLabel,
 			incrementIcon,
 			joined,
+			joinedPickerAriaLabel,
 			noAnimation,
 			onChange,
 			onPick,
@@ -281,33 +320,37 @@ const ExpandablePickerBase = kind({
 			>
 				<Picker
 					className={css.picker}
-					disabled={disabled}
-					onChange={onPick}
-					value={value}
+					decrementAriaLabel={decrementAriaLabel}
 					decrementIcon={decrementIcon}
+					disabled={disabled}
+					incrementAriaLabel={incrementAriaLabel}
 					incrementIcon={incrementIcon}
 					joined={joined}
+					joinedPickerAriaLabel={joinedPickerAriaLabel}
 					noAnimation={noAnimation}
+					onChange={onPick}
 					onSpotlightDisappear={onSpotlightDisappear}
 					onSpotlightDown={onSpotlightDown}
 					onSpotlightLeft={!rtl ? onSpotlightLeft : null}
 					onSpotlightRight={rtl ? onSpotlightRight : null}
 					orientation={orientation}
 					spotlightDisabled={spotlightDisabled}
+					value={value}
 					width={width}
 					wrap={wrap}
 				>
 					{children}
 				</Picker>
 				<IconButton
-					onTap={onChange}
+					aria-label={checkButtonAriaLabel}
+					className={css.button}
 					onSpotlightDisappear={onSpotlightDisappear}
 					onSpotlightDown={onSpotlightDown}
 					onSpotlightLeft={rtl ? onSpotlightLeft : null}
 					onSpotlightRight={!rtl ? onSpotlightRight : null}
-					spotlightDisabled={spotlightDisabled}
-					className={css.button}
+					onTap={onChange}
 					small
+					spotlightDisabled={spotlightDisabled}
 				>check</IconButton>
 			</ExpandableItemBase>
 		);
