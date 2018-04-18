@@ -8,8 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VideoPlayer` property `tooltipHideDelay`
 - `moonstone/IncrementSlider` and `moonstone/Slider` props `tooltipAsPercent`, `tooltipSide`, and `tooltipForceSide`, to be replaced by `moonstone/IncrementSlider.IncrementSliderTooltip` and `moonstone/Slider.SliderTooltip` props `percent`, `side`, and `forceSide`
+- `moonstone/IncrementSlider` and `moonstone/Slider` props `tooltipAsPercent`, `tooltipSide`, and `tooltipForceSide`, to be replaced by `percent` and `side` on `moonstone/ProgressBar.ProgressBarTooltip`
 - `moonstone/IncrementSlider` props `detachedKnob`, `onDecrement`, `onIncrement`, and `scrubbing`
 - `moonstone/Slider` props `detachedKnob`, `onDecrement`, `onIncrement`, `scrubbing`, and `onKnobMove`
+- `moonstone/ProgressBar` props `tooltipSide` and `tooltipForceSide`, to be replaced by `side` on `moonstone/ProgressBar.ProgressBarTooltip`
 
 ### Added
 
@@ -26,6 +28,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/IncrementSlider` and `moonstone/Slider` prop `tooltip` to support either a boolean for the default tooltip or an element or component for a custom tooltip
+- `moonstone/ProgressBar.ProgressBarTooltip` prop `side` to support either locale-aware or locale-independent positioning
+- `moonstone/ProgressBar.ProgressBarTooltip` prop `tooltip` to support custom tooltip components
 
 ## [2.0.0-alpha.8] - 2018-04-17
 
