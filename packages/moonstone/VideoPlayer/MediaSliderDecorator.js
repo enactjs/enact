@@ -1,4 +1,4 @@
-import {adaptEvent, handle, forKey, forward, oneOf, preventDefault} from '@enact/core/handle';
+import {adaptEvent, call, handle, forKey, forward, oneOf, preventDefault, returnsTrue, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {calcProportion} from '@enact/ui/Slider/utils';
 import PropTypes from 'prop-types';
@@ -28,6 +28,38 @@ const increment = (state) => {
 	return null;
 };
 
+const handleBlur = handle(
+	forward('onBlur'),
+	call('untrack')
+);
+
+const handleFocus = handle(
+	forward('onFocus'),
+	// extract target from the event and pass it to track()
+	adaptEvent(({target}) => target, call('track'))
+);
+
+const handleKeyDown = handle(
+	forward('onKeyDown'),
+	call('isTracking'),
+	// if tracking and the key is left/right update the preview x position
+	oneOf(
+		[forKey('left'), returnsTrue(call('decrement'))],
+		[forKey('right'), returnsTrue(call('increment'))]
+	),
+	// if we handled left or right, stopImmediate to prevent spotlight handling
+	stopImmediate
+);
+
+const handleKeyUp = handle(
+	forward('onKeyUp'),
+	call('isTracking'),
+	forKey('enter'),
+	// prevent moonstone/Slider from activating the knob
+	preventDefault,
+	adaptEvent(call('getEventPayload'), forward('onChange'))
+);
+
 /**
  * MediaSlider for {@link moonstone/VideoPlayer}.
  *
@@ -50,6 +82,10 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 			this.handleMouseOver = this.handleMouseOver.bind(this);
 			this.handleMouseOut = this.handleMouseOut.bind(this);
 			this.handleMouseMove = this.handleMouseMove.bind(this);
+			this.handleBlur = handleBlur.bind(this);
+			this.handleFocus = handleFocus.bind(this);
+			this.handleKeyDown = handleKeyDown.bind(this);
+			this.handleKeyUp = handleKeyUp.bind(this);
 
 			this.state = {
 				maxX: 0,
@@ -59,10 +95,18 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 			};
 		}
 
-		getEventPayload = () => ({
-			value: this.state.x,
-			proportion: this.state.x
-		})
+		componentDidUpdate (prevProps, prevState) {
+			if (prevState.x !== this.state.x) {
+				forward('onKnobMove', this.getEventPayload(), this.props);
+			}
+		}
+
+		getEventPayload () {
+			return {
+				value: this.state.x,
+				proportion: this.state.x
+			};
+		}
 
 		track (target) {
 			const bounds = target.getBoundingClientRect();
@@ -93,35 +137,17 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 			});
 		}
 
-		handle = handle.bind(this)
+		decrement () {
+			this.setState(decrement);
+		}
 
-		handleBlur = this.handle(
-			forward('onBlur'),
-			() =>  this.untrack()
-		)
+		increment () {
+			this.setState(increment);
+		}
 
-		handleFocus = this.handle(
-			forward('onFocus'),
-			(ev) =>  this.track(ev.target)
-		)
-
-		handleKeyDown = this.handle(
-			forward('onKeyDown'),
-			() => this.state.tracking,
-			preventDefault,
-			adaptEvent(this.getEventPayload, forward('onKnobMove')),
-			oneOf(
-				[forKey('left'), () => this.setState(decrement)],
-				[forKey('right'), () => this.setState(increment)]
-			)
-		)
-
-		handleKeyUp = this.handle(
-			forward('onKeyUp'),
-			() => this.state.tracking,
-			forKey('enter'),
-			adaptEvent(this.getEventPayload, forward('onChange'))
-		)
+		isTracking () {
+			return this.state.tracking;
+		}
 
 		handleMouseOver (ev) {
 			if (ev.currentTarget.contains(ev.relatedTarget)) {
