@@ -230,7 +230,20 @@ const IncrementSliderBase = kind({
 		 */
 		onDecrementSpotlightDisappear: PropTypes.func,
 
+		/**
+		 * Forwarded from SliderBehaviorDecorator onto the internal slider
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		onDragEnd: PropTypes.func,
+
+		/**
+		 * Forwarded from SliderBehaviorDecorator onto the internal slider
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		onDragStart: PropTypes.func,
 
 		/**

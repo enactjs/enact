@@ -128,18 +128,6 @@ const SliderBase = kind({
 		noFill: PropTypes.bool,
 
 		/**
-		 * The handler to run when the value is changed.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {Number} event.value      Value of the slider
-		 * @param {Number} event.proportion Proportion of the value in terms of the min and max
-		 *                                  values
-		 * @public
-		 */
-		onChange: PropTypes.func,
-
-		/**
 		 * The orientation of the slider, either `"horizontal"` or `"vertical"`.
 		 *
 		 * @type {Boolean}
@@ -203,6 +191,7 @@ const SliderBase = kind({
 		max: 100,
 		noFill: false,
 		orientation: 'horizontal',
+		step: 1,
 		value: 0
 	},
 
@@ -287,6 +276,20 @@ const SliderDecorator = compose(
  * @ui
  * @public
  */
+
+/**
+ * The handler to run when the value is changed.
+ *
+ * @name onChange
+ * @memberof ui/Slider.Slider
+ * @type {Function}
+ * @param {Object} event
+ * @param {Number} event.value      Value of the slider
+ * @param {Number} event.proportion Proportion of the value in terms of the min and max
+ *                                  values
+ * @public
+ */
+
 const Slider = SliderDecorator(SliderBase);
 
 export default Slider;

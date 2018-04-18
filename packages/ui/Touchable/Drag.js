@@ -85,10 +85,10 @@ class Drag {
 		if (!this.isDragging()) return;
 
 		const {moveTolerance, onDrag, onDragStart} = this.dragConfig;
-		const dx = coords.x - this.startX;
-		const dy = coords.y - this.startY;
 
 		if (this.tracking === Tracking.Untracked) {
+			const dx = coords.x - this.startX;
+			const dy = coords.y - this.startY;
 
 			if (Math.sqrt(dx * dx + dy * dy) >= moveTolerance) {
 				this.tracking = Tracking.Active;

@@ -65,8 +65,6 @@ const Knob = kind({
 	},
 
 	render: ({orientation, proportion, tooltipComponent, value, ...rest}) => {
-		delete rest.orientation;
-
 		return (
 			<div {...rest}>
 				<ComponentOverride

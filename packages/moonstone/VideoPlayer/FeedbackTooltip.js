@@ -53,6 +53,15 @@ const FeedbackTooltipBase = kind({
 		noFeedback: PropTypes.bool,
 
 		/**
+		 * Part of the API required by `ui/Slider` but not used by FeedbackTooltip which only
+		 * supports horizontal orientation
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		orientation: PropTypes.string,
+
+		/**
 		 * Value of the feedback playback rate
 		 *
 		 * @type {String|Number}
@@ -173,6 +182,8 @@ const FeedbackTooltipBase = kind({
 	render: ({children, noFeedback, playbackState, playbackRate, thumbnailComponent, ...rest}) => {
 		delete rest.duration;
 		delete rest.formatter;
+		delete rest.orientation;
+		delete rest.proportion;
 		delete rest.thumbnailDeactivated;
 		delete rest.thumbnailSrc;
 		delete rest.visible;

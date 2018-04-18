@@ -12,6 +12,7 @@ import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 import ComponentOverride from '@enact/ui/ComponentOverride';
 import Changeable from '@enact/ui/Changeable';
+import Pure from '@enact/ui/internal/Pure';
 import Slottable from '@enact/ui/Slottable';
 import UiSlider from '@enact/ui/Slider';
 import PropTypes from 'prop-types';
@@ -186,10 +187,8 @@ const SliderBase = kind({
 	render: ({css, focused, tooltip, ...rest}) => {
 		delete rest.activateOnFocus;
 		delete rest.active;
-		delete rest.focused;
 		delete rest.knobStep;
 		delete rest.onActivate;
-		delete rest.tooltip;
 
 		return (
 			<UiSlider
@@ -217,6 +216,7 @@ const SliderBase = kind({
  * @public
  */
 const SliderDecorator = compose(
+	Pure,
 	Changeable,
 	SliderBehaviorDecorator,
 	Spottable,

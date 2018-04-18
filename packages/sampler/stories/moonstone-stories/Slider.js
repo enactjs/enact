@@ -38,17 +38,17 @@ storiesOf('Moonstone', module)
 				activateOnFocus={boolean('activateOnFocus', false)}
 				backgroundProgress={number('backgroundProgress', 0.5, {range: true, min: 0, max: 1, step: 0.01})}
 				disabled={boolean('disabled', false)}
+				forceSide={nullify(boolean('forceSide', false))}
 				knobStep={number('knobStep')}
 				max={number('max', 10)}
 				min={number('min', 0)}
 				noFill={boolean('noFill', false)}
 				onChange={action('onChange')}
 				orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
-				step={number('step', 1)}
-				tooltip={nullify(boolean('tooltip', false))}
 				percent={nullify(boolean('percent', false))}
 				side={nullify(select('side', ['before', 'after']))}
-				forceSide={nullify(boolean('forceSide', false))}
+				step={number('step', 1)}
+				tooltip={nullify(boolean('tooltip', false))}
 			/>
 		))
 	);
