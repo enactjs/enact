@@ -2,23 +2,28 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames';
 
+import styles from '@enact/core/kind/styles.js';
 import Pure from '@enact/ui/internal/Pure';
-import {compareSources} from '@enact/moonstone/VideoPlayer/util';
 import Media from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
+import {compareSources} from '@enact/moonstone/VideoPlayer/util';
 import Spottable from '@enact/spotlight/Spottable';
 
 import Image from '../Image';
 import Skinnable from '../Skinnable';
 import {MarqueeController, Marquee} from '../Marquee';
 
-import css from './PictureInGraphics.less';
+import componentCss from './PictureInGraphics.less';
 
 const defaultPlaceholder =
 	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
 	'9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
 	'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
 	'4NCg==';
+const cfgStyles = {
+	css: componentCss,
+	publicClassNames: ['pictureInGraphics', 'textOverlay']
+};
 
 class PictureInGraphicsBase extends React.Component {
 	static propTypes = {
@@ -30,6 +35,20 @@ class PictureInGraphicsBase extends React.Component {
 		 * @public
 		 */
 		source: PropTypes.node.isRequired,
+
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `pictureInGraphics` - The root class name
+		 * * `textOverlay` - class name for `textOverlayContent`
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
 
 		/**
 		 * Image path for image overlay.
@@ -49,38 +68,12 @@ class PictureInGraphicsBase extends React.Component {
 		placeholder: PropTypes.string,
 
 		/**
-		 * Font color of text overlay. It is a hexadecimal string.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		textOverlayColor: PropTypes.string,
-
-		/**
 		 * Text of text overlay
 		 *
 		 * @type {String}
 		 * @public
 		 */
 		textOverlayContent: PropTypes.string,
-
-		/**
-		 * Font size of text overlay.
-		 * It is your responsibility to scale font size according to the resolution.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		textOverlayFontSize: PropTypes.string,
-
-		/**
-		 * Select the vertical alignment of text overlay.
-		 *
-		 * @type {String}
-		 * @default 'middle'
-		 * @public
-		 */
-		textOverlayVerticalAlign: PropTypes.oneOf(['top', 'middle', 'bottom']),
 
 		/**
 		 * Video component to use. The default (`'video'`) renders an `HTMLVideoElement`. Custom
@@ -98,13 +91,13 @@ class PictureInGraphicsBase extends React.Component {
 
 	static defaultProps = {
 		placeholder: defaultPlaceholder,
-		textOverlayVerticalAlign: 'middle',
 		videoComponent: 'video'
 	}
 
 	constructor (props) {
 		super(props);
 		this.video = null;
+		this.renderStyles = cfgStyles ? styles(cfgStyles) : false;
 	}
 
 	componentDidUpdate (prevProps) {
@@ -121,37 +114,23 @@ class PictureInGraphicsBase extends React.Component {
 	}
 
 	render () {
+		let p = Object.assign({}, this.props);
+		if (this.renderStyles) p = this.renderStyles(p);
+
 		const {
 			className,
+			css,
 			source,
 			placeholder,
 			imageOverlaySrc,
 			textOverlayContent,
-			textOverlayColor,
-			textOverlayFontSize,
-			textOverlayVerticalAlign,
 			videoComponent,
-			...rest} = this.props;
-
+			...rest} = p;
 		const containerClassName = classNames(className, css.pictureInGraphics);
-		const textOverlayStyle = {color: textOverlayColor};
-
-		if (textOverlayVerticalAlign === 'top') {
-			textOverlayStyle['alignItems'] = 'flex-start';
-		} else if (textOverlayVerticalAlign === 'middle') {
-			textOverlayStyle['alignItems'] = 'center';
-		} else if (textOverlayVerticalAlign === 'bottom') {
-			textOverlayStyle['alignItems'] = 'flex-end';
-		}
-
-		if (textOverlayFontSize) {
-			textOverlayStyle['fontSize'] = textOverlayFontSize;
-		}
 
 		return (
 			<div {...rest} className={containerClassName} >
 				<Media
-					{...rest}
 					autoPlay
 					className={css.video}
 					component={videoComponent}
@@ -160,8 +139,8 @@ class PictureInGraphicsBase extends React.Component {
 				>
 					{source}
 				</Media>
-				{imageOverlaySrc ? <Image placeholder={placeholder} className={css.image} src={imageOverlaySrc} /> : null}
-				{textOverlayContent ? (<Marquee marqueeOn="render" alignment="center" className={css.textOverlay} style={textOverlayStyle}>{textOverlayContent}</Marquee>) : null}
+				{imageOverlaySrc ? <Image className={css.image} placeholder={placeholder} sizing="fit" src={imageOverlaySrc} /> : null}
+				{textOverlayContent ? (<Marquee alignment="center" className={css.textOverlay} marqueeOn="render">{textOverlayContent}</Marquee>) : null}
 			</div>
 		);
 	}
