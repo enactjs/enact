@@ -287,7 +287,7 @@ class ScrollButtons extends Component {
 		}
 	}
 
-	depressButton = (ev) => {
+	depressButton = () => {
 		this.setPressStatus(true);
 	}
 
