@@ -14,21 +14,29 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/ProgressBar.ProgressBarTooltip` props `percent` to format the value as a percent and `visible` to control display of the tooltip
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="list"`
-- `moonstone/Panels` property `closeButtonAriaLabel` to configure the label set on application close button 
+- `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` props `scrollRightAriaLabel`, `scrollLeftAriaLabel`, `scrollDownAriaLabel`, and `scrollUpAriaLabel` to configure the aria-label set on scroll buttons in the scrollbars
+
+## [2.0.0-alpha.8] - 2018-04-17
+
+### Added
+
+- `moonstone/Panels` property `closeButtonAriaLabel` to configure the label set on application close button
 
 ### Changed
 
-- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="region"` to remove obsolete role in `SpotlightPlaceholder`
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to set its ARIA `role` to `"list"`
 - `moonstone/VideoPlayer` property `title` to accept node type
 - `moonstone/IncrementSlider` and `moonstone/Slider` prop `tooltip` to support either a boolean for the default tooltip or an element or component for a custom tooltip
 
 ### Fixed
 
 - `moonstone/TimePicker` to show `meridiem` correctly in all locales
-- `moonstone/Scrollable/ScrollButtons` to read out out audio guidance when button down.
+- `moonstone/Scrollable` scroll buttons to read out out audio guidance when button pressed down
 - `moonstone/ExpandableItem` to show label properly when open and disabled
+- `moonstone/Notification` to position properly in RTL locales
+- `moonstone/VideoPlayer` to show controls when pressing 5-way select
 
-## [2.0.0-alpha.7 - 2018-04-03]
+## [2.0.0-alpha.7] - 2018-04-03
 
 ### Removed
 
