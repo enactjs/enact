@@ -10,6 +10,7 @@ import kind from '@enact/core/kind';
 import {extractAriaProps} from '@enact/core/util';
 import Spottable from '@enact/spotlight/Spottable';
 import Changeable from '@enact/ui/Changeable';
+import {SliderDecorator} from '@enact/ui/Slider';
 import Slottable from '@enact/ui/Slottable';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
@@ -33,7 +34,7 @@ const isLeft = is('left');
 const isRight = is('right');
 const isUp = is('up');
 
-const Slider = Spottable(Skinnable(SliderBase));
+const Slider = SliderDecorator(Spottable(Skinnable(SliderBase)));
 
 const forwardWithType = (type, props) => forward(type, {type}, props);
 

@@ -11,10 +11,9 @@ import {forKey, forProp, forward, forwardWithPrevent, handle} from '@enact/core/
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 import ComponentOverride from '@enact/ui/ComponentOverride';
-import Changeable from '@enact/ui/Changeable';
 import Pure from '@enact/ui/internal/Pure';
 import Slottable from '@enact/ui/Slottable';
-import UiSlider from '@enact/ui/Slider';
+import UiSlider, {SliderDecorator as UiSliderDecorator} from '@enact/ui/Slider';
 import PropTypes from 'prop-types';
 import anyPass from 'ramda/src/anyPass';
 import compose from 'ramda/src/compose';
@@ -35,7 +34,7 @@ import componentCss from './Slider.less';
  * Range-selection input component
  *
  * @class SliderBase
- * @extends ui/Slider.Slider
+ * @extends ui/Slider.SliderBase
  * @memberof moonstone/Slider
  * @ui
  * @public
@@ -213,11 +212,12 @@ const SliderBase = kind({
  * @mixes ui/Changeable.Changeable
  * @mixes spotlight/Spottable.Spottable
  * @mixes ui/Skinnable.Skinnable
+ * @mixes ui/Slider.SliderDecorator
  * @public
  */
 const SliderDecorator = compose(
 	Pure,
-	Changeable,
+	UiSliderDecorator,
 	SliderBehaviorDecorator,
 	Spottable,
 	Slottable({slots: ['knob', 'tooltip']}),

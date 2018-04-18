@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
 
+import Changeable from '../Changeable';
 import ComponentOverride from '../ComponentOverride';
 import Touchable from '../Touchable';
 
@@ -262,6 +263,7 @@ const SliderBase = kind({
  * @public
  */
 const SliderDecorator = compose(
+	Changeable,
 	PositionDecorator,
 	Touchable({activeProp: 'pressed'})
 );
