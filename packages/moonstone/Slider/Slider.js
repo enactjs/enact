@@ -112,6 +112,32 @@ const SliderBase = kind({
 		onActivate: PropTypes.func,
 
 		/**
+		 * Called when a key is pressed down while the slider is focused.
+		 *
+		 * When a directional key is pressed down and the knob is active (either by first
+		 * pressing enter or when `activateOnFocus` is enabled), the Slider will increment or
+		 * decrement the current value and emit an `onChange` event. This default behavior can be
+		 * prevented by calling `preventDefault()` on the event passed to this callback.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onKeyDown: PropTypes.func,
+
+		/**
+		 * Called when a key is released while the slider is focused.
+		 *
+		 * When the enter key is released and `activateOnFocus` is not enabled, the slider will be
+		 * activated to enable incrementing or decrementing the value via directional keys. This
+		 * default behavior can be prevented by calling `preventDefault()` on the event passed to
+		 * this callback.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onKeyUp: PropTypes.func,
+
+		/**
 		 * Enables the built-in tooltip
 		 *
 		 * To customize the tooltip, pass either a custom Tooltip component or an instance of
