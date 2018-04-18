@@ -196,7 +196,7 @@ const oneOf = handle.oneOf = function (...handlers) {
 const returnsTrue = handle.returnsTrue = function (handler) {
 	if (handler) {
 		return function (...args) {
-			handler(...args);
+			handler.apply(this, args);
 
 			return true;
 		};
@@ -551,7 +551,7 @@ const call = function (method) {
  */
 const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
 	return function (ev, ...args) {
-		return handler(adapter(ev, ...args), ...args);
+		return handler.call(this, adapter.call(this, ev, ...args), ...args);
 	};
 });
 

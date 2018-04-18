@@ -2,6 +2,7 @@ import sinon from 'sinon';
 import {
 	handle,
 	adaptEvent,
+	call,
 	callOnEvent,
 	forEventProp,
 	forKeyCode,
@@ -484,6 +485,36 @@ describe('handle', () => {
 
 			const expected = [1, 2, 3];
 			const actual = handler.firstCall.args;
+
+			expect(actual).to.deep.equal(expected);
+		});
+
+		it('should support bound adapter function', () => {
+			const obj = {
+				adapt: () => 1
+			};
+			const handler = sinon.spy();
+			const fn = adaptEvent(call('adapt'), handler).bind(obj);
+
+			fn(0, 2, 3);
+
+			const expected = [1, 2, 3];
+			const actual = handler.firstCall.args;
+
+			expect(actual).to.deep.equal(expected);
+		});
+
+		it('should support bound handler function', () => {
+			const obj = {
+				handler: sinon.spy()
+			};
+			const returnOne = () => 1;
+			const fn = adaptEvent(returnOne, call('handler')).bind(obj);
+
+			fn(0, 2, 3);
+
+			const expected = [1, 2, 3];
+			const actual = obj.handler.firstCall.args;
 
 			expect(actual).to.deep.equal(expected);
 		});
