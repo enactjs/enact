@@ -67,6 +67,14 @@ class ScrollButtons extends Component {
 		disabled: PropTypes.bool,
 
 		/**
+		* Sets the hint string read when focusing the next button in the scroll bar.
+		*
+		* @type {String}
+		* @public
+		*/
+		nextButtonAriaLabel: PropTypes.string,
+
+		/**
 		 * Called when the scrollbar's down/right button is pressed.
 		 *
 		 * @type {Function}
@@ -97,6 +105,14 @@ class ScrollButtons extends Component {
 		 * @private
 		 */
 		onPrevSpotlightDisappear: PropTypes.func,
+
+		/**
+		 * Sets the hint string read when focusing the previous button in the scroll bar.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		previousButtonAriaLabel: PropTypes.string,
 
 		/**
 		 * `true` if rtl, `false` if ltr.
@@ -315,13 +331,14 @@ class ScrollButtons extends Component {
 
 	render () {
 		const
-			{disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, thumbRenderer, vertical} = this.props,
+			{disabled, nextButtonAriaLabel, onNextSpotlightDisappear, onPrevSpotlightDisappear, previousButtonAriaLabel, thumbRenderer, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			prevIcon = preparePrevButton(vertical),
 			nextIcon = prepareNextButton(vertical);
 
 		return [
 			<ScrollButton
+				aria-label={previousButtonAriaLabel}
 				key="prevButton"
 				data-scroll-button="previous"
 				data-spotlight-overflow="ignore"
@@ -343,6 +360,7 @@ class ScrollButtons extends Component {
 			</ScrollButton>,
 			thumbRenderer(),
 			<ScrollButton
+				aria-label={nextButtonAriaLabel}
 				key="nextButton"
 				data-scroll-button="next"
 				data-spotlight-overflow="ignore"

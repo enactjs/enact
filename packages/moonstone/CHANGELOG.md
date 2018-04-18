@@ -7,22 +7,33 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="list"`
-- `moonstone/Panels` property `closeButtonAriaLabel` to configure the label set on application close button 
+- `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` props `scrollRightAriaLabel`, `scrollLeftAriaLabel`, `scrollDownAriaLabel`, and `scrollUpAriaLabel` to configure the aria-label set on scroll buttons in the scrollbars
+
+### Fixed
+
+- `moonstone/Scroller` and `moonstone/VirtualList` navigation via 5-way from paging controls
+
+## [2.0.0-alpha.8] - 2018-04-17
+
+### Added
+
+- `moonstone/Panels` property `closeButtonAriaLabel` to configure the label set on application close button
 
 ### Changed
 
-- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="region"` to remove obsolete role in `SpotlightPlaceholder`
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to set its ARIA `role` to `"list"`
 - `moonstone/VideoPlayer` property `title` to accept node type
 
 ### Fixed
 
 - `moonstone/TimePicker` to show `meridiem` correctly in all locales
 - `moonstone/Scrollable/ScrollButtons` to read out out audio guidance when button down.
-- `moonstone/Scroller` and `moonstone/VirtualList` navigation via 5-way from paging controls
+- `moonstone/Scrollable` scroll buttons to read out out audio guidance when button pressed down
 - `moonstone/ExpandableItem` to show label properly when open and disabled
 - `moonstone/Notification` to position properly in RTL locales
+- `moonstone/VideoPlayer` to show controls when pressing 5-way select
 
-## [2.0.0-alpha.7 - 2018-04-03]
+## [2.0.0-alpha.7] - 2018-04-03
 
 ### Removed
 

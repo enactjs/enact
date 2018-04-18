@@ -6,6 +6,8 @@ import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Touchable from '@enact/ui/Touchable';
 
+import $L from '../internal/$L';
+
 import Scrollbar from './Scrollbar';
 
 import scrollbarCss from './Scrollbar.less';
@@ -104,7 +106,43 @@ class ScrollableBaseNative extends Component {
 		 * @default false
 		 * @public
 		 */
-		focusableScrollbar: PropTypes.bool
+		focusableScrollbar: PropTypes.bool,
+
+		/**
+		* Sets the hint string read when focusing the next button in the vertical scroll bar.
+		*
+		* @type {String}
+		* @default $L('scroll down')
+		* @public
+		*/
+		scrollDownAriaLabel: PropTypes.string,
+
+		/**
+		* Sets the hint string read when focusing the previous button in the horizontal scroll bar.
+		*
+		* @type {String}
+		* @default $L('scroll left')
+		* @public
+		*/
+		scrollLeftAriaLabel: PropTypes.string,
+
+		/**
+		* Sets the hint string read when focusing the next button in the horizontal scroll bar.
+		*
+		* @type {String}
+		* @default $L('scroll right')
+		* @public
+		*/
+		scrollRightAriaLabel: PropTypes.string,
+
+		/**
+		* Sets the hint string read when focusing the previous button in the vertical scroll bar.
+		*
+		* @type {String}
+		* @default $L('scroll up')
+		* @public
+		*/
+		scrollUpAriaLabel: PropTypes.string
 	}
 
 	static defaultProps = {
@@ -517,7 +555,21 @@ class ScrollableBaseNative extends Component {
 	}
 
 	render () {
-		const {childRenderer, 'data-spotlight-container': spotlightContainer, 'data-spotlight-id': spotlightId, ...rest} = this.props;
+		const
+			{
+				childRenderer,
+				'data-spotlight-container': spotlightContainer,
+				'data-spotlight-id': spotlightId,
+				scrollRightAriaLabel,
+				scrollLeftAriaLabel,
+				scrollDownAriaLabel,
+				scrollUpAriaLabel,
+				...rest
+			} = this.props,
+			downButtonAriaLabel = scrollDownAriaLabel == null ? $L('scroll down') : scrollDownAriaLabel,
+			upButtonAriaLabel = scrollUpAriaLabel == null ? $L('scroll up') : scrollUpAriaLabel,
+			rightButtonAriaLabel = scrollRightAriaLabel == null ? $L('scroll right') : scrollRightAriaLabel,
+			leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
 
 		delete rest.focusableScrollbar;
 
@@ -567,9 +619,30 @@ class ScrollableBaseNative extends Component {
 									spotlightId
 								})}
 							</TouchableDiv>
-							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} rtl={rtl} /> : null}
+							{isVerticalScrollbarVisible ?
+								<Scrollbar
+									{...verticalScrollbarProps}
+									{...this.scrollbarProps}
+									disabled={!isVerticalScrollbarVisible}
+									nextButtonAriaLabel={downButtonAriaLabel}
+									previousButtonAriaLabel={upButtonAriaLabel}
+									rtl={rtl}
+								/> :
+								null
+							}
 						</div>
-						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} {...this.scrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} rtl={rtl} /> : null}
+						{isHorizontalScrollbarVisible ?
+							<Scrollbar
+								{...horizontalScrollbarProps}
+								{...this.scrollbarProps}
+								corner={isVerticalScrollbarVisible}
+								disabled={!isHorizontalScrollbarVisible}
+								nextButtonAriaLabel={rightButtonAriaLabel}
+								previousButtonAriaLabel={leftButtonAriaLabel}
+								rtl={rtl}
+							/> :
+							null
+						}
 					</div>
 				)}
 			/>
