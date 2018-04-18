@@ -4,9 +4,35 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="list"`
+- `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` props `scrollRightAriaLabel`, `scrollLeftAriaLabel`, `scrollDownAriaLabel`, and `scrollUpAriaLabel` to configure the aria-label set on scroll buttons in the scrollbars
+
+## [2.0.0-alpha.8] - 2018-04-17
+
+### Added
+
+- `moonstone/Panels` property `closeButtonAriaLabel` to configure the label set on application close button
+
+### Changed
+
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to set its ARIA `role` to `"list"`
+- `moonstone/VideoPlayer` property `title` to accept node type
+
+### Fixed
+
+- `moonstone/TimePicker` to show `meridiem` correctly in all locales
+- `moonstone/Scrollable` scroll buttons to read out out audio guidance when button pressed down
+- `moonstone/ExpandableItem` to show label properly when open and disabled
+- `moonstone/Notification` to position properly in RTL locales
+- `moonstone/VideoPlayer` to show controls when pressing 5-way select
+
+## [2.0.0-alpha.7] - 2018-04-03
+
 ### Removed
 
-- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `data`
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `data` to eliminate the misunderstanding caused by the ambiguity of `data`
 
 ### Added
 
@@ -18,7 +44,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` property `moreButtonColor` to allow setting underline colors for more button
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `isItemDisabled`, which accepts a function that checks if the item at the supplied index is disabled
 - `moonstone/Panels.Header` support for `headerInput` so the Header can be used as an Input. See documentation for usage examples.
-- `moonstone/ProgressBar` prop `tooltipSide` to configure tooltip position relative to the progress bar
+- `moonstone/ProgressBar` property `tooltipSide` to configure tooltip position relative to the progress bar
 - `moonstone/ProgressBar` colors (affecting `moonstone/Slider` as well) for light and dark theme to match the latest designs and make them more visible when drawn over arbitrary background colors
 
 ### Fixed
@@ -29,7 +55,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to hide more icon when right components are removed
 - `moonstone/Picker` to correctly update pressed state when dragging off buttons
 - `moonstone/Notification` to display when it's opened
-- `moonstone/VirtualList` and `moonstone/VirtualGridList`, to show Spotlight properly while navigating them with page up and down keys
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to show Spotlight properly while navigating with page up and down keys
 - `moonstone/Input` to allow navigating via left or right to other components when the input is active and the selection is at start or end of the text, respectively
 - `moonstone/Panels.ActivityPanels` to correctly lay out the existing panel after adding additional panels
 

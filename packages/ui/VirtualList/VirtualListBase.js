@@ -243,6 +243,12 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
+		componentWillUpdate (nextProps, nextState) {
+			if (this.state.firstIndex === nextState.firstIndex) {
+				this.prevFirstIndex = -1; // force to re-render items
+			}
+		}
+
 		scrollBounds = {
 			clientWidth: 0,
 			clientHeight: 0,
@@ -626,10 +632,10 @@ const VirtualListBaseFactory = (type) => {
 				{firstIndex, numOfItems} = this.state,
 				{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc} = this,
 				diff = firstIndex - this.prevFirstIndex,
-				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.prevFirstIndex + numOfItems;
+				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems || this.prevFirstIndex === -1) ? firstIndex : this.prevFirstIndex + numOfItems;
 			let
 				hideTo = 0,
-				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0) ? firstIndex + numOfItems : this.prevFirstIndex;
+				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0 || this.prevFirstIndex === -1) ? firstIndex + numOfItems : this.prevFirstIndex;
 
 			if (updateFrom >= updateTo) {
 				return;
@@ -791,32 +797,70 @@ VirtualListBaseNative.displayName = 'ui:VirtualListBaseNative';
 const ScrollableVirtualList = (props) => (
 	<Scrollable
 		{...props}
-		childRenderer={({initUiChildRef, ...virtualListProps}) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
-				{...virtualListProps}
+				{...rest}
 				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
+					cc.length ? <div ref={initItemContainerRef} role="list">{cc}</div> : null
 				)}
-				ref={initUiChildRef}
+				ref={initChildRef}
 			/>
 		)}
 	/>
 );
 
+ScrollableVirtualList.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
+	/**
+	 * Direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'vertical'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+};
+
+ScrollableVirtualList.defaultProps = {
+	direction: 'vertical'
+};
+
 const ScrollableVirtualListNative = (props) => (
 	<ScrollableNative
 		{...props}
-		childRenderer={({initUiChildRef, ...virtualListProps}) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
-				{...virtualListProps}
+				{...rest}
 				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
+					cc.length ? <div ref={initItemContainerRef} role="list">{cc}</div> : null
 				)}
-				ref={initUiChildRef}
+				ref={initChildRef}
 			/>
 		)}
 	/>
 );
+
+ScrollableVirtualListNative.propTypes = /** @lends ui/VirtualList.VirtualListBaseNative.prototype */ {
+	/**
+	 * Direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'vertical'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+};
+
+ScrollableVirtualListNative.defaultProps = {
+	direction: 'vertical'
+};
 
 export default VirtualListBase;
 export {

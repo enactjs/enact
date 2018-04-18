@@ -518,10 +518,10 @@ const VideoPlayerBase = class extends React.Component {
 		/**
 		 * Set a title for the video being played.
 		 *
-		 * @type {String}
+		 * @type {String|Node}
 		 * @public
 		 */
-		title: PropTypes.string,
+		title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 		/**
 		 * The amount of time in milliseconds that should pass before the title disappears from the
@@ -1930,6 +1930,7 @@ const VideoPlayerBase = class extends React.Component {
 					// This captures spotlight focus for use with 5-way.
 					// It's non-visible but lives at the top of the VideoPlayer.
 					className={css.controlsHandleAbove}
+					onClick={this.showControls}
 					onKeyDown={this.handleKeyDown}
 					onSpotlightDown={this.showControls}
 					spotlightDisabled={this.state.mediaControlsVisible || spotlightDisabled}

@@ -80,8 +80,6 @@ const VirtualListBaseFactory = (type) => {
 			 * Usage:
 			 * ```
 			 * renderItem = ({index, ...rest}) => {
-			 * 	delete rest.data;
-			 *
 			 * 	return (
 			 * 		<MyComponent index={index} {...rest} />
 			 * 	);
@@ -107,6 +105,24 @@ const VirtualListBaseFactory = (type) => {
 			 * @private
 			 */
 			itemsRenderer: PropTypes.func.isRequired,
+
+			/**
+			 * Callback method of scrollTo.
+			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			cbScrollTo: PropTypes.func,
+
+			/**
+			 * Size of the data.
+			 *
+			 * @type {Number}
+			 * @default 0
+			 * @public
+			 */
+			dataSize: PropTypes.number,
 
 			/**
 			 * Spotlight container Id.
@@ -151,6 +167,15 @@ const VirtualListBaseFactory = (type) => {
 			 */
 			isItemDisabled: PropTypes.func,
 
+			/*
+			 * It scrolls by page when `true`, by item when `false`.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @private
+			 */
+			pageScroll: PropTypes.bool,
+
 			/**
 			 * `true` if rtl, `false` if ltr.
 			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
@@ -158,7 +183,16 @@ const VirtualListBaseFactory = (type) => {
 			 * @type {Boolean}
 			 * @private
 			 */
-			rtl: PropTypes.bool
+			rtl: PropTypes.bool,
+
+			/**
+			 * Spacing between items.
+			 *
+			 * @type {Number}
+			 * @default 0
+			 * @public
+			 */
+			spacing: PropTypes.number
 		}
 
 		componentDidMount () {
@@ -230,8 +264,7 @@ const VirtualListBaseFactory = (type) => {
 
 		findSpottableItem = (indexFrom, indexTo) => {
 			const
-				{isItemDisabled} = this.props,
-				{dataSize} = this.uiRef.props,
+				{dataSize, isItemDisabled} = this.props,
 				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
 				safeIndexTo = clamp(-1, dataSize, indexTo),
 				delta = (indexFrom < indexTo) ? 1 : -1;
@@ -253,8 +286,7 @@ const VirtualListBaseFactory = (type) => {
 
 		getIndexToScrollDisabled = (direction, currentIndex) => {
 			const
-				{isItemDisabled} = this.props,
-				{dataSize, spacing} = this.uiRef.props,
+				{dataSize, isItemDisabled, spacing} = this.props,
 				{dimensionToExtent, primary} = this.uiRef,
 				{findSpottableItem} = this,
 				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo,
@@ -323,7 +355,7 @@ const VirtualListBaseFactory = (type) => {
 
 		getIndexToScroll = (direction, currentIndex) => {
 			const
-				{dataSize, spacing} = this.uiRef.props,
+				{dataSize, spacing} = this.props,
 				{dimensionToExtent, primary} = this.uiRef,
 				numOfItemsInPage = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent,
 				factor = (direction === 'down' || direction === 'right') ? 1 : -1;
@@ -343,7 +375,7 @@ const VirtualListBaseFactory = (type) => {
 
 		scrollToNextItem = ({direction, focusedItem}) => {
 			const
-				{isItemDisabled} = this.props,
+				{cbScrollTo, isItemDisabled} = this.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
 				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute));
 			let indexToScroll = -1;
@@ -373,7 +405,7 @@ const VirtualListBaseFactory = (type) => {
 					focusedItem.blur();
 					this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
 				}
-				this.uiRef.props.cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
+				cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
 			}
 
 			return true;
@@ -389,7 +421,7 @@ const VirtualListBaseFactory = (type) => {
 
 		setSpotlightContainerRestrict = (keyCode, target) => {
 			const
-				{dataSize} = this.uiRef.props,
+				{dataSize} = this.props,
 				{isPrimaryDirectionVertical, dimensionToExtent} = this.uiRef,
 				index = Number.parseInt(target.getAttribute(dataIndexAttribute)),
 				canMoveBackward = index >= dimensionToExtent,
@@ -409,8 +441,7 @@ const VirtualListBaseFactory = (type) => {
 
 		jumpToSpottableItem = (keyCode, target) => {
 			const
-				{isItemDisabled} = this.props,
-				{cbScrollTo, dataSize} = this.uiRef.props,
+				{cbScrollTo, dataSize, isItemDisabled} = this.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
 				{isPrimaryDirectionVertical} = this.uiRef,
 				rtl = this.props.rtl,
@@ -631,7 +662,7 @@ const VirtualListBaseFactory = (type) => {
 
 		calculatePositionOnFocus = ({item, scrollPosition = this.uiRef.scrollPosition}) => {
 			const
-				{pageScroll} = this.uiRef.props,
+				{pageScroll} = this.props,
 				{numOfItems} = this.uiRef.state,
 				{primary} = this.uiRef,
 				offsetToClientEnd = primary.clientSize - primary.itemSize,
@@ -770,15 +801,15 @@ VirtualListBase.displayName = 'VirtualListBase';
 const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'VirtualListBaseNative';
 
-const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
+const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
 	<Scrollable
-		{...rest}
-		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
+		{...props}
+		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
-				{...props}
-				itemsRenderer={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
+				{...childProps}
+				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
 					[
-						cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
+						cc.length ? <div key="0" ref={initUiItemContainerRef} role="list">{cc}</div> : null,
 						primary ?
 							null :
 							<SpotlightPlaceholder
@@ -786,7 +817,6 @@ const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line reac
 								data-vl-placeholder
 								key="1"
 								onFocus={handlePlaceholderFocus}
-								role="region"
 							/>,
 						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
 					]
@@ -798,23 +828,32 @@ const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line reac
 
 ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 	/**
-	 * Aria role.
+	 * Direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
 	 *
 	 * @type {String}
+	 * @default 'vertical'
 	 * @public
 	 */
-	role: PropTypes.string
+	direction: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 
-const ScrollableVirtualListNative = ({role, ...rest}) => (
+ScrollableVirtualList.defaultProps = {
+	direction: 'vertical'
+};
+
+const ScrollableVirtualListNative = (props) => (
 	<ScrollableNative
-		{...rest}
-		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
+		{...props}
+		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
-				{...props}
-				itemsRenderer={({cc, primary, needsScrollingPlaceholder, initItemContainerRef, handlePlaceholderFocus}) => ( // eslint-disable-line react/jsx-no-bind
+				{...childProps}
+				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
 					[
-						cc.length ? <div key="0" ref={initItemContainerRef} role={role}>{cc}</div> : null,
+						cc.length ? <div key="0" ref={initUiItemContainerRef} role="list">{cc}</div> : null,
 						primary ?
 							null :
 							<SpotlightPlaceholder
@@ -822,7 +861,6 @@ const ScrollableVirtualListNative = ({role, ...rest}) => (
 								data-vl-placeholder
 								key="1"
 								onFocus={handlePlaceholderFocus}
-								role="region"
 							/>,
 						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
 					]
@@ -834,12 +872,21 @@ const ScrollableVirtualListNative = ({role, ...rest}) => (
 
 ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListBaseNative.prototype */ {
 	/**
-	 * Aria role.
+	 * Direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
 	 *
 	 * @type {String}
-	 * @private
+	 * @default 'vertical'
+	 * @public
 	 */
-	role: PropTypes.string
+	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+};
+
+ScrollableVirtualListNative.defaultProps = {
+	direction: 'vertical'
 };
 
 const SpottableVirtualList = SpotlightContainerDecorator(SpotlightContainerConfig, ScrollableVirtualList);
