@@ -241,9 +241,7 @@ const VirtualListBaseFactory = (type) => {
 				this.updateStatesAndBounds(nextProps);
 				this.setContainerSize();
 			} else if (rtl !== nextProps.rtl) {
-				const
-					{scrollPosition} = this,
-					{x, y} = this.isPrimaryDirectionVertical ? {x: 0, y: scrollPosition} : {x: scrollPosition, y: 0};
+				const {x, y} = this.getCoordinates(this.scrollPosition, 0);
 
 				this.cc = [];
 				if (type === Native) {
@@ -593,7 +591,7 @@ const VirtualListBaseFactory = (type) => {
 
 		composeStyle (width, height, primaryPosition, secondaryPosition) {
 			const
-				{x, y} = this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition},
+				{x, y} = this.getCoordinates(primaryPosition, secondaryPosition),
 				style = {
 					position: 'absolute',
 					/* FIXME: RTL / this calculation only works for Chrome */
@@ -675,6 +673,8 @@ const VirtualListBaseFactory = (type) => {
 
 			this.prevFirstIndex = firstIndex;
 		}
+
+		getCoordinates = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
 		getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
 
