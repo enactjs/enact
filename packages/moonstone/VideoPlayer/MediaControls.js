@@ -451,5 +451,7 @@ class MediaControls extends React.Component {
 	}
 }
 
+MediaControls.defaultSlot = 'mediaControlsComponent';
+
 export default MediaControls;
 export {MediaControls};

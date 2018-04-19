@@ -7,6 +7,7 @@
  */
 import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
+import ComponentOverride from '@enact/ui/ComponentOverride';
 import equals from 'ramda/src/equals';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -225,6 +226,15 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		loading: PropTypes.bool,
+
+		/**
+		 * [mediaControlsComponent description]
+		 *
+		 * @type {Component|Element}
+		 * @default `moonstone/VideoPlayer.MediaControls`
+		 * @public
+		 */
+		mediaControlsComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
 
 		/**
 		 * Amount of time (in milliseconds), after the last user action, that the `miniFeedback`
@@ -580,6 +590,7 @@ const VideoPlayerBase = class extends React.Component {
 		initialJumpDelay: 400,
 		jumpBy: 30,
 		jumpDelay: 200,
+		mediaControlsComponent: MediaControls,
 		miniFeedbackHideDelay: 2000,
 		moreButtonColor: 'blue',
 		playbackRateHash: {
@@ -1764,6 +1775,7 @@ const VideoPlayerBase = class extends React.Component {
 			infoComponents,
 			leftComponents,
 			loading,
+			mediaControlsComponent,
 			noAutoPlay,
 			noMiniFeedback,
 			noRateButtons,
@@ -1902,7 +1914,8 @@ const VideoPlayerBase = class extends React.Component {
 								</FeedbackTooltip>
 							</MediaSlider>}
 
-							<MediaControls
+							<ComponentOverride
+								component={mediaControlsComponent}
 								leftComponents={leftComponents}
 								mediaDisabled={disabled || this.state.mediaControlsDisabled}
 								noRateButtons={noRateButtons}
@@ -1921,7 +1934,7 @@ const VideoPlayerBase = class extends React.Component {
 								visible={this.state.mediaControlsVisible}
 							>
 								{children}
-							</MediaControls>
+							</ComponentOverride>
 						</ControlsContainer>
 					</div> :
 					null
@@ -2005,7 +2018,7 @@ const VideoPlayer = ApiDecorator(
 		'toggleControls'
 	]},
 	Slottable(
-		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source', 'thumbnailComponent']},
+		{slots: ['infoComponents', 'mediaControlsComponent', 'leftComponents', 'rightComponents', 'source', 'thumbnailComponent']},
 		FloatingLayerDecorator(
 			{floatLayerId: 'videoPlayerFloatingLayer'},
 			Skinnable(
@@ -2016,4 +2029,4 @@ const VideoPlayer = ApiDecorator(
 );
 
 export default VideoPlayer;
-export {VideoPlayer, VideoPlayerBase};
+export {VideoPlayer, MediaControls, VideoPlayerBase};
