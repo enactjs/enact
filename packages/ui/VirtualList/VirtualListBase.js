@@ -241,7 +241,7 @@ const VirtualListBaseFactory = (type) => {
 				this.updateStatesAndBounds(nextProps);
 				this.setContainerSize();
 			} else if (rtl !== nextProps.rtl) {
-				const {x, y} = this.getCoordinates(this.scrollPosition, 0);
+				const {x, y} = this.getXY(this.scrollPosition, 0);
 
 				this.cc = [];
 				if (type === Native) {
@@ -320,6 +320,8 @@ const VirtualListBaseFactory = (type) => {
 
 		gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) =>
 			(this.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
+
+		getXY = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
 		getClientSize = (node) => ({
 			clientWidth: node.clientWidth,
@@ -597,7 +599,7 @@ const VirtualListBaseFactory = (type) => {
 
 		composeStyle (width, height, primaryPosition, secondaryPosition) {
 			const
-				{x, y} = this.getCoordinates(primaryPosition, secondaryPosition),
+				{x, y} = this.getXY(primaryPosition, secondaryPosition),
 				style = {
 					position: 'absolute',
 					/* FIXME: RTL / this calculation only works for Chrome */
@@ -679,8 +681,6 @@ const VirtualListBaseFactory = (type) => {
 
 			this.prevFirstIndex = firstIndex;
 		}
-
-		getCoordinates = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
 		getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
 
