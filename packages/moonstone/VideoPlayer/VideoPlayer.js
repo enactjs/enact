@@ -238,27 +238,6 @@ const VideoPlayerBase = class extends React.Component {
 		miniFeedbackHideDelay: PropTypes.number,
 
 		/**
-		 * The color of the underline beneath more icon button.
-		 *
-		 * This property accepts one of the following color names, which correspond with the
-		 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
-		 *
-		 * @type {String}
-		 * @see {@link moonstone/IconButton.IconButtonBase.color}
-		 * @default 'blue'
-		 * @public
-		 */
-		moreButtonColor: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
-
-		/**
-		 * This boolean sets the disabled state of the "More" button.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		moreButtonDisabled: PropTypes.bool,
-
-		/**
 		 * Disable audio for this video. In a TV context, this is handled by the remote control,
 		 * not programmatically in the VideoPlayer API.
 		 *
@@ -573,7 +552,6 @@ const VideoPlayerBase = class extends React.Component {
 		jumpDelay: 200,
 		mediaControlsComponent: MediaControls,
 		miniFeedbackHideDelay: 2000,
-		moreButtonColor: 'blue',
 		playbackRateHash: {
 			fastForward: ['2', '4', '8', '16'],
 			rewind: ['-2', '-4', '-8', '-16'],
@@ -1042,7 +1020,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleKeyUp = (ev) => {
-		const {disabled, moreButtonColor, moreButtonDisabled, noRateButtons, no5WayJump, rateButtonsDisabled} = this.props;
+		const {disabled, noRateButtons, no5WayJump, rateButtonsDisabled} = this.props;
 
 		if (disabled || this.state.mediaControlsDisabled) {
 			return;
@@ -1771,7 +1749,6 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.initialJumpDelay;
 		delete rest.jumpBy;
 		delete rest.jumpDelay;
-		delete rest.moreButtonColor;
 		delete rest.miniFeedbackHideDelay;
 		delete rest.no5WayJump;
 		delete rest.onBackwardButtonClick;
