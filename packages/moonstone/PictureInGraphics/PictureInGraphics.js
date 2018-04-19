@@ -1,6 +1,20 @@
+/**
+ * Display picture in graphics
+ *
+ * @example
+ * <PictureInGraphics>
+ *     <source type='' src=''/>
+ * </PictureInGraphics>
+ *
+ * @module moonstone/PictureInGraphics
+ * @exports PictureInGraphics
+ * @exports PictureInGraphicsBase
+ * @exports PictureInGraphicsDecorator
+ */
+
 import PropTypes from 'prop-types';
 import React from 'react';
-import classNames from 'classnames';
+import compose from 'ramda/src/compose';
 
 import styles from '@enact/core/kind/styles.js';
 import Pure from '@enact/ui/internal/Pure';
@@ -20,11 +34,21 @@ const defaultPlaceholder =
 	'9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
 	'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
 	'4NCg==';
+
 const cfgStyles = {
 	css: componentCss,
+	className: 'pictureInGraphics',
 	publicClassNames: ['pictureInGraphics', 'textOverlay']
 };
 
+/**
+ * picture in graphics {@link moonstone/PictureInGraphics.PictureInGraphicsBase}.
+ *
+ * @class PictureInGraphicsBase
+ * @memberof moonstone/PictureInGraphics
+ * @ui
+ * @public
+ */
 class PictureInGraphicsBase extends React.Component {
 	static propTypes = {
 		/**
@@ -97,7 +121,7 @@ class PictureInGraphicsBase extends React.Component {
 	constructor (props) {
 		super(props);
 		this.video = null;
-		this.renderStyles = cfgStyles ? styles(cfgStyles) : false;
+		this.renderStyles = styles(cfgStyles);
 	}
 
 	componentDidUpdate (prevProps) {
@@ -115,10 +139,9 @@ class PictureInGraphicsBase extends React.Component {
 
 	render () {
 		let p = Object.assign({}, this.props);
-		if (this.renderStyles) p = this.renderStyles(p);
+		p = this.renderStyles(p);
 
 		const {
-			className,
 			css,
 			source,
 			placeholder,
@@ -126,10 +149,9 @@ class PictureInGraphicsBase extends React.Component {
 			textOverlayContent,
 			videoComponent,
 			...rest} = p;
-		const containerClassName = classNames(className, css.pictureInGraphics);
 
 		return (
-			<div {...rest} className={containerClassName} >
+			<div {...rest}>
 				<Media
 					autoPlay
 					className={css.video}
@@ -146,18 +168,46 @@ class PictureInGraphicsBase extends React.Component {
 	}
 }
 
-const PictureInGraphics = Pure(
-	MarqueeController({marqueeOnFocus: true},
-		Spottable(
-			Slottable(
-				{slots: ['source']},
-				Skinnable(
-					PictureInGraphicsBase
-				)
-			)
-		)
-	)
+/**
+ * Moonstone-specific behaviors to apply to [PictureInGraphics]{@link moonstone/PictureInGraphics.PictureInGraphicsBase}.
+ *
+ * @hoc
+ * @memberof moonstone/PictureInGraphics
+ * @mixes moonstone/Marquee.MarqueeController
+ * @mixes spotlight/Spottable.Spottable
+ * @mixes ui/Slottable.Slottable
+ * @mixes ui/Skinnable.Skinnable
+ * @public
+ */
+const PictureInGraphicsDecorator = compose(
+	Pure,
+	MarqueeController({marqueeOnFocus: true}),
+	Spottable,
+	Slottable({slots: ['source']}),
+	Skinnable
 );
 
+/**
+ * A Moonstone-styled PictureInGraphics, ready to use.
+ *
+ * Usage:
+ * ```
+ * <PictureInGraphics>
+ *     <source type='' src=''/>
+ * </PictureInGraphics>
+ * ```
+ *
+ * @class PictureInGraphics
+ * @memberof moonstone/PictureInGraphics
+ * @mixes moonstone/PictureInGraphics.PictureInGraphicsDecorator
+ * @ui
+ * @public
+ */
+const PictureInGraphics = PictureInGraphicsDecorator(PictureInGraphicsBase);
+
 export default PictureInGraphics;
-export {PictureInGraphics, PictureInGraphicsBase};
+export {
+	PictureInGraphics,
+	PictureInGraphicsBase,
+	PictureInGraphicsDecorator
+};
