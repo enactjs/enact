@@ -39,7 +39,7 @@ storiesOf('Moonstone', module)
 				disabled={boolean('disabled', false)}
 				forceSide={nullify(boolean('forceSide', false))}
 				incrementIcon={nullify(select('incrementIcon', ['', ...incrementIcons]))}
-				knobStep={number('knobStep', IncrementSliderBase.defaultProps.knobStep)}
+				knobStep={number('knobStep')}
 				max={number('max', IncrementSliderBase.defaultProps.max)}
 				min={number('min', IncrementSliderBase.defaultProps.min)}
 				noFill={boolean('noFill', false)}

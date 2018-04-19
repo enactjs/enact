@@ -178,8 +178,9 @@ const SliderBase = kind({
 		/**
 		 * The value of the slider.
 		 *
+		 * Defaults to the value of `min`.
+		 *
 		 * @type {Number}
-		 * @default 0
 		 * @public
 		 */
 		value: PropTypes.number
@@ -192,8 +193,7 @@ const SliderBase = kind({
 		max: 100,
 		noFill: false,
 		orientation: 'horizontal',
-		step: 1,
-		value: 0
+		step: 1
 	},
 
 	styles: {
@@ -213,8 +213,8 @@ const SliderBase = kind({
 				}
 			);
 		},
-		percent: ({max, min, value}) => calcProportion(min, max, value),
-		style: ({backgroundProgress, max, min, style, value}) => {
+		percent: ({max, min, value = min}) => calcProportion(min, max, value),
+		style: ({backgroundProgress, max, min, style, value = min}) => {
 			const proportion = calcProportion(min, max, value);
 
 			return {
@@ -226,10 +226,9 @@ const SliderBase = kind({
 		}
 	},
 
-	render: ({css, disabled, knobComponent, orientation, percent, tooltipComponent, value, ...rest}) => {
+	render: ({css, disabled, knobComponent, min, orientation, percent, tooltipComponent, value = min, ...rest}) => {
 		delete rest.backgroundProgress;
 		delete rest.max;
-		delete rest.min;
 		delete rest.noFill;
 		delete rest.pressed;
 		delete rest.step;

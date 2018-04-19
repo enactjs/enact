@@ -160,18 +160,37 @@ const SliderBase = kind({
 		 * </Slider>
 		 * ```
 		 *
+		 * If a custom tooltip is provided, it will receive the following props:
+		 *
+		 * * `children` - The `value` prop from the slider
+		 * * `visible` - `true` if the tooltip should be displayed
+		 * * `orientation` - The value of the `orientation` prop from the slider
+		 * * `proportion` - A number between 0 and 1 representing the proportion of the `value` in
+		 *   terms of `min` and `max`
+		 *
 		 * @type {Boolean|Element|Function}
 		 * @public
 		 */
-		tooltip: PropTypes.oneOfType([PropTypes.bool, PropTypes.object, PropTypes.func])
+		tooltip: PropTypes.oneOfType([PropTypes.bool, PropTypes.object, PropTypes.func]),
+
+		/**
+		 * The value of the slider.
+		 *
+		 * Defaults to the value of `min`.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		value: PropTypes.number
 	},
 
 	defaultProps: {
 		activateOnFocus: false,
 		active: false,
 		disabled: false,
-		knobStep: 1,
-		value: 0
+		max: 100,
+		min: 0,
+		step: 1
 	},
 
 	styles: {

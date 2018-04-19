@@ -26,9 +26,10 @@ const isDecrement = ({keyCode}, {orientation}) => {
 };
 
 const emitChange = (direction) => adaptEvent(
-	(ev, {knobStep, max, min, step, value}) => ({
+	(ev, {knobStep, max, min, step, value = min}) => ({
 		value: clamp(min, max, value + (calcStep(knobStep, step) * direction)),
-		proportion: calcProportion(min, max, value)
+		proportion: calcProportion(min, max, value),
+		type: 'onChange'
 	}),
 	forward('onChange')
 );
@@ -52,8 +53,8 @@ const handleDecrement = handle(
 );
 
 const either = (a, b) => (...args) => a(...args) || b(...args);
-const atMinimum = (ev, {min, value}) => value <= min;
-const atMaximum = (ev, {max, value}) => value >= max;
+const atMinimum = (ev, {min, value = min}) => value <= min;
+const atMaximum = (ev, {max, min, value = min}) => value >= max;
 const forwardOnlyType = (type) => adaptEvent(() => ({type}), forward(type));
 
 const forwardSpotlightEvents = oneOf(

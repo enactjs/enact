@@ -58,8 +58,7 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static defaultProps = {
 			max: 100,
 			min: 0,
-			orientation: 'horizontal',
-			value: 0
+			orientation: 'horizontal'
 		}
 
 		constructor () {
@@ -93,7 +92,7 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		getValueText () {
-			const {'aria-valuetext': ariaValueText, orientation, value} = this.props;
+			const {'aria-valuetext': ariaValueText, min, orientation, value = min} = this.props;
 			const {useHintText} = this.state;
 
 			const verticalHint = $L('change a value with up down button');

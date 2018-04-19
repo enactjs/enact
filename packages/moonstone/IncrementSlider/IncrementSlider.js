@@ -174,7 +174,6 @@ const IncrementSliderBase = kind({
 		 * If not specified, `step` is used for the default value.
 		 *
 		 * @type {Number}
-		 * @default 1
 		 * @public
 		 */
 		knobStep: PropTypes.number,
@@ -365,26 +364,25 @@ const IncrementSliderBase = kind({
 		tooltip: PropTypes.oneOfType([PropTypes.bool, PropTypes.object, PropTypes.func]),
 
 		/**
-		* The value of the increment slider.
-		*
-		* @type {Number}
-		* @default 0
-		* @public
-		*/
+		 * The value of the increment slider.
+		 *
+		 * Defaults to the value of `min`.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
 		value: PropTypes.number
 	},
 
 	defaultProps: {
 		backgroundProgress: 0,
-		knobStep: 1,
 		max: 100,
 		min: 0,
 		noFill: false,
 		orientation: 'horizontal',
 		spotlightDisabled: false,
 		step: 1,
-		tooltip: false,
-		value: 0
+		tooltip: false
 	},
 
 	handlers: {
@@ -424,11 +422,11 @@ const IncrementSliderBase = kind({
 
 	computed: {
 		className: ({orientation, styler}) => styler.append(orientation),
-		decrementDisabled: ({disabled, min, value}) => disabled || value <= min,
-		incrementDisabled: ({disabled, max, value}) => disabled || value >= max,
+		decrementDisabled: ({disabled, min, value = min}) => disabled || value <= min,
+		incrementDisabled: ({disabled, max, min, value = min}) => disabled || value >= max,
 		decrementIcon: ({decrementIcon, orientation}) => (decrementIcon || ((orientation === 'vertical') ? 'arrowlargedown' : 'arrowlargeleft')),
 		incrementIcon: ({incrementIcon, orientation}) => (incrementIcon || ((orientation === 'vertical') ? 'arrowlargeup' : 'arrowlargeright')),
-		decrementAriaLabel: ({'aria-valuetext': valueText, decrementAriaLabel, disabled, min, value}) => {
+		decrementAriaLabel: ({'aria-valuetext': valueText, decrementAriaLabel, disabled, min, value = min}) => {
 			if (decrementAriaLabel == null) {
 				decrementAriaLabel = $L('press ok button to decrease the value');
 			}
@@ -437,7 +435,7 @@ const IncrementSliderBase = kind({
 				`${valueText != null ? valueText : value} ${decrementAriaLabel}` :
 				null;
 		},
-		incrementAriaLabel: ({'aria-valuetext': valueText, incrementAriaLabel, disabled, max, value}) => {
+		incrementAriaLabel: ({'aria-valuetext': valueText, incrementAriaLabel, disabled, min, max, value = min}) => {
 			if (incrementAriaLabel == null) {
 				incrementAriaLabel = $L('press ok button to increase the value');
 			}
