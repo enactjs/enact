@@ -1,6 +1,8 @@
-import classnames from 'classnames/bind';
+import kind from '@enact/core/kind';
+import hoc from '@enact/core/hoc';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
@@ -14,7 +16,6 @@ import {countReactChildren} from './util';
 
 import css from './VideoPlayer.less';
 
-const cn = classnames.bind(css);
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 const MediaButton = onlyUpdateForKeys([
 	'children',
@@ -28,13 +29,15 @@ const forwardToggleMore = forward('onToggleMore');
 /**
  * MediaControls {@link moonstone/VideoPlayer}.
  *
- * @class MediaControls
+ * @class MediaControlsBase
  * @memberof moonstone/VideoPlayer
  * @ui
  * @public
  */
-class MediaControlsBase extends React.Component {
-	static propTypes = /** @lends moonstone/VideoPlayer.MediaControls.prototype */ {
+const MediaControlsBase = kind({
+	name: 'MediaControlsBase',
+
+	propTypes: /** @lends moonstone/VideoPlayer.MediaControlsBase.prototype */ {
 		/**
 		 * A string which is sent to the `backward` icon of the player controls. This can be
 		 * anything that is accepted by {@link moonstone/Icon}.
@@ -196,6 +199,14 @@ class MediaControlsBase extends React.Component {
 		onJumpForwardButtonClick: PropTypes.func,
 
 		/**
+		 * Function executed when the user clicks the More button.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onMoreClick: PropTypes.func,
+
+		/**
 		 * Function executed when the user clicks the Play button. Is passed
 		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
 		 *
@@ -203,14 +214,6 @@ class MediaControlsBase extends React.Component {
 		 * @public
 		 */
 		onPlayButtonClick: PropTypes.func,
-
-		/**
-		 * Function executed when the user clicks the More button.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onToggleMore: PropTypes.func,
 
 		/**
 		 * `true` when the video is paused.
@@ -261,6 +264,14 @@ class MediaControlsBase extends React.Component {
 		rightComponents: PropTypes.node,
 
 		/**
+		 * When `true`, more components are visible.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		showMoreComponents: PropTypes.bool,
+
+		/**
 		 * `true` controls are disabled from Spotlight.
 		 *
 		 * @type {Boolean}
@@ -276,9 +287,9 @@ class MediaControlsBase extends React.Component {
 		 * @public
 		 */
 		visible: PropTypes.bool
-	}
+	},
 
-	static defaultProps = {
+	defaultProps: {
 		backwardIcon: 'backward',
 		forwardIcon: 'forward',
 		jumpBackwardIcon: 'skipbackward',
@@ -287,144 +298,66 @@ class MediaControlsBase extends React.Component {
 		pauseIcon: 'pause',
 		playIcon: 'play',
 		visible: true
-	}
+	},
 
+	styles: {
+		css,
+		className: 'controlsFrame'
+	},
 
-	constructor (props) {
-		super(props);
+	computed: {
+		className: ({visible, styler}) => styler.append({hidden: !visible}),
+		centerClassName: ({showMoreComponents, styler}) => styler.join('centerComponents', {more: showMoreComponents}),
+		moreIconLabel: ({showMoreComponents}) => showMoreComponents ? $L('Back') : $L('More'),
+		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowshrinkleft' : 'ellipsis'
+	},
 
-		this.mediaControls = null;
-
-		this.state = {
-			showMoreComponents: false
-		};
-	}
-
-	componentDidMount () {
-		this.calculateMaxComponentCount(
-			countReactChildren(this.props.leftComponents),
-			countReactChildren(this.props.rightComponents),
-			countReactChildren(this.props.children)
-		);
-	}
-
-	componentWillReceiveProps (nextProps) {
-		// Detect if the number of components has changed
-		const leftCount = countReactChildren(nextProps.leftComponents),
-			rightCount = countReactChildren(nextProps.rightComponents),
-			childrenCount = countReactChildren(nextProps.children);
-
-		if (
-			countReactChildren(this.props.leftComponents) !== leftCount ||
-			countReactChildren(this.props.rightComponents) !== rightCount ||
-			countReactChildren(this.props.children) !== childrenCount
-		) {
-			this.calculateMaxComponentCount(leftCount, rightCount, childrenCount);
-		}
-
-		if (this.props.visible && !nextProps.visible) {
-			this.setState(() => {
-				return {
-					showMoreComponents: false
-				};
-			});
-		}
-	}
-
-	componentDidUpdate (prevProps, prevState) {
-		if (this.state.showMoreComponents !== prevState.showMoreComponents) {
-			forwardToggleMore({showMoreComponents: this.state.showMoreComponents}, this.props);
-
-			// Readout 'more' or 'back' button explicitly.
-			let selectedButton = Spotlight.getCurrent();
-			selectedButton.blur();
-			selectedButton.focus();
-		}
-	}
-
-	handleMoreClick = () => {
-		this.setState((prevState) => {
-			return {
-				showMoreComponents: !prevState.showMoreComponents
-			};
-		});
-	}
-
-	calculateMaxComponentCount = (leftCount, rightCount, childrenCount) => {
-		// If the "more" button is present, automatically add it to the right's count.
-		if (childrenCount) {
-			rightCount += 1;
-		}
-
-		const max = Math.max(leftCount, rightCount);
-
-		this.mediaControls.style.setProperty('--moon-video-player-max-side-components', max);
-	}
-
-
-	getMediaControls = (node) => {
-		this.mediaControls = node;
-	}
-
-	render () {
-		const props = Object.assign({}, this.props);
-		const {
-			backwardIcon,
-			children,
-			forwardIcon,
-			jumpBackwardIcon,
-			jumpButtonsDisabled,
-			jumpForwardIcon,
-			leftComponents,
-			mediaDisabled,
-			moreButtonColor,
-			moreButtonDisabled,
-			noJumpButtons,
-			noRateButtons,
-			onBackwardButtonClick,
-			onForwardButtonClick,
-			onJumpBackwardButtonClick,
-			onJumpForwardButtonClick,
-			onPlayButtonClick,
-			paused,
-			pauseIcon,
-			playIcon,
-			rateButtonsDisabled,
-			rightComponents,
-			spotlightDisabled,
-			visible,
-			...rest
-		} = props;
-
-		delete rest.moreButtonCloseLabel;
-		delete rest.moreButtonLabel;
-		delete rest.onToggleMore;
-
-		let moreIconLabel, moreIcon;
-		if (this.state.showMoreComponents) {
-			moreIconLabel = $L('Back');
-			moreIcon = 'arrowshrinkleft';
-		} else {
-			moreIconLabel = $L('More');
-			moreIcon = 'ellipsis';
-		}
-
-		const className = cn('controlsFrame', {hidden: !visible}, rest.className);
-		const centerClassName = cn('centerComponents', {more: this.state.showMoreComponents});
+	render: ({
+		backwardIcon,
+		centerClassName,
+		children,
+		forwardIcon,
+		jumpBackwardIcon,
+		jumpButtonsDisabled,
+		jumpForwardIcon,
+		leftComponents,
+		mediaDisabled,
+		moreButtonColor,
+		moreButtonDisabled,
+		moreIcon,
+		moreIconLabel,
+		noJumpButtons,
+		noRateButtons,
+		onBackwardButtonClick,
+		onForwardButtonClick,
+		onJumpBackwardButtonClick,
+		onJumpForwardButtonClick,
+		onMoreClick,
+		onPlayButtonClick,
+		paused,
+		pauseIcon,
+		playIcon,
+		rateButtonsDisabled,
+		rightComponents,
+		showMoreComponents,
+		spotlightDisabled,
+		...rest
+	}) => {
+		delete rest.visible;
 
 		return (
-			<div {...rest} ref={this.getMediaControls} className={className} data-media-controls>
+			<div {...rest} data-media-controls>
 				<div className={css.leftComponents}>{leftComponents}</div>
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
-						<Container className={css.mediaControls} spotlightDisabled={this.state.showMoreComponents || spotlightDisabled}>
+						<Container className={css.mediaControls} spotlightDisabled={showMoreComponents || spotlightDisabled}>
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpBackwardIcon}</MediaButton>}
 							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{backwardIcon}</MediaButton>}
 							<MediaButton aria-label={paused ? $L('Play') : $L('Pause')} className={spotlightDefaultClass} backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{paused ? playIcon : pauseIcon}</MediaButton>
 							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onForwardButtonClick} spotlightDisabled={spotlightDisabled}>{forwardIcon}</MediaButton>}
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpForwardIcon}</MediaButton>}
 						</Container>
-						<Container className={css.moreControls} spotlightDisabled={!this.state.showMoreComponents || spotlightDisabled}>
+						<Container className={css.moreControls} spotlightDisabled={!showMoreComponents || spotlightDisabled}>
 							{children}
 						</Container>
 					</div>
@@ -438,7 +371,7 @@ class MediaControlsBase extends React.Component {
 							className={css.moreButton}
 							color={moreButtonColor}
 							disabled={moreButtonDisabled}
-							onTap={this.handleMoreClick}
+							onTap={onMoreClick}
 							tooltipProps={{role: 'dialog'}}
 							tooltipText={moreIconLabel}
 							spotlightDisabled={spotlightDisabled}
@@ -450,11 +383,150 @@ class MediaControlsBase extends React.Component {
 			</div>
 		);
 	}
-}
+});
 
-const MediaControls = Slottable({slots: ['leftComponents', 'rightComponents']}, MediaControlsBase);
+const MediaControlsDecorator = hoc((config, Wrapped) => {
+	class MediaControlsDecoratorHOC extends React.Component {
+		static propTypes = /** @lends moonstone/VideoPlayer.MediaControlsDecoratorHOC.prototype */ {
+			/**
+			 * These components are placed below the title. Typically these will be media descriptor
+			 * icons, like how many audio channels, what codec the video uses, but can also be a
+			 * description for the video or anything else that seems appropriate to provide information
+			 * about the video to the user.
+			 *
+			 * @type {Node}
+			 * @public
+			 */
+			leftComponents: PropTypes.node,
+
+			/**
+			 * Function executed when the user clicks the More button.
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onToggleMore: PropTypes.func,
+
+			/**
+			 * These components are placed into the slot to the right of the media controls.
+			 *
+			 * @type {Node}
+			 * @public
+			 */
+			rightComponents: PropTypes.node,
+
+			/**
+			 * The visibility of the component. When `false`, the component will be hidden.
+			 *
+			 * @type {Boolean}
+			 * @default true
+			 * @public
+			 */
+			visible: PropTypes.bool
+		}
+
+		displayName = 'MediaControlsDecorator'
+
+		constructor (props) {
+			super(props);
+
+			this.mediaControls = null;
+
+			this.state = {
+				showMoreComponents: false
+			};
+		}
+
+		componentDidMount () {
+			this.calculateMaxComponentCount(
+				countReactChildren(this.props.leftComponents),
+				countReactChildren(this.props.rightComponents),
+				countReactChildren(this.props.children)
+			);
+		}
+
+		componentWillReceiveProps (nextProps) {
+			// Detect if the number of components has changed
+			const leftCount = countReactChildren(nextProps.leftComponents),
+				rightCount = countReactChildren(nextProps.rightComponents),
+				childrenCount = countReactChildren(nextProps.children);
+
+			if (
+				countReactChildren(this.props.leftComponents) !== leftCount ||
+				countReactChildren(this.props.rightComponents) !== rightCount ||
+				countReactChildren(this.props.children) !== childrenCount
+			) {
+				this.calculateMaxComponentCount(leftCount, rightCount, childrenCount);
+			}
+
+			if (this.props.visible && !nextProps.visible) {
+				this.setState(() => {
+					return {
+						showMoreComponents: false
+					};
+				});
+			}
+		}
+
+		componentDidUpdate (prevProps, prevState) {
+			if (this.state.showMoreComponents !== prevState.showMoreComponents) {
+				forwardToggleMore({showMoreComponents: this.state.showMoreComponents}, this.props);
+
+				// Readout 'more' or 'back' button explicitly.
+				let selectedButton = Spotlight.getCurrent();
+				selectedButton.blur();
+				selectedButton.focus();
+			}
+		}
+
+		handleMoreClick = () => {
+			this.setState((prevState) => {
+				return {
+					showMoreComponents: !prevState.showMoreComponents
+				};
+			});
+		}
+
+		calculateMaxComponentCount = (leftCount, rightCount, childrenCount) => {
+			// If the "more" button is present, automatically add it to the right's count.
+			if (childrenCount) {
+				rightCount += 1;
+			}
+
+			const max = Math.max(leftCount, rightCount);
+
+			this.mediaControls.style.setProperty('--moon-video-player-max-side-components', max);
+		}
+
+		getMediaControls = (node) => {
+			this.mediaControls = ReactDOM.findDOMNode(node); // eslint-disable-line react/no-find-dom-node
+		}
+
+		render () {
+			const props = Object.assign({}, this.props);
+			delete props.onToggleMore;
+
+			return (
+				<Wrapped
+					ref={this.getMediaControls}
+					{...props}
+					onMoreClick={this.handleMoreClick}
+					showMoreComponents={this.state.showMoreComponents}
+				/>
+			);
+		}
+	}
+
+	return Slottable({slots: ['leftComponents', 'rightComponents']}, MediaControlsDecoratorHOC);
+});
+
+const MediaControls = MediaControlsDecorator(MediaControlsBase);
 
 MediaControls.defaultSlot = 'mediaControlsComponent';
 
 export default MediaControls;
-export {MediaControls};
+export {
+	MediaControlsBase,
+	MediaControls,
+	MediaControlsDecorator
+};
