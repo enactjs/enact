@@ -779,7 +779,11 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		if (nextPreloadSource) {
-			this.preloadVideo.load();
+			if (preloadSource && compareSources(preloadSource, nextPreloadSource)) {
+				this.video.play();
+			} else {
+				this.preloadVideo.load();
+			}
 		}
 
 		if (!compareSources(source, nextSource)) {
@@ -832,12 +836,22 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		const {source} = this.props;
-		const {source: prevSource} = prevProps;
+		const {source, preloadSource} = this.props;
+		const {source: prevSource, preloadSource: prevPreloadSource} = prevProps;
 
 		// Detect a change to the video source and reload if necessary.
 		if (!compareSources(source, prevSource)) {
 			this.reloadVideo(this.isVideoPreloaded);
+		}
+
+		if (preloadSource) {
+			if (preloadSource && compareSources(preloadSource, prevPreloadSource)) {
+				// Might not play
+				this.video.play();
+			} else {
+				// Could trigger play
+				this.preloadVideo.load();
+			}
 		}
 
 		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
@@ -1304,6 +1318,9 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopListeningForPulses();
 		if (!preloaded) {
 			this.video.load();
+		} else {
+			// if autoPlay is on
+			// this.video.play();
 		}
 		this.setState({
 			announce: AnnounceState.READY
@@ -1906,14 +1923,14 @@ const VideoPlayerBase = class extends React.Component {
 
 	// These methods are here because on webOS TVs we can't play a video until after second video
 	// player is loaded
-	onLoadStartInitialPlaying = () => {
-		if (this.isPlayerMounted && this.isVideoPreloaded) {
+	onSourceChangeInitialPlaying = () => {
+		if (this.isPlayerMounted && this.isVideoPreloaded && !this.props.noAutoPlay) {
 			return this.preloadSourcePlaying ? this.video.play() : null;
 		}
 	}
 
-	onLoadStartIntialLoaded = () => {
-		if (this.isPlayerMounted && this.isVideoPreloaded) {
+	onSourceChangeIntialLoaded = () => {
+		if (this.isPlayerMounted && this.isVideoPreloaded && !this.props.noAutoPlay) {
 			return this.preloadSourcePlaying ? null : this.video.play();
 		}
 	}
@@ -1984,6 +2001,9 @@ const VideoPlayerBase = class extends React.Component {
 		const moreDisabled = !(this.state.more);
 		const controlsAriaProps = this.getControlsAriaProps();
 
+
+		// These are the initial props for the first video to be played.
+		// If the next video is a from a preloaded source then we swap props to hide this video.
 		const initialPlayingProps = {
 			...rest,
 			autoPlay: this.preloadSourcePlaying ? false : !noAutoPlay,
@@ -1992,11 +2012,13 @@ const VideoPlayerBase = class extends React.Component {
 			component: videoComponent,
 			controls: false,
 			preload: this.preloadSourcePlaying ? 'auto' : 'none',
-			onLoadStart: this.onLoadStartInitialPlaying,
+			onLoadStart: this.onSourceChangeInitialPlaying,
 			onUpdate: this.preloadSourcePlaying ? null : this.handleEvent,
 			ref: this.setVideoRef
 		};
 
+		// These are the initial props for the first video to be preloaded.
+		// If the next video is a from a preloaded source then we swap props to show this video.
 		const initialLoadingProps = {
 			...rest,
 			autoPlay: this.preloadSourcePlaying ? !noAutoPlay : false,
@@ -2004,7 +2026,7 @@ const VideoPlayerBase = class extends React.Component {
 			className: this.preloadSourcePlaying ? css.video : css.preloadVideo,
 			component: videoComponent,
 			controls: false,
-			onLoadStart: this.onLoadStartIntialLoaded,
+			onLoadStart: this.onSourceChangeIntialLoaded,
 			onUpdate: this.preloadSourcePlaying ? this.handleEvent : null,
 			preload: this.preloadSourcePlaying ? 'none' : 'auto',
 			ref: this.setPreloadRef
