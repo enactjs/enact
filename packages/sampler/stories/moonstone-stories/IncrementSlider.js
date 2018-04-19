@@ -11,44 +11,40 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('IncrementSlider', IncrementSliderBase, IncrementSlider);
 
-// eslint-disable-next-line
-function IncrementSliderWithTooltip ({percent, side, forceSide, tooltip, ...rest}) {
-	return (
-		<IncrementSlider {...rest}>
-			{tooltip ? (
-				<IncrementSliderTooltip
-					forceSide={forceSide}
-					percent={percent}
-					side={side}
-				/>
-			) : null}
-		</IncrementSlider>
-	);
-}
-
 storiesOf('Moonstone', module)
 	.add(
 		'IncrementSlider',
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of IncrementSlider'
-		})(() => (
-			<IncrementSliderWithTooltip
-				backgroundProgress={number('backgroundProgress', IncrementSliderBase.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
-				decrementIcon={nullify(select('decrementIcon', ['', ...decrementIcons]))}
-				disabled={boolean('disabled', false)}
-				forceSide={nullify(boolean('forceSide', false))}
-				incrementIcon={nullify(select('incrementIcon', ['', ...incrementIcons]))}
-				knobStep={number('knobStep')}
-				max={number('max', IncrementSliderBase.defaultProps.max)}
-				min={number('min', IncrementSliderBase.defaultProps.min)}
-				noFill={boolean('noFill', false)}
-				onChange={action('onChange')}
-				orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
-				percent={nullify(boolean('percent', false))}
-				side={nullify(select('side', ['before', 'after']))}
-				step={number('step', 1)}
-				tooltip={nullify(boolean('tooltip', false))}
-			/>
-		))
+		})(() => {
+			const side = nullify(select('side', ['before', 'after']));
+			const forceSide = nullify(boolean('forceSide', false));
+			const tooltip = nullify(boolean('tooltip', false));
+			const percent = nullify(boolean('percent', false));
+
+			return (
+				<IncrementSlider
+					backgroundProgress={number('backgroundProgress', IncrementSliderBase.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
+					decrementIcon={nullify(select('decrementIcon', ['', ...decrementIcons]))}
+					disabled={boolean('disabled', false)}
+					incrementIcon={nullify(select('incrementIcon', ['', ...incrementIcons]))}
+					knobStep={number('knobStep')}
+					max={number('max', IncrementSliderBase.defaultProps.max)}
+					min={number('min', IncrementSliderBase.defaultProps.min)}
+					noFill={boolean('noFill', false)}
+					onChange={action('onChange')}
+					orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
+					step={number('step', 1)}
+				>
+					{tooltip ? (
+						<IncrementSliderTooltip
+							forceSide={forceSide}
+							percent={percent}
+							side={side}
+						/>
+					) : null}
+				</IncrementSlider>
+			);
+		})
 	);

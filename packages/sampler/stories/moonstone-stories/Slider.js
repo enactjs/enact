@@ -6,26 +6,9 @@ import {boolean, number, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
+import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('Slider', SliderBase, Slider);
-removeProps(Config, 'defaultPressed pressed');
-
-// eslint-disable-next-line
-function SliderWithTooltip ({percent, side, forceSide, tooltip, ...rest}) {
-	return (
-		<Slider
-			{...rest}
-			tooltip={tooltip ? (
-				<SliderTooltip
-					forceSide={forceSide}
-					percent={percent}
-					side={side}
-				/>
-			) : null}
-		/>
-	);
-}
 
 storiesOf('Moonstone', module)
 	.add(
@@ -33,22 +16,33 @@ storiesOf('Moonstone', module)
 		withInfo({
 			propTables: [Config],
 			text: 'Basic usage of Slider'
-		})(() => (
-			<SliderWithTooltip
-				activateOnFocus={boolean('activateOnFocus', false)}
-				backgroundProgress={number('backgroundProgress', 0.5, {range: true, min: 0, max: 1, step: 0.01})}
-				disabled={boolean('disabled', false)}
-				forceSide={nullify(boolean('forceSide', false))}
-				knobStep={number('knobStep')}
-				max={number('max', 10)}
-				min={number('min', 0)}
-				noFill={boolean('noFill', false)}
-				onChange={action('onChange')}
-				orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
-				percent={nullify(boolean('percent', false))}
-				side={nullify(select('side', ['before', 'after']))}
-				step={number('step', 1)}
-				tooltip={nullify(boolean('tooltip', false))}
-			/>
-		))
+		})(() => {
+			const side = nullify(select('side', ['before', 'after']));
+			const forceSide = nullify(boolean('forceSide', false));
+			const tooltip = nullify(boolean('tooltip', false));
+			const percent = nullify(boolean('percent', false));
+
+			return (
+				<Slider
+					activateOnFocus={boolean('activateOnFocus', false)}
+					backgroundProgress={number('backgroundProgress', 0.5, {range: true, min: 0, max: 1, step: 0.01})}
+					disabled={boolean('disabled', false)}
+					knobStep={number('knobStep')}
+					max={number('max', 10)}
+					min={number('min', 0)}
+					noFill={boolean('noFill', false)}
+					onChange={action('onChange')}
+					orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
+					step={number('step', 1)}
+				>
+					{tooltip ? (
+						<SliderTooltip
+							percent={percent}
+							forceSide={forceSide}
+							side={side}
+						/>
+					) : null}
+				</Slider>
+			);
+		})
 	);
