@@ -1,6 +1,8 @@
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
+import {is} from '@enact/core/keymap';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
+import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
@@ -400,6 +402,27 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			leftComponents: PropTypes.node,
 
 			/**
+			 * The color of the underline beneath more icon button.
+			 *
+			 * This property accepts one of the following color names, which correspond with the
+			 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
+			 *
+			 * @type {String}
+			 * @see {@link moonstone/IconButton.IconButtonBase.color}
+			 * @default 'blue'
+			 * @public
+			 */
+			moreButtonColor: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
+
+			/**
+			 * Sets the `disabled` state on the media "more" button.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			moreButtonDisabled: PropTypes.bool,
+
+			/**
 			 * Function executed when the user clicks the More button.
 			 *
 			 * @type {Function}
@@ -443,6 +466,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				countReactChildren(this.props.rightComponents),
 				countReactChildren(this.props.children)
 			);
+			on('keyup', this.handleKeyUp);
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -479,12 +503,21 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
+		componentWillUnmount () {
+			off('keyup', this.handleKeyUp);
+		}
+
 		handleMoreClick = () => {
-			this.setState((prevState) => {
-				return {
-					showMoreComponents: !prevState.showMoreComponents
-				};
-			});
+			this.toggleMoreComponents();
+		}
+
+		handleKeyUp = (ev) => {
+			const {moreButtonColor, moreButtonDisabled, visible} = this.props;
+
+			if (visible && moreButtonColor && !moreButtonDisabled && is(moreButtonColor, ev.keyCode)) {
+				Spotlight.focus(this.mediaControls.querySelector(`.${css.moreButton}`));
+				this.toggleMoreComponents();
+			}
 		}
 
 		calculateMaxComponentCount = (leftCount, rightCount, childrenCount) => {
@@ -500,6 +533,14 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 
 		getMediaControls = (node) => {
 			this.mediaControls = ReactDOM.findDOMNode(node); // eslint-disable-line react/no-find-dom-node
+		}
+
+		toggleMoreComponents () {
+			this.setState((prevState) => {
+				return {
+					showMoreComponents: !prevState.showMoreComponents
+				};
+			});
 		}
 
 		render () {

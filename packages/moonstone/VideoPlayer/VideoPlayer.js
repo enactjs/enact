@@ -1064,12 +1064,6 @@ const VideoPlayerBase = class extends React.Component {
 			}
 		}
 
-		if (this.state.bottomControlsRendered && this.state.mediaControlsVisible &&
-			moreButtonColor && !moreButtonDisabled && is(moreButtonColor, ev.keyCode)) {
-			Spotlight.focus(this.player.querySelector(`.${css.moreButton}`));
-			this.toggleMore();
-		}
-
 		if (!no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			this.stopListeningForPulses();
 			this.paused.resume();
