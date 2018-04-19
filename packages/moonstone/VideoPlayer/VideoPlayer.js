@@ -208,17 +208,6 @@ const VideoPlayerBase = class extends React.Component {
 		jumpDelay: PropTypes.number,
 
 		/**
-		 * These components are placed below the title. Typically these will be media descriptor
-		 * icons, like how many audio channels, what codec the video uses, but can also be a
-		 * description for the video or anything else that seems appropriate to provide information
-		 * about the video to the user.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		leftComponents: PropTypes.node,
-
-		/**
 		 * Manually set the loading state of the media, in case you have information that
 		 * `VideoPlayer` does not have.
 		 *
@@ -442,14 +431,6 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		rateButtonsDisabled: PropTypes.bool,
-
-		/**
-		 * These components are placed into the slot to the right of the media controls.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		rightComponents: PropTypes.node,
 
 		/**
 		 * When `true`, seek function is disabled.
@@ -1769,11 +1750,9 @@ const VideoPlayerBase = class extends React.Component {
 
 	render () {
 		const {
-			children,
 			className,
 			disabled,
 			infoComponents,
-			leftComponents,
 			loading,
 			mediaControlsComponent,
 			noAutoPlay,
@@ -1782,7 +1761,6 @@ const VideoPlayerBase = class extends React.Component {
 			noSlider,
 			noSpinner,
 			rateButtonsDisabled,
-			rightComponents,
 			source,
 			spotlightDisabled,
 			spotlightId,
@@ -1916,11 +1894,9 @@ const VideoPlayerBase = class extends React.Component {
 
 							<ComponentOverride
 								component={mediaControlsComponent}
-								leftComponents={leftComponents}
 								mediaDisabled={disabled || this.state.mediaControlsDisabled}
 								noRateButtons={noRateButtons}
 								onBackwardButtonClick={this.onBackward}
-								onClick={this.resetAutoTimeout}
 								onForwardButtonClick={this.onForward}
 								onJumpBackwardButtonClick={this.onJumpBackward}
 								onJumpForwardButtonClick={this.onJumpForward}
@@ -1929,12 +1905,9 @@ const VideoPlayerBase = class extends React.Component {
 								onToggleMore={this.handleToggleMore}
 								paused={this.state.paused}
 								rateButtonsDisabled={rateButtonsDisabled}
-								rightComponents={rightComponents}
 								spotlightDisabled={!this.state.mediaControlsVisible || spotlightDisabled}
 								visible={this.state.mediaControlsVisible}
-							>
-								{children}
-							</ComponentOverride>
+							/>
 						</ControlsContainer>
 					</div> :
 					null
@@ -2018,7 +1991,7 @@ const VideoPlayer = ApiDecorator(
 		'toggleControls'
 	]},
 	Slottable(
-		{slots: ['infoComponents', 'mediaControlsComponent', 'leftComponents', 'rightComponents', 'source', 'thumbnailComponent']},
+		{slots: ['infoComponents', 'mediaControlsComponent', 'source', 'thumbnailComponent']},
 		FloatingLayerDecorator(
 			{floatLayerId: 'videoPlayerFloatingLayer'},
 			Skinnable(

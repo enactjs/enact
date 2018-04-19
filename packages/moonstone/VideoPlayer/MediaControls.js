@@ -2,6 +2,7 @@ import classnames from 'classnames/bind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 import {forward} from '@enact/core/handle';
@@ -32,7 +33,7 @@ const forwardToggleMore = forward('onToggleMore');
  * @ui
  * @public
  */
-class MediaControls extends React.Component {
+class MediaControlsBase extends React.Component {
 	static propTypes = /** @lends moonstone/VideoPlayer.MediaControls.prototype */ {
 		/**
 		 * A string which is sent to the `backward` icon of the player controls. This can be
@@ -450,6 +451,8 @@ class MediaControls extends React.Component {
 		);
 	}
 }
+
+const MediaControls = Slottable({slots: ['leftComponents', 'rightComponents']}, MediaControlsBase);
 
 MediaControls.defaultSlot = 'mediaControlsComponent';
 
