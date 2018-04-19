@@ -13,8 +13,8 @@ const VoiceControlDecorator = hoc({}, (config, Wrapped) => {
 
 		componentDidMount () {
 			this.node = findDOMNode(this);
-			if (!(this.node.hasAttribute('data-voice-event-target') || this.node.hasAttribute('data-webos-voice-intent'))) {
-				this.node = this.node.querySelector('[data-voice-event-target]') || this.node.querySelector('[data-webos-voice-intent]');
+			if (!(this.node.hasAttribute('data-webos-voice-event-target') || this.node.hasAttribute('data-webos-voice-intent'))) {
+				this.node = this.node.querySelector('[data-webos-voice-event-target]') || this.node.querySelector('[data-webos-voice-intent]');
 			}
 			if (this.node) this.node.addEventListener('webOSVoice', this.props.onVoice);
 		}
