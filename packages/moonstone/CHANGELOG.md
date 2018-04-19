@@ -27,7 +27,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/TimePicker` to show `meridiem` correctly in all locales
-- `moonstone/Scrollable/ScrollButtons` to read out out audio guidance when button down.
 - `moonstone/Scrollable` scroll buttons to read out out audio guidance when button pressed down
 - `moonstone/ExpandableItem` to show label properly when open and disabled
 - `moonstone/Notification` to position properly in RTL locales

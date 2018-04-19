@@ -281,8 +281,8 @@ class ScrollButtons extends Component {
 			fromPrevToNext = (vertical && direction === 'down') || (!vertical && direction === (rtl ? 'left' : 'right'));
 
 		// manually focus the opposite scroll button when 5way pressed
-		if ((fromNextToPrev && target === this.nextButtonNodeRef && !prevButtonDisabled) ||
-			(fromPrevToNext && target === this.prevButtonNodeRef && !nextButtonDisabled)) {
+		if ((fromNextToPrev && target === this.nextButtonNodeRef) ||
+			(fromPrevToNext && target === this.prevButtonNodeRef)) {
 			this.focusOnOppositeScrollButton(ev, direction);
 		}
 	}
