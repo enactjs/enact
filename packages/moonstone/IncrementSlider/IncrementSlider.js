@@ -1,7 +1,23 @@
 /**
  * An interactive numeric range picker with increment decrement
  *
+ * @example
+ * <IncrementSlider
+ *   decrementIcon="minus"
+ *   defaultValue={-25}
+ *   incrementIcon="plus"
+ *   knobStep={25}
+ *   max={100}
+ *   min={-100}
+ *   step={5}
+ *   tooltip
+ * />
+ *
  * @module moonstone/IncrementSlider
+ * @exports IncrementSlider
+ * @exports IncrementSliderBase
+ * @exports IncrementSliderDecorator
+ * @exports IncrementSliderTooltip
  */
 
 import {forward} from '@enact/core/handle';
@@ -326,12 +342,12 @@ const IncrementSliderBase = kind({
 		spotlightDisabled: PropTypes.bool,
 
 		/**
-		* The amount to increment or decrement the value.
-		*
-		* @type {Number}
-		* @default 1
-		* @public
-		*/
+		 * The amount to increment or decrement the value.
+		 *
+		 * @type {Number}
+		 * @default 1
+		 * @public
+		 */
 		step: PropTypes.number,
 
 		/**

@@ -159,10 +159,10 @@ const SliderBase = kind({
 		 *
 		 * The following props are forwarded to the tooltip:
 		 *
+		 * * `children` - The `value` prop from the slider
 		 * * `orientation` - The value of the `orientation` prop from the slider
 		 * * `proportion` - A number between 0 and 1 representing the proportion of the `value` in
 		 *   terms of `min` and `max`
-		 * * `children` - The `value` prop from the slider
 		 *
 		 * This prop accepts either a Component (e.g. `MyTooltip`} which will be instantiated with
 		 * the above props or a component instance (e.g. `<MyTooltip customProp="value" />`) which

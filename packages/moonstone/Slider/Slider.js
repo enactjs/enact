@@ -1,10 +1,20 @@
 /**
  * Provides a Moonstone-themed slider components and behaviors
  *
+ * @example
+ * <Slider
+ *   defaultValue={-30}
+ *   max={100}
+ *   min={-100}
+ *   step={10}
+ *   tooltip
+ * />
+ *
  * @module moonstone/Slider
  * @exports Slider
  * @exports SliderBase
  * @exports SliderDecorator
+ * @exports SliderTooltip
  */
 
 import {forKey, forProp, forward, forwardWithPrevent, handle} from '@enact/core/handle';
@@ -43,17 +53,6 @@ const SliderBase = kind({
 	name: 'Slider',
 
 	propTypes: /** @lends moonstone/Slider.SliderBase.prototype */ {
-		/**
-		 * Overrides the `aria-valuetext` for the slider.
-		 *
-		 * By default, `aria-valuetext` is set to the current value. This should only be used when
-		 * the parent controls the value of the slider directly through the props.
-		 *
-		 * @type {String|Number}
-		 * @public
-		 */
-		'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-
 		/**
 		 * When `true`, the component may be manipulated via the directional input keys upon
 		 * receiving focus.
@@ -98,10 +97,27 @@ const SliderBase = kind({
 		 * If not specified, `step` is used for the default value.
 		 *
 		 * @type {Number}
-		 * @default 1
 		 * @public
 		 */
 		knobStep: PropTypes.number,
+
+		/**
+		 * The maximum value of the slider.
+		 *
+		 * @type {Number}
+		 * @default 100
+		 * @public
+		 */
+		max: PropTypes.number,
+
+		/**
+		 * The minimum value of the slider.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		min: PropTypes.number,
 
 		/**
 		 * The handler when the knob is activated or deactivated by selecting it via 5-way
@@ -136,6 +152,15 @@ const SliderBase = kind({
 		 * @public
 		 */
 		onKeyUp: PropTypes.func,
+
+		/**
+		 * The amount to increment or decrement the value.
+		 *
+		 * @type {Number}
+		 * @default 1
+		 * @public
+		 */
+		step: PropTypes.number,
 
 		/**
 		 * Enables the built-in tooltip
@@ -283,6 +308,19 @@ const SliderDecorator = compose(
  * @ui
  * @public
  */
+
+/**
+ * Overrides the `aria-valuetext` for the slider.
+ *
+ * By default, `aria-valuetext` is set to the current value. This should only be used when
+ * the parent controls the value of the slider directly through the props.
+ *
+ * @name aria-valuetext
+ * @memberof moonstone/Slider.Slider.prototype
+ * @type {String|Number}
+ * @public
+ */
+
 const Slider = SliderDecorator(SliderBase);
 
 /**
