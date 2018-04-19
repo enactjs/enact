@@ -191,7 +191,7 @@ const memoize = (fn) => {
 		if (n in cache) {
 			return cache[n];
 		} else {
-			let result = fn(n);
+			let result = fn(...args);
 			cache[n] = result;
 			return result;
 		}
