@@ -116,7 +116,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardMouseLeave = forward(leaveEvent);
 	const {navigableFilter, preserveId, ...containerConfig} = config;
 
-	const add = ({spotlightId}) => {
+	const stateFromProps = ({spotlightId}) => {
 		const id = Spotlight.add(spotlightId);
 		return {
 			id,
@@ -179,7 +179,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.state = add(props);
+			this.state = stateFromProps(props);
 		}
 
 		componentWillMount () {
@@ -203,7 +203,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				Spotlight.remove(prevId);
 				id = Spotlight.add(id);
 
-				this.setState(add({spotlightId: id}));
+				this.setState(stateFromProps({spotlightId: id}));
 			}
 		}
 
