@@ -117,7 +117,7 @@ const TimePickerBase = kind({
 		 * @default 'hour'
 		 * @public
 		 */
-		hourAriaLabel: PropTypes.string,
+		hourAccessibilityHint: PropTypes.string,
 
 		/**
 		 * Sets the hint string read when focusing the joined picker.
@@ -126,7 +126,7 @@ const TimePickerBase = kind({
 		 * @default 'change a value with up down button'
 		 * @public
 		 */
-		joinedPickerAriaLabel: PropTypes.string,
+		joinedAccessibilityHint: PropTypes.string,
 
 		/**
 		 * The `meridiem` component of the time
@@ -162,7 +162,7 @@ const TimePickerBase = kind({
 		 * @default 'minute'
 		 * @public
 		 */
-		minuteAriaLabel: PropTypes.string,
+		minuteAccessibilityHint: PropTypes.string,
 
 		/**
 		 * When `true`, omits the labels below the pickers
@@ -274,14 +274,14 @@ const TimePickerBase = kind({
 		handlePickerKeyDown,
 		hasMeridiem,
 		hour,
-		hourAriaLabel,
-		joinedPickerAriaLabel,
+		hourAccessibilityHint,
+		joinedAccessibilityHint,
 		meridiem,
 		meridiemLabel,
 		meridiemPickerWidth,
 		meridiems,
 		minute,
-		minuteAriaLabel,
+		minuteAccessibilityHint,
 		noLabels,
 		onChangeHour,
 		onChangeMeridiem,
@@ -323,8 +323,8 @@ const TimePickerBase = kind({
 									return (
 										<HourPicker
 											className={css.hourComponents}
-											hintAriaLabel={hourAriaLabel}
-											joinedPickerAriaLabel={joinedPickerAriaLabel}
+											accessibilityHint={hourAccessibilityHint}
+											joinedAccessibilityHint={joinedAccessibilityHint}
 											key="hour-picker"
 											label={noLabels ? null : $L('hour')}
 											onChange={onChangeHour}
@@ -343,8 +343,8 @@ const TimePickerBase = kind({
 									return (
 										<DateComponentRangePicker
 											className={css.minutesComponents}
-											hintAriaLabel={minuteAriaLabel}
-											joinedPickerAriaLabel={joinedPickerAriaLabel}
+											accessibilityHint={minuteAccessibilityHint}
+											joinedAccessibilityHint={joinedAccessibilityHint}
 											key="minute-picker"
 											label={noLabels ? null : $L('minute')}
 											max={59}
@@ -365,7 +365,7 @@ const TimePickerBase = kind({
 										<DateComponentPicker
 											aria-valuetext={meridiems ? meridiems[meridiem] : null}
 											className={css.meridiemComponent}
-											joinedPickerAriaLabel={joinedPickerAriaLabel}
+											joinedAccessibilityHint={joinedAccessibilityHint}
 											key="meridiem-picker"
 											label={noLabels ? null : meridiemLabel}
 											onChange={onChangeMeridiem}

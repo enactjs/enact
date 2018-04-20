@@ -8,9 +8,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="list"`
 - `moonstone/Panels` prop `closeButtonAriaLabel` to configure the aria-label set on application close button
-- `moonstone/Picker` props `decrementAriaLabel`, `incrementAriaLabel`, `joinedPickerAriaLabel` to configure the aria-label set on each button
-- `moonstone/DatePicker` props `dayAriaLabel`, `joinedPickerAriaLabel`, `monthAriaLabel`, `yearAriaLabel` to configure the aria-label set on date pickers
-- `moonstone/TimePicker` props `hourAriaLabel`, `joinedPickerAriaLabel`, `minuteAriaLabel` to configure the aria-label set on time pickers
+- `moonstone/Picker` props `decrementAccessibilityHint`, `incrementAccessibilityHint`, `joinedAccessibilityHint` to configure the accessibilityHint set on each button
+- `moonstone/DatePicker` props `dayAccessibilityHint`, `joinedAccessibilityHint`, `monthAccessibilityHint`, `yearAccessibilityHint` to configure the accessibilityHint set on date pickers
+- `moonstone/TimePicker` props `hourAccessibilityHint`, `joinedAccessibilityHint`, `minuteAccessibilityHint` to configure the accessibilityHint set on time pickers
 - `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` props `scrollRightAriaLabel`, `scrollLeftAriaLabel`, `scrollDownAriaLabel`, and `scrollUpAriaLabel` to configure the aria-label set on scroll buttons in the scrollbars
 - `moonstone/Popup` property `closeButtonAriaLabel` to configure the label set on popup close button
 

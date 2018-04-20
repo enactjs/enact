@@ -51,7 +51,7 @@ const DateComponentRangePickerBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		hintAriaLabel: PropTypes.string,
+		accessibilityHint: PropTypes.string,
 
 		/**
 		 * The label to display below the picker
@@ -79,11 +79,11 @@ const DateComponentRangePickerBase = kind({
 		wrap: PropTypes.bool
 	},
 
-	render: ({className, hintAriaLabel, label, max, min, noAnimation, value, wrap, ...rest}) => (
+	render: ({accessibilityHint, className, label, max, min, noAnimation, value, wrap, ...rest}) => (
 		<DateComponentPickerChrome className={className} label={label}>
 			<RangePicker
 				{...rest}
-				accessibilityHint={(hintAriaLabel == null) ? label : hintAriaLabel}
+				accessibilityHint={(accessibilityHint == null) ? label : accessibilityHint}
 				joined
 				max={max}
 				min={min}

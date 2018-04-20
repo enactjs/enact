@@ -95,7 +95,7 @@ const DatePickerBase = kind({
 		 * @default 'day'
 		 * @public
 		 */
-		dayAriaLabel: PropTypes.string,
+		dayAccessibilityHint: PropTypes.string,
 
 		/**
 		 * Sets the hint string read when focusing the joined picker.
@@ -104,7 +104,7 @@ const DatePickerBase = kind({
 		 * @default 'change a value with up down button'
 		 * @public
 		 */
-		joinedPickerAriaLabel: PropTypes.string,
+		joinedAccessibilityHint: PropTypes.string,
 
 		/**
 		 * The maximum selectable `year` value
@@ -131,7 +131,7 @@ const DatePickerBase = kind({
 		 * @default 'month'
 		 * @public
 		 */
-		monthAriaLabel: PropTypes.string,
+		monthAccessibilityHint: PropTypes.string,
 
 		/**
 		 * When `true`, omits the labels below the pickers
@@ -224,7 +224,7 @@ const DatePickerBase = kind({
 		 * @default 'year'
 		 * @public
 		 */
-		yearAriaLabel: PropTypes.string
+		yearAccessibilityHint: PropTypes.string
 	},
 
 	defaultProps: {
@@ -247,15 +247,15 @@ const DatePickerBase = kind({
 
 	render: ({
 		day,
-		dayAriaLabel,
+		dayAccessibilityHint,
 		handlePickerKeyDown,
-		joinedPickerAriaLabel,
+		joinedAccessibilityHint,
 		maxDays,
 		maxMonths,
 		maxYear,
 		minYear,
 		month,
-		monthAriaLabel,
+		monthAccessibilityHint,
 		noLabels,
 		onChangeDate,
 		onChangeMonth,
@@ -267,7 +267,7 @@ const DatePickerBase = kind({
 		rtl,
 		spotlightDisabled,
 		year,
-		yearAriaLabel,
+		yearAccessibilityHint,
 		...rest
 	}) => {
 
@@ -294,8 +294,8 @@ const DatePickerBase = kind({
 								return (
 									<DateComponentRangePicker
 										className={css.day}
-										hintAriaLabel={dayAriaLabel}
-										joinedPickerAriaLabel={joinedPickerAriaLabel}
+										accessibilityHint={dayAccessibilityHint}
+										joinedAccessibilityHint={joinedAccessibilityHint}
 										key="day-picker"
 										label={noLabels ? null : $L('day')}
 										max={maxDays}
@@ -314,8 +314,8 @@ const DatePickerBase = kind({
 								return (
 									<DateComponentRangePicker
 										className={css.month}
-										hintAriaLabel={monthAriaLabel}
-										joinedPickerAriaLabel={joinedPickerAriaLabel}
+										accessibilityHint={monthAccessibilityHint}
+										joinedAccessibilityHint={joinedAccessibilityHint}
 										key="month-picker"
 										label={noLabels ? null : $L('month')}
 										max={maxMonths}
@@ -334,8 +334,8 @@ const DatePickerBase = kind({
 								return (
 									<DateComponentRangePicker
 										className={css.year}
-										hintAriaLabel={yearAriaLabel}
-										joinedPickerAriaLabel={joinedPickerAriaLabel}
+										accessibilityHint={yearAccessibilityHint}
+										joinedAccessibilityHint={joinedAccessibilityHint}
 										key="year-picker"
 										label={noLabels ? null : $L('year')}
 										max={maxYear}
