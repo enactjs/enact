@@ -99,6 +99,15 @@ const PickerBase = class extends React.Component {
 		min: PropTypes.number.isRequired,
 
 		/**
+		 * Sets the hint string read when focusing the joined picker.
+		 *
+		 * @type {String}
+		 * @default 'change a value with left right button'
+		 * @public
+		 */
+		'aria-label': PropTypes.string,
+
+		/**
 		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
 		 * to the current selected child and accessibilityHint text.
 		 *
@@ -141,7 +150,7 @@ const PickerBase = class extends React.Component {
 		 * @default 'previous item'
 		 * @public
 		 */
-		decrementAccessibilityHint: PropTypes.string,
+		decrementAriaLabel: PropTypes.string,
 
 		/**
 		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
@@ -177,7 +186,7 @@ const PickerBase = class extends React.Component {
 		 * @default 'next item'
 		 * @public
 		 */
-		incrementAccessibilityHint: PropTypes.string,
+		incrementAriaLabel: PropTypes.string,
 
 		/**
 		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -200,15 +209,6 @@ const PickerBase = class extends React.Component {
 		 * @public
 		 */
 		joined: PropTypes.bool,
-
-		/**
-		 * Sets the hint string read when focusing the joined picker.
-		 *
-		 * @type {String}
-		 * @default 'change a value with left right button'
-		 * @public
-		 */
-		joinedAccessibilityHint: PropTypes.string,
 
 		/**
 		 * By default, the picker will animate transitions between items if it has a defined
@@ -698,13 +698,13 @@ const PickerBase = class extends React.Component {
 
 	calcButtonLabel (next, valueText) {
 		const
-			{decrementAccessibilityHint, incrementAccessibilityHint, joined} = this.props,
-			nextItemAccessibilityHint = (incrementAccessibilityHint == null) ? $L('next item') : incrementAccessibilityHint,
-			previousItemAccessibilityHint = (decrementAccessibilityHint == null) ? $L('previous item') : decrementAccessibilityHint;
+			{decrementAriaLabel, incrementAriaLabel, joined} = this.props,
+			nextItemAriaLabel = (incrementAriaLabel == null) ? $L('next item') : incrementAriaLabel,
+			previousItemAriaLabel = (decrementAriaLabel == null) ? $L('previous item') : decrementAriaLabel;
 
 		// no label is necessary when joined
 		if (!joined) {
-			return `${valueText} ${next ? nextItemAccessibilityHint : previousItemAccessibilityHint}`;
+			return `${valueText} ${next ? nextItemAriaLabel : previousItemAriaLabel}`;
 		}
 	}
 
@@ -718,10 +718,10 @@ const PickerBase = class extends React.Component {
 
 	calcJoinedLabel (valueText) {
 		const
-			{joinedAccessibilityHint, orientation} = this.props,
+			{['aria-label']: ariaLabel, orientation} = this.props,
 			hint = orientation === 'horizontal' ? $L('change a value with left right button') : $L('change a value with up down button');
 
-		return `${valueText} ${(joinedAccessibilityHint == null) ? hint : joinedAccessibilityHint}`;
+		return `${valueText} ${(ariaLabel == null) ? hint : ariaLabel}`;
 	}
 
 	initRef (prop) {
@@ -752,12 +752,12 @@ const PickerBase = class extends React.Component {
 			...rest
 		} = this.props;
 
+		delete rest['aria-label'];
 		delete rest.accessibilityHint;
-		delete rest.decrementAccessibilityHint;
+		delete rest.decrementAriaLabel;
 		delete rest.decrementIcon;
-		delete rest.incrementAccessibilityHint;
+		delete rest.incrementAriaLabel;
 		delete rest.incrementIcon;
-		delete rest.joinedAccessibilityHint;
 		delete rest.max;
 		delete rest.min;
 		delete rest.onChange;
