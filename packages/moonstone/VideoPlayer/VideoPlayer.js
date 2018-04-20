@@ -779,9 +779,8 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		if (nextPreloadSource) {
-			if (preloadSource && compareSources(preloadSource, nextPreloadSource)) {
-				this.video.play();
-			} else {
+			const preloadSourcesEqual = preloadSource && compareSources(preloadSource, nextPreloadSource);
+			if (!preloadSourcesEqual) {
 				this.preloadVideo.load();
 			}
 		}
@@ -840,18 +839,9 @@ const VideoPlayerBase = class extends React.Component {
 		const {source: prevSource, preloadSource: prevPreloadSource} = prevProps;
 
 		// Detect a change to the video source and reload if necessary.
+		const preloadSourcesEqual = preloadSource && prevPreloadSource && compareSources(preloadSource, prevPreloadSource)
 		if (!compareSources(source, prevSource)) {
-			this.reloadVideo(this.isVideoPreloaded);
-		}
-
-		if (preloadSource) {
-			if (preloadSource && compareSources(preloadSource, prevPreloadSource)) {
-				// Might not play
-				this.video.play();
-			} else {
-				// Could trigger play
-				this.preloadVideo.load();
-			}
+			this.reloadVideo(this.isVideoPreloaded, preloadSourcesEqual);
 		}
 
 		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
@@ -1313,15 +1303,17 @@ const VideoPlayerBase = class extends React.Component {
 		};
 	}
 
-	reloadVideo = (preloaded) => {
+	reloadVideo = (preloaded, preloadSourcesEqual) => {
 		// When changing a HTML5 video, you have to reload it.
 		this.stopListeningForPulses();
 		if (!preloaded) {
 			this.video.load();
-		} else {
-			// if autoPlay is on
-			// this.video.play();
 		}
+
+		if (preloaded && preloadSourcesEqual) {
+			this.handleLoadStart();
+		}
+
 		this.setState({
 			announce: AnnounceState.READY
 		});
@@ -1924,14 +1916,14 @@ const VideoPlayerBase = class extends React.Component {
 	// These methods are here because on webOS TVs we can't play a video until after second video
 	// player is loaded
 	onSourceChangeInitialPlaying = () => {
-		if (this.isPlayerMounted && this.isVideoPreloaded && !this.props.noAutoPlay) {
-			return this.preloadSourcePlaying ? this.video.play() : null;
+		if (this.isPlayerMounted && this.isVideoPreloaded && this.preloadSourcePlaying) {
+			this.handleLoadStart();
 		}
 	}
 
 	onSourceChangeIntialLoaded = () => {
-		if (this.isPlayerMounted && this.isVideoPreloaded && !this.props.noAutoPlay) {
-			return this.preloadSourcePlaying ? null : this.video.play();
+		if (this.isPlayerMounted && this.isVideoPreloaded && !this.preloadSourcePlaying) {
+			this.handleLoadStart();
 		}
 	}
 
