@@ -274,7 +274,6 @@ class ScrollButtons extends Component {
 	handleSpotlight = (ev) => {
 		const
 			{rtl, vertical} = this.props,
-			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			{keyCode, target} = ev,
 			direction = getDirection(keyCode),
 			fromNextToPrev = (vertical && direction === 'up') || (!vertical && direction === (rtl ? 'right' : 'left')),
