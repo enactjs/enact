@@ -159,7 +159,7 @@ describe('Touchable', () => {
 			expect(actual).to.equal(expected);
 		});
 
-		it.only('should be called on click', function () {
+		it('should be called on click', function () {
 			const Component = Touchable({activeProp: 'active'}, DivComponent);
 			const handler = sinon.spy();
 			const subject = mount(
