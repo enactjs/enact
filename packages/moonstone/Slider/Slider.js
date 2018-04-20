@@ -20,10 +20,11 @@
 import {forKey, forProp, forward, forwardWithPrevent, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
+import Changeable from '@enact/ui/Changeable';
 import ComponentOverride from '@enact/ui/ComponentOverride';
 import Pure from '@enact/ui/internal/Pure';
 import Slottable from '@enact/ui/Slottable';
-import UiSlider, {SliderDecorator as UiSliderDecorator} from '@enact/ui/Slider';
+import UiSlider from '@enact/ui/Slider';
 import PropTypes from 'prop-types';
 import anyPass from 'ramda/src/anyPass';
 import compose from 'ramda/src/compose';
@@ -287,7 +288,7 @@ const SliderBase = kind({
  */
 const SliderDecorator = compose(
 	Pure,
-	UiSliderDecorator,
+	Changeable,
 	SliderBehaviorDecorator,
 	Spottable,
 	Slottable({slots: ['knob', 'tooltip']}),

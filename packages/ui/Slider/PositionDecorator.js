@@ -17,7 +17,8 @@ const PositionDecorator = hoc((config, Wrapped) => {
 			min: PropTypes.number,
 			onChange: PropTypes.func,
 			orientation: PropTypes.string,
-			step: PropTypes.number
+			step: PropTypes.number,
+			value: PropTypes.number
 		}
 
 		static defaultProps = {
@@ -65,13 +66,18 @@ const PositionDecorator = hoc((config, Wrapped) => {
 				} else {
 					value += step - delta;
 				}
+
+				// recalculate the proportion based on the stepped value
+				proportion = calcProportion(min, max, value);
 			}
 
-			forward('onChange', {
-				type: 'onChange',
-				value,
-				proportion
-			}, this.props);
+			if (value !== this.props.value) {
+				forward('onChange', {
+					type: 'onChange',
+					value,
+					proportion
+				}, this.props);
+			}
 		}
 
 		updateBounds (node) {
