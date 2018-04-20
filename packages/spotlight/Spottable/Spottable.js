@@ -44,6 +44,11 @@ const isKeyboardAccessible = (node) => {
 	);
 };
 
+// Last instance of spottable to be focused
+let lastSelectTarget = null;
+// Should we prevent select being passed through
+let selectCancelled = false;
+
 /**
  * Default configuration for Spottable
  *
@@ -168,20 +173,44 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			this.isFocused = false;
 			this.isHovered = false;
+
 			this.state = {
-				spotted: false
+				disabled: props.disabled || props.spotlightDisabled
 			};
 		}
 
-		componentWillUnmount () {
-			const {onSpotlightDisappear} = this.props;
-			if (this.state.spotted && onSpotlightDisappear) {
-				onSpotlightDisappear();
+		componentWillReceiveProps () {
+			this.setState((state, nextProps) => {
+				return !this.isFocused &&
+					this.state.disabled &&
+					!nextProps.disabled &&
+					!nextProps.spotlightDisabled ?
+					{disabled: false} :
+					null;
+			});
+		}
+
+		componentDidUpdate (_, prevState) {
+			// if the component is focused and became disabled,
+			if (this.isFocused && !prevState.disabled && (
+				this.props.disabled || this.props.spotlightDisabled
+			)) {
+				if (lastSelectTarget === this) {
+					selectCancelled = true;
+					forward('onMouseUp', null, this.props);
+				}
 			}
-			// if (this.state.spotted) {
-			// 	forward('onSpotlightDisappear', null, this.props);
-			// }
+		}
+
+		componentWillUnmount () {
+			if (this.isFocused) {
+				forward('onSpotlightDisappear', null, this.props);
+			}
+			if (lastSelectTarget === this) {
+				lastSelectTarget = null;
+			}
 		}
 
 		shouldEmulateMouse = ({currentTarget, repeat, type, which}) => {
@@ -213,9 +242,34 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
+		handleSelect = (ev) => {
+			// Only apply accelerator if handling select
+			if ((ev.which === REMOTE_OK_KEY) || (ev.which === ENTER_KEY)) {
+				if (selectCancelled || (lastSelectTarget && lastSelectTarget !== this)) {
+					return false;
+				}
+				lastSelectTarget = this;
+			}
+			return true;
+		}
+
+		forwardAndResetLastSelectTarget = (ev, props) => {
+			const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
+			const allow = lastSelectTarget === this;
+			selectCancelled = false;
+			lastSelectTarget = null;
+			return notPrevented && allow;
+		}
+
+		isActionable = () => {
+			return !this.props.disabled && !this.props.spotlightDisabled;
+		}
+
 		handle = handle.bind(this)
 
 		handleKeyDown = this.handle(
+			this.isActionable,
+			this.handleSelect,
 			forwardWithPrevent('onKeyDown'),
 			this.forwardSpotlightEvents,
 			this.shouldEmulateMouse,
@@ -223,6 +277,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		handleKeyUp = this.handle(
+			this.isActionable,
+			this.forwardAndResetLastSelectTarget,
 			this.shouldEmulateMouse,
 			forward('onMouseUp'),
 			forward('onClick')
@@ -230,7 +286,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleBlur = (ev) => {
 			if (ev.currentTarget === ev.target) {
-				this.setState({spotted: false});
+				this.isFocused = false;
+				this.setState((state, props) => {
+					const {disabled} = props;
+					return !state.disabled && disabled ? {disabled} : null;
+				});
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
@@ -242,7 +302,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleFocus = (ev) => {
 			if (ev.currentTarget === ev.target) {
-				this.setState({spotted: true});
+				this.isFocused = true;
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
@@ -264,7 +324,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const {disabled, spotlightDisabled, spotlightId, ...rest} = this.props;
-			const spottableDisabled = this.state.spotted && disabled;
+			const spottableDisabled = this.isFocused && disabled;
 			const spottable = (spottableDisabled || !disabled) && !spotlightDisabled;
 			const classes = spottableDisabled ? `${spottableClass} ${spottableDisabledClass}` : spottableClass;
 			let tabIndex = rest.tabIndex;
@@ -279,14 +339,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				tabIndex = -1;
 			}
 
-			if (!spottableDisabled) {
-				rest.onKeyUp = this.handleKeyUp;
-			}
-
 			if (spottable) {
-				rest.onBlur = this.handleBlur;
-				rest.onFocus = this.handleFocus;
-				rest.onKeyDown = this.handleKeyDown;
 
 				if (rest.className) {
 					rest.className += ' ' + classes;
@@ -302,8 +355,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return (
 				<Wrapped
 					{...rest}
+					onBlur={this.handleBlur}
+					onFocus={this.handleFocus}
 					onMouseEnter={this.handleEnter}
 					onMouseLeave={this.handleLeave}
+					onKeyDown={this.handleKeyDown}
+					onKeyUp={this.handleKeyUp}
 					disabled={disabled}
 					tabIndex={tabIndex}
 				/>

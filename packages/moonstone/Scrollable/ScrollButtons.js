@@ -161,20 +161,11 @@ class ScrollButtons extends Component {
 			}
 		});
 
-		if (shouldDisablePrevButton && spotItem === this.prevButtonNodeRef) {
-			if (this.pressed) {
-				this.setIgnoreMode(true);
-				this.buttonToFocus = this.nextButtonNodeRef;
-			} else {
-				Spotlight.focus(this.nextButtonNodeRef);
-			}
-		} else if (shouldDisableNextButton && spotItem === this.nextButtonNodeRef) {
-			if (this.pressed) {
-				this.setIgnoreMode(true);
-				this.buttonToFocus = this.prevButtonNodeRef;
-			} else {
-				Spotlight.focus(this.prevButtonNodeRef);
-			}
+		if (this.pressed && (
+			shouldDisablePrevButton && spotItem && spotItem === this.prevButtonNodeRef ||
+			shouldDisableNextButton && spotItem && spotItem === this.nextButtonNodeRef
+		)) {
+			this.setIgnoreMode(true);
 		}
 	}
 
@@ -280,7 +271,6 @@ class ScrollButtons extends Component {
 		return [
 			<ScrollButton
 				key="prevButton"
-				data-scroll-button="previous"
 				direction={vertical ? 'up' : 'left'}
 				disabled={disabled || prevButtonDisabled}
 				onClick={this.handlePrevScroll}
@@ -296,7 +286,6 @@ class ScrollButtons extends Component {
 			thumbRenderer(),
 			<ScrollButton
 				key="nextButton"
-				data-scroll-button="next"
 				direction={vertical ? 'down' : 'right'}
 				disabled={disabled || nextButtonDisabled}
 				onClick={this.handleNextScroll}
