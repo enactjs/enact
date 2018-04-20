@@ -7,9 +7,10 @@ import {addCancelHandler, Cancelable, removeCancelHandler} from '../Cancelable';
 describe('Cancelable', () => {
 
 	// Suite-wide setup
-	const Component = () => (
-		<div>
-			<button />
+	// eslint-disable-next-line
+	const Component = ({children, className, onKeyUp}) => (
+		<div onKeyUp={onKeyUp} className={className}>
+			{children}
 		</div>
 	);
 
@@ -22,7 +23,10 @@ describe('Cancelable', () => {
 		};
 	};
 
+	/* eslint-disable react/jsx-no-bind */
 	const returnsTrue = () => true;
+	const returnsFalse = () => false;
+	const stop = (ev) => ev.stopPropagation();
 
 	it('should call onCancel from prop for escape key', function () {
 		const handleCancel = sinon.spy(returnsTrue);
@@ -160,6 +164,91 @@ describe('Cancelable', () => {
 
 		const expected = true;
 		const actual = handleCancel.calledOnce;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should bubble up the component tree when config handler returns false', function () {
+		const handleCancel = sinon.spy(returnsFalse);
+		const Comp = Cancelable(
+			{onCancel: handleCancel},
+			Component
+		);
+
+		const subject = mount(
+			<Comp>
+				<Comp className="second" />
+			</Comp>
+		);
+
+		subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
+
+		const expected = 2;
+		const actual = handleCancel.callCount;
+
+		expect(actual).to.equal(expected);
+	});
+
+
+	it('should not bubble up the component tree when config handler returns true', function () {
+		const handleCancel = sinon.spy(returnsTrue);
+		const Comp = Cancelable(
+			{onCancel: handleCancel},
+			Component
+		);
+
+		const subject = mount(
+			<Comp>
+				<Comp className="second" />
+			</Comp>
+		);
+
+		subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
+
+		const expected = 1;
+		const actual = handleCancel.callCount;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should bubble up the component tree when prop handler returns false', function () {
+		const handleCancel = sinon.spy();
+		const Comp = Cancelable(
+			{onCancel: 'onCustomEvent'},
+			Component
+		);
+
+		const subject = mount(
+			<Comp onCustomEvent={handleCancel}>
+				<Comp className="second" onCustomEvent={returnsFalse} />
+			</Comp>
+		);
+
+		subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
+
+		const expected = true;
+		const actual = handleCancel.called;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not bubble up the component tree when prop handler calls stopPropagation', function () {
+		const handleCancel = sinon.spy();
+		const Comp = Cancelable(
+			{onCancel: 'onCustomEvent'},
+			Component
+		);
+
+		const subject = mount(
+			<Comp onCustomEvent={handleCancel}>
+				<Comp className="second" onCustomEvent={stop} />
+			</Comp>
+		);
+
+		subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
+
+		const expected = false;
+		const actual = handleCancel.called;
 
 		expect(actual).to.equal(expected);
 	});

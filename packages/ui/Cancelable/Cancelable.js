@@ -4,7 +4,7 @@
  * @module ui/Cancelable
  */
 
-import {forward, handle, stopImmediate} from '@enact/core/handle';
+import {forward, handle, stop, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import invariant from 'invariant';
@@ -88,8 +88,16 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 	const onCancelIsFunction = typeof onCancel === 'function';
 	const dispatchCancelToConfig = function (ev, props) {
 		if (onCancelIsString && typeof props[onCancel] === 'function') {
-			props[onCancel]();
-			return true;
+			let stopped = false;
+
+			props[onCancel]({
+				type: onCancel,
+				stopPropagation: () => {
+					stopped = true;
+				}
+			});
+
+			return stopped;
 		} else if (onCancelIsFunction) {
 			return onCancel(props);
 		}
@@ -120,6 +128,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			forCancel,
 			forward('onCancel'),
 			dispatchCancelToConfig,
+			stop,
 			stopImmediate
 		)
 
