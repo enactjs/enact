@@ -10,9 +10,10 @@ import {activate, deactivate} from '../state';
 import {configure, getConfig, resetDefaultConfig} from '../config';
 
 describe('Touchable', () => {
-	const DivComponent = ({onMouseDown, onMouseLeave, onMouseUp}) => {
+	const DivComponent = ({onClick, onMouseDown, onMouseLeave, onMouseUp}) => {
 		return (
 			<div
+				onClick={onClick}
 				onMouseDown={onMouseDown}
 				onMouseUp={onMouseUp}
 				onMouseLeave={onMouseLeave}
@@ -151,6 +152,21 @@ describe('Touchable', () => {
 			const ev = {};
 			subject.simulate('mousedown', ev);
 			subject.simulate('mouseup', ev);
+
+			const expected = true;
+			const actual = handler.calledOnce;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it.only('should be called on click', function () {
+			const Component = Touchable({activeProp: 'active'}, DivComponent);
+			const handler = sinon.spy();
+			const subject = mount(
+				<Component onTap={handler} />
+			);
+
+			subject.simulate('click');
 
 			const expected = true;
 			const actual = handler.calledOnce;

@@ -117,8 +117,18 @@ const handleMouseLeave = handle(
 
 const handleMouseUp = handle(
 	forward('onMouseUp'),
-	handleUp
+	handleUp,
+	// block the next click to prevent duplicate onUp events
+	block
 );
+
+const handleClick = handle(
+	isNotBlocked,
+	isEnabled,
+	call('activate'),
+	forward('onClick'),
+	handleUp,
+).finally(unblock);
 
 // Touch event handlers
 
@@ -382,6 +392,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			}, 400);
 
+			this.handleClick = handleClick.bind(this);
 			this.handleMouseDown = handleMouseDown.bind(this);
 			this.handleMouseEnter = handleMouseEnter.bind(this);
 			this.handleMouseMove = handleMouseMove.bind(this);
@@ -553,6 +564,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		// events and initiate gestures
 
 		addHandlers (props) {
+			props.onClick = this.handleClick;
 			props.onMouseDown = this.handleMouseDown;
 			props.onMouseLeave = this.handleMouseLeave;
 			props.onMouseMove = this.handleMouseMove;
