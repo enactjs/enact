@@ -839,7 +839,7 @@ const VideoPlayerBase = class extends React.Component {
 		const {source: prevSource, preloadSource: prevPreloadSource} = prevProps;
 
 		// Detect a change to the video source and reload if necessary.
-		const preloadSourcesEqual = preloadSource && prevPreloadSource && compareSources(preloadSource, prevPreloadSource)
+		const preloadSourcesEqual = preloadSource && prevPreloadSource && compareSources(preloadSource, prevPreloadSource);
 		if (!compareSources(source, prevSource)) {
 			this.reloadVideo(this.isVideoPreloaded, preloadSourcesEqual);
 		}
