@@ -195,30 +195,22 @@ const VirtualListBaseFactory = (type) => {
 			spacing: PropTypes.number,
 
 			/**
-			 * When it's `true` and the spotlight focus is not able to move to the given direction anymore,
-			 * the spotlight focus moves to the other side in wraparound manner by 5-way keys.
+			 * When it's `true` and the spotlight focus cannot move to the given direction anymore by 5-way keys,
+			 * a list is scrolled with an animation to the other side and the spotlight focus moves in wraparound manner.
 			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @private
-			 */
-			wrap: PropTypes.bool,
-
-			/**
-			 * When it's `true` and the spotlight focus moves in wraparound manner to the other side,
-			 * it scrolles with an animation.
+			 * When it's `'noAnimation'`, the spotlight focus moves in wraparound manner as same as when it's `true`
+			 * except that a list is scrolled without an animation.
 			 *
-			 * @type {Boolean}
+			 * @type {Boolean|String}
 			 * @default false
-			 * @private
+			 * @public
 			 */
-			wrapAnimated: PropTypes.bool
+			wrap: PropTypes.oneOf([false, true, 'noAnimation'])
 		}
 
 		static defaultProps = {
 			isItemDisabled: isItemDisabledDefault,
-			wrap: false,
-			wrapAnimated: false
+			wrap: false
 		}
 
 		componentDidMount () {
@@ -518,9 +510,9 @@ const VirtualListBaseFactory = (type) => {
 			this.setRestrict(isSelfOnly);
 		}
 
-		jumpToSpottableItem = (keyCode, target) => {
+		jumpToSpottableItem = (keyCode, repeat, target) => {
 			const
-				{cbScrollTo, dataSize, isItemDisabled, rtl, wrap, wrapAnimated} = this.props,
+				{cbScrollTo, dataSize, isItemDisabled, rtl, wrap} = this.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
 				{dimensionToExtent, isPrimaryDirectionVertical} = this.uiRef,
 				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute)),
@@ -556,7 +548,7 @@ const VirtualListBaseFactory = (type) => {
 				if (nextIndex === -1) {
 					spottableExtent = this.findSpottableExtent(currentIndex, true);
 					if (spottableExtent === -1) {
-						if (wrap) {
+						if (wrap && !repeat) {
 							const candidateExtent = this.getExtentIndex(this.findSpottableItem(0, dataSize));
 
 							// If currentExtent is equal to candidateExtent,
@@ -564,7 +556,7 @@ const VirtualListBaseFactory = (type) => {
 							// So we find nextIndex only when currentExtent is different from candidateExtent.
 							if (currentExtent !== candidateExtent) {
 								nextIndex = this.findNearestSpottableItemInExtent(currentIndex, candidateExtent);
-								animate = wrapAnimated;
+								animate = (wrap === true);
 								isWrapped = true;
 							}
 						}
@@ -584,7 +576,7 @@ const VirtualListBaseFactory = (type) => {
 					spottableExtent = this.findSpottableExtent(currentIndex, false);
 
 					if (spottableExtent === -1) {
-						if (wrap) {
+						if (wrap && !repeat) {
 							const candidateExtent = this.getExtentIndex(this.findSpottableItem(dataSize - 1, -1));
 
 							// If currentExtent is equal to candidateExtent,
@@ -592,7 +584,7 @@ const VirtualListBaseFactory = (type) => {
 							// So we find nextIndex only when currentExtent is different from candidateExtent.
 							if (currentExtent !== candidateExtent) {
 								nextIndex = this.findNearestSpottableItemInExtent(currentIndex, candidateExtent);
-								animate = wrapAnimated;
+								animate = (wrap === true);
 								isWrapped = true;
 							}
 						}
@@ -647,13 +639,13 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		onKeyDown = (ev) => {
-			const {keyCode, target} = ev;
+			const {keyCode, repeat, target} = ev;
 
 			this.isScrolledBy5way = false;
 			if (getDirection(keyCode)) {
 				ev.preventDefault();
 				this.setSpotlightContainerRestrict(keyCode, target);
-				this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, target);
+				this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, repeat, target);
 				if (this.shouldPreventScrollByFocus()) {
 					ev.stopPropagation();
 				}
@@ -865,7 +857,6 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.initUiChildRef;
 			delete rest.isItemDisabled;
 			delete rest.wrap;
-			delete rest.wrapAnimated;
 
 			return (
 				<UiBase
