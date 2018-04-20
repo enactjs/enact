@@ -155,7 +155,6 @@ storiesOf('VideoPlayer')
 						spotlightDisabled={boolean('spotlightDisabled', false)}
 						thumbnailSrc={poster}
 						thumbnailUnavailable={boolean('thumbnailUnavailable', false)}
-						tooltipHideDelay={number('tooltipHideDelay', 3000)}
 						title={text('title', 'Moonstone VideoPlayer Sample Video')}
 						titleHideDelay={number('titleHideDelay', 4000)}
 						{...prop.eventActions}

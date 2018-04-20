@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
+- `moonstone/VideoPlayer` prop `tooltipHideDelay`, to be removed in 2.0.0
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `data`, to be removed in 2.0.0
 
 ## [1.15.0] - 2018-02-28
