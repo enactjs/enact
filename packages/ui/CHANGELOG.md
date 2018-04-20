@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Changed
+
+- `ui/Cancelable` default behavior when using a string value for `onCancel` to allow propagation up the component tree. Event propagation can be prevented using the `stopPropagation` method added to the event payload passed to the `onCancel` callback.
+
 ### Fixed
 
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to support RTL by dynamic language changes
