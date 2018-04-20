@@ -39,6 +39,15 @@ class ScrollbarBase extends Component {
 		corner: PropTypes.bool,
 
 		/**
+		 * `true` if rtl, `false` if ltr.
+		 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * Registers the ScrollButtons component with an
 		 * {@link core/internal/ApiDecorator.ApiDecorator}.
 		 *

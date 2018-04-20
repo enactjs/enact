@@ -2,7 +2,32 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [2.0.0-alpha.7 - 2018-04-03]
+## [2.0.0-alpha.8] - 2018-04-17
+
+### Added
+
+- `core/handle.call` to invoke a named method on a bound handler
+- `moonstone/Panels` property `closeButtonAriaLabel` to configure the label set on application close button
+- `background` global knob to help visualize components over various background images
+- `ui/Placeholder.PlaceholderControllerDecorator` config property `thresholdFactor`
+
+### Changed
+
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to set its ARIA `role` to `"list"`
+- `moonstone/VideoPlayer` property `title` to accept node type
+- `ui/Transition` property `children` to not be required
+- `ui/Transition` to fire `onShow` and `onHide` even when there are no `children`
+
+### Fixed
+
+- `moonstone/TimePicker` to show `meridiem` correctly in all locales
+- `moonstone/Scrollable` scroll buttons to read out out audio guidance when button pressed down
+- `moonstone/ExpandableItem` to show label properly when open and disabled
+- `moonstone/Notification` to position properly in RTL locales
+- `moonstone/VideoPlayer` to show controls when pressing 5-way select
+- `ui/ViewManager` to not initially pass the wrong value for `enteringProp` when a view initiates a transition into the viewport
+
+## [2.0.0-alpha.7] - 2018-04-03
 
 ### Removed
 
@@ -113,6 +138,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/Slider` to correctly show localized percentage value in tooltip when `tooltipAsPercent` is true
 - `moonstone/VirtualGridList` to show or hide its scrollbars properly
 - `moonstone/Button` text to be properly centered
+- `ui/ViewManager` to suppress `enteringProp` for views that are rendered at mount
 
 ## [2.0.0-alpha.4] - 2018-02-13
 
