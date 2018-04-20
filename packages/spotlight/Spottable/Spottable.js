@@ -21,7 +21,6 @@ import Spotlight from '../src/spotlight';
  * @public
  */
 const spottableClass = 'spottable';
-const spottableDisabledClass = 'spottableDisabled';
 
 const ENTER_KEY = 13;
 const REMOTE_OK_KEY = 16777221;
@@ -177,26 +176,20 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			this.isHovered = false;
 
 			this.state = {
-				disabled: props.disabled || props.spotlightDisabled
+				spottableDisabled: false
 			};
 		}
 
 		componentWillReceiveProps () {
 			this.setState((state, nextProps) => {
-				return !this.isFocused &&
-					this.state.disabled &&
-					!nextProps.disabled &&
-					!nextProps.spotlightDisabled ?
-					{disabled: false} :
-					null;
+				const spottableDisabled = this.isFocused && nextProps.disabled || nextProps.spotlightDisabled;
+				return !this.state.spottableDisabled && spottableDisabled ? {spottableDisabled} : null;
 			});
 		}
 
 		componentDidUpdate (_, prevState) {
-			// if the component is focused and became disabled,
-			if (this.isFocused && !prevState.disabled && (
-				this.props.disabled || this.props.spotlightDisabled
-			)) {
+			// if the component is focused and became disabled
+			if (!prevState.spottableDisabled && this.state.spottableDisabled) {
 				if (lastSelectTarget === this) {
 					selectCancelled = true;
 					forward('onMouseUp', null, this.props);
@@ -287,9 +280,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		handleBlur = (ev) => {
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = false;
-				this.setState((state, props) => {
-					const {disabled} = props;
-					return !state.disabled && disabled ? {disabled} : null;
+				this.setState((state) => {
+					return state.spottableDisabled ? {spottableDisabled: false} : null;
 				});
 			}
 
@@ -324,9 +316,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const {disabled, spotlightDisabled, spotlightId, ...rest} = this.props;
-			const spottableDisabled = this.isFocused && disabled;
-			const spottable = (spottableDisabled || !disabled) && !spotlightDisabled;
-			const classes = spottableDisabled ? `${spottableClass} ${spottableDisabledClass}` : spottableClass;
+			const spottable = this.state.spottableDisabled || !disabled && !spotlightDisabled;
 			let tabIndex = rest.tabIndex;
 
 			delete rest.onSpotlightDisappear;
@@ -340,11 +330,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (spottable) {
-
 				if (rest.className) {
-					rest.className += ' ' + classes;
+					rest.className += ' ' + spottableClass;
 				} else {
-					rest.className = classes;
+					rest.className = spottableClass;
 				}
 			}
 
