@@ -30,7 +30,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Slider` as an unstyled, base range selection component
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` `role="list"`
-- `ui/Placeholder.PlaceholderControllerDecorator` config property `thresholdFactor
+- `ui/Placeholder.PlaceholderControllerDecorator` config property `thresholdFactor`
 - `ui/Touchable` to fire `onTap` when a `click` event occurs
 
 ### Changed
