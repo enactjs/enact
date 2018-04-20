@@ -2,11 +2,21 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
-## [unreleased]
+## [2.0.0-alpha.8] - 2018-04-17
+
+### Added
+
+- `core/handle.call` to invoke a named method on a bound handler
+
+## [2.0.0-alpha.7] - 2018-04-03
+
+No significant changes.
+
+## [2.0.0-alpha.6] - 2018-03-22
 
 ### Removed
 
-- `core/factory` module replaced by the `css` override feature
+- `core/factory` module, replaced by the `css` override feature
 
 ## [2.0.0-alpha.5] - 2018-03-07
 

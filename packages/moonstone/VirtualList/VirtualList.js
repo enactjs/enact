@@ -15,7 +15,7 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {SpottableVirtualList, SpottableVirtualListNative, VirtualListBase, VirtualListBaseNative} from './VirtualListBase';
+import {ScrollableVirtualList, ScrollableVirtualListNative, VirtualListBase, VirtualListBaseNative} from './VirtualListBase';
 
 /**
  * A Moonstone-styled scrollable and spottable virtual list component.
@@ -49,7 +49,7 @@ const VirtualList = kind({
 	},
 
 	render: (props) => (
-		<SpottableVirtualList {...props} />
+		<ScrollableVirtualList {...props} />
 	)
 });
 
@@ -73,7 +73,12 @@ const VirtualGridList = kind({
 		 *
 		 * Usage:
 		 * ```
-		 * <VirtualGridList itemSize={{minWidth: ri.scale(180), minHeight: ri.scale(270)}} />
+		 * <VirtualGridList
+		 * 	itemSize={{
+		 * 		minWidth: ri.scale(180),
+		 * 		minHeight: ri.scale(270)
+		 * 	}}
+		 * />
 		 * ```
 		 *
 		 * @type {ui/VirtualList.gridListItemSizeShape}
@@ -84,7 +89,7 @@ const VirtualGridList = kind({
 	},
 
 	render: (props) => (
-		<SpottableVirtualList {...props} />
+		<ScrollableVirtualList {...props} />
 	)
 });
 
@@ -124,7 +129,7 @@ const VirtualListNative = kind({
 	},
 
 	render: (props) => (
-		<SpottableVirtualListNative {...props} />
+		<ScrollableVirtualListNative {...props} />
 	)
 });
 
@@ -151,7 +156,12 @@ const VirtualGridListNative = kind({
 		 *
 		 * Usage:
 		 * ```
-		 * <VirtualGridListNative itemSize={{minWidth: ri.scale(180), minHeight: ri.scale(270)}} />
+		 * <VirtualGridListNative
+		 * 	itemSize={{
+		 * 		minWidth: ri.scale(180),
+		 * 		minHeight: ri.scale(270)
+		 * 	}}
+		 * />
 		 * ```
 		 *
 		 * @type {ui/VirtualList.gridListItemSizeShape}
@@ -162,7 +172,7 @@ const VirtualGridListNative = kind({
 	},
 
 	render: (props) => (
-		<SpottableVirtualListNative {...props} />
+		<ScrollableVirtualListNative {...props} />
 	)
 });
 

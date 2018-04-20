@@ -32,6 +32,7 @@ const NotificationBase = kind({
 		 * `small` property set and will be coerced to `small` if not specified.
 		 *
 		 * @type {Node}
+		 * @required
 		 * @public
 		 */
 		buttons: PropTypes.oneOfType([

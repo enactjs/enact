@@ -20,7 +20,7 @@ import componentCss from './Scrollbar.less';
  * @private
  */
 class ScrollbarBase extends Component {
-	static displayName = 'ScrollerBase'
+	static displayName = 'ScrollbarBase'
 
 	static propTypes = /** @lends moonstone/Scrollable.Scrollbar.prototype */ {
 		/**
@@ -39,6 +39,15 @@ class ScrollbarBase extends Component {
 		 * @public
 		 */
 		corner: PropTypes.bool,
+
+		/**
+		 * `true` if rtl, `false` if ltr.
+		 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
 
 		/**
 		 * Registers the ScrollButtons component with an

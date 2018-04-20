@@ -15,8 +15,7 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {gridListItemSizeShape, ScrollableVirtualList, VirtualListBase} from './VirtualListBase';
-import {ScrollableVirtualListNative, VirtualListBaseNative} from './VirtualListBaseNative';
+import {gridListItemSizeShape, ScrollableVirtualList, ScrollableVirtualListNative, VirtualListBase, VirtualListBaseNative} from './VirtualListBase';
 
 /**
  * An unstyled scrollable virtual list component with touch support.
@@ -74,7 +73,12 @@ const VirtualGridList = kind({
 		 *
 		 * Usage:
 		 * ```
-		 * <VirtualGridList itemSize={{minWidth: ri.scale(180), minHeight: ri.scale(270)}} />
+		 * <VirtualGridList
+		 * 	itemSize={{
+		 * 		minWidth: ri.scale(180),
+		 * 		minHeight: ri.scale(270)
+		 * 	}}
+		 * />
 		 * ```
 		 *
 		 * @type {ui/VirtualList.gridListItemSizeShape}
@@ -151,7 +155,12 @@ const VirtualGridListNative = kind({
 		 *
 		 * Usage:
 		 * ```
-		 * <VirtualGridListNative itemSize={{minWidth: ri.scale(180), minHeight: ri.scale(270)}} />
+		 * <VirtualGridListNative
+		 * 	itemSize={{
+		 * 		minWidth: ri.scale(180),
+		 * 		minHeight: ri.scale(270)
+		 * 	}}
+		 * />
 		 * ```
 		 *
 		 * @type {ui/VirtualList.gridListItemSizeShape}

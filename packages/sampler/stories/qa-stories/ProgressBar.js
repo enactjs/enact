@@ -13,9 +13,12 @@ storiesOf('ProgressBar', module)
 		'The basic ProgressBar',
 		() => (
 			<ProgressBar
-				backgroundProgress={number('backgroundProgress', ProgressBarBase.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
-				progress={number('progress', ProgressBarBase.defaultProps.progress, {range: true, min: 0, max: 1, step: 0.1})}
+				backgroundProgress={number('backgroundProgress', 0.5, {range: true, min: 0, max: 1, step: 0.01})}
+				tooltip={boolean('tooltip', false)}
+				progress={number('progress', 0.4, {range: true, min: 0, max: 1, step: 0.01})}
 				orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
+				tooltipForceSide={boolean('tooltipForceSide', false)}
+				tooltipSide={select('tooltipSide', ['before', 'after'], 'before')}
 				disabled={nullify(boolean('disabled', false))}
 			/>
 		),

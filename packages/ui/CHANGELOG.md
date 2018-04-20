@@ -4,6 +4,39 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Fixed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to support RTL by dynamic language changes
+
+## [2.0.0-alpha.8] - 2018-04-17
+
+### Added
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` `role="list"`
+- `ui/Placeholder.PlaceholderControllerDecorator` config property `thresholdFactor`
+
+### Changed
+
+- `ui/Transition` property `children` to not be required
+- `ui/Transition` to fire `onShow` and `onHide` even when there are no `children`
+
+### Fixed
+
+- `ui/VirtualList.VirtualList` to re-render items when forceUpdate() called
+- `ui/ViewManager` to not initially pass the wrong value for `enteringProp` when a view initiates a transition into the viewport
+
+## [2.0.0-alpha.7] - 2018-04-03
+
+### Removed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `data` to eliminate the misunderstanding caused by the ambiguity of `data`
+
+### Fixed
+
+- `ui/Scroller` horizontal scrolling in RTL locales
+
+## [2.0.0-alpha.6] - 2018-03-22
+
 ### Removed
 
 - `ui/Transition` property `clipHeight`
@@ -12,16 +45,15 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/Scrollable` support for scrolling by touch
-- `ui/ProgressBar` property orientation to accept orientation strings like "vertical" and "horizontal"
+- `ui/ProgressBar` property `orientation` to accept orientation strings like `"vertical"` and `"horizontal"`
 
 ### Changed
 
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
 
-
 ### Fixed
 
-- `ui/Transition` animation for `clip` for "up", "left", and "right" directions. This includes a DOM addition to the Transition markup.
+- `ui/Transition` animation for `clip` for `"up"`, `"left"`, and `"right"` directions. This includes a DOM addition to the Transition markup.
 - `ui/ComponentOverride` and `ui/ToggleItem` to accept HTML DOM node tag names as strings for its `component` property
 
 ## [2.0.0-alpha.5] - 2018-03-07
@@ -36,6 +68,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` components as unstyled base components to support UI libraries
 
+### Fixed
+
+- `ui/ViewManager` to suppress `enteringProp` for views that are rendered at mount
+
 ## [2.0.0-alpha.4] - 2018-02-13
 
 ### Added
@@ -48,10 +84,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/Repeater` and `ui/Group` to require a unique key for each object type data
 - `ui/Toggleable` to use `'selected'` as its default `prop`, rather than `'active'`, since `'selected'` is by far the most common use case
 - `ui/Touchable` to use global gesture configuration with instance override rather than component-level configuration via HOC configs with instance override
-
-### Fixed
-
-- `ui/ViewManager` to suppress `enteringProp` for views that are rendered at mount
 
 ## [2.0.0-alpha.3] - 2018-01-18
 
