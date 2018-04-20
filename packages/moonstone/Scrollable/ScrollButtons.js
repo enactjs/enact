@@ -44,6 +44,7 @@ class ScrollButtons extends Component {
 		 * The render function for thumb.
 		 *
 		 * @type {Function}
+		 * @required
 		 * @private
 		 */
 		thumbRenderer: PropTypes.func.isRequired,
@@ -64,6 +65,14 @@ class ScrollButtons extends Component {
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		* Sets the hint string read when focusing the next button in the scroll bar.
+		*
+		* @type {String}
+		* @public
+		*/
+		nextButtonAriaLabel: PropTypes.string,
 
 		/**
 		 * Called when the scrollbar's down/right button is pressed.
@@ -96,6 +105,14 @@ class ScrollButtons extends Component {
 		 * @private
 		 */
 		onPrevSpotlightDisappear: PropTypes.func,
+
+		/**
+		* Sets the hint string read when focusing the previous button in the scroll bar.
+		*
+		* @type {String}
+		* @public
+		*/
+		previousButtonAriaLabel: PropTypes.string,
 
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
@@ -191,22 +208,32 @@ class ScrollButtons extends Component {
 		return current === this.prevButtonNodeRef || current === this.nextButtonNodeRef;
 	}
 
+	handlePrevDown = () => {
+		const {vertical} = this.props;
+
+		if (this.announce) {
+			this.announce(vertical ? $L('UP') : $L('LEFT'));
+		}
+	}
+
+	handleNextDown = () => {
+		const {vertical} = this.props;
+
+		if (this.announce) {
+			this.announce(vertical ? $L('DOWN') : $L('RIGHT'));
+		}
+	}
+
 	handlePrevScroll = (ev) => {
 		const {onPrevScroll, vertical} = this.props;
 
 		onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
-		if (this.announce) {
-			this.announce(vertical ? $L('UP') : $L('LEFT'));
-		}
 	}
 
 	handleNextScroll = (ev) => {
 		const {onNextScroll, vertical} = this.props;
 
 		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
-		if (this.announce) {
-			this.announce(vertical ? $L('DOWN') : $L('RIGHT'));
-		}
 	}
 
 	handlePrevHoldPulse = (ev) => {
@@ -269,18 +296,20 @@ class ScrollButtons extends Component {
 
 	render () {
 		const
-			{disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, thumbRenderer, vertical} = this.props,
+			{disabled, nextButtonAriaLabel, onNextSpotlightDisappear, onPrevSpotlightDisappear, previousButtonAriaLabel, thumbRenderer, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			prevIcon = preparePrevButton(vertical),
 			nextIcon = prepareNextButton(vertical);
 
 		return [
 			<ScrollButton
+				aria-label={previousButtonAriaLabel}
 				key="prevButton"
 				data-scroll-button="previous"
 				direction={vertical ? 'up' : 'left'}
 				disabled={disabled || prevButtonDisabled}
 				onClick={this.handlePrevScroll}
+				onDown={this.handlePrevDown}
 				onHoldPulse={this.handlePrevHoldPulse}
 				onKeyDown={this.depressButton}
 				onKeyUp={this.releaseButton}
@@ -292,11 +321,13 @@ class ScrollButtons extends Component {
 			</ScrollButton>,
 			thumbRenderer(),
 			<ScrollButton
+				aria-label={nextButtonAriaLabel}
 				key="nextButton"
 				data-scroll-button="next"
 				direction={vertical ? 'down' : 'right'}
 				disabled={disabled || nextButtonDisabled}
 				onClick={this.handleNextScroll}
+				onDown={this.handleNextDown}
 				onHoldPulse={this.handleNextHoldPulse}
 				onKeyDown={this.depressButton}
 				onKeyUp={this.releaseButton}

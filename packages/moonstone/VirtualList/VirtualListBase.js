@@ -910,15 +910,15 @@ VirtualListBase.displayName = 'VirtualListBase';
 const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'VirtualListBaseNative';
 
-const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
+const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
 	<Scrollable
-		{...rest}
-		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
+		{...props}
+		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
-				{...props}
+				{...childProps}
 				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
 					[
-						cc.length ? <div key="0" ref={initUiItemContainerRef} role={role}>{cc}</div> : null,
+						cc.length ? <div key="0" ref={initUiItemContainerRef} role="list">{cc}</div> : null,
 						primary ?
 							null :
 							<SpotlightPlaceholder
@@ -926,7 +926,6 @@ const ScrollableVirtualList = ({role, ...rest}) => ( // eslint-disable-line reac
 								data-vl-placeholder
 								key="1"
 								onFocus={handlePlaceholderFocus}
-								role="region"
 							/>,
 						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
 					]
@@ -948,30 +947,22 @@ ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBa
 	 * @default 'vertical'
 	 * @public
 	 */
-	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-
-	/**
-	 * Aria role.
-	 *
-	 * @type {String}
-	 * @public
-	 */
-	role: PropTypes.string
+	direction: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 
 ScrollableVirtualList.defaultProps = {
 	direction: 'vertical'
 };
 
-const ScrollableVirtualListNative = ({role, ...rest}) => (
+const ScrollableVirtualListNative = (props) => (
 	<ScrollableNative
-		{...rest}
-		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
+		{...props}
+		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
-				{...props}
+				{...childProps}
 				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
 					[
-						cc.length ? <div key="0" ref={initUiItemContainerRef} role={role}>{cc}</div> : null,
+						cc.length ? <div key="0" ref={initUiItemContainerRef} role="list">{cc}</div> : null,
 						primary ?
 							null :
 							<SpotlightPlaceholder
@@ -979,7 +970,6 @@ const ScrollableVirtualListNative = ({role, ...rest}) => (
 								data-vl-placeholder
 								key="1"
 								onFocus={handlePlaceholderFocus}
-								role="region"
 							/>,
 						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
 					]
@@ -1001,15 +991,7 @@ ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.Virtual
 	 * @default 'vertical'
 	 * @public
 	 */
-	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-
-	/**
-	 * Aria role.
-	 *
-	 * @type {String}
-	 * @private
-	 */
-	role: PropTypes.string
+	direction: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 
 ScrollableVirtualListNative.defaultProps = {
