@@ -20,7 +20,7 @@ function getResBundle () {
  *
  * @returns {ilib.ResBundle} New ilib.ResBundle
  */
-function createResBundle (locale) {
+function createResBundle (locale, options) {
 	return new Promise((resolve, reject) => {
 		// eslint-disable-next-line no-new
 		new ResBundle({
@@ -29,6 +29,7 @@ function createResBundle (locale) {
 			name: 'strings',
 			lengthen: true,		// if pseudo-localizing, this tells it to lengthen strings
 			sync: false,
+			...options,
 			onLoad: (bundle) => {
 				resBundle = bundle;
 

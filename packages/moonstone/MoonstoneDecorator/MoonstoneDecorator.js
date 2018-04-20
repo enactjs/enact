@@ -12,6 +12,7 @@ import {ResolutionDecorator} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
 
+import {createResBundle} from '../internal/$L';
 import Skinnable from '../Skinnable';
 
 import I18nFontDecorator from './I18nFontDecorator';
@@ -71,6 +72,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		// Apply the @enact/i18n decorator around the font decorator so the latter will update the
 		// font stylesheet when the locale changes
 		App = I18nDecorator(
+			{loader: createResBundle},
 			I18nFontDecorator(
 				App
 			)

@@ -1,10 +1,21 @@
 /* global ILIB_MOONSTONE_PATH */
 
+import {createResBundle as ilibCreateBundle} from '@enact/i18n/src/resBundle';
 import ResBundle from '@enact/i18n/ilib/lib/ResBundle';
 import Locale from '@enact/i18n/ilib/lib/Locale';
 
 // The ilib.ResBundle for the active locale used by $L
 let resBundle;
+
+function createResBundle () {
+	ilibCreateBundle(null, {
+		loadParams: {
+			root: ILIB_MOONSTONE_PATH
+		}
+	}).then(bundle => {
+		resBundle = bundle;
+	});
+}
 
 /**
  * Creates a new ilib.ResBundle for string translation
@@ -13,14 +24,14 @@ let resBundle;
  */
 function getResBundle () {
 	let currLoc = new Locale();
-	if (typeof ILIB_MOONSTONE_PATH === 'string' && (!resBundle ||
-			currLoc.getSpec() !== resBundle.getLocale().getSpec())) {
-		resBundle = new ResBundle({
-			loadParams: {
-				root: ILIB_MOONSTONE_PATH
-			}
-		});
+	if (typeof ILIB_MOONSTONE_PATH === 'string' && (
+		!resBundle || currLoc.getSpec() !== resBundle.getLocale().getSpec()
+	)) {
+		createResBundle();
+
+		return;
 	}
+
 	return resBundle;
 }
 
@@ -42,18 +53,18 @@ function clearResBundle () {
 * @returns {String} Localized string.
 */
 function $L (str) {
-	return str;
-	// const rb = getResBundle();
-	// const isObject = typeof str === 'object';
-	// if (!rb) {
-	// 	return isObject ? str.value : str;
-	// }
-	// return isObject ? rb.getString(str.value, str.key).toString() : rb.getString(str).toString();
+	const rb = getResBundle();
+	const isObject = typeof str === 'object';
+	if (!rb) {
+		return isObject ? str.value : str;
+	}
+	return isObject ? rb.getString(str.value, str.key).toString() : rb.getString(str).toString();
 }
 
 export default $L;
 export {
 	$L,
 	getResBundle,
-	clearResBundle
+	clearResBundle,
+	createResBundle
 };

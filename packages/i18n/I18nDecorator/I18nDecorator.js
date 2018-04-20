@@ -11,7 +11,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Publisher, contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
 
-import ilib from '../src/index.js';
+import UnitFmt from '../ilib/lib/UnitFmt';
+import Country from '../ilib/lib/Country';
+import DateFmt from '../ilib/lib/DateFmt';
+import IString from '../ilib/lib/IString';
+import LocaleInfo from '../ilib/lib/LocaleInfo';
+import ilibPromise from '../src/promise';
 import {isRtlLocale, updateLocale} from '../locale';
 
 import getI18nClasses from './getI18nClasses';
@@ -47,7 +52,9 @@ const contextTypes = {
  * @hoc
  * @public
  */
-const IntlHoc = hoc((config, Wrapped) => {
+const IntlHoc = hoc({}, (config, Wrapped) => {
+	const {loader} = config;
+
 	return class I18nDecorator extends React.Component {
 		static contextTypes = stateContextTypes
 		static childContextTypes = {...contextTypes, ...stateContextTypes}
@@ -110,6 +117,21 @@ const IntlHoc = hoc((config, Wrapped) => {
 			this.updateLocale();
 		}
 
+		preloadResources () {
+			// Need to pass options as second arg and explicitly rely on the default behavior when
+			// the first arg, locale, is unset
+			// eslint-disable-next-line no-undefined
+			return ilibPromise(LocaleInfo, [undefined]).then(() => Promise.all([
+				ilibPromise(UnitFmt),
+				ilibPromise(Country),
+				ilibPromise(DateFmt),
+				new Promise(resolve => {
+					return IString.loadPlurals(false, null, null, resolve);
+				}),
+				loader ? loader() : null
+			]));
+		}
+
 		/**
 		 * Updates the locale for the application. If `newLocale` is omitted, the locale will be
 		 * reset to the device's default locale.
@@ -121,8 +143,12 @@ const IntlHoc = hoc((config, Wrapped) => {
 		 */
 		updateLocale = async (newLocale) => {
 			const locale = await updateLocale(newLocale);
-			const rtl = await isRtlLocale();
-			const classes = await getI18nClasses();
+
+			const [rtl, classes] = await Promise.all([
+				isRtlLocale(),
+				getI18nClasses(),
+				this.preloadResources()
+			]);
 
 			this.setState({
 				classes,
