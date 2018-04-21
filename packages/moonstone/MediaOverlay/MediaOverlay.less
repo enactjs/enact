@@ -22,11 +22,10 @@
 		background-origin: content-box;
 		display: block;
 		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		padding: @moon-mediaoverlay-spotlight-outset-width;
+		top: @moon-mediaoverlay-inner-padding;
+		left: @moon-mediaoverlay-inner-padding;
+		right: @moon-mediaoverlay-inner-padding;
+		bottom: @moon-mediaoverlay-inner-padding;
 		margin: 0;
 	}
 
@@ -35,25 +34,14 @@
 		align-items: center;
 		justify-content: center;
 		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100%;
-		width: 100%;
-		padding: @moon-mediaoverlay-spotlight-outset-width * 3;
-		box-sizing: border-box;
+		top: @moon-mediaoverlay-inner-padding;
+		left: @moon-mediaoverlay-inner-padding;
+		right: @moon-mediaoverlay-inner-padding;
+		bottom: @moon-mediaoverlay-inner-padding;
 		.moon-font('MuseoSans', 'Moonstone LG Display Light');
 		font-weight: 900;
 		font-size: 24px;
 		line-height: normal;
-	}
-
-	&:not(:global(.spottable)) {
-		.image {
-			padding: 0;
-		}
-		.text {
-			padding: @moon-mediaoverlay-spotlight-outset-width * 2;
-		}
 	}
 
 	:global(.enact-locale-right-to-left) & {
@@ -63,8 +51,4 @@
 			left: auto;
 		}
 	}
-}
-
-:not(:global(.spottable))&.mediaOverlay {
-	padding: 0;
 }

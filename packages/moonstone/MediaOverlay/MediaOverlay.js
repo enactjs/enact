@@ -29,12 +29,6 @@ const defaultPlaceholder =
 	'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
 	'4NCg==';
 
-const cfgStyles = {
-	css: componentCss,
-	className: 'mediaOverlay',
-	publicClassNames: ['mediaOverlay', 'text']
-};
-
 /**
  * A media component with image and text overlay support.
  *
@@ -115,7 +109,11 @@ class MediaOverlayBase extends React.Component {
 	constructor (props) {
 		super(props);
 		this.media = null;
-		this.renderStyles = styles(cfgStyles);
+		this.renderStyles = styles({
+			css: componentCss,
+			className: 'mediaOverlay',
+			publicClassNames: ['mediaOverlay', 'text']
+		});
 	}
 
 	componentDidUpdate (prevProps) {
