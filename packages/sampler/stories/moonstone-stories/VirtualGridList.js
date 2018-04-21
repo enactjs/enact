@@ -1,5 +1,5 @@
 import {VirtualGridList as UiVirtualGridList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
-import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
+import {VirtualGridListNative as VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
 import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
 import {GridListImageItem} from '@enact/moonstone/GridListImageItem';
 import ri from '@enact/ui/resolution';
@@ -20,8 +20,8 @@ const
 	},
 	items = [],
 	// eslint-disable-next-line enact/prop-types
-	uiRenderItem = ({data, index, ...rest}) => {
-		const {text, subText, source} = data[index];
+	uiRenderItem = ({index, ...rest}) => {
+		const {text, subText, source} = items[index];
 
 		return (
 			<UiGridListImageItem
@@ -33,8 +33,8 @@ const
 		);
 	},
 	// eslint-disable-next-line enact/prop-types
-	renderItem = ({data, index, ...rest}) => {
-		const {text, subText, source} = data[index];
+	renderItem = ({index, ...rest}) => {
+		const {text, subText, source} = items[index];
 
 		return (
 			<GridListImageItem
@@ -65,7 +65,6 @@ storiesOf('UI', module)
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<UiVirtualGridList
-				data={items}
 				dataSize={number('dataSize', items.length)}
 				direction={select('direction', prop.direction, 'vertical')}
 				itemRenderer={uiRenderItem}
@@ -91,7 +90,6 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<VirtualGridList
-				data={items}
 				dataSize={number('dataSize', items.length)}
 				direction={select('direction', prop.direction, 'vertical')}
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}

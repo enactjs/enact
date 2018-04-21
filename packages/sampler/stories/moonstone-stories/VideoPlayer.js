@@ -68,7 +68,6 @@ const prop = {
 		'onStalled',
 		'onSuspend',
 		// 'onTimeUpdate',	// Disabled due to Storybook Actions-reporting having an adverse effect on VideoPlayer performance. Uncomment to view this event.
-		'onUMSMediaInfo',	// Custom webOS media event
 		'onVolumeChange',
 		'onWaiting'
 	]

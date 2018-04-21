@@ -64,6 +64,7 @@ class ScrollableBase extends Component {
 		 * Render function.
 		 *
 		 * @type {Function}
+		 * @required
 		 * @private
 		 */
 		containerRenderer: PropTypes.func.isRequired,
@@ -107,6 +108,20 @@ class ScrollableBase extends Component {
 		 * @public
 		 */
 		cbScrollTo: PropTypes.func,
+
+		/**
+		 * Direction of the list or the scroller.
+		 * `'both'` could be only used for[Scroller]{@link ui/Scroller.Scroller}.
+		 *
+		 * Valid values are:
+		 * * `'both'`,
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
 		 * Specifies how to show horizontal scrollbar.
@@ -336,7 +351,6 @@ class ScrollableBase extends Component {
 		const bounds = this.getScrollBounds();
 
 		this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
-		this.direction = this.childRef.props.direction;
 		this.addEventListeners();
 		this.updateScrollbars();
 
@@ -363,7 +377,6 @@ class ScrollableBase extends Component {
 
 		this.clampScrollPosition();
 
-		this.direction = this.childRef.props.direction;
 		this.addEventListeners();
 		if (
 			hasDataSizeChanged === false &&
@@ -444,7 +457,6 @@ class ScrollableBase extends Component {
 
 	// status
 	deferScrollTo = true
-	direction = 'vertical'
 	isScrollAnimationTargetAccumulated = false
 	isUpdatedScrollThumb = false
 	pageDistance = 0
@@ -493,9 +505,11 @@ class ScrollableBase extends Component {
 	}
 
 	onDrag = (ev) => {
+		const {direction} = this.props;
+
 		this.start({
-			targetX: (this.direction === 'vertical') ? 0 : this.dragStartX - this.getRtlX(ev.x), // 'horizontal' or 'both'
-			targetY: (this.direction === 'horizontal') ? 0 : this.dragStartY - ev.y, // 'vertical' or 'both'
+			targetX: (direction === 'vertical') ? 0 : this.dragStartX - this.getRtlX(ev.x), // 'horizontal' or 'both'
+			targetY: (direction === 'horizontal') ? 0 : this.dragStartY - ev.y, // 'vertical' or 'both'
 			animate: false
 		});
 	}
@@ -798,12 +812,10 @@ class ScrollableBase extends Component {
 
 	scrollTo = (opt) => {
 		if (!this.deferScrollTo) {
-			const
-				{left, top} = this.getPositionForScrollTo(opt),
-				{scrollTo} = this.props;
+			const {left, top} = this.getPositionForScrollTo(opt);
 
-			if (scrollTo) {
-				scrollTo(opt);
+			if (this.props.scrollTo) {
+				this.props.scrollTo(opt);
 			}
 			this.scrollToInfo = null;
 			this.start({
@@ -817,13 +829,12 @@ class ScrollableBase extends Component {
 	}
 
 	canScrollHorizontally = (bounds) => {
-		const {direction} = this;
-
+		const {direction} = this.props;
 		return (direction === 'horizontal' || direction === 'both') && (bounds.scrollWidth > bounds.clientWidth) && !isNaN(bounds.scrollWidth);
 	}
 
 	canScrollVertically = (bounds) => {
-		const {direction} = this;
+		const {direction} = this.props;
 		return (direction === 'vertical' || direction === 'both') && (bounds.scrollHeight > bounds.clientHeight) && !isNaN(bounds.scrollHeight);
 	}
 
@@ -1021,15 +1032,16 @@ class ScrollableBase extends Component {
 		delete rest.verticalScrollbar;
 
 		return containerRenderer({
-			childComponentProps: {...rest, rtl},
+			childComponentProps: rest,
 			className: scrollableClasses,
 			componentCss: css,
 			handleScroll: this.handleScroll,
 			horizontalScrollbarProps: this.horizontalScrollbarProps,
+			initChildRef: this.initChildRef,
 			initContainerRef: this.initContainerRef,
-			initUiChildRef: this.initChildRef,
 			isHorizontalScrollbarVisible,
 			isVerticalScrollbarVisible,
+			rtl,
 			scrollTo: this.scrollTo,
 			style,
 			touchableProps: {
@@ -1061,6 +1073,7 @@ class Scrollable extends Component {
 		 * Render function.
 		 *
 		 * @type {Function}
+		 * @required
 		 * @private
 		 */
 		childRenderer: PropTypes.func.isRequired
@@ -1078,10 +1091,11 @@ class Scrollable extends Component {
 					componentCss,
 					handleScroll,
 					horizontalScrollbarProps,
+					initChildRef,
 					initContainerRef,
-					initUiChildRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
+					rtl,
 					scrollTo,
 					style,
 					touchableProps,
@@ -1098,8 +1112,9 @@ class Scrollable extends Component {
 									...childComponentProps,
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
-									initUiChildRef,
-									onScroll: handleScroll
+									initChildRef,
+									onScroll: handleScroll,
+									rtl
 								})}
 							</TouchableDiv>
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}

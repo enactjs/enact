@@ -27,23 +27,21 @@ const gridListItemSizeShape = PropTypes.shape({
 	minHeight: PropTypes.number.isRequired
 });
 
+/**
+ * The base version of the virtual list component.
+ *
+ * @class VirtualListBase
+ * @memberof ui/VirtualList
+ * @ui
+ * @public
+ */
 const VirtualListBaseFactory = (type) => {
 	return class VirtualListCore extends Component {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
 		static propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
 			/**
-			 * The `render` function for an item of the list receives the following parameters:
-			 * - `data` is for accessing the supplied `data` property of the list.
-			 * > NOTE: In most cases, it is recommended to use data from redux store instead of using
-			 * is parameters due to performance optimizations.
-			 *
-			 * @param {Object} event
-			 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
-			 * @param {Number} event.index The index number of the componet to render
-			 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
-			 *
-			 * Data manipulation can be done in this function.
+			 * The `render` function called for each item in the list.
 			 *
 			 * > NOTE: The list does NOT always render a component whenever its render function is called
 			 * due to performance optimization.
@@ -51,15 +49,21 @@ const VirtualListBaseFactory = (type) => {
 			 * Usage:
 			 * ```
 			 * renderItem = ({index, ...rest}) => {
-			 *		delete rest.data;
+			 * 	delete rest.data;
 			 *
-			 *		return (
-			 *			<MyComponent index={index} {...rest} />
-			 *		);
+			 * 	return (
+			 * 		<MyComponent index={index} {...rest} />
+			 * 	);
 			 * }
 			 * ```
 			 *
 			 * @type {Function}
+			 * @param {Object} event
+			 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
+			 * @param {Number} event.index The index number of the component to render
+			 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
+			 *
+			 * @required
 			 * @public
 			 */
 			itemRenderer: PropTypes.func.isRequired,
@@ -69,6 +73,7 @@ const VirtualListBaseFactory = (type) => {
 			 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
 			 *
 			 * @type {Number|ui/VirtualList.gridListItemSizeShape}
+			 * @required
 			 * @private
 			 */
 			itemSize: PropTypes.oneOfType([
@@ -80,6 +85,7 @@ const VirtualListBaseFactory = (type) => {
 			 * The render function for the items.
 			 *
 			 * @type {Function}
+			 * @required
 			 * @private
 			 */
 			itemsRenderer: PropTypes.func.isRequired,
@@ -105,17 +111,6 @@ const VirtualListBaseFactory = (type) => {
 				clientWidth: PropTypes.number.isRequired,
 				clientHeight: PropTypes.number.isRequired
 			}),
-
-			/**
-			 * Data for passing it through `itemRenderer` prop.
-			 * NOTICE: For performance reason, changing this prop does NOT always cause the list to
-			 * redraw its items.
-			 *
-			 * @type {Any}
-			 * @default []
-			 * @public
-			 */
-			data: PropTypes.any,
 
 			/**
 			 * Size of the data.
@@ -195,7 +190,6 @@ const VirtualListBaseFactory = (type) => {
 
 		static defaultProps = {
 			cbScrollTo: nop,
-			data: [],
 			dataSize: 0,
 			direction: 'vertical',
 			overhang: 3,
@@ -229,7 +223,7 @@ const VirtualListBaseFactory = (type) => {
 		// Calling setState within componentWillReceivePropswill not trigger an additional render.
 		componentWillReceiveProps (nextProps) {
 			const
-				{dataSize, direction, itemSize, overhang, spacing} = this.props,
+				{dataSize, direction, itemSize, overhang, rtl, spacing} = this.props,
 				hasMetricsChanged = (
 					direction !== nextProps.direction ||
 					((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
@@ -246,6 +240,21 @@ const VirtualListBaseFactory = (type) => {
 			} else if (this.hasDataSizeChanged) {
 				this.updateStatesAndBounds(nextProps);
 				this.setContainerSize();
+			} else if (rtl !== nextProps.rtl) {
+				const {x, y} = this.getXY(this.scrollPosition, 0);
+
+				this.cc = [];
+				if (type === Native) {
+					this.scrollToPosition(x, y, nextProps.rtl);
+				} else {
+					this.setScrollPosition(x, y, 0, 0, nextProps.rtl);
+				}
+			}
+		}
+
+		componentWillUpdate (nextProps, nextState) {
+			if (this.state.firstIndex === nextState.firstIndex) {
+				this.prevFirstIndex = -1; // force to re-render items
 			}
 		}
 
@@ -311,6 +320,8 @@ const VirtualListBaseFactory = (type) => {
 
 		gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) =>
 			(this.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
+
+		getXY = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
 		getClientSize = (node) => ({
 			clientWidth: node.clientWidth,
@@ -515,18 +526,18 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		// Native only
-		scrollToPosition (x, y) {
+		scrollToPosition (x, y, rtl = this.props.rtl) {
 			if (this.containerRef) {
 				this.containerRef.scrollTo(
-					(this.props.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y
+					(rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y
 				);
 			}
 		}
 
 		// JS only
-		setScrollPosition (x, y, dirX, dirY) {
+		setScrollPosition (x, y, dirX, dirY, rtl = this.props.rtl) {
 			if (this.contentRef) {
-				this.contentRef.style.transform = `translate3d(${this.props.rtl ? x : -x}px, -${y}px, 0)`;
+				this.contentRef.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
 				this.didScroll(x, y, dirX, dirY);
 			}
 		}
@@ -588,7 +599,7 @@ const VirtualListBaseFactory = (type) => {
 
 		composeStyle (width, height, primaryPosition, secondaryPosition) {
 			const
-				{x, y} = this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition},
+				{x, y} = this.getXY(primaryPosition, secondaryPosition),
 				style = {
 					position: 'absolute',
 					/* FIXME: RTL / this calculation only works for Chrome */
@@ -605,10 +616,9 @@ const VirtualListBaseFactory = (type) => {
 
 		applyStyleToNewNode = (index, ...rest) => {
 			const
-				{itemRenderer, getComponentProps, data} = this.props,
+				{itemRenderer, getComponentProps} = this.props,
 				key = index % this.state.numOfItems,
 				itemElement = itemRenderer({
-					data,
 					index,
 					key
 				}),
@@ -633,10 +643,10 @@ const VirtualListBaseFactory = (type) => {
 				{firstIndex, numOfItems} = this.state,
 				{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc} = this,
 				diff = firstIndex - this.prevFirstIndex,
-				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.prevFirstIndex + numOfItems;
+				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems || this.prevFirstIndex === -1) ? firstIndex : this.prevFirstIndex + numOfItems;
 			let
 				hideTo = 0,
-				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0) ? firstIndex + numOfItems : this.prevFirstIndex;
+				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0 || this.prevFirstIndex === -1) ? firstIndex + numOfItems : this.prevFirstIndex;
 
 			if (updateFrom >= updateTo) {
 				return;
@@ -745,7 +755,6 @@ const VirtualListBaseFactory = (type) => {
 
 			delete rest.cbScrollTo;
 			delete rest.clientSize;
-			delete rest.data;
 			delete rest.dataSize;
 			delete rest.direction;
 			delete rest.getComponentProps;
@@ -799,32 +808,70 @@ VirtualListBaseNative.displayName = 'ui:VirtualListBaseNative';
 const ScrollableVirtualList = (props) => (
 	<Scrollable
 		{...props}
-		childRenderer={({initUiChildRef, ...virtualListProps}) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
-				{...virtualListProps}
+				{...rest}
 				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
+					cc.length ? <div ref={initItemContainerRef} role="list">{cc}</div> : null
 				)}
-				ref={initUiChildRef}
+				ref={initChildRef}
 			/>
 		)}
 	/>
 );
 
+ScrollableVirtualList.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
+	/**
+	 * Direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'vertical'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+};
+
+ScrollableVirtualList.defaultProps = {
+	direction: 'vertical'
+};
+
 const ScrollableVirtualListNative = (props) => (
 	<ScrollableNative
 		{...props}
-		childRenderer={({initUiChildRef, ...virtualListProps}) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
-				{...virtualListProps}
+				{...rest}
 				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initItemContainerRef}>{cc}</div> : null
+					cc.length ? <div ref={initItemContainerRef} role="list">{cc}</div> : null
 				)}
-				ref={initUiChildRef}
+				ref={initChildRef}
 			/>
 		)}
 	/>
 );
+
+ScrollableVirtualListNative.propTypes = /** @lends ui/VirtualList.VirtualListBaseNative.prototype */ {
+	/**
+	 * Direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'vertical'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+};
+
+ScrollableVirtualListNative.defaultProps = {
+	direction: 'vertical'
+};
 
 export default VirtualListBase;
 export {

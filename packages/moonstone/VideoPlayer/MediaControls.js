@@ -7,6 +7,8 @@ import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlig
 import $L from '../internal/$L';
 import IconButton from '../IconButton';
 
+import {countReactChildren} from './util';
+
 import css from './VideoPlayer.less';
 
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
@@ -381,14 +383,14 @@ const MediaControls = kind({
 		delete rest.visible;
 
 		return (
-			<div {...rest}>
+			<div {...rest} data-media-controls>
 				<div className={css.leftComponents}>{leftComponents}</div>
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
 						<Container className={css.mediaControls} spotlightDisabled={!moreDisabled || spotlightDisabled}>
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpBackwardIcon}</MediaButton>}
 							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{backwardIcon}</MediaButton>}
-							<MediaButton aria-label={playPauseLabel} className={spotlightDefaultClass} backgroundOpacity="translucent" onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{playPauseIcon}</MediaButton>
+							<MediaButton aria-label={playPauseLabel} className={spotlightDefaultClass} backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{playPauseIcon}</MediaButton>
 							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onForwardButtonClick} spotlightDisabled={spotlightDisabled}>{forwardIcon}</MediaButton>}
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpForwardIcon}</MediaButton>}
 						</Container>
@@ -399,7 +401,7 @@ const MediaControls = kind({
 				</div>
 				<div className={css.rightComponents}>
 					{rightComponents}
-					{React.Children.count(children) ? (
+					{countReactChildren(children) ? (
 						<MediaButton
 							aria-label={moreIconLabel}
 							backgroundOpacity="translucent"

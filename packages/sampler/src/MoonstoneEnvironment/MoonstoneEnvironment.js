@@ -64,6 +64,31 @@ const locales = {
 	'en-JP': 'en-JP - English, custom Japanese font'
 };
 
+// Keys for `backgroundLabels` and `backgrounds` must be kept in sync
+const backgroundLabels = {
+	'': 'Default (Based on Skin)',
+	'backgroundColorful1': 'Strawberries (Red)',
+	'backgroundColorful2': 'Tunnel (Green)',
+	'backgroundColorful3': 'Mountains (Blue)',
+	'backgroundColorful4': 'Misty River',
+	'backgroundColorful5': 'Turbulant Tides',
+	'backgroundColorful6': 'Space Station',
+	'backgroundColorful7': 'Warm Pup',
+	'backgroundColorful8': 'Random'
+};
+
+const backgrounds = {
+	'': {},
+	'backgroundColorful1': {background: '#bb3352 url("https://picsum.photos/1280/720?image=1080") no-repeat center/cover'},
+	'backgroundColorful2': {background: '#4e6a40 url("https://picsum.photos/1280/720?image=1063") no-repeat center/cover'},
+	'backgroundColorful3': {background: '#5985a8 url("https://picsum.photos/1280/720?image=930") no-repeat center/cover'},
+	'backgroundColorful4': {background: '#71736d url("https://picsum.photos/1280/720?image=1044") no-repeat center/cover'},
+	'backgroundColorful5': {background: '#547460 url("https://picsum.photos/1280/720?image=1053") no-repeat center/cover'},
+	'backgroundColorful6': {background: '#7c4590 url("https://picsum.photos/1280/720?image=967") no-repeat center/cover'},
+	'backgroundColorful7': {background: '#5d6542 url("https://picsum.photos/1280/720?image=1025") no-repeat center/cover'},
+	'backgroundColorful8': {background: '#555 url("https://picsum.photos/1280/720") no-repeat center/cover'}
+};
+
 const skins = {
 	dark: 'Dark',
 	light: 'Light'
@@ -98,6 +123,7 @@ const StorybookDecorator = (story, config) => {
 			locale={select('locale', locales, getPropFromURL('locale', 'en-US'))}
 			textSize={boolean('large text', (getPropFromURL('large text') === 'true')) ? 'large' : 'normal'}
 			highContrast={boolean('high contrast', (getPropFromURL('high contrast') === 'true'))}
+			style={backgrounds[select('background', backgroundLabels, getPropFromURL('background'))]}
 			skin={select('skin', skins, getPropFromURL('skin'))}
 		>
 			{sample}
@@ -114,6 +140,7 @@ const FullscreenStorybookDecorator = (story, config) => {
 			locale={select('locale', locales, getPropFromURL('locale', 'en-US'))}
 			textSize={boolean('large text', (getPropFromURL('large text') === 'true')) ? 'large' : 'normal'}
 			highContrast={boolean('high contrast', (getPropFromURL('high contrast') === 'true'))}
+			style={backgrounds[select('background', backgroundLabels, getPropFromURL('background'))]}
 			skin={select('skin', skins, getPropFromURL('skin'))}
 		>
 			{sample}
