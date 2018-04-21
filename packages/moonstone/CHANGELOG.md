@@ -7,9 +7,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/MediaOverlay` component
-- `moonstone/VideoPlayer` property `moreButtonColor` to allow setting underline colors for more button
-- `moonstone/Panels.Header` support for `headerInput` so the Header can be used as an Input. See documentation for usage examples.
-- `moonstone/ProgressBar` prop `tooltipSide` to configure tooltip position relative to the progress bar
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="list"`
 - `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` props `scrollRightAriaLabel`, `scrollLeftAriaLabel`, `scrollDownAriaLabel`, and `scrollUpAriaLabel` to configure the aria-label set on scroll buttons in the scrollbars
 - `moonstone/Popup` property `closeButtonAriaLabel` to configure the label set on popup close button
