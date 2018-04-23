@@ -32,6 +32,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableItem` to show label properly when open and disabled
 - `moonstone/Notification` to position properly in RTL locales
 - `moonstone/VideoPlayer` to show controls when pressing 5-way select
+- `moonstone/MoonstoneDecorator.I18nDecorator` to optimize localized font loading performance
+- `moonstone/styles/fonts.less` to remove specified unicode range definitions
 
 ## [2.0.0-alpha.7] - 2018-04-03
 
