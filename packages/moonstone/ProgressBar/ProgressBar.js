@@ -102,6 +102,8 @@ const ProgressBarBase = kind({
 	},
 
 	defaultProps: {
+		orientation: 'horizontal',
+		progress: 0,
 		tooltip: false
 	},
 
