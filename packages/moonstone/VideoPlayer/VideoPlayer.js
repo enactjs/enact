@@ -7,6 +7,7 @@
  */
 import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
+import deprecate from '@enact/core/internal/deprecate';
 import equals from 'ramda/src/equals';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -670,6 +671,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {Number}
 		 * @default 3000
 		 * @public
+		 * @deprecated
 		 */
 		tooltipHideDelay: PropTypes.number
 	}
@@ -756,6 +758,10 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (props.setApiProvider) {
 			props.setApiProvider(this);
+		}
+
+		if (props.tooltipHideDelay) {
+			deprecate({name: 'tooltipHideDelay', since: '1.16.0', until: '2.0.0'});
 		}
 	}
 
