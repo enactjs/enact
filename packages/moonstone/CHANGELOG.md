@@ -9,6 +9,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="list"`
 - `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` props `scrollRightAriaLabel`, `scrollLeftAriaLabel`, `scrollDownAriaLabel`, and `scrollUpAriaLabel` to configure the aria-label set on scroll buttons in the scrollbars
 - `moonstone/Popup` property `closeButtonAriaLabel` to configure the label set on popup close button
+- `moonstone/ExpandableItem` and `moonstone/Input` prop `voiceProps` to configure webOS voice control properties
+- `moonstone/IncrementSlider` props `decrementVoiceLabel` and `incrementVoiceLabel` to set voice control label for the decrement and increment buttons
+
 
 ### Fixed
 
