@@ -103,7 +103,7 @@ const PickerBase = class extends React.Component {
 		 *
 		 * @type {String}
 		 * @default 'change a value with left right button'
-		 * @memberof moonstone/internal/Picker.Picker.prototype
+		 * @memberof moonstone/internal/Picker.PickerBase.prototype
 		 * @public
 		 */
 		'aria-label': PropTypes.string,
@@ -113,7 +113,7 @@ const PickerBase = class extends React.Component {
 		 * to the current selected child and accessibilityHint text.
 		 *
 		 * @type {String}
-		 * @memberof moonstone/internal/Picker.Picker.prototype
+		 * @memberof moonstone/internal/Picker.PickerBase.prototype
 		 * @public
 		 */
 		'aria-valuetext': PropTypes.string,

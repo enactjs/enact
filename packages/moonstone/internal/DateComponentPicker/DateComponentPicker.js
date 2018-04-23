@@ -46,7 +46,7 @@ const DateComponentPickerBase = kind({
 		 * to the current selected child and accessibilityHint text.
 		 *
 		 * @type {String}
-		 * @memberof moonstone/internal/Picker.Picker.prototype
+		 * @memberof moonstone/internal/DataComponentPicker.DataComponentPickerBase.prototype
 		 * @public
 		 */
 		'aria-valuetext': PropTypes.string,
