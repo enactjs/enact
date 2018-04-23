@@ -224,7 +224,7 @@ const VirtualListBaseFactory = (type) => {
 
 			setTimeout(() => {
 				this.restoreFocus();
-			});
+			}, 1);
 		}
 
 		componentWillReceiveProps (nextProps) {
