@@ -177,7 +177,8 @@ const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
 };
 
 /**
- * Creates a function that memoizes the result of `fn`.
+ * Creates a function that memoizes the result of `fn`. Note that this function is a naive
+ * implementation and only checks the first argument for memoization.
  *
  * @method
  * @memberof core/util
