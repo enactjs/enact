@@ -5,6 +5,7 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import NumFmt from '@enact/i18n/ilib/lib/NumFmt';
 import React from 'react';
 import PropTypes from 'prop-types';
+import warning from 'warning';
 
 import Tooltip from '../TooltipDecorator/Tooltip';
 
@@ -14,6 +15,19 @@ const memoizedPercentFormatter = memoize((/* locale */) => new NumFmt({
 	type: 'percentage',
 	useNative: false
 }));
+
+const getSide = (orientation, side) => {
+	const valid = orientation === 'vertical' || (
+		orientation === 'horizontal' && (side === 'before' || side === 'after')
+	);
+
+	warning(
+		valid,
+		'The value of `side` must be either "after" or "before" when `orientation` is "horizontal"'
+	);
+
+	return valid ? side : 'before';
+};
 
 /**
  * A [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} specifically adapted for use with
@@ -112,19 +126,25 @@ const ProgressBarTooltipBase = kind({
 
 			return children;
 		},
-		className: ({orientation, proportion, side, styler}) => styler.append(
-			orientation,
-			{
-				afterMidpoint: proportion > 0.5,
-				ignoreLocale: side === 'left' || side === 'right'
-			},
-			side === 'before' || side === 'left' ? 'before' : 'after'
-		),
+		className: ({orientation, proportion, side, styler}) => {
+			side = getSide(orientation, side);
+
+			return styler.append(
+				orientation,
+				{
+					afterMidpoint: proportion > 0.5,
+					ignoreLocale: side === 'left' || side === 'right'
+				},
+				(side === 'before' || side === 'left') ? 'before' : 'after'
+			);
+		},
 		arrowAnchor: ({proportion, orientation}) => {
 			if (orientation === 'vertical') return 'middle';
 			return proportion > 0.5 ? 'left' : 'right';
 		},
 		direction: ({orientation, side}, context) => {
+			side = getSide(orientation, side);
+
 			let dir = 'right';
 			if (orientation === 'vertical') {
 				if (
