@@ -23,12 +23,6 @@ import {compareSources} from '../VideoPlayer/util';
 
 import componentCss from './MediaOverlay.less';
 
-const defaultPlaceholder =
-	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
-	'9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
-	'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
-	'4NCg==';
-
 const renderStyles = styles({
 	css: componentCss,
 	className: 'mediaOverlay',
@@ -111,7 +105,6 @@ class MediaOverlayBase extends React.Component {
 	}
 
 	static defaultProps = {
-		placeholder: defaultPlaceholder,
 		mediaComponent: 'video'
 	}
 
