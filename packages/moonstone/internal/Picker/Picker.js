@@ -103,6 +103,7 @@ const PickerBase = class extends React.Component {
 		 *
 		 * @type {String}
 		 * @default 'change a value with left right button'
+		 * @memberof moonstone/internal/Picker.Picker.prototype
 		 * @public
 		 */
 		'aria-label': PropTypes.string,
@@ -697,14 +698,10 @@ const PickerBase = class extends React.Component {
 	}
 
 	calcButtonLabel (next, valueText) {
-		const
-			{decrementAriaLabel, incrementAriaLabel, joined} = this.props,
-			nextItemAriaLabel = (incrementAriaLabel == null) ? $L('next item') : incrementAriaLabel,
-			previousItemAriaLabel = (decrementAriaLabel == null) ? $L('previous item') : decrementAriaLabel;
+		if (!this.props.joined) {
+			const {decrementAriaLabel = $L('previous item'), incrementAriaLabel = $L('next item')} = this.props;
 
-		// no label is necessary when joined
-		if (!joined) {
-			return `${valueText} ${next ? nextItemAriaLabel : previousItemAriaLabel}`;
+			return `${valueText} ${next ? incrementAriaLabel : decrementAriaLabel}`;
 		}
 	}
 
@@ -716,10 +713,14 @@ const PickerBase = class extends React.Component {
 		return this.calcButtonLabel(!this.props.reverse, valueText);
 	}
 
-	calcJoinedLabel (valueText) {
+	calcAriaLabel (valueText) {
 		const
-			{['aria-label']: ariaLabel, orientation} = this.props,
+			{'aria-label': ariaLabel, joined, orientation} = this.props,
 			hint = orientation === 'horizontal' ? $L('change a value with left right button') : $L('change a value with up down button');
+
+		if (!joined && !(ariaLabel == null)) {
+			return ariaLabel;
+		}
 
 		return `${valueText} ${(ariaLabel == null) ? hint : ariaLabel}`;
 	}
@@ -797,7 +798,7 @@ const PickerBase = class extends React.Component {
 				{...rest}
 				aria-controls={joined ? id : null}
 				aria-disabled={disabled}
-				aria-label={joined ? this.calcJoinedLabel(valueText) : null}
+				aria-label={this.calcAriaLabel(valueText)}
 				className={classes}
 				disabled={disabled}
 				onBlur={this.handleBlur}
