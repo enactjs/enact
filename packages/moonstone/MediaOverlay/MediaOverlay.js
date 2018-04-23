@@ -7,19 +7,19 @@
  * @exports MediaOverlayDecorator
  */
 
-import {compareSources} from '@enact/moonstone/VideoPlayer/util';
-import compose from 'ramda/src/compose';
-import Media from '@enact/ui/Media';
-import PropTypes from 'prop-types';
-import Pure from '@enact/ui/internal/Pure';
-import React from 'react';
-import Slottable from '@enact/ui/Slottable';
+import styles from '@enact/core/kind/styles';
 import Spottable from '@enact/spotlight/Spottable';
-import styles from '@enact/core/kind/styles.js';
+import Media from '@enact/ui/Media';
+import Pure from '@enact/ui/internal/Pure';
+import Slottable from '@enact/ui/Slottable';
+import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
+import React from 'react';
 
 import Image from '../Image';
-import Skinnable from '../Skinnable';
 import {MarqueeController, Marquee} from '../Marquee';
+import Skinnable from '../Skinnable';
+import {compareSources} from '../VideoPlayer/util';
 
 import componentCss from './MediaOverlay.less';
 
@@ -28,6 +28,12 @@ const defaultPlaceholder =
 	'9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
 	'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
 	'4NCg==';
+
+const renderStyles = styles({
+	css: componentCss,
+	className: 'mediaOverlay',
+	publicClassNames: ['mediaOverlay', 'text']
+});
 
 /**
  * A media component with image and text overlay support.
@@ -40,7 +46,8 @@ const defaultPlaceholder =
 class MediaOverlayBase extends React.Component {
 	static propTypes = {
 		/**
-		 * Any children `<source>` tag elements will be sent directly to the media element as sources.
+		 * Any children `<source>` tag elements will be sent directly to the media element as
+		 * sources.
 		 *
 		 * @type {Node}
 		 * @public
@@ -66,14 +73,16 @@ class MediaOverlayBase extends React.Component {
 		 *
 		 * NOTE: When image is displayed, media is not displayed even though it is playing.
 		 *
-		 * @type {String}
+		 * @type {String | Object}
 		 * @public
 		 */
-		imageOverlay: PropTypes.string,
+		imageOverlay: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
-		 * Media component to use. The default (`'video'`) renders an `HTMLVideoElement`. Custom
-		 * media components must have a similar API structure, exposing the following APIs:
+		 * Media component to use.
+		 *
+		 * The default (`'video'`) renders an `HTMLVideoElement`. Custom media components must have
+		 * a similar API structure, exposing the following APIs:
 		 *
 		 * Methods:
 		 * * `load()` - load media
@@ -108,12 +117,8 @@ class MediaOverlayBase extends React.Component {
 
 	constructor (props) {
 		super(props);
+
 		this.media = null;
-		this.renderStyles = styles({
-			css: componentCss,
-			className: 'mediaOverlay',
-			publicClassNames: ['mediaOverlay', 'text']
-		});
 	}
 
 	componentDidUpdate (prevProps) {
@@ -130,16 +135,8 @@ class MediaOverlayBase extends React.Component {
 	}
 
 	render () {
-		const props = this.renderStyles(Object.assign({}, this.props));
-
-		const {
-			css,
-			imageOverlay,
-			mediaComponent,
-			placeholder,
-			source,
-			text,
-			...rest} = props;
+		const props = renderStyles(Object.assign({}, this.props));
+		const {css, imageOverlay, mediaComponent, placeholder, source, text, ...rest} = props;
 
 		return (
 			<div {...rest}>
@@ -153,8 +150,19 @@ class MediaOverlayBase extends React.Component {
 				>
 					{source}
 				</Media>
-				{imageOverlay ? <Image className={css.image} placeholder={placeholder} sizing="fit" src={imageOverlay} /> : null}
-				{text ? (<Marquee alignment="center" className={css.text} marqueeOn="render">{text}</Marquee>) : null}
+				{imageOverlay ? (
+					<Image
+						className={css.image}
+						placeholder={placeholder}
+						sizing="fill"
+						src={imageOverlay}
+					/>
+				) : null}
+				{text ? (
+					<Marquee alignment="center" className={css.text} marqueeOn="render">
+						{text}
+					</Marquee>
+				) : null}
 			</div>
 		);
 	}

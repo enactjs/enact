@@ -17,38 +17,28 @@
 		margin: 0;
 	}
 
+	.image,
+	.text {
+		position: absolute;
+		.position(@moon-mediaoverlay-inner-padding);
+	}
+
 	.image {
 		box-sizing: border-box;
 		background-origin: content-box;
 		display: block;
-		position: absolute;
-		top: @moon-mediaoverlay-inner-padding;
-		left: @moon-mediaoverlay-inner-padding;
-		right: @moon-mediaoverlay-inner-padding;
-		bottom: @moon-mediaoverlay-inner-padding;
 		margin: 0;
+		height: auto;
+		width: auto;
 	}
 
 	.text {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		position: absolute;
-		top: @moon-mediaoverlay-inner-padding;
-		left: @moon-mediaoverlay-inner-padding;
-		right: @moon-mediaoverlay-inner-padding;
-		bottom: @moon-mediaoverlay-inner-padding;
 		.moon-font('MuseoSans', 'Moonstone LG Display Light');
-		font-weight: 900;
-		font-size: 24px;
+		font-weight: @moon-mediaoverlay-font-weight;
+		font-size: @moon-mediaoverlay-font-size;
 		line-height: normal;
-	}
-
-	:global(.enact-locale-right-to-left) & {
-		.text,
-		.image {
-			right: 0;
-			left: auto;
-		}
 	}
 }
