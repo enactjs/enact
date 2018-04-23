@@ -630,16 +630,6 @@ const VideoPlayerBase = class extends React.Component {
 		titleHideDelay: PropTypes.number,
 
 		/**
-		 * The amount of time in milliseconds that should pass before the tooltip disappears from the
-		 * controls. Setting this to `0` disables the hiding.
-		 *
-		 * @type {Number}
-		 * @default 3000
-		 * @public
-		 */
-		tooltipHideDelay: PropTypes.number,
-
-		/**
 		 * Video component to use. The default (`'video'`) renders an `HTMLVideoElement`. Custom
 		 * video components must have a similar API structure, exposing the following APIs:
 		 *
@@ -685,7 +675,6 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		titleHideDelay: 5000,
-		tooltipHideDelay: 3000,
 		videoComponent: 'video'
 	}
 
@@ -1955,7 +1944,6 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.setApiProvider;
 		delete rest.thumbnailUnavailable;
 		delete rest.titleHideDelay;
-		delete rest.tooltipHideDelay;
 		delete rest.videoPath;
 
 		// Handle some cases when the "more" button is pressed
