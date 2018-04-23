@@ -99,6 +99,16 @@ const PickerBase = class extends React.Component {
 		min: PropTypes.number.isRequired,
 
 		/**
+		 * Sets the hint string read when focusing the joined picker.
+		 *
+		 * @type {String}
+		 * @default 'change a value with left right button'
+		 * @memberof moonstone/internal/Picker.Picker.prototype
+		 * @public
+		 */
+		'aria-label': PropTypes.string,
+
+		/**
 		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
 		 * to the current selected child and accessibilityHint text.
 		 *
@@ -200,15 +210,6 @@ const PickerBase = class extends React.Component {
 		 * @public
 		 */
 		joined: PropTypes.bool,
-
-		/**
-		 * Sets the hint string read when focusing the joined picker.
-		 *
-		 * @type {String}
-		 * @default 'change a value with left right button'
-		 * @public
-		 */
-		joinedPickerAriaLabel: PropTypes.string,
 
 		/**
 		 * By default, the picker will animate transitions between items if it has a defined
@@ -697,14 +698,10 @@ const PickerBase = class extends React.Component {
 	}
 
 	calcButtonLabel (next, valueText) {
-		const
-			{decrementAriaLabel, incrementAriaLabel, joined} = this.props,
-			nextItemAriaLabel = (incrementAriaLabel == null) ? $L('next item') : incrementAriaLabel,
-			previousItemAriaLabel = (decrementAriaLabel == null) ? $L('previous item') : decrementAriaLabel;
+		if (!this.props.joined) {
+			const {decrementAriaLabel = $L('previous item'), incrementAriaLabel = $L('next item')} = this.props;
 
-		// no label is necessary when joined
-		if (!joined) {
-			return `${valueText} ${next ? nextItemAriaLabel : previousItemAriaLabel}`;
+			return `${valueText} ${next ? incrementAriaLabel : decrementAriaLabel}`;
 		}
 	}
 
@@ -716,12 +713,16 @@ const PickerBase = class extends React.Component {
 		return this.calcButtonLabel(!this.props.reverse, valueText);
 	}
 
-	calcJoinedLabel (valueText) {
+	calcAriaLabel (valueText) {
 		const
-			{joinedPickerAriaLabel, orientation} = this.props,
+			{'aria-label': ariaLabel, joined, orientation} = this.props,
 			hint = orientation === 'horizontal' ? $L('change a value with left right button') : $L('change a value with up down button');
 
-		return `${valueText} ${(joinedPickerAriaLabel == null) ? hint : joinedPickerAriaLabel}`;
+		if (!joined && !(ariaLabel == null)) {
+			return ariaLabel;
+		}
+
+		return `${valueText} ${(ariaLabel == null) ? hint : ariaLabel}`;
 	}
 
 	initRef (prop) {
@@ -752,12 +753,12 @@ const PickerBase = class extends React.Component {
 			...rest
 		} = this.props;
 
+		delete rest['aria-label'];
 		delete rest.accessibilityHint;
 		delete rest.decrementAriaLabel;
 		delete rest.decrementIcon;
 		delete rest.incrementAriaLabel;
 		delete rest.incrementIcon;
-		delete rest.joinedPickerAriaLabel;
 		delete rest.max;
 		delete rest.min;
 		delete rest.onChange;
@@ -797,7 +798,7 @@ const PickerBase = class extends React.Component {
 				{...rest}
 				aria-controls={joined ? id : null}
 				aria-disabled={disabled}
-				aria-label={joined ? this.calcJoinedLabel(valueText) : null}
+				aria-label={this.calcAriaLabel(valueText)}
 				className={classes}
 				disabled={disabled}
 				onBlur={this.handleBlur}

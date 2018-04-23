@@ -89,6 +89,15 @@ const DatePickerBase = kind({
 		year: PropTypes.number.isRequired,
 
 		/**
+		 * Sets the hint string read when focusing the day picker.
+		 *
+		 * @type {String}
+		 * @default 'change a value with up down button'
+		 * @public
+		 */
+		dayAccessibilityHint: PropTypes.string,
+
+		/**
 		 * Sets the hint string for day label read when focusing the day picker.
 		 *
 		 * @type {String}
@@ -96,15 +105,6 @@ const DatePickerBase = kind({
 		 * @public
 		 */
 		dayAriaLabel: PropTypes.string,
-
-		/**
-		 * Sets the hint string read when focusing the joined picker.
-		 *
-		 * @type {String}
-		 * @default 'change a value with up down button'
-		 * @public
-		 */
-		joinedPickerAriaLabel: PropTypes.string,
 
 		/**
 		 * The maximum selectable `year` value
@@ -123,6 +123,15 @@ const DatePickerBase = kind({
 		 * @public
 		 */
 		minYear: PropTypes.number,
+
+		/**
+		 * Sets the hint string read when focusing the month picker.
+		 *
+		 * @type {String}
+		 * @default 'change a value with up down button'
+		 * @public
+		 */
+		monthAccessibilityHint: PropTypes.string,
 
 		/**
 		 * Sets the hint string for month label read when focusing the month picker.
@@ -218,6 +227,15 @@ const DatePickerBase = kind({
 		spotlightDisabled: PropTypes.bool,
 
 		/**
+		 * Sets the hint string read when focusing the year picker.
+		 *
+		 * @type {String}
+		 * @default 'change a value with up down button'
+		 * @public
+		 */
+		yearAccessibilityHint: PropTypes.string,
+
+		/**
 		 * Sets the hint string for year label read when focusing the year picker.
 		 *
 		 * @type {String}
@@ -247,14 +265,15 @@ const DatePickerBase = kind({
 
 	render: ({
 		day,
+		dayAccessibilityHint,
 		dayAriaLabel,
 		handlePickerKeyDown,
-		joinedPickerAriaLabel,
 		maxDays,
 		maxMonths,
 		maxYear,
 		minYear,
 		month,
+		monthAccessibilityHint,
 		monthAriaLabel,
 		noLabels,
 		onChangeDate,
@@ -267,6 +286,7 @@ const DatePickerBase = kind({
 		rtl,
 		spotlightDisabled,
 		year,
+		yearAccessibilityHint,
 		yearAriaLabel,
 		...rest
 	}) => {
@@ -293,9 +313,9 @@ const DatePickerBase = kind({
 							case 'd':
 								return (
 									<DateComponentRangePicker
+										accessibilityHint={dayAriaLabel}
+										aria-label={dayAccessibilityHint}
 										className={css.day}
-										hintAriaLabel={dayAriaLabel}
-										joinedPickerAriaLabel={joinedPickerAriaLabel}
 										key="day-picker"
 										label={noLabels ? null : $L('day')}
 										max={maxDays}
@@ -313,9 +333,9 @@ const DatePickerBase = kind({
 							case 'm':
 								return (
 									<DateComponentRangePicker
+										accessibilityHint={monthAriaLabel}
+										aria-label={monthAccessibilityHint}
 										className={css.month}
-										hintAriaLabel={monthAriaLabel}
-										joinedPickerAriaLabel={joinedPickerAriaLabel}
 										key="month-picker"
 										label={noLabels ? null : $L('month')}
 										max={maxMonths}
@@ -333,9 +353,9 @@ const DatePickerBase = kind({
 							case 'y':
 								return (
 									<DateComponentRangePicker
+										accessibilityHint={yearAriaLabel}
+										aria-label={yearAccessibilityHint}
 										className={css.year}
-										hintAriaLabel={yearAriaLabel}
-										joinedPickerAriaLabel={joinedPickerAriaLabel}
 										key="year-picker"
 										label={noLabels ? null : $L('year')}
 										max={maxYear}
