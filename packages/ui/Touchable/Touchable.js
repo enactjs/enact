@@ -1,7 +1,5 @@
 /**
- * Provides the [Touchable]{@link ui/Touchable.Touchable} Higher-order Component (HOC) to add
- * gesture support to components and the [configure()]{@link ui/Touchable.configure} method for
- * configuring gestures for the application.
+ * Provides gesture support services.
  *
  * @module ui/Touchable
  */
@@ -190,9 +188,9 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/Touchable.Touchable} is a Higher-order Component that provides a consistent set of
- * pointer events -- `onDown`, `onUp`, and `onTap` -- across mouse and touch interfaces along with
- * support for common gestures including `onFlick`, `onDrag`, onHold`, and `onHoldPulse`.
+ * A Higher-order Component that provides a consistent set of pointer events -- `onDown`, `onUp`,
+ * and `onTap` -- across mouse and touch interfaces. Also provides support for common gestures
+ * including `onFlick`, `onDrag`, `onHold`, and `onHoldPulse`.
  *
  * @class Touchable
  * @memberof ui/Touchable
