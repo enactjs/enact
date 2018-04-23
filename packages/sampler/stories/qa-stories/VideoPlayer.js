@@ -34,9 +34,15 @@ class VideoSourceSwap extends React.Component {
 		});
 	}
 
-	changePreload = () => {
+	nextVideoKeepPreload = () => {
 		this.setState({
 			cursor: this.state.cursor ===  this.lastIndex ? 0 : this.state.cursor + 1
+		});
+	}
+
+	nextPreloadVideoKeepVideo = () => {
+		this.setState({
+			preloadCursor: this.state.preloadCursor ===  this.lastIndex ? 0 : this.state.preloadCursor + 1
 		});
 	}
 
@@ -52,7 +58,8 @@ class VideoSourceSwap extends React.Component {
 			<div>
 				{button('Next Preload Video', this.nextVideo)}
 				{button('Non Preload Video', this.differentVideo)}
-				{button('Next Preload Video without changing preload', this.changePreload)}
+				{button('Next Preload Video without changing preload', this.nextVideoKeepPreload)}
+				{button('Change Preload without changing video', this.nextPreloadVideoKeepVideo)}
 				{button('Reset Sources', this.resetSources)}
 				<VideoPlayer
 					muted
