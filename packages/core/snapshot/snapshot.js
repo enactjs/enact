@@ -21,18 +21,18 @@ function isWindowReady () {
 }
 
 /**
- * Registers a callback that requires a valid window before execution such as event handlers.
+ * Executes a callback, such as registering event handlers, when a valid `window` is available.
  *
- * During development, the callback will be executed immediately. When using pre-rendering, the
- * callbacks would not be executed at all. When using snapshot, the callbacks are queued up and
- * executed in order once the window is available.
+ * During normal operation, the callback will be executed immediately. During a pre-rendering pass,
+ * the callback is not be executed at all. When using snapshot, the callback is added to a queued
+ * and is executed in order once the window is available.
  *
  * *Important Notes*
- * * Callbacks should not alter the initial HTML state. If it does, it will invalidate the pre-render
- *   state and interfere with React rehydration.
- * * Callbacks should be limited to module-scoped actions and not component instance actions. If the
- *   action is tied to a component, it should be invoked from within the component's lifecycle
- *   methods,
+ * * The callback should not alter the initial HTML state. If it does, it will invalidate the
+ * pre-render state and interfere with React rehydration.
+ * * The callback should be limited to module-scoped actions and not component instance actions. If
+ * the action is tied to a component, it should be invoked from within the component's lifecycle
+ * methods.
  *
  * @param   {Function} callback Function to run when the window is ready
  * @memberof core/snapshot
@@ -49,7 +49,7 @@ function onWindowReady (callback) {
 /**
  * Executes all queued window callbacks.
  *
- * Requires that the window be, in fact, available and will throw an Error if not.
+ * Requires that the window be, in fact, available and will throw an `Error` if not.
  *
  * @memberof core/snapshot
  * @public
