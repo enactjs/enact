@@ -7,6 +7,9 @@ The following is a curated list of changes in the Enact core module, newest chan
 ### Added
 
 - `core/snapshot` module with `isWindowReady` method to check the window state and `onWindowReady` method to queue window-dependent callbacks for snapshot builds
+### Fixed
+
+- `core/util.memoize` to forward all args to memoized function
 
 ## [2.0.0-alpha.8] - 2018-04-17
 
