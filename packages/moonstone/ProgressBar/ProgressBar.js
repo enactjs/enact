@@ -103,8 +103,7 @@ const ProgressBarBase = kind({
 
 	defaultProps: {
 		orientation: 'horizontal',
-		progress: 0,
-		tooltip: false
+		progress: 0
 	},
 
 	styles: {
@@ -113,36 +112,27 @@ const ProgressBarBase = kind({
 	},
 
 	computed: {
-		children: ({orientation, progress, tooltip}) => {
-			if (tooltip) {
-				const component = tooltip === true ? ProgressBarTooltip : tooltip;
-				const progressPercentage = Math.min(parseInt(progress * 100), 100);
-				const percentageText = `${progressPercentage}%`;
-
-				return (
-					<ComponentOverride
-						component={component}
-						proportion={progress}
-						orientation={orientation}
-						visible
-					>
-						{percentageText}
-					</ComponentOverride>
-				);
-			} else {
-				return null;
-			}
-		}
+		tooltip: ({tooltip}) => tooltip === true ? ProgressBarTooltip : tooltip
 	},
 
-	render: ({css, ...rest}) => {
+	render: ({css, orientation, progress, tooltip, ...rest}) => {
 		delete rest.tooltip;
 
 		return (
 			<UiProgressBar
 				{...rest}
+				orientation={orientation}
+				progress={progress}
 				css={css}
-			/>
+			>
+				<ComponentOverride
+					component={tooltip}
+					orientation={orientation}
+					percent
+					proportion={progress}
+					visible
+				/>
+			</UiProgressBar>
 		);
 	}
 });

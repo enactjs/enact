@@ -121,7 +121,7 @@ const ProgressBarTooltipBase = kind({
 			if (percent) {
 				const formatter = memoizedPercentFormatter(ilib.getLocale());
 
-				return formatter.format(Math.floor(proportion * 100));
+				return formatter.format(Math.round(proportion * 100));
 			}
 
 			return children;
