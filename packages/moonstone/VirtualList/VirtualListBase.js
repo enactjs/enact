@@ -221,16 +221,16 @@ const VirtualListBaseFactory = (type) => {
 			if (containerNode && containerNode.addEventListener) {
 				containerNode.addEventListener('keydown', this.onKeyDown);
 			}
+
+			setTimeout(() => {
+				this.restoreFocus();
+			});
 		}
 
 		componentWillReceiveProps (nextProps) {
 			if (nextProps.spotlightId && nextProps.spotlightId !== this.props.spotlightId) {
 				configureSpotlight(nextProps.spotlightId, this);
 			}
-		}
-
-		componentDidUpdate () {
-			this.restoreFocus();
 		}
 
 		componentWillUnmount () {
