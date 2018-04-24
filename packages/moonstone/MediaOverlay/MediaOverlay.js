@@ -9,6 +9,7 @@
 
 import styles from '@enact/core/kind/styles';
 import Spottable from '@enact/spotlight/Spottable';
+import {Layout, Cell} from '@enact/ui/Layout';
 import Media from '@enact/ui/Media';
 import Pure from '@enact/ui/internal/Pure';
 import Slottable from '@enact/ui/Slottable';
@@ -101,11 +102,30 @@ class MediaOverlayBase extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		text: PropTypes.string
+		text: PropTypes.string,
+
+		/**
+		 * Aligns the children [Cells]{@link ui/Layout.Cell} vertically in the case of a horizontal
+		 * layout or horizontally in the case of a vertical layout. `"start"`, `"center"` and
+		 * `"end"` are the most commonly used, although all values of `align-items` are supported.
+		 * `"start"` refers to the top in a horizontal layout, and left in a vertical LTR layout
+		 * `"end"` refers to the bottom in a horizontal layout, and right in a vertical LTR layout
+		 * `"start"` and `"end"` reverse places when in a vertical layout in a RTL locale.
+		 * This includes support for `align-parts` which is shorthand for combining `align-items`
+		 * and `justify-content` into a single property, separated by a space, in that order.
+		 * This allows you to specify both the horizontal and vertical alignment in one property,
+		 * separated by a space.
+		 *
+		 * @type {String}
+		 * @public
+		 * @default "center"
+		 */
+		textAlign: PropTypes.string
 	}
 
 	static defaultProps = {
-		mediaComponent: 'video'
+		mediaComponent: 'video',
+		textAlign: 'center'
 	}
 
 	constructor (props) {
@@ -129,7 +149,7 @@ class MediaOverlayBase extends React.Component {
 
 	render () {
 		const props = renderStyles(Object.assign({}, this.props));
-		const {css, imageOverlay, mediaComponent, placeholder, source, text, ...rest} = props;
+		const {css, imageOverlay, mediaComponent, placeholder, source, text, textAlign, ...rest} = props;
 
 		return (
 			<div {...rest}>
@@ -152,9 +172,11 @@ class MediaOverlayBase extends React.Component {
 					/>
 				) : null}
 				{text ? (
-					<Marquee alignment="center" className={css.text} marqueeOn="render">
-						{text}
-					</Marquee>
+					<Layout align={textAlign} className={css.textWrapper}>
+						<Cell component={Marquee} alignment="center" className={css.text} marqueeOn="render">
+							{text}
+						</Cell>
+					</Layout>
 				) : null}
 			</div>
 		);
