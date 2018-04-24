@@ -63,7 +63,6 @@ const SlotItemBase = kind({
 	render: (props) => {
 		return (
 			<UiSlotItemBase
-				data-webos-voice-intent="Select"
 				{...props}
 				component={ItemBase}
 				css={props.css}

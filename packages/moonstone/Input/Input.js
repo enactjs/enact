@@ -210,15 +210,7 @@ const InputBase = kind({
 		 * @type {String|Number}
 		 * @public
 		 */
-		value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-
-		/**
-		 * Add voice control property to input tag
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		voiceProps:  PropTypes.object
+		value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 	},
 
 	defaultProps: {
@@ -267,7 +259,7 @@ const InputBase = kind({
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, voiceProps, ...rest}) => {
+	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, ...rest}) => {
 		delete rest.dismissOnEnter;
 		delete rest.focused;
 		delete rest.invalid;
@@ -278,7 +270,6 @@ const InputBase = kind({
 			<div {...rest} disabled={disabled}>
 				<InputDecoratorIcon position="before" small={small}>{iconBefore}</InputDecoratorIcon>
 				<input
-					{...voiceProps}
 					aria-disabled={disabled}
 					className={css.input}
 					dir={dir}

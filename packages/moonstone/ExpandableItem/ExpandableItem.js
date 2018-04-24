@@ -216,15 +216,7 @@ const ExpandableItemBase = kind({
 		 * @default false
 		 * @public
 		 */
-		spotlightDisabled: PropTypes.bool,
-
-		/**
-		 * Set voice control property to LabeledItem
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		voiceProps: PropTypes.object
+		spotlightDisabled: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -305,7 +297,6 @@ const ExpandableItemBase = kind({
 		spotlightDisabled,
 		title,
 		transitionSpotlightDisabled,
-		voiceProps,
 		...rest
 	}) => {
 		delete rest.autoClose;
@@ -327,7 +318,6 @@ const ExpandableItemBase = kind({
 			>
 				<LabeledItem
 					{...ariaProps}
-					{...voiceProps}
 					css={css}
 					className={labeledItemClassName}
 					data-expandable-label

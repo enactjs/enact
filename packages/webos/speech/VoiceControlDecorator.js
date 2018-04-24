@@ -10,7 +10,7 @@ import hoc from '@enact/core/hoc';
  * @memberof webos/speech
  * @hoc
  */
-const VoiceControlDecorator = hoc({}, (config, Wrapped) => {
+const VoiceControlDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'VoiceControlDecorator'
 
@@ -26,8 +26,8 @@ const VoiceControlDecorator = hoc({}, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			this.node = findDOMNode(this);	// eslint-disable-line 
-			if (!(this.node.hasAttribute('data-webos-voice-event-target') || this.node.hasAttribute('data-webos-voice-intent'))) {
+			this.node = findDOMNode(this);	// eslint-disable-line
+			if (this.node && !(this.node.hasAttribute('data-webos-voice-event-target') || this.node.hasAttribute('data-webos-voice-intent'))) {
 				this.node = this.node.querySelector('[data-webos-voice-event-target]') || this.node.querySelector('[data-webos-voice-intent]');
 			}
 			if (this.node) this.node.addEventListener('webOSVoice', this.props.onVoice);
