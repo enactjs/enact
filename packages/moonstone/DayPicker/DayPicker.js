@@ -56,13 +56,13 @@ const DayPickerBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * The format for names of days used in the label. "M, T, W" for `short`; "Mo, Tu, We" for `medium`, etc.
+		 * The selected label for DayPicker
 		 *
 		 * @type {String}
-		 * @default 'long'
 		 * @public
 		 */
-		labelDayNameLength: PropTypes.oneOf(['short', 'medium', 'long', 'full']),
+		label: PropTypes.string,
+
 
 		/**
 		 * Current locale for DayPicker
@@ -121,18 +121,9 @@ const DayPickerBase = kind({
 		disabled: false
 	},
 
-	// computed: {
-	// 	'aria-label': ({selected, title}) => {
-	// 		const type = this.calcSelectedDayType(selected);
-	// 		if (type === SELECTED_DAY_TYPES.SELECTED_DAYS) {
-	// 			return `${title} ${this.getSelectedDayString(type, this.longDayNames)}`;
-	// 		}
-	// 	},
-	// 	label: ({selected}) => {
-	// 		const type = this.calcSelectedDayType(selected);
-	// 		return this.getSelectedDayString(type, this.shortDayNames);
-	// 	}
-	// },
+	computed: {
+		'aria-label': ({label, title}) => `${title} ${label}`
+	},
 
 	render: ({...rest}) => {
 		return (

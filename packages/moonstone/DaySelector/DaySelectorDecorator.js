@@ -36,6 +36,15 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/DaySelector.DaySelectorDecorator.prototype */ {
 			/**
+			 * The format for names of days used in the label. "M, T, W" for `short`; "Mo, Tu, We" for `medium`, etc.
+			 *
+			 * @type {String}
+			 * @default 'long'
+			 * @public
+			 */
+			dayNameLength: PropTypes.oneOf(['short', 'medium', 'long', 'full']),
+
+			/**
 			 * When `true`, applies a disabled style and the control becomes non-interactive.
 			 *
 			 * @type {Boolean}
@@ -43,17 +52,6 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			 * @public
 			 */
 			disabled: PropTypes.bool,
-
-			/**
-			 * Use long day names (Sunday, Monday..) for labels
-			 *
-			 * If `false` short text will be displayed for the the days (Sun, Mon..)
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			longDayLabels: PropTypes.bool,
 
 			/**
 			 * Called when an item is selected. The first parameter will be an object containing a
@@ -76,7 +74,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 
 		static defaultProps = {
 			disabled: false,
-			longDayLabels: false
+			dayNameLength: 'long'
 		}
 
 		constructor (props) {
@@ -88,8 +86,8 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			this.weekendEnd = 0;
 
 			// default strings for long and short day strings
-			this.longDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-			this.shortDayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+			this.fullDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+			this.labelDayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 			this.initIlib();
 		}
@@ -104,7 +102,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 				this.locale = locale;
 
 				const df = new DateFmt({length: 'full'});
-				const sdf = new DateFmt({length: 'long'});
+				const sdf = new DateFmt({length: this.props.dayNameLength});
 				const li = new LocaleInfo(ilib.getLocale());
 				const daysOfWeek = df.getDaysOfWeek();
 				const days = sdf.getDaysOfWeek();
@@ -115,8 +113,8 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 
 				for (let i = 0; i < 7; i++) {
 					const index = (i + this.firstDayOfWeek) % 7;
-					this.longDayNames[i] = daysOfWeek[index];
-					this.shortDayNames[i] = days[index];
+					this.fullDayNames[i] = daysOfWeek[index];
+					this.labelDayName[i] = days[index];
 				}
 
 				this.everyDayText = $L('Every Day');
@@ -193,18 +191,22 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 
 		handleSelect = ({selected}) => {
 			const type = this.calcSelectedDayType(selected);
-			const labels = this.props.longDayLabels ? this.longDayNames : this.shortDayNames;
+			const labels = this.labelDayName;
 			const content = this.getSelectedDayString(type, selected, labels);
 
 			forwardSelect({selected, content}, this.props);
 		}
 
 		render () {
-			const {longDayLabels, ...rest} = this.props;
+			const {selected, ...rest} = this.props;
+			const type = this.calcSelectedDayType(selected);
+			const content = this.getSelectedDayString(type, selected, this.labelDayName);
+
+			delete rest.dayNameLength;
 
 			return (
-				<Wrapped {...rest} onSelect={this.handleSelect}>
-					{longDayLabels ? this.longDayNames : this.shortDayNames}
+				<Wrapped {...rest} label={content} fullDayNames={this.fullDayNames} onSelect={this.handleSelect} selected={selected}>
+					{this.labelDayName}
 				</Wrapped>
 			);
 		}
