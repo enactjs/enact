@@ -275,16 +275,6 @@ const VideoPlayerBase = class extends React.Component {
 		noMiniFeedback: PropTypes.bool,
 
 		/**
-		 * Removes the "rate" buttons. The buttons that change the playback rate of the video.
-		 * Double speed, half speed, reverse 4x speed, etc.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noRateButtons: PropTypes.bool,
-
-		/**
 		 * Removes the media slider.
 		 *
 		 * @type {Boolean}
@@ -402,14 +392,6 @@ const VideoPlayerBase = class extends React.Component {
 			slowForward: PropTypes.arrayOf(PropTypes.string),
 			slowRewind: PropTypes.arrayOf(PropTypes.string)
 		}),
-
-		/**
-		 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		rateButtonsDisabled: PropTypes.bool,
 
 		/**
 		 * When `true`, seek function is disabled.
@@ -1020,7 +1002,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleKeyUp = (ev) => {
-		const {disabled, noRateButtons, no5WayJump, rateButtonsDisabled} = this.props;
+		const {disabled, no5WayJump} = this.props;
 
 		if (disabled || this.state.mediaControlsDisabled) {
 			return;
@@ -1032,20 +1014,22 @@ const VideoPlayerBase = class extends React.Component {
 		} else if (is('pause', ev.keyCode)) {
 			this.showMiniFeedback = true;
 			this.pause();
-		} else if (!noRateButtons && !rateButtonsDisabled) {
-			if (is('rewind', ev.keyCode)) {
-				this.showMiniFeedback = true;
-				this.rewind();
-			} else if (is('fastForward', ev.keyCode)) {
-				this.showMiniFeedback = true;
-				this.fastForward();
-			}
 		}
 
 		if (!no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			this.stopListeningForPulses();
 			this.paused.resume();
 		}
+	}
+
+	handleRewind = () => {
+		this.showMiniFeedback = true;
+		this.rewind();
+	}
+
+	handleFastForward = () => {
+		this.showMiniFeedback = true;
+		this.fastForward();
 	}
 
 	handleGlobalKeyDown = this.handle(
@@ -1729,10 +1713,8 @@ const VideoPlayerBase = class extends React.Component {
 			mediaControlsComponent,
 			noAutoPlay,
 			noMiniFeedback,
-			noRateButtons,
 			noSlider,
 			noSpinner,
-			rateButtonsDisabled,
 			source,
 			spotlightDisabled,
 			spotlightId,
@@ -1866,16 +1848,16 @@ const VideoPlayerBase = class extends React.Component {
 							<ComponentOverride
 								component={mediaControlsComponent}
 								mediaDisabled={disabled || this.state.mediaControlsDisabled}
-								noRateButtons={noRateButtons}
 								onBackwardButtonClick={this.onBackward}
 								onForwardButtonClick={this.onForward}
+								onFastForward={this.handleFastForward}
+								onRewind={this.handleRewind}
 								onJumpBackwardButtonClick={this.onJumpBackward}
 								onJumpForwardButtonClick={this.onJumpForward}
 								onKeyDown={this.handleKeyDownFromControls}
 								onPlayButtonClick={this.onPlay}
 								onToggleMore={this.handleToggleMore}
 								paused={this.state.paused}
-								rateButtonsDisabled={rateButtonsDisabled}
 								spotlightDisabled={!this.state.mediaControlsVisible || spotlightDisabled}
 								visible={this.state.mediaControlsVisible}
 							/>

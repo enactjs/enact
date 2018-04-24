@@ -402,6 +402,14 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			leftComponents: PropTypes.node,
 
 			/**
+			 * Sets the `disabled` state on the media buttons.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			mediaDisabled: PropTypes.bool,
+
+			/**
 			 * The color of the underline beneath more icon button.
 			 *
 			 * This property accepts one of the following color names, which correspond with the
@@ -423,12 +431,43 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			moreButtonDisabled: PropTypes.bool,
 
 			/**
+			 * Removes the "rate" buttons. The buttons that change the playback rate of the video.
+			 * Double speed, half speed, reverse 4x speed, etc.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			noRateButtons: PropTypes.bool,
+
+			/**
+			 * [onFastForward description]
+			 * @type {Function}
+			 * @public
+			 */
+			onFastForward: PropTypes.func,
+
+			/**
+			 * [onRewind description]
+			 * @type {Function}
+			 * @public
+			 */
+			onRewind: PropTypes.func,
+
+			/**
 			 * Function executed when the user clicks the More button.
 			 *
 			 * @type {Function}
 			 * @public
 			 */
 			onToggleMore: PropTypes.func,
+
+			/**
+			 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			rateButtonsDisabled: PropTypes.bool,
 
 			/**
 			 * These components are placed into the slot to the right of the media controls.
@@ -512,11 +551,28 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 		}
 
 		handleKeyUp = (ev) => {
-			const {moreButtonColor, moreButtonDisabled, visible} = this.props;
+			const {
+				mediaDisabled,
+				moreButtonColor,
+				moreButtonDisabled,
+				noRateButtons,
+				rateButtonsDisabled,
+				visible
+			} = this.props;
+
+			if (mediaDisabled) return;
 
 			if (visible && moreButtonColor && !moreButtonDisabled && is(moreButtonColor, ev.keyCode)) {
 				Spotlight.focus(this.mediaControls.querySelector(`.${css.moreButton}`));
 				this.toggleMoreComponents();
+			}
+
+			if (!noRateButtons && !rateButtonsDisabled) {
+				if (is('rewind', ev.keyCode)) {
+					forward('onRewind', ev, this.props);
+				} else if (is('fastForward', ev.keyCode)) {
+					forward('onFastForward', ev, this.props);
+				}
 			}
 		}
 
@@ -545,6 +601,8 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 
 		render () {
 			const props = Object.assign({}, this.props);
+			delete props.onFastForward;
+			delete props.onRewind;
 			delete props.onToggleMore;
 
 			return (
