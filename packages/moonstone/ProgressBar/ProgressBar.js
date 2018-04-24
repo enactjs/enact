@@ -8,6 +8,7 @@
  * @exports ProgressBar
  * @exports ProgressBarBase
  * @exports ProgressBarDecorator
+ * @exports ProgressBarTooltip
  */
 
 import kind from '@enact/core/kind';
