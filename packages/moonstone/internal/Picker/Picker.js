@@ -103,7 +103,7 @@ const PickerBase = class extends React.Component {
 		 *
 		 * @type {String}
 		 * @default 'change a value with left right button'
-		 * @memberof moonstone/internal/Picker.Picker.prototype
+		 * @memberof moonstone/internal/Picker.PickerBase.prototype
 		 * @public
 		 */
 		'aria-label': PropTypes.string,
@@ -113,7 +113,7 @@ const PickerBase = class extends React.Component {
 		 * to the current selected child and accessibilityHint text.
 		 *
 		 * @type {String}
-		 * @memberof moonstone/internal/Picker.Picker.prototype
+		 * @memberof moonstone/internal/Picker.PickerBase.prototype
 		 * @public
 		 */
 		'aria-valuetext': PropTypes.string,
@@ -718,7 +718,7 @@ const PickerBase = class extends React.Component {
 			{'aria-label': ariaLabel, joined, orientation} = this.props,
 			hint = orientation === 'horizontal' ? $L('change a value with left right button') : $L('change a value with up down button');
 
-		if (!joined && !(ariaLabel == null)) {
+		if (!joined || ariaLabel != null) {
 			return ariaLabel;
 		}
 
