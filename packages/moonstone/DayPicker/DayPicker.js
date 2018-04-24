@@ -4,10 +4,8 @@
  * @module moonstone/DayPicker
  */
 
-import Changeable from '@enact/ui/Changeable';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Pure from '@enact/ui/internal/Pure';
 import {Subscription} from '@enact/core/internal/PubSub';
 
 import {Expandable} from '../ExpandableItem';
