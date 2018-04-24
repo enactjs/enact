@@ -36,15 +36,6 @@ const DayPickerBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
-		 * Array of day names
-		 *
-		 * @type {String[]}
-		 * @default false
-		 * @private
-		 */
-		children: PropTypes.arrayOf(PropTypes.string),
-
-		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
@@ -52,6 +43,15 @@ const DayPickerBase = kind({
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * Array of full day names
+		 *
+		 * @type {String[]}
+		 * @default false
+		 * @private
+		 */
+		fullDayNames: PropTypes.arrayOf(PropTypes.string),
 
 		/**
 		 * The selected label for DayPicker
@@ -123,12 +123,14 @@ const DayPickerBase = kind({
 		'aria-label': ({label, title}) => `${title} ${label}`
 	},
 
-	render: ({...rest}) => {
+	render: ({fullDayNames, ...rest}) => {
 		return (
 			<ExpandableListBase
 				{...rest}
 				select="multiple"
-			/>
+			>
+				{fullDayNames}
+			</ExpandableListBase>
 		);
 	}
 });

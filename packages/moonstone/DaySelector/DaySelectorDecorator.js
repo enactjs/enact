@@ -87,7 +87,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 
 			// default strings for long and short day strings
 			this.fullDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-			this.labelDayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+			this.abbreviatedDayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 			this.initIlib();
 		}
@@ -114,7 +114,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 				for (let i = 0; i < 7; i++) {
 					const index = (i + this.firstDayOfWeek) % 7;
 					this.fullDayNames[i] = daysOfWeek[index];
-					this.labelDayName[i] = days[index];
+					this.abbreviatedDayNames[i] = days[index];
 				}
 
 				this.everyDayText = $L('Every Day');
@@ -191,7 +191,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 
 		handleSelect = ({selected}) => {
 			const type = this.calcSelectedDayType(selected);
-			const labels = this.labelDayName;
+			const labels = this.abbreviatedDayNames;
 			const content = this.getSelectedDayString(type, selected, labels);
 
 			forwardSelect({selected, content}, this.props);
@@ -200,13 +200,13 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 		render () {
 			const {selected, ...rest} = this.props;
 			const type = this.calcSelectedDayType(selected);
-			const content = this.getSelectedDayString(type, selected, this.labelDayName);
+			const content = this.getSelectedDayString(type, selected, this.abbreviatedDayNames);
 
 			delete rest.dayNameLength;
 
 			return (
 				<Wrapped {...rest} label={content} fullDayNames={this.fullDayNames} onSelect={this.handleSelect} selected={selected}>
-					{this.labelDayName}
+					{this.abbreviatedDayNames}
 				</Wrapped>
 			);
 		}
