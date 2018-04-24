@@ -14,6 +14,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` props `scrollRightAriaLabel`, `scrollLeftAriaLabel`, `scrollDownAriaLabel`, and `scrollUpAriaLabel` to configure the aria-label set on scroll buttons in the scrollbars
 - `moonstone/Popup` property `closeButtonAriaLabel` to configure the label set on popup close button
 - `moonstone/ExpandablePicker` props `checkButtonAriaLabel`, `decrementAriaLabel`, `incrementAriaLabel`, `pickerAriaLabel` to configure the label set on each button
+- `moonstone/ExpandableList` props `aria-label`, `childrenAriaLabels` to configure the label set on each item
+- `moonstone/DayPicker` props `childrenAriaLabels`, `everyDayAriaLabel`, `everyWeekdayAriaLabel`, `everyWeekendAriaLabel` to configure the label set on each item
 
 ## [2.0.0-alpha.8] - 2018-04-17
 
