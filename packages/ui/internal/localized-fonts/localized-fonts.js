@@ -53,13 +53,12 @@ const buildFontSet = function (fontName, fonts, strLang, bitDefault) {
 	return strOut;
 };
 
-function fontGenerator (locale) {
+const buildFontDefinitionCss = function (locale, buildOverrides) {
 	const
 		matchLang = locale.match(/\b([a-z]{2})\b/),
 		language = matchLang && matchLang[1],
 		matchReg = locale.match(/\b([A-Z]{2}|[0-9]{3})\b/),
-		region = matchReg && matchReg[1],
-		styleId = 'localized-fonts';
+		region = matchReg && matchReg[1];
 
 	let fontDefinitionCss = '';
 
@@ -68,19 +67,25 @@ function fontGenerator (locale) {
 		const fonts = fontMap[fontName];
 
 		for (let lang in fonts) {
-			fontDefinitionCss += buildFontSet(fontName, fonts, lang);
-
-			// Set up the override for locale-specific font.
-			// la = language, re = region; `la-RE`
-			const [la, re] = lang.split('-');
-			if (la === language) {
-				if (!re || (re && re === region)) {
-					fontDefinitionCss += buildFontSet(fontName, fonts, lang, true);
+			if (!buildOverrides) {
+				fontDefinitionCss += buildFontSet(fontName, fonts, lang);
+			} else {
+				// Set up the override for locale-specific font.
+				// la = language, re = region; `la-RE`
+				const [la, re] = lang.split('-');
+				if (la === language) {
+					if (!re || (re && re === region)) {
+						fontDefinitionCss += buildFontSet(fontName, fonts, lang, true);
+					}
 				}
 			}
 		}
 	}
 
+	return fontDefinitionCss;
+};
+
+const insertFontDefinitionCss = function (styleId, fontDefinitionCss) {
 	if (typeof document !== 'undefined') {
 		// Normal execution in a browser window
 		let styleElem = document.getElementById(styleId);
@@ -99,6 +104,20 @@ function fontGenerator (locale) {
 		// We're rendering without the DOM; return the font definition stylesheet element string.
 		return tag;
 	}
+};
+
+function fontGenerator (locale) {
+	const styleId = 'localized-fonts';
+
+	if (typeof document !== 'undefined' && document.getElementById(styleId)) {
+		return;
+	}
+
+	return insertFontDefinitionCss(styleId, buildFontDefinitionCss(locale));
+}
+
+function fontOverrideGenerator (locale) {
+	return insertFontDefinitionCss('localized-fonts-override', buildFontDefinitionCss(locale, true));
 }
 
 /**
@@ -150,6 +169,14 @@ function generateFontRules (locale) {
 	return fontGenerator(locale);
 }
 
+function generateFontOverrideRules (locale) {
+	if (!locale) {
+		return;
+	}
+
+	return fontOverrideGenerator(locale);
+}
+
 /**
  * Adds a localed font to the font map
  *
@@ -195,5 +222,6 @@ function removeLocalizedFont (name) {
 
 module.exports = generateFontRules;
 module.exports.generateFontRules = generateFontRules;
+module.exports.generateFontOverrideRules = generateFontOverrideRules;
 module.exports.addLocalizedFont = addLocalizedFont;
 module.exports.removeLocalizedFont = removeLocalizedFont;
