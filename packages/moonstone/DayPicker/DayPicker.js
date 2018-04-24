@@ -60,6 +60,15 @@ const DayPickerBase = class extends React.Component {
 		disabled: PropTypes.bool,
 
 		/**
+		 * The format for names of days used in the label. "M, T, W" for `short`; "Mo, Tu, We" for `medium`, etc.
+		 *
+		 * @type {String}
+		 * @default 'long'
+		 * @public
+		 */
+		labelDayNameLength: PropTypes.oneOf(['short', 'medium', 'long', 'full']),
+
+		/**
 		 * Current locale for DayPicker
 		 *
 		 * @type {String}
@@ -112,6 +121,10 @@ const DayPickerBase = class extends React.Component {
 		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)])
 	}
 
+	static defaultProps = {
+		labelDayNameLength: 'full'
+	}
+
 	constructor (props) {
 		super(props);
 
@@ -122,7 +135,7 @@ const DayPickerBase = class extends React.Component {
 
 		// default strings for long and short day strings
 		this.longDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-		this.shortDayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+		this.labelDayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 		this.initIlib(props.locale);
 	}
@@ -136,7 +149,7 @@ const DayPickerBase = class extends React.Component {
 			this.locale = locale;
 
 			const df = new DateFmt({length: 'full'});
-			const sdf = new DateFmt({length: 'long'});
+			const sdf = new DateFmt({length: this.props.labelDayNameLength});
 			const li = new LocaleInfo(locale);
 			const daysOfWeek = df.getDaysOfWeek();
 			const days = sdf.getDaysOfWeek();
@@ -147,17 +160,24 @@ const DayPickerBase = class extends React.Component {
 
 			// clone the name arrays
 			this.longDayNames = this.longDayNames.slice();
-			this.shortDayNames = this.shortDayNames.slice();
+			this.labelDayNames = this.labelDayNames.slice();
 
 			for (let i = 0; i < 7; i++) {
 				const index = (i + this.firstDayOfWeek) % 7;
 				this.longDayNames[i] = daysOfWeek[index];
-				this.shortDayNames[i] = days[index];
+				this.labelDayNames[i] = days[index];
 			}
 
 			this.everyDayText = $L('Every Day');
 			this.everyWeekdayText = $L('Every Weekday');
 			this.everyWeekendText = $L('Every Weekend');
+		} else {
+			const sdf = new DateFmt({length: this.props.labelDayNameLength});
+			const days = sdf.getDaysOfWeek();
+			for (let i = 0; i < 7; i++) {
+				const index = (i + this.firstDayOfWeek) % 7;
+				this.labelDayNames[i] = days[index];
+			}
 		}
 	}
 
@@ -232,8 +252,9 @@ const DayPickerBase = class extends React.Component {
 		const
 			{title, ...rest} = this.props,
 			type = this.calcSelectedDayType(this.props.selected),
-			label = this.getSelectedDayString(type, this.shortDayNames);
+			label = this.getSelectedDayString(type, this.labelDayNames);
 
+		delete rest.labelDayNameLength;
 		delete rest.locale;
 
 		let ariaLabel = null;

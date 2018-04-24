@@ -13,8 +13,9 @@ storiesOf('Moonstone', module)
 			text: 'The basic DayPicker'
 		})(() => (
 			<DayPicker
+				dayNameLength={text('dayNameLength', 'full')}
 				title={text('title', 'Day Picker')}
-				noneText={text('none', 'none')}
+				noneText={text('noneText', 'none')}
 				disabled={boolean('disabled', false)}
 				onSelect={action('onSelect')}
 				onOpen={action('onOpen')}
