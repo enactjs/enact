@@ -8,13 +8,13 @@ import $L from '../internal/$L';
 
 import {forwardSpotlightEvents} from './utils';
 
-const useHintOnActivate = ({active}) => {
+const useHintOnActive = ({active}) => {
 	return {
 		useHintText: active
 	};
 };
 
-const toggleActivate = ({active}) => {
+const toggleActive = ({active}) => {
 	return {
 		active: !active
 	};
@@ -110,8 +110,8 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleActivate () {
-			this.setState(toggleActivate);
-			this.setState(useHintOnActivate);
+			this.setState(toggleActive);
+			this.setState(useHintOnActive);
 		}
 
 		handleBlur (ev) {

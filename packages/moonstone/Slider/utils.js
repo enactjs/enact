@@ -26,11 +26,15 @@ const isDecrement = ({keyCode}, {orientation}) => {
 };
 
 const emitChange = (direction) => adaptEvent(
-	(ev, {knobStep, max, min, step, value = min}) => ({
-		value: clamp(min, max, value + (calcStep(knobStep, step) * direction)),
-		proportion: calcProportion(min, max, value),
-		type: 'onChange'
-	}),
+	(ev, {knobStep, max, min, step, value = min}) => {
+		const newValue = clamp(min, max, value + (calcStep(knobStep, step) * direction));
+
+		return {
+			value: newValue,
+			proportion: calcProportion(min, max, newValue),
+			type: 'onChange'
+		};
+	},
 	forward('onChange')
 );
 
