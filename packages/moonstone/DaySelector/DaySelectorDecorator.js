@@ -120,6 +120,14 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 				this.everyDayText = $L('Every Day');
 				this.everyWeekdayText = $L('Every Weekday');
 				this.everyWeekendText = $L('Every Weekend');
+			} else {
+				const sdf = new DateFmt({length: this.props.dayNameLength});
+				const days = sdf.getDaysOfWeek();
+
+				for (let i = 0; i < 7; i++) {
+					const index = (i + this.firstDayOfWeek) % 7;
+					this.abbreviatedDayNames[i] = days[index];
+				}
 			}
 		}
 
