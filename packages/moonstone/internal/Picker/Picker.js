@@ -201,22 +201,6 @@ const PickerBase = class extends React.Component {
 		onChange: PropTypes.func,
 
 		/**
-		 * A function to run when the decrement button is disabled
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onDecrementSpotlightDisappear: PropTypes.func,
-
-		/**
-		 * A function to run when the Increment button is disabled
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onIncrementSpotlightDisappear: PropTypes.func,
-
-		/**
 		 * The handler to run prior to focus leaving the picker when the 5-way down key is pressed.
 		 *
 		 * @type {Function}
@@ -251,6 +235,14 @@ const PickerBase = class extends React.Component {
 		 * @public
 		 */
 		onPickerSpotlightUp: PropTypes.func,
+
+		/**
+		 * A function to run when the picker is removed while retaining focus.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onSpotlightDisappear: PropTypes.func,
 
 		/**
 		 * Sets the orientation of the picker, whether the buttons are above and below or on the
@@ -708,8 +700,7 @@ const PickerBase = class extends React.Component {
 			id,
 			index,
 			joined,
-			onDecrementSpotlightDisappear,
-			onIncrementSpotlightDisappear,
+			onSpotlightDisappear,
 			orientation,
 			spotlightDisabled,
 			step,
@@ -781,7 +772,7 @@ const PickerBase = class extends React.Component {
 					onDown={this.handleIncDown}
 					onHoldPulse={this.handleIncDown}
 					onKeyDown={this.handleIncKeyDown}
-					onSpotlightDisappear={onIncrementSpotlightDisappear}
+					onSpotlightDisappear={onSpotlightDisappear}
 					onTap={this.handleIncClick}
 					spotlightDisabled={spotlightDisabled}
 				/>
@@ -816,7 +807,7 @@ const PickerBase = class extends React.Component {
 					onDown={this.handleDecDown}
 					onHoldPulse={this.handleDecDown}
 					onKeyDown={this.handleDecKeyDown}
-					onSpotlightDisappear={onDecrementSpotlightDisappear}
+					onSpotlightDisappear={onSpotlightDisappear}
 					onTap={this.handleDecClick}
 					onUp={this.handleUp}
 					spotlightDisabled={spotlightDisabled}

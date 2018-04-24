@@ -12,6 +12,7 @@ import {is} from '@enact/core/keymap';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import {getContainersForNode} from '../src/container';
 import Spotlight from '../src/spotlight';
 
 /**
@@ -183,16 +184,38 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillReceiveProps () {
 			this.setState((state, nextProps) => {
 				const spottableDisabled = this.isFocused && nextProps.disabled || nextProps.spotlightDisabled;
-				return !this.state.spottableDisabled && spottableDisabled ? {spottableDisabled} : null;
+				return !state.spottableDisabled && spottableDisabled ? {spottableDisabled} : null;
 			});
 		}
 
-		componentDidUpdate (_, prevState) {
+		componentDidUpdate (prevProps, prevState) {
 			// if the component is focused and became disabled
 			if (!prevState.spottableDisabled && this.state.spottableDisabled) {
 				if (lastSelectTarget === this) {
 					selectCancelled = true;
 					forward('onMouseUp', null, this.props);
+				}
+			}
+
+			// if the component became enabled, notify spotlight to enable restoring "lost" focus
+			if (
+				(!this.props.disabled && !this.props.spotlightDisabled) && (
+					(prevProps.disabled && !this.props.disabled) ||
+					(prevProps.spotlightDisabled && !this.props.spotlightDisabled)
+				)
+			) {
+				if (Spotlight.getPointerMode()) {
+					if (this.isHovered) {
+						Spotlight.setPointerMode(false);
+						Spotlight.focus(this.node);
+						Spotlight.setPointerMode(true);
+					}
+				} else if (!Spotlight.getCurrent() && !Spotlight.isPaused()) {
+					const containers = getContainersForNode(this.node);
+					const containerId = Spotlight.getActiveContainer();
+					if (containers.indexOf(containerId) >= 0) {
+						Spotlight.focus(containerId);
+					}
 				}
 			}
 		}
@@ -254,8 +277,14 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return notPrevented && allow;
 		}
 
-		isActionable = () => {
-			return !this.props.disabled && !this.props.spotlightDisabled;
+		isActionable = (ev, props) => {
+			const actionable = !props.disabled && !props.spotlightDisabled;
+
+			if (!actionable) {
+				this.forwardSpotlightEvents(ev, props);
+			}
+
+			return actionable;
 		}
 
 		handle = handle.bind(this)
