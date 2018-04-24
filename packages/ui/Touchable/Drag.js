@@ -41,7 +41,7 @@ class Drag {
 		}
 
 		this.bounds = bounds;
-	};
+	}
 
 	updatePosition = (clientX, clientY) => {
 		const {maxX, maxY, minX, minY} = this.bounds;

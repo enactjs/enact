@@ -196,7 +196,7 @@ const oneOf = handle.oneOf = function (...handlers) {
 const returnsTrue = handle.returnsTrue = function (handler) {
 	if (handler) {
 		return function (...args) {
-			handler(...args);
+			handler.apply(this, args);
 
 			return true;
 		};
@@ -448,7 +448,6 @@ const forProp = handle.forProp = curry((prop, value, ev, props) => {
 	return props[prop] === value;
 });
 
-
 /**
  * Logs the event, props, and context optionally preceded by a custom message. Will only log in
  * development mode.
@@ -523,8 +522,42 @@ const call = function (method) {
 	};
 };
 
+/**
+ * Adapts an event with `adapter` before calling `handler`.
+ *
+ * The `adapter` function receives the same arguments as any handler. The value returned from
+ * `adapter` is passed as the first argument to `handler` with the remaining arguments kept the
+ * same. This is often useful to generate a custom event payload before forwarding on to a callback.
+ *
+ * ```
+ * import {adaptEvent, forward} from '@enact/core/handle';
+ *
+ * // calls the onChange callback with an event payload containing a type and value member
+ * const incrementAndChange = adaptEvent(
+ * 	(ev, props) => ({
+ * 	  type: 'onChange',
+ * 	  value: props.value + 1
+ * 	}),
+ * 	forward('onChange')
+ * )
+ * ```
+ *
+ * @method   adaptEvent
+ * @memberof core/handle
+ * @param    {Function}  adapter  Function to adapt the event payload
+ * @param    {Function}  handler  Handler to call with the new event payload
+ * @param    {...*}      [args]   Additional args passed to both `adapter` and `handler`
+ * @returns  {Object}             New event payload
+ */
+const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
+	return function (ev, ...args) {
+		return handler.call(this, adapter.call(this, ev, ...args), ...args);
+	};
+});
+
 export default handle;
 export {
+	adaptEvent,
 	call,
 	callOnEvent,
 	forward,
