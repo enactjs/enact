@@ -17,6 +17,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Scroller` and `moonstone/VirtualList` navigation via 5-way from paging controls
+- `moonstone/MoonstoneDecorator` to optimize localized font loading performance
 
 ## [2.0.0-alpha.8] - 2018-04-17
 
