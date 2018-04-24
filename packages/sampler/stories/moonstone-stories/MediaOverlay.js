@@ -15,31 +15,12 @@ const defaultPlaceholder =
 	'4NCg==';
 
 const prop = {
-	videoTitles: [
-		'Sintel',
-		'Big Buck Bunny',
-		'VideoTest',
-		'Bad Video Source'
-	],
-	videos: [
-		{
-			poster: 'http://media.w3.org/2010/05/sintel/poster.png',
-			source: 'http://media.w3.org/2010/05/sintel/trailer.mp4'
-		},
-		{
-			poster: 'http://media.w3.org/2010/05/bunny/poster.png',
-			source: 'http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov'
-		},
-		{
-			poster: 'http://media.w3.org/2010/05/video/poster.png',
-			source: 'http://media.w3.org/2010/05/video/movie_300.mp4'
-		},
-		{
-			poster: 'http://media.w3.org/2010/05/video/poster.png',
-			// Purposefully not a video to demonstrate source error state
-			source: 'https://github.com/mderrick/react-html5video'
-		}
-	],
+	videos: {
+		'http://media.w3.org/2010/05/sintel/trailer.mp4': 'Sintel',
+		'http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov': 'Big Buck Bunny',
+		'http://media.w3.org/2010/05/video/movie_300.mp4': 'VideoTest',
+		'https://github.com/mderrick/react-html5video': 'Bad Video Source'
+	},
 	images: {
 		'': 'None',
 		'https://picsum.photos/1280/720?image=1080': 'Strawberries',
@@ -64,14 +45,6 @@ const prop = {
 	}
 };
 
-
-const videoSources = {};
-for (let index = 0; index < prop.videos.length; index++) {
-	if (index != null && prop.videos[index]) {
-		videoSources[prop.videos[index].source] = prop.videoTitles[index];
-	}
-}
-
 storiesOf('Moonstone', module)
 	.add(
 		'MediaOverlay',
@@ -85,7 +58,7 @@ storiesOf('Moonstone', module)
 				text={select('text', prop.text, prop.text[0])}
 				textAlign={select('textAlign', ['start', 'center', 'end'], 'center')}
 			>
-				<source src={select('source', videoSources, prop.videos[0].source)} />
+				<source src={select('source', prop.videos, Object.keys(prop.videos)[0])} />
 			</MediaOverlay>
 		))
 	);
