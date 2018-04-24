@@ -114,7 +114,7 @@ const TimePickerBase = kind({
 		 * Sets the hint string read when focusing the hour picker.
 		 *
 		 * @type {String}
-		 * @default 'change a value with up down button'
+		 * @default 'hour'
 		 * @public
 		 */
 		hourAccessibilityHint: PropTypes.string,
@@ -123,7 +123,7 @@ const TimePickerBase = kind({
 		 * Sets the hint string for hour label read when focusing the hour picker.
 		 *
 		 * @type {String}
-		 * @default 'hour'
+		 * @default 'change a value with up down button'
 		 * @public
 		 */
 		hourAriaLabel: PropTypes.string,
@@ -141,7 +141,6 @@ const TimePickerBase = kind({
 		 * Sets the hint string read when focusing the meridiem picker.
 		 *
 		 * @type {String}
-		 * @default 'change a value with up down button'
 		 * @public
 		 */
 		meridiemAccessibilityHint: PropTypes.string,
@@ -150,7 +149,7 @@ const TimePickerBase = kind({
 		 * Sets the hint string for meridiem label read when focusing the meridiem picker.
 		 *
 		 * @type {String}
-		 * @default ''
+		 * @default 'change a value with up down button'
 		 * @public
 		 */
 		meridiemAriaLabel: PropTypes.string,
@@ -177,7 +176,7 @@ const TimePickerBase = kind({
 		 * Sets the hint string read when focusing the minute picker.
 		 *
 		 * @type {String}
-		 * @default 'change a value with up down button'
+		 * @default 'minute'
 		 * @public
 		 */
 		minuteAccessibilityHint: PropTypes.string,
@@ -186,7 +185,7 @@ const TimePickerBase = kind({
 		 * Sets the hint string for minute label read when focusing the minute picker.
 		 *
 		 * @type {String}
-		 * @default 'minute'
+		 * @default 'change a value with up down button'
 		 * @public
 		 */
 		minuteAriaLabel: PropTypes.string,
@@ -352,8 +351,8 @@ const TimePickerBase = kind({
 								case 'k':
 									return (
 										<HourPicker
-											accessibilityHint={hourAriaLabel}
-											aria-label={hourAccessibilityHint}
+											accessibilityHint={hourAccessibilityHint}
+											aria-label={hourAriaLabel}
 											className={css.hourComponents}
 											key="hour-picker"
 											label={noLabels ? null : $L('hour')}
@@ -372,8 +371,8 @@ const TimePickerBase = kind({
 								case 'm':
 									return (
 										<DateComponentRangePicker
-											accessibilityHint={minuteAriaLabel}
-											aria-label={minuteAccessibilityHint}
+											accessibilityHint={minuteAccessibilityHint}
+											aria-label={minuteAriaLabel}
 											className={css.minutesComponents}
 											key="minute-picker"
 											label={noLabels ? null : $L('minute')}
@@ -393,8 +392,8 @@ const TimePickerBase = kind({
 								case 'a':
 									return (
 										<DateComponentPicker
-											accessibilityHint={meridiemAriaLabel}
-											aria-label={meridiemAccessibilityHint}
+											accessibilityHint={meridiemAccessibilityHint}
+											aria-label={meridiemAriaLabel}
 											aria-valuetext={meridiems ? meridiems[meridiem] : null}
 											className={css.meridiemComponent}
 											key="meridiem-picker"

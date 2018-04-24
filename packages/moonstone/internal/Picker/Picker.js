@@ -718,7 +718,7 @@ const PickerBase = class extends React.Component {
 			{'aria-label': ariaLabel, joined, orientation} = this.props,
 			hint = orientation === 'horizontal' ? $L('change a value with left right button') : $L('change a value with up down button');
 
-		if (!joined && !(ariaLabel == null)) {
+		if (!joined || ariaLabel != null) {
 			return ariaLabel;
 		}
 
