@@ -233,6 +233,10 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
+		componentDidUpdate () {
+			this.restoreFocus();
+		}
+
 		componentWillUnmount () {
 			const containerNode = this.uiRef.containerRef;
 
