@@ -166,10 +166,12 @@ const DayPickerBase = kind({
  * @public
  */
 
-const DayPicker = Subscription(
-	{channels: ['i18n'], mapMessageToProps: (channel, {locale}) => ({locale})},
-	DaySelectorDecorator(
-		DayPickerBase
+const DayPicker = Expandable(
+	Subscription(
+		{channels: ['i18n'], mapMessageToProps: (channel, {locale}) => ({locale})},
+		DaySelectorDecorator(
+			DayPickerBase
+		)
 	)
 );
 
