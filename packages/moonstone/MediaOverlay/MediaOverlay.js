@@ -27,7 +27,7 @@ import componentCss from './MediaOverlay.less';
 const renderStyles = styles({
 	css: componentCss,
 	className: 'mediaOverlay',
-	publicClassNames: ['mediaOverlay', 'text']
+	publicClassNames: ['image', 'textLayout']
 });
 
 /**
@@ -55,8 +55,8 @@ class MediaOverlayBase extends React.Component {
 		 *
 		 * The following classes are supported:
 		 *
-		 * * `mediaOverlay` - The root class name
-		 * * `text` - class name for `text`
+		 * * `image` - class name for image
+		 * * `textLayout` - class name for text layout
 		 *
 		 * @type {Object}
 		 * @public
@@ -172,7 +172,7 @@ class MediaOverlayBase extends React.Component {
 					/>
 				) : null}
 				{text ? (
-					<Layout align={textAlign} className={css.textWrapper}>
+					<Layout align={textAlign} className={css.textLayout}>
 						<Cell component={Marquee} alignment="center" className={css.text} marqueeOn="render">
 							{text}
 						</Cell>
