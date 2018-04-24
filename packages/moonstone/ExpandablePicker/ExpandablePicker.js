@@ -111,15 +111,6 @@ const ExpandablePickerBase = kind({
 		joined: PropTypes.bool,
 
 		/**
-		 * Sets the hint string read when focusing the joined picker.
-		 *
-		 * @type {String}
-		 * @default 'change a value with left right button'
-		 * @public
-		 */
-		joinedPickerAriaLabel: PropTypes.string,
-
-		/**
 		 * By default, the picker will animate transitions between items if it has a defined
 		 * `width`. Specifying `noAnimation` will prevent any transition animation for the
 		 * component.
@@ -208,6 +199,15 @@ const ExpandablePickerBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
+		 * Sets the hint string read when focusing the picker.
+		 *
+		 * @type {String}
+		 * @default 'change a value with left right button'
+		 * @public
+		 */
+		pickerAriaLabel: PropTypes.string,
+
+		/**
 		 * When `true`, current locale is RTL
 		 *
 		 * @type {Boolean}
@@ -289,7 +289,6 @@ const ExpandablePickerBase = kind({
 			incrementAriaLabel,
 			incrementIcon,
 			joined,
-			joinedPickerAriaLabel,
 			noAnimation,
 			onChange,
 			onPick,
@@ -299,6 +298,7 @@ const ExpandablePickerBase = kind({
 			onSpotlightRight,
 			open,
 			orientation,
+			pickerAriaLabel,
 			rtl,
 			spotlightDisabled,
 			value,
@@ -319,6 +319,7 @@ const ExpandablePickerBase = kind({
 				spotlightDisabled={spotlightDisabled}
 			>
 				<Picker
+					aria-label={pickerAriaLabel}
 					className={css.picker}
 					decrementAriaLabel={decrementAriaLabel}
 					decrementIcon={decrementIcon}
@@ -326,7 +327,6 @@ const ExpandablePickerBase = kind({
 					incrementAriaLabel={incrementAriaLabel}
 					incrementIcon={incrementIcon}
 					joined={joined}
-					joinedPickerAriaLabel={joinedPickerAriaLabel}
 					noAnimation={noAnimation}
 					onChange={onPick}
 					onSpotlightDisappear={onSpotlightDisappear}
