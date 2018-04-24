@@ -389,7 +389,12 @@ class ScrollableBase extends Component {
 
 	onKeyDown = (ev) => {
 		this.animateOnFocus = true;
-		if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) && !ev.repeat && this.hasFocus()) {
+
+		if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) &&
+			!ev.repeat &&
+			this.hasFocus() &&
+			!Spotlight.getPointerMode()
+		) {
 			this.scrollByPage(ev.keyCode);
 		}
 	}
