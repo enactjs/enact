@@ -76,7 +76,7 @@ const DaySelectorBase = kind({
 		className: 'daySelector'
 	},
 
-	render: ({disabled, onSelect, ...rest}) => {
+	render: ({disabled, ...rest}) => {
 		return (
 			<Group
 				{...rest}
@@ -84,7 +84,6 @@ const DaySelectorBase = kind({
 				childSelect="onToggle"
 				disabled={disabled}
 				itemProps={{className: componentCss.daySelectorItem, disabled}}
-				onSelect={onSelect}
 				select="multiple"
 				selectedProp="selected"
 			/>
