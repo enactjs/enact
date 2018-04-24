@@ -293,8 +293,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		handleKeyUp = this.handle(
-			this.isActionable,
 			this.forwardAndResetLastSelectTarget,
+			this.isActionable,
 			this.shouldEmulateMouse,
 			forward('onMouseUp'),
 			forward('onClick')
