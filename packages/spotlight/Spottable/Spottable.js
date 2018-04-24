@@ -278,22 +278,16 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		isActionable = (ev, props) => {
-			const actionable = !props.disabled && !props.spotlightDisabled;
-
-			if (!actionable) {
-				this.forwardSpotlightEvents(ev, props);
-			}
-
-			return actionable;
+			return !props.disabled && !props.spotlightDisabled;
 		}
 
 		handle = handle.bind(this)
 
 		handleKeyDown = this.handle(
-			this.isActionable,
-			this.handleSelect,
 			forwardWithPrevent('onKeyDown'),
 			this.forwardSpotlightEvents,
+			this.isActionable,
+			this.handleSelect,
 			this.shouldEmulateMouse,
 			forward('onMouseDown')
 		)
