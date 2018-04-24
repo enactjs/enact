@@ -27,7 +27,7 @@ import componentCss from './MediaOverlay.less';
 const renderStyles = styles({
 	css: componentCss,
 	className: 'mediaOverlay',
-	publicClassNames: ['image', 'textLayout']
+	publicClassNames: ['mediaOverlay', 'image', 'textLayout']
 });
 
 /**
@@ -105,16 +105,13 @@ class MediaOverlayBase extends React.Component {
 		text: PropTypes.string,
 
 		/**
-		 * Aligns the children [Cells]{@link ui/Layout.Cell} vertically in the case of a horizontal
-		 * layout or horizontally in the case of a vertical layout. `"start"`, `"center"` and
-		 * `"end"` are the most commonly used, although all values of `align-items` are supported.
-		 * `"start"` refers to the top in a horizontal layout, and left in a vertical LTR layout
-		 * `"end"` refers to the bottom in a horizontal layout, and right in a vertical LTR layout
-		 * `"start"` and `"end"` reverse places when in a vertical layout in a RTL locale.
-		 * This includes support for `align-parts` which is shorthand for combining `align-items`
-		 * and `justify-content` into a single property, separated by a space, in that order.
-		 * This allows you to specify both the horizontal and vertical alignment in one property,
-		 * separated by a space.
+		 * Aligns the `text` vertically within the component.
+		 *
+		 * Allowed values are:
+		 *
+		 * * `"center"`, the default, aligns the text in the middle
+		 * * `"start"` aligns the text to the top
+		 * * `"end"` aligns the text to the bottom
 		 *
 		 * @type {String}
 		 * @public
