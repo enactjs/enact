@@ -1,13 +1,29 @@
-import Media from '@enact/ui/Media';
+/**
+ * Exports the {@link moonstone/VideoPlayer.VideoWithPreload} and
+ * {@link moonstone/VideoPlayer.VideoWithPreload} components. The default export is
+ * {@link moonstone/VideoPlayer.VideoWithPreload}.
+ *
+ * @module moonstone/VideoPlayer
+ */
+
 import React from 'react';
+import Media from '@enact/ui/Media';
 
 import css from './VideoPlayer.less';
 
 import {compareSources} from './util';
 import PropTypes from 'prop-types';
 
-class Video extends React.Component {
-	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */ {
+/**
+ * VideoWithPreload {@link moonstone/VideoPlayer}.
+ *
+ * @class VideoWithPreload
+ * @memberof moonstone/VideoPlayer
+ * @ui
+ * @private
+ */
+class VideoWithPreload extends React.Component {
+	static propTypes = /** @lends moonstone/VideoPlayer.VideoWithPreload.prototype */ {
 
 		/**
 		 * Function to send media events to VideoPlayer
@@ -91,6 +107,10 @@ class Video extends React.Component {
 		videoRef: PropTypes.func
 	}
 
+	static defaultProps = {
+		videoComponent: 'video'
+	}
+
 	constructor (props) {
 		super(props);
 		this.isPlayerMounted = false;
@@ -104,10 +124,10 @@ class Video extends React.Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		const {preloadSource} = this.props;
+		const {source, preloadSource} = this.props;
 		const {source: nextSource, preloadSource: nextPreloadSource} = nextProps;
 
-		if (preloadSource && compareSources(preloadSource, nextSource)) {
+		if (preloadSource && compareSources(preloadSource, nextSource) && !compareSources(source, nextSource)) {
 			this.preloadSourcePlaying = !this.preloadSourcePlaying;
 			const currentVideoSource = this.video;
 			this.video = this.preloadVideo;
@@ -142,10 +162,6 @@ class Video extends React.Component {
 
 	resetPreloadState () {
 		this.isPlayVideoPreloaded = false;
-	}
-
-	handleEvent = () => {
-
 	}
 
 	setVideoRef = (node) => {
@@ -205,5 +221,5 @@ class Video extends React.Component {
 	}
 }
 
-export default Video;
-export {Video};
+export default VideoWithPreload;
+export {VideoWithPreload};

@@ -36,7 +36,7 @@ class VideoSourceSwap extends React.Component {
 
 	nextVideoKeepPreload = () => {
 		this.setState({
-			cursor: this.state.cursor ===  this.lastIndex ? 0 : this.state.cursor + 1
+			cursor: this.state.cursor === this.lastIndex ? 0 : this.state.cursor + 1
 		});
 	}
 

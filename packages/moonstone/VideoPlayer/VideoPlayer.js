@@ -40,7 +40,7 @@ import MediaSlider from './MediaSlider';
 import FeedbackContent from './FeedbackContent';
 import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
-import Video from './Video';
+import VideoWithPreload from './VideoWithPreload';
 
 import css from './VideoPlayer.less';
 
@@ -764,8 +764,11 @@ const VideoPlayerBase = class extends React.Component {
 			this.calculateMaxComponentCount(leftCount, rightCount, childrenCount);
 		}
 
-		const {source} = this.props;
-		const {source: nextSource} = nextProps;
+		const {source, preloadSource} = this.props;
+		const {source: nextSource, preloadSource: nextPreloadSource} = nextProps;
+
+		this.isPreloadedVideo = compareSources(nextSource, preloadSource);
+		this.isPreloadedSourceSame = nextPreloadSource && preloadSource && compareSources(nextPreloadSource, preloadSource);
 
 		if (!compareSources(source, nextSource)) {
 			this.firstPlayReadFlag = true;
@@ -817,11 +820,11 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		const {source, preloadSource} = this.props;
+		const {source} = this.props;
 		const {source: prevSource} = prevProps;
 
 		if (!compareSources(source, prevSource)) {
-			this.reloadVideo(!!preloadSource);
+			this.reloadVideo(this.isPreloadedVideo, this.isPreloadedSourceSame);
 		}
 
 		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
@@ -1283,12 +1286,16 @@ const VideoPlayerBase = class extends React.Component {
 		};
 	}
 
-	reloadVideo = (isPreloaded) => {
+	reloadVideo = (isPreloaded, preloadSourcesEqual) => {
 		// When changing a HTML5 video, you have to reload it.
 		this.stopListeningForPulses();
 
 		if (!isPreloaded) {
 			this.video.load();
+		}
+
+		if (isPreloaded && preloadSourcesEqual) {
+			this.handleLoadStart();
 		}
 
 		this.setState({
@@ -1964,7 +1971,7 @@ const VideoPlayerBase = class extends React.Component {
 			>
 				{/* Video Section */}
 				{this.props.preloadSource ?
-					<Video
+					<VideoWithPreload
 						{...rest}
 						handleEvent={this.handleEvent}
 						handleLoadStart={this.handleLoadStart}
