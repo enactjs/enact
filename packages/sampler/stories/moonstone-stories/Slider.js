@@ -1,4 +1,4 @@
-import Slider, {SliderBase, SliderTooltip} from '@enact/moonstone/Slider';
+import Slider, {SliderBase, Tooltip} from '@enact/moonstone/Slider';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
@@ -36,7 +36,7 @@ storiesOf('Moonstone', module)
 					step={number('step', 1)}
 				>
 					{tooltip ? (
-						<SliderTooltip
+						<Tooltip
 							percent={percent}
 							forceSide={forceSide}
 							side={side}

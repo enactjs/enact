@@ -30,7 +30,7 @@ import anyPass from 'ramda/src/anyPass';
 import compose from 'ramda/src/compose';
 import React from 'react';
 
-import {ProgressBarTooltip} from '../ProgressBar';
+import {Tooltip} from '../ProgressBar';
 import Skinnable from '../Skinnable';
 
 import SliderBehaviorDecorator from './SliderBehaviorDecorator';
@@ -251,7 +251,7 @@ const SliderBase = kind({
 			activateOnFocus,
 			active
 		}),
-		tooltip: ({tooltip}) => tooltip === true ? ProgressBarTooltip : tooltip
+		tooltip: ({tooltip}) => tooltip === true ? Tooltip : tooltip
 	},
 
 	render: ({css, focused, tooltip, ...rest}) => {
@@ -330,7 +330,7 @@ const Slider = SliderDecorator(SliderBase);
  * [ProgressBar]{@link moonstone/ProgressBar.ProgressBar}, or
  * [Slider]{@link moonstone/Slider.Slider}.
  *
- * See {@link moonstone/ProgressBar.ProgressBarTooltip}
+ * See {@link moonstone/ProgressBar.Tooltip}
  *
  * @class SliderTooltip
  * @memberof moonstone/Slider
@@ -343,5 +343,5 @@ export {
 	Slider,
 	SliderBase,
 	SliderDecorator,
-	ProgressBarTooltip as SliderTooltip
+	Tooltip
 };
