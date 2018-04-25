@@ -8,6 +8,7 @@
  * @exports ProgressBar
  * @exports ProgressBarBase
  * @exports ProgressBarDecorator
+ * @exports ProgressBarTooltip
  */
 
 import kind from '@enact/core/kind';
@@ -118,17 +119,16 @@ const ProgressBarBase = kind({
 	computed: {
 		tooltipComponent: ({orientation, progress, tooltip, tooltipForceSide, tooltipSide}) => {
 			if (tooltip) {
-				const progressAfterMidpoint = progress > 0.5;
 				const progressPercentage = Math.min(parseInt(progress * 100), 100);
 				const percentageText = `${progressPercentage}%`;
 
 				return (
 					<ProgressBarTooltip
 						forceSide={tooltipForceSide}
-						knobAfterMidpoint={progressAfterMidpoint}
 						proportion={progress}
 						orientation={orientation}
 						side={tooltipSide}
+						visible
 					>
 						{percentageText}
 					</ProgressBarTooltip>
