@@ -17,6 +17,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="list"`
 - `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` props `scrollRightAriaLabel`, `scrollLeftAriaLabel`, `scrollDownAriaLabel`, and `scrollUpAriaLabel` to configure the aria-label set on scroll buttons in the scrollbars
 - `moonstone/Popup` property `closeButtonAriaLabel` to configure the label set on popup close button
+- `moonstone/MediaOverlay` component
 
 ### Fixed
 
