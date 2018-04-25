@@ -59,6 +59,15 @@ const GridListImageItemBase = kind({
 		css: PropTypes.object,
 
 		/**
+		 * Placeholder image used while [source]{@link ui/GridListImageItem.GridListImageItem#source}
+		 * is loaded.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		placeholder: PropTypes.string,
+
+		/**
 		 * When `true`, applies a selected visual effect to the image, but only if `selectionOverlayShowing`
 		 * is also `true`.
 		 *
@@ -93,7 +102,7 @@ const GridListImageItemBase = kind({
 		publicClassNames: ['icon', 'image', 'selected', 'caption', 'subCaption']
 	},
 
-	render: ({css, selectionOverlay, ...rest}) => {
+	render: ({css, placeholder, selectionOverlay, ...rest}) => {
 		if (selectionOverlay) {
 			rest['role'] = 'checkbox';
 			rest['aria-checked'] = rest.selected;
@@ -106,7 +115,8 @@ const GridListImageItemBase = kind({
 				css={css}
 				iconComponent={Icon}
 				imageComponent={Image}
-				placeholder={defaultPlaceholder}
+				placeholder={placeholder || defaultPlaceholder}
+				selectionOverlay={selectionOverlay}
 			/>
 		);
 	}
