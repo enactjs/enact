@@ -26,6 +26,7 @@
 @moon-bg-color:      @moon-light-gray;
 @moon-text-color:    @moon-dark-gray;
 @moon-border-color:  @moon-dark-gray;
+@moon-overlay-text-shadow: 0 2px 2px rgba(0, 0, 0, 0.75);
 
 // Disabled Opacity
 // ---------------------------------------
@@ -141,7 +142,7 @@
 
 // MediaOverlay
 // ---------------------------------------
-@moon-mediaoverlay-text-shadow: 0 2px 2px rgba(0, 0, 0, 0.75);
+@moon-mediaoverlay-text-shadow: @moon-overlay-text-shadow;
 
 // Panels
 // ---------------------------------------
@@ -221,4 +222,4 @@
 @moon-video-player-slider-load-color: fade(darken(@moon-accent, 30%), 30%);
 @moon-video-player-subdued-text-color: #ccc;
 @moon-video-player-title-color: @moon-white;
-@moon-video-player-title-text-shadow: 0 2px 2px rgba(0, 0, 0, 0.75);
+@moon-video-player-title-text-shadow: @moon-overlay-text-shadow;
