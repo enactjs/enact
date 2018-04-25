@@ -387,6 +387,10 @@ const VirtualListBaseFactory = (type) => {
 
 			// reset
 			this.scrollPosition = 0;
+			if (type === JS && this.contentRef) {
+				this.contentRef.style.transform = null;
+			}
+
 			// eslint-disable-next-line react/no-direct-mutation-state
 			this.state.firstIndex = 0;
 			// eslint-disable-next-line react/no-direct-mutation-state
