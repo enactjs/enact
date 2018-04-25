@@ -12,6 +12,7 @@ import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import LabeledItem from '../LabeledItem';
@@ -271,7 +272,10 @@ const ExpandableItemBase = kind({
 	},
 
 	computed: {
-		className: ({disabled, open, styler}) => (styler.append({open: open && !disabled})),
+		className: ({disabled, open, showLabel, styler}) => (styler.append({
+			open: open && !disabled,
+			autoLabel: showLabel === 'auto'
+		})),
 		label: ({label, noneText}) => (label || noneText),
 		labeledItemClassName: ({showLabel, styler}) => (styler.join(css.labeledItem, css[showLabel])),
 		open: ({disabled, open}) => (open && !disabled),
