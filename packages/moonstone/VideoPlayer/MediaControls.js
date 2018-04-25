@@ -1,3 +1,4 @@
+import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
@@ -555,6 +556,15 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			rightComponents: PropTypes.node,
 
 			/**
+			 * Registers the MediaControls component with an
+			 * {@link core/internal/ApiDecorator.ApiDecorator}.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			setApiProvider: PropTypes.func,
+
+			/**
 			 * The visibility of the component. When `false`, the component will be hidden.
 			 *
 			 * @type {Boolean}
@@ -583,6 +593,10 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			this.state = {
 				showMoreComponents: false
 			};
+
+			if (props.setApiProvider) {
+				props.setApiProvider(this);
+			}
 		}
 
 		componentDidMount () {
@@ -745,6 +759,18 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			this.mediaControls = ReactDOM.findDOMNode(node); // eslint-disable-line react/no-find-dom-node
 		}
 
+		areMoreComponentsAvailable () {
+			return this.state.showMoreComponents;
+		}
+
+		showMoreComponents () {
+			this.setState({showMoreComponents: true});
+		}
+
+		hideMoreComponents () {
+			this.setState({showMoreComponents: false});
+		}
+
 		toggleMoreComponents () {
 			this.setState((prevState) => {
 				return {
@@ -763,6 +789,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			delete props.onPulse;
 			delete props.onRewind;
 			delete props.onToggleMore;
+			delete props.setApiProvider;
 
 			return (
 				<Wrapped
@@ -779,7 +806,12 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 	return Slottable({slots: ['leftComponents', 'rightComponents']}, MediaControlsDecoratorHOC);
 });
 
-const MediaControls = MediaControlsDecorator(MediaControlsBase);
+const MediaControls = ApiDecorator(
+	{api: [
+		'areMoreComponentsAvailable',
+		'showMoreComponents',
+		'hideMoreComponents'
+	]}, MediaControlsDecorator(MediaControlsBase));
 
 MediaControls.defaultSlot = 'mediaControlsComponent';
 
