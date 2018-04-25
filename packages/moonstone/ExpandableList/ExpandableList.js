@@ -263,7 +263,6 @@ const ExpandableListBase = kind({
 	},
 
 	defaultProps: {
-		childrenAriaLabels: [],
 		select: 'radio',
 		spotlightDisabled: false
 	},
@@ -289,20 +288,10 @@ const ExpandableListBase = kind({
 	computed: {
 		'aria-multiselectable': ({select}) => select === 'multiple',
 
-		children: ({children, childrenAriaLabels}) => {
-			if (childrenAriaLabels && childrenAriaLabels.length === 0) {
-				return children;
-			}
-			const childrenArray = [];
-			children.map((element, i) => {
-				childrenArray.push({'aria-label': childrenAriaLabels[i], children: element, key: i});
-			});
-
-			return childrenArray;
-		},
-
-		computedAriaLabel: ({'aria-label': ariaLabel, childrenAriaLabels, label, select, selected, title}) => {
-			if (ariaLabel != null || (childrenAriaLabels && childrenAriaLabels.length === 0)) {
+		ariaLabel: ({'aria-label': ariaLabel, childrenAriaLabels, label, select, selected, title}) => {
+			if (ariaLabel != null) {
+				return ariaLabel;
+			} else if (childrenAriaLabels && childrenAriaLabels.length === 0) {
 				return null;
 			}
 
@@ -315,6 +304,18 @@ const ExpandableListBase = kind({
 					return `${title} ${selectedChildrenAriaLabel}`;
 				}
 			}
+		},
+
+		children: ({children, childrenAriaLabels}) => {
+			if (childrenAriaLabels && childrenAriaLabels.length === 0) {
+				return children;
+			}
+			const childrenArray = [];
+			children.map((element, i) => {
+				childrenArray.push({'aria-label': childrenAriaLabels[i], children: element, key: i});
+			});
+
+			return childrenArray;
 		},
 
 		disabled: ({children, disabled}) => {
@@ -364,9 +365,8 @@ const ExpandableListBase = kind({
 	},
 
 	render: ({
-		'aria-label': ariaLabel,
+		ariaLabel,
 		children,
-		computedAriaLabel,
 		itemProps,
 		ListItem,
 		noAutoClose,
@@ -382,7 +382,7 @@ const ExpandableListBase = kind({
 		return (
 			<ExpandableItemBase
 				{...rest}
-				aria-label={ariaLabel || computedAriaLabel}
+				aria-label={ariaLabel}
 				showLabel="auto"
 				autoClose={!noAutoClose}
 				lockBottom={!noLockBottom}
