@@ -39,7 +39,7 @@ const renderStyles = styles({
  * @public
  */
 class MediaOverlayBase extends React.Component {
-	static propTypes = {
+	static propTypes = /** @lends moonstone/MediaOverlay.MediaOverlayBase.prototype */ {
 		/**
 		 * Any children `<source>` tag elements will be sent directly to the media element as
 		 * sources.
