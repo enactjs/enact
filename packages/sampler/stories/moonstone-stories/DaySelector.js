@@ -2,7 +2,7 @@ import DaySelector, {DaySelectorBase} from '@enact/moonstone/DaySelector';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, select, text} from '@storybook/addon-knobs';
+import {boolean, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
