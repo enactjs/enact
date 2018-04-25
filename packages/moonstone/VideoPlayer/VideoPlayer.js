@@ -25,7 +25,6 @@ import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
 import Spotlight from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
-import Pause from '@enact/spotlight/Pause';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 import {toUpperCase} from '@enact/i18n/util';
 
@@ -178,16 +177,6 @@ const VideoPlayerBase = class extends React.Component {
 		infoComponents: PropTypes.node,
 
 		/**
-		 * The number of milliseconds that the player will pause before firing the
-		 * first jump event on a right or left pulse.
-		 *
-		 * @type {Number}
-		 * @default 400
-		 * @public
-		 */
-		initialJumpDelay: PropTypes.number,
-
-		/**
 		 * The number of seconds the player should skip forward or backward when a "jump" button is
 		 * pressed.
 		 *
@@ -196,16 +185,6 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		jumpBy: PropTypes.number,
-
-		/**
-		 * The number of milliseconds that the player will throttle before firing a
-		 * jump event on a right or left pulse.
-		 *
-		 * @type {Number}
-		 * @default 200
-		 * @public
-		 */
-		jumpDelay: PropTypes.number,
 
 		/**
 		 * Manually set the loading state of the media, in case you have information that
@@ -246,15 +225,6 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		muted: PropTypes.bool,
-
-		/**
-		 * Setting this to `true` will disable left and right keys for seeking.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		no5WayJump: PropTypes.bool,
 
 		/**
 		 * By default, the video will start playing immediately after it's loaded, unless this is set.
@@ -529,9 +499,7 @@ const VideoPlayerBase = class extends React.Component {
 	static defaultProps = {
 		autoCloseTimeout: 5000,
 		feedbackHideDelay: 3000,
-		initialJumpDelay: 400,
 		jumpBy: 30,
-		jumpDelay: 200,
 		mediaControlsComponent: MediaControls,
 		miniFeedbackHideDelay: 2000,
 		playbackRateHash: {
@@ -561,8 +529,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.sliderKnobProportion = 0;
 
 		this.initI18n();
-
-		this.paused = new Pause('VideoPlayer');
 
 		// Re-render-necessary State
 		this.state = {
@@ -598,7 +564,6 @@ const VideoPlayerBase = class extends React.Component {
 		on('mousemove', this.activityDetected);
 		on('keypress', this.activityDetected);
 		on('keydown', this.handleGlobalKeyDown);
-		on('keyup', this.handleKeyUp);
 		this.startDelayedFeedbackHide();
 	}
 
@@ -694,7 +659,6 @@ const VideoPlayerBase = class extends React.Component {
 		off('mousemove', this.activityDetected);
 		off('keypress', this.activityDetected);
 		off('keydown', this.handleGlobalKeyDown);
-		off('keyup', this.handleKeyUp);
 		this.stopRewindJob();
 		this.stopAutoCloseTimeout();
 		this.stopDelayedTitleHide();
@@ -702,7 +666,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedMiniFeedbackHide();
 		this.announceJob.stop();
 		this.renderBottomControl.stop();
-		this.stopListeningForPulses();
 		this.sliderTooltipTimeJob.stop();
 		this.slider5WayPressJob.stop();
 	}
@@ -939,58 +902,6 @@ const VideoPlayerBase = class extends React.Component {
 
 	handle = handle.bind(this)
 
-	startListeningForPulses = (keyCode) => {
-		// Ignore new pulse calls if key code is same, otherwise start new series if we're pulsing
-		if (this.pulsing && keyCode !== this.pulsingKeyCode) {
-			this.stopListeningForPulses();
-		}
-		if (!this.pulsing) {
-			this.pulsingKeyCode = keyCode;
-			this.pulsing = true;
-			this.keyLoop = setTimeout(this.handlePulse, this.props.initialJumpDelay);
-			this.doPulseAction();
-		}
-	}
-
-	doPulseAction () {
-		if (this.props.seekDisabled) {
-			forward('onSeekFailed', {}, this.props);
-		} else if (is('left', this.pulsingKeyCode)) {
-			this.showMiniFeedback = true;
-			this.jump(-1 * this.props.jumpBy);
-			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
-		} else if (is('right', this.pulsingKeyCode)) {
-			this.showMiniFeedback = true;
-			this.jump(this.props.jumpBy);
-			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
-		}
-	}
-
-	handlePulse = () => {
-		this.doPulseAction();
-		this.keyLoop = setTimeout(this.handlePulse, this.props.jumpDelay);
-	}
-
-	stopListeningForPulses () {
-		this.pulsing = false;
-		if (this.keyLoop) {
-			clearTimeout(this.keyLoop);
-			this.keyLoop = null;
-		}
-	}
-
-	handleKeyDown = (ev) => {
-		if (!this.props.no5WayJump &&
-				!this.state.mediaControlsVisible &&
-				!this.props.disabled &&
-				!this.state.mediaControlsDisabled &&
-				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
-			this.paused.pause();
-			this.startListeningForPulses(ev.keyCode);
-		}
-		return true;
-	}
-
 	showControlsFromPointer = () => {
 		Spotlight.setPointerMode(false);
 		this.showControls();
@@ -1001,25 +912,14 @@ const VideoPlayerBase = class extends React.Component {
 		this.pulsedPlaybackState = null;
 	}
 
-	handleKeyUp = (ev) => {
-		const {disabled, no5WayJump} = this.props;
+	handlePlay = () => {
+		this.showMiniFeedback = true;
+		this.play();
+	}
 
-		if (disabled || this.state.mediaControlsDisabled) {
-			return;
-		}
-
-		if (is('play', ev.keyCode)) {
-			this.showMiniFeedback = true;
-			this.play();
-		} else if (is('pause', ev.keyCode)) {
-			this.showMiniFeedback = true;
-			this.pause();
-		}
-
-		if (!no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
-			this.stopListeningForPulses();
-			this.paused.resume();
-		}
+	handlePause = () => {
+		this.showMiniFeedback = true;
+		this.pause();
 	}
 
 	handleRewind = () => {
@@ -1030,6 +930,20 @@ const VideoPlayerBase = class extends React.Component {
 	handleFastForward = () => {
 		this.showMiniFeedback = true;
 		this.fastForward();
+	}
+
+	handlePulse = ({keyCode}) => {
+		if (this.props.seekDisabled) {
+			forward('onSeekFailed', {}, this.props);
+		} else if (is('left', keyCode)) {
+			this.showMiniFeedback = true;
+			this.jump(-1 * this.props.jumpBy);
+			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
+		} else if (is('right', keyCode)) {
+			this.showMiniFeedback = true;
+			this.jump(this.props.jumpBy);
+			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
+		}
 	}
 
 	handleGlobalKeyDown = this.handle(
@@ -1728,11 +1642,8 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.announce;
 		delete rest.autoCloseTimeout;
 		delete rest.feedbackHideDelay;
-		delete rest.initialJumpDelay;
 		delete rest.jumpBy;
-		delete rest.jumpDelay;
 		delete rest.miniFeedbackHideDelay;
-		delete rest.no5WayJump;
 		delete rest.onBackwardButtonClick;
 		delete rest.onControlsAvailable;
 		delete rest.onForwardButtonClick;
@@ -1850,8 +1761,6 @@ const VideoPlayerBase = class extends React.Component {
 								mediaDisabled={disabled || this.state.mediaControlsDisabled}
 								onBackwardButtonClick={this.onBackward}
 								onForwardButtonClick={this.onForward}
-								onFastForward={this.handleFastForward}
-								onRewind={this.handleRewind}
 								onJumpBackwardButtonClick={this.onJumpBackward}
 								onJumpForwardButtonClick={this.onJumpForward}
 								onKeyDown={this.handleKeyDownFromControls}
@@ -1860,6 +1769,13 @@ const VideoPlayerBase = class extends React.Component {
 								paused={this.state.paused}
 								spotlightDisabled={!this.state.mediaControlsVisible || spotlightDisabled}
 								visible={this.state.mediaControlsVisible}
+
+
+								onFastForward={this.handleFastForward}
+								onRewind={this.handleRewind}
+								onPlay={this.handlePlay}
+								onPause={this.handlePause}
+								onPulse={this.handlePulse}
 							/>
 						</ControlsContainer>
 					</div> :

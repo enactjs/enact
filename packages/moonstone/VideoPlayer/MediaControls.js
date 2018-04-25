@@ -3,6 +3,7 @@ import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import {on, off} from '@enact/core/dispatcher';
+import Pause from '@enact/spotlight/Pause';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
@@ -391,6 +392,27 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 	class MediaControlsDecoratorHOC extends React.Component {
 		static propTypes = /** @lends moonstone/VideoPlayer.MediaControlsDecoratorHOC.prototype */ {
 			/**
+			 * The number of milliseconds that the player will pause before firing the
+			 * first jump event on a right or left pulse.
+			 *
+			 * @type {Number}
+			 * @default 400
+			 * @public
+			 */
+			initialJumpDelay: PropTypes.number,
+
+
+			/**
+			 * The number of milliseconds that the player will throttle before firing a
+			 * jump event on a right or left pulse.
+			 *
+			 * @type {Number}
+			 * @default 200
+			 * @public
+			 */
+			jumpDelay: PropTypes.number,
+
+			/**
 			 * These components are placed below the title. Typically these will be media descriptor
 			 * icons, like how many audio channels, what codec the video uses, but can also be a
 			 * description for the video or anything else that seems appropriate to provide information
@@ -431,6 +453,15 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			moreButtonDisabled: PropTypes.bool,
 
 			/**
+			 * Setting this to `true` will disable left and right keys for seeking.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			no5WayJump: PropTypes.bool,
+
+			/**
 			 * Removes the "rate" buttons. The buttons that change the playback rate of the video.
 			 * Double speed, half speed, reverse 4x speed, etc.
 			 *
@@ -445,6 +476,15 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			 * @public
 			 */
 			onFastForward: PropTypes.func,
+
+			onPause: PropTypes.func,
+			onPlay: PropTypes.func,
+			/**
+			 * [onFastForward description]
+			 * @type {Function}
+			 * @public
+			 */
+			onPulse: PropTypes.func,
 
 			/**
 			 * [onRewind description]
@@ -487,12 +527,21 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			visible: PropTypes.bool
 		}
 
+		static defaultProps = {
+			initialJumpDelay: 400,
+			jumpDelay: 200
+		}
+
 		displayName = 'MediaControlsDecorator'
 
 		constructor (props) {
 			super(props);
 
+			this.keyLoop = null;
 			this.mediaControls = null;
+			this.pulsingKeyCode = null;
+			this.pulsing = null;
+			this.paused = new Pause('VideoPlayer');
 
 			this.state = {
 				showMoreComponents: false
@@ -505,6 +554,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				countReactChildren(this.props.rightComponents),
 				countReactChildren(this.props.children)
 			);
+			on('keydown', this.handleKeyDown);
 			on('keyup', this.handleKeyUp);
 		}
 
@@ -543,11 +593,29 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
+			off('keydown', this.handleKeyDown);
 			off('keyup', this.handleKeyUp);
+			this.stopListeningForPulses();
 		}
 
 		handleMoreClick = () => {
 			this.toggleMoreComponents();
+		}
+
+		handleKeyDown = (ev) => {
+			const {
+				mediaDisabled,
+				no5WayJump,
+				visible
+			} = this.props;
+
+			if (!no5WayJump &&
+					!visible &&
+					!mediaDisabled &&
+					(is('left', ev.keyCode) || is('right', ev.keyCode))) {
+				this.paused.pause();
+				this.startListeningForPulses(ev.keyCode);
+			}
 		}
 
 		handleKeyUp = (ev) => {
@@ -555,6 +623,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				mediaDisabled,
 				moreButtonColor,
 				moreButtonDisabled,
+				no5WayJump,
 				noRateButtons,
 				rateButtonsDisabled,
 				visible
@@ -567,12 +636,49 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				this.toggleMoreComponents();
 			}
 
+			if (is('play', ev.keyCode)) {
+				forward('onPlay', ev, this.props);
+			} else if (is('pause', ev.keyCode)) {
+				forward('onPause', ev, this.props);
+			}
+
+			if (!no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
+				this.stopListeningForPulses();
+				this.paused.resume();
+			}
+
 			if (!noRateButtons && !rateButtonsDisabled) {
 				if (is('rewind', ev.keyCode)) {
 					forward('onRewind', ev, this.props);
 				} else if (is('fastForward', ev.keyCode)) {
 					forward('onFastForward', ev, this.props);
 				}
+			}
+		}
+
+		startListeningForPulses = (keyCode) => {
+			// Ignore new pulse calls if key code is same, otherwise start new series if we're pulsing
+			if (this.pulsing && keyCode !== this.pulsingKeyCode) {
+				this.stopListeningForPulses();
+			}
+			if (!this.pulsing) {
+				this.pulsingKeyCode = keyCode;
+				this.pulsing = true;
+				this.keyLoop = setTimeout(this.handlePulse, this.props.initialJumpDelay);
+				forward('onPulse', {keyCode}, this.props);
+			}
+		}
+
+		handlePulse = () => {
+			forward('onPulse', {keyCode: this.pulsingKeyCode}, this.props);
+			this.keyLoop = setTimeout(this.handlePulse, this.props.jumpDelay);
+		}
+
+		stopListeningForPulses () {
+			this.pulsing = false;
+			if (this.keyLoop) {
+				clearTimeout(this.keyLoop);
+				this.keyLoop = null;
 			}
 		}
 
@@ -601,7 +707,12 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 
 		render () {
 			const props = Object.assign({}, this.props);
+			delete props.initialJumpDelay;
+			delete props.jumpDelay;
 			delete props.onFastForward;
+			delete props.onPause;
+			delete props.onPlay;
+			delete props.onPulse;
 			delete props.onRewind;
 			delete props.onToggleMore;
 
