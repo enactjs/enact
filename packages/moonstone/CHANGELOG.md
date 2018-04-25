@@ -19,15 +19,17 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Popup` property `closeButtonAriaLabel` to configure the label set on popup close button
 - `moonstone/MediaOverlay` component
 
+### Changed
+
+- `moonstone/IncrementSlider` and `moonstone/Slider` prop `tooltip` to support either a boolean for
+- the default tooltip or an element or component for a custom tooltip
+- `moonstone/ProgressBar.ProgressBarTooltip`, `moonstone/Slider.SliderTooltip` and `moonstone/IncrementSlider/IncrementSliderTooltip` exports to be `moonstone/ProgressBar.Tooltip`, `moonstone/Slider.Tooltip` and `moonstone/IncrementSlider/Tooltip` respectively
+
 ### Fixed
 
 - `moonstone/Scroller` and `moonstone/VirtualList` navigation via 5-way from paging controls
 - `moonstone/MoonstoneDecorator` to optimize localized font loading performance
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to give initial focus
-
-### Changed
-
-- `moonstone/IncrementSlider` and `moonstone/Slider` prop `tooltip` to support either a boolean for the default tooltip or an element or component for a custom tooltip
 
 ## [2.0.0-alpha.8] - 2018-04-17
 
