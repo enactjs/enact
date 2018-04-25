@@ -237,12 +237,12 @@ const DayPickerBase = class extends React.Component {
 	 * Determines whether it should return ariaLabel passed in prop.
 	 *
 	 * @param {Number} selected day type
-	 * @param {String[]} selected day aria labels
 	 * @param {String[]} selected day strings
+	 * @param {String[]} selected day aria labels
 	 *
 	 * @returns {String} Aria label for "Every Day", "Every Weekend", "Every Week" or list of days
 	 */
-	getSelectedDayAriaLabel = (type, selectDayAriaLabels, selectDayStrings) => {
+	getSelectedDayAriaLabel = (type, selectDayStrings, selectDayAriaLabels) => {
 		const
 			{everyDayAriaLabel, everyWeekdayAriaLabel, everyWeekendAriaLabel} = this.props,
 			selected = coerceArray(this.props.selected);
@@ -291,19 +291,15 @@ const DayPickerBase = class extends React.Component {
 
 	render () {
 		const
-			{childrenAriaLabels, everyDayAriaLabel, everyWeekdayAriaLabel, everyWeekendAriaLabel, title, ...rest} = this.props,
+			{childrenAriaLabels, title, ...rest} = this.props,
 			type = this.calcSelectedDayType(this.props.selected),
 			label = this.getSelectedDayString(type, this.shortDayNames);
+		let ariaLabel = null;
 
 		delete rest.locale;
 
-		let ariaLabel = null;
-		if (label &&
-			((everyDayAriaLabel || everyWeekdayAriaLabel || everyWeekendAriaLabel) ||
-			(childrenAriaLabels && childrenAriaLabels.length > 0))) {
-			ariaLabel = `${title} ${this.getSelectedDayAriaLabel(type, childrenAriaLabels, this.longDayNames)}`;
-		} else if (type === SELECTED_DAY_TYPES.SELECTED_DAYS) {
-			ariaLabel = `${title} ${this.getSelectedDayString(type, this.longDayNames)}`;
+		if (label) {
+			ariaLabel = `${title} ${this.getSelectedDayAriaLabel(type, this.longDayNames, childrenAriaLabels)}`;
 		}
 
 		return (
