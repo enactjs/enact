@@ -412,7 +412,6 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			 */
 			initialJumpDelay: PropTypes.number,
 
-
 			/**
 			 * The number of milliseconds that the player will throttle before firing a
 			 * jump event on a right or left pulse.
@@ -495,8 +494,20 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			 */
 			onFastForward: PropTypes.func,
 
+			/**
+			 * [onFastForward description]
+			 * @type {Function}
+			 * @public
+			 */
 			onPause: PropTypes.func,
+
+			/**
+			 * [onFastForward description]
+			 * @type {Function}
+			 * @public
+			 */
 			onPlay: PropTypes.func,
+
 			/**
 			 * [onFastForward description]
 			 * @type {Function}
@@ -558,7 +569,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			jumpDelay: 200
 		}
 
-		displayName = 'MediaControlsDecorator'
+		static displayName = 'MediaControlsDecorator'
 
 		constructor (props) {
 			super(props);
@@ -683,6 +694,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
+		// TODO: may need to add a prop for disabling pulse. See VideoPlayer.reloadVideo()
 		startListeningForPulses = (keyCode) => {
 			// Ignore new pulse calls if key code is same, otherwise start new series if we're pulsing
 			if (this.pulsing && keyCode !== this.pulsingKeyCode) {
