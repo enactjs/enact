@@ -33,6 +33,7 @@ const
  * A moonstone-styled base component for [GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem}.
  *
  * @class GridListImageItemBase
+ * @extends ui/GridListImageItem.GridListImageItem
  * @memberof moonstone/GridListImageItem
  * @ui
  * @public
