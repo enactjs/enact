@@ -4,7 +4,6 @@ import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Spottable from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 
@@ -13,22 +12,21 @@ import ScrollableNative from '../Scrollable/ScrollableNative';
 
 const SpotlightPlaceholder = Spottable('div');
 
-const
-	SpotlightContainerConfig = {
+const configureSpotlight = (spotlightId, instance) => {
+	Spotlight.set(spotlightId, {
 		enterTo: 'last-focused',
 		/*
 		 * Returns the data-index as the key for last focused
 		 */
-		lastFocusedPersist: (node) => {
-			const indexed = node.dataset.index ? node : node.closest('[data-index]');
-			if (indexed) {
+		lastFocusedPersist: function () {
+			if (this.lastFocusedIndex != null) {
 				return {
 					container: false,
 					element: true,
-					key: indexed.dataset.index
+					key: this.lastFocusedIndex
 				};
 			}
-		},
+		}.bind(instance),
 		/*
 		 * Restores the data-index into the placeholder if its the only element. Tries to find a
 		 * matching child otherwise.
@@ -43,10 +41,11 @@ const
 			return all.reduce((focused, node) => {
 				return focused || node.dataset.index === key && node;
 			}, null);
-		},
-		preserveId: true,
-		restrict: 'self-first'
-	},
+		}
+	});
+};
+
+const
 	dataContainerDisabledAttribute = 'data-spotlight-container-disabled',
 	isDown = is('down'),
 	isLeft = is('left'),
@@ -125,14 +124,6 @@ const VirtualListBaseFactory = (type) => {
 			dataSize: PropTypes.number,
 
 			/**
-			 * Spotlight container Id.
-			 *
-			 * @type {String}
-			 * @private
-			 */
-			'data-spotlight-id': PropTypes.string, // eslint-disable-line react/sort-prop-types,
-
-			/**
 			 * Passes the instance of [VirtualList]{@link ui/VirtualList.VirtualList}.
 			 *
 			 * @type {Object}
@@ -192,7 +183,24 @@ const VirtualListBaseFactory = (type) => {
 			 * @default 0
 			 * @public
 			 */
-			spacing: PropTypes.number
+			spacing: PropTypes.number,
+
+			/**
+			 * Spotlight Id. It would be the same with [Scrollable]{@link ui/Scrollable.Scrollable}'s.
+			 *
+			 * @type {String}
+			 * @private
+			 */
+			spotlightId: PropTypes.string
+		}
+
+		constructor (props) {
+			super(props);
+
+			const {spotlightId} = props;
+			if (spotlightId) {
+				configureSpotlight(spotlightId, this);
+			}
 		}
 
 		componentDidMount () {
@@ -212,6 +220,12 @@ const VirtualListBaseFactory = (type) => {
 
 			if (containerNode && containerNode.addEventListener) {
 				containerNode.addEventListener('keydown', this.onKeyDown);
+			}
+		}
+
+		componentWillReceiveProps (nextProps) {
+			if (nextProps.spotlightId && nextProps.spotlightId !== this.props.spotlightId) {
+				configureSpotlight(nextProps.spotlightId, this);
 			}
 		}
 
@@ -245,10 +259,12 @@ const VirtualListBaseFactory = (type) => {
 		restoreLastFocused = false
 
 		setContainerDisabled = (bool) => {
-			const contentNode = this.uiRef.contentRef;
+			const
+				{spotlightId} = this.props,
+				containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 
-			if (contentNode) {
-				contentNode.setAttribute(dataContainerDisabledAttribute, bool);
+			if (containerNode) {
+				containerNode.setAttribute(dataContainerDisabledAttribute, bool);
 
 				if (bool) {
 					document.addEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
@@ -416,7 +432,7 @@ const VirtualListBaseFactory = (type) => {
 		 */
 
 		setRestrict = (bool) => {
-			Spotlight.set(this.props['data-spotlight-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
+			Spotlight.set(this.props.spotlightId, {restrict: (bool) ? 'self-only' : 'self-first'});
 		}
 
 		setSpotlightContainerRestrict = (keyCode, target) => {
@@ -570,6 +586,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
+			this.isScrolledByJump = false;
 		}
 
 		initItemRef = (ref, index) => {
@@ -582,7 +599,6 @@ const VirtualListBaseFactory = (type) => {
 					// So we would like to skip `focus` handling when focusing the item as a workaround.
 					this.isScrolledByJump = true;
 					this.focusOnItem(index);
-					this.isScrolledByJump = false;
 				}
 			}
 		}
@@ -633,9 +649,9 @@ const VirtualListBaseFactory = (type) => {
 				!this.isPlaceholderFocused()
 			) {
 				const
-					containerId = this.props['data-spotlight-id'],
+					{spotlightId} = this.props,
 					node = this.uiRef.containerRef.querySelector(
-						`[data-spotlight-id="${containerId}"] [data-index="${this.preservedIndex}"]`
+						`[data-spotlight-id="${spotlightId}"] [data-index="${this.preservedIndex}"]`
 					);
 
 				if (node) {
@@ -650,7 +666,7 @@ const VirtualListBaseFactory = (type) => {
 					// spotlight isn't lost
 					if (!foundLastFocused) {
 						this.restoreLastFocused = true;
-						Spotlight.focus(containerId);
+						Spotlight.focus(spotlightId);
 					}
 				}
 			}
@@ -721,6 +737,7 @@ const VirtualListBaseFactory = (type) => {
 				// If we need to restore last focus and the index is beyond the screen,
 				// we call `scrollTo` to create DOM for it.
 				cbScrollTo({index: preservedIndex, animate: false, focus: true});
+				this.isScrolledByJump = true;
 
 				return true;
 			} else {
@@ -746,6 +763,7 @@ const VirtualListBaseFactory = (type) => {
 				{itemRenderer, itemsRenderer, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
+			delete rest.spotlightId;
 			delete rest.initUiChildRef;
 			delete rest.isItemDisabled;
 
@@ -889,14 +907,10 @@ ScrollableVirtualListNative.defaultProps = {
 	direction: 'vertical'
 };
 
-const SpottableVirtualList = SpotlightContainerDecorator(SpotlightContainerConfig, ScrollableVirtualList);
-
-const SpottableVirtualListNative = SpotlightContainerDecorator(SpotlightContainerConfig, ScrollableVirtualListNative);
-
 export default VirtualListBase;
 export {
-	SpottableVirtualList,
-	SpottableVirtualListNative,
+	ScrollableVirtualList,
+	ScrollableVirtualListNative,
 	VirtualListBase,
 	VirtualListBaseNative
 };
