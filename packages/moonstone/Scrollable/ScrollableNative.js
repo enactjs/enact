@@ -1,5 +1,6 @@
 import {constants, ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
+import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
@@ -179,6 +180,7 @@ class ScrollableBaseNative extends Component {
 	lastScrollPositionOnFocus = null
 	indexToFocus = null
 	nodeToFocus = null
+	isPointerHiding = false
 
 	// browser native scrolling
 	resetPosition = null // prevent auto-scroll on focus by Spotlight
@@ -437,13 +439,21 @@ class ScrollableBaseNative extends Component {
 	}
 
 	onKeyDown = (ev) => {
-		this.animateOnFocus = true;
-		if (isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) {
-			ev.preventDefault();
-			if (!ev.repeat && this.hasFocus()) {
-				this.scrollByPage(ev.keyCode);
+		if (is('pointerHide', ev.keyCode)) {
+			this.isPointerHiding = true;
+		} else if (!is('pointerShow', ev.keyCode) && !this.isPointerHiding) {
+			this.animateOnFocus = true;
+			if (isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) {
+				ev.preventDefault();
+				if (!ev.repeat && this.hasFocus()) {
+					this.scrollByPage(ev.keyCode);
+				}
 			}
 		}
+	}
+
+	onKeyUp = () => {
+		this.isPointerHiding = false;
 	}
 
 	onScrollbarButtonClick = ({isPreviousScrollButton, isVerticalScrollBar}) => {
@@ -578,6 +588,7 @@ class ScrollableBaseNative extends Component {
 				{...rest}
 				addEventListeners={this.addEventListeners}
 				onKeyDown={this.onKeyDown}
+				onKeyUp={this.onKeyUp}
 				onMouseDown={this.onMouseDown}
 				onWheel={this.onWheel}
 				ref={this.initUiRef}
