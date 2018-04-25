@@ -149,6 +149,14 @@ const MediaControlsBase = kind({
 		moreButtonLabel: PropTypes.string,
 
 		/**
+		 * [moreButtonSpotlightId description]
+		 * @type {String}
+		 * @default 'mediaButton'
+		 * @public
+		 */
+		moreButtonSpotlightId: PropTypes.string,
+
+		/**
 		 * Removes the "jump" buttons. The buttons that skip forward or backward in the video.
 		 *
 		 * @type {Boolean}
@@ -298,6 +306,7 @@ const MediaControlsBase = kind({
 		jumpBackwardIcon: 'skipbackward',
 		jumpForwardIcon: 'skipforward',
 		moreButtonColor: 'blue',
+		moreButtonSpotlightId: 'moreButton',
 		pauseIcon: 'pause',
 		playIcon: 'play',
 		visible: true
@@ -327,6 +336,7 @@ const MediaControlsBase = kind({
 		mediaDisabled,
 		moreButtonColor,
 		moreButtonDisabled,
+		moreButtonSpotlightId,
 		moreIcon,
 		moreIconLabel,
 		noJumpButtons,
@@ -377,6 +387,7 @@ const MediaControlsBase = kind({
 							onTap={onMoreClick}
 							tooltipProps={{role: 'dialog'}}
 							tooltipText={moreIconLabel}
+							spotlightId={moreButtonSpotlightId}
 							spotlightDisabled={spotlightDisabled}
 						>
 							{moreIcon}
@@ -451,6 +462,13 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			 * @public
 			 */
 			moreButtonDisabled: PropTypes.bool,
+
+			/**
+			 * [moreButtonSpotlightId description]
+			 * @type {String}
+			 * @public
+			 */
+			moreButtonSpotlightId: PropTypes.string,
 
 			/**
 			 * Setting this to `true` will disable left and right keys for seeking.
@@ -631,6 +649,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				mediaDisabled,
 				moreButtonColor,
 				moreButtonDisabled,
+				moreButtonSpotlightId,
 				no5WayJump,
 				noRateButtons,
 				rateButtonsDisabled,
@@ -640,7 +659,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			if (mediaDisabled) return;
 
 			if (visible && moreButtonColor && !moreButtonDisabled && is(moreButtonColor, ev.keyCode)) {
-				Spotlight.focus(this.mediaControls.querySelector(`.${css.moreButton}`));
+				Spotlight.focus(moreButtonSpotlightId);
 				this.toggleMoreComponents();
 			}
 
