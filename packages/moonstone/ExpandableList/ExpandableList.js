@@ -308,7 +308,7 @@ const ExpandableListBase = kind({
 		},
 
 		children: ({children, childrenAriaLabels}) => {
-			if (childrenAriaLabels && childrenAriaLabels.length === 0) {
+			if (!childrenAriaLabels || childrenAriaLabels.length === 0) {
 				return children;
 			}
 			const childrenArray = [];
