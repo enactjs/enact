@@ -1707,7 +1707,7 @@ const VideoPlayerBase = class extends React.Component {
 									thumbnailComponent={thumbnailComponent}
 									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
-									visible
+									visible={this.state.feedbackVisible}
 								/>
 							</MediaSlider>}
 
