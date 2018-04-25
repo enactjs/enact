@@ -152,7 +152,6 @@ const MediaControlsBase = kind({
 		/**
 		 * [moreButtonSpotlightId description]
 		 * @type {String}
-		 * @default 'mediaButton'
 		 * @public
 		 */
 		moreButtonSpotlightId: PropTypes.string,
@@ -307,7 +306,6 @@ const MediaControlsBase = kind({
 		jumpBackwardIcon: 'skipbackward',
 		jumpForwardIcon: 'skipforward',
 		moreButtonColor: 'blue',
-		moreButtonSpotlightId: 'moreButton',
 		pauseIcon: 'pause',
 		playIcon: 'play',
 		visible: true
@@ -466,6 +464,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			/**
 			 * [moreButtonSpotlightId description]
 			 * @type {String}
+			 * @default 'mediaButton'
 			 * @public
 			 */
 			moreButtonSpotlightId: PropTypes.string,
@@ -576,6 +575,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 
 		static defaultProps = {
 			initialJumpDelay: 400,
+			moreButtonSpotlightId: 'moreButton',
 			jumpDelay: 200
 		}
 
