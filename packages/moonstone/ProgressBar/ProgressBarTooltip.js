@@ -1,11 +1,19 @@
 import kind from '@enact/core/kind';
+import {memoize} from '@enact/core/util';
+import ilib from '@enact/i18n';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import NumFmt from '@enact/i18n/ilib/lib/NumFmt';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import Tooltip from '../TooltipDecorator/Tooltip';
 
 import css from './ProgressBarTooltip.less';
+
+const memoizedPercentFormatter = memoize((/* locale */) => new NumFmt({
+	type: 'percentage',
+	useNative: false
+}));
 
 /**
  * A [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} specifically adapted for use with
@@ -33,17 +41,6 @@ const ProgressBarTooltipBase = kind({
 		forceSide: PropTypes.bool,
 
 		/**
-		* When not `vertical`, determines which side of the knob the tooltip appears on.
-		* When `false`, the tooltip will be on the left side, when `true`, the tooltip will
-		* be on the right.
-		*
-		* @type {String}
-		* @default 'rising'
-		* @private
-		*/
-		knobAfterMidpoint: PropTypes.bool,
-
-		/**
 		 * Sets the orientation of the tooltip based on the orientation of the Slider, 'vertical'
 		 * sends the tooltip to one of the sides, 'horizontal'  positions it above the Slider.
 		 * Must be either `'horizontal'` or `'vertical'`.
@@ -53,6 +50,15 @@ const ProgressBarTooltipBase = kind({
 		 * @public
 		 */
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+
+		/**
+		 * Display the percentage instead of the value
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		percent: PropTypes.bool,
 
 		/**
 		 * The proportion of progress across the bar. Should be a number between 0 and 1.
@@ -75,15 +81,25 @@ const ProgressBarTooltipBase = kind({
 		 * @default 'before'
 		 * @public
 		 */
-		side: PropTypes.oneOf(['before', 'after'])
+		side: PropTypes.oneOf(['before', 'after']),
+
+		/**
+		 * Visibility of the tooltip
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		visible: PropTypes.bool
 	},
 
 	defaultProps: {
-		knobAfterMidpoint: false,
 		forceSide: false,
 		orientation: 'horizontal',
+		percent: false,
 		proportion: 0,
-		side: 'before'
+		side: 'before',
+		visible: false
 	},
 
 	styles: {
@@ -94,10 +110,26 @@ const ProgressBarTooltipBase = kind({
 	contextTypes,
 
 	computed: {
-		className: ({forceSide, knobAfterMidpoint, orientation, side, styler}) => styler.append(orientation, {ignoreLocale: forceSide, knobAfterMidpoint}, side),
-		arrowAnchor: ({knobAfterMidpoint, orientation}) => {
+		children: ({children, proportion, percent}) => {
+			if (percent) {
+				const formatter = memoizedPercentFormatter(ilib.getLocale());
+
+				return formatter.format(Math.floor(proportion * 100));
+			}
+
+			return children;
+		},
+		className: ({forceSide, orientation, proportion, side, styler}) => styler.append(
+			orientation,
+			{
+				afterMidpoint: proportion > 0.5,
+				ignoreLocale: forceSide
+			},
+			side
+		),
+		arrowAnchor: ({proportion, orientation}) => {
 			if (orientation === 'vertical') return 'middle';
-			return knobAfterMidpoint ? 'left' : 'right';
+			return proportion > 0.5 ? 'left' : 'right';
 		},
 		direction: ({forceSide, orientation, side}, context) => {
 			let dir = 'right';
@@ -127,10 +159,12 @@ const ProgressBarTooltipBase = kind({
 		})
 	},
 
-	render: ({children, ...rest}) => {
-		delete rest.knobAfterMidpoint;
+	render: ({children, visible, ...rest}) => {
+		if (!visible) return null;
+
 		delete rest.forceSide;
 		delete rest.orientation;
+		delete rest.percent;
 		delete rest.proportion;
 		delete rest.side;
 
@@ -142,5 +176,10 @@ const ProgressBarTooltipBase = kind({
 	}
 });
 
+ProgressBarTooltipBase.defaultSlot = 'tooltip';
+
 export default ProgressBarTooltipBase;
-export {ProgressBarTooltipBase, ProgressBarTooltipBase as ProgressBarTooltip};
+export {
+	ProgressBarTooltipBase,
+	ProgressBarTooltipBase as ProgressBarTooltip
+};

@@ -1,3 +1,5 @@
+import sinon from 'sinon';
+
 import {memoize} from '..';
 
 describe('memoize', function () {
@@ -14,5 +16,16 @@ describe('memoize', function () {
 		memoizedTest('a');
 		memoizedTest('a');
 		expect(obj).to.have.property('a', 1);
+	});
+
+	it('should forward all args to memoized function', function () {
+		const spy = sinon.spy();
+		const memoized = memoize(spy);
+		memoized(1, 2);
+
+		const expected = [1, 2];
+		const actual = spy.firstCall.args;
+
+		expect(expected).to.deep.equal(actual);
 	});
 });
