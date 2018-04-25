@@ -817,14 +817,12 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		const {source, preloadSource} = this.props;
+		const {source} = this.props;
 		const {source: prevSource, preloadSource: prevPreloadSource} = prevProps;
 
 		if (!compareSources(source, prevSource)) {
 			const isPreloadedVideo = source && prevPreloadSource && compareSources(source, prevPreloadSource);
-			const isPreloadedSourceSame = preloadSource && prevPreloadSource && compareSources(preloadSource, prevPreloadSource);
-
-			this.reloadVideo(isPreloadedVideo, isPreloadedSourceSame);
+			this.reloadVideo(isPreloadedVideo);
 		}
 
 		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
@@ -1286,16 +1284,12 @@ const VideoPlayerBase = class extends React.Component {
 		};
 	}
 
-	reloadVideo = (isPreloaded, preloadSourcesEqual) => {
+	reloadVideo = (isPreloaded) => {
 		// When changing a HTML5 video, you have to reload it.
 		this.stopListeningForPulses();
 
 		if (!isPreloaded) {
 			this.video.load();
-		}
-
-		if (isPreloaded && preloadSourcesEqual) {
-			this.handleLoadStart();
 		}
 
 		this.setState({

@@ -144,6 +144,19 @@ class VideoWithPreload extends React.Component {
 		}
 	}
 
+	componentDidUpdate (prevProps) {
+		const {source, preloadSource} = this.props;
+		const {source: prevSource, preloadSource: prevPreloadSource} = prevProps;
+
+		const isPreloadedVideo = source && prevPreloadSource && compareSources(source, prevPreloadSource);
+		const isPreloadedSourceSame = preloadSource && prevPreloadSource && compareSources(preloadSource, prevPreloadSource);
+
+		if (!compareSources(source, prevSource) && isPreloadedVideo && isPreloadedSourceSame) {
+			this.props.handleLoadStart();
+		}
+	}
+
+
 	// These methods are here because on webOS TVs we can't play a video until after second video
 	// player is loaded
 	handleVideoLoadStart = () => {
