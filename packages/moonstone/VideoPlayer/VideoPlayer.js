@@ -14,7 +14,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {contextTypes, FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
-import {forKey, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
+import {adaptEvent, call, forKey, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
 import ilib from '@enact/i18n';
 import {perfNow, Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
@@ -53,13 +53,16 @@ const ControlsContainer = SpotlightContainerDecorator(
 	'div'
 );
 
+const forwardWithState = (type) => adaptEvent(call('addStateToEvent'), forwardWithPrevent(type));
+
 // provide forwarding of events on media controls
 const forwardControlsAvailable = forward('onControlsAvailable');
-const forwardBackwardButtonClick = forwardWithPrevent('onBackwardButtonClick');
-const forwardForwardButtonClick = forwardWithPrevent('onForwardButtonClick');
-const forwardJumpBackwardButtonClick = forwardWithPrevent('onJumpBackwardButtonClick');
-const forwardJumpForwardButtonClick = forwardWithPrevent('onJumpForwardButtonClick');
-const forwardPlayButtonClick = forward('onPlayButtonClick');
+const forwardPlay = forwardWithState('onPlay');
+const forwardPause = forwardWithState('onPause');
+const forwardRewind = forwardWithState('onRewind');
+const forwardFastForward = forwardWithState('onFastForward');
+const forwardJumpBackward = forwardWithState('onJumpBackward');
+const forwardJumpForward = forwardWithState('onJumpForward');
 
 const AnnounceState = {
 	// Video is loaded but additional announcements have not been made
@@ -262,15 +265,6 @@ const VideoPlayerBase = class extends React.Component {
 		noSpinner: PropTypes.bool,
 
 		/**
-		 * Function executed when the user clicks the Backward button. Is passed
-		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onBackwardButtonClick: PropTypes.func,
-
-		/**
 		 * Function executed when the player's controls change availability, whether they are shown
 		 * or hidden. The current status is sent as the first argument in an object with a key
 		 * `available` which will be either true or false. `onControlsAvailable({available: true})`
@@ -280,15 +274,7 @@ const VideoPlayerBase = class extends React.Component {
 		 */
 		onControlsAvailable: PropTypes.func,
 
-		/**
-		 * Function executed when the user clicks the Forward button. Is passed
-		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onForwardButtonClick: PropTypes.func,
-
+		onFastForward: PropTypes.func,
 		/**
 		 * Function executed when the user clicks the JumpBackward button. Is passed
 		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
@@ -296,7 +282,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onJumpBackwardButtonClick: PropTypes.func,
+		onJumpBackward: PropTypes.func,
 
 		/**
 		 * Function executed when the user clicks the JumpForward button. Is passed
@@ -305,16 +291,11 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onJumpForwardButtonClick: PropTypes.func,
+		onJumpForward: PropTypes.func,
 
-		/**
-		 * Function executed when the user clicks the Play button. Is passed
-		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onPlayButtonClick: PropTypes.func,
+		onPause: PropTypes.func,
+		onPlay: PropTypes.func,
+		onRewind: PropTypes.func,
 
 		/**
 		 * Function executed when the user is moving the VideoPlayer's Slider knob independently of
@@ -901,25 +882,36 @@ const VideoPlayerBase = class extends React.Component {
 		this.pulsedPlaybackState = null;
 	}
 
-	handlePlay = () => {
-		this.showMiniFeedback = true;
-		this.play();
+	shouldShowMiniFeedback = (ev) => {
+		if (ev.type === 'keyup') {
+			this.showMiniFeedback = true;
+		}
+		return true;
 	}
 
-	handlePause = () => {
-		this.showMiniFeedback = true;
-		this.pause();
-	}
+	handlePlay = this.handle(
+		forwardPlay,
+		this.shouldShowMiniFeedback,
+		() => this.play()
+	)
 
-	handleRewind = () => {
-		this.showMiniFeedback = true;
-		this.rewind();
-	}
+	handlePause = this.handle(
+		forwardPause,
+		this.shouldShowMiniFeedback,
+		() => this.pause()
+	)
 
-	handleFastForward = () => {
-		this.showMiniFeedback = true;
-		this.fastForward();
-	}
+	handleRewind = this.handle(
+		forwardRewind,
+		this.shouldShowMiniFeedback,
+		() => this.rewind(),
+	)
+
+	handleFastForward = this.handle(
+		forwardFastForward,
+		this.shouldShowMiniFeedback,
+		() => this.fastForward()
+	)
 
 	handlePulse = ({keyCode}) => {
 		if (this.props.seekDisabled) {
@@ -1508,27 +1500,11 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	onJumpBackward = this.handle(
-		(ev, props) => forwardJumpBackwardButtonClick(this.addStateToEvent(ev), props),
+		forwardJumpBackward,
 		() => this.jump(-1 * this.props.jumpBy)
 	)
-	onBackward = this.handle(
-		(ev, props) => forwardBackwardButtonClick(this.addStateToEvent(ev), props),
-		this.rewind
-	)
-	onPlay = (ev) => {
-		forwardPlayButtonClick(this.addStateToEvent(ev), this.props);
-		if (this.state.paused) {
-			this.play();
-		} else {
-			this.pause();
-		}
-	}
-	onForward = this.handle(
-		(ev, props) => forwardForwardButtonClick(this.addStateToEvent(ev), props),
-		this.fastForward
-	)
 	onJumpForward = this.handle(
-		(ev, props) => forwardJumpForwardButtonClick(this.addStateToEvent(ev), props),
+		forwardJumpForward,
 		() => this.jump(this.props.jumpBy)
 	)
 
@@ -1624,12 +1600,13 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.feedbackHideDelay;
 		delete rest.jumpBy;
 		delete rest.miniFeedbackHideDelay;
-		delete rest.onBackwardButtonClick;
 		delete rest.onControlsAvailable;
-		delete rest.onForwardButtonClick;
-		delete rest.onJumpBackwardButtonClick;
-		delete rest.onJumpForwardButtonClick;
-		delete rest.onPlayButtonClick;
+		delete rest.onFastForward;
+		delete rest.onJumpBackward;
+		delete rest.onJumpForward;
+		delete rest.onPause;
+		delete rest.onPlay;
+		delete rest.onRewind;
 		delete rest.onScrub;
 		delete rest.onSeekFailed;
 		delete rest.pauseAtEnd;
@@ -1730,30 +1707,27 @@ const VideoPlayerBase = class extends React.Component {
 									thumbnailComponent={thumbnailComponent}
 									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
-									visible={this.state.feedbackVisible}
+									visible
 								/>
 							</MediaSlider>}
 
 							<ComponentOverride
 								component={mediaControlsComponent}
 								mediaDisabled={disabled || this.state.mediaControlsDisabled}
-								onBackwardButtonClick={this.onBackward}
-								onForwardButtonClick={this.onForward}
+								onBackwardButtonClick={this.handleRewind}
+								onFastForward={this.handleFastForward}
+								onForwardButtonClick={this.handleFastForward}
 								onJumpBackwardButtonClick={this.onJumpBackward}
 								onJumpForwardButtonClick={this.onJumpForward}
 								onKeyDown={this.handleKeyDownFromControls}
-								onPlayButtonClick={this.onPlay}
+								onPause={this.handlePause}
+								onPlay={this.handlePlay}
+								onPulse={this.handlePulse}
+								onRewind={this.handleRewind}
 								onToggleMore={this.handleToggleMore}
 								paused={this.state.paused}
 								spotlightDisabled={!this.state.mediaControlsVisible || spotlightDisabled}
 								visible={this.state.mediaControlsVisible}
-
-
-								onFastForward={this.handleFastForward}
-								onRewind={this.handleRewind}
-								onPlay={this.handlePlay}
-								onPause={this.handlePause}
-								onPulse={this.handlePulse}
 							/>
 						</ControlsContainer>
 					</div> :

@@ -502,6 +502,14 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			onToggleMore: PropTypes.func,
 
 			/**
+			 * `true` when the video is paused.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			paused: PropTypes.bool,
+
+			/**
 			 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
 			 *
 			 * @type {Boolean}
@@ -674,6 +682,15 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			this.keyLoop = setTimeout(this.handlePulse, this.props.jumpDelay);
 		}
 
+		handlePlayButtonClick = (ev) => {
+			forward('onPlayButtonClick', ev, this.props);
+			if (this.props.paused) {
+				forward('onPlay', ev, this.props);
+			} else {
+				forward('onPause', ev, this.props);
+			}
+		}
+
 		stopListeningForPulses () {
 			this.pulsing = false;
 			if (this.keyLoop) {
@@ -721,6 +738,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 					ref={this.getMediaControls}
 					{...props}
 					onMoreClick={this.handleMoreClick}
+					onPlayButtonClick={this.handlePlayButtonClick}
 					showMoreComponents={this.state.showMoreComponents}
 				/>
 			);
