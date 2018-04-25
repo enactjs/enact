@@ -6,6 +6,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import Pure from '@enact/ui/internal/Pure';
 import {Subscription} from '@enact/core/internal/PubSub';
 
 import {Expandable} from '../ExpandableItem';
@@ -120,7 +121,7 @@ const DayPickerBase = kind({
 	},
 
 	computed: {
-		'aria-label': ({label, title}) => `${title} ${label}`
+		'aria-label': ({label, title}) => label ? `${title} ${label}` : null
 	},
 
 	render: ({fullDayNames, ...rest}) => {
@@ -157,11 +158,13 @@ const DayPickerBase = kind({
  * @public
  */
 
-const DayPicker = Expandable(
-	Subscription(
-		{channels: ['i18n'], mapMessageToProps: (channel, {locale}) => ({locale})},
-		DaySelectorDecorator(
-			DayPickerBase
+const DayPicker = Pure(
+	Expandable(
+		Subscription(
+			{channels: ['i18n'], mapMessageToProps: (channel, {locale}) => ({locale})},
+			DaySelectorDecorator(
+				DayPickerBase
+			)
 		)
 	)
 );
