@@ -194,6 +194,12 @@ const VirtualListBaseFactory = (type) => {
 			spotlightId: PropTypes.string
 		}
 
+		static defaultProps = {
+			dataSize: 0,
+			pageScroll: false,
+			spacing: 0
+		}
+
 		constructor (props) {
 			super(props);
 
@@ -310,7 +316,7 @@ const VirtualListBaseFactory = (type) => {
 				{dimensionToExtent, primary} = this.uiRef,
 				{findSpottableItem} = this,
 				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo,
-				numOfItemsInPage = (Math.floor((primary.clientSize + (spacing || 0)) / primary.gridSize) * dimensionToExtent),
+				numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent),
 				isPageDown = (direction === 'down' || direction === 'right') ? 1 : -1;
 			let candidateIndex = -1;
 
@@ -377,7 +383,7 @@ const VirtualListBaseFactory = (type) => {
 			const
 				{dataSize, spacing} = this.props,
 				{dimensionToExtent, primary} = this.uiRef,
-				numOfItemsInPage = Math.floor((primary.clientSize + (spacing || 0)) / primary.gridSize) * dimensionToExtent,
+				numOfItemsInPage = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent,
 				factor = (direction === 'down' || direction === 'right') ? 1 : -1;
 			let indexToScroll = currentIndex + factor * numOfItemsInPage;
 
