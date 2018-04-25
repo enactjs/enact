@@ -56,7 +56,7 @@ const DayPickerBase = class extends React.Component {
 		 * @type {Array}
 		 * @public
 		 */
-		childrenAriaLabels: PropTypes.array,
+		dayAriaLabels: PropTypes.array,
 
 		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
@@ -237,15 +237,15 @@ const DayPickerBase = class extends React.Component {
 	 * Determines whether it should return ariaLabel passed in prop.
 	 *
 	 * @param {Number} selected day type
-	 * @param {String[]} selected day strings
-	 * @param {String[]} selected day aria labels
+	 * @param {String[]} Array of long day strings
+	 * @param {String[]} Array of day aria labels
 	 *
-	 * @returns {String} Aria label for "Every Day", "Every Weekend", "Every Week" or list of days
+	 * @returns {String} Aria label for list of days
 	 */
 	getSelectedDayAriaLabel = (type, selectDayStrings, selectDayAriaLabels) => {
 		const
-			{everyDayAriaLabel, everyWeekdayAriaLabel, everyWeekendAriaLabel} = this.props,
-			selected = coerceArray(this.props.selected);
+			{everyDayAriaLabel, everyWeekdayAriaLabel, everyWeekendAriaLabel, selected} = this.props,
+			selectedArray = coerceArray(selected);
 
 		if (type === SELECTED_DAY_TYPES.EVERY_DAY) {
 			return everyDayAriaLabel || this.everyDayText;
@@ -254,7 +254,7 @@ const DayPickerBase = class extends React.Component {
 		} else if (type === SELECTED_DAY_TYPES.EVERY_WEEKDAY) {
 			return everyWeekdayAriaLabel || this.everyWeekdayText;
 		} else if (type === SELECTED_DAY_TYPES.SELECTED_DAYS) {
-			return selected.sort().map((dayIndex) => (selectDayAriaLabels && selectDayAriaLabels[dayIndex]) || selectDayStrings[dayIndex]).join(', ');
+			return selectedArray.sort().map((dayIndex) => (selectDayAriaLabels && selectDayAriaLabels[dayIndex]) || selectDayStrings[dayIndex]).join(', ');
 		}
 	}
 
@@ -263,7 +263,7 @@ const DayPickerBase = class extends React.Component {
 	 * days for a given selected day type.
 	 *
 	 * @param {Number} selected day type
-	 * @param {String[]} selected day strings
+	 * @param {String[]} selected short day strings
 	 *
 	 * @returns {String} "Every Day", "Every Weekend", "Every Week" or list of days
 	 */
@@ -291,7 +291,7 @@ const DayPickerBase = class extends React.Component {
 
 	render () {
 		const
-			{childrenAriaLabels, title, ...rest} = this.props,
+			{dayAriaLabels, title, ...rest} = this.props,
 			type = this.calcSelectedDayType(this.props.selected),
 			label = this.getSelectedDayString(type, this.shortDayNames);
 		let ariaLabel = null;
@@ -299,14 +299,14 @@ const DayPickerBase = class extends React.Component {
 		delete rest.locale;
 
 		if (label) {
-			ariaLabel = `${title} ${this.getSelectedDayAriaLabel(type, this.longDayNames, childrenAriaLabels)}`;
+			ariaLabel = `${title} ${this.getSelectedDayAriaLabel(type, this.longDayNames, dayAriaLabels)}`;
 		}
 
 		return (
 			<ExpandableListBase
 				{...rest}
 				aria-label={ariaLabel}
-				childrenAriaLabels={childrenAriaLabels}
+				childrenAriaLabels={dayAriaLabels}
 				label={label}
 				onSelect={this.handleSelect}
 				select="multiple"
