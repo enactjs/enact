@@ -4,7 +4,7 @@ import {off, on} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import Spotlight from '@enact/spotlight';
+import Spotlight, {getDirection} from '@enact/spotlight';
 
 import $L from '../internal/$L';
 
@@ -107,12 +107,20 @@ class ScrollButtons extends Component {
 		onPrevSpotlightDisappear: PropTypes.func,
 
 		/**
-		* Sets the hint string read when focusing the previous button in the scroll bar.
-		*
-		* @type {String}
-		* @public
-		*/
+		 * Sets the hint string read when focusing the previous button in the scroll bar.
+		 *
+		 * @type {String}
+		 * @public
+		 */
 		previousButtonAriaLabel: PropTypes.string,
+
+		/**
+		 * `true` if rtl, `false` if ltr.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
 
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
@@ -252,6 +260,32 @@ class ScrollButtons extends Component {
 		}
 	}
 
+	focusOnOppositeScrollButton = (ev, direction) => {
+		const buttonNode = (ev.target === this.nextButtonNodeRef) ? this.prevButtonNodeRef : this.nextButtonNodeRef;
+
+		ev.preventDefault();
+		ev.nativeEvent.stopPropagation();
+
+		if (!Spotlight.focus(buttonNode)) {
+			Spotlight.move(direction);
+		}
+	}
+
+	handleSpotlight = (ev) => {
+		const
+			{rtl, vertical} = this.props,
+			{keyCode, target} = ev,
+			direction = getDirection(keyCode),
+			fromNextToPrev = (vertical && direction === 'up') || (!vertical && direction === (rtl ? 'right' : 'left')),
+			fromPrevToNext = (vertical && direction === 'down') || (!vertical && direction === (rtl ? 'left' : 'right'));
+
+		// manually focus the opposite scroll button when 5way pressed
+		if ((fromNextToPrev && target === this.nextButtonNodeRef) ||
+			(fromPrevToNext && target === this.prevButtonNodeRef)) {
+			this.focusOnOppositeScrollButton(ev, direction);
+		}
+	}
+
 	depressButton = () => {
 		this.setPressStatus(true);
 	}
@@ -306,6 +340,7 @@ class ScrollButtons extends Component {
 				aria-label={previousButtonAriaLabel}
 				key="prevButton"
 				data-scroll-button="previous"
+				data-spotlight-overflow="ignore"
 				direction={vertical ? 'up' : 'left'}
 				disabled={disabled || prevButtonDisabled}
 				onClick={this.handlePrevScroll}
@@ -315,6 +350,9 @@ class ScrollButtons extends Component {
 				onKeyUp={this.releaseButton}
 				onMouseDown={this.depressButton}
 				onSpotlightDisappear={onPrevSpotlightDisappear}
+				onSpotlightDown={this.handleSpotlight}
+				onSpotlightLeft={this.handleSpotlight}
+				onSpotlightRight={this.handleSpotlight}
 				ref={this.initPrevButtonRef}
 			>
 				{prevIcon}
@@ -324,6 +362,7 @@ class ScrollButtons extends Component {
 				aria-label={nextButtonAriaLabel}
 				key="nextButton"
 				data-scroll-button="next"
+				data-spotlight-overflow="ignore"
 				direction={vertical ? 'down' : 'right'}
 				disabled={disabled || nextButtonDisabled}
 				onClick={this.handleNextScroll}
@@ -333,6 +372,9 @@ class ScrollButtons extends Component {
 				onKeyUp={this.releaseButton}
 				onMouseDown={this.depressButton}
 				onSpotlightDisappear={onNextSpotlightDisappear}
+				onSpotlightLeft={this.handleSpotlight}
+				onSpotlightRight={this.handleSpotlight}
+				onSpotlightUp={this.handleSpotlight}
 				ref={this.initNextButtonRef}
 			>
 				{nextIcon}

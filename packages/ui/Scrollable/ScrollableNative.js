@@ -856,12 +856,10 @@ class ScrollableBaseNative extends Component {
 
 	scrollTo = (opt) => {
 		if (!this.deferScrollTo) {
-			const
-				{left, top} = this.getPositionForScrollTo(opt),
-				{scrollTo} = this.props;
+			const {left, top} = this.getPositionForScrollTo(opt);
 
-			if (scrollTo) {
-				scrollTo(opt);
+			if (this.props.scrollTo) {
+				this.props.scrollTo(opt);
 			}
 			this.scrollToInfo = null;
 			this.start(
@@ -1072,7 +1070,7 @@ class ScrollableBaseNative extends Component {
 		delete rest.verticalScrollbar;
 
 		return containerRenderer({
-			childComponentProps: {...rest, rtl},
+			childComponentProps: rest,
 			className: scrollableClasses,
 			componentCss: css,
 			horizontalScrollbarProps: this.horizontalScrollbarProps,
@@ -1080,6 +1078,7 @@ class ScrollableBaseNative extends Component {
 			initChildRef: this.initChildRef,
 			isHorizontalScrollbarVisible,
 			isVerticalScrollbarVisible,
+			rtl,
 			scrollTo: this.scrollTo,
 			style,
 			touchableProps: {
@@ -1132,6 +1131,7 @@ class ScrollableNative extends Component {
 					initChildRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
+					rtl,
 					scrollTo,
 					style,
 					touchableProps,
@@ -1148,7 +1148,8 @@ class ScrollableNative extends Component {
 									...childComponentProps,
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
-									initChildRef
+									initChildRef,
+									rtl
 								})}
 							</TouchableDiv>
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}

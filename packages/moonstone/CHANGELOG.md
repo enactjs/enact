@@ -4,8 +4,16 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Removed
+
+- `moonstone/VideoPlayer` property `tooltipHideDelay`
+- `moonstone/IncrementSlider` and `moonstone/Slider` props `tooltipAsPercent`, `tooltipSide`, and `tooltipForceSide`, to be replaced by `moonstone/IncrementSlider.IncrementSliderTooltip` and `moonstone/Slider.SliderTooltip` props `percent`, `side`, and `forceSide`
+- `moonstone/IncrementSlider` props `detachedKnob`, `onDecrement`, `onIncrement`, and `scrubbing`
+- `moonstone/Slider` props `detachedKnob`, `onDecrement`, `onIncrement`, `scrubbing`, and `onKnobMove`
+
 ### Added
 
+- `moonstone/ProgressBar.ProgressBarTooltip` props `percent` to format the value as a percent and `visible` to control display of the tooltip
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="list"`
 - `moonstone/Panels` prop `closeButtonAriaLabel` to configure the aria-label set on application close button
 - `moonstone/Picker` props `aria-label` , `decrementAriaLabel`, `incrementAriaLabel` to configure the label set on each button
@@ -16,6 +24,16 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandablePicker` props `checkButtonAriaLabel`, `decrementAriaLabel`, `incrementAriaLabel`, `pickerAriaLabel` to configure the label set on each button and picker
 - `moonstone/ExpandableList` props `aria-label`, `childrenAriaLabels` to configure the label set on each item
 - `moonstone/DayPicker` props `childrenAriaLabels`, `everyDayAriaLabel`, `everyWeekdayAriaLabel`, `everyWeekendAriaLabel` to configure the label set on each item
+- `moonstone/MediaOverlay` component
+
+### Fixed
+
+- `moonstone/Scroller` and `moonstone/VirtualList` navigation via 5-way from paging controls
+- `moonstone/MoonstoneDecorator` to optimize localized font loading performance
+
+### Changed
+
+- `moonstone/IncrementSlider` and `moonstone/Slider` prop `tooltip` to support either a boolean for the default tooltip or an element or component for a custom tooltip
 
 ## [2.0.0-alpha.8] - 2018-04-17
 
