@@ -764,11 +764,8 @@ const VideoPlayerBase = class extends React.Component {
 			this.calculateMaxComponentCount(leftCount, rightCount, childrenCount);
 		}
 
-		const {source, preloadSource} = this.props;
-		const {source: nextSource, preloadSource: nextPreloadSource} = nextProps;
-
-		this.isPreloadedVideo = compareSources(nextSource, preloadSource);
-		this.isPreloadedSourceSame = nextPreloadSource && preloadSource && compareSources(nextPreloadSource, preloadSource);
+		const {source} = this.props;
+		const {source: nextSource} = nextProps;
 
 		if (!compareSources(source, nextSource)) {
 			this.firstPlayReadFlag = true;
@@ -820,11 +817,14 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		const {source} = this.props;
-		const {source: prevSource} = prevProps;
+		const {source, preloadSource} = this.props;
+		const {source: prevSource, preloadSource: prevPreloadSource} = prevProps;
 
 		if (!compareSources(source, prevSource)) {
-			this.reloadVideo(this.isPreloadedVideo, this.isPreloadedSourceSame);
+			const isPreloadedVideo = source && prevPreloadSource && compareSources(source, prevPreloadSource);
+			const isPreloadedSourceSame = preloadSource && prevPreloadSource && compareSources(preloadSource, prevPreloadSource);
+
+			this.reloadVideo(isPreloadedVideo, isPreloadedSourceSame);
 		}
 
 		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
