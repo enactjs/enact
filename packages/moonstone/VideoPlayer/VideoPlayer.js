@@ -40,6 +40,7 @@ import MediaSlider from './MediaSlider';
 import FeedbackContent from './FeedbackContent';
 import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
+import Video from './Video';
 
 import css from './VideoPlayer.less';
 
@@ -701,7 +702,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.id = this.generateId();
 		this.selectPlaybackRates('fastForward');
 		this.sliderKnobProportion = 0;
-		this.preloadSourcePlaying = false;
 		this.isPlayerMounted = false;
 
 		this.initI18n();
@@ -766,24 +766,8 @@ const VideoPlayerBase = class extends React.Component {
 			this.calculateMaxComponentCount(leftCount, rightCount, childrenCount);
 		}
 
-		const {source, preloadSource} = this.props;
-		const {source: nextSource, preloadSource: nextPreloadSource} = nextProps;
-		this.isVideoPreloaded = false;
-
-		if (preloadSource && compareSources(preloadSource, nextSource)) {
-			this.preloadSourcePlaying = !this.preloadSourcePlaying;
-			const currentVideoSource = this.video;
-			this.video = this.preloadVideo;
-			this.preloadVideo = currentVideoSource;
-			this.isVideoPreloaded = true;
-		}
-
-		if (nextPreloadSource) {
-			const preloadSourcesEqual = preloadSource && compareSources(preloadSource, nextPreloadSource);
-			if (!preloadSourcesEqual) {
-				this.preloadVideo.load();
-			}
-		}
+		const {source} = this.props;
+		const {source: nextSource} = nextProps;
 
 		if (!compareSources(source, nextSource)) {
 			this.firstPlayReadFlag = true;
@@ -836,12 +820,10 @@ const VideoPlayerBase = class extends React.Component {
 
 	componentDidUpdate (prevProps, prevState) {
 		const {source, preloadSource} = this.props;
-		const {source: prevSource, preloadSource: prevPreloadSource} = prevProps;
+		const {source: prevSource} = prevProps;
 
-		// Detect a change to the video source and reload if necessary.
-		const preloadSourcesEqual = preloadSource && prevPreloadSource && compareSources(preloadSource, prevPreloadSource);
 		if (!compareSources(source, prevSource)) {
-			this.reloadVideo(this.isVideoPreloaded, preloadSourcesEqual);
+			this.reloadVideo(!!preloadSource);
 		}
 
 		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
@@ -1303,15 +1285,12 @@ const VideoPlayerBase = class extends React.Component {
 		};
 	}
 
-	reloadVideo = (preloaded, preloadSourcesEqual) => {
+	reloadVideo = (isPreloaded) => {
 		// When changing a HTML5 video, you have to reload it.
 		this.stopListeningForPulses();
-		if (!preloaded) {
-			this.video.load();
-		}
 
-		if (preloaded && preloadSourcesEqual) {
-			this.handleLoadStart();
+		if (!isPreloaded) {
+			this.video.load();
 		}
 
 		this.setState({
@@ -1871,10 +1850,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.video = video;
 	}
 
-	setPreloadRef = (video) => {
-		this.preloadVideo = video;
-	}
-
 	setAnnounceRef = (node) => {
 		this.announceRef = node;
 	}
@@ -1911,20 +1886,6 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		return null;
-	}
-
-	// These methods are here because on webOS TVs we can't play a video until after second video
-	// player is loaded
-	onSourceChangeInitialPlaying = () => {
-		if (this.isPlayerMounted && this.isVideoPreloaded && this.preloadSourcePlaying) {
-			this.handleLoadStart();
-		}
-	}
-
-	onSourceChangeIntialLoaded = () => {
-		if (this.isPlayerMounted && this.isVideoPreloaded && !this.preloadSourcePlaying) {
-			this.handleLoadStart();
-		}
 	}
 
 	render () {
@@ -1993,37 +1954,6 @@ const VideoPlayerBase = class extends React.Component {
 		const moreDisabled = !(this.state.more);
 		const controlsAriaProps = this.getControlsAriaProps();
 
-
-		// These are the initial props for the first video to be played.
-		// If the next video is a from a preloaded source then we swap props to hide this video.
-		const initialPlayingProps = {
-			...rest,
-			autoPlay: this.preloadSourcePlaying ? false : !noAutoPlay,
-			children: this.preloadSourcePlaying ?  preloadSource : source,
-			className: this.preloadSourcePlaying ? css.preloadVideo : css.video,
-			component: videoComponent,
-			controls: false,
-			preload: this.preloadSourcePlaying ? 'auto' : 'none',
-			onLoadStart: this.onSourceChangeInitialPlaying,
-			onUpdate: this.preloadSourcePlaying ? null : this.handleEvent,
-			ref: this.setVideoRef
-		};
-
-		// These are the initial props for the first video to be preloaded.
-		// If the next video is a from a preloaded source then we swap props to show this video.
-		const initialLoadingProps = {
-			...rest,
-			autoPlay: this.preloadSourcePlaying ? !noAutoPlay : false,
-			children: this.preloadSourcePlaying ? source : preloadSource,
-			className: this.preloadSourcePlaying ? css.video : css.preloadVideo,
-			component: videoComponent,
-			controls: false,
-			onLoadStart: this.onSourceChangeIntialLoaded,
-			onUpdate: this.preloadSourcePlaying ? this.handleEvent : null,
-			preload: this.preloadSourcePlaying ? 'none' : 'auto',
-			ref: this.setPreloadRef
-		};
-
 		return (
 			<RootContainer
 				className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')}
@@ -2036,10 +1966,16 @@ const VideoPlayerBase = class extends React.Component {
 			>
 				{/* Video Section */}
 				{this.props.preloadSource ?
-					<React.Fragment>
-						<Media {...initialPlayingProps} />
-						<Media {...initialLoadingProps} />
-					</React.Fragment> :
+					<Video
+						{...rest}
+						handleEvent={this.handleEvent}
+						handleLoadStart={this.handleLoadStart}
+						noAutoPlay={noAutoPlay}
+						preloadSource={preloadSource}
+						source={source}
+						videoComponent={videoComponent}
+						videoRef={this.setVideoRef}
+					/> :
 					<Media
 						{...rest}
 						autoPlay={!noAutoPlay}
