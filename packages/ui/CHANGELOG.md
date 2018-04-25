@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
-- `ui/Cancelable` default behavior when using a string value for `onCancel` to allow propagation up the component tree. Event propagation can be prevented using the `stopPropagation` method added to the event payload passed to the `onCancel` callback.
+- `ui/Cancelable` callback `onCancel` to accept an event with a `stopPropagation` method to prevent upstream instances from handling the event instead of using the return value from the callback to prevent propagation. When a function is passed to `onCancel`, it will now receive an event and a props object instead of only the props object. When a string is passed to `onCancel`, it will now receive an event instead of no arguments. Also when a string is passed, the event will now propagate to upstream instances unless `stopPropagation` is called.
 
 ### Fixed
 
