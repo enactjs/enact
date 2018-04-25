@@ -702,7 +702,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.id = this.generateId();
 		this.selectPlaybackRates('fastForward');
 		this.sliderKnobProportion = 0;
-		this.isPlayerMounted = false;
 
 		this.initI18n();
 
@@ -749,7 +748,6 @@ const VideoPlayerBase = class extends React.Component {
 			countReactChildren(this.props.rightComponents),
 			countReactChildren(this.props.children)
 		);
-		this.isPlayerMounted = true;
 	}
 
 	componentWillReceiveProps (nextProps) {
