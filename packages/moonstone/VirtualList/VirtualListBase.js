@@ -221,6 +221,10 @@ const VirtualListBaseFactory = (type) => {
 			if (containerNode && containerNode.addEventListener) {
 				containerNode.addEventListener('keydown', this.onKeyDown);
 			}
+
+			setTimeout(() => {
+				this.restoreFocus();
+			}, 0);
 		}
 
 		componentWillReceiveProps (nextProps) {
