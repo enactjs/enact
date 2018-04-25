@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 
 import Tooltip from '../TooltipDecorator/Tooltip';
 
-import css from './ProgressBarTooltip.less';
+import css from './Tooltip.less';
 
 const memoizedPercentFormatter = memoize((/* locale */) => new NumFmt({
 	type: 'percentage',
@@ -21,15 +21,15 @@ const memoizedPercentFormatter = memoize((/* locale */) => new NumFmt({
  * [ProgressBar]{@link moonstone/ProgressBar.ProgressBar}, or
  * [Slider]{@link moonstone/Slider.Slider}.
  *
- * @class ProgressBarTooltip
+ * @class Tooltip
  * @memberof moonstone/ProgressBar
  * @ui
  * @public
  */
-const ProgressBarTooltipBase = kind({
+const TooltipBase = kind({
 	name: 'ProgressBarTooltip',
 
-	propTypes: /** @lends moonstone/ProgressBar.ProgressBarTooltip.prototype */{
+	propTypes: /** @lends moonstone/ProgressBar.Tooltip.prototype */{
 		/**
 		 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale changes
 		 * for `vertical` ProgressBars/Sliders. This may be useful if you have a static layout that does not
@@ -176,10 +176,10 @@ const ProgressBarTooltipBase = kind({
 	}
 });
 
-ProgressBarTooltipBase.defaultSlot = 'tooltip';
+TooltipBase.defaultSlot = 'tooltip';
 
-export default ProgressBarTooltipBase;
+export default TooltipBase;
 export {
-	ProgressBarTooltipBase,
-	ProgressBarTooltipBase as ProgressBarTooltip
+	TooltipBase,
+	TooltipBase as Tooltip
 };

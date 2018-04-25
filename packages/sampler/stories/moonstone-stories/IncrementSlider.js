@@ -1,4 +1,4 @@
-import IncrementSlider, {IncrementSliderBase, IncrementSliderTooltip} from '@enact/moonstone/IncrementSlider';
+import IncrementSlider, {IncrementSliderBase, Tooltip} from '@enact/moonstone/IncrementSlider';
 import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -38,7 +38,7 @@ storiesOf('Moonstone', module)
 					step={number('step', 1)}
 				>
 					{tooltip ? (
-						<IncrementSliderTooltip
+						<Tooltip
 							forceSide={forceSide}
 							percent={percent}
 							side={side}

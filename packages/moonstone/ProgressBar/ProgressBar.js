@@ -8,7 +8,7 @@
  * @exports ProgressBar
  * @exports ProgressBarBase
  * @exports ProgressBarDecorator
- * @exports ProgressBarTooltip
+ * @exports Tooltip
  */
 
 import kind from '@enact/core/kind';
@@ -19,7 +19,7 @@ import compose from 'ramda/src/compose';
 import React from 'react';
 
 import Skinnable from '../Skinnable';
-import {ProgressBarTooltip} from './ProgressBarTooltip';
+import {Tooltip} from './Tooltip';
 
 import componentCss from './ProgressBar.less';
 
@@ -123,7 +123,7 @@ const ProgressBarBase = kind({
 				const percentageText = `${progressPercentage}%`;
 
 				return (
-					<ProgressBarTooltip
+					<Tooltip
 						forceSide={tooltipForceSide}
 						proportion={progress}
 						orientation={orientation}
@@ -131,7 +131,7 @@ const ProgressBarBase = kind({
 						visible
 					>
 						{percentageText}
-					</ProgressBarTooltip>
+					</Tooltip>
 				);
 			} else {
 				return null;
@@ -186,5 +186,5 @@ export {
 	ProgressBar,
 	ProgressBarBase,
 	ProgressBarDecorator,
-	ProgressBarTooltip
+	Tooltip
 };
