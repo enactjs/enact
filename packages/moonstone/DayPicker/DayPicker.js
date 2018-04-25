@@ -4,15 +4,18 @@
  * @module moonstone/DayPicker
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
+import kind from '@enact/core/kind';
+import Changeable from '@enact/ui/Changeable';
 import Pure from '@enact/ui/internal/Pure';
-import {Subscription} from '@enact/core/internal/PubSub';
+import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
+import React from 'react';
 
 import {Expandable} from '../ExpandableItem';
 import {ExpandableListBase} from '../ExpandableList';
-import kind from '@enact/core/kind';
-import {DaySelectorDecorator} from '../DaySelector';
+// We're using the i18n features for DaySelectorDecorator only and not the complete HOC stack so we
+// reach into the internal module to pluck it out directly
+import DaySelectorDecorator from '../DaySelector/DaySelectorDecorator';
 
 /**
  * {@link moonstone/DayPicker.DayPicker} is a component that
@@ -24,7 +27,7 @@ import {DaySelectorDecorator} from '../DaySelector';
  * @public
  */
 const DayPickerBase = kind({
-	name: 'DaySelectorBase',
+	name: 'DayPicker',
 
 	propTypes: /** @lends moonstone/DayPicker.DayPickerBase.prototype */ {
 		/**
@@ -136,6 +139,13 @@ const DayPickerBase = kind({
 	}
 });
 
+const DayPickerDecorator = compose(
+	Pure,
+	Expandable,
+	Changeable({change: 'onSelect', prop: 'selected'}),
+	DaySelectorDecorator
+);
+
 /**
  * {@link moonstone/DayPicker.DayPicker} is a component that
  * allows the user to choose day(s) of the week.
@@ -157,17 +167,7 @@ const DayPickerBase = kind({
  * @ui
  * @public
  */
-
-const DayPicker = Pure(
-	Expandable(
-		Subscription(
-			{channels: ['i18n'], mapMessageToProps: (channel, {locale}) => ({locale})},
-			DaySelectorDecorator(
-				DayPickerBase
-			)
-		)
-	)
-);
+const DayPicker = DayPickerDecorator(DayPickerBase);
 
 export default DayPicker;
 export {DayPicker, DayPickerBase};

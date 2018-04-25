@@ -1,5 +1,6 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import {contextTypes} from '@enact/core/internal/PubSub';
 import {coerceArray} from '@enact/core/util';
 import ilib from '@enact/i18n';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
@@ -33,6 +34,8 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 
 		static displayName = 'DaySelector'
+
+		static contextTypes = contextTypes
 
 		static propTypes = /** @lends moonstone/DaySelector.DaySelectorDecorator.prototype */ {
 			/**
@@ -80,55 +83,76 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			// default indexes
-			this.firstDayOfWeek = 0;
-			this.weekendStart = 6;
-			this.weekendEnd = 0;
-
-			// default strings for long and short day strings
-			this.fullDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-			this.abbreviatedDayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-			this.initIlib();
+			this.state = {
+				// default indexes
+				firstDayOfWeek: 0,
+				weekendStart: 6,
+				weekendEnd: 0,
+				// default strings for long and short day strings
+				fullDayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+				abbreviatedDayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+				...this.getLocaleState(props.dayNameLength)
+			};
 		}
 
-		componentWillUpdate () {
-			this.initIlib();
-		}
-
-		initIlib () {
-			const locale = ilib.getLocale();
-			if (this.locale !== locale && typeof window === 'object') {
-				this.locale = locale;
-
-				const df = new DateFmt({length: 'full'});
-				const sdf = new DateFmt({length: this.props.dayNameLength});
-				const li = new LocaleInfo(ilib.getLocale());
-				const daysOfWeek = df.getDaysOfWeek();
-				const days = sdf.getDaysOfWeek();
-
-				this.firstDayOfWeek = li.getFirstDayOfWeek();
-				this.weekendStart = li.getWeekEndStart ? this.adjustWeekends(li.getWeekEndStart()) : this.weekendStart;
-				this.weekendEnd = li.getWeekEndEnd ? this.adjustWeekends(li.getWeekEndEnd()) : this.weekendEnd;
-
-				for (let i = 0; i < 7; i++) {
-					const index = (i + this.firstDayOfWeek) % 7;
-					this.fullDayNames[i] = daysOfWeek[index];
-					this.abbreviatedDayNames[i] = days[index];
-				}
-
-				this.everyDayText = $L('Every Day');
-				this.everyWeekdayText = $L('Every Weekday');
-				this.everyWeekendText = $L('Every Weekend');
-			} else {
-				const sdf = new DateFmt({length: this.props.dayNameLength});
-				const days = sdf.getDaysOfWeek();
-
-				for (let i = 0; i < 7; i++) {
-					const index = (i + this.firstDayOfWeek) % 7;
-					this.abbreviatedDayNames[i] = days[index];
-				}
+		componentDidMount () {
+			if (this.context.Subscriber) {
+				this.context.Subscriber.subscribe('i18n', this.handleLocaleChange);
 			}
+		}
+
+		componentWillReceiveProps (nextProps) {
+			if (this.props.dayNameLength !== nextProps.dayNameLength) {
+				this.setState(this.getLocaleState(nextProps.dayNameLength));
+			}
+		}
+
+		componentWillUnmount () {
+			if (this.context.Subscriber) {
+				this.context.Subscriber.unsubscribe('i18n', this.handleLocaleChange);
+			}
+		}
+
+		handleLocaleChange = () => {
+			this.setState(({locale}) => this.getLocaleState(this.props.dayNameLength, locale));
+		}
+
+		getLocaleState (dayNameLength, locale) {
+			const newLocale = ilib.getLocale();
+			if (locale === newLocale || typeof window === 'undefined') return null;
+
+			const df = new DateFmt({length: 'full'});
+			const sdf = new DateFmt({length: dayNameLength});
+			const li = new LocaleInfo(ilib.getLocale());
+			const daysOfWeek = df.getDaysOfWeek();
+			const days = sdf.getDaysOfWeek();
+			const firstDayOfWeek = li.getFirstDayOfWeek();
+
+			const state = {
+				locale: newLocale,
+				everyDayText: $L('Every Day'),
+				everyWeekdayText: $L('Every Weekday'),
+				everyWeekendText: $L('Every Weekend'),
+				fullDayNames: [],
+				abbreviatedDayNames: [],
+				firstDayOfWeek
+			};
+
+			if (li.getWeekEndStart) {
+				state.weekendStart = this.adjustWeekends(firstDayOfWeek, li.getWeekEndStart());
+			}
+
+			if (li.getWeekEndEnd) {
+				state.weekendEnd = this.adjustWeekends(firstDayOfWeek, li.getWeekEndEnd());
+			}
+
+			for (let i = 0; i < 7; i++) {
+				const index = (i + firstDayOfWeek) % 7;
+				state.fullDayNames[i] = daysOfWeek[index];
+				state.abbreviatedDayNames[i] = days[index];
+			}
+
+			return state;
 		}
 
 		/**
@@ -149,14 +173,14 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 
 			const
 				length = selected.length,
-				weekendLength = this.weekendStart === this.weekendEnd ? 1 : 2;
+				weekendLength = this.state.weekendStart === this.state.weekendEnd ? 1 : 2;
 
 			if (length === 7) return SELECTED_DAY_TYPES.EVERY_DAY;
 
 			for (let i = 0; i < 7; i++) {
 				index = selected[i];
-				weekendStart = weekendStart || this.weekendStart === index;
-				weekendEnd = weekendEnd || this.weekendEnd === index;
+				weekendStart = weekendStart || this.state.weekendStart === index;
+				weekendEnd = weekendEnd || this.state.weekendEnd === index;
 			}
 
 			if (weekendStart && weekendEnd && length === weekendLength) {
@@ -181,11 +205,11 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 		getSelectedDayString = (type, selected, selectDayStrings) => {
 			switch (type) {
 				case SELECTED_DAY_TYPES.EVERY_DAY :
-					return this.everyDayText;
+					return this.state.everyDayText;
 				case SELECTED_DAY_TYPES.EVERY_WEEKEND :
-					return this.everyWeekendText;
+					return this.state.everyWeekendText;
 				case SELECTED_DAY_TYPES.EVERY_WEEKDAY :
-					return this.everyWeekdayText;
+					return this.state.everyWeekdayText;
 				case SELECTED_DAY_TYPES.SELECTED_DAYS :
 					return selected.sort().map((dayIndex) => selectDayStrings[dayIndex]).join(', ');
 				case SELECTED_DAY_TYPES.SELECTED_NONE :
@@ -193,13 +217,13 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		adjustWeekends (day) {
-			return ((day - this.firstDayOfWeek + 7) % 7);
+		adjustWeekends (firstDayOfWeek, day) {
+			return ((day - firstDayOfWeek + 7) % 7);
 		}
 
 		handleSelect = ({selected}) => {
 			const type = this.calcSelectedDayType(selected);
-			const labels = this.abbreviatedDayNames;
+			const labels = this.state.abbreviatedDayNames;
 			const content = this.getSelectedDayString(type, selected, labels);
 
 			forwardSelect({selected, content}, this.props);
@@ -208,13 +232,13 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 		render () {
 			const {selected, ...rest} = this.props;
 			const type = this.calcSelectedDayType(selected);
-			const content = this.getSelectedDayString(type, selected, this.abbreviatedDayNames);
+			const content = this.getSelectedDayString(type, selected, this.state.abbreviatedDayNames);
 
 			delete rest.dayNameLength;
 
 			return (
-				<Wrapped {...rest} label={content} fullDayNames={this.fullDayNames} onSelect={this.handleSelect} selected={selected}>
-					{this.abbreviatedDayNames}
+				<Wrapped {...rest} label={content} fullDayNames={this.state.fullDayNames} onSelect={this.handleSelect} selected={selected}>
+					{this.state.abbreviatedDayNames}
 				</Wrapped>
 			);
 		}
