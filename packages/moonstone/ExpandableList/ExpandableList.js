@@ -291,17 +291,18 @@ const ExpandableListBase = kind({
 		ariaLabel: ({'aria-label': ariaLabel, childrenAriaLabels, label, select, selected, title}) => {
 			if (ariaLabel != null) {
 				return ariaLabel;
-			} else if (childrenAriaLabels && childrenAriaLabels.length === 0) {
+			}
+
+			if (label != null || !childrenAriaLabels || childrenAriaLabels.length === 0) {
 				return null;
 			}
 
-			if (label) {
-				return `${title} ${label}`;
-			} else if (selected || selected === 0) {
+			if (selected || selected === 0) {
 				const isArray = Array.isArray(selected);
 				if (select === 'multiple' && isArray) {
-					const selectedChildrenAriaLabel = selected.map(i => childrenAriaLabels[i]).filter(str => !!str).join(', ');
-					return `${title} ${selectedChildrenAriaLabel}`;
+					return `${title} ${selected.map(i => childrenAriaLabels[i]).filter(str => !!str).join(', ')}`;
+				} else {
+					return `${title} ${childrenAriaLabels[isArray ? selected[0] : selected]}`;
 				}
 			}
 		},
