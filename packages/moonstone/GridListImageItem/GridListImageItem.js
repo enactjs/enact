@@ -64,6 +64,10 @@ const GridListImageItemBase = kind({
 		 * is loaded.
 		 *
 		 * @type {String}
+		 * @default 'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
+		 * '9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
+		 * 'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
+		 * '4NCg==';
 		 * @public
 		 */
 		placeholder: PropTypes.string,
@@ -98,12 +102,17 @@ const GridListImageItemBase = kind({
 		selectionOverlay: PropTypes.func
 	},
 
+	defaultProps: {
+		placeholder: defaultPlaceholder,
+		selected: false
+	},
+
 	styles: {
 		css: componentCss,
 		publicClassNames: ['icon', 'image', 'selected', 'caption', 'subCaption']
 	},
 
-	render: ({css, placeholder, selectionOverlay, ...rest}) => {
+	render: ({css, selectionOverlay, ...rest}) => {
 		if (selectionOverlay) {
 			rest['role'] = 'checkbox';
 			rest['aria-checked'] = rest.selected;
@@ -116,7 +125,6 @@ const GridListImageItemBase = kind({
 				css={css}
 				iconComponent={Icon}
 				imageComponent={Image}
-				placeholder={placeholder || defaultPlaceholder}
 				selectionOverlay={selectionOverlay}
 			/>
 		);
