@@ -29,7 +29,7 @@ const forwardOnShow = forward('onShow');
 const forwardOnHide = forward('onHide');
 
 /**
- * The stateless structure of the component, in case you want toprovide all of the state yourself.
+ * The stateless structure of the component, in case you want to provide all of the state yourself.
  * In general, you'll probably want to use the [stateful version]{@link ui/Transition.Transition}.
  *
  * @class TransitionBase
