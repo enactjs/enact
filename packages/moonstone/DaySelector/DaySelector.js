@@ -67,16 +67,16 @@ const DaySelectorBase = kind({
 		className: 'daySelector'
 	},
 
-	render: ({disabled, ...rest}) => {
-		delete rest.fullDayNames;
-
+	render: (props) => {
 		return (
 			<Group
-				{...rest}
+				{...props}
 				childComponent={DaySelectorItem}
 				childSelect="onToggle"
-				disabled={disabled}
-				itemProps={{className: componentCss.daySelectorItem, disabled}}
+				itemProps={{
+					className: componentCss.daySelectorItem,
+					disabled: props.disabled
+				}}
 				select="multiple"
 				selectedProp="selected"
 			/>

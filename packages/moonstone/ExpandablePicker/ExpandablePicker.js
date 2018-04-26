@@ -45,7 +45,7 @@ const ExpandablePickerBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * Sets the hint string read when focusing the check button.
+		 * The "aria-label" for the the check button.
 		 *
 		 * @type {String}
 		 * @public
@@ -53,7 +53,7 @@ const ExpandablePickerBase = kind({
 		checkButtonAriaLabel: PropTypes.string,
 
 		/**
-		 * Sets the hint string read when focusing the decrement button.
+		 * The "aria-label" for the decrement button.
 		 *
 		 * @type {String}
 		 * @default 'previous item'
@@ -80,7 +80,7 @@ const ExpandablePickerBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Sets the hint string read when focusing the increment button.
+		 * The "aria-label" for the increment button.
 		 *
 		 * @type {String}
 		 * @default 'next item'
@@ -199,10 +199,9 @@ const ExpandablePickerBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * Sets the hint string read when focusing the picker.
+		 * The "aria-label" for the picker.
 		 *
 		 * @type {String}
-		 * @default 'change a value with left right button'
 		 * @public
 		 */
 		pickerAriaLabel: PropTypes.string,
