@@ -15,7 +15,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/ProgressBar.ProgressBarTooltip` props `percent` to format the value as a percent and `visible` to control display of the tooltip
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="list"`
-- `moonstone/Panels` prop `closeButtonAriaLabel` to configure the aria-label set on application close button
 - `moonstone/Picker` props `aria-label`, `decrementAriaLabel`, and `incrementAriaLabel` to configure the label set on each button
 - `moonstone/DatePicker` props `dayAccessibilityHint`, `dayAriaLabel`, `monthAccessibilityHint`, `monthAriaLabel`, `yearAccessibilityHint`, and `yearAriaLabel` to configure the label set on date pickers
 - `moonstone/TimePicker` props `hourAccessibilityHint`, `hourAriaLabel`, `meridiemAccessibilityHint`, `meridiemAriaLabel`, `minuteAccessibilityHint`, and `minuteAriaLabel` to configure the label set on time pickers
