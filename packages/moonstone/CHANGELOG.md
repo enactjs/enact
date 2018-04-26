@@ -24,7 +24,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` and `moonstone/VirtualList` navigation via 5-way from paging controls
 - `moonstone/MoonstoneDecorator` to optimize localized font loading performance
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to give initial focus
-- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to initialize the default value for `dataSize`, and `pageScroll`, and `spacing` props
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to have the default value for `dataSize`, `pageScroll`, and `spacing` props
 
 ### Changed
 
