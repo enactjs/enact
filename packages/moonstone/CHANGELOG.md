@@ -24,6 +24,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` and `moonstone/VirtualList` navigation via 5-way from paging controls
 - `moonstone/MoonstoneDecorator` to optimize localized font loading performance
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to give initial focus
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to ignore a page up or down key when changing from pointer mode to 5 way key mode
 
 ### Changed
 
