@@ -40,15 +40,6 @@ const DaySelectorBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Array of full day names
-		 *
-		 * @type {String[]}
-		 * @default false
-		 * @private
-		 */
-		fullDayNames: PropTypes.arrayOf(PropTypes.string),
-
-		/**
 		 * Called when an item is selected. The first parameter will be an object containing a
 		 * `selected` member, containing the array of numbers representing the selected days, zero
 		 * indexed.
@@ -76,15 +67,16 @@ const DaySelectorBase = kind({
 		className: 'daySelector'
 	},
 
-	render: ({disabled, ...rest}) => {
-		delete rest.fullDayNames;
+	render: (props) => {
 		return (
 			<Group
-				{...rest}
+				{...props}
 				childComponent={DaySelectorItem}
 				childSelect="onToggle"
-				disabled={disabled}
-				itemProps={{className: componentCss.daySelectorItem, disabled}}
+				itemProps={{
+					className: componentCss.daySelectorItem,
+					disabled: props.disabled
+				}}
 				select="multiple"
 				selectedProp="selected"
 			/>
@@ -111,8 +103,6 @@ const DaySelectorDecorator = compose(
  * @public
  */
 
-const DaySelector = DaySelectorDecorator(DaySelectorBase);
-
 /**
  * Use long day names (Sunday, Monday..) for labels
  *
@@ -124,6 +114,38 @@ const DaySelector = DaySelectorDecorator(DaySelectorBase);
  * @default false
  * @public
  */
+
+/**
+ * The text displayed in the label when every day is selected
+ *
+ * @name everyDayText
+ * @type {String}
+ * @default 'Every Day'
+ * @memberof moonstone/DaySelector.DaySelector.prototype
+ * @public
+ */
+
+/**
+ * The text displayed in the label when every weekeday is selected
+ *
+ * @name everyWeekdayText
+ * @type {String}
+ * @default 'Every Weekday'
+ * @memberof moonstone/DaySelector.DaySelector.prototype
+ * @public
+ */
+
+/**
+ * The text displayed in the label when every weekend day is selected
+ *
+ * @name everyWeekendText
+ * @type {String}
+ * @default 'Every Weekend'
+ * @memberof moonstone/DaySelector.DaySelector.prototype
+ * @public
+ */
+
+const DaySelector = DaySelectorDecorator(DaySelectorBase);
 
 export default DaySelector;
 export {

@@ -40,6 +40,18 @@ const DayPickerBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
+		 * Sets the "aria-label" for the picker.
+		 *
+		 * By default, "aria-label" is set to the title and the full names of the selected days or
+		 * the custom text when the weekend, week days, or all days is selected.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/DayPicker.DayPickerBase.prototype
+		 * @public
+		 */
+		'aria-label': PropTypes.string,
+
+		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
@@ -49,22 +61,12 @@ const DayPickerBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Array of full day names
-		 *
-		 * @type {String[]}
-		 * @default false
-		 * @private
-		 */
-		fullDayNames: PropTypes.arrayOf(PropTypes.string),
-
-		/**
 		 * The selected label for DayPicker
 		 *
 		 * @type {String}
 		 * @public
 		 */
 		label: PropTypes.string,
-
 
 		/**
 		 * Current locale for DayPicker
@@ -124,17 +126,15 @@ const DayPickerBase = kind({
 	},
 
 	computed: {
-		'aria-label': ({label, title}) => label ? `${title} ${label}` : null
+		children: ({children}) => children.map(child => child['aria-label'])
 	},
 
-	render: ({fullDayNames, ...rest}) => {
+	render: (props) => {
 		return (
 			<ExpandableListBase
-				{...rest}
+				{...props}
 				select="multiple"
-			>
-				{fullDayNames}
-			</ExpandableListBase>
+			/>
 		);
 	}
 });
@@ -167,6 +167,37 @@ const DayPickerDecorator = compose(
  * @ui
  * @public
  */
+
+/**
+ * The text displayed in the label when every day is selected
+ *
+ * @name everyDayText
+ * @type {String}
+ * @default 'Every Day'
+ * @memberof moonstone/DayPicker.DayPicker.prototype
+ * @public
+ */
+
+/**
+ * The text displayed in the label when every weekeday is selected
+ *
+ * @name everyWeekdayText
+ * @type {String}
+ * @default 'Every Weekday'
+ * @memberof moonstone/DayPicker.DayPicker.prototype
+ * @public
+ */
+
+/**
+ * The text displayed in the label when every weekend day is selected
+ *
+ * @name everyWeekendText
+ * @type {String}
+ * @default 'Every Weekend'
+ * @memberof moonstone/DayPicker.DayPicker.prototype
+ * @public
+ */
+
 const DayPicker = DayPickerDecorator(DayPickerBase);
 
 export default DayPicker;
