@@ -111,8 +111,6 @@ const DaySelectorDecorator = compose(
  * @public
  */
 
-const DaySelector = DaySelectorDecorator(DaySelectorBase);
-
 /**
  * Use long day names (Sunday, Monday..) for labels
  *
@@ -124,6 +122,38 @@ const DaySelector = DaySelectorDecorator(DaySelectorBase);
  * @default false
  * @public
  */
+
+/**
+ * The text displayed in the label when every day is selected
+ *
+ * @name everyDayText
+ * @type {String}
+ * @default 'Every Day'
+ * @memberof moonstone/DaySelector.DaySelector.prototype
+ * @public
+ */
+
+/**
+ * The text displayed in the label when every weekeday is selected
+ *
+ * @name everyWeekdayText
+ * @type {String}
+ * @default 'Every Weekday'
+ * @memberof moonstone/DaySelector.DaySelector.prototype
+ * @public
+ */
+
+/**
+ * The text displayed in the label when every weekend day is selected
+ *
+ * @name everyWeekendText
+ * @type {String}
+ * @default 'Every Weekend'
+ * @memberof moonstone/DaySelector.DaySelector.prototype
+ * @public
+ */
+
+const DaySelector = DaySelectorDecorator(DaySelectorBase);
 
 export default DaySelector;
 export {

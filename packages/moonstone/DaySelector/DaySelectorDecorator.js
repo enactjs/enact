@@ -57,6 +57,33 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
+			 * The text displayed in the label when every day is selected
+			 *
+			 * @type {String}
+			 * @default 'Every Day'
+			 * @public
+			 */
+			everyDayText: PropTypes.string,
+
+			/**
+			 * The text displayed in the label when every weekeday is selected
+			 *
+			 * @type {String}
+			 * @default 'Every Weekday'
+			 * @public
+			 */
+			everyWeekdayText: PropTypes.string,
+
+			/**
+			 * The text displayed in the label when every weekend day is selected
+			 *
+			 * @type {String}
+			 * @default 'Every Weekend'
+			 * @public
+			 */
+			everyWeekendText: PropTypes.string,
+
+			/**
 			 * Called when an item is selected. The first parameter will be an object containing a
 			 * `selected` member, containing the array of numbers representing the selected days, zero
 			 * indexed.
@@ -130,9 +157,6 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 
 			const state = {
 				locale: newLocale,
-				everyDayText: $L('Every Day'),
-				everyWeekdayText: $L('Every Weekday'),
-				everyWeekendText: $L('Every Weekend'),
 				fullDayNames: [],
 				abbreviatedDayNames: [],
 				firstDayOfWeek
@@ -203,13 +227,19 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 		 * @returns {String} "Every Day", "Every Weekend", "Every Week" or list of days
 		 */
 		getSelectedDayString = (type, selected, selectDayStrings) => {
+			const {
+				everyDayText = $L('Every Day'),
+				everyWeekdayText = $L('Every Weekday'),
+				everyWeekendText = $L('Every Weekend')
+			} = this.props;
+
 			switch (type) {
 				case SELECTED_DAY_TYPES.EVERY_DAY :
-					return this.state.everyDayText;
+					return everyDayText;
 				case SELECTED_DAY_TYPES.EVERY_WEEKEND :
-					return this.state.everyWeekendText;
+					return everyWeekendText;
 				case SELECTED_DAY_TYPES.EVERY_WEEKDAY :
-					return this.state.everyWeekdayText;
+					return everyWeekdayText;
 				case SELECTED_DAY_TYPES.SELECTED_DAYS :
 					return selected.sort().map((dayIndex) => selectDayStrings[dayIndex]).join(', ');
 				case SELECTED_DAY_TYPES.SELECTED_NONE :

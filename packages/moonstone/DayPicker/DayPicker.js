@@ -174,6 +174,37 @@ const DayPickerDecorator = compose(
  * @ui
  * @public
  */
+
+/**
+ * The text displayed in the label when every day is selected
+ *
+ * @name everyDayText
+ * @type {String}
+ * @default 'Every Day'
+ * @memberof moonstone/DayPicker.DayPicker.prototype
+ * @public
+ */
+
+/**
+ * The text displayed in the label when every weekeday is selected
+ *
+ * @name everyWeekdayText
+ * @type {String}
+ * @default 'Every Weekday'
+ * @memberof moonstone/DayPicker.DayPicker.prototype
+ * @public
+ */
+
+/**
+ * The text displayed in the label when every weekend day is selected
+ *
+ * @name everyWeekendText
+ * @type {String}
+ * @default 'Every Weekend'
+ * @memberof moonstone/DayPicker.DayPicker.prototype
+ * @public
+ */
+
 const DayPicker = DayPickerDecorator(DayPickerBase);
 
 export default DayPicker;
