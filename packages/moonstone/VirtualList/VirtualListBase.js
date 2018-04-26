@@ -204,7 +204,10 @@ const VirtualListBaseFactory = (type) => {
 			 * @default false
 			 * @public
 			 */
-			wrap: PropTypes.oneOf([false, true, 'noAnimation'])
+			wrap: PropTypes.oneOfType([
+				PropTypes.bool,
+				PropTypes.oneOf(['noAnimation'])
+			])
 		}
 
 		static defaultProps = {
