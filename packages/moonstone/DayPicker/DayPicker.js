@@ -46,7 +46,7 @@ const DayPickerBase = kind({
 		 * the custom text when the weekend, week days, or all days is selected.
 		 *
 		 * @type {String}
-		 * @memberof moonstone/DayPicker.PickerBase.prototype
+		 * @memberof moonstone/DayPicker.DayPickerBase.prototype
 		 * @public
 		 */
 		'aria-label': PropTypes.string,
