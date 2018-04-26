@@ -48,6 +48,19 @@ const NotificationBase = kind({
 		children: PropTypes.node,
 
 		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `notification` - The root class name
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
+
+		/**
 		 * When `true`, the popup will not close when the user presses `ESC` key.
 		 *
 		 * @type {Boolean}
