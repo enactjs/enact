@@ -77,15 +77,15 @@
 			}
 
 			[aria-label]::after {
-				content: "Aria Label: " attr(aria-label);
+				content: "Aria Label:\0020" attr(aria-label);
 			}
 
 			[aria-valuetext]::after {
-				content: "Aria Value: " attr(aria-valuetext);
+				content: "Aria Value:\0020" attr(aria-valuetext);
 			}
 
 			[aria-label][aria-valuetext]::after {
-				content: "Aria Label: '" attr(aria-label) "'; Aria Value: '" attr(aria-valuetext) "';";
+				content: "Aria Label:\0020'" attr(aria-label) "'; Aria Value:\0020'" attr(aria-valuetext) "';";
 			}
 		}
 	}
