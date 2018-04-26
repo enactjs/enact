@@ -13,13 +13,12 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBase, UiVirtualListBase);
 
-const wrapOption = {
-	'false': false,
-	'true': true,
-	"'noAnimation'": 'noAnimation'
-};
-
 const
+	wrapOption = {
+		'false': false,
+		'true': true,
+		"'noAnimation'": 'noAnimation'
+	},
 	items = [],
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderItem = (size) => ({index, ...rest}) => {

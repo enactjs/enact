@@ -338,7 +338,7 @@ const VirtualListBaseFactory = (type) => {
 					diffPosition = (indexFrom % dimensionToExtent) - position,
 					// When direction is 1 (forward) and diffPosition is positive, add dimensionToExtent.
 					// When direction is -1 (backward) and diffPosition is negative, substract dimensionToExtent.
-					startIndex = indexFrom - diffPosition + ((direction * diffPosition > 0) ? (direction * dimensionToExtent) : 0);
+					startIndex = indexFrom - diffPosition + ((direction * diffPosition > 0) ? delta : 0);
 
 				for (let i = startIndex; direction * (indexTo - i) > 0; i += delta) {
 					if (!isItemDisabled(i)) {
