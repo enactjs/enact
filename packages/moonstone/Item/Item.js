@@ -58,6 +58,7 @@ const ItemBase = kind({
 	render: ({css, ...rest}) => {
 		return (
 			<UiItemBase
+				data-webos-voice-intent="Select"
 				{...rest}
 				css={css}
 			/>

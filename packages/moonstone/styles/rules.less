@@ -47,6 +47,12 @@
 	.disabled({
 		.vendor-opacity(@moon-disabled-opacity);
 
+		// Focused and disabled, must restore their natural opacity, then assign the faded text/content color
+		.focus({
+			.vendor-opacity(1);
+			color: @moon-spotlight-disabled-text-color;
+		});
+
 		cursor: default;
 
 		// Disabled children of disabled components
