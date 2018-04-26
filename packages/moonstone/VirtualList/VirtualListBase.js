@@ -665,7 +665,7 @@ const VirtualListBaseFactory = (type) => {
 				ev.preventDefault();
 				this.setSpotlightContainerRestrict(keyCode, target);
 				this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, repeat, target);
-				if (this.shouldPreventScrollByFocus()) {
+				if (this.isScrolledBy5way) {
 					ev.stopPropagation();
 				}
 			}
