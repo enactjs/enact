@@ -17,7 +17,7 @@
  * @exports IncrementSlider
  * @exports IncrementSliderBase
  * @exports IncrementSliderDecorator
- * @exports IncrementSliderTooltip
+ * @exports Tooltip
  */
 
 import {forward} from '@enact/core/handle';
@@ -353,13 +353,13 @@ const IncrementSliderBase = kind({
 		 * Enables the built-in tooltip
 		 *
 		 * To customize the tooltip, pass either a custom Tooltip component or an instance of
-		 * [IncrementSliderTooltip]{@link moonstone/IncrementSlider.IncrementSliderTooltip} with
+		 * [Tooltip]{@link moonstone/IncrementSlider.Tooltip} with
 		 * additional props configured.
 		 *
 		 * ```
 		 * <IncrementSlider
 		 *   tooltip={
-		 *     <IncrementSliderTooltip percent side="after" />
+		 *     <Tooltip percent side="after" />
 		 *   }
 		 * />
 		 * ```
@@ -369,7 +369,7 @@ const IncrementSliderBase = kind({
 		 *
 		 * ```
 		 * <IncrementSlider>
-		 *   <IncrementSliderTooltip percent side="after" />
+		 *   <Tooltip percent side="after" />
 		 * </IncrementSlider>
 		 * ```
 		 *
@@ -598,7 +598,7 @@ const IncrementSlider = IncrementSliderDecorator(IncrementSliderBase);
  *
  * See {@link moonstone/ProgressBar.Tooltip}
  *
- * @class IncrementSliderTooltip
+ * @class Tooltip
  * @memberof moonstone/IncrementSlider
  * @ui
  * @public

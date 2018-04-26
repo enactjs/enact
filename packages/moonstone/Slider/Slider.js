@@ -14,7 +14,7 @@
  * @exports Slider
  * @exports SliderBase
  * @exports SliderDecorator
- * @exports SliderTooltip
+ * @exports Tooltip
  */
 
 import {forKey, forProp, forward, forwardWithPrevent, handle} from '@enact/core/handle';
@@ -167,12 +167,12 @@ const SliderBase = kind({
 		 * Enables the built-in tooltip
 		 *
 		 * To customize the tooltip, pass either a custom Tooltip component or an instance of
-		 * [SliderTooltip]{@link moonstone/Slider.SliderTooltip} with additional props configured.
+		 * [Tooltip]{@link moonstone/Slider.Tooltip} with additional props configured.
 		 *
 		 * ```
 		 * <Slider
 		 *   tooltip={
-		 *     <SliderTooltip percent side="after" />
+		 *     <Tooltip percent side="after" />
 		 *   }
 		 * />
 		 * ```
@@ -182,7 +182,7 @@ const SliderBase = kind({
 		 *
 		 * ```
 		 * <Slider>
-		 *   <SliderTooltip percent side="after" />
+		 *   <Tooltip percent side="after" />
 		 * </Slider>
 		 * ```
 		 *
@@ -332,7 +332,7 @@ const Slider = SliderDecorator(SliderBase);
  *
  * See {@link moonstone/ProgressBar.Tooltip}
  *
- * @class SliderTooltip
+ * @class Tooltip
  * @memberof moonstone/Slider
  * @ui
  * @public
