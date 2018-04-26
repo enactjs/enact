@@ -439,7 +439,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	onKeyDown = (ev) => {
-		if (is('pointerHide', ev.keyCode)) {
+		if (Spotlight.getPointerMode() & is('pointerHide', ev.keyCode)) {
 			this.isPointerHiding = true;
 		} else if (!is('pointerShow', ev.keyCode) && !this.isPointerHiding) {
 			this.animateOnFocus = true;
