@@ -699,9 +699,14 @@ const PickerBase = class extends React.Component {
 
 	calcButtonLabel (next, valueText) {
 		if (!this.props.joined) {
-			const {decrementAriaLabel = $L('previous item'), incrementAriaLabel = $L('next item')} = this.props;
+			const {decrementAriaLabel, incrementAriaLabel} = this.props;
+			let label = next ? incrementAriaLabel : decrementAriaLabel;
 
-			return `${valueText} ${next ? incrementAriaLabel : decrementAriaLabel}`;
+			if (label != null) {
+				return label;
+			}
+
+			return `${valueText} ${next ? $L('next item') : $L('previous item')}`;
 		}
 	}
 
@@ -722,7 +727,7 @@ const PickerBase = class extends React.Component {
 			return ariaLabel;
 		}
 
-		return `${valueText} ${(ariaLabel == null) ? hint : ariaLabel}`;
+		return `${valueText} ${hint}`;
 	}
 
 	initRef (prop) {
