@@ -99,18 +99,22 @@ const PickerBase = class extends React.Component {
 		min: PropTypes.number.isRequired,
 
 		/**
-		 * Sets the hint string read when focusing the joined picker.
+		 * The "aria-label" for the picker.
+		 *
+		 * While the `aria-label` will always be set on the root node, that node is only focusable
+		 * when the picker is `joined`.
 		 *
 		 * @type {String}
-		 * @default 'change a value with left right button'
 		 * @memberof moonstone/internal/Picker.PickerBase.prototype
 		 * @public
 		 */
 		'aria-label': PropTypes.string,
 
 		/**
-		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
-		 * to the current selected child and accessibilityHint text.
+		 * Overrides the `aria-valuetext` for the picker.
+		 *
+		 * By default, `aria-valuetext` is set to the current selected child and `accessibilityHint`
+		 * text.
 		 *
 		 * @type {String}
 		 * @memberof moonstone/internal/Picker.PickerBase.prototype
@@ -120,6 +124,7 @@ const PickerBase = class extends React.Component {
 
 		/**
 		 * Accessibility hint
+		 *
 		 * For example, `hour`, `year`, and `meridiem`
 		 *
 		 * @type {String}
@@ -145,7 +150,7 @@ const PickerBase = class extends React.Component {
 		className: PropTypes.string,
 
 		/**
-		 * Sets the hint string read when focusing the decrement button.
+		 * The "aria-label" for the decrement button.
 		 *
 		 * @type {String}
 		 * @default 'previous item'
@@ -181,7 +186,7 @@ const PickerBase = class extends React.Component {
 		id: PropTypes.string,
 
 		/**
-		 * Sets the hint string read when focusing the increment button.
+		 * The "aria-label" for the increment button.
 		 *
 		 * @type {String}
 		 * @default 'next item'
