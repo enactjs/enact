@@ -9,6 +9,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import ComponentOverride from '@enact/ui/ComponentOverride';
 
 import Switch from '../Switch';
 import ToggleItem from '../ToggleItem';
@@ -40,17 +41,34 @@ const SwitchItemBase = kind({
 		 * @public
 		 */
 		css: PropTypes.object,
-		iconComponent: PropTypes.object
+
+		/**
+		 * Customize the component used as the switch.
+		 *
+		 * @type {Component}
+		 * @default {@link moonstone/Switch.Switch}
+		 * @private
+		 */
+		iconComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func])
 	},
 
 	defaultProps: {
-		iconComponent: <Switch className={componentCss.switch} />
+		iconComponent: Switch
 	},
 
 	styles: {
 		css: componentCss,
 		className: 'switchItem',
 		publicClassNames: ['switchItem']
+	},
+
+	computed: {
+		iconComponent: ({css, iconComponent}) => (
+			<ComponentOverride
+				component={iconComponent}
+				className={css.switch}
+			/>
+		)
 	},
 
 	render: (props) => (
