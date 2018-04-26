@@ -1671,26 +1671,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.hideControls
 	)
 
-	handleSpotlightUpFromSlider = handle(
-		stopImmediate,
-		// FIXME: This is a workaround for a scenario in which Slider does not receive a blur event
-		// on 5-way up from it.
-		() => {
-			this.handleSliderBlur();
-			return true;
-		},
-		this.hideControls
-	);
-
-	handleSpotlightDownFromSlider = (ev) => {
-		Spotlight.setPointerMode(false);
-
-		if (this.focusDefaultMediaControl()) {
-			ev.preventDefault();
-			ev.stopPropagation();
-		}
-	}
-
 	/**
 	 * Check for elements with the spotlightDefaultClass, in the following location order:
 	 * left components, right components, media controls or more controls (depending on which is
@@ -1726,7 +1706,7 @@ const VideoPlayerBase = class extends React.Component {
 	sliderTooltipTimeJob = new Job((time) => this.setState({sliderTooltipTime: time}), 20)
 
 	handleKnobMove = (ev) => {
-		this.sliderScrubbing = ev.detached;
+		this.sliderScrubbing = true;
 
 		// prevent announcing repeatedly when the knob is detached from the progress.
 		// TODO: fix Slider to not send onKnobMove when the knob hasn't, in fact, moved
@@ -1734,7 +1714,7 @@ const VideoPlayerBase = class extends React.Component {
 			this.sliderKnobProportion = ev.proportion;
 			const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
 
-			if (this.sliderScrubbing && !isNaN(seconds)) {
+			if (!isNaN(seconds)) {
 				this.sliderTooltipTimeJob.throttle(seconds);
 				const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
 
@@ -1787,6 +1767,17 @@ const VideoPlayerBase = class extends React.Component {
 			this.setState({
 				slider5WayPressed: true
 			}, this.slider5WayPressJob.start());
+		} else if (is('down', ev.keyCode)) {
+			Spotlight.setPointerMode(false);
+
+			if (this.focusDefaultMediaControl()) {
+				stopImmediate(ev);
+			}
+		} else if (is('up', ev.keyCode)) {
+			stopImmediate(ev);
+
+			this.handleSliderBlur();
+			this.hideControls();
 		}
 	}
 
@@ -2012,13 +2003,14 @@ const VideoPlayerBase = class extends React.Component {
 								onFocus={this.handleSliderFocus}
 								onKeyDown={this.handleSliderKeyDown}
 								onKnobMove={this.handleKnobMove}
-								onSpotlightDown={this.handleSpotlightDownFromSlider}
 								onSpotlightUp={this.handleSpotlightUpFromSlider}
 								spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
 								value={this.state.proportionPlayed}
 								visible={this.state.mediaSliderVisible}
 							>
 								<FeedbackTooltip
+									duration={this.state.duration}
+									formatter={this.durfmt}
 									noFeedback={!this.state.feedbackIconVisible}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
 									playbackState={this.prevCommand}
@@ -2026,9 +2018,7 @@ const VideoPlayerBase = class extends React.Component {
 									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
 									visible={this.state.feedbackVisible}
-								>
-									{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
-								</FeedbackTooltip>
+								/>
 							</MediaSlider>}
 
 							<MediaControls

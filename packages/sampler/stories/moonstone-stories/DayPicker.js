@@ -2,7 +2,7 @@ import DayPicker, {DayPickerBase} from '@enact/moonstone/DayPicker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, text} from '@storybook/addon-knobs';
+import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 storiesOf('Moonstone', module)
@@ -13,8 +13,9 @@ storiesOf('Moonstone', module)
 			text: 'The basic DayPicker'
 		})(() => (
 			<DayPicker
+				dayNameLength={select('dayNameLength', ['short', 'medium', 'long', 'full'], 'long')}
 				title={text('title', 'Day Picker')}
-				noneText={text('none', 'none')}
+				noneText={text('noneText', 'none')}
 				disabled={boolean('disabled', false)}
 				onSelect={action('onSelect')}
 				onOpen={action('onOpen')}
