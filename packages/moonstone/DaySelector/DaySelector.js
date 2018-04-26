@@ -32,21 +32,21 @@ const DaySelectorBase = kind({
 
 	propTypes: /** @lends moonstone/DaySelector.DaySelectorBase.prototype */ {
 		/**
-		 * Array of day names
-		 *
-		 * @type {String[]}
-		 * @default false
-		 * @private
-		 */
-		children: PropTypes.arrayOf(PropTypes.string),
-
-		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * Array of full day names
+		 *
+		 * @type {String[]}
+		 * @default false
+		 * @private
+		 */
+		fullDayNames: PropTypes.arrayOf(PropTypes.string),
 
 		/**
 		 * Called when an item is selected. The first parameter will be an object containing a
@@ -76,7 +76,8 @@ const DaySelectorBase = kind({
 		className: 'daySelector'
 	},
 
-	render: ({disabled, onSelect, ...rest}) => {
+	render: ({disabled, ...rest}) => {
+		delete rest.fullDayNames;
 		return (
 			<Group
 				{...rest}
@@ -84,7 +85,6 @@ const DaySelectorBase = kind({
 				childSelect="onToggle"
 				disabled={disabled}
 				itemProps={{className: componentCss.daySelectorItem, disabled}}
-				onSelect={onSelect}
 				select="multiple"
 				selectedProp="selected"
 			/>
