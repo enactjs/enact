@@ -14,21 +14,27 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `wrap` to support wrap-around spotlight navigation
 - `moonstone/ProgressBar.ProgressBarTooltip` props `percent` to format the value as a percent and `visible` to control display of the tooltip
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="list"`
 - `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` props `scrollRightAriaLabel`, `scrollLeftAriaLabel`, `scrollDownAriaLabel`, and `scrollUpAriaLabel` to configure the aria-label set on scroll buttons in the scrollbars
 - `moonstone/Popup` property `closeButtonAriaLabel` to configure the label set on popup close button
+- `moonstone/MediaOverlay` component
 
 ### Fixed
 
 - `moonstone/Scroller` and `moonstone/VirtualList` navigation via 5-way from paging controls
 - `moonstone/MoonstoneDecorator` to optimize localized font loading performance
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to give initial focus
+- `moonstone/GridListImageItem` to show proper `placeholder` and `selectionOverlay`
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to have the default value for `dataSize`, `pageScroll`, and `spacing` props
 
 ### Changed
 
 - `moonstone/IncrementSlider` and `moonstone/Slider` prop `tooltip` to support either a boolean for the default tooltip or an element or component for a custom tooltip
 - `moonstone/ProgressBar.ProgressBarTooltip` prop `side` to support either locale-aware or locale-independent positioning
 - `moonstone/ProgressBar.ProgressBarTooltip` prop `tooltip` to support custom tooltip components
+- `moonstone/Scroller`, `moonstone/Picker`, and `moonstone/IncrementSlider` to retain focus on `moonstone/IconButton` when it becomes disabled
 
 ## [2.0.0-alpha.8] - 2018-04-17
 

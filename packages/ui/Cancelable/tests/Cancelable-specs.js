@@ -7,9 +7,10 @@ import {addCancelHandler, Cancelable, removeCancelHandler} from '../Cancelable';
 describe('Cancelable', () => {
 
 	// Suite-wide setup
-	const Component = () => (
-		<div>
-			<button />
+	// eslint-disable-next-line
+	const Component = ({children, className, onKeyUp}) => (
+		<div onKeyUp={onKeyUp} className={className}>
+			{children}
 		</div>
 	);
 
@@ -22,7 +23,9 @@ describe('Cancelable', () => {
 		};
 	};
 
+	/* eslint-disable react/jsx-no-bind */
 	const returnsTrue = () => true;
+	const stop = (ev) => ev.stopPropagation();
 
 	it('should call onCancel from prop for escape key', function () {
 		const handleCancel = sinon.spy(returnsTrue);
@@ -81,8 +84,8 @@ describe('Cancelable', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should stop propagation for escape key', function () {
-		const handleCancel = sinon.spy(returnsTrue);
+	it('should stop propagation when handled', function () {
+		const handleCancel = sinon.spy(stop);
 		const keyEvent = makeKeyEvent(27);
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
@@ -101,7 +104,7 @@ describe('Cancelable', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not stop propagation for non-escape key', function () {
+	it('should not stop propagation for not handled', function () {
 		const handleCancel = sinon.spy(returnsTrue);
 		const keyEvent = makeKeyEvent(42);
 		const Comp = Cancelable(
@@ -125,7 +128,7 @@ describe('Cancelable', () => {
 		const handleKeyUp = sinon.spy();
 		const keyEvent = makeKeyEvent(42);
 		const Comp = Cancelable(
-			{onCancel: () => true},
+			{onCancel: returnsTrue},
 			Component
 		);
 
@@ -160,6 +163,91 @@ describe('Cancelable', () => {
 
 		const expected = true;
 		const actual = handleCancel.calledOnce;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should bubble up the component tree when config handler does not call stopPropagation', function () {
+		const handleCancel = sinon.spy(returnsTrue);
+		const Comp = Cancelable(
+			{onCancel: handleCancel},
+			Component
+		);
+
+		const subject = mount(
+			<Comp>
+				<Comp className="second" />
+			</Comp>
+		);
+
+		subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
+
+		const expected = 2;
+		const actual = handleCancel.callCount;
+
+		expect(actual).to.equal(expected);
+	});
+
+
+	it('should not bubble up the component tree when config handler calls stopPropagation', function () {
+		const handleCancel = sinon.spy(stop);
+		const Comp = Cancelable(
+			{onCancel: handleCancel},
+			Component
+		);
+
+		const subject = mount(
+			<Comp>
+				<Comp className="second" />
+			</Comp>
+		);
+
+		subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
+
+		const expected = 1;
+		const actual = handleCancel.callCount;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should bubble up the component tree when prop handler does not call stopPropagation', function () {
+		const handleCancel = sinon.spy();
+		const Comp = Cancelable(
+			{onCancel: 'onCustomEvent'},
+			Component
+		);
+
+		const subject = mount(
+			<Comp onCustomEvent={handleCancel}>
+				<Comp className="second" onCustomEvent={returnsTrue} />
+			</Comp>
+		);
+
+		subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
+
+		const expected = true;
+		const actual = handleCancel.called;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not bubble up the component tree when prop handler calls stopPropagation', function () {
+		const handleCancel = sinon.spy();
+		const Comp = Cancelable(
+			{onCancel: 'onCustomEvent'},
+			Component
+		);
+
+		const subject = mount(
+			<Comp onCustomEvent={handleCancel}>
+				<Comp className="second" onCustomEvent={stop} />
+			</Comp>
+		);
+
+		subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
+
+		const expected = false;
+		const actual = handleCancel.called;
 
 		expect(actual).to.equal(expected);
 	});
@@ -228,7 +316,7 @@ describe('Cancelable', () => {
 			expect(actual).to.deep.equal(expected);
 		});
 
-		it('should not invoke modal handlers after one returns true', function () {
+		it('should not invoke modal handlers after one calls stopPropagation', function () {
 			const handleCancel = sinon.spy(returnsTrue);
 
 			const First = Cancelable(
@@ -236,7 +324,7 @@ describe('Cancelable', () => {
 				Component
 			);
 			const Second = Cancelable(
-				{modal: true, onCancel: returnsTrue},
+				{modal: true, onCancel: stop},
 				Component
 			);
 

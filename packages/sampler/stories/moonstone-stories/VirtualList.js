@@ -5,7 +5,7 @@ import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, number} from '@storybook/addon-knobs';
+import {boolean, number, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
@@ -14,6 +14,11 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBase, UiVirtualListBase);
 
 const
+	wrapOption = {
+		'false': false,
+		'true': true,
+		"'noAnimation'": 'noAnimation'
+	},
 	items = [],
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderItem = (size) => ({index, ...rest}) => {
@@ -78,6 +83,7 @@ storiesOf('Moonstone', module)
 					style={{
 						height: ri.unit(552, 'rem')
 					}}
+					wrap={wrapOption[select('wrap', ['false', 'true', "'noAnimation'"])]}
 				/>
 			);
 		})
