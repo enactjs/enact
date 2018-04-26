@@ -25,6 +25,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/MediaOverlay` component
 - `moonstone/DayPicker` and `moonstone/DaySelector` property `dayNameLength` to configure the length of the day names
 
+### Changed
+
+- `moonstone/Input` to prevent pointer actions on other component when the input has focus
+
 ### Fixed
 
 - `moonstone/Scroller` and `moonstone/VirtualList` navigation via 5-way from paging controls
