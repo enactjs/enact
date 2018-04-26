@@ -40,15 +40,6 @@ const DaySelectorBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Array of full day names
-		 *
-		 * @type {String[]}
-		 * @default false
-		 * @private
-		 */
-		fullDayNames: PropTypes.arrayOf(PropTypes.string),
-
-		/**
 		 * Called when an item is selected. The first parameter will be an object containing a
 		 * `selected` member, containing the array of numbers representing the selected days, zero
 		 * indexed.
@@ -78,6 +69,7 @@ const DaySelectorBase = kind({
 
 	render: ({disabled, ...rest}) => {
 		delete rest.fullDayNames;
+
 		return (
 			<Group
 				{...rest}

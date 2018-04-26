@@ -39,6 +39,16 @@ const DayPickerBase = kind({
 		 */
 		title: PropTypes.string.isRequired,
 
+		/**
+		 * Sets the "aria-label" for the picker.
+		 *
+		 * By default, "aria-label" is set to the title and the full names of the selected days or
+		 * the custom text when the weekend, week days, or all days is selected.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/DayPicker.PickerBase.prototype
+		 * @public
+		 */
 		'aria-label': PropTypes.string,
 
 		/**
@@ -49,15 +59,6 @@ const DayPickerBase = kind({
 		 * @public
 		 */
 		disabled: PropTypes.bool,
-
-		/**
-		 * Array of full day names
-		 *
-		 * @type {String[]}
-		 * @default false
-		 * @private
-		 */
-		fullDayNames: PropTypes.arrayOf(PropTypes.string),
 
 		/**
 		 * The selected label for DayPicker
@@ -125,23 +126,15 @@ const DayPickerBase = kind({
 	},
 
 	computed: {
-		'aria-label': ({'aria-label': ariaLabel, label, title}) => {
-			if (ariaLabel != null) {
-				return ariaLabel;
-			}
-
-			return label ? `${title} ${label}` : null;
-		}
+		children: ({children}) => children.map(child => child['aria-label'])
 	},
 
-	render: ({fullDayNames, ...rest}) => {
+	render: (props) => {
 		return (
 			<ExpandableListBase
-				{...rest}
+				{...props}
 				select="multiple"
-			>
-				{fullDayNames}
-			</ExpandableListBase>
+			/>
 		);
 	}
 });

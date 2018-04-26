@@ -39,6 +39,14 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/DaySelector.DaySelectorDecorator.prototype */ {
 			/**
+			 * The "aria-label" for the selector.
+			 *
+			 * @memberof moonstone/DaySelector.DaySelectorDecorator
+			 * @private
+			 */
+			'aria-label': PropTypes.string,
+
+			/**
 			 * The format for names of days used in the label. "M, T, W" for `short`; "Mo, Tu, We" for `medium`, etc.
 			 *
 			 * @type {String}
@@ -99,7 +107,17 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			 * @type {Number|Number[]}
 			 * @public
 			 */
-			selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)])
+			selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)]),
+
+			/**
+			 * Used by DayPicker to generate the aria-label.
+			 *
+			 * Type set to "any" to avoid warnings if passed in some other unknown scenario
+			 *
+			 * @type {String}
+			 * @private
+			 */
+			title: PropTypes.any
 		}
 
 		static defaultProps = {
@@ -226,12 +244,15 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 		 *
 		 * @returns {String} "Every Day", "Every Weekend", "Every Week" or list of days
 		 */
-		getSelectedDayString = (type, selected, selectDayStrings) => {
+		getSelectedDayString (selectDayStrings) {
 			const {
 				everyDayText = $L('Every Day'),
 				everyWeekdayText = $L('Every Weekday'),
-				everyWeekendText = $L('Every Weekend')
+				everyWeekendText = $L('Every Weekend'),
+				selected
 			} = this.props;
+
+			const type = this.calcSelectedDayType(selected);
 
 			switch (type) {
 				case SELECTED_DAY_TYPES.EVERY_DAY :
@@ -247,28 +268,53 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
+		getAriaLabel () {
+			const {'aria-label': ariaLabel, selected, title} = this.props;
+			const {fullDayNames} = this.state;
+
+			if (ariaLabel != null || title == null || selected == null || selected.length === 0) {
+				return ariaLabel;
+			}
+
+			const label = this.getSelectedDayString(fullDayNames);
+
+			return `${title} ${label}`;
+		}
+
 		adjustWeekends (firstDayOfWeek, day) {
 			return ((day - firstDayOfWeek + 7) % 7);
 		}
 
 		handleSelect = ({selected}) => {
-			const type = this.calcSelectedDayType(selected);
 			const labels = this.state.abbreviatedDayNames;
-			const content = this.getSelectedDayString(type, selected, labels);
+			const content = this.getSelectedDayString(labels);
 
 			forwardSelect({selected, content}, this.props);
 		}
 
 		render () {
-			const {selected, ...rest} = this.props;
-			const type = this.calcSelectedDayType(selected);
-			const content = this.getSelectedDayString(type, selected, this.state.abbreviatedDayNames);
+			const props = Object.assign({}, this.props);
+			const {abbreviatedDayNames, fullDayNames} = this.state;
+			const content = this.getSelectedDayString(abbreviatedDayNames);
 
-			delete rest.dayNameLength;
+			delete props.dayNameLength;
+			delete props.everyDayText;
+			delete props.everyWeekdayText;
+			delete props.everyWeekendText;
 
 			return (
-				<Wrapped {...rest} label={content} fullDayNames={this.state.fullDayNames} onSelect={this.handleSelect} selected={selected}>
-					{this.state.abbreviatedDayNames}
+				<Wrapped
+					{...props}
+					aria-label={this.getAriaLabel()}
+					label={content}
+					onSelect={this.handleSelect}
+				>
+					{abbreviatedDayNames.map((children, index) => ({
+						children,
+						// "short" dayNameLength can result in the same name so adding index
+						key: `${index} ${children}`,
+						'aria-label': fullDayNames[index]
+					}))}
 				</Wrapped>
 			);
 		}
