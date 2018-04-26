@@ -205,8 +205,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 		 * @returns {Number}
 		 */
 		calcSelectedDayType (selected) {
-			if (!selected) return SELECTED_DAY_TYPES.SELECTED_NONE;
-			selected = coerceArray(selected);
+			if (selected == null) return SELECTED_DAY_TYPES.SELECTED_NONE;
 
 			let
 				weekendStart = false,
@@ -244,13 +243,16 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 		 *
 		 * @returns {String} "Every Day", "Every Weekend", "Every Week" or list of days
 		 */
-		getSelectedDayString (selectDayStrings) {
+		getSelectedDayString (selected, selectDayStrings) {
 			const {
 				everyDayText = $L('Every Day'),
 				everyWeekdayText = $L('Every Weekday'),
-				everyWeekendText = $L('Every Weekend'),
-				selected
+				everyWeekendText = $L('Every Weekend')
 			} = this.props;
+
+			if (selected != null) {
+				selected = coerceArray(selected);
+			}
 
 			const type = this.calcSelectedDayType(selected);
 
@@ -276,7 +278,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 				return ariaLabel;
 			}
 
-			const label = this.getSelectedDayString(fullDayNames);
+			const label = this.getSelectedDayString(selected, fullDayNames);
 
 			return `${title} ${label}`;
 		}
@@ -287,27 +289,28 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 
 		handleSelect = ({selected}) => {
 			const labels = this.state.abbreviatedDayNames;
-			const content = this.getSelectedDayString(labels);
+			const content = this.getSelectedDayString(selected, labels);
 
 			forwardSelect({selected, content}, this.props);
 		}
 
 		render () {
-			const props = Object.assign({}, this.props);
+			const {selected, ...rest} = this.props;
 			const {abbreviatedDayNames, fullDayNames} = this.state;
-			const content = this.getSelectedDayString(abbreviatedDayNames);
+			const content = this.getSelectedDayString(selected, abbreviatedDayNames);
 
-			delete props.dayNameLength;
-			delete props.everyDayText;
-			delete props.everyWeekdayText;
-			delete props.everyWeekendText;
+			delete rest.dayNameLength;
+			delete rest.everyDayText;
+			delete rest.everyWeekdayText;
+			delete rest.everyWeekendText;
 
 			return (
 				<Wrapped
-					{...props}
+					{...rest}
 					aria-label={this.getAriaLabel()}
 					label={content}
 					onSelect={this.handleSelect}
+					selected={selected}
 				>
 					{abbreviatedDayNames.map((children, index) => ({
 						children,
