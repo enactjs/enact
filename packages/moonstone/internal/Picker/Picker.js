@@ -98,17 +98,32 @@ const PickerBase = class extends React.Component {
 		min: PropTypes.number.isRequired,
 
 		/**
-		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
-		 * to the current selected child and accessibilityHint text.
+		 * The "aria-label" for the picker.
+		 *
+		 * While the `aria-label` will always be set on the root node, that node is only focusable
+		 * when the picker is `joined`.
 		 *
 		 * @type {String}
-		 * @memberof moonstone/internal/Picker.Picker.prototype
+		 * @memberof moonstone/internal/Picker.PickerBase.prototype
+		 * @public
+		 */
+		'aria-label': PropTypes.string,
+
+		/**
+		 * Overrides the `aria-valuetext` for the picker.
+		 *
+		 * By default, `aria-valuetext` is set to the current selected child and `accessibilityHint`
+		 * text.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/internal/Picker.PickerBase.prototype
 		 * @public
 		 */
 		'aria-valuetext': PropTypes.string,
 
 		/**
 		 * Accessibility hint
+		 *
 		 * For example, `hour`, `year`, and `meridiem`
 		 *
 		 * @type {String}
@@ -132,6 +147,15 @@ const PickerBase = class extends React.Component {
 		 * @public
 		 */
 		className: PropTypes.string,
+
+		/**
+		 * The "aria-label" for the decrement button.
+		 *
+		 * @type {String}
+		 * @default 'previous item'
+		 * @public
+		 */
+		decrementAriaLabel: PropTypes.string,
 
 		/**
 		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
@@ -159,6 +183,15 @@ const PickerBase = class extends React.Component {
 		 * @private
 		 */
 		id: PropTypes.string,
+
+		/**
+		 * The "aria-label" for the increment button.
+		 *
+		 * @type {String}
+		 * @default 'next item'
+		 * @public
+		 */
+		incrementAriaLabel: PropTypes.string,
 
 		/**
 		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -661,8 +694,14 @@ const PickerBase = class extends React.Component {
 	}
 
 	calcButtonLabel (next, valueText) {
-		// no label is necessary when joined
 		if (!this.props.joined) {
+			const {decrementAriaLabel, incrementAriaLabel} = this.props;
+			let label = next ? incrementAriaLabel : decrementAriaLabel;
+
+			if (label != null) {
+				return label;
+			}
+
 			return `${valueText} ${next ? $L('next item') : $L('previous item')}`;
 		}
 	}
@@ -675,9 +714,15 @@ const PickerBase = class extends React.Component {
 		return this.calcButtonLabel(!this.props.reverse, valueText);
 	}
 
-	calcJoinedLabel (valueText) {
-		const {orientation} = this.props;
-		const hint = orientation === 'horizontal' ? $L('change a value with left right button') : $L('change a value with up down button');
+	calcAriaLabel (valueText) {
+		const
+			{'aria-label': ariaLabel, joined, orientation} = this.props,
+			hint = orientation === 'horizontal' ? $L('change a value with left right button') : $L('change a value with up down button');
+
+		if (!joined || ariaLabel != null) {
+			return ariaLabel;
+		}
+
 		return `${valueText} ${hint}`;
 	}
 
@@ -708,8 +753,11 @@ const PickerBase = class extends React.Component {
 			...rest
 		} = this.props;
 
+		delete rest['aria-label'];
 		delete rest.accessibilityHint;
+		delete rest.decrementAriaLabel;
 		delete rest.decrementIcon;
+		delete rest.incrementAriaLabel;
 		delete rest.incrementIcon;
 		delete rest.max;
 		delete rest.min;
@@ -750,7 +798,7 @@ const PickerBase = class extends React.Component {
 				{...rest}
 				aria-controls={joined ? id : null}
 				aria-disabled={disabled}
-				aria-label={joined ? this.calcJoinedLabel(valueText) : null}
+				aria-label={this.calcAriaLabel(valueText)}
 				className={classes}
 				disabled={disabled}
 				onBlur={this.handleBlur}

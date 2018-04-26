@@ -16,6 +16,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` prop `wrap` to support wrap-around spotlight navigation
 - `moonstone/ProgressBar.ProgressBarTooltip` props `percent` to format the value as a percent and `visible` to control display of the tooltip
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` `role="list"`
+- `moonstone/Picker` props `aria-label`, `decrementAriaLabel`, and `incrementAriaLabel` to configure the label set on each button
+- `moonstone/DatePicker` props `dayAriaLabel`, `dayLabel`, `monthAriaLabel`, `monthLabel`, `yearAriaLabel` and `yearLabel` to configure the label set on date pickers
+- `moonstone/TimePicker` props `hourAriaLabel`, `hourLabel`, `meridiemAriaLabel`, `meridiemLabel`, `minuteAriaLabel`, and `minuteLabel` to configure the label set on time pickers
 - `moonstone/VirtualList`, `moonstone/VirtualGridList` and `moonstone/Scroller` props `scrollRightAriaLabel`, `scrollLeftAriaLabel`, `scrollDownAriaLabel`, and `scrollUpAriaLabel` to configure the aria-label set on scroll buttons in the scrollbars
 - `moonstone/Popup` property `closeButtonAriaLabel` to configure the label set on popup close button
 - `moonstone/MediaOverlay` component
