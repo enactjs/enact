@@ -452,6 +452,10 @@ const VideoPlayerBase = class extends React.Component {
 		 * * `proportionPlayed` {Number} - A value between `0` and `1` representing the
 		 *	proportion of the media that has already been shown
 		 *
+		 * Events:
+		 * * `onPlay` - Sent when playback of the media starts after having been paused
+		 * * `onUpdate` - Sent when any of the properties were updated
+		 *
 		 * Methods:
 		 * * `play()` - play video
 		 * * `pause()` - pause video
@@ -943,7 +947,7 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Media Interaction Methods
 	//
-	updateMainState = () => {
+	handleEvent = () => {
 		const el = this.video;
 		const updatedState = {
 			// Standard media properties
@@ -976,6 +980,17 @@ const VideoPlayerBase = class extends React.Component {
 
 		this.setState(updatedState);
 	}
+
+	handlePlayEvent = (ev) => {
+		forward('onPlay', ev, this.props);
+		if (!this.state.bottomControlsRendered) {
+			this.renderBottomControl.idle();
+		}
+	}
+
+	renderBottomControl = new Job(() => {
+		this.setState({bottomControlsRendered: true});
+	});
 
 	/**
 	 * Returns an object with the current state of the media including `currentTime`, `duration`,
@@ -1363,18 +1378,6 @@ const VideoPlayerBase = class extends React.Component {
 		};
 	}
 
-	handleEvent = (ev) => {
-		this.updateMainState();
-
-		if (ev.type === 'onLoadStart') {
-			this.handleLoadStart();
-		}
-
-		if (ev.type === 'play') {
-			this.mayRenderBottomControls();
-		}
-	}
-
 	disablePointerMode = () => {
 		Spotlight.setPointerMode(false);
 		return true;
@@ -1540,22 +1543,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.announceRef = node;
 	}
 
-	handleLoadStart = () => {
-		if (!this.props.noAutoPlay) {
-			this.video.play();
-		}
-	}
-
-	mayRenderBottomControls = () => {
-		if (!this.state.bottomControlsRendered) {
-			this.renderBottomControl.idle();
-		}
-	}
-
-	renderBottomControl = new Job(() => {
-		this.setState({bottomControlsRendered: true});
-	});
-
 	getControlsAriaProps () {
 		if (this.state.announce === AnnounceState.TITLE) {
 			return {
@@ -1637,6 +1624,7 @@ const VideoPlayerBase = class extends React.Component {
 					component={videoComponent}
 					controls={false}
 					onUpdate={this.handleEvent}
+					onPlay={this.handlePlayEvent}
 					ref={this.setVideoRef}
 				>
 					{source}

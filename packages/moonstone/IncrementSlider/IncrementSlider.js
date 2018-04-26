@@ -34,7 +34,6 @@ import React from 'react';
 
 import IdProvider from '../internal/IdProvider';
 import $L from '../internal/$L';
-import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator';
 import {ProgressBarTooltip} from '../ProgressBar';
 import Skinnable from '../Skinnable';
 import {SliderBase} from '../Slider';
@@ -563,12 +562,6 @@ const IncrementSliderDecorator = compose(
 	Pure,
 	Changeable,
 	IdProvider({generateProp: null, prefix: 's_'}),
-	DisappearSpotlightDecorator({
-		events: {
-			onIncrementSpotlightDisappear: `.${componentCss.decrementButton}`,
-			onDecrementSpotlightDisappear: `.${componentCss.incrementButton}`
-		}
-	}),
 	SliderBehaviorDecorator({emitSpotlightEvents: 'onSpotlightDirection'}),
 	Skinnable,
 	Slottable({slots: ['knob', 'tooltip']})
