@@ -29,7 +29,7 @@ const forwardOnShow = forward('onShow');
 const forwardOnHide = forward('onHide');
 
 /**
- * A minimally styled toggle item without any behavior, ripe for extension.
+ * The stateless structure of the component, in case you want toprovide all of the state yourself.
  * In general, you'll probably want to use the [stateful version]{@link ui/Transition.Transition}.
  *
  * @class TransitionBase
@@ -204,7 +204,7 @@ const TransitionBase = kind({
 				if (visible && (direction === 'up' || direction === 'down')) {
 					style.height = clipHeight;
 				}
-				// If duration isn't a know named string, assume it is a CSS duration value
+				// If duration isn't a known named string, assume it is a CSS duration value
 				if (duration && !css[duration]) {
 					// If it's a number, assume it's miliseconds, if not, assume it's already a CSS duration string (like "200ms" or "2s")
 					style.transitionDuration = (typeof duration === 'number' ? duration + 'ms' : duration);
