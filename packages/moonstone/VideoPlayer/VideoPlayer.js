@@ -645,6 +645,9 @@ const VideoPlayerBase = class extends React.Component {
 		 * * `proportionPlayed` {Number} - A value between `0` and `1` representing the
 		 *	proportion of the media that has already been shown
 		 *
+		 * Events:
+		 * * onPlay - Sent when playback of the media starts after having been paused
+		 *
 		 * Methods:
 		 * * `play()` - play video
 		 * * `pause()` - pause video
@@ -1256,7 +1259,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState(updatedState);
 	}
 
-	handlePlayEvent = () => {
+	handlePlayEvent = (ev) => {
+		forward('onPlay', ev, this.props);
 		if (!this.state.bottomControlsRendered) {
 			this.renderBottomControl.idle();
 		}
