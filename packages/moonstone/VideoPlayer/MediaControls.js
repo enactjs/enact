@@ -305,7 +305,9 @@ const MediaControlsBase = kind({
 		forwardIcon: 'forward',
 		jumpBackwardIcon: 'skipbackward',
 		jumpForwardIcon: 'skipforward',
+		moreButtonCloseLabel: $L('Back'),
 		moreButtonColor: 'blue',
+		moreButtonLabel: $L('More'),
 		pauseIcon: 'pause',
 		playIcon: 'play',
 		visible: true
@@ -319,7 +321,7 @@ const MediaControlsBase = kind({
 	computed: {
 		className: ({visible, styler}) => styler.append({hidden: !visible}),
 		centerClassName: ({showMoreComponents, styler}) => styler.join('centerComponents', {more: showMoreComponents}),
-		moreIconLabel: ({showMoreComponents}) => showMoreComponents ? $L('Back') : $L('More'),
+		moreIconLabel: ({moreButtonCloseLabel, moreButtonLabel, showMoreComponents}) => showMoreComponents ? moreButtonCloseLabel : moreButtonLabel,
 		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowshrinkleft' : 'ellipsis'
 	},
 
@@ -355,6 +357,8 @@ const MediaControlsBase = kind({
 		spotlightDisabled,
 		...rest
 	}) => {
+		delete rest.moreButtonCloseLabel;
+		delete rest.moreButtonLabel;
 		delete rest.visible;
 
 		return (
@@ -782,6 +786,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			const props = Object.assign({}, this.props);
 			delete props.initialJumpDelay;
 			delete props.jumpDelay;
+			delete props.no5WayJump;
 			delete props.onFastForward;
 			delete props.onPause;
 			delete props.onPlay;
