@@ -194,6 +194,12 @@ const VirtualListBaseFactory = (type) => {
 			spotlightId: PropTypes.string
 		}
 
+		static defaultProps = {
+			dataSize: 0,
+			pageScroll: false,
+			spacing: 0
+		}
+
 		constructor (props) {
 			super(props);
 
