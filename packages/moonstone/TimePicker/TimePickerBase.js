@@ -111,6 +111,24 @@ const TimePickerBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
+		 * The "aria-label" for the hour picker
+		 *
+		 * @type {String}
+		 * @default 'change a value with up down button'
+		 * @public
+		 */
+		hourAriaLabel: PropTypes.string,
+
+		/**
+		 * Sets the hint string read when focusing the hour picker.
+		 *
+		 * @type {String}
+		 * @default 'hour'
+		 * @public
+		 */
+		hourLabel: PropTypes.string,
+
+		/**
 		 * The `meridiem` component of the time
 		 *
 		 * @type {Number}
@@ -120,10 +138,18 @@ const TimePickerBase = kind({
 		meridiem: PropTypes.number,
 
 		/**
-		 * String of meridiem for picker label
+		 * The "aria-label" for the meridiem picker
 		 *
 		 * @type {String}
-		 * @required
+		 * @default 'change a value with up down button'
+		 * @public
+		 */
+		meridiemAriaLabel: PropTypes.string,
+
+		/**
+		 * Sets the hint string read when focusing the meridiem picker.
+		 *
+		 * @type {String}
 		 * @public
 		 */
 		meridiemLabel: PropTypes.string,
@@ -136,6 +162,24 @@ const TimePickerBase = kind({
 		 * @public
 		 */
 		meridiems: PropTypes.arrayOf(PropTypes.string),
+
+		/**
+		 * The "aria-label" for the minute picker
+		 *
+		 * @type {String}
+		 * @default 'change a value with up down button'
+		 * @public
+		 */
+		minuteAriaLabel: PropTypes.string,
+
+		/**
+		 * Sets the hint string read when focusing the minute picker.
+		 *
+		 * @type {String}
+		 * @default 'minute'
+		 * @public
+		 */
+		minuteLabel: PropTypes.string,
 
 		/**
 		 * When `true`, omits the labels below the pickers
@@ -247,11 +291,16 @@ const TimePickerBase = kind({
 		handlePickerKeyDown,
 		hasMeridiem,
 		hour,
+		hourAriaLabel,
+		hourLabel = $L('hour'),
 		meridiem,
+		meridiemAriaLabel,
 		meridiemLabel,
 		meridiemPickerWidth,
 		meridiems,
 		minute,
+		minuteAriaLabel,
+		minuteLabel = $L('minute'),
 		noLabels,
 		onChangeHour,
 		onChangeMeridiem,
@@ -292,9 +341,11 @@ const TimePickerBase = kind({
 								case 'k':
 									return (
 										<HourPicker
+											accessibilityHint={hourLabel}
+											aria-label={hourAriaLabel}
 											className={css.hourComponents}
 											key="hour-picker"
-											label={noLabels ? null : $L('hour')}
+											label={noLabels ? null : hourLabel}
 											onChange={onChangeHour}
 											onSpotlightDisappear={onSpotlightDisappear}
 											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
@@ -310,17 +361,19 @@ const TimePickerBase = kind({
 								case 'm':
 									return (
 										<DateComponentRangePicker
+											accessibilityHint={minuteLabel}
+											aria-label={minuteAriaLabel}
 											className={css.minutesComponents}
 											key="minute-picker"
-											label={noLabels ? null : $L('minute')}
+											label={noLabels ? null : minuteLabel}
 											max={59}
 											min={0}
 											onChange={onChangeMinute}
 											onSpotlightDisappear={onSpotlightDisappear}
 											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
 											onSpotlightRight={isRight ? onSpotlightRight : null}
-											spotlightDisabled={spotlightDisabled}
 											padded
+											spotlightDisabled={spotlightDisabled}
 											value={minute}
 											width={2}
 											wrap
@@ -329,6 +382,8 @@ const TimePickerBase = kind({
 								case 'a':
 									return (
 										<DateComponentPicker
+											accessibilityHint={meridiemLabel}
+											aria-label={meridiemAriaLabel}
 											aria-valuetext={meridiems ? meridiems[meridiem] : null}
 											className={css.meridiemComponent}
 											key="meridiem-picker"

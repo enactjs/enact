@@ -1,5 +1,5 @@
 import {VirtualGridList as UiVirtualGridList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
-import {VirtualGridListNative as VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
+import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
 import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
 import {GridListImageItem} from '@enact/moonstone/GridListImageItem';
 import ri from '@enact/ui/resolution';
@@ -15,6 +15,11 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('VirtualGridList', VirtualGridList, VirtualListBase, UiVirtualListBase);
 
 const
+	wrapOption = {
+		'false': false,
+		'true': true,
+		"'noAnimation'": 'noAnimation'
+	},
 	prop = {
 		direction: {'horizontal': 'horizontal', 'vertical': 'vertical'}
 	},
@@ -104,6 +109,7 @@ storiesOf('Moonstone', module)
 				style={{
 					height: ri.unit(549, 'rem')
 				}}
+				wrap={wrapOption[select('wrap', ['false', 'true', "'noAnimation'"])]}
 			/>
 		))
 	);

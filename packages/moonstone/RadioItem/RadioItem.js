@@ -50,6 +50,7 @@ const RadioItemBase = kind({
 
 	render: (props) => (
 		<ToggleItem
+			data-webos-voice-intent="SelectRadioItem"
 			{...props}
 			css={props.css}
 			iconComponent={

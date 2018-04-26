@@ -630,16 +630,6 @@ const VideoPlayerBase = class extends React.Component {
 		titleHideDelay: PropTypes.number,
 
 		/**
-		 * The amount of time in milliseconds that should pass before the tooltip disappears from the
-		 * controls. Setting this to `0` disables the hiding.
-		 *
-		 * @type {Number}
-		 * @default 3000
-		 * @public
-		 */
-		tooltipHideDelay: PropTypes.number,
-
-		/**
 		 * Video component to use. The default (`'video'`) renders an `HTMLVideoElement`. Custom
 		 * video components must have a similar API structure, exposing the following APIs:
 		 *
@@ -654,6 +644,10 @@ const VideoPlayerBase = class extends React.Component {
 		 *	representing the proportion of the media that has loaded
 		 * * `proportionPlayed` {Number} - A value between `0` and `1` representing the
 		 *	proportion of the media that has already been shown
+		 *
+		 * Events:
+		 * * `onPlay` - Sent when playback of the media starts after having been paused
+		 * * `onUpdate` - Sent when any of the properties were updated
 		 *
 		 * Methods:
 		 * * `play()` - play video
@@ -685,7 +679,6 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		titleHideDelay: 5000,
-		tooltipHideDelay: 3000,
 		videoComponent: 'video'
 	}
 
@@ -1233,7 +1226,7 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Media Interaction Methods
 	//
-	updateMainState = () => {
+	handleEvent = () => {
 		const el = this.video;
 		const updatedState = {
 			// Standard media properties
@@ -1266,6 +1259,17 @@ const VideoPlayerBase = class extends React.Component {
 
 		this.setState(updatedState);
 	}
+
+	handlePlayEvent = (ev) => {
+		forward('onPlay', ev, this.props);
+		if (!this.state.bottomControlsRendered) {
+			this.renderBottomControl.idle();
+		}
+	}
+
+	renderBottomControl = new Job(() => {
+		this.setState({bottomControlsRendered: true});
+	});
 
 	/**
 	 * Returns an object with the current state of the media including `currentTime`, `duration`,
@@ -1653,18 +1657,6 @@ const VideoPlayerBase = class extends React.Component {
 		};
 	}
 
-	handleEvent = (ev) => {
-		this.updateMainState();
-
-		if (ev.type === 'onLoadStart') {
-			this.handleLoadStart();
-		}
-
-		if (ev.type === 'play') {
-			this.mayRenderBottomControls();
-		}
-	}
-
 	disablePointerMode = () => {
 		Spotlight.setPointerMode(false);
 		return true;
@@ -1678,26 +1670,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.disablePointerMode,
 		this.hideControls
 	)
-
-	handleSpotlightUpFromSlider = handle(
-		stopImmediate,
-		// FIXME: This is a workaround for a scenario in which Slider does not receive a blur event
-		// on 5-way up from it.
-		() => {
-			this.handleSliderBlur();
-			return true;
-		},
-		this.hideControls
-	);
-
-	handleSpotlightDownFromSlider = (ev) => {
-		Spotlight.setPointerMode(false);
-
-		if (this.focusDefaultMediaControl()) {
-			ev.preventDefault();
-			ev.stopPropagation();
-		}
-	}
 
 	/**
 	 * Check for elements with the spotlightDefaultClass, in the following location order:
@@ -1734,7 +1706,7 @@ const VideoPlayerBase = class extends React.Component {
 	sliderTooltipTimeJob = new Job((time) => this.setState({sliderTooltipTime: time}), 20)
 
 	handleKnobMove = (ev) => {
-		this.sliderScrubbing = ev.detached;
+		this.sliderScrubbing = true;
 
 		// prevent announcing repeatedly when the knob is detached from the progress.
 		// TODO: fix Slider to not send onKnobMove when the knob hasn't, in fact, moved
@@ -1742,7 +1714,7 @@ const VideoPlayerBase = class extends React.Component {
 			this.sliderKnobProportion = ev.proportion;
 			const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
 
-			if (this.sliderScrubbing && !isNaN(seconds)) {
+			if (!isNaN(seconds)) {
 				this.sliderTooltipTimeJob.throttle(seconds);
 				const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
 
@@ -1795,6 +1767,17 @@ const VideoPlayerBase = class extends React.Component {
 			this.setState({
 				slider5WayPressed: true
 			}, this.slider5WayPressJob.start());
+		} else if (is('down', ev.keyCode)) {
+			Spotlight.setPointerMode(false);
+
+			if (this.focusDefaultMediaControl()) {
+				stopImmediate(ev);
+			}
+		} else if (is('up', ev.keyCode)) {
+			stopImmediate(ev);
+
+			this.handleSliderBlur();
+			this.hideControls();
 		}
 	}
 
@@ -1861,22 +1844,6 @@ const VideoPlayerBase = class extends React.Component {
 	setAnnounceRef = (node) => {
 		this.announceRef = node;
 	}
-
-	handleLoadStart = () => {
-		if (!this.props.noAutoPlay) {
-			this.video.play();
-		}
-	}
-
-	mayRenderBottomControls = () => {
-		if (!this.state.bottomControlsRendered) {
-			this.renderBottomControl.idle();
-		}
-	}
-
-	renderBottomControl = new Job(() => {
-		this.setState({bottomControlsRendered: true});
-	});
 
 	getControlsAriaProps () {
 		if (this.state.announce === AnnounceState.TITLE) {
@@ -1955,7 +1922,6 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.setApiProvider;
 		delete rest.thumbnailUnavailable;
 		delete rest.titleHideDelay;
-		delete rest.tooltipHideDelay;
 		delete rest.videoPath;
 
 		// Handle some cases when the "more" button is pressed
@@ -1980,6 +1946,7 @@ const VideoPlayerBase = class extends React.Component {
 					component={videoComponent}
 					controls={false}
 					onUpdate={this.handleEvent}
+					onPlay={this.handlePlayEvent}
 					ref={this.setVideoRef}
 				>
 					{source}
@@ -2036,13 +2003,14 @@ const VideoPlayerBase = class extends React.Component {
 								onFocus={this.handleSliderFocus}
 								onKeyDown={this.handleSliderKeyDown}
 								onKnobMove={this.handleKnobMove}
-								onSpotlightDown={this.handleSpotlightDownFromSlider}
 								onSpotlightUp={this.handleSpotlightUpFromSlider}
 								spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
 								value={this.state.proportionPlayed}
 								visible={this.state.mediaSliderVisible}
 							>
 								<FeedbackTooltip
+									duration={this.state.duration}
+									formatter={this.durfmt}
 									noFeedback={!this.state.feedbackIconVisible}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
 									playbackState={this.prevCommand}
@@ -2050,9 +2018,7 @@ const VideoPlayerBase = class extends React.Component {
 									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
 									visible={this.state.feedbackVisible}
-								>
-									{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
-								</FeedbackTooltip>
+								/>
 							</MediaSlider>}
 
 							<MediaControls
