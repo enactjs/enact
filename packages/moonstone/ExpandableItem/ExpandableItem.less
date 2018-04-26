@@ -1,7 +1,12 @@
 // ExpandableItem.less
 //
+@import '../styles/variables.less';
 
 .expandableItem {
+	&.autoLabel {
+		min-height: @moon-body-line-height + @moon-item-line-height + (@moon-item-vertical-padding * 2);
+	}
+
 	.labeledItem {
 		&.always,
 		&.auto {

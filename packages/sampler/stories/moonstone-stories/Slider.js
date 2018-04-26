@@ -17,8 +17,7 @@ storiesOf('Moonstone', module)
 			propTables: [Config],
 			text: 'Basic usage of Slider'
 		})(() => {
-			const side = nullify(select('side', ['before', 'after']));
-			const forceSide = nullify(boolean('forceSide', false));
+			const side = nullify(select('side', ['after', 'before', 'left', 'right'], 'before'));
 			const tooltip = nullify(boolean('tooltip', false));
 			const percent = nullify(boolean('percent', false));
 
@@ -38,7 +37,6 @@ storiesOf('Moonstone', module)
 					{tooltip ? (
 						<SliderTooltip
 							percent={percent}
-							forceSide={forceSide}
 							side={side}
 						/>
 					) : null}
