@@ -9,6 +9,7 @@
 
 import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
+import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
@@ -199,6 +200,7 @@ class ScrollableBase extends Component {
 	lastScrollPositionOnFocus = null
 	indexToFocus = null
 	nodeToFocus = null
+	isPointerHiding = false
 
 	onFlick = () => {
 		const focusedItem = Spotlight.getCurrent();
@@ -388,10 +390,18 @@ class ScrollableBase extends Component {
 	}
 
 	onKeyDown = (ev) => {
-		this.animateOnFocus = true;
-		if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) && !ev.repeat && this.hasFocus()) {
-			this.scrollByPage(ev.keyCode);
+		if (Spotlight.getPointerMode() & is('pointerHide', ev.keyCode)) {
+			this.isPointerHiding = true;
+		} else if (!is('pointerShow', ev.keyCode) && !this.isPointerHiding) {
+			this.animateOnFocus = true;
+			if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) && !ev.repeat && this.hasFocus()) {
+				this.scrollByPage(ev.keyCode);
+			}
 		}
+	}
+
+	onKeyUp = () => {
+		this.isPointerHiding = false;
 	}
 
 	onScrollbarButtonClick = ({isPreviousScrollButton, isVerticalScrollBar}) => {
@@ -527,6 +537,7 @@ class ScrollableBase extends Component {
 				addEventListeners={this.addEventListeners}
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
+				onKeyUp={this.onKeyUp}
 				onWheel={this.onWheel}
 				ref={this.initUiRef}
 				removeEventListeners={this.removeEventListeners}
