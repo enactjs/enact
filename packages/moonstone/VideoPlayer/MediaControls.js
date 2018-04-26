@@ -236,7 +236,7 @@ const MediaControlsBase = kind({
 
 		/**
 		 * A string which is sent to the `pause` icon of the player controls. This can be
-		 * anything that is accepted by {@link moonstone/Icon}. This will be temporarily replaced by
+		 * anything that is accepted by [Icon]{@link moonstone/Icon}. This will be temporarily replaced by
 		 * the [playIcon]{@link moonstone/VideoPlayer.MediaControls.playIcon} when the
 		 * [paused]{@link moonstone/VideoPlayer.MediaControls.paused} boolean is `false`.
 		 *
@@ -583,9 +583,9 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			this.mediaControlsNode = null;
 
 			this.keyLoop = null;
-			this.mediaControls = null;
 			this.pulsingKeyCode = null;
 			this.pulsing = null;
 			this.paused = new Pause('VideoPlayer');
@@ -708,7 +708,6 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		// TODO: may need to add a prop for disabling pulse. See VideoPlayer.reloadVideo()
 		startListeningForPulses = (keyCode) => {
 			// Ignore new pulse calls if key code is same, otherwise start new series if we're pulsing
 			if (this.pulsing && keyCode !== this.pulsingKeyCode) {
@@ -752,11 +751,11 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 
 			const max = Math.max(leftCount, rightCount);
 
-			this.mediaControls.style.setProperty('--moon-video-player-max-side-components', max);
+			this.mediaControlsNode.style.setProperty('--moon-video-player-max-side-components', max);
 		}
 
 		getMediaControls = (node) => {
-			this.mediaControls = ReactDOM.findDOMNode(node); // eslint-disable-line react/no-find-dom-node
+			this.mediaControlsNode = ReactDOM.findDOMNode(node); // eslint-disable-line react/no-find-dom-node
 		}
 
 		areMoreComponentsAvailable () {

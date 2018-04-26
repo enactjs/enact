@@ -886,6 +886,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.pulsedPlaybackState = null;
 	}
 
+	// only show mini feedback if playback controls are invoked by a key event
 	shouldShowMiniFeedback = (ev) => {
 		if (ev.type === 'keyup') {
 			this.showMiniFeedback = true;
@@ -1014,8 +1015,6 @@ const VideoPlayerBase = class extends React.Component {
 
 	reloadVideo = () => {
 		// When changing a HTML5 video, you have to reload it.
-		this.stopListeningForPulses();
-
 		this.video.load();
 		this.setState({
 			announce: AnnounceState.READY
