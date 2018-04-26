@@ -12,7 +12,7 @@ import Slottable from '@enact/ui/Slottable';
 
 import Popup from '../Popup';
 
-import css from './Notification.less';
+import componentCss from './Notification.less';
 
 /**
  * {@link moonstone/Notification.NotificationBase} is a toast-like minimal popup that comes up
@@ -32,13 +32,12 @@ const NotificationBase = kind({
 		 * `small` property set and will be coerced to `small` if not specified.
 		 *
 		 * @type {Node}
-		 * @required
 		 * @public
 		 */
 		buttons: PropTypes.oneOfType([
 			PropTypes.arrayOf(PropTypes.element),
 			PropTypes.element
-		]).isRequired,
+		]),
 
 		/**
 		 * The contents to be displayed in the body of the Notification.
@@ -92,13 +91,14 @@ const NotificationBase = kind({
 	},
 
 	styles: {
-		css,
-		className: 'notification'
+		css: componentCss,
+		className: 'notification',
+		publicClassNames: ['notification']
 	},
 
 	computed: {
 		className: ({className, buttons, styler}) => {
-			if (buttons.length > 3) {
+			if (buttons && buttons.length > 3) {
 				return styler.append({wide: true});
 			} else {
 				return className;
@@ -113,15 +113,15 @@ const NotificationBase = kind({
 		})
 	},
 
-	render: ({buttons, children, ...rest}) => {
+	render: ({buttons, children, css, ...rest}) => {
 		return (
 			<Popup noAnimation {...rest}>
 				<div className={css.body}>
 					{children}
 				</div>
-				<div className={css.buttons}>
+				{buttons ? <div className={css.buttons}>
 					{buttons}
-				</div>
+				</div> : null}
 			</Popup>
 		);
 	}

@@ -39,7 +39,12 @@ const SwitchItemBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		css: PropTypes.object,
+		iconComponent: PropTypes.object
+	},
+
+	defaultProps: {
+		iconComponent: <Switch className={componentCss.switch} />
 	},
 
 	styles: {
@@ -53,9 +58,6 @@ const SwitchItemBase = kind({
 			data-webos-voice-intent="SelectToggleItem"
 			{...props}
 			css={props.css}
-			iconComponent={
-				<Switch className={componentCss.switch} />
-			}
 			iconPosition="after"
 		/>
 	)
