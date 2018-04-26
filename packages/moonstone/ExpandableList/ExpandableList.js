@@ -97,23 +97,6 @@ const ExpandableListBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
-		 * Sets the hint string read when focusing the ExpandableList.
-		 *
-		 * @type {String}
-		 * @memberof moonstone/ExpandableList.prototype
-		 * @public
-		 */
-		'aria-label': PropTypes.string,
-
-		/**
-		 * Sets the hint string read when focusing the each item.
-		 *
-		 * @type {Array}
-		 * @public
-		 */
-		childrenAriaLabels: PropTypes.array,
-
-		/**
 		 * When `true` and `select` is not `'multiple'`, the expandable will be closed when an item
 		 * is selected.
 		 *
@@ -288,37 +271,6 @@ const ExpandableListBase = kind({
 	computed: {
 		'aria-multiselectable': ({select}) => select === 'multiple',
 
-		ariaLabel: ({'aria-label': ariaLabel, childrenAriaLabels, label, select, selected, title}) => {
-			if (ariaLabel != null) {
-				return ariaLabel;
-			}
-
-			if (label != null || !childrenAriaLabels || childrenAriaLabels.length === 0) {
-				return null;
-			}
-
-			if (selected || selected === 0) {
-				const isArray = Array.isArray(selected);
-				if (select === 'multiple' && isArray) {
-					return `${title} ${selected.map(i => childrenAriaLabels[i]).filter(str => !!str).join(', ')}`;
-				} else {
-					return `${title} ${childrenAriaLabels[isArray ? selected[0] : selected]}`;
-				}
-			}
-		},
-
-		children: ({children, childrenAriaLabels}) => {
-			if (!childrenAriaLabels || childrenAriaLabels.length === 0) {
-				return children;
-			}
-			const childrenArray = [];
-			children.map((element, i) => {
-				childrenArray.push({'aria-label': childrenAriaLabels[i], children: element, key: i});
-			});
-
-			return childrenArray;
-		},
-
 		disabled: ({children, disabled}) => {
 			return disabled || !children || children.length === 0;
 		},
@@ -366,7 +318,6 @@ const ExpandableListBase = kind({
 	},
 
 	render: ({
-		ariaLabel,
 		children,
 		itemProps,
 		ListItem,
@@ -377,13 +328,11 @@ const ExpandableListBase = kind({
 		selected,
 		...rest
 	}) => {
-		delete rest.childrenAriaLabels;
 		delete rest.closeOnSelect;
 
 		return (
 			<ExpandableItemBase
 				{...rest}
-				aria-label={ariaLabel}
 				showLabel="auto"
 				autoClose={!noAutoClose}
 				lockBottom={!noLockBottom}
