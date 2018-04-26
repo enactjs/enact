@@ -33,6 +33,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to give initial focus
 - `moonstone/GridListImageItem` to show proper `placeholder` and `selectionOverlay`
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to have the default value for `dataSize`, `pageScroll`, and `spacing` props
+- `moonstone/ExpandableItem` and related expandable components to expand smoothly when used in a scroller
 
 ### Changed
 
