@@ -15,6 +15,12 @@ const handlePointerDown = handle(
 	setCapturing(true)			// and flag that we've started capturing a down event
 );
 
+const handlePointerUp = handle(
+	isCapturing,				// if a down event was captured
+	preventDefault,				// prevent the up event bubbling
+	stop						// (and stop propagation to support touch)
+);
+
 const handlePointerClick = handle(
 	isCapturing,				// if a down event was captured
 	stop,						// prevent the click event from propagating
@@ -26,7 +32,9 @@ const handlePointerClick = handle(
 const lockPointer = (target) => {
 	active = target;
 	document.addEventListener('mousedown', handlePointerDown, {capture: true});
+	document.addEventListener('mouseup', handlePointerUp, {capture: true});
 	document.addEventListener('touchstart', handlePointerDown, {capture: true});
+	document.addEventListener('touchend', handlePointerUp, {capture: true});
 	document.addEventListener('click', handlePointerClick, {capture: true});
 };
 
@@ -35,7 +43,9 @@ const releasePointer = (target) => {
 	if (target === active) {
 		active = null;
 		document.removeEventListener('mousedown', handlePointerDown, {capture: true});
+		document.removeEventListener('mouseup', handlePointerUp, {capture: true});
 		document.removeEventListener('touchstart', handlePointerDown, {capture: true});
+		document.removeEventListener('touchend', handlePointerUp, {capture: true});
 		document.removeEventListener('click', handlePointerClick, {capture: true});
 	}
 };
