@@ -111,22 +111,22 @@ const TimePickerBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
-		 * Sets the hint string read when focusing the hour picker.
-		 *
-		 * @type {String}
-		 * @default 'hour'
-		 * @public
-		 */
-		hourAccessibilityHint: PropTypes.string,
-
-		/**
-		 * Sets the hint string for hour label read when focusing the hour picker.
+		 * The "aria-label" for the hour picker
 		 *
 		 * @type {String}
 		 * @default 'change a value with up down button'
 		 * @public
 		 */
 		hourAriaLabel: PropTypes.string,
+
+		/**
+		 * Sets the hint string read when focusing the hour picker.
+		 *
+		 * @type {String}
+		 * @default 'hour'
+		 * @public
+		 */
+		hourLabel: PropTypes.string,
 
 		/**
 		 * The `meridiem` component of the time
@@ -138,15 +138,7 @@ const TimePickerBase = kind({
 		meridiem: PropTypes.number,
 
 		/**
-		 * Sets the hint string read when focusing the meridiem picker.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		meridiemAccessibilityHint: PropTypes.string,
-
-		/**
-		 * Sets the hint string for meridiem label read when focusing the meridiem picker.
+		 * The "aria-label" for the meridiem picker
 		 *
 		 * @type {String}
 		 * @default 'change a value with up down button'
@@ -155,10 +147,9 @@ const TimePickerBase = kind({
 		meridiemAriaLabel: PropTypes.string,
 
 		/**
-		 * String of meridiem for picker label
+		 * Sets the hint string read when focusing the meridiem picker.
 		 *
 		 * @type {String}
-		 * @required
 		 * @public
 		 */
 		meridiemLabel: PropTypes.string,
@@ -173,22 +164,22 @@ const TimePickerBase = kind({
 		meridiems: PropTypes.arrayOf(PropTypes.string),
 
 		/**
-		 * Sets the hint string read when focusing the minute picker.
-		 *
-		 * @type {String}
-		 * @default 'minute'
-		 * @public
-		 */
-		minuteAccessibilityHint: PropTypes.string,
-
-		/**
-		 * Sets the hint string for minute label read when focusing the minute picker.
+		 * The "aria-label" for the minute picker
 		 *
 		 * @type {String}
 		 * @default 'change a value with up down button'
 		 * @public
 		 */
 		minuteAriaLabel: PropTypes.string,
+
+		/**
+		 * Sets the hint string read when focusing the minute picker.
+		 *
+		 * @type {String}
+		 * @default 'minute'
+		 * @public
+		 */
+		minuteLabel: PropTypes.string,
 
 		/**
 		 * When `true`, omits the labels below the pickers
@@ -300,17 +291,16 @@ const TimePickerBase = kind({
 		handlePickerKeyDown,
 		hasMeridiem,
 		hour,
-		hourAccessibilityHint,
 		hourAriaLabel,
+		hourLabel = $L('hour'),
 		meridiem,
-		meridiemAccessibilityHint,
 		meridiemAriaLabel,
 		meridiemLabel,
 		meridiemPickerWidth,
 		meridiems,
 		minute,
-		minuteAccessibilityHint,
 		minuteAriaLabel,
+		minuteLabel = $L('minute'),
 		noLabels,
 		onChangeHour,
 		onChangeMeridiem,
@@ -351,11 +341,11 @@ const TimePickerBase = kind({
 								case 'k':
 									return (
 										<HourPicker
-											accessibilityHint={hourAccessibilityHint}
+											accessibilityHint={hourLabel}
 											aria-label={hourAriaLabel}
 											className={css.hourComponents}
 											key="hour-picker"
-											label={noLabels ? null : $L('hour')}
+											label={noLabels ? null : hourLabel}
 											onChange={onChangeHour}
 											onSpotlightDisappear={onSpotlightDisappear}
 											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
@@ -371,11 +361,11 @@ const TimePickerBase = kind({
 								case 'm':
 									return (
 										<DateComponentRangePicker
-											accessibilityHint={minuteAccessibilityHint}
+											accessibilityHint={minuteLabel}
 											aria-label={minuteAriaLabel}
 											className={css.minutesComponents}
 											key="minute-picker"
-											label={noLabels ? null : $L('minute')}
+											label={noLabels ? null : minuteLabel}
 											max={59}
 											min={0}
 											onChange={onChangeMinute}
@@ -392,7 +382,7 @@ const TimePickerBase = kind({
 								case 'a':
 									return (
 										<DateComponentPicker
-											accessibilityHint={meridiemAccessibilityHint}
+											accessibilityHint={meridiemLabel}
 											aria-label={meridiemAriaLabel}
 											aria-valuetext={meridiems ? meridiems[meridiem] : null}
 											className={css.meridiemComponent}
