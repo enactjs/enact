@@ -44,6 +44,18 @@ const FeedbackTooltipBase = kind({
 		formatter: PropTypes.object,
 
 		/**
+		 * If the current `playbackState` allows this component's visibility to be changed,
+		 * this component will be hidden. If not, setting this property will have no effect.
+		 * All `playbackState`s respond to this property except the following:
+		 * `'rewind'`, `'slowRewind'`, `'fastForward'`, `'slowForward'`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		hidden: PropTypes.bool,
+
+		/**
 		 * When `true`, only time would appear in tooltip.
 		 *
 		 * @type {Boolean}
@@ -125,10 +137,7 @@ const FeedbackTooltipBase = kind({
 		thumbnailSrc: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
-		 * If the current `playbackState` allows this component's visibility to be changed,
-		 * this component will be hidden. If not, setting this property will have no effect.
-		 * All `playbackState`s respond to this property except the following:
-		 * `'rewind'`, `'slowRewind'`, `'fastForward'`, `'slowForward'`.
+		 * Required by the interface for moonstone/Slider.tooltip but not used here
 		 *
 		 * @type {Boolean}
 		 * @default true
@@ -140,7 +149,7 @@ const FeedbackTooltipBase = kind({
 	defaultProps: {
 		noFeedback: false,
 		thumbnailDeactivated: false,
-		visible: true
+		hidden: false
 	},
 
 	styles: {
@@ -152,10 +161,10 @@ const FeedbackTooltipBase = kind({
 		children: ({children, duration, formatter}) => {
 			return secondsToTime(children * duration, formatter);
 		},
-		className: ({playbackState: s, proportion, thumbnailDeactivated, styler, visible}) => {
+		className: ({hidden, playbackState: s, proportion, thumbnailDeactivated, styler}) => {
 			return styler.append({
 				afterMidpoint: proportion > 0.5,
-				hidden: !visible && states[s] && states[s].allowHide,
+				hidden: hidden && states[s] && states[s].allowHide,
 				thumbnailDeactivated
 			});
 		},
@@ -182,6 +191,7 @@ const FeedbackTooltipBase = kind({
 	render: ({children, noFeedback, playbackState, playbackRate, thumbnailComponent, ...rest}) => {
 		delete rest.duration;
 		delete rest.formatter;
+		delete rest.hidden;
 		delete rest.orientation;
 		delete rest.proportion;
 		delete rest.thumbnailDeactivated;
