@@ -55,6 +55,7 @@ const ScrollButton = kind({
 		* Sets the hint string read when focusing the scroll bar button.
 		*
 		* @type {String}
+		* @memberof moonstone/Scrollable.ScrollButton.prototype
 		* @public
 		*/
 		'aria-label': PropTypes.string,

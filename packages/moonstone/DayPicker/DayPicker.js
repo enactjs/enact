@@ -4,28 +4,18 @@
  * @module moonstone/DayPicker
  */
 
+import kind from '@enact/core/kind';
 import Changeable from '@enact/ui/Changeable';
-import {coerceArray} from '@enact/core/util';
-import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
-import {forward} from '@enact/core/handle';
-import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
-import React from 'react';
-import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
-import {Subscription} from '@enact/core/internal/PubSub';
+import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
+import React from 'react';
 
-import $L from '../internal/$L';
 import {Expandable} from '../ExpandableItem';
 import {ExpandableListBase} from '../ExpandableList';
-
-const forwardSelect = forward('onSelect');
-const SELECTED_DAY_TYPES = {
-	EVERY_DAY: 0,
-	EVERY_WEEKDAY: 1,
-	EVERY_WEEKEND: 2,
-	SELECTED_DAYS: 3,
-	SELECTED_NONE: 4
-};
+// We're using the i18n features for DaySelectorDecorator only and not the complete HOC stack so we
+// reach into the internal module to pluck it out directly
+import DaySelectorDecorator from '../DaySelector/DaySelectorDecorator';
 
 /**
  * {@link moonstone/DayPicker.DayPicker} is a component that
@@ -36,11 +26,10 @@ const SELECTED_DAY_TYPES = {
  * @ui
  * @public
  */
-const DayPickerBase = class extends React.Component {
+const DayPickerBase = kind({
+	name: 'DayPicker',
 
-	static displayName = 'DayPicker'
-
-	static propTypes = /** @lends moonstone/DayPicker.DayPickerBase.prototype */ {
+	propTypes: /** @lends moonstone/DayPicker.DayPickerBase.prototype */ {
 		/**
 		 * The primary text of the Picker.
 		 *
@@ -51,6 +40,18 @@ const DayPickerBase = class extends React.Component {
 		title: PropTypes.string.isRequired,
 
 		/**
+		 * Sets the "aria-label" for the picker.
+		 *
+		 * By default, "aria-label" is set to the title and the full names of the selected days or
+		 * the custom text when the weekend, week days, or all days is selected.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/DayPicker.DayPickerBase.prototype
+		 * @public
+		 */
+		'aria-label': PropTypes.string,
+
+		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
@@ -58,6 +59,14 @@ const DayPickerBase = class extends React.Component {
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * The selected label for DayPicker
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		label: PropTypes.string,
 
 		/**
 		 * Current locale for DayPicker
@@ -110,152 +119,32 @@ const DayPickerBase = class extends React.Component {
 		 * @public
 		 */
 		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)])
-	}
+	},
 
-	constructor (props) {
-		super(props);
+	defaultProps: {
+		disabled: false
+	},
 
-		// default indexes
-		this.firstDayOfWeek = 0;
-		this.weekEndStart = 6;
-		this.weekEndEnd = 0;
+	computed: {
+		children: ({children}) => children.map(child => child['aria-label'])
+	},
 
-		// default strings for long and short day strings
-		this.longDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-		this.shortDayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-		this.initIlib(props.locale);
-	}
-
-	componentWillReceiveProps (nextProps) {
-		this.initIlib(nextProps.locale);
-	}
-
-	initIlib (locale) {
-		if (this.locale !== locale && typeof window === 'object') {
-			this.locale = locale;
-
-			const df = new DateFmt({length: 'full'});
-			const sdf = new DateFmt({length: 'long'});
-			const li = new LocaleInfo(locale);
-			const daysOfWeek = df.getDaysOfWeek();
-			const days = sdf.getDaysOfWeek();
-
-			this.firstDayOfWeek = li.getFirstDayOfWeek();
-			this.weekEndStart = li.getWeekEndStart ? this.adjustWeekends(li.getWeekEndStart()) : this.weekEndStart;
-			this.weekEndEnd = li.getWeekEndEnd ? this.adjustWeekends(li.getWeekEndEnd()) : this.weekEndEnd;
-
-			// clone the name arrays
-			this.longDayNames = this.longDayNames.slice();
-			this.shortDayNames = this.shortDayNames.slice();
-
-			for (let i = 0; i < 7; i++) {
-				const index = (i + this.firstDayOfWeek) % 7;
-				this.longDayNames[i] = daysOfWeek[index];
-				this.shortDayNames[i] = days[index];
-			}
-
-			this.everyDayText = $L('Every Day');
-			this.everyWeekdayText = $L('Every Weekday');
-			this.everyWeekendText = $L('Every Weekend');
-		}
-	}
-
-	/**
-	 * Determines whether it should return day type number for a given selected indexes.
-	 *
-	 * @param {Number[]} [selected] Array of day indexes
-	 *
-	 * @returns {Number}
-	 */
-	calcSelectedDayType (selected = []) {
-		if (selected === null || selected.length === 0) return SELECTED_DAY_TYPES.SELECTED_NONE;
-		selected = coerceArray(selected);
-
-		let
-			bWeekEndStart = false,
-			bWeekEndEnd = false,
-			index;
-
-		const
-			length = selected.length,
-			weekendLength = this.weekEndStart === this.weekEndEnd ? 1 : 2;
-
-		if (length === 7) return SELECTED_DAY_TYPES.EVERY_DAY;
-
-		for (let i = 0; i < 7; i++) {
-			index = selected[i];
-			bWeekEndStart = bWeekEndStart || this.weekEndStart === index;
-			bWeekEndEnd = bWeekEndEnd || this.weekEndEnd === index;
-		}
-
-		if (bWeekEndStart && bWeekEndEnd && length === weekendLength) {
-			return SELECTED_DAY_TYPES.EVERY_WEEKEND;
-		} else if (!bWeekEndStart && !bWeekEndEnd && length === 7 - weekendLength) {
-			return SELECTED_DAY_TYPES.EVERY_WEEKDAY;
-		} else {
-			return SELECTED_DAY_TYPES.SELECTED_DAYS;
-		}
-	}
-
-	/**
-	 * Determines whether it should return "Every Day", "Every Weekend", "Every Weekday" or list of
-	 * days for a given selected day type.
-	 *
-	 * @param {Number} selected day type
-	 *
-	 * @returns {String} "Every Day", "Every Weekend", "Every Week" or list of days
-	 */
-	getSelectedDayString = (type, selectDayStrings) => {
-		const selected = coerceArray(this.props.selected);
-
-		if (type === SELECTED_DAY_TYPES.EVERY_DAY) {
-			return this.everyDayText;
-		} else if (type === SELECTED_DAY_TYPES.EVERY_WEEKEND) {
-			return this.everyWeekendText;
-		} else if (type === SELECTED_DAY_TYPES.EVERY_WEEKDAY) {
-			return this.everyWeekdayText;
-		} else if (type === SELECTED_DAY_TYPES.SELECTED_DAYS) {
-			return selected.sort().map((dayIndex) => selectDayStrings[dayIndex]).join(', ');
-		}
-	}
-
-	adjustWeekends (day) {
-		return ((day - this.firstDayOfWeek + 7) % 7);
-	}
-
-	handleSelect = ({selected}) => {
-		forwardSelect({selected: selected}, this.props);
-	}
-
-	render () {
-		const
-			{title, ...rest} = this.props,
-			type = this.calcSelectedDayType(this.props.selected),
-			label = this.getSelectedDayString(type, this.shortDayNames);
-
-		delete rest.locale;
-
-		let ariaLabel = null;
-		if (type === SELECTED_DAY_TYPES.SELECTED_DAYS) {
-			ariaLabel = `${title} ${this.getSelectedDayString(type, this.longDayNames)}`;
-		}
-
+	render: (props) => {
 		return (
 			<ExpandableListBase
-				{...rest}
-				aria-label={ariaLabel}
-				label={label}
-				onSelect={this.handleSelect}
+				{...props}
 				select="multiple"
-				title={title}
-			>
-				{this.longDayNames}
-			</ExpandableListBase>
+			/>
 		);
 	}
-};
+});
 
+const DayPickerDecorator = compose(
+	Pure,
+	Expandable,
+	Changeable({change: 'onSelect', prop: 'selected'}),
+	DaySelectorDecorator
+);
 
 /**
  * {@link moonstone/DayPicker.DayPicker} is a component that
@@ -278,17 +167,38 @@ const DayPickerBase = class extends React.Component {
  * @ui
  * @public
  */
-const DayPicker = Pure(
-	Expandable(
-		Changeable(
-			{prop: 'selected', change: 'onSelect'},
-			Subscription(
-				{channels: ['i18n'], mapMessageToProps: (channel, {locale}) => ({locale})},
-				DayPickerBase
-			)
-		)
-	)
-);
+
+/**
+ * The text displayed in the label when every day is selected
+ *
+ * @name everyDayText
+ * @type {String}
+ * @default 'Every Day'
+ * @memberof moonstone/DayPicker.DayPicker.prototype
+ * @public
+ */
+
+/**
+ * The text displayed in the label when every weekeday is selected
+ *
+ * @name everyWeekdayText
+ * @type {String}
+ * @default 'Every Weekday'
+ * @memberof moonstone/DayPicker.DayPicker.prototype
+ * @public
+ */
+
+/**
+ * The text displayed in the label when every weekend day is selected
+ *
+ * @name everyWeekendText
+ * @type {String}
+ * @default 'Every Weekend'
+ * @memberof moonstone/DayPicker.DayPicker.prototype
+ * @public
+ */
+
+const DayPicker = DayPickerDecorator(DayPickerBase);
 
 export default DayPicker;
 export {DayPicker, DayPickerBase};
