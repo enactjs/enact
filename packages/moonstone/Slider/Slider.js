@@ -251,12 +251,13 @@ const SliderBase = kind({
 			activateOnFocus,
 			active
 		}),
-		tooltip: ({tooltip}) => tooltip === true ? ProgressBarTooltip : tooltip
+		tooltip: ({focused, tooltip}) => tooltip === true ? <ProgressBarTooltip visible={focused} /> : tooltip
 	},
 
-	render: ({css, focused, tooltip, ...rest}) => {
+	render: ({css, tooltip, ...rest}) => {
 		delete rest.activateOnFocus;
 		delete rest.active;
+		delete rest.focused;
 		delete rest.knobStep;
 		delete rest.onActivate;
 
@@ -267,7 +268,6 @@ const SliderBase = kind({
 				tooltipComponent={
 					<ComponentOverride
 						component={tooltip}
-						visible={focused}
 					/>
 				}
 			/>

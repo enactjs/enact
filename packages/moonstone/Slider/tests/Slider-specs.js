@@ -422,4 +422,19 @@ describe('Slider', () => {
 
 		expect(actual).to.equal(expected);
 	});
+
+	it('should set the custom tooltip to not visible when focused', () => {
+		const subject = mount(
+			<Slider
+				tooltip={<div id="customtooltip">tooltip</div>}
+			/>
+		);
+
+		focus(subject);
+
+		const expected = 'not visible';
+		const actual = subject.find('#customtooltip').prop('visible') ? 'visible' : 'not visible';
+
+		expect(actual).to.equal(expected);
+	});
 });
