@@ -642,8 +642,10 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 
 				// Readout 'more' or 'back' button explicitly.
 				let selectedButton = Spotlight.getCurrent();
-				selectedButton.blur();
-				selectedButton.focus();
+				if (selectedButton) {
+					selectedButton.blur();
+					selectedButton.focus();
+				}
 			}
 		}
 

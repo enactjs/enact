@@ -523,7 +523,7 @@ const VideoPlayerBase = class extends React.Component {
 			mediaControlsVisible: false,
 			miniFeedbackVisible: false,
 			mediaSliderVisible: false,
-			more: false,
+			infoVisible: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
 			titleVisible: true
@@ -769,7 +769,7 @@ const VideoPlayerBase = class extends React.Component {
 			mediaControlsVisible: false,
 			mediaSliderVisible: false,
 			miniFeedbackVisible: false,
-			more: false
+			infoVisible: false
 		});
 		this.markAnnounceRead();
 	}
@@ -796,7 +796,7 @@ const VideoPlayerBase = class extends React.Component {
 			feedbackVisible: false,
 			mediaControlsVisible: false,
 			mediaSliderVisible: this.state.mediaSliderVisible && this.state.miniFeedbackVisible,
-			more: false
+			infoVisible: false
 		});
 		this.markAnnounceRead();
 	}
@@ -1405,9 +1405,7 @@ const VideoPlayerBase = class extends React.Component {
 			this.player.querySelector(
 				`.${css.leftComponents} ${defaultSpottable}, .${css.rightComponents} ${defaultSpottable}`
 			) ||
-			this.player.querySelector(
-				`.${this.state.more ? css.moreControls : css.mediaControls} ${defaultSpottable}`
-			);
+			'data-media-controls';
 
 		return defaultControl ? Spotlight.focus(defaultControl) : false;
 	}
@@ -1521,7 +1519,7 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		this.setState({
-			more: showMoreComponents,
+			infoVisible: showMoreComponents,
 			titleVisible: true,
 			announce: this.state.announce < AnnounceState.INFO ? AnnounceState.INFO : AnnounceState.DONE
 		});
@@ -1659,7 +1657,7 @@ const VideoPlayerBase = class extends React.Component {
 								<div className={css.infoFrame}>
 									<MediaTitle
 										id={this.id}
-										infoVisible={this.state.more}
+										infoVisible={this.state.infoVisible}
 										style={{'--infoComponentsOffset': this.state.titleOffsetHeight + 'px'}}
 										title={title}
 										visible={this.state.titleVisible && this.state.mediaControlsVisible}
