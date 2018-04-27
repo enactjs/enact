@@ -211,14 +211,11 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		static defaultProps = {
-			isItemDisabled: isItemDisabledDefault,
-			wrap: false
-		}
-
-		static defaultProps = {
 			dataSize: 0,
+			isItemDisabled: isItemDisabledDefault,
 			pageScroll: false,
-			spacing: 0
+			spacing: 0,
+			wrap: false
 		}
 
 		constructor (props) {
