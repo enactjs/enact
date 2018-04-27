@@ -7,9 +7,9 @@
  */
 
 import kind from '@enact/core/kind';
+import ComponentOverride from '@enact/ui/ComponentOverride';
 import React from 'react';
 import PropTypes from 'prop-types';
-import ComponentOverride from '@enact/ui/ComponentOverride';
 
 import Switch from '../Switch';
 import ToggleItem from '../ToggleItem';
