@@ -162,7 +162,7 @@ const LayoutBase = kind({
 			return {
 				...style,
 				alignItems: toFlexAlign(alignParts[0]),
-				justifyItems: toFlexAlign(alignParts[1])
+				justifyContent: toFlexAlign(alignParts[1])
 			};
 		}
 	},

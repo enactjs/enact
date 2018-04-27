@@ -13,6 +13,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` showing blank when `direction` prop changed after scroll position changed
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to support RTL by dynamic language changes
+- `ui/Layout` to correctly support two `align` values, allowing horizontal and vertical in one property. Previously, the transverse alignment was ignored, only allowing perpendicular alignment.
+- `ui/Layout.Cell` to no longer overflow when both `size` and `shrink` are set together
 
 ## [2.0.0-alpha.8] - 2018-04-17
 
