@@ -7,12 +7,24 @@
  */
 
 import React from 'react';
+import {forward} from '@enact/core/handle';
 import Slottable from '@enact/ui/Slottable';
 
 import css from './VideoPlayer.less';
 
 import {compareSources} from './util';
 import PropTypes from 'prop-types';
+
+const toKey = (source) => {
+	if (React.isValidElement(source)) {
+		return React.Children.toArray(source)
+			.filter(s => !!s)
+			.map(s => s.src)
+			.join('+');
+	}
+
+	return String(source);
+};
 
 /**
  * Video {@link moonstone/VideoPlayer}.
@@ -24,23 +36,6 @@ import PropTypes from 'prop-types';
  */
 class VideoBase extends React.Component {
 	static propTypes = /** @lends moonstone/VideoPlayer.VideoBase.prototype */ {
-
-		/**
-		 * Function to send media events to VideoPlayer
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		handleEvent: PropTypes.func,
-
-		/**
-		 * Function to run after the preload video is loaded.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		handleLoadStart: PropTypes.func,
-
 		/**
 		 * By default, the video will start playing immediately after it's loaded, unless this is set.
 		 *
@@ -141,11 +136,13 @@ class VideoBase extends React.Component {
 		const {source, preloadSource} = this.props;
 		const {source: prevSource, preloadSource: prevPreloadSource} = prevProps;
 
-		const isPreloadedVideo = source && prevPreloadSource && compareSources(source, prevPreloadSource);
-		const isPreloadedSourceSame = preloadSource && prevPreloadSource && compareSources(preloadSource, prevPreloadSource);
+		if (!compareSources(source, prevSource)) {
+			this.video.load();
+			// forward('onLoadStart', {}, this.props);
+		}
 
-		if (!compareSources(source, prevSource) && isPreloadedVideo && isPreloadedSourceSame) {
-			this.props.handleLoadStart();
+		if (!compareSources(preloadSource, prevPreloadSource)) {
+			this.preloadVideo.load();
 		}
 
 		if (this.props.setMedia !== prevProps.setMedia) {
@@ -171,7 +168,7 @@ class VideoBase extends React.Component {
 	}
 
 	getMedia () {
-		return this.preloadSourcePlaying ? this.preloadVideo : this.video;
+		return this.video;
 	}
 
 	get buffered () {
@@ -195,7 +192,7 @@ class VideoBase extends React.Component {
 	}
 
 	load () {
-		return this.getMedia().load;
+		return this.getMedia().load();
 	}
 
 	get NETWORK_NO_SOURCE () {
@@ -207,7 +204,7 @@ class VideoBase extends React.Component {
 	}
 
 	pause () {
-		return this.getMedia().pause;
+		return this.getMedia().pause();
 	}
 
 	get paused () {
@@ -215,7 +212,7 @@ class VideoBase extends React.Component {
 	}
 
 	play () {
-		return this.getMedia().play;
+		return this.getMedia().play();
 	}
 
 	get playbackRate () {
@@ -232,16 +229,16 @@ class VideoBase extends React.Component {
 
 	// These methods are here because on webOS TVs we can't play a video until after second video
 	// player is loaded
-	handleVideoLoadStart = () => {
-		if (this.isPlayerMounted && this.isPlayVideoPreloaded && this.preloadSourcePlaying) {
-			this.props.handleLoadStart();
+	handleVideoLoadStart = (ev) => {
+		if (this.isPlayerMounted && this.isPlayVideoPreloaded) {
+			forward('onLoadStart', ev, this.props);
 			this.resetPreloadState();
 		}
 	}
 
-	handlePreloadVideoLoadStart = () => {
-		if (this.isPlayerMounted && this.isPlayVideoPreloaded && !this.preloadSourcePlaying) {
-			this.props.handleLoadStart();
+	handlePreloadVideoLoadStart = (ev) => {
+		if (this.isPlayerMounted && this.isPlayVideoPreloaded) {
+			forward('onLoadStart', ev, this.props);
 			this.resetPreloadState();
 		}
 	}
@@ -259,10 +256,7 @@ class VideoBase extends React.Component {
 	}
 
 	render () {
-		const {preloadSourcePlaying} = this;
-
 		const {
-			handleEvent,
 			noAutoPlay,
 			preloadSource,
 			source,
@@ -270,33 +264,31 @@ class VideoBase extends React.Component {
 			...rest
 		} = this.props;
 
-		delete rest.handleLoadStart;
-
 		return (
 			<React.Fragment>
 				<VideoComponent
 					{...rest}
-					autoPlay={preloadSourcePlaying ? false : !noAutoPlay}
-					className={preloadSourcePlaying ? css.preloadVideo : css.video}
+					autoPlay={!noAutoPlay}
+					className={css.video}
 					controls={false}
-					preload={preloadSourcePlaying ? 'auto' : 'none'}
+					key={toKey(source)}
+					preload={'none'}
 					onLoadStart={this.handleVideoLoadStart}
-					onUpdate={preloadSourcePlaying ? null : handleEvent}
 					ref={this.setVideoRef}
 				>
-					{preloadSourcePlaying ?  preloadSource : source}
+					{source}
 				</VideoComponent>
 				<VideoComponent
 					{...rest}
-					autoPlay={preloadSourcePlaying ? !noAutoPlay : false}
-					className={preloadSourcePlaying ? css.video : css.preloadVideo}
+					autoPlay={false}
+					className={css.preloadVideo}
 					controls={false}
+					key={toKey(preloadSource)}
 					onLoadStart={this.handlePreloadVideoLoadStart}
-					onUpdate={preloadSourcePlaying ? handleEvent : null}
-					preload={preloadSourcePlaying ? 'none' : 'auto'}
+					preload={'auto'}
 					ref={this.setPreloadRef}
 				>
-					{preloadSourcePlaying ? source : preloadSource}
+					{preloadSource}
 				</VideoComponent>
 			</React.Fragment>
 		);
