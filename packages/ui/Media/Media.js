@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {forward} from '@enact/core/handle';
 import {on, off} from '@enact/core/dispatcher';
+import ComponentOverride from '@enact/ui/ComponentOverride';
 
 /**
  * Event forwarding map for all of the supported media events. See https://reactjs.org/docs/events.html#media-events
@@ -219,10 +220,25 @@ class Media extends React.Component {
 			delete rest[customMediaEventsMap[eventName]];
 		}
 
+		if (typeof Component === 'string') {
+			return (
+				<Component
+					{...rest}
+					ref={this.mediaRef}
+					{...this.handledMediaEvents}
+				/>
+			);
+		}
+
+		if (!rest.children || React.Children.toArray(rest.children).length === 0) {
+			delete rest.children;
+		}
+
 		return (
-			<Component
+			<ComponentOverride
+				component={Component}
 				{...rest}
-				ref={this.mediaRef}
+				setMedia={this.mediaRef}
 				{...this.handledMediaEvents}
 			/>
 		);

@@ -40,7 +40,7 @@ import MediaSlider from './MediaSlider';
 import FeedbackContent from './FeedbackContent';
 import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
-import VideoWithPreload from './VideoWithPreload';
+import Video from './Video';
 
 import css from './VideoPlayer.less';
 
@@ -1912,7 +1912,6 @@ const VideoPlayerBase = class extends React.Component {
 			noSpinner,
 			pauseIcon,
 			playIcon,
-			preloadSource,
 			rateButtonsDisabled,
 			rightComponents,
 			source,
@@ -1964,29 +1963,17 @@ const VideoPlayerBase = class extends React.Component {
 				style={style}
 			>
 				{/* Video Section */}
-				{this.props.preloadSource ?
-					<VideoWithPreload
-						{...rest}
-						handleEvent={this.handleEvent}
-						handleLoadStart={this.handleLoadStart}
-						noAutoPlay={noAutoPlay}
-						preloadSource={preloadSource}
-						source={source}
-						videoComponent={videoComponent}
-						videoRef={this.setVideoRef}
-					/> :
-					<Media
-						{...rest}
-						autoPlay={!noAutoPlay}
-						className={css.video}
-						component={videoComponent}
-						controls={false}
-						onUpdate={this.handleEvent}
-						ref={this.setVideoRef}
-					>
-						{source}
-					</Media>
-				}
+				<Media
+					{...rest}
+					autoPlay={!noAutoPlay}
+					className={css.video}
+					component={videoComponent}
+					controls={false}
+					onUpdate={this.handleEvent}
+					ref={this.setVideoRef}
+				>
+					{source}
+				</Media>
 
 				<Overlay
 					bottomControlsVisible={this.state.mediaControlsVisible}
@@ -2176,7 +2163,7 @@ const VideoPlayer = ApiDecorator(
 		'toggleControls'
 	]},
 	Slottable(
-		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source', 'thumbnailComponent']},
+		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source', 'thumbnailComponent', 'videoComponent']},
 		FloatingLayerDecorator(
 			{floatLayerId: 'videoPlayerFloatingLayer'},
 			Skinnable(
@@ -2187,4 +2174,8 @@ const VideoPlayer = ApiDecorator(
 );
 
 export default VideoPlayer;
-export {VideoPlayer, VideoPlayerBase};
+export {
+	Video,
+	VideoPlayer,
+	VideoPlayerBase
+};

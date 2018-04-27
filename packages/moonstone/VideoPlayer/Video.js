@@ -1,13 +1,13 @@
 /**
- * Exports the {@link moonstone/VideoPlayer.VideoWithPreload} and
- * {@link moonstone/VideoPlayer.VideoWithPreload} components. The default export is
- * {@link moonstone/VideoPlayer.VideoWithPreload}.
+ * Exports the {@link moonstone/VideoPlayer.Video} and
+ * {@link moonstone/VideoPlayer.Video} components. The default export is
+ * {@link moonstone/VideoPlayer.Video}.
  *
  * @module moonstone/VideoPlayer
  */
 
 import React from 'react';
-import Media from '@enact/ui/Media';
+import Slottable from '@enact/ui/Slottable';
 
 import css from './VideoPlayer.less';
 
@@ -15,15 +15,15 @@ import {compareSources} from './util';
 import PropTypes from 'prop-types';
 
 /**
- * VideoWithPreload {@link moonstone/VideoPlayer}.
+ * Video {@link moonstone/VideoPlayer}.
  *
- * @class VideoWithPreload
+ * @class VideoBase
  * @memberof moonstone/VideoPlayer
  * @ui
  * @private
  */
-class VideoWithPreload extends React.Component {
-	static propTypes = /** @lends moonstone/VideoPlayer.VideoWithPreload.prototype */ {
+class VideoBase extends React.Component {
+	static propTypes = /** @lends moonstone/VideoPlayer.VideoBase.prototype */ {
 
 		/**
 		 * Function to send media events to VideoPlayer
@@ -57,6 +57,8 @@ class VideoWithPreload extends React.Component {
 		 * @public
 		 */
 		preloadSource:  PropTypes.node,
+
+		setMedia: PropTypes.func,
 
 		/**
 		 * Any children `<source>` tag elements of [VideoPlayer]{@link moonstone/VideoPlayer} will
@@ -96,15 +98,7 @@ class VideoWithPreload extends React.Component {
 		 * @default 'video'
 		 * @public
 		 */
-		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-
-		/**
-		 * Function passed to video to get the ref of the current playing video.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		videoRef: PropTypes.func
+		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
 	}
 
 	static defaultProps = {
@@ -120,7 +114,7 @@ class VideoWithPreload extends React.Component {
 
 	componentDidMount () {
 		this.isPlayerMounted = true;
-		this.props.videoRef(this.video);
+		this.setMedia();
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -131,7 +125,6 @@ class VideoWithPreload extends React.Component {
 			this.preloadSourcePlaying = !this.preloadSourcePlaying;
 			const currentVideoSource = this.video;
 			this.video = this.preloadVideo;
-			this.props.videoRef(this.video);
 			this.preloadVideo = currentVideoSource;
 			this.isPlayVideoPreloaded = true;
 		}
@@ -154,8 +147,88 @@ class VideoWithPreload extends React.Component {
 		if (!compareSources(source, prevSource) && isPreloadedVideo && isPreloadedSourceSame) {
 			this.props.handleLoadStart();
 		}
+
+		if (this.props.setMedia !== prevProps.setMedia) {
+			this.clearMedia(prevProps);
+			this.setMedia();
+		}
 	}
 
+	componentWillUnmount () {
+		this.clearMedia();
+	}
+
+	clearMedia ({setMedia} = this.props) {
+		if (setMedia) {
+			setMedia(null);
+		}
+	}
+
+	setMedia ({setMedia} = this.props) {
+		if (setMedia) {
+			setMedia(this);
+		}
+	}
+
+	getMedia () {
+		return this.preloadSourcePlaying ? this.preloadVideo : this.video;
+	}
+
+	get buffered () {
+		return this.getMedia().buffered;
+	}
+
+	get currentTime () {
+		return this.getMedia().currentTime;
+	}
+
+	set currentTime (currentTime) {
+		return (this.getMedia().currentTime = currentTime);
+	}
+
+	get duration () {
+		return this.getMedia().duration;
+	}
+
+	get HAVE_ENOUGH_DATA () {
+		return this.getMedia().HAVE_ENOUGH_DATA;
+	}
+
+	load () {
+		return this.getMedia().load;
+	}
+
+	get NETWORK_NO_SOURCE () {
+		return this.getMedia().NETWORK_NO_SOURCE;
+	}
+
+	get networkState () {
+		return this.getMedia().networkState;
+	}
+
+	pause () {
+		return this.getMedia().pause;
+	}
+
+	get paused () {
+		return this.getMedia().paused;
+	}
+
+	play () {
+		return this.getMedia().play;
+	}
+
+	get playbackRate () {
+		return this.getMedia().playbackRate;
+	}
+
+	set playbackRate (playbackRate) {
+		return (this.getMedia().playbackRate = playbackRate);
+	}
+
+	get readyState () {
+		return this.getMedia().readyState;
+	}
 
 	// These methods are here because on webOS TVs we can't play a video until after second video
 	// player is loaded
@@ -179,7 +252,6 @@ class VideoWithPreload extends React.Component {
 
 	setVideoRef = (node) => {
 		this.video = node;
-		this.props.videoRef(this.video);
 	}
 
 	setPreloadRef = (node) => {
@@ -194,20 +266,18 @@ class VideoWithPreload extends React.Component {
 			noAutoPlay,
 			preloadSource,
 			source,
-			videoComponent,
+			videoComponent: VideoComponent,
 			...rest
 		} = this.props;
 
 		delete rest.handleLoadStart;
-		delete rest.videoRef;
 
 		return (
 			<React.Fragment>
-				<Media
+				<VideoComponent
 					{...rest}
 					autoPlay={preloadSourcePlaying ? false : !noAutoPlay}
 					className={preloadSourcePlaying ? css.preloadVideo : css.video}
-					component={videoComponent}
 					controls={false}
 					preload={preloadSourcePlaying ? 'auto' : 'none'}
 					onLoadStart={this.handleVideoLoadStart}
@@ -215,12 +285,11 @@ class VideoWithPreload extends React.Component {
 					ref={this.setVideoRef}
 				>
 					{preloadSourcePlaying ?  preloadSource : source}
-				</Media>
-				<Media
+				</VideoComponent>
+				<VideoComponent
 					{...rest}
 					autoPlay={preloadSourcePlaying ? !noAutoPlay : false}
 					className={preloadSourcePlaying ? css.video : css.preloadVideo}
-					component={videoComponent}
 					controls={false}
 					onLoadStart={this.handlePreloadVideoLoadStart}
 					onUpdate={preloadSourcePlaying ? handleEvent : null}
@@ -228,11 +297,19 @@ class VideoWithPreload extends React.Component {
 					ref={this.setPreloadRef}
 				>
 					{preloadSourcePlaying ? source : preloadSource}
-				</Media>
+				</VideoComponent>
 			</React.Fragment>
 		);
 	}
 }
 
-export default VideoWithPreload;
-export {VideoWithPreload};
+const Video = Slottable(
+	{slots: ['source', 'preloadSource']},
+	VideoBase
+);
+Video.defaultSlot = 'videoComponent';
+
+export default Video;
+export {
+	Video
+};
