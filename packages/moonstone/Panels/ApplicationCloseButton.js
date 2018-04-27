@@ -27,6 +27,7 @@ const ApplicationCloseButton = kind({
 		*
 		* @type {String}
 		* @default 'Exit app'
+		* @memberof moonstone/Panels.ApplicationCloseButton.prototype
 		* @public
 		*/
 		'aria-label': PropTypes.string,
