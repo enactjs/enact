@@ -2,16 +2,17 @@ import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
-import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import {on, off} from '@enact/core/dispatcher';
 import Pause from '@enact/spotlight/Pause';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 import {forward} from '@enact/core/handle';
+
+import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 import $L from '../internal/$L';
 import IconButton from '../IconButton';
@@ -31,7 +32,7 @@ const MediaButton = onlyUpdateForKeys([
 const forwardToggleMore = forward('onToggleMore');
 
 /**
- * MediaControls {@link moonstone/VideoPlayer}.
+ * A set of components to control media playback and more.
  *
  * @class MediaControlsBase
  * @memberof moonstone/VideoPlayer
@@ -150,7 +151,8 @@ const MediaControlsBase = kind({
 		moreButtonLabel: PropTypes.string,
 
 		/**
-		 * [moreButtonSpotlightId description]
+		 * A custom more button ID to use with Spotlight.
+		 *
 		 * @type {String}
 		 * @public
 		 */
@@ -174,8 +176,7 @@ const MediaControlsBase = kind({
 		noRateButtons: PropTypes.bool,
 
 		/**
-		 * Function executed when the user clicks the Backward button. Is passed
-		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
+		 * Function executed when the user clicks the Backward button.
 		 *
 		 * @type {Function}
 		 * @public
@@ -183,8 +184,7 @@ const MediaControlsBase = kind({
 		onBackwardButtonClick: PropTypes.func,
 
 		/**
-		 * Function executed when the user clicks the Forward button. Is passed
-		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
+		 * Function executed when the user clicks the Forward button.
 		 *
 		 * @type {Function}
 		 * @public
@@ -192,8 +192,7 @@ const MediaControlsBase = kind({
 		onForwardButtonClick: PropTypes.func,
 
 		/**
-		 * Function executed when the user clicks the JumpBackward button. Is passed
-		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
+		 * Function executed when the user clicks the JumpBackward button
 		 *
 		 * @type {Function}
 		 * @public
@@ -201,8 +200,7 @@ const MediaControlsBase = kind({
 		onJumpBackwardButtonClick: PropTypes.func,
 
 		/**
-		 * Function executed when the user clicks the JumpForward button. Is passed
-		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
+		 * Function executed when the user clicks the JumpForward button.
 		 *
 		 * @type {Function}
 		 * @public
@@ -218,8 +216,7 @@ const MediaControlsBase = kind({
 		onMoreClick: PropTypes.func,
 
 		/**
-		 * Function executed when the user clicks the Play button. Is passed
-		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
+		 * Function executed when the user clicks the Play button.
 		 *
 		 * @type {Function}
 		 * @public
@@ -452,7 +449,6 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			 *
 			 * @type {String}
 			 * @see {@link moonstone/IconButton.IconButtonBase.color}
-			 * @default 'blue'
 			 * @public
 			 */
 			moreButtonColor: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
@@ -466,7 +462,8 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			moreButtonDisabled: PropTypes.bool,
 
 			/**
-			 * [moreButtonSpotlightId description]
+			 * A custom more button ID to use with Spotlight.
+			 *
 			 * @type {String}
 			 * @default 'mediaButton'
 			 * @public
@@ -477,7 +474,6 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			 * Setting this to `true` will disable left and right keys for seeking.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			no5WayJump: PropTypes.bool,
@@ -492,35 +488,40 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			noRateButtons: PropTypes.bool,
 
 			/**
-			 * [onFastForward description]
+			 * Fucntion to be called when media fast forwards
+			 *
 			 * @type {Function}
 			 * @public
 			 */
 			onFastForward: PropTypes.func,
 
 			/**
-			 * [onFastForward description]
+			 * Fucntion to be called when media jumps
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onJump: PropTypes.func,
+
+			/**
+			 * Fucntion to be called when media gets paused
+			 *
 			 * @type {Function}
 			 * @public
 			 */
 			onPause: PropTypes.func,
 
 			/**
-			 * [onFastForward description]
+			 * Fucntion to be called when media starts playing
+			 *
 			 * @type {Function}
 			 * @public
 			 */
 			onPlay: PropTypes.func,
 
 			/**
-			 * [onFastForward description]
-			 * @type {Function}
-			 * @public
-			 */
-			onPulse: PropTypes.func,
-
-			/**
-			 * [onRewind description]
+			 * Fucntion to be called when media rewinds
+			 *
 			 * @type {Function}
 			 * @public
 			 */
@@ -571,7 +572,6 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			 * The visibility of the component. When `false`, the component will be hidden.
 			 *
 			 * @type {Boolean}
-			 * @default true
 			 * @public
 			 */
 			visible: PropTypes.bool
@@ -723,12 +723,12 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				this.pulsingKeyCode = keyCode;
 				this.pulsing = true;
 				this.keyLoop = setTimeout(this.handlePulse, this.props.initialJumpDelay);
-				forward('onPulse', {keyCode}, this.props);
+				forward('onJump', {keyCode}, this.props);
 			}
 		}
 
 		handlePulse = () => {
-			forward('onPulse', {keyCode: this.pulsingKeyCode}, this.props);
+			forward('onJump', {keyCode: this.pulsingKeyCode}, this.props);
 			this.keyLoop = setTimeout(this.handlePulse, this.props.jumpDelay);
 		}
 
@@ -790,9 +790,9 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			delete props.jumpDelay;
 			delete props.no5WayJump;
 			delete props.onFastForward;
+			delete props.onJump;
 			delete props.onPause;
 			delete props.onPlay;
-			delete props.onPulse;
 			delete props.onRewind;
 			delete props.onToggleMore;
 			delete props.setApiProvider;

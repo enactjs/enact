@@ -1,9 +1,10 @@
 /**
- * Exports the {@link moonstone/VideoPlayer.VideoPlayer} and
- * {@link moonstone/VideoPlayer.VideoPlayerBase} components. The default export is
- * {@link moonstone/VideoPlayer.VideoPlayer}.
+ * Provides Moonstone-themed video player components.
  *
  * @module moonstone/VideoPlayer
+ * @exports VideoPlayer
+ * @exports VideoPlayerBase
+ * @exports MediaControls
  */
 import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
@@ -274,7 +275,14 @@ const VideoPlayerBase = class extends React.Component {
 		 */
 		onControlsAvailable: PropTypes.func,
 
+		/**
+		 * Funtion executed when fastforwards
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onFastForward: PropTypes.func,
+
 		/**
 		 * Function executed when the user clicks the JumpBackward button. Is passed
 		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
@@ -293,8 +301,28 @@ const VideoPlayerBase = class extends React.Component {
 		 */
 		onJumpForward: PropTypes.func,
 
+		/**
+		 * Funtion executed when video pauses
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onPause: PropTypes.func,
+
+		/**
+		 * Funtion executed when video plays
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onPlay: PropTypes.func,
+
+		/**
+		 * Funtion executed when video rewinds
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onRewind: PropTypes.func,
 
 		/**
@@ -918,7 +946,7 @@ const VideoPlayerBase = class extends React.Component {
 		() => this.fastForward()
 	)
 
-	handlePulse = ({keyCode}) => {
+	handleJump = ({keyCode}) => {
 		if (this.props.seekDisabled) {
 			forward('onSeekFailed', {}, this.props);
 		} else if (is('left', keyCode)) {
@@ -1702,12 +1730,12 @@ const VideoPlayerBase = class extends React.Component {
 								onBackwardButtonClick={this.handleRewind}
 								onFastForward={this.handleFastForward}
 								onForwardButtonClick={this.handleFastForward}
+								onJump={this.handleJump}
 								onJumpBackwardButtonClick={this.onJumpBackward}
 								onJumpForwardButtonClick={this.onJumpForward}
 								onKeyDown={this.handleKeyDownFromControls}
 								onPause={this.handlePause}
 								onPlay={this.handlePlay}
-								onPulse={this.handlePulse}
 								onRewind={this.handleRewind}
 								onToggleMore={this.handleToggleMore}
 								paused={this.state.paused}
