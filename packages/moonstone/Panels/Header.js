@@ -244,7 +244,7 @@ const HeaderBase = kind({
 			case 'standard': return (
 				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
 					{titleOrInput}
-					<Cell shrink size={78}>
+					<Cell shrink size={96}>
 						<Layout align="end">
 							<Cell>
 								{titleBelowComponent}
