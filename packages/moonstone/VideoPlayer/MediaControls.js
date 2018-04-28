@@ -34,15 +34,15 @@ const forwardToggleMore = forward('onToggleMore');
 /**
  * A set of components to control media playback and more.
  *
- * @class MediaControlsBase
+ * @class MediaControls
  * @memberof moonstone/VideoPlayer
  * @ui
  * @public
  */
 const MediaControlsBase = kind({
-	name: 'MediaControlsBase',
+	name: 'MediaControls',
 
-	propTypes: /** @lends moonstone/VideoPlayer.MediaControlsBase.prototype */ {
+	propTypes: /** @lends moonstone/VideoPlayer.MediaControls.prototype */ {
 		/**
 		 * A string which is sent to the `backward` icon of the player controls. This can be
 		 * anything that is accepted by {@link moonstone/Icon}.
@@ -399,9 +399,16 @@ const MediaControlsBase = kind({
 	}
 });
 
+/**
+ * Media Control behaviors
+ *
+ * @class MediaControlsDecorator
+ * @memberof moonstone/VideoPlayer
+ * @private
+ */
 const MediaControlsDecorator = hoc((config, Wrapped) => {
 	class MediaControlsDecoratorHOC extends React.Component {
-		static propTypes = /** @lends moonstone/VideoPlayer.MediaControlsDecoratorHOC.prototype */ {
+		static propTypes = /** @lends moonstone/VideoPlayer.MediaControlsDecorator.prototype */ {
 			/**
 			 * The number of milliseconds that the player will pause before firing the
 			 * first jump event on a right or left pulse.
