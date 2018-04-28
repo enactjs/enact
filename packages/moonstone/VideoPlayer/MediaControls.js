@@ -495,7 +495,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			noRateButtons: PropTypes.bool,
 
 			/**
-			 * Fucntion to be called when media fast forwards
+			 * Function to be called when media fast forwards
 			 *
 			 * @type {Function}
 			 * @public
@@ -503,7 +503,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			onFastForward: PropTypes.func,
 
 			/**
-			 * Fucntion to be called when media jumps
+			 * Function to be called when media jumps
 			 *
 			 * @type {Function}
 			 * @public
@@ -511,7 +511,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			onJump: PropTypes.func,
 
 			/**
-			 * Fucntion to be called when media gets paused
+			 * Function to be called when media gets paused
 			 *
 			 * @type {Function}
 			 * @public
@@ -519,7 +519,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			onPause: PropTypes.func,
 
 			/**
-			 * Fucntion to be called when media starts playing
+			 * Function to be called when media starts playing
 			 *
 			 * @type {Function}
 			 * @public
@@ -527,7 +527,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			onPlay: PropTypes.func,
 
 			/**
-			 * Fucntion to be called when media rewinds
+			 * Function to be called when media rewinds
 			 *
 			 * @type {Function}
 			 * @public
