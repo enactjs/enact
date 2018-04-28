@@ -5,6 +5,8 @@ import {action} from '@storybook/addon-actions';
 import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
+import nullify from '../../src/utils/nullify.js';
+
 storiesOf('Moonstone', module)
 	.add(
 		'DayPicker',
@@ -13,13 +15,17 @@ storiesOf('Moonstone', module)
 			text: 'The basic DayPicker'
 		})(() => (
 			<DayPicker
+				aria-label={nullify(text('aria-label', ''))}
 				dayNameLength={select('dayNameLength', ['short', 'medium', 'long', 'full'], 'long')}
-				title={text('title', 'Day Picker')}
-				noneText={text('noneText', 'none')}
 				disabled={boolean('disabled', false)}
-				onSelect={action('onSelect')}
-				onOpen={action('onOpen')}
+				everyDayText={nullify(text('everyDayText', ''))}
+				everyWeekdayText={nullify(text('everyWeekdayText', ''))}
+				everyWeekendText={nullify(text('everyWeekendText', ''))}
+				noneText={text('noneText', 'none')}
 				onClose={action('onClose')}
+				onOpen={action('onOpen')}
+				onSelect={action('onSelect')}
+				title={text('title', 'Day Picker')}
 			/>
 		))
 	);

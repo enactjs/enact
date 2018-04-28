@@ -69,14 +69,19 @@ const CellBase = kind({
 		shrink: PropTypes.bool,
 
 		/**
-		 * Sets the requested size, possibly overflowing if the contents are too large for the space.
-		 * When used in conjunction with [shrink]{@link ui/Layout.Cell#shrink}, the size will be set
-		 * as close to the requested size as is possible, given the dimensions of the contents of
-		 * this cell. E.g. If your content is `40px` tall and you set `size` to "30px", the Cell will
-		 * render `30px` tall. If [shrink]{@link ui/Layout.Cell#shrink} was used also, the rendered
-		 * Cell would be `40px` tall.
-		 * This accepts any valid CSS measurement and overrules the
-		 * [shrink]{@link ui/Layout.Cell#shrink} property.
+		 * Set the desired size of the Cell using any valid CSS measurement value.
+		 * When used in conjunction with [shrink]{@link ui/Layout.Cell#shrink}, the size will be
+		 * the maximum size, shrinking as necessary, to fit the content.
+		 *
+		 * E.g.
+		 * * `size="400px"` -> cell will be 400px, regardless of the dimensions of your content
+		 * * `size="400px" shrink` -> cell will be 400px if your content is greater than 400px,
+		 *   and will match your contents size if it's smaller
+		 *
+		 * This accepts any valid CSS measurement value string. If a numeric value is used, it will
+		 * be treated as a pixel value and converted to a
+		 * [relative unit]{@link ui/resolution.unit} based on the rules of
+		 * [resolution independence]{@link ui/resolution}.
 		 *
 		 * @type {String|Number}
 		 * @public
@@ -99,13 +104,21 @@ const CellBase = kind({
 		style: ({align, shrink, size, style}) => {
 			if (typeof size === 'number') size = ri.unit(ri.scale(size), 'rem');
 
+			let cellSize = size;
+			if (!size) {
+				if (shrink) {
+					cellSize = '100%';
+				} else {
+					cellSize = 'none';
+				}
+			}
+
 			return {
 				...style,
 				alignSelf: toFlexAlign(align),
-				flexBasis: size,
-				// shrink and size uses just basis, size without shrink forcibly sets the size,
-				// allowing overflow.
-				'--cell-size': (shrink || !size) ? 'none' : size
+				flexBasis: (shrink ? null : size),
+				// Setting 100% below in the presence of `shrink`` and absense of `size` prevents overflow
+				'--cell-size': cellSize
 			};
 		}
 	},
