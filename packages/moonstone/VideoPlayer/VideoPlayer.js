@@ -6,6 +6,7 @@
  * @exports VideoPlayerBase
  * @exports MediaControls
  */
+
 import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import ComponentOverride from '@enact/ui/ComponentOverride';

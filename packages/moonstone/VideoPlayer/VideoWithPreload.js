@@ -1,11 +1,3 @@
-/**
- * Exports the {@link moonstone/VideoPlayer.VideoWithPreload} and
- * {@link moonstone/VideoPlayer.VideoWithPreload} components. The default export is
- * {@link moonstone/VideoPlayer.VideoWithPreload}.
- *
- * @module moonstone/VideoPlayer
- */
-
 import React from 'react';
 import Media from '@enact/ui/Media';
 
