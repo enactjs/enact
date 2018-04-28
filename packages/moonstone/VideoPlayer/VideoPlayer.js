@@ -173,7 +173,11 @@ const VideoPlayerBase = class extends React.Component {
 		feedbackHideDelay: PropTypes.number,
 
 		/**
-		 * These components are placed into the slot to the left of the media controls.
+		 * Components placed below the title.
+		 *
+		 * Typically these will be media descriptor icons, like how many audio channels, what codec
+		 * the video uses, but can also be a description for the video or anything else that seems
+		 * appropriate to provide information about the video to the user.
 		 *
 		 * @type {Node}
 		 * @public
@@ -200,7 +204,25 @@ const VideoPlayerBase = class extends React.Component {
 		loading: PropTypes.bool,
 
 		/**
-		 * [mediaControlsComponent description]
+		 * Overrides the default media control component to support customized behaviors.
+		 *
+		 * The provided component will receive the following props from `VideoPlayer`:
+		 *
+		 * * `mediaDisabled` -
+		 * * `onBackwardButtonClick` - Called when the rewind button is pressed
+		 * * `onFastForward` - Called when the media is fast forwarded via a key event
+		 * * `onForwardButtonClick` - Called when the fast forward button is pressed
+		 * * `onJump` - Called when the media jumps either forward or backward
+		 * * `onJumpBackwardButtonClick` - Called when the jump backward button is pressed
+		 * * `onJumpForwardButtonClick` - Called when the jump forward button is pressed
+		 * * `onKeyDown` - Called when a key is pressed
+		 * * `onPause` - Called when the media is paused via a key event
+		 * * `onPlay` - Called when the media is played via a key event
+		 * * `onRewind` - Called when the media is rewound via a key event
+		 * * `onToggleMore` - Called when the more components are hidden or shown
+		 * * `paused` - `true` when the media is paused
+		 * * `spotlightDisabled` - `true` when spotlight is disabled for the media controls
+		 * * `visible` - `true` when the media controls should be displayed
 		 *
 		 * @type {Component|Element}
 		 * @default `moonstone/VideoPlayer.MediaControls`
@@ -276,7 +298,7 @@ const VideoPlayerBase = class extends React.Component {
 		onControlsAvailable: PropTypes.func,
 
 		/**
-		 * Funtion executed when fastforwards
+		 * Function executed when the video is fast forwarded
 		 *
 		 * @type {Function}
 		 * @public
@@ -302,7 +324,7 @@ const VideoPlayerBase = class extends React.Component {
 		onJumpForward: PropTypes.func,
 
 		/**
-		 * Funtion executed when video pauses
+		 * Funtion executed when video is paused
 		 *
 		 * @type {Function}
 		 * @public
@@ -310,7 +332,7 @@ const VideoPlayerBase = class extends React.Component {
 		onPause: PropTypes.func,
 
 		/**
-		 * Funtion executed when video plays
+		 * Funtion executed when video is played
 		 *
 		 * @type {Function}
 		 * @public
@@ -318,7 +340,7 @@ const VideoPlayerBase = class extends React.Component {
 		onPlay: PropTypes.func,
 
 		/**
-		 * Funtion executed when video rewinds
+		 * Funtion executed when video is rewound
 		 *
 		 * @type {Function}
 		 * @public
