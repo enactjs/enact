@@ -29,7 +29,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/MediaOverlay` component
 - `moonstone/DayPicker` and `moonstone/DaySelector` property `dayNameLength` to configure the length of the day names
 - `moonstone/VideoPlayer.MediaControls` component to support additional customization of the playback controls
-- `moonstone/VideoPlayer` props `mediaControlsComponent`, `onRewind`, `onFastForward`, `onJumpBackward`, `onJumpForward`, `onPause`, and `onPlay`
+- `moonstone/VideoPlayer` props `mediaControlsComponent`, `onRewind`, `onFastForward`, `onJumpBackward`, `onJumpForward`, `onPause`, `onPlay`, and `preloadSource`
 
 ### Changed
 
@@ -57,8 +57,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/Panels` property `closeButtonAriaLabel` to configure the label set on application close button
-- `moonstone/Panels` property `closeButtonAriaLabel` to configure the label set on application close button 
-- `moonstone/VideoPlayer` property `preloadSource` to preload a video in the background
 
 ### Changed
 
