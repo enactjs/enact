@@ -10,7 +10,6 @@ import {forward, forwardWithPrevent, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import {getContainersForNode} from '../src/container';
@@ -176,35 +175,25 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 			this.isFocused = false;
 			this.isHovered = false;
+
+			this.state = {
+				spottableDisabled: false
+			};
 		}
 
-		componentDidMount () {
-			// eslint-disable-next-line react/no-find-dom-node
-			this.node = ReactDOM.findDOMNode(this);
+		componentWillReceiveProps () {
+			this.setState((state, nextProps) => {
+				const spottableDisabled = this.isFocused && nextProps.disabled || nextProps.spotlightDisabled;
+				return !state.spottableDisabled && spottableDisabled ? {spottableDisabled} : null;
+			});
 		}
 
-		componentDidUpdate (prevProps) {
-			// if the component is focused and became disabled,
-			if (this.isFocused && (
-				(!prevProps.disabled && this.props.disabled) ||
-				(!prevProps.spotlightDisabled && this.props.spotlightDisabled)
-			)) {
-				forward('onSpotlightDisappear', null, this.props);
+		componentDidUpdate (prevProps, prevState) {
+			// if the component is focused and became disabled
+			if (!prevState.spottableDisabled && this.state.spottableDisabled) {
 				if (lastSelectTarget === this) {
 					selectCancelled = true;
 					forward('onMouseUp', null, this.props);
-				}
-
-				// if spotlight didn't move, find something else to spot starting from here
-				const current = Spotlight.getCurrent();
-				if (!current || this.node === current) {
-					this.node.blur();
-
-					if (!Spotlight.getPointerMode()) {
-						getContainersForNode(this.node).reverse().reduce((found, id) => {
-							return found || Spotlight.focus(id);
-						}, false);
-					}
 				}
 			}
 
@@ -288,18 +277,24 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return notPrevented && allow;
 		}
 
+		isActionable = (ev, props) => {
+			return !props.disabled && !props.spotlightDisabled;
+		}
+
 		handle = handle.bind(this)
 
 		handleKeyDown = this.handle(
-			this.handleSelect,
 			forwardWithPrevent('onKeyDown'),
 			this.forwardSpotlightEvents,
+			this.isActionable,
+			this.handleSelect,
 			this.shouldEmulateMouse,
 			forward('onMouseDown')
 		)
 
 		handleKeyUp = this.handle(
 			this.forwardAndResetLastSelectTarget,
+			this.isActionable,
 			this.shouldEmulateMouse,
 			forward('onMouseUp'),
 			forward('onClick')
@@ -308,6 +303,9 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		handleBlur = (ev) => {
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = false;
+				this.setState((state) => {
+					return state.spottableDisabled ? {spottableDisabled: false} : null;
+				});
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
@@ -341,7 +339,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const {disabled, spotlightDisabled, spotlightId, ...rest} = this.props;
-			const spottable = !disabled && !spotlightDisabled;
+			const spottable = this.state.spottableDisabled || !disabled && !spotlightDisabled;
 			let tabIndex = rest.tabIndex;
 
 			delete rest.onSpotlightDisappear;

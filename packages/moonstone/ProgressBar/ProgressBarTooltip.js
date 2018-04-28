@@ -5,6 +5,7 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import NumFmt from '@enact/i18n/ilib/lib/NumFmt';
 import React from 'react';
 import PropTypes from 'prop-types';
+import warning from 'warning';
 
 import Tooltip from '../TooltipDecorator/Tooltip';
 
@@ -14,6 +15,19 @@ const memoizedPercentFormatter = memoize((/* locale */) => new NumFmt({
 	type: 'percentage',
 	useNative: false
 }));
+
+const getSide = (orientation, side) => {
+	const valid = orientation === 'vertical' || (
+		orientation === 'horizontal' && (side === 'before' || side === 'after')
+	);
+
+	warning(
+		valid,
+		'The value of `side` must be either "after" or "before" when `orientation` is "horizontal"'
+	);
+
+	return valid ? side : 'before';
+};
 
 /**
  * A [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} specifically adapted for use with
@@ -30,16 +44,6 @@ const ProgressBarTooltipBase = kind({
 	name: 'ProgressBarTooltip',
 
 	propTypes: /** @lends moonstone/ProgressBar.ProgressBarTooltip.prototype */{
-		/**
-		 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale changes
-		 * for `vertical` ProgressBars/Sliders. This may be useful if you have a static layout that does not
-		 * automatically reverse when in an RTL language.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		forceSide: PropTypes.bool,
-
 		/**
 		 * Sets the orientation of the tooltip based on the orientation of the Slider, 'vertical'
 		 * sends the tooltip to one of the sides, 'horizontal'  positions it above the Slider.
@@ -70,18 +74,22 @@ const ProgressBarTooltipBase = kind({
 		proportion: PropTypes.number,
 
 		/**
-		 * Specify where the tooltip should appear in relation to the ProgressBar/Slider bar. Options are
-		 * `'before'` and `'after'`. `before` renders above a `horizontal` ProgressBar/Slider and to the
-		 * left of a `vertical` ProgressBar/Slider. `after` renders below a `horizontal` ProgressBar/Slider
-		 * and to the right of a `vertical` ProgressBar/Slider.
-		 * In the `vertical` case, the rendering position is automatically reversed when rendering in an RTL locale.
-		 * This can be overridden by using the [tooltipForceSide]{@link moonstone/Slider.Slider#tooltipForceSide} prop.
+		 * Specify where the tooltip should appear in relation to the ProgressBar/Slider bar.
+		 *
+		 * Allowed values are:
+		 *
+		 * * `"after"` renders below a `horizontal` ProgressBar/Slider and after (respecting the
+		 *   current locale's text direction) a `vertical` ProgressBar/Slider
+		 * * `"before"` renders above a `horizontal` ProgressBar/Slider and before (respecting the
+		 *   current locale's text direction) a `vertical` ProgressBar/Slider
+		 * * `"left"` renders to the left of a `vertical` ProgressBar/Slider regardless of locale
+		 * * `"right"` renders to the right of a `vertical` ProgressBar/Slider regardless of locale
 		 *
 		 * @type {String}
 		 * @default 'before'
 		 * @public
 		 */
-		side: PropTypes.oneOf(['before', 'after']),
+		side: PropTypes.oneOf(['after', 'before', 'left', 'right']),
 
 		/**
 		 * Visibility of the tooltip
@@ -94,7 +102,6 @@ const ProgressBarTooltipBase = kind({
 	},
 
 	defaultProps: {
-		forceSide: false,
 		orientation: 'horizontal',
 		percent: false,
 		proportion: 0,
@@ -114,42 +121,44 @@ const ProgressBarTooltipBase = kind({
 			if (percent) {
 				const formatter = memoizedPercentFormatter(ilib.getLocale());
 
-				return formatter.format(Math.floor(proportion * 100));
+				return formatter.format(Math.round(proportion * 100));
 			}
 
 			return children;
 		},
-		className: ({forceSide, orientation, proportion, side, styler}) => styler.append(
-			orientation,
-			{
-				afterMidpoint: proportion > 0.5,
-				ignoreLocale: forceSide
-			},
-			side
-		),
+		className: ({orientation, proportion, side, styler}) => {
+			side = getSide(orientation, side);
+
+			return styler.append(
+				orientation,
+				{
+					afterMidpoint: proportion > 0.5,
+					ignoreLocale: side === 'left' || side === 'right'
+				},
+				(side === 'before' || side === 'left') ? 'before' : 'after'
+			);
+		},
 		arrowAnchor: ({proportion, orientation}) => {
 			if (orientation === 'vertical') return 'middle';
 			return proportion > 0.5 ? 'left' : 'right';
 		},
-		direction: ({forceSide, orientation, side}, context) => {
+		direction: ({orientation, side}, context) => {
+			side = getSide(orientation, side);
+
 			let dir = 'right';
 			if (orientation === 'vertical') {
 				if (
-					// LTR before (Both force and nonforce cases)
-					(!context.rtl && !forceSide && side === 'before') ||
+					// forced to the left
+					side === 'left' ||
+					// LTR before
+					(!context.rtl && side === 'before') ||
 					// RTL after
-					(context.rtl && !forceSide && side === 'after') ||
-					// RTL before FORCE
-					(context.rtl && forceSide && side === 'before') ||
-					// LTR before FORCE
-					(!context.rtl && forceSide && side === 'before')
+					(context.rtl && side === 'after')
 				) {
 					dir = 'left';
-				} else {
-					dir = 'right';
 				}
 			} else {
-				dir = (side === 'before' ? 'above' : 'below');
+				dir = side === 'before' ? 'above' : 'below';
 			}
 			return dir;
 		},
@@ -162,7 +171,6 @@ const ProgressBarTooltipBase = kind({
 	render: ({children, visible, ...rest}) => {
 		if (!visible) return null;
 
-		delete rest.forceSide;
 		delete rest.orientation;
 		delete rest.percent;
 		delete rest.proportion;

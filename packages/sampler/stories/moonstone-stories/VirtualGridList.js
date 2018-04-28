@@ -15,6 +15,11 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('VirtualGridList', VirtualGridList, VirtualListBase, UiVirtualListBase);
 
 const
+	wrapOption = {
+		'false': false,
+		'true': true,
+		"'noAnimation'": 'noAnimation'
+	},
 	prop = {
 		direction: {'horizontal': 'horizontal', 'vertical': 'vertical'}
 	},
@@ -104,6 +109,7 @@ storiesOf('Moonstone', module)
 				style={{
 					height: ri.unit(549, 'rem')
 				}}
+				wrap={wrapOption[select('wrap', ['false', 'true', "'noAnimation'"])]}
 			/>
 		))
 	);

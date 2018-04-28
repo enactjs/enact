@@ -89,6 +89,27 @@ const DatePickerBase = kind({
 		year: PropTypes.number.isRequired,
 
 		/**
+		 * The "aria-label" for the day picker
+		 *
+		 * @type {String}
+		 * @default 'change a value with up down button'
+		 * @public
+		 */
+		dayAriaLabel: PropTypes.string,
+
+		/**
+		 * The label displayed below the day picker.
+		 *
+		 * This prop will also be appended to the current value and set as "aria-valuetext" on the
+		 * picker when the value changes.
+		 *
+		 * @type {String}
+		 * @default 'day'
+		 * @public
+		 */
+		dayLabel: PropTypes.string,
+
+		/**
 		 * The maximum selectable `year` value
 		 *
 		 * @type {Number}
@@ -105,6 +126,27 @@ const DatePickerBase = kind({
 		 * @public
 		 */
 		minYear: PropTypes.number,
+
+		/**
+		 * The "aria-label" for the month picker
+		 *
+		 * @type {String}
+		 * @default 'change a value with up down button'
+		 * @public
+		 */
+		monthAriaLabel: PropTypes.string,
+
+		/**
+		 * The label displayed below the month picker.
+		 *
+		 * This prop will also be appended to the current value and set as "aria-valuetext" on the
+		 * picker when the value changes.
+		 *
+		 * @type {String}
+		 * @default 'month'
+		 * @public
+		 */
+		monthLabel: PropTypes.string,
 
 		/**
 		 * When `true`, omits the labels below the pickers
@@ -188,7 +230,28 @@ const DatePickerBase = kind({
 		 * @default false
 		 * @public
 		 */
-		spotlightDisabled: PropTypes.bool
+		spotlightDisabled: PropTypes.bool,
+
+		/**
+		 * The "aria-label" for the year picker
+		 *
+		 * @type {String}
+		 * @default 'change a value with up down button'
+		 * @public
+		 */
+		yearAriaLabel: PropTypes.string,
+
+		/**
+		 * The label displayed below the year picker.
+		 *
+		 * This prop will also be appended to the current value and set as "aria-valuetext" on the
+		 * picker when the value changes.
+		 *
+		 * @type {String}
+		 * @default 'year'
+		 * @public
+		 */
+		yearLabel: PropTypes.string
 	},
 
 	defaultProps: {
@@ -211,12 +274,16 @@ const DatePickerBase = kind({
 
 	render: ({
 		day,
+		dayAriaLabel,
+		dayLabel = $L('day'),
 		handlePickerKeyDown,
 		maxDays,
 		maxMonths,
 		maxYear,
 		minYear,
 		month,
+		monthAriaLabel,
+		monthLabel = $L('month'),
 		noLabels,
 		onChangeDate,
 		onChangeMonth,
@@ -228,6 +295,8 @@ const DatePickerBase = kind({
 		rtl,
 		spotlightDisabled,
 		year,
+		yearAriaLabel,
+		yearLabel = $L('year'),
 		...rest
 	}) => {
 
@@ -248,13 +317,16 @@ const DatePickerBase = kind({
 						const isLast = index === order.length - 1;
 						const isLeft = isFirst && !rtl || isLast && rtl;
 						const isRight = isFirst && rtl || isLast && !rtl;
+
 						switch (picker) {
 							case 'd':
 								return (
 									<DateComponentRangePicker
+										accessibilityHint={dayLabel}
+										aria-label={dayAriaLabel}
 										className={css.day}
 										key="day-picker"
-										label={noLabels ? null : $L('day')}
+										label={noLabels ? null : dayLabel}
 										max={maxDays}
 										min={1}
 										onChange={onChangeDate}
@@ -270,9 +342,11 @@ const DatePickerBase = kind({
 							case 'm':
 								return (
 									<DateComponentRangePicker
+										accessibilityHint={monthLabel}
+										aria-label={monthAriaLabel}
 										className={css.month}
 										key="month-picker"
-										label={noLabels ? null : $L('month')}
+										label={noLabels ? null : monthLabel}
 										max={maxMonths}
 										min={1}
 										onChange={onChangeMonth}
@@ -288,9 +362,11 @@ const DatePickerBase = kind({
 							case 'y':
 								return (
 									<DateComponentRangePicker
+										accessibilityHint={yearLabel}
+										aria-label={yearAriaLabel}
 										className={css.year}
 										key="year-picker"
-										label={noLabels ? null : $L('year')}
+										label={noLabels ? null : yearLabel}
 										max={maxYear}
 										min={minYear}
 										onChange={onChangeYear}

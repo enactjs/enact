@@ -7,6 +7,7 @@
  */
 
 import kind from '@enact/core/kind';
+import ComponentOverride from '@enact/ui/ComponentOverride';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -39,7 +40,20 @@ const SwitchItemBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		css: PropTypes.object,
+
+		/**
+		 * Customize the component used as the switch.
+		 *
+		 * @type {Component}
+		 * @default {@link moonstone/Switch.Switch}
+		 * @private
+		 */
+		iconComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func])
+	},
+
+	defaultProps: {
+		iconComponent: Switch
 	},
 
 	styles: {
@@ -48,14 +62,20 @@ const SwitchItemBase = kind({
 		publicClassNames: ['switchItem']
 	},
 
+	computed: {
+		iconComponent: ({css, iconComponent}) => (
+			<ComponentOverride
+				component={iconComponent}
+				className={css.switch}
+			/>
+		)
+	},
+
 	render: (props) => (
 		<ToggleItem
 			data-webos-voice-intent="SelectToggleItem"
 			{...props}
 			css={props.css}
-			iconComponent={
-				<Switch className={componentCss.switch} />
-			}
 			iconPosition="after"
 		/>
 	)

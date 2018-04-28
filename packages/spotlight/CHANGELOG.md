@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `spotlight/Spottable` to retain focus on a component when it becomes disabled while focused
+
 ## [2.0.0-alpha.8] - 2018-04-17
 
 No significant changes.
