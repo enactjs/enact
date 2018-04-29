@@ -6,6 +6,7 @@
  * @exports VideoPlayerBase
  * @exports MediaControls
  */
+
 import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import ComponentOverride from '@enact/ui/ComponentOverride';
@@ -41,6 +42,7 @@ import MediaSlider from './MediaSlider';
 import FeedbackContent from './FeedbackContent';
 import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
+import VideoWithPreload from './VideoWithPreload';
 
 import css from './VideoPlayer.less';
 
@@ -395,6 +397,16 @@ const VideoPlayerBase = class extends React.Component {
 		}),
 
 		/**
+		 * The video source to be preloaded.
+		 *
+		 * Expects a `<source>` node.
+		 *
+		 * @type {String|Node}
+		 * @public
+		 */
+		preloadSource:  PropTypes.node,
+
+		/**
 		 * When `true`, seek function is disabled.
 		 *
 		 * Note that jump by arrow keys will also be disabled when `true`.
@@ -598,7 +610,6 @@ const VideoPlayerBase = class extends React.Component {
 		if (!compareSources(source, nextSource)) {
 			this.firstPlayReadFlag = true;
 			this.setState({currentTime: 0, proportionPlayed: 0, proportionLoaded: 0});
-			this.reloadVideo();
 		}
 	}
 
@@ -647,11 +658,11 @@ const VideoPlayerBase = class extends React.Component {
 
 	componentDidUpdate (prevProps, prevState) {
 		const {source} = this.props;
-		const {source: prevSource} = prevProps;
+		const {source: prevSource, preloadSource: prevPreloadSource} = prevProps;
 
-		// Detect a change to the video source and reload if necessary.
 		if (!compareSources(source, prevSource)) {
-			this.reloadVideo();
+			const isPreloadedVideo = source && prevPreloadSource && compareSources(source, prevPreloadSource);
+			this.reloadVideo(isPreloadedVideo);
 		}
 
 		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
@@ -1063,9 +1074,12 @@ const VideoPlayerBase = class extends React.Component {
 		};
 	}
 
-	reloadVideo = () => {
+	reloadVideo = (isPreloaded) => {
 		// When changing a HTML5 video, you have to reload it.
-		this.video.load();
+		if (!isPreloaded) {
+			this.video.load();
+		}
+
 		this.setState({
 			announce: AnnounceState.READY
 		});
@@ -1590,6 +1604,12 @@ const VideoPlayerBase = class extends React.Component {
 		this.announceRef = node;
 	}
 
+	handleLoadStart = () => {
+		if (!this.props.noAutoPlay) {
+			this.video.play();
+		}
+	}
+
 	getControlsAriaProps () {
 		if (this.state.announce === AnnounceState.TITLE) {
 			return {
@@ -1619,6 +1639,7 @@ const VideoPlayerBase = class extends React.Component {
 			noMiniFeedback,
 			noSlider,
 			noSpinner,
+			preloadSource,
 			source,
 			spotlightDisabled,
 			spotlightId,
@@ -1664,18 +1685,31 @@ const VideoPlayerBase = class extends React.Component {
 				style={style}
 			>
 				{/* Video Section */}
-				<Media
-					{...rest}
-					autoPlay={!noAutoPlay}
-					className={css.video}
-					component={videoComponent}
-					controls={false}
-					onUpdate={this.handleEvent}
-					onPlay={this.handlePlayEvent}
-					ref={this.setVideoRef}
-				>
-					{source}
-				</Media>
+				{this.props.preloadSource ?
+					<VideoWithPreload
+						{...rest}
+						handleEvent={this.handleEvent}
+						handleLoadStart={this.handleLoadStart}
+						noAutoPlay={noAutoPlay}
+						onPlay={this.handlePlayEvent}
+						preloadSource={preloadSource}
+						source={source}
+						videoComponent={videoComponent}
+						videoRef={this.setVideoRef}
+					/> :
+					<Media
+						{...rest}
+						autoPlay={!noAutoPlay}
+						className={css.video}
+						component={videoComponent}
+						controls={false}
+						onPlay={this.handlePlayEvent}
+						onUpdate={this.handleEvent}
+						ref={this.setVideoRef}
+					>
+						{source}
+					</Media>
+				}
 
 				<Overlay
 					bottomControlsVisible={this.state.mediaControlsVisible}
