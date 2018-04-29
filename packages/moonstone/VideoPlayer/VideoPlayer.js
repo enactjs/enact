@@ -1604,6 +1604,12 @@ const VideoPlayerBase = class extends React.Component {
 		this.announceRef = node;
 	}
 
+	handleLoadStart = () => {
+		if (!this.props.noAutoPlay) {
+			this.video.play();
+		}
+	}
+
 	getControlsAriaProps () {
 		if (this.state.announce === AnnounceState.TITLE) {
 			return {
