@@ -397,16 +397,6 @@ const VideoPlayerBase = class extends React.Component {
 		}),
 
 		/**
-		 * The video source to be preloaded.
-		 *
-		 * Expects a `<source>` node.
-		 *
-		 * @type {String|Node}
-		 * @public
-		 */
-		preloadSource:  PropTypes.node,
-
-		/**
 		 * When `true`, seek function is disabled.
 		 *
 		 * Note that jump by arrow keys will also be disabled when `true`.
@@ -1604,12 +1594,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.announceRef = node;
 	}
 
-	handleLoadStart = () => {
-		if (!this.props.noAutoPlay) {
-			this.video.play();
-		}
-	}
-
 	getControlsAriaProps () {
 		if (this.state.announce === AnnounceState.TITLE) {
 			return {
@@ -1639,7 +1623,6 @@ const VideoPlayerBase = class extends React.Component {
 			noMiniFeedback,
 			noSlider,
 			noSpinner,
-			preloadSource,
 			source,
 			spotlightDisabled,
 			spotlightId,
@@ -1685,31 +1668,18 @@ const VideoPlayerBase = class extends React.Component {
 				style={style}
 			>
 				{/* Video Section */}
-				{this.props.preloadSource ?
-					<VideoWithPreload
-						{...rest}
-						handleEvent={this.handleEvent}
-						handleLoadStart={this.handleLoadStart}
-						noAutoPlay={noAutoPlay}
-						onPlay={this.handlePlayEvent}
-						preloadSource={preloadSource}
-						source={source}
-						videoComponent={videoComponent}
-						videoRef={this.setVideoRef}
-					/> :
-					<Media
-						{...rest}
-						autoPlay={!noAutoPlay}
-						className={css.video}
-						component={videoComponent}
-						controls={false}
-						onPlay={this.handlePlayEvent}
-						onUpdate={this.handleEvent}
-						ref={this.setVideoRef}
-					>
-						{source}
-					</Media>
-				}
+				<Media
+					{...rest}
+					autoPlay={!noAutoPlay}
+					className={css.video}
+					component={videoComponent}
+					controls={false}
+					onPlay={this.handlePlayEvent}
+					onUpdate={this.handleEvent}
+					ref={this.setVideoRef}
+				>
+					{source}
+				</Media>
 
 				<Overlay
 					bottomControlsVisible={this.state.mediaControlsVisible}

@@ -12,14 +12,13 @@ import Slottable from '@enact/ui/Slottable';
 
 import css from './VideoPlayer.less';
 
-import {compareSources} from './util';
 import PropTypes from 'prop-types';
 
-const toKey = (source) => {
+const toKey = (source = '') => {
 	if (React.isValidElement(source)) {
 		return React.Children.toArray(source)
 			.filter(s => !!s)
-			.map(s => s.src)
+			.map(s => s.props.src)
 			.join('+');
 	}
 
@@ -103,8 +102,11 @@ class VideoBase extends React.Component {
 	constructor (props) {
 		super(props);
 		this.isPlayerMounted = false;
-		this.isPlayVideoPreloaded = false;
-		this.preloadSourcePlaying = false;
+
+		this.loaded = {
+			video: false,
+			preload: false
+		};
 	}
 
 	componentDidMount () {
@@ -112,37 +114,27 @@ class VideoBase extends React.Component {
 		this.setMedia();
 	}
 
-	componentWillReceiveProps (nextProps) {
-		const {source, preloadSource} = this.props;
-		const {source: nextSource, preloadSource: nextPreloadSource} = nextProps;
-
-		if (preloadSource && compareSources(preloadSource, nextSource) && !compareSources(source, nextSource)) {
-			this.preloadSourcePlaying = !this.preloadSourcePlaying;
-			const currentVideoSource = this.video;
-			this.video = this.preloadVideo;
-			this.preloadVideo = currentVideoSource;
-			this.isPlayVideoPreloaded = true;
-		}
-
-		if (nextPreloadSource) {
-			const preloadSourcesEqual = preloadSource && compareSources(preloadSource, nextPreloadSource);
-			if (!preloadSourcesEqual) {
-				this.preloadVideo.load();
-			}
-		}
-	}
-
 	componentDidUpdate (prevProps) {
 		const {source, preloadSource} = this.props;
 		const {source: prevSource, preloadSource: prevPreloadSource} = prevProps;
 
-		if (!compareSources(source, prevSource)) {
+		const key = toKey(source);
+		const prevKey = toKey(prevSource);
+		if (source && key !== prevKey) {
+			this.loaded.video = false;
 			this.video.load();
-			// forward('onLoadStart', {}, this.props);
 		}
 
-		if (!compareSources(preloadSource, prevPreloadSource)) {
-			this.preloadVideo.load();
+		const preloadKey = toKey(preloadSource);
+		const prevPreloadKey = toKey(prevPreloadSource);
+		if (preloadSource && preloadKey !== prevPreloadKey) {
+			// if preload did not switch from source, we need to wait for preload to start loading
+			if (preloadKey !== prevKey) {
+				this.preloadVideo.load();
+				this.loaded.preload = false;
+			}
+		} else if (!preloadSource) {
+			this.loaded.preload = true;
 		}
 
 		if (this.props.setMedia !== prevProps.setMedia) {
@@ -153,6 +145,10 @@ class VideoBase extends React.Component {
 
 	componentWillUnmount () {
 		this.clearMedia();
+	}
+
+	canPlay () {
+		return this.isPlayerMounted && this.loaded.video && this.loaded.preload;
 	}
 
 	clearMedia ({setMedia} = this.props) {
@@ -167,84 +163,95 @@ class VideoBase extends React.Component {
 		}
 	}
 
-	getMedia () {
-		return this.video;
-	}
-
 	get buffered () {
-		return this.getMedia().buffered;
+		if (!this.video) return;
+		return this.video.buffered;
 	}
 
 	get currentTime () {
-		return this.getMedia().currentTime;
+		if (!this.video) return;
+		return this.video.currentTime;
 	}
 
 	set currentTime (currentTime) {
-		return (this.getMedia().currentTime = currentTime);
+		if (!this.video) return;
+		return (this.video.currentTime = currentTime);
 	}
 
 	get duration () {
-		return this.getMedia().duration;
+		if (!this.video) return;
+		return this.video.duration;
 	}
 
 	get HAVE_ENOUGH_DATA () {
-		return this.getMedia().HAVE_ENOUGH_DATA;
+		if (!this.video) return;
+		return this.video.HAVE_ENOUGH_DATA;
 	}
 
 	load () {
-		return this.getMedia().load();
+		if (!this.video) return;
+		return this.video.load();
 	}
 
 	get NETWORK_NO_SOURCE () {
-		return this.getMedia().NETWORK_NO_SOURCE;
+		if (!this.video) return;
+		return this.video.NETWORK_NO_SOURCE;
 	}
 
 	get networkState () {
-		return this.getMedia().networkState;
+		if (!this.video) return;
+		return this.video.networkState;
 	}
 
 	pause () {
-		return this.getMedia().pause();
+		if (!this.video) return;
+		return this.video.pause();
 	}
 
 	get paused () {
-		return this.getMedia().paused;
+		if (!this.video) return;
+		return this.video.paused;
 	}
 
 	play () {
-		return this.getMedia().play();
+		if (!this.video) return;
+		return this.video.play();
 	}
 
 	get playbackRate () {
-		return this.getMedia().playbackRate;
+		if (!this.video) return;
+		return this.video.playbackRate;
 	}
 
 	set playbackRate (playbackRate) {
-		return (this.getMedia().playbackRate = playbackRate);
+		if (!this.video) return;
+		return (this.video.playbackRate = playbackRate);
 	}
 
 	get readyState () {
-		return this.getMedia().readyState;
+		if (!this.video) return;
+		return this.video.readyState;
+	}
+
+	autoPlay () {
+		if (this.props.noAutoPlay || !this.canPlay()) return;
+
+		this.video.play();
+
+		forward('onLoadStart', this.loadStartEvent, this.props);
 	}
 
 	// These methods are here because on webOS TVs we can't play a video until after second video
 	// player is loaded
 	handleVideoLoadStart = (ev) => {
-		if (this.isPlayerMounted && this.isPlayVideoPreloaded) {
-			forward('onLoadStart', ev, this.props);
-			this.resetPreloadState();
-		}
+		this.loaded.video = true;
+		this.loadStartEvent = {...ev};
+		this.autoPlay();
 	}
 
-	handlePreloadVideoLoadStart = (ev) => {
-		if (this.isPlayerMounted && this.isPlayVideoPreloaded) {
-			forward('onLoadStart', ev, this.props);
-			this.resetPreloadState();
-		}
-	}
-
-	resetPreloadState () {
-		this.isPlayVideoPreloaded = false;
+	handlePreloadVideoLoadStart = () => {
+		this.loaded.preload = true;
+		this.autoPlay();
 	}
 
 	setVideoRef = (node) => {
@@ -257,39 +264,52 @@ class VideoBase extends React.Component {
 
 	render () {
 		const {
-			noAutoPlay,
 			preloadSource,
 			source,
 			videoComponent: VideoComponent,
 			...rest
 		} = this.props;
 
+		delete rest.noAutoPlay;
+		delete rest.setMedia;
+
+		const sourceKey = toKey(source);
+		let preloadKey = toKey(preloadSource);
+
+		// prevent duplicate components by suppressing preload when sources are the same
+		if (sourceKey === preloadKey) {
+			preloadKey = null;
+		}
+
 		return (
 			<React.Fragment>
-				<VideoComponent
-					{...rest}
-					autoPlay={!noAutoPlay}
-					className={css.video}
-					controls={false}
-					key={toKey(source)}
-					preload={'none'}
-					onLoadStart={this.handleVideoLoadStart}
-					ref={this.setVideoRef}
-				>
-					{source}
-				</VideoComponent>
-				<VideoComponent
-					{...rest}
-					autoPlay={false}
-					className={css.preloadVideo}
-					controls={false}
-					key={toKey(preloadSource)}
-					onLoadStart={this.handlePreloadVideoLoadStart}
-					preload={'auto'}
-					ref={this.setPreloadRef}
-				>
-					{preloadSource}
-				</VideoComponent>
+				{sourceKey ? (
+					<VideoComponent
+						{...rest}
+						autoPlay={false}
+						className={css.video}
+						controls={false}
+						key={sourceKey}
+						onLoadStart={this.handleVideoLoadStart}
+						preload="none"
+						ref={this.setVideoRef}
+					>
+						{source}
+					</VideoComponent>
+				) : null}
+				{preloadKey ? (
+					<VideoComponent
+						autoPlay={false}
+						className={css.preloadVideo}
+						controls={false}
+						key={preloadKey}
+						onLoadStart={this.handlePreloadVideoLoadStart}
+						preload="auto"
+						ref={this.setPreloadRef}
+					>
+						{preloadSource}
+					</VideoComponent>
+				) : null}
 			</React.Fragment>
 		);
 	}

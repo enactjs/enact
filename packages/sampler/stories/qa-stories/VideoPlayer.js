@@ -1,6 +1,6 @@
 import Button from '@enact/moonstone/Button';
 import React from 'react';
-import VideoPlayer from '@enact/moonstone/VideoPlayer';
+import VideoPlayer, {Video} from '@enact/moonstone/VideoPlayer';
 import IconButton from '@enact/moonstone/IconButton';
 import {storiesOf} from '@storybook/react';
 import {button} from '@storybook/addon-knobs';
@@ -61,11 +61,11 @@ class VideoSourceSwap extends React.Component {
 				{button('Next Preload Video without changing preload', this.nextVideoKeepPreload)}
 				{button('Change Preload without changing video', this.nextPreloadVideoKeepVideo)}
 				{button('Reset Sources', this.resetSources)}
-				<VideoPlayer
-					muted
-					preloadSource={<source src={this.state.playlist[this.state.preloadCursor]} type="video/mp4" />}
-				>
-					<source src={this.state.playlist[this.state.cursor]} type="video/mp4" />
+				<VideoPlayer muted>
+					<Video>
+						<source src={this.state.playlist[this.state.cursor]} type="video/mp4" />
+						<source src={this.state.playlist[this.state.preloadCursor]} type="video/mp4" slot="preloadSource" />
+					</Video>
 					<infoComponents>A video about some things happening to and around some characters. Very exciting stuff.</infoComponents>
 
 					<Button backgroundOpacity="translucent">Add To Favorites</Button>
