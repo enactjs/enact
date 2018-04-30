@@ -92,7 +92,7 @@ class VideoBase extends React.Component {
 		 * @default 'video'
 		 * @public
 		 */
-		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
+		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element])
 	}
 
 	static defaultProps = {
