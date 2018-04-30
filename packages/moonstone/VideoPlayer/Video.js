@@ -120,21 +120,21 @@ class VideoBase extends React.Component {
 
 		const key = toKey(source);
 		const prevKey = toKey(prevSource);
-		if (source && key !== prevKey) {
+		const preloadKey = toKey(preloadSource);
+		const prevPreloadKey = toKey(prevPreloadSource);
+
+		// if there's source and it has changed and it's not the prior preloaded source
+		if (source && key !== prevKey && key !== prevPreloadKey) {
+			// flag it as unloaded and load it.
 			this.loaded.video = false;
 			this.video.load();
 		}
 
-		const preloadKey = toKey(preloadSource);
-		const prevPreloadKey = toKey(prevPreloadSource);
-		if (preloadSource && preloadKey !== prevPreloadKey) {
-			// if preload did not switch from source, we need to wait for preload to start loading
-			if (preloadKey !== prevKey) {
-				this.preloadVideo.load();
-				this.loaded.preload = false;
-			}
-		} else if (!preloadSource) {
-			this.loaded.preload = true;
+		// if there's a preload and it has changed and it's not the prior source
+		if (preloadSource && preloadKey !== prevPreloadKey && preloadKey !== prevKey) {
+			// flag it unloaded and load it
+			this.preloadVideo.load();
+			this.loaded.preload = false;
 		}
 
 		if (this.props.setMedia !== prevProps.setMedia) {
@@ -148,7 +148,10 @@ class VideoBase extends React.Component {
 	}
 
 	canPlay () {
-		return this.isPlayerMounted && this.loaded.video && this.loaded.preload;
+		return this.isPlayerMounted && this.loaded.video && (
+			// video can play if there isn't a preloaded source or there is and it has loaded
+			!this.props.preloadSource || this.loaded.preload
+		);
 	}
 
 	clearMedia ({setMedia} = this.props) {
