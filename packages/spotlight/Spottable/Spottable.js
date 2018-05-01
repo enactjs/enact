@@ -339,8 +339,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const {disabled, spotlightDisabled, spotlightId, ...rest} = this.props;
-			const pointerMode = this.isHovered && disabled;
-			const spottable = (this.state.spottableDisabled || !disabled && !spotlightDisabled) && !pointerMode;
+			const spottable = this.state.spottableDisabled || !disabled && !spotlightDisabled;
 			let tabIndex = rest.tabIndex;
 
 			delete rest.onSpotlightDisappear;
