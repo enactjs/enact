@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/SliderBehaviorDecorator` to not focused when disabled
+- `moonstone/SliderBehaviorDecorator` to not focus when disabled
 
 ## [2.0.0-beta.1] - 2018-04-29
 
