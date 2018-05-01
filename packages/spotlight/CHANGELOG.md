@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight/Spottable` to not be spottable on click when disabled
+
 ## [2.0.0-beta.1] - 2018-04-29
 
 ### Changed
