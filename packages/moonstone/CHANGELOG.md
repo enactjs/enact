@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Slider` not to fire `onChange` event when 5-ways out of boundary
+
 ## [2.0.0-beta.1] - 2018-04-29
 
 ### Removed

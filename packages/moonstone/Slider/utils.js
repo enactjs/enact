@@ -25,7 +25,15 @@ const isDecrement = ({keyCode}, {orientation}) => {
 	return orientation === 'vertical' ? is('down', keyCode) : is('left', keyCode);
 };
 
-const emitChange = (direction) => adaptEvent(
+const isNotMax = (ev, {value, max}) => {
+	return value !== max;
+};
+
+const isNotMin = (ev, {value, min}) => {
+	return value !== min;
+};
+
+const emitChange = (direction) =>  adaptEvent(
 	(ev, {knobStep, max, min, step, value = min}) => {
 		const newValue = clamp(min, max, value + (calcStep(knobStep, step) * direction));
 
@@ -45,16 +53,16 @@ const isActive = (ev, props) => {
 const handleIncrement = handle(
 	isActive,
 	isIncrement,
-	emitChange(1),
-	stopImmediate
-);
+	isNotMax,
+	emitChange(1)
+).finally(stopImmediate);
 
 const handleDecrement = handle(
 	isActive,
 	isDecrement,
-	emitChange(-1),
-	stopImmediate
-);
+	isNotMin,
+	emitChange(-1)
+).finally(stopImmediate);
 
 const either = (a, b) => (...args) => a(...args) || b(...args);
 const atMinimum = (ev, {min, value = min}) => value <= min;
