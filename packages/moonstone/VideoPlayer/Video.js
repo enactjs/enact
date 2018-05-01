@@ -6,9 +6,12 @@
  * @module moonstone/VideoPlayer
  */
 
-import React from 'react';
 import {forward} from '@enact/core/handle';
+import ForwardRef from '@enact/ui/ForwardRef';
+import Media from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
+import compose from 'ramda/src/compose';
+import React from 'react';
 
 import css from './VideoPlayer.less';
 
@@ -35,34 +38,6 @@ const toKey = (source = '') => {
  */
 class VideoBase extends React.Component {
 	static propTypes = /** @lends moonstone/VideoPlayer.VideoBase.prototype */ {
-		/**
-		 * By default, the video will start playing immediately after it's loaded, unless this is set.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noAutoPlay: PropTypes.bool,
-
-		/**
-		 * The video source to be preloaded. Expects a `<source>` node.
-		 *
-		 * @type {String|Node}
-		 * @public
-		 */
-		preloadSource:  PropTypes.node,
-
-		setMedia: PropTypes.func,
-
-		/**
-		 * Any children `<source>` tag elements of [VideoPlayer]{@link moonstone/VideoPlayer} will
-		 * be sent directly to the `videoComponent` as video sources.
-		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		source: PropTypes.node,
 
 		/**
 		 * Video component to use. The default (`'video'`) renders an `HTMLVideoElement`. Custom
@@ -92,11 +67,40 @@ class VideoBase extends React.Component {
 		 * @default 'video'
 		 * @public
 		 */
-		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element])
+		mediaComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element]),
+
+		/**
+		 * By default, the video will start playing immediately after it's loaded, unless this is set.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noAutoPlay: PropTypes.bool,
+
+		/**
+		 * The video source to be preloaded. Expects a `<source>` node.
+		 *
+		 * @type {String|Node}
+		 * @public
+		 */
+		preloadSource:  PropTypes.node,
+
+		setMedia: PropTypes.func,
+
+		/**
+		 * Any children `<source>` tag elements of [VideoPlayer]{@link moonstone/VideoPlayer} will
+		 * be sent directly to the `mediaComponent` as video sources.
+		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		source: PropTypes.node
 	}
 
 	static defaultProps = {
-		videoComponent: 'video'
+		mediaComponent: 'video'
 	}
 
 	constructor (props) {
@@ -130,16 +134,28 @@ class VideoBase extends React.Component {
 			this.video.load();
 		}
 
-		// if there's a preload and it has changed and it's not the prior source
-		if (preloadSource && preloadKey !== prevPreloadKey && preloadKey !== prevKey) {
-			// flag it unloaded and load it
-			this.preloadVideo.load();
-			this.loaded.preload = false;
+		// if there's a preload and it has changed and
+		if (preloadSource && preloadKey !== prevPreloadKey) {
+			// flag it as unloaded (if its not the same as source) and load it
+			this.loaded.preload = preloadKey === key;
+
+			// In the case that the previous source equalled the previous preload (causing the
+			// preload video node to not be created) and then the preload source was changed, we
+			// need to guard against accessing the preloadVideo node.
+			if (this.preloadVideo) {
+				this.preloadVideo.load();
+			}
 		}
 
 		if (this.props.setMedia !== prevProps.setMedia) {
 			this.clearMedia(prevProps);
 			this.setMedia();
+		}
+
+		// if the preload video is switched to the current, try to play it now because it won't fire
+		// an onLoadStart events since it has already loaded.
+		if (source && prevPreloadKey === key) {
+			this.autoPlay();
 		}
 	}
 
@@ -162,78 +178,8 @@ class VideoBase extends React.Component {
 
 	setMedia ({setMedia} = this.props) {
 		if (setMedia) {
-			setMedia(this);
+			setMedia(this.video);
 		}
-	}
-
-	get buffered () {
-		if (!this.video) return;
-		return this.video.buffered;
-	}
-
-	get currentTime () {
-		if (!this.video) return;
-		return this.video.currentTime;
-	}
-
-	set currentTime (currentTime) {
-		if (!this.video) return;
-		return (this.video.currentTime = currentTime);
-	}
-
-	get duration () {
-		if (!this.video) return;
-		return this.video.duration;
-	}
-
-	get HAVE_ENOUGH_DATA () {
-		if (!this.video) return;
-		return this.video.HAVE_ENOUGH_DATA;
-	}
-
-	load () {
-		if (!this.video) return;
-		return this.video.load();
-	}
-
-	get NETWORK_NO_SOURCE () {
-		if (!this.video) return;
-		return this.video.NETWORK_NO_SOURCE;
-	}
-
-	get networkState () {
-		if (!this.video) return;
-		return this.video.networkState;
-	}
-
-	pause () {
-		if (!this.video) return;
-		return this.video.pause();
-	}
-
-	get paused () {
-		if (!this.video) return;
-		return this.video.paused;
-	}
-
-	play () {
-		if (!this.video) return;
-		return this.video.play();
-	}
-
-	get playbackRate () {
-		if (!this.video) return;
-		return this.video.playbackRate;
-	}
-
-	set playbackRate (playbackRate) {
-		if (!this.video) return;
-		return (this.video.playbackRate = playbackRate);
-	}
-
-	get readyState () {
-		if (!this.video) return;
-		return this.video.readyState;
 	}
 
 	autoPlay () {
@@ -262,6 +208,9 @@ class VideoBase extends React.Component {
 	}
 
 	setPreloadRef = (node) => {
+		if (node && this.loaded.preload === false) {
+			node.load();
+		}
 		this.preloadVideo = node;
 	}
 
@@ -269,7 +218,7 @@ class VideoBase extends React.Component {
 		const {
 			preloadSource,
 			source,
-			videoComponent: VideoComponent,
+			mediaComponent,
 			...rest
 		} = this.props;
 
@@ -287,41 +236,47 @@ class VideoBase extends React.Component {
 		return (
 			<React.Fragment>
 				{sourceKey ? (
-					<VideoComponent
+					<Media
 						{...rest}
 						autoPlay={false}
 						className={css.video}
 						controls={false}
 						key={sourceKey}
+						mediaComponent={mediaComponent}
 						onLoadStart={this.handleVideoLoadStart}
 						preload="none"
 						ref={this.setVideoRef}
-					>
-						{source}
-					</VideoComponent>
+						source={React.isValidElement(source) ? source : (
+							<source src={source} />
+						)}
+					/>
 				) : null}
 				{preloadKey ? (
-					<VideoComponent
+					<Media
 						autoPlay={false}
 						className={css.preloadVideo}
 						controls={false}
 						key={preloadKey}
+						mediaComponent={mediaComponent}
 						onLoadStart={this.handlePreloadVideoLoadStart}
 						preload="auto"
 						ref={this.setPreloadRef}
-					>
-						{preloadSource}
-					</VideoComponent>
+						source={React.isValidElement(preloadSource) ? preloadSource : (
+							<source src={preloadSource} />
+						)}
+					/>
 				) : null}
 			</React.Fragment>
 		);
 	}
 }
 
-const Video = Slottable(
-	{slots: ['source', 'preloadSource']},
-	VideoBase
+const VideoDecorator = compose(
+	ForwardRef({prop: 'setMedia'}),
+	Slottable({slots: ['source', 'preloadSource']})
 );
+
+const Video = VideoDecorator(VideoBase);
 Video.defaultSlot = 'videoComponent';
 
 export default Video;

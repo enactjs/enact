@@ -10,7 +10,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {forward} from '@enact/core/handle';
 import {on, off} from '@enact/core/dispatcher';
-import ComponentOverride from '@enact/ui/ComponentOverride';
+
+const getKeyFromSource = (source = '') => {
+	if (React.isValidElement(source)) {
+		return React.Children.toArray(source)
+			.filter(s => !!s)
+			.map(s => s.props.src)
+			.join('+');
+	}
+
+	return String(source);
+};
 
 /**
  * Event forwarding map for all of the supported media events. See https://reactjs.org/docs/events.html#media-events
@@ -62,7 +72,7 @@ class Media extends React.Component {
 		 * @required
 		 * @public
 		 */
-		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+		mediaComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
 
 		/**
 		 * A event map object for custom media events. List custom events that aren't standard to
@@ -92,7 +102,9 @@ class Media extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onUpdate: PropTypes.func
+		onUpdate: PropTypes.func,
+
+		source: PropTypes.any
 	}
 
 	static defaultProps = {
@@ -158,89 +170,89 @@ class Media extends React.Component {
 	}
 
 	play () {
+		if (!this.media) return;
 		this.media.play();
 	}
 
 	pause () {
+		if (!this.media) return;
 		this.media.pause();
 	}
 
 	load () {
+		if (!this.media) return;
 		this.media.load();
 	}
 
 	get currentTime ()  {
+		if (!this.media) return;
 		return this.media.currentTime;
 	}
 
 	set currentTime (currentTime) {
+		if (!this.media) return;
 		this.media.currentTime = currentTime;
 	}
 
 	get duration () {
+		if (!this.media) return;
 		return this.media.duration;
 	}
 
 	get error () {
+		if (!this.media) return;
 		return this.media.networkState === this.media.NETWORK_NO_SOURCE;
 	}
 
 	get loading () {
+		if (!this.media) return;
 		return this.media.readyState < this.media.HAVE_ENOUGH_DATA;
 	}
 
 	get paused () {
+		if (!this.media) return;
 		return this.media.paused;
 	}
 
 	get playbackRate () {
+		if (!this.media) return;
 		return this.media.playbackRate;
 	}
 
 	set playbackRate (playbackRate) {
+		if (!this.media) return;
 		this.media.playbackRate = playbackRate;
 	}
 
 	get proportionLoaded () {
+		if (!this.media) return;
 		return this.media.buffered.length && this.media.buffered.end(this.media.buffered.length - 1) / this.media.duration;
 	}
 
 	get proportionPlayed () {
+		if (!this.media) return;
 		return this.media.currentTime / this.media.duration;
 	}
 
 	render () {
-		const props = Object.assign({}, this.props);
+		const {source, ...props} = this.props;
 		delete props.mediaEventsMap;
 		delete props.onUpdate;
 
-		const {customMediaEventsMap, component: Component, ...rest} = props;
+		const {customMediaEventsMap, mediaComponent: Component, ...rest} = props;
 		// Remove the events we manually added so they aren't added twice or fail.
 		for (let eventName in customMediaEventsMap) {
 			delete rest[customMediaEventsMap[eventName]];
 		}
 
-		if (typeof Component === 'string') {
-			return (
-				<Component
-					{...rest}
-					ref={this.mediaRef}
-					{...this.handledMediaEvents}
-				/>
-			);
-		}
-
-		if (!rest.children || React.Children.toArray(rest.children).length === 0) {
-			delete rest.children;
-		}
-
 		return (
-			<ComponentOverride
-				component={Component}
+			<Component
 				{...rest}
-				setMedia={this.mediaRef}
 				{...this.handledMediaEvents}
-			/>
+				ref={this.mediaRef}
+			>
+				{source}
+			</Component>
 		);
 	}
 }

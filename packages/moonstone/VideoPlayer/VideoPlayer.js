@@ -517,7 +517,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * component as a child node.
 		 *
 		 * @type {Component}
-		 * @default 'video'
+		 * @default {@link ui/Media.Media}
 		 * @public
 		 */
 		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element])
@@ -536,7 +536,7 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		titleHideDelay: 5000,
-		videoComponent: 'video'
+		videoComponent: Media
 	}
 
 	constructor (props) {
@@ -593,23 +593,23 @@ const VideoPlayerBase = class extends React.Component {
 		this.startDelayedFeedbackHide();
 	}
 
-	componentWillReceiveProps (nextProps) {
-		const {source} = this.props;
-		const {source: nextSource} = nextProps;
+	componentWillReceiveProps () {
+		// const {source} = this.props;
+		// const {source: nextSource} = nextProps;
 
-		if (!compareSources(source, nextSource)) {
-			this.firstPlayReadFlag = true;
-			this.setState({currentTime: 0, proportionPlayed: 0, proportionLoaded: 0});
-		}
+		// if (!compareSources(source, nextSource)) {
+		// 	this.firstPlayReadFlag = true;
+		// 	this.setState({currentTime: 0, proportionPlayed: 0, proportionLoaded: 0});
+		// }
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
-		const {source} = this.props;
-		const {source: nextSource} = nextProps;
+		// const {source} = this.props;
+		// const {source: nextSource} = nextProps;
 
-		if (!compareSources(source, nextSource)) {
-			return true;
-		}
+		// if (!compareSources(source, nextSource)) {
+		// 	return true;
+		// }
 
 		if (
 			!this.state.miniFeedbackVisible && this.state.miniFeedbackVisible === nextState.miniFeedbackVisible &&
@@ -1623,7 +1623,6 @@ const VideoPlayerBase = class extends React.Component {
 			noMiniFeedback,
 			noSlider,
 			noSpinner,
-			source,
 			spotlightDisabled,
 			spotlightId,
 			style,
@@ -1631,29 +1630,31 @@ const VideoPlayerBase = class extends React.Component {
 			thumbnailSrc,
 			title,
 			videoComponent,
-			...rest} = this.props;
+			...mediaProps
+		} = this.props;
 
-		delete rest.announce;
-		delete rest.autoCloseTimeout;
-		delete rest.feedbackHideDelay;
-		delete rest.jumpBy;
-		delete rest.miniFeedbackHideDelay;
-		delete rest.onControlsAvailable;
-		delete rest.onFastForward;
-		delete rest.onJumpBackward;
-		delete rest.onJumpForward;
-		delete rest.onPause;
-		delete rest.onPlay;
-		delete rest.onRewind;
-		delete rest.onScrub;
-		delete rest.onSeekFailed;
-		delete rest.pauseAtEnd;
-		delete rest.playbackRateHash;
-		delete rest.seekDisabled;
-		delete rest.setApiProvider;
-		delete rest.thumbnailUnavailable;
-		delete rest.titleHideDelay;
-		delete rest.videoPath;
+		delete mediaProps.announce;
+		delete mediaProps.autoCloseTimeout;
+		delete mediaProps.children;
+		delete mediaProps.feedbackHideDelay;
+		delete mediaProps.jumpBy;
+		delete mediaProps.miniFeedbackHideDelay;
+		delete mediaProps.onControlsAvailable;
+		delete mediaProps.onFastForward;
+		delete mediaProps.onJumpBackward;
+		delete mediaProps.onJumpForward;
+		delete mediaProps.onPause;
+		delete mediaProps.onPlay;
+		delete mediaProps.onRewind;
+		delete mediaProps.onScrub;
+		delete mediaProps.onSeekFailed;
+		delete mediaProps.pauseAtEnd;
+		delete mediaProps.playbackRateHash;
+		delete mediaProps.seekDisabled;
+		delete mediaProps.setApiProvider;
+		delete mediaProps.thumbnailUnavailable;
+		delete mediaProps.titleHideDelay;
+		delete mediaProps.videoPath;
 
 		const controlsAriaProps = this.getControlsAriaProps();
 
@@ -1668,18 +1669,17 @@ const VideoPlayerBase = class extends React.Component {
 				style={style}
 			>
 				{/* Video Section */}
-				<Media
-					{...rest}
+				<ComponentOverride
+					{...mediaProps}
 					autoPlay={!noAutoPlay}
 					className={css.video}
 					component={videoComponent}
 					controls={false}
+					mediaComponent="video"
 					onPlay={this.handlePlayEvent}
 					onUpdate={this.handleEvent}
 					ref={this.setVideoRef}
-				>
-					{source}
-				</Media>
+				/>
 
 				<Overlay
 					bottomControlsVisible={this.state.mediaControlsVisible}

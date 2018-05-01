@@ -51,10 +51,17 @@ import React from 'react';
  * @ui
  * @public
  */
-const ComponentOverride = ({component, ...props}) => component ? (
-	(typeof component === 'function' || typeof component === 'string') && React.createElement(component, props) ||
-	React.isValidElement(component) && React.cloneElement(component, props)
-) : null;
+const ComponentOverride = React.forwardRef(({component: Component, ...rest}, ref) => {
+	const props = {...rest, ref};
+
+	return Component && (
+		(typeof Component === 'function' || typeof Component === 'string') && (
+			<Component {...props} />
+		) || React.isValidElement(Component) && (
+			React.cloneElement(Component, props)
+		)
+	) || null;
+});
 
 export default ComponentOverride;
 export {

@@ -63,13 +63,10 @@ class VideoSourceSwap extends React.Component {
 				{button('Reset Sources', this.resetSources)}
 				<VideoPlayer muted>
 					<Video>
-						<source src={this.state.playlist[this.state.cursor]} type="video/mp4" />
-						<source src={this.state.playlist[this.state.preloadCursor]} type="video/mp4" slot="preloadSource" />
+						<source src={this.state.playlist[this.state.cursor]} />
+						<source src={this.state.playlist[this.state.preloadCursor]} slot="preloadSource" />
 					</Video>
 					<infoComponents>A video about some things happening to and around some characters. Very exciting stuff.</infoComponents>
-
-					<Button backgroundOpacity="translucent">Add To Favorites</Button>
-					<IconButton backgroundOpacity="translucent">star</IconButton>
 				</VideoPlayer>
 			</div>
 

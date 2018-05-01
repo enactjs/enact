@@ -83,7 +83,11 @@ const calcNumberValueOfPlaybackRate = (rate) => {
  * @private
  */
 const compareSources = (source, nextSource) => {
-	if (Array.isArray(source) !== Array.isArray(nextSource)) {
+	if (!source && !nextSource) {
+		return true;
+	} if (source && !nextSource || !source && nextSource) {
+		return false;
+	} else if (Array.isArray(source) !== Array.isArray(nextSource)) {
 		return false;
 	} else if (Array.isArray(source) && Array.isArray(nextSource)) {
 		return source.every((src, i) => {
