@@ -52,7 +52,7 @@
 		line-height: (@moon-button-height-large - (2 * @moon-button-border-width));
 	});
 
-	.bg {
+	&::before {
 		background-color: inherit;
 		border-width: @moon-button-border-width;
 		border-style: solid;
@@ -137,7 +137,7 @@
 		.focus({
 			&.pressed,
 			&:active {
-				.bg {
+				&::before {
 					-webkit-animation-name: expand;
 					animation-name: expand;
 				}
@@ -149,23 +149,23 @@
 	.applySkins({
 		color: @moon-button-text-color;
 
-		.bg {
+		&::before {
 			background-color: @moon-button-bg-color;
 			border-color: transparent;
 		}
 
-		&.translucent .bg {
+		&.translucent::before {
 			background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
 		}
 
-		&.lightTranslucent .bg {
+		&.lightTranslucent::before {
 			background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
 		}
 
 		&.transparent {
 			color: @moon-text-color;
 
-			.bg {
+			&::before {
 				background-color: transparent;
 			}
 		}
@@ -187,7 +187,7 @@
 			color: @moon-spotlight-text-color;
 			background-color: transparent;
 
-			.bg {
+			&::before {
 				background-color: @moon-spotlight-border-color;
 			}
 
@@ -198,7 +198,7 @@
 
 		// 'Selected' state
 		&.selected {
-			.bg {
+			&::before {
 				border-color: @moon-spotlight-border-color;
 			}
 
@@ -206,7 +206,7 @@
 			.focus({
 				color: @moon-spotlight-text-color;
 
-				.bg {
+				&::before {
 					border-color: @moon-active-spotlight-border-color;
 					background-color: @moon-spotlight-border-color;
 				}
@@ -221,7 +221,7 @@
 		&:not([disabled]) {
 			.focus({
 				&.pressed {
-					.bg {
+					&::before {
 						-webkit-animation-name: none;
 						animation-name: none;
 					}
@@ -235,22 +235,22 @@
 				background-color: transparent;
 				color: @moon-button-text-color;
 
-				.bg {
+				&::before {
 					background-color: @moon-button-bg-color;
 				}
 
-				&.translucent .bg {
+				&.translucent::before {
 					background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
 				}
 
-				&.lightTranslucent .bg {
+				&.lightTranslucent::before {
 					background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
 				}
 
 				&.transparent {
 					color: @moon-text-color;
 
-					.bg {
+					&::before {
 						background-color: transparent;
 					}
 				}
@@ -259,7 +259,7 @@
 			&.selected {
 				// 'Selected+Focus' state, seen in grouped buttons
 				.focus({
-					.bg {
+					&::before {
 						border-color: @moon-spotlight-border-color;
 					}
 				});

@@ -11,7 +11,7 @@
 	// Take the size of the minimum tappable area, and subtract the element's current size.
 	@_tap-offset: -((@moon-button-small-tap-area-height - @element-size) / 2);
 
-	&::before {
+	&::after {
 		content: "";
 		position: absolute;
 		top: @_tap-offset;
@@ -24,7 +24,7 @@
 
 .moon-taparea(@element-size) when (@moon-button-small-tap-area-height <= @element-size) {
 	// Remove the tappable area if the tap area is smaller than the element's current size.
-	&::before {
+	&::after {
 		content: none;
 	}
 }
