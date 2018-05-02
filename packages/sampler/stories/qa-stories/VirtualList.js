@@ -23,20 +23,18 @@ const
 			height: ri.unit(552, 'rem')
 		}
 	},
-	items = [],
+	dataSize = 1000,
+	getItem = (index) => ('Item ' + ('00' + index).slice(-3)),
+	selected = {},
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderItem = (size) => ({index, ...rest}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
 		return (
 			<StatefulSwitchItem  index={index} style={itemStyle} {...rest}>
-				{items[index].item}
+				{getItem(index).item}
 			</StatefulSwitchItem>
 		);
 	};
-
-for (let i = 0; i < 1000; i++) {
-	items.push({item :'Item ' + ('00' + i).slice(-3), selected: false});
-}
 
 class StatefulSwitchItem extends React.Component {
 	static propTypes = {
@@ -46,18 +44,18 @@ class StatefulSwitchItem extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			selected: items[props.index].selected
+			selected: !!selected[props.index]
 		};
 	}
 
 	componentWillReceiveProps (nextProps) {
 		if (this.props.index !== nextProps.index) {
-			this.setState({selected: items[nextProps.index].selected});
+			this.setState({selected: !!selected[nextProps.index]});
 		}
 	}
 
 	onToggle = () => {
-		items[this.props.index].selected = !items[this.props.index].selected;
+		selected[this.props.index] = !selected[this.props.index];
 		this.setState({selected: !this.state.selected});
 	}
 
@@ -80,7 +78,7 @@ storiesOf('VirtualList', module)
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
 				<VirtualList
-					dataSize={number('dataSize', items.length)}
+					dataSize={number('dataSize', dataSize)}
 					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize}

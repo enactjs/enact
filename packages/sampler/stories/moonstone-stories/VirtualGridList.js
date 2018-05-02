@@ -23,10 +23,20 @@ const
 	prop = {
 		direction: {'horizontal': 'horizontal', 'vertical': 'vertical'}
 	},
-	items = [],
+	dataSize = 1000,
+	getItem = (index) => {
+		const
+			count = ('00' + index).slice(-3),
+			text = `Item ${count}`,
+			subText = `SubItem ${count}`,
+			color = Math.floor((Math.random() * (0x1000000 - 0x101010)) + 0x101010).toString(16),
+			source = `http://placehold.it/300x300/${color}/ffffff&text=Image ${index}`;
+
+		return {text, subText, source};
+	},
 	// eslint-disable-next-line enact/prop-types
 	uiRenderItem = ({index, ...rest}) => {
-		const {text, subText, source} = items[index];
+		const {text, subText, source} = getItem(index);
 
 		return (
 			<UiGridListImageItem
@@ -39,7 +49,7 @@ const
 	},
 	// eslint-disable-next-line enact/prop-types
 	renderItem = ({index, ...rest}) => {
-		const {text, subText, source} = items[index];
+		const {text, subText, source} = getItem(index);
 
 		return (
 			<GridListImageItem
@@ -51,17 +61,6 @@ const
 		);
 	};
 
-for (let i = 0; i < 1000; i++) {
-	const
-		count = ('00' + i).slice(-3),
-		text = `Item ${count}`,
-		subText = `SubItem ${count}`,
-		color = Math.floor((Math.random() * (0x1000000 - 0x101010)) + 0x101010).toString(16),
-		source = `http://placehold.it/300x300/${color}/ffffff&text=Image ${i}`;
-
-	items.push({text, subText, source});
-}
-
 storiesOf('UI', module)
 	.add(
 		'VirtualList.VirtualGridList',
@@ -70,7 +69,7 @@ storiesOf('UI', module)
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<UiVirtualGridList
-				dataSize={number('dataSize', items.length)}
+				dataSize={number('dataSize', dataSize)}
 				direction={select('direction', prop.direction, 'vertical')}
 				itemRenderer={uiRenderItem}
 				itemSize={{
@@ -95,7 +94,7 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<VirtualGridList
-				dataSize={number('dataSize', items.length)}
+				dataSize={number('dataSize', dataSize)}
 				direction={select('direction', prop.direction, 'vertical')}
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 				itemRenderer={renderItem}
