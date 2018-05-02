@@ -53,16 +53,18 @@ const isActive = (ev, props) => {
 const handleIncrement = handle(
 	isActive,
 	isIncrement,
+	stopImmediate,
 	isNotMax,
 	emitChange(1)
-).finally(stopImmediate);
+);
 
 const handleDecrement = handle(
 	isActive,
 	isDecrement,
+	stopImmediate,
 	isNotMin,
 	emitChange(-1)
-).finally(stopImmediate);
+);
 
 const either = (a, b) => (...args) => a(...args) || b(...args);
 const atMinimum = (ev, {min, value = min}) => value <= min;
