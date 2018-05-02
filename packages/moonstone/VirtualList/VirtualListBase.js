@@ -283,7 +283,6 @@ const VirtualListBaseFactory = (type) => {
 		isScrolledByJump = false
 		lastFocusedIndex = null
 		nodeIndexToBeFocused = null
-		ignoreToScrollOnFocus = false
 		preservedIndex = null
 		restoreLastFocused = false
 
@@ -502,7 +501,6 @@ const VirtualListBaseFactory = (type) => {
 					}
 					focusedItem.blur();
 					this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
-					this.ignoreToScrollOnFocus = true;
 				}
 				cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
 			}
@@ -633,7 +631,6 @@ const VirtualListBaseFactory = (type) => {
 					this.focusOnItem(nextIndex);
 				} else {
 					this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
-					this.ignoreToScrollOnFocus = true;
 
 					if (!Spotlight.isPaused()) {
 						Spotlight.pause();
@@ -707,7 +704,6 @@ const VirtualListBaseFactory = (type) => {
 			}
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
-			this.ignoreToScrollOnFocus = false;
 			this.isScrolledByJump = false;
 		}
 
