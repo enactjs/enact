@@ -8,8 +8,11 @@
  */
 
 import {extractAriaProps} from '@enact/core/util';
+import {getContainersForNode} from '@enact/spotlight/src/container';
+import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
+import last from 'ramda/src/last';
 import React from 'react';
 import PropTypes from 'prop-types';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
@@ -25,6 +28,20 @@ const isUp = is('up');
 const isDown = is('down');
 
 const ContainerDiv = SpotlightContainerDecorator({continue5WayHold: true}, 'div');
+
+function wouldDirectionLeaveContainer (dir, srcNode) {
+	const target = getTargetByDirectionFromElement(dir, srcNode);
+
+	// If there's no target in the direction we won't move
+	if (!target) {
+		return false;
+	}
+
+	const targetContainer = last(getContainersForNode(target));
+	const srcContainer = last(getContainersForNode(srcNode));
+
+	return (targetContainer !== srcContainer);
+}
 
 /**
  * {@link moonstone/ExpandableItem.ExpandableItemBase} is a stateless component that
@@ -236,13 +253,16 @@ const ExpandableItemBase = kind({
 				// case here in which the children of the container are spottable and the
 				// ExpandableList use case which has an intermediate child (Group) between the
 				// spottable components and the container.
-				if (autoClose && isUp(keyCode) && target.parentNode.firstChild === target && onClose) {
-					onClose();
-					ev.nativeEvent.stopImmediatePropagation();
-				} else if (isDown(keyCode) && target.parentNode.lastChild === target) {
-					if (lockBottom) {
+				if (autoClose && isUp(keyCode) && onClose) {
+					if (wouldDirectionLeaveContainer('up', target)) {
+						onClose();
 						ev.nativeEvent.stopImmediatePropagation();
-					} else if (onSpotlightDown) {
+					}
+				} else if (isDown(keyCode)) {
+					const leaving = wouldDirectionLeaveContainer('down', target);
+					if (lockBottom && leaving) {
+						ev.nativeEvent.stopImmediatePropagation();
+					} else if (onSpotlightDown && leaving) {
 						onSpotlightDown(ev);
 					}
 				}
