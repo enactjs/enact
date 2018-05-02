@@ -381,6 +381,7 @@ class ScrollableBase extends Component {
 		) {
 			this.deferScrollTo = false;
 			this.isUpdatedScrollThumb = this.updateScrollThumbSize();
+			this.enqueueForceUpdate();
 		} else {
 			this.updateScrollbars();
 		}
@@ -1113,7 +1114,12 @@ class Scrollable extends Component {
 									rtl
 								})}
 							</TouchableDiv>
-							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
+
+							{isVerticalScrollbarVisible ?
+								<Scrollbar
+									{...verticalScrollbarProps}
+									style={{display: isVerticalScrollbarVisible ? 'block' : 'none'}}
+								/> : null}
 						</div>
 						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
 					</div>
