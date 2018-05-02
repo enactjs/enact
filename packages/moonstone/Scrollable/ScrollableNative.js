@@ -166,7 +166,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	componentDidUpdate () {
-		if (this.uiRef.scrollToInfo === null) {
+		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null) {
 			this.updateScrollOnFocus();
 		}
 	}
