@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Item`, `moonstone/SlotItem`, `moonstone/ToggleItem` to properly apply `className`
+
 ## [2.0.0-beta.1] - 2018-04-29
 
 ### Removed
