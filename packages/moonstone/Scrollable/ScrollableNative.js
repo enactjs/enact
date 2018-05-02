@@ -377,8 +377,7 @@ class ScrollableBaseNative extends Component {
 			{childRef, scrollToAccumulatedTarget} = this.uiRef,
 			bounds = this.uiRef.getScrollBounds(),
 			canScrollVertically = this.uiRef.canScrollVertically(bounds),
-			direction = isPageUp(keyCode) ? -1 : 1,
-			pageDistance = direction * (canScrollVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
+			pageDistance = (isPageUp(keyCode) ? -1 : 1) * (canScrollVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
 			spotItem = Spotlight.getCurrent();
 
 		if (!Spotlight.getPointerMode() && spotItem) {
