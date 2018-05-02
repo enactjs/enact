@@ -316,16 +316,16 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = (ev) => {
-			if (!this.props.disabled) {
-				if (ev.currentTarget === ev.target) {
-					this.isFocused = true;
-				}
+			if (this.props.disabled) return;
 
-				if (Spotlight.isMuted(ev.target)) {
-					ev.stopPropagation();
-				} else {
-					forward('onFocus', ev, this.props);
-				}
+			if (ev.currentTarget === ev.target) {
+				this.isFocused = true;
+			}
+
+			if (Spotlight.isMuted(ev.target)) {
+				ev.stopPropagation();
+			} else {
+				forward('onFocus', ev, this.props);
 			}
 		}
 
