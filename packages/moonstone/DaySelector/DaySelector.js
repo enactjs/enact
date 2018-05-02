@@ -32,15 +32,6 @@ const DaySelectorBase = kind({
 
 	propTypes: /** @lends moonstone/DaySelector.DaySelectorBase.prototype */ {
 		/**
-		 * Array of day names
-		 *
-		 * @type {String[]}
-		 * @default false
-		 * @private
-		 */
-		children: PropTypes.arrayOf(PropTypes.string),
-
-		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
@@ -76,15 +67,16 @@ const DaySelectorBase = kind({
 		className: 'daySelector'
 	},
 
-	render: ({disabled, onSelect, ...rest}) => {
+	render: (props) => {
 		return (
 			<Group
-				{...rest}
+				{...props}
 				childComponent={DaySelectorItem}
 				childSelect="onToggle"
-				disabled={disabled}
-				itemProps={{className: componentCss.daySelectorItem, disabled}}
-				onSelect={onSelect}
+				itemProps={{
+					className: componentCss.daySelectorItem,
+					disabled: props.disabled
+				}}
 				select="multiple"
 				selectedProp="selected"
 			/>
@@ -111,8 +103,6 @@ const DaySelectorDecorator = compose(
  * @public
  */
 
-const DaySelector = DaySelectorDecorator(DaySelectorBase);
-
 /**
  * Use long day names (Sunday, Monday..) for labels
  *
@@ -124,6 +114,38 @@ const DaySelector = DaySelectorDecorator(DaySelectorBase);
  * @default false
  * @public
  */
+
+/**
+ * The text displayed in the label when every day is selected
+ *
+ * @name everyDayText
+ * @type {String}
+ * @default 'Every Day'
+ * @memberof moonstone/DaySelector.DaySelector.prototype
+ * @public
+ */
+
+/**
+ * The text displayed in the label when every weekeday is selected
+ *
+ * @name everyWeekdayText
+ * @type {String}
+ * @default 'Every Weekday'
+ * @memberof moonstone/DaySelector.DaySelector.prototype
+ * @public
+ */
+
+/**
+ * The text displayed in the label when every weekend day is selected
+ *
+ * @name everyWeekendText
+ * @type {String}
+ * @default 'Every Weekend'
+ * @memberof moonstone/DaySelector.DaySelector.prototype
+ * @public
+ */
+
+const DaySelector = DaySelectorDecorator(DaySelectorBase);
 
 export default DaySelector;
 export {

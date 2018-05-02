@@ -28,12 +28,18 @@ storiesOf('Moonstone', module)
 			text: 'The basic TimePicker'
 		})(() => (
 			<TimePicker
-				title={text('title', 'Time')}
+				hourAriaLabel={nullify(text('hourAriaLabel', ''))}
+				hourLabel={nullify(text('hourLabel', ''))}
+				meridiemAriaLabel={nullify(text('meridiemAriaLabel', ''))}
+				meridiemLabel={nullify(text('meridiemLabel', ''))}
+				minuteAriaLabel={nullify(text('minuteAriaLabel', ''))}
+				minuteLabel={nullify(text('minuteLabel', ''))}
 				noLabels={nullify(boolean('noLabels', false))}
 				noneText={text('noneText', 'Nothing Selected')}
 				onChange={action('onChange')}
-				onOpen={action('onOpen')}
 				onClose={action('onClose')}
+				onOpen={action('onOpen')}
+				title={text('title', 'Time')}
 			/>
 		))
 	);

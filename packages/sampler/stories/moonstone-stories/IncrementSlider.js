@@ -18,8 +18,7 @@ storiesOf('Moonstone', module)
 			propTables: [Config],
 			text: 'Basic usage of IncrementSlider'
 		})(() => {
-			const side = nullify(select('side', ['before', 'after']));
-			const forceSide = nullify(boolean('forceSide', false));
+			const side = nullify(select('side', ['after', 'before', 'left', 'right'], 'before'));
 			const tooltip = nullify(boolean('tooltip', false));
 			const percent = nullify(boolean('percent', false));
 
@@ -39,7 +38,6 @@ storiesOf('Moonstone', module)
 				>
 					{tooltip ? (
 						<IncrementSliderTooltip
-							forceSide={forceSide}
 							percent={percent}
 							side={side}
 						/>

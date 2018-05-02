@@ -19,12 +19,18 @@ storiesOf('Moonstone', module)
 			text: 'The basic DatePicker'
 		})(() => (
 			<DatePicker
-				title={text('title', 'Date')}
+				dayAriaLabel={nullify(text('dayAriaLabel', ''))}
+				dayLabel={nullify(text('dayLabel', ''))}
+				monthAriaLabel={nullify(text('monthAriaLabel', ''))}
+				monthLabel={nullify(text('monthLabel', ''))}
 				noLabels={nullify(boolean('noLabels', false))}
 				noneText={text('noneText', 'Nothing Selected')}
 				onChange={action('onChange')}
-				onOpen={action('onOpen')}
 				onClose={action('onClose')}
+				onOpen={action('onOpen')}
+				title={text('title', 'Date')}
+				yearAriaLabel={nullify(text('yearAriaLabel', ''))}
+				yearLabel={nullify(text('yearLabel', ''))}
 			/>
 		))
 	);
