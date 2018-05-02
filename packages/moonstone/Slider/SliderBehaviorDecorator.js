@@ -49,7 +49,6 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = {
 			'aria-valuetext': PropTypes.oneOf([PropTypes.string, PropTypes.number]),
-			disabled: PropTypes.bool,
 			max: PropTypes.number,
 			min: PropTypes.number,
 			orientation: PropTypes.string,
