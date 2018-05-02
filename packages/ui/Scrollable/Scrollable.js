@@ -375,15 +375,19 @@ class ScrollableBase extends Component {
 		this.clampScrollPosition();
 
 		this.addEventListeners();
+		console.log('did up', isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible);
 		if (
 			hasDataSizeChanged === false &&
 			(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
 		) {
 			this.deferScrollTo = false;
 			this.isUpdatedScrollThumb = this.updateScrollThumbSize();
-			this.enqueueForceUpdate();
 		} else {
 			this.updateScrollbars();
+		}
+
+		if (isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible) {
+			this.enqueueForceUpdate();
 		}
 
 		if (this.scrollToInfo !== null) {
