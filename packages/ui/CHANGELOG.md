@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Item` to use its natural width rather than imposing a 100% width. This allows in-line Items to be the correct width.
+- `ui/Item` to use its natural width rather than imposing a 100% width allowing inline Items to be the correct width.
 
 ## [2.0.0-beta.1] - 2018-04-29
 
