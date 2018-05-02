@@ -186,7 +186,7 @@ class ScrollableBase extends Component {
 	}
 
 	componentDidUpdate () {
-		if (this.uiRef.scrollToInfo === null && this.childRef.ignoreToScrollOnFocus === false) {
+		if (this.uiRef.scrollToInfo === null && !this.childRef.ignoreToScrollOnFocus) {
 			this.updateScrollOnFocus();
 		}
 	}
