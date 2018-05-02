@@ -8,7 +8,7 @@
 
 .dialog {
 	position: relative;
-	padding: 24px 42px 42px;
+	padding: 24px @moon-dialog-h-padding @moon-dialog-h-padding;
 
 	&.showDivider {
 		.titleWrapper {
@@ -18,6 +18,9 @@
 			border-bottom-width: 3px;
 			margin-bottom: 18px;
 		}
+	}
+	&.reserveClose {
+		.padding-start-end(@moon-dialog-h-padding, @moon-icon-button-small-size + @moon-spotlight-outset);
 	}
 	.titleBlock {
 		max-width: 100%;

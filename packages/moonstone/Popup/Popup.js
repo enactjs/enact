@@ -148,7 +148,8 @@ const PopupBase = kind({
 
 	styles: {
 		css,
-		className: 'popup'
+		className: 'popup',
+		publicClassNames: ['reserveClose']
 	},
 
 	computed: {
