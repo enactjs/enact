@@ -98,11 +98,15 @@ const ResponsiveImageDecorator = hoc((config, Wrapped) => {
 		}
 
 		handleResize = () => {
-			const src = selectSrc(this.props.src);
-			if (src !== this.state.src) {
+			this.setState((state, props) => {
+				const src = selectSrc(props.src);
 				// Trigger a render and save the currently selected src for later comparisons
-				this.setState({src});
-			}
+				if (src !== state.src) {
+					return {src};
+				}
+
+				return null;
+			});
 		}
 
 		render () {
