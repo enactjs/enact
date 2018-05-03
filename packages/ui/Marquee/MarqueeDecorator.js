@@ -599,11 +599,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				return;
 			}
 
-			if (this.props.marqueeOn === 'render') {
-				this.restartAnimation();
-			} else {
-				this.stop();
-			}
+			this.stop();
 		}
 
 		handleResize = () => {
