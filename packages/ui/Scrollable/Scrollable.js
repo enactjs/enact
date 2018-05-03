@@ -375,7 +375,6 @@ class ScrollableBase extends Component {
 		this.clampScrollPosition();
 
 		this.addEventListeners();
-		console.log('did up', isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible);
 		if (
 			hasDataSizeChanged === false &&
 			(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
@@ -1118,12 +1117,7 @@ class Scrollable extends Component {
 									rtl
 								})}
 							</TouchableDiv>
-
-							{isVerticalScrollbarVisible ?
-								<Scrollbar
-									{...verticalScrollbarProps}
-									style={{display: isVerticalScrollbarVisible ? 'block' : 'none'}}
-								/> : null}
+							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
 						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
 					</div>

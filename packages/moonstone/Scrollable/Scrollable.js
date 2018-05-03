@@ -574,7 +574,6 @@ class ScrollableBase extends Component {
 									disabled={!isVerticalScrollbarVisible}
 									nextButtonAriaLabel={downButtonAriaLabel}
 									previousButtonAriaLabel={upButtonAriaLabel}
-									style={{display: isVerticalScrollbarVisible ? 'block' : 'none'}}
 									rtl={rtl}
 								/> :
 								null
