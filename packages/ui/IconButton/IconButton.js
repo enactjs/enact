@@ -15,6 +15,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import Touchable from '../Touchable';
+import ComponentOverride from '../ComponentOverride';
 
 import componentCss from './IconButton.less';
 
@@ -147,7 +148,7 @@ const IconButtonBase = kind({
 		className: ({small, styler}) => styler.append({small})
 	},
 
-	render: ({buttonComponent: Button, children, css, icon, iconComponent: Icon, small, ...rest}) => {
+	render: ({buttonComponent, children, css, icon, iconComponent: Icon, small, ...rest}) => {
 
 		// To support the simpler use case of only specifying the icon as the children within
 		// <IconButton>, this falls back on using children if icon isn't specified.
@@ -156,11 +157,17 @@ const IconButtonBase = kind({
 			children = null;
 		}
 
+		console.log('css:', css);
 		return (
-			<Button {...rest} small={small} minWidth={false}>
+			<ComponentOverride
+				{...rest}
+				component={buttonComponent}
+				small={small}
+				minWidth={false}
+			>
 				<Icon small={small} className={css.icon}>{icon}</Icon>
 				{children}
-			</Button>
+			</ComponentOverride>
 		);
 	}
 });
