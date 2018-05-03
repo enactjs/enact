@@ -386,7 +386,7 @@ class ScrollableBase extends Component {
 		}
 
 		if (isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible) {
-			this.enqueueForceUpdate();
+			this.forceUpdate();
 		}
 
 		if (this.scrollToInfo !== null) {
