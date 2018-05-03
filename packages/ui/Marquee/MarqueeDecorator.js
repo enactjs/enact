@@ -294,7 +294,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (next) {
-			const {marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
+			const {forceDirection, marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
 			this.validateTextDirection(next);
 			if ((this.props.children !== next.children) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
 				// restart marqueeOn="render" marquees or synced marquees that were animating
@@ -305,7 +305,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.invalidateMetrics();
 				this.cancelAnimation();
 				this.textDirectionValidated = false;
-			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled || next.marqueeSpeed !== marqueeSpeed) {
+			} else if (
+				next.marqueeOn !== marqueeOn ||
+				next.marqueeDisabled !== marqueeDisabled ||
+				next.marqueeSpeed !== marqueeSpeed ||
+				next.forceDirection !== forceDirection
+			) {
 				this.cancelAnimation();
 			} else if (next.disabled && this.isHovered && marqueeOn === 'focus' && this.sync) {
 				this.context.enter(this);
@@ -387,6 +392,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		shouldStartMarquee () {
 			const {disabled, marqueeOn} = this.props;
 			return (
+				marqueeOn === 'render' ||
 				this.forceRestartMarquee ||
 				!this.sync && (
 					(this.isFocused && marqueeOn === 'focus' && !disabled) ||
@@ -593,7 +599,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				return;
 			}
 
-			this.stop();
+			if (this.props.marqueeOn === 'render') {
+				this.restartAnimation();
+			} else {
+				this.stop();
+			}
 		}
 
 		handleResize = () => {
