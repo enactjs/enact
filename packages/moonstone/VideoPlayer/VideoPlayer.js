@@ -7,34 +7,35 @@
  * @exports MediaControls
  */
 
-import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
-import ComponentOverride from '@enact/ui/ComponentOverride';
-import equals from 'ramda/src/equals';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
-import {contextTypes, FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
-import {adaptEvent, call, forKey, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
-import ilib from '@enact/i18n';
-import {perfNow, Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
-import {platform} from '@enact/core/platform';
+import {adaptEvent, call, forKey, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
+import {platform} from '@enact/core/platform';
+import {perfNow, Job} from '@enact/core/util';
+import ilib from '@enact/i18n';
+import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
+import {toUpperCase} from '@enact/i18n/util';
+import Spotlight from '@enact/spotlight';
+import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
+import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
+import Announce from '@enact/ui/AnnounceDecorator/Announce';
+import ComponentOverride from '@enact/ui/ComponentOverride';
+import {contextTypes, FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import Media from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
-import Spotlight from '@enact/spotlight';
-import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
-import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
-import {toUpperCase} from '@enact/i18n/util';
+import equals from 'ramda/src/equals';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import shallowEqual from 'recompose/shallowEqual';
 
 import $L from '../internal/$L';
-import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
+import Spinner from '../Spinner';
 
-import {calcNumberValueOfPlaybackRate, compareSources, secondsToTime} from './util';
+import {calcNumberValueOfPlaybackRate, secondsToTime} from './util';
 import Overlay from './Overlay';
 import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
@@ -593,23 +594,14 @@ const VideoPlayerBase = class extends React.Component {
 		this.startDelayedFeedbackHide();
 	}
 
-	componentWillReceiveProps () {
-		// const {source} = this.props;
-		// const {source: nextSource} = nextProps;
-
-		// if (!compareSources(source, nextSource)) {
-		// 	this.firstPlayReadFlag = true;
-		// 	this.setState({currentTime: 0, proportionPlayed: 0, proportionLoaded: 0});
-		// }
-	}
-
 	shouldComponentUpdate (nextProps, nextState) {
-		// const {source} = this.props;
-		// const {source: nextSource} = nextProps;
+		// consider a shallow props compare instead of source comparison to support possible changes
+		// from mediaComponent. might not be necessary since a source change there will fire
+		// onLoadStart causing a state change here.
 
-		// if (!compareSources(source, nextSource)) {
-		// 	return true;
-		// }
+		if (!shallowEqual(this.props, nextProps)) {
+			return true;
+		}
 
 		if (
 			!this.state.miniFeedbackVisible && this.state.miniFeedbackVisible === nextState.miniFeedbackVisible &&
@@ -622,9 +614,9 @@ const VideoPlayerBase = class extends React.Component {
 			)
 		) {
 			return false;
-		} else {
-			return true;
 		}
+
+		return true;
 	}
 
 	componentWillUpdate (nextProps) {
@@ -647,14 +639,6 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		const {source} = this.props;
-		const {source: prevSource, preloadSource: prevPreloadSource} = prevProps;
-
-		if (!compareSources(source, prevSource)) {
-			const isPreloadedVideo = source && prevPreloadSource && compareSources(source, prevPreloadSource);
-			this.reloadVideo(isPreloadedVideo);
-		}
-
 		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
 
 		if (!this.state.mediaControlsVisible && prevState.mediaControlsVisible) {
@@ -945,6 +929,16 @@ const VideoPlayerBase = class extends React.Component {
 		return true;
 	}
 
+	handleLoadStart = () => {
+		this.firstPlayReadFlag = true;
+		this.setState({
+			announce: AnnounceState.READY,
+			currentTime: 0,
+			proportionPlayed: 0,
+			proportionLoaded: 0
+		});
+	}
+
 	handlePlay = this.handle(
 		forwardPlay,
 		this.shouldShowMiniFeedback,
@@ -1062,17 +1056,6 @@ const VideoPlayerBase = class extends React.Component {
 			proportionLoaded  : this.state.proportionLoaded,
 			proportionPlayed  : this.state.proportionPlayed
 		};
-	}
-
-	reloadVideo = (isPreloaded) => {
-		// When changing a HTML5 video, you have to reload it.
-		if (!isPreloaded) {
-			this.video.load();
-		}
-
-		this.setState({
-			announce: AnnounceState.READY
-		});
 	}
 
 	/**
@@ -1677,6 +1660,7 @@ const VideoPlayerBase = class extends React.Component {
 					controls={false}
 					mediaComponent="video"
 					onPlay={this.handlePlayEvent}
+					onLoadStart={this.handleLoadStart}
 					onUpdate={this.handleEvent}
 					ref={this.setVideoRef}
 				/>

@@ -8,7 +8,7 @@
 
 import {forward} from '@enact/core/handle';
 import ForwardRef from '@enact/ui/ForwardRef';
-import Media from '@enact/ui/Media';
+import {Media, getKeyFromSource} from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import compose from 'ramda/src/compose';
 import React from 'react';
@@ -16,17 +16,6 @@ import React from 'react';
 import css from './VideoPlayer.less';
 
 import PropTypes from 'prop-types';
-
-const toKey = (source = '') => {
-	if (React.isValidElement(source)) {
-		return React.Children.toArray(source)
-			.filter(s => !!s)
-			.map(s => s.props.src)
-			.join('+');
-	}
-
-	return String(source);
-};
 
 /**
  * Video {@link moonstone/VideoPlayer}.
@@ -122,16 +111,15 @@ class VideoBase extends React.Component {
 		const {source, preloadSource} = this.props;
 		const {source: prevSource, preloadSource: prevPreloadSource} = prevProps;
 
-		const key = toKey(source);
-		const prevKey = toKey(prevSource);
-		const preloadKey = toKey(preloadSource);
-		const prevPreloadKey = toKey(prevPreloadSource);
+		const key = getKeyFromSource(source);
+		const prevKey = getKeyFromSource(prevSource);
+		const preloadKey = getKeyFromSource(preloadSource);
+		const prevPreloadKey = getKeyFromSource(prevPreloadSource);
 
 		// if there's source and it has changed and it's not the prior preloaded source
 		if (source && key !== prevKey && key !== prevPreloadKey) {
-			// flag it as unloaded and load it.
+			// flag it as unloaded
 			this.loaded.video = false;
-			this.video.load();
 		}
 
 		// if there's a preload and it has changed and
@@ -205,6 +193,7 @@ class VideoBase extends React.Component {
 
 	setVideoRef = (node) => {
 		this.video = node;
+		this.setMedia();
 	}
 
 	setPreloadRef = (node) => {
@@ -225,8 +214,8 @@ class VideoBase extends React.Component {
 		delete rest.noAutoPlay;
 		delete rest.setMedia;
 
-		const sourceKey = toKey(source);
-		let preloadKey = toKey(preloadSource);
+		const sourceKey = getKeyFromSource(source);
+		let preloadKey = getKeyFromSource(preloadSource);
 
 		// prevent duplicate components by suppressing preload when sources are the same
 		if (sourceKey === preloadKey) {
@@ -258,6 +247,7 @@ class VideoBase extends React.Component {
 						controls={false}
 						key={preloadKey}
 						mediaComponent={mediaComponent}
+						noAutoLoad
 						onLoadStart={this.handlePreloadVideoLoadStart}
 						preload="auto"
 						ref={this.setPreloadRef}
