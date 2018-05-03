@@ -754,6 +754,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const props = Object.assign({}, this.props);
 
 			delete props.alignment;
+			delete props.forceDirection;
 			delete props.marqueeCentered;
 			delete props.marqueeDelay;
 			delete props.marqueeDisabled;
