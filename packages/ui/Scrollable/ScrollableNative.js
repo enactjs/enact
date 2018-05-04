@@ -347,9 +347,6 @@ class ScrollableBaseNative extends Component {
 	}
 
 	componentDidMount () {
-		const bounds = this.getScrollBounds();
-
-		this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 		this.addEventListeners();
 		this.updateScrollbars();
 
@@ -444,7 +441,6 @@ class ScrollableBaseNative extends Component {
 	deferScrollTo = true
 	isScrollAnimationTargetAccumulated = false
 	isUpdatedScrollThumb = false
-	pageDistance = 0
 
 	// bounds info
 	bounds = {
@@ -653,7 +649,7 @@ class ScrollableBaseNative extends Component {
 		const
 			bounds = this.getScrollBounds(),
 			canScrollVertically = this.canScrollVertically(bounds),
-			pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance;
+			pageDistance = (isPageUp(keyCode) ? -1 : 1) * (canScrollVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
 		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 	}
