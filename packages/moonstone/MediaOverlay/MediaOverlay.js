@@ -133,7 +133,7 @@ class MediaOverlayBase extends React.Component {
 				<Media
 					autoPlay
 					className={css.media}
-					component={mediaComponent}
+					mediaComponent={mediaComponent}
 					controls={false}
 					muted
 					source={source}

@@ -3,7 +3,9 @@
  * handler.
  *
  * @module ui/Media
- * @private
+ * @exports	getKeyFromSource
+ * @exports	handledMediaEventsMap
+ * @exports	Media
  */
 
 import React from 'react';
@@ -11,6 +13,27 @@ import PropTypes from 'prop-types';
 import {forward} from '@enact/core/handle';
 import {on, off} from '@enact/core/dispatcher';
 
+/**
+ * Generates a key representing the source node or nodes provided
+ *
+ * ```
+ * getKeyFromSource('path/file.mp4'); // 'path/file.mp4'
+ * getKeyFromSource(
+ * 	<source src="path/file.mp4" type="video/mp4" />
+ * ); // 'path/file.mp4'
+ * getKeyFromSource([
+ * 	<source src="path/file.mp4" type="video/mp4" />,
+ * 	<source src="path/file.ogg" type="video/ogg" />,
+ * ]); // 'path/file.mp4+path/file.ogg'
+ * ```
+ *
+ * @param   {String|Element|Element[]} source URI for a source, `<source>` node, or array of
+ *                                     `<source>` nodes
+ * @returns {String}                   Key representing sources
+ * @function
+ * @memberof ui/Media
+ * @public
+ */
 const getKeyFromSource = (source = '') => {
 	if (React.isValidElement(source)) {
 		return React.Children.toArray(source)
@@ -23,7 +46,37 @@ const getKeyFromSource = (source = '') => {
 };
 
 /**
- * Event forwarding map for all of the supported media events. See https://reactjs.org/docs/events.html#media-events
+ * Maps standard media event `type` values to React-style callback prop names
+ *
+ * See https://reactjs.org/docs/events.html#media-events
+ *
+ * ```
+ * {
+ *   abort           : 'onAbort',
+ *   canplay         : 'onCanPlay',
+ *   canplaythrough  : 'onCanPlayThrough',
+ *   durationchange  : 'onDurationChange',
+ *   emptied         : 'onEmptied',
+ *   encrypted       : 'onEncrypted',
+ *   ended           : 'onEnded',
+ *   error           : 'onError',
+ *   loadeddata      : 'onLoadedData',
+ *   loadedmetadata  : 'onLoadedMetadata',
+ *   loadstart       : 'onLoadStart',
+ *   pause           : 'onPause',
+ *   play            : 'onPlay',
+ *   playing         : 'onPlaying',
+ *   progress        : 'onProgress',
+ *   ratechange      : 'onRateChange',
+ *   seeked          : 'onSeeked',
+ *   seeking         : 'onSeeking',
+ *   stalled         : 'onStalled',
+ *   suspend         : 'onSuspend',
+ *   timeupdate      : 'onTimeUpdate',
+ *   volumechange    : 'onVolumeChange',
+ *   waiting         : 'onWaiting'
+ * }
+ * ```
  *
  * @typedef {Object} handledMediaEventsMap
  * @memberof ui/Media
@@ -56,12 +109,12 @@ const handledMediaEventsMap = {
 };
 
 /**
- * {@link ui/Media.Media} is a class representation of HTMLMediaElement.
+ * {@link ui/Media.Media} is a component representation of HTMLMediaElement.
  *
  * @class Media
  * @memberof ui/Media
  * @ui
- * @private
+ * @public
  */
 class Media extends React.Component {
 	static propTypes = /** @lends ui/Media.Media.prototype */ {
@@ -202,67 +255,54 @@ class Media extends React.Component {
 	}
 
 	play () {
-		if (!this.media) return;
 		this.media.play();
 	}
 
 	pause () {
-		if (!this.media) return;
 		this.media.pause();
 	}
 
 	load () {
-		if (!this.media) return;
 		this.media.load();
 	}
 
 	get currentTime ()  {
-		if (!this.media) return;
 		return this.media.currentTime;
 	}
 
 	set currentTime (currentTime) {
-		if (!this.media) return;
 		this.media.currentTime = currentTime;
 	}
 
 	get duration () {
-		if (!this.media) return;
 		return this.media.duration;
 	}
 
 	get error () {
-		if (!this.media) return;
 		return this.media.networkState === this.media.NETWORK_NO_SOURCE;
 	}
 
 	get loading () {
-		if (!this.media) return;
 		return this.media.readyState < this.media.HAVE_ENOUGH_DATA;
 	}
 
 	get paused () {
-		if (!this.media) return;
 		return this.media.paused;
 	}
 
 	get playbackRate () {
-		if (!this.media) return;
 		return this.media.playbackRate;
 	}
 
 	set playbackRate (playbackRate) {
-		if (!this.media) return;
 		this.media.playbackRate = playbackRate;
 	}
 
 	get proportionLoaded () {
-		if (!this.media) return;
 		return this.media.buffered.length && this.media.buffered.end(this.media.buffered.length - 1) / this.media.duration;
 	}
 
 	get proportionPlayed () {
-		if (!this.media) return;
 		return this.media.currentTime / this.media.duration;
 	}
 

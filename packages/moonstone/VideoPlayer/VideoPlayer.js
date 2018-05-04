@@ -595,15 +595,10 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
-		// consider a shallow props compare instead of source comparison to support possible changes
-		// from mediaComponent. might not be necessary since a source change there will fire
-		// onLoadStart causing a state change here.
-
-		if (!shallowEqual(this.props, nextProps)) {
-			return true;
-		}
-
 		if (
+			// Use shallow props compare instead of source comparison to support possible changes
+			// from mediaComponent.
+			shallowEqual(this.props, nextProps) &&
 			!this.state.miniFeedbackVisible && this.state.miniFeedbackVisible === nextState.miniFeedbackVisible &&
 			!this.state.mediaSliderVisible && this.state.mediaSliderVisible === nextState.mediaSliderVisible &&
 			this.state.loading === nextState.loading && this.props.loading === nextProps.loading &&
