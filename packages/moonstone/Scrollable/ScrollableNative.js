@@ -166,7 +166,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	componentDidUpdate () {
-		if (this.uiRef.scrollToInfo === null) {
+		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null) {
 			this.updateScrollOnFocus();
 		}
 	}
@@ -377,7 +377,7 @@ class ScrollableBaseNative extends Component {
 			{childRef, scrollToAccumulatedTarget} = this.uiRef,
 			bounds = this.uiRef.getScrollBounds(),
 			canScrollVertically = this.uiRef.canScrollVertically(bounds),
-			pageDistance = isPageUp(keyCode) ? (this.uiRef.pageDistance * -1) : this.uiRef.pageDistance,
+			pageDistance = (isPageUp(keyCode) ? -1 : 1) * (canScrollVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
 			spotItem = Spotlight.getCurrent();
 
 		if (!Spotlight.getPointerMode() && spotItem) {
@@ -449,16 +449,15 @@ class ScrollableBaseNative extends Component {
 	onScrollbarButtonClick = ({isPreviousScrollButton, isVerticalScrollBar}) => {
 		const
 			bounds = this.uiRef.getScrollBounds(),
-			pageDistance = (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
-			delta = isPreviousScrollButton ? -pageDistance : pageDistance,
-			direction = Math.sign(delta);
+			direction = isPreviousScrollButton ? -1 : 1,
+			pageDistance = direction * (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
 		if (direction !== this.uiRef.wheelDirection) {
 			this.uiRef.isScrollAnimationTargetAccumulated = false;
 			this.uiRef.wheelDirection = direction;
 		}
 
-		this.uiRef.scrollToAccumulatedTarget(delta, isVerticalScrollBar);
+		this.uiRef.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar);
 	}
 
 	scrollStopOnScroll = () => {
