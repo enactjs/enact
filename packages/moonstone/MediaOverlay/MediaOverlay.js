@@ -20,7 +20,6 @@ import React from 'react';
 import Image from '../Image';
 import {MarqueeController, Marquee} from '../Marquee';
 import Skinnable from '../Skinnable';
-import {compareSources} from '../VideoPlayer/util';
 
 import componentCss from './MediaOverlay.less';
 
@@ -125,25 +124,6 @@ class MediaOverlayBase extends React.Component {
 		textAlign: 'center'
 	}
 
-	constructor (props) {
-		super(props);
-
-		this.media = null;
-	}
-
-	componentDidUpdate (prevProps) {
-		const {source} = this.props;
-		const {source: prevSource} = prevProps;
-
-		if (!compareSources(source, prevSource)) {
-			this.media.load();
-		}
-	}
-
-	setMediaRef = (media) => {
-		this.media = media;
-	}
-
 	render () {
 		const props = renderStyles(Object.assign({}, this.props));
 		const {css, imageOverlay, mediaComponent, placeholder, source, text, textAlign, ...rest} = props;
@@ -156,10 +136,8 @@ class MediaOverlayBase extends React.Component {
 					component={mediaComponent}
 					controls={false}
 					muted
-					ref={this.setMediaRef}
-				>
-					{source}
-				</Media>
+					source={source}
+				/>
 				{imageOverlay ? (
 					<Image
 						className={css.image}

@@ -75,32 +75,6 @@ const calcNumberValueOfPlaybackRate = (rate) => {
 };
 
 /**
- * Compares two source(s) of a video, mainly `src` and `type`.
- *
- * @param {Object|Array} source Source node(s)
- * @param {Object|Array} nextSource Source node(s)
- * @return {Boolean} true if two sources are the same
- * @private
- */
-const compareSources = (source, nextSource) => {
-	if (!source && !nextSource) {
-		return true;
-	} if (source && !nextSource || !source && nextSource) {
-		return false;
-	} else if (Array.isArray(source) !== Array.isArray(nextSource)) {
-		return false;
-	} else if (Array.isArray(source) && Array.isArray(nextSource)) {
-		return source.every((src, i) => {
-			return src.props.src === nextSource[i].props.src && src.props.type === nextSource[i].props.type;
-		});
-	} else if (nextSource.props.src === source.props.src && nextSource.props.type === source.props.type) {
-		return true;
-	} else {
-		return false;
-	}
-};
-
-/**
  * Safely count the children nodes and exclude null & undefined values for an accurate count of
  * real children
  *
@@ -112,7 +86,6 @@ const countReactChildren = (children) => React.Children.toArray(children).filter
 
 export {
 	calcNumberValueOfPlaybackRate,
-	compareSources,
 	countReactChildren,
 	parseTime,
 	secondsToPeriod,
