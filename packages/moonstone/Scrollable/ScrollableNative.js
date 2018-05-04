@@ -374,7 +374,7 @@ class ScrollableBaseNative extends Component {
 		if (!this.uiRef.state.isVerticalScrollbarVisible) return;
 
 		const
-			{childRef, scrollToAccumulatedTarget} = this.uiRef,
+			{childRef, containerRef, scrollToAccumulatedTarget} = this.uiRef,
 			bounds = this.uiRef.getScrollBounds(),
 			canScrollVertically = this.uiRef.canScrollVertically(bounds),
 			pageDistance = (isPageUp(keyCode) ? -1 : 1) * (canScrollVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
@@ -386,12 +386,7 @@ class ScrollableBaseNative extends Component {
 				return;
 			}
 			const
-				spotlightId = (
-					// ScrollerNative has a spotlightId on containerRef
-					childRef.containerRef.dataset.spotlightId ||
-					// VirtualListNative has a spotlightId on contentRef
-					childRef.contentRef.dataset.spotlightId
-				),
+				spotlightId = containerRef.dataset.spotlightId,
 				direction = this.getPageDirection(keyCode),
 				rDirection = reverseDirections[direction],
 				viewportBounds = this.uiRef.containerRef.getBoundingClientRect(),
