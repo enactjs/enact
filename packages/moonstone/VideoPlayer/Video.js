@@ -117,12 +117,18 @@ class VideoBase extends React.Component {
 		const prevPreloadKey = getKeyFromSource(prevPreloadSource);
 
 		// if there's source and it has changed and it's not the prior preloaded source
-		if (source && key !== prevKey && key !== prevPreloadKey) {
-			// flag it as unloaded
-			this.loaded.video = false;
+		if (source && key !== prevKey) {
+			// if it wasn't the preload key
+			if (key !== prevPreloadKey) {
+				// flag it as unloaded
+				this.loaded.video = false;
+			} else {
+				// if the preload video is switched to the current, try to play it now because it
+				// won't fire an onLoadStart events since it has already loaded.
+				this.autoPlay();
+			}
 		}
 
-		// if there's a preload and it has changed and
 		if (preloadSource && preloadKey !== prevPreloadKey) {
 			// flag it as unloaded (if its not the same as source) and load it
 			this.loaded.preload = preloadKey === key;
@@ -138,12 +144,6 @@ class VideoBase extends React.Component {
 		if (this.props.setMedia !== prevProps.setMedia) {
 			this.clearMedia(prevProps);
 			this.setMedia();
-		}
-
-		// if the preload video is switched to the current, try to play it now because it won't fire
-		// an onLoadStart events since it has already loaded.
-		if (source && prevPreloadKey === key) {
-			this.autoPlay();
 		}
 	}
 
