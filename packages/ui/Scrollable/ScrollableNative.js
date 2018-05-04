@@ -55,6 +55,7 @@ class ScrollableBaseNative extends Component {
 		 * Render function.
 		 *
 		 * @type {Function}
+		 * @required
 		 * @private
 		 */
 		containerRenderer: PropTypes.func.isRequired,
@@ -346,9 +347,6 @@ class ScrollableBaseNative extends Component {
 	}
 
 	componentDidMount () {
-		const bounds = this.getScrollBounds();
-
-		this.pageDistance = (this.canScrollVertically(bounds) ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 		this.addEventListeners();
 		this.updateScrollbars();
 
@@ -443,7 +441,6 @@ class ScrollableBaseNative extends Component {
 	deferScrollTo = true
 	isScrollAnimationTargetAccumulated = false
 	isUpdatedScrollThumb = false
-	pageDistance = 0
 
 	// bounds info
 	bounds = {
@@ -652,7 +649,7 @@ class ScrollableBaseNative extends Component {
 		const
 			bounds = this.getScrollBounds(),
 			canScrollVertically = this.canScrollVertically(bounds),
-			pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance;
+			pageDistance = (isPageUp(keyCode) ? -1 : 1) * (canScrollVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
 		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 	}
@@ -855,12 +852,10 @@ class ScrollableBaseNative extends Component {
 
 	scrollTo = (opt) => {
 		if (!this.deferScrollTo) {
-			const
-				{left, top} = this.getPositionForScrollTo(opt),
-				{scrollTo} = this.props;
+			const {left, top} = this.getPositionForScrollTo(opt);
 
-			if (scrollTo) {
-				scrollTo(opt);
+			if (this.props.scrollTo) {
+				this.props.scrollTo(opt);
 			}
 			this.scrollToInfo = null;
 			this.start(
@@ -1071,7 +1066,7 @@ class ScrollableBaseNative extends Component {
 		delete rest.verticalScrollbar;
 
 		return containerRenderer({
-			childComponentProps: {...rest, rtl},
+			childComponentProps: rest,
 			className: scrollableClasses,
 			componentCss: css,
 			horizontalScrollbarProps: this.horizontalScrollbarProps,
@@ -1079,6 +1074,7 @@ class ScrollableBaseNative extends Component {
 			initChildRef: this.initChildRef,
 			isHorizontalScrollbarVisible,
 			isVerticalScrollbarVisible,
+			rtl,
 			scrollTo: this.scrollTo,
 			style,
 			touchableProps: {
@@ -1131,6 +1127,7 @@ class ScrollableNative extends Component {
 					initChildRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
+					rtl,
 					scrollTo,
 					style,
 					touchableProps,
@@ -1147,7 +1144,8 @@ class ScrollableNative extends Component {
 									...childComponentProps,
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
-									initChildRef
+									initChildRef,
+									rtl
 								})}
 							</TouchableDiv>
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}

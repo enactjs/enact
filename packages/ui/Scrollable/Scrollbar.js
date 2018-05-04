@@ -41,6 +41,7 @@ class ScrollbarBase extends PureComponent {
 		 * The render function for child.
 		 *
 		 * @type {Function}
+		 * @required
 		 * @private
 		 */
 		childRenderer: PropTypes.func.isRequired,

@@ -32,7 +32,7 @@ components encourage a consistent ordering of keys for top-down readability:
 > The `name` component accepts these `propTypes`, which have the following default values,
 > `defaultProps`. It is formatted according to the CSS modules map and `className` in `styles`. That
 > data is used to produce several `computed` properties which ultimately are provided to `render` to
-> create the final component heirarchy.
+> create the final component hierarchy.
 
 For the following sample, the `'Badge'` component accepts the `children` and `greeting` properties, with
 `greeting` having a default of `'Hello, my name is ...'`. It applies the `'badge'` `className` (combined
@@ -170,12 +170,12 @@ configuration. Unlike `hoc()`, `factory()` only supports a known set of configur
 than an arbitrary set. Currently, the only supported key is `css`, which allows authors to provide
 a custom CSS class name map which is merged with the component's CSS class name map. This feature
 allows for overriding the style of particular children within the component's internal
-heirarchy.
+hierarchy.
 
 A few important notes about this feature:
 
 * This is a recent addition to Enact and has not been widely adopted by framework components yet
-* In order to promote UX consistency, not every class will be customizeable
+* In order to promote UX consistency, not every class will be customizable
 * We do not yet have a means to document which classes may be customized
 
 However, we do think this is an important feature for the framework and we will continue to roll it out

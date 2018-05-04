@@ -101,6 +101,7 @@ const IconButtonBase = kind({
 	render: ({children, css, tooltipNode, ...rest}) => {
 		return (
 			<UiIconButtonBase
+				data-webos-voice-intent="Select"
 				{...rest}
 				buttonComponent={ButtonBase}
 				css={css}

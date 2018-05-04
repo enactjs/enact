@@ -66,7 +66,7 @@ const ToggleItemBase = kind({
 		 * @required
 		 * @public
 		 */
-		component:  PropTypes.func.isRequired,
+		component: PropTypes.func.isRequired,
 
 		/**
 		 * The Icon to render in this item. This component receives the `selected` prop and value,

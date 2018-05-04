@@ -2,6 +2,20 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
+## [2.0.0-beta.1] - 2018-04-29
+
+### Added
+
+- `webos/speech` module with `readAlert()` function and `VoiceControlDecorator` Higher-order Component
+
+### Removed
+
+- `webos/VoiceReadout` module and replaced with `webos/speech.readAlert()`
+
+## [2.0.0-alpha.8] - 2018-04-17
+
+No significant changes.
+
 ## [2.0.0-alpha.7 - 2018-04-03]
 
 ### Added

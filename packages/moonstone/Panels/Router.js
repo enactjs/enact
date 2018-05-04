@@ -48,6 +48,7 @@ const Router = class extends React.Component {
 		 * of strings (`['app', 'home', 'settings']`)
 		 *
 		 * @type {String|String[]}
+		 * @required
 		 * @public
 		 */
 		path: propTypes.path.isRequired,
@@ -196,6 +197,7 @@ Route.propTypes = {
 	 * {@link moonstone/Panels.Routable} container.
 	 *
 	 * @type {String|Function}
+	 * @required
 	 * @public
 	 * @memberof moonstone/Panels.Route.prototype
 	 */
@@ -208,6 +210,7 @@ Route.propTypes = {
 	 * The name of the path segment
 	 *
 	 * @type {String}
+	 * @required
 	 * @public
 	 * @memberof moonstone/Panels.Route.prototype
 	 */

@@ -23,6 +23,7 @@ const InputDecoratorIconBase = kind({
 		 * The position of the icon. Either `before` or `after`.
 		 *
 		 * @type {String}
+		 * @required
 		 */
 		position: PropTypes.oneOf(['before', 'after']).isRequired,
 

@@ -26,6 +26,7 @@ class Subscriber extends React.Component {
 		* Name of `Broadcast` channel to listen for value changes on.
 		*
 		* @type {String}
+		* @required
 		* @private
 		*/
 		channel: PropTypes.string.isRequired,

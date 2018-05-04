@@ -6,7 +6,7 @@
  * @module ui/Touchable
  */
 
-import {forward, forwardWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
+import {call, forward, forwardWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
@@ -58,11 +58,109 @@ const makeTouchableEvent = (type, fn) => (ev, ...args) => {
 	return fn(payload, ...args);
 };
 
-// Cache handlers since they are consistent across instances
-const forwardDown = makeTouchableEvent('down', forwardWithPrevent('onDown'));
-const forwardUp = makeTouchableEvent('up', forwardWithPrevent('onUp'));
-const forwardTap = makeTouchableEvent('tap', forward('onTap'));
-const forwardMove = makeTouchableEvent('move', forward('onMove'));
+const isEnabled = forProp('disabled', false);
+
+const handleDown = handle(
+	isEnabled,
+	makeTouchableEvent('down', forwardWithPrevent('onDown')),
+	call('activate'),
+	call('startGesture')
+);
+
+const handleUp = handle(
+	isEnabled,
+	call('endGesture'),
+	call('isTracking'),
+	makeTouchableEvent('up', forwardWithPrevent('onUp')),
+	makeTouchableEvent('tap', forward('onTap'))
+).finally(call('deactivate'));
+
+const handleEnter = handle(
+	isEnabled,
+	forProp('noResume', false),
+	call('enterGesture'),
+	call('isPaused'),
+	call('activate')
+);
+
+const handleLeave = handle(
+	isEnabled,
+	call('leaveGesture'),
+	oneOf(
+		[forProp('noResume', false), call('pause')],
+		[returnsTrue, call('deactivate')]
+	)
+);
+
+// Mouse event handlers
+
+const handleMouseDown = handle(
+	isNotBlocked,
+	forward('onMouseDown'),
+	handleDown
+).finally(unblock);
+
+const handleMouseEnter = handle(
+	forward('onMouseEnter'),
+	handleEnter
+);
+
+const handleMouseMove = handle(
+	forward('onMouseMove'),
+	call('moveGesture')
+);
+
+const handleMouseLeave = handle(
+	forward('onMouseLeave'),
+	handleLeave
+);
+
+const handleMouseUp = handle(
+	forward('onMouseUp'),
+	handleUp
+);
+
+// Touch event handlers
+
+const handleTouchStart = handle(
+	forward('onTouchStart'),
+	// block the next mousedown to prevent duplicate onDown events
+	block,
+	handleDown
+);
+
+const handleTouchMove = handle(
+	forward('onTouchMove'),
+	call('isTracking'),
+	// we don't receive enter/leave events during a touch so we have to simulate them by
+	// detecting when the touch leaves the boundary. oneOf returns the value of whichever
+	// branch it follows so we append moveHold to either to handle moves that aren't
+	// entering or leaving
+	makeTouchableEvent('move', forward('onMove')),
+	oneOf(
+		[call('hasTouchLeftTarget'), handleLeave],
+		[returnsTrue, handleEnter]
+	).finally(call('moveGesture'))
+);
+
+const handleTouchEnd = handle(
+	forward('onTouchEnd'),
+	call('isTracking'),
+	complement(call('hasTouchLeftTarget')),
+	handleUp
+);
+
+// Global touchend/mouseup event handler to deactivate the component
+const handleGlobalUp = handle(
+	call('isTracking'),
+	call('deactivate')
+).finally(call('endGesture'));
+
+const handleGlobalMove = handle(
+	call('isTracking'),
+	call('containsCurrentTarget'),
+	call('moveGesture')
+);
 
 /**
  * Default config for {@link ui/Touchable.Touchable}.
@@ -272,6 +370,28 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				flick: props.flickConfig,
 				hold: props.holdConfig
 			});
+
+			this.target = null;
+			this.handle = handle.bind(this);
+			this.drag = new Drag();
+			this.flick = new Flick();
+			this.hold = new Hold();
+			this.blurJob = new Job(target => {
+				if (target.blur) {
+					target.blur();
+				}
+			}, 400);
+
+			this.handleMouseDown = handleMouseDown.bind(this);
+			this.handleMouseEnter = handleMouseEnter.bind(this);
+			this.handleMouseMove = handleMouseMove.bind(this);
+			this.handleMouseLeave = handleMouseLeave.bind(this);
+			this.handleMouseUp = handleMouseUp.bind(this);
+			this.handleTouchStart = handleTouchStart.bind(this);
+			this.handleTouchMove = handleTouchMove.bind(this);
+			this.handleTouchEnd = handleTouchEnd.bind(this);
+			this.handleGlobalUp = handleGlobalUp.bind(this);
+			this.handleGlobalMove = handleGlobalMove.bind(this);
 		}
 
 		componentDidMount () {
@@ -308,15 +428,9 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			off('mousemove', this.handleGlobalMove, document);
 		}
 
-		target = null
-		handle = handle.bind(this)
-		drag = new Drag()
-		flick = new Flick()
-		hold = new Hold()
-
 		// State Management
 
-		setTarget = (target) => {
+		setTarget (target) {
 			this.target = target;
 
 			if (platform.touch) {
@@ -325,7 +439,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		clearTarget = () => {
+		clearTarget () {
 			if (platform.touch) {
 				off('contextmenu', preventDefault);
 				this.targetBounds = null;
@@ -334,13 +448,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.target = null;
 		}
 
-		blurJob = new Job(target => {
-			if (target.blur) {
-				target.blur();
-			}
-		}, 400);
-
-		activate = (ev) => {
+		activate (ev) {
 			this.setTarget(ev.currentTarget);
 			if (activeProp) {
 				this.setState(activate);
@@ -353,7 +461,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		deactivate = (ev) => {
+		deactivate (ev) {
 			if (ev && 'changedTouches' in ev) {
 				this.blurJob.start(this.target);
 			}
@@ -366,7 +474,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		pause = () => {
+		pause () {
 			if (activeProp) {
 				this.setState(pause);
 			}
@@ -376,7 +484,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		// Gesture Support
 
-		startGesture = (ev, props) => {
+		startGesture (ev, props) {
 			const coords = getEventCoordinates(ev);
 			let {hold, flick, drag} = this.config;
 
@@ -387,7 +495,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		moveGesture = (ev) => {
+		moveGesture (ev) {
 			const coords = getEventCoordinates(ev);
 
 			this.hold.move(coords);
@@ -397,21 +505,21 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		enterGesture = () => {
+		enterGesture () {
 			this.drag.enter();
 			this.hold.enter();
 
 			return true;
 		}
 
-		leaveGesture = () => {
+		leaveGesture () {
 			this.drag.leave();
 			this.hold.leave();
 
 			return true;
 		}
 
-		endGesture = () => {
+		endGesture () {
 			this.hold.end();
 			this.flick.end();
 			this.drag.end();
@@ -421,124 +529,28 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		// Event handler utilities
 
-		isTracking = () => {
+		isTracking () {
 			// verify we had a target and the up target is still within the current node
 			return this.target;
 		}
 
-		isPaused = () => {
+		isPaused () {
 			return this.state.active === States.Paused;
 		}
 
-		hasTouchLeftTarget = (ev) => Array.from(ev.changedTouches).reduce((hasLeft, {pageX, pageY}) => {
-			const {left, right, top, bottom} = this.targetBounds;
-			return hasLeft && left > pageX || right < pageX || top > pageY || bottom < pageY;
-		}, true);
+		hasTouchLeftTarget (ev) {
+			return Array.from(ev.changedTouches).reduce((hasLeft, {pageX, pageY}) => {
+				const {left, right, top, bottom} = this.targetBounds;
+				return hasLeft && left > pageX || right < pageX || top > pageY || bottom < pageY;
+			}, true);
+		}
+
+		containsCurrentTarget ({target}) {
+			return !this.target.contains(target);
+		}
 
 		// Normalized handlers - Mouse and Touch events are mapped to these to trigger cross-type
 		// events and initiate gestures
-
-		handleDown = this.handle(
-			forProp('disabled', false),
-			forwardDown,
-			this.activate,
-			this.startGesture
-		)
-
-		handleUp = this.handle(
-			forProp('disabled', false),
-			this.endGesture,
-			this.isTracking,
-			forwardUp,
-			forwardTap
-		).finally(this.deactivate)
-
-		handleEnter = this.handle(
-			forProp('disabled', false),
-			forProp('noResume', false),
-			this.enterGesture,
-			this.isPaused,
-			this.activate
-		)
-
-		handleLeave = this.handle(
-			forProp('disabled', false),
-			this.leaveGesture,
-			oneOf(
-				[forProp('noResume', false), this.pause],
-				[returnsTrue, this.deactivate]
-			)
-		)
-
-		// Mouse event handlers
-
-		handleMouseDown = this.handle(
-			isNotBlocked,
-			forward('onMouseDown'),
-			this.handleDown
-		).finally(unblock)
-
-		handleMouseEnter = this.handle(
-			forward('onMouseEnter'),
-			this.handleEnter
-		)
-
-		handleMouseMove = this.handle(
-			forward('onMouseMove'),
-			this.moveGesture
-		)
-
-		handleMouseLeave = this.handle(
-			forward('onMouseLeave'),
-			this.handleLeave
-		)
-
-		handleMouseUp = this.handle(
-			forward('onMouseUp'),
-			this.handleUp
-		)
-
-		// Touch event handlers
-
-		handleTouchStart = this.handle(
-			forward('onTouchStart'),
-			// block the next mousedown to prevent duplicate onDown events
-			block,
-			this.handleDown
-		)
-
-		handleTouchMove = this.handle(
-			forward('onTouchMove'),
-			this.isTracking,
-			// we don't receive enter/leave events during a touch so we have to simulate them by
-			// detecting when the touch leaves the boundary. oneOf returns the value of whichever
-			// branch it follows so we append moveHold to either to handle moves that aren't
-			// entering or leaving
-			forwardMove,
-			oneOf(
-				[this.hasTouchLeftTarget, this.handleLeave],
-				[returnsTrue, this.handleEnter]
-			).finally(this.moveGesture)
-		)
-
-		handleTouchEnd = this.handle(
-			forward('onTouchEnd'),
-			this.isTracking,
-			complement(this.hasTouchLeftTarget),
-			this.handleUp
-		)
-
-		// Global touchend/mouseup event handler to deactivate the component
-		handleGlobalUp = this.handle(
-			this.isTracking,
-			this.deactivate
-		).finally(this.endGesture)
-
-		handleGlobalMove = this.handle(
-			this.isTracking,
-			({target}) => !this.target.contains(target),
-			this.moveGesture
-		)
 
 		addHandlers (props) {
 			props.onMouseDown = this.handleMouseDown;

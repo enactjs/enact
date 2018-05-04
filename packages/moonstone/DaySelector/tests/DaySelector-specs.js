@@ -55,11 +55,11 @@ describe('DaySelector', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should use the long string format when longDayLabels is true', function () {
+	it('should use the full string format when dayNameLength is `full`', function () {
 		const handleSelect = sinon.spy();
 		const content = 'Saturday';
 		const subject = mount(
-			<DaySelector longDayLabels onSelect={handleSelect} />
+			<DaySelector dayNameLength="full" onSelect={handleSelect} />
 		);
 
 		const item = subject.find('DaySelectorItem').last();

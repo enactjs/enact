@@ -37,6 +37,7 @@ const BreadcrumbBase = kind({
 		 * Index of the panel for which this is the breadcrumb
 		 *
 		 * @type {Number}
+		 * @required
 		 */
 		index: PropTypes.number.isRequired,
 

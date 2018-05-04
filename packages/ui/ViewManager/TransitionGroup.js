@@ -214,9 +214,8 @@ class TransitionGroup extends React.Component {
 		this.state = {
 			children: mapChildren(this.props.children)
 		};
-	}
 
-	componentWillMount () {
+		this.hasMounted = false;
 		this.currentlyTransitioningKeys = {};
 		this.keysToEnter = [];
 		this.keysToLeave = [];
@@ -224,6 +223,8 @@ class TransitionGroup extends React.Component {
 	}
 
 	componentDidMount () {
+		this.hasMounted = true;
+
 		// this isn't used by ViewManager or View at the moment but leaving it around for future
 		// flexibility
 		this.state.children.forEach(child => this.performAppear(child.key));
@@ -436,7 +437,7 @@ class TransitionGroup extends React.Component {
 
 			return React.cloneElement(
 				this.props.childFactory(child),
-				{key: child.key, ref: child.key, leaving: isLeaving}
+				{key: child.key, ref: child.key, leaving: isLeaving, appearing: !this.hasMounted}
 			);
 		});
 

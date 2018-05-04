@@ -1,6 +1,6 @@
 {
   "name": "@enact/webos",
-  "version": "2.0.0-alpha.7",
+  "version": "2.0.0-beta.1",
   "description": "webOS support library",
   "main": "index.js",
   "scripts": {
@@ -24,5 +24,11 @@
   },
   "eslintConfig": {
     "extends": "enact/strict"
+  },
+  "dependencies": {
+    "@enact/core": "^2.0.0-beta.1",
+    "prop-types": "^15.6.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
   }
 }

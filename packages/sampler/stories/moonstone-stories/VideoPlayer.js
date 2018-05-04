@@ -1,5 +1,5 @@
 import icons from './icons';
-import VideoPlayer, {VideoPlayerBase} from '@enact/moonstone/VideoPlayer';
+import VideoPlayer, {VideoPlayerBase, MediaControls} from '@enact/moonstone/VideoPlayer';
 import IconButton from '@enact/moonstone/IconButton';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
@@ -41,7 +41,6 @@ const prop = {
 	],
 	events: [
 		'onAbort',
-		'onBackwardButtonClick',
 		'onCanPlay',
 		'onCanPlayThrough',
 		'onControlsAvailable',
@@ -50,25 +49,24 @@ const prop = {
 		'onEncrypted',
 		'onEnded',
 		'onError',
-		'onForwardButtonClick',
-		'onJumpBackwardButtonClick',
-		'onJumpForwardButtonClick',
+		'onFastForward',
+		'onJumpBackward',
+		'onJumpForward',
 		'onLoadedData',
 		'onLoadedMetadata',
 		'onLoadStart',
 		'onPause',
 		'onPlay',
-		'onPlayButtonClick',
 		'onPlaying',
 		'onProgress',
 		'onRateChange',
+		'onRewind',
 		'onSeeked',
 		'onSeekFailed',
 		'onSeeking',
 		'onStalled',
 		'onSuspend',
 		// 'onTimeUpdate',	// Disabled due to Storybook Actions-reporting having an adverse effect on VideoPlayer performance. Uncomment to view this event.
-		'onUMSMediaInfo',	// Custom webOS media event
 		'onVolumeChange',
 		'onWaiting'
 	]
@@ -129,48 +127,49 @@ storiesOf('Moonstone', module)
 					>VideoPlayer Edge</label>
 					<VideoPlayer
 						autoCloseTimeout={number('autoCloseTimeout', 7000)}
-						backwardIcon={select('backwardIcon', icons, 'backward')}
 						disabled={boolean('disabled', false)}
 						feedbackHideDelay={number('feedbackHideDelay', 3000)}
-						forwardIcon={select('forwardIcon', icons, 'forward')}
-						initialJumpDelay={number('initialJumpDelay', 400)}
-						jumpBackwardIcon={select('jumpBackwardIcon', icons, 'skipbackward')}
-						jumpForwardIcon={select('jumpForwardIcon', icons, 'skipforward')}
-						jumpButtonsDisabled={boolean('jumpButtonsDisabled', false)}
-						jumpDelay={number('jumpDelay', 200)}
-						rateButtonsDisabled={boolean('rateButtonsDisabled', false)}
 						loop={boolean('loop', true)}
 						miniFeedbackHideDelay={number('miniFeedbackHideDelay', 2000)}
-						moreButtonCloseLabel={text('moreButtonCloseLabel')}
-						moreButtonDisabled={boolean('moreButtonDisabled', false)}
-						moreButtonLabel={text('moreButtonLabel')}
 						muted={boolean('muted', true)}
-						no5WayJump={boolean('no5WayJump', false)}
 						noAutoPlay={boolean('noAutoPlay', false)}
-						noJumpButtons={boolean('noJumpButtons', false)}
 						noMiniFeedback={boolean('noMiniFeedback', false)}
-						noRateButtons={boolean('noRateButtons', false)}
 						noSlider={boolean('noSlider', false)}
 						pauseAtEnd={boolean('pauseAtEnd', false)}
-						pauseIcon={select('pauseIcon', icons, 'pause')}
-						playIcon={select('playIcon', icons, 'play')}
 						poster={poster}
 						seekDisabled={boolean('seekDisabled', false)}
 						spotlightDisabled={boolean('spotlightDisabled', false)}
 						thumbnailSrc={poster}
 						thumbnailUnavailable={boolean('thumbnailUnavailable', false)}
-						tooltipHideDelay={number('tooltipHideDelay', 3000)}
 						title={text('title', 'Moonstone VideoPlayer Sample Video')}
 						titleHideDelay={number('titleHideDelay', 4000)}
 						{...prop.eventActions}
 					>
 						<source src={videoSource} type="video/mp4" />
 						<infoComponents>A video about some things happening to and around some characters. Very exciting stuff.</infoComponents>
-						<leftComponents><IconButton backgroundOpacity="translucent">fullscreen</IconButton></leftComponents>
-						<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
-
-						<Button backgroundOpacity="translucent">Add To Favorites</Button>
-						<IconButton backgroundOpacity="translucent">star</IconButton>
+						<MediaControls
+							backwardIcon={select('backwardIcon', icons, 'backward')}
+							forwardIcon={select('forwardIcon', icons, 'forward')}
+							initialJumpDelay={number('initialJumpDelay', 400)}
+							jumpBackwardIcon={select('jumpBackwardIcon', icons, 'skipbackward')}
+							jumpButtonsDisabled={boolean('jumpButtonsDisabled', false)}
+							jumpDelay={number('jumpDelay', 200)}
+							jumpForwardIcon={select('jumpForwardIcon', icons, 'skipforward')}
+							moreButtonCloseLabel={text('moreButtonCloseLabel')}
+							moreButtonDisabled={boolean('moreButtonDisabled', false)}
+							moreButtonLabel={text('moreButtonLabel')}
+							no5WayJump={boolean('no5WayJump', false)}
+							noJumpButtons={boolean('noJumpButtons', false)}
+							noRateButtons={boolean('noRateButtons', false)}
+							pauseIcon={select('pauseIcon', icons, 'pause')}
+							playIcon={select('playIcon', icons, 'play')}
+							rateButtonsDisabled={boolean('rateButtonsDisabled', false)}
+						>
+							<leftComponents><IconButton backgroundOpacity="translucent">fullscreen</IconButton></leftComponents>
+							<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
+							<Button backgroundOpacity="translucent">Add To Favorites</Button>
+							<IconButton backgroundOpacity="translucent">star</IconButton>
+						</MediaControls>
 					</VideoPlayer>
 				</div>
 			);

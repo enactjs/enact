@@ -4,16 +4,48 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Fixed
+
+- `ui/Item` to use its natural width rather than imposing a 100% width allowing inline Items to be the correct width
+- `ui/MarqueeDecorator` to correctly reset animation when children updates
+
+## [2.0.0-beta.1] - 2018-04-29
+
+### Changed
+
+- `ui/Cancelable` callback `onCancel` to accept an event with a `stopPropagation` method to prevent upstream instances from handling the event instead of using the return value from the callback to prevent propagation. When a function is passed to `onCancel`, it will now receive an event and a props object instead of only the props object. When a string is passed to `onCancel`, it will now receive an event instead of no arguments. Also when a string is passed, the event will now propagate to upstream instances unless `stopPropagation` is called.
+- `ui/Transition` property `duration` to now also support a numeric value representing milliseconds or a string representing any valid CSS duration value
+
+### Fixed
+
+- `ui/Layout.Cell` to no longer overflow when both `size` and `shrink` are set together
+- `ui/Layout` to correctly support two `align` values, allowing horizontal and vertical in one property. Previously, the transverse alignment was ignored, only allowing perpendicular alignment.
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` showing blank when `direction` prop changed after scroll position changed
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to support RTL by dynamic language changes
+
+## [2.0.0-alpha.8] - 2018-04-17
+
+### Added
+
+- `ui/Slider` as an unstyled, base range selection component
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` `role="list"`
+- `ui/Placeholder.PlaceholderControllerDecorator` config property `thresholdFactor`
+
 ### Changed
 
 - `ui/Transition` property `children` to not be required
 - `ui/Transition` to fire `onShow` and `onHide` even when there are no `children`
 
-## [2.0.0-alpha.7 - 2018-04-03]
+### Fixed
+
+- `ui/VirtualList.VirtualList` to re-render items when forceUpdate() called
+- `ui/ViewManager` to not initially pass the wrong value for `enteringProp` when a view initiates a transition into the viewport
+
+## [2.0.0-alpha.7] - 2018-04-03
 
 ### Removed
 
-- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `data`
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `data` to eliminate the misunderstanding caused by the ambiguity of `data`
 
 ### Fixed
 
@@ -52,6 +84,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` components as unstyled base components to support UI libraries
 
+### Fixed
+
+- `ui/ViewManager` to suppress `enteringProp` for views that are rendered at mount
+
 ## [2.0.0-alpha.4] - 2018-02-13
 
 ### Added
@@ -64,10 +100,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/Repeater` and `ui/Group` to require a unique key for each object type data
 - `ui/Toggleable` to use `'selected'` as its default `prop`, rather than `'active'`, since `'selected'` is by far the most common use case
 - `ui/Touchable` to use global gesture configuration with instance override rather than component-level configuration via HOC configs with instance override
-
-### Fixed
-
-- `ui/ViewManager` to suppress `enteringProp` for views that are rendered at mount
 
 ## [2.0.0-alpha.3] - 2018-01-18
 

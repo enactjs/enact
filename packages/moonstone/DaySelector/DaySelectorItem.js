@@ -30,6 +30,7 @@ const DaySelectorItem = kind({
 		 * The string to be displayed as the main content of the checkbox item.
 		 *
 		 * @type {String}
+		 * @required
 		 * @public
 		 */
 		children: PropTypes.string.isRequired,

@@ -153,7 +153,7 @@ const ToggleButtonBase = kind({
 		delete rest.toggleOnLabel;
 
 		return (
-			<Button {...rest} aria-pressed={selected} selected={selected} />
+			<Button data-webos-voice-intent="SelectToggleItem" {...rest} aria-pressed={selected} selected={selected} />
 		);
 	}
 });

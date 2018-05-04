@@ -99,7 +99,7 @@ only want to test the output of the single object.  If you need to be able to te
 then you will need to use Mount rendering.  Once a component is rendered a number of methods are available to inspect the
 output.  These include:
 
-*   `find()` - Returns nodes that match the passed-in selector.  For custom components, usually you can use the name ofthe control
+*   `find()` - Returns nodes that match the passed-in selector.  For custom components, usually you can use the name of the control
 *   `contains()` - Returns true if a node or array of nodes exist in the render
 *   `hasClass()` - Returns true if the component has the specified className
 *   `children()` - Returns the children of the component, wrapped so that these methods can be applied. (Note: In shallow render, the children will not be complete)

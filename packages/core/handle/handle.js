@@ -63,17 +63,26 @@ import {is} from '../keymap';
 
 // Accepts an array of handlers, sanitizes them, and returns a handler function
 // compose(allPass, map(makeSafeHandler));
-const makeHandler = (handlers) => (...args) => {
-	for (let i = 0; i < handlers.length; i++) {
-		const fn = handlers[i];
-		if (typeof fn !== 'function' || fn(...args)) {
-			continue;
+const makeHandler = (handlers) => {
+	// allowing shadowing here to provide a meaningful function name in dev tools
+	// eslint-disable-next-line no-shadow
+	return function handle (...args) {
+		for (let i = 0; i < handlers.length; i++) {
+			const fn = handlers[i];
+			if (typeof fn !== 'function' || fn.apply(this, args)) {
+				continue;
+			}
+
+			return false;
 		}
 
-		return false;
-	}
+		return true;
+	};
+};
 
-	return true;
+// Loose check to determine if obj is component-ish if it has both props and context members
+const hasPropsAndContext = (obj) => {
+	return obj && obj.hasOwnProperty && obj.hasOwnProperty('props') && obj.hasOwnProperty('context');
 };
 
 /**
@@ -92,29 +101,47 @@ const makeHandler = (handlers) => (...args) => {
  */
 const handle = function (...handlers) {
 	const h = makeHandler(handlers);
-	h.displayName = 'handle';
 
-	const fn = (ev, props, context) => {
+	// In order to support binding either handle (handle.bind(this)) or a handler
+	// (a = handle(), a.bind(this)), we cache `this` here and use is as the fallback for props and
+	// context if fn() doesn't have its own `this`.
+	const _outer = this;
+
+	const fn = function (ev, props, context) {
+		let caller = null;
+
 		// if handle() was bound to a class, use its props and context. otherwise, we accept
 		// incoming props/context as would be provided by computed/handlers from kind()
-		if (this) {
+		if (hasPropsAndContext(this)) {
+			caller = this;
 			props = this.props;
 			context = this.context;
+		} else if (hasPropsAndContext(_outer)) {
+			caller = _outer;
+			props = _outer.props;
+			context = _outer.context;
 		}
 
-		return h(ev, props, context);
+		return h.call(caller, ev, props, context);
 	};
 
-	fn.finally = (cleanup) => (...args) => {
-		let result = false;
+	fn.finally = function (cleanup) {
+		return function (ev, props, context) {
+			let result = false;
 
-		try {
-			result = fn(...args);
-		} finally {
-			cleanup(...args);
-		}
+			if (hasPropsAndContext(this)) {
+				props = this.props;
+				context = this.context;
+			}
 
-		return result;
+			try {
+				result = fn.call(this, ev, props, context);
+			} finally {
+				cleanup.call(this, ev, props, context);
+			}
+
+			return result;
+		};
 	};
 
 	return fn;
@@ -169,7 +196,7 @@ const oneOf = handle.oneOf = function (...handlers) {
 const returnsTrue = handle.returnsTrue = function (handler) {
 	if (handler) {
 		return function (...args) {
-			handler(...args);
+			handler.apply(this, args);
 
 			return true;
 		};
@@ -421,7 +448,6 @@ const forProp = handle.forProp = curry((prop, value, ev, props) => {
 	return props[prop] === value;
 });
 
-
 /**
  * Logs the event, props, and context optionally preceded by a custom message. Will only log in
  * development mode.
@@ -451,8 +477,88 @@ const log = handle.log = curry((message, ev, ...args) => {
 	return true;
 });
 
+/**
+ * Invokes a method by name on the component to which {@link core/handle.handle} is bound.
+ *
+ * If the methods exists on the object, it is called with the event, props, and context and its
+ * return value is returned.
+ *
+ * If the method does not exist or handle isn't bound to an instance, it returns `false`.
+ *
+ * ```
+ * import {call, handle, forProp} from '@enact/core/handle';
+ *
+ * const incrementIfEnabled = handle(
+ *   forProp('disabled', false),
+ *   call('increment')
+ * );
+ *
+ * class Counter extends React.Component {
+ *   constructor () {
+ *     super();
+ *
+ *     this.handleIncrement = incrementIfEnabled.bind(this);
+ *   }
+ *
+ *   render () {
+ *     // ...
+ *   }
+ * }
+ * ```
+ *
+ * @method   call
+ * @memberof core/handle
+ * @param    {String}     method  Name of method
+ * @returns  {Boolean}            Returns the value returned by `method`, or `false` if the method
+ *                                does not exist
+ */
+const call = function (method) {
+	return function (...args) {
+		if (this && this[method]) {
+			return this[method](...args);
+		}
+
+		return false;
+	};
+};
+
+/**
+ * Adapts an event with `adapter` before calling `handler`.
+ *
+ * The `adapter` function receives the same arguments as any handler. The value returned from
+ * `adapter` is passed as the first argument to `handler` with the remaining arguments kept the
+ * same. This is often useful to generate a custom event payload before forwarding on to a callback.
+ *
+ * ```
+ * import {adaptEvent, forward} from '@enact/core/handle';
+ *
+ * // calls the onChange callback with an event payload containing a type and value member
+ * const incrementAndChange = adaptEvent(
+ * 	(ev, props) => ({
+ * 	  type: 'onChange',
+ * 	  value: props.value + 1
+ * 	}),
+ * 	forward('onChange')
+ * )
+ * ```
+ *
+ * @method   adaptEvent
+ * @memberof core/handle
+ * @param    {Function}  adapter  Function to adapt the event payload
+ * @param    {Function}  handler  Handler to call with the new event payload
+ * @param    {...*}      [args]   Additional args passed to both `adapter` and `handler`
+ * @returns  {Object}             New event payload
+ */
+const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
+	return function (ev, ...args) {
+		return handler.call(this, adapter.call(this, ev, ...args), ...args);
+	};
+});
+
 export default handle;
 export {
+	adaptEvent,
+	call,
 	callOnEvent,
 	forward,
 	forwardWithPrevent,

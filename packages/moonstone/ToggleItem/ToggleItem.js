@@ -78,7 +78,6 @@ const ToggleItemBase = kind({
 
 	styles: {
 		css: componentCss,
-		className: 'toggleItem',
 		publicClassNames: ['toggleItem']
 	},
 

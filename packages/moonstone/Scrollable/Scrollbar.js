@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
 
-import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator';
-
 import ScrollButtons from './ScrollButtons';
 import ScrollThumb from './ScrollThumb';
 
@@ -39,6 +37,15 @@ class ScrollbarBase extends Component {
 		 * @public
 		 */
 		corner: PropTypes.bool,
+
+		/**
+		 * `true` if rtl, `false` if ltr.
+		 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
 
 		/**
 		 * Registers the ScrollButtons component with an
@@ -140,14 +147,7 @@ const Scrollbar = ApiDecorator(
 		'showThumb',
 		'startHidingThumb',
 		'update'
-	]},
-	DisappearSpotlightDecorator(
-		{events: {
-			onNextSpotlightDisappear: '[data-scroll-button="previous"]',
-			onPrevSpotlightDisappear: '[data-scroll-button="next"]'
-		}},
-		ScrollbarBase
-	)
+	]}, ScrollbarBase
 );
 Scrollbar.displayName = 'Scrollbar';
 

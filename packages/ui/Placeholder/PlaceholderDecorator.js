@@ -58,7 +58,7 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {placeholderComponent: PlaceholderComponent, style} = config;
 	const placeholderStyle = Object.assign({}, defaultConfig.style, style);
 
-	return class extends React.Component {
+	return class extends React.PureComponent {
 		static displayName = 'PlaceholderDecorator'
 
 		static contextTypes = contextTypes
@@ -77,6 +77,13 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		componentDidUpdate (prevProps, prevState) {
+			if (this.state.visible && prevState.visible !== this.state.visible) {
+				this.context.invalidateBounds();
+				this.context.unregisterPlaceholder(this);
+			}
+		}
+
 		componentWillUnmount () {
 			if (!this.state.visible) {
 				this.context.unregisterPlaceholder(this);
@@ -87,9 +94,7 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {offsetLeft, offsetTop, offsetHeight, offsetWidth} = this.placeholderRef;
 
 			if (offsetTop < topThreshold + offsetHeight && offsetLeft < leftThreshold + offsetWidth) {
-				this.setState({visible: true});
-				this.context.invalidateBounds();
-				this.context.unregisterPlaceholder(this);
+				this.setState((state) => state.visible ? null : {visible: true});
 			}
 		}
 

@@ -2,7 +2,30 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
-## [2.0.0-alpha.7 - 2018-04-03]
+## [unreleased]
+
+### Fixed
+
+- `core/dispatcher.on` to not add duplicate event handlers
+
+## [2.0.0-beta.1] - 2018-04-29
+
+### Added
+
+- `core/snapshot` module with `isWindowReady` method to check the window state and `onWindowReady` method to queue window-dependent callbacks for snapshot builds
+
+### Fixed
+
+- `core/util.memoize` to forward all args to memoized function
+
+## [2.0.0-alpha.8] - 2018-04-17
+
+### Added
+
+- `core/handle.adaptEvent` to adapt event payload before passing to subsequent handler
+- `core/handle.call` to invoke a named method on a bound handler
+
+## [2.0.0-alpha.7] - 2018-04-03
 
 No significant changes.
 

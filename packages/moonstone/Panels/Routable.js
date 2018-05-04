@@ -48,6 +48,7 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 			 * of strings (`['app', 'home', 'settings']`)
 			 *
 			 * @type {String|String[]}
+			 * @required
 			 * @public
 			 */
 			path: propTypes.path.isRequired,

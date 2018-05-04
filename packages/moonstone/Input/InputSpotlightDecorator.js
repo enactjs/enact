@@ -1,16 +1,14 @@
 import deprecate from '@enact/core/internal/deprecate';
-import {forward} from '@enact/core/handle';
+import {forward, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
-import React from 'react';
-import PropTypes from 'prop-types';
 import {getDirection, Spotlight} from '@enact/spotlight';
 import Pause from '@enact/spotlight/Pause';
 import Spottable from '@enact/spotlight/Spottable';
+import PropTypes from 'prop-types';
+import React from 'react';
 
-const preventSpotlightNavigation = (ev) => {
-	ev.nativeEvent.stopImmediatePropagation();
-};
+import {lockPointer, releasePointer} from './pointer';
 
 const isBubbling = (ev) => ev.currentTarget !== ev.target;
 
@@ -149,6 +147,8 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				if (onSpotlightDisappear) {
 					onSpotlightDisappear();
 				}
+
+				releasePointer(this.state.node);
 			}
 		}
 
@@ -163,9 +163,11 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			if (focusChanged) {
 				if (this.state.focused === 'input') {
 					forward('onActivate', {type: 'onActivate'}, this.props);
+					lockPointer(this.state.node);
 					this.paused.pause();
 				} else if (prevState.focused === 'input') {
 					forward('onDeactivate', {type: 'onDeactivate'}, this.props);
+					releasePointer(prevState.node);
 					this.paused.resume();
 				}
 			}
@@ -278,7 +280,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 						setPointerMode(false);
 					}
 
-					preventSpotlightNavigation(ev);
+					stopImmediate(ev);
 					this.paused.resume();
 
 					// Move spotlight in the keypress direction
@@ -291,7 +293,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					}
 				} else if (isLeft || isRight) {
 					// prevent 5-way nav for left/right keys within the <input>
-					preventSpotlightNavigation(ev);
+					stopImmediate(ev);
 				}
 			}
 			forwardKeyDown(ev, this.props);

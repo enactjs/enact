@@ -46,6 +46,7 @@ const EditableIntegerPickerBase = kind({
 		 * The maximum value selectable by the picker (inclusive).
 		 *
 		 * @type {Number}
+		 * @required
 		 * @public
 		 */
 		max: PropTypes.number.isRequired,
@@ -54,6 +55,7 @@ const EditableIntegerPickerBase = kind({
 		 * The minimum value selectable by the picker (inclusive).
 		 *
 		 * @type {Number}
+		 * @required
 		 * @public
 		 */
 		min: PropTypes.number.isRequired,

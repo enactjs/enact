@@ -1,8 +1,18 @@
 /**
- * Exports the {@link ui/Transition.Transition} and {@link ui/Transition.TransitionBase}
- * components.  The default export is {@link ui/Transition.Transition}.
+ * This component allows you to transition its children components onto the screen, whether that's
+ * from off the edge of the screen or hidden inside or behind an already-on-screen component.
+ * You can switch types of transitions using the `type` property, change the direction they come in
+ * from using the `direction` property, or even adjust the transition timing function using
+ * `timingFunction`.
+ *
+ * @example
+ * <Transition visible={true} type="slide">
+ * 	<div>Set `visible` above to `false` to hide this element.</div>
+ * </Transition>
  *
  * @module ui/Transition
+ * @exports Transition
+ * @exports TransitionBase
  */
 
 import {forward} from '@enact/core/handle';
@@ -19,9 +29,8 @@ const forwardOnShow = forward('onShow');
 const forwardOnHide = forward('onHide');
 
 /**
- * {@link ui/Transition.TransitionBase} is a stateless component that allows for applying
- * transitions to its child items via configurable properties and events. In general, you want to
- * use the stateful version, {@link ui/Transition.Transition}.
+ * The stateless structure of the component, in case you want to provide all of the state yourself.
+ * In general, you'll probably want to use the [stateful version]{@link ui/Transition.Transition}.
  *
  * @class TransitionBase
  * @memberof ui/Transition
@@ -81,14 +90,16 @@ const TransitionBase = kind({
 
 		/**
 		 * Control how long the transition should take.
-		 * Supported durations are: `'short'` (250ms), `'long'` (1s). `'medium'` (500ms) is default
-		 * when no others are specified.
+		 * Supported preset durations are: `'short'` (250ms), `'medium'` (500ms), and `'long'` (1s).
+		 * `'medium'` (500ms) is default when no others are specified.
+		 * Any valid CSS duration value is also accepted, e.g. "200ms" or "3s". Pure numeric values
+		 * are also supported and treated as miliseconds.
 		 *
-		 * @type {String}
+		 * @type {String|Number}
 		 * @default 'medium'
 		 * @public
 		 */
-		duration: PropTypes.oneOf(['short', 'medium', 'long']),
+		duration: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 		/**
 		 * When `true`, transition animation is disabled. When `false`, visibility changes animate.
@@ -119,8 +130,24 @@ const TransitionBase = kind({
 		]),
 
 		/**
-		 * Choose how you'd like the transition to affect the content.
-		 * Supported types are: slide, clip, and fade.
+		 * How you'd like the transition to affect the content.
+		 * Supported types are: `'slide'`, `'clip'`, and `'fade'`.
+		 *
+		 * Details on types:
+		 *  * `'slide'` - Typically used for bringing something which is off the edge of the screen,
+		 *  	and not visible, onto the screen. Think of a popup, toast, notification, dialog, or
+		 *  	an overlaying menu. This requires no re-rendering or repainting of the screen during
+		 *  	the transition, making it very performant. However, this does not affect layout at
+		 *  	all, which makes it less useful for transitioning from a place already on the
+		 *  	screen.
+		 *  * `'clip'` - This is useful for showing a component that transitions-in from a location
+		 *  	that is already on the screen. Examples would be an expanding header or an
+		 *  	accordion. This type does affects layout, its current size will push other sibling
+		 *  	elements to make room for itself. Because of this, repainting the layout does happen
+		 *  	during transition.
+		 *  * `'fade'` - Fade the components onto the screen, from 0 opacity (completely invisible)
+		 *  	to 1 (full visibility). Pretty basic, but useful for fading on/off a tooltip, a
+		 *  	menu, a panel, or even view contents. This does not affect layout at all.
 		 *
 		 * @type {String}
 		 * @default 'slide'
@@ -167,7 +194,7 @@ const TransitionBase = kind({
 				};
 			}
 		},
-		style: ({clipHeight, direction, type, visible, style}) => {
+		style: ({clipHeight, direction, duration, type, visible, style}) => {
 			if (type === 'clip') {
 				style = {
 					...style,
@@ -176,6 +203,11 @@ const TransitionBase = kind({
 
 				if (visible && (direction === 'up' || direction === 'down')) {
 					style.height = clipHeight;
+				}
+				// If duration isn't a known named string, assume it is a CSS duration value
+				if (duration && !css[duration]) {
+					// If it's a number, assume it's miliseconds, if not, assume it's already a CSS duration string (like "200ms" or "2s")
+					style.transitionDuration = (typeof duration === 'number' ? duration + 'ms' : duration);
 				}
 			}
 
@@ -213,8 +245,8 @@ const TRANSITION_STATE = {
 };
 
 /**
- * {@link ui/Transition.Transition} is a stateful component that allows for applying transitions
- * to its child items via configurable properties and events.
+ * A stateful component that allows for applying transitions to its child items via configurable
+ * properties and events.
  *
  * @class Transition
  * @memberof ui/Transition
@@ -244,14 +276,17 @@ class Transition extends React.Component {
 		direction: PropTypes.oneOf(['up', 'right', 'down', 'left']),
 
 		/**
-		 * The duration of the transition.
-		 * Supported durations are: `'short'` (250ms), `'long'` (1s) and `'medium'` (500ms).
+		 * Control how long the transition should take.
+		 * Supported preset durations are: `'short'` (250ms), `'medium'` (500ms), and `'long'` (1s).
+		 * `'medium'` (500ms) is default when no others are specified.
+		 * Any valid CSS duration value is also accepted, e.g. "200ms" or "3s". Pure numeric values
+		 * are also supported and treated as miliseconds.
 		 *
-		 * @type {String}
+		 * @type {String|Number}
 		 * @default 'medium'
 		 * @public
 		 */
-		duration: PropTypes.oneOf(['short', 'medium', 'long']),
+		duration: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 		/**
 		 * A function to run after transition for hiding is finished.
@@ -289,8 +324,24 @@ class Transition extends React.Component {
 		]),
 
 		/**
-		 * How the transition affects the content.
+		 * How you'd like the transition to affect the content.
 		 * Supported types are: `'slide'`, `'clip'`, and `'fade'`.
+		 *
+		 * Details on types:
+		 *  * `'slide'` - Typically used for bringing something which is off the edge of the screen,
+		 *  	and not visible, onto the screen. Think of a popup, toast, notification, dialog, or
+		 *  	an overlaying menu. This requires no re-rendering or repainting of the screen during
+		 *  	the transition, making it very performant. However, this does not affect layout at
+		 *  	all, which makes it less useful for transitioning from a place already on the
+		 *  	screen.
+		 *  * `'clip'` - This is useful for showing a component that transitions-in from a location
+		 *  	that is already on the screen. Examples would be an expanding header or an
+		 *  	accordion. This type does affects layout, its current size will push other sibling
+		 *  	elements to make room for itself. Because of this, repainting the layout does happen
+		 *  	during transition.
+		 *  * `'fade'` - Fade the components onto the screen, from 0 opacity (completely invisible)
+		 *  	to 1 (full visibility). Pretty basic, but useful for fading on/off a tooltip, a
+		 *  	menu, a panel, or even view contents. This does not affect layout at all.
 		 *
 		 * @type {String}
 		 * @default 'slide'
@@ -299,7 +350,7 @@ class Transition extends React.Component {
 		type: PropTypes.oneOf(['slide', 'clip', 'fade']),
 
 		/**
-		 * The visibility of the component, which determines whether it's on screen or off.
+		 * The visibility of the component, which determines whether it's on the screen or off.
 		 *
 		 * @type {Boolean}
 		 * @default true

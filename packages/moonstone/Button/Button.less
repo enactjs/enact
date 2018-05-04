@@ -183,16 +183,18 @@
 			background-color: @moon-remote-button-blue-color;
 		}
 
-		&:not([disabled]) {
-			.focus({
-				color: @moon-spotlight-text-color;
-				background-color: transparent;
+		.focus({
+			color: @moon-spotlight-text-color;
+			background-color: transparent;
 
-				.bg {
-					background-color: @moon-spotlight-border-color;
-				}
+			.bg {
+				background-color: @moon-spotlight-border-color;
+			}
+
+			.disabled({
+				color: @moon-spotlight-disabled-text-color;
 			});
-		}
+		});
 
 		// 'Selected' state
 		&.selected {
@@ -210,13 +212,6 @@
 				}
 			});
 		}
-
-		.disabled({
-			&.translucent,
-			&.transparent {
-				opacity: @moon-disabled-translucent-opacity;
-			}
-		});
 	});
 }
 

@@ -6,6 +6,8 @@ import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Touchable from '@enact/ui/Touchable';
 
+import $L from '../internal/$L';
+
 import Scrollbar from './Scrollbar';
 
 import scrollbarCss from './Scrollbar.less';
@@ -26,41 +28,33 @@ const
 
 const TouchableDiv = Touchable('div');
 
-const ScrollableSpotlightContainer = SpotlightContainerDecorator(
-	{
-		navigableFilter: (elem, {focusableScrollbar}) => {
-			if (
-				!focusableScrollbar &&
-				!Spotlight.getPointerMode() &&
-				// ignore containers passed as their id
-				typeof elem !== 'string' &&
-				elem.classList.contains(scrollbarCss.scrollButton)
-			) {
-				return false;
-			}
-		},
-		overflow: true
-	},
-	({containerRef, ...rest}) => {
-		delete rest.focusableScrollbar;
-
-		return (
-			<div ref={containerRef} {...rest} />
-		);
+const navigableFilter = (elem) => {
+	if (
+		!Spotlight.getPointerMode() &&
+		// ignore containers passed as their id
+		typeof elem !== 'string' &&
+		elem.classList.contains(scrollbarCss.scrollButton)
+	) {
+		return false;
 	}
-);
+};
 
+const configureSpotlightContainer = ({'data-spotlight-id': spotlightId, focusableScrollbar}) => {
+	Spotlight.set(spotlightId, {
+		navigableFilter: focusableScrollbar ? null : navigableFilter
+	});
+};
 
 /**
  * A Moonstone-styled native component that provides horizontal and vertical scrollbars.
  *
- * @class ScrollableNative
+ * @class ScrollableBaseNative
  * @memberof moonstone/ScrollableNative
  * @extends ui/Scrollable.ScrollableBaseNative
  * @ui
  * @private
  */
-class ScrollableNative extends Component {
+class ScrollableBaseNative extends Component {
 	static displayName = 'ScrollableNative'
 
 	static propTypes = /** @lends moonstone/ScrollableNative.ScrollableNative.prototype */ {
@@ -68,9 +62,27 @@ class ScrollableNative extends Component {
 		 * Render function.
 		 *
 		 * @type {Function}
+		 * @required
 		 * @private
 		 */
 		childRenderer: PropTypes.func.isRequired,
+
+		/**
+		 * This is set to `true` by SpotlightContainerDecorator
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		'data-spotlight-container': PropTypes.bool,
+
+		/**
+		 * This is passed onto the wrapped component to allow
+		 * it to customize the spotlight container for its use case.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		'data-spotlight-id': PropTypes.string,
 
 		/**
 		 * Direction of the list or the scroller.
@@ -94,7 +106,43 @@ class ScrollableNative extends Component {
 		 * @default false
 		 * @public
 		 */
-		focusableScrollbar: PropTypes.bool
+		focusableScrollbar: PropTypes.bool,
+
+		/**
+		* Sets the hint string read when focusing the next button in the vertical scroll bar.
+		*
+		* @type {String}
+		* @default $L('scroll down')
+		* @public
+		*/
+		scrollDownAriaLabel: PropTypes.string,
+
+		/**
+		* Sets the hint string read when focusing the previous button in the horizontal scroll bar.
+		*
+		* @type {String}
+		* @default $L('scroll left')
+		* @public
+		*/
+		scrollLeftAriaLabel: PropTypes.string,
+
+		/**
+		* Sets the hint string read when focusing the next button in the horizontal scroll bar.
+		*
+		* @type {String}
+		* @default $L('scroll right')
+		* @public
+		*/
+		scrollRightAriaLabel: PropTypes.string,
+
+		/**
+		* Sets the hint string read when focusing the previous button in the vertical scroll bar.
+		*
+		* @type {String}
+		* @default $L('scroll up')
+		* @public
+		*/
+		scrollUpAriaLabel: PropTypes.string
 	}
 
 	static defaultProps = {
@@ -109,10 +157,16 @@ class ScrollableNative extends Component {
 			onNextScroll: this.onScrollbarButtonClick,
 			onPrevScroll: this.onScrollbarButtonClick
 		};
+
+		configureSpotlightContainer(props);
+	}
+
+	componentWillReceiveProps (nextProps) {
+		configureSpotlightContainer(nextProps);
 	}
 
 	componentDidUpdate () {
-		if (this.uiRef.scrollToInfo === null) {
+		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null) {
 			this.updateScrollOnFocus();
 		}
 	}
@@ -320,10 +374,10 @@ class ScrollableNative extends Component {
 		if (!this.uiRef.state.isVerticalScrollbarVisible) return;
 
 		const
-			{childRef, scrollToAccumulatedTarget} = this.uiRef,
+			{childRef, containerRef, scrollToAccumulatedTarget} = this.uiRef,
 			bounds = this.uiRef.getScrollBounds(),
 			canScrollVertically = this.uiRef.canScrollVertically(bounds),
-			pageDistance = isPageUp(keyCode) ? (this.uiRef.pageDistance * -1) : this.uiRef.pageDistance,
+			pageDistance = (isPageUp(keyCode) ? -1 : 1) * (canScrollVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
 			spotItem = Spotlight.getCurrent();
 
 		if (!Spotlight.getPointerMode() && spotItem) {
@@ -332,18 +386,13 @@ class ScrollableNative extends Component {
 				return;
 			}
 			const
-				containerId = (
-					// ScrollerNative has a spotlightId on containerRef
-					childRef.containerRef.dataset.spotlightId ||
-					// VirtualListNative has a spotlightId on contentRef
-					childRef.contentRef.dataset.spotlightId
-				),
+				spotlightId = containerRef.dataset.spotlightId,
 				direction = this.getPageDirection(keyCode),
 				rDirection = reverseDirections[direction],
 				viewportBounds = this.uiRef.containerRef.getBoundingClientRect(),
 				spotItemBounds = spotItem.getBoundingClientRect(),
 				endPoint = this.getEndPoint(direction, spotItemBounds, viewportBounds),
-				next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId),
+				next = getTargetByDirectionFromPosition(rDirection, endPoint, spotlightId),
 				scrollFn = this.childRef.scrollToNextPage || this.childRef.scrollToNextItem;
 
 			// If there is no next spottable DOM elements, scroll one page with animation
@@ -355,7 +404,7 @@ class ScrollableNative extends Component {
 				Spotlight.focus(next);
 			// If a next spottable DOM element is equals to the current spottable item, we need to find a next item
 			} else {
-				const nextPage = scrollFn({direction, reverseDirection: rDirection, focusedItem: spotItem, containerId});
+				const nextPage = scrollFn({direction, reverseDirection: rDirection, focusedItem: spotItem, spotlightId});
 
 				// If finding a next spottable item in a Scroller, focus it
 				if (typeof nextPage === 'object') {
@@ -375,8 +424,8 @@ class ScrollableNative extends Component {
 		let current = Spotlight.getCurrent();
 
 		if (!current || Spotlight.getPointerMode()) {
-			const containerId = Spotlight.getActiveContainer();
-			current = document.querySelector(`[data-spotlight-id="${containerId}"]`);
+			const spotlightId = Spotlight.getActiveContainer();
+			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 		}
 
 		return current && this.uiRef.containerRef.contains(current);
@@ -395,16 +444,15 @@ class ScrollableNative extends Component {
 	onScrollbarButtonClick = ({isPreviousScrollButton, isVerticalScrollBar}) => {
 		const
 			bounds = this.uiRef.getScrollBounds(),
-			pageDistance = (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
-			delta = isPreviousScrollButton ? -pageDistance : pageDistance,
-			direction = Math.sign(delta);
+			direction = isPreviousScrollButton ? -1 : 1,
+			pageDistance = direction * (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
 		if (direction !== this.uiRef.wheelDirection) {
 			this.uiRef.isScrollAnimationTargetAccumulated = false;
 			this.uiRef.wheelDirection = direction;
 		}
 
-		this.uiRef.scrollToAccumulatedTarget(delta, isVerticalScrollBar);
+		this.uiRef.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar);
 	}
 
 	scrollStopOnScroll = () => {
@@ -501,7 +549,23 @@ class ScrollableNative extends Component {
 	}
 
 	render () {
-		const {focusableScrollbar, childRenderer, ...rest} = this.props;
+		const
+			{
+				childRenderer,
+				'data-spotlight-container': spotlightContainer,
+				'data-spotlight-id': spotlightId,
+				scrollRightAriaLabel,
+				scrollLeftAriaLabel,
+				scrollDownAriaLabel,
+				scrollUpAriaLabel,
+				...rest
+			} = this.props,
+			downButtonAriaLabel = scrollDownAriaLabel == null ? $L('scroll down') : scrollDownAriaLabel,
+			upButtonAriaLabel = scrollUpAriaLabel == null ? $L('scroll up') : scrollUpAriaLabel,
+			rightButtonAriaLabel = scrollRightAriaLabel == null ? $L('scroll right') : scrollRightAriaLabel,
+			leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
+
+		delete rest.focusableScrollbar;
 
 		return (
 			<UiScrollableBaseNative
@@ -524,15 +588,17 @@ class ScrollableNative extends Component {
 					initContainerRef: initUiContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
+					rtl,
 					scrollTo,
 					style,
 					touchableProps,
 					verticalScrollbarProps
 				}) => (
-					<ScrollableSpotlightContainer
+					<div
 						className={className}
-						containerRef={initUiContainerRef}
-						focusableScrollbar={focusableScrollbar}
+						data-spotlight-container={spotlightContainer}
+						data-spotlight-id={spotlightId}
+						ref={initUiContainerRef}
 						style={style}
 					>
 						<div className={componentCss.container}>
@@ -542,20 +608,63 @@ class ScrollableNative extends Component {
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
 									initUiChildRef,
-									ref: this.initChildRef
+									ref: this.initChildRef,
+									rtl,
+									spotlightId
 								})}
 							</TouchableDiv>
-							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} {...this.scrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
+							{isVerticalScrollbarVisible ?
+								<Scrollbar
+									{...verticalScrollbarProps}
+									{...this.scrollbarProps}
+									disabled={!isVerticalScrollbarVisible}
+									nextButtonAriaLabel={downButtonAriaLabel}
+									previousButtonAriaLabel={upButtonAriaLabel}
+									rtl={rtl}
+								/> :
+								null
+							}
 						</div>
-						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} {...this.scrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
-					</ScrollableSpotlightContainer>
+						{isHorizontalScrollbarVisible ?
+							<Scrollbar
+								{...horizontalScrollbarProps}
+								{...this.scrollbarProps}
+								corner={isVerticalScrollbarVisible}
+								disabled={!isHorizontalScrollbarVisible}
+								nextButtonAriaLabel={rightButtonAriaLabel}
+								previousButtonAriaLabel={leftButtonAriaLabel}
+								rtl={rtl}
+							/> :
+							null
+						}
+					</div>
 				)}
 			/>
 		);
 	}
 }
 
+/**
+ * A Moonstone-styled component that provides horizontal and vertical scrollbars.
+ *
+ * @class ScrollableNative
+ * @memberof moonstone/ScrollableNative
+ * @mixes spotlight/SpotlightContainerDecorator
+ * @extends moonstone/Scrollable.ScrollableBaseNative
+ * @ui
+ * @private
+ */
+const ScrollableNative = SpotlightContainerDecorator(
+	{
+		overflow: true,
+		preserveId: true,
+		restrict: 'self-first'
+	},
+	ScrollableBaseNative
+);
+
 export default ScrollableNative;
 export {
+	ScrollableBaseNative,
 	ScrollableNative
 };

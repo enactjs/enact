@@ -60,6 +60,15 @@ const PanelsBase = kind({
 		children: PropTypes.node,
 
 		/**
+		* Sets the hint string read when focusing the application close button.
+		*
+		* @type {String}
+		* @default 'Exit app'
+		* @public
+		*/
+		closeButtonAriaLabel: PropTypes.string,
+
+		/**
 		 * The background-color opacity of the application close button; valid values are `'opaque'`,
 		 * `'translucent'`, `'lightTranslucent'`, and `'transparent'`.
 		 *
@@ -137,12 +146,13 @@ const PanelsBase = kind({
 		className: ({noCloseButton, styler}) => styler.append({
 			hasCloseButton: !noCloseButton
 		}),
-		applicationCloseButton: ({closeButtonBackgroundOpacity, id, noCloseButton, onApplicationClose}) => {
+		applicationCloseButton: ({closeButtonAriaLabel, closeButtonBackgroundOpacity, id, noCloseButton, onApplicationClose}) => {
 			if (!noCloseButton) {
 				const closeId = id ? `${id}_close` : null;
 
 				return (
 					<ApplicationCloseButton
+						aria-label={closeButtonAriaLabel}
 						backgroundOpacity={closeButtonBackgroundOpacity}
 						className={css.close}
 						id={closeId}
@@ -172,6 +182,7 @@ const PanelsBase = kind({
 
 	render: ({noAnimation, arranger, childProps, children, generateId, index, applicationCloseButton, ...rest}) => {
 		delete rest.closeButtonBackgroundOpacity;
+		delete rest.closeButtonAriaLabel;
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
 		delete rest.onBack;

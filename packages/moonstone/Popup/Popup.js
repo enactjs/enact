@@ -54,9 +54,19 @@ const PopupBase = kind({
 		 * The contents to be displayed in the body of the popup.
 		 *
 		 * @type {Node}
+		 * @required
 		 * @public
 		 */
 		children: PropTypes.node.isRequired,
+
+		/**
+		 * Sets the hint string read when focusing the popup close button.
+		 *
+		 * @type {String}
+		 * @default 'Close'
+		 * @public
+		 */
+		closeButtonAriaLabel: PropTypes.string,
 
 		/**
 		 * When `true`, the popup will not animate on/off screen.
@@ -143,15 +153,17 @@ const PopupBase = kind({
 
 	computed: {
 		className: ({showCloseButton, styler}) => styler.append({reserveClose: showCloseButton}),
-		closeButton: ({showCloseButton, onCloseButtonClick}) => {
+		closeButton: ({closeButtonAriaLabel, onCloseButtonClick, showCloseButton}) => {
 			if (showCloseButton) {
+				const ariaLabel = (closeButtonAriaLabel == null) ? $L('Close') : closeButtonAriaLabel;
+
 				return (
 					<IconButton
 						className={css.closeButton}
 						backgroundOpacity="transparent"
 						small
 						onTap={onCloseButtonClick}
-						aria-label={$L('Close')}
+						aria-label={ariaLabel}
 					>
 						closex
 					</IconButton>
@@ -161,6 +173,7 @@ const PopupBase = kind({
 	},
 
 	render: ({closeButton, children, noAnimation, open, onHide, onShow, spotlightId, spotlightRestrict, ...rest}) => {
+		delete rest.closeButtonAriaLabel;
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
 		return (
@@ -216,6 +229,15 @@ const checkScrimNone = (props) => {
 class Popup extends React.Component {
 
 	static propTypes = /** @lends moonstone/Popup.Popup.prototype */ {
+		/**
+		 * Sets the hint string read when focusing the popup close button.
+		 *
+		 * @type {String}
+		 * @default 'Close'
+		 * @public
+		 */
+		closeButtonAriaLabel: PropTypes.string,
+
 		/**
 		 * When `true`, the popup will not animate on/off screen.
 		 *

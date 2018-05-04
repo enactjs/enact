@@ -6,9 +6,12 @@ import {platform} from '../platform';
 
 /**
  * Read alert text when accessibility VoiceReadout enabled.
+ *
+ * @function
  * @param {String} string String to voice readout.
  * @param {Boolean} [clear=true] Clear option for TTS. If true, it will cutt off previous reading.
  * @returns {undefined}
+ * @memberof webos/speech
  */
 const readAlert = (string, clear = true) => {
 	if (platform.tv) {

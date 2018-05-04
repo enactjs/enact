@@ -75,7 +75,6 @@ class SliderList extends React.Component {
 			<div>
 				<Slider
 					backgroundProgress={0}
-					detachedKnob={false}
 					disabled={false}
 					max={100}
 					min={0}

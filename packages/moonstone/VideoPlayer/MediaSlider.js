@@ -1,9 +1,10 @@
 import kind from '@enact/core/kind';
-import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import Slider from '../Slider';
+
+import MediaSliderDecorator from './MediaSliderDecorator';
 
 import css from './VideoPlayer.less';
 
@@ -19,22 +20,6 @@ const MediaSliderBase = kind({
 	name: 'MediaSlider',
 
 	propTypes: /** @lends moonstone/VideoPlayer.MediaSlider.prototype */ {
-		/**
-		 * Background progress, as a proportion from `0` to `1`.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		backgroundProgress: PropTypes.number,
-
-		/**
-		 * When `true`, the component is shown as disabled and does not generate events.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		disabled: PropTypes.bool,
 
 		/**
 		 * When `true`, the knob will expand. Note that Slider is a controlled
@@ -45,25 +30,6 @@ const MediaSliderBase = kind({
 		 * @public
 		 */
 		forcePressed: PropTypes.bool,
-
-		/**
-		 * The handler to run when the value is changed.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {Number} event.value Value of the slider
-		 * @public
-		 */
-		onChange: PropTypes.func,
-
-		/**
-		 * The value of the slider.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		value: PropTypes.number,
 
 		/**
 		 * The visibility of the component. When `false`, the component will be hidden.
@@ -103,8 +69,6 @@ const MediaSliderBase = kind({
 					aria-hidden="true"
 					className={sliderClassName}
 					css={css}
-					detachedKnob
-					knobStep={0.05}
 					max={1}
 					min={0}
 					step={0.00001}
@@ -114,7 +78,7 @@ const MediaSliderBase = kind({
 	}
 });
 
-const MediaSlider = onlyUpdateForKeys(['backgroundProgress', 'children', 'forcePressed', 'value', 'visible'])(MediaSliderBase);
+const MediaSlider = MediaSliderDecorator(MediaSliderBase);
 
 export default MediaSlider;
 export {

@@ -12,7 +12,7 @@ import Slottable from '@enact/ui/Slottable';
 
 import Popup from '../Popup';
 
-import css from './Notification.less';
+import componentCss from './Notification.less';
 
 /**
  * {@link moonstone/Notification.NotificationBase} is a toast-like minimal popup that comes up
@@ -37,7 +37,7 @@ const NotificationBase = kind({
 		buttons: PropTypes.oneOfType([
 			PropTypes.arrayOf(PropTypes.element),
 			PropTypes.element
-		]).isRequired,
+		]),
 
 		/**
 		 * The contents to be displayed in the body of the Notification.
@@ -46,6 +46,19 @@ const NotificationBase = kind({
 		 * @public
 		 */
 		children: PropTypes.node,
+
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `notification` - The root class name
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
 
 		/**
 		 * When `true`, the popup will not close when the user presses `ESC` key.
@@ -91,13 +104,14 @@ const NotificationBase = kind({
 	},
 
 	styles: {
-		css,
-		className: 'notification'
+		css: componentCss,
+		className: 'notification',
+		publicClassNames: ['notification']
 	},
 
 	computed: {
 		className: ({className, buttons, styler}) => {
-			if (buttons.length > 3) {
+			if (buttons && buttons.length > 3) {
 				return styler.append({wide: true});
 			} else {
 				return className;
@@ -112,15 +126,15 @@ const NotificationBase = kind({
 		})
 	},
 
-	render: ({buttons, children, ...rest}) => {
+	render: ({buttons, children, css, ...rest}) => {
 		return (
 			<Popup noAnimation {...rest}>
 				<div className={css.body}>
 					{children}
 				</div>
-				<div className={css.buttons}>
+				{buttons ? <div className={css.buttons}>
 					{buttons}
-				</div>
+				</div> : null}
 			</Popup>
 		);
 	}

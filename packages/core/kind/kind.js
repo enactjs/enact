@@ -107,7 +107,7 @@ const kind = (config) => {
 		 */
 		prepareHandler (prop, handler) {
 			this.handlers[prop] = (ev) => {
-				handler(ev, this.props, this.context);
+				return handler(ev, this.props, this.context);
 			};
 		}
 

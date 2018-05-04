@@ -64,6 +64,7 @@ class Broadcast extends React.Component {
 		* Name of channel to broadcast changes on.
 		*
 		* @type {String}
+		* @required
 		* @private
 		*/
 		channel: PropTypes.string.isRequired,

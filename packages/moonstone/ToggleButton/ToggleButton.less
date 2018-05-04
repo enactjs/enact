@@ -8,13 +8,13 @@
 .toggleButton {
 	text-align: center;
 	position: relative;
-	padding-right: @moon-toggle-button-text-switch-gutter + @moon-button-h-padding + @moon-toggle-button-switch-width + 2*@moon-toggle-button-switch-border-width;
+	.padding-start-end(@moon-toggle-button-text-switch-gutter, @moon-toggle-button-text-switch-gutter + @moon-button-h-padding + @moon-toggle-button-switch-width + 2*@moon-toggle-button-switch-border-width);
 
 	&::after {
 		position: absolute;
+		.position-start-end(auto, @moon-button-h-padding);
 		content: '';
 		top: 50%;
-		right: @moon-button-h-padding;
 		width: @moon-toggle-button-switch-width;
 		height: @moon-toggle-button-switch-width;
 		border-width: @moon-toggle-button-switch-border-width;

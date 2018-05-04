@@ -51,6 +51,7 @@ const SelectableItemBase = kind({
 
 	render: (props) => (
 		<ToggleItem
+			data-webos-voice-intent="SelectCheckItem"
 			{...props}
 			css={props.css}
 			iconComponent={SelectableIcon}

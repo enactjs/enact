@@ -1,0 +1,46 @@
+@import '../styles/skin.less';
+@import '../styles/text.less';
+@import '../styles/variables.less';
+@import '../styles/mixins.less';
+
+.mediaOverlay {
+	display: block;
+	position: relative;
+	padding: @moon-mediaoverlay-spotlight-outset-width;
+	width: @moon-mediaoverlay-width;
+	height: auto;
+
+	.media {
+		display: block;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+	}
+
+	.image,
+	.textLayout {
+		position: absolute;
+		.position(0);
+	}
+
+	.textLayout {
+		margin: @moon-mediaoverlay-spotlight-outset-width * 2;
+	}
+
+	.image {
+		margin: @moon-mediaoverlay-spotlight-outset-width;
+		height: auto;
+		width: auto;
+	}
+
+	.text {
+		font-weight: @moon-mediaoverlay-font-weight;
+	}
+
+	// Skin colors
+	.applySkins({
+		.text {
+			text-shadow: @moon-mediaoverlay-text-shadow;
+		}
+	});
+}
