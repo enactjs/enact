@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `i18n/I18nDecorator` to listen correct event on webOS platform to check language changes.
+
 ## [2.0.0-beta.1] - 2018-04-29
 
 ### Removed

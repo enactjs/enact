@@ -84,7 +84,11 @@ const IntlHoc = hoc((config, Wrapped) => {
 
 		componentDidMount () {
 			if (typeof window === 'object') {
-				on('languagechange', this.handleLocaleChange, window);
+				if (ilib._platform === 'webos') {
+					on('webOSLocaleChange', this.handleLocaleChange, document);
+				} else {
+					on('languagechange', this.handleLocaleChange, window);
+				}
 			}
 		}
 
@@ -96,7 +100,11 @@ const IntlHoc = hoc((config, Wrapped) => {
 
 		componentWillUnmount () {
 			if (typeof window === 'object') {
-				off('languagechange', this.handleLocaleChange, window);
+				if (ilib._platform === 'webos') {
+					off('webOSLocaleChange', this.handleLocaleChange, document);
+				} else {
+					off('languagechange', this.handleLocaleChange, window);
+				}
 			}
 		}
 
