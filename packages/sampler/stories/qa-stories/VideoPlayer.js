@@ -1,9 +1,7 @@
-import Button from '@enact/moonstone/Button';
-import React from 'react';
 import VideoPlayer, {Video} from '@enact/moonstone/VideoPlayer';
-import IconButton from '@enact/moonstone/IconButton';
-import {storiesOf} from '@storybook/react';
 import {button} from '@storybook/addon-knobs';
+import {storiesOf} from '@storybook/react';
+import React from 'react';
 
 class VideoSourceSwap extends React.Component {
 	constructor (props) {
