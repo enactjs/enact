@@ -13,10 +13,20 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('VirtualGridList', VirtualGridList, VirtualListBase, UiVirtualListBase);
 
 const
-	items = [],
+	dataSize = 1000,
+	getItem = (index) => {
+		const
+			count = ('00' + index).slice(-3),
+			text = `Item ${count}`,
+			subText = `SubItem ${count}`,
+			color = Math.floor((Math.random() * (0x1000000 - 0x101010)) + 0x101010).toString(16),
+			source = `http://placehold.it/300x300/${color}/ffffff&text=Image ${index}`;
+
+		return {text, subText, source};
+	},
 	// eslint-disable-next-line enact/prop-types
 	renderItem = ({index, ...rest}) => {
-		const {text, subText, source} = items[index];
+		const {text, subText, source} = getItem(index);
 
 		return (
 			<GridListImageItem
@@ -28,23 +38,12 @@ const
 		);
 	};
 
-for (let i = 0; i < 1000; i++) {
-	const
-		count = ('00' + i).slice(-3),
-		text = `Item ${count}`,
-		subText = `SubItem ${count}`,
-		color = Math.floor((Math.random() * (0x1000000 - 0x101010)) + 0x101010).toString(16),
-		source = `http://placehold.it/300x300/${color}/ffffff&text=Image ${i}`;
-
-	items.push({text, subText, source});
-}
-
 storiesOf('VirtualList.VirtualGridList', module)
 	.add(
 		'Horizontal VirtualGridList',
 		() => (
 			<VirtualGridList
-				dataSize={number('dataSize', items.length)}
+				dataSize={number('dataSize', dataSize)}
 				direction="horizontal"
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 				itemRenderer={renderItem}
