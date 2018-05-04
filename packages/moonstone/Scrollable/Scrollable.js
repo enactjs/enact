@@ -342,7 +342,7 @@ class ScrollableBase extends Component {
 
 			const
 				// VirtualList and Scroller have a spotlightId on containerRef
-				spotlightId = this.uiRef.containerRef.dataset.spotlightId,
+				spotlightId = containerRef.dataset.spotlightId,
 				direction = this.getPageDirection(keyCode),
 				rDirection = reverseDirections[direction],
 				viewportBounds = containerRef.getBoundingClientRect(),
