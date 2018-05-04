@@ -7,7 +7,7 @@
  * @exports MediaOverlayDecorator
  */
 
-import styles from '@enact/core/kind/styles';
+import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 import {Layout, Cell} from '@enact/ui/Layout';
 import Media from '@enact/ui/Media';
@@ -23,12 +23,6 @@ import Skinnable from '../Skinnable';
 
 import componentCss from './MediaOverlay.less';
 
-const renderStyles = styles({
-	css: componentCss,
-	className: 'mediaOverlay',
-	publicClassNames: ['mediaOverlay', 'image', 'textLayout']
-});
-
 /**
  * A media component with image and text overlay support.
  *
@@ -37,8 +31,10 @@ const renderStyles = styles({
  * @ui
  * @public
  */
-class MediaOverlayBase extends React.Component {
-	static propTypes = /** @lends moonstone/MediaOverlay.MediaOverlayBase.prototype */ {
+const MediaOverlayBase = kind({
+	name: 'MediaOverlay',
+
+	propTypes: /** @lends moonstone/MediaOverlay.MediaOverlayBase.prototype */ {
 		/**
 		 * Any children `<source>` tag elements will be sent directly to the media element as
 		 * sources.
@@ -117,24 +113,27 @@ class MediaOverlayBase extends React.Component {
 		 * @default "center"
 		 */
 		textAlign: PropTypes.string
-	}
+	},
 
-	static defaultProps = {
+	defaultProps: {
 		mediaComponent: 'video',
 		textAlign: 'center'
-	}
+	},
 
-	render () {
-		const props = renderStyles(Object.assign({}, this.props));
-		const {css, imageOverlay, mediaComponent, placeholder, source, text, textAlign, ...rest} = props;
+	styles: {
+		css: componentCss,
+		className: 'mediaOverlay',
+		publicClassNames: ['mediaOverlay', 'image', 'textLayout']
+	},
 
+	render: ({css, imageOverlay, mediaComponent, placeholder, source, text, textAlign, ...rest}) => {
 		return (
 			<div {...rest}>
 				<Media
 					autoPlay
 					className={css.media}
-					mediaComponent={mediaComponent}
 					controls={false}
+					mediaComponent={mediaComponent}
 					muted
 					source={source}
 				/>
@@ -156,7 +155,7 @@ class MediaOverlayBase extends React.Component {
 			</div>
 		);
 	}
-}
+});
 
 /**
  * Moonstone-specific behaviors to apply to [MediaOverlay]{@link moonstone/MediaOverlay.MediaOverlayBase}.
