@@ -111,6 +111,14 @@ class Media extends React.Component {
 		 */
 		onUpdate: PropTypes.func,
 
+		/**
+		 * Media sources passed as children to `mediaComponent`
+		 *
+		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
+		 *
+		 * @type {Node}
+		 * @public
+		 */
 		source: PropTypes.any
 	}
 

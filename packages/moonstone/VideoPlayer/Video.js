@@ -1,11 +1,3 @@
-/**
- * Exports the {@link moonstone/VideoPlayer.Video} and
- * {@link moonstone/VideoPlayer.Video} components. The default export is
- * {@link moonstone/VideoPlayer.Video}.
- *
- * @module moonstone/VideoPlayer
- */
-
 import {forward} from '@enact/core/handle';
 import ForwardRef from '@enact/ui/ForwardRef';
 import {Media, getKeyFromSource} from '@enact/ui/Media';
@@ -18,15 +10,17 @@ import css from './VideoPlayer.less';
 import PropTypes from 'prop-types';
 
 /**
- * Video {@link moonstone/VideoPlayer}.
+ * Adds support for preloading a video source for `VideoPlayer`.
  *
  * @class VideoBase
  * @memberof moonstone/VideoPlayer
  * @ui
  * @private
  */
-class VideoBase extends React.Component {
-	static propTypes = /** @lends moonstone/VideoPlayer.VideoBase.prototype */ {
+const VideoBase = class extends React.Component {
+	static displayName = 'Video'
+
+	static propTypes = /** @lends moonstone/VideoPlayer.Video.prototype */ {
 
 		/**
 		 * Video component to use. The default (`'video'`) renders an `HTMLVideoElement`. Custom
@@ -49,8 +43,8 @@ class VideoBase extends React.Component {
 		 * * `pause()` - pause video
 		 * * `load()` - load video
 		 *
-		 * The [`source`]{@link moonstone/VideoPlayer.VideoPlayerBase.source} property is passed to the video
-		 * component as a child node.
+		 * The [`source`]{@link moonstone/VideoPlayer.VideoBase.source} property is passed to
+		 * the video component as a child node.
 		 *
 		 * @type {Component}
 		 * @default 'video'
@@ -59,7 +53,7 @@ class VideoBase extends React.Component {
 		mediaComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element]),
 
 		/**
-		 * By default, the video will start playing immediately after it's loaded, unless this is set.
+		 * Disable automatically playing the video after it has loaded
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -75,11 +69,20 @@ class VideoBase extends React.Component {
 		 */
 		preloadSource:  PropTypes.node,
 
+		/**
+		 * Called with a reference to the active [Media]{@link ui/Media.Media} component
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		setMedia: PropTypes.func,
 
 		/**
-		 * Any children `<source>` tag elements of [VideoPlayer]{@link moonstone/VideoPlayer} will
-		 * be sent directly to the `mediaComponent` as video sources.
+		 * The video source to be played.
+		 *
+		 * Any children `<source>` elements will be sent directly to the `mediaComponent` as video
+		 * sources.
+		 *
 		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
 		 *
 		 * @type {Node}
@@ -259,13 +262,32 @@ class VideoBase extends React.Component {
 			</React.Fragment>
 		);
 	}
-}
+};
 
 const VideoDecorator = compose(
 	ForwardRef({prop: 'setMedia'}),
 	Slottable({slots: ['source', 'preloadSource']})
 );
 
+/**
+ * Adds support for preloading a video source for `VideoPlayer`.
+ *
+ * ```
+ * <VideoPlayer>
+ *   <Video>
+ *     <source src="active.mp4" />
+ *     <source src="preload.mp4" slot="preloadSource" />
+ *   </Video>
+ * </VideoPlayer>
+ * ```
+ *
+ * @class Video
+ * @extends {moonstone/VideoPlayer.VideoBase}
+ * @mixes ui/Slottable
+ * @memberof moonstone/VideoPlayer
+ * @ui
+ * @public
+ */
 const Video = VideoDecorator(VideoBase);
 Video.defaultSlot = 'videoComponent';
 
