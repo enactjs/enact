@@ -314,14 +314,14 @@ class ScrollButtons extends Component {
 
 	render () {
 		const
-			{disabled, nextButtonAriaLabel, previousButtonAriaLabel, thumbRenderer, vertical} = this.props,
+			{disabled, nextButtonAriaLabel, previousButtonAriaLabel, rtl, thumbRenderer, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			prevIcon = preparePrevButton(vertical),
 			nextIcon = prepareNextButton(vertical);
 
 		return [
 			<ScrollButton
-				aria-label={previousButtonAriaLabel}
+				aria-label={rtl ? nextButtonAriaLabel : previousButtonAriaLabel}
 				key="prevButton"
 				data-spotlight-overflow="ignore"
 				direction={vertical ? 'up' : 'left'}
@@ -341,7 +341,7 @@ class ScrollButtons extends Component {
 			</ScrollButton>,
 			thumbRenderer(),
 			<ScrollButton
-				aria-label={nextButtonAriaLabel}
+				aria-label={rtl ? previousButtonAriaLabel : nextButtonAriaLabel}
 				key="nextButton"
 				data-spotlight-overflow="ignore"
 				direction={vertical ? 'down' : 'right'}
