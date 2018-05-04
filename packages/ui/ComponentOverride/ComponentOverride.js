@@ -51,9 +51,7 @@ import React from 'react';
  * @ui
  * @public
  */
-const ComponentOverride = React.forwardRef(({component: Component, ...rest}, ref) => {
-	const props = {...rest, ref};
-
+const ComponentOverride = ({component: Component, ...props}) => {
 	return Component && (
 		(typeof Component === 'function' || typeof Component === 'string') && (
 			<Component {...props} />
@@ -61,7 +59,7 @@ const ComponentOverride = React.forwardRef(({component: Component, ...rest}, ref
 			React.cloneElement(Component, props)
 		)
 	) || null;
-});
+};
 
 export default ComponentOverride;
 export {

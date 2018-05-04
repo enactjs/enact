@@ -1607,7 +1607,7 @@ const VideoPlayerBase = class extends React.Component {
 			thumbnailComponent,
 			thumbnailSrc,
 			title,
-			videoComponent,
+			videoComponent: VideoComponent,
 			...mediaProps
 		} = this.props;
 
@@ -1634,6 +1634,15 @@ const VideoPlayerBase = class extends React.Component {
 		delete mediaProps.titleHideDelay;
 		delete mediaProps.videoPath;
 
+		mediaProps.autoPlay = !noAutoPlay;
+		mediaProps.className = css.video;
+		mediaProps.controls = false;
+		mediaProps.mediaComponent = 'video';
+		mediaProps.onPlay = this.handlePlayEvent;
+		mediaProps.onLoadStart = this.handleLoadStart;
+		mediaProps.onUpdate = this.handleEvent;
+		mediaProps.ref = this.setVideoRef;
+
 		const controlsAriaProps = this.getControlsAriaProps();
 
 		return (
@@ -1647,18 +1656,16 @@ const VideoPlayerBase = class extends React.Component {
 				style={style}
 			>
 				{/* Video Section */}
-				<ComponentOverride
-					{...mediaProps}
-					autoPlay={!noAutoPlay}
-					className={css.video}
-					component={videoComponent}
-					controls={false}
-					mediaComponent="video"
-					onPlay={this.handlePlayEvent}
-					onLoadStart={this.handleLoadStart}
-					onUpdate={this.handleEvent}
-					ref={this.setVideoRef}
-				/>
+				{
+					// Duplicating logic from <ComponentOverride /> until enzyme supports forwardRef
+					VideoComponent && (
+						(typeof VideoComponent === 'function' || typeof VideoComponent === 'string') && (
+							<VideoComponent {...mediaProps} />
+						) || React.isValidElement(VideoComponent) && (
+							React.cloneElement(VideoComponent, mediaProps)
+						)
+					) || null
+				}
 
 				<Overlay
 					bottomControlsVisible={this.state.mediaControlsVisible}
