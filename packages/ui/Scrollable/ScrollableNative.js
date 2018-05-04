@@ -649,8 +649,7 @@ class ScrollableBaseNative extends Component {
 		const
 			bounds = this.getScrollBounds(),
 			canScrollVertically = this.canScrollVertically(bounds),
-			direction = isPageUp(keyCode) ? -1 : 1,
-			pageDistance = direction * (canScrollVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+			pageDistance = (isPageUp(keyCode) ? -1 : 1) * (canScrollVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
 		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 	}
