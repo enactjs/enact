@@ -203,14 +203,14 @@ class ScrollButtons extends Component {
 	handlePrevDown = () => {
 		if (this.announce) {
 			const {rtl, vertical} = this.props;
-			this.announce(vertical ? $L('UP') : $L(rtl ? 'RIGHT' : 'LEFT'));
+			this.announce(vertical && $L('UP') || rtl && $L('RIGHT') || $L('LEFT'));
 		}
 	}
 
 	handleNextDown = () => {
 		if (this.announce) {
 			const {rtl, vertical} = this.props;
-			this.announce(vertical ? $L('DOWN') : $L(rtl ? 'LEFT' : 'RIGHT'));
+			this.announce(vertical && $L('DOWN') || rtl && $L('LEFT') || $L('RIGHT'));
 		}
 	}
 
