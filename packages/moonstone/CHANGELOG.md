@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to scroll properly with all disabled items
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to ignore to scroll on focus when jumping
 
 ## [2.0.0-beta.1] - 2018-04-29
