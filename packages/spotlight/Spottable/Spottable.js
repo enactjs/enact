@@ -316,6 +316,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = (ev) => {
+			if (this.props.disabled) return;
+
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = true;
 			}
