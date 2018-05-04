@@ -7,15 +7,15 @@
  * @module moonstone/ExpandableItem
  */
 
+import {is} from '@enact/core/keymap';
+import kind from '@enact/core/kind';
 import {extractAriaProps} from '@enact/core/util';
 import {getContainersForNode} from '@enact/spotlight/src/container';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
-import {is} from '@enact/core/keymap';
-import kind from '@enact/core/kind';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import PropTypes from 'prop-types';
 import last from 'ramda/src/last';
 import React from 'react';
-import PropTypes from 'prop-types';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import LabeledItem from '../LabeledItem';
 
@@ -256,16 +256,13 @@ const ExpandableItemBase = kind({
 				// case here in which the children of the container are spottable and the
 				// ExpandableList use case which has an intermediate child (Group) between the
 				// spottable components and the container.
-				if (autoClose && isUp(keyCode) && onClose) {
-					if (wouldDirectionLeaveContainer('up', target)) {
-						onClose();
+				if (autoClose && onClose && isUp(keyCode) && wouldDirectionLeaveContainer('up', target)) {
+					onClose();
+					ev.nativeEvent.stopImmediatePropagation();
+				} else if (isDown(keyCode) && wouldDirectionLeaveContainer('down', target)) {
+					if (lockBottom) {
 						ev.nativeEvent.stopImmediatePropagation();
-					}
-				} else if (isDown(keyCode)) {
-					const leaving = wouldDirectionLeaveContainer('down', target);
-					if (lockBottom && leaving) {
-						ev.nativeEvent.stopImmediatePropagation();
-					} else if (onSpotlightDown && leaving) {
+					} else if (onSpotlightDown) {
 						onSpotlightDown(ev);
 					}
 				}
