@@ -4,6 +4,15 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/ForwardRef` HOC to adapt `React.forwardRef` to HOC chains
+- `ui/Media` component
+
+### Changed
+
+- `ui/ComponentOverride` to forward `ref` callbacks to its `component`
+
 ### Fixed
 
 - `ui/Item` to use its natural width rather than imposing a 100% width allowing inline Items to be the correct width.

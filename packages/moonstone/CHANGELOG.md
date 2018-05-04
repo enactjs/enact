@@ -2,6 +2,20 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+### [unreleased]
+
+### Removed
+
+- `moonstone/VideoPlayer` prop `preloadSource`, to be replaced by `moonstone/VideoPlayer.Video` prop `preloadSource`
+
+### Added
+
+- `moonstone/VideoPlayer.Video` component to support preloading video sources
+
+### Changed
+
+- `moonstone/VideoPlayer.videoComponent` prop to default to `ui/Media.Media` instead of `'video'`. As a result, to use a custom video element, one must pass an instance of `ui/Media` with its `mediaComponent` prop set to the desired element.
+
 ## [2.0.0-beta.1] - 2018-04-29
 
 ### Removed
