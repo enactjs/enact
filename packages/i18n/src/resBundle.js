@@ -76,5 +76,6 @@ function clearResBundle () {
 export {
 	getResBundle,
 	setResBundleLocale,
-	clearResBundle
+	clearResBundle,
+	createResBundle
 };

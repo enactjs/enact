@@ -12,6 +12,8 @@ import PropTypes from 'prop-types';
 import {Publisher, contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
 
 import UnitFmt from '../ilib/lib/UnitFmt';
+import Charset from '../ilib/lib/Charset';
+import Charmap from '../ilib/lib/Charmap';
 import Country from '../ilib/lib/Country';
 import DateFmt from '../ilib/lib/DateFmt';
 import IString from '../ilib/lib/IString';
@@ -39,6 +41,11 @@ const contextTypes = {
 	updateLocale: PropTypes.func
 };
 
+const defaultConfig = {
+	loader: null,
+	preloadResources: false
+};
+
 /**
  * {@link i18n/I18nDecorator.I18nDecorator} is a Higher Order Component that is used to wrap
  * the root element in an app. It provides an `rtl` member on the context of the wrapped component, allowing
@@ -52,8 +59,14 @@ const contextTypes = {
  * @hoc
  * @public
  */
-const IntlHoc = hoc({}, (config, Wrapped) => {
-	const {loader} = config;
+const IntlHoc = hoc(defaultConfig, (config, Wrapped) => {
+	const {loader, preloadResources} = config;
+
+	const shouldPreloadResource = (name) => {
+		return preloadResources === true || (
+			Array.isArray(name) && preloadResources.indexOf(name) >= 0
+		);
+	};
 
 	return class I18nDecorator extends React.Component {
 		static contextTypes = stateContextTypes
@@ -118,16 +131,21 @@ const IntlHoc = hoc({}, (config, Wrapped) => {
 		}
 
 		preloadResources () {
+			if (!preloadResources) return;
+
 			// Need to pass options as second arg and explicitly rely on the default behavior when
 			// the first arg, locale, is unset
 			// eslint-disable-next-line no-undefined
 			return ilibPromise(LocaleInfo, [undefined]).then(() => Promise.all([
-				ilibPromise(UnitFmt),
-				ilibPromise(Country),
-				ilibPromise(DateFmt),
-				new Promise(resolve => {
+				shouldPreloadResource('unit') ? ilibPromise(UnitFmt) : null,
+				shouldPreloadResource('country') ? ilibPromise(Country) : null,
+				shouldPreloadResource('date') ? ilibPromise(DateFmt) : null,
+				shouldPreloadResource('charset') ? ilibPromise(Charset, [], {name: 'US-ASCII'}).then(() => {
+					return ilibPromise(Charmap);
+				}) : null,
+				shouldPreloadResource('string') ? new Promise(resolve => {
 					return IString.loadPlurals(false, null, null, resolve);
-				}),
+				}) : null,
 				loader ? loader() : null
 			]));
 		}

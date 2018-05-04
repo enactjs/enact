@@ -8,7 +8,7 @@ import Locale from '@enact/i18n/ilib/lib/Locale';
 let resBundle;
 
 function createResBundle () {
-	ilibCreateBundle(null, {
+	return ilibCreateBundle(null, {
 		loadParams: {
 			root: ILIB_MOONSTONE_PATH
 		}
