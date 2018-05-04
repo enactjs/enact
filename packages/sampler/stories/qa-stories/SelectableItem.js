@@ -95,6 +95,7 @@ storiesOf('SelectableItem', module)
 					disabled: boolean('disabled', false)
 				}}
 				selectedProp="selected"
+				disabled={boolean('disabled', false)}
 				onSelect={action('onSelect')}
 			>
 
