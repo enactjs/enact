@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `core/dispatcher.on` to not add duplicate event handlers
+
 ## [2.0.0-beta.1] - 2018-04-29
 
 ### Added
