@@ -14,8 +14,8 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Touchable from '../Touchable';
 import ComponentOverride from '../ComponentOverride';
+import Touchable from '../Touchable';
 
 import componentCss from './IconButton.less';
 
@@ -36,11 +36,11 @@ const IconButtonBase = kind({
 		 *
 		 * This is the root component and will receive all props except `icon`.
 		 *
-		 * @type {Function}
+		 * @type {Function|Element}
 		 * @required
 		 * @public
 		 */
-		buttonComponent: PropTypes.func.isRequired,
+		buttonComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
 
 		/**
 		 * The component used to render the [icon]{@link ui/IconButton.IconButtonBase.icon}.
@@ -157,7 +157,6 @@ const IconButtonBase = kind({
 			children = null;
 		}
 
-		console.log('css:', css);
 		return (
 			<ComponentOverride
 				{...rest}
