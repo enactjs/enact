@@ -13,6 +13,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
+import {SlotItemDecorator as UiSlotItemDecorator} from '@enact/ui/SlotItem';
 
 import ComponentOverride from '../ComponentOverride';
 import Toggleable from '../Toggleable';
@@ -175,7 +176,7 @@ const ToggleItemBase = kind({
 		slotAfter: iconCreator('after')
 	},
 
-	render: ({component: Component, css, children, onToggle, selected, ...rest}) => {
+	render: ({component: Component, css, children, selected, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.iconPosition;
 		delete rest.value;
@@ -186,7 +187,6 @@ const ToggleItemBase = kind({
 				{...rest}
 				css={css}
 				aria-checked={selected}
-				onTap={onToggle}
 			>
 				{children}
 			</Component>
@@ -199,6 +199,7 @@ const ToggleItemBase = kind({
  *
  * @class ToggleItemDecorator
  * @memberof ui/ToggleItem
+ * @mixes ui/SlotItem.SlotItemDecorator
  * @mixes ui/Remeasurable.RemeasurableDecorator
  * @mixes ui/Touchable.Touchable
  * @mixes ui/Toggleable.Toggleable
@@ -206,9 +207,10 @@ const ToggleItemBase = kind({
  * @public
  */
 const ToggleItemDecorator = compose(
+	UiSlotItemDecorator, // Slottable
 	RemeasurableDecorator({trigger: 'selected'}),
-	Touchable,
-	Toggleable
+	Toggleable({toggle: 'onTap'}),
+	Touchable
 );
 
 /**

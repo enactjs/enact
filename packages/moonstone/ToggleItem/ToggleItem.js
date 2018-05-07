@@ -14,8 +14,12 @@ import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
 import UiToggleItem from '@enact/ui/ToggleItem';
+import Spottable from '@enact/spotlight/Spottable';
+import compose from 'ramda/src/compose';
 
-import SlotItem from '../SlotItem';
+import {MarqueeDecorator} from '../Marquee';
+import Skinnable from '../Skinnable';
+import {SlotItemBase} from '../SlotItem';
 
 import componentCss from './ToggleItem.less';
 
@@ -87,7 +91,7 @@ const ToggleItemBase = kind({
 			<UiToggleItem
 				role="checkbox"
 				{...props}
-				component={SlotItem}
+				component={SlotItemBase}
 				css={props.css}
 			/>
 		);
@@ -99,10 +103,18 @@ const ToggleItemBase = kind({
  *
  * @class ToggleItemDecorator
  * @memberof moonstone/ToggleItem
+ * @mixes spotlight/Spottable.Spottable
+ * @mixes moonstone/Marquee.MarqueeDecorator
+ * @mixes moonstone/Skinnable
  * @hoc
  * @public
  */
-const ToggleItemDecorator = Pure;
+const ToggleItemDecorator = compose(
+	Pure,
+	Spottable,
+	MarqueeDecorator({className: componentCss.content}),
+	Skinnable
+);
 
 /**
  * A Moonstone-styled item with built-in support for toggling, marqueed text, and `Spotlight` focus.
