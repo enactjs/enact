@@ -14,6 +14,7 @@ import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Touchable from '@enact/ui/Touchable';
+import {Provider} from '@enact/ui/Scrollable/ScrollableContext';
 
 import $L from '../internal/$L';
 
@@ -546,53 +547,57 @@ class ScrollableBase extends Component {
 					style,
 					touchableProps,
 					verticalScrollbarProps
-				}) => (
-					<div
-						className={className}
-						data-spotlight-container={spotlightContainer}
-						data-spotlight-id={spotlightId}
-						ref={initUiContainerRef}
-						style={style}
-					>
-						<div className={componentCss.container}>
-							<TouchableDiv {...touchableProps}>
-								{childRenderer({
-									...childComponentProps,
-									cbScrollTo: scrollTo,
-									className: componentCss.scrollableFill,
-									initUiChildRef,
-									onScroll: handleScroll,
-									ref: this.initChildRef,
-									rtl,
-									spotlightId
-								})}
-							</TouchableDiv>
-							{isVerticalScrollbarVisible ?
-								<Scrollbar
-									{...verticalScrollbarProps}
-									{...this.scrollbarProps}
-									disabled={!isVerticalScrollbarVisible}
-									nextButtonAriaLabel={downButtonAriaLabel}
-									previousButtonAriaLabel={upButtonAriaLabel}
-									rtl={rtl}
-								/> :
+				}) => {
+					console.log('provider', isVerticalScrollbarVisible);
+					return (
+					<Provider value={isVerticalScrollbarVisible}>
+						<div
+							className={className}
+							data-spotlight-container={spotlightContainer}
+							data-spotlight-id={spotlightId}
+							ref={initUiContainerRef}
+							style={style}
+						>
+							<div className={componentCss.container}>
+								<TouchableDiv {...touchableProps}>
+									{childRenderer({
+										...childComponentProps,
+										cbScrollTo: scrollTo,
+										className: componentCss.scrollableFill,
+										initUiChildRef,
+										onScroll: handleScroll,
+										ref: this.initChildRef,
+										rtl,
+										spotlightId
+									})}
+								</TouchableDiv>
+								{isVerticalScrollbarVisible ?
+									<Scrollbar
+										{...verticalScrollbarProps}
+										{...this.scrollbarProps}
+										disabled={!isVerticalScrollbarVisible}
+										nextButtonAriaLabel={downButtonAriaLabel}
+										previousButtonAriaLabel={upButtonAriaLabel}
+										rtl={rtl}
+									/> :
 								null
 							}
-						</div>
-						{isHorizontalScrollbarVisible ?
-							<Scrollbar
-								{...horizontalScrollbarProps}
-								{...this.scrollbarProps}
-								corner={isVerticalScrollbarVisible}
-								disabled={!isHorizontalScrollbarVisible}
-								nextButtonAriaLabel={rightButtonAriaLabel}
-								previousButtonAriaLabel={leftButtonAriaLabel}
-								rtl={rtl}
-							/> :
+							</div>
+							{isHorizontalScrollbarVisible ?
+								<Scrollbar
+									{...horizontalScrollbarProps}
+									{...this.scrollbarProps}
+									corner={isVerticalScrollbarVisible}
+									disabled={!isHorizontalScrollbarVisible}
+									nextButtonAriaLabel={rightButtonAriaLabel}
+									previousButtonAriaLabel={leftButtonAriaLabel}
+									rtl={rtl}
+								/> :
 							null
 						}
-					</div>
-				)}
+						</div>
+					</Provider>
+				)}}
 			/>
 		);
 	}

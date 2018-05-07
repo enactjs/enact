@@ -79,7 +79,6 @@ class ScrollbarBase extends Component {
 		}
 	}
 
-
 	initScrollbarRef = (ref) => {
 		if (ref) {
 			const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = ref;

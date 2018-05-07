@@ -72,8 +72,11 @@ class ScrollerBase extends Component {
 		this.calculateMetrics();
 	}
 
-	componentDidUpdate () {
+	componentDidUpdate (prevProps) {
 		this.calculateMetrics();
+		if (this.props.isVerticalScrollBarVisible && !prevProps.isVerticalScrollBarVisible) {
+			this.forceUpdate();
+		}
 	}
 
 	scrollBounds = {
@@ -172,6 +175,7 @@ class ScrollerBase extends Component {
 		delete rest.cbScrollTo;
 		delete rest.direction;
 		delete rest.rtl;
+		delete rest.isVerticalScrollBarVisible;
 
 		return (
 			<div
