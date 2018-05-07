@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Fixed
 
 - `core/dispatcher.on` to not add duplicate event handlers
+- `moonstone/IconButton` to allow theme-style customization, like it claimed was possible
 - `moonstone/ExpandableItem` and related expandables to deal with disabled items and the `autoClose`, `lockBottom` and `noLockBottom` props
 - `moonstone/Slider` not to fire `onChange` event when 5-ways out of boundary
 - `moonstone/ToggleButton` layout for RTL locales
