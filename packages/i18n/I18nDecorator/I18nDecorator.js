@@ -140,9 +140,7 @@ const IntlHoc = hoc(defaultConfig, (config, Wrapped) => {
 				shouldPreloadResource('unit') ? ilibPromise(UnitFmt) : null,
 				shouldPreloadResource('country') ? ilibPromise(Country) : null,
 				shouldPreloadResource('date') ? ilibPromise(DateFmt) : null,
-				shouldPreloadResource('charset') ? ilibPromise(Charset, [], {name: 'US-ASCII'}).then(() => {
-					return ilibPromise(Charmap);
-				}) : null,
+				shouldPreloadResource('charset') ? ilibPromise(Charset, [], {name: 'US-ASCII'}) : null,
 				shouldPreloadResource('string') ? new Promise(resolve => {
 					return IString.loadPlurals(false, null, null, resolve);
 				}) : null,
