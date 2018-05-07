@@ -209,7 +209,7 @@ const ToggleItemBase = kind({
 const ToggleItemDecorator = compose(
 	UiSlotItemDecorator, // Slottable
 	RemeasurableDecorator({trigger: 'selected'}),
-	Toggleable({toggle: 'onTap'}),
+	Toggleable({toggleProp: 'onTap'}),
 	Touchable
 );
 
