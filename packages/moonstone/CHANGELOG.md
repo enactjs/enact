@@ -2,8 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-
-## [unreleased]
+## [2.0.0-beta.2] - 2018-05-07
 
 ### Fixed
 
@@ -13,7 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Item`, `moonstone/SlotItem`, `moonstone/ToggleItem` to properly apply `className`
 - `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` scrollbar button's aria-lable in RTL
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to scroll properly with all disabled items
-- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to ignore to scroll on focus when jumping
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to not scroll on focus when jumping
 
 ## [2.0.0-beta.1] - 2018-04-29
 
