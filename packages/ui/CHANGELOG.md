@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
+- `ui/Marquee` to always marquee when `marqueeOn` is set to `'render'`
 - `ui/Item` to use its natural width rather than imposing a 100% width allowing inline Items to be the correct width
 - `ui/MarqueeDecorator` to correctly reset animation when children updates
 
