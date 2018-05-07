@@ -2,10 +2,17 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+
 ## [unreleased]
 
 ### Fixed
 
+- `moonstone/ExpandableItem` and related expandables to deal with disabled items and the `autoClose`, `lockBottom` and `noLockBottom` props
+- `moonstone/Slider` not to fire `onChange` event when 5-ways out of boundary
+- `moonstone/ToggleButton` layout for RTL locales
+- `moonstone/Item`, `moonstone/SlotItem`, `moonstone/ToggleItem` to properly apply `className`
+- `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` scrollbar button's aria-lable in RTL
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to scroll properly with all disabled items
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to ignore to scroll on focus when jumping
 
 ## [2.0.0-beta.1] - 2018-04-29
