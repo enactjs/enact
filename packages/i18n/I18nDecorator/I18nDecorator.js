@@ -64,7 +64,7 @@ const IntlHoc = hoc(defaultConfig, (config, Wrapped) => {
 
 	const shouldPreloadResource = (name) => {
 		return preloadResources === true || (
-			Array.isArray(name) && preloadResources.indexOf(name) >= 0
+			Array.isArray(preloadResources) && preloadResources.indexOf(name) >= 0
 		);
 	};
 
