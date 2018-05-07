@@ -13,7 +13,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {SlotItemDecorator as UiSlotItemDecorator} from '@enact/ui/SlotItem';
+import {SlotItemDecorator as UiSlotItemDecorator} from '../SlotItem';
 
 import ComponentOverride from '../ComponentOverride';
 import Toggleable from '../Toggleable';
