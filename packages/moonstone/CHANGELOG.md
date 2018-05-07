@@ -5,6 +5,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Changed
+
+- `moonstone/ToggleItem` to forward native events on `onFocus` and `onBlur`
+
 ### Fixed
 
 - `moonstone/ExpandableItem` and related expandables to deal with disabled items and the `autoClose`, `lockBottom` and `noLockBottom` props

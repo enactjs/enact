@@ -112,7 +112,7 @@ const ToggleItemBase = kind({
 const ToggleItemDecorator = compose(
 	Pure,
 	Spottable,
-	MarqueeDecorator({className: componentCss.content}),
+	MarqueeDecorator({className: componentCss.content, invalidateProps: ['inline', 'autoHide']}),
 	Skinnable
 );
 
