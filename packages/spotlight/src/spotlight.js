@@ -359,7 +359,6 @@ const Spotlight = (function () {
 		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
 
 		if (pointerHandled) {
-			_pointerMoveDuringKeyPress = true;
 			return;
 		}
 
