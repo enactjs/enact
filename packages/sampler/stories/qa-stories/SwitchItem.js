@@ -62,7 +62,9 @@ storiesOf('SwitchItem', module)
 						inline: boolean('ItemProps-Inline', false),
 						disabled: boolean('disabled', false)
 					}}
+					childSelect="onToggle"
 					selectedProp="selected"
+					disabled={boolean('disabled', false)}
 					defaultSelected={1}
 					onSelect={action('onSelect')}
 				>

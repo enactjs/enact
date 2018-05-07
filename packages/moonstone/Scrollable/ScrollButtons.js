@@ -201,18 +201,16 @@ class ScrollButtons extends Component {
 	}
 
 	handlePrevDown = () => {
-		const {vertical} = this.props;
-
 		if (this.announce) {
-			this.announce(vertical ? $L('UP') : $L('LEFT'));
+			const {rtl, vertical} = this.props;
+			this.announce(vertical && $L('UP') || rtl && $L('RIGHT') || $L('LEFT'));
 		}
 	}
 
 	handleNextDown = () => {
-		const {vertical} = this.props;
-
 		if (this.announce) {
-			this.announce(vertical ? $L('DOWN') : $L('RIGHT'));
+			const {rtl, vertical} = this.props;
+			this.announce(vertical && $L('DOWN') || rtl && $L('LEFT') || $L('RIGHT'));
 		}
 	}
 
@@ -314,14 +312,14 @@ class ScrollButtons extends Component {
 
 	render () {
 		const
-			{disabled, nextButtonAriaLabel, previousButtonAriaLabel, thumbRenderer, vertical} = this.props,
+			{disabled, nextButtonAriaLabel, previousButtonAriaLabel, rtl, thumbRenderer, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			prevIcon = preparePrevButton(vertical),
 			nextIcon = prepareNextButton(vertical);
 
 		return [
 			<ScrollButton
-				aria-label={previousButtonAriaLabel}
+				aria-label={rtl && !vertical ? nextButtonAriaLabel : previousButtonAriaLabel}
 				key="prevButton"
 				data-spotlight-overflow="ignore"
 				direction={vertical ? 'up' : 'left'}
@@ -341,7 +339,7 @@ class ScrollButtons extends Component {
 			</ScrollButton>,
 			thumbRenderer(),
 			<ScrollButton
-				aria-label={nextButtonAriaLabel}
+				aria-label={rtl && !vertical ? previousButtonAriaLabel : nextButtonAriaLabel}
 				key="nextButton"
 				data-spotlight-overflow="ignore"
 				direction={vertical ? 'down' : 'right'}
