@@ -433,7 +433,7 @@ class ScrollableBaseNative extends Component {
 
 	onKeyDown = (ev) => {
 		this.animateOnFocus = true;
-		if (!Spotlight.getPointerMode() && (isPageUp(ev.keyCode) || isPageDown(ev.keyCode))) {
+		if (isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) {
 			ev.preventDefault();
 			if (!ev.repeat && this.hasFocus()) {
 				this.scrollByPage(ev.keyCode);
