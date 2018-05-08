@@ -449,11 +449,7 @@ const VirtualListBaseFactory = (type) => {
 
 			/* For grid lists, find the nearest item from the current item */
 			if (candidateIndex !== -1) {
-				if (!noDisabledItem) {
-					return candidateIndex;
-				} else {
-					return this.findNearestSpottableItemInExtent(candidateIndex, this.getExtentIndex(candidateIndex));
-				}
+				return noDisabledItem ? candidateIndex : this.findNearestSpottableItemInExtent(candidateIndex, this.getExtentIndex(candidateIndex));
 			} else {
 				return -1;
 			}
