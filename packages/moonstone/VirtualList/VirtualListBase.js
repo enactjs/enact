@@ -459,8 +459,8 @@ const VirtualListBaseFactory = (type) => {
 			const
 				{cbScrollTo} = this.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
-				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute));
-			let indexToScroll = this.getIndexToScroll(direction, focusedIndex);
+				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
+				indexToScroll = this.getIndexToScroll(direction, focusedIndex);
 
 			if (indexToScroll !== -1) {
 				const
