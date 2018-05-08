@@ -369,9 +369,8 @@ const Scroller = (props) => (
 		{...props}
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
 			delete scrollerProps.spotlightId;
-			return (
-				<ScrollerBase {...scrollerProps} />
-			);
+
+			return <ScrollerBase {...scrollerProps} />;
 		}}
 	/>
 );
