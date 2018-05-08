@@ -103,7 +103,7 @@ const IconButtonBase = kind({
 			<UiIconButtonBase
 				data-webos-voice-intent="Select"
 				{...rest}
-				buttonComponent={ButtonBase}
+				buttonComponent={<ButtonBase css={css} />}
 				css={css}
 				icon={children}
 				iconComponent={Icon}
