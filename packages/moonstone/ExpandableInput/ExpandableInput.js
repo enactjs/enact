@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import Pause from '@enact/spotlight/Pause';
 
-import {calcAriaLabel, Input} from '../Input';
+import {calcAriaLabel, extractInputProps, Input} from '../Input';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 
 import css from './ExpandableInput.less';
@@ -294,6 +294,7 @@ class ExpandableInputBase extends React.Component {
 			...rest
 		} = this.props;
 
+		const inputProps = extractInputProps(rest);
 		delete rest.onChange;
 		delete rest.onInputChange;
 
@@ -312,6 +313,7 @@ class ExpandableInputBase extends React.Component {
 				spotlightDisabled={spotlightDisabled}
 			>
 				<Input
+					{...inputProps}
 					autoFocus
 					className={css.decorator}
 					disabled={disabled}

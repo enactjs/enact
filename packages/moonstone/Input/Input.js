@@ -20,6 +20,7 @@ import Tooltip from '../TooltipDecorator/Tooltip';
 import componentCss from './Input.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
+import {extractInputProps} from './util';
 
 const calcAriaLabel = function (title, type, value = '') {
 	const hint = $L('Input field');
@@ -259,7 +260,8 @@ const InputBase = kind({
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({autoComplete, css, dir, disabled, iconAfter, iconBefore, invalidTooltip, list, maxLength, minLength, onChange, pattern, placeholder, required, size, small, type, value, ...rest}) => {
+	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, ...rest}) => {
+		const inputProps = extractInputProps(rest);
 		delete rest.dismissOnEnter;
 		delete rest.focused;
 		delete rest.invalid;
@@ -270,19 +272,13 @@ const InputBase = kind({
 			<div {...rest} disabled={disabled}>
 				<InputDecoratorIcon position="before" small={small}>{iconBefore}</InputDecoratorIcon>
 				<input
+					{...inputProps}
 					aria-disabled={disabled}
-					autoComplete={autoComplete}
 					className={css.input}
 					dir={dir}
 					disabled={disabled}
 					onChange={onChange}
-					list={list}
-					maxLength={maxLength}
-					minLength={minLength}
-					pattern={pattern}
 					placeholder={placeholder}
-					required={required}
-					size={size}
 					type={type}
 					value={value}
 				/>
@@ -325,6 +321,7 @@ const Input = Pure(
 export default Input;
 export {
 	calcAriaLabel,
+	extractInputProps,
 	Input,
 	InputBase
 };
