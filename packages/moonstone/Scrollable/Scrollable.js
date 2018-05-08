@@ -547,9 +547,7 @@ class ScrollableBase extends Component {
 					style,
 					touchableProps,
 					verticalScrollbarProps
-				}) => {
-					console.log('provider', isVerticalScrollbarVisible);
-					return (
+				}) => (
 					<Provider value={isVerticalScrollbarVisible}>
 						<div
 							className={className}
@@ -597,7 +595,7 @@ class ScrollableBase extends Component {
 						}
 						</div>
 					</Provider>
-				)}}
+				)}
 			/>
 		);
 	}

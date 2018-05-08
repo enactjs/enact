@@ -56,6 +56,14 @@ class ScrollerBase extends Component {
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
+		 * Prop to check context value if Scrollbar exists or not.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		isVerticalScrollBarVisible: PropTypes.bool,
+
+		/**
 		 * `true` if rtl, `false` if ltr.
 		 *
 		 * @type {Boolean}

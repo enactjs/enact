@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Image` so it automatically swaps the `src` to the appropriate resolution dynamically as the screen resizes
 - `moonstone/Popup` to support all `spotlightRestrict` options
+- `moonstone/Scroller` to not cut off expandables when scrollbar appears
 
 ## [2.0.0-beta.2] - 2018-05-07
 
