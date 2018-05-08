@@ -334,7 +334,7 @@ class ScrollableBase extends Component {
 			pageDistance = (isPageUp(keyCode) ? -1 : 1) * (canScrollVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
 			spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem) {
+		if (spotItem) {
 			// Should skip scroll by page when spotItem is paging control button of Scrollbar
 			if (!childRef.containerRef.contains(spotItem)) {
 				return;
@@ -389,7 +389,7 @@ class ScrollableBase extends Component {
 
 	onKeyDown = (ev) => {
 		this.animateOnFocus = true;
-		if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) && !ev.repeat && this.hasFocus()) {
+		if (!Spotlight.getPointerMode() && (isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) && !ev.repeat && this.hasFocus()) {
 			this.scrollByPage(ev.keyCode);
 		}
 	}
