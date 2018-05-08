@@ -313,11 +313,15 @@ const VirtualListBaseFactory = (type) => {
 				{dataSize, isItemDisabled} = this.props,
 				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
 				safeIndexTo = clamp(-1, dataSize, indexTo),
-				delta = (indexFrom < indexTo) ? 1 : -1;
+				noDisabledItem = (isItemDisabled === isItemDisabledDefault);
 
 			if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
 				return -1;
+			} else if (noDisabledItem) {
+				return safeIndexFrom;
 			}
+
+			const delta = (indexFrom < indexTo) ? 1 : -1;
 
 			if (safeIndexFrom !== safeIndexTo) {
 				for (let i = safeIndexFrom; i !== safeIndexTo; i += delta) {
@@ -399,14 +403,15 @@ const VirtualListBaseFactory = (type) => {
 			return nearestIndex;
 		}
 
-		getIndexToScrollDisabled = (direction, currentIndex) => {
+		getIndexToScroll = (direction, currentIndex) => {
 			const
-				{dataSize, spacing} = this.props,
+				{dataSize, isItemDisabled, spacing} = this.props,
 				{dimensionToExtent, primary} = this.uiRef,
 				{findSpottableItem} = this,
 				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo,
 				numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent),
-				isPageDown = (direction === 'down' || direction === 'right') ? 1 : -1;
+				isPageDown = (direction === 'down' || direction === 'right') ? 1 : -1,
+				noDisabledItem = (isItemDisabled === isItemDisabledDefault);
 			let candidateIndex = -1;
 
 			/* First, find a spottable item in this page */
@@ -444,44 +449,22 @@ const VirtualListBaseFactory = (type) => {
 
 			/* For grid lists, find the nearest item from the current item */
 			if (candidateIndex !== -1) {
-				return this.findNearestSpottableItemInExtent(currentIndex, this.getExtentIndex(currentIndex));
+				if (!noDisabledItem) {
+					return candidateIndex;
+				} else {
+					return this.findNearestSpottableItemInExtent(candidateIndex, this.getExtentIndex(candidateIndex));
+				}
 			} else {
 				return -1;
 			}
 		}
 
-		getIndexToScroll = (direction, currentIndex) => {
-			const
-				{dataSize, spacing} = this.props,
-				{dimensionToExtent, primary} = this.uiRef,
-				numOfItemsInPage = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent,
-				factor = (direction === 'down' || direction === 'right') ? 1 : -1;
-			let indexToScroll = currentIndex + factor * numOfItemsInPage;
-
-			if (indexToScroll < 0) {
-				indexToScroll = currentIndex % dimensionToExtent;
-			} else if (indexToScroll >= dataSize) {
-				indexToScroll = dataSize - dataSize % dimensionToExtent + currentIndex % dimensionToExtent;
-				if (indexToScroll >= dataSize) {
-					indexToScroll = dataSize - 1;
-				}
-			}
-
-			return indexToScroll === currentIndex ? -1 : indexToScroll;
-		}
-
 		scrollToNextItem = ({direction, focusedItem}) => {
 			const
-				{cbScrollTo, isItemDisabled} = this.props,
+				{cbScrollTo} = this.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
 				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute));
-			let indexToScroll = -1;
-
-			if (isItemDisabled === isItemDisabledDefault) {
-				indexToScroll = this.getIndexToScroll(direction, focusedIndex);
-			} else {
-				indexToScroll = this.getIndexToScrollDisabled(direction, focusedIndex);
-			}
+			let indexToScroll = this.getIndexToScroll(direction, focusedIndex);
 
 			if (indexToScroll !== -1) {
 				const
