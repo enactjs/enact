@@ -94,11 +94,32 @@ storiesOf('SelectableItem', module)
 					inline: boolean('inline', false),
 					disabled: boolean('disabled', false)
 				}}
+				childSelect="onToggle"
 				selectedProp="selected"
+				disabled={boolean('disabled', false)}
 				onSelect={action('onSelect')}
 			>
 
 				{[text('Normal Text 1', inputData.normalText + 1), text('Normal Text 2', inputData.normalText + 2), text('Normal Text 3', inputData.normalText + 3)]}
+			</Group>
+		)
+	)
+	.add(
+		'that is grouped with individual disabled items',
+		() => (
+			<Group
+				childComponent={SelectableItem}
+				childSelect="onToggle"
+				selectedProp="selected"
+				onSelect={action('onSelect')}
+			>
+				{[
+					{children: '1', disabled: true},
+					{children: '2', disabled: false},
+					{children: '3', disabled: true},
+					{children: '4', disabled: false}
+
+				]}
 			</Group>
 		)
 	);

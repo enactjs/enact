@@ -7,12 +7,15 @@
  * @module moonstone/ExpandableItem
  */
 
-import {extractAriaProps} from '@enact/core/util';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
-import React from 'react';
-import PropTypes from 'prop-types';
+import {extractAriaProps} from '@enact/core/util';
+import {getContainersForNode} from '@enact/spotlight/src/container';
+import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import PropTypes from 'prop-types';
+import last from 'ramda/src/last';
+import React from 'react';
 
 import LabeledItem from '../LabeledItem';
 
@@ -25,6 +28,23 @@ const isUp = is('up');
 const isDown = is('down');
 
 const ContainerDiv = SpotlightContainerDecorator({continue5WayHold: true}, 'div');
+
+// Returns `true` if a directional movement would leave the same container as `srcNode` is in.
+// For a more generalized implementation, there'd need to be some way to specify an upper-most
+// container for dealing with cases of components that are themselves wrapped in containers.
+function wouldDirectionLeaveContainer (dir, srcNode) {
+	const target = getTargetByDirectionFromElement(dir, srcNode);
+
+	// If there's no target in the direction we won't move
+	if (!target) {
+		return false;
+	}
+
+	const targetContainer = last(getContainersForNode(target));
+	const srcContainer = last(getContainersForNode(srcNode));
+
+	return (targetContainer !== srcContainer);
+}
 
 /**
  * {@link moonstone/ExpandableItem.ExpandableItemBase} is a stateless component that
@@ -236,10 +256,10 @@ const ExpandableItemBase = kind({
 				// case here in which the children of the container are spottable and the
 				// ExpandableList use case which has an intermediate child (Group) between the
 				// spottable components and the container.
-				if (autoClose && isUp(keyCode) && target.parentNode.firstChild === target && onClose) {
+				if (autoClose && onClose && isUp(keyCode) && wouldDirectionLeaveContainer('up', target)) {
 					onClose();
 					ev.nativeEvent.stopImmediatePropagation();
-				} else if (isDown(keyCode) && target.parentNode.lastChild === target) {
+				} else if (isDown(keyCode) && wouldDirectionLeaveContainer('down', target)) {
 					if (lockBottom) {
 						ev.nativeEvent.stopImmediatePropagation();
 					} else if (onSpotlightDown) {
