@@ -12,7 +12,8 @@ import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from 
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {Spotlight, getDirection} from '@enact/spotlight';
-import {Consumer} from '@enact/ui/Scrollable/ScrollableContext';
+import {Consumer} from '@enact/ui/Scrollable/VerticalScrollbarContext';
+
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 

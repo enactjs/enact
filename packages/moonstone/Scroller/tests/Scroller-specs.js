@@ -29,7 +29,6 @@ describe('Scroller', () => {
 					{contents}
 				</Scroller>
 			);
-
 			const expected = 2;
 			const actual = subject.find('Scrollbar').length;
 

@@ -14,7 +14,7 @@ import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Touchable from '@enact/ui/Touchable';
-import {Provider} from '@enact/ui/Scrollable/ScrollableContext';
+import {Provider} from '@enact/ui/Scrollable/VerticalScrollbarContext';
 
 import $L from '../internal/$L';
 
@@ -548,15 +548,15 @@ class ScrollableBase extends Component {
 					touchableProps,
 					verticalScrollbarProps
 				}) => (
-					<Provider value={isVerticalScrollbarVisible}>
-						<div
-							className={className}
-							data-spotlight-container={spotlightContainer}
-							data-spotlight-id={spotlightId}
-							ref={initUiContainerRef}
-							style={style}
-						>
-							<div className={componentCss.container}>
+					<div
+						className={className}
+						data-spotlight-container={spotlightContainer}
+						data-spotlight-id={spotlightId}
+						ref={initUiContainerRef}
+						style={style}
+					>
+						<div className={componentCss.container}>
+							<Provider value={isVerticalScrollbarVisible}>
 								<TouchableDiv {...touchableProps}>
 									{childRenderer({
 										...childComponentProps,
@@ -569,32 +569,32 @@ class ScrollableBase extends Component {
 										spotlightId
 									})}
 								</TouchableDiv>
-								{isVerticalScrollbarVisible ?
-									<Scrollbar
-										{...verticalScrollbarProps}
-										{...this.scrollbarProps}
-										disabled={!isVerticalScrollbarVisible}
-										nextButtonAriaLabel={downButtonAriaLabel}
-										previousButtonAriaLabel={upButtonAriaLabel}
-										rtl={rtl}
-									/> :
-								null
-							}
-							</div>
-							{isHorizontalScrollbarVisible ?
+							</Provider>
+							{isVerticalScrollbarVisible ?
 								<Scrollbar
-									{...horizontalScrollbarProps}
+									{...verticalScrollbarProps}
 									{...this.scrollbarProps}
-									corner={isVerticalScrollbarVisible}
-									disabled={!isHorizontalScrollbarVisible}
-									nextButtonAriaLabel={rightButtonAriaLabel}
-									previousButtonAriaLabel={leftButtonAriaLabel}
+									disabled={!isVerticalScrollbarVisible}
+									nextButtonAriaLabel={downButtonAriaLabel}
+									previousButtonAriaLabel={upButtonAriaLabel}
 									rtl={rtl}
 								/> :
+								null
+							}
+						</div>
+						{isHorizontalScrollbarVisible ?
+							<Scrollbar
+								{...horizontalScrollbarProps}
+								{...this.scrollbarProps}
+								corner={isVerticalScrollbarVisible}
+								disabled={!isHorizontalScrollbarVisible}
+								nextButtonAriaLabel={rightButtonAriaLabel}
+								previousButtonAriaLabel={leftButtonAriaLabel}
+								rtl={rtl}
+							/> :
 							null
 						}
-						</div>
-					</Provider>
+					</div>
 				)}
 			/>
 		);
