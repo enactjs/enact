@@ -245,7 +245,6 @@ const InputBase = kind({
 		},
 		className: ({focused, invalid, small, styler}) => styler.append({focused, invalid, small}),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
-		inputProps: ({autoComplete, list, maxLength, minLength, pattern, required, size}) => Object.assign({}, {autoComplete, list, maxLength, minLength, pattern, required, size}),
 		invalidTooltip: ({css, invalid, invalidMessage, rtl}) => {
 			if (invalid && invalidMessage) {
 				const direction = rtl ? 'left' : 'right';
@@ -260,7 +259,7 @@ const InputBase = kind({
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({css, dir, disabled, iconAfter, iconBefore, inputProps, invalidTooltip, onChange, placeholder, small, type, value, ...rest}) => {
+	render: ({autoComplete, css, dir, disabled, iconAfter, iconBefore, invalidTooltip, list, maxLength, minLength, onChange, pattern, placeholder, required, size, small, type, value, ...rest}) => {
 		delete rest.dismissOnEnter;
 		delete rest.focused;
 		delete rest.invalid;
@@ -271,13 +270,19 @@ const InputBase = kind({
 			<div {...rest} disabled={disabled}>
 				<InputDecoratorIcon position="before" small={small}>{iconBefore}</InputDecoratorIcon>
 				<input
-					{...inputProps}
 					aria-disabled={disabled}
+					autoComplete={autoComplete}
 					className={css.input}
 					dir={dir}
 					disabled={disabled}
 					onChange={onChange}
+					list={list}
+					maxLength={maxLength}
+					minLength={minLength}
+					pattern={pattern}
 					placeholder={placeholder}
+					required={required}
+					size={size}
 					type={type}
 					value={value}
 				/>
