@@ -607,6 +607,7 @@ class ScrollableBaseNative extends Component {
 									...childComponentProps,
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
+									isVerticalScrollbarVisible,
 									initUiChildRef,
 									ref: this.initChildRef,
 									rtl,

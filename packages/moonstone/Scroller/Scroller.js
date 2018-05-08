@@ -12,7 +12,6 @@ import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from 
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {Spotlight, getDirection} from '@enact/spotlight';
-import {Consumer} from '@enact/ui/Scrollable/VerticalScrollbarContext';
 
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -371,13 +370,7 @@ const Scroller = (props) => (
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
 			delete scrollerProps.spotlightId;
 			return (
-				<Consumer>
-					{(value) => {
-						return (
-							<ScrollerBase {...scrollerProps} isVerticalScrollBarVisible={value} />
-						);
-					}}
-				</Consumer>
+				<ScrollerBase {...scrollerProps} />
 			);
 		}}
 	/>

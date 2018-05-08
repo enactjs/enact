@@ -61,7 +61,7 @@ class ScrollerBase extends Component {
 		 * @type {Boolean}
 		 * @private
 		 */
-		isVerticalScrollBarVisible: PropTypes.bool,
+		isVerticalScrollbarVisible: PropTypes.bool,
 
 		/**
 		 * `true` if rtl, `false` if ltr.
@@ -82,7 +82,7 @@ class ScrollerBase extends Component {
 
 	componentDidUpdate (prevProps) {
 		this.calculateMetrics();
-		if (this.props.isVerticalScrollBarVisible && !prevProps.isVerticalScrollBarVisible) {
+		if (this.props.isVerticalScrollbarVisible && !prevProps.isVerticalScrollbarVisible) {
 			this.forceUpdate();
 		}
 	}
@@ -183,7 +183,7 @@ class ScrollerBase extends Component {
 		delete rest.cbScrollTo;
 		delete rest.direction;
 		delete rest.rtl;
-		delete rest.isVerticalScrollBarVisible;
+		delete rest.isVerticalScrollbarVisible;
 
 		return (
 			<div
