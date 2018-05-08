@@ -191,7 +191,7 @@ const isContainerEnabled = (node) => {
 const getContainerId = (node) => node.dataset[containerKey];
 
 /**
- * Generates a CSS selector string for a currrent container if `node` is a container
+ * Generates a CSS selector string for a current container if `node` is a container
  *
  * @param   {Node}    node  Container Node
  *

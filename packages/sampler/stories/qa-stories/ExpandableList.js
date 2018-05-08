@@ -79,8 +79,14 @@ storiesOf('ExpandableList', module)
 				<ExpandableList title="First">
 					{['One', 'Two', 'Three']}
 				</ExpandableList>
-				<ExpandableList title="Second">
-					{['Fourth', 'Fifth', 'Sixth']}
+				<ExpandableList title="Second (with disabled items)">
+					{[
+						{key: 1, children: 'a', disabled: true},
+						{key: 2, children: 'b'},
+						{key: 3, children: 'c', disabled: true},
+						{key: 4, children: 'd'},
+						{key: 5, children: 'e', disabled: true}
+					]}
 				</ExpandableList>
 				<ExpandableList title="Third">
 					{['Seventh', 'Eighth', 'Ninth']}
