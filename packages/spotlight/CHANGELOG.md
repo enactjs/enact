@@ -6,8 +6,13 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
-- `spotlight/Spottable` to not set its focused state when disabled
 - `spotlight` handling of 5-way events after the pointer hides
+
+## [2.0.0-beta.2] - 2018-05-07
+
+### Fixed
+
+- `spotlight/Spottable` to not set its focused state when disabled
 
 ## [2.0.0-beta.1] - 2018-04-29
 
