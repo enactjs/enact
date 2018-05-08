@@ -186,55 +186,55 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 	let _root = (params && typeof params.root !== 'undefined') ? params.root : iLibResources;
 	let cache = {data: this._loadFilesCache(_root, paths)};
 	if (sync) {
-		debugger;
+		// sync mode is not supported right now
 
-		let ret = [];
-		let locdata = this._pathjoin(this.base, 'locale');
-		// synchronous
-		paths.forEach(function (path, index) {
-			if (this.webos && path.indexOf('zoneinfo') !== -1) {
-				ret.push(this._createZoneFile(path));
-			} else if (cache.data[index]) {
-				ret.push(cache.data[index]);
-			} else {
-				let found = false;
+		// let ret = [];
+		// let locdata = this._pathjoin(this.base, 'locale');
+		// // synchronous
+		// paths.forEach(function (path, index) {
+		// 	if (this.webos && path.indexOf('zoneinfo') !== -1) {
+		// 		ret.push(this._createZoneFile(path));
+		// 	} else if (cache.data[index]) {
+		// 		ret.push(cache.data[index]);
+		// 	} else {
+		// 		let found = false;
 
-				const handler = (json, err) => {
-					if (!err && typeof json === 'object') {
-						cache.update = true;
-						ret.push(json);
-						found = true;
-					}
-				};
+		// 		const handler = (json, err) => {
+		// 			if (!err && typeof json === 'object') {
+		// 				cache.update = true;
+		// 				ret.push(json);
+		// 				found = true;
+		// 			}
+		// 		};
 
-				if (this.isAvailable(_root, path)) {
-					get(this._pathjoin(_root, path), handler);
-				}
+		// 		if (this.isAvailable(_root, path)) {
+		// 			get(this._pathjoin(_root, path), handler);
+		// 		}
 
-				if (!found && this.isAvailable(locdata, path)) {
-					get(this._pathjoin(locdata, path), handler);
-				}
+		// 		if (!found && this.isAvailable(locdata, path)) {
+		// 			get(this._pathjoin(locdata, path), handler);
+		// 		}
 
-				if (!found) {
-					if (path === 'localeinfo.json') {
-						// Use default locale info when xhr on root localeinfo.json fails/skips
-						ret.push(LocaleInfo.defaultInfo);
-					} else {
-						// not there, so fill in a blank entry in the array
-						// eslint-disable-next-line no-undefined
-						ret.push(undefined);
-					}
-				}
-			}
-		}.bind(this));
+		// 		if (!found) {
+		// 			if (path === 'localeinfo.json') {
+		// 				// Use default locale info when xhr on root localeinfo.json fails/skips
+		// 				ret.push(LocaleInfo.defaultInfo);
+		// 			} else {
+		// 				// not there, so fill in a blank entry in the array
+		// 				// eslint-disable-next-line no-undefined
+		// 				ret.push(undefined);
+		// 			}
+		// 		}
+		// 	}
+		// }.bind(this));
 
-		if (cache.update) {
-			this._storeFilesCache(_root, paths, ret);
-		}
-		if (typeof callback === 'function') {
-			callback.call(this, ret);
-		}
-		return ret;
+		// if (cache.update) {
+		// 	this._storeFilesCache(_root, paths, ret);
+		// }
+		// if (typeof callback === 'function') {
+		// 	callback.call(this, ret);
+		// }
+		// return ret;
 	}
 
 	// asynchronous
