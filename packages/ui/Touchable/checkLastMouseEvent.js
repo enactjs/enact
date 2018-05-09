@@ -1,14 +1,14 @@
-let event = {
+let lastEvent = {
 	type: null,
 	timeStamp: 0
 };
 
 const checkLastMouseEvent = ({type, timeStamp}) => {
-	if (event.type === 'mouseup' && type === 'click' && event.timeStamp === timeStamp) {
+	if (lastEvent.type === 'mouseup' && type === 'click' && lastEvent.timeStamp === timeStamp) {
 		return false;
 	}
-	event.type = type;
-	event.timeStamp = timeStamp;
+	lastEvent.type = type;
+	lastEvent.timeStamp = timeStamp;
 
 	return true;
 };
