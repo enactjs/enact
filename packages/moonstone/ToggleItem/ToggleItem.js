@@ -9,11 +9,12 @@
  * @exports ToggleItemDecorator
  */
 
+import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
-import UiToggleItem from '@enact/ui/ToggleItem';
+import {ToggleItemBase as UiToggleItem, ToggleItemDecorator as UiToggleItemDecorator} from '@enact/ui/ToggleItem';
 import Spottable from '@enact/spotlight/Spottable';
 import compose from 'ramda/src/compose';
 
@@ -99,22 +100,44 @@ const ToggleItemBase = kind({
 });
 
 /**
+ * Default config for {@link moonstone/ToggleItem.ToggleItemDecorator}.
+ *
+ * @memberof moonstone/ToggleItem.ToggleItemDecorator
+ * @hocconfig
+ */
+const defaultConfig = {
+	/**
+	 * Invalidate the distance of marquee text if any property (like 'inline') changes.
+	 * Expects an array of props which on change trigger invalidateMetrics.
+	 *
+	 * @type {Array}
+	 * @default ['inline']
+	 * @memberof moonstone/ToggleItem.ToggleItemDecorator.defaultConfig
+	 */
+	invalidateProps: ['inline']
+};
+
+/**
  * Adds interactive functionality to `ToggleItemBase`
  *
  * @class ToggleItemDecorator
  * @memberof moonstone/ToggleItem
+ * @mixes ui/ToggleItem.ToggleItemDecorator
  * @mixes spotlight/Spottable.Spottable
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes moonstone/Skinnable
  * @hoc
  * @public
  */
-const ToggleItemDecorator = compose(
-	Pure,
-	Spottable,
-	MarqueeDecorator({className: componentCss.content, invalidateProps: ['inline', 'autoHide']}),
-	Skinnable
-);
+const ToggleItemDecorator = hoc(defaultConfig, ({invalidateProps}, Wrapped) => {
+	return compose(
+		Pure,
+		UiToggleItemDecorator,
+		Spottable,
+		MarqueeDecorator({className: componentCss.content, invalidateProps}),
+		Skinnable
+	)(Wrapped);
+});
 
 /**
  * A Moonstone-styled item with built-in support for toggling, marqueed text, and `Spotlight` focus.

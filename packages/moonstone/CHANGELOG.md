@@ -5,6 +5,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/SelectableItem.SelectableItemDecorator`
+
 ### Changed
 
 - `moonstone/ToggleItem` to forward native events on `onFocus` and `onBlur`

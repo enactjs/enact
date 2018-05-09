@@ -4,13 +4,14 @@
  * @module moonstone/SelectableItem
  * @exports SelectableItem
  * @exports SelectableItemBase
+ * @exports SelectableItemDecorator
  */
 
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import ToggleItem from '../ToggleItem';
+import {ToggleItemBase, ToggleItemDecorator} from '../ToggleItem';
 
 import SelectableIcon from './SelectableIcon';
 
@@ -21,7 +22,7 @@ import componentCss from './SelectableItem.less';
  *
  * @class SelectableItem
  * @memberof moonstone/SelectableItem
- * @extends moonstone/ToggleItem.ToggleItem
+ * @extends moonstone/ToggleItem.ToggleItemBase
  * @ui
  * @public
  */
@@ -50,7 +51,7 @@ const SelectableItemBase = kind({
 	},
 
 	render: (props) => (
-		<ToggleItem
+		<ToggleItemBase
 			data-webos-voice-intent="SelectCheckItem"
 			{...props}
 			css={props.css}
@@ -59,8 +60,38 @@ const SelectableItemBase = kind({
 	)
 });
 
-export default SelectableItemBase;
+/**
+ * Adds interactive functionality to `SelectableItemBase`
+ *
+ * @class SelectableItemDecorator
+ * @memberof moostone/SelectableItem
+ * @mixes moostone/ToggleItem.ToggleItemDecorator
+ * @hoc
+ * @public
+ */
+const SelectableItemDecorator = ToggleItemDecorator({invalidateProps: ['inline', 'selected']});
+
+/**
+ * A Moonstone-styled item with circle shaped component with built-in support for toggling,
+ * marqueed text, and `Spotlight` focus.
+ *
+ * Usage:
+ * ```
+ * <SelectableItem>Toggle Me</SelectableItem>
+ * ```
+ *
+ * @class SelectableItem
+ * @memberof moonstone/SelectableItem
+ * @extends moonstone/SelectableItem.SelectableItemBase
+ * @mixes moonstone/SelectableItem.SelectableItemDecorator
+ * @ui
+ * @public
+ */
+const SelectableItem = SelectableItemDecorator(SelectableItemBase);
+
+export default SelectableItem;
 export {
-	SelectableItemBase as SelectableItem,
-	SelectableItemBase
+	SelectableItem,
+	SelectableItemBase,
+	SelectableItemDecorator
 };

@@ -13,11 +13,9 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {SlotItemDecorator as UiSlotItemDecorator} from '../SlotItem';
 
 import ComponentOverride from '../ComponentOverride';
 import Toggleable from '../Toggleable';
-import {RemeasurableDecorator} from '../Remeasurable';
 import Touchable from '../Touchable';
 
 import componentCss from './ToggleItem.less';
@@ -199,16 +197,12 @@ const ToggleItemBase = kind({
  *
  * @class ToggleItemDecorator
  * @memberof ui/ToggleItem
- * @mixes ui/SlotItem.SlotItemDecorator
- * @mixes ui/Remeasurable.RemeasurableDecorator
  * @mixes ui/Touchable.Touchable
  * @mixes ui/Toggleable.Toggleable
  * @hoc
  * @public
  */
 const ToggleItemDecorator = compose(
-	UiSlotItemDecorator, // Slottable
-	RemeasurableDecorator({trigger: 'selected'}),
 	Toggleable({toggleProp: 'onTap'}),
 	Touchable
 );
