@@ -1,5 +1,7 @@
 /**
- * Provides gesture support services.
+ * Provides the [Touchable]{@link ui/Touchable.Touchable} Higher-order Component (HOC) to add
+ * gesture support to components and the [configure()]{@link ui/Touchable.configure} method for
+ * configuring gestures for the application.
  *
  * @module ui/Touchable
  */
@@ -117,9 +119,7 @@ const handleMouseLeave = handle(
 const handleMouseUp = handle(
 	checkLastMouseEvent,
 	forward('onMouseUp'),
-	handleUp,
-	// block the next click to prevent duplicate onUp events
-	// block
+	handleUp
 );
 
 const handleClick = handle(
@@ -128,7 +128,7 @@ const handleClick = handle(
 	call('activate'),
 	forward('onClick'),
 	handleUp,
-).finally(unblock);
+);
 
 // Touch event handlers
 
