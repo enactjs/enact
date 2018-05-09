@@ -17,6 +17,7 @@ import Touchable from '@enact/ui/Touchable';
 
 import $L from '../internal/$L';
 
+import OverscrollEffect from './OverscrollEffect';
 import Scrollbar from './Scrollbar';
 
 import scrollbarCss from './Scrollbar.less';
@@ -129,39 +130,39 @@ class ScrollableBase extends Component {
 		focusableScrollbar: PropTypes.bool,
 
 		/**
-		* Sets the hint string read when focusing the next button in the vertical scroll bar.
-		*
-		* @type {String}
-		* @default $L('scroll down')
-		* @public
-		*/
+		 * Sets the hint string read when focusing the next button in the vertical scroll bar.
+		 *
+		 * @type {String}
+		 * @default $L('scroll down')
+		 * @public
+		 */
 		scrollDownAriaLabel: PropTypes.string,
 
 		/**
-		* Sets the hint string read when focusing the previous button in the horizontal scroll bar.
-		*
-		* @type {String}
-		* @default $L('scroll left')
-		* @public
-		*/
+		 * Sets the hint string read when focusing the previous button in the horizontal scroll bar.
+		 *
+		 * @type {String}
+		 * @default $L('scroll left')
+		 * @public
+		 */
 		scrollLeftAriaLabel: PropTypes.string,
 
 		/**
-		* Sets the hint string read when focusing the next button in the horizontal scroll bar.
-		*
-		* @type {String}
-		* @default $L('scroll right')
-		* @public
-		*/
+		 * Sets the hint string read when focusing the next button in the horizontal scroll bar.
+		 *
+		 * @type {String}
+		 * @default $L('scroll right')
+		 * @public
+		 */
 		scrollRightAriaLabel: PropTypes.string,
 
 		/**
-		* Sets the hint string read when focusing the previous button in the vertical scroll bar.
-		*
-		* @type {String}
-		* @default $L('scroll up')
-		* @public
-		*/
+		 * Sets the hint string read when focusing the previous button in the vertical scroll bar.
+		 *
+		 * @type {String}
+		 * @default $L('scroll up')
+		 * @public
+		 */
 		scrollUpAriaLabel: PropTypes.string
 	}
 
@@ -199,6 +200,9 @@ class ScrollableBase extends Component {
 	lastScrollPositionOnFocus = null
 	indexToFocus = null
 	nodeToFocus = null
+
+	// overscroll
+	overscrollRefs = {[true]: {}, [false]: {}} // `true` for vertical and `false` for horizontal
 
 	onFlick = () => {
 		const focusedItem = Spotlight.getCurrent();
@@ -475,6 +479,14 @@ class ScrollableBase extends Component {
 		this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 	}
 
+	updateOverscrollEffect = (vertical, forth) => {
+		const ref = this.overscrollRefs[vertical][forth];
+
+		if (ref) {
+			ref.update();
+		}
+	}
+
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	addEventListeners = (childContainerRef) => {
 		if (childContainerRef && childContainerRef.addEventListener) {
@@ -486,6 +498,12 @@ class ScrollableBase extends Component {
 	removeEventListeners = (childContainerRef) => {
 		if (childContainerRef && childContainerRef.removeEventListener) {
 			childContainerRef.removeEventListener('focusin', this.onFocus);
+		}
+	}
+
+	initOverscrollRef = (vertical, forth) => (ref) => {
+		if (ref) {
+			this.overscrollRefs[vertical][forth] = ref;
 		}
 	}
 
@@ -531,6 +549,7 @@ class ScrollableBase extends Component {
 				removeEventListeners={this.removeEventListeners}
 				scrollTo={this.scrollTo}
 				stop={this.stop}
+				updateOverscrollEffect={this.updateOverscrollEffect}
 				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
 					childComponentProps,
 					className,
@@ -566,6 +585,10 @@ class ScrollableBase extends Component {
 									rtl,
 									spotlightId
 								})}
+								<OverscrollEffect forth rtl={rtl} vertical ref={this.initOverscrollRef(true, true)} />
+								<OverscrollEffect rtl={rtl} vertical ref={this.initOverscrollRef(true, false)} />
+								<OverscrollEffect forth rtl={rtl} ref={this.initOverscrollRef(false, true)} />
+								<OverscrollEffect rtl={rtl} ref={this.initOverscrollRef(false, false)} />
 							</TouchableDiv>
 							{isVerticalScrollbarVisible ?
 								<Scrollbar

@@ -277,6 +277,14 @@ class ScrollableBaseNative extends Component {
 		style: PropTypes.object,
 
 		/**
+		 * Called to execute additional logic in a themed component to show overscroll effect.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		updateOverscrollEffect: PropTypes.func,
+
+		/**
 		 * Specifies how to show vertical scrollbar.
 		 * Valid values are:
 		 * * `'auto'`,
@@ -552,7 +560,7 @@ class ScrollableBaseNative extends Component {
 
 	/*
 	 * wheel event handler;
-	 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot suppor this
+	 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot support this
 	 * - for vertical scroll, supports wheel action on scrollbars only
 	 */
 	onWheel = (ev) => {
@@ -590,6 +598,7 @@ class ScrollableBaseNative extends Component {
 						needToHideThumb = !delta;
 					}
 				} else {
+					this.updateOverscrollEffect(true, !(this.scrollTop === 0));
 					needToHideThumb = true;
 				}
 			} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
@@ -597,6 +606,7 @@ class ScrollableBaseNative extends Component {
 					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
 				} else {
+					this.updateOverscrollEffect(false, !(this.scrollLeft === 0));
 					needToHideThumb = true;
 				}
 			}
@@ -681,6 +691,16 @@ class ScrollableBaseNative extends Component {
 		this.start(this.accumulatedTargetX, this.accumulatedTargetY);
 	}
 
+	// overscroll effect
+
+	updateOverscrollEffect = (vertical, forth) => {
+		if (this.props.updateOverscrollEffect) {
+			this.props.updateOverscrollEffect(vertical, forth);
+		}
+
+		this.checkOverscroll = false;
+	}
+
 	// call scroll callbacks
 
 	forwardScrollEvent (type) {
@@ -732,6 +752,16 @@ class ScrollableBaseNative extends Component {
 		const bounds = this.getScrollBounds();
 
 		this.scrollLeft = clamp(0, bounds.maxLeft, value);
+
+		if (this.checkOverscroll && this.isScrollAnimationTargetAccumulated) {
+			const scrollLeft = this.scrollLeft;
+			if (scrollLeft === 0) {
+				this.updateOverscrollEffect(false, false);
+			} else if (scrollLeft === bounds.maxLeft) {
+				this.updateOverscrollEffect(false, true);
+			}
+		}
+
 		if (this.state.isHorizontalScrollbarVisible) {
 			this.updateThumb(this.horizontalScrollbarRef, bounds);
 		}
@@ -741,6 +771,16 @@ class ScrollableBaseNative extends Component {
 		const bounds = this.getScrollBounds();
 
 		this.scrollTop = clamp(0, bounds.maxTop, value);
+
+		if (this.checkOverscroll && this.isScrollAnimationTargetAccumulated) {
+			const scrollTop = this.scrollTop;
+			if (scrollTop === 0) {
+				this.updateOverscrollEffect(true, false);
+			} else if (scrollTop === bounds.maxTop) {
+				this.updateOverscrollEffect(true, true);
+			}
+		}
+
 		if (this.state.isVerticalScrollbarVisible) {
 			this.updateThumb(this.verticalScrollbarRef, bounds);
 		}
@@ -754,8 +794,7 @@ class ScrollableBaseNative extends Component {
 			childRef = this.childRef,
 			childContainerRef = childRef.containerRef;
 
-		targetX = clamp(0, bounds.maxLeft, targetX);
-		targetY = clamp(0, bounds.maxTop, targetY);
+		this.checkOverscroll = true;
 
 		if ((bounds.maxLeft - targetX) < epsilon) {
 			targetX = bounds.maxLeft;
@@ -1063,6 +1102,7 @@ class ScrollableBaseNative extends Component {
 		delete rest.scrollStopOnScroll;
 		delete rest.scrollTo;
 		delete rest.start;
+		delete rest.updateOverscrollEffect;
 		delete rest.verticalScrollbar;
 
 		return containerRenderer({

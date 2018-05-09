@@ -8,6 +8,7 @@ import Touchable from '@enact/ui/Touchable';
 
 import $L from '../internal/$L';
 
+import OverscrollEffect from './OverscrollEffect';
 import Scrollbar from './Scrollbar';
 
 import scrollbarCss from './Scrollbar.less';
@@ -109,39 +110,39 @@ class ScrollableBaseNative extends Component {
 		focusableScrollbar: PropTypes.bool,
 
 		/**
-		* Sets the hint string read when focusing the next button in the vertical scroll bar.
-		*
-		* @type {String}
-		* @default $L('scroll down')
-		* @public
-		*/
+		 * Sets the hint string read when focusing the next button in the vertical scroll bar.
+		 *
+		 * @type {String}
+		 * @default $L('scroll down')
+		 * @public
+		 */
 		scrollDownAriaLabel: PropTypes.string,
 
 		/**
-		* Sets the hint string read when focusing the previous button in the horizontal scroll bar.
-		*
-		* @type {String}
-		* @default $L('scroll left')
-		* @public
-		*/
+		 * Sets the hint string read when focusing the previous button in the horizontal scroll bar.
+		 *
+		 * @type {String}
+		 * @default $L('scroll left')
+		 * @public
+		 */
 		scrollLeftAriaLabel: PropTypes.string,
 
 		/**
-		* Sets the hint string read when focusing the next button in the horizontal scroll bar.
-		*
-		* @type {String}
-		* @default $L('scroll right')
-		* @public
-		*/
+		 * Sets the hint string read when focusing the next button in the horizontal scroll bar.
+		 *
+		 * @type {String}
+		 * @default $L('scroll right')
+		 * @public
+		 */
 		scrollRightAriaLabel: PropTypes.string,
 
 		/**
-		* Sets the hint string read when focusing the previous button in the vertical scroll bar.
-		*
-		* @type {String}
-		* @default $L('scroll up')
-		* @public
-		*/
+		 * Sets the hint string read when focusing the previous button in the vertical scroll bar.
+		 *
+		 * @type {String}
+		 * @default $L('scroll up')
+		 * @public
+		 */
 		scrollUpAriaLabel: PropTypes.string
 	}
 
@@ -180,6 +181,9 @@ class ScrollableBaseNative extends Component {
 	indexToFocus = null
 	nodeToFocus = null
 
+	// overscroll
+	overscrollRefs = {[true]: {}, [false]: {}} // `true` for vertical and `false` for horizontal
+
 	// browser native scrolling
 	resetPosition = null // prevent auto-scroll on focus by Spotlight
 
@@ -204,7 +208,7 @@ class ScrollableBaseNative extends Component {
 
 	/*
 	 * wheel event handler;
-	 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot suppor this
+	 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot support this
 	 * - for vertical scroll, supports wheel action on scrollbars only
 	 */
 	onWheel = (ev) => {
@@ -243,6 +247,7 @@ class ScrollableBaseNative extends Component {
 					needToHideThumb = !delta;
 				}
 			} else {
+				this.uiRef.updateOverscrollEffect(true, !(this.uiRef.scrollTop === 0));
 				needToHideThumb = true;
 			}
 		} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
@@ -254,6 +259,7 @@ class ScrollableBaseNative extends Component {
 				delta = this.uiRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				needToHideThumb = !delta;
 			} else {
+				this.uiRef.updateOverscrollEffect(false, !(this.uiRef.scrollLeft === 0));
 				needToHideThumb = true;
 			}
 		}
@@ -520,6 +526,14 @@ class ScrollableBaseNative extends Component {
 		this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 	}
 
+	updateOverscrollEffect = (vertical, forth) => {
+		const ref = this.overscrollRefs[vertical][forth];
+
+		if (ref) {
+			ref.update();
+		}
+	}
+
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	addEventListeners = (childContainerRef) => {
 		if (childContainerRef && childContainerRef.addEventListener) {
@@ -535,6 +549,12 @@ class ScrollableBaseNative extends Component {
 			childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
 			childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
 			childContainerRef.removeEventListener('focusin', this.onFocus);
+		}
+	}
+
+	initOverscrollRef = (vertical, forth) => (ref) => {
+		if (ref) {
+			this.overscrollRefs[vertical][forth] = ref;
 		}
 	}
 
@@ -581,6 +601,7 @@ class ScrollableBaseNative extends Component {
 				scrollStopOnScroll={this.scrollStopOnScroll}
 				scrollTo={this.scrollTo}
 				start={this.start}
+				updateOverscrollEffect={this.updateOverscrollEffect}
 				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
 					childComponentProps,
 					className,
@@ -614,6 +635,10 @@ class ScrollableBaseNative extends Component {
 									rtl,
 									spotlightId
 								})}
+								<OverscrollEffect forth rtl={rtl} vertical ref={this.initOverscrollRef(true, true)} />
+								<OverscrollEffect rtl={rtl} vertical ref={this.initOverscrollRef(true, false)} />
+								<OverscrollEffect forth rtl={rtl} ref={this.initOverscrollRef(false, true)} />
+								<OverscrollEffect rtl={rtl} ref={this.initOverscrollRef(false, false)} />
 							</TouchableDiv>
 							{isVerticalScrollbarVisible ?
 								<Scrollbar

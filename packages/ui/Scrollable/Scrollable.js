@@ -278,6 +278,14 @@ class ScrollableBase extends Component {
 		style: PropTypes.object,
 
 		/**
+		 * Called to execute additional logic in a themed component to show overscroll effect.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		updateOverscrollEffect: PropTypes.func,
+
+		/**
 		 * Specifies how to show vertical scrollbar.
 		 * Valid values are:
 		 * * `'auto'`,
@@ -629,6 +637,16 @@ class ScrollableBase extends Component {
 		});
 	}
 
+	// overscroll effect
+
+	updateOverscrollEffect = (vertical, forth) => {
+		if (this.props.updateOverscrollEffect) {
+			this.props.updateOverscrollEffect(vertical, forth);
+		}
+
+		this.checkOverscroll = false;
+	}
+
 	// call scroll callbacks
 
 	forwardScrollEvent (type) {
@@ -641,6 +659,16 @@ class ScrollableBase extends Component {
 		const bounds = this.getScrollBounds();
 
 		this.scrollLeft = clamp(0, bounds.maxLeft, value);
+
+		if (this.checkOverscroll && this.isScrollAnimationTargetAccumulated) {
+			const scrollLeft = this.scrollLeft;
+			if (scrollLeft === 0) {
+				this.updateOverscrollEffect(false, false);
+			} else if (scrollLeft === bounds.maxLeft) {
+				this.updateOverscrollEffect(false, true);
+			}
+		}
+
 		if (this.state.isHorizontalScrollbarVisible) {
 			this.updateThumb(this.horizontalScrollbarRef, bounds);
 		}
@@ -650,6 +678,16 @@ class ScrollableBase extends Component {
 		const bounds = this.getScrollBounds();
 
 		this.scrollTop = clamp(0, bounds.maxTop, value);
+
+		if (this.checkOverscroll && this.isScrollAnimationTargetAccumulated) {
+			const scrollTop = this.scrollTop;
+			if (scrollTop === 0) {
+				this.updateOverscrollEffect(true, false);
+			} else if (scrollTop === bounds.maxTop) {
+				this.updateOverscrollEffect(true, true);
+			}
+		}
+
 		if (this.state.isVerticalScrollbarVisible) {
 			this.updateThumb(this.verticalScrollbarRef, bounds);
 		}
@@ -658,14 +696,17 @@ class ScrollableBase extends Component {
 	// scroll start/stop
 
 	start ({targetX, targetY, animate = true, duration = animationDuration}) {
-		const {scrollLeft, scrollTop} = this;
-		const bounds = this.getScrollBounds();
+		const
+			{scrollLeft, scrollTop} = this,
+			bounds = this.getScrollBounds();
 
 		this.animator.stop();
 		if (!this.scrolling) {
 			this.scrolling = true;
 			this.forwardScrollEvent('onScrollStart');
 		}
+
+		this.checkOverscroll = true;
 
 		if (Math.abs(bounds.maxLeft - targetX) < epsilon) {
 			targetX = bounds.maxLeft;
@@ -685,9 +726,6 @@ class ScrollableBase extends Component {
 				duration
 			}));
 		} else {
-			targetX = clamp(0, bounds.maxLeft, targetX);
-			targetY = clamp(0, bounds.maxTop, targetY);
-
 			this.scroll(targetX, targetY);
 			this.stop();
 		}
@@ -700,14 +738,11 @@ class ScrollableBase extends Component {
 
 		if (curTime < duration) {
 			this.scroll(
-				this.canScrollHorizontally(bounds) ? clamp(0, bounds.maxLeft, this.animator.timingFunction(sourceX, targetX, duration, curTime)) : sourceX,
-				this.canScrollVertically(bounds) ? clamp(0, bounds.maxTop, this.animator.timingFunction(sourceY, targetY, duration, curTime)) : sourceY
+				this.canScrollHorizontally(bounds) ? this.animator.timingFunction(sourceX, targetX, duration, curTime) : sourceX,
+				this.canScrollVertically(bounds) ? this.animator.timingFunction(sourceY, targetY, duration, curTime) : sourceY
 			);
 		} else {
-			this.scroll(
-				clamp(0, bounds.maxLeft, targetX),
-				clamp(0, bounds.maxTop, targetY)
-			);
+			this.scroll(targetX, targetY);
 			this.stop();
 		}
 	}
@@ -1025,6 +1060,7 @@ class ScrollableBase extends Component {
 		delete rest.removeEventListeners;
 		delete rest.scrollTo;
 		delete rest.stop;
+		delete rest.updateOverscrollEffect;
 		delete rest.verticalScrollbar;
 
 		return containerRenderer({

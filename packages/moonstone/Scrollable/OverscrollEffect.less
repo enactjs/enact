@@ -1,0 +1,58 @@
+@import '../styles/variables.less';
+@import '../styles/skin.less';
+
+.overscroll {
+	display: none;
+	position: absolute;
+	border-radius: 50%;
+	transition-duration: var(--moon-overscroll-duration);
+	transition-property: transform;
+	transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+	&.visible {
+		display: block;
+	}
+
+	// Skin colors
+	.applySkins({
+		background-color: @moon-accent;
+	});
+}
+
+.horizontal {
+	top: 50%; // Center the element
+	width: 6px;
+	height: 70%;
+	transform: translateY(-50%) scale3d(1, 0, 1);
+
+	&.forward {
+		right: 0;
+	}
+
+	&.backward {
+		left: 0;
+	}
+
+	&.expand {
+		transform: translateY(-50%) scale3d(0.5, 1, 1);
+	}
+}
+
+.vertical {
+	left: 50%; // Center the element
+	width: 70%;
+	height: 6px;
+	transform: translateX(-50%) scale3d(0, 1, 1);
+
+	&.forward {
+		bottom: 0;
+	}
+
+	&.backward {
+		top: 0;
+	}
+
+	&.expand {
+		transform: translateX(-50%) scale3d(1, 0.5, 1);
+	}
+}
