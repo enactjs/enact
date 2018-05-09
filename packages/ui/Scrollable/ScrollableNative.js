@@ -382,10 +382,6 @@ class ScrollableBaseNative extends Component {
 			this.updateScrollbars();
 		}
 
-		if (isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible) {
-			this.forceUpdate();
-		}
-
 		if (this.scrollToInfo !== null) {
 			if (!this.deferScrollTo) {
 				this.scrollTo(this.scrollToInfo);
