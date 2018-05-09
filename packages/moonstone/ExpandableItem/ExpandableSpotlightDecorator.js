@@ -109,13 +109,21 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const current = Spotlight.getCurrent();
 			if (this.containerNode.contains(current)) {
 				Spotlight.focus(this.containerNode.querySelector('[data-expandable-label]'));
-			} else if (!current) {
-				// when focus is not currently set during close (due to a cancel event or the close
-				// on blur from ExpandableInput), we need to fix the last focused element for the
-				// container tree to be the labeled item so that focus can be restored to it rather
-				// than spotlight getting lost
+			} else {
 				const label = this.containerNode.querySelector('[data-expandable-label]');
 				const containerIds = getContainersForNode(label);
+
+				// when focus is not within the expandable (due to a cancel event or the close
+				// on blur from ExpandableInput, or some quick key presses), we need to fix the last
+				// focused element config so that focus can be restored to the label rather than
+				// spotlight getting lost.
+				//
+				// If there is focus somewhere else, then we only need to fix the nearest container
+				// to be the label. If there isn't focus, we need to update the entire container
+				// tree.
+				if (current) {
+					containerIds.splice(containerIds.length - 1);
+				}
 
 				setContainerLastFocusedElement(label, containerIds);
 			}
