@@ -16,6 +16,7 @@ import React from 'react';
 import {configure, mergeConfig} from './config';
 import {activate, deactivate, pause, States} from './state';
 import {block, unblock, isNotBlocked} from './block';
+import {checkLastMouseEvent} from './checkLastMouseEvent';
 
 import {Drag, dragConfigPropType} from './Drag';
 import {Flick, flickConfigPropType} from './Flick';
@@ -114,15 +115,16 @@ const handleMouseLeave = handle(
 );
 
 const handleMouseUp = handle(
+	checkLastMouseEvent,
 	forward('onMouseUp'),
 	handleUp,
 	// block the next click to prevent duplicate onUp events
-	block
+	// block
 );
 
 const handleClick = handle(
-	isNotBlocked,
 	isEnabled,
+	checkLastMouseEvent,
 	call('activate'),
 	forward('onClick'),
 	handleUp,
