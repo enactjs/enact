@@ -18,6 +18,7 @@ import React from 'react';
 import {configure, mergeConfig} from './config';
 import {activate, deactivate, pause, States} from './state';
 import {block, unblock, isNotBlocked} from './block';
+import {checkLastMouseEvent} from './checkLastMouseEvent';
 
 import {Drag, dragConfigPropType} from './Drag';
 import {Flick, flickConfigPropType} from './Flick';
@@ -116,8 +117,17 @@ const handleMouseLeave = handle(
 );
 
 const handleMouseUp = handle(
+	checkLastMouseEvent,
 	forward('onMouseUp'),
 	handleUp
+);
+
+const handleClick = handle(
+	isEnabled,
+	checkLastMouseEvent,
+	call('activate'),
+	forward('onClick'),
+	handleUp,
 );
 
 // Touch event handlers
@@ -382,6 +392,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			}, 400);
 
+			this.handleClick = handleClick.bind(this);
 			this.handleMouseDown = handleMouseDown.bind(this);
 			this.handleMouseEnter = handleMouseEnter.bind(this);
 			this.handleMouseMove = handleMouseMove.bind(this);
@@ -553,6 +564,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		// events and initiate gestures
 
 		addHandlers (props) {
+			props.onClick = this.handleClick;
 			props.onMouseDown = this.handleMouseDown;
 			props.onMouseLeave = this.handleMouseLeave;
 			props.onMouseMove = this.handleMouseMove;
