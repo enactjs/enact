@@ -2,6 +2,14 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` to ignore any user key events in pointer mode
+- `moonstone/Image` so it automatically swaps the `src` to the appropriate resolution dynamically as the screen resizes
+- `moonstone/Popup` to support all `spotlightRestrict` options
+
 ## [2.0.0-beta.2] - 2018-05-07
 
 ### Fixed
@@ -10,8 +18,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableItem` and related expandables to deal with disabled items and the `autoClose`, `lockBottom` and `noLockBottom` props
 - `moonstone/Slider` not to fire `onChange` event when 5-ways out of boundary
 - `moonstone/ToggleButton` layout for RTL locales
-- `moonstone/Item`, `moonstone/SlotItem`, `moonstone/ToggleItem` to properly apply `className`
-- `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` scrollbar button's aria-lable in RTL
+- `moonstone/Item`, `moonstone/SlotItem`, `moonstone/ToggleItem` to not apply duplicate `className` values
+- `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` scrollbar button's aria-label in RTL
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to scroll properly with all disabled items
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to not scroll on focus when jumping
 

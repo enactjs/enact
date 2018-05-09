@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
-- `spotlight/Spottable` to not set its focused state when disabled
+- `spotlight/Spottable` to not add a focused state when a component had already been set as disabled
 
 ## [2.0.0-beta.1] - 2018-04-29
 
