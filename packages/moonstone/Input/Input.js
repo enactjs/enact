@@ -20,18 +20,7 @@ import Tooltip from '../TooltipDecorator/Tooltip';
 import componentCss from './Input.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
-import {extractInputProps} from './util';
-
-const calcAriaLabel = function (title, type, value = '') {
-	const hint = $L('Input field');
-
-	if (type === 'password' && value) {
-		const character = value.length > 1 ? $L('characters') : $L('character');
-		value = `${value.length} ${character}`;
-	}
-
-	return `${title} ${value} ${hint}`;
-};
+import {calcAriaLabel, extractInputProps} from './util';
 
 /**
  * {@link moonstone/Input.InputBase} is a Moonstone styled input component. It supports start and end
@@ -218,7 +207,6 @@ const InputBase = kind({
 		disabled: false,
 		dismissOnEnter: false,
 		invalid: false,
-		invalidMessage: $L('Please enter a valid value.'),
 		placeholder: '',
 		type: 'text'
 	},
@@ -246,7 +234,7 @@ const InputBase = kind({
 		},
 		className: ({focused, invalid, small, styler}) => styler.append({focused, invalid, small}),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
-		invalidTooltip: ({css, invalid, invalidMessage, rtl}) => {
+		invalidTooltip: ({css, invalid, invalidMessage = $L('Please enter a valid value.'), rtl}) => {
 			if (invalid && invalidMessage) {
 				const direction = rtl ? 'left' : 'right';
 				return (

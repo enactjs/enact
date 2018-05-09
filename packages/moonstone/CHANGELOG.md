@@ -7,7 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/Input` and `moonstone/ExpandableInput` support for `<input>` props
+- `moonstone/Input` and `moonstone/ExpandableInput` support for forwarding valid `<input>` props to the contained `<input>` node
 
 ### Fixed
 
