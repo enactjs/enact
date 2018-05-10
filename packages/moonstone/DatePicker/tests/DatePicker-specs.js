@@ -85,4 +85,88 @@ describe('DatePicker', () => {
 
 		expect(actual).to.equal(expected);
 	});
+
+	it('should set "dayAriaLabel" to day picker', function () {
+		const label = 'custom day aria-label';
+		const subject = mount(
+			<DatePicker dayAriaLabel={label} title="Date" value={new Date(2000, 0, 1)} open />
+		);
+
+		const dayPicker = subject.find(`DateComponentRangePicker.${css.day}`);
+
+		const expected = label;
+		const actual = dayPicker.prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "monthAriaLabel" to month picker', function () {
+		const label = 'custom month aria-label';
+		const subject = mount(
+			<DatePicker monthAriaLabel={label} title="Date" value={new Date(2000, 0, 1)} open />
+		);
+
+		const monthPicker = subject.find(`DateComponentRangePicker.${css.month}`);
+
+		const expected = label;
+		const actual = monthPicker.prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "yearAriaLabel" to year picker', function () {
+		const label = 'custom year aria-label';
+		const subject = mount(
+			<DatePicker yearAriaLabel={label} title="Date" value={new Date(2000, 0, 1)} open />
+		);
+
+		const yearPicker = subject.find(`DateComponentRangePicker.${css.year}`);
+
+		const expected = label;
+		const actual = yearPicker.prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "dayLabel" to day label', function () {
+		const label = 'custom day label';
+		const subject = mount(
+			<DatePicker dayLabel={label} title="Date" value={new Date(2000, 0, 1)} open />
+		);
+
+		const dayPicker = subject.find(`DateComponentRangePicker.${css.day}`);
+
+		const expected = label;
+		const actual = dayPicker.prop('label');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "monthAriaLabel" to month picker', function () {
+		const label = 'custom month label';
+		const subject = mount(
+			<DatePicker monthLabel={label} title="Date" value={new Date(2000, 0, 1)} open />
+		);
+
+		const monthPicker = subject.find(`DateComponentRangePicker.${css.month}`);
+
+		const expected = label;
+		const actual = monthPicker.prop('label');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "yearAriaLabel" to year picker', function () {
+		const label = 'custom year label';
+		const subject = mount(
+			<DatePicker yearLabel={label} title="Date" value={new Date(2000, 0, 1)} open />
+		);
+
+		const yearPicker = subject.find(`DateComponentRangePicker.${css.year}`);
+
+		const expected = label;
+		const actual = yearPicker.prop('label');
+
+		expect(actual).to.equal(expected);
+	});
 });

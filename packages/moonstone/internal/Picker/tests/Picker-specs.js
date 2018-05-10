@@ -394,5 +394,56 @@ describe('Picker Specs', function () {
 
 			expect(actual).to.equal(expected);
 		});
+
+		it('should set picker "decrementAriaLabel" to decrement button', () => {
+			const label = 'custom decrement aria-label';
+			const picker = mount(
+				<Picker decrementAriaLabel={label} index={1} value={1} min={0} max={3}>
+					<PickerItem>1</PickerItem>
+					<PickerItem>2</PickerItem>
+					<PickerItem>3</PickerItem>
+					<PickerItem>4</PickerItem>
+				</Picker>
+			);
+
+			const expected = label;
+			const actual = picker.find(`PickerButton.${css.decrementer}`).prop('aria-label');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should set picker "incrementAriaLabel" to decrement button', () => {
+			const label = 'custom increment aria-label';
+			const picker = mount(
+				<Picker incrementAriaLabel={label} index={1} value={1} min={0} max={3}>
+					<PickerItem>1</PickerItem>
+					<PickerItem>2</PickerItem>
+					<PickerItem>3</PickerItem>
+					<PickerItem>4</PickerItem>
+				</Picker>
+			);
+
+			const expected = label;
+			const actual = picker.find(`PickerButton.${css.incrementer}`).prop('aria-label');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should set "aria-label" to joined picker', () => {
+			const label = 'custom joined picker aria-label';
+			const picker = mount(
+				<Picker aria-label={label} index={1} value={1} min={0} max={3} joined>
+					<PickerItem>1</PickerItem>
+					<PickerItem>2</PickerItem>
+					<PickerItem>3</PickerItem>
+					<PickerItem>4</PickerItem>
+				</Picker>
+			);
+
+			const expected = label;
+			const actual = picker.find(`.${css.valueWrapper}`).parent().prop('aria-label');
+
+			expect(actual).to.equal(expected);
+		});
 	});
 });

@@ -62,4 +62,68 @@ describe('ExpandablePicker Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
+
+	it('should set "checkButtonAriaLabel" to check button', function () {
+		const label = 'custom check button aria-label';
+		const expandablePicker = mount(
+			<ExpandablePickerBase checkButtonAriaLabel={label} title="Options" open>
+				{['Option one', 'Option two', 'Option three']}
+			</ExpandablePickerBase>
+		);
+
+		const checkButton = expandablePicker.find('IconButton').at(2);
+
+		const expected = label;
+		const actual = checkButton.prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "decrementAriaLabel" to previous button', function () {
+		const label = 'custom previous button aria-label';
+		const expandablePicker = mount(
+			<ExpandablePickerBase decrementAriaLabel={label} title="Options" open>
+				{['Option one', 'Option two', 'Option three']}
+			</ExpandablePickerBase>
+		);
+
+		const checkButton = expandablePicker.find('IconButton').at(1);
+
+		const expected = label;
+		const actual = checkButton.prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "incrementAriaLabel" to next button', function () {
+		const label = 'custom next button aria-label';
+		const expandablePicker = mount(
+			<ExpandablePickerBase incrementAriaLabel={label} title="Options" open>
+				{['Option one', 'Option two', 'Option three']}
+			</ExpandablePickerBase>
+		);
+
+		const checkButton = expandablePicker.find('IconButton').at(0);
+
+		const expected = label;
+		const actual = checkButton.prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "pickerAriaLabel" to joined picker', function () {
+		const label = 'custom joined picker aria-label';
+		const expandablePicker = mount(
+			<ExpandablePickerBase pickerAriaLabel={label} title="Options" open>
+				{['Option one', 'Option two', 'Option three']}
+			</ExpandablePickerBase>
+		);
+
+		const joinedPicker = expandablePicker.find('Picker').at(1);
+
+		const expected = label;
+		const actual = joinedPicker.prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
 });
