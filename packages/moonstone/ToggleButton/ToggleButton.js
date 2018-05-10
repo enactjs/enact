@@ -175,7 +175,7 @@ const ToggleButtonBase = kind({
  */
 const ToggleButton = Pure(
 	Toggleable(
-		{prop: 'selected', toggle: 'onTap'},
+		{prop: 'selected', toggleProp: 'onTap'},
 		Skinnable(
 			ToggleButtonBase
 		)

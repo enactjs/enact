@@ -177,13 +177,15 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleActivate = this.handle(
 			forProp('disabled', false),
-			this.forwardWithState(activate),
+			forward(activate),
+			this.forwardWithState(toggle),
 			() => this.updateActive(true)
 		)
 
 		handleDeactivate = this.handle(
 			forProp('disabled', false),
-			this.forwardWithState(deactivate),
+			forward(deactivate),
+			this.forwardWithState(toggle),
 			() => this.updateActive(false)
 		)
 
