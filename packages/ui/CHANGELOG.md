@@ -4,10 +4,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [2.0.0-beta.2] - 2018-05-07
 
-### Changed
-
-- `ui/ToggleItem` to to be slottable
-
 ### Fixed
 
 - `ui/Marquee` to always marquee when `marqueeOn` is set to `'render'`
