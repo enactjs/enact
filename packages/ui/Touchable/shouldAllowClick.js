@@ -1,20 +1,23 @@
-let lastMouseUpTime = 0;
+class Clickable {
+	constructor () {
+		this.lastMouseUpTime = 0;
+		this.setLastMouseUp = this.setLastMouseUp.bind(this);
+		this.shouldAllowClick = this.shouldAllowClick.bind(this);
+	}
 
-const setLastMouseUp = (ev) => {
-	if (ev.type === 'mouseup') {
-		lastMouseUpTime = ev.timestamp;
+	setLastMouseUp (ev) {
+		if (ev.type === 'mouseup') {
+			this.lastMouseUpTime = ev.timeStamp;
+		}
+	}
+
+	shouldAllowClick (ev) {
+		const {type, timeStamp} = ev;
+		return !(type === 'click' && this.lastMouseUpTime === timeStamp);
 	}
 }
 
-const shouldAllowClick = (ev) => {
-	const {type, timeStamp} = ev;
-
-	return !(type === 'click' && lastMouseUpTime === timeStamp);
-};
-
-export default shouldAllowClick;
+export default Clickable;
 export {
-	setLastMouseUp,
-	shouldAllowClick
+	Clickable
 };
-
