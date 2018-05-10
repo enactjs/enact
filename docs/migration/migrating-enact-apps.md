@@ -102,8 +102,6 @@ shouldComponentUpdate (nextProps) {
 shouldComponentUpdate (nextProps) {
 	return this.props.children !== nextProps.children;
 }
-8002387827
-8663872573
 ```
 
 ### i18n
