@@ -9,6 +9,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` to ignore any user key events in pointer mode
 - `moonstone/Image` so it automatically swaps the `src` to the appropriate resolution dynamically as the screen resizes
 - `moonstone/Popup` to support all `spotlightRestrict` options
+- `disabled` component colors to match the most recent design guidelines (from 30% to 60% opacity)
 
 ## [2.0.0-beta.2] - 2018-05-07
 
