@@ -18,7 +18,7 @@ import React from 'react';
 import {configure, mergeConfig} from './config';
 import {activate, deactivate, pause, States} from './state';
 import {block, unblock, isNotBlocked} from './block';
-import Clickable from './shouldAllowClick';
+import ClickAllow from './ClickAllow';
 
 import {Drag, dragConfigPropType} from './Drag';
 import {Flick, flickConfigPropType} from './Flick';
@@ -390,7 +390,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			}, 400);
 
-			this.clickable = new Clickable();
+			this.clickAllow = new ClickAllow();
 			this.handleClick = handleClick.bind(this);
 			this.handleMouseDown = handleMouseDown.bind(this);
 			this.handleMouseEnter = handleMouseEnter.bind(this);
@@ -563,13 +563,13 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		// events and initiate gestures
 
 		onClick = (ev) => {
-			if (this.clickable.shouldAllowClick(ev)) {
+			if (this.clickAllow.shouldAllowClick(ev)) {
 				this.handleClick(ev);
 			}
 		}
 
 		onMouseUp = (ev) => {
-			this.clickable.setLastMouseUp(ev);
+			this.clickAllow.setLastMouseUp(ev);
 			this.handleMouseUp(ev);
 		}
 

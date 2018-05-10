@@ -1,4 +1,4 @@
-class Clickable {
+class ClickAllow {
 	constructor () {
 		this.lastMouseUpTime = 0;
 		this.setLastMouseUp = this.setLastMouseUp.bind(this);
@@ -17,7 +17,7 @@ class Clickable {
 	}
 }
 
-export default Clickable;
+export default ClickAllow;
 export {
-	Clickable
+	ClickAllow
 };
