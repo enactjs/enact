@@ -7,7 +7,7 @@
  */
 
 import Changeable from '@enact/ui/Changeable';
-import {forKey, forward, oneOf, preventDefault, stopImmediate} from '@enact/core/handle';
+import {adaptEvent, call, forKey, forward, handle, oneOf, preventDefault, stopImmediate} from '@enact/core/handle';
 import deprecate from '@enact/core/internal/deprecate';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -18,6 +18,24 @@ import {calcAriaLabel, Input} from '../Input';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 
 import css from './ExpandableInput.less';
+
+const handleDeactivate = handle(
+	call('shouldClose'),
+	adaptEvent(
+		() => ({type: 'onClose'}),
+		forward('onClose')
+	)
+);
+
+// Special onKeyDown handle for up and down key events
+const handleUpDown = handle(
+	// prevent InputSpotlightDecorator from attempting to move focus up/down
+	preventDefault,
+	// prevent Spotlight handling up/down since closing the expandable will spot the label
+	stopImmediate,
+	// trigger close to resume spotlight and emit onClose
+	handleDeactivate
+);
 
 /**
  * {@link moonstone/ExpandableInput.ExpandableInputBase} is a stateless component that
@@ -192,6 +210,9 @@ class ExpandableInputBase extends React.Component {
 		if (props.onInputChange) {
 			deprecate({name: 'onInputChange', since: '1.0.0', message: 'Use `onChange` instead', until: '2.0.0'});
 		}
+
+		this.handleUpDown = handleUpDown.bind(this);
+		this.handleDeactivate = handleDeactivate.bind(this);
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -203,6 +224,10 @@ class ExpandableInputBase extends React.Component {
 		}
 
 		this.setState({initialValue});
+	}
+
+	componentWillUnmount () {
+		this.paused.resume();
 	}
 
 	calcAriaLabel () {
@@ -220,14 +245,6 @@ class ExpandableInputBase extends React.Component {
 		}
 	}
 
-	fireCloseEvent = () => {
-		const {onClose} = this.props;
-
-		if (onClose) {
-			onClose();
-		}
-	}
-
 	resetValue = () => {
 		this.paused.resume();
 		forward('onChange', {
@@ -235,13 +252,13 @@ class ExpandableInputBase extends React.Component {
 		}, this.props);
 	}
 
+	shouldClose () {
+		return this.paused.resume() && !this.pointer;
+	}
+
 	handleInputKeyDown = oneOf(
-		// prevent Enter onKeyPress which would re-open the expandable when the label
-		// receives focus
-		[forKey('enter'), preventDefault],
-		// prevent Spotlight handling up/down since closing the expandable will spot the label
-		[forKey('up'), stopImmediate],
-		[forKey('down'), stopImmediate],
+		[forKey('up'), handleUpDown],
+		[forKey('down'), handleUpDown],
 		[forKey('left'), forward('onSpotlightLeft')],
 		[forKey('right'), forward('onSpotlightRight')],
 		[forKey('cancel'), this.resetValue]
@@ -249,12 +266,6 @@ class ExpandableInputBase extends React.Component {
 
 	handleActivate = () => {
 		this.paused.pause();
-	}
-
-	handleDeactivate = () => {
-		if (this.paused.resume() && !this.pointer) {
-			this.fireCloseEvent();
-		}
 	}
 
 	handleChange = (val) => {
