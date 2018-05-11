@@ -66,7 +66,7 @@ describe('ExpandablePicker Specs', () => {
 	it('should set "checkButtonAriaLabel" to check button', function () {
 		const label = 'custom check button aria-label';
 		const expandablePicker = mount(
-			<ExpandablePickerBase checkButtonAriaLabel={label} title="Options" open>
+			<ExpandablePickerBase checkButtonAriaLabel={label} open title="Options">
 				{['Option one', 'Option two', 'Option three']}
 			</ExpandablePickerBase>
 		);
@@ -82,7 +82,7 @@ describe('ExpandablePicker Specs', () => {
 	it('should set "decrementAriaLabel" to previous button', function () {
 		const label = 'custom previous button aria-label';
 		const expandablePicker = mount(
-			<ExpandablePickerBase decrementAriaLabel={label} title="Options" open>
+			<ExpandablePickerBase decrementAriaLabel={label} open title="Options">
 				{['Option one', 'Option two', 'Option three']}
 			</ExpandablePickerBase>
 		);
@@ -98,7 +98,7 @@ describe('ExpandablePicker Specs', () => {
 	it('should set "incrementAriaLabel" to next button', function () {
 		const label = 'custom next button aria-label';
 		const expandablePicker = mount(
-			<ExpandablePickerBase incrementAriaLabel={label} title="Options" open>
+			<ExpandablePickerBase incrementAriaLabel={label} open title="Options">
 				{['Option one', 'Option two', 'Option three']}
 			</ExpandablePickerBase>
 		);
@@ -114,7 +114,7 @@ describe('ExpandablePicker Specs', () => {
 	it('should set "pickerAriaLabel" to joined picker', function () {
 		const label = 'custom joined picker aria-label';
 		const expandablePicker = mount(
-			<ExpandablePickerBase pickerAriaLabel={label} title="Options" open>
+			<ExpandablePickerBase joined open pickerAriaLabel={label} title="Options">
 				{['Option one', 'Option two', 'Option three']}
 			</ExpandablePickerBase>
 		);
