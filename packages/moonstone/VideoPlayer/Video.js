@@ -46,7 +46,7 @@ const VideoBase = class extends React.Component {
 		 * The [`source`]{@link moonstone/VideoPlayer.VideoBase.source} property is passed to
 		 * the video component as a child node.
 		 *
-		 * @type {Component}
+		 * @type {String | Element | Component}
 		 * @default 'video'
 		 * @public
 		 */
@@ -85,10 +85,10 @@ const VideoBase = class extends React.Component {
 		 *
 		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
 		 *
-		 * @type {Node}
+		 * @type {String | Node}
 		 * @public
 		 */
-		source: PropTypes.node
+		source: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 	}
 
 	static defaultProps = {
@@ -270,13 +270,25 @@ const VideoDecorator = compose(
 );
 
 /**
- * Adds support for preloading a video source for `VideoPlayer`.
+ * Provides support for more advanced video configurations for `VideoPlayer`.
+ *
+ * Custom Video Tag
+ *
+ * ```
+ * <VideoPlayer>
+ *   <Video mediaComponent="custom-video-element">
+ *     <source src="path/to/source.mp4" />
+ *   </Video>
+ * </VideoPlayer>
+ * ```
+ *
+ * Preload Video Source
  *
  * ```
  * <VideoPlayer>
  *   <Video>
- *     <source src="active.mp4" />
- *     <source src="preload.mp4" slot="preloadSource" />
+ *     <source src="path/to/source.mp4" />
+ *     <source src="path/to/preload-source.mp4" slot="preloadSource" />
  *   </Video>
  * </VideoPlayer>
  * ```
