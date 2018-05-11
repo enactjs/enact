@@ -124,10 +124,13 @@ const handleMouseUp = handle(
 
 const handleClick = handle(
 	isEnabled,
-	call('shouldAllowClick'),
-	call('activate'),
-	forward('onClick'),
-	handleUp,
+	// wrapping another handler to always forward onClick but, if onTap should occur, it should
+	// occur first to keep in sync with the up handler which emits onTap first
+	handle(
+		call('shouldAllowTap'),
+		call('activate'),
+		handleUp
+	).finally(forward('onClick'))
 );
 
 // Touch event handlers
@@ -562,8 +565,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return !this.target.contains(target);
 		}
 
-		shouldAllowClick (ev) {
-			return this.clickAllow.shouldAllowClick(ev);
+		shouldAllowTap (ev) {
+			return this.clickAllow.shouldAllowTap(ev);
 		}
 
 		setLastMouseUp (ev) {

@@ -1,8 +1,6 @@
 class ClickAllow {
 	constructor () {
 		this.lastMouseUpTime = 0;
-		this.setLastMouseUp = this.setLastMouseUp.bind(this);
-		this.shouldAllowClick = this.shouldAllowClick.bind(this);
 	}
 
 	setLastMouseUp (ev) {
@@ -11,7 +9,7 @@ class ClickAllow {
 		}
 	}
 
-	shouldAllowClick (ev) {
+	shouldAllowTap (ev) {
 		const {type, timeStamp} = ev;
 		return !(type === 'click' && this.lastMouseUpTime === timeStamp);
 	}
