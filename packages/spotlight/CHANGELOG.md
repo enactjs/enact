@@ -6,8 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
-- `spotlight` to always set focus when the window is activated after the window has been previously blurred
-
+- `spotlight` to retry setting focus when the window is activated
 
 ## [2.0.0-beta.2] - 2018-05-07
 
