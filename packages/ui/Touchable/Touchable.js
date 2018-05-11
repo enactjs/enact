@@ -117,12 +117,14 @@ const handleMouseLeave = handle(
 );
 
 const handleMouseUp = handle(
+	returnsTrue(call('setLastMouseUp')),
 	forward('onMouseUp'),
 	handleUp
 );
 
 const handleClick = handle(
 	isEnabled,
+	call('shouldAllowClick'),
 	call('activate'),
 	forward('onClick'),
 	handleUp,
@@ -391,6 +393,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			}, 400);
 
 			this.clickAllow = new ClickAllow();
+
 			this.handleClick = handleClick.bind(this);
 			this.handleMouseDown = handleMouseDown.bind(this);
 			this.handleMouseEnter = handleMouseEnter.bind(this);
@@ -562,24 +565,21 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		// Normalized handlers - Mouse and Touch events are mapped to these to trigger cross-type
 		// events and initiate gestures
 
-		onClick = (ev) => {
-			if (this.clickAllow.shouldAllowClick(ev)) {
-				this.handleClick(ev);
-			}
+		shouldAllowClick  = (ev) => {
+			return this.clickAllow.shouldAllowClick(ev);
 		}
 
-		onMouseUp = (ev) => {
+		setLastMouseUp = (ev) => {
 			this.clickAllow.setLastMouseUp(ev);
-			this.handleMouseUp(ev);
 		}
 
 		addHandlers (props) {
-			props.onClick = this.onClick;
+			props.onClick = this.handleClick;
 			props.onMouseDown = this.handleMouseDown;
 			props.onMouseLeave = this.handleMouseLeave;
 			props.onMouseMove = this.handleMouseMove;
 			props.onMouseEnter = this.handleMouseEnter;
-			props.onMouseUp = this.onMouseUp;
+			props.onMouseUp = this.handleMouseUp;
 
 			if (platform.touch) {
 				props.onTouchStart = this.handleTouchStart;
