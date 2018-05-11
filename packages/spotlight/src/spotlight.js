@@ -328,7 +328,11 @@ const Spotlight = (function () {
 			// If the window was previously blurred while in pointer mode, the last active containerId may
 			// not have yet set focus to its spottable elements. For this reason we can't rely on setting focus
 			// to the last focused element of the last active containerId, so we use rootContainerId instead
-			Spotlight.focus(getContainerLastFocusedElement(rootContainerId));
+			if (!Spotlight.focus(getContainerLastFocusedElement(rootContainerId))) {
+				// If the last focused element was previously also disabled (or no longer exists), we
+				// need to set focus somewhere
+				Spotlight.focus();
+			}
 			_spotOnWindowFocus = false;
 		}
 	}
