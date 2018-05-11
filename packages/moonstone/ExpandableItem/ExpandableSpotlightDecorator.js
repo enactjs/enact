@@ -1,5 +1,4 @@
 import {getContainersForNode, setContainerLastFocusedElement} from '@enact/spotlight/src/container';
-import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import Spotlight from '@enact/spotlight';
 import Pause from '@enact/spotlight/Pause';
@@ -80,7 +79,19 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			noAutoFocus: false
 		}
 
-		paused = new Pause('ExpandableItem')
+		constructor () {
+			super();
+
+			this.paused = new Pause('ExpandableItem');
+		}
+
+		componentDidUpdate (prevProps) {
+			// Only pause when open changes to ensure that spotlight isn't paused when an expandable
+			// is explicitly set to open and onClose is never handled
+			if (this.props.open !== prevProps.open) {
+				this.paused.pause();
+			}
+		}
 
 		componentWillUnmount () {
 			this.resume();
@@ -162,18 +173,6 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.paused.resume();
 		}
 
-		handle = handle.bind(this)
-
-		handleClose = this.handle(
-			forward('onClose'),
-			this.pause
-		)
-
-		handleOpen = this.handle(
-			forward('onOpen'),
-			this.pause
-		)
-
 		handleHide = () => {
 			this.resume();
 			const pointerMode = Spotlight.getPointerMode();
@@ -202,8 +201,6 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					{...props}
 					onHide={this.handleHide}
 					onShow={this.handleShow}
-					onOpen={this.handleOpen}
-					onClose={this.handleClose}
 					setContainerNode={this.setContainerNode}
 				/>
 			);
