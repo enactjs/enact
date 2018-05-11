@@ -82,6 +82,10 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		paused = new Pause('ExpandableItem')
 
+		componentWillUnmount () {
+			this.resume();
+		}
+
 		highlightContents = () => {
 			const current = Spotlight.getCurrent();
 			if (this.containerNode.contains(current) || document.activeElement === document.body) {
@@ -150,9 +154,13 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 
-		pause = () => this.paused.pause()
+		pause = () => {
+			this.paused.pause();
+		}
 
-		resume = () => this.paused.resume()
+		resume = () => {
+			this.paused.resume();
+		}
 
 		handle = handle.bind(this)
 
