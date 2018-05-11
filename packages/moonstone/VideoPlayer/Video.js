@@ -250,7 +250,6 @@ const VideoBase = class extends React.Component {
 						controls={false}
 						key={preloadKey}
 						mediaComponent={mediaComponent}
-						noAutoLoad
 						onLoadStart={this.handlePreloadVideoLoadStart}
 						preload="auto"
 						ref={this.setPreloadRef}

@@ -150,13 +150,6 @@ class Media extends React.Component {
 		mediaEventsMap: PropTypes.object,
 
 		/**
-		 * Disable automatically loaded
-		 *
-		 * @type {[type]}
-		 */
-		noAutoLoad: PropTypes.bool,
-
-		/**
 		 * A function to be run when media updates.
 		 *
 		 * @type {Function}
@@ -176,8 +169,7 @@ class Media extends React.Component {
 	}
 
 	static defaultProps = {
-		mediaEventsMap: handledMediaEventsMap,
-		noAutoLoad: false
+		mediaEventsMap: handledMediaEventsMap
 	}
 
 	constructor (props) {
@@ -206,26 +198,18 @@ class Media extends React.Component {
 
 	componentDidMount () {
 		this.attachCustomMediaEvents();
-
-		this.autoLoad();
 	}
 
 	componentDidUpdate ({source: prevSource}) {
 		const {source} = this.props;
 
 		if (getKeyFromSource(source) !== getKeyFromSource(prevSource)) {
-			this.autoLoad();
+			this.load();
 		}
 	}
 
 	componentWillUnmount () {
 		this.detachCustomMediaEvents();
-	}
-
-	autoLoad () {
-		if (this.props.noAutoLoad) return;
-
-		this.load();
 	}
 
 	attachCustomMediaEvents = () => {
@@ -310,7 +294,6 @@ class Media extends React.Component {
 		const {customMediaEventsMap, mediaComponent: Component, source, ...rest} = this.props;
 
 		delete rest.mediaEventsMap;
-		delete rest.noAutoLoad;
 		delete rest.onUpdate;
 
 		// Remove the events we manually added so they aren't added twice or fail.
