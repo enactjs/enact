@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/Touchable` to fire `onTap` when a `click` event occurs
+- `ui/Touchable` support to fire `onTap` when a `click` event occurs
 
 ### Changed
 
