@@ -63,7 +63,7 @@ const isEnabled = forProp('disabled', false);
 
 const handleDown = handle(
 	isEnabled,
-	makeTouchableEvent('down', forwardWithPrevent('onDown')),
+	makeTouchableEvent('onDown', forwardWithPrevent('onDown')),
 	call('activate'),
 	call('startGesture')
 );
@@ -72,8 +72,8 @@ const handleUp = handle(
 	isEnabled,
 	call('endGesture'),
 	call('isTracking'),
-	makeTouchableEvent('up', forwardWithPrevent('onUp')),
-	makeTouchableEvent('tap', forward('onTap'))
+	makeTouchableEvent('onUp', forwardWithPrevent('onUp')),
+	makeTouchableEvent('onTap', forward('onTap'))
 ).finally(call('deactivate'));
 
 const handleEnter = handle(
@@ -149,7 +149,7 @@ const handleTouchMove = handle(
 	// detecting when the touch leaves the boundary. oneOf returns the value of whichever
 	// branch it follows so we append moveHold to either to handle moves that aren't
 	// entering or leaving
-	makeTouchableEvent('move', forward('onMove')),
+	makeTouchableEvent('onMove', forward('onMove')),
 	oneOf(
 		[call('hasTouchLeftTarget'), handleLeave],
 		[returnsTrue, handleEnter]
