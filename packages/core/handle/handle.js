@@ -85,6 +85,20 @@ const hasPropsAndContext = (obj) => {
 	return obj && obj.hasOwnProperty && obj.hasOwnProperty('props') && obj.hasOwnProperty('context');
 };
 
+const decorateHandleFunction = (fn) => {
+	fn.named = (name) => {
+		Object.defineProperty(fn, 'name', {
+			value: name,
+			writeable: false,
+			enumerable: false
+		});
+
+		return fn;
+	};
+
+	return fn;
+}
+
 /**
  * Allows generating event handlers by chaining input functions to filter or short-circuit the
  * handling flow. Any input function that returns a falsey value will stop the chain.
@@ -126,7 +140,7 @@ const handle = function (...handlers) {
 	};
 
 	fn.finally = function (cleanup) {
-		return function (ev, props, context) {
+		return decorateHandleFunction(function (ev, props, context) {
 			let result = false;
 
 			if (hasPropsAndContext(this)) {
@@ -141,10 +155,10 @@ const handle = function (...handlers) {
 			}
 
 			return result;
-		};
+		});
 	};
 
-	return fn;
+	return decorateHandleFunction(fn);
 };
 
 /**
