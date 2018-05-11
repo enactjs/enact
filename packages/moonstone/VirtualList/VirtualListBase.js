@@ -313,15 +313,13 @@ const VirtualListBaseFactory = (type) => {
 				{dataSize, isItemDisabled} = this.props,
 				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
 				safeIndexTo = clamp(-1, dataSize, indexTo),
-				noDisabledItem = (isItemDisabled === isItemDisabledDefault);
+				delta = (indexFrom < indexTo) ? 1 : -1;
 
 			if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
 				return -1;
-			} else if (noDisabledItem) {
+			} else if (isItemDisabled === isItemDisabledDefault) {
 				return safeIndexFrom;
 			}
-
-			const delta = (indexFrom < indexTo) ? 1 : -1;
 
 			if (safeIndexFrom !== safeIndexTo) {
 				for (let i = safeIndexFrom; i !== safeIndexTo; i += delta) {
@@ -410,8 +408,7 @@ const VirtualListBaseFactory = (type) => {
 				{findSpottableItem} = this,
 				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo,
 				numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent),
-				isPageDown = (direction === 'down' || direction === 'right') ? 1 : -1,
-				noDisabledItem = (isItemDisabled === isItemDisabledDefault);
+				isPageDown = (direction === 'down' || direction === 'right') ? 1 : -1;
 			let candidateIndex = -1;
 
 			/* First, find a spottable item in this page */
@@ -449,7 +446,7 @@ const VirtualListBaseFactory = (type) => {
 
 			/* For grid lists, find the nearest item from the current item */
 			if (candidateIndex !== -1) {
-				return noDisabledItem ? candidateIndex : this.findNearestSpottableItemInExtent(candidateIndex, this.getExtentIndex(candidateIndex));
+				return (isItemDisabled === isItemDisabledDefault) ? candidateIndex : this.findNearestSpottableItemInExtent(currentIndex, this.getExtentIndex(candidateIndex));
 			} else {
 				return -1;
 			}
