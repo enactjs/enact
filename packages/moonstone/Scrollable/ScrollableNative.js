@@ -380,7 +380,7 @@ class ScrollableBaseNative extends Component {
 			pageDistance = (isPageUp(keyCode) ? -1 : 1) * (canScrollVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
 			spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem) {
+		if (spotItem) {
 			// Should skip scroll by page when spotItem is paging control button of Scrollbar
 			if (!childRef.containerRef.contains(spotItem)) {
 				return;
@@ -435,7 +435,9 @@ class ScrollableBaseNative extends Component {
 		this.animateOnFocus = true;
 		if (isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) {
 			ev.preventDefault();
-			if (!ev.repeat && this.hasFocus()) {
+			if (Spotlight.getPointerMode()) {
+				ev.stopPropagation();
+			} else if (!ev.repeat && this.hasFocus()) {
 				this.scrollByPage(ev.keyCode);
 			}
 		}

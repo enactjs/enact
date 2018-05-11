@@ -11,11 +11,15 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/ToggleItem` to forward native events on `onFocus` and `onBlur`
+- `moonstone/Input` and `moonstone/ExpandableInput` support for forwarding valid `<input>` props to the contained `<input>` node
 
 ### Fixed
 
+- `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` to ignore any user key events in pointer mode
 - `moonstone/Image` so it automatically swaps the `src` to the appropriate resolution dynamically as the screen resizes
 - `moonstone/Popup` to support all `spotlightRestrict` options
+- `moonstone` component `disabled` colors to match the most recent design guidelines (from 30% to 60% opacity)
+- `moonstone/ExpandableInput` spotlight behavior when leaving the component via 5-way
 
 ## [2.0.0-beta.2] - 2018-05-07
 
