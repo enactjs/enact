@@ -9,6 +9,7 @@ import $L from '../internal/$L';
  * @param   {String}  type     `type` of the Input
  * @param   {String}  [value]  Current value of the input
  * @returns {String}           `aria-label` value
+ * @private
  */
 const calcAriaLabel = function (prefix, type, value = '') {
 	const hint = $L('Input field');
@@ -31,6 +32,7 @@ const calcAriaLabel = function (prefix, type, value = '') {
  * @memberof moonstone/Input
  * @param   {Object} props  Props object
  * @returns {Object}        input related props
+ * @private
  */
 const extractInputProps = function (props) {
 	const inputProps = {};
