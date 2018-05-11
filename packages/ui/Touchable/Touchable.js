@@ -162,6 +162,10 @@ const handleGlobalMove = handle(
 	call('moveGesture')
 );
 
+const handleOnBlur = handle(
+	call('onBlur')
+);
+
 /**
  * Default config for {@link ui/Touchable.Touchable}.
  *
@@ -392,6 +396,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.handleTouchEnd = handleTouchEnd.bind(this);
 			this.handleGlobalUp = handleGlobalUp.bind(this);
 			this.handleGlobalMove = handleGlobalMove.bind(this);
+			this.handleOnBlur = handleOnBlur.bind(this);
 		}
 
 		componentDidMount () {
@@ -505,6 +510,10 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
+		onBlur () {
+			return this.endGesture();
+		}
+
 		enterGesture () {
 			this.drag.enter();
 			this.hold.enter();
@@ -558,6 +567,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			props.onMouseMove = this.handleMouseMove;
 			props.onMouseEnter = this.handleMouseEnter;
 			props.onMouseUp = this.handleMouseUp;
+			props.onBlur = this.handleOnBlur;
 
 			if (platform.touch) {
 				props.onTouchStart = this.handleTouchStart;
