@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `ui/Toggleable` to forward events on `acitvate` and `deactivate` instead of firing toggled payload. Use `toggle` to handle toggled payload from the event
+
 ## [2.0.0-beta.2] - 2018-05-07
 
 ### Fixed
