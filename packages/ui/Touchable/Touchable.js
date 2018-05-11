@@ -562,14 +562,11 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return !this.target.contains(target);
 		}
 
-		// Normalized handlers - Mouse and Touch events are mapped to these to trigger cross-type
-		// events and initiate gestures
-
-		shouldAllowClick  = (ev) => {
+		shouldAllowClick (ev) {
 			return this.clickAllow.shouldAllowClick(ev);
 		}
 
-		setLastMouseUp = (ev) => {
+		setLastMouseUp (ev) {
 			this.clickAllow.setLastMouseUp(ev);
 		}
 
