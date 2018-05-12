@@ -181,17 +181,13 @@ const VideoBase = class extends React.Component {
 		forward('onLoadStart', this.loadStartEvent, this.props);
 	}
 
-	// These methods are here because on webOS TVs we can't play a video until after second video
-	// player is loaded
 	handleVideoLoadStart = (ev) => {
 		this.loaded.video = true;
 		this.loadStartEvent = {...ev};
-		this.autoPlay();
 	}
 
 	handlePreloadVideoLoadStart = () => {
 		this.loaded.preload = true;
-		this.autoPlay();
 	}
 
 	setVideoRef = (node) => {
@@ -208,13 +204,13 @@ const VideoBase = class extends React.Component {
 
 	render () {
 		const {
+			noAutoPlay,
 			preloadSource,
 			source,
 			mediaComponent,
 			...rest
 		} = this.props;
 
-		delete rest.noAutoPlay;
 		delete rest.setMedia;
 
 		const sourceKey = getKeyFromSource(source);
@@ -230,7 +226,7 @@ const VideoBase = class extends React.Component {
 				{sourceKey ? (
 					<Media
 						{...rest}
-						autoPlay={false}
+						autoPlay={!noAutoPlay}
 						className={css.video}
 						controls={false}
 						key={sourceKey}
@@ -251,7 +247,7 @@ const VideoBase = class extends React.Component {
 						key={preloadKey}
 						mediaComponent={mediaComponent}
 						onLoadStart={this.handlePreloadVideoLoadStart}
-						preload="auto"
+						preload="none"
 						ref={this.setPreloadRef}
 						source={React.isValidElement(preloadSource) ? preloadSource : (
 							<source src={preloadSource} />
