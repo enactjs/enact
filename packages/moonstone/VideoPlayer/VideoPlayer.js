@@ -508,7 +508,7 @@ const VideoPlayerBase = class extends React.Component {
 		 *
 		 * Events:
 		 * * `onLoadStart` - Called when the video starts to load
-                 * * `onPlay` - Sent when playback of the media starts after having been paused
+		 * * `onPlay` - Sent when playback of the media starts after having been paused
 		 * * `onUpdate` - Sent when any of the properties were updated
 		 *
 		 * Methods:
