@@ -1,4 +1,3 @@
-import {forward} from '@enact/core/handle';
 import ForwardRef from '@enact/ui/ForwardRef';
 import {Media, getKeyFromSource} from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
@@ -95,18 +94,7 @@ const VideoBase = class extends React.Component {
 		mediaComponent: 'video'
 	}
 
-	constructor (props) {
-		super(props);
-		this.isPlayerMounted = false;
-
-		this.loaded = {
-			video: false,
-			preload: false
-		};
-	}
-
 	componentDidMount () {
-		this.isPlayerMounted = true;
 		this.setMedia();
 	}
 
@@ -119,23 +107,12 @@ const VideoBase = class extends React.Component {
 		const preloadKey = getKeyFromSource(preloadSource);
 		const prevPreloadKey = getKeyFromSource(prevPreloadSource);
 
-		// if there's source and it has changed and it's not the prior preloaded source
+		// if there's source and it has changed.
 		if (source && key !== prevKey) {
-			// if it wasn't the preload key
-			if (key !== prevPreloadKey) {
-				// flag it as unloaded
-				this.loaded.video = false;
-			} else {
-				// if the preload video is switched to the current, try to play it now because it
-				// won't fire an onLoadStart events since it has already loaded.
-				this.autoPlay();
-			}
+			this.autoPlay();
 		}
 
 		if (preloadSource && preloadKey !== prevPreloadKey) {
-			// flag it as unloaded (if its not the same as source) and load it
-			this.loaded.preload = preloadKey === key;
-
 			// In the case that the previous source equalled the previous preload (causing the
 			// preload video node to not be created) and then the preload source was changed, we
 			// need to guard against accessing the preloadVideo node.
@@ -154,13 +131,6 @@ const VideoBase = class extends React.Component {
 		this.clearMedia();
 	}
 
-	canPlay () {
-		return this.isPlayerMounted && this.loaded.video && (
-			// video can play if there isn't a preloaded source or there is and it has loaded
-			!this.props.preloadSource || this.loaded.preload
-		);
-	}
-
 	clearMedia ({setMedia} = this.props) {
 		if (setMedia) {
 			setMedia(null);
@@ -174,20 +144,9 @@ const VideoBase = class extends React.Component {
 	}
 
 	autoPlay () {
-		if (this.props.noAutoPlay || !this.canPlay()) return;
+		if (this.props.noAutoPlay) return;
 
 		this.video.play();
-
-		forward('onLoadStart', this.loadStartEvent, this.props);
-	}
-
-	handleVideoLoadStart = (ev) => {
-		this.loaded.video = true;
-		this.loadStartEvent = {...ev};
-	}
-
-	handlePreloadVideoLoadStart = () => {
-		this.loaded.preload = true;
 	}
 
 	setVideoRef = (node) => {
@@ -196,7 +155,7 @@ const VideoBase = class extends React.Component {
 	}
 
 	setPreloadRef = (node) => {
-		if (node && this.loaded.preload === false) {
+		if (node) {
 			node.load();
 		}
 		this.preloadVideo = node;
@@ -231,7 +190,6 @@ const VideoBase = class extends React.Component {
 						controls={false}
 						key={sourceKey}
 						mediaComponent={mediaComponent}
-						onLoadStart={this.handleVideoLoadStart}
 						preload="none"
 						ref={this.setVideoRef}
 						source={React.isValidElement(source) ? source : (
@@ -246,7 +204,6 @@ const VideoBase = class extends React.Component {
 						controls={false}
 						key={preloadKey}
 						mediaComponent={mediaComponent}
-						onLoadStart={this.handlePreloadVideoLoadStart}
 						preload="none"
 						ref={this.setPreloadRef}
 						source={React.isValidElement(preloadSource) ? preloadSource : (
