@@ -220,7 +220,6 @@ const VideoPlayerBase = class extends React.Component {
 		 * * `onJumpBackwardButtonClick` - Called when the jump backward button is pressed
 		 * * `onJumpForwardButtonClick` - Called when the jump forward button is pressed
 		 * * `onKeyDown` - Called when a key is pressed
-		 * * `onLoadStart` - Called when the video starts to load
 		 * * `onPause` - Called when the media is paused via a key event
 		 * * `onPlay` - Called when the media is played via a key event
 		 * * `onRewind` - Called when the media is rewound via a key event
@@ -508,7 +507,8 @@ const VideoPlayerBase = class extends React.Component {
 		 *	proportion of the media that has already been shown
 		 *
 		 * Events:
-		 * * `onPlay` - Sent when playback of the media starts after having been paused
+		 * * `onLoadStart` - Called when the video starts to load
+                 * * `onPlay` - Sent when playback of the media starts after having been paused
 		 * * `onUpdate` - Sent when any of the properties were updated
 		 *
 		 * Methods:
