@@ -11,7 +11,7 @@ class ClickAllow {
 
 	shouldAllowTap (ev) {
 		const {type, timeStamp} = ev;
-		return !(type === 'click' && this.lastMouseUpTime === timeStamp);
+		return type === 'click' && this.lastMouseUpTime !== timeStamp;
 	}
 }
 
