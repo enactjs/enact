@@ -403,7 +403,7 @@ const VirtualListBaseFactory = (type) => {
 
 		getIndexToScroll = (direction, currentIndex) => {
 			const
-				{dataSize, isItemDisabled, spacing} = this.props,
+				{dataSize, spacing} = this.props,
 				{dimensionToExtent, primary} = this.uiRef,
 				{findSpottableItem} = this,
 				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo,
@@ -413,13 +413,13 @@ const VirtualListBaseFactory = (type) => {
 
 			/* First, find a spottable item in this page */
 			if (isPageDown === 1) { // Page Down
-				if ((lastVisibleIndex - (lastVisibleIndex % dimensionToExtent || dimensionToExtent)) >= currentIndex) {
+				if ((lastVisibleIndex - (lastVisibleIndex % dimensionToExtent)) > currentIndex) { // If a current focused item is in the last visible line.
 					candidateIndex = findSpottableItem(
 						lastVisibleIndex,
 						currentIndex - (currentIndex % dimensionToExtent) + dimensionToExtent - 1
 					);
 				}
-			} else if (firstVisibleIndex + dimensionToExtent <= currentIndex) { // Page Up
+			} else if (firstVisibleIndex + dimensionToExtent <= currentIndex) { // Page Up,  if a current focused item is in the first visible line.
 				candidateIndex = findSpottableItem(
 					firstVisibleIndex,
 					currentIndex - (currentIndex % dimensionToExtent)
@@ -446,7 +446,7 @@ const VirtualListBaseFactory = (type) => {
 
 			/* For grid lists, find the nearest item from the current item */
 			if (candidateIndex !== -1) {
-				return (isItemDisabled === isItemDisabledDefault) ? candidateIndex : this.findNearestSpottableItemInExtent(currentIndex, this.getExtentIndex(candidateIndex));
+				return this.findNearestSpottableItemInExtent(currentIndex, this.getExtentIndex(candidateIndex));
 			} else {
 				return -1;
 			}
