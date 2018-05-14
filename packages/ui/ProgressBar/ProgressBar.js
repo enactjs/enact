@@ -17,21 +17,13 @@ import {validateRange} from '../internal/validators';
 import componentCss from './ProgressBar.less';
 
 const progressToPercent = (value) => (clamp(0, 1, value) * 100) + '%';
-const calcBarStyle = (prop, value, startProp, endProp) => {
-	let start = 0;
-	let end = 1;
+const calcBarStyle = (prop, anchor, value = anchor, startProp, endProp) => {
+	let start = Math.min(anchor, value);
+	let end = Math.max(anchor, value) - start;
 
-	if (Array.isArray(value)) {
-		start = value[0] || 0;
-		__DEV__ && validateRange(value[0], 0, 1, 'ProgressBar', prop + '[start]', 'min', 'max');
-
-		end = value[1] || 0;
-		__DEV__ && validateRange(end, start, 1, 'ProgressBar', prop + '[end]', 'min', 'max');
-
-		end -= start;
-	} else {
-		end = value || 0;
-		__DEV__ && validateRange(end, 0, 1, 'ProgressBar', prop, 'min', 'max');
+	if (__DEV__) {
+		validateRange(start, 0, 1, 'ProgressBar', prop, 'min', 'max');
+		validateRange(end, 0, 1, 'ProgressBar', prop, 'min', 'max');
 	}
 
 	return {
@@ -56,14 +48,11 @@ const ProgressBar = kind({
 		 * The proportion of the loaded portion of the progress bar. Valid values are
 		 * between `0` and `1`.
 		 *
-		 * @type {Number | Number[]}
+		 * @type {Number}
 		 * @default 0
 		 * @public
 		 */
-		backgroundProgress: PropTypes.oneOfType([
-			PropTypes.number,
-			PropTypes.arrayOf(PropTypes.number)
-		]),
+		backgroundProgress: PropTypes.number,
 
 		/**
 		 * The contents to be displayed with progress bar.
@@ -105,20 +94,18 @@ const ProgressBar = kind({
 		 * The proportion of the filled portion of the progress bar. Valid values are
 		 * between `0` and `1`.
 		 *
-		 * @type {Number | Number[]}
+		 * @type {Number}
 		 * @default 0
 		 * @public
 		 */
-		progress: PropTypes.oneOfType([
-			PropTypes.number,
-			PropTypes.arrayOf(PropTypes.number)
-		])
+		progress: PropTypes.number,
+
+		progressAnchor: PropTypes.number
 	},
 
 	defaultProps: {
-		backgroundProgress: 0,
 		orientation: 'horizontal',
-		progress: 0
+		progressAnchor: 0
 	},
 
 	styles: {
@@ -129,17 +116,19 @@ const ProgressBar = kind({
 
 	computed: {
 		className: ({orientation, styler}) => styler.append(orientation),
-		style: ({backgroundProgress, progress, style}) => {
+		style: ({backgroundProgress, progress, progressAnchor, style}) => {
 			return {
 				...style,
 				...calcBarStyle(
 					'backgroundProgress',
+					progressAnchor,
 					backgroundProgress,
 					'--ui-progressbar-proportion-start-background',
 					'--ui-progressbar-proportion-end-background',
 				),
 				...calcBarStyle(
 					'progress',
+					progressAnchor,
 					progress,
 					'--ui-progressbar-proportion-start',
 					'--ui-progressbar-proportion-end'
@@ -152,6 +141,7 @@ const ProgressBar = kind({
 		delete rest.backgroundProgress;
 		delete rest.orientation;
 		delete rest.progress;
+		delete rest.progressAnchor;
 
 		return (
 			<div role="progressbar" {...rest}>
