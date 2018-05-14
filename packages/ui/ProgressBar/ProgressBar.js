@@ -17,6 +17,28 @@ import {validateRange} from '../internal/validators';
 import componentCss from './ProgressBar.less';
 
 const progressToPercent = (value) => (clamp(0, 1, value) * 100) + '%';
+const calcBarStyle = (prop, value, startProp, endProp) => {
+	let start = 0;
+	let end = 1;
+
+	if (Array.isArray(value)) {
+		start = value[0] || 0;
+		__DEV__ && validateRange(value[0], 0, 1, 'ProgressBar', prop + '[start]', 'min', 'max');
+
+		end = value[1] || 0;
+		__DEV__ && validateRange(end, start, 1, 'ProgressBar', prop + '[end]', 'min', 'max');
+
+		end -= start;
+	} else {
+		end = value || 0;
+		__DEV__ && validateRange(end, 0, 1, 'ProgressBar', prop, 'min', 'max');
+	}
+
+	return {
+		[startProp]: progressToPercent(start),
+		[endProp]: progressToPercent(end)
+	};
+}
 
 /**
  * Provides unstyled progress bar component to be customized by a theme or application.
@@ -34,11 +56,14 @@ const ProgressBar = kind({
 		 * The proportion of the loaded portion of the progress bar. Valid values are
 		 * between `0` and `1`.
 		 *
-		 * @type {Number}
+		 * @type {Number | Number[]}
 		 * @default 0
 		 * @public
 		 */
-		backgroundProgress: PropTypes.number,
+		backgroundProgress: PropTypes.oneOfType([
+			PropTypes.number,
+			PropTypes.arrayOf(PropTypes.number)
+		]),
 
 		/**
 		 * The contents to be displayed with progress bar.
@@ -57,7 +82,7 @@ const ProgressBar = kind({
 		 * * `progressBar` - The root component class
 		 * * `fill` - The foreground node of the progress bar
 		 * * `load` - The background node of the progress bar
-		 * * `horizontal` - Applied when `orientation` is `'horizontal'`
+		 * * `horizontal` - Applied when `is `'horizontal'`
 		 * * `vertical` - Applied when `orientation` is `'vertical'`
 		 *
 		 * @type {Object}
@@ -80,11 +105,14 @@ const ProgressBar = kind({
 		 * The proportion of the filled portion of the progress bar. Valid values are
 		 * between `0` and `1`.
 		 *
-		 * @type {Number}
+		 * @type {Number | Number[]}
 		 * @default 0
 		 * @public
 		 */
-		progress: PropTypes.number
+		progress: PropTypes.oneOfType([
+			PropTypes.number,
+			PropTypes.arrayOf(PropTypes.number)
+		])
 	},
 
 	defaultProps: {
@@ -101,21 +129,34 @@ const ProgressBar = kind({
 
 	computed: {
 		className: ({orientation, styler}) => styler.append(orientation),
-		progressCssProp: ({orientation}) => ((orientation === 'vertical') ? 'height' : 'width')
+		style: ({backgroundProgress, progress, style}) => {
+			return {
+				...style,
+				...calcBarStyle(
+					'backgroundProgress',
+					backgroundProgress,
+					'--ui-progressbar-proportion-start-background',
+					'--ui-progressbar-proportion-end-background',
+				),
+				...calcBarStyle(
+					'progress',
+					progress,
+					'--ui-progressbar-proportion-start',
+					'--ui-progressbar-proportion-end'
+				)
+			};
+		}
 	},
 
-	render: ({backgroundProgress, children, css, progress, progressCssProp, ...rest}) => {
+	render: ({children, css, ...rest}) => {
+		delete rest.backgroundProgress;
 		delete rest.orientation;
-
-		if (__DEV__) {
-			validateRange(backgroundProgress, 0, 1, 'ProgressBar', 'backgroundProgress', 'min', 'max');
-			validateRange(progress, 0, 1, 'ProgressBar', 'progress', 'min', 'max');
-		}
+		delete rest.progress;
 
 		return (
 			<div role="progressbar" {...rest}>
-				<div className={css.load} style={{[progressCssProp]: progressToPercent(backgroundProgress)}} />
-				<div className={css.fill} style={{[progressCssProp]: progressToPercent(progress)}} />
+				<div className={css.load} />
+				<div className={css.fill} />
 				{children}
 			</div>
 		);

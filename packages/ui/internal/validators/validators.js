@@ -43,6 +43,8 @@ export const warn = (msg) => {
  */
 export const validateRange = (value, min, max, component, valueName = '"value"', minName = '"min"', maxName = '"max"') => {
 	if (__DEV__) {
+		if (Array.isArray(value)) return;
+
 		if (value < min) {
 			warn(`Warning: ${component} ${valueName} (${value}) less than ${minName} (${min})`);
 		} else if (value > max) {
