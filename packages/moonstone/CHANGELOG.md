@@ -17,6 +17,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` to ignore any user key events in pointer mode
+- `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` to pass `data-spotlight-container-disabled` prop to their outer DOM element
 - `moonstone/Image` so it automatically swaps the `src` to the appropriate resolution dynamically as the screen resizes
 - `moonstone/Popup` to support all `spotlightRestrict` options
 - `moonstone` component `disabled` colors to match the most recent design guidelines (from 30% to 60% opacity)
