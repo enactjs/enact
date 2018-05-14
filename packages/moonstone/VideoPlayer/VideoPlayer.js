@@ -231,6 +231,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		mediaControlsComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+		mediaSliderComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
 
 		/**
 		 * Amount of time (in milliseconds), after the last user action, that the `miniFeedback`
@@ -538,6 +539,7 @@ const VideoPlayerBase = class extends React.Component {
 		feedbackHideDelay: 3000,
 		jumpBy: 30,
 		mediaControlsComponent: MediaControls,
+		mediaSliderComponent: MediaSlider,
 		miniFeedbackHideDelay: 2000,
 		playbackRateHash: {
 			fastForward: ['2', '4', '8', '16'],
@@ -1635,6 +1637,7 @@ const VideoPlayerBase = class extends React.Component {
 			infoComponents,
 			loading,
 			mediaControlsComponent,
+			mediaSliderComponent,
 			noAutoPlay,
 			noMiniFeedback,
 			noSlider,
@@ -1753,32 +1756,35 @@ const VideoPlayerBase = class extends React.Component {
 								null
 							}
 
-							{noSlider ? null : <MediaSlider
-								backgroundProgress={this.state.proportionLoaded}
-								disabled={disabled}
-								forcePressed={this.state.slider5WayPressed}
-								onBlur={this.handleSliderBlur}
-								onChange={this.onSliderChange}
-								onFocus={this.handleSliderFocus}
-								onKeyDown={this.handleSliderKeyDown}
-								onKnobMove={this.handleKnobMove}
-								onSpotlightUp={this.handleSpotlightUpFromSlider}
-								spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
-								value={this.state.proportionPlayed}
-								visible={this.state.mediaSliderVisible}
-							>
-								<FeedbackTooltip
-									duration={this.state.duration}
-									formatter={this.durfmt}
-									noFeedback={!this.state.feedbackIconVisible}
-									playbackRate={this.selectPlaybackRate(this.speedIndex)}
-									playbackState={this.prevCommand}
-									thumbnailComponent={thumbnailComponent}
-									thumbnailDeactivated={this.props.thumbnailUnavailable}
-									thumbnailSrc={thumbnailSrc}
-									hidden={!this.state.feedbackVisible}
-								/>
-							</MediaSlider>}
+							{noSlider ? null : (
+								<ComponentOverride
+									backgroundProgress={this.state.proportionLoaded}
+									component={mediaSliderComponent}
+									disabled={disabled}
+									forcePressed={this.state.slider5WayPressed}
+									onBlur={this.handleSliderBlur}
+									onChange={this.onSliderChange}
+									onFocus={this.handleSliderFocus}
+									onKeyDown={this.handleSliderKeyDown}
+									onKnobMove={this.handleKnobMove}
+									onSpotlightUp={this.handleSpotlightUpFromSlider}
+									spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
+									value={this.state.proportionPlayed}
+									visible={this.state.mediaSliderVisible}
+								>
+									<FeedbackTooltip
+										duration={this.state.duration}
+										formatter={this.durfmt}
+										noFeedback={!this.state.feedbackIconVisible}
+										playbackRate={this.selectPlaybackRate(this.speedIndex)}
+										playbackState={this.prevCommand}
+										thumbnailComponent={thumbnailComponent}
+										thumbnailDeactivated={this.props.thumbnailUnavailable}
+										thumbnailSrc={thumbnailSrc}
+										hidden={!this.state.feedbackVisible}
+									/>
+								</ComponentOverride>
+							)}
 
 							<ComponentOverride
 								component={mediaControlsComponent}
@@ -1891,4 +1897,9 @@ const VideoPlayer = ApiDecorator(
 );
 
 export default VideoPlayer;
-export {VideoPlayer, MediaControls, VideoPlayerBase};
+export {
+	MediaControls,
+	MediaSlider,
+	VideoPlayer,
+	VideoPlayerBase
+};
