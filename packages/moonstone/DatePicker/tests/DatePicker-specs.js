@@ -22,7 +22,7 @@ describe('DatePicker', () => {
 	it('should emit an onChange event when changing a component picker', function () {
 		const handleChange = sinon.spy();
 		const subject = mount(
-			<DatePicker value={new Date(2000, 6, 15)} title="Date" open onChange={handleChange} />
+			<DatePicker onChange={handleChange} open title="Date" value={new Date(2000, 6, 15)} />
 		);
 
 		const base = subject.find('DateComponentRangePicker').first();
@@ -36,7 +36,7 @@ describe('DatePicker', () => {
 
 	it('should omit labels when noLabels is true', function () {
 		const subject = mount(
-			<DatePickerBase title="Date" day={1} maxDays={31} month={1} maxMonths={12} year={2000} order={['m', 'd']} open noLabels />
+			<DatePickerBase day={1} maxDays={31} maxMonths={12} month={1} noLabels open order={['m', 'd']} title="Date" year={2000} />
 		);
 
 		const expected = 2;
@@ -58,7 +58,7 @@ describe('DatePicker', () => {
 
 	it('should accept a JavaScript Date for its value prop', function () {
 		const subject = mount(
-			<DatePicker title="Date" value={new Date(2000, 0, 1)} open />
+			<DatePicker open title="Date" value={new Date(2000, 0, 1)} />
 		);
 
 		const yearPicker = subject.find(`DateComponentRangePicker.${css.year}`);
@@ -71,7 +71,7 @@ describe('DatePicker', () => {
 
 	it('should accept an updated JavaScript Date for its value prop', function () {
 		const subject = mount(
-			<DatePicker title="Date" open value={new Date(2000, 0, 1)} />
+			<DatePicker open title="Date" value={new Date(2000, 0, 1)} />
 		);
 
 		subject.setProps({
@@ -117,7 +117,7 @@ describe('DatePicker', () => {
 	it('should set "yearAriaLabel" to year picker', function () {
 		const label = 'custom year aria-label';
 		const subject = mount(
-			<DatePicker yearAriaLabel={label} open title="Date" value={new Date(2000, 0, 1)} />
+			<DatePicker open title="Date" value={new Date(2000, 0, 1)} yearAriaLabel={label} />
 		);
 
 		const yearPicker = subject.find(`DateComponentRangePicker.${css.year}`);
