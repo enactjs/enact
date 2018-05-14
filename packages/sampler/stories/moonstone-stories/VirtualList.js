@@ -20,7 +20,7 @@ const
 		"'noAnimation'": 'noAnimation'
 	},
 	items = [],
-	dataSizeDefault = 1000,
+	defaultDataSize = 1000,
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderItem = (size) => ({index, ...rest}) => {
 		const itemStyle = {
@@ -38,7 +38,7 @@ const
 
 const updateDataSize = (dataSize) => {
 	const
-		itemNumberDigits = dataSize > 1 ? Math.floor(Math.log10(dataSize - 1)) + 1 : 0,
+		itemNumberDigits = dataSize > 0 ? ((dataSize - 1) + '').length : 0,
 		headingZeros = Array(itemNumberDigits).join('0');
 
 	items.length = 0;
@@ -50,7 +50,7 @@ const updateDataSize = (dataSize) => {
 	return dataSize;
 };
 
-updateDataSize(dataSizeDefault);
+updateDataSize(defaultDataSize);
 
 storiesOf('UI', module)
 	.add(
@@ -62,7 +62,7 @@ storiesOf('UI', module)
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
 				<UiVirtualList
-					dataSize={updateDataSize(number('dataSize', dataSizeDefault))}
+					dataSize={updateDataSize(number('dataSize', defaultDataSize))}
 					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
@@ -86,7 +86,7 @@ storiesOf('Moonstone', module)
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
 				<VirtualList
-					dataSize={updateDataSize(number('dataSize', dataSizeDefault))}
+					dataSize={updateDataSize(number('dataSize', defaultDataSize))}
 					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize}

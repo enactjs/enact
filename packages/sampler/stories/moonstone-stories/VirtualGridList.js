@@ -24,7 +24,7 @@ const
 		direction: {'horizontal': 'horizontal', 'vertical': 'vertical'}
 	},
 	items = [],
-	dataSizeDefault = 1000,
+	defaultDataSize = 1000,
 	// eslint-disable-next-line enact/prop-types
 	uiRenderItem = ({index, ...rest}) => {
 		const {text, subText, source} = items[index];
@@ -73,7 +73,7 @@ const updateDataSize = (dataSize) => {
 	return dataSize;
 };
 
-updateDataSize(dataSizeDefault);
+updateDataSize(defaultDataSize);
 
 storiesOf('UI', module)
 	.add(
@@ -83,7 +83,7 @@ storiesOf('UI', module)
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<UiVirtualGridList
-				dataSize={updateDataSize(number('dataSize', dataSizeDefault))}
+				dataSize={updateDataSize(number('dataSize', defaultDataSize))}
 				direction={select('direction', prop.direction, 'vertical')}
 				itemRenderer={uiRenderItem}
 				itemSize={{
@@ -108,7 +108,7 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<VirtualGridList
-				dataSize={updateDataSize(number('dataSize', dataSizeDefault))}
+				dataSize={updateDataSize(number('dataSize', defaultDataSize))}
 				direction={select('direction', prop.direction, 'vertical')}
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 				itemRenderer={renderItem}
