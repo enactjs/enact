@@ -64,8 +64,8 @@ const SelectableItemBase = kind({
  * Adds interactive functionality to `SelectableItemBase`
  *
  * @class SelectableItemDecorator
- * @memberof moostone/SelectableItem
- * @mixes moostone/ToggleItem.ToggleItemDecorator
+ * @memberof moonstone/SelectableItem
+ * @mixes moonstone/ToggleItem.ToggleItemDecorator
  * @hoc
  * @public
  */

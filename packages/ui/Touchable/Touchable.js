@@ -18,6 +18,7 @@ import React from 'react';
 import {configure, mergeConfig} from './config';
 import {activate, deactivate, pause, States} from './state';
 import {block, unblock, isNotBlocked} from './block';
+import ClickAllow from './ClickAllow';
 
 import {Drag, dragConfigPropType} from './Drag';
 import {Flick, flickConfigPropType} from './Flick';
@@ -62,7 +63,7 @@ const isEnabled = forProp('disabled', false);
 
 const handleDown = handle(
 	isEnabled,
-	makeTouchableEvent('down', forwardWithPrevent('onDown')),
+	makeTouchableEvent('onDown', forwardWithPrevent('onDown')),
 	call('activate'),
 	call('startGesture')
 );
@@ -71,8 +72,8 @@ const handleUp = handle(
 	isEnabled,
 	call('endGesture'),
 	call('isTracking'),
-	makeTouchableEvent('up', forwardWithPrevent('onUp')),
-	makeTouchableEvent('tap', forward('onTap'))
+	makeTouchableEvent('onUp', forwardWithPrevent('onUp')),
+	makeTouchableEvent('onTap', forward('onTap'))
 ).finally(call('deactivate'));
 
 const handleEnter = handle(
@@ -116,8 +117,20 @@ const handleMouseLeave = handle(
 );
 
 const handleMouseUp = handle(
+	returnsTrue(call('setLastMouseUp')),
 	forward('onMouseUp'),
 	handleUp
+);
+
+const handleClick = handle(
+	isEnabled,
+	// wrapping another handler to always forward onClick but, if onTap should occur, it should
+	// occur first to keep in sync with the up handler which emits onTap first
+	handle(
+		call('shouldAllowTap'),
+		call('activate'),
+		handleUp
+	).finally(forward('onClick'))
 );
 
 // Touch event handlers
@@ -136,7 +149,7 @@ const handleTouchMove = handle(
 	// detecting when the touch leaves the boundary. oneOf returns the value of whichever
 	// branch it follows so we append moveHold to either to handle moves that aren't
 	// entering or leaving
-	makeTouchableEvent('move', forward('onMove')),
+	makeTouchableEvent('onMove', forward('onMove')),
 	oneOf(
 		[call('hasTouchLeftTarget'), handleLeave],
 		[returnsTrue, handleEnter]
@@ -382,6 +395,9 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			}, 400);
 
+			this.clickAllow = new ClickAllow();
+
+			this.handleClick = handleClick.bind(this);
 			this.handleMouseDown = handleMouseDown.bind(this);
 			this.handleMouseEnter = handleMouseEnter.bind(this);
 			this.handleMouseMove = handleMouseMove.bind(this);
@@ -549,10 +565,16 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return !this.target.contains(target);
 		}
 
-		// Normalized handlers - Mouse and Touch events are mapped to these to trigger cross-type
-		// events and initiate gestures
+		shouldAllowTap (ev) {
+			return this.clickAllow.shouldAllowTap(ev);
+		}
+
+		setLastMouseUp (ev) {
+			this.clickAllow.setLastMouseUp(ev);
+		}
 
 		addHandlers (props) {
+			props.onClick = this.handleClick;
 			props.onMouseDown = this.handleMouseDown;
 			props.onMouseLeave = this.handleMouseLeave;
 			props.onMouseMove = this.handleMouseMove;

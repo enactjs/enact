@@ -10,9 +10,10 @@ import {activate, deactivate} from '../state';
 import {configure, getConfig, resetDefaultConfig} from '../config';
 
 describe('Touchable', () => {
-	const DivComponent = ({onMouseDown, onMouseLeave, onMouseUp}) => {
+	const DivComponent = ({onClick, onMouseDown, onMouseLeave, onMouseUp}) => {
 		return (
 			<div
+				onClick={onClick}
 				onMouseDown={onMouseDown}
 				onMouseUp={onMouseUp}
 				onMouseLeave={onMouseLeave}
@@ -156,6 +157,58 @@ describe('Touchable', () => {
 			const actual = handler.calledOnce;
 
 			expect(actual).to.equal(expected);
+		});
+
+		it('should be called on click', function () {
+			const Component = Touchable({activeProp: 'active'}, DivComponent);
+			const handler = sinon.spy();
+			const subject = mount(
+				<Component onTap={handler} />
+			);
+
+			subject.simulate('click');
+
+			const expected = true;
+			const actual = handler.calledOnce;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should be called before onClick on click', function () {
+			const Component = Touchable({activeProp: 'active'}, DivComponent);
+			const handler = sinon.spy();
+			const subject = mount(
+				<Component onTap={handler} onClick={handler} />
+			);
+
+			subject.simulate('click');
+
+			const expected = ['onTap', 'click'];
+			const actual = handler.getCalls().map(call => call.args[0].type);
+
+			expect(actual).to.deep.equal(expected);
+		});
+
+		it('should be called before onCLick on mouse up', function () {
+			const Component = Touchable({activeProp: 'active'}, DivComponent);
+			const handler = sinon.spy();
+			const subject = mount(
+				<Component onTap={handler} onClick={handler} />
+			);
+
+			const ev = {
+				// a matching timeStamp is used by Touchable to prevent multiple onTaps on "true"
+				// click (mouseup + click)
+				timeStamp: 1
+			};
+			subject.simulate('mousedown', ev);
+			subject.simulate('mouseup', ev);
+			subject.simulate('click', ev);
+
+			const expected = ['onTap', 'click'];
+			const actual = handler.getCalls().map(call => call.args[0].type);
+
+			expect(actual).to.deep.equal(expected);
 		});
 
 		it('should be preventable via onUp handler', function () {
