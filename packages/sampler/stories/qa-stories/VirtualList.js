@@ -24,7 +24,6 @@ const
 		}
 	},
 	items = [],
-	defaultDataSize = 1000,
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderItem = (size) => ({index, ...rest}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
@@ -35,21 +34,9 @@ const
 		);
 	};
 
-const updateDataSize = (dataSize) => {
-	const
-		itemNumberDigits = dataSize > 0 ? ((dataSize - 1) + '').length : 0,
-		headingZeros = Array(itemNumberDigits).join('0');
-
-	items.length = 0;
-
-	for (let i = 0; i < dataSize; i++) {
-		items.push({item :'Item ' + (headingZeros + i).slice(-itemNumberDigits), selected: false});
-	}
-
-	return dataSize;
-};
-
-updateDataSize(defaultDataSize);
+for (let i = 0; i < 1000; i++) {
+	items.push({item :'Item ' + ('00' + i).slice(-3), selected: false});
+}
 
 class StatefulSwitchItem extends React.Component {
 	static propTypes = {
@@ -93,7 +80,7 @@ storiesOf('VirtualList', module)
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
 				<VirtualList
-					dataSize={updateDataSize(number('dataSize', defaultDataSize))}
+					dataSize={number('dataSize', items.length)}
 					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize}

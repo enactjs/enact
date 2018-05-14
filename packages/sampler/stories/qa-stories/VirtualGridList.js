@@ -14,7 +14,6 @@ const Config = mergeComponentMetadata('VirtualGridList', VirtualGridList, Virtua
 
 const
 	items = [],
-	defaultDataSize = 1000,
 	// eslint-disable-next-line enact/prop-types
 	renderItem = ({index, ...rest}) => {
 		const {text, subText, source} = items[index];
@@ -29,35 +28,23 @@ const
 		);
 	};
 
-const updateDataSize = (dataSize) => {
+for (let i = 0; i < 1000; i++) {
 	const
-		itemNumberDigits = dataSize > 0 ? ((dataSize - 1) + '').length : 0,
-		headingZeros = Array(itemNumberDigits).join('0');
+		count = ('00' + i).slice(-3),
+		text = `Item ${count}`,
+		subText = `SubItem ${count}`,
+		color = Math.floor((Math.random() * (0x1000000 - 0x101010)) + 0x101010).toString(16),
+		source = `http://placehold.it/300x300/${color}/ffffff&text=Image ${i}`;
 
-	items.length = 0;
-
-	for (let i = 0; i < dataSize; i++) {
-		const
-			count = (headingZeros + i).slice(-itemNumberDigits),
-			text = `Item ${count}`,
-			subText = `SubItem ${count}`,
-			color = Math.floor((Math.random() * (0x1000000 - 0x101010)) + 0x101010).toString(16),
-			source = `http://placehold.it/300x300/${color}/ffffff&text=Image ${i}`;
-
-		items.push({text, subText, source});
-	}
-
-	return dataSize;
-};
-
-updateDataSize(defaultDataSize);
+	items.push({text, subText, source});
+}
 
 storiesOf('VirtualList.VirtualGridList', module)
 	.add(
 		'Horizontal VirtualGridList',
 		() => (
 			<VirtualGridList
-				dataSize={updateDataSize(number('dataSize', defaultDataSize))}
+				dataSize={number('dataSize', items.length)}
 				direction="horizontal"
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 				itemRenderer={renderItem}
