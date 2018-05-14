@@ -22,6 +22,7 @@ import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 import Changeable from '@enact/ui/Changeable';
 import ComponentOverride from '@enact/ui/ComponentOverride';
+import ProgressBar from '@enact/ui/ProgressBar';
 import Pure from '@enact/ui/internal/Pure';
 import Slottable from '@enact/ui/Slottable';
 import UiSlider from '@enact/ui/Slider';
@@ -154,6 +155,8 @@ const SliderBase = kind({
 		 */
 		onKeyUp: PropTypes.func,
 
+		progressAnchor: PropTypes.number,
+
 		/**
 		 * The amount to increment or decrement the value.
 		 *
@@ -254,7 +257,7 @@ const SliderBase = kind({
 		tooltip: ({tooltip}) => tooltip === true ? ProgressBarTooltip : tooltip
 	},
 
-	render: ({css, focused, tooltip, ...rest}) => {
+	render: ({css, focused, min, progressAnchor = min, tooltip, ...rest}) => {
 		delete rest.activateOnFocus;
 		delete rest.active;
 		delete rest.knobStep;
@@ -264,6 +267,11 @@ const SliderBase = kind({
 			<UiSlider
 				{...rest}
 				css={css}
+				min={min}
+				progressBarComponent={
+					<ProgressBar css={css} />
+				}
+				progressAnchor={progressAnchor}
 				tooltipComponent={
 					<ComponentOverride
 						component={tooltip}

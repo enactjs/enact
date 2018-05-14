@@ -14,7 +14,7 @@
 	box-sizing: content-box;
 	direction: ltr;
 
-	.bars {
+	.progressBar {
 		position: relative;
 		height: 100%;
 		width: 100%;
@@ -63,14 +63,6 @@
 			height: 100%;
 		}
 
-		.fill {
-			width: ~"calc(var(--ui-slider-proportion-end) * 100%)";
-		}
-
-		.load {
-			width: ~"calc(var(--ui-slider-proportion-end-background) * 100%)";
-		}
-
 		.knob {
 			left: ~"calc(var(--ui-slider-proportion-end-knob) * 100%)";
 		}
@@ -95,16 +87,8 @@
 			bottom: 0;
 		}
 
-		.fill {
-			height: ~"calc(var(--ui-slider-proportion-end) * 100%)";
-		}
-
-		.load {
-			height: ~"calc(var(--ui-slider-proportion-end-background) * 100%)";
-		}
-
 		.knob {
-			bottom: ~"calc(var(--ui-slider-proportion-end) * 100%)";
+			bottom: ~"calc(var(--ui-slider-proportion-end-knob) * 100%)";
 			top: auto;
 		}
 
@@ -132,7 +116,7 @@
 	});
 
 	.applySkins({
-		.bars {
+		.progressBar {
 			background-color: @moon-progress-bar-bg-color;
 		}
 

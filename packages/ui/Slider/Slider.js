@@ -36,6 +36,8 @@ const SliderBase = kind({
 	name: 'ui:Slider',
 
 	propTypes: /** @lends ui/Slider.SliderBase.prototype */ {
+		progressBarComponent: PropTypes.func.isRequired,
+
 		/**
 		 * Background progress, as a proportion between `0` and `1`.
 		 *
@@ -145,6 +147,8 @@ const SliderBase = kind({
 		 */
 		pressed: PropTypes.bool,
 
+		progressAnchor: PropTypes.number,
+
 		/**
 		 * The amount to increment or decrement the value.
 		 *
@@ -214,19 +218,30 @@ const SliderBase = kind({
 			);
 		},
 		percent: ({max, min, value = min}) => calcProportion(min, max, value),
-		style: ({backgroundProgress, max, min, style, value = min}) => {
+		style: ({max, min, style, value = min}) => {
 			const proportion = calcProportion(min, max, value);
 
 			return {
 				...style,
-				'--ui-slider-proportion-end': proportion,
-				'--ui-slider-proportion-end-background': backgroundProgress,
 				'--ui-slider-proportion-end-knob': proportion
 			};
 		}
 	},
 
-	render: ({css, disabled, knobComponent, min, orientation, percent, tooltipComponent, value = min, ...rest}) => {
+	render: ({
+		backgroundProgress,
+		css,
+		disabled,
+		knobComponent,
+		min,
+		orientation,
+		percent,
+		progressBarComponent,
+		progressAnchor = min,
+		tooltipComponent,
+		value = min,
+		...rest
+	}) => {
 		delete rest.backgroundProgress;
 		delete rest.max;
 		delete rest.noFill;
@@ -235,9 +250,13 @@ const SliderBase = kind({
 
 		return (
 			<div {...rest} disabled={disabled}>
-				<div className={css.bars}>
-					<div className={css.load} />
-					<div className={css.fill} />
+				<ComponentOverride
+					backgroundProgress={backgroundProgress}
+					component={progressBarComponent}
+					orientation={orientation}
+					progress={percent}
+					progressAnchor={progressAnchor}
+				>
 					<ComponentOverride
 						className={css.knob}
 						component={knobComponent}
@@ -247,7 +266,7 @@ const SliderBase = kind({
 						tooltipComponent={tooltipComponent}
 						value={value}
 					/>
-				</div>
+				</ComponentOverride>
 			</div>
 		);
 	}
