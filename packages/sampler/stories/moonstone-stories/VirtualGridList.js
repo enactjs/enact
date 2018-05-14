@@ -24,6 +24,7 @@ const
 		direction: {'horizontal': 'horizontal', 'vertical': 'vertical'}
 	},
 	items = [],
+	dataSizeDefault = 1000,
 	// eslint-disable-next-line enact/prop-types
 	uiRenderItem = ({index, ...rest}) => {
 		const {text, subText, source} = items[index];
@@ -51,16 +52,28 @@ const
 		);
 	};
 
-for (let i = 0; i < 1000; i++) {
+const updateDataSize = (dataSize) => {
 	const
-		count = ('00' + i).slice(-3),
-		text = `Item ${count}`,
-		subText = `SubItem ${count}`,
-		color = Math.floor((Math.random() * (0x1000000 - 0x101010)) + 0x101010).toString(16),
-		source = `http://placehold.it/300x300/${color}/ffffff&text=Image ${i}`;
+		itemNumberDigits = dataSize > 1 ? Math.floor(Math.log10(dataSize - 1)) + 1 : 0,
+		headingZeros = Array(itemNumberDigits).join('0');
 
-	items.push({text, subText, source});
-}
+	items.length = 0;
+
+	for (let i = 0; i < dataSize; i++) {
+		const
+			count = (headingZeros + i).slice(-itemNumberDigits),
+			text = `Item ${count}`,
+			subText = `SubItem ${count}`,
+			color = Math.floor((Math.random() * (0x1000000 - 0x101010)) + 0x101010).toString(16),
+			source = `http://placehold.it/300x300/${color}/ffffff&text=Image ${i}`;
+
+		items.push({text, subText, source});
+	}
+
+	return dataSize;
+};
+
+updateDataSize(dataSizeDefault);
 
 storiesOf('UI', module)
 	.add(
@@ -70,7 +83,7 @@ storiesOf('UI', module)
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<UiVirtualGridList
-				dataSize={number('dataSize', items.length)}
+				dataSize={updateDataSize(number('dataSize', dataSizeDefault))}
 				direction={select('direction', prop.direction, 'vertical')}
 				itemRenderer={uiRenderItem}
 				itemSize={{
@@ -95,7 +108,7 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<VirtualGridList
-				dataSize={number('dataSize', items.length)}
+				dataSize={updateDataSize(number('dataSize', dataSizeDefault))}
 				direction={select('direction', prop.direction, 'vertical')}
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 				itemRenderer={renderItem}
