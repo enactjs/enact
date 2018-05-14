@@ -71,7 +71,7 @@ describe('DatePicker', () => {
 
 	it('should accept an updated JavaScript Date for its value prop', function () {
 		const subject = mount(
-			<DatePicker title="Date" value={new Date(2000, 0, 1)} open />
+			<DatePicker title="Date" open value={new Date(2000, 0, 1)} />
 		);
 
 		subject.setProps({
@@ -89,7 +89,7 @@ describe('DatePicker', () => {
 	it('should set "dayAriaLabel" to day picker', function () {
 		const label = 'custom day aria-label';
 		const subject = mount(
-			<DatePicker dayAriaLabel={label} title="Date" value={new Date(2000, 0, 1)} open />
+			<DatePicker dayAriaLabel={label} open title="Date" value={new Date(2000, 0, 1)} />
 		);
 
 		const dayPicker = subject.find(`DateComponentRangePicker.${css.day}`);
@@ -103,7 +103,7 @@ describe('DatePicker', () => {
 	it('should set "monthAriaLabel" to month picker', function () {
 		const label = 'custom month aria-label';
 		const subject = mount(
-			<DatePicker monthAriaLabel={label} title="Date" value={new Date(2000, 0, 1)} open />
+			<DatePicker monthAriaLabel={label} open title="Date" value={new Date(2000, 0, 1)} />
 		);
 
 		const monthPicker = subject.find(`DateComponentRangePicker.${css.month}`);
@@ -117,7 +117,7 @@ describe('DatePicker', () => {
 	it('should set "yearAriaLabel" to year picker', function () {
 		const label = 'custom year aria-label';
 		const subject = mount(
-			<DatePicker yearAriaLabel={label} title="Date" value={new Date(2000, 0, 1)} open />
+			<DatePicker yearAriaLabel={label} open title="Date" value={new Date(2000, 0, 1)} />
 		);
 
 		const yearPicker = subject.find(`DateComponentRangePicker.${css.year}`);
@@ -131,7 +131,7 @@ describe('DatePicker', () => {
 	it('should set "dayLabel" to day label', function () {
 		const label = 'custom day label';
 		const subject = mount(
-			<DatePicker dayLabel={label} title="Date" value={new Date(2000, 0, 1)} open />
+			<DatePicker dayLabel={label} open title="Date" value={new Date(2000, 0, 1)} />
 		);
 
 		const dayPicker = subject.find(`DateComponentRangePicker.${css.day}`);
@@ -145,7 +145,7 @@ describe('DatePicker', () => {
 	it('should set "monthAriaLabel" to month picker', function () {
 		const label = 'custom month label';
 		const subject = mount(
-			<DatePicker monthLabel={label} title="Date" value={new Date(2000, 0, 1)} open />
+			<DatePicker monthLabel={label} open title="Date" value={new Date(2000, 0, 1)} />
 		);
 
 		const monthPicker = subject.find(`DateComponentRangePicker.${css.month}`);
@@ -159,7 +159,7 @@ describe('DatePicker', () => {
 	it('should set "yearAriaLabel" to year picker', function () {
 		const label = 'custom year label';
 		const subject = mount(
-			<DatePicker yearLabel={label} title="Date" value={new Date(2000, 0, 1)} open />
+			<DatePicker open title="Date" value={new Date(2000, 0, 1)} yearLabel={label} />
 		);
 
 		const yearPicker = subject.find(`DateComponentRangePicker.${css.year}`);
