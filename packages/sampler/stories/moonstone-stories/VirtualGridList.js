@@ -54,7 +54,7 @@ const
 
 const updateDataSize = (dataSize) => {
 	const
-		itemNumberDigits = dataSize > 1 ? Math.floor(Math.log10(dataSize - 1)) + 1 : 0,
+		itemNumberDigits = ((dataSize - 1) + '').length,
 		headingZeros = Array(itemNumberDigits).join('0');
 
 	items.length = 0;
