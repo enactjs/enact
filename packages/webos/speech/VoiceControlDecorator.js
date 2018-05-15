@@ -10,6 +10,7 @@ import hoc from '@enact/core/hoc';
  * By default, `onVoice` handler will be added to the node where `data-webos-voice-intent` attribute is declared.
  * In addition, if you need to specify a target node, `data-webos-voice-event-target` attribute can be used.
  *
+ * ```
  * import React from 'react';
  * import Item from '@enact/moonstone/Item';
  * import {VoiceControlDecorator} from '@enact/webos/speech';
@@ -45,6 +46,7 @@ import hoc from '@enact/core/hoc';
  *     );
  *   }
  * }
+ * ```
  *
  * @class VoiceControlDecorator
  * @memberof webos/speech
