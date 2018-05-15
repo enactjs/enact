@@ -393,9 +393,9 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			}, 400);
 
-      this.clickAllow = new ClickAllow();
+			this.clickAllow = new ClickAllow();
 
-      handleClick.bindAs(this, 'handleClick');
+			handleClick.bindAs(this, 'handleClick');
 			handleMouseDown.bindAs(this, 'handleMouseDown');
 			handleMouseEnter.bindAs(this, 'handleMouseEnter');
 			handleMouseMove.bindAs(this, 'handleMouseMove');
