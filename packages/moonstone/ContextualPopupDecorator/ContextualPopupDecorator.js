@@ -234,7 +234,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				arrowPosition: {top: 0, left: 0},
 				containerPosition: {top: 0, left: 0},
 				containerId: Spotlight.add(this.props.popupSpotlightId),
-				activator: null
+				activator: null,
+				shouldSpotActivator: true
 			};
 
 			this.overflow = {};
@@ -253,21 +254,26 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
+			const current = Spotlight.getCurrent();
+
 			if (this.props.direction !== nextProps.direction) {
 				this.adjustedDirection = nextProps.direction;
 				this.setContainerPosition();
 			}
 
 			if (!this.props.open && nextProps.open) {
-				const activator = Spotlight.getCurrent();
-				this.updateLeaveFor(activator);
+				this.updateLeaveFor(current);
 				this.setState({
-					activator
+					activator: current
 				});
 			} else if (this.props.open && !nextProps.open) {
+
 				this.updateLeaveFor(null);
 				this.setState({
-					activator: null
+					activator: null,
+					// only spot the activator on close if spotlight isn't set or if the current
+					// focus is within the popup
+					shouldSpotActivator: !current || this.containerNode.contains(current)
 				});
 			}
 		}
@@ -280,7 +286,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else if (!this.props.open && prevProps.open) {
 				off('keydown', this.handleKeyDown);
 				off('keyup', this.handleKeyUp);
-				this.spotActivator(prevState.activator);
+
+				if (this.state.shouldSpotActivator) {
+					this.spotActivator(prevState.activator);
+				}
 			}
 		}
 
