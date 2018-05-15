@@ -63,7 +63,7 @@ const handleDown = handle(
 	adaptEvent(makeTouchableEvent('down'), forwardWithPrevent('onDown')),
 	call('activate'),
 	call('startGesture')
-);
+).named('handleDown');
 
 const handleUp = handle(
 	isEnabled,
@@ -71,7 +71,7 @@ const handleUp = handle(
 	call('isTracking'),
 	adaptEvent(makeTouchableEvent('up'), forwardWithPrevent('onUp')),
 	adaptEvent(makeTouchableEvent('tap'), forward('onTap'))
-).finally(call('deactivate'));
+).finally(call('deactivate')).named('handleUp');
 
 const handleEnter = handle(
 	isEnabled,
@@ -79,7 +79,7 @@ const handleEnter = handle(
 	call('enterGesture'),
 	call('isPaused'),
 	call('activate')
-);
+).named('handleEnter');
 
 const handleLeave = handle(
 	isEnabled,
@@ -88,7 +88,7 @@ const handleLeave = handle(
 		[forProp('noResume', false), call('pause')],
 		[returnsTrue, call('deactivate')]
 	)
-);
+).named('handleLeave');
 
 // Mouse event handlers
 

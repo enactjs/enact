@@ -140,7 +140,7 @@ const handle = function (...handlers) {
 	// context if fn() doesn't have its own `this`.
 	const _outer = this;
 
-	const fn = function (ev, props, context) {
+	const fn = function prepareHandleArgs (ev, props, context) {
 		let caller = null;
 
 		// if handle() was bound to a class, use its props and context. otherwise, we accept
@@ -159,7 +159,7 @@ const handle = function (...handlers) {
 	};
 
 	fn.finally = function (cleanup) {
-		return decorateHandleFunction(function (ev, props, context) {
+		return decorateHandleFunction(function handleWithFinally (ev, props, context) {
 			let result = false;
 
 			if (hasPropsAndContext(this)) {
@@ -232,7 +232,7 @@ const returnsTrue = handle.returnsTrue = function (handler) {
 			handler.apply(this, args);
 
 			return true;
-		}, 'handle.returnsTrue');
+		}, 'returnsTrue');
 	}
 
 	return true;
@@ -319,7 +319,7 @@ const forward = handle.forward = curry(named((name, ev, props) => {
 	}
 
 	return true;
-}, 'handle.forward'));
+}, 'forward'));
 
 /**
  * Calls `event.preventDefault()` and returns `true`.
@@ -373,7 +373,7 @@ const forwardWithPrevent = handle.forwardWithPrevent = curry(named((name, ev, pr
 	forward(name, wrappedEvent, props);
 
 	return !prevented;
-}, 'handle.forwardWithPrevent'));
+}, 'forwardWithPrevent'));
 
 /**
  * Calls `event.stopPropagation()` and returns `true`
@@ -552,7 +552,7 @@ const call = function (method) {
 		}
 
 		return false;
-	}, 'handle.call');
+	}, 'call');
 };
 
 /**
@@ -585,7 +585,7 @@ const call = function (method) {
 const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
 	return named(function (ev, ...args) {
 		return handler.call(this, adapter.call(this, ev, ...args), ...args);
-	}, 'handle.adaptEvent');
+	}, 'adaptEvent');
 });
 
 export default handle;
