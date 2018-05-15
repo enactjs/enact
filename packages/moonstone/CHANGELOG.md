@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/IconButton` to allow external customization of the `Icon` vertical alignment (by setting `line-height`)
+- `moonstone/ContextualPopupDecorator` to properly stop propagating keydown event if fired from the popup container
 
 ## [2.0.0-beta.3] - 2018-05-14
 

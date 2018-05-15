@@ -464,14 +464,14 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		handleKeyDown = (ev) => {
-			const {onClose, spotlightRestrict} = this.props;
+			const {spotlightRestrict} = this.props;
 			const current = Spotlight.getCurrent();
 			const direction = getDirection(ev.keyCode);
 			const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
 			const spotlessSpotlightModal = spotlightRestrict === 'self-only' && !spottables;
 			const shouldSpotPopup = current === this.state.activator && direction === this.adjustedDirection;
 
-			if (direction && spottables && (shouldSpotPopup || (this.containerNode.contains(current) || spotlessSpotlightModal))) {
+			if (direction && (shouldSpotPopup || spotlessSpotlightModal)) {
 				// prevent default page scrolling
 				ev.preventDefault();
 				// stop propagation to prevent default spotlight behavior
@@ -479,16 +479,29 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// set the pointer mode to false on keydown
 				Spotlight.setPointerMode(false);
 
-				if (shouldSpotPopup) {
+				if (!spotlessSpotlightModal && shouldSpotPopup) {
 					this.spotPopupContent();
+				}
+			}
+		}
 
-				// we guard against attempting a focus change by verifying the case where a spotlightModal
-				// popup contains no spottable components
-				} else if (!spotlessSpotlightModal && Spotlight.move(direction)) {
+		handleContainreKeyDown = (ev) => {
+			// Note: Container will be only rendered if `open`ed, therefore no need to check for `open`
 
+			const direction = getDirection(ev.keyCode);
+
+			if (direction) {
+				// prevent default page scrolling
+				ev.preventDefault();
+				// stop propagation to prevent default spotlight behavior
+				ev.stopPropagation();
+				// set the pointer mode to false on keydown
+				Spotlight.setPointerMode(false);
+
+				if (Spotlight.move(direction)) {
 					// if current focus is not within the popup's container, issue the `onClose` event
-					if (!this.containerNode.contains(Spotlight.getCurrent()) && onClose) {
-						onClose(ev);
+					if (!this.containerNode.contains(Spotlight.getCurrent())) {
+						forward('onClose', ev, this.props);
 					}
 				}
 			}
@@ -539,6 +552,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							className={popupClassName}
 							showCloseButton={showCloseButton}
 							onCloseButtonClick={onClose}
+							onKeyDown={this.handleContainreKeyDown}
 							direction={this.state.direction}
 							arrowPosition={this.state.arrowPosition}
 							containerPosition={this.state.containerPosition}
