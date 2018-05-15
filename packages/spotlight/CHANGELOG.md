@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [2.0.0-beta.3] - 2018-05-14
+
+### Fixed
+
+- `spotlight` to retry setting focus when the window is activated
+- `spotlight` handling of 5-way events after the pointer hides
+
 ## [2.0.0-beta.2] - 2018-05-07
 
 ### Fixed
