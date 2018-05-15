@@ -85,19 +85,35 @@ const hasPropsAndContext = (obj) => {
 	return obj && obj.hasOwnProperty && obj.hasOwnProperty('props') && obj.hasOwnProperty('context');
 };
 
-const decorateHandleFunction = (fn) => {
-	fn.named = (name) => {
+const named = (fn, name) => {
+	if (__DEV__) {
 		Object.defineProperty(fn, 'name', {
 			value: name,
 			writeable: false,
 			enumerable: false
 		});
-
-		return fn;
-	};
+	}
 
 	return fn;
-}
+};
+
+const bindAs = (fn, obj, name) => {
+	const namedFunction = name ? named(fn, name) : fn;
+	const bound = namedFunction.bind(obj);
+
+	if (name) {
+		obj[name] = bound;
+	}
+
+	return bound;
+};
+
+const decorateHandleFunction = (fn) => {
+	fn.named = (name) => named(fn, name);
+	fn.bindAs = (obj, name) => bindAs(fn, obj, name);
+
+	return fn;
+};
 
 /**
  * Allows generating event handlers by chaining input functions to filter or short-circuit the
@@ -209,11 +225,11 @@ const oneOf = handle.oneOf = function (...handlers) {
  */
 const returnsTrue = handle.returnsTrue = function (handler) {
 	if (handler) {
-		return function (...args) {
+		return named(function (...args) {
 			handler.apply(this, args);
 
 			return true;
-		};
+		}, 'handle.returnsTrue');
 	}
 
 	return true;
@@ -293,14 +309,14 @@ const forEventProp = handle.forEventProp = curry((prop, value, ev) => {
  * @param    {Object}    props  Props object
  * @returns  {Boolean}          Always returns `true`
  */
-const forward = handle.forward = curry((name, ev, props) => {
+const forward = handle.forward = curry(named((name, ev, props) => {
 	const fn = props && props[name];
 	if (typeof fn === 'function') {
 		fn(ev);
 	}
 
 	return true;
-});
+}, 'handle.forward'));
 
 /**
  * Calls `event.preventDefault()` and returns `true`.
@@ -343,7 +359,7 @@ const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
  * @param    {Object}    props  Props object
  * @returns  {Boolean}          Returns `true` if default action is prevented
  */
-const forwardWithPrevent = handle.forwardWithPrevent = curry((name, ev, props) => {
+const forwardWithPrevent = handle.forwardWithPrevent = curry(named((name, ev, props) => {
 	let prevented = false;
 	const wrappedEvent = Object.assign({}, ev, {
 		preventDefault: () => {
@@ -354,7 +370,7 @@ const forwardWithPrevent = handle.forwardWithPrevent = curry((name, ev, props) =
 	forward(name, wrappedEvent, props);
 
 	return !prevented;
-});
+}, 'handle.forwardWithPrevent'));
 
 /**
  * Calls `event.stopPropagation()` and returns `true`
@@ -373,7 +389,7 @@ const forwardWithPrevent = handle.forwardWithPrevent = curry((name, ev, props) =
  * @param    {Object}   ev  Event
  * @returns  {Boolean}      Always returns `true`
  */
-const stop = handle.stop = callOnEvent('stopPropagation');
+const stop = handle.stop = named(callOnEvent('stopPropagation'), 'stop');
 
 /**
  * Calls `event.stopImmediatePropagation()` and returns `true`
@@ -527,13 +543,13 @@ const log = handle.log = curry((message, ev, ...args) => {
  *                                does not exist
  */
 const call = function (method) {
-	return function (...args) {
+	return named(function (...args) {
 		if (this && this[method]) {
 			return this[method](...args);
 		}
 
 		return false;
-	};
+	}, 'handle.call');
 };
 
 /**
@@ -564,9 +580,9 @@ const call = function (method) {
  * @returns  {Object}             New event payload
  */
 const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
-	return function (ev, ...args) {
+	return named(function (ev, ...args) {
 		return handler.call(this, adapter.call(this, ev, ...args), ...args);
-	};
+	}, 'handle.adaptEvent');
 });
 
 export default handle;

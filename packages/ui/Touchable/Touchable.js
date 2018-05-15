@@ -6,7 +6,7 @@
  * @module ui/Touchable
  */
 
-import {call, forward, forwardWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
+import {adaptEvent, call, forward, forwardWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
@@ -34,7 +34,7 @@ const getEventCoordinates = (ev) => {
 };
 
 // Establish a standard payload for onDown/onUp/onTap events and pass it along to a handler
-const makeTouchableEvent = (type, fn) => (ev, ...args) => {
+const makeTouchableEvent = (type) => (ev) => {
 	const {target, currentTarget} = ev;
 	let {clientX, clientY, pageX, pageY} = ev;
 
@@ -45,7 +45,7 @@ const makeTouchableEvent = (type, fn) => (ev, ...args) => {
 		pageY = ev.changedTouches[0].pageY;
 	}
 
-	const payload = {
+	return {
 		type,
 		target,
 		currentTarget,
@@ -54,15 +54,13 @@ const makeTouchableEvent = (type, fn) => (ev, ...args) => {
 		pageX,
 		pageY
 	};
-
-	return fn(payload, ...args);
 };
 
 const isEnabled = forProp('disabled', false);
 
 const handleDown = handle(
 	isEnabled,
-	makeTouchableEvent('down', forwardWithPrevent('onDown')),
+	adaptEvent(makeTouchableEvent('down'), forwardWithPrevent('onDown')),
 	call('activate'),
 	call('startGesture')
 );
@@ -71,8 +69,8 @@ const handleUp = handle(
 	isEnabled,
 	call('endGesture'),
 	call('isTracking'),
-	makeTouchableEvent('up', forwardWithPrevent('onUp')),
-	makeTouchableEvent('tap', forward('onTap'))
+	adaptEvent(makeTouchableEvent('up'), forwardWithPrevent('onUp')),
+	adaptEvent(makeTouchableEvent('tap'), forward('onTap'))
 ).finally(call('deactivate'));
 
 const handleEnter = handle(
@@ -136,7 +134,7 @@ const handleTouchMove = handle(
 	// detecting when the touch leaves the boundary. oneOf returns the value of whichever
 	// branch it follows so we append moveHold to either to handle moves that aren't
 	// entering or leaving
-	makeTouchableEvent('move', forward('onMove')),
+	adaptEvent(makeTouchableEvent('move'), forward('onMove')),
 	oneOf(
 		[call('hasTouchLeftTarget'), handleLeave],
 		[returnsTrue, handleEnter]
@@ -382,16 +380,16 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			}, 400);
 
-			this.handleMouseDown = handleMouseDown.bind(this);
-			this.handleMouseEnter = handleMouseEnter.bind(this);
-			this.handleMouseMove = handleMouseMove.bind(this);
-			this.handleMouseLeave = handleMouseLeave.bind(this);
-			this.handleMouseUp = handleMouseUp.bind(this);
-			this.handleTouchStart = handleTouchStart.bind(this);
-			this.handleTouchMove = handleTouchMove.bind(this);
-			this.handleTouchEnd = handleTouchEnd.bind(this);
-			this.handleGlobalUp = handleGlobalUp.bind(this);
-			this.handleGlobalMove = handleGlobalMove.bind(this);
+			handleMouseDown.bindAs(this, 'handleMouseDown');
+			handleMouseEnter.bindAs(this, 'handleMouseEnter');
+			handleMouseMove.bindAs(this, 'handleMouseMove');
+			handleMouseLeave.bindAs(this, 'handleMouseLeave');
+			handleMouseUp.bindAs(this, 'handleMouseUp');
+			handleTouchStart.bindAs(this, 'handleTouchStart');
+			handleTouchMove.bindAs(this, 'handleTouchMove');
+			handleTouchEnd.bindAs(this, 'handleTouchEnd');
+			handleGlobalUp.bindAs(this, 'handleGlobalUp');
+			handleGlobalMove.bindAs(this, 'handleGlobalMove');
 		}
 
 		componentDidMount () {
