@@ -90,11 +90,15 @@ const hasPropsAndContext = (obj) => {
 
 const named = (fn, name) => {
 	if (__DEV__) {
-		Object.defineProperty(fn, 'name', {
-			value: name,
-			writeable: false,
-			enumerable: false
-		});
+		try {
+			Object.defineProperty(fn, 'name', {
+				value: name,
+				writeable: false,
+				enumerable: false
+			});
+		} catch (err) {
+			// unable to set name of function
+		}
 	}
 
 	return fn;
