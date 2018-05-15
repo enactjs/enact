@@ -182,10 +182,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const spottableDisabled = this.isFocused && nextProps.disabled || nextProps.spotlightDisabled;
+			const becomingDisabled = nextProps.disabled && !this.props.disabled;
 
-			if (!this.state.spottableDisabled && spottableDisabled) {
-				this.setState({spottableDisabled});
+			if (!this.state.spottableDisabled && this.isFocused && becomingDisabled) {
+				this.setState({
+					spottableDisabled: true
+				});
 			}
 		}
 
