@@ -33,22 +33,17 @@
  *
  * class MyComponent extends React.Component {
  *   // bind handle() to the instance
- *   handle = handle.bind(this)
+ *   constructor () {
+ *     super();
  *
- *   // then create handlers using the bound function
- *   logEnter = this.handle(
- *     forward('onKeyDown'),  // forwards the event to the function passed in the onKeyDown prop
- *     forKey('enter'),       // if the event.keyCode maps to the enter key, allows event processing to continue
- *     preventDefault,        // calls event.preventDefault() to prevent the `keypress` event
- *     (ev, props) => {       // custom event handler -- in this case, logging some text
- *       // In the bound version, `props` will contain a reference to this.props
- *       // since it doesn't return `true`, no further input functions would be called after this one
- *       console.log('The Enter key was pressed down');
- *     }
- *   )
+ *     // logEnter will be bound to `this` and set as this.handleKeyDown
+ *     logEnter.bindAs(this, 'handleKeyDown');
+ *   }
  *
  *   render () {
- *     // ...
+ *     return (
+ *       <div onKeyDown={this.handleKeyDown} />
+ *     );
  *   }
  * }
  * ```
