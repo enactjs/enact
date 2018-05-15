@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `moonstone/Button` and `moonstone/IconButton` class name `small` to the list of allowed `css` overrides
+
+### Fixed
+
+- `moonstone/IconButton` to allow external customization of the `Icon` vertical alignment (by setting `line-height`)
+
 ## [2.0.0-beta.3] - 2018-05-14
 
 ### Added
@@ -15,6 +25,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ToggleButton` to fire `onToggle` when toggled
 
 ### Fixed
+
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to scroll properly with all enabled items via a page up or down key
 - `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` to ignore any user key events in pointer mode
 - `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` to pass `data-spotlight-container-disabled` prop to their outer DOM element
