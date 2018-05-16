@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/VirtualList`, `moonstone/VirtualGridList`, `ui/VirtualList`, and `ui/VirtualGridList` samples to show items properly when `dataSize` is greater than 1000
+
 ## [2.0.0-beta.3] - 2018-05-14
 
 No significant changes.
