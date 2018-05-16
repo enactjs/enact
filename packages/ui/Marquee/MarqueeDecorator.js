@@ -163,8 +163,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			children: PropTypes.node,
 
 			/**
-			 * Disables all marquee behavior except when `marqueeOn` is `'hover'` or `'focus'`. Will
-			 * be forwarded onto the wrapped component as well.
+			 * When `true`, adds the `disabled` element attribute to the marquee. By default, no
+			 * styling is applied to the marquee by the framework.
 			 *
 			 * @type {Boolean}
 			 * @public
