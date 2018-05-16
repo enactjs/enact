@@ -1784,6 +1784,7 @@ const VideoPlayerBase = class extends React.Component {
 								component={mediaControlsComponent}
 								mediaDisabled={disabled || this.state.mediaControlsDisabled}
 								onBackwardButtonClick={this.handleRewind}
+								onClose={this.hideControls}
 								onFastForward={this.handleFastForward}
 								onForwardButtonClick={this.handleFastForward}
 								onJump={this.handleJump}

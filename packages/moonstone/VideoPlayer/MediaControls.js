@@ -1,4 +1,5 @@
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
+import Cancelable from '@enact/ui/Cancelable';
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
@@ -356,6 +357,8 @@ const MediaControlsBase = kind({
 	}) => {
 		delete rest.moreButtonCloseLabel;
 		delete rest.moreButtonLabel;
+		delete rest.onClose;
+		delete rest.onCloseMore;
 		delete rest.visible;
 
 		return (
@@ -783,7 +786,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			this.setState({showMoreComponents: false});
 		}
 
-		toggleMoreComponents () {
+		toggleMoreComponents = () => {
 			this.setState((prevState) => {
 				return {
 					showMoreComponents: !prevState.showMoreComponents
@@ -808,6 +811,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				<Wrapped
 					ref={this.getMediaControls}
 					{...props}
+					onCloseMore={this.toggleMoreComponents}
 					onMoreClick={this.handleMoreClick}
 					onPlayButtonClick={this.handlePlayButtonClick}
 					showMoreComponents={this.state.showMoreComponents}
@@ -819,12 +823,26 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 	return Slottable({slots: ['leftComponents', 'rightComponents']}, MediaControlsDecoratorHOC);
 });
 
+const handleCancel = (ev, {onClose, onCloseMore, visible, showMoreComponents}) => {
+	if (visible) {
+		if (showMoreComponents) {
+			onCloseMore();
+		} else {
+			onClose();
+		}
+	}
+};
+
 const MediaControls = ApiDecorator(
 	{api: [
 		'areMoreComponentsAvailable',
 		'showMoreComponents',
 		'hideMoreComponents'
-	]}, MediaControlsDecorator(MediaControlsBase));
+	]},
+	MediaControlsDecorator(
+		Cancelable({modal: true, onCancel: handleCancel}, MediaControlsBase)
+	)
+);
 
 MediaControls.defaultSlot = 'mediaControlsComponent';
 
