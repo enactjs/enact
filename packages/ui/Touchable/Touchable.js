@@ -528,6 +528,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		onBlur () {
 			this.hold.suspend();
+			this.drag.end();
 
 			return true;
 		}
