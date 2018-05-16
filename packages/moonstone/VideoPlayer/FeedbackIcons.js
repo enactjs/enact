@@ -8,8 +8,8 @@ export default {
 	slowRewind    : {icon: 'pausebackward',      position: 'before',  allowHide: false,   message: 'x'},
 	fastForward   : {icon: 'forward',            position: 'after',   allowHide: false,   message: 'x'},
 	slowForward   : {icon: 'pauseforward',       position: 'after',   allowHide: false,   message: 'x'},
-	jumpBackward  : {icon: 'pausejumpbackward',  position: 'before',  allowHide: true,  message: ' '},
-	jumpForward   : {icon: 'pausejumpforward',   position: 'after',   allowHide: true,  message: ' '},
+	jumpBackward  : {icon: 'pausejumpbackward',  position: 'before',  allowHide: false,  message: ' '},
+	jumpForward   : {icon: 'pausejumpforward',   position: 'after',   allowHide: false,  message: ' '},
 	jumpToStart   : {icon: 'skipbackward',       position: 'before',  allowHide: true,   message: null},
 	jumpToEnd     : {icon: 'skipforward',        position: 'after',   allowHide: true,   message: null},
 	stop          : {icon: null,                 position: null,      allowHide: true,   message: null}
