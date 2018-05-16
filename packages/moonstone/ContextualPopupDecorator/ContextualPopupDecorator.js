@@ -479,6 +479,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// set the pointer mode to false on keydown
 				Spotlight.setPointerMode(false);
 
+				// we guard against attempting a focus change by verifying the case where a spotlightModal
+				// popup contains no spottable components
 				if (!spotlessSpotlightModal && shouldSpotPopup) {
 					this.spotPopupContent();
 				}
