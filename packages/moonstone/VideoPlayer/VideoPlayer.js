@@ -902,6 +902,8 @@ const VideoPlayerBase = class extends React.Component {
 					miniFeedbackVisible: !(this.state.loading || !this.state.duration || this.state.error)
 				});
 			}
+		} else if (this.state.mediaControlsVisible && this.state.feedbackVisible && !this.state.feedbackIconVisible) {
+			this.setState({feedbackIconVisible: true});
 		}
 	}
 
@@ -1534,8 +1536,9 @@ const VideoPlayerBase = class extends React.Component {
 	handleSliderBlur = () => {
 		this.sliderScrubbing = false;
 		this.startDelayedFeedbackHide();
+
 		this.setState({
-			feedbackIconVisible: true,
+			feedbackIconVisible: this.state.paused,
 			sliderTooltipTime: this.state.currentTime
 		});
 	}
