@@ -1,3 +1,4 @@
+import {forward} from '@enact/core/handle';
 import ForwardRef from '@enact/ui/ForwardRef';
 import {Media, getKeyFromSource} from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
@@ -107,8 +108,19 @@ const VideoBase = class extends React.Component {
 		const preloadKey = getKeyFromSource(preloadSource);
 		const prevPreloadKey = getKeyFromSource(prevPreloadSource);
 
-		// if there's source and it has changed.
-		if (source && key !== prevKey) {
+		if (source) {
+			if (key === prevPreloadKey) {
+				// if there's source and it was the preload source
+				// emit onUpdate to give VideoPlayer an opportunity to updates its internal state
+				// since it won't receive the onLoadStart or onError event
+				forward('onUpdate', {type: 'onUpdate'}, this.props);
+
+				this.autoPlay();
+			} else if (key !== prevKey) {
+				// if there's source and it has changed.
+				this.autoPlay();
+			}
+
 			this.autoPlay();
 		}
 
