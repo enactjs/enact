@@ -485,7 +485,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handleContainreKeyDown = (ev) => {
+		handleContainerKeyDown = (ev) => {
 			// Note: Container will be only rendered if `open`ed, therefore no need to check for `open`
 
 			const direction = getDirection(ev.keyCode);
@@ -552,7 +552,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							className={popupClassName}
 							showCloseButton={showCloseButton}
 							onCloseButtonClick={onClose}
-							onKeyDown={this.handleContainreKeyDown}
+							onKeyDown={this.handleContainerKeyDown}
 							direction={this.state.direction}
 							arrowPosition={this.state.arrowPosition}
 							containerPosition={this.state.containerPosition}
