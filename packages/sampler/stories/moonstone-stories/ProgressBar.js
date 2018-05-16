@@ -23,6 +23,7 @@ storiesOf('Moonstone', module)
 				<ProgressBar
 					backgroundProgress={number('backgroundProgress', 0.5, {range: true, min: 0, max: 1, step: 0.01})}
 					disabled={nullify(boolean('disabled', false))}
+					highlighted={nullify(boolean('highlighted', false))}
 					orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
 					progress={number('progress', 0.4, {range: true, min: 0, max: 1, step: 0.01})}
 					side={nullify(select('side', ['after', 'before', 'left', 'right'], 'before'))}
