@@ -527,7 +527,9 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		onBlur () {
-			return this.suspendGesture();
+			this.hold.suspend();
+
+			return true;
 		}
 
 		enterGesture () {
@@ -548,14 +550,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.hold.end();
 			this.flick.end();
 			this.drag.end();
-
-			return true;
-		}
-
-		suspendGesture () {
-			this.hold.suspend();
-			this.flick.suspend();
-			this.drag.suspend();
 
 			return true;
 		}
