@@ -269,6 +269,7 @@ const InputBase = kind({
 					placeholder={placeholder}
 					type={type}
 					value={value}
+					data-webos-voice-intent="Select"
 				/>
 				<InputDecoratorIcon position="after" small={small}>{iconAfter}</InputDecoratorIcon>
 				{invalidTooltip}

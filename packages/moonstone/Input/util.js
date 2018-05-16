@@ -45,6 +45,8 @@ const extractInputProps = function (props) {
 			case 'pattern':
 			case 'required':
 			case 'size':
+			case 'data-webos-voice-label':
+			case 'data-webos-voice-group-label':
 				inputProps[key] = props[key];
 				delete props[key];
 		}
