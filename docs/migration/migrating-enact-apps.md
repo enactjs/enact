@@ -189,23 +189,25 @@ The boolean props `horizontal` and `vertical` have been replaced by the `orienta
 <IncrementSlider orientation="vertical" />
 ```
 The `tooltipAsPercent`, `tooltipSide`, and `tooltipForceSide` props for the built-in tooltip
-have been removed.  Use a `moonstone/IncrementSlider.IncrementSliderTooltip` and its `percent`,
-`side`, and `forceSide` props instead.
+have been removed.  Use a `moonstone/IncrementSlider.IncrementSliderTooltip` and its `percent`
+and `side` props instead. `side` supports both local-aware and locale-independent values.
 ##### Example
 ###### 1.x
 ```
-<IncrementSlider tooltip tooltipAsPercent tooltipForceSide tooltipSide="after" />
+<IncrementSlider orientation="vertical" tooltip tooltipAsPercent tooltipForceSide tooltipSide="after" />
 ```
 ###### 2.0
 ```
 ...
-import {IncrementSliderTooltip} from '@enact/moonstone/IncrementSlider';
+import {IncrementSlider, IncrementSliderTooltip} from '@enact/moonstone/IncrementSlider';
 ...
-<IncrementSlider>
-	<IncrementSliderTooltip forceSide percent side="after" />
+<IncrementSlider orientation="vertical">
+	<IncrementSliderTooltip percent side="right" />
 </IncrementSlider>
 ```
-The `onDecrement` and `onIncrement` props have been removed.  Developers can use `onKeyDown` and/or `onKeyUp`.
+The `onDecrement` and `onIncrement` props have been removed.  These callbacks were only available
+on `IncrementSliderBase` and mostly used internally by the framework.  If necessary, developers can use
+`onKeyDown` and/or `onKeyUp`.
 
 The `detachedKnob` and `scrubbing` props have been removed with no replacement.
 
@@ -218,6 +220,15 @@ These components are all replaced by `moonstone/SlotItem`.
 
 #### `Marquee.MarqueeText`
 This component is replaced by `moonstone/Marquee`.
+##### Example
+###### 1.x
+```
+import {MarqueeText} from '@enact/moonstone/Marquee';
+```
+###### 2.0
+```
+import Marquee from '@enact/moonstone/Marquee';
+```
 
 #### `Popup`
 The `containerId` prop has changed to `spotlightId`.
@@ -309,23 +320,25 @@ The boolean props `horizontal` and `vertical` have been replaced by the `orienta
 <Slider orientation="vertical" />
 ```
 The `tooltipAsPercent`, `tooltipSide`, and `tooltipForceSide` props for the built-in tooltip
-have been removed.  Use a `moonstone/Slider.SliderTooltip` and its `percent`, `side`, and
-`forceSide` props instead.
+have been removed.  Use a `moonstone/Slider.SliderTooltip` and its `percent` and `side` props
+instead. `side` supports both local-aware and locale-independent values.
 ##### Example
 ###### 1.x
 ```
-<Slider tooltip tooltipAsPercent tooltipForceSide tooltipSide="after" />
+<Slider orientation="vertical" tooltip tooltipAsPercent tooltipForceSide tooltipSide="after" />
 ```
 ###### 2.0
 ```
 ...
-import {SliderTooltip} from '@enact/moonstone/Slider';
+import {Slider, SliderTooltip} from '@enact/moonstone/Slider';
 ...
-<Slider>
-	<SliderTooltip forceSide percent side="after" />
+<Slider orientation="vertical">
+	<SliderTooltip percent side="right" />
 </Slider>
 ```
-The `onDecrement` and `onIncrement` props have been removed.  Developers can use `onKeyDown` and/or `onKeyUp`.
+The `onDecrement` and `onIncrement` props have been removed.  These callbacks were only available
+on `SliderBase` and mostly used internally by the framework.  If necessary, developers can use
+`onKeyDown` and/or `onKeyUp`.
 
 The `detachedKnob`, `scrubbing` and `onKnobMove` props have been removed with no replacement.
 
@@ -357,7 +370,7 @@ The `containerId` prop has changed to `spotlightId`.
 The `tooltipHideDelay` prop has been removed with no replacement.
 
 #### `VirtualFlexList`
-This component is replaced by `ui/VirtualFlexList`.
+This component has been removed with no replacement.
 
 #### `VirtualGridList`
 The `component` and `data` props are replaced by `itemRenderer`.  `itemRenderer` should
@@ -383,6 +396,7 @@ const ListItem = ({data, index}) => {
 	data={items}
 	...
 />
+...
 ```
 ###### 2.0
 ```
@@ -403,10 +417,11 @@ const itemRenderer = ({index}) => {
 	itemRenderer={itemRenderer}
 	...
 />
+...
 ```
 
 #### `VirtualGridList.GridListImageItem`
-This component is replaced by `ui/GridListImageItem`.
+This component is replaced by `moonstone/GridListImageItem`.
 
 #### `VirtualList`
 The `scrollTo` method's `indexToFocus` option has been removed.  Use the `focus` option and
@@ -455,6 +470,7 @@ const ListItem = ({data, index}) => {
 	data={items}
 	...
 />
+...
 ```
 ###### 2.0
 ```
@@ -475,11 +491,33 @@ const itemRenderer = ({index}) => {
 	itemRenderer={itemRenderer}
 	...
 />
+...
 ```
 
 ### spotlight
 Selectors targeting the `spotlight` container attributes `data-container-disabled` or `data-container-muted`
 should use `data-spotlight-container-disabled` or `data-spotlight-container-muted` instead.
+
+`spotlight/Spottable` added support for the `spotlightId` prop which can be used to identify the component
+in calls to `Spotlight.focus()`. In cases where you might have added a custom data attribute to identify a node,
+you can now use `spotlightId` instead.
+##### Example
+###### 1.x
+```
+...
+	<MyComponent data-component-id="my-first-component" />
+...
+	Spotlight.focus('[data-component-id="my-first-component"]]);
+...
+```
+###### 2.0
+```
+...
+	<MyComponent spotlightId="my-first-component" />
+...
+	Spotlight.focus('my-first-component');
+...
+```
 
 #### `SpotlightContainerDecorator`
 The `containerId` prop has changed to `spotlightId`.
@@ -504,10 +542,10 @@ const MyContainer = SpotlightContainerDecorator(MyComponent);
 for more information.
 
 #### `Holdable`
-This component has been replaced by `ui/Touchable`.
+This component has been replaced by [`ui/Touchable`](../../../modules/ui/Touchable/).
 
 #### `Pressable`
-This component has been replaced by `ui/Touchable`.
+This component has been replaced by [`ui/Touchable`](../../../modules/ui/Touchable/).
 
 #### `Repeater`
 `Repeater` now requires a unique key for `Object` type data. [Read about keys](https://reactjs.org/docs/lists-and-keys.html#keys)
@@ -515,6 +553,19 @@ for more information.
 
 #### `Toggleable`
 The default `prop` for the default HOC configuration is changed from `'active'` to `'selected'`.
+##### Example
+###### 1.x
+```
+const MyComponent = ...;
+const MyToggleComponent = Toggleable(MyComponent); // toggle prop is `active`
+const MyOtherToggleComponent = Toggleable({prop: 'selected'}, MyComponent); // toggle prop is `selected`
+```
+###### 2.0
+```
+const MyComponent = ...;
+const MyToggleComponent = Toggleable(MyComponent); // toggle prop is `selected`
+const MyOtherToggleComponent = Toggleable({prop: 'active'}, MyComponent); // toggle prop is `active`
+```
 
 #### `Transition`
 `children` is now a required prop for this component.
@@ -524,8 +575,14 @@ The `clipHeight` prop has been removed.  The base component's `clipHeight` is no
 
 ### webos
 
-#### `LS2Request`
-Import change.
-
 #### `VoiceReadout`
 This module (which only had exported `readAlert`) has been replaced by `webos/speech/readAlert`.
+##### Example
+###### 1.x
+```
+import {readAlert} from `@enact/webos/VoiceReadout`;
+```
+###### 2.0
+```
+import {readAlert} from `@enact/webos/speech`;
+```
