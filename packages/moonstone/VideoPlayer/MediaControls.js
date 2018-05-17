@@ -798,7 +798,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			this.setState({showMoreComponents: false});
 		}
 
-		toggleMoreComponents = () => {
+		toggleMoreComponents () {
 			this.setState((prevState) => {
 				return {
 					showMoreComponents: !prevState.showMoreComponents
