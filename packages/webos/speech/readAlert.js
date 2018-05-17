@@ -9,7 +9,7 @@ import {platform} from '../platform';
  *
  * @function
  * @param {String} string String to voice readout.
- * @param {Boolean} [clear=true] Clear option for TTS. If true, it will cutt off previous reading.
+ * @param {Boolean} [clear=true] Clear option for TTS. If true, it will cut off previous reading.
  * @returns {undefined}
  * @memberof webos/speech
  */
