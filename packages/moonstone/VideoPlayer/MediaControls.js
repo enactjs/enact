@@ -411,10 +411,14 @@ const MediaControlsBase = kind({
 });
 
 /**
- * Media Control behaviors
+ * Media control behaviors to apply to [MediaControlsBase]{@link moonstone/VideoPlayer.MediaControlsBase}.
+ * Provides built-in support for showing more components and key handling for basic playback
+ * controls.
  *
  * @class MediaControlsDecorator
  * @memberof moonstone/VideoPlayer
+ * @mixes ui/Slottable.Slottable
+ * @hoc
  * @public
  */
 const MediaControlsDecorator = hoc((config, Wrapped) => {
@@ -852,13 +856,10 @@ const handleCancel = (ev, {onClose}) => {
  * children will be rendered into the "more" controls area. "More" button would appear if any
  * children exist and transitioning will be handle by `MediaControls`.
  *
- * Plus, it handles key events for handling basic playback controls. (e.g. ff/rew/jump forward/jump
- * backward)
  *
  * @class MediaControls
  * @memberof moonstone/VideoPlayer
  * @extends moonstone/VideoPlayer.MediaControlsBase
- * @mixes ui/Slottable.Slottable
  * @mixes moonstone/VideoPlayer.MediaControlsDecorator
  * @mixes ui/Cancelable.Cancelable
  * @ui
