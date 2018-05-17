@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Media` prop `onReady` to indicate a media source is ready to be started
+
 ## [2.0.0-beta.3] - 2018-05-14
 
 ### Changed
