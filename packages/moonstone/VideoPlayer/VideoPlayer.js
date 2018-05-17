@@ -1820,19 +1820,22 @@ const VideoPlayerBase = class extends React.Component {
 /**
  * {@link moonstone/VideoPlayer.VideoPlayer} is a standard HTML5 video player for Moonstone. It
  * behaves, responds to, and operates like a standard `<video>` tag in its support for `<source>`s
- * and accepts several additional custom tags like `<infoComponents>`, `<leftComponents>`, and
- * `<rightComponents>`. Any additional children will be rendered into the "more" controls area.
+ * It also accepts custom tags such as `<infoComponents>` for displaying additional information
+ * in the title area and `<MediaControls>` for handling media playback controls and adding more
+ * controls.
  *
  * Example usage:
  * ```
  *	<VideoPlayer title="Hilarious Cat Video" poster="http://my.cat.videos/boots-poster.jpg">
  *		<source src="http://my.cat.videos/boots.mp4" type="video/mp4" />
  *		<infoComponents>A video about my cat Boots, wearing boots.</infoComponents>
- *		<leftComponents><IconButton backgroundOpacity="translucent">star</IconButton></leftComponents>
- *		<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
+ *		<MediaControls>
+ *			<leftComponents><IconButton backgroundOpacity="translucent">star</IconButton></leftComponents>
+ *			<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
  *
- *		<Button backgroundOpacity="translucent">Add To Favorites</Button>
- *		<IconButton backgroundOpacity="translucent">search</IconButton>
+ *			<Button backgroundOpacity="translucent">Add To Favorites</Button>
+ *			<IconButton backgroundOpacity="translucent">search</IconButton>
+ *		</MediaControls>
  *	</VideoPlayer>
  * ```
  *

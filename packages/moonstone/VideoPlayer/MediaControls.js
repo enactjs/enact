@@ -33,7 +33,8 @@ const MediaButton = onlyUpdateForKeys([
 const forwardToggleMore = forward('onToggleMore');
 
 /**
- * A set of components to control media playback and more.
+ * A set of components to control media playback and render additional components in designated
+ * areas.
  *
  * @class MediaControls
  * @memberof moonstone/VideoPlayer
@@ -183,6 +184,14 @@ const MediaControlsBase = kind({
 		 * @public
 		 */
 		onBackwardButtonClick: PropTypes.func,
+
+		/**
+		 * Function executed when cancel/back key events are fired.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onClose: PropTypes.func,
 
 		/**
 		 * Function executed when the user clicks the Forward button.
@@ -358,7 +367,6 @@ const MediaControlsBase = kind({
 		delete rest.moreButtonCloseLabel;
 		delete rest.moreButtonLabel;
 		delete rest.onClose;
-		delete rest.onCloseMore;
 		delete rest.visible;
 
 		return (
@@ -387,7 +395,7 @@ const MediaControlsBase = kind({
 							className={css.moreButton}
 							color={moreButtonColor}
 							disabled={moreButtonDisabled}
-							onTap={onMoreClick}
+							onClick={onMoreClick}
 							tooltipProps={{role: 'dialog'}}
 							tooltipText={moreIconLabel}
 							spotlightId={moreButtonSpotlightId}
@@ -407,7 +415,7 @@ const MediaControlsBase = kind({
  *
  * @class MediaControlsDecorator
  * @memberof moonstone/VideoPlayer
- * @private
+ * @public
  */
 const MediaControlsDecorator = hoc((config, Wrapped) => {
 	class MediaControlsDecoratorHOC extends React.Component {
@@ -794,6 +802,15 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			});
 		}
 
+		handleClose = (ev) => {
+			if (this.state.showMoreComponents) {
+				this.toggleMoreComponents();
+				ev.stopPropagation();
+			} else if (this.props.visible) {
+				forward('onClose', ev, this.props);
+			}
+		}
+
 		render () {
 			const props = Object.assign({}, this.props);
 			delete props.initialJumpDelay;
@@ -811,7 +828,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				<Wrapped
 					ref={this.getMediaControls}
 					{...props}
-					onCloseMore={this.toggleMoreComponents}
+					onClose={this.handleClose}
 					onMoreClick={this.handleMoreClick}
 					onPlayButtonClick={this.handlePlayButtonClick}
 					showMoreComponents={this.state.showMoreComponents}
@@ -823,16 +840,30 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 	return Slottable({slots: ['leftComponents', 'rightComponents']}, MediaControlsDecoratorHOC);
 });
 
-const handleCancel = (ev, {onClose, onCloseMore, visible, showMoreComponents}) => {
-	if (visible) {
-		if (showMoreComponents) {
-			onCloseMore();
-		} else {
-			onClose();
-		}
+const handleCancel = (ev, {onClose}) => {
+	if (onClose) {
+		onClose(ev);
 	}
 };
 
+/**
+ * A set of components to control media playback and render additional components in designated
+ * areas. It accetps custom tags `<leftComponents>`, and `<rightComponents>`. Any additional
+ * children will be rendered into the "more" controls area. "More" button would appear if any
+ * children exist and transitioning will be handle by `MediaControls`.
+ *
+ * Plus, it handles key events for handling basic playback controls. (e.g. ff/rew/jump forward/jump
+ * backward)
+ *
+ * @class MediaControls
+ * @memberof moonstone/VideoPlayer
+ * @extends moonstone/VideoPlayer.MediaControlsBase
+ * @mixes ui/Slottable.Slottable
+ * @mixes moonstone/VideoPlayer.MediaControlsDecorator
+ * @mixes ui/Cancelable.Cancelable
+ * @ui
+ * @public
+ */
 const MediaControls = ApiDecorator(
 	{api: [
 		'areMoreComponentsAvailable',
