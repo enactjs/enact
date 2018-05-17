@@ -10,19 +10,31 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Button` and `moonstone/IconButton` class name `small` to the list of allowed `css` overrides
+
+### Fixed
+
+- `moonstone/IconButton` to allow external customization of the `Icon` vertical alignment (by setting `line-height`)
+
+## [2.0.0-beta.3] - 2018-05-14
+
+### Added
+
 - `moonstone/SelectableItem.SelectableItemDecorator`
 - `moonstone/VideoPlayer.Video` component to support preloading video sources
 
 ### Changed
 
 - `moonstone/ToggleItem` to forward native events on `onFocus` and `onBlur`
-- `moonstone/Input` and `moonstone/ExpandableInput` support for forwarding valid `<input>` props to the contained `<input>` node
+- `moonstone/Input` and `moonstone/ExpandableInput` to support forwarding valid `<input>` props to the contained `<input>` node
 - `moonstone/ToggleButton` to fire `onToggle` when toggled
 - `moonstone/VideoPlayer.videoComponent` prop to default to `ui/Media.Media` instead of `'video'`. As a result, to use a custom video element, one must pass an instance of `ui/Media` with its `mediaComponent` prop set to the desired element.
 
 ### Fixed
 
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to scroll properly with all enabled items via a page up or down key
 - `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` to ignore any user key events in pointer mode
+- `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` to pass `data-spotlight-container-disabled` prop to their outer DOM element
 - `moonstone/Image` so it automatically swaps the `src` to the appropriate resolution dynamically as the screen resizes
 - `moonstone/Popup` to support all `spotlightRestrict` options
 - `moonstone` component `disabled` colors to match the most recent design guidelines (from 30% to 60% opacity)

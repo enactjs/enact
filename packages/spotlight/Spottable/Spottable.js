@@ -181,11 +181,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		componentWillReceiveProps () {
-			this.setState((state, nextProps) => {
-				const spottableDisabled = this.isFocused && nextProps.disabled || nextProps.spotlightDisabled;
-				return !state.spottableDisabled && spottableDisabled ? {spottableDisabled} : null;
-			});
+		componentWillReceiveProps (nextProps) {
+			const spottableDisabled = this.isFocused && nextProps.disabled || nextProps.spotlightDisabled;
+
+			if (!this.state.spottableDisabled && spottableDisabled) {
+				this.setState({spottableDisabled});
+			}
 		}
 
 		componentDidUpdate (prevProps, prevState) {
@@ -303,9 +304,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		handleBlur = (ev) => {
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = false;
-				this.setState((state) => {
-					return state.spottableDisabled ? {spottableDisabled: false} : null;
-				});
+
+				if (this.state.spottableDisabled) {
+					this.setState({spottableDisabled: false});
+				}
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
