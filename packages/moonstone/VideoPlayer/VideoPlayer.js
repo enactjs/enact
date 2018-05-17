@@ -928,7 +928,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	handleReady = () => {
 		this.firstPlayReadFlag = true;
-		this.prevCommand = null;
+		this.prevCommand = this.props.noAutoPlay ? 'pause' : 'play';
 		this.speedIndex = 0;
 		this.setState({
 			announce: AnnounceState.READY,

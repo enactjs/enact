@@ -95,10 +95,6 @@ const VideoBase = class extends React.Component {
 		mediaComponent: 'video'
 	}
 
-	componentDidMount () {
-		this.setMedia();
-	}
-
 	componentDidUpdate (prevProps) {
 		const {source, preloadSource} = this.props;
 		const {source: prevSource, preloadSource: prevPreloadSource} = prevProps;
@@ -131,8 +127,6 @@ const VideoBase = class extends React.Component {
 				// if there's source and it has changed.
 				this.autoPlay();
 			}
-
-			this.autoPlay();
 		}
 
 		if (preloadSource && preloadKey !== prevPreloadKey) {
