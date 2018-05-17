@@ -579,12 +579,12 @@ const VideoPlayerBase = class extends React.Component {
 			bottomOffsetHeight: 0,
 
 			// Non-standard state computed from properties
-			bottomControlsRendered: false,
+			bottomControlsRendered: true,
 			feedbackIconVisible: true,
-			feedbackVisible: false,
-			mediaControlsVisible: false,
+			feedbackVisible: true,
+			mediaControlsVisible: true,
 			miniFeedbackVisible: false,
-			mediaSliderVisible: false,
+			mediaSliderVisible: true,
 			infoVisible: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
@@ -601,6 +601,8 @@ const VideoPlayerBase = class extends React.Component {
 		on('keypress', this.activityDetected);
 		on('keydown', this.handleGlobalKeyDown);
 		this.startDelayedFeedbackHide();
+		this.startDelayedTitleHide();
+		this.startAutoCloseTimeout();
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -610,6 +612,7 @@ const VideoPlayerBase = class extends React.Component {
 		if (!compareSources(source, nextSource)) {
 			this.firstPlayReadFlag = true;
 			this.setState({currentTime: 0, proportionPlayed: 0, proportionLoaded: 0});
+			this.showControls();
 		}
 	}
 
