@@ -4,8 +4,6 @@ import {calcProportion} from '@enact/ui/Slider/utils';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import MediaKnob from './MediaKnob';
-
 // decrements the MediaKnob position if we're tracking
 const decrement = (state) => {
 	if (state.tracking && state.x > 0) {
@@ -178,9 +176,6 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 			return (
 				<Wrapped
 					{...props}
-					knobComponent={
-						<MediaKnob preview={this.state.tracking} previewProportion={this.state.x} />
-					}
 					onBlur={this.handleBlur}
 					onFocus={this.handleFocus}
 					onKeyDown={this.handleKeyDown}
@@ -188,6 +183,8 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 					onMouseOver={this.handleMouseOver}
 					onMouseOut={this.handleMouseOut}
 					onMouseMove={this.handleMouseMove}
+					preview={this.state.tracking}
+					previewProportion={this.state.x}
 				/>
 			);
 		}

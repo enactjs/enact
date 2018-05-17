@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import Slider from '../Slider';
 
+import MediaKnob from './MediaKnob';
 import MediaSliderDecorator from './MediaSliderDecorator';
 
 import css from './VideoPlayer.less';
@@ -30,6 +31,9 @@ const MediaSliderBase = kind({
 		 * @public
 		 */
 		forcePressed: PropTypes.bool,
+
+		preview: PropTypes.bool,
+		previewProportion: PropTypes.number,
 
 		/**
 		 * The visibility of the component. When `false`, the component will be hidden.
@@ -58,7 +62,7 @@ const MediaSliderBase = kind({
 		})
 	},
 
-	render: ({className, sliderClassName, ...rest}) => {
+	render: ({className, preview, previewProportion, sliderClassName, ...rest}) => {
 		delete rest.forcePressed;
 		delete rest.visible;
 
@@ -69,6 +73,9 @@ const MediaSliderBase = kind({
 					aria-hidden="true"
 					className={sliderClassName}
 					css={css}
+					knobComponent={
+						<MediaKnob preview={preview} previewProportion={previewProportion} />
+					}
 					max={1}
 					min={0}
 					step={0.00001}
@@ -83,5 +90,6 @@ const MediaSlider = MediaSliderDecorator(MediaSliderBase);
 export default MediaSlider;
 export {
 	MediaSlider,
-	MediaSliderBase
+	MediaSliderBase,
+	MediaSliderDecorator
 };
