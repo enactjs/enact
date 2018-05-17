@@ -210,27 +210,51 @@ const VideoPlayerBase = class extends React.Component {
 		 *
 		 * The provided component will receive the following props from `VideoPlayer`:
 		 *
-		 * * `mediaDisabled` -
-		 * * `onBackwardButtonClick` - Called when the rewind button is pressed
-		 * * `onFastForward` - Called when the media is fast forwarded via a key event
-		 * * `onForwardButtonClick` - Called when the fast forward button is pressed
-		 * * `onJump` - Called when the media jumps either forward or backward
+		 * * `mediaDisabled`             - `true` when the media controls are not interactive
+		 * * `onBackwardButtonClick`     - Called when the rewind button is pressed
+		 * * `onFastForward`             - Called when the media is fast forwarded via a key event
+		 * * `onForwardButtonClick`      - Called when the fast forward button is pressed
+		 * * `onJump`                    - Called when the media jumps either forward or backward
 		 * * `onJumpBackwardButtonClick` - Called when the jump backward button is pressed
-		 * * `onJumpForwardButtonClick` - Called when the jump forward button is pressed
-		 * * `onKeyDown` - Called when a key is pressed
-		 * * `onPause` - Called when the media is paused via a key event
-		 * * `onPlay` - Called when the media is played via a key event
-		 * * `onRewind` - Called when the media is rewound via a key event
-		 * * `onToggleMore` - Called when the more components are hidden or shown
-		 * * `paused` - `true` when the media is paused
-		 * * `spotlightDisabled` - `true` when spotlight is disabled for the media controls
-		 * * `visible` - `true` when the media controls should be displayed
+		 * * `onJumpForwardButtonClick`  - Called when the jump forward button is pressed
+		 * * `onKeyDown`                 - Called when a key is pressed
+		 * * `onPause`                   - Called when the media is paused via a key event
+		 * * `onPlay`                    - Called when the media is played via a key event
+		 * * `onRewind`                  - Called when the media is rewound via a key event
+		 * * `onToggleMore`              - Called when the more components are hidden or shown
+		 * * `paused`                    - `true` when the media is paused
+		 * * `spotlightDisabled`         - `true` when spotlight is disabled for the media controls
+		 * * `visible`                   - `true` when the media controls should be displayed
 		 *
 		 * @type {Component|Element}
 		 * @default `moonstone/VideoPlayer.MediaControls`
 		 * @public
 		 */
 		mediaControlsComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+
+		/**
+		 * Overries the default media slider component to support customized behaviors.
+		 *
+		 * The provided component will receive the following props from `VideoPlayer`
+		 *
+		 * * backgroundProgress - The proportion of the video loaded
+		 * * children           - A tooltip component
+		 * * disabled           - `true` when the slider is not interactive
+		 * * forcePressed       - `true` when the slider's knob should appear pressed
+		 * * onBlur             - Called when the slider loses focus
+		 * * onChange           - Called when the user has changed the slider's value
+		 * * onFocus            - Called when the slider gains focus
+		 * * onKeyDown          - Called when a key is pressed
+		 * * onKnobMove         - Called when the knob is moved when in preview mode
+		 * * onSpotlightUp      - Called when pressing the "up" key
+		 * * spotlightDisabled  - `true` when spotlight is disabled for the slider
+		 * * value              - The current play time of the video as a proportion of its duration
+		 * * visible            - `true` if the slider should be displayed
+		 *
+		 * @type {Component|Element}
+		 * @default `moonstone/VideoPlayer.MediaSlider`
+		 * @public
+		 */
 		mediaSliderComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
 
 		/**
@@ -1889,7 +1913,7 @@ const VideoPlayer = ApiDecorator(
 		'toggleControls'
 	]},
 	Slottable(
-		{slots: ['infoComponents', 'mediaControlsComponent', 'source', 'thumbnailComponent']},
+		{slots: ['infoComponents', 'mediaControlsComponent', 'mediaSliderComponent', 'source', 'thumbnailComponent']},
 		FloatingLayerDecorator(
 			{floatLayerId: 'videoPlayerFloatingLayer'},
 			Skinnable(

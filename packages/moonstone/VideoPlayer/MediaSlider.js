@@ -101,6 +101,7 @@ const MediaSliderBase = kind({
 });
 
 const MediaSlider = MediaSliderDecorator(MediaSliderBase);
+MediaSlider.defaultSlot = 'mediaSliderComponent';
 
 export default MediaSlider;
 export {
