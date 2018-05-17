@@ -902,7 +902,7 @@ const VideoPlayerBase = class extends React.Component {
 					miniFeedbackVisible: !(this.state.loading || !this.state.duration || this.state.error)
 				});
 			}
-		} else if (this.state.mediaControlsVisible && this.state.feedbackVisible && !this.state.feedbackIconVisible) {
+		} else if (this.state.feedbackVisible && !this.state.feedbackIconVisible) {
 			this.setState({feedbackIconVisible: true});
 		}
 	}
