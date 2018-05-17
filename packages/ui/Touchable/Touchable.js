@@ -176,7 +176,8 @@ const handleGlobalMove = handle(
 );
 
 const handleOnBlur = handle(
-	call('onBlur')
+	forward('onBlur'),
+	handleLeave
 );
 
 /**
@@ -522,13 +523,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.hold.move(coords);
 			this.flick.move(coords);
 			this.drag.move(coords);
-
-			return true;
-		}
-
-		onBlur () {
-			this.hold.suspend();
-			this.drag.end();
 
 			return true;
 		}
