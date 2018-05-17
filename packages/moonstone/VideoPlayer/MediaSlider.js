@@ -32,7 +32,21 @@ const MediaSliderBase = kind({
 		 */
 		forcePressed: PropTypes.bool,
 
+		/**
+		 * Allow moving the knob via pointer or 5-way without emitting `onChange` events
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		preview: PropTypes.bool,
+
+		/**
+		 * The position of the knob when in `preview` mode
+		 *
+		 * @type {Number}
+		 * @public
+		 */
 		previewProportion: PropTypes.number,
 
 		/**
@@ -46,6 +60,7 @@ const MediaSliderBase = kind({
 	},
 
 	defaultProps: {
+		preview: false,
 		visible: true
 	},
 

@@ -71,6 +71,9 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 		static displayName = 'MediaSliderDecorator'
 
 		static propTypes = {
+			backgroundProgress: PropTypes.number,
+			selection: PropTypes.arrayOf(PropTypes.number),
+			selectionMode: PropTypes.bool,
 			value: PropTypes.number
 		}
 
@@ -88,9 +91,26 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 			this.state = {
 				maxX: 0,
 				minX: 0,
+				progressAnchor: 0,
 				tracking: false,
 				x: 0
 			};
+		}
+
+		componentWillReceiveProps (nextProps) {
+			const {value, selectionMode} = nextProps;
+
+			if (this.props.selectionMode !== selectionMode) {
+				if (selectionMode) {
+					this.setState({
+						progressAnchor: value
+					});
+				} else {
+					this.setState({
+						progressAnchor: 0
+					});
+				}
+			}
 		}
 
 		componentDidUpdate (prevProps, prevState) {
@@ -169,13 +189,23 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
-			const props = Object.assign({}, this.props);
+			let {progressAnchor} = this.state;
+			let {backgroundProgress} = this.props;
+			const {selection, selectionMode, ...rest} = this.props;
 
-			delete props.onKnobMove;
+			if (!selectionMode && selection != null) {
+				progressAnchor = selection[0];
+				backgroundProgress = selection[1];
+			} else if (selectionMode) {
+				backgroundProgress = progressAnchor;
+			}
+
+			delete rest.onKnobMove;
 
 			return (
 				<Wrapped
-					{...props}
+					{...rest}
+					backgroundProgress={backgroundProgress}
 					onBlur={this.handleBlur}
 					onFocus={this.handleFocus}
 					onKeyDown={this.handleKeyDown}
@@ -185,6 +215,7 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 					onMouseMove={this.handleMouseMove}
 					preview={this.state.tracking}
 					previewProportion={this.state.x}
+					progressAnchor={progressAnchor}
 				/>
 			);
 		}
