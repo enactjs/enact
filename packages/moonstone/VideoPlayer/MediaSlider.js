@@ -10,17 +10,18 @@ import MediaSliderDecorator from './MediaSliderDecorator';
 import css from './VideoPlayer.less';
 
 /**
- * MediaSlider for {@link moonstone/VideoPlayer}.
+ * The base component to render a customized [Slider]{@link moonstone/Slider.Slider} for use in
+ * [VideoPlayer]{@link moonstone/VideoPlayer.VideoPlayer}.
  *
- * @class MediaSlider
+ * @class MediaSliderBase
  * @memberof moonstone/VideoPlayer
  * @ui
- * @private
+ * @public
  */
 const MediaSliderBase = kind({
 	name: 'MediaSlider',
 
-	propTypes: /** @lends moonstone/VideoPlayer.MediaSlider.prototype */ {
+	propTypes: /** @lends moonstone/VideoPlayer.MediaSliderBase.prototype */ {
 
 		/**
 		 * When `true`, the knob will expand. Note that Slider is a controlled
@@ -100,8 +101,60 @@ const MediaSliderBase = kind({
 	}
 });
 
+/**
+ * A customized slider suitable for use within
+ * [VideoPlayer]{@link moonstone/VideoPlayer.VideoPlayer}.
+ *
+ * ```
+ * <VideoPlayer>
+ *   <MediaSlider selection={selection} selectionMode={selectionMode} />
+ *   <source src="path/to/source.mp4" />
+ * </VideoPlayer>
+ * ```
+ *
+ * @class MediaSlider
+ * @memberof moonstone/VideoPlayer
+ * @ui
+ * @public
+ */
 const MediaSlider = MediaSliderDecorator(MediaSliderBase);
 MediaSlider.defaultSlot = 'mediaSliderComponent';
+
+/**
+ * Called when a `selection` is active and the user seeks the media outside of the selection
+ *
+ * @name onSelectCancel
+ * @type {Function}
+ * @param {Object} event
+ * @param {Number} event.value      Value of the slider
+ * @param {Number} event.proportion Proportion of the value in terms of the min and max
+ *                                  values
+ * @memberof moonstone/VideoPlayer.MediaSlider.prototype
+ * @public
+ */
+
+/**
+ * An 2-valued array representing the start and end proportion value for the selected range
+ *
+ * @name selection
+ * @type {Number[]}
+ * @memberof moonstone/VideoPlayer.MediaSlider.prototype
+ * @public
+ */
+
+/**
+ * Enables range selection on the slider
+ *
+ * When set to `true`, the `progressAnchor` of the slider is set to the current value.
+ * When set to `false`, the `progressAnchor` is reset to 0. If `selection` is also valued, the
+ * slider will show the `backgroundProgress` over that range with the start value used as the
+ * `progressAnchor`.
+ *
+ * @name selectionMode
+ * @type {Function}
+ * @memberof moonstone/VideoPlayer.MediaSlider.prototype
+ * @public
+ */
 
 export default MediaSlider;
 export {

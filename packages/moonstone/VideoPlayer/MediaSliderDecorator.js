@@ -108,7 +108,7 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 			this.state = {
 				maxX: 0,
 				minX: 0,
-				progressAnchor: 0,
+				progressAnchor: this.props.value,
 				tracking: false,
 				x: 0
 			};

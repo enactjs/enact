@@ -255,7 +255,7 @@ const SliderBase = kind({
 		tooltip: ({tooltip}) => tooltip === true ? ProgressBarTooltip : tooltip
 	},
 
-	render: ({css, focused, min, tooltip, ...rest}) => {
+	render: ({css, focused, tooltip, ...rest}) => {
 		delete rest.activateOnFocus;
 		delete rest.active;
 		delete rest.knobStep;
@@ -265,7 +265,6 @@ const SliderBase = kind({
 			<UiSlider
 				{...rest}
 				css={css}
-				min={min}
 				progressBarComponent={
 					<ProgressBar css={css} />
 				}

@@ -4,6 +4,7 @@
  * @module moonstone/VideoPlayer
  * @exports VideoPlayer
  * @exports VideoPlayerBase
+ * @exports MediaSlider
  * @exports MediaControls
  */
 
