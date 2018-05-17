@@ -579,12 +579,12 @@ const VideoPlayerBase = class extends React.Component {
 			bottomOffsetHeight: 0,
 
 			// Non-standard state computed from properties
-			bottomControlsRendered: true,
-			feedbackIconVisible: true,
-			feedbackVisible: true,
-			mediaControlsVisible: true,
+			bottomControlsRendered: false,
+			feedbackIconVisible: false,
+			feedbackVisible: false,
+			mediaControlsVisible: false,
 			miniFeedbackVisible: false,
-			mediaSliderVisible: true,
+			mediaSliderVisible: false,
 			infoVisible: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
@@ -601,8 +601,6 @@ const VideoPlayerBase = class extends React.Component {
 		on('keypress', this.activityDetected);
 		on('keydown', this.handleGlobalKeyDown);
 		this.startDelayedFeedbackHide();
-		this.startDelayedTitleHide();
-		this.startAutoCloseTimeout();
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -1054,6 +1052,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	renderBottomControl = new Job(() => {
+		this.showControls();
 		this.setState({bottomControlsRendered: true});
 	});
 
