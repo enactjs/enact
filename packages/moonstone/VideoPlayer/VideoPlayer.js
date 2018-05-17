@@ -1507,9 +1507,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.toggleControls();
 	}
 
-	onSliderChange = (ev) => {
-		const {value} = ev;
-
+	onSliderChange = ({value}) => {
 		this.seek(value * this.state.duration);
 		this.sliderScrubbing = false;
 	}

@@ -36,6 +36,24 @@ const SliderBase = kind({
 	name: 'ui:Slider',
 
 	propTypes: /** @lends ui/Slider.SliderBase.prototype */ {
+		/**
+		 * The component used to render the progress bar within the slider
+		 *
+		 * The provided component will receive the following props from `Slider`
+		 *
+		 * * backgroundProgress - The value of `backgroundProgress`
+		 * * orientation        - The value of `orientation`
+		 * * progress           - The `value` as a proportion between `min` and `max`
+		 * * progressAnchor     - The value of `progressAnchor`
+		 *
+		 * This prop accepts either a Component (e.g. `MyProgress`} which will be instantiated with
+		 * the above props or a component instance (e.g. `<MyProgress customProp="value" />`) which
+		 * will have its props merged with the above props.
+		 *
+		 * @type {Component|Element}
+		 * @required
+		 * @public
+		 */
 		progressBarComponent: PropTypes.func.isRequired,
 
 		/**
@@ -53,15 +71,12 @@ const SliderBase = kind({
 		 *
 		 * The following classes are supported:
 		 *
-		 * * `slider` - The root component class
-		 * * `fill` - The progress bar node representing the `value`
-		 * * `load` - The progress bar node representing the `backgroundProgress`
-		 * * `knob` - The knob node
-		 * * `bars` - The parent node for the fill bar, load bar, and knob
+		 * * `slider`     - The root component class
+		 * * `knob`       - The knob node
 		 * * `horizontal` - Applied when `orientation` prop is `"horizontal"``
-		 * * `pressed` - Applied when `pressed` prop is `true`
-		 * * `noFill` - Applied when `noFill` prop is `true`
-		 * * `vertical` - Applied when `orientation` prop is `"vertical"`
+		 * * `pressed`    - Applied when `pressed` prop is `true`
+		 * * `noFill`     - Applied when `noFill` prop is `true`
+		 * * `vertical`   - Applied when `orientation` prop is `"vertical"`
 		 *
 		 * @type {Object}
 		 * @public
@@ -83,13 +98,12 @@ const SliderBase = kind({
 		 *
 		 * The following props are forwarded to the tooltip:
 		 *
-		 * * `className` - A `knob` class applied by the slider
-		 * * `disabled` - The value of `disabled` from the slider
-		 * * `orientation` - The value of `orientation` from the slider
-		 * * `proportion` - A number between 0 and 1 representing the proportion of the `value` in
-		 *   terms of `min` and `max`
-		 * * `tooltipComponent` - The value of `tooltipComponent` from the slider
-		 * * `value` - The value of `value` from the slider
+		 * * `className`        - A `knob` class applied by the slider
+		 * * `disabled`         - The value of `disabled`
+		 * * `orientation`      - The value of `orientation`
+		 * * `proportion`       - The `value` as a proportion between `min` and `max`
+		 * * `tooltipComponent` - The value of `tooltipComponent`
+		 * * `value`            - The value of `value`
 		 *
 		 * This prop accepts either a Component (e.g. `MyKnob`} which will be instantiated with
 		 * the above props or a component instance (e.g. `<MyKnob customProp="value" />`) which
@@ -176,10 +190,9 @@ const SliderBase = kind({
 		 *
 		 * The following props are forwarded to the tooltip:
 		 *
-		 * * `children` - The `value` prop from the slider
+		 * * `children`    - The `value` prop from the slider
 		 * * `orientation` - The value of the `orientation` prop from the slider
-		 * * `proportion` - A number between 0 and 1 representing the proportion of the `value` in
-		 *   terms of `min` and `max`
+		 * * `proportion`  - The `value` as a proportion between `min` and `max`
 		 *
 		 * This prop accepts either a Component (e.g. `MyTooltip`} which will be instantiated with
 		 * the above props or a component instance (e.g. `<MyTooltip customProp="value" />`) which

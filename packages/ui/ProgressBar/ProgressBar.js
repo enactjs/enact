@@ -69,10 +69,10 @@ const ProgressBar = kind({
 		 * The following classes are supported:
 		 *
 		 * * `progressBar` - The root component class
-		 * * `fill` - The foreground node of the progress bar
-		 * * `load` - The background node of the progress bar
-		 * * `horizontal` - Applied when `is `'horizontal'`
-		 * * `vertical` - Applied when `orientation` is `'vertical'`
+		 * * `fill`        - The foreground node of the progress bar
+		 * * `load`        - The background node of the progress bar
+		 * * `horizontal`  - Applied when `orientation` is `'horizontal'`
+		 * * `vertical`    - Applied when `orientation` is `'vertical'`
 		 *
 		 * @type {Object}
 		 * @public
@@ -117,7 +117,9 @@ const ProgressBar = kind({
 	},
 
 	defaultProps: {
+		backgroundProgress: 0,
 		orientation: 'horizontal',
+		progress: 0,
 		progressAnchor: 0
 	},
 
