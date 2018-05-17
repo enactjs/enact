@@ -94,8 +94,8 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 			value: PropTypes.number
 		}
 
-		constructor () {
-			super();
+		constructor (props) {
+			super(props);
 
 			this.handleMouseOver = this.handleMouseOver.bind(this);
 			this.handleMouseOut = this.handleMouseOut.bind(this);
@@ -108,7 +108,7 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 			this.state = {
 				maxX: 0,
 				minX: 0,
-				progressAnchor: this.props.value,
+				progressAnchor: props.value || 0,
 				tracking: false,
 				x: 0
 			};
