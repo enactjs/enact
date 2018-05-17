@@ -1589,6 +1589,11 @@ const VideoPlayerBase = class extends React.Component {
 		});
 	}
 
+	handleMediaControlsClose = (ev) => {
+		this.hideControls();
+		ev.stopPropagation();
+	}
+
 	setPlayerRef = (node) => {
 		// TODO: We've moved SpotlightContainerDecorator up to allow VP to be spottable but also
 		// need a ref to the root node to query for children and set CSS variables.
@@ -1784,7 +1789,7 @@ const VideoPlayerBase = class extends React.Component {
 								component={mediaControlsComponent}
 								mediaDisabled={disabled || this.state.mediaControlsDisabled}
 								onBackwardButtonClick={this.handleRewind}
-								onClose={this.hideControls}
+								onClose={this.handleMediaControlsClose}
 								onFastForward={this.handleFastForward}
 								onForwardButtonClick={this.handleFastForward}
 								onJump={this.handleJump}
