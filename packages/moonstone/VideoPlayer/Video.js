@@ -108,9 +108,20 @@ const VideoBase = class extends React.Component {
 		const preloadKey = getKeyFromSource(preloadSource);
 		const prevPreloadKey = getKeyFromSource(prevPreloadSource);
 
+		if (this.props.setMedia !== prevProps.setMedia) {
+			this.clearMedia(prevProps);
+			this.setMedia();
+		}
+
 		if (source) {
 			if (key === prevPreloadKey) {
 				// if there's source and it was the preload source
+
+				// if the preloaded video didn't error, notify VideoPlayer it is ready to reset
+				if (!this.video.error) {
+					forward('onReady', {type: 'onReady'}, this.props);
+				}
+
 				// emit onUpdate to give VideoPlayer an opportunity to updates its internal state
 				// since it won't receive the onLoadStart or onError event
 				forward('onUpdate', {type: 'onUpdate'}, this.props);
@@ -131,11 +142,6 @@ const VideoBase = class extends React.Component {
 			if (this.preloadVideo) {
 				this.preloadVideo.load();
 			}
-		}
-
-		if (this.props.setMedia !== prevProps.setMedia) {
-			this.clearMedia(prevProps);
-			this.setMedia();
 		}
 	}
 

@@ -150,6 +150,14 @@ class Media extends React.Component {
 		mediaEventsMap: PropTypes.object,
 
 		/**
+		 * A function to be run after the media has started loading to indicate is it ready
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onReady: PropTypes.func,
+
+		/**
 		 * A function to be run when media updates.
 		 *
 		 * @type {Function}
@@ -234,6 +242,11 @@ class Media extends React.Component {
 		}
 	}
 
+	handleLoadStart = (ev) => {
+		forward('onLoadStart', ev, this.props);
+		forward('onReady', {type: 'onReady'}, this.props);
+	}
+
 	mediaRef = (node) => {
 		this.media = node;
 	}
@@ -294,6 +307,7 @@ class Media extends React.Component {
 		const {customMediaEventsMap, mediaComponent: Component, source, ...rest} = this.props;
 
 		delete rest.mediaEventsMap;
+		delete rest.onReady;
 		delete rest.onUpdate;
 
 		// Remove the events we manually added so they aren't added twice or fail.
@@ -305,6 +319,7 @@ class Media extends React.Component {
 			<Component
 				{...rest}
 				{...this.handledMediaEvents}
+				onLoadStart={this.handleLoadStart}
 				ref={this.mediaRef}
 			>
 				{source}
