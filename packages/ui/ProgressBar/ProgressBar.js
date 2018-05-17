@@ -100,6 +100,19 @@ const ProgressBar = kind({
 		 */
 		progress: PropTypes.number,
 
+		/**
+		 * Sets the point, as a proportion between 0 and 1, from which the progress bar is filled.
+		 *
+		 * Applies to both the progress bar's `value` and `backgroundProgress`. In both cases,
+		 * setting the value of `progressAnchor` will cause the progress bar to fill from that point
+		 * down, when `value` or `backgroundProgress` is proportionally less than the anchor, or up,
+		 * when `value` or `backgroundProgress` is proportionally greater than the anchor, rather
+		 * than always from the start of the progress bar.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
 		progressAnchor: PropTypes.number
 	},
 

@@ -147,6 +147,19 @@ const SliderBase = kind({
 		 */
 		pressed: PropTypes.bool,
 
+		/**
+		 * Sets the point, as a proportion between 0 and 1, from which the slider is filled.
+		 *
+		 * Applies to both the slider's `value` and `backgroundProgress`. In both cases,
+		 * setting the value of `progressAnchor` will cause the slider to fill from that point
+		 * down, when `value` or `backgroundProgress` is proportionally less than the anchor, or up,
+		 * when `value` or `backgroundProgress` is proportionally greater than the anchor, rather
+		 * than always from the start of the slider.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
 		progressAnchor: PropTypes.number,
 
 		/**
@@ -197,6 +210,7 @@ const SliderBase = kind({
 		max: 100,
 		noFill: false,
 		orientation: 'horizontal',
+		progressAnchor: 0,
 		step: 1
 	},
 
@@ -237,7 +251,7 @@ const SliderBase = kind({
 		orientation,
 		percent,
 		progressBarComponent,
-		progressAnchor = min,
+		progressAnchor,
 		tooltipComponent,
 		value = min,
 		...rest

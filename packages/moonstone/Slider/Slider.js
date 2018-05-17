@@ -155,8 +155,6 @@ const SliderBase = kind({
 		 */
 		onKeyUp: PropTypes.func,
 
-		progressAnchor: PropTypes.number,
-
 		/**
 		 * The amount to increment or decrement the value.
 		 *
@@ -257,7 +255,7 @@ const SliderBase = kind({
 		tooltip: ({tooltip}) => tooltip === true ? ProgressBarTooltip : tooltip
 	},
 
-	render: ({css, focused, min, progressAnchor = min, tooltip, ...rest}) => {
+	render: ({css, focused, min, tooltip, ...rest}) => {
 		delete rest.activateOnFocus;
 		delete rest.active;
 		delete rest.knobStep;
@@ -271,7 +269,6 @@ const SliderBase = kind({
 				progressBarComponent={
 					<ProgressBar css={css} />
 				}
-				progressAnchor={progressAnchor}
 				tooltipComponent={
 					<ComponentOverride
 						component={tooltip}
