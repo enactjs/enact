@@ -368,8 +368,6 @@ const VideoPlayerBase = class extends React.Component {
 		 */
 		onSeekFailed: PropTypes.func,
 
-		onSliderChange: PropTypes.func,
-
 		/**
 		 * When `true`, the video will pause when it reaches either the start or the end of the
 		 * video during rewind, slow rewind, fast forward, or slow forward.
@@ -1484,9 +1482,8 @@ const VideoPlayerBase = class extends React.Component {
 	onVideoClick = () => {
 		this.toggleControls();
 	}
-	onSliderChange = (ev) => {
-		forwardWithPrevent('onSliderChange', ev, this.props);
 
+	onSliderChange = (ev) => {
 		const {value} = ev;
 
 		this.seek(value * this.state.duration);

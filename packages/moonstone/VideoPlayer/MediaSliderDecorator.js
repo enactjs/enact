@@ -49,13 +49,29 @@ const handleKeyDown = handle(
 	stopImmediate
 );
 
+const mayCancelSelect = handle(
+	({value}, {selection}) => {
+		if (selection != null) {
+			const [start, end] = selection;
+
+			return value > end || value < start;
+		}
+
+		return false;
+	},
+	forward('onSelectCancel')
+);
+
 const handleKeyUp = handle(
 	forward('onKeyUp'),
 	call('isTracking'),
 	forKey('enter'),
 	// prevent moonstone/Slider from activating the knob
 	preventDefault,
-	adaptEvent(call('getEventPayload'), forward('onChange'))
+	adaptEvent(call('getEventPayload'), handle(
+		forward('onChange'),
+		mayCancelSelect
+	))
 );
 
 /**
@@ -72,6 +88,7 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 
 		static propTypes = {
 			backgroundProgress: PropTypes.number,
+			onSelectCancel: PropTypes.func,
 			selection: PropTypes.arrayOf(PropTypes.number),
 			selectionMode: PropTypes.bool,
 			value: PropTypes.number
