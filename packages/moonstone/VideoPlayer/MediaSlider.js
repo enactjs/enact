@@ -16,7 +16,7 @@ import css from './VideoPlayer.less';
  * @class MediaSliderBase
  * @memberof moonstone/VideoPlayer
  * @ui
- * @public
+ * @private
  */
 const MediaSliderBase = kind({
 	name: 'MediaSlider',
