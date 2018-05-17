@@ -54,7 +54,7 @@ const SliderBase = kind({
 		 * @required
 		 * @public
 		 */
-		progressBarComponent: PropTypes.func.isRequired,
+		progressBarComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
 
 		/**
 		 * Background progress, as a proportion between `0` and `1`.

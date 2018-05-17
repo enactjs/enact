@@ -30,7 +30,7 @@ const calcBarStyle = (prop, anchor, value = anchor, startProp, endProp) => {
 		[startProp]: progressToPercent(start),
 		[endProp]: progressToPercent(end)
 	};
-}
+};
 
 /**
  * Provides unstyled progress bar component to be customized by a theme or application.
