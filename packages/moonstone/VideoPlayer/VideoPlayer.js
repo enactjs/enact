@@ -1537,7 +1537,6 @@ const VideoPlayerBase = class extends React.Component {
 	handleSliderBlur = () => {
 		this.sliderScrubbing = false;
 		this.startDelayedFeedbackHide();
-		console.log(this.state.paused);
 		this.setState({
 			// If paused is false that means it is playing. We only want to hide on playing.
 			feedbackIconVisible: this.state.paused,
