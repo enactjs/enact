@@ -17,6 +17,9 @@ import {validateRange} from '../internal/validators';
 
 import PickerCore, {PickerItem} from '../internal/Picker';
 import SpottablePicker from './SpottablePicker';
+import {VoiceControlDecorator} from '@enact/webos/speech';
+
+const VoicePickerCore = VoiceControlDecorator(PickerCore);
 
 /**
  * The base component for {@link moonstone/Picker.Picker}. This version is not spottable.
@@ -167,6 +170,15 @@ const PickerBase = kind({
 		value: 0
 	},
 
+	handlers: {
+		onVoice: (e, {onChange, max}) => {
+			let index = e && e.detail && typeof e.detail.index !== 'undefined' && Number(e.detail.index);
+			if (typeof index === 'number' && !isNaN(index) && onChange) {
+				onChange({value: clamp(0, max, index)});
+			}
+		}
+	},
+
 	computed: {
 		max: ({children}) => children && children.length ? children.length - 1 : 0,
 		reverse: ({orientation}) => (orientation === 'vertical'),
@@ -187,16 +199,28 @@ const PickerBase = kind({
 				validateRange(value, 0, max, 'Picker', '"value"', 'min', 'max index');
 			}
 			return clamp(0, max, value);
+		},
+		voiceLabels: ({children}) => {
+			return JSON.stringify(children.map((child) => (typeof child === 'object' ? child.props.children : child)));
 		}
 	},
 
-	render: ({children, max, value, ...rest}) => {
+	render: ({children, max, value, voiceLabels, ...rest}) => {
 		delete rest.marqueeDisabled;
 
 		return (
-			<PickerCore {...rest} min={0} max={max} index={value} step={1} value={value}>
+			<VoicePickerCore
+				{...rest}
+				data-webos-voice-intent='Select'
+				data-webos-voice-labels={voiceLabels}
+				min={0}
+				max={max}
+				index={value}
+				step={1}
+				value={value}
+			>
 				{children}
-			</PickerCore>
+			</VoicePickerCore>
 		);
 	}
 });
