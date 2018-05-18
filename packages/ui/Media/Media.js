@@ -150,7 +150,7 @@ class Media extends React.Component {
 		mediaEventsMap: PropTypes.object,
 
 		/**
-		 * A function to be run after the media has started loading to indicate is it ready
+		 * A function to be run after the media has enough data to play
 		 *
 		 * @type {Function}
 		 * @public
@@ -242,8 +242,8 @@ class Media extends React.Component {
 		}
 	}
 
-	handleLoadStart = (ev) => {
-		forward('onLoadStart', ev, this.props);
+	handleCanPlayThrough = (ev) => {
+		forward('onCanPlayThrough', ev, this.props);
 		forward('onReady', {type: 'onReady'}, this.props);
 	}
 
@@ -319,7 +319,7 @@ class Media extends React.Component {
 			<Component
 				{...rest}
 				{...this.handledMediaEvents}
-				onLoadStart={this.handleLoadStart}
+				onCanPlayThrough={this.handleCanPlayThrough}
 				ref={this.mediaRef}
 			>
 				{source}
