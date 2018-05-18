@@ -580,7 +580,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			// Non-standard state computed from properties
 			bottomControlsRendered: false,
-			feedbackIconVisible: false,
+			feedbackIconVisible: true,
 			feedbackVisible: false,
 			mediaControlsVisible: false,
 			miniFeedbackVisible: false,
@@ -609,7 +609,12 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (!compareSources(source, nextSource)) {
 			this.firstPlayReadFlag = true;
-			this.setState({announce: AnnounceState.READY, currentTime: 0, proportionPlayed: 0, proportionLoaded: 0});
+			this.setState({
+				announce: AnnounceState.READY,
+				currentTime: 0,
+				proportionPlayed: 0,
+				proportionLoaded: 0
+			});
 		}
 	}
 
