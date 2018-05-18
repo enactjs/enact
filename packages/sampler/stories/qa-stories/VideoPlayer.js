@@ -67,9 +67,11 @@ class VideoSourceSwap extends React.Component {
 				{button('Change Preload without changing video', this.nextPreloadVideoKeepVideo)}
 				{button('Reset Sources', this.resetSources)}
 				<VideoPlayer
-					title={this.state.videoTitles[this.state.preloadCursor]}
 					muted
+					onJumpBackward={this.differentVideo}
+					onJumpForward={this.nextVideo}
 					preloadSource={<source src={this.state.playlist[this.state.preloadCursor]} type="video/mp4" />}
+					title={this.state.videoTitles[this.state.cursor]}
 				>
 					<source src={this.state.playlist[this.state.cursor]} type="video/mp4" />
 					<infoComponents>A video about some things happening to and around some characters. Very exciting stuff.</infoComponents>
