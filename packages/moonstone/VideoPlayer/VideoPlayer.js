@@ -609,7 +609,12 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (!compareSources(source, nextSource)) {
 			this.firstPlayReadFlag = true;
-			this.setState({currentTime: 0, proportionPlayed: 0, proportionLoaded: 0});
+			this.setState({
+				announce: AnnounceState.READY,
+				currentTime: 0,
+				proportionPlayed: 0,
+				proportionLoaded: 0
+			});
 		}
 	}
 
@@ -663,6 +668,7 @@ const VideoPlayerBase = class extends React.Component {
 		if (!compareSources(source, prevSource)) {
 			const isPreloadedVideo = source && prevPreloadSource && compareSources(source, prevPreloadSource);
 			this.reloadVideo(isPreloadedVideo);
+			this.showControls();
 		}
 
 		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
@@ -1054,6 +1060,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	renderBottomControl = new Job(() => {
+		this.showControls();
 		this.setState({bottomControlsRendered: true});
 	});
 
