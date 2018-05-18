@@ -598,7 +598,7 @@ class ScrollableBaseNative extends Component {
 						needToHideThumb = !delta;
 					}
 				} else {
-					this.updateOverscrollEffect(true, !(this.scrollTop === 0));
+					this.updateOverscrollEffect('vertical', this.scrollTop === 0 ? 'before' : 'after');
 					needToHideThumb = true;
 				}
 			} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
@@ -606,7 +606,7 @@ class ScrollableBaseNative extends Component {
 					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
 				} else {
-					this.updateOverscrollEffect(false, !(this.scrollLeft === 0));
+					this.updateOverscrollEffect('horizontal', this.scrollLeft === 0 ? 'before' : 'after');
 					needToHideThumb = true;
 				}
 			}
@@ -693,9 +693,9 @@ class ScrollableBaseNative extends Component {
 
 	// overscroll effect
 
-	updateOverscrollEffect = (vertical, forth) => {
+	updateOverscrollEffect = (orientation, position) => {
 		if (this.props.updateOverscrollEffect) {
-			this.props.updateOverscrollEffect(vertical, forth);
+			this.props.updateOverscrollEffect(orientation, position);
 		}
 
 		this.checkOverscroll = false;
@@ -756,9 +756,9 @@ class ScrollableBaseNative extends Component {
 		if (this.checkOverscroll && this.isScrollAnimationTargetAccumulated) {
 			const scrollLeft = this.scrollLeft;
 			if (scrollLeft === 0) {
-				this.updateOverscrollEffect(false, false);
+				this.updateOverscrollEffect('horizontal', 'before');
 			} else if (scrollLeft === bounds.maxLeft) {
-				this.updateOverscrollEffect(false, true);
+				this.updateOverscrollEffect('horizontal', 'after');
 			}
 		}
 
@@ -775,9 +775,9 @@ class ScrollableBaseNative extends Component {
 		if (this.checkOverscroll && this.isScrollAnimationTargetAccumulated) {
 			const scrollTop = this.scrollTop;
 			if (scrollTop === 0) {
-				this.updateOverscrollEffect(true, false);
+				this.updateOverscrollEffect('vertical', 'before');
 			} else if (scrollTop === bounds.maxTop) {
-				this.updateOverscrollEffect(true, true);
+				this.updateOverscrollEffect('vertical', 'after');
 			}
 		}
 

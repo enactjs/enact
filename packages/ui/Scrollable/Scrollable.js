@@ -639,9 +639,9 @@ class ScrollableBase extends Component {
 
 	// overscroll effect
 
-	updateOverscrollEffect = (vertical, forth) => {
+	updateOverscrollEffect = (orientation, position) => {
 		if (this.props.updateOverscrollEffect) {
-			this.props.updateOverscrollEffect(vertical, forth);
+			this.props.updateOverscrollEffect(orientation, position);
 		}
 
 		this.checkOverscroll = false;
@@ -663,9 +663,9 @@ class ScrollableBase extends Component {
 		if (this.checkOverscroll && this.isScrollAnimationTargetAccumulated) {
 			const scrollLeft = this.scrollLeft;
 			if (scrollLeft === 0) {
-				this.updateOverscrollEffect(false, false);
+				this.updateOverscrollEffect('horizontal', 'before');
 			} else if (scrollLeft === bounds.maxLeft) {
-				this.updateOverscrollEffect(false, true);
+				this.updateOverscrollEffect('horizontal', 'after');
 			}
 		}
 
@@ -682,9 +682,9 @@ class ScrollableBase extends Component {
 		if (this.checkOverscroll && this.isScrollAnimationTargetAccumulated) {
 			const scrollTop = this.scrollTop;
 			if (scrollTop === 0) {
-				this.updateOverscrollEffect(true, false);
+				this.updateOverscrollEffect('vertical', 'before');
 			} else if (scrollTop === bounds.maxTop) {
-				this.updateOverscrollEffect(true, true);
+				this.updateOverscrollEffect('vertical', 'after');
 			}
 		}
 

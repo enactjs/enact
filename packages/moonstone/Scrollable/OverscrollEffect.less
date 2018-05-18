@@ -1,58 +1,93 @@
+// OverscrollEffect.less
+//
+@import '~@enact/ui/Scrollable/Scrollable.less';
+
+@import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/skin.less';
 
+:root {
+	--moon-scrollable-overscroll-ratio-horizontalbefore: 0;
+	--moon-scrollable-overscroll-ratio-horizontalafter: 0;
+	--moon-scrollable-overscroll-ratio-verticalbefore: 0;
+	--moon-scrollable-overscroll-ratio-verticalafter: 0;
+}
+
+.scrollable {
+	// Skin colors
+	.applySkins({
+		--overscroll-effect-color: @moon-accent;
+	});
+}
+
 .overscroll {
-	display: none;
+	display: block;
 	position: absolute;
+	content: "";
 	border-radius: 50%;
-	transition-duration: var(--moon-overscroll-duration);
+	transition-duration: @moon-scrollable-overscroll-duration;
 	transition-property: transform;
 	transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
 	&.visible {
 		display: block;
 	}
-
-	// Skin colors
-	.applySkins({
-		background-color: @moon-accent;
-	});
+	background-color: var(--overscroll-effect-color, white);
 }
 
 .horizontal {
+	.overscroll;
+
 	top: 50%; // Center the element
 	width: 6px;
 	height: 70%;
-	transform: translateY(-50%) scale3d(1, 0, 1);
+}
 
-	&.forward {
+.horizontalEffects::before {
+	.horizontal;
+
+	transform: translateY(-50%) scale3d(calc((2 - var(--moon-scrollable-overscroll-ratio-horizontalbefore)) / 2), var(--moon-scrollable-overscroll-ratio-horizontalbefore), 1);
+	left: 0;
+	z-index: 1;
+
+	:global(.enact-locale-right-to-left) & {
+		left: auto;
 		right: 0;
 	}
+}
 
-	&.backward {
+.horizontalEffects::after {
+	.horizontal;
+
+	transform: translateY(-50%) scale3d(calc((2 - var(--moon-scrollable-overscroll-ratio-horizontalafter)) / 2), var(--moon-scrollable-overscroll-ratio-horizontalafter), 1);
+	right: 0;
+
+	:global(.enact-locale-right-to-left) & {
 		left: 0;
-	}
-
-	&.expand {
-		transform: translateY(-50%) scale3d(0.5, 1, 1);
+		right: auto;
 	}
 }
 
 .vertical {
-	left: 50%; // Center the element
-	width: 70%;
+	.overscroll;
+
+	--overscroll-effect-vertical-size: calc(100% - @moon-scrollable-scrollbar-size);
+	width: calc(var(--overscroll-effect-vertical-size) * 0.7);
 	height: 6px;
-	transform: translateX(-50%) scale3d(0, 1, 1);
+	.margin-start-end(calc(var(--overscroll-effect-vertical-size) * 0.15), 0);
+}
 
-	&.forward {
-		bottom: 0;
-	}
+.verticalEffects::before {
+	.vertical;
 
-	&.backward {
-		top: 0;
-	}
+	transform: scale3d(var(--moon-scrollable-overscroll-ratio-verticalbefore), calc((2 - var(--moon-scrollable-overscroll-ratio-verticalbefore)) / 2), 1);
+	top: 0;
+	z-index: 1;
+}
 
-	&.expand {
-		transform: translateX(-50%) scale3d(1, 0.5, 1);
-	}
+.verticalEffects::after {
+	.vertical;
+
+	transform: scale3d(var(--moon-scrollable-overscroll-ratio-verticalafter), calc((2 - var(--moon-scrollable-overscroll-ratio-verticalafter)) / 2), 1);
+	bottom: 0;
 }
