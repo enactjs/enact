@@ -1469,7 +1469,7 @@ const VideoPlayerBase = class extends React.Component {
 			this.player.querySelector(
 				`.${css.leftComponents} ${defaultSpottable}, .${css.rightComponents} ${defaultSpottable}`
 			) ||
-			'data-media-controls';
+			this.player.querySelector(`[data-media-controls] ${defaultSpottable}`);
 
 		return defaultControl ? Spotlight.focus(defaultControl) : false;
 	}
