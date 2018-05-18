@@ -163,8 +163,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			children: PropTypes.node,
 
 			/**
-			 * When `true`, adds the `disabled` element attribute to the marquee. By default, no
-			 * styling is applied to the marquee by the framework.
+			 * Passed through to the wrapped component. Does not affect Marquee behavior except that
+			 * components that are `marqueeOn="focus"` will be treated as if they were
+			 * `marqueeOn="hover"`, to allow disabled (and thuse, unfocusable) components to
+			 * marquee.
 			 *
 			 * @type {Boolean}
 			 * @public
