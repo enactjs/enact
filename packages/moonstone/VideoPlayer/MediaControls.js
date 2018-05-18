@@ -319,7 +319,7 @@ const MediaControlsBase = kind({
 	computed: {
 		className: ({visible, styler}) => styler.append({hidden: !visible}),
 		centerClassName: ({showMoreComponents, styler}) => styler.join('centerComponents', {more: showMoreComponents}),
-		playPauseClassName: ({showMoreComponents, styler}) => styler.join({[spotlightDefaultClass]: !showMoreComponents}),
+		playPauseClassName: ({showMoreComponents}) => showMoreComponents ? null : spotlightDefaultClass,
 		moreButtonClassName: ({showMoreComponents, styler}) => styler.join('moreButton', {[spotlightDefaultClass]: showMoreComponents}),
 		moreIconLabel: ({moreButtonCloseLabel, moreButtonLabel, showMoreComponents}) => showMoreComponents ? moreButtonCloseLabel : moreButtonLabel,
 		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowshrinkleft' : 'ellipsis'
