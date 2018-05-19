@@ -665,7 +665,12 @@ const VideoPlayerBase = class extends React.Component {
 			this.reloadVideo(isPreloadedVideo);
 		}
 
-		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
+		if (
+			prevState.mediaControlsVisible === !this.state.mediaControlsVisible ||
+			prevState.mediaSliderVisible === !this.state.mediaSliderVisible
+		) {
+			this.context.closeAllFloatingLayers();
+		}
 
 		if (!this.state.mediaControlsVisible && prevState.mediaControlsVisible) {
 			forwardControlsAvailable({available: false}, this.props);
@@ -770,13 +775,6 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		return true;
-	}
-
-	setFloatingLayerShowing = (showing) => {
-		const layer = this.context.getFloatingLayer && this.context.getFloatingLayer();
-		if (layer) {
-			layer.style.display = showing ? 'block' : 'none';
-		}
 	}
 
 	/**

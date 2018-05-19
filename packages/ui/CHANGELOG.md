@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/FloatingLayerDecorator` imperative API to close all floating layers registered in the same id 
+
 ### Fixed
 
 - `ui/Touchable` to guard against null events

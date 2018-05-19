@@ -60,8 +60,9 @@ class FloatingLayerBase extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
-		 * A function to be run when `ESC` key is pressed. The function will only invoke if
-		 * `noAutoDismiss` is set to `false`.
+		 * A function to be run when a closing action is invoked. These actions may include pressing
+		 * cancel/back (e.g. `ESC`) key or programmatically closing by `FloatingLayerDecorator`. When
+		 * cancel key is pressed, the function will only invoke if `noAutoDismiss` is set to `false`.
 		 *
 		 * @type {Function}
 		 * @public
@@ -113,6 +114,10 @@ class FloatingLayerBase extends React.Component {
 		if (open && onOpen) {
 			onOpen({});
 		}
+
+		if (this.context.registerFloatingLayer) {
+			this.context.registerFloatingLayer(this, {close: this.handleClose});
+		}
 	}
 
 	componentDidUpdate (prevProps) {
@@ -136,6 +141,16 @@ class FloatingLayerBase extends React.Component {
 	componentWillUnmount () {
 		this.node = null;
 		off('click', this.handleClick);
+
+		if (this.context.unregisterFloatingLayer) {
+			this.context.unregisterFloatingLayer(this);
+		}
+	}
+
+	handleClose = () => {
+		if (this.props.open && this.props.onDismiss) {
+			this.props.onDismiss({});
+		}
 	}
 
 	handleClick = () => {
