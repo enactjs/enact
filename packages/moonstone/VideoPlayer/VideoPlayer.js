@@ -582,12 +582,13 @@ const VideoPlayerBase = class extends React.Component {
 			bottomControlsRendered: false,
 			feedbackIconVisible: true,
 			feedbackVisible: false,
-			mediaControlsVisible: false,
-			miniFeedbackVisible: false,
-			mediaSliderVisible: false,
 			infoVisible: false,
+			mediaControlsVisible: false,
+			mediaSliderVisible: false,
+			miniFeedbackVisible: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
+			sourceUnavailable: false,
 			titleVisible: true
 		};
 
@@ -1028,20 +1029,16 @@ const VideoPlayerBase = class extends React.Component {
 			playbackRate: el.playbackRate,
 
 			// Non-standard state computed from properties
-			proportionLoaded: el.proportionLoaded,
-			proportionPlayed: el.proportionPlayed || 0,
 			error: el.error,
 			loading: el.loading,
-			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime
+			proportionLoaded: el.proportionLoaded,
+			proportionPlayed: el.proportionPlayed || 0,
+			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime,
+			sourceUnavailable: !el.duration || el.error
 		};
 
 		// If there's an error, we're obviously not loading, no matter what the readyState is.
 		if (updatedState.error) updatedState.loading = false;
-
-		updatedState.mediaControlsDisabled = (
-			!updatedState.duration ||
-			updatedState.error
-		);
 
 		const isRewind = this.prevCommand === 'rewind' || this.prevCommand === 'slowRewind';
 		const isForward = this.prevCommand === 'fastForward' || this.prevCommand === 'slowForward';
@@ -1155,7 +1152,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	seek = (timeIndex) => {
-		if (!this.props.seekDisabled) {
+		if (!this.props.seekDisabled && !isNaN(this.video.duration)) {
 			this.video.currentTime = timeIndex;
 		} else {
 			forward('onSeekFailed', {}, this.props);
@@ -1766,7 +1763,7 @@ const VideoPlayerBase = class extends React.Component {
 
 							{noSlider ? null : <MediaSlider
 								backgroundProgress={this.state.proportionLoaded}
-								disabled={disabled}
+								disabled={disabled || this.state.sourceUnavailable}
 								forcePressed={this.state.slider5WayPressed}
 								onBlur={this.handleSliderBlur}
 								onChange={this.onSliderChange}
@@ -1787,13 +1784,13 @@ const VideoPlayerBase = class extends React.Component {
 									thumbnailComponent={thumbnailComponent}
 									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
-									hidden={!this.state.feedbackVisible}
+									hidden={!this.state.feedbackVisible || this.state.sourceUnavailable}
 								/>
 							</MediaSlider>}
 
 							<ComponentOverride
 								component={mediaControlsComponent}
-								mediaDisabled={disabled || this.state.mediaControlsDisabled}
+								mediaDisabled={disabled || this.state.sourceUnavailable}
 								onBackwardButtonClick={this.handleRewind}
 								onFastForward={this.handleFastForward}
 								onForwardButtonClick={this.handleFastForward}

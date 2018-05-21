@@ -9,6 +9,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Button` and `moonstone/IconButton` class name `small` to the list of allowed `css` overrides
 - `moonstone/ProgressBar` prop, `highlighted`, for when the UX needs to call special attention to a progress bar
 
+### Changed
+- `moonstone/VideoPlayer` to disable media slider when source is unavailable
+
 ### Fixed
 
 - `moonstone/IconButton` to allow external customization of the `Icon` vertical alignment (by setting `line-height`)
