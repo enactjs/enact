@@ -156,67 +156,56 @@ const CountableDiv = Countable('div');
 const CountableDivAsDataNumber = CountableAsDataNumber('div');
 ```
 
-## Adding Design-Time Customizations to Components
+## Customizing Components at Design-Time
 
-> NOTE: `factory()` is deprecated and will be removed in 2.0
+> NOTE: `factory()`, the previous experimental technique for doing this, is deprecated and will be removed in 2.0
 
-While many of our components are easily configured using properties, we've found that sometimes an app
-needs the more flexibility. Generally, this type of customization isn't variable at
-run-time and is primarily used to adjust the visual design of a component. To support this use case,
-we've introduced the `factory()` function.
+Occasionally, you'll want to modify the appearance of an Enact component, and the majority of that time, you can simply apply external styling to the outer-most element of the component, via `className` or `style`. However, what if you need to customize one of the deeper child elements?
 
-Like `hoc()`, `factory()` accepts a configuration object which is merged with the component's default
-configuration. Unlike `hoc()`, `factory()` only supports a known set of configuration keys rather
-than an arbitrary set. Currently, the only supported key is `css`, which allows authors to provide
-a custom CSS class name map which is merged with the component's CSS class name map. This feature
-allows for overriding the style of particular children within the component's internal
-hierarchy.
+We've got you covered! In Enact 2.0 we've added a built-in theming capability to make this significantly easier and even safer. Now, components built with the `kind` feature can use the `publicClassNames` key in their `styles` block of their component definition.
 
-A few important notes about this feature:
+The `publicClassNames` key allows a component to define an array of CSS class names that will be available for a component consumer to add styling to. **NOTE: GO INTO MORE DETAIL AND LINK TO OTHER PAGE** All components in `@enact/ui` and many in `@enact/moonstone` and other themes have already been imbued with this feature.
 
-* This is a recent addition to Enact and has not been widely adopted by framework components yet
-* In order to promote UX consistency, not every class will be customizable
-* We do not yet have a means to document which classes may be customized
+Use the theming system is as easy as importing your CSS/LESS file and passing it to the `css` prop on the component you want to customize. The class names defined in your CSS file that match the published class names of the target component will be applied directly to the internal elements of the component. They will be applied in addition to the existing class names, not in-leu of, so you can simply add your customizations, rather than repeat the existing styling.
 
-However, we do think this is an important feature for the framework and we will continue to roll it out
-throughout and improve the overall developer experience around it. Here's a short example to whet
-your appetite:
+How about an example to make this more clear. Let's customize the background color of a Moonstone [`Button`](../../../modules/moonstone/Button/). `Button` exposes several classes for customization: 'button', 'bg', 'small', and 'selected', and in this case we're interested in 'button' and 'bg'.  In our customized component LESS file, the following should do the trick:
 
 ```
-import factory from '@enact/core/factory';
-import kind from '@enact/core/kind';
-import React from 'react';
+// CustomButton.less
+//
+@import '~@enact/moonstone/styles/skin.less';
 
-import componentCss from './Button.less';
-
-const ButtonFactory = factory({css: componentCss}, ({css}) => {
-	return kind({
-		name: 'Button',
-
-		// Since 'button' will be resolved against the combined `css` map, it can be overridden too
-		styles: {
-			css,
-			className: 'button'
-		},
-
-		// Component authors can also prevent overrides by using their css map directly as is done
-		// with the `inner` class below
-		render: ({children, ...rest}) => (
-			<button {...rest}>
-				<div className={componentCss.inner}>
-					{children}
-				</div>
-			</button>
-		)
+.button {
+	.applySkins({
+		.bg {
+			background-color: orange;
+		}
 	});
+}
+```
+
+*The `.applySkins` is added here because Moonstone uses our skinning system too, which is in charge of applying colors independent from measurements, layout, and metrics.*
+
+Then, in our component we'll just apply the imported LESS file to the component with the `css` property.
+
+```
+import React from 'react';
+import kind from '@enact/core/kind';
+import Button from '@enact/moonstone/Button';
+
+import css from './CustomButton.less';
+
+const CustomButton = kind({
+	name: 'CustomizedButton',
+
+	render: ({children, ...rest}) => (
+		<Button {...rest} css={css}>{children}</Button>
+	)
 });
+
+export default CustomButton;
 ```
 
-```
-// If `buttonCss` includes a `button` class, it will be appended to the `button` class of the
-// `Button` component.
-import buttonCss from './CustomButton.less';
-CustomizedButton = ButtonFactory({css: buttonCss});
+Now, all we do in our app is import this `CustomButton` like any other, and it will be styled with our custom styling.
 
-<CustomizedButton />
-```
+For more details and advanced theming features and recommendations, see our [Themeing Guide](somewhere). **NOTE: Actually link this somewhere**
