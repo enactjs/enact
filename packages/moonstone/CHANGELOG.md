@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/IconButton` to allow external customization of the `Icon` vertical alignment (by setting `line-height`)
 - `moonstone/ContextualPopupDecorator` to not set focus to activator when closing if focus was set elsewhere
+- `moonstone/Marquee.MarqueeController` to not cancel valid animations
 - `moonstone/VideoPlayer` feedback and feedback icon to hide properly on play/pause/fast forward/rewind
 - `moonstone/VideoPlayer` to correctly focus to default media controls component
 - `moonstone/VideoPlayer` to show controls on mount and when playing next preload video
