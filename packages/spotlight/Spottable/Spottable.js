@@ -53,7 +53,11 @@ let pointerX = null;
 let pointerY = null;
 
 const isPointerChanged = ({clientX, clientY}) => (
-	Spotlight.getPointerMode() && (pointerX && pointerX !== clientX || pointerY && pointerY !== clientY)
+	Spotlight.getPointerMode() &&
+	(
+		pointerX !== null && pointerX !== clientX ||
+		pointerY !== null && pointerY !== clientY
+	)
 );
 
 /**

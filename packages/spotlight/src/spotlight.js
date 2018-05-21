@@ -617,7 +617,6 @@ const Spotlight = (function () {
 
 			const nextContainerIds = getContainersForNode(target);
 			const nextContainerId = last(nextContainerIds);
-
 			if (isNavigable(target, nextContainerId, true)) {
 				return focusElement(target, nextContainerIds);
 			} else if (wasContainerId) {
