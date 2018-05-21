@@ -12,11 +12,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/IconButton` to allow external customization of the `Icon` vertical alignment (by setting `line-height`)
-- `moonstone/Panels.Panel` to set the active container id on render
 - `moonstone/ContextualPopupDecorator` to not set focus to activator when closing if focus was set elsewhere
 - `moonstone/VideoPlayer` feedback and feedback icon to hide properly on play/pause/fast forward/rewind
 - `moonstone/VideoPlayer` to correctly focus to default media controls component
 - `moonstone/VideoPlayer` to show controls on mount and when playing next preload video
+- `moonstone/Panels.Panel` to set the active container id on render
 
 ## [2.0.0-beta.3] - 2018-05-14
 
