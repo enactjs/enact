@@ -215,7 +215,7 @@ const FeedbackTooltipBase = kind({
 });
 
 const FeedbackTooltip = onlyUpdateForKeys(
-	['children', 'noFeedback', 'playbackState', 'playbackRate', 'thumbnailComponent', 'thumbnailDeactivated', 'thumbnailSrc', 'visible']
+	['children', 'hidden', 'noFeedback', 'playbackState', 'playbackRate', 'thumbnailComponent', 'thumbnailDeactivated', 'thumbnailSrc', 'visible']
 )(
 	Skinnable(
 		FeedbackTooltipBase

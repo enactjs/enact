@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `core/handle.handle` utility `bindAs` to facilitate debugging and binding handlers to component instances
+
 ## [2.0.0-beta.3] - 2018-05-14
 
 No significant changes.
