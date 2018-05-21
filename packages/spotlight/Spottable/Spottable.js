@@ -49,6 +49,13 @@ let lastSelectTarget = null;
 // Should we prevent select being passed through
 let selectCancelled = false;
 
+let pointerX = null;
+let pointerY = null;
+
+const isPointerChanged = ({clientX, clientY}) => (
+	Spotlight.getPointerMode() && (pointerX && pointerX !== clientX || pointerY && pointerY !== clientY)
+);
+
 /**
  * Default configuration for Spottable
  *
@@ -333,12 +340,22 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleEnter = (ev) => {
 			forward('onMouseEnter', ev, this.props);
-			this.isHovered = true;
+			if (isPointerChanged) {
+				this.isHovered = true;
+			}
 		}
 
 		handleLeave = (ev) => {
 			forward('onMouseLeave', ev, this.props);
-			this.isHovered = false;
+			if (isPointerChanged) {
+				this.isHovered = false;
+			}
+		}
+
+		handleMove = (ev) => {
+			forward('onMouseMove', ev, this.props);
+			pointerX = ev.clientX;
+			pointerY = ev.clientY;
 		}
 
 		render () {
@@ -375,6 +392,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 					onFocus={this.handleFocus}
 					onMouseEnter={this.handleEnter}
 					onMouseLeave={this.handleLeave}
+					onMouseMove={this.handleMove}
 					onKeyDown={this.handleKeyDown}
 					onKeyUp={this.handleKeyUp}
 					disabled={disabled}

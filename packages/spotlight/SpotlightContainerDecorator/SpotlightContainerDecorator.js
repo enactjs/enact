@@ -23,6 +23,13 @@ import Spotlight from '../src/spotlight';
 const spotlightDefaultClass = 'spottable-default';
 const enterEvent = 'onMouseEnter';
 const leaveEvent = 'onMouseLeave';
+const moveEvent = 'onMouseMove';
+let pointerX = null;
+let pointerY = null;
+
+const isPointerChanged = ({clientX, clientY}) => (
+	Spotlight.getPointerMode() && (pointerX && pointerX !== clientX || pointerY && pointerY !== clientY)
+);
 
 /**
  * Default config for {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
@@ -114,6 +121,7 @@ const defaultConfig = {
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardMouseEnter = forward(enterEvent);
 	const forwardMouseLeave = forward(leaveEvent);
+	const forwardMouseMove = forward(moveEvent);
 	const {navigableFilter, preserveId, ...containerConfig} = config;
 
 	const stateFromProps = ({spotlightId}) => {
@@ -233,12 +241,14 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleMouseEnter = (ev) => {
-			Spotlight.setActiveContainer(this.state.id);
+			if (isPointerChanged(ev)) {
+				Spotlight.setActiveContainer(this.state.id);
+			}
 			forwardMouseEnter(ev, this.props);
 		}
 
 		handleMouseLeave = (ev) => {
-			if (this.props.spotlightRestrict !== 'self-only') {
+			if (this.props.spotlightRestrict !== 'self-only' && isPointerChanged(ev)) {
 				const parentContainer = ev.currentTarget.parentNode.closest('[data-spotlight-container]');
 				let activeContainer = Spotlight.getActiveContainer();
 
@@ -252,6 +262,12 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forwardMouseLeave(ev, this.props);
 		}
 
+		handleMouseMove = (ev) => {
+			pointerX = ev.clientX;
+			pointerY = ev.clientY;
+			forwardMouseMove(ev, this.props);
+		}
+
 		render () {
 			const {spotlightDisabled, spotlightMuted, ...rest} = this.props;
 			delete rest.containerId;
@@ -262,6 +278,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			rest['data-spotlight-id'] = this.state.id;
 			rest[enterEvent] = this.handleMouseEnter;
 			rest[leaveEvent] = this.handleMouseLeave;
+			rest[moveEvent] = this.handleMouseMove;
 
 			if (spotlightDisabled) {
 				rest['data-spotlight-container-disabled'] = spotlightDisabled;

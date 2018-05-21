@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` to handle pointer events only when pointer has moved
+
 ## [2.0.0-beta.3] - 2018-05-14
 
 ### Fixed

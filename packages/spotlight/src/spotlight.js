@@ -411,8 +411,9 @@ const Spotlight = (function () {
 		if (shouldPreventNavigation()) return;
 
 		const {target} = evt;
+		const {x, y} = getLastPointerPosition();
 
-		if (getPointerMode()) {
+		if (getPointerMode() && (x !== evt.clientX || y !== evt.clientY)) {
 			const next = getNavigableTarget(target); // account for child controls
 
 			if (next && next !== getCurrent()) {
@@ -616,6 +617,7 @@ const Spotlight = (function () {
 
 			const nextContainerIds = getContainersForNode(target);
 			const nextContainerId = last(nextContainerIds);
+
 			if (isNavigable(target, nextContainerId, true)) {
 				return focusElement(target, nextContainerIds);
 			} else if (wasContainerId) {

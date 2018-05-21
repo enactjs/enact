@@ -131,6 +131,7 @@ const PanelBase = kind({
 				}
 
 				Spotlight.set(spotlightId, config);
+				Spotlight.setActiveContainer(spotlightId);
 				Spotlight.focus(spotlightId);
 			}
 		}
