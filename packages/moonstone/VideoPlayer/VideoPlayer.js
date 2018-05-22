@@ -764,23 +764,24 @@ const VideoPlayerBase = class extends React.Component {
 		this.startDelayedFeedbackHide();
 		this.startDelayedTitleHide();
 
-		let {announce} = this.state;
-		if (announce === AnnounceState.READY) {
-			// if we haven't read the title yet, do so this time
-			announce = AnnounceState.TITLE;
-		} else if (announce === AnnounceState.TITLE) {
-			// if we have read the title, advance to INFO so title isn't read again
-			announce = AnnounceState.TITLE_READ;
-		}
+		this.setState(({announce}) => {
+			if (announce === AnnounceState.READY) {
+				// if we haven't read the title yet, do so this time
+				announce = AnnounceState.TITLE;
+			} else if (announce === AnnounceState.TITLE) {
+				// if we have read the title, advance to INFO so title isn't read again
+				announce = AnnounceState.TITLE_READ;
+			}
 
-		this.setState({
-			announce,
-			bottomControlsRendered: true,
-			feedbackVisible: true,
-			mediaControlsVisible: true,
-			mediaSliderVisible: true,
-			miniFeedbackVisible: false,
-			titleVisible: true
+			return {
+				announce,
+				bottomControlsRendered: true,
+				feedbackVisible: true,
+				mediaControlsVisible: true,
+				mediaSliderVisible: true,
+				miniFeedbackVisible: false,
+				titleVisible: true
+			};
 		});
 	}
 
@@ -862,9 +863,12 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	showFeedback = () => {
-		if (this.state.mediaControlsVisible && !this.state.feedbackVisible) {
-			this.setState({feedbackVisible: true});
-		} else if (!this.state.mediaControlsVisible) {
+		if (this.state.mediaControlsVisible) {
+			this.setState({
+				feedbackIconVisible: true,
+				feedbackVisible: true
+			});
+		} else {
 			const shouldShowSlider = this.pulsedPlaybackState !== null || calcNumberValueOfPlaybackRate(this.playbackRate) !== 1;
 
 			if (this.showMiniFeedback && (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider)) {
@@ -936,6 +940,8 @@ const VideoPlayerBase = class extends React.Component {
 			proportionPlayed: 0,
 			proportionLoaded: 0
 		});
+
+		this.showControls();
 	}
 
 	handlePlay = this.handle(
@@ -1034,6 +1040,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	renderBottomControl = new Job(() => {
+		this.showControls();
 		this.setState({bottomControlsRendered: true});
 	});
 
@@ -1441,7 +1448,7 @@ const VideoPlayerBase = class extends React.Component {
 			this.player.querySelector(
 				`.${css.leftComponents} ${defaultSpottable}, .${css.rightComponents} ${defaultSpottable}`
 			) ||
-			'data-media-controls';
+			this.player.querySelector(`[data-media-controls] ${defaultSpottable}`);
 
 		return defaultControl ? Spotlight.focus(defaultControl) : false;
 	}
@@ -1507,7 +1514,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.sliderScrubbing = false;
 		this.startDelayedFeedbackHide();
 		this.setState({
-			feedbackIconVisible: true,
+			// If paused is false that means it is playing. We only want to hide on playing.
+			feedbackIconVisible: this.state.paused,
 			sliderTooltipTime: this.state.currentTime
 		});
 	}

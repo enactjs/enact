@@ -7,6 +7,11 @@ class VideoSourceSwap extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
+			videoTitles: [
+				'Big Buck Bunny',
+				'Sintel',
+				'VideoTest'
+			],
 			playlist: [
 				'http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov',
 				'http://media.w3.org/2010/05/sintel/trailer.mp4',
@@ -59,7 +64,12 @@ class VideoSourceSwap extends React.Component {
 				{button('Next Preload Video without changing preload', this.nextVideoKeepPreload)}
 				{button('Change Preload without changing video', this.nextPreloadVideoKeepVideo)}
 				{button('Reset Sources', this.resetSources)}
-				<VideoPlayer muted>
+				<VideoPlayer
+					muted
+					onJumpBackward={this.differentVideo}
+					onJumpForward={this.nextVideo}
+					title={this.state.videoTitles[this.state.cursor]}
+				>
 					<Video>
 						<source src={this.state.playlist[this.state.cursor]} />
 						<source src={this.state.playlist[this.state.preloadCursor]} slot="preloadSource" />
