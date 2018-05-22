@@ -114,8 +114,8 @@ const VideoBase = class extends React.Component {
 				// if there's source and it was the preload source
 
 				// if the preloaded video didn't error, notify VideoPlayer it is ready to reset
-				if (!this.video.error) {
-					forward('onReady', {type: 'onReady'}, this.props);
+				if (this.preloadLoadStart) {
+					forward('onLoadStart', this.preloadLoadStart, this.props);
 				}
 
 				// emit onUpdate to give VideoPlayer an opportunity to updates its internal state
@@ -130,6 +130,8 @@ const VideoBase = class extends React.Component {
 		}
 
 		if (preloadSource && preloadKey !== prevPreloadKey) {
+			this.preloadLoadStart = null;
+
 			// In the case that the previous source equalled the previous preload (causing the
 			// preload video node to not be created) and then the preload source was changed, we
 			// need to guard against accessing the preloadVideo node.
@@ -141,6 +143,15 @@ const VideoBase = class extends React.Component {
 
 	componentWillUnmount () {
 		this.clearMedia();
+	}
+
+	handlePreloadLoadStart = (ev) => {
+		// persist the event so we can cache it to re-emit when the preload becomes active
+		ev.persist();
+		this.preloadLoadStart = ev;
+
+		// prevent the from bubbling to upstream handlers
+		ev.stopPropagation();
 	}
 
 	clearMedia ({setMedia} = this.props) {
@@ -216,6 +227,7 @@ const VideoBase = class extends React.Component {
 						controls={false}
 						key={preloadKey}
 						mediaComponent={mediaComponent}
+						onLoadStart={this.handlePreloadLoadStart}
 						preload="none"
 						ref={this.setPreloadRef}
 						source={React.isValidElement(preloadSource) ? preloadSource : (

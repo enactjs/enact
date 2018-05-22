@@ -926,7 +926,7 @@ const VideoPlayerBase = class extends React.Component {
 		return true;
 	}
 
-	handleReady = () => {
+	handleLoadStart = () => {
 		this.firstPlayReadFlag = true;
 		this.prevCommand = this.props.noAutoPlay ? 'pause' : 'play';
 		this.speedIndex = 0;
@@ -1643,7 +1643,7 @@ const VideoPlayerBase = class extends React.Component {
 		mediaProps.controls = false;
 		mediaProps.mediaComponent = 'video';
 		mediaProps.onPlay = this.handlePlayEvent;
-		mediaProps.onReady = this.handleReady;
+		mediaProps.onLoadStart = this.handleLoadStart;
 		mediaProps.onUpdate = this.handleEvent;
 		mediaProps.ref = this.setVideoRef;
 
