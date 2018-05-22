@@ -1,5 +1,5 @@
 import deprecate from '@enact/core/internal/deprecate';
-import {forward, stopImmediate} from '@enact/core/handle';
+import {call, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {getDirection, Spotlight} from '@enact/spotlight';
@@ -23,6 +23,11 @@ const isSelectionAtLocation = (target, location) => {
 	}
 };
 
+const handleKeyDown = handle(
+	forwardWithPrevent('onKeyDown'),
+	call('onKeyDown')
+);
+
 /**
  * {@link moonstone/Input.InputSpotlightDecorator} is a Higher-order Component that manages the
  * spotlight behavior for an {@link moonstone/Input.Input}
@@ -37,7 +42,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 	const forwardBlur = forward('onBlur');
 	const forwardMouseDown = forward('onMouseDown');
 	const forwardFocus = forward('onFocus');
-	const forwardKeyDown = forward('onKeyDown');
 	const forwardKeyUp = forward('onKeyUp');
 
 	return class extends React.Component {
@@ -128,6 +132,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			};
 
 			this.paused = new Pause('InputSpotlightDecorator');
+			this.handleKeyDown = handleKeyDown.bind(this);
 
 			if (props.noDecorator) {
 				deprecate({name: 'noDecorator', since: '1.3.0', replacedBy: 'autoFocus'});
@@ -242,7 +247,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		onKeyDown = (ev) => {
+		onKeyDown (ev) {
 			const {currentTarget, keyCode, preventDefault, target} = ev;
 
 			// cache the target if this is the first keyDown event to ensure the component had focus
@@ -296,7 +301,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					stopImmediate(ev);
 				}
 			}
-			forwardKeyDown(ev, this.props);
 		}
 
 		onKeyUp = (ev) => {
@@ -342,7 +346,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					onBlur={this.onBlur}
 					onMouseDown={this.onMouseDown}
 					onFocus={this.onFocus}
-					onKeyDown={this.onKeyDown}
+					onKeyDown={this.handleKeyDown}
 					onKeyUp={this.onKeyUp}
 				/>
 			);

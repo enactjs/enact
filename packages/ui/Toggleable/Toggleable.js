@@ -22,8 +22,19 @@ const defaultConfig = {
 	/**
 	 * Configures the event name that activates the component.
 	 *
-	 * Note: When using `activate`/`deactivate` instead of `toggle`, set `toggle` to `null` to
-	 * prevent passing the default `onToggle` prop to the wrapped component.
+	 * Note: When using `activate`/`deactivate`, the event payload will only forward the original
+	 * event and not include toggled `prop` value. Use `toggle` to receive toggled value from the
+	 * event payload.
+	 *
+	 * Example:
+	 * ```
+	 * const ToggleItem = Toggleable({activate: 'onFocus', deactivate: 'onBlur'}, Item);
+	 *
+	 * handleEvent = (ev) => {
+	 * 	// do something with `ev.selected` here
+	 * }
+	 *
+	 * <ToggleItem onToggle={handleEvent}>This is a toggle item</Item>
 	 *
 	 * @type {String}
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
@@ -33,9 +44,20 @@ const defaultConfig = {
 	/**
 	 * Configures the event name that deactivates the component.
 	 *
-	 * Note: When using `activate`/`deactivate` instead of `toggle`, set `toggle` to `null` to
-	 * prevent passing the default `onToggle` prop to the wrapped component.
+	 * Note: When using `activate`/`deactivate`, the event payload will only forward the original
+	 * event and not include toggled `prop` value. Use `toggle` to receive toggled value from the
+	 * event payload.
 	 *
+	 * Example:
+	 * ```
+	 * const ToggleItem = Toggleable({activate: 'onFocus', deactivate: 'onBlur'}, Item);
+	 *
+	 * handleEvent = (ev) => {
+	 * 	// do something with `ev.selected` here
+	 * }
+	 *
+	 * <ToggleItem onToggle={handleEvent}>This is a toggle item</Item>
+	 * ```
 	 * @type {String}
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
 	 */
@@ -51,7 +73,11 @@ const defaultConfig = {
 	prop: 'selected',
 
 	/**
-	 * Configures the event name that toggles the component.
+	 * Configures the event name that toggles the component. The payload includes a toggled boolean
+	 * value of `prop`.
+	 *
+	 * Note: The payload will override the original event. If a native event is set, then the native
+	 * event payload will be lost.
 	 *
 	 * @type {String}
 	 * @default 'onToggle'
@@ -73,9 +99,12 @@ const defaultConfig = {
 
 /**
  * {@link ui/Toggleable.Toggleable} is a Higher-order Component that applies a 'Toggleable' behavior
- * to its wrapped component.  Its default event and property can be configured when applied to a component.
+ * to its wrapped component. Its default event and property can be configured when applied to a component.
  *
- * By default, Toggleable applies the `active` property on click events.
+ * Example:
+ * ```
+ * 	const ToggleItem = Toggleable({toggleProp: 'onClick'}, Item);
+ * ```
  *
  * @class Toggleable
  * @memberof ui/Toggleable
@@ -177,13 +206,15 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleActivate = this.handle(
 			forProp('disabled', false),
-			this.forwardWithState(activate),
+			forward(activate),
+			this.forwardWithState(toggle),
 			() => this.updateActive(true)
 		)
 
 		handleDeactivate = this.handle(
 			forProp('disabled', false),
-			this.forwardWithState(deactivate),
+			forward(deactivate),
+			this.forwardWithState(toggle),
 			() => this.updateActive(false)
 		)
 

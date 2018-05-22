@@ -76,6 +76,15 @@ class ScrollableBaseNative extends Component {
 		'data-spotlight-container': PropTypes.bool,
 
 		/**
+		 * `false` if the content of the list or the scroller could get focus
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		'data-spotlight-container-disabled': PropTypes.bool,
+
+		/**
 		 * This is passed onto the wrapped component to allow
 		 * it to customize the spotlight container for its use case.
 		 *
@@ -146,6 +155,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	static defaultProps = {
+		'data-spotlight-container-disabled': false,
 		focusableScrollbar: false
 	}
 
@@ -380,7 +390,7 @@ class ScrollableBaseNative extends Component {
 			pageDistance = (isPageUp(keyCode) ? -1 : 1) * (canScrollVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
 			spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem) {
+		if (spotItem) {
 			// Should skip scroll by page when spotItem is paging control button of Scrollbar
 			if (!childRef.containerRef.contains(spotItem)) {
 				return;
@@ -435,7 +445,9 @@ class ScrollableBaseNative extends Component {
 		this.animateOnFocus = true;
 		if (isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) {
 			ev.preventDefault();
-			if (!ev.repeat && this.hasFocus()) {
+			if (Spotlight.getPointerMode()) {
+				ev.stopPropagation();
+			} else if (!ev.repeat && this.hasFocus()) {
 				this.scrollByPage(ev.keyCode);
 			}
 		}
@@ -553,6 +565,7 @@ class ScrollableBaseNative extends Component {
 			{
 				childRenderer,
 				'data-spotlight-container': spotlightContainer,
+				'data-spotlight-container-disabled': spotlightContainerDisabled,
 				'data-spotlight-id': spotlightId,
 				scrollRightAriaLabel,
 				scrollLeftAriaLabel,
@@ -597,6 +610,7 @@ class ScrollableBaseNative extends Component {
 					<div
 						className={className}
 						data-spotlight-container={spotlightContainer}
+						data-spotlight-container-disabled={spotlightContainerDisabled}
 						data-spotlight-id={spotlightId}
 						ref={initUiContainerRef}
 						style={style}

@@ -2,6 +2,52 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.0.0-beta.4] - 2018-05-21
+
+### Added
+
+- `core/handle.handle` utility `bindAs` to facilitate debugging and binding handlers to component instances
+- `moonstone/Button` and `moonstone/IconButton` class name `small` to the list of allowed `css` overrides
+- `moonstone/ProgressBar` prop `highlighted` for when the UX needs to call special attention to a progress bar
+
+### Fixed
+
+- `moonstone/ContextualPopupDecorator` to not set focus to activator when closing if focus was set elsewhere
+- `moonstone/IconButton` to allow external customization of vertical alignment of its `Icon` by setting `line-height`
+- `moonstone/Marquee.MarqueeController` to not cancel valid animations
+- `moonstone/VideoPlayer` feedback and feedback icon to hide properly on play/pause/fast forward/rewind
+- `moonstone/VideoPlayer` to correctly focus to default media controls component
+- `moonstone/VideoPlayer` to show controls on mount and when playing next preload video
+- `moonstone/VirtualList`, `moonstone/VirtualGridList`, `ui/VirtualList`, and `ui/VirtualGridList` samples to show items properly when `dataSize` is greater than 1000
+- `spotlight/Spottable` to not make components spottable when `spotlightDisabled` is set
+- `ui/Touchable` to guard against null events
+
+## [2.0.0-beta.3] - 2018-05-14
+
+### Added
+
+- `moonstone/SelectableItem.SelectableItemDecorator`
+- `ui/Touchable` support to fire `onTap` when a `click` event occurs
+
+### Changed
+
+- `moonstone/ToggleItem` to forward native events on `onFocus` and `onBlur`
+- `moonstone/Input` and `moonstone/ExpandableInput` to support forwarding valid `<input>` props to the contained `<input>` node
+- `moonstone/ToggleButton` to fire `onToggle` when toggled
+- `ui/Touchable` custom events `onDown`, `onUp`, `onMove`, and `onTap` to use the event name as the `type` rather than the shorter name (e.g. `onTap` rather than `tap`)
+- `ui/Toggleable` to forward events on `activate` and `deactivate` instead of firing toggled payload. Use `toggle` to handle toggled payload from the event.
+
+### Fixed
+
+- `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` to ignore any user key events in pointer mode
+- `moonstone/Image` so it automatically swaps the `src` to the appropriate resolution dynamically as the screen resizes
+- `moonstone/Popup` to support all `spotlightRestrict` options
+- `moonstone` component `disabled` colors to match the most recent design guidelines (from 30% to 60% opacity)
+- `moonstone/ExpandableInput` spotlight behavior when leaving the component via 5-way
+- `spotlight` to retry setting focus when the window is activated
+- `spotlight` handling of 5-way events after the pointer hides
+
+
 ## [2.0.0-beta.2] - 2018-05-07
 
 ### Fixed
@@ -11,11 +57,11 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/ExpandableItem` and related expandables to deal with disabled items and the `autoClose`, `lockBottom` and `noLockBottom` props
 - `moonstone/Slider` not to fire `onChange` event when 5-ways out of boundary
 - `moonstone/ToggleButton` layout for RTL locales
-- `moonstone/Item`, `moonstone/SlotItem`, `moonstone/ToggleItem` to properly apply `className`
-- `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` scrollbar button's aria-lable in RTL
+- `moonstone/Item`, `moonstone/SlotItem`, `moonstone/ToggleItem` to not apply duplicate `className` values
+- `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` scrollbar button's aria-label in RTL
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to scroll properly with all disabled items
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to not scroll on focus when jumping
-- `spotlight/Spottable` to not set its focused state when disabled
+- `spotlight/Spottable` to not add a focused state when a component had already been set as disabled
 - `ui/Marquee` to always marquee when `marqueeOn` is set to `'render'`
 - `ui/Item` to use its natural width rather than imposing a 100% width allowing inline Items to be the correct width
 - `ui/Marquee.MarqueeDecorator` to correctly reset animation when `children` updates

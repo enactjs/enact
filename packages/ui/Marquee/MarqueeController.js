@@ -208,7 +208,9 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		handleCancel = () => {
-			this.cancelJob.start();
+			if (this.anyRunning()) {
+				this.cancelJob.start();
+			}
 		}
 
 		doCancel = () => {
@@ -265,7 +267,9 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		handleBlur = (ev) => {
 			this.isFocused = false;
-			this.cancelJob.start();
+			if (this.anyRunning()) {
+				this.cancelJob.start();
+			}
 			forwardBlur(ev, this.props);
 		}
 
