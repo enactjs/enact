@@ -175,9 +175,10 @@ const handleGlobalMove = handle(
 	call('moveGesture')
 );
 
-const handleOnBlur = handle(
+const handleBlur = handle(
 	forward('onBlur'),
-	handleLeave
+	call('hasFocus'),
+	call('leaveGesture')
 );
 
 /**
@@ -390,6 +391,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			});
 
 			this.target = null;
+			this.targetHadFocus = false;
 			this.handle = handle.bind(this);
 			this.drag = new Drag();
 			this.flick = new Flick();
@@ -413,7 +415,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.handleTouchEnd = handleTouchEnd.bind(this);
 			this.handleGlobalUp = handleGlobalUp.bind(this);
 			this.handleGlobalMove = handleGlobalMove.bind(this);
-			this.handleOnBlur = handleOnBlur.bind(this);
+			this.handleBlur = handleBlur.bind(this);
 		}
 
 		componentDidMount () {
@@ -514,6 +516,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.flick.begin(flick, props, coords);
 			this.drag.begin(drag, props, coords, this.target);
 
+			this.targetHadFocus = this.target === document.activeElement;
+
 			return true;
 		}
 
@@ -535,6 +539,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		leaveGesture () {
+			this.targetHadFocus = false;
+
 			this.drag.leave();
 			this.hold.leave();
 
@@ -542,6 +548,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		endGesture () {
+			this.targetHadFocus = false;
+
 			this.hold.end();
 			this.flick.end();
 			this.drag.end();
@@ -558,6 +566,10 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		isPaused () {
 			return this.state.active === States.Paused;
+		}
+
+		hasFocus () {
+			return this.targetHadFocus;
 		}
 
 		hasTouchLeftTarget (ev) {
@@ -586,7 +598,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			props.onMouseMove = this.handleMouseMove;
 			props.onMouseEnter = this.handleMouseEnter;
 			props.onMouseUp = this.handleMouseUp;
-			props.onBlur = this.handleOnBlur;
+			props.onBlur = this.handleBlur;
 
 			if (platform.touch) {
 				props.onTouchStart = this.handleTouchStart;
