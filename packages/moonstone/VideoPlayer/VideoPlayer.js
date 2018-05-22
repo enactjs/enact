@@ -234,31 +234,6 @@ const VideoPlayerBase = class extends React.Component {
 		mediaControlsComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
 
 		/**
-		 * Overries the default media slider component to support customized behaviors.
-		 *
-		 * The provided component will receive the following props from `VideoPlayer`
-		 *
-		 * * backgroundProgress - The proportion of the video loaded
-		 * * children           - A tooltip component
-		 * * disabled           - `true` when the slider is not interactive
-		 * * forcePressed       - `true` when the slider's knob should appear pressed
-		 * * onBlur             - Called when the slider loses focus
-		 * * onChange           - Called when the user has changed the slider's value
-		 * * onFocus            - Called when the slider gains focus
-		 * * onKeyDown          - Called when a key is pressed
-		 * * onKnobMove         - Called when the knob is moved when in preview mode
-		 * * onSpotlightUp      - Called when pressing the "up" key
-		 * * spotlightDisabled  - `true` when spotlight is disabled for the slider
-		 * * value              - The current play time of the video as a proportion of its duration
-		 * * visible            - `true` if the slider should be displayed
-		 *
-		 * @type {Component|Element}
-		 * @default `moonstone/VideoPlayer.MediaSlider`
-		 * @public
-		 */
-		mediaSliderComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-
-		/**
 		 * Amount of time (in milliseconds), after the last user action, that the `miniFeedback`
 		 * will automatically hide.
 		 * Setting this to 0 or `null` disables `miniFeedbackHideDelay`; `miniFeedback` will always
@@ -564,7 +539,6 @@ const VideoPlayerBase = class extends React.Component {
 		feedbackHideDelay: 3000,
 		jumpBy: 30,
 		mediaControlsComponent: MediaControls,
-		mediaSliderComponent: MediaSlider,
 		miniFeedbackHideDelay: 2000,
 		playbackRateHash: {
 			fastForward: ['2', '4', '8', '16'],
@@ -1663,7 +1637,6 @@ const VideoPlayerBase = class extends React.Component {
 			infoComponents,
 			loading,
 			mediaControlsComponent,
-			mediaSliderComponent,
 			noAutoPlay,
 			noMiniFeedback,
 			noSlider,
@@ -1783,9 +1756,8 @@ const VideoPlayerBase = class extends React.Component {
 							}
 
 							{noSlider ? null : (
-								<ComponentOverride
+								<MediaSlider
 									backgroundProgress={this.state.proportionLoaded}
-									component={mediaSliderComponent}
 									disabled={disabled}
 									forcePressed={this.state.slider5WayPressed}
 									onBlur={this.handleSliderBlur}
@@ -1809,7 +1781,7 @@ const VideoPlayerBase = class extends React.Component {
 										thumbnailSrc={thumbnailSrc}
 										hidden={!this.state.feedbackVisible}
 									/>
-								</ComponentOverride>
+								</MediaSlider>
 							)}
 
 							<ComponentOverride

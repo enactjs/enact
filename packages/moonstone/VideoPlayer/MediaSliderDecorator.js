@@ -49,30 +49,15 @@ const handleKeyDown = handle(
 	stopImmediate
 );
 
-const mayCancelSelect = handle(
-	({value}, {selection}) => {
-		if (selection != null) {
-			const [start, end] = selection;
+const isValueBeyondSelection = ({selection, value}) => {
+	if (selection != null) {
+		const [start, end] = selection;
 
-			return value > end || value < start;
-		}
+		return value > end || value < start;
+	}
 
-		return false;
-	},
-	forward('onSelectCancel')
-);
-
-const handleKeyUp = handle(
-	forward('onKeyUp'),
-	call('isTracking'),
-	forKey('enter'),
-	// prevent moonstone/Slider from activating the knob
-	preventDefault,
-	adaptEvent(call('getEventPayload'), handle(
-		forward('onChange'),
-		mayCancelSelect
-	))
-);
+	return false;
+};
 
 /**
  * MediaSlider for {@link moonstone/VideoPlayer}.
@@ -103,12 +88,11 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 			this.handleBlur = handleBlur.bind(this);
 			this.handleFocus = handleFocus.bind(this);
 			this.handleKeyDown = handleKeyDown.bind(this);
-			this.handleKeyUp = handleKeyUp.bind(this);
 
 			this.state = {
 				maxX: 0,
 				minX: 0,
-				progressAnchor: props.value || 0,
+				progressAnchor: props.selectionMode ? props.value : 0,
 				tracking: false,
 				x: 0
 			};
@@ -132,12 +116,17 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 
 		componentDidUpdate (prevProps, prevState) {
 			if (prevState.x !== this.state.x) {
-				forward('onKnobMove', this.getEventPayload(), this.props);
+				forward('onKnobMove', this.getEventPayload('onKnobMove'), this.props);
+			}
+
+			if (prevProps.value !== this.props.value && isValueBeyondSelection(this.props)) {
+				forward('onSelectCancel', this.getEventPayload('onSelectCancel'), this.props);
 			}
 		}
 
-		getEventPayload () {
+		getEventPayload (type) {
 			return {
+				type,
 				value: this.state.x,
 				proportion: this.state.x
 			};
@@ -226,7 +215,6 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 					onBlur={this.handleBlur}
 					onFocus={this.handleFocus}
 					onKeyDown={this.handleKeyDown}
-					onKeyUp={this.handleKeyUp}
 					onMouseOver={this.handleMouseOver}
 					onMouseOut={this.handleMouseOut}
 					onMouseMove={this.handleMouseMove}
