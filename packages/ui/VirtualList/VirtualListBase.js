@@ -769,6 +769,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.rtl;
 			delete rest.spacing;
 			delete rest.updateStatesAndBounds;
+			delete rest.isVerticalScrollbarVisible;
 
 			if (primary) {
 				this.positionItems();

@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Scroller` to not cut off expandables when scrollbar appears
+
 ## [2.0.0-beta.4] - 2018-05-21
 
 ### Added
