@@ -7,7 +7,7 @@ import {boolean, select, text} from '@storybook/addon-knobs';
 
 const iconNames = ['', ...Object.keys(icons)];
 
-const divMargin = {margin: '12px'};
+const divMargin = () => ({margin: '12px'});
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -132,7 +132,7 @@ storiesOf('Input', module)
 		'5 way test',
 		() => (
 			<div>
-				<div style={divMargin}>
+				<div style={divMargin()}>
 					<Input
 						autoFocus={boolean('autoFocus')}
 						onChange={action('onChange')}
@@ -156,7 +156,7 @@ storiesOf('Input', module)
 						defaultValue={inputData.initialValue + ' two'}
 					/>
 				</div>
-				<div style={divMargin}>
+				<div style={divMargin()}>
 					<Input
 						autoFocus={boolean('autoFocus')}
 						onChange={action('onChange')}

@@ -9,12 +9,12 @@ import {select} from '@storybook/addon-knobs';
 const ContextualButton = ContextualPopupDecorator(Button);
 ContextualButton.displayName = 'ContextualButton';
 
-const buttonMargin = {margin: '12px'};
+const buttonMargin = () => ({margin: ri.unit(12, 'rem')});
 
 const renderPopup = () => (
 	<div style={{width: ri.unit(600, 'rem')}}>
-		<Button style={buttonMargin}>First Button</Button>
-		<Button style={buttonMargin}>Hello Spottable Button</Button>
+		<Button style={buttonMargin()}>First Button</Button>
+		<Button style={buttonMargin()}>Hello Spottable Button</Button>
 	</div>
 );
 
