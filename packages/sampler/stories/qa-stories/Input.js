@@ -1,5 +1,6 @@
 import {icons} from '@enact/moonstone/Icon';
 import {Input, InputBase} from '@enact/moonstone/Input';
+import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
@@ -7,7 +8,7 @@ import {boolean, select, text} from '@storybook/addon-knobs';
 
 const iconNames = ['', ...Object.keys(icons)];
 
-const divMargin = () => ({margin: '12px'});
+const divMargin = () => ({margin: ri.unit(12, 'rem')});
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
