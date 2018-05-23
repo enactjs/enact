@@ -178,7 +178,7 @@ const handleGlobalMove = handle(
 const handleBlur = handle(
 	forward('onBlur'),
 	call('hasFocus'),
-	call('leaveGesture')
+	call('endGesture')
 );
 
 /**
@@ -539,8 +539,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		leaveGesture () {
-			this.targetHadFocus = false;
-
 			this.drag.leave();
 			this.hold.leave();
 
