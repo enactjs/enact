@@ -86,6 +86,10 @@ const ButtonBase = kind({
 		css: PropTypes.object
 	},
 
+	defaultProps: {
+		backgroundOpacity: 'opaque'
+	},
+
 	styles: {
 		css: componentCss,
 		publicClassNames: ['button', 'bg', 'selected', 'small']
