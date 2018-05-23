@@ -4,7 +4,6 @@
  * @module moonstone/VideoPlayer
  * @exports VideoPlayer
  * @exports VideoPlayerBase
- * @exports MediaSlider
  * @exports MediaControls
  */
 
@@ -211,21 +210,21 @@ const VideoPlayerBase = class extends React.Component {
 		 *
 		 * The provided component will receive the following props from `VideoPlayer`:
 		 *
-		 * * `mediaDisabled`             - `true` when the media controls are not interactive
-		 * * `onBackwardButtonClick`     - Called when the rewind button is pressed
-		 * * `onFastForward`             - Called when the media is fast forwarded via a key event
-		 * * `onForwardButtonClick`      - Called when the fast forward button is pressed
-		 * * `onJump`                    - Called when the media jumps either forward or backward
+		 * * `mediaDisabled` - `true` when the media controls are not interactive
+		 * * `onBackwardButtonClick` - Called when the rewind button is pressed
+		 * * `onFastForward` - Called when the media is fast forwarded via a key event
+		 * * `onForwardButtonClick` - Called when the fast forward button is pressed
+		 * * `onJump` - Called when the media jumps either forward or backward
 		 * * `onJumpBackwardButtonClick` - Called when the jump backward button is pressed
-		 * * `onJumpForwardButtonClick`  - Called when the jump forward button is pressed
-		 * * `onKeyDown`                 - Called when a key is pressed
-		 * * `onPause`                   - Called when the media is paused via a key event
-		 * * `onPlay`                    - Called when the media is played via a key event
-		 * * `onRewind`                  - Called when the media is rewound via a key event
-		 * * `onToggleMore`              - Called when the more components are hidden or shown
-		 * * `paused`                    - `true` when the media is paused
-		 * * `spotlightDisabled`         - `true` when spotlight is disabled for the media controls
-		 * * `visible`                   - `true` when the media controls should be displayed
+		 * * `onJumpForwardButtonClick` - Called when the jump forward button is pressed
+		 * * `onKeyDown` - Called when a key is pressed
+		 * * `onPause` - Called when the media is paused via a key event
+		 * * `onPlay` - Called when the media is played via a key event
+		 * * `onRewind` - Called when the media is rewound via a key event
+		 * * `onToggleMore` - Called when the more components are hidden or shown
+		 * * `paused` - `true` when the media is paused
+		 * * `spotlightDisabled` - `true` when spotlight is disabled for the media controls
+		 * * `visible` - `true` when the media controls should be displayed
 		 *
 		 * @type {Component|Element}
 		 * @default `moonstone/VideoPlayer.MediaControls`
@@ -1826,35 +1825,33 @@ const VideoPlayerBase = class extends React.Component {
 								null
 							}
 
-							{noSlider ? null : (
-								<MediaSlider
-									backgroundProgress={this.state.proportionLoaded}
-									disabled={disabled}
-									forcePressed={this.state.slider5WayPressed}
-									onBlur={this.handleSliderBlur}
-									onChange={this.onSliderChange}
-									onFocus={this.handleSliderFocus}
-									onKeyDown={this.handleSliderKeyDown}
-									onKnobMove={this.handleKnobMove}
-									onSpotlightUp={this.handleSpotlightUpFromSlider}
-									selection={proportionSelection}
-									spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
-									value={this.state.proportionPlayed}
-									visible={this.state.mediaSliderVisible}
-								>
-									<FeedbackTooltip
-										duration={this.state.duration}
-										formatter={this.durfmt}
-										noFeedback={!this.state.feedbackIconVisible}
-										playbackRate={this.selectPlaybackRate(this.speedIndex)}
-										playbackState={this.prevCommand}
-										thumbnailComponent={thumbnailComponent}
-										thumbnailDeactivated={this.props.thumbnailUnavailable}
-										thumbnailSrc={thumbnailSrc}
-										hidden={!this.state.feedbackVisible}
-									/>
-								</MediaSlider>
-							)}
+							{noSlider ? null : <MediaSlider
+								backgroundProgress={this.state.proportionLoaded}
+								disabled={disabled}
+								forcePressed={this.state.slider5WayPressed}
+								onBlur={this.handleSliderBlur}
+								onChange={this.onSliderChange}
+								onFocus={this.handleSliderFocus}
+								onKeyDown={this.handleSliderKeyDown}
+								onKnobMove={this.handleKnobMove}
+								onSpotlightUp={this.handleSpotlightUpFromSlider}
+								selection={proportionSelection}
+								spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
+								value={this.state.proportionPlayed}
+								visible={this.state.mediaSliderVisible}
+							>
+								<FeedbackTooltip
+									duration={this.state.duration}
+									formatter={this.durfmt}
+									noFeedback={!this.state.feedbackIconVisible}
+									playbackRate={this.selectPlaybackRate(this.speedIndex)}
+									playbackState={this.prevCommand}
+									thumbnailComponent={thumbnailComponent}
+									thumbnailDeactivated={this.props.thumbnailUnavailable}
+									thumbnailSrc={thumbnailSrc}
+									hidden={!this.state.feedbackVisible}
+								/>
+							</MediaSlider>}
 
 							<ComponentOverride
 								component={mediaControlsComponent}
@@ -1956,7 +1953,7 @@ const VideoPlayer = ApiDecorator(
 		'toggleControls'
 	]},
 	Slottable(
-		{slots: ['infoComponents', 'mediaControlsComponent', 'mediaSliderComponent', 'source', 'thumbnailComponent']},
+		{slots: ['infoComponents', 'mediaControlsComponent', 'source', 'thumbnailComponent']},
 		FloatingLayerDecorator(
 			{floatLayerId: 'videoPlayerFloatingLayer'},
 			Skinnable(
@@ -1969,7 +1966,6 @@ const VideoPlayer = ApiDecorator(
 export default VideoPlayer;
 export {
 	MediaControls,
-	MediaSlider,
 	VideoPlayer,
 	VideoPlayerBase
 };
