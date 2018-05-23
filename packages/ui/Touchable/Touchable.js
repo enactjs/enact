@@ -404,7 +404,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 			handleClick.bindAs(this, 'handleClick');
 			handleBlur.bindAs(this, 'handleBlur');
-      handleMouseDown.bindAs(this, 'handleMouseDown');
+			handleMouseDown.bindAs(this, 'handleMouseDown');
 			handleMouseEnter.bindAs(this, 'handleMouseEnter');
 			handleMouseMove.bindAs(this, 'handleMouseMove');
 			handleMouseLeave.bindAs(this, 'handleMouseLeave');
