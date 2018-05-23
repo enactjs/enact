@@ -56,6 +56,14 @@ class ScrollerBase extends Component {
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
+		 * Prop to check context value if Scrollbar exists or not.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		isVerticalScrollbarVisible: PropTypes.bool,
+
+		/**
 		 * `true` if rtl, `false` if ltr.
 		 *
 		 * @type {Boolean}
@@ -72,8 +80,11 @@ class ScrollerBase extends Component {
 		this.calculateMetrics();
 	}
 
-	componentDidUpdate () {
+	componentDidUpdate (prevProps) {
 		this.calculateMetrics();
+		if (this.props.isVerticalScrollbarVisible && !prevProps.isVerticalScrollbarVisible) {
+			this.forceUpdate();
+		}
 	}
 
 	scrollBounds = {
@@ -172,6 +183,7 @@ class ScrollerBase extends Component {
 		delete rest.cbScrollTo;
 		delete rest.direction;
 		delete rest.rtl;
+		delete rest.isVerticalScrollbarVisible;
 
 		return (
 			<div

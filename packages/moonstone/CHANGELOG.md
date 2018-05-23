@@ -4,6 +4,28 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Fixed
+
+- `moonstone/Scroller` to not cut off expandables when scrollbar appears
+
+## [2.0.0-beta.4] - 2018-05-21
+
+### Added
+
+- `moonstone/Button` and `moonstone/IconButton` class name `small` to the list of allowed `css` overrides
+- `moonstone/ProgressBar` prop `highlighted` for when the UX needs to call special attention to a progress bar
+
+### Fixed
+
+- `moonstone/ContextualPopupDecorator` to not set focus to activator when closing if focus was set elsewhere
+- `moonstone/IconButton` to allow external customization of vertical alignment of its `Icon` by setting `line-height`
+- `moonstone/Marquee.MarqueeController` to not cancel valid animations
+- `moonstone/VideoPlayer` feedback and feedback icon to hide properly on play/pause/fast forward/rewind
+- `moonstone/VideoPlayer` to correctly focus to default media controls component
+- `moonstone/VideoPlayer` to show controls on mount and when playing next preload video
+
+## [2.0.0-beta.3] - 2018-05-14
+
 ### Added
 
 - `moonstone/SelectableItem.SelectableItemDecorator`
@@ -11,11 +33,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/ToggleItem` to forward native events on `onFocus` and `onBlur`
-- `moonstone/Input` and `moonstone/ExpandableInput` support for forwarding valid `<input>` props to the contained `<input>` node
+- `moonstone/Input` and `moonstone/ExpandableInput` to support forwarding valid `<input>` props to the contained `<input>` node
 - `moonstone/ToggleButton` to fire `onToggle` when toggled
 
 ### Fixed
 
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` to scroll properly with all enabled items via a page up or down key
 - `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` to ignore any user key events in pointer mode
 - `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` to pass `data-spotlight-container-disabled` prop to their outer DOM element
 - `moonstone/Image` so it automatically swaps the `src` to the appropriate resolution dynamically as the screen resizes
