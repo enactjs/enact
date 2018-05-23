@@ -31,7 +31,7 @@ const MyI18nApp = I18nDecorator(MyApp);
 the wrapped component, provided it is a `string`.
 
 ```
-import Uppercase from `@enact/i18n/Uppercase`
+import Uppercase from `@enact/i18n/Uppercase`;
 
 const MyComponent = (props) => (
     <div {...props} />
@@ -49,7 +49,7 @@ npm install --save @enact/i18n
 
 ## Acknowledgments
 
-This module is built upon the [iLib](http://docs.jedlsoft.com/ilib/jsdoc/) library.
+This module is built upon the [iLib](http://github.com/iLib-js/iLib) library.
 
 ## Copyright and License Information
 
@@ -73,4 +73,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 This work is based on the Apache-2.0 licensed [iLib](http://sourceforge.net/projects/i18nlib/)
-from [JEDLsoft](http://jedlsoft.com/index.html).
+from JEDLSoft.
