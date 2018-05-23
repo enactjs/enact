@@ -347,7 +347,7 @@ const ExpandableItemBase = kind({
 					css={css}
 					className={labeledItemClassName}
 					data-expandable-label
-					data-webos-voice-group={voiceGroupLabel}
+					data-webos-voice-group-label={voiceGroupLabel}
 					data-webos-voice-intent={voiceIntent}
 					data-webos-voice-label={voiceLabel}
 					disabled={disabled}
