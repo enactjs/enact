@@ -10,6 +10,7 @@ import {forward, forwardWithPrevent, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import {getContainersForNode} from '../src/container';
@@ -43,6 +44,8 @@ const isKeyboardAccessible = (node) => {
 		)
 	);
 };
+
+const isSpottable = (props) => !props.disabled && !props.spotlightDisabled;
 
 // Last instance of spottable to be focused
 let lastSelectTarget = null;
@@ -177,20 +180,26 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			this.isHovered = false;
 
 			this.state = {
-				spottableDisabled: false
+				focusedWhenDisabled: false
 			};
 		}
 
-		componentWillReceiveProps () {
-			this.setState((state, nextProps) => {
-				const spottableDisabled = this.isFocused && nextProps.disabled || nextProps.spotlightDisabled;
-				return !state.spottableDisabled && spottableDisabled ? {spottableDisabled} : null;
+		componentDidMount () {
+			// eslint-disable-next-line react/no-find-dom-node
+			this.node = ReactDOM.findDOMNode(this);
+		}
+
+		componentWillReceiveProps (nextProps) {
+			const focusedWhenDisabled = this.isFocused && nextProps.disabled && !this.props.disabled;
+
+			this.setState({
+				focusedWhenDisabled
 			});
 		}
 
 		componentDidUpdate (prevProps, prevState) {
 			// if the component is focused and became disabled
-			if (!prevState.spottableDisabled && this.state.spottableDisabled) {
+			if (!prevState.focusedWhenDisabled && this.state.focusedWhenDisabled) {
 				if (lastSelectTarget === this) {
 					selectCancelled = true;
 					forward('onMouseUp', null, this.props);
@@ -198,12 +207,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			// if the component became enabled, notify spotlight to enable restoring "lost" focus
-			if (
-				(!this.props.disabled && !this.props.spotlightDisabled) && (
-					(prevProps.disabled && !this.props.disabled) ||
-					(prevProps.spotlightDisabled && !this.props.spotlightDisabled)
-				)
-			) {
+			if (isSpottable(this.props) && !isSpottable(prevProps)) {
 				if (Spotlight.getPointerMode()) {
 					if (this.isHovered) {
 						Spotlight.setPointerMode(false);
@@ -277,9 +281,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return notPrevented && allow;
 		}
 
-		isActionable = (ev, props) => {
-			return !props.disabled && !props.spotlightDisabled;
-		}
+		isActionable = (ev, props) => isSpottable(props)
 
 		handle = handle.bind(this)
 
@@ -303,9 +305,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		handleBlur = (ev) => {
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = false;
-				this.setState((state) => {
-					return state.spottableDisabled ? {spottableDisabled: false} : null;
-				});
+
+				if (this.state.focusedWhenDisabled) {
+					this.setState({focusedWhenDisabled: false});
+				}
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
@@ -340,8 +343,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {disabled, spotlightDisabled, spotlightId, ...rest} = this.props;
-			const spottable = this.state.spottableDisabled || !disabled && !spotlightDisabled;
+			const {disabled, spotlightId, ...rest} = this.props;
+			const spottable = this.state.focusedWhenDisabled || isSpottable(this.props);
 			let tabIndex = rest.tabIndex;
 
 			delete rest.onSpotlightDisappear;
@@ -349,6 +352,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.onSpotlightLeft;
 			delete rest.onSpotlightRight;
 			delete rest.onSpotlightUp;
+			delete rest.spotlightDisabled;
 
 			if (tabIndex == null) {
 				tabIndex = -1;

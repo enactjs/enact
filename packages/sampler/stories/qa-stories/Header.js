@@ -99,6 +99,7 @@ storiesOf('Header', module)
 			<Header
 				title={text('title', 'Title')}
 				titleBelow={text('titleBelow', 'This is a header sample with long titleBelow text and header components to test positioning of header components.')}
+				subTitleBelow={text('subTitleBelow', 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 			>
 				<Button small>On / Off</Button>
 			</Header>

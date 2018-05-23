@@ -163,8 +163,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			children: PropTypes.node,
 
 			/**
-			 * Disables all marquee behavior except when `marqueeOn` is `'hover'` or `'focus'`. Will
-			 * be forwarded onto the wrapped component as well.
+			 * Passed through to the wrapped component. Does not affect Marquee behavior except that
+			 * components that are `marqueeOn="focus"` will be treated as if they were
+			 * `marqueeOn="hover"`, to allow disabled (and thuse, unfocusable) components to
+			 * marquee.
 			 *
 			 * @type {Boolean}
 			 * @public
@@ -318,9 +320,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		shouldComponentUpdate (nextProps, nextState) {
+			const {overflow, ...rest} = this.state;
+			const {overflow: nextOverflow, ...nextRest} = nextState;
+
 			return (
-				!shallowEqual(this.state, nextState) ||
-				!shallowEqual(this.props, nextProps)
+				!shallowEqual(rest, nextRest) ||
+				!shallowEqual(this.props, nextProps) ||
+				(overflow !== 'ellipsis' && nextOverflow !== 'clip')
 			);
 		}
 
@@ -390,8 +396,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {Boolean} - `true` if a possible marquee condition exists
 		 */
 		shouldStartMarquee () {
-			const {disabled, marqueeOn} = this.props;
-			return (
+			const {disabled, marqueeDisabled, marqueeOn} = this.props;
+			return !marqueeDisabled && (
 				marqueeOn === 'render' ||
 				this.forceRestartMarquee ||
 				!this.sync && (
@@ -428,7 +434,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 				// TODO: Replace with functional setState with React 16
 				const overflow = this.calculateTextOverflow(this.distance);
-				if (overflow !== this.state.overflow) {
+				if (!(this.contentFits && overflow === 'clip' && this.state.overflow === 'ellipsis')) {
 					this.setState({overflow});
 				}
 			}
@@ -508,9 +514,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		stop = () => {
 			this.clearTimeout();
-			this.setState({
-				animating: false
-			});
+
+			if (this.state.animating) {
+				this.setState({
+					animating: false
+				});
+			}
 		}
 
 		/*
@@ -562,16 +571,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			// synchronized Marquees defer to the controller to restart them
 			if (this.sync) {
 				this.context.complete(this);
-			} else {
-				this.setState(this.setStateStartAnimation);
-			}
-		}
-
-		setStateStartAnimation = (prevState) => {
-			if (!prevState.animating) {
+			} else if (!this.state.animating) {
 				this.startAnimation();
 			}
-			return null;
 		}
 
 		/*
@@ -625,7 +627,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleFocus = (ev) => {
 			this.isFocused = true;
 			if (!this.sync) {
-				this.setState(this.setStateStartAnimation);
+				this.calculateMetrics();
+
+				if (!this.state.animating && !this.contentFits) {
+					this.startAnimation();
+				}
 			}
 			forwardFocus(ev, this.props);
 		}
@@ -646,8 +652,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.props.disabled || this.props.marqueeOn === 'hover') {
 				if (this.sync) {
 					this.context.enter(this);
-				} else {
-					this.setState(this.setStateStartAnimation);
+				} else if (!this.state.animating) {
+					this.startAnimation();
 				}
 			}
 			forwardEnter(ev, this.props);

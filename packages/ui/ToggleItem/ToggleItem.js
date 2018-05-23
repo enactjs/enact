@@ -16,7 +16,6 @@ import compose from 'ramda/src/compose';
 
 import ComponentOverride from '../ComponentOverride';
 import Toggleable from '../Toggleable';
-import {RemeasurableDecorator} from '../Remeasurable';
 import Touchable from '../Touchable';
 
 import componentCss from './ToggleItem.less';
@@ -175,7 +174,7 @@ const ToggleItemBase = kind({
 		slotAfter: iconCreator('after')
 	},
 
-	render: ({component: Component, css, children, onToggle, selected, ...rest}) => {
+	render: ({component: Component, css, children, selected, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.iconPosition;
 		delete rest.value;
@@ -186,7 +185,6 @@ const ToggleItemBase = kind({
 				{...rest}
 				css={css}
 				aria-checked={selected}
-				onTap={onToggle}
 			>
 				{children}
 			</Component>
@@ -199,16 +197,14 @@ const ToggleItemBase = kind({
  *
  * @class ToggleItemDecorator
  * @memberof ui/ToggleItem
- * @mixes ui/Remeasurable.RemeasurableDecorator
  * @mixes ui/Touchable.Touchable
  * @mixes ui/Toggleable.Toggleable
  * @hoc
  * @public
  */
 const ToggleItemDecorator = compose(
-	RemeasurableDecorator({trigger: 'selected'}),
-	Touchable,
-	Toggleable
+	Toggleable({toggleProp: 'onTap'}),
+	Touchable
 );
 
 /**

@@ -22,9 +22,9 @@ describe('ToggleItem Specs', () => {
 	it('should call onToggle, onClick, or both when clicked', function () {
 		const handleToggle = sinon.spy();
 		const subject = mount(
-			<ToggleItemBase component={SlottedItem} onToggle={handleToggle} iconComponent={CustomIcon}>
+			<ToggleItem component={SlottedItem} onToggle={handleToggle} iconComponent={CustomIcon}>
 				Toggle Item
-			</ToggleItemBase>
+			</ToggleItem>
 		);
 
 		tap(subject);

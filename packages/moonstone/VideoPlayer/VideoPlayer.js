@@ -607,7 +607,12 @@ const VideoPlayerBase = class extends React.Component {
 		const {source: nextSource} = nextProps;
 
 		if (!compareSources(source, nextSource)) {
-			this.setState({currentTime: 0, proportionPlayed: 0, proportionLoaded: 0});
+			this.setState({
+				announce: AnnounceState.READY,
+				currentTime: 0,
+				proportionPlayed: 0,
+				proportionLoaded: 0
+			});
 		}
 	}
 
@@ -661,6 +666,7 @@ const VideoPlayerBase = class extends React.Component {
 		if (!compareSources(source, prevSource)) {
 			const isPreloadedVideo = source && prevPreloadSource && compareSources(source, prevPreloadSource);
 			this.reloadVideo(isPreloadedVideo);
+			this.showControls();
 		}
 
 		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
@@ -889,9 +895,12 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	showFeedback = () => {
-		if (this.state.mediaControlsVisible && !this.state.feedbackVisible) {
-			this.setState({feedbackVisible: true});
-		} else if (!this.state.mediaControlsVisible) {
+		if (this.state.mediaControlsVisible) {
+			this.setState({
+				feedbackIconVisible: true,
+				feedbackVisible: true
+			});
+		} else {
 			const shouldShowSlider = this.pulsedPlaybackState !== null || calcNumberValueOfPlaybackRate(this.playbackRate) !== 1;
 
 			if (this.showMiniFeedback && (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider)) {
@@ -1049,6 +1058,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	renderBottomControl = new Job(() => {
+		this.showControls();
 		this.setState({bottomControlsRendered: true});
 	});
 
@@ -1463,7 +1473,7 @@ const VideoPlayerBase = class extends React.Component {
 			this.player.querySelector(
 				`.${css.leftComponents} ${defaultSpottable}, .${css.rightComponents} ${defaultSpottable}`
 			) ||
-			'data-media-controls';
+			this.player.querySelector(`[data-media-controls] ${defaultSpottable}`);
 
 		return defaultControl ? Spotlight.focus(defaultControl) : false;
 	}
@@ -1529,7 +1539,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.sliderScrubbing = false;
 		this.startDelayedFeedbackHide();
 		this.setState({
-			feedbackIconVisible: true,
+			// If paused is false that means it is playing. We only want to hide on playing.
+			feedbackIconVisible: this.state.paused,
 			sliderTooltipTime: this.state.currentTime
 		});
 	}
