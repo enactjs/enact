@@ -463,6 +463,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forward('onClose')
 		)
 
+		// handle key event from outside (i.e. the activator) to the popup container
 		handleKeyDown = (ev) => {
 			const {spotlightRestrict} = this.props;
 			const current = Spotlight.getCurrent();
@@ -487,9 +488,9 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		// handle key event from contextual popup and closes the popup
 		handleContainerKeyDown = (ev) => {
 			// Note: Container will be only rendered if `open`ed, therefore no need to check for `open`
-
 			const direction = getDirection(ev.keyCode);
 
 			if (direction) {
