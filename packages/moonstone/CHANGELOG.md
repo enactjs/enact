@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Scroller` to not cut off expandables when scrollbar appears
+- `moonstone/VideoPlayer` to correctly read out when play button is pressed
 
 ## [2.0.0-beta.4] - 2018-05-21
 
