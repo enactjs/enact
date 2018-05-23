@@ -58,16 +58,6 @@ const handleKeyUp = handle(
 	adaptEvent(call('getEventPayload'), forward('onChange'))
 );
 
-const isValueBeyondSelection = ({selection, value}) => {
-	if (selection != null) {
-		const [start, end] = selection;
-
-		return value > end || value < start;
-	}
-
-	return false;
-};
-
 /**
  * MediaSlider for {@link moonstone/VideoPlayer}.
  *
@@ -82,9 +72,7 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 
 		static propTypes = {
 			backgroundProgress: PropTypes.number,
-			onSelectCancel: PropTypes.func,
 			selection: PropTypes.arrayOf(PropTypes.number),
-			selectionMode: PropTypes.bool,
 			value: PropTypes.number
 		}
 
@@ -103,35 +91,14 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 			this.state = {
 				maxX: 0,
 				minX: 0,
-				progressAnchor: props.selectionMode ? props.value : 0,
 				tracking: false,
 				x: 0
 			};
 		}
 
-		componentWillReceiveProps (nextProps) {
-			const {value, selectionMode} = nextProps;
-
-			if (this.props.selectionMode !== selectionMode) {
-				if (selectionMode) {
-					this.setState({
-						progressAnchor: value
-					});
-				} else {
-					this.setState({
-						progressAnchor: 0
-					});
-				}
-			}
-		}
-
 		componentDidUpdate (prevProps, prevState) {
 			if (prevState.x !== this.state.x) {
 				forward('onKnobMove', this.getEventPayload('onKnobMove'), this.props);
-			}
-
-			if (prevProps.value !== this.props.value && isValueBeyondSelection(this.props)) {
-				forward('onSelectCancel', this.getEventPayload('onSelectCancel'), this.props);
 			}
 		}
 
@@ -206,15 +173,12 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
-			let {progressAnchor} = this.state;
+			const {selection, ...rest} = this.props;
 			let {backgroundProgress} = this.props;
-			const {selection, selectionMode, ...rest} = this.props;
+			let progressAnchor = 0;
 
-			if (!selectionMode && selection != null) {
-				progressAnchor = selection[0];
-				backgroundProgress = selection[1];
-			} else if (selectionMode) {
-				backgroundProgress = progressAnchor;
+			if (selection != null) {
+				[progressAnchor, backgroundProgress = progressAnchor] = selection;
 			}
 
 			delete rest.onKnobMove;
