@@ -517,6 +517,7 @@ class Popup extends React.Component {
 					onShow={this.handlePopupShow}
 					open={this.state.popupOpen}
 					spotlightRestrict="self-only"
+					data-webos-voice-exclusive
 				/>
 			</FloatingLayer>
 		);

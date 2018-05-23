@@ -1,11 +1,14 @@
 import {icons} from '@enact/moonstone/Icon';
 import {Input, InputBase} from '@enact/moonstone/Input';
+import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {boolean, select, text} from '@storybook/addon-knobs';
 
 const iconNames = ['', ...Object.keys(icons)];
+
+const divMargin = () => ({margin: ri.unit(12, 'rem')});
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -130,7 +133,7 @@ storiesOf('Input', module)
 		'5 way test',
 		() => (
 			<div>
-				<div>
+				<div style={divMargin()}>
 					<Input
 						autoFocus={boolean('autoFocus')}
 						onChange={action('onChange')}
@@ -154,7 +157,7 @@ storiesOf('Input', module)
 						defaultValue={inputData.initialValue + ' two'}
 					/>
 				</div>
-				<div>
+				<div style={divMargin()}>
 					<Input
 						autoFocus={boolean('autoFocus')}
 						onChange={action('onChange')}
