@@ -667,6 +667,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				if (selectedButton) {
 					selectedButton.blur();
 					selectedButton.focus();
+					Spotlight.focus(this.props.moreButtonSpotlightId);
 				}
 			}
 		}
