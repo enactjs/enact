@@ -42,21 +42,14 @@ const ButtonBase = kind({
 		 * The background-color opacity of this button.
 		 *
 		 * Valid values are:
-		 * * `'opaque'`,
 		 * * `'translucent'`,
 		 * * `'lightTranslucent'`, and
 		 * * `'transparent'`.
 		 *
 		 * @type {String}
-		 * @default 'opaque'
 		 * @public
 		 */
-		backgroundOpacity: PropTypes.oneOf([
-			'opaque',
-			'translucent',
-			'lightTranslucent',
-			'transparent'
-		]),
+		backgroundOpacity: PropTypes.oneOf([null, 'translucent', 'lightTranslucent', 'transparent']),
 
 		/**
 		 * The color of the underline beneath button's content. Used for `IconButton`.
@@ -84,10 +77,6 @@ const ButtonBase = kind({
 		 * @public
 		 */
 		css: PropTypes.object
-	},
-
-	defaultProps: {
-		backgroundOpacity: 'opaque'
 	},
 
 	styles: {

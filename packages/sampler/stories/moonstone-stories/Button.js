@@ -14,7 +14,8 @@ const Config = mergeComponentMetadata('Button', ButtonBase, Button, UIButton, UI
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: ['opaque', 'translucent', 'lightTranslucent', 'transparent'],
+	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
+	casing: ['preserve', 'sentence', 'word', 'upper'],
 	icons: ['', ...Object.keys(icons)]
 };
 
@@ -28,7 +29,7 @@ storiesOf('Moonstone', module)
 			<Button
 				onClick={action('onClick')}
 				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
-				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
+				casing={select('casing', prop.casing, 'upper')}
 				disabled={boolean('disabled', Config.defaultProps.disabled)}
 				icon={nullify(select('icon', prop.icons, Config.defaultProps.icon))}
 				minWidth={boolean('minWidth', Config.defaultProps.minWidth)}

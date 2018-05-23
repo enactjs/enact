@@ -69,14 +69,14 @@ const PanelsBase = kind({
 		closeButtonAriaLabel: PropTypes.string,
 
 		/**
-		 * The background-color opacity of the application close button; valid values are `'opaque'`,
+		 * The background-color opacity of the application close button; valid values are
 		 * `'translucent'`, `'lightTranslucent'`, and `'transparent'`.
 		 *
 		 * @type {String}
 		 * @default 'transparent'
 		 * @public
 		 */
-		closeButtonBackgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'lightTranslucent', 'transparent']),
+		closeButtonBackgroundOpacity: PropTypes.oneOf([null, 'translucent', 'lightTranslucent', 'transparent']),
 
 		/**
 		 * Unique identifier for the Panels instance
