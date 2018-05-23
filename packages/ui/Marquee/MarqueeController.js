@@ -3,7 +3,8 @@ import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Spotlight from '@enact/spotlight';
+import {is} from '@enact/core/keymap';
+import {platform} from '@enact/core/platform';
 
 const STATE = {
 	inactive: 0,	// Marquee is not necessary (render or focus not happened)
@@ -136,8 +137,23 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		componentDidMount () {
+			if (platform.webos) {
+				document.addEventListener('keydown', this.checkPointerHide);
+			}
+		}
+
 		componentWillUnmount () {
 			this.cancelJob.stop();
+			if (platform.webos) {
+				document.removeEventListener('keydown', this.checkPointerHide);
+			}
+		}
+
+		checkPointerHide = ({keyCode}) => {
+			if (is('pointerHide', keyCode)) {
+				this.isHovered = false;
+			}
 		}
 
 		cancelJob = new Job(() => this.doCancel(), 30)
@@ -215,12 +231,9 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		doCancel = () => {
-			const isHoveredAndPointer = this.isHovered && Spotlight.getPointerMode();
-
-			if ((isHoveredAndPointer || this.isFocused)) {
+			if (this.isHovered || this.isFocused) {
 				return;
 			}
-
 			this.markAll(STATE.inactive);
 			this.dispatch('stop');
 		}

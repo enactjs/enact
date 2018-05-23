@@ -2,6 +2,11 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [Unreleased] 
+
+### Fixed
+- `ui/MarqueeController` to listen for webOS pointer hiding
+
 ## [2.0.0-beta.4] - 2018-05-21
 
 ### Fixed
