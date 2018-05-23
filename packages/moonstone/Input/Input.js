@@ -248,7 +248,7 @@ const InputBase = kind({
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, ...rest}) => {
+	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-intent' : voiceIntent, 'data-webos-voice-label': voiceLabel, ...rest}) => {
 		const inputProps = extractInputProps(rest);
 		delete rest.dismissOnEnter;
 		delete rest.focused;
@@ -263,13 +263,15 @@ const InputBase = kind({
 					{...inputProps}
 					aria-disabled={disabled}
 					className={css.input}
+					data-webos-voice-group-label={voiceGroupLabel}
+					data-webos-voice-intent={voiceIntent}
+					data-webos-voice-label={voiceLabel}
 					dir={dir}
 					disabled={disabled}
 					onChange={onChange}
 					placeholder={placeholder}
 					type={type}
 					value={value}
-					data-webos-voice-intent="Select"
 				/>
 				<InputDecoratorIcon position="after" small={small}>{iconAfter}</InputDecoratorIcon>
 				{invalidTooltip}
