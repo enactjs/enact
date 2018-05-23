@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Scroller` to not cut off expandables when scrollbar appears
+- `moonstone/VideoPlayer` to correctly read out when play button is pressed
 
 ## [2.0.0-beta.4] - 2018-05-21
 
@@ -43,7 +44,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` to pass `data-spotlight-container-disabled` prop to their outer DOM element
 - `moonstone/Image` so it automatically swaps the `src` to the appropriate resolution dynamically as the screen resizes
 - `moonstone/Popup` to support all `spotlightRestrict` options
-- `moonstone/VideoPlayer` to correctly read out when play button is pressed
 - `moonstone` component `disabled` colors to match the most recent design guidelines (from 30% to 60% opacity)
 - `moonstone/ExpandableInput` spotlight behavior when leaving the component via 5-way
 
