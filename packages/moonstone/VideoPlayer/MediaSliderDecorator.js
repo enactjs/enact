@@ -49,6 +49,15 @@ const handleKeyDown = handle(
 	stopImmediate
 );
 
+const handleKeyUp = handle(
+	forward('onKeyUp'),
+	call('isTracking'),
+	forKey('enter'),
+	// prevent moonstone/Slider from activating the knob
+	preventDefault,
+	adaptEvent(call('getEventPayload'), forward('onChange'))
+);
+
 const isValueBeyondSelection = ({selection, value}) => {
 	if (selection != null) {
 		const [start, end] = selection;
@@ -85,9 +94,11 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 			this.handleMouseOver = this.handleMouseOver.bind(this);
 			this.handleMouseOut = this.handleMouseOut.bind(this);
 			this.handleMouseMove = this.handleMouseMove.bind(this);
-			this.handleBlur = handleBlur.bind(this);
-			this.handleFocus = handleFocus.bind(this);
-			this.handleKeyDown = handleKeyDown.bind(this);
+
+			handleBlur.bindAs(this, 'handleBlur');
+			handleFocus.bindAs(this, 'handleFocus');
+			handleKeyDown.bindAs(this, 'handleKeyDown');
+			handleKeyUp.bindAs(this, 'handleKeyUp');
 
 			this.state = {
 				maxX: 0,

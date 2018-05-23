@@ -759,22 +759,22 @@ const VideoPlayerBase = class extends React.Component {
 		return Math.random().toString(36).substr(2, 8);
 	}
 
-	isValueBeyondSelection (value) {
+	isTimeBeyondSelection (time) {
 		const {selection} = this.props;
 
 		if (selection != null) {
 			const [start, end] = selection;
 
-			return value > end || value < start;
+			return time > end || time < start;
 		}
 
 		return false;
 	}
 
-	preventValueChange (value) {
+	preventTimeChange (time) {
 		return (
-			this.isValueBeyondSelection(value) &&
-			!forwardWithPrevent('onSelectCancel', {type: 'onSelectCancel', value}, this.props)
+			this.isTimeBeyondSelection(time) &&
+			!forwardWithPrevent('onSelectCancel', {type: 'onSelectCancel', time}, this.props)
 		);
 	}
 
@@ -1007,9 +1007,9 @@ const VideoPlayerBase = class extends React.Component {
 			forward('onSeekFailed', {}, this.props);
 		} else {
 			const jumpBy = (is('left', keyCode) ? -1 : 1) * this.props.jumpBy;
-			const value = Math.min(1, Math.max(0, (this.state.currentTime + jumpBy) / this.state.duration));
+			const time = Math.min(this.state.duration, Math.max(0, this.state.currentTime + jumpBy));
 
-			if (this.preventValueChange(value)) return;
+			if (this.preventTimeChange(time)) return;
 
 			this.showMiniFeedback = true;
 			this.jump(jumpBy);
@@ -1506,9 +1506,11 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	onSliderChange = ({value}) => {
-		if (this.preventValueChange(value)) return;
+		const time = value * this.state.duration;
 
-		this.seek(value * this.state.duration);
+		if (this.preventTimeChange(time)) return;
+
+		this.seek(time);
 		this.sliderScrubbing = false;
 	}
 
