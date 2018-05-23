@@ -173,6 +173,12 @@ const handleGlobalMove = handle(
 	call('moveGesture')
 );
 
+const handleBlur = handle(
+	forward('onBlur'),
+	call('hasFocus'),
+	call('endGesture')
+);
+
 /**
  * Default config for {@link ui/Touchable.Touchable}.
  *
@@ -383,6 +389,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			});
 
 			this.target = null;
+			this.targetHadFocus = false;
 			this.handle = handle.bind(this);
 			this.drag = new Drag();
 			this.flick = new Flick();
@@ -396,6 +403,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.clickAllow = new ClickAllow();
 
 			handleClick.bindAs(this, 'handleClick');
+			handleBlur.bindAs(this, 'handleBlur');
 			handleMouseDown.bindAs(this, 'handleMouseDown');
 			handleMouseEnter.bindAs(this, 'handleMouseEnter');
 			handleMouseMove.bindAs(this, 'handleMouseMove');
@@ -506,6 +514,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.flick.begin(flick, props, coords);
 			this.drag.begin(drag, props, coords, this.target);
 
+			this.targetHadFocus = this.target === document.activeElement;
+
 			return true;
 		}
 
@@ -534,6 +544,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		endGesture () {
+			this.targetHadFocus = false;
+
 			this.hold.end();
 			this.flick.end();
 			this.drag.end();
@@ -550,6 +562,10 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		isPaused () {
 			return this.state.active === States.Paused;
+		}
+
+		hasFocus () {
+			return this.targetHadFocus;
 		}
 
 		hasTouchLeftTarget (ev) {
@@ -578,6 +594,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			props.onMouseMove = this.handleMouseMove;
 			props.onMouseEnter = this.handleMouseEnter;
 			props.onMouseUp = this.handleMouseUp;
+			props.onBlur = this.handleBlur;
 
 			if (platform.touch) {
 				props.onTouchStart = this.handleTouchStart;
