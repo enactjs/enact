@@ -664,9 +664,11 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 
 				// Readout 'more' or 'back' button explicitly.
 				let selectedButton = Spotlight.getCurrent();
-				if (selectedButton) {
+				if (selectedButton === this.mediaControlsNode.querySelector(`.${css.moreButton}`)) {
 					selectedButton.blur();
 					selectedButton.focus();
+				} else if (!this.state.showMoreComponents) {
+					// if spotlight was not in "back" button, then focus "more" button
 					Spotlight.focus(this.props.moreButtonSpotlightId);
 				}
 			}
