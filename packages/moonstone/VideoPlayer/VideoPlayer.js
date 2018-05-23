@@ -417,6 +417,9 @@ const VideoPlayerBase = class extends React.Component {
 		 */
 		seekDisabled: PropTypes.bool,
 
+		selection: PropTypes.arrayOf(PropTypes.number),
+		selectionMode: PropTypes.bool,
+
 		/**
 		 * Registers the VideoPlayer component with an
 		 * {@link core/internal/ApiDecorator.ApiDecorator}.
@@ -756,6 +759,25 @@ const VideoPlayerBase = class extends React.Component {
 		return Math.random().toString(36).substr(2, 8);
 	}
 
+	isValueBeyondSelection (value) {
+		const {selection} = this.props;
+
+		if (selection != null) {
+			const [start, end] = selection;
+
+			return value > end || value < start;
+		}
+
+		return false;
+	}
+
+	preventValueChange (value) {
+		return (
+			this.isValueBeyondSelection(value) &&
+			!forwardWithPrevent('onSelectCancel', {type: 'onSelectCancel', value}, this.props)
+		);
+	}
+
 	/**
 	 * If the announce state is either ready to read the title or ready to read info, advance the
 	 * state to "read".
@@ -983,13 +1005,14 @@ const VideoPlayerBase = class extends React.Component {
 	handleJump = ({keyCode}) => {
 		if (this.props.seekDisabled) {
 			forward('onSeekFailed', {}, this.props);
-		} else if (is('left', keyCode)) {
+		} else {
+			const jumpBy = (is('left', keyCode) ? -1 : 1) * this.props.jumpBy;
+			const value = Math.min(1, Math.max(0, (this.state.currentTime + jumpBy) / this.state.duration));
+
+			if (this.preventValueChange(value)) return;
+
 			this.showMiniFeedback = true;
-			this.jump(-1 * this.props.jumpBy);
-			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
-		} else if (is('right', keyCode)) {
-			this.showMiniFeedback = true;
-			this.jump(this.props.jumpBy);
+			this.jump(jumpBy);
 			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
 		}
 	}
@@ -1483,6 +1506,8 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	onSliderChange = ({value}) => {
+		if (this.preventValueChange(value)) return;
+
 		this.seek(value * this.state.duration);
 		this.sliderScrubbing = false;
 	}
@@ -1642,6 +1667,8 @@ const VideoPlayerBase = class extends React.Component {
 			noSlider,
 			noSpinner,
 			preloadSource,
+			selection,
+			selectionMode,
 			source,
 			spotlightDisabled,
 			spotlightId,
@@ -1766,6 +1793,8 @@ const VideoPlayerBase = class extends React.Component {
 									onKeyDown={this.handleSliderKeyDown}
 									onKnobMove={this.handleKnobMove}
 									onSpotlightUp={this.handleSpotlightUpFromSlider}
+									selection={selection}
+									selectionMode={selectionMode}
 									spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
 									value={this.state.proportionPlayed}
 									visible={this.state.mediaSliderVisible}
