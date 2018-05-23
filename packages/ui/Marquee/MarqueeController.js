@@ -3,6 +3,7 @@ import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Spotlight from '@enact/spotlight';
 
 const STATE = {
 	inactive: 0,	// Marquee is not necessary (render or focus not happened)
@@ -214,9 +215,12 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		doCancel = () => {
-			if (this.isHovered || this.isFocused) {
+			const isHoveredAndPointer = this.isHovered && Spotlight.getPointerMode();
+
+			if ((isHoveredAndPointer || this.isFocused)) {
 				return;
 			}
+
 			this.markAll(STATE.inactive);
 			this.dispatch('stop');
 		}
