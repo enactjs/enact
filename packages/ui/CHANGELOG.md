@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/ProgressBar` and `ui/Slider` prop `progressAnchor` to configure from where in the progress bar or slider progress should begin
+- `ui/Slider` prop `progressBarComponent` to support customization of progress bar within a slider
+
 ## [2.0.0-beta.4] - 2018-05-21
 
 ### Fixed
