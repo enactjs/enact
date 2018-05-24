@@ -4,6 +4,17 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/ForwardRef` HOC to adapt `React.forwardRef` to HOC chains
+- `ui/Media` component
+
+### Fixed
+
+- `ui/Touchable` to end gestures when focus is lost
+
+## [2.0.0-beta.4] - 2018-05-21
+
 ### Fixed
 
 - `ui/Touchable` to guard against null events
@@ -16,8 +27,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/ForwardRef` HOC to adapt `React.forwardRef` to HOC chains
-- `ui/Media` component
 - `ui/Touchable` support to fire `onTap` when a `click` event occurs
 
 ### Changed

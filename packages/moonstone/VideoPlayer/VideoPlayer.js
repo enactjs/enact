@@ -552,7 +552,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.showMiniFeedback = false;
 		this.speedIndex = 0;
-		this.firstPlayReadFlag = true;
 		this.id = this.generateId();
 		this.selectPlaybackRates('fastForward');
 		this.sliderKnobProportion = 0;
@@ -1091,11 +1090,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(1);
 		this.send('play');
 		this.prevCommand = 'play';
-		if (this.firstPlayReadFlag) {
-			this.firstPlayReadFlag = false;
-		} else {
-			this.announce($L('Play'));
-		}
+		this.announce($L('Play'));
 		this.startDelayedMiniFeedbackHide(5000);
 	}
 
