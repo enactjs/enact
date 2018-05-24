@@ -396,8 +396,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {Boolean} - `true` if a possible marquee condition exists
 		 */
 		shouldStartMarquee () {
-			const {disabled, marqueeOn} = this.props;
-			return (
+			const {disabled, marqueeDisabled, marqueeOn} = this.props;
+			return !marqueeDisabled && (
 				marqueeOn === 'render' ||
 				this.forceRestartMarquee ||
 				!this.sync && (
