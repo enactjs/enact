@@ -14,6 +14,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Button` and `moonstone/IconButton` class name `small` to the list of allowed `css` overrides
 - `moonstone/ProgressBar` prop `highlighted` for when the UX needs to call special attention to a progress bar
+- `moonstone/Slider` ARIA property `role="slider"`
 
 ### Fixed
 
