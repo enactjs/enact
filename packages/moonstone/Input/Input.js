@@ -36,6 +36,12 @@ const InputBase = kind({
 	name: 'Input',
 
 	propTypes: /** @lends moonstone/Input.InputBase.prototype */ {
+
+		// TODO: Document voice control props and make public
+		'data-webos-voice-group-label': PropTypes.string,
+		'data-webos-voice-intent': PropTypes.string,
+		'data-webos-voice-label': PropTypes.string,
+
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
