@@ -24,6 +24,7 @@ import css from './VideoPlayer.less';
 
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 const MediaButton = onlyUpdateForKeys([
+	'className',
 	'children',
 	'disabled',
 	'onClick',
@@ -328,6 +329,8 @@ const MediaControlsBase = kind({
 	computed: {
 		className: ({visible, styler}) => styler.append({hidden: !visible}),
 		centerClassName: ({showMoreComponents, styler}) => styler.join('centerComponents', {more: showMoreComponents}),
+		playPauseClassName: ({showMoreComponents}) => showMoreComponents ? null : spotlightDefaultClass,
+		moreButtonClassName: ({showMoreComponents, styler}) => styler.join('moreButton', {[spotlightDefaultClass]: showMoreComponents}),
 		moreIconLabel: ({moreButtonCloseLabel, moreButtonLabel, showMoreComponents}) => showMoreComponents ? moreButtonCloseLabel : moreButtonLabel,
 		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowshrinkleft' : 'ellipsis'
 	},
@@ -342,6 +345,7 @@ const MediaControlsBase = kind({
 		jumpForwardIcon,
 		leftComponents,
 		mediaDisabled,
+		moreButtonClassName,
 		moreButtonColor,
 		moreButtonDisabled,
 		moreButtonSpotlightId,
@@ -358,6 +362,7 @@ const MediaControlsBase = kind({
 		paused,
 		pauseIcon,
 		playIcon,
+		playPauseClassName,
 		rateButtonsDisabled,
 		rightComponents,
 		showMoreComponents,
@@ -377,7 +382,7 @@ const MediaControlsBase = kind({
 						<Container className={css.mediaControls} spotlightDisabled={showMoreComponents || spotlightDisabled}>
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpBackwardIcon}</MediaButton>}
 							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{backwardIcon}</MediaButton>}
-							<MediaButton aria-label={paused ? $L('Play') : $L('Pause')} className={spotlightDefaultClass} backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{paused ? playIcon : pauseIcon}</MediaButton>
+							<MediaButton aria-label={paused ? $L('Play') : $L('Pause')} className={playPauseClassName} backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{paused ? playIcon : pauseIcon}</MediaButton>
 							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onForwardButtonClick} spotlightDisabled={spotlightDisabled}>{forwardIcon}</MediaButton>}
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpForwardIcon}</MediaButton>}
 						</Container>
@@ -392,7 +397,7 @@ const MediaControlsBase = kind({
 						<MediaButton
 							aria-label={moreIconLabel}
 							backgroundOpacity="translucent"
-							className={css.moreButton}
+							className={moreButtonClassName}
 							color={moreButtonColor}
 							disabled={moreButtonDisabled}
 							onClick={onMoreClick}

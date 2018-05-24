@@ -27,28 +27,31 @@
  * `props` and `context`. This allows you to write consistent event handlers for components created
  * either with `kind()` or ES6 classes without worrying about from where the props are sourced.
  *
+ * Handlers can either be bound directly using the native `bind()` method or using the `bindAs()`
+ * utility method that is appended to the handler.
+ *
  * ```
  * import {forKey, forward, handle, preventDefault} from '@enact/core/handle';
  * import React from 'react';
  *
  * class MyComponent extends React.Component {
  *   // bind handle() to the instance
- *   handle = handle.bind(this)
+ *   constructor () {
+ *     super();
  *
- *   // then create handlers using the bound function
- *   logEnter = this.handle(
- *     forward('onKeyDown'),  // forwards the event to the function passed in the onKeyDown prop
- *     forKey('enter'),       // if the event.keyCode maps to the enter key, allows event processing to continue
- *     preventDefault,        // calls event.preventDefault() to prevent the `keypress` event
- *     (ev, props) => {       // custom event handler -- in this case, logging some text
- *       // In the bound version, `props` will contain a reference to this.props
- *       // since it doesn't return `true`, no further input functions would be called after this one
- *       console.log('The Enter key was pressed down');
- *     }
- *   )
+ *     // logEnter will be bound to `this` and set as this.handleKeyDown
+ *     //
+ *     // Equivalent to the following with the advantage of set the function name to be displayed in
+ *     // development tool call stacks
+ *     //
+ *     //   this.handleKeyDown = logEnter.bind(this)
+ *     logEnter.bindAs(this, 'handleKeyDown');
+ *   }
  *
  *   render () {
- *     // ...
+ *     return (
+ *       <div onKeyDown={this.handleKeyDown} />
+ *     );
  *   }
  * }
  * ```
@@ -85,6 +88,40 @@ const hasPropsAndContext = (obj) => {
 	return obj && obj.hasOwnProperty && obj.hasOwnProperty('props') && obj.hasOwnProperty('context');
 };
 
+const named = (fn, name) => {
+	if (__DEV__) {
+		try {
+			Object.defineProperty(fn, 'name', {
+				value: name,
+				writeable: false,
+				enumerable: false
+			});
+		} catch (err) {
+			// unable to set name of function
+		}
+	}
+
+	return fn;
+};
+
+const bindAs = (fn, obj, name) => {
+	const namedFunction = name ? named(fn, name) : fn;
+	const bound = namedFunction.bind(obj);
+
+	if (name) {
+		obj[name] = bound;
+	}
+
+	return bound;
+};
+
+const decorateHandleFunction = (fn) => {
+	fn.named = (name) => named(fn, name);
+	fn.bindAs = (obj, name) => bindAs(fn, obj, name);
+
+	return fn;
+};
+
 /**
  * Allows generating event handlers by chaining input functions to filter or short-circuit the
  * handling flow. Any input function that returns a falsey value will stop the chain.
@@ -107,7 +144,7 @@ const handle = function (...handlers) {
 	// context if fn() doesn't have its own `this`.
 	const _outer = this;
 
-	const fn = function (ev, props, context) {
+	const fn = function prepareHandleArgs (ev, props, context) {
 		let caller = null;
 
 		// if handle() was bound to a class, use its props and context. otherwise, we accept
@@ -126,7 +163,7 @@ const handle = function (...handlers) {
 	};
 
 	fn.finally = function (cleanup) {
-		return function (ev, props, context) {
+		return decorateHandleFunction(function handleWithFinally (ev, props, context) {
 			let result = false;
 
 			if (hasPropsAndContext(this)) {
@@ -141,10 +178,10 @@ const handle = function (...handlers) {
 			}
 
 			return result;
-		};
+		});
 	};
 
-	return fn;
+	return decorateHandleFunction(fn);
 };
 
 /**
@@ -195,11 +232,11 @@ const oneOf = handle.oneOf = function (...handlers) {
  */
 const returnsTrue = handle.returnsTrue = function (handler) {
 	if (handler) {
-		return function (...args) {
+		return named(function (...args) {
 			handler.apply(this, args);
 
 			return true;
-		};
+		}, 'returnsTrue');
 	}
 
 	return true;
@@ -279,14 +316,14 @@ const forEventProp = handle.forEventProp = curry((prop, value, ev) => {
  * @param    {Object}    props  Props object
  * @returns  {Boolean}          Always returns `true`
  */
-const forward = handle.forward = curry((name, ev, props) => {
+const forward = handle.forward = curry(named((name, ev, props) => {
 	const fn = props && props[name];
 	if (typeof fn === 'function') {
 		fn(ev);
 	}
 
 	return true;
-});
+}, 'forward'));
 
 /**
  * Calls `event.preventDefault()` and returns `true`.
@@ -329,7 +366,7 @@ const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
  * @param    {Object}    props  Props object
  * @returns  {Boolean}          Returns `true` if default action is prevented
  */
-const forwardWithPrevent = handle.forwardWithPrevent = curry((name, ev, props) => {
+const forwardWithPrevent = handle.forwardWithPrevent = curry(named((name, ev, props) => {
 	let prevented = false;
 	const wrappedEvent = Object.assign({}, ev, {
 		preventDefault: () => {
@@ -340,7 +377,7 @@ const forwardWithPrevent = handle.forwardWithPrevent = curry((name, ev, props) =
 	forward(name, wrappedEvent, props);
 
 	return !prevented;
-});
+}, 'forwardWithPrevent'));
 
 /**
  * Calls `event.stopPropagation()` and returns `true`
@@ -359,7 +396,7 @@ const forwardWithPrevent = handle.forwardWithPrevent = curry((name, ev, props) =
  * @param    {Object}   ev  Event
  * @returns  {Boolean}      Always returns `true`
  */
-const stop = handle.stop = callOnEvent('stopPropagation');
+const stop = handle.stop = named(callOnEvent('stopPropagation'), 'stop');
 
 /**
  * Calls `event.stopImmediatePropagation()` and returns `true`
@@ -513,13 +550,13 @@ const log = handle.log = curry((message, ev, ...args) => {
  *                                does not exist
  */
 const call = function (method) {
-	return function (...args) {
+	return named(function (...args) {
 		if (this && this[method]) {
 			return this[method](...args);
 		}
 
 		return false;
-	};
+	}, 'call');
 };
 
 /**
@@ -550,9 +587,9 @@ const call = function (method) {
  * @returns  {Object}             New event payload
  */
 const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
-	return function (ev, ...args) {
+	return named(function (ev, ...args) {
 		return handler.call(this, adapter.call(this, ev, ...args), ...args);
-	};
+	}, 'adaptEvent');
 });
 
 export default handle;

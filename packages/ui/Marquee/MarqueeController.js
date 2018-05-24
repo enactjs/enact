@@ -208,7 +208,9 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		handleCancel = () => {
-			this.cancelJob.start();
+			if (this.anyRunning()) {
+				this.cancelJob.start();
+			}
 		}
 
 		doCancel = () => {
