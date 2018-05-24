@@ -9,7 +9,7 @@ and to update the current locale. Additionally, it provides a locale-aware `Uppe
 ## Usage
 
 ```
-import {I18nDecorator, contextTypes} from `@enact/i18n/I18nDecorator`;
+import {I18nDecorator, contextTypes} from '@enact/i18n/I18nDecorator';
 
 const MyComponent = (props, context) => (
     <div>{context.rtl ? "right to left" : "left to right"}</div>
@@ -31,7 +31,7 @@ const MyI18nApp = I18nDecorator(MyApp);
 the wrapped component, provided it is a `string`.
 
 ```
-import Uppercase from `@enact/i18n/Uppercase`;
+import Uppercase from '@enact/i18n/Uppercase';
 
 const MyComponent = (props) => (
     <div {...props} />
