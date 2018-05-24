@@ -12,7 +12,7 @@ and to update the current locale. Additionally, it provides a locale-aware `Uppe
 import {I18nDecorator, contextTypes} from '@enact/i18n/I18nDecorator';
 
 const MyComponent = (props, context) => (
-    <div>{context.rtl ? "right to left" : "left to right"}</div>
+    <div>{context.rtl ? 'right to left' : 'left to right'}</div>
 );
 
 // Without contextTypes, your component will not receive context!
