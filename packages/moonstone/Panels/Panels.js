@@ -76,7 +76,7 @@ const PanelsBase = kind({
 		 * @default 'transparent'
 		 * @public
 		 */
-		closeButtonBackgroundOpacity: PropTypes.oneOf([null, 'translucent', 'lightTranslucent', 'transparent']),
+		closeButtonBackgroundOpacity: PropTypes.oneOf(['translucent', 'lightTranslucent', 'transparent']),
 
 		/**
 		 * Unique identifier for the Panels instance

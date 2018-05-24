@@ -36,7 +36,7 @@ const ToggleButtonBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		backgroundOpacity: PropTypes.oneOf([null, 'translucent', 'lightTranslucent', 'transparent']),
+		backgroundOpacity: PropTypes.oneOf(['translucent', 'lightTranslucent', 'transparent']),
 
 		/**
 		 * The string to be displayed as the main content of the toggle button.

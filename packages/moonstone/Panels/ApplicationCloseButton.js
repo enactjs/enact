@@ -40,7 +40,7 @@ const ApplicationCloseButton = kind({
 		 * @default 'transparent'
 		 * @public
 		 */
-		backgroundOpacity: PropTypes.oneOf([null, 'translucent', 'lightTranslucent', 'transparent']),
+		backgroundOpacity: PropTypes.oneOf(['translucent', 'lightTranslucent', 'transparent']),
 
 		/**
 		 * A function to run when app close button is clicked

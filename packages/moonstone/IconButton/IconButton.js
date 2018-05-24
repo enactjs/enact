@@ -50,7 +50,7 @@ const IconButtonBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		backgroundOpacity: PropTypes.oneOf([null, 'translucent', 'lightTranslucent', 'transparent']),
+		backgroundOpacity: PropTypes.oneOf(['translucent', 'lightTranslucent', 'transparent']),
 
 		/**
 		 * The color of the underline beneath the icon.
@@ -61,7 +61,7 @@ const IconButtonBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
+		color: PropTypes.oneOf(['red', 'green', 'yellow', 'blue']),
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
