@@ -794,7 +794,9 @@ const VideoPlayerBase = class extends React.Component {
 	isTimeBeyondSelection (time) {
 		const {selection} = this.props;
 
-		if (selection != null) {
+		// if selection isn't set or only contains the starting value, there isn't a valid selection
+		// with which to test the time
+		if (selection != null && selection.length >= 2) {
 			const [start, end] = selection;
 
 			return time > end || time < start;
