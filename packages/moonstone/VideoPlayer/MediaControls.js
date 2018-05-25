@@ -132,7 +132,7 @@ const MediaControlsBase = kind({
 		 * @default 'blue'
 		 * @public
 		 */
-		moreButtonColor: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
+		moreButtonColor: PropTypes.oneOf(['red', 'green', 'yellow', 'blue']),
 
 		/**
 		 * Sets the `disabled` state on the media "more" button.
@@ -463,7 +463,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			 * @see {@link moonstone/IconButton.IconButtonBase.color}
 			 * @public
 			 */
-			moreButtonColor: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
+			moreButtonColor: PropTypes.oneOf(['red', 'green', 'yellow', 'blue']),
 
 			/**
 			 * Sets the `disabled` state on the media "more" button.
