@@ -269,7 +269,6 @@ const SliderBase = kind({
 		value = min,
 		...rest
 	}) => {
-		delete rest.backgroundProgress;
 		delete rest.max;
 		delete rest.noFill;
 		delete rest.pressed;
