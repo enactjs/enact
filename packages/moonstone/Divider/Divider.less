@@ -1,8 +1,8 @@
 // Divider.less
 //
-@import '../styles/variables.less';
-@import '../styles/text.less';
-@import '../styles/skin.less';
+@import "../styles/variables.less";
+@import "../styles/text.less";
+@import "../styles/skin.less";
 
 .divider {
 	.moon-divider-text();
@@ -10,7 +10,7 @@
 	border-bottom: @moon-divider-border-width solid transparent;
 	margin: 0 @moon-spotlight-outset (1.5 * @moon-spotlight-outset) @moon-spotlight-outset;
 	min-height: (1.5 * @moon-spotlight-outset);
-	line-height: 1.6em;
+	line-height: @moon-divider-height;
 
 	&.none {
 		margin-bottom: 0;
