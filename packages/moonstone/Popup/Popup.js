@@ -130,9 +130,10 @@ const PopupBase = kind({
 
 		/**
 		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
-		 * can be either `'none'`, `'self-first'`, or `'self-only'`. Note: The ready-to-use
-		 * [Popup]{@link moonstone/Popup.Popup} component only supports `'self-first'` and
-		 * `'self-only'`.
+		 * can be either `'none'`, `'self-first'`, or `'self-only'`.
+		 *
+		 * Note: The ready-to-use [Popup]{@link moonstone/Popup.Popup} component only supports
+		 * `'self-first'` and `'self-only'`.
 		 *
 		 * @type {String}
 		 * @default 'self-only'
@@ -259,10 +260,15 @@ class Popup extends React.Component {
 		noAutoDismiss: PropTypes.bool,
 
 		/**
-		 * A function to be run when a closing action is invoked by the user. These actions include
-		 * pressing `ESC` key, clicking on the close button, or spotlight focus moves outside the
-		 * boundary of the popup (when `spotlightRestrict` is not `'self-only'`). It is the
-		 * responsibility of the callback to set the `open` property to `false`.
+		 * A function to be run when a closing action is invoked by the user.
+		 *
+		 * These actions include
+		 * * pressing `ESC` key,
+		 * * clicking on the close button, or
+		 * * moving spotlight focus outside the boundary of the popup when `spotlightRestrict` is
+		 *   `'self-first'`.
+		 *
+		 * It is the responsibility of the callback to set the `open` property to `false`.
 		 *
 		 * @type {Function}
 		 * @public
