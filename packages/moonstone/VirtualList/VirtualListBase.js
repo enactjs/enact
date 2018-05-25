@@ -281,6 +281,7 @@ const VirtualListBaseFactory = (type) => {
 
 		isScrolledBy5way = false
 		isScrolledByJump = false
+		isWrappedBy5way = false
 		lastFocusedIndex = null
 		nodeIndexToBeFocused = null
 		preservedIndex = null
@@ -553,6 +554,9 @@ const VirtualListBaseFactory = (type) => {
 					null
 				);
 
+			this.isScrolledBy5way = false;
+			this.isWrappedBy5way = false;
+
 			// If the currently focused item is disabled, we assume that all items in a list are disabled.
 			if (
 				(!wrap && isItemDisabled === isItemDisabledDefault) ||
@@ -627,6 +631,10 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			if (nextIndex !== -1) {
+				if (isWrapped) {
+					this.isWrappedBy5way = true;
+				}
+
 				if (firstIndex <= nextIndex && nextIndex < firstIndex + numOfItems) {
 					this.focusOnItem(nextIndex);
 				} else {
@@ -651,6 +659,7 @@ const VirtualListBaseFactory = (type) => {
 						}, 50);
 					}
 
+					this.isScrolledBy5way = true;
 					cbScrollTo({
 						index: nextIndex,
 						stickTo: isForward ? 'end' : 'start',
@@ -667,12 +676,10 @@ const VirtualListBaseFactory = (type) => {
 		onKeyDown = (ev) => {
 			const {keyCode, repeat, target} = ev;
 
-			this.isScrolledBy5way = false;
 			if (getDirection(keyCode)) {
 				ev.preventDefault();
 				this.setSpotlightContainerRestrict(keyCode, target);
-				this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, repeat, target);
-				if (this.isScrolledBy5way) {
+				if (this.jumpToSpottableItem(keyCode, repeat, target)) {
 					ev.stopPropagation();
 				}
 			}
@@ -840,6 +847,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		shouldPreventScrollByFocus = () => ((type === JS) ? (this.isScrolledBy5way) : (this.isScrolledBy5way || this.isScrolledByJump))
+
+		shouldPreventOverscrollEffect = () => (this.isWrappedBy5way)
 
 		setLastFocusedIndex = (param) => {
 			this.lastFocusedIndex = param;
