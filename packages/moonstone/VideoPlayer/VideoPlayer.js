@@ -2,39 +2,41 @@
  * Provides Moonstone-themed video player components.
  *
  * @module moonstone/VideoPlayer
+ * @exports Video
  * @exports VideoPlayer
  * @exports VideoPlayerBase
  * @exports MediaControls
  */
 
-import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
-import ComponentOverride from '@enact/ui/ComponentOverride';
-import equals from 'ramda/src/equals';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
-import {contextTypes, FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
-import {adaptEvent, call, forKey, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
-import ilib from '@enact/i18n';
-import {perfNow, Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
-import {platform} from '@enact/core/platform';
+import {adaptEvent, call, forKey, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
+import {platform} from '@enact/core/platform';
+import {perfNow, Job} from '@enact/core/util';
+import ilib from '@enact/i18n';
+import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
+import {toUpperCase} from '@enact/i18n/util';
+import Spotlight from '@enact/spotlight';
+import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
+import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
+import Announce from '@enact/ui/AnnounceDecorator/Announce';
+import ComponentOverride from '@enact/ui/ComponentOverride';
+import {contextTypes, FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import Media from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
-import Spotlight from '@enact/spotlight';
-import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
-import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
-import {toUpperCase} from '@enact/i18n/util';
+import equals from 'ramda/src/equals';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import shallowEqual from 'recompose/shallowEqual';
 
 import $L from '../internal/$L';
-import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
+import Spinner from '../Spinner';
 
-import {calcNumberValueOfPlaybackRate, compareSources, secondsToTime} from './util';
+import {calcNumberValueOfPlaybackRate, secondsToTime} from './util';
 import Overlay from './Overlay';
 import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
@@ -42,7 +44,7 @@ import MediaSlider from './MediaSlider';
 import FeedbackContent from './FeedbackContent';
 import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
-import VideoWithPreload from './VideoWithPreload';
+import Video from './Video';
 
 import css from './VideoPlayer.less';
 
@@ -398,16 +400,6 @@ const VideoPlayerBase = class extends React.Component {
 		}),
 
 		/**
-		 * The video source to be preloaded.
-		 *
-		 * Expects a `<source>` node.
-		 *
-		 * @type {String|Node}
-		 * @public
-		 */
-		preloadSource:  PropTypes.node,
-
-		/**
 		 * When `true`, seek function is disabled.
 		 *
 		 * Note that jump by arrow keys will also be disabled when `true`.
@@ -516,6 +508,7 @@ const VideoPlayerBase = class extends React.Component {
 		 *	proportion of the media that has already been shown
 		 *
 		 * Events:
+		 * * `onLoadStart` - Called when the video starts to load
 		 * * `onPlay` - Sent when playback of the media starts after having been paused
 		 * * `onUpdate` - Sent when any of the properties were updated
 		 *
@@ -528,10 +521,10 @@ const VideoPlayerBase = class extends React.Component {
 		 * component as a child node.
 		 *
 		 * @type {Component}
-		 * @default 'video'
+		 * @default {@link ui/Media.Media}
 		 * @public
 		 */
-		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
+		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element])
 	}
 
 	static defaultProps = {
@@ -547,7 +540,7 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		titleHideDelay: 5000,
-		videoComponent: 'video'
+		videoComponent: Media
 	}
 
 	constructor (props) {
@@ -603,29 +596,11 @@ const VideoPlayerBase = class extends React.Component {
 		this.startDelayedFeedbackHide();
 	}
 
-	componentWillReceiveProps (nextProps) {
-		const {source} = this.props;
-		const {source: nextSource} = nextProps;
-
-		if (!compareSources(source, nextSource)) {
-			this.setState({
-				announce: AnnounceState.READY,
-				currentTime: 0,
-				proportionPlayed: 0,
-				proportionLoaded: 0
-			});
-		}
-	}
-
 	shouldComponentUpdate (nextProps, nextState) {
-		const {source} = this.props;
-		const {source: nextSource} = nextProps;
-
-		if (!compareSources(source, nextSource)) {
-			return true;
-		}
-
 		if (
+			// Use shallow props compare instead of source comparison to support possible changes
+			// from mediaComponent.
+			shallowEqual(this.props, nextProps) &&
 			!this.state.miniFeedbackVisible && this.state.miniFeedbackVisible === nextState.miniFeedbackVisible &&
 			!this.state.mediaSliderVisible && this.state.mediaSliderVisible === nextState.mediaSliderVisible &&
 			this.state.loading === nextState.loading && this.props.loading === nextProps.loading &&
@@ -636,9 +611,9 @@ const VideoPlayerBase = class extends React.Component {
 			)
 		) {
 			return false;
-		} else {
-			return true;
 		}
+
+		return true;
 	}
 
 	componentWillUpdate (nextProps) {
@@ -661,15 +636,6 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		const {source} = this.props;
-		const {source: prevSource, preloadSource: prevPreloadSource} = prevProps;
-
-		if (!compareSources(source, prevSource)) {
-			const isPreloadedVideo = source && prevPreloadSource && compareSources(source, prevPreloadSource);
-			this.reloadVideo(isPreloadedVideo);
-			this.showControls();
-		}
-
 		this.setFloatingLayerShowing(this.state.mediaControlsVisible || this.state.mediaSliderVisible);
 
 		if (!this.state.mediaControlsVisible && prevState.mediaControlsVisible) {
@@ -798,23 +764,24 @@ const VideoPlayerBase = class extends React.Component {
 		this.startDelayedFeedbackHide();
 		this.startDelayedTitleHide();
 
-		let {announce} = this.state;
-		if (announce === AnnounceState.READY) {
-			// if we haven't read the title yet, do so this time
-			announce = AnnounceState.TITLE;
-		} else if (announce === AnnounceState.TITLE) {
-			// if we have read the title, advance to INFO so title isn't read again
-			announce = AnnounceState.TITLE_READ;
-		}
+		this.setState(({announce}) => {
+			if (announce === AnnounceState.READY) {
+				// if we haven't read the title yet, do so this time
+				announce = AnnounceState.TITLE;
+			} else if (announce === AnnounceState.TITLE) {
+				// if we have read the title, advance to INFO so title isn't read again
+				announce = AnnounceState.TITLE_READ;
+			}
 
-		this.setState({
-			announce,
-			bottomControlsRendered: true,
-			feedbackVisible: true,
-			mediaControlsVisible: true,
-			mediaSliderVisible: true,
-			miniFeedbackVisible: false,
-			titleVisible: true
+			return {
+				announce,
+				bottomControlsRendered: true,
+				feedbackVisible: true,
+				mediaControlsVisible: true,
+				mediaSliderVisible: true,
+				miniFeedbackVisible: false,
+				titleVisible: true
+			};
 		});
 	}
 
@@ -963,6 +930,20 @@ const VideoPlayerBase = class extends React.Component {
 		return true;
 	}
 
+	handleLoadStart = () => {
+		this.firstPlayReadFlag = true;
+		this.prevCommand = this.props.noAutoPlay ? 'pause' : 'play';
+		this.speedIndex = 0;
+		this.setState({
+			announce: AnnounceState.READY,
+			currentTime: 0,
+			proportionPlayed: 0,
+			proportionLoaded: 0
+		});
+
+		this.showControls();
+	}
+
 	handlePlay = this.handle(
 		forwardPlay,
 		this.shouldShowMiniFeedback,
@@ -1081,17 +1062,6 @@ const VideoPlayerBase = class extends React.Component {
 			proportionLoaded  : this.state.proportionLoaded,
 			proportionPlayed  : this.state.proportionPlayed
 		};
-	}
-
-	reloadVideo = (isPreloaded) => {
-		// When changing a HTML5 video, you have to reload it.
-		if (!isPreloaded) {
-			this.video.load();
-		}
-
-		this.setState({
-			announce: AnnounceState.READY
-		});
 	}
 
 	/**
@@ -1615,12 +1585,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.announceRef = node;
 	}
 
-	handleLoadStart = () => {
-		if (!this.props.noAutoPlay) {
-			this.video.play();
-		}
-	}
-
 	getControlsAriaProps () {
 		if (this.state.announce === AnnounceState.TITLE) {
 			return {
@@ -1650,38 +1614,47 @@ const VideoPlayerBase = class extends React.Component {
 			noMiniFeedback,
 			noSlider,
 			noSpinner,
-			preloadSource,
-			source,
 			spotlightDisabled,
 			spotlightId,
 			style,
 			thumbnailComponent,
 			thumbnailSrc,
 			title,
-			videoComponent,
-			...rest} = this.props;
+			videoComponent: VideoComponent,
+			...mediaProps
+		} = this.props;
 
-		delete rest.announce;
-		delete rest.autoCloseTimeout;
-		delete rest.feedbackHideDelay;
-		delete rest.jumpBy;
-		delete rest.miniFeedbackHideDelay;
-		delete rest.onControlsAvailable;
-		delete rest.onFastForward;
-		delete rest.onJumpBackward;
-		delete rest.onJumpForward;
-		delete rest.onPause;
-		delete rest.onPlay;
-		delete rest.onRewind;
-		delete rest.onScrub;
-		delete rest.onSeekFailed;
-		delete rest.pauseAtEnd;
-		delete rest.playbackRateHash;
-		delete rest.seekDisabled;
-		delete rest.setApiProvider;
-		delete rest.thumbnailUnavailable;
-		delete rest.titleHideDelay;
-		delete rest.videoPath;
+		delete mediaProps.announce;
+		delete mediaProps.autoCloseTimeout;
+		delete mediaProps.children;
+		delete mediaProps.feedbackHideDelay;
+		delete mediaProps.jumpBy;
+		delete mediaProps.miniFeedbackHideDelay;
+		delete mediaProps.onControlsAvailable;
+		delete mediaProps.onFastForward;
+		delete mediaProps.onJumpBackward;
+		delete mediaProps.onJumpForward;
+		delete mediaProps.onPause;
+		delete mediaProps.onPlay;
+		delete mediaProps.onRewind;
+		delete mediaProps.onScrub;
+		delete mediaProps.onSeekFailed;
+		delete mediaProps.pauseAtEnd;
+		delete mediaProps.playbackRateHash;
+		delete mediaProps.seekDisabled;
+		delete mediaProps.setApiProvider;
+		delete mediaProps.thumbnailUnavailable;
+		delete mediaProps.titleHideDelay;
+		delete mediaProps.videoPath;
+
+		mediaProps.autoPlay = !noAutoPlay;
+		mediaProps.className = css.video;
+		mediaProps.controls = false;
+		mediaProps.mediaComponent = 'video';
+		mediaProps.onPlay = this.handlePlayEvent;
+		mediaProps.onLoadStart = this.handleLoadStart;
+		mediaProps.onUpdate = this.handleEvent;
+		mediaProps.ref = this.setVideoRef;
 
 		const controlsAriaProps = this.getControlsAriaProps();
 
@@ -1696,30 +1669,15 @@ const VideoPlayerBase = class extends React.Component {
 				style={style}
 			>
 				{/* Video Section */}
-				{this.props.preloadSource ?
-					<VideoWithPreload
-						{...rest}
-						handleEvent={this.handleEvent}
-						handleLoadStart={this.handleLoadStart}
-						noAutoPlay={noAutoPlay}
-						onPlay={this.handlePlayEvent}
-						preloadSource={preloadSource}
-						source={source}
-						videoComponent={videoComponent}
-						videoRef={this.setVideoRef}
-					/> :
-					<Media
-						{...rest}
-						autoPlay={!noAutoPlay}
-						className={css.video}
-						component={videoComponent}
-						controls={false}
-						onPlay={this.handlePlayEvent}
-						onUpdate={this.handleEvent}
-						ref={this.setVideoRef}
-					>
-						{source}
-					</Media>
+				{
+					// Duplicating logic from <ComponentOverride /> until enzyme supports forwardRef
+					VideoComponent && (
+						(typeof VideoComponent === 'function' || typeof VideoComponent === 'string') && (
+							<VideoComponent {...mediaProps} />
+						) || React.isValidElement(VideoComponent) && (
+							React.cloneElement(VideoComponent, mediaProps)
+						)
+					) || null
 				}
 
 				<Overlay
@@ -1895,7 +1853,7 @@ const VideoPlayer = ApiDecorator(
 		'toggleControls'
 	]},
 	Slottable(
-		{slots: ['infoComponents', 'mediaControlsComponent', 'source', 'thumbnailComponent']},
+		{slots: ['infoComponents', 'mediaControlsComponent', 'source', 'thumbnailComponent', 'videoComponent']},
 		FloatingLayerDecorator(
 			{floatLayerId: 'videoPlayerFloatingLayer'},
 			Skinnable(
@@ -1906,4 +1864,9 @@ const VideoPlayer = ApiDecorator(
 );
 
 export default VideoPlayer;
-export {VideoPlayer, MediaControls, VideoPlayerBase};
+export {
+	MediaControls,
+	Video,
+	VideoPlayer,
+	VideoPlayerBase
+};
