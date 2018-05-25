@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
+- `moonstone/Popup`, `moonstone/Dialog` and `moonstone/Notification` property `spotlightRestrict` option `'none'`
 - `moonstone/VideoPlayer` prop `preloadSource`, to be replaced by `moonstone/VideoPlayer.Video` prop `preloadSource`
 - `moonstone/Button` and `moonstone/IconButton` allowed value `'opaque'` from prop `backgroundOpacity` which was the default and therefore has the same effect as omitting the prop
 
