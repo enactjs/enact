@@ -4,13 +4,20 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Removed
+
+- `moonstone/Button` and `moonstone/IconButton` allowed value `'opaque'` from prop `backgroundOpacity` which was the default and therefore has the same effect as omitting the prop
+
 ### Added
 
 - `moonstone/VideoPlayer` props `selection` and `onSeekOutsideRange` to support selecting a range and notification of interactions outside of that range
 
 ### Fixed
 
+- `moonstone/ContextualPopupDecorator` to properly stop propagating keydown event if fired from the popup container
+- `moonstone/Slider` to read when focus to knob or change value
 - `moonstone/Scroller` to not cut off expandables when scrollbar appears
+- `moonstone/VideoPlayer` to correctly read out when play button is pressed
 
 ## [2.0.0-beta.4] - 2018-05-21
 
