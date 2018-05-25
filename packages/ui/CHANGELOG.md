@@ -2,10 +2,13 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [Unreleased] 
+## [unreleased]
 
 ### Fixed
+
 - `ui/MarqueeController` to listen for webOS pointer hiding
+- `ui/Touchable` to end gestures when focus is lost
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to prevent items overlap with scroll buttons
 
 ## [2.0.0-beta.4] - 2018-05-21
 
