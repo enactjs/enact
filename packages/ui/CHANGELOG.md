@@ -7,10 +7,15 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/FloatingLayerDecorator` imperative API to close all floating layers registered in the same id 
+- `ui/ProgressBar` and `ui/Slider` prop `progressAnchor` to configure from where in the progress bar or slider progress should begin
+- `ui/Slider` prop `progressBarComponent` to support customization of progress bar within a slider
+- `ui/ForwardRef` HOC to adapt `React.forwardRef` to HOC chains
+- `ui/Media` component
 
 ### Fixed
 
 - `ui/Touchable` to end gestures when focus is lost
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to prevent items overlap with scroll buttons
 
 ## [2.0.0-beta.4] - 2018-05-21
 

@@ -37,6 +37,26 @@ const SliderBase = kind({
 
 	propTypes: /** @lends ui/Slider.SliderBase.prototype */ {
 		/**
+		 * The component used to render the progress bar within the slider
+		 *
+		 * The provided component will receive the following props from `Slider`
+		 *
+		 * * backgroundProgress - The value of `backgroundProgress`
+		 * * orientation        - The value of `orientation`
+		 * * progress           - The `value` as a proportion between `min` and `max`
+		 * * progressAnchor     - The value of `progressAnchor`
+		 *
+		 * This prop accepts either a Component (e.g. `MyProgress`} which will be instantiated with
+		 * the above props or a component instance (e.g. `<MyProgress customProp="value" />`) which
+		 * will have its props merged with the above props.
+		 *
+		 * @type {Component|Element}
+		 * @required
+		 * @public
+		 */
+		progressBarComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
+
+		/**
 		 * Background progress, as a proportion between `0` and `1`.
 		 *
 		 * @type {Number}
@@ -51,15 +71,12 @@ const SliderBase = kind({
 		 *
 		 * The following classes are supported:
 		 *
-		 * * `slider` - The root component class
-		 * * `fill` - The progress bar node representing the `value`
-		 * * `load` - The progress bar node representing the `backgroundProgress`
-		 * * `knob` - The knob node
-		 * * `bars` - The parent node for the fill bar, load bar, and knob
+		 * * `slider`     - The root component class
+		 * * `knob`       - The knob node
 		 * * `horizontal` - Applied when `orientation` prop is `"horizontal"``
-		 * * `pressed` - Applied when `pressed` prop is `true`
-		 * * `noFill` - Applied when `noFill` prop is `true`
-		 * * `vertical` - Applied when `orientation` prop is `"vertical"`
+		 * * `pressed`    - Applied when `pressed` prop is `true`
+		 * * `noFill`     - Applied when `noFill` prop is `true`
+		 * * `vertical`   - Applied when `orientation` prop is `"vertical"`
 		 *
 		 * @type {Object}
 		 * @public
@@ -81,13 +98,12 @@ const SliderBase = kind({
 		 *
 		 * The following props are forwarded to the tooltip:
 		 *
-		 * * `className` - A `knob` class applied by the slider
-		 * * `disabled` - The value of `disabled` from the slider
-		 * * `orientation` - The value of `orientation` from the slider
-		 * * `proportion` - A number between 0 and 1 representing the proportion of the `value` in
-		 *   terms of `min` and `max`
-		 * * `tooltipComponent` - The value of `tooltipComponent` from the slider
-		 * * `value` - The value of `value` from the slider
+		 * * `className`        - A `knob` class applied by the slider
+		 * * `disabled`         - The value of `disabled`
+		 * * `orientation`      - The value of `orientation`
+		 * * `proportion`       - The `value` as a proportion between `min` and `max`
+		 * * `tooltipComponent` - The value of `tooltipComponent`
+		 * * `value`            - The value of `value`
 		 *
 		 * This prop accepts either a Component (e.g. `MyKnob`} which will be instantiated with
 		 * the above props or a component instance (e.g. `<MyKnob customProp="value" />`) which
@@ -146,6 +162,21 @@ const SliderBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
+		 * Sets the point, as a proportion between 0 and 1, from which the slider is filled.
+		 *
+		 * Applies to both the slider's `value` and `backgroundProgress`. In both cases,
+		 * setting the value of `progressAnchor` will cause the slider to fill from that point
+		 * down, when `value` or `backgroundProgress` is proportionally less than the anchor, or up,
+		 * when `value` or `backgroundProgress` is proportionally greater than the anchor, rather
+		 * than always from the start of the slider.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		progressAnchor: PropTypes.number,
+
+		/**
 		 * The amount to increment or decrement the value.
 		 *
 		 * @type {Number}
@@ -159,10 +190,9 @@ const SliderBase = kind({
 		 *
 		 * The following props are forwarded to the tooltip:
 		 *
-		 * * `children` - The `value` prop from the slider
+		 * * `children`    - The `value` prop from the slider
 		 * * `orientation` - The value of the `orientation` prop from the slider
-		 * * `proportion` - A number between 0 and 1 representing the proportion of the `value` in
-		 *   terms of `min` and `max`
+		 * * `proportion`  - The `value` as a proportion between `min` and `max`
 		 *
 		 * This prop accepts either a Component (e.g. `MyTooltip`} which will be instantiated with
 		 * the above props or a component instance (e.g. `<MyTooltip customProp="value" />`) which
@@ -193,6 +223,7 @@ const SliderBase = kind({
 		max: 100,
 		noFill: false,
 		orientation: 'horizontal',
+		progressAnchor: 0,
 		step: 1
 	},
 
@@ -214,20 +245,30 @@ const SliderBase = kind({
 			);
 		},
 		percent: ({max, min, value = min}) => calcProportion(min, max, value),
-		style: ({backgroundProgress, max, min, style, value = min}) => {
+		style: ({max, min, style, value = min}) => {
 			const proportion = calcProportion(min, max, value);
 
 			return {
 				...style,
-				'--ui-slider-proportion-end': proportion,
-				'--ui-slider-proportion-end-background': backgroundProgress,
 				'--ui-slider-proportion-end-knob': proportion
 			};
 		}
 	},
 
-	render: ({css, disabled, knobComponent, min, orientation, percent, tooltipComponent, value = min, ...rest}) => {
-		delete rest.backgroundProgress;
+	render: ({
+		backgroundProgress,
+		css,
+		disabled,
+		knobComponent,
+		min,
+		orientation,
+		percent,
+		progressBarComponent,
+		progressAnchor,
+		tooltipComponent,
+		value = min,
+		...rest
+	}) => {
 		delete rest.max;
 		delete rest.noFill;
 		delete rest.pressed;
@@ -235,9 +276,13 @@ const SliderBase = kind({
 
 		return (
 			<div {...rest} disabled={disabled}>
-				<div className={css.bars}>
-					<div className={css.load} />
-					<div className={css.fill} />
+				<ComponentOverride
+					backgroundProgress={backgroundProgress}
+					component={progressBarComponent}
+					orientation={orientation}
+					progress={percent}
+					progressAnchor={progressAnchor}
+				>
 					<ComponentOverride
 						className={css.knob}
 						component={knobComponent}
@@ -247,7 +292,7 @@ const SliderBase = kind({
 						tooltipComponent={tooltipComponent}
 						value={value}
 					/>
-				</div>
+				</ComponentOverride>
 			</div>
 		);
 	}

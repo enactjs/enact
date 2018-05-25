@@ -496,8 +496,8 @@ const VirtualListBaseFactory = (type) => {
 
 		setContainerSize = () => {
 			if (this.contentRef) {
-				this.contentRef.style.width = this.scrollBounds.scrollWidth + 'px';
-				this.contentRef.style.height = this.scrollBounds.scrollHeight + 'px';
+				this.contentRef.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
+				this.contentRef.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
 			}
 		}
 
