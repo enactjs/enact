@@ -37,14 +37,15 @@ const forwardToggleMore = forward('onToggleMore');
  * A set of components to control media playback and render additional components in designated
  * areas.
  *
- * @class MediaControls
+ * @class MediaControlsBase
  * @memberof moonstone/VideoPlayer
  * @ui
- * @public
+ * @private
  */
 const MediaControlsBase = kind({
 	name: 'MediaControls',
 
+	// intentionally assigning these props to MediaControls instead of Base (which is private)
 	propTypes: /** @lends moonstone/VideoPlayer.MediaControls.prototype */ {
 		/**
 		 * A string which is sent to the `backward` icon of the player controls. This can be
@@ -286,7 +287,7 @@ const MediaControlsBase = kind({
 		 * When `true`, more components are visible.
 		 *
 		 * @type {Boolean}
-		 * @public
+		 * @private
 		 */
 		showMoreComponents: PropTypes.bool,
 
@@ -424,7 +425,7 @@ const MediaControlsBase = kind({
  * @memberof moonstone/VideoPlayer
  * @mixes ui/Slottable.Slottable
  * @hoc
- * @public
+ * @private
  */
 const MediaControlsDecorator = hoc((config, Wrapped) => {
 	class MediaControlsDecoratorHOC extends React.Component {
@@ -860,15 +861,16 @@ const handleCancel = (ev, {onClose}) => {
 
 /**
  * A set of components to control media playback and render additional components in designated
- * areas. It accetps custom tags `<leftComponents>`, and `<rightComponents>`. Any additional
- * children will be rendered into the "more" controls area. "More" button would appear if any
- * children exist and transitioning will be handle by `MediaControls`.
+ * areas.
  *
+ * `MediaControls` uses [Slottable]{@link ui/Slottable} to accept the custom tags `<leftComponents>`
+ * and `<rightComponents>` to add components to the left and right, respectively, of the media
+ * controls. Any additional children will be rendered into the "more" controls area causing the
+ * "More" button to appear. Showing the additional components is handled by `MediaControls` when the
+ * user taps the "More" button.
  *
  * @class MediaControls
  * @memberof moonstone/VideoPlayer
- * @extends moonstone/VideoPlayer.MediaControlsBase
- * @mixes moonstone/VideoPlayer.MediaControlsDecorator
  * @mixes ui/Cancelable.Cancelable
  * @ui
  * @public
