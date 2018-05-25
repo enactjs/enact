@@ -41,6 +41,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Marquee.MarqueeController` to not cancel valid animations
 - `moonstone/VideoPlayer` feedback and feedback icon to hide properly on play/pause/fast forward/rewind
 - `moonstone/VideoPlayer` to correctly focus to default media controls component
+- `moonstone/VideoPlayer` to close opened popup components when media controls hide
 - `moonstone/VideoPlayer` to show controls on mount and when playing next preload video
 
 ## [2.0.0-beta.3] - 2018-05-14
