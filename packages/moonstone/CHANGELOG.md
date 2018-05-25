@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Removed
 
 - `moonstone/VideoPlayer` prop `preloadSource`, to be replaced by `moonstone/VideoPlayer.Video` prop `preloadSource`
+- `moonstone/Button` and `moonstone/IconButton` allowed value `'opaque'` from prop `backgroundOpacity` which was the default and therefore has the same effect as omitting the prop
 
 ### Added
 
@@ -15,7 +16,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/VideoPlayer.videoComponent` prop to default to `ui/Media.Media` instead of `'video'`. As a result, to use a custom video element, one must pass an instance of `ui/Media` with its `mediaComponent` prop set to the desired element.
-- `moonstone/Button` and `moonstone/IconButton` allowed value `'opaque'` from prop `backgroundOpacity` which was the default and therefore has the same effect as omitting the prop
 
 ### Fixed
 
