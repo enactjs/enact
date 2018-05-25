@@ -4,7 +4,7 @@ import {Job} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {is} from '@enact/core/keymap';
-import {platform} from '@enact/core/platform';
+import {on, off} from '@enact/core/dispatcher';
 
 const STATE = {
 	inactive: 0,	// Marquee is not necessary (render or focus not happened)
@@ -138,16 +138,12 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			if (platform.webos) {
-				document.addEventListener('keydown', this.checkPointerHide);
-			}
+			on('keydown', this.checkPointerHide, document);
 		}
 
 		componentWillUnmount () {
 			this.cancelJob.stop();
-			if (platform.webos) {
-				document.removeEventListener('keydown', this.checkPointerHide);
-			}
+			off('keydown', this.checkPointerHide, document);
 		}
 
 		checkPointerHide = ({keyCode}) => {
