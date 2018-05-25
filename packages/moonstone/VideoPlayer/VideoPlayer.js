@@ -212,6 +212,7 @@ const VideoPlayerBase = class extends React.Component {
 		 *
 		 * * `mediaDisabled` -
 		 * * `onBackwardButtonClick` - Called when the rewind button is pressed
+		 * * `onClose` - Called when cancel key is pressed when the media controls are visible
 		 * * `onFastForward` - Called when the media is fast forwarded via a key event
 		 * * `onForwardButtonClick` - Called when the fast forward button is pressed
 		 * * `onJump` - Called when the media jumps either forward or backward
