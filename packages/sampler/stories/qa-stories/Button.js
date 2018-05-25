@@ -7,7 +7,8 @@ import css from './Button.less';
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'lightTranslucent': 'lightTranslucent', 'transparent': 'transparent'},
+	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
+	casing: ['preserve', 'sentence', 'word', 'upper'],
 	longText:{'Loooooooooooooooooog Button': 'Loooooooooooooooooog Button', 'BUTTON   WITH   EXTRA   SPACES': 'BUTTON   WITH   EXTRA   SPACES'},
 	tallText:{'ิ้  ไั  ஒ  து': 'ิ้  ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'}
 };
@@ -17,7 +18,7 @@ storiesOf('Button', module)
 		'with long text',
 		() => (
 			<Button
-				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
+				casing={select('casing', prop.casing)}
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}
@@ -33,7 +34,7 @@ storiesOf('Button', module)
 		'with tall characters',
 		() => (
 			<Button
-				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
+				casing={select('casing', prop.casing, 'upper')}
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}
@@ -49,7 +50,7 @@ storiesOf('Button', module)
 		'to validate minWidth with a single character',
 		() => (
 			<Button
-				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
+				casing={select('casing', prop.casing, 'upper')}
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}
@@ -79,7 +80,7 @@ storiesOf('Button', module)
 		() => (
 			<div>
 				<Button
-					casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
+					casing={select('casing', prop.casing, 'upper')}
 					className={css.tapArea}
 					onClick={action('onClick')}
 					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
@@ -90,7 +91,7 @@ storiesOf('Button', module)
 					Normal Button
 				</Button>
 				<Button
-					casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
+					casing={select('casing', prop.casing, 'upper')}
 					className={css.tapArea}
 					onClick={action('onClick')}
 					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
