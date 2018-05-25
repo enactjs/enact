@@ -4,7 +4,7 @@ class ClickAllow {
 	}
 
 	setLastMouseUp (ev) {
-		if (ev.type === 'mouseup') {
+		if (ev && ev.type === 'mouseup') {
 			this.lastMouseUpTime = ev.timeStamp;
 		}
 	}
