@@ -6,6 +6,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/ProgressBar` and `ui/Slider` prop `progressAnchor` to configure from where in the progress bar or slider progress should begin
+- `ui/Slider` prop `progressBarComponent` to support customization of progress bar within a slider
 - `ui/ForwardRef` HOC to adapt `React.forwardRef` to HOC chains
 - `ui/Media` component
 

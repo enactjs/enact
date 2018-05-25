@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/VideoPlayer` props `selection` and `onSeekOutsideRange` to support selecting a range and notification of interactions outside of that range
 - `moonstone/VideoPlayer.Video` component to support preloading video sources
 
 ### Changed

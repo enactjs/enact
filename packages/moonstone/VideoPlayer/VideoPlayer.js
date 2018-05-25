@@ -212,7 +212,7 @@ const VideoPlayerBase = class extends React.Component {
 		 *
 		 * The provided component will receive the following props from `VideoPlayer`:
 		 *
-		 * * `mediaDisabled` -
+		 * * `mediaDisabled` - `true` when the media controls are not interactive
 		 * * `onBackwardButtonClick` - Called when the rewind button is pressed
 		 * * `onClose` - Called when cancel key is pressed when the media controls are visible
 		 * * `onFastForward` - Called when the media is fast forwarded via a key event
@@ -371,6 +371,17 @@ const VideoPlayerBase = class extends React.Component {
 		onSeekFailed: PropTypes.func,
 
 		/**
+		 * Function executed when seeking outside of the current `selection` range.
+		 *
+		 * By default, the seek will still be performed. Calling `preventDefault()` on the event
+		 * will prevent the seek operation.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onSeekOutsideSelection: PropTypes.func,
+
+		/**
 		 * When `true`, the video will pause when it reaches either the start or the end of the
 		 * video during rewind, slow rewind, fast forward, or slow forward.
 		 *
@@ -408,6 +419,25 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		seekDisabled: PropTypes.bool,
+
+		/**
+		 * A range of the video to display as selected.
+		 *
+		 * The value of `selection` may either be:
+		 * * `null` or `undefined` for no selection,
+		 * * a single-element array with the start time of the selection
+		 * * a two-element array containing both the start and end time of the selection in seconds
+		 *
+		 * When the start time is specified, the media slider will show filled starting at that
+		 * time to the current time.
+		 *
+		 * When the end time is specified, the slider's background will be filled between the two
+		 * times.
+		 *
+		 * @type {Number[]}
+		 * @public
+		 */
+		selection: PropTypes.arrayOf(PropTypes.number),
 
 		/**
 		 * Registers the VideoPlayer component with an
@@ -726,6 +756,27 @@ const VideoPlayerBase = class extends React.Component {
 		return Math.random().toString(36).substr(2, 8);
 	}
 
+	isTimeBeyondSelection (time) {
+		const {selection} = this.props;
+
+		// if selection isn't set or only contains the starting value, there isn't a valid selection
+		// with which to test the time
+		if (selection != null && selection.length >= 2) {
+			const [start, end] = selection;
+
+			return time > end || time < start;
+		}
+
+		return false;
+	}
+
+	preventTimeChange (time) {
+		return (
+			this.isTimeBeyondSelection(time) &&
+			!forwardWithPrevent('onSeekOutsideSelection', {type: 'onSeekOutsideSelection', time}, this.props)
+		);
+	}
+
 	/**
 	 * If the announce state is either ready to read the title or ready to read info, advance the
 	 * state to "read".
@@ -971,13 +1022,14 @@ const VideoPlayerBase = class extends React.Component {
 	handleJump = ({keyCode}) => {
 		if (this.props.seekDisabled) {
 			forward('onSeekFailed', {}, this.props);
-		} else if (is('left', keyCode)) {
+		} else {
+			const jumpBy = (is('left', keyCode) ? -1 : 1) * this.props.jumpBy;
+			const time = Math.min(this.state.duration, Math.max(0, this.state.currentTime + jumpBy));
+
+			if (this.preventTimeChange(time)) return;
+
 			this.showMiniFeedback = true;
-			this.jump(-1 * this.props.jumpBy);
-			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
-		} else if (is('right', keyCode)) {
-			this.showMiniFeedback = true;
-			this.jump(this.props.jumpBy);
+			this.jump(jumpBy);
 			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
 		}
 	}
@@ -1455,8 +1507,13 @@ const VideoPlayerBase = class extends React.Component {
 	onVideoClick = () => {
 		this.toggleControls();
 	}
+
 	onSliderChange = ({value}) => {
-		this.seek(value * this.state.duration);
+		const time = value * this.state.duration;
+
+		if (this.preventTimeChange(time)) return;
+
+		this.seek(time);
 		this.sliderScrubbing = false;
 	}
 
@@ -1614,6 +1671,7 @@ const VideoPlayerBase = class extends React.Component {
 			noMiniFeedback,
 			noSlider,
 			noSpinner,
+			selection,
 			spotlightDisabled,
 			spotlightId,
 			style,
@@ -1639,6 +1697,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete mediaProps.onRewind;
 		delete mediaProps.onScrub;
 		delete mediaProps.onSeekFailed;
+		delete mediaProps.onSeekOutsideSelection;
 		delete mediaProps.pauseAtEnd;
 		delete mediaProps.playbackRateHash;
 		delete mediaProps.seekDisabled;
@@ -1657,6 +1716,11 @@ const VideoPlayerBase = class extends React.Component {
 		mediaProps.ref = this.setVideoRef;
 
 		const controlsAriaProps = this.getControlsAriaProps();
+
+		let proportionSelection = selection;
+		if (proportionSelection != null && this.state.duration) {
+			proportionSelection = selection.map(t => t / this.state.duration);
+		}
 
 		return (
 			<RootContainer
@@ -1732,6 +1796,7 @@ const VideoPlayerBase = class extends React.Component {
 								onKeyDown={this.handleSliderKeyDown}
 								onKnobMove={this.handleKnobMove}
 								onSpotlightUp={this.handleSpotlightUpFromSlider}
+								selection={proportionSelection}
 								spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
 								value={this.state.proportionPlayed}
 								visible={this.state.mediaSliderVisible}
