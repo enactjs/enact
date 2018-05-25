@@ -177,7 +177,9 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 			let {backgroundProgress} = this.props;
 			let progressAnchor = 0;
 
-			if (selection != null) {
+			if (selection != null && selection.length > 0) {
+				// extracts both values from selection, defaulting backgroundProgress to
+				// progressAnchor if not defined
 				[progressAnchor, backgroundProgress = progressAnchor] = selection;
 			}
 
