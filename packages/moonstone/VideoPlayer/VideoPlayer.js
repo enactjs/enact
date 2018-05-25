@@ -1727,6 +1727,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.onRewind;
 		delete rest.onScrub;
 		delete rest.onSeekFailed;
+		delete rest.onSeekOutsideSelection;
 		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;
 		delete rest.seekDisabled;
