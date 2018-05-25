@@ -212,6 +212,7 @@ const VideoPlayerBase = class extends React.Component {
 		 *
 		 * * `mediaDisabled` -
 		 * * `onBackwardButtonClick` - Called when the rewind button is pressed
+		 * * `onClose` - Called when cancel key is pressed when the media controls are visible
 		 * * `onFastForward` - Called when the media is fast forwarded via a key event
 		 * * `onForwardButtonClick` - Called when the fast forward button is pressed
 		 * * `onJump` - Called when the media jumps either forward or backward
@@ -559,7 +560,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.showMiniFeedback = false;
 		this.speedIndex = 0;
-		this.firstPlayReadFlag = true;
 		this.id = this.generateId();
 		this.selectPlaybackRates('fastForward');
 		this.sliderKnobProportion = 0;
@@ -608,7 +608,6 @@ const VideoPlayerBase = class extends React.Component {
 		const {source: nextSource} = nextProps;
 
 		if (!compareSources(source, nextSource)) {
-			this.firstPlayReadFlag = true;
 			this.setState({
 				announce: AnnounceState.READY,
 				currentTime: 0,
@@ -1122,11 +1121,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(1);
 		this.send('play');
 		this.prevCommand = 'play';
-		if (this.firstPlayReadFlag) {
-			this.firstPlayReadFlag = false;
-		} else {
-			this.announce($L('Play'));
-		}
+		this.announce($L('Play'));
 		this.startDelayedMiniFeedbackHide(5000);
 	}
 
@@ -1600,6 +1595,11 @@ const VideoPlayerBase = class extends React.Component {
 		});
 	}
 
+	handleMediaControlsClose = (ev) => {
+		this.hideControls();
+		ev.stopPropagation();
+	}
+
 	setPlayerRef = (node) => {
 		// TODO: We've moved SpotlightContainerDecorator up to allow VP to be spottable but also
 		// need a ref to the root node to query for children and set CSS variables.
@@ -1795,6 +1795,7 @@ const VideoPlayerBase = class extends React.Component {
 								component={mediaControlsComponent}
 								mediaDisabled={disabled || this.state.mediaControlsDisabled}
 								onBackwardButtonClick={this.handleRewind}
+								onClose={this.handleMediaControlsClose}
 								onFastForward={this.handleFastForward}
 								onForwardButtonClick={this.handleFastForward}
 								onJump={this.handleJump}
@@ -1830,19 +1831,22 @@ const VideoPlayerBase = class extends React.Component {
 /**
  * {@link moonstone/VideoPlayer.VideoPlayer} is a standard HTML5 video player for Moonstone. It
  * behaves, responds to, and operates like a standard `<video>` tag in its support for `<source>`s
- * and accepts several additional custom tags like `<infoComponents>`, `<leftComponents>`, and
- * `<rightComponents>`. Any additional children will be rendered into the "more" controls area.
+ * It also accepts custom tags such as `<infoComponents>` for displaying additional information
+ * in the title area and `<MediaControls>` for handling media playback controls and adding more
+ * controls.
  *
  * Example usage:
  * ```
  *	<VideoPlayer title="Hilarious Cat Video" poster="http://my.cat.videos/boots-poster.jpg">
  *		<source src="http://my.cat.videos/boots.mp4" type="video/mp4" />
  *		<infoComponents>A video about my cat Boots, wearing boots.</infoComponents>
- *		<leftComponents><IconButton backgroundOpacity="translucent">star</IconButton></leftComponents>
- *		<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
+ *		<MediaControls>
+ *			<leftComponents><IconButton backgroundOpacity="translucent">star</IconButton></leftComponents>
+ *			<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
  *
- *		<Button backgroundOpacity="translucent">Add To Favorites</Button>
- *		<IconButton backgroundOpacity="translucent">search</IconButton>
+ *			<Button backgroundOpacity="translucent">Add To Favorites</Button>
+ *			<IconButton backgroundOpacity="translucent">search</IconButton>
+ *		</MediaControls>
  *	</VideoPlayer>
  * ```
  *

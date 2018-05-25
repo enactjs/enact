@@ -9,10 +9,10 @@ and to update the current locale. Additionally, it provides a locale-aware `Uppe
 ## Usage
 
 ```
-import {I18nDecorator, contextTypes} from `@enact/i18n/I18nDecorator`;
+import {I18nDecorator, contextTypes} from '@enact/i18n/I18nDecorator';
 
 const MyComponent = (props, context) => (
-    <div>{context.rtl ? "right to left" : "left to right"}</div>
+    <div>{context.rtl ? 'right to left' : 'left to right'}</div>
 );
 
 // Without contextTypes, your component will not receive context!
@@ -31,7 +31,7 @@ const MyI18nApp = I18nDecorator(MyApp);
 the wrapped component, provided it is a `string`.
 
 ```
-import Uppercase from `@enact/i18n/Uppercase`
+import Uppercase from '@enact/i18n/Uppercase';
 
 const MyComponent = (props) => (
     <div {...props} />
@@ -49,7 +49,7 @@ npm install --save @enact/i18n
 
 ## Acknowledgments
 
-This module is built upon the [iLib](http://docs.jedlsoft.com/ilib/jsdoc/) library.
+This module is built upon the [iLib](http://github.com/iLib-js/iLib) library.
 
 ## Copyright and License Information
 
@@ -72,5 +72,5 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-This work is based on the Apache-2.0 licensed [iLib](http://sourceforge.net/projects/i18nlib/)
-from [JEDLsoft](http://jedlsoft.com/index.html).
+This work is based on the Apache-2.0 licensed [iLib](http://github.com/iLib-js/iLib)
+from JEDLSoft.
