@@ -8,6 +8,7 @@ let toLowerCaseMapper, toUpperCaseMapper;
  * @returns {undefined}
  */
 function initCaseMappers () {
+	console.error("src/case.js initCaseMappers");
 	toLowerCaseMapper = new CaseMapper({direction: 'tolower'});
 	toUpperCaseMapper = new CaseMapper({direction: 'toupper'});
 }
@@ -19,6 +20,7 @@ function initCaseMappers () {
  * @returns {String} Lower-cased string
  */
 const toLowerCase = function (inString) {
+	console.error("src/case.js toLowerCase");
 	if (inString != null) {
 		return toLowerCaseMapper.map(inString.toString());
 	}
@@ -32,6 +34,7 @@ const toLowerCase = function (inString) {
  * @returns {String} Upper-cased string
  */
 const toUpperCase = function (inString) {
+	console.error("src/case.js toUpperCase");
 	if (inString != null) {
 		return toUpperCaseMapper.map(inString.toString());
 	}

@@ -24,6 +24,7 @@ import {setResBundleLocale} from '../src/resBundle';
  * @returns {Boolean} `true` if non-Latin locale
  */
 function isNonLatinLocale (spec) {
+	console.error("locale/locale.js isNonLatinLocale");
 	const li = new LocaleInfo(spec),
 		locale = li.getLocale();
 
@@ -56,6 +57,7 @@ function isNonLatinLocale (spec) {
  * @returns {Boolean} `true` if current locale is a right-to-left locale
  */
 function isRtlLocale () {
+	console.error("locale/locale.js isRtlLocale");
 	const li = new LocaleInfo();
 	const scriptName = li.getScript();
 	const script = new ScriptInfo(scriptName);
@@ -75,6 +77,7 @@ function isRtlLocale () {
  * @returns {undefined}
  */
 const updateLocale = function (locale) {
+	console.error("locale/locale.js updateLocale");
 	// blow away the cache to force it to reload the manifest files for the new app
 	// eslint-disable-next-line no-undefined
 	if (ilib._load) ilib._load.manifest = undefined;

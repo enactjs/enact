@@ -24,6 +24,7 @@ import IString from '../ilib/lib/IString';
  * @returns {ilib.IString} The translated string
  */
 function toIString (str) {
+	console.error("$L toIString");
 	const rb = getResBundle();
 	const isObject = typeof str === 'object';
 	if (rb) {
@@ -42,6 +43,7 @@ function toIString (str) {
  * @returns {String} The translated string.
  */
 function $L (str) {
+	console.error("$L $L");
 	return String(toIString(str));
 }
 

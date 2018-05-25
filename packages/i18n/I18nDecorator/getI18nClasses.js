@@ -2,6 +2,7 @@ import {isNonLatinLocale, isRtlLocale} from '../locale';
 import LocaleInfo from '../ilib/lib/LocaleInfo';
 
 function getI18nClasses () {
+	console.error("getI18nClasses");
 	const li = new LocaleInfo(); // for the current locale
 	const locale = li.getLocale();
 	const base = 'enact-locale-';

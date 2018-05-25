@@ -58,6 +58,7 @@ const IntlHoc = hoc((config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			console.error("I18nDecorator constructor");
 			const ilibLocale = ilib.getLocale();
 			const locale = props.locale && props.locale !== ilibLocale ? updateLocale(props.locale) : ilibLocale;
 
@@ -67,6 +68,7 @@ const IntlHoc = hoc((config, Wrapped) => {
 		}
 
 		getChildContext () {
+			console.error("I18nDecorator getChildContext");
 			return {
 				Subscriber: this.publisher.getSubscriber(),
 				rtl: isRtlLocale(),
@@ -75,6 +77,7 @@ const IntlHoc = hoc((config, Wrapped) => {
 		}
 
 		componentWillMount () {
+			console.error("I18nDecorator componentWillMount");
 			this.publisher = Publisher.create('i18n', this.context.Subscriber);
 			this.publisher.publish({
 				locale: this.state.locale,
@@ -83,24 +86,29 @@ const IntlHoc = hoc((config, Wrapped) => {
 		}
 
 		componentDidMount () {
+			console.error("I18nDecorator componentDidMount");
 			if (typeof window === 'object') {
+				console.error("I18nDecorator componentDidMount if(typeof window === 'object')");
 				on('languagechange', this.handleLocaleChange, window);
 			}
 		}
 
 		componentWillReceiveProps (newProps) {
+			console.error("I18nDecorator componentWillReceivePropst");
 			if (newProps.locale) {
 				this.updateLocale(newProps.locale);
 			}
 		}
 
 		componentWillUnmount () {
+			console.error("I18nDecorator componentWillUnmount");
 			if (typeof window === 'object') {
 				off('languagechange', this.handleLocaleChange, window);
 			}
 		}
 
 		handleLocaleChange = () => {
+			console.error("I18nDecorator handleLocaleChange");
 			this.updateLocale();
 		}
 
@@ -114,6 +122,7 @@ const IntlHoc = hoc((config, Wrapped) => {
 		 * @public
 		 */
 		updateLocale = (newLocale) => {
+			console.error("I18nDecorator updateLocale");
 			const locale = updateLocale(newLocale);
 			this.setState({locale});
 			this.publisher.publish({

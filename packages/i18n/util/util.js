@@ -19,6 +19,7 @@ const rtlPattern = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-
 * @public
 */
 const isRtlText = function (str) {
+	console.error("util/util.js isRtlText");
 	if (typeof str === 'string') {
 		return rtlPattern.test(str);
 	}
@@ -36,6 +37,7 @@ const isRtlText = function (str) {
  * @public
  */
 const toCapitalized = function (str) {
+	console.error("util/util.js toCapitalized");
 	return toUpperCase(str.slice(0, 1)) + str.slice(1);
 };
 
@@ -50,6 +52,7 @@ const toCapitalized = function (str) {
  * @public
  */
 const toWordCase = (str) => {
+	console.error("util/util.js toWordCase");
 	return str.split(' ').map(toCapitalized).join(' ');
 };
 

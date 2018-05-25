@@ -10,6 +10,7 @@ let resBundle;
  * @returns {ilib.ResBundle} Current ResBundle
  */
 function getResBundle () {
+	console.error("src/resBundle.js getResBundle");
 	return resBundle;
 }
 
@@ -21,6 +22,7 @@ function getResBundle () {
  * @returns {ilib.ResBundle} New ilib.ResBundle
  */
 function createResBundle (locale) {
+	console.error("src/resBundle.js createResBundle");
 	resBundle = new ResBundle({
 		locale: locale,
 		type: 'html',
@@ -39,6 +41,7 @@ function createResBundle (locale) {
  * @returns {undefined}
  */
 function setResBundleLocale (spec) {
+	console.error("src/resBundle.js setResBundleLocale");
 	// Load any ResBundle external data into cache.
 	ResBundle.strings = ResBundle.strings || {};
 	ResBundle.strings.cache = global.resBundleData || ResBundle.strings.cache;
@@ -55,6 +58,7 @@ function setResBundleLocale (spec) {
  * @returns {undefined}
  */
 function clearResBundle () {
+	console.error("src/resBundle.js clearResBundle");
 	delete ResBundle.strings;
 	delete ResBundle.sysres;
 	resBundle = null;
