@@ -33,14 +33,14 @@ const ApplicationCloseButton = kind({
 		'aria-label': PropTypes.string,
 
 		/**
-		 * The background-color opacity of this button; valid values are `'opaque'`, `'translucent'`,
+		 * The background-color opacity of this button; valid values are 'translucent'`,
 		 * `'lightTranslucent'` and `'transparent'`.
 		 *
 		 * @type {String}
 		 * @default 'transparent'
 		 * @public
 		 */
-		backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'lightTranslucent', 'transparent']),
+		backgroundOpacity: PropTypes.oneOf(['translucent', 'lightTranslucent', 'transparent']),
 
 		/**
 		 * A function to run when app close button is clicked

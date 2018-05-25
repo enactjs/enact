@@ -6,7 +6,8 @@ import {text, boolean, select} from '@storybook/addon-knobs';
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'transparent': 'transparent'},
+	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
+	casing: ['preserve', 'sentence', 'word', 'upper'],
 	tallText:{'ิ้  ไั  ஒ  து': 'ิ้  ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'}
 };
 
@@ -17,7 +18,7 @@ storiesOf('ToggleButton', module)
 			<ToggleButton
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
-				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
+				casing={select('casing', prop.casing, 'upper')}
 				disabled={boolean('disabled')}
 				small={boolean('small')}
 				toggleOnLabel={text('toggleOnLabel', 'Loooooooooooooooooog On')}
@@ -31,7 +32,7 @@ storiesOf('ToggleButton', module)
 			<ToggleButton
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
-				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
+				casing={select('casing', prop.casing, 'upper')}
 				disabled={boolean('disabled')}
 				small={boolean('small')}
 				toggleOnLabel={select('toggleOnLabel', prop.tallText, 'ิ้  ไั  ஒ  து')}
@@ -39,5 +40,3 @@ storiesOf('ToggleButton', module)
 			/>
 		)
 	);
-
-
