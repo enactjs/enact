@@ -1,16 +1,15 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
-import {Button as UIButton, ButtonBase as UIButtonBase} from '@enact/ui/Button';
+import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, select, text} from '@storybook/addon-knobs';
+import {boolean, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-import nullify from '../../src/utils/nullify.js';
+import {mergeComponentMetadata, nullify, smartSelect} from '../../src/utils';
 
-const Config = mergeComponentMetadata('Button', ButtonBase, Button, UIButton, UIButtonBase);
+const Config = mergeComponentMetadata('Button', UIButtonBase, UIButton, ButtonBase, Button);
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -28,10 +27,10 @@ storiesOf('Moonstone', module)
 		})(() => (
 			<Button
 				onClick={action('onClick')}
-				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
-				casing={select('casing', prop.casing, 'upper')}
+				backgroundOpacity={smartSelect('backgroundOpacity', prop.backgroundOpacity, Config)}
+				casing={smartSelect('casing', prop.casing, Config, 'upper')}
 				disabled={boolean('disabled', Config.defaultProps.disabled)}
-				icon={nullify(select('icon', prop.icons, Config.defaultProps.icon))}
+				icon={smartSelect('icon', prop.icons, Config)}
 				minWidth={boolean('minWidth', Config.defaultProps.minWidth)}
 				selected={nullify(boolean('selected', false))}
 				small={nullify(boolean('small', Config.defaultProps.small))}
