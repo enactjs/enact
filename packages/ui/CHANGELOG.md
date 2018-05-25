@@ -4,6 +4,11 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/ForwardRef` HOC to adapt `React.forwardRef` to HOC chains
+- `ui/Media` component
+
 ### Fixed
 
 - `ui/Touchable` to end gestures when focus is lost
