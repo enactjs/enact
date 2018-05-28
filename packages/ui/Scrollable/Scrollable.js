@@ -36,7 +36,8 @@ const
 		overscrollNeeds: {
 			nothing: 0,
 			tracking: 1,
-			clearing: 2
+			clearing: 2,
+			delayedClearing: 3
 		},
 		paginationPageMultiplier: 0.8,
 		scrollWheelPageMultiplierForMaxPixel: 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
@@ -543,6 +544,8 @@ class ScrollableBase extends Component {
 
 			this.isScrollAnimationTargetAccumulated = false;
 			this.start({targetX, targetY, animate: true, duration});
+			this.setOverscrollStatus(overscrollNeeds.delayedClearing);
+			this.clearAllOverscrollEffects();
 
 			this.flickTarget = null;
 		} else {
@@ -808,7 +811,7 @@ class ScrollableBase extends Component {
 
 			if (this.canScrollHorizontally(bounds)) {
 				curTargetX = this.animator.timingFunction(sourceX, targetX, duration, curTime);
-				if (curTargetX < 0 || curTargetX > bounds.maxLeft) {
+				if (Math.abs(curTargetX - targetX) < epsilon) {
 					curTargetX = targetX;
 				} else {
 					toBeContinued = true;
@@ -817,7 +820,7 @@ class ScrollableBase extends Component {
 
 			if (this.canScrollVertically(bounds)) {
 				curTargetY = this.animator.timingFunction(sourceY, targetY, duration, curTime);
-				if (curTargetY < 0 || curTargetY > bounds.maxTop) {
+				if (Math.abs(curTargetY - targetY) < epsilon) {
 					curTargetY = targetY;
 				} else {
 					toBeContinued = true;
@@ -856,7 +859,6 @@ class ScrollableBase extends Component {
 		this.animator.stop();
 		this.isScrollAnimationTargetAccumulated = false;
 		this.startHidingThumb();
-		this.setOverscrollStatus(overscrollNeeds.nothing);
 		if (!this.isDragging) {
 			this.clearAllOverscrollEffects();
 		}

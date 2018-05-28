@@ -46,7 +46,7 @@
 .horizontalEffects::before {
 	.horizontal;
 
-	transform: translateY(-50%) scale3d(calc((2 - var(--moon-scrollable-overscroll-ratio-horizontalbefore)) / 2), var(--moon-scrollable-overscroll-ratio-horizontalbefore), 1);
+	transform: translateY(-50%) scale3d(~"calc((2 - var(--moon-scrollable-overscroll-ratio-horizontalbefore)) / 2)", var(--moon-scrollable-overscroll-ratio-horizontalbefore), 1);
 	left: 0;
 	z-index: 1;
 
@@ -59,7 +59,7 @@
 .horizontalEffects::after {
 	.horizontal;
 
-	transform: translateY(-50%) scale3d(calc((2 - var(--moon-scrollable-overscroll-ratio-horizontalafter)) / 2), var(--moon-scrollable-overscroll-ratio-horizontalafter), 1);
+	transform: translateY(-50%) scale3d(~"calc((2 - var(--moon-scrollable-overscroll-ratio-horizontalafter)) / 2)", var(--moon-scrollable-overscroll-ratio-horizontalafter), 1);
 	right: 0;
 
 	:global(.enact-locale-right-to-left) & {
@@ -71,16 +71,16 @@
 .vertical {
 	.overscroll;
 
-	--overscroll-effect-vertical-size: calc(100% - @moon-scrollable-scrollbar-size);
-	width: calc(var(--overscroll-effect-vertical-size) * 0.7);
+	--overscroll-effect-vertical-size: ~"calc(100% - " @moon-scrollable-scrollbar-size ~")";
+	width: ~"calc(var(--overscroll-effect-vertical-size) * 0.7)";
 	height: 6px;
-	.margin-start-end(calc(var(--overscroll-effect-vertical-size) * 0.15), 0);
+	.margin-start-end(~"calc(var(--overscroll-effect-vertical-size) * 0.15)", 0);
 }
 
 .verticalEffects::before {
 	.vertical;
 
-	transform: scale3d(var(--moon-scrollable-overscroll-ratio-verticalbefore), calc((2 - var(--moon-scrollable-overscroll-ratio-verticalbefore)) / 2), 1);
+	transform: scale3d(var(--moon-scrollable-overscroll-ratio-verticalbefore), ~"calc((2 - var(--moon-scrollable-overscroll-ratio-verticalbefore)) / 2)", 1);
 	top: 0;
 	z-index: 1;
 }
@@ -88,6 +88,10 @@
 .verticalEffects::after {
 	.vertical;
 
-	transform: scale3d(var(--moon-scrollable-overscroll-ratio-verticalafter), calc((2 - var(--moon-scrollable-overscroll-ratio-verticalafter)) / 2), 1);
+	transform: scale3d(var(--moon-scrollable-overscroll-ratio-verticalafter), ~"calc((2 - var(--moon-scrollable-overscroll-ratio-verticalafter)) / 2)", 1);
 	bottom: 0;
+}
+
+.horizontalScrollbarVisible.verticalEffects::after {
+	bottom: @moon-scrollable-scrollbar-size;
 }

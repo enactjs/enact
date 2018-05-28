@@ -38,6 +38,7 @@ const
 	isLeft = is('left'),
 	isRight = is('right'),
 	isUp = is('up'),
+	overscrollTimeout = 300,
 	reverseDirections = {
 		down: 'up',
 		left: 'right',
@@ -212,7 +213,6 @@ class ScrollableBase extends Component {
 
 	// overscroll
 	overscrollRefs = {['horizontal']: null, ['vertical']: null}
-	overscrollManualEffects = [] // manual(non-auto) effects
 
 	onFlick = () => {
 		const focusedItem = Spotlight.getCurrent();
@@ -533,12 +533,21 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	clearAllOverscrollEffects = () => {
-		const manualEffects = this.overscrollManualEffects;
-		while (manualEffects.length) {
-			const {nodeRef, orientation, position} = manualEffects.pop();
-			setTimeout(this.playOverscrollEffect, 300, nodeRef, orientation, position, 0, false);
+	clearOverscrollEffect = (orientation) => {
+		const
+			getOverscrollStatus = this.uiRef.getOverscrollStatus,
+			status = getOverscrollStatus(orientation);
+
+		if (status > overscrollNeeds.tracking) { // clearing or delayedClearing
+			const timeout = (status === overscrollNeeds.delayedClearing) ? overscrollTimeout : 0;
+			setTimeout(this.playOverscrollEffect, timeout, this.overscrollRefs[orientation], orientation, 'before', 0, false);
+			setTimeout(this.playOverscrollEffect, timeout, this.overscrollRefs[orientation], orientation, 'after', 0, false);
 		}
+	}
+
+	clearAllOverscrollEffects = () => {
+		this.clearOverscrollEffect('horizontal');
+		this.clearOverscrollEffect('vertical');
 	}
 
 	playOverscrollEffect = (nodeRef, orientation, position, ratio, auto) => {
@@ -546,7 +555,7 @@ class ScrollableBase extends Component {
 
 		nodeRef.style.setProperty(prefix + orientation + position, ratio);
 		if (auto && ratio > 0) {
-			setTimeout(this.playOverscrollEffect, 300, nodeRef, orientation, position, 0, false);
+			setTimeout(this.playOverscrollEffect, overscrollTimeout, nodeRef, orientation, position, 0, false);
 		}
 	}
 
@@ -558,9 +567,6 @@ class ScrollableBase extends Component {
 
 		if (nodeRef && scrollability) {
 			playOverscrollEffect(nodeRef, orientation, position, ratio, auto);
-			if (!auto && ratio !== 0) {
-				this.overscrollManualEffects.push({nodeRef, orientation, position});
-			}
 		}
 	}
 
@@ -657,7 +663,7 @@ class ScrollableBase extends Component {
 						ref={initUiContainerRef}
 						style={style}
 					>
-						<div className={classNames(componentCss.container, overscrollCss.verticalEffects)} ref={this.initVerticalOverscrollRef}>
+						<div className={classNames(componentCss.container, overscrollCss.verticalEffects, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={this.initVerticalOverscrollRef}>
 							<TouchableDiv className={classNames(touchableClassName, overscrollCss.horizontalEffects)} ref={this.initHorizontalOverscrollRef} {...restTouchableProps}>
 								{childRenderer({
 									...childComponentProps,
