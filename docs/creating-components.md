@@ -38,7 +38,7 @@ For the following sample, the `'Badge'` component accepts the `children` and `gr
 `greeting` having a default of `'Hello, my name is ...'`. It applies the `'badge'` `className` (combined
 with any passed-in `className`), it computes a new value for `children` and renders the result.
 
-```
+```javascript
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -109,16 +109,16 @@ behaviors across components. All of these HOCs were created using the `hoc()` fa
   merged with a set of default configuration parameters.
 * HOCs are flexible in their usage. They can:
   * Accept a configuration object and a component 
-    ```
+    ```javascript
     const ToggleableWidget = Toggleable({toggle: 'onClick', prop: 'selected'}, Widget);
     ```
   * Accept only a component and use the default configuration:
-    ```
+    ```javascript
     const ToggleableWidget = Toggleable(Widget);
     ```
   * Accept a configuration object in one invocation and a component in a second invocation. This
     allows you to reuse a pre-configured HOC on multiple components:
-    ```
+    ```javascript
     const ToggleDecorator = Toggleable({toggle: 'onClick', prop: 'selected'});
     const ToggleableWidget = ToggleDecorator(Widget);
     const ToggleableFrob = ToggleDecorator(Frob);
@@ -131,7 +131,7 @@ a component.
 
 Here's a simple example to illustrate:
 
-```
+```javascript
 const Countable = hoc({prop: 'data-count'}, (config, Wrapped) => {
 	return class extends React.Component {
 		constructor (props) {
@@ -158,19 +158,13 @@ const CountableDivAsDataNumber = CountableAsDataNumber('div');
 
 ## Customizing Components at Design-Time
 
-> NOTE: `factory()`, the previous experimental technique for doing this, is deprecated and will be removed in 2.0
+Occasionally, you'll want to modify the appearance of an Enact component, and usually, simply applying external styling to the outer-most element of the component, via `className` or `style` will work just fine. However, what if you need to customize one of the deeper child elements?
 
-Occasionally, you'll want to modify the appearance of an Enact component, and the majority of that time, you can simply apply external styling to the outer-most element of the component, via `className` or `style`. However, what if you need to customize one of the deeper child elements?
+We've got you covered! In Enact 2.0 we've added a built-in theming capability to make this significantly easier and even safer. Using the [theming system](./theming.md) is as straight-forward as importing your CSS/LESS file and passing it to the `css` prop on the component you want to customize. The class names defined in your CSS file that match the published class names of the target component will be applied directly to the internal elements of the component. They will be applied in addition to the existing class names, not in lieu of, so you can simply add your customizations, rather than repeat the existing styling. Each customizable component will include documentation for the `css` prop, which will list what classes are available and a brief description of what role they play.
 
-We've got you covered! In Enact 2.0 we've added a built-in theming capability to make this significantly easier and even safer. Now, components built with the `kind` feature can use the `publicClassNames` key in their `styles` block of their component definition.
+How about an example to make this more clear. Let's customize the background color of a [`moonstone/Button`](../../../modules/moonstone/Button/). `Button` exposes several classes for customization: 'button', 'bg', 'small', and 'selected', and in this case we're interested in 'button' and 'bg'.  In our customized component LESS file, the following should do the trick:
 
-The `publicClassNames` key allows a component to define an array of CSS class names that will be available for a component consumer to add styling to. **NOTE: GO INTO MORE DETAIL AND LINK TO OTHER PAGE** All components in `@enact/ui` and many in `@enact/moonstone` and other themes have already been imbued with this feature.
-
-Use the theming system is as easy as importing your CSS/LESS file and passing it to the `css` prop on the component you want to customize. The class names defined in your CSS file that match the published class names of the target component will be applied directly to the internal elements of the component. They will be applied in addition to the existing class names, not in-leu of, so you can simply add your customizations, rather than repeat the existing styling.
-
-How about an example to make this more clear. Let's customize the background color of a Moonstone [`Button`](../../../modules/moonstone/Button/). `Button` exposes several classes for customization: 'button', 'bg', 'small', and 'selected', and in this case we're interested in 'button' and 'bg'.  In our customized component LESS file, the following should do the trick:
-
-```
+```css
 // CustomButton.less
 //
 @import '~@enact/moonstone/styles/skin.less';
@@ -188,7 +182,7 @@ How about an example to make this more clear. Let's customize the background col
 
 Then, in our component we'll just apply the imported LESS file to the component with the `css` property.
 
-```
+```javascript
 import React from 'react';
 import kind from '@enact/core/kind';
 import Button from '@enact/moonstone/Button';
@@ -208,4 +202,12 @@ export default CustomButton;
 
 Now, all we do in our app is import this `CustomButton` like any other, and it will be styled with our custom styling.
 
-For more details and advanced theming features and recommendations, see our [Themeing Guide](somewhere). **NOTE: Actually link this somewhere**
+```javascript
+import CustomButton from './CustomButton';
+
+...
+
+	<CustomButton>Our Orange Button</CustomButton>
+```
+
+For more details and advanced theming features and recommendations, see our [Theming Guide](./theming.md).
