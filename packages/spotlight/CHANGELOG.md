@@ -13,6 +13,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 No significant changes.
 
+### Fixed
+
+- `spotlight` to partition and prioritize next spottable elements for more natural 5-way behavior
+
 ## [2.0.0-beta.4] - 2018-05-21
 
 ### Fixed
