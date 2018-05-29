@@ -3,6 +3,8 @@ import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {is} from '@enact/core/keymap';
+import {on, off} from '@enact/core/dispatcher';
 
 const STATE = {
 	inactive: 0,	// Marquee is not necessary (render or focus not happened)
@@ -135,8 +137,19 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		componentDidMount () {
+			on('keydown', this.checkPointerHide, document);
+		}
+
 		componentWillUnmount () {
 			this.cancelJob.stop();
+			off('keydown', this.checkPointerHide, document);
+		}
+
+		checkPointerHide = ({keyCode}) => {
+			if (is('pointerHide', keyCode)) {
+				this.isHovered = false;
+			}
 		}
 
 		cancelJob = new Job(() => this.doCancel(), 30)
@@ -208,7 +221,9 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		handleCancel = () => {
-			this.cancelJob.start();
+			if (this.anyRunning()) {
+				this.cancelJob.start();
+			}
 		}
 
 		doCancel = () => {
@@ -265,7 +280,9 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		handleBlur = (ev) => {
 			this.isFocused = false;
-			this.cancelJob.start();
+			if (this.anyRunning()) {
+				this.cancelJob.start();
+			}
 			forwardBlur(ev, this.props);
 		}
 

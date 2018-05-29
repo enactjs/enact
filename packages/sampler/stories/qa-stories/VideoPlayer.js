@@ -1,14 +1,17 @@
-import Button from '@enact/moonstone/Button';
-import React from 'react';
-import VideoPlayer from '@enact/moonstone/VideoPlayer';
-import IconButton from '@enact/moonstone/IconButton';
-import {storiesOf} from '@storybook/react';
+import VideoPlayer, {Video} from '@enact/moonstone/VideoPlayer';
 import {button} from '@storybook/addon-knobs';
+import {storiesOf} from '@storybook/react';
+import React from 'react';
 
 class VideoSourceSwap extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
+			videoTitles: [
+				'Big Buck Bunny',
+				'Sintel',
+				'VideoTest'
+			],
 			playlist: [
 				'http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov',
 				'http://media.w3.org/2010/05/sintel/trailer.mp4',
@@ -63,13 +66,15 @@ class VideoSourceSwap extends React.Component {
 				{button('Reset Sources', this.resetSources)}
 				<VideoPlayer
 					muted
-					preloadSource={<source src={this.state.playlist[this.state.preloadCursor]} type="video/mp4" />}
+					onJumpBackward={this.differentVideo}
+					onJumpForward={this.nextVideo}
+					title={this.state.videoTitles[this.state.cursor]}
 				>
-					<source src={this.state.playlist[this.state.cursor]} type="video/mp4" />
+					<Video>
+						<source src={this.state.playlist[this.state.cursor]} />
+						<source src={this.state.playlist[this.state.preloadCursor]} slot="preloadSource" />
+					</Video>
 					<infoComponents>A video about some things happening to and around some characters. Very exciting stuff.</infoComponents>
-
-					<Button backgroundOpacity="translucent">Add To Favorites</Button>
-					<IconButton backgroundOpacity="translucent">star</IconButton>
 				</VideoPlayer>
 			</div>
 

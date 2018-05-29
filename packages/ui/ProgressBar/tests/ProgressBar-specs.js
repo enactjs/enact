@@ -11,7 +11,12 @@ describe('ProgressBar Specs', () => {
 			/>
 		);
 
-		expect(progressBar.find(`.${css.fill}`).prop('style').width).to.equal('50%');
+		const style = progressBar.find(`.${css.progressBar}`).prop('style');
+
+		const expected = '50%';
+		const actual = style['--ui-progressbar-proportion-end'];
+
+		expect(actual).to.equal(expected);
 	});
 
 	it('should have background width of 75%', () => {
@@ -21,7 +26,12 @@ describe('ProgressBar Specs', () => {
 			/>
 		);
 
-		expect(progressBar.find(`.${css.load}`).prop('style').width).to.equal('75%');
+		const style = progressBar.find(`.${css.progressBar}`).prop('style');
+
+		const expected = '75%';
+		const actual = style['--ui-progressbar-proportion-end-background'];
+
+		expect(actual).to.equal(expected);
 	});
 
 	it('should have height of 50%', () => {
@@ -32,7 +42,12 @@ describe('ProgressBar Specs', () => {
 			/>
 		);
 
-		expect(progressBar.find(`.${css.fill}`).prop('style').height).to.equal('50%');
+		const style = progressBar.find(`.${css.progressBar}`).prop('style');
+
+		const expected = '50%';
+		const actual = style['--ui-progressbar-proportion-end'];
+
+		expect(actual).to.equal(expected);
 	});
 
 	it('should have background height of 50%', () => {
@@ -44,6 +59,11 @@ describe('ProgressBar Specs', () => {
 			/>
 		);
 
-		expect(progressBar.find(`.${css.load}`).prop('style').height).to.equal('75%');
+		const style = progressBar.find(`.${css.progressBar}`).prop('style');
+
+		const expected = '75%';
+		const actual = style['--ui-progressbar-proportion-end-background'];
+
+		expect(actual).to.equal(expected);
 	});
 });

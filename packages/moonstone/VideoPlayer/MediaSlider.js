@@ -4,14 +4,16 @@ import PropTypes from 'prop-types';
 
 import Slider from '../Slider';
 
+import MediaKnob from './MediaKnob';
 import MediaSliderDecorator from './MediaSliderDecorator';
 
 import css from './VideoPlayer.less';
 
 /**
- * MediaSlider for {@link moonstone/VideoPlayer}.
+ * The base component to render a customized [Slider]{@link moonstone/Slider.Slider} for use in
+ * [VideoPlayer]{@link moonstone/VideoPlayer.VideoPlayer}.
  *
- * @class MediaSlider
+ * @class MediaSliderBase
  * @memberof moonstone/VideoPlayer
  * @ui
  * @private
@@ -19,7 +21,7 @@ import css from './VideoPlayer.less';
 const MediaSliderBase = kind({
 	name: 'MediaSlider',
 
-	propTypes: /** @lends moonstone/VideoPlayer.MediaSlider.prototype */ {
+	propTypes: /** @lends moonstone/VideoPlayer.MediaSliderBase.prototype */ {
 
 		/**
 		 * When `true`, the knob will expand. Note that Slider is a controlled
@@ -32,6 +34,23 @@ const MediaSliderBase = kind({
 		forcePressed: PropTypes.bool,
 
 		/**
+		 * Allow moving the knob via pointer or 5-way without emitting `onChange` events
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		preview: PropTypes.bool,
+
+		/**
+		 * The position of the knob when in `preview` mode
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		previewProportion: PropTypes.number,
+
+		/**
 		 * The visibility of the component. When `false`, the component will be hidden.
 		 *
 		 * @type {Boolean}
@@ -42,6 +61,7 @@ const MediaSliderBase = kind({
 	},
 
 	defaultProps: {
+		preview: false,
 		visible: true
 	},
 
@@ -58,7 +78,7 @@ const MediaSliderBase = kind({
 		})
 	},
 
-	render: ({className, sliderClassName, ...rest}) => {
+	render: ({className, preview, previewProportion, sliderClassName, ...rest}) => {
 		delete rest.forcePressed;
 		delete rest.visible;
 
@@ -69,6 +89,9 @@ const MediaSliderBase = kind({
 					aria-hidden="true"
 					className={sliderClassName}
 					css={css}
+					knobComponent={
+						<MediaKnob preview={preview} previewProportion={previewProportion} />
+					}
 					max={1}
 					min={0}
 					step={0.00001}
@@ -78,6 +101,15 @@ const MediaSliderBase = kind({
 	}
 });
 
+/**
+ * A customized slider suitable for use within
+ * [VideoPlayer]{@link moonstone/VideoPlayer.VideoPlayer}.
+ *
+ * @class MediaSlider
+ * @memberof moonstone/VideoPlayer
+ * @ui
+ * @private
+ */
 const MediaSlider = MediaSliderDecorator(MediaSliderBase);
 
 export default MediaSlider;

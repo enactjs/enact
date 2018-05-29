@@ -6,7 +6,7 @@
  * @module ui/Touchable
  */
 
-import {call, forward, forwardWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
+import {adaptEvent, call, forward, forwardWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
@@ -18,6 +18,7 @@ import React from 'react';
 import {configure, mergeConfig} from './config';
 import {activate, deactivate, pause, States} from './state';
 import {block, unblock, isNotBlocked} from './block';
+import ClickAllow from './ClickAllow';
 
 import {Drag, dragConfigPropType} from './Drag';
 import {Flick, flickConfigPropType} from './Flick';
@@ -34,7 +35,7 @@ const getEventCoordinates = (ev) => {
 };
 
 // Establish a standard payload for onDown/onUp/onTap events and pass it along to a handler
-const makeTouchableEvent = (type, fn) => (ev, ...args) => {
+const makeTouchableEvent = (type) => (ev) => {
 	const {target, currentTarget} = ev;
 	let {clientX, clientY, pageX, pageY} = ev;
 
@@ -45,7 +46,7 @@ const makeTouchableEvent = (type, fn) => (ev, ...args) => {
 		pageY = ev.changedTouches[0].pageY;
 	}
 
-	const payload = {
+	return {
 		type,
 		target,
 		currentTarget,
@@ -54,26 +55,24 @@ const makeTouchableEvent = (type, fn) => (ev, ...args) => {
 		pageX,
 		pageY
 	};
-
-	return fn(payload, ...args);
 };
 
 const isEnabled = forProp('disabled', false);
 
 const handleDown = handle(
 	isEnabled,
-	makeTouchableEvent('down', forwardWithPrevent('onDown')),
+	adaptEvent(makeTouchableEvent('onDown'), forwardWithPrevent('onDown')),
 	call('activate'),
 	call('startGesture')
-);
+).named('handleDown');
 
 const handleUp = handle(
 	isEnabled,
 	call('endGesture'),
 	call('isTracking'),
-	makeTouchableEvent('up', forwardWithPrevent('onUp')),
-	makeTouchableEvent('tap', forward('onTap'))
-).finally(call('deactivate'));
+	adaptEvent(makeTouchableEvent('onUp'), forwardWithPrevent('onUp')),
+	adaptEvent(makeTouchableEvent('onTap'), forward('onTap'))
+).finally(call('deactivate')).named('handleUp');
 
 const handleEnter = handle(
 	isEnabled,
@@ -81,7 +80,7 @@ const handleEnter = handle(
 	call('enterGesture'),
 	call('isPaused'),
 	call('activate')
-);
+).named('handleEnter');
 
 const handleLeave = handle(
 	isEnabled,
@@ -90,7 +89,7 @@ const handleLeave = handle(
 		[forProp('noResume', false), call('pause')],
 		[returnsTrue, call('deactivate')]
 	)
-);
+).named('handleLeave');
 
 // Mouse event handlers
 
@@ -116,8 +115,20 @@ const handleMouseLeave = handle(
 );
 
 const handleMouseUp = handle(
+	returnsTrue(call('setLastMouseUp')),
 	forward('onMouseUp'),
 	handleUp
+);
+
+const handleClick = handle(
+	isEnabled,
+	// wrapping another handler to always forward onClick but, if onTap should occur, it should
+	// occur first to keep in sync with the up handler which emits onTap first
+	handle(
+		call('shouldAllowTap'),
+		call('activate'),
+		handleUp
+	).finally(forward('onClick'))
 );
 
 // Touch event handlers
@@ -136,7 +147,7 @@ const handleTouchMove = handle(
 	// detecting when the touch leaves the boundary. oneOf returns the value of whichever
 	// branch it follows so we append moveHold to either to handle moves that aren't
 	// entering or leaving
-	makeTouchableEvent('move', forward('onMove')),
+	adaptEvent(makeTouchableEvent('onMove'), forward('onMove')),
 	oneOf(
 		[call('hasTouchLeftTarget'), handleLeave],
 		[returnsTrue, handleEnter]
@@ -160,6 +171,12 @@ const handleGlobalMove = handle(
 	call('isTracking'),
 	call('containsCurrentTarget'),
 	call('moveGesture')
+);
+
+const handleBlur = handle(
+	forward('onBlur'),
+	call('hasFocus'),
+	call('endGesture')
 );
 
 /**
@@ -372,6 +389,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			});
 
 			this.target = null;
+			this.targetHadFocus = false;
 			this.handle = handle.bind(this);
 			this.drag = new Drag();
 			this.flick = new Flick();
@@ -382,16 +400,20 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			}, 400);
 
-			this.handleMouseDown = handleMouseDown.bind(this);
-			this.handleMouseEnter = handleMouseEnter.bind(this);
-			this.handleMouseMove = handleMouseMove.bind(this);
-			this.handleMouseLeave = handleMouseLeave.bind(this);
-			this.handleMouseUp = handleMouseUp.bind(this);
-			this.handleTouchStart = handleTouchStart.bind(this);
-			this.handleTouchMove = handleTouchMove.bind(this);
-			this.handleTouchEnd = handleTouchEnd.bind(this);
-			this.handleGlobalUp = handleGlobalUp.bind(this);
-			this.handleGlobalMove = handleGlobalMove.bind(this);
+			this.clickAllow = new ClickAllow();
+
+			handleClick.bindAs(this, 'handleClick');
+			handleBlur.bindAs(this, 'handleBlur');
+			handleMouseDown.bindAs(this, 'handleMouseDown');
+			handleMouseEnter.bindAs(this, 'handleMouseEnter');
+			handleMouseMove.bindAs(this, 'handleMouseMove');
+			handleMouseLeave.bindAs(this, 'handleMouseLeave');
+			handleMouseUp.bindAs(this, 'handleMouseUp');
+			handleTouchStart.bindAs(this, 'handleTouchStart');
+			handleTouchMove.bindAs(this, 'handleTouchMove');
+			handleTouchEnd.bindAs(this, 'handleTouchEnd');
+			handleGlobalUp.bindAs(this, 'handleGlobalUp');
+			handleGlobalMove.bindAs(this, 'handleGlobalMove');
 		}
 
 		componentDidMount () {
@@ -492,6 +514,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.flick.begin(flick, props, coords);
 			this.drag.begin(drag, props, coords, this.target);
 
+			this.targetHadFocus = this.target === document.activeElement;
+
 			return true;
 		}
 
@@ -520,6 +544,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		endGesture () {
+			this.targetHadFocus = false;
+
 			this.hold.end();
 			this.flick.end();
 			this.drag.end();
@@ -538,6 +564,10 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return this.state.active === States.Paused;
 		}
 
+		hasFocus () {
+			return this.targetHadFocus;
+		}
+
 		hasTouchLeftTarget (ev) {
 			return Array.from(ev.changedTouches).reduce((hasLeft, {pageX, pageY}) => {
 				const {left, right, top, bottom} = this.targetBounds;
@@ -549,15 +579,22 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return !this.target.contains(target);
 		}
 
-		// Normalized handlers - Mouse and Touch events are mapped to these to trigger cross-type
-		// events and initiate gestures
+		shouldAllowTap (ev) {
+			return this.clickAllow.shouldAllowTap(ev);
+		}
+
+		setLastMouseUp (ev) {
+			this.clickAllow.setLastMouseUp(ev);
+		}
 
 		addHandlers (props) {
+			props.onClick = this.handleClick;
 			props.onMouseDown = this.handleMouseDown;
 			props.onMouseLeave = this.handleMouseLeave;
 			props.onMouseMove = this.handleMouseMove;
 			props.onMouseEnter = this.handleMouseEnter;
 			props.onMouseUp = this.handleMouseUp;
+			props.onBlur = this.handleBlur;
 
 			if (platform.touch) {
 				props.onTouchStart = this.handleTouchStart;

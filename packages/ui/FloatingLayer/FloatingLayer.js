@@ -1,13 +1,19 @@
 import {on, off} from '@enact/core/dispatcher';
+import {adaptEvent, forward, forProp, handle, stop} from '@enact/core/handle';
 import invariant from 'invariant';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 import Cancelable from '../Cancelable';
 
 import {contextTypes} from './FloatingLayerDecorator';
 import Scrim from './Scrim';
+
+const forwardDismiss = adaptEvent(
+	() => ({type: 'onDismiss'}),
+	forward('onDismiss')
+);
 
 /**
  * {@link ui/FloatingLayer.FloatingLayerBase} is a component that creates an entry point to the new
@@ -60,8 +66,9 @@ class FloatingLayerBase extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
-		 * A function to be run when `ESC` key is pressed. The function will only invoke if
-		 * `noAutoDismiss` is set to `false`.
+		 * A function to be run when a closing action is invoked. These actions may include pressing
+		 * cancel/back (e.g. `ESC`) key or programmatically closing by `FloatingLayerDecorator`. When
+		 * cancel key is pressed, the function will only invoke if `noAutoDismiss` is set to `false`.
 		 *
 		 * @type {Function}
 		 * @public
@@ -113,6 +120,10 @@ class FloatingLayerBase extends React.Component {
 		if (open && onOpen) {
 			onOpen({});
 		}
+
+		if (this.context.registerFloatingLayer) {
+			this.context.registerFloatingLayer(this, {close: this.handleClose});
+		}
 	}
 
 	componentDidUpdate (prevProps) {
@@ -136,11 +147,20 @@ class FloatingLayerBase extends React.Component {
 	componentWillUnmount () {
 		this.node = null;
 		off('click', this.handleClick);
+
+		if (this.context.unregisterFloatingLayer) {
+			this.context.unregisterFloatingLayer(this);
+		}
 	}
 
+	handleClose = handle(
+		forProp('open', true),
+		forwardDismiss
+	).bind(this)
+
 	handleClick = () => {
-		if (!this.props.noAutoDismiss && this.props.open && this.props.onDismiss) {
-			this.props.onDismiss({});
+		if (!this.props.noAutoDismiss && this.props.open) {
+			forwardDismiss(null, this.props);
 		}
 	}
 
@@ -208,14 +228,12 @@ class FloatingLayerBase extends React.Component {
 	}
 }
 
-const handleCancel = (ev, {noAutoDismiss, onDismiss, open}) => {
-	if (open && !noAutoDismiss && onDismiss) {
-		onDismiss({
-			type: 'onDismiss'
-		});
-		ev.stopPropagation();
-	}
-};
+const handleCancel = handle(
+	// can't use forProp safely since either could be undefined ~= false
+	(ev, {open, noAutoDismiss}) => open && !noAutoDismiss,
+	forwardDismiss,
+	stop
+);
 
 /**
  * {@link ui/FloatingLayer.FloatingLayer} is a component that creates an entry point to the new

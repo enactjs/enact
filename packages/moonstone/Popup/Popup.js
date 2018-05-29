@@ -132,6 +132,9 @@ const PopupBase = kind({
 		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
 		 * can be either `'none'`, `'self-first'`, or `'self-only'`.
 		 *
+		 * Note: The ready-to-use [Popup]{@link moonstone/Popup.Popup} component only supports
+		 * `'self-first'` and `'self-only'`.
+		 *
 		 * @type {String}
 		 * @default 'self-only'
 		 * @public
@@ -257,10 +260,15 @@ class Popup extends React.Component {
 		noAutoDismiss: PropTypes.bool,
 
 		/**
-		 * A function to be run when a closing action is invoked by the user. These actions include
-		 * pressing `ESC` key, clicking on the close button, or spotlight focus moves outside the
-		 * boundary of the popup (when `spotlightRestrict` is not `'self-only'`). It is the
-		 * responsibility of the callback to set the `open` property to `false`.
+		 * A function to be run when a closing action is invoked by the user.
+		 *
+		 * These actions include
+		 * * pressing `ESC` key,
+		 * * clicking on the close button, or
+		 * * moving spotlight focus outside the boundary of the popup when `spotlightRestrict` is
+		 *   `'self-first'`.
+		 *
+		 * It is the responsibility of the callback to set the `open` property to `false`.
 		 *
 		 * @type {Function}
 		 * @public
@@ -327,13 +335,13 @@ class Popup extends React.Component {
 
 		/**
 		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
-		 * can be either `'none'`, `'self-first'`, or `'self-only'`.
+		 * can be either `'self-first'`, or `'self-only'`.
 		 *
 		 * @type {String}
 		 * @default 'self-only'
 		 * @public
 		 */
-		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
+		spotlightRestrict: PropTypes.oneOf(['self-first', 'self-only'])
 	}
 
 	static defaultProps = {
@@ -517,6 +525,7 @@ class Popup extends React.Component {
 					onShow={this.handlePopupShow}
 					open={this.state.popupOpen}
 					spotlightRestrict="self-only"
+					data-webos-voice-exclusive
 				/>
 			</FloatingLayer>
 		);

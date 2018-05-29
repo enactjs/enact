@@ -107,6 +107,15 @@ class ScrollableBase extends Component {
 		'data-spotlight-container': PropTypes.bool,
 
 		/**
+		 * `false` if the content of the list or the scroller could get focus
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		'data-spotlight-container-disabled': PropTypes.bool,
+
+		/**
 		 * This is passed onto the wrapped component to allow
 		 * it to customize the spotlight container for its use case.
 		 *
@@ -177,6 +186,7 @@ class ScrollableBase extends Component {
 	}
 
 	static defaultProps = {
+		'data-spotlight-container-disabled': false,
 		focusableScrollbar: false
 	}
 
@@ -613,6 +623,7 @@ class ScrollableBase extends Component {
 			{
 				childRenderer,
 				'data-spotlight-container': spotlightContainer,
+				'data-spotlight-container-disabled': spotlightContainerDisabled,
 				'data-spotlight-id': spotlightId,
 				scrollRightAriaLabel,
 				scrollLeftAriaLabel,
@@ -659,6 +670,7 @@ class ScrollableBase extends Component {
 					<div
 						className={classNames(className, overscrollCss.scrollable)}
 						data-spotlight-container={spotlightContainer}
+						data-spotlight-container-disabled={spotlightContainerDisabled}
 						data-spotlight-id={spotlightId}
 						ref={initUiContainerRef}
 						style={style}
@@ -670,6 +682,7 @@ class ScrollableBase extends Component {
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
 									initUiChildRef,
+									isVerticalScrollbarVisible,
 									onScroll: handleScroll,
 									ref: this.initChildRef,
 									rtl,

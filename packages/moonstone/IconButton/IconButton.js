@@ -43,16 +43,14 @@ const IconButtonBase = kind({
 		 * The background-color opacity of this icon button
 		 *
 		 * Valid values are:
-		 * * `'opaque'`,
 		 * * `'translucent'`,
 		 * * `'lightTranslucent'`, and
 		 * * `'transparent'`.
 		 *
 		 * @type {String}
-		 * @default 'opaque'
 		 * @public
 		 */
-		backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'lightTranslucent', 'transparent']),
+		backgroundOpacity: PropTypes.oneOf(['translucent', 'lightTranslucent', 'transparent']),
 
 		/**
 		 * The color of the underline beneath the icon.
@@ -63,7 +61,7 @@ const IconButtonBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
+		color: PropTypes.oneOf(['red', 'green', 'yellow', 'blue']),
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -74,6 +72,7 @@ const IconButtonBase = kind({
 		 * * `iconButton` - The root class name
 		 * * `bg` - The background node of the icon button
 		 * * `selected` - Applied to a `selected` icon button
+		 * * `small` - Applied to a `small` icon button
 		 *
 		 * @type {Object}
 		 * @public
@@ -91,7 +90,7 @@ const IconButtonBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['iconButton', 'bg', 'selected']
+		publicClassNames: ['iconButton', 'bg', 'selected', 'small']
 	},
 
 	computed: {

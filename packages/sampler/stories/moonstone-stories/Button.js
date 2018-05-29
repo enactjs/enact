@@ -1,4 +1,5 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
+import {Button as UIButton, ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -9,11 +10,12 @@ import {withInfo} from '@storybook/addon-info';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 import nullify from '../../src/utils/nullify.js';
 
-const Config = mergeComponentMetadata('Button', ButtonBase, Button);
+const Config = mergeComponentMetadata('Button', ButtonBase, Button, UIButton, UIButtonBase);
 
 // Set up some defaults for info and knobs
 const prop = {
 	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
+	casing: ['preserve', 'sentence', 'word', 'upper'],
 	icons: ['', ...Object.keys(icons)]
 };
 
@@ -27,10 +29,10 @@ storiesOf('Moonstone', module)
 			<Button
 				onClick={action('onClick')}
 				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
-				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
+				casing={select('casing', prop.casing, 'upper')}
 				disabled={boolean('disabled', Config.defaultProps.disabled)}
 				icon={nullify(select('icon', prop.icons, Config.defaultProps.icon))}
-				minWidth={nullify(boolean('minWidth', Config.defaultProps.minWidth))}
+				minWidth={boolean('minWidth', Config.defaultProps.minWidth)}
 				selected={nullify(boolean('selected', false))}
 				small={nullify(boolean('small', Config.defaultProps.small))}
 			>

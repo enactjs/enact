@@ -20,17 +20,7 @@ import Tooltip from '../TooltipDecorator/Tooltip';
 import componentCss from './Input.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
-
-const calcAriaLabel = function (title, type, value = '') {
-	const hint = $L('Input field');
-
-	if (type === 'password' && value) {
-		const character = value.length > 1 ? $L('characters') : $L('character');
-		value = `${value.length} ${character}`;
-	}
-
-	return `${title} ${value} ${hint}`;
-};
+import {calcAriaLabel, extractInputProps} from './util';
 
 /**
  * {@link moonstone/Input.InputBase} is a Moonstone styled input component. It supports start and end
@@ -46,6 +36,12 @@ const InputBase = kind({
 	name: 'Input',
 
 	propTypes: /** @lends moonstone/Input.InputBase.prototype */ {
+
+		// TODO: Document voice control props and make public
+		'data-webos-voice-group-label': PropTypes.string,
+		'data-webos-voice-intent': PropTypes.string,
+		'data-webos-voice-label': PropTypes.string,
+
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
@@ -217,7 +213,6 @@ const InputBase = kind({
 		disabled: false,
 		dismissOnEnter: false,
 		invalid: false,
-		invalidMessage: $L('Please enter a valid value.'),
 		placeholder: '',
 		type: 'text'
 	},
@@ -245,7 +240,7 @@ const InputBase = kind({
 		},
 		className: ({focused, invalid, small, styler}) => styler.append({focused, invalid, small}),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
-		invalidTooltip: ({css, invalid, invalidMessage, rtl}) => {
+		invalidTooltip: ({css, invalid, invalidMessage = $L('Please enter a valid value.'), rtl}) => {
 			if (invalid && invalidMessage) {
 				const direction = rtl ? 'left' : 'right';
 				return (
@@ -259,7 +254,8 @@ const InputBase = kind({
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, ...rest}) => {
+	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-intent' : voiceIntent, 'data-webos-voice-label': voiceLabel, ...rest}) => {
+		const inputProps = extractInputProps(rest);
 		delete rest.dismissOnEnter;
 		delete rest.focused;
 		delete rest.invalid;
@@ -270,8 +266,12 @@ const InputBase = kind({
 			<div {...rest} disabled={disabled}>
 				<InputDecoratorIcon position="before" small={small}>{iconBefore}</InputDecoratorIcon>
 				<input
+					{...inputProps}
 					aria-disabled={disabled}
 					className={css.input}
+					data-webos-voice-group-label={voiceGroupLabel}
+					data-webos-voice-intent={voiceIntent}
+					data-webos-voice-label={voiceLabel}
 					dir={dir}
 					disabled={disabled}
 					onChange={onChange}
@@ -318,6 +318,7 @@ const Input = Pure(
 export default Input;
 export {
 	calcAriaLabel,
+	extractInputProps,
 	Input,
 	InputBase
 };

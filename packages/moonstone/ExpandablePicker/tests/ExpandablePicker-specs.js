@@ -13,7 +13,7 @@ describe('ExpandablePicker Specs', () => {
 	it('should close onChange', function () {
 
 		const expandablePicker = mount(
-			<ExpandablePicker title="Options" defaultOpen>
+			<ExpandablePicker defaultOpen title="Options">
 				{['Option one', 'Option two', 'Option three']}
 			</ExpandablePicker>
 		);
@@ -31,7 +31,7 @@ describe('ExpandablePicker Specs', () => {
 		const value = 2;
 		const handleChange = sinon.spy();
 		const expandablePicker = mount(
-			<ExpandablePicker title="Options" onChange={handleChange} open value={value}>
+			<ExpandablePicker onChange={handleChange} open title="Options" value={value}>
 				{['Option one', 'Option two', 'Option three']}
 			</ExpandablePicker>
 		);
@@ -49,7 +49,7 @@ describe('ExpandablePicker Specs', () => {
 		const value = 0;
 		const handleChange = sinon.spy();
 		const expandablePicker = mount(
-			<ExpandablePickerBase title="Options" onChange={handleChange} open>
+			<ExpandablePickerBase onChange={handleChange} open title="Options">
 				{['Option one', 'Option two', 'Option three']}
 			</ExpandablePickerBase>
 		);
@@ -59,6 +59,70 @@ describe('ExpandablePicker Specs', () => {
 
 		const expected = value;
 		const actual = handleChange.firstCall.args[0].value;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "checkButtonAriaLabel" to check button', function () {
+		const label = 'custom check button aria-label';
+		const expandablePicker = mount(
+			<ExpandablePickerBase checkButtonAriaLabel={label} open title="Options">
+				{['Option one', 'Option two', 'Option three']}
+			</ExpandablePickerBase>
+		);
+
+		const checkButton = expandablePicker.find('IconButton').at(2);
+
+		const expected = label;
+		const actual = checkButton.prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "decrementAriaLabel" to previous button', function () {
+		const label = 'custom previous button aria-label';
+		const expandablePicker = mount(
+			<ExpandablePickerBase decrementAriaLabel={label} open title="Options">
+				{['Option one', 'Option two', 'Option three']}
+			</ExpandablePickerBase>
+		);
+
+		const checkButton = expandablePicker.find('IconButton').at(1);
+
+		const expected = label;
+		const actual = checkButton.prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "incrementAriaLabel" to next button', function () {
+		const label = 'custom next button aria-label';
+		const expandablePicker = mount(
+			<ExpandablePickerBase incrementAriaLabel={label} open title="Options">
+				{['Option one', 'Option two', 'Option three']}
+			</ExpandablePickerBase>
+		);
+
+		const checkButton = expandablePicker.find('IconButton').at(0);
+
+		const expected = label;
+		const actual = checkButton.prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "pickerAriaLabel" to joined picker', function () {
+		const label = 'custom joined picker aria-label';
+		const expandablePicker = mount(
+			<ExpandablePickerBase joined open pickerAriaLabel={label} title="Options">
+				{['Option one', 'Option two', 'Option three']}
+			</ExpandablePickerBase>
+		);
+
+		const joinedPicker = expandablePicker.find('Picker').at(1);
+
+		const expected = label;
+		const actual = joinedPicker.prop('aria-label');
 
 		expect(actual).to.equal(expected);
 	});
