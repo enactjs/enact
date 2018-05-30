@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 - `spotlight` to handle pointer events only when pointer has moved
 - `spotlight` to correctly set the active container id when unable to set focus to a container
+
 ## [2.0.0-beta.5] - 2018-05-29
 
 No significant changes.
