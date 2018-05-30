@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `moonstone/VideoPlayer.MediaControls` property `playerNode`
+
 ## [2.0.0-beta.5] - 2018-05-29
 
 ### Removed

@@ -1829,6 +1829,7 @@ const VideoPlayerBase = class extends React.Component {
 								onRewind={this.handleRewind}
 								onToggleMore={this.handleToggleMore}
 								paused={this.state.paused}
+								playerNode={this.player}
 								spotlightDisabled={!this.state.mediaControlsVisible || spotlightDisabled}
 								visible={this.state.mediaControlsVisible}
 							/>
