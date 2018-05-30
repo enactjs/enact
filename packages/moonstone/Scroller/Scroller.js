@@ -158,15 +158,15 @@ class ScrollerBase extends Component {
 				nestedItemTop = this.uiRef.containerRef.scrollTop + (top - containerTop),
 				nestedItemBottom = nestedItemTop + nestedItemHeight;
 
-			if (newItemTop - nestedItemHeight - currentScrollTop > epsilon) {
-				// set scroll position so that the top of the container is at least on the top
-				newScrollTop = newItemTop - nestedItemHeight;
-			} else if (nestedItemBottom - scrollBottom > epsilon) {
+			if (nestedItemBottom - scrollBottom > epsilon) {
 				// Caculate when 5-way focus down past the bottom.
 				newScrollTop += nestedItemBottom - scrollBottom;
 			} else if (nestedItemTop - currentScrollTop < epsilon) {
 				// Caculate when 5-way focus up past the top.
 				newScrollTop += nestedItemTop - currentScrollTop;
+			} else if (newItemTop - nestedItemHeight - currentScrollTop > epsilon) {
+				// set scroll position so that the top of the container is at least on the top
+				newScrollTop = newItemTop - nestedItemHeight;
 			}
 		} else if (itemBottom - scrollBottom > epsilon) {
 			// Caculate when 5-way focus down past the bottom.
