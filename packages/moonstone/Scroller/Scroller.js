@@ -151,8 +151,8 @@ class ScrollerBase extends Component {
 			}
 		}
 
-		// Calculations for `containerHeight` that are bigger than `clientHeight`
 		if (itemHeight > clientHeight) {
+			// Calculations for `containerHeight` that are bigger than `clientHeight`
 			const
 				{top, height: nestedItemHeight} = focusedItem.getBoundingClientRect(),
 				nestedItemTop = this.uiRef.containerRef.scrollTop + (top - containerTop),
@@ -165,7 +165,7 @@ class ScrollerBase extends Component {
 				// Caculate when 5-way focus up past the top.
 				newScrollTop += nestedItemTop - currentScrollTop;
 			} else if (newItemTop - nestedItemHeight - currentScrollTop > epsilon) {
-				// set scroll position so that the top of the container is at least on the top
+				// set scroll position so that the top of the container is at least on the top as a fallback.
 				newScrollTop = newItemTop - nestedItemHeight;
 			}
 		} else if (itemBottom - scrollBottom > epsilon) {
