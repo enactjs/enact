@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Scroller` to scroll by page when focus was at the edge of the viewport
+
 ## [2.0.0-beta.5] - 2018-05-29
 
 ### Removed
