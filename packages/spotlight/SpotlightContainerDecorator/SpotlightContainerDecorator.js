@@ -12,8 +12,8 @@ import hoc from '@enact/core/hoc';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import {hasPointerMoved} from '../src/pointer';
 import Spotlight from '../src/spotlight';
-import {getLastPointerPosition} from '../src/pointer';
 
 /**
  * The class name to apply to the default component to focus in a container.
@@ -24,11 +24,6 @@ import {getLastPointerPosition} from '../src/pointer';
 const spotlightDefaultClass = 'spottable-default';
 const enterEvent = 'onMouseEnter';
 const leaveEvent = 'onMouseLeave';
-
-const isPointerChanged = ({clientX, clientY}) => {
-	const {x, y} = getLastPointerPosition();
-	return Spotlight.getPointerMode() && (x !== clientX || y !== clientY);
-};
 
 /**
  * Default config for {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
@@ -239,14 +234,14 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleMouseEnter = (ev) => {
-			if (isPointerChanged(ev)) {
+			if (hasPointerMoved(ev.clientX, ev.clientY)) {
 				Spotlight.setActiveContainer(this.state.id);
 			}
 			forwardMouseEnter(ev, this.props);
 		}
 
 		handleMouseLeave = (ev) => {
-			if (this.props.spotlightRestrict !== 'self-only' && isPointerChanged(ev)) {
+			if (this.props.spotlightRestrict !== 'self-only' && hasPointerMoved(ev.clientX, ev.clientY)) {
 				const parentContainer = ev.currentTarget.parentNode.closest('[data-spotlight-container]');
 				let activeContainer = Spotlight.getActiveContainer();
 

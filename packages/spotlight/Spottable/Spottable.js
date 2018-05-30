@@ -14,7 +14,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import {getContainersForNode} from '../src/container';
-import {getLastPointerPosition, updatePointerPosition} from '../src/pointer';
+import {hasPointerMoved} from '../src/pointer';
 import Spotlight from '../src/spotlight';
 
 /**
@@ -52,11 +52,6 @@ const isSpottable = (props) => !props.disabled && !props.spotlightDisabled;
 let lastSelectTarget = null;
 // Should we prevent select being passed through
 let selectCancelled = false;
-
-const isPointerChanged = ({clientX, clientY}) => {
-	const {x, y} = getLastPointerPosition();
-	return Spotlight.getPointerMode() && (x !== clientX || y !== clientY);
-};
 
 /**
  * Default configuration for Spottable
@@ -340,14 +335,14 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleEnter = (ev) => {
 			forward('onMouseEnter', ev, this.props);
-			if (isPointerChanged(ev)) {
+			if (hasPointerMoved(ev.clientX, ev.clientY)) {
 				this.isHovered = true;
 			}
 		}
 
 		handleLeave = (ev) => {
 			forward('onMouseLeave', ev, this.props);
-			if (isPointerChanged(ev)) {
+			if (hasPointerMoved(ev.clientX, ev.clientY)) {
 				this.isHovered = false;
 			}
 		}
