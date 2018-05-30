@@ -561,7 +561,7 @@ class ScrollableBase extends Component {
 	}
 
 	playOverscrollEffect = (nodeRef, orientation, position, ratio, auto) => {
-		const prefix = '--moon-scrollable-overscroll-ratio-';
+		const prefix = '--scrollable-overscroll-ratio-';
 
 		nodeRef.style.setProperty(prefix + orientation + position, ratio);
 		if (auto && ratio > 0) {
@@ -668,15 +668,15 @@ class ScrollableBase extends Component {
 					verticalScrollbarProps
 				}) => (
 					<div
-						className={classNames(className, overscrollCss.scrollable)}
+						className={classNames(className, overscrollCss.scrollable, overscrollCss.overscroll)}
 						data-spotlight-container={spotlightContainer}
 						data-spotlight-container-disabled={spotlightContainerDisabled}
 						data-spotlight-id={spotlightId}
 						ref={initUiContainerRef}
 						style={style}
 					>
-						<div className={classNames(componentCss.container, overscrollCss.verticalEffects, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={this.initVerticalOverscrollRef}>
-							<TouchableDiv className={classNames(touchableClassName, overscrollCss.horizontalEffects)} ref={this.initHorizontalOverscrollRef} {...restTouchableProps}>
+						<div className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={this.initVerticalOverscrollRef}>
+							<TouchableDiv className={classNames(touchableClassName, overscrollCss.overscrollFrame, overscrollCss.horizontal)} ref={this.initHorizontalOverscrollRef} {...restTouchableProps}>
 								{childRenderer({
 									...childComponentProps,
 									cbScrollTo: scrollTo,
