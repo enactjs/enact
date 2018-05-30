@@ -230,7 +230,7 @@ class FloatingLayerBase extends React.Component {
 
 const handleCancel = handle(
 	// can't use forProp safely since either could be undefined ~= false
-	(ev, {open, noAutoDismiss}) => open && !noAutoDismiss,
+	(ev, {open, noAutoDismiss, onDismiss}) => open && !noAutoDismiss && onDismiss,
 	forwardDismiss,
 	stop
 );
