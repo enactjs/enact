@@ -17,8 +17,7 @@ storiesOf('Popup', module)
 					The contents of the popup below should contain the only controls that can be
 					navigated to using 5-way. This is because the popup is using a `spotlightRestrict`
 					value of `self-only`. If the value changes to `self-first`, the other panel controls
-					can receive focus, but priority will be given to controls within the popup first. If
-					the value changes to `none`, there is no priority.
+					can receive focus, but priority will be given to controls within the popup first.
 				</p>
 				<Button>Button</Button>
 				<Popup
@@ -27,7 +26,7 @@ storiesOf('Popup', module)
 					noAutoDismiss={boolean('noAutoDismiss', false)}
 					onClose={action('onClose')}
 					showCloseButton={boolean('showCloseButton', true)}
-					spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-only')}
+					spotlightRestrict={select('spotlightRestrict', ['self-first', 'self-only'], 'self-only')}
 				>
 					<div>{text('children', 'Hello Popup')}</div>
 					<br />

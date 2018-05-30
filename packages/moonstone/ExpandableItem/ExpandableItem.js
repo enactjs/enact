@@ -69,6 +69,11 @@ const ExpandableItemBase = kind({
 		 */
 		title: PropTypes.string.isRequired,
 
+		// TODO: Document voice control props and make public
+		'data-webos-voice-group-label': PropTypes.string,
+		'data-webos-voice-intent': PropTypes.string,
+		'data-webos-voice-label': PropTypes.string,
+
 		/**
 		 * When `true`, the expandable automatically closes when the user navigates to the `title`
 		 * of the component using 5-way controls; if `false`, the user must select/tap the header to
@@ -303,6 +308,9 @@ const ExpandableItemBase = kind({
 
 	render: ({
 		children,
+		'data-webos-voice-group-label': voiceGroupLabel,
+		'data-webos-voice-intent': voiceIntent,
+		'data-webos-voice-label': voiceLabel,
 		disabled,
 		handleKeyDown,
 		handleLabelKeyDown,
@@ -344,6 +352,9 @@ const ExpandableItemBase = kind({
 					css={css}
 					className={labeledItemClassName}
 					data-expandable-label
+					data-webos-voice-group-label={voiceGroupLabel}
+					data-webos-voice-intent={voiceIntent}
+					data-webos-voice-label={voiceLabel}
 					disabled={disabled}
 					label={label}
 					onTap={handleOpen}
