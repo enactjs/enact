@@ -13,6 +13,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Spotlight from '../src/spotlight';
+import {getLastPointerPosition} from '../src/pointer';
 
 /**
  * The class name to apply to the default component to focus in a container.
@@ -23,17 +24,11 @@ import Spotlight from '../src/spotlight';
 const spotlightDefaultClass = 'spottable-default';
 const enterEvent = 'onMouseEnter';
 const leaveEvent = 'onMouseLeave';
-const moveEvent = 'onMouseMove';
-let pointerX = null;
-let pointerY = null;
 
-const isPointerChanged = ({clientX, clientY}) => (
-	Spotlight.getPointerMode() &&
-	(
-		pointerX !== null && pointerX !== clientX ||
-		pointerY !== null && pointerY !== clientY
-	)
-);
+const isPointerChanged = ({clientX, clientY}) => {
+	const {x, y} = getLastPointerPosition();
+	return Spotlight.getPointerMode() && (x !== clientX || y !== clientY);
+};
 
 /**
  * Default config for {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
@@ -125,7 +120,6 @@ const defaultConfig = {
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardMouseEnter = forward(enterEvent);
 	const forwardMouseLeave = forward(leaveEvent);
-	const forwardMouseMove = forward(moveEvent);
 	const {navigableFilter, preserveId, ...containerConfig} = config;
 
 	const stateFromProps = ({spotlightId}) => {
@@ -266,12 +260,6 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forwardMouseLeave(ev, this.props);
 		}
 
-		handleMouseMove = (ev) => {
-			pointerX = ev.clientX;
-			pointerY = ev.clientY;
-			forwardMouseMove(ev, this.props);
-		}
-
 		render () {
 			const {spotlightDisabled, spotlightMuted, ...rest} = this.props;
 			delete rest.containerId;
@@ -282,7 +270,6 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			rest['data-spotlight-id'] = this.state.id;
 			rest[enterEvent] = this.handleMouseEnter;
 			rest[leaveEvent] = this.handleMouseLeave;
-			rest[moveEvent] = this.handleMouseMove;
 
 			if (spotlightDisabled) {
 				rest['data-spotlight-container-disabled'] = spotlightDisabled;

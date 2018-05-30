@@ -1,6 +1,7 @@
 import {mount} from 'enzyme';
 import React from 'react';
 import Spotlight from '../../src/spotlight';
+import {updatePointerPosition} from '../../src/pointer';
 
 import SpotlightContainerDecorator from '../SpotlightContainerDecorator';
 
@@ -19,6 +20,7 @@ describe('SpotlightContainerDecorator', () => {
 
 	beforeEach(() => {
 		Spotlight.setActiveContainer(null);
+		updatePointerPosition(0, 0);
 	});
 
 	it('should set itself as the active container on mouse enter', function () {
@@ -28,12 +30,7 @@ describe('SpotlightContainerDecorator', () => {
 			<Component spotlightId="test-container" />
 		);
 
-		const div = subject.find(Div);
-
-		// initialize pointer position
-		div.prop('onMouseMove')(unhoverPosition);
-
-		div.prop('onMouseEnter')(hoverPosition);
+		subject.find(Div).prop('onMouseEnter')(hoverPosition);
 
 		const expected = 'test-container';
 		const actual = Spotlight.getActiveContainer();
@@ -56,12 +53,9 @@ describe('SpotlightContainerDecorator', () => {
 		const innerWrapper = subject.find(selector);
 		const innerNode = node.querySelector(selector);
 
-		// initialize pointer position
-		innerWrapper.prop('onMouseMove')(unhoverPosition);
-
 		// set inner-container as active
 		innerWrapper.prop('onMouseEnter')(hoverPosition);
-		innerWrapper.prop('onMouseMove')(hoverPosition);
+		updatePointerPosition(0, 1);
 
 		// leave inner-container
 		innerWrapper.prop('onMouseLeave')({...unhoverPosition, currentTarget: innerNode});
@@ -88,12 +82,9 @@ describe('SpotlightContainerDecorator', () => {
 		const innerWrapper = subject.find(selector);
 		const innerNode = node.querySelector(selector);
 
-		// initialize pointer position
-		innerWrapper.prop('onMouseMove')(unhoverPosition);
-
 		// set inner-container as active
 		innerWrapper.prop('onMouseEnter')(hoverPosition);
-		innerWrapper.prop('onMouseMove')(hoverPosition);
+		updatePointerPosition(0, 1);
 
 		// set another container to be active
 		Spotlight.setActiveContainer('self-only-container');

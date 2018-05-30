@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 - `spotlight/Spottable` making a component as spottable when `spotlightDisabled` is set
 - `spotlight` to handle pointer events only when pointer has moved
+- `spotlight` to correctly set the active container id when unable to set focus to a container
 
 ## [2.0.0-beta.3] - 2018-05-14
 

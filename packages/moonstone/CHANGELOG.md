@@ -16,7 +16,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` feedback and feedback icon to hide properly on play/pause/fast forward/rewind
 - `moonstone/VideoPlayer` to correctly focus to default media controls component
 - `moonstone/VideoPlayer` to show controls on mount and when playing next preload video
-- `moonstone/Panels.Panel` to set the active container id on render
 
 ## [2.0.0-beta.3] - 2018-05-14
 
