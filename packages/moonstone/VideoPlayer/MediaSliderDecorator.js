@@ -192,6 +192,7 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 					onBlur={this.handleBlur}
 					onFocus={this.handleFocus}
 					onKeyDown={this.handleKeyDown}
+					onKeyUp={this.handleKeyUp}
 					onMouseOver={this.handleMouseOver}
 					onMouseOut={this.handleMouseOut}
 					onMouseMove={this.handleMouseMove}
