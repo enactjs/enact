@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 - `moonstone/Scroller` ordering of logic for Scroller focus to check focus possibilities first then go to fallback at the top of the container
 - `moonstone/Scroller` to scroll by page when focus was at the edge of the viewport
+- `moonstone/VideoPlayer` to show thumbnail only when focused on slider
 
 ## [2.0.0-beta.5] - 2018-05-29
 

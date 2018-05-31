@@ -827,6 +827,7 @@ const VideoPlayerBase = class extends React.Component {
 				announce,
 				bottomControlsRendered: true,
 				feedbackVisible: true,
+				feedbackIconVisible: true,
 				mediaControlsVisible: true,
 				mediaSliderVisible: true,
 				miniFeedbackVisible: false,
@@ -849,6 +850,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopAutoCloseTimeout();
 		this.setState({
 			feedbackVisible: false,
+			feedbackIconVisible: false,
 			mediaControlsVisible: false,
 			mediaSliderVisible: false,
 			miniFeedbackVisible: false,
@@ -1568,6 +1570,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState({
 			// If paused is false that means it is playing. We only want to hide on playing.
 			feedbackIconVisible: this.state.paused,
+			feedbackVisible: false,
 			sliderTooltipTime: this.state.currentTime
 		});
 	}
