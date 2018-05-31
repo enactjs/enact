@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ProgressBar` prop, `highlighted`, for when the UX needs to call special attention to a progress bar
 
 ### Changed
+
 - `moonstone/VideoPlayer` to disable media slider when source is unavailable
 
 ### Fixed
