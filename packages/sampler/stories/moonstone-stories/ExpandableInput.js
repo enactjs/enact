@@ -1,4 +1,4 @@
-import ExpandableInput, {ExpandableInputBase} from '@enact/moonstone/ExpandableInput';
+import ExpandableInput from '@enact/moonstone/ExpandableInput';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -6,17 +6,15 @@ import {action} from '@storybook/addon-actions';
 import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
 const iconNames = ['', ...Object.keys(icons)];
 
-const Config = mergeComponentMetadata('ExpandableInput', ExpandableInputBase, ExpandableInput);
+ExpandableInput.displayName = 'ExpandableInput';
 
 storiesOf('Moonstone', module)
 	.add(
 		'ExpandableInput',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [ExpandableInput],
 			text: 'Basic usage of divider'
 		})(() => (
 			<ExpandableInput

@@ -1,4 +1,4 @@
-import Popup, {PopupBase} from '@enact/moonstone/Popup';
+import Popup from '@enact/moonstone/Popup';
 import BodyText from '@enact/moonstone/BodyText';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -6,15 +6,11 @@ import {action} from '@storybook/addon-actions';
 import {boolean, text, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const Config = mergeComponentMetadata('Popup', PopupBase, Popup);
-
 storiesOf('Moonstone', module)
 	.add(
 		'Popup',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [Popup],
 			text: 'Basic usage of Popup'
 		})(() => (
 			<div>

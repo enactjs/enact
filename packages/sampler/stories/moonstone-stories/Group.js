@@ -24,10 +24,15 @@ const prop = {
 
 const getComponent = (name) => prop.children[name];
 
+Group.displayName = 'Group';
+
 storiesOf('UI', module)
 	.add(
 		'Group',
-		withInfo('Basic usage of Group')(() => (
+		withInfo({
+			propTablesExclude: [Group],
+			text: 'Basic usage of Group'
+		})(() => (
 			<Group
 				childComponent={getComponent(select('childComponent', Object.keys(prop.children), 'CheckboxItem'))}
 				itemProps={{

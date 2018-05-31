@@ -1,4 +1,4 @@
-import Slider, {SliderBase, SliderTooltip} from '@enact/moonstone/Slider';
+import Slider, {SliderTooltip} from '@enact/moonstone/Slider';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
@@ -6,15 +6,15 @@ import {boolean, number, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('Slider', SliderBase, Slider);
+Slider.displayName = 'Slider';
+SliderTooltip.displayName = 'SliderTooltip';
 
 storiesOf('Moonstone', module)
 	.add(
 		'Slider',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [Slider, SliderTooltip],
 			text: 'Basic usage of Slider'
 		})(() => {
 			const side = nullify(select('side', ['after', 'before', 'left', 'right'], 'before'));

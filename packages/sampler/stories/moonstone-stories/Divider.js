@@ -6,6 +6,7 @@ import {withInfo} from '@storybook/addon-info';
 
 import {mergeComponentMetadata, smartSelect} from '../../src/utils';
 
+Divider.displayName = 'Divider';
 const Config = mergeComponentMetadata('Divider', DividerBase, Divider);
 
 // Set up some defaults for info and knobs
@@ -17,7 +18,10 @@ const prop = {
 storiesOf('Moonstone', module)
 	.add(
 		'Divider',
-		withInfo('Basic usage of divider')(() => (
+		withInfo({
+			propTablesExclude: [Divider],
+			text: 'Basic usage of divider'
+		})(() => (
 			<Divider
 				casing={smartSelect('casing', prop.casing, Config)}
 				spacing={smartSelect('spacing', prop.spacing, Config)}

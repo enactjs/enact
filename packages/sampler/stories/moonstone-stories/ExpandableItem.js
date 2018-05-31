@@ -9,10 +9,17 @@ import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 
+ExpandableItem.displayName = 'ExpandableItem';
+Icon.displayName = 'Icon';
+Item.displayName = 'Item';
+
 storiesOf('Moonstone', module)
 	.add(
 		'ExpandableItem',
-		withInfo('Basic usage of ExpandableItem')(() => (
+		withInfo({
+			propTablesExclude: [ExpandableItem, Icon, Item],
+			text: 'Basic usage of ExpandableItem'
+		})(() => (
 			<ExpandableItem
 				autoClose={nullify(boolean('autoClose', false))}
 				disabled={boolean('disabled', false)}

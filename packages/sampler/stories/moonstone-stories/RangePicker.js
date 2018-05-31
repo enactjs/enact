@@ -1,4 +1,4 @@
-import RangePicker, {RangePickerBase} from '@enact/moonstone/RangePicker';
+import RangePicker from '@enact/moonstone/RangePicker';
 import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -7,9 +7,6 @@ import {boolean, number, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const Config = mergeComponentMetadata('RangePicker', RangePickerBase, RangePicker);
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -24,11 +21,13 @@ const parseIntOrNullify = (v) => {
 	}
 };
 
+RangePicker.displayName = 'RangePicker';
+
 storiesOf('Moonstone', module)
 	.add(
 		'RangePicker',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [RangePicker],
 			text: 'Basic usage of RangePicker'
 		})(() => (
 			<RangePicker

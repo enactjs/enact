@@ -7,10 +7,15 @@ import {action} from '@storybook/addon-actions';
 import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
+Dialog.displayName = 'Dialog';
+
 storiesOf('Moonstone', module)
 	.add(
 		'Dialog',
-		withInfo('Basic usage of Dialog')(() => (
+		withInfo({
+			propTablesExclude: [BodyText, Button, Dialog],
+			text: 'Basic usage of Dialog'
+		})(() => (
 			<div>
 				<Dialog
 					casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}

@@ -10,13 +10,14 @@ import {withInfo} from '@storybook/addon-info';
 
 import {mergeComponentMetadata, smartSelect} from '../../src/utils';
 
+CheckboxItem.displayName = 'CheckboxItem';
 const Config = mergeComponentMetadata('CheckboxItem', ItemBase, Item, UiToggleItemBase, UiToggleItem, ToggleItem, CheckboxItem);
 
 storiesOf('Moonstone', module)
 	.add(
 		'CheckboxItem',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [CheckboxItem],
 			text: 'Basic usage of CheckboxItem'
 		})(() => (
 			<CheckboxItem

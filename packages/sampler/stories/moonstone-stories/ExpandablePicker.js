@@ -1,15 +1,13 @@
-import ExpandablePicker, {ExpandablePickerBase} from '@enact/moonstone/ExpandablePicker';
+import ExpandablePicker from '@enact/moonstone/ExpandablePicker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
 import nullify from '../../src/utils/nullify.js';
 
-const Config = mergeComponentMetadata('ExpandablePicker', ExpandablePickerBase, ExpandablePicker);
-removeProps(Config, 'onPick');
+ExpandablePicker.displayName = 'ExpandablePicker';
 
 const emoticons = ['💥 boom', '😩🖐 facepalm', '🍩 doughnut', '👻 ghost', '💍 ring', '🎮 videogame', '🍌🍌 bananas'];
 
@@ -17,7 +15,7 @@ storiesOf('Moonstone', module)
 	.add(
 		'ExpandablePicker',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [ExpandablePicker],
 			text: 'Basic usage of ExpandablePicker'
 		})(() => (
 			<ExpandablePicker

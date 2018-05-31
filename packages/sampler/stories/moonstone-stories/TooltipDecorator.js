@@ -31,7 +31,10 @@ const prop = {
 storiesOf('Moonstone', module)
 	.add(
 		'TooltipDecorator',
-		withInfo('The basic TooltipDecorator')(() => (
+		withInfo({
+			propTablesExclude: [Button],
+			text: 'The basic TooltipDecorator'
+		})(() => (
 			<div style={{textAlign: 'center'}}>
 				<Button
 					tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}

@@ -11,11 +11,15 @@ const src = {
 	'uhd': 'http://via.placeholder.com/600x600'
 };
 
+Image.displayName = 'Image';
+
 storiesOf('Moonstone', module)
 	.add(
 		'Image',
-		withInfo('The basic Image')(() => (
-
+		withInfo({
+			propTablesExclude: [Image],
+			text: 'The basic Image'
+		})(() => (
 			<Image
 				src={src}
 				sizing={select('sizing', ['fill', 'fit', 'none'], 'fill')}

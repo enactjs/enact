@@ -1,5 +1,5 @@
-import {VirtualGridList as UiVirtualGridList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
-import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
+import {VirtualGridList as UiVirtualGridList} from '@enact/ui/VirtualList';
+import {VirtualGridList} from '@enact/moonstone/VirtualList';
 import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
 import {GridListImageItem} from '@enact/moonstone/GridListImageItem';
 import ri from '@enact/ui/resolution';
@@ -10,9 +10,6 @@ import {boolean, number, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const Config = mergeComponentMetadata('VirtualGridList', VirtualGridList, VirtualListBase, UiVirtualListBase);
 
 const
 	wrapOption = {
@@ -75,11 +72,13 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
+UiVirtualGridList.displayName = 'VirtualGridList';
+
 storiesOf('UI', module)
 	.add(
 		'VirtualList.VirtualGridList',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [UiVirtualGridList],
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<UiVirtualGridList
@@ -104,7 +103,7 @@ storiesOf('Moonstone', module)
 	.add(
 		'VirtualList.VirtualGridList',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [VirtualGridList],
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<VirtualGridList

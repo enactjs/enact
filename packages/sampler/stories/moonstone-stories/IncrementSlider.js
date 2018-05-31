@@ -8,13 +8,14 @@ import {withInfo} from '@storybook/addon-info';
 
 import {mergeComponentMetadata, nullify, smartSelect} from '../../src/utils';
 
+IncrementSlider.displayName = 'IncrementSlider';
 const Config = mergeComponentMetadata('IncrementSlider', IncrementSliderBase, IncrementSlider);
 
 storiesOf('Moonstone', module)
 	.add(
 		'IncrementSlider',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [IncrementSlider],
 			text: 'Basic usage of IncrementSlider'
 		})(() => {
 			const side = smartSelect('side', ['after', 'before', 'left', 'right'], IncrementSliderTooltip, 'after');

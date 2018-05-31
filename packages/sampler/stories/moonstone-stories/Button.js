@@ -9,6 +9,7 @@ import {withInfo} from '@storybook/addon-info';
 
 import {mergeComponentMetadata, nullify, smartSelect} from '../../src/utils';
 
+Button.displayName = 'Button';
 const Config = mergeComponentMetadata('Button', UIButtonBase, UIButton, ButtonBase, Button);
 
 // Set up some defaults for info and knobs
@@ -22,7 +23,7 @@ storiesOf('Moonstone', module)
 	.add(
 		'Button',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [Button],
 			text: 'The basic Button'
 		})(() => (
 			<Button

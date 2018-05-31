@@ -8,15 +8,14 @@ import {boolean, number, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('Layout', Layout);
+Layout.displayName = 'Layout';
 
 storiesOf('UI', module)
 	.add(
 		'Layout',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [Button, Cell, Item, Layout],
 			text: 'Basic usage of Layout'
 		})(() => (
 			<div className="debug" style={{height: ri.unit(399, 'rem')}}>

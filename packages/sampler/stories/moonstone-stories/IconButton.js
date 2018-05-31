@@ -1,4 +1,4 @@
-import IconButton, {IconButtonBase} from '@enact/moonstone/IconButton';
+import IconButton from '@enact/moonstone/IconButton';
 import icons from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -7,25 +7,24 @@ import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 // import icons
 import docs from '../../images/icon-enact-docs.png';
 import factory from '../../images/icon-enact-factory.svg';
 import logo from '../../images/icon-enact-logo.svg';
 
-const Config = mergeComponentMetadata('IconButton', IconButtonBase, IconButton);
-
 // Set up some defaults for info and knobs
 const prop = {
 	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent']
 };
 
+IconButton.displayName = 'IconButton';
+
 storiesOf('Moonstone', module)
 	.add(
 		'IconButton',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [IconButton],
 			text: 'The basic IconButton'
 		})(() => (
 			<IconButton

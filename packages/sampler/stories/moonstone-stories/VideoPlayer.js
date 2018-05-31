@@ -1,5 +1,5 @@
 import icons from './icons';
-import VideoPlayer, {VideoPlayerBase, MediaControls} from '@enact/moonstone/VideoPlayer';
+import VideoPlayer, {MediaControls} from '@enact/moonstone/VideoPlayer';
 import IconButton from '@enact/moonstone/IconButton';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
@@ -7,10 +7,6 @@ import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {boolean, number, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
-
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const Config = mergeComponentMetadata('VideoPlayer', VideoPlayerBase, VideoPlayer);
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -93,11 +89,14 @@ prop.events.forEach( (ev) => {
 	prop.eventActions[ev] = action(ev);
 });
 
+VideoPlayer.displayName = 'VideoPlayer';
+MediaControls.displayName = 'MediaControls';
+
 storiesOf('Moonstone', module)
 	.add(
 		'VideoPlayer',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [Button, IconButton, MediaControls, VideoPlayer],
 			text: 'The basic VideoPlayer'
 		})(() => {
 			const videoSource = select('source', videoSources, prop.videos[0].source);

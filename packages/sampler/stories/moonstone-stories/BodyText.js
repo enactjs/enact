@@ -6,10 +6,15 @@ import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 
+BodyText.displayName = 'BodyText';
+
 storiesOf('Moonstone', module)
 	.add(
 		'BodyText',
-		withInfo('The basic BodyText')(() => (
+		withInfo({
+			propTablesExclude: [BodyText],
+			text: 'The basic BodyText'
+		})(() => (
 			<BodyText
 				centered={nullify(boolean('centered', false))}
 			>

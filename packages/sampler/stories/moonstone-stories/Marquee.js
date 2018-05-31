@@ -6,10 +6,15 @@ import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 
+Marquee.displayName = 'Marquee';
+
 storiesOf('Moonstone', module)
 	.add(
 		'Marquee',
-		withInfo('The basic MarqueeText')(() => {
+		withInfo({
+			propTablesExclude: [Marquee],
+			text: 'The basic MarqueeText'
+		})(() => {
 			const disabled = nullify(boolean('disabled', false));
 			return (
 				<section>

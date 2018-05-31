@@ -1,6 +1,4 @@
-import ToggleItem from '@enact/moonstone/ToggleItem';
 import SelectableItem from '@enact/moonstone/SelectableItem';
-import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
@@ -8,15 +6,14 @@ import {boolean, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('SelectableItem', ItemBase, Item, ToggleItem, SelectableItem);
+SelectableItem.displayName = 'SelectableItem';
 
 storiesOf('Moonstone', module)
 	.add(
 		'SelectableItem',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [SelectableItem],
 			text: 'Basic usage of SelectableItem'
 		})(() => (
 			<SelectableItem

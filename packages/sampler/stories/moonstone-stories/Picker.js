@@ -1,4 +1,4 @@
-import Picker, {PickerBase} from '@enact/moonstone/Picker';
+import Picker from '@enact/moonstone/Picker';
 import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -7,9 +7,6 @@ import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const Config = mergeComponentMetadata('Picker', PickerBase, Picker);
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -24,11 +21,13 @@ const airports = [
 	'נמל התעופה בן גוריון טרמינל הבינלאומי'
 ];
 
+Picker.displayName = 'Picker';
+
 storiesOf('Moonstone', module)
 	.add(
 		'Picker',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [Picker],
 			text: 'Basic usage of Picker'
 		})(() => (
 			<Picker

@@ -6,19 +6,18 @@ import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const Config = mergeComponentMetadata('SlotItem', SlotItem);
 
 const prop = {
 	autoHide: [null, 'after', 'before', 'both']
 };
 
+SlotItem.displayName = 'SlotItem';
+
 storiesOf('Moonstone', module)
 	.add(
 		'SlotItem',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [Icon, SlotItem],
 			text: 'Basic usage of SlotItem'
 		})(() => (
 			<SlotItem

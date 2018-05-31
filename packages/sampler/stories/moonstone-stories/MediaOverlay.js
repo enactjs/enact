@@ -1,12 +1,8 @@
-import MediaOverlay, {MediaOverlayBase} from '@enact/moonstone/MediaOverlay';
+import MediaOverlay from '@enact/moonstone/MediaOverlay';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
-
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const Config = mergeComponentMetadata('MediaOverlay', MediaOverlayBase);
 
 const defaultPlaceholder =
 	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
@@ -45,11 +41,13 @@ const prop = {
 	}
 };
 
+MediaOverlay.displayName = 'MediaOverlay';
+
 storiesOf('Moonstone', module)
 	.add(
 		'MediaOverlay',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [MediaOverlay],
 			text: 'The basic MediaOverlay'
 		})(() => (
 			<MediaOverlay

@@ -8,10 +8,15 @@ import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 
+Spinner.displayName = 'Spinner';
+
 storiesOf('Moonstone', module)
 	.add(
 		'Spinner',
-		withInfo('Basic usage of Spinner')(() => (
+		withInfo({
+			propTablesExclude: [Spinner],
+			text: 'Basic usage of Spinner'
+		})(() => (
 			<div
 				style={{
 					outline: 'teal dashed 1px',

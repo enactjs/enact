@@ -14,7 +14,10 @@ import logo from '../../images/icon-enact-logo.svg';
 storiesOf('Moonstone', module)
 	.add(
 		'Icon',
-		withInfo('Basic usage of Icon')(() => {
+		withInfo({
+			propTablesExclude: [Divider, Icon],
+			text: 'Basic usage of Icon'
+		})(() => {
 			const small = boolean('small', false);
 			return (
 				<div>

@@ -1,4 +1,4 @@
-import Input, {InputBase} from '@enact/moonstone/Input';
+import Input from '@enact/moonstone/Input';
 import icons from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -7,17 +7,16 @@ import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const Config = mergeComponentMetadata('Input', InputBase, Input);
 
 const iconNames = ['', ...icons];
+
+Input.displayName = 'Input';
 
 storiesOf('Moonstone', module)
 	.add(
 		'Input',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [Input],
 			text: 'The basic Input'
 		})(() => (
 			<Input

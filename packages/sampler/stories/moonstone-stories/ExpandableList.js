@@ -1,4 +1,4 @@
-import ExpandableList, {ExpandableListBase} from '@enact/moonstone/ExpandableList';
+import ExpandableList from '@enact/moonstone/ExpandableList';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
@@ -7,11 +7,13 @@ import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 
+ExpandableList.displayName = 'ExpandableList';
+
 storiesOf('Moonstone', module)
 	.add(
 		'ExpandableList',
 		withInfo({
-			propTables: [ExpandableListBase],
+			propTablesExclude: [ExpandableList],
 			text: 'Basic usage of ExpandableList'
 		})(() => (
 			<ExpandableList

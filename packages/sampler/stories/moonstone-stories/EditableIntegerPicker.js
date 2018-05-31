@@ -1,4 +1,4 @@
-import EditableIntegerPicker, {EditableIntegerPickerBase} from '@enact/moonstone/EditableIntegerPicker';
+import EditableIntegerPicker from '@enact/moonstone/EditableIntegerPicker';
 import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -7,9 +7,8 @@ import {boolean, number, text, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('EditableIntegerPicker', EditableIntegerPickerBase, EditableIntegerPicker);
+EditableIntegerPicker.displayName = 'EditableIntegerPicker';
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -22,7 +21,7 @@ storiesOf('Moonstone', module)
 		'EditableIntegerPicker',
 
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [EditableIntegerPicker],
 			text: 'Basic usage of EditableIntegerPicker'
 		})(() => (
 			<EditableIntegerPicker

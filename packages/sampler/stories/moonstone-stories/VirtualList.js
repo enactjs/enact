@@ -1,6 +1,6 @@
 import Item from '@enact/moonstone/Item';
-import {VirtualList as UiVirtualList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
-import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
+import {VirtualList as UiVirtualList} from '@enact/ui/VirtualList';
+import VirtualList from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -9,9 +9,6 @@ import {boolean, number, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBase, UiVirtualListBase);
 
 const
 	wrapOption = {
@@ -52,11 +49,13 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
+UiVirtualList.displayName = 'VirtualList';
+
 storiesOf('UI', module)
 	.add(
 		'VirtualList',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [UiVirtualList],
 			text: 'Basic usage of VirtualList'
 		})(() => {
 			const itemSize = ri.scale(number('itemSize', 72));
@@ -80,7 +79,7 @@ storiesOf('Moonstone', module)
 	.add(
 		'VirtualList',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [VirtualList],
 			text: 'Basic usage of VirtualList'
 		})(() => {
 			const itemSize = ri.scale(number('itemSize', 72));

@@ -1,4 +1,4 @@
-import Notification, {NotificationBase} from '@enact/moonstone/Notification';
+import Notification from '@enact/moonstone/Notification';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -6,15 +6,13 @@ import {action} from '@storybook/addon-actions';
 import {boolean, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const Config = mergeComponentMetadata('Notification', NotificationBase, Notification);
+Notification.displayName = 'Notification';
 
 storiesOf('Moonstone', module)
 	.add(
 		'Notification',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [Button, Notification],
 			text: 'Basic usage of Notification'
 		})(() => (
 			<Notification

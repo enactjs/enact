@@ -1,19 +1,17 @@
-import DaySelector, {DaySelectorBase} from '@enact/moonstone/DaySelector';
+import DaySelector from '@enact/moonstone/DaySelector';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {boolean, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const Config = mergeComponentMetadata('DaySelector', DaySelectorBase, DaySelector);
+DaySelector.displayName = 'DaySelector';
 
 storiesOf('Moonstone', module)
 	.add(
 		'DaySelector',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [DaySelector],
 			text: 'Basic usage of DaySelector'
 		})(() => (
 			<DaySelector

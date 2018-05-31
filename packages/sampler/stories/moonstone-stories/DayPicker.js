@@ -1,4 +1,4 @@
-import DayPicker, {DayPickerBase} from '@enact/moonstone/DayPicker';
+import DayPicker from '@enact/moonstone/DayPicker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
@@ -7,11 +7,13 @@ import {withInfo} from '@storybook/addon-info';
 
 import nullify from '../../src/utils/nullify.js';
 
+DayPicker.displayName = 'DayPicker';
+
 storiesOf('Moonstone', module)
 	.add(
 		'DayPicker',
 		withInfo({
-			propTables: [DayPickerBase],
+			propTablesExclude: [DayPicker],
 			text: 'The basic DayPicker'
 		})(() => (
 			<DayPicker

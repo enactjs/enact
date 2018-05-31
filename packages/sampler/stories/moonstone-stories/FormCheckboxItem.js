@@ -1,21 +1,15 @@
 import FormCheckboxItem from '@enact/moonstone/FormCheckboxItem';
-import ToggleItem from '@enact/moonstone/ToggleItem';
-import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const Config = mergeComponentMetadata('FormCheckboxItem', ItemBase, Item, ToggleItem, FormCheckboxItem);
-
 storiesOf('Moonstone', module)
 	.add(
 		'FormCheckboxItem',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [FormCheckboxItem],
 			text: 'Basic usage of FormCheckboxItem'
 		})(() => (
 			<FormCheckboxItem
