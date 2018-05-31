@@ -174,11 +174,12 @@ class ScrollableBase extends Component {
 		scrollUpAriaLabel: PropTypes.string,
 
 		/**
-		* Sets Spotlight to lock with either to the scroller container or the current child
-		* spotlight container
+		* Sets Spotlight to behave differently on page up/down controls. When set to `scroller`
+		* spotlight will move within the `Scroller`'s larger container. When set to `child` to
+		* spotlight will move within the smaller container the current spotlight is in.
 		*
 		* @type {String}
-		* @default 'child'
+		* @default 'scroller'
 		* @public
 		*/
 		spotlightPaging: PropTypes.oneOf(['child', 'scroller'])
