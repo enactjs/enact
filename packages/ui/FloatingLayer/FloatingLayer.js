@@ -10,10 +10,14 @@ import Cancelable from '../Cancelable';
 import {contextTypes} from './FloatingLayerDecorator';
 import Scrim from './Scrim';
 
-const forwardDismiss = adaptEvent(
-	() => ({type: 'onDismiss'}),
-	forward('onDismiss')
+const forwardWithType = type => adaptEvent(
+	() => ({type}),
+	forward(type)
 );
+
+const forwardDismiss = forwardWithType('onDismiss');
+const forwardClose = forwardWithType('onClose');
+const forwardOpen = forwardWithType('onOpen');
 
 /**
  * {@link ui/FloatingLayer.FloatingLayerBase} is a component that creates an entry point to the new
@@ -120,7 +124,7 @@ class FloatingLayerBase extends React.Component {
 
 	componentDidMount () {
 		if (this.props.open) {
-			forward('onOpen', {}, this.props);
+			forwardOpen(null, this.props);
 			this.renderNode();
 		}
 
@@ -130,7 +134,7 @@ class FloatingLayerBase extends React.Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		if (!this.open && nextProps.open && !this.state.nodeRendered) {
+		if (!this.props.open && nextProps.open && !this.state.nodeRendered) {
 			this.renderNode();
 		}
 	}
@@ -139,9 +143,9 @@ class FloatingLayerBase extends React.Component {
 		const {open, scrimType} = this.props;
 
 		if (prevProps.open && !open) {
-			forward('onClose', {}, this.props);
+			forwardClose(null, this.props);
 		} else if (!prevProps.open && open) {
-			forward('onOpen', {}, this.props);
+			forwardOpen(null, this.props);
 		}
 
 		if (scrimType === 'none') {
@@ -193,27 +197,30 @@ class FloatingLayerBase extends React.Component {
 		const {floatLayerClassName} = this.props;
 		const floatingLayer = this.context.getFloatingLayer();
 
-		if (!this.node && floatingLayer && typeof document !== 'undefined') {
-			invariant(
-				this.context.getFloatingLayer,
-				'FloatingLayer cannot be used outside the subtree of a FloatingLayerDecorator'
-			);
+		if (this.node || !floatingLayer) return;
 
-			this.node = document.createElement('div');
-			this.node.className = floatLayerClassName;
-			this.node.style.zIndex = 100;
+		invariant(
+			this.context.getFloatingLayer,
+			'FloatingLayer cannot be used outside the subtree of a FloatingLayerDecorator'
+		);
 
-			floatingLayer.appendChild(this.node);
-			on('scroll', this.handleScroll, this.node);
+		this.node = document.createElement('div');
+		this.node.className = floatLayerClassName;
+		this.node.style.zIndex = 100;
 
-			// render children when this.node is inserted in the DOM tree.
-			this.setState({nodeRendered: true});
-		}
+		floatingLayer.appendChild(this.node);
+		on('scroll', this.handleScroll, this.node);
+
+		// render children when this.node is inserted in the DOM tree.
+		this.setState({nodeRendered: true});
 	}
 
 	render () {
-		const props = Object.assign({}, this.props);
-		const {children, open, scrimType, ...rest} = props;
+		const {children, open, scrimType, ...rest} = this.props;
+
+		if (!open || !this.state.nodeRendered) {
+			return null;
+		}
 
 		delete rest.floatLayerClassName;
 		delete rest.floatLayerId;
@@ -222,16 +229,12 @@ class FloatingLayerBase extends React.Component {
 		delete rest.onDismiss;
 		delete rest.onOpen;
 
-		return (
-			open && this.state.nodeRendered ?
-				ReactDOM.createPortal(
-					<div {...rest}>
-						{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
-						{React.cloneElement(children, {onClick: this.stopPropagation})}
-					</div>,
-					this.node
-				) :
-				null
+		return ReactDOM.createPortal(
+			<div {...rest}>
+				{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
+				{React.cloneElement(children, {onClick: this.stopPropagation})}
+			</div>,
+			this.node
 		);
 	}
 }
