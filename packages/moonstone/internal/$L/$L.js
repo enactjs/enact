@@ -13,6 +13,8 @@ let resBundle;
  */
 function getResBundle () {
 	let currLoc = new Locale();
+	console.log("**********************************************");
+	console.log(ILIB_MOONSTONE_PATH);
 	if (typeof ILIB_MOONSTONE_PATH === 'string' && (!resBundle ||
 			currLoc.getSpec() !== resBundle.getLocale().getSpec())) {
 		resBundle = new ResBundle({

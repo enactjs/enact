@@ -7,6 +7,7 @@ import LocaleInfo from '../ilib/lib/LocaleInfo';
 import ZoneInfoFile from './zoneinfo';
 
 const get = (url, callback) => {
+	console.error("Loader get");
 	if (typeof XMLHttpRequest !== 'undefined') {
 		xhr.XMLHttpRequest = XMLHttpRequest || xhr.XMLHttpRequest;
 		let req;
@@ -32,6 +33,7 @@ const cacheKey = cachePrefix + 'CACHE-ID';
 const cacheID = ILIB_CACHE_ID;
 
 function EnyoLoader () {
+	console.error("Loader EnyoLoader");
 	this.base = iLibBase;
 	// TODO: full enyo.platform implementation for improved accuracy
 	if (typeof window === 'object' && typeof window.PalmSystem === 'object') {
@@ -89,6 +91,7 @@ EnyoLoader.prototype._pathjoin = function (_root, subpath) {
  * @returns {undefined}
  */
 EnyoLoader.prototype._loadFilesAsync = function (paths, results, params, cache, callback) {
+	console.error("Loader _loadFilesAsync");
 	let _root = iLibResources;
 	if (params && typeof params.root !== 'undefined') {
 		_root = params.root;
@@ -138,6 +141,7 @@ EnyoLoader.prototype._loadFilesAsync = function (paths, results, params, cache, 
 };
 
 EnyoLoader.prototype._loadFilesCache = function (_root, paths) {
+	console.error("Loader _loadFilesCache");
 	this._validateCache();
 	if (typeof window !== 'undefined' && window.localStorage && paths.length > 0) {
 		let stored = window.localStorage.getItem(cachePrefix + _root + '/' + paths[0]);
@@ -155,6 +159,7 @@ EnyoLoader.prototype._loadFilesCache = function (_root, paths) {
 };
 
 EnyoLoader.prototype._storeFilesCache = function (_root, paths, data) {
+	console.error("Loader _storeFilesCache");
 	if (typeof window !== 'undefined' && window.localStorage && paths.length > 0) {
 		let target = JSON.stringify(paths);
 		window.localStorage.setItem(cachePrefix + _root + '/' + paths[0], JSON.stringify({target:target, value:data}));
@@ -162,6 +167,7 @@ EnyoLoader.prototype._storeFilesCache = function (_root, paths, data) {
 };
 
 EnyoLoader.prototype._validateCache = function () {
+	console.error("Loader _validateCache");
 	if (!this._cacheValidated && typeof window !== 'undefined' && window.localStorage) {
 		let activeID = window.localStorage.getItem(cacheKey);
 		if (activeID !== cacheID) {
@@ -179,6 +185,7 @@ EnyoLoader.prototype._validateCache = function () {
 };
 
 EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
+	console.error("Loader loadFiles");
 	let _root = (params && typeof params.root !== 'undefined') ? params.root : iLibResources;
 	let cache = {data: this._loadFilesCache(_root, paths)};
 	if (sync) {
@@ -244,6 +251,7 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 };
 
 EnyoLoader.prototype._loadManifest = function (_root, subpath) {
+	console.error("Loader _loadManifest");
 	if (!this.manifest) {
 		this.manifest = {};
 	}
@@ -278,6 +286,8 @@ EnyoLoader.prototype._loadManifest = function (_root, subpath) {
 };
 
 EnyoLoader.prototype._loadStandardManifests = function () {
+	console.error("Loader _loadStandardManifests");
+	console.dir(this.manifest, this.base, iLibResources);
 	// util.print('enyo loader: load manifests\n');
 	if (!this.manifest) {
 		this._validateCache();
@@ -287,12 +297,15 @@ EnyoLoader.prototype._loadStandardManifests = function () {
 };
 
 EnyoLoader.prototype.listAvailableFiles = function () {
+	console.error("Loader listAvailableFiles");
 	// util.print('enyo loader: list available files called\n');
 	this._loadStandardManifests();
 	return this.manifest;
 };
 
 EnyoLoader.prototype.isAvailable = function (_root, path) {
+	console.error("Loader isAvailable");
+	console.dir(_root, path);
 	this._loadStandardManifests();
 
 	if (!this.manifest[_root]) {

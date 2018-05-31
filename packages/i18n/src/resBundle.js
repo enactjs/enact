@@ -30,6 +30,9 @@ function createResBundle (locale) {
 		sync: true,
 		lengthen: true		// if pseudo-localizing, this tells it to lengthen strings
 	});
+	console.log("############### createResBundle #############");
+	console.dir(resBundle);
+	console.log("############### createResBundle #############");
 
 	return resBundle;
 }
