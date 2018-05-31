@@ -171,12 +171,23 @@ class ScrollableBase extends Component {
 		* @default $L('scroll up')
 		* @public
 		*/
-		scrollUpAriaLabel: PropTypes.string
+		scrollUpAriaLabel: PropTypes.string,
+
+		/**
+		* Sets Spotlight to lock with either to the scroller container or the current child
+		* spotlight container
+		*
+		* @type {String}
+		* @default 'child'
+		* @public
+		*/
+		spotlightPaging: PropTypes.oneOf(['child', 'scroller'])
 	}
 
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
-		focusableScrollbar: false
+		focusableScrollbar: false,
+		spotlightPaging: 'scroller'
 	}
 
 	constructor (props) {
@@ -351,8 +362,8 @@ class ScrollableBase extends Component {
 			}
 
 			const
+				spotlightId = this.props.spotlightPaging === 'scroller' ? containerRef.dataset.spotlightId : Spotlight.getActiveContainer(),
 				// VirtualList and Scroller have a spotlightId on containerRef
-				spotlightId = containerRef.dataset.spotlightId,
 				direction = this.getPageDirection(keyCode),
 				rDirection = reverseDirections[direction],
 				viewportBounds = containerRef.getBoundingClientRect(),
@@ -530,6 +541,7 @@ class ScrollableBase extends Component {
 			leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
 
 		delete rest.focusableScrollbar;
+		delete rest.spotlightPaging;
 
 		return (
 			<UiScrollableBase
