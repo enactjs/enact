@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [Unreleased]
 
+### Changed
+
+- `moonstone/VideoPlayer` to roam spotlight focus freely to left and right from `MediaControls`
+
 ### Fixed
 - `moonstone/Scroller` ordering of logic for Scroller focus to check focus possibilities first then go to fallback at the top of the container
 - `moonstone/Scroller` to scroll by page when focus was at the edge of the viewport

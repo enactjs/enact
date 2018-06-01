@@ -50,13 +50,7 @@ import css from './VideoPlayer.less';
 
 const SpottableDiv = Touchable(Spottable('div'));
 const RootContainer = SpotlightContainerDecorator('div');
-const ControlsContainer = SpotlightContainerDecorator(
-	{
-		leaveFor: {down:'', up:'', left:'', right:''},
-		enterTo: ''
-	},
-	'div'
-);
+const ControlsContainer = SpotlightContainerDecorator({enterTo: ''}, 'div');
 
 const forwardWithState = (type) => adaptEvent(call('addStateToEvent'), forwardWithPrevent(type));
 
