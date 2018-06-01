@@ -490,10 +490,9 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (!direction) return;
 
-			const spotlessSpotlightModal = spotlightRestrict === 'self-only' && (
-				Spotlight.getSpottableDescendants(containerId).length === 0
-			);
-			const shouldSpotPopup = current === activator && direction === this.adjustedDirection;
+			const hasSpottables = Spotlight.getSpottableDescendants(containerId).length > 0;
+			const spotlessSpotlightModal = spotlightRestrict === 'self-only' && !hasSpottables;
+			const shouldSpotPopup = current === activator && direction === this.adjustedDirection && hasSpottables;
 
 			if (shouldSpotPopup || spotlessSpotlightModal) {
 				this.handleDirectionalKey(ev);
