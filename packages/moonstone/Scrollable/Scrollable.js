@@ -175,14 +175,14 @@ class ScrollableBase extends Component {
 
 		/**
 		* Sets Spotlight to behave differently on page up/down controls. When set to `scroller`
-		* spotlight will move within the `Scroller`'s larger container. When set to `child` to
-		* spotlight will move within the smaller container the current spotlight is in.
+		* spotlight will move within the `Scroller`'s larger container. When set to `container` to
+		* spotlight will move within the immediate container the current spotlight is in.
 		*
 		* @type {String}
 		* @default 'scroller'
 		* @public
 		*/
-		spotlightPaging: PropTypes.oneOf(['child', 'scroller'])
+		spotlightPaging: PropTypes.oneOf(['container', 'scroller'])
 	}
 
 	static defaultProps = {
