@@ -183,7 +183,7 @@ So, you're fully versed in the theming system and you're ready to make your own 
 
 ### Visually Divorced
 
-All of the Enact components following a naming strategy that we call "visually divorced". This is the concept of naming all APIs, classes, and components with words that do not relate to visual concepts, but rather semantically. This way, when a theme chooses to visually represent something, like a state or a prop that we added to a component, it can fully decide how that looks, and not be dependent on how we've named something. As a contrived example, think about it like the shift in HTML from using `<b>` bold and `<i>` italic tags to `<strong>` and `<em>` tags. The former describe how the components visually appear, while the latter describe what the meaning of those is, which just _happen_ to be represented by bold text and italic text by the browser. A web developer could choose to represent those concepts differently on their site, for visually impaired users, or for languages or fonts that are unable to represent a bold or italic font style.
+All of the Enact components follow a naming strategy that we call "visually divorced". This is the concept of naming all APIs, classes, and components with words that do not relate to visual concepts, but rather semantically. This way, when a theme chooses to visually represent something, like a state or a prop that we added to a component, it can fully decide how that looks, and not be dependent on how we've named something. As a contrived example, think about it like the shift in HTML from using `<b>` bold and `<i>` italic tags to `<strong>` and `<em>` tags. The former describe how the components visually appear, while the latter describe what the meaning of those is, which just _happen_ to be represented by bold text and italic text by the browser. A web developer could choose to represent those concepts differently on their site, for visually impaired users, or for languages or fonts that are unable to represent a bold or italic font style.
 
 ### States
 
@@ -273,7 +273,7 @@ The remainder of the props are spread onto the `buttonComponent` while the `smal
 
 Recomendations for components:
 
-* Should establish the necessary HTML DOM structure necessary to operate itself, and the minimum styling need.
+* Should establish the minimum HTML DOM structure necessary to operate itself, and the minimum styling need.
 * Should declare and export all of its state-classes via `publicClassNames: true`.
 * Should allow component and possibly sub-component (child component) overrides where reasonable. 
 
