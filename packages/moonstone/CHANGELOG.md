@@ -5,6 +5,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ## [Unreleased]
 
 ### Fixed
+
+- `moonstone/ContextualPopupDecorator` to allow focusing components under a popup without any focusable components
 - `moonstone/Scroller` ordering of logic for Scroller focus to check focus possibilities first then go to fallback at the top of the container
 - `moonstone/Scroller` to scroll by page when focus was at the edge of the viewport
 
