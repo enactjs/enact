@@ -826,8 +826,8 @@ const VideoPlayerBase = class extends React.Component {
 			return {
 				announce,
 				bottomControlsRendered: true,
-				feedbackVisible: true,
 				feedbackIconVisible: true,
+				feedbackVisible: true,
 				mediaControlsVisible: true,
 				mediaSliderVisible: true,
 				miniFeedbackVisible: false,
@@ -849,8 +849,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedTitleHide();
 		this.stopAutoCloseTimeout();
 		this.setState({
-			feedbackVisible: false,
 			feedbackIconVisible: false,
+			feedbackVisible: false,
 			mediaControlsVisible: false,
 			mediaSliderVisible: false,
 			miniFeedbackVisible: false,
