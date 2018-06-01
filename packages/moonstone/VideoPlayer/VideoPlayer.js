@@ -1602,7 +1602,7 @@ const VideoPlayerBase = class extends React.Component {
 	)
 
 	handleToggleMore = ({showMoreComponents}) => {
-		if (showMoreComponents) {
+		if (!showMoreComponents) {
 			this.startAutoCloseTimeout();	// Restore the timer since we are leaving "more.
 			// Restore the title-hide now that we're finished with "more".
 			this.startDelayedTitleHide();
