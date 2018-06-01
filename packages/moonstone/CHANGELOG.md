@@ -40,6 +40,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer.MediaControls` property `onClose` to handle back key
 - `moonstone/ProgressBar` prop `highlighted` for when the UX needs to call special attention to a progress bar
 
+### Changed
+
+- `moonstone/VideoPlayer` to disable media slider when source is unavailable
+
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` to not set focus to activator when closing if focus was set elsewhere
