@@ -151,12 +151,23 @@ class ScrollableBaseNative extends Component {
 		* @default $L('scroll up')
 		* @public
 		*/
-		scrollUpAriaLabel: PropTypes.string
+		scrollUpAriaLabel: PropTypes.string,
+		/**
+		* Sets Spotlight to behave differently on page up/down controls. When set to `scroller`
+		* spotlight will move within the `Scroller`'s larger container. When set to `child` to
+		* spotlight will move within the smaller container the current spotlight is in.
+		*
+		* @type {String}
+		* @default 'scroller'
+		* @public
+		*/
+		spotlightPaging: PropTypes.oneOf(['child', 'scroller'])
 	}
 
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
-		focusableScrollbar: false
+		focusableScrollbar: false,
+		spotlightPaging: 'scroller'
 	}
 
 	constructor (props) {
@@ -396,7 +407,7 @@ class ScrollableBaseNative extends Component {
 				return;
 			}
 			const
-				spotlightId = containerRef.dataset.spotlightId,
+				spotlightId = this.props.spotlightPaging === 'scroller' ? containerRef.dataset.spotlightId : Spotlight.getActiveContainer(),
 				direction = this.getPageDirection(keyCode),
 				rDirection = reverseDirections[direction],
 				viewportBounds = this.uiRef.containerRef.getBoundingClientRect(),
@@ -579,6 +590,7 @@ class ScrollableBaseNative extends Component {
 			leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
 
 		delete rest.focusableScrollbar;
+		delete rest.spotlightPaging;
 
 		return (
 			<UiScrollableBaseNative
