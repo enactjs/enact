@@ -273,7 +273,7 @@ The remainder of the props are spread onto the `buttonComponent` while the `smal
 
 Recomendations for components:
 
-* Should establish the minimum HTML DOM structure necessary to operate itself, and the minimum styling need.
+* Should establish the complete HTML DOM structure necessary to operate itself, and the minimum styling needed.
 * Should declare and export all of its state-classes via `publicClassNames: true`.
 * Should allow component and possibly sub-component (child component) overrides where reasonable. 
 
