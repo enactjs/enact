@@ -183,11 +183,11 @@ So, you're fully versed in the theming system and you're ready to make your own 
 
 ### Visually Divorced
 
-All of the Enact components follow a naming strategy that we call "visually divorced". This is the concept of naming all APIs, classes, and components with words that do not relate to visual concepts, but rather semantically. This way, when a theme chooses to visually represent something, like a state or a prop that we added to a component, it can fully decide how that looks, and not be dependent on how we've named something. As a contrived example, think about it like the shift in HTML from using `<b>` bold and `<i>` italic tags to `<strong>` and `<em>` tags. The former describe how the components visually appear, while the latter describe what the meaning of those is, which just _happen_ to be represented by bold text and italic text by the browser. A web developer could choose to represent those concepts differently on their site, for visually impaired users, or for languages or fonts that are unable to represent a bold or italic font style.
+All of the Enact components follow a naming strategy that we call "visually divorced". This is the concept of naming all APIs, classes, and components with words that do not relate to visual concepts, but rather to semantic concepts. This way, when a theme chooses to visually represent something, like a state or a prop that we added to a component, it can fully decide how that looks, and not be dependent on how we've named something. As a contrived example, think about it like the shift in HTML from using `<b>` bold and `<i>` italic tags to `<strong>` and `<em>` tags. The former describe how the components visually appear, while the latter describe what the meaning of those is, which just _happen_ to be represented by bold text and italic text by the browser. A web developer could choose to represent those concepts differently on their site, for visually impaired users, or for languages or fonts that are unable to represent a bold or italic font style.
 
 ### States
 
-Typically, we'll represent the state of a component using a class. The presence of the class means "on" and the absence of it means "off". This works really well for boolean properties, but can also be used to represent enumerated properties. The `orientation` prop is a good example of this. A Slider can choose an orientation, which applies one of the allowed values as a class. `moonstone/Slider` currently supports `orientation="horizontal"` and `orientation="vertical"`. These values are applied literally to the component as classes `.horizontal` and `.vertical`. That being said, there's no reason why new orientations like "radial" or "2d" couldn't be implemented, which we can then fully stylize using CSS however we want; maybe "radial" describes a speedometer-like dial and "2d" describes a graph-like square. `Slider` imposes no expectations on how the values it manages are used, it just makes them available. The visual designer is then able to use this available information to design, restriction-free, how ever is most appropriate for their theme.
+Typically, we'll represent the state of a component using a class. The presence of the class means "on" and the absence of it means "off". This works really well for boolean properties, but can also be used to represent enumerated properties. The `orientation` prop is a good example of this. A Slider can choose an orientation, which applies one of the allowed values as a class. `moonstone/Slider` currently supports `orientation="horizontal"` and `orientation="vertical"`. These values are applied literally to the component as classes `.horizontal` and `.vertical`. That being said, there's no reason why new orientations like "radial" or "2d" couldn't be implemented, which we can then fully style using CSS however we want; maybe "radial" describes a speedometer-like dial and "2d" describes a graph-like square. `Slider` imposes no expectations on how the values it manages are used, it just makes them available. The visual designer is then able to use this available information to design, restriction-free, how ever is most appropriate for their theme.
 
 Something like the following is easy to read, understand, maintain, and extend:
 
@@ -271,16 +271,16 @@ The remainder of the props are spread onto the `buttonComponent` while the `smal
 
 #### Should
 
-Recomendations for components:
+Recommendations for components:
 
-* Should establish the complete HTML DOM structure necessary to operate itself, and the minimum styling needed.
-* Should declare and export all of its state-classes via `publicClassNames: true`.
-* Should allow component and possibly sub-component (child component) overrides where reasonable. 
+* Establish the complete HTML DOM structure necessary for operation, with the minimum styling needed.
+* Declare and export all of state-classes via `publicClassNames: true`.
+* Allow component and possibly sub-component (child component) overrides where reasonable.
 
 
 #### Should Not
 
 Generally avoid doing these for components:
 
-* Typically, unless it's always necessary, it should not include HOCs (higher-order components), allowing the theme to compose and decorate its own features.
-* Should not define colors, measurements (that aren't critical for functionality), margins/paddings, or other purely visual aspects of the component's styles.
+* Include HOCs (higher-order components), not allowing the theme to compose and decorate its own features, unless they are always necessary for function.
+* Define colors, measurements (that aren't critical for functionality), margins/paddings, or other purely visual aspects of the component's styles.
