@@ -162,7 +162,7 @@ Occasionally, you'll want to modify the appearance of an Enact component, and us
 
 We've got you covered! In Enact 2.0 we've added a built-in theming capability to make this significantly easier and even safer. Using the [theming system](./theming.md) is as straight-forward as importing your CSS/LESS file and passing it to the `css` prop on the component you want to customize. The class names defined in your CSS file that match the published class names of the target component will be applied directly to the internal elements of the component. They will be applied in addition to the existing class names, not in lieu of, so you can simply add your customizations, rather than repeat the existing styling. Each customizable component will include documentation for the `css` prop, which will list what classes are available and a brief description of what role they play.
 
-How about an example to make this more clear. Let's customize the background color of a [`moonstone/Button`](../../../modules/moonstone/Button/). `Button` exposes several classes for customization: 'button', 'bg', 'small', and 'selected', and in this case we're interested in 'button' and 'bg'.  In our customized component LESS file, the following should do the trick:
+How about an example to make this more clear. Let's customize the background color of a [`moonstone/Button`](../../modules/moonstone/Button/). `Button` exposes several classes for customization: 'button', 'bg', 'small', and 'selected', and in this case we're interested in 'button' and 'bg'.  In our customized component LESS file, the following should do the trick:
 
 ```css
 // CustomButton.less
