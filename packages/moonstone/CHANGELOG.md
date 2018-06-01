@@ -2,9 +2,14 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [Unreleased]
+## [unreleased]
+
+### Removed
+
+- `moonstone/IncrementSlider` prop `children` which was no longer supported for setting the tooltip (since 2.0.0-beta.1)
 
 ### Fixed
+
 - `moonstone/Scroller` ordering of logic for Scroller focus to check focus possibilities first then go to fallback at the top of the container
 - `moonstone/Scroller` to scroll by page when focus was at the edge of the viewport
 - `moonstone/VideoPlayer` to show thumbnail only when focused on slider
