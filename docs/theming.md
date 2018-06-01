@@ -274,7 +274,7 @@ The remainder of the props are spread onto the `buttonComponent` while the `smal
 Recommendations for components:
 
 * Establish the complete HTML DOM structure necessary for operation, with the minimum styling needed.
-* Declare and export all of state-classes via `publicClassNames: true`.
+* Declare and export all state-classes via `publicClassNames: true`.
 * Allow component and possibly sub-component (child component) overrides where reasonable.
 
 
