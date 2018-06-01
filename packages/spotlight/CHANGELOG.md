@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
  
 ### Fixed
 
+- `spotlight` to partition and prioritize next spottable elements for more natural 5-way behavior
 - `spotlight` to handle pointer events only when pointer has moved
 - `spotlight` to correctly set the active container id when unable to set focus to a container
 
