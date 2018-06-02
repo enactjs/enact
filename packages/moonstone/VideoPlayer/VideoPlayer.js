@@ -1037,7 +1037,6 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleGlobalKeyDown = this.handle(
-		this.activityDetected,
 		forKey('down'),
 		() => (
 			!this.state.mediaControlsVisible &&
