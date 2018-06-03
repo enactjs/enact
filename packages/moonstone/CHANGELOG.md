@@ -8,6 +8,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/IncrementSlider` prop `children` which was no longer supported for setting the tooltip (since 2.0.0-beta.1)
 
+### Added
+- `moonstone/Scrollable` props `spotlightPaging` to determine how spotlight moves when page up/down are pressed
+
 ### Fixed
 
 - `moonstone/Scroller` ordering of logic for Scroller focus to check focus possibilities first then go to fallback at the top of the container

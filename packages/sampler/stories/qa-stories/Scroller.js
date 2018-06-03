@@ -19,7 +19,8 @@ for (let i = 0; i < 100; i++) {
 const
 	prop = {
 		direction: ['both', 'horizontal', 'vertical'],
-		horizontalScrollbar: ['auto', 'hidden', 'visible']
+		horizontalScrollbar: ['auto', 'hidden', 'visible'],
+		spotlightPaging: ['container', 'scroller']
 	};
 
 storiesOf('Scroller', module)
@@ -41,6 +42,7 @@ storiesOf('Scroller', module)
 		() => (
 			<Scroller
 				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+				spotlightPaging={select('spotlightPaging', prop.spotlightPaging, 'container')}
 				style={{height: ri.unit(600, 'rem')}}
 			>
 				<ExpandableList
