@@ -10,7 +10,6 @@ import {storiesOf} from '@storybook/react';
 import {withKnobs, number} from '@storybook/addon-knobs';
 
 class SliderList extends React.Component {
-
 	static propTypes = {
 		itemSize: PropTypes.number
 	}
@@ -84,10 +83,9 @@ class SliderList extends React.Component {
 					value={this.state.value}
 				/>
 				<VirtualList
-					itemRenderer={this.renderItem(this.props.itemSize)}
 					dataSize={this.state.selectedItems.length}
+					itemRenderer={this.renderItem(this.props.itemSize)}
 					itemSize={this.props.itemSize}
-					spacing={ri.scale(0)}
 					style={{
 						height: ri.unit(552, 'rem')
 					}}
