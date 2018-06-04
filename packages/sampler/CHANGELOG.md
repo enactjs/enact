@@ -10,7 +10,7 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ### Fixed
 
-- `Slider` sample in `src/qa-stories` to deprecate `data` prop in VirtualList.
+- `Slider` in QA sampler to deprecate `data` prop in `moonstone/VirtualList`
 
 ## [2.0.0-beta.5] - 2018-05-29
 
