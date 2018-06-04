@@ -23,7 +23,6 @@ import React from 'react';
 import {ButtonBase} from '../Button';
 import Icon from '../Icon';
 import Skinnable from '../Skinnable';
-import TooltipDecorator from '../TooltipDecorator';
 
 import componentCss from './IconButton.less';
 
@@ -80,12 +79,14 @@ const IconButtonBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * An optional node to receive the tooltip from `TooltipDecorator`.
+		 * The icon displayed within the [button]{@link moonstone/IconButton.IconButtonBase}.
+		 *
+		 * If not specified, `children` is used as the icon value instead.
 		 *
 		 * @type {Node}
-		 * @private
+		 * @public
 		 */
-		tooltipNode: PropTypes.node
+		icon: PropTypes.string
 	},
 
 	styles: {
@@ -97,17 +98,25 @@ const IconButtonBase = kind({
 		className: ({color, styler}) => styler.append(color)
 	},
 
-	render: ({children, css, tooltipNode, ...rest}) => {
+	render: ({children, css, icon, ...rest}) => {
+
+		// To support the simpler use case of only specifying the icon as the children within
+		// <IconButton>, this falls back on using children if icon isn't specified.
+		if (!icon && children) {
+			icon = children;
+			children = null;
+		}
+
 		return (
 			<UiIconButtonBase
 				data-webos-voice-intent="Select"
 				{...rest}
 				buttonComponent={<ButtonBase css={css} />}
 				css={css}
-				icon={children}
+				icon={icon}
 				iconComponent={Icon}
 			>
-				{tooltipNode}
+				{children}
 			</UiIconButtonBase>
 		);
 	}
@@ -127,7 +136,6 @@ const IconButtonBase = kind({
  */
 const IconButtonDecorator = compose(
 	Pure,
-	TooltipDecorator({tooltipDestinationProp: 'tooltipNode'}),
 	UiIconButtonDecorator,
 	Spottable,
 	Skinnable

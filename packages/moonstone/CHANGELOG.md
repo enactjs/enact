@@ -7,6 +7,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Removed
 
 - `moonstone/IncrementSlider` prop `children` which was no longer supported for setting the tooltip (since 2.0.0-beta.1)
+- `moonstone/Button` and `moonstone/IconButton` built-in support for tooltips
+
+### Added
+
+- `moonstone/IconButton` prop `icon` to allow the display of an icon when `children` contains alternate content
 
 ### Fixed
 

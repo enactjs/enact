@@ -17,6 +17,7 @@ import ReactDOM from 'react-dom';
 
 import $L from '../internal/$L';
 import IconButton from '../IconButton';
+import TooltipDecorator from '../TooltipDecorator';
 
 import {countReactChildren} from './util';
 
@@ -30,6 +31,7 @@ const MediaButton = onlyUpdateForKeys([
 	'onClick',
 	'spotlightDisabled'
 ])(IconButton);
+const MoreButton = TooltipDecorator(MediaButton);
 
 const forwardToggleMore = forward('onToggleMore');
 
@@ -395,20 +397,19 @@ const MediaControlsBase = kind({
 				<div className={css.rightComponents}>
 					{rightComponents}
 					{countReactChildren(children) ? (
-						<MediaButton
+						<MoreButton
 							aria-label={moreIconLabel}
 							backgroundOpacity="translucent"
 							className={moreButtonClassName}
 							color={moreButtonColor}
 							disabled={moreButtonDisabled}
+							icon={moreIcon}
 							onClick={onMoreClick}
 							tooltipProps={{role: 'dialog'}}
 							tooltipText={moreIconLabel}
 							spotlightId={moreButtonSpotlightId}
 							spotlightDisabled={spotlightDisabled}
-						>
-							{moreIcon}
-						</MediaButton>
+						/>
 					) : null}
 				</div>
 			</div>

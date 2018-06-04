@@ -22,7 +22,6 @@ import React from 'react';
 import Icon from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
-import TooltipDecorator from '../TooltipDecorator';
 
 import componentCss from './Button.less';
 
@@ -112,7 +111,6 @@ const ButtonBase = kind({
  * @hoc
  * @memberof moonstone/Button
  * @mixes i18n/Uppercase.Uppercase
- * @mixes moonstone/TooltipDecorator.TooltipDecorator
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes ui/Button.ButtonDecorator
  * @mixes spotlight/Spottable.Spottable
@@ -122,7 +120,6 @@ const ButtonBase = kind({
 const ButtonDecorator = compose(
 	Pure,
 	Uppercase,
-	TooltipDecorator,
 	MarqueeDecorator({className: componentCss.marquee}),
 	UiButtonDecorator,
 	Spottable,
@@ -130,7 +127,7 @@ const ButtonDecorator = compose(
 );
 
 /**
- * A Moonstone-styled button with built-in support for uppercasing, tooltips, marqueed text, and
+ * A Moonstone-styled button with built-in support for uppercasing, marqueed text, and
  * Spotlight focus.
  *
  * Usage:
