@@ -4,9 +4,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Added
-
-- `moonstone/VideoPlayer.MediaControls` property `playerNode`
 ### Removed
 
 - `moonstone/IncrementSlider` prop `children` which was no longer supported for setting the tooltip (since 2.0.0-beta.1)
@@ -19,6 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to not hide title and info section when showing more components
 - `moonstone/VideoPlayer` to select a position in slider to seek in 5-way mode
 - `moonstone/ToggleButton` to have correct padding and orientation for RTL
+- `moonstone/VideoPlayer.MediaControls` to handle left and right key to jump when `moonstone/VideoPlayer` is focused
 
 ## [2.0.0-beta.5] - 2018-05-29
 
