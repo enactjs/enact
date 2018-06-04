@@ -284,10 +284,10 @@ class ScrollerBase extends Component {
 		return oPoint;
 	}
 
-	scrollToNextPage = ({direction, reverseDirection, focusedItem, containerId}) => {
+	scrollToNextPage = ({direction, reverseDirection, focusedItem, spotlightId}) => {
 		const
 			endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect()),
-			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, containerId);
+			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
 
 		if (next === focusedItem) {
 			return false; // Scroll one page with animation
