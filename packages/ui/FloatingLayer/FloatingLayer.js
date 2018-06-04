@@ -158,8 +158,11 @@ class FloatingLayerBase extends React.Component {
 	}
 
 	componentWillUnmount () {
-		const floatingLayer = this.context.getFloatingLayer();
-		floatingLayer.removeChild(this.node);
+		if (this.node) {
+			const floatingLayer = this.context.getFloatingLayer();
+			floatingLayer.removeChild(this.node);
+			this.node = null;
+		}
 
 		off('click', this.handleClick);
 
