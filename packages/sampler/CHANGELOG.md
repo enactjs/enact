@@ -8,6 +8,11 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 - `smartSelect` knob in `src/utils` to incorporate several useful features into a simple knob-creation interface. It can automatically gather the default value and label it in the selection knob.
 
+
+### Fixed
+
+- `Slider` sample in `src/qa-stories` to deprecate `data` prop in VirtualList.
+
 ## [2.0.0-beta.5] - 2018-05-29
 
 No significant changes.
