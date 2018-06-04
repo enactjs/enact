@@ -572,14 +572,6 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			paused: PropTypes.bool,
 
 			/**
-			 * A DOM Node of the player.
-			 *
-			 * @type {Node}
-			 * @public
-			 */
-			playerNode: PropTypes.node,
-
-			/**
 			 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
 			 *
 			 * @type {Boolean}
@@ -645,8 +637,8 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				countReactChildren(this.props.rightComponents),
 				countReactChildren(this.props.children)
 			);
-			on('keydown', this.handleKeyDown, this.props.playerNode);
-			on('keyup', this.handleKeyUp, this.props.playerNode);
+			on('keydown', this.handleKeyDown);
+			on('keyup', this.handleKeyUp);
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -705,9 +697,12 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				visible
 			} = this.props;
 
+			const current = Spotlight.getCurrent();
+
 			if (!no5WayJump &&
 					!visible &&
 					!mediaDisabled &&
+					(!current || current.classList.contains(css.controlsHandleAbove)) &&
 					(is('left', ev.keyCode) || is('right', ev.keyCode))) {
 				this.paused.pause();
 				this.startListeningForPulses(ev.keyCode);
@@ -843,7 +838,6 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			delete props.onPlay;
 			delete props.onRewind;
 			delete props.onToggleMore;
-			delete props.playerNode;
 			delete props.setApiProvider;
 
 			return (
