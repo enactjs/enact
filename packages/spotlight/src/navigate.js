@@ -1,9 +1,55 @@
 
-const calcGroupId = (x, y) => y * 3 + x;
 const obliqueMinDistance = 1;
 const obliqueMultiplier = 5;
 const straightMinDistance = 0;
 const straightMultiplier = 1;
+
+const calcGroupId = ({x, y}) => y * 3 + x;
+
+const calcNextGridPosition = (current, next) => {
+	const center = current.center;
+	let x, y;
+
+	if (center.x < next.left) {
+		x = 0;
+	} else if (center.x <= next.right) {
+		x = 1;
+	} else {
+		x = 2;
+	}
+
+	if (center.y < next.top) {
+		y = 0;
+	} else if (center.y <= next.bottom) {
+		y = 1;
+	} else {
+		y = 2;
+	}
+
+	return {x, y};
+};
+
+const calcNextExtendedGridPosition = (current, next) => {
+	let x, y;
+
+	if (current.right <= next.left) {
+		x = 0;
+	} else if (current.left < next.right) {
+		x = 1;
+	} else {
+		x = 2;
+	}
+
+	if (current.bottom <= next.top) {
+		y = 0;
+	} else if (current.top < next.bottom) {
+		y = 1;
+	} else {
+		y = 2;
+	}
+
+	return {x, y};
+};
 
 function prioritize (priorities, targetEdge) {
 	const destGroup = [];
@@ -184,53 +230,18 @@ function navigate (targetRect, direction, rects, config) {
 		rects,
 		targetRect,
 		config.straightOverlapThreshold,
-		(rect, destRect) => {
-			let x, y;
-
-			if (rect.right <= destRect.left) {
-				x = 0;
-			} else if (rect.left < destRect.right) {
-				x = 1;
-			} else {
-				x = 2;
-			}
-
-			if (rect.bottom <= destRect.top) {
-				y = 0;
-			} else if (rect.top < destRect.bottom) {
-				y = 1;
-			} else {
-				y = 2;
-			}
-			return calcGroupId(x, y);
-		}
+		(rect, destRect) => (
+			calcGroupId(
+				direction === 'up' || direction === 'down' ? calcNextExtendedGridPosition(rect, destRect) : calcNextGridPosition(rect, destRect)
+			)
+		)
 	);
 
 	const internalGroups = partition(
 		groups[4],
 		targetRect.center,
 		config.straightOverlapThreshold,
-		(rect, destRect) => {
-			const center = rect.center;
-			let x, y;
-
-			if (center.x < destRect.left) {
-				x = 0;
-			} else if (center.x <= destRect.right) {
-				x = 1;
-			} else {
-				x = 2;
-			}
-
-			if (center.y < destRect.top) {
-				y = 0;
-			} else if (center.y <= destRect.bottom) {
-				y = 1;
-			} else {
-				y = 2;
-			}
-			return calcGroupId(x, y);
-		}
+		(rect, destRect) => calcGroupId(calcNextGridPosition(rect, destRect))
 	);
 
 	let priorities, targetEdge;
