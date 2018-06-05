@@ -2,11 +2,9 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
-## [unreleased]
+## [2.0.0-beta.6] - 2018-06-04
 
-### Added
-
-- `smartSelect` knob in `src/utils` to incorporate several useful features into a simple knob-creation interface. It can automatically gather the default value and label it in the selection knob.
+No significant changes.
 
 ## [2.0.0-beta.5] - 2018-05-29
 

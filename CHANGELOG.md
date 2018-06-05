@@ -2,6 +2,27 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.0.0-beta.6] - 2018-06-04
+
+### Removed
+
+- `moonstone/IncrementSlider` prop `children` which was no longer supported for setting the tooltip (since 2.0.0-beta.1)
+
+### Fixed
+
+- `moonstone/Scroller` to check focus possibilities first then go to fallback at the top of the container of focused item
+- `moonstone/Scroller` to scroll by page when focus was at the edge of the viewport
+- `moonstone/ToggleButton` padding and orientation for RTL
+- `moonstone/VideoPlayer` to not hide title and info section when showing more components
+- `moonstone/VideoPlayer` to select a position in slider to seek in 5-way mode
+- `moonstone/VideoPlayer` to show thumbnail only when focused on slider
+- `spotlight` to provide more natural 5-way behavior
+- `spotlight` to handle pointer events only when pointer has moved
+- `spotlight` to update the last focused container when unable to set focus within that container
+- `spotlight/Spottable` to not trigger a scroll on focus on webOS
+- `ui/FloatingLayer` to render correctly if already opened at mounting time
+- `webos/speech` method `readAlert` to subscribe to changes in audio guidance to improve speech response time
+
 ## [2.0.0-beta.5] - 2018-05-29
 
 ### Removed
@@ -14,7 +35,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `moonstone/VideoPlayer` props `selection` and `onSeekOutsideRange` to support selecting a range and notification of interactions outside of that range
 - `moonstone/VideoPlayer.Video` component to support preloading video sources
-- `ui/FloatingLayerDecorator` imperative API to close all floating layers registered in the same id 
+- `ui/FloatingLayerDecorator` imperative API to close all floating layers registered in the same id
 - `ui/ProgressBar` and `ui/Slider` prop `progressAnchor` to configure from where in the progress bar or slider progress should begin
 - `ui/Slider` prop `progressBarComponent` to support customization of progress bar within a slider
 - `ui/ForwardRef` HOC to adapt `React.forwardRef` to HOC chains
