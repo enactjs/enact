@@ -406,7 +406,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (tooltipText) {
 				const renderedTooltip = (
-					<FloatingLayer open={this.state.showing} scrimType="none" key="tooltipFloatingLayer">
+					<FloatingLayer open={this.state.showing} onDismiss={this.hideTooltip} scrimType="none" key="tooltipFloatingLayer">
 						<Tooltip
 							aria-live="off"
 							role="alert"
