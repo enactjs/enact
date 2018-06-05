@@ -112,19 +112,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				'right bottom', 'right middle', 'right top']),
 
 			/**
-			 * When true, the case of the [`tooltipText`]{@link moonstone/TooltipDecorator.TooltipDecorator#tooltipText}
-			 * will remain unchanged.
-			 * Uses [Uppercase HOC]{@link i18n/Uppercase.Uppercase} and mirrors the
-			 * [preserveCase prop]{@link i18n/Uppercase.Uppercase#preserveCase}
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @deprecated replaced by `tooltipCasing`
-			 * @public
-			 */
-			tooltipPreserveCase: PropTypes.bool,
-
-			/**
 			 * An object containing properties to be passed to tooltip component.
 			 *
 			 * @type {Object}
@@ -154,8 +141,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: false,
 			tooltipCasing: 'upper',
 			tooltipDelay: 500,
-			tooltipPosition: 'above',
-			tooltipPreserveCase: false
+			tooltipPosition: 'above'
 		}
 
 		static contextTypes = contextTypes
@@ -402,7 +388,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @private
 		 */
 		renderTooltip () {
-			const {children, tooltipCasing, tooltipPreserveCase, tooltipProps, tooltipText, tooltipWidth} = this.props;
+			const {children, tooltipCasing, tooltipProps, tooltipText, tooltipWidth} = this.props;
 
 			if (tooltipText) {
 				const renderedTooltip = (
@@ -415,7 +401,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							casing={tooltipCasing}
 							direction={this.state.tooltipDirection}
 							position={this.state.position}
-							preserveCase={tooltipPreserveCase}
 							tooltipRef={this.getTooltipRef}
 							width={tooltipWidth}
 						>
@@ -456,7 +441,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.tooltipDelay;
 			delete props.tooltipPosition;
 			delete props.tooltipCasing;
-			delete props.tooltipPreserveCase;
 			delete props.tooltipProps;
 			delete props.tooltipText;
 			delete props.tooltipWidth;
