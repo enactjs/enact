@@ -1,5 +1,6 @@
 import Button from '@enact/moonstone/Button';
 import ExpandableList from '@enact/moonstone/ExpandableList';
+import Scroller from '@enact/moonstone/Scroller';
 import {RadioControllerDecorator} from '@enact/ui/RadioDecorator';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -81,16 +82,16 @@ storiesOf('ExpandableList', module)
 	.add(
 		'with default selected',
 		() => (
-			<div>
-				<ExpandableList title="Default Selected" selected={2}>
+			<Scroller style={{height: 600}}>
+				<ExpandableList title="Default Selected" defaultSelected={2}>
 					{['Option 1', 'Option 2', 'Option 3']}
 				</ExpandableList>
-				<ExpandableList title="Multiple Selected" select="multiple" selected={[1, 2]}>
+				<ExpandableList title="Multiple Selected" select="multiple" defaultSelected={[1, 2]}>
 					{['Option 1', 'Option 2', 'Option 3']}
 				</ExpandableList>
-				<ExpandableList title="Long Contents Selected" select="multiple" selected={[17, 18, 19]}>
+				<ExpandableList title="Long Contents Selected" select="multiple" defaultSelected={[17, 18, 19]}>
 					{optionsArray}
 				</ExpandableList>
-			</div>
+			</Scroller>
 		)
 	);
