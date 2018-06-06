@@ -12,6 +12,12 @@ const prop = {
 	listArray: [['a', 'b', 'c'], ['c', 'd', 'e', 'f', 'g']]
 };
 
+const optionsArray = [];
+
+for (let i = 0; i < 21; i++) {
+	optionsArray.push(`Option ${i + 1}`);
+}
+
 class ExpandableListChildrenLengthUpdate extends React.Component {
 	constructor (props) {
 		super(props);
@@ -73,23 +79,17 @@ storiesOf('ExpandableList', module)
 		)
 	)
 	.add(
-		'with multiples (to test "lockBottom" prop)',
+		'with default selected',
 		() => (
 			<div>
-				<ExpandableList title="First">
-					{['One', 'Two', 'Three']}
+				<ExpandableList title="Default Selected" selected={2}>
+					{['Option 1', 'Option 2', 'Option 3']}
 				</ExpandableList>
-				<ExpandableList title="Second (with disabled items)">
-					{[
-						{key: 1, children: 'a', disabled: true},
-						{key: 2, children: 'b'},
-						{key: 3, children: 'c', disabled: true},
-						{key: 4, children: 'd'},
-						{key: 5, children: 'e', disabled: true}
-					]}
+				<ExpandableList title="Multiple Selected" select="multiple" selected={[1, 2]}>
+					{['Option 1', 'Option 2', 'Option 3']}
 				</ExpandableList>
-				<ExpandableList title="Third">
-					{['Seventh', 'Eighth', 'Ninth']}
+				<ExpandableList title="Long Contents Selected" select="multiple" selected={[17, 18, 19]}>
+					{optionsArray}
 				</ExpandableList>
 			</div>
 		)
