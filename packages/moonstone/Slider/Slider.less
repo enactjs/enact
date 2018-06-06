@@ -53,10 +53,10 @@
 	}
 
 	&.horizontal {
-		@h-gap: (@moon-slider-knob-width / 2);
+		@h-gap: (@moon-slider-knob-width / 2) + @moon-spotlight-outset;
 		@v-gap: (@moon-slider-knob-height - @moon-slider-bar-height) / 2;
 		width: auto;
-		padding: @v-gap @h-gap;
+		margin: @v-gap @h-gap;
 
 		.fill,
 		.load {
@@ -68,15 +68,15 @@
 		}
 
 		.moon-custom-text({
-			@h-gap-large: (@moon-slider-knob-width-large / 2);
-			padding: ((@moon-slider-knob-height-large - @moon-slider-bar-height) / 2) @h-gap-large;
+			@h-gap-large: (@moon-slider-knob-width-large / 2) + @moon-spotlight-outset;
+			margin: ((@moon-slider-knob-height-large - @moon-slider-bar-height) / 2) @h-gap-large;
 		});
 	}
 
 	&.vertical {
-		@h-gap: ((@moon-slider-knob-height - @moon-slider-bar-height) / 2);
+		@h-gap: ((@moon-slider-knob-height - @moon-slider-bar-height) / 2) + @moon-spotlight-outset;
 		@v-gap: (@moon-slider-knob-width / 2);
-		padding: @v-gap @h-gap;
+		margin: @v-gap @h-gap;
 		min-height: 120px;
 		display: inline-block;
 		vertical-align: top;
@@ -93,7 +93,7 @@
 
 		.moon-custom-text({
 			@v-gap-large: (@moon-slider-knob-width / 2);
-			padding: @v-gap-large ((@moon-slider-knob-height-large - @moon-slider-bar-height) / 2);
+			margin: @v-gap-large ((@moon-slider-knob-height-large - @moon-slider-bar-height) / 2 + @moon-spotlight-outset);
 		});
 	}
 

@@ -160,8 +160,7 @@
 			}
 
 			.sliderFrame {
-				@slider-padding-v: ((@moon-video-player-slider-tap-area - @moon-video-player-slider-height) / 2);
-				@slider-padding-h: @moon-video-player-slider-knob-size;
+				@slider-margin-v: ((@moon-video-player-slider-tap-area - @moon-video-player-slider-height) / 2);
 
 				&.hidden {
 					will-change: opacity;
@@ -169,8 +168,8 @@
 				}
 
 				.mediaSlider {
-					margin: 0;
-					padding: @slider-padding-v 0;
+					margin: @slider-margin-v 0;
+					padding: 0;
 					height: @moon-video-player-slider-height;
 
 					// Add a tap area that extends to the edges of the screen, to make the slider more accessible
