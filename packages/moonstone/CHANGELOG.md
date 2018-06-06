@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `moonstone/Slider` and `moonstone/IncrementSlider` margin and padding changes to provide more natural 5-way focus behavior
+
 ## [2.0.0-beta.6] - 2018-06-04
 
 ### Removed
