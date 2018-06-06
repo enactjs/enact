@@ -105,12 +105,16 @@ storiesOf('Touchable', module)
 		'onTap when clicked',
 		() => (
 			<TouchableDiv
+				disabled={boolean('disabled')}
+				noResume={boolean('noResume', false)}
 				onClick={action('onClick')}
+				onDown={action('onDown')}
 				onMouseDown={action('onMouseDown')}
 				onMouseUp={action('onMouseUp')}
 				onTap={action('onTap')}
-				onTouchStart={action('onTouchStart')}
 				onTouchEnd={action('onTouchEnd')}
+				onTouchStart={action('onTouchStart')}
+				onUp={action('onUp')}
 				style={{border: '2px dashed #888', textAlign: 'center'}}
 			>
 				Click here
