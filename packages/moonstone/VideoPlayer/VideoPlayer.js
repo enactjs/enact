@@ -611,7 +611,7 @@ const VideoPlayerBase = class extends React.Component {
 			miniFeedbackVisible: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
-			sourceUnavailable: false,
+			sourceUnavailable: true,
 			titleVisible: true
 		};
 
@@ -990,6 +990,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState({
 			announce: AnnounceState.READY,
 			currentTime: 0,
+			sourceUnavailable: true,
 			proportionPlayed: 0,
 			proportionLoaded: 0
 		});
@@ -1067,7 +1068,8 @@ const VideoPlayerBase = class extends React.Component {
 			proportionLoaded: el.proportionLoaded,
 			proportionPlayed: el.proportionPlayed || 0,
 			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime,
-			sourceUnavailable: !el.duration || el.error
+			// note: `el.loading && this.state.sourceUnavailable == false` is equivalent to `oncanplaythrough`
+			sourceUnavailable: el.loading && this.state.sourceUnavailable || el.error
 		};
 
 		// If there's an error, we're obviously not loading, no matter what the readyState is.
