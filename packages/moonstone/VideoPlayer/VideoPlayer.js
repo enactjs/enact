@@ -53,7 +53,8 @@ const RootContainer = SpotlightContainerDecorator('div');
 const ControlsContainer = SpotlightContainerDecorator(
 	{
 		leaveFor: {down:'', up:'', left:'', right:''},
-		enterTo: ''
+		enterTo: '',
+		straightOnly: true
 	},
 	'div'
 );
