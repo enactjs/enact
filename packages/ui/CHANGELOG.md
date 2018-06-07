@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/MarqueeDecorator` to handle pointer leave when pointer hides
+- `ui/MarqueeDecorator` to stop marqueeing when using hover and pointer hides
 
 ## [2.0.0-beta.6] - 2018-06-04
 
