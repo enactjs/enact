@@ -79,7 +79,7 @@ const IconButtonBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * The icon displayed within the [button]{@link moonstone/IconButton.IconButtonBase}.
+		 * The icon displayed within the [Button]{@link moonstone/IconButton.IconButtonBase}.
 		 *
 		 * If not specified, `children` is used as the icon value instead.
 		 *

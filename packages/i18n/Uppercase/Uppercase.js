@@ -65,20 +65,20 @@ const Uppercase = hoc((config, Wrapped) => kind({
 				casing = casing || preserveCase && 'preserve';
 			}
 
-			if (casing !== 'preserve' && React.Children.count(children) === 1) {
-				const content = React.Children.toArray(children)[0];
-				if (typeof content == 'string') {
+			return (casing !== 'preserve') ? React.Children.map(children, (child) => {
+				if (typeof child == 'string') {
 					switch (casing) {
 						case 'word':
-							return toWordCase(content);
+							return toWordCase(child);
 						case 'sentence':
-							return toCapitalized(content);
+							return toCapitalized(child);
 						case 'upper':
-							return toUpperCase(content);
+							return toUpperCase(child);
 					}
+				} else {
+					return child;
 				}
-			}
-			return children;
+			}) : children;
 		}
 	},
 
