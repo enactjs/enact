@@ -27,9 +27,11 @@ const PanelsBase = kind({
 			<Panels onApplicationClose={reloadPage}>
 				<Panel>
 					<Header type="compact" title={title} casing="preserve" />
-					<div className={css.description}>
-						<p>{description}</p>
-					</div>
+					{description ? (
+						<div className={css.description}>
+							<p>{description}</p>
+						</div>
+					) : null}
 					{children}
 				</Panel>
 			</Panels>
