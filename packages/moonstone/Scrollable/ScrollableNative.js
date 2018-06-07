@@ -193,6 +193,8 @@ class ScrollableBaseNative extends Component {
 	// browser native scrolling
 	resetPosition = null // prevent auto-scroll on focus by Spotlight
 
+	isVoiceControl = false
+
 	onMouseDown = () => {
 		this.lastFocusedItem = null;
 		this.childRef.setContainerDisabled(false);
@@ -473,6 +475,10 @@ class ScrollableBaseNative extends Component {
 		this.lastFocusedItem = null;
 		this.lastScrollPositionOnFocus = null;
 		this.isWheeling = false;
+		if (this.isVoiceControl) {
+			this.isVoiceControl = false;
+			this.updateFocusAfterVoiceControl();
+		}
 	}
 
 	focusOnItem () {
@@ -537,6 +543,8 @@ class ScrollableBaseNative extends Component {
 			childContainerRef.addEventListener('mousemove', this.onMouseMove, {capture: true});
 			childContainerRef.addEventListener('focusin', this.onFocus);
 			childContainerRef.addEventListener('webOSVoice', this.onVoice);
+			// FIXME In case of VirtualList, addEventListener target is not matched childContainerRef. So, scroll intent is added dynamically.
+			childContainerRef.setAttribute('data-webos-voice-intent', 'Scroll');
 		}
 	}
 
@@ -562,11 +570,31 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	updateFocusAfterVoiceControl = () => {
+		const
+			{direction} = this.props,
+			viewportBounds = this.uiRef.containerRef.getBoundingClientRect(),
+			spotItemBounds = document.activeElement.getBoundingClientRect(),
+			nodes = this.uiRef.containerRef.querySelectorAll('[data-index]'),
+			isVertical = (direction === 'vertical' || direction === 'both'),
+			first = isVertical ? 'top' : 'left',
+			last = isVertical ? 'bottom' : 'right';
+
+		if (spotItemBounds[last] < viewportBounds[first] || spotItemBounds[first] > viewportBounds[last]) {
+			for (let i = 0; i < nodes.length; i++) {
+				const nodeBounds = nodes[i].getBoundingClientRect();
+				if (nodeBounds[first] > viewportBounds[first] && nodeBounds[last] < viewportBounds[last]) {
+					Spotlight.focus(nodes[i]);
+					break;
+				}
+			}
+		}
+	}
+
 	onVoice = (e) => {
-		// test code
-		// console.log("onVoice>", e);
-		// document.querySelectorAll('[data-webos-voice-intent="Scroll"]')[0].dispatchEvent(new CustomEvent('webOSVoice', {detail: {intent: 'Scroll', scroll: 'down'}}));
-		let {scroll} = e.detail;
+		const {scroll} = e.detail;
+		this.isVoiceControl = true;
+
 		switch (scroll) {
 			case 'up':
 				this.onScrollbarButtonClick({isPreviousScrollButton: true, isVerticalScrollBar: true});
@@ -620,7 +648,6 @@ class ScrollableBaseNative extends Component {
 			<UiScrollableBaseNative
 				{...rest}
 				addEventListeners={this.addEventListeners}
-				data-webos-voice-intent="Scroll"
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
 				onWheel={this.onWheel}
