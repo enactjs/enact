@@ -674,7 +674,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handleUnhover = () => {
+		handleUnhover () {
 			this.isHovered = false;
 			if (this.props.disabled || this.props.marqueeOn === 'hover') {
 				if (this.sync) {
