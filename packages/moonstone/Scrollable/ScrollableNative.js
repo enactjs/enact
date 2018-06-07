@@ -536,6 +536,7 @@ class ScrollableBaseNative extends Component {
 			childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
 			childContainerRef.addEventListener('mousemove', this.onMouseMove, {capture: true});
 			childContainerRef.addEventListener('focusin', this.onFocus);
+			childContainerRef.addEventListener('webOSVoice', this.onVoice);
 		}
 	}
 
@@ -545,6 +546,7 @@ class ScrollableBaseNative extends Component {
 			childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
 			childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
 			childContainerRef.removeEventListener('focusin', this.onFocus);
+			childContainerRef.removeEventListener('webOSVoice', this.onVoice);
 		}
 	}
 
@@ -558,6 +560,40 @@ class ScrollableBaseNative extends Component {
 		if (ref) {
 			this.uiRef = ref;
 		}
+	}
+
+	onVoice = (e) => {
+		// test code
+		// console.log("onVoice>", e);
+		// document.querySelectorAll('[data-webos-voice-intent="Scroll"]')[0].dispatchEvent(new CustomEvent('webOSVoice', {detail: {intent: 'Scroll', scroll: 'down'}}));
+		let {scroll} = e.detail;
+		switch (scroll) {
+			case 'up':
+				this.onScrollbarButtonClick({isPreviousScrollButton: true, isVerticalScrollBar: true});
+				break;
+			case 'down':
+				this.onScrollbarButtonClick({isPreviousScrollButton: false, isVerticalScrollBar: true});
+				break;
+			case 'left':
+				this.onScrollbarButtonClick({isPreviousScrollButton: true, isVerticalScrollBar: false});
+				break;
+			case 'right':
+				this.onScrollbarButtonClick({isPreviousScrollButton: false, isVerticalScrollBar: false});
+				break;
+			case 'top':
+				this.uiRef.scrollTo({align: 'top'});
+				break;
+			case 'bottom':
+				this.uiRef.scrollTo({align: 'bottom'});
+				break;
+			case 'leftmost':
+				this.uiRef.scrollTo({align: 'left'});
+				break;
+			case 'rightmost':
+				this.uiRef.scrollTo({align: 'right'});
+				break;
+		}
+		e.preventDefault();
 	}
 
 	render () {
@@ -584,6 +620,7 @@ class ScrollableBaseNative extends Component {
 			<UiScrollableBaseNative
 				{...rest}
 				addEventListeners={this.addEventListeners}
+				data-webos-voice-intent="Scroll"
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
 				onWheel={this.onWheel}
