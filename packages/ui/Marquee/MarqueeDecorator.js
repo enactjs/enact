@@ -295,7 +295,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.props.marqueeOn === 'render') {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
-			on('keydown', this.pointerHide, document);
+			on('keydown', this.handlePointerHide, document);
 		}
 
 		componentWillReceiveProps (next) {
@@ -359,13 +359,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.context.Subscriber.unsubscribe('resize', this.handleResize);
 				this.context.Subscriber.unsubscribe('i18n', this.handleLocaleChange);
 			}
-			off('keydown', this.pointerHide, document);
-		}
-
-		pointerHide = ({keyCode}) => {
-			if (is('pointerHide', keyCode)) {
-				this.handleLeave();
-			}
+			off('keydown', this.handlePointerHide, document);
 		}
 
 		/*
@@ -670,6 +664,17 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleLeave = (ev) => {
+			this.handleUnhover();
+			forwardLeave(ev, this.props);
+		}
+
+		handlePointerHide = ({keyCode}) => {
+			if (is('pointerHide', keyCode)) {
+				this.handleUnhover();
+			}
+		}
+
+		handleUnhover = () => {
 			this.isHovered = false;
 			if (this.props.disabled || this.props.marqueeOn === 'hover') {
 				if (this.sync) {
@@ -678,7 +683,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.cancelAnimation();
 				}
 			}
-			forwardLeave(ev, this.props);
 		}
 
 		cacheNode = (node) => {
