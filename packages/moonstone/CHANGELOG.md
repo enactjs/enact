@@ -7,6 +7,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/TooltipDecorator` to hide when `onDismiss` has been invoked
+### Changed
+
+- `moonstone/VideoPlayer` container changes to provide a more natural 5-way focus behavior
 
 ## [2.0.0-beta.6] - 2018-06-04
 
