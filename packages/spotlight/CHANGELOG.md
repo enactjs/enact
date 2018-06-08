@@ -2,6 +2,15 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [2.0.0-beta.6] - 2018-06-04
+
+### Fixed
+
+- `spotlight` to provide more natural 5-way behavior
+- `spotlight` to handle pointer events only when pointer has moved
+- `spotlight` to update the last focused container when unable to set focus within that container
+- `spotlight/Spottable` to not trigger a scroll on focus on webOS
+
 ## [2.0.0-beta.5] - 2018-05-29
 
 No significant changes.

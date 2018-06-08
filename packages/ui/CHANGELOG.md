@@ -2,11 +2,23 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/FloatingLayer.FloatingLayerBase` export 
+
+## [2.0.0-beta.6] - 2018-06-04
+
+### Fixed
+
+- `ui/FloatingLayer` to render correctly if already opened at mounting time
+
 ## [2.0.0-beta.5] - 2018-05-29
 
 ### Added
 
-- `ui/FloatingLayerDecorator` imperative API to close all floating layers registered in the same id 
+- `ui/FloatingLayerDecorator` imperative API to close all floating layers registered in the same id
 - `ui/ProgressBar` and `ui/Slider` prop `progressAnchor` to configure from where in the progress bar or slider progress should begin
 - `ui/Slider` prop `progressBarComponent` to support customization of progress bar within a slider
 - `ui/ForwardRef` HOC to adapt `React.forwardRef` to HOC chains
