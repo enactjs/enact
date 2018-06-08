@@ -362,7 +362,7 @@ describe('handle', () => {
 			expect(actual).to.equal(expected);
 		});
 
-		it('should return false when the passed condition branch returns a falsey value', () => {
+		it('should return false when the passed condition branch returns a falsy value', () => {
 			const callback = oneOf(
 				[returnsTrue, () => null]
 			);

@@ -7,7 +7,7 @@ const modals = [];
 /**
  * Dispatches the cancel event to each modal `Cancelable` instance. Consistent with
  * {@link core/handle.handle}, returning a `true` value means the event was handled and anything
- * falsey allows the event to pass to the next handler.
+ * falsy allows the event to pass to the next handler.
  *
  * @param	{Object}	ev	Event payload
  *
