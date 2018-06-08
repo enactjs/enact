@@ -227,6 +227,28 @@ const Spotlight = (function () {
 			setContainerLastFocusedElement(elem, containerIds);
 			setLastContainer(containerId);
 		}
+
+		// The below code shoud be gated on non-production environment only.
+		// Debug Mode
+		const directions = ['up', 'right', 'down', 'left'],
+			nextClassBase = spottableClass + '-next-';
+
+		// Remove all previous targets
+		directions.forEach((dir) => {
+			const nextClass = nextClassBase + dir,
+				prevElems = parseSelector('.' + nextClass);
+			if (prevElems && prevElems.length !== 0) {
+				prevElems.forEach(prevElem => prevElem.classList.remove(nextClass));
+			}
+		});
+
+		// Find all next targets and identify them
+		directions.forEach((dir) => {
+			const nextElem = getTargetByDirectionFromElement(dir, elem);
+			if (nextElem) {
+				nextElem.classList.add(nextClassBase + dir);
+			}
+		});
 	}
 
 	function restoreFocus () {
