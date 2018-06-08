@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Fixed
+
+- `ui/MarqueeDecorator` to stop marqueeing when using hover and pointer hides
+
 ### Added
 
 - `ui/FloatingLayer.FloatingLayerBase` export
