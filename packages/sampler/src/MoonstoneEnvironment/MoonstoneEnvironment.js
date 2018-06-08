@@ -125,6 +125,8 @@ const StorybookDecorator = (story, config) => {
 			highContrast={boolean('high contrast', (getPropFromURL('high contrast') === 'true'))}
 			style={backgrounds[select('background', backgroundLabels, getPropFromURL('background'))]}
 			skin={select('skin', skins, getPropFromURL('skin'))}
+			debugAria={boolean('debug aria', (getPropFromURL('debug aria') === 'true'))}
+			debugSpotlight={boolean('debug spotlight', (getPropFromURL('debug spotlight') === 'true'))}
 		>
 			{sample}
 		</Moonstone>

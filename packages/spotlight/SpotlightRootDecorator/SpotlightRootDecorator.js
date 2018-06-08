@@ -5,6 +5,7 @@
  * @module spotlight/SpotlightRootDecorator
  */
 
+import classnames from 'classnames';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
@@ -91,7 +92,15 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			return <Wrapped {...this.props} />;
+			const {className, ...rest} = this.props;
+			const classes = [className];
+			if (this.props.debugSpotlight) {
+				classes.push('debug', 'spotlight');
+			}
+
+			delete rest.debugSpotlight;
+
+			return <Wrapped {...rest} className={classnames(classes)} />;
 		}
 	};
 });

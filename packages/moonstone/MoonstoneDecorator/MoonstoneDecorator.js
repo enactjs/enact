@@ -5,6 +5,7 @@
  */
 
 import {addAll} from '@enact/core/keymap';
+import classnames from 'classnames';
 import hoc from '@enact/core/hoc';
 import I18nDecorator from '@enact/i18n/I18nDecorator';
 import React from 'react';
@@ -119,16 +120,23 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'MoonstoneDecorator';
 
 		render () {
-			let className = css.root + ' enact-unselectable enact-fit';
+			const {className, ...rest} = this.props,
+				classes = [css.root, 'enact-unselectable', 'enact-fit'];
+
 			if (!float) {
-				className += ' ' + bgClassName;
+				classes.push(bgClassName);
 			}
-			if (this.props.className) {
-				className += ` ${this.props.className}`;
+			if (this.props.debugAria) {
+				classes.push('debug', 'aria');
+			}
+			if (className) {
+				classes.push(className);
 			}
 
+			delete rest.debugAria;
+
 			return (
-				<App {...this.props} className={className} />
+				<App {...rest} className={classnames(classes)} />
 			);
 		}
 	};
