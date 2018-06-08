@@ -4,10 +4,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Changed
-
-- `moonstone/VideoPlayer` to roam spotlight focus freely to left and right from `MediaControls`
-## Removed
+### Removed
 
 - `moonstone/Dialog` properties `preserveCase` and `showDivider`, replaced by `casing` and `noDivider` respectively
 - `moonstone/Divider` property `preserveCase`, replaced by `casing`
@@ -25,6 +22,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/VideoPlayer` to roam spotlight focus freely to left and right from `MediaControls`
 - `moonstone/VideoPlayer` to disable bottom controls when loading until it's playable
 - `moonstone/VideoPlayer` container changes to provide a more natural 5-way focus behavior
 
