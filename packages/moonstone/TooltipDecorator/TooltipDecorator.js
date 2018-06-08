@@ -8,7 +8,7 @@
 
 import {contextTypes} from '@enact/core/internal/PubSub';
 import hoc from '@enact/core/hoc';
-import FloatingLayer from '@enact/ui/FloatingLayer';
+import {FloatingLayerBase} from '@enact/ui/FloatingLayer';
 import {forward, handle, forProp} from '@enact/core/handle';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
@@ -406,7 +406,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (tooltipText) {
 				const renderedTooltip = (
-					<FloatingLayer open={this.state.showing} scrimType="none" key="tooltipFloatingLayer">
+					<FloatingLayerBase open={this.state.showing} onDismiss={this.hideTooltip} scrimType="none" key="tooltipFloatingLayer">
 						<Tooltip
 							aria-live="off"
 							role="alert"
@@ -421,7 +421,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						>
 							{tooltipText}
 						</Tooltip>
-					</FloatingLayer>
+					</FloatingLayerBase>
 				);
 
 				if (tooltipDestinationProp === 'children') {
