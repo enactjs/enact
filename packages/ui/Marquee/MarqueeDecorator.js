@@ -295,7 +295,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.props.marqueeOn === 'render') {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
-			on('keydown', this.handlePointerHide, document);
+			on('keydown', this.handlePointerHide);
 		}
 
 		componentWillReceiveProps (next) {
@@ -359,7 +359,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.context.Subscriber.unsubscribe('resize', this.handleResize);
 				this.context.Subscriber.unsubscribe('i18n', this.handleLocaleChange);
 			}
-			off('keydown', this.handlePointerHide, document);
+			off('keydown', this.handlePointerHide);
 		}
 
 		/*
