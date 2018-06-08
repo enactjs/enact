@@ -10,9 +10,6 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Fixed
 
-- `moonston/EditableIntegerPicker` to disable itself when on a range producing a single static value.
-- `moonston/Picker` to disable itself when containing only one or zero items.
-- `moonston/RangePicker` to disable itself when on a range producing a single static value.
 - `moonstone/Scroller` to check focus possibilities first then go to fallback at the top of the container of focused item
 - `moonstone/Scroller` to scroll by page when focus was at the edge of the viewport
 - `moonstone/ToggleButton` padding and orientation for RTL

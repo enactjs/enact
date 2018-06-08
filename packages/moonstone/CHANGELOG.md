@@ -6,6 +6,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonston/EditableIntegerPicker` to disable itself when on a range producing a single static value.
+- `moonston/Picker` to disable itself when containing only one or zero items.
+- `moonston/RangePicker` to disable itself when on a range producing a single static value.
 - `moonstone/TooltipDecorator` to hide when `onDismiss` has been invoked
 - `moonstone/VideoPlayer.MediaControls` to handle left and right key to jump when `moonstone/VideoPlayer` is focused
 
