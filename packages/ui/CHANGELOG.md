@@ -4,6 +4,12 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/FloatingLayer.FloatingLayerBase` export 
+
+## [2.0.0-beta.6] - 2018-06-04
+
 ### Fixed
 
 - `ui/FloatingLayer` to render correctly if already opened at mounting time

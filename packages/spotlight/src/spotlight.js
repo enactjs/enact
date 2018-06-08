@@ -237,7 +237,7 @@ const Spotlight = (function () {
 			next.unshift(lastContainerId);
 
 			// only prepend last focused if it exists so that Spotlight.focus() doesn't receive
-			// a falsey target
+			// a falsy target
 			const lastFocused = getContainerLastFocusedElement(lastContainerId);
 			if (lastFocused) {
 				next.unshift(lastFocused);
