@@ -27,7 +27,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` to scroll by page when focus was at the edge of the viewport
 - `moonstone/ToggleButton` padding and orientation for RTL
 - `moonstone/VideoPlayer` to not hide title and info section when showing more components
-- `moonstone/VideoPlayer` to select a position in slider to seek in 5-way 
+- `moonstone/VideoPlayer` to select a position in slider to seek in 5-way mode
 - `moonstone/VideoPlayer` to show thumbnail only when focused on slider
 
 ## [2.0.0-beta.5] - 2018-05-29
