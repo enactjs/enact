@@ -6,13 +6,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## Removed
 
-- `moonstone/Dialog` properties `preserveCase` and `showDivider`
-- `moonstone/Divider` property `preserveCase`
-- `moonstone/ExpandableInput` property `onInputChange`
-- `moonstone/MoonstoneDecorator.TextSizeDecorator`
-- `moonstone/Panels.Header` property `preserveCase`
-- `moonstone/Panels.Panel` property `noAutoFocus`
-- `moonstone/TooltipDecorator` property `tooltipPreserveCase`
+- `moonstone/Dialog` properties `preserveCase` and `showDivider`, replaced by `casing` and `noDivider` respectively
+- `moonstone/Divider` property `preserveCase`, replaced by `casing`
+- `moonstone/ExpandableInput` property `onInputChange`, replaced by `onChange`
+- `moonstone/MoonstoneDecorator.TextSizeDecorator`, replaced by `moonstone/MoonstoneDecorator.AccessibilityDecorator`
+- `moonstone/Panels.Header` property `preserveCase`, replaced by `casing`
+- `moonstone/Panels.Panel` property `noAutoFocus`, replaced by `autoFocus`
+- `moonstone/TooltipDecorator` property `tooltipPreserveCase`, replaced by `tooltipCasing`
 
 ## [2.0.0-beta.6] - 2018-06-04
 
