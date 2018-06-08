@@ -278,7 +278,7 @@ const navigableFilter = (node, containerId) => {
 const getSpottableDescendants = (containerId) => {
 	const node = getContainerNode(containerId);
 
-	// if it's falsey or is a disabled container, return an empty set
+	// if it's falsy or is a disabled container, return an empty set
 	if (!node || (isContainerNode(node) && !isContainerEnabled(node))) {
 		return [];
 	}

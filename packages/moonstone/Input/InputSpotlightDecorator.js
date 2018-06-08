@@ -1,4 +1,3 @@
-import deprecate from '@enact/core/internal/deprecate';
 import {call, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
@@ -76,17 +75,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			dismissOnEnter: PropTypes.bool,
 
 			/**
-			 * When `true`, prevents the decorator from receiving a visible focus state
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @deprecated will be replaced by `autoFocus` in 2.0.0
-			 * @public
-			 */
-			noDecorator: PropTypes.bool,
-
-
-			/**
 			 * The handler to run when the internal input is focused
 			 *
 			 * @type {Function}
@@ -133,10 +121,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 			this.paused = new Pause('InputSpotlightDecorator');
 			this.handleKeyDown = handleKeyDown.bind(this);
-
-			if (props.noDecorator) {
-				deprecate({name: 'noDecorator', since: '1.3.0', replacedBy: 'autoFocus'});
-			}
 		}
 
 		componentDidUpdate (_, prevState) {
@@ -197,7 +181,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		onBlur = (ev) => {
-			if (!this.props.noDecorator && !this.props.autoFocus) {
+			if (!this.props.autoFocus) {
 				if (isBubbling(ev)) {
 					if (Spotlight.getPointerMode()) {
 						this.blur();
@@ -239,9 +223,9 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		onFocus = (ev) => {
 			forwardFocus(ev, this.props);
 
-			// when in noDecorator or autoFocus mode, focusing the decorator directly will cause it to
+			// when in autoFocus mode, focusing the decorator directly will cause it to
 			// forward the focus onto the <input>
-			if (!isBubbling(ev) && (this.props.noDecorator || this.props.autoFocus && this.state.focused === null && !Spotlight.getPointerMode())) {
+			if (!isBubbling(ev) && (this.props.autoFocus && this.state.focused === null && !Spotlight.getPointerMode())) {
 				this.focusInput(ev.currentTarget);
 				ev.stopPropagation();
 			}
@@ -337,7 +321,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			delete props.autoFocus;
 			delete props.onActivate;
 			delete props.onDeactivate;
-			delete props.noDecorator;
 
 			return (
 				<Component
