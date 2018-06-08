@@ -612,7 +612,7 @@ const VideoPlayerBase = class extends React.Component {
 			miniFeedbackVisible: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
-			sourceUnavailable: false,
+			sourceUnavailable: true,
 			titleVisible: true
 		};
 
@@ -991,6 +991,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState({
 			announce: AnnounceState.READY,
 			currentTime: 0,
+			sourceUnavailable: true,
 			proportionPlayed: 0,
 			proportionLoaded: 0
 		});
@@ -1068,7 +1069,8 @@ const VideoPlayerBase = class extends React.Component {
 			proportionLoaded: el.proportionLoaded,
 			proportionPlayed: el.proportionPlayed || 0,
 			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime,
-			sourceUnavailable: !el.duration || el.error
+			// note: `el.loading && this.state.sourceUnavailable == false` is equivalent to `oncanplaythrough`
+			sourceUnavailable: el.loading && this.state.sourceUnavailable || el.error
 		};
 
 		// If there's an error, we're obviously not loading, no matter what the readyState is.
@@ -1138,6 +1140,10 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	play = () => {
+		if (this.state.sourceUnavailable) {
+			return;
+		}
+
 		this.speedIndex = 0;
 		this.setPlaybackRate(1);
 		this.send('play');
@@ -1154,6 +1160,10 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	pause = () => {
+		if (this.state.sourceUnavailable) {
+			return;
+		}
+
 		this.speedIndex = 0;
 		this.setPlaybackRate(1);
 		this.send('pause');
@@ -1171,7 +1181,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	seek = (timeIndex) => {
-		if (!this.props.seekDisabled && !isNaN(this.video.duration)) {
+		if (!this.props.seekDisabled && !isNaN(this.video.duration) && !this.state.sourceUnavailable) {
 			this.video.currentTime = timeIndex;
 		} else {
 			forward('onSeekFailed', {}, this.props);
@@ -1188,6 +1198,10 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	jump = (distance) => {
+		if (this.state.sourceUnavailable) {
+			return;
+		}
+
 		this.pulsedPlaybackRate = toUpperCase(new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}));
 		this.pulsedPlaybackState = distance > 0 ? 'jumpForward' : 'jumpBackward';
 		this.showFeedback();
@@ -1204,6 +1218,10 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	fastForward = () => {
+		if (this.state.sourceUnavailable) {
+			return;
+		}
+
 		let shouldResumePlayback = false;
 
 		switch (this.prevCommand) {
@@ -1257,6 +1275,10 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	rewind = () => {
+		if (this.state.sourceUnavailable) {
+			return;
+		}
+
 		const rateForSlowRewind = this.props.playbackRateHash['slowRewind'];
 		let shouldResumePlayback = false,
 			command = 'rewind';
