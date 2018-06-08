@@ -142,7 +142,7 @@ describe('pointer', () => {
 			expect(actual).to.equal(expected);
 		});
 
-		it('should return true if the pointer has moved and current is falsey', () => {
+		it('should return true if the pointer has moved and current is falsy', () => {
 			const expected = true;
 			const actual = notifyPointerMove(null, null, 5, 5);
 

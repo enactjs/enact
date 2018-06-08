@@ -697,9 +697,12 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				visible
 			} = this.props;
 
+			const current = Spotlight.getCurrent();
+
 			if (!no5WayJump &&
 					!visible &&
 					!mediaDisabled &&
+					(!current || current.classList.contains(css.controlsHandleAbove)) &&
 					(is('left', ev.keyCode) || is('right', ev.keyCode))) {
 				this.paused.pause();
 				this.startListeningForPulses(ev.keyCode);

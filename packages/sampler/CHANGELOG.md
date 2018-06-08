@@ -6,6 +6,10 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 No significant changes.
 
+### Fixed
+
+- `Slider` in QA sampler to deprecate `data` prop in `moonstone/VirtualList`
+
 ## [2.0.0-beta.5] - 2018-05-29
 
 No significant changes.
