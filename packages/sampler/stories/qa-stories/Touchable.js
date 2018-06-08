@@ -100,4 +100,24 @@ storiesOf('Touchable', module)
 				prevent drag from resuming when re-entering this component after leaving.
 			</TouchableDiv>
 		)
+	)
+	.add(
+		'onTap when clicked',
+		() => (
+			<TouchableDiv
+				disabled={boolean('disabled')}
+				noResume={boolean('noResume', false)}
+				onClick={action('onClick')}
+				onDown={action('onDown')}
+				onMouseDown={action('onMouseDown')}
+				onMouseUp={action('onMouseUp')}
+				onTap={action('onTap')}
+				onTouchEnd={action('onTouchEnd')}
+				onTouchStart={action('onTouchStart')}
+				onUp={action('onUp')}
+				style={{border: '2px dashed #888', textAlign: 'center'}}
+			>
+				Click here
+			</TouchableDiv>
+		)
 	);

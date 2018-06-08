@@ -377,6 +377,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 			return (
 				<Wrapped
+					data-preventscrollonfocus=""
 					{...rest}
 					onBlur={this.handleBlur}
 					onFocus={this.handleFocus}

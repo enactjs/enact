@@ -4,18 +4,30 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Fixed
+
+- `moonstone/TooltipDecorator` to hide when `onDismiss` has been invoked
+
+### Changed
+
+- `moonstone/VideoPlayer` container changes to provide a more natural 5-way focus behavior
+
+## [2.0.0-beta.6] - 2018-06-04
+
 ### Removed
 
 - `moonstone/IncrementSlider` prop `children` which was no longer supported for setting the tooltip (since 2.0.0-beta.1)
 
 ### Fixed
 
+- `moonstone/ContextualPopupDecorator` to allow focusing components under a popup without any focusable components
 - `moonstone/Scroller` ordering of logic for Scroller focus to check focus possibilities first then go to fallback at the top of the container
+- `moonstone/Scroller` to check focus possibilities first then go to fallback at the top of the container of focused item
 - `moonstone/Scroller` to scroll by page when focus was at the edge of the viewport
-- `moonstone/VideoPlayer` to show thumbnail only when focused on slider
+- `moonstone/ToggleButton` padding and orientation for RTL
 - `moonstone/VideoPlayer` to not hide title and info section when showing more components
 - `moonstone/VideoPlayer` to select a position in slider to seek in 5-way mode
-- `moonstone/ToggleButton` to have correct padding and orientation for RTL
+- `moonstone/VideoPlayer` to show thumbnail only when focused on slider
 
 ## [2.0.0-beta.5] - 2018-05-29
 
