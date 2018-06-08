@@ -14,6 +14,15 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Panels.Panel` property `noAutoFocus`, replaced by `autoFocus`
 - `moonstone/TooltipDecorator` property `tooltipPreserveCase`, replaced by `tooltipCasing`
 
+### Fixed
+
+- `moonstone/TooltipDecorator` to hide when `onDismiss` has been invoked
+- `moonstone/VideoPlayer.MediaControls` to handle left and right key to jump when `moonstone/VideoPlayer` is focused
+
+### Changed
+
+- `moonstone/VideoPlayer` container changes to provide a more natural 5-way focus behavior
+
 ## [2.0.0-beta.6] - 2018-06-04
 
 ### Removed
