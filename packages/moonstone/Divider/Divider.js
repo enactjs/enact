@@ -51,16 +51,6 @@ const DividerBase = kind({
 		children: PropTypes.string,
 
 		/**
-		 * The children string will have each word capitalized, unless this is set to `true`.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @deprecated use `casing`
-		 * @public
-		 */
-		preserveCase: PropTypes.bool,
-
-		/**
 		 * The size of the spacing around the divider.
 		 *
 		 * * `'normal'` (default) spacing is slightly larger than the standard spotlight spacing.
@@ -82,7 +72,6 @@ const DividerBase = kind({
 
 	defaultProps: {
 		casing: 'word',
-		preserveCase: false,
 		spacing: 'normal'
 	},
 

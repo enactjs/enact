@@ -33,7 +33,6 @@ storiesOf('Input', module)
 				iconBefore={select('iconBefore', iconNames)}
 				invalid={boolean('invalid', false)}
 				invalidMessage={text('invalidMessage', InputBase.defaultProps.invalidMessage)}
-				noDecorator={boolean('noDecorator')}
 				placeholder={text('placeholder')}
 				type={select('type', inputData.type, inputData.type[0])}
 				defaultValue={inputData.longText}
@@ -51,7 +50,6 @@ storiesOf('Input', module)
 				iconBefore={select('iconBefore', iconNames)}
 				invalid={boolean('invalid', false)}
 				invalidMessage={text('invalidMessage', InputBase.defaultProps.invalidMessage)}
-				noDecorator={boolean('noDecorator')}
 				placeholder={text('placeholder', inputData.longPlaceHolder)}
 				type={select('type', inputData.type, inputData.type[0])}
 			/>
@@ -67,7 +65,6 @@ storiesOf('Input', module)
 					disabled={boolean('disabled')}
 					iconAfter={select('iconAfter', iconNames)}
 					iconBefore={select('iconBefore', iconNames)}
-					noDecorator={boolean('noDecorator')}
 					placeholder={text('placeholder', 'Input some tall characters')}
 					type={select('type', inputData.type, inputData.type[0])}
 					defaultValue={inputData.tallText[0]}
@@ -78,7 +75,6 @@ storiesOf('Input', module)
 					disabled={boolean('disabled')}
 					iconAfter={select('iconAfter', iconNames)}
 					iconBefore={select('iconBefore', iconNames)}
-					noDecorator={boolean('noDecorator')}
 					placeholder={text('placeholder', 'Input some tall characters')}
 					type={select('type', inputData.type, inputData.type[0])}
 					defaultValue={inputData.tallText[1]}
@@ -89,7 +85,6 @@ storiesOf('Input', module)
 					disabled={boolean('disabled')}
 					iconAfter={select('iconAfter', iconNames)}
 					iconBefore={select('iconBefore', iconNames)}
-					noDecorator={boolean('noDecorator')}
 					placeholder={text('placeholder', 'Input some tall characters')}
 					type={select('type', inputData.type, inputData.type[0])}
 					defaultValue={inputData.tallText[2]}
@@ -106,7 +101,6 @@ storiesOf('Input', module)
 				disabled={boolean('disabled')}
 				iconAfter={select('iconAfter', iconNames)}
 				iconBefore={select('iconBefore', iconNames)}
-				noDecorator={boolean('noDecorator')}
 				placeholder={text('placeholder')}
 				type={select('type', inputData.type, inputData.type[0])}
 				defaultValue={inputData.extraSpaceText}
@@ -122,7 +116,6 @@ storiesOf('Input', module)
 				disabled={boolean('disabled')}
 				iconAfter={select('iconAfter', iconNames)}
 				iconBefore={select('iconBefore', iconNames)}
-				noDecorator={boolean('noDecorator')}
 				placeholder={text('placeholder', 'Input RTL and LTR text together')}
 				type={select('type', inputData.type, inputData.type[0])}
 				defaultValue={inputData.rtlAndLtr}
@@ -140,7 +133,6 @@ storiesOf('Input', module)
 						disabled={boolean('disabled')}
 						iconAfter={select('iconAfter', iconNames)}
 						iconBefore={select('iconBefore', iconNames)}
-						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
 						defaultValue={inputData.initialValue + ' one'}
@@ -151,7 +143,6 @@ storiesOf('Input', module)
 						disabled={boolean('disabled')}
 						iconAfter={select('iconAfter', iconNames)}
 						iconBefore={select('iconBefore', iconNames)}
-						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
 						defaultValue={inputData.initialValue + ' two'}
@@ -164,7 +155,6 @@ storiesOf('Input', module)
 						disabled={boolean('disabled')}
 						iconAfter={select('iconAfter', iconNames)}
 						iconBefore={select('iconBefore', iconNames)}
-						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
 						defaultValue={inputData.initialValue + ' three'}
@@ -175,7 +165,6 @@ storiesOf('Input', module)
 						disabled={boolean('disabled')}
 						iconAfter={select('iconAfter', iconNames)}
 						iconBefore={select('iconBefore', iconNames)}
-						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
 						defaultValue={inputData.initialValue + ' four'}
@@ -193,7 +182,6 @@ storiesOf('Input', module)
 				disabled={boolean('disabled')}
 				iconAfter={select('iconAfter', iconNames)}
 				iconBefore={select('iconBefore', iconNames)}
-				noDecorator={boolean('noDecorator')}
 				type={inputData.type[1]}
 				defaultValue={inputData.initialNumericValue}
 			/>
