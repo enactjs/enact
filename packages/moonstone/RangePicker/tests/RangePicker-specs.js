@@ -70,7 +70,7 @@ describe('RangePicker Specs', () => {
 	});
 
 	it('should be disabled when limited to a single value', function () {
-		const picker = mount(
+		const picker = shallow(
 			<RangePickerBase min={0} max={0} value={0} />
 		);
 

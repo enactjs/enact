@@ -155,7 +155,7 @@ describe('EditableIntegerPicker', () => {
 	});
 
 	it('should be disabled when limited to a single value', function () {
-		const picker = mount(
+		const picker = shallow(
 			<EditableIntegerPickerBase min={0} max={0} value={0} />
 		);
 
