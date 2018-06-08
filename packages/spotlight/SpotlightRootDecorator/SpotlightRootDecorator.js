@@ -92,15 +92,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {className, ...rest} = this.props;
-			const classes = [className];
-			if (this.props.debugSpotlight) {
-				classes.push('debug', 'spotlight');
-			}
-
-			delete rest.debugSpotlight;
-
-			return <Wrapped {...rest} className={classnames(classes)} />;
+			return <Wrapped {...this.props} />;
 		}
 	};
 });

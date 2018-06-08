@@ -228,27 +228,9 @@ const Spotlight = (function () {
 			setLastContainer(containerId);
 		}
 
-		// The below code shoud be gated on non-production environment only.
-		// Debug Mode
-		const directions = ['up', 'right', 'down', 'left'],
-			nextClassBase = spottableClass + '-next-';
-
-		// Remove all previous targets
-		directions.forEach((dir) => {
-			const nextClass = nextClassBase + dir,
-				prevElems = parseSelector('.' + nextClass);
-			if (prevElems && prevElems.length !== 0) {
-				prevElems.forEach(prevElem => prevElem.classList.remove(nextClass));
-			}
-		});
-
-		// Find all next targets and identify them
-		directions.forEach((dir) => {
-			const nextElem = getTargetByDirectionFromElement(dir, elem);
-			if (nextElem) {
-				nextElem.classList.add(nextClassBase + dir);
-			}
-		});
+		if (__DEV__) {
+			assignFocusPreview(elem);
+		}
 	}
 
 	function restoreFocus () {
@@ -269,6 +251,29 @@ const Spotlight = (function () {
 		// attempt to find a target starting with the last focused element in the last
 		// container, followed by the last container, and finally the root container
 		return next.reduce((focused, target) => focused || Spotlight.focus(target), false);
+	}
+
+	// The below should be gated on non-production environment only.
+	function assignFocusPreview (elem) {
+		const directions = ['up', 'right', 'down', 'left'],
+			nextClassBase = spottableClass + '-next-';
+
+		// Remove all previous targets
+		directions.forEach((dir) => {
+			const nextClass = nextClassBase + dir,
+				prevElems = parseSelector('.' + nextClass);
+			if (prevElems && prevElems.length !== 0) {
+				prevElems.forEach(prevElem => prevElem.classList.remove(nextClass));
+			}
+		});
+
+		// Find all next targets and identify them
+		directions.forEach((dir) => {
+			const nextElem = getTargetByDirectionFromElement(dir, elem);
+			if (nextElem) {
+				nextElem.classList.add(nextClassBase + dir);
+			}
+		});
 	}
 
 	function spotNextFromPoint (direction, position) {

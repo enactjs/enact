@@ -126,14 +126,9 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (!float) {
 				classes.push(bgClassName);
 			}
-			if (this.props.debugAria) {
-				classes.push('debug', 'aria');
-			}
 			if (className) {
 				classes.push(className);
 			}
-
-			delete rest.debugAria;
 
 			return (
 				<App {...rest} className={classnames(classes)} />

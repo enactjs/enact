@@ -1,5 +1,6 @@
 // Moonstone Environment
 
+import classnames from 'classnames';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -116,8 +117,17 @@ const getPropFromURL = (propName, fallbackValue) => {
 
 const StorybookDecorator = (story, config) => {
 	const sample = story();
+	const classes = {
+		aria: boolean('debug aria', (getPropFromURL('debug aria') === 'true')),
+		layout: boolean('debug layout', (getPropFromURL('debug layout') === 'true')),
+		spotlight: boolean('debug spotlight', (getPropFromURL('debug spotlight') === 'true'))
+	};
+	if (Object.keys(classes).length > 0) {
+		classes.debug = true;
+	}
 	return (
 		<Moonstone
+			className={classnames(classes)}
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
 			locale={select('locale', locales, getPropFromURL('locale', 'en-US'))}
@@ -125,8 +135,6 @@ const StorybookDecorator = (story, config) => {
 			highContrast={boolean('high contrast', (getPropFromURL('high contrast') === 'true'))}
 			style={backgrounds[select('background', backgroundLabels, getPropFromURL('background'))]}
 			skin={select('skin', skins, getPropFromURL('skin'))}
-			debugAria={boolean('debug aria', (getPropFromURL('debug aria') === 'true'))}
-			debugSpotlight={boolean('debug spotlight', (getPropFromURL('debug spotlight') === 'true'))}
 		>
 			{sample}
 		</Moonstone>
