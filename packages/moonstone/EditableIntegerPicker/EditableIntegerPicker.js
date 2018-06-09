@@ -14,7 +14,6 @@ import React from 'react';
 
 import {MarqueeController} from '../Marquee';
 import {Picker, PickerItem} from '../internal/Picker';
-import SpottablePicker from '../Picker/SpottablePicker';
 import {validateRange} from '../internal/validators';
 
 import css from './EditableIntegerPicker.less';
@@ -249,22 +248,28 @@ const EditableIntegerPickerBase = kind({
 				label = value;
 			}
 
-			return (
-				editMode ?
+			if (editMode) {
+				return (
 					<input
 						className={css.input}
 						key={value}
 						onBlur={onInputBlur}
 						ref={inputRef}
-					/> : <PickerItem
-						key={value}
-						onClick={onPickerItemClick}
-					>
-						{`${label} ${unit}`}
-					</PickerItem>
+					/>
+				);
+			}
+
+			return (
+				<PickerItem
+					key={value}
+					onClick={onPickerItemClick}
+				>
+					{`${label} ${unit}`}
+				</PickerItem>
 			);
 		},
-		className: ({className, editMode, styler}) => editMode ? styler.append({editMode}) : className
+		className: ({className, editMode, styler}) => editMode ? styler.append({editMode}) : className,
+		disabled: ({disabled, max, min}) => min >= max ? true : disabled
 	},
 
 	render: ({pickerRef, ...rest}) => {
@@ -300,9 +305,7 @@ const EditableIntegerPicker = Pure(
 		EditableIntegerPickerDecorator(
 			MarqueeController(
 				{marqueeOnFocus: true},
-				SpottablePicker(
-					EditableIntegerPickerBase
-				)
+				EditableIntegerPickerBase
 			)
 		)
 	)
