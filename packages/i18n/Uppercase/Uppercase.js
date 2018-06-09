@@ -4,7 +4,6 @@
  * @module i18n/Uppercase
  */
 
-import deprecate from '@enact/core/internal/deprecate';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -40,31 +39,15 @@ const Uppercase = hoc((config, Wrapped) => kind({
 		 * @default 'upper'
 		 * @public
 		 */
-		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
-
-		/**
-		 * The children string will be uppercased, unless this is set to true.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @deprecated replaced by `casing`
-		 * @public
-		 */
-		preserveCase: PropTypes.bool
+		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence'])
 	},
 
 	defaultProps: {
-		casing: 'upper',
-		preserveCase: false
+		casing: 'upper'
 	},
 
 	computed: {
-		children: ({casing, children, preserveCase}) => {
-			if (preserveCase) {
-				deprecate({name: 'preserveCase', since: '1.1.0', replacedBy: 'casing'});
-				casing = casing || preserveCase && 'preserve';
-			}
-
+		children: ({casing, children}) => {
 			if (casing !== 'preserve' && React.Children.count(children) === 1) {
 				const content = React.Children.toArray(children)[0];
 				if (typeof content == 'string') {
@@ -84,7 +67,6 @@ const Uppercase = hoc((config, Wrapped) => kind({
 
 	render: (props) => {
 		delete props.casing;
-		delete props.preserveCase;
 		return (
 			<Wrapped {...props} />
 		);

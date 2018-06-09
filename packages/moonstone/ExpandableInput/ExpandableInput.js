@@ -8,7 +8,6 @@
 
 import Changeable from '@enact/ui/Changeable';
 import {adaptEvent, call, forKey, forward, handle, oneOf, preventDefault, stopImmediate} from '@enact/core/handle';
-import deprecate from '@enact/core/internal/deprecate';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
@@ -112,17 +111,6 @@ class ExpandableInputBase extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
-		 * This handler will be fired as `onChange`. `onInputChange` is deprecated and will be removed
-		 * in a future update.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @deprecated replaced by `onChange`
-		 * @public
-		 */
-		onInputChange: PropTypes.func,
-
-		/**
 		 * The handler to run when the component is removed while retaining focus.
 		 *
 		 * @type {Function}
@@ -207,10 +195,6 @@ class ExpandableInputBase extends React.Component {
 			initialValue: props.value
 		};
 
-		if (props.onInputChange) {
-			deprecate({name: 'onInputChange', since: '1.0.0', message: 'Use `onChange` instead', until: '2.0.0'});
-		}
-
 		this.handleUpDown = handleUpDown.bind(this);
 		this.handleDeactivate = handleDeactivate.bind(this);
 	}
@@ -268,18 +252,7 @@ class ExpandableInputBase extends React.Component {
 		this.paused.pause();
 	}
 
-	handleChange = (val) => {
-		const {onChange, onInputChange} = this.props;
-
-		// handler that fires `onChange` and `onInputChange` in `Input`'s' `onChange`.
-		if (onChange) {
-			onChange(val);
-		}
-
-		if (onInputChange) {
-			onInputChange(val);
-		}
-	}
+	handleChange = (val) => forward('onChange', val, this.props)
 
 	handleDown = () => {
 		this.pointer = true;
@@ -307,7 +280,6 @@ class ExpandableInputBase extends React.Component {
 
 		const inputProps = extractInputProps(rest);
 		delete rest.onChange;
-		delete rest.onInputChange;
 
 		return (
 			<ExpandableItemBase
