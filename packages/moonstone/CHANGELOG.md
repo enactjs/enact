@@ -17,6 +17,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/TooltipDecorator` to hide when `onDismiss` has been invoked
+- `moonstone/VideoPlayer` to show media controls when pressing down in pointer mode
 - `moonstone/VideoPlayer.MediaControls` to handle left and right key to jump when `moonstone/VideoPlayer` is focused
 - `moonstone/Popup` to spot its content correctly when `open` by default
 
