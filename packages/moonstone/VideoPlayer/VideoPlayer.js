@@ -52,7 +52,6 @@ const SpottableDiv = Touchable(Spottable('div'));
 const RootContainer = SpotlightContainerDecorator('div');
 const ControlsContainer = SpotlightContainerDecorator(
 	{
-		leaveFor: {down:'', up:'', left:'', right:''},
 		enterTo: '',
 		straightOnly: true
 	},
