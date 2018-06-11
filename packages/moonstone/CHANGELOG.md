@@ -24,6 +24,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer.MediaControls` to handle left and right key to jump when `moonstone/VideoPlayer` is focused
 - `moonstone/Popup` to spot its content correctly when `open` by default
 
+### Added
+
+- `moonstone/ContextualPopupDecorator` config option `repositionProps` to trigger reposition upon prop change
+
 ### Changed
 
 - `moonstone/VideoPlayer` to roam spotlight focus freely to left and right from `MediaControls`

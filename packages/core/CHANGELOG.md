@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `core/util.didPropChange` to support prop change check
+
 ## [2.0.0-beta.6] - 2018-06-04
 
 No significant changes.
