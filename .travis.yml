@@ -2,7 +2,11 @@ language: node_js
 node_js:
     - "node"
 sudo: false
+cache:
+  directories:
+    - $(npm config get cache)
 install:
+    - npm config set prefer-offline true
     - npm install -g enyojs/enact-cli#develop
     - npm install
     - npm run bootstrap
