@@ -1,4 +1,5 @@
 import direction from 'direction';
+import {didPropChange} from '@enact/core/util';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
@@ -94,20 +95,6 @@ const defaultConfig = {
 	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	marqueeDirection: (str) => direction(str) === 'rtl' ? 'rtl' : 'ltr'
-};
-
-/**
- * Checks whether any of the invalidateProps has changed or not
- *
- * @param {Array} propList An array of invalidateProps
- * @param {Object} prev Previous props
- * @param {Object} next Next props
- * @returns {Boolean} `true` if any of the props changed
- * @private
- */
-const didPropChange = (propList, prev, next) => {
-	const hasPropsChanged = propList.map(i => prev[i] !== next[i]);
-	return hasPropsChanged.indexOf(true) !== -1;
 };
 
 /*
@@ -301,7 +288,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillReceiveProps (next) {
 			const {forceDirection, marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
 			this.validateTextDirection(next);
-			if (!shallowEqual(this.props.children, next.children) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
+			if (!shallowEqual(this.props.children, next.children) || didPropChange(invalidateProps, this.props, next)) {
 				// restart marqueeOn="render" marquees or synced marquees that were animating
 				this.forceRestartMarquee = next.marqueeOn === 'render' || (
 					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)

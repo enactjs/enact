@@ -177,6 +177,17 @@ const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
 };
 
 /**
+ * Checks whether any props has changed or not for a given list of properties
+ *
+ * @param {Array} propsList An array of props to check
+ * @param {Object} prev Previous props
+ * @param {Object} next Next props
+ * @returns {Boolean} `true` if any of the props changed
+ * @private
+ */
+const didPropChange = (propsList, prev, next) => Array.isArray(propsList) && propsList.some((prop) => prev[prop] !== next[prop]);
+
+/**
  * Creates a function that memoizes the result of `fn`. Note that this function is a naive
  * implementation and only checks the first argument for memoization.
  *
@@ -203,6 +214,7 @@ export {
 	cap,
 	coerceArray,
 	coerceFunction,
+	didPropChange,
 	extractAriaProps,
 	isRenderable,
 	Job,
