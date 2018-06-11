@@ -6,6 +6,7 @@
  * @module moonstone/ContextualPopupDecorator
  */
 
+import {didPropChange} from '@enact/core/util';
 import {extractAriaProps} from '@enact/core/util';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import hoc from '@enact/core/hoc';
@@ -48,7 +49,18 @@ const defaultConfig = {
 	 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.defaultConfig
 	 * @public
 	 */
-	openProp: 'selected'
+	openProp: 'selected',
+
+	/**
+	 * Repositions container if any properties change. Expects an array of props which on change
+	 * trigger recalculation of container positions.
+	 *
+	 * @type {Array}
+	 * @default null
+	 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.defaultConfig
+	 * @public
+	 */
+	repositionProps: null
 };
 
 const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'default-element', preserveId: true}, ContextualPopup);
@@ -94,7 +106,7 @@ const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'default-
  * @public
  */
 const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {noSkin, openProp} = config;
+	const {noSkin, openProp, repositionProps} = config;
 
 	const Decorator = class extends React.Component {
 		static displayName = 'ContextualPopupDecorator'
@@ -235,6 +247,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				containerPosition: {top: 0, left: 0},
 				containerId: Spotlight.add(this.props.popupSpotlightId),
 				activator: null,
+				shouldReposition: false,
 				shouldSpotActivator: true
 			};
 
@@ -261,13 +274,18 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.setContainerPosition();
 			}
 
+			if (didPropChange(repositionProps, this.props, nextProps)) {
+				this.setState({
+					shouldReposition: true
+				});
+			}
+
 			if (!this.props.open && nextProps.open) {
 				this.updateLeaveFor(current);
 				this.setState({
 					activator: current
 				});
 			} else if (this.props.open && !nextProps.open) {
-
 				this.updateLeaveFor(null);
 				this.setState({
 					activator: null,
@@ -290,6 +308,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				if (this.state.shouldSpotActivator) {
 					this.spotActivator(prevState.activator);
 				}
+			}
+
+			if (!prevState.shouldReposition && this.state.shouldReposition) {
+				this.setContainerPosition();
 			}
 		}
 
@@ -446,7 +468,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.setState({
 					direction: this.adjustedDirection,
 					arrowPosition: this.getArrowPosition(clientNode),
-					containerPosition: this.getContainerPosition(containerNode, clientNode)
+					containerPosition: this.getContainerPosition(containerNode, clientNode),
+					shouldReposition: false
 				});
 			}
 		}
