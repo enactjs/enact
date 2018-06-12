@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight/Spottable` to add `true` string value on `data-preventscrollonfocus` property to be handled by web engine correctly.
+
 ## [2.0.0-beta.6] - 2018-06-04
 
 ### Removed
