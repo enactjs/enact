@@ -5,10 +5,10 @@ import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata, smartSelect} from '../../src/utils';
+import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
 CheckboxItem.displayName = 'CheckboxItem';
 const Config = mergeComponentMetadata('CheckboxItem', ItemBase, Item, UiToggleItemBase, UiToggleItem, ToggleItem, CheckboxItem);
@@ -21,12 +21,13 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of CheckboxItem'
 		})(() => (
 			<CheckboxItem
-				disabled={boolean('disabled', false)}
-				iconPosition={smartSelect('iconPosition', ['before', 'after'], Config)}
-				inline={boolean('inline', false)}
+				// disabled and inline have problems when set to `null` from the internal nullify...
+				disabled={boolean('disabled', Config, false)}
+				iconPosition={select('iconPosition', ['before', 'after'], Config)}
+				inline={boolean('inline', Config)}
 				onToggle={action('onToggle')}
 			>
-				{text('children', 'Hello CheckboxItem')}
+				{text('children', Config, 'Hello CheckboxItem')}
 			</CheckboxItem>
 		))
 	);

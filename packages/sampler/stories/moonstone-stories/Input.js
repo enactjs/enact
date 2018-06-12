@@ -1,15 +1,16 @@
-import Input from '@enact/moonstone/Input';
+import Input, {InputBase} from '@enact/moonstone/Input';
 import icons from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
+import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
 const iconNames = ['', ...icons];
 
+const Config = mergeComponentMetadata('Input', InputBase, Input);
 Input.displayName = 'Input';
 
 storiesOf('Moonstone', module)
@@ -21,15 +22,15 @@ storiesOf('Moonstone', module)
 		})(() => (
 			<Input
 				onChange={action('onChange')}
-				disabled={boolean('disabled', false)}
-				dismissOnEnter={nullify(boolean('dismissOnEnter', false))}
-				iconAfter={nullify(select('iconAfter', iconNames))}
-				iconBefore={nullify(select('iconBefore', iconNames))}
-				invalid={boolean('invalid', false)}
-				invalidMessage={nullify(text('invalidMessage'))}
-				placeholder={text('placeholder')}
-				small={boolean('small', false)}
-				type={text('type')}
+				disabled={boolean('disabled', Config)}
+				dismissOnEnter={boolean('dismissOnEnter', Config)}
+				iconAfter={select('iconAfter', iconNames, Config)}
+				iconBefore={select('iconBefore', iconNames, Config)}
+				invalid={boolean('invalid', Config)}
+				invalidMessage={text('invalidMessage', Config)}
+				placeholder={text('placeholder', Config)}
+				small={boolean('small', Config)}
+				type={text('type', Config)}
 			/>
 		))
 	);

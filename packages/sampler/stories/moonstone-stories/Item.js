@@ -1,8 +1,14 @@
-import Item from '@enact/moonstone/Item';
+import Item, {ItemBase} from '@enact/moonstone/Item';
+import UiItem, {ItemBase as UiItemBase} from '@enact/ui/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {boolean, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
+
+import {boolean, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
+
+const Config = mergeComponentMetadata('Item', UiItemBase, UiItem, ItemBase, Item);
+Item.displayName = 'Item';
 
 storiesOf('Moonstone', module)
 	.add(
@@ -12,10 +18,10 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of Item'
 		})(() => (
 			<Item
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', Config)}
+				inline={boolean('inline', Config)}
 			>
-				{text('children', 'Hello Item')}
+				{text('children', Config, 'Hello Item')}
 			</Item>
 		))
 	);

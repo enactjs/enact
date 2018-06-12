@@ -4,6 +4,5 @@
  * There is no `default` for this file.
  */
 
-export * from './smartSelect.js';
 export * from './propTables.js';
 export * from './nullify.js';

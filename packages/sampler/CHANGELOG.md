@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `enact-knobs` (boolean, number, select, and text) to `src/enact-knobs` to incorporate several useful features into knob replacements. They can automatically gather the default value and label it in the selection knob.
+
+### Changed
+
+- `src/util/smartSelect` to be incorporated into `enact-knobs` and updated it to the latest/future format (`selectV2`) which transposes the key/values of the labels
+
 ## [2.0.0-beta.6] - 2018-06-04
 
 No significant changes.

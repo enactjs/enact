@@ -1,9 +1,9 @@
 import BodyText from '@enact/moonstone/BodyText';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {text, boolean} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
+import {boolean, text} from '../../src/enact-knobs';
 import nullify from '../../src/utils/nullify.js';
 
 BodyText.displayName = 'BodyText';
@@ -16,9 +16,9 @@ storiesOf('Moonstone', module)
 			text: 'The basic BodyText'
 		})(() => (
 			<BodyText
-				centered={nullify(boolean('centered', false))}
+				centered={boolean('centered', BodyText)}
 			>
-				{text('children', 'This is Body Text')}
+				{text('children', BodyText, 'This is Body Text')}
 			</BodyText>
 		))
 	);
