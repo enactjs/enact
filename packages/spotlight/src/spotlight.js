@@ -355,6 +355,8 @@ const Spotlight = (function () {
 	}
 
 	function onKeyDown (evt) {
+		console.log('Spotlight > onKeyDown');
+
 		if (shouldPreventNavigation()) {
 			return;
 		}
@@ -366,6 +368,8 @@ const Spotlight = (function () {
 		if (pointerHandled || !(direction || isEnter(keyCode))) {
 			return;
 		}
+
+		console.log('Spotlight > onKeyDown2');
 
 		if (!isPaused() && !_pointerMoveDuringKeyPress) {
 			if (getCurrent()) {

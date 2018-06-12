@@ -30,7 +30,7 @@ const
 		};
 
 		return (
-			<Item {...rest} style={itemStyle}>
+			<Item {...rest} style={itemStyle} disabled={index > 10 && index < 13}>
 				{items[index]}
 			</Item>
 		);
@@ -62,6 +62,7 @@ storiesOf('UI', module)
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
 				<UiVirtualList
+					isItemDisabled={(i)=>(i > 10 && i < 20)}
 					dataSize={updateDataSize(number('dataSize', defaultDataSize))}
 					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize}
@@ -86,6 +87,7 @@ storiesOf('Moonstone', module)
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
 				<VirtualList
+					isItemDisabled={(i)=>(i > 10 && i < 13)}
 					dataSize={updateDataSize(number('dataSize', defaultDataSize))}
 					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 					itemRenderer={renderItem(itemSize)}

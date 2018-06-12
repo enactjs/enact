@@ -26,6 +26,8 @@ let _pointerMode = true;
  */
 const setPointerMode = (pointerMode) => {
 	_pointerMode = pointerMode;
+
+	console.log('Spotlight > pointer > _pointerMode = ' + _pointerMode);
 };
 
 /**

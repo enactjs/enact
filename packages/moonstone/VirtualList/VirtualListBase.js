@@ -643,11 +643,19 @@ const VirtualListBaseFactory = (type) => {
 		onKeyDown = (ev) => {
 			const {keyCode, repeat, target} = ev;
 
+			console.log('VL > onKeyDown');
+
 			this.isScrolledBy5way = false;
 			if (getDirection(keyCode)) {
+
+				console.log('VL > onKeyDown > getDirection()');
+
 				ev.preventDefault();
 				this.setSpotlightContainerRestrict(keyCode, target);
 				this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, repeat, target);
+
+				console.log('VL > onKeyDown > getDirection() > this.isScrolledBy5way = ' + this.isScrolledBy5way);
+
 				if (this.isScrolledBy5way) {
 					ev.stopPropagation();
 				}
