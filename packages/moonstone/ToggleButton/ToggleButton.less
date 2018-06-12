@@ -1,19 +1,21 @@
 // ToggleButton.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/text.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/text.less";
+@import "../styles/skin.less";
 
 .toggleButton {
+	.padding-start-end(@moon-button-h-padding, @moon-toggle-button-text-switch-gutter + @moon-button-h-padding + @moon-toggle-button-switch-width + @moon-toggle-button-switch-border-width);
+
 	text-align: center;
 	position: relative;
-	.padding-start-end(@moon-button-h-padding, @moon-toggle-button-text-switch-gutter + @moon-button-h-padding + @moon-toggle-button-switch-width + 2*@moon-toggle-button-switch-border-width);
 
 	&::after {
-		position: absolute;
 		.position-start-end(auto, @moon-button-h-padding);
-		content: '';
+
+		position: absolute;
+		content: "";
 		top: 50%;
 		width: @moon-toggle-button-switch-width;
 		height: @moon-toggle-button-switch-width;
@@ -25,34 +27,13 @@
 
 
 	&.small {
-		padding-right: @moon-toggle-button-text-switch-gutter + @moon-button-small-h-padding + @moon-toggle-button-switch-width + 2*@moon-toggle-button-switch-border-width;
+		.padding-start-end(@moon-button-small-h-padding, @moon-toggle-button-small-text-switch-gutter + @moon-button-small-h-padding + @moon-toggle-button-switch-width + @moon-toggle-button-switch-border-width);
 
 		&::after {
+			.position-start-end(auto, @moon-button-small-h-padding);
+
 			top: 50%;
 			transform: translateY(-50%);
-			right: @moon-button-small-h-padding;
-		}
-	}
-
-	:global(.enact-locale-right-to-left) & {
-		.toggleButton {
-			padding-right: @moon-button-h-padding;
-			padding-left: @moon-toggle-button-text-switch-gutter + @moon-button-h-padding + @moon-toggle-button-switch-width + 2*@moon-toggle-button-switch-border-width;
-
-			&::after {
-				left: @moon-button-h-padding;
-				right: auto;
-			}
-
-			&.small {
-				padding-right: @moon-button-small-h-padding;
-				padding-left: @moon-toggle-button-text-switch-gutter + @moon-button-small-h-padding + @moon-toggle-button-switch-width + 2*@moon-toggle-button-switch-border-width;
-
-				&::after {
-					left: @moon-button-small-h-padding;
-					right: auto;
-				}
-			}
 		}
 	}
 

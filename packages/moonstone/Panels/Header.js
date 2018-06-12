@@ -106,19 +106,6 @@ const HeaderBase = kind({
 		marqueeOn: PropTypes.oneOf(['focus', 'hover', 'render']),
 
 		/**
-		 * When true, the case of the [`title`]{@link moonstone/Panels.Header#title} will
-		 * remain unchanged.
-		 * Uses [Uppercase HOC]{@link i18n/Uppercase.Uppercase} and mirrors the
-		 * [preserveCase prop]{@link i18n/Uppercase.Uppercase#preserveCase}
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @deprecated replaced by `casing`
-		 * @public
-		 */
-		preserveCase: PropTypes.bool,
-
-		/**
 		 * Sub-title displayed at the bottom of the panel. This is a "slot", so it can be used as a
 		 * tag-name inside this component, which improves readability.
 		 *
@@ -171,7 +158,6 @@ const HeaderBase = kind({
 		casing: 'upper',
 		fullBleed: false,
 		marqueeOn: 'hover',
-		preserveCase: false,
 		// titleAbove: '00',
 		type: 'standard'
 	},
@@ -195,7 +181,7 @@ const HeaderBase = kind({
 		subTitleBelowComponent: ({marqueeOn, subTitleBelow}) => {
 			return <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn}>{(subTitleBelow != null && subTitleBelow !== '') ? subTitleBelow : ' '}</MarqueeH2>;
 		},
-		titleOrInput: ({casing, headerInput, marqueeOn, preserveCase, title}) => {
+		titleOrInput: ({casing, headerInput, marqueeOn, title}) => {
 			if (headerInput) {
 				return (
 					<Cell>
@@ -207,7 +193,7 @@ const HeaderBase = kind({
 				);
 			} else {
 				return (
-					<Cell component={HeaderH1} casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn={marqueeOn}>
+					<Cell component={HeaderH1} casing={casing} className={css.title} marqueeOn={marqueeOn}>
 						{title}
 					</Cell>
 				);
@@ -215,7 +201,7 @@ const HeaderBase = kind({
 		}
 	},
 
-	render: ({casing, children, direction, marqueeOn, preserveCase, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+	render: ({casing, children, direction, marqueeOn, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.fullBleed;
 		delete rest.headerInput;
 		delete rest.subTitleBelow;
@@ -225,7 +211,7 @@ const HeaderBase = kind({
 			case 'compact': return (
 				<Layout component="header" aria-label={title} {...rest} align="end">
 					<Cell component={CompactTitle} title={title} titleBelow={titleBelowComponent} marqueeOn={marqueeOn} forceDirection={direction}>
-						<UppercaseH1 casing={casing} className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
+						<UppercaseH1 casing={casing} className={css.title}>{title}</UppercaseH1>
 						{titleBelowComponent}
 					</Cell>
 					<Cell shrink component="nav" className={css.headerComponents}>{children}</Cell>
@@ -235,7 +221,7 @@ const HeaderBase = kind({
 			// case 'large': return (
 			// 	<header {...rest}>
 			// 		<div className={css.titleAbove}>{titleAbove}</div>
-			// 		<h1 className={css.title}><UppercaseMarquee preserveCase={preserveCase}>{title}</UppercaseMarquee></h1>
+			// 		<h1 className={css.title}><UppercaseMarquee>{title}</UppercaseMarquee></h1>
 			// 		<h2 className={css.titleBelow}><Marquee>{titleBelow}</Marquee></h2>
 			// 		<h2 className={css.subTitleBelow}><Marquee>{subTitleBelow}</Marquee></h2>
 			// 		<nav className={css.headerComponents}>{children}</nav>

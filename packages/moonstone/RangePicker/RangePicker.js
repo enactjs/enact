@@ -13,7 +13,6 @@ import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 
 import {Picker, PickerItem} from '../internal/Picker';
-import SpottablePicker from '../Picker/SpottablePicker';
 import {validateRange} from '../internal/validators';
 
 const digits = (num) => {
@@ -207,6 +206,7 @@ const RangePickerBase = kind({
 	},
 
 	computed: {
+		disabled: ({disabled, max, min}) => min >= max ? true : disabled,
 		label: ({max, min, padded, value}) => {
 			if (padded) {
 				const maxDigits = digits(Math.max(Math.abs(min), Math.abs(max)));
@@ -254,9 +254,7 @@ const RangePickerBase = kind({
  */
 const RangePicker = Pure(
 	Changeable(
-		SpottablePicker(
-			RangePickerBase
-		)
+		RangePickerBase
 	)
 );
 

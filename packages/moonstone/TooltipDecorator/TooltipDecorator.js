@@ -8,7 +8,7 @@
 
 import {contextTypes} from '@enact/core/internal/PubSub';
 import hoc from '@enact/core/hoc';
-import FloatingLayer from '@enact/ui/FloatingLayer';
+import {FloatingLayerBase} from '@enact/ui/FloatingLayer';
 import {forward, handle, forProp} from '@enact/core/handle';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
@@ -112,19 +112,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				'right bottom', 'right middle', 'right top']),
 
 			/**
-			 * When true, the case of the [`tooltipText`]{@link moonstone/TooltipDecorator.TooltipDecorator#tooltipText}
-			 * will remain unchanged.
-			 * Uses [Uppercase HOC]{@link i18n/Uppercase.Uppercase} and mirrors the
-			 * [preserveCase prop]{@link i18n/Uppercase.Uppercase#preserveCase}
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @deprecated replaced by `tooltipCasing`
-			 * @public
-			 */
-			tooltipPreserveCase: PropTypes.bool,
-
-			/**
 			 * An object containing properties to be passed to tooltip component.
 			 *
 			 * @type {Object}
@@ -154,8 +141,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: false,
 			tooltipCasing: 'upper',
 			tooltipDelay: 500,
-			tooltipPosition: 'above',
-			tooltipPreserveCase: false
+			tooltipPosition: 'above'
 		}
 
 		static contextTypes = contextTypes
@@ -402,11 +388,11 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @private
 		 */
 		renderTooltip () {
-			const {children, tooltipCasing, tooltipPreserveCase, tooltipProps, tooltipText, tooltipWidth} = this.props;
+			const {children, tooltipCasing, tooltipProps, tooltipText, tooltipWidth} = this.props;
 
 			if (tooltipText) {
 				const renderedTooltip = (
-					<FloatingLayer open={this.state.showing} scrimType="none" key="tooltipFloatingLayer">
+					<FloatingLayerBase open={this.state.showing} onDismiss={this.hideTooltip} scrimType="none" key="tooltipFloatingLayer">
 						<Tooltip
 							aria-live="off"
 							role="alert"
@@ -415,13 +401,12 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							casing={tooltipCasing}
 							direction={this.state.tooltipDirection}
 							position={this.state.position}
-							preserveCase={tooltipPreserveCase}
 							tooltipRef={this.getTooltipRef}
 							width={tooltipWidth}
 						>
 							{tooltipText}
 						</Tooltip>
-					</FloatingLayer>
+					</FloatingLayerBase>
 				);
 
 				if (tooltipDestinationProp === 'children') {
@@ -456,7 +441,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.tooltipDelay;
 			delete props.tooltipPosition;
 			delete props.tooltipCasing;
-			delete props.tooltipPreserveCase;
 			delete props.tooltipProps;
 			delete props.tooltipText;
 			delete props.tooltipWidth;

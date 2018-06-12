@@ -124,7 +124,6 @@ class FloatingLayerBase extends React.Component {
 
 	componentDidMount () {
 		if (this.props.open) {
-			forwardOpen(null, this.props);
 			this.renderNode();
 		}
 
@@ -139,12 +138,12 @@ class FloatingLayerBase extends React.Component {
 		}
 	}
 
-	componentDidUpdate (prevProps) {
+	componentDidUpdate (prevProps, prevState) {
 		const {open, scrimType} = this.props;
 
 		if (prevProps.open && !open) {
 			forwardClose(null, this.props);
-		} else if (!prevProps.open && open) {
+		} else if (!prevProps.open && open || (open && !prevState.nodeRendered && this.state.nodeRendered)) {
 			forwardOpen(null, this.props);
 		}
 
@@ -158,8 +157,11 @@ class FloatingLayerBase extends React.Component {
 	}
 
 	componentWillUnmount () {
-		const floatingLayer = this.context.getFloatingLayer();
-		floatingLayer.removeChild(this.node);
+		if (this.node) {
+			const floatingLayer = this.context.getFloatingLayer();
+			floatingLayer.removeChild(this.node);
+			this.node = null;
+		}
 
 		off('click', this.handleClick);
 
