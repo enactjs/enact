@@ -35,7 +35,6 @@ storiesOf('Moonstone', module)
 				disabled={boolean('disabled', false)}
 				selected={nullify(boolean('selected', false))}
 				small={boolean('small', false)}
-				tooltipText={nullify(text('tooltipText', ''))}
 			>
 				{select('src', ['', docs, factory, logo], '') + select('icon', ['', ...icons], 'plus') + text('custom icon', '')}
 			</IconButton>
