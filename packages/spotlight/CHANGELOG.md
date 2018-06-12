@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Fixed
 
 - `spotlight/Spottable` to prevent scroll on focus on webOS
+
 ## [2.0.0-beta.7] - 2018-06-11
 
 No significant changes.
