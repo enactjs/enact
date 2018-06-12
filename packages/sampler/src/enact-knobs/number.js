@@ -1,6 +1,6 @@
 import {number as numberKnob} from '@storybook/addon-knobs';
 
-import nullify from '../utils/nullify.js';
+// import nullify from '../utils/nullify.js';
 
 /*
  * Enact `number` is used just like the `number` knob, but instead a `Config` object is passed in to
@@ -20,7 +20,7 @@ const number = (name, Config, opts, preferredValue) => {
 	if (typeof opts === 'number') {
 		// opts was omitted, causing the preferredValue to be the last value. Reassignment dipsy-doodle.
 		preferredValue = opts;
-		opts = null;
+		opts = {};
 	}
 	if (typeof Config === 'number' || typeof Config === 'string' || Config == null) {
 		// Config wasn't set, or was omitted, causing the preferredValue to be the last value. Reassignment dipsy-doodle.
@@ -37,7 +37,7 @@ const number = (name, Config, opts, preferredValue) => {
 
 	// console.log(name + ':', Config.defaultProps);
 
-	return nullify(numberKnob(name, (preferredValue != null ? preferredValue : Config.defaultProps[name]), opts, Config.groupId));
+	return numberKnob(name, (preferredValue != null ? preferredValue : Config.defaultProps[name]), opts, Config.groupId);
 };
 
 export default number;

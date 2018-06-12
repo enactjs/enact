@@ -37,8 +37,8 @@ storiesOf('Moonstone', module)
 				onChange={action('onChange')}
 				onKeyDown={action('onKeyDown')}
 				orientation={select('orientation', prop.orientation, Config)}
-				step={number('step', 1)}
-				unit={text('unit', '')}
+				step={number('step', Config)}
+				unit={text('unit', Config)}
 				width={select('width', prop.width,  Config)}
 				wrap={boolean('wrap', Config)}
 			/>
