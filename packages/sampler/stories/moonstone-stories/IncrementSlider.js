@@ -3,10 +3,9 @@ import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-// import {number} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import {boolean, number, select, text} from '../../src/enact-knobs';
+import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 IncrementSlider.displayName = 'IncrementSlider';

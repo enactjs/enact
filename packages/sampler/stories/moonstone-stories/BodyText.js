@@ -4,7 +4,6 @@ import {storiesOf} from '@storybook/react';
 import {withInfo} from '@storybook/addon-info';
 
 import {boolean, text} from '../../src/enact-knobs';
-import nullify from '../../src/utils/nullify.js';
 
 BodyText.displayName = 'BodyText';
 
