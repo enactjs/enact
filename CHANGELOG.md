@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/VirtualList` to remove adding `data-preventscrollonfocus` since `Spottable` handles it by default.
+
 ## [2.0.0-beta.6] - 2018-06-04
 
 ### Removed
