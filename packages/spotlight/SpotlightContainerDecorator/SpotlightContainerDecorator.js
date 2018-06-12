@@ -12,6 +12,7 @@ import hoc from '@enact/core/hoc';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import {hasPointerMoved} from '../src/pointer';
 import Spotlight from '../src/spotlight';
 
 /**
@@ -233,12 +234,14 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleMouseEnter = (ev) => {
-			Spotlight.setActiveContainer(this.state.id);
+			if (hasPointerMoved(ev.clientX, ev.clientY)) {
+				Spotlight.setActiveContainer(this.state.id);
+			}
 			forwardMouseEnter(ev, this.props);
 		}
 
 		handleMouseLeave = (ev) => {
-			if (this.props.spotlightRestrict !== 'self-only') {
+			if (this.props.spotlightRestrict !== 'self-only' && hasPointerMoved(ev.clientX, ev.clientY)) {
 				const parentContainer = ev.currentTarget.parentNode.closest('[data-spotlight-container]');
 				let activeContainer = Spotlight.getActiveContainer();
 

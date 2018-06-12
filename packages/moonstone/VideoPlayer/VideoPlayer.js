@@ -52,8 +52,8 @@ const SpottableDiv = Touchable(Spottable('div'));
 const RootContainer = SpotlightContainerDecorator('div');
 const ControlsContainer = SpotlightContainerDecorator(
 	{
-		leaveFor: {down:'', up:'', left:'', right:''},
-		enterTo: ''
+		enterTo: '',
+		straightOnly: true
 	},
 	'div'
 );
@@ -605,12 +605,13 @@ const VideoPlayerBase = class extends React.Component {
 			bottomControlsRendered: false,
 			feedbackIconVisible: true,
 			feedbackVisible: false,
-			mediaControlsVisible: false,
-			miniFeedbackVisible: false,
-			mediaSliderVisible: false,
 			infoVisible: false,
+			mediaControlsVisible: false,
+			mediaSliderVisible: false,
+			miniFeedbackVisible: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
+			sourceUnavailable: true,
 			titleVisible: true
 		};
 
@@ -826,6 +827,7 @@ const VideoPlayerBase = class extends React.Component {
 			return {
 				announce,
 				bottomControlsRendered: true,
+				feedbackIconVisible: true,
 				feedbackVisible: true,
 				mediaControlsVisible: true,
 				mediaSliderVisible: true,
@@ -848,6 +850,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedTitleHide();
 		this.stopAutoCloseTimeout();
 		this.setState({
+			feedbackIconVisible: false,
 			feedbackVisible: false,
 			mediaControlsVisible: false,
 			mediaSliderVisible: false,
@@ -987,6 +990,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState({
 			announce: AnnounceState.READY,
 			currentTime: 0,
+			sourceUnavailable: true,
 			proportionPlayed: 0,
 			proportionLoaded: 0
 		});
@@ -1034,7 +1038,6 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleGlobalKeyDown = this.handle(
-		this.activityDetected,
 		forKey('down'),
 		() => (
 			!this.state.mediaControlsVisible &&
@@ -1059,20 +1062,17 @@ const VideoPlayerBase = class extends React.Component {
 			playbackRate: el.playbackRate,
 
 			// Non-standard state computed from properties
-			proportionLoaded: el.proportionLoaded,
-			proportionPlayed: el.proportionPlayed || 0,
 			error: el.error,
 			loading: el.loading,
-			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime
+			proportionLoaded: el.proportionLoaded,
+			proportionPlayed: el.proportionPlayed || 0,
+			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime,
+			// note: `el.loading && this.state.sourceUnavailable == false` is equivalent to `oncanplaythrough`
+			sourceUnavailable: el.loading && this.state.sourceUnavailable || el.error
 		};
 
 		// If there's an error, we're obviously not loading, no matter what the readyState is.
 		if (updatedState.error) updatedState.loading = false;
-
-		updatedState.mediaControlsDisabled = (
-			!updatedState.duration ||
-			updatedState.error
-		);
 
 		const isRewind = this.prevCommand === 'rewind' || this.prevCommand === 'slowRewind';
 		const isForward = this.prevCommand === 'fastForward' || this.prevCommand === 'slowForward';
@@ -1138,6 +1138,10 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	play = () => {
+		if (this.state.sourceUnavailable) {
+			return;
+		}
+
 		this.speedIndex = 0;
 		this.setPlaybackRate(1);
 		this.send('play');
@@ -1154,6 +1158,10 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	pause = () => {
+		if (this.state.sourceUnavailable) {
+			return;
+		}
+
 		this.speedIndex = 0;
 		this.setPlaybackRate(1);
 		this.send('pause');
@@ -1171,7 +1179,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	seek = (timeIndex) => {
-		if (!this.props.seekDisabled) {
+		if (!this.props.seekDisabled && !isNaN(this.video.duration) && !this.state.sourceUnavailable) {
 			this.video.currentTime = timeIndex;
 		} else {
 			forward('onSeekFailed', {}, this.props);
@@ -1188,6 +1196,10 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	jump = (distance) => {
+		if (this.state.sourceUnavailable) {
+			return;
+		}
+
 		this.pulsedPlaybackRate = toUpperCase(new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}));
 		this.pulsedPlaybackState = distance > 0 ? 'jumpForward' : 'jumpBackward';
 		this.showFeedback();
@@ -1204,6 +1216,10 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	fastForward = () => {
+		if (this.state.sourceUnavailable) {
+			return;
+		}
+
 		let shouldResumePlayback = false;
 
 		switch (this.prevCommand) {
@@ -1257,6 +1273,10 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	rewind = () => {
+		if (this.state.sourceUnavailable) {
+			return;
+		}
+
 		const rateForSlowRewind = this.props.playbackRateHash['slowRewind'];
 		let shouldResumePlayback = false,
 			command = 'rewind';
@@ -1568,6 +1588,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState({
 			// If paused is false that means it is playing. We only want to hide on playing.
 			feedbackIconVisible: this.state.paused,
+			feedbackVisible: false,
 			sliderTooltipTime: this.state.currentTime
 		});
 	}
@@ -1605,7 +1626,7 @@ const VideoPlayerBase = class extends React.Component {
 	)
 
 	handleToggleMore = ({showMoreComponents}) => {
-		if (showMoreComponents) {
+		if (!showMoreComponents) {
 			this.startAutoCloseTimeout();	// Restore the timer since we are leaving "more.
 			// Restore the title-hide now that we're finished with "more".
 			this.startDelayedTitleHide();
@@ -1787,7 +1808,7 @@ const VideoPlayerBase = class extends React.Component {
 
 							{noSlider ? null : <MediaSlider
 								backgroundProgress={this.state.proportionLoaded}
-								disabled={disabled}
+								disabled={disabled || this.state.sourceUnavailable}
 								forcePressed={this.state.slider5WayPressed}
 								onBlur={this.handleSliderBlur}
 								onChange={this.onSliderChange}
@@ -1809,13 +1830,13 @@ const VideoPlayerBase = class extends React.Component {
 									thumbnailComponent={thumbnailComponent}
 									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
-									hidden={!this.state.feedbackVisible}
+									hidden={!this.state.feedbackVisible || this.state.sourceUnavailable}
 								/>
 							</MediaSlider>}
 
 							<ComponentOverride
 								component={mediaControlsComponent}
-								mediaDisabled={disabled || this.state.mediaControlsDisabled}
+								mediaDisabled={disabled || this.state.sourceUnavailable}
 								onBackwardButtonClick={this.handleRewind}
 								onClose={this.handleMediaControlsClose}
 								onFastForward={this.handleFastForward}
