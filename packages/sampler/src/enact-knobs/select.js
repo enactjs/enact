@@ -23,7 +23,7 @@ const select = (name, items, Config, selecetdValue) => {
 	const labels = {};
 
 	if (typeof Config === 'string' || Config == null) {
-		// Config wasn't set, or was omitted, causing the selecetdValue to be the last value. Reassignment dipsy-doodle.
+		// Config wasn't set, or was omitted, causing the selectedValue to be the last value. Reassignment dipsy-doodle.
 		selecetdValue = Config;
 		Config = {
 			defaultProps: {}
@@ -36,25 +36,17 @@ const select = (name, items, Config, selecetdValue) => {
 		return key + (Config.defaultProps[name] === label ? defaultString : '');
 	};
 
-	// console.groupCollapsed('enact-select: ' + name);
 	if (items instanceof Array) {
 		// An array of items
 		items.forEach((item) => {
-			// console.log('defaultAppender(item):', defaultAppender(item), '; item:', item);
 			labels[defaultAppender(item)] = item;
 		});
 	} else {
-		// Items is an object (hash, probably?)
+		// Items is an object
 		for (const item in items) {
-			// console.log('defaultAppender(item):', defaultAppender(item), '; item:', item, '; items[item]:', items[item]);
 			labels[defaultAppender(item, items[item])] = items[item];
 		}
 	}
-	// console.log('defaultValue:', defaultValue);
-	// console.log('selecetdValue:', selecetdValue);
-	// console.log('labels:', labels);
-	// console.log('Config:', Config.defaultProps);
-	// console.groupEnd();
 
 	return nullify(selectKnob(name, labels, defaultValue, Config.groupId));
 };

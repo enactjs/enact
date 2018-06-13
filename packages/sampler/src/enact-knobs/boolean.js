@@ -30,8 +30,6 @@ const boolean = (name, Config, preferredValue) => {
 		Config.groupId = Config.displayName;
 	}
 
-	// console.log(name + ':', Config.defaultProps);
-
 	return nullify(booleanKnob(name, (preferredValue != null ? preferredValue : Config.defaultProps[name]), Config.groupId));
 };
 

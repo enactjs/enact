@@ -35,8 +35,6 @@ const number = (name, Config, opts, preferredValue) => {
 		Config.groupId = Config.displayName;
 	}
 
-	// console.log(name + ':', Config.defaultProps);
-
 	return numberKnob(name, (preferredValue != null ? preferredValue : Config.defaultProps[name]), opts, Config.groupId);
 };
 
