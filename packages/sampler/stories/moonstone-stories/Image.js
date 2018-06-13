@@ -1,9 +1,11 @@
-import Image from '@enact/moonstone/Image';
+import Image, {ImageBase, ImageDecorator} from '@enact/moonstone/Image';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
+
+import {object, select} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
 const src = {
 	'hd':  'http://via.placeholder.com/200x200',
@@ -11,6 +13,7 @@ const src = {
 	'uhd': 'http://via.placeholder.com/600x600'
 };
 
+const Config = mergeComponentMetadata('Image', Image, ImageBase, ImageDecorator);
 Image.displayName = 'Image';
 
 storiesOf('Moonstone', module)
@@ -21,8 +24,8 @@ storiesOf('Moonstone', module)
 			text: 'The basic Image'
 		})(() => (
 			<Image
-				src={src}
-				sizing={select('sizing', ['fill', 'fit', 'none'], 'fill')}
+				src={object('src', Config, src)}
+				sizing={select('sizing', ['fill', 'fit', 'none'], Config, 'fill')}
 				onError={action('error')}
 				onLoad={action('loaded')}
 				style={{

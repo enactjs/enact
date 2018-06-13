@@ -6,3 +6,4 @@
 
 export * from './propTables.js';
 export * from './nullify.js';
+export * from './emptify.js';

@@ -4,10 +4,12 @@ import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
+import {boolean, select} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
+
+const Config = mergeComponentMetadata('Scroller', Scroller, UiScroller);
 
 const
 	prop = {
@@ -24,15 +26,15 @@ storiesOf('UI', module)
 			text: 'Basic usage of Scroller'
 		})(() => (
 			<UiScroller
-				direction={select('direction', prop.direction, 'both')}
-				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, 'auto')}
+				direction={select('direction', prop.direction, Config, 'both')}
+				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, Config, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				style={{
 					height: ri.unit(552, 'rem'),
 					width: '100%'
 				}}
-				verticalScrollbar={select('verticalScrollbar', prop.verticalScrollbar, 'auto')}
+				verticalScrollbar={select('verticalScrollbar', prop.verticalScrollbar, Config, 'auto')}
 			>
 				<div
 					style={{
@@ -62,16 +64,16 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of Scroller'
 		})(() => (
 			<Scroller
-				direction={select('direction', prop.direction, 'both')}
-				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
-				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, 'auto')}
+				direction={select('direction', prop.direction, Config, 'both')}
+				focusableScrollbar={boolean('focusableScrollbar', Config)}
+				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, Config, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				style={{
 					height: ri.unit(552, 'rem'),
 					width: '100%'
 				}}
-				verticalScrollbar={select('verticalScrollbar', prop.verticalScrollbar, 'auto')}
+				verticalScrollbar={select('verticalScrollbar', prop.verticalScrollbar, Config, 'auto')}
 			>
 				<div
 					style={{

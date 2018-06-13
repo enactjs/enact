@@ -8,8 +8,8 @@ import {withInfo} from '@storybook/addon-info';
 import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
-IncrementSlider.displayName = 'IncrementSlider';
 const Config = mergeComponentMetadata('IncrementSlider', IncrementSliderBase, IncrementSlider);
+IncrementSlider.displayName = 'IncrementSlider';
 
 storiesOf('Moonstone', module)
 	.add(

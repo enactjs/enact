@@ -6,10 +6,10 @@ import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, number, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
+import {boolean, number, select} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
 const
 	wrapOption = {
@@ -72,6 +72,8 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
+
+const Config = mergeComponentMetadata('VirtualGridList', UiVirtualGridList, VirtualGridList);
 UiVirtualGridList.displayName = 'VirtualGridList';
 
 storiesOf('UI', module)
@@ -82,16 +84,16 @@ storiesOf('UI', module)
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<UiVirtualGridList
-				dataSize={updateDataSize(number('dataSize', defaultDataSize))}
-				direction={select('direction', prop.direction, 'vertical')}
+				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+				direction={select('direction', prop.direction, Config, 'vertical')}
 				itemRenderer={uiRenderItem}
 				itemSize={{
-					minWidth: ri.scale(number('minWidth', 180)),
-					minHeight: ri.scale(number('minHeight', 270))
+					minWidth: ri.scale(number('minWidth', Config, 180)),
+					minHeight: ri.scale(number('minHeight', Config, 270))
 				}}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				spacing={ri.scale(number('spacing', 20))}
+				spacing={ri.scale(number('spacing', Config, 20))}
 				style={{
 					height: ri.unit(549, 'rem')
 				}}
@@ -107,21 +109,21 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<VirtualGridList
-				dataSize={updateDataSize(number('dataSize', defaultDataSize))}
-				direction={select('direction', prop.direction, 'vertical')}
-				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+				direction={select('direction', prop.direction, Config, 'vertical')}
+				focusableScrollbar={boolean('focusableScrollbar', Config)}
 				itemRenderer={renderItem}
 				itemSize={{
-					minWidth: ri.scale(number('minWidth', 180)),
-					minHeight: ri.scale(number('minHeight', 270))
+					minWidth: ri.scale(number('minWidth', Config, 180)),
+					minHeight: ri.scale(number('minHeight', Config, 270))
 				}}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				spacing={ri.scale(number('spacing', 20))}
+				spacing={ri.scale(number('spacing', Config, 20))}
 				style={{
 					height: ri.unit(549, 'rem')
 				}}
-				wrap={wrapOption[select('wrap', ['false', 'true', "'noAnimation'"])]}
+				wrap={wrapOption[select('wrap', ['false', 'true', "'noAnimation'"], Config)]}
 			/>
 		))
 	);

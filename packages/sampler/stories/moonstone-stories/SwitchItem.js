@@ -2,10 +2,12 @@ import React from 'react';
 import {SwitchItem} from '@enact/moonstone/SwitchItem';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
+import {boolean, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
+
+const Config = mergeComponentMetadata('SwitchItem', SwitchItem);
 
 storiesOf('Moonstone', module)
 	.add(
@@ -15,11 +17,11 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of SwitchItem'
 		})(() => (
 			<SwitchItem
-				disabled={boolean('disabled', false)}
-				inline={nullify(boolean('inline', false))}
+				disabled={boolean('disabled', Config)}
+				inline={boolean('inline', Config)}
 				onToggle={action('onToggle')}
 			>
-				{text('children', 'Hello SwitchItem')}
+				{text('children', Config, 'Hello SwitchItem')}
 			</SwitchItem>
 		))
 	);

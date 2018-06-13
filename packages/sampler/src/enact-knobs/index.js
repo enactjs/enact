@@ -6,5 +6,6 @@
 
 export * from './boolean.js';
 export * from './number.js';
+export * from './object.js';
 export * from './select.js';
 export * from './text.js';

@@ -2,11 +2,12 @@ import TimePicker from '@enact/moonstone/TimePicker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
+import {boolean, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
+const Config = mergeComponentMetadata('TimePicker', TimePicker);
 TimePicker.displayName = 'TimePicker';
 
 storiesOf('Moonstone', module)
@@ -17,18 +18,18 @@ storiesOf('Moonstone', module)
 			text: 'The basic TimePicker'
 		})(() => (
 			<TimePicker
-				hourAriaLabel={nullify(text('hourAriaLabel', ''))}
-				hourLabel={nullify(text('hourLabel', ''))}
-				meridiemAriaLabel={nullify(text('meridiemAriaLabel', ''))}
-				meridiemLabel={nullify(text('meridiemLabel', ''))}
-				minuteAriaLabel={nullify(text('minuteAriaLabel', ''))}
-				minuteLabel={nullify(text('minuteLabel', ''))}
-				noLabels={nullify(boolean('noLabels', false))}
-				noneText={text('noneText', 'Nothing Selected')}
+				hourAriaLabel={text('hourAriaLabel', Config, '')}
+				hourLabel={text('hourLabel', Config, '')}
+				meridiemAriaLabel={text('meridiemAriaLabel', Config, '')}
+				meridiemLabel={text('meridiemLabel', Config, '')}
+				minuteAriaLabel={text('minuteAriaLabel', Config, '')}
+				minuteLabel={text('minuteLabel', Config, '')}
+				noLabels={boolean('noLabels', Config)}
+				noneText={text('noneText', Config, 'Nothing Selected')}
 				onChange={action('onChange')}
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}
-				title={text('title', 'Time')}
+				title={text('title', Config, 'Time')}
 			/>
 		))
 	);

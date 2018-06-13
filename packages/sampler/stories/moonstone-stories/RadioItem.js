@@ -2,8 +2,12 @@ import RadioItem from '@enact/moonstone/RadioItem';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
+
+import {boolean, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
+
+const Config = mergeComponentMetadata('RadioItem', RadioItem);
 
 storiesOf('Moonstone', module)
 	.add(
@@ -13,11 +17,11 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of RadioItem'
 		})(() => (
 			<RadioItem
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', Config)}
+				inline={boolean('inline', Config)}
 				onToggle={action('onToggle')}
 			>
-				{text('children', 'Hello RadioItem')}
+				{text('children', Config, 'Hello RadioItem')}
 			</RadioItem>
 		))
 	);

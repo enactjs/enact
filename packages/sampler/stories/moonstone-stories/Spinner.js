@@ -3,11 +3,12 @@ import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
+import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
+const Config = mergeComponentMetadata('Spinner', Spinner);
 Spinner.displayName = 'Spinner';
 
 storiesOf('Moonstone', module)
@@ -65,12 +66,12 @@ storiesOf('Moonstone', module)
 						onClick={action('Inside container events')}
 					/>
 					<Spinner
-						blockClickOn={nullify(select('blockClickOn', [null, 'container', 'screen']))}
-						centered={boolean('centered', false)}
-						scrim={boolean('scrim', false)}
-						transparent={boolean('transparent', false)}
+						blockClickOn={select('blockClickOn', [null, 'container', 'screen'], Config)}
+						centered={boolean('centered', Config)}
+						scrim={boolean('scrim', Config)}
+						transparent={boolean('transparent', Config)}
 					>
-						{text('content', '')}
+						{text('content', Config, '')}
 					</Spinner>
 				</div>
 			</div>

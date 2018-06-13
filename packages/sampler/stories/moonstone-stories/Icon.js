@@ -3,8 +3,10 @@ import Divider from '@enact/moonstone/Divider';
 import iconNames from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
+
+import {boolean, select, text} from '../../src/enact-knobs';
+import emptify from '../../src/utils/emptify.js';
 
 // import icons
 import docs from '../../images/icon-enact-docs.png';
@@ -18,13 +20,13 @@ storiesOf('Moonstone', module)
 			propTablesExclude: [Divider, Icon],
 			text: 'Basic usage of Icon'
 		})(() => {
-			const small = boolean('small', false);
+			const small = boolean('small', Icon);
 			return (
 				<div>
 					<Icon
 						small={small}
 					>
-						{select('src', ['', docs, factory, logo], '') + select('icon', ['', ...iconNames], 'plus') + text('custom icon', '')}
+						{emptify(select('src', ['', docs, factory, logo], Icon, '')) + emptify(select('icon', ['', ...iconNames], Icon, 'plus')) + emptify(text('custom icon', Icon, ''))}
 					</Icon>
 					<br />
 					<br />

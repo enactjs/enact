@@ -1,14 +1,15 @@
-import ExpandableItem from '@enact/moonstone/ExpandableItem';
+import ExpandableItem, {Expandable, ExpandableItemBase} from '@enact/moonstone/ExpandableItem';
 import Icon from '@enact/moonstone/Icon';
 import Item from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
+import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
+const Config = mergeComponentMetadata('ExpandableItem', Expandable, ExpandableItem, ExpandableItemBase);
 ExpandableItem.displayName = 'ExpandableItem';
 Icon.displayName = 'Icon';
 Item.displayName = 'Item';
@@ -21,14 +22,14 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of ExpandableItem'
 		})(() => (
 			<ExpandableItem
-				autoClose={nullify(boolean('autoClose', false))}
-				disabled={boolean('disabled', false)}
-				label={text('label', 'label')}
-				lockBottom={nullify(boolean('lockBottom', false))}
+				autoClose={boolean('autoClose', Config)}
+				disabled={boolean('disabled', Config)}
+				label={text('label', Config, 'label')}
+				lockBottom={boolean('lockBottom', Config)}
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}
-				showLabel={select('showLabel', ['always', 'never', 'auto'], 'auto')}
-				title={text('title', 'title')}
+				showLabel={select('showLabel', ['always', 'never', 'auto'], Config)}
+				title={text('title', Config, 'title')}
 			>
 				<Item>
 					This can be any type of content you might want to
