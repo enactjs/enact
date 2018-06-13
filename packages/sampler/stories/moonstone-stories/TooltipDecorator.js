@@ -1,8 +1,11 @@
 import Button from '@enact/moonstone/Button';
+import TooltipDecorator from '@enact/moonstone/TooltipDecorator';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {number, object, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
+
+const TooltipButton = TooltipDecorator(Button);
 
 const prop = {
 	tooltipPosition: {
@@ -33,7 +36,7 @@ storiesOf('Moonstone', module)
 		'TooltipDecorator',
 		withInfo('The basic TooltipDecorator')(() => (
 			<div style={{textAlign: 'center'}}>
-				<Button
+				<TooltipButton
 					tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 					tooltipDelay={number('tooltipDelay', 500)}
 					tooltipText={text('tooltipText', 'tooltip!')}
@@ -42,7 +45,7 @@ storiesOf('Moonstone', module)
 					tooltipProps={object('tooltipProps', prop.ariaObject)}
 				>
 					hello
-				</Button>
+				</TooltipButton>
 			</div>
 		))
 	);
