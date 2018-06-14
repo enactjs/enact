@@ -230,7 +230,6 @@ class ScrollButtons extends Component {
 		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
 	}
 
-
 	handlePrevHoldPulse = (ev) => {
 		const {onPrevScroll, vertical} = this.props;
 
@@ -247,7 +246,6 @@ class ScrollButtons extends Component {
 		}
 	}
 
-	// Handle up / down / left / right keydown events after Spotlight handled them
 	handleSpotlight = (ev) => {
 		const
 			{rtl, vertical} = this.props,
@@ -279,17 +277,16 @@ class ScrollButtons extends Component {
 	handleKeyDown = (ev) => {
 		const
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
-			{keyCode} = ev,
-			isPreviousScrollButton = (ev.target === this.prevButtonNodeRef);
+			{keyCode} = ev;
 
 		if (isPageUp(keyCode)) {
-			if (!isPreviousScrollButton && !prevButtonDisabled) {
+			if (ev.target === this.nextButtonNodeRef && !prevButtonDisabled) {
 				Spotlight.focus(this.prevButtonNodeRef);
 			} else {
 				this.handlePrevClick(ev);
 			}
 		} else if (isPageDown(keyCode)) {
-			if (isPreviousScrollButton && !nextButtonDisabled) {
+			if (ev.target === this.prevButtonNodeRef && !nextButtonDisabled) {
 				Spotlight.focus(this.nextButtonNodeRef);
 			} else {
 				this.handleNextClick(ev);
