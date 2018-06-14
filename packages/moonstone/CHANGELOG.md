@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Scrollable` to update scroll properly on pointer click
+
 ## [2.0.0-beta.7] - 2018-06-11
 
 ### Removed
