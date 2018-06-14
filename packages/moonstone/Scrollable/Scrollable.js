@@ -201,6 +201,14 @@ class ScrollableBase extends Component {
 		}
 	}
 
+	// Callback for updates that needed new calculation; and scroll to new scroll position based on focused item if needed.
+	updateScroll = () => {
+		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null) {
+			const spotItem = Spotlight.getCurrent();
+			this.calculateAndScroll(spotItem);
+		}
+	}
+
 	// status
 	isWheeling = false
 
@@ -255,10 +263,28 @@ class ScrollableBase extends Component {
 		}
 	}
 
+	calculateAndScroll = (spotItem) => {
+		const positionFn = this.childRef.calculatePositionOnFocus;
+
+		if (spotItem && positionFn) {
+			const lastPos = this.lastScrollPositionOnFocus;
+			let pos;
+
+			// If scroll animation is ongoing, we need to pass last target position to
+			// determine correct scroll position.
+			if (this.uiRef.animator.isAnimating() && lastPos) {
+				pos = positionFn({item: spotItem, scrollPosition: (this.props.direction !== 'horizontal') ? lastPos.top : lastPos.left});
+			} else {
+				pos = positionFn({item: spotItem});
+			}
+
+			this.startScrollOnFocus(pos, spotItem);
+		}
+	}
+
 	onFocus = (ev) => {
 		const
-			{direction} = this.props,
-			{animator, isDragging} = this.uiRef,
+			{isDragging} = this.uiRef,
 			shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
 				this.childRef.shouldPreventScrollByFocus() :
 				false;
@@ -275,22 +301,10 @@ class ScrollableBase extends Component {
 		if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || isDragging)) {
 			const
 				item = ev.target,
-				positionFn = this.childRef.calculatePositionOnFocus,
 				spotItem = Spotlight.getCurrent();
 
-			if (item && item === spotItem && positionFn) {
-				const lastPos = this.lastScrollPositionOnFocus;
-				let pos;
-
-				// If scroll animation is ongoing, we need to pass last target position to
-				// determine correct scroll position.
-				if (animator.isAnimating() && lastPos) {
-					pos = positionFn({item, scrollPosition: (direction !== 'horizontal') ? lastPos.top : lastPos.left});
-				} else {
-					pos = positionFn({item});
-				}
-
-				this.startScrollOnFocus(pos, item);
+			if (item && item === spotItem) {
+				this.calculateAndScroll();
 			}
 		} else if (this.childRef.setLastFocusedIndex) {
 			this.childRef.setLastFocusedIndex(ev.target);
@@ -577,7 +591,8 @@ class ScrollableBase extends Component {
 									onScroll: handleScroll,
 									ref: this.initChildRef,
 									rtl,
-									spotlightId
+									spotlightId,
+									updateCallback: this.updateScroll
 								})}
 							</TouchableDiv>
 							{isVerticalScrollbarVisible ?

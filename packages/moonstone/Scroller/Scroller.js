@@ -53,7 +53,23 @@ class ScrollerBase extends Component {
 		 * @type {Boolean}
 		 * @private
 		 */
-		rtl: PropTypes.bool
+		rtl: PropTypes.bool,
+
+
+		/**
+		 * Callback function to run after [Scroller]{@link moonstone/Scroller.Scroller} updates.
+		 *
+		 * @type {function}
+		 * @private
+		 */
+		updateCallback: PropTypes.func
+	}
+
+	componentDidUpdate () {
+		const {updateCallback} = this.props;
+		if (updateCallback) {
+			updateCallback();
+		}
 	}
 
 	componentWillUnmount () {
@@ -337,6 +353,7 @@ class ScrollerBase extends Component {
 	render () {
 		const props = Object.assign({}, this.props);
 
+		delete props.updateCallback;
 		delete props.initUiChildRef;
 
 		return (
