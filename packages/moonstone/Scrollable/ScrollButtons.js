@@ -200,44 +200,50 @@ class ScrollButtons extends Component {
 		return current === this.prevButtonNodeRef || current === this.nextButtonNodeRef;
 	}
 
-	// Handle page up / page down keydown events
-	handleKeyDown = (ev) => {
-		const
-			{prevButtonDisabled, nextButtonDisabled} = this.state,
-			{keyCode} = ev,
-			isPreviousScrollButton = (ev.target === this.prevButtonNodeRef);
+	handlePrevDown = () => {
+		this.setPressStatus(true);
 
-		if (isPageUp(keyCode)) {
-			if (!isPreviousScrollButton && !prevButtonDisabled) {
-				Spotlight.focus(this.prevButtonNodeRef);
-			} else {
-				this.handleClick(ev);
-			}
-		} else if (isPageDown(keyCode)) {
-			if (isPreviousScrollButton && !nextButtonDisabled) {
-				Spotlight.focus(this.nextButtonNodeRef);
-			} else {
-				this.handleClick(ev);
-			}
+		if (this.announce) {
+			const {rtl, vertical} = this.props;
+			this.announce(vertical && $L('UP') || rtl && $L('RIGHT') || $L('LEFT'));
 		}
 	}
 
-	// Handle up / down / left / right keydown events
-	handleDown = (ev) => {
-		const
-			direction = getDirection(ev.keyCode),
-			isPreviousScrollButton = (ev.target === this.prevButtonNodeRef);
-
+	handleNextDown = () => {
 		this.setPressStatus(true);
 
-		if (direction && this.announce) {
+		if (this.announce) {
 			const {rtl, vertical} = this.props;
+			this.announce(vertical && $L('DOWN') || rtl && $L('LEFT') || $L('RIGHT'));
+		}
+	}
 
-			if (isPreviousScrollButton === true) {
-				this.announce(vertical && $L('UP') || rtl && $L('RIGHT') || $L('LEFT'));
-			} else if (isPreviousScrollButton === false) {
-				this.announce(vertical && $L('DOWN') || rtl && $L('LEFT') || $L('RIGHT'));
-			}
+	handlePrevClick = (ev) => {
+		const {onPrevScroll, vertical} = this.props;
+
+		onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
+	}
+
+	handleNextClick = (ev) => {
+		const {onNextScroll, vertical} = this.props;
+
+		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
+	}
+
+
+	handlePrevHoldPulse = (ev) => {
+		const {onPrevScroll, vertical} = this.props;
+
+		if (!this.ignoreMode) {
+			onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
+		}
+	}
+
+	handleNextHoldPulse = (ev) => {
+		const {onNextScroll, vertical} = this.props;
+
+		if (!this.ignoreMode) {
+			onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
 		}
 	}
 
@@ -265,25 +271,30 @@ class ScrollButtons extends Component {
 		}
 	}
 
-	handleHoldPulse = (isPreviousScrollButton) => (ev) => {
-		const {onNextScroll, onPrevScroll, vertical} = this.props;
-
-		if (!this.ignoreMode) {
-			(isPreviousScrollButton ? onPrevScroll : onNextScroll)({...ev, isPreviousScrollButton, isVerticalScrollBar: vertical});
-		}
-	}
-
-	handleUp = (ev) => {
+	handleUp = () => {
 		this.setPressStatus(false);
 		this.setIgnoreMode(false);
 	}
 
-	handleClick = (ev) => {
+	handleKeyDown = (ev) => {
 		const
-			{onNextScroll, onPrevScroll, vertical} = this.props,
+			{prevButtonDisabled, nextButtonDisabled} = this.state,
+			{keyCode} = ev,
 			isPreviousScrollButton = (ev.target === this.prevButtonNodeRef);
 
-		(isPreviousScrollButton? onPrevScroll : onNextScroll)({...ev, isPreviousScrollButton, isVerticalScrollBar: vertical});
+		if (isPageUp(keyCode)) {
+			if (!isPreviousScrollButton && !prevButtonDisabled) {
+				Spotlight.focus(this.prevButtonNodeRef);
+			} else {
+				this.handlePrevClick(ev);
+			}
+		} else if (isPageDown(keyCode)) {
+			if (isPreviousScrollButton && !nextButtonDisabled) {
+				Spotlight.focus(this.nextButtonNodeRef);
+			} else {
+				this.handleNextClick(ev);
+			}
+		}
 	}
 
 	initAnnounceRef = (ref) => {
@@ -318,9 +329,9 @@ class ScrollButtons extends Component {
 				data-spotlight-overflow="ignore"
 				direction={vertical ? 'up' : 'left'}
 				disabled={disabled || prevButtonDisabled}
-				onClick={this.handleClick}
-				onDown={this.handleDown}
-				onHoldPulse={this.handleHoldPulse(true)}
+				onClick={this.handlePrevClick}
+				onDown={this.handlePrevDown}
+				onHoldPulse={this.handlePrevHoldPulse}
 				onKeyDown={this.handleKeyDown}
 				onSpotlightDown={this.handleSpotlight}
 				onSpotlightLeft={this.handleSpotlight}
@@ -337,9 +348,9 @@ class ScrollButtons extends Component {
 				data-spotlight-overflow="ignore"
 				direction={vertical ? 'down' : 'right'}
 				disabled={disabled || nextButtonDisabled}
-				onClick={this.handleClick}
-				onDown={this.handleDown}
-				onHoldPulse={this.handleHoldPulse(false)}
+				onClick={this.handleNextClick}
+				onDown={this.handleNextDown}
+				onHoldPulse={this.handleNextHoldPulse}
 				onKeyDown={this.handleKeyDown}
 				onSpotlightLeft={this.handleSpotlight}
 				onSpotlightRight={this.handleSpotlight}
