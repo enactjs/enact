@@ -1,25 +1,28 @@
 /**
- * Exports the {@link moonstone/Divider.Divider} component.
+ * Provides Moonstone-themed divider components and behaviors.
  *
  * @module moonstone/Divider
+ * @exports Divider
+ * @exports DividerBase
+ * @exports DividerDecorator
  */
 
 import kind from '@enact/core/kind';
-import Uppercase from '@enact/i18n/Uppercase';
-import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
+import Uppercase from '@enact/i18n/Uppercase';
+import compose from 'ramda/src/compose';
+import React from 'react';
 
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import css from './Divider.less';
 
-const MarqueeH3 = Uppercase(MarqueeDecorator('h3'));
+const MarqueeH3 = MarqueeDecorator('h3');
 
 /**
- * {@link moonstone/Divider.Divider} is a simply styled component that may be used as a separator
- * between groups of components.
+ * A simply styled component that may be used as a separator between groups of components.
  *
  * @class Divider
  * @memberof moonstone/Divider
@@ -51,6 +54,16 @@ const DividerBase = kind({
 		children: PropTypes.string,
 
 		/**
+		 * Determines what triggers the header content to start its animation. Valid values are
+		 * `'hover'` and `'render'`. The default is `'render'`.
+		 *
+		 * @type {String}
+		 * @default 'render'
+		 * @public
+		 */
+		marqueeOn: PropTypes.oneOf(['hover', 'render']),
+
+		/**
 		 * The size of the spacing around the divider.
 		 *
 		 * * `'normal'` (default) spacing is slightly larger than the standard spotlight spacing.
@@ -72,6 +85,7 @@ const DividerBase = kind({
 
 	defaultProps: {
 		casing: 'word',
+		marqueeOn: 'render',
 		spacing: 'normal'
 	},
 
@@ -84,21 +98,43 @@ const DividerBase = kind({
 		className: ({spacing, styler}) => styler.append(spacing)
 	},
 
-	render: ({children, ...rest}) => {
-		delete rest.spacing;
+	render: (props) => {
+		delete props.spacing;
 
 		return (
-			// TODO: change to `marqueeOn="render"`
-			<MarqueeH3 marqueeOn="hover" {...rest}>{children}</MarqueeH3>
+			<MarqueeH3 {...props} />
 		);
 	}
 });
 
-const Divider = Pure(
-	Skinnable(
-		DividerBase
-	)
+/**
+ * Moonstone-specific divider behaviors to apply to [Divider]{@link moonstone/Divider.DividerBase}.
+ *
+ * @hoc
+ * @memberof moonstone/Divider
+ * @mixes i18n/Uppercase.Uppercase
+ * @mixes ui/Skinnable.Skinnable
+ */
+const DividerDecorator = compose(
+	Pure,
+	Uppercase,
+	Skinnable
 );
 
+/**
+ * A Moonstone-styled divider with built-in support for uppercasing, and marqueed text.
+ *
+ * @class Divider
+ * @memberof moonstone/Divider
+ * @mixes moonstone/Divider.DividerDecorator
+ * @ui
+ * @public
+ */
+const Divider = DividerDecorator(DividerBase);
+
 export default Divider;
-export {Divider, DividerBase};
+export {
+	Divider,
+	DividerBase,
+	DividerDecorator
+};
