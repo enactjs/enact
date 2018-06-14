@@ -7,12 +7,12 @@
  * @exports DividerDecorator
  */
 
-import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import Uppercase from '@enact/i18n/Uppercase';
 import compose from 'ramda/src/compose';
+import defaultProps from 'recompose/defaultProps';
 import React from 'react';
 
 import {MarqueeDecorator} from '../Marquee';
@@ -92,51 +92,16 @@ const DividerBase = kind({
  * @mixes moonstone/MarqueeDecorator.MarqueeDecorator
  * @mixes ui/Skinnable.Skinnable
  */
-const DividerDecorator = hoc((config, Wrapped) => {
-	const DividerDecoratorHOC = compose(
-		Pure,
-		Uppercase,
-		MarqueeDecorator,
-		Skinnable
-	)(Wrapped);
-
-	return kind({
-		name: 'DividerDecoratorHOC',
-
-		propTypes: /** @lends moonstone/Divider.DividerDecoratorHOC.prototype */ {
-			/**
-			 * Configures how the `children` string will be capitalized. By default, each word is capitalized.
-			 *
-			 * @see i18n/Uppercase#casing
-			 * @type {String}
-			 * @default 'word'
-			 * @public
-			 */
-			casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
-
-			/**
-			 * Determines what triggers the header content to start its animation. Valid values are
-			 * `'hover'` and `'render'`. The default is `'render'`.
-			 *
-			 * @type {String}
-			 * @default 'render'
-			 * @public
-			 */
-			marqueeOn: PropTypes.oneOf(['hover', 'render'])
-		},
-
-		defaultProps: {
-			casing: 'word',
-			marqueeOn: 'render'
-		},
-
-		render: (props) => {
-			return (
-				<DividerDecoratorHOC {...props} />
-			);
-		}
-	});
-});
+const DividerDecorator = compose(
+	defaultProps({
+		casing: 'word',
+		marqueeOn: 'render'
+	}),
+	Pure,
+	Uppercase,
+	MarqueeDecorator,
+	Skinnable
+);
 
 /**
  * A Moonstone-styled divider with built-in support for uppercasing, and marqueed text.
