@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/VirtualList` to allow scrolling on focus by default on webOS
+
 ## [2.0.0-beta.7] - 2018-06-11
 
 ### Added
