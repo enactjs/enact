@@ -7,6 +7,7 @@
  * @exports DividerDecorator
  */
 
+import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
@@ -19,14 +20,11 @@ import Skinnable from '../Skinnable';
 
 import css from './Divider.less';
 
-const MarqueeH3 = MarqueeDecorator('h3');
-
 /**
  * A simply styled component that may be used as a separator between groups of components.
  *
  * @class Divider
  * @memberof moonstone/Divider
- * @mixes moonstone/MarqueeDecorator.MarqueeDecorator
  * @ui
  * @public
  */
@@ -35,33 +33,13 @@ const DividerBase = kind({
 
 	propTypes: /** @lends moonstone/Divider.Divider.prototype */ {
 		/**
-		 * Configures how the `children` string will be capitalized. By default, each word is capitalized.
-		 *
-		 * @see i18n/Uppercase#casing
-		 * @type {String}
-		 * @default 'word'
-		 * @public
-		 */
-		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
-
-		/**
 		 * The content of the divider. A divider with no children (text content) will render simply
 		 * as a horizontal line, with even spacing above and below.
 		 *
-		 * @type {String}
+		 * @type {Node}
 		 * @public
 		 */
-		children: PropTypes.string,
-
-		/**
-		 * Determines what triggers the header content to start its animation. Valid values are
-		 * `'hover'` and `'render'`. The default is `'render'`.
-		 *
-		 * @type {String}
-		 * @default 'render'
-		 * @public
-		 */
-		marqueeOn: PropTypes.oneOf(['hover', 'render']),
+		children: PropTypes.node,
 
 		/**
 		 * The size of the spacing around the divider.
@@ -84,8 +62,6 @@ const DividerBase = kind({
 	},
 
 	defaultProps: {
-		casing: 'word',
-		marqueeOn: 'render',
 		spacing: 'normal'
 	},
 
@@ -102,7 +78,7 @@ const DividerBase = kind({
 		delete props.spacing;
 
 		return (
-			<MarqueeH3 {...props} />
+			<h3 {...props} />
 		);
 	}
 });
@@ -113,13 +89,54 @@ const DividerBase = kind({
  * @hoc
  * @memberof moonstone/Divider
  * @mixes i18n/Uppercase.Uppercase
+ * @mixes moonstone/MarqueeDecorator.MarqueeDecorator
  * @mixes ui/Skinnable.Skinnable
  */
-const DividerDecorator = compose(
-	Pure,
-	Uppercase,
-	Skinnable
-);
+const DividerDecorator = hoc((config, Wrapped) => {
+	const DividerDecoratorHOC = compose(
+		Pure,
+		Uppercase,
+		MarqueeDecorator,
+		Skinnable
+	)(Wrapped);
+
+	return kind({
+		name: 'DividerDecoratorHOC',
+
+		propTypes: /** @lends moonstone/Divider.DividerDecoratorHOC.prototype */ {
+			/**
+			 * Configures how the `children` string will be capitalized. By default, each word is capitalized.
+			 *
+			 * @see i18n/Uppercase#casing
+			 * @type {String}
+			 * @default 'word'
+			 * @public
+			 */
+			casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
+
+			/**
+			 * Determines what triggers the header content to start its animation. Valid values are
+			 * `'hover'` and `'render'`. The default is `'render'`.
+			 *
+			 * @type {String}
+			 * @default 'render'
+			 * @public
+			 */
+			marqueeOn: PropTypes.oneOf(['hover', 'render'])
+		},
+
+		defaultProps: {
+			casing: 'word',
+			marqueeOn: 'render'
+		},
+
+		render: (props) => {
+			return (
+				<DividerDecoratorHOC {...props} />
+			);
+		}
+	});
+});
 
 /**
  * A Moonstone-styled divider with built-in support for uppercasing, and marqueed text.
