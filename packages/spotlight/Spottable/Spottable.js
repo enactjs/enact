@@ -276,6 +276,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		forwardAndResetLastSelectTarget = (ev, props) => {
 			const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
+
+			// bail early for non-enter keyup to avoid clearing lastSelectTarget prematurely
+			if (!is('enter', ev.keyCode)) {
+				return notPrevented;
+			}
+
 			const allow = lastSelectTarget === this;
 			selectCancelled = false;
 			lastSelectTarget = null;
