@@ -151,12 +151,12 @@ class ScrollButtons extends Component {
 		if (shouldIgnore !== this.ignoreMode) {
 			if (shouldIgnore) {
 				this.ignoreMode = true;
-				on('mousemove', this.handleUp);
-				on('mouseup', this.handleUp);
+				on('mousemove', this.onUp);
+				on('mouseup', this.onUp);
 			} else {
 				this.ignoreMode = false;
-				off('mousemove', this.handleUp);
-				off('mouseup', this.handleUp);
+				off('mousemove', this.onUp);
+				off('mouseup', this.onUp);
 			}
 		}
 	}
@@ -200,7 +200,7 @@ class ScrollButtons extends Component {
 		return current === this.prevButtonNodeRef || current === this.nextButtonNodeRef;
 	}
 
-	handlePrevDown = () => {
+	onDownPrev = () => {
 		this.setPressStatus(true);
 
 		if (this.announce) {
@@ -209,7 +209,7 @@ class ScrollButtons extends Component {
 		}
 	}
 
-	handleNextDown = () => {
+	onDownNext = () => {
 		this.setPressStatus(true);
 
 		if (this.announce) {
@@ -218,19 +218,19 @@ class ScrollButtons extends Component {
 		}
 	}
 
-	handlePrevClick = (ev) => {
+	onClickPrev = (ev) => {
 		const {onPrevScroll, vertical} = this.props;
 
 		onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
 	}
 
-	handleNextClick = (ev) => {
+	onClickNext = (ev) => {
 		const {onNextScroll, vertical} = this.props;
 
 		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
 	}
 
-	handlePrevHoldPulse = (ev) => {
+	onHoldPulsePrev = (ev) => {
 		const {onPrevScroll, vertical} = this.props;
 
 		if (!this.ignoreMode) {
@@ -238,7 +238,7 @@ class ScrollButtons extends Component {
 		}
 	}
 
-	handleNextHoldPulse = (ev) => {
+	onHoldPulseNext = (ev) => {
 		const {onNextScroll, vertical} = this.props;
 
 		if (!this.ignoreMode) {
@@ -246,7 +246,7 @@ class ScrollButtons extends Component {
 		}
 	}
 
-	handleSpotlight = (ev) => {
+	onSpotlight = (ev) => {
 		const
 			{rtl, vertical} = this.props,
 			{keyCode, target} = ev,
@@ -269,28 +269,32 @@ class ScrollButtons extends Component {
 		}
 	}
 
-	handleUp = () => {
+	onUp = () => {
 		this.setPressStatus(false);
 		this.setIgnoreMode(false);
 	}
 
-	handleKeyDown = (ev) => {
+	onKeyDownPrev = (ev) => {
 		const
-			{prevButtonDisabled, nextButtonDisabled} = this.state,
+			{nextButtonDisabled} = this.state,
 			{keyCode} = ev;
 
-		if (isPageUp(keyCode)) {
-			if (ev.target === this.nextButtonNodeRef && !prevButtonDisabled) {
-				Spotlight.focus(this.prevButtonNodeRef);
-			} else {
-				this.handlePrevClick(ev);
-			}
+		if (isPageDown(keyCode) && !nextButtonDisabled) {
+			Spotlight.focus(this.nextButtonNodeRef);
+		} else if (isPageUp(keyCode)) {
+			this.onClickPrev(ev);
+		}
+	}
+
+	onKeyDownNext = (ev) => {
+		const
+			{prevButtonDisabled} = this.state,
+			{keyCode} = ev;
+
+		if (isPageUp(keyCode) && !prevButtonDisabled) {
+			Spotlight.focus(this.prevButtonNodeRef);
 		} else if (isPageDown(keyCode)) {
-			if (ev.target === this.prevButtonNodeRef && !nextButtonDisabled) {
-				Spotlight.focus(this.nextButtonNodeRef);
-			} else {
-				this.handleNextClick(ev);
-			}
+			this.onClickNext(ev);
 		}
 	}
 
@@ -322,18 +326,18 @@ class ScrollButtons extends Component {
 		return [
 			<ScrollButton
 				aria-label={rtl && !vertical ? nextButtonAriaLabel : previousButtonAriaLabel}
-				key="prevButton"
 				data-spotlight-overflow="ignore"
 				direction={vertical ? 'up' : 'left'}
 				disabled={disabled || prevButtonDisabled}
-				onClick={this.handlePrevClick}
-				onDown={this.handlePrevDown}
-				onHoldPulse={this.handlePrevHoldPulse}
-				onKeyDown={this.handleKeyDown}
-				onSpotlightDown={this.handleSpotlight}
-				onSpotlightLeft={this.handleSpotlight}
-				onSpotlightRight={this.handleSpotlight}
-				onUp={this.handleUp}
+				key="prevButton"
+				onClick={this.onClickPrev}
+				onDown={this.onDownPrev}
+				onHoldPulse={this.onHoldPulsePrev}
+				onKeyDown={this.onKeyDownPrev}
+				onSpotlightDown={this.onSpotlight}
+				onSpotlightLeft={this.onSpotlight}
+				onSpotlightRight={this.onSpotlight}
+				onUp={this.onUp}
 				ref={this.initPrevButtonRef}
 			>
 				{prevIcon}
@@ -341,18 +345,18 @@ class ScrollButtons extends Component {
 			thumbRenderer(),
 			<ScrollButton
 				aria-label={rtl && !vertical ? previousButtonAriaLabel : nextButtonAriaLabel}
-				key="nextButton"
 				data-spotlight-overflow="ignore"
 				direction={vertical ? 'down' : 'right'}
 				disabled={disabled || nextButtonDisabled}
-				onClick={this.handleNextClick}
-				onDown={this.handleNextDown}
-				onHoldPulse={this.handleNextHoldPulse}
-				onKeyDown={this.handleKeyDown}
-				onSpotlightLeft={this.handleSpotlight}
-				onSpotlightRight={this.handleSpotlight}
-				onSpotlightUp={this.handleSpotlight}
-				onUp={this.handleUp}
+				key="nextButton"
+				onClick={this.onClickNext}
+				onDown={this.onDownNext}
+				onHoldPulse={this.onHoldPulseNext}
+				onKeyDown={this.onKeyDownNext}
+				onSpotlightLeft={this.onSpotlight}
+				onSpotlightRight={this.onSpotlight}
+				onSpotlightUp={this.onSpotlight}
+				onUp={this.onUp}
 				ref={this.initNextButtonRef}
 			>
 				{nextIcon}
