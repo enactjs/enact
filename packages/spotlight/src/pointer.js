@@ -44,6 +44,20 @@ let _pointerX = null;
 let _pointerY = null;
 
 /**
+ * Returns whether or not the current pointer position matches the provided coordinates
+ *
+ * @param   {Number} x Pointer position relative to the left side of the viewport
+ * @param   {Number} y Pointer position relative to the top side of the viewport
+ *
+ * @returns {Boolean}   `true` if the position was changed
+ * @memberof spotlight/pointer
+ * @private
+ */
+const hasPointerMoved = (x, y) => (
+	x !== _pointerX || y !== _pointerY
+);
+
+/**
  * Updates the cached pointer position, updating the current pointer mode when the position has
  * changed.
  *
@@ -56,7 +70,7 @@ let _pointerY = null;
  */
 const updatePointerPosition = (x, y) => {
 	// Chrome emits mousemove on scroll, but client coordinates do not change.
-	if (x !== _pointerX || y !== _pointerY) {
+	if (hasPointerMoved(x, y)) {
 		setPointerMode(true);
 		_pointerX = x;
 		_pointerY = y;
@@ -147,6 +161,7 @@ const notifyKeyDown = (keyCode, callback) => {
 export {
 	getLastPointerPosition,
 	getPointerMode,
+	hasPointerMoved,
 	notifyKeyDown,
 	notifyPointerMove,
 	setPointerMode,

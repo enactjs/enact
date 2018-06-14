@@ -3,7 +3,7 @@
  * `React.Component`s. The default export, `handle()`, generates an event handler function from a
  * set of input functions. The input functions either process or filter the event. If an input
  * function returns `true`, `handle()` will continue processing the event by calling the next input
- * function in the chain. If it returns `false` (or any falsey value like `null` or `undefined`),
+ * function in the chain. If it returns `false` (or any falsy value like `null` or `undefined`),
  * the event handling chain stops at that input function.
  *
  * ```
@@ -124,7 +124,7 @@ const decorateHandleFunction = (fn) => {
 
 /**
  * Allows generating event handlers by chaining input functions to filter or short-circuit the
- * handling flow. Any input function that returns a falsey value will stop the chain.
+ * handling flow. Any input function that returns a falsy value will stop the chain.
  *
  * The returned handler function has a `finally()` member that accepts a function and returns a new
  * handler function. The accepted function is called once the original handler completes regardless

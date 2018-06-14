@@ -104,15 +104,6 @@ const IncrementSliderBase = kind({
 		backgroundProgress: PropTypes.number,
 
 		/**
-		 * The custom value or component for the tooltip. If [tooltip]{@link moonstone/Slider.SliderBase#tooltip},
-		 * is `true`, then it will use built-in tooltip with given a string. If `false`, a custom tooltip
-		 * component, which follows the knob, may be used instead.
-		 *
-		 * @type {String|Node}
-		 */
-		children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-
-		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
 		 *
@@ -463,7 +454,6 @@ const IncrementSliderBase = kind({
 	render: ({active,
 		'aria-hidden': ariaHidden,
 		backgroundProgress,
-		children,
 		css,
 		decrementAriaLabel,
 		decrementDisabled,
@@ -538,9 +528,7 @@ const IncrementSliderBase = kind({
 					step={step}
 					tooltip={tooltip}
 					value={value}
-				>
-					{children}
-				</Slider>
+				/>
 				<IncrementSliderButton
 					aria-controls={!decrementDisabled ? id : null}
 					aria-hidden={ariaHidden}

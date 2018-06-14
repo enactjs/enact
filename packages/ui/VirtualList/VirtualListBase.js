@@ -631,7 +631,6 @@ const VirtualListBaseFactory = (type) => {
 			this.cc[key] = React.cloneElement(itemElement, {
 				...componentProps,
 				className: classNames(css.listItem, itemElement.props.className),
-				['data-preventscrollonfocus']: true, // Added this attribute to prevent scroll on focus by browser
 				style: {...itemElement.props.style, ...(this.composeStyle(...rest))}
 			});
 		}

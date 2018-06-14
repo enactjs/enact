@@ -25,7 +25,8 @@ const prop = {
 		'': 'None',
 		'https://picsum.photos/1280/720?image=1080': 'Strawberries',
 		'https://picsum.photos/1280/720?image=1063': 'Tunnel',
-		'https://picsum.photos/1280/720?image=930': 'Mountains'
+		'https://picsum.photos/1280/720?image=930': 'Mountains',
+		'imagenotfound.png': 'Bad Image Source'
 	},
 	text: [
 		'',

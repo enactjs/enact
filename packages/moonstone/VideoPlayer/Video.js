@@ -21,6 +21,14 @@ const VideoBase = class extends React.Component {
 	static displayName = 'Video'
 
 	static propTypes = /** @lends moonstone/VideoPlayer.Video.prototype */ {
+		/**
+		 * When `true`, automatically play the video after it has loaded
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		autoPlay: PropTypes.bool,
 
 		/**
 		 * Video component to use. The default (`'video'`) renders an `HTMLVideoElement`. Custom
@@ -51,15 +59,6 @@ const VideoBase = class extends React.Component {
 		 * @public
 		 */
 		mediaComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element]),
-
-		/**
-		 * Disable automatically playing the video after it has loaded
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noAutoPlay: PropTypes.bool,
 
 		/**
 		 * The video source to be preloaded. Expects a `<source>` node.
@@ -167,7 +166,7 @@ const VideoBase = class extends React.Component {
 	}
 
 	autoPlay () {
-		if (this.props.noAutoPlay) return;
+		if (!this.props.autoPlay) return;
 
 		this.video.play();
 	}
@@ -186,7 +185,6 @@ const VideoBase = class extends React.Component {
 
 	render () {
 		const {
-			noAutoPlay,
 			preloadSource,
 			source,
 			mediaComponent,
@@ -208,7 +206,6 @@ const VideoBase = class extends React.Component {
 				{sourceKey ? (
 					<Media
 						{...rest}
-						autoPlay={!noAutoPlay}
 						className={css.video}
 						controls={false}
 						key={sourceKey}

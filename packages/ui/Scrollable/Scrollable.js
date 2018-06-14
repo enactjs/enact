@@ -105,7 +105,6 @@ class ScrollableBase extends Component {
 		 * - {node} - Node to scroll into view
 		 * - {animate} - When `true`, scroll occurs with animation. When `false`, no
 		 *   animation occurs.
-		 * - {indexToFocus} - Deprecated: Use `focus` instead.
 		 * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
 		 *   by `index` or `node`.
 		 * > Note: Only specify one of: `position`, `align`, `index` or `node`

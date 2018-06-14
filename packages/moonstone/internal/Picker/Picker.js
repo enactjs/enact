@@ -17,6 +17,7 @@ import {validateRange, validateStepped} from '../validators';
 import IdProvider from '../IdProvider';
 import $L from '../$L';
 import PickerButton from './PickerButton';
+import SpottablePicker from './SpottablePicker';
 
 import css from './Picker.less';
 
@@ -865,10 +866,12 @@ const PickerBase = class extends React.Component {
 	}
 };
 
-const Picker = IdProvider(
-	{generateProp: null, prefix: 'p_'},
-	Skinnable(
-		PickerBase
+const Picker = SpottablePicker(
+	IdProvider(
+		{generateProp: null, prefix: 'p_'},
+		Skinnable(
+			PickerBase
+		)
 	)
 );
 
