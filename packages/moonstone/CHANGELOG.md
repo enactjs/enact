@@ -2,6 +2,11 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [Unreleased]
+
+### Fixed
+- `moonstone/VideoPlayer` to prevent updating state when the source is changed to the preload source, but the current preload source is the same
+
 ## [2.0.0-beta.7] - 2018-06-11
 
 ### Removed
