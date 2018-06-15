@@ -582,7 +582,7 @@ class ScrollableBaseNative extends Component {
 			const
 				viewportBounds = this.uiRef.containerRef.getBoundingClientRect(),
 				spotItemBounds = spotItem.getBoundingClientRect(),
-				nodes = this.uiRef.containerRef.querySelectorAll('[data-index]'),
+				nodes = Spotlight.getSpottableDescendants(this.uiRef.containerRef.dataset.spotlightId),
 				first = this.voiceControlDirection === 'vertical' ? 'top' : 'left',
 				last = this.voiceControlDirection === 'vertical' ? 'bottom' : 'right';
 
