@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/Divider` property `marqueeOn` default value to `render`
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualList`, and `moonstone/VirtualList.VirtualGridList` scrollbar button to move a previous or next page when pressing a page up or down key instead of releasing it
 
 ## [2.0.0-beta.7] - 2018-06-11
 
