@@ -5,6 +5,7 @@
  */
 
 import kind from '@enact/core/kind';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Changeable from '@enact/ui/Changeable';
 import Group from '@enact/ui/Group';
 import Pure from '@enact/ui/internal/Pure';
@@ -88,6 +89,7 @@ const DaySelectorBase = kind({
 const DaySelectorDecorator = compose(
 	Pure,
 	Changeable({change: 'onSelect', prop: 'selected'}),
+	I18nContextDecorator({localeProp: 'locale'}),
 	Decorator,
 	Skinnable
 );

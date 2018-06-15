@@ -1,6 +1,5 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import {contextTypes} from '@enact/core/internal/PubSub';
 import {coerceArray} from '@enact/core/util';
 import ilib from '@enact/i18n';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
@@ -33,7 +32,7 @@ const SELECTED_DAY_TYPES = {
 const DaySelectorDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 
-		static displayName = 'DaySelector'
+		static displayName = 'DaySelectorDecorator'
 
 		static propTypes = /** @lends moonstone/DaySelector.DaySelectorDecorator.prototype */ {
 			/**
@@ -90,6 +89,8 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			 */
 			everyWeekendText: PropTypes.string,
 
+			locale: PropTypes.string,
+
 			/**
 			 * Called when an item is selected. The first parameter will be an object containing a
 			 * `selected` member, containing the array of numbers representing the selected days, zero
@@ -119,8 +120,6 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			title: PropTypes.any
 		}
 
-		static contextTypes = contextTypes
-
 		static defaultProps = {
 			dayNameLength: 'long',
 			disabled: false
@@ -137,35 +136,19 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 				// default strings for long and short day strings
 				fullDayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
 				abbreviatedDayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-				...this.getLocaleState(props.dayNameLength)
+				...this.getLocaleState(props.dayNameLength, props.locale)
 			};
 		}
 
-		componentDidMount () {
-			if (this.context.Subscriber) {
-				this.context.Subscriber.subscribe('i18n', this.handleLocaleChange);
-			}
-		}
-
 		componentWillReceiveProps (nextProps) {
-			if (this.props.dayNameLength !== nextProps.dayNameLength) {
-				this.setState(this.getLocaleState(nextProps.dayNameLength));
+			const {dayNameLength, locale} = nextProps;
+			if (this.props.dayNameLength !== dayNameLength || this.props.locale !== locale) {
+				this.setState(this.getLocaleState(dayNameLength, locale));
 			}
-		}
-
-		componentWillUnmount () {
-			if (this.context.Subscriber) {
-				this.context.Subscriber.unsubscribe('i18n', this.handleLocaleChange);
-			}
-		}
-
-		handleLocaleChange = () => {
-			this.setState(({locale}) => this.getLocaleState(this.props.dayNameLength, locale));
 		}
 
 		getLocaleState (dayNameLength, locale) {
-			const newLocale = ilib.getLocale();
-			if (locale === newLocale || typeof window === 'undefined') return null;
+			if (typeof window === 'undefined') return null;
 
 			const df = new DateFmt({length: 'full'});
 			const sdf = new DateFmt({length: dayNameLength});
@@ -175,7 +158,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			const firstDayOfWeek = li.getFirstDayOfWeek();
 
 			const state = {
-				locale: newLocale,
+				locale,
 				fullDayNames: [],
 				abbreviatedDayNames: [],
 				firstDayOfWeek
@@ -304,6 +287,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			delete rest.everyDayText;
 			delete rest.everyWeekdayText;
 			delete rest.everyWeekendText;
+			delete rest.locale;
 
 			return (
 				<Wrapped

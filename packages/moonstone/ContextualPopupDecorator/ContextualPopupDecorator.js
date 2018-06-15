@@ -6,19 +6,20 @@
  * @module moonstone/ContextualPopupDecorator
  */
 
-import {extractAriaProps} from '@enact/core/util';
-import FloatingLayer from '@enact/ui/FloatingLayer';
-import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
 import {handle, forProp, forKey, forward, stop} from '@enact/core/handle';
-import React from 'react';
-import PropTypes from 'prop-types';
-import ri from '@enact/ui/resolution';
+import hoc from '@enact/core/hoc';
+import {extractAriaProps} from '@enact/core/util';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import {Subscription} from '@enact/core/internal/PubSub';
+import FloatingLayer from '@enact/ui/FloatingLayer';
+import ri from '@enact/ui/resolution';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import {ContextualPopup} from './ContextualPopup';
+
 import css from './ContextualPopupDecorator.less';
 
 /**
@@ -585,11 +586,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 	};
 
-	return Subscription(
-		{
-			channels: ['i18n'],
-			mapMessageToProps: (key, {rtl}) => ({rtl})
-		},
+	return I18nContextDecorator(
+		{rtlProp: 'rtl'},
 		Decorator
 	);
 });
