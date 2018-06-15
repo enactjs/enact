@@ -246,6 +246,17 @@ class ScrollButtons extends Component {
 		}
 	}
 
+	focusOnOppositeScrollButton = (ev, direction) => {
+		const buttonNode = (ev.target === this.nextButtonNodeRef) ? this.prevButtonNodeRef : this.nextButtonNodeRef;
+
+		ev.preventDefault();
+		ev.nativeEvent.stopPropagation();
+
+		if (!Spotlight.focus(buttonNode)) {
+			Spotlight.move(direction);
+		}
+	}
+
 	onSpotlight = (ev) => {
 		const
 			{rtl, vertical} = this.props,
@@ -257,15 +268,7 @@ class ScrollButtons extends Component {
 		// manually focus the opposite scroll button when 5way pressed
 		if ((fromNextToPrev && target === this.nextButtonNodeRef) ||
 			(fromPrevToNext && target === this.prevButtonNodeRef)) {
-			// Focus on opposite ScrollButton
-			const buttonNode = (ev.target === this.nextButtonNodeRef) ? this.prevButtonNodeRef : this.nextButtonNodeRef;
-
-			ev.preventDefault();
-			ev.nativeEvent.stopPropagation();
-
-			if (!Spotlight.focus(buttonNode)) {
-				Spotlight.move(direction);
-			}
+			this.focusOnOppositeScrollButton(ev, direction);
 		}
 	}
 
