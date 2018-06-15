@@ -48,7 +48,7 @@ const mergeFn = (key, defaultValue, userValue) => {
  *	});
  *
  *	const CountableAsDataNumber({prop: 'data-number'});
- *	const CountableDiv('div');
+ *	const CountableDiv = Countable('div');
  *	const CountableDivAsDataNumber = CountableAsDataNumber('div');
  * ```
  *
@@ -74,7 +74,7 @@ const hoc = (defaultConfig, hawk) => {
 		if (isRenderable(config)) {
 			return factory(defaults, config);
 		} else {
-			const cfg = mergeDeepWithKey(mergeFn, defaults, config);
+			const cfg = mergeDeepWithKey(mergeFn, defaults, config || {});
 			if (isRenderable(maybeWrapped)) {
 				return factory(cfg, maybeWrapped);
 			} else {
@@ -84,5 +84,59 @@ const hoc = (defaultConfig, hawk) => {
 	};
 };
 
+/**
+ * Performs right-to-left composition of Higher-order Components
+ *
+ * Unlike typical functional composition which accepts `n` arguments for the last function and 1
+ * argument for the remaining functions, `compose` supports either 1 or two arguments for each
+ * function.
+ *
+ * If the function supports 2 arguments (as determined by its `length` property), both the config
+ * object and the component are passed. If it only supports 1 arguments, only the component is
+ * passed.
+ *
+ * The function returned by `compose` is itself a HOC as returned by [hoc]{@link core/hoc.hoc} and
+ * supports the same variable arguments.
+ *
+ * Example:
+ * ```
+ * const CountDecorator = compose(
+ *   FirstDecorator({prop: 'value'}),     // seals FirstDecorator with the provided config
+ *   SecondDecorator(null),               // seals SecondDecorator with the default config
+ *   (cfg, Wrapped) => ThirdDecorator(	  // merges the provided config with a pre-configured option
+ *     {...cfg, option: true},
+ *     Wrapped
+ *   ),
+ *   Countable                            // passes the provided config untouched
+ * );
+ *
+ * // In this example, the configuration object passed to `compose` is `{prop: 'data-number'}`.
+ * // * FirstDecorator will not receive it because it was sealed with a pre-configured object
+ * // * SecondDecorator will not receive it because it was sealed with a `null` configuration object
+ * // * ThirdDecorator will receive it with `{option: true}` added
+ * // * Countable will receive it as is
+ * const CountableAsDataNumber = CountDecorator({prop: 'data-number'});
+ * ```
+ *
+ * @function
+ * @param  {...Function} hawks Higher-order component
+ *
+ * @returns {Function}         HoC Decorator
+ * @memberof core/hoc
+ * @public
+ */
+const compose = (...hawks) => hoc((config, Wrapped) => {
+	return hawks.reduce((Component, hawk) => {
+		if (!hawk || typeof hawk !== 'function' || hawk.length === 0) {
+			return Component;
+		}
+
+		return hawk.length === 1 ? hawk(Component) : hawk(config, Component);
+	}, Wrapped);
+});
+
 export default hoc;
-export {hoc};
+export {
+	compose,
+	hoc
+};
