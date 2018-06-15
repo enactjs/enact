@@ -5,6 +5,7 @@ import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Touchable from '@enact/ui/Touchable';
+import {platform} from '@enact/webos/platform';
 
 import $L from '../internal/$L';
 
@@ -194,6 +195,7 @@ class ScrollableBaseNative extends Component {
 	resetPosition = null // prevent auto-scroll on focus by Spotlight
 
 	isVoiceControl = false
+	voiceControlDirection = 'vertical'
 
 	onMouseDown = () => {
 		this.lastFocusedItem = null;
@@ -542,9 +544,10 @@ class ScrollableBaseNative extends Component {
 			childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
 			childContainerRef.addEventListener('mousemove', this.onMouseMove, {capture: true});
 			childContainerRef.addEventListener('focusin', this.onFocus);
-			childContainerRef.addEventListener('webOSVoice', this.onVoice);
-			// FIXME In case of VirtualList, addEventListener target is not matched childContainerRef. So, scroll intent is added dynamically.
-			childContainerRef.setAttribute('data-webos-voice-intent', 'Scroll');
+			if (platform.tv) {
+				childContainerRef.addEventListener('webOSVoice', this.onVoice);
+				childContainerRef.setAttribute('data-webos-voice-intent', 'Scroll');
+			}
 		}
 	}
 
@@ -554,7 +557,10 @@ class ScrollableBaseNative extends Component {
 			childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
 			childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
 			childContainerRef.removeEventListener('focusin', this.onFocus);
-			childContainerRef.removeEventListener('webOSVoice', this.onVoice);
+			if (platform.tv) {
+				childContainerRef.removeEventListener('webOSVoice', this.onVoice);
+				childContainerRef.removeAttribute('data-webos-voice-intent');
+			}
 		}
 	}
 
@@ -571,55 +577,66 @@ class ScrollableBaseNative extends Component {
 	}
 
 	updateFocusAfterVoiceControl = () => {
-		const
-			{direction} = this.props,
-			viewportBounds = this.uiRef.containerRef.getBoundingClientRect(),
-			spotItemBounds = document.activeElement.getBoundingClientRect(),
-			nodes = this.uiRef.containerRef.querySelectorAll('[data-index]'),
-			isVertical = (direction === 'vertical' || direction === 'both'),
-			first = isVertical ? 'top' : 'left',
-			last = isVertical ? 'bottom' : 'right';
+		const spotItem = Spotlight.getCurrent();
+		if (spotItem && this.uiRef.containerRef.contains(spotItem)) {
+			const
+				viewportBounds = this.uiRef.containerRef.getBoundingClientRect(),
+				spotItemBounds = spotItem.getBoundingClientRect(),
+				nodes = this.uiRef.containerRef.querySelectorAll('[data-index]'),
+				first = this.voiceControlDirection === 'vertical' ? 'top' : 'left',
+				last = this.voiceControlDirection === 'vertical' ? 'bottom' : 'right';
 
-		if (spotItemBounds[last] < viewportBounds[first] || spotItemBounds[first] > viewportBounds[last]) {
-			for (let i = 0; i < nodes.length; i++) {
-				const nodeBounds = nodes[i].getBoundingClientRect();
-				if (nodeBounds[first] > viewportBounds[first] && nodeBounds[last] < viewportBounds[last]) {
-					Spotlight.focus(nodes[i]);
-					break;
+			if (spotItemBounds[last] < viewportBounds[first] || spotItemBounds[first] > viewportBounds[last]) {
+				for (let i = 0; i < nodes.length; i++) {
+					const nodeBounds = nodes[i].getBoundingClientRect();
+					if (nodeBounds[first] > viewportBounds[first] && nodeBounds[last] < viewportBounds[last]) {
+						Spotlight.focus(nodes[i]);
+						break;
+					}
 				}
 			}
 		}
 	}
 
 	onVoice = (e) => {
-		const {scroll} = e.detail;
+		const scroll = e && e.detail && e.detail.scroll;
 		this.isVoiceControl = true;
 
 		switch (scroll) {
 			case 'up':
+				this.voiceControlDirection = 'vertical';
 				this.onScrollbarButtonClick({isPreviousScrollButton: true, isVerticalScrollBar: true});
 				break;
 			case 'down':
+				this.voiceControlDirection = 'vertical';
 				this.onScrollbarButtonClick({isPreviousScrollButton: false, isVerticalScrollBar: true});
 				break;
 			case 'left':
+				this.voiceControlDirection = 'horizontal';
 				this.onScrollbarButtonClick({isPreviousScrollButton: true, isVerticalScrollBar: false});
 				break;
 			case 'right':
+				this.voiceControlDirection = 'horizontal';
 				this.onScrollbarButtonClick({isPreviousScrollButton: false, isVerticalScrollBar: false});
 				break;
 			case 'top':
+				this.voiceControlDirection = 'vertical';
 				this.uiRef.scrollTo({align: 'top'});
 				break;
 			case 'bottom':
+				this.voiceControlDirection = 'vertical';
 				this.uiRef.scrollTo({align: 'bottom'});
 				break;
 			case 'leftmost':
+				this.voiceControlDirection = 'horizontal';
 				this.uiRef.scrollTo({align: 'left'});
 				break;
 			case 'rightmost':
+				this.voiceControlDirection = 'horizontal';
 				this.uiRef.scrollTo({align: 'right'});
 				break;
+			default:
+				this.isVoiceControl = false;
 		}
 		e.preventDefault();
 	}
