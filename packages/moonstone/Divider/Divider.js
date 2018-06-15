@@ -124,6 +124,7 @@ const DividerDecorator = compose(
  * @see i18n/Uppercase#casing
  * @type {String}
  * @default 'word'
+ * @memberof moonstone/Divider.Divider.prototype
  * @public
  */
 
@@ -133,6 +134,7 @@ const DividerDecorator = compose(
  *
  * @type {String}
  * @default 'render'
+ * @memberof moonstone/Divider.Divider.prototype
  * @public
  */
 const Divider = DividerDecorator(DividerBase);
