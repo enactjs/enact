@@ -13,6 +13,7 @@ import Pure from '@enact/ui/internal/Pure';
 import Uppercase from '@enact/i18n/Uppercase';
 import compose from 'ramda/src/compose';
 import defaultProps from 'recompose/defaultProps';
+import setPropTypes from 'recompose/setPropTypes';
 import React from 'react';
 
 import {MarqueeDecorator} from '../Marquee';
@@ -93,6 +94,9 @@ const DividerBase = kind({
  * @mixes ui/Skinnable.Skinnable
  */
 const DividerDecorator = compose(
+	setPropTypes({
+		marqueeOn: PropTypes.oneOf(['hover', 'render'])
+	}),
 	defaultProps({
 		casing: 'word',
 		marqueeOn: 'render'
