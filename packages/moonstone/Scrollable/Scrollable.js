@@ -14,6 +14,7 @@ import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Touchable from '@enact/ui/Touchable';
+import {platform} from '@enact/webos/platform';
 
 import $L from '../internal/$L';
 
@@ -209,6 +210,9 @@ class ScrollableBase extends Component {
 	lastScrollPositionOnFocus = null
 	indexToFocus = null
 	nodeToFocus = null
+
+	isVoiceControl = false
+	voiceControlDirection = 'vertical'
 
 	onFlick = () => {
 		const focusedItem = Spotlight.getCurrent();
@@ -424,6 +428,10 @@ class ScrollableBase extends Component {
 		this.lastFocusedItem = null;
 		this.lastScrollPositionOnFocus = null;
 		this.isWheeling = false;
+		if (this.isVoiceControl) {
+			this.isVoiceControl = false;
+			this.updateFocusAfterVoiceControl();
+		}
 	}
 
 	focusOnItem () {
@@ -489,6 +497,10 @@ class ScrollableBase extends Component {
 	addEventListeners = (childContainerRef) => {
 		if (childContainerRef && childContainerRef.addEventListener) {
 			childContainerRef.addEventListener('focusin', this.onFocus);
+			if (platform.tv) {
+				childContainerRef.addEventListener('webOSVoice', this.onVoice);
+				childContainerRef.setAttribute('data-webos-voice-intent', 'Scroll');
+			}
 		}
 	}
 
@@ -496,6 +508,10 @@ class ScrollableBase extends Component {
 	removeEventListeners = (childContainerRef) => {
 		if (childContainerRef && childContainerRef.removeEventListener) {
 			childContainerRef.removeEventListener('focusin', this.onFocus);
+			if (platform.tv) {
+				childContainerRef.removeEventListener('webOSVoice', this.onVoice);
+				childContainerRef.removeAttribute('data-webos-voice-intent');
+			}
 		}
 	}
 
@@ -509,6 +525,71 @@ class ScrollableBase extends Component {
 		if (ref) {
 			this.uiRef = ref;
 		}
+	}
+
+	updateFocusAfterVoiceControl = () => {
+		const spotItem = Spotlight.getCurrent();
+		if (spotItem && this.uiRef.containerRef.contains(spotItem)) {
+			const
+				viewportBounds = this.uiRef.containerRef.getBoundingClientRect(),
+				spotItemBounds = spotItem.getBoundingClientRect(),
+				nodes = Spotlight.getSpottableDescendants(this.uiRef.containerRef.dataset.spotlightId),
+				first = this.voiceControlDirection === 'vertical' ? 'top' : 'left',
+				last = this.voiceControlDirection === 'vertical' ? 'bottom' : 'right';
+
+			if (spotItemBounds[last] < viewportBounds[first] || spotItemBounds[first] > viewportBounds[last]) {
+				for (let i = 0; i < nodes.length; i++) {
+					const nodeBounds = nodes[i].getBoundingClientRect();
+					if (nodeBounds[first] > viewportBounds[first] && nodeBounds[last] < viewportBounds[last]) {
+						Spotlight.focus(nodes[i]);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	onVoice = (e) => {
+		const scroll = e && e.detail && e.detail.scroll;
+		this.isVoiceControl = true;
+
+		switch (scroll) {
+			case 'up':
+				this.voiceControlDirection = 'vertical';
+				this.onScrollbarButtonClick({isPreviousScrollButton: true, isVerticalScrollBar: true});
+				break;
+			case 'down':
+				this.voiceControlDirection = 'vertical';
+				this.onScrollbarButtonClick({isPreviousScrollButton: false, isVerticalScrollBar: true});
+				break;
+			case 'left':
+				this.voiceControlDirection = 'horizontal';
+				this.onScrollbarButtonClick({isPreviousScrollButton: true, isVerticalScrollBar: false});
+				break;
+			case 'right':
+				this.voiceControlDirection = 'horizontal';
+				this.onScrollbarButtonClick({isPreviousScrollButton: false, isVerticalScrollBar: false});
+				break;
+			case 'top':
+				this.voiceControlDirection = 'vertical';
+				this.uiRef.scrollTo({align: 'top'});
+				break;
+			case 'bottom':
+				this.voiceControlDirection = 'vertical';
+				this.uiRef.scrollTo({align: 'bottom'});
+				break;
+			case 'leftmost':
+				this.voiceControlDirection = 'horizontal';
+				this.uiRef.scrollTo({align: 'left'});
+				break;
+			case 'rightmost':
+				this.voiceControlDirection = 'horizontal';
+				this.uiRef.scrollTo({align: 'right'});
+				break;
+			default:
+				this.isVoiceControl = false;
+		}
+		e.preventDefault();
 	}
 
 	render () {
