@@ -35,6 +35,7 @@ const
 		overscrollTypes,
 		paginationPageMultiplier
 	} = constants,
+	overscrollRatioPrefix = '--scrollable-overscroll-ratio-',
 	overscrollTimeout = 300,
 	reverseDirections = {
 		down: 'up',
@@ -226,10 +227,10 @@ class ScrollableBase extends Component {
 	nodeToFocus = null
 
 	// overscroll
-	overscrollRefs = {['horizontal']: null, ['vertical']: null}
+	overscrollRefs = {horizontal: null, vertical: null}
 	overscrollJobs = {
-		['horizontal']: {['before']: null, ['after']: null},
-		['vertical']: {['before']: null, ['after']: null}
+		horizontal: {before: null, after: null},
+		vertical: {before: null, after: null}
 	}
 
 	onFlick = () => {
@@ -263,10 +264,10 @@ class ScrollableBase extends Component {
 			const
 				{top, left} = pos,
 				bounds = this.uiRef.getScrollBounds(),
-				horizontalMove = bounds.maxLeft > 0 && left !== this.uiRef.scrollLeft,
-				verticalMove = bounds.maxTop > 0 && top !== this.uiRef.scrollTop;
+				scrollHorizontally = bounds.maxLeft > 0 && left !== this.uiRef.scrollLeft,
+				scrollVertically = bounds.maxTop > 0 && top !== this.uiRef.scrollTop;
 
-			if (horizontalMove || verticalMove) {
+			if (scrollHorizontally || scrollVertically) {
 				this.uiRef.start({
 					targetX: left,
 					targetY: top,
@@ -274,11 +275,11 @@ class ScrollableBase extends Component {
 					duration: animationDuration
 				});
 
-				if (this.childRef.shouldPreventOverscrollEffect ? !this.childRef.shouldPreventOverscrollEffect() : true) {
-					if (horizontalMove) {
+				if (!this.childRef.shouldPreventOverscrollEffect || !this.childRef.shouldPreventOverscrollEffect()) {
+					if (scrollHorizontally) {
 						this.uiRef.updateOverscrollEffect('horizontal', left, overscrollTypes.scrolling, 1);
 					}
-					if (verticalMove) {
+					if (scrollVertically) {
 						this.uiRef.updateOverscrollEffect('vertical', top, overscrollTypes.scrolling, 1);
 					}
 				}
@@ -410,8 +411,14 @@ class ScrollableBase extends Component {
 					this.animateOnFocus = false;
 					Spotlight.focus(nextPage);
 				// Scroll one page with animation if nextPage is equals to `false`
-				} else if (!nextPage) {
+				} else if (nextPage === false) {
 					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
+				} else if (nextPage === -1) {
+					const
+						isRtl = this.uiRef.state.rtl,
+						orientation = (direction === 'up' || direction === 'down') ? 'vertical' : 'horizontal',
+						position = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
+					this.uiRef.updateOverscrollEffectByDirection(orientation, position, overscrollTypes.scrolling, 1);
 				}
 			}
 		} else {
@@ -437,12 +444,11 @@ class ScrollableBase extends Component {
 			if (isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) {
 				this.scrollByPage(ev.keyCode);
 			} else {
-				const
-					direction = getDirection(ev.keyCode);
+				const direction = getDirection(ev.keyCode);
 				if (direction !== false) {
 					const
 						element = Spotlight.getCurrent(),
-						nextSpottable = getTargetByDirectionFromElement(direction, element);
+						nextSpottable = element ? getTargetByDirectionFromElement(direction, element) : null;
 
 					if (!nextSpottable) { /* if the spotlight focus will not move */
 						const
@@ -559,12 +565,10 @@ class ScrollableBase extends Component {
 	}
 
 	applyOverscrollEffect = (orientation, position, type, ratio) => {
-		const
-			nodeRef = this.overscrollRefs[orientation],
-			prefix = '--scrollable-overscroll-ratio-';
+		const nodeRef = this.overscrollRefs[orientation];
 
 		if (nodeRef) {
-			nodeRef.style.setProperty(prefix + orientation + position, ratio);
+			nodeRef.style.setProperty(overscrollRatioPrefix + orientation + position, ratio);
 
 			if (type === overscrollTypes.scrolling) {
 				this.overscrollJobs[orientation][position].start(orientation, position, overscrollTypes.none, 0);
@@ -603,7 +607,7 @@ class ScrollableBase extends Component {
 
 	initHorizontalOverscrollRef = (ref) => {
 		if (ref) {
-			this.overscrollRefs['horizontal'] = ReactDOM.findDOMNode(ref); // eslint-disable-line react/no-find-dom-node
+			this.overscrollRefs.horizontal = ReactDOM.findDOMNode(ref); // eslint-disable-line react/no-find-dom-node
 			this.newOverscrollJob('horizontal', 'before');
 			this.newOverscrollJob('horizontal', 'after');
 		}
@@ -611,7 +615,7 @@ class ScrollableBase extends Component {
 
 	initVerticalOverscrollRef = (ref) => {
 		if (ref) {
-			this.overscrollRefs['vertical'] = ref;
+			this.overscrollRefs.vertical = ref;
 			this.newOverscrollJob('vertical', 'before');
 			this.newOverscrollJob('vertical', 'after');
 		}

@@ -460,7 +460,7 @@ const VirtualListBaseFactory = (type) => {
 				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
 				indexToScroll = this.getIndexToScroll(direction, focusedIndex);
 
-			if (indexToScroll !== -1) {
+			if (indexToScroll !== -1 && focusedIndex !== indexToScroll) {
 				const
 					isRtl = this.props.rtl,
 					isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right');
@@ -480,9 +480,11 @@ const VirtualListBaseFactory = (type) => {
 					this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
 				}
 				cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
-			}
 
-			return true;
+				return true;
+			} else {
+				return -1;
+			}
 		}
 
 		/**

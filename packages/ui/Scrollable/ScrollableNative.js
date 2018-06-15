@@ -467,8 +467,8 @@ class ScrollableBaseNative extends Component {
 
 	// overscroll
 	overscrollStatus = {
-		['horizontal']: {type: overscrollTypes.none, ratio: 0},
-		['vertical']: {type: overscrollTypes.none, ratio: 0}
+		horizontal: {type: overscrollTypes.none, ratio: 0},
+		vertical: {type: overscrollTypes.none, ratio: 0}
 	}
 
 	// bounds info
