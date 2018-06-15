@@ -107,9 +107,28 @@ const DividerDecorator = compose(
  * A Moonstone-styled divider with built-in support for uppercasing, and marqueed text.
  *
  * @class Divider
+ * @extends moonstone/Divider.DividerBase
  * @memberof moonstone/Divider
  * @mixes moonstone/Divider.DividerDecorator
  * @ui
+ * @public
+ */
+
+/**
+ * Configures how the `children` string will be capitalized. By default, each word is capitalized.
+ *
+ * @see i18n/Uppercase#casing
+ * @type {String}
+ * @default 'word'
+ * @public
+ */
+
+/**
+ * Determines what triggers the header content to start its animation. Valid values are
+ * `'hover'` and `'render'`. The default is `'render'`.
+ *
+ * @type {String}
+ * @default 'render'
  * @public
  */
 const Divider = DividerDecorator(DividerBase);
