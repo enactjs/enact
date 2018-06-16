@@ -403,13 +403,14 @@ const MediaControlsBase = kind({
 							className={moreButtonClassName}
 							color={moreButtonColor}
 							disabled={moreButtonDisabled}
-							icon={moreIcon}
 							onClick={onMoreClick}
 							tooltipProps={{role: 'dialog'}}
 							tooltipText={moreIconLabel}
 							spotlightId={moreButtonSpotlightId}
 							spotlightDisabled={spotlightDisabled}
-						/>
+						>
+							{moreIcon}
+						</MoreButton>
 					) : null}
 				</div>
 			</div>

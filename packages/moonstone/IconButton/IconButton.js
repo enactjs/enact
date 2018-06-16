@@ -76,17 +76,7 @@ const IconButtonBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object,
-
-		/**
-		 * The icon displayed within the [Button]{@link moonstone/IconButton.IconButtonBase}.
-		 *
-		 * If not specified, `children` is used as the icon value instead.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		icon: PropTypes.string
+		css: PropTypes.object
 	},
 
 	styles: {
@@ -98,13 +88,16 @@ const IconButtonBase = kind({
 		className: ({color, styler}) => styler.append(color)
 	},
 
-	render: ({children, css, icon, ...rest}) => {
+	render: ({children, css, ...rest}) => {
+		let icon;
 
-		// To support the simpler use case of only specifying the icon as the children within
-		// <IconButton>, this falls back on using children if icon isn't specified.
-		if (!icon && children) {
-			icon = children;
-			children = null;
+		if (children) {
+			if (React.Children.count(children) === 1) {
+				icon = children;
+				children = null;
+			} else {
+				icon = children.shift();
+			}
 		}
 
 		return (
