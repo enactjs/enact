@@ -203,18 +203,21 @@ Tips:
 * Use the active voice when writing docs.
 * Descriptions should focus on what the componet or property provides.
 * Only document the `true` state for boolean propertues unless the `false` state's operation is unclear.
+* Properties should use a future tense (e.g. 'applies') and callbacks should use past tense (e.g. 'called')
 
 Good:
 
 * A Moonstone-styled button with built-in support for ...
 * The color of the underline beneath button's content.
-* When `true`, the control is in the expanded state with the contents visible.
+* Applies a disabled style and prevents interacting with the component.
+* Called when the internal input is focused.
 
 Could be better:
 
 * This component could be used to display a button ...
 * Set this to change the color of the underline beneath the button's content.
 * Controls whether the item is expanded or not.
+* A callback function invoked when the internal input is focused.
 
 ## Verifying Correct Documentation
 
