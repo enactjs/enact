@@ -9,13 +9,12 @@ import {withInfo} from '@storybook/addon-info';
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
-Button.displayName = 'Button';
-const Config = mergeComponentMetadata('Button', UIButtonBase, UIButton, ButtonBase, Button);
+const Component = mergeComponentMetadata('Button', UIButtonBase, UIButton, ButtonBase, Button);
 
 // Set up some defaults for info and knobs
 const prop = {
 	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
-	casing: ['preserve', 'sentence', 'word', 'upper'],
+	casing: ['', 'preserve', 'sentence', 'word', 'upper'],
 	icons: ['', ...Object.keys(icons)]
 };
 
@@ -23,20 +22,20 @@ storiesOf('Moonstone', module)
 	.add(
 		'Button',
 		withInfo({
-			propTablesExclude: [Button],
+			propTables: false,
 			text: 'The basic Button'
 		})(() => (
-			<Button
+			<Component
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
-				casing={select('casing', prop.casing, Config, 'upper')}
-				disabled={boolean('disabled', Config)}
-				icon={select('icon', prop.icons, Config)}
-				minWidth={boolean('minWidth', Config)}
-				selected={boolean('selected', Config)}
-				small={boolean('small', Config)}
+				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Component)}
+				casing={select('casing', prop.casing, Component)}
+				disabled={boolean('disabled', Component)}
+				icon={select('icon', prop.icons, Component)}
+				minWidth={boolean('minWidth', Component)}
+				selected={boolean('selected', Component)}
+				small={boolean('small', Component)}
 			>
-				{text('children', Config, 'click me')}
-			</Button>
+				{text('children', Component, 'click me')}
+			</Component>
 		))
 	);

@@ -1,9 +1,15 @@
+import React from 'react';
+
 const merge = (components, field) => {
 	return Object.assign({}, ...components.map(c => c[field]));
 };
 
 const mergeComponentMetadata = (displayName, ...components) => {
-	const fn = function () {};
+	const Component = components[components.length - 1];
+	const fn = function (props) {
+		return <Component {...props} />;
+	};
+
 	fn.displayName = displayName;
 	fn.propTypes = merge(components, 'propTypes');
 	fn.defaultProps = merge(components, 'defaultProps');
