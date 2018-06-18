@@ -203,7 +203,7 @@ class ScrollableBase extends Component {
 
 	// Callback for updates that needed new calculation; and scroll to new scroll position based on focused item if needed.
 	updateScroll = () => {
-		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null) {
+		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null && Spotlight.getPointerMode()) {
 			const spotItem = Spotlight.getCurrent();
 			this.calculateAndScroll(spotItem);
 		}
@@ -304,7 +304,7 @@ class ScrollableBase extends Component {
 				spotItem = Spotlight.getCurrent();
 
 			if (item && item === spotItem) {
-				this.calculateAndScroll();
+				this.calculateAndScroll(item);
 			}
 		} else if (this.childRef.setLastFocusedIndex) {
 			this.childRef.setLastFocusedIndex(ev.target);
