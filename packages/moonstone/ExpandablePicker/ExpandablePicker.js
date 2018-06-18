@@ -45,7 +45,7 @@ const ExpandablePickerBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * The `data-webos-voice-group-label` for LabeledItem and Picker.
+		 * The `data-webos-voice-group-label` for ExpandableItem and Picker.
 		 *
 		 * @type {String}
 		 * @public
