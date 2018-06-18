@@ -123,7 +123,7 @@ const PickerBase = class extends React.Component {
 		'aria-valuetext': PropTypes.string,
 
 		/**
-		 * The `data-webos-voice-group-label` for the IconButton of picker.
+		 * The `data-webos-voice-group-label` for the IconButton of Picker.
 		 *
 		 * @type {String}
 		 * @public

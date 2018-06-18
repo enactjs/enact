@@ -87,7 +87,7 @@ const IncrementSliderBase = kind({
 		'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 		/**
-		 * The `data-webos-voice-group-label` for the IconButton of Picker.
+		 * The `data-webos-voice-group-label` for the IconButton of IncrementSlider.
 		 *
 		 * @type {String}
 		 * @public
