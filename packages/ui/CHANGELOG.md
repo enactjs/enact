@@ -6,7 +6,9 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/MarqueeDecorator` to stop marqueeing when using hover and pointer hides
+- `ui/VirtualList` to allow scrolling on focus by default on webOS
+
+## [2.0.0-beta.7] - 2018-06-11
 
 ### Added
 
@@ -15,6 +17,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Changed
 
 - `ui/FloatingLayer` to call `onOpen` only after it is rendered
+
+### Fixed
+
+- `ui/MarqueeDecorator` to stop marqueeing when using hover and pointer hides
 
 ## [2.0.0-beta.6] - 2018-06-04
 

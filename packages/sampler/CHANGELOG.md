@@ -4,21 +4,17 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ## [unreleased]
 
-### Added
-
-- `enact-knobs` (boolean, number, select, and text) to `src/enact-knobs` to incorporate several useful features into knob replacements. They can automatically gather the default value and label it in the selection knob.
-
 ### Changed
 
-- `src/util/smartSelect` to be incorporated into `enact-knobs` and updated it to the latest/future format (`selectV2`) which transposes the key/values of the labels
+- Knobs to incorporate several useful features such as labeling the default value in the selection knob.
+
+## [2.0.0-beta.7] - 2018-06-11
+
+No significant changes.
 
 ## [2.0.0-beta.6] - 2018-06-04
 
 No significant changes.
-
-### Fixed
-
-- `Slider` in QA sampler to deprecate `data` prop in `moonstone/VirtualList`
 
 ## [2.0.0-beta.5] - 2018-05-29
 
