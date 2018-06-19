@@ -7,10 +7,14 @@
  * @private
  */
 
+import classNames from 'classnames';
 import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
-import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
+import {getDirection} from '@enact/spotlight';
+import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
+import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Touchable from '@enact/ui/Touchable';
@@ -18,7 +22,9 @@ import Touchable from '@enact/ui/Touchable';
 import $L from '../internal/$L';
 
 import Scrollbar from './Scrollbar';
+import Skinnable from '../Skinnable';
 
+import overscrollCss from './OverscrollEffect.less';
 import scrollbarCss from './Scrollbar.less';
 
 const
@@ -26,8 +32,11 @@ const
 		animationDuration,
 		isPageDown,
 		isPageUp,
+		overscrollTypes,
 		paginationPageMultiplier
 	} = constants,
+	overscrollRatioPrefix = '--scrollable-overscroll-ratio-',
+	overscrollTimeout = 300,
 	reverseDirections = {
 		down: 'up',
 		left: 'right',
@@ -138,39 +147,39 @@ class ScrollableBase extends Component {
 		focusableScrollbar: PropTypes.bool,
 
 		/**
-		* Sets the hint string read when focusing the next button in the vertical scroll bar.
-		*
-		* @type {String}
-		* @default $L('scroll down')
-		* @public
-		*/
+		 * Sets the hint string read when focusing the next button in the vertical scroll bar.
+		 *
+		 * @type {String}
+		 * @default $L('scroll down')
+		 * @public
+		 */
 		scrollDownAriaLabel: PropTypes.string,
 
 		/**
-		* Sets the hint string read when focusing the previous button in the horizontal scroll bar.
-		*
-		* @type {String}
-		* @default $L('scroll left')
-		* @public
-		*/
+		 * Sets the hint string read when focusing the previous button in the horizontal scroll bar.
+		 *
+		 * @type {String}
+		 * @default $L('scroll left')
+		 * @public
+		 */
 		scrollLeftAriaLabel: PropTypes.string,
 
 		/**
-		* Sets the hint string read when focusing the next button in the horizontal scroll bar.
-		*
-		* @type {String}
-		* @default $L('scroll right')
-		* @public
-		*/
+		 * Sets the hint string read when focusing the next button in the horizontal scroll bar.
+		 *
+		 * @type {String}
+		 * @default $L('scroll right')
+		 * @public
+		 */
 		scrollRightAriaLabel: PropTypes.string,
 
 		/**
-		* Sets the hint string read when focusing the previous button in the vertical scroll bar.
-		*
-		* @type {String}
-		* @default $L('scroll up')
-		* @public
-		*/
+		 * Sets the hint string read when focusing the previous button in the vertical scroll bar.
+		 *
+		 * @type {String}
+		 * @default $L('scroll up')
+		 * @public
+		 */
 		scrollUpAriaLabel: PropTypes.string
 	}
 
@@ -201,12 +210,11 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	// Callback for updates that needed new calculation; and scroll to new scroll position based on focused item if needed.
-	updateScroll = () => {
-		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null && Spotlight.getPointerMode()) {
-			const spotItem = Spotlight.getCurrent();
-			this.calculateAndScroll(spotItem);
-		}
+	componentWillUnmount () {
+		this.stopOverscrollJob('horizontal', 'before');
+		this.stopOverscrollJob('horizontal', 'after');
+		this.stopOverscrollJob('vertical', 'before');
+		this.stopOverscrollJob('vertical', 'after');
 	}
 
 	// status
@@ -217,6 +225,13 @@ class ScrollableBase extends Component {
 	lastScrollPositionOnFocus = null
 	indexToFocus = null
 	nodeToFocus = null
+
+	// overscroll
+	overscrollRefs = {horizontal: null, vertical: null}
+	overscrollJobs = {
+		horizontal: {before: null, after: null},
+		vertical: {before: null, after: null}
+	}
 
 	onFlick = () => {
 		const focusedItem = Spotlight.getCurrent();
@@ -248,15 +263,26 @@ class ScrollableBase extends Component {
 		if (pos) {
 			const
 				{top, left} = pos,
-				bounds = this.uiRef.getScrollBounds();
+				bounds = this.uiRef.getScrollBounds(),
+				scrollHorizontally = bounds.maxLeft > 0 && left !== this.uiRef.scrollLeft,
+				scrollVertically = bounds.maxTop > 0 && top !== this.uiRef.scrollTop;
 
-			if ((bounds.maxTop > 0 && top !== this.uiRef.scrollTop) || (bounds.maxLeft > 0 && left !== this.uiRef.scrollLeft)) {
+			if (scrollHorizontally || scrollVertically) {
 				this.uiRef.start({
 					targetX: left,
 					targetY: top,
 					animate: (animationDuration > 0) && this.animateOnFocus,
 					duration: animationDuration
 				});
+
+				if (!this.childRef.shouldPreventOverscrollEffect || !this.childRef.shouldPreventOverscrollEffect()) {
+					if (scrollHorizontally) {
+						this.uiRef.updateOverscrollEffect('horizontal', left, overscrollTypes.scrolling, 1);
+					}
+					if (scrollVertically) {
+						this.uiRef.updateOverscrollEffect('vertical', top, overscrollTypes.scrolling, 1);
+					}
+				}
 			}
 			this.lastFocusedItem = item;
 			this.lastScrollPositionOnFocus = pos;
@@ -391,8 +417,14 @@ class ScrollableBase extends Component {
 					this.animateOnFocus = false;
 					Spotlight.focus(nextPage);
 				// Scroll one page with animation if nextPage is equals to `false`
-				} else if (!nextPage) {
+				} else if (nextPage === false) {
 					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
+				} else if (nextPage === null) {
+					const
+						isRtl = this.uiRef.state.rtl,
+						orientation = (direction === 'up' || direction === 'down') ? 'vertical' : 'horizontal',
+						position = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
+					this.uiRef.updateOverscrollEffectByDirection(orientation, position, overscrollTypes.scrolling, 1);
 				}
 			}
 		} else {
@@ -413,8 +445,26 @@ class ScrollableBase extends Component {
 
 	onKeyDown = (ev) => {
 		this.animateOnFocus = true;
-		if (!Spotlight.getPointerMode() && (isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) && !ev.repeat && this.hasFocus()) {
-			this.scrollByPage(ev.keyCode);
+
+		if (!Spotlight.getPointerMode() && !ev.repeat && this.hasFocus()) {
+			if (isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) {
+				this.scrollByPage(ev.keyCode);
+			} else {
+				const direction = getDirection(ev.keyCode);
+				if (direction !== false) {
+					const
+						element = Spotlight.getCurrent(),
+						nextSpottable = element ? getTargetByDirectionFromElement(direction, element) : null;
+
+					if (!nextSpottable) { /* if the spotlight focus will not move */
+						const
+							isRtl = this.uiRef.state.rtl,
+							orientation = (direction === 'up' || direction === 'down') ? 'vertical' : 'horizontal',
+							position = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
+						this.uiRef.updateOverscrollEffectByDirection(orientation, position, overscrollTypes.scrolling, 1);
+					}
+				}
+			}
 		}
 	}
 
@@ -499,6 +549,62 @@ class ScrollableBase extends Component {
 		this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 	}
 
+	// Callback for updates that needed new calculation; and scroll to new scroll position based on focused item if needed.
+	handleScrollerUpdate = () => {
+		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null && Spotlight.getPointerMode()) {
+			const spotItem = Spotlight.getCurrent();
+			this.calculateAndScroll(spotItem);
+		}
+	}
+
+	clearOverscrollEffect = (orientation, position) => {
+		const {type} = this.uiRef.getOverscrollStatus(orientation);
+
+		if (type !== overscrollTypes.none) {
+			this.overscrollJobs[orientation][position].startAfter(
+				(type === overscrollTypes.scrolling) ? overscrollTimeout : 0,
+				orientation,
+				position,
+				overscrollTypes.none,
+				0
+			);
+		}
+	}
+
+	clearAllOverscrollEffects = () => {
+		this.clearOverscrollEffect('horizontal', 'before');
+		this.clearOverscrollEffect('horizontal', 'after');
+		this.clearOverscrollEffect('vertical', 'before');
+		this.clearOverscrollEffect('vertical', 'after');
+	}
+
+	applyOverscrollEffect = (orientation, position, type, ratio) => {
+		const nodeRef = this.overscrollRefs[orientation];
+
+		if (nodeRef) {
+			nodeRef.style.setProperty(overscrollRatioPrefix + orientation + position, ratio);
+
+			if (type === overscrollTypes.scrolling) {
+				this.overscrollJobs[orientation][position].start(orientation, position, overscrollTypes.none, 0);
+			}
+		}
+	}
+
+	newOverscrollJob = (orientation, position) => {
+		if (!this.overscrollJobs[orientation][position]) {
+			this.overscrollJobs[orientation][position] = new Job(this.applyOverscrollEffect.bind(this), overscrollTimeout);
+		}
+	}
+
+	stopOverscrollJob = (orientation, position) => {
+		const job = this.overscrollJobs[orientation][position];
+
+		if (job) {
+			job.stop();
+			this.overscrollJobs[orientation][position] = null;
+		}
+	}
+
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	addEventListeners = (childContainerRef) => {
 		if (childContainerRef && childContainerRef.addEventListener) {
@@ -510,6 +616,22 @@ class ScrollableBase extends Component {
 	removeEventListeners = (childContainerRef) => {
 		if (childContainerRef && childContainerRef.removeEventListener) {
 			childContainerRef.removeEventListener('focusin', this.onFocus);
+		}
+	}
+
+	initHorizontalOverscrollRef = (ref) => {
+		if (ref) {
+			this.overscrollRefs.horizontal = ReactDOM.findDOMNode(ref); // eslint-disable-line react/no-find-dom-node
+			this.newOverscrollJob('horizontal', 'before');
+			this.newOverscrollJob('horizontal', 'after');
+		}
+	}
+
+	initVerticalOverscrollRef = (ref) => {
+		if (ref) {
+			this.overscrollRefs.vertical = ref;
+			this.newOverscrollJob('vertical', 'before');
+			this.newOverscrollJob('vertical', 'after');
 		}
 	}
 
@@ -549,6 +671,8 @@ class ScrollableBase extends Component {
 			<UiScrollableBase
 				{...rest}
 				addEventListeners={this.addEventListeners}
+				applyOverscrollEffect={this.applyOverscrollEffect}
+				clearAllOverscrollEffects={this.clearAllOverscrollEffects}
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onWheel={this.onWheel}
@@ -569,19 +693,19 @@ class ScrollableBase extends Component {
 					rtl,
 					scrollTo,
 					style,
-					touchableProps,
+					touchableProps: {className: touchableClassName, ...restTouchableProps},
 					verticalScrollbarProps
 				}) => (
 					<div
-						className={className}
+						className={classNames(className, overscrollCss.scrollable)}
 						data-spotlight-container={spotlightContainer}
 						data-spotlight-container-disabled={spotlightContainerDisabled}
 						data-spotlight-id={spotlightId}
 						ref={initUiContainerRef}
 						style={style}
 					>
-						<div className={componentCss.container}>
-							<TouchableDiv {...touchableProps}>
+						<div className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={this.initVerticalOverscrollRef}>
+							<TouchableDiv className={classNames(touchableClassName, overscrollCss.overscrollFrame, overscrollCss.horizontal)} ref={this.initHorizontalOverscrollRef} {...restTouchableProps}>
 								{childRenderer({
 									...childComponentProps,
 									cbScrollTo: scrollTo,
@@ -589,7 +713,7 @@ class ScrollableBase extends Component {
 									initUiChildRef,
 									isVerticalScrollbarVisible,
 									onScroll: handleScroll,
-									onUpdate: this.updateScroll,
+									onUpdate: this.handleScrollerUpdate,
 									ref: this.initChildRef,
 									rtl,
 									spotlightId
@@ -636,14 +760,14 @@ class ScrollableBase extends Component {
  * @ui
  * @public
  */
-const Scrollable = SpotlightContainerDecorator(
+const Scrollable = Skinnable(SpotlightContainerDecorator(
 	{
 		overflow: true,
 		preserveId: true,
 		restrict: 'self-first'
 	},
 	ScrollableBase
-);
+));
 
 export default Scrollable;
 export {
