@@ -7,7 +7,7 @@ import React from 'react';
  *
  * @param  {Number|String} value A duration of time represented in seconds
  *
- * @return {Object}       An object with keys {hour, minute, second} representing the duration
+ * @returns {Object}       An object with keys {hour, minute, second} representing the duration
  *                        seconds provided as an argument.
  * @private
  */
@@ -28,7 +28,7 @@ const parseTime = (value) => {
  *
  * @param  {Number|String} seconds A duration of time represented in seconds
  *
- * @return {String}      String formatted for use in a `datetime` field of a `<time>` tag.
+ * @returns {String}      String formatted for use in a `datetime` field of a `<time>` tag.
  * @private
  */
 const secondsToPeriod = (seconds) => {
@@ -44,7 +44,7 @@ const secondsToPeriod = (seconds) => {
  *                             component.
  * @param  {Object} config Additional configuration object that includes `includeHour`.
  *
- * @return {String}      Formatted duration string
+ * @returns {String}      Formatted duration string
  * @private
  */
 const secondsToTime = (seconds, durfmt, config) => {
@@ -79,7 +79,7 @@ const calcNumberValueOfPlaybackRate = (rate) => {
  * real children
  *
  * @param {component} children React.Component or React.PureComponent
- * @return {Number} Number of children nodes
+ * @returns {Number} Number of children nodes
  * @private
  */
 const countReactChildren = (children) => React.Children.toArray(children).filter(n => n != null).length;

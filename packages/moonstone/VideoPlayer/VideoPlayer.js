@@ -1506,7 +1506,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * left components, right components, media controls or more controls (depending on which is
 	 * available)
 	 *
-	 * @return {Node|false} The focused control or `false` if nothing is found.
+	 * @returns {Node|false} The focused control or `false` if nothing is found.
 	 * @private
 	 */
 	focusDefaultMediaControl = () => {
