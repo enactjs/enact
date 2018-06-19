@@ -473,7 +473,7 @@ class ScrollableBaseNative extends Component {
 				// Scroll one page with animation if nextPage is equals to `false`
 				} else if (nextPage === false) {
 					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
-				} else if (nextPage === -1) {
+				} else if (nextPage === null) {
 					const
 						isRtl = this.uiRef.state.rtl,
 						orientation = (direction === 'up' || direction === 'down') ? 'vertical' : 'horizontal',

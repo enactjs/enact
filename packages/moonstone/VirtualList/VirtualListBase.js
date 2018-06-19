@@ -483,7 +483,7 @@ const VirtualListBaseFactory = (type) => {
 
 				return true;
 			} else {
-				return -1;
+				return null;
 			}
 		}
 
