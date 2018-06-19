@@ -4,12 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Fixed
-
-- `moonstone/Scrollable` to update scroll properly on pointer click
 ### Added
 
 - `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` overscroll effect when the edges are reached
+- `moonstone/Scroller` prop `onUpdate`
 
 ### Changed
 
@@ -18,6 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VideoPlayer` to prevent updating state when the source is changed to the preload source, but the current preload source is the same
+- `moonstone/Scrollable` to update scroll properly on pointer click
 
 ## [2.0.0-beta.7] - 2018-06-11
 
