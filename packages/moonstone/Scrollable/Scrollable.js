@@ -549,7 +549,7 @@ class ScrollableBase extends Component {
 		this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 	}
 
-	// Callback for updates that needed new calculation; and scroll to new scroll position based on focused item if needed.
+	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
 	handleScrollerUpdate = () => {
 		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null && Spotlight.getPointerMode()) {
 			const spotItem = Spotlight.getCurrent();
