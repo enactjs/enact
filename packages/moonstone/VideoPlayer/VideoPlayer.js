@@ -135,8 +135,6 @@ const AnnounceState = {
 const VideoPlayerBase = class extends React.Component {
 	static displayName = 'VideoPlayerBase'
 
-	static contextTypes = contextTypes
-
 	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */ {
 		/**
 		 * passed by AnnounceDecorator for accessibility
@@ -556,6 +554,8 @@ const VideoPlayerBase = class extends React.Component {
 		 */
 		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element])
 	}
+
+	static contextTypes = contextTypes
 
 	static defaultProps = {
 		autoCloseTimeout: 5000,

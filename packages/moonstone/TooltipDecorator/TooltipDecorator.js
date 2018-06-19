@@ -137,14 +137,14 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			tooltipWidth: PropTypes.number
 		}
 
+		static contextTypes = contextTypes
+
 		static defaultProps = {
 			disabled: false,
 			tooltipCasing: 'upper',
 			tooltipDelay: 500,
 			tooltipPosition: 'above'
 		}
-
-		static contextTypes = contextTypes
 
 		constructor (props) {
 			super(props);

@@ -49,12 +49,13 @@ const contextTypes = {
  */
 const IntlHoc = hoc((config, Wrapped) => {
 	return class I18nDecorator extends React.Component {
-		static contextTypes = stateContextTypes
-		static childContextTypes = {...contextTypes, ...stateContextTypes}
 		static propTypes = /** @lends i18n/I18nDecorator.I18nDecorator.prototype */ {
 			className: PropTypes.string,
 			locale: PropTypes.string
 		}
+
+		static contextTypes = stateContextTypes
+		static childContextTypes = {...contextTypes, ...stateContextTypes}
 
 		constructor (props) {
 			super(props);

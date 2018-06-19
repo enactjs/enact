@@ -28,7 +28,7 @@ const
 	renderItem = (size) => ({index, ...rest}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
 		return (
-			<StatefulSwitchItem  index={index} style={itemStyle} {...rest}>
+			<StatefulSwitchItem index={index} style={itemStyle} {...rest}>
 				{items[index].item}
 			</StatefulSwitchItem>
 		);
