@@ -7,8 +7,10 @@ import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
+
+import {boolean} from '../../src/enact-knobs';
+
 import css from './About.less';
 
 const riSafe = (style) => {
@@ -52,11 +54,11 @@ storiesOf('About', module)
 		withInfo('A Tour of Sampler')(() => (
 			<div>
 				<BodyText
-					centered={boolean('text centered', false)}
+					centered={boolean('text centered', BodyText)}
 				>
 					Welcome to the Enact sampler! Explore Enact components.
 				</BodyText>
-				<Button onClick={action('onClick')} selected={boolean('button selected', false)}>
+				<Button onClick={action('onClick')} selected={boolean('button selected', Button)}>
 					Click me
 				</Button>
 				<aside className={css.hintDialog} style={{top: riSafe(48), right: 30}}>

@@ -109,7 +109,7 @@ const VideoBase = class extends React.Component {
 		}
 
 		if (source) {
-			if (key === prevPreloadKey) {
+			if (key === prevPreloadKey && preloadKey !== prevPreloadKey) {
 				// if there's source and it was the preload source
 
 				// if the preloaded video didn't error, notify VideoPlayer it is ready to reset

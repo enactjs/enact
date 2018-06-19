@@ -104,7 +104,7 @@ describe('Changeable', () => {
 			expect(actual).to.equal(expected);
 		});
 
-		it('should use value prop when defined but falsey', function () {
+		it('should use value prop when defined but falsy', function () {
 			const Component = Changeable(DivComponent);
 			const subject = shallow(
 				<Component defaultValue={1} value={0} />

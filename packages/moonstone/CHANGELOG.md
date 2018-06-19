@@ -7,8 +7,43 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualList`, and `moonstone/VirtualList.VirtualGridList` to scroll when receiving `webOSVoice` event
+- `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` overscroll effect when the edges are reached
 
 ### Changed
+
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualList`, and `moonstone/VirtualList.VirtualGridList` scrollbar button to move a previous or next page when pressing a page up or down key instead of releasing it
+
+### Fixed
+
+- `moonstone/VideoPlayer` to prevent updating state when the source is changed to the preload source, but the current preload source is the same
+
+## [2.0.0-beta.7] - 2018-06-11
+
+### Removed
+
+- `moonstone/Dialog` properties `preserveCase` and `showDivider`, replaced by `casing` and `noDivider` respectively
+- `moonstone/Divider` property `preserveCase`, replaced by `casing`
+- `moonstone/ExpandableInput` property `onInputChange`, replaced by `onChange`
+- `moonstone/MoonstoneDecorator.TextSizeDecorator`, replaced by `moonstone/MoonstoneDecorator.AccessibilityDecorator`
+- `moonstone/Panels.Header` property `preserveCase`, replaced by `casing`
+- `moonstone/Panels.Panel` property `noAutoFocus`, replaced by `autoFocus`
+- `moonstone/TooltipDecorator` property `tooltipPreserveCase`, replaced by `tooltipCasing`
+
+### Changed
+
+- `moonstone/VideoPlayer` to allow spotlight focus to move left and right from `MediaControls`
+- `moonstone/VideoPlayer` to disable bottom controls when loading until it's playable
+
+### Fixed
+
+- `moonstone/EditableIntegerPicker` to disable itself when on a range consisting of a single static value
+- `moonstone/Picker` to disable itself when containing fewer than two items
+- `moonstone/Popup` to spot its content correctly when `open` by default
+- `moonstone/RangePicker` to disable itself when on a range consisting of a single static value
+- `moonstone/TooltipDecorator` to hide when `onDismiss` has been invoked
+- `moonstone/VideoPlayer` to show media controls when pressing down in pointer mode
+- `moonstone/VideoPlayer` to provide a more natural 5-way focus behavior
+- `moonstone/VideoPlayer.MediaControls` to handle left and right key to jump when `moonstone/VideoPlayer` is focused
 
 ## [2.0.0-beta.6] - 2018-06-04
 

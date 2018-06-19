@@ -2,6 +2,8 @@ import direction from 'direction';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
+import {is} from '@enact/core/keymap';
+import {on, off} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React from 'react';
 import shallowEqual from 'recompose/shallowEqual';
@@ -293,6 +295,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.props.marqueeOn === 'render') {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
+			on('keydown', this.handlePointerHide);
 		}
 
 		componentWillReceiveProps (next) {
@@ -356,6 +359,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.context.Subscriber.unsubscribe('resize', this.handleResize);
 				this.context.Subscriber.unsubscribe('i18n', this.handleLocaleChange);
 			}
+			off('keydown', this.handlePointerHide);
 		}
 
 		/*
@@ -660,6 +664,17 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleLeave = (ev) => {
+			this.handleUnhover();
+			forwardLeave(ev, this.props);
+		}
+
+		handlePointerHide = ({keyCode}) => {
+			if (is('pointerHide', keyCode)) {
+				this.handleUnhover();
+			}
+		}
+
+		handleUnhover () {
 			this.isHovered = false;
 			if (this.props.disabled || this.props.marqueeOn === 'hover') {
 				if (this.sync) {
@@ -668,7 +683,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.cancelAnimation();
 				}
 			}
-			forwardLeave(ev, this.props);
 		}
 
 		cacheNode = (node) => {

@@ -1,6 +1,6 @@
 import React from 'react';
-import {mount} from 'enzyme';
-import Picker from '../Picker';
+import {mount, shallow} from 'enzyme';
+import {Picker, PickerBase} from '../Picker';
 
 describe('Picker Specs', () => {
 	it('should render selected child wrapped with <PickerItem/>', function () {
@@ -29,4 +29,15 @@ describe('Picker Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
+
+	it('should be disabled when empty', function () {
+		const picker = shallow(
+			<PickerBase>
+				{[]}
+			</PickerBase>
+		);
+
+		const actual = picker.find('SpottablePicker').last().prop('disabled');
+		expect(actual).to.be.true();
+	});
 });
