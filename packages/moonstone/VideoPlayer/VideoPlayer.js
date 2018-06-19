@@ -878,12 +878,12 @@ const VideoPlayerBase = class extends React.Component {
 	doAutoClose = () => {
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedTitleHide();
-		this.setState({
+		this.setState(({mediaSliderVisible, miniFeedbackVisible}) => ({
 			feedbackVisible: false,
 			mediaControlsVisible: false,
-			mediaSliderVisible: this.state.mediaSliderVisible && this.state.miniFeedbackVisible,
+			mediaSliderVisible: mediaSliderVisible && miniFeedbackVisible,
 			infoVisible: false
-		});
+		}));
 		this.markAnnounceRead();
 	}
 
@@ -925,10 +925,10 @@ const VideoPlayerBase = class extends React.Component {
 			const shouldShowSlider = this.pulsedPlaybackState !== null || calcNumberValueOfPlaybackRate(this.playbackRate) !== 1;
 
 			if (this.showMiniFeedback && (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider)) {
-				this.setState({
+				this.setState(({loading, duration, error}) => ({
 					mediaSliderVisible: shouldShowSlider,
-					miniFeedbackVisible: !(this.state.loading || !this.state.duration || this.state.error)
-				});
+					miniFeedbackVisible: !(loading || !duration || error)
+				}));
 			}
 		}
 	}
@@ -1585,12 +1585,12 @@ const VideoPlayerBase = class extends React.Component {
 	handleSliderBlur = () => {
 		this.sliderScrubbing = false;
 		this.startDelayedFeedbackHide();
-		this.setState({
+		this.setState(({paused, currentTime}) => ({
 			// If paused is false that means it is playing. We only want to hide on playing.
-			feedbackIconVisible: this.state.paused,
+			feedbackIconVisible: paused,
 			feedbackVisible: false,
-			sliderTooltipTime: this.state.currentTime
-		});
+			sliderTooltipTime: currentTime
+		}));
 	}
 
 	slider5WayPressJob = new Job(() => {
@@ -1635,11 +1635,11 @@ const VideoPlayerBase = class extends React.Component {
 			this.stopDelayedTitleHide();
 		}
 
-		this.setState({
+		this.setState(({announce}) => ({
 			infoVisible: showMoreComponents,
 			titleVisible: true,
-			announce: this.state.announce < AnnounceState.INFO ? AnnounceState.INFO : AnnounceState.DONE
-		});
+			announce: announce < AnnounceState.INFO ? AnnounceState.INFO : AnnounceState.DONE
+		}));
 	}
 
 	handleMediaControlsClose = (ev) => {
