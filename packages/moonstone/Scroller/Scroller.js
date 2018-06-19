@@ -48,27 +48,26 @@ class ScrollerBase extends Component {
 		initUiChildRef: PropTypes.func,
 
 		/**
-		 * `true` if rtl, `false` if ltr.
-		 *
-		 * @type {Boolean}
-		 * @private
-		 */
-		rtl: PropTypes.bool,
-
-
-		/**
 		 * Callback function to run after [Scroller]{@link moonstone/Scroller.Scroller} updates.
 		 *
 		 * @type {function}
 		 * @private
 		 */
-		updateCallback: PropTypes.func
+		onUpdate: PropTypes.func,
+
+		/**
+		 * `true` if rtl, `false` if ltr.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool
 	}
 
 	componentDidUpdate () {
-		const {updateCallback} = this.props;
-		if (updateCallback) {
-			updateCallback();
+		const {onUpdate} = this.props;
+		if (onUpdate) {
+			onUpdate();
 		}
 	}
 
@@ -353,8 +352,8 @@ class ScrollerBase extends Component {
 	render () {
 		const props = Object.assign({}, this.props);
 
-		delete props.updateCallback;
 		delete props.initUiChildRef;
+		delete props.onUpdate;
 
 		return (
 			<UiScrollerBase

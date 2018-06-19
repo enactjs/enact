@@ -589,10 +589,10 @@ class ScrollableBase extends Component {
 									initUiChildRef,
 									isVerticalScrollbarVisible,
 									onScroll: handleScroll,
+									onUpdate: this.updateScroll,
 									ref: this.initChildRef,
 									rtl,
-									spotlightId,
-									updateCallback: this.updateScroll
+									spotlightId
 								})}
 							</TouchableDiv>
 							{isVerticalScrollbarVisible ?
