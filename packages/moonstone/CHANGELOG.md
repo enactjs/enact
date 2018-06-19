@@ -2,6 +2,14 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualList`, and `moonstone/VirtualList.VirtualGridList` to scroll when receiving `webOSVoice` event
+
+### Changed
+
 ## [2.0.0-beta.6] - 2018-06-04
 
 ### Removed
