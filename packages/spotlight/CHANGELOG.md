@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
+- `spotlight/Spottable` to retain focus for disabled component after updates
 - `spotlight/Spottable` to emulate `onMouseUp` events that occur immediately after a non-enter key press
 - `spotlight/Spottable` to prevent scroll on focus on webOS
 
