@@ -3,13 +3,13 @@ import {constants, ScrollableBaseNative as UiScrollableBaseNative} from '@enact/
 import {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {Job} from '@enact/core/util';
+import platform from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Touchable from '@enact/ui/Touchable';
-import {platform} from '@enact/webos/platform';
 
 import $L from '../internal/$L';
 
@@ -663,7 +663,7 @@ class ScrollableBaseNative extends Component {
 			childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
 			childContainerRef.addEventListener('mousemove', this.onMouseMove, {capture: true});
 			childContainerRef.addEventListener('focusin', this.onFocus);
-			if (platform.tv) {
+			if (platform.webos) {
 				childContainerRef.addEventListener('webOSVoice', this.onVoice);
 				childContainerRef.setAttribute('data-webos-voice-intent', 'Scroll');
 			}
@@ -676,7 +676,7 @@ class ScrollableBaseNative extends Component {
 			childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
 			childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
 			childContainerRef.removeEventListener('focusin', this.onFocus);
-			if (platform.tv) {
+			if (platform.webos) {
 				childContainerRef.removeEventListener('webOSVoice', this.onVoice);
 				childContainerRef.removeAttribute('data-webos-voice-intent');
 			}
