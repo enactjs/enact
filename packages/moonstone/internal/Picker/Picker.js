@@ -123,6 +123,15 @@ const PickerBase = class extends React.Component {
 		'aria-valuetext': PropTypes.string,
 
 		/**
+		 * The `data-webos-voice-group-label` for the IconButton of Picker.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/internal/Picker.PickerBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-group-label': PropTypes.string,
+
+		/**
 		 * Accessibility hint
 		 *
 		 * For example, `hour`, `year`, and `meridiem`
@@ -740,6 +749,7 @@ const PickerBase = class extends React.Component {
 		const {active} = this.state;
 		const {
 			'aria-valuetext': ariaValueText,
+			'data-webos-voice-group-label': voiceGroupLabel,
 			noAnimation,
 			children,
 			disabled,
@@ -814,6 +824,7 @@ const PickerBase = class extends React.Component {
 					aria-controls={!joined ? incrementerAriaControls : null}
 					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
+					data-webos-voice-group-label={voiceGroupLabel}
 					disabled={incrementerDisabled}
 					hidden={reachedEnd}
 					icon={incrementIcon}
@@ -848,6 +859,7 @@ const PickerBase = class extends React.Component {
 					aria-controls={!joined ? decrementerAriaControls : null}
 					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
+					data-webos-voice-group-label={voiceGroupLabel}
 					disabled={decrementerDisabled}
 					hidden={reachedStart}
 					icon={decrementIcon}
