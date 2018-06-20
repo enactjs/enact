@@ -403,7 +403,7 @@ class ScrollableBase extends Component {
 
 		if (!this.initialScrollTo && this.props.initialScrollPosition) {
 			const {left, top} = this.props.initialScrollPosition;
-			this.scroll(left, top);
+			this.start({targetX: left, targetY: top, animate: false});
 		} else if (isSync) {
 			// If we actually synced, we need to reset scroll position.
 			this.setScrollLeft(0);

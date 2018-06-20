@@ -404,9 +404,7 @@ class ScrollableBaseNative extends Component {
 
 		if (!this.initialScrollTo && this.props.initialScrollPosition) {
 			const {left, top} = this.props.initialScrollPosition;
-			this.childRef.containerRef.style.scrollBehavior = null;
-			this.childRef.scrollToPosition(left, top);
-			this.childRef.containerRef.style.scrollBehavior = 'smooth';
+			this.start(left, top, false);
 		} else if (isSync) {
 			// If we actually synced, we need to reset scroll position.
 			this.setScrollLeft(0);
