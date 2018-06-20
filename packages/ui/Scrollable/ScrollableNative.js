@@ -154,15 +154,15 @@ class ScrollableBaseNative extends Component {
 		/**
 		 * Specifies initial scroll position including the following properties
 		 *
-		 * `x` is the number of scroll x position.
-		 * `y` is the number of scroll y position.
+		 * `left` is the number of scroll left position.
+		 * `top` is the number of scroll top position.
 		 *
 		 * @type {Object}
 		 * @public
 		 */
 		initialScrollPosition: PropTypes.shape({
-			x: PropTypes.number.isRequired,
-			y: PropTypes.number.isRequired
+			left: PropTypes.number.isRequired,
+			top: PropTypes.number.isRequired
 		}),
 
 		/**
@@ -405,8 +405,8 @@ class ScrollableBaseNative extends Component {
 			const isSync = this.childRef.syncClientSize();
 
 			if (this.props.initialScrollPosition) {
-				const {x, y} = this.props.initialScrollPosition;
-				this.childRef.scrollToPosition(x, y);
+				const {left, top} = this.props.initialScrollPosition;
+				this.childRef.scrollToPosition(left, top);
 			} else if (isSync) {
 				this.setScrollLeft(0);
 				this.setScrollTop(0);
