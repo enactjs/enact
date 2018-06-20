@@ -34,8 +34,10 @@ const DividerBase = kind({
 
 	propTypes: /** @lends moonstone/Divider.Divider.prototype */ {
 		/**
-		 * The content of the divider. A divider with no children (text content) will render simply
-		 * as a horizontal line, with even spacing above and below.
+		 * The divider content.
+		 *
+		 * A divider with no children (text content) will render simply as a horizontal line, with
+		 * even spacing above and below.
 		 *
 		 * @type {Node}
 		 * @public
@@ -119,24 +121,29 @@ const DividerDecorator = compose(
  */
 
 /**
- * Configures how the `children` string will be capitalized. By default, each word is capitalized.
+ * Capitalization style for `children`.
  *
- * @see i18n/Uppercase#casing
+ * @name casing
  * @type {String}
  * @default 'word'
  * @memberof moonstone/Divider.Divider.prototype
+ * @see i18n/Uppercase#casing
  * @public
  */
 
 /**
- * Determines what triggers the header content to start its animation. Valid values are
- * `'hover'` and `'render'`. The default is `'render'`.
+ * Marquee animation trigger.
  *
+ * Valid values are `'hover'` and `'render'`.
+ *
+ * @name marqueeOn
  * @type {String}
  * @default 'render'
  * @memberof moonstone/Divider.Divider.prototype
+ * @see moonstone/Marquee.Marquee
  * @public
  */
+
 const Divider = DividerDecorator(DividerBase);
 
 export default Divider;
