@@ -1,16 +1,14 @@
 import icons from './icons';
-import VideoPlayer, {VideoPlayerBase, MediaControls} from '@enact/moonstone/VideoPlayer';
+import VideoPlayer, {MediaControls} from '@enact/moonstone/VideoPlayer';
 import IconButton from '@enact/moonstone/IconButton';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, number, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const Config = mergeComponentMetadata('VideoPlayer', VideoPlayerBase, VideoPlayer);
+import {boolean, number, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -93,14 +91,19 @@ prop.events.forEach( (ev) => {
 	prop.eventActions[ev] = action(ev);
 });
 
+const Config = mergeComponentMetadata('VideoPlayer', VideoPlayer);
+const MediaControlsConfig = mergeComponentMetadata('MediaControls', MediaControls);
+VideoPlayer.displayName = 'VideoPlayer';
+MediaControls.displayName = 'MediaControls';
+
 storiesOf('Moonstone', module)
 	.add(
 		'VideoPlayer',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [Button, IconButton, MediaControls, VideoPlayer],
 			text: 'The basic VideoPlayer'
 		})(() => {
-			const videoSource = select('source', videoSources, prop.videos[0].source);
+			const videoSource = select('source', videoSources, Config, prop.videos[0].source);
 			const poster = matchPoster(videoSource);
 			return (
 				<div
@@ -126,44 +129,44 @@ storiesOf('Moonstone', module)
 						}}
 					>VideoPlayer Edge</label>
 					<VideoPlayer
-						autoCloseTimeout={number('autoCloseTimeout', 7000)}
-						disabled={boolean('disabled', false)}
-						feedbackHideDelay={number('feedbackHideDelay', 3000)}
-						loop={boolean('loop', true)}
-						miniFeedbackHideDelay={number('miniFeedbackHideDelay', 2000)}
-						muted={boolean('muted', true)}
-						noAutoPlay={boolean('noAutoPlay', false)}
-						noMiniFeedback={boolean('noMiniFeedback', false)}
-						noSlider={boolean('noSlider', false)}
-						pauseAtEnd={boolean('pauseAtEnd', false)}
+						autoCloseTimeout={number('autoCloseTimeout', Config, 7000)}
+						disabled={boolean('disabled', Config)}
+						feedbackHideDelay={number('feedbackHideDelay', Config, 3000)}
+						loop={boolean('loop', Config, true)}
+						miniFeedbackHideDelay={number('miniFeedbackHideDelay', Config, 2000)}
+						muted={boolean('muted', Config, true)}
+						noAutoPlay={boolean('noAutoPlay', Config)}
+						noMiniFeedback={boolean('noMiniFeedback', Config)}
+						noSlider={boolean('noSlider', Config)}
+						pauseAtEnd={boolean('pauseAtEnd', Config)}
 						poster={poster}
-						seekDisabled={boolean('seekDisabled', false)}
-						spotlightDisabled={boolean('spotlightDisabled', false)}
+						seekDisabled={boolean('seekDisabled', Config)}
+						spotlightDisabled={boolean('spotlightDisabled', Config)}
 						thumbnailSrc={poster}
-						thumbnailUnavailable={boolean('thumbnailUnavailable', false)}
-						title={text('title', 'Moonstone VideoPlayer Sample Video')}
-						titleHideDelay={number('titleHideDelay', 4000)}
+						thumbnailUnavailable={boolean('thumbnailUnavailable', Config)}
+						title={text('title', Config, 'Moonstone VideoPlayer Sample Video')}
+						titleHideDelay={number('titleHideDelay', Config, 4000)}
 						{...prop.eventActions}
 					>
 						<source src={videoSource} type="video/mp4" />
 						<infoComponents>A video about some things happening to and around some characters. Very exciting stuff.</infoComponents>
 						<MediaControls
-							backwardIcon={select('backwardIcon', icons, 'backward')}
-							forwardIcon={select('forwardIcon', icons, 'forward')}
-							initialJumpDelay={number('initialJumpDelay', 400)}
-							jumpBackwardIcon={select('jumpBackwardIcon', icons, 'skipbackward')}
-							jumpButtonsDisabled={boolean('jumpButtonsDisabled', false)}
-							jumpDelay={number('jumpDelay', 200)}
-							jumpForwardIcon={select('jumpForwardIcon', icons, 'skipforward')}
-							moreButtonCloseLabel={text('moreButtonCloseLabel')}
-							moreButtonDisabled={boolean('moreButtonDisabled', false)}
-							moreButtonLabel={text('moreButtonLabel')}
-							no5WayJump={boolean('no5WayJump', false)}
-							noJumpButtons={boolean('noJumpButtons', false)}
-							noRateButtons={boolean('noRateButtons', false)}
-							pauseIcon={select('pauseIcon', icons, 'pause')}
-							playIcon={select('playIcon', icons, 'play')}
-							rateButtonsDisabled={boolean('rateButtonsDisabled', false)}
+							backwardIcon={select('backwardIcon', icons, MediaControlsConfig, 'backward')}
+							forwardIcon={select('forwardIcon', icons, MediaControlsConfig, 'forward')}
+							initialJumpDelay={number('initialJumpDelay', MediaControlsConfig, 400)}
+							jumpBackwardIcon={select('jumpBackwardIcon', icons, MediaControlsConfig, 'skipbackward')}
+							jumpButtonsDisabled={boolean('jumpButtonsDisabled', MediaControlsConfig)}
+							jumpDelay={number('jumpDelay', MediaControlsConfig, 200)}
+							jumpForwardIcon={select('jumpForwardIcon', icons, MediaControlsConfig, 'skipforward')}
+							moreButtonCloseLabel={text('moreButtonCloseLabel', MediaControlsConfig)}
+							moreButtonDisabled={boolean('moreButtonDisabled', MediaControlsConfig)}
+							moreButtonLabel={text('moreButtonLabel', MediaControlsConfig)}
+							no5WayJump={boolean('no5WayJump', MediaControlsConfig)}
+							noJumpButtons={boolean('noJumpButtons', MediaControlsConfig)}
+							noRateButtons={boolean('noRateButtons', MediaControlsConfig)}
+							pauseIcon={select('pauseIcon', icons, MediaControlsConfig, 'pause')}
+							playIcon={select('playIcon', icons, MediaControlsConfig, 'play')}
+							rateButtonsDisabled={boolean('rateButtonsDisabled', MediaControlsConfig)}
 						>
 							<leftComponents><IconButton backgroundOpacity="translucent">fullscreen</IconButton></leftComponents>
 							<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
