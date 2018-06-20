@@ -152,6 +152,20 @@ class ScrollableBaseNative extends Component {
 		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
 		/**
+		 * Specifies initial scroll position including the following properties
+		 *
+		 * `x` is the number of scroll x position.
+		 * `y` is the number of scroll y position.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		initialScrollPosition: PropTypes.shape({
+			x: PropTypes.number.isRequired,
+			y: PropTypes.number.isRequired
+		}),
+
+		/**
 		 * Called when flicking with a mouse or a touch screen.
 		 *
 		 * @type {Function}
@@ -388,7 +402,12 @@ class ScrollableBaseNative extends Component {
 		// Need to sync calculated client size if it is different from the real size
 		if (this.childRef.syncClientSize) {
 			// If we actually synced, we need to reset scroll position.
-			if (this.childRef.syncClientSize()) {
+			const isSync = this.childRef.syncClientSize();
+
+			if (this.props.initialScrollPosition) {
+				const {x, y} = this.props.initialScrollPosition;
+				this.childRef.scrollToPosition(x, y);
+			} else if (isSync) {
 				this.setScrollLeft(0);
 				this.setScrollTop(0);
 			}
@@ -1235,6 +1254,7 @@ class ScrollableBaseNative extends Component {
 		delete rest.cbScrollTo;
 		delete rest.clearAllOverscrollEffects;
 		delete rest.horizontalScrollbar;
+		delete rest.initialScrollPosition;
 		delete rest.onFlick;
 		delete rest.onKeyDown;
 		delete rest.onMouseDown;
