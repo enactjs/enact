@@ -1,12 +1,10 @@
-import MediaOverlay, {MediaOverlayBase} from '@enact/moonstone/MediaOverlay';
+import MediaOverlay, {MediaOverlayBase, MediaOverlayDecorator} from '@enact/moonstone/MediaOverlay';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const Config = mergeComponentMetadata('MediaOverlay', MediaOverlayBase);
+import {select} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
 const defaultPlaceholder =
 	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
@@ -46,20 +44,24 @@ const prop = {
 	}
 };
 
+
+const Config = mergeComponentMetadata('MediaOverlay', MediaOverlay, MediaOverlayBase, MediaOverlayDecorator);
+MediaOverlay.displayName = 'MediaOverlay';
+
 storiesOf('Moonstone', module)
 	.add(
 		'MediaOverlay',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [MediaOverlay],
 			text: 'The basic MediaOverlay'
 		})(() => (
 			<MediaOverlay
-				imageOverlay={select('imageOverlay', prop.images)}
-				placeholder={select('placeholder', prop.placeholder, 'None')}
-				text={select('text', prop.text, prop.text[0])}
-				textAlign={select('textAlign', ['start', 'center', 'end'], 'center')}
+				imageOverlay={select('imageOverlay', prop.images, Config)}
+				placeholder={select('placeholder', prop.placeholder, Config, 'None')}
+				text={select('text', prop.text, Config, prop.text[0])}
+				textAlign={select('textAlign', ['start', 'center', 'end'], Config, 'center')}
 			>
-				<source src={select('source', prop.videos, Object.keys(prop.videos)[0])} />
+				<source src={select('source', prop.videos, Config, Object.keys(prop.videos)[0])} />
 			</MediaOverlay>
 		))
 	);

@@ -2,11 +2,10 @@ import Icon from '@enact/moonstone/Icon';
 import SlotItem from '@enact/moonstone/SlotItem';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('SlotItem', SlotItem);
 
@@ -14,19 +13,21 @@ const prop = {
 	autoHide: [null, 'after', 'before', 'both']
 };
 
+SlotItem.displayName = 'SlotItem';
+
 storiesOf('Moonstone', module)
 	.add(
 		'SlotItem',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [Icon, SlotItem],
 			text: 'Basic usage of SlotItem'
 		})(() => (
 			<SlotItem
-				autoHide={nullify(select('autoHide', prop.autoHide, 'after'))}
-				disabled={boolean('disabled', false)}
+				autoHide={select('autoHide', prop.autoHide, Config, 'after')}
+				disabled={boolean('disabled', Config)}
 			>
 				<Icon slot="slotBefore">star</Icon>
-				{text('children', 'Hello Item')}
+				{text('children', Config, 'Hello Item')}
 				<slotAfter>
 					<Icon>lock</Icon>
 					<Icon>flag</Icon>

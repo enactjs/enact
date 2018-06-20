@@ -822,7 +822,6 @@ const PickerBase = class extends React.Component {
 					onHoldPulse={this.handleIncDown}
 					onKeyDown={this.handleIncKeyDown}
 					onSpotlightDisappear={onSpotlightDisappear}
-					onTap={this.handleIncClick}
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
@@ -857,7 +856,6 @@ const PickerBase = class extends React.Component {
 					onHoldPulse={this.handleDecDown}
 					onKeyDown={this.handleDecKeyDown}
 					onSpotlightDisappear={onSpotlightDisappear}
-					onTap={this.handleDecClick}
 					onUp={this.handleUp}
 					spotlightDisabled={spotlightDisabled}
 				/>
