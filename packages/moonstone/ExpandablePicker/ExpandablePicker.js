@@ -48,6 +48,7 @@ const ExpandablePickerBase = kind({
 		 * The `data-webos-voice-group-label` for ExpandableItem and Picker.
 		 *
 		 * @type {String}
+		 * @memberof moonstone/ExpandablePicker.ExpandablePickerBase.prototype
 		 * @public
 		 */
 		'data-webos-voice-group-label': PropTypes.string,

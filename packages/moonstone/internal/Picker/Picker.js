@@ -126,6 +126,7 @@ const PickerBase = class extends React.Component {
 		 * The `data-webos-voice-group-label` for the IconButton of Picker.
 		 *
 		 * @type {String}
+		 * @memberof moonstone/internal/Picker.PickerBase.prototype
 		 * @public
 		 */
 		'data-webos-voice-group-label': PropTypes.string,

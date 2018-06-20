@@ -90,6 +90,7 @@ const IncrementSliderBase = kind({
 		 * The `data-webos-voice-group-label` for the IconButton of IncrementSlider.
 		 *
 		 * @type {String}
+		 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
 		 * @public
 		 */
 		'data-webos-voice-group-label': PropTypes.string,
