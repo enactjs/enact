@@ -1,30 +1,28 @@
 import FormCheckboxItem from '@enact/moonstone/FormCheckboxItem';
-import ToggleItem from '@enact/moonstone/ToggleItem';
-import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('FormCheckboxItem', ItemBase, Item, ToggleItem, FormCheckboxItem);
+const Config = mergeComponentMetadata('FormCheckboxItem', FormCheckboxItem);
 
 storiesOf('Moonstone', module)
 	.add(
 		'FormCheckboxItem',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [FormCheckboxItem],
 			text: 'Basic usage of FormCheckboxItem'
 		})(() => (
 			<FormCheckboxItem
-				disabled={boolean('disabled', false)}
-				iconPosition={select('iconPosition', ['before', 'after'], 'before')}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', Config)}
+				iconPosition={select('iconPosition', ['before', 'after'], Config, 'before')}
+				inline={boolean('inline', Config)}
 				onToggle={action('onToggle')}
 			>
-				{text('children', 'A Checkbox for a form')}
+				{text('children', Config, 'A Checkbox for a form')}
 			</FormCheckboxItem>
 		))
 	);
