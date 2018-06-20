@@ -55,7 +55,7 @@ const DividerBase = kind({
 		 *
 		 * _Note:_ Spacing is separate from margin with regard to `margin-top`. It ensures a
 		 * consistent distance from the bottom horizontal line. It's safe to use `margin-top` to add
-		 * additional spacing above your {@link moonstone/Divider.Divider}.
+		 * additional spacing above your `Divider`.
 		 *
 		 * @type {String}
 		 * @default 'normal'
