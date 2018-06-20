@@ -16,6 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/MediaOverlay` to not use `moonstone/Marquee.MarqueeController` for `marqueeOn` render
 - `moonston/EditableIntegerPicker` to disable itself when on a range producing a single static value.
 - `moonston/Picker` to disable itself when containing only one or zero items.
 - `moonston/RangePicker` to disable itself when on a range producing a single static value.
@@ -26,6 +27,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/MediaOverlay` to remove text-shadow style and change font-weight from 700 to 500
 - `moonstone/VideoPlayer` to roam spotlight focus freely to left and right from `MediaControls`
 - `moonstone/VideoPlayer` to disable bottom controls when loading until it's playable
 - `moonstone/VideoPlayer` container changes to provide a more natural 5-way focus behavior
