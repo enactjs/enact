@@ -399,18 +399,17 @@ class ScrollableBase extends Component {
 			{hasDataSizeChanged} = this.childRef;
 
 		// Need to sync calculated client size if it is different from the real size
-		if (this.childRef.syncClientSize) {
-			// If we actually synced, we need to reset scroll position.
-			const isSync = this.childRef.syncClientSize();
+		const isSync = this.childRef.syncClientSize ? this.childRef.syncClientSize() : null;
 
-			if (this.props.initialScrollPosition) {
-				const {left, top} = this.props.initialScrollPosition;
-				this.scroll(left, top);
-			} else if (isSync) {
-				this.setScrollLeft(0);
-				this.setScrollTop(0);
-			}
+		if (!this.initialScrollTo && this.props.initialScrollPosition) {
+			const {left, top} = this.props.initialScrollPosition;
+			this.scroll(left, top);
+		} else if (isSync) {
+			// If we actually synced, we need to reset scroll position.
+			this.setScrollLeft(0);
+			this.setScrollTop(0);
 		}
+		this.initialScrollTo = true;
 
 		this.clampScrollPosition();
 
@@ -494,6 +493,7 @@ class ScrollableBase extends Component {
 
 	// status
 	deferScrollTo = true
+	initialScrollTo = false
 	isScrollAnimationTargetAccumulated = false
 	isUpdatedScrollThumb = false
 
