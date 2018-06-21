@@ -1,5 +1,5 @@
 /**
- * Provides methods to map to transtalted strings.
+ * Provides methods to map to translated strings.
  *
  * Usage:
  * ```

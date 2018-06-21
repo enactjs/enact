@@ -1,7 +1,7 @@
 import {isNonLatinLocale, isRtlLocale} from '../locale';
 import LocaleInfo from '../ilib/lib/LocaleInfo';
 
-/**
+/*
  * A function that returns locale in class name.
  *
  * @memberof i18n/I18nDecorator

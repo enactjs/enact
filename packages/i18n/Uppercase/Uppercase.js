@@ -1,5 +1,5 @@
 /**
- * Provide higher-order component interface for handling locale-aware uppercasing.
+ * Provides higher-order component interface for handling locale-aware uppercasing.
  *
  * @module i18n/Uppercase
  * @exports Uppercase

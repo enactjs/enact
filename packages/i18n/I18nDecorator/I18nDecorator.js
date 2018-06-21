@@ -62,7 +62,7 @@ const IntlHoc = hoc((config, Wrapped) => {
 			className: PropTypes.string,
 
 			/**
-			 * Locale string in the format.
+			 * A string with a {@link https://tools.ietf.org/html/rfc5646|BCP 47 language tag}.
 			 *
 			 * The system locale will be used by default.
 			 *

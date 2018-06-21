@@ -100,7 +100,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		/**
+		/*
 		 * Compare our current version of the resolved resolution class names with a fresh
 		 * initialization of RI.
 		 *
