@@ -1,3 +1,13 @@
+/**
+ * A collection of locale-aware text utility methods.
+ *
+ * @module i18n/util
+ * @exports toCapitalized
+ * @exports isRtlText
+ * @exports toLowerCase
+ * @exports toUpperCase
+ * @exports toWordCase
+ */
 import '../src/glue';
 import {toLowerCase, toUpperCase} from '../src/case';
 
