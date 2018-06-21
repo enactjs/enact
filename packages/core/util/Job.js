@@ -1,6 +1,7 @@
 /**
  * @class Job
  * @memberof core/util
+ * @public
  */
 class Job {
 	id = null
@@ -11,8 +12,8 @@ class Job {
 	/**
 	 * @constructor
 	 * @memberof core/util.Job
-	 * @param {Function} fn       function to execute as the requested job.
-	 * @param {Number}   timeout  The number of milliseconds to wait before starting the job.
+	 * @param {Function}    fn       Function to execute as the requested job.
+	 * @param {Number}      timeout  The number of milliseconds to wait before starting the job.
 	 */
 	constructor (fn, timeout) {
 		this.fn = fn;
@@ -162,7 +163,7 @@ class Job {
 	 *
 	 * @method
 	 * @memberof core/util.Job
-	 * @param   {Number}     timeout  The number of milliseconds to wait before running requestAnimationFrame.
+	 * @param   {Number}     timeout  The number of milliseconds to wait before running `requestAnimationFrame`.
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
 	 * @returns {undefined}
 	 * @public

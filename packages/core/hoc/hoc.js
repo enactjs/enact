@@ -1,5 +1,5 @@
 /**
- * Provides the {@link core/hoc.hoc} method to create Higher-Order Components (HOCs).
+ * Provides the {@link core/hoc.hoc} method to create higher-order components (HOCs).
  *
  * @module core/hoc
  */
@@ -17,7 +17,7 @@ const mergeFn = (key, defaultValue, userValue) => {
 };
 
 /**
- * Constructs a Higher-order Component using an optional set of default configuration parameters and
+ * Constructs a higher-order component (HOC) using an optional set of default configuration parameters and
  * a factory method that accepts instance configuration parameters and a component to wrap. The
  * returned function can accept:
  *	* an instance config and a component constructor to wrap and return a renderable component, or
@@ -25,7 +25,7 @@ const mergeFn = (key, defaultValue, userValue) => {
  *	(like the next bullet), or
  *	* a component constructor and return a renderable component
  *
- * Example:
+ * Usage:
  * ```
  *	const Countable = hoc({prop: 'data-count'}, (config, Wrapped) => {
  *		return class extends React.Component {
@@ -53,9 +53,9 @@ const mergeFn = (key, defaultValue, userValue) => {
  *
  * @function
  * @param  {Object} defaultConfig Set of default configuration parameters
- * @param  {Function} hawk        Higher-order component
+ * @param  {Function} hawk        higher-order component
  *
- * @returns {Function}             HoC Decorator
+ * @returns {Function}             HOC Decorator
  * @memberof core/hoc
  * @public
  */

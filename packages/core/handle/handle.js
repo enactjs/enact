@@ -6,6 +6,7 @@
  * function in the chain. If it returns `false` (or any falsy value like `null` or `undefined`),
  * the event handling chain stops at that input function.
  *
+ * @example
  * ```
  * import {forKey, forward, handle, preventDefault} from '@enact/core/handle';
  *
@@ -30,6 +31,7 @@
  * Handlers can either be bound directly using the native `bind()` method or using the `bindAs()`
  * utility method that is appended to the handler.
  *
+ * @example
  * ```
  * import {forKey, forward, handle, preventDefault} from '@enact/core/handle';
  * import React from 'react';
@@ -132,7 +134,7 @@ const decorateHandleFunction = (fn) => {
  *
  * @method   handle
  * @memberof core/handle
- * @param    {...Function}  handlers List of handlers to process the event
+ * @param    {...Function}  handlers List of handlers to process the event.
  * @returns  {Function}	    A function that accepts an event which is dispatched to each of the
  *                          provided handlers.
  */
@@ -140,7 +142,7 @@ const handle = function (...handlers) {
 	const h = makeHandler(handlers);
 
 	// In order to support binding either handle (handle.bind(this)) or a handler
-	// (a = handle(), a.bind(this)), we cache `this` here and use is as the fallback for props and
+	// (a = handle(), a.bind(this)), we cache `this` here and use it as the fallback for props and
 	// context if fn() doesn't have its own `this`.
 	const _outer = this;
 
@@ -190,16 +192,18 @@ const handle = function (...handlers) {
  * arguments are passed to both the condition function and the handler function. The value returned
  * from the handler is returned.
  *
+ * @example
  * ```
  * const handler = oneOf(
  * 	[forKey('enter'), handleEnter],
  * 	[forKey('left'), handleLeft],
  * 	[forKey('right'), handleRight]
  * );
+ * ```
  *
  * @method   oneOf
  * @memberof core/handle
- * @param    {...Function}  handlers List of handlers to process the event
+ * @param    {...Function[]}  handlers List of conditions and handlers to process the event
  * @returns  {Function}	    A function that accepts an event which is dispatched to each of the
  *                          conditions and, if it passes, onto the provided handler.
  */
@@ -211,6 +215,7 @@ const oneOf = handle.oneOf = function (...handlers) {
  * A function that always returns `true`. Optionally accepts a `handler` function which is called
  * before returning `true`.
  *
+ * @example
  * ```
  * // Used to coerce an existing function into a handler change
  * const coercedHandler = handle(
@@ -227,7 +232,7 @@ const oneOf = handle.oneOf = function (...handlers) {
  *
  * @method   returnsTrue
  * @memberof core/handle
- * @param    {[Function]}  handler  Handler function called before returning `true`
+ * @param    {Function}  handler  Handler function called before returning `true`.
  * @returns  {Function}	   A function that returns true
  */
 const returnsTrue = handle.returnsTrue = function (handler) {
@@ -243,8 +248,9 @@ const returnsTrue = handle.returnsTrue = function (handler) {
 };
 
 /**
- * Calls a named function on the event and returns `true`
+ * Calls a named function on the event and returns `true`.
  *
+ * @example
  * ```
  * import {callOnEvent, handle} from '@enact/core/handle';
  *
@@ -256,8 +262,8 @@ const returnsTrue = handle.returnsTrue = function (handler) {
  *
  * @method   callOnEvent
  * @memberof core/handle
- * @param    {String}     methodName  Name of the method to call on the event.
- * @param    {Object}     ev          Event
+ * @param    {String}     methodName  Name of the method to call on the event
+ * @param    {Object}     ev          Event payload
  * @returns  {Boolean}                Always returns `true`
  * @private
  */
@@ -275,6 +281,7 @@ const callOnEvent = handle.callOnEvent = curry((methodName, ev) => {
 /**
  * Allows handling to continue if the value of `prop` on the event strictly equals `value`
  *
+ * @example
  * ```
  * import {forEventProp, handle} from '@enact/core/handle';
  *
@@ -288,7 +295,7 @@ const callOnEvent = handle.callOnEvent = curry((methodName, ev) => {
  * @memberof core/handle
  * @param    {String}	   prop   Name of property on event
  * @param    {*}           value  Value of property
- * @param    {Object}      ev     Event
+ * @param    {Object}      ev     Event payload
  * @returns  {Boolean}            Returns `true` if `prop` on `event` strictly equals `value`
  */
 const forEventProp = handle.forEventProp = curry((prop, value, ev) => {
@@ -300,6 +307,7 @@ const forEventProp = handle.forEventProp = curry((prop, value, ev) => {
  * is not a function, it is ignored. The return value of the forwarded function is ignored and
  * `true` is always returned instead.
  *
+ * @example
  * ```
  * import {forward, handle} from '@enact/core/handle';
  *
@@ -312,7 +320,7 @@ const forEventProp = handle.forEventProp = curry((prop, value, ev) => {
  * @method   forward
  * @memberof core/handle
  * @param    {String}    name   Name of method on the `props`
- * @param    {Object}    ev     Event
+ * @param    {Object}    ev     Event payload
  * @param    {Object}    props  Props object
  * @returns  {Boolean}          Always returns `true`
  */
@@ -328,6 +336,7 @@ const forward = handle.forward = curry(named((name, ev, props) => {
 /**
  * Calls `event.preventDefault()` and returns `true`.
  *
+ * @example
  * ```
  * import {handle, preventDefault} from '@enact/core/handle';
  *
@@ -339,7 +348,7 @@ const forward = handle.forward = curry(named((name, ev, props) => {
  *
  * @method   preventDefault
  * @memberof core/handle
- * @param    {Object}        ev  Event
+ * @param    {Object}        ev  Event payload
  * @returns  {Boolean}           Always returns `true`
  */
 const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
@@ -349,6 +358,7 @@ const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
  * behavior. If the specified prop is `undefined` or is not a function, it is ignored. Returns
  * `false` when `event.preventDefault()` has been called in a handler.
  *
+ * @example
  * ```
  * import {forwardWithPrevent, handle} from '@enact/core/handle';
  *
@@ -359,12 +369,12 @@ const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
  * ```
  *
  * @method   forwardWithPrevent
- * @private
  * @memberof core/handle
  * @param    {String}    name   Name of method on the `props`
- * @param    {Object}    ev     Event
+ * @param    {Object}    ev     Event payload
  * @param    {Object}    props  Props object
  * @returns  {Boolean}          Returns `true` if default action is prevented
+ * @private
  */
 const forwardWithPrevent = handle.forwardWithPrevent = curry(named((name, ev, props) => {
 	let prevented = false;
@@ -382,6 +392,7 @@ const forwardWithPrevent = handle.forwardWithPrevent = curry(named((name, ev, pr
 /**
  * Calls `event.stopPropagation()` and returns `true`
  *
+ * @example
  * ```
  * import {handle, stop} from '@enact/core/handle';
  *
@@ -393,7 +404,7 @@ const forwardWithPrevent = handle.forwardWithPrevent = curry(named((name, ev, pr
  *
  * @method   stop
  * @memberof core/handle
- * @param    {Object}   ev  Event
+ * @param    {Object}   ev  Event payload
  * @returns  {Boolean}      Always returns `true`
  */
 const stop = handle.stop = named(callOnEvent('stopPropagation'), 'stop');
@@ -401,6 +412,7 @@ const stop = handle.stop = named(callOnEvent('stopPropagation'), 'stop');
 /**
  * Calls `event.stopImmediatePropagation()` and returns `true`
  *
+ * @example
  * ```
  * import {handle, stopImmediate} from '@enact/core/handle';
  *
@@ -412,7 +424,7 @@ const stop = handle.stop = named(callOnEvent('stopPropagation'), 'stop');
  *
  * @method   stopImmediate
  * @memberof core/handle
- * @param    {Object}       ev  Event
+ * @param    {Object}       ev  Event payload
  * @returns  {Boolean}          Always returns `true`
  */
 const stopImmediate = handle.stopImmediate = callOnEvent('stopImmediatePropagation');
@@ -420,6 +432,7 @@ const stopImmediate = handle.stopImmediate = callOnEvent('stopImmediatePropagati
 /**
  * Allows event handling to continue if `event.keyCode === value`.
  *
+ * @example
  * ```
  * import {forKeyCode, handle} from '@enact/core/handle';
  *
@@ -432,7 +445,7 @@ const stopImmediate = handle.stopImmediate = callOnEvent('stopImmediatePropagati
  * @method   forKeyCode
  * @memberof core/handle
  * @param    {Number}    value  `keyCode` to test
- * @param    {Object}    ev     Event
+ * @param    {Object}    ev     Event payload
  * @returns  {Boolean}          Returns `true` if `event.keyCode` strictly equals `value`
  */
 const forKeyCode = handle.forKeyCode = forEventProp('keyCode');
@@ -441,6 +454,7 @@ const forKeyCode = handle.forKeyCode = forEventProp('keyCode');
  * Allows handling to continue if the event's keyCode is mapped to `name` within
  * {@link core/keymap}.
  *
+ * @example
  * ```
  * import {forKey, handle} from '@enact/core/handle';
  *
@@ -453,7 +467,7 @@ const forKeyCode = handle.forKeyCode = forEventProp('keyCode');
  * @method   forKey
  * @memberof core/handle
  * @param    {String}    name   Name from {@link core/keymap}
- * @param    {Object}    ev     Event
+ * @param    {Object}    ev     Event payload
  * @returns  {Boolean}          Returns `true` if `event.keyCode` is mapped to `name`
  * @see      core/keymap
  */
@@ -464,6 +478,7 @@ const forKey = handle.forKey = curry((name, ev) => {
 /**
  * Allows handling to continue if the value of `prop` on the props strictly equals `value`.
  *
+ * @example
  * ```
  * import {forProp, handle} from '@enact/core/handle';
  *
@@ -477,9 +492,9 @@ const forKey = handle.forKey = curry((name, ev) => {
  * @memberof core/handle
  * @param    {String}    prop   Name of property on props object
  * @param    {*}         value  Value of property
- * @param    {Object}    ev     Event
+ * @param    {Object}    ev     Event payload
  * @param    {Object}    props  Props object
- * @returns  {Boolean}          Event handler
+ * @returns  {Boolean}          Returns `true` if the value of `props[prop]` strictly equals `value`
  */
 const forProp = handle.forProp = curry((prop, value, ev, props) => {
 	return props[prop] === value;
@@ -489,6 +504,7 @@ const forProp = handle.forProp = curry((prop, value, ev, props) => {
  * Logs the event, props, and context optionally preceded by a custom message. Will only log in
  * development mode.
  *
+ * @example
  * ```
  * import {forProp, handle, log} from '@enact/core/handle';
  *
@@ -501,7 +517,7 @@ const forProp = handle.forProp = curry((prop, value, ev, props) => {
  * @method   log
  * @memberof core/handle
  * @param    {String}     message  Custom message
- * @param    {Object}     ev       Event
+ * @param    {Object}     ev       Event payload
  * @param    {...*}       [args]   Any args passed are logged
  * @returns  {Boolean}             Always returns `true`
  */
@@ -522,6 +538,7 @@ const log = handle.log = curry((message, ev, ...args) => {
  *
  * If the method does not exist or handle isn't bound to an instance, it returns `false`.
  *
+ * @example
  * ```
  * import {call, handle, forProp} from '@enact/core/handle';
  *
@@ -566,6 +583,7 @@ const call = function (method) {
  * `adapter` is passed as the first argument to `handler` with the remaining arguments kept the
  * same. This is often useful to generate a custom event payload before forwarding on to a callback.
  *
+ * @example
  * ```
  * import {adaptEvent, forward} from '@enact/core/handle';
  *

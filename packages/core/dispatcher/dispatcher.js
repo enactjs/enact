@@ -18,7 +18,7 @@ import {getListeners, addListener} from './listeners';
 const getDefaultTarget = () => typeof document !== 'undefined' && document;
 
 /**
- * Wraps event callbacks with a try-catch block to prevent unrelated code from blocking
+ * Wraps event callbacks with a try-catch block to prevent unrelated code from blocking.
  *
  * @function
  * @param	{Event}		ev	Event payload
@@ -38,7 +38,7 @@ const invoker = curry(function (ev, fn) {
 });
 
 /**
- * Dispatches an event to the registered handlers
+ * Dispatches an event to the registered handlers.
  *
  * @function
  * @param	{Event}		ev	Event payload
@@ -79,7 +79,7 @@ const on = function (name, fn, target = getDefaultTarget()) {
 };
 
 /**
- * Removes a global event listener
+ * Removes a global event listener.
  *
  * @function
  * @param	{String}	name				Event name
@@ -104,7 +104,7 @@ const off = function (name, fn, target = getDefaultTarget()) {
 };
 
 /**
- * Adds a new global event listener that removes itself after handling one event
+ * Adds a new global event listener that removes itself after handling one event.
  *
  * @function
  * @param	{String}	name		Event name

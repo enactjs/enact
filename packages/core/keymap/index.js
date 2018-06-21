@@ -1,3 +1,27 @@
+/**
+ * Manages a map of names to key codes to simplify event handlers
+ *
+ * @example
+ * ```
+ * import {add, is} from '@enact/core/keymap';
+ *
+ * add('enter', 13);
+ * const isEnter = is('enter');
+ *
+ * // within event handler
+ * if (isEnter(ev.keyCode)) {
+ *   // handle enter
+ * }
+ * ```
+ *
+ * @module core/keymap
+ * @exports add
+ * @exports addAll
+ * @exports is
+ * @exports remove
+ * @exports removeAll
+ */
+
 // keymap uses a singleton object, map, to manage the keymap. since webpack may make multiple copies
 // of the module available if the import path is different, we ensure a consistent import path for
 // the singleton instance by facading it with this module.

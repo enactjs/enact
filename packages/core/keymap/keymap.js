@@ -1,21 +1,3 @@
-/**
- * Manages a map of names to key codes to simplify event handlers
- *
- * ```
- * import {add, is} from '@enact/core/keymap';
- *
- * add('enter', 13);
- * const isEnter = is('enter');
- *
- * // within event handler
- * if (isEnter(ev.keyCode)) {
- *   // handle enter
- * }
- * ```
- *
- * @module core/keymap
- */
-
 import curry from 'ramda/src/curry';
 
 /**
@@ -28,19 +10,19 @@ import curry from 'ramda/src/curry';
 const map = {};
 
 /**
- * Utility to safely convert keymap name to lower case
+ * Safely converts keymap name to lowercase.
  *
  * @function
  * @memberof core/keymap
  * @param   {String} name  Name for keyCode
  *
- * @returns {String}       Name for keyCode in lower case
+ * @returns {String}       Name for keyCode in lowercase
  * @private
  */
 const toLowerCase = (name) => name ? name.toLowerCase() : '';
 
 /**
- * Iterates over `set` and invokes `fn` with the key and value of each item
+ * Iterates over `set` and invokes `fn` with the key and value of each item.
  *
  * @function
  * @memberof core/keymap
@@ -55,7 +37,7 @@ const forEachObj = curry(function (fn, set) {
 });
 
 /**
- * Invokes `fn` with `name` and `keyCode` for each key code provided
+ * Invokes `fn` with `name` and `keyCode` for each key code provided.
  *
  * @function
  * @memberof core/keymap
@@ -75,7 +57,7 @@ const oneOrArray = curry(function (fn, name, keyCode) {
 });
 
 /**
- * Adds `keyCode` to `name`
+ * Adds `keyCode` to `name`.
  *
  * @function
  * @memberof core/keymap
@@ -122,7 +104,7 @@ const removeOne = curry(function (name, keyCode) {
 });
 
 /**
- * Registers `keyCode` for `name`
+ * Registers `keyCode` for `name`.
  *
  * @function add
  * @memberof core/keymap
@@ -147,7 +129,7 @@ const add = oneOrArray(addOne);
 const addAll = forEachObj(add);
 
 /**
- * Deregisters `keyCode` from `name`.
+ * Unregisters `keyCode` from `name`.
  *
  * @function remove
  * @memberof core/keymap
@@ -160,7 +142,7 @@ const addAll = forEachObj(add);
 const remove = oneOrArray(removeOne);
 
 /**
- * Deregisters a set of key codes.
+ * Unregisters a set of key codes.
  *
  * @function removeAll
  * @memberof core/keymap

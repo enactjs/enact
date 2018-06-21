@@ -2,6 +2,15 @@
  * A collection of utility methods.
  *
  * @module core/util
+ * @exports cap
+ * @exports coerceArray
+ * @exports coerceFunction
+ * @exports extractAriaProps
+ * @exports isRenderable
+ * @exports Job
+ * @exports memoize
+ * @exports mergeClassNameMaps
+ * @exports perfNow
  */
 import always from 'ramda/src/always';
 import isType from 'ramda/src/is';
@@ -11,12 +20,12 @@ import withContext from 'recompose/withContext';
 import Job from './Job';
 
 /**
- * Capitalizes a given string (not locale aware).
+ * Capitalizes a given string (not locale-aware).
  *
  * @method
  * @memberof core/util
- * @param {String} str - The string to capitalize.
- * @returns {String} The capitalized string.
+ * @param   {String}    str   The string to capitalize.
+ * @returns {String}          The capitalized string.
  * @public
  */
 const cap = function (str) {
@@ -24,23 +33,23 @@ const cap = function (str) {
 };
 
 /**
- * If `arg` is a function, return it. Otherwise returns a function that returns `arg`
+ * If `arg` is a function, return it. Otherwise returns a function that returns `arg`.
  *
- * Example:
+ * @example
  * ```
  *	const returnsZero = coerceFunction(0);
  *	const returnsArg = coerceFunction(() => 0);
  * ```
  * @method
  * @memberof core/util
- * @param {*} arg Function or value
+ * @param {*}    arg    Function or value
  */
 const coerceFunction = unless(isType(Function), always);
 
 /**
- * If `arg` is array-like, return it. Otherwise returns a single element array containing `arg`
+ * If `arg` is array-like, return it. Otherwise returns a single element array containing `arg`.
  *
- * Example:
+ * @example
  * ```
  *	const returnsArray = coerceArray(0); // [0]
  *	const returnsArg = coerceArray([0]); // [0]
@@ -49,20 +58,20 @@ const coerceFunction = unless(isType(Function), always);
  * @see http://ramdajs.com/docs/#isArrayLike
  * @method
  * @memberof core/util
- * @param {*} array Array or value
- * @returns {Array}	Either `array` or `[array]`
+ * @param {*}    array    Array or value
+ * @returns {Array}       Either `array` or `[array]`
  */
 const coerceArray = function (array) {
 	return Array.isArray(array) ? array : [array];
 };
 
 /**
- * Loosely determines if `tag` is a renderable component (either a string or a function)
+ * Loosely determines if `tag` is a renderable component (either a string or a function).
  *
  * @method
  * @memberof core/util
- * @param  {*}  tag Component to tes
- * @returns {Boolean} `true` if `tag` is renderable
+ * @param {*}    tag    Component to test
+ * @returns {Boolean}   `true` if `tag` is either a string or a function
  */
 const isRenderable = function (tag) {
 	const type = typeof tag;
@@ -71,13 +80,13 @@ const isRenderable = function (tag) {
 
 /**
  * Removes `aria-` prefixed props and the `role` prop from `props` and returns them in a new object.
- * Useful when redirecting ARIA-related props from a non-focusable root element to a focusable
+ * This is useful when redirecting ARIA-related props from a non-focusable root element to a focusable
  * child element.
  *
  * @method
  * @memberof core/util
- * @param   {Object} props  Props object
- * @returns {Object}        ARIA-related props
+ * @param   {Object}    props    Props object
+ * @returns {Object}             ARIA-related props
  */
 const extractAriaProps = function (props) {
 	const aria = {};
@@ -92,10 +101,10 @@ const extractAriaProps = function (props) {
 };
 
 /**
- * Accepts a `contextTypes` object and a component, then matches those contextTypes with incoming
+ * Accepts a `contextTypes` object and a component, then matches those context types with incoming
  * props on the component, and sends them to context on that component for children to to access.
  *
- * Usage:
+ * @example
  * ```
  * const contextTypes = {
  * 	alignment: PropTypes.string
@@ -103,14 +112,13 @@ const extractAriaProps = function (props) {
  *
  * const Component = withContextFromProps(contextTypes, BaseBase);
  *
- * // The `alignment` will now be available as a context key in Component's children.
+ * // `alignment` will now be available as a context key in `Component`'s children.
  * ```
  *
- * @param  {Object} propsList	A contextTypes object full of keys to be used as prop->context and
- *	their PropTypes as keys
- * @param  {Component} Wrapped	A component to apply this to
+ * @param  {Object}       propsList    Keys to be used as prop->context and their `PropTypes` as keys
+ * @param  {Component}    Wrapped      The component that will receive the context
  *
- * @return {Component}              The component, now with context on it
+ * @returns {Component}                 The component, now with context on it
  * @private
  */
 const withContextFromProps = (propsList, Wrapped) => withContext(propsList, (props) => {
@@ -121,7 +129,7 @@ const withContextFromProps = (propsList, Wrapped) => withContext(propsList, (pro
 })(Wrapped);
 
 /**
- * Gets current timestamp of either `window.performance.now` or `Date.now`
+ * Gets the current timestamp of either `window.performance.now` or `Date.now`
  *
  * @method
  * @memberof core/util
@@ -141,6 +149,7 @@ const perfNow = function () {
  * `allowedClassNames` may optionally limit which keys will be merged from `additiveMap` into
  * `baseMap`.
  *
+ * @example
  * ```
  * // merges all matching class names from additiveMap1 with baseMap1
  * const newMap1 = mergeClassNameMaps(baseMap1, additiveMap1);
@@ -158,7 +167,7 @@ const perfNow = function () {
  * @param {String[]}  [allowedClassNames]  Array of logical class names that can be augmented. When
  *                                         set, the logical class name must exist in `baseMap`,
  *                                         `additiveMap`, and this array to be concatenated.
- * @returns {Object}
+ * @returns {Object}                       The merged class name map.
  */
 const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
 	let css = baseMap;
@@ -182,8 +191,8 @@ const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
  *
  * @method
  * @memberof core/util
- * @param {Function} fn The function to have its output memoized.
- * @returns {Function} Returns the new memoized function.
+ * @param {Function}    fn    The function to have its output memoized.
+ * @returns {Function}        The new memoized function.
  */
 const memoize = (fn) => {
 	let cache = {};

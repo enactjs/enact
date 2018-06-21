@@ -2,6 +2,7 @@
  * Provides the {@link core/kind.kind} method to create components
  *
  * @module core/kind
+ * @exports kind
  */
 
 import React from 'react';
@@ -12,7 +13,7 @@ import styles from './styles';
 /**
  * Creates a new component with some helpful declarative syntactic sugar.
  *
- * Example:
+ * @example
  * ```
  *	import css from './Button.less';
  *	const Button = kind({
@@ -54,9 +55,9 @@ import styles from './styles';
  * ```
  *
  * @function
- * @param  {Object} config - Component configuration
+ * @param  {Object}    config    Component configuration
  *
- * @returns {Function}        Component
+ * @returns {Function}           Component
  * @memberof core/kind
  * @public
  */

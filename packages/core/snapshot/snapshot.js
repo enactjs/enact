@@ -2,6 +2,9 @@
  * Utilities to facilitate integration with v8 snapshot builds
  *
  * @module core/snapshot
+ * @exports isWindowReady
+ * @exports onWindowReady
+ * @exports windowReady
  * @public
  */
 
@@ -24,7 +27,7 @@ function isWindowReady () {
  * Executes a callback, such as registering event handlers, when a valid `window` is available.
  *
  * During normal operation, the callback will be executed immediately. During a pre-rendering pass,
- * the callback is not be executed at all. When using snapshot, the callback is added to a queued
+ * the callback is not be executed at all. When using snapshot, the callback is added to a queue
  * and is executed in order once the window is available.
  *
  * *Important Notes*
@@ -34,7 +37,7 @@ function isWindowReady () {
  * the action is tied to a component, it should be invoked from within the component's lifecycle
  * methods.
  *
- * @param   {Function} callback Function to run when the window is ready
+ * @param   {Function}    callback    Function to run when the window is ready
  * @memberof core/snapshot
  * @public
  */

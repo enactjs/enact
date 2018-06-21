@@ -4,6 +4,9 @@
  * {@link core/platform.platform}.
  *
  * @module core/platform
+ * @exports detect
+ * @exports platform
+ * @public
  */
 
 import uniq from 'ramda/src/uniq';
@@ -83,7 +86,7 @@ let _platform;
  * {@link core/platform.detect} returns the {@link core/platform.platform} object.
  *
  * @type {Function}
- * @returns {Object} the {@link core/platform.platform} object
+ * @returns {Object}     The {@link core/platform.platform} object
  *
  * @method detect
  * @memberof core/platform
@@ -142,11 +145,11 @@ const detect = () => {
  *
  * @readonly
  * @type {Object}
- * @property {Boolean} gesture - Set `true` if the platform has native double-finger events
- * @property {Boolean} node - Set `true` only if `window` is `undefined`
- * @property {String} platformName - Set to the name of the platform
- * @property {Boolean} touch - Set `true` if the platform has native single-finger events
- * @property {Boolean} unknown - Set `true` for any unknown system
+ * @property {Boolean} gesture - `true` if the platform has native double-finger events
+ * @property {Boolean} node - `true` only if `window` is `undefined`
+ * @property {String} platformName - The name of the platform
+ * @property {Boolean} touch - `true` if the platform has native single-finger events
+ * @property {Boolean} unknown - `true` for any unknown system
  *
  * @memberof core/platform
  * @public
