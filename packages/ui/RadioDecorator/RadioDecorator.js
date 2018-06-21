@@ -89,7 +89,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.notifyController(nextProps);
 		}
 
-		componentWillUnount () {
+		componentWillUnmount () {
 			if (this.sync) {
 				this.sync = false;
 				this.context.deregisterRadioItem(this);
@@ -98,7 +98,6 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		notifyController (props) {
 			if (this.sync && prop && props[prop]) {
-				// console.log('notify', prop, deactivate);
 				this.context.activateRadioItem(this);
 			}
 		}
