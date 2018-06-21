@@ -364,6 +364,10 @@ class ScrollableBaseNative extends Component {
 		};
 
 		props.cbScrollTo(this.scrollTo);
+
+		if (!props.initialScrollPosition) {
+			this.scrollInitially = nop;
+		}
 	}
 
 	getChildContext = () => ({
@@ -474,17 +478,12 @@ class ScrollableBaseNative extends Component {
 	}
 
 	scrollInitially () {
-		const initialScrollTo = this.initialScrollTo;
+		const {left, top} = this.props.initialScrollPosition;
 
-		this.initialScrollTo = true;
+		this.scrollInitially = nop;
+		this.start(left, top, false);
 
-		if (!initialScrollTo && this.props.initialScrollPosition) {
-			const {left, top} = this.props.initialScrollPosition;
-			this.start(left, top, false);
-			return true;
-		} else {
-			return false;
-		}
+		return true;
 	}
 
 	// constants
@@ -493,7 +492,6 @@ class ScrollableBaseNative extends Component {
 
 	// status
 	deferScrollTo = true
-	initialScrollTo = false
 	isScrollAnimationTargetAccumulated = false
 	isUpdatedScrollThumb = false
 
