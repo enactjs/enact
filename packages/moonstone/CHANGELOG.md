@@ -38,9 +38,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonston/EditableIntegerPicker` to disable itself when on a range producing a single static value.
-- `moonston/Picker` to disable itself when containing only one or zero items.
-- `moonston/RangePicker` to disable itself when on a range producing a single static value.
 - `moonstone/EditableIntegerPicker` to disable itself when on a range consisting of a single static value
 - `moonstone/Picker` to disable itself when containing fewer than two items
 - `moonstone/Popup` to spot its content correctly when `open` by default
@@ -49,7 +46,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to show media controls when pressing down in pointer mode
 - `moonstone/VideoPlayer` to provide a more natural 5-way focus behavior
 - `moonstone/VideoPlayer.MediaControls` to handle left and right key to jump when `moonstone/VideoPlayer` is focused
-- `moonstone/Popup` to spot its content correctly when `open` by default
 
 ## [2.0.0-beta.6] - 2018-06-04
 
