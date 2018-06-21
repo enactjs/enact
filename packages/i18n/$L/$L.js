@@ -1,5 +1,5 @@
 /**
- * Provides methods to map to translated strings.
+ * Provides functions to map to translated strings.
  *
  * Usage:
  * ```
@@ -20,6 +20,7 @@ import IString from '../ilib/lib/IString';
 /**
  * Maps a string or key/value object to a translated string for the current locale.
  *
+ * @function
  * @memberof i18n/$L
  * @param  {String|Object} str Source string
  *
@@ -38,6 +39,7 @@ function toIString (str) {
 /**
  * Maps a string or key/value object to a translated string for the current locale.
  *
+ * @function
  * @memberof i18n/$L
  * @param  {String|Object} str Source string
  *
