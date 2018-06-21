@@ -59,6 +59,7 @@ const prop = {
 };
 
 const Config = mergeComponentMetadata('MediaOverlay', MediaOverlay, MediaOverlayBase, MediaOverlayDecorator);
+Config.groupId = 'MediaOverlay';
 MediaOverlay.displayName = 'MediaOverlay';
 
 storiesOf('Moonstone', module)
