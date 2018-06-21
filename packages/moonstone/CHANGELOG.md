@@ -16,6 +16,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VideoPlayer` to prevent updating state when the source is changed to the preload source, but the current preload source is the same
+- `moonstone/MediaOverlay` to marquee correctly
+- `moonstone/MediaOverlay` to match UX guidelines
 
 ## [2.0.0-beta.7] - 2018-06-11
 
