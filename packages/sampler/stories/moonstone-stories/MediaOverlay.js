@@ -13,18 +13,32 @@ const defaultPlaceholder =
 	'4NCg==';
 
 const prop = {
+	videoTitles: [
+		'Sintel',
+		'Big Buck Bunny',
+		'VideoTest',
+		'Bad Video Source'
+	],
 	videos: {
-		'http://media.w3.org/2010/05/sintel/trailer.mp4': 'Sintel',
-		'http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov': 'Big Buck Bunny',
-		'http://media.w3.org/2010/05/video/movie_300.mp4': 'VideoTest',
-		'https://github.com/mderrick/react-html5video': 'Bad Video Source'
+		'Sintel': 'http://media.w3.org/2010/05/sintel/trailer.mp4',
+		'Big Buck Bunny': 'http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov',
+		'VideoTest': 'http://media.w3.org/2010/05/video/movie_300.mp4',
+		// Purposefully not a video to demonstrate source error state
+		'Bad Video Source': 'https://github.com/mderrick/react-html5video'
 	},
+	imageNames: [
+		'None',
+		'Strawberries',
+		'Tunnel',
+		'Mountains',
+		'Bad Image Source'
+	],
 	images: {
-		'': 'None',
-		'https://picsum.photos/1280/720?image=1080': 'Strawberries',
-		'https://picsum.photos/1280/720?image=1063': 'Tunnel',
-		'https://picsum.photos/1280/720?image=930': 'Mountains',
-		'imagenotfound.png': 'Bad Image Source'
+		'None': '',
+		'Strawberries': 'https://picsum.photos/1280/720?image=1080',
+		'Tunnel': 'https://picsum.photos/1280/720?image=1063',
+		'Mountains': 'https://picsum.photos/1280/720?image=930',
+		'Bad Image Source': 'imagenotfound.png'
 	},
 	text: [
 		'',
@@ -44,7 +58,6 @@ const prop = {
 	}
 };
 
-
 const Config = mergeComponentMetadata('MediaOverlay', MediaOverlay, MediaOverlayBase, MediaOverlayDecorator);
 MediaOverlay.displayName = 'MediaOverlay';
 
@@ -54,14 +67,20 @@ storiesOf('Moonstone', module)
 		withInfo({
 			propTablesExclude: [MediaOverlay],
 			text: 'The basic MediaOverlay'
-		})(() => (
-			<MediaOverlay
-				imageOverlay={select('imageOverlay', prop.images, Config)}
-				placeholder={select('placeholder', prop.placeholder, Config, 'None')}
-				text={select('text', prop.text, Config, prop.text[0])}
-				textAlign={select('textAlign', ['start', 'center', 'end'], Config, 'center')}
-			>
-				<source src={select('source', prop.videos, Config, Object.keys(prop.videos)[0])} />
-			</MediaOverlay>
-		))
+		})(() => {
+			const videoTitle = select('source', prop.videoTitles, Config, 'Sintel');
+			const videoSource = prop.videos[videoTitle];
+			const imageName = select('imageOverlay', prop.imageNames, Config, 'None');
+			const imageSource = prop.images[imageName];
+			return (
+				<MediaOverlay
+					imageOverlay={imageSource}
+					placeholder={select('placeholder', prop.placeholder, Config, '')}
+					text={select('text', prop.text, Config, prop.text[0])}
+					textAlign={select('textAlign', ['start', 'center', 'end'], Config, 'center')}
+				>
+					<source src={videoSource} />
+				</MediaOverlay>
+			);
+		})
 	);
