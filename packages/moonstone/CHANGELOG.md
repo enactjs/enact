@@ -16,6 +16,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VideoPlayer` to prevent updating state when the source is changed to the preload source, but the current preload source is the same
+- `moonstone/MediaOverlay` to marquee correctly
+- `moonstone/MediaOverlay` to match UX guidelines
 
 ## [2.0.0-beta.7] - 2018-06-11
 
@@ -36,7 +38,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/MediaOverlay` to not use `moonstone/Marquee.MarqueeController` for `marqueeOn` render
 - `moonston/EditableIntegerPicker` to disable itself when on a range producing a single static value.
 - `moonston/Picker` to disable itself when containing only one or zero items.
 - `moonston/RangePicker` to disable itself when on a range producing a single static value.
@@ -49,13 +50,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to provide a more natural 5-way focus behavior
 - `moonstone/VideoPlayer.MediaControls` to handle left and right key to jump when `moonstone/VideoPlayer` is focused
 - `moonstone/Popup` to spot its content correctly when `open` by default
-
-### Changed
-
-- `moonstone/MediaOverlay` to remove text-shadow style and change font-weight from 700 to 500
-- `moonstone/VideoPlayer` to roam spotlight focus freely to left and right from `MediaControls`
-- `moonstone/VideoPlayer` to disable bottom controls when loading until it's playable
-- `moonstone/VideoPlayer` container changes to provide a more natural 5-way focus behavior
 
 ## [2.0.0-beta.6] - 2018-06-04
 
