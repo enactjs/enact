@@ -385,7 +385,9 @@ class ScrollableBaseNative extends Component {
 
 	componentDidMount () {
 		this.addEventListeners();
-		this.updateScrollbars();
+		if (!this.updateScrollbars()) {
+			this.scrollInitially();
+		}
 
 		on('keydown', this.onKeyDown);
 	}
@@ -402,15 +404,12 @@ class ScrollableBaseNative extends Component {
 		// Need to sync calculated client size if it is different from the real size
 		const isSync = this.childRef.syncClientSize ? this.childRef.syncClientSize() : null;
 
-		if (!this.initialScrollTo && this.props.initialScrollPosition) {
-			const {left, top} = this.props.initialScrollPosition;
-			this.start(left, top, false);
-		} else if (isSync) {
+		// this.childRef.syncClientSize() should be called before calling this.scrollInitially() to use proper bounds
+		if (!this.scrollInitially() && isSync) {
 			// If we actually synced, we need to reset scroll position.
 			this.setScrollLeft(0);
 			this.setScrollTop(0);
 		}
-		this.initialScrollTo = true;
 
 		this.addEventListeners();
 		if (
@@ -471,6 +470,20 @@ class ScrollableBaseNative extends Component {
 			}
 		} else if (channel === 'resize') {
 			this.publisher.publish(message);
+		}
+	}
+
+	scrollInitially () {
+		const initialScrollTo = this.initialScrollTo;
+
+		this.initialScrollTo = true;
+
+		if (!initialScrollTo && this.props.initialScrollPosition) {
+			const {left, top} = this.props.initialScrollPosition;
+			this.start(left, top, false);
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -1132,6 +1145,8 @@ class ScrollableBaseNative extends Component {
 			this.deferScrollTo = false;
 			this.isUpdatedScrollThumb = this.updateScrollThumbSize();
 		}
+
+		return isVisibilityChanged;
 	}
 
 	updateScrollThumbSize = () => {

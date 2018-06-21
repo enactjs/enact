@@ -384,7 +384,9 @@ class ScrollableBase extends Component {
 
 	componentDidMount () {
 		this.addEventListeners();
-		this.updateScrollbars();
+		if (!this.updateScrollbars()) {
+			this.scrollInitially();
+		}
 
 		on('keydown', this.onKeyDown);
 	}
@@ -401,15 +403,12 @@ class ScrollableBase extends Component {
 		// Need to sync calculated client size if it is different from the real size
 		const isSync = this.childRef.syncClientSize ? this.childRef.syncClientSize() : null;
 
-		if (!this.initialScrollTo && this.props.initialScrollPosition) {
-			const {left, top} = this.props.initialScrollPosition;
-			this.start({targetX: left, targetY: top, animate: false});
-		} else if (isSync) {
+		// this.childRef.syncClientSize() should be called before calling this.scrollInitially() to use proper bounds
+		if (!this.scrollInitially() && isSync) {
 			// If we actually synced, we need to reset scroll position.
 			this.setScrollLeft(0);
 			this.setScrollTop(0);
 		}
-		this.initialScrollTo = true;
 
 		this.clampScrollPosition();
 
@@ -484,6 +483,20 @@ class ScrollableBase extends Component {
 
 		if (this.scrollLeft > bounds.maxLeft) {
 			this.scrollLeft = bounds.maxLeft;
+		}
+	}
+
+	scrollInitially () {
+		const initialScrollTo = this.initialScrollTo;
+
+		this.initialScrollTo = true;
+
+		if (!initialScrollTo && this.props.initialScrollPosition) {
+			const {left, top} = this.props.initialScrollPosition;
+			this.start({targetX: left, targetY: top, animate: false});
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -1095,6 +1108,8 @@ class ScrollableBase extends Component {
 			this.deferScrollTo = false;
 			this.isUpdatedScrollThumb = this.updateScrollThumbSize();
 		}
+
+		return isVisibilityChanged;
 	}
 
 	updateScrollThumbSize = () => {
