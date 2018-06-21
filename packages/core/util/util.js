@@ -35,7 +35,7 @@ const cap = function (str) {
 /**
  * If `arg` is a function, return it. Otherwise returns a function that returns `arg`.
  *
- * @example
+ * Example:
  * ```
  *	const returnsZero = coerceFunction(0);
  *	const returnsArg = coerceFunction(() => 0);
@@ -49,7 +49,7 @@ const coerceFunction = unless(isType(Function), always);
 /**
  * If `arg` is array-like, return it. Otherwise returns a single element array containing `arg`.
  *
- * @example
+ * Example:
  * ```
  *	const returnsArray = coerceArray(0); // [0]
  *	const returnsArg = coerceArray([0]); // [0]
@@ -104,7 +104,7 @@ const extractAriaProps = function (props) {
  * Accepts a `contextTypes` object and a component, then matches those context types with incoming
  * props on the component, and sends them to context on that component for children to to access.
  *
- * @example
+ * Example:
  * ```
  * const contextTypes = {
  * 	alignment: PropTypes.string
@@ -149,7 +149,7 @@ const perfNow = function () {
  * `allowedClassNames` may optionally limit which keys will be merged from `additiveMap` into
  * `baseMap`.
  *
- * @example
+ * Example:
  * ```
  * // merges all matching class names from additiveMap1 with baseMap1
  * const newMap1 = mergeClassNameMaps(baseMap1, additiveMap1);

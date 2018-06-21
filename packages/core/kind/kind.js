@@ -13,7 +13,7 @@ import styles from './styles';
 /**
  * Creates a new component with some helpful declarative syntactic sugar.
  *
- * @example
+ * Example:
  * ```
  *	import css from './Button.less';
  *	const Button = kind({

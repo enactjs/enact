@@ -25,7 +25,7 @@ const mergeFn = (key, defaultValue, userValue) => {
  *	(like the next bullet), or
  *	* a component constructor and return a renderable component
  *
- * Usage:
+ * Eample:
  * ```
  *	const Countable = hoc({prop: 'data-count'}, (config, Wrapped) => {
  *		return class extends React.Component {

@@ -1,7 +1,7 @@
 /**
  * Manages a map of names to key codes to simplify event handlers
  *
- * @example
+ * Example:
  * ```
  * import {add, is} from '@enact/core/keymap';
  *
