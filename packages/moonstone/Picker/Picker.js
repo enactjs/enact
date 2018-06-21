@@ -11,15 +11,15 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
+import {VoiceControlDecorator} from '@enact/webos/speech';
 
 import {MarqueeController} from '../Marquee';
 import {validateRange} from '../internal/validators';
 
 import PickerCore, {PickerItem} from '../internal/Picker';
 import SpottablePicker from './SpottablePicker';
-import {VoiceControlDecorator} from '@enact/webos/speech';
 
-const VoicePickerCore = VoiceControlDecorator(PickerCore);
+const VoiceControlPickerCore = VoiceControlDecorator(PickerCore);
 
 /**
  * The base component for {@link moonstone/Picker.Picker}. This version is not spottable.
@@ -171,10 +171,12 @@ const PickerBase = kind({
 	},
 
 	handlers: {
-		onVoice: (e, {onChange, max}) => {
-			let index = e && e.detail && typeof e.detail.index !== 'undefined' && Number(e.detail.index);
-			if (typeof index === 'number' && !isNaN(index) && onChange) {
-				onChange({value: clamp(0, max, index)});
+		onVoice: (e, {onChange, children}) => {
+			const value = e && e.detail && e.detail.value;
+			const labels = children.map((child) => (typeof child === 'object' ? child.props.children : child));
+			const index = labels.indexOf(value);
+			if (onChange && index > -1) {
+				onChange({value: index});
 			}
 		}
 	},
@@ -209,7 +211,7 @@ const PickerBase = kind({
 		delete rest.marqueeDisabled;
 
 		return (
-			<VoicePickerCore
+			<VoiceControlPickerCore
 				{...rest}
 				data-webos-voice-intent='Select'
 				data-webos-voice-labels={voiceLabels}
@@ -220,7 +222,7 @@ const PickerBase = kind({
 				value={value}
 			>
 				{children}
-			</VoicePickerCore>
+			</VoiceControlPickerCore>
 		);
 	}
 });
