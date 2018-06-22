@@ -119,7 +119,7 @@ class ScrollableBaseNative extends Component {
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
-		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
+		 * Allows 5-way navigation to the scrollbar controls. By default, 5-way will
 		 * not move focus to the scrollbar controls.
 		 *
 		 * @type {Boolean}

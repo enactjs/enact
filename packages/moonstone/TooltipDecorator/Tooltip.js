@@ -9,8 +9,8 @@ import TooltipLabel from './TooltipLabel';
 import css from './Tooltip.less';
 
 /**
- * {@link moonstone/TooltipDecorator.TooltipBase} is a stateless tooltip component with
- * Moonston styling applied.
+ * [TooltipBase]{@link moonstone/TooltipDecorator.TooltipBase} is a stateless tooltip component with
+ * the Moonston styling applied.
  *
  * @class TooltipBase
  * @memberof moonstone/TooltipDecorator
@@ -30,8 +30,8 @@ const TooltipBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * Position of tooltip arrow in relation to the activator; valid values are
-		 * `'left'`, `'center'`, `'right'`, `'top'`, `'middle'`, and `'bottom'`.
+		 * Position of tooltip arrow in relation to the activator.
+		 * * Values: `'left'`, `'center'`, `'right'`, `'top'`, `'middle'`, `'bottom'`
 		 *
 		 * Note that `'left'`, `'center'`, `'right'` are applicable when direction is in vertical
 		 * orientation (i.e. `'above'`, `'below'`), and `'top'`, `'middle'`, and `'bottom'` are
@@ -44,8 +44,8 @@ const TooltipBase = kind({
 		arrowAnchor: PropTypes.oneOf(['left', 'center', 'right', 'top', 'middle', 'bottom']),
 
 		/**
-		 * Direction of label in relation to the activator; valid values are `'above'`, `'below'`,
-		 * `'left'`, and `'right'`.
+		 * Direction of label in relation to the activator.
+		 * * Values: `'above'`, `'below'`, `'left'`, and `'right'`
 		 *
 		 * @type {String}
 		 * @default 'above'
@@ -125,7 +125,7 @@ const TooltipBase = kind({
 });
 
 /**
- * {@link moonstone/TooltipDecorator.Tooltip} is a tooltip component with Moonstone styling
+ * [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} is a tooltip component with Moonstone styling
  * applied. If the Tooltip's child component is text, it will be uppercased unless
  * `casing` is set.
  *

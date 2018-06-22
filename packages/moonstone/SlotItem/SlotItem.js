@@ -3,6 +3,15 @@
  * usual `children` prop, as well as two additional props: `slotBefore`, and `slotAfter`.
  * It is able to be customized by a theme or application.
  *
+ * @example
+ *	<SlotItem autoHide="both">
+ *		<slotBefore>
+ *			<Icon>flag</Icon>
+ *			<Icon>star</Icon>
+ *		</slotBefore>
+ *		An Item that will show some icons before and after this text when spotted
+ *		<Icon slot="slotAfter">trash</Icon>
+ *	</SlotItem>
  * @module moonstone/SlotItem
  * @exports SlotItem
  * @exports SlotItemBase

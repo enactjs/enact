@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import {Router, propTypes, toSegments} from './Router';
 
 /**
- * Default config for {@link moonstone/Panels.Routable}
+ * Default config for [`Routable`]{@link moonstone/Panels.Routable}
  *
  * @memberof moonstone/Panels.Routable
  * @hocconfig
@@ -24,8 +24,9 @@ const defaultConfig = {
 };
 
 /**
- * Adds support for Routes as children of Panels which are selected via `path` instead of the usual
- * flat array of Panels. When using `Routable` you must specify the `navigate` config option.
+ * A Higher-order component that provides support for Routes as children of Panels which are
+ * selected via `path` instead of the usual flat array of Panels. When using `Routable` you must
+ * specify the `navigate` config option.
  *
  * @class Routable
  * @memberof moonstone/Panels
@@ -45,7 +46,7 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 			 * Path to the active panel
 			 *
 			 * May either be a URI-style path (`'/app/home/settings'`) or an array
-			 * of strings (`['app', 'home', 'settings']`)
+			 * of strings (`['app', 'home', 'settings']`).
 			 *
 			 * @type {String|String[]}
 			 * @required
@@ -54,7 +55,7 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 			path: propTypes.path.isRequired,
 
 			/**
-			 * Decorates payload with path for `index`
+			 * Decorates payload with path for `index`.
 			 *
 			 * @type {Function}
 			 */

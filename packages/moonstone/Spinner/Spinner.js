@@ -97,7 +97,7 @@ const SpinnerBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, the background-color  of the spinner is transparent.
+		 * Makes the background-color transparent.
 		 *
 		 *
 		 * @type {Boolean}
@@ -211,7 +211,7 @@ const SpinnerDecorator = compose(
 );
 
 /**
- * A ready to use Moonstone-styled Spinner.
+ * A Moonstone-styled Spinner.
  *
  * @class Spinner
  * @memberof moonstone/Spinner

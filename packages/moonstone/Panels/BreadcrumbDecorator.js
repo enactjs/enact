@@ -125,7 +125,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			index: PropTypes.number,
 
 			/**
-			 * Disable breadcrumb transitions
+			 * Disable breadcrumb transitions.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -133,8 +133,8 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			noAnimation: PropTypes.bool,
 
 			/**
-			 * Handler called when a breadcrumb is clicked. The payload includes the `index` of the
-			 * selected breadcrumb
+			 * Called when a breadcrumb is clicked. The payload includes the `index` of the selected
+			 * breadcrumb
 			 *
 			 * @type {Function}
 			 */

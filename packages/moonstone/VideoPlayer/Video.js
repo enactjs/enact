@@ -22,7 +22,7 @@ const VideoBase = class extends React.Component {
 
 	static propTypes = /** @lends moonstone/VideoPlayer.Video.prototype */ {
 		/**
-		 * When `true`, automatically play the video after it has loaded
+		 * Play the video automatically.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -31,7 +31,7 @@ const VideoBase = class extends React.Component {
 		autoPlay: PropTypes.bool,
 
 		/**
-		 * Video component to use. The default (`'video'`) renders an `HTMLVideoElement`. Custom
+		 * Video component to use. The default `'video'` renders an `HTMLVideoElement`. Custom
 		 * video components must have a similar API structure, exposing the following APIs:
 		 *
 		 * Properties:
@@ -69,7 +69,7 @@ const VideoBase = class extends React.Component {
 		preloadSource:  PropTypes.node,
 
 		/**
-		 * Called with a reference to the active [Media]{@link ui/Media.Media} component
+		 * Called with a reference to the active [Media]{@link ui/Media.Media} component.
 		 *
 		 * @type {Function}
 		 * @private

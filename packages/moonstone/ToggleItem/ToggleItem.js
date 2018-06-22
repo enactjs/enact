@@ -1,8 +1,12 @@
 /**
- * Provides Moonstone-themed toggle item components and behaviors. This is not intended to be used
- * directly, but should be extended by a component that will customize this component's appearance
- * by supplying an [iconComponent prop]{@link moonstone/ToggleItem.ToggleItemBase#iconComponent}.
+ * Moonstone-themed toggle item component.
  *
+ * @example
+ * <ToggleItem
+ * 	iconComponent={Checkbox}
+ * 	iconPosition='before'>
+ * 	Toggle me
+ * </ToggleItem>
  * @module moonstone/ToggleItem
  * @exports ToggleItem
  * @exports ToggleItemBase
@@ -25,7 +29,7 @@ import {SlotItemBase} from '../SlotItem';
 import componentCss from './ToggleItem.less';
 
 /**
- * A moonstone-styled toggle item without any behavior.
+ * Moonstone-styled toggle component without any behavior.
  *
  * @class ToggleItemBase
  * @memberof moonstone/ToggleItem
@@ -46,7 +50,7 @@ const ToggleItemBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * The Icon to render in this item. This component receives the `selected` prop and value,
+		 * The icon to render in this item. This component receives the `selected` prop and value,
 		 * and must therefore respond to it in some way. It is recommended to use the
 		 * [ToggleIcon]{@link moonstone/ToggleIcon} for this.
 		 *
@@ -118,7 +122,7 @@ const defaultConfig = {
 };
 
 /**
- * Adds interactive functionality to `ToggleItemBase`
+ * Adds interactive functionality to `ToggleItemBase`.
  *
  * @class ToggleItemDecorator
  * @memberof moonstone/ToggleItem
@@ -141,11 +145,8 @@ const ToggleItemDecorator = hoc(defaultConfig, ({invalidateProps}, Wrapped) => {
 
 /**
  * A Moonstone-styled item with built-in support for toggling, marqueed text, and `Spotlight` focus.
- *
- * Usage:
- * ```
- * <ToggleItem icon="lock" iconPosition="before">Toggle Me</ToggleItem>
- * ```
+ * This is not intended to be used directly, but should be extended by a component that will
+ * customize this component's appearance by supplying an `iconComponent` prop.
  *
  * @class ToggleItem
  * @memberof moonstone/ToggleItem
@@ -155,6 +156,19 @@ const ToggleItemDecorator = hoc(defaultConfig, ({invalidateProps}, Wrapped) => {
  * @public
  */
 const ToggleItem = ToggleItemDecorator(ToggleItemBase);
+
+/**
+ * The Icon to render in this item. This component receives the `selected` prop and value,
+ * and must therefore respond to it in some way. It is recommended to use the
+ * [ToggleIcon]{@link moonstone/ToggleIcon} for this.
+ *
+ * @name iconComponent
+ * @memberof moonstone/ToggleItem.ToggleItem.prototype
+ * @type {Component|Element}
+ * @default null
+ * @required
+ * @public
+ */
 
 export default ToggleItem;
 export {

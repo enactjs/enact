@@ -1,6 +1,8 @@
 /**
- * Exports the {@link moonstone/ToggleButton.ToggleButton} component.
+ * Provides a Moonstone-themed toggle button component and behaviors.
  *
+ * @example
+ * <ToggleButton>Toggle me</ToggleButton>
  * @module moonstone/ToggleButton
  */
 
@@ -16,8 +18,8 @@ import Skinnable from '../Skinnable';
 import css from './ToggleButton.less';
 
 /**
- * {@link moonstone/ToggleButton.ToggleButtonBase} is a stateless [Button]{@link moonstone/Button.Button}
- * that can be toggled by changing its `selected` property
+ * This component is a stateless [Button]{@link moonstone/Button.Button}
+ * that can be toggled by changing its `selected` property.
  *
  * @class ToggleButtonBase
  * @memberof moonstone/ToggleButton
@@ -30,8 +32,8 @@ const ToggleButtonBase = kind({
 
 	propTypes: /** @lends moonstone/ToggleButton.ToggleButtonBase.prototype */ {
 		/**
-		 * The background-color opacity of this button; valid values are `'translucent'`,
-		 * `'lightTranslucent'` and `'transparent'`.
+		 * The background-color opacity of this button.
+		 * * Values: `'translucent'`, `'lightTranslucent'`, `'transparent'`
 		 *
 		 * @type {String}
 		 * @public
@@ -43,14 +45,13 @@ const ToggleButtonBase = kind({
 		 * If `toggleOffLabel` and/or `toggleOnLabel` are provided, they will
 		 * be used for the respective states.
 		 *
-		 * @type {Node}
+		 * @type {Node|String}
 		 * @public
 		 */
-		children: PropTypes.node,
+		children: PropTypes.oneOf([PropTypes.string, PropTypes.node]),
 
 		/**
-		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
-		 * generate `onClick` [events]{@glossary event}.
+		 * Disables button.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -59,11 +60,10 @@ const ToggleButtonBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * A boolean parameter affecting the minimum width of the button. When `true`,
-		 * the minimum width will be set to 180px (or 130px if `small`
-		 * is `true`). If `false`, the minimum width will be set to the current value of
-		 * `@moon-button-height` (thus forcing the button to be no smaller than a circle with
-		 * diameter `@moon-button-height`).
+		 * Indicates the minimum width will be set to 180px (or 130px if `small` is `true`).
+		 *
+		 * When it's set to `false`, the minimum width will be set to the current value of
+		 * `@moon-button-height`(84px).
 		 *
 		 * @type {Boolean}
 		 * @default true
@@ -72,7 +72,7 @@ const ToggleButtonBase = kind({
 		minWidth: PropTypes.bool,
 
 		/**
-		 * When `true` a pressed visual effect is applied to the button
+		 * Indicates the button is pressed and visual effect is applied.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -80,7 +80,7 @@ const ToggleButtonBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * Boolean indicating whether toggle button is currently in the 'on' state.
+		 * Indicates the button is 'on'.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -89,10 +89,8 @@ const ToggleButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * A boolean parameter affecting the size of the button. If `true`, the
-		 * button's diameter will be set to 60px. However, the button's tap target
-		 * will still have a diameter of 78px, with an invisible DOM element
-		 * wrapping the small button to provide the larger tap zone.
+		 * Sets the button's diameter to 60px, and its tap target will stay at a diameter of 78px,
+		 * with an invisible DOM element wrapping the small button to provide the larger tap zone.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -157,12 +155,13 @@ const ToggleButtonBase = kind({
 });
 
 /**
- * {@link moonstone/ToggleButton.ToggleButton} is a [Button]{@link moonstone/Button.Button} that is [Toggleable]{@link ui/Toggleable.Toggleable}.
+ * [ToggleButton]{@link moonstone/ToggleButton.ToggleButton}
+ * is a [toggleable]{@link ui/Toggleable.Toggleable} [button]{@link moonstone/Button.Button}.
  *
- * By default, `ToggleButton` maintains the state of its `selected` property. Supply the
- * `defaultSelected` property to control its initial value. If you wish to directly control updates
- * to the component, supply a value to `selected` at creation time and update it in response to
- * `onToggle` events.
+ * By default, [ToggleButton]{@link moonstone/ToggleButton.ToggleButton} maintains the state of its
+ * `selected` property. Supply the `defaultSelected` property to control its initial value. If you
+ * wish to directly control updates to the component, supply a value to `selected` at creation time
+ * and update it in response to `onToggle` events.
  *
  * @class ToggleButton
  * @memberof moonstone/ToggleButton

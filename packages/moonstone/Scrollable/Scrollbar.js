@@ -30,7 +30,7 @@ class ScrollbarBase extends Component {
 		cbAlertThumb: PropTypes.func,
 
 		/**
-		 * If `true`, add the corner between vertical and horizontal scrollbars.
+		 * Adds the corner between vertical and horizontal scrollbars.
 		 *
 		 * @type {Booelan}
 		 * @default false
@@ -57,7 +57,7 @@ class ScrollbarBase extends Component {
 		setApiProvider: PropTypes.func,
 
 		/**
-		 * If `true`, the scrollbar will be oriented vertically.
+		 * The scrollbar will be oriented vertically.
 		 *
 		 * @type {Boolean}
 		 * @default true
