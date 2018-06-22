@@ -429,17 +429,18 @@ const VirtualListBaseFactory = (type) => {
 			this.calculateScrollBounds(props);
 			this.updateMoreInfo(dataSize, scrollPosition);
 
-			this.scrollPosition = props.initialScrollPosition.top;
-			if (this.scrollPosition > 0 && !this.flag) {
-				this.setScrollPosition(0/* this.props.initialScrollPosition.left */, this.props.initialScrollPosition.top, 0, 1, this.props.rtl, numOfItems);
-				return;
-			} else
-			if (!(updateStatesAndBounds && updateStatesAndBounds({
+			if (updateStatesAndBounds && updateStatesAndBounds({
 				cbScrollTo: props.cbScrollTo,
 				numOfItems,
 				dataSize,
 				moreInfo
-			}))) {
+			})) {
+				this.flag = true;
+			} else if (props.initialScrollPosition.top > 0 && !this.flag) {
+				this.scrollPosition = 0;
+				this.setScrollPosition(0/* this.props.initialScrollPosition.left */, this.props.initialScrollPosition.top, 0, 1, this.props.rtl, numOfItems);
+				return;
+			} else {
 				newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
 			}
 
