@@ -13,21 +13,20 @@ understand how to use `shouldComponentUpdate` to [avoid reconciliation](https://
 [not mutate data](https://reactjs.org/docs/optimizing-performance.html#the-power-of-not-mutating-data)
 if possible.
 
-Inside of `Enact` we provide some useful tools to help you acheive faster performance.
+Inside of `Enact` we provide some useful tools to help you achieve faster performance.
 
 ## Job
 
 [`Job`](../../modules/core/util#Job/) is a class that we have included inside our `core` module. It
-is a useful wrapper for async things like `setTimeout` and `requestIdleCallback`. Along with those 
-wrappers we also provide functionality like `throttling`. 
+is a useful wrapper for async things like `setTimeout` and `requestIdleCallback`. Along with those wrappers we also provide functionality like `throttling`. 
 
 ### Idle
 
-In some modern browsers there is support for
+In some modern browsers, there is support for
 [`requestIdleCallback`](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback).
 In `Job` we can access this through `idle`. This is really helpful for having a function call only
 when the browser is in an idle state. This is great for functions that do not need to be called
-immediately, and can be called asynchnously without blocking the main thread.
+immediately and can be called asynchronously without blocking the main thread.
 
 ```JavaScript
 import {Job} from '@enact/core/util';
@@ -39,8 +38,8 @@ this.importantButNotHighPriority.idle();
 
 ### Throttle
 
-Sometimes a function will fire off too often. For instance lets take something like an `onWheel` event.
-This event may fire too often for out liking cauing a bad user experience. To throttle it we can do something like:
+Sometimes a function will fire off too often. For instance, let's take something like an `onWheel` event.
+This event may fire too often for out liking causing a bad user experience. To throttle it we can do something like:
 
 ```JavaScript
 import {Job} from '@enact/core/util';
@@ -50,7 +49,7 @@ const throttleEvent = new Job(doSomething, 100);
 
 // When we run the event we can do this. This will run the event every 100ms even if we fire it more often.
 const handleWheel = () => {
-	this.throttleWheelInc.throttle();
+    this.throttleWheelInc.throttle();
 }
 
 // render
@@ -70,20 +69,20 @@ performance boost.
 
 Since Enact is built on top of React we can use 
 
-This tool is especially helpful visualizing slowness in a specific component. 
+This tool is especially helpful in visualizing slowness in a specific component. 
 
 ## Production Packing
 
 Enact's `cli` tool provides a no config way to create, test, and build applications. When packing 
 your application to production `cli` makes it very simple.
 
-If you want to run your app in production mode run the command below. This will minify and ugligy 
+If you want to run your app in production mode run the command below. This will minify and uglify 
 all of your code and bundle it into a single file.
 ```bash
 enact pack --production
 ```
 
-If you wish to generate a static version of your first page you can use. This will create an HTML
+If you wish to generate a static version of the first page you can use. This will create an HTML
 representation of your entry page allowing users to see the initial content much faster.
 
 ```bash
@@ -109,8 +108,7 @@ const difference = secondTime - firstTime;
 
 ## webOS
 
-If you're developing for [`webOS`](http://webosose.org/) using enact we have some tools to help you 
-with that as well. 
+If you're developing for [`webOS`](http://webosose.org/) using enact we have some tools to help you with that as well. 
 
 We can run a log to see how long an application took to launch with:
 ```
@@ -135,7 +133,7 @@ WebAppMgr                      WINDOW_FOCUSIN            1.84     +0.002    APP_
 Elapsed time (s) : 1.840
 ```
 
-While this is great, we may want to add some custom timestamps to this log. To acheive this we can
+While this is great, we may want to add some custom timestamps to this log. To achieve this we can
 simply add `perfLog` from the `webos` library. It takes three arguments 
 `perfLog(MsgID, Type, Group)`. 
 
@@ -147,7 +145,7 @@ import {perfLog} from '@enact/webos/pmloglib'
 perfLog('APP_INTERACTIVE', 'AppLaunch', 'com.webos.app.coolapp');
 ```
 
-This will now output the same thing we preivously had, but with more info.
+This will now output the same thing we previously had, but with more info.
 
 ```
 Process                        MsgID                     Time(s)  +Diff(s)  Extra
