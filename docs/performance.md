@@ -73,7 +73,7 @@ This tool is especially helpful in visualizing slowness in a specific component.
 
 ## Production Packing
 
-Enact's `cli` tool provides a no config way to create, test, and build applications. When packing 
+Enact's [`cli`](../../developer-tools/cli/) tool provides a no config way to create, test, and build applications. When packing 
 your application to production `cli` makes it very simple.
 
 If you want to run your app in production mode run the command below. This will minify and uglify 
@@ -82,7 +82,8 @@ all of your code and bundle it into a single file.
 enact pack --production
 ```
 
-If you wish to generate a static version of the first page you can use. This will create an HTML
+If you wish to generate a static version of the first page you can use our
+[`isomorphic`](../../developer-tools/cli/isomorphic-support/) flag. This will create an HTML
 representation of your entry page allowing users to see the initial content much faster.
 
 ```bash
