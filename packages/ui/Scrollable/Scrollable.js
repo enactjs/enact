@@ -363,10 +363,6 @@ class ScrollableBase extends Component {
 		};
 
 		props.cbScrollTo(this.scrollTo);
-
-		// if (!props.initialScrollPosition) {
-			this.scrollInitially = nop;
-		// }
 	}
 
 	getChildContext = () => ({
@@ -388,9 +384,7 @@ class ScrollableBase extends Component {
 
 	componentDidMount () {
 		this.addEventListeners();
-		if (!this.updateScrollbars()) {
-			this.scrollInitially();
-		}
+		this.updateScrollbars();
 
 		on('keydown', this.onKeyDown);
 	}
@@ -405,21 +399,20 @@ class ScrollableBase extends Component {
 			{hasDataSizeChanged} = this.childRef;
 
 		// Need to sync calculated client size if it is different from the real size
-		const isSync = this.childRef.syncClientSize ? this.childRef.syncClientSize() : null;
-
-		this.childRef.flag = true;
-
-		// this.childRef.syncClientSize() should be called before calling this.scrollInitially() to use proper bounds
-		if (!this.scrollInitially() && isSync) {
-			if (this.props.initialScrollPosition) {
-				this.setScrollLeft(this.props.initialScrollPosition.left);
-				this.setScrollTop(this.props.initialScrollPosition.top);
-			} else {
-				// If we actually synced, we need to reset scroll position.
-				this.setScrollLeft(0);
-				this.setScrollTop(0);
+		if (this.childRef.syncClientSize) {
+			if (this.childRef.syncClientSize()) {
+				if (this.props.initialScrollPosition) {
+					this.setScrollLeft(this.props.initialScrollPosition.left);
+					this.setScrollTop(this.props.initialScrollPosition.top);
+				} else {
+					// If we actually synced, we need to reset scroll position.
+					this.setScrollLeft(0);
+					this.setScrollTop(0);
+				}
 			}
 		}
+
+		this.childRef.flag = true;
 
 		this.clampScrollPosition();
 
@@ -495,15 +488,6 @@ class ScrollableBase extends Component {
 		if (this.scrollLeft > bounds.maxLeft) {
 			this.scrollLeft = bounds.maxLeft;
 		}
-	}
-
-	scrollInitially () {
-		const {left, top} = this.props.initialScrollPosition;
-
-		this.scrollInitially = nop;
-		this.start({targetX: left, targetY: top, animate: false});
-
-		return true;
 	}
 
 	// constants
@@ -1113,8 +1097,6 @@ class ScrollableBase extends Component {
 			this.deferScrollTo = false;
 			this.isUpdatedScrollThumb = this.updateScrollThumbSize();
 		}
-
-		return isVisibilityChanged;
 	}
 
 	updateScrollThumbSize = () => {
@@ -1243,7 +1225,6 @@ class ScrollableBase extends Component {
 		delete rest.cbScrollTo;
 		delete rest.clearAllOverscrollEffects;
 		delete rest.horizontalScrollbar;
-		// delete rest.initialScrollPosition;
 		delete rest.onFlick;
 		delete rest.onKeyDown;
 		delete rest.onMouseDown;
