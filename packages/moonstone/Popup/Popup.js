@@ -1,8 +1,9 @@
 /**
- * Exports the {@link moonstone/Popup.Popup} and {@link moonstone/Popup.PopupBase} components.
- * The default export is {@link moonstone/Popup.Popup}.
+ * Modal component that appears at the bottom of the screen and takes up the full screen width.
  *
  * @module moonstone/Popup
+ * @example
+ *<Popup open>Hello!</Popup>
  */
 
 import {is} from '@enact/core/keymap';
@@ -38,8 +39,8 @@ const forwardHide = forward('onHide');
 const forwardShow = forward('onShow');
 
 /**
- * {@link moonstone/Popup.PopupBase} is a modal component that appears at the bottom of
- * the screen and takes up the full screen width.
+ * [`PopupBase`]{@link moonstone/Popup.PopupBase} is a base component of
+ * [`Popup`]{@link moonstone/Popup.Popup}.
  *
  * @class PopupBase
  * @memberof moonstone/Popup
@@ -78,7 +79,7 @@ const PopupBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * A function to be run when either the close button (if present) is clicked
+		 * A callback function on click on the close button.
 		 *
 		 * @type {Function}
 		 * @public
@@ -86,7 +87,7 @@ const PopupBase = kind({
 		onCloseButtonClick: PropTypes.func,
 
 		/**
-		 * A function to be run after transition for hiding is finished.
+		 * A callback function for the hiding transition.
 		 *
 		 * @type {Function}
 		 * @public
@@ -94,7 +95,7 @@ const PopupBase = kind({
 		onHide: PropTypes.func,
 
 		/**
-		 * A function to run after transition for showing is finished.
+		 * A callback function for the showing transition.
 		 *
 		 * @type {Function}
 		 * @public
@@ -102,7 +103,7 @@ const PopupBase = kind({
 		onShow: PropTypes.func,
 
 		/**
-		 * When `true`, the popup is in the open/expanded state with the contents visible
+		 * When `true`, the popup is in the open/expanded state with the contents visible.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -221,8 +222,9 @@ const checkScrimNone = (props) => {
 };
 
 /**
- * {@link moonstone/Popup.Popup} is a stateful component that help {@link moonstone/Popup.PopupBase}
- * to appear in {@link ui/FloatingLayer.FloatingLayer}.
+ * [Popup]{@link moonstone/Popup.Popup} is a stateful component that help
+ * [PopupBase]{@link moonstone/Popup.PopupBase} to appear in
+ * [FloatingLayer]{@link ui/FloatingLayer.FloatingLayer}.
  *
  * @class Popup
  * @memberof moonstone/Popup
@@ -251,7 +253,7 @@ class Popup extends React.Component {
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * When `true`, the popup will not close when the user presses `ESC` key.
+		 * When `true`, the popup will not close on the `ESC` key press.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -260,12 +262,11 @@ class Popup extends React.Component {
 		noAutoDismiss: PropTypes.bool,
 
 		/**
-		 * A function to be run when a closing action is invoked by the user.
+		 * Close callback function on,
 		 *
-		 * These actions include
-		 * * pressing `ESC` key,
-		 * * clicking on the close button, or
-		 * * moving spotlight focus outside the boundary of the popup when `spotlightRestrict` is
+		 *	* pressing `ESC` key,
+		 *	* clicking on the close button, or
+		 *	* moving spotlight focus outside the boundary of the popup when `spotlightRestrict` is
 		 *   `'self-first'`.
 		 *
 		 * It is the responsibility of the callback to set the `open` property to `false`.
@@ -276,8 +277,7 @@ class Popup extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
-		 * A function to be run when popup hides. When animating it runs after transition for
-		 * hiding is finished.
+		 * Hide callback function
 		 *
 		 * @type {Function}
 		 * @public
@@ -285,7 +285,7 @@ class Popup extends React.Component {
 		onHide: PropTypes.func,
 
 		/**
-		 * A function to be run when a key-down action is invoked by the user.
+		 * A key-down event callback function
 		 *
 		 * @type {Function}
 		 * @public
@@ -293,10 +293,9 @@ class Popup extends React.Component {
 		onKeyDown: PropTypes.func,
 
 		/**
-		 * A function to run when popup shows. When animating, it runs after transition for
-		 * showing is finished.
+		 * Show callback function
 		 *
-		 * Note: The function does not run if Popup is initially opened and non animating.
+		 * Note: The function does not run if Popup is initially opened and not animating.
 		 *
 		 * @type {Function}
 		 * @public

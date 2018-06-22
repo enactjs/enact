@@ -210,7 +210,7 @@ const SpinnerDecorator = compose(
 );
 
 /**
- * A ready to use Moonstone-styled Spinner.
+ * A Moonstone-styled Spinner.
  *
  * @class Spinner
  * @memberof moonstone/Spinner

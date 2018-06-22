@@ -13,7 +13,7 @@ import Viewport from './Viewport';
 import css from './Panels.less';
 
 /**
- * Basic Panels component without breadcrumbs or default arranger
+ * Basic Panels component without breadcrumbs or default [`arranger`]{@link ui/ViewManager.Arranger}
  *
  * @class Panels
  * @memberof moonstone/Panels
@@ -35,7 +35,7 @@ const PanelsBase = kind({
 
 		/**
 		 * Set of functions that control how the panels are transitioned into and out of the
-		 * viewport
+		 * viewport. Refer to [`Arranger`]{@link ui/ViewManager#SlideArranger}.
 		 *
 		 * @type {Arranger}
 		 * @public
@@ -52,7 +52,7 @@ const PanelsBase = kind({
 		childProps: PropTypes.object,
 
 		/**
-		 * Panels to be rendered
+		 * [`Panels`]{@link moonstone/Panels.Panel} to be rendered
 		 *
 		 * @type {Panel}
 		 * @public
@@ -69,8 +69,8 @@ const PanelsBase = kind({
 		closeButtonAriaLabel: PropTypes.string,
 
 		/**
-		 * The background-color opacity of the application close button; valid values are
-		 * `'translucent'`, `'lightTranslucent'`, and `'transparent'`.
+		 * The background-color opacity of the application close button.
+		 * Values: `'translucent'`, `'lightTranslucent'`, and `'transparent'`
 		 *
 		 * @type {String}
 		 * @default 'transparent'

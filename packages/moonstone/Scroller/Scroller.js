@@ -1,5 +1,15 @@
 /**
  * Provides Moonstone-themed scroller components and behaviors.
+ * @example
+ * <Scroller>
+ * 	<div>
+ * 		<p>Scroll me</p>
+ * 		<p>Scroll me</p>
+ * 		<p>Scroll me</p>
+ * 		<p>Scroll me</p>
+ * 		<p>Scroll me</p>
+ * 	</div>
+ * </Scroller>
  *
  * @module moonstone/Scroller
  * @exports Scroller
@@ -26,8 +36,9 @@ const
 
 /**
  * A Moonstone-styled base component for [Scroller]{@link moonstone/Scroller.Scroller}.
- * In most circumstances, you will want to use the SpotlightContainerDecorator and Scrollable version:
- * [Scroller]{@link moonstone/Scroller.Scroller}
+ * In most circumstances, you will want to use the
+ * [SpotlightContainerDecorator]{@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
+ * and Scrollable version, [Scroller]{@link moonstone/Scroller.Scroller}
  *
  * @class ScrollerBase
  * @memberof moonstone/Scroller
@@ -352,10 +363,9 @@ class ScrollerBase extends Component {
 /**
  * A Moonstone-styled Scroller, Scrollable applied.
  *
- * Usage:
- * ```
+ * @example
  * <Scroller>Scroll me.</Scroller>
- * ```
+ *
  *
  * @class Scroller
  * @memberof moonstone/Scroller
@@ -379,10 +389,9 @@ Scroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
 	/**
 	 * Direction of the scroller.
 	 *
-	 * Valid values are:
-	 * * `'both'`,
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
+	 * * `'both'`
+	 * * `'horizontal'`
+	 * * `'vertical'`
 	 *
 	 * @type {String}
 	 * @default 'both'
@@ -401,10 +410,8 @@ Scroller.defaultProps = {
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
  *
- * Usage:
- * ```
+ * @example
  * <ScrollerNative>Scroll me.</ScrollerNative>
- * ```
  *
  * @class ScrollerNative
  * @memberof moonstone/Scroller
@@ -428,10 +435,9 @@ ScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototyp
 	/**
 	 * Direction of the scroller.
 	 *
-	 * Valid values are:
-	 * * `'both'`,
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
+	 * * `'both'`
+	 * * `'horizontal'`
+	 * * `'vertical'`
 	 *
 	 * @type {String}
 	 * @default 'both'

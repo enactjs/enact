@@ -1,6 +1,5 @@
 /**
- * Provides Moonstone-themed pill-shaped toggle switch component with interactive togglable
- * capabilities.
+ * Provides Moonstone-themed pill-shaped toggle switch component.
  *
  * @example
  * <Switch />
@@ -19,7 +18,6 @@ import ToggleIcon from '../ToggleIcon';
 import componentCss from './Switch.less';
 
 /**
- * Renders the base level DOM structure of the component.
  *
  * @class Switch
  * @memberof moonstone/Switch
@@ -35,7 +33,7 @@ const SwitchBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Sets whether this control is animated during change.
+		 * When `true`, it toggles without animation.
 		 *
 		 * @type {Boolean}
 		 * @default false

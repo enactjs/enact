@@ -45,9 +45,9 @@ const ProgressBarTooltipBase = kind({
 
 	propTypes: /** @lends moonstone/ProgressBar.ProgressBarTooltip.prototype */{
 		/**
-		 * Sets the orientation of the tooltip based on the orientation of the Slider, 'vertical'
-		 * sends the tooltip to one of the sides, 'horizontal'  positions it above the Slider.
-		 * Must be either `'horizontal'` or `'vertical'`.
+		 * Sets the orientation of the tooltip based on the orientation of the bar, 'vertical'
+		 * sends the tooltip to one of the sides, 'horizontal'  positions it above the bar.
+		 * Values: `'horizontal'` or `'vertical'`
 		 *
 		 * @type {String}
 		 * @default 'horizontal'
@@ -56,7 +56,7 @@ const ProgressBarTooltipBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * Display the percentage instead of the value
+		 * When `'true'`, display the percentage instead of the value.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -65,7 +65,8 @@ const ProgressBarTooltipBase = kind({
 		percent: PropTypes.bool,
 
 		/**
-		 * The proportion of progress across the bar. Should be a number between 0 and 1.
+		 * The proportion of the filled part of the bar.
+		 * * Should be a number between 0 and 1.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -78,12 +79,12 @@ const ProgressBarTooltipBase = kind({
 		 *
 		 * Allowed values are:
 		 *
-		 * * `"after"` renders below a `horizontal` ProgressBar/Slider and after (respecting the
+		 * * `after` renders below a `horizontal` ProgressBar/Slider and after (respecting the
 		 *   current locale's text direction) a `vertical` ProgressBar/Slider
-		 * * `"before"` renders above a `horizontal` ProgressBar/Slider and before (respecting the
+		 * * `before` renders above a `horizontal` ProgressBar/Slider and before (respecting the
 		 *   current locale's text direction) a `vertical` ProgressBar/Slider
-		 * * `"left"` renders to the left of a `vertical` ProgressBar/Slider regardless of locale
-		 * * `"right"` renders to the right of a `vertical` ProgressBar/Slider regardless of locale
+		 * * `left` renders to the left of a `vertical` ProgressBar/Slider regardless of locale
+		 * * `right` renders to the right of a `vertical` ProgressBar/Slider regardless of locale
 		 *
 		 * @type {String}
 		 * @default 'before'

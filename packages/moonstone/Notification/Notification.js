@@ -1,8 +1,9 @@
 /**
- * Exports the {@link moonstone/Notification.Notification} and {@link moonstone/Notification.NotificationBase}
- * components. The default export is {@link moonstone/Notification.Notification}.
+ * Moonstone-styled Notification components.
  *
  * @module moonstone/Notification
+ * @exports Notification
+ * @exports NotificationBase
  */
 
 import kind from '@enact/core/kind';
@@ -15,8 +16,8 @@ import Popup from '../Popup';
 import componentCss from './Notification.less';
 
 /**
- * {@link moonstone/Notification.NotificationBase} is a toast-like minimal popup that comes up
- * from the bottom of the screen. It requires a button to be provided and present to close it.
+ * A Moonstone styled notification component. It provides a notification modal which can be open and
+ * closed overlayed over an app. Apps will want to use {@link moonstone/Notification.Notification}.
  *
  * @class NotificationBase
  * @memberof moonstone/Notification
@@ -142,8 +143,7 @@ const NotificationBase = kind({
 
 
 /**
- * {@link moonstone/Notification.Notification} is modal component with a message, and an area
- * for additional controls.
+ * A Moonstone styled modal component with a message, and an area for additional controls.
  *
  * @class Notification
  * @memberof moonstone/Notification

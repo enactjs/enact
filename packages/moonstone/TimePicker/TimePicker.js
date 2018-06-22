@@ -1,6 +1,8 @@
 /**
- * Exports the {@link moonstone/TimePicker.TimePicker} component
+ * Provides a time selection component.
  *
+ * @example
+ * <TimePicker title="Open me" value={new Date()}></TimePicker>
  * @module moonstone/TimePicker
  */
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
@@ -190,21 +192,15 @@ const dateTimeConfig = {
 };
 
 /**
- * {@link moonstone/TimePicker.TimePicker} allows the selection (or simply display) of a hour,
- * month, and meridiem.
  *
- * Set the [value]{@link moonstone/TimePicker.TimePicker#value} property to a standard JavaScript
- * {@glossary Date} object to initialize the picker.
- *
- * By default, `TimePicker` maintains the state of its `value` property. Supply the
+ * By default, this component maintains the state of its `value` property. Supply the
  * `defaultValue` property to control its initial value. If you wish to directly control updates
  * to the component, supply a value to `value` at creation time and update it in response to
  * `onChange` events.
  *
- * `TimePicker` is an expandable component and it maintains its open/closed state by default. The
- * initial state can be supplied using `defaultOpen`. In order to directly control the open/closed
- * state, supply a value for `open` at creation time and update its value in response to
- * `onClose`/`onOpen` events.
+ * It is expandable and it maintains its open/closed state by default. `defaultOpen` can be used to
+ * set the initial state. For the direct control of its open/closed state, supply a value for
+ * `open` at creation time and update its value in response to `onClose`/`onOpen` events.
  *
  * @class TimePicker
  * @memberof moonstone/TimePicker
@@ -214,6 +210,16 @@ const dateTimeConfig = {
  * @ui
  * @public
  */
+
+/**
+ * Default value
+ *
+ * @name defaultValue
+ * @memberof moonstone/TimePicker.TimePicker.prototype
+ * @type {Number}
+ * @public
+ */
+
 const TimePicker = Pure(
 	Skinnable(
 		DateTimeDecorator(

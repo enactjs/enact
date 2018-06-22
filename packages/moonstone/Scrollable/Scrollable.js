@@ -49,7 +49,8 @@ const TouchableDiv = Touchable('div');
 
 /**
  * The name of a custom attribute which indicates the index of an item in
- * [VirtualList]{@link moonstone/VirtualList.VirtualList} or [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
+ * [VirtualList]{@link moonstone/VirtualList.VirtualList} or
+ * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
  *
  * @constant dataIndexAttribute
  * @memberof moonstone/Scrollable
