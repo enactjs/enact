@@ -1,6 +1,12 @@
 /**
- * Exports the {@link moonstone/DatePicker.DatePicker} and {@link moonstone/DatePicker.DatePickerBase}
- * components.
+ * Date selection components and behaviors.
+ *
+ * @example
+ * <DatePicker
+ *	defaultValue={selectedDate}
+ *	onChange={handleChange}
+ * 	title="Select Date"
+ * />
  *
  * @module moonstone/DatePicker
  */
@@ -68,11 +74,16 @@ const dateTimeConfig = {
 };
 
 /**
- * {@link moonstone/DatePicker.DatePicker} allows the selection (or simply display) of
- * a day, month, and year.
+ * A date selection (or simply display) component.
  *
- * Set the [value]{@link moonstone/DatePicker.DatePicker#value} property to a standard
- * JavaScript {@glossary Date} object to initialize the picker.
+ * Usage:
+ * ```
+ * <DatePicker
+ *	defaultValue={selectedDate}
+ *	onChange={handleChange}
+ * 	title="Select Date"
+ * />
+ * ```
  *
  * By default, `DatePicker` maintains the state of its `value` property. Supply the
  * `defaultValue` property to control its initial value. If you wish to directly control updates

@@ -180,7 +180,7 @@ const InputBase = kind({
 		placeholder: PropTypes.string,
 
 		/**
-		 * Indicates content is RTL.
+		 * Indicates the content's text direction is right-to-left.
 		 *
 		 * @type {Boolean}
 		 * @private
