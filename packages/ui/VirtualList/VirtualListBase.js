@@ -143,6 +143,20 @@ const VirtualListBaseFactory = (type) => {
 			getComponentProps: PropTypes.func,
 
 			/**
+			 * Specifies initial scroll position including the following properties
+			 *
+			 * `left` is the number of scroll left position.
+			 * `top` is the number of scroll top position.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
+			initialScrollPosition: PropTypes.shape({
+				left: PropTypes.number.isRequired,
+				top: PropTypes.number.isRequired
+			}),
+
+			/**
 			 * Number of spare DOM node.
 			 * `3` is good for the default value experimentally and
 			 * this value is highly recommended not to be changed by developers.
@@ -417,8 +431,7 @@ const VirtualListBaseFactory = (type) => {
 
 			this.scrollPosition = props.initialScrollPosition.top;
 			if (this.scrollPosition > 0 && !this.flag) {
-				// this.flag = true;
-				this.setScrollPosition(0/*this.props.initialScrollPosition.left*/, this.props.initialScrollPosition.top, 0, 1, this.props.rtl, numOfItems);
+				this.setScrollPosition(0/* this.props.initialScrollPosition.left */, this.props.initialScrollPosition.top, 0, 1, this.props.rtl, numOfItems);
 				return;
 			} else
 			if (!(updateStatesAndBounds && updateStatesAndBounds({
@@ -599,7 +612,6 @@ const VirtualListBaseFactory = (type) => {
 			if (firstIndex !== newFirstIndex) {
 				if (numOfItems) {
 					this.setState({firstIndex: newFirstIndex, numOfItems});
-					this.state.firstIndex = newFirstIndex;
 				} else {
 					this.setState({firstIndex: newFirstIndex});
 				}
@@ -772,6 +784,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.dataSize;
 			delete rest.direction;
 			delete rest.getComponentProps;
+			delete rest.initialScrollPosition;
 			delete rest.itemRenderer;
 			delete rest.itemSize;
 			delete rest.overhang;
