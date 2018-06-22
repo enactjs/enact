@@ -17,7 +17,7 @@ Inside of `Enact` we provide some useful tools to help you achieve faster perfor
 
 ## Job
 
-[`Job`](../../modules/core/util#Job/) is a class that we have included inside our `core` module. It
+[`Job`](../../modules/core/util/#Job) is a class that we have included inside our `core` module. It
 is a useful wrapper for async things like `setTimeout` and `requestIdleCallback`. Along with those wrappers we also provide functionality like `throttling`. 
 
 ### Idle
@@ -92,7 +92,7 @@ enact pack --production --isomorphic
 
 ## perfNow
 
-[`perfNow`](../../modules/core/util#perfNow/) is a nice little wrapper around
+[`perfNow`](../../modules/core/util/#perfNow/) is a nice little wrapper around
 [`window.performance.now`](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now) that 
 will fall back to [`Date.now`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now). This is
 useful for getting higher resolution timestamps to see how long a set of functions take.
