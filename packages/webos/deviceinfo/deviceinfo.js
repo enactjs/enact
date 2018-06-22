@@ -1,3 +1,9 @@
+/**
+ * Provides a function to get the device-specific information.
+ *
+ * @module webos/deviceinfo
+ * @exports deviceinfo
+ */
 import LS2Request from '../LS2Request';
 import {platform} from '../platform';
 
@@ -20,8 +26,12 @@ const device = {};
 
 /**
  * Gets the device-specific information regarding model, OS version, specifications, etc.
+ *
+ * @function
  * @param {webOS~deviceCallback} callback - The function to call once the information is collected
  * @returns {undefined}
+ * @memberof webos/deviceinfo
+ * @public
  */
 const deviceinfo = (callback) => {
 	if (Object.keys(device).length === 0) {
@@ -80,4 +90,6 @@ const deviceinfo = (callback) => {
 };
 
 export default deviceinfo;
-export {deviceinfo};
+export {
+	deviceinfo
+};

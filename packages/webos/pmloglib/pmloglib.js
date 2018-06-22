@@ -1,7 +1,19 @@
 /* eslint-disable no-console */
 /* global console */
-
-// Convenience wrapper around PmLogLib logging API
+/**
+ * Provides a wrapper around PmLogLib logging API
+ *
+ * @module webos/pmloglib
+ * @exports emergency
+ * @exports alert
+ * @exports critical
+ * @exports error
+ * @exports warning
+ * @exports notice
+ * @exports info
+ * @exports debug
+ * @exports perfLog
+ */
 
 // Log level constants
 const levelEmergency = 0;
@@ -44,86 +56,118 @@ const log = (level, messageId, keyVals, freeText) => {
 };
 
 /**
- * Logs with PmLogLib at the "emergency" level
- * @param {String} messageId - Short string that uniquely identifies the log message within a component.
- * @param {Object} keyVals - Key-value pairs to log
- * @param {String} freeText - Text string to log
+ * Logs with PmLogLib at the "emergency" level.
+ *
+ * @function
+ * @param {String} messageId Short string that uniquely identifies the log message within a component
+ * @param {Object} keyVals Key-value pairs to log
+ * @param {String} freeText Text string to log
  * @returns {undefined}
+ * @memberof webos/pmloglib
+ * @public
  */
 const emergency = (messageId, keyVals, freeText) => {
 	log(levelEmergency, messageId, keyVals, freeText);
 };
 
 /**
- * Logs with PmLogLib at the "alert" level
- * @param {String} messageId - Short string that uniquely identifies the log message within a component.
- * @param {Object} keyVals - Key-value pairs to log
- * @param {String} freeText - Text string to log
+ * Logs with PmLogLib at the "alert" level.
+ *
+ * @function
+ * @param {String} messageId Short string that uniquely identifies the log message within a component
+ * @param {Object} keyVals Key-value pairs to log
+ * @param {String} freeText Text string to log
  * @returns {undefined}
+ * @memberof webos/pmloglib
+ * @public
  */
 const alert = (messageId, keyVals, freeText) => {
 	log(levelAlert, messageId, keyVals, freeText);
 };
 
 /**
- * Logs with PmLogLib at the "critical" level
- * @param {String} messageId - Short string that uniquely identifies the log message within a component.
- * @param {Object} keyVals - Key-value pairs to log
- * @param {String} freeText - Text string to log
+ * Logs with PmLogLib at the "critical" level.
+ *
+ * @function
+ * @param {String} messageId Short string that uniquely identifies the log message within a component
+ * @param {Object} keyVals Key-value pairs to log
+ * @param {String} freeText Text string to log
  * @returns {undefined}
+ * @memberof webos/pmloglib
+ * @public
  */
 const critical = (messageId, keyVals, freeText) => {
 	log(levelCritical, messageId, keyVals, freeText);
 };
 
 /**
- * Logs with PmLogLib at the "error" level
- * @param {String} messageId - Short string that uniquely identifies the log message within a component.
- * @param {Object} keyVals - Key-value pairs to log
- * @param {String} freeText - Text string to log
+ * Logs with PmLogLib at the "error" level.
+ *
+ * @function
+ * @param {String} messageId Short string that uniquely identifies the log message within a component
+ * @param {Object} keyVals Key-value pairs to log
+ * @param {String} freeText Text string to log
  * @returns {undefined}
+ * @memberof webos/pmloglib
+ * @public
  */
 const error = (messageId, keyVals, freeText) => {
 	log(levelError, messageId, keyVals, freeText);
 };
 
 /**
- * Logs with PmLogLib at the "warning" level
- * @param {String} messageId - Short string that uniquely identifies the log message within a component.
- * @param {Object} keyVals - Key-value pairs to log
- * @param {String} freeText - Text string to log
+ * Logs with PmLogLib at the "warning" level.
+ *
+ * @function
+ * @param {String} messageId Short string that uniquely identifies the log message within a component
+ * @param {Object} keyVals Key-value pairs to log
+ * @param {String} freeText Text string to log
  * @returns {undefined}
+ * @memberof webos/pmloglib
+ * @public
  */
 const warning = (messageId, keyVals, freeText) => {
 	log(levelWarning, messageId, keyVals, freeText);
 };
 
 /**
- * Logs with PmLogLib at the "notice" level
- * @param {String} messageId - Short string that uniquely identifies the log message within a component.
- * @param {Object} keyVals - Key-value pairs to log
- * @param {String} freeText - Text string to log
+ * Logs with PmLogLib at the "notice" level.
+ *
+ * @function
+ * @param {String} messageId Short string that uniquely identifies the log message within a component
+ * @param {Object} keyVals Key-value pairs to log
+ * @param {String} freeText Text string to log
  * @returns {undefined}
+ * @memberof webos/pmloglib
+ * @public
  */
 const notice = (messageId, keyVals, freeText) => {
 	log(levelNotice, messageId, keyVals, freeText);
 };
 
 /**
- * Logs with PmLogLib at the "info" level
- * @param {String} messageId - Short string that uniquely identifies the log message within a component.
- * @param {Object} keyVals - Key-value pairs to log
- * @param {String} freeText - Text string to log
+ * Logs with PmLogLib at the "info" level.
+ *
+ * @function
+ * @param {String} messageId Short string that uniquely identifies the log message within a component
+ * @param {Object} keyVals Key-value pairs to log
+ * @param {String} freeText Text string to log
  * @returns {undefined}
+ * @memberof webos/pmloglib
+ * @public
  */
 const info = (messageId, keyVals, freeText) => {
 	log(levelInfo, messageId, keyVals, freeText);
 };
 
 /**
- * Logs with PmLogLib at the "debug" level
- * @param {String} freeText - Text string to log
+ * Logs with PmLogLib at the "debug" level.
+ *
+ * @function
+ * @param {String} freeText Text string to log
  * @returns {undefined}
+ * @memberof webos/pmloglib
+ * @public
  */
 const debug = (freeText) => {
 	log(levelDebug, '', '', freeText);
@@ -131,11 +175,15 @@ const debug = (freeText) => {
 
 /**
  * Places a time-stamped performance log entry into the system log using the `PmLogInfoWithClock()`
- * method
- * @param {String} messageId - Short string that uniquely identifies the log message within a component.
- * @param {String} perfType - A string that identifies the type of perf message
- * @param {String} perfGroup - A string that identifies the group of the perf message
+ * method.
+ *
+ * @function
+ * @param {String} messageId Short string that uniquely identifies the log message within a component.
+ * @param {String} perfType A string that identifies the type of perf message
+ * @param {String} perfGroup A string that identifies the group of the perf message
  * @returns {undefined}
+ * @memberof webos/pmloglib
+ * @public
  */
 const perfLog = (messageId, perfType, perfGroup) => {
 	if (typeof window !== 'undefined' && window.PalmSystem) {
