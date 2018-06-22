@@ -6,12 +6,6 @@ import {withInfo} from '@storybook/addon-info';
 import {select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
-const defaultPlaceholder =
-	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
-	'9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
-	'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
-	'4NCg==';
-
 const prop = {
 	videoTitles: [
 		'Sintel',
@@ -52,9 +46,16 @@ const prop = {
 		'قفز الثعلب البني السريع فوق الكلب الكسول. الطيور تطير في الفول عند غروب الشمس.',
 		'فوری بھوری لومڑی سست کتے پر چھلانگ لگا. بین پرندوں سوریاست میں پرواز.'
 	],
+	placeholderNames: [
+		'None',
+		'SVG'
+	],
 	placeholder: {
-		'': 'None',
-		[defaultPlaceholder]: 'SVG'
+		'None': '',
+		'SVG': 'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
+		'9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
+		'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
+		'4NCg=='
 	}
 };
 
@@ -71,12 +72,14 @@ storiesOf('Moonstone', module)
 		})(() => {
 			const videoTitle = select('source', prop.videoTitles, Config, 'Sintel');
 			const videoSource = prop.videos[videoTitle];
-			const imageName = select('imageOverlay', prop.imageNames, Config, 'None');
+			const imageName = select('imageOverlay', prop.imageNames, Config);
 			const imageSource = prop.images[imageName];
+			const placeholderName = select('placeholder', prop.placeholderNames, Config, 'None');
+			const placeholder = prop.placeholder[placeholderName];
 			return (
 				<MediaOverlay
 					imageOverlay={imageSource}
-					placeholder={select('placeholder', prop.placeholder, Config, '')}
+					placeholder={placeholder}
 					text={select('text', prop.text, Config, prop.text[0])}
 					textAlign={select('textAlign', ['start', 'center', 'end'], Config, 'center')}
 				>
