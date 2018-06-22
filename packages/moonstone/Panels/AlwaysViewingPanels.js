@@ -23,8 +23,8 @@ const calcMax = () => {
 };
 
 /**
- * An instance of Panels in which the Panel uses the right half of the viewable screen with
- * breadcrumbs to the left for any panels prior to the active panel.
+ * An instance of Panels which restricts the Panel to the right half of the screen with the left
+ * half used for multiple breadcrumbs. Typically it's used for overlaying panels over a screen.
  *
  * @class AlwaysViewingPanels
  * @memberof moonstone/Panels

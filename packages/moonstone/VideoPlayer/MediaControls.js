@@ -35,8 +35,7 @@ const MediaButton = onlyUpdateForKeys([
 const forwardToggleMore = forward('onToggleMore');
 
 /**
- * A set of components to control media playback and render additional components in designated
- * areas.
+ * A set of components for controlling media playback and rendering additional components.
  *
  * @class MediaControlsBase
  * @memberof moonstone/VideoPlayer
@@ -49,8 +48,8 @@ const MediaControlsBase = kind({
 	// intentionally assigning these props to MediaControls instead of Base (which is private)
 	propTypes: /** @lends moonstone/VideoPlayer.MediaControls.prototype */ {
 		/**
-		 * A string which is sent to the `backward` icon of the player controls. This can be
-		 * anything that is accepted by {@link moonstone/Icon.Icon}.
+		 * Backward [icon]{@link moonstone/Icon.Icon}. Accepts any [icon]{@link moonstone/Icon.Icon}
+		 * component type.
 		 *
 		 * @type {String}
 		 * @default 'backward'
@@ -59,8 +58,8 @@ const MediaControlsBase = kind({
 		backwardIcon: PropTypes.string,
 
 		/**
-		 * A string which is sent to the `forward` icon of the player controls. This can be anything
-		 * that is accepted by {@link moonstone/Icon.Icon}.
+		 * Forward [icon]{@link moonstone/Icon.Icon}. Accepts any [icon]{@link moonstone/Icon.Icon}
+		 * component type.
 		 *
 		 * @type {String}
 		 * @default 'forward'
@@ -69,8 +68,8 @@ const MediaControlsBase = kind({
 		forwardIcon: PropTypes.string,
 
 		/**
-		 * A string which is sent to the `jumpBackward` icon of the player controls. This can be
-		 * anything that is accepted by {@link moonstone/Icon.Icon}.
+		 * Jump backward [icon]{@link moonstone/Icon.Icon}. Accepts any [icon]{@link moonstone/Icon.Icon}
+		 * component type.
 		 *
 		 * @type {String}
 		 * @default 'skipbackward'
@@ -79,7 +78,7 @@ const MediaControlsBase = kind({
 		jumpBackwardIcon: PropTypes.string,
 
 		/**
-		 * Sets the `disabled` state on the media "jump" buttons; the outer pair.
+		 * Disables state on the media "jump" buttons; the outer pair.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -87,8 +86,8 @@ const MediaControlsBase = kind({
 		jumpButtonsDisabled: PropTypes.bool,
 
 		/**
-		 * A string which is sent to the `jumpForward` icon of the player controls. This can be
-		 * anything that is accepted by {@link moonstone/Icon.Icon}.
+		 * Jump forward [icon]{@link moonstone/Icon.Icon}. Accepts any [icon]{@link moonstone/Icon.Icon}
+		 * component type.
 		 *
 		 * @type {String}
 		 * @default 'skipforward'
@@ -108,7 +107,7 @@ const MediaControlsBase = kind({
 		leftComponents: PropTypes.node,
 
 		/**
-		 * Sets the `disabled` state on the media buttons.
+		 * Disables the media buttons.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -116,7 +115,7 @@ const MediaControlsBase = kind({
 		mediaDisabled: PropTypes.bool,
 
 		/**
-		 * The label for the "More" button for when the "More" tray is open.
+		 * The label for the 'More' button for when the 'More' tray is open.
 		 * This will show on the tooltip.
 		 *
 		 * @type {String}
@@ -129,7 +128,7 @@ const MediaControlsBase = kind({
 		 * The color of the underline beneath more icon button.
 		 *
 		 * This property accepts one of the following color names, which correspond with the
-		 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
+		 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`.
 		 *
 		 * @type {String}
 		 * @see {@link moonstone/IconButton.IconButtonBase.color}
@@ -139,7 +138,7 @@ const MediaControlsBase = kind({
 		moreButtonColor: PropTypes.oneOf(['red', 'green', 'yellow', 'blue']),
 
 		/**
-		 * Sets the `disabled` state on the media "more" button.
+		 * Disables the media 'More' button.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -147,7 +146,7 @@ const MediaControlsBase = kind({
 		moreButtonDisabled: PropTypes.bool,
 
 		/**
-		 * The label for the "More" button. This will show on the tooltip.
+		 * The label for the 'More' button. This will show on the tooltip.
 		 *
 		 * @type {String}
 		 * @default 'More'
@@ -181,7 +180,7 @@ const MediaControlsBase = kind({
 		noRateButtons: PropTypes.bool,
 
 		/**
-		 * Function executed when the user clicks the Backward button.
+		 * Called when the user clicks the Backward button.
 		 *
 		 * @type {Function}
 		 * @public
@@ -189,7 +188,7 @@ const MediaControlsBase = kind({
 		onBackwardButtonClick: PropTypes.func,
 
 		/**
-		 * Function executed when cancel/back key events are fired.
+		 * Called when cancel/back key events are fired.
 		 *
 		 * @type {Function}
 		 * @public
@@ -197,7 +196,7 @@ const MediaControlsBase = kind({
 		onClose: PropTypes.func,
 
 		/**
-		 * Function executed when the user clicks the Forward button.
+		 * Called when the user clicks the Forward button.
 		 *
 		 * @type {Function}
 		 * @public
@@ -205,7 +204,7 @@ const MediaControlsBase = kind({
 		onForwardButtonClick: PropTypes.func,
 
 		/**
-		 * Function executed when the user clicks the JumpBackward button
+		 * Called when the user clicks the JumpBackward button
 		 *
 		 * @type {Function}
 		 * @public
@@ -213,7 +212,7 @@ const MediaControlsBase = kind({
 		onJumpBackwardButtonClick: PropTypes.func,
 
 		/**
-		 * Function executed when the user clicks the JumpForward button.
+		 * Called when the user clicks the JumpForward button.
 		 *
 		 * @type {Function}
 		 * @public
@@ -221,7 +220,7 @@ const MediaControlsBase = kind({
 		onJumpForwardButtonClick: PropTypes.func,
 
 		/**
-		 * Function executed when the user clicks the More button.
+		 * Called when the user clicks the More button.
 		 *
 		 * @type {Function}
 		 * @public
@@ -229,7 +228,7 @@ const MediaControlsBase = kind({
 		onMoreClick: PropTypes.func,
 
 		/**
-		 * Function executed when the user clicks the Play button.
+		 * Called when the user clicks the Play button.
 		 *
 		 * @type {Function}
 		 * @public
@@ -269,7 +268,7 @@ const MediaControlsBase = kind({
 		playIcon: PropTypes.string,
 
 		/**
-		 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
+		 * Disables the media playback-rate control buttons; the inner pair.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -465,7 +464,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			leftComponents: PropTypes.node,
 
 			/**
-			 * Sets the `disabled` state on the media buttons.
+			 * Disables the media buttons.
 			 *
 			 * @type {Boolean}
 			 * @public
@@ -486,7 +485,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			moreButtonColor: PropTypes.oneOf(['red', 'green', 'yellow', 'blue']),
 
 			/**
-			 * Sets the `disabled` state on the media "more" button.
+			 * Disables the media "more" button.
 			 *
 			 * @type {Boolean}
 			 * @public
@@ -520,7 +519,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			noRateButtons: PropTypes.bool,
 
 			/**
-			 * Function to be called when media fast forwards
+			 * Called when media fast forwards.
 			 *
 			 * @type {Function}
 			 * @public
@@ -528,7 +527,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			onFastForward: PropTypes.func,
 
 			/**
-			 * Function to be called when media jumps
+			 * Called when media jumps.
 			 *
 			 * @type {Function}
 			 * @public
@@ -536,7 +535,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			onJump: PropTypes.func,
 
 			/**
-			 * Function to be called when media gets paused
+			 * Called when media gets paused.
 			 *
 			 * @type {Function}
 			 * @public
@@ -544,7 +543,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			onPause: PropTypes.func,
 
 			/**
-			 * Function to be called when media starts playing
+			 * Called when media starts playing.
 			 *
 			 * @type {Function}
 			 * @public
@@ -552,7 +551,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			onPlay: PropTypes.func,
 
 			/**
-			 * Function to be called when media rewinds
+			 * Called when media rewinds.
 			 *
 			 * @type {Function}
 			 * @public
@@ -560,7 +559,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			onRewind: PropTypes.func,
 
 			/**
-			 * Function executed when the user clicks the More button.
+			 * Called when the user clicks the More button.
 			 *
 			 * @type {Function}
 			 * @public
@@ -568,7 +567,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			onToggleMore: PropTypes.func,
 
 			/**
-			 * `true` when the video is paused.
+			 * Indicates the video is paused.
 			 *
 			 * @type {Boolean}
 			 * @public
@@ -576,7 +575,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			paused: PropTypes.bool,
 
 			/**
-			 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
+			 * Disables the media playback-rate control buttons; the inner pair.
 			 *
 			 * @type {Boolean}
 			 * @public
@@ -593,7 +592,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 
 			/**
 			 * Registers the MediaControls component with an
-			 * {@link core/internal/ApiDecorator.ApiDecorator}.
+			 * [ApiDecorator]{@link core/internal/ApiDecorator.ApiDecorator}.
 			 *
 			 * @type {Function}
 			 * @private
@@ -866,14 +865,13 @@ const handleCancel = (ev, {onClose}) => {
 };
 
 /**
- * A set of components to control media playback and render additional components in designated
- * areas.
+ * A set of components for controlling media playback and rendering additional components.
  *
- * `MediaControls` uses [Slottable]{@link ui/Slottable} to accept the custom tags `<leftComponents>`
- * and `<rightComponents>` to add components to the left and right, respectively, of the media
+ * This uses [Slottable]{@link ui/Slottable} to accept the custom tags, `<leftComponents>`
+ * and `<rightComponents>`, to add components to the left and right of the media
  * controls. Any additional children will be rendered into the "more" controls area causing the
- * "More" button to appear. Showing the additional components is handled by `MediaControls` when the
- * user taps the "More" button.
+ * 'More' button to appear. Showing the additional components is handled by `MediaControls` when the
+ * user taps the 'More' button.
  *
  * @class MediaControls
  * @memberof moonstone/VideoPlayer

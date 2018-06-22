@@ -22,7 +22,8 @@ const SpottableDiv = Spottable('div');
 export const breadcrumbWidth = 96;
 
 /**
- * Vertical, transparent bar generally laid out horizontally used to navigate to a prior Panel.
+ * Vertical, transparent bar used to navigate to a prior Panel.
+ * ActivityPanels has one breadcrumb, and AlwaysViewingPanels can have multiple stacked horizontally.
  *
  * @class Breadcrumb
  * @memberof moonstone/Panels
@@ -34,7 +35,7 @@ const BreadcrumbBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Breadcrumb.prototype */ {
 		/**
-		 * Index of the panel for which this is the breadcrumb
+		 * Index of the panel that relates to a breadcrumb.
 		 *
 		 * @type {Number}
 		 * @required

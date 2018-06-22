@@ -8,6 +8,11 @@
  * [the icon for SelectableItem]{@link moonstone/SelectableItem.SelectableItem}.
  *
  * @module moonstone/ToggleIcon
+ * @example
+ * <ToggleIcon
+ * 	onToggle={(props)=> console.log(props.selected)}>
+ * 	check
+ * </ToggleIcon>
  * @exports ToggleIcon
  * @exports ToggleIconBase
  * @exports ToggleIconDecorator
@@ -23,7 +28,7 @@ import Icon from '../Icon';
 import Skinnable from '../Skinnable';
 
 /**
- * Renders a check mark in a shape which supports a Boolean state.
+ * This supports a Boolean state of `selected` onToggle.
  *
  * @class ToggleIconBase
  * @memberof moonstone/ToggleIcon
@@ -42,7 +47,7 @@ const ToggleIconBase = kind({
 });
 
 /**
- * Moonstone-specific behaviors to apply to `ToggleIconBase`.
+ * Moonstone-specific behaviors to apply to [ToggleIconBase]{@link moonstone/ToggleIcon.ToggleIconBase}.
  *
  * @hoc
  * @memberof moonstone/ToggleIcon

@@ -199,7 +199,7 @@ const TimePickerBase = kind({
 		noLabels: PropTypes.bool,
 
 		/**
-		 * Handler for changes in the `hour` component of the time
+		 * Called on changes in the `hour` component of the time
 		 *
 		 * @type {Function}
 		 * @public
@@ -207,7 +207,7 @@ const TimePickerBase = kind({
 		onChangeHour: PropTypes.func,
 
 		/**
-		 * Handler for changes in the `meridiem` component of the time
+		 * Called on changes in the `meridiem` component of the time
 		 *
 		 * @type {Function}
 		 * @public
@@ -215,7 +215,7 @@ const TimePickerBase = kind({
 		onChangeMeridiem: PropTypes.func,
 
 		/**
-		 * Handler for changes in the `minute` component of the time
+		 * Called on changes in the `minute` component of the time
 		 *
 		 * @type {Function}
 		 * @public
@@ -223,7 +223,7 @@ const TimePickerBase = kind({
 		onChangeMinute: PropTypes.func,
 
 		/**
-		 * Callback to be called when a condition occurs which should cause the expandable to close
+		 * Called when a condition occurs which should cause the expandable to close
 		 *
 		 * @type {Function}
 		 * @public
@@ -231,7 +231,7 @@ const TimePickerBase = kind({
 		onClose: PropTypes.func,
 
 		/**
-		 * The handler to run when the component is removed while retaining focus.
+		 * Called when the component is removed while retaining focus.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -240,7 +240,7 @@ const TimePickerBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 * Called when the focus leaves the expandable when the 5-way left key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -249,7 +249,7 @@ const TimePickerBase = kind({
 		onSpotlightLeft: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 * Called when the focus leaves the expandable when the 5-way right key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -258,7 +258,7 @@ const TimePickerBase = kind({
 		onSpotlightRight: PropTypes.func,
 
 		/**
-		 * When `true`, current locale is RTL
+		 * Set current locale to RTL.
 		 *
 		 * @type {Boolean}
 		 * @private
@@ -266,7 +266,7 @@ const TimePickerBase = kind({
 		rtl: PropTypes.bool,
 
 		/**
-		 * When `true`, the component cannot be navigated using spotlight.
+		 * Disables spotlight.
 		 *
 		 * @type {Boolean}
 		 * @default false

@@ -1874,8 +1874,8 @@ const VideoPlayerBase = class extends React.Component {
 };
 
 /**
- * {@link moonstone/VideoPlayer.VideoPlayer} is a standard HTML5 video player for Moonstone. It
- * behaves, responds to, and operates like a standard `<video>` tag in its support for `<source>`s
+ * [VideoPlayer]{@link moonstone/VideoPlayer.VideoPlayer} is a standard HTML5 video player for
+ * Moonstone. It behaves, responds to, and operates like a `<video>` tag in its support for `<source>`.
  * It also accepts custom tags such as `<infoComponents>` for displaying additional information
  * in the title area and `<MediaControls>` for handling media playback controls and adding more
  * controls.
@@ -1895,9 +1895,9 @@ const VideoPlayerBase = class extends React.Component {
  *	</VideoPlayer>
  * ```
  *
- * To invoke methods (`fastForward()`, `hideControls()`, `jump()`, `pause()`, `play()`, `rewind()`,
- * `seek()`, 'showControls()') or get the current state (`getMediaState()`), store a ref to the
- * `VideoPlayer` within your component:
+ * To invoke methods: `fastForward()`, `hideControls()`, `jump()`, `pause()`, `play()`, `rewind()`,
+ * `seek()`, 'showControls()', or get the current state, `getMediaState()`, store a ref to the
+ * `VideoPlayer` within your component as bolow.
  *
  * ```
  * 	...

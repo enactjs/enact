@@ -1,8 +1,16 @@
 /**
- * Exports the {@link moonstone/Picker.Picker} and {@link moonstone/Picker.PickerBase}
- * components. The default export is {@link moonstone/Picker.Picker}.
+ * A component for selecting values from a list of values.
+ *
+ * @example
+ * <Picker>
+ * 	<p>A</p>
+ * 	<p>B</p>
+ * 	<p>C</p>
+ * </Picker>
  *
  * @module moonstone/Picker
+ * @exports Picker
+ * @exports PickerBase
  */
 
 import Changeable from '@enact/ui/Changeable';
@@ -18,7 +26,8 @@ import {validateRange} from '../internal/validators';
 import PickerCore, {PickerItem} from '../internal/Picker';
 
 /**
- * The base component for {@link moonstone/Picker.Picker}. This version is not spottable.
+ * The base component for [`Picker`]{@link moonstone/Picker.Picker}. This version is not
+ * [`spottable`]{@link spotlight/Spottable.Spottable}.
  *
  * @class PickerBase
  * @memberof moonstone/Picker
@@ -30,14 +39,13 @@ const PickerBase = kind({
 
 	propTypes: /** @lends moonstone/Picker.PickerBase.prototype */ {
 		/**
-		 * Children from which to pick
+		 * Picker value list
 		 *
 		 * @type {Node}
 		 * @required
 		 * @public
 		 */
 		children: PropTypes.node.isRequired,
-
 		/**
 		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
 		 * to the current selected child text.
@@ -72,8 +80,7 @@ const PickerBase = kind({
 		decrementIcon: PropTypes.string,
 
 		/**
-		 * When `true`, the Picker is shown as disabled and does not generate `onChange`
-		 * [events]{@link /docs/developer-guide/glossary/#event}.
+		 * Disables the picker.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -91,11 +98,10 @@ const PickerBase = kind({
 		incrementIcon: PropTypes.string,
 
 		/**
-		 * Determines the user interaction of the control. A joined picker allows the user to use
-		 * the arrow keys to adjust the picker's value. The user may no longer use those arrow keys
-		 * to navigate, while this control is focused. A split control allows full navigation,
-		 * but requires individual ENTER presses on the incrementer and decrementer buttons.
-		 * Pointer interaction is the same for both formats.
+		 * Indicates that the users can use the arrow keys to adjust the picker's value.
+		 * The user may no longer use those arrow keys to navigate, while this control is focused.
+		 * A default control allows full navigation, but requires individual ENTER presses on the incrementer
+		 * and decrementer buttons. Pointer interaction is the same for both formats.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -104,7 +110,7 @@ const PickerBase = kind({
 
 		/**
 		 * By default, each picker item is wrapped by a
-		 * {@link moonstone/Marquee.MarqueeText}. When `marqueeDisabled` is `true`,
+		 * [`MarqueeText`]{@link moonstone/Marquee.MarqueeText}. When `marqueeDisabled` is `true`,
 		 * the items will not be wrapped.
 		 *
 		 * @type {Boolean}
@@ -113,9 +119,7 @@ const PickerBase = kind({
 		marqueeDisabled: PropTypes.bool,
 
 		/**
-		 * By default, the picker will animate transitions between items if it has a defined
-		 * `width`. Specifying `noAnimation` will prevent any transition animation for the
-		 * component.
+		 * Disables transition animation.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -123,7 +127,7 @@ const PickerBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * A function to run when the control should increment or decrement.
+		 * Called when the `value` changes.
 		 *
 		 * @type {Function}
 		 * @public
@@ -131,8 +135,9 @@ const PickerBase = kind({
 		onChange: PropTypes.func,
 
 		/**
-		 * Sets the orientation of the picker, whether the buttons are above and below or on the
-		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
+		 * Orientation of the picker, whether the buttons are alined horizontally or vertically
+		 * with its selected value.
+		 * * Values: `'horizontal'`, `'vertical'`
 		 *
 		 * @type {String}
 		 * @public
@@ -149,13 +154,16 @@ const PickerBase = kind({
 		value: PropTypes.number,
 
 		/**
-		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
-		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
-		 * word pickers, `'large'` for maximum-sized pickers.
+		 * A number can be used to set the minimum number of characters to be shown.
+		 * This number will determine the minumum size of the Picker.
+		 * Setting a number to less than the number of characters in your longest value will cause the
+		 * width to grow for the longer values.
 		 *
-		 * You may also supply a number. This number will determine the minumum size of the Picker.
-		 * Setting a number to less than the number of characters in your longest value may produce
-		 * unexpected results.
+		 * Choose a specific size for your picker.
+		 * * `'small'` - numeric values
+		 * * `'medium'` - single or short words
+		 * * `'large'` - maximum-sized pickers taking full width of its parent
+		 * * `null` - auto-sizing
 		 *
 		 * @type {String|Number}
 		 * @public
@@ -166,8 +174,7 @@ const PickerBase = kind({
 		]),
 
 		/**
-		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
-		 * to `true` to allow the picker to continue from the opposite end of the list of options.
+		 * When`true`, a picker continues from the start of the list after it reaches the end.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -226,9 +233,8 @@ const PickerBase = kind({
 });
 
 /**
- * A Picker component that allows selecting values from a list of values.
- *
- * By default, `Picker` maintains the state of its `value` property. Supply the `defaultValue`
+ * A Picker component that allows selecting values from a list of values. By default,
+ * `RangePicker` maintains the state of its `value` property. Supply the `defaultValue`
  * property to control its initial value. If you wish to directly control updates to the component,
  * supply a value to `value` at creation time and update it in response to `onChange` events.
  *
@@ -247,6 +253,16 @@ const Picker = Pure(
 		)
 	)
 );
+
+/**
+ * Default Index of the selected child
+ *
+ * @name defaultValue
+ * @memberof moonstone/Picker.Picker.prototype
+ * @type {Number}
+ * @default 0
+ * @public
+ */
 
 export default Picker;
 export {Picker, PickerBase};

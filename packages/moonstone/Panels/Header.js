@@ -33,7 +33,7 @@ const CompactTitleBase = kind({
 const CompactTitle = MarqueeDecorator({invalidateProps: ['title', 'titleBelow']}, CompactTitleBase);
 
 /**
- * A visual header component for a Panel with a title, titleAbove, titleBelow, and subTitleBelow
+ * A header component for a Panel with a `title`, `titleBelow`, and `subTitleBelow`
  *
  * @class Header
  * @memberof moonstone/Panels
@@ -47,6 +47,7 @@ const HeaderBase = kind({
 	propTypes: /** @lends moonstone/Panels.Header.prototype */ {
 		/**
 		 * Configures the mode of uppercasing for the [`title`]{@link moonstone/Panels.Header#title}.
+		 * * Values: `'upper'`, `'preserve'`, `'word'`, `'sentence'`
 		 *
 		 * @see i18n/Uppercase#Uppercase.casing
 		 * @type {String}
@@ -67,7 +68,7 @@ const HeaderBase = kind({
 		]),
 
 		/**
-		 * When `true`, the header content is indented and the header lines are removed.
+		 * Indent its content and removes lines.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -77,9 +78,10 @@ const HeaderBase = kind({
 
 		/**
 		 * Converts the title text of a "standard" Header into an Input, which you provide through
-		 * this property. This is also a "slot" so it can be referred to as if it were JSX.
+		 * this property. This is also a [`slot`]{@link ui/Slottable.Slottable}, so it can be referred
+		 * to as if it were JSX.
 		 *
-		 * Example:
+		 * Example
 		 * ```
 		 *  <Header>
 		 *  	<title>Example Header Title</title>
@@ -96,8 +98,8 @@ const HeaderBase = kind({
 		headerInput: PropTypes.node,
 
 		/**
-		 * Determines what triggers the header content to start its animation. Valid values are
-		 * `'focus'`, `'hover'` and `'render'`. The default is `'hover'`.
+		 * Determines what triggers the header content to start its animation.
+		 * * Values: `'focus'`, `'hover'` and `'render'`. The default is `'hover'`.
 		 *
 		 * @type {String}
 		 * @default 'hover'
@@ -106,16 +108,16 @@ const HeaderBase = kind({
 		marqueeOn: PropTypes.oneOf(['focus', 'hover', 'render']),
 
 		/**
-		 * Sub-title displayed at the bottom of the panel. This is a "slot", so it can be used as a
-		 * tag-name inside this component, which improves readability.
+		 * Sub-title displayed at the bottom of the panel.
+		 * This is a [`slot`]{@link ui/Slottable.Slottable}, so it can be used as a tag-name inside
+		 * this component.
 		 *
 		 * @type {String}
 		 */
 		subTitleBelow: PropTypes.string,
 
 		/**
-		 * Title of the header. This is a "slot", so it can be used as a tag-name inside this
-		 * component, which improves readability.
+		 * Title of the header. This is a [`slot`]{@link ui/Slottable.Slottable}.
 		 *
 		 * Example:
 		 * ```
@@ -130,7 +132,7 @@ const HeaderBase = kind({
 		 */
 		title: PropTypes.string,
 
-		// /**
+		// /** SHOULD THIS BE REMOVED
 		//  * Text displayed above the title
 		//  *
 		//  * @type {String}
@@ -138,15 +140,14 @@ const HeaderBase = kind({
 		// titleAbove: PropTypes.string,
 
 		/**
-		 * Text displayed below the title. This is a "slot", so it can be used as a tag-name inside
-		 * this component, which improves readability.
+		 * Text displayed below the title. This is a [`slot`]{@link ui/Slottable.Slottable}.
 		 *
 		 * @type {String}
 		 */
 		titleBelow: PropTypes.string,
 
 		/**
-		 * Set the type of header to be used. `standard` or `compact`.
+		 * Set the type of header to be used. `'standard'` or `'compact'`.
 		 *
 		 * @type {String}
 		 * @default 'standard'
@@ -245,7 +246,7 @@ const HeaderBase = kind({
 	}
 });
 
-// Note that we only export this (even as HeaderBase).  HeaderBase is not useful on its own.
+// Note that we only export this (even as HeaderBase). HeaderBase is not useful on its own.
 const Header = Slottable({slots: ['headerInput', 'subTitleBelow', /* 'titleAbove', */'title', 'titleBelow']}, Skinnable(HeaderBase));
 
 // Set up Header so when it's used in a slottable layout (like Panel), it is automatically
