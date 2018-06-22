@@ -415,6 +415,12 @@ const VirtualListBaseFactory = (type) => {
 			this.calculateScrollBounds(props);
 			this.updateMoreInfo(dataSize, scrollPosition);
 
+			this.scrollPosition = props.initialScrollPosition.top;
+			if (this.scrollPosition > 0 && !this.flag) {
+				// this.flag = true;
+				this.setScrollPosition(0/*this.props.initialScrollPosition.left*/, this.props.initialScrollPosition.top, 0, 1, this.props.rtl, numOfItems);
+				return;
+			} else
 			if (!(updateStatesAndBounds && updateStatesAndBounds({
 				cbScrollTo: props.cbScrollTo,
 				numOfItems,
@@ -539,14 +545,14 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		// JS only
-		setScrollPosition (x, y, dirX, dirY, rtl = this.props.rtl) {
+		setScrollPosition (x, y, dirX, dirY, rtl = this.props.rtl, numOfItems) {
 			if (this.contentRef) {
 				this.contentRef.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
-				this.didScroll(x, y, dirX, dirY);
+				this.didScroll(x, y, dirX, dirY, numOfItems);
 			}
 		}
 
-		didScroll (x, y, dirX, dirY) {
+		didScroll (x, y, dirX, dirY, numOfItems) {
 			const
 				{dataSize} = this.props,
 				{firstIndex} = this.state,
@@ -591,7 +597,12 @@ const VirtualListBaseFactory = (type) => {
 			this.updateMoreInfo(dataSize, pos);
 
 			if (firstIndex !== newFirstIndex) {
-				this.setState({firstIndex: newFirstIndex});
+				if (numOfItems) {
+					this.setState({firstIndex: newFirstIndex, numOfItems});
+					this.state.firstIndex = newFirstIndex;
+				} else {
+					this.setState({firstIndex: newFirstIndex});
+				}
 			}
 		}
 

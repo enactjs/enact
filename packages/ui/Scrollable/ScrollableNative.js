@@ -364,10 +364,6 @@ class ScrollableBaseNative extends Component {
 		};
 
 		props.cbScrollTo(this.scrollTo);
-
-		if (!props.initialScrollPosition) {
-			this.scrollInitially = nop;
-		}
 	}
 
 	getChildContext = () => ({
@@ -389,9 +385,7 @@ class ScrollableBaseNative extends Component {
 
 	componentDidMount () {
 		this.addEventListeners();
-		if (!this.updateScrollbars()) {
-			this.scrollInitially();
-		}
+		this.updateScrollbars();
 
 		on('keydown', this.onKeyDown);
 	}
@@ -406,14 +400,20 @@ class ScrollableBaseNative extends Component {
 			{hasDataSizeChanged} = this.childRef;
 
 		// Need to sync calculated client size if it is different from the real size
-		const isSync = this.childRef.syncClientSize ? this.childRef.syncClientSize() : null;
-
-		// this.childRef.syncClientSize() should be called before calling this.scrollInitially() to use proper bounds
-		if (!this.scrollInitially() && isSync) {
-			// If we actually synced, we need to reset scroll position.
-			this.setScrollLeft(0);
-			this.setScrollTop(0);
+		if (this.childRef.syncClientSize) {
+			if (this.childRef.syncClientSize()) {
+				if (this.props.initialScrollPosition) {
+					this.setScrollLeft(this.props.initialScrollPosition.left);
+					this.setScrollTop(this.props.initialScrollPosition.top);
+				} else {
+					// If we actually synced, we need to reset scroll position.
+					this.setScrollLeft(0);
+					this.setScrollTop(0);
+				}
+			}
 		}
+
+		this.childRef.flag = true;
 
 		this.addEventListeners();
 		if (
@@ -475,15 +475,6 @@ class ScrollableBaseNative extends Component {
 		} else if (channel === 'resize') {
 			this.publisher.publish(message);
 		}
-	}
-
-	scrollInitially () {
-		const {left, top} = this.props.initialScrollPosition;
-
-		this.scrollInitially = nop;
-		this.start(left, top, false);
-
-		return true;
 	}
 
 	// constants
@@ -1143,8 +1134,6 @@ class ScrollableBaseNative extends Component {
 			this.deferScrollTo = false;
 			this.isUpdatedScrollThumb = this.updateScrollThumbSize();
 		}
-
-		return isVisibilityChanged;
 	}
 
 	updateScrollThumbSize = () => {

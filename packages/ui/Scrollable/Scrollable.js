@@ -364,9 +364,9 @@ class ScrollableBase extends Component {
 
 		props.cbScrollTo(this.scrollTo);
 
-		if (!props.initialScrollPosition) {
+		// if (!props.initialScrollPosition) {
 			this.scrollInitially = nop;
-		}
+		// }
 	}
 
 	getChildContext = () => ({
@@ -407,11 +407,18 @@ class ScrollableBase extends Component {
 		// Need to sync calculated client size if it is different from the real size
 		const isSync = this.childRef.syncClientSize ? this.childRef.syncClientSize() : null;
 
+		this.childRef.flag = true;
+
 		// this.childRef.syncClientSize() should be called before calling this.scrollInitially() to use proper bounds
 		if (!this.scrollInitially() && isSync) {
-			// If we actually synced, we need to reset scroll position.
-			this.setScrollLeft(0);
-			this.setScrollTop(0);
+			if (this.props.initialScrollPosition) {
+				this.setScrollLeft(this.props.initialScrollPosition.left);
+				this.setScrollTop(this.props.initialScrollPosition.top);
+			} else {
+				// If we actually synced, we need to reset scroll position.
+				this.setScrollLeft(0);
+				this.setScrollTop(0);
+			}
 		}
 
 		this.clampScrollPosition();
@@ -1236,7 +1243,7 @@ class ScrollableBase extends Component {
 		delete rest.cbScrollTo;
 		delete rest.clearAllOverscrollEffects;
 		delete rest.horizontalScrollbar;
-		delete rest.initialScrollPosition;
+		// delete rest.initialScrollPosition;
 		delete rest.onFlick;
 		delete rest.onKeyDown;
 		delete rest.onMouseDown;
@@ -1261,6 +1268,7 @@ class ScrollableBase extends Component {
 			isVerticalScrollbarVisible,
 			rtl,
 			scrollTo: this.scrollTo,
+			scrollToDirectly: this.scrollToDirectly,
 			style,
 			touchableProps: {
 				className: css.content,
@@ -1315,6 +1323,7 @@ class Scrollable extends Component {
 					isVerticalScrollbarVisible,
 					rtl,
 					scrollTo,
+					scrollToDirectly,
 					style,
 					touchableProps,
 					verticalScrollbarProps
@@ -1329,6 +1338,7 @@ class Scrollable extends Component {
 								{childRenderer({
 									...childComponentProps,
 									cbScrollTo: scrollTo,
+									cdScrollToDirectly: scrollToDirectly,
 									className: componentCss.scrollableFill,
 									initChildRef,
 									onScroll: handleScroll,
