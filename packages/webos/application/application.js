@@ -2,7 +2,7 @@
 /* global console */
 
 /**
- * Provides a collection of methods for fetching information about the application metadata.
+ * Provides a collection of functions for fetching information about the application metadata.
  *
  * @module webos/application
  * @exports fetchAppId,
