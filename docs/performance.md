@@ -1,5 +1,5 @@
 ---
-title: Enact Performance
+title: Enact Performance Guide
 ---
 
 ## Overview
