@@ -401,12 +401,12 @@ class ScrollableBaseNative extends Component {
 
 		// Need to sync calculated client size if it is different from the real size
 		if (this.childRef.syncClientSize) {
+			// If we actually synced, we need to reset scroll position.
 			if (this.childRef.syncClientSize()) {
 				if (this.props.initialScrollPosition) {
 					this.setScrollLeft(this.props.initialScrollPosition.left);
 					this.setScrollTop(this.props.initialScrollPosition.top);
 				} else {
-					// If we actually synced, we need to reset scroll position.
 					this.setScrollLeft(0);
 					this.setScrollTop(0);
 				}
