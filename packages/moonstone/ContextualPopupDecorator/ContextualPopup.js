@@ -82,10 +82,10 @@ const ContextualPopupBase = kind({
 		 * @public
 		 */
 		arrowPosition: PropTypes.shape({
-			top: PropTypes.number,
 			bottom: PropTypes.number,
 			left: PropTypes.number,
-			right: PropTypes.number
+			right: PropTypes.number,
+			top: PropTypes.number
 		}),
 
 		/**
@@ -95,10 +95,10 @@ const ContextualPopupBase = kind({
 		 * @public
 		 */
 		containerPosition: PropTypes.shape({
-			top: PropTypes.number,
 			bottom: PropTypes.number,
 			left: PropTypes.number,
-			right: PropTypes.number
+			right: PropTypes.number,
+			top: PropTypes.number
 		}),
 
 		/**
