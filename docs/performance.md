@@ -18,7 +18,7 @@ Inside of `Enact` we provide some useful tools to help you achieve faster perfor
 ## Managing async calls
 
 [`Job`](../../modules/core/util/#Job) is a class that we have included inside our `core` module. It
-is a useful wrapper for async things like `setTimeout` and `requestIdleCallback`. Along with those wrappers we also provide functionality like `throttling`. 
+is a useful wrapper for async things like `setTimeout` and `requestIdleCallback`. Along with those wrappers we also provide functionality like `throttling`.
 
 ### Idle
 
@@ -58,7 +58,7 @@ const handleWheel = () => {
 
 ## Dealing with long lists of data
 
-React recommends using 
+React recommends using
 [virtualized lists](https://reactjs.org/docs/optimizing-performance.html#virtualize-long-lists) for
 rendering long lists of data. This is for good reason. Virtualized lists drastically reduce the number
 of repainting and reflowing that normally cause browsers to slow down. Enact contains our own
@@ -67,11 +67,11 @@ performance boost.
 
 ## Production Packing
 
-Enact's [`cli`](../../developer-tools/cli/) tool provides a way to create, test, and build 
+Enact's [`cli`](../../developer-tools/cli/) tool provides a way to create, test, and build
 applications. When packing your application for production [`cli`](../../developer-tools/cli/) makes
 it very simple.
 
-If you want to run your app in production mode run the command below. This will minify and uglify 
+If you want to run your app in production mode run the command below. This will minify and uglify
 all of your code and bundle it into a single file.
 ```bash
 enact pack --production
@@ -90,7 +90,7 @@ enact pack --production --isomorphic
 ## Using timestamps
 
 [`perfNow`](../../modules/core/util/#perfNow) is a nice little wrapper around
-[`window.performance.now`](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now) that 
+[`window.performance.now`](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now) that
 will fall back to [`Date.now`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now). This is
 useful for getting higher resolution timestamps to see how long a set of functions take.
 
@@ -106,7 +106,7 @@ const difference = secondTime - firstTime;
 
 ## Working with webOS
 
-If you're developing for [`webOS`](http://webosose.org/) using enact we have some tools to help you with that as well. 
+If you're developing for [`webOS`](http://webosose.org/) using enact we have some tools to help you with that as well.
 
 We can run a log to see how long an application took to launch with:
 ```
@@ -132,8 +132,8 @@ Elapsed time (s) : 1.840
 ```
 
 While this is great, we may want to add some custom timestamps to this log. To achieve this we can
-simply add `perfLog` from the `webos` library. It takes three arguments 
-`perfLog(MsgID, Type, Group)`. 
+simply add `perfLog` from the `webos` library. It takes three arguments
+`perfLog(MsgID, Type, Group)`.
 
 We can use it like this.
 
