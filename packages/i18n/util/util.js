@@ -2,8 +2,8 @@
  * A collection of locale-aware text utility function.
  *
  * @module i18n/util
- * @exports toCapitalized
  * @exports isRtlText
+ * @exports toCapitalized
  * @exports toLowerCase
  * @exports toUpperCase
  * @exports toWordCase
@@ -65,8 +65,8 @@ const toWordCase = (str) => {
 };
 
 export {
-	toCapitalized,
 	isRtlText,
+	toCapitalized,
 	toLowerCase,
 	toUpperCase,
 	toWordCase
