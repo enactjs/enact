@@ -48,4 +48,6 @@ const I18nFontDecorator = hoc((config, Wrapped) => {
 });
 
 export default I18nFontDecorator;
-export {I18nFontDecorator};
+export {
+	I18nFontDecorator
+};

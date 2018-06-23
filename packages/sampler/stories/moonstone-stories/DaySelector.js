@@ -13,8 +13,8 @@ const Config = mergeComponentMetadata('DaySelector', DaySelectorBase, DaySelecto
 // NOTE: Something about the HOC is inhibiting accessing its defaultProps, so we're adding them here
 // manually. This can (should) be revisited later to find out why and a solution.
 Config.defaultProps = {
-	disabled: false,
-	dayNameLength: 'long'
+	dayNameLength: 'long',
+	disabled: false
 };
 
 storiesOf('Moonstone', module)

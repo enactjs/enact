@@ -429,6 +429,8 @@ const MediaControlsBase = kind({
  */
 const MediaControlsDecorator = hoc((config, Wrapped) => {
 	class MediaControlsDecoratorHOC extends React.Component {
+		static displayName = 'MediaControlsDecorator'
+
 		static propTypes = /** @lends moonstone/VideoPlayer.MediaControlsDecorator.prototype */ {
 			/**
 			 * The number of milliseconds that the player will pause before firing the
@@ -607,11 +609,9 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 
 		static defaultProps = {
 			initialJumpDelay: 400,
-			moreButtonSpotlightId: 'moreButton',
-			jumpDelay: 200
+			jumpDelay: 200,
+			moreButtonSpotlightId: 'moreButton'
 		}
-
-		static displayName = 'MediaControlsDecorator'
 
 		constructor (props) {
 			super(props);
