@@ -206,7 +206,8 @@ class ScrollableBase extends Component {
 
 	componentDidUpdate () {
 		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null) {
-			this.updateScrollOnFocus();
+			const focusedItem = Spotlight.getCurrent();
+			this.calculateAndScroll(focusedItem);
 		}
 	}
 
@@ -290,9 +291,10 @@ class ScrollableBase extends Component {
 	}
 
 	calculateAndScroll = (spotItem) => {
-		const positionFn = this.childRef.calculatePositionOnFocus;
+		const positionFn = this.childRef.calculatePositionOnFocus,
+			{containerRef} = this.uiRef.childRef;
 
-		if (spotItem && positionFn) {
+		if (spotItem && positionFn && containerRef && containerRef.contains(spotItem)) {
 			const lastPos = this.lastScrollPositionOnFocus;
 			let pos;
 
@@ -301,10 +303,21 @@ class ScrollableBase extends Component {
 			if (this.uiRef.animator.isAnimating() && lastPos) {
 				pos = positionFn({item: spotItem, scrollPosition: (this.props.direction !== 'horizontal') ? lastPos.top : lastPos.left});
 			} else {
-				pos = positionFn({item: spotItem});
+				// scrollInfo passes in current `scrollHeight` and `scrollTop` before calculations
+				const
+					scrollInfo = {
+						previousScrollHeight: this.uiRef.bounds.scrollHeight,
+						scrollTop: this.uiRef.scrollTop
+					};
+				pos = positionFn({item: spotItem, scrollInfo});
 			}
 
-			this.startScrollOnFocus(pos, spotItem);
+			if (pos && (pos.left !== this.uiRef.scrollLeft || pos.top !== this.uiRef.scrollTop)) {
+				this.startScrollOnFocus(pos, spotItem);
+			}
+
+			// update `scrollHeight`
+			this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 		}
 	}
 
@@ -521,32 +534,6 @@ class ScrollableBase extends Component {
 		if (!Spotlight.getPointerMode() && spotItem && this.uiRef && this.uiRef.childRef.containerRef.contains(spotItem) && this.uiRef.isUpdatedScrollThumb) {
 			this.alertThumb();
 		}
-	}
-
-	updateScrollOnFocus () {
-		const
-			focusedItem = Spotlight.getCurrent(),
-			{containerRef} = this.uiRef.childRef;
-
-		if (focusedItem && containerRef && containerRef.contains(focusedItem)) {
-			const
-				scrollInfo = {
-					previousScrollHeight: this.uiRef.bounds.scrollHeight,
-					scrollTop: this.uiRef.scrollTop
-				},
-				pos = this.childRef.calculatePositionOnFocus({item: focusedItem, scrollInfo});
-
-			if (pos && (pos.left !== this.uiRef.scrollLeft || pos.top !== this.uiRef.scrollTop)) {
-				this.uiRef.start({
-					targetX: pos.left,
-					targetY: pos.top,
-					animate: false
-				});
-			}
-		}
-
-		// update `scrollHeight`
-		this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 	}
 
 	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
