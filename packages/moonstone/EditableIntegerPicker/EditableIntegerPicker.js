@@ -73,7 +73,7 @@ const EditableIntegerPickerBase = kind({
 		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		decrementIcon: PropTypes.string,
@@ -99,7 +99,7 @@ const EditableIntegerPickerBase = kind({
 		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		incrementIcon: PropTypes.string,

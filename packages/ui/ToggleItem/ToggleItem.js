@@ -50,7 +50,7 @@ const ToggleItemBase = kind({
 		/**
 		 * The string to be displayed as the main content of the toggle item.
 		 *
-		 * @type {String}
+		 * @type {Node}
 		 * @required
 		 * @public
 		 */
@@ -61,7 +61,7 @@ const ToggleItemBase = kind({
 		 * theme extension and therefore must be a custom component and not a simple HTML DOM node.
 		 * Recommended component or themed derivitive: [SlotItem]{@link ui/SlotItem.SlotItem}
 		 *
-		 * @type {Component}
+		 * @type {Function}
 		 * @required
 		 * @public
 		 */
@@ -72,7 +72,7 @@ const ToggleItemBase = kind({
 		 * and must therefore respond to it in some way. It is recommended to use
 		 * [ToggleIcon]{@link ui/ToggleIcon} for this.
 		 *
-		 * @type {Component}
+		 * @type {Component|Element}
 		 * @required
 		 * @public
 		 */

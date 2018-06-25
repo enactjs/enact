@@ -162,7 +162,7 @@ class Media extends React.Component {
 		 *
 		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
 		 *
-		 * @type {Node}
+		 * @type {*}
 		 * @public
 		 */
 		source: PropTypes.any

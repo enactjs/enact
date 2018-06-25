@@ -122,7 +122,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * The text to be displayed as the main content of the tooltip.
 			 *
-			 * @type {String|Node}}
+			 * @type {Node}
 			 * @public
 			 */
 			tooltipText: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),

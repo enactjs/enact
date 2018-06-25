@@ -41,7 +41,7 @@ const ItemBase = kind({
 		 * The type of component to use to render the item. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
 		 *
-		 * @type {String|Node}
+		 * @type {Component}
 		 * @default 'div'
 		 * @public
 		 */
