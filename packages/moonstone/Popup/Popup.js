@@ -60,6 +60,15 @@ const PopupBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * Sets the hint string read when focusing the popup close button.
+		 *
+		 * @type {String}
+		 * @default 'Close'
+		 * @public
+		 */
+		closeButtonAriaLabel: PropTypes.string,
+
+		/**
 		 * When `true`, the popup will not animate on/off screen.
 		 *
 		 * @type {Boolean}
@@ -123,6 +132,9 @@ const PopupBase = kind({
 		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
 		 * can be either `'none'`, `'self-first'`, or `'self-only'`.
 		 *
+		 * Note: The ready-to-use [Popup]{@link moonstone/Popup.Popup} component only supports
+		 * `'self-first'` and `'self-only'`.
+		 *
 		 * @type {String}
 		 * @default 'self-only'
 		 * @public
@@ -144,15 +156,17 @@ const PopupBase = kind({
 
 	computed: {
 		className: ({showCloseButton, styler}) => styler.append({reserveClose: showCloseButton}),
-		closeButton: ({showCloseButton, onCloseButtonClick}) => {
+		closeButton: ({closeButtonAriaLabel, onCloseButtonClick, showCloseButton}) => {
 			if (showCloseButton) {
+				const ariaLabel = (closeButtonAriaLabel == null) ? $L('Close') : closeButtonAriaLabel;
+
 				return (
 					<IconButton
 						className={css.closeButton}
 						backgroundOpacity="transparent"
 						small
 						onTap={onCloseButtonClick}
-						aria-label={$L('Close')}
+						aria-label={ariaLabel}
 					>
 						closex
 					</IconButton>
@@ -162,6 +176,7 @@ const PopupBase = kind({
 	},
 
 	render: ({closeButton, children, noAnimation, open, onHide, onShow, spotlightId, spotlightRestrict, ...rest}) => {
+		delete rest.closeButtonAriaLabel;
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
 		return (
@@ -218,6 +233,15 @@ class Popup extends React.Component {
 
 	static propTypes = /** @lends moonstone/Popup.Popup.prototype */ {
 		/**
+		 * Sets the hint string read when focusing the popup close button.
+		 *
+		 * @type {String}
+		 * @default 'Close'
+		 * @public
+		 */
+		closeButtonAriaLabel: PropTypes.string,
+
+		/**
 		 * When `true`, the popup will not animate on/off screen.
 		 *
 		 * @type {Boolean}
@@ -236,10 +260,15 @@ class Popup extends React.Component {
 		noAutoDismiss: PropTypes.bool,
 
 		/**
-		 * A function to be run when a closing action is invoked by the user. These actions include
-		 * pressing `ESC` key, clicking on the close button, or spotlight focus moves outside the
-		 * boundary of the popup (when `spotlightRestrict` is not `'self-only'`). It is the
-		 * responsibility of the callback to set the `open` property to `false`.
+		 * A function to be run when a closing action is invoked by the user.
+		 *
+		 * These actions include
+		 * * pressing `ESC` key,
+		 * * clicking on the close button, or
+		 * * moving spotlight focus outside the boundary of the popup when `spotlightRestrict` is
+		 *   `'self-first'`.
+		 *
+		 * It is the responsibility of the callback to set the `open` property to `false`.
 		 *
 		 * @type {Function}
 		 * @public
@@ -306,13 +335,13 @@ class Popup extends React.Component {
 
 		/**
 		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
-		 * can be either `'none'`, `'self-first'`, or `'self-only'`.
+		 * can be either `'self-first'`, or `'self-only'`.
 		 *
 		 * @type {String}
 		 * @default 'self-only'
 		 * @public
 		 */
-		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
+		spotlightRestrict: PropTypes.oneOf(['self-first', 'self-only'])
 	}
 
 	static defaultProps = {
@@ -336,13 +365,6 @@ class Popup extends React.Component {
 		checkScrimNone(this.props);
 	}
 
-	componentDidMount () {
-		if (this.props.open && this.props.noAnimation) {
-			on('keydown', this.handleKeyDown);
-			this.spotPopupContent();
-		}
-	}
-
 	componentWillReceiveProps (nextProps) {
 		if (!this.props.open && nextProps.open) {
 			this.setState({
@@ -351,10 +373,12 @@ class Popup extends React.Component {
 				activator: Spotlight.getCurrent()
 			});
 		} else if (this.props.open && !nextProps.open) {
+			const activator = this.state.activator;
+
 			this.setState({
 				popupOpen: nextProps.noAnimation,
 				floatLayerOpen: !nextProps.noAnimation,
-				activator: nextProps.noAnimation ? null : this.state.activator
+				activator: nextProps.noAnimation ? null : activator
 			});
 		}
 		checkScrimNone(nextProps);
@@ -366,11 +390,9 @@ class Popup extends React.Component {
 				this.paused.pause();
 			} else if (this.props.open) {
 				forwardShow({}, this.props);
-				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
 			} else if (prevProps.open) {
 				forwardHide({}, this.props);
-				off('keydown', this.handleKeyDown);
 				this.spotActivator(prevState.activator);
 			}
 		}
@@ -388,6 +410,8 @@ class Popup extends React.Component {
 			this.setState({
 				popupOpen: true
 			});
+		} else if (this.state.popupOpen && this.props.open) {
+			this.spotPopupContent();
 		}
 	}
 
@@ -428,7 +452,6 @@ class Popup extends React.Component {
 			this.paused.resume();
 
 			if (!this.props.open) {
-				off('keydown', this.handleKeyDown);
 				this.spotActivator(this.state.activator);
 			}
 		}
@@ -441,7 +464,6 @@ class Popup extends React.Component {
 			this.paused.resume();
 
 			if (this.props.open) {
-				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
 			}
 		}
@@ -450,6 +472,8 @@ class Popup extends React.Component {
 	spotActivator = (activator) => {
 		const current = Spotlight.getCurrent();
 		const containerNode = getContainerNode(this.state.containerId);
+
+		off('keydown', this.handleKeyDown);
 
 		// if there is no currently-spotted control or it is wrapped by the popup's container, we
 		// know it's safe to change focus
@@ -463,6 +487,9 @@ class Popup extends React.Component {
 
 	spotPopupContent = () => {
 		const {containerId} = this.state;
+
+		on('keydown', this.handleKeyDown);
+
 		if (!Spotlight.focus(containerId)) {
 			const current = Spotlight.getCurrent();
 
@@ -490,11 +517,12 @@ class Popup extends React.Component {
 			>
 				<SkinnedPopupBase
 					{...rest}
+					data-webos-voice-exclusive
 					onCloseButtonClick={onClose}
 					onHide={this.handlePopupHide}
-					spotlightId={this.state.containerId}
 					onShow={this.handlePopupShow}
 					open={this.state.popupOpen}
+					spotlightId={this.state.containerId}
 					spotlightRestrict="self-only"
 				/>
 			</FloatingLayer>

@@ -17,10 +17,10 @@ import ExpandableSpotlightDecorator from './ExpandableSpotlightDecorator';
  * @returns {undefined}
  * @private
  */
-const handleCancel = function (props) {
+const handleCancel = function (ev, props) {
 	if (props.open) {
 		props.onClose();
-		return true;
+		ev.stopPropagation();
 	}
 };
 

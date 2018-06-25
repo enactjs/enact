@@ -2,7 +2,41 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
-## [2.0.0-alpha.7 - 2018-04-03]
+## [2.0.0-beta.7] - 2018-06-11
+
+### Removed
+
+- `i18n/Uppercase` property `preserveCase`, replaced by `casing`
+
+## [2.0.0-beta.6] - 2018-06-04
+
+No significant changes.
+
+## [2.0.0-beta.5] - 2018-05-29
+
+No significant changes.
+
+## [2.0.0-beta.4] - 2018-05-21
+
+No significant changes.
+
+## [2.0.0-beta.3] - 2018-05-14
+
+No significant changes.
+
+## [2.0.0-beta.2] - 2018-05-07
+
+No significant changes.
+
+## [2.0.0-beta.1] - 2018-04-29
+
+No significant changes.
+
+## [2.0.0-alpha.8] - 2018-04-17
+
+No significant changes.
+
+## [2.0.0-alpha.7] - 2018-04-03
 
 No significant changes.
 

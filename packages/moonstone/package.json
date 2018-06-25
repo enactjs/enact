@@ -1,6 +1,6 @@
 {
   "name": "@enact/moonstone",
-  "version": "2.0.0-alpha.7",
+  "version": "2.0.0-beta.7",
   "description": "Large-screen/TV support library for Enact, containing a variety of UI components.",
   "main": "index.js",
   "scripts": {
@@ -28,17 +28,17 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^2.0.0-alpha.7",
-    "@enact/i18n": "^2.0.0-alpha.7",
-    "@enact/spotlight": "^2.0.0-alpha.7",
-    "@enact/ui": "^2.0.0-alpha.7",
+    "@enact/core": "^2.0.0-beta.7",
+    "@enact/i18n": "^2.0.0-beta.7",
+    "@enact/spotlight": "^2.0.0-beta.7",
+    "@enact/ui": "^2.0.0-beta.7",
     "classnames": "^2.2.5",
     "eases": "^1.0.8",
     "invariant": "^2.2.2",
     "prop-types": "^15.6.0",
     "ramda": "^0.24.1",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
     "recompose": "^0.26.0",
     "warning": "^3.0.0"
   }

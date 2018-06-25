@@ -6,7 +6,7 @@
 
 import curry from 'ramda/src/curry';
 
-import getListeners from './listeners';
+import {getListeners, addListener} from './listeners';
 
 /**
  * Checks if the default target of `document` exists before returning it, otherwise returns `false`.
@@ -58,7 +58,7 @@ const dispatcher = function (ev) {
 };
 
 /**
- * Adds a new global event listener
+ * Adds a new global event listener. Duplicate event handlers will be discarded.
  *
  * @function
  * @param	{String}	name				Event name
@@ -70,10 +70,9 @@ const dispatcher = function (ev) {
  */
 const on = function (name, fn, target = getDefaultTarget()) {
 	if (target) {
-		const listeners = getListeners(target, name);
+		const added = addListener(target, name, fn);
 
-		const length = listeners.push(fn);
-		if (length === 1) {
+		if (added && getListeners(target, name).length === 1) {
 			target.addEventListener(name, dispatcher);
 		}
 	}

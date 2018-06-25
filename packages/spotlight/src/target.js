@@ -225,6 +225,17 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 		return previous;
 	}
 
+	// `spotlightOverflow` is a private, and likely temporary, API to allow a component within an
+	// spotlight container with `overflow: true` to be treated as if it were outside of the
+	// container. The result is that the candidates, `elements` are filtered by the bounds of the
+	// overflow container effectively hiding those that have overflowed and are visually hidden.
+	//
+	// Currently only used by moonstone/Scroller.Scrollbar as a means to allow 5-way navigation to
+	// escape the Scrollable from paging controls rather than focusing contents that are out of view
+	if (element.dataset.spotlightOverflow === 'ignore') {
+		boundingRect = getOverflowContainerRect(containerId) || boundingRect;
+	}
+
 	let elementRects = filterRects(getRects(elements), boundingRect);
 
 	let next = null;

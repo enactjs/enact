@@ -1,19 +1,21 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
+import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, select, text} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-import nullify from '../../src/utils/nullify.js';
+import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('Button', ButtonBase, Button);
+Button.displayName = 'Button';
+const Config = mergeComponentMetadata('Button', UIButtonBase, UIButton, ButtonBase, Button);
 
 // Set up some defaults for info and knobs
 const prop = {
 	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
+	casing: ['preserve', 'sentence', 'word', 'upper'],
 	icons: ['', ...Object.keys(icons)]
 };
 
@@ -21,20 +23,20 @@ storiesOf('Moonstone', module)
 	.add(
 		'Button',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [Button],
 			text: 'The basic Button'
 		})(() => (
 			<Button
 				onClick={action('onClick')}
-				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
-				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
-				disabled={boolean('disabled', Config.defaultProps.disabled)}
-				icon={nullify(select('icon', prop.icons, Config.defaultProps.icon))}
-				minWidth={nullify(boolean('minWidth', Config.defaultProps.minWidth))}
-				selected={nullify(boolean('selected', false))}
-				small={nullify(boolean('small', Config.defaultProps.small))}
+				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+				casing={select('casing', prop.casing, Config, 'upper')}
+				disabled={boolean('disabled', Config)}
+				icon={select('icon', prop.icons, Config)}
+				minWidth={boolean('minWidth', Config)}
+				selected={boolean('selected', Config)}
+				small={boolean('small', Config)}
 			>
-				{text('children', 'click me')}
+				{text('children', Config, 'click me')}
 			</Button>
 		))
 	);

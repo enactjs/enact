@@ -45,6 +45,32 @@ const ExpandablePickerBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * The `data-webos-voice-group-label` for ExpandableItem and Picker.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/ExpandablePicker.ExpandablePickerBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-group-label': PropTypes.string,
+
+		/**
+		 * The "aria-label" for the the check button.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		checkButtonAriaLabel: PropTypes.string,
+
+		/**
+		 * The "aria-label" for the decrement button.
+		 *
+		 * @type {String}
+		 * @default 'previous item'
+		 * @public
+		 */
+		decrementAriaLabel: PropTypes.string,
+
+		/**
 		 * A custom icon for the decrementer. All strings supported by [Icon]{Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
@@ -61,6 +87,15 @@ const ExpandablePickerBase = kind({
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * The "aria-label" for the increment button.
+		 *
+		 * @type {String}
+		 * @default 'next item'
+		 * @public
+		 */
+		incrementAriaLabel: PropTypes.string,
 
 		/**
 		 * A custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -173,6 +208,14 @@ const ExpandablePickerBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
+		 * The "aria-label" for the picker.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		pickerAriaLabel: PropTypes.string,
+
+		/**
 		 * When `true`, current locale is RTL
 		 *
 		 * @type {Boolean}
@@ -246,9 +289,13 @@ const ExpandablePickerBase = kind({
 
 	render: (props) => {
 		const {
+			'data-webos-voice-group-label': voiceGroupLabel,
+			checkButtonAriaLabel,
 			children,
+			decrementAriaLabel,
 			decrementIcon,
 			disabled,
+			incrementAriaLabel,
 			incrementIcon,
 			joined,
 			noAnimation,
@@ -260,6 +307,7 @@ const ExpandablePickerBase = kind({
 			onSpotlightRight,
 			open,
 			orientation,
+			pickerAriaLabel,
 			rtl,
 			spotlightDisabled,
 			value,
@@ -271,6 +319,7 @@ const ExpandablePickerBase = kind({
 		return (
 			<ExpandableItemBase
 				{...rest}
+				data-webos-voice-group-label={voiceGroupLabel}
 				disabled={disabled}
 				onSpotlightDisappear={onSpotlightDisappear}
 				onSpotlightDown={!open ? onSpotlightDown : null}
@@ -280,34 +329,39 @@ const ExpandablePickerBase = kind({
 				spotlightDisabled={spotlightDisabled}
 			>
 				<Picker
+					aria-label={pickerAriaLabel}
 					className={css.picker}
-					disabled={disabled}
-					onChange={onPick}
-					value={value}
+					data-webos-voice-group-label={voiceGroupLabel}
+					decrementAriaLabel={decrementAriaLabel}
 					decrementIcon={decrementIcon}
+					disabled={disabled}
+					incrementAriaLabel={incrementAriaLabel}
 					incrementIcon={incrementIcon}
 					joined={joined}
 					noAnimation={noAnimation}
+					onChange={onPick}
 					onSpotlightDisappear={onSpotlightDisappear}
 					onSpotlightDown={onSpotlightDown}
 					onSpotlightLeft={!rtl ? onSpotlightLeft : null}
 					onSpotlightRight={rtl ? onSpotlightRight : null}
 					orientation={orientation}
 					spotlightDisabled={spotlightDisabled}
+					value={value}
 					width={width}
 					wrap={wrap}
 				>
 					{children}
 				</Picker>
 				<IconButton
-					onTap={onChange}
+					aria-label={checkButtonAriaLabel}
+					className={css.button}
 					onSpotlightDisappear={onSpotlightDisappear}
 					onSpotlightDown={onSpotlightDown}
 					onSpotlightLeft={rtl ? onSpotlightLeft : null}
 					onSpotlightRight={!rtl ? onSpotlightRight : null}
-					spotlightDisabled={spotlightDisabled}
-					className={css.button}
+					onTap={onChange}
 					small
+					spotlightDisabled={spotlightDisabled}
 				>check</IconButton>
 			</ExpandableItemBase>
 		);

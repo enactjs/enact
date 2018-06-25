@@ -1,16 +1,19 @@
 import kind from '@enact/core/kind';
-import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import Slider from '../Slider';
 
+import MediaKnob from './MediaKnob';
+import MediaSliderDecorator from './MediaSliderDecorator';
+
 import css from './VideoPlayer.less';
 
 /**
- * MediaSlider for {@link moonstone/VideoPlayer}.
+ * The base component to render a customized [Slider]{@link moonstone/Slider.Slider} for use in
+ * [VideoPlayer]{@link moonstone/VideoPlayer.VideoPlayer}.
  *
- * @class MediaSlider
+ * @class MediaSliderBase
  * @memberof moonstone/VideoPlayer
  * @ui
  * @private
@@ -18,23 +21,7 @@ import css from './VideoPlayer.less';
 const MediaSliderBase = kind({
 	name: 'MediaSlider',
 
-	propTypes: /** @lends moonstone/VideoPlayer.MediaSlider.prototype */ {
-		/**
-		 * Background progress, as a proportion from `0` to `1`.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		backgroundProgress: PropTypes.number,
-
-		/**
-		 * When `true`, the component is shown as disabled and does not generate events.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		disabled: PropTypes.bool,
+	propTypes: /** @lends moonstone/VideoPlayer.MediaSliderBase.prototype */ {
 
 		/**
 		 * When `true`, the knob will expand. Note that Slider is a controlled
@@ -47,23 +34,21 @@ const MediaSliderBase = kind({
 		forcePressed: PropTypes.bool,
 
 		/**
-		 * The handler to run when the value is changed.
+		 * Allow moving the knob via pointer or 5-way without emitting `onChange` events
 		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {Number} event.value Value of the slider
+		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
-		onChange: PropTypes.func,
+		preview: PropTypes.bool,
 
 		/**
-		 * The value of the slider.
+		 * The position of the knob when in `preview` mode
 		 *
 		 * @type {Number}
-		 * @default 0
 		 * @public
 		 */
-		value: PropTypes.number,
+		previewProportion: PropTypes.number,
 
 		/**
 		 * The visibility of the component. When `false`, the component will be hidden.
@@ -76,6 +61,7 @@ const MediaSliderBase = kind({
 	},
 
 	defaultProps: {
+		preview: false,
 		visible: true
 	},
 
@@ -92,7 +78,7 @@ const MediaSliderBase = kind({
 		})
 	},
 
-	render: ({className, sliderClassName, ...rest}) => {
+	render: ({className, preview, previewProportion, sliderClassName, ...rest}) => {
 		delete rest.forcePressed;
 		delete rest.visible;
 
@@ -103,8 +89,9 @@ const MediaSliderBase = kind({
 					aria-hidden="true"
 					className={sliderClassName}
 					css={css}
-					detachedKnob
-					knobStep={0.05}
+					knobComponent={
+						<MediaKnob preview={preview} previewProportion={previewProportion} />
+					}
 					max={1}
 					min={0}
 					step={0.00001}
@@ -114,7 +101,16 @@ const MediaSliderBase = kind({
 	}
 });
 
-const MediaSlider = onlyUpdateForKeys(['backgroundProgress', 'children', 'forcePressed', 'value', 'visible'])(MediaSliderBase);
+/**
+ * A customized slider suitable for use within
+ * [VideoPlayer]{@link moonstone/VideoPlayer.VideoPlayer}.
+ *
+ * @class MediaSlider
+ * @memberof moonstone/VideoPlayer
+ * @ui
+ * @private
+ */
+const MediaSlider = MediaSliderDecorator(MediaSliderBase);
 
 export default MediaSlider;
 export {

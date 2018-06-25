@@ -1,6 +1,6 @@
 import React from 'react';
-import {mount} from 'enzyme';
-import EditableIntegerPicker from '../EditableIntegerPicker';
+import {mount, shallow} from 'enzyme';
+import {EditableIntegerPicker, EditableIntegerPickerBase} from '../EditableIntegerPicker';
 import Spotlight from '@enact/spotlight';
 
 const isPaused = () => Spotlight.isPaused() ? 'paused' : 'not paused';
@@ -152,6 +152,15 @@ describe('EditableIntegerPicker', () => {
 		node.parentNode.removeChild(node);
 
 		expect(actual).to.equal(expected);
+	});
+
+	it('should be disabled when limited to a single value', function () {
+		const picker = shallow(
+			<EditableIntegerPickerBase min={0} max={0} value={0} />
+		);
+
+		const actual = picker.find('SpottablePicker').last().prop('disabled');
+		expect(actual).to.be.true();
 	});
 
 });

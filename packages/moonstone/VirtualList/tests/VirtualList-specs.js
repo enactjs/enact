@@ -281,4 +281,82 @@ describe('VirtualList', () => {
 			}, 0);
 		});
 	});
+
+	describe('Scrollbar accessibility', () => {
+		it('should set "aria-label" to previous scroll button in the horizontal scrollbar', function () {
+			const label = 'custom button aria label';
+			const subject = mount(
+				<VirtualList
+					clientSize={clientSize}
+					dataSize={dataSize}
+					direction="horizontal"
+					scrollLeftAriaLabel={label}
+					itemRenderer={renderItem}
+					itemSize={30}
+				/>
+			);
+
+			const expected = label;
+			const actual = subject.find('ScrollButton').at(0).prop('aria-label');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should set "aria-label" to next scroll button in the horizontal scrollbar', function () {
+			const label = 'custom button aria label';
+			const subject = mount(
+				<VirtualList
+					clientSize={clientSize}
+					dataSize={dataSize}
+					direction="horizontal"
+					scrollRightAriaLabel={label}
+					itemRenderer={renderItem}
+					itemSize={30}
+				/>
+			);
+
+			const expected = label;
+			const actual = subject.find('ScrollButton').at(1).prop('aria-label');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should set "aria-label" to previous scroll button in the vertical scrollbar', function () {
+			const label = 'custom button aria label';
+			const subject = mount(
+				<VirtualList
+					clientSize={clientSize}
+					dataSize={dataSize}
+					direction="vertical"
+					itemRenderer={renderItem}
+					itemSize={30}
+					scrollUpAriaLabel={label}
+				/>
+			);
+
+			const expected = label;
+			const actual = subject.find('ScrollButton').at(0).prop('aria-label');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should set "aria-label" to next scroll button in the vertical scrollbar', function () {
+			const label = 'custom button aria label';
+			const subject = mount(
+				<VirtualList
+					clientSize={clientSize}
+					dataSize={dataSize}
+					direction="vertical"
+					itemRenderer={renderItem}
+					itemSize={30}
+					scrollDownAriaLabel={label}
+				/>
+			);
+
+			const expected = label;
+			const actual = subject.find('ScrollButton').at(1).prop('aria-label');
+
+			expect(actual).to.equal(expected);
+		});
+	});
 });

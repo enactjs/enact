@@ -13,11 +13,11 @@ import Spotlight, {getDirection} from '@enact/spotlight';
 
 import Skinnable from '../../Skinnable';
 import {validateRange, validateStepped} from '../validators';
-import DisappearSpotlightDecorator from '../DisappearSpotlightDecorator';
 
 import IdProvider from '../IdProvider';
 import $L from '../$L';
 import PickerButton from './PickerButton';
+import SpottablePicker from './SpottablePicker';
 
 import css from './Picker.less';
 
@@ -99,17 +99,41 @@ const PickerBase = class extends React.Component {
 		min: PropTypes.number.isRequired,
 
 		/**
-		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
-		 * to the current selected child and accessibilityHint text.
+		 * The "aria-label" for the picker.
+		 *
+		 * While the `aria-label` will always be set on the root node, that node is only focusable
+		 * when the picker is `joined`.
 		 *
 		 * @type {String}
-		 * @memberof moonstone/internal/Picker.Picker.prototype
+		 * @memberof moonstone/internal/Picker.PickerBase.prototype
+		 * @public
+		 */
+		'aria-label': PropTypes.string,
+
+		/**
+		 * Overrides the `aria-valuetext` for the picker.
+		 *
+		 * By default, `aria-valuetext` is set to the current selected child and `accessibilityHint`
+		 * text.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/internal/Picker.PickerBase.prototype
 		 * @public
 		 */
 		'aria-valuetext': PropTypes.string,
 
 		/**
+		 * The `data-webos-voice-group-label` for the IconButton of Picker.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/internal/Picker.PickerBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-group-label': PropTypes.string,
+
+		/**
 		 * Accessibility hint
+		 *
 		 * For example, `hour`, `year`, and `meridiem`
 		 *
 		 * @type {String}
@@ -133,6 +157,15 @@ const PickerBase = class extends React.Component {
 		 * @public
 		 */
 		className: PropTypes.string,
+
+		/**
+		 * The "aria-label" for the decrement button.
+		 *
+		 * @type {String}
+		 * @default 'previous item'
+		 * @public
+		 */
+		decrementAriaLabel: PropTypes.string,
 
 		/**
 		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
@@ -160,6 +193,15 @@ const PickerBase = class extends React.Component {
 		 * @private
 		 */
 		id: PropTypes.string,
+
+		/**
+		 * The "aria-label" for the increment button.
+		 *
+		 * @type {String}
+		 * @default 'next item'
+		 * @public
+		 */
+		incrementAriaLabel: PropTypes.string,
 
 		/**
 		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -202,22 +244,6 @@ const PickerBase = class extends React.Component {
 		onChange: PropTypes.func,
 
 		/**
-		 * A function to run when the decrement button is disabled
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onDecrementSpotlightDisappear: PropTypes.func,
-
-		/**
-		 * A function to run when the Increment button is disabled
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onIncrementSpotlightDisappear: PropTypes.func,
-
-		/**
 		 * The handler to run prior to focus leaving the picker when the 5-way down key is pressed.
 		 *
 		 * @type {Function}
@@ -252,6 +278,14 @@ const PickerBase = class extends React.Component {
 		 * @public
 		 */
 		onPickerSpotlightUp: PropTypes.func,
+
+		/**
+		 * A function to run when the picker is removed while retaining focus.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onSpotlightDisappear: PropTypes.func,
 
 		/**
 		 * Sets the orientation of the picker, whether the buttons are above and below or on the
@@ -670,8 +704,14 @@ const PickerBase = class extends React.Component {
 	}
 
 	calcButtonLabel (next, valueText) {
-		// no label is necessary when joined
 		if (!this.props.joined) {
+			const {decrementAriaLabel, incrementAriaLabel} = this.props;
+			let label = next ? incrementAriaLabel : decrementAriaLabel;
+
+			if (label != null) {
+				return label;
+			}
+
 			return `${valueText} ${next ? $L('next item') : $L('previous item')}`;
 		}
 	}
@@ -684,9 +724,15 @@ const PickerBase = class extends React.Component {
 		return this.calcButtonLabel(!this.props.reverse, valueText);
 	}
 
-	calcJoinedLabel (valueText) {
-		const {orientation} = this.props;
-		const hint = orientation === 'horizontal' ? $L('change a value with left right button') : $L('change a value with up down button');
+	calcAriaLabel (valueText) {
+		const
+			{'aria-label': ariaLabel, joined, orientation} = this.props,
+			hint = orientation === 'horizontal' ? $L('change a value with left right button') : $L('change a value with up down button');
+
+		if (!joined || ariaLabel != null) {
+			return ariaLabel;
+		}
+
 		return `${valueText} ${hint}`;
 	}
 
@@ -703,14 +749,14 @@ const PickerBase = class extends React.Component {
 		const {active} = this.state;
 		const {
 			'aria-valuetext': ariaValueText,
+			'data-webos-voice-group-label': voiceGroupLabel,
 			noAnimation,
 			children,
 			disabled,
 			id,
 			index,
 			joined,
-			onDecrementSpotlightDisappear,
-			onIncrementSpotlightDisappear,
+			onSpotlightDisappear,
 			orientation,
 			spotlightDisabled,
 			step,
@@ -718,8 +764,11 @@ const PickerBase = class extends React.Component {
 			...rest
 		} = this.props;
 
+		delete rest['aria-label'];
 		delete rest.accessibilityHint;
+		delete rest.decrementAriaLabel;
 		delete rest.decrementIcon;
+		delete rest.incrementAriaLabel;
 		delete rest.incrementIcon;
 		delete rest.max;
 		delete rest.min;
@@ -760,7 +809,7 @@ const PickerBase = class extends React.Component {
 				{...rest}
 				aria-controls={joined ? id : null}
 				aria-disabled={disabled}
-				aria-label={joined ? this.calcJoinedLabel(valueText) : null}
+				aria-label={this.calcAriaLabel(valueText)}
 				className={classes}
 				disabled={disabled}
 				onBlur={this.handleBlur}
@@ -775,6 +824,7 @@ const PickerBase = class extends React.Component {
 					aria-controls={!joined ? incrementerAriaControls : null}
 					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
+					data-webos-voice-group-label={voiceGroupLabel}
 					disabled={incrementerDisabled}
 					hidden={reachedEnd}
 					icon={incrementIcon}
@@ -782,8 +832,7 @@ const PickerBase = class extends React.Component {
 					onDown={this.handleIncDown}
 					onHoldPulse={this.handleIncDown}
 					onKeyDown={this.handleIncKeyDown}
-					onSpotlightDisappear={onIncrementSpotlightDisappear}
-					onTap={this.handleIncClick}
+					onSpotlightDisappear={onSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
@@ -810,6 +859,7 @@ const PickerBase = class extends React.Component {
 					aria-controls={!joined ? decrementerAriaControls : null}
 					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
+					data-webos-voice-group-label={voiceGroupLabel}
 					disabled={decrementerDisabled}
 					hidden={reachedStart}
 					icon={decrementIcon}
@@ -817,8 +867,7 @@ const PickerBase = class extends React.Component {
 					onDown={this.handleDecDown}
 					onHoldPulse={this.handleDecDown}
 					onKeyDown={this.handleDecKeyDown}
-					onSpotlightDisappear={onDecrementSpotlightDisappear}
-					onTap={this.handleDecClick}
+					onSpotlightDisappear={onSpotlightDisappear}
 					onUp={this.handleUp}
 					spotlightDisabled={spotlightDisabled}
 				/>
@@ -827,14 +876,10 @@ const PickerBase = class extends React.Component {
 	}
 };
 
-const Picker = IdProvider(
-	{generateProp: null, prefix: 'p_'},
-	Skinnable(
-		DisappearSpotlightDecorator(
-			{events: {
-				onDecrementSpotlightDisappear: `.${css.incrementer}`,
-				onIncrementSpotlightDisappear: `.${css.decrementer}`
-			}},
+const Picker = SpottablePicker(
+	IdProvider(
+		{generateProp: null, prefix: 'p_'},
+		Skinnable(
 			PickerBase
 		)
 	)

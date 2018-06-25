@@ -7,17 +7,34 @@
  */
 
 import Changeable from '@enact/ui/Changeable';
-import {forKey, forward, oneOf, preventDefault, stopImmediate} from '@enact/core/handle';
-import deprecate from '@enact/core/internal/deprecate';
+import {adaptEvent, call, forKey, forward, handle, oneOf, preventDefault, stopImmediate} from '@enact/core/handle';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import Pause from '@enact/spotlight/Pause';
 
-import {calcAriaLabel, Input} from '../Input';
+import {calcAriaLabel, extractInputProps, Input} from '../Input';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 
 import css from './ExpandableInput.less';
+
+const handleDeactivate = handle(
+	call('shouldClose'),
+	adaptEvent(
+		() => ({type: 'onClose'}),
+		forward('onClose')
+	)
+);
+
+// Special onKeyDown handle for up and down key events
+const handleUpDown = handle(
+	// prevent InputSpotlightDecorator from attempting to move focus up/down
+	preventDefault,
+	// prevent Spotlight handling up/down since closing the expandable will spot the label
+	stopImmediate,
+	// trigger close to resume spotlight and emit onClose
+	handleDeactivate
+);
 
 /**
  * {@link moonstone/ExpandableInput.ExpandableInputBase} is a stateless component that
@@ -92,17 +109,6 @@ class ExpandableInputBase extends React.Component {
 		 * @public
 		 */
 		onClose: PropTypes.func,
-
-		/**
-		 * This handler will be fired as `onChange`. `onInputChange` is deprecated and will be removed
-		 * in a future update.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @deprecated replaced by `onChange`
-		 * @public
-		 */
-		onInputChange: PropTypes.func,
 
 		/**
 		 * The handler to run when the component is removed while retaining focus.
@@ -189,9 +195,8 @@ class ExpandableInputBase extends React.Component {
 			initialValue: props.value
 		};
 
-		if (props.onInputChange) {
-			deprecate({name: 'onInputChange', since: '1.0.0', message: 'Use `onChange` instead', until: '2.0.0'});
-		}
+		this.handleUpDown = handleUpDown.bind(this);
+		this.handleDeactivate = handleDeactivate.bind(this);
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -203,6 +208,10 @@ class ExpandableInputBase extends React.Component {
 		}
 
 		this.setState({initialValue});
+	}
+
+	componentWillUnmount () {
+		this.paused.resume();
 	}
 
 	calcAriaLabel () {
@@ -220,14 +229,6 @@ class ExpandableInputBase extends React.Component {
 		}
 	}
 
-	fireCloseEvent = () => {
-		const {onClose} = this.props;
-
-		if (onClose) {
-			onClose();
-		}
-	}
-
 	resetValue = () => {
 		this.paused.resume();
 		forward('onChange', {
@@ -235,13 +236,13 @@ class ExpandableInputBase extends React.Component {
 		}, this.props);
 	}
 
+	shouldClose () {
+		return this.paused.resume() && !this.pointer;
+	}
+
 	handleInputKeyDown = oneOf(
-		// prevent Enter onKeyPress which would re-open the expandable when the label
-		// receives focus
-		[forKey('enter'), preventDefault],
-		// prevent Spotlight handling up/down since closing the expandable will spot the label
-		[forKey('up'), stopImmediate],
-		[forKey('down'), stopImmediate],
+		[forKey('up'), handleUpDown],
+		[forKey('down'), handleUpDown],
 		[forKey('left'), forward('onSpotlightLeft')],
 		[forKey('right'), forward('onSpotlightRight')],
 		[forKey('cancel'), this.resetValue]
@@ -251,24 +252,7 @@ class ExpandableInputBase extends React.Component {
 		this.paused.pause();
 	}
 
-	handleDeactivate = () => {
-		if (this.paused.resume() && !this.pointer) {
-			this.fireCloseEvent();
-		}
-	}
-
-	handleChange = (val) => {
-		const {onChange, onInputChange} = this.props;
-
-		// handler that fires `onChange` and `onInputChange` in `Input`'s' `onChange`.
-		if (onChange) {
-			onChange(val);
-		}
-
-		if (onInputChange) {
-			onInputChange(val);
-		}
-	}
+	handleChange = (val) => forward('onChange', val, this.props)
 
 	handleDown = () => {
 		this.pointer = true;
@@ -294,8 +278,8 @@ class ExpandableInputBase extends React.Component {
 			...rest
 		} = this.props;
 
+		const inputProps = extractInputProps(rest);
 		delete rest.onChange;
-		delete rest.onInputChange;
 
 		return (
 			<ExpandableItemBase
@@ -312,6 +296,7 @@ class ExpandableInputBase extends React.Component {
 				spotlightDisabled={spotlightDisabled}
 			>
 				<Input
+					{...inputProps}
 					autoFocus
 					className={css.decorator}
 					disabled={disabled}

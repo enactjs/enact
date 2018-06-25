@@ -23,8 +23,8 @@ const
  * @public
  */
 const gridListItemSizeShape = PropTypes.shape({
-	minWidth: PropTypes.number.isRequired,
-	minHeight: PropTypes.number.isRequired
+	minHeight: PropTypes.number.isRequired,
+	minWidth: PropTypes.number.isRequired
 });
 
 /**
@@ -103,13 +103,13 @@ const VirtualListBaseFactory = (type) => {
 			 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
 			 *
 			 * @type {Object}
-			 * @property {Number} clientWidth - The client width of the list.
 			 * @property {Number} clientHeight - The client height of the list.
+			 * @property {Number} clientWidth - The client width of the list.
 			 * @public
 			 */
 			clientSize: PropTypes.shape({
-				clientWidth: PropTypes.number.isRequired,
-				clientHeight: PropTypes.number.isRequired
+				clientHeight: PropTypes.number.isRequired,
+				clientWidth: PropTypes.number.isRequired
 			}),
 
 			/**
@@ -223,7 +223,7 @@ const VirtualListBaseFactory = (type) => {
 		// Calling setState within componentWillReceivePropswill not trigger an additional render.
 		componentWillReceiveProps (nextProps) {
 			const
-				{dataSize, direction, itemSize, overhang, spacing} = this.props,
+				{dataSize, direction, itemSize, overhang, rtl, spacing} = this.props,
 				hasMetricsChanged = (
 					direction !== nextProps.direction ||
 					((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
@@ -240,6 +240,21 @@ const VirtualListBaseFactory = (type) => {
 			} else if (this.hasDataSizeChanged) {
 				this.updateStatesAndBounds(nextProps);
 				this.setContainerSize();
+			} else if (rtl !== nextProps.rtl) {
+				const {x, y} = this.getXY(this.scrollPosition, 0);
+
+				this.cc = [];
+				if (type === Native) {
+					this.scrollToPosition(x, y, nextProps.rtl);
+				} else {
+					this.setScrollPosition(x, y, 0, 0, nextProps.rtl);
+				}
+			}
+		}
+
+		componentWillUpdate (nextProps, nextState) {
+			if (this.state.firstIndex === nextState.firstIndex) {
+				this.prevFirstIndex = -1; // force to re-render items
 			}
 		}
 
@@ -306,6 +321,8 @@ const VirtualListBaseFactory = (type) => {
 		gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) =>
 			(this.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
 
+		getXY = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
+
 		getClientSize = (node) => ({
 			clientWidth: node.clientWidth,
 			clientHeight: node.clientHeight
@@ -370,6 +387,10 @@ const VirtualListBaseFactory = (type) => {
 
 			// reset
 			this.scrollPosition = 0;
+			if (type === JS && this.contentRef) {
+				this.contentRef.style.transform = null;
+			}
+
 			// eslint-disable-next-line react/no-direct-mutation-state
 			this.state.firstIndex = 0;
 			// eslint-disable-next-line react/no-direct-mutation-state
@@ -475,8 +496,8 @@ const VirtualListBaseFactory = (type) => {
 
 		setContainerSize = () => {
 			if (this.contentRef) {
-				this.contentRef.style.width = this.scrollBounds.scrollWidth + 'px';
-				this.contentRef.style.height = this.scrollBounds.scrollHeight + 'px';
+				this.contentRef.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
+				this.contentRef.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
 			}
 		}
 
@@ -509,18 +530,18 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		// Native only
-		scrollToPosition (x, y) {
+		scrollToPosition (x, y, rtl = this.props.rtl) {
 			if (this.containerRef) {
 				this.containerRef.scrollTo(
-					(this.props.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y
+					(rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y
 				);
 			}
 		}
 
 		// JS only
-		setScrollPosition (x, y, dirX, dirY) {
+		setScrollPosition (x, y, dirX, dirY, rtl = this.props.rtl) {
 			if (this.contentRef) {
-				this.contentRef.style.transform = `translate3d(${this.props.rtl ? x : -x}px, -${y}px, 0)`;
+				this.contentRef.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
 				this.didScroll(x, y, dirX, dirY);
 			}
 		}
@@ -582,7 +603,7 @@ const VirtualListBaseFactory = (type) => {
 
 		composeStyle (width, height, primaryPosition, secondaryPosition) {
 			const
-				{x, y} = this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition},
+				{x, y} = this.getXY(primaryPosition, secondaryPosition),
 				style = {
 					position: 'absolute',
 					/* FIXME: RTL / this calculation only works for Chrome */
@@ -610,7 +631,6 @@ const VirtualListBaseFactory = (type) => {
 			this.cc[key] = React.cloneElement(itemElement, {
 				...componentProps,
 				className: classNames(css.listItem, itemElement.props.className),
-				['data-preventscrollonfocus']: true, // Added this attribute to prevent scroll on focus by browser
 				style: {...itemElement.props.style, ...(this.composeStyle(...rest))}
 			});
 		}
@@ -626,10 +646,10 @@ const VirtualListBaseFactory = (type) => {
 				{firstIndex, numOfItems} = this.state,
 				{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc} = this,
 				diff = firstIndex - this.prevFirstIndex,
-				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.prevFirstIndex + numOfItems;
+				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems || this.prevFirstIndex === -1) ? firstIndex : this.prevFirstIndex + numOfItems;
 			let
 				hideTo = 0,
-				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0) ? firstIndex + numOfItems : this.prevFirstIndex;
+				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0 || this.prevFirstIndex === -1) ? firstIndex + numOfItems : this.prevFirstIndex;
 
 			if (updateFrom >= updateTo) {
 				return;
@@ -748,6 +768,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.rtl;
 			delete rest.spacing;
 			delete rest.updateStatesAndBounds;
+			delete rest.isVerticalScrollbarVisible;
 
 			if (primary) {
 				this.positionItems();

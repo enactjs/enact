@@ -14,6 +14,7 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import ComponentOverride from '../ComponentOverride';
 import Touchable from '../Touchable';
 
 import componentCss from './IconButton.less';
@@ -35,11 +36,11 @@ const IconButtonBase = kind({
 		 *
 		 * This is the root component and will receive all props except `icon`.
 		 *
-		 * @type {Function}
+		 * @type {Function|Element}
 		 * @required
 		 * @public
 		 */
-		buttonComponent: PropTypes.func.isRequired,
+		buttonComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
 
 		/**
 		 * The component used to render the [icon]{@link ui/IconButton.IconButtonBase.icon}.
@@ -147,7 +148,7 @@ const IconButtonBase = kind({
 		className: ({small, styler}) => styler.append({small})
 	},
 
-	render: ({buttonComponent: Button, children, css, icon, iconComponent: Icon, small, ...rest}) => {
+	render: ({buttonComponent, children, css, icon, iconComponent: Icon, small, ...rest}) => {
 
 		// To support the simpler use case of only specifying the icon as the children within
 		// <IconButton>, this falls back on using children if icon isn't specified.
@@ -157,10 +158,15 @@ const IconButtonBase = kind({
 		}
 
 		return (
-			<Button {...rest} small={small} minWidth={false}>
+			<ComponentOverride
+				{...rest}
+				component={buttonComponent}
+				small={small}
+				minWidth={false}
+			>
 				<Icon small={small} className={css.icon}>{icon}</Icon>
 				{children}
-			</Button>
+			</ComponentOverride>
 		);
 	}
 });

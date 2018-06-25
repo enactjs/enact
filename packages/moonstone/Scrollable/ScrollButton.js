@@ -2,7 +2,6 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import $L from '../internal/$L';
 import IconButton from '../IconButton';
 
 import css from './Scrollbar.less';
@@ -53,6 +52,15 @@ const ScrollButton = kind({
 		direction: PropTypes.oneOf(['down', 'left', 'right', 'up']).isRequired,
 
 		/**
+		* Sets the hint string read when focusing the scroll bar button.
+		*
+		* @type {String}
+		* @memberof moonstone/Scrollable.ScrollButton.prototype
+		* @public
+		*/
+		'aria-label': PropTypes.string,
+
+		/**
 		 * When `true`, the `aria-label` is set.
 		 *
 		 * @type {Boolean}
@@ -77,22 +85,7 @@ const ScrollButton = kind({
 	},
 
 	computed: {
-		'aria-label': ({active, direction}) => {
-			if (active) {
-				return null;
-			}
-
-			switch (direction) {
-				case 'up':
-					return $L('scroll up');
-				case 'down':
-					return $L('scroll down');
-				case 'left':
-					return $L('scroll left');
-				case 'right':
-					return $L('scroll right');
-			}
-		},
+		'aria-label': ({active, 'aria-label': ariaLabel}) => (active ? null : ariaLabel),
 		className: ({direction, styler}) => styler.append(classNameMap[direction])
 	},
 

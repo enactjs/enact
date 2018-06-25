@@ -1,6 +1,8 @@
 import sinon from 'sinon';
 import {
 	handle,
+	adaptEvent,
+	call,
 	callOnEvent,
 	forEventProp,
 	forKeyCode,
@@ -208,6 +210,7 @@ describe('handle', () => {
 
 	it('should include object props as second arg when bound', function () {
 		const componentInstance = {
+			context: {},
 			props: {
 				value: 1
 			}
@@ -227,7 +230,8 @@ describe('handle', () => {
 		const componentInstance = {
 			context: {
 				value: 1
-			}
+			},
+			props: {}
 		};
 		const handler = sinon.spy();
 		const h = handle.bind(componentInstance);
@@ -358,7 +362,7 @@ describe('handle', () => {
 			expect(actual).to.equal(expected);
 		});
 
-		it('should return false when the passed condition branch returns a falsey value', () => {
+		it('should return false when the passed condition branch returns a falsy value', () => {
 			const callback = oneOf(
 				[returnsTrue, () => null]
 			);
@@ -383,6 +387,7 @@ describe('handle', () => {
 
 		it('should support bound handlers', () => {
 			const componentInstance = {
+				props: {},
 				context: {
 					value: 1
 				}
@@ -404,7 +409,8 @@ describe('handle', () => {
 			const componentInstance = {
 				props: {
 					value: 1
-				}
+				},
+				context: {}
 			};
 			const handler = sinon.spy();
 			const o = oneOf.bind(componentInstance);
@@ -421,6 +427,7 @@ describe('handle', () => {
 
 		it('should include object context as third arg when bound', function () {
 			const componentInstance = {
+				props: {},
 				context: {
 					value: 1
 				}
@@ -451,6 +458,65 @@ describe('handle', () => {
 			const actual = handler.calledOnce;
 
 			expect(actual).to.equal(expected);
+		});
+	});
+
+	describe('#adaptEvent', () => {
+		it('should pass the adapted event payload to the provided handler', () => {
+			const handler = sinon.spy();
+			const onlyValue = ({value}) => ({value});
+			const ev = {
+				value: 1,
+				message: 'ok'
+			};
+
+			adaptEvent(onlyValue, handler)(ev);
+
+			const expected = {value: 1};
+			const actual = handler.firstCall.args[0];
+
+			expect(actual).to.deep.equal(expected);
+		});
+
+		it('should pass additional arguments to the provided handler', () => {
+			const handler = sinon.spy();
+			const returnOne = () => 1;
+			adaptEvent(returnOne, handler)(0, 2, 3);
+
+			const expected = [1, 2, 3];
+			const actual = handler.firstCall.args;
+
+			expect(actual).to.deep.equal(expected);
+		});
+
+		it('should support bound adapter function', () => {
+			const obj = {
+				adapt: () => 1
+			};
+			const handler = sinon.spy();
+			const fn = adaptEvent(call('adapt'), handler).bind(obj);
+
+			fn(0, 2, 3);
+
+			const expected = [1, 2, 3];
+			const actual = handler.firstCall.args;
+
+			expect(actual).to.deep.equal(expected);
+		});
+
+		it('should support bound handler function', () => {
+			const obj = {
+				handler: sinon.spy()
+			};
+			const returnOne = () => 1;
+			const fn = adaptEvent(returnOne, call('handler')).bind(obj);
+
+			fn(0, 2, 3);
+
+			const expected = [1, 2, 3];
+			const actual = obj.handler.firstCall.args;
+
+			expect(actual).to.deep.equal(expected);
 		});
 	});
 });

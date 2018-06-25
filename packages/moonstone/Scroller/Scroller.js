@@ -12,7 +12,6 @@ import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from 
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {Spotlight, getDirection} from '@enact/spotlight';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -152,22 +151,22 @@ class ScrollerBase extends Component {
 			}
 		}
 
-		// Calculations for `containerHeight` that are bigger than `clientHeight`
 		if (itemHeight > clientHeight) {
+			// Calculations for `containerHeight` that are bigger than `clientHeight`
 			const
 				{top, height: nestedItemHeight} = focusedItem.getBoundingClientRect(),
 				nestedItemTop = this.uiRef.containerRef.scrollTop + (top - containerTop),
 				nestedItemBottom = nestedItemTop + nestedItemHeight;
 
-			if (newItemTop - nestedItemHeight - currentScrollTop > epsilon) {
-				// set scroll position so that the top of the container is at least on the top
-				newScrollTop = newItemTop - nestedItemHeight;
-			} else if (nestedItemBottom - scrollBottom > epsilon) {
+			if (nestedItemBottom - scrollBottom > epsilon) {
 				// Caculate when 5-way focus down past the bottom.
 				newScrollTop += nestedItemBottom - scrollBottom;
 			} else if (nestedItemTop - currentScrollTop < epsilon) {
 				// Caculate when 5-way focus up past the top.
 				newScrollTop += nestedItemTop - currentScrollTop;
+			} else if (newItemTop - nestedItemHeight - currentScrollTop > epsilon) {
+				// set scroll position so that the top of the container is at least on the top as a fallback.
+				newScrollTop = newItemTop - nestedItemHeight;
 			}
 		} else if (itemBottom - scrollBottom > epsilon) {
 			// Caculate when 5-way focus down past the bottom.
@@ -285,10 +284,10 @@ class ScrollerBase extends Component {
 		return oPoint;
 	}
 
-	scrollToNextPage = ({direction, reverseDirection, focusedItem, containerId}) => {
+	scrollToNextPage = ({direction, reverseDirection, focusedItem, spotlightId}) => {
 		const
 			endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect()),
-			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, containerId);
+			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
 
 		if (next === focusedItem) {
 			return false; // Scroll one page with animation
@@ -350,66 +349,8 @@ class ScrollerBase extends Component {
 	}
 }
 
-const ScrollableScroller = (props) => (
-	<Scrollable
-		{...props}
-		childRenderer={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
-			<ScrollerBase {...scrollerProps} />
-		)}
-	/>
-);
-
-ScrollableScroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
-	/**
-	 * Direction of the scroller.
-	 *
-	 * Valid values are:
-	 * * `'both'`,
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'both'
-	 * @public
-	 */
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
-};
-
-ScrollableScroller.defaultProps = {
-	direction: 'both'
-};
-
-const ScrollableScrollerNative = (props) => (
-	<ScrollableNative
-		{...props}
-		childRenderer={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
-			<ScrollerBase {...scrollerProps} />
-		)}
-	/>
-);
-
-ScrollableScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototype */ {
-	/**
-	 * Direction of the scroller.
-	 *
-	 * Valid values are:
-	 * * `'both'`,
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'both'
-	 * @public
-	 */
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
-};
-
-ScrollableScrollerNative.defaultProps = {
-	direction: 'both'
-};
-
 /**
- * A Moonstone-styled Scroller, SpotlightContainerDecorator and Scrollable applied.
+ * A Moonstone-styled Scroller, Scrollable applied.
  *
  * Usage:
  * ```
@@ -418,16 +359,44 @@ ScrollableScrollerNative.defaultProps = {
  *
  * @class Scroller
  * @memberof moonstone/Scroller
- * @mixes spotlight/SpotlightContainerDecorator
  * @extends moonstone/Scrollable.Scrollable
  * @extends moonstone/Scroller.ScrollerBase
  * @ui
  * @public
  */
-const Scroller = SpotlightContainerDecorator({restrict: 'self-first'}, ScrollableScroller);
+const Scroller = (props) => (
+	<Scrollable
+		{...props}
+		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
+			delete scrollerProps.spotlightId;
+
+			return <ScrollerBase {...scrollerProps} />;
+		}}
+	/>
+);
+
+Scroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
+	/**
+	 * Direction of the scroller.
+	 *
+	 * Valid values are:
+	 * * `'both'`,
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'both'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+};
+
+Scroller.defaultProps = {
+	direction: 'both'
+};
 
 /**
- * A Moonstone-styled native Scroller, SpotlightContainerDecorator and Scrollable applied.
+ * A Moonstone-styled native Scroller, Scrollable applied.
  * For smooth native scrolling, web engine with below Chromium 61, should be launched
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
@@ -439,13 +408,41 @@ const Scroller = SpotlightContainerDecorator({restrict: 'self-first'}, Scrollabl
  *
  * @class ScrollerNative
  * @memberof moonstone/Scroller
- * @mixes spotlight/SpotlightContainerDecorator
  * @extends moonstone/Scrollable.ScrollableNative
  * @extends moonstone/Scroller.ScrollerBase
  * @ui
  * @private
  */
-const ScrollerNative = SpotlightContainerDecorator({restrict: 'self-first'}, ScrollableScrollerNative);
+const ScrollerNative = (props) => (
+	<ScrollableNative
+		{...props}
+		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
+			delete scrollerProps.spotlightId;
+
+			return <ScrollerBase {...scrollerProps} />;
+		}}
+	/>
+);
+
+ScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototype */ {
+	/**
+	 * Direction of the scroller.
+	 *
+	 * Valid values are:
+	 * * `'both'`,
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'both'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+};
+
+ScrollerNative.defaultProps = {
+	direction: 'both'
+};
 
 export default Scroller;
 export {

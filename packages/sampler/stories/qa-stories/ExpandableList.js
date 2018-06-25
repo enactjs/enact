@@ -1,5 +1,6 @@
 import Button from '@enact/moonstone/Button';
 import ExpandableList from '@enact/moonstone/ExpandableList';
+import Scroller from '@enact/moonstone/Scroller';
 import {RadioControllerDecorator} from '@enact/ui/RadioDecorator';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -12,6 +13,12 @@ const prop = {
 	listArray: [['a', 'b', 'c'], ['c', 'd', 'e', 'f', 'g']]
 };
 
+const optionsArray = [];
+
+for (let i = 0; i < 21; i++) {
+	optionsArray.push(`Option ${i + 1}`);
+}
+
 class ExpandableListChildrenLengthUpdate extends React.Component {
 	constructor (props) {
 		super(props);
@@ -21,9 +28,9 @@ class ExpandableListChildrenLengthUpdate extends React.Component {
 	}
 
 	updateValue = () => {
-		this.setState({
-			index: 1 - this.state.index
-		});
+		this.setState(({index}) => ({
+			index: 1 - index
+		}));
 	}
 
 	render () {
@@ -79,12 +86,34 @@ storiesOf('ExpandableList', module)
 				<ExpandableList title="First">
 					{['One', 'Two', 'Three']}
 				</ExpandableList>
-				<ExpandableList title="Second">
-					{['Fourth', 'Fifth', 'Sixth']}
+				<ExpandableList title="Second (with disabled items)">
+					{[
+						{key: 1, children: 'a', disabled: true},
+						{key: 2, children: 'b'},
+						{key: 3, children: 'c', disabled: true},
+						{key: 4, children: 'd'},
+						{key: 5, children: 'e', disabled: true}
+					]}
 				</ExpandableList>
 				<ExpandableList title="Third">
 					{['Seventh', 'Eighth', 'Ninth']}
 				</ExpandableList>
 			</div>
+		)
+	)
+	.add(
+		'with default selected',
+		() => (
+			<Scroller>
+				<ExpandableList title="Default Selected" defaultSelected={2}>
+					{['Option 1', 'Option 2', 'Option 3']}
+				</ExpandableList>
+				<ExpandableList title="Multiple Selected" select="multiple" defaultSelected={[1, 2]}>
+					{['Option 1', 'Option 2', 'Option 3']}
+				</ExpandableList>
+				<ExpandableList title="Long Contents Selected" select="multiple" defaultSelected={[17, 18, 19]}>
+					{optionsArray}
+				</ExpandableList>
+			</Scroller>
 		)
 	);

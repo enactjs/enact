@@ -30,14 +30,13 @@ const ToggleButtonBase = kind({
 
 	propTypes: /** @lends moonstone/ToggleButton.ToggleButtonBase.prototype */ {
 		/**
-		 * The background-color opacity of this button; valid values are `'opaque'`, `'translucent'`,
-		 * and `'transparent'`.
+		 * The background-color opacity of this button; valid values are `'translucent'`,
+		 * `'lightTranslucent'` and `'transparent'`.
 		 *
 		 * @type {String}
-		 * @default 'opaque'
 		 * @public
 		 */
-		backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
+		backgroundOpacity: PropTypes.oneOf(['translucent', 'lightTranslucent', 'transparent']),
 
 		/**
 		 * The string to be displayed as the main content of the toggle button.
@@ -121,7 +120,6 @@ const ToggleButtonBase = kind({
 	},
 
 	defaultProps: {
-		backgroundOpacity: 'opaque',
 		disabled: false,
 		minWidth: true,
 		selected: false,
@@ -153,7 +151,7 @@ const ToggleButtonBase = kind({
 		delete rest.toggleOnLabel;
 
 		return (
-			<Button {...rest} aria-pressed={selected} selected={selected} />
+			<Button data-webos-voice-intent="SetToggleItem" {...rest} aria-pressed={selected} selected={selected} />
 		);
 	}
 });
@@ -175,7 +173,7 @@ const ToggleButtonBase = kind({
  */
 const ToggleButton = Pure(
 	Toggleable(
-		{prop: 'selected', toggle: 'onTap'},
+		{prop: 'selected', toggleProp: 'onTap'},
 		Skinnable(
 			ToggleButtonBase
 		)

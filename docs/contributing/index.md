@@ -10,9 +10,11 @@ submitting code or documentation to the project:
 *   [Documentation Style Guide](./documentation.md) - How we use jsDoc comments to document Enact
 *   [Documenting Changes](./changelogs.md) -  The Enact `CHANGELOG.md` guidelines
 
+The source for Enact is located in the [enactjs GitHub repository](https://github.com/enactjs/enact). Our [issue tracker](https://github.com/enactjs/enact/issues) is also located on GitHub, where you can find our [roadmap](https://github.com/enactjs/enact/issues/1504).
+
 ### Contributors Welcome!
 
-Enact is an open-source project, and is developed in public on GitHub under the Apache 2.0 license. We have a core team of
+Enact is an open-source project, and is developed in public under the Apache 2.0 license. We have a core team of
 developers who work full-time on Enact, and we also welcome outside contributors to join our effort to make native-quality
 app development a reality on the web stack.
 
@@ -23,7 +25,7 @@ Here's what you need to know to get started.
 	those libraries. In general, it’s safe to say that smaller changes are more likely to be accepted than larger ones, and
 	that contributions to the “outer rings” of Enact are more likely to be accepted than things that affect the Enact core.
 
-### Contribution GuideLines
+### Contribution Guidelines
 
 We have formalized our contribution guidelines a bit to ensure we can safely accept even large contributions to the official
 project. Please read this section carefully if you are interested in contributing:

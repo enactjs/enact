@@ -110,7 +110,7 @@ const extractAriaProps = function (props) {
  *	their PropTypes as keys
  * @param  {Component} Wrapped	A component to apply this to
  *
- * @return {Component}              The component, now with context on it
+ * @returns {Component}              The component, now with context on it
  * @private
  */
 const withContextFromProps = (propsList, Wrapped) => withContext(propsList, (props) => {
@@ -177,7 +177,8 @@ const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
 };
 
 /**
- * Creates a function that memoizes the result of `fn`.
+ * Creates a function that memoizes the result of `fn`. Note that this function is a naive
+ * implementation and only checks the first argument for memoization.
  *
  * @method
  * @memberof core/util
@@ -191,7 +192,7 @@ const memoize = (fn) => {
 		if (n in cache) {
 			return cache[n];
 		} else {
-			let result = fn(n);
+			let result = fn(...args);
 			cache[n] = result;
 			return result;
 		}

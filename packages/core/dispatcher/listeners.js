@@ -11,5 +11,15 @@ const getListeners = function (target, name) {
 	return (listeners[name] = listeners[name] || []);
 };
 
+const addListener = function (target, name, fn) {
+	const listeners = getListeners(target, name);
+
+	if (listeners.indexOf(fn) === -1) {
+		listeners.push(fn);
+		return true;
+	}
+	return false;
+};
+
 export default getListeners;
-export {getListeners};
+export {getListeners, addListener};

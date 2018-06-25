@@ -1,40 +1,48 @@
-import Slider, {SliderBase} from '@enact/moonstone/Slider';
+import Slider, {SliderTooltip} from '@enact/moonstone/Slider';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, number, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
+import {boolean, number, select} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('Slider', SliderBase, Slider);
-removeProps(Config, 'defaultPressed pressed');
+const Config = mergeComponentMetadata('Slider', Slider);
+
+Slider.displayName = 'Slider';
+SliderTooltip.displayName = 'SliderTooltip';
 
 storiesOf('Moonstone', module)
 	.add(
 		'Slider',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [Slider, SliderTooltip],
 			text: 'Basic usage of Slider'
-		})(() => (
-			<Slider
-				activateOnFocus={boolean('activateOnFocus', false)}
-				backgroundProgress={number('backgroundProgress', SliderBase.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
-				detachedKnob={nullify(boolean('detachedKnob', false))}
-				disabled={boolean('disabled', false)}
-				knobStep={number('knobStep')}
-				max={number('max', SliderBase.defaultProps.max)}
-				min={number('min', SliderBase.defaultProps.min)}
-				noFill={boolean('noFill', false)}
-				onChange={action('onChange')}
-				onKnobMove={action('onKnobMove')}
-				orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
-				step={number('step', SliderBase.defaultProps.step)}
-				tooltip={nullify(boolean('tooltip', false))}
-				tooltipAsPercent={nullify(boolean('tooltipAsPercent', false))}
-				tooltipForceSide={nullify(boolean('tooltipForceSide', false))}
-				tooltipSide={select('tooltipSide', ['before', 'after'], 'after')}
-			/>
-		))
+		})(() => {
+			const side = select('side', ['after', 'before', 'left', 'right'], SliderTooltip, 'before');
+			const tooltip = boolean('tooltip', SliderTooltip);
+			const percent = boolean('percent', SliderTooltip);
+
+			return (
+				<Slider
+					activateOnFocus={boolean('activateOnFocus', Config)}
+					backgroundProgress={number('backgroundProgress', Config, {range: true, min: 0, max: 1, step: 0.01}, 0.5)}
+					disabled={boolean('disabled', Config)}
+					knobStep={number('knobStep', Config)}
+					max={number('max', Config, 10)}
+					min={number('min', Config, 0)}
+					noFill={boolean('noFill', Config)}
+					onChange={action('onChange')}
+					orientation={select('orientation', ['horizontal', 'vertical'], Config, 'horizontal')}
+					step={number('step', Config, 1)}
+				>
+					{tooltip ? (
+						<SliderTooltip
+							percent={percent}
+							side={side}
+						/>
+					) : null}
+				</Slider>
+			);
+		})
 	);

@@ -50,6 +50,7 @@ import {
 import {
 	getLastPointerPosition,
 	getPointerMode,
+	hasPointerMoved,
 	notifyKeyDown,
 	notifyPointerMove,
 	setPointerMode
@@ -236,7 +237,7 @@ const Spotlight = (function () {
 			next.unshift(lastContainerId);
 
 			// only prepend last focused if it exists so that Spotlight.focus() doesn't receive
-			// a falsey target
+			// a falsy target
 			const lastFocused = getContainerLastFocusedElement(lastContainerId);
 			if (lastFocused) {
 				next.unshift(lastFocused);
@@ -328,7 +329,11 @@ const Spotlight = (function () {
 			// If the window was previously blurred while in pointer mode, the last active containerId may
 			// not have yet set focus to its spottable elements. For this reason we can't rely on setting focus
 			// to the last focused element of the last active containerId, so we use rootContainerId instead
-			Spotlight.focus(getContainerLastFocusedElement(rootContainerId));
+			if (!Spotlight.focus(getContainerLastFocusedElement(rootContainerId))) {
+				// If the last focused element was previously also disabled (or no longer exists), we
+				// need to set focus somewhere
+				Spotlight.focus();
+			}
 			_spotOnWindowFocus = false;
 		}
 	}
@@ -358,12 +363,7 @@ const Spotlight = (function () {
 		const direction = getDirection(keyCode);
 		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
 
-		if (pointerHandled) {
-			_pointerMoveDuringKeyPress = true;
-			return;
-		}
-
-		if (!(direction || isEnter(keyCode))) {
+		if (pointerHandled || !(direction || isEnter(keyCode))) {
 			return;
 		}
 
@@ -413,7 +413,7 @@ const Spotlight = (function () {
 
 		const {target} = evt;
 
-		if (getPointerMode()) {
+		if (getPointerMode() && hasPointerMoved(evt.clientX, evt.clientY)) {
 			const next = getNavigableTarget(target); // account for child controls
 
 			if (next && next !== getCurrent()) {
@@ -618,7 +618,13 @@ const Spotlight = (function () {
 			const nextContainerIds = getContainersForNode(target);
 			const nextContainerId = last(nextContainerIds);
 			if (isNavigable(target, nextContainerId, true)) {
-				return focusElement(target, nextContainerIds);
+				const focused = focusElement(target, nextContainerIds);
+
+				if (!focused && wasContainerId) {
+					this.setActiveContainer(elem);
+				}
+
+				return focused;
 			} else if (wasContainerId) {
 				// if we failed to find a spottable target within the provided container, we'll set
 				// it as the active container to allow it to focus itself if its contents change

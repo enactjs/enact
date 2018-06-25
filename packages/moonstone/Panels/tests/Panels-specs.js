@@ -49,6 +49,18 @@ describe('Panels Specs', () => {
 		expect(expected).to.equal(actual);
 	});
 
+	it('should set application close button "aria-label" to closeButtonAriaLabel', function () {
+		const label = 'custom close button label';
+		const panels = mount(
+			<Panels closeButtonAriaLabel={label} />
+		);
+
+		const expected = label;
+		const actual = panels.find('IconButton').prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
 	describe('computed', () => {
 		describe('childProps', () => {
 			it('should not add aria-owns when noCloseButton is true', () => {

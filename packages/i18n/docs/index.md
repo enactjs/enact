@@ -16,7 +16,7 @@ This guide details how to use some of i18n library's features. For an overview o
 
 ## Using I18nDecorator
 
-`I18nDecorator` is a Higher-order Component (HOC) that provides easy access to locale information. Applications wishing to receive locale information can wrap the root component with the HOC. It is not necessary to use `I18nDecorator` directly for applications using `MoonstoneDecorator`.
+`I18nDecorator` is a higher-order component (HOC) that provides easy access to locale information. Applications wishing to receive locale information can wrap the root component with the HOC. It is not necessary to use `I18nDecorator` directly for applications using `MoonstoneDecorator`.
 
 The HOC works by passing locale information to the app through `context` and CSS classes. It contains two properties inside its `context`:
 
@@ -153,4 +153,3 @@ iLib provides the locale-specific features of i18n. If you wish to learn about s
 ## Sample
 
 A sample i18n app is available [here](https://github.com/enactjs/samples/tree/master/pattern-locale-switching).
-
