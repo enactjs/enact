@@ -87,6 +87,15 @@ const IncrementSliderBase = kind({
 		'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 		/**
+		 * The `data-webos-voice-group-label` for the IconButton of IncrementSlider.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-group-label': PropTypes.string,
+
+		/**
 		 * When `true`, the knob displays selected and can be moved using 5-way controls.
 		 *
 		 * @type {Boolean}
@@ -453,6 +462,7 @@ const IncrementSliderBase = kind({
 
 	render: ({active,
 		'aria-hidden': ariaHidden,
+		'data-webos-voice-group-label': voiceGroupLabel,
 		backgroundProgress,
 		css,
 		decrementAriaLabel,
@@ -498,6 +508,7 @@ const IncrementSliderBase = kind({
 					aria-hidden={ariaHidden}
 					aria-label={decrementAriaLabel}
 					className={css.decrementButton}
+					data-webos-voice-group-label={voiceGroupLabel}
 					disabled={decrementDisabled}
 					onTap={onDecrement}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
@@ -534,6 +545,7 @@ const IncrementSliderBase = kind({
 					aria-hidden={ariaHidden}
 					aria-label={incrementAriaLabel}
 					className={css.incrementButton}
+					data-webos-voice-group-label={voiceGroupLabel}
 					disabled={incrementDisabled}
 					onTap={onIncrement}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}

@@ -45,6 +45,15 @@ const ExpandablePickerBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * The `data-webos-voice-group-label` for ExpandableItem and Picker.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/ExpandablePicker.ExpandablePickerBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-group-label': PropTypes.string,
+
+		/**
 		 * The "aria-label" for the the check button.
 		 *
 		 * @type {String}
@@ -280,6 +289,7 @@ const ExpandablePickerBase = kind({
 
 	render: (props) => {
 		const {
+			'data-webos-voice-group-label': voiceGroupLabel,
 			checkButtonAriaLabel,
 			children,
 			decrementAriaLabel,
@@ -309,6 +319,7 @@ const ExpandablePickerBase = kind({
 		return (
 			<ExpandableItemBase
 				{...rest}
+				data-webos-voice-group-label={voiceGroupLabel}
 				disabled={disabled}
 				onSpotlightDisappear={onSpotlightDisappear}
 				onSpotlightDown={!open ? onSpotlightDown : null}
@@ -320,6 +331,7 @@ const ExpandablePickerBase = kind({
 				<Picker
 					aria-label={pickerAriaLabel}
 					className={css.picker}
+					data-webos-voice-group-label={voiceGroupLabel}
 					decrementAriaLabel={decrementAriaLabel}
 					decrementIcon={decrementIcon}
 					disabled={disabled}

@@ -254,8 +254,6 @@ const TRANSITION_STATE = {
  */
 class Transition extends React.Component {
 
-	static contextTypes = contextTypes
-
 	static propTypes = /** @lends ui/Transition.Transition.prototype */ {
 		/**
 		 * The node to be transitioned.
@@ -358,6 +356,8 @@ class Transition extends React.Component {
 		 */
 		visible: PropTypes.bool
 	}
+
+	static contextTypes = contextTypes
 
 	static defaultProps = {
 		direction: 'up',

@@ -35,8 +35,6 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 
 		static displayName = 'DaySelector'
 
-		static contextTypes = contextTypes
-
 		static propTypes = /** @lends moonstone/DaySelector.DaySelectorDecorator.prototype */ {
 			/**
 			 * The "aria-label" for the selector.
@@ -120,9 +118,11 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			title: PropTypes.any
 		}
 
+		static contextTypes = contextTypes
+
 		static defaultProps = {
-			disabled: false,
-			dayNameLength: 'long'
+			dayNameLength: 'long',
+			disabled: false
 		}
 
 		constructor (props) {

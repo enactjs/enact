@@ -48,7 +48,7 @@ const HeaderBase = kind({
 		/**
 		 * Configures the mode of uppercasing for the [`title`]{@link moonstone/Panels.Header#title}.
 		 *
-		 * @see i18n/Uppercase#casing
+		 * @see i18n/Uppercase#Uppercase.casing
 		 * @type {String}
 		 * @default 'upper'
 		 * @public
