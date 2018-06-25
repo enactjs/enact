@@ -1,7 +1,16 @@
 /**
- * Exports the {@link moonstone/DaySelector.DaySelector} component.
+ * Moonstone styled inline day selector components.
+ *
+ * @example
+ * <DaySelector
+ *   defaultSelected={[2, 3]}
+ *   onSelect={console.log}
+ * />
  *
  * @module moonstone/DaySelector
+ * @exports	DaySelector
+ * @exports DaySelectorBase
+ * @exports DaySelectorDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -20,7 +29,10 @@ import DaySelectorItem from './DaySelectorItem';
 import componentCss from './DaySelector.less';
 
 /**
- * A component that allows the user to choose day(s) of the week.
+ * A Moonstone styled inline day of the week selection component.
+ *
+ * This component is most often not used directly but may be composed within another component as it
+ * is within {@link moonstone/DaySelector.DaySelector}.
  *
  * @class DaySelectorBase
  * @memberof moonstone/DaySelector
@@ -32,7 +44,7 @@ const DaySelectorBase = kind({
 
 	propTypes: /** @lends moonstone/DaySelector.DaySelectorBase.prototype */ {
 		/**
-		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 * Applies a disabled style and prevents interacting with the component.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -40,9 +52,11 @@ const DaySelectorBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Called when an item is selected. The first parameter will be an object containing a
-		 * `selected` member, containing the array of numbers representing the selected days, zero
-		 * indexed.
+		 * Called when an day is selected or unselected.
+		 *
+		 * The event payload will be an object with the following members:
+		 * * `selected` - An array of numbers representing the selected days, 0 indexed
+		 * * `content` - Localized string representing the selected days
 		 *
 		 * @type {Function}
 		 * @public
@@ -93,8 +107,15 @@ const DaySelectorDecorator = compose(
 );
 
 /**
- * A component that allows the user to choose day(s) of the week.
+ * A Moonstone styled inline day of the week selection component.
  *
+ * Usage:
+ * ```
+ * <DaySelector
+ *   defaultSelected={[2, 3]}
+ *   onSelect={handleSelect}
+ * />
+ * ```
  * @class DaySelector
  * @extends moonstone/DaySelector.DaySelectorBase
  * @mixes moonstone/DaySelector.DaySelectorDecorator
@@ -102,6 +123,7 @@ const DaySelectorDecorator = compose(
  * @ui
  * @public
  */
+const DaySelector = DaySelectorDecorator(DaySelectorBase);
 
 /**
  * Use long day names (Sunday, Monday..) for labels
@@ -144,8 +166,6 @@ const DaySelectorDecorator = compose(
  * @memberof moonstone/DaySelector.DaySelector.prototype
  * @public
  */
-
-const DaySelector = DaySelectorDecorator(DaySelectorBase);
 
 export default DaySelector;
 export {

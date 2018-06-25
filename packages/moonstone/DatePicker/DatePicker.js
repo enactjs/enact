@@ -3,13 +3,15 @@
  *
  * @example
  * <DatePicker
- *	defaultValue={selectedDate}
- *	onChange={handleChange}
- * 	title="Select Date"
+ *   onChange={console.log}
+ * 	 title="Select Date"
  * />
  *
  * @module moonstone/DatePicker
+ * @exports DatePicker
+ * @exports DatePickerBase
  */
+
 
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 import Pure from '@enact/ui/internal/Pure';
@@ -97,6 +99,7 @@ const dateTimeConfig = {
  *
  * @class DatePicker
  * @memberof moonstone/DatePicker
+ * @extends moonstone/DatePicker.DatePickerBase
  * @mixes ui/Toggleable.Toggleable
  * @mixes ui/RadioDecorator.RadioDecorator
  * @mixes ui/Changeable.Changeable
@@ -113,4 +116,7 @@ const DatePicker = Pure(
 );
 
 export default DatePicker;
-export {DatePicker, DatePickerBase};
+export {
+	DatePicker,
+	DatePickerBase
+};

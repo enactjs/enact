@@ -144,6 +144,7 @@ const ButtonDecorator = compose(
  *
  * @class Button
  * @memberof moonstone/Button
+ * @extends moonstone/Button.ButtonBase
  * @mixes moonstone/Button.ButtonDecorator
  * @ui
  * @public

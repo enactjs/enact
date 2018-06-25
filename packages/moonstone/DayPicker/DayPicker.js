@@ -1,37 +1,49 @@
 /**
- * Exports the {@link moonstone/DayPicker.DayPicker} component.
+ * Moonstone styled expandable day picker components.
+ *
+ * @example
+ * <DayPicker
+ *   defaultSelected={[2, 3]}
+ *   onSelect={console.log}
+ *   title="Select a Day"
+ * />
  *
  * @module moonstone/DayPicker
+ * @exports DayPicker
+ * @exports DayPickerBase
  */
 
 import kind from '@enact/core/kind';
 import Changeable from '@enact/ui/Changeable';
 import Pure from '@enact/ui/internal/Pure';
-import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
+import PropTypes from 'prop-types';
 import React from 'react';
 
-import {Expandable} from '../ExpandableItem';
-import {ExpandableListBase} from '../ExpandableList';
 // We're using the i18n features for DaySelectorDecorator only and not the complete HOC stack so we
 // reach into the internal module to pluck it out directly
 import DaySelectorDecorator from '../DaySelector/DaySelectorDecorator';
+import {Expandable} from '../ExpandableItem';
+import {ExpandableListBase} from '../ExpandableList';
 
 /**
- * {@link moonstone/DayPicker.DayPicker} is a component that
- * allows the user to choose day(s) of the week.
+ * A Moonstyle styled day of the week selection component.
+ *
+ * This component is most often not used directly but may be composed within another component as it
+ * is within {@link moonstone/DayPicker.DayPicker}.
  *
  * @class DayPickerBase
  * @memberof moonstone/DayPicker
+ * @extends moonstone/ExpandableList.ExpandableListBase
  * @ui
  * @public
  */
 const DayPickerBase = kind({
 	name: 'DayPicker',
 
-	propTypes: /** @lends moonstone/DayPicker.DayPickerBase.prototype */ {
+	propTypes: /** @lends moonstone/DayPicker.DayPicker.prototype */ {
 		/**
-		 * The primary text of the Picker.
+		 * The primary text label for the component.
 		 *
 		 * @type {String}
 		 * @required
@@ -40,63 +52,27 @@ const DayPickerBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
-		 * Sets the "aria-label" for the picker.
-		 *
-		 * By default, "aria-label" is set to the title and the full names of the selected days or
-		 * the custom text when the weekend, week days, or all days is selected.
-		 *
-		 * @type {String}
-		 * @memberof moonstone/DayPicker.DayPickerBase.prototype
-		 * @public
-		 */
-		'aria-label': PropTypes.string,
-
-		/**
-		 * When `true`, applies a disabled style and the control becomes non-interactive.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		disabled: PropTypes.bool,
-
-		/**
-		 * The selected label for DayPicker
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		label: PropTypes.string,
-
-		/**
-		 * Current locale for DayPicker
-		 *
-		 * @type {String}
-		 * @private
-		 */
-		locale: PropTypes.string,
-
-		/**
-		 * Callback to be called when a condition occurs which should cause the expandable to close
+		 * Called when the user requests the expandable close.
 		 *
 		 * @type {Function}
-		 * @default null
 		 * @public
 		 */
 		onClose: PropTypes.func,
 
 		/**
-		 * Callback to be called when a condition occurs which should cause the expandable to open
+		 * Called when the user requests the expandable open.
 		 *
 		 * @type {Function}
-		 * @default null
 		 * @public
 		 */
 		onOpen: PropTypes.func,
 
 		/**
-		 * Called when an item is selected. The first parameter will be an object containing a `selected` member,
-		 * containing the array of numbers representing the selected days, 0 indexed
+		 * Called when an day is selected or unselected.
+		 *
+		 * The event payload will be an object with the following members:
+		 * * `selected` - An array of numbers representing the selected days, 0 indexed
+		 * * `content` - Localized string representing the selected days
 		 *
 		 * @type {Function}
 		 * @public
@@ -104,7 +80,7 @@ const DayPickerBase = kind({
 		onSelect: PropTypes.func,
 
 		/**
-		 * When `true`, the control in rendered in the expanded state, with the contents visible?
+		 * Opens the component to display the date component pickers.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -118,11 +94,10 @@ const DayPickerBase = kind({
 		 * @type {Number|Number[]}
 		 * @public
 		 */
-		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)])
-	},
-
-	defaultProps: {
-		disabled: false
+		selected: PropTypes.oneOfType([
+			PropTypes.number,
+			PropTypes.arrayOf(PropTypes.number)
+		])
 	},
 
 	computed: {
@@ -147,8 +122,7 @@ const DayPickerDecorator = compose(
 );
 
 /**
- * {@link moonstone/DayPicker.DayPicker} is a component that
- * allows the user to choose day(s) of the week.
+ * A Moonstyle styled expandable day of the week selection component.
  *
  * By default, `DayPicker` maintains the state of its `selected` property. Supply the
  * `defaultSelected` property to control its initial value. If you wish to directly control updates
@@ -160,11 +134,63 @@ const DayPickerDecorator = compose(
  * state, supply a value for `open` at creation time and update its value in response to
  * `onClose`/`OnOpen` events.
  *
+ * Usage:
+ * ```
+ * <DayPicker
+ *   defaultOpen
+ *   defaultSelected={[2, 3]}
+ *   onSelect={handleSelect}
+ *   title="Select a Day"
+ * />
+ * ```
+ *
  * @class DayPicker
  * @memberof moonstone/DayPicker
+ * @extends moonstone/DayPicker.DayPickerBase
  * @mixes moonstone/ExpandableItem.Expandable
  * @mixes ui/Changeable.Changeable
  * @ui
+ * @public
+ */
+const DayPicker = DayPickerDecorator(DayPickerBase);
+
+/**
+ * Sets the "aria-label" for the component.
+ *
+ * By default, "aria-label" is set to the title and the full names of the selected days or
+ * the custom text when the weekend, week days, or all days is selected.
+ *
+ * @name aria-label
+ * @type {String}
+ * @memberof moonstone/DayPicker.DayPicker.prototype
+ * @public
+ */
+
+/**
+ * The initial value used when `open` is not set.
+ *
+ * @name defaultOpen
+ * @type {Boolean}
+ * @memberof moonstone/DayPicker.DayPicker.prototype
+ * @public
+ */
+
+/**
+ * The initial value used when `selected` is not set.
+ *
+ * @name defaultSelected
+ * @type {Number|Number[]}
+ * @memberof moonstone/DayPicker.DayPicker.prototype
+ * @public
+ */
+
+/**
+ * Applies a disabled style and prevents interacting with the component.
+ *
+ * @name disabled
+ * @type {Boolean}
+ * @default false
+ * @memberof moonstone/DayPicker.DayPicker.prototype
  * @public
  */
 
@@ -198,7 +224,8 @@ const DayPickerDecorator = compose(
  * @public
  */
 
-const DayPicker = DayPickerDecorator(DayPickerBase);
-
 export default DayPicker;
-export {DayPicker, DayPickerBase};
+export {
+	DayPicker,
+	DayPickerBase
+};

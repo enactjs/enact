@@ -91,6 +91,7 @@ const BodyTextDecorator = compose(
  *
  * @class BodyText
  * @memberof moonstone/BodyText
+ * @extends moonstone/BodyText.BodyTextBase
  * @mixes moonstone/BodyText.BodyTextDecorator
  * @ui
  * @public
