@@ -49,7 +49,7 @@ class ViewManager extends React.Component {
 		/**
 		 * Type of component wrapping the children. May be a DOM node or a custom React component.
 		 *
-		 * @type {String|Component}
+		 * @type {Component}
 		 * @default 'div'
 		 */
 		component: PropTypes.oneOfType([

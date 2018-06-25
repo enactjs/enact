@@ -114,7 +114,7 @@ const RangePickerBase = kind({
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		incrementIcon: PropTypes.string,
