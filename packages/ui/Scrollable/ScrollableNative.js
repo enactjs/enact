@@ -176,6 +176,34 @@ class ScrollableBaseNative extends Component {
 		onMouseDown: PropTypes.func,
 
 		/**
+		 * Called when the edges are reached.
+		 * Passes `orientation`, `position`, and `reached`.
+		 *
+		 * Example:
+		 * ```
+		 * onReachEdge = ({orientation, position, reached}) => {
+		 *     // do something along with reached
+		 * }
+		 *
+		 * render = () => (
+		 *     <VirtualList
+		 *         ...
+		 *         onReachEdge={this.onReachEdge}
+		 *         ...
+		 *     />
+		 * )
+		 * ```
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @param {String} event.orientation The orientation of scrolling. `'horizontal'` or `'vertical'`
+		 * @param {String} event.position The position of the edge. `'begin'` or `'end'`
+		 * @param {Boolean} event.reached `true` when the edge is reached.
+		 * @private
+		 */
+		onReachEdge: PropTypes.func,
+
+		/**
 		 * Called when scrolling.
 		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
 		 * It is not recommended to set this prop since it can cause performance degradation.
@@ -394,6 +422,9 @@ class ScrollableBaseNative extends Component {
 			}
 		}
 
+		this.forwardReachEdgeEvent('horizontal');
+		this.forwardReachEdgeEvent('vertical');
+
 		this.addEventListeners();
 		if (
 			hasDataSizeChanged === false &&
@@ -491,6 +522,16 @@ class ScrollableBaseNative extends Component {
 	scrollLeft = 0
 	scrollTop = 0
 	scrollToInfo = null
+	touchingEdgeInfo = {
+		horizontal: {
+			begin: false,
+			end: false
+		},
+		vertical: {
+			begin: false,
+			end: false
+		}
+	}
 
 	// component info
 	childRef = null
@@ -851,6 +892,43 @@ class ScrollableBaseNative extends Component {
 		forward(type, {scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
 	}
 
+	compareAndSet (obj, name, value) {
+		const changed = (obj[name] !== value);
+		obj[name] = value;
+		return changed;
+	}
+
+	forwardReachEdgeEvent (orientation) {
+		const {onReachEdge} = this.props;
+		if (onReachEdge) {
+			const {direction} = this.props;
+
+			if (direction === orientation || direction === 'both') {
+				const
+					{compareAndSet} = this,
+					info = this.touchingEdgeInfo[orientation];
+				let
+					conditionBegin = false,
+					conditionEnd = false;
+
+				if (this.getScrollabilities(orientation)) {
+					const
+						name = (orientation === 'vertical') ? 'Top' : 'Left',
+						curPos = this['scroll' + name];
+					conditionBegin = (curPos <= 0);
+					conditionEnd = (curPos >= this.getScrollBounds()['max' + name]);
+				}
+
+				if (compareAndSet(info, 'begin', conditionBegin)) {
+					onReachEdge({orientation, position: 'begin', reached: info.begin});
+				}
+				if (compareAndSet(info, 'end', conditionEnd)) {
+					onReachEdge({orientation, position: 'end', reached: info.end});
+				}
+			}
+		}
+	}
+
 	// call scroll callbacks and update scrollbars for native scroll
 
 	scrollStartOnScroll = () => {
@@ -899,12 +977,14 @@ class ScrollableBaseNative extends Component {
 		const
 			bounds = this.getScrollBounds(),
 			maxValue = bounds.maxLeft,
-			{type, ratio} = this.getOverscrollStatus('horizontal');
+			orientation = 'horizontal',
+			{type, ratio} = this.getOverscrollStatus(orientation);
 
 		this.scrollLeft = clamp(0, maxValue, value);
+		this.forwardReachEdgeEvent(orientation);
 
 		if (type === overscrollTypes.scrolling) {
-			this.updateOverscrollEffect('horizontal', this.scrollLeft, type, ratio);
+			this.updateOverscrollEffect(orientation, this.scrollLeft, type, ratio);
 		}
 
 		if (this.state.isHorizontalScrollbarVisible) {
@@ -916,12 +996,14 @@ class ScrollableBaseNative extends Component {
 		const
 			bounds = this.getScrollBounds(),
 			maxValue = bounds.maxTop,
-			{type, ratio} = this.getOverscrollStatus('vertical');
+			orientation = 'vertical',
+			{type, ratio} = this.getOverscrollStatus(orientation);
 
 		this.scrollTop = clamp(0, maxValue, value);
+		this.forwardReachEdgeEvent(orientation);
 
 		if (type === overscrollTypes.scrolling) {
-			this.updateOverscrollEffect('vertical', this.scrollTop, type, ratio);
+			this.updateOverscrollEffect(orientation, this.scrollTop, type, ratio);
 		}
 
 		if (this.state.isVerticalScrollbarVisible) {
@@ -1241,6 +1323,7 @@ class ScrollableBaseNative extends Component {
 		delete rest.onScroll;
 		delete rest.onScrollStart;
 		delete rest.onScrollStop;
+		delete rest.onReachEdge;
 		delete rest.onWheel;
 		delete rest.removeEventListeners;
 		delete rest.scrollStopOnScroll;
