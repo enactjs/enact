@@ -413,13 +413,17 @@ class ScrollableBase extends Component {
 		}
 
 		// publish container resize changes
+		if (this.resizeParam !== null) {
+			this.publisher.publish(this.resizeParam);
+			this.resizeParam = null;
+		}
 		const horizontal = isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
 		const vertical = isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
 		if (horizontal || vertical) {
-			this.publisher.publish({
+			this.resizeParam = {
 				horizontal,
 				vertical
-			});
+			};
 		}
 	}
 
@@ -477,6 +481,7 @@ class ScrollableBase extends Component {
 	deferScrollTo = true
 	isScrollAnimationTargetAccumulated = false
 	isUpdatedScrollThumb = false
+	resizeParam = null
 
 	// overscroll
 	overscrollStatus = {
