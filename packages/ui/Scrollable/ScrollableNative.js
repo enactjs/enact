@@ -313,6 +313,13 @@ class ScrollableBaseNative extends Component {
 		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 	}
 
+	static contextTypes = contextTypesState
+
+	static childContextTypes = {
+		...contextTypesResize,
+		...contextTypesState
+	}
+
 	static defaultProps = {
 		cbScrollTo: nop,
 		horizontalScrollbar: 'auto',
@@ -321,13 +328,6 @@ class ScrollableBaseNative extends Component {
 		onScrollStop: nop,
 		verticalScrollbar: 'auto'
 	}
-
-	static childContextTypes = {
-		...contextTypesResize,
-		...contextTypesState
-	}
-
-	static contextTypes = contextTypesState
 
 	constructor (props) {
 		super(props);

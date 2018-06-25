@@ -373,10 +373,12 @@ class Popup extends React.Component {
 				activator: Spotlight.getCurrent()
 			});
 		} else if (this.props.open && !nextProps.open) {
+			const activator = this.state.activator;
+
 			this.setState({
 				popupOpen: nextProps.noAnimation,
 				floatLayerOpen: !nextProps.noAnimation,
-				activator: nextProps.noAnimation ? null : this.state.activator
+				activator: nextProps.noAnimation ? null : activator
 			});
 		}
 		checkScrimNone(nextProps);

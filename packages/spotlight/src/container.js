@@ -563,7 +563,7 @@ const isNavigable = (node, containerId, verify) => {
 /**
  * Returns the IDs of all containers
  *
- * @return {String[]}  Array of container IDs
+ * @returns {String[]}  Array of container IDs
  * @memberof spotlight/container
  * @private
  */
