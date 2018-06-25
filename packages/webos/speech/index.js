@@ -1,7 +1,9 @@
 /**
- * Provides utility methods and Higher-Order Components for working with webOS speech APIs.
+ * Provides utility functions and higher-order components for working with webOS speech APIs.
  *
  * @module webos/speech
+ * @exports readAlert
+ * @exports VoiceControlDecorator
  */
 
 import readAlert from './readAlert';

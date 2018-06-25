@@ -4,12 +4,13 @@ import {findDOMNode} from 'react-dom';
 import hoc from '@enact/core/hoc';
 
 /**
- * VoiceControlDecorator is a Higher-order Component that adds a callback for voice event
+ * VoiceControlDecorator is a higher-order component that adds a callback for voice event
  * to its wrapped component.
  *
  * By default, `onVoice` handler will be added to the node where `data-webos-voice-intent` attribute is declared.
  * In addition, if you need to specify a target node, `data-webos-voice-event-target` attribute can be used.
  *
+ * Usage:
  * ```
  * import React from 'react';
  * import Item from '@enact/moonstone/Item';
@@ -51,6 +52,7 @@ import hoc from '@enact/core/hoc';
  * @class VoiceControlDecorator
  * @memberof webos/speech
  * @hoc
+ * @public
  */
 const VoiceControlDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
@@ -88,4 +90,6 @@ const VoiceControlDecorator = hoc((config, Wrapped) => {
 });
 
 export default VoiceControlDecorator;
-export {VoiceControlDecorator};
+export {
+	VoiceControlDecorator
+};
