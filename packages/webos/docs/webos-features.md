@@ -31,7 +31,7 @@ with LS2Request and other useful platform APIs.
 *   `@enact/webos/deviceinfo` - returns various details about the webOS device where the application is running
 *   `@enact/webos/keyboard` - use to see if the keyboard is currently visible
 *   `@enact/webos/LS2Request` - without this, your application cannot use the myriad webOS services that are available!
-    *    [Luna Service API](./luna-service-api.md) example
+    *    [Luna Service API example](./luna-service-api.md#example)
 *   `@enact/webos/platform` - returns various details about the webOS platform where the application is running (SmartTV, Open webOS, legacy devices (Palm, HP), etc.)
 *   `@enact/webos/pmloglib` - system-level logging for your application
 *   `@enact/webos/speech` - working with webOS speech APIs
