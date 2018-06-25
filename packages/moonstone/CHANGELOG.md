@@ -6,12 +6,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualList`, and `moonstone/VirtualList.VirtualGridList` to scroll when receiving `webOSVoice` event
-- `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` overscroll effect when the edges are reached
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` support for scrolling via voice control on webOS
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` overscroll effect when the edges are reached
 
 ### Changed
 
-- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualList`, and `moonstone/VirtualList.VirtualGridList` scrollbar button to move a previous or next page when pressing a page up or down key instead of releasing it
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` scrollbar button to move a previous or next page when pressing a page up or down key instead of releasing it
 
 ### Fixed
 
