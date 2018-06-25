@@ -10,7 +10,9 @@ import {platform} from '../platform';
 const device = {};
 
 /**
- * @callback webOS~deviceCallback
+ * Callback signature for `deviceinfo`
+ *
+ * @callback deviceCallback
  * @param {Object} info - JSON object containing the device information details
  * @param {String} info.modelName Model name of device in UTF-8 format
  * @param {String} info.modelNameAscii Model name of device in ASCII format
@@ -22,13 +24,14 @@ const device = {};
  * @param {Number} info.screenWidth Width in pixels
  * @param {Number} info.screenHeight Height in pixels
  * @param {Boolean} [info.uhd] Whether supports Ultra HD resolution.
+ * @memberof webos/deviceinfo
  */
 
 /**
  * Gets the device-specific information regarding model, OS version, specifications, etc.
  *
  * @function
- * @param {webOS~deviceCallback} callback - The function to call once the information is collected
+ * @param {webos/deviceinfo~deviceCallback} callback - Called once the information is collected
  * @returns {undefined}
  * @memberof webos/deviceinfo
  * @public

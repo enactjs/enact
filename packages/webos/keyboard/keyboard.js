@@ -9,7 +9,7 @@
  * Checks if the virtual keyboard is visible (only works on SmartTV platform).
  *
  * @function
- * @returns {Boolean} Whether or not the virtual keyboard is displaying
+ * @returns {Boolean} `true` if the virtual keyboard is displaying
  * @memberof webos/keyboard
  * @public
  */

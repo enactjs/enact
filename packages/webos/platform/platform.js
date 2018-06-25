@@ -1,5 +1,5 @@
 /**
- * A collection of a function and an object to get basic device type information for webOS platform.
+ * Utilities for webOS platform detection.
  *
  * @module webos/platform
  * @export detect
@@ -70,11 +70,11 @@ function detect () {
  *
  * @readonly
  * @type {Object}
- * @property {Boolean} tv True for LG webOS SmartTV
- * @property {Boolean} watch True for LG webOS SmartWatch
- * @property {Boolean} open True for Open webOS
- * @property {Boolean} legacy True for legacy webOS (Palm and HP hardware)
- * @property {Boolean} unknown True for any unknown system
+ * @property {Boolean} tv `true` for LG webOS SmartTV
+ * @property {Boolean} watch `true` for LG webOS SmartWatch
+ * @property {Boolean} open `true` for Open webOS
+ * @property {Boolean} legacy `true` for legacy webOS (Palm and HP hardware)
+ * @property {Boolean} unknown `true` for any unknown system
  * @memberof webos/platform
  * @public
  */
