@@ -70,10 +70,10 @@ const EditableIntegerPickerBase = kind({
 		'aria-valuetext': PropTypes.string,
 
 		/**
-		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{moonstone/Icon.Icon} are
+		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		decrementIcon: PropTypes.string,
@@ -96,10 +96,10 @@ const EditableIntegerPickerBase = kind({
 		editMode : PropTypes.bool,
 
 		/**
-		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{moonstone/Icon.Icon} are
+		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		incrementIcon: PropTypes.string,

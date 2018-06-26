@@ -2,11 +2,11 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
-## [unreleased]
+## [2.0.0-beta.8] - 2018-06-25
 
 ### Changed
 
-- Knobs to incorporate several useful features such as labeling the default value in the selection knob.
+- Sampler knobs to incorporate several useful features such as labeling the default value in the selection knob.
 
 ## [2.0.0-beta.7] - 2018-06-11
 

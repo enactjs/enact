@@ -168,9 +168,9 @@ const PickerBase = class extends React.Component {
 		decrementAriaLabel: PropTypes.string,
 
 		/**
-		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
+		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{Icon#orientation} is changed.
+		 * the [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
 		 *
 		 * @type {String}
 		 * @public
@@ -204,9 +204,9 @@ const PickerBase = class extends React.Component {
 		incrementAriaLabel: PropTypes.string,
 
 		/**
-		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
+		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{Icon#orientation} is changed.
+		 * the [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
 		 *
 		 * @type {String}
 		 * @public

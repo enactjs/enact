@@ -37,9 +37,9 @@ const ToggleItemBase = kind({
 
 	propTypes: /** @lends moonstone/ToggleItem.ToggleItemBase.prototype */ {
 		/**
-		 * The string to be displayed as the main content of the toggle item.
+		 * The content to be displayed as the main content of the toggle item.
 		 *
-		 * @type {String}
+		 * @type {Node}
 		 * @required
 		 * @public
 		 */
@@ -50,7 +50,7 @@ const ToggleItemBase = kind({
 		 * and must therefore respond to it in some way. It is recommended to use the
 		 * [ToggleIcon]{@link moonstone/ToggleIcon} for this.
 		 *
-		 * @type {Component}
+		 * @type {Component|Element}
 		 * @default null
 		 * @required
 		 * @public

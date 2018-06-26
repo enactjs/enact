@@ -66,13 +66,13 @@ const ContextualPopupBase = kind({
 		/**
 		 * The element(s) to be displayed in the body of the popup.
 		 *
-		 * @type {Node}
+		 * @type {Element|Element[]}
 		 * @required
 		 * @public
 		 */
 		children: PropTypes.oneOfType([
-			PropTypes.arrayOf(PropTypes.element),
-			PropTypes.element
+			PropTypes.element,
+			PropTypes.arrayOf(PropTypes.element)
 		]).isRequired,
 
 		/**

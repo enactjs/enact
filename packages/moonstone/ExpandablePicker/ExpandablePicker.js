@@ -71,9 +71,9 @@ const ExpandablePickerBase = kind({
 		decrementAriaLabel: PropTypes.string,
 
 		/**
-		 * A custom icon for the decrementer. All strings supported by [Icon]{Icon} are
+		 * A custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{Icon#orientation} is changed.
+		 * the [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
 		 *
 		 * @type {string}
 		 * @public
@@ -98,11 +98,11 @@ const ExpandablePickerBase = kind({
 		incrementAriaLabel: PropTypes.string,
 
 		/**
-		 * A custom icon for the incrementer. All strings supported by [Icon]{Icon} are
+		 * A custom icon for the incrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{Icon#orientation} is changed.
+		 * the [orientation]{@link moostone/Icon.Icon#orientation} is changed.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		incrementIcon: PropTypes.string,

@@ -48,7 +48,7 @@ const ImageBase = kind({
 		 * String value or Object of values used to determine which image will appear on
 		 * a specific screenSize.
 		 *
-		 * @type {String | Object}
+		 * @type {String|Object}
 		 * @required
 		 * @public
 		 */
