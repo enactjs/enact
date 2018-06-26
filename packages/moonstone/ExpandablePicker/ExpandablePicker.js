@@ -100,7 +100,7 @@ const ExpandablePickerBase = kind({
 		/**
 		 * A custom icon for the incrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{@link moostone/Icon#orientation} is changed.
+		 * the [orientation]{@link moostone/Icon.Icon#orientation} is changed.
 		 *
 		 * @type {String}
 		 * @public
