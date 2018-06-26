@@ -5,7 +5,6 @@
  * @module spotlight/SpotlightRootDecorator
  */
 
-import classnames from 'classnames';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
