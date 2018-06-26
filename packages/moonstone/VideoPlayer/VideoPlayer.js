@@ -52,7 +52,6 @@ const SpottableDiv = Touchable(Spottable('div'));
 const RootContainer = SpotlightContainerDecorator('div');
 const ControlsContainer = SpotlightContainerDecorator(
 	{
-		leaveFor: {down:'', up:'', left:'', right:''},
 		enterTo: '',
 		straightOnly: true
 	},
@@ -135,8 +134,6 @@ const AnnounceState = {
  */
 const VideoPlayerBase = class extends React.Component {
 	static displayName = 'VideoPlayerBase'
-
-	static contextTypes = contextTypes
 
 	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */ {
 		/**
@@ -230,7 +227,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * * `spotlightDisabled` - `true` when spotlight is disabled for the media controls
 		 * * `visible` - `true` when the media controls should be displayed
 		 *
-		 * @type {Component|Element}
+		 * @type {Function|Element}
 		 * @default `moonstone/VideoPlayer.MediaControls`
 		 * @public
 		 */
@@ -507,7 +504,7 @@ const VideoPlayerBase = class extends React.Component {
 		/**
 		 * Set a title for the video being played.
 		 *
-		 * @type {String|Node}
+		 * @type {Node}
 		 * @public
 		 */
 		title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
@@ -551,12 +548,14 @@ const VideoPlayerBase = class extends React.Component {
 		 * The [`source`]{@link moonstone/VideoPlayer.VideoPlayerBase.source} property is passed to the video
 		 * component as a child node.
 		 *
-		 * @type {Component}
+		 * @type {Component|Element}
 		 * @default {@link ui/Media.Media}
 		 * @public
 		 */
 		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element])
 	}
+
+	static contextTypes = contextTypes
 
 	static defaultProps = {
 		autoCloseTimeout: 5000,
@@ -612,7 +611,7 @@ const VideoPlayerBase = class extends React.Component {
 			miniFeedbackVisible: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
-			sourceUnavailable: false,
+			sourceUnavailable: true,
 			titleVisible: true
 		};
 
@@ -879,12 +878,12 @@ const VideoPlayerBase = class extends React.Component {
 	doAutoClose = () => {
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedTitleHide();
-		this.setState({
+		this.setState(({mediaSliderVisible, miniFeedbackVisible}) => ({
 			feedbackVisible: false,
 			mediaControlsVisible: false,
-			mediaSliderVisible: this.state.mediaSliderVisible && this.state.miniFeedbackVisible,
+			mediaSliderVisible: mediaSliderVisible && miniFeedbackVisible,
 			infoVisible: false
-		});
+		}));
 		this.markAnnounceRead();
 	}
 
@@ -926,10 +925,10 @@ const VideoPlayerBase = class extends React.Component {
 			const shouldShowSlider = this.pulsedPlaybackState !== null || calcNumberValueOfPlaybackRate(this.playbackRate) !== 1;
 
 			if (this.showMiniFeedback && (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider)) {
-				this.setState({
+				this.setState(({loading, duration, error}) => ({
 					mediaSliderVisible: shouldShowSlider,
-					miniFeedbackVisible: !(this.state.loading || !this.state.duration || this.state.error)
-				});
+					miniFeedbackVisible: !(loading || !duration || error)
+				}));
 			}
 		}
 	}
@@ -991,6 +990,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState({
 			announce: AnnounceState.READY,
 			currentTime: 0,
+			sourceUnavailable: true,
 			proportionPlayed: 0,
 			proportionLoaded: 0
 		});
@@ -1038,7 +1038,6 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleGlobalKeyDown = this.handle(
-		this.activityDetected,
 		forKey('down'),
 		() => (
 			!this.state.mediaControlsVisible &&
@@ -1068,7 +1067,8 @@ const VideoPlayerBase = class extends React.Component {
 			proportionLoaded: el.proportionLoaded,
 			proportionPlayed: el.proportionPlayed || 0,
 			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime,
-			sourceUnavailable: !el.duration || el.error
+			// note: `el.loading && this.state.sourceUnavailable == false` is equivalent to `oncanplaythrough`
+			sourceUnavailable: el.loading && this.state.sourceUnavailable || el.error
 		};
 
 		// If there's an error, we're obviously not loading, no matter what the readyState is.
@@ -1138,6 +1138,10 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	play = () => {
+		if (this.state.sourceUnavailable) {
+			return;
+		}
+
 		this.speedIndex = 0;
 		this.setPlaybackRate(1);
 		this.send('play');
@@ -1154,6 +1158,10 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	pause = () => {
+		if (this.state.sourceUnavailable) {
+			return;
+		}
+
 		this.speedIndex = 0;
 		this.setPlaybackRate(1);
 		this.send('pause');
@@ -1171,7 +1179,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	seek = (timeIndex) => {
-		if (!this.props.seekDisabled && !isNaN(this.video.duration)) {
+		if (!this.props.seekDisabled && !isNaN(this.video.duration) && !this.state.sourceUnavailable) {
 			this.video.currentTime = timeIndex;
 		} else {
 			forward('onSeekFailed', {}, this.props);
@@ -1188,6 +1196,10 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	jump = (distance) => {
+		if (this.state.sourceUnavailable) {
+			return;
+		}
+
 		this.pulsedPlaybackRate = toUpperCase(new DurationFmt({length: 'long'}).format({second: this.props.jumpBy}));
 		this.pulsedPlaybackState = distance > 0 ? 'jumpForward' : 'jumpBackward';
 		this.showFeedback();
@@ -1204,6 +1216,10 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	fastForward = () => {
+		if (this.state.sourceUnavailable) {
+			return;
+		}
+
 		let shouldResumePlayback = false;
 
 		switch (this.prevCommand) {
@@ -1257,6 +1273,10 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	rewind = () => {
+		if (this.state.sourceUnavailable) {
+			return;
+		}
+
 		const rateForSlowRewind = this.props.playbackRateHash['slowRewind'];
 		let shouldResumePlayback = false,
 			command = 'rewind';
@@ -1486,7 +1506,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * left components, right components, media controls or more controls (depending on which is
 	 * available)
 	 *
-	 * @return {Node|false} The focused control or `false` if nothing is found.
+	 * @returns {Node|false} The focused control or `false` if nothing is found.
 	 * @private
 	 */
 	focusDefaultMediaControl = () => {
@@ -1565,12 +1585,12 @@ const VideoPlayerBase = class extends React.Component {
 	handleSliderBlur = () => {
 		this.sliderScrubbing = false;
 		this.startDelayedFeedbackHide();
-		this.setState({
+		this.setState(({paused, currentTime}) => ({
 			// If paused is false that means it is playing. We only want to hide on playing.
-			feedbackIconVisible: this.state.paused,
+			feedbackIconVisible: paused,
 			feedbackVisible: false,
-			sliderTooltipTime: this.state.currentTime
-		});
+			sliderTooltipTime: currentTime
+		}));
 	}
 
 	slider5WayPressJob = new Job(() => {
@@ -1615,11 +1635,11 @@ const VideoPlayerBase = class extends React.Component {
 			this.stopDelayedTitleHide();
 		}
 
-		this.setState({
+		this.setState(({announce}) => ({
 			infoVisible: showMoreComponents,
 			titleVisible: true,
-			announce: this.state.announce < AnnounceState.INFO ? AnnounceState.INFO : AnnounceState.DONE
-		});
+			announce: announce < AnnounceState.INFO ? AnnounceState.INFO : AnnounceState.DONE
+		}));
 	}
 
 	handleMediaControlsClose = (ev) => {

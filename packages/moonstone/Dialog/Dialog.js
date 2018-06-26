@@ -5,7 +5,6 @@
  * @module moonstone/Dialog
  */
 
-import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -35,12 +34,12 @@ const DialogBase = kind({
 		/**
 		 * Buttons, typically to close or take action in the dialog.
 		 *
-		 * @type {Node}
+		 * @type {Element|Element[]}
 		 * @public
 		 */
 		buttons: PropTypes.oneOfType([
-			PropTypes.arrayOf(PropTypes.element),
-			PropTypes.element
+			PropTypes.element,
+			PropTypes.arrayOf(PropTypes.element)
 		]),
 
 		/**
@@ -71,7 +70,7 @@ const DialogBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * When `true`, a divider line will not separate the title from the dialog body
+		 * When `true`, a divider line will not separate the title from the dialog body.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -98,23 +97,13 @@ const DialogBase = kind({
 		onHide: PropTypes.func,
 
 		/**
-		 * When `true`, the control is in the expanded state with the contents visible
+		 * When `true`, the control is in the expanded state with the contents visible.
 		 *
 		 * @type {Boolean}
 		 * @default false
 		 * @public
 		 */
 		open: PropTypes.bool,
-
-		/**
-		 * When `true`, the case of `title` will be preserved
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @deprecated replaced by `casing`
-		 * @public
-		 */
-		preserveCase: PropTypes.bool,
 
 		/**
 		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.
@@ -135,15 +124,6 @@ const DialogBase = kind({
 		showCloseButton: PropTypes.bool,
 
 		/**
-		 * When `true`, a divider line separates the title from the dialog body
-		 *
-		 * @type {Boolean}
-		 * @public
-		 * @deprecated
-		 */
-		showDivider: PropTypes.bool,
-
-		/**
 		 * Title of the header
 		 *
 		 * @type {String}
@@ -152,7 +132,7 @@ const DialogBase = kind({
 		title: PropTypes.string,
 
 		/**
-		 * Text displayed below the title
+		 * Text displayed below the title.
 		 *
 		 * @type {String}
 		 * @public
@@ -164,7 +144,6 @@ const DialogBase = kind({
 		noAnimation: false,
 		noDivider: false,
 		open: false,
-		preserveCase: false,
 		showCloseButton: false
 	},
 
@@ -174,24 +153,17 @@ const DialogBase = kind({
 	},
 
 	computed: {
-		className: ({noDivider, showDivider, styler}) => {
-			if (showDivider) {
-				deprecate({name: 'showDivider', since: '1.8.0', message: 'Use `noDivider` instead', until: '2.0.0'});
-			}
-
-			return styler.append({showDivider: !noDivider});
-		}
+		className: ({noDivider, styler}) => styler.append({showDivider: !noDivider})
 	},
 
-	render: ({buttons, casing, children, preserveCase, title, titleBelow, ...rest}) => {
+	render: ({buttons, casing, children, title, titleBelow, ...rest}) => {
 		delete rest.noDivider;
-		delete rest.showDivider;
 
 		return (
 			<Popup {...rest}>
 				<div className={css.titleWrapper}>
 					<div className={css.titleBlock}>
-						<MarqueeH1 casing={casing} preserveCase={preserveCase} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
+						<MarqueeH1 casing={casing} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
 							{title}
 						</MarqueeH1>
 						<h2 className={css.titleBelow}>

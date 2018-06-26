@@ -4,7 +4,7 @@
 
 `@enact/i18n` provides a decorator that can be used to wrap a root component in a React (or Enact) application.
 This decorator provides a context to child components that can be used to determine locale text directionality
-and to update the current locale. Additionally, it provides a locale-aware `Uppercase` Higher Order Component (HOC).
+and to update the current locale. Additionally, it provides a locale-aware `Uppercase` higher-order component (HOC).
 
 ## Usage
 

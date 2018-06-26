@@ -16,7 +16,6 @@ import {MarqueeController} from '../Marquee';
 import {validateRange} from '../internal/validators';
 
 import PickerCore, {PickerItem} from '../internal/Picker';
-import SpottablePicker from './SpottablePicker';
 
 /**
  * The base component for {@link moonstone/Picker.Picker}. This version is not spottable.
@@ -50,9 +49,9 @@ const PickerBase = kind({
 		'aria-valuetext': PropTypes.string,
 
 		/**
-		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
+		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{Icon#orientation} is changed.
+		 * the [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
 		 *
 		 * @type {String}
 		 * @public
@@ -69,9 +68,9 @@ const PickerBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
+		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{Icon#orientation} is changed.
+		 * the [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
 		 *
 		 * @type {String}
 		 * @public
@@ -181,6 +180,7 @@ const PickerBase = kind({
 				</PickerItem>
 			);
 		}),
+		disabled: ({children, disabled}) => React.Children.count(children) > 1 ? disabled : true,
 		value: ({value, children}) => {
 			const max = children && children.length ? children.length - 1 : 0;
 			if (__DEV__) {
@@ -219,9 +219,7 @@ const Picker = Pure(
 	Changeable(
 		MarqueeController(
 			{marqueeOnFocus: true},
-			SpottablePicker(
-				PickerBase
-			)
+			PickerBase
 		)
 	)
 );

@@ -31,8 +31,6 @@ const forwardOpen = forwardWithType('onOpen');
 class FloatingLayerBase extends React.Component {
 	static displayName = 'FloatingLayer'
 
-	static contextTypes = contextTypes
-
 	static propTypes = /** @lends ui/FloatingLayer.FloatingLayerBase.prototype */ {
 		/**
 		 * CSS classes for FloatingLayer.
@@ -106,6 +104,8 @@ class FloatingLayerBase extends React.Component {
 		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none'])
 	}
 
+	static contextTypes = contextTypes
+
 	static defaultProps = {
 		floatLayerClassName: 'enact-fit enact-clip enact-untouchable',
 		floatLayerId: 'floatLayer',
@@ -124,7 +124,6 @@ class FloatingLayerBase extends React.Component {
 
 	componentDidMount () {
 		if (this.props.open) {
-			forwardOpen(null, this.props);
 			this.renderNode();
 		}
 
@@ -139,12 +138,12 @@ class FloatingLayerBase extends React.Component {
 		}
 	}
 
-	componentDidUpdate (prevProps) {
+	componentDidUpdate (prevProps, prevState) {
 		const {open, scrimType} = this.props;
 
 		if (prevProps.open && !open) {
 			forwardClose(null, this.props);
-		} else if (!prevProps.open && open) {
+		} else if (!prevProps.open && open || (open && !prevState.nodeRendered && this.state.nodeRendered)) {
 			forwardOpen(null, this.props);
 		}
 

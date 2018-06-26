@@ -13,7 +13,6 @@ import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 
 import {Picker, PickerItem} from '../internal/Picker';
-import SpottablePicker from '../Picker/SpottablePicker';
 import {validateRange} from '../internal/validators';
 
 const digits = (num) => {
@@ -92,9 +91,9 @@ const RangePickerBase = kind({
 		className: PropTypes.string,
 
 		/**
-		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
+		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{Icon#orientation} is changed.
+		 * the [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
 		 *
 		 * @type {string}
 		 * @public
@@ -111,11 +110,11 @@ const RangePickerBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
+		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{Icon#orientation} is changed.
+		 * the [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		incrementIcon: PropTypes.string,
@@ -207,6 +206,7 @@ const RangePickerBase = kind({
 	},
 
 	computed: {
+		disabled: ({disabled, max, min}) => min >= max ? true : disabled,
 		label: ({max, min, padded, value}) => {
 			if (padded) {
 				const maxDigits = digits(Math.max(Math.abs(min), Math.abs(max)));
@@ -254,9 +254,7 @@ const RangePickerBase = kind({
  */
 const RangePicker = Pure(
 	Changeable(
-		SpottablePicker(
-			RangePickerBase
-		)
+		RangePickerBase
 	)
 );
 

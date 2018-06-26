@@ -8,14 +8,17 @@ import {text, select} from '@storybook/addon-knobs';
 
 const
 	prop = {
-		tallText: {'नरेंद्र मोदी': 'नरेंद्र मोदी', 'ฟิ้  ไั  ஒ  து': 'ฟิ้  ไั  ஒ  து', 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ': 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ'}
+		tallText: {'नरेंद्र मोदी': 'नरेंद्र मोदी', 'ฟิ้  ไั  ஒ  து': 'ฟิ้  ไั  ஒ  து', 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ': 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ'},
+		marqueeOn: ['', 'hover', 'render']
 	};
 
 storiesOf('Divider', module)
 	.add(
 		'with long text',
 		() => (
-			<Divider>
+			<Divider
+				marqueeOn={select('marqueeOn', prop.marqueeOn)}
+			>
 				{text('children', 'This long text is for the marquee test in divider component. This long text is for the marquee test in divider component. This long text is for the marquee test in divider component.')}
 			</Divider>
 		)

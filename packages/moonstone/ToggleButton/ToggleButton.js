@@ -43,7 +43,7 @@ const ToggleButtonBase = kind({
 		 * If `toggleOffLabel` and/or `toggleOnLabel` are provided, they will
 		 * be used for the respective states.
 		 *
-		 * @type {node}
+		 * @type {Node}
 		 * @public
 		 */
 		children: PropTypes.node,
@@ -151,7 +151,7 @@ const ToggleButtonBase = kind({
 		delete rest.toggleOnLabel;
 
 		return (
-			<Button data-webos-voice-intent="SelectToggleItem" {...rest} aria-pressed={selected} selected={selected} />
+			<Button data-webos-voice-intent="SetToggleItem" {...rest} aria-pressed={selected} selected={selected} />
 		);
 	}
 });

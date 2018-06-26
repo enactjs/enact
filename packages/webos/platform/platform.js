@@ -1,9 +1,9 @@
 /**
- * Exports the {@link webos/platform.platform} object that contains basic device
- * type information for webOS platforms.  For detection of non-webOS platforms,
- * use the {@link core/platform} module.
+ * Utilities for webOS platform detection.
  *
  * @module webos/platform
+ * @export detect
+ * @export platform
  */
 
 function is (type) {
@@ -13,16 +13,13 @@ function is (type) {
 let _platform;
 
 /**
- * {@link webos/platform.detect} returns the {@link webos/platform.platform} object.
+ * Returns the {@link webos/platform.platform} object.
  *
- * @type {Function}
- * @returns {Object} the {@link webos/platform.platform} object
- *
- * @method detect
+ * @function
+ * @returns {Object} The {@link webos/platform.platform} object
  * @memberof webos/platform
  * @public
  */
-
 function detect () {
 	if (_platform) {
 		// if we've already determined the platform, we'll use that determination
@@ -69,21 +66,20 @@ function detect () {
 
 
 /**
- * {@link webos/platform.platform} provides identification of webOS variants.
+ * Provides identification of webOS variants.
  *
  * @readonly
- * @type {object}
- * @property {?boolean} tv - Set true for LG webOS SmartTV
- * @property {?boolean} watch - Set true for LG webOS SmartWatch
- * @property {?boolean} open - Set true for Open webOS
- * @property {?boolean} legacy - Set true for legacy webOS (Palm and HP hardware)
- * @property {?boolean} unknown - Set true for any unknown system
- *
+ * @type {Object}
+ * @property {Boolean} tv `true` for LG webOS SmartTV
+ * @property {Boolean} watch `true` for LG webOS SmartWatch
+ * @property {Boolean} open `true` for Open webOS
+ * @property {Boolean} legacy `true` for legacy webOS (Palm and HP hardware)
+ * @property {Boolean} unknown `true` for any unknown system
  * @memberof webos/platform
  * @public
  */
-
 const platform = {};
+
 [
 	'tv',
 	'watch',
@@ -101,4 +97,7 @@ const platform = {};
 });
 
 export default platform;
-export {detect, platform};
+export {
+	detect,
+	platform
+};

@@ -2,23 +2,21 @@
 title: i18n (Internationalization)
 ---
 
-* [Overview](#1)
-* [Using I18nDecorator](#2)
-* [Locale-Specific CSS](#3)
-* [Translating Strings using $L()](#4)
-* [Updating Locale](#4)
-* [iLib](#6)
-* [Sample i18n App](#7)
+* [Overview](#overview)
+* [Using I18nDecorator](#using-i18ndecorator)
+* [Locale-Specific CSS](#locale-specific-css)
+* [Translating Strings using $L()](#translating-strings-using-l)
+* [Updating Locale](#updating-locale)
+* [iLib](#ilib)
+* [Sample i18n App](#sample)
 
-<a name="1"></a>
 ## Overview
 
 This guide details how to use some of i18n library's features. For an overview of the modules supplied with the library please see [I18nDecorator](../../modules/i18n/I18nDecorator/) and [Uppercase](../../modules/i18n/Uppercase/). This library incorporates the [iLib](https://github.com/iLib-js/iLib) internationalization library.
 
-<a name="2"></a>
 ## Using I18nDecorator
 
-`I18nDecorator` is a Higher-order Component (HOC) that provides easy access to locale information. Applications wishing to receive locale information can wrap the root component with the HOC. It is not necessary to use `I18nDecorator` directly for applications using `MoonstoneDecorator`.
+`I18nDecorator` is a higher-order component (HOC) that provides easy access to locale information. Applications wishing to receive locale information can wrap the root component with the HOC. It is not necessary to use `I18nDecorator` directly for applications using `MoonstoneDecorator`.
 
 The HOC works by passing locale information to the app through `context` and CSS classes. It contains two properties inside its `context`:
 
@@ -58,7 +56,6 @@ const SomeComponent = kind({
 });
 ```
 
-<a name="3"></a>
 ## Locale-Specific CSS
 
 When the `I18nDecorator` wraps your app, it automatically applies some CSS
@@ -101,7 +98,6 @@ used to turn on right-to-left orientation for a widget:
 
 > NOTE: We're using LESS and CSS modules, which are supported by the enact command line tool
 
-<a name="4"></a>
 ## Translating Strings using $L()
 
 `$L()` is a convenience function wrapping `ilib/ResBundle` that is exported by the
@@ -137,7 +133,7 @@ The `strings.json` files should contain the translations in JSON format, i.e.:
 		"source string1": "translated string1",
 		"source string2": "translated string2",
 		...
-	} 
+	}
 ```
 
 Many localization companies are able to provide translations in this format.
@@ -146,18 +142,14 @@ The string returned from a call to `$L()` will be the translated string for the
 current UI locale. If a different locale or a bundle with a different name is
 needed, use `ResBundle` directly instead of `$L()`.
 
-<a name="5"></a>
 ## Updating Locale
 
 If you wish to learn how to programmatically change the locale, please see [Updating Locale](./updating-locale.md).
 
-<a name="6"></a>
 ## iLib
 
 iLib provides the locale-specific features of i18n. If you wish to learn about some of the other things it can do, like string translation, string/number formatting, etc., please see [iLib Docs](./ilib.md).
 
-<a name="7"></a>
 ## Sample
 
 A sample i18n app is available [here](https://github.com/enactjs/samples/tree/master/pattern-locale-switching).
-

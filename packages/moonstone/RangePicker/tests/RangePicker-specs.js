@@ -1,6 +1,6 @@
 import React from 'react';
-import {mount} from 'enzyme';
-import RangePicker from '../RangePicker';
+import {mount, shallow} from 'enzyme';
+import {RangePicker, RangePickerBase} from '../RangePicker';
 
 const tap = (node) => {
 	node.simulate('mousedown');
@@ -67,5 +67,14 @@ describe('RangePicker Specs', () => {
 		const actual = picker.find('PickerItem').text();
 
 		expect(actual).to.equal(expected);
+	});
+
+	it('should be disabled when limited to a single value', function () {
+		const picker = shallow(
+			<RangePickerBase min={0} max={0} value={0} />
+		);
+
+		const actual = picker.find('SpottablePicker').last().prop('disabled');
+		expect(actual).to.be.true();
 	});
 });

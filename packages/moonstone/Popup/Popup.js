@@ -365,13 +365,6 @@ class Popup extends React.Component {
 		checkScrimNone(this.props);
 	}
 
-	componentDidMount () {
-		if (this.props.open) {
-			on('keydown', this.handleKeyDown);
-			this.spotPopupContent();
-		}
-	}
-
 	componentWillReceiveProps (nextProps) {
 		if (!this.props.open && nextProps.open) {
 			this.setState({
@@ -380,10 +373,12 @@ class Popup extends React.Component {
 				activator: Spotlight.getCurrent()
 			});
 		} else if (this.props.open && !nextProps.open) {
+			const activator = this.state.activator;
+
 			this.setState({
 				popupOpen: nextProps.noAnimation,
 				floatLayerOpen: !nextProps.noAnimation,
-				activator: nextProps.noAnimation ? null : this.state.activator
+				activator: nextProps.noAnimation ? null : activator
 			});
 		}
 		checkScrimNone(nextProps);
@@ -395,11 +390,9 @@ class Popup extends React.Component {
 				this.paused.pause();
 			} else if (this.props.open) {
 				forwardShow({}, this.props);
-				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
 			} else if (prevProps.open) {
 				forwardHide({}, this.props);
-				off('keydown', this.handleKeyDown);
 				this.spotActivator(prevState.activator);
 			}
 		}
@@ -417,6 +410,8 @@ class Popup extends React.Component {
 			this.setState({
 				popupOpen: true
 			});
+		} else if (this.state.popupOpen && this.props.open) {
+			this.spotPopupContent();
 		}
 	}
 
@@ -457,7 +452,6 @@ class Popup extends React.Component {
 			this.paused.resume();
 
 			if (!this.props.open) {
-				off('keydown', this.handleKeyDown);
 				this.spotActivator(this.state.activator);
 			}
 		}
@@ -470,7 +464,6 @@ class Popup extends React.Component {
 			this.paused.resume();
 
 			if (this.props.open) {
-				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
 			}
 		}
@@ -479,6 +472,8 @@ class Popup extends React.Component {
 	spotActivator = (activator) => {
 		const current = Spotlight.getCurrent();
 		const containerNode = getContainerNode(this.state.containerId);
+
+		off('keydown', this.handleKeyDown);
 
 		// if there is no currently-spotted control or it is wrapped by the popup's container, we
 		// know it's safe to change focus
@@ -492,6 +487,9 @@ class Popup extends React.Component {
 
 	spotPopupContent = () => {
 		const {containerId} = this.state;
+
+		on('keydown', this.handleKeyDown);
+
 		if (!Spotlight.focus(containerId)) {
 			const current = Spotlight.getCurrent();
 
@@ -519,13 +517,13 @@ class Popup extends React.Component {
 			>
 				<SkinnedPopupBase
 					{...rest}
+					data-webos-voice-exclusive
 					onCloseButtonClick={onClose}
 					onHide={this.handlePopupHide}
-					spotlightId={this.state.containerId}
 					onShow={this.handlePopupShow}
 					open={this.state.popupOpen}
+					spotlightId={this.state.containerId}
 					spotlightRestrict="self-only"
-					data-webos-voice-exclusive
 				/>
 			</FloatingLayer>
 		);
