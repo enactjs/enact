@@ -293,6 +293,11 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/Panels.ActivityPanels` to correctly lay out the existing panel after adding additional panels
 - `spotlight` to partition and prioritize next spottable elements for more natural 5-way behavior
 - `ui/Scroller` horizontal scrolling in RTL locales
+## Unreleased
+
+### Changed
+
+- `moonstone/moonstoneDecorator` to include functionality from AccessibilityDecorator and SpotlightRootDecorator to reduce startup time
 
 ## [2.0.0-alpha.6] - 2018-03-22
 
