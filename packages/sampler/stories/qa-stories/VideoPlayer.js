@@ -24,29 +24,29 @@ class VideoSourceSwap extends React.Component {
 	}
 
 	nextVideo = () => {
-		this.setState({
-			cursor: this.state.cursor === this.lastIndex ? 0 : this.state.cursor + 1,
-			preloadCursor: this.state.preloadCursor === this.lastIndex ? 0 : this.state.preloadCursor + 1
-		});
+		this.setState(({cursor, preloadCursor}) => ({
+			cursor: cursor === this.lastIndex ? 0 : cursor + 1,
+			preloadCursor: preloadCursor === this.lastIndex ? 0 : preloadCursor + 1
+		}));
 	}
 
 	differentVideo = () => {
-		this.setState({
-			cursor: (this.state.cursor + 2) % this.state.playlist.length,
-			preloadCursor: (this.state.preloadCursor + 2) % this.state.playlist.length
-		});
+		this.setState(({cursor, playlist, preloadCursor}) => ({
+			cursor: (cursor + 2) % playlist.length,
+			preloadCursor: (preloadCursor + 2) % playlist.length
+		}));
 	}
 
 	nextVideoKeepPreload = () => {
-		this.setState({
-			cursor: this.state.cursor === this.lastIndex ? 0 : this.state.cursor + 1
-		});
+		this.setState(({cursor}) => ({
+			cursor: cursor === this.lastIndex ? 0 : cursor + 1
+		}));
 	}
 
 	nextPreloadVideoKeepVideo = () => {
-		this.setState({
-			preloadCursor: this.state.preloadCursor ===  this.lastIndex ? 0 : this.state.preloadCursor + 1
-		});
+		this.setState(({preloadCursor}) => ({
+			preloadCursor: preloadCursor ===  this.lastIndex ? 0 : preloadCursor + 1
+		}));
 	}
 
 	resetSources = () => {

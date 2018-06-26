@@ -6,6 +6,31 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
+- `moonstone/Button` and `moonstone/IconButton` built-in support for tooltips
+- `moonstone/TooltipDecorator` config property `tooltipDestinationProp` in order to prevent directing tooltip into a property
+
+## [2.0.0-beta.8] - 2018-06-25
+
+### Added
+
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` support for scrolling via voice control on webOS
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` overscroll effect when the edges are reached
+
+### Changed
+
+- `moonstone/Divider` property `marqueeOn` default value to `render`
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` scrollbar button to move a previous or next page when pressing a page up or down key instead of releasing it
+
+### Fixed
+
+- `moonstone/VideoPlayer` to prevent updating state when the source is changed to the preload source, but the current preload source is the same
+- `moonstone/MediaOverlay` to marquee correctly
+- `moonstone/MediaOverlay` to match UX guidelines
+
+## [2.0.0-beta.7] - 2018-06-11
+
+### Removed
+
 - `moonstone/Dialog` properties `preserveCase` and `showDivider`, replaced by `casing` and `noDivider` respectively
 - `moonstone/Divider` property `preserveCase`, replaced by `casing`
 - `moonstone/ExpandableInput` property `onInputChange`, replaced by `onChange`
@@ -13,30 +38,28 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Panels.Header` property `preserveCase`, replaced by `casing`
 - `moonstone/Panels.Panel` property `noAutoFocus`, replaced by `autoFocus`
 - `moonstone/TooltipDecorator` property `tooltipPreserveCase`, replaced by `tooltipCasing`
-- `moonstone/TooltipDecorator` config property `tooltipDestinationProp` in order to prevent directing tooltip into a property
-
-### Fixed
-
-- `moonston/EditableIntegerPicker` to disable itself when on a range producing a single static value.
-- `moonston/Picker` to disable itself when containing only one or zero items.
-- `moonston/RangePicker` to disable itself when on a range producing a single static value.
-- `moonstone/TooltipDecorator` to hide when `onDismiss` has been invoked
-- `moonstone/VideoPlayer` to show media controls when pressing down in pointer mode
-- `moonstone/VideoPlayer.MediaControls` to handle left and right key to jump when `moonstone/VideoPlayer` is focused
-- `moonstone/Popup` to spot its content correctly when `open` by default
 
 ### Changed
 
-- `moonstone/VideoPlayer` to roam spotlight focus freely to left and right from `MediaControls`
+- `moonstone/VideoPlayer` to allow spotlight focus to move left and right from `MediaControls`
 - `moonstone/VideoPlayer` to disable bottom controls when loading until it's playable
-- `moonstone/VideoPlayer` container changes to provide a more natural 5-way focus behavior
+
+### Fixed
+
+- `moonstone/EditableIntegerPicker` to disable itself when on a range consisting of a single static value
+- `moonstone/Picker` to disable itself when containing fewer than two items
+- `moonstone/Popup` to spot its content correctly when `open` by default
+- `moonstone/RangePicker` to disable itself when on a range consisting of a single static value
+- `moonstone/TooltipDecorator` to hide when `onDismiss` has been invoked
+- `moonstone/VideoPlayer` to show media controls when pressing down in pointer mode
+- `moonstone/VideoPlayer` to provide a more natural 5-way focus behavior
+- `moonstone/VideoPlayer.MediaControls` to handle left and right key to jump when `moonstone/VideoPlayer` is focused
 
 ## [2.0.0-beta.6] - 2018-06-04
 
 ### Removed
 
 - `moonstone/IncrementSlider` prop `children` which was no longer supported for setting the tooltip (since 2.0.0-beta.1)
-- `moonstone/Button` and `moonstone/IconButton` built-in support for tooltips
 
 ### Fixed
 

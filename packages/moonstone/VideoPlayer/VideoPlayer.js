@@ -135,8 +135,6 @@ const AnnounceState = {
 const VideoPlayerBase = class extends React.Component {
 	static displayName = 'VideoPlayerBase'
 
-	static contextTypes = contextTypes
-
 	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */ {
 		/**
 		 * passed by AnnounceDecorator for accessibility
@@ -229,7 +227,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * * `spotlightDisabled` - `true` when spotlight is disabled for the media controls
 		 * * `visible` - `true` when the media controls should be displayed
 		 *
-		 * @type {Component|Element}
+		 * @type {Function|Element}
 		 * @default `moonstone/VideoPlayer.MediaControls`
 		 * @public
 		 */
@@ -506,7 +504,7 @@ const VideoPlayerBase = class extends React.Component {
 		/**
 		 * Set a title for the video being played.
 		 *
-		 * @type {String|Node}
+		 * @type {Node}
 		 * @public
 		 */
 		title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
@@ -550,12 +548,14 @@ const VideoPlayerBase = class extends React.Component {
 		 * The [`source`]{@link moonstone/VideoPlayer.VideoPlayerBase.source} property is passed to the video
 		 * component as a child node.
 		 *
-		 * @type {Component}
+		 * @type {Component|Element}
 		 * @default {@link ui/Media.Media}
 		 * @public
 		 */
 		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element])
 	}
+
+	static contextTypes = contextTypes
 
 	static defaultProps = {
 		autoCloseTimeout: 5000,
@@ -878,12 +878,12 @@ const VideoPlayerBase = class extends React.Component {
 	doAutoClose = () => {
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedTitleHide();
-		this.setState({
+		this.setState(({mediaSliderVisible, miniFeedbackVisible}) => ({
 			feedbackVisible: false,
 			mediaControlsVisible: false,
-			mediaSliderVisible: this.state.mediaSliderVisible && this.state.miniFeedbackVisible,
+			mediaSliderVisible: mediaSliderVisible && miniFeedbackVisible,
 			infoVisible: false
-		});
+		}));
 		this.markAnnounceRead();
 	}
 
@@ -925,10 +925,10 @@ const VideoPlayerBase = class extends React.Component {
 			const shouldShowSlider = this.pulsedPlaybackState !== null || calcNumberValueOfPlaybackRate(this.playbackRate) !== 1;
 
 			if (this.showMiniFeedback && (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider)) {
-				this.setState({
+				this.setState(({loading, duration, error}) => ({
 					mediaSliderVisible: shouldShowSlider,
-					miniFeedbackVisible: !(this.state.loading || !this.state.duration || this.state.error)
-				});
+					miniFeedbackVisible: !(loading || !duration || error)
+				}));
 			}
 		}
 	}
@@ -1506,7 +1506,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * left components, right components, media controls or more controls (depending on which is
 	 * available)
 	 *
-	 * @return {Node|false} The focused control or `false` if nothing is found.
+	 * @returns {Node|false} The focused control or `false` if nothing is found.
 	 * @private
 	 */
 	focusDefaultMediaControl = () => {
@@ -1585,12 +1585,12 @@ const VideoPlayerBase = class extends React.Component {
 	handleSliderBlur = () => {
 		this.sliderScrubbing = false;
 		this.startDelayedFeedbackHide();
-		this.setState({
+		this.setState(({paused, currentTime}) => ({
 			// If paused is false that means it is playing. We only want to hide on playing.
-			feedbackIconVisible: this.state.paused,
+			feedbackIconVisible: paused,
 			feedbackVisible: false,
-			sliderTooltipTime: this.state.currentTime
-		});
+			sliderTooltipTime: currentTime
+		}));
 	}
 
 	slider5WayPressJob = new Job(() => {
@@ -1635,11 +1635,11 @@ const VideoPlayerBase = class extends React.Component {
 			this.stopDelayedTitleHide();
 		}
 
-		this.setState({
+		this.setState(({announce}) => ({
 			infoVisible: showMoreComponents,
 			titleVisible: true,
-			announce: this.state.announce < AnnounceState.INFO ? AnnounceState.INFO : AnnounceState.DONE
-		});
+			announce: announce < AnnounceState.INFO ? AnnounceState.INFO : AnnounceState.DONE
+		}));
 	}
 
 	handleMediaControlsClose = (ev) => {

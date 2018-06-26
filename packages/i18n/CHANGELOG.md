@@ -8,6 +8,12 @@ The following is a curated list of changes in the Enact i18n module, newest chan
 
 - `i18n/Uppercase` to apply the designated `casing` prop format to each child instead of only the first child
 
+## [2.0.0-beta.8] - 2018-06-25
+
+No significant changes.
+
+## [2.0.0-beta.7] - 2018-06-11
+
 ### Removed
 
 - `i18n/Uppercase` property `preserveCase`, replaced by `casing`

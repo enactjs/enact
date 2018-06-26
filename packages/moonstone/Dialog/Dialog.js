@@ -34,12 +34,12 @@ const DialogBase = kind({
 		/**
 		 * Buttons, typically to close or take action in the dialog.
 		 *
-		 * @type {Node}
+		 * @type {Element|Element[]}
 		 * @public
 		 */
 		buttons: PropTypes.oneOfType([
-			PropTypes.arrayOf(PropTypes.element),
-			PropTypes.element
+			PropTypes.element,
+			PropTypes.arrayOf(PropTypes.element)
 		]),
 
 		/**
@@ -70,7 +70,7 @@ const DialogBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * When `true`, a divider line will not separate the title from the dialog body
+		 * When `true`, a divider line will not separate the title from the dialog body.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -97,7 +97,7 @@ const DialogBase = kind({
 		onHide: PropTypes.func,
 
 		/**
-		 * When `true`, the control is in the expanded state with the contents visible
+		 * When `true`, the control is in the expanded state with the contents visible.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -132,7 +132,7 @@ const DialogBase = kind({
 		title: PropTypes.string,
 
 		/**
-		 * Text displayed below the title
+		 * Text displayed below the title.
 		 *
 		 * @type {String}
 		 * @public

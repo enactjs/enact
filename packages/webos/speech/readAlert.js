@@ -50,13 +50,14 @@ const readAlertMessage = (string, clear) => () => new Promise((resolve, reject) 
 });
 
 /**
- * Read alert text when accessibility VoiceReadout enabled.
+ * Read alert text when accessibility audio guidance is enabled.
  *
  * @function
- * @param {String} string String to voice readout.
+ * @param {String} string String to voice readout
  * @param {Boolean} [clear=true] Clear option for TTS. If true, it will cut off previous reading.
  * @returns {undefined}
  * @memberof webos/speech
+ * @public
  */
 const readAlert = (string, clear = true) => {
 	if (platform.tv) {
@@ -73,4 +74,6 @@ const readAlert = (string, clear = true) => {
 };
 
 export default readAlert;
-export {readAlert};
+export {
+	readAlert
+};

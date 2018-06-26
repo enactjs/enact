@@ -245,6 +245,7 @@ const ExpandableItemBase = kind({
 	},
 
 	defaultProps: {
+		'data-webos-voice-intent': 'Select',
 		autoClose: false,
 		disabled: false,
 		lockBottom: false,

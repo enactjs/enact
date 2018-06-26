@@ -113,7 +113,7 @@ const FeedbackTooltipBase = kind({
 		 * This can be a tag name as a string, a rendered DOM node, a component, or a component
 		 * instance.
 		 *
-		 * @type {Component}
+		 * @type {Component|Element}
 		 * @public
 		 */
 		thumbnailComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.element, PropTypes.func]),

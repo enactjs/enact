@@ -52,7 +52,7 @@ const MarqueeBase = kind({
 		 *
 		 * This prop may be empty in some cases, which is OK.
 		 *
-		 * @type {Node|Node[]}
+		 * @type {Node}
 		 * @public
 		 */
 		children: PropTypes.node,

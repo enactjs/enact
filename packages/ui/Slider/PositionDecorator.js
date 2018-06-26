@@ -23,8 +23,8 @@ const PositionDecorator = hoc((config, Wrapped) => {
 
 		static defaultProps = {
 			disabled: false,
-			min: 0,
 			max: 100,
+			min: 0,
 			orientation: 'horizontal',
 			step: 1
 		}

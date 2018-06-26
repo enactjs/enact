@@ -23,8 +23,8 @@ const
  * @public
  */
 const gridListItemSizeShape = PropTypes.shape({
-	minWidth: PropTypes.number.isRequired,
-	minHeight: PropTypes.number.isRequired
+	minHeight: PropTypes.number.isRequired,
+	minWidth: PropTypes.number.isRequired
 });
 
 /**
@@ -103,13 +103,13 @@ const VirtualListBaseFactory = (type) => {
 			 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
 			 *
 			 * @type {Object}
-			 * @property {Number} clientWidth - The client width of the list.
 			 * @property {Number} clientHeight - The client height of the list.
+			 * @property {Number} clientWidth - The client width of the list.
 			 * @public
 			 */
 			clientSize: PropTypes.shape({
-				clientWidth: PropTypes.number.isRequired,
-				clientHeight: PropTypes.number.isRequired
+				clientHeight: PropTypes.number.isRequired,
+				clientWidth: PropTypes.number.isRequired
 			}),
 
 			/**
@@ -631,7 +631,6 @@ const VirtualListBaseFactory = (type) => {
 			this.cc[key] = React.cloneElement(itemElement, {
 				...componentProps,
 				className: classNames(css.listItem, itemElement.props.className),
-				['data-preventscrollonfocus']: true, // Added this attribute to prevent scroll on focus by browser
 				style: {...itemElement.props.style, ...(this.composeStyle(...rest))}
 			});
 		}
