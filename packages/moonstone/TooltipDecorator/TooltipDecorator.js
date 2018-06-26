@@ -331,7 +331,9 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.clientRef = null;
 				currentTooltip = null;
 				this.showTooltipJob.stop();
-				this.setState({showing: false});
+				if (this.state.showing) {
+					this.setState({showing: false});
+				}
 			}
 		}
 
