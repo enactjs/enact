@@ -131,9 +131,9 @@ const IncrementSliderBase = kind({
 		decrementAriaLabel: PropTypes.string,
 
 		/**
-		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon} are
+		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * [vertical]{@link moonstone/IncrementSlider#vertical} is changed.
+		 * [vertical]{@link moonstone/IncrementSlider.IncrementSlider#vertical} is changed.
 		 *
 		 * @type {String}
 		 * @public
@@ -173,9 +173,9 @@ const IncrementSliderBase = kind({
 		incrementAriaLabel: PropTypes.string,
 
 		/**
-		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{@link moonstone/Icon} are
+		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * [vertical]{@link moonstone/IncrementSlider#vertical} is changed.
+		 * [vertical]{@link moonstone/IncrementSlider.IncrementSlider#vertical} is changed.
 		 *
 		 * @type {String}
 		 * @public
