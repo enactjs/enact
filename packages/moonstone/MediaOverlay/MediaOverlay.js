@@ -63,7 +63,7 @@ const MediaOverlayBase = kind({
 		 *
 		 * NOTE: When image is displayed, media is not displayed even though it is playing.
 		 *
-		 * @type {String | Object}
+		 * @type {String|Object}
 		 * @public
 		 */
 		imageOverlay: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),

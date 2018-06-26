@@ -50,7 +50,7 @@ const SliderBase = kind({
 		 * the above props or a component instance (e.g. `<MyProgress customProp="value" />`) which
 		 * will have its props merged with the above props.
 		 *
-		 * @type {Component|Element}
+		 * @type {Function|Element}
 		 * @required
 		 * @public
 		 */
@@ -111,7 +111,7 @@ const SliderBase = kind({
 		 *
 		 * See {@link ui/ComponentOverride} for more information.
 		 *
-		 * @type {Component|Element}
+		 * @type {Function|Element}
 		 * @default {@link ui/Slider.Knob}
 		 * @public
 		 */
@@ -147,7 +147,7 @@ const SliderBase = kind({
 		/**
 		 * The orientation of the slider, either `"horizontal"` or `"vertical"`.
 		 *
-		 * @type {Boolean}
+		 * @type {String}
 		 * @default "horizontal"
 		 * @public
 		 */
@@ -200,7 +200,7 @@ const SliderBase = kind({
 		 *
 		 * See {@link ui/ComponentOverride} for more information.
 		 *
-		 * @type {Component|Element}
+		 * @type {Function|Element}
 		 * @public
 		 */
 		tooltipComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),

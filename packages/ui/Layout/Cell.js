@@ -49,7 +49,7 @@ const CellBase = kind({
 		 * The type of component to use to render as the Cell. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
 		 *
-		 * @type {String|Node}
+		 * @type {Component}
 		 * @default 'div'
 		 * @public
 		 */

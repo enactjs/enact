@@ -35,7 +35,7 @@ const SlotItemBase = kind({
 		 * This component will receive the `inline` prop and any additional unhandled props provided
 		 * to `SlotItem`. A derivative of [Item]{@link ui/Item.Item} is recommended.
 		 *
-		 * @type {Component}
+		 * @type {Function}
 		 * @required
 		 * @public
 		 */
