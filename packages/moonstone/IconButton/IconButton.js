@@ -89,28 +89,15 @@ const IconButtonBase = kind({
 	},
 
 	render: ({children, css, ...rest}) => {
-		let icon;
-
-		if (children) {
-			if (React.Children.count(children) === 1) {
-				icon = children;
-				children = null;
-			} else {
-				icon = children.shift();
-			}
-		}
-
 		return (
 			<UiIconButtonBase
 				data-webos-voice-intent="Select"
 				{...rest}
 				buttonComponent={<ButtonBase css={css} />}
 				css={css}
-				icon={icon}
+				icon={children}
 				iconComponent={Icon}
-			>
-				{children}
-			</UiIconButtonBase>
+			/>
 		);
 	}
 });

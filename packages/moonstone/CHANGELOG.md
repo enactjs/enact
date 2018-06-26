@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Panels.Header` property `preserveCase`, replaced by `casing`
 - `moonstone/Panels.Panel` property `noAutoFocus`, replaced by `autoFocus`
 - `moonstone/TooltipDecorator` property `tooltipPreserveCase`, replaced by `tooltipCasing`
+- `moonstone/TooltipDecorator` config property `tooltipDestinationProp` in order to prevent directing tooltip into a property
 
 ### Fixed
 
