@@ -283,6 +283,7 @@ const InputBase = kind({
 					disabled={disabled}
 					onChange={onChange}
 					placeholder={placeholder}
+					tabIndex={-1}
 					type={type}
 					value={value}
 				/>
