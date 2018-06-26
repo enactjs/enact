@@ -25,6 +25,7 @@ const rtlPattern = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-
  * Takes content `str` and determines whether or not it is [RTL]{@glossary RTL}.
  *
  * @function
+ * @memberof i18n/util
  * @param {String} str - A [String]{@glossary String} to check the [RTL]{@glossary RTL}-ness of.
  * @returns {Boolean} `true` if `str` should be RTL; `false` if not.
  * @public
