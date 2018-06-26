@@ -2,7 +2,7 @@
  * Moonstone styled checkbox components.
  *
  * @example
- * <Checkbox />
+ * <Checkbox onToggle={console.log} />
  *
  * @module moonstone/Checkbox
  * @exports Checkbox
@@ -19,16 +19,14 @@ import Icon from '@enact/ui/Icon';
 import css from './Checkbox.less';
 
 /**
- * A checkbox component
+ * A checkbox component, ready to use in Moonstone applications.
  *
- * May be used independently but more commonly used as part of [CheckboxItem]
- * {@link moonstone/CheckboxItem}.
+ * `Checkbox` may be used independently to represent a togglable state but is more commonly used as
+ * part of [CheckboxItem]{@link moonstone/CheckboxItem}.
  *
  * Usage:
  * ```
- * <Checkbox
- * 	selected
- * />
+ * <Checkbox selected />
  * ```
  *
  * @class Checkbox

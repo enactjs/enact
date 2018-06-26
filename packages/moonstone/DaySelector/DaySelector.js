@@ -107,12 +107,21 @@ const DaySelectorDecorator = compose(
 );
 
 /**
- * A Moonstone styled inline day of the week selection component.
+ * An inline day of the week selection component, ready to use in Moonstone applications.
+ *
+ * `DaySelector` may be used to select one or more days of the week from a horizontal list of
+ * abbreviated day names.
+ *
+ * By default, `DaySelector` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onChange` events.
  *
  * Usage:
  * ```
  * <DaySelector
  *   defaultSelected={[2, 3]}
+ *   longDayLabels
  *   onSelect={handleSelect}
  * />
  * ```
@@ -124,48 +133,6 @@ const DaySelectorDecorator = compose(
  * @public
  */
 const DaySelector = DaySelectorDecorator(DaySelectorBase);
-
-/**
- * Use long day names (Sunday, Monday..) for labels
- *
- * If `false` short text will be displayed for the the days (Sun, Mon..)
- *
- * @name longDayLabels
- * @memberof moonstone/DaySelector.DaySelector.prototype
- * @type {Boolean}
- * @default false
- * @public
- */
-
-/**
- * The text displayed in the label when every day is selected
- *
- * @name everyDayText
- * @type {String}
- * @default 'Every Day'
- * @memberof moonstone/DaySelector.DaySelector.prototype
- * @public
- */
-
-/**
- * The text displayed in the label when every weekeday is selected
- *
- * @name everyWeekdayText
- * @type {String}
- * @default 'Every Weekday'
- * @memberof moonstone/DaySelector.DaySelector.prototype
- * @public
- */
-
-/**
- * The text displayed in the label when every weekend day is selected
- *
- * @name everyWeekendText
- * @type {String}
- * @default 'Every Weekend'
- * @memberof moonstone/DaySelector.DaySelector.prototype
- * @public
- */
 
 export default DaySelector;
 export {

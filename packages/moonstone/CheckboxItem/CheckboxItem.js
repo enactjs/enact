@@ -1,5 +1,5 @@
 /**
- * Moonstone styled item components with toggleable checkbox.
+ * Moonstone styled item components with a toggleable checkbox.
  *
  * @example
  * <CheckboxItem onToggle={console.log}>
@@ -21,9 +21,9 @@ import ToggleItem from '../ToggleItem';
 import componentCss from './CheckboxItem.less';
 
 /**
- * An item with a checkbox component.
+ * An item with a checkbox component, ready to use in Moonstone applications.
  *
- * `CheckboxItem` should be used to allow the user to select a single option or used as part of a
+ * `CheckboxItem` may be used to allow the user to select a single option or used as part of a
  * [Group]{@link ui/Group} when multiple [selections]{@link ui/Group.Group.select} are possible.
  *
  * Usage:

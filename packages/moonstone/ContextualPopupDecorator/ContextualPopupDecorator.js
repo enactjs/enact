@@ -1,5 +1,5 @@
 /**
- * Higher-order Component to add a Moonstone styled popup to a component.
+ * Higher-order component to add a Moonstone styled popup to a component.
  *
  * @module moonstone/ContextualPopupDecorator
  * @exports	ContextualPopup
@@ -18,7 +18,7 @@ import FloatingLayer from '@enact/ui/FloatingLayer';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {ContextualPopup} from './ContextualPopup';
+import ContextualPopup from './ContextualPopup';
 
 import css from './ContextualPopupDecorator.less';
 
@@ -59,23 +59,27 @@ const ContextualPopupContainer = SpotlightContainerDecorator(
 );
 
 /**
- * A Higher-order Component that positions a
+ * Adds support for positioning a
  * [ContextualPopup]{@link moonstone/ContextualPopupDecorator.ContextualPopup} relative to the
  * wrapped component.
+ *
+ * `ContextualPopupDecorator` may be used to show additional settings or actions rendered within a
+ * small floating popup.
  *
  * Usage:
  * ```
  * const ButtonWithPopup = ContextualPopupDecorator(Button);
  * <ButtonWithPopup
- *     popupComponent={CustomPopupComponent}
+ *   direction="up"
+ *   open={this.state.open}
+ *   popupComponent={CustomPopupComponent}
  * >
- *     Open Popup
+ *   Open Popup
  * </ButtonWithPopup>
  * ```
  *
- * @class ContextualPopupDecorator
- * @memberof moonstone/ContextualPopupDecorator
  * @hoc
+ * @memberof moonstone/ContextualPopupDecorator
  * @public
  */
 const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
@@ -105,7 +109,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
 
 			/**
-			 * Disables closiung the popup when the user presses the cancel key or taps outside the
+			 * Disables closing the popup when the user presses the cancel key or taps outside the
 			 * popup.
 			 *
 			 * @type {Boolean}

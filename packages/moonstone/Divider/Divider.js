@@ -30,7 +30,7 @@ import Skinnable from '../Skinnable';
 import css from './Divider.less';
 
 /**
- * A Moonstone styled labeled divider component used to group components.
+ * A labeled divider component.
  *
  * This component is most often not used directly but may be composed within another component as it
  * is within {@link moonstone/Divider.Divider}.
@@ -99,8 +99,7 @@ const DividerBase = kind({
 });
 
 /**
- * Moonstone specific divider behaviors to apply to
- * [DividerBase]{@link moonstone/Divider.DividerBase}.
+ * Applies Moonstone specific behaviors to [DividerBase]{@link moonstone/Divider.DividerBase}.
  *
  * @hoc
  * @memberof moonstone/Divider
@@ -124,7 +123,9 @@ const DividerDecorator = compose(
 );
 
 /**
- * A Moonstone styled labeled divider component used to group components.
+ * A labeled divider component, ready to use in Moonstone applications.
+ *
+ * `Divider` may be used as a header to group related components.
  *
  * Usage:
  * ```
@@ -132,8 +133,10 @@ const DividerDecorator = compose(
  *   casing="preserve"
  *   spacing="medium"
  * >
- *   A group of related components
+ *   Related Settings
  * </Divider>
+ * <CheckboxItem>A Setting</CheckboxItem>
+ * <CheckboxItem>A Second Setting</CheckboxItem>
  * ```
  *
  * @class Divider

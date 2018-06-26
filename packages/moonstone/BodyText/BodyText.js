@@ -24,6 +24,9 @@ import componentCss from './BodyText.less';
 /**
  * A simple text block component.
  *
+ * This component is most often not used directly but may be composed within another component as it
+ * is within {@link moonstone/BodyText.BodyText}.
+ *
  * @class BodyTextBase
  * @memberof moonstone/BodyText
  * @extends ui/BodyText.BodyText
@@ -64,7 +67,7 @@ const BodyTextBase = kind({
 });
 
 /**
- * Applies Moonstone specific behaviors [BodyText]{@link moonstone/BodyText.BodyTextBase} components.
+ * Applies Moonstone specific behaviors to [BodyText]{@link moonstone/BodyText.BodyTextBase}.
  *
  * @hoc
  * @memberof moonstone/BodyText
@@ -79,13 +82,13 @@ const BodyTextDecorator = compose(
 /**
  * A simple text block component, ready to use in Moonstone applications.
  *
+ * `BodyText` may be used to display a block of text and is sized and spaced appropriately for a
+ * Moonstone application.
+ *
  * Usage:
  * ```
  * <BodyText>
- * 	I have a Ham radio. There are many like it, but this one is mine.
- * </BodyText>
- * <BodyText centered>
- * 	A centered block of text
+ *  I have a Ham radio. There are many like it, but this one is mine.
  * </BodyText>
  * ```
  *

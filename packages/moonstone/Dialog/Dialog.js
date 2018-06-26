@@ -20,9 +20,7 @@ import css from './Dialog.less';
 const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
 
 /**
- * A Moonstone styled modal dialog component.
- *
- * The dialong consists of a title, a subtitle, a message, and an area for additional controls.
+ * A modal dialog component.
  *
  * This component is most often not used directly but may be composed within another component as it
  * is within {@link moonstone/Dialog.Dialog}.
@@ -200,9 +198,27 @@ const DialogBase = kind({
 });
 
 /**
- * A Moonstone styled modal dialog component.
+ * A modal dialog component, ready to use in Moonstone applications.
  *
- * The dialong consists of a title, a subtitle, a message, and an area for additional controls.
+ * `Dialog` may be used to interrupt a workflow to receive feedback from the user. The dialong
+ * consists of a title, a subtitle, a message, and an area for additional
+ * [buttons]{@link moonstone/Dialog.Dialog.buttons}.
+ *
+ * Usage:
+ * ```
+ * <Dialog
+ *   open={this.state.open}
+ *   showCloseButton
+ *   title="An Important Dialog"
+ *   titleBelow="Some important context to share about the purpose"
+ * >
+ *   <BodyText>You can include other Moonstone components here. </BodyText>
+ *   <buttons>
+ *     <Button>Button 1</Button>
+ *     <Button>Button 2</Button>
+ *   </buttons>
+ * </Dialog>
+ * ```
  *
  * @class Dialog
  * @memberof moonstone/Dialog

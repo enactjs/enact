@@ -11,7 +11,7 @@ import css from './DatePicker.less';
 import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
 
 /**
- * A Moonstone styled date selection component without behaviors applied.
+ * A date selection component.
  *
  * This component is most often not used directly but may be composed within another component as it
  * is within {@link moonstone/DatePicker.DatePicker}.
