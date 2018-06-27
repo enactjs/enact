@@ -1,5 +1,5 @@
 /**
- * `core/util/Job` provides a convenient way to manage timed execution of functions.
+ * Provides a convenient way to manage timed execution of functions.
  *
  * @module core/util/Job
  * @exports Job
