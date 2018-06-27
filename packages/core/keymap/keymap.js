@@ -9,7 +9,7 @@ import curry from 'ramda/src/curry';
  */
 const map = {};
 
-/**
+/*
  * Safely converts keymap name to lowercase.
  *
  * @function
@@ -21,7 +21,7 @@ const map = {};
  */
 const toLowerCase = (name) => name ? name.toLowerCase() : '';
 
-/**
+/*
  * Iterates over `set` and invokes `fn` with the key and value of each item.
  *
  * @function
@@ -36,7 +36,7 @@ const forEachObj = curry(function (fn, set) {
 	Object.keys(set).forEach(name => fn(name, set[name]));
 });
 
-/**
+/*
  * Invokes `fn` with `name` and `keyCode` for each key code provided.
  *
  * @function
@@ -56,7 +56,7 @@ const oneOrArray = curry(function (fn, name, keyCode) {
 	}
 });
 
-/**
+/*
  * Adds `keyCode` to `name`.
  *
  * @function
@@ -79,7 +79,7 @@ const addOne = curry(function (name, keyCode) {
 	}
 });
 
-/**
+/*
  * Removes `keyCode` from `name`.
  *
  * @function

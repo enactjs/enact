@@ -59,6 +59,22 @@
  * ```
  *
  * @module core/handle
+ * @exports adaptEvent
+ * @exports call
+ * @exports callOnEvent
+ * @exports forward
+ * @exports forwardWithPrevent
+ * @exports forEventProp
+ * @exports forKey
+ * @exports forKeyCode
+ * @exports forProp
+ * @exports handle
+ * @exports log
+ * @exports oneOf
+ * @exports preventDefault
+ * @exports returnsTrue
+ * @exports stop
+ * @exports stopImmediate
  */
 
 import cond from 'ramda/src/cond';

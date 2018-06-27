@@ -2,6 +2,7 @@
  * Provides the {@link core/hoc.hoc} method to create higher-order components (HOCs).
  *
  * @module core/hoc
+ * @exports hoc
  */
 
 import {isRenderable} from '../util';

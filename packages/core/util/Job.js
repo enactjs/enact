@@ -1,4 +1,11 @@
 /**
+ * `core/util/Job` provides a convenient way to manage timed execution of functions.
+ *
+ * @module core/util/Job
+ * @exports Job
+ */
+
+/**
  * @class Job
  * @memberof core/util
  * @public

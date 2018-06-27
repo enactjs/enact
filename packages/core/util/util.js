@@ -11,6 +11,7 @@
  * @exports memoize
  * @exports mergeClassNameMaps
  * @exports perfNow
+ * @exports withContextFromProps
  */
 import always from 'ramda/src/always';
 import isType from 'ramda/src/is';
@@ -22,7 +23,7 @@ import Job from './Job';
 /**
  * Capitalizes a given string (not locale-aware).
  *
- * @method
+ * @function
  * @memberof core/util
  * @param   {String}    str   The string to capitalize.
  * @returns {String}          The capitalized string.
@@ -40,7 +41,7 @@ const cap = function (str) {
  *	const returnsZero = coerceFunction(0);
  *	const returnsArg = coerceFunction(() => 0);
  * ```
- * @method
+ * @function
  * @memberof core/util
  * @param {*}    arg    Function or value
  */
@@ -56,7 +57,7 @@ const coerceFunction = unless(isType(Function), always);
  *	const returnsObjArg = coerceArray({0: 'zeroth', length: 1});
  * ```
  * @see http://ramdajs.com/docs/#isArrayLike
- * @method
+ * @function
  * @memberof core/util
  * @param {*}    array    Array or value
  * @returns {Array}       Either `array` or `[array]`
@@ -68,7 +69,7 @@ const coerceArray = function (array) {
 /**
  * Loosely determines if `tag` is a renderable component (either a string or a function).
  *
- * @method
+ * @function
  * @memberof core/util
  * @param {*}    tag    Component to test
  * @returns {Boolean}   `true` if `tag` is either a string or a function
@@ -83,7 +84,7 @@ const isRenderable = function (tag) {
  * This is useful when redirecting ARIA-related props from a non-focusable root element to a focusable
  * child element.
  *
- * @method
+ * @function
  * @memberof core/util
  * @param   {Object}    props    Props object
  * @returns {Object}             ARIA-related props
@@ -115,6 +116,7 @@ const extractAriaProps = function (props) {
  * // `alignment` will now be available as a context key in `Component`'s children.
  * ```
  *
+ * @function
  * @param  {Object}       propsList    Keys to be used as prop->context and their `PropTypes` as keys
  * @param  {Component}    Wrapped      The component that will receive the context
  *
@@ -131,7 +133,7 @@ const withContextFromProps = (propsList, Wrapped) => withContext(propsList, (pro
 /**
  * Gets the current timestamp of either `window.performance.now` or `Date.now`
  *
- * @method
+ * @function
  * @memberof core/util
  * @returns {Number}
  */
@@ -158,7 +160,7 @@ const perfNow = function () {
  * const newMap2 = mergeClassNameMaps(baseMap2, additiveMap2, ['a', 'b']);
  * ```
  *
- * @method
+ * @function
  * @memberof core/util
  * @param {Object}     baseMap             The source mapping of logical class name to physical
  *                                         class name
@@ -189,7 +191,7 @@ const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
  * Creates a function that memoizes the result of `fn`. Note that this function is a naive
  * implementation and only checks the first argument for memoization.
  *
- * @method
+ * @function
  * @memberof core/util
  * @param {Function}    fn    The function to have its output memoized.
  * @returns {Function}        The new memoized function.

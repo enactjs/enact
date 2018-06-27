@@ -1,7 +1,5 @@
 /**
- * Exports the {@link core/platform.detect} method and the {@link core/platform.platform}
- * object to get information about the current platform.  The default export is
- * {@link core/platform.platform}.
+ * Utilities for detecting basic platform capabilities.
  *
  * @module core/platform
  * @exports detect
@@ -83,9 +81,9 @@ const ua = () => {
 let _platform;
 
 /**
- * {@link core/platform.detect} returns the {@link core/platform.platform} object.
+ * Returns the {@link core/platform.platform} object.
  *
- * @type {Function}
+ * @function
  * @returns {Object}     The {@link core/platform.platform} object
  *
  * @method detect
@@ -141,7 +139,7 @@ const detect = () => {
 };
 
 /**
- * {@link core/platform.platform} provides basic information about the running platform.
+ * Provides basic information about the running platform.
  *
  * @readonly
  * @type {Object}
@@ -156,6 +154,7 @@ const detect = () => {
  */
 
 const platform = {};
+
 [
 	'gesture',
 	'node',
@@ -174,4 +173,7 @@ const platform = {};
 });
 
 export default platform;
-export {detect, platform};
+export {
+	detect,
+	platform
+};

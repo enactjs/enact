@@ -2,14 +2,19 @@
  * Provides methods to add and remove global event listeners
  *
  * @module core/dispatcher
+ * @exports off
+ * @exports on
+ * @exports once
  */
 
 import curry from 'ramda/src/curry';
 
 import {getListeners, addListener} from './listeners';
 
-/**
+/*
  * Checks if the default target of `document` exists before returning it, otherwise returns `false`.
+ *
+ * @function
  *
  * @returns {Node|Boolean}
  * @memberof core/dispatcher
@@ -17,7 +22,7 @@ import {getListeners, addListener} from './listeners';
  */
 const getDefaultTarget = () => typeof document !== 'undefined' && document;
 
-/**
+/*
  * Wraps event callbacks with a try-catch block to prevent unrelated code from blocking.
  *
  * @function
@@ -37,7 +42,7 @@ const invoker = curry(function (ev, fn) {
 	}
 });
 
-/**
+/*
  * Dispatches an event to the registered handlers.
  *
  * @function

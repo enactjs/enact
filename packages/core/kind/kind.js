@@ -98,7 +98,7 @@ const kind = (config) => {
 			}
 		}
 
-		/**
+		/*
 		 * Caches an event handler on the local `handlers` member
 		 *
 		 * @param   {String}    name     Event name
