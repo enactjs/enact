@@ -83,18 +83,16 @@ const DateComponentRangePickerBase = kind({
 
 	handlers: {
 		onVoice: (e, {onChange, min, max}) => {
-			const result = e && e.detail && e.detail.value;
-			const labels = Array.from(Array(max - min + 1)).map((_, n) => (min + n) + '');
-			const index = labels.indexOf(result);
-			if (onChange && index > -1) {
-				onChange({value: Number(labels[index])});
+			const value = e && e.detail && e.detail.value && Number(e.detail.value);
+			if (onChange && (value >= min && value <= max)) {
+				onChange({value: value});
 			}
 		}
 	},
 
 	computed: {
 		voiceLabels: ({min, max}) => {
-			return JSON.stringify(Array.from(Array(max - min + 1)).map((_, n) => (min + n) + ''));
+			return JSON.stringify([min, max]);
 		}
 	},
 
@@ -104,7 +102,7 @@ const DateComponentRangePickerBase = kind({
 				{...rest}
 				accessibilityHint={(accessibilityHint == null) ? label : accessibilityHint}
 				data-webos-voice-intent='Select'
-				data-webos-voice-labels={voiceLabels}
+				data-webos-voice-labels-ext={voiceLabels}
 				joined
 				max={max}
 				min={min}
