@@ -183,7 +183,7 @@ class ScrollableBase extends Component {
 		onMouseDown: PropTypes.func,
 
 		/**
-		 * Called when the edges are reached.
+		 * Called when reached to an edge.
 		 * Passes `orientation`, `position`, and `reached`.
 		 *
 		 * Example:
@@ -409,6 +409,7 @@ class ScrollableBase extends Component {
 
 	componentDidUpdate (prevProps, prevState) {
 		const
+			{onReachEdge} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			{hasDataSizeChanged} = this.childRef;
 
@@ -423,8 +424,28 @@ class ScrollableBase extends Component {
 
 		this.clampScrollPosition();
 
-		this.forwardReachEdgeEvent('horizontal');
-		this.forwardReachEdgeEvent('vertical');
+		if (onReachEdge) {
+			const name = {horizontal: 'Left', vertical: 'Top'};
+
+			['horizontal', 'vertical'].forEach((orientation) => {
+				const
+					info = this.reachEdgeInfo[orientation],
+					currentPosition = this['scroll' + name[orientation]];
+				let condition = {begin: false, end: false};
+
+				if (this.getScrollabilities(orientation)) {
+					condition.begin = currentPosition <= 0;
+					condition.end = currentPosition >= this.getScrollBounds()['max' + name[orientation]];
+				}
+
+				['begin', 'end'].forEach((position) => {
+					if (info[position] !== condition[position]) {
+						info[position] = condition[position];
+						forward('onReachEdge', {orientation, position, reached: info[position]}, this.props);
+					}
+				});
+			});
+		}
 
 		this.addEventListeners();
 		if (
@@ -534,7 +555,7 @@ class ScrollableBase extends Component {
 	scrollLeft = 0
 	scrollTop = 0
 	scrollToInfo = null
-	touchingEdgeInfo = {
+	reachEdgeInfo = {
 		horizontal: {
 			begin: false,
 			end: false
@@ -826,54 +847,30 @@ class ScrollableBase extends Component {
 		forward(type, {scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
 	}
 
-	compareAndSet (obj, name, value) {
-		const changed = (obj[name] !== value);
-		obj[name] = value;
-		return changed;
-	}
-
-	forwardReachEdgeEvent (orientation) {
-		const {onReachEdge} = this.props;
-		if (onReachEdge) {
-			const {direction} = this.props;
-
-			if (direction === orientation || direction === 'both') {
-				const
-					{compareAndSet} = this,
-					info = this.touchingEdgeInfo[orientation];
-				let
-					conditionBegin = false,
-					conditionEnd = false;
-
-				if (this.getScrollabilities(orientation)) {
-					const
-						name = (orientation === 'vertical') ? 'Top' : 'Left',
-						curPos = this['scroll' + name];
-					conditionBegin = (curPos <= 0);
-					conditionEnd = (curPos >= this.getScrollBounds()['max' + name]);
-				}
-
-				if (compareAndSet(info, 'begin', conditionBegin)) {
-					onReachEdge({orientation, position: 'begin', reached: info.begin});
-				}
-				if (compareAndSet(info, 'end', conditionEnd)) {
-					onReachEdge({orientation, position: 'end', reached: info.end});
-				}
-			}
-		}
-	}
-
 	// update scroll position
 
 	setScrollLeft (value) {
 		const
+			{onReachEdge} = this.props,
 			bounds = this.getScrollBounds(),
 			maxValue = bounds.maxLeft,
 			orientation = 'horizontal',
-			{type, ratio} = this.getOverscrollStatus(orientation);
+			{ratio, type} = this.getOverscrollStatus(orientation);
 
 		this.scrollLeft = clamp(0, maxValue, value);
-		this.forwardReachEdgeEvent(orientation);
+
+		if (onReachEdge && this.getScrollabilities(orientation)) {
+			const
+				info = this.reachEdgeInfo[orientation],
+				condition = {begin: this.scrollLeft <= 0, end: this.scrollLeft >= maxValue};
+
+			['begin', 'end'].forEach((position) => {
+				if (info[position] !== condition[position]) {
+					info[position] = condition[position];
+					forward('onReachEdge', {orientation, position, reached: info[position]}, this.props);
+				}
+			});
+		}
 
 		if (type === overscrollTypes.scrolling) {
 			this.updateOverscrollEffect(orientation, this.scrollLeft, type, ratio);
@@ -886,13 +883,26 @@ class ScrollableBase extends Component {
 
 	setScrollTop (value) {
 		const
+			{onReachEdge} = this.props,
 			bounds = this.getScrollBounds(),
 			maxValue = bounds.maxTop,
 			orientation = 'vertical',
-			{type, ratio} = this.getOverscrollStatus(orientation);
+			{ratio, type} = this.getOverscrollStatus(orientation);
 
 		this.scrollTop = clamp(0, maxValue, value);
-		this.forwardReachEdgeEvent(orientation);
+
+		if (onReachEdge && this.getScrollabilities(orientation)) {
+			const
+				info = this.reachEdgeInfo[orientation],
+				condition = {begin: this.scrollTop <= 0, end: this.scrollTop >= maxValue};
+
+			['begin', 'end'].forEach((position) => {
+				if (info[position] !== condition[position]) {
+					info[position] = condition[position];
+					forward('onReachEdge', {orientation, position, reached: info[position]}, this.props);
+				}
+			});
+		}
 
 		if (type === overscrollTypes.scrolling) {
 			this.updateOverscrollEffect(orientation, this.scrollTop, type, ratio);
@@ -1289,10 +1299,10 @@ class ScrollableBase extends Component {
 		delete rest.onFlick;
 		delete rest.onKeyDown;
 		delete rest.onMouseDown;
+		delete rest.onReachEdge;
 		delete rest.onScroll;
 		delete rest.onScrollStart;
 		delete rest.onScrollStop;
-		delete rest.onReachEdge;
 		delete rest.onWheel;
 		delete rest.removeEventListeners;
 		delete rest.scrollTo;
