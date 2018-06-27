@@ -1,8 +1,9 @@
 /**
- * Exports the {@link i18n/I18nDecorator.I18nDecorator} component and
- * {@link i18n/I18nDecorator.contextTypes} validation rules.
+ * Provides a HOC interface for internationalization.
  *
  * @module i18n/I18nDecorator
+ * @exports contextTypes
+ * @exports I18nDecorator
  */
 
 import hoc from '@enact/core/hoc';
@@ -17,8 +18,9 @@ import {isRtlLocale, updateLocale} from '../locale';
 import getI18nClasses from './getI18nClasses';
 
 /**
- * `contextTypes` is an object that exports the default context validation rules. These must be applied
- * to any child components that wish to receive the i18n context.
+ * An object that exports the default context validation rules.
+ *
+ * These must be applied to any child components that wish to receive the i18n context.
  *
  * ```
  * import {contextTypes} from '@enact/i18n/I18nDecorator';
@@ -35,10 +37,9 @@ const contextTypes = {
 };
 
 /**
- * {@link i18n/I18nDecorator.I18nDecorator} is a Higher Order Component that is used to wrap
- * the root element in an app. It provides an `rtl` member on the context of the wrapped component, allowing
- * the children to check the current text directionality as well as an `updateLocale` method that can be
- * used to update the current locale.
+ * A higher-order component that is used to wrap the root element in an app. It provides an `rtl` member on the
+ * context of the wrapped component, allowing the children to check the current text directionality as well as
+ * an `updateLocale` method that can be used to update the current locale.
  *
  * There are no configurable options on this HOC.
  *
@@ -49,12 +50,28 @@ const contextTypes = {
  */
 const IntlHoc = hoc((config, Wrapped) => {
 	return class I18nDecorator extends React.Component {
-		static contextTypes = stateContextTypes
-		static childContextTypes = {...contextTypes, ...stateContextTypes}
 		static propTypes = /** @lends i18n/I18nDecorator.I18nDecorator.prototype */ {
+			/**
+			 * Classname for a root app element.
+			 *
+			 * @type {String}
+			 * @public
+			 */
 			className: PropTypes.string,
+
+			/**
+			 * A string with a {@link https://tools.ietf.org/html/rfc5646|BCP 47 language tag}.
+			 *
+			 * The system locale will be used by default.
+			 *
+			 * @type {String}
+			 * @public
+			 */
 			locale: PropTypes.string
 		}
+
+		static contextTypes = stateContextTypes
+		static childContextTypes = {...contextTypes, ...stateContextTypes}
 
 		constructor (props) {
 			super(props);
@@ -139,4 +156,7 @@ const IntlHoc = hoc((config, Wrapped) => {
 });
 
 export default IntlHoc;
-export {IntlHoc as I18nDecorator, contextTypes};
+export {
+	IntlHoc as I18nDecorator,
+	contextTypes
+};

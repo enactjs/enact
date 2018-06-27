@@ -2,20 +2,23 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [2.0.0-beta.8] - 2018-06-25
 
 ### Added
 
-- `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/Scroller.Scroller` overscroll effect when the edges are reached
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` support for scrolling via voice control on webOS
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` overscroll effect when the edges are reached
 
 ### Changed
 
 - `moonstone/Divider` property `marqueeOn` default value to `render`
-- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualList`, and `moonstone/VirtualList.VirtualGridList` scrollbar button to move a previous or next page when pressing a page up or down key instead of releasing it
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` scrollbar button to move a previous or next page when pressing a page up or down key instead of releasing it
 
 ### Fixed
 
 - `moonstone/VideoPlayer` to prevent updating state when the source is changed to the preload source, but the current preload source is the same
+- `moonstone/MediaOverlay` to marquee correctly
+- `moonstone/MediaOverlay` to match UX guidelines
 
 ## [2.0.0-beta.7] - 2018-06-11
 

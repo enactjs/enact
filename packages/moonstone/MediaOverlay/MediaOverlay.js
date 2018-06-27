@@ -18,7 +18,7 @@ import compose from 'ramda/src/compose';
 import React from 'react';
 
 import Image from '../Image';
-import {MarqueeController, Marquee} from '../Marquee';
+import {Marquee} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import componentCss from './MediaOverlay.less';
@@ -63,7 +63,7 @@ const MediaOverlayBase = kind({
 		 *
 		 * NOTE: When image is displayed, media is not displayed even though it is playing.
 		 *
-		 * @type {String | Object}
+		 * @type {String|Object}
 		 * @public
 		 */
 		imageOverlay: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
@@ -162,7 +162,6 @@ const MediaOverlayBase = kind({
  *
  * @hoc
  * @memberof moonstone/MediaOverlay
- * @mixes moonstone/Marquee.MarqueeController
  * @mixes spotlight/Spottable.Spottable
  * @mixes ui/Slottable.Slottable
  * @mixes ui/Skinnable.Skinnable
@@ -170,7 +169,6 @@ const MediaOverlayBase = kind({
  */
 const MediaOverlayDecorator = compose(
 	Pure,
-	MarqueeController({marqueeOnFocus: true}),
 	Spottable,
 	Slottable({slots: ['source']}),
 	Skinnable

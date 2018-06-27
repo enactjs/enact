@@ -34,8 +34,6 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
 
 		static displayName = 'EditableIntegerPickerDecorator'
 
-		static contextTypes = contextTypes
-
 		static propTypes =  /** @lends moonstone/EditableIntegerPicker.EditableIntegerPickerDecorator.prototype */ {
 			/**
 		 	* The maximum value selectable by the picker (inclusive).
@@ -73,6 +71,8 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
 			 */
 			value: PropTypes.number
 		}
+
+		static contextTypes = contextTypes
 
 		static defaultProps = {
 			value: 0

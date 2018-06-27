@@ -2,6 +2,28 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.0.0-beta.8] - 2018-06-25
+
+### Added
+
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` support for scrolling via voice control on webOS
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` overscroll effect when the edges are reached
+
+### Changed
+
+- `moonstone/Divider` property `marqueeOn` default value to `render`
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` scrollbar button to move a previous or next page when pressing a page up or down key instead of releasing it
+
+### Fixed
+
+- `moonstone/VideoPlayer` to prevent updating state when the source is changed to the preload source, but the current preload source is the same
+- `moonstone/MediaOverlay` to marquee correctly
+- `moonstone/MediaOverlay` to match UX guidelines
+- `spotlight/Spottable` to retain focus for disabled component after updates
+- `spotlight/Spottable` to emulate `onMouseUp` events that occur immediately after a non-enter key press
+- `spotlight/Spottable` to prevent scroll on focus on webOS
+- `ui/VirtualList` to allow scrolling on focus by default on webOS
+
 ## [2.0.0-beta.7] - 2018-06-11
 
 ### Removed

@@ -24,8 +24,9 @@ import css from './VideoPlayer.less';
 
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 const MediaButton = onlyUpdateForKeys([
-	'className',
 	'children',
+	'className',
+	'color',
 	'disabled',
 	'onClick',
 	'spotlightDisabled'
@@ -49,7 +50,7 @@ const MediaControlsBase = kind({
 	propTypes: /** @lends moonstone/VideoPlayer.MediaControls.prototype */ {
 		/**
 		 * A string which is sent to the `backward` icon of the player controls. This can be
-		 * anything that is accepted by {@link moonstone/Icon}.
+		 * anything that is accepted by {@link moonstone/Icon.Icon}.
 		 *
 		 * @type {String}
 		 * @default 'backward'
@@ -59,7 +60,7 @@ const MediaControlsBase = kind({
 
 		/**
 		 * A string which is sent to the `forward` icon of the player controls. This can be anything
-		 * that is accepted by {@link moonstone/Icon}.
+		 * that is accepted by {@link moonstone/Icon.Icon}.
 		 *
 		 * @type {String}
 		 * @default 'forward'
@@ -69,7 +70,7 @@ const MediaControlsBase = kind({
 
 		/**
 		 * A string which is sent to the `jumpBackward` icon of the player controls. This can be
-		 * anything that is accepted by {@link moonstone/Icon}.
+		 * anything that is accepted by {@link moonstone/Icon.Icon}.
 		 *
 		 * @type {String}
 		 * @default 'skipbackward'
@@ -87,7 +88,7 @@ const MediaControlsBase = kind({
 
 		/**
 		 * A string which is sent to the `jumpForward` icon of the player controls. This can be
-		 * anything that is accepted by {@link moonstone/Icon}.
+		 * anything that is accepted by {@link moonstone/Icon.Icon}.
 		 *
 		 * @type {String}
 		 * @default 'skipforward'
@@ -245,7 +246,7 @@ const MediaControlsBase = kind({
 
 		/**
 		 * A string which is sent to the `pause` icon of the player controls. This can be
-		 * anything that is accepted by [Icon]{@link moonstone/Icon}. This will be temporarily replaced by
+		 * anything that is accepted by [Icon]{@link moonstone/Icon.Icon}. This will be temporarily replaced by
 		 * the [playIcon]{@link moonstone/VideoPlayer.MediaControls.playIcon} when the
 		 * [paused]{@link moonstone/VideoPlayer.MediaControls.paused} boolean is `false`.
 		 *
@@ -257,7 +258,7 @@ const MediaControlsBase = kind({
 
 		/**
 		 * A string which is sent to the `play` icon of the player controls. This can be
-		 * anything that is accepted by {@link moonstone/Icon}. This will be temporarily replaced by
+		 * anything that is accepted by {@link moonstone/Icon.Icon}. This will be temporarily replaced by
 		 * the [pauseIcon]{@link moonstone/VideoPlayer.MediaControls.pauseIcon} when the
 		 * [paused]{@link moonstone/VideoPlayer.MediaControls.paused} boolean is `true`.
 		 *
@@ -429,6 +430,8 @@ const MediaControlsBase = kind({
  */
 const MediaControlsDecorator = hoc((config, Wrapped) => {
 	class MediaControlsDecoratorHOC extends React.Component {
+		static displayName = 'MediaControlsDecorator'
+
 		static propTypes = /** @lends moonstone/VideoPlayer.MediaControlsDecorator.prototype */ {
 			/**
 			 * The number of milliseconds that the player will pause before firing the
@@ -607,11 +610,9 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 
 		static defaultProps = {
 			initialJumpDelay: 400,
-			moreButtonSpotlightId: 'moreButton',
-			jumpDelay: 200
+			jumpDelay: 200,
+			moreButtonSpotlightId: 'moreButton'
 		}
-
-		static displayName = 'MediaControlsDecorator'
 
 		constructor (props) {
 			super(props);

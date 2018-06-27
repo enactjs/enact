@@ -46,7 +46,7 @@ const GridListImageItem = kind({
 		/**
 		 * The component used to render the captions
 		 *
-		 * @type {Function|string}
+		 * @type {Component}
 		 * @public
 		 */
 		captionComponent: PropTypes.oneOfType([

@@ -120,7 +120,7 @@ const extractAriaProps = function (props) {
  * @param  {Object}       propsList    Keys to be used as prop->context and their `PropTypes` as keys
  * @param  {Component}    Wrapped      The component that will receive the context
  *
- * @returns {Component}                 The component, now with context on it
+ * @returns {Component}                The component, now with context on it
  * @private
  */
 const withContextFromProps = (propsList, Wrapped) => withContext(propsList, (props) => {
