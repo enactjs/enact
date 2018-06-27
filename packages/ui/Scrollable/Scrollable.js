@@ -428,22 +428,19 @@ class ScrollableBase extends Component {
 			const name = {horizontal: 'Left', vertical: 'Top'};
 
 			['horizontal', 'vertical'].forEach((orientation) => {
-				const
-					info = this.reachEdgeInfo[orientation],
-					currentPosition = this['scroll' + name[orientation]];
-				let condition = {begin: false, end: false};
+				const currentPosition = this['scroll' + name[orientation]];
 
 				if (this.getScrollabilities(orientation)) {
-					condition.begin = currentPosition <= 0;
-					condition.end = currentPosition >= this.getScrollBounds()['max' + name[orientation]];
+					this.checkAndForwardReachEdge(
+						orientation,
+						{
+							begin: currentPosition <= 0,
+							end: currentPosition >= this.getScrollBounds()['max' + name[orientation]]
+						}
+					);
+				} else {
+					this.checkAndForwardReachEdge(orientation, {begin: false, end: false});
 				}
-
-				['begin', 'end'].forEach((position) => {
-					if (info[position] !== condition[position]) {
-						info[position] = condition[position];
-						forward('onReachEdge', {orientation, position, reached: info[position]}, this.props);
-					}
-				});
 			});
 		}
 
@@ -841,6 +838,18 @@ class ScrollableBase extends Component {
 		this.setOverscrollStatus('vertical', overscrollTypes.none);
 	}
 
+	// check and call reachEdge callback
+	checkAndForwardReachEdge (orientation, updatedStatus) {
+		const info = this.reachEdgeInfo[orientation];
+
+		['begin', 'end'].forEach((position) => {
+			if (info[position] !== updatedStatus[position]) {
+				info[position] = updatedStatus[position];
+				forward('onReachEdge', {orientation, position, reached: info[position]}, this.props);
+			}
+		});
+	}
+
 	// call scroll callbacks
 
 	forwardScrollEvent (type) {
@@ -860,16 +869,13 @@ class ScrollableBase extends Component {
 		this.scrollLeft = clamp(0, maxValue, value);
 
 		if (onReachEdge && this.getScrollabilities(orientation)) {
-			const
-				info = this.reachEdgeInfo[orientation],
-				condition = {begin: this.scrollLeft <= 0, end: this.scrollLeft >= maxValue};
-
-			['begin', 'end'].forEach((position) => {
-				if (info[position] !== condition[position]) {
-					info[position] = condition[position];
-					forward('onReachEdge', {orientation, position, reached: info[position]}, this.props);
+			this.checkAndForwardReachEdge(
+				orientation,
+				{
+					begin: this.scrollLeft <= 0,
+					end: this.scrollLeft >= maxValue
 				}
-			});
+			);
 		}
 
 		if (type === overscrollTypes.scrolling) {
@@ -892,16 +898,13 @@ class ScrollableBase extends Component {
 		this.scrollTop = clamp(0, maxValue, value);
 
 		if (onReachEdge && this.getScrollabilities(orientation)) {
-			const
-				info = this.reachEdgeInfo[orientation],
-				condition = {begin: this.scrollTop <= 0, end: this.scrollTop >= maxValue};
-
-			['begin', 'end'].forEach((position) => {
-				if (info[position] !== condition[position]) {
-					info[position] = condition[position];
-					forward('onReachEdge', {orientation, position, reached: info[position]}, this.props);
+			this.checkAndForwardReachEdge(
+				orientation,
+				{
+					begin: this.scrollTop <= 0,
+					end: this.scrollTop >= maxValue
 				}
-			});
+			);
 		}
 
 		if (type === overscrollTypes.scrolling) {
