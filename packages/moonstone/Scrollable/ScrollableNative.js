@@ -189,7 +189,7 @@ class ScrollableBaseNative extends Component {
 	componentDidUpdate () {
 		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null) {
 			const focusedItem = Spotlight.getCurrent();
-			this.calculateAndScroll(focusedItem);
+			this.calculateAndScrollTo(focusedItem);
 		}
 	}
 
@@ -359,7 +359,7 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
-	calculateAndScroll = (spotItem) => {
+	calculateAndScrollTo = (spotItem) => {
 		const positionFn = this.childRef.calculatePositionOnFocus,
 			{containerRef} = this.uiRef.childRef;
 
@@ -408,7 +408,7 @@ class ScrollableBaseNative extends Component {
 				spotItem = Spotlight.getCurrent();
 
 			if (item && item === spotItem && positionFn) {
-				this.calculateAndScroll(item);
+				this.calculateAndScrollTo(item);
 			}
 		} else if (this.childRef.setLastFocusedIndex) {
 			this.childRef.setLastFocusedIndex(ev.target);
@@ -611,7 +611,7 @@ class ScrollableBaseNative extends Component {
 	handleScrollerUpdate = () => {
 		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null && Spotlight.getPointerMode()) {
 			const spotItem = Spotlight.getCurrent();
-			this.calculateAndScroll(spotItem);
+			this.calculateAndScrollTo(spotItem);
 		}
 	}
 
