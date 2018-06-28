@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/ContextualPopup`'s new API `positionContextualPopup`
+
 ### Fixed
 
 - `moonstone/TooltipDecorator` to prevent unnecessary re-renders when losing focus
