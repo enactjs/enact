@@ -8,6 +8,7 @@ import {addAll} from '@enact/core/keymap';
 import hoc from '@enact/core/hoc';
 import I18nDecorator from '@enact/i18n/I18nDecorator';
 import React from 'react';
+import classNames from 'classnames';
 import {ResolutionDecorator} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
@@ -58,10 +59,14 @@ const defaultConfig = {
  * @public
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {ri, i18n, spotlight, float, noAutoFocus, overlay, textSize, skin, highContrast} = config;
+	const {ri, i18n, spotlight, float, noAutoFocus, overlay,
+		textSize, skin, highContrast, disableFullscreen} = config;
 
 	// Apply classes depending on screen type (overlay / fullscreen)
-	const bgClassName = 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
+	const bgClassName = classNames({
+		'enact-fit': !disableFullscreen,
+		[`${css.bg}`]: !overlay
+	});
 
 	let App = Wrapped;
 	if (float) App = FloatingLayerDecorator({wrappedClassName: bgClassName}, App);
