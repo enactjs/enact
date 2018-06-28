@@ -4,7 +4,8 @@ import React from 'react';
 import Button from '@enact/moonstone/Button';
 import Image from '@enact/moonstone/Image';
 import {storiesOf} from '@storybook/react';
-import {boolean, select, text} from '@storybook/addon-knobs';
+
+import {boolean, select, text} from '../../src/enact-knobs';
 
 const iconNames = ['', ...Object.keys(icons)];
 
@@ -21,9 +22,9 @@ storiesOf('Item', module)
 		'with long text',
 		() => (
 			<Item
-				disabled={boolean('disabled')}
+				disabled={boolean('disabled', Item)}
 			>
-				{text('Children', inputData.longText)}
+				{text('Children', Item, inputData.longText)}
 			</Item>
 		)
 	)
@@ -31,9 +32,9 @@ storiesOf('Item', module)
 		'with tall characters',
 		() => (
 			<Item
-				disabled={boolean('disabled')}
+				disabled={boolean('disabled', Item)}
 			>
-				{select('value', inputData.tallText, inputData.tallText[2])}
+				{select('value', inputData.tallText, Item, inputData.tallText[2])}
 			</Item>
 		)
 	)
@@ -41,9 +42,9 @@ storiesOf('Item', module)
 		'with extra spaces',
 		() => (
 			<Item
-				disabled={boolean('disabled')}
+				disabled={boolean('disabled', Item)}
 			>
-				{text('Children', inputData.extraSpaceText)}
+				{text('Children', Item, inputData.extraSpaceText)}
 			</Item>
 		)
 	)
@@ -51,10 +52,10 @@ storiesOf('Item', module)
 		'integrated with other components',
 		() => (
 			<Item
-				disabled={boolean('disabled')}
+				disabled={boolean('disabled', Item)}
 			>
 				<Button>Click here</Button>
-				{text('Children', 'Hello Item')}
+				{text('Children', Item, 'Hello Item')}
 				<Button>Click here</Button>
 				<Image src="http://lorempixel.com/512/512/city/1/" sizing="fill" alt="lorempixel" />
 				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p>
@@ -68,48 +69,48 @@ storiesOf('Item', module)
 		() => (
 			<div>
 				<Item>
-					{text('Spottable Text', inputData.normalText)}
+					{text('Spottable Text', Item, inputData.normalText)}
 				</Item>
 				<Item
 					disabled
 				>
-					{text('Disabled Text', inputData.disabledText)}
+					{text('Disabled Text', Item, inputData.disabledText)}
 				</Item>
 				<Item>
 					<Icon
-						small={boolean('small')}
+						small={boolean('small', Icon)}
 					>
-						{select('iconBefore', iconNames, 'plus')}
+						{select('iconBefore', iconNames, Icon, 'plus')}
 					</Icon>
 
-					{text('Text with icon at start', 'Item with text that is spottable with an icon (at the start of the string)')}
+					{text('Text with icon at start', Item, 'Item with text that is spottable with an icon (at the start of the string)')}
 				</Item>
 				<Item>
-					{text('Text with icon at end', 'Item with text that is spottable with an icon(at the end of the string)')}
+					{text('Text with icon at end', Item, 'Item with text that is spottable with an icon(at the end of the string)')}
 					<Icon
-						small={boolean('small')}
+						small={boolean('small', Icon)}
 					>
-						{select('iconAfter', iconNames, 'pauseforward')}
+						{select('iconAfter', iconNames, Icon, 'pauseforward')}
 					</Icon>
 				</Item>
 				<Item>
 					<Icon
-						small={boolean('small')}
+						small={boolean('small', Icon)}
 					>
 						gear
 					</Icon>
 					<Icon
-						small={boolean('small')}
+						small={boolean('small', Icon)}
 					>
 						minus
 					</Icon>
 					<Icon
-						small={boolean('small')}
+						small={boolean('small', Icon)}
 					>
 						trash
 					</Icon>
 					<Icon
-						small={boolean('small')}
+						small={boolean('small', Icon)}
 					>
 						flag
 					</Icon>

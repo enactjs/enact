@@ -4,7 +4,10 @@ import ri from '@enact/ui/resolution';
 import Scroller from '@enact/moonstone/Scroller';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {text, select} from '@storybook/addon-knobs';
+
+import {select, text} from '../../src/enact-knobs';
+
+Divider.displayName = 'Divider';
 
 const
 	prop = {
@@ -17,9 +20,9 @@ storiesOf('Divider', module)
 		'with long text',
 		() => (
 			<Divider
-				marqueeOn={select('marqueeOn', prop.marqueeOn)}
+				marqueeOn={select('marqueeOn', prop.marqueeOn, Divider)}
 			>
-				{text('children', 'This long text is for the marquee test in divider component. This long text is for the marquee test in divider component. This long text is for the marquee test in divider component.')}
+				{text('children', Divider, 'This long text is for the marquee test in divider component. This long text is for the marquee test in divider component. This long text is for the marquee test in divider component.')}
 			</Divider>
 		)
 	)
@@ -28,7 +31,7 @@ storiesOf('Divider', module)
 		'with tall characters',
 		() => (
 			<Divider>
-				{select('children', prop.tallText, 'नरेंद्र मोदी')}
+				{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}
 			</Divider>
 		)
 	)
@@ -41,9 +44,9 @@ storiesOf('Divider', module)
 					Adjust the spacing prop to see how the Divider is positioned with respect to the element below.
 				</div>
 				<Divider
-					spacing={select('spacing', ['normal', 'small', 'medium', 'large', 'none'])}
+					spacing={select('spacing', ['normal', 'small', 'medium', 'large', 'none'], Divider)}
 				>
-					{text('children', 'Hello World')}
+					{text('children', Divider, 'Hello World')}
 				</Divider>
 				<Item>
 					Some content below

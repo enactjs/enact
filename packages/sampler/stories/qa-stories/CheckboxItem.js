@@ -1,9 +1,16 @@
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
+import ToggleItem from '@enact/moonstone/ToggleItem';
+import UiToggleItem, {ToggleItemBase as UiToggleItemBase} from '@enact/ui/ToggleItem';
+import Item, {ItemBase} from '@enact/moonstone/Item';
 import Group from '@enact/ui/Group';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, text, select} from '@storybook/addon-knobs';
+
+import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
+
+const Config = mergeComponentMetadata('CheckboxItem', ItemBase, Item, UiToggleItemBase, UiToggleItem, ToggleItem, CheckboxItem);
 
 const prop = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -17,11 +24,12 @@ storiesOf('CheckboxItem', module)
 		'with long text',
 		() => (
 			<CheckboxItem
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', Config, false)}
+				iconPosition={select('iconPosition', ['before', 'after'], Config)}
+				inline={boolean('inline', Config)}
 				onToggle={action('onToggle')}
 			>
-				{text('children', prop.longText)}
+				{text('children', Config, prop.longText)}
 			</CheckboxItem>
 		)
 	)
@@ -29,11 +37,12 @@ storiesOf('CheckboxItem', module)
 		'with tall characters',
 		() => (
 			<CheckboxItem
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', Config, false)}
+				iconPosition={select('iconPosition', ['before', 'after'], Config)}
+				inline={boolean('inline', Config)}
 				onToggle={action('onToggle')}
 			>
-				{select('children', prop.tallText, prop.tallText[0])}
+				{select('children', prop.tallText, Config, prop.tallText[0])}
 			</CheckboxItem>
 		)
 	)
@@ -41,11 +50,12 @@ storiesOf('CheckboxItem', module)
 		'with extra spacing',
 		() => (
 			<CheckboxItem
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', Config, false)}
+				iconPosition={select('iconPosition', ['before', 'after'], Config)}
+				inline={boolean('inline', Config)}
 				onToggle={action('onToggle')}
 			>
-				{text('children', prop.extraSpaceText)}
+				{text('children', Config, prop.extraSpaceText)}
 			</CheckboxItem>
 		)
 	)
@@ -53,11 +63,12 @@ storiesOf('CheckboxItem', module)
 		'with right to left text',
 		() => (
 			<CheckboxItem
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', Config, false)}
+				iconPosition={select('iconPosition', ['before', 'after'], Config)}
+				inline={boolean('inline', Config)}
 				onToggle={action('onToggle')}
 			>
-				{text('children', prop.rtlText)}
+				{text('children', Config, prop.rtlText)}
 			</CheckboxItem>
 		)
 	)
@@ -70,7 +81,7 @@ storiesOf('CheckboxItem', module)
 				itemProps={{
 					inline: boolean('ItemProps-Inline', false)
 				}}
-				select={select('select', ['single', 'radio', 'multiple'], 'multiple')}
+				select={select('select', ['single', 'radio', 'multiple'], Group, 'multiple')}
 				selectedProp="selected"
 				defaultSelected={0}
 				onSelect={action('onSelect')}
