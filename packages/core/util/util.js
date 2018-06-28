@@ -24,9 +24,10 @@ import Job from './Job';
  * Capitalizes a given string (not locale-aware).
  *
  * @function
- * @memberof core/util
  * @param   {String}    str   The string to capitalize.
+ *
  * @returns {String}          The capitalized string.
+ * @memberof core/util
  * @public
  */
 const cap = function (str) {
@@ -42,8 +43,11 @@ const cap = function (str) {
  *	const returnsArg = coerceFunction(() => 0);
  * ```
  * @function
- * @memberof core/util
  * @param {*}    arg    Function or value
+ *
+ * @returns {Function}  Either `arg` if `arg` is a function, or a function that returns `arg`
+ * @memberof core/util
+ * @public
  */
 const coerceFunction = unless(isType(Function), always);
 
@@ -58,9 +62,11 @@ const coerceFunction = unless(isType(Function), always);
  * ```
  * @see http://ramdajs.com/docs/#isArrayLike
  * @function
- * @memberof core/util
  * @param {*}    array    Array or value
+ *
  * @returns {Array}       Either `array` or `[array]`
+ * @memberof core/util
+ * @public
  */
 const coerceArray = function (array) {
 	return Array.isArray(array) ? array : [array];
@@ -70,9 +76,11 @@ const coerceArray = function (array) {
  * Loosely determines if `tag` is a renderable component (either a string or a function).
  *
  * @function
- * @memberof core/util
  * @param {*}    tag    Component to test
+ *
  * @returns {Boolean}   `true` if `tag` is either a string or a function
+ * @memberof core/util
+ * @public
  */
 const isRenderable = function (tag) {
 	const type = typeof tag;
@@ -85,9 +93,11 @@ const isRenderable = function (tag) {
  * child element.
  *
  * @function
- * @memberof core/util
  * @param   {Object}    props    Props object
+ *
  * @returns {Object}             ARIA-related props
+ * @memberof core/util
+ * @public
  */
 const extractAriaProps = function (props) {
 	const aria = {};
@@ -121,6 +131,7 @@ const extractAriaProps = function (props) {
  * @param  {Component}    Wrapped      The component that will receive the context
  *
  * @returns {Component}                The component, now with context on it
+ * @memberof core/util
  * @private
  */
 const withContextFromProps = (propsList, Wrapped) => withContext(propsList, (props) => {
@@ -134,8 +145,10 @@ const withContextFromProps = (propsList, Wrapped) => withContext(propsList, (pro
  * Gets the current timestamp of either `window.performance.now` or `Date.now`
  *
  * @function
+ *
+ * @returns {Number}                    The timestamp from `window.performance.now` or `Date.now`
  * @memberof core/util
- * @returns {Number}
+ * @public
  */
 const perfNow = function () {
 	if (typeof window === 'object') {
@@ -161,7 +174,6 @@ const perfNow = function () {
  * ```
  *
  * @function
- * @memberof core/util
  * @param {Object}     baseMap             The source mapping of logical class name to physical
  *                                         class name
  * @param {Object}     additiveMap         Mapping of logical to physical class names which are
@@ -169,7 +181,10 @@ const perfNow = function () {
  * @param {String[]}  [allowedClassNames]  Array of logical class names that can be augmented. When
  *                                         set, the logical class name must exist in `baseMap`,
  *                                         `additiveMap`, and this array to be concatenated.
+ *
  * @returns {Object}                       The merged class name map.
+ * @memberof core/util
+ * @public
  */
 const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
 	let css = baseMap;
@@ -192,9 +207,11 @@ const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
  * implementation and only checks the first argument for memoization.
  *
  * @function
- * @memberof core/util
  * @param {Function}    fn    The function to have its output memoized.
+ *
  * @returns {Function}        The new memoized function.
+ * @memberof core/util
+ * @public
  */
 const memoize = (fn) => {
 	let cache = {};

@@ -1,6 +1,6 @@
 import curry from 'ramda/src/curry';
 
-/**
+/*
  * The singleton map of names to keyCodes. If a name doesn't have any keyCodes mapped to it, it will
  * not exist in this map. If it does, its value will be an array of its keyCodes.
  *
@@ -13,10 +13,10 @@ const map = {};
  * Safely converts keymap name to lowercase.
  *
  * @function
- * @memberof core/keymap
  * @param   {String} name  Name for keyCode
  *
  * @returns {String}       Name for keyCode in lowercase
+ * @memberof core/keymap
  * @private
  */
 const toLowerCase = (name) => name ? name.toLowerCase() : '';
@@ -25,11 +25,11 @@ const toLowerCase = (name) => name ? name.toLowerCase() : '';
  * Iterates over `set` and invokes `fn` with the key and value of each item.
  *
  * @function
- * @memberof core/keymap
  * @param   {Function}  fn   Function to invoke
  * @param   {Object}    set  A map of names to keyCodes
  *
  * @returns {undefined}
+ * @memberof core/keymap
  * @private
  */
 const forEachObj = curry(function (fn, set) {
@@ -40,12 +40,12 @@ const forEachObj = curry(function (fn, set) {
  * Invokes `fn` with `name` and `keyCode` for each key code provided.
  *
  * @function
- * @memberof core/keymap
  * @param   {Function}        fn       Function to invoke
  * @param   {String}          name     Name for the key codes
  * @param   {Number|Number[]} keyCode  A key code or array of key codes
  *
  * @returns {undefined}
+ * @memberof core/keymap
  * @private
  */
 const oneOrArray = curry(function (fn, name, keyCode) {
@@ -60,11 +60,11 @@ const oneOrArray = curry(function (fn, name, keyCode) {
  * Adds `keyCode` to `name`.
  *
  * @function
- * @memberof core/keymap
  * @param   {String}    name     Name for the key code
  * @param   {Number}    keyCode  A key code
  *
  * @returns {undefined}
+ * @memberof core/keymap
  * @private
  */
 const addOne = curry(function (name, keyCode) {
@@ -83,11 +83,11 @@ const addOne = curry(function (name, keyCode) {
  * Removes `keyCode` from `name`.
  *
  * @function
- * @memberof core/keymap
  * @param   {String}    name     Name for the key code
  * @param   {Number}    keyCode  A key code
  *
  * @returns {undefined}
+ * @memberof core/keymap
  * @private
  */
 const removeOne = curry(function (name, keyCode) {
@@ -107,11 +107,11 @@ const removeOne = curry(function (name, keyCode) {
  * Registers `keyCode` for `name`.
  *
  * @function add
- * @memberof core/keymap
  * @param   {String}          name     Name for the key code
  * @param   {Number|Number[]} keyCode  A key code or array of key codes
  *
  * @returns {undefined}
+ * @memberof core/keymap
  * @public
  */
 const add = oneOrArray(addOne);
@@ -120,10 +120,10 @@ const add = oneOrArray(addOne);
  * Registers a set of key codes.
  *
  * @function addAll
- * @memberof core/keymap
  * @param   {Object}    set  A map of names to keyCodes
  *
  * @returns {undefined}
+ * @memberof core/keymap
  * @public
  */
 const addAll = forEachObj(add);
@@ -132,11 +132,11 @@ const addAll = forEachObj(add);
  * Unregisters `keyCode` from `name`.
  *
  * @function remove
- * @memberof core/keymap
  * @param   {String}          name     Name for the key code
  * @param   {Number|Number[]} keyCode  A key code or array of key codes
  *
  * @returns {undefined}
+ * @memberof core/keymap
  * @public
  */
 const remove = oneOrArray(removeOne);
@@ -145,10 +145,10 @@ const remove = oneOrArray(removeOne);
  * Unregisters a set of key codes.
  *
  * @function removeAll
- * @memberof core/keymap
  * @param   {Object}    set  A map of names to keyCodes
  *
  * @returns {undefined}
+ * @memberof core/keymap
  * @public
  */
 const removeAll = forEachObj(remove);
@@ -157,11 +157,11 @@ const removeAll = forEachObj(remove);
  * Determines if `keyCode` is mapped to `name`.
  *
  * @function is
- * @memberof core/keymap
  * @param   {String}    name     Name for the key code
  * @param   {Number}    keyCode  A key code
  *
  * @returns {Boolean}            `true` if `keyCode` is mapped to `name`
+ * @memberof core/keymap
  * @public
  */
 const is = curry(function (name, keyCode) {

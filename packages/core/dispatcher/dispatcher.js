@@ -72,6 +72,7 @@ const dispatcher = function (ev) {
  *
  * @returns {undefined}
  * @memberof core/dispatcher
+ * @public
  */
 const on = function (name, fn, target = getDefaultTarget()) {
 	if (target) {
@@ -93,6 +94,7 @@ const on = function (name, fn, target = getDefaultTarget()) {
  *
  * @returns {undefined}
  * @memberof core/dispatcher
+ * @public
  */
 const off = function (name, fn, target = getDefaultTarget()) {
 	if (target) {
@@ -116,9 +118,10 @@ const off = function (name, fn, target = getDefaultTarget()) {
  * @param	{Function}	fn			Event handler
  * @param	{Node}		[target]	Event listener target
  *
- * @returns {Function}						The single-use handler which can be passed to `off` to
- *											remove it.
+ * @returns {Function}				The single-use handler which can be passed to `off` to
+ *									remove it.
  * @memberof core/dispatcher
+ * @public
  */
 const once = function (name, fn, target) {
 	const onceFn = function (ev) {

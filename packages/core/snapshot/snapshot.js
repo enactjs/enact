@@ -16,6 +16,7 @@ const windowCallbacks = [];
  * Determines if the `window` is available
  *
  * @function
+ *
  * @returns {Boolean} `true` when `window` is ready
  * @memberof core/snapshot
  * @public
@@ -40,6 +41,8 @@ function isWindowReady () {
  *
  * @function
  * @param   {Function}    callback    Function to run when the window is ready
+ *
+ * @returns {undefined}
  * @memberof core/snapshot
  * @public
  */
@@ -57,6 +60,8 @@ function onWindowReady (callback) {
  * Requires that the window be, in fact, available and will throw an `Error` if not.
  *
  * @function
+ *
+ * @returns {undefined}
  * @memberof core/snapshot
  * @public
  */
