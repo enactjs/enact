@@ -28,9 +28,9 @@ class ExpandableListChildrenLengthUpdate extends React.Component {
 	}
 
 	updateValue = () => {
-		this.setState({
-			index: 1 - this.state.index
-		});
+		this.setState(({index}) => ({
+			index: 1 - index
+		}));
 	}
 
 	render () {

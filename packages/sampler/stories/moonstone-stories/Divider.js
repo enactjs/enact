@@ -12,6 +12,7 @@ Divider.displayName = 'Divider';
 // Set up some defaults for info and knobs
 const prop = {
 	casing: ['', 'preserve', 'sentence', 'word', 'upper'],
+	marqueeOn: ['', 'hover', 'render'],
 	spacing: ['', 'normal', 'small', 'medium', 'large', 'none']
 };
 
@@ -24,6 +25,7 @@ storiesOf('Moonstone', module)
 		})(() => (
 			<Divider
 				casing={select('casing', prop.casing, Config)}
+				marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				spacing={select('spacing', prop.spacing, Config)}
 			>
 				{text('children', Config, 'divider text')}

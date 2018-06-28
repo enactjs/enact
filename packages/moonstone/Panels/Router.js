@@ -56,7 +56,7 @@ const Router = class extends React.Component {
 		/**
 		 * The component wrapping the rendered path
 		 *
-		 * @type {String|Function}
+		 * @type {Component}
 		 * @default 'div'
 		 * @public
 		 */

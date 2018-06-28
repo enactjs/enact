@@ -122,7 +122,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * The text to be displayed as the main content of the tooltip.
 			 *
-			 * @type {String|Node}}
+			 * @type {Node}
 			 * @public
 			 */
 			tooltipText: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
@@ -137,14 +137,14 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			tooltipWidth: PropTypes.number
 		}
 
+		static contextTypes = contextTypes
+
 		static defaultProps = {
 			disabled: false,
 			tooltipCasing: 'upper',
 			tooltipDelay: 500,
 			tooltipPosition: 'above'
 		}
-
-		static contextTypes = contextTypes
 
 		constructor (props) {
 			super(props);
@@ -331,7 +331,9 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.clientRef = null;
 				currentTooltip = null;
 				this.showTooltipJob.stop();
-				this.setState({showing: false});
+				if (this.state.showing) {
+					this.setState({showing: false});
+				}
 			}
 		}
 

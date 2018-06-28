@@ -4,6 +4,7 @@
  * Provides a class for making LS2 service requests on webOS platforms.
  *
  * @module webos/LS2Request
+ * @exports LS2Request
  */
 
 import {Job} from '@enact/core/util';
@@ -22,7 +23,7 @@ const failureHandler = ({errorText}) => console.error(`LS2Request: ${errorText}`
 const timeoutHandler = ({errorText}) => console.warn(`LS2Request: ${errorText}`);
 
 /**
- * A class for managing LS2 Requests
+ * A class for managing LS2 Requests.
  *
  * @memberof webos/LS2Request
  * @class

@@ -12,31 +12,31 @@ import {mergeComponentMetadata} from '../../src/utils';
 
 // Set up some defaults for info and knobs
 const prop = {
+	moreButtonColor: [
+		'red',
+		'green',
+		'yellow',
+		'blue'
+	],
 	videoTitles: [
 		'Sintel',
 		'Big Buck Bunny',
 		'VideoTest',
 		'Bad Video Source'
 	],
-	videos: [
-		{
-			poster: 'http://media.w3.org/2010/05/sintel/poster.png',
-			source: 'http://media.w3.org/2010/05/sintel/trailer.mp4'
-		},
-		{
-			poster: 'http://media.w3.org/2010/05/bunny/poster.png',
-			source: 'http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov'
-		},
-		{
-			poster: 'http://media.w3.org/2010/05/video/poster.png',
-			source: 'http://media.w3.org/2010/05/video/movie_300.mp4'
-		},
-		{
-			poster: 'http://media.w3.org/2010/05/video/poster.png',
-			// Purposefully not a video to demonstrate source error state
-			source: 'https://github.com/mderrick/react-html5video'
-		}
-	],
+	videos: {
+		'Sintel': 'http://media.w3.org/2010/05/sintel/trailer.mp4',
+		'Big Buck Bunny': 'http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov',
+		'VideoTest': 'http://media.w3.org/2010/05/video/movie_300.mp4',
+		// Purposefully not a video to demonstrate source error state
+		'Bad Video Source': 'https://github.com/mderrick/react-html5video'
+	},
+	posters: {
+		'Sintel': 'http://media.w3.org/2010/05/sintel/poster.png',
+		'Big Buck Bunny': 'http://media.w3.org/2010/05/bunny/poster.png',
+		'VideoTest': 'http://media.w3.org/2010/05/video/poster.png',
+		'Bad Video Source': 'http://media.w3.org/2010/05/video/poster.png'
+	},
 	events: [
 		'onAbort',
 		'onCanPlay',
@@ -70,22 +70,6 @@ const prop = {
 	]
 };
 
-const videoSources = {};
-for (let index = 0; index < prop.videos.length; index++) {
-	if (index != null && prop.videos[index]) {
-		videoSources[prop.videos[index].source] = prop.videoTitles[index];
-	}
-}
-
-const matchPoster = (src) => {
-	for (let index = 0; index < prop.videos.length; index += 1) {
-		if (prop.videos[index].source === src) {
-			return prop.videos[index].poster;
-		}
-	}
-	return '';
-};
-
 prop.eventActions = {};
 prop.events.forEach( (ev) => {
 	prop.eventActions[ev] = action(ev);
@@ -93,6 +77,7 @@ prop.events.forEach( (ev) => {
 
 const Config = mergeComponentMetadata('VideoPlayer', VideoPlayer);
 const MediaControlsConfig = mergeComponentMetadata('MediaControls', MediaControls);
+
 VideoPlayer.displayName = 'VideoPlayer';
 MediaControls.displayName = 'MediaControls';
 
@@ -103,8 +88,9 @@ storiesOf('Moonstone', module)
 			propTablesExclude: [Button, IconButton, MediaControls, VideoPlayer],
 			text: 'The basic VideoPlayer'
 		})(() => {
-			const videoSource = select('source', videoSources, Config, prop.videos[0].source);
-			const poster = matchPoster(videoSource);
+			const videoTitle = select('source', prop.videoTitles, Config, 'Sintel');
+			const videoSource = prop.videos[videoTitle];
+			const poster = prop.posters[videoTitle];
 			return (
 				<div
 					style={{
@@ -159,6 +145,7 @@ storiesOf('Moonstone', module)
 							jumpDelay={number('jumpDelay', MediaControlsConfig, 200)}
 							jumpForwardIcon={select('jumpForwardIcon', icons, MediaControlsConfig, 'skipforward')}
 							moreButtonCloseLabel={text('moreButtonCloseLabel', MediaControlsConfig)}
+							moreButtonColor={select('moreButtonColor', prop.moreButtonColor, MediaControlsConfig, 'blue')}
 							moreButtonDisabled={boolean('moreButtonDisabled', MediaControlsConfig)}
 							moreButtonLabel={text('moreButtonLabel', MediaControlsConfig)}
 							no5WayJump={boolean('no5WayJump', MediaControlsConfig)}

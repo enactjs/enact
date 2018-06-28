@@ -121,7 +121,7 @@ const GroupBase = kind({
 		/**
 		 * The index(es) of the currently activated item.
 		 *
-		 * @type {Number | Array}
+		 * @type {Number|Array}
 		 * @public
 		 */
 		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.array]),

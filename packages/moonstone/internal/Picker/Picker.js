@@ -123,6 +123,15 @@ const PickerBase = class extends React.Component {
 		'aria-valuetext': PropTypes.string,
 
 		/**
+		 * The `data-webos-voice-group-label` for the IconButton of Picker.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/internal/Picker.PickerBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-group-label': PropTypes.string,
+
+		/**
 		 * Accessibility hint
 		 *
 		 * For example, `hour`, `year`, and `meridiem`
@@ -159,9 +168,9 @@ const PickerBase = class extends React.Component {
 		decrementAriaLabel: PropTypes.string,
 
 		/**
-		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
+		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{Icon#orientation} is changed.
+		 * the [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
 		 *
 		 * @type {String}
 		 * @public
@@ -195,9 +204,9 @@ const PickerBase = class extends React.Component {
 		incrementAriaLabel: PropTypes.string,
 
 		/**
-		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
+		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{Icon#orientation} is changed.
+		 * the [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
 		 *
 		 * @type {String}
 		 * @public
@@ -740,6 +749,7 @@ const PickerBase = class extends React.Component {
 		const {active} = this.state;
 		const {
 			'aria-valuetext': ariaValueText,
+			'data-webos-voice-group-label': voiceGroupLabel,
 			noAnimation,
 			children,
 			disabled,
@@ -814,6 +824,7 @@ const PickerBase = class extends React.Component {
 					aria-controls={!joined ? incrementerAriaControls : null}
 					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
+					data-webos-voice-group-label={voiceGroupLabel}
 					disabled={incrementerDisabled}
 					hidden={reachedEnd}
 					icon={incrementIcon}
@@ -822,7 +833,6 @@ const PickerBase = class extends React.Component {
 					onHoldPulse={this.handleIncDown}
 					onKeyDown={this.handleIncKeyDown}
 					onSpotlightDisappear={onSpotlightDisappear}
-					onTap={this.handleIncClick}
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
@@ -849,6 +859,7 @@ const PickerBase = class extends React.Component {
 					aria-controls={!joined ? decrementerAriaControls : null}
 					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
+					data-webos-voice-group-label={voiceGroupLabel}
 					disabled={decrementerDisabled}
 					hidden={reachedStart}
 					icon={decrementIcon}
@@ -857,7 +868,6 @@ const PickerBase = class extends React.Component {
 					onHoldPulse={this.handleDecDown}
 					onKeyDown={this.handleDecKeyDown}
 					onSpotlightDisappear={onSpotlightDisappear}
-					onTap={this.handleDecClick}
 					onUp={this.handleUp}
 					spotlightDisabled={spotlightDisabled}
 				/>

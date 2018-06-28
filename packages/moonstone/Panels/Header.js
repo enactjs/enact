@@ -48,7 +48,7 @@ const HeaderBase = kind({
 		/**
 		 * Configures the mode of uppercasing for the [`title`]{@link moonstone/Panels.Header#title}.
 		 *
-		 * @see i18n/Uppercase#casing
+		 * @see i18n/Uppercase#Uppercase.casing
 		 * @type {String}
 		 * @default 'upper'
 		 * @public
@@ -59,11 +59,11 @@ const HeaderBase = kind({
 		 * Children provided are added to the header-components area. A space for controls which
 		 * live in the header, apart from the body of the panel view.
 		 *
-		 * @type {String}
+		 * @type {Element|Element[]}
 		 */
 		children: PropTypes.oneOfType([
-			PropTypes.arrayOf(PropTypes.element),
-			PropTypes.element
+			PropTypes.element,
+			PropTypes.arrayOf(PropTypes.element)
 		]),
 
 		/**
@@ -91,7 +91,7 @@ const HeaderBase = kind({
 		 *  </Header>
 		 * ```
 		 *
-		 * @type {[type]}
+		 * @type {Node}
 		 */
 		headerInput: PropTypes.node,
 

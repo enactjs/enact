@@ -67,7 +67,7 @@ const kind = (config) => {
 		defaultProps,
 		handlers,
 		name,
-		propTypes,
+		propTypes,	// eslint-disable-line react/forbid-foreign-prop-types
 		render,
 		styles: cfgStyles
 	} = config;
@@ -81,9 +81,9 @@ const kind = (config) => {
 
 		static propTypes = propTypes
 
-		static defaultProps = defaultProps
-
 		static contextTypes = contextTypes
+
+		static defaultProps = defaultProps
 
 		constructor () {
 			super();
