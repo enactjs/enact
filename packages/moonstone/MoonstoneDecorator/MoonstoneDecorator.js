@@ -65,7 +65,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	// Apply classes depending on screen type (overlay / fullscreen)
 	const bgClassName = classNames({
 		'enact-fit': !disableFullscreen,
-		[`${css.bg}`]: !overlay
+		[css.bg]: !overlay
 	});
 
 	let App = Wrapped;
@@ -123,13 +123,10 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'MoonstoneDecorator';
 
 		render () {
-			let className = css.root + ' enact-unselectable enact-fit';
-			if (!float) {
-				className += ' ' + bgClassName;
-			}
-			if (this.props.className) {
-				className += ` ${this.props.className}`;
-			}
+			const className = classNames(css.root, this.props.className, 'enact-unselectable', {
+				[bgClassName]: !float,
+				'enact-fit': !disableFullscreen
+			});
 
 			return (
 				<App {...this.props} className={className} />
