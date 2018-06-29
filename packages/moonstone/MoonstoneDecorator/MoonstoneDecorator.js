@@ -37,7 +37,8 @@ const defaultConfig = {
 	},
 	spotlight: true,
 	textSize: true,
-	skin: true
+	skin: true,
+	disableFullscreen: false
 };
 
 /**
