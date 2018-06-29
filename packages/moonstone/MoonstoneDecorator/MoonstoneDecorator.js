@@ -28,17 +28,17 @@ import {configure} from '@enact/ui/Touchable';
  * @hocconfig
  */
 const defaultConfig = {
-	i18n: true,
+	disableFullscreen: false,
 	float: true,
+	i18n: true,
 	noAutoFocus: false,
 	overlay: false,
 	ri: {
 		screenTypes
 	},
-	spotlight: true,
-	textSize: true,
 	skin: true,
-	disableFullscreen: false
+	spotlight: true,
+	textSize: true
 };
 
 /**
