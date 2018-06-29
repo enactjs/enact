@@ -54,7 +54,7 @@ const mergeFn = (key, defaultValue, userValue) => {
  *
  * @function
  * @param  {Object} defaultConfig Set of default configuration parameters
- * @param  {Function} hawk        higher-order component
+ * @param  {Function} hawk        Higher-order component
  *
  * @returns {Function}             HOC Decorator
  * @memberof core/hoc

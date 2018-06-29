@@ -251,7 +251,7 @@ const oneOf = handle.oneOf = function (...handlers) {
  * ```
  *
  * @method   returnsTrue
- * @param    {Function}  handler  Handler function called before returning `true`.
+ * @param    {Function}  [handler]  Handler function called before returning `true`.
  *
  * @returns  {Function}	   A function that returns true
  * @memberof core/handle

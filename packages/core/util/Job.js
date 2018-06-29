@@ -16,7 +16,7 @@ class Job {
 	 * @param {Function}    fn       Function to execute as the requested job.
 	 * @param {Number}      timeout  The number of milliseconds to wait before starting the job.
 	 *
-	 * @memberof core/util.Job
+	 * @memberof core/util.Job.prototype
 	 */
 	constructor (fn, timeout) {
 		this.fn = fn;
@@ -35,7 +35,7 @@ class Job {
 	 * @param   {...*}       [args]  Any args passed are forwarded to the callback
 	 *
 	 * @returns {undefined}
-	 * @memberof core/util.Job
+	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
 	start = (...args) => {
@@ -52,7 +52,7 @@ class Job {
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
 	 *
 	 * @returns {undefined}
-	 * @memberof core/util.Job
+	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
 	startAfter = (timeout, ...args) => {
@@ -67,7 +67,7 @@ class Job {
 	 * @method
 	 *
 	 * @returns {undefined}
-	 * @memberof core/util.Job
+	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
 	stop = () => {
@@ -91,7 +91,7 @@ class Job {
 	 * @param   {...*}       args  Any args passed are forwarded to the callback
 	 *
 	 * @returns {undefined}
-	 * @memberof core/util.Job
+	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
 	throttle = (...args) => {
@@ -109,7 +109,7 @@ class Job {
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
 	 *
 	 * @returns {undefined}
-	 * @memberof core/util.Job
+	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
 	throttleUntil = (timeout, ...args) => {
@@ -126,7 +126,7 @@ class Job {
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
 	 *
 	 * @returns {undefined}
-	 * @memberof core/util.Job
+	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
 	idle = (...args) => {
@@ -143,7 +143,7 @@ class Job {
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
 	 *
 	 * @returns {undefined}
-	 * @memberof core/util.Job
+	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
 	idleUntil = (timeout, ...args) => {
@@ -165,7 +165,7 @@ class Job {
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
 	 *
 	 * @returns {undefined}
-	 * @memberof core/util.Job
+	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
 	startRaf = (...args) => {
@@ -180,7 +180,7 @@ class Job {
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
 	 *
 	 * @returns {undefined}
-	 * @memberof core/util.Job
+	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
 	startRafAfter = (timeout, ...args) => {

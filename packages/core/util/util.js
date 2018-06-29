@@ -88,9 +88,10 @@ const isRenderable = function (tag) {
 };
 
 /**
- * Removes `aria-` prefixed props and the `role` prop from `props` and returns them in a new object.
- * This is useful when redirecting ARIA-related props from a non-focusable root element to a focusable
- * child element.
+ * Removes ARIA-related props from `props` and returns them in a new object.
+ *
+ * Specifically, it removes the `role` prop and any prop prefixed with `aria-`. This is useful when
+ * redirecting ARIA-related props from a non-focusable root element to a focusable child element.
  *
  * @function
  * @param   {Object}    props    Props object
@@ -112,6 +113,8 @@ const extractAriaProps = function (props) {
 };
 
 /**
+ * Forwards members from context to component as props.
+ *
  * Accepts a `contextTypes` object and a component, then matches those context types with incoming
  * props on the component, and sends them to context on that component for children to to access.
  *
@@ -127,15 +130,15 @@ const extractAriaProps = function (props) {
  * ```
  *
  * @function
- * @param  {Object}       propsList    Keys to be used as prop->context and their `PropTypes` as keys
- * @param  {Component}    Wrapped      The component that will receive the context
+ * @param  {Object}     contextTypes  Keys to be used as prop->context and their `PropTypes` as keys
+ * @param  {Component}  Wrapped       The component that will receive the context
  *
- * @returns {Component}                The component, now with context on it
+ * @returns {Component}               The component, now with context on it
  * @memberof core/util
  * @private
  */
-const withContextFromProps = (propsList, Wrapped) => withContext(propsList, (props) => {
-	return Object.keys(propsList).reduce((obj, key) => {
+const withContextFromProps = (contextTypes, Wrapped) => withContext(contextTypes, (props) => {
+	return Object.keys(contextTypes).reduce((obj, key) => {
 		obj[key] = props[key];
 		return obj;
 	}, {});
@@ -159,10 +162,11 @@ const perfNow = function () {
 };
 
 /**
- * Merges two class name maps into one. The resulting map will only contain the class names defined
- * in the `baseMap` and will be appended with the value from `additiveMap` if it exists. Further,
- * `allowedClassNames` may optionally limit which keys will be merged from `additiveMap` into
- * `baseMap`.
+ * Merges two class name maps into one.
+ *
+ * The resulting map will only contain the class names defined in the `baseMap` and will be appended
+ * with the value from `additiveMap` if it exists. Further, `allowedClassNames` may optionally limit
+ * which keys will be merged from `additiveMap` into `baseMap`.
  *
  * Example:
  * ```
@@ -203,8 +207,10 @@ const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
 };
 
 /**
- * Creates a function that memoizes the result of `fn`. Note that this function is a naive
- * implementation and only checks the first argument for memoization.
+ * Creates a function that memoizes the result of `fn`.
+ *
+ * Note that this function is a naive implementation and only checks the first argument for
+ * memoization.
  *
  * @function
  * @param {Function}    fn    The function to have its output memoized.
