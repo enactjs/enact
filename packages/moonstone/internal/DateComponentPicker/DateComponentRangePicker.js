@@ -79,11 +79,27 @@ const DateComponentRangePickerBase = kind({
 		wrap: PropTypes.bool
 	},
 
-	render: ({accessibilityHint, className, label, max, min, noAnimation, value, wrap, ...rest}) => (
+	handlers: {
+		onVoice: (e, {onChange, min, max}) => {
+			const value = e.value && Number(e.value);
+			if (onChange && (value >= min && value <= max)) {
+				onChange({value: value});
+			}
+		}
+	},
+
+	computed: {
+		voiceLabels: ({min, max}) => {
+			return JSON.stringify([min, max]);
+		}
+	},
+
+	render: ({accessibilityHint, className, label, max, min, noAnimation, value, wrap, voiceLabels, ...rest}) => (
 		<DateComponentPickerChrome className={className} label={label}>
 			<RangePicker
 				{...rest}
 				accessibilityHint={(accessibilityHint == null) ? label : accessibilityHint}
+				data-webos-voice-labels-ext={voiceLabels}
 				joined
 				max={max}
 				min={min}

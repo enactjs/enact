@@ -397,6 +397,14 @@ const PickerBase = class extends React.Component {
 		if (this.props.joined) {
 			this.containerRef.addEventListener('wheel', this.handleWheel);
 		}
+		this.containerRef.addEventListener('webOSVoice', this.handleVoice);
+	}
+
+	handleVoice = (e) => {
+		const {onVoice} = this.props;
+		if (e && e.detail && onVoice) {
+			onVoice(e.detail);
+		}
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -428,6 +436,7 @@ const PickerBase = class extends React.Component {
 		if (this.props.joined) {
 			this.containerRef.removeEventListener('wheel', this.handleWheel);
 		}
+		this.containerRef.removeEventListener('webOSVoice', this.handleVoice);
 	}
 
 	computeNextValue = (delta) => {
@@ -780,6 +789,7 @@ const PickerBase = class extends React.Component {
 		delete rest.reverse;
 		delete rest.value;
 		delete rest.wrap;
+		delete rest.onVoice;
 
 		const incrementIcon = selectIncIcon(this.props);
 		const decrementIcon = selectDecIcon(this.props);
@@ -811,6 +821,7 @@ const PickerBase = class extends React.Component {
 				aria-disabled={disabled}
 				aria-label={this.calcAriaLabel(valueText)}
 				className={classes}
+				data-webos-voice-intent='Select'
 				disabled={disabled}
 				onBlur={this.handleBlur}
 				onFocus={this.handleFocus}

@@ -93,19 +93,33 @@ const DateComponentPickerBase = kind({
 		wrap: PropTypes.bool
 	},
 
+	handlers: {
+		onVoice: (e, {onChange, children}) => {
+			const max = children && children.length ? children.length - 1 : 0;
+			const index = e && e.index && Number(e.index);
+			if (onChange && index >= 0 && index <= max) {
+				onChange({value: index});
+			}
+		}
+	},
+
 	computed: {
 		children: ({children}) => React.Children.map(children, (child) => (
 			<PickerItem marqueeDisabled>{child}</PickerItem>
 		)),
-		max: ({children}) => React.Children.count(children) - 1
+		max: ({children}) => React.Children.count(children) - 1,
+		voiceLabels: ({children}) => {
+			return JSON.stringify(children);
+		}
 	},
 
-	render: ({'aria-valuetext': ariaValuetext, accessibilityHint, children, className, label, max, noAnimation, reverse, value, wrap, ...rest}) => (
+	render: ({'aria-valuetext': ariaValuetext, accessibilityHint, children, className, label, max, noAnimation, reverse, value, voiceLabels, wrap, ...rest}) => (
 		<DateComponentPickerChrome className={className} label={label}>
 			<Picker
 				{...rest}
 				accessibilityHint={(accessibilityHint == null) ? label : accessibilityHint}
 				aria-valuetext={(accessibilityHint == null) ? ariaValuetext : null}
+				data-webos-voice-labels-ext={voiceLabels}
 				index={value}
 				joined
 				max={max}
