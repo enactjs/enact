@@ -29,7 +29,7 @@ storiesOf('Button', module)
 		() => (
 			<Button
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', Config.propTypes)}
+				backgroundOpacity={select('backgroundOpacity', Config.propTypes, Config)}
 				casing={select('casing', prop.casing, Config, 'upper')}
 				disabled={boolean('disabled', Config)}
 				icon={select('icon', prop.icons, Config)}

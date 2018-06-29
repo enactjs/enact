@@ -76,7 +76,7 @@ storiesOf('Picker', module)
 		() => (
 			<Picker
 				onChange={action('onChange')}
-				width={select('width', prop.width, Picker, Picker, 'large')}
+				width={select('width', prop.width, Picker, 'large')}
 				orientation={select('orientation', prop.orientation, Picker, 'horizontal')}
 				wrap={boolean('wrap', Picker)}
 				joined={boolean('joined', Picker)}
@@ -114,8 +114,8 @@ storiesOf('Picker', module)
 			<Picker
 				onChange={action('onChange')}
 				width={select('width', prop.width, Picker, 'large')}
-				orientation={select('orientation', prop.orientation)}
-				wrap={boolean('wrap', true, Picker)}
+				orientation={select('orientation', prop.orientation, Picker)}
+				wrap={boolean('wrap', Picker, true)}
 				joined={boolean('joined', Picker)}
 				noAnimation={boolean('noAnimation', Picker)}
 				disabled={boolean('disabled', Picker)}
@@ -132,8 +132,8 @@ storiesOf('Picker', module)
 			<Picker
 				onChange={action('onChange')}
 				width={select('width', prop.width, Picker, 'large')}
-				orientation={select('orientation', prop.orientation)}
-				wrap={boolean('wrap', true, Picker)}
+				orientation={select('orientation', prop.orientation, Picker)}
+				wrap={boolean('wrap', Picker, true)}
 				joined={boolean('joined', Picker)}
 				noAnimation={boolean('noAnimation', Picker)}
 				disabled={boolean('disabled', Picker)}

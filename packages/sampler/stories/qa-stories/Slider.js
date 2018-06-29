@@ -100,7 +100,7 @@ storiesOf('Slider', module)
 	.add(
 		'Add and Remove ',
 		() => {
-			const itemSize = ri.scale(number('itemSize', 72));
+			const itemSize = ri.scale(number('itemSize', Slider, 72));
 			return (
 				<SliderList itemSize={itemSize} />
 			);
