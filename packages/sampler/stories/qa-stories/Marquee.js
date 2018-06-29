@@ -37,6 +37,7 @@ storiesOf('Marquee', module)
 					<Marquee
 						style={{width: ri.unit(399, 'rem')}}
 						disabled={disabled}
+						forceDirection={nullify(select('forceDirection', ['', 'ltr', 'rtl']))}
 						marqueeDelay={number('marqueeDelay', 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', false)}
 						marqueeOn={select('marqueeOn', ['hover', 'render'], 'render')}
@@ -61,6 +62,7 @@ storiesOf('Marquee', module)
 					<Marquee
 						style={{width: ri.unit(399, 'rem')}}
 						disabled={disabled}
+						forceDirection={nullify(select('forceDirection', ['', 'ltr', 'rtl']))}
 						marqueeDelay={number('marqueeDelay', 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', false)}
 						marqueeOn={select('marqueeOn', ['hover', 'render'], 'render')}
