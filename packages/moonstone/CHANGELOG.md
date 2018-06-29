@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/ContextualPopup` to refocus its activator on close when the popup lacks spottable children
 - `moonstone/Scrollable` to update scroll properly on pointer click
 - `moonstone/TooltipDecorator` to prevent unnecessary re-renders when losing focus
 
