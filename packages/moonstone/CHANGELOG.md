@@ -4,8 +4,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/Scroller` prop `onUpdate`
+
 ### Fixed
 
+- `moonstone/Scrollable` to update scroll properly on pointer click
 - `moonstone/TooltipDecorator` to prevent unnecessary re-renders when losing focus
 
 ## [2.0.0-beta.8] - 2018-06-25
