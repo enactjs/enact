@@ -271,9 +271,15 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.updateLeaveFor(null);
 				this.setState({
 					activator: null,
-					// only spot the activator on close if spotlight isn't set or if the current
-					// focus is within the popup
-					shouldSpotActivator: !current || this.containerNode.contains(current)
+					// only spot the activator on close if spotlight ...
+					shouldSpotActivator: (
+						// isn't set
+						!current ||
+						// is on the activator and we want to re-spot it so a11y read out can occur
+						current === this.state.activator ||
+						// is within the popup
+						this.containerNode.contains(current)
+					)
 				});
 			}
 		}
