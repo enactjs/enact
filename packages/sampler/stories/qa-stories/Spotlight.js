@@ -8,6 +8,7 @@ import ExpandableItem from '@enact/moonstone/ExpandableItem';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import ExpandablePicker from '@enact/moonstone/ExpandablePicker';
 import FormCheckboxItem from '@enact/moonstone/FormCheckboxItem';
+import Icon from '@enact/moonstone/Icon';
 import IconButton from '@enact/moonstone/IconButton';
 import IncrementSlider from '@enact/moonstone/IncrementSlider';
 import Input from '@enact/moonstone/Input';
@@ -480,6 +481,7 @@ storiesOf('Spotlight', module)
 								</SwitchItem>
 								<ToggleItem
 									icon="plus"
+									iconComponent={Icon}
 									onSpotlightDown={action('onSpotlightDown')}
 									onSpotlightLeft={action('onSpotlightLeft')}
 									onSpotlightRight={action('onSpotlightRight')}

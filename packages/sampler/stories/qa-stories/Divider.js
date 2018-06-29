@@ -1,3 +1,4 @@
+import BodyText from '@enact/moonstone/BodyText';
 import Divider from '@enact/moonstone/Divider';
 import Item from '@enact/moonstone/Item';
 import ri from '@enact/ui/resolution';
@@ -40,9 +41,9 @@ storiesOf('Divider', module)
 		'with an element below',
 		() => (
 			<div>
-				<div>
+				<BodyText>
 					Adjust the spacing prop to see how the Divider is positioned with respect to the element below.
-				</div>
+				</BodyText>
 				<Divider
 					spacing={select('spacing', ['normal', 'small', 'medium', 'large', 'none'], Divider)}
 				>
@@ -59,51 +60,21 @@ storiesOf('Divider', module)
 		'Multiple',
 		() => (
 			<div>
-				<Divider>
-					First Divider
-				</Divider>
-				<Item>
-					Item 11
-				</Item>
-				<Item>
-					Item 12
-				</Item>
-				<Item>
-					Item 13
-				</Item>
-				<Divider>
-					Second Divider
-				</Divider>
-				<Item>
-					Item 21
-				</Item>
-				<Item>
-					Item 22
-				</Item>
-				<Item>
-					Item 23
-				</Item>
-				<Divider>
-					Third Divider
-				</Divider>
-				<Item>
-					Item 31
-				</Item>
-				<Item>
-					Item 32
-				</Item>
-				<Item>
-					Item 33
-				</Item>
-				<Divider>
-					Fourth Divider
-				</Divider>
-				<Item>
-					Item 41
-				</Item>
-				<Item>
-					Item 42
-				</Item>
+				<Divider>First Divider</Divider>
+				<Item>Item 11</Item>
+				<Item>Item 12</Item>
+				<Item>Item 13</Item>
+				<Divider>Second Divider</Divider>
+				<Item>Item 21</Item>
+				<Item>Item 22</Item>
+				<Item>Item 23</Item>
+				<Divider>Third Divider</Divider>
+				<Item>Item 31</Item>
+				<Item>Item 32</Item>
+				<Item>Item 33</Item>
+				<Divider>Fourth Divider</Divider>
+				<Item>Item 41</Item>
+				<Item>Item 42</Item>
 			</div>
 		)
 	)
@@ -125,51 +96,21 @@ storiesOf('Divider', module)
 						width: ri.unit(2001, 'rem')
 					}}
 				>
-					<Divider>
-						First Divider
-					</Divider>
-					<Item>
-						Item 11
-					</Item>
-					<Item>
-						Item 12
-					</Item>
-					<Item>
-						Item 13
-					</Item>
-					<Divider>
-						Second Divider
-					</Divider>
-					<Item>
-						Item 21
-					</Item>
-					<Item>
-						Item 22
-					</Item>
-					<Item>
-						Item 23
-					</Item>
-					<Divider>
-						Third Divider
-					</Divider>
-					<Item>
-						Item 31
-					</Item>
-					<Item>
-						Item 32
-					</Item>
-					<Item>
-						Item 33
-					</Item>
-					<Divider>
-						Fourth Divider
-					</Divider>
-					<Item>
-						Item 41
-					</Item>
-					<Item>
-						Item 42
-					</Item>
+					<Divider>First Divider</Divider>
+					<Item>Item 11</Item>
+					<Item>Item 12</Item>
+					<Item>Item 13</Item>
+					<Divider>Second Divider</Divider>
+					<Item>Item 21</Item>
+					<Item>Item 22</Item>
+					<Item>Item 23</Item>
+					<Divider>Third Divider</Divider>
+					<Item>Item 31</Item>
+					<Item>Item 32</Item>
+					<Item>Item 33</Item>
+					<Divider>Fourth Divider</Divider>
+					<Item>Item 41</Item>
+					<Item>Item 42</Item>
 				</div>
 			</Scroller>
 		)

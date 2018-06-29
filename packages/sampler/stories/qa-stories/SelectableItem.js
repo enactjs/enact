@@ -103,7 +103,11 @@ storiesOf('SelectableItem', module)
 				onSelect={action('onSelect')}
 			>
 
-				{[text('Normal Text 1', SelectableItem, inputData.normalText + 1), text('Normal Text 2', SelectableItem, inputData.normalText + 2), text('Normal Text 3', SelectableItem, inputData.normalText + 3)]}
+				{[
+					text('Normal Text 1', SelectableItem, inputData.normalText + 1),
+					text('Normal Text 2', SelectableItem, inputData.normalText + 2),
+					text('Normal Text 3', SelectableItem, inputData.normalText + 3)
+				]}
 			</Group>
 		)
 	)
@@ -117,11 +121,10 @@ storiesOf('SelectableItem', module)
 				onSelect={action('onSelect')}
 			>
 				{[
-					{children: '1', disabled: true},
-					{children: '2', disabled: false},
-					{children: '3', disabled: true},
-					{children: '4', disabled: false}
-
+					{key: 'item1', children: '1', disabled: true},
+					{key: 'item2', children: '2', disabled: false},
+					{key: 'item3', children: '3', disabled: true},
+					{key: 'item4', children: '4', disabled: false}
 				]}
 			</Group>
 		)

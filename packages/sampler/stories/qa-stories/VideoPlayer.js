@@ -3,6 +3,8 @@ import {button} from '@storybook/addon-knobs';
 import {storiesOf} from '@storybook/react';
 import React from 'react';
 
+const videoTabLabel = 'VideoPlayer';
+
 class VideoSourceSwap extends React.Component {
 	constructor (props) {
 		super(props);
@@ -59,11 +61,11 @@ class VideoSourceSwap extends React.Component {
 	render () {
 		return (
 			<div>
-				{button('Next Preload Video', this.nextVideo)}
-				{button('Non Preload Video', this.differentVideo)}
-				{button('Next Preload Video without changing preload', this.nextVideoKeepPreload)}
-				{button('Change Preload without changing video', this.nextPreloadVideoKeepVideo)}
-				{button('Reset Sources', this.resetSources)}
+				{button('Next Preload Video', this.nextVideo, videoTabLabel)}
+				{button('Non Preload Video', this.differentVideo, videoTabLabel)}
+				{button('Next Preload Video without changing preload', this.nextVideoKeepPreload, videoTabLabel)}
+				{button('Change Preload without changing video', this.nextPreloadVideoKeepVideo, videoTabLabel)}
+				{button('Reset Sources', this.resetSources, videoTabLabel)}
 				<VideoPlayer
 					muted
 					onJumpBackward={this.differentVideo}
