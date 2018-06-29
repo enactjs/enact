@@ -18,6 +18,7 @@
  *
  * @method computed
  * @param   {Object}    cfg  Configuration object mapping transformation functions to property names
+ *
  * @returns {Function}       Function that accepts a props object and mutates it to include the
  *                           computed props
  * @private
