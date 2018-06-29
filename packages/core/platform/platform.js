@@ -1,9 +1,10 @@
 /**
- * Exports the {@link core/platform.detect} method and the {@link core/platform.platform}
- * object to get information about the current platform.  The default export is
- * {@link core/platform.platform}.
+ * Utilities for detecting basic platform capabilities.
  *
  * @module core/platform
+ * @exports detect
+ * @exports platform
+ * @public
  */
 
 import uniq from 'ramda/src/uniq';
@@ -80,10 +81,10 @@ const ua = () => {
 let _platform;
 
 /**
- * {@link core/platform.detect} returns the {@link core/platform.platform} object.
+ * Returns the {@link core/platform.platform} object.
  *
- * @type {Function}
- * @returns {Object} the {@link core/platform.platform} object
+ * @function
+ * @returns {Object}     The {@link core/platform.platform} object
  *
  * @method detect
  * @memberof core/platform
@@ -138,21 +139,22 @@ const detect = () => {
 };
 
 /**
- * {@link core/platform.platform} provides basic information about the running platform.
+ * Provides basic information about the running platform.
  *
  * @readonly
  * @type {Object}
- * @property {Boolean} gesture - Set `true` if the platform has native double-finger events
- * @property {Boolean} node - Set `true` only if `window` is `undefined`
- * @property {String} platformName - Set to the name of the platform
- * @property {Boolean} touch - Set `true` if the platform has native single-finger events
- * @property {Boolean} unknown - Set `true` for any unknown system
+ * @property {Boolean} gesture - `true` if the platform has native double-finger events
+ * @property {Boolean} node - `true` only if `window` is `undefined`
+ * @property {String} platformName - The name of the platform
+ * @property {Boolean} touch - `true` if the platform has native single-finger events
+ * @property {Boolean} unknown - `true` for any unknown system
  *
  * @memberof core/platform
  * @public
  */
 
 const platform = {};
+
 [
 	'gesture',
 	'node',
@@ -171,4 +173,7 @@ const platform = {};
 });
 
 export default platform;
-export {detect, platform};
+export {
+	detect,
+	platform
+};

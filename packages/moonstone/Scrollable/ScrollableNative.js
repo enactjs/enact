@@ -188,7 +188,8 @@ class ScrollableBaseNative extends Component {
 
 	componentDidUpdate () {
 		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null) {
-			this.updateScrollOnFocus();
+			const focusedItem = Spotlight.getCurrent();
+			this.calculateAndScrollTo(focusedItem);
 		}
 	}
 
@@ -358,9 +359,39 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	calculateAndScrollTo = (spotItem) => {
+		const positionFn = this.childRef.calculatePositionOnFocus,
+			{containerRef} = this.uiRef.childRef;
+
+		if (spotItem && positionFn && containerRef && containerRef.contains(spotItem)) {
+			const lastPos = this.lastScrollPositionOnFocus;
+			let pos;
+
+			// If scroll animation is ongoing, we need to pass last target position to
+			// determine correct scroll position.
+			if (this.uiRef.scrolling && lastPos) {
+				pos = positionFn({item: spotItem, scrollPosition: (this.props.direction !== 'horizontal') ? lastPos.top : lastPos.left});
+			} else {
+				// scrollInfo passes in current `scrollHeight` and `scrollTop` before calculations
+				const
+					scrollInfo = {
+						previousScrollHeight: this.uiRef.bounds.scrollHeight,
+						scrollTop: this.uiRef.scrollTop
+					};
+				pos = positionFn({item: spotItem, scrollInfo});
+			}
+
+			if (pos && (pos.left !== this.uiRef.scrollLeft || pos.top !== this.uiRef.scrollTop)) {
+				this.startScrollOnFocus(pos, spotItem);
+			}
+
+			// update `scrollHeight`
+			this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
+		}
+	}
+
 	onFocus = (ev) => {
 		const
-			{direction} = this.props,
 			{isDragging} = this.uiRef,
 			shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
 				this.childRef.shouldPreventScrollByFocus() :
@@ -377,18 +408,7 @@ class ScrollableBaseNative extends Component {
 				spotItem = Spotlight.getCurrent();
 
 			if (item && item === spotItem && positionFn) {
-				const lastPos = this.lastScrollPositionOnFocus;
-				let pos;
-
-				// If scroll animation is ongoing, we need to pass last target position to
-				// determine correct scroll position.
-				if (this.uiRef.scrolling && lastPos) {
-					pos = positionFn({item, scrollPosition: (direction !== 'horizontal') ? lastPos.top : lastPos.left});
-				} else {
-					pos = positionFn({item});
-				}
-
-				this.startScrollOnFocus(pos, item);
+				this.calculateAndScrollTo(item);
 			}
 		} else if (this.childRef.setLastFocusedIndex) {
 			this.childRef.setLastFocusedIndex(ev.target);
@@ -587,26 +607,12 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
-	updateScrollOnFocus () {
-		const
-			focusedItem = Spotlight.getCurrent(),
-			{containerRef} = this.uiRef.childRef;
-
-		if (focusedItem && containerRef && containerRef.contains(focusedItem)) {
-			const
-				scrollInfo = {
-					previousScrollHeight: this.uiRef.bounds.scrollHeight,
-					scrollTop: this.uiRef.scrollTop
-				},
-				pos = this.childRef.calculatePositionOnFocus({item: focusedItem, scrollInfo});
-
-			if (pos && (pos.left !== this.uiRef.scrollLeft || pos.top !== this.uiRef.scrollTop)) {
-				this.uiRef.start(pos.left, pos.top, false);
-			}
+	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
+	handleScrollerUpdate = () => {
+		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null && Spotlight.getPointerMode()) {
+			const spotItem = Spotlight.getCurrent();
+			this.calculateAndScrollTo(spotItem);
 		}
-
-		// update `scrollHeight`
-		this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 	}
 
 	clearOverscrollEffect = (orientation, position) => {
@@ -842,6 +848,7 @@ class ScrollableBaseNative extends Component {
 									className: componentCss.scrollableFill,
 									isVerticalScrollbarVisible,
 									initUiChildRef,
+									onUpdate: this.handleScrollerUpdate,
 									ref: this.initChildRef,
 									rtl,
 									spotlightId

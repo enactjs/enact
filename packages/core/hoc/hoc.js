@@ -1,7 +1,8 @@
 /**
- * Provides the {@link core/hoc.hoc} method to create Higher-Order Components (HOCs).
+ * Provides the {@link core/hoc.hoc} method to create higher-order components (HOCs).
  *
  * @module core/hoc
+ * @exports hoc
  */
 
 import {isRenderable} from '../util';
@@ -17,7 +18,7 @@ const mergeFn = (key, defaultValue, userValue) => {
 };
 
 /**
- * Constructs a Higher-order Component using an optional set of default configuration parameters and
+ * Constructs a higher-order component (HOC) using an optional set of default configuration parameters and
  * a factory method that accepts instance configuration parameters and a component to wrap. The
  * returned function can accept:
  *	* an instance config and a component constructor to wrap and return a renderable component, or
@@ -55,7 +56,7 @@ const mergeFn = (key, defaultValue, userValue) => {
  * @param  {Object} defaultConfig Set of default configuration parameters
  * @param  {Function} hawk        Higher-order component
  *
- * @returns {Function}             HoC Decorator
+ * @returns {Function}             HOC Decorator
  * @memberof core/hoc
  * @public
  */
