@@ -18,3 +18,11 @@ script:
     - npm run pack
     - npm run pack-qa
     - echo -e "\x1b\x5b35;1m*** sampler build complete\x1b\x5b0m"
+    - cd ../../..
+    - git clone --depth=1 git@github.com:enyojs/enact-docs.git
+    - cd enact-docs
+    - npm install
+    - rm -r node_modules/enact
+      # link is relative to target location!
+    - ln -s ../../enact node_modules/enact
+    - npm run parse -- --strict
