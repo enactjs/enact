@@ -4,7 +4,8 @@ import Divider from '@enact/moonstone/Divider';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {select} from '@storybook/addon-knobs';
+
+import {select} from '../../src/enact-knobs';
 
 const ContextualButton = ContextualPopupDecorator(Button);
 ContextualButton.displayName = 'ContextualButton';
@@ -67,9 +68,9 @@ storiesOf('ContextualPopupDecorator', module)
 		() => (
 			<div style={{textAlign: 'center', marginTop: ri.unit(99, 'rem')}}>
 				<ContextualPopupWithActivator
-					direction={select('direction', ['up', 'down', 'left', 'right'], 'down')}
+					direction={select('direction', ['up', 'down', 'left', 'right'], ContextualButton, 'down')}
 					popupComponent={renderPopup}
-					spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-only')}
+					spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], ContextualButton, 'self-only')}
 				>
 					Hello Contextual Button
 				</ContextualPopupWithActivator>

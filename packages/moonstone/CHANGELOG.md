@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `moonstone/MoonstoneDecorator` config property `disableFullscreen` to exclude `enact-fit` className
+- `moonstone/Scroller` prop `onUpdate`
+
+### Fixed
+
+- `moonstone/Scrollable` to update scroll properly on pointer click
+- `moonstone/TooltipDecorator` to prevent unnecessary re-renders when losing focus
+
 ## [2.0.0-beta.8] - 2018-06-25
 
 ### Added
@@ -88,6 +100,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` to read when knob gains focus or for a change in value
 - `moonstone/Scroller` to not cut off Expandables when scrollbar appears
 - `moonstone/VideoPlayer` to correctly read out when play button is pressed
+- `moonstone/Divider` to always use a fixed height, regardless of locale
 
 ## [2.0.0-beta.4] - 2018-05-21
 
