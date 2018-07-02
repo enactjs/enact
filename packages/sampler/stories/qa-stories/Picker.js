@@ -5,8 +5,10 @@ import PickerRTL from './components/PickerRTL';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, select} from '@storybook/addon-knobs';
-import nullify from '../../src/utils/nullify.js';
+
+import {boolean, select} from '../../src/enact-knobs';
+
+Picker.displayName = 'Picker';
 
 const prop = {
 	orientation: ['horizontal', 'vertical'],
@@ -56,14 +58,14 @@ storiesOf('Picker', module)
 		() => (
 			<Picker
 				onChange={action('onChange')}
-				width={nullify(select('width', prop.width, 'large'))}
-				orientation={select('orientation', prop.orientation, 'horizontal')}
-				wrap={boolean('wrap')}
-				joined={boolean('joined')}
-				noAnimation={boolean('noAnimation')}
-				disabled={boolean('disabled')}
-				incrementIcon={select('incrementIcon', iconNames)}
-				decrementIcon={select('decrementIcon', iconNames)}
+				width={select('width', prop.width, Picker, 'large')}
+				orientation={select('orientation', prop.orientation, Picker, 'horizontal')}
+				wrap={boolean('wrap', Picker)}
+				joined={boolean('joined', Picker)}
+				noAnimation={boolean('noAnimation', Picker)}
+				disabled={boolean('disabled', Picker)}
+				incrementIcon={select('incrementIcon', iconNames, Picker)}
+				decrementIcon={select('decrementIcon', iconNames, Picker)}
 			>
 				{pickerList.long}
 			</Picker>
@@ -74,14 +76,14 @@ storiesOf('Picker', module)
 		() => (
 			<Picker
 				onChange={action('onChange')}
-				width={nullify(select('width', prop.width, 'large'))}
-				orientation={select('orientation', prop.orientation, 'horizontal')}
-				wrap={boolean('wrap')}
-				joined={boolean('joined')}
-				noAnimation={boolean('noAnimation')}
-				disabled={boolean('disabled')}
-				incrementIcon={select('incrementIcon', iconNames)}
-				decrementIcon={select('decrementIcon', iconNames)}
+				width={select('width', prop.width, Picker, 'large')}
+				orientation={select('orientation', prop.orientation, Picker, 'horizontal')}
+				wrap={boolean('wrap', Picker)}
+				joined={boolean('joined', Picker)}
+				noAnimation={boolean('noAnimation', Picker)}
+				disabled={boolean('disabled', Picker)}
+				incrementIcon={select('incrementIcon', iconNames, Picker)}
+				decrementIcon={select('decrementIcon', iconNames, Picker)}
 			>
 				{pickerList.tall}
 			</Picker>
@@ -92,14 +94,14 @@ storiesOf('Picker', module)
 		() => (
 			<Picker
 				onChange={action('onChange')}
-				width={nullify(select('width', prop.width, 'medium'))}
-				orientation={select('orientation', prop.orientation, 'horizontal')}
-				wrap={boolean('wrap')}
-				joined={boolean('joined')}
-				noAnimation={boolean('noAnimation')}
-				disabled={boolean('disabled')}
-				incrementIcon={select('incrementIcon', iconNames)}
-				decrementIcon={select('decrementIcon', iconNames)}
+				width={select('width', prop.width, Picker, 'medium')}
+				orientation={select('orientation', prop.orientation, Picker, 'horizontal')}
+				wrap={boolean('wrap', Picker)}
+				joined={boolean('joined', Picker)}
+				noAnimation={boolean('noAnimation', Picker)}
+				disabled={boolean('disabled', Picker)}
+				incrementIcon={select('incrementIcon', iconNames, Picker)}
+				decrementIcon={select('decrementIcon', iconNames, Picker)}
 				defaultValue={2}
 			>
 				{pickerList.vegetables}
@@ -111,14 +113,14 @@ storiesOf('Picker', module)
 		() => (
 			<Picker
 				onChange={action('onChange')}
-				width={select('width', prop.width, 'large')}
-				orientation={select('orientation', prop.orientation)}
-				wrap={boolean('wrap', true)}
-				joined={boolean('joined')}
-				noAnimation={boolean('noAnimation')}
-				disabled={boolean('disabled')}
-				incrementIcon={select('incrementIcon', iconNames)}
-				decrementIcon={select('decrementIcon', iconNames)}
+				width={select('width', prop.width, Picker, 'large')}
+				orientation={select('orientation', prop.orientation, Picker)}
+				wrap={boolean('wrap', Picker, true)}
+				joined={boolean('joined', Picker)}
+				noAnimation={boolean('noAnimation', Picker)}
+				disabled={boolean('disabled', Picker)}
+				incrementIcon={select('incrementIcon', iconNames, Picker)}
+				decrementIcon={select('decrementIcon', iconNames, Picker)}
 			>
 				{[]}
 			</Picker>
@@ -129,14 +131,14 @@ storiesOf('Picker', module)
 		() => (
 			<Picker
 				onChange={action('onChange')}
-				width={nullify(select('width', prop.width, 'large'))}
-				orientation={select('orientation', prop.orientation)}
-				wrap={boolean('wrap', true)}
-				joined={boolean('joined')}
-				noAnimation={boolean('noAnimation')}
-				disabled={boolean('disabled')}
-				incrementIcon={select('incrementIcon', iconNames)}
-				decrementIcon={select('decrementIcon', iconNames)}
+				width={select('width', prop.width, Picker, 'large')}
+				orientation={select('orientation', prop.orientation, Picker)}
+				wrap={boolean('wrap', Picker, true)}
+				joined={boolean('joined', Picker)}
+				noAnimation={boolean('noAnimation', Picker)}
+				disabled={boolean('disabled', Picker)}
+				incrementIcon={select('incrementIcon', iconNames, Picker)}
+				decrementIcon={select('decrementIcon', iconNames, Picker)}
 			>
 				{pickerList.oneAirport}
 			</Picker>
@@ -146,12 +148,12 @@ storiesOf('Picker', module)
 		'with item add/remove (ENYO-2448)',
 		() => (
 			<PickerAddRemove
-				width={select('width', prop.width, 'medium')}
-				orientation={select('orientation', prop.orientation, 'horizontal')}
-				wrap={boolean('wrap')}
-				joined={boolean('joined')}
-				noAnimation={boolean('noAnimation')}
-				disabled={boolean('disabled')}
+				width={select('width', prop.width, Picker, 'medium')}
+				orientation={select('orientation', prop.orientation, Picker, 'horizontal')}
+				wrap={boolean('wrap', Picker)}
+				joined={boolean('joined', Picker)}
+				noAnimation={boolean('noAnimation', Picker)}
+				disabled={boolean('disabled', Picker)}
 			>
 				{pickerList.emptyList}
 			</PickerAddRemove>
@@ -161,11 +163,11 @@ storiesOf('Picker', module)
 		'RTL Layout (PLAT-28123)',
 		() => (
 			<PickerRTL
-				width={select('width', prop.width, 'medium')}
-				wrap={boolean('wrap')}
-				joined={boolean('joined')}
-				noAnimation={boolean('noAnimation')}
-				disabled={boolean('disabled')}
+				width={select('width', prop.width, Picker, 'medium')}
+				wrap={boolean('wrap', Picker)}
+				joined={boolean('joined', Picker)}
+				noAnimation={boolean('noAnimation', Picker)}
+				disabled={boolean('disabled', Picker)}
 			>
 				{pickerList.orderedList}
 			</PickerRTL>

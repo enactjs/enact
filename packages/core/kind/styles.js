@@ -36,6 +36,7 @@ import {addInternalProp} from './util';
  * @method styles
  * @param   {Object}    cfg  Configuration object containing one of `css`, `className`,
  *                           `publicClassNames`, and/or `style`
+ *
  * @returns {Function}       Function that accepts a props object and mutates it to merge class
  *                           names and style objects and provide the `styler` utility function and
  *                           `css` merged class name map
