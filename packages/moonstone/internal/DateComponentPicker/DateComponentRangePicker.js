@@ -97,7 +97,7 @@ const DateComponentRangePickerBase = kind({
 				noAnimation={noAnimation}
 				orientation="vertical"
 				value={value}
-				voiceLabelType="index"
+				voiceLabelType="range"
 				wrap={wrap}
 			/>
 		</DateComponentPickerChrome>
