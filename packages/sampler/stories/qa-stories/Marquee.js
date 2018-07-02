@@ -4,8 +4,10 @@ import ri from '@enact/ui/resolution';
 import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {boolean, number, select} from '@storybook/addon-knobs';
-import nullify from '../../src/utils/nullify.js';
+
+import {boolean, number, select} from '../../src/enact-knobs';
+
+Marquee.displayName = 'Marquee';
 
 const SpottableMarquee = Spottable(Marquee);
 const Controller = MarqueeController('div');
@@ -31,20 +33,20 @@ storiesOf('Marquee', module)
 	.add(
 		'LTR',
 		() => {
-			const disabled = nullify(boolean('disabled', false));
+			const disabled = boolean('disabled', Marquee, false);
 			return (
 				<section>
 					<Marquee
 						style={{width: ri.unit(399, 'rem')}}
 						disabled={disabled}
-						marqueeDelay={number('marqueeDelay', 1000)}
-						marqueeDisabled={boolean('marqueeDisabled', false)}
-						marqueeOn={select('marqueeOn', ['hover', 'render'], 'render')}
+						marqueeDelay={number('marqueeDelay', Marquee, 1000)}
+						marqueeDisabled={boolean('marqueeDisabled', Marquee, false)}
+						marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
 						marqueeOnRenderDelay={1000}
-						marqueeResetDelay={number('marqueeResetDelay', 1000)}
-						marqueeSpeed={number('marqueeSpeed', 60)}
+						marqueeResetDelay={number('marqueeResetDelay', Marquee, 1000)}
+						marqueeSpeed={number('marqueeSpeed', Marquee, 60)}
 					>
-						{select('children', LTR, LTR[0])}
+						{select('children', LTR, Marquee, LTR[0])}
 					</Marquee>
 					{disabledDisclaimer(disabled)}
 				</section>
@@ -55,20 +57,20 @@ storiesOf('Marquee', module)
 	.add(
 		'RTL',
 		() => {
-			const disabled = nullify(boolean('disabled', false));
+			const disabled = boolean('disabled', Marquee, false);
 			return (
 				<section>
 					<Marquee
 						style={{width: ri.unit(399, 'rem')}}
 						disabled={disabled}
-						marqueeDelay={number('marqueeDelay', 1000)}
-						marqueeDisabled={boolean('marqueeDisabled', false)}
-						marqueeOn={select('marqueeOn', ['hover', 'render'], 'render')}
+						marqueeDelay={number('marqueeDelay', Marquee, 1000)}
+						marqueeDisabled={boolean('marqueeDisabled', Marquee, false)}
+						marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
 						marqueeOnRenderDelay={1000}
-						marqueeResetDelay={number('marqueeResetDelay', 1000)}
-						marqueeSpeed={number('marqueeSpeed', 60)}
+						marqueeResetDelay={number('marqueeResetDelay', Marquee, 1000)}
+						marqueeSpeed={number('marqueeSpeed', Marquee, 60)}
 					>
-						{select('children', RTL, RTL[0])}
+						{select('children', RTL, Marquee, RTL[0])}
 					</Marquee>
 					{disabledDisclaimer(disabled)}
 				</section>
@@ -79,19 +81,19 @@ storiesOf('Marquee', module)
 	.add(
 		'Synchronized',
 		() => {
-			const disabled = nullify(boolean('disabled', false));
+			const disabled = boolean('disabled', Marquee, false);
 			return (
 				<Controller style={{width: ri.unit(399, 'rem')}}>
 					{LTR.map((children, index) => (
 						<Marquee
 							disabled={disabled}
 							key={index}
-							marqueeDelay={number('marqueeDelay', 1000)}
-							marqueeDisabled={boolean('marqueeDisabled', false)}
-							marqueeOn={select('marqueeOn', ['hover', 'render'], 'render')}
+							marqueeDelay={number('marqueeDelay', Marquee, 1000)}
+							marqueeDisabled={boolean('marqueeDisabled', Marquee, false)}
+							marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
 							marqueeOnRenderDelay={5000}
-							marqueeResetDelay={number('marqueeResetDelay', 1000)}
-							marqueeSpeed={number('marqueeSpeed', 60)}
+							marqueeResetDelay={number('marqueeResetDelay', Marquee, 1000)}
+							marqueeSpeed={number('marqueeSpeed', Marquee, 60)}
 						>
 							{children}
 						</Marquee>
