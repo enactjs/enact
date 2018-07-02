@@ -408,11 +408,10 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		/**
-		 * Calculates and positions contextual popup in relation to the position and dimensions of the activator
-		 * and popup.
+		 * Position the popup in relation to the activator.
 		 *
-		 * If the popup's dimension does not fit within the given direction, then it will automatically flip to
-		 * the opposite direction.
+		 * Position is based on the dimensions of the popup and its avitvator. If the popup does not
+		 * fit in the specified direction, it will automatically flip to the opposite direction.
 		 *
 		 * @method
 		 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.prototype
