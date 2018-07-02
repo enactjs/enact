@@ -821,6 +821,7 @@ const PickerBase = class extends React.Component {
 				aria-disabled={disabled}
 				aria-label={this.calcAriaLabel(valueText)}
 				className={classes}
+				data-webos-voice-group-label={voiceGroupLabel}
 				data-webos-voice-intent='Select'
 				disabled={disabled}
 				onBlur={this.handleBlur}
