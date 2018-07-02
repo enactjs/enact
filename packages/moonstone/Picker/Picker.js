@@ -166,16 +166,6 @@ const PickerBase = kind({
 		value: 0
 	},
 
-	handlers: {
-		onVoice: (e, {onChange, children}) => {
-			const max = children && children.length ? children.length - 1 : 0;
-			const index = e && e.index && Number(e.index);
-			if (onChange && index >= 0 && index <= max) {
-				onChange({value: index});
-			}
-		}
-	},
-
 	computed: {
 		max: ({children}) => children && children.length ? children.length - 1 : 0,
 		reverse: ({orientation}) => (orientation === 'vertical'),
@@ -198,16 +188,16 @@ const PickerBase = kind({
 			}
 			return clamp(0, max, value);
 		},
-		voiceLabels: ({children}) => {
+		voiceLabel: ({children}) => {
 			return JSON.stringify(children.map((child) => (typeof child === 'object' ? child.props.children : child)));
 		}
 	},
 
-	render: ({children, max, value, voiceLabels, ...rest}) => {
+	render: ({children, max, value, voiceLabel, ...rest}) => {
 		delete rest.marqueeDisabled;
 
 		return (
-			<PickerCore {...rest} data-webos-voice-labels-ext={voiceLabels} min={0} max={max} index={value} step={1} value={value}>
+			<PickerCore {...rest} data-webos-voice-labels-ext={voiceLabel} min={0} max={max} index={value} step={1} value={value} voiceLabelType="element">
 				{children}
 			</PickerCore>
 		);

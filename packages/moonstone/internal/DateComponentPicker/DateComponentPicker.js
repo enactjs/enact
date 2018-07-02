@@ -93,33 +93,23 @@ const DateComponentPickerBase = kind({
 		wrap: PropTypes.bool
 	},
 
-	handlers: {
-		onVoice: (e, {onChange, children}) => {
-			const max = children && children.length ? children.length - 1 : 0;
-			const index = e && e.index && Number(e.index);
-			if (onChange && index >= 0 && index <= max) {
-				onChange({value: index});
-			}
-		}
-	},
-
 	computed: {
 		children: ({children}) => React.Children.map(children, (child) => (
 			<PickerItem marqueeDisabled>{child}</PickerItem>
 		)),
 		max: ({children}) => React.Children.count(children) - 1,
-		voiceLabels: ({children}) => {
+		voiceLabel: ({children}) => {
 			return JSON.stringify(children);
 		}
 	},
 
-	render: ({'aria-valuetext': ariaValuetext, accessibilityHint, children, className, label, max, noAnimation, reverse, value, voiceLabels, wrap, ...rest}) => (
+	render: ({'aria-valuetext': ariaValuetext, accessibilityHint, children, className, label, max, noAnimation, reverse, value, voiceLabel, wrap, ...rest}) => (
 		<DateComponentPickerChrome className={className} label={label}>
 			<Picker
 				{...rest}
 				accessibilityHint={(accessibilityHint == null) ? label : accessibilityHint}
 				aria-valuetext={(accessibilityHint == null) ? ariaValuetext : null}
-				data-webos-voice-labels-ext={voiceLabels}
+				data-webos-voice-labels-ext={voiceLabel}
 				index={value}
 				joined
 				max={max}
@@ -129,6 +119,7 @@ const DateComponentPickerBase = kind({
 				reverse={reverse}
 				step={1}
 				value={value}
+				voiceLabelType="element"
 				wrap={wrap}
 			>
 				{children}

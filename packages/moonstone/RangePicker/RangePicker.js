@@ -205,15 +205,6 @@ const RangePickerBase = kind({
 		wrap: PropTypes.bool
 	},
 
-	handlers: {
-		onVoice: (e, {onChange, min, max}) => {
-			const value = e.value && Number(e.value);
-			if (onChange && (value >= min && value <= max)) {
-				onChange({value: value});
-			}
-		}
-	},
-
 	computed: {
 		disabled: ({disabled, max, min}) => min >= max ? true : disabled,
 		label: ({max, min, padded, value}) => {
@@ -235,15 +226,15 @@ const RangePickerBase = kind({
 			}
 			return clamp(min, max, value);
 		},
-		voiceLabels: ({min, max}) => {
+		voiceLabel: ({min, max}) => {
 			return JSON.stringify([min, max]);
 		}
 	},
 
-	render: ({label, value, voiceLabels, ...rest}) => {
+	render: ({label, value, voiceLabel, ...rest}) => {
 		delete rest.padded;
 		return (
-			<Picker {...rest} data-webos-voice-labels-ext={voiceLabels} index={0} value={value} reverse={false}>
+			<Picker {...rest} data-webos-voice-labels-ext={voiceLabel} index={0} value={value} voiceLabelType="range" reverse={false}>
 				<PickerItem key={value} marqueeDisabled style={{direction: 'ltr'}}>{label}</PickerItem>
 			</Picker>
 		);

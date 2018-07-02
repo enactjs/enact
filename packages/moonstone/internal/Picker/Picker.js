@@ -338,6 +338,15 @@ const PickerBase = class extends React.Component {
 		value: PropTypes.number,
 
 		/**
+		 * The type of voice label array
+		 *
+		 * @type {String}
+		 * @default 'element'
+		 * @public
+		 */
+		voiceLabelType: PropTypes.oneOf(['element', 'range']),
+
+		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
 		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
 		 * word pickers, `'large'` for maximum-sized pickers.
@@ -369,7 +378,8 @@ const PickerBase = class extends React.Component {
 		orientation: 'horizontal',
 		spotlightDisabled: false,
 		step: 1,
-		value: 0
+		value: 0,
+		voiceLabelType: 'element'
 	}
 
 	constructor (props) {
@@ -677,9 +687,11 @@ const PickerBase = class extends React.Component {
 	}
 
 	handleVoice = (ev) => {
-		const {onVoice} = this.props;
-		if (ev && ev.detail && onVoice) {
-			onVoice(ev.detail);
+		const {onChange, value, min, max, voiceLabelType} = this.props;
+		const type = voiceLabelType === 'range' ? 'value' : 'index';
+		const result = ev && ev.detail && ev.detail[type] && Number(ev.detail[type]);
+		if (onChange && result >= min && result <= max && result !== value) {
+			onChange({value: result});
 		}
 	}
 
@@ -793,8 +805,8 @@ const PickerBase = class extends React.Component {
 		delete rest.onPickerSpotlightUp;
 		delete rest.reverse;
 		delete rest.value;
+		delete rest.voiceLabelType;
 		delete rest.wrap;
-		delete rest.onVoice;
 
 		const incrementIcon = selectIncIcon(this.props);
 		const decrementIcon = selectDecIcon(this.props);
