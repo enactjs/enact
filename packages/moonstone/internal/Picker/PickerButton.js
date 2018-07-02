@@ -2,10 +2,10 @@ import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {contextTypes as controlContextTypes} from '@enact/ui/Marquee/MarqueeController';
 import Pure from '@enact/ui/internal/Pure';
 import Touchable from '@enact/ui/Touchable';
 
-import {controlContextTypes} from '../../Marquee';
 import Icon from '../../Icon';
 import IconButton from '../../IconButton';
 import {withSkinnableProps} from '../../Skinnable';
