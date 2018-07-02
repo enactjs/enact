@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Scrollable` to update scroll properly on pointer click
 - `moonstone/TooltipDecorator` to prevent unnecessary re-renders when losing focus
+- `moonstone/VideoPlayer.MediaControls` to correctly handle more button color when the prop is not specified
 
 ## [2.0.0-beta.8] - 2018-06-25
 
