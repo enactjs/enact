@@ -700,8 +700,10 @@ class ScrollableBaseNative extends Component {
 
 	onKeyDown = (ev) => {
 		if (this.props.onKeyDown) {
+			console.log('ui/Scrollable.onKeyDown');
 			forward('onKeyDown', ev, this.props);
 		} else if (isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) {
+			console.log('ui/Scrollable.onKeyDown 2');
 			ev.preventDefault();
 			if (!ev.repeat) {
 				this.scrollByPage(ev.keyCode);
@@ -932,6 +934,7 @@ class ScrollableBaseNative extends Component {
 	// scroll start
 
 	start (targetX, targetY, animate = true) {
+console.log('ui/Scrollable.start');
 		const
 			bounds = this.getScrollBounds(),
 			childRef = this.childRef,
@@ -947,9 +950,24 @@ class ScrollableBaseNative extends Component {
 		if (animate) {
 			childRef.scrollToPosition(targetX, targetY);
 		} else {
+
 			childContainerRef.style.scrollBehavior = null;
+console.log('ui/Scrollable.start > scrollBehavior: null');
+
 			childRef.scrollToPosition(targetX, targetY);
 			childContainerRef.style.scrollBehavior = 'smooth';
+console.log('ui/Scrollable.start > scrollBehavior: smooth');
+
+
+			// childContainerRef.scrollTop = this.scrollTop + 1;
+
+			// setTimeout(() => {
+			// 	childContainerRef.style.scrollBehavior = null;
+			// 	childContainerRef.scrollTop = targetY;
+			// 	childContainerRef.style.scrollBehavior = 'smooth';
+			// }, 30);
+
+
 		}
 
 		if (this.props.start) {
@@ -963,8 +981,11 @@ class ScrollableBaseNative extends Component {
 			childContainerRef = childRef.containerRef;
 
 		childContainerRef.style.scrollBehavior = null;
+		console.log('ui/Scrollable.stop > scrollBehavior: null');
+
 		childRef.scrollToPosition(this.scrollLeft + 0.1, this.scrollTop + 0.1);
 		childContainerRef.style.scrollBehavior = 'smooth';
+		console.log('ui/Scrollable.stop > scrollBehavior: smooth');
 	}
 
 	// scrollTo API
@@ -1173,6 +1194,8 @@ class ScrollableBaseNative extends Component {
 				childRef.containerRef.addEventListener('mousedown', this.onMouseDown);
 			}
 			this.childRef.containerRef.style.scrollBehavior = 'smooth';
+console.log('ui/Scrollable.stop > scrollBehavior: smooth');
+
 		}
 
 		if (this.props.addEventListeners) {

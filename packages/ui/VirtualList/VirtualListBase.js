@@ -535,6 +535,8 @@ const VirtualListBaseFactory = (type) => {
 				this.containerRef.scrollTo(
 					(rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y
 				);
+console.log('moonstone/VirtualListBase.scrollToPosition > y: ', y);
+
 			}
 		}
 
@@ -547,6 +549,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		didScroll (x, y, dirX, dirY) {
+console.log('moonstone/VirtualListBase.didScroll > firstIndex, y: ', this.state.firstIndex, y);
 			const
 				{dataSize} = this.props,
 				{firstIndex} = this.state,
@@ -590,8 +593,11 @@ const VirtualListBaseFactory = (type) => {
 			this.scrollPosition = pos;
 			this.updateMoreInfo(dataSize, pos);
 
+console.log('moonstone/VirtualListBase.didScroll > newFirstIndex: ', newFirstIndex);
 			if (firstIndex !== newFirstIndex) {
 				this.setState({firstIndex: newFirstIndex});
+console.log('moonstone/VirtualListBase.didScroll > setState');
+
 			}
 		}
 
@@ -652,11 +658,16 @@ const VirtualListBaseFactory = (type) => {
 				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0 || this.prevFirstIndex === -1) ? firstIndex + numOfItems : this.prevFirstIndex;
 
 			if (updateFrom >= updateTo) {
+console.log('moonstone/VirtualListBase.positionItems > return');
+
 				return;
 			} else if (updateTo > dataSize) {
 				hideTo = updateTo;
 				updateTo = dataSize;
 			}
+
+console.log('moonstone/VirtualListBase.positionItems > updateFrom, updateTo: ', updateFrom, updateTo);
+
 
 			let
 				{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom),

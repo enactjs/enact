@@ -454,11 +454,15 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		scrollToNextItem = ({direction, focusedItem}) => {
+			console.log('moonstone/VirtualListBase.scrollToNextItem > direction, focusedItem: ', direction, focusedItem);
+
 			const
 				{cbScrollTo} = this.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
 				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
 				indexToScroll = this.getIndexToScroll(direction, focusedIndex);
+
+			console.log('moonstone/VirtualListBase.scrollToNextItem > indexToScroll: ', indexToScroll);
 
 			if (indexToScroll !== -1 && focusedIndex !== indexToScroll) {
 				const
@@ -474,10 +478,13 @@ const VirtualListBaseFactory = (type) => {
 				} else {
 					// Scroll to the next spottable item without animation
 					if (!Spotlight.isPaused()) {
+						console.log('moonstone/VirtualListBase.scrollToNextItem > Spotlight.pause');
 						Spotlight.pause();
 					}
 					focusedItem.blur();
+					console.log('moonstone/VirtualListBase.scrollToNextItem > focusedItem.blur');
 					this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
+					console.log('moonstone/VirtualListBase.scrollToNextItem > this.nodeIndexToBeFocused: ', this.nodeIndexToBeFocused);
 				}
 				cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
 
@@ -516,6 +523,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		jumpToSpottableItem = (keyCode, repeat, target) => {
+console.log('moonstone/VirtualListBase.jumpToSpottableItem');
 			const
 				{cbScrollTo, dataSize, isItemDisabled, rtl, wrap} = this.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
@@ -531,6 +539,8 @@ const VirtualListBaseFactory = (type) => {
 					!isPrimaryDirectionVertical && (!rtl && isLeft(keyCode) || rtl && isRight(keyCode)) ||
 					null
 				);
+
+console.log('moonstone/VirtualListBase.jumpToSpottableItem > currentIndex: ', currentIndex);
 
 			this.isScrolledBy5way = false;
 			this.isWrappedBy5way = false;
@@ -615,11 +625,15 @@ const VirtualListBaseFactory = (type) => {
 
 				if (firstIndex <= nextIndex && nextIndex < firstIndex + numOfItems) {
 					this.focusOnItem(nextIndex);
+console.log('moonstone/VirtualListBase.jumpToSpottableItem > this.focusOnItem');
 				} else {
 					this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
+console.log('moonstone/VirtualListBase.jumpToSpottableItem > this.nodeIndexToBeFocuse: ', this.nodeIndexToBeFocuse);
 
 					if (!Spotlight.isPaused()) {
 						Spotlight.pause();
+console.log('moonstone/VirtualListBase.jumpToSpottableItem > Spotlight.pause');
+
 					}
 
 					if (isWrapped) {
@@ -628,16 +642,19 @@ const VirtualListBaseFactory = (type) => {
 						// since it can be a very long scroll (from one edge to the other edge)
 						// and definitely it's not a case of changing "pointer" mode to "5way key" mode.
 						target.blur();
+console.log('moonstone/VirtualListBase.jumpToSpottableItem > target.blur');
 					} else {
 						// When changing from "pointer" mode to "5way key" mode,
 						// a pointer is hidden and a last focused item get focused after 30ms.
 						// To make sure the item to be blurred after that, we used 50ms.
 						setTimeout(() => {
 							target.blur();
+console.log('moonstone/VirtualListBase.jumpToSpottableItem > target.blur with setTimeout');
 						}, 50);
 					}
 
 					this.isScrolledBy5way = true;
+console.log('moonstone/VirtualListBase.jumpToSpottableItem > cbScrollTo');
 					cbScrollTo({
 						index: nextIndex,
 						stickTo: isForward ? 'end' : 'start',
@@ -678,6 +695,7 @@ const VirtualListBaseFactory = (type) => {
 		focusOnNode = (node) => {
 			if (node) {
 				Spotlight.focus(node);
+console.log('moonstone/VirtualListBase.focusOnNode > Spotlight.focus node: ', node);
 			}
 		}
 
@@ -686,13 +704,18 @@ const VirtualListBaseFactory = (type) => {
 
 			if (Spotlight.isPaused()) {
 				Spotlight.resume();
+console.log('moonstone/VirtualListBase.focusOnItem > Spotlight.resume');
 			}
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
+console.log('moonstone/VirtualListBase.focusOnItem > this.nodeIndexToBeFocused = null');
 			this.isScrolledByJump = false;
+console.log('moonstone/VirtualListBase.focusOnItem > this.isScrolledByJump = false');
 		}
 
 		initItemRef = (ref, index) => {
+console.log('moonstone/VirtualListBase.initItemRef > this.index: ', index);
+
 			if (ref) {
 				if (type === JS) {
 					this.focusOnItem(index);
@@ -701,6 +724,7 @@ const VirtualListBaseFactory = (type) => {
 					// Then VirtualListNative tries to scroll again differently from VirtualList.
 					// So we would like to skip `focus` handling when focusing the item as a workaround.
 					this.isScrolledByJump = true;
+console.log('moonstone/VirtualListBase.initItemRef > this.isScrolledByJump = true');
 					this.focusOnItem(index);
 				}
 			}
@@ -710,6 +734,7 @@ const VirtualListBaseFactory = (type) => {
 			// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
 			setTimeout(() => {
 				this.focusOnItem(index);
+console.log('moonstone/VirtualListBase.focusByIndex > this.focusOnItem');
 			}, 0);
 		}
 
@@ -798,7 +823,11 @@ const VirtualListBaseFactory = (type) => {
 					}
 				}
 				this.nodeIndexToBeFocused = null;
+console.log('moonstone/VirtualListBase.calculatePositionOnFocus > this.nodeIndexToBeFocused = null');
+
 				this.lastFocusedIndex = focusedIndex;
+console.log('moonstone/VirtualListBase.calculatePositionOnFocus > this.lastFocusedIndex: ', this.lastFocusedIndex);
+
 
 				if (primary.clientSize >= primary.itemSize) {
 					if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
@@ -843,6 +872,7 @@ const VirtualListBaseFactory = (type) => {
 				// we call `scrollTo` to create DOM for it.
 				cbScrollTo({index: preservedIndex, animate: false, focus: true});
 				this.isScrolledByJump = true;
+console.log('moonstone/VirtualListBase.updateStatesAndBounds > this.isScrolledByJump = true');
 
 				return true;
 			} else {

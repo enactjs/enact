@@ -431,6 +431,8 @@ class ScrollableBaseNative extends Component {
 	}
 
 	scrollByPage = (keyCode) => {
+		console.log('moonstone/Scrollable.scrollByPage');
+
 		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
 		// scroller as a plain container
 		if (!this.uiRef.state.isVerticalScrollbarVisible) return;
@@ -443,6 +445,7 @@ class ScrollableBaseNative extends Component {
 			spotItem = Spotlight.getCurrent();
 
 		if (spotItem) {
+			console.log('moonstone/Scrollable.scrollByPage', 'spotItem');
 			// Should skip scroll by page when spotItem is paging control button of Scrollbar
 			if (!childRef.containerRef.contains(spotItem)) {
 				return;
@@ -468,6 +471,8 @@ class ScrollableBaseNative extends Component {
 				Spotlight.focus(next);
 			// If a next spottable DOM element is equals to the current spottable item, we need to find a next item
 			} else {
+				console.log('moonstone/Scrollable.scrollByPage', 'scrollFn');
+
 				const nextPage = scrollFn({direction, reverseDirection: rDirection, focusedItem: spotItem, spotlightId});
 
 				// If finding a next spottable item in a Scroller, focus it
@@ -508,6 +513,7 @@ class ScrollableBaseNative extends Component {
 			if (Spotlight.getPointerMode()) {
 				ev.stopPropagation();
 			} else if (!ev.repeat && this.hasFocus()) {
+				console.log('moonstone/Scrollable.onKeyDown');
 				this.scrollByPage(ev.keyCode);
 			}
 		} else if (!Spotlight.getPointerMode() && !ev.repeat && this.hasFocus()) {
