@@ -5,6 +5,7 @@ import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import platform from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import Touchable from '@enact/ui/Touchable';
 import shouldUpdate from 'recompose/shouldUpdate';
@@ -397,13 +398,8 @@ const PickerBase = class extends React.Component {
 		if (this.props.joined) {
 			this.containerRef.addEventListener('wheel', this.handleWheel);
 		}
-		this.containerRef.addEventListener('webOSVoice', this.handleVoice);
-	}
-
-	handleVoice = (e) => {
-		const {onVoice} = this.props;
-		if (e && e.detail && onVoice) {
-			onVoice(e.detail);
+		if (platform.webos) {
+			this.containerRef.addEventListener('webOSVoice', this.handleVoice);
 		}
 	}
 
@@ -436,7 +432,9 @@ const PickerBase = class extends React.Component {
 		if (this.props.joined) {
 			this.containerRef.removeEventListener('wheel', this.handleWheel);
 		}
-		this.containerRef.removeEventListener('webOSVoice', this.handleVoice);
+		if (platform.webos) {
+			this.containerRef.removeEventListener('webOSVoice', this.handleVoice);
+		}
 	}
 
 	computeNextValue = (delta) => {
@@ -675,6 +673,13 @@ const PickerBase = class extends React.Component {
 			onPickerSpotlightRight(ev);
 		} else if (isUp(keyCode) && onPickerSpotlightUp) {
 			onPickerSpotlightUp(ev);
+		}
+	}
+
+	handleVoice = (ev) => {
+		const {onVoice} = this.props;
+		if (ev && ev.detail && onVoice) {
+			onVoice(ev.detail);
 		}
 	}
 
