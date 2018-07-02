@@ -2,12 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [2.0.0-beta.9] - 2018-07-02
 
 ### Added
 
 - `moonstone/ContextualPopupDecorator` instance method `positionContextualPopup()`
-- `moonstone/MoonstoneDecorator` config property `disableFullscreen` to exclude `enact-fit` className
+- `moonstone/MoonstoneDecorator` config property `disableFullscreen` to prevent the decorator from filling the entire screen
 - `moonstone/Scroller` prop `onUpdate`
 
 ### Fixed
