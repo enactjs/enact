@@ -228,6 +228,9 @@ The arrangement of controls on a page or view. The Enyo layout library provides 
 #### See Also
 *   [https://github.com/enyojs/layout](https://github.com/enyojs/layout)
 
+### LTR
+An acronym for 'left to right' describing locale characteristics.
+
 ### networkState
 #### See Also
 *   [https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement#Properties](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement#Properties)
@@ -300,6 +303,9 @@ Methods and properties marked as protected should only be used when subclassing 
 ### readyState
 #### See Also
 *   [https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement#Properties](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement#Properties)
+
+### RTL
+An acronym for 'right to left' describing locale characteristics.
 
 ### script
 #### See Also

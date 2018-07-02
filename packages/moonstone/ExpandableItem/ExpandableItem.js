@@ -111,7 +111,7 @@ const ExpandableItemBase = kind({
 		label: PropTypes.node,
 
 		/**
-		 * When `true`, the user is prevented from moving {@glossary Spotlight} past the bottom
+		 * When `true`, the user is prevented from moving [Spotlight] {@link /docs/developer-guide/glossary/#spotlight} past the bottom
 		 * of the expandable (when open) using 5-way controls.
 		 *
 		 * @type {Boolean}

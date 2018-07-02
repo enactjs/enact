@@ -136,8 +136,8 @@ const ExpandableListBase = kind({
 		noAutoClose: PropTypes.bool,
 
 		/**
-		 * When `true`, the user may move {@glossary Spotlight} past the bottom of the expandable
-		 * (when open) using 5-way controls.
+		 * When `true`, the user may move [Spotlight] {@link /docs/developer-guide/glossary/#spotlight} past the bottom
+		 * of the expandable (when open) using 5-way controls.
 		 *
 		 * @type {Boolean}
 		 * @default false

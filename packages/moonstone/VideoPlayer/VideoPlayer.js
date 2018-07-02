@@ -1361,7 +1361,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	/**
-	 * Sets the playback rate type (from the [keys]{@glossary Object.keys} of
+	 * Sets the playback rate type (from the [keys]{@link /docs/developer-guide/glossary/#objectkeys} of
 	 * [playbackRateHash]{@link moonstone/VideoPlayer.VideoPlayer#playbackRateHash}).
 	 *
 	 * @param {String} cmd - Key of the playback rate type.

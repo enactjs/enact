@@ -179,7 +179,7 @@ const PickerBase = class extends React.Component {
 
 		/**
 		 * When `true`, the Picker is shown as disabled and does not generate `onChange`
-		 * [events]{@glossary event}.
+		 * [events]{@link /docs/developer-guide/glossary/#event}.
 		 *
 		 * @type {Boolean}
 		 * @public

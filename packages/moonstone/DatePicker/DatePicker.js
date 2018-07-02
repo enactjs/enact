@@ -72,7 +72,7 @@ const dateTimeConfig = {
  * a day, month, and year.
  *
  * Set the [value]{@link moonstone/DatePicker.DatePicker#value} property to a standard
- * JavaScript {@glossary Date} object to initialize the picker.
+ * JavaScript [Date] {@link /docs/developer-guide/glossary/#date} object to initialize the picker.
  *
  * By default, `DatePicker` maintains the state of its `value` property. Supply the
  * `defaultValue` property to control its initial value. If you wish to directly control updates

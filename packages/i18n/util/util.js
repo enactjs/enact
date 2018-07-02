@@ -22,11 +22,11 @@ import {toLowerCase, toUpperCase} from '../src/case';
 const rtlPattern = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFE\u0590-\u05FF\uFB1D-\uFB4F]/;
 
 /**
- * Takes content `str` and determines whether or not it is [RTL]{@glossary RTL}.
+ * Takes content `str` and determines whether or not it is [RTL]{@link /docs/developer-guide/glossary/#rtl}.
  *
  * @function
  * @memberof i18n/util
- * @param {String} str - A [String]{@glossary String} to check the [RTL]{@glossary RTL}-ness of.
+ * @param {String} str - A [String]{@link /docs/developer-guide/glossary/#string} to check the [RTL]{@link /docs/developer-guide/glossary/#rtl}-ness of.
  * @returns {Boolean} `true` if `str` should be RTL; `false` if not.
  * @public
  */

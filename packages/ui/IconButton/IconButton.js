@@ -84,8 +84,8 @@ const IconButtonBase = kind({
 		/**
 		 * Disables the [IconButton]{@link ui/IconButton.IconButtonBase}
 		 *
-		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
-		 * generate `onClick` [events]{@glossary event}.
+		 * When `true`, the [button]{@link /docs/developer-guide/glossary/#button} is shown as disabled and does not
+		 * generate `onClick` [events]{@link /docs/developer-guide/glossary/#event}.
 		 *
 		 * @type {Boolean}
 		 * @default false
