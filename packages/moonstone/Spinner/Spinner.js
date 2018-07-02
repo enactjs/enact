@@ -156,6 +156,7 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 			 * Determines how far the click-blocking should extend.
 			 *
 			 * It can be either `'screen'`, `'container'`, or `null`. `'screen'` pauses spotlight.
+			 * Changing this property to `'screen'` after creation is not supported.
 			 *
 			 * @type {String}
 			 * @default null
