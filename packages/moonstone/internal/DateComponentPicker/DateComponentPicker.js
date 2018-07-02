@@ -3,12 +3,15 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';
+import {VoiceControlDecorator} from '@enact/webos/speech';
 
 import PickerCore, {PickerItem} from '../Picker';
 
 import DateComponentPickerChrome from './DateComponentPickerChrome';
 
 const Picker = Spottable(PickerCore);
+
+const VoiceControlPicker = VoiceControlDecorator(Picker);
 
 /**
  * {@link moonstone/internal/DataComponentPicker.DateComponentPickerBase} allows the selection of one
@@ -93,19 +96,34 @@ const DateComponentPickerBase = kind({
 		wrap: PropTypes.bool
 	},
 
+	handlers: {
+		onVoice: (e, {onChange, children, value}) => {
+			const result = e && e.detail && e.detail.value;
+			const index = children.indexOf(result);
+			if (onChange && index > -1 && value !== index) {
+				onChange({value: index});
+			}
+		}
+	},
+
 	computed: {
 		children: ({children}) => React.Children.map(children, (child) => (
 			<PickerItem marqueeDisabled>{child}</PickerItem>
 		)),
-		max: ({children}) => React.Children.count(children) - 1
+		max: ({children}) => React.Children.count(children) - 1,
+		voiceLabels: ({children}) => {
+			return JSON.stringify(children);
+		}
 	},
 
-	render: ({'aria-valuetext': ariaValuetext, accessibilityHint, children, className, label, max, noAnimation, reverse, value, wrap, ...rest}) => (
+	render: ({'aria-valuetext': ariaValuetext, accessibilityHint, children, className, label, max, noAnimation, reverse, value, wrap, voiceLabels, ...rest}) => (
 		<DateComponentPickerChrome className={className} label={label}>
-			<Picker
+			<VoiceControlPicker
 				{...rest}
 				accessibilityHint={(accessibilityHint == null) ? label : accessibilityHint}
 				aria-valuetext={(accessibilityHint == null) ? ariaValuetext : null}
+				data-webos-voice-intent='Select'
+				data-webos-voice-labels-ext={voiceLabels}
 				index={value}
 				joined
 				max={max}
@@ -118,7 +136,7 @@ const DateComponentPickerBase = kind({
 				wrap={wrap}
 			>
 				{children}
-			</Picker>
+			</VoiceControlPicker>
 		</DateComponentPickerChrome>
 	)
 });

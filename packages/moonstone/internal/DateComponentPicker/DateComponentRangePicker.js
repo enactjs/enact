@@ -2,11 +2,13 @@ import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {VoiceControlDecorator} from '@enact/webos/speech';
 
 import RangePicker from '../../RangePicker';
 
 import DateComponentPickerChrome from './DateComponentPickerChrome';
 
+const VoiceControlRangePicker = VoiceControlDecorator(RangePicker);
 
 /**
  * {@link moonstone/internal/DataComponentPicker.DateComponentRangePicker} allows the selection of
@@ -79,11 +81,28 @@ const DateComponentRangePickerBase = kind({
 		wrap: PropTypes.bool
 	},
 
-	render: ({accessibilityHint, className, label, max, min, noAnimation, value, wrap, ...rest}) => (
+	handlers: {
+		onVoice: (e, {onChange, min, max}) => {
+			const value = e && e.detail && e.detail.value && Number(e.detail.value);
+			if (onChange && (value >= min && value <= max)) {
+				onChange({value: value});
+			}
+		}
+	},
+
+	computed: {
+		voiceLabels: ({min, max}) => {
+			return JSON.stringify([min, max]);
+		}
+	},
+
+	render: ({accessibilityHint, className, label, max, min, noAnimation, value, wrap, voiceLabels, ...rest}) => (
 		<DateComponentPickerChrome className={className} label={label}>
-			<RangePicker
+			<VoiceControlRangePicker
 				{...rest}
 				accessibilityHint={(accessibilityHint == null) ? label : accessibilityHint}
+				data-webos-voice-intent='Select'
+				data-webos-voice-labels-ext={voiceLabels}
 				joined
 				max={max}
 				min={min}
