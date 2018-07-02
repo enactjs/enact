@@ -44,7 +44,7 @@ const defaultConfig = {
  *
  * @type {Object}
  * @memberof ui/Resizable
- * @public
+ * @private
  */
 const contextTypes = {
 	invalidateBounds: PropTypes.func
