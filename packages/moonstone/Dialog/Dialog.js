@@ -2,7 +2,7 @@
  * Moonstone styled modal dialog components.
  *
  * @module moonstone/Dialog
- * @exports	Dialog
+ * @exports Dialog
  * @exports DialogBase
  */
 

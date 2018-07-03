@@ -12,7 +12,6 @@
  * @exports DatePickerBase
  */
 
-
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 import Pure from '@enact/ui/internal/Pure';
 
@@ -118,6 +117,43 @@ const DatePicker = Pure(
 		)
 	)
 );
+
+/**
+ * The initial value used when `open` is not set.
+ *
+ * @name defaultOpen
+ * @type {Boolean}
+ * @memberof moonstone/DatePicker.DatePicker.prototype
+ * @public
+ */
+
+/**
+ * The initial value used when `value` is not set.
+ *
+ * @name defaultValue
+ * @type {Date}
+ * @memberof moonstone/DatePicker.DatePicker.prototype
+ * @public
+ */
+
+/**
+ * Opens the component to display the date component pickers.
+ *
+ * @name open
+ * @type {Boolean}
+ * @default false
+ * @memberof moonstone/DatePicker.DatePicker.prototype
+ * @public
+ */
+
+/**
+ * The selected date
+ *
+ * @name value
+ * @type {Date}
+ * @memberof moonstone/DatePicker.DatePicker.prototype
+ * @public
+ */
 
 export default DatePicker;
 export {

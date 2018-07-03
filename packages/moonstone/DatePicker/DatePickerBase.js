@@ -18,6 +18,7 @@ import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponen
  *
  * @class DatePickerBase
  * @memberof moonstone/DatePicker
+ * @extends moonstone/ExpandableItem.ExpandableItemBase
  * @ui
  * @private
  */

@@ -50,9 +50,12 @@ const ContextualPopupRoot = Skinnable(
 );
 
 /**
- * A Moonstone styled chrome component used by
+ * A popup component used by
  * [ContextualPopupDecorator]{@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} to
  * wrap its [popupComponent]{@link moonstone/ContextualPopupDecorator.popupComponent}.
+ *
+ * `ContextualPopup` is usually not used directly but is made available for unique application use
+ * cases.
  *
  * @class ContextualPopup
  * @memberof moonstone/ContextualPopupDecorator

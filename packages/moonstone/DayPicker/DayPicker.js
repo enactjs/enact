@@ -80,7 +80,7 @@ const DayPickerBase = kind({
 		onSelect: PropTypes.func,
 
 		/**
-		 * Opens the component to display the date component pickers.
+		 * Opens the component to display the day selection components.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -161,7 +161,7 @@ const DayPickerDecorator = compose(
 const DayPicker = DayPickerDecorator(DayPickerBase);
 
 /**
- * Sets the "aria-label" for the component.
+ * The "aria-label" for the component.
  *
  * By default, "aria-label" is set to the title and the full names of the selected days or
  * the custom text when the weekend, week days, or all days is selected.
