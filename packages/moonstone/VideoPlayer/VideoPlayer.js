@@ -227,7 +227,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * * `spotlightDisabled` - `true` when spotlight is disabled for the media controls
 		 * * `visible` - `true` when the media controls should be displayed
 		 *
-		 * @type {Component|Element}
+		 * @type {Function|Element}
 		 * @default `moonstone/VideoPlayer.MediaControls`
 		 * @public
 		 */
@@ -504,7 +504,7 @@ const VideoPlayerBase = class extends React.Component {
 		/**
 		 * Set a title for the video being played.
 		 *
-		 * @type {String|Node}
+		 * @type {Node}
 		 * @public
 		 */
 		title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
@@ -548,7 +548,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * The [`source`]{@link moonstone/VideoPlayer.VideoPlayerBase.source} property is passed to the video
 		 * component as a child node.
 		 *
-		 * @type {Component}
+		 * @type {Component|Element}
 		 * @default {@link ui/Media.Media}
 		 * @public
 		 */

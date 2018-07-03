@@ -50,7 +50,7 @@ const MediaTitleBase = kind({
 		/**
 		 * A title string to identify the media's title.
 		 *
-		 * @type {String|Node}
+		 * @type {Node}
 		 * @public
 		 */
 		title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
@@ -60,7 +60,7 @@ const MediaTitleBase = kind({
 		 * the control has rendered causes a fade-out transition. Setting to `true` after or during
 		 * the transition makes the component immediately visible again, without delay or transition.
 		 *
-		 * @type {String}
+		 * @type {Boolean}
 		 * @default true
 		 * @public
 		 */

@@ -45,7 +45,7 @@ const SwitchItemBase = kind({
 		/**
 		 * Customize the component used as the switch.
 		 *
-		 * @type {Component}
+		 * @type {Element|Function}
 		 * @default {@link moonstone/Switch.Switch}
 		 * @private
 		 */

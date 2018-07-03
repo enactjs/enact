@@ -34,4 +34,4 @@ with LS2Request and other useful platform APIs.
     *    [Luna Service API example](./luna-service-api.md#example)
 *   `@enact/webos/platform` - returns various details about the webOS platform where the application is running (SmartTV, Open webOS, legacy devices (Palm, HP), etc.)
 *   `@enact/webos/pmloglib` - system-level logging for your application
-*   `@enact/webos/VoiceReadout` - reads alert text when accessibility VoiceReadout enabled
+*   `@enact/webos/speech` - working with webOS speech APIs

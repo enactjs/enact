@@ -43,7 +43,7 @@ const ToggleButtonBase = kind({
 		 * If `toggleOffLabel` and/or `toggleOnLabel` are provided, they will
 		 * be used for the respective states.
 		 *
-		 * @type {node}
+		 * @type {Node}
 		 * @public
 		 */
 		children: PropTypes.node,

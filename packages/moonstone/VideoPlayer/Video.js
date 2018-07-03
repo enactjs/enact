@@ -54,7 +54,7 @@ const VideoBase = class extends React.Component {
 		 * The [`source`]{@link moonstone/VideoPlayer.VideoBase.source} property is passed to
 		 * the video component as a child node.
 		 *
-		 * @type {String | Element | Component}
+		 * @type {Component|Element}
 		 * @default 'video'
 		 * @public
 		 */
@@ -63,7 +63,7 @@ const VideoBase = class extends React.Component {
 		/**
 		 * The video source to be preloaded. Expects a `<source>` node.
 		 *
-		 * @type {String|Node}
+		 * @type {Node}
 		 * @public
 		 */
 		preloadSource:  PropTypes.node,
@@ -84,7 +84,7 @@ const VideoBase = class extends React.Component {
 		 *
 		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
 		 *
-		 * @type {String | Node}
+		 * @type {Node}
 		 * @public
 		 */
 		source: PropTypes.oneOfType([PropTypes.string, PropTypes.node])

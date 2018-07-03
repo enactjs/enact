@@ -31,12 +31,12 @@ const NotificationBase = kind({
 		 * Buttons, typically to close or take action in the Notification. Buttons must have their
 		 * `small` property set and will be coerced to `small` if not specified.
 		 *
-		 * @type {Node}
+		 * @type {Element|Element[]}
 		 * @public
 		 */
 		buttons: PropTypes.oneOfType([
-			PropTypes.arrayOf(PropTypes.element),
-			PropTypes.element
+			PropTypes.element,
+			PropTypes.arrayOf(PropTypes.element)
 		]),
 
 		/**
