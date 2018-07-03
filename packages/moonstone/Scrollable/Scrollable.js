@@ -554,7 +554,7 @@ class ScrollableBase extends Component {
 	}
 
 	clearOverscrollEffect = (orientation, position) => {
-		const {type} = this.uiRef.getOverscrollStatus(orientation);
+		const {type} = this.uiRef.getOverscrollStatus(orientation, position);
 
 		if (type !== overscrollTypes.none) {
 			this.overscrollJobs[orientation][position].startAfter(

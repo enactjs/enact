@@ -290,9 +290,10 @@ class ScrollableBaseNative extends Component {
 					(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(ev.target))) {
 					delta = this.uiRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
+				} else {
+					this.uiRef.updateOverscrollEffect('vertical', this.uiRef.scrollTop + eventDelta, overscrollTypes.scrolling, 1);
 				}
 			} else {
-				this.uiRef.updateOverscrollEffect('vertical', this.uiRef.scrollTop + delta, overscrollTypes.scrolling, 1);
 				needToHideThumb = true;
 			}
 		} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
@@ -304,7 +305,6 @@ class ScrollableBaseNative extends Component {
 				delta = this.uiRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				needToHideThumb = !delta;
 			} else {
-				this.uiRef.updateOverscrollEffect('horizontal', this.uiRef.scrollLeft + delta, overscrollTypes.scrolling, 1);
 				needToHideThumb = true;
 			}
 		}
@@ -616,7 +616,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	clearOverscrollEffect = (orientation, position) => {
-		const {type} = this.uiRef.getOverscrollStatus(orientation);
+		const {type} = this.uiRef.getOverscrollStatus(orientation, position);
 
 		if (type !== overscrollTypes.none) {
 			this.overscrollJobs[orientation][position].startAfter(
