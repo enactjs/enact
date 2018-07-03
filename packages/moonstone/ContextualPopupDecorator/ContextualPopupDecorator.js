@@ -74,7 +74,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * When `true`, the range of voice control is limited to popup.
 			 *
-			 * @type {String}
+			 * @type {Boolean}
 			 * @default true
 			 * @public
 			 */
@@ -202,8 +202,8 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
-			direction: 'down',
 			'data-webos-voice-exclusive': true,
+			direction: 'down',
 			open: false,
 			showCloseButton: false,
 			spotlightRestrict: 'self-first'
