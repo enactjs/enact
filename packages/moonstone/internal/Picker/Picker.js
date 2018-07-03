@@ -692,6 +692,7 @@ const PickerBase = class extends React.Component {
 		const result = ev && ev.detail && ev.detail[key] && Number(ev.detail[key]);
 		if (onChange && result >= min && result <= max && result !== value) {
 			onChange({value: result});
+			ev.preventDefault();
 		}
 	}
 
