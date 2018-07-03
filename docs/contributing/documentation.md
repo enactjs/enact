@@ -205,7 +205,9 @@ Tips:
 * Use the active voice when writing docs.
 * Descriptions should focus on what the componet or property provides.
 * Only document the `true` state for boolean propertues unless the `false` state's operation is unclear.
-* Properties should use a future tense (e.g. 'applies') and callbacks should use past tense (e.g. 'called')
+* Property descriptions use the present tense and complete either 'This property ...' or 'This property configures ...'
+* Callbacks use the future perfect tense and complete the sentence 'This callback will be ...'
+* Imperative methods (rarely used) use the present tense and completes the sentence 'Call this method to ...'
 
 Good:
 

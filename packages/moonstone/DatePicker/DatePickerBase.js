@@ -14,7 +14,7 @@ import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponen
  * A date selection component.
  *
  * This component is most often not used directly but may be composed within another component as it
- * is within {@link moonstone/DatePicker.DatePicker}.
+ * is within [DatePicker]{@link moonstone/DatePicker.DatePicker}.
  *
  * @class DatePickerBase
  * @memberof moonstone/DatePicker

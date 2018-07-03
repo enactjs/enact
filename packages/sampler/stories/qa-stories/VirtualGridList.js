@@ -5,9 +5,8 @@ import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, number} from '@storybook/addon-knobs';
 
-import nullify from '../../src/utils/nullify.js';
+import {boolean, number} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('VirtualGridList', VirtualGridList, VirtualListBase, UiVirtualListBase);
@@ -44,17 +43,17 @@ storiesOf('VirtualList.VirtualGridList', module)
 		'Horizontal VirtualGridList',
 		() => (
 			<VirtualGridList
-				dataSize={number('dataSize', items.length)}
+				dataSize={number('dataSize', Config, items.length)}
 				direction="horizontal"
-				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+				focusableScrollbar={boolean('focusableScrollbar', Config, false)}
 				itemRenderer={renderItem}
 				itemSize={{
-					minWidth: ri.scale(number('minWidth', 180)),
-					minHeight: ri.scale(number('minHeight', 270))
+					minWidth: ri.scale(number('minWidth', Config, 180)),
+					minHeight: ri.scale(number('minHeight', Config, 270))
 				}}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				spacing={ri.scale(number('spacing', 18))}
+				spacing={ri.scale(number('spacing', Config, 18))}
 				style={{
 					height: ri.unit(552, 'rem')
 				}}

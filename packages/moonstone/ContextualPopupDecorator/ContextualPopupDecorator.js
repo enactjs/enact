@@ -6,6 +6,7 @@
  * @exports	ContextualPopupDecorator
  */
 
+import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {on, off} from '@enact/core/dispatcher';
 import {handle, forProp, forKey, forward, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
@@ -16,6 +17,7 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import ri from '@enact/ui/resolution';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import React from 'react';
 
 import ContextualPopup from './ContextualPopup';
@@ -58,34 +60,10 @@ const ContextualPopupContainer = SpotlightContainerDecorator(
 	ContextualPopup
 );
 
-/**
- * Adds support for positioning a
- * [ContextualPopup]{@link moonstone/ContextualPopupDecorator.ContextualPopup} relative to the
- * wrapped component.
- *
- * `ContextualPopupDecorator` may be used to show additional settings or actions rendered within a
- * small floating popup.
- *
- * Usage:
- * ```
- * const ButtonWithPopup = ContextualPopupDecorator(Button);
- * <ButtonWithPopup
- *   direction="up"
- *   open={this.state.open}
- *   popupComponent={CustomPopupComponent}
- * >
- *   Open Popup
- * </ButtonWithPopup>
- * ```
- *
- * @hoc
- * @memberof moonstone/ContextualPopupDecorator
- * @public
- */
-const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
+const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {noSkin, openProp} = config;
 
-	const Decorator = class extends React.Component {
+	return class extends React.Component {
 		static displayName = 'ContextualPopupDecorator'
 
 		static propTypes = /** @lends moonstone/ContextualPopupDecorator.ContextualPopupDecorator.prototype */ {
@@ -187,6 +165,15 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			rtl: PropTypes.bool,
 
 			/**
+			 * Registers the ContextualPopupDecorator component with an [ApiDecorator]
+			 * {@link core/internal/ApiDecorator.ApiDecorator}.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			setApiProvider: PropTypes.func,
+
+			/**
 			 * Shows the close button.
 			 *
 			 * @type {Boolean}
@@ -248,6 +235,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.ARROW_WIDTH = ri.scale(30);
 			this.ARROW_OFFSET = ri.scale(18);
 			this.MARGIN = ri.scale(12);
+
+			if (props.setApiProvider) {
+				props.setApiProvider(this);
+			}
 		}
 
 		componentDidMount () {
@@ -262,7 +253,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (this.props.direction !== nextProps.direction) {
 				this.adjustedDirection = nextProps.direction;
-				this.setContainerPosition();
+				this.positionContextualPopup();
 			}
 
 			if (!this.props.open && nextProps.open) {
@@ -436,7 +427,18 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return pos;
 		}
 
-		setContainerPosition () {
+		/**
+		 * Position the popup in relation to the activator.
+		 *
+		 * Position is based on the dimensions of the popup and its avitvator. If the popup does not
+		 * fit in the specified direction, it will automatically flip to the opposite direction.
+		 *
+		 * @method
+		 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.prototype
+		 * @public
+		 * @returns {undefined}
+		 */
+		positionContextualPopup () {
 			if (this.containerNode && this.clientNode) {
 				const containerNode = this.containerNode.getBoundingClientRect();
 				const {top, left, bottom, right, width, height} = this.clientNode.getBoundingClientRect();
@@ -458,7 +460,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		getContainerNode = (node) => {
 			this.containerNode = node;
 			if (node) {
-				this.setContainerPosition();
+				this.positionContextualPopup();
 			}
 		}
 
@@ -558,6 +560,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			delete rest.popupSpotlightId;
 			delete rest.rtl;
+			delete rest.setApiProvider;
 
 			if (openProp) rest[openProp] = open;
 
@@ -588,15 +591,41 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			);
 		}
 	};
+});
 
-	return Subscription(
+/**
+ * Adds support for positioning a
+ * [ContextualPopup]{@link moonstone/ContextualPopupDecorator.ContextualPopup} relative to the
+ * wrapped component.
+ *
+ * `ContextualPopupDecorator` may be used to show additional settings or actions rendered within a
+ * small floating popup.
+ *
+ * Usage:
+ * ```
+ * const ButtonWithPopup = ContextualPopupDecorator(Button);
+ * <ButtonWithPopup
+ *   direction="up"
+ *   open={this.state.open}
+ *   popupComponent={CustomPopupComponent}
+ * >
+ *   Open Popup
+ * </ButtonWithPopup>
+ * ```
+ *
+ * @hoc
+ * @memberof moonstone/ContextualPopupDecorator
+ * @public
+ */
+const ContextualPopupDecorator = compose(
+	ApiDecorator({api: ['positionContextualPopup']}),
+	Subscription(
 		{
 			channels: ['i18n'],
 			mapMessageToProps: (key, {rtl}) => ({rtl})
-		},
-		Decorator
-	);
-});
+		}),
+	Decorator
+);
 
 export default ContextualPopupDecorator;
 export {

@@ -32,7 +32,7 @@ import componentCss from './DaySelector.less';
  * A Moonstone styled inline day of the week selection component.
  *
  * This component is most often not used directly but may be composed within another component as it
- * is within {@link moonstone/DaySelector.DaySelector}.
+ * is within [DaySelector]{@link moonstone/DaySelector.DaySelector}.
  *
  * @class DaySelectorBase
  * @memberof moonstone/DaySelector

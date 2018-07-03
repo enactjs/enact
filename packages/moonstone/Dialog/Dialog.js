@@ -23,7 +23,7 @@ const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
  * A modal dialog component.
  *
  * This component is most often not used directly but may be composed within another component as it
- * is within {@link moonstone/Dialog.Dialog}.
+ * is within [Dialog]{@link moonstone/Dialog.Dialog}.
  *
  * @class DialogBase
  * @memberof moonstone/Dialog

@@ -30,7 +30,7 @@ import {ExpandableListBase} from '../ExpandableList';
  * A day of the week selection component.
  *
  * This component is most often not used directly but may be composed within another component as it
- * is within {@link moonstone/DayPicker.DayPicker}.
+ * is within [DayPicker]{@link moonstone/DayPicker.DayPicker}.
  *
  * @class DayPickerBase
  * @memberof moonstone/DayPicker

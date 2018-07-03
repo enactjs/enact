@@ -1,6 +1,9 @@
 /**
+ * Provides a convenient way to manage timed execution of functions.
+ *
  * @class Job
  * @memberof core/util
+ * @public
  */
 class Job {
 	id = null
@@ -10,9 +13,10 @@ class Job {
 
 	/**
 	 * @constructor
-	 * @memberof core/util.Job
-	 * @param {Function} fn       function to execute as the requested job.
-	 * @param {Number}   timeout  The number of milliseconds to wait before starting the job.
+	 * @param {Function}    fn       Function to execute as the requested job.
+	 * @param {Number}      timeout  The number of milliseconds to wait before starting the job.
+	 *
+	 * @memberof core/util.Job.prototype
 	 */
 	constructor (fn, timeout) {
 		this.fn = fn;
@@ -28,9 +32,11 @@ class Job {
 	 * Starts the job.
 	 *
 	 * @method
-	 * @memberof core/util.Job
 	 * @param   {...*}       [args]  Any args passed are forwarded to the callback
+	 *
 	 * @returns {undefined}
+	 * @memberof core/util.Job.prototype
+	 * @public
 	 */
 	start = (...args) => {
 		this.startAfter(this.timeout, ...args);
@@ -40,12 +46,14 @@ class Job {
 	 * Starts the job in `timeout` milliseconds
 	 *
 	 * @method
-	 * @memberof core/util.Job
 	 * @param   {Number}     timeout  The number of milliseconds to wait before starting the job.
 	 *                                This supersedes the timeout set at construction or by
 	 *                                `setTimeout`.
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
+	 *
 	 * @returns {undefined}
+	 * @memberof core/util.Job.prototype
+	 * @public
 	 */
 	startAfter = (timeout, ...args) => {
 		this.stop();
@@ -57,8 +65,10 @@ class Job {
 	 * Stops the job.
 	 *
 	 * @method
-	 * @memberof core/util.Job
+	 *
 	 * @returns {undefined}
+	 * @memberof core/util.Job.prototype
+	 * @public
 	 */
 	stop = () => {
 		if (this.id) {
@@ -78,9 +88,10 @@ class Job {
 	 * until the `timeout` configured at construction or via `setTimeout` passes.
 	 *
 	 * @method
-	 * @memberof core/util.Job
 	 * @param   {...*}       args  Any args passed are forwarded to the callback
+	 *
 	 * @returns {undefined}
+	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
 	throttle = (...args) => {
@@ -92,12 +103,13 @@ class Job {
 	 * `timeout` milliseconds.
 	 *
 	 * @method
-	 * @memberof core/util.Job
 	 * @param   {Number}     timeout  The number of milliseconds to wait before allowing the job to
 	 *                                be ran again. This supersedes the timeout set at construction
 	 *                                or by `setTimeout`.
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
+	 *
 	 * @returns {undefined}
+	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
 	throttleUntil = (timeout, ...args) => {
@@ -111,9 +123,10 @@ class Job {
 	 * Executes job when the CPU is idle.
 	 *
 	 * @method
-	 * @memberof core/util.Job
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
+	 *
 	 * @returns {undefined}
+	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
 	idle = (...args) => {
@@ -124,12 +137,13 @@ class Job {
 	 * Executes job when the CPU is idle, or when the timeout is reached, whichever occurs first.
 	 *
 	 * @method
-	 * @memberof core/util.Job
 	 * @param   {Number}     timeout  The number of milliseconds to wait before executing the
 	 *                                job. This guarantees that the job is run, if a positive value
 	 *                                is specified.
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
+	 *
 	 * @returns {undefined}
+	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
 	idleUntil = (timeout, ...args) => {
@@ -148,9 +162,10 @@ class Job {
 	 * Executes job before the next repaint.
 	 *
 	 * @method
-	 * @memberof core/util.Job
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
+	 *
 	 * @returns {undefined}
+	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
 	startRaf = (...args) => {
@@ -161,10 +176,11 @@ class Job {
 	 * Executes job before the next repaint after a given amount of timeout.
 	 *
 	 * @method
-	 * @memberof core/util.Job
-	 * @param   {Number}     timeout  The number of milliseconds to wait before running requestAnimationFrame.
+	 * @param   {Number}     timeout  The number of milliseconds to wait before running `requestAnimationFrame`.
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
+	 *
 	 * @returns {undefined}
+	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
 	startRafAfter = (timeout, ...args) => {

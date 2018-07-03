@@ -30,7 +30,7 @@ import componentCss from './Button.less';
  * A button component.
  *
  * This component is most often not used directly but may be composed within another component as it
- * is within {@link moonstone/Button.Button}.
+ * is within [Button]{@link moonstone/Button.Button}.
  *
  * @class ButtonBase
  * @memberof moonstone/Button

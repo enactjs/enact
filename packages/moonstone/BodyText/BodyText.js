@@ -25,7 +25,7 @@ import componentCss from './BodyText.less';
  * A simple text block component.
  *
  * This component is most often not used directly but may be composed within another component as it
- * is within {@link moonstone/BodyText.BodyText}.
+ * is within [BodyText]{@link moonstone/BodyText.BodyText}.
  *
  * @class BodyTextBase
  * @memberof moonstone/BodyText

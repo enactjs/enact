@@ -33,7 +33,7 @@ import css from './Divider.less';
  * A labeled divider component.
  *
  * This component is most often not used directly but may be composed within another component as it
- * is within {@link moonstone/Divider.Divider}.
+ * is within [Divider]{@link moonstone/Divider.Divider}.
  *
  * @class DividerBase
  * @memberof moonstone/Divider
