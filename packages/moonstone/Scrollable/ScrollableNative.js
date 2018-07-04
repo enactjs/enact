@@ -294,6 +294,9 @@ class ScrollableBaseNative extends Component {
 					this.uiRef.updateOverscrollEffect('vertical', this.uiRef.scrollTop + eventDelta, overscrollTypes.scrolling, 1);
 				}
 			} else {
+				if (eventDelta < 0 && this.uiRef.scrollTop <= 0 || eventDelta > 0 && this.uiRef.scrollTop >= bounds.maxTop) {
+					this.uiRef.updateOverscrollEffect('vertical', this.uiRef.scrollTop, overscrollTypes.scrolling, 1);
+				}
 				needToHideThumb = true;
 			}
 		} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
@@ -305,6 +308,7 @@ class ScrollableBaseNative extends Component {
 				delta = this.uiRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				needToHideThumb = !delta;
 			} else {
+				this.uiRef.updateOverscrollEffect('horizontal', this.uiRef.scrollLeft, overscrollTypes.scrolling, 1);
 				needToHideThumb = true;
 			}
 		}
@@ -490,19 +494,17 @@ class ScrollableBaseNative extends Component {
 			} else {
 				const nextPage = scrollFn({direction, reverseDirection: rDirection, focusedItem: spotItem, spotlightId});
 
-				// If finding a next spottable item in a Scroller, focus it
-				if (typeof nextPage === 'object') {
-					this.animateOnFocus = false;
-					Spotlight.focus(nextPage);
-				// Scroll one page with animation if nextPage is equals to `false`
-				} else if (nextPage === false) {
-					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
-				} else if (nextPage === null) {
+				if (nextPage === null) { // If nothing found in a VirtualList, show overscroll effect
 					const
 						isRtl = this.uiRef.state.rtl,
 						orientation = (direction === 'up' || direction === 'down') ? 'vertical' : 'horizontal',
 						position = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
 					this.uiRef.updateOverscrollEffectByDirection(orientation, position, overscrollTypes.scrolling, 1);
+				} else if (typeof nextPage === 'object') { // If finding a next spottable item in a Scroller, focus it
+					this.animateOnFocus = false;
+					Spotlight.focus(nextPage);
+				} else if (nextPage === false) { // Scroll one page with animation if nextPage is equals to `false`
+					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 				}
 			}
 		} else {

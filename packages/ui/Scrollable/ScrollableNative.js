@@ -640,6 +640,9 @@ class ScrollableBaseNative extends Component {
 						this.updateOverscrollEffect('vertical', this.scrollTop + eventDelta, overscrollTypes.scrolling, 1);
 					}
 				} else {
+					if (eventDelta < 0 && this.scrollTop <= 0 || eventDelta > 0 && this.scrollTop >= bounds.maxTop) {
+						this.updateOverscrollEffect('vertical', this.scrollTop, overscrollTypes.scrolling, 1);
+					}
 					needToHideThumb = true;
 				}
 			} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
@@ -647,6 +650,7 @@ class ScrollableBaseNative extends Component {
 					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
 				} else {
+					this.updateOverscrollEffect('horizontal', this.scrollLeft, overscrollTypes.scrolling, 1);
 					needToHideThumb = true;
 				}
 			}
