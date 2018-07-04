@@ -237,6 +237,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/styles/mixins.less` mixins: `.moon-spotlight-margin()` and `.moon-spotlight-padding()`
 - `moonstone/Button` property `noAnimation` to support non-animating pressed visual
+- `moonstone/Popup` property `onActivatorFocusFail` to support user-defined behavior when the popup closes and cannot set focus to its activating control
 
 ### Changed
 

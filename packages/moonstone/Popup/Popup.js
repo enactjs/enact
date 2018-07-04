@@ -36,6 +36,12 @@ const getContainerNode = (containerId) => {
 const forwardHide = forward('onHide');
 const forwardShow = forward('onShow');
 
+const shouldChangeFocus = (containerId) => {
+	const current = Spotlight.getCurrent();
+	const containerNode = getContainerNode(containerId);
+	return !current || (containerNode && containerNode.contains(current));
+};
+
 /**
  * {@link moonstone/Popup.PopupBase} is a modal component that appears at the bottom of
  * the screen and takes up the full screen width.
@@ -232,6 +238,15 @@ class Popup extends React.Component {
 		 * @public
 		 */
 		noAutoDismiss: PropTypes.bool,
+
+		/**
+		 * A function to be run after the popup closes and fails to set focus to the activating
+		 * control.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onActivatorFocusFail: PropTypes.func,
 
 		/**
 		 * A function to be run when a closing action is invoked by the user. These actions include
@@ -445,15 +460,24 @@ class Popup extends React.Component {
 	}
 
 	spotActivator = (activator) => {
-		const current = Spotlight.getCurrent();
-		const containerNode = getContainerNode(this.state.containerId);
+		const {containerId} = this.state;
 
 		// if there is no currently-spotted control or it is wrapped by the popup's container, we
 		// know it's safe to change focus
-		if (!current || (containerNode && containerNode.contains(current))) {
+		if (shouldChangeFocus(containerId)) {
 			// attempt to set focus to the activator, if available
 			if (!Spotlight.focus(activator)) {
-				Spotlight.focus();
+				const {onActivatorFocusFail} = this.props;
+
+				if (onActivatorFocusFail) {
+					onActivatorFocusFail();
+				}
+
+				// as a last resort, we check if it's safe to allow spotlight to set focus since
+				// `onActivatorFocusFail` may or may not have changed focus above
+				if (shouldChangeFocus(containerId)) {
+					Spotlight.focus();
+				}
 			}
 		}
 	}
@@ -475,6 +499,7 @@ class Popup extends React.Component {
 
 	render () {
 		const {noAutoDismiss, onClose, scrimType, ...rest} = this.props;
+		delete rest.onActivatorFocusFail;
 		delete rest.spotlightRestrict;
 
 		return (
