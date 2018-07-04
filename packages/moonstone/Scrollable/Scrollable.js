@@ -425,7 +425,16 @@ class ScrollableBase extends Component {
 			// If there is a next spottable DOM element vertically or horizontally, focus it without animation
 			} else if (next !== spotItem && this.childRef.scrollToNextPage) {
 				this.animateOnFocus = false;
-				Spotlight.focus(next);
+				if (Spotlight.getPointerMode()) {
+					// When changing from "pointer" mode to "5way key" mode,
+					// a pointer is hidden and a last focused item get focused after 30ms.
+					// To make sure the item to be focused after that, we used 50ms.
+					setTimeout(() => {
+						Spotlight.focus(next);
+					}, 50);
+				} else {
+					Spotlight.focus(next);
+				}
 			// If a next spottable DOM element is equals to the current spottable item, we need to find a next item
 			} else {
 				const nextPage = scrollFn({direction, reverseDirection: rDirection, focusedItem: spotItem, spotlightId});
