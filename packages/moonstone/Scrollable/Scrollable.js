@@ -453,7 +453,7 @@ class ScrollableBase extends Component {
 	hasFocus () {
 		let current = Spotlight.getCurrent();
 
-		if (!current || Spotlight.getPointerMode()) {
+		if (!current) {
 			const spotlightId = Spotlight.getActiveContainer();
 			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 		}
@@ -464,7 +464,7 @@ class ScrollableBase extends Component {
 	onKeyDown = (ev) => {
 		this.animateOnFocus = true;
 
-		if (!Spotlight.getPointerMode() && !ev.repeat && this.hasFocus()) {
+		if (!ev.repeat && this.hasFocus()) {
 			if (isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) {
 				this.scrollByPage(ev.keyCode);
 			} else {
