@@ -285,12 +285,14 @@ class ScrollButtons extends Component {
 				(fromPrevToNext && target === this.prevButtonNodeRef)) {
 				this.focusOnOppositeScrollButton(ev, direction);
 			}
-		} else if (target === this.nextButtonNodeRef || target === this.prevButtonNodeRef) {
+		} else {
 			const direction = !vertical && 'up' || rtl && 'right' || 'left';
 
 			if (Spotlight.getPointerMode()) {
 				setTimeout(() => {
-					Spotlight.move(direction);
+					if (Spotlight.getCurrent() === target) {
+						Spotlight.move(direction);
+					}
 				}, 50);
 			} else {
 				Spotlight.move(direction);
