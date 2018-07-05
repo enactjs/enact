@@ -11,20 +11,20 @@ can mix and match third-party libraries with Enact easily.
 ## Using Third-Party Components inside of Enact
 When creating an app using `enact create`, it creates app boilerplate that is set up for a
 `Moonstone` styled app. However, if you want to use another UI library like
-`material-ui`, `reactstrap`, or `react-router`, just use `npm install`.
+[`material-ui`](https://material-ui.com/), [`reactstrap`](https://reactstrap.github.io/), or [`react-router`](https://reacttraining.com/react-router/), just use `npm install`.
 
 You can include components just like you normally would by using `import`.
 
 ```JavaScript
-import { Button as BSButton} from 'reactstrap';
+import { Button } from 'reactstrap';
 
-const MainPanel = kind({
-	name: 'MainPanel',
+const App = kind({
+	name: 'App',
 
 	render: (props) => (
-		<Panel>
-			<BSButton color="primary">Danger!</BSButton>
-		</Panel>
+		<div>
+			<Button color="primary">Danger!</Button>
+		</div>
 	)
 });
 ```
@@ -35,7 +35,7 @@ For libraries like bootstrap, you can also import the css in your `App.less` fil
 @global-import 'bootstrap/dist/css/bootstrap.css';
 ```
 
-The advantage of this is we get to use Enact's `cli` to develop, test, and build applications.
+The advantage of this is you get to use Enact's `cli` to develop, test, and build applications.
 
 ## Using Enact outside of Enact
 If you're using something like `create-react-app`, it's pretty easy to use Enact as a module.
