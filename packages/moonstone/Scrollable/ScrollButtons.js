@@ -67,6 +67,16 @@ class ScrollButtons extends Component {
 		disabled: PropTypes.bool,
 
 		/**
+		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
+		 * not move focus to the scrollbar controls.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		focusableScrollbar: PropTypes.bool,
+
+		/**
 		* Sets the hint string read when focusing the next button in the scroll bar.
 		*
 		* @type {String}
@@ -259,16 +269,32 @@ class ScrollButtons extends Component {
 
 	onSpotlight = (ev) => {
 		const
-			{rtl, vertical} = this.props,
-			{keyCode, target} = ev,
-			direction = getDirection(keyCode),
-			fromNextToPrev = (vertical && direction === 'up') || (!vertical && direction === (rtl ? 'right' : 'left')),
-			fromPrevToNext = (vertical && direction === 'down') || (!vertical && direction === (rtl ? 'left' : 'right'));
+			{focusableScrollbar, rtl, vertical} = this.props,
+			{target} = ev;
 
-		// manually focus the opposite scroll button when 5way pressed
-		if ((fromNextToPrev && target === this.nextButtonNodeRef) ||
-			(fromPrevToNext && target === this.prevButtonNodeRef)) {
-			this.focusOnOppositeScrollButton(ev, direction);
+		// We don't need to navigate manually if `focusableScrollbar` is `false`
+		if (focusableScrollbar) {
+			const
+				{keyCode} = ev,
+				direction = getDirection(keyCode),
+				fromNextToPrev = (vertical && direction === 'up') || (!vertical && direction === (rtl ? 'right' : 'left')),
+				fromPrevToNext = (vertical && direction === 'down') || (!vertical && direction === (rtl ? 'left' : 'right'));
+
+			// manually focus the opposite scroll button when 5way pressed
+			if ((fromNextToPrev && target === this.nextButtonNodeRef) ||
+				(fromPrevToNext && target === this.prevButtonNodeRef)) {
+				this.focusOnOppositeScrollButton(ev, direction);
+			}
+		} else if (target === this.nextButtonNodeRef || target === this.prevButtonNodeRef) {
+			const direction = !vertical && 'up' || rtl && 'right' || 'left';
+
+			if (Spotlight.getPointerMode()) {
+				setTimeout(() => {
+					Spotlight.move(direction);
+				}, 50);
+			} else {
+				Spotlight.move(direction);
+			}
 		}
 	}
 
@@ -279,11 +305,16 @@ class ScrollButtons extends Component {
 
 	onKeyDownPrev = (ev) => {
 		const
+			{focusableScrollbar} = this.props,
 			{nextButtonDisabled} = this.state,
 			{keyCode} = ev;
 
-		if (isPageDown(keyCode) && !nextButtonDisabled) {
-			Spotlight.focus(this.nextButtonNodeRef);
+		if (isPageDown(keyCode)) {
+			if (focusableScrollbar && !nextButtonDisabled) {
+				Spotlight.focus(this.nextButtonNodeRef);
+			} else if (!focusableScrollbar) {
+				this.onClickNext(ev);
+			}
 		} else if (isPageUp(keyCode)) {
 			this.onClickPrev(ev);
 		}
@@ -291,11 +322,16 @@ class ScrollButtons extends Component {
 
 	onKeyDownNext = (ev) => {
 		const
+			{focusableScrollbar} = this.props,
 			{prevButtonDisabled} = this.state,
 			{keyCode} = ev;
 
-		if (isPageUp(keyCode) && !prevButtonDisabled) {
-			Spotlight.focus(this.prevButtonNodeRef);
+		if (isPageUp(keyCode)) {
+			if (focusableScrollbar && !prevButtonDisabled) {
+				Spotlight.focus(this.prevButtonNodeRef);
+			} else if (!focusableScrollbar) {
+				this.onClickPrev(ev);
+			}
 		} else if (isPageDown(keyCode)) {
 			this.onClickNext(ev);
 		}
@@ -340,6 +376,7 @@ class ScrollButtons extends Component {
 				onSpotlightDown={this.onSpotlight}
 				onSpotlightLeft={this.onSpotlight}
 				onSpotlightRight={this.onSpotlight}
+				onSpotlightUp={this.onSpotlight}
 				onUp={this.onUp}
 				ref={this.initPrevButtonRef}
 			>
@@ -356,6 +393,7 @@ class ScrollButtons extends Component {
 				onDown={this.onDownNext}
 				onHoldPulse={this.onHoldPulseNext}
 				onKeyDown={this.onKeyDownNext}
+				onSpotlightDown={this.onSpotlight}
 				onSpotlightLeft={this.onSpotlight}
 				onSpotlightRight={this.onSpotlight}
 				onSpotlightUp={this.onSpotlight}

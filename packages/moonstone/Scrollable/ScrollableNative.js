@@ -789,6 +789,7 @@ class ScrollableBaseNative extends Component {
 				'data-spotlight-container': spotlightContainer,
 				'data-spotlight-container-disabled': spotlightContainerDisabled,
 				'data-spotlight-id': spotlightId,
+				focusableScrollbar,
 				scrollRightAriaLabel,
 				scrollLeftAriaLabel,
 				scrollDownAriaLabel,
@@ -859,6 +860,7 @@ class ScrollableBaseNative extends Component {
 									{...verticalScrollbarProps}
 									{...this.scrollbarProps}
 									disabled={!isVerticalScrollbarVisible}
+									focusableScrollbar={focusableScrollbar}
 									nextButtonAriaLabel={downButtonAriaLabel}
 									previousButtonAriaLabel={upButtonAriaLabel}
 									rtl={rtl}
@@ -872,6 +874,7 @@ class ScrollableBaseNative extends Component {
 								{...this.scrollbarProps}
 								corner={isVerticalScrollbarVisible}
 								disabled={!isHorizontalScrollbarVisible}
+								focusableScrollbar={focusableScrollbar}
 								nextButtonAriaLabel={rightButtonAriaLabel}
 								previousButtonAriaLabel={leftButtonAriaLabel}
 								rtl={rtl}
