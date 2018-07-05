@@ -21,7 +21,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/TooltipDecorator` to prevent unnecessary re-renders when losing focus
 - `moonstone/TooltipDecorator` to not dismiss the tooltip on pointer click
 
-
 ## [2.0.0-beta.8] - 2018-06-25
 
 ### Added
