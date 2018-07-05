@@ -39,7 +39,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			/**
 			 * The "aria-label" for the selector.
 			 *
-			 * @memberof moonstone/DaySelector.DaySelectorDecorator
+			 * @memberof moonstone/DaySelector.DaySelectorDecorator.prototype
 			 * @type {String}
 			 * @private
 			 */

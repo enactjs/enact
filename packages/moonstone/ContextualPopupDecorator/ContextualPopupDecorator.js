@@ -74,6 +74,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * When `true`, the range of voice control is limited to popup.
 			 *
+			 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.prototype
 			 * @type {Boolean}
 			 * @default true
 			 * @public
