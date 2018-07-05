@@ -1,21 +1,19 @@
 ---
-title: Using Enact with third-party libaries
+title: Using Enact with Third-party Libraries
 ---
 
 ## Overview
 
-`Enact` is a fantastic way to build apps. By default we give you a template using our `Moonstone`
-library. `Moonstone` is a library designed for TVs. However, if you're not looking to create TV
-apps, you can easily use `Enact` to build applications for desktop and mobile. You can mix and match
-third-party libraries to use with `Enact` easily. Alternatively, it is also straightforward if you
-just want to use `Enact` components in your own `React` app.
+Enact is a fantastic way to build apps. However, you're not limited to developing your apps using
+only Enact components, nor are you prevented from using pieces of Enact in other React apps.  You
+can mix and match third-party libraries with Enact easily.
 
 ## Using Third-Party Components inside of Enact
-When creating an app using `enact create`, it creates an `Enact` boilerplate that setups for a
-`Moonstone` styled app. However if you want to use something outside of `Moonstone` like
-`material-ui`, `reactstrap`, or `react-router` just use `npm install`.
+When creating an app using `enact create`, it creates app boilerplate that is set up for a
+`Moonstone` styled app. However, if you want to use another UI library like
+`material-ui`, `reactstrap`, or `react-router`, just use `npm install`.
 
-You can include components just like you normally would by using import.
+You can include components just like you normally would by using `import`.
 
 ```JavaScript
 import { Button as BSButton} from 'reactstrap';
@@ -31,26 +29,26 @@ const MainPanel = kind({
 });
 ```
 
-For libraries like bootstrap you can also import the css in our `.less` file.
+For libraries like bootstrap, you can also import the css in your `App.less` file.
 
 ```less
 @global-import 'bootstrap/dist/css/bootstrap.css';
 ```
 
-The advantage of this is we get to use `Enact`'s `cli` to develop, test, and build applications.
+The advantage of this is we get to use Enact's `cli` to develop, test, and build applications.
 
 ## Using Enact outside of Enact
-If you're using something like `create-react-app` it's pretty easy to use `Enact` as a module.
+If you're using something like `create-react-app`, it's pretty easy to use Enact as a module.
 
-You can run something like:
+You can create a new application, as follows:
 ```
 create-react-app react-add-enact
 ```
 
-Add/install dependencies to `package.json` like `@enact/core` and `@enact/ui`.
+Then, add/install Enact dependencies like `@enact/core` and `@enact/ui` to `package.json`.
 
-At this point developers can use basic core `Enact` (kind with computed props) and un-styled
-components (ui/Button).
+At this point you can use core Enact features (`kind` with computed props) and un-styled
+components (`ui/Button`).
 
 
 ```JavaScript
@@ -68,6 +66,6 @@ const App = kind({
 
 ## Theming
 
-`Enact` also has support theming. This way you can take our components and just style them to best fit
-your the platform you wish to target. You can learn about that in our
+Enact also has support theming. This way you can take our components and style them to best fit
+the platform you wish to target. You can learn about that in our
 [`Theming`](../../developer-guide/theming/) section.
