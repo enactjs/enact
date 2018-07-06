@@ -291,6 +291,9 @@ class ScrollButtons extends Component {
 			const direction = !vertical && 'up' || rtl && 'right' || 'left';
 
 			if (Spotlight.getPointerMode()) {
+				// When changing from "pointer" mode to "5way key" mode,
+				// a pointer is hidden and a last focused item get focused after 30ms.
+				// To make sure the content in `VirtualList` or `Scroller` to be focused after that, we used 50ms.
 				setTimeout(() => {
 					if (Spotlight.getCurrent() === target) {
 						Spotlight.move(direction);
