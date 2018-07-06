@@ -67,12 +67,12 @@ class ScrollButtons extends Component {
 		disabled: PropTypes.bool,
 
 		/**
-		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
-		 * not move focus to the scrollbar controls.
+		 * When it is `true`, it allows 5 way navigation to the ScrollButtons.
+		 * This value is set by `Scrollable`.
 		 *
 		 * @type {Boolean}
 		 * @default false
-		 * @public
+		 * @private
 		 */
 		focusableScrollButtons: PropTypes.bool,
 
