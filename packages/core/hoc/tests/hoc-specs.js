@@ -2,7 +2,9 @@
 
 import React from 'react';
 import {shallow, mount} from 'enzyme';
-import hoc from '../hoc';
+import sinon from 'sinon';
+
+import hoc, {compose} from '../hoc';
 
 describe('hoc', () => {
 
@@ -122,4 +124,76 @@ describe('hoc', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	describe('compose', function () {
+		it('should call each hoc only once', function () {
+			const Component = () => <div />;
+			const spy = sinon.spy(x => x);
+			const hawk = compose(
+				spy
+			);
+
+			hawk(Component);
+
+			const expected = 'callCount: 1';
+			const actual = `callCount: ${spy.callCount}`;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should pass the provided config options to each hoc', function () {
+			const config = {a: 1};
+			const Component = () => <div />;
+			const spy = sinon.spy((x, y) => y);
+			const hawk = compose(
+				spy
+			);
+
+			hawk(config, Component);
+
+			const expected = ['a'];
+			const actual = Object.keys(spy.firstCall.args[0]);
+
+			expect(actual).to.deep.equal(expected);
+		});
+
+		it('should skip non-function provided args', function () {
+			const Component = () => <div />;
+			const spy = sinon.spy((x, y) => y);
+			const hawk = compose(
+				null,
+				undefined, // eslint-disable-line no-undefined
+				true,
+				false,
+				'asdf',
+				1,
+				[],
+				{},
+				spy
+			);
+
+			hawk(Component);
+
+			const expected = 'callCount: 1';
+			const actual = `callCount: ${spy.callCount}`;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should skip function provided args that do not expect any arguments', function () {
+			const Component = () => <div />;
+			const spy = sinon.spy((x, y) => y);
+			const hawk = compose(
+				() => {},
+				function () {},
+				spy
+			);
+
+			hawk(Component);
+
+			const expected = 'callCount: 1';
+			const actual = `callCount: ${spy.callCount}`;
+
+			expect(actual).to.equal(expected);
+		});
+	});
 });
