@@ -127,6 +127,7 @@ class ScrollButtons extends Component {
 	}
 
 	static defaultProps = {
+		focusableScrollButtons: false,
 		onNextScroll: nop,
 		onPrevScroll: nop
 	}
