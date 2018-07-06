@@ -92,6 +92,16 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			tooltipDelay: PropTypes.number,
 
 			/**
+			 * When `true`, tooltip does not show, overiding normal tooltip behavior. When `false`,
+			 * tooltip behaves as normal.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltipHidden: PropTypes.bool,
+
+			/**
 			 * Position of the tooltip with respect to the activating control. Valid values are
 			 * `'above'`, `'above center'`, `'above left'`, `'above right'`, `'below'`, `'below center'`,
 			 * `'below left'`, `'below right'`, `'left bottom'`, `'left middle'`, `'left top'`,
@@ -154,6 +164,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: false,
 			tooltipCasing: 'upper',
 			tooltipDelay: 500,
+			tooltipHidden: false,
 			tooltipPosition: 'above',
 			tooltipPreserveCase: false
 		}
@@ -403,10 +414,11 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		renderTooltip () {
 			const {children, tooltipCasing, tooltipPreserveCase, tooltipProps, tooltipText, tooltipWidth} = this.props;
+			const showing = this.props.tooltipHidden ? false : this.state.showing;
 
 			if (tooltipText) {
 				const renderedTooltip = (
-					<FloatingLayer open={this.state.showing} scrimType="none" key="tooltipFloatingLayer">
+					<FloatingLayer open={showing} scrimType="none" key="tooltipFloatingLayer">
 						<Tooltip
 							aria-live="off"
 							role="alert"
@@ -453,6 +465,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			);
 
+			delete props.tooltipHidden;
 			delete props.tooltipDelay;
 			delete props.tooltipPosition;
 			delete props.tooltipCasing;
