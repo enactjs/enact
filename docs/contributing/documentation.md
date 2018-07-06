@@ -60,17 +60,19 @@ Below is an example block for a component:
  *
  * @class Button
  * @memberof moonstone/Button
+ * @extends moonstone/Button.ButtonBase
  * @mixes moonstone/Button.ButtonDecorator
  * @ui
  * @public
  */
 ```
 
-* `@link` tags can be used to link to related materials
-* `@class` should include the name of the object being documented
+* `@link` tags can be used to link to related materials.
+* `@class` should include the name of the object being documented.
 * `@memberof` is required and should reflect the name of the module the object belongs to.
-* `@mixes` is used to call out HOCs that may be applied
-* `@ui` is a custom tag that should be applied to any component that creates visible controls
+* `@extends` is used when a component's root element is another public custom component.
+* `@mixes` is used to call out HOCs that may be applied.
+* `@ui` is a custom tag that should be applied to any component that creates visible controls.
 * `@public` should be used for any component or HOC that is exported. Unexported objects should be marked `@private` to prevent them from appearing in the documentation.
 * Note: The Usage example is not runnable and will not render a preview.
 
