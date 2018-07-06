@@ -24,7 +24,7 @@ const JoinedPickerButtonBase = kind({
 	},
 
 	render: ({disabled, icon, ...rest}) => (
-		<span {...rest} disabled={disabled}>
+		<span {...rest} data-webos-voice-intent="Select" disabled={disabled}>
 			<Icon className={css.icon} disabled={disabled} small>{icon}</Icon>
 		</span>
 	)
