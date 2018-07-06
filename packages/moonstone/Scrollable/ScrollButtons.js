@@ -74,7 +74,7 @@ class ScrollButtons extends Component {
 		 * @default false
 		 * @public
 		 */
-		focusableScrollbar: PropTypes.bool,
+		focusableScrollButtons: PropTypes.bool,
 
 		/**
 		* Sets the hint string read when focusing the next button in the scroll bar.
@@ -269,11 +269,11 @@ class ScrollButtons extends Component {
 
 	onSpotlight = (ev) => {
 		const
-			{focusableScrollbar, rtl, vertical} = this.props,
+			{focusableScrollButtons, rtl, vertical} = this.props,
 			{target} = ev;
 
-		// We don't need to navigate manually if `focusableScrollbar` is `false`
-		if (focusableScrollbar) {
+		// We don't need to navigate manually if `focusableScrollButtons` is `false`
+		if (focusableScrollButtons) {
 			const
 				direction = getDirection(ev.keyCode),
 				fromNextToPrev = (vertical && direction === 'up') || (!vertical && direction === (rtl ? 'right' : 'left')),
@@ -298,7 +298,7 @@ class ScrollButtons extends Component {
 						Spotlight.move(direction);
 					}
 				}, 50);
-			} else {
+			} else if (Spotlight.getCurrent() === target) {
 				Spotlight.move(direction);
 			}
 		}
@@ -311,14 +311,14 @@ class ScrollButtons extends Component {
 
 	onKeyDownPrev = (ev) => {
 		const
-			{focusableScrollbar} = this.props,
+			{focusableScrollButtons} = this.props,
 			{nextButtonDisabled} = this.state,
 			{keyCode} = ev;
 
-		if (isPageDown(keyCode)) {
-			if (focusableScrollbar && !nextButtonDisabled) {
+		if (isPageDown(keyCode) && !nextButtonDisabled) {
+			if (focusableScrollButtons) {
 				Spotlight.focus(this.nextButtonNodeRef);
-			} else if (!focusableScrollbar) {
+			} else {
 				this.onClickNext(ev);
 			}
 		} else if (isPageUp(keyCode)) {
@@ -328,14 +328,14 @@ class ScrollButtons extends Component {
 
 	onKeyDownNext = (ev) => {
 		const
-			{focusableScrollbar} = this.props,
+			{focusableScrollButtons} = this.props,
 			{prevButtonDisabled} = this.state,
 			{keyCode} = ev;
 
-		if (isPageUp(keyCode)) {
-			if (focusableScrollbar && !prevButtonDisabled) {
+		if (isPageUp(keyCode) && !prevButtonDisabled) {
+			if (focusableScrollButtons) {
 				Spotlight.focus(this.prevButtonNodeRef);
-			} else if (!focusableScrollbar) {
+			} else {
 				this.onClickPrev(ev);
 			}
 		} else if (isPageDown(keyCode)) {

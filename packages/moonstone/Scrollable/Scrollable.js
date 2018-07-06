@@ -803,7 +803,7 @@ class ScrollableBase extends Component {
 									{...verticalScrollbarProps}
 									{...this.scrollbarProps}
 									disabled={!isVerticalScrollbarVisible}
-									focusableScrollbar={focusableScrollbar}
+									focusableScrollButtons={focusableScrollbar}
 									nextButtonAriaLabel={downButtonAriaLabel}
 									previousButtonAriaLabel={upButtonAriaLabel}
 									rtl={rtl}
@@ -817,7 +817,7 @@ class ScrollableBase extends Component {
 								{...this.scrollbarProps}
 								corner={isVerticalScrollbarVisible}
 								disabled={!isHorizontalScrollbarVisible}
-								focusableScrollbar={focusableScrollbar}
+								focusableScrollButtons={focusableScrollbar}
 								nextButtonAriaLabel={rightButtonAriaLabel}
 								previousButtonAriaLabel={leftButtonAriaLabel}
 								rtl={rtl}
