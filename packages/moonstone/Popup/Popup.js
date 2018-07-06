@@ -424,9 +424,8 @@ class Popup extends React.Component {
 		const direction = getDirection(keyCode);
 		const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
 
-		if (direction && onClose) {
+		if (direction) {
 			let focusChanged;
-
 			if (spottables && Spotlight.getCurrent() && spotlightRestrict !== 'self-only') {
 				focusChanged = Spotlight.move(direction);
 			}
@@ -438,7 +437,9 @@ class Popup extends React.Component {
 				ev.stopPropagation();
 				// set the pointer mode to false on keydown
 				Spotlight.setPointerMode(false);
-				onClose(ev);
+				if (onClose) {
+					onClose(ev);
+				}
 			}
 		}
 	}
