@@ -1,6 +1,9 @@
 /**
  * Moonstone styled input components.
  *
+ * @example
+ * <Input placeholder="Enter text here" />
+ *
  * @module moonstone/Input
  * @exports Input
  * @exports InputBase
@@ -61,7 +64,7 @@ const InputBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Applies a disabled style and prevents interacting with the component.
+		 * Disables Input and becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -304,6 +307,7 @@ const InputBase = kind({
  *
  * @class Input
  * @memberof moonstone/Input
+ * @extends moonstone/Input.InputBase
  * @mixes ui/Changeable.Changeable
  * @mixes spotlight/Spottable.Spottable
  * @ui

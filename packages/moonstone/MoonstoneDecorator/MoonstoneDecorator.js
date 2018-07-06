@@ -2,6 +2,7 @@
  * Exports the {@link moonstone/MoonstoneDecorator.MoonstoneDecorator} HOC
  *
  * @module moonstone/MoonstoneDecorator
+ * @exports MoonstoneDecorator
  */
 
 import {addAll} from '@enact/core/keymap';

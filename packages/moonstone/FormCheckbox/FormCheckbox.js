@@ -1,8 +1,11 @@
 /**
- * Provides Moonstone-themed checkmark icon inside a circle, primarily used inside the
+ * Moonstone styled checkmark icon inside a circle, primarily used inside the
  * [FormCheckboxItem]{@link moonstone/FormCheckboxItem.FormCheckboxItem}. This also has built-in
  * `Spotlight` support since `FormCheckboxItem` is a specialized [Item]{@link moonstone/Item} that
  * does not visually respond to focus; this child component shows focus instead.
+ *
+ * @example
+ * <FormCheckbox />
  *
  * @module moonstone/FormCheckbox
  * @exports FormCheckbox

@@ -1,9 +1,18 @@
 /**
- * Exports the {@link moonstone/ExpandableList.ExpandableList} and
- * {@link moonstone/ExpandableList.ExpandableListBase} components. The default export is
- * {@link moonstone/ExpandableList.ExpandableList}.
+ * Moonstone styled expandable list.
+ *
+ * @example
+ * <ExpandableList
+ *   noneText="Nothing is selected"
+ *   select="multiple"
+ *   title="Expandable List"
+ * >
+ *   {['Item 1', 'Item 2']}
+ * </ExpandableList>
  *
  * @module moonstone/ExpandableList
+ * @exports ExpandableList
+ * @exports ExpandableItemBase
  */
 
 import Changeable from '@enact/ui/Changeable';
@@ -106,7 +115,7 @@ const ExpandableListBase = kind({
 		closeOnSelect: PropTypes.bool,
 
 		/**
-		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 * Disables ExpandableList and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -124,8 +133,7 @@ const ExpandableListBase = kind({
 		label: PropTypes.node,
 
 		/**
-		 * When `true`, the expandable will not automatically close when the user navigates to the
-		 * `title` of the component using 5-way controls.
+		 * Stays open when the user navigates to the `title` of the component using 5-way controls.
 		 *
 		 * This does not affect `closeOnSelect`.
 		 *
@@ -136,7 +144,7 @@ const ExpandableListBase = kind({
 		noAutoClose: PropTypes.bool,
 
 		/**
-		 * When `true`, the user may move {@glossary Spotlight} past the bottom of the expandable
+		 * Allows the user to move {@glossary Spotlight} past the bottom of the expandable
 		 * (when open) using 5-way controls.
 		 *
 		 * @type {Boolean}
@@ -178,7 +186,7 @@ const ExpandableListBase = kind({
 		onSelect: PropTypes.func,
 
 		/**
-		 * The handler to run when the component is removed while retaining focus.
+		 * Called when the component is removed while retaining focus.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -187,7 +195,7 @@ const ExpandableListBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 * Called prior to focus leaving the expandable when the 5-way left key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -196,7 +204,7 @@ const ExpandableListBase = kind({
 		onSpotlightLeft: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 * Called prior to focus leaving the expandable when the 5-way right key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -205,7 +213,7 @@ const ExpandableListBase = kind({
 		onSpotlightRight: PropTypes.func,
 
 		/**
-		 * When `true`, the expandable is open with its contents visible
+		 * Opens the expandable with its contents visible
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -236,7 +244,7 @@ const ExpandableListBase = kind({
 		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)]),
 
 		/**
-		 * When `true`, the component cannot be navigated using spotlight.
+		 * Disables spotlight navigation.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -369,6 +377,7 @@ const ExpandableListBase = kind({
  *
  * @class ExpandableList
  * @memberof moonstone/ExpandableList
+ * @extends moonstone/ExpandableList.ExpandableListBase
  * @mixes moonstone/ExpandableItem.Expandable
  * @mixes ui/Changeable.Changeable
  * @ui

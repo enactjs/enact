@@ -1,8 +1,16 @@
 /**
- * Exports the {@link moonstone/EditableIntegerPicker.EditableIntegerPicker} and
- * {@link moonstone/EditableIntegerPicker.EditableIntegerPickerBase} components
+ * Moonstone styled editable integer picker.
+ *
+ * @example
+ * <EditableIntegerPicker
+ *   editMode
+ *   max={10}
+ *   min={1}
+ * />
  *
  * @module moonstone/EditableIntegerPicker
+ * @exports EditableIntegerPicker
+ * @exports EditableIntegerPickerBase
  */
 
 import Changeable from '@enact/ui/Changeable';
@@ -28,8 +36,8 @@ const digits = (num) => {
 };
 
 /**
- * {@link moonstone/EditableIntegerPicker.EditableIntegerPickerBase} is a component that lets the user select a number
- * from a range of numbers. This version is not spottable. Developers are encouraged to use
+ * A picker component that lets the user select a number from a range of numbers.
+ * This component is not spottable. Developers are encouraged to use
  * {@link moonstone/EditableIntegerPicker.EditableIntegerPicker}.
  *
  * @class EditableIntegerPickerBase
@@ -79,7 +87,7 @@ const EditableIntegerPickerBase = kind({
 		decrementIcon: PropTypes.string,
 
 		/**
-		 * When `true`, the EditableIntegerPicker is shown as disabled and does not generate `onChange`
+		 * Disables the EditableIntegerPicker and does not generate `onChange`
 		 * [events]{@glossary event}.
 		 *
 		 * @type {Boolean}
@@ -113,7 +121,7 @@ const EditableIntegerPickerBase = kind({
 		inputRef: PropTypes.func,
 
 		/**
-		 * A function to be run when there is a blur in the input
+		 * Called when there is a blur in the input
 		 *
 		 * @type {Function}
 		 * @public
@@ -121,7 +129,7 @@ const EditableIntegerPickerBase = kind({
 		onInputBlur : PropTypes.func,
 
 		/**
-		 * A function to be run when pickerItem is clicked.
+		 * Called when the pickerItem is clicked.
 		 * This enables the input field in the component
 		 *
 		 * @type {Function}
@@ -296,6 +304,7 @@ const EditableIntegerPickerBase = kind({
  *
  * @class EditableIntegerPicker
  * @memberof moonstone/EditableIntegerPicker
+ * @extends moonstone/EditableIntegerPicker.EditableIntegerPickerBase
  * @mixes ui/Changeable.Changeable
  * @ui
  * @public

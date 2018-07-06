@@ -1,6 +1,11 @@
 /**
  * Provides a media component with image and text overlay support.
  *
+ * @example
+ * <MediaOverlay>
+ *   <source src="http://media.w3.org/2010/05/sintel/trailer.mp4" />
+ * </MediaOverlay>
+ *
  * @module moonstone/MediaOverlay
  * @exports MediaOverlay
  * @exports MediaOverlayBase
@@ -186,6 +191,7 @@ const MediaOverlayDecorator = compose(
  *
  * @class MediaOverlay
  * @memberof moonstone/MediaOverlay
+ * @extends moonstone/mediaOverlay.MediaOverlayBase
  * @mixes moonstone/MediaOverlay.MediaOverlayDecorator
  * @ui
  * @public

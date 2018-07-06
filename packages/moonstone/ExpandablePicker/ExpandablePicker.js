@@ -1,9 +1,18 @@
 /**
- * Exports the {@link moonstone/ExpandablePicker.ExpandablePicker} and
- * {@link moonstone/ExpandablePicker.ExpandablePickerBase} components. The default export is
- * {@link moonstone/ExpandablePicker.ExpandablePicker}.
+ * Moonstone styled expandable picker.
+ *
+ * @example
+ * <ExpandablePicker
+ *   joined
+ *   title="Choose an option"
+ *   width="medium"
+ * >
+ *   {['Option 1', 'Option 2', 'Option 3']}
+ * </ExpandablePicker>
  *
  * @module moonstone/ExpandablePicker
+ * @exports ExpandablePicker
+ * @exports ExpandablePickerBase
  */
 
 import Changeable from '@enact/ui/Changeable';
@@ -81,7 +90,7 @@ const ExpandablePickerBase = kind({
 		decrementIcon: PropTypes.string,
 
 		/**
-		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 * Disables ExpandablePicker and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -120,9 +129,7 @@ const ExpandablePickerBase = kind({
 		joined: PropTypes.bool,
 
 		/**
-		 * By default, the picker will animate transitions between items if it has a defined
-		 * `width`. Specifying `noAnimation` will prevent any transition animation for the
-		 * component.
+		 * Prevents any transition animation for the component.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -130,7 +137,7 @@ const ExpandablePickerBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * Callback to be called when the control should increment or decrement.
+		 * Called when the control should increment or decrement.
 		 *
 		 * @type {Function}
 		 * @public
@@ -138,7 +145,7 @@ const ExpandablePickerBase = kind({
 		onChange: PropTypes.func,
 
 		/**
-		 * Callback to be called when a condition occurs which should cause the expandable to close
+		 * Called when a condition occurs which should cause the expandable to close
 		 *
 		 * @type {Function}
 		 * @public
@@ -146,7 +153,7 @@ const ExpandablePickerBase = kind({
 		onClose: PropTypes.func,
 
 		/**
-		 * Callback to be called when an item is picked.
+		 * Called when an item is picked.
 		 *
 		 * @type {Function}
 		 * @public
@@ -154,7 +161,7 @@ const ExpandablePickerBase = kind({
 		onPick: PropTypes.func,
 
 		/**
-		 * The handler to run when the component is removed while retaining focus.
+		 * Called when the component is removed while retaining focus.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -163,7 +170,7 @@ const ExpandablePickerBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way down key is pressed.
+		 * Called prior to focus leaving the expandable when the 5-way down key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -172,7 +179,7 @@ const ExpandablePickerBase = kind({
 		onSpotlightDown: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 * Called prior to focus leaving the expandable when the 5-way left key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -181,7 +188,7 @@ const ExpandablePickerBase = kind({
 		onSpotlightLeft: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 * Called prior to focus leaving the expandable when the 5-way right key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -190,7 +197,7 @@ const ExpandablePickerBase = kind({
 		onSpotlightRight: PropTypes.func,
 
 		/**
-		 * When `true`, the control is rendered in the expanded state, with the contents visible
+		 * Opens ExpandablePicker with the contents visible
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -216,7 +223,7 @@ const ExpandablePickerBase = kind({
 		pickerAriaLabel: PropTypes.string,
 
 		/**
-		 * When `true`, current locale is RTL
+		 * Sets current locale to RTL
 		 *
 		 * @type {Boolean}
 		 * @private
@@ -224,7 +231,7 @@ const ExpandablePickerBase = kind({
 		rtl: PropTypes.bool,
 
 		/**
-		 * When `true`, the component cannot be navigated using spotlight.
+		 * Disables spotlight navigation.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -252,8 +259,7 @@ const ExpandablePickerBase = kind({
 		width: PropTypes.oneOf([null, 'small', 'medium', 'large']),
 
 		/*
-		 * Whether the picker stops incrementing when it reaches the last element. Set `wrap`
-		 * to `true` to allow the picker to continue from the opposite end of the list of options.
+		 * Allows picker to continue from the opposite end of the list of options when reaching the start or the end of the list.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -384,6 +390,7 @@ const ExpandablePickerBase = kind({
  *
  * @class ExpandablePicker
  * @memberof moonstone/ExpandablePicker
+ * @extends moonstone/ExpandablePicker.ExpandablePickerBase
  * @ui
  * @mixes moonstone/ExpandableItem.Expandable
  * @mixes ui/Changeable.Changeable

@@ -1,7 +1,11 @@
 /**
  * Exports the {@link moonstone/LabeledItem.LabeledItem} component.
  *
+ * @example
+ * <LabeledItem label="Label">Hello LabeledItem</LabeledItem>
+ *
  * @module moonstone/LabeledItem
+ * @module moonstone/LabeledItemBase
  */
 
 import kind from '@enact/core/kind';
@@ -65,7 +69,7 @@ const LabeledItemBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 * Applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -106,6 +110,15 @@ const LabeledItemBase = kind({
 	)
 });
 
+/**
+ * A Moonstone styled labeled item with built-in support for marqueed text, and Spotlight focus.
+ *
+ * @class LabeledItem
+ * @memberof moonstone/LabeledItem
+ * @extends moonstone/LabeledItem.LabeledItemBase
+ * @ui
+ * @public
+ */
 const LabeledItem = Pure(
 	Skinnable(
 		LabeledItemBase
