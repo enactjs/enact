@@ -480,6 +480,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			 *
 			 * @type {String}
 			 * @see {@link moonstone/IconButton.IconButtonBase.color}
+			 * @default 'blue'
 			 * @public
 			 */
 			moreButtonColor: PropTypes.oneOf(['red', 'green', 'yellow', 'blue']),
@@ -611,6 +612,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 		static defaultProps = {
 			initialJumpDelay: 400,
 			jumpDelay: 200,
+			moreButtonColor: 'blue',
 			moreButtonSpotlightId: 'moreButton'
 		}
 

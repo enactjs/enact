@@ -13,6 +13,7 @@ import {mergeComponentMetadata} from '../../src/utils';
 // Set up some defaults for info and knobs
 const prop = {
 	moreButtonColor: [
+		'',
 		'red',
 		'green',
 		'yellow',
@@ -145,7 +146,7 @@ storiesOf('Moonstone', module)
 							jumpDelay={number('jumpDelay', MediaControlsConfig, 200)}
 							jumpForwardIcon={select('jumpForwardIcon', icons, MediaControlsConfig, 'skipforward')}
 							moreButtonCloseLabel={text('moreButtonCloseLabel', MediaControlsConfig)}
-							moreButtonColor={select('moreButtonColor', prop.moreButtonColor, MediaControlsConfig, 'blue')}
+							moreButtonColor={select('moreButtonColor', prop.moreButtonColor, MediaControlsConfig, '')}
 							moreButtonDisabled={boolean('moreButtonDisabled', MediaControlsConfig)}
 							moreButtonLabel={text('moreButtonLabel', MediaControlsConfig)}
 							no5WayJump={boolean('no5WayJump', MediaControlsConfig)}
