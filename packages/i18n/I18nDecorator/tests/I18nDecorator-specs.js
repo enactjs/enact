@@ -32,7 +32,7 @@ describe('I18nDecorator', () => {
 		);
 		const subject = mount(<Wrapped />);
 
-		const expected = 'has rtl context';
+		const expected = 'has rtl prop';
 		const actual = subject.text();
 
 		expect(actual).to.equal(expected);
@@ -132,7 +132,7 @@ describe('I18nDecorator', () => {
 
 		const Wrapped = I18nDecorator(Component);
 		// explicitly setting locale so we get a known class list regardless of runtime locale
-		const subject = shallow(<Wrapped locale="en-US" />);
+		const subject = shallow(<Wrapped locale="en-US" />).find(Component);
 
 		const expected = true;
 		const actual =	subject.hasClass('enact-locale-en') &&
