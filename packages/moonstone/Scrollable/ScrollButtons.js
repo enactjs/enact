@@ -286,6 +286,8 @@ class ScrollButtons extends Component {
 				this.focusOnOppositeScrollButton(ev, direction);
 			}
 		} else {
+			// If it is vertical `Scrollable`, move focus to the left for ltr or to the right for rtl
+			// If is is horizontal `Scrollable`, move focus to the up
 			const direction = !vertical && 'up' || rtl && 'right' || 'left';
 
 			if (Spotlight.getPointerMode()) {
