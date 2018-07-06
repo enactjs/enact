@@ -1,8 +1,8 @@
 /**
- * Provides Moonstone-themed checkmark in a circle component and interactive togglable capabilities.
+ * Moonstone styled checkbox components.
  *
  * @example
- * <Checkbox />
+ * <Checkbox onToggle={console.log} />
  *
  * @module moonstone/Checkbox
  * @exports Checkbox
@@ -10,16 +10,24 @@
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import ToggleIcon from '../ToggleIcon';
 import Icon from '@enact/ui/Icon';
 
-import componentCss from './Checkbox.less';
+import css from './Checkbox.less';
 
 /**
- * Renders a check mark in a shape which supports a Boolean state.
+ * A checkbox component, ready to use in Moonstone applications.
+ *
+ * `Checkbox` may be used independently to represent a togglable state but is more commonly used as
+ * part of [CheckboxItem]{@link moonstone/CheckboxItem}.
+ *
+ * Usage:
+ * ```
+ * <Checkbox selected />
+ * ```
  *
  * @class Checkbox
  * @memberof moonstone/Checkbox
@@ -30,20 +38,23 @@ import componentCss from './Checkbox.less';
 const CheckboxBase = kind({
 	name: 'Checkbox',
 
-	propTypes: {
-		children: PropTypes.string,
-		css: PropTypes.object
+	propTypes: /** @lends moonstone/Checkbox.Checkbox.prototype */ {
+		/**
+		 * The icon displayed when `selected`.
+		 *
+		 * @see moonstone/Icon.Icon.children
+		 * @type {String|Object}
+		 * @default	'check'
+		 * @public
+		 */
+		children: PropTypes.string
 	},
 
 	defaultProps: {
 		children: 'check'
 	},
 
-	styles: {
-		css: componentCss
-	},
-
-	render: ({children, css, ...rest}) => {
+	render: ({children, ...rest}) => {
 		return (
 			<ToggleIcon
 				{...rest}
