@@ -25,9 +25,11 @@ import InputSpotlightDecorator from './InputSpotlightDecorator';
 import {calcAriaLabel, extractInputProps} from './util';
 
 /**
- * A Moonstone styled input component. It supports start and end icons. Note that this base
- * component is not stateless as many other base components are. However, it does not support
- * Spotlight. Apps will want to use {@link moonstone/Input.Input}.
+ * A Moonstone styled input component.
+ *
+ * It supports start and end icons. Note that this base component is not stateless as many other
+ * base components are. However, it does not support Spotlight. Apps will want to use
+ * {@link moonstone/Input.Input}.
  *
  * @class InputBase
  * @memberof moonstone/Input
@@ -180,7 +182,7 @@ const InputBase = kind({
 		placeholder: PropTypes.string,
 
 		/**
-		 * Indicates content is RTL.
+		 * Indicates the content's text direction is right-to-left.
 		 *
 		 * @type {Boolean}
 		 * @private

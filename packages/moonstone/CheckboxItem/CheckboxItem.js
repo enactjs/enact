@@ -1,5 +1,10 @@
 /**
- * Provides Moonstone-themed item component and interactive togglable checkbox.
+ * Moonstone styled item components with a toggleable checkbox.
+ *
+ * @example
+ * <CheckboxItem onToggle={console.log}>
+ * 	Item with a Checkbox
+ * </CheckboxItem>
  *
  * @module moonstone/CheckboxItem
  * @exports CheckboxItem
@@ -7,8 +12,8 @@
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import Checkbox from '../Checkbox';
 import ToggleItem from '../ToggleItem';
@@ -16,7 +21,20 @@ import ToggleItem from '../ToggleItem';
 import componentCss from './CheckboxItem.less';
 
 /**
- * Renders an item with a checkbox component. Useful to show a selected state on an item.
+ * An item with a checkbox component, ready to use in Moonstone applications.
+ *
+ * `CheckboxItem` may be used to allow the user to select a single option or used as part of a
+ * [Group]{@link ui/Group} when multiple [selections]{@link ui/Group.Group.select} are possible.
+ *
+ * Usage:
+ * ```
+ * <CheckboxItem
+ * 	defaultSelected={selected}
+ * 	onToggle={handleToggle}
+ * >
+ *  Item with a Checkbox
+ * </CheckboxItem>
+ * ```
  *
  * @class CheckboxItem
  * @memberof moonstone/CheckboxItem

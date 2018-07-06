@@ -2,6 +2,11 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [Unreleased]
+
+### Fixed
+- `moonstone/VideoPlayer.MediaControls` to correctly handle more button color when the prop is not specified
+
 ## [2.0.0-beta.9] - 2018-07-02
 
 ### Added

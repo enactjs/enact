@@ -1,5 +1,5 @@
 /**
- * Provides Moonstone-themed button components and behaviors.
+ * Moonstone styled button components and behaviors.
  *
  * @example
  * <Button small>Hello Enact!</Button>
@@ -27,7 +27,10 @@ import TooltipDecorator from '../TooltipDecorator';
 import componentCss from './Button.less';
 
 /**
- * A moonstone-styled button without any behavior.
+ * A button component.
+ *
+ * This component is most often not used directly but may be composed within another component as it
+ * is within [Button]{@link moonstone/Button.Button}.
  *
  * @class ButtonBase
  * @memberof moonstone/Button
@@ -39,7 +42,7 @@ const ButtonBase = kind({
 
 	propTypes: /** @lends moonstone/Button.ButtonBase.prototype */ {
 		/**
-		 * The background-color opacity of this button.
+		 * The background opacity of this button.
 		 *
 		 * Valid values are:
 		 * * `'translucent'`,
@@ -52,7 +55,7 @@ const ButtonBase = kind({
 		backgroundOpacity: PropTypes.oneOf(['translucent', 'lightTranslucent', 'transparent']),
 
 		/**
-		 * The color of the underline beneath button's content. Used for `IconButton`.
+		 * The color of the underline beneath button's content.
 		 *
 		 * Accepts one of the following color names, which correspond with the colored buttons on a
 		 * standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`.
@@ -107,10 +110,11 @@ const ButtonBase = kind({
 });
 
 /**
- * Moonstone-specific button behaviors to apply to [Button]{@link moonstone/Button.ButtonBase}.
+ * Applies Moonstone specific behaviors to [Button]{@link moonstone/Button.ButtonBase} components.
  *
  * @hoc
  * @memberof moonstone/Button
+ * @extends moonstone/Button.ButtonBase
  * @mixes i18n/Uppercase.Uppercase
  * @mixes moonstone/TooltipDecorator.TooltipDecorator
  * @mixes moonstone/Marquee.MarqueeDecorator
@@ -130,16 +134,21 @@ const ButtonDecorator = compose(
 );
 
 /**
- * A Moonstone-styled button with built-in support for uppercasing, tooltips, marqueed text, and
- * Spotlight focus.
+ * A button component, ready to use in Moonstone applications.
  *
  * Usage:
  * ```
- * <Button>Press me!</Button>
+ * <Button
+ * 	backgroundOpacity="translucent"
+ * 	color="blue"
+ * >
+ * 	Press me!
+ * </Button>
  * ```
  *
  * @class Button
  * @memberof moonstone/Button
+ * @extends moonstone/Button.ButtonBase
  * @mixes moonstone/Button.ButtonDecorator
  * @ui
  * @public
