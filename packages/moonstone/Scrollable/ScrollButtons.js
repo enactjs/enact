@@ -275,8 +275,7 @@ class ScrollButtons extends Component {
 		// We don't need to navigate manually if `focusableScrollbar` is `false`
 		if (focusableScrollbar) {
 			const
-				{keyCode} = ev,
-				direction = getDirection(keyCode),
+				direction = getDirection(ev.keyCode),
 				fromNextToPrev = (vertical && direction === 'up') || (!vertical && direction === (rtl ? 'right' : 'left')),
 				fromPrevToNext = (vertical && direction === 'down') || (!vertical && direction === (rtl ? 'left' : 'right'));
 
