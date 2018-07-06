@@ -111,6 +111,6 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 
 export default Resizable;
 export {
-	contextTypes,
+	contextTypes as privateContextTypes,
 	Resizable
 };
