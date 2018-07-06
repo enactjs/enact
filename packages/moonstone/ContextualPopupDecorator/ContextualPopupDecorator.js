@@ -78,6 +78,16 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			popupComponent: PropTypes.func.isRequired,
 
 			/**
+			 * Limits the range of voice control to the popup.
+			 *
+			 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.prototype
+			 * @type {Boolean}
+			 * @default true
+			 * @public
+			 */
+			'data-webos-voice-exclusive': PropTypes.bool,
+
+			/**
 			 * Direction of popup with respect to the wrapped component.
 			 *
 			 * @type {String}
@@ -212,6 +222,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
+			'data-webos-voice-exclusive': true,
 			direction: 'down',
 			noAutoDismiss: false,
 			open: false,
@@ -549,7 +560,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, onOpen, popupProps, skin, spotlightRestrict, ...rest} = this.props;
+			const {'data-webos-voice-exclusive': voiceExclusive, showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, onOpen, popupProps, skin, spotlightRestrict, ...rest} = this.props;
 			const scrimType = spotlightRestrict === 'self-only' ? 'transparent' : 'none';
 			const popupPropsRef = Object.assign({}, popupProps);
 			const ariaProps = extractAriaProps(popupPropsRef);
@@ -577,6 +588,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 							arrowPosition={this.state.arrowPosition}
 							containerPosition={this.state.containerPosition}
 							containerRef={this.getContainerNode}
+							data-webos-voice-exclusive={voiceExclusive}
 							skin={skin}
 							spotlightId={this.state.containerId}
 							spotlightRestrict={spotlightRestrict}
