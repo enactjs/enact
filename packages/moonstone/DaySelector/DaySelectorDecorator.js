@@ -20,14 +20,13 @@ const SELECTED_DAY_TYPES = {
 };
 
 /**
- * Moonstone-specific behaviors to apply to
+ * Applies Moonstone specific behaviors to
  * [DaySelector]{@link moonstone/DaySelector.DaySelectorBase}.
  *
- * @hoc DaySelectorDecorator
+ * @hoc
  * @memberof moonstone/DaySelector
  * @mixes ui/Changeable.Changeable
  * @mixes ui/Skinnable.Skinnable
- * @ui
  * @public
  */
 const DaySelectorDecorator = hoc((config, Wrapped) => {
@@ -39,14 +38,14 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			/**
 			 * The "aria-label" for the selector.
 			 *
-			 * @memberof moonstone/DaySelector.DaySelectorDecorator
+			 * @memberof moonstone/DaySelector.DaySelectorDecorator.prototype
 			 * @type {String}
 			 * @private
 			 */
 			'aria-label': PropTypes.string,
 
 			/**
-			 * The format for names of days used in the label. "M, T, W" for `short`; "Mo, Tu, We" for `medium`, etc.
+			 * The format for names of days used in the label.
 			 *
 			 * @type {String}
 			 * @default 'long'
@@ -55,7 +54,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			dayNameLength: PropTypes.oneOf(['short', 'medium', 'long', 'full']),
 
 			/**
-			 * When `true`, applies a disabled style and the control becomes non-interactive.
+			 * Applies a disabled style and prevents interacting with the component.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -64,7 +63,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * The text displayed in the label when every day is selected
+			 * The text displayed in the label when every day is selected.
 			 *
 			 * @type {String}
 			 * @default 'Every Day'
@@ -73,7 +72,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			everyDayText: PropTypes.string,
 
 			/**
-			 * The text displayed in the label when every weekeday is selected
+			 * The text displayed in the label when every weekeday is selected.
 			 *
 			 * @type {String}
 			 * @default 'Every Weekday'
@@ -82,7 +81,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			everyWeekdayText: PropTypes.string,
 
 			/**
-			 * The text displayed in the label when every weekend day is selected
+			 * The text displayed in the label when every weekend day is selected.
 			 *
 			 * @type {String}
 			 * @default 'Every Weekend'
@@ -91,9 +90,11 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			everyWeekendText: PropTypes.string,
 
 			/**
-			 * Called when an item is selected. The first parameter will be an object containing a
-			 * `selected` member, containing the array of numbers representing the selected days, zero
-			 * indexed.
+			 * Called when an day is selected or unselected.
+			 *
+			 * The event payload will be an object with the following members:
+			 * * `selected` - An array of numbers representing the selected days, 0 indexed
+			 * * `content` - Localized string representing the selected days
 			 *
 			 * @type {Function}
 			 * @public

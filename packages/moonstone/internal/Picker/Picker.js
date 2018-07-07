@@ -704,24 +704,22 @@ const PickerBase = class extends React.Component {
 	}
 
 	calcButtonLabel (next, valueText) {
-		if (!this.props.joined) {
-			const {decrementAriaLabel, incrementAriaLabel} = this.props;
-			let label = next ? incrementAriaLabel : decrementAriaLabel;
+		const {decrementAriaLabel, incrementAriaLabel} = this.props;
+		let label = next ? incrementAriaLabel : decrementAriaLabel;
 
-			if (label != null) {
-				return label;
-			}
-
-			return `${valueText} ${next ? $L('next item') : $L('previous item')}`;
+		if (label != null) {
+			return label;
 		}
+
+		return `${valueText} ${next ? $L('next item') : $L('previous item')}`;
 	}
 
 	calcDecrementLabel (valueText) {
-		return this.calcButtonLabel(this.props.reverse, valueText);
+		return !this.props.joined ? this.calcButtonLabel(this.props.reverse, valueText) : null;
 	}
 
 	calcIncrementLabel (valueText) {
-		return this.calcButtonLabel(!this.props.reverse, valueText);
+		return !this.props.joined ? this.calcButtonLabel(!this.props.reverse, valueText) : null;
 	}
 
 	calcAriaLabel (valueText) {
@@ -758,6 +756,7 @@ const PickerBase = class extends React.Component {
 			joined,
 			onSpotlightDisappear,
 			orientation,
+			reverse,
 			spotlightDisabled,
 			step,
 			width,
@@ -777,7 +776,6 @@ const PickerBase = class extends React.Component {
 		delete rest.onPickerSpotlightLeft;
 		delete rest.onPickerSpotlightRight;
 		delete rest.onPickerSpotlightUp;
-		delete rest.reverse;
 		delete rest.value;
 		delete rest.wrap;
 
@@ -825,6 +823,7 @@ const PickerBase = class extends React.Component {
 					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
 					data-webos-voice-group-label={voiceGroupLabel}
+					data-webos-voice-label={joined ? this.calcButtonLabel(!reverse, valueText) : null}
 					disabled={incrementerDisabled}
 					hidden={reachedEnd}
 					icon={incrementIcon}
@@ -860,6 +859,7 @@ const PickerBase = class extends React.Component {
 					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
 					data-webos-voice-group-label={voiceGroupLabel}
+					data-webos-voice-label={joined ? this.calcButtonLabel(reverse, valueText) : null}
 					disabled={decrementerDisabled}
 					hidden={reachedStart}
 					icon={decrementIcon}
