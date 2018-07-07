@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Removed
+
+`core/util.withContextFromProps` function
+
 ## [2.0.0-beta.9] - 2018-07-02
 
 No significant changes.

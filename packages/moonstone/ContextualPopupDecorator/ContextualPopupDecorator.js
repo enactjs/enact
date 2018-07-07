@@ -10,17 +10,17 @@ import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {on, off} from '@enact/core/dispatcher';
 import {handle, forProp, forKey, forward, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import {Subscription} from '@enact/core/internal/PubSub';
 import {extractAriaProps} from '@enact/core/util';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import ri from '@enact/ui/resolution';
 import FloatingLayer from '@enact/ui/FloatingLayer';
-import PropTypes from 'prop-types';
+import ri from '@enact/ui/resolution';
 import compose from 'ramda/src/compose';
+import PropTypes from 'prop-types';
 import React from 'react';
 
-import ContextualPopup from './ContextualPopup';
+import {ContextualPopup} from './ContextualPopup';
 
 import css from './ContextualPopupDecorator.less';
 
@@ -631,11 +631,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
  */
 const ContextualPopupDecorator = compose(
 	ApiDecorator({api: ['positionContextualPopup']}),
-	Subscription(
-		{
-			channels: ['i18n'],
-			mapMessageToProps: (key, {rtl}) => ({rtl})
-		}),
+	I18nContextDecorator({rtlProp: 'rtl'}),
 	Decorator
 );
 
