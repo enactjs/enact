@@ -17,7 +17,7 @@ import {on, off} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import {contextTypes as contextTypesResize} from '../Resizable';
+import {privateContextTypes as contextTypesResize} from '../Resizable';
 import ri from '../resolution';
 import Touchable from '../Touchable';
 

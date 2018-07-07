@@ -2,6 +2,20 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [unreleased]
+
+### Removed
+
+- `i18n/I18nDecorator.contextTypes`, replaced by `i18n/I18nDecorator.I18nContextDecorator`
+
+### Added
+
+- `i18n/I18nDecorator.I18nContextDecorator` HOC to support notification of locale changes
+
+## [2.0.0-beta.9] - 2018-07-02
+
+No significant changes.
+
 ## [2.0.0-beta.8] - 2018-06-25
 
 No significant changes.

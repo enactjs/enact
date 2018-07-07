@@ -22,7 +22,8 @@ import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlig
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ComponentOverride from '@enact/ui/ComponentOverride';
-import {contextTypes, FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
+import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
+import {contextTypes} from '@enact/ui/FloatingLayer/FloatingLayerDecorator';
 import Media from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
