@@ -4,6 +4,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [Unreleased]
 
+### Changed
+
+- `moonstone/spinner` to blur Spotlight when the spinner is active
 ### Fixed
 - `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to handle direction, page up, and page down keys properly on page controls them when `focusableScrollbar` is false
 - `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to handle a page up or down key in pointer mode
