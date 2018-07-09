@@ -9,6 +9,7 @@ import {number, object, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('TooltipDecorator', TooltipDecorator, Tooltip, TooltipBase);
+const TooltipButton = TooltipDecorator(Button);
 
 const prop = {
 	tooltipPosition: {
@@ -42,7 +43,7 @@ storiesOf('Moonstone', module)
 			text: 'The basic TooltipDecorator'
 		})(() => (
 			<div style={{textAlign: 'center'}}>
-				<Button
+				<TooltipButton
 					tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
 					tooltipDelay={number('tooltipDelay', Config, 500)}
 					tooltipText={text('tooltipText', Config, 'tooltip!')}
@@ -51,7 +52,7 @@ storiesOf('Moonstone', module)
 					tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
 				>
 					hello
-				</Button>
+				</TooltipButton>
 			</div>
 		))
 	);

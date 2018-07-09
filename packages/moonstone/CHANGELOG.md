@@ -8,9 +8,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` support `data-webos-voice-focused` and `data-webos-voice-group-label`
 
+### Removed
+
+- `moonstone/Button` built-in support for tooltips
+
 ### Changed
 
-- `moonstone/spinner` to blur Spotlight when the spinner is active
+- `moonstone/Spinner` to blur Spotlight when the spinner is active
 
 ### Fixed
 
