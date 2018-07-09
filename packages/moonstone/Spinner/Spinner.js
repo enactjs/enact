@@ -18,6 +18,7 @@ import compose from 'ramda/src/compose';
 import React from 'react';
 import Pause from '@enact/spotlight/Pause';
 import UiSpinnerBase from '@enact/ui/Spinner';
+import Spotlight from '@enact/spotlight';
 
 import $L from '../internal/$L';
 import Marquee from '../Marquee';
@@ -156,6 +157,7 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 			 * Determines how far the click-blocking should extend.
 			 *
 			 * It can be either `'screen'`, `'container'`, or `null`. `'screen'` pauses spotlight.
+			 * Changing this property to `'screen'` after creation is not supported.
 			 *
 			 * @type {String}
 			 * @default null
@@ -175,6 +177,7 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 
 			if (blockClickOn === 'screen') {
 				this.paused.pause();
+				Spotlight.getCurrent().blur();
 			}
 		}
 
@@ -182,6 +185,7 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 			const {blockClickOn} = this.props;
 
 			if (blockClickOn === 'screen') {
+				Spotlight.focus();
 				this.paused.resume();
 			}
 		}

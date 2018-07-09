@@ -1,5 +1,4 @@
 import {addAll, is} from '@enact/core/keymap';
-import {contextTypes} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
@@ -55,7 +54,7 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
 
 			/**
 			 * When `true`, the EditableIntegerPicker is shown as disabled and does not generate `onChange`
-			 * [events]{@glossary event}.
+			 * [events]{@link /docs/developer-guide/glossary/#event}.
 			 *
 			 * @type {Boolean}
 			 * @public
@@ -71,8 +70,6 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
 			 */
 			value: PropTypes.number
 		}
-
-		static contextTypes = contextTypes
 
 		static defaultProps = {
 			value: 0
