@@ -768,7 +768,7 @@ const VirtualListBaseFactory = (type) => {
 
 		render () {
 			const
-				{'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, className, itemsRenderer, style, ...rest} = this.props,
+				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
 				{cc, initItemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className);
 
@@ -792,7 +792,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			return (
-				<div className={containerClasses} ref={this.initContainerRef} style={style} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel}>
+				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.initContainerRef} style={style}>
 					<div {...rest} ref={this.initContentRef}>
 						{itemsRenderer({cc, initItemContainerRef, primary})}
 					</div>
