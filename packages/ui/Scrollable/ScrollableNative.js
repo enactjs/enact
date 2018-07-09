@@ -752,7 +752,7 @@ class ScrollableBaseNative extends Component {
 
 	getOverscrollStatus = (orientation, position) => (this.overscrollStatus[orientation][position])
 
-	getOverscrollRatio = (orientation, position) => {
+	calculateOverscrollRatio = (orientation, position) => {
 		const
 			bounds = this.getScrollBounds(),
 			isVertical = (orientation === 'vertical'),
@@ -764,9 +764,11 @@ class ScrollableBaseNative extends Component {
 			overDistance = -position;
 		} else if (position > maxPos) {
 			overDistance = position - maxPos;
+		} else {
+			return 0;
 		}
 
-		return clamp(0, 1, 2 * overDistance / baseSize);
+		return Math.min(1, 2 * overDistance / baseSize);
 	}
 
 	// This should be called by user interaction
@@ -777,25 +779,24 @@ class ScrollableBaseNative extends Component {
 
 	// This can be called by user interaction or on-going scrolling
 	updateOverscrollEffectByDirection = (orientation, position, type, ratio) => {
-		const applyOverscrollEffect = this.props.applyOverscrollEffect;
+		const
+			applyOverscrollEffect = this.props.applyOverscrollEffect,
+			{none, scrolling} = overscrollTypes;
 
-		if (applyOverscrollEffect && this.getScrollabilities(orientation)) {
+		if (applyOverscrollEffect && this.getScrollabilities(orientation) && ratio > 0 && type === scrolling) {
 			const
 				isVertical = (orientation === 'vertical'),
 				curPos = isVertical ? this.scrollTop : this.scrollLeft,
-				maxPos = this.getScrollBounds()[isVertical ? 'maxTop' : 'maxLeft'],
-				{none, scrolling} = overscrollTypes;
+				maxPos = this.getScrollBounds()[isVertical ? 'maxTop' : 'maxLeft'];
 
-			if (ratio > 0 && type === scrolling) {
-				if (position === 'before' && curPos <= 0) { // Already on the beginning egde
-					applyOverscrollEffect(orientation, 'before', type, ratio);
-					this.setOverscrollStatus(orientation, position, none, 0);
-				} else if (position === 'after' && curPos >= maxPos) { // Already on the ending egde
-					applyOverscrollEffect(orientation, 'after', type, ratio);
-					this.setOverscrollStatus(orientation, position, none, 0);
-				} else {
-					this.setOverscrollStatus(orientation, position, type, ratio);
-				}
+			if (position === 'before' && curPos <= 0) { // Already on the beginning edge
+				applyOverscrollEffect(orientation, 'before', type, ratio);
+				this.setOverscrollStatus(orientation, 'before', none, 0);
+			} else if (position === 'after' && curPos >= maxPos) { // Already on the ending edge
+				applyOverscrollEffect(orientation, 'after', type, ratio);
+				this.setOverscrollStatus(orientation, 'after', none, 0);
+			} else {
+				this.setOverscrollStatus(orientation, position, type, ratio);
 			}
 		}
 	}
@@ -811,20 +812,19 @@ class ScrollableBaseNative extends Component {
 				maxPos = this.getScrollBounds()[isVertical ? 'maxTop' : 'maxLeft'],
 				{none, scrolling} = overscrollTypes;
 			let
+				updatedRatio = (ratio === null) ? this.calculateOverscrollRatio(orientation, targetPos) : ratio,
 				showEffectBefore = false,
 				showEffectAfter = false;
 
-			ratio = (ratio === null) ? this.getOverscrollRatio(orientation, targetPos) : ratio;
-
-			if (type !== none && ratio > 0) {
-				if (targetPos <= 0 && curPos <= 0) { // Already on the beginning egde
-					applyOverscrollEffect(orientation, 'before', type, ratio);
+			if (type !== none && updatedRatio > 0) {
+				if (targetPos <= 0 && curPos <= 0) { // Already on the beginning edge
+					applyOverscrollEffect(orientation, 'before', type, updatedRatio);
 					if (type === scrolling) {
 						this.setOverscrollStatus(orientation, 'before', none, 0);
 						showEffectBefore = true;
 					}
-				} else if (targetPos >= maxPos && curPos >= maxPos) { // Already on the ending egde
-					applyOverscrollEffect(orientation, 'after', type, ratio);
+				} else if (targetPos >= maxPos && curPos >= maxPos) { // Already on the ending edge
+					applyOverscrollEffect(orientation, 'after', type, updatedRatio);
 					if (type === scrolling) {
 						this.setOverscrollStatus(orientation, 'after', none, 0);
 						showEffectAfter = true;
@@ -833,10 +833,10 @@ class ScrollableBaseNative extends Component {
 			}
 
 			if (!showEffectBefore) {
-				this.setOverscrollStatus(orientation, 'before', type, ratio);
+				this.setOverscrollStatus(orientation, 'before', type, updatedRatio);
 			}
 			if (!showEffectAfter) {
-				this.setOverscrollStatus(orientation, 'after', type, ratio);
+				this.setOverscrollStatus(orientation, 'after', type, updatedRatio);
 			}
 		}
 	}
@@ -846,10 +846,10 @@ class ScrollableBaseNative extends Component {
 			this.props.clearAllOverscrollEffects();
 		}
 
-		this.setOverscrollStatus('horizontal', 'before', overscrollTypes.none);
-		this.setOverscrollStatus('horizontal', 'after', overscrollTypes.none);
-		this.setOverscrollStatus('vertical', 'before', overscrollTypes.none);
-		this.setOverscrollStatus('vertical', 'after', overscrollTypes.none);
+		this.setOverscrollStatus('horizontal', 'before', overscrollTypes.none, 0);
+		this.setOverscrollStatus('horizontal', 'after', overscrollTypes.none, 0);
+		this.setOverscrollStatus('vertical', 'before', overscrollTypes.none, 0);
+		this.setOverscrollStatus('vertical', 'after', overscrollTypes.none, 0);
 	}
 
 	// call scroll callbacks
