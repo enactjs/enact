@@ -91,6 +91,22 @@ const VirtualListBaseFactory = (type) => {
 			itemsRenderer: PropTypes.func.isRequired,
 
 			/**
+			 * When there are several voice control targets, activate or deactivate target.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			'data-webos-voice-focused': PropTypes.bool,
+
+			/**
+			 * Set voice control group label.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			'data-webos-voice-group-label': PropTypes.string,
+
+			/**
 			 * Callback method of scrollTo.
 			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
 			 *
@@ -752,7 +768,7 @@ const VirtualListBaseFactory = (type) => {
 
 		render () {
 			const
-				{className, itemsRenderer, style, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, ...rest} = this.props,
+				{'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, className, itemsRenderer, style, ...rest} = this.props,
 				{cc, initItemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className);
 
