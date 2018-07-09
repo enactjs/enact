@@ -10,17 +10,17 @@ import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {on, off} from '@enact/core/dispatcher';
 import {handle, forProp, forKey, forward, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import {Subscription} from '@enact/core/internal/PubSub';
 import {extractAriaProps} from '@enact/core/util';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import ri from '@enact/ui/resolution';
 import FloatingLayer from '@enact/ui/FloatingLayer';
-import PropTypes from 'prop-types';
+import ri from '@enact/ui/resolution';
 import compose from 'ramda/src/compose';
+import PropTypes from 'prop-types';
 import React from 'react';
 
-import ContextualPopup from './ContextualPopup';
+import {ContextualPopup} from './ContextualPopup';
 
 import css from './ContextualPopupDecorator.less';
 
@@ -76,6 +76,16 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			popupComponent: PropTypes.func.isRequired,
+
+			/**
+			 * Limits the range of voice control to the popup.
+			 *
+			 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.prototype
+			 * @type {Boolean}
+			 * @default true
+			 * @public
+			 */
+			'data-webos-voice-exclusive': PropTypes.bool,
 
 			/**
 			 * Direction of popup with respect to the wrapped component.
@@ -212,6 +222,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
+			'data-webos-voice-exclusive': true,
 			direction: 'down',
 			noAutoDismiss: false,
 			open: false,
@@ -549,7 +560,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, onOpen, popupProps, skin, spotlightRestrict, ...rest} = this.props;
+			const {'data-webos-voice-exclusive': voiceExclusive, showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, onOpen, popupProps, skin, spotlightRestrict, ...rest} = this.props;
 			const scrimType = spotlightRestrict === 'self-only' ? 'transparent' : 'none';
 			const popupPropsRef = Object.assign({}, popupProps);
 			const ariaProps = extractAriaProps(popupPropsRef);
@@ -577,6 +588,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 							arrowPosition={this.state.arrowPosition}
 							containerPosition={this.state.containerPosition}
 							containerRef={this.getContainerNode}
+							data-webos-voice-exclusive={voiceExclusive}
 							skin={skin}
 							spotlightId={this.state.containerId}
 							spotlightRestrict={spotlightRestrict}
@@ -619,11 +631,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
  */
 const ContextualPopupDecorator = compose(
 	ApiDecorator({api: ['positionContextualPopup']}),
-	Subscription(
-		{
-			channels: ['i18n'],
-			mapMessageToProps: (key, {rtl}) => ({rtl})
-		}),
+	I18nContextDecorator({rtlProp: 'rtl'}),
 	Decorator
 );
 

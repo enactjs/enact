@@ -45,58 +45,58 @@ const MyIStringText = MyIString.toString();
 
 **Previous:** The `updateLocale()` method of the `enyo/i18n` library could be invoked
 
-**Current:** The `updateLocale()` method is available for any component whose ancestor is wrapped with the `I18nDecorator`, which provides this method as part of the `context`.
+**Current:** The `updateLocale()` method is available for any component whose ancestor is wrapped with the `I18nDecorator`, which provides this method as part of the [Context API](https://reactjs.org/docs/context.html). `I18nDecorator` provides easy access via the `I18nContextDecorator` HOC which can provide the locale, rtl state, and `updateLocale` method via props by specifying the `localeProp`, `rtlProp`, and `updateLocaleProp` configuration options, respectively.
 
 ```
 import Button from '@enact/moonstone/Button';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 
-class MyComponent extends React.Component {
-	static contextTypes = contextTypes
+const MyComponent = I18nContextDecorator(
+	{updateLocaleProp: 'updateLocale'},
+	class extends React.Component {
+		setLocale = (locale) => () => {
+			const {updateLocale} = this.props;
+			updateLocale(locale);
+		}
 
-	setLocale = () => (locale) => {
-		const {updateLocale} = this.context;
-		updateLocale(locale);
+		render () {
+			return (
+				<div>
+					<Button onClick={this.setLocale('ar-SA')} small>ar-SA</Button>
+					<Button onClick={this.setLocale('en-US')} small>en-US</Button>
+					<Button onClick={this.setLocale('ko-KR')} small>ko-KR</Button>
+					<Button onClick={this.setLocale('th-TH')} small>th-TH</Button>
+				</div>
+			);
+		}
 	}
-
-	render () {
-		const {updateLocale} = this.context;
-
-		return (
-			<div>
-				<Button onClick={setLocale('ar-SA')} small>ar-SA</Button>
-				<Button onClick={setLocale('en-US')} small>en-US</Button>
-				<Button onClick={setLocale('ko-KR')} small>ko-KR</Button>
-				<Button onClick={setLocale('th-TH')} small>th-TH</Button>
-			</div>
-		);
-	}
-}
+);
 ```
 
 ### Current Locale Text Directionality
 
 **Previous:** Components could check the value of `this.rtl`
 
-**Current:** Using `context`, any component whose ancestor is wrapped with `I18nDecorator` can check the value of `rtl`. Additionally, the value of `context.rtl` can be updated by any intermediary component, which will affect all descendants.
+**Current:** The `rtl` state method is available for any component whose ancestor is wrapped with the `I18nDecorator`, which provides this value as part of the [Context API](https://reactjs.org/docs/context.html). `I18nDecorator` provides easy access via the `I18nContextDecorator` HOC which can provide the locale, rtl state, and `updateLocale` method via props by specifying the `localeProp`, `rtlProp`, and `updateLocaleProp` configuration options, respectively.
 
 ```
 import Button from '@enact/moonstone/Button';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 
-class MyComponent extends React.Component {
-	static contextTypes = contextTypes
+const MyComponent = I18nContextDecorator(
+	{rtlProp: 'rtl'},
+	class extends React.Component {
+		render () {
+			const {rtl} = this.props;
 
-	render () {
-		const {rtl} = this.context;
-
-		return (
-			<Button>My {rtl ? 'RTL' : 'LTR'} button</Button>
-		);
+			return (
+				<Button>My {rtl ? 'RTL' : 'LTR'} button</Button>
+			);
+		}
 	}
-}
+);
 ```
 
 ### Determine Text Directionality

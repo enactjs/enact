@@ -71,7 +71,7 @@ const ScrollButton = kind({
 
 		/**
 		 * When `true`, the component is shown as disabled and does not generate `onClick`.
-		 * [events]{@glossary event}.
+		 * [events]{@link /docs/developer-guide/glossary/#event}.
 		 *
 		 * @type {Boolean}
 		 * @public
