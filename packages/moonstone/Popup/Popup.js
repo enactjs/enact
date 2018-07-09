@@ -441,11 +441,6 @@ class Popup extends React.Component {
 	handlePopupHide = (ev) => {
 		forwardHide(ev, this.props);
 
-		this.setState({
-			floatLayerOpen: false,
-			activator: null
-		});
-
 		if (ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
 			this.paused.resume();
 
