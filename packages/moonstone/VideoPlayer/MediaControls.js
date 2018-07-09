@@ -24,8 +24,9 @@ import css from './VideoPlayer.less';
 
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 const MediaButton = onlyUpdateForKeys([
-	'className',
 	'children',
+	'className',
+	'color',
 	'disabled',
 	'onClick',
 	'spotlightDisabled'
@@ -479,6 +480,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			 *
 			 * @type {String}
 			 * @see {@link moonstone/IconButton.IconButtonBase.color}
+			 * @default 'blue'
 			 * @public
 			 */
 			moreButtonColor: PropTypes.oneOf(['red', 'green', 'yellow', 'blue']),
@@ -610,6 +612,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 		static defaultProps = {
 			initialJumpDelay: 400,
 			jumpDelay: 200,
+			moreButtonColor: 'blue',
 			moreButtonSpotlightId: 'moreButton'
 		}
 

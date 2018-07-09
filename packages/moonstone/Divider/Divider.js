@@ -1,5 +1,13 @@
 /**
- * Provides Moonstone-themed divider components and behaviors.
+ * Moonstone styled labeled divider components and behaviors
+ *
+ * @example
+ * <Divider
+ *   casing="preserve"
+ *   spacing="medium"
+ * >
+ *   A group of related components
+ * </Divider>
  *
  * @module moonstone/Divider
  * @exports Divider
@@ -8,9 +16,9 @@
  */
 
 import kind from '@enact/core/kind';
-import PropTypes from 'prop-types';
-import Pure from '@enact/ui/internal/Pure';
 import Uppercase from '@enact/i18n/Uppercase';
+import Pure from '@enact/ui/internal/Pure';
+import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import defaultProps from 'recompose/defaultProps';
 import setPropTypes from 'recompose/setPropTypes';
@@ -22,9 +30,12 @@ import Skinnable from '../Skinnable';
 import css from './Divider.less';
 
 /**
- * A simply styled component that may be used as a separator between groups of components.
+ * A labeled divider component.
  *
- * @class Divider
+ * This component is most often not used directly but may be composed within another component as it
+ * is within [Divider]{@link moonstone/Divider.Divider}.
+ *
+ * @class DividerBase
  * @memberof moonstone/Divider
  * @ui
  * @public
@@ -32,9 +43,9 @@ import css from './Divider.less';
 const DividerBase = kind({
 	name: 'Divider',
 
-	propTypes: /** @lends moonstone/Divider.Divider.prototype */ {
+	propTypes: /** @lends moonstone/Divider.DividerBase.prototype */ {
 		/**
-		 * The divider content.
+		 * The text for the label of the divider.
 		 *
 		 * A divider with no children (text content) will render simply as a horizontal line, with
 		 * even spacing above and below.
@@ -47,15 +58,16 @@ const DividerBase = kind({
 		/**
 		 * The size of the spacing around the divider.
 		 *
-		 * * `'normal'` (default) spacing is slightly larger than the standard spotlight spacing.
-		 * * `'small'` is the same size as spotlight spacing.
-		 * * `'medium'` is 2x spotlight.
-		 * * `'large'` is 3x spotlight.
-		 * * `'none'` has no spacing at all. Neighboring elements will directly touch the divider.
+		 * Allowed values include:
+		 * * `'normal'` (default) - slightly larger than the standard spotlight spacing.
+		 * * `'small'` - same size as spotlight spacing.
+		 * * `'medium'` - 2x spotlight.
+		 * * `'large'` - 3x spotlight.
+		 * * `'none'` - no spacing at all. Neighboring elements will directly touch the divider.
 		 *
 		 * _Note:_ Spacing is separate from margin with regard to `margin-top`. It ensures a
 		 * consistent distance from the bottom horizontal line. It's safe to use `margin-top` to add
-		 * additional spacing above your `Divider`.
+		 * additional spacing above the divider.
 		 *
 		 * @type {String}
 		 * @default 'normal'
@@ -87,13 +99,14 @@ const DividerBase = kind({
 });
 
 /**
- * Moonstone-specific divider behaviors to apply to [Divider]{@link moonstone/Divider.DividerBase}.
+ * Applies Moonstone specific behaviors to [DividerBase]{@link moonstone/Divider.DividerBase}.
  *
  * @hoc
  * @memberof moonstone/Divider
  * @mixes i18n/Uppercase.Uppercase
  * @mixes moonstone/MarqueeDecorator.MarqueeDecorator
  * @mixes ui/Skinnable.Skinnable
+ * @public
  */
 const DividerDecorator = compose(
 	setPropTypes({
@@ -110,18 +123,33 @@ const DividerDecorator = compose(
 );
 
 /**
- * A Moonstone-styled divider with built-in support for uppercasing, and marqueed text.
+ * A labeled divider component, ready to use in Moonstone applications.
+ *
+ * `Divider` may be used as a header to group related components.
+ *
+ * Usage:
+ * ```
+ * <Divider
+ *   casing="preserve"
+ *   spacing="medium"
+ * >
+ *   Related Settings
+ * </Divider>
+ * <CheckboxItem>A Setting</CheckboxItem>
+ * <CheckboxItem>A Second Setting</CheckboxItem>
+ * ```
  *
  * @class Divider
- * @extends moonstone/Divider.DividerBase
  * @memberof moonstone/Divider
+ * @extends moonstone/Divider.DividerBase
  * @mixes moonstone/Divider.DividerDecorator
  * @ui
  * @public
  */
+const Divider = DividerDecorator(DividerBase);
 
 /**
- * Capitalization style for `children`.
+ * The casing mode applied to the `children` text.
  *
  * @name casing
  * @type {String}
@@ -134,7 +162,9 @@ const DividerDecorator = compose(
 /**
  * Marquee animation trigger.
  *
- * Valid values are `'hover'` and `'render'`.
+ * Allowed values include:
+ * * `'hover'` - Marquee begins when the pointer enters the component
+ * * `'render'` - Marquee begins when the component is rendered
  *
  * @name marqueeOn
  * @type {String}
@@ -143,8 +173,6 @@ const DividerDecorator = compose(
  * @see moonstone/Marquee.Marquee
  * @public
  */
-
-const Divider = DividerDecorator(DividerBase);
 
 export default Divider;
 export {

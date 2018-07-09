@@ -3,7 +3,10 @@ import Group from '@enact/ui/Group';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, text, select} from '@storybook/addon-knobs';
+
+import {boolean, select, text} from '../../src/enact-knobs';
+
+SelectableItem.displayName = 'SelectableItem';
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -20,18 +23,18 @@ storiesOf('SelectableItem', module)
 		() => (
 			<div>
 				<SelectableItem
-					disabled={boolean('disabled', false)}
-					inline={boolean('inline', false)}
+					disabled={boolean('disabled', SelectableItem, false)}
+					inline={boolean('inline', SelectableItem, false)}
 					onToggle={action('onToggle')}
 				>
-					{text('Long Text', inputData.longText)}
+					{text('Long Text', SelectableItem, inputData.longText)}
 				</SelectableItem>
 				<SelectableItem
 					disabled
-					inline={boolean('inline', false)}
+					inline={boolean('inline', SelectableItem, false)}
 					onToggle={action('onToggle')}
 				>
-					{text('Disable Long Text', inputData.disabledLong)}
+					{text('Disable Long Text', SelectableItem, inputData.disabledLong)}
 				</SelectableItem>
 			</div>
 		)
@@ -40,11 +43,11 @@ storiesOf('SelectableItem', module)
 		'with tall characters',
 		() => (
 			<SelectableItem
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', SelectableItem, false)}
+				inline={boolean('inline', SelectableItem, false)}
 				onToggle={action('onToggle')}
 			>
-				{select('children', inputData.tallText, inputData.tallText[0])}
+				{select('children', inputData.tallText, SelectableItem, inputData.tallText[0])}
 			</SelectableItem>
 		)
 	)
@@ -52,11 +55,11 @@ storiesOf('SelectableItem', module)
 		'with right to left text',
 		() => (
 			<SelectableItem
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', SelectableItem, false)}
+				inline={boolean('inline', SelectableItem, false)}
 				onToggle={action('onToggle')}
 			>
-				{text('Right to Left Text', inputData.rtlText)}
+				{text('Right to Left Text', SelectableItem, inputData.rtlText)}
 			</SelectableItem>
 		)
 	)
@@ -64,11 +67,11 @@ storiesOf('SelectableItem', module)
 		'with extra spacing',
 		() => (
 			<SelectableItem
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', SelectableItem, false)}
+				inline={boolean('inline', SelectableItem, false)}
 				onToggle={action('onToggle')}
 			>
-				{text('extra space text', inputData.extraSpaceText)}
+				{text('extra space text', SelectableItem, inputData.extraSpaceText)}
 			</SelectableItem>
 		)
 	)
@@ -77,11 +80,11 @@ storiesOf('SelectableItem', module)
 		() => (
 			<SelectableItem
 				defaultSelected
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', SelectableItem, false)}
+				inline={boolean('inline', SelectableItem, false)}
 				onToggle={action('onToggle')}
 			>
-				{text('children', inputData.normalText)}
+				{text('children', SelectableItem, inputData.normalText)}
 			</SelectableItem>
 		)
 	)
@@ -91,16 +94,20 @@ storiesOf('SelectableItem', module)
 			<Group
 				childComponent={SelectableItem}
 				itemProps={{
-					inline: boolean('inline', false),
-					disabled: boolean('disabled', false)
+					inline: boolean('inline', SelectableItem, false),
+					disabled: boolean('disabled', SelectableItem, false)
 				}}
 				childSelect="onToggle"
 				selectedProp="selected"
-				disabled={boolean('disabled', false)}
+				disabled={boolean('disabled', SelectableItem, false)}
 				onSelect={action('onSelect')}
 			>
 
-				{[text('Normal Text 1', inputData.normalText + 1), text('Normal Text 2', inputData.normalText + 2), text('Normal Text 3', inputData.normalText + 3)]}
+				{[
+					text('Normal Text 1', SelectableItem, inputData.normalText + 1),
+					text('Normal Text 2', SelectableItem, inputData.normalText + 2),
+					text('Normal Text 3', SelectableItem, inputData.normalText + 3)
+				]}
 			</Group>
 		)
 	)
@@ -114,11 +121,10 @@ storiesOf('SelectableItem', module)
 				onSelect={action('onSelect')}
 			>
 				{[
-					{children: '1', disabled: true},
-					{children: '2', disabled: false},
-					{children: '3', disabled: true},
-					{children: '4', disabled: false}
-
+					{key: 'item1', children: '1', disabled: true},
+					{key: 'item2', children: '2', disabled: false},
+					{key: 'item3', children: '3', disabled: true},
+					{key: 'item4', children: '4', disabled: false}
 				]}
 			</Group>
 		)

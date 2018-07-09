@@ -12,6 +12,13 @@ import {mergeComponentMetadata} from '../../src/utils';
 
 // Set up some defaults for info and knobs
 const prop = {
+	moreButtonColor: [
+		'',
+		'red',
+		'green',
+		'yellow',
+		'blue'
+	],
 	videoTitles: [
 		'Sintel',
 		'Big Buck Bunny',
@@ -71,6 +78,7 @@ prop.events.forEach( (ev) => {
 
 const Config = mergeComponentMetadata('VideoPlayer', VideoPlayer);
 const MediaControlsConfig = mergeComponentMetadata('MediaControls', MediaControls);
+
 VideoPlayer.displayName = 'VideoPlayer';
 MediaControls.displayName = 'MediaControls';
 
@@ -138,6 +146,7 @@ storiesOf('Moonstone', module)
 							jumpDelay={number('jumpDelay', MediaControlsConfig, 200)}
 							jumpForwardIcon={select('jumpForwardIcon', icons, MediaControlsConfig, 'skipforward')}
 							moreButtonCloseLabel={text('moreButtonCloseLabel', MediaControlsConfig)}
+							moreButtonColor={select('moreButtonColor', prop.moreButtonColor, MediaControlsConfig, '')}
 							moreButtonDisabled={boolean('moreButtonDisabled', MediaControlsConfig)}
 							moreButtonLabel={text('moreButtonLabel', MediaControlsConfig)}
 							no5WayJump={boolean('no5WayJump', MediaControlsConfig)}

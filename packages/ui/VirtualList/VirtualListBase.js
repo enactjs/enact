@@ -763,6 +763,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.getComponentProps;
 			delete rest.itemRenderer;
 			delete rest.itemSize;
+			delete rest.onUpdate;
 			delete rest.overhang;
 			delete rest.pageScroll;
 			delete rest.rtl;

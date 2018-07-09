@@ -1,11 +1,16 @@
 import Button from '@enact/moonstone/Button';
-import ExpandableList from '@enact/moonstone/ExpandableList';
+import Divider from '@enact/moonstone/Divider';
+import ExpandableList, {ExpandableListBase} from '@enact/moonstone/ExpandableList';
 import Scroller from '@enact/moonstone/Scroller';
 import {RadioControllerDecorator} from '@enact/ui/RadioDecorator';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
+
 import {boolean, text, select} from '@storybook/addon-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
+
+const Config = mergeComponentMetadata('ExpandableList', ExpandableList, ExpandableListBase);
 
 const ExpandableGroup = RadioControllerDecorator('div');
 
@@ -37,6 +42,7 @@ class ExpandableListChildrenLengthUpdate extends React.Component {
 		return (
 			<div>
 				<Button onClick={this.updateValue}>update value</Button>
+				<Divider />
 				<ExpandableList {...this.props}>
 					{prop.listArray[this.state.index]}
 				</ExpandableList>
@@ -50,16 +56,16 @@ storiesOf('ExpandableList', module)
 		'with children length update',
 		() => (
 			<ExpandableListChildrenLengthUpdate
-				closeOnSelect={boolean('closeOnSelect', false)}
-				disabled={boolean('disabled', false)}
-				noAutoClose={boolean('noAutoClose', false)}
-				noLockBottom={boolean('noLockBottom', false)}
-				noneText={text('noneText', 'nothing selected')}
+				closeOnSelect={boolean('closeOnSelect', Config)}
+				disabled={boolean('disabled', Config)}
+				noAutoClose={boolean('noAutoClose', Config)}
+				noLockBottom={boolean('noLockBottom', Config)}
+				noneText={text('noneText', Config, 'nothing selected')}
 				onSelect={action('onSelect')}
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}
-				select={select('select', ['radio', 'multiple', 'single'], 'radio')}
-				title={text('title', 'title')}
+				select={select('select', ['radio', 'multiple', 'single'], Config, 'radio')}
+				title="with children length update"
 			/>
 		)
 	)

@@ -5,13 +5,13 @@
  * @private
  */
 
-import Changeable from '@enact/ui/Changeable';
-import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import hoc from '@enact/core/hoc';
 import ilib from '@enact/i18n';
-import React from 'react';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
+import Changeable from '@enact/ui/Changeable';
 import PropTypes from 'prop-types';
-import {Subscription} from '@enact/core/internal/PubSub';
+import React from 'react';
 
 import {Expandable} from '../../ExpandableItem';
 
@@ -232,8 +232,8 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 	};
 
-	return Subscription(
-		{channels: ['i18n'], mapMessageToProps: (channel, {rtl}) => ({rtl})},
+	return I18nContextDecorator(
+		{rtlProp: 'rtl'},
 		Expandable(
 			Changeable(
 				Decorator
