@@ -2,15 +2,21 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [Unreleased]
+## [unreleased]
 
 ### Changed
 
 - `moonstone/spinner` to blur Spotlight when the spinner is active
+
 ### Fixed
+
 - `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to handle direction, page up, and page down keys properly on page controls them when `focusableScrollbar` is false
 - `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to handle a page up or down key in pointer mode
 - `moonstone/VideoPlayer.MediaControls` to correctly handle more button color when the prop is not specified
+
+### Added
+
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` support `data-webos-voice-focused` and `data-webos-voice-group-label`
 
 ## [2.0.0-beta.9] - 2018-07-02
 
