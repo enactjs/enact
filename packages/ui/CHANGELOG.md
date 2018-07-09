@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [2.0.0-rc.1]
+
+### Added
+
+- `ui/VirtualList` support `data-webos-voice-focused` and `data-webos-voice-group label`
+
 ## [2.0.0-beta.9] - 2018-07-02
 
 No significant changes.
