@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [Unreleased]
+## [unreleased]
 
 ### Removed
 
@@ -10,10 +10,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/Marquee.controlContextTypes` export
 - `ui/Placeholder.contextTypes` export
 - `ui/Resizable.contextTypes` export
-
-### Added
-
-- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` support `data-webos-voice-focused` and `data-webos-voice-group-label`
 
 ## [2.0.0-beta.9] - 2018-07-02
 

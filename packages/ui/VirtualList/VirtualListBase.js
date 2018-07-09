@@ -91,18 +91,18 @@ const VirtualListBaseFactory = (type) => {
 			itemsRenderer: PropTypes.func.isRequired,
 
 			/**
-			 * When there are several voice control targets, activate or deactivate target.
+			 * Activates the component for voice control.
 			 *
 			 * @type {Boolean}
-			 * @public
+			 * @private
 			 */
 			'data-webos-voice-focused': PropTypes.bool,
 
 			/**
-			 * Set voice control group label.
+			 * The voice control group label.
 			 *
 			 * @type {String}
-			 * @public
+			 * @private
 			 */
 			'data-webos-voice-group-label': PropTypes.string,
 
