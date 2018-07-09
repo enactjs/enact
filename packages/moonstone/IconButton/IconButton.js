@@ -23,6 +23,7 @@ import React from 'react';
 import {ButtonBase} from '../Button';
 import Icon from '../Icon';
 import Skinnable from '../Skinnable';
+import TooltipDecorator from '../TooltipDecorator';
 
 import componentCss from './IconButton.less';
 
@@ -76,7 +77,15 @@ const IconButtonBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		css: PropTypes.object,
+
+		/**
+		 * An optional node to receive the tooltip from `TooltipDecorator`.
+		 *
+		 * @type {Node}
+		 * @private
+		 */
+		tooltipNode: PropTypes.node
 	},
 
 	styles: {
@@ -88,7 +97,7 @@ const IconButtonBase = kind({
 		className: ({color, styler}) => styler.append(color)
 	},
 
-	render: ({children, css, ...rest}) => {
+	render: ({children, css, tooltipNode, ...rest}) => {
 		return (
 			<UiIconButtonBase
 				data-webos-voice-intent="Select"
@@ -97,7 +106,9 @@ const IconButtonBase = kind({
 				css={css}
 				icon={children}
 				iconComponent={Icon}
-			/>
+			>
+				{tooltipNode}
+			</UiIconButtonBase>
 		);
 	}
 });
@@ -116,6 +127,7 @@ const IconButtonBase = kind({
  */
 const IconButtonDecorator = compose(
 	Pure,
+	TooltipDecorator({tooltipDestinationProp: 'tooltipNode'}),
 	UiIconButtonDecorator,
 	Spottable,
 	Skinnable

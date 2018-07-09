@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
-- `moonstone/Button` and `moonstone/IconButton` built-in support for tooltips
+- `moonstone/Button` built-in support for tooltips
 - `moonstone/TooltipDecorator` config property `tooltipDestinationProp` in order to prevent directing tooltip into a property
 
 ## [2.0.0-beta.8] - 2018-06-25
