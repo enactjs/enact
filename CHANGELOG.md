@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `core/util.withContextFromProps` function
 - `i18n/I18nDecorator.contextTypes`, replaced by `i18n/I18nDecorator.I18nContextDecorator`
+- `moonstone/Button` built-in support for tooltips
 - `ui/FloatingLayer.contextTypes` export
 - `ui/Marquee.controlContextTypes` export
 - `ui/Placeholder.contextTypes` export
@@ -20,7 +21,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Changed
 
-- `moonstone/spinner` to blur Spotlight when the spinner is active
+- `moonstone/Spinner` to blur Spotlight when the spinner is active
 
 ### Fixed
 

@@ -14,7 +14,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `moonstone/spinner` to blur Spotlight when the spinner is active
+- `moonstone/Spinner` to blur Spotlight when the spinner is active
 
 ### Fixed
 
