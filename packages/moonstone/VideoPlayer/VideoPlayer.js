@@ -22,7 +22,8 @@ import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlig
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ComponentOverride from '@enact/ui/ComponentOverride';
-import {contextTypes, FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
+import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
+import {contextTypes} from '@enact/ui/FloatingLayer/FloatingLayerDecorator';
 import Media from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
@@ -1361,8 +1362,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	/**
-	 * Sets the playback rate type (from the [keys]{@glossary Object.keys} of
-	 * [playbackRateHash]{@link moonstone/VideoPlayer.VideoPlayer#playbackRateHash}).
+	 * Sets the playback rate type (from the keys of [playbackRateHash]{@link moonstone/VideoPlayer.VideoPlayer#playbackRateHash}).
 	 *
 	 * @param {String} cmd - Key of the playback rate type.
 	 * @private

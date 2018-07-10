@@ -469,7 +469,12 @@ const VirtualListBaseFactory = (type) => {
 					const node = this.uiRef.containerRef.querySelector(`[data-index='${indexToScroll}'].spottable`);
 
 					if (node) {
-						Spotlight.focus(node);
+						// When changing from "pointer" mode to "5way key" mode,
+						// a pointer is hidden and a last focused item get focused after 30ms.
+						// To make sure the item to be focused after that, we used 50ms.
+						setTimeout(() => {
+							Spotlight.focus(node);
+						}, 50);
 					}
 				} else {
 					// Scroll to the next spottable item without animation
@@ -911,6 +916,24 @@ const VirtualListBaseFactory = (type) => {
  */
 const VirtualListBase = VirtualListBaseFactory(JS);
 VirtualListBase.displayName = 'VirtualListBase';
+
+/**
+ * Activates the component for voice control.
+ *
+ * @name data-webos-voice-focused
+ * @memberof moonstone/VirtualList.VirtualListBase.prototype
+ * @type {Boolean}
+ * @public
+ */
+
+/**
+ * The voice control group label.
+ *
+ * @name data-webos-voice-group-label
+ * @memberof moonstone/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @public
+ */
 
 /**
  * A Moonstone-styled base component for [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative} and

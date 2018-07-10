@@ -8,10 +8,10 @@
 
 import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
-import React from 'react';
-import PropTypes from 'prop-types';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Pure from '@enact/ui/internal/Pure';
-import {Subscription} from '@enact/core/internal/PubSub';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import IconButton from '../IconButton';
@@ -390,8 +390,8 @@ const ExpandablePickerBase = kind({
  * @public
  */
 const ExpandablePicker = Pure(
-	Subscription(
-		{channels: ['i18n'], mapMessageToProps: (channel, {rtl}) => ({rtl})},
+	I18nContextDecorator(
+		{rtlProp: 'rtl'},
 		Expandable(
 			Changeable(
 				ExpandablePickerDecorator(

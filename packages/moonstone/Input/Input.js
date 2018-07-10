@@ -7,8 +7,7 @@
  */
 
 import kind from '@enact/core/kind';
-import {Subscription} from '@enact/core/internal/PubSub';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import {isRtlText} from '@enact/i18n/util';
 import Changeable from '@enact/ui/Changeable';
 import Pure from '@enact/ui/internal/Pure';
@@ -25,9 +24,11 @@ import InputSpotlightDecorator from './InputSpotlightDecorator';
 import {calcAriaLabel, extractInputProps} from './util';
 
 /**
- * A Moonstone styled input component. It supports start and end icons. Note that this base
- * component is not stateless as many other base components are. However, it does not support
- * Spotlight. Apps will want to use {@link moonstone/Input.Input}.
+ * A Moonstone styled input component.
+ *
+ * It supports start and end icons. Note that this base component is not stateless as many other
+ * base components are. However, it does not support Spotlight. Apps will want to use
+ * {@link moonstone/Input.Input}.
  *
  * @class InputBase
  * @memberof moonstone/Input
@@ -180,7 +181,7 @@ const InputBase = kind({
 		placeholder: PropTypes.string,
 
 		/**
-		 * Indicates content is RTL.
+		 * Indicates the content's text direction is right-to-left.
 		 *
 		 * @type {Boolean}
 		 * @private
@@ -223,8 +224,6 @@ const InputBase = kind({
 		placeholder: '',
 		type: 'text'
 	},
-
-	contextTypes,
 
 	styles: {
 		css: componentCss,
@@ -302,14 +301,15 @@ const InputBase = kind({
  *
  * @class Input
  * @memberof moonstone/Input
+ * @mixes i18n/I18nDecorator.I18nContextDecorator
  * @mixes ui/Changeable.Changeable
  * @mixes spotlight/Spottable.Spottable
  * @ui
  * @public
  */
 const Input = Pure(
-	Subscription(
-		{channels: ['i18n'], mapMessageToProps: (channel, {rtl}) => ({rtl})},
+	I18nContextDecorator(
+		{rtlProp: 'rtl'},
 		Changeable(
 			InputSpotlightDecorator(
 				Skinnable(

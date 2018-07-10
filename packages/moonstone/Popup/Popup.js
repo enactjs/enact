@@ -334,8 +334,11 @@ class Popup extends React.Component {
 		showCloseButton: PropTypes.bool,
 
 		/**
-		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
-		 * can be either `'self-first'`, or `'self-only'`.
+		 * Restricts or prioritizes navigation when focus attempts to leave the popup.
+		 *
+		 * It can be either `'self-first'`, or `'self-only'`. Note: If `onClose` is not set, then
+		 * this has no effect on 5-way navigation. If the popup has no spottable children, 5-way
+		 * navigation will cause the popup to fire `onClose`.
 		 *
 		 * @type {String}
 		 * @default 'self-only'

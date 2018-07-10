@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [2.0.0-rc.1] - 2018-07-09
+
+### Fixed
+
+- Inline Storybook CSS now correctly detecting feature support on WebOS against its internal Chromium version.
+
+## [2.0.0-beta.9] - 2018-07-02
+
+No significant changes.
+
 ## [2.0.0-beta.8] - 2018-06-25
 
 ### Changed

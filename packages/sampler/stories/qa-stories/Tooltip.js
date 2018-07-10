@@ -1,6 +1,9 @@
 import Button from '@enact/moonstone/Button';
+import TooltipDecorator from '@enact/moonstone/TooltipDecorator';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
+
+const TooltipButton = TooltipDecorator(Button);
 
 class TooltipTest extends React.Component {
 	constructor (props) {
@@ -20,13 +23,13 @@ class TooltipTest extends React.Component {
 			<div>
 				Focus the button and click it before 5s has elapsed, and observe the console for errors
 				{this.state.showButton ? (
-					<Button
+					<TooltipButton
 						onClick={this.handleClick}
 						tooltipDelay={5000}
 						tooltipText="Tooltip!"
 					>
 						Click me
-					</Button>
+					</TooltipButton>
 				) : null}
 			</div>
 		);
