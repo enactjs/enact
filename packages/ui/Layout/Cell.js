@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ri from '../resolution';
+import ComponentOverride from '../ComponentOverride';
 
 import css from './Layout.less';
 
@@ -128,7 +129,12 @@ const CellBase = kind({
 		delete rest.shrink;
 		delete rest.size;
 
-		return <Component {...rest} />;
+		return (
+			<ComponentOverride
+				component={Component}
+				{...rest}
+			/>
+		);
 	}
 });
 
