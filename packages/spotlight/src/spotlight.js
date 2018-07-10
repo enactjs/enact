@@ -17,6 +17,7 @@
  */
 
 import {is} from '@enact/core/keymap';
+import {isWindowReady} from '@enact/core/snapshot';
 import last from 'ramda/src/last';
 
 import Accelerator from '../Accelerator';
@@ -163,6 +164,8 @@ const Spotlight = (function () {
 	}
 
 	function getCurrent () {
+		if (!isWindowReady()) return;
+
 		let activeElement = document.activeElement;
 		if (activeElement && activeElement !== document.body) {
 			return activeElement;
