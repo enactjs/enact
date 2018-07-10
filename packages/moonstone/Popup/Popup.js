@@ -1,9 +1,13 @@
 /**
  * Modal component that appears at the bottom of the screen and takes up the full screen width.
  *
+ * Note: Popup is meant to always have some spottable elements. In the example below we show the
+ * close button. If no spottable elements are provided then spotlight will still exist behind the
+ * popup.
+ *
  * @module moonstone/Popup
  * @example
- * <Popup open>Hello!</Popup>
+ * <Popup open showCloseButton>Hello!</Popup>
  */
 
 import {is} from '@enact/core/keymap';
