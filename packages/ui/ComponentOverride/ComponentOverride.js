@@ -5,6 +5,7 @@
  * the parent component.
  *
  * @module ui/ComponentOverride
+ * @exports ComponentOverride
  */
 
 import React from 'react';
@@ -16,6 +17,7 @@ import React from 'react';
  * element (e.g. `<Button customProp="value" />`) and return a new element which includes the
  * remaining props specified.
  *
+ * Example:
  * ```
  * const LabeledIconButton = ({iconComponent, label, ...rest}) => {
  *   return (

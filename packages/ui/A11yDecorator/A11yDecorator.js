@@ -1,7 +1,8 @@
 /**
- * Exports the {@link ui/A11yDecorator.A11yDecorator} Higher-order Component (HOC).
+ * Exports the {@link ui/A11yDecorator.A11yDecorator} higher-order component (HOC).
  *
  * @module ui/A11yDecorator
+ * @exports A11yDecorator
  */
 
 import hoc from '@enact/core/hoc';
@@ -27,7 +28,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/A11yDecorator.A11yDecorator} is a Higher-order Component that adds support for hint
+ * {@link ui/A11yDecorator.A11yDecorator} is a higher-order component (HOC) that adds support for hint
  * text to be read before and/or after the content. By default, the `children` prop is used as the
  * source of the components content but may be configured by passing a different `prop` to the HOC
  * configuration.
@@ -43,10 +44,29 @@ const A11yDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return kind({
 		name: 'A11yDecorator',
 
-		propTypes: {
+		propTypes: /** @lends ui/A11yDecorator.A11yDecorator.prototype */ {
+			/**
+			 * Sets the hint text to be read after the content.
+			 *
+			 * @type {String}
+			 * @public
+			 */
 			accessibilityHint: PropTypes.string,
+			/**
+			 * Sets the hint text to be read before the content.
+			 *
+			 * @type {String}
+			 * @public
+			 */
 			accessibilityPreHint: PropTypes.string,
-			// TOOD: fix bug in react eslint rules with sorting of quoted keys
+			// TODO: fix bug in react eslint rules with sorting of quoted keys
+			/**
+			 * Sets the value of the `aria-label` attribute for the wrapped component.
+			 *
+			 * @type {String}
+			 * @public
+			 * @memberof ui/A11yDecorator.A11yDecorator.prototype
+			 */
 			// eslint-disable-next-line react/sort-prop-types
 			'aria-label': PropTypes.string
 		},

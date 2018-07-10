@@ -1,7 +1,10 @@
 /**
- * Exports the {@link ui/Cancelable.Cancelable} Higher-order Component (HOC).
+ * Exports the {@link ui/Cancelable.Cancelable} higher-order component (HOC).
  *
  * @module ui/Cancelable
+ * @exports addCancelHandler
+ * @exports Cancelable
+ * @exports removeCancelHandle
  */
 
 import {forward, handle, stop, stopImmediate} from '@enact/core/handle';
@@ -36,7 +39,7 @@ const defaultConfig = {
 	onCancel: null,
 
 	/**
-	 * When `true`, the Cancelable instance will handle cancel events globally that successfully
+	 * When `true`, the `Cancelable` instance will handle cancel events globally that successfully
 	 * bubble up to `window` regardless of which component is focused.
 	 *
 	 * `modal` cancel handlers are processed in reverse of the order they are created such that the
@@ -50,8 +53,8 @@ const defaultConfig = {
 	modal: false,
 
 	/**
-	 * When set, the Wrapped component will be contained within an instance of `component`. This may
-	 * be necessary if the props passed to Wrapped are not placed on the root element.
+	 * When set, the wrapped component will be contained within an instance of `component`. This may
+	 * be necessary if the props passed to the wrapped component are not placed on the root element.
 	 *
 	 * @type {Component}
 	 * @default null
@@ -64,7 +67,7 @@ const defaultConfig = {
 add('cancel', 27);
 
 /**
- * {@link ui/Cancelable.Cancelable} is a Higher-order Component that allows mapping
+ * {@link ui/Cancelable.Cancelable} is a higher-order component (HOC) that allows mapping
  * a cancel key event to existing event handler either directly or via a custom function which can
  * adapt the event payload.
  *
@@ -113,6 +116,12 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'Cancelable';
 
 		static propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
+			/**
+			 * Cancels an event.
+			 *
+			 * @type {String|Function}
+			 * @public
+			 */
 			onCancel: PropTypes.func
 		}
 

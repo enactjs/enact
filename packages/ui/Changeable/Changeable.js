@@ -1,9 +1,10 @@
 /* eslint-disable react/sort-prop-types */
 
 /**
- * Exports the {@link ui/Changeable.Changeable} Higher-order Component (HOC).
+ * Exports the {@link ui/Changeable.Changeable} higher-order component (HOC).
  *
  * @module ui/Changeable
+ * @exports Changeable
  */
 
 import {forProp, forward, handle} from '@enact/core/handle';
@@ -40,7 +41,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/Changeable.Changeable} is a Higher-order Component that applies a
+ * {@link ui/Changeable.Changeable} is a higher-order component (HOC) that applies a
  * 'Changeable' behavior to its wrapped component.  Its default event and value properties can be
  * configured when applied to a component.
  *

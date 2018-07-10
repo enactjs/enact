@@ -16,7 +16,7 @@ import React from 'react';
  */
 const defaultConfig = {
 	/**
-	 * Configures the prop name to pass the ref callback
+	 * The prop name to pass the ref callback
 	 *
 	 * @type {String}
 	 * @default 'forwardRef'

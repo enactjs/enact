@@ -1,8 +1,10 @@
 /**
- * Exports the {@link ui/AnnounceDecorator.AnnounceDecorator} Higher-order Component (HOC) and the
+ * Exports the {@link ui/AnnounceDecorator.AnnounceDecorator} higher-order component (HOC) and the
  * {@link ui/AnnounceDecorator.Announce} component;
  *
  * @module ui/AnnounceDecorator
+ * @exports Announce
+ * @exports AnnounceDecorator
  */
 
 import Announce from './Announce';
@@ -19,7 +21,7 @@ import PropTypes from 'prop-types';
  */
 const defaultConfig = {
 	/**
-	 * Configures the prop name to pass the announce function
+	 * Configures the prop name to pass the announce function.
 	 *
 	 * @type {String}
 	 * @default 'announce'
@@ -29,12 +31,13 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/AnnounceDecorator.AnnounceDecorator} is a Higher-order Component that passes a function
+ * {@link ui/AnnounceDecorator.AnnounceDecorator} is a higher-order component that passes a function
  * to its wrapped component which can be called to alert the user for accessibility notifications.
  *
  * By default, the function is passed in the `announce` prop but may be customized by specifying the
  * `prop` config member.
  *
+ * Example:
  * ```
  * import AnnounceDecorator from '@enact/ui/AnnounceDecorator';
  * import React from 'react';
@@ -69,7 +72,7 @@ const AnnounceDecorator = hoc(defaultConfig, ({prop}, Wrapped) => {
 
 		static propTypes = /** @lends ui/AnnounceDecorator.AnnounceDecorator.prototype */ {
 			/**
-			 * An instance of {@link ui/AnnounceDecorator.Announce} will be appended to children
+			 * An instance of {@link ui/AnnounceDecorator.Announce} will be appended to children.
 			 *
 			 * @type {Node}
 			 * @public

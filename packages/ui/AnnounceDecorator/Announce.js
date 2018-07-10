@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
  * {@link ui/AnnounceDecorator.Announce} provides an imperative API, `announce`, to alert the user
  * of behavior for accessibility.
  *
+ * Example:
  * ```
  * import {Announce} from '@enact/ui/AnnounceDecorator';
  * import React from 'react';
@@ -66,9 +67,10 @@ const Announce = class extends React.Component {
 		this.alert.removeAttribute('aria-label');
 	}
 
-	/*
-	 * Call to update the message for the alert
+	/**
+	 * Call to update the message for the alert.
 	 *
+	 * @method
 	 * @param   {String}     message  Message to notify the user
 	 * @returns {undefined}
 	 * @public
