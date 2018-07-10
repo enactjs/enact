@@ -180,6 +180,7 @@ const ProgressBarTooltipBase = kind({
 		delete rest.orientation;
 		delete rest.percent;
 		delete rest.proportion;
+		delete rest.rtl;
 		delete rest.side;
 
 		return (
