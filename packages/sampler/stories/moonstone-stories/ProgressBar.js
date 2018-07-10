@@ -6,7 +6,8 @@ import {withInfo} from '@storybook/addon-info';
 import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('ProgressBar', ProgressBar);
+const ProgressBarConfig = mergeComponentMetadata('ProgressBar', ProgressBar);
+const ProgressBarTooltipConfig = mergeComponentMetadata('ProgressBarTooltip', ProgressBarTooltip);
 
 ProgressBar.displayName = 'ProgressBar';
 ProgressBarTooltip.displayName = 'ProgressBarTooltip';
@@ -18,17 +19,17 @@ storiesOf('Moonstone', module)
 			propTablesExclude: [ProgressBar, ProgressBarTooltip],
 			text: 'The basic ProgressBar'
 		})(() => {
-			const side = select('side', ['after', 'before', 'left', 'right'], ProgressBarTooltip, 'before');
-			const tooltip = boolean('tooltip', ProgressBarTooltip);
+			const side = select('side', ['after', 'before', 'left', 'right'], ProgressBarTooltipConfig, 'before');
+			const tooltip = boolean('tooltip', ProgressBarTooltipConfig);
 
 			return (
 				<ProgressBar
-					backgroundProgress={number('backgroundProgress', Config, {range: true, min: 0, max: 1, step: 0.01}, 0.5)}
-					disabled={boolean('disabled', Config)}
-					highlighted={boolean('highlighted', Config)}
-					orientation={select('orientation', ['horizontal', 'vertical'], Config, 'horizontal')}
-					progress={number('progress', Config, {range: true, min: 0, max: 1, step: 0.01}, 0.4)}
-					side={select('side', ['after', 'before', 'left', 'right'], Config, 'before')}
+					backgroundProgress={number('backgroundProgress', ProgressBarConfig, {range: true, min: 0, max: 1, step: 0.01}, 0.5)}
+					disabled={boolean('disabled', ProgressBarConfig)}
+					highlighted={boolean('highlighted', ProgressBarConfig)}
+					orientation={select('orientation', ['horizontal', 'vertical'], ProgressBarConfig, 'horizontal')}
+					progress={number('progress', ProgressBarConfig, {range: true, min: 0, max: 1, step: 0.01}, 0.4)}
+					side={select('side', ['after', 'before', 'left', 'right'], ProgressBarConfig, 'before')}
 				>
 					{tooltip ? (
 						<ProgressBarTooltip

@@ -10,6 +10,7 @@
  * @exports ButtonDecorator
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
@@ -22,9 +23,14 @@ import React from 'react';
 import Icon from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
-import TooltipDecorator from '../TooltipDecorator';
 
 import componentCss from './Button.less';
+
+// Called when `tooltip` props are used
+const deprecation = deprecate(() => {}, {
+	message: 'Tooltip props require the button to be wrapped by TooltipDecorator',
+	since: '2.0.0'
+});
 
 /**
  * A button component.
@@ -98,6 +104,10 @@ const ButtonBase = kind({
 		delete rest.backgroundOpacity;
 		delete rest.color;
 
+		if (__DEV__ && Object.keys(rest).some(s => s.indexOf('tooltip') === 0)) {
+			deprecation();
+		}
+
 		return (
 			<UiButtonBase
 				data-webos-voice-intent="Select"
@@ -116,7 +126,6 @@ const ButtonBase = kind({
  * @memberof moonstone/Button
  * @extends moonstone/Button.ButtonBase
  * @mixes i18n/Uppercase.Uppercase
- * @mixes moonstone/TooltipDecorator.TooltipDecorator
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes ui/Button.ButtonDecorator
  * @mixes spotlight/Spottable.Spottable
@@ -126,7 +135,6 @@ const ButtonBase = kind({
 const ButtonDecorator = compose(
 	Pure,
 	Uppercase,
-	TooltipDecorator,
 	MarqueeDecorator({className: componentCss.marquee}),
 	UiButtonDecorator,
 	Spottable,

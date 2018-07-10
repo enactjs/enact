@@ -174,10 +174,13 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 
 		componentWillMount () {
 			const {blockClickOn} = this.props;
+			const current = Spotlight.getCurrent();
 
 			if (blockClickOn === 'screen') {
 				this.paused.pause();
-				Spotlight.getCurrent().blur();
+				if (current) {
+					current.blur();
+				}
 			}
 		}
 

@@ -432,6 +432,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			);
 
+			delete props.rtl;
 			delete props.tooltipDelay;
 			delete props.tooltipPosition;
 			delete props.tooltipCasing;
