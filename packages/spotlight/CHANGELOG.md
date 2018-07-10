@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `spotlight` debugging to visualize which components will be targeted as the next component for any 5-way direction
+
 ## [2.0.0-rc.1] - 2018-07-09
 
 No significant changes.
