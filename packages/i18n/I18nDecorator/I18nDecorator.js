@@ -76,13 +76,13 @@ const I18nDecorator = hoc((config, Wrapped) => {
 			};
 		}
 
-		getChildContext () {
-			return {
-				Subscriber: this.publisher.getSubscriber(),
-				rtl: isRtlLocale(),
-				updateLocale: this.updateLocale
-			};
-		}
+		// getChildContext () {
+		// 	return {
+		// 		Subscriber: this.publisher.getSubscriber(),
+		// 		rtl: isRtlLocale(),
+		// 		updateLocale: this.updateLocale
+		// 	};
+		// }
 
 		componentWillMount () {
 			this.publisher = Publisher.create('i18n', this.context.Subscriber);
