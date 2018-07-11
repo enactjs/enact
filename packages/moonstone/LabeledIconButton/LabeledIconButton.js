@@ -83,7 +83,7 @@ const LabeledIconButtonBase = kind({
 	},
 
 	computed: {
-		iconComponent: ({icon}) => (typeof icon === 'string' ? <IconButton>{icon}</IconButton> : icon)
+		// iconComponent: ({icon}) => (typeof icon === 'string' ? IconButton : icon)
 	// 	className: ({children: LabeledIconButton, LabeledIconList, pressed, small, styler}) => styler.append({
 	// 		// If the LabeledIconButton isn't in our known set, apply our custom font class
 	// 		dingbat: !(LabeledIconButton in LabeledIconList),
@@ -92,12 +92,12 @@ const LabeledIconButtonBase = kind({
 	// 	})
 	},
 
-	render: ({css, children, iconComponent, ...rest}) => {
+	render: ({css, children, ...rest}) => {
 		// delete rest.small;
 
 		return (
 			<UiLabeledIcon
-				iconComponent={iconComponent}
+				iconComponent={IconButton}
 				{...rest}
 				css={css}
 			>

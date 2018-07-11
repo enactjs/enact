@@ -43,7 +43,7 @@ storiesOf('Moonstone', module)
 						<Scroller>
 							<Layout wrap align="center space-between">
 								{iconNames.map((icon) =>
-									<Cell size={200} style={{textAlign: 'center'}} key={'icon' + icon}>
+									<Cell size={200} key={'icon' + icon}>
 										<LabeledIcon
 											style={{width: '100%', marginLeft: 0, marginRight: 0}}
 											icon={icon}

@@ -9,7 +9,7 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import ComponentOverride from '../ComponentOverride';
+// import ComponentOverride from '../ComponentOverride';
 import Layout, {Cell} from '../Layout';
 
 import componentCss from './LabeledIcon.less';
@@ -55,6 +55,7 @@ const LabeledIcon = kind({
 		 * @public
 		 */
 		css: PropTypes.object,
+		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 		iconComponent: PropTypes.node,
 		labelPosition: PropTypes.oneOf(['above', 'after', 'before', 'below', 'left', 'right']),
 
@@ -105,7 +106,7 @@ const LabeledIcon = kind({
 	// 	)
 	// },
 
-	render: ({css, children, iconComponent, pressed, small, ...rest}) => {
+	render: ({css, children, icon, iconComponent, pressed, small, ...rest}) => {
 		delete rest.labelPosition;
 
 		return (
@@ -113,7 +114,7 @@ const LabeledIcon = kind({
 				align="center center"
 				{...rest}
 			>
-				<Cell shrink size="100%" component={iconComponent} className={css.icon} pressed={pressed} small={small} />
+				<Cell shrink size="100%" component={iconComponent} className={css.icon} pressed={pressed} small={small}>{icon}</Cell>
 				<Cell shrink component="label" className={css.label}>{children}</Cell>
 			</Layout>
 		);

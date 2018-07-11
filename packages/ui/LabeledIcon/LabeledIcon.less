@@ -16,6 +16,24 @@
 		cursor: default;
 	});
 
+	&.above,
+	&.before,
+	&.left,
+	:global(.enact-locale-right-to-left) &.right {
+		.icon { order: 2; }
+		.label { order: 1; }
+	}
+	:global(.enact-locale-right-to-left) &.left {
+		.icon { order: 1; }
+		.label { order: 2; }
+	}
+
+	&.above,
+	&.after,
+	&.before,
+	&.below,
+	&.left,
+	&.right,
 	.icon,
 	.label {
 		/* Public Class Names */

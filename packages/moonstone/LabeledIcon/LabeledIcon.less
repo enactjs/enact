@@ -1,6 +1,5 @@
-// Icon.less
+// LabeledIcon.less
 //
-@import "../styles/mixins.less";
 @import "../styles/variables.less";
 
 .labeledIcon {
@@ -17,10 +16,30 @@
 		text-overflow: ellipsis;
 		overflow: hidden;
 		width: 100%;
+		white-space: nowrap;
 	}
 
-	// .icon,
-	// .label {
-	// 	 Public Class Names
-	// }
+	&.above,
+	&.below {
+		text-align: center;
+	}
+
+	// Allow the lable to collapse to smaller than its content
+	&.after,
+	&.before,
+	&.left,
+	&.right {
+		flex-shrink: 1;
+	}
+
+	// Text alignment
+	&.before {
+		text-align: end;
+	}
+	&.left {
+		text-align: right;
+	}
+	&.right {
+		text-align: left;
+	}
 }

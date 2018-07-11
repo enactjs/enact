@@ -69,22 +69,22 @@ const LabeledIcon = kind({
 		publicClassNames: ['labeledIcon', 'icon', 'label']
 	},
 
-	computed: {
-		iconComponent: ({icon}) => (typeof icon === 'string' ? <Icon>{icon}</Icon> : icon)
+	// computed: {
+	// iconComponent: ({icon}) => (typeof icon === 'string' ? <Icon>{icon}</Icon> : icon)
 	// 	className: ({children: LabeledIcon, LabeledIconList, pressed, small, styler}) => styler.append({
 	// 		// If the LabeledIcon isn't in our known set, apply our custom font class
 	// 		dingbat: !(LabeledIcon in LabeledIconList),
 	// 		pressed,
 	// 		small
 	// 	})
-	},
+	// },
 
-	render: ({css, children, iconComponent, ...rest}) => {
+	render: ({css, children, ...rest}) => {
 		// delete rest.small;
 
 		return (
 			<UiLabeledIcon
-				iconComponent={iconComponent}
+				iconComponent={Icon}
 				{...rest}
 				css={css}
 			>

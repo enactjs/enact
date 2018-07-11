@@ -129,12 +129,8 @@ const CellBase = kind({
 		delete rest.shrink;
 		delete rest.size;
 
-		return (
-			<ComponentOverride
-				component={Component}
-				{...rest}
-			/>
-		);
+		return <Component {...rest} />;
+
 	}
 });
 
