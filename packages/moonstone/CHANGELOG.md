@@ -6,8 +6,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Picker` to properly set focus when navigating between buttons
 - `moonstone/ProgressBar.ProgressBarTooltip` not to display unknown props warning
+- `moonstone/Picker` to properly set focus when navigating between buttons
 
 ## [2.0.0-rc.1] - 2018-07-09
 
