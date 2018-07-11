@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/ExpandableItem` spotlight behavior when leaving the component via 5-way
+
 ## [2.0.0-rc.1] - 2018-07-09
 
 ### Added
