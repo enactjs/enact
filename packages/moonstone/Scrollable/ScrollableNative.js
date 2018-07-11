@@ -227,14 +227,20 @@ class ScrollableBaseNative extends Component {
 		this.childRef.setContainerDisabled(false);
 	}
 
-	onFlick = () => {
+	onFlick = ({direction}) => {
+		const bounds = this.uiRef.getScrollBounds();
 		const focusedItem = Spotlight.getCurrent();
 
 		if (focusedItem) {
 			focusedItem.blur();
 		}
 
-		this.childRef.setContainerDisabled(true);
+		if (
+			direction === 'vertical' && this.uiRef.canScrollVertically(bounds) ||
+			direction === 'horizontal' && this.uiRef.canScrollHorizontally(bounds)
+		) {
+			this.childRef.setContainerDisabled(true);
+		}
 	}
 
 	onMouseOver = () => {
