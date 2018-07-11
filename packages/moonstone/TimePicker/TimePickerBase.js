@@ -111,6 +111,14 @@ const TimePickerBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
+		 * Disable voice control feature
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
+
+		/**
 		 * The "aria-label" for the hour picker
 		 *
 		 * @type {String}
@@ -288,6 +296,7 @@ const TimePickerBase = kind({
 	},
 
 	render: ({
+		'data-webos-voice-disabled': voiceDisabled,
 		handlePickerKeyDown,
 		hasMeridiem,
 		hour,
@@ -318,6 +327,7 @@ const TimePickerBase = kind({
 				{...rest}
 				showLabel="always"
 				autoClose={false}
+				data-webos-voice-disabled={voiceDisabled}
 				lockBottom={false}
 				onSpotlightDisappear={onSpotlightDisappear}
 				onSpotlightLeft={onSpotlightLeft}
@@ -344,6 +354,8 @@ const TimePickerBase = kind({
 											accessibilityHint={hourLabel}
 											aria-label={hourAriaLabel}
 											className={css.hourComponents}
+											data-webos-voice-disabled={voiceDisabled}
+											data-webos-voice-group-label={hourLabel}
 											key="hour-picker"
 											label={noLabels ? null : hourLabel}
 											onChange={onChangeHour}
@@ -364,6 +376,8 @@ const TimePickerBase = kind({
 											accessibilityHint={minuteLabel}
 											aria-label={minuteAriaLabel}
 											className={css.minutesComponents}
+											data-webos-voice-disabled={voiceDisabled}
+											data-webos-voice-group-label={minuteLabel}
 											key="minute-picker"
 											label={noLabels ? null : minuteLabel}
 											max={59}
@@ -386,6 +400,8 @@ const TimePickerBase = kind({
 											aria-label={meridiemAriaLabel}
 											aria-valuetext={meridiems ? meridiems[meridiem] : null}
 											className={css.meridiemComponent}
+											data-webos-voice-disabled={voiceDisabled}
+											data-webos-voice-group-label={meridiemLabel}
 											key="meridiem-picker"
 											label={noLabels ? null : meridiemLabel}
 											onChange={onChangeMeridiem}

@@ -5,6 +5,7 @@ import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import platform from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import Touchable from '@enact/ui/Touchable';
 import shouldUpdate from 'recompose/shouldUpdate';
@@ -397,6 +398,9 @@ const PickerBase = class extends React.Component {
 		if (this.props.joined) {
 			this.containerRef.addEventListener('wheel', this.handleWheel);
 		}
+		if (platform.webos) {
+			this.containerRef.addEventListener('webOSVoice', this.handleVoice);
+		}
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -427,6 +431,9 @@ const PickerBase = class extends React.Component {
 		this.throttleWheelDec.stop();
 		if (this.props.joined) {
 			this.containerRef.removeEventListener('wheel', this.handleWheel);
+		}
+		if (platform.webos) {
+			this.containerRef.removeEventListener('webOSVoice', this.handleVoice);
 		}
 	}
 
@@ -669,6 +676,17 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
+	handleVoice = (ev) => {
+		const {max, min, onChange, value} = this.props;
+		const voiceIndex = ev && ev.detail && ev.detail.matchedIndex && Number(ev.detail.matchedIndex);
+		const voiceValue = min + voiceIndex;
+
+		if (onChange && voiceValue >= min && voiceValue <= max && voiceValue !== value) {
+			onChange({value: voiceValue});
+			ev.preventDefault();
+		}
+	}
+
 	determineClasses (decrementerDisabled, incrementerDisabled) {
 		const {joined, orientation, width} = this.props;
 		const {pressed} = this.state;
@@ -747,9 +765,9 @@ const PickerBase = class extends React.Component {
 		const {active} = this.state;
 		const {
 			'aria-valuetext': ariaValueText,
-			'data-webos-voice-group-label': voiceGroupLabel,
 			noAnimation,
 			children,
+			'data-webos-voice-group-label': voiceGroupLabel,
 			disabled,
 			id,
 			index,
@@ -809,6 +827,8 @@ const PickerBase = class extends React.Component {
 				aria-disabled={disabled}
 				aria-label={this.calcAriaLabel(valueText)}
 				className={classes}
+				data-webos-voice-group-label={voiceGroupLabel}
+				data-webos-voice-intent="Select"
 				disabled={disabled}
 				onBlur={this.handleBlur}
 				onFocus={this.handleFocus}

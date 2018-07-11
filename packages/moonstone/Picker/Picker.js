@@ -187,14 +187,17 @@ const PickerBase = kind({
 				validateRange(value, 0, max, 'Picker', '"value"', 'min', 'max index');
 			}
 			return clamp(0, max, value);
+		},
+		voiceLabel: ({children}) => {
+			return JSON.stringify(children.map((child) => (typeof child === 'object' ? child.props.children : child)));
 		}
 	},
 
-	render: ({children, max, value, ...rest}) => {
+	render: ({children, max, value, voiceLabel, ...rest}) => {
 		delete rest.marqueeDisabled;
 
 		return (
-			<PickerCore {...rest} min={0} max={max} index={value} step={1} value={value}>
+			<PickerCore {...rest} data-webos-voice-labels-ext={voiceLabel} min={0} max={max} index={value} step={1} value={value}>
 				{children}
 			</PickerCore>
 		);

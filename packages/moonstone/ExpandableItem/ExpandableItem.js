@@ -69,9 +69,36 @@ const ExpandableItemBase = kind({
 		 */
 		title: PropTypes.string.isRequired,
 
-		// TODO: Document voice control props and make public
+		/**
+		 * Disable voice control feature.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
+
+		/**
+		 * Specified if the item belongs to a specific group.
+		 *
+		 * @type {String}
+		 * @public
+		 */
 		'data-webos-voice-group-label': PropTypes.string,
+
+		/**
+		 * Intent for voice control.
+		 *
+		 * @type {String}
+		 * @public
+		 */
 		'data-webos-voice-intent': PropTypes.string,
+
+		/**
+		 * Voice control label.
+		 *
+		 * @type {String}
+		 * @public
+		 */
 		'data-webos-voice-label': PropTypes.string,
 
 		/**
@@ -309,6 +336,7 @@ const ExpandableItemBase = kind({
 
 	render: ({
 		children,
+		'data-webos-voice-disabled': voiceDisabled,
 		'data-webos-voice-group-label': voiceGroupLabel,
 		'data-webos-voice-intent': voiceIntent,
 		'data-webos-voice-label': voiceLabel,
@@ -353,6 +381,7 @@ const ExpandableItemBase = kind({
 					css={css}
 					className={labeledItemClassName}
 					data-expandable-label
+					data-webos-voice-disabled={voiceDisabled}
 					data-webos-voice-group-label={voiceGroupLabel}
 					data-webos-voice-intent={voiceIntent}
 					data-webos-voice-label={voiceLabel}
