@@ -1,5 +1,6 @@
 import Button from '@enact/moonstone/Button';
 import ExpandableList from '@enact/moonstone/ExpandableList';
+import {ScrollableBase} from '@enact/moonstone/Scrollable';
 import Scroller from '@enact/moonstone/Scroller';
 import Item from '@enact/moonstone/Item';
 import ri from '@enact/ui/resolution';
@@ -28,6 +29,7 @@ storiesOf('Scroller', module)
 		'List of things',
 		() => (
 			<Scroller
+				data-spotlight-container-disabled={boolean('data-spotlight-container-disabled', ScrollableBase, false)}
 				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
 				style={{height: ri.unit(600, 'rem')}}
 			>
