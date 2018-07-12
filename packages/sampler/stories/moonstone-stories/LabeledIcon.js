@@ -21,6 +21,7 @@ storiesOf('Moonstone', module)
 			propTablesExclude: [LabeledIcon, Scroller, Layout, Cell],
 			text: 'Basic usage of LabeledIcon'
 		})(() => {
+			const disabled = boolean('disabled', Config);
 			const labelPosition = select('labelPosition', ['above', 'after', 'before', 'below', 'left', 'right'], Config);
 			const pressed = boolean('pressed', Config);
 			const small = boolean('small', Config);
@@ -28,11 +29,9 @@ storiesOf('Moonstone', module)
 				<Layout orientation="vertical" style={{height: '100%'}}>
 					<Cell shrink>
 						<LabeledIcon
-							// label={text('label', LabeledIcon, 'Label')}
-							// disabled={boolean('disabled', LabeledIcon)}
 							icon={select('icon', ['', ...iconNames], Config, 'fullscreen')}
+							disabled={disabled}
 							labelPosition={labelPosition}
-							pressed={pressed}
 							small={small}
 						>
 							{text('children', Config, 'Hello LabeledIcon')}
@@ -47,8 +46,8 @@ storiesOf('Moonstone', module)
 										<LabeledIcon
 											style={{width: '100%', marginLeft: 0, marginRight: 0}}
 											icon={icon}
+											disabled={disabled}
 											labelPosition={labelPosition}
-											pressed={pressed}
 											small={small}
 										>{icon}</LabeledIcon>
 									</Cell>

@@ -8,9 +8,12 @@
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
+import compose from 'ramda/src/compose';
+import Pure from '@enact/ui/internal/Pure';
+import UiLabeledIcon from '@enact/ui/LabeledIcon';
 
 import Icon from '../Icon';
-import UiLabeledIcon from '@enact/ui/LabeledIcon';
+import Skinnable from '../Skinnable';
 
 import componentCss from './LabeledIcon.less';
 
@@ -22,7 +25,7 @@ import componentCss from './LabeledIcon.less';
  * @ui
  * @public
  */
-const LabeledIcon = kind({
+const LabeledIconBase = kind({
 	name: 'LabeledIcon',
 
 	propTypes: /** @lends ui/LabeledIcon.LabeledIconBase.prototype */ {
@@ -57,31 +60,13 @@ const LabeledIcon = kind({
 		css: PropTypes.object
 	},
 
-	defaultProps: {
-	// 	LabeledIconList: {},
-	// 	pressed: false,
-	// 	small: false
-	},
-
 	styles: {
 		css: componentCss,
 		className: 'labeledIcon',
 		publicClassNames: ['labeledIcon', 'icon', 'label']
 	},
 
-	// computed: {
-	// iconComponent: ({icon}) => (typeof icon === 'string' ? <Icon>{icon}</Icon> : icon)
-	// 	className: ({children: LabeledIcon, LabeledIconList, pressed, small, styler}) => styler.append({
-	// 		// If the LabeledIcon isn't in our known set, apply our custom font class
-	// 		dingbat: !(LabeledIcon in LabeledIconList),
-	// 		pressed,
-	// 		small
-	// 	})
-	// },
-
 	render: ({css, children, ...rest}) => {
-		// delete rest.small;
-
 		return (
 			<UiLabeledIcon
 				iconComponent={Icon}
@@ -94,7 +79,16 @@ const LabeledIcon = kind({
 	}
 });
 
+const LabeledIconDecorator = compose(
+	Pure,
+	Skinnable
+);
+
+const LabeledIcon = LabeledIconDecorator(LabeledIconBase);
+
 export default LabeledIcon;
 export {
-	LabeledIcon
+	LabeledIcon,
+	LabeledIconBase,
+	LabeledIconDecorator
 };

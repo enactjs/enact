@@ -9,7 +9,6 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-// import ComponentOverride from '../ComponentOverride';
 import Layout, {Cell} from '../Layout';
 
 import componentCss from './LabeledIcon.less';
@@ -55,27 +54,22 @@ const LabeledIcon = kind({
 		 * @public
 		 */
 		css: PropTypes.object,
+
+		/**
+		 * Disables the [LabeledIconBase]{@link ui/LabeledIcon.LabeledIconBase}
+		 *
+		 * When `true`, the LabeledIcon is shown as disabled and does not respond to
+		 * `onClick` [events]{@link /docs/developer-guide/glossary/#event}.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		disabled: PropTypes.bool,
+
 		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-		iconComponent: PropTypes.node,
-		labelPosition: PropTypes.oneOf(['above', 'after', 'before', 'below', 'left', 'right']),
-
-		/**
-		 * Applies the `pressed` CSS class to the [IconBase]{@link ui/Icon.IconBase}
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		pressed: PropTypes.bool,
-
-		/**
-		 * Applies the `small` CSS class to the [IconBase]{@link ui/Icon.IconBase}
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		small: PropTypes.bool
+		iconComponent: PropTypes.func,
+		labelPosition: PropTypes.oneOf(['above', 'after', 'before', 'below', 'left', 'right'])
 	},
 
 	defaultProps: {
@@ -89,33 +83,23 @@ const LabeledIcon = kind({
 	},
 
 	computed: {
-		className: ({labelPosition, styler}) => styler.append(labelPosition, {
-			// If the LabeledIcon isn't in our known set, apply our custom font class
-			// dingbat: !(LabeledIcon in LabeledIconList),
-			// pressed,
-			// small
-		}),
+		className: ({labelPosition, styler}) => styler.append(labelPosition),
 		orientation: ({labelPosition}) => (labelPosition === 'above' || labelPosition === 'below') ? 'vertical' : 'horizontal'
 	},
-	// computed: {
-	// 	iconComponent: ({css, iconComponent}) => (
-	// 		<ComponentOverride
-	// 			component={iconComponent}
-	//
-	// 		/>
-	// 	)
-	// },
 
-	render: ({css, children, icon, iconComponent, pressed, small, ...rest}) => {
+	render: ({css, children, className, disabled, icon, iconComponent, orientation, style, ...rest}) => {
 		delete rest.labelPosition;
 
 		return (
 			<Layout
 				align="center center"
-				{...rest}
+				className={className}
+				disabled={disabled}
+				orientation={orientation}
+				style={style}
 			>
-				<Cell shrink size="100%" component={iconComponent} className={css.icon} pressed={pressed} small={small}>{icon}</Cell>
-				<Cell shrink component="label" className={css.label}>{children}</Cell>
+				<Cell shrink size="100%" {...rest} component={iconComponent} className={css.icon} disabled={disabled}>{icon}</Cell>
+				<Cell shrink component="label" className={css.label} disabled={disabled}>{children}</Cell>
 			</Layout>
 		);
 	}

@@ -17,11 +17,13 @@ import {IconButtonDecorator as UiIconButtonDecorator} from '@enact/ui/IconButton
 import Skinnable from '../Skinnable';
 import {IconButtonBase} from '../IconButton';
 
-import componentCss from './LabeledIconButton.less';
+// This refers to the LabeledIcon styling, since they're the same.
+// If this fact changes in the future, we can simply create a new less file in this component and
+// either copy or less-import the styling rules from LabeledIcon. (Whichever is more appropriate.)
+import componentCss from '../LabeledIcon/LabeledIcon.less';
 
 
 const IconButton = compose(
-	Pure,
 	UiIconButtonDecorator,
 	Spottable,
 	Skinnable
@@ -70,31 +72,13 @@ const LabeledIconButtonBase = kind({
 		css: PropTypes.object
 	},
 
-	defaultProps: {
-	// 	LabeledIconList: {},
-	// 	pressed: false,
-	// 	small: false
-	},
-
 	styles: {
 		css: componentCss,
 		className: 'labeledIconButton',
 		publicClassNames: ['labeledIconButton', 'icon', 'label']
 	},
 
-	computed: {
-		// iconComponent: ({icon}) => (typeof icon === 'string' ? IconButton : icon)
-	// 	className: ({children: LabeledIconButton, LabeledIconList, pressed, small, styler}) => styler.append({
-	// 		// If the LabeledIconButton isn't in our known set, apply our custom font class
-	// 		dingbat: !(LabeledIconButton in LabeledIconList),
-	// 		pressed,
-	// 		small
-	// 	})
-	},
-
 	render: ({css, children, ...rest}) => {
-		// delete rest.small;
-
 		return (
 			<UiLabeledIcon
 				iconComponent={IconButton}
