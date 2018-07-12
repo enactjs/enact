@@ -2,11 +2,11 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [Unreleased]
+## [unreleased]
 
 ### Fixed
 
-- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` page controls to stop propagating an event if the event is handle
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` page controls to stop propagating an event if the event is handled
 - `moonstone/ProgressBar.ProgressBarTooltip` not to display unknown props warn
 
 ## [2.0.0-rc.1] - 2018-07-09
