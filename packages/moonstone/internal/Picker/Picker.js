@@ -630,8 +630,7 @@ const PickerBase = class extends React.Component {
 		const direction = getDirection(keyCode);
 
 		if (direction) {
-			const {orientation, step, ...rest} = this.props;
-			const spotlightLeaveEvent = rest[`onPickerSpotlight${cap(direction)}`];
+			const {orientation, step} = this.props;
 
 			if (
 				!this.hasReachedBound(step) &&
@@ -646,8 +645,8 @@ const PickerBase = class extends React.Component {
 				// set the pointer mode to false on keydown
 				Spotlight.setPointerMode(false);
 				Spotlight.focus(this.containerRef.querySelector(`.${css.incrementer}`));
-			} else if (spotlightLeaveEvent) {
-				spotlightLeaveEvent(ev);
+			} else {
+				forward(`onPickerSpotlight${cap(direction)}`, ev, this.props);
 			}
 		}
 	}
@@ -657,8 +656,7 @@ const PickerBase = class extends React.Component {
 		const direction = getDirection(keyCode);
 
 		if (direction) {
-			const {orientation, step, ...rest} = this.props;
-			const spotlightLeaveEvent = rest[`onPickerSpotlight${cap(direction)}`];
+			const {orientation, step} = this.props;
 
 			if (
 				!this.hasReachedBound(step * -1) &&
@@ -673,8 +671,8 @@ const PickerBase = class extends React.Component {
 				// set the pointer mode to false on keydown
 				Spotlight.setPointerMode(false);
 				Spotlight.focus(this.containerRef.querySelector(`.${css.decrementer}`));
-			} else if (spotlightLeaveEvent) {
-				spotlightLeaveEvent(ev);
+			} else {
+				forward(`onPickerSpotlight${cap(direction)}`, ev, this.props);
 			}
 		}
 	}
