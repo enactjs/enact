@@ -33,6 +33,7 @@ const
 		animationDuration,
 		isPageDown,
 		isPageUp,
+		overscrollTypeDone,
 		overscrollTypeNone,
 		overscrollTypeOnce,
 		paginationPageMultiplier
@@ -576,7 +577,7 @@ class ScrollableBase extends Component {
 		const {type} = this.uiRef.getOverscrollStatus(orientation, edge);
 
 		if (type !== overscrollTypeNone) {
-			this.overscrollJobs[orientation][edge].startAfter(0, orientation, edge, overscrollTypeNone, 0);
+			this.overscrollJobs[orientation][edge].startAfter(overscrollTimeout, orientation, edge, overscrollTypeNone, 0);
 			this.uiRef.setOverscrollStatus(orientation, edge, overscrollTypeNone, 0);
 		}
 	}
@@ -588,7 +589,7 @@ class ScrollableBase extends Component {
 			nodeRef.style.setProperty(overscrollRatioPrefix + orientation + edge, ratio);
 
 			if (type === overscrollTypeOnce) {
-				this.overscrollJobs[orientation][edge].start(orientation, edge, overscrollTypeNone, 0);
+				this.overscrollJobs[orientation][edge].start(orientation, edge, overscrollTypeDone, 0);
 			}
 		}
 	}

@@ -33,9 +33,10 @@ const
 		isPageDown: is('pageDown'),
 		isPageUp: is('pageUp'),
 		nop: () => {},
-		overscrollTypeHold: 2,
 		overscrollTypeNone: 0,
-		overscrollTypeOnce: 1,
+		overscrollTypeHold: 1,
+		overscrollTypeOnce: 2,
+		overscrollTypeDone: 9,
 		paginationPageMultiplier: 0.8,
 		scrollWheelPageMultiplierForMaxPixel: 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	},
@@ -45,9 +46,10 @@ const
 		isPageDown,
 		isPageUp,
 		nop,
+		overscrollTypeDone,
+		overscrollTypeHold,
 		overscrollTypeNone,
 		overscrollTypeOnce,
-		overscrollTypeHold,
 		paginationPageMultiplier,
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
@@ -698,18 +700,11 @@ class ScrollableBase extends Component {
 	}
 
 	applyOverscrollEffect = (orientation, edge, type, ratio) => {
-		const isHold = (type === overscrollTypeHold);
-
 		if (this.props.applyOverscrollEffect) {
 			this.props.applyOverscrollEffect(orientation, edge, type, ratio);
 		}
 
-		this.setOverscrollStatus(
-			orientation,
-			edge,
-			isHold ? type : overscrollTypeNone,
-			isHold ? ratio : 0
-		);
+		this.setOverscrollStatus(orientation, edge, type === overscrollTypeOnce ? overscrollTypeDone : type, ratio);
 	}
 
 	checkAndApplyOverscrollEffect = (orientation, edge, type, ratio) => {
@@ -834,7 +829,7 @@ class ScrollableBase extends Component {
 
 				if (isDragging) {
 					this.applyOverscrollEffectOnDrag('horizontal', edge, targetX, overscrollTypeHold);
-				} else if (edge) {
+				} else if (edge && this.getOverscrollStatus('horizontal', edge).type === overscrollTypeNone) {
 					this.checkAndApplyOverscrollEffect('horizontal', edge, overscrollTypeOnce, 1);
 				}
 			}
@@ -843,7 +838,7 @@ class ScrollableBase extends Component {
 
 				if (isDragging) {
 					this.applyOverscrollEffectOnDrag('vertical', edge, targetY, overscrollTypeHold);
-				} else if (edge) {
+				} else if (edge && this.getOverscrollStatus('vertical', edge).type === overscrollTypeNone) {
 					this.checkAndApplyOverscrollEffect('vertical', edge, overscrollTypeOnce, 1);
 				}
 			}
