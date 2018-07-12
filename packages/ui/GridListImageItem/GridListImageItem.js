@@ -2,7 +2,7 @@
  * Provides unstyled grid list image item components and behaviors to be customized by a theme or application.
  *
  * @module ui/GridListImageItem
- * @exports GridListIamgeItem
+ * @exports GridListImageItem
  */
 
 import kind from '@enact/core/kind';

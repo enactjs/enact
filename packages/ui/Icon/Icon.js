@@ -16,6 +16,7 @@ import componentCss from './Icon.less';
 /**
  * Merges consumer styles with the image `src` resolved through the resolution independence module.
  *
+ * @function
  * @param	{Object}		style	Style object
  * @param	{String|Object}	src		URI to image or object of URIs
  *
@@ -36,6 +37,7 @@ const mergeStyle = function (style, src) {
 /**
  * Tests if a character is a single printable character
  *
+ * @function
  * @param	{String}	c	Character to test
  *
  * @returns	{Boolean}		`true` if c is a single character
@@ -50,7 +52,7 @@ const isSingleCharacter = function (c) {
 /**
  * A basic icon component structure without any behaviors applied to it.
  *
- * @class IconBase
+ * @class Icon
  * @memberof ui/Icon
  * @ui
  * @public
@@ -58,13 +60,13 @@ const isSingleCharacter = function (c) {
 const Icon = kind({
 	name: 'ui:Icon',
 
-	propTypes: /** @lends ui/Icon.IconBase.prototype */ {
+	propTypes: /** @lends ui/Icon.Icon.prototype */ {
 		/**
 		 * The icon content.
 		 *
 		 * May be specified as either:
 		 *
-		 * * A string that represents an icon from the [iconList]{@link ui/Icon.IconBase.iconList},
+		 * * A string that represents an icon from the [iconList]{@link ui/Icon.Icon.iconList},
 		 * * An HTML entity string, Unicode reference or hex value (in the form '0x...'),
 		 * * A URL specifying path to an icon image, or
 		 * * An object representing a resolution independent resource (See {@link ui/resolution}).
@@ -81,8 +83,8 @@ const Icon = kind({
 		 * The following classes are supported:
 		 *
 		 * * `icon` - The root component class
-		 * * `dingbat` - Applied when the value of [`icon`]{@link ui/Icon.IconBase.icon} is not
-		 *   found in [iconList]{@link ui/Icon.IconBase.iconList}
+		 * * `dingbat` - Applied when the value of [`icon`]{@link ui/Icon.Icon.icon} is not
+		 *   found in [iconList]{@link ui/Icon.Icon.iconList}
 		 * * `small` - Applied when `small` prop is `true`
 		 * * `pressed` - Applied when `pressed` prop is `true`
 		 *
@@ -106,7 +108,7 @@ const Icon = kind({
 		iconList: PropTypes.object,
 
 		/**
-		 * Applies the `pressed` CSS class to the [IconBase]{@link ui/Icon.IconBase}
+		 * When `true`, applies the `pressed` CSS class to the [Icon]{@link ui/Icon.Icon}
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -115,7 +117,7 @@ const Icon = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * Applies the `small` CSS class to the [IconBase]{@link ui/Icon.IconBase}
+		 * When `true`, applies the `small` CSS class to the [Icon]{@link ui/Icon.Icon}
 		 *
 		 * @type {Boolean}
 		 * @default false

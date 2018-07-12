@@ -11,11 +11,12 @@ import React from 'react';
 import {isSelected, select as selectItem} from '../internal/selection';
 
 /**
- * Pick the GroupItem-specific props into a 'private' itemProps key to be extracted by GroupItem
- * before passing the remaining on to the repeated `childComponent`
+ * Pick the `GroupItem`-specific props into a [private]{@link /developer-guide/glossary/#private} `itemProps` key to be extracted by
+ * `GroupItem` before passing the remaining on to the repeated `childComponent`
  *
- * @param {Object} props Group props
- * @returns {Object} GroupItem props
+ * @function
+ * @param {Object} props `Group` props
+ * @returns {Object} `GroupItem` props
  * @private
  */
 const pickGroupItemProps = (props) => ({
@@ -32,7 +33,7 @@ const pickGroupItemProps = (props) => ({
 });
 
 /**
- * {@link ui/Group.GroupItemBase} is a stateless component that is used within a
+ * {@link ui/Group.GroupItem} is a stateless component that is used within a
  * {@link ui/Group.Group}.  It supports passing the configurable selected property and
  * handler to its configured `childComponent`.
  *
