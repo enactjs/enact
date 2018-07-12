@@ -52,7 +52,7 @@ const PickerBase = kind({
 		 * By default, `data-webos-voice-labels-ext` is generated reference to children.
 		 * However, if the children is not an array of number or string, label value should be explicitly decalred.
 		 *
-		 * @type {Number[], String[]}
+		 * @type {Number[]|String[]}
 		 * @memberof moonstone/Picker.PickerBase.prototype
 		 * @public
 		 */
@@ -203,7 +203,7 @@ const PickerBase = kind({
 			if (voiceLabelsExt) {
 				voiceLabel = voiceLabelsExt;
 			} else {
-				voiceLabel = children.map((child) => ((typeof child === 'number' || typeof child === 'string') ? child : ''));
+				voiceLabel = children && Array.isArray(children) && React.Children.map(children, (child) => ((typeof child === 'number' || typeof child === 'string') ? child : ''));
 			}
 			return JSON.stringify(voiceLabel);
 		}
