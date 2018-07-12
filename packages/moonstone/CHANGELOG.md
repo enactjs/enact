@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Scrollable.Scrollable` and `moonstone/Scrollable.ScrollableNative` to set `lastFocusedItem` and `lastScrollPositionOnFocus` when it really starts scrolling.
 - `moonstone/ProgressBar.ProgressBarTooltip` not to display unknown props warning
 
 ## [2.0.0-rc.1] - 2018-07-09

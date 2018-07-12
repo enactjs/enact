@@ -353,9 +353,9 @@ class ScrollableBaseNative extends Component {
 						this.uiRef.updateOverscrollEffect('vertical', top, overscrollTypes.scrolling, 1);
 					}
 				}
+				this.lastFocusedItem = item;
+				this.lastScrollPositionOnFocus = pos;
 			}
-			this.lastFocusedItem = item;
-			this.lastScrollPositionOnFocus = pos;
 		}
 	}
 
