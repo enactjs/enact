@@ -485,11 +485,9 @@ const VirtualListBaseFactory = (type) => {
 					this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
 				}
 				cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
-
-				return true;
-			} else {
-				return null;
 			}
+
+			return true;
 		}
 
 		/**
