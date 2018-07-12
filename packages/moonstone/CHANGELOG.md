@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` component for a light-weight `Icon` or `IconButton` with a label that responds to locale rules
+
 ## [2.0.0-rc.1] - 2018-07-09
 
 ### Added

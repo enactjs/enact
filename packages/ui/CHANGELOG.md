@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/LabeledIcon` component for a light-weight Icon with a label
+
 ## [2.0.0-rc.1] - 2018-07-09
 
 ### Removed
