@@ -99,6 +99,7 @@ const DatePickerBase = kind({
 		 * Disable voice control feature.
 		 *
 		 * @type {Boolean}
+		 * @memberof moonstone/DatePicker.DatePickerBase.prototype
 		 * @public
 		 */
 		'data-webos-voice-disabled': PropTypes.bool,
