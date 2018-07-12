@@ -49,6 +49,16 @@ const PickerBase = kind({
 		'aria-valuetext': PropTypes.string,
 
 		/**
+		 * By default, `data-webos-voice-labels-ext` is generated reference to children.
+		 * However, if the children is not an array of number or string, label value should be explicitly decalred.
+		 *
+		 * @type {Number[], String[]}
+		 * @memberof moonstone/Picker.PickerBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-labels-ext': PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.arrayOf(PropTypes.string)]),
+
+		/**
 		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
@@ -188,8 +198,14 @@ const PickerBase = kind({
 			}
 			return clamp(0, max, value);
 		},
-		voiceLabel: ({children}) => {
-			return JSON.stringify(children.map((child) => (typeof child === 'object' ? child.props.children : child)));
+		voiceLabel: ({children, 'data-webos-voice-labels-ext': voiceLabelsExt}) => {
+			let voiceLabel;
+			if (voiceLabelsExt) {
+				voiceLabel = voiceLabelsExt;
+			} else {
+				voiceLabel = children.map((child) => ((typeof child === 'number' || typeof child === 'string') ? child : ''));
+			}
+			return JSON.stringify(voiceLabel);
 		}
 	},
 

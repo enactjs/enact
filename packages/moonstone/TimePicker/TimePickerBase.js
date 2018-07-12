@@ -114,6 +114,7 @@ const TimePickerBase = kind({
 		 * Disable voice control feature
 		 *
 		 * @type {Boolean}
+		 * @memberof moonstone/TimePicker.TimePickerBase.prototype
 		 * @public
 		 */
 		'data-webos-voice-disabled': PropTypes.bool,

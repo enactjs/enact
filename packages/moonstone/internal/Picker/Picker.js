@@ -678,12 +678,14 @@ const PickerBase = class extends React.Component {
 
 	handleVoice = (ev) => {
 		const {max, min, onChange, value} = this.props;
-		const voiceIndex = ev && ev.detail && ev.detail.matchedIndex && Number(ev.detail.matchedIndex);
-		const voiceValue = min + voiceIndex;
+		const voiceIndex = ev && ev.detail && typeof ev.detail.matchedIndex !== 'undefined' && Number(ev.detail.matchedIndex);
 
-		if (onChange && voiceValue >= min && voiceValue <= max && voiceValue !== value) {
-			onChange({value: voiceValue});
-			ev.preventDefault();
+		if (Number.isInteger(voiceIndex)) {
+			const voiceValue = min + voiceIndex;
+			if (onChange && voiceValue >= min && voiceValue <= max && voiceValue !== value) {
+				onChange({value: voiceValue});
+				ev.preventDefault();
+			}
 		}
 	}
 
