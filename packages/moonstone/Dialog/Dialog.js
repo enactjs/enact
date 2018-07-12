@@ -177,14 +177,14 @@ const DialogBase = kind({
 		return (
 			<Popup {...rest}>
 				<div className={css.titleWrapper}>
-					<div className={css.titleBlock}>
+					{title && <div className={css.titleBlock}>
 						<MarqueeH1 casing={casing} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
 							{title}
 						</MarqueeH1>
 						<h2 className={css.titleBelow}>
 							{titleBelow}
 						</h2>
-					</div>
+					</div>}
 					<div className={css.buttons}>
 						{buttons}
 					</div>
