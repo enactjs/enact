@@ -604,6 +604,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			// Non-standard state computed from properties
 			bottomControlsRendered: false,
+			feedbackAction: 'idle',
 			feedbackIconVisible: true,
 			feedbackVisible: false,
 			infoVisible: false,
@@ -920,7 +921,8 @@ const VideoPlayerBase = class extends React.Component {
 		if (this.state.mediaControlsVisible) {
 			this.setState({
 				feedbackIconVisible: true,
-				feedbackVisible: true
+				feedbackVisible: true,
+				feedbackAction: 'idle'
 			});
 		} else {
 			const shouldShowSlider = this.pulsedPlaybackState !== null || calcNumberValueOfPlaybackRate(this.playbackRate) !== 1;
@@ -936,7 +938,10 @@ const VideoPlayerBase = class extends React.Component {
 
 	hideFeedback = () => {
 		if (this.state.feedbackVisible) {
-			this.setState({feedbackVisible: false});
+			this.setState({
+				feedbackVisible: false,
+				feedbackAction: 'idle'
+			});
 		}
 	}
 
@@ -1563,6 +1568,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.sliderScrubbing = true;
 
 		this.setState({
+			feedbackAction: 'focus',
 			feedbackIconVisible: false,
 			feedbackVisible: true
 		});
@@ -1588,7 +1594,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState(({paused, currentTime}) => ({
 			// If paused is false that means it is playing. We only want to hide on playing.
 			feedbackIconVisible: paused,
-			feedbackVisible: false,
+			feedbackAction: 'blur',
+			feedbackVisible: true,
 			sliderTooltipTime: currentTime
 		}));
 	}
@@ -1824,12 +1831,13 @@ const VideoPlayerBase = class extends React.Component {
 								<FeedbackTooltip
 									duration={this.state.duration}
 									formatter={this.durfmt}
-									noFeedback={!this.state.feedbackIconVisible}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
 									playbackState={this.prevCommand}
 									thumbnailComponent={thumbnailComponent}
 									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
+									thumbnailVisible={!this.state.feedbackIconVisible}
+									action={this.state.feedbackAction}
 									hidden={!this.state.feedbackVisible || this.state.sourceUnavailable}
 								/>
 							</MediaSlider>}
