@@ -1,5 +1,5 @@
 /**
- * Provides a HOC interface for `ref` forwarding.
+ * A higher-order component (HOC) interface for `ref` forwarding.
  *
  * @module ui/ForwardRef
  * @exports	ForwardRef

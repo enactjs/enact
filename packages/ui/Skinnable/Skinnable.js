@@ -61,7 +61,6 @@ const defaultConfig = {
  * component to establish your supported skins.
  *
  * Example:
- *
  * ```
  * App = Skinnable({
  * 	skins: {

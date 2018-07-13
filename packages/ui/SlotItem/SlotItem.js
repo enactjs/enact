@@ -180,7 +180,6 @@ const SlotItemDecorator = Slottable({slots: ['slotAfter', 'slotBefore']});
  * A ui-styled item with built-in support for slots.
  *
  * Example:
- *
  * ```
  *	<SlotItem component={Item} autoHide="both">
  *		<slotBefore>

@@ -103,7 +103,6 @@ const defaultConfig = {
  * to its wrapped component. Its default event and property can be configured when applied to a component.
  *
  * Example:
- *
  * ```
  * const ToggleItem = Toggleable({toggleProp: 'onClick'}, Item);
  * ```

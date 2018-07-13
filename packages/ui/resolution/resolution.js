@@ -85,7 +85,6 @@ function getScreenTypeObject (type) {
  * Executing this method also initializes the rest of the resolution-independence code.
  *
  * Example:
- *
  * ```
  * import ri from 'enact/ui/resolution';
  *
@@ -316,7 +315,6 @@ function scale (px) {
  * {@link ui/resolution.unitToPixelFactors} object.
  *
  * Example:
- *
  * ```
  * import ri from '@enact/ui/resolution';
  *
@@ -376,7 +374,6 @@ const scaleToRem = (pixels) => unit(scale(pixels), 'rem');
  * resolution is less than or equal to the provided screen types.
  *
  * Example:
- *
  * ```
  * // Take advantage of the multi-res mode
  * import {Image} from '@enact/ui/Image';

@@ -1,5 +1,5 @@
 /**
- * Provides unstyled BodyText components and behaviors to be customized by a theme or application.
+ * An unstyled body text component and behaviors to be customized by a theme or application.
  *
  * @module ui/BodyText
  * @exports BodyText

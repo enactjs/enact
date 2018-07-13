@@ -212,7 +212,7 @@ const ToggleItemDecorator = compose(
 /**
  * An unstyled item with built-in support for toggling.
  *
- * Usage:
+ * Example:
  * ```
  * <ToggleItem icon="lock" iconPosition="before">Toggle Me</ToggleItem>
  * ```

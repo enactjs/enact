@@ -48,7 +48,6 @@ const defaultConfig = {
  *	* `screenTypes: null` - defines a set of screen types to support
  *
  * Example:
- *
  * ```
  *	// Will have the resolution classes and will be updated when the window resizes
  *	const AppWithResolution = ResolutionDecorator(App);

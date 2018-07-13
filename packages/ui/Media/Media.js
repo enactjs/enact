@@ -1,5 +1,5 @@
 /**
- * Provides a representation of `HTMLMediaElement` component with an ability to attach a custom event
+ * A representation of `HTMLMediaElement` component with an ability to attach a custom event
  * handler.
  *
  * @module ui/Media
@@ -17,7 +17,6 @@ import {on, off} from '@enact/core/dispatcher';
  * Generates a key representing the source node or nodes provided
  *
  * Example:
- *
  * ```
  * getKeyFromSource('path/file.mp4'); // 'path/file.mp4'
  * getKeyFromSource(
@@ -135,7 +134,6 @@ class Media extends React.Component {
 		 * will be executed as callback functions when the event fires.
 		 *
 		 * Example:
-		 *
 		 * ```
 		 * {'umsmediainfo': 'onUMSMediaInfo'} // `onUMSMediaInfo` prop function will execute when the `umsmediainfo` event happens
 		 * ```

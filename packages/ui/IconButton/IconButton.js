@@ -185,7 +185,6 @@ const IconButtonDecorator = Touchable({activeProp: 'pressed'});
  * A minimally styled, but interactive, Button ready for customization by a theme.
  *
  * Example:
- *
  * ```
  * <IconButton small>
  *     plus

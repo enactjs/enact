@@ -1,5 +1,5 @@
 /**
- * Provides unstyled scroller components and behaviors to be customized by a theme or application.
+ * Unstyled scroller components and behaviors to be customized by a theme or application.
  *
  * @module ui/Scroller
  * @exports Scroller
@@ -200,7 +200,6 @@ class ScrollerBase extends Component {
  * An unstyled scroller.
  *
  * Example:
- *
  * ```
  * <Scroller>Scroll me.</Scroller>
  * ```
@@ -248,7 +247,6 @@ Scroller.defaultProps = {
  * The one with Chromium 61 or above, is launched to support it by default.
  *
  * Example:
- *
  * ```
  * <ScrollerNative>Scroll me.</ScrollerNative>
  * ```

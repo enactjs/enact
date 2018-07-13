@@ -1,5 +1,5 @@
 /**
- * Provides an unstyled item component and behaviors to be customized by a theme or application.
+ * An unstyled item component and behaviors to be customized by a theme or application.
  *
  * @module ui/Item
  * @exports Item

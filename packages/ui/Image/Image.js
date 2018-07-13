@@ -1,5 +1,5 @@
 /**
- * Provides unstyled image component to be customized by a theme or application.
+ * An unstyled image component to be customized by a theme or application.
  *
  * @module ui/Image
  * @exports Image
@@ -18,7 +18,6 @@ import componentCss from './Image.less';
  * specified using a CSS `className` or inline `style`.
  *
  * Example:
- *
  * ```
  * const src = {
  *   'hd': 'http://lorempixel.com/64/64/city/1/',

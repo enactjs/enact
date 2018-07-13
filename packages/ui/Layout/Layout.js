@@ -41,7 +41,6 @@ import css from './Layout.less';
  * (`Cells`) in an organized, readable way.
  *
  * Example:
- *
  * ```
  * import Input from '@enact/moonstone/Input';
  * import css from './LayoutExample.less';

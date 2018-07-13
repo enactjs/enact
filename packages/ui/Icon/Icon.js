@@ -1,5 +1,5 @@
 /**
- * Provides unstyled icon components to be customized by a theme or application.
+ * An unstyled icon component to be customized by a theme or application.
  *
  * @module ui/Icon
  * @exports Icon

@@ -1,5 +1,5 @@
 /**
- * Provides unstyled button components and behaviors to be customized by a theme or application.
+ * Unstyled button components and behaviors to be customized by a theme or application.
  *
  * @module ui/Button
  * @exports Button

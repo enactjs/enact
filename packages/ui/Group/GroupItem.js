@@ -37,7 +37,7 @@ const pickGroupItemProps = (props) => ({
  * {@link ui/Group.Group}.  It supports passing the configurable selected property and
  * handler to its configured `childComponent`.
  *
- * Note: It receives its properties through the `$$GroupItem` property passed from `Group`'s
+ * **Note**: It receives its properties through the `$$GroupItem` property passed from `Group`'s
  * {@link ui/Repeater.Repeater}.
  *
  * @class GroupItemBase

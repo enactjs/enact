@@ -1,5 +1,5 @@
 /**
- * Provides unstyled slider components and behaviors to be customized by a theme or application.
+ * Unstyled slider components and behaviors to be customized by a theme or application.
  *
  * @module ui/Slider
  * @exports Knob
