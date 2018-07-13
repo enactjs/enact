@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ProgressBar.ProgressBarTooltip` not to display unknown props warning
+- `moonstone/VideoPlayer` to display feedback tooltip when hover out from slider while playing
 
 ## [2.0.0-rc.1] - 2018-07-09
 
