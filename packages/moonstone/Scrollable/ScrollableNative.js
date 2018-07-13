@@ -331,7 +331,7 @@ class ScrollableBaseNative extends Component {
 
 	// event handlers for Spotlight support
 
-	startScrollOnFocus = (pos, item) => {
+	startScrollOnFocus = (pos) => {
 		if (pos) {
 			const
 				{top, left} = pos,
@@ -378,7 +378,7 @@ class ScrollableBaseNative extends Component {
 			}
 
 			if (pos && (pos.left !== this.uiRef.scrollLeft || pos.top !== this.uiRef.scrollTop)) {
-				this.startScrollOnFocus(pos, spotItem);
+				this.startScrollOnFocus(pos);
 			}
 
 			// update `scrollHeight`
