@@ -1824,15 +1824,15 @@ const VideoPlayerBase = class extends React.Component {
 								visible={this.state.mediaSliderVisible}
 							>
 								<FeedbackTooltip
+									action={this.state.feedbackAction}
 									duration={this.state.duration}
 									formatter={this.durfmt}
+									hidden={!this.state.feedbackVisible || this.state.sourceUnavailable}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
 									playbackState={this.prevCommand}
 									thumbnailComponent={thumbnailComponent}
 									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
-									action={this.state.feedbackAction}
-									hidden={!this.state.feedbackVisible || this.state.sourceUnavailable}
 								/>
 							</MediaSlider>}
 
