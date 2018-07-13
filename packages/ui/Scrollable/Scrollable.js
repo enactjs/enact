@@ -350,6 +350,8 @@ class ScrollableBase extends Component {
 			vertical: true
 		};
 
+		this.overscrollEnabled = !!(props.applyOverscrollEffect);
+
 		props.cbScrollTo(this.scrollTo);
 	}
 
@@ -536,12 +538,13 @@ class ScrollableBase extends Component {
 	}
 
 	onDrag = (ev) => {
-		const
-			{direction} = this.props,
-			targetX = (direction === 'vertical') ? 0 : this.dragStartX - this.getRtlX(ev.x), // 'horizontal' or 'both'
-			targetY = (direction === 'horizontal') ? 0 : this.dragStartY - ev.y; // 'vertical' or 'both'
+		const {direction} = this.props;
 
-		this.start({targetX, targetY, animate: false});
+		this.start({
+			targetX: (direction === 'vertical') ? 0 : this.dragStartX - this.getRtlX(ev.x), // 'horizontal' or 'both'
+			targetY: (direction === 'horizontal') ? 0 : this.dragStartY - ev.y, // 'vertical' or 'both'
+			animate: false
+		});
 	}
 
 	onDragEnd = () => {
@@ -556,7 +559,10 @@ class ScrollableBase extends Component {
 			this.stop();
 		}
 
-		this.clearAllOverscrollEffects();
+		if (this.overscrollEnabled) {
+			this.clearAllOverscrollEffects();
+		}
+
 		this.flickTarget = null;
 	}
 
@@ -662,7 +668,7 @@ class ScrollableBase extends Component {
 
 	// overscroll effect
 
-	isOverEdge = (position, maxPosition) => {
+	getEdgeFromPosition = (position, maxPosition) => {
 		if (position <= 0) {
 			return 'before';
 		} else if (position >= maxPosition) {
@@ -700,10 +706,7 @@ class ScrollableBase extends Component {
 	}
 
 	applyOverscrollEffect = (orientation, edge, type, ratio) => {
-		if (this.props.applyOverscrollEffect) {
-			this.props.applyOverscrollEffect(orientation, edge, type, ratio);
-		}
-
+		this.props.applyOverscrollEffect(orientation, edge, type, ratio);
 		this.setOverscrollStatus(orientation, edge, type === overscrollTypeOnce ? overscrollTypeDone : type, ratio);
 	}
 
@@ -752,6 +755,26 @@ class ScrollableBase extends Component {
 		}
 	}
 
+	checkAndApplyOverscrollEffectOnScroll = (orientation) => {
+		['before', 'after'].forEach((edge) => {
+			const {ratio, type} = this.getOverscrollStatus(orientation, edge);
+
+			if (type === overscrollTypeOnce) {
+				this.checkAndApplyOverscrollEffect(orientation, edge, type, ratio);
+			}
+		});
+	}
+
+	checkAndApplyOverscrollEffectOnStart = (orientation, edge, targetPosition) => {
+		if (edge) {
+			if (this.isDragging) {
+				this.applyOverscrollEffectOnDrag(orientation, edge, targetPosition, overscrollTypeHold);
+			} else if (this.getOverscrollStatus(orientation, edge).type === overscrollTypeNone) {
+				this.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce, 1);
+			}
+		}
+	}
+
 	// call scroll callbacks
 
 	forwardScrollEvent (type) {
@@ -761,20 +784,13 @@ class ScrollableBase extends Component {
 	// update scroll position
 
 	setScrollLeft (value) {
-		const
-			bounds = this.getScrollBounds(),
-			maxValue = bounds.maxLeft,
-			orientation = 'horizontal';
+		const bounds = this.getScrollBounds();
 
-		this.scrollLeft = clamp(0, maxValue, value);
+		this.scrollLeft = clamp(0, bounds.maxLeft, value);
 
-		['before', 'after'].forEach((edge) => {
-			const {type, ratio} = this.getOverscrollStatus(orientation, edge);
-
-			if (type === overscrollTypeOnce) {
-				this.checkAndApplyOverscrollEffect(orientation, edge, type, ratio);
-			}
-		});
+		if (this.overscrollEnabled) {
+			this.checkAndApplyOverscrollEffectOnScroll('horizontal');
+		}
 
 		if (this.state.isHorizontalScrollbarVisible) {
 			this.updateThumb(this.horizontalScrollbarRef, bounds);
@@ -782,20 +798,13 @@ class ScrollableBase extends Component {
 	}
 
 	setScrollTop (value) {
-		const
-			bounds = this.getScrollBounds(),
-			maxValue = bounds.maxTop,
-			orientation = 'vertical';
+		const bounds = this.getScrollBounds();
 
-		this.scrollTop = clamp(0, maxValue, value);
+		this.scrollTop = clamp(0, bounds.maxTop, value);
 
-		['before', 'after'].forEach((edge) => {
-			const {type, ratio} = this.getOverscrollStatus(orientation, edge);
-
-			if (type === overscrollTypeOnce) {
-				this.checkAndApplyOverscrollEffect(orientation, edge, type, ratio);
-			}
-		});
+		if (this.overscrollEnabled) {
+			this.checkAndApplyOverscrollEffectOnScroll('vertical');
+		}
 
 		if (this.state.isVerticalScrollbarVisible) {
 			this.updateThumb(this.verticalScrollbarRef, bounds);
@@ -806,7 +815,7 @@ class ScrollableBase extends Component {
 
 	start ({targetX, targetY, animate = true, duration = animationDuration, overscrollEffect = true}) {
 		const
-			{isDragging, scrollLeft, scrollTop} = this,
+			{scrollLeft, scrollTop} = this,
 			bounds = this.getScrollBounds(),
 			{maxLeft, maxTop} = bounds;
 
@@ -823,24 +832,12 @@ class ScrollableBase extends Component {
 			targetY = maxTop;
 		}
 
-		if (overscrollEffect) {
+		if (this.overscrollEnabled && overscrollEffect) {
 			if (scrollLeft !== targetX && this.canScrollHorizontally(bounds)) {
-				const edge = this.isOverEdge(targetX, maxLeft);
-
-				if (isDragging) {
-					this.applyOverscrollEffectOnDrag('horizontal', edge, targetX, overscrollTypeHold);
-				} else if (edge && this.getOverscrollStatus('horizontal', edge).type === overscrollTypeNone) {
-					this.checkAndApplyOverscrollEffect('horizontal', edge, overscrollTypeOnce, 1);
-				}
+				this.checkAndApplyOverscrollEffectOnStart('horizontal', this.getEdgeFromPosition(targetX, maxLeft), targetX);
 			}
 			if (scrollTop !== targetY && this.canScrollVertically(bounds)) {
-				const edge = this.isOverEdge(targetY, maxTop);
-
-				if (isDragging) {
-					this.applyOverscrollEffectOnDrag('vertical', edge, targetY, overscrollTypeHold);
-				} else if (edge && this.getOverscrollStatus('vertical', edge).type === overscrollTypeNone) {
-					this.checkAndApplyOverscrollEffect('vertical', edge, overscrollTypeOnce, 1);
-				}
+				this.checkAndApplyOverscrollEffectOnStart('vertical', this.getEdgeFromPosition(targetY, maxTop), targetY);
 			}
 		}
 
@@ -921,7 +918,7 @@ class ScrollableBase extends Component {
 		this.animator.stop();
 		this.isScrollAnimationTargetAccumulated = false;
 		this.startHidingThumb();
-		if (!this.isDragging) {
+		if (this.overscrollEnabled && !this.isDragging) {
 			this.clearAllOverscrollEffects();
 		}
 		if (this.props.stop) {
