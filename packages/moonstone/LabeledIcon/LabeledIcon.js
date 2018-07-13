@@ -30,14 +30,8 @@ const LabeledIconBase = kind({
 
 	propTypes: /** @lends ui/LabeledIcon.LabeledIconBase.prototype */ {
 		/**
-		 * The LabeledIcon content.
-		 *
-		 * May be specified as either:
-		 *
-		 * * A string that represents an LabeledIcon from the [LabeledIconList]{@link ui/LabeledIcon.LabeledIconBase.LabeledIconList},
-		 * * An HTML entity string, Unicode reference or hex value (in the form '0x...'),
-		 * * A URL specifying path to an LabeledIcon image, or
-		 * * An object representing a resolution independent resource (See {@link ui/resolution}).
+		 * The readable label. This accepts strings, DOM, and Components, if you need more elaborate
+		 * features.
 		 *
 		 * @type {Node}
 		 * @public

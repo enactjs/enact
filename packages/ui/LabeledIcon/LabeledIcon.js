@@ -29,14 +29,8 @@ const LabeledIconBase = kind({
 
 	propTypes: /** @lends ui/LabeledIcon.LabeledIconBase.prototype */ {
 		/**
-		 * The LabeledIcon content.
-		 *
-		 * May be specified as either:
-		 *
-		 * * A string that represents an LabeledIcon from the [LabeledIconList]{@link ui/LabeledIcon.LabeledIconBase.LabeledIconList},
-		 * * An HTML entity string, Unicode reference or hex value (in the form '0x...'),
-		 * * A URL specifying path to an LabeledIcon image, or
-		 * * An object representing a resolution independent resource (See {@link ui/resolution}).
+		 * The readable label. This accepts strings, DOM, and Components, if you need more elaborate
+		 * features.
 		 *
 		 * @type {Node}
 		 * @public
@@ -50,8 +44,18 @@ const LabeledIconBase = kind({
 		 * The following classes are supported:
 		 *
 		 * * `labeledIcon` - The root component class
-		 * * `label` - The label component class
 		 * * `icon` - The icon component class
+		 * * `iconCell` - Applied to the `iconComponent` directly, like `.icon`. If `icon` in a
+		 *                React component, this class is applied to the container of the icon,
+		 *                rather than the icon itself.
+		 * * `label` - The label component class
+		 * * `inline` - Applied when the inline prop is set
+		 * * `above` - Applied when the labelPosition prop is set to above
+		 * * `after` - Applied when the labelPosition prop is set to after
+		 * * `before` - Applied when the labelPosition prop is set to before
+		 * * `below` - Applied when the labelPosition prop is set to below
+		 * * `left` - Applied when the labelPosition prop is set to left
+		 * * `right` - Applied when the labelPosition prop is set to right
 		 *
 		 * @type {Object}
 		 * @public
@@ -70,14 +74,45 @@ const LabeledIconBase = kind({
 		 */
 		disabled: PropTypes.bool,
 
-		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+		/**
+		 * The icon content. This will be passed as `children` to the `iconComponent`, unless you
+		 * supply a React element (like JSX) to this prop, directly or via the `<icon>` slot.
+		 *
+		 * @type {String|Object|Component}
+		 */
+		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.func]),
+
+		/**
+		 * The component used to render the `icon`. This will receive the `icon` prop as `children`
+		 * and should handle it appropriately. This prop is ignored in the case of a component being
+		 * passed into the `icon` prop.
+		 *
+		 * @type {String|Component}
+		 */
 		iconComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+
+		/**
+		 * Enable this component to be used in an "inline" context. This is useful for when you have
+		 * several of these components in a row and are not using a [Layout]{@link ui/Layout} or
+		 * flex-box configuration.
+		 *
+		 * @type {Boolean}
+		 */
+		inline: PropTypes.bool,
+
+		/**
+		 * Assigns where the label will be positioned in relation to the icon element. The supported
+		 * options are 'below' (default), 'above', 'left', 'right', 'before', and 'after'. The
+		 * 'before' and 'after' values automatically swap sides when in an RTL locale context.
+		 *
+		 * @type {String}
+		 */
 		labelPosition: PropTypes.oneOf(['above', 'after', 'before', 'below', 'left', 'right'])
 	},
 
 	defaultProps: {
-		// iconComponent: 'div',
-		labelPosition: 'below'
+		labelPosition: 'below',
+		inline: false
 	},
 
 	styles: {
@@ -87,7 +122,7 @@ const LabeledIconBase = kind({
 	},
 
 	computed: {
-		className: ({labelPosition, styler}) => styler.append(labelPosition),
+		className: ({inline, labelPosition, styler}) => styler.append(labelPosition, {inline}),
 		orientation: ({labelPosition}) => (labelPosition === 'above' || labelPosition === 'below') ? 'vertical' : 'horizontal'
 	},
 
@@ -108,6 +143,7 @@ const LabeledIconBase = kind({
 			iconClassName = null;
 		}
 
+		delete rest.inline;
 		delete rest.labelPosition;
 
 		return (

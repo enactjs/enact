@@ -22,7 +22,6 @@ import {IconButtonBase} from '../IconButton';
 // either copy or less-import the styling rules from LabeledIcon. (Whichever is more appropriate.)
 import componentCss from '../LabeledIcon/LabeledIcon.less';
 
-
 const IconButton = compose(
 	UiIconButtonDecorator,
 	Spottable,
@@ -42,19 +41,13 @@ const LabeledIconButtonBase = kind({
 
 	propTypes: /** @lends ui/LabeledIconButton.LabeledIconButtonBase.prototype */ {
 		/**
-		 * The LabeledIconButton content.
+		 * The readable label. This accepts strings, DOM, and Components, if you need more elaborate
+		 * features.
 		 *
-		 * May be specified as either:
-		 *
-		 * * A string that represents an LabeledIconButton from the [LabeledIconList]{@link ui/LabeledIconButton.LabeledIconButtonBase.LabeledIconList},
-		 * * An HTML entity string, Unicode reference or hex value (in the form '0x...'),
-		 * * A URL specifying path to an LabeledIconButton image, or
-		 * * An object representing a resolution independent resource (See {@link ui/resolution}).
-		 *
-		 * @type {String|Object}
+		 * @type {Node}
 		 * @public
 		 */
-		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+		children: PropTypes.node,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the

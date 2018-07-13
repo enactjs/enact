@@ -23,6 +23,7 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of LabeledIconButton'
 		})(() => {
 			const disabled = boolean('disabled', Config);
+			const inline = boolean('inline', Config);
 			const labelPosition = select('labelPosition', ['above', 'after', 'before', 'below', 'left', 'right'], Config);
 			const selected = boolean('selected', Config);
 			const small = boolean('small', Config);
@@ -31,6 +32,7 @@ storiesOf('Moonstone', module)
 					<Cell shrink>
 						<LabeledIconButton
 							disabled={disabled}
+							inline={inline}
 							labelPosition={labelPosition}
 							selected={selected}
 							small={small}
@@ -46,9 +48,10 @@ storiesOf('Moonstone', module)
 								{iconNames.map((icon) =>
 									<Cell size={200} key={'icon' + icon}>
 										<LabeledIconButton
-											style={{width: '100%', marginLeft: 0, marginRight: 0}}
+											style={{marginLeft: 0, marginRight: 0}}
 											disabled={disabled}
 											icon={icon}
+											inline={inline}
 											labelPosition={labelPosition}
 											small={small}
 										>{icon}</LabeledIconButton>
