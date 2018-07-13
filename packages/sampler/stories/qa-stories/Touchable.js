@@ -3,7 +3,8 @@ import React from 'react';
 import Touchable from '@enact/ui/Touchable';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, number} from '@storybook/addon-knobs';
+
+import {boolean, number} from '../../src/enact-knobs';
 
 const TouchableDiv = Touchable('div');
 
@@ -14,7 +15,7 @@ storiesOf('Touchable', module)
 			<Button
 				onHold={action('onHold')}
 				onHoldPulse={action('onHoldPulse')}
-				disabled={boolean('disabled')}
+				disabled={boolean('disabled', Button)}
 			>
 				Touchable
 			</Button>
@@ -33,7 +34,7 @@ storiesOf('Touchable', module)
 				}}
 				onHold={action('onHold')}
 				onHoldPulse={action('onHoldPulse')}
-				disabled={boolean('disabled')}
+				disabled={boolean('disabled', Button)}
 			>
 				LongPress
 			</Button>
@@ -44,13 +45,13 @@ storiesOf('Touchable', module)
 		() => (
 			<Button
 				holdConfig={{
-					moveTolerance: number('holdConfig.moveTolerance', 16),
-					cancelOnMove: boolean('holdConfig.cancelOnMove', true)
+					moveTolerance: number('holdConfig.moveTolerance', Button, 16),
+					cancelOnMove: boolean('holdConfig.cancelOnMove', Button, true)
 				}}
-				noResume={boolean('noResume', false)}
+				noResume={boolean('noResume', Button, false)}
 				onHold={action('onHold')}
 				onHoldPulse={action('onHoldPulse')}
-				disabled={boolean('disabled')}
+				disabled={boolean('disabled', Button)}
 			>
 				Resumable
 			</Button>
@@ -60,10 +61,10 @@ storiesOf('Touchable', module)
 		'that does not resume when re-entering component',
 		() => (
 			<Button
-				noResume={boolean('noResume', true)}
+				noResume={boolean('noResume', Button, true)}
 				onHold={action('onHold')}
 				onHoldPulse={action('onHoldPulse')}
-				disabled={boolean('disabled')}
+				disabled={boolean('disabled', Button)}
 			>
 				Not Resumable
 			</Button>
@@ -74,7 +75,7 @@ storiesOf('Touchable', module)
 		() => (
 			<TouchableDiv
 				onFlick={action('onFlick')}
-				disabled={boolean('disabled')}
+				disabled={boolean('disabled', TouchableDiv)}
 				style={{border: '2px dashed #888', width: 500, height: 500}}
 			>
 				Flick within this component
@@ -86,14 +87,14 @@ storiesOf('Touchable', module)
 		() => (
 			<TouchableDiv
 				dragConfig={{
-					global: boolean('dragConfig.global', false),
-					moveTolerance: number('dragConfig.moveTolerance', 16)
+					global: boolean('dragConfig.global', TouchableDiv, false),
+					moveTolerance: number('dragConfig.moveTolerance', TouchableDiv, 16)
 				}}
-				noResume={boolean('noResume', false)}
+				noResume={boolean('noResume', TouchableDiv, false)}
 				onDragStart={action('onDragStart')}
 				onDrag={action('onDrag')}
 				onDragEnd={action('onDragEnd')}
-				disabled={boolean('disabled')}
+				disabled={boolean('disabled', TouchableDiv)}
 				style={{border: '2px dashed #888', width: 500, height: 500}}
 			>
 				Drag within this component. Setting <code>noResume</code> to <code>false</code> should
@@ -105,8 +106,8 @@ storiesOf('Touchable', module)
 		'onTap when clicked',
 		() => (
 			<TouchableDiv
-				disabled={boolean('disabled')}
-				noResume={boolean('noResume', false)}
+				disabled={boolean('disabled', TouchableDiv)}
+				noResume={boolean('noResume', TouchableDiv, false)}
 				onClick={action('onClick')}
 				onDown={action('onDown')}
 				onMouseDown={action('onMouseDown')}

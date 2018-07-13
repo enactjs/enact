@@ -7,7 +7,48 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Input` to not focus by *tab* key
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effect properly when reached to the edge for the first time by wheel
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to show overscroll effect when focus is moved from a disabled paging control button to the opposite button
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll properly when `animate` is false via `scrollTo`
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` page controls to stop propagating an event if the event is handled
+- `moonstone/ProgressBar.ProgressBarTooltip` not to display unknown props warning
+- `moonstone/Picker` to properly set focus when navigating between buttons
+- `moonstone/Scrollable` to disable container during flick events only when contents can scroll
+
+## [2.0.0-rc.1] - 2018-07-09
+
+### Added
+
+- `moonstone/VirtualList.VirtualList` and `moonstone/VirtualList.VirtualGridList` support `data-webos-voice-focused` and `data-webos-voice-group-label`
+
+### Removed
+
+- `moonstone/Button` built-in support for tooltips
+
+### Changed
+
+- `moonstone/Spinner` to blur Spotlight when the spinner is active
+
+### Fixed
+
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to handle direction, page up, and page down keys properly on page controls them when `focusableScrollbar` is false
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to handle a page up or down key in pointer mode
+- `moonstone/VideoPlayer.MediaControls` to correctly handle more button color when the prop is not specified
+- `VirtualList.VirtualList` to handle focus properly when switching to 5-way mode
+
+## [2.0.0-beta.9] - 2018-07-02
+
+### Added
+
+- `moonstone/ContextualPopupDecorator` instance method `positionContextualPopup()`
+- `moonstone/MoonstoneDecorator` config property `disableFullscreen` to prevent the decorator from filling the entire screen
+- `moonstone/Scroller` prop `onUpdate`
+
+### Fixed
+
+- `moonstone/Scrollable` to update scroll properly on pointer click
 - `moonstone/TooltipDecorator` to prevent unnecessary re-renders when losing focus
+- `moonstone/TooltipDecorator` to not dismiss the tooltip on pointer click
 
 ## [2.0.0-beta.8] - 2018-06-25
 
@@ -95,6 +136,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` to read when knob gains focus or for a change in value
 - `moonstone/Scroller` to not cut off Expandables when scrollbar appears
 - `moonstone/VideoPlayer` to correctly read out when play button is pressed
+- `moonstone/Divider` to always use a fixed height, regardless of locale
 
 ## [2.0.0-beta.4] - 2018-05-21
 

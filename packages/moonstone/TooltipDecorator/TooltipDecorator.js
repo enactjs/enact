@@ -6,8 +6,8 @@
  * @module moonstone/TooltipDecorator
  */
 
-import {contextTypes} from '@enact/core/internal/PubSub';
 import hoc from '@enact/core/hoc';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import {FloatingLayerBase} from '@enact/ui/FloatingLayer';
 import {forward, handle, forProp} from '@enact/core/handle';
 import {Job} from '@enact/core/util';
@@ -59,7 +59,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 	const tooltipDestinationProp = config.tooltipDestinationProp;
 
-	return class extends React.Component {
+	const Decorator = class extends React.Component {
 		static displayName = 'TooltipDecorator'
 
 		static propTypes = /** @lends moonstone/TooltipDecorator.TooltipDecorator.prototype */ {
@@ -71,6 +71,14 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			disabled: PropTypes.bool,
+
+			/**
+			 * Sets the text direction to be right-to-left
+			 *
+			 * @type {Boolean}
+			 * @private
+			 */
+			rtl: PropTypes.bool,
 
 			/**
 			 * Configures the mode of uppercasing of the `tooltipText` that should be performed.
@@ -137,8 +145,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			tooltipWidth: PropTypes.number
 		}
 
-		static contextTypes = contextTypes
-
 		static defaultProps = {
 			disabled: false,
 			tooltipCasing: 'upper',
@@ -159,12 +165,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		componentWillMount () {
-			if (this.context.Subscriber) {
-				this.context.Subscriber.subscribe('i18n', this.handleLocaleChange);
-			}
-		}
-
 		componentWillUnmount () {
 			if (currentTooltip === this) {
 				currentTooltip = null;
@@ -174,14 +174,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.props.disabled) {
 				off('keydown', this.handleKeyDown);
 			}
-
-			if (this.context.Subscriber) {
-				this.context.Subscriber.unsubscribe('i18n', this.handleLocaleChange);
-			}
-		}
-
-		handleLocaleChange = ({message: {rtl}}) => {
-			this.rtlLocale = rtl;
 		}
 
 		setTooltipLayout () {
@@ -233,7 +225,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		adjustDirection (tooltipDirection, overflow) {
-			if (this.rtlLocale && (tooltipDirection === 'left' || tooltipDirection === 'right')) {
+			if (this.props.rtl && (tooltipDirection === 'left' || tooltipDirection === 'right')) {
 				tooltipDirection = tooltipDirection === 'left' ? 'right' : 'left';
 			}
 
@@ -253,7 +245,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		adjustAnchor (arrowAnchor, tooltipDirection, overflow) {
 			if (tooltipDirection === 'above' || tooltipDirection === 'below') {
-				if (this.rtlLocale && arrowAnchor !== 'center') {
+				if (this.props.rtl && arrowAnchor !== 'center') {
 					arrowAnchor = arrowAnchor === 'left' ? 'right' : 'left';
 				}
 
@@ -394,7 +386,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (tooltipText) {
 				const renderedTooltip = (
-					<FloatingLayerBase open={this.state.showing} onDismiss={this.hideTooltip} scrimType="none" key="tooltipFloatingLayer">
+					<FloatingLayerBase open={this.state.showing} noAutoDismiss onDismiss={this.hideTooltip} scrimType="none" key="tooltipFloatingLayer">
 						<Tooltip
 							aria-live="off"
 							role="alert"
@@ -440,6 +432,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			);
 
+			delete props.rtl;
 			delete props.tooltipDelay;
 			delete props.tooltipPosition;
 			delete props.tooltipCasing;
@@ -452,6 +445,11 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			);
 		}
 	};
+
+	return I18nContextDecorator(
+		{rtlProp: 'rtl'},
+		Decorator
+	);
 });
 
 export default TooltipDecorator;

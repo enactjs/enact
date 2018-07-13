@@ -1,5 +1,5 @@
 /**
- * Accepts and displays a block of text. Use case is similar to a paragraph tag.
+ * Moonstone styled text block components and behaviors.
  *
  * @example
  * <BodyText centered>Hello Enact!</BodyText>
@@ -22,7 +22,10 @@ import Skinnable from '../Skinnable';
 import componentCss from './BodyText.less';
 
 /**
- * A simple implementation of a block of text.
+ * A simple text block component.
+ *
+ * This component is most often not used directly but may be composed within another component as it
+ * is within [BodyText]{@link moonstone/BodyText.BodyText}.
  *
  * @class BodyTextBase
  * @memberof moonstone/BodyText
@@ -33,7 +36,7 @@ import componentCss from './BodyText.less';
 const BodyTextBase = kind({
 	name: 'BodyText',
 
-	propTypes: /** @lends moonstone/BodyText.BodyText.prototype */ {
+	propTypes: /** @lends moonstone/BodyText.BodyTextBase.prototype */ {
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
@@ -64,7 +67,7 @@ const BodyTextBase = kind({
 });
 
 /**
- * Moonstone-specific wrappers to apply to [BodyTextBase]{@link moonstone/BodyText.BodyTextBase}.
+ * Applies Moonstone specific behaviors to [BodyText]{@link moonstone/BodyText.BodyTextBase}.
  *
  * @hoc
  * @memberof moonstone/BodyText
@@ -77,15 +80,21 @@ const BodyTextDecorator = compose(
 );
 
 /**
- * A Moonstone-styled BodyText, ready to use.
+ * A simple text block component, ready to use in Moonstone applications.
+ *
+ * `BodyText` may be used to display a block of text and is sized and spaced appropriately for a
+ * Moonstone application.
  *
  * Usage:
  * ```
- * <BodyText>I have a Ham radio. There are many like it, but this one is mine.</BodyText>
+ * <BodyText>
+ *  I have a Ham radio. There are many like it, but this one is mine.
+ * </BodyText>
  * ```
  *
  * @class BodyText
  * @memberof moonstone/BodyText
+ * @extends moonstone/BodyText.BodyTextBase
  * @mixes moonstone/BodyText.BodyTextDecorator
  * @ui
  * @public
