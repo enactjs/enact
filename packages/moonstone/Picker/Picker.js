@@ -203,7 +203,9 @@ const PickerBase = kind({
 			if (voiceLabelsExt) {
 				voiceLabel = voiceLabelsExt;
 			} else {
-				voiceLabel = children && Array.isArray(children) && React.Children.map(children, (child) => ((typeof child === 'number' || typeof child === 'string') ? child : ''));
+				voiceLabel = React.Children.map(children, (child) => (
+					(typeof child === 'number' || typeof child === 'string') ? child : '')
+				);
 			}
 			return JSON.stringify(voiceLabel);
 		}
