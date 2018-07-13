@@ -1,5 +1,5 @@
 /**
- * Provides a represetation of HTMLMediaElement component with an ability to attach a custom event
+ * Provides a representation of `HTMLMediaElement` component with an ability to attach a custom event
  * handler.
  *
  * @module ui/Media
@@ -16,6 +16,8 @@ import {on, off} from '@enact/core/dispatcher';
 /**
  * Generates a key representing the source node or nodes provided
  *
+ * Example:
+ *
  * ```
  * getKeyFromSource('path/file.mp4'); // 'path/file.mp4'
  * getKeyFromSource(
@@ -27,10 +29,10 @@ import {on, off} from '@enact/core/dispatcher';
  * ]); // 'path/file.mp4+path/file.ogg'
  * ```
  *
+ * @function
  * @param   {String|Element|Element[]} source URI for a source, `<source>` node, or array of
  *                                     `<source>` nodes
  * @returns {String}                   Key representing sources
- * @function
  * @memberof ui/Media
  * @public
  */
@@ -128,12 +130,15 @@ class Media extends React.Component {
 		mediaComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
 
 		/**
-		 * A event map object for custom media events. List custom events that aren't standard to
+		 * An event map object for custom media events. List custom events that aren't standard to
 		 * React. These will be directly added to the media element and props matching their name
 		 * will be executed as callback functions when the event fires.
 		 *
-		 * Example: {'umsmediainfo': 'onUMSMediaInfo'}
-		 * "onUMSMediaInfo" prop function will execute when the "umsmediainfo" event happens.
+		 * Example:
+		 *
+		 * ```
+		 * {'umsmediainfo': 'onUMSMediaInfo'} // `onUMSMediaInfo` prop function will execute when the `umsmediainfo` event happens
+		 * ```
 		 *
 		 * @type {Object}
 		 * @public
@@ -144,8 +149,8 @@ class Media extends React.Component {
 		 * A event map object for media events.
 		 *
 		 * @type {Object}
-		 * @public
 		 * @default {@link ui/Media.handledMediaEventsMap}
+		 * @public
 		 */
 		mediaEventsMap: PropTypes.object,
 

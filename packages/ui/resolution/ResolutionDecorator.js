@@ -1,5 +1,5 @@
 /*
- * Exports the {@link ui/resolution.ResolutionDecorator} Higher-order Component (HOC).
+ * Exports the {@link ui/resolution.ResolutionDecorator} higher-order component (HOC).
  *
  * not jsdoc module on purpose
  */
@@ -41,13 +41,14 @@ const defaultConfig = {
 };
 
 /**
- * Higher-order Component that configures resolution support for its wrapped component tree.
+ * A higher-order component (HOC) that configures resolution support for its wrapped component tree.
  *
  * Configuration options:
- *	* dynamic: `true` - when `true`, updates the resolution classes when the window resizes
- *	* screenTypes: `null` - defines a set of screen types to support
+ *	* `dynamic: true` - when `true`, updates the resolution classes when the window resizes
+ *	* `screenTypes: null` - defines a set of screen types to support
  *
  * Example:
+ *
  * ```
  *	// Will have the resolution classes and will be updated when the window resizes
  *	const AppWithResolution = ResolutionDecorator(App);
