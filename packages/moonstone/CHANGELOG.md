@@ -14,6 +14,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ProgressBar.ProgressBarTooltip` not to display unknown props warning
 - `moonstone/Picker` to properly set focus when navigating between buttons
 - `moonstone/Scrollable` to disable container during flick events only when contents can scroll
+- `moonstone/Popup` to set correct open state while transitioning
 
 ## [2.0.0-rc.1] - 2018-07-09
 
