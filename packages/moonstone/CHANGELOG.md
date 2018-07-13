@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` page controls to stop propagating an event if the event is handled
 - `moonstone/ProgressBar.ProgressBarTooltip` not to display unknown props warning
 - `moonstone/Scrollable` to disable container during flick events only when contents can scroll
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to restore focus on items focused by pointer
 
 ## [2.0.0-rc.1] - 2018-07-09
 
