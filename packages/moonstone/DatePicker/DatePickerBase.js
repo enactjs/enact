@@ -20,7 +20,7 @@ import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponen
  * @memberof moonstone/DatePicker
  * @extends moonstone/ExpandableItem.ExpandableItemBase
  * @ui
- * @private
+ * @public
  */
 const DatePickerBase = kind({
 	name: 'DatePickerBase',

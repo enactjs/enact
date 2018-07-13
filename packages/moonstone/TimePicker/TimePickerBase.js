@@ -67,7 +67,7 @@ class HourPicker extends React.Component {
 * @class TimePickerBase
 * @memberof moonstone/TimePicker
 * @ui
-* @private
+* @public
 */
 const TimePickerBase = kind({
 	name: 'TimePickerBase',
