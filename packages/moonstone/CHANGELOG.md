@@ -6,7 +6,14 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Input` to not focus by *tab* key
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effect properly when reached to the edge for the first time by wheel
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to show overscroll effect when focus is moved from a disabled paging control button to the opposite button
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll properly when `animate` is false via `scrollTo`
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` page controls to stop propagating an event if the event is handled
 - `moonstone/ProgressBar.ProgressBarTooltip` not to display unknown props warning
+- `moonstone/Picker` to properly set focus when navigating between buttons
+- `moonstone/Scrollable` to disable container during flick events only when contents can scroll
 - `moonstone/VideoPlayer` to display feedback tooltip when hover out from slider while playing
 
 ## [2.0.0-rc.1] - 2018-07-09
@@ -28,6 +35,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to handle direction, page up, and page down keys properly on page controls them when `focusableScrollbar` is false
 - `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to handle a page up or down key in pointer mode
 - `moonstone/VideoPlayer.MediaControls` to correctly handle more button color when the prop is not specified
+- `VirtualList.VirtualList` to handle focus properly when switching to 5-way mode
 
 ## [2.0.0-beta.9] - 2018-07-02
 

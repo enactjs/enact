@@ -485,11 +485,9 @@ const VirtualListBaseFactory = (type) => {
 					this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
 				}
 				cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
-
-				return true;
-			} else {
-				return null;
 			}
+
+			return true;
 		}
 
 		/**
@@ -662,6 +660,7 @@ const VirtualListBaseFactory = (type) => {
 			if (getDirection(keyCode)) {
 				ev.preventDefault();
 				this.setSpotlightContainerRestrict(keyCode, target);
+				Spotlight.setPointerMode(false);
 				if (this.jumpToSpottableItem(keyCode, repeat, target)) {
 					ev.stopPropagation();
 				}
