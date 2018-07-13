@@ -64,7 +64,7 @@ class ScrollerBase extends Component {
 		isVerticalScrollbarVisible: PropTypes.bool,
 
 		/**
-		 * `true` if rtl, `false` if ltr.
+		 * `true` if RTL, `false` if LTR.
 		 *
 		 * @type {Boolean}
 		 * @private
@@ -199,7 +199,8 @@ class ScrollerBase extends Component {
 /**
  * An unstyled scroller.
  *
- * Usage:
+ * Example:
+ *
  * ```
  * <Scroller>Scroll me.</Scroller>
  * ```
@@ -246,7 +247,8 @@ Scroller.defaultProps = {
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
  *
- * Usage:
+ * Example:
+ *
  * ```
  * <ScrollerNative>Scroll me.</ScrollerNative>
  * ```

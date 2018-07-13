@@ -3,6 +3,13 @@
  * arrangers for use with it.
  *
  * @module ui/ViewManager
+ * @exports shape
+ * @exports SlideArranger
+ * @exports SlideBottomArranger
+ * @exports SlideLeftArranger
+ * @exports SlideRightArranger
+ * @exports SlideTopArranger
+ * @exports ViewManager
  */
 
 import React from 'react';

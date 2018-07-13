@@ -93,10 +93,10 @@ const SliderBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Defines a custom knob component for the slider. By default, Slider will use it's own
+		 * Defines a custom knob component for the slider. By default, Slider will use its own
 		 * implementation, {@link ui/Slider.Knob}.
 		 *
-		 * The following props are forwarded to the tooltip:
+		 * The following props are forwarded to the knob:
 		 *
 		 * * `className`        - A `knob` class applied by the slider
 		 * * `disabled`         - The value of `disabled`
@@ -109,7 +109,7 @@ const SliderBase = kind({
 		 * the above props or a component instance (e.g. `<MyKnob customProp="value" />`) which
 		 * will have its props merged with the above props.
 		 *
-		 * See {@link ui/ComponentOverride} for more information.
+		 * @see {@link ui/ComponentOverride}
 		 *
 		 * @type {Function|Element}
 		 * @default {@link ui/Slider.Knob}
@@ -198,7 +198,7 @@ const SliderBase = kind({
 		 * the above props or a component instance (e.g. `<MyTooltip customProp="value" />`) which
 		 * will have its props merged with the above props.
 		 *
-		 * See {@link ui/ComponentOverride} for more information.
+		 * @see {@link ui/ComponentOverride}
 		 *
 		 * @type {Function|Element}
 		 * @public
@@ -303,6 +303,7 @@ const SliderBase = kind({
  *
  * @hoc
  * @memberof ui/Slider
+ * @mixes ui/Changeable.Changeable
  * @mixes ui/Touchable.Touchable
  * @public
  */

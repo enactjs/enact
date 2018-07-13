@@ -1,12 +1,14 @@
 /**
- * Exports the {@link ui/Skinnable.Skinnable} Higher-order Component (HOC).
+ * Exports the {@link ui/Skinnable.Skinnable} higher-order component (HOC).
  *
  * This is the base-level implementation of this component. It will typically never be accessed
- * directly, and only be instantiated with a configuration once inside a visual-library like
+ * directly, and only be instantiated with a configuration once inside a visual library like
  * {@link moonstone/Skinnable}. Interface libraries will supply a set of supported skins which will
  * be accessible to their components.
  *
  * @module ui/Skinnable
+ * @exports Skinnable
+ * @exports withSkinnableProps
  * @public
  */
 
@@ -52,13 +54,14 @@ const defaultConfig = {
 };
 
 /**
- * [Skinnable]{@link ui/Skinnable.Skinnable} is a Higher-order Component that assigns skinning
+ * [Skinnable]{@link ui/Skinnable.Skinnable} is a higher-order component (HOC) that assigns skinning
  * classes for the purposes of styling children components.
  *
- * Use the config options to specify the skins your theme has. Set this up in your Theme's decorator
+ * Use the config options to specify the skins your theme has. Set this up in your theme's decorator
  * component to establish your supported skins.
  *
  * Example:
+ *
  * ```
  * App = Skinnable({
  * 	skins: {

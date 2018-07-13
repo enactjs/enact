@@ -2,6 +2,7 @@
  * Exports the {@link ui/Toggleable.Toggleable} Higher-order Component (HOC).
  *
  * @module ui/Toggleable
+ * @exports Toggleable
  */
 
 import {forProp, forward, handle} from '@enact/core/handle';
@@ -22,7 +23,7 @@ const defaultConfig = {
 	/**
 	 * Configures the event name that activates the component.
 	 *
-	 * Note: When using `activate`/`deactivate`, the event payload will only forward the original
+	 * **Note**: When using `activate`/`deactivate`, the event payload will only forward the original
 	 * event and not include toggled `prop` value. Use `toggle` to receive toggled value from the
 	 * event payload.
 	 *
@@ -44,7 +45,7 @@ const defaultConfig = {
 	/**
 	 * Configures the event name that deactivates the component.
 	 *
-	 * Note: When using `activate`/`deactivate`, the event payload will only forward the original
+	 * **Note**: When using `activate`/`deactivate`, the event payload will only forward the original
 	 * event and not include toggled `prop` value. Use `toggle` to receive toggled value from the
 	 * event payload.
 	 *
@@ -73,10 +74,10 @@ const defaultConfig = {
 	prop: 'selected',
 
 	/**
-	 * Configures the event name that toggles the component. The payload includes a toggled boolean
+	 * Configures the event name that toggles the component. The payload includes a toggled Boolean
 	 * value of `prop`.
 	 *
-	 * Note: The payload will override the original event. If a native event is set, then the native
+	 * **Note**: The payload will override the original event. If a native event is set, then the native
 	 * event payload will be lost.
 	 *
 	 * @type {String}
@@ -87,7 +88,7 @@ const defaultConfig = {
 
 	/**
 	 * Allows you to remap the incoming `toggle` callback to an event name of your choosing.
-	 * Ex: run `onToggle` when the wrapped component has an `onClick` property and you've specified
+	 * For example, run `onToggle` when the wrapped component has an `onClick` property and you've specified
 	 * `onClick` here.
 	 *
 	 * @type {String}
@@ -98,12 +99,13 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/Toggleable.Toggleable} is a Higher-order Component that applies a 'Toggleable' behavior
+ * {@link ui/Toggleable.Toggleable} is a higher-order component (HOC) that applies a 'toggleable' behavior
  * to its wrapped component. Its default event and property can be configured when applied to a component.
  *
  * Example:
+ *
  * ```
- * 	const ToggleItem = Toggleable({toggleProp: 'onClick'}, Item);
+ * const ToggleItem = Toggleable({toggleProp: 'onClick'}, Item);
  * ```
  *
  * @class Toggleable
@@ -137,8 +139,8 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 			/**
 			 * Current toggled state. When set at construction, the component is considered
-			 * "controlled" and will only update its internal value when updated by new props. If
-			 * undefined, the component is "uncontrolled" and `Toggleable` will manage the toggled
+			 * 'controlled' and will only update its internal value when updated by new props. If
+			 * undefined, the component is 'uncontrolled' and `Toggleable` will manage the toggled
 			 * state using callbacks defined by its configuration.
 			 *
 			 * @type {Boolean}

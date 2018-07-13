@@ -18,8 +18,8 @@ const
  *
  * @typedef {Object} gridListItemSizeShape
  * @memberof ui/VirtualList
- * @property {Number} minWidth - The minimum width of the grid list item.
- * @property {Number} minHeight - The minimum height of the grid list item.
+ * @property {Number}    minWidth    The minimum width of the grid list item.
+ * @property {Number}    minHeight    The minimum height of the grid list item.
  * @public
  */
 const gridListItemSizeShape = PropTypes.shape({
@@ -41,12 +41,12 @@ const VirtualListBaseFactory = (type) => {
 
 		static propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
 			/**
-			 * The `render` function called for each item in the list.
+			 * The rendering function called for each item in the list.
 			 *
-			 * > NOTE: The list does NOT always render a component whenever its render function is called
+			 * > **Note**: The list does **not** always render a component whenever its render function is called
 			 * due to performance optimization.
 			 *
-			 * Usage:
+			 * Example:
 			 * ```
 			 * renderItem = ({index, ...rest}) => {
 			 * 	delete rest.data;
@@ -58,10 +58,10 @@ const VirtualListBaseFactory = (type) => {
 			 * ```
 			 *
 			 * @type {Function}
-			 * @param {Object} event
-			 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
-			 * @param {Number} event.index The index number of the component to render
-			 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
+			 * @param {Object}     event
+			 * @param {Number}     event.data-index    It is required for `Spotlight` 5-way navigation. Pass to the root element in the component.
+			 * @param {Number}     event.index    The index number of the component to render
+			 * @param {Number}     event.key    It MUST be passed as a prop to the root element in the component for DOM recycling.
 			 *
 			 * @required
 			 * @public
@@ -69,7 +69,7 @@ const VirtualListBaseFactory = (type) => {
 			itemRenderer: PropTypes.func.isRequired,
 
 			/**
-			 * Size of an item for the list; valid values are either a number for `VirtualList`
+			 * The size of an item for the list; valid values are either a number for `VirtualList`
 			 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
 			 *
 			 * @type {Number|ui/VirtualList.gridListItemSizeShape}
@@ -119,8 +119,8 @@ const VirtualListBaseFactory = (type) => {
 			 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
 			 *
 			 * @type {Object}
-			 * @property {Number} clientHeight - The client height of the list.
-			 * @property {Number} clientWidth - The client width of the list.
+			 * @property {Number}    clientHeight    The client height of the list.
+			 * @property {Number}    clientWidth    The client width of the list.
 			 * @public
 			 */
 			clientSize: PropTypes.shape({
@@ -129,7 +129,7 @@ const VirtualListBaseFactory = (type) => {
 			}),
 
 			/**
-			 * Size of the data.
+			 * The number of items of data the list contains.
 			 *
 			 * @type {Number}
 			 * @default 0
@@ -138,7 +138,7 @@ const VirtualListBaseFactory = (type) => {
 			dataSize: PropTypes.number,
 
 			/**
-			 * Direction of the list.
+			 * The layout direction of the list.
 			 *
 			 * Valid values are:
 			 * * `'horizontal'`, and
@@ -170,7 +170,7 @@ const VirtualListBaseFactory = (type) => {
 			overhang: PropTypes.number,
 
 			/**
-			 * It scrolls by page when `true`, by item when `false`.
+			 * When `true`, the list will scroll by page.  Otherwise the list will scroll by item.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -179,7 +179,7 @@ const VirtualListBaseFactory = (type) => {
 			pageScroll: PropTypes.bool,
 
 			/**
-			 * `true` if rtl, `false` if ltr.
+			 * `true` if RTL, `false` if LTR.
 			 *
 			 * @type {Boolean}
 			 * @private
@@ -187,7 +187,7 @@ const VirtualListBaseFactory = (type) => {
 			rtl: PropTypes.bool,
 
 			/**
-			 * Spacing between items.
+			 * The spacing between items.
 			 *
 			 * @type {Number}
 			 * @default 0
@@ -843,7 +843,7 @@ const ScrollableVirtualList = (props) => (
 
 ScrollableVirtualList.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
 	/**
-	 * Direction of the list.
+	 * The layout direction of the list.
 	 *
 	 * Valid values are:
 	 * * `'horizontal'`, and
@@ -877,7 +877,7 @@ const ScrollableVirtualListNative = (props) => (
 
 ScrollableVirtualListNative.propTypes = /** @lends ui/VirtualList.VirtualListBaseNative.prototype */ {
 	/**
-	 * Direction of the list.
+	 * The layout direction of the list.
 	 *
 	 * Valid values are:
 	 * * `'horizontal'`, and
