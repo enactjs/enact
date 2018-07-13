@@ -51,8 +51,9 @@ const PickerBase = kind({
 		/**
 		 * The voice control labels for the `children`.
 		 *
-		 * By default, `data-webos-voice-labels-ext` is generated from `children`. However, if the
-		 * children is not an array of number or string, label value should be explicitly decalred.
+		 * By default, `data-webos-voice-labels-ext` is generated from `children`. However, if
+		 * `children` is not an array of numbers or strings, `data-webos-voice-labels-ext` should be
+		 * set to a JSON-encoded array of labels.
 		 *
 		 * @type {Number[]|String[]}
 		 * @memberof moonstone/Picker.PickerBase.prototype
