@@ -1,7 +1,7 @@
 /*
  * thaisolar.js - Represent a Thai solar calendar object.
  *
- * Copyright © 2013-2015, JEDLSoft
+ * Copyright © 2013-2015,2018, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,12 +30,16 @@ var GregorianCal = require("./GregorianCal.js");
  * Construct a new Thai solar calendar object. This class encodes information about
  * a Thai solar calendar.<p>
  *
- *
+ * @param {Object=} options Options governing the construction of this instance
  * @constructor
  * @extends Calendar
  */
-var ThaiSolarCal = function() {
+var ThaiSolarCal = function(options) {
 	this.type = "thaisolar";
+    
+    if (options && typeof(options.onLoad) === "function") {
+        options.onLoad(this);
+    }
 };
 
 ThaiSolarCal.prototype = new GregorianCal({noinstance: true});

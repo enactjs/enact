@@ -1,6 +1,6 @@
 /*
  * isLower.js - Character type is lower case letter
- * 
+ *
  * Copyright © 2012-2015, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,9 +28,9 @@ var IString = require("./IString.js");
 
 /**
  * Return whether or not the first character is lower-case. For alphabetic
- * characters in scripts that do not make a distinction between upper- and 
+ * characters in scripts that do not make a distinction between upper- and
  * lower-case, this function always returns true.<p>
- * 
+ *
  * @static
  * @param {string|IString|number} ch character or code point to examine
  * @return {boolean} true if the first character is lower-case.
@@ -51,7 +51,7 @@ var isLower = function (ch) {
 			break;
 	}
 
-	return CType._inRange(num, 'Ll', ilib.data.ctype_l);
+	return ilib.data.ctype_l ? CType._inRange(num, 'Ll', ilib.data.ctype_l) : (num >= 0x61 && num <= 0x7A);
 };
 
 /**

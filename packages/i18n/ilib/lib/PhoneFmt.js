@@ -126,7 +126,7 @@ var PhoneFmt = function(options) {
 
 					Utils.loadData({
 						name: "phonefmt.json",
-						object: PhoneFmt,
+						object: "PhoneFmt",
 						locale: this.locale, 
 						sync: this.sync,
 						loadParams: JSUtils.merge(this.loadParams, {
@@ -301,7 +301,7 @@ PhoneFmt.prototype = {
 							onLoad: ilib.bind(this, function (locale) {
 								Utils.loadData({
 									name: "phonefmt.json",
-									object: PhoneFmt,
+									object: "PhoneFmt",
 									locale: locale,
 									sync: sync,
 									loadParams: JSUtils.merge(loadParams, {

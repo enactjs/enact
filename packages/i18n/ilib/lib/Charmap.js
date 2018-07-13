@@ -1,7 +1,7 @@
 /*
  * Charmap.js - A character set mapping class
  * 
- * Copyright © 2014-2015, JEDLSoft
+ * Copyright © 2014-2015,2018, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,7 +101,10 @@ var Charmap = function(options) {
 	var sync = true,
 	    loadParams = undefined;
 	
-	this.charset = new Charset({name: "US-ASCII"});
+	if (options && options.noinstance) {
+	    return;
+	}
+	
 	this.missing = "placeholder";
 	this.placeholder = "?";
 	this.escapeStyle = "js";
@@ -135,8 +138,6 @@ var Charmap = function(options) {
 			}
 		}
 	}
-	
-	this._calcExpansionFactor();
 };
 
 /**

@@ -1,7 +1,7 @@
 /*
  * ScriptInfo.js - information about scripts
  * 
- * Copyright © 2012-2015, JEDLSoft
+ * Copyright © 2012-2018, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ var Utils = require("./Utils.js");
  * 
  * @constructor
  * @param {string} script The ISO 15924 4-letter identifier for the script
- * @param {Object} options parameters to initialize this matcher 
+ * @param {Object=} options parameters to initialize this instance 
  */
 var ScriptInfo = function(script, options) {
 	var sync = true,
@@ -72,13 +72,9 @@ var ScriptInfo = function(script, options) {
 		}
 	}
 
-	if (!ScriptInfo.cache) {
-		ScriptInfo.cache = {};
-	}
-
 	if (!ilib.data.scripts) {
 		Utils.loadData({
-			object: ScriptInfo, 
+			object: "ScriptInfo", 
 			locale: "-", 
 			name: "scripts.json", 
 			sync: sync, 
@@ -87,7 +83,7 @@ var ScriptInfo = function(script, options) {
 				if (!info) {
 					info = {"Latn":{"nb":215,"nm":"Latin","lid":"Latin","rtl":false,"ime":false,"casing":true}};
 					var spec = this.locale.getSpec().replace(/-/g, "_");
-					ScriptInfo.cache[spec] = info;
+					ilib.data.cache.ScriptInfo[spec] = info;
 				}
 				ilib.data.scripts = info;
 				this.info = script && ilib.data.scripts[script];
@@ -98,8 +94,10 @@ var ScriptInfo = function(script, options) {
 		});
 	} else {
 		this.info = ilib.data.scripts[script];
+        if (options && typeof(options.onLoad) === 'function') {
+            options.onLoad(this);
+        }
 	}
-
 };
 
 /**
@@ -132,7 +130,7 @@ ScriptInfo._getScriptsArray = function() {
 ScriptInfo.getAllScripts = function(sync, loadParams, onLoad) {
 	if (!ilib.data.scripts) {
 		Utils.loadData({
-			object: ScriptInfo, 
+			object: "ScriptInfo", 
 			locale: "-", 
 			name: "scripts.json", 
 			sync: sync, 
@@ -145,6 +143,10 @@ ScriptInfo.getAllScripts = function(sync, loadParams, onLoad) {
 				}
 			})
 		});
+	} else {
+        if (typeof(onLoad) === 'function') {
+            onLoad(ScriptInfo._getScriptsArray());
+        }
 	}
 	
 	return ScriptInfo._getScriptsArray();

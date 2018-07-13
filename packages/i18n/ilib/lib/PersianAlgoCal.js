@@ -1,7 +1,7 @@
 /*
  * persian.js - Represent a Persian algorithmic calendar object.
  * 
- * Copyright © 2014-2015, JEDLSoft
+ * Copyright © 2014-2015,2018, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,12 +29,16 @@ var Calendar = require("./Calendar.js");
  * Construct a new Persian algorithmic calendar object. This class encodes information about
  * a Persian algorithmic calendar.<p>
  * 
- * 
+ * @param {Object=} options Options governing the construction of this instance
  * @constructor
  * @extends Calendar
  */
-var PersianAlgoCal = function() {
+var PersianAlgoCal = function(options) {
 	this.type = "persian-algo";
+    
+    if (options && typeof(options.onLoad) === "function") {
+        options.onLoad(this);
+    }
 };
 
 /**

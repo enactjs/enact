@@ -1,7 +1,7 @@
 /*
  * ResBundle.js - Resource bundle definition
  * 
- * Copyright © 2012-2015, JEDLSoft
+ * Copyright © 2012-2016, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,15 +47,16 @@ var IString = require("./IString.js");
  * base name is "resources".
  * 
  * <li><i>type</i> - Name the type of strings this bundle contains. Valid values are 
- * "xml", "html", "text", or "raw". The default is "text". If the type is "xml" or "html",
+ * "xml", "html", "text", "c", or "raw". The default is "text". If the type is "xml" or "html",
  * then XML/HTML entities and tags are not pseudo-translated. During a real translation, 
  * HTML character entities are translated to their corresponding characters in a source
  * string before looking that string up in the translations. Also, the characters "<", ">",
  * and "&" are converted to entities again in the output, but characters are left as they
  * are. If the type is "xml", "html", or "text" types, then the replacement parameter names
  * are not pseudo-translated as well so that the output can be used for formatting with 
- * the IString class. If the type is raw, all characters are pseudo-translated, 
- * including replacement parameters as well as XML/HTML tags and entities.
+ * the IString class. If the type is "c" then all C language style printf replacement
+ * parameters (eg. "%s" and "%d") are skipped automatically. If the type is raw, all characters 
+ * are pseudo-translated, including replacement parameters as well as XML/HTML tags and entities.
  * 
  * <li><i>lengthen</i> - when pseudo-translating the string, tell whether or not to 
  * automatically lengthen the string to simulate "long" languages such as German
@@ -252,19 +253,20 @@ var ResBundle = function (options) {
 			}
 		}
 	} else {
-		options = {};
+		options = {sync: true};
 	}
 	
 	this.map = {};
 
-	if (!ResBundle[this.baseName]) {
-		ResBundle[this.baseName] = {};
-	}
-
+	if (!ilib.data.cache.ResBundle) {
+        ilib.data.cache.ResBundle = {};
+    }
+	
 	lookupLocale = this.locale.isPseudo() ? new Locale("en-US") : this.locale;
+	var object = "ResBundle-" + this.baseName; 
 
 	Utils.loadData({
-		object: ResBundle[this.baseName], 
+		object: object,
 		locale: lookupLocale, 
 		name: this.baseName + ".json", 
 		sync: this.sync, 
@@ -273,18 +275,18 @@ var ResBundle = function (options) {
 			if (!map) {
 				map = ilib.data[this.baseName] || {};
 				spec = lookupLocale.getSpec().replace(/-/g, '_');
-				ResBundle[this.baseName].cache[spec] = map;
+				ilib.data.cache[object][spec] = map;
 			}
 			this.map = map;
 			if (this.locale.isPseudo()) {
-				if (!ResBundle.pseudomap) {
-					ResBundle.pseudomap = {};
+				if (!ilib.data.cache.ResBundle.pseudomap) {
+				    ilib.data.cache.ResBundle.pseudomap = {};
 				}
 	
 				this._loadPseudo(this.locale, options.onLoad);
 			} else if (this.missing === "pseudo") {
-				if (!ResBundle.pseudomap) {
-					ResBundle.pseudomap = {};
+				if (!ilib.data.cache.ResBundle.pseudomap) {
+				    ilib.data.cache.ResBundle.pseudomap = {};
 				}
 	
 				new LocaleInfo(this.locale, {
@@ -330,7 +332,7 @@ ResBundle.prototype = {
      */
     _loadPseudo: function (pseudoLocale, onLoad) {
 		Utils.loadData({
-			object: ResBundle.pseudomap, 
+			object: "ResBundle", 
 			locale: pseudoLocale, 
 			name: "pseudomap.json", 
 			sync: this.sync, 
@@ -339,7 +341,7 @@ ResBundle.prototype = {
 				if (!map || JSUtils.isEmpty(map)) {
 					map = ResBundle.defaultPseudo;
 					var spec = pseudoLocale.getSpec().replace(/-/g, '_');
-					ResBundle.pseudomap.cache[spec] = map;
+					ilib.data.cache.ResBundle.pseudomap[spec] = map;
 				}
 				this.pseudomap = map;
 				if (typeof(onLoad) === 'function') {
@@ -375,6 +377,8 @@ ResBundle.prototype = {
 		return this.type;
 	},
 
+	percentRE: new RegExp("%(\\d+\\$)?([\\-#\\+ 0,\\(])?(\\d+)?(\\.\\d+)?[bBhHsScCdoxXeEfgGaAtT%n]"),
+
 	/**
 	 * @private
 	 * Pseudo-translate a string
@@ -392,18 +396,25 @@ ResBundle.prototype = {
 						while (i < str.length && str.charAt(i) !== '>') {
 							ret += str.charAt(i++);
 						}
-						if (i < str.length) {
-							ret += str.charAt(i++);
-						}
 					} else if (str.charAt(i) === '&') {
 						ret += str.charAt(i++);
 						while (i < str.length && str.charAt(i) !== ';' && str.charAt(i) !== ' ') {
 							ret += str.charAt(i++);
 						}
-						if (i < str.length) {
-							ret += str.charAt(i++);
+					} else if (str.charAt(i) === '\\' && str.charAt(i+1) === "u") {
+						ret += str.substring(i, i+6);
+						i += 6;
+					}
+				} else if (this.type === "c") {
+					if (str.charAt(i) === "%") {
+						var m = this.percentRE.exec(str.substring(i));
+						if (m && m.length) {
+							// console.log("Match found: " + JSON.stringify(m[0].replace("%", "%%")));
+							ret += m[0];
+							i += m[0].length;
 						}
 					}
+
 				}
 				if (i < str.length) { 
 					if (str.charAt(i) === '{') {
@@ -482,8 +493,58 @@ ResBundle.prototype = {
 		return (this.type === "xml" || this.type === "html") ? this._unescapeXml(key) : key;
 	},
 	
+    /**
+     * @private
+     */
+	_getStringSingle: function(source, key, escapeMode) {
+        if (!source && !key) return new IString("");
+
+        var trans;
+        if (this.locale.isPseudo()) {
+            var str = source ? source : this.map[key];
+            trans = this._pseudo(str || key);
+        } else {
+            var keyName = key || this._makeKey(source);
+            if (typeof(this.map[keyName]) !== 'undefined') {
+                trans = this.map[keyName];
+            } else if (this.missing === "pseudo") {
+                trans = this._pseudo(source || key);
+            } else if (this.missing === "empty") {
+                trans = "";
+            } else {
+                trans = source;
+            }
+        }
+
+        if (escapeMode && escapeMode !== "none") {
+            if (escapeMode == "default") {
+                escapeMode = this.type;
+            }
+            if (escapeMode === "xml" || escapeMode === "html") {
+                trans = this._escapeXml(trans);
+            } else if (escapeMode == "js" || escapeMode === "attribute") {
+                trans = trans.replace(/'/g, "\\\'").replace(/"/g, "\\\"");
+            }
+        }
+        if (trans === undefined) {
+            return undefined;
+        } else {
+            var ret = new IString(trans);
+            ret.setLocale(this.locale.getSpec(), true, this.loadParams); // no callback
+            return ret;
+        }
+	}, 
+	    
 	/**
-	 * Return a localized string. If the string is not found in the loaded set of
+	 * Return a localized string, array, or object. This method can localize individual
+	 * strings or arrays of strings.<p>
+	 * 
+	 * If the source parameter is a string, the translation of that string is looked
+	 * up and returned. If the source parameter is an array of strings, then the translation 
+	 * of each of the elements of that array is looked up, and an array of translated strings
+	 * is returned. <p>
+	 * 
+	 * If any string is not found in the loaded set of
 	 * resources, the original source string is returned. If the key is not given,
 	 * then the source string itself is used as the key. In the case where the 
 	 * source string is used as the key, the whitespace is compressed down to 1 space
@@ -515,53 +576,30 @@ ResBundle.prototype = {
 	 * be "js" so that the output string can be used in Javascript without causing syntax
 	 * errors.
 	 * 
-	 * @param {?string=} source the source string to translate
-	 * @param {?string=} key optional name of the key, if any
+	 * @param {?string|Array.<string>=} source the source string or strings to translate
+	 * @param {?string|Array.<string>=} key optional name of the key, if any
 	 * @param {?string=} escapeMode escape mode, if any
-	 * @return {IString|undefined} the translation of the given source/key or undefined 
+	 * @return {IString|Array.<IString>|undefined} the translation of the given source/key or undefined 
 	 * if the translation is not found and the source is undefined 
 	 */
 	getString: function (source, key, escapeMode) {
 		if (!source && !key) return new IString("");
-
-		var trans;
-		if (this.locale.isPseudo()) {
-			var str = source ? source : this.map[key];
-			trans = this._pseudo(str || key);
+		
+		//if (typeof(source) === "object") {
+            // TODO localize objects
+        //} else
+		
+        if (ilib.isArray(source)) {
+		    return source.map(ilib.bind(this, function(str) {
+		       return typeof(str) === "string" ? this._getStringSingle(str, key, escapeMode) : str;
+		    }));
 		} else {
-			var keyName = key || this._makeKey(source);
-			if (typeof(this.map[keyName]) !== 'undefined') {
-				trans = this.map[keyName];
-			} else if (this.missing === "pseudo") {
-				trans = this._pseudo(source || key);
-			} else if (this.missing === "empty") {
-				trans = "";
-			} else {
-				trans = source;
-			}
-		}
-
-		if (escapeMode && escapeMode !== "none") {
-			if (escapeMode == "default") {
-				escapeMode = this.type;
-			}
-			if (escapeMode === "xml" || escapeMode === "html") {
-				trans = this._escapeXml(trans);
-			} else if (escapeMode == "js" || escapeMode === "attribute") {
-				trans = trans.replace(/'/g, "\\\'").replace(/"/g, "\\\"");
-			}
-		}
-		if (trans === undefined) {
-			return undefined;
-		} else {
-			var ret = new IString(trans);
-			ret.setLocale(this.locale.getSpec(), true, this.loadParams); // no callback
-			return ret;
+            return this._getStringSingle(source, key, escapeMode);
 		}
 	},
 	
 	/**
-	 * Return a localized string as a Javascript object. This does the same thing as
+	 * Return a localized string as an intrinsic Javascript String object. This does the same thing as
 	 * the getString() method, but it returns a regular Javascript string instead of
 	 * and IString instance. This means it cannot be formatted with the format()
 	 * method without being wrapped in an IString instance first.
@@ -573,7 +611,21 @@ ResBundle.prototype = {
 	 * if the translation is not found and the source is undefined
 	 */
 	getStringJS: function(source, key, escapeMode) {
-		return this.getString(source, key, escapeMode).toString();
+		if (typeof(source) === 'undefined' && typeof(key) === 'undefined') {
+			return undefined;
+		}
+		//if (typeof(source) === "object") {
+		    // TODO localize objects
+		//} else 
+		
+		if (ilib.isArray(source)) {
+		    return this.getString(source, key, escapeMode).map(function(str) {
+		       return (str && str instanceof IString) ? str.toString() : str;
+		    });
+		} else {
+            var s = this.getString(source, key, escapeMode); 
+            return s ? s.toString() : undefined;
+		}
 	},
 	
 	/**

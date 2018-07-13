@@ -133,6 +133,8 @@ var CharmapFactory = function(options) {
 		if (typeof(options.sync) === 'boolean') {
 			sync = options.sync;
 		}
+	} else {
+	    options = {sync: true};
 	}
 
 	var instance;
@@ -140,7 +142,7 @@ var CharmapFactory = function(options) {
 	new Charset({
 		name: charsetName,
 		sync: sync,
-		loadParams: options && options.loadParams,
+		loadParams: options.loadParams,
 		onLoad: function (charset) {
 			// name will be normalized already
 			var cons, name = charset.getName();

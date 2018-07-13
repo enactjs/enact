@@ -1,7 +1,7 @@
 /*
  * Loader.js - shared loader implementation
  * 
- * Copyright © 2015, JEDLSoft
+ * Copyright © 2015, 2018, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -117,7 +117,7 @@ Loader.prototype.loadFiles = function(paths, sync, params, callback) {
 		
 		for (var i = 0; i < paths.length; i++) {
 			var text = this._loadFileAlongIncludePath(includePath, Path.normalize(paths[i]));
-			ret.push(text ? JSON.parse(text) : undefined);
+			ret.push(typeof(text) === "string" ? JSON.parse(text) : text);
 			if (params && params.returnOne && text) {
 				break;
 			}
@@ -134,8 +134,8 @@ Loader.prototype.loadFiles = function(paths, sync, params, callback) {
 	// asynchronous
 	this._loadManifests(false, ilib.bind(this, function() {
 		//console.log("Loader.loadFiles: now loading files asynchronously");
-		this.results = [];
-		this._loadFilesAsync(includePath, paths, callback);
+		var results = [];
+		this._loadFilesAsync(includePath, paths, results, callback);
 	}));
 };
 
@@ -151,7 +151,7 @@ Loader.prototype._loadFilesAsyncAlongIncludePath = function (includes, filename,
 			var filepath = Path.join(root, filename);
 			this._loadFile(filepath, false, ilib.bind(this, function(t) {
 				//console.log("Loader._loadFilesAsyncAlongIncludePath: loading " + (t ? " success" : " failed"));
-				if (t) {
+			    if (t) {
 					cb(t);
 				} else {
 					this._loadFilesAsyncAlongIncludePath(includes, filename, cb);
@@ -162,47 +162,48 @@ Loader.prototype._loadFilesAsyncAlongIncludePath = function (includes, filename,
 			this._loadFilesAsyncAlongIncludePath(includes, filename, cb);
 		}
 	} else {
+	    // file not found in any of the include paths
 		cb();
 	}
 };
 
-Loader.prototype._loadFilesAsync = function (includePath, paths, callback) {
+Loader.prototype._loadFilesAsync = function (includePath, paths, results, callback) {
 	if (paths.length > 0) {
 		var filename = paths[0];
 		paths = paths.slice(1);
 		
 		//console.log("Loader._loadFilesAsync: attempting to load " + filename + " along the include path.");
 		this._loadFilesAsyncAlongIncludePath(includePath, filename, ilib.bind(this, function (json) {
-			this.results.push(json ? JSON.parse(json) : undefined);
-			this._loadFilesAsync(includePath, paths, callback);
+		    results.push(typeof(json) === "string" ? JSON.parse(json) : json);
+			this._loadFilesAsync(includePath, paths, results, callback);
 		}));
 	} else {
 		// only call the callback at the end of the chain of files
 		if (typeof(callback) === 'function') {
-			callback(this.results);
+			callback(results);
 		}
 	}
 };
 
 Loader.prototype._loadManifestFile = function(i, sync, cb) {
-	//console.log("Loader._loadManifestFile: Checking include path " + i + " " + this.includePath[i]);
-	if (i < this.includePath.length) {
-		var filepath = Path.join(this.includePath[i], "ilibmanifest.json");
-		//console.log("Loader._loadManifestFile: Loading manifest file " + filepath);
-		var text = this._loadFile(filepath, sync, ilib.bind(this, function(text) {
-			if (text) {
-				//console.log("Loader._loadManifestFile: success!");
-				this.manifest[this.includePath[i]] = JSON.parse(text).files;
-			}
-			//else console.log("Loader._loadManifestFile: failed...");
-			this._loadManifestFile(i+1, sync, cb);
-		}));
-	} else {
-		if (typeof(cb) === 'function') {
-			//console.log("Loader._loadManifestFile: now calling callback function");
-			cb();
-		}
-	}
+    //console.log("Loader._loadManifestFile: Checking include path " + i + " " + this.includePath[i]);
+    if (i < this.includePath.length) {
+        var filepath = Path.join(this.includePath[i], "ilibmanifest.json");
+        //console.log("Loader._loadManifestFile: Loading manifest file " + filepath);
+        var text = this._loadFile(filepath, sync, ilib.bind(this, function(text) {
+            if (text) {
+                //console.log("Loader._loadManifestFile: success!");
+                this.manifest[this.includePath[i]] = (typeof(text) === "string" ? JSON.parse(text) : text).files;
+            }
+            //else console.log("Loader._loadManifestFile: failed...");
+            this._loadManifestFile(i+1, sync, cb);
+        }));
+    } else {
+        if (typeof(cb) === 'function') {
+            //console.log("Loader._loadManifestFile: now calling callback function");
+            cb();
+        }
+    }
 };
 
 Loader.prototype._loadManifests = function(sync, cb) {

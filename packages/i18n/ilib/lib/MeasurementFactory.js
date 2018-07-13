@@ -23,6 +23,7 @@
 UnknownUnit.js
 AreaUnit.js
 DigitalStorageUnit.js
+DigitalSpeedUnit.js
 EnergyUnit.js
 FuelConsumptionUnit.js
 LengthUnit.js
@@ -39,6 +40,7 @@ Measurement.js
 var UnknownUnit = require("./UnknownUnit.js");
 var AreaUnit = require("./AreaUnit.js");
 var DigitalStorageUnit = require("./DigitalStorageUnit.js");
+var DigitalSpeedUnit = require("./DigitalSpeedUnit.js");
 var EnergyUnit = require("./EnergyUnit.js");
 var FuelConsumptionUnit = require("./FuelConsumptionUnit.js");
 var LengthUnit = require("./LengthUnit.js");
@@ -109,28 +111,41 @@ var Measurement = require("./Measurement.js");
  * @param {Object=} options options that control the construction of this instance
  */
 var MeasurementFactory = function(options) {
-	if (!options || typeof(options.unit) === 'undefined') {
-		return undefined;
-	}
+    if (!options || typeof(options.unit) === 'undefined') {
+        return undefined;
+    }
 
-	var measure = undefined;
+    var measure = undefined;
 
-	for (var c in Measurement._constructors) {
-		var measurement = Measurement._constructors[c];
-		if (typeof(measurement.aliases[options.unit]) !== 'undefined') {
-			measure = c;
-			break;
-		}
-	}
+    // first try in the existing case
+    for (var c in Measurement._constructors) {
+        var measurement = Measurement._constructors[c];
+        if (Measurement.getUnitId(measurement, options.unit)) {
+            measure = c;
+            break;
+        }
+    }
 
-	if (!measure || typeof(measure) === 'undefined') {
-		return new UnknownUnit({
-			unit: options.unit,
-			amount: options.amount
-		});
-	} else {
-		return new Measurement._constructors[measure](options);
-	}
+    if (!measure) {
+        // if it wasn't found before, try again in lower case -- this may recognize incorrectly because some
+        // units can differ only in their case like "mm" and "Mm"
+        for (var c in Measurement._constructors) {
+            var measurement = Measurement._constructors[c];
+            if (typeof(Measurement.getUnitIdCaseInsensitive(measurement, options.unit)) !== 'undefined') {
+                measure = c;
+                break;
+            }
+        }
+    }
+
+    if (!measure || typeof(measure) === 'undefined') {
+        return new UnknownUnit({
+            unit: options.unit,
+            amount: options.amount
+        });
+    } else {
+        return new Measurement._constructors[measure](options);
+    }
 };
 
 /**

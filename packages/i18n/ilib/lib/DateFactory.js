@@ -131,16 +131,12 @@ var DateFactory = function(options) {
 		new LocaleInfo(locale, {
 			sync: sync,
 			loadParams: options && options.loadParams,
-			// Note: ENYO-4578
-			onLoad: function onLoad(info) {
-       			type = info.getCalendar();
-                obj = DateFactory._init(type, options);
-
-                if (options && typeof options.onLoad === 'function') {
-          			options.onLoad(obj);
-        		}
-      		}
-    	});
+			onLoad: function(info) {
+				type = info.getCalendar();
+				
+				obj = DateFactory._init(type, options);
+			}
+		});
 	} else {
 		obj = DateFactory._init(type, options);
 	}
@@ -196,6 +192,9 @@ DateFactory._init = function(type, options) {
 	
 	// pass the same options through to the constructor so the subclass
 	// has the ability to do something with if it needs to
+	if (!cons && typeof(options.onLoad) === "function") {
+	    options.onLoad(undefined);
+	}
 	return cons && new cons(options);
 };
 

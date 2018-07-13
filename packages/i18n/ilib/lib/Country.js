@@ -1,6 +1,6 @@
 /*
  * Country.js - Country class to get country name corresponding to country code in locale assigned
- * 
+ *
  * Copyright © 2017, LGE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@
 
 // !depends ilib.js Utils.js Locale.js LocaleInfo.js ResBundle.js
 
-// !data ctrynames
+// !data ctryreverse
 
 var ilib = require("./ilib.js");
 var Utils = require("./Utils.js");
@@ -29,36 +29,36 @@ var ResBundle = require("./ResBundle.js");
 
 /**
  * @class
- * Create a new country information instance. Instances of this class encode 
+ * Create a new country information instance. Instances of this class encode
  * information about country name.<p>
- * 
+ *
  * The options can contain any of the following properties:
- * 
+ *
  * <ul>
- * <li><i>locale</i> - specify the locale for this instance. Country names are provided 
+ * <li><i>locale</i> - specify the locale for this instance. Country names are provided
  * in the language of this locale.
  *
- * <li><i>onLoad</i> - a callback function to call when the country name data is fully 
+ * <li><i>onLoad</i> - a callback function to call when the country name data is fully
  * loaded. When the onLoad option is given, this class will attempt to
  * load any missing locale data using the ilib loader callback.
- * When the constructor is done (even if the data is already preassembled), the 
+ * When the constructor is done (even if the data is already preassembled), the
  * onLoad function is called with the current instance as a parameter, so this
- * callback can be used with preassembled or dynamic loading or a mix of the two. 
+ * callback can be used with preassembled or dynamic loading or a mix of the two.
  *
- * <li><i>sync</i> - tell whether to load any missing locale data synchronously or 
+ * <li><i>sync</i> - tell whether to load any missing locale data synchronously or
  * asynchronously. If this option is given as "false", then the "onLoad"
  * callback must be given, as the instance returned from this constructor will
  * not be usable for a while.
  *
- * <li><i>loadParams</i> - an object containing parameters to pass to the 
+ * <li><i>loadParams</i> - an object containing parameters to pass to the
  * loader callback function when locale data is missing. The parameters are not
- * interpretted or modified in any way. They are simply passed along. The object 
+ * interpretted or modified in any way. They are simply passed along. The object
  * may contain any property/value pairs as long as the calling code is in
  * agreement with the loader callback function as to what those parameters mean.
  * </ul>
- * 
+ *
  * If the locale is not set, the default locale(en-US) will be used.<p>
- * 
+ *
  * @constructor
  * @param options {Object} a set of properties to govern how this instance is constructed.
  */
@@ -80,73 +80,76 @@ var Country = function (options) {
 	}
 
 	this.locale = this.locale || new Locale();
-	localeinfo = new LocaleInfo(this.locale);
-	
-	if (localeinfo.getRegionName() === undefined) {
-		locale = 'en-US';
-	} else {
-		locale = this.locale;
-	}
-	
-	if (!this.countryToCode) {
-		Utils.loadData({
-			name: "ctrynames.json",
-			object: Country, 
-			locale: locale,
-			sync: sync, 
-			loadParams: loadParams, 
-			callback: ilib.bind(this, function(countries) {
-				this.countryToCode = countries;
-				this._loadLocinfo(options && options.onLoad);
-			})
-		});
-	} else {
-		this._loadLocinfo(options && options.onLoad);
-	}
+	new LocaleInfo(this.locale, {
+		sync: sync,
+		loadParams: loadParams,
+		onLoad: ilib.bind(this, function (li) {
+			this.locinfo = li;
+			if (this.locinfo.getRegionName() === undefined) {
+				locale = 'en-US';
+			} else {
+				locale = this.locale;
+			}
+
+			if (!this.codeToCountry) {
+				Utils.loadData({
+					name: "ctryreverse.json",
+					object: Country,
+					locale: locale,
+					sync: sync,
+					loadParams: loadParams,
+					callback: ilib.bind(this, function(countries) {
+						this.codeToCountry = countries;
+						this._calculateCountryToCode();
+						if (options && typeof(options.onLoad) === 'function') {
+							options.onLoad(this);
+						}
+					})
+				});
+			} else {
+				this._calculateCountryToCode();
+				if (options && typeof(options.onLoad) === 'function') {
+					options.onLoad(this);
+				}
+			}
+		})
+	});
 };
 
 /**
  * Return an array of the ids for all ISO 3166-1 alpha-2 code that
  * this copy of ilib knows about.
- * 
+ *
  * @static
  * @return {Object} an object of country code that this copy of ilib knows about.
  */
 Country.getAvailableCode = function() {
-	var ret = [],
-		country,
-		countries = new ResBundle({
-			name: "ctrynames"
+	var countries = new ResBundle({
+			name: "ctryreverse"
 		}).getResObj();
-	
-	for (country in countries) {
-		if (country && countries[country]) {
-			ret.push(countries[country]);
-		}
-	}		
-	
-	return ret;
+
+	return Object.keys(countries);
 };
 
 /**
  * Return an array of country names that this copy of ilib knows about.
- * 
+ *
  * @static
  * @return {Object} an object of country code that this copy of ilib knows about.
  */
 Country.getAvailableCountry = function() {
 	var ret = [],
-		country,
+		code,
 		countries = new ResBundle({
-			name: "ctrynames"
+			name: "ctryreverse"
 		}).getResObj();
-	
-	for (country in countries) {
-		if (country && countries[country]) {
-			ret.push(country);
+
+	for (code in countries) {
+		if (code && countries[code]) {
+			ret.push(countries[code]);
 		}
 	}
-	
+
 	return ret;
 };
 
@@ -154,35 +157,26 @@ Country.prototype = {
 	/**
 	 * @private
 	 */
-	_loadLocinfo: function(onLoad) {
-		new LocaleInfo(this.locale, {
-			onLoad: ilib.bind(this, function (li) {
-				var temp = this.countryToCode,
-				    ctry;
+	_calculateCountryToCode: function() {
+		var temp = this.codeToCountry,
+				code;
 
-				this.codeToCountry = {};
-				this.locinfo = li;
+		this.countryToCode = {};
 
-				for (ctry in temp) {
-					if (ctry && temp[ctry]) {
-						this.codeToCountry[temp[ctry]] = ctry;
-					}
-				}		
-
-				if (typeof(onLoad) === 'function') {
-					onLoad(this);
-				}
-			})
-		});
+		for (code in temp) {
+			if (code && temp[code]) {
+				this.countryToCode[temp[code]] = code;
+			}
+		}
 	},
-	
+
 	/**
 	 * Return the country code corresponding to the country name given.
 	 * If the country name is given, but it is not found in the list of known countries, this
 	 * method will throw an exception.
 	 * @param {string} ctryname The country name in the language of the locale of this instance
 	 * @return {string} the country code corresponding to the country name
-	 * @throws "Country xx is unknown" when the given country name is not in the list of 
+	 * @throws "Country xx is unknown" when the given country name is not in the list of
 	 * known country names. xx is replaced with the requested country name.
 	 */
 	getCode: function (ctryname) {
@@ -191,14 +185,14 @@ Country.prototype = {
 		}
 		return this.countryToCode[ctryname];
 	},
-	
+
 	/**
 	 * Return the country name corresponding to the country code given.
 	 * If the code is given, but it is not found in the list of known countries, this
 	 * method will throw an exception.
 	 * @param {string} code The country code to get the country name
 	 * @return {string} the country name in the language of the locale of this instance
-	 * @throws "Country xx is unknown" when the given country code is not in the list of 
+	 * @throws "Country xx is unknown" when the given country code is not in the list of
 	 * known country codes. xx is replaced with the requested country code.
 	 */
 	getName: function (code) {
@@ -207,9 +201,9 @@ Country.prototype = {
 		}
 		return this.codeToCountry[code];
 	},
-	
+
 	/**
-	 * Return the locale for this country. If the options to the constructor 
+	 * Return the locale for this country. If the options to the constructor
 	 * included a locale property in order to find the country that is appropriate
 	 * for that locale, then the locale is returned here. If the options did not
 	 * include a locale, then this method returns undefined.

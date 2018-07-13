@@ -25,7 +25,7 @@
  * as elements of that type.
  * 
  * @class
- * @param {Array.<string|number>} elements initial elements to add to the set
+ * @param {Array.<string|number>=} elements initial elements to add to the set
  * @constructor
  */
 var ISet = function(elements) {
