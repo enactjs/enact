@@ -39,10 +39,10 @@ const LabeledIconBase = kind({
 		 * * A URL specifying path to an LabeledIcon image, or
 		 * * An object representing a resolution independent resource (See {@link ui/resolution}).
 		 *
-		 * @type {String|Object}
+		 * @type {Node}
 		 * @public
 		 */
-		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+		children: PropTypes.node,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the

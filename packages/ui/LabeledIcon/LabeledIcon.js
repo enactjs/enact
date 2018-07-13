@@ -8,7 +8,10 @@
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
+import compose from 'ramda/src/compose';
 
+import ComponentOverride from '../ComponentOverride';
+import Slottable from '../Slottable';
 import Layout, {Cell} from '../Layout';
 
 import componentCss from './LabeledIcon.less';
@@ -21,7 +24,7 @@ import componentCss from './LabeledIcon.less';
  * @ui
  * @public
  */
-const LabeledIcon = kind({
+const LabeledIconBase = kind({
 	name: 'ui:LabeledIcon',
 
 	propTypes: /** @lends ui/LabeledIcon.LabeledIconBase.prototype */ {
@@ -35,10 +38,10 @@ const LabeledIcon = kind({
 		 * * A URL specifying path to an LabeledIcon image, or
 		 * * An object representing a resolution independent resource (See {@link ui/resolution}).
 		 *
-		 * @type {String|Object}
+		 * @type {Node}
 		 * @public
 		 */
-		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+		children: PropTypes.node,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -68,11 +71,12 @@ const LabeledIcon = kind({
 		disabled: PropTypes.bool,
 
 		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-		iconComponent: PropTypes.func,
+		iconComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 		labelPosition: PropTypes.oneOf(['above', 'after', 'before', 'below', 'left', 'right'])
 	},
 
 	defaultProps: {
+		// iconComponent: 'div',
 		labelPosition: 'below'
 	},
 
@@ -88,6 +92,22 @@ const LabeledIcon = kind({
 	},
 
 	render: ({css, children, className, disabled, icon, iconComponent, orientation, style, ...rest}) => {
+		let iconClassName = css.icon;
+
+		// Rearrange the props to support custom JSX components
+		// `icon` is normally passed to `iconComponent` as children, but if `icon` is instead a
+		// rendered JSX component, it should become a child of `Cell.icon` and iconComponent should
+		// use Cell's default value. We must also reposition the `icon` class
+		if (React.isValidElement(icon)) {
+			icon = <ComponentOverride
+				component={icon}
+				className={iconClassName}
+				disabled={disabled}
+			/>;
+			iconComponent = void 0;
+			iconClassName = null;
+		}
+
 		delete rest.labelPosition;
 
 		return (
@@ -98,14 +118,38 @@ const LabeledIcon = kind({
 				orientation={orientation}
 				style={style}
 			>
-				<Cell shrink size="100%" {...rest} component={iconComponent} className={css.icon} disabled={disabled}>{icon}</Cell>
-				<Cell shrink component="label" className={css.label} disabled={disabled}>{children}</Cell>
+				<Cell
+					shrink
+					size="100%"
+					{...rest}
+					component={iconComponent}
+					className={css.iconCell + ' ' + iconClassName}
+					disabled={disabled}
+				>
+					{icon}
+				</Cell>
+				<Cell
+					shrink
+					component="label"
+					className={css.label}
+					disabled={disabled}
+				>
+					{children}
+				</Cell>
 			</Layout>
 		);
 	}
 });
 
+const LabeledIconDecorator = compose(
+	Slottable({slots: ['icon']})
+);
+
+const LabeledIcon = LabeledIconDecorator(LabeledIconBase);
+
 export default LabeledIcon;
 export {
-	LabeledIcon
+	LabeledIcon,
+	LabeledIconBase,
+	LabeledIconDecorator
 };

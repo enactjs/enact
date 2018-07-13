@@ -1,22 +1,40 @@
 import React from 'react';
-import {shallow} from 'enzyme';
-import Icon from '../Icon';
+import {mount} from 'enzyme';
+import LabeledIcon from '../LabeledIcon';
+import CustomIcon from '../../Icon';
+import css from '../LabeledIcon.less';
 
-describe('Icon Specs', () => {
-	it('should merge author styles with src', function () {
-		const src = 'images/icon.png';
-		const icon = shallow(
-			<Icon style={{color: 'green'}}>
-				{src}
-			</Icon>
+const iconName = 'anIconName';
+const iconLabel = 'A real label';
+
+describe('LabeledIcon Specs', () => {
+	it('should insert the icon source into the icon slot element', function () {
+
+		const labeledIcon = mount(
+			<LabeledIcon>
+				<icon>{iconName}</icon>
+				{iconLabel}
+			</LabeledIcon>
 		);
 
-		const expected = {
-			color: 'green',
-			backgroundImage: `url(${src})`
-		};
-		const actual = icon.prop('style');
-		expect(actual).to.deep.equal(expected);
+		const expected = iconName;
+		const actual = labeledIcon.find(`.${css.icon}`).first().text();
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should insert custom icon components into the icon slot', function () {
+		const labeledIcon = mount(
+			<LabeledIcon>
+				<icon><CustomIcon>{iconName}</CustomIcon></icon>
+				{iconLabel}
+			</LabeledIcon>
+		);
+
+		const expected = true;
+		const actual = labeledIcon.find(CustomIcon);
+
+		expect(actual).to.have.length(expected);
 	});
 });
 

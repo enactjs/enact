@@ -4,14 +4,14 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {withInfo} from '@storybook/addon-info';
 import Scroller from '@enact/ui/Scroller';
-import UILabeledIcon from '@enact/ui/LabeledIcon';
+import {LabeledIconBase as UiLabeledIconBase, LabeledIcon as UiLabeledIcon} from '@enact/ui/LabeledIcon';
 import Layout, {Cell} from '@enact/ui/Layout';
 
 import iconNames from './icons';
 import {mergeComponentMetadata} from '../../src/utils';
 import {boolean, select, text} from '../../src/enact-knobs';
 
-const Config = mergeComponentMetadata('LabeledIcon', UILabeledIcon, LabeledIcon);
+const Config = mergeComponentMetadata('LabeledIcon', UiLabeledIconBase, UiLabeledIcon, LabeledIcon);
 Config.displayName = 'LabeledIcon';
 
 storiesOf('Moonstone', module)
@@ -23,21 +23,20 @@ storiesOf('Moonstone', module)
 		})(() => {
 			const disabled = boolean('disabled', Config);
 			const labelPosition = select('labelPosition', ['above', 'after', 'before', 'below', 'left', 'right'], Config);
-			const pressed = boolean('pressed', Config);
 			const small = boolean('small', Config);
 			return (
 				<Layout orientation="vertical" style={{height: '100%'}}>
 					<Cell shrink>
 						<LabeledIcon
-							icon={select('icon', ['', ...iconNames], Config, 'fullscreen')}
 							disabled={disabled}
 							labelPosition={labelPosition}
 							small={small}
 						>
+							<icon>{select('icon', ['', ...iconNames], Config, 'fullscreen')}</icon>
 							{text('children', Config, 'Hello LabeledIcon')}
 						</LabeledIcon>
 					</Cell>
-					<Cell shrink component={Divider} style={{marginTop: '1em'}}>Several Icons</Cell>
+					<Cell shrink component={Divider} style={{marginTop: '1em'}}>All Icons</Cell>
 					<Cell>
 						<Scroller>
 							<Layout wrap align="center space-between">
