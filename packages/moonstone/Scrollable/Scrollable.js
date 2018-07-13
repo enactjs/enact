@@ -224,7 +224,6 @@ class ScrollableBase extends Component {
 	isWheeling = false
 
 	// spotlight
-	lastFocusedItem = null
 	lastScrollPositionOnFocus = null
 	indexToFocus = null
 	nodeToFocus = null
@@ -266,7 +265,7 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	startScrollOnFocus = (pos, item) => {
+	startScrollOnFocus = (pos) => {
 		if (pos) {
 			const
 				{top, left} = pos,
@@ -281,9 +280,8 @@ class ScrollableBase extends Component {
 					animate: (animationDuration > 0) && this.animateOnFocus,
 					overscrollEffect: (!this.childRef.shouldPreventOverscrollEffect || !this.childRef.shouldPreventOverscrollEffect())
 				});
+				this.lastScrollPositionOnFocus = pos;
 			}
-			this.lastFocusedItem = item;
-			this.lastScrollPositionOnFocus = pos;
 		}
 	}
 
@@ -310,7 +308,7 @@ class ScrollableBase extends Component {
 			}
 
 			if (pos && (pos.left !== this.uiRef.scrollLeft || pos.top !== this.uiRef.scrollTop)) {
-				this.startScrollOnFocus(pos, spotItem);
+				this.startScrollOnFocus(pos);
 			}
 
 			// update `scrollHeight`
@@ -524,7 +522,6 @@ class ScrollableBase extends Component {
 	stop = () => {
 		this.childRef.setContainerDisabled(false);
 		this.focusOnItem();
-		this.lastFocusedItem = null;
 		this.lastScrollPositionOnFocus = null;
 		this.isWheeling = false;
 		if (this.isVoiceControl) {
