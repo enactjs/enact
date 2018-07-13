@@ -204,7 +204,6 @@ class ScrollableBaseNative extends Component {
 	isWheeling = false
 
 	// spotlight
-	lastFocusedItem = null
 	lastScrollPositionOnFocus = null
 	indexToFocus = null
 	nodeToFocus = null
@@ -223,7 +222,6 @@ class ScrollableBaseNative extends Component {
 	voiceControlDirection = 'vertical'
 
 	onMouseDown = () => {
-		this.lastFocusedItem = null;
 		this.childRef.setContainerDisabled(false);
 	}
 
@@ -267,7 +265,6 @@ class ScrollableBaseNative extends Component {
 			delta = 0,
 			needToHideThumb = false;
 
-		this.lastFocusedItem = null;
 		if (typeof window !== 'undefined') {
 			window.document.activeElement.blur();
 		}
@@ -334,7 +331,7 @@ class ScrollableBaseNative extends Component {
 
 	// event handlers for Spotlight support
 
-	startScrollOnFocus = (pos, item) => {
+	startScrollOnFocus = (pos) => {
 		if (pos) {
 			const
 				{top, left} = pos,
@@ -344,6 +341,7 @@ class ScrollableBaseNative extends Component {
 
 			if (scrollHorizontally || scrollVertically) {
 				this.uiRef.start(left, top, this.animateOnFocus);
+				this.lastScrollPositionOnFocus = pos;
 
 				if (!this.childRef.shouldPreventOverscrollEffect || !this.childRef.shouldPreventOverscrollEffect()) {
 					if (scrollHorizontally) {
@@ -354,8 +352,6 @@ class ScrollableBaseNative extends Component {
 					}
 				}
 			}
-			this.lastFocusedItem = item;
-			this.lastScrollPositionOnFocus = pos;
 		}
 	}
 
@@ -382,7 +378,7 @@ class ScrollableBaseNative extends Component {
 			}
 
 			if (pos && (pos.left !== this.uiRef.scrollLeft || pos.top !== this.uiRef.scrollTop)) {
-				this.startScrollOnFocus(pos, spotItem);
+				this.startScrollOnFocus(pos);
 			}
 
 			// update `scrollHeight`
@@ -572,7 +568,6 @@ class ScrollableBaseNative extends Component {
 	scrollStopOnScroll = () => {
 		this.childRef.setContainerDisabled(false);
 		this.focusOnItem();
-		this.lastFocusedItem = null;
 		this.lastScrollPositionOnFocus = null;
 		this.isWheeling = false;
 		if (this.isVoiceControl) {
