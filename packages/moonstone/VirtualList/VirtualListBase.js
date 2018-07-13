@@ -662,6 +662,7 @@ const VirtualListBaseFactory = (type) => {
 			if (getDirection(keyCode)) {
 				ev.preventDefault();
 				this.setSpotlightContainerRestrict(keyCode, target);
+				Spotlight.setPointerMode(false);
 				if (this.jumpToSpottableItem(keyCode, repeat, target)) {
 					ev.stopPropagation();
 				}
