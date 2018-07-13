@@ -370,7 +370,7 @@ class Popup extends React.Component {
 
 	componentWillReceiveProps (nextProps) {
 		// while transitioning, we set `popupOpen` with the given `open` prop value
-		if (this.state.floatLayerOpen) {
+		if (!this.props.noAnimation && this.state.floatLayerOpen) {
 			this.setState({
 				popupOpen: nextProps.open
 			});
