@@ -605,7 +605,6 @@ const VideoPlayerBase = class extends React.Component {
 			// Non-standard state computed from properties
 			bottomControlsRendered: false,
 			feedbackAction: 'idle',
-			feedbackIconVisible: true,
 			feedbackVisible: false,
 			infoVisible: false,
 			mediaControlsVisible: false,
@@ -829,7 +828,7 @@ const VideoPlayerBase = class extends React.Component {
 			return {
 				announce,
 				bottomControlsRendered: true,
-				feedbackIconVisible: true,
+				feedbackAction: 'idle',
 				feedbackVisible: true,
 				mediaControlsVisible: true,
 				mediaSliderVisible: true,
@@ -852,7 +851,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedTitleHide();
 		this.stopAutoCloseTimeout();
 		this.setState({
-			feedbackIconVisible: false,
+			feedbackAction: 'idle',
 			feedbackVisible: false,
 			mediaControlsVisible: false,
 			mediaSliderVisible: false,
@@ -920,7 +919,6 @@ const VideoPlayerBase = class extends React.Component {
 	showFeedback = () => {
 		if (this.state.mediaControlsVisible) {
 			this.setState({
-				feedbackIconVisible: true,
 				feedbackVisible: true,
 				feedbackAction: 'idle'
 			});
@@ -1569,7 +1567,6 @@ const VideoPlayerBase = class extends React.Component {
 
 		this.setState({
 			feedbackAction: 'focus',
-			feedbackIconVisible: false,
 			feedbackVisible: true
 		});
 		this.stopDelayedFeedbackHide();
@@ -1591,9 +1588,7 @@ const VideoPlayerBase = class extends React.Component {
 	handleSliderBlur = () => {
 		this.sliderScrubbing = false;
 		this.startDelayedFeedbackHide();
-		this.setState(({paused, currentTime}) => ({
-			// If paused is false that means it is playing. We only want to hide on playing.
-			feedbackIconVisible: paused,
+		this.setState(({currentTime}) => ({
 			feedbackAction: 'blur',
 			feedbackVisible: true,
 			sliderTooltipTime: currentTime
@@ -1836,7 +1831,6 @@ const VideoPlayerBase = class extends React.Component {
 									thumbnailComponent={thumbnailComponent}
 									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
-									thumbnailVisible={!this.state.feedbackIconVisible}
 									action={this.state.feedbackAction}
 									hidden={!this.state.feedbackVisible || this.state.sourceUnavailable}
 								/>
