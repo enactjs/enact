@@ -604,7 +604,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			// Non-standard state computed from properties
 			bottomControlsRendered: false,
-			feedbackIconVisible: true,
+			feedbackAction: 'idle',
 			feedbackVisible: false,
 			infoVisible: false,
 			mediaControlsVisible: false,
@@ -828,7 +828,7 @@ const VideoPlayerBase = class extends React.Component {
 			return {
 				announce,
 				bottomControlsRendered: true,
-				feedbackIconVisible: true,
+				feedbackAction: 'idle',
 				feedbackVisible: true,
 				mediaControlsVisible: true,
 				mediaSliderVisible: true,
@@ -851,7 +851,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedTitleHide();
 		this.stopAutoCloseTimeout();
 		this.setState({
-			feedbackIconVisible: false,
+			feedbackAction: 'idle',
 			feedbackVisible: false,
 			mediaControlsVisible: false,
 			mediaSliderVisible: false,
@@ -919,8 +919,8 @@ const VideoPlayerBase = class extends React.Component {
 	showFeedback = () => {
 		if (this.state.mediaControlsVisible) {
 			this.setState({
-				feedbackIconVisible: true,
-				feedbackVisible: true
+				feedbackVisible: true,
+				feedbackAction: 'idle'
 			});
 		} else {
 			const shouldShowSlider = this.pulsedPlaybackState !== null || calcNumberValueOfPlaybackRate(this.playbackRate) !== 1;
@@ -936,7 +936,10 @@ const VideoPlayerBase = class extends React.Component {
 
 	hideFeedback = () => {
 		if (this.state.feedbackVisible) {
-			this.setState({feedbackVisible: false});
+			this.setState({
+				feedbackVisible: false,
+				feedbackAction: 'idle'
+			});
 		}
 	}
 
@@ -1563,7 +1566,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.sliderScrubbing = true;
 
 		this.setState({
-			feedbackIconVisible: false,
+			feedbackAction: 'focus',
 			feedbackVisible: true
 		});
 		this.stopDelayedFeedbackHide();
@@ -1585,10 +1588,9 @@ const VideoPlayerBase = class extends React.Component {
 	handleSliderBlur = () => {
 		this.sliderScrubbing = false;
 		this.startDelayedFeedbackHide();
-		this.setState(({paused, currentTime}) => ({
-			// If paused is false that means it is playing. We only want to hide on playing.
-			feedbackIconVisible: paused,
-			feedbackVisible: false,
+		this.setState(({currentTime}) => ({
+			feedbackAction: 'blur',
+			feedbackVisible: true,
 			sliderTooltipTime: currentTime
 		}));
 	}
@@ -1822,15 +1824,15 @@ const VideoPlayerBase = class extends React.Component {
 								visible={this.state.mediaSliderVisible}
 							>
 								<FeedbackTooltip
+									action={this.state.feedbackAction}
 									duration={this.state.duration}
 									formatter={this.durfmt}
-									noFeedback={!this.state.feedbackIconVisible}
+									hidden={!this.state.feedbackVisible || this.state.sourceUnavailable}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
 									playbackState={this.prevCommand}
 									thumbnailComponent={thumbnailComponent}
 									thumbnailDeactivated={this.props.thumbnailUnavailable}
 									thumbnailSrc={thumbnailSrc}
-									hidden={!this.state.feedbackVisible || this.state.sourceUnavailable}
 								/>
 							</MediaSlider>}
 
