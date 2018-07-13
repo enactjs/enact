@@ -96,7 +96,7 @@ const DatePickerBase = kind({
 		year: PropTypes.number.isRequired,
 
 		/**
-		 * Disable voice control feature.
+		 * Disables voice control.
 		 *
 		 * @type {Boolean}
 		 * @memberof moonstone/DatePicker.DatePickerBase.prototype

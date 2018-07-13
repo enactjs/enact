@@ -111,7 +111,7 @@ const TimePickerBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
-		 * Disable voice control feature
+		 * Disables voice control.
 		 *
 		 * @type {Boolean}
 		 * @memberof moonstone/TimePicker.TimePickerBase.prototype

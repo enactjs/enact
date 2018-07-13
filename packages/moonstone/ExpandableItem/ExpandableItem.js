@@ -70,7 +70,7 @@ const ExpandableItemBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
-		 * Disable voice control feature.
+		 * Disables voice control.
 		 *
 		 * @type {Boolean}
 		 * @memberof moonstone/ExpandableItem.ExpandableItemBase.prototype
@@ -79,7 +79,7 @@ const ExpandableItemBase = kind({
 		'data-webos-voice-disabled': PropTypes.bool,
 
 		/**
-		 * Specified if the item belongs to a specific group.
+		 * The voice control group.
 		 *
 		 * @type {String}
 		 * @memberof moonstone/ExpandableItem.ExpandableItemBase.prototype
@@ -88,7 +88,7 @@ const ExpandableItemBase = kind({
 		'data-webos-voice-group-label': PropTypes.string,
 
 		/**
-		 * Intent for voice control.
+		 * The voice control intent.
 		 *
 		 * @type {String}
 		 * @memberof moonstone/ExpandableItem.ExpandableItemBase.prototype
@@ -97,7 +97,7 @@ const ExpandableItemBase = kind({
 		'data-webos-voice-intent': PropTypes.string,
 
 		/**
-		 * Voice control label.
+		 * The voice control label.
 		 *
 		 * @type {String}
 		 * @memberof moonstone/ExpandableItem.ExpandableItemBase.prototype

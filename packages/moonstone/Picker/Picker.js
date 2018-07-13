@@ -49,8 +49,11 @@ const PickerBase = kind({
 		'aria-valuetext': PropTypes.string,
 
 		/**
-		 * By default, `data-webos-voice-labels-ext` is generated reference to children.
-		 * However, if the children is not an array of number or string, label value should be explicitly decalred.
+		 * The voice control labels for the `children`.
+		 *
+		 * By default, `data-webos-voice-labels-ext` is generated reference to children. However, if
+		 * the children is not an array of number or string, label value should be explicitly
+		 * decalred.
 		 *
 		 * @type {Number[]|String[]}
 		 * @memberof moonstone/Picker.PickerBase.prototype
