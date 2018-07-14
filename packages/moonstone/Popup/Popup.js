@@ -39,7 +39,7 @@ const forwardHide = forward('onHide');
 const forwardShow = forward('onShow');
 
 /**
- * [`PopupBase`]{@link moonstone/Popup.PopupBase} is a base component of
+ * PopupBase is a base component of
  * [`Popup`]{@link moonstone/Popup.Popup}.
  *
  * @class PopupBase
@@ -222,7 +222,7 @@ const checkScrimNone = (props) => {
 };
 
 /**
- * [Popup]{@link moonstone/Popup.Popup} is a stateful component that help
+ * Popup is a stateful component that helps
  * [PopupBase]{@link moonstone/Popup.PopupBase} to appear in
  * [FloatingLayer]{@link ui/FloatingLayer.FloatingLayer}.
  *
@@ -285,7 +285,7 @@ class Popup extends React.Component {
 		onHide: PropTypes.func,
 
 		/**
-		 * A key-down event callback function
+		 * Called when a key is pressed.
 		 *
 		 * @type {Function}
 		 * @public
@@ -295,7 +295,8 @@ class Popup extends React.Component {
 		/**
 		 * Called when popup shows.
 		 *
-		 * Note: The function does not run if Popup is initially opened and not animating.
+		 * Note: The function does not run if Popup is initially opened and
+		 * [noAnimation]{@link moonstone/Popup.PopupBase#noAnimation} is `true`.
 		 *
 		 * @type {Function}
 		 * @public
@@ -303,8 +304,7 @@ class Popup extends React.Component {
 		onShow: PropTypes.func,
 
 		/**
-		 * Indicates the popups will be rendered into the
-		 * [floating layer]{@link ui/FloatingLayer.FloatingLayer}.
+		 * Controls the visibility of the Popup.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -313,9 +313,10 @@ class Popup extends React.Component {
 		open: PropTypes.bool,
 
 		/**
-		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`. `'none'`
-		 * is not compatible with `spotlightRestrict` of `'self-only'`, use a transparent scrim to
-		 * prevent mouse focus when using popup.
+		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.
+		 *
+		 * `'none'` is not compatible with `spotlightRestrict` of `'self-only'`, use a transparent scrim
+		 * to prevent mouse focus when using popup.
 		 *
 		 * @type {String}
 		 * @default 'translucent'

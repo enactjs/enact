@@ -51,7 +51,7 @@ const ProgressBarBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Highlights the filled portion in red.
+		 * Highlights the filled portion.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -79,7 +79,7 @@ const ProgressBarBase = kind({
 		progress: PropTypes.number,
 
 		/**
-		 * Enables the built-in tooltip
+		 * Enables the built-in tooltip.
 		 *
 		 * To customize the tooltip, pass either a custom tooltip component or an instance of
 		 * [ProgressBarTooltip]{@link moonstone/ProgressBar.ProgressBarTooltip} with additional
@@ -105,7 +105,7 @@ const ProgressBarBase = kind({
 		 * @type {Boolean|Element|Function}
 		 * @public
 		 */
-		tooltip: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.func])
+		tooltip: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.object, PropTypes.func])
 	},
 
 	defaultProps: {

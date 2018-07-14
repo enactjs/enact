@@ -45,8 +45,9 @@ const ProgressBarTooltipBase = kind({
 
 	propTypes: /** @lends moonstone/ProgressBar.ProgressBarTooltip.prototype */{
 		/**
-		 * Sets the orientation of the tooltip based on the orientation of the bar, 'vertical'
-		 * sends the tooltip to one of the sides, 'horizontal'  positions it above the bar.
+		 * Sets the orientation of the tooltip based on the orientation of the bar.
+		 *
+		 * 'vertical' sends the tooltip to one of the sides, 'horizontal'  positions it above the bar.
 		 * * Values: `'horizontal'`, `'vertical'`
 		 *
 		 * @type {String}
@@ -87,12 +88,12 @@ const ProgressBarTooltipBase = kind({
 		 *
 		 * Allowed values are:
 		 *
-		 * * `after` renders below a `horizontal` ProgressBar/Slider and after (respecting the
+		 * * `'after'` renders below a `horizontal` ProgressBar/Slider and after (respecting the
 		 *   current locale's text direction) a `vertical` ProgressBar/Slider
-		 * * `before` renders above a `horizontal` ProgressBar/Slider and before (respecting the
+		 * * `'before'` renders above a `horizontal` ProgressBar/Slider and before (respecting the
 		 *   current locale's text direction) a `vertical` ProgressBar/Slider
-		 * * `left` renders to the left of a `vertical` ProgressBar/Slider regardless of locale
-		 * * `right` renders to the right of a `vertical` ProgressBar/Slider regardless of locale
+		 * * `'left'` renders to the left of a `vertical` ProgressBar/Slider regardless of locale
+		 * * `'right'` renders to the right of a `vertical` ProgressBar/Slider regardless of locale
 		 *
 		 * @type {String}
 		 * @default 'before'

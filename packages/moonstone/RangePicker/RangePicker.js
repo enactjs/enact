@@ -100,12 +100,7 @@ const RangePickerBase = kind({
 		decrementIcon: PropTypes.string,
 
 		/**
-<<<<<<< HEAD
-		 * When `true`, the RangePicker is shown as disabled and does not generate `onChange`
-		 * [events]{@link /docs/developer-guide/glossary/#event}.
-=======
 		 * Disables the picker.
->>>>>>> updated docs
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -134,8 +129,9 @@ const RangePickerBase = kind({
 		joined: PropTypes.bool,
 
 		/**
+		 * Disables animation.
+		 *
 		 * By default, the picker will animate transitions between items.
-		 * Specifying `noAnimation` will prevent any transition animation.
 		 *
 		 * @type {Boolean}
 		 * @public
