@@ -23,7 +23,7 @@ storiesOf('Moonstone', module)
 				checkButtonAriaLabel={text('checkButtonAriaLabel', Config, '')}
 				decrementAriaLabel={text('decrementAriaLabel', Config, '')}
 				incrementAriaLabel={text('incrementAriaLabel', Config, '')}
-				joined={boolean('joined', Config)}
+				joined={boolean('joined', Config, false)}
 				onChange={action('onChange')}
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}

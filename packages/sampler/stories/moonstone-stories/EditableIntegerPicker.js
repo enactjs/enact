@@ -28,11 +28,11 @@ storiesOf('Moonstone', module)
 			<EditableIntegerPicker
 				decrementIcon={select('decrementIcon', ['', ...decrementIcons], Config)}
 				defaultValue={20}
-				disabled={boolean('disabled', Config)}
+				disabled={boolean('disabled', Config, false)}
 				incrementIcon={select('incrementIcon', ['', ...incrementIcons], Config)}
 				max={number('max', Config, 100)}
 				min={number('min', Config, 0)}
-				noAnimation={boolean('noAnimation', Config)}
+				noAnimation={boolean('noAnimation', Config, false)}
 				onBlur={action('onBlur')}
 				onChange={action('onChange')}
 				onKeyDown={action('onKeyDown')}
@@ -40,7 +40,7 @@ storiesOf('Moonstone', module)
 				step={number('step', Config)}
 				unit={text('unit', Config)}
 				width={select('width', prop.width,  Config)}
-				wrap={boolean('wrap', Config)}
+				wrap={boolean('wrap', Config, false)}
 			/>
 		))
 	);

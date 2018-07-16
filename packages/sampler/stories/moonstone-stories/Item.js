@@ -18,8 +18,8 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of Item'
 		})(() => (
 			<Item
-				disabled={boolean('disabled', Config)}
-				inline={boolean('inline', Config)}
+				disabled={boolean('disabled', Config, false)}
+				inline={boolean('inline', Config, false)}
 			>
 				{text('children', Config, 'Hello Item')}
 			</Item>

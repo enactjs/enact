@@ -25,7 +25,7 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of DaySelector'
 		})(() => (
 			<DaySelector
-				disabled={boolean('disabled', Config)}
+				disabled={boolean('disabled', Config, false)}
 				dayNameLength={select('dayNameLength', ['short', 'medium', 'long', 'full'], Config)}
 				onSelect={action('onSelect')}
 			/>

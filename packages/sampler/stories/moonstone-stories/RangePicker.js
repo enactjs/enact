@@ -41,10 +41,10 @@ storiesOf('Moonstone', module)
 				defaultValue={0}
 				width={parseIntOrNullify(select('width', prop.width, Config, 'small'))}
 				orientation={select('orientation', prop.orientation, Config, 'horizontal')}
-				wrap={boolean('wrap', Config)}
-				joined={boolean('joined', Config)}
-				noAnimation={boolean('noAnimation', Config)}
-				disabled={boolean('disabled', Config)}
+				wrap={boolean('wrap', Config, false)}
+				joined={boolean('joined', Config, false)}
+				noAnimation={boolean('noAnimation', Config, false)}
+				disabled={boolean('disabled', Config, false)}
 				incrementIcon={select('incrementIcon', ['', ...incrementIcons], Config)}
 				decrementIcon={select('decrementIcon', ['', ...decrementIcons], Config)}
 			/>

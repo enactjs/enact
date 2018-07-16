@@ -24,7 +24,7 @@ storiesOf('Moonstone', module)
 				meridiemLabel={text('meridiemLabel', Config, '')}
 				minuteAriaLabel={text('minuteAriaLabel', Config, '')}
 				minuteLabel={text('minuteLabel', Config, '')}
-				noLabels={boolean('noLabels', Config)}
+				noLabels={boolean('noLabels', Config, false)}
 				noneText={text('noneText', Config, 'Nothing Selected')}
 				onChange={action('onChange')}
 				onClose={action('onClose')}

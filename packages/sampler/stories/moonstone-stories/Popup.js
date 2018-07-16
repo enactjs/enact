@@ -19,14 +19,14 @@ storiesOf('Moonstone', module)
 		})(() => (
 			<div>
 				<Popup
-					open={boolean('open', Config)}
-					noAnimation={boolean('noAnimation', Config)}
-					noAutoDismiss={boolean('noAutoDismiss', Config)}
+					open={boolean('open', Config, false)}
+					noAnimation={boolean('noAnimation', Config, false)}
+					noAutoDismiss={boolean('noAutoDismiss', Config, false)}
 					onClose={action('onClose')}
 					onHide={action('onHide')}
 					onShow={action('onShow')}
 					scrimType={select('scrimType', ['none', 'translucent', 'transparent'], Config, 'translucent')}
-					showCloseButton={boolean('showCloseButton', Config)}
+					showCloseButton={boolean('showCloseButton', Config, false)}
 					spotlightRestrict={select('spotlightRestrict', ['self-first', 'self-only'], Config, 'self-only')}
 				>
 					<div>{text('children', Config, 'Hello Popup')}</div>

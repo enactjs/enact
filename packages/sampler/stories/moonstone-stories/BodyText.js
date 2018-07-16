@@ -15,7 +15,7 @@ storiesOf('Moonstone', module)
 			text: 'The basic BodyText'
 		})(() => (
 			<BodyText
-				centered={boolean('centered', BodyText)}
+				centered={boolean('centered', BodyText, false)}
 			>
 				{text('children', BodyText, 'This is Body Text')}
 			</BodyText>

@@ -37,7 +37,7 @@ storiesOf('UI', module)
 			<Group
 				childComponent={getComponent(select('childComponent', Object.keys(prop.children), Group, 'CheckboxItem'))}
 				itemProps={{
-					inline: boolean('ItemProps-Inline', Group)
+					inline: boolean('ItemProps-Inline', Group, false)
 				}}
 				select={select('select', ['single', 'radio', 'multiple'], Group, 'radio')}
 				selectedProp="selected"
