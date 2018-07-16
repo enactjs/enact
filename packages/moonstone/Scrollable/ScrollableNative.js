@@ -415,8 +415,8 @@ class ScrollableBaseNative extends Component {
 			if (item && item === spotItem && positionFn) {
 				this.calculateAndScrollTo(item);
 			}
-		} else if (this.childRef.setLastFocusedIndex) {
-			this.childRef.setLastFocusedIndex(ev.target);
+		} else if (this.childRef.setLastFocusedNode) {
+			this.childRef.setLastFocusedNode(ev.target);
 		}
 	}
 
