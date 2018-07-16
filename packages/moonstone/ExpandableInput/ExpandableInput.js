@@ -108,7 +108,7 @@ class ExpandableInputBase extends React.Component {
 		onChange: PropTypes.func,
 
 		/**
-		 * Called when a condition occurs which should cause the expandable to close
+		 * Called when a condition occurs which should cause the expandable to close.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -144,7 +144,7 @@ class ExpandableInputBase extends React.Component {
 		onSpotlightRight: PropTypes.func,
 
 		/**
-		 * Opens the control, with the contents visible
+		 * Opens the control, with the contents visible.
 		 *
 		 * @type {Boolean}
 		 * @public

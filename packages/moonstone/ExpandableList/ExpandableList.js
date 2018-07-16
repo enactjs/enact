@@ -170,7 +170,7 @@ const ExpandableListBase = kind({
 		onClose: PropTypes.func,
 
 		/**
-		 * Called when the expandable is opening
+		 * Called when the expandable is opening.
 		 *
 		 * @type {Function}
 		 * @public
@@ -178,7 +178,7 @@ const ExpandableListBase = kind({
 		onOpen: PropTypes.func,
 
 		/**
-		 * Called when an item is selected
+		 * Called when an item is selected.
 		 *
 		 * @type {Function}
 		 * @public
@@ -213,7 +213,7 @@ const ExpandableListBase = kind({
 		onSpotlightRight: PropTypes.func,
 
 		/**
-		 * Opens the expandable with its contents visible
+		 * Opens the expandable with its contents visible.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -221,7 +221,7 @@ const ExpandableListBase = kind({
 		open: PropTypes.bool,
 
 		/**
-		 * Selection mode for the list
+		 * Selection mode for the list.
 		 *
 		 * * `'single'` - Allows for 0 or 1 item to be selected. The selected item may be deselected.
 		 * * `'radio'` - Allows for 0 or 1 item to be selected. The selected item may only be
@@ -236,7 +236,7 @@ const ExpandableListBase = kind({
 		select: PropTypes.oneOf(['single', 'radio', 'multiple']),
 
 		/**
-		 * Index or array of indices of the selected item(s)
+		 * Index or array of indices of the selected item(s).
 		 *
 		 * @type {Number|Number[]}
 		 * @public

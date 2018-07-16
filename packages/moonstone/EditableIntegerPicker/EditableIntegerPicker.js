@@ -121,7 +121,7 @@ const EditableIntegerPickerBase = kind({
 		inputRef: PropTypes.func,
 
 		/**
-		 * Called when there is a blur in the input
+		 * Called when there is a blur in the input.
 		 *
 		 * @type {Function}
 		 * @public
@@ -130,7 +130,7 @@ const EditableIntegerPickerBase = kind({
 
 		/**
 		 * Called when the pickerItem is clicked.
-		 * This enables the input field in the component
+		 * This enables the input field in the component.
 		 *
 		 * @type {Function}
 		 * @public

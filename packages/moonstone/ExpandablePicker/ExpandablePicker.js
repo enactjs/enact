@@ -145,7 +145,7 @@ const ExpandablePickerBase = kind({
 		onChange: PropTypes.func,
 
 		/**
-		 * Called when a condition occurs which should cause the expandable to close
+		 * Called when a condition occurs which should cause the expandable to close.
 		 *
 		 * @type {Function}
 		 * @public
@@ -197,7 +197,7 @@ const ExpandablePickerBase = kind({
 		onSpotlightRight: PropTypes.func,
 
 		/**
-		 * Opens ExpandablePicker with the contents visible
+		 * Opens ExpandablePicker with the contents visible.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -223,7 +223,7 @@ const ExpandablePickerBase = kind({
 		pickerAriaLabel: PropTypes.string,
 
 		/**
-		 * Sets current locale to RTL
+		 * Sets current locale to RTL.
 		 *
 		 * @type {Boolean}
 		 * @private
@@ -240,7 +240,7 @@ const ExpandablePickerBase = kind({
 		spotlightDisabled: PropTypes.bool,
 
 		/**
-		 * Index of the selected child
+		 * Index of the selected child.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -259,7 +259,8 @@ const ExpandablePickerBase = kind({
 		width: PropTypes.oneOf([null, 'small', 'medium', 'large']),
 
 		/*
-		 * Allows picker to continue from the opposite end of the list of options when reaching the start or the end of the list.
+		 * Allows picker to continue from the opposite end of the list of options when reaching the
+		 * start or the end of the list.
 		 *
 		 * @type {Boolean}
 		 * @public

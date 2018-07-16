@@ -89,7 +89,7 @@ const MediaOverlayBase = kind({
 		mediaComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
-		 * Placeholder for image overlay
+		 * Placeholder for image overlay.
 		 *
 		 * @type {String}
 		 * @public
@@ -97,7 +97,7 @@ const MediaOverlayBase = kind({
 		placeholder: PropTypes.string,
 
 		/**
-		 * Text to display over media
+		 * Text to display over media.
 		 *
 		 * @type {String}
 		 * @public

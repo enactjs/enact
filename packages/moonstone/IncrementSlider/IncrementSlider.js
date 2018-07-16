@@ -140,7 +140,7 @@ const IncrementSliderBase = kind({
 		decrementIcon: PropTypes.string,
 
 		/**
-		 * Disables IncrementSlider and does not generate events
+		 * Disables IncrementSlider and does not generate events.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -210,7 +210,7 @@ const IncrementSliderBase = kind({
 		min: PropTypes.number,
 
 		/**
-		 * Hides the slider bar fill and prevents highlight when spotted
+		 * Hides the slider bar fill and prevents highlight when spotted.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -218,7 +218,7 @@ const IncrementSliderBase = kind({
 		noFill: PropTypes.bool,
 
 		/**
-		 * Called when the knob is activated or deactivated by selecting it via 5-way
+		 * Called when the knob is activated or deactivated by selecting it via 5-way.
 		 *
 		 * @type {Function}
 		 * @public
@@ -236,7 +236,7 @@ const IncrementSliderBase = kind({
 		onChange: PropTypes.func,
 
 		/**
-		 * Called run when the decrement button becomes disabled
+		 * Called run when the decrement button becomes disabled.
 		 *
 		 * @type {Function}
 		 * @private
@@ -244,7 +244,7 @@ const IncrementSliderBase = kind({
 		onDecrementSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * Forwarded from SliderBehaviorDecorator onto the internal slider
+		 * Forwarded from SliderBehaviorDecorator onto the internal slider.
 		 *
 		 * @type {Function}
 		 * @private
@@ -252,7 +252,7 @@ const IncrementSliderBase = kind({
 		onDragEnd: PropTypes.func,
 
 		/**
-		 * Forwarded from SliderBehaviorDecorator onto the internal slider
+		 * Forwarded from SliderBehaviorDecorator onto the internal slider.
 		 *
 		 * @type {Function}
 		 * @private
@@ -260,7 +260,7 @@ const IncrementSliderBase = kind({
 		onDragStart: PropTypes.func,
 
 		/**
-		 * Called when the increment button becomes disabled
+		 * Called when the increment button becomes disabled.
 		 *
 		 * @type {Function}
 		 * @private
@@ -268,7 +268,7 @@ const IncrementSliderBase = kind({
 		onIncrementSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * Called when the increment button becomes disabled
+		 * Called when the increment button becomes disabled.
 		 *
 		 * @type {Function}
 		 * @private

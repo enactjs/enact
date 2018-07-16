@@ -63,7 +63,7 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * The value of the picker to be displayed
+			 * The value of the picker to be displayed.
 			 *
 			 * @type {Number}
 			 * @default 0

@@ -93,7 +93,7 @@ const ExpandableItemBase = kind({
 		autoClose: PropTypes.bool,
 
 		/**
-		 * The contents of the expandable item displayed when `open` is `true`
+		 * The contents of the expandable item displayed when `open` is `true`.
 		 *
 		 * @type {Node}
 		 * @public
@@ -135,7 +135,7 @@ const ExpandableItemBase = kind({
 		noneText: PropTypes.string,
 
 		/**
-		 * Called when a condition occurs which should cause the expandable to close
+		 * Called when a condition occurs which should cause the expandable to close.
 		 *
 		 * @type {Function}
 		 * @public
@@ -143,7 +143,7 @@ const ExpandableItemBase = kind({
 		onClose: PropTypes.func,
 
 		/**
-		 * Called when the expandable closes
+		 * Called when the expandable closes.
 		 *
 		 * @type {Function}
 		 * @private
@@ -151,7 +151,7 @@ const ExpandableItemBase = kind({
 		onHide: PropTypes.func,
 
 		/**
-		 * Called when a condition occurs which should cause the expandable to open
+		 * Called when a condition occurs which should cause the expandable to open.
 		 *
 		 * @type {Function}
 		 * @public
@@ -159,7 +159,7 @@ const ExpandableItemBase = kind({
 		onOpen: PropTypes.func,
 
 		/**
-		 * Called when the expandable opens
+		 * Called when the expandable opens.
 		 *
 		 * @type {Function}
 		 * @private
@@ -212,7 +212,7 @@ const ExpandableItemBase = kind({
 		onSpotlightUp: PropTypes.func,
 
 		/**
-		 * Opens ExpandableItem with the contents visible
+		 * Opens ExpandableItem with the contents visible.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -221,7 +221,7 @@ const ExpandableItemBase = kind({
 		open: PropTypes.bool,
 
 		/**
-		 * Sets a reference to the root container node of the ExpandableItem
+		 * Sets a reference to the root container node of the ExpandableItem.
 		 *
 		 * @type {Function}
 		 * @private
