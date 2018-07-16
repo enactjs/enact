@@ -3,7 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ri from '../resolution';
-import ComponentOverride from '../ComponentOverride';
 
 import css from './Layout.less';
 
