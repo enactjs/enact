@@ -11,6 +11,7 @@
  */
 
 import deprecate from '@enact/core/internal/deprecate';
+import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
@@ -93,6 +94,13 @@ const ButtonBase = kind({
 		publicClassNames: ['button', 'bg', 'selected', 'small']
 	},
 
+	handlers: {
+		onClick: handle(
+			forProp('disabled', false),
+			forward('onClick')
+		)
+	},
+
 	computed: {
 		className: ({backgroundOpacity, color, styler}) => styler.append(
 			backgroundOpacity,
@@ -108,14 +116,12 @@ const ButtonBase = kind({
 			deprecation();
 		}
 
-		return (
-			<UiButtonBase
-				data-webos-voice-intent="Select"
-				{...rest}
-				css={css}
-				iconComponent={Icon}
-			/>
-		);
+		return UiButtonBase.inline({
+			'data-webos-voice-intent': 'Select',
+			...rest,
+			css: css,
+			iconComponent: Icon
+		});
 	}
 });
 

@@ -157,17 +157,16 @@ const IconButtonBase = kind({
 			children = null;
 		}
 
-		return (
-			<ComponentOverride
-				{...rest}
-				component={buttonComponent}
-				small={small}
-				minWidth={false}
-			>
-				<Icon small={small} className={css.icon}>{icon}</Icon>
-				{children}
-			</ComponentOverride>
-		);
+		return ComponentOverride({
+			...rest,
+			component: buttonComponent,
+			small: small,
+			minWidth: false,
+			children: [
+				<Icon small={small} className={css.icon}>{icon}</Icon>,
+				children
+			]
+		});
 	}
 });
 

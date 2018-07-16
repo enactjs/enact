@@ -124,6 +124,18 @@ const kind = (config) => {
 	// Decorate the Component with the computed property object in DEV for easier testability
 	if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
 
+	Component.inline = (props, context) => {
+		if (__DEV__ && handlers) {
+			// eslint-disable-next-line
+			console.warn('Cannot use handlers with inline');
+		}
+
+		return Component.prototype.render.apply({
+			props,
+			context,
+			handlers: null
+		});
+	};
 
 	return Component;
 };
