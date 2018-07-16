@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` component for a light-weight `Icon` or `IconButton` with a label that responds to locale rules
+
 ### Fixed
 
 - `moonstone/Input` to not focus by *tab* key
