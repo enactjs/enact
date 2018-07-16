@@ -69,9 +69,40 @@ const ExpandableItemBase = kind({
 		 */
 		title: PropTypes.string.isRequired,
 
-		// TODO: Document voice control props and make public
+		/**
+		 * Disables voice control.
+		 *
+		 * @type {Boolean}
+		 * @memberof moonstone/ExpandableItem.ExpandableItemBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
+
+		/**
+		 * The voice control group.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/ExpandableItem.ExpandableItemBase.prototype
+		 * @public
+		 */
 		'data-webos-voice-group-label': PropTypes.string,
+
+		/**
+		 * The voice control intent.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/ExpandableItem.ExpandableItemBase.prototype
+		 * @public
+		 */
 		'data-webos-voice-intent': PropTypes.string,
+
+		/**
+		 * The voice control label.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/ExpandableItem.ExpandableItemBase.prototype
+		 * @public
+		 */
 		'data-webos-voice-label': PropTypes.string,
 
 		/**
@@ -309,6 +340,7 @@ const ExpandableItemBase = kind({
 
 	render: ({
 		children,
+		'data-webos-voice-disabled': voiceDisabled,
 		'data-webos-voice-group-label': voiceGroupLabel,
 		'data-webos-voice-intent': voiceIntent,
 		'data-webos-voice-label': voiceLabel,
@@ -353,6 +385,7 @@ const ExpandableItemBase = kind({
 					css={css}
 					className={labeledItemClassName}
 					data-expandable-label
+					data-webos-voice-disabled={voiceDisabled}
 					data-webos-voice-group-label={voiceGroupLabel}
 					data-webos-voice-intent={voiceIntent}
 					data-webos-voice-label={voiceLabel}
