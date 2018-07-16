@@ -7,7 +7,6 @@
  * @exports ButtonDecorator
  */
 
-import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -154,13 +153,6 @@ const ButtonBase = kind({
 				<Icon small={small} className={css.icon}>{icon}</Icon>
 			) : icon;
 		}
-	},
-
-	handlers: {
-		onClick: handle(
-			forProp('disabled', false),
-			forward('onClick')
-		)
 	},
 
 	render: ({children, css, disabled, icon, ...rest}) => {
