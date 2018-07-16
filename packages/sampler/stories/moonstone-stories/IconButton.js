@@ -31,9 +31,9 @@ storiesOf('Moonstone', module)
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, IconButton, '')}
 				color={select('color', ['', 'red', 'green', 'yellow', 'blue'], IconButton, '')}
-				disabled={boolean('disabled', IconButton)}
-				selected={boolean('selected', IconButton)}
-				small={boolean('small', IconButton)}
+				disabled={boolean('disabled', IconButton, false)}
+				selected={boolean('selected', IconButton, false)}
+				small={boolean('small', IconButton, false)}
 				tooltipText={text('tooltipText', IconButton, '')}
 			>
 				{emptify(select('src', ['', docs, factory, logo], '')) + emptify(select('icon', ['', ...icons], 'plus')) + emptify(text('custom icon', ''))}

@@ -87,7 +87,7 @@ storiesOf('Moonstone', module)
 			return (
 				<VirtualList
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
-					focusableScrollbar={boolean('focusableScrollbar', Config)}
+					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
 					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}

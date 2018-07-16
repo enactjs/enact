@@ -22,10 +22,10 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of ExpandableItem'
 		})(() => (
 			<ExpandableItem
-				autoClose={boolean('autoClose', Config)}
-				disabled={boolean('disabled', Config)}
+				autoClose={boolean('autoClose', Config, false)}
+				disabled={boolean('disabled', Config, false)}
 				label={text('label', Config, 'label')}
-				lockBottom={boolean('lockBottom', Config)}
+				lockBottom={boolean('lockBottom', Config, false)}
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}
 				showLabel={select('showLabel', ['always', 'never', 'auto'], Config)}

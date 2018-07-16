@@ -34,15 +34,15 @@ storiesOf('Moonstone', module)
 				aria-label={text('aria-label', Picker, '')}
 				decrementAriaLabel={text('decrementAriaLabel', Picker, '')}
 				decrementIcon={select('decrementIcon', ['', ...decrementIcons], Picker)}
-				disabled={boolean('disabled', Picker)}
+				disabled={boolean('disabled', Picker, false)}
 				incrementAriaLabel={text('incrementAriaLabel', Picker, '')}
 				incrementIcon={select('incrementIcon', ['', ...incrementIcons], Picker)}
-				joined={boolean('joined', Picker)}
-				noAnimation={boolean('noAnimation', Picker)}
+				joined={boolean('joined', Picker, false)}
+				noAnimation={boolean('noAnimation', Picker, false)}
 				onChange={action('onChange')}
 				orientation={select('orientation', prop.orientation, Picker, prop.orientation[0])}
 				width={select('width', prop.width, Picker, prop.width[3])}
-				wrap={boolean('wrap', Picker)}
+				wrap={boolean('wrap', Picker, false)}
 			>
 				{airports}
 			</Picker>

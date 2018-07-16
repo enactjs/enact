@@ -67,9 +67,9 @@ storiesOf('Moonstone', module)
 					/>
 					<Spinner
 						blockClickOn={select('blockClickOn', [null, 'container', 'screen'], Config)}
-						centered={boolean('centered', Config)}
-						scrim={boolean('scrim', Config)}
-						transparent={boolean('transparent', Config)}
+						centered={boolean('centered', Config, false)}
+						scrim={boolean('scrim', Config, false)}
+						transparent={boolean('transparent', Config, false)}
 					>
 						{text('content', Config, '')}
 					</Spinner>

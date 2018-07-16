@@ -21,18 +21,18 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of Slider'
 		})(() => {
 			const side = select('side', ['after', 'before', 'left', 'right'], SliderTooltipConfig, 'before');
-			const tooltip = boolean('tooltip', SliderTooltipConfig);
-			const percent = boolean('percent', SliderTooltipConfig);
+			const tooltip = boolean('tooltip', SliderTooltipConfig, false);
+			const percent = boolean('percent', SliderTooltipConfig, false);
 
 			return (
 				<Slider
-					activateOnFocus={boolean('activateOnFocus', SliderConfig)}
+					activateOnFocus={boolean('activateOnFocus', SliderConfig, false)}
 					backgroundProgress={number('backgroundProgress', SliderConfig, {range: true, min: 0, max: 1, step: 0.01}, 0.5)}
-					disabled={boolean('disabled', SliderConfig)}
+					disabled={boolean('disabled', SliderConfig, false)}
 					knobStep={number('knobStep', SliderConfig)}
 					max={number('max', SliderConfig, 10)}
 					min={number('min', SliderConfig, 0)}
-					noFill={boolean('noFill', SliderConfig)}
+					noFill={boolean('noFill', SliderConfig, false)}
 					onChange={action('onChange')}
 					orientation={select('orientation', ['horizontal', 'vertical'], SliderConfig, 'horizontal')}
 					step={number('step', SliderConfig, 1)}

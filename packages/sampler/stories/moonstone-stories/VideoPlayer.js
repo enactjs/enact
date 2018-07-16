@@ -117,20 +117,20 @@ storiesOf('Moonstone', module)
 					>VideoPlayer Edge</label>
 					<VideoPlayer
 						autoCloseTimeout={number('autoCloseTimeout', Config, 7000)}
-						disabled={boolean('disabled', Config)}
+						disabled={boolean('disabled', Config, false)}
 						feedbackHideDelay={number('feedbackHideDelay', Config, 3000)}
 						loop={boolean('loop', Config, true)}
 						miniFeedbackHideDelay={number('miniFeedbackHideDelay', Config, 2000)}
 						muted={boolean('muted', Config, true)}
-						noAutoPlay={boolean('noAutoPlay', Config)}
-						noMiniFeedback={boolean('noMiniFeedback', Config)}
-						noSlider={boolean('noSlider', Config)}
-						pauseAtEnd={boolean('pauseAtEnd', Config)}
+						noAutoPlay={boolean('noAutoPlay', Config, false)}
+						noMiniFeedback={boolean('noMiniFeedback', Config, false)}
+						noSlider={boolean('noSlider', Config, false)}
+						pauseAtEnd={boolean('pauseAtEnd', Config, false)}
 						poster={poster}
-						seekDisabled={boolean('seekDisabled', Config)}
-						spotlightDisabled={boolean('spotlightDisabled', Config)}
+						seekDisabled={boolean('seekDisabled', Config, false)}
+						spotlightDisabled={boolean('spotlightDisabled', Config, false)}
 						thumbnailSrc={poster}
-						thumbnailUnavailable={boolean('thumbnailUnavailable', Config)}
+						thumbnailUnavailable={boolean('thumbnailUnavailable', Config, false)}
 						title={text('title', Config, 'Moonstone VideoPlayer Sample Video')}
 						titleHideDelay={number('titleHideDelay', Config, 4000)}
 						{...prop.eventActions}
@@ -142,19 +142,19 @@ storiesOf('Moonstone', module)
 							forwardIcon={select('forwardIcon', icons, MediaControlsConfig, 'forward')}
 							initialJumpDelay={number('initialJumpDelay', MediaControlsConfig, 400)}
 							jumpBackwardIcon={select('jumpBackwardIcon', icons, MediaControlsConfig, 'skipbackward')}
-							jumpButtonsDisabled={boolean('jumpButtonsDisabled', MediaControlsConfig)}
+							jumpButtonsDisabled={boolean('jumpButtonsDisabled', MediaControlsConfig, false)}
 							jumpDelay={number('jumpDelay', MediaControlsConfig, 200)}
 							jumpForwardIcon={select('jumpForwardIcon', icons, MediaControlsConfig, 'skipforward')}
 							moreButtonCloseLabel={text('moreButtonCloseLabel', MediaControlsConfig)}
 							moreButtonColor={select('moreButtonColor', prop.moreButtonColor, MediaControlsConfig, '')}
-							moreButtonDisabled={boolean('moreButtonDisabled', MediaControlsConfig)}
+							moreButtonDisabled={boolean('moreButtonDisabled', MediaControlsConfig, false)}
 							moreButtonLabel={text('moreButtonLabel', MediaControlsConfig)}
-							no5WayJump={boolean('no5WayJump', MediaControlsConfig)}
-							noJumpButtons={boolean('noJumpButtons', MediaControlsConfig)}
-							noRateButtons={boolean('noRateButtons', MediaControlsConfig)}
+							no5WayJump={boolean('no5WayJump', MediaControlsConfig, false)}
+							noJumpButtons={boolean('noJumpButtons', MediaControlsConfig, false)}
+							noRateButtons={boolean('noRateButtons', MediaControlsConfig, false)}
 							pauseIcon={select('pauseIcon', icons, MediaControlsConfig, 'pause')}
 							playIcon={select('playIcon', icons, MediaControlsConfig, 'play')}
-							rateButtonsDisabled={boolean('rateButtonsDisabled', MediaControlsConfig)}
+							rateButtonsDisabled={boolean('rateButtonsDisabled', MediaControlsConfig, false)}
 						>
 							<leftComponents><IconButton backgroundOpacity="translucent">fullscreen</IconButton></leftComponents>
 							<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>

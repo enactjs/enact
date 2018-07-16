@@ -14,7 +14,7 @@ storiesOf('Moonstone', module)
 			propTablesExclude: [Marquee],
 			text: 'The basic MarqueeText'
 		})(() => {
-			const disabled = boolean('disabled', Marquee);
+			const disabled = boolean('disabled', Marquee, false);
 			return (
 				<section>
 					<Marquee
@@ -22,7 +22,7 @@ storiesOf('Moonstone', module)
 						disabled={disabled}
 						forceDirection={select('forceDirection', [null, 'rtl', 'ltr'], Marquee)}
 						marqueeDelay={number('marqueeDelay', Marquee, 1000)}
-						marqueeDisabled={boolean('marqueeDisabled', Marquee)}
+						marqueeDisabled={boolean('marqueeDisabled', Marquee, false)}
 						marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
 						marqueeOnRenderDelay={1000}
 						marqueeResetDelay={number('marqueeResetDelay', Marquee, 1000)}

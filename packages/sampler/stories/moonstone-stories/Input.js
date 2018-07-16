@@ -22,14 +22,14 @@ storiesOf('Moonstone', module)
 		})(() => (
 			<Input
 				onChange={action('onChange')}
-				disabled={boolean('disabled', Config)}
-				dismissOnEnter={boolean('dismissOnEnter', Config)}
+				disabled={boolean('disabled', Config, false)}
+				dismissOnEnter={boolean('dismissOnEnter', Config, false)}
 				iconAfter={select('iconAfter', iconNames, Config)}
 				iconBefore={select('iconBefore', iconNames, Config)}
-				invalid={boolean('invalid', Config)}
+				invalid={boolean('invalid', Config, false)}
 				invalidMessage={text('invalidMessage', Config)}
 				placeholder={text('placeholder', Config)}
-				small={boolean('small', Config)}
+				small={boolean('small', Config, false)}
 				type={text('type', Config)}
 			/>
 		))

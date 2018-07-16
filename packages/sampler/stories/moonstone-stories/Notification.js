@@ -22,7 +22,7 @@ storiesOf('Moonstone', module)
 		})(() => (
 			<Notification
 				open={boolean('open', Config, true)}
-				noAutoDismiss={boolean('noAutoDismiss', Config)}
+				noAutoDismiss={boolean('noAutoDismiss', Config, false)}
 				onClose={action('onClose')}
 			>
 				<span>{text('message', Config, 'Notification has content in it and can be very useful for organizing information for the user.')}</span>

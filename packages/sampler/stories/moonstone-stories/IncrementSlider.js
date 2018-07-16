@@ -21,19 +21,19 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of IncrementSlider'
 		})(() => {
 			const side = select('side', ['after', 'before', 'left', 'right'], IncrementSliderTooltipConfig, 'after');
-			const tooltip = boolean('tooltip', IncrementSliderTooltipConfig);
-			const percent = boolean('percent', IncrementSliderTooltipConfig);
+			const tooltip = boolean('tooltip', IncrementSliderTooltipConfig, false);
+			const percent = boolean('percent', IncrementSliderTooltipConfig, false);
 
 			return (
 				<IncrementSlider
 					backgroundProgress={number('backgroundProgress', IncrementSliderConfig, {range: true, min: 0, max: 1, step: 0.01})}
 					decrementIcon={select('decrementIcon', ['', ...decrementIcons], IncrementSliderConfig)}
-					disabled={boolean('disabled', IncrementSliderConfig)}
+					disabled={boolean('disabled', IncrementSliderConfig, false)}
 					incrementIcon={select('incrementIcon', ['', ...incrementIcons], IncrementSliderConfig)}
 					knobStep={number('knobStep', IncrementSliderConfig)}
 					max={number('max', IncrementSliderConfig)}
 					min={number('min', IncrementSliderConfig)}
-					noFill={boolean('noFill', IncrementSliderConfig)}
+					noFill={boolean('noFill', IncrementSliderConfig, false)}
 					onChange={action('onChange')}
 					orientation={select('orientation', ['horizontal', 'vertical'], IncrementSliderConfig)}
 					step={number('step', IncrementSliderConfig)} // def: 1

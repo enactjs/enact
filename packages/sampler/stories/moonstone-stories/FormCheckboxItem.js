@@ -17,9 +17,9 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of FormCheckboxItem'
 		})(() => (
 			<FormCheckboxItem
-				disabled={boolean('disabled', Config)}
+				disabled={boolean('disabled', Config, false)}
 				iconPosition={select('iconPosition', ['before', 'after'], Config, 'before')}
-				inline={boolean('inline', Config)}
+				inline={boolean('inline', Config, false)}
 				onToggle={action('onToggle')}
 			>
 				{text('children', Config, 'A Checkbox for a form')}

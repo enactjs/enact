@@ -39,11 +39,11 @@ storiesOf('Moonstone', module)
 			<div style={{textAlign: 'center', marginTop: ri.unit(99, 'rem')}}>
 				<ContextualButton
 					direction={select('direction', ['up', 'down', 'left', 'right'], Config)}
-					noAutoDismiss={boolean('noAutoDismiss', Config)}
+					noAutoDismiss={boolean('noAutoDismiss', Config, false)}
 					onClose={action('onClose')}
-					open={boolean('open', Config)}
+					open={boolean('open', Config, false)}
 					popupComponent={renderPopup}
-					showCloseButton={boolean('showCloseButton', Config)}
+					showCloseButton={boolean('showCloseButton', Config, false)}
 					spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], Config)}
 				>
 					{text('button string', Config, 'Hello Contextual Button')}

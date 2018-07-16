@@ -20,13 +20,13 @@ storiesOf('Moonstone', module)
 			text: 'The basic ProgressBar'
 		})(() => {
 			const side = select('side', ['after', 'before', 'left', 'right'], ProgressBarTooltipConfig, 'before');
-			const tooltip = boolean('tooltip', ProgressBarTooltipConfig);
+			const tooltip = boolean('tooltip', ProgressBarTooltipConfig, false);
 
 			return (
 				<ProgressBar
 					backgroundProgress={number('backgroundProgress', ProgressBarConfig, {range: true, min: 0, max: 1, step: 0.01}, 0.5)}
-					disabled={boolean('disabled', ProgressBarConfig)}
-					highlighted={boolean('highlighted', ProgressBarConfig)}
+					disabled={boolean('disabled', ProgressBarConfig, false)}
+					highlighted={boolean('highlighted', ProgressBarConfig, false)}
 					orientation={select('orientation', ['horizontal', 'vertical'], ProgressBarConfig, 'horizontal')}
 					progress={number('progress', ProgressBarConfig, {range: true, min: 0, max: 1, step: 0.01}, 0.4)}
 					side={select('side', ['after', 'before', 'left', 'right'], ProgressBarConfig, 'before')}

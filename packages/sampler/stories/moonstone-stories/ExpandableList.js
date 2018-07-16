@@ -18,10 +18,10 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of ExpandableList'
 		})(() => (
 			<ExpandableList
-				closeOnSelect={boolean('closeOnSelect', Config)}
-				disabled={boolean('disabled', Config)}
-				noAutoClose={boolean('noAutoClose', Config)}
-				noLockBottom={boolean('noLockBottom', Config)}
+				closeOnSelect={boolean('closeOnSelect', Config, false)}
+				disabled={boolean('disabled', Config, false)}
+				noAutoClose={boolean('noAutoClose', Config, false)}
+				noLockBottom={boolean('noLockBottom', Config, false)}
 				noneText={text('noneText', Config, 'nothing selected')}
 				onSelect={action('onSelect')}
 				onClose={action('onClose')}

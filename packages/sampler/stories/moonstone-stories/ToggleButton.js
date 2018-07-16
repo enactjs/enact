@@ -27,9 +27,9 @@ storiesOf('Moonstone', module)
 				aria-label="toggle button"
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 				casing={select('casing', prop.casing, Config, 'upper')}
-				disabled={boolean('disabled', Config)}
+				disabled={boolean('disabled', Config, false)}
 				onToggle={action('onToggle')}
-				small={boolean('small', Config)}
+				small={boolean('small', Config, false)}
 				toggleOffLabel={text('toggleOffLabel', Config, 'Off')}
 				toggleOnLabel={text('toggleOnLabel', Config, 'On')}
 			>
