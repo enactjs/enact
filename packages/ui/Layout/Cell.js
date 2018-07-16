@@ -129,7 +129,6 @@ const CellBase = kind({
 		delete rest.size;
 
 		return <Component {...rest} />;
-
 	}
 });
 
