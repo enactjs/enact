@@ -68,7 +68,7 @@ const HeaderBase = kind({
 		]),
 
 		/**
-		 * Indent its content and removes lines.
+		 * Indents its content and removes separator lines.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -77,8 +77,9 @@ const HeaderBase = kind({
 		fullBleed: PropTypes.bool,
 
 		/**
-		 * Converts the title text of a "standard" Header into an Input, which you provide through
-		 * this property. This is also a [`slot`]{@link ui/Slottable.Slottable}, so it can be referred
+		 * [Input]{@link moonstone/Input} element that will replace the `title`.
+		 *
+		 * This is also a [slot]{@link ui/Slottable.Slottable}, so it can be referred
 		 * to as if it were JSX.
 		 *
 		 * Example
@@ -131,13 +132,6 @@ const HeaderBase = kind({
 		 * @type {String}
 		 */
 		title: PropTypes.string,
-
-		// /** SHOULD THIS BE REMOVED
-		//  * Text displayed above the title
-		//  *
-		//  * @type {String}
-		//  */
-		// titleAbove: PropTypes.string,
 
 		/**
 		 * Text displayed below the title. This is a [`slot`]{@link ui/Slottable.Slottable}.
@@ -247,7 +241,7 @@ const HeaderBase = kind({
 });
 
 // Note that we only export this (even as HeaderBase). HeaderBase is not useful on its own.
-const Header = Slottable({slots: ['headerInput', 'subTitleBelow', /* 'titleAbove', */'title', 'titleBelow']}, Skinnable(HeaderBase));
+const Header = Slottable({slots: ['headerInput', 'subTitleBelow', 'title', 'titleBelow']}, Skinnable(HeaderBase));
 
 // Set up Header so when it's used in a slottable layout (like Panel), it is automatically
 // recognized as this specific slot.

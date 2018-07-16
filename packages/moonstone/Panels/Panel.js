@@ -51,8 +51,9 @@ const PanelBase = kind({
 		autoFocus: PropTypes.string,
 
 		/**
-		 * Header for the panel. This is usually passed by the
-		 * [`Slottable`]{@link ui/Slottable.Slottable} API by using a
+		 * Header for the panel.
+		 *
+		 * This is usually passed by the [Slottable]{@link ui/Slottable.Slottable} API by using a
 		 * [Header]{@link moonstone/Panels.Header} component as a child of the Panel.
 		 *
 		 * @type {Header}

@@ -23,7 +23,9 @@ export const breadcrumbWidth = 96;
 
 /**
  * Vertical, transparent bar used to navigate to a prior Panel.
- * ActivityPanels has one breadcrumb, and AlwaysViewingPanels can have multiple stacked horizontally.
+ * [`ActivityPanels`]{@link moonstone/Panels.ActivityPanels} has one breadcrumb, and
+ * [`AlwaysViewingPanels`]{@link moonstone/Panels.AlwaysViewingPanels} can have multiple stacked
+ * horizontally.
  *
  * @class Breadcrumb
  * @memberof moonstone/Panels
@@ -35,7 +37,7 @@ const BreadcrumbBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Breadcrumb.prototype */ {
 		/**
-		 * Index of the panel that relates to a breadcrumb.
+		 * Index of the accociated panel.
 		 *
 		 * @type {Number}
 		 * @required
