@@ -1,8 +1,8 @@
-import {forward} from '@enact/core/handle';
+import {forward, stopImmediate} from '@enact/core/handle';
 import clamp from 'ramda/src/clamp';
 import equals from 'ramda/src/equals';
 import {is} from '@enact/core/keymap';
-import {Job} from '@enact/core/util';
+import {cap, Job} from '@enact/core/util';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import platform from '@enact/core/platform';
@@ -634,45 +634,53 @@ const PickerBase = class extends React.Component {
 
 	handleDecKeyDown = (ev) => {
 		const {keyCode} = ev;
-		const {
-			onPickerSpotlightDown,
-			onPickerSpotlightLeft,
-			onPickerSpotlightRight,
-			onPickerSpotlightUp,
-			orientation,
-			step
-		} = this.props;
+		const direction = getDirection(keyCode);
 
-		if (isDown(keyCode) && onPickerSpotlightDown) {
-			onPickerSpotlightDown(ev);
-		} else if (isLeft(keyCode) && onPickerSpotlightLeft) {
-			onPickerSpotlightLeft(ev);
-		} else if (isRight(keyCode) && onPickerSpotlightRight && (orientation === 'vertical' || this.hasReachedBound(step))) {
-			onPickerSpotlightRight(ev);
-		} else if (isUp(keyCode) && onPickerSpotlightUp && (orientation === 'horizontal' || this.hasReachedBound(step))) {
-			onPickerSpotlightUp(ev);
+		if (direction) {
+			const {orientation, step} = this.props;
+
+			if (
+				!this.hasReachedBound(step) &&
+				(
+					isRight(keyCode) && orientation === 'horizontal' ||
+					isUp(keyCode) && orientation === 'vertical'
+				)
+			) {
+				ev.preventDefault();
+				// prevent default spotlight behavior
+				stopImmediate(ev);
+				// set the pointer mode to false on keydown
+				Spotlight.setPointerMode(false);
+				Spotlight.focus(this.containerRef.querySelector(`.${css.incrementer}`));
+			} else {
+				forward(`onPickerSpotlight${cap(direction)}`, ev, this.props);
+			}
 		}
 	}
 
 	handleIncKeyDown = (ev) => {
 		const {keyCode} = ev;
-		const {
-			onPickerSpotlightDown,
-			onPickerSpotlightLeft,
-			onPickerSpotlightRight,
-			onPickerSpotlightUp,
-			orientation,
-			step
-		} = this.props;
+		const direction = getDirection(keyCode);
 
-		if (isDown(keyCode) && onPickerSpotlightDown && (orientation === 'horizontal' || this.hasReachedBound(step * -1))) {
-			onPickerSpotlightDown(ev);
-		} else if (isLeft(keyCode) && onPickerSpotlightLeft && (orientation === 'vertical' || this.hasReachedBound(step * -1))) {
-			onPickerSpotlightLeft(ev);
-		} else if (isRight(keyCode) && onPickerSpotlightRight) {
-			onPickerSpotlightRight(ev);
-		} else if (isUp(keyCode) && onPickerSpotlightUp) {
-			onPickerSpotlightUp(ev);
+		if (direction) {
+			const {orientation, step} = this.props;
+
+			if (
+				!this.hasReachedBound(step * -1) &&
+				(
+					isLeft(keyCode) && orientation === 'horizontal' ||
+					isDown(keyCode) && orientation === 'vertical'
+				)
+			) {
+				ev.preventDefault();
+				// prevent default spotlight behavior
+				stopImmediate(ev);
+				// set the pointer mode to false on keydown
+				Spotlight.setPointerMode(false);
+				Spotlight.focus(this.containerRef.querySelector(`.${css.decrementer}`));
+			} else {
+				forward(`onPickerSpotlight${cap(direction)}`, ev, this.props);
+			}
 		}
 	}
 
