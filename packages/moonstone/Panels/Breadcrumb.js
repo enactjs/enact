@@ -37,7 +37,7 @@ const BreadcrumbBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Breadcrumb.prototype */ {
 		/**
-		 * Index of the accociated panel.
+		 * Index of the associated panel.
 		 *
 		 * @type {Number}
 		 * @required
