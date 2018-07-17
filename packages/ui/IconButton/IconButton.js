@@ -164,7 +164,7 @@ const IconButtonBase = kind({
 			minWidth: false,
 			children: [
 				<Icon small={small} key="icon" className={css.icon}>{icon}</Icon>,
-				children
+				...React.Children.toArray(children)
 			]
 		});
 	}

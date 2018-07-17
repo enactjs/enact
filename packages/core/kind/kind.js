@@ -75,6 +75,12 @@ const kind = (config) => {
 
 	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
+	const renderKind = (props, context) => {
+		if (renderStyles) props = renderStyles(props, context);
+		if (renderComputed) props = renderComputed(props, context);
+
+		return render(props, context);
+	};
 
 	// addition prop decorations would be chained here (after config.render)
 	const Component = class extends React.Component {
@@ -113,11 +119,10 @@ const kind = (config) => {
 		}
 
 		render () {
-			let p = Object.assign({}, this.props, this.handlers);
-			if (renderStyles) p = renderStyles(p, this.context);
-			if (renderComputed) p = renderComputed(p, this.context);
-
-			return render(p, this.context);
+			return renderKind({
+				...this.props,
+				...this.handlers
+			}, this.context);
 		}
 	};
 
@@ -125,16 +130,18 @@ const kind = (config) => {
 	if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
 
 	Component.inline = (props, context) => {
-		if (__DEV__ && handlers) {
-			// eslint-disable-next-line
-			console.warn('Cannot use handlers with inline');
+		const updated = {
+			...defaultProps,
+			...props
+		};
+
+		if (handlers) {
+			Object.keys(handlers).forEach(key => {
+				updated[key] = (ev) => handlers[key](ev, props, context);
+			});
 		}
 
-		return Component.prototype.render.apply({
-			props,
-			context,
-			handlers: null
-		});
+		return renderKind(updated, context);
 	};
 
 	return Component;
