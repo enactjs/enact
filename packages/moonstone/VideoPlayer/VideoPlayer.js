@@ -668,7 +668,6 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-
 		if (
 			!this.state.mediaControlsVisible && prevState.mediaControlsVisible !== this.state.mediaControlsVisible ||
 			!this.state.mediaSliderVisible && prevState.mediaSliderVisible !== this.state.mediaSliderVisible
@@ -696,6 +695,10 @@ const VideoPlayerBase = class extends React.Component {
 					this.focusDefaultMediaControl();
 				}
 			}
+		}
+
+		if (this.state.bottomControlsRendered && !prevState.bottomControlsRendered) {
+			this.showControls();
 		}
 	}
 
@@ -999,11 +1002,16 @@ const VideoPlayerBase = class extends React.Component {
 			proportionLoaded: 0
 		});
 
-		this.showControls();
+		if (!this.state.bottomControlsRendered) {
+			this.renderBottomControl.idle();
+		}
+	}
+
+	handleEmptied = () => {
+		this.hideControls();
 	}
 
 	handlePlay = this.handle(
-		forwardPlay,
 		this.shouldShowMiniFeedback,
 		() => this.play()
 	)
@@ -1087,16 +1095,19 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState(updatedState);
 	}
 
-	handlePlayEvent = (ev) => {
-		forward('onPlay', ev, this.props);
-		if (!this.state.bottomControlsRendered) {
-			this.renderBottomControl.idle();
+	handlePlayEvent = this.handle(
+		forwardPlay,
+		() => {
+			if (this.state.bottomControlsRendered && !this.state.mediaControlsVisible) {
+				this.showControls();
+			}
 		}
-	}
+	);
 
 	renderBottomControl = new Job(() => {
-		this.showControls();
-		this.setState({bottomControlsRendered: true});
+		if (!this.state.bottomControlsRendered) {
+			this.setState({bottomControlsRendered: true});
+		}
 	});
 
 	/**
@@ -1734,6 +1745,7 @@ const VideoPlayerBase = class extends React.Component {
 		mediaProps.mediaComponent = 'video';
 		mediaProps.onPlay = this.handlePlayEvent;
 		mediaProps.onLoadStart = this.handleLoadStart;
+		mediaProps.onEmptied = this.handleEmptied;
 		mediaProps.onUpdate = this.handleEvent;
 		mediaProps.ref = this.setVideoRef;
 
