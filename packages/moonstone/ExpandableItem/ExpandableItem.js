@@ -303,12 +303,10 @@ const ExpandableItemBase = kind({
 				} else if ((isDown(keyCode) && wouldDirectionLeaveContainer('down', target)) || isPageDown(keyCode)) {
 					if (lockBottom) {
 						ev.nativeEvent.stopImmediatePropagation();
-						console.log('keycode');
 						if (isPageDown(keyCode)) {
 							const expandableContainer = last(getContainersForNode(target));
 							const lastElementToFocus = last(getContainerNavigableElements(expandableContainer));
 							Spotlight.focus(lastElementToFocus);
-							console.log(expandableContainer, lastElementToFocus);
 						}
 					} else if (onSpotlightDown) {
 						onSpotlightDown(ev);
@@ -317,8 +315,6 @@ const ExpandableItemBase = kind({
 			}
 		},
 		handleLabelKeyDown: (ev, {onSpotlightDown, open}) => {
-
-			console.log('keyCode', ev.keyCode);
 			if (isDown(ev.keyCode) && !open && onSpotlightDown) {
 				onSpotlightDown(ev);
 			}
