@@ -10,9 +10,10 @@
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import {extractAriaProps} from '@enact/core/util';
-import {getContainersForNode} from '@enact/spotlight/src/container';
+import {getContainersForNode, getContainerNavigableElements} from '@enact/spotlight/src/container';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import Spotlight from '@enact/spotlight';
 import PropTypes from 'prop-types';
 import last from 'ramda/src/last';
 import React from 'react';
@@ -26,6 +27,8 @@ import css from './ExpandableItem.less';
 
 const isUp = is('up');
 const isDown = is('down');
+const isPageUp = is('pageUp');
+const isPageDown = is('pageDown');
 
 const ContainerDiv = SpotlightContainerDecorator({continue5WayHold: true}, 'div');
 
@@ -293,12 +296,20 @@ const ExpandableItemBase = kind({
 				// case here in which the children of the container are spottable and the
 				// ExpandableList use case which has an intermediate child (Group) between the
 				// spottable components and the container.
-				if (autoClose && onClose && isUp(keyCode) && wouldDirectionLeaveContainer('up', target)) {
+				// And close when `pageup` is pressed
+				if (autoClose && onClose && ((isUp(keyCode) && wouldDirectionLeaveContainer('up', target)) || isPageUp(keyCode))) {
 					onClose();
 					ev.nativeEvent.stopImmediatePropagation();
-				} else if (isDown(keyCode) && wouldDirectionLeaveContainer('down', target)) {
+				} else if ((isDown(keyCode) && wouldDirectionLeaveContainer('down', target)) || isPageDown(keyCode)) {
 					if (lockBottom) {
 						ev.nativeEvent.stopImmediatePropagation();
+						console.log('keycode');
+						if (isPageDown(keyCode)) {
+							const expandableContainer = last(getContainersForNode(target));
+							const lastElementToFocus = last(getContainerNavigableElements(expandableContainer));
+							Spotlight.focus(lastElementToFocus);
+							console.log(expandableContainer, lastElementToFocus);
+						}
 					} else if (onSpotlightDown) {
 						onSpotlightDown(ev);
 					}
@@ -306,6 +317,8 @@ const ExpandableItemBase = kind({
 			}
 		},
 		handleLabelKeyDown: (ev, {onSpotlightDown, open}) => {
+
+			console.log('keyCode', ev.keyCode);
 			if (isDown(ev.keyCode) && !open && onSpotlightDown) {
 				onSpotlightDown(ev);
 			}
