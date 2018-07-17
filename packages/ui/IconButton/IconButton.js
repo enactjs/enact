@@ -163,7 +163,7 @@ const IconButtonBase = kind({
 			small: small,
 			minWidth: false,
 			children: [
-				<Icon small={small} className={css.icon}>{icon}</Icon>,
+				<Icon small={small} key="icon" className={css.icon}>{icon}</Icon>,
 				children
 			]
 		});

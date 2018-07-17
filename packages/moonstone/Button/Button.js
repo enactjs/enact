@@ -11,7 +11,7 @@
  */
 
 import deprecate from '@enact/core/internal/deprecate';
-import {forProp, forward, handle} from '@enact/core/handle';
+// import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
@@ -19,7 +19,7 @@ import {ButtonBase as UiButtonBase, ButtonDecorator as UiButtonDecorator} from '
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import React from 'react';
+// import React from 'react';
 
 import Icon from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
@@ -94,12 +94,13 @@ const ButtonBase = kind({
 		publicClassNames: ['button', 'bg', 'selected', 'small']
 	},
 
-	handlers: {
-		onClick: handle(
-			forProp('disabled', false),
-			forward('onClick')
-		)
-	},
+	// These are properly handled by Touchable now
+	// handlers: {
+	// 	onClick: handle(
+	// 		forProp('disabled', false),
+	// 		forward('onClick')
+	// 	)
+	// },
 
 	computed: {
 		className: ({backgroundOpacity, color, styler}) => styler.append(
@@ -116,15 +117,13 @@ const ButtonBase = kind({
 			deprecation();
 		}
 
-		return (
-			<UiButtonBase
-				data-webos-voice-intent="Select"
-				{...rest}
-				css={css}
-				// iconComponent={Icon}
-				iconComponent={rest.icon ? Icon : null}
-			/>
-		);
+		return UiButtonBase.inline({
+			'data-webos-voice-intent': 'Select',
+			...rest,
+			css,
+			// iconComponent={Icon}
+			iconComponent: (rest.icon ? Icon : null)  // Conditionally send the Icon component to UiButtonBase
+		});
 	}
 });
 
