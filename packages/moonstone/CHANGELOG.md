@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ExpandableItem` spotlight behavior when leaving the component via 5-way
+- `moonstone/ExpandableItem` behavior when paging up or paging down the component
 
 ## [2.0.0-rc.2] - 2018-07-16
 

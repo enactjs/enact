@@ -304,6 +304,7 @@ const ExpandableItemBase = kind({
 					if (lockBottom) {
 						ev.nativeEvent.stopImmediatePropagation();
 						if (isPageDown(keyCode)) {
+							// Spot the last item when page down
 							const expandableContainer = last(getContainersForNode(target));
 							const lastElementToFocus = last(getContainerNavigableElements(expandableContainer));
 							Spotlight.focus(lastElementToFocus);
