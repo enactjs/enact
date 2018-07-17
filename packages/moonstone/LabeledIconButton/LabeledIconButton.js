@@ -7,19 +7,21 @@
 
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
+// import React from 'react';
 import compose from 'ramda/src/compose';
 import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
 import UiLabeledIcon from '@enact/ui/LabeledIcon';
 import Touchable from '@enact/ui/Touchable';
+import {ButtonBase as UiButtonBase} from '@enact/ui/Button';
 
 import Skinnable from '../Skinnable';
 import {IconBase} from '../Icon';
 
 import buttonCss from '../Button/Button.less';
-import uiButtonCss from '@enact/ui/Button/Button.less';
+// import uiButtonCss from '@enact/ui/Button/Button.less';
 import iconButtonCss from '../IconButton/IconButton.less';
+// import uiIconButtonCss from '@enact/ui/IconButton/IconButton.less';
 
 // This refers to the LabeledIcon styling, since they're the same.
 // If this fact changes in the future, we can simply create a new less file in this component and
@@ -27,8 +29,8 @@ import iconButtonCss from '../IconButton/IconButton.less';
 import componentCss from '../LabeledIcon/LabeledIcon.less';
 
 // Tamper with the class names so they map to our class names (all in the name of perf)
-componentCss.icon += ' ' + buttonCss.button;
-componentCss.icon += ' ' + iconButtonCss.iconButton;
+// componentCss.icon += ' ' + buttonCss.button;
+// componentCss.icon += ' ' + iconButtonCss.iconButton;
 // buttonCss.icon = buttonCss.button;
 // delete buttonCss.button;
 // iconButtonCss.icon = iconButtonCss.iconButton;
@@ -36,13 +38,22 @@ componentCss.icon += ' ' + iconButtonCss.iconButton;
 
 // componentCss.icon = componentCss.icon + ' ' + buttonCss.icon + ' ' + iconButtonCss.icon;
 
-console.log('comonentCss:', componentCss);
+// console.log('comonentCss:', componentCss);
 
-const Icon = compose(
+const IconButtonMin = ({css, children, className, disabled, small, ...rest}) => UiButtonBase.inline({
+	...rest,
+	css: buttonCss,
+	disabled,
+	className: className + ' ' + iconButtonCss.iconButton, // + ' ' + buttonCss.minWidth,
+	small,
+	children: [IconBase.inline({css, children, disabled, small})]
+});
+
+const IconButton = compose(
 	Touchable({activeProp: 'pressed'}),
 	Spottable,
 	Skinnable
-)(IconBase);
+)(IconButtonMin);
 
 /**
  * A basic LabeledIconButton component structure without any behaviors applied to it.
@@ -82,30 +93,28 @@ const LabeledIconButtonBase = kind({
 	},
 
 	styles: {
-		css: {...componentCss, ...buttonCss, ...iconButtonCss},
+		css: componentCss,
 		className: 'labeledIconButton',
 		publicClassNames: ['labeledIconButton', 'icon', 'label']
 	},
 
-	computed: {
-		simulatedIcon: ({css}) => (props) => (
-			<div className={buttonCss.button}>
-				<div className={buttonCss.bg} />
-				<div className={buttonCss.client}><Icon {...props} /></div>
-			</div>
-		)
-	},
+	// computed: {
+	// 	simulatedIcon: ({css}) => (props) => (
+	// 		<div className={buttonCss.button}>
+	// 			<div className={buttonCss.bg} />
+	// 			<div className={buttonCss.client}><Icon {...props} /></div>
+	// 		</div>
+	// 	)
+	// },
 
-	render: ({css, children, simulatedIcon, ...rest}) => {
-		return (
-			<UiLabeledIcon
-				iconComponent={simulatedIcon}
-				{...rest}
-				css={css}
-			>
-				{children}
-			</UiLabeledIcon>
-		);
+	render: ({css, children, ...rest}) => {
+		return UiLabeledIcon.inline({
+			// iconComponent: IconButtonMin,
+			iconComponent: IconButton,
+			...rest,
+			css,
+			children
+		});
 	}
 });
 
