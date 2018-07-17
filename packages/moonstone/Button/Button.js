@@ -116,12 +116,15 @@ const ButtonBase = kind({
 			deprecation();
 		}
 
-		return UiButtonBase.inline({
-			'data-webos-voice-intent': 'Select',
-			...rest,
-			css: css,
-			iconComponent: Icon
-		});
+		return (
+			<UiButtonBase
+				data-webos-voice-intent="Select"
+				{...rest}
+				css={css}
+				// iconComponent={Icon}
+				iconComponent={rest.icon ? Icon : null}
+			/>
+		);
 	}
 });
 

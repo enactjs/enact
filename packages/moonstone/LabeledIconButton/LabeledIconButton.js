@@ -12,21 +12,37 @@ import compose from 'ramda/src/compose';
 import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
 import UiLabeledIcon from '@enact/ui/LabeledIcon';
-import {IconButtonDecorator as UiIconButtonDecorator} from '@enact/ui/IconButton';
+import Touchable from '@enact/ui/Touchable';
 
 import Skinnable from '../Skinnable';
-import {IconButtonBase} from '../IconButton';
+import {IconBase} from '../Icon';
+
+import buttonCss from '../Button/Button.less';
+import uiButtonCss from '@enact/ui/Button/Button.less';
+import iconButtonCss from '../IconButton/IconButton.less';
 
 // This refers to the LabeledIcon styling, since they're the same.
 // If this fact changes in the future, we can simply create a new less file in this component and
 // either copy or less-import the styling rules from LabeledIcon. (Whichever is more appropriate.)
 import componentCss from '../LabeledIcon/LabeledIcon.less';
 
-const IconButton = compose(
-	UiIconButtonDecorator,
+// Tamper with the class names so they map to our class names (all in the name of perf)
+componentCss.icon += ' ' + buttonCss.button;
+componentCss.icon += ' ' + iconButtonCss.iconButton;
+// buttonCss.icon = buttonCss.button;
+// delete buttonCss.button;
+// iconButtonCss.icon = iconButtonCss.iconButton;
+// delete iconButtonCss.iconButton;
+
+// componentCss.icon = componentCss.icon + ' ' + buttonCss.icon + ' ' + iconButtonCss.icon;
+
+console.log('comonentCss:', componentCss);
+
+const Icon = compose(
+	Touchable({activeProp: 'pressed'}),
 	Spottable,
 	Skinnable
-)(IconButtonBase);
+)(IconBase);
 
 /**
  * A basic LabeledIconButton component structure without any behaviors applied to it.
@@ -66,15 +82,24 @@ const LabeledIconButtonBase = kind({
 	},
 
 	styles: {
-		css: componentCss,
+		css: {...componentCss, ...buttonCss, ...iconButtonCss},
 		className: 'labeledIconButton',
 		publicClassNames: ['labeledIconButton', 'icon', 'label']
 	},
 
-	render: ({css, children, ...rest}) => {
+	computed: {
+		simulatedIcon: ({css}) => (props) => (
+			<div className={buttonCss.button}>
+				<div className={buttonCss.bg} />
+				<div className={buttonCss.client}><Icon {...props} /></div>
+			</div>
+		)
+	},
+
+	render: ({css, children, simulatedIcon, ...rest}) => {
 		return (
 			<UiLabeledIcon
-				iconComponent={IconButton}
+				iconComponent={simulatedIcon}
 				{...rest}
 				css={css}
 			>
