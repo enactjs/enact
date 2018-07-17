@@ -7,7 +7,7 @@
 
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
+// import React from 'react';
 import compose from 'ramda/src/compose';
 import Pure from '@enact/ui/internal/Pure';
 import UiLabeledIcon from '@enact/ui/LabeledIcon';
@@ -61,15 +61,12 @@ const LabeledIconBase = kind({
 	},
 
 	render: ({css, children, ...rest}) => {
-		return (
-			<UiLabeledIcon
-				iconComponent={Icon}
-				{...rest}
-				css={css}
-			>
-				{children}
-			</UiLabeledIcon>
-		);
+		return UiLabeledIcon.inline({
+			iconComponent: Icon,
+			...rest,
+			css,
+			children
+		});
 	}
 });
 

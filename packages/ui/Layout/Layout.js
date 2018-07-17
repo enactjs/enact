@@ -25,7 +25,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {Cell, toFlexAlign} from './Cell';
+import {Cell, CellBase, toFlexAlign} from './Cell';
 
 import css from './Layout.less';
 
@@ -202,6 +202,7 @@ const Row = (props) => (
 export default LayoutBase;
 export {
 	Cell,
+	CellBase,
 	Column,
 	LayoutBase as Layout,
 	LayoutBase,
