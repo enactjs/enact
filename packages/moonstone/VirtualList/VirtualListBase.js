@@ -832,8 +832,8 @@ const VirtualListBaseFactory = (type) => {
 
 		shouldPreventOverscrollEffect = () => (this.isWrappedBy5way)
 
-		setLastFocusedIndex = (param) => {
-			this.lastFocusedIndex = param;
+		setLastFocusedNode = (node) => {
+			this.lastFocusedIndex = node.dataset && Number.parseInt(node.dataset.index);
 		}
 
 		updateStatesAndBounds = ({cbScrollTo, dataSize, moreInfo, numOfItems}) => {
