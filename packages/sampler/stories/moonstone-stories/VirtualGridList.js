@@ -21,7 +21,7 @@ const
 		direction: {'horizontal': 'horizontal', 'vertical': 'vertical'}
 	},
 	items = [],
-	defaultDataSize = 1000,
+	defaultDataSize = 100,
 	// eslint-disable-next-line enact/prop-types
 	uiRenderItem = ({index, ...rest}) => {
 		const {text, subText, source} = items[index];
@@ -42,9 +42,9 @@ const
 		return (
 			<GridListImageItem
 				{...rest}
-				caption={text}
+				caption={index % 2 ? text : null}
 				source={source}
-				subCaption={subText}
+				subCaption={index % 5 ? subText : null}
 			/>
 		);
 	};

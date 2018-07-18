@@ -1,7 +1,7 @@
-@import '../styles/mixins.less';
-@import '../styles/text.less';
-@import '../styles/variables.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/text.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
 
 .gridListImageItem {
 	box-sizing: border-box;
@@ -22,24 +22,26 @@
 	}
 
 	.image {
-		display: block; // leaving this to prevent whitespace between inline-block elements
-		width: 100%;
-		height: 100%;
-		margin: 0;
+		height: ~"calc(100% - " @moon-gridlist-item-two-captions-padding-bottom ~")";
+		// .position(0, 0, @moon-gridlist-item-two-captions-padding-bottom, 0)
+		// display: block; // leaving this to prevent whitespace between inline-block elements
+		// width: 100%;
+		// height: 100%;
+		// margin: 0;
 	}
 
-	.overlayComponent {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		height: 100%;
-	}
+	// .overlayComponent {
+	// 	display: flex;
+	// 	align-items: center;
+	// 	justify-content: center;
+	// 	height: 100%;
+	// }
 
-	.overlayContainer {
-		background-color: transparent;
-		pointer-events: none;
-		height: 100%;
-	}
+	// .overlayContainer {
+	// 	background-color: transparent;
+	// 	pointer-events: none;
+	// 	height: 100%;
+	// }
 
 	&.selected {
 		.icon {
@@ -47,14 +49,14 @@
 		}
 	}
 
-	&.useCaption,
-	&.useSubCaption {
-		padding-bottom: @moon-gridlist-item-one-caption-padding-bottom;
-	}
+	// &.useCaption,
+	// &.useSubCaption {
+	// 	padding-bottom: @moon-gridlist-item-one-caption-padding-bottom;
+	// }
 
-	&.useCaption.useSubCaption {
-		padding-bottom: @moon-gridlist-item-two-captions-padding-bottom;
-	}
+	// &.useCaption.useSubCaption {
+	// 	padding-bottom: @moon-gridlist-item-two-captions-padding-bottom;
+	// }
 
 	.caption {
 		.moon-sub-header-text();

@@ -194,8 +194,8 @@ const GridListImageItem = kind({
 				<ImageComponent className={css.image} placeholder={placeholder} src={source}>
 					{selectionOverlay}
 				</ImageComponent>
-				{caption ? (<Caption className={css.caption}>{caption}</Caption>) : null}
-				{subCaption ? (<Caption className={css.subCaption}>{subCaption}</Caption>) : null}
+				<Caption className={css.caption}>{caption || ' '}</Caption>
+				<Caption className={css.subCaption}>{subCaption}</Caption>
 			</div>
 		);
 	}

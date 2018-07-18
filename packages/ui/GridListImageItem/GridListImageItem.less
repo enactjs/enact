@@ -3,9 +3,9 @@
 
 	.icon {
 		position: relative;
-		display: block;
-		margin: 0;
-		opacity: 0.5;
+		display: none;
+		// margin: 0;
+		// opacity: 0.5;
 	}
 
 	.image {
@@ -28,26 +28,32 @@
 		height: 100%;
 	}
 
+	.useCaption
+	.useSubCaption,
+	.caption,
+	.subCaption,
 	&.selected {
-		.icon {
-			opacity: 1;
-		}
+		/* Export for theme usage */
+
+		// .icon {
+		// 	opacity: 1;
+		// }
 	}
 
-	&.useCaption,
-	&.useSubCaption {
-		padding-bottom: 5%;
-	}
+	// &.useCaption,
+	// &.useSubCaption {
+	// 	padding-bottom: 5%;
+	// }
 
-	&.useCaption.useSubCaption {
-		padding-bottom: 5%;
-	}
+	// &.useCaption.useSubCaption {
+	// 	padding-bottom: 5%;
+	// }
 
-	.caption {
-		padding-top: 5%;
-	}
+	// .caption {
+	// 	padding-top: 5%;
+	// }
 
-	.subCaption {
-		padding-top: 5%;
-	}
+	// .subCaption {
+	// 	padding-top: 5%;
+	// }
 }
