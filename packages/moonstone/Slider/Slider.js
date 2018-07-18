@@ -56,8 +56,8 @@ const SliderBase = kind({
 
 	propTypes: /** @lends moonstone/Slider.SliderBase.prototype */ {
 		/**
-		 * Activates the component so that it may be manipulated via the directional input keys upon
-		 * receiving focus.
+		 * Activates the component when focused so that it may be manipulated via the directional
+		 * input keys.
 		 *
 		 * @type {Boolean}
 		 * @public

@@ -74,7 +74,7 @@ const TimePickerBase = kind({
 
 	propTypes: /** @lends moonstone/TimePicker.TimePickerBase.prototype */ {
 		/**
-		 * The `hour` component of the Date
+		 * The `hour` component of the time.
 		 *
 		 * @type {Number}
 		 * @required
@@ -83,7 +83,7 @@ const TimePickerBase = kind({
 		hour: PropTypes.number.isRequired,
 
 		/**
-		 * The `minute` component of the time
+		 * The `minute` component of the time.
 		 *
 		 * @type {Number}
 		 * @required
@@ -92,8 +92,9 @@ const TimePickerBase = kind({
 		minute: PropTypes.number.isRequired,
 
 		/**
-		 * The order in which the component pickers are displayed. Should be an array of 2 or 3
-		 * strings containing one of `'h'`, `'k'`, `'m'`, and `'a'`.
+		 * The order in which the component pickers are displayed.
+		 *
+		 * Should be an array of 2 or 3 strings containing one of `'h'`, `'k'`, `'m'`, and `'a'`.
 		 *
 		 * @type {String[]}
 		 * @required
@@ -138,7 +139,7 @@ const TimePickerBase = kind({
 		hourLabel: PropTypes.string,
 
 		/**
-		 * The `meridiem` component of the time
+		 * The `meridiem` component of the time.
 		 *
 		 * @type {Number}
 		 * @required
@@ -147,7 +148,7 @@ const TimePickerBase = kind({
 		meridiem: PropTypes.number,
 
 		/**
-		 * The "aria-label" for the meridiem picker
+		 * The "aria-label" for the meridiem picker.
 		 *
 		 * @type {String}
 		 * @default 'change a value with up down button'
@@ -156,7 +157,7 @@ const TimePickerBase = kind({
 		meridiemAriaLabel: PropTypes.string,
 
 		/**
-		 * Sets the hint string read when focusing the meridiem picker.
+		 * The hint string read when focusing the meridiem picker.
 		 *
 		 * @type {String}
 		 * @public
@@ -164,7 +165,7 @@ const TimePickerBase = kind({
 		meridiemLabel: PropTypes.string,
 
 		/**
-		 * Array of meridiem labels to display
+		 * Array of meridiem labels to display.
 		 *
 		 * @type {String[]}
 		 * @required
@@ -173,7 +174,7 @@ const TimePickerBase = kind({
 		meridiems: PropTypes.arrayOf(PropTypes.string),
 
 		/**
-		 * The "aria-label" for the minute picker
+		 * The "aria-label" for the minute picker.
 		 *
 		 * @type {String}
 		 * @default 'change a value with up down button'
@@ -191,7 +192,7 @@ const TimePickerBase = kind({
 		minuteLabel: PropTypes.string,
 
 		/**
-		 * When `true`, omits the labels below the pickers
+		 * Omits the labels below the pickers.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -199,7 +200,7 @@ const TimePickerBase = kind({
 		noLabels: PropTypes.bool,
 
 		/**
-		 * Called on changes in the `hour` component of the time
+		 * Called on changes in the `hour` component of the time.
 		 *
 		 * @type {Function}
 		 * @public
@@ -207,7 +208,7 @@ const TimePickerBase = kind({
 		onChangeHour: PropTypes.func,
 
 		/**
-		 * Called on changes in the `meridiem` component of the time
+		 * Called on changes in the `meridiem` component of the time.
 		 *
 		 * @type {Function}
 		 * @public
@@ -215,7 +216,7 @@ const TimePickerBase = kind({
 		onChangeMeridiem: PropTypes.func,
 
 		/**
-		 * Called on changes in the `minute` component of the time
+		 * Called on changes in the `minute` component of the time.
 		 *
 		 * @type {Function}
 		 * @public
@@ -223,7 +224,7 @@ const TimePickerBase = kind({
 		onChangeMinute: PropTypes.func,
 
 		/**
-		 * Called when a condition occurs which should cause the expandable to close
+		 * Called when a condition occurs which should cause the expandable to close.
 		 *
 		 * @type {Function}
 		 * @public
@@ -258,7 +259,7 @@ const TimePickerBase = kind({
 		onSpotlightRight: PropTypes.func,
 
 		/**
-		 * Set current locale to RTL.
+		 * Set content to RTL.
 		 *
 		 * @type {Boolean}
 		 * @private
@@ -266,7 +267,7 @@ const TimePickerBase = kind({
 		rtl: PropTypes.bool,
 
 		/**
-		 * Disables spotlight.
+		 * Prevents navigation of the component using spotlight.
 		 *
 		 * @type {Boolean}
 		 * @default false

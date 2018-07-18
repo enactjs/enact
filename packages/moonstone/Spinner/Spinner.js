@@ -100,7 +100,6 @@ const SpinnerBase = kind({
 		/**
 		 * Makes the background-color transparent.
 		 *
-		 *
 		 * @type {Boolean}
 		 * @default false
 		 * @public

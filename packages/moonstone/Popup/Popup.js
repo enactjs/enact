@@ -39,8 +39,7 @@ const forwardHide = forward('onHide');
 const forwardShow = forward('onShow');
 
 /**
- * PopupBase is a base component of
- * [`Popup`]{@link moonstone/Popup.Popup}.
+ * PopupBase is a base component of [`Popup`]{@link moonstone/Popup.Popup}.
  *
  * @class PopupBase
  * @memberof moonstone/Popup
@@ -103,7 +102,7 @@ const PopupBase = kind({
 		onShow: PropTypes.func,
 
 		/**
-		 * Indicates the open/expanded state with the contents visible.
+		 * Controls the visibility of the Popup.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -121,7 +120,7 @@ const PopupBase = kind({
 		showCloseButton: PropTypes.bool,
 
 		/**
-		 * Specifies the container id.
+		 * The container id.
 		 *
 		 * @type {String}
 		 * @default null
@@ -130,8 +129,9 @@ const PopupBase = kind({
 		spotlightId: PropTypes.string,
 
 		/**
-		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
-		 * can be either `'none'`, `'self-first'`, or `'self-only'`.
+		 * Restricts or prioritizes navigation when focus attempts to leave the popup.
+		 *
+		 * It can be either `'none'`, `'self-first'`, or `'self-only'`.
 		 *
 		 * Note: The ready-to-use [Popup]{@link moonstone/Popup.Popup} component only supports
 		 * `'self-first'` and `'self-only'`.
@@ -222,8 +222,7 @@ const checkScrimNone = (props) => {
 };
 
 /**
- * Popup is a stateful component that helps
- * [PopupBase]{@link moonstone/Popup.PopupBase} to appear in
+ * A stateful component that renders a popup in a
  * [FloatingLayer]{@link ui/FloatingLayer.FloatingLayer}.
  *
  * @class Popup
@@ -235,7 +234,7 @@ class Popup extends React.Component {
 
 	static propTypes = /** @lends moonstone/Popup.Popup.prototype */ {
 		/**
-		 * Sets the hint string read when focusing the popup close button.
+		 * Hint string read when focusing the popup close button.
 		 *
 		 * @type {String}
 		 * @default 'Close'
@@ -253,7 +252,7 @@ class Popup extends React.Component {
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * Indicates that the popup will not close on the `ESC` key press.
+		 * Indicates that the popup will not trigger `onClose` on the *ESC* key press.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -264,9 +263,9 @@ class Popup extends React.Component {
 		/**
 		 * Called on,
 		 *
-		 *	* pressing `ESC` key,
-		 *	* clicking on the close button, or
-		 *	* moving spotlight focus outside the boundary of the popup when `spotlightRestrict` is
+		 * * pressing `ESC` key,
+		 * * clicking on the close button, or
+		 * * moving spotlight focus outside the boundary of the popup when `spotlightRestrict` is
 		 *   `'self-first'`.
 		 *
 		 * It is the responsibility of the callback to set the `open` property to `false`.
@@ -313,7 +312,9 @@ class Popup extends React.Component {
 		open: PropTypes.bool,
 
 		/**
-		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.
+		 * Scrim type.
+		 *
+		 * It can be either `'transparent'`, `'translucent'`, or `'none'`.
 		 *
 		 * `'none'` is not compatible with `spotlightRestrict` of `'self-only'`, use a transparent scrim
 		 * to prevent mouse focus when using popup.

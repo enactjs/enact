@@ -1,5 +1,5 @@
 /**
- * Provides a time selection component.
+ * Provides a Moonstone-themed time selection component.
  *
  * @example
  * <TimePicker title="Open me" value={new Date()}></TimePicker>
@@ -15,7 +15,7 @@ import Skinnable from '../Skinnable';
 
 import TimePickerBase from './TimePickerBase';
 
-/**
+/*
  * Converts a string representation of time into minutes
  *
  * @param	{String}	time	Time in the format `HH:mm`
@@ -30,7 +30,7 @@ const toMinutes = (time) => {
 	return hour * 60 + minute;
 };
 
-/**
+/*
  * Converts the `start` and `end` string representations (e.g. '12:00') into a numerical
  * representation.
  *
@@ -46,7 +46,7 @@ const calcMeridiemRange = ({start, end}) => ({
 	end: toMinutes(end)
 });
 
-/**
+/*
  * Finds the index of the meridiem which contains `time`
  *
  * @param	{Number}	time		Time in minutes
@@ -192,6 +192,7 @@ const dateTimeConfig = {
 };
 
 /**
+ * A component that allows displaying or selecting time.
  *
  * Set the [value]{@link moonstone/TimePicker.TimePicker#value} property to a standard JavaScript
  * [Date] {@link /docs/developer-guide/glossary/#date} object to initialize the picker.
@@ -254,7 +255,7 @@ const TimePicker = Pure(
  */
 
 /**
- * Called when the expandable closes.
+ * Called when a condition occurs which should cause the expandable to close.
  *
  * @name onClose
  * @memberof moonstone/TimePicker.TimePicker
@@ -264,7 +265,7 @@ const TimePicker = Pure(
  */
 
 /**
- * The selected date
+ * The selected date.
  *
  * @name value
  * @memberof moonstone/TimePicker.TimePicker

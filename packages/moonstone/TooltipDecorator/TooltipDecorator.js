@@ -60,7 +60,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/TooltipDecorator.TooltipDecorator.prototype */ {
 			/**
-			 * Disables the component but will show a tooltip, if present.
+			 * Disables the component but does not affect tooltip operation.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -69,7 +69,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * Sets the text direction to be right-to-left
+			 * Indicates the tooltip text direction is right-to-left.
 			 *
 			 * @type {Boolean}
 			 * @private
@@ -77,7 +77,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			rtl: PropTypes.bool,
 
 			/**
-			 * Configures the mode of uppercasing of the `tooltipText` that should be performed.
+			 * The casing of `tooltipText`.
 			 *
 			 * @see i18n/Uppercase#casing
 			 * @type {String}
@@ -87,7 +87,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			tooltipCasing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 
 			/**
-			 * Number of milliseconds to wait before showing tooltip on hover.
+			 * Time to wait (in milliseconds) before showing tooltip on hover.
 			 *
 			 * @type {Number}
 			 * @default 500
@@ -97,7 +97,10 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			/**
 			 * Position of the tooltip with respect to the activating control.
-			 * * Values: `'above'`, `'above center'`, `'above left'`, `'above right'`, `'below'`, `'below center'`, `'below left'`, `'below right'`, `'left bottom'`, `'left middle'`, `'left top'`, `'right bottom'`, `'right middle'`, `'right top'`
+			 *
+			 * * Values: `'above'`, `'above center'`, `'above left'`, `'above right'`, `'below'`,
+			 * `'below center'`, `'below left'`, `'below right'`, `'left bottom'`, `'left middle'`,
+			 * `'left top'`, `'right bottom'`, `'right middle'`, `'right top'`
 			 *
 			 * @type {String}
 			 * @default 'above'
@@ -110,7 +113,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				'right bottom', 'right middle', 'right top']),
 
 			/**
-			 * An object containing properties to be passed to tooltip component.
+			 * Properties to be passed to tooltip component.
 			 *
 			 * @type {Object}
 			 * @public
@@ -126,8 +129,10 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			tooltipText: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 			/**
-			 * The width of tooltip content in pixels (px). If the content goes over the given width,
-			 * then it will automatically wrap. When `null`, content does not wrap.
+			 * The width of tooltip content in pixels (px).
+			 *
+			 * If the content goes over the given width, it will automatically wrap. When `null`,
+			 * content does not wrap.
 			 *
 			 * @type {Number|null}
 			 * @public

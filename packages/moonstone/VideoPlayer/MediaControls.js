@@ -567,7 +567,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			onToggleMore: PropTypes.func,
 
 			/**
-			 * Indicates the video is paused.
+			 * The video pause state.
 			 *
 			 * @type {Boolean}
 			 * @public

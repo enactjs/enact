@@ -24,7 +24,7 @@ const stringifyRoutes = (routes) => {
 const propTypes = {
 	path: PropTypes.oneOfType([
 		PropTypes.arrayOf(PropTypes.string),	// array of path segments
-		PropTypes.string								// URI-style path
+		PropTypes.string						// URI-style path
 	])
 };
 
@@ -70,38 +70,38 @@ const Router = class extends React.Component {
 		 * precendence over a JSX definition.
 		 *
 		 * ```JavaScript
-     * const routes = {
-     *   'first': {
-     *     '$props': {
-     *       'title': 'About Routable Panels Pattern'
-     *     },
-     *     '$component': AboutPanel,
-     *     'second': {
-     *       '$props': {
-     *         'next': 'fourth',
-     *         'title': 'Second'
-     *       },
-     *       '$component': MainPanel
-     *     },
-     *     'third': {
-     *       '$props': {
-     *         'next': 'first',
-     *         'title': 'Third'
-     *       },
-     *       '$component': MainPanel,
-     *       'fourth': {
-     *         '$props': {
-     *           'next': 'third',
-     *           'title': 'Fourth'
-     *         },
-     *         '$component': MainPanel
-     *       }
-     *     }
-     *   }
-     * };
+		 * const routes = {
+		 *   'first': {
+		 *     '$props': {
+		 *       'title': 'About Routable Panels Pattern'
+		 *     },
+		 *     '$component': AboutPanel,
+		 *     'second': {
+		 *       '$props': {
+		 *         'next': 'fourth',
+		 *         'title': 'Second'
+		 *       },
+		 *       '$component': MainPanel
+		 *     },
+		 *     'third': {
+		 *       '$props': {
+		 *         'next': 'first',
+		 *         'title': 'Third'
+		 *       },
+		 *       '$component': MainPanel,
+		 *       'fourth': {
+		 *         '$props': {
+		 *           'next': 'third',
+		 *           'title': 'Fourth'
+		 *         },
+		 *         '$component': MainPanel
+		 *       }
+		 *     }
+		 *   }
+		 * };
 		 *
 		 *	<Panels path="/app/home/settings" routes={routes} />
-	   * ```
+		 * ```
 		 *
 		 * @type {Object}
 		 * @public

@@ -31,8 +31,10 @@ const VideoBase = class extends React.Component {
 		autoPlay: PropTypes.bool,
 
 		/**
-		 * Video component to use. The default `'video'` renders an `HTMLVideoElement`. Custom
-		 * video components must have a similar API structure, exposing the following APIs:
+		 * Video component to use.
+		 *
+		 * The default (`'video'`) renders an `HTMLVideoElement`. Custom video components must have
+		 * a similar API structure, exposing the following APIs:
 		 *
 		 * Properties:
 		 * * `currentTime` {Number} - Playback index of the media in seconds
@@ -45,6 +47,11 @@ const VideoBase = class extends React.Component {
 		 *	representing the proportion of the media that has loaded
 		 * * `proportionPlayed` {Number} - A value between `0` and `1` representing the
 		 *	proportion of the media that has already been shown
+		 *
+		 * Events:
+		 * * `onLoadStart` - Called when the video starts to load
+		 * * `onPlay` - Sent when playback of the media starts after having been paused
+		 * * `onUpdate` - Sent when any of the properties were updated
 		 *
 		 * Methods:
 		 * * `play()` - play video

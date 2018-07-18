@@ -70,9 +70,11 @@ const PickerBase = kind({
 		'data-webos-voice-labels-ext': PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.arrayOf(PropTypes.string)]),
 
 		/**
-		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
-		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
+		 * A custom icon for the decrementer.
+		 *
+		 * All strings supported by [Icon]{@link moonstone/Icon.Icon} are supported. Without a
+		 * custom icon, the default is used, and is automatically changed when the
+		 * [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
 		 *
 		 * @type {String}
 		 * @public
@@ -88,9 +90,11 @@ const PickerBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
-		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
+		 * A custom icon for the incrementer.
+		 *
+		 * All strings supported by [Icon]{@link moonstone/Icon.Icon} are supported. Without a
+		 * custom icon, the default is used, and is automatically changed when the
+		 * [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
 		 *
 		 * @type {String}
 		 * @public
@@ -99,9 +103,10 @@ const PickerBase = kind({
 
 		/**
 		 * Indicates that the users can use the arrow keys to adjust the picker's value.
+		 *
 		 * The user may no longer use those arrow keys to navigate, while this control is focused.
-		 * A default control allows full navigation, but requires individual ENTER presses on the incrementer
-		 * and decrementer buttons. Pointer interaction is the same for both formats.
+		 * A default control allows full navigation, but requires individual ENTER presses on the
+		 * incrementer and decrementer buttons. Pointer interaction is the same for both formats.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -109,9 +114,11 @@ const PickerBase = kind({
 		joined: PropTypes.bool,
 
 		/**
+		 * Disables marqueeing of items.
+		 *
 		 * By default, each picker item is wrapped by a
-		 * [`MarqueeText`]{@link moonstone/Marquee.MarqueeText}. When `marqueeDisabled` is `true`,
-		 * the items will not be wrapped.
+		 * [`MarqueeText`]{@link moonstone/Marquee.MarqueeText}. When this is set, the items will
+		 * not be wrapped.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -135,8 +142,11 @@ const PickerBase = kind({
 		onChange: PropTypes.func,
 
 		/**
-		 * Orientation of the picker, whether the buttons are alined horizontally or vertically
-		 * with its selected value.
+		 * Orientation of the picker.
+		 *
+		 * Controls whether the buttons are aligned horizontally or vertically with its selected
+		 * value.
+		 *
 		 * * Values: `'horizontal'`, `'vertical'`
 		 *
 		 * @type {String}
@@ -155,11 +165,12 @@ const PickerBase = kind({
 
 		/**
 		 * A number can be used to set the minimum number of characters to be shown.
-		 * This number will determine the minumum size of the Picker.
-		 * Setting a number to less than the number of characters in your longest value will cause the
-		 * width to grow for the longer values.
 		 *
-		 * Choose a specific size for your picker.
+		 * This number will determine the minimum size of the Picker.  Setting a number to less than
+		 * the number of characters in your longest value will cause the width to grow for the
+		 * longer values.
+		 *
+		 * Choose a specific size for your picker:
 		 * * `'small'` - numeric values
 		 * * `'medium'` - single or short words
 		 * * `'large'` - maximum-sized pickers taking full width of its parent
@@ -174,7 +185,7 @@ const PickerBase = kind({
 		]),
 
 		/**
-		 * When`true`, a picker continues from the start of the list after it reaches the end.
+		 * Allows picker to continue from the start of the list after it reaches the end.
 		 *
 		 * @type {Boolean}
 		 * @public

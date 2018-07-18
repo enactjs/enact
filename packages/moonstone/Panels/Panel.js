@@ -60,7 +60,7 @@ const PanelBase = kind({
 		 * @public
 		 */
 		header: PropTypes.node,
-		// shouldn't this be set in the Panel level?
+
 		/**
 		 * Hides the body components.
 		 *

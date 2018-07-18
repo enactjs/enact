@@ -1,5 +1,5 @@
 /**
- * Provides Moonstone-themed pill-shaped toggle switch component.
+ * Provides a Moonstone-themed pill-shaped toggle switch component.
  *
  * @example
  * <Switch />
@@ -18,6 +18,7 @@ import ToggleIcon from '../ToggleIcon';
 import componentCss from './Switch.less';
 
 /**
+ * A pill shaped toggle switch.
  *
  * @class Switch
  * @memberof moonstone/Switch

@@ -18,8 +18,8 @@ import Skinnable from '../Skinnable';
 import css from './ToggleButton.less';
 
 /**
- * This component is a stateless [Button]{@link moonstone/Button.Button}
- * that can be toggled by changing its `selected` property.
+ * A stateless [Button]{@link moonstone/Button.Button} that can be toggled by changing its
+ * `selected` property.
  *
  * @class ToggleButtonBase
  * @memberof moonstone/ToggleButton
@@ -33,6 +33,7 @@ const ToggleButtonBase = kind({
 	propTypes: /** @lends moonstone/ToggleButton.ToggleButtonBase.prototype */ {
 		/**
 		 * The background-color opacity of this button.
+		 *
 		 * * Values: `'translucent'`, `'lightTranslucent'`, `'transparent'`
 		 *
 		 * @type {String}
@@ -42,8 +43,9 @@ const ToggleButtonBase = kind({
 
 		/**
 		 * The string to be displayed as the main content of the toggle button.
-		 * If `toggleOffLabel` and/or `toggleOnLabel` are provided, they will
-		 * be used for the respective states.
+		 *
+		 * If `toggleOffLabel` and/or `toggleOnLabel` are provided, they will be used for the
+		 * respective states.
 		 *
 		 * @type {Node|String}
 		 * @public
@@ -51,7 +53,7 @@ const ToggleButtonBase = kind({
 		children: PropTypes.oneOf([PropTypes.string, PropTypes.node]),
 
 		/**
-		 * Disables button.
+		 * Disables the button.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -60,10 +62,11 @@ const ToggleButtonBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Indicates the minimum width will be set to 180px (or 130px if `small` is `true`).
+		 * Sets the minimum width to 180px (or 130px if `small` is `true`).
 		 *
-		 * When it's set to `false`, the minimum width will be set to the current value of
-		 * `@moon-button-height`(84px).
+		 * When not specified, the minimum width will be set to the current value of
+		 * `@moon-button-height` (84px). Pixel values are based on 'fhd' resolution and scale
+		 * appropriately for other resolutions.
 		 *
 		 * @type {Boolean}
 		 * @default true
@@ -72,7 +75,7 @@ const ToggleButtonBase = kind({
 		minWidth: PropTypes.bool,
 
 		/**
-		 * Indicates the button is pressed and visual effect is applied.
+		 * Applies a pressed visual effect.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -89,8 +92,11 @@ const ToggleButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Sets the button's diameter to 60px, and its tap target will stay at a diameter of 78px,
-		 * with an invisible DOM element wrapping the small button to provide the larger tap zone.
+		 * Sets button to a small size.
+		 *
+		 * When small, the button's diameter is 60px and its tap target will stay at a diameter of
+		 * 78px, with an invisible DOM element wrapping the small button to provide the larger tap
+		 * zone.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -99,7 +105,9 @@ const ToggleButtonBase = kind({
 		small: PropTypes.bool,
 
 		/**
-		 * Button text displayed in the 'off' state. If not specified, `children` will be used for 'off' button text.
+		 * Button text displayed in the 'off' state.
+		 *
+		 * If not specified, `children` will be used for 'off' button text.
 		 *
 		 * @type {String}
 		 * @default ''
@@ -108,7 +116,9 @@ const ToggleButtonBase = kind({
 		toggleOffLabel: PropTypes.string,
 
 		/**
-		 * Button text displayed in the 'on' state. If not specified, `children` will be used for 'on' button text.
+		 * Button text displayed in the 'on' state.
+		 *
+		 * If not specified, `children` will be used for 'on' button text.
 		 *
 		 * @type {String}
 		 * @default ''

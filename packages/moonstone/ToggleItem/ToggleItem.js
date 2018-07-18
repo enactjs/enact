@@ -50,9 +50,10 @@ const ToggleItemBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * The icon to render in this item. This component receives the `selected` prop and value,
-		 * and must therefore respond to it in some way. It is recommended to use the
-		 * [ToggleIcon]{@link moonstone/ToggleIcon} for this.
+		 * The Icon to render in this item.
+		 *
+		 * This component receives the `selected` prop and value, and must therefore respond to it in some
+		 * way. It is recommended to use [ToggleIcon]{@link moonstone/ToggleIcon} for this.
 		 *
 		 * @type {Component|Element}
 		 * @default null
@@ -75,9 +76,10 @@ const ToggleItemBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * An optional prop that lets you override the icon of the `iconComponent` component.
+		 * Overrides the icon of the `iconComponent` component.
+		 *
 		 * This accepts any string that the [Icon]{@link moonstone/Icon.Icon} component supports,
-		 * provided the recomendations of `iconComponent` are followed.
+		 * provided the recommendations of `iconComponent` are followed.
 		 *
 		 * @type {String}
 		 * @public
@@ -158,9 +160,10 @@ const ToggleItemDecorator = hoc(defaultConfig, ({invalidateProps}, Wrapped) => {
 const ToggleItem = ToggleItemDecorator(ToggleItemBase);
 
 /**
- * The Icon to render in this item. This component receives the `selected` prop and value,
- * and must therefore respond to it in some way. It is recommended to use the
- * [ToggleIcon]{@link moonstone/ToggleIcon} for this.
+ * The Icon to render in this item.
+ *
+ * This component receives the `selected` prop and value, and must therefore respond to it in some
+ * way. It is recommended to use [ToggleIcon]{@link moonstone/ToggleIcon} for this.
  *
  * @name iconComponent
  * @memberof moonstone/ToggleItem.ToggleItem.prototype

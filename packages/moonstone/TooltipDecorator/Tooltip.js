@@ -31,6 +31,7 @@ const TooltipBase = kind({
 
 		/**
 		 * Position of tooltip arrow in relation to the activator.
+		 *
 		 * * Values: `'left'`, `'center'`, `'right'`, `'top'`, `'middle'`, `'bottom'`
 		 *
 		 * Note that `'left'`, `'center'`, `'right'` are applicable when direction is in vertical
@@ -45,6 +46,7 @@ const TooltipBase = kind({
 
 		/**
 		 * Direction of label in relation to the activator.
+		 *
 		 * * Values: `'above'`, `'below'`, `'left'`, and `'right'`
 		 *
 		 * @type {String}
@@ -67,7 +69,7 @@ const TooltipBase = kind({
 		}),
 
 		/**
-		 * The method to run when the tooltip mounts/unmounts, giving a reference to the DOM.
+		 * Called when the tooltip mounts/unmounts, giving a reference to the DOM.
 		 *
 		 * @type {Function}
 		 * @public
@@ -75,8 +77,10 @@ const TooltipBase = kind({
 		tooltipRef: PropTypes.func,
 
 		/**
-		 * The width of tooltip content in pixels (px). If the content goes over the given width,
-		 * then it will automatically wrap. When `null`, content does not wrap.
+		 * The width of tooltip content in pixels (px).
+		 *
+		 * If the content goes over the given width, then it will automatically wrap. When `null`,
+		 * content does not wrap.
 		 *
 		 * @type {Number|null}
 		 * @public

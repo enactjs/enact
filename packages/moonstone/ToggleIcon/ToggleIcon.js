@@ -28,7 +28,7 @@ import Icon from '../Icon';
 import Skinnable from '../Skinnable';
 
 /**
- * This supports a Boolean state of `selected` onToggle.
+ * A component that indicates a boolean state.
  *
  * @class ToggleIconBase
  * @memberof moonstone/ToggleIcon
@@ -60,7 +60,7 @@ const ToggleIconDecorator = compose(
 );
 
 /**
- * A customizable moonstone starting point [Icon]{@link moonstone/Icon.Icon} that responds to the
+ * A customizable Moonstone starting point [Icon]{@link moonstone/Icon.Icon} that responds to the
  * `selected` prop.
  *
  * @class ToggleIcon
