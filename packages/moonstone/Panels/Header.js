@@ -68,7 +68,7 @@ const HeaderBase = kind({
 		]),
 
 		/**
-		 * Indents its content and removes separator lines.
+		 * Indents then content and removes separator lines.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -77,7 +77,7 @@ const HeaderBase = kind({
 		fullBleed: PropTypes.bool,
 
 		/**
-		 * [Input]{@link moonstone/Input} element that will replace the `title`.
+		 * [`Input`]{@link moonstone/Input} element that will replace the `title`.
 		 *
 		 * This is also a [slot]{@link ui/Slottable.Slottable}, so it can be referred
 		 * to as if it were JSX.
@@ -100,7 +100,7 @@ const HeaderBase = kind({
 
 		/**
 		 * Determines what triggers the header content to start its animation.
-		 * * Values: `'focus'`, `'hover'` and `'render'`. The default is `'hover'`.
+		 * * Values: `'focus'`, `'hover'` and `'render'`.
 		 *
 		 * @type {String}
 		 * @default 'hover'
@@ -110,6 +110,7 @@ const HeaderBase = kind({
 
 		/**
 		 * Sub-title displayed at the bottom of the panel.
+		 *
 		 * This is a [`slot`]{@link ui/Slottable.Slottable}, so it can be used as a tag-name inside
 		 * this component.
 		 *
@@ -118,7 +119,9 @@ const HeaderBase = kind({
 		subTitleBelow: PropTypes.string,
 
 		/**
-		 * Title of the header. This is a [`slot`]{@link ui/Slottable.Slottable}.
+		 * Title of the header.
+		 *
+		 * This is a [`slot`]{@link ui/Slottable.Slottable}.
 		 *
 		 * Example:
 		 * ```
@@ -134,14 +137,18 @@ const HeaderBase = kind({
 		title: PropTypes.string,
 
 		/**
-		 * Text displayed below the title. This is a [`slot`]{@link ui/Slottable.Slottable}.
+		 * Text displayed below the title.
+		 *
+		 * This is a [`slot`]{@link ui/Slottable.Slottable}.
 		 *
 		 * @type {String}
 		 */
 		titleBelow: PropTypes.string,
 
 		/**
-		 * Set the type of header to be used. `'standard'` or `'compact'`.
+		 * Set the type of header to be used.
+		 *
+		 * * Values: `'standard'` or `'compact'`.
 		 *
 		 * @type {String}
 		 * @default 'standard'

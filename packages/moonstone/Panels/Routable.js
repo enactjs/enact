@@ -7,16 +7,16 @@ import PropTypes from 'prop-types';
 import {Router, propTypes, toSegments} from './Router';
 
 /**
- * Default config for [`Routable`]{@link moonstone/Panels.Routable}
+ * Default config for [`Routable`]{@link moonstone/Panels.Routable}.
  *
  * @memberof moonstone/Panels.Routable
  * @hocconfig
  */
 const defaultConfig = {
 	/**
-	 * The event callback invoked when navigating back up the path
+	 * The property name of event callback invoked when navigating back up the path.
 	 *
-	 * @type {Function}
+	 * @type {String}
 	 * @required
 	 * @memberof moonstone/Panels.Routable.defaultConfig
 	 */
@@ -43,7 +43,7 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 
 		propTypes: /** @lends moonstone/Panels.Routable.prototype */ {
 			/**
-			 * Path to the active panel
+			 * Path to the active panel.
 			 *
 			 * May either be a URI-style path (`'/app/home/settings'`) or an array
 			 * of strings (`['app', 'home', 'settings']`).
@@ -55,7 +55,11 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 			path: propTypes.path.isRequired,
 
 			/**
-			 * Decorates payload with path for `index`.
+			 * Called when navigating.
+			 *
+			 * The event object is decorated to add `path`.
+			 *
+			 * *NOTE*: The actual name of this property is configured in the HOC config.
 			 *
 			 * @type {Function}
 			 */

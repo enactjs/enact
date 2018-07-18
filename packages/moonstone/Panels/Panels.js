@@ -13,7 +13,7 @@ import Viewport from './Viewport';
 import css from './Panels.less';
 
 /**
- * Basic Panels component without breadcrumbs or default [`arranger`]{@link ui/ViewManager.Arranger}
+ * Basic Panels component without breadcrumbs or default [arranger]{@link ui/ViewManager.Arranger}
  *
  * @class Panels
  * @memberof moonstone/Panels
@@ -25,7 +25,7 @@ const PanelsBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Panels.prototype */ {
 		/**
-		 * Function that generates unique identifiers for Panel instances
+		 * Function that generates unique identifiers for Panel instances.
 		 *
 		 * @type {Function}
 		 * @required
@@ -35,8 +35,9 @@ const PanelsBase = kind({
 
 		/**
 		 * Set of functions that control how the panels are transitioned into and out of the
-		 * viewport. Refer to [`Arranger`]{@link ui/ViewManager#SlideArranger}.
+		 * viewport.
 		 *
+		 * @see ui/ViewManager.SlideArranger
 		 * @type {Arranger}
 		 * @public
 		 */

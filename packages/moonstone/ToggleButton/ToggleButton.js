@@ -62,11 +62,10 @@ const ToggleButtonBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Sets the minimum width to 180px (or 130px if `small` is `true`).
+		 * Enforces a minimum width on the Button.
 		 *
-		 * When not specified, the minimum width will be set to the current value of
-		 * `@moon-button-height` (84px). Pixel values are based on 'fhd' resolution and scale
-		 * appropriately for other resolutions.
+		 * *NOTE*: This property's default is `true` and must be explicitly set to `false` to allow
+		 * the button to shrink to fit its contents.
 		 *
 		 * @type {Boolean}
 		 * @default true
@@ -92,11 +91,10 @@ const ToggleButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Sets button to a small size.
+		 * Reduces the size of the button.
 		 *
-		 * When small, the button's diameter is 60px and its tap target will stay at a diameter of
-		 * 78px, with an invisible DOM element wrapping the small button to provide the larger tap
-		 * zone.
+		 * The button will have a larger tap target than its apparent size to allow it to be clicked
+		 * more easily.
 		 *
 		 * @type {Boolean}
 		 * @default false

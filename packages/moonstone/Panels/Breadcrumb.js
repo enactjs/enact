@@ -45,14 +45,17 @@ const BreadcrumbBase = kind({
 		index: PropTypes.number.isRequired,
 
 		/**
-		 * Called when the breadcrumb is clicked
+		 * Called when the breadcrumb is clicked.
 		 *
+		 * @private
 		 * @type {Function}
 		 */
 		onClick: PropTypes.func,
 
 		/**
-		 * Called when the breadcrumb is clicked
+		 * Called when the breadcrumb is clicked.
+		 *
+		 * The index of the clicked breadcrumb is passed in the event data.
 		 *
 		 * @type {Function}
 		 */

@@ -39,16 +39,18 @@ const PickerBase = kind({
 
 	propTypes: /** @lends moonstone/Picker.PickerBase.prototype */ {
 		/**
-		 * Picker value list
+		 * Picker value list.
 		 *
 		 * @type {Node}
 		 * @required
 		 * @public
 		 */
 		children: PropTypes.node.isRequired,
+
 		/**
-		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
-		 * to the current selected child text.
+		 * The `aria-valuetext` for the picker.
+		 *
+		 * By default, `aria-valuetext` is set to the current selected child text.
 		 *
 		 * @type {String}
 		 * @memberof moonstone/Picker.PickerBase.prototype
@@ -61,7 +63,7 @@ const PickerBase = kind({
 		 *
 		 * By default, `data-webos-voice-labels-ext` is generated from `children`. However, if
 		 * `children` is not an array of numbers or strings, `data-webos-voice-labels-ext` should be
-		 * set to a JSON-encoded array of labels.
+		 * set to an array of labels.
 		 *
 		 * @type {Number[]|String[]}
 		 * @memberof moonstone/Picker.PickerBase.prototype
@@ -74,7 +76,7 @@ const PickerBase = kind({
 		 *
 		 * All strings supported by [Icon]{@link moonstone/Icon.Icon} are supported. Without a
 		 * custom icon, the default is used, and is automatically changed when the
-		 * [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
+		 * [orientation]{@link moonstone/Picker.Picker#orientation} is changed.
 		 *
 		 * @type {String}
 		 * @public
@@ -94,7 +96,7 @@ const PickerBase = kind({
 		 *
 		 * All strings supported by [Icon]{@link moonstone/Icon.Icon} are supported. Without a
 		 * custom icon, the default is used, and is automatically changed when the
-		 * [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
+		 * [orientation]{@link moonstone/Picker.Picker#orientation} is changed.
 		 *
 		 * @type {String}
 		 * @public
@@ -102,9 +104,9 @@ const PickerBase = kind({
 		incrementIcon: PropTypes.string,
 
 		/**
-		 * Indicates that the users can use the arrow keys to adjust the picker's value.
+		 * Allows the user can use the arrow keys to adjust the picker's value.
 		 *
-		 * The user may no longer use those arrow keys to navigate, while this control is focused.
+		 * The user may no longer use those arrow keys to navigate while this control is focused.
 		 * A default control allows full navigation, but requires individual ENTER presses on the
 		 * incrementer and decrementer buttons. Pointer interaction is the same for both formats.
 		 *
@@ -155,7 +157,7 @@ const PickerBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * Index of the selected child
+		 * Index of the selected child.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -164,17 +166,18 @@ const PickerBase = kind({
 		value: PropTypes.number,
 
 		/**
-		 * A number can be used to set the minimum number of characters to be shown.
+		 * The width of the picker.
 		 *
-		 * This number will determine the minimum size of the Picker.  Setting a number to less than
-		 * the number of characters in your longest value will cause the width to grow for the
-		 * longer values.
+		 * A number can be used to set the minimum number of characters to be shown.  Setting a
+		 * number to less than the number of characters in the longest value will cause the width to
+		 * grow for the longer values.
 		 *
-		 * Choose a specific size for your picker:
+		 * A string can be used to select from pre-defined widths:
 		 * * `'small'` - numeric values
 		 * * `'medium'` - single or short words
 		 * * `'large'` - maximum-sized pickers taking full width of its parent
-		 * * `null` - auto-sizing
+		 *
+		 * By default, the picker will size according to the longest valid value.
 		 *
 		 * @type {String|Number}
 		 * @public
@@ -185,7 +188,8 @@ const PickerBase = kind({
 		]),
 
 		/**
-		 * Allows picker to continue from the start of the list after it reaches the end.
+		 * Allows picker to continue from the start of the list after it reaches the end and
+		 * vice-versa.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -266,12 +270,13 @@ const Picker = Pure(
 );
 
 /**
- * Default Index of the selected child
+ * Default index of the selected child.
+ *
+ * *Note*: Changing `defaultValue` after initial render has no effect.
  *
  * @name defaultValue
  * @memberof moonstone/Picker.Picker.prototype
  * @type {Number}
- * @default 0
  * @public
  */
 

@@ -3,6 +3,7 @@
  *
  * @example
  * <RadioItem>Item</RadioItem>
+ *
  * @module moonstone/RadioItem
  * @exports RadioItem
  * @exports RadioItemBase

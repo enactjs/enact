@@ -16,8 +16,8 @@ import Popup from '../Popup';
 import componentCss from './Notification.less';
 
 /**
- * A Moonstone styled notification component. It provides a notification modal which can be open and
- * closed overlayed over an app. Apps will want to use {@link moonstone/Notification.Notification}.
+ * A Moonstone styled notification component. It provides a notification modal which can be opened
+ * and closed, overlaying an app. Apps will want to use {@link moonstone/Notification.Notification}.
  *
  * @class NotificationBase
  * @memberof moonstone/Notification
@@ -29,7 +29,9 @@ const NotificationBase = kind({
 
 	propTypes: /** @lends moonstone/Notification.NotificationBase.prototype */ {
 		/**
-		 * Buttons, typically to close or take action in the Notification. Buttons must have their
+		 * Buttons for the Notification.
+		 *
+		 * These typically close or take action in the Notification. Buttons must have their
 		 * `small` property set and will be coerced to `small` if not specified.
 		 *
 		 * @type {Element|Element[]}
@@ -41,7 +43,7 @@ const NotificationBase = kind({
 		]),
 
 		/**
-		 * The contents to be displayed in the body of the Notification.
+		 * The contents for the body of the Notification.
 		 *
 		 * @type {Node}
 		 * @public
@@ -62,7 +64,7 @@ const NotificationBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Indicates that the popup will not close when the user presses `ESC` key.
+		 * Indicates that the notification will not trigger `onClose` on the *ESC* key press.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -71,9 +73,10 @@ const NotificationBase = kind({
 		noAutoDismiss: PropTypes.bool,
 
 		/**
-		 * A function to be run when a closing action is invoked by the user. These actions include
-		 * pressing `ESC` key or clicking on the close button. It is the responsibility of the
-		 * callback to set the `open` state to false.
+		 * Called when a closing action is invoked by the user.
+		 *
+		 * These actions include pressing *ESC* key or clicking on the close button. It is the
+		 * responsibility of the callback to set the `open` state to `false`.
 		 *
 		 * @type {Function}
 		 * @public
@@ -81,7 +84,9 @@ const NotificationBase = kind({
 		onClose: PropTypes.func,
 
 		/**
-		 * Is this control in the expanded state (true), opened, with the contents visible?
+		 * Controls the visibility of the Notification.
+		 *
+		 * By default, the Notification and its contents are not rendered until `open`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -90,7 +95,9 @@ const NotificationBase = kind({
 		open: PropTypes.bool,
 
 		/**
-		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.
+		 * Scrim type.
+		 *
+		 * * Values: `'transparent'`, `'translucent'`, or `'none'`.
 		 *
 		 * @type {String}
 		 * @default 'transparent'

@@ -78,7 +78,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default IndexedBreadcrumbs
 			 */
 			breadcrumbs: PropTypes.oneOfType([
-				PropTypes.func,							// generator
+				PropTypes.func,						// generator
 				PropTypes.arrayOf(PropTypes.node)	// static array of breadcrumbs
 			]),
 

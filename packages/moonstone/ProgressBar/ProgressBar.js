@@ -60,6 +60,7 @@ const ProgressBarBase = kind({
 
 		/**
 		 * Sets the orientation of the slider.
+		 *
 		 * * Values: `'horizontal'`, `'vertical'`
 		 *
 		 * @type {String}
@@ -69,8 +70,7 @@ const ProgressBarBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * The proportion of the filled portion of the bar.
-		 * A value should range from `0` to `1`.
+		 * A number between `0` and `1` indicating the proportion of the filled portion of the bar.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -102,7 +102,7 @@ const ProgressBarBase = kind({
 		 * </ProgressBar>
 		 * ```
 		 *
-		 * @type {Boolean|Element|Function}
+		 * @type {Boolean|Element}
 		 * @public
 		 */
 		tooltip: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.object, PropTypes.func])

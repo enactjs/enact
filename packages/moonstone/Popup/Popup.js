@@ -104,6 +104,8 @@ const PopupBase = kind({
 		/**
 		 * Controls the visibility of the Popup.
 		 *
+		 * By default, the Popup and its contents are not rendered until `open`.
+		 *
 		 * @type {Boolean}
 		 * @default false
 		 * @public
@@ -305,6 +307,8 @@ class Popup extends React.Component {
 		/**
 		 * Controls the visibility of the Popup.
 		 *
+		 * By default, the Popup and its contents are not rendered until `open`.
+		 *
 		 * @type {Boolean}
 		 * @default false
 		 * @public
@@ -314,7 +318,7 @@ class Popup extends React.Component {
 		/**
 		 * Scrim type.
 		 *
-		 * It can be either `'transparent'`, `'translucent'`, or `'none'`.
+		 * * Values: `'transparent'`, `'translucent'`, or `'none'`.
 		 *
 		 * `'none'` is not compatible with `spotlightRestrict` of `'self-only'`, use a transparent scrim
 		 * to prevent mouse focus when using popup.
@@ -337,9 +341,10 @@ class Popup extends React.Component {
 		/**
 		 * Restricts or prioritizes navigation when focus attempts to leave the popup.
 		 *
-		 * It can be either `'self-first'`, or `'self-only'`. Note: If `onClose` is not set, then
-		 * this has no effect on 5-way navigation. If the popup has no spottable children, 5-way
-		 * navigation will cause the popup to fire `onClose`.
+		 * * Values: `'self-first'`, or `'self-only'`.
+		 *
+		 * Note: If `onClose` is not set, then this has no effect on 5-way navigation. If the popup
+		 * has no spottable children, 5-way navigation will cause the Popup to fire `onClose`.
 		 *
 		 * @type {String}
 		 * @default 'self-only'

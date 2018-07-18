@@ -7,7 +7,7 @@ import {breadcrumbWidth} from './Breadcrumb';
 import BreadcrumbDecorator from './BreadcrumbDecorator';
 import Viewport from './Viewport';
 
-/**
+/*
  * Calculates the number of breadcrumbs that would fit in half of the viewport
  *
  * @param {Number} viewportWidth inner width of the viewport (usually the window)
@@ -23,8 +23,9 @@ const calcMax = () => {
 };
 
 /**
- * An instance of Panels which restricts the Panel to the right half of the screen with the left
- * half used for multiple breadcrumbs. Typically it's used for overlaying panels over a screen.
+ * An instance of [`Panels`]{@link moonstone/Panels.Panels} which restricts the `Panel` to the right
+ * half of the screen with the left half used for breadcrumbs that allow navigating to previous
+ * panels. Typically used for overlaying panels over a screen.
  *
  * @class AlwaysViewingPanels
  * @memberof moonstone/Panels
