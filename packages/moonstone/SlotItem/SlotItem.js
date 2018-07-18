@@ -1,7 +1,7 @@
 /**
- * Provides Moonstone-themed item component that accepts multiple positions of children, using the
- * usual `children` prop, as well as two additional props: `slotBefore`, and `slotAfter`.
- * It is able to be customized by a theme or application.
+ * Provides a Moonstone-themed item component that accepts multiple positions for children, using
+ * the usual `children` prop, as well as two additional props: `slotBefore`, and `slotAfter`.  It is
+ * customizable by a theme or application.
  *
  * @example
  *	<SlotItem autoHide="both">
@@ -12,6 +12,7 @@
  *		An Item that will show some icons before and after this text when spotted
  *		<Icon slot="slotAfter">trash</Icon>
  *	</SlotItem>
+ *
  * @module moonstone/SlotItem
  * @exports SlotItem
  * @exports SlotItemBase

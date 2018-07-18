@@ -379,9 +379,10 @@ class ScrollerBase extends Component {
 /**
  * A Moonstone-styled Scroller, Scrollable applied.
  *
- * @example
+ * Usage:
+ * ```
  * <Scroller>Scroll me.</Scroller>
- *
+ * ```
  *
  * @class Scroller
  * @memberof moonstone/Scroller
@@ -405,9 +406,7 @@ Scroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
 	/**
 	 * Direction of the scroller.
 	 *
-	 * * `'both'`
-	 * * `'horizontal'`
-	 * * `'vertical'`
+	 * * Values: `'both'`, `'horizontal'`, `'vertical'`.
 	 *
 	 * @type {String}
 	 * @default 'both'
@@ -426,8 +425,10 @@ Scroller.defaultProps = {
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
  *
- * @example
+ * Usage:
+ * ```
  * <ScrollerNative>Scroll me.</ScrollerNative>
+ * ```
  *
  * @class ScrollerNative
  * @memberof moonstone/Scroller
@@ -451,9 +452,7 @@ ScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototyp
 	/**
 	 * Direction of the scroller.
 	 *
-	 * * `'both'`
-	 * * `'horizontal'`
-	 * * `'vertical'`
+	 * * Values: `'both'`, `'horizontal'`, `'vertical'`.
 	 *
 	 * @type {String}
 	 * @default 'both'

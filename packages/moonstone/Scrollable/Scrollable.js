@@ -2,7 +2,6 @@
  * Provides Moonstone-themed scrollable components and behaviors.
  *
  * @module moonstone/Scrollable
- * @exports dataIndexAttribute
  * @exports Scrollable
  * @private
  */

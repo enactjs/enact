@@ -126,6 +126,7 @@ const ButtonBase = kind({
  * the button to shrink to fit its contents.
  *
  * @name minWidth
+ * @memberof moonstone/Button.ButtonBase.prototype
  * @type {Boolean}
  * @default true
  * @public

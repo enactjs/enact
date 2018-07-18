@@ -15,6 +15,7 @@ import PropTypes from 'prop-types';
 import Divider from '../Divider';
 
 /**
+ * A component for grouping other components.
  *
  * @class Region
  * @memberof moonstone/Region
@@ -36,7 +37,9 @@ const RegionBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
-		 * Sets the aria-label for the region. If unset, it defaults to the value of `title`
+		 * The aria-label for the region.
+		 *
+		 * If unset, it defaults to the value of `title`
 		 *
 		 * @memberof moonstone/Region.Region.prototype
 		 * @type {String}
@@ -45,7 +48,7 @@ const RegionBase = kind({
 		'aria-label': PropTypes.string,
 
 		/**
-		 * Contents of the region
+		 * Contents of the region.
 		 *
 		 * @type {Node}
 		 * @public
