@@ -385,15 +385,12 @@ const Spotlight = (function () {
 	}
 
 	function onKeyDown (evt) {
-		if (shouldPreventNavigation()) {
-			return;
-		}
-
+		const shouldPrevent = shouldPreventNavigation();
 		const keyCode = evt.keyCode;
 		const direction = getDirection(keyCode);
-		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
+		const pointerHandled = notifyKeyDown(keyCode, !shouldPrevent && handlePointerHide);
 
-		if (pointerHandled || !(direction || isEnter(keyCode))) {
+		if (pointerHandled || !(direction || isEnter(keyCode)) || shouldPrevent) {
 			return;
 		}
 
