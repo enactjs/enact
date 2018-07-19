@@ -168,7 +168,8 @@ const DialogBase = kind({
 	},
 
 	computed: {
-		className: ({noDivider, styler}) => styler.append({showDivider: !noDivider})
+		className: ({noDivider, styler}) => styler.append({showDivider: !noDivider}),
+		titleBelow: ({title, titleBelow}) => title ? titleBelow : ''
 	},
 
 	render: ({buttons, casing, children, title, titleBelow, ...rest}) => {
@@ -177,14 +178,14 @@ const DialogBase = kind({
 		return (
 			<Popup {...rest}>
 				<div className={css.titleWrapper}>
-					{title && <div className={css.titleBlock}>
+					<div className={css.titleBlock}>
 						<MarqueeH1 casing={casing} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
 							{title}
 						</MarqueeH1>
 						<h2 className={css.titleBelow}>
 							{titleBelow}
 						</h2>
-					</div>}
+					</div>
 					<div className={css.buttons}>
 						{buttons}
 					</div>
