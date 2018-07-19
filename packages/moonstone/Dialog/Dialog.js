@@ -15,7 +15,7 @@ import Uppercase from '@enact/i18n/Uppercase';
 import {MarqueeDecorator} from '../Marquee';
 import Popup from '../Popup';
 
-import css from './Dialog.less';
+import componentCss from './Dialog.less';
 
 const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
 
@@ -169,7 +169,7 @@ const DialogBase = kind({
 	},
 
 	styles: {
-		css,
+		css: componentCss,
 		className: 'dialog'
 	},
 
@@ -183,12 +183,12 @@ const DialogBase = kind({
 		}
 	},
 
-	render: ({buttons, casing, children, preserveCase, title, titleBelow, ...rest}) => {
+	render: ({buttons, casing, css, children, preserveCase, title, titleBelow, ...rest}) => {
 		delete rest.noDivider;
 		delete rest.showDivider;
 
 		return (
-			<Popup {...rest}>
+			<Popup {...rest} css={css}>
 				<div className={css.titleWrapper}>
 					<div className={css.titleBlock}>
 						<MarqueeH1 casing={casing} preserveCase={preserveCase} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
