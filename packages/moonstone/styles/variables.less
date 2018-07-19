@@ -257,7 +257,12 @@
 // Radio Item
 // ---------------------------------------
 @moon-radio-item-indicator-size: 24px;
-@moon-radio-item-indicator-border: 3px;
+@moon-radio-item-indicator-border: 1.75px;  // This _absurd_ number is to facilitate a 2px border.
+	// 2px, not being a multiple of 3 poses special problems. This value must be large enough that
+	// so it will be rounded to 2px at FHD and rounded down to 1px for HD. It must also round up to
+	// something meaningful for UHD (which this does not. It works out to be 2.5px.) This causes a
+	// 1px layout issue in the current renderer that we hope is not noticible enough to be an actual
+	// problem. A smarter fix is due. 1.74px is too little and causes worse HD layout issues.
 
 // GridListImageItem
 // ---------------------------------------
