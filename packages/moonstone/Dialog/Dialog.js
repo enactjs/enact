@@ -66,6 +66,19 @@ const DialogBase = kind({
 		children: PropTypes.node,
 
 		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `dialog` - The root class name
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		css: PropTypes.object,
+
+		/**
 		 * Disables animating the dialog on or off screen.
 		 *
 		 * @type {Boolean}

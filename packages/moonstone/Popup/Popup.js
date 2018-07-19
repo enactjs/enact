@@ -22,7 +22,7 @@ import $L from '../internal/$L';
 import IconButton from '../IconButton';
 import Skinnable from '../Skinnable';
 
-import css from './Popup.less';
+import componentCss from './Popup.less';
 
 const isUp = is('up');
 const TransitionContainer = SpotlightContainerDecorator(
@@ -67,6 +67,20 @@ const PopupBase = kind({
 		 * @public
 		 */
 		closeButtonAriaLabel: PropTypes.string,
+
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `popup` - The root class name
+		 * * `reserveClose` - Applied when the close button is shown and space must be allocated for it
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		css: PropTypes.object,
 
 		/**
 		 * When `true`, the popup will not animate on/off screen.
@@ -150,14 +164,14 @@ const PopupBase = kind({
 	},
 
 	styles: {
-		css,
+		css: componentCss,
 		className: 'popup',
 		publicClassNames: ['popup', 'reserveClose']
 	},
 
 	computed: {
 		className: ({showCloseButton, styler}) => styler.append({reserveClose: showCloseButton}),
-		closeButton: ({closeButtonAriaLabel, onCloseButtonClick, showCloseButton}) => {
+		closeButton: ({closeButtonAriaLabel, css, onCloseButtonClick, showCloseButton}) => {
 			if (showCloseButton) {
 				const ariaLabel = (closeButtonAriaLabel == null) ? $L('Close') : closeButtonAriaLabel;
 
@@ -176,7 +190,7 @@ const PopupBase = kind({
 		}
 	},
 
-	render: ({closeButton, children, noAnimation, open, onHide, onShow, spotlightId, spotlightRestrict, ...rest}) => {
+	render: ({children, closeButton, css, noAnimation, onHide, onShow, open, spotlightId, spotlightRestrict, ...rest}) => {
 		delete rest.closeButtonAriaLabel;
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
