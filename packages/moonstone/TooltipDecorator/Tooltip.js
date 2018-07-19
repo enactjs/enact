@@ -60,10 +60,10 @@ const TooltipBase = kind({
 		 * @public
 		 */
 		position: PropTypes.shape({
-			top: PropTypes.number,
 			bottom: PropTypes.number,
 			left: PropTypes.number,
-			right: PropTypes.number
+			right: PropTypes.number,
+			top: PropTypes.number
 		}),
 
 		/**

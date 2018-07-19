@@ -7,7 +7,7 @@ import React from 'react';
  *
  * @param  {Number|String} value A duration of time represented in seconds
  *
- * @return {Object}       An object with keys {hour, minute, second} representing the duration
+ * @returns {Object}       An object with keys {hour, minute, second} representing the duration
  *                        seconds provided as an argument.
  * @private
  */
@@ -28,7 +28,7 @@ const parseTime = (value) => {
  *
  * @param  {Number|String} seconds A duration of time represented in seconds
  *
- * @return {String}      String formatted for use in a `datetime` field of a `<time>` tag.
+ * @returns {String}      String formatted for use in a `datetime` field of a `<time>` tag.
  * @private
  */
 const secondsToPeriod = (seconds) => {
@@ -44,7 +44,7 @@ const secondsToPeriod = (seconds) => {
  *                             component.
  * @param  {Object} config Additional configuration object that includes `includeHour`.
  *
- * @return {String}      Formatted duration string
+ * @returns {String}      Formatted duration string
  * @private
  */
 const secondsToTime = (seconds, durfmt, config) => {
@@ -75,40 +75,17 @@ const calcNumberValueOfPlaybackRate = (rate) => {
 };
 
 /**
- * Compares two source(s) of a video, mainly `src` and `type`.
- *
- * @param {Object|Array} source Source node(s)
- * @param {Object|Array} nextSource Source node(s)
- * @return {Boolean} true if two sources are the same
- * @private
- */
-const compareSources = (source, nextSource) => {
-	if (Array.isArray(source) !== Array.isArray(nextSource)) {
-		return false;
-	} else if (Array.isArray(source) && Array.isArray(nextSource)) {
-		return source.every((src, i) => {
-			return src.props.src === nextSource[i].props.src && src.props.type === nextSource[i].props.type;
-		});
-	} else if (nextSource.props.src === source.props.src && nextSource.props.type === source.props.type) {
-		return true;
-	} else {
-		return false;
-	}
-};
-
-/**
  * Safely count the children nodes and exclude null & undefined values for an accurate count of
  * real children
  *
  * @param {component} children React.Component or React.PureComponent
- * @return {Number} Number of children nodes
+ * @returns {Number} Number of children nodes
  * @private
  */
 const countReactChildren = (children) => React.Children.toArray(children).filter(n => n != null).length;
 
 export {
 	calcNumberValueOfPlaybackRate,
-	compareSources,
 	countReactChildren,
 	parseTime,
 	secondsToPeriod,

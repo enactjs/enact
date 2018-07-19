@@ -1,5 +1,5 @@
 /**
- * Provides Moonstone-themed button components and behaviors.
+ * Moonstone styled button components and behaviors.
  *
  * @example
  * <Button small>Hello Enact!</Button>
@@ -10,6 +10,7 @@
  * @exports ButtonDecorator
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
@@ -22,12 +23,20 @@ import React from 'react';
 import Icon from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
-import TooltipDecorator from '../TooltipDecorator';
 
 import componentCss from './Button.less';
 
+// Called when `tooltip` props are used
+const deprecation = deprecate(() => {}, {
+	message: 'Tooltip props require the button to be wrapped by TooltipDecorator',
+	since: '2.0.0'
+});
+
 /**
- * A moonstone-styled button without any behavior.
+ * A button component.
+ *
+ * This component is most often not used directly but may be composed within another component as it
+ * is within [Button]{@link moonstone/Button.Button}.
  *
  * @class ButtonBase
  * @memberof moonstone/Button
@@ -39,27 +48,20 @@ const ButtonBase = kind({
 
 	propTypes: /** @lends moonstone/Button.ButtonBase.prototype */ {
 		/**
-		 * The background-color opacity of this button.
+		 * The background opacity of this button.
 		 *
 		 * Valid values are:
-		 * * `'opaque'`,
 		 * * `'translucent'`,
 		 * * `'lightTranslucent'`, and
 		 * * `'transparent'`.
 		 *
 		 * @type {String}
-		 * @default 'opaque'
 		 * @public
 		 */
-		backgroundOpacity: PropTypes.oneOf([
-			'opaque',
-			'translucent',
-			'lightTranslucent',
-			'transparent'
-		]),
+		backgroundOpacity: PropTypes.oneOf(['translucent', 'lightTranslucent', 'transparent']),
 
 		/**
-		 * The color of the underline beneath button's content. Used for `IconButton`.
+		 * The color of the underline beneath button's content.
 		 *
 		 * Accepts one of the following color names, which correspond with the colored buttons on a
 		 * standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`.
@@ -67,7 +69,7 @@ const ButtonBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
+		color: PropTypes.oneOf(['red', 'green', 'yellow', 'blue']),
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -78,6 +80,7 @@ const ButtonBase = kind({
 		 * * `button` - The root class name
 		 * * `bg` - The background node of the button
 		 * * `selected` - Applied to a `selected` button
+		 * * `small` - Applied to a `small` button
 		 *
 		 * @type {Object}
 		 * @public
@@ -87,7 +90,7 @@ const ButtonBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['button', 'bg', 'selected']
+		publicClassNames: ['button', 'bg', 'selected', 'small']
 	},
 
 	computed: {
@@ -101,6 +104,10 @@ const ButtonBase = kind({
 		delete rest.backgroundOpacity;
 		delete rest.color;
 
+		if (__DEV__ && Object.keys(rest).some(s => s.indexOf('tooltip') === 0)) {
+			deprecation();
+		}
+
 		return (
 			<UiButtonBase
 				data-webos-voice-intent="Select"
@@ -113,12 +120,12 @@ const ButtonBase = kind({
 });
 
 /**
- * Moonstone-specific button behaviors to apply to [Button]{@link moonstone/Button.ButtonBase}.
+ * Applies Moonstone specific behaviors to [Button]{@link moonstone/Button.ButtonBase} components.
  *
  * @hoc
  * @memberof moonstone/Button
+ * @extends moonstone/Button.ButtonBase
  * @mixes i18n/Uppercase.Uppercase
- * @mixes moonstone/TooltipDecorator.TooltipDecorator
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes ui/Button.ButtonDecorator
  * @mixes spotlight/Spottable.Spottable
@@ -128,7 +135,6 @@ const ButtonBase = kind({
 const ButtonDecorator = compose(
 	Pure,
 	Uppercase,
-	TooltipDecorator,
 	MarqueeDecorator({className: componentCss.marquee}),
 	UiButtonDecorator,
 	Spottable,
@@ -136,16 +142,21 @@ const ButtonDecorator = compose(
 );
 
 /**
- * A Moonstone-styled button with built-in support for uppercasing, tooltips, marqueed text, and
- * Spotlight focus.
+ * A button component, ready to use in Moonstone applications.
  *
  * Usage:
  * ```
- * <Button>Press me!</Button>
+ * <Button
+ * 	backgroundOpacity="translucent"
+ * 	color="blue"
+ * >
+ * 	Press me!
+ * </Button>
  * ```
  *
  * @class Button
  * @memberof moonstone/Button
+ * @extends moonstone/Button.ButtonBase
  * @mixes moonstone/Button.ButtonDecorator
  * @ui
  * @public

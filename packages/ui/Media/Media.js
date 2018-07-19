@@ -3,7 +3,9 @@
  * handler.
  *
  * @module ui/Media
- * @private
+ * @exports	getKeyFromSource
+ * @exports	handledMediaEventsMap
+ * @exports	Media
  */
 
 import React from 'react';
@@ -12,7 +14,69 @@ import {forward} from '@enact/core/handle';
 import {on, off} from '@enact/core/dispatcher';
 
 /**
- * Event forwarding map for all of the supported media events. See https://reactjs.org/docs/events.html#media-events
+ * Generates a key representing the source node or nodes provided
+ *
+ * ```
+ * getKeyFromSource('path/file.mp4'); // 'path/file.mp4'
+ * getKeyFromSource(
+ * 	<source src="path/file.mp4" type="video/mp4" />
+ * ); // 'path/file.mp4'
+ * getKeyFromSource([
+ * 	<source src="path/file.mp4" type="video/mp4" />,
+ * 	<source src="path/file.ogg" type="video/ogg" />,
+ * ]); // 'path/file.mp4+path/file.ogg'
+ * ```
+ *
+ * @param   {String|Element|Element[]} source URI for a source, `<source>` node, or array of
+ *                                     `<source>` nodes
+ * @returns {String}                   Key representing sources
+ * @function
+ * @memberof ui/Media
+ * @public
+ */
+const getKeyFromSource = (source = '') => {
+	if (React.isValidElement(source)) {
+		return React.Children.toArray(source)
+			.filter(s => !!s)
+			.map(s => s.props.src)
+			.join('+');
+	}
+
+	return String(source);
+};
+
+/**
+ * Maps standard media event `type` values to React-style callback prop names
+ *
+ * See https://reactjs.org/docs/events.html#media-events
+ *
+ * ```
+ * {
+ *   abort           : 'onAbort',
+ *   canplay         : 'onCanPlay',
+ *   canplaythrough  : 'onCanPlayThrough',
+ *   durationchange  : 'onDurationChange',
+ *   emptied         : 'onEmptied',
+ *   encrypted       : 'onEncrypted',
+ *   ended           : 'onEnded',
+ *   error           : 'onError',
+ *   loadeddata      : 'onLoadedData',
+ *   loadedmetadata  : 'onLoadedMetadata',
+ *   loadstart       : 'onLoadStart',
+ *   pause           : 'onPause',
+ *   play            : 'onPlay',
+ *   playing         : 'onPlaying',
+ *   progress        : 'onProgress',
+ *   ratechange      : 'onRateChange',
+ *   seeked          : 'onSeeked',
+ *   seeking         : 'onSeeking',
+ *   stalled         : 'onStalled',
+ *   suspend         : 'onSuspend',
+ *   timeupdate      : 'onTimeUpdate',
+ *   volumechange    : 'onVolumeChange',
+ *   waiting         : 'onWaiting'
+ * }
+ * ```
  *
  * @typedef {Object} handledMediaEventsMap
  * @memberof ui/Media
@@ -45,12 +109,12 @@ const handledMediaEventsMap = {
 };
 
 /**
- * {@link ui/Media.Media} is a class representation of HTMLMediaElement.
+ * {@link ui/Media.Media} is a component representation of HTMLMediaElement.
  *
  * @class Media
  * @memberof ui/Media
  * @ui
- * @private
+ * @public
  */
 class Media extends React.Component {
 	static propTypes = /** @lends ui/Media.Media.prototype */ {
@@ -61,7 +125,7 @@ class Media extends React.Component {
 		 * @required
 		 * @public
 		 */
-		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+		mediaComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
 
 		/**
 		 * A event map object for custom media events. List custom events that aren't standard to
@@ -91,7 +155,17 @@ class Media extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onUpdate: PropTypes.func
+		onUpdate: PropTypes.func,
+
+		/**
+		 * Media sources passed as children to `mediaComponent`
+		 *
+		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
+		 *
+		 * @type {*}
+		 * @public
+		 */
+		source: PropTypes.any
 	}
 
 	static defaultProps = {
@@ -124,6 +198,14 @@ class Media extends React.Component {
 
 	componentDidMount () {
 		this.attachCustomMediaEvents();
+	}
+
+	componentDidUpdate ({source: prevSource}) {
+		const {source} = this.props;
+
+		if (getKeyFromSource(source) !== getKeyFromSource(prevSource)) {
+			this.load();
+		}
 	}
 
 	componentWillUnmount () {
@@ -209,11 +291,11 @@ class Media extends React.Component {
 	}
 
 	render () {
-		const props = Object.assign({}, this.props);
-		delete props.mediaEventsMap;
-		delete props.onUpdate;
+		const {customMediaEventsMap, mediaComponent: Component, source, ...rest} = this.props;
 
-		const {customMediaEventsMap, component: Component, ...rest} = props;
+		delete rest.mediaEventsMap;
+		delete rest.onUpdate;
+
 		// Remove the events we manually added so they aren't added twice or fail.
 		for (let eventName in customMediaEventsMap) {
 			delete rest[customMediaEventsMap[eventName]];
@@ -222,15 +304,18 @@ class Media extends React.Component {
 		return (
 			<Component
 				{...rest}
-				ref={this.mediaRef}
 				{...this.handledMediaEvents}
-			/>
+				ref={this.mediaRef}
+			>
+				{source}
+			</Component>
 		);
 	}
 }
 
 export default Media;
 export {
+	getKeyFromSource,
 	handledMediaEventsMap,
 	Media
 };

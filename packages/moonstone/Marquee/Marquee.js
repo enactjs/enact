@@ -12,7 +12,6 @@
 import hoc from '@enact/core/hoc';
 import {isRtlText} from '@enact/i18n/util';
 import {
-	controlContextTypes,
 	MarqueeBase,
 	MarqueeController,
 	MarqueeDecorator as UiMarqueeDecorator
@@ -26,8 +25,6 @@ const Marquee = MarqueeDecorator('div');
 
 export default Marquee;
 export {
-	controlContextTypes,
-
 	/**
 	 * A block element which will marquee its contents
 	 *

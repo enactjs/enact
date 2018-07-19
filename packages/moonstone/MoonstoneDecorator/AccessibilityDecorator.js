@@ -16,10 +16,6 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'AccessibilityDecorator'
 
-		static contextTypes = contextTypes
-
-		static childContextTypes = contextTypes
-
 		static propTypes =  /** @lends moonstone/MoonstoneDecorator.AccessibilityDecorator.prototype */ {
 			/**
 			 * Enables additional features to help users visually differentiate components.
@@ -42,6 +38,10 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {
 			 */
 			textSize: PropTypes.oneOf(['normal', 'large'])
 		}
+
+		static contextTypes = contextTypes
+
+		static childContextTypes = contextTypes
 
 		static defaultProps = {
 			highContrast: false,

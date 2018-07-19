@@ -194,7 +194,7 @@ const dateTimeConfig = {
  * month, and meridiem.
  *
  * Set the [value]{@link moonstone/TimePicker.TimePicker#value} property to a standard JavaScript
- * {@glossary Date} object to initialize the picker.
+ * [Date] {@link /docs/developer-guide/glossary/#date} object to initialize the picker.
  *
  * By default, `TimePicker` maintains the state of its `value` property. Supply the
  * `defaultValue` property to control its initial value. If you wish to directly control updates

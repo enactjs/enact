@@ -1,28 +1,16 @@
 .slider {
-	// The "end" referenced below refers to the current "max value" of the proportion. If Slider
-	// supports a "min" or "start" value to facilitate a dual-knob scenario, this will seem less
-	// awkward, and this comment can be deleted.
-	--ui-slider-proportion-end: 0;
-	--ui-slider-proportion-end-background: 0;
+	// The "end" referenced below refers to the current "max value" of the proportion. This is a
+	// forward-looking variable name to support a potential second knob at the "min value".
 	--ui-slider-proportion-end-knob: 0;
 
 	position: relative;
 	direction: ltr;
-
-	.fill,
-	.load {
-		position: absolute;
-		pointer-events: none;
-		transform-origin: 0 0;
-		will-change: transform;
-	}
 
 	.knob {
 		top: 50%;
 		left: 50%;
 	}
 
-	.bars,
 	&.horizontal,
 	&.pressed,
 	&.noFill,

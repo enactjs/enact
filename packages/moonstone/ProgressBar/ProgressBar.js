@@ -51,6 +51,14 @@ const ProgressBarBase = kind({
 		css: PropTypes.object,
 
 		/**
+		 * Enable to draw special visual attention to this component.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		highlighted: PropTypes.bool,
+
+		/**
 		 * Sets the orientation of the slider, whether the progress-bar depicts its progress value
 		 * in a left and right orientation or up and down onientation.
 		 * Must be either `'horizontal'` or `'vertical'`.
@@ -112,11 +120,13 @@ const ProgressBarBase = kind({
 	},
 
 	computed: {
+		className: ({highlighted, styler}) => styler.append({highlighted}),
 		tooltip: ({tooltip}) => tooltip === true ? ProgressBarTooltip : tooltip
 	},
 
 	render: ({css, orientation, progress, tooltip, ...rest}) => {
 		delete rest.tooltip;
+		delete rest.highlighted;
 
 		return (
 			<UiProgressBar

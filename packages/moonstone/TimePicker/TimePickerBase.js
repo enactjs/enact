@@ -67,7 +67,7 @@ class HourPicker extends React.Component {
 * @class TimePickerBase
 * @memberof moonstone/TimePicker
 * @ui
-* @private
+* @public
 */
 const TimePickerBase = kind({
 	name: 'TimePickerBase',
@@ -109,6 +109,15 @@ const TimePickerBase = kind({
 		 * @public
 		 */
 		title: PropTypes.string.isRequired,
+
+		/**
+		 * Disables voice control.
+		 *
+		 * @type {Boolean}
+		 * @memberof moonstone/TimePicker.TimePickerBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
 
 		/**
 		 * The "aria-label" for the hour picker
@@ -288,6 +297,7 @@ const TimePickerBase = kind({
 	},
 
 	render: ({
+		'data-webos-voice-disabled': voiceDisabled,
 		handlePickerKeyDown,
 		hasMeridiem,
 		hour,
@@ -318,6 +328,7 @@ const TimePickerBase = kind({
 				{...rest}
 				showLabel="always"
 				autoClose={false}
+				data-webos-voice-disabled={voiceDisabled}
 				lockBottom={false}
 				onSpotlightDisappear={onSpotlightDisappear}
 				onSpotlightLeft={onSpotlightLeft}
@@ -344,6 +355,8 @@ const TimePickerBase = kind({
 											accessibilityHint={hourLabel}
 											aria-label={hourAriaLabel}
 											className={css.hourComponents}
+											data-webos-voice-disabled={voiceDisabled}
+											data-webos-voice-group-label={hourLabel}
 											key="hour-picker"
 											label={noLabels ? null : hourLabel}
 											onChange={onChangeHour}
@@ -364,6 +377,8 @@ const TimePickerBase = kind({
 											accessibilityHint={minuteLabel}
 											aria-label={minuteAriaLabel}
 											className={css.minutesComponents}
+											data-webos-voice-disabled={voiceDisabled}
+											data-webos-voice-group-label={minuteLabel}
 											key="minute-picker"
 											label={noLabels ? null : minuteLabel}
 											max={59}
@@ -386,6 +401,8 @@ const TimePickerBase = kind({
 											aria-label={meridiemAriaLabel}
 											aria-valuetext={meridiems ? meridiems[meridiem] : null}
 											className={css.meridiemComponent}
+											data-webos-voice-disabled={voiceDisabled}
+											data-webos-voice-group-label={meridiemLabel}
 											key="meridiem-picker"
 											label={noLabels ? null : meridiemLabel}
 											onChange={onChangeMeridiem}

@@ -6,9 +6,9 @@
  * @module moonstone/TooltipDecorator
  */
 
-import {contextTypes} from '@enact/core/internal/PubSub';
 import hoc from '@enact/core/hoc';
-import FloatingLayer from '@enact/ui/FloatingLayer';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+import {FloatingLayerBase} from '@enact/ui/FloatingLayer';
 import {forward, handle, forProp} from '@enact/core/handle';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
@@ -59,7 +59,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 	const tooltipDestinationProp = config.tooltipDestinationProp;
 
-	return class extends React.Component {
+	const Decorator = class extends React.Component {
 		static displayName = 'TooltipDecorator'
 
 		static propTypes = /** @lends moonstone/TooltipDecorator.TooltipDecorator.prototype */ {
@@ -71,6 +71,14 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			disabled: PropTypes.bool,
+
+			/**
+			 * Sets the text direction to be right-to-left
+			 *
+			 * @type {Boolean}
+			 * @private
+			 */
+			rtl: PropTypes.bool,
 
 			/**
 			 * Configures the mode of uppercasing of the `tooltipText` that should be performed.
@@ -112,19 +120,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				'right bottom', 'right middle', 'right top']),
 
 			/**
-			 * When true, the case of the [`tooltipText`]{@link moonstone/TooltipDecorator.TooltipDecorator#tooltipText}
-			 * will remain unchanged.
-			 * Uses [Uppercase HOC]{@link i18n/Uppercase.Uppercase} and mirrors the
-			 * [preserveCase prop]{@link i18n/Uppercase.Uppercase#preserveCase}
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @deprecated replaced by `tooltipCasing`
-			 * @public
-			 */
-			tooltipPreserveCase: PropTypes.bool,
-
-			/**
 			 * An object containing properties to be passed to tooltip component.
 			 *
 			 * @type {Object}
@@ -135,7 +130,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * The text to be displayed as the main content of the tooltip.
 			 *
-			 * @type {String|Node}}
+			 * @type {Node}
 			 * @public
 			 */
 			tooltipText: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
@@ -154,11 +149,8 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: false,
 			tooltipCasing: 'upper',
 			tooltipDelay: 500,
-			tooltipPosition: 'above',
-			tooltipPreserveCase: false
+			tooltipPosition: 'above'
 		}
-
-		static contextTypes = contextTypes
 
 		constructor (props) {
 			super(props);
@@ -173,12 +165,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		componentWillMount () {
-			if (this.context.Subscriber) {
-				this.context.Subscriber.subscribe('i18n', this.handleLocaleChange);
-			}
-		}
-
 		componentWillUnmount () {
 			if (currentTooltip === this) {
 				currentTooltip = null;
@@ -188,14 +174,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.props.disabled) {
 				off('keydown', this.handleKeyDown);
 			}
-
-			if (this.context.Subscriber) {
-				this.context.Subscriber.unsubscribe('i18n', this.handleLocaleChange);
-			}
-		}
-
-		handleLocaleChange = ({message: {rtl}}) => {
-			this.rtlLocale = rtl;
 		}
 
 		setTooltipLayout () {
@@ -247,7 +225,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		adjustDirection (tooltipDirection, overflow) {
-			if (this.rtlLocale && (tooltipDirection === 'left' || tooltipDirection === 'right')) {
+			if (this.props.rtl && (tooltipDirection === 'left' || tooltipDirection === 'right')) {
 				tooltipDirection = tooltipDirection === 'left' ? 'right' : 'left';
 			}
 
@@ -267,7 +245,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		adjustAnchor (arrowAnchor, tooltipDirection, overflow) {
 			if (tooltipDirection === 'above' || tooltipDirection === 'below') {
-				if (this.rtlLocale && arrowAnchor !== 'center') {
+				if (this.props.rtl && arrowAnchor !== 'center') {
 					arrowAnchor = arrowAnchor === 'left' ? 'right' : 'left';
 				}
 
@@ -345,7 +323,9 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.clientRef = null;
 				currentTooltip = null;
 				this.showTooltipJob.stop();
-				this.setState({showing: false});
+				if (this.state.showing) {
+					this.setState({showing: false});
+				}
 			}
 		}
 
@@ -402,11 +382,11 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @private
 		 */
 		renderTooltip () {
-			const {children, tooltipCasing, tooltipPreserveCase, tooltipProps, tooltipText, tooltipWidth} = this.props;
+			const {children, tooltipCasing, tooltipProps, tooltipText, tooltipWidth} = this.props;
 
 			if (tooltipText) {
 				const renderedTooltip = (
-					<FloatingLayer open={this.state.showing} scrimType="none" key="tooltipFloatingLayer">
+					<FloatingLayerBase open={this.state.showing} noAutoDismiss onDismiss={this.hideTooltip} scrimType="none" key="tooltipFloatingLayer">
 						<Tooltip
 							aria-live="off"
 							role="alert"
@@ -415,13 +395,12 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							casing={tooltipCasing}
 							direction={this.state.tooltipDirection}
 							position={this.state.position}
-							preserveCase={tooltipPreserveCase}
 							tooltipRef={this.getTooltipRef}
 							width={tooltipWidth}
 						>
 							{tooltipText}
 						</Tooltip>
-					</FloatingLayer>
+					</FloatingLayerBase>
 				);
 
 				if (tooltipDestinationProp === 'children') {
@@ -453,10 +432,10 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			);
 
+			delete props.rtl;
 			delete props.tooltipDelay;
 			delete props.tooltipPosition;
 			delete props.tooltipCasing;
-			delete props.tooltipPreserveCase;
 			delete props.tooltipProps;
 			delete props.tooltipText;
 			delete props.tooltipWidth;
@@ -466,6 +445,11 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			);
 		}
 	};
+
+	return I18nContextDecorator(
+		{rtlProp: 'rtl'},
+		Decorator
+	);
 });
 
 export default TooltipDecorator;

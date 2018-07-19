@@ -1,0 +1,97 @@
+//
+// Spotlight Debug
+//
+
+:global {
+	.debug.spotlight {
+		@debug-color-up: hsla(0, 100%, 72%, 1);
+		@debug-color-right: hsla(90, 100%, 72%, 1);
+		@debug-color-down: hsla(180, 100%, 72%, 1);
+		@debug-color-left: hsla(240, 100%, 72%, 1);
+
+		.spottable-next-up,
+		.spottable-next-right,
+		.spottable-next-down,
+		.spottable-next-left {
+			// outline: 3px dotted transparent;
+			// box-shadow: 0;
+
+			&::after {
+				content: '';
+				position: absolute;
+				top: 0;
+				border-width: 0 1px 1px 0;
+				border-style: solid;
+				border-bottom-right-radius: 0.5ex;
+				// font-family: "Moonstone Miso";
+				font-size: 15px;
+				line-height: 18px;
+				padding: 0 1ex;
+				left: 0;
+
+				border-width: 0 1px 1px 1px;
+				border-bottom-right-radius: 0.5ex;
+				border-bottom-left-radius: 0.5ex;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+		}
+
+		.spottable-next-up    { box-shadow: 0     12px  9px -3px @debug-color-up,    0 0 1px 3px @debug-color-up;    &::after { content: 'Spotlight next: up';    color: @debug-color-up;    }}
+		.spottable-next-right { box-shadow: -12px 0     9px -3px @debug-color-right, 0 0 1px 3px @debug-color-right; &::after { content: 'Spotlight next: right'; color: @debug-color-right; }}
+		.spottable-next-down  { box-shadow: 0     -12px 9px -3px @debug-color-down,  0 0 1px 3px @debug-color-down;  &::after { content: 'Spotlight next: down';  color: @debug-color-down;  }}
+		.spottable-next-left  { box-shadow: 12px  0     9px -3px @debug-color-left,  0 0 1px 3px @debug-color-left;  &::after { content: 'Spotlight next: left';  color: @debug-color-left;  }}
+
+
+		// Below are some alternative visuals still being worked out.
+
+		//
+		// Crisp shadow-arrows
+		//
+		// .spottable-next-up    { box-shadow:
+		// 	0 3px 1px -1px @debug-color-up,
+		// 	0 12px 1px -3px @debug-color-up,
+		// 	0 21px 1px -9px @debug-color-up,
+		// 	0 30px 1px -15px @debug-color-up,
+		// 	0 39px 1px -21px @debug-color-up,
+		// 	0 0 1px 3px @debug-color-up;
+		// 	&::after { content: 'Spotlight next: up';    color: @debug-color-up;    }
+		// }
+		// .spottable-next-right    { box-shadow:
+		// 	-3px 0 1px -1px @debug-color-right,
+		// 	-12px 0 1px -3px @debug-color-right,
+		// 	-21px 0 1px -9px @debug-color-right,
+		// 	-30px 0 1px -15px @debug-color-right,
+		// 	-39px 0 1px -21px @debug-color-right,
+		// 	0 0 1px 3px @debug-color-right;
+		// 	&::after { content: 'Spotlight next: right';    color: @debug-color-right;    }
+		// }
+		// .spottable-next-down    { box-shadow:
+		// 	0 -3px 1px -1px @debug-color-down,
+		// 	0 -12px 1px -3px @debug-color-down,
+		// 	0 -21px 1px -9px @debug-color-down,
+		// 	0 -30px 1px -15px @debug-color-down,
+		// 	0 -39px 1px -21px @debug-color-down,
+		// 	0 0 1px 3px @debug-color-down;
+		// 	&::after { content: 'Spotlight next: down';    color: @debug-color-down;    }
+		// }
+		// .spottable-next-left    { box-shadow:
+		// 	3px 0 1px -1px @debug-color-left,
+		// 	12px 0 1px -3px @debug-color-left,
+		// 	21px 0 1px -9px @debug-color-left,
+		// 	30px 0 1px -15px @debug-color-left,
+		// 	39px 0 1px -21px @debug-color-left,
+		// 	0 0 1px 3px @debug-color-left;
+		// 	&::after { content: 'Spotlight next: left';    color: @debug-color-left;    }
+		// }
+
+		//
+		// Plain Boxy Outlines
+		//
+		// .spottable-next-up    { outline-color: @debug-color-up;    &::after { content: 'Spotlight next: up';    color: @debug-color-up;    }}
+		// .spottable-next-right { outline-color: @debug-color-right; &::after { content: 'Spotlight next: right'; color: @debug-color-right; }}
+		// .spottable-next-down  { outline-color: @debug-color-down;  &::after { content: 'Spotlight next: down';  color: @debug-color-down;  }}
+		// .spottable-next-left  { outline-color: @debug-color-left;  &::after { content: 'Spotlight next: left';  color: @debug-color-left;  }}
+	}
+}
+

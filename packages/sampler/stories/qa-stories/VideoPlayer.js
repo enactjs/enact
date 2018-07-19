@@ -1,14 +1,19 @@
-import Button from '@enact/moonstone/Button';
-import React from 'react';
-import VideoPlayer from '@enact/moonstone/VideoPlayer';
-import IconButton from '@enact/moonstone/IconButton';
-import {storiesOf} from '@storybook/react';
+import VideoPlayer, {Video} from '@enact/moonstone/VideoPlayer';
 import {button} from '@storybook/addon-knobs';
+import {storiesOf} from '@storybook/react';
+import React from 'react';
+
+const videoTabLabel = 'VideoPlayer';
 
 class VideoSourceSwap extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
+			videoTitles: [
+				'Big Buck Bunny',
+				'Sintel',
+				'VideoTest'
+			],
 			playlist: [
 				'http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov',
 				'http://media.w3.org/2010/05/sintel/trailer.mp4',
@@ -21,29 +26,29 @@ class VideoSourceSwap extends React.Component {
 	}
 
 	nextVideo = () => {
-		this.setState({
-			cursor: this.state.cursor === this.lastIndex ? 0 : this.state.cursor + 1,
-			preloadCursor: this.state.preloadCursor === this.lastIndex ? 0 : this.state.preloadCursor + 1
-		});
+		this.setState(({cursor, preloadCursor}) => ({
+			cursor: cursor === this.lastIndex ? 0 : cursor + 1,
+			preloadCursor: preloadCursor === this.lastIndex ? 0 : preloadCursor + 1
+		}));
 	}
 
 	differentVideo = () => {
-		this.setState({
-			cursor: (this.state.cursor + 2) % this.state.playlist.length,
-			preloadCursor: (this.state.preloadCursor + 2) % this.state.playlist.length
-		});
+		this.setState(({cursor, playlist, preloadCursor}) => ({
+			cursor: (cursor + 2) % playlist.length,
+			preloadCursor: (preloadCursor + 2) % playlist.length
+		}));
 	}
 
 	nextVideoKeepPreload = () => {
-		this.setState({
-			cursor: this.state.cursor === this.lastIndex ? 0 : this.state.cursor + 1
-		});
+		this.setState(({cursor}) => ({
+			cursor: cursor === this.lastIndex ? 0 : cursor + 1
+		}));
 	}
 
 	nextPreloadVideoKeepVideo = () => {
-		this.setState({
-			preloadCursor: this.state.preloadCursor ===  this.lastIndex ? 0 : this.state.preloadCursor + 1
-		});
+		this.setState(({preloadCursor}) => ({
+			preloadCursor: preloadCursor ===  this.lastIndex ? 0 : preloadCursor + 1
+		}));
 	}
 
 	resetSources = () => {
@@ -56,20 +61,22 @@ class VideoSourceSwap extends React.Component {
 	render () {
 		return (
 			<div>
-				{button('Next Preload Video', this.nextVideo)}
-				{button('Non Preload Video', this.differentVideo)}
-				{button('Next Preload Video without changing preload', this.nextVideoKeepPreload)}
-				{button('Change Preload without changing video', this.nextPreloadVideoKeepVideo)}
-				{button('Reset Sources', this.resetSources)}
+				{button('Next Preload Video', this.nextVideo, videoTabLabel)}
+				{button('Non Preload Video', this.differentVideo, videoTabLabel)}
+				{button('Next Preload Video without changing preload', this.nextVideoKeepPreload, videoTabLabel)}
+				{button('Change Preload without changing video', this.nextPreloadVideoKeepVideo, videoTabLabel)}
+				{button('Reset Sources', this.resetSources, videoTabLabel)}
 				<VideoPlayer
 					muted
-					preloadSource={<source src={this.state.playlist[this.state.preloadCursor]} type="video/mp4" />}
+					onJumpBackward={this.differentVideo}
+					onJumpForward={this.nextVideo}
+					title={this.state.videoTitles[this.state.cursor]}
 				>
-					<source src={this.state.playlist[this.state.cursor]} type="video/mp4" />
+					<Video>
+						<source src={this.state.playlist[this.state.cursor]} />
+						<source src={this.state.playlist[this.state.preloadCursor]} slot="preloadSource" />
+					</Video>
 					<infoComponents>A video about some things happening to and around some characters. Very exciting stuff.</infoComponents>
-
-					<Button backgroundOpacity="translucent">Add To Favorites</Button>
-					<IconButton backgroundOpacity="translucent">star</IconButton>
 				</VideoPlayer>
 			</div>
 

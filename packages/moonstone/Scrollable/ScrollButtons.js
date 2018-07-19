@@ -1,6 +1,5 @@
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import {is} from '@enact/core/keymap';
-import {off, on} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
@@ -67,6 +66,16 @@ class ScrollButtons extends Component {
 		disabled: PropTypes.bool,
 
 		/**
+		 * When it is `true`, it allows 5 way navigation to the ScrollButtons.
+		 * This value is set by `Scrollable`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		focusableScrollButtons: PropTypes.bool,
+
+		/**
 		* Sets the hint string read when focusing the next button in the scroll bar.
 		*
 		* @type {String}
@@ -117,6 +126,7 @@ class ScrollButtons extends Component {
 	}
 
 	static defaultProps = {
+		focusableScrollButtons: false,
 		onNextScroll: nop,
 		onPrevScroll: nop
 	}
@@ -130,36 +140,12 @@ class ScrollButtons extends Component {
 		};
 	}
 
-	componentWillUnmount () {
-		this.setIgnoreMode(false); // To remove event handler
-	}
-
-	ignoreMode = false
-	pressed = false
 	announce = null
 
 	// elements
 
 	prevButtonNodeRef = null
 	nextButtonNodeRef = null
-
-	setPressStatus = (isPressed) => {
-		this.pressed = isPressed;
-	}
-
-	setIgnoreMode = (shouldIgnore) => {
-		if (shouldIgnore !== this.ignoreMode) {
-			if (shouldIgnore) {
-				this.ignoreMode = true;
-				on('mousemove', this.releaseButton);
-				on('mouseup', this.releaseButton);
-			} else {
-				this.ignoreMode = false;
-				off('mousemove', this.releaseButton);
-				off('mouseup', this.releaseButton);
-			}
-		}
-	}
 
 	updateButtons = (bounds) => {
 		const
@@ -169,8 +155,7 @@ class ScrollButtons extends Component {
 			shouldDisablePrevButton = currentPos <= 0,
 			/* If a scroll size or a client size is not integer,
 			   browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
-			shouldDisableNextButton = maxPos - currentPos <= 1,
-			spotItem = Spotlight.getCurrent();
+			shouldDisableNextButton = maxPos - currentPos <= 1;
 
 		this.setState((prevState) => {
 			const
@@ -185,13 +170,6 @@ class ScrollButtons extends Component {
 				return {nextButtonDisabled: shouldDisableNextButton};
 			}
 		});
-
-		if (this.pressed && (
-			shouldDisablePrevButton && spotItem && spotItem === this.prevButtonNodeRef ||
-			shouldDisableNextButton && spotItem && spotItem === this.nextButtonNodeRef
-		)) {
-			this.setIgnoreMode(true);
-		}
 	}
 
 	isOneOfScrollButtonsFocused = () => {
@@ -200,97 +178,110 @@ class ScrollButtons extends Component {
 		return current === this.prevButtonNodeRef || current === this.nextButtonNodeRef;
 	}
 
-	handlePrevDown = () => {
-		const {vertical} = this.props;
-
+	onDownPrev = () => {
 		if (this.announce) {
-			this.announce(vertical ? $L('UP') : $L('LEFT'));
+			const {rtl, vertical} = this.props;
+			this.announce(vertical && $L('UP') || rtl && $L('RIGHT') || $L('LEFT'));
 		}
 	}
 
-	handleNextDown = () => {
-		const {vertical} = this.props;
-
+	onDownNext = () => {
 		if (this.announce) {
-			this.announce(vertical ? $L('DOWN') : $L('RIGHT'));
+			const {rtl, vertical} = this.props;
+			this.announce(vertical && $L('DOWN') || rtl && $L('LEFT') || $L('RIGHT'));
 		}
 	}
 
-	handlePrevScroll = (ev) => {
+	onClickPrev = (ev) => {
 		const {onPrevScroll, vertical} = this.props;
 
 		onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
 	}
 
-	handleNextScroll = (ev) => {
+	onClickNext = (ev) => {
 		const {onNextScroll, vertical} = this.props;
 
 		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
 	}
 
-	handlePrevHoldPulse = (ev) => {
-		const {onPrevScroll, vertical} = this.props;
-
-		if (!this.ignoreMode) {
-			onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
-		}
-	}
-
-	handleNextHoldPulse = (ev) => {
-		const {onNextScroll, vertical} = this.props;
-
-		if (!this.ignoreMode) {
-			onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
-		}
-	}
-
 	focusOnOppositeScrollButton = (ev, direction) => {
 		const buttonNode = (ev.target === this.nextButtonNodeRef) ? this.prevButtonNodeRef : this.nextButtonNodeRef;
 
-		ev.preventDefault();
-		ev.nativeEvent.stopPropagation();
+		ev.stopPropagation();
 
 		if (!Spotlight.focus(buttonNode)) {
 			Spotlight.move(direction);
 		}
 	}
 
-	handleSpotlight = (ev) => {
+	onSpotlight = (ev) => {
 		const
-			{rtl, vertical} = this.props,
-			{keyCode, target} = ev,
-			direction = getDirection(keyCode),
-			fromNextToPrev = (vertical && direction === 'up') || (!vertical && direction === (rtl ? 'right' : 'left')),
-			fromPrevToNext = (vertical && direction === 'down') || (!vertical && direction === (rtl ? 'left' : 'right'));
+			{focusableScrollButtons, rtl, vertical} = this.props,
+			{target} = ev;
 
-		// manually focus the opposite scroll button when 5way pressed
-		if ((fromNextToPrev && target === this.nextButtonNodeRef) ||
-			(fromPrevToNext && target === this.prevButtonNodeRef)) {
-			this.focusOnOppositeScrollButton(ev, direction);
+		// We don't need to navigate manually if `focusableScrollButtons` is `false`
+		if (focusableScrollButtons) {
+			const
+				direction = getDirection(ev.keyCode),
+				fromNextToPrev = (vertical && direction === 'up') || (!vertical && direction === (rtl ? 'right' : 'left')),
+				fromPrevToNext = (vertical && direction === 'down') || (!vertical && direction === (rtl ? 'left' : 'right'));
+
+			// manually focus the opposite scroll button when 5way pressed
+			if ((fromNextToPrev && target === this.nextButtonNodeRef) ||
+				(fromPrevToNext && target === this.prevButtonNodeRef)) {
+				this.focusOnOppositeScrollButton(ev, direction);
+			}
+		} else {
+			// If it is vertical `Scrollable`, move focus to the left for ltr or to the right for rtl
+			// If is is horizontal `Scrollable`, move focus to the up
+			const direction = !vertical && 'up' || rtl && 'right' || 'left';
+
+			if (Spotlight.getPointerMode()) {
+				// When changing from "pointer" mode to "5way key" mode,
+				// a pointer is hidden and a last focused item get focused after 30ms.
+				// To make sure the content in `VirtualList` or `Scroller` to be focused after that, we used 50ms.
+				setTimeout(() => {
+					if (Spotlight.getCurrent() === target) {
+						Spotlight.move(direction);
+					}
+				}, 50);
+			} else if (Spotlight.getCurrent() === target) {
+				Spotlight.move(direction);
+			}
 		}
 	}
 
-	depressButton = () => {
-		this.setPressStatus(true);
-	}
+	onKeyDownPrev = (ev) => {
+		const
+			{focusableScrollButtons} = this.props,
+			{nextButtonDisabled} = this.state,
+			{keyCode} = ev;
 
-	releaseButton = (ev) => {
-		const {prevButtonDisabled, nextButtonDisabled} = this.state;
-
-		this.setPressStatus(false);
-		this.setIgnoreMode(false);
-		if (isPageUp(ev.keyCode)) {
-			if (ev.target === this.nextButtonNodeRef && !prevButtonDisabled) {
-				Spotlight.focus(this.prevButtonNodeRef);
-			} else {
-				this.handlePrevScroll(ev);
-			}
-		} else if (isPageDown(ev.keyCode)) {
-			if (ev.target === this.prevButtonNodeRef && !nextButtonDisabled) {
+		if (isPageDown(keyCode) && !nextButtonDisabled) {
+			if (focusableScrollButtons) {
 				Spotlight.focus(this.nextButtonNodeRef);
 			} else {
-				this.handleNextScroll(ev);
+				this.onClickNext(ev);
 			}
+		} else if (isPageUp(keyCode)) {
+			this.onClickPrev(ev);
+		}
+	}
+
+	onKeyDownNext = (ev) => {
+		const
+			{focusableScrollButtons} = this.props,
+			{prevButtonDisabled} = this.state,
+			{keyCode} = ev;
+
+		if (isPageUp(keyCode) && !prevButtonDisabled) {
+			if (focusableScrollButtons) {
+				Spotlight.focus(this.prevButtonNodeRef);
+			} else {
+				this.onClickPrev(ev);
+			}
+		} else if (isPageDown(keyCode)) {
+			this.onClickNext(ev);
 		}
 	}
 
@@ -314,47 +305,45 @@ class ScrollButtons extends Component {
 
 	render () {
 		const
-			{disabled, nextButtonAriaLabel, previousButtonAriaLabel, thumbRenderer, vertical} = this.props,
+			{disabled, nextButtonAriaLabel, previousButtonAriaLabel, rtl, thumbRenderer, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			prevIcon = preparePrevButton(vertical),
 			nextIcon = prepareNextButton(vertical);
 
 		return [
 			<ScrollButton
-				aria-label={previousButtonAriaLabel}
-				key="prevButton"
+				aria-label={rtl && !vertical ? nextButtonAriaLabel : previousButtonAriaLabel}
 				data-spotlight-overflow="ignore"
 				direction={vertical ? 'up' : 'left'}
 				disabled={disabled || prevButtonDisabled}
-				onClick={this.handlePrevScroll}
-				onDown={this.handlePrevDown}
-				onHoldPulse={this.handlePrevHoldPulse}
-				onKeyDown={this.depressButton}
-				onKeyUp={this.releaseButton}
-				onMouseDown={this.depressButton}
-				onSpotlightDown={this.handleSpotlight}
-				onSpotlightLeft={this.handleSpotlight}
-				onSpotlightRight={this.handleSpotlight}
+				key="prevButton"
+				onClick={this.onClickPrev}
+				onDown={this.onDownPrev}
+				onHoldPulse={this.onClickPrev}
+				onKeyDown={this.onKeyDownPrev}
+				onSpotlightDown={this.onSpotlight}
+				onSpotlightLeft={this.onSpotlight}
+				onSpotlightRight={this.onSpotlight}
+				onSpotlightUp={this.onSpotlight}
 				ref={this.initPrevButtonRef}
 			>
 				{prevIcon}
 			</ScrollButton>,
 			thumbRenderer(),
 			<ScrollButton
-				aria-label={nextButtonAriaLabel}
-				key="nextButton"
+				aria-label={rtl && !vertical ? previousButtonAriaLabel : nextButtonAriaLabel}
 				data-spotlight-overflow="ignore"
 				direction={vertical ? 'down' : 'right'}
 				disabled={disabled || nextButtonDisabled}
-				onClick={this.handleNextScroll}
-				onDown={this.handleNextDown}
-				onHoldPulse={this.handleNextHoldPulse}
-				onKeyDown={this.depressButton}
-				onKeyUp={this.releaseButton}
-				onMouseDown={this.depressButton}
-				onSpotlightLeft={this.handleSpotlight}
-				onSpotlightRight={this.handleSpotlight}
-				onSpotlightUp={this.handleSpotlight}
+				key="nextButton"
+				onClick={this.onClickNext}
+				onDown={this.onDownNext}
+				onHoldPulse={this.onClickNext}
+				onKeyDown={this.onKeyDownNext}
+				onSpotlightDown={this.onSpotlight}
+				onSpotlightLeft={this.onSpotlight}
+				onSpotlightRight={this.onSpotlight}
+				onSpotlightUp={this.onSpotlight}
 				ref={this.initNextButtonRef}
 			>
 				{nextIcon}

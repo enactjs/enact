@@ -1,38 +1,41 @@
-import Slider, {SliderBase, SliderTooltip} from '@enact/moonstone/Slider';
+import Slider, {SliderTooltip} from '@enact/moonstone/Slider';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, number, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {boolean, number, select} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('Slider', SliderBase, Slider);
+const SliderConfig = mergeComponentMetadata('Slider', Slider);
+const SliderTooltipConfig = mergeComponentMetadata('SliderTooltip', SliderTooltip);
+
+Slider.displayName = 'Slider';
+SliderTooltip.displayName = 'SliderTooltip';
 
 storiesOf('Moonstone', module)
 	.add(
 		'Slider',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [Slider, SliderTooltip],
 			text: 'Basic usage of Slider'
 		})(() => {
-			const side = nullify(select('side', ['after', 'before', 'left', 'right'], 'before'));
-			const tooltip = nullify(boolean('tooltip', false));
-			const percent = nullify(boolean('percent', false));
+			const side = select('side', ['after', 'before', 'left', 'right'], SliderTooltipConfig, 'before');
+			const tooltip = boolean('tooltip', SliderTooltipConfig);
+			const percent = boolean('percent', SliderTooltipConfig);
 
 			return (
 				<Slider
-					activateOnFocus={boolean('activateOnFocus', false)}
-					backgroundProgress={number('backgroundProgress', 0.5, {range: true, min: 0, max: 1, step: 0.01})}
-					disabled={boolean('disabled', false)}
-					knobStep={number('knobStep')}
-					max={number('max', 10)}
-					min={number('min', 0)}
-					noFill={boolean('noFill', false)}
+					activateOnFocus={boolean('activateOnFocus', SliderConfig)}
+					backgroundProgress={number('backgroundProgress', SliderConfig, {range: true, min: 0, max: 1, step: 0.01}, 0.5)}
+					disabled={boolean('disabled', SliderConfig)}
+					knobStep={number('knobStep', SliderConfig)}
+					max={number('max', SliderConfig, 10)}
+					min={number('min', SliderConfig, 0)}
+					noFill={boolean('noFill', SliderConfig)}
 					onChange={action('onChange')}
-					orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
-					step={number('step', 1)}
+					orientation={select('orientation', ['horizontal', 'vertical'], SliderConfig, 'horizontal')}
+					step={number('step', SliderConfig, 1)}
 				>
 					{tooltip ? (
 						<SliderTooltip

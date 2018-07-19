@@ -2,6 +2,7 @@
  * Provides the {@link core/kind.kind} method to create components
  *
  * @module core/kind
+ * @exports kind
  */
 
 import React from 'react';
@@ -54,9 +55,9 @@ import styles from './styles';
  * ```
  *
  * @function
- * @param  {Object} config - Component configuration
+ * @param  {Object}    config    Component configuration
  *
- * @returns {Function}        Component
+ * @returns {Function}           Component
  * @memberof core/kind
  * @public
  */
@@ -67,7 +68,7 @@ const kind = (config) => {
 		defaultProps,
 		handlers,
 		name,
-		propTypes,
+		propTypes,	// eslint-disable-line react/forbid-foreign-prop-types
 		render,
 		styles: cfgStyles
 	} = config;
@@ -81,9 +82,9 @@ const kind = (config) => {
 
 		static propTypes = propTypes
 
-		static defaultProps = defaultProps
-
 		static contextTypes = contextTypes
+
+		static defaultProps = defaultProps
 
 		constructor () {
 			super();
@@ -97,7 +98,7 @@ const kind = (config) => {
 			}
 		}
 
-		/**
+		/*
 		 * Caches an event handler on the local `handlers` member
 		 *
 		 * @param   {String}    name     Event name

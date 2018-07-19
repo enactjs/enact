@@ -22,6 +22,7 @@ import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 import Changeable from '@enact/ui/Changeable';
 import ComponentOverride from '@enact/ui/ComponentOverride';
+import ProgressBar from '@enact/ui/ProgressBar';
 import Pure from '@enact/ui/internal/Pure';
 import Slottable from '@enact/ui/Slottable';
 import UiSlider from '@enact/ui/Slider';
@@ -264,6 +265,9 @@ const SliderBase = kind({
 			<UiSlider
 				{...rest}
 				css={css}
+				progressBarComponent={
+					<ProgressBar css={css} />
+				}
 				tooltipComponent={
 					<ComponentOverride
 						component={tooltip}

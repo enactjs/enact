@@ -3,38 +3,40 @@ import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, number, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {boolean, number, select} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('IncrementSlider', IncrementSliderBase, IncrementSlider);
+const IncrementSliderConfig = mergeComponentMetadata('IncrementSlider', IncrementSliderBase, IncrementSlider);
+const IncrementSliderTooltipConfig = mergeComponentMetadata('IncrementSliderTooltip', IncrementSliderTooltip);
+
+IncrementSlider.displayName = 'IncrementSlider';
 
 storiesOf('Moonstone', module)
 	.add(
 		'IncrementSlider',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [IncrementSlider],
 			text: 'Basic usage of IncrementSlider'
 		})(() => {
-			const side = nullify(select('side', ['after', 'before', 'left', 'right'], 'before'));
-			const tooltip = nullify(boolean('tooltip', false));
-			const percent = nullify(boolean('percent', false));
+			const side = select('side', ['after', 'before', 'left', 'right'], IncrementSliderTooltipConfig, 'after');
+			const tooltip = boolean('tooltip', IncrementSliderTooltipConfig);
+			const percent = boolean('percent', IncrementSliderTooltipConfig);
 
 			return (
 				<IncrementSlider
-					backgroundProgress={number('backgroundProgress', IncrementSliderBase.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
-					decrementIcon={nullify(select('decrementIcon', ['', ...decrementIcons]))}
-					disabled={boolean('disabled', false)}
-					incrementIcon={nullify(select('incrementIcon', ['', ...incrementIcons]))}
-					knobStep={number('knobStep')}
-					max={number('max', IncrementSliderBase.defaultProps.max)}
-					min={number('min', IncrementSliderBase.defaultProps.min)}
-					noFill={boolean('noFill', false)}
+					backgroundProgress={number('backgroundProgress', IncrementSliderConfig, {range: true, min: 0, max: 1, step: 0.01})}
+					decrementIcon={select('decrementIcon', ['', ...decrementIcons], IncrementSliderConfig)}
+					disabled={boolean('disabled', IncrementSliderConfig)}
+					incrementIcon={select('incrementIcon', ['', ...incrementIcons], IncrementSliderConfig)}
+					knobStep={number('knobStep', IncrementSliderConfig)}
+					max={number('max', IncrementSliderConfig)}
+					min={number('min', IncrementSliderConfig)}
+					noFill={boolean('noFill', IncrementSliderConfig)}
 					onChange={action('onChange')}
-					orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
-					step={number('step', 1)}
+					orientation={select('orientation', ['horizontal', 'vertical'], IncrementSliderConfig)}
+					step={number('step', IncrementSliderConfig)} // def: 1
 				>
 					{tooltip ? (
 						<IncrementSliderTooltip

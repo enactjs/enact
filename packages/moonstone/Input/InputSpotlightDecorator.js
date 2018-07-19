@@ -1,5 +1,4 @@
-import deprecate from '@enact/core/internal/deprecate';
-import {forward, stopImmediate} from '@enact/core/handle';
+import {call, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {getDirection, Spotlight} from '@enact/spotlight';
@@ -23,6 +22,11 @@ const isSelectionAtLocation = (target, location) => {
 	}
 };
 
+const handleKeyDown = handle(
+	forwardWithPrevent('onKeyDown'),
+	call('onKeyDown')
+);
+
 /**
  * {@link moonstone/Input.InputSpotlightDecorator} is a Higher-order Component that manages the
  * spotlight behavior for an {@link moonstone/Input.Input}
@@ -37,7 +41,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 	const forwardBlur = forward('onBlur');
 	const forwardMouseDown = forward('onMouseDown');
 	const forwardFocus = forward('onFocus');
-	const forwardKeyDown = forward('onKeyDown');
 	const forwardKeyUp = forward('onKeyUp');
 
 	return class extends React.Component {
@@ -70,17 +73,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			 * @public
 			 */
 			dismissOnEnter: PropTypes.bool,
-
-			/**
-			 * When `true`, prevents the decorator from receiving a visible focus state
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @deprecated will be replaced by `autoFocus` in 2.0.0
-			 * @public
-			 */
-			noDecorator: PropTypes.bool,
-
 
 			/**
 			 * The handler to run when the internal input is focused
@@ -128,10 +120,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			};
 
 			this.paused = new Pause('InputSpotlightDecorator');
-
-			if (props.noDecorator) {
-				deprecate({name: 'noDecorator', since: '1.3.0', replacedBy: 'autoFocus'});
-			}
+			this.handleKeyDown = handleKeyDown.bind(this);
 		}
 
 		componentDidUpdate (_, prevState) {
@@ -192,7 +181,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		onBlur = (ev) => {
-			if (!this.props.noDecorator && !this.props.autoFocus) {
+			if (!this.props.autoFocus) {
 				if (isBubbling(ev)) {
 					if (Spotlight.getPointerMode()) {
 						this.blur();
@@ -234,15 +223,15 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		onFocus = (ev) => {
 			forwardFocus(ev, this.props);
 
-			// when in noDecorator or autoFocus mode, focusing the decorator directly will cause it to
+			// when in autoFocus mode, focusing the decorator directly will cause it to
 			// forward the focus onto the <input>
-			if (!isBubbling(ev) && (this.props.noDecorator || this.props.autoFocus && this.state.focused === null && !Spotlight.getPointerMode())) {
+			if (!isBubbling(ev) && (this.props.autoFocus && this.state.focused === null && !Spotlight.getPointerMode())) {
 				this.focusInput(ev.currentTarget);
 				ev.stopPropagation();
 			}
 		}
 
-		onKeyDown = (ev) => {
+		onKeyDown (ev) {
 			const {currentTarget, keyCode, preventDefault, target} = ev;
 
 			// cache the target if this is the first keyDown event to ensure the component had focus
@@ -296,7 +285,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					stopImmediate(ev);
 				}
 			}
-			forwardKeyDown(ev, this.props);
 		}
 
 		onKeyUp = (ev) => {
@@ -333,7 +321,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			delete props.autoFocus;
 			delete props.onActivate;
 			delete props.onDeactivate;
-			delete props.noDecorator;
 
 			return (
 				<Component
@@ -342,7 +329,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					onBlur={this.onBlur}
 					onMouseDown={this.onMouseDown}
 					onFocus={this.onFocus}
-					onKeyDown={this.onKeyDown}
+					onKeyDown={this.handleKeyDown}
 					onKeyUp={this.onKeyUp}
 				/>
 			);

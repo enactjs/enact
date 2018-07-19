@@ -1,7 +1,7 @@
 import hoc from '@enact/core/hoc';
 import Spottable from '@enact/spotlight/Spottable';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 const SpottablePicker = hoc(null, (config, Wrapped) => {
 	const Joined = Spottable(Wrapped);
@@ -34,4 +34,6 @@ const SpottablePicker = hoc(null, (config, Wrapped) => {
 });
 
 export default SpottablePicker;
-export {SpottablePicker};
+export {
+	SpottablePicker
+};

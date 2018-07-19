@@ -191,7 +191,7 @@ const isContainerEnabled = (node) => {
 const getContainerId = (node) => node.dataset[containerKey];
 
 /**
- * Generates a CSS selector string for a currrent container if `node` is a container
+ * Generates a CSS selector string for a current container if `node` is a container
  *
  * @param   {Node}    node  Container Node
  *
@@ -278,7 +278,7 @@ const navigableFilter = (node, containerId) => {
 const getSpottableDescendants = (containerId) => {
 	const node = getContainerNode(containerId);
 
-	// if it's falsey or is a disabled container, return an empty set
+	// if it's falsy or is a disabled container, return an empty set
 	if (!node || (isContainerNode(node) && !isContainerEnabled(node))) {
 		return [];
 	}
@@ -563,7 +563,7 @@ const isNavigable = (node, containerId, verify) => {
 /**
  * Returns the IDs of all containers
  *
- * @return {String[]}  Array of container IDs
+ * @returns {String[]}  Array of container IDs
  * @memberof spotlight/container
  * @private
  */

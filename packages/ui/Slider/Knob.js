@@ -19,7 +19,7 @@ const Knob = kind({
 		/**
 		 * The orientation of the slider, either `"horizontal"` or `"vertical"`.
 		 *
-		 * @type {Boolean}
+		 * @type {String}
 		 * @default "horizontal"
 		 * @public
 		 */
@@ -49,7 +49,7 @@ const Knob = kind({
 		 *
 		 * See {@link ui/ComponentOverride} for more information.
 		 *
-		 * @type {Component|Element}
+		 * @type {Function|Element}
 		 * @public
 		 */
 		tooltipComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),

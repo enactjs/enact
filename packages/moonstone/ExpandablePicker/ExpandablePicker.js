@@ -8,10 +8,10 @@
 
 import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
-import React from 'react';
-import PropTypes from 'prop-types';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Pure from '@enact/ui/internal/Pure';
-import {Subscription} from '@enact/core/internal/PubSub';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import IconButton from '../IconButton';
@@ -45,6 +45,15 @@ const ExpandablePickerBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * The `data-webos-voice-group-label` for ExpandableItem and Picker.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/ExpandablePicker.ExpandablePickerBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-group-label': PropTypes.string,
+
+		/**
 		 * The "aria-label" for the the check button.
 		 *
 		 * @type {String}
@@ -62,9 +71,9 @@ const ExpandablePickerBase = kind({
 		decrementAriaLabel: PropTypes.string,
 
 		/**
-		 * A custom icon for the decrementer. All strings supported by [Icon]{Icon} are
+		 * A custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{Icon#orientation} is changed.
+		 * the [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
 		 *
 		 * @type {string}
 		 * @public
@@ -89,11 +98,11 @@ const ExpandablePickerBase = kind({
 		incrementAriaLabel: PropTypes.string,
 
 		/**
-		 * A custom icon for the incrementer. All strings supported by [Icon]{Icon} are
+		 * A custom icon for the incrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{Icon#orientation} is changed.
+		 * the [orientation]{@link moostone/Icon.Icon#orientation} is changed.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		incrementIcon: PropTypes.string,
@@ -280,6 +289,7 @@ const ExpandablePickerBase = kind({
 
 	render: (props) => {
 		const {
+			'data-webos-voice-group-label': voiceGroupLabel,
 			checkButtonAriaLabel,
 			children,
 			decrementAriaLabel,
@@ -309,6 +319,7 @@ const ExpandablePickerBase = kind({
 		return (
 			<ExpandableItemBase
 				{...rest}
+				data-webos-voice-group-label={voiceGroupLabel}
 				disabled={disabled}
 				onSpotlightDisappear={onSpotlightDisappear}
 				onSpotlightDown={!open ? onSpotlightDown : null}
@@ -320,6 +331,7 @@ const ExpandablePickerBase = kind({
 				<Picker
 					aria-label={pickerAriaLabel}
 					className={css.picker}
+					data-webos-voice-group-label={voiceGroupLabel}
 					decrementAriaLabel={decrementAriaLabel}
 					decrementIcon={decrementIcon}
 					disabled={disabled}
@@ -378,8 +390,8 @@ const ExpandablePickerBase = kind({
  * @public
  */
 const ExpandablePicker = Pure(
-	Subscription(
-		{channels: ['i18n'], mapMessageToProps: (channel, {rtl}) => ({rtl})},
+	I18nContextDecorator(
+		{rtlProp: 'rtl'},
 		Expandable(
 			Changeable(
 				ExpandablePickerDecorator(

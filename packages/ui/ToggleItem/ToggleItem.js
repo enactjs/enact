@@ -16,7 +16,6 @@ import compose from 'ramda/src/compose';
 
 import ComponentOverride from '../ComponentOverride';
 import Toggleable from '../Toggleable';
-import {RemeasurableDecorator} from '../Remeasurable';
 import Touchable from '../Touchable';
 
 import componentCss from './ToggleItem.less';
@@ -51,7 +50,7 @@ const ToggleItemBase = kind({
 		/**
 		 * The string to be displayed as the main content of the toggle item.
 		 *
-		 * @type {String}
+		 * @type {Node}
 		 * @required
 		 * @public
 		 */
@@ -62,7 +61,7 @@ const ToggleItemBase = kind({
 		 * theme extension and therefore must be a custom component and not a simple HTML DOM node.
 		 * Recommended component or themed derivitive: [SlotItem]{@link ui/SlotItem.SlotItem}
 		 *
-		 * @type {Component}
+		 * @type {Function}
 		 * @required
 		 * @public
 		 */
@@ -73,7 +72,7 @@ const ToggleItemBase = kind({
 		 * and must therefore respond to it in some way. It is recommended to use
 		 * [ToggleIcon]{@link ui/ToggleIcon} for this.
 		 *
-		 * @type {Component}
+		 * @type {Component|Element}
 		 * @required
 		 * @public
 		 */
@@ -175,7 +174,7 @@ const ToggleItemBase = kind({
 		slotAfter: iconCreator('after')
 	},
 
-	render: ({component: Component, css, children, onToggle, selected, ...rest}) => {
+	render: ({component: Component, css, children, selected, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.iconPosition;
 		delete rest.value;
@@ -186,7 +185,6 @@ const ToggleItemBase = kind({
 				{...rest}
 				css={css}
 				aria-checked={selected}
-				onTap={onToggle}
 			>
 				{children}
 			</Component>
@@ -199,16 +197,14 @@ const ToggleItemBase = kind({
  *
  * @class ToggleItemDecorator
  * @memberof ui/ToggleItem
- * @mixes ui/Remeasurable.RemeasurableDecorator
  * @mixes ui/Touchable.Touchable
  * @mixes ui/Toggleable.Toggleable
  * @hoc
  * @public
  */
 const ToggleItemDecorator = compose(
-	RemeasurableDecorator({trigger: 'selected'}),
-	Touchable,
-	Toggleable
+	Toggleable({toggleProp: 'onTap'}),
+	Touchable
 );
 
 /**

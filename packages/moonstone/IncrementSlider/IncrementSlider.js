@@ -87,6 +87,15 @@ const IncrementSliderBase = kind({
 		'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 		/**
+		 * The `data-webos-voice-group-label` for the IconButton of IncrementSlider.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-group-label': PropTypes.string,
+
+		/**
 		 * When `true`, the knob displays selected and can be moved using 5-way controls.
 		 *
 		 * @type {Boolean}
@@ -102,15 +111,6 @@ const IncrementSliderBase = kind({
 		 * @public
 		 */
 		backgroundProgress: PropTypes.number,
-
-		/**
-		 * The custom value or component for the tooltip. If [tooltip]{@link moonstone/Slider.SliderBase#tooltip},
-		 * is `true`, then it will use built-in tooltip with given a string. If `false`, a custom tooltip
-		 * component, which follows the knob, may be used instead.
-		 *
-		 * @type {String|Node}
-		 */
-		children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -131,9 +131,9 @@ const IncrementSliderBase = kind({
 		decrementAriaLabel: PropTypes.string,
 
 		/**
-		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
+		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * [vertical]{moonstone/IncrementSlider#vertical} is changed.
+		 * [vertical]{@link moonstone/IncrementSlider.IncrementSlider#vertical} is changed.
 		 *
 		 * @type {String}
 		 * @public
@@ -173,9 +173,9 @@ const IncrementSliderBase = kind({
 		incrementAriaLabel: PropTypes.string,
 
 		/**
-		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
+		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * [vertical]{moonstone/IncrementSlider#vertical} is changed.
+		 * [vertical]{@link moonstone/IncrementSlider.IncrementSlider#vertical} is changed.
 		 *
 		 * @type {String}
 		 * @public
@@ -462,8 +462,8 @@ const IncrementSliderBase = kind({
 
 	render: ({active,
 		'aria-hidden': ariaHidden,
+		'data-webos-voice-group-label': voiceGroupLabel,
 		backgroundProgress,
-		children,
 		css,
 		decrementAriaLabel,
 		decrementDisabled,
@@ -508,6 +508,7 @@ const IncrementSliderBase = kind({
 					aria-hidden={ariaHidden}
 					aria-label={decrementAriaLabel}
 					className={css.decrementButton}
+					data-webos-voice-group-label={voiceGroupLabel}
 					disabled={decrementDisabled}
 					onTap={onDecrement}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
@@ -538,14 +539,13 @@ const IncrementSliderBase = kind({
 					step={step}
 					tooltip={tooltip}
 					value={value}
-				>
-					{children}
-				</Slider>
+				/>
 				<IncrementSliderButton
 					aria-controls={!decrementDisabled ? id : null}
 					aria-hidden={ariaHidden}
 					aria-label={incrementAriaLabel}
 					className={css.incrementButton}
+					data-webos-voice-group-label={voiceGroupLabel}
 					disabled={incrementDisabled}
 					onTap={onIncrement}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}

@@ -6,12 +6,12 @@
  * @module ui/FloatingLayer
  */
 
-import FloatingLayer from './FloatingLayer';
-import {FloatingLayerDecorator, contextTypes} from './FloatingLayerDecorator';
+import {FloatingLayer, FloatingLayerBase} from './FloatingLayer';
+import {FloatingLayerDecorator} from './FloatingLayerDecorator';
 
 export default FloatingLayer;
 export {
-	contextTypes,
 	FloatingLayer,
+	FloatingLayerBase,
 	FloatingLayerDecorator
 };

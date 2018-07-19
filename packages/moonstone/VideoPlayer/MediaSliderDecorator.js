@@ -4,8 +4,6 @@ import {calcProportion} from '@enact/ui/Slider/utils';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import MediaKnob from './MediaKnob';
-
 // decrements the MediaKnob position if we're tracking
 const decrement = (state) => {
 	if (state.tracking && state.x > 0) {
@@ -73,19 +71,22 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 		static displayName = 'MediaSliderDecorator'
 
 		static propTypes = {
+			backgroundProgress: PropTypes.number,
+			selection: PropTypes.arrayOf(PropTypes.number),
 			value: PropTypes.number
 		}
 
-		constructor () {
-			super();
+		constructor (props) {
+			super(props);
 
 			this.handleMouseOver = this.handleMouseOver.bind(this);
 			this.handleMouseOut = this.handleMouseOut.bind(this);
 			this.handleMouseMove = this.handleMouseMove.bind(this);
-			this.handleBlur = handleBlur.bind(this);
-			this.handleFocus = handleFocus.bind(this);
-			this.handleKeyDown = handleKeyDown.bind(this);
-			this.handleKeyUp = handleKeyUp.bind(this);
+
+			handleBlur.bindAs(this, 'handleBlur');
+			handleFocus.bindAs(this, 'handleFocus');
+			handleKeyDown.bindAs(this, 'handleKeyDown');
+			handleKeyUp.bindAs(this, 'handleKeyUp');
 
 			this.state = {
 				maxX: 0,
@@ -97,12 +98,13 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 
 		componentDidUpdate (prevProps, prevState) {
 			if (prevState.x !== this.state.x) {
-				forward('onKnobMove', this.getEventPayload(), this.props);
+				forward('onKnobMove', this.getEventPayload('onKnobMove'), this.props);
 			}
 		}
 
-		getEventPayload () {
+		getEventPayload (type) {
 			return {
+				type,
 				value: this.state.x,
 				proportion: this.state.x
 			};
@@ -171,16 +173,22 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
-			const props = Object.assign({}, this.props);
+			const {selection, ...rest} = this.props;
+			let {backgroundProgress} = this.props;
+			let progressAnchor = 0;
 
-			delete props.onKnobMove;
+			if (selection != null && selection.length > 0) {
+				// extracts both values from selection, defaulting backgroundProgress to
+				// progressAnchor if not defined
+				[progressAnchor, backgroundProgress = progressAnchor] = selection;
+			}
+
+			delete rest.onKnobMove;
 
 			return (
 				<Wrapped
-					{...props}
-					knobComponent={
-						<MediaKnob preview={this.state.tracking} previewProportion={this.state.x} />
-					}
+					{...rest}
+					backgroundProgress={backgroundProgress}
 					onBlur={this.handleBlur}
 					onFocus={this.handleFocus}
 					onKeyDown={this.handleKeyDown}
@@ -188,6 +196,9 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 					onMouseOver={this.handleMouseOver}
 					onMouseOut={this.handleMouseOut}
 					onMouseMove={this.handleMouseMove}
+					preview={this.state.tracking}
+					previewProportion={this.state.x}
+					progressAnchor={progressAnchor}
 				/>
 			);
 		}

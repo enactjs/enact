@@ -4,15 +4,20 @@ import Divider from '@enact/moonstone/Divider';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {select} from '@storybook/addon-knobs';
+
+import {select} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
 const ContextualButton = ContextualPopupDecorator(Button);
+const Config = mergeComponentMetadata('ContextualButton', ContextualButton);
 ContextualButton.displayName = 'ContextualButton';
+
+const buttonMargin = () => ({margin: ri.unit(12, 'rem')});
 
 const renderPopup = () => (
 	<div style={{width: ri.unit(600, 'rem')}}>
-		<Button>First Button</Button>
-		<Button>Hello Spottable Button</Button>
+		<Button style={buttonMargin()}>First Button</Button>
+		<Button style={buttonMargin()}>Hello Spottable Button</Button>
 	</div>
 );
 
@@ -43,8 +48,7 @@ class ContextualPopupWithActivator extends React.Component {
 	}
 
 	handleOpenToggle = () => {
-		const open = !this.state.open;
-		this.setState({open});
+		this.setState(({open}) => ({open: !open}));
 	}
 
 	render () {
@@ -66,9 +70,9 @@ storiesOf('ContextualPopupDecorator', module)
 		() => (
 			<div style={{textAlign: 'center', marginTop: ri.unit(99, 'rem')}}>
 				<ContextualPopupWithActivator
-					direction={select('direction', ['up', 'down', 'left', 'right'], 'down')}
+					direction={select('direction', ['up', 'down', 'left', 'right'], Config, 'down')}
 					popupComponent={renderPopup}
-					spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-only')}
+					spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], Config, 'self-only')}
 				>
 					Hello Contextual Button
 				</ContextualPopupWithActivator>
