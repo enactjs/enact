@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ExpandableItem` and other expandable components to spotlight correctly when switching from
+	pointer mode to 5-way with `closeOnSelect`
+
 ## [2.0.0-rc.2] - 2018-07-16
 
 ### Added
