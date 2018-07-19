@@ -16,7 +16,7 @@ about: File a bug report
 [//]: # (Describe the bug.  Explain what happened and what you expected to happen.)
 
 ### Environment
-[//]: # (Describe the relevant environment (e.g. node/npm version, browser version).)
+[//]: # (Describe the relevant environment, e.g. node/npm version, browser version.)
 
 **Enact version:**
 
