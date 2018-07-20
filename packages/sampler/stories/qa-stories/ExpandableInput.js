@@ -13,7 +13,7 @@ storiesOf('ExpandableInput', module)
 		'Long Placeholder',
 		() => (
 			<ExpandableInput
-				disabled={boolean('disabled', ExpandableInput)}
+				disabled={boolean('disabled', ExpandableInput, false)}
 				iconAfter={select('iconAfter', iconNames, ExpandableInput)}
 				iconBefore={select('iconBefore', iconNames, ExpandableInput)}
 				noneText={text('noneText', ExpandableInput, 'noneText')}

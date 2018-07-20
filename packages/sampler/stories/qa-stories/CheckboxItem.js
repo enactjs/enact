@@ -26,7 +26,7 @@ storiesOf('CheckboxItem', module)
 			<CheckboxItem
 				disabled={boolean('disabled', Config, false)}
 				iconPosition={select('iconPosition', ['before', 'after'], Config)}
-				inline={boolean('inline', Config)}
+				inline={boolean('inline', Config, false)}
 				onToggle={action('onToggle')}
 			>
 				{text('children', Config, prop.longText)}
@@ -39,7 +39,7 @@ storiesOf('CheckboxItem', module)
 			<CheckboxItem
 				disabled={boolean('disabled', Config, false)}
 				iconPosition={select('iconPosition', ['before', 'after'], Config)}
-				inline={boolean('inline', Config)}
+				inline={boolean('inline', Config, false)}
 				onToggle={action('onToggle')}
 			>
 				{select('children', prop.tallText, Config, prop.tallText[0])}
@@ -52,7 +52,7 @@ storiesOf('CheckboxItem', module)
 			<CheckboxItem
 				disabled={boolean('disabled', Config, false)}
 				iconPosition={select('iconPosition', ['before', 'after'], Config)}
-				inline={boolean('inline', Config)}
+				inline={boolean('inline', Config, false)}
 				onToggle={action('onToggle')}
 			>
 				{text('children', Config, prop.extraSpaceText)}
@@ -65,7 +65,7 @@ storiesOf('CheckboxItem', module)
 			<CheckboxItem
 				disabled={boolean('disabled', Config, false)}
 				iconPosition={select('iconPosition', ['before', 'after'], Config)}
-				inline={boolean('inline', Config)}
+				inline={boolean('inline', Config, false)}
 				onToggle={action('onToggle')}
 			>
 				{text('children', Config, prop.rtlText)}
