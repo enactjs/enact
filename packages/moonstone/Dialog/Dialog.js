@@ -177,7 +177,8 @@ const DialogBase = kind({
 
 	styles: {
 		css: componentCss,
-		className: 'dialog'
+		className: 'dialog',
+		publicClassNames: ['dialog']
 	},
 
 	computed: {
@@ -246,4 +247,7 @@ const Dialog = Slottable(
 );
 
 export default Dialog;
-export {Dialog, DialogBase};
+export {
+	Dialog,
+	DialogBase
+};
