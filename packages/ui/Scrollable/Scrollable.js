@@ -1000,7 +1000,7 @@ class ScrollableBase extends Component {
 			if (this.props.scrollTo) {
 				this.props.scrollTo(opt);
 			}
-			this.scrollToInfo = null;
+			setTimeout(() => {this.scrollToInfo = null;});
 			this.start({
 				targetX: (left !== null) ? left : this.scrollLeft,
 				targetY: (top !== null) ? top : this.scrollTop,
