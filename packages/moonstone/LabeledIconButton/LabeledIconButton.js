@@ -9,13 +9,13 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 // import React from 'react';
 import compose from 'ramda/src/compose';
-// import Spottable from '@enact/spotlight/Spottable';
+import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
 import UiLabeledIcon from '@enact/ui/LabeledIcon';
-// import Touchable from '@enact/ui/Touchable';
+import Touchable from '@enact/ui/Touchable';
 // import {ButtonBase as UiButtonBase} from '@enact/ui/Button';
 
-import IconButton from '../IconButton';
+import {IconButtonBase} from '../IconButton';
 import Skinnable from '../Skinnable';
 // import {IconBase} from '../Icon';
 
@@ -50,11 +50,11 @@ import componentCss from '../LabeledIcon/LabeledIcon.less';
 // 	children: [IconBase.inline({css, children, disabled, small})]
 // });
 
-// const IconButton = compose(
-// 	Touchable({activeProp: 'pressed'}),
-// 	Spottable,
-// 	Skinnable
-// )(IconButtonMin);
+const IconButton = compose(
+	Touchable({activeProp: 'pressed'}),
+	Spottable,
+	Skinnable
+)(IconButtonBase);
 
 /**
  * A basic LabeledIconButton component structure without any behaviors applied to it.
