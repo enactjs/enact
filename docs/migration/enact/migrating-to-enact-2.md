@@ -157,7 +157,6 @@ The `preserveCase` and `showDivider` props have changed to `casing` and `noDivid
 ##### 1.x
 ```
 <Dialog preserveCase showDivider />  // preserve casing and show divider
-...
 <Dialog preserveCase />  // preserve casing and do not show divider
 ```
 ##### 2.0
@@ -179,7 +178,7 @@ The `preserveCase` prop has changed to `casing`.
 ```
 
 ### `ExpandableInput`
-The `onInputChange` prop has changed to `onChange`.
+The `onInputChange` has changed to `onChange`.
 #### Example
 ##### 1.x
 ```
@@ -314,8 +313,8 @@ The `noAutoFocus` prop has changed to `autoFocus`.
 ```
 ##### 2.0
 ```
-<Panel autoFocus /> // automatically focus the Panel
-<Panel /> // do not automatically focus the Panel
+<Panel /> // automatically focus the Panel
+<Panel autoFocus="none" /> // do not automatically focus the Panel
 ```
 
 ### `Popup`
@@ -452,7 +451,9 @@ The `tooltipPreserveCase` prop has changed to `tooltipCasing`.
 import BasicButton from '@enact/ui/Button';
 import TooltipDecorator from '@enact/ui/TooltipDecorator';
 
-const Button = TooltipDecorator({tooltipPreserveCase: true}, BasicButton);
+const Button = TooltipDecorator(BasicButton);
+
+<Button tooltipPreserveCase />
 ```
 ##### 2.0
 ```
@@ -460,6 +461,8 @@ import BasicButton from '@enact/ui/Button';
 import TooltipDecorator from '@enact/ui/TooltipDecorator';
 
 const Button = TooltipDecorator({tooltipCasing: 'preserve'}, BasicButton);
+
+<Button tooltipCasing="preserve" />
 ```
 
 ### `VideoPlayer`
