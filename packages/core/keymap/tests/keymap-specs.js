@@ -93,7 +93,7 @@ describe('keymap', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not add entry with a falsey name', function () {
+	it('should not add entry with a falsy name', function () {
 		keymap.add('', 13);
 
 		const expected = false;

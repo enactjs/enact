@@ -4,7 +4,7 @@
  * included by external developers.
  */
 // eslint-disable-next-line no-var
-var {addLocalizedFont, generateFontRules} = require('@enact/ui/internal/localized-fonts');
+var {addLocalizedFont, generateFontRules, generateFontOverrideRules} = require('@enact/ui/internal/localized-fonts');
 
 const fontName = 'Moonstone LG Display';
 
@@ -76,4 +76,5 @@ addLocalizedFont(fontName, fonts);
 
 module.exports = generateFontRules;
 module.exports.fontGenerator = generateFontRules;
+module.exports.fontOverrideGenerator = generateFontOverrideRules;
 module.exports.generateFontRules = generateFontRules;

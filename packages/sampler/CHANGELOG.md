@@ -2,6 +2,56 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [2.0.0-rc.2] - 2018-07-16
+
+No significant changes.
+
+## [2.0.0-rc.1] - 2018-07-09
+
+### Fixed
+
+- Inline Storybook CSS now correctly detecting feature support on WebOS against its internal Chromium version.
+
+## [2.0.0-beta.9] - 2018-07-02
+
+No significant changes.
+
+## [2.0.0-beta.8] - 2018-06-25
+
+### Changed
+
+- Sampler knobs to incorporate several useful features such as labeling the default value in the selection knob.
+
+## [2.0.0-beta.7] - 2018-06-11
+
+No significant changes.
+
+## [2.0.0-beta.6] - 2018-06-04
+
+No significant changes.
+
+## [2.0.0-beta.5] - 2018-05-29
+
+No significant changes.
+
+## [2.0.0-beta.4] - 2018-05-21
+
+### Fixed
+
+- `moonstone/VirtualList`, `moonstone/VirtualGridList`, `ui/VirtualList`, and `ui/VirtualGridList` samples to show items properly when `dataSize` is greater than 1000
+
+## [2.0.0-beta.3] - 2018-05-14
+
+No significant changes.
+
+## [2.0.0-beta.2] - 2018-05-07
+
+No significant changes.
+
+## [2.0.0-beta.1] - 2018-04-29
+
+No significant changes.
+
 ## [2.0.0-alpha.8] - 2018-04-17
 
 ### Added

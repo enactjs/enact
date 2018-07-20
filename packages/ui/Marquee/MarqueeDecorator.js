@@ -2,6 +2,8 @@ import direction from 'direction';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
+import {is} from '@enact/core/keymap';
+import {on, off} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React from 'react';
 import shallowEqual from 'recompose/shallowEqual';
@@ -140,11 +142,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'ui:MarqueeDecorator'
 
-		static contextTypes = {
-			...contextTypes,
-			...stateContextTypes
-		}
-
 		static propTypes = /** @lends ui/Marquee.MarqueeDecorator.prototype */ {
 			/**
 			 * Text alignment value of the marquee. Valid values are `'left'`, `'right'` and `'center'`.
@@ -163,8 +160,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			children: PropTypes.node,
 
 			/**
-			 * Disables all marquee behavior except when `marqueeOn` is `'hover'` or `'focus'`. Will
-			 * be forwarded onto the wrapped component as well.
+			 * Passed through to the wrapped component. Does not affect Marquee behavior except that
+			 * components that are `marqueeOn="focus"` will be treated as if they were
+			 * `marqueeOn="hover"`, to allow disabled (and thuse, unfocusable) components to
+			 * marquee.
 			 *
 			 * @type {Boolean}
 			 * @public
@@ -248,6 +247,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			remeasure: PropTypes.any
 		}
 
+		static contextTypes = {
+			...contextTypes,
+			...stateContextTypes
+		}
+
 		static defaultProps = {
 			marqueeDelay: 1000,
 			marqueeOn: 'focus',
@@ -291,12 +295,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.props.marqueeOn === 'render') {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
+			on('keydown', this.handlePointerHide);
 		}
 
 		componentWillReceiveProps (next) {
-			const {marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
+			const {forceDirection, marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
 			this.validateTextDirection(next);
-			if ((this.props.children !== next.children) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
+			if (!shallowEqual(this.props.children, next.children) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
 				// restart marqueeOn="render" marquees or synced marquees that were animating
 				this.forceRestartMarquee = next.marqueeOn === 'render' || (
 					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)
@@ -305,7 +310,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.invalidateMetrics();
 				this.cancelAnimation();
 				this.textDirectionValidated = false;
-			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled || next.marqueeSpeed !== marqueeSpeed) {
+			} else if (
+				next.marqueeOn !== marqueeOn ||
+				next.marqueeDisabled !== marqueeDisabled ||
+				next.marqueeSpeed !== marqueeSpeed ||
+				next.forceDirection !== forceDirection
+			) {
 				this.cancelAnimation();
 			} else if (next.disabled && this.isHovered && marqueeOn === 'focus' && this.sync) {
 				this.context.enter(this);
@@ -313,9 +323,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		shouldComponentUpdate (nextProps, nextState) {
+			const {overflow, ...rest} = this.state;
+			const {overflow: nextOverflow, ...nextRest} = nextState;
+
 			return (
-				!shallowEqual(this.state, nextState) ||
-				!shallowEqual(this.props, nextProps)
+				!shallowEqual(rest, nextRest) ||
+				!shallowEqual(this.props, nextProps) ||
+				(overflow !== 'ellipsis' && nextOverflow !== 'clip')
 			);
 		}
 
@@ -345,6 +359,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.context.Subscriber.unsubscribe('resize', this.handleResize);
 				this.context.Subscriber.unsubscribe('i18n', this.handleLocaleChange);
 			}
+			off('keydown', this.handlePointerHide);
 		}
 
 		/*
@@ -385,8 +400,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {Boolean} - `true` if a possible marquee condition exists
 		 */
 		shouldStartMarquee () {
-			const {disabled, marqueeOn} = this.props;
-			return (
+			const {disabled, marqueeDisabled, marqueeOn} = this.props;
+			return !marqueeDisabled && (
+				marqueeOn === 'render' ||
 				this.forceRestartMarquee ||
 				!this.sync && (
 					(this.isFocused && marqueeOn === 'focus' && !disabled) ||
@@ -422,7 +438,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 				// TODO: Replace with functional setState with React 16
 				const overflow = this.calculateTextOverflow(this.distance);
-				if (overflow !== this.state.overflow) {
+				if (!(this.contentFits && overflow === 'clip' && this.state.overflow === 'ellipsis')) {
 					this.setState({overflow});
 				}
 			}
@@ -502,9 +518,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		stop = () => {
 			this.clearTimeout();
-			this.setState({
-				animating: false
-			});
+
+			if (this.state.animating) {
+				this.setState({
+					animating: false
+				});
+			}
 		}
 
 		/*
@@ -556,16 +575,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			// synchronized Marquees defer to the controller to restart them
 			if (this.sync) {
 				this.context.complete(this);
-			} else {
-				this.setState(this.setStateStartAnimation);
-			}
-		}
-
-		setStateStartAnimation = (prevState) => {
-			if (!prevState.animating) {
+			} else if (!this.state.animating) {
 				this.startAnimation();
 			}
-			return null;
 		}
 
 		/*
@@ -619,7 +631,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleFocus = (ev) => {
 			this.isFocused = true;
 			if (!this.sync) {
-				this.setState(this.setStateStartAnimation);
+				this.calculateMetrics();
+
+				if (!this.state.animating && !this.contentFits) {
+					this.startAnimation();
+				}
 			}
 			forwardFocus(ev, this.props);
 		}
@@ -640,14 +656,25 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.props.disabled || this.props.marqueeOn === 'hover') {
 				if (this.sync) {
 					this.context.enter(this);
-				} else {
-					this.setState(this.setStateStartAnimation);
+				} else if (!this.state.animating) {
+					this.startAnimation();
 				}
 			}
 			forwardEnter(ev, this.props);
 		}
 
 		handleLeave = (ev) => {
+			this.handleUnhover();
+			forwardLeave(ev, this.props);
+		}
+
+		handlePointerHide = ({keyCode}) => {
+			if (is('pointerHide', keyCode)) {
+				this.handleUnhover();
+			}
+		}
+
+		handleUnhover () {
 			this.isHovered = false;
 			if (this.props.disabled || this.props.marqueeOn === 'hover') {
 				if (this.sync) {
@@ -656,7 +683,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.cancelAnimation();
 				}
 			}
-			forwardLeave(ev, this.props);
 		}
 
 		cacheNode = (node) => {
@@ -748,6 +774,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const props = Object.assign({}, this.props);
 
 			delete props.alignment;
+			delete props.forceDirection;
 			delete props.marqueeCentered;
 			delete props.marqueeDelay;
 			delete props.marqueeDisabled;

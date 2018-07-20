@@ -7,8 +7,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 const contextTypes = {
+	closeAllFloatingLayers: PropTypes.func,
 	getFloatingLayer: PropTypes.func,
-	getRootFloatingLayer: PropTypes.func
+	getRootFloatingLayer: PropTypes.func,
+	registerFloatingLayer: PropTypes.func,
+	unregisterFloatingLayer: PropTypes.func
 };
 
 /**
@@ -58,10 +61,19 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static childContextTypes = contextTypes
 
+		constructor (props) {
+			super(props);
+			this.floatingLayer = null;
+			this.layers = [];
+		}
+
 		getChildContext () {
 			return {
+				closeAllFloatingLayers: this.handleCloseAll,
 				getFloatingLayer: this.getFloatingLayer,
-				getRootFloatingLayer: this.getRootFloatingLayer
+				getRootFloatingLayer: this.getRootFloatingLayer,
+				registerFloatingLayer: this.handleRegister,
+				unregisterFloatingLayer: this.handleUnregister
 			};
 		}
 
@@ -83,6 +95,30 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			return this.getFloatingLayer();
+		}
+
+		handleCloseAll = () => {
+			this.layers.forEach(({component, close}) => {
+				if (component) {
+					close.call(component);
+				}
+			});
+		}
+
+		handleRegister = (component, handlers) => {
+			this.layers.push({
+				component,
+				...handlers
+			});
+		}
+
+		handleUnregister = (component) => {
+			for (let i = 0; i < this.layers.length; i++) {
+				if (this.layers[i].component === component) {
+					this.layers.splice(i, 1);
+					break;
+				}
+			}
 		}
 
 		setFloatingLayer = (node) => {

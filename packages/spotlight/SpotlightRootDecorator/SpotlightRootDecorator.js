@@ -13,6 +13,8 @@ import {spottableClass} from '../Spottable';
 
 import {rootContainerId} from '../src/container';
 
+import '../styles/debug.less';
+
 /**
  * Default configuration for SpotlightRootDecorator
  *
@@ -96,6 +98,5 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 export default SpotlightRootDecorator;
 export {
-	rootContainerId as spotlightRootContainerName, // DEPRECATED
 	SpotlightRootDecorator
 };

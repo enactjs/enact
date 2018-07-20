@@ -1,311 +1,37 @@
+import {mount} from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import {mount} from 'enzyme';
-import {Slider, SliderBase} from '../Slider';
-import {SliderDecorator} from '../../internal/SliderDecorator';
+
+import Slider from '../Slider';
 import css from '../Slider.less';
 
-describe('Slider Specs', () => {
-	it('should not fire change event on props change', function () {
-		const handleChange = sinon.spy();
+const getNode = (slider) => slider.find(`div.${css.slider}`);
 
-		const slider = mount(
-			<Slider
-				min={0}
-				max={100}
-				value={50}
-				step={1}
-				onChange={handleChange}
-			/>
-		);
+const focus = (slider) => getNode(slider).simulate('focus');
+const blur = (slider) => getNode(slider).simulate('blur');
+const activate = (slider) => getNode(slider).simulate('keyup', {keyCode: 13});
+const keyDown = (keyCode) => (slider) => getNode(slider).simulate('keydown', {keyCode});
 
-		slider.setProps({value: 25});
+const leftKeyDown = keyDown(37);
+const rightKeyDown = keyDown(39);
+const upKeyDown = keyDown(38);
+const downKeyDown = keyDown(40);
 
-		const expected = false;
-		const actual = handleChange.called;
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should not fire change if clicked but value has not changed', function () {
-		const handleChange = sinon.spy();
-		const value = 50;
-
-		const slider = mount(
-			<Slider
-				min={0}
-				max={100}
-				value={value}
-				step={1}
-				onChange={handleChange}
-			/>
-		);
-
-		slider.find(`.${css.input}`)
-			.simulate('mousedown', {value})
-			.simulate('change', {target: {value}})
-			.simulate('mouseup', {value});
-
-		const expected = false;
-		const actual = handleChange.called;
-		expect(actual).to.equal(expected);
-	});
-
-	it('should not fire change event more than once', function () {
-		const handleChange = sinon.spy();
-		const value = 25;
-
-		const slider = mount(
-			<Slider
-				min={0}
-				max={100}
-				value={50}
-				step={1}
-				onChange={handleChange}
-			/>
-		);
-
-		slider.find(`.${css.input}`)
-			.simulate('mousedown', {value})
-			.simulate('change', {target: {value}})
-			.simulate('mouseup', {value});
-
-		const expected = 1;
-		const actual = handleChange.callCount;
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should forward value in change event', function () {
-		const handleChange = sinon.spy();
-		const value = 25;
-
-		const slider = mount(
-			<Slider
-				min={0}
-				max={100}
-				value={50}
-				step={1}
-				onChange={handleChange}
-			/>
-		);
-
-		slider.find(`.${css.input}`)
-			.simulate('mousedown', {value})
-			.simulate('change', {target: {value}})
-			.simulate('mouseup', {value});
-
-		const expected = value;
-		const actual = handleChange.args[0][0].value;
-
-		expect(actual).to.equal(expected);
-	});
-
-	// I don't feel super great about this test but I'm not sure how else to be able to check
-	// that values that are applied directly to the DOM are the values that should be applied
-	// This validates ENYO-3734 fix
-	it('should apply the right knob position on startup', function () {
-		const node = document.body.appendChild(document.createElement('div'));
-		mount(
-			<Slider
-				min={0}
-				max={100}
-				value={50}
-				step={1}
-				style={{width: '100px'}}
-			/>,
-			{attachTo: node}
-		);
-
-		const knob = document.querySelector(`.${css.knob}`);
-
-		const expected = 'translate3d(50px, 0, 0)';
-		const actual = knob.style.transform;
-
-		node.remove();
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should not position knob outside slider', function () {
-		const node = document.body.appendChild(document.createElement('div'));
-		// eslint-disable-next-line
-		console.warn.restore();
-		const spy = sinon.stub(console, 'warn');
-
-		mount(
-			<Slider
-				min={0}
-				max={100}
-				value={150}
-				step={1}
-				style={{width: '100px'}}
-			/>,
-			{attachTo: node}
-		);
-
-		const knob = document.querySelector(`.${css.knob}`);
-
-		const expected = 'translate3d(100px, 0, 0)';
-		const actual = knob.style.transform;
-
-		const warningExpected = 'Warning: SliderDecorator "value" (150) greater than "max" (100)';
-		const warningActual = spy.args[0][0];
-
-		node.remove();
-
-		expect(actual).to.equal(expected);
-		expect(warningActual).to.equal(warningExpected);
-	});
-
-	it('should apply min/max on mount', function () {
-		const node = document.body.appendChild(document.createElement('div'));
-		mount(
-			<Slider
-				min={-100}
-				max={0}
-				value={-50}
-				step={1}
-				style={{width: '100px'}}
-			/>,
-			{attachTo: node}
-		);
-
-		const knob = document.querySelector(`.${css.knob}`);
-
-		const expected = 'translate3d(50px, 0, 0)';
-		const actual = knob.style.transform;
-
-		node.remove();
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should update value, min, max together', function () {
-		const node = document.body.appendChild(document.createElement('div'));
-		const slider = mount(
-			<Slider
-				min={0}
-				max={100}
-				value={50}
-				step={1}
-				style={{width: '100px'}}
-			/>,
-			{attachTo: node}
-		);
-
-		slider.setProps({min: -100, max: 0, value: -60});
-		const knob = document.querySelector(`.${css.knob}`);
-
-		const expected = 'translate3d(40px, 0, 0)';
-		const actual = knob.style.transform;
-
-		node.remove();
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should clamp knob position when min changed', function () {
-		const node = document.body.appendChild(document.createElement('div'));
-		// eslint-disable-next-line
-		console.warn.restore();
-		const spy = sinon.stub(console, 'warn');
-		const slider = mount(
-			<Slider
-				min={0}
-				max={100}
-				value={0}
-				step={1}
-				style={{width: '100px'}}
-			/>,
-			{attachTo: node}
-		);
-
-		slider.setProps({min: 50});
-		const knob = document.querySelector(`.${css.knob}`);
-
-		const expected = 'translate3d(0px, 0, 0)';
-		const actual = knob.style.transform;
-
-		const warningExpected = 'Warning: SliderDecorator "value" (0) less than "min" (50)';
-		const warningActual = spy.args[0][0];
-
-
-		node.remove();
-
-		expect(actual).to.equal(expected);
-		expect(warningActual).to.equal(warningExpected);
-	});
-
-	it('should clamp bar position when min changed', function () {
-		const node = document.body.appendChild(document.createElement('div'));
-		// eslint-disable-next-line
-		console.warn.restore();
-		const spy = sinon.stub(console, 'warn');
-		const slider = mount(
-			<Slider
-				min={0}
-				max={100}
-				value={0}
-				step={1}
-				style={{width: '100px'}}
-			/>,
-			{attachTo: node}
-		);
-
-		slider.setProps({min: 50});
-		const knob = document.querySelector(`.${css.fill}`);
-
-		const expected = 'scale(0, 1) translateZ(0)';
-		const actual = knob.style.transform;
-
-		const warningExpected = 'Warning: SliderDecorator "value" (0) less than "min" (50)';
-		const warningActual = spy.args[0][0];
-
-		node.remove();
-
-		expect(actual).to.equal(expected);
-		expect(warningActual).to.equal(warningExpected);
-	});
-
-	// Note: This was causing a value out of bounds error, but should not have as
-	// backgroundProgress is percent, not an absolute value
-	it('should not change background position when min changed', function () {
-		const node = document.body.appendChild(document.createElement('div'));
-		// eslint-disable-next-line
-		console.warn.restore();
-		const spy = sinon.stub(console, 'warn');
-		const slider = mount(
-			<Slider
-				min={0}
-				max={100}
-				value={0}
-				step={1}
-				backgroundProgress={0.3}
-				style={{width: '100px'}}
-			/>,
-			{attachTo: node}
-		);
-
-		slider.setProps({min: 50});
-		const knob = document.querySelector(`.${css.load}`);
-
-		const expected = 'scale(0.3, 1) translateZ(0)';
-		const actual = knob.style.transform;
-
-		const warningExpected = 'Warning: SliderDecorator "value" (0) less than "min" (50)';
-		const warningActual = spy.args[0][0];
-
-		node.remove();
-
-		expect(actual).to.equal(expected);
-		expect(warningActual).to.equal(warningExpected);
-	});
+describe('Slider', () => {
+	const callCount = spy => {
+		switch (spy.callCount) {
+			case 0:
+				return 'not called';
+			case 1:
+				return 'called once';
+			default:
+				return `called ${spy.callCount} times`;
+		}
+	};
 
 	it('should set "aria-valuetext" to hint string when knob is active and vertical is false', function () {
-		const Comp = SliderDecorator(SliderBase);
 		const slider = mount(
-			<Comp />
+			<Slider />
 		);
 
 		slider.find('Slider').prop('onActivate')();
@@ -318,9 +44,8 @@ describe('Slider Specs', () => {
 	});
 
 	it('should set "aria-valuetext" to hint string when knob is active and vertical is true', function () {
-		const Comp = SliderDecorator(SliderBase);
 		const slider = mount(
-			<Comp orientation="vertical" />
+			<Slider orientation="vertical" />
 		);
 
 		slider.find('Slider').prop('onActivate')();
@@ -333,13 +58,367 @@ describe('Slider Specs', () => {
 	});
 
 	it('should set "aria-valuetext" to value when value is changed', function () {
-		const Comp = SliderDecorator(SliderBase);
 		const slider = mount(
-			<Comp value={10} />
+			<Slider value={10} />
 		);
 
 		const expected = 10;
 		const actual = slider.find('Slider').prop('aria-valuetext');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should activate the slider on enter keyup', () => {
+		const subject = mount(
+			<Slider />
+		);
+
+		activate(subject);
+
+		const expected = 'active';
+		const actual = subject.find('Slider').prop('active') ? 'active' : 'not active';
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should deactivate the slider on blur', () => {
+		const subject = mount(
+			<Slider />
+		);
+
+		activate(subject);
+		blur(subject);
+
+		const expected = 'not active';
+		const actual = subject.find('Slider').prop('active') ? 'active' : 'not active';
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not activate the slider on enter when activateOnFocus', () => {
+		const subject = mount(
+			<Slider activateOnFocus />
+		);
+
+		activate(subject);
+		const expected = 'not active';
+		const actual = subject.find('Slider').prop('active') ? 'active' : 'not active';
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should decrement the value of horizontal slider on key left when active', () => {
+		const subject = mount(
+			<Slider defaultValue={50} />
+		);
+
+		activate(subject);
+		leftKeyDown(subject);
+
+		const expected = 49;
+		const actual = subject.find('Slider').prop('value');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should decrement the value of horizontal slider on key left when activateOnFocus is true', () => {
+		const subject = mount(
+			<Slider defaultValue={50} activateOnFocus />
+		);
+
+		focus(subject);
+		leftKeyDown(subject);
+
+		const expected = 49;
+		const actual = subject.find('Slider').prop('value');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should decrement the value of vertical slider on key down when active', () => {
+		const subject = mount(
+			<Slider defaultValue={50} orientation="vertical" />
+		);
+
+		activate(subject);
+		downKeyDown(subject);
+
+		const expected = 49;
+		const actual = subject.find('Slider').prop('value');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should decrement the value of vertical slider on key down when activateOnFocus is true', () => {
+		const subject = mount(
+			<Slider defaultValue={50} orientation="vertical" activateOnFocus />
+		);
+
+		focus(subject);
+		downKeyDown(subject);
+
+		const expected = 49;
+		const actual = subject.find('Slider').prop('value');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should increment the value of horizontal slider on key right when active', () => {
+		const subject = mount(
+			<Slider defaultValue={50} />
+		);
+
+		activate(subject);
+		rightKeyDown(subject);
+
+		const expected = 51;
+		const actual = subject.find('Slider').prop('value');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should increment the value of horizontal slider on key right when activateOnFocus is true', () => {
+		const subject = mount(
+			<Slider defaultValue={50} activateOnFocus />
+		);
+
+		focus(subject);
+		rightKeyDown(subject);
+
+		const expected = 51;
+		const actual = subject.find('Slider').prop('value');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should increment the value of vertical slider on key up when active', () => {
+		const subject = mount(
+			<Slider defaultValue={50} orientation="vertical" />
+		);
+
+		activate(subject);
+		upKeyDown(subject);
+
+		const expected = 51;
+		const actual = subject.find('Slider').prop('value');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should increment the value of vertical slider on key up when activateOnFocus is true', () => {
+		const subject = mount(
+			<Slider defaultValue={50} orientation="vertical" activateOnFocus />
+		);
+
+		focus(subject);
+		upKeyDown(subject);
+
+		const expected = 51;
+		const actual = subject.find('Slider').prop('value');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should call onSpotlightLeft on horizontal slider at min value', () => {
+		const handleSpotlight = sinon.spy();
+		const subject = mount(
+			<Slider defaultValue={0} onSpotlightLeft={handleSpotlight} />
+		);
+
+		focus(subject);
+		leftKeyDown(subject);
+
+		const expected = 'called once';
+		const actual = callCount(handleSpotlight);
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should call onSpotlightLeft on vertical slider at any value', () => {
+		const handleSpotlight = sinon.spy();
+		const subject = mount(
+			<Slider defaultValue={50} orientation="vertical" onSpotlightLeft={handleSpotlight} />
+		);
+
+		focus(subject);
+		leftKeyDown(subject);
+
+		const expected = 'called once';
+		const actual = callCount(handleSpotlight);
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not call onSpotlightLeft on horizontal slider at greater than min value', () => {
+		const handleSpotlight = sinon.spy();
+		const subject = mount(
+			<Slider defaultValue={1} onSpotlightLeft={handleSpotlight} />
+		);
+
+		focus(subject);
+		leftKeyDown(subject);
+
+		const expected = 'not called';
+		const actual = callCount(handleSpotlight);
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should call onSpotlightDown on vertical slider at min value', () => {
+		const handleSpotlight = sinon.spy();
+		const subject = mount(
+			<Slider defaultValue={0} orientation="vertical" onSpotlightDown={handleSpotlight} />
+		);
+
+		focus(subject);
+		downKeyDown(subject);
+
+		const expected = 'called once';
+		const actual = callCount(handleSpotlight);
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should call onSpotlightDown on horizontal slider at any value', () => {
+		const handleSpotlight = sinon.spy();
+		const subject = mount(
+			<Slider defaultValue={50} onSpotlightDown={handleSpotlight} />
+		);
+
+		focus(subject);
+		downKeyDown(subject);
+
+		const expected = 'called once';
+		const actual = callCount(handleSpotlight);
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not call onSpotlightDown on vertical slider at greater than min value', () => {
+		const handleSpotlight = sinon.spy();
+		const subject = mount(
+			<Slider defaultValue={1} orientation="vertical" onSpotlightDown={handleSpotlight} />
+		);
+
+		focus(subject);
+		downKeyDown(subject);
+
+		const expected = 'not called';
+		const actual = callCount(handleSpotlight);
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should call onSpotlightRight on horizontal slider at max value', () => {
+		const handleSpotlight = sinon.spy();
+		const subject = mount(
+			<Slider defaultValue={100} onSpotlightRight={handleSpotlight} />
+		);
+
+		focus(subject);
+		rightKeyDown(subject);
+
+		const expected = 'called once';
+		const actual = callCount(handleSpotlight);
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should call onSpotlightRight on vertical slider at any value', () => {
+		const handleSpotlight = sinon.spy();
+		const subject = mount(
+			<Slider defaultValue={50} orientation="vertical" onSpotlightRight={handleSpotlight} />
+		);
+
+		focus(subject);
+		rightKeyDown(subject);
+
+		const expected = 'called once';
+		const actual = callCount(handleSpotlight);
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not call onSpotlightRight on horizontal slider at less than max value', () => {
+		const handleSpotlight = sinon.spy();
+		const subject = mount(
+			<Slider defaultValue={99} onSpotlightRight={handleSpotlight} />
+		);
+
+		focus(subject);
+		rightKeyDown(subject);
+
+		const expected = 'not called';
+		const actual = callCount(handleSpotlight);
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should call onSpotlightUp on vertical slider at max value', () => {
+		const handleSpotlight = sinon.spy();
+		const subject = mount(
+			<Slider defaultValue={100} max={100} orientation="vertical" onSpotlightUp={handleSpotlight} />
+		);
+
+		focus(subject);
+		upKeyDown(subject);
+
+		const expected = 'called once';
+		const actual = callCount(handleSpotlight);
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should call onSpotlightUp on horizontal slider at any value', () => {
+		const handleSpotlight = sinon.spy();
+		const subject = mount(
+			<Slider defaultValue={50} onSpotlightUp={handleSpotlight} />
+		);
+
+		focus(subject);
+		upKeyDown(subject);
+
+		const expected = 'called once';
+		const actual = callCount(handleSpotlight);
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not call onSpotlightUp on vertical slider at less than max value', () => {
+		const handleSpotlight = sinon.spy();
+		const subject = mount(
+			<Slider defaultValue={99} orientation="vertical" onSpotlightUp={handleSpotlight} />
+		);
+
+		focus(subject);
+		upKeyDown(subject);
+
+		const expected = 'not called';
+		const actual = callCount(handleSpotlight);
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set the tooltip to visible when focused', () => {
+		const subject = mount(
+			<Slider tooltip />
+		);
+
+		focus(subject);
+
+		const expected = 'visible';
+		const actual = subject.find('ProgressBarTooltip').prop('visible') ? 'visible' : 'not visible';
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set the tooltip to not visible when unfocused', () => {
+		const subject = mount(
+			<Slider tooltip />
+		);
+
+		const expected = 'not visible';
+		const actual = subject.find('ProgressBarTooltip').prop('visible') ? 'visible' : 'not visible';
 
 		expect(actual).to.equal(expected);
 	});

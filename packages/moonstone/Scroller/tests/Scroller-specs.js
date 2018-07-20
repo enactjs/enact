@@ -1,7 +1,8 @@
-import {mount} from 'enzyme';
+import sinon from 'sinon';
+import {mount, shallow} from 'enzyme';
 import React from 'react';
 
-import Scroller from '../Scroller';
+import Scroller, {ScrollerBase} from '../Scroller';
 
 describe('Scroller', () => {
 	let contents;
@@ -66,6 +67,100 @@ describe('Scroller', () => {
 			const actual = subject.find('Scrollbar').length;
 
 			expect(actual).to.equal(expected);
+		});
+	});
+
+	describe('Scrollbar accessibility', () => {
+		it('should set "aria-label" to previous scroll button in the horizontal scroll bar', function () {
+			const label = 'custom button aria label';
+			const subject = mount(
+				<Scroller
+					horizontalScrollbar="visible"
+					scrollLeftAriaLabel={label}
+					verticalScrollbar="visible"
+				>
+					{contents}
+				</Scroller>
+			);
+
+			const expected = label;
+			const actual = subject.find('ScrollButton').at(2).prop('aria-label');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should set "aria-label" to next scroll button in the horizontal scroll bar', function () {
+			const label = 'custom button aria label';
+			const subject = mount(
+				<Scroller
+					horizontalScrollbar="visible"
+					scrollRightAriaLabel={label}
+					verticalScrollbar="visible"
+				>
+					{contents}
+				</Scroller>
+			);
+
+			const expected = label;
+			const actual = subject.find('ScrollButton').at(3).prop('aria-label');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should set "aria-label" to previous scroll button in the vertical scroll bar', function () {
+			const label = 'custom button aria label';
+			const subject = mount(
+				<Scroller
+					horizontalScrollbar="visible"
+					verticalScrollbar="visible"
+					scrollUpAriaLabel={label}
+				>
+					{contents}
+				</Scroller>
+			);
+
+			const expected = label;
+			const actual = subject.find('ScrollButton').at(0).prop('aria-label');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should set "aria-label" to next scroll button in the vertical scroll bar', function () {
+			const label = 'custom button aria label';
+			const subject = mount(
+				<Scroller
+					horizontalScrollbar="visible"
+					verticalScrollbar="visible"
+					scrollDownAriaLabel={label}
+				>
+					{contents}
+				</Scroller>
+			);
+
+			const expected = label;
+			const actual = subject.find('ScrollButton').at(1).prop('aria-label');
+
+			expect(actual).to.equal(expected);
+		});
+	});
+
+	describe('ScrollerBase API', () => {
+		it('should call onUpdate when Scroller updates', function () {
+			const handleUpdate = sinon.spy();
+			const subject = shallow(
+				<ScrollerBase
+					onUpdate={handleUpdate}
+				>
+					{contents}
+				</ScrollerBase>
+			);
+
+			subject.setProps({children: ''});
+
+			const expected = true;
+			const actual = handleUpdate.calledOnce;
+
+			expect(expected).to.equal(actual);
 		});
 	});
 });

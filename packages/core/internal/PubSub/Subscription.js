@@ -77,9 +77,9 @@ const Subscription = hoc(defaultConfig, (config, Wrapped) => {
 
 		static displayName = 'Subscription'
 
-		static contextTypes = contextTypes
-
 		static propTypes = {}
+
+		static contextTypes = contextTypes
 
 		static defaultProps = {}
 

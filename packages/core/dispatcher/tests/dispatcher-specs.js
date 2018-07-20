@@ -20,6 +20,20 @@ describe('dispatcher', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it('should not register duplicate handlers on target', function () {
+		const handler = sinon.spy();
+		on('localechange', handler, window);
+		on('localechange', handler, window);
+
+		const ev = new CustomEvent('localechange', {});
+		window.dispatchEvent(ev);
+
+		const expected = true;
+		const actual = handler.calledOnce;
+
+		expect(actual).to.equal(expected);
+	});
+
 	it('should unregister handlers on target', function () {
 		const handler = sinon.spy();
 		on('localechange', handler, window);

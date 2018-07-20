@@ -76,7 +76,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			init();
+			init({measurementNode: (typeof window !== 'undefined' && window)});
 			this.state = {
 				resolutionClasses: ''
 			};
@@ -100,11 +100,12 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		/**
+		/*
 		 * Compare our current version of the resolved resolution class names with a fresh
 		 * initialization of RI.
 		 *
-		 * @return {String|undefined} A string of new class names or undefined when there is no change.
+		 * @returns {String|undefined} A string of new class names or undefined when there is no change.
+		 * @private
 		 */
 		didClassesChange () {
 			const prevClassNames = getResolutionClasses();

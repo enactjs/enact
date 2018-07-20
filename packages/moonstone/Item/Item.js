@@ -51,13 +51,13 @@ const ItemBase = kind({
 
 	styles: {
 		css: componentCss,
-		className: 'item',
 		publicClassNames: 'item'
 	},
 
 	render: ({css, ...rest}) => {
 		return (
 			<UiItemBase
+				data-webos-voice-intent="Select"
 				{...rest}
 				css={css}
 			/>

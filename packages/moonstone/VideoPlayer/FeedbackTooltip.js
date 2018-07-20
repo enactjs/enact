@@ -9,6 +9,7 @@ import Skinnable from '../Skinnable';
 
 import FeedbackContent from './FeedbackContent';
 import states from './FeedbackIcons.js';
+import {secondsToTime} from './util';
 
 import css from './FeedbackTooltip.less';
 
@@ -26,13 +27,50 @@ const FeedbackTooltipBase = kind({
 
 	propTypes: /** @lends moonstone/VideoPlayer.FeedbackTooltip.prototype */ {
 		/**
-		 * When `true`, only time would appear in tooltip.
+		 * Invoke action to display or hide tooltip.
+		 *
+		 * @type {String}
+		 * @default 'idle'
+		 */
+		action: PropTypes.oneOf(['focus', 'blur', 'idle']),
+
+		/**
+		 * Duration of the curent media in seconds
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		duration: PropTypes.number,
+
+		/**
+		 * Instance of `NumFmt` to format the time
+		 *
+		 * @type {Objct}
+		 * @public
+		 */
+		formatter: PropTypes.object,
+
+		/**
+		 * If the current `playbackState` allows this component's visibility to be changed,
+		 * this component will be hidden. If not, setting this property will have no effect.
+		 * All `playbackState`s respond to this property except the following:
+		 * `'rewind'`, `'slowRewind'`, `'fastForward'`, `'slowForward'`.
 		 *
 		 * @type {Boolean}
 		 * @default false
 		 * @public
 		 */
-		noFeedback: PropTypes.bool,
+		hidden: PropTypes.bool,
+
+		/**
+		 * Part of the API required by `ui/Slider` but not used by FeedbackTooltip which only
+		 * supports horizontal orientation
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		orientation: PropTypes.string,
 
 		/**
 		 * Value of the feedback playback rate
@@ -58,14 +96,23 @@ const FeedbackTooltipBase = kind({
 		playbackState: PropTypes.oneOf(Object.keys(states)),
 
 		/**
+		 * A number between 0 and 1 representing the proportion of the `value` in terms of `min`
+		 * and `max` props of the slider
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		proportion: PropTypes.number,
+
+		/**
 		 * This component will be used instead of the built-in version. The internal thumbnail style
 		 * will be applied to this component. This component follows the same rules as the built-in
-		 * version; hiding and showing according to the state of `noFeedback`.
+		 * version; hiding and showing according to the state of `action`.
 		 *
 		 * This can be a tag name as a string, a rendered DOM node, a component, or a component
 		 * instance.
 		 *
-		 * @type {Component}
+		 * @type {Component|Element}
 		 * @public
 		 */
 		thumbnailComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.element, PropTypes.func]),
@@ -89,10 +136,7 @@ const FeedbackTooltipBase = kind({
 		thumbnailSrc: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
-		 * If the current `playbackState` allows this component's visibility to be changed,
-		 * this component will be hidden. If not, setting this property will have no effect.
-		 * All `playbackState`s respond to this property except the following:
-		 * `'rewind'`, `'slowRewind'`, `'fastForward'`, `'slowForward'`.
+		 * Required by the interface for moonstone/Slider.tooltip but not used here
 		 *
 		 * @type {Boolean}
 		 * @default true
@@ -102,9 +146,9 @@ const FeedbackTooltipBase = kind({
 	},
 
 	defaultProps: {
-		noFeedback: false,
+		action: 'idle',
 		thumbnailDeactivated: false,
-		visible: true
+		hidden: false
 	},
 
 	styles: {
@@ -113,14 +157,21 @@ const FeedbackTooltipBase = kind({
 	},
 
 	computed: {
-		className: ({playbackState: s, thumbnailDeactivated, styler, visible}) => styler.append({
-			hidden: !visible && states[s] && states[s].allowHide,
-			thumbnailDeactivated
-		}),
-		thumbnailComponent: ({noFeedback, thumbnailComponent, thumbnailSrc}) => {
-			// noFeedback is effectively "tooltip mode", one mode being whether the time and icon are visible,
-			// the other being the thumbnail and time are visible.
-			if (noFeedback) {
+		children: ({children, duration, formatter}) => {
+			return secondsToTime(children * duration, formatter);
+		},
+		className: ({hidden, playbackState: s, proportion, thumbnailDeactivated, styler}) => {
+			return styler.append({
+				afterMidpoint: proportion > 0.5,
+				hidden: hidden && states[s] && states[s].allowHide,
+				thumbnailDeactivated
+			});
+		},
+		feedbackVisible: ({action, playbackState}) => {
+			return (action !== 'focus' || action === 'idle') && !(action === 'blur' && playbackState === 'play');
+		},
+		thumbnailComponent: ({action, thumbnailComponent, thumbnailSrc}) => {
+			if (action === 'focus') {
 				if (thumbnailComponent) {
 					return <ComponentOverride
 						component={thumbnailComponent}
@@ -137,16 +188,23 @@ const FeedbackTooltipBase = kind({
 		}
 	},
 
-	render: ({children, noFeedback, playbackState, playbackRate, thumbnailComponent, ...rest}) => {
-		delete rest.visible;
+	render: ({children, feedbackVisible, playbackState, playbackRate, thumbnailComponent, ...rest}) => {
+		delete rest.action;
+		delete rest.duration;
+		delete rest.formatter;
+		delete rest.hidden;
+		delete rest.orientation;
+		delete rest.proportion;
 		delete rest.thumbnailDeactivated;
 		delete rest.thumbnailSrc;
+		delete rest.visible;
+
 		return (
 			<div {...rest}>
 				{thumbnailComponent}
 				<FeedbackContent
 					className={css.content}
-					feedbackVisible={!noFeedback}
+					feedbackVisible={feedbackVisible}
 					playbackRate={playbackRate}
 					playbackState={playbackState}
 				>
@@ -158,12 +216,14 @@ const FeedbackTooltipBase = kind({
 });
 
 const FeedbackTooltip = onlyUpdateForKeys(
-	['children', 'noFeedback', 'playbackState', 'playbackRate', 'thumbnailComponent', 'thumbnailDeactivated', 'thumbnailSrc', 'visible']
+	['action', 'children', 'hidden', 'playbackState', 'playbackRate', 'thumbnailComponent', 'thumbnailDeactivated', 'thumbnailSrc', 'visible']
 )(
 	Skinnable(
 		FeedbackTooltipBase
 	)
 );
+
+FeedbackTooltip.defaultSlot = 'tooltip';
 
 export default FeedbackTooltip;
 export {

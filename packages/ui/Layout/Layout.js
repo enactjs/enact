@@ -89,7 +89,7 @@ const LayoutBase = kind({
 		 * The type of component to use to render as the Layout. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
 		 *
-		 * @type {String|Node}
+		 * @type {Component}
 		 * @default 'div'
 		 * @public
 		 */
@@ -162,7 +162,7 @@ const LayoutBase = kind({
 			return {
 				...style,
 				alignItems: toFlexAlign(alignParts[0]),
-				justifyItems: toFlexAlign(alignParts[1])
+				justifyContent: toFlexAlign(alignParts[1])
 			};
 		}
 	},

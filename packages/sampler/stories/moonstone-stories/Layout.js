@@ -4,30 +4,28 @@ import Button from '@enact/moonstone/Button';
 import Item from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {boolean, number, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {boolean, number, select} from '../../src/enact-knobs';
 
-const Config = mergeComponentMetadata('Layout', Layout);
+Layout.displayName = 'Layout';
 
 storiesOf('UI', module)
 	.add(
 		'Layout',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [Button, Cell, Item, Layout],
 			text: 'Basic usage of Layout'
 		})(() => (
 			<div className="debug" style={{height: ri.unit(399, 'rem')}}>
 				<Layout
-					align={select('align', ['start', 'center', 'stretch', 'end'], 'start')}
-					orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
+					align={select('align', ['start', 'center', 'stretch', 'end'], Layout, 'start')}
+					orientation={select('orientation', ['horizontal', 'vertical'], Layout, 'horizontal')}
 				>
-					<Cell size={number('cell size', 100, {range: true, min: 0, max: 300, step: 5}) + 'px'} shrink>
+					<Cell size={number('cell size', Cell, {range: true, min: 0, max: 300, step: 5}, 100) + 'px'} shrink>
 						<Button small>First</Button>
 					</Cell>
-					<Cell shrink={nullify(boolean('shrinkable cell', false))}>
+					<Cell shrink={boolean('shrinkable cell', Cell)}>
 						<Button small>Second</Button>
 					</Cell>
 					<Cell>

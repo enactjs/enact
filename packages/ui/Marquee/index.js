@@ -3,7 +3,6 @@
  * (HOC) to add marquee behavior to the content of existing components.
  *
  * @module ui/Marquee
- * @exports controlContextTypes
  * @exports Marquee
  * @exports MarqueeBase
  * @exports MarqueeController
@@ -18,7 +17,7 @@
 // decorator) and MarqueeDecorator (which needs to import Marquee.js).
 
 import MarqueeBase from './MarqueeBase';
-import {MarqueeController, contextTypes as controlContextTypes} from './MarqueeController';
+import {MarqueeController} from './MarqueeController';
 import MarqueeDecorator from './MarqueeDecorator';
 
 /**
@@ -35,7 +34,6 @@ const Marquee = MarqueeDecorator({component: MarqueeBase}, 'div');
 
 export default Marquee;
 export {
-	controlContextTypes,
 	Marquee,
 	MarqueeBase,
 	MarqueeController,

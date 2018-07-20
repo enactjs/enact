@@ -6,9 +6,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, number} from '@storybook/addon-knobs';
 
-import nullify from '../../src/utils/nullify.js';
+import {boolean, number} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBase, UiVirtualListBase);
@@ -28,7 +27,7 @@ const
 	renderItem = (size) => ({index, ...rest}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
 		return (
-			<StatefulSwitchItem  index={index} style={itemStyle} {...rest}>
+			<StatefulSwitchItem index={index} style={itemStyle} {...rest}>
 				{items[index].item}
 			</StatefulSwitchItem>
 		);
@@ -58,7 +57,9 @@ class StatefulSwitchItem extends React.Component {
 
 	onToggle = () => {
 		items[this.props.index].selected = !items[this.props.index].selected;
-		this.setState({selected: !this.state.selected});
+		this.setState(({selected}) => ({
+			selected: !selected
+		}));
 	}
 
 	render () {
@@ -77,16 +78,16 @@ storiesOf('VirtualList', module)
 	.add(
 		'with more items',
 		() => {
-			const itemSize = ri.scale(number('itemSize', 72));
+			const itemSize = ri.scale(number('itemSize', Config, 72));
 			return (
 				<VirtualList
-					dataSize={number('dataSize', items.length)}
-					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+					dataSize={number('dataSize', Config, items.length)}
+					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
 					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', 0))}
+					spacing={ri.scale(number('spacing', Config, 0))}
 					style={style.list}
 				/>
 			);

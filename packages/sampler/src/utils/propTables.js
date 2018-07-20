@@ -17,7 +17,7 @@ const removeProps = (component, props) => {
 	}
 
 	props.forEach(prop => {
-		delete component.propTypes[prop];
+		delete component.propTypes[prop];	// eslint-disable-line react/forbid-foreign-prop-types
 		delete component.defaultProps[prop];
 	});
 };
