@@ -14,7 +14,6 @@
 
 import kind from '@enact/core/kind';
 import {IconButtonBase as UiIconButtonBase, IconButtonDecorator as UiIconButtonDecorator} from '@enact/ui/IconButton';
-import {ButtonDecorator as UiButtonDecorator} from '@enact/ui/Button';
 import Pure from '@enact/ui/internal/Pure';
 import Spottable from '@enact/spotlight/Spottable';
 import PropTypes from 'prop-types';
@@ -127,7 +126,6 @@ const IconButtonBase = kind({
 const IconButtonDecorator = compose(
 	Pure,
 	TooltipDecorator({tooltipDestinationProp: 'tooltipNode'}),
-	UiButtonDecorator,
 	UiIconButtonDecorator,
 	Spottable,
 	Skinnable

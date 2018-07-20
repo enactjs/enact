@@ -12,8 +12,9 @@ import compose from 'ramda/src/compose';
 import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
 import UiLabeledIcon from '@enact/ui/LabeledIcon';
-import Touchable from '@enact/ui/Touchable';
+// import Touchable from '@enact/ui/Touchable';
 // import {ButtonBase as UiButtonBase} from '@enact/ui/Button';
+import {IconButtonDecorator as UiIconButtonDecorator} from '@enact/ui/IconButton';
 
 import {IconButtonBase} from '../IconButton';
 import Skinnable from '../Skinnable';
@@ -51,7 +52,7 @@ import componentCss from '../LabeledIcon/LabeledIcon.less';
 // });
 
 const IconButton = compose(
-	Touchable({activeProp: 'pressed'}),
+	UiIconButtonDecorator,
 	Spottable,
 	Skinnable
 )(IconButtonBase);
