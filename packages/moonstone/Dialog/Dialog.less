@@ -21,6 +21,10 @@
 	}
 	&.reserveClose {
 		.padding-start-end(@moon-dialog-h-padding, @moon-icon-button-small-size + @moon-spotlight-outset);
+
+		.moon-custom-text({
+			.padding-start-end(@moon-dialog-h-padding, @moon-icon-button-small-size-large + @moon-spotlight-outset, parent);
+		});
 	}
 	.titleBlock {
 		max-width: 100%;
