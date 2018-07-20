@@ -388,9 +388,9 @@ const Spotlight = (function () {
 		const shouldPrevent = shouldPreventNavigation();
 		const keyCode = evt.keyCode;
 		const direction = getDirection(keyCode);
-		const pointerHandled = notifyKeyDown(keyCode, !shouldPrevent && handlePointerHide);
+		const pointerHandled = notifyKeyDown(keyCode, shouldPrevent ? null : handlePointerHide);
 
-		if (pointerHandled || !(direction || isEnter(keyCode)) || shouldPrevent) {
+		if (shouldPrevent || pointerHandled || !(direction || isEnter(keyCode))) {
 			return;
 		}
 
@@ -409,7 +409,10 @@ const Spotlight = (function () {
 	}
 
 	function onMouseMove ({target, clientX, clientY}) {
-		if (shouldPreventNavigation()) return;
+		if (shouldPreventNavigation()) {
+			notifyPointerMove(null, target, clientX, clientY);
+			return;
+		}
 
 		const current = getCurrent();
 		const update = notifyPointerMove(current, target, clientX, clientY);

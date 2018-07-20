@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
-- `spotlight` to exit `onKeyDown` after executing `notifyKeyDown`.
+- `spotlight` to track pointer mode while paused
 
 ## [2.0.0-rc.2] - 2018-07-16
 
