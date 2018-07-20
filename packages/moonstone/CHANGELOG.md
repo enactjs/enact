@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Input` to not focus by *tab* key
 - `moonstone/Picker` to properly set focus when navigating between buttons
+- `moonstone/Popup` to set correct open state while transitioning
 - `moonstone/ProgressBar.ProgressBarTooltip` unknown props warning
 - `moonstone/Scrollable` to disable spotlight container during flick events only when contents can scroll
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll properly when `animate` is false via `scrollTo`
