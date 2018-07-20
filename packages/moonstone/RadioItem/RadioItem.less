@@ -12,14 +12,22 @@
 // Interally theme our implementation using published classes from ToggleItem and ToggleIcon
 .toggleIcon {
 	.icon {
-		width: (@moon-radio-item-indicator-size - 2 * @moon-radio-item-indicator-border);
-		height: (@moon-radio-item-indicator-size - 2 * @moon-radio-item-indicator-border);
+		width: @moon-radio-item-indicator-size;
+		height: @moon-radio-item-indicator-size;
+		box-sizing: border-box;
 		border-width: @moon-radio-item-indicator-border;
 		border-style: solid;
 		border-radius: (@moon-radio-item-indicator-size / 2);
 		flex-shrink: 0;
 		margin-right: 0;
 		margin-left: 0;
+
+		// The following section has been added to support a non-multiple of 3, so it can be safely
+		// scaled down to not cause any rounding errors when working with float values.
+		:global(.enact-res-hd) & {
+			@hd-thickness: @moon-radio-item-indicator-border / 2;
+			border-width: @hd-thickness;
+		}
 
 		&::before {
 			content: "";
