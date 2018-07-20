@@ -1,26 +1,29 @@
 /**
- * Exports the {@link moonstone/Dialog.Dialog} and {@link moonstone/Dialog.DialogBase} components.
- * The default export is {@link moonstone/Dialog.Dialog}.
+ * Moonstone styled modal dialog components.
  *
  * @module moonstone/Dialog
+ * @exports Dialog
+ * @exports DialogBase
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
-import PropTypes from 'prop-types';
-import Slottable from '@enact/ui/Slottable';
 import Uppercase from '@enact/i18n/Uppercase';
+import Slottable from '@enact/ui/Slottable';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import {MarqueeDecorator} from '../Marquee';
 import Popup from '../Popup';
 
-import css from './Dialog.less';
+import componentCss from './Dialog.less';
 
 const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
 
 /**
- * {@link moonstone/Dialog.DialogBase} is a modal component with a title, a subtitle, a
- * message, and an area for additional controls.
+ * A modal dialog component.
+ *
+ * This component is most often not used directly but may be composed within another component as it
+ * is within [Dialog]{@link moonstone/Dialog.Dialog}.
  *
  * @class DialogBase
  * @memberof moonstone/Dialog
@@ -32,7 +35,9 @@ const DialogBase = kind({
 
 	propTypes: /** @lends moonstone/Dialog.DialogBase.prototype */ {
 		/**
-		 * Buttons, typically to close or take action in the dialog.
+		 * Buttons to be included within the header of the component.
+		 *
+		 * Typically, these buttons would be used to close or take action on the dialog.
 		 *
 		 * @type {Element|Element[]}
 		 * @public
@@ -43,7 +48,7 @@ const DialogBase = kind({
 		]),
 
 		/**
-		 * Configures the mode of uppercasing of the `title` that should be performed.
+		 * The casing mode applied to the `title` text.
 		 *
 		 * @see i18n/Uppercase#casing
 		 * @type {String}
@@ -53,7 +58,7 @@ const DialogBase = kind({
 		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 
 		/**
-		 * The contents to be displayed in the body of the Dialog.
+		 * The contents of the body of the component.
 		 *
 		 * @type {Node}
 		 * @public
@@ -61,7 +66,20 @@ const DialogBase = kind({
 		children: PropTypes.node,
 
 		/**
-		 * When `true`, the dialog will not animate on/off screen.
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `dialog` - The root class name
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		css: PropTypes.object,
+
+		/**
+		 * Disables animating the dialog on or off screen.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -70,7 +88,7 @@ const DialogBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * When `true`, a divider line will not separate the title from the dialog body.
+		 * Omits the dividing line between the header and body of the component.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -79,9 +97,10 @@ const DialogBase = kind({
 		noDivider: PropTypes.bool,
 
 		/**
-		 * A function to be run when a closing action is invoked by the user. These actions include
-		 * pressing `ESC` key or clicking on the close button. It is the responsibility of the
-		 * callback to set the `open` property to `false`.
+		 * Called when the user requests to close the dialog.
+		 *
+		 * These actions include pressing the cancel key or tapping on the close button. It is the
+		 * responsibility of the callback to set the `open` property to `false`.
 		 *
 		 * @type {Function}
 		 * @public
@@ -89,7 +108,7 @@ const DialogBase = kind({
 		onClose: PropTypes.func,
 
 		/**
-		 * A function to be run after transition for hiding is finished.
+		 * Called after the transition to hide the dialog has finished.
 		 *
 		 * @type {Function}
 		 * @public
@@ -97,7 +116,7 @@ const DialogBase = kind({
 		onHide: PropTypes.func,
 
 		/**
-		 * When `true`, the control is in the expanded state with the contents visible.
+		 * Opens the dialog.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -106,7 +125,14 @@ const DialogBase = kind({
 		open: PropTypes.bool,
 
 		/**
-		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.
+		 * The types of scrim shown behind the dialog.
+		 *
+		 * Allowed values include:
+		 * * `'transparent'` - The scrim is invisible but prevents pointer events for components
+		 *   below it.
+		 * * `'translucent'` - The scrim is visible and both obscures and prevents pointer events
+		 *   for components below it.
+		 * * `'none'` - No scrim is present and pointer events are allowed outside the dialog.
 		 *
 		 * @type {String}
 		 * @default 'translucent'
@@ -115,7 +141,7 @@ const DialogBase = kind({
 		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none']),
 
 		/**
-		 * When `true`, the close button is shown; when `false`, it is hidden.
+		 * Shows the close button within the component.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -124,7 +150,7 @@ const DialogBase = kind({
 		showCloseButton: PropTypes.bool,
 
 		/**
-		 * Title of the header
+		 * The primary text displayed within the header
 		 *
 		 * @type {String}
 		 * @public
@@ -132,7 +158,7 @@ const DialogBase = kind({
 		title: PropTypes.string,
 
 		/**
-		 * Text displayed below the title.
+		 * The secondary text displayed below the `title` within the header.
 		 *
 		 * @type {String}
 		 * @public
@@ -141,26 +167,29 @@ const DialogBase = kind({
 	},
 
 	defaultProps: {
+		casing: 'upper',
 		noAnimation: false,
 		noDivider: false,
 		open: false,
-		showCloseButton: false
+		showCloseButton: false,
+		scrimType: 'translucent'
 	},
 
 	styles: {
-		css,
-		className: 'dialog'
+		css: componentCss,
+		className: 'dialog',
+		publicClassNames: ['dialog']
 	},
 
 	computed: {
 		className: ({noDivider, styler}) => styler.append({showDivider: !noDivider})
 	},
 
-	render: ({buttons, casing, children, title, titleBelow, ...rest}) => {
+	render: ({buttons, casing, css, children, title, titleBelow, ...rest}) => {
 		delete rest.noDivider;
 
 		return (
-			<Popup {...rest}>
+			<Popup {...rest} css={css}>
 				<div className={css.titleWrapper}>
 					<div className={css.titleBlock}>
 						<MarqueeH1 casing={casing} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
@@ -183,11 +212,31 @@ const DialogBase = kind({
 });
 
 /**
- * {@link moonstone/Dialog.Dialog} is modal component with a title, a subtitle, a
- * message, and an area for additional controls.
+ * A modal dialog component, ready to use in Moonstone applications.
+ *
+ * `Dialog` may be used to interrupt a workflow to receive feedback from the user. The dialong
+ * consists of a title, a subtitle, a message, and an area for additional
+ * [buttons]{@link moonstone/Dialog.Dialog.buttons}.
+ *
+ * Usage:
+ * ```
+ * <Dialog
+ *   open={this.state.open}
+ *   showCloseButton
+ *   title="An Important Dialog"
+ *   titleBelow="Some important context to share about the purpose"
+ * >
+ *   <BodyText>You can include other Moonstone components here. </BodyText>
+ *   <buttons>
+ *     <Button>Button 1</Button>
+ *     <Button>Button 2</Button>
+ *   </buttons>
+ * </Dialog>
+ * ```
  *
  * @class Dialog
  * @memberof moonstone/Dialog
+ * @extends moonstone/Dialog.DialogBase
  * @mixes ui/Slottable.Slottable
  * @ui
  * @public
@@ -198,4 +247,7 @@ const Dialog = Slottable(
 );
 
 export default Dialog;
-export {Dialog, DialogBase};
+export {
+	Dialog,
+	DialogBase
+};

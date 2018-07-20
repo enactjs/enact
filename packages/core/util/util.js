@@ -11,12 +11,10 @@
  * @exports memoize
  * @exports mergeClassNameMaps
  * @exports perfNow
- * @exports withContextFromProps
  */
 import always from 'ramda/src/always';
 import isType from 'ramda/src/is';
 import unless from 'ramda/src/unless';
-import withContext from 'recompose/withContext';
 
 import Job from './Job';
 
@@ -111,38 +109,6 @@ const extractAriaProps = function (props) {
 
 	return aria;
 };
-
-/**
- * Forwards members from context to component as props.
- *
- * Accepts a `contextTypes` object and a component, then matches those context types with incoming
- * props on the component, and sends them to context on that component for children to to access.
- *
- * Example:
- * ```
- * const contextTypes = {
- * 	alignment: PropTypes.string
- * };
- *
- * const Component = withContextFromProps(contextTypes, BaseBase);
- *
- * // `alignment` will now be available as a context key in `Component`'s children.
- * ```
- *
- * @function
- * @param  {Object}     contextTypes  Keys to be used as prop->context and their `PropTypes` as keys
- * @param  {Component}  Wrapped       The component that will receive the context
- *
- * @returns {Component}               The component, now with context on it
- * @memberof core/util
- * @private
- */
-const withContextFromProps = (contextTypes, Wrapped) => withContext(contextTypes, (props) => {
-	return Object.keys(contextTypes).reduce((obj, key) => {
-		obj[key] = props[key];
-		return obj;
-	}, {});
-})(Wrapped);
 
 /**
  * Gets the current timestamp of either `window.performance.now` or `Date.now`
@@ -242,6 +208,5 @@ export {
 	Job,
 	memoize,
 	mergeClassNameMaps,
-	perfNow,
-	withContextFromProps
+	perfNow
 };

@@ -49,6 +49,19 @@ const PickerBase = kind({
 		'aria-valuetext': PropTypes.string,
 
 		/**
+		 * The voice control labels for the `children`.
+		 *
+		 * By default, `data-webos-voice-labels-ext` is generated from `children`. However, if
+		 * `children` is not an array of numbers or strings, `data-webos-voice-labels-ext` should be
+		 * set to a JSON-encoded array of labels.
+		 *
+		 * @type {Number[]|String[]}
+		 * @memberof moonstone/Picker.PickerBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-labels-ext': PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.arrayOf(PropTypes.string)]),
+
+		/**
 		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
@@ -60,7 +73,7 @@ const PickerBase = kind({
 
 		/**
 		 * When `true`, the Picker is shown as disabled and does not generate `onChange`
-		 * [events]{@glossary event}.
+		 * [events]{@link /docs/developer-guide/glossary/#event}.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -187,14 +200,25 @@ const PickerBase = kind({
 				validateRange(value, 0, max, 'Picker', '"value"', 'min', 'max index');
 			}
 			return clamp(0, max, value);
+		},
+		voiceLabel: ({children, 'data-webos-voice-labels-ext': voiceLabelsExt}) => {
+			let voiceLabel;
+			if (voiceLabelsExt) {
+				voiceLabel = voiceLabelsExt;
+			} else {
+				voiceLabel = React.Children.map(children, (child) => (
+					(typeof child === 'number' || typeof child === 'string') ? child : '')
+				);
+			}
+			return JSON.stringify(voiceLabel);
 		}
 	},
 
-	render: ({children, max, value, ...rest}) => {
+	render: ({children, max, value, voiceLabel, ...rest}) => {
 		delete rest.marqueeDisabled;
 
 		return (
-			<PickerCore {...rest} min={0} max={max} index={value} step={1} value={value}>
+			<PickerCore {...rest} data-webos-voice-labels-ext={voiceLabel} min={0} max={max} index={value} step={1} value={value}>
 				{children}
 			</PickerCore>
 		);

@@ -60,17 +60,19 @@ Below is an example block for a component:
  *
  * @class Button
  * @memberof moonstone/Button
+ * @extends moonstone/Button.ButtonBase
  * @mixes moonstone/Button.ButtonDecorator
  * @ui
  * @public
  */
 ```
 
-* `@link` tags can be used to link to related materials
-* `@class` should include the name of the object being documented
+* `@link` tags can be used to link to related materials.
+* `@class` should include the name of the object being documented.
 * `@memberof` is required and should reflect the name of the module the object belongs to.
-* `@mixes` is used to call out HOCs that may be applied
-* `@ui` is a custom tag that should be applied to any component that creates visible controls
+* `@extends` is used when a component's root element is another public custom component.
+* `@mixes` is used to call out HOCs that may be applied.
+* `@ui` is a custom tag that should be applied to any component that creates visible controls.
 * `@public` should be used for any component or HOC that is exported. Unexported objects should be marked `@private` to prevent them from appearing in the documentation.
 * Note: The Usage example is not runnable and will not render a preview.
 
@@ -203,7 +205,9 @@ Tips:
 * Use the active voice when writing docs.
 * Descriptions should focus on what the componet or property provides.
 * Only document the `true` state for boolean propertues unless the `false` state's operation is unclear.
-* Properties should use a future tense (e.g. 'applies') and callbacks should use past tense (e.g. 'called')
+* Property descriptions use the present tense and complete either 'This property ...' or 'This property configures ...'
+* Callbacks use the future perfect tense and complete the sentence 'This callback will be ...'
+* Imperative methods (rarely used) use the present tense and completes the sentence 'Call this method to ...'
 
 Good:
 

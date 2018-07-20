@@ -4,7 +4,10 @@ import React from 'react';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, text, select} from '@storybook/addon-knobs';
+
+import {boolean, select, text} from '../../src/enact-knobs';
+
+Popup.displayName = 'Popup';
 
 const Container = SpotlightContainerDecorator('div');
 
@@ -21,14 +24,14 @@ storiesOf('Popup', module)
 				</p>
 				<Button>Button</Button>
 				<Popup
-					open={boolean('open', true)}
-					noAnimation={boolean('noAnimation', false)}
-					noAutoDismiss={boolean('noAutoDismiss', false)}
+					open={boolean('open', Popup, true)}
+					noAnimation={boolean('noAnimation', Popup, false)}
+					noAutoDismiss={boolean('noAutoDismiss', Popup, false)}
 					onClose={action('onClose')}
-					showCloseButton={boolean('showCloseButton', true)}
-					spotlightRestrict={select('spotlightRestrict', ['self-first', 'self-only'], 'self-only')}
+					showCloseButton={boolean('showCloseButton', Popup, true)}
+					spotlightRestrict={select('spotlightRestrict', ['self-first', 'self-only'], Popup, 'self-only')}
 				>
-					<div>{text('children', 'Hello Popup')}</div>
+					<div>{text('children', Popup, 'Hello Popup')}</div>
 					<br />
 					<Container>
 						<Button>Button</Button>

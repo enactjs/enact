@@ -39,7 +39,7 @@ const select = (name, items, Config, selecetdValue) => {
 	if (items instanceof Array) {
 		// An array of items
 		items.forEach((item) => {
-			labels[defaultAppender(item)] = item;
+			labels[defaultAppender(item || '')] = item;
 		});
 	} else {
 		// Items is an object

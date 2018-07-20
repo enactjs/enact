@@ -102,7 +102,7 @@ const RangePickerBase = kind({
 
 		/**
 		 * When `true`, the RangePicker is shown as disabled and does not generate `onChange`
-		 * [events]{@glossary event}.
+		 * [events]{@link /docs/developer-guide/glossary/#event}.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -225,13 +225,16 @@ const RangePickerBase = kind({
 				validateRange(value, min, max, 'RangePicker');
 			}
 			return clamp(min, max, value);
+		},
+		voiceLabel: ({min, max}) => {
+			return JSON.stringify([min, max]);
 		}
 	},
 
-	render: ({label, value, ...rest}) => {
+	render: ({label, value, voiceLabel, ...rest}) => {
 		delete rest.padded;
 		return (
-			<Picker {...rest} index={0} value={value} reverse={false}>
+			<Picker {...rest} data-webos-voice-labels-ext={voiceLabel} index={0} value={value} reverse={false}>
 				<PickerItem key={value} marqueeDisabled style={{direction: 'ltr'}}>{label}</PickerItem>
 			</Picker>
 		);

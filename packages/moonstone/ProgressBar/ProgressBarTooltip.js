@@ -1,7 +1,7 @@
 import kind from '@enact/core/kind';
 import {memoize} from '@enact/core/util';
 import ilib from '@enact/i18n';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import NumFmt from '@enact/i18n/ilib/lib/NumFmt';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -74,6 +74,14 @@ const ProgressBarTooltipBase = kind({
 		proportion: PropTypes.number,
 
 		/**
+		 * Sets the text direction to be right-to-left
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * Specify where the tooltip should appear in relation to the ProgressBar/Slider bar.
 		 *
 		 * Allowed values are:
@@ -114,8 +122,6 @@ const ProgressBarTooltipBase = kind({
 		className: 'tooltip'
 	},
 
-	contextTypes,
-
 	computed: {
 		children: ({children, proportion, percent}) => {
 			if (percent) {
@@ -142,7 +148,7 @@ const ProgressBarTooltipBase = kind({
 			if (orientation === 'vertical') return 'middle';
 			return proportion > 0.5 ? 'left' : 'right';
 		},
-		direction: ({orientation, side}, context) => {
+		direction: ({orientation, rtl, side}) => {
 			side = getSide(orientation, side);
 
 			let dir = 'right';
@@ -151,9 +157,9 @@ const ProgressBarTooltipBase = kind({
 					// forced to the left
 					side === 'left' ||
 					// LTR before
-					(!context.rtl && side === 'before') ||
+					(!rtl && side === 'before') ||
 					// RTL after
-					(context.rtl && side === 'after')
+					(rtl && side === 'after')
 				) {
 					dir = 'left';
 				}
@@ -174,6 +180,7 @@ const ProgressBarTooltipBase = kind({
 		delete rest.orientation;
 		delete rest.percent;
 		delete rest.proportion;
+		delete rest.rtl;
 		delete rest.side;
 
 		return (
@@ -184,10 +191,14 @@ const ProgressBarTooltipBase = kind({
 	}
 });
 
-ProgressBarTooltipBase.defaultSlot = 'tooltip';
+const ProgressBarTooltip = I18nContextDecorator(
+	{rtlProp: 'rtl'},
+	ProgressBarTooltipBase
+);
+ProgressBarTooltip.defaultSlot = 'tooltip';
 
-export default ProgressBarTooltipBase;
+export default ProgressBarTooltip;
 export {
-	ProgressBarTooltipBase,
-	ProgressBarTooltipBase as ProgressBarTooltip
+	ProgressBarTooltip,
+	ProgressBarTooltipBase
 };

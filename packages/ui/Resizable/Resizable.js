@@ -44,7 +44,7 @@ const defaultConfig = {
  *
  * @type {Object}
  * @memberof ui/Resizable
- * @public
+ * @private
  */
 const contextTypes = {
 	invalidateBounds: PropTypes.func
@@ -111,6 +111,6 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 
 export default Resizable;
 export {
-	contextTypes,
+	contextTypes as privateContextTypes,
 	Resizable
 };

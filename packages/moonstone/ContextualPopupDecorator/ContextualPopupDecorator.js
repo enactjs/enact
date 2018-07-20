@@ -1,24 +1,27 @@
 /**
- * Exports the {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} Higher-order
- * Component (HOC) and the {@link moonstone/ContextualPopupDecorator.ContextualPopup} component.
- * The default export is {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator}.
+ * Higher-order component to add a Moonstone styled popup to a component.
  *
  * @module moonstone/ContextualPopupDecorator
+ * @exports	ContextualPopup
+ * @exports	ContextualPopupDecorator
  */
 
-import {extractAriaProps} from '@enact/core/util';
-import FloatingLayer from '@enact/ui/FloatingLayer';
-import hoc from '@enact/core/hoc';
+import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {on, off} from '@enact/core/dispatcher';
 import {handle, forProp, forKey, forward, stop} from '@enact/core/handle';
-import React from 'react';
-import PropTypes from 'prop-types';
-import ri from '@enact/ui/resolution';
+import hoc from '@enact/core/hoc';
+import {extractAriaProps} from '@enact/core/util';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import {Subscription} from '@enact/core/internal/PubSub';
+import FloatingLayer from '@enact/ui/FloatingLayer';
+import ri from '@enact/ui/resolution';
+import compose from 'ramda/src/compose';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import {ContextualPopup} from './ContextualPopup';
+
 import css from './ContextualPopupDecorator.less';
 
 /**
@@ -30,9 +33,9 @@ import css from './ContextualPopupDecorator.less';
  */
 const defaultConfig = {
 	/**
-	 * If the wrapped component does not support skinning, set `noSkin` to `true` to disable passing
-	 * the `skin` prop to it.
+	 * Disables passing the `skin` prop to the wrapped component.
 	 *
+	 * @see ui/Skinnable.Skinnable.skin
 	 * @type {Boolean}
 	 * @default false
 	 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.defaultConfig
@@ -41,7 +44,8 @@ const defaultConfig = {
 	noSkin: false,
 
 	/**
-	 * Configures the prop name to map value of `open` state of ContextualPopupDecorator
+	 * The prop in which to pass the value of `open` state of ContextualPopupDecorator to the
+	 * wrapped component.
 	 *
 	 * @type {String}
 	 * @default 'selected'
@@ -51,75 +55,50 @@ const defaultConfig = {
 	openProp: 'selected'
 };
 
-const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'default-element', preserveId: true}, ContextualPopup);
+const ContextualPopupContainer = SpotlightContainerDecorator(
+	{enterTo: 'default-element', preserveId: true},
+	ContextualPopup
+);
 
-/**
- * {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} is a Higher-order Component
- * which positions {@link moonstone/ContextualPopupDecorator.ContextualPopup} in
- * relation to the Wrapped component.
- *
- * Example:
- * ```
- * import PopupComponent from './PopupComponent';
- *
- * const ContextualPopupComponent = ContextualPopupDecorator(Button);
- *
- * const MyComponent = kind({
- * 	name: 'MyComponent',
- *
- * 	render: (props) => {
- * 		const popupProps = {
- * 			functionProp: () => {},
- * 			stringProp: '',
- * 			booleanProp: false
- * 		};
- *
- * 		return (
- * 			<div {...props}>
- * 				<ContextualPopupComponent
- * 					popupComponent={PopupComponent}
- * 					popupProps={popupProps}
- * 				>
- * 					Open Popup
- * 				</ContextualPopupComponent>
- * 			</div>
- * 		);
- * 	}
- * });
- * ```
- *
- * @class ContextualPopupDecorator
- * @memberof moonstone/ContextualPopupDecorator
- * @hoc
- * @public
- */
-const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
+const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {noSkin, openProp} = config;
 
-	const Decorator = class extends React.Component {
+	return class extends React.Component {
 		static displayName = 'ContextualPopupDecorator'
 
 		static propTypes = /** @lends moonstone/ContextualPopupDecorator.ContextualPopupDecorator.prototype */ {
 			/**
-			 * The component to use to render popup.
+			 * The component rendered within the
+			 * [ContextualPopup]{@link moonstone/ContextualPopupDecorator.ContextualPopup}.
 			 *
-			 * @type {Function}
+			 * @type {Component}
 			 * @required
 			 * @public
 			 */
 			popupComponent: PropTypes.func.isRequired,
 
 			/**
-			 * Direction of ContextualPopup
+			 * Limits the range of voice control to the popup.
+			 *
+			 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.prototype
+			 * @type {Boolean}
+			 * @default true
+			 * @public
+			 */
+			'data-webos-voice-exclusive': PropTypes.bool,
+
+			/**
+			 * Direction of popup with respect to the wrapped component.
 			 *
 			 * @type {String}
-			 * @public
 			 * @default 'down'
+			 * @public
 			 */
 			direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
 
 			/**
-			 * When `true`, the popup will not close when the user presses `ESC` key or click outside.
+			 * Disables closing the popup when the user presses the cancel key or taps outside the
+			 * popup.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -128,7 +107,9 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			noAutoDismiss: PropTypes.bool,
 
 			/**
-			 * A function to be run when either the close button is clicked or spotlight focus
+			 * Called when the user has attempted to close the popup.
+			 *
+			 * This may occur either when the close button is clicked or when spotlight focus
 			 * moves outside the boundary of the popup. Setting `spotlightRestrict` to `'self-only'`
 			 * will prevent Spotlight focus from leaving the popup.
 			 *
@@ -138,7 +119,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			onClose: PropTypes.func,
 
 			/**
-			 * A function to be run when the popup is opened.
+			 * Called when the popup is opened.
 			 *
 			 * @type {Function}
 			 * @public
@@ -146,16 +127,19 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			onOpen: PropTypes.func,
 
 			/**
-			 * When `true`, the contextual popup will be visible.
+			 * Displays the contextual popup.
 			 *
 			 * @type {Boolean}
-			 * @public
 			 * @default false
+			 * @public
 			 */
 			open: PropTypes.bool,
 
 			/**
-			 * Classname to pass to the popup. You may set width and height of the popup with it.
+			 * CSS class name to pass to the
+			 * [ContextualPopup]{@link moonstone/ContextualPopupDecorator.ContextualPopup}.
+			 *
+			 * This is commonly used to set width and height of the popup.
 			 *
 			 * @type {String}
 			 * @public
@@ -171,7 +155,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			popupProps: PropTypes.object,
 
 			/**
-			 * A custom container ID to use with Spotlight.
+			 * The container ID to use with Spotlight.
 			 *
 			 * The spotlight container for the popup isn't created until it is open. To configure
 			 * the container using `Spotlight.set()`, handle the `onOpen` event which is fired after
@@ -183,7 +167,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			popupSpotlightId: PropTypes.string,
 
 			/**
-			 * When `true`, current locale is RTL
+			 * Indicates the content's text direction is right-to-left.
 			 *
 			 * @type {Boolean}
 			 * @private
@@ -191,28 +175,44 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			rtl: PropTypes.bool,
 
 			/**
-			 * When `true`, it shows close button.
+			 * Registers the ContextualPopupDecorator component with an [ApiDecorator]
+			 * {@link core/internal/ApiDecorator.ApiDecorator}.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			setApiProvider: PropTypes.func,
+
+			/**
+			 * Shows the close button.
 			 *
 			 * @type {Boolean}
-			 * @public
 			 * @default false
+			 * @public
 			 */
 			showCloseButton : PropTypes.bool,
 
 			/**
-			 * Overrides the current skin for this component. When `noSkin` is set on the config
-			 * object, `skin` will only be applied to the
-			 * `moonstone/ContextualPopupDecorator.ContextualPopup` and not to the popup's activator
-			 * component.
+			 * The current skin for this component.
 			 *
+			 * When `noSkin` is set on the config object, `skin` will only be applied to the
+			 * [ContextualPopup]{@link moonstone/ContextualPopupDecorator.ContextualPopup} and not
+			 * to the popup's activator component.
+			 *
+			 * @see ui/Skinnable.Skinnable.skin
 			 * @type {String}
 			 * @public
 			 */
 			skin: PropTypes.string,
 
 			/**
-			 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
-			 * can be either `'none'`, `'self-first'`, or `'self-only'`.
+			 * Restricts or prioritizes spotlight navigation.
+			 *
+			 * Allowed values are:
+			 * * `'none'` - Spotlight can move freely within and beyond the popup
+			 * * `'self-first'` - Spotlight should prefer components within the popup over
+			 *   components beyond the popup, or
+			 * * `'self-only'` - Spotlight can only be set within the popup
 			 *
 			 * @type {String}
 			 * @default 'self-first'
@@ -222,7 +222,9 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
+			'data-webos-voice-exclusive': true,
 			direction: 'down',
+			noAutoDismiss: false,
 			open: false,
 			showCloseButton: false,
 			spotlightRestrict: 'self-first'
@@ -244,6 +246,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.ARROW_WIDTH = ri.scale(30);
 			this.ARROW_OFFSET = ri.scale(18);
 			this.MARGIN = ri.scale(12);
+
+			if (props.setApiProvider) {
+				props.setApiProvider(this);
+			}
 		}
 
 		componentDidMount () {
@@ -258,7 +264,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (this.props.direction !== nextProps.direction) {
 				this.adjustedDirection = nextProps.direction;
-				this.setContainerPosition();
+				this.positionContextualPopup();
 			}
 
 			if (!this.props.open && nextProps.open) {
@@ -438,7 +444,18 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return pos;
 		}
 
-		setContainerPosition () {
+		/**
+		 * Position the popup in relation to the activator.
+		 *
+		 * Position is based on the dimensions of the popup and its avitvator. If the popup does not
+		 * fit in the specified direction, it will automatically flip to the opposite direction.
+		 *
+		 * @method
+		 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.prototype
+		 * @public
+		 * @returns {undefined}
+		 */
+		positionContextualPopup () {
 			if (this.containerNode && this.clientNode) {
 				const containerNode = this.containerNode.getBoundingClientRect();
 				const {top, left, bottom, right, width, height} = this.clientNode.getBoundingClientRect();
@@ -460,7 +477,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		getContainerNode = (node) => {
 			this.containerNode = node;
 			if (node) {
-				this.setContainerPosition();
+				this.positionContextualPopup();
 			}
 		}
 
@@ -549,7 +566,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, onOpen, popupProps, skin, spotlightRestrict, ...rest} = this.props;
+			const {'data-webos-voice-exclusive': voiceExclusive, showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, onOpen, popupProps, skin, spotlightRestrict, ...rest} = this.props;
 			const scrimType = spotlightRestrict === 'self-only' ? 'transparent' : 'none';
 			const popupPropsRef = Object.assign({}, popupProps);
 			const ariaProps = extractAriaProps(popupPropsRef);
@@ -560,6 +577,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			delete rest.popupSpotlightId;
 			delete rest.rtl;
+			delete rest.setApiProvider;
 
 			if (openProp) rest[openProp] = open;
 
@@ -576,6 +594,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							arrowPosition={this.state.arrowPosition}
 							containerPosition={this.state.containerPosition}
 							containerRef={this.getContainerNode}
+							data-webos-voice-exclusive={voiceExclusive}
 							skin={skin}
 							spotlightId={this.state.containerId}
 							spotlightRestrict={spotlightRestrict}
@@ -590,15 +609,40 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			);
 		}
 	};
-
-	return Subscription(
-		{
-			channels: ['i18n'],
-			mapMessageToProps: (key, {rtl}) => ({rtl})
-		},
-		Decorator
-	);
 });
 
+/**
+ * Adds support for positioning a
+ * [ContextualPopup]{@link moonstone/ContextualPopupDecorator.ContextualPopup} relative to the
+ * wrapped component.
+ *
+ * `ContextualPopupDecorator` may be used to show additional settings or actions rendered within a
+ * small floating popup.
+ *
+ * Usage:
+ * ```
+ * const ButtonWithPopup = ContextualPopupDecorator(Button);
+ * <ButtonWithPopup
+ *   direction="up"
+ *   open={this.state.open}
+ *   popupComponent={CustomPopupComponent}
+ * >
+ *   Open Popup
+ * </ButtonWithPopup>
+ * ```
+ *
+ * @hoc
+ * @memberof moonstone/ContextualPopupDecorator
+ * @public
+ */
+const ContextualPopupDecorator = compose(
+	ApiDecorator({api: ['positionContextualPopup']}),
+	I18nContextDecorator({rtlProp: 'rtl'}),
+	Decorator
+);
+
 export default ContextualPopupDecorator;
-export {ContextualPopupDecorator, ContextualPopup};
+export {
+	ContextualPopupDecorator,
+	ContextualPopup
+};

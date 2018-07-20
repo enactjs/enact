@@ -22,7 +22,7 @@ import $L from '../internal/$L';
 import IconButton from '../IconButton';
 import Skinnable from '../Skinnable';
 
-import css from './Popup.less';
+import componentCss from './Popup.less';
 
 const isUp = is('up');
 const TransitionContainer = SpotlightContainerDecorator(
@@ -67,6 +67,20 @@ const PopupBase = kind({
 		 * @public
 		 */
 		closeButtonAriaLabel: PropTypes.string,
+
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `popup` - The root class name
+		 * * `reserveClose` - Applied when the close button is shown and space must be allocated for it
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		css: PropTypes.object,
 
 		/**
 		 * When `true`, the popup will not animate on/off screen.
@@ -150,13 +164,14 @@ const PopupBase = kind({
 	},
 
 	styles: {
-		css,
-		className: 'popup'
+		css: componentCss,
+		className: 'popup',
+		publicClassNames: ['popup', 'reserveClose']
 	},
 
 	computed: {
 		className: ({showCloseButton, styler}) => styler.append({reserveClose: showCloseButton}),
-		closeButton: ({closeButtonAriaLabel, onCloseButtonClick, showCloseButton}) => {
+		closeButton: ({closeButtonAriaLabel, css, onCloseButtonClick, showCloseButton}) => {
 			if (showCloseButton) {
 				const ariaLabel = (closeButtonAriaLabel == null) ? $L('Close') : closeButtonAriaLabel;
 
@@ -175,7 +190,7 @@ const PopupBase = kind({
 		}
 	},
 
-	render: ({closeButton, children, noAnimation, open, onHide, onShow, spotlightId, spotlightRestrict, ...rest}) => {
+	render: ({children, closeButton, css, noAnimation, onHide, onShow, open, spotlightId, spotlightRestrict, ...rest}) => {
 		delete rest.closeButtonAriaLabel;
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
@@ -334,8 +349,11 @@ class Popup extends React.Component {
 		showCloseButton: PropTypes.bool,
 
 		/**
-		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
-		 * can be either `'self-first'`, or `'self-only'`.
+		 * Restricts or prioritizes navigation when focus attempts to leave the popup.
+		 *
+		 * It can be either `'self-first'`, or `'self-only'`. Note: If `onClose` is not set, then
+		 * this has no effect on 5-way navigation. If the popup has no spottable children, 5-way
+		 * navigation will cause the popup to fire `onClose`.
 		 *
 		 * @type {String}
 		 * @default 'self-only'
@@ -366,7 +384,12 @@ class Popup extends React.Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		if (!this.props.open && nextProps.open) {
+		// while transitioning, we set `popupOpen` with the given `open` prop value
+		if (!this.props.noAnimation && this.state.floatLayerOpen) {
+			this.setState({
+				popupOpen: nextProps.open
+			});
+		} else if (!this.props.open && nextProps.open) {
 			this.setState({
 				popupOpen: nextProps.noAnimation,
 				floatLayerOpen: true,
