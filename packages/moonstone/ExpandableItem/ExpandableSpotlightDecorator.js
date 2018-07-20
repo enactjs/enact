@@ -115,10 +115,19 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		highlightLabeledItem = () => {
 			const current = Spotlight.getCurrent();
+			const label = this.containerNode.querySelector('[data-expandable-label]');
+
+			if (current === label) return;
+
 			if (this.containerNode.contains(current)) {
-				Spotlight.focus(this.containerNode.querySelector('[data-expandable-label]'));
+				if (Spotlight.getPointerMode()) {
+					// If we don't clear the focus, switching back to 5-way before focusing anything
+					// will result in what appears to be lost focus
+					current.blur();
+				}
+
+				Spotlight.focus(label);
 			} else {
-				const label = this.containerNode.querySelector('[data-expandable-label]');
 				const containerIds = getContainersForNode(label);
 
 				// when focus is not within the expandable (due to a cancel event or the close
@@ -140,9 +149,8 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		highlight = (callback) => {
 			if (Spotlight.isPaused()) return;
 
-			const {open} = this.props;
 			const pointerMode = Spotlight.getPointerMode();
-			const changePointerMode = pointerMode && (noPointerMode || !open);
+			const changePointerMode = pointerMode && noPointerMode;
 
 			if (changePointerMode) {
 				// we temporarily set pointer mode to `false` to ensure that focus is forced away
@@ -168,12 +176,7 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleHide = () => {
 			this.resume();
-			const pointerMode = Spotlight.getPointerMode();
-
-			if (!pointerMode || noPointerMode) {
-				// In `pointerMode`, only highlight `LabeledItem` when `noPointerMode` is `true`
-				this.highlight(this.highlightLabeledItem);
-			}
+			this.highlight(this.highlightLabeledItem);
 		}
 
 		handle = handle.bind(this)

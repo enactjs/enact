@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll properly when holding down paging control buttons
 - `moonstone/ExpandableItem` spotlight behavior when leaving the component via 5-way
+- `moonstone/ExpandableItem` and other expandable components to spotlight correctly when switching from pointer mode to 5-way with `closeOnSelect`
 
 ## [2.0.0-rc.2] - 2018-07-16
 
