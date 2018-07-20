@@ -115,17 +115,19 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		highlightLabeledItem = () => {
 			const current = Spotlight.getCurrent();
-			if (this.containerNode.contains(current)) {
-				const pointerMode = Spotlight.getPointerMode();
+			const label = this.containerNode.querySelector('[data-expandable-label]');
 
-				if (pointerMode) {
+			if (current === label) return;
+
+			if (this.containerNode.contains(current)) {
+				if (Spotlight.getPointerMode()) {
 					// If we don't clear the focus, switching back to 5-way before focusing anything
 					// will result in what appears to be lost focus
 					current.blur();
 				}
-				Spotlight.focus(this.containerNode.querySelector('[data-expandable-label]'));
+
+				Spotlight.focus(label);
 			} else {
-				const label = this.containerNode.querySelector('[data-expandable-label]');
 				const containerIds = getContainersForNode(label);
 
 				// when focus is not within the expandable (due to a cancel event or the close
