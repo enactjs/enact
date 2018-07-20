@@ -145,8 +145,9 @@ const DialogBase = kind({
 		title: PropTypes.string,
 
 		/**
-		 * The secondary text displayed below the `title` within the header. It won't show when `title`
-		 * is not set.
+		 * The secondary text displayed below the `title` within the header.
+		 *
+		 * Will not display if `title` is not set.
 		 *
 		 * @type {String}
 		 * @public
