@@ -31,19 +31,34 @@ const GroupBase = kind({
 		 * Component type to repeat. This can be a React component or a string describing a DOM
 		 * node (e.g. `'div'`)
 		 *
-		 * @type {Element}
+		 * @type {Component}
+		 * @required
 		 * @public
 		 */
 		childComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
 
 		/**
-		 * An array of data to be mapped onto the `childComponent`.  For example, an array of
-		 * strings.
+		 * An array of data to be mapped onto the `childComponent`. This supports two data types.
+		 * If an array of strings is provided, the strings will be used in the generated
+		 * `childComponent` as the content (i.e. passed as `children`). If an array of objects is
+		 * provided, each object will be spread onto the generated `childComponent` with no
+		 * interpretation. You'll be responsible for setting properties like `disabled`,
+		 * `className`, and setting the content using `children`.
 		 *
-		 * @type {Array}
+		 * NOTE: When providing an array of objects be sure a unique `key` is assigned to each
+		 * item. [Read about keys](https://reactjs.org/docs/lists-and-keys.html#keys) for more
+		 * information.
+		 *
+		 * @type {String[]|Object[]}
+		 * @required
 		 * @public
 		 */
-		children: PropTypes.array.isRequired,
+		children: PropTypes.oneOfType([
+			PropTypes.arrayOf(PropTypes.string),
+			PropTypes.arrayOf(PropTypes.shape({
+				key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
+			}))
+		]).isRequired,
 
 		/**
 		 * The property on each `childComponent` that receives the data in `children`
@@ -106,7 +121,7 @@ const GroupBase = kind({
 		/**
 		 * The index(es) of the currently activated item.
 		 *
-		 * @type {Number | Array}
+		 * @type {Number|Array}
 		 * @public
 		 */
 		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.array]),

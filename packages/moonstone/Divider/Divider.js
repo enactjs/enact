@@ -1,77 +1,73 @@
 /**
- * Exports the {@link moonstone/Divider.Divider} component.
+ * Moonstone styled labeled divider components and behaviors
+ *
+ * @example
+ * <Divider
+ *   casing="preserve"
+ *   spacing="medium"
+ * >
+ *   A group of related components
+ * </Divider>
  *
  * @module moonstone/Divider
+ * @exports Divider
+ * @exports DividerBase
+ * @exports DividerDecorator
  */
 
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
-import React from 'react';
-import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
+import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
+import defaultProps from 'recompose/defaultProps';
+import setPropTypes from 'recompose/setPropTypes';
+import React from 'react';
 
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import css from './Divider.less';
 
-const MarqueeH3 = Uppercase(MarqueeDecorator('h3'));
-
 /**
- * {@link moonstone/Divider.Divider} is a simply styled component that may be used as a separator
- * between groups of components.
+ * A labeled divider component.
  *
- * @class Divider
+ * This component is most often not used directly but may be composed within another component as it
+ * is within [Divider]{@link moonstone/Divider.Divider}.
+ *
+ * @class DividerBase
  * @memberof moonstone/Divider
- * @mixes moonstone/MarqueeDecorator.MarqueeDecorator
  * @ui
  * @public
  */
 const DividerBase = kind({
 	name: 'Divider',
 
-	propTypes: /** @lends moonstone/Divider.Divider.prototype */ {
+	propTypes: /** @lends moonstone/Divider.DividerBase.prototype */ {
 		/**
-		 * Configures how the `children` string will be capitalized. By default, each word is capitalized.
+		 * The text for the label of the divider.
 		 *
-		 * @see i18n/Uppercase#casing
-		 * @type {String}
-		 * @default 'word'
+		 * A divider with no children (text content) will render simply as a horizontal line, with
+		 * even spacing above and below.
+		 *
+		 * @type {Node}
 		 * @public
 		 */
-		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
-
-		/**
-		 * The content of the divider. A divider with no children (text content) will render simply
-		 * as a horizontal line, with even spacing above and below.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		children: PropTypes.string,
-
-		/**
-		 * The children string will have each word capitalized, unless this is set to `true`.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @deprecated use `casing`
-		 * @public
-		 */
-		preserveCase: PropTypes.bool,
+		children: PropTypes.node,
 
 		/**
 		 * The size of the spacing around the divider.
 		 *
-		 * * `'normal'` (default) spacing is slightly larger than the standard spotlight spacing.
-		 * * `'small'` is the same size as spotlight spacing.
-		 * * `'medium'` is 2x spotlight.
-		 * * `'large'` is 3x spotlight.
-		 * * `'none'` has no spacing at all. Neighboring elements will directly touch the divider.
+		 * Allowed values include:
+		 * * `'normal'` (default) - slightly larger than the standard spotlight spacing.
+		 * * `'small'` - same size as spotlight spacing.
+		 * * `'medium'` - 2x spotlight.
+		 * * `'large'` - 3x spotlight.
+		 * * `'none'` - no spacing at all. Neighboring elements will directly touch the divider.
 		 *
 		 * _Note:_ Spacing is separate from margin with regard to `margin-top`. It ensures a
 		 * consistent distance from the bottom horizontal line. It's safe to use `margin-top` to add
-		 * additional spacing above your {@link moonstone/Divider.Divider}.
+		 * additional spacing above the divider.
 		 *
 		 * @type {String}
 		 * @default 'normal'
@@ -81,8 +77,6 @@ const DividerBase = kind({
 	},
 
 	defaultProps: {
-		casing: 'word',
-		preserveCase: false,
 		spacing: 'normal'
 	},
 
@@ -95,21 +89,94 @@ const DividerBase = kind({
 		className: ({spacing, styler}) => styler.append(spacing)
 	},
 
-	render: ({children, ...rest}) => {
-		delete rest.spacing;
+	render: (props) => {
+		delete props.spacing;
 
 		return (
-			// TODO: change to `marqueeOn="render"`
-			<MarqueeH3 marqueeOn="hover" {...rest}>{children}</MarqueeH3>
+			<h3 {...props} />
 		);
 	}
 });
 
-const Divider = Pure(
-	Skinnable(
-		DividerBase
-	)
+/**
+ * Applies Moonstone specific behaviors to [DividerBase]{@link moonstone/Divider.DividerBase}.
+ *
+ * @hoc
+ * @memberof moonstone/Divider
+ * @mixes i18n/Uppercase.Uppercase
+ * @mixes moonstone/MarqueeDecorator.MarqueeDecorator
+ * @mixes ui/Skinnable.Skinnable
+ * @public
+ */
+const DividerDecorator = compose(
+	setPropTypes({
+		marqueeOn: PropTypes.oneOf(['hover', 'render'])
+	}),
+	defaultProps({
+		casing: 'word',
+		marqueeOn: 'render'
+	}),
+	Pure,
+	Uppercase,
+	MarqueeDecorator,
+	Skinnable
 );
 
+/**
+ * A labeled divider component, ready to use in Moonstone applications.
+ *
+ * `Divider` may be used as a header to group related components.
+ *
+ * Usage:
+ * ```
+ * <Divider
+ *   casing="preserve"
+ *   spacing="medium"
+ * >
+ *   Related Settings
+ * </Divider>
+ * <CheckboxItem>A Setting</CheckboxItem>
+ * <CheckboxItem>A Second Setting</CheckboxItem>
+ * ```
+ *
+ * @class Divider
+ * @memberof moonstone/Divider
+ * @extends moonstone/Divider.DividerBase
+ * @mixes moonstone/Divider.DividerDecorator
+ * @ui
+ * @public
+ */
+const Divider = DividerDecorator(DividerBase);
+
+/**
+ * The casing mode applied to the `children` text.
+ *
+ * @name casing
+ * @type {String}
+ * @default 'word'
+ * @memberof moonstone/Divider.Divider.prototype
+ * @see i18n/Uppercase#casing
+ * @public
+ */
+
+/**
+ * Marquee animation trigger.
+ *
+ * Allowed values include:
+ * * `'hover'` - Marquee begins when the pointer enters the component
+ * * `'render'` - Marquee begins when the component is rendered
+ *
+ * @name marqueeOn
+ * @type {String}
+ * @default 'render'
+ * @memberof moonstone/Divider.Divider.prototype
+ * @see moonstone/Marquee.Marquee
+ * @public
+ */
+
 export default Divider;
-export {Divider, DividerBase};
+export {
+	Divider,
+	DividerBase,
+	DividerDecorator
+};

@@ -2,6 +2,94 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [2.0.0-rc.2] - 2018-07-16
+
+No significant changes.
+
+## [2.0.0-rc.1] - 2018-07-09
+
+### Fixed
+
+- `i18n/Uppercase` to apply the designated `casing` prop format to each child instead of only the first child
+
+### Removed
+
+- `i18n/I18nDecorator.contextTypes`, replaced by `i18n/I18nDecorator.I18nContextDecorator`
+
+### Added
+
+- `i18n/I18nDecorator.I18nContextDecorator` HOC to support notification of locale changes
+
+## [2.0.0-beta.9] - 2018-07-02
+
+No significant changes.
+
+## [2.0.0-beta.8] - 2018-06-25
+
+No significant changes.
+
+## [2.0.0-beta.7] - 2018-06-11
+
+### Removed
+
+- `i18n/Uppercase` property `preserveCase`, replaced by `casing`
+
+## [2.0.0-beta.6] - 2018-06-04
+
+No significant changes.
+
+## [2.0.0-beta.5] - 2018-05-29
+
+No significant changes.
+
+## [2.0.0-beta.4] - 2018-05-21
+
+No significant changes.
+
+## [2.0.0-beta.3] - 2018-05-14
+
+No significant changes.
+
+## [2.0.0-beta.2] - 2018-05-07
+
+No significant changes.
+
+## [2.0.0-beta.1] - 2018-04-29
+
+No significant changes.
+
+## [2.0.0-alpha.8] - 2018-04-17
+
+No significant changes.
+
+## [2.0.0-alpha.7] - 2018-04-03
+
+No significant changes.
+
+## [2.0.0-alpha.6] - 2018-03-22
+
+No significant changes.
+
+## [2.0.0-alpha.5] - 2018-03-07
+
+No significant changes.
+
+## [2.0.0-alpha.4] - 2018-02-13
+
+No significant changes.
+
+## [2.0.0-alpha.3] - 2018-01-18
+
+No significant changes.
+
+## [2.0.0-alpha.2] - 2017-08-29
+
+No significant changes.
+
+## [2.0.0-alpha.1] - 2017-08-27
+
+No significant changes.
+
 ## [1.15.0] - 2018-02-28
 
 No significant changes.

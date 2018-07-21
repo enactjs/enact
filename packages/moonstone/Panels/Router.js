@@ -48,6 +48,7 @@ const Router = class extends React.Component {
 		 * of strings (`['app', 'home', 'settings']`)
 		 *
 		 * @type {String|String[]}
+		 * @required
 		 * @public
 		 */
 		path: propTypes.path.isRequired,
@@ -55,7 +56,7 @@ const Router = class extends React.Component {
 		/**
 		 * The component wrapping the rendered path
 		 *
-		 * @type {String|Function}
+		 * @type {Component}
 		 * @default 'div'
 		 * @public
 		 */
@@ -141,7 +142,7 @@ const Router = class extends React.Component {
 				return React.createElement(route.$component, {
 					...route.$props,
 					key: 'view$/' + subPath,
-					containerId: `panel-${subPath.replace(/\//g, '-')}`
+					spotlightId: `panel-${subPath.replace(/\//g, '-')}`
 				});
 			}
 
@@ -196,6 +197,7 @@ Route.propTypes = {
 	 * {@link moonstone/Panels.Routable} container.
 	 *
 	 * @type {String|Function}
+	 * @required
 	 * @public
 	 * @memberof moonstone/Panels.Route.prototype
 	 */
@@ -208,6 +210,7 @@ Route.propTypes = {
 	 * The name of the path segment
 	 *
 	 * @type {String}
+	 * @required
 	 * @public
 	 * @memberof moonstone/Panels.Route.prototype
 	 */

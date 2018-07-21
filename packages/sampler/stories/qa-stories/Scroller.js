@@ -5,10 +5,12 @@ import Item from '@enact/moonstone/Item';
 import ri from '@enact/ui/resolution';
 import Group from '@enact/ui/Group';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
 
-import nullify from '../../src/utils/nullify.js';
+import {boolean, select} from '../../src/enact-knobs';
+
+Scroller.displayName = 'Scroller';
 
 const itemData = [];
 for (let i = 0; i < 100; i++) {
@@ -21,12 +23,13 @@ const
 		horizontalScrollbar: ['auto', 'hidden', 'visible']
 	};
 
-storiesOf('Scroller')
-	.addWithInfo(
+storiesOf('Scroller', module)
+	.add(
 		'List of things',
 		() => (
 			<Scroller
-				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+				data-spotlight-container-disabled={boolean('data-spotlight-container-disabled', Scroller, false)}
+				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
 				style={{height: ri.unit(600, 'rem')}}
 			>
 				<Group childComponent={Item}>
@@ -35,11 +38,11 @@ storiesOf('Scroller')
 			</Scroller>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'With ExpandableList',
 		() => (
 			<Scroller
-				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
 				style={{height: ri.unit(600, 'rem')}}
 			>
 				<ExpandableList
@@ -51,13 +54,13 @@ storiesOf('Scroller')
 			</Scroller>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'Horizontal scroll',
 		() => (
 			<Scroller
-				direction={select('direction', prop.direction, 'horizontal')}
-				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
-				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, 'auto')}
+				direction={select('direction', prop.direction, Scroller, 'horizontal')}
+				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
+				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, Scroller, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				style={{

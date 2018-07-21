@@ -1,167 +1,160 @@
 /**
- * Exports the {@link moonstone/Image.Image} component.
+ * Provides Moonstone-themed Image component that supports multiple resolution sources.
+ *
+ * @example
+ * <Image src="https://dummyimage.com/64/e048e0/0011ff" style={{height: 64, width: 64}} />
  *
  * @module moonstone/Image
+ * @exports Image
+ * @exports ImageBase
+ * @exports ImageDecorator
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
-import PropTypes from 'prop-types';
+import hoc from '@enact/core/hoc';
+import UiImage from '@enact/ui/Image';
 import Pure from '@enact/ui/internal/Pure';
 import {selectSrc} from '@enact/ui/resolution';
+import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
+import React from 'react';
 
-import css from './Image.less';
+import Skinnable from '../Skinnable';
+
+import componentCss from './Image.less';
 
 /**
- * {@link moonstone/Image.Image} is a component designed to display images
- * conditionally based on screen size. This component has a default size but should have a size
- * specified for its particular usage using a CSS `className` or inline `style`.
+ * A Moonstone-styled image component without any behavior
  *
- * Usage:
- *
- * ```
- *const src = {
- *  'hd': 'http://lorempixel.com/64/64/city/1/',
- *  'fhd': 'http://lorempixel.com/128/128/city/1/',
- *  'uhd': 'http://lorempixel.com/256/256/city/1/'
- *};
- *
- * <Image className={css.myImage} src={src} sizing={'fill'} />
- * ```
- *
- * Image is based on the `div` element, but it uses `img` to provide `onError`
- * and `onLoad` events. The image that you see on screen is a `background-image`
- * from the `div` element, not the `img` element.
- *
- * > If you need a naturally sized image, you can use the native `<img>` element instead.
- *
- * @class Image
+ * @class ImageBase
  * @memberof moonstone/Image
  * @ui
  * @public
  */
-
 const ImageBase = kind({
 	name: 'Image',
 
-	propTypes: /** @lends moonstone/Image.Image.prototype */ {
+	propTypes: /** @lends moonstone/Image.ImageBase.prototype */ {
 		/**
-		 * String value or Object of values used to determine which image will appear on
-		 * a specific screenSize.
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
 		 *
-		 * @type {String | Object}
-		 * @required
+		 * The following classes are supported:
+		 *
+		 * * `image` - The root component class for Image
+		 *
+		 * @type {Object}
 		 * @public
 		 */
-		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-
-		/**
-		 * Sets the aria-label for the image. If unset, it defaults to the value of `alt`
-		 *
-		 * @type {String}
-		 * @public
-		 * @memberof moonstone/Image.Image.prototype
-		 */
-		// Quoting this (necessary) makes it alphabetically sort differently...
-		'aria-label': PropTypes.string,
-
-		/**
-		 * String value for the alt attribute of the image.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		alt: PropTypes.string,
-
-		/**
-		 * Node for the children of an Image. Useful for overlays.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		children: PropTypes.node,
-
-		/**
-		 * Function that will run if the image has an error.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onError: PropTypes.func,
-
-		/**
-		 * Function that will run once the image is loaded.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onLoad: PropTypes.func,
-
-		/**
-		 * A placeholder image to be displayed before the image is loaded.
-		 * For performance purposes, it should be pre-loaded or be a data url.
-		 *
-		 * @type {String}
-		 * @default ''
-		 * @public
-		 */
-		placeholder: PropTypes.string,
-
-		/**
-		 * Used to set the `background-size` of an Image.
-		 *
-		 * * `'fill'` - sets `background-size: cover`
-		 * * `'fit'` - sets `background-size: contain`
-		 * * `'none'` - uses the image's natural size
-		 *
-		 * @type {String}
-		 * @default 'fill'
-		 * @public
-		 */
-		sizing: PropTypes.oneOf(['fit', 'fill', 'none'])
-	},
-
-	defaultProps: {
-		placeholder: '',
-		sizing: 'fill'
+		css: PropTypes.object
 	},
 
 	styles: {
-		css,
-		className: 'image'
+		css: componentCss,
+		publicClassNames: ['image']
 	},
 
-	computed: {
-		bgImage: ({src, placeholder}) => {
-			const imageSrc = selectSrc(src) || '';
-			return placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
-		},
-		className: ({className, sizing, styler}) => {
-			return sizing !== 'none' ? styler.append(sizing) : className;
-		},
-		imgSrc: ({src}) => selectSrc(src) || null
-	},
-
-	render: ({alt, 'aria-label': ariaLabel, bgImage, children, imgSrc, onError, onLoad, style, ...rest}) => {
-		delete rest.placeholder;
-		delete rest.sizing;
-		delete rest.src;
-
+	render: ({css, ...rest}) => {
 		return (
-			<div role="img" {...rest} aria-label={ariaLabel || alt} style={{...style, backgroundImage: bgImage}}>
-				{children}
-				<img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} />
-			</div>
+			<UiImage
+				{...rest}
+				css={css}
+			/>
 		);
 	}
 });
 
-const Image = Pure(
-	ImageBase
+
+// This induces a render when there is a screen size change that has a corosponding image src value
+// associated with the new screen size. The render is kicked off by remembering the new image src.
+//
+// This hoc could (should) be rewritten at a later time to use a smarter context API and callbacks,
+// or something like pub/sub; each of which would be hooked together from the resolution.js that
+// would coordinate any screen size/orientation changes and emit events from there.
+//
+// This is ripe for refactoring, and could probably move into UI to be generalized, but that's for
+// another time. -B 2018-05-01
+const ResponsiveImageDecorator = hoc((config, Wrapped) => {
+	return class extends React.Component {
+		static displayName = 'ResponsiveImageDecorator'
+
+		static propTypes = {
+			src: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired
+		}
+
+		constructor (props) {
+			super(props);
+			this.state = {
+				src: selectSrc(this.props.src)
+			};
+		}
+
+		componentDidMount () {
+			window.addEventListener('resize', this.handleResize);
+		}
+
+		componentWillUnmount () {
+			window.removeEventListener('resize', this.handleResize);
+		}
+
+		handleResize = () => {
+			this.setState((state, props) => {
+				const src = selectSrc(props.src);
+				// Trigger a render and save the currently selected src for later comparisons
+				if (src !== state.src) {
+					return {src};
+				}
+
+				return null;
+			});
+		}
+
+		render () {
+			return <Wrapped {...this.props} />;
+		}
+	};
+});
+
+/**
+ * Moonstone-specific behaviors to apply to [Image]{@link moonstone/Image.ImageBase}.
+ *
+ * @hoc
+ * @memberof moonstone/Image
+ * @mixes ui/Skinnable.Skinnable
+ * @public
+ */
+const ImageDecorator = compose(
+	Pure,
+	ResponsiveImageDecorator,
+	Skinnable
 );
+
+/**
+ * A Moonstone-styled image component
+ *
+ * ```
+ * <Image
+ *   src={{
+ *     'hd': 'https://dummyimage.com/64/e048e0/0011ff',
+ *     'fhd': 'https://dummyimage.com/128/e048e0/0011ff',
+ *     'uhd': 'https://dummyimage.com/256/e048e0/0011ff'
+ *   }}
+ * >
+ * ```
+ *
+ * @class Image
+ * @memberof moonstone/Image
+ * @extends moonstone/Image.ImageBase
+ * @mixes moonstone/Image.ImageDecorator
+ * @ui
+ * @public
+ */
+const Image = ImageDecorator(ImageBase);
+
 
 export default Image;
 export {
 	Image,
-	ImageBase
+	ImageBase,
+	ImageDecorator
 };

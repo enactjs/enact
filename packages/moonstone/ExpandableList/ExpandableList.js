@@ -70,7 +70,11 @@ const ExpandableListBase = kind({
 		 * strings is provided, the strings will be used in the generated components as the readable
 		 * text. If an array of objects is provided, each object will be spread onto the generated
 		 * component with no interpretation. You'll be responsible for setting properties like
-		 * `disabled`, `className`, and setting the text content using the `children` key.
+		 * `disabled`, `className`, and setting the content using `children`.
+		 *
+		 * NOTE: When providing an array of objects be sure a unique `key` is assigned to each
+		 * item. [Read about keys](https://reactjs.org/docs/lists-and-keys.html#keys) for more
+		 * information.
 		 *
 		 * @type {String[]|Object[]}
 		 * @required
@@ -78,7 +82,9 @@ const ExpandableListBase = kind({
 		 */
 		children: PropTypes.oneOfType([
 			PropTypes.arrayOf(PropTypes.string),
-			PropTypes.arrayOf(PropTypes.object)
+			PropTypes.arrayOf(PropTypes.shape({
+				key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
+			}))
 		]).isRequired,
 
 		/**
@@ -130,8 +136,8 @@ const ExpandableListBase = kind({
 		noAutoClose: PropTypes.bool,
 
 		/**
-		 * When `true`, the user may move {@glossary Spotlight} past the bottom of the expandable
-		 * (when open) using 5-way controls.
+		 * When `true`, the user may move [Spotlight] {@link /docs/developer-guide/glossary/#spotlight} past the bottom
+		 * of the expandable (when open) using 5-way controls.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -372,9 +378,24 @@ const ExpandableList = Pure(
 	{propComparators: {
 		children: compareChildren
 	}},
-	Expandable(
-		Changeable(
-			{change: 'onSelect', prop: 'selected'},
+	Changeable(
+		{change: 'onSelect', prop: 'selected'},
+		Expandable(
+			{
+				getChildFocusTarget: (node, {selected = 0}) => {
+					let selectedIndex = selected;
+					if (Array.isArray(selected) && selected.length) {
+						selectedIndex = selected[0];
+					}
+
+					let selectedNode = null;
+					if (node) {
+						selectedNode = node.querySelector(`[data-index="${selectedIndex}"]`);
+					}
+
+					return selectedNode;
+				}
+			},
 			ExpandableListBase
 		)
 	)

@@ -1,0 +1,53 @@
+// Button.less
+//
+@import "../styles/mixins.less";
+
+.button {
+	display: inline-block;
+	box-sizing: border-box;
+	position: relative;
+	overflow: visible;
+	white-space: nowrap;
+	width: auto;
+	z-index: 0;
+	cursor: pointer;
+
+	//**
+	//* Classes to apply to the background of the button, used on a child of button.
+	//* @public
+	//*/
+	.bg {
+		.position(0);
+		position: absolute;
+		z-index: -1;
+	}
+
+	//**
+	//* Where the content of the button lives.
+	//* @public
+	//*/
+	.client {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		height: 100%;
+		position: relative;
+	}
+
+	.icon,
+	&.minWidth,
+	&.small,
+	//**
+	//* Classes to apply to the selected state of the button, applied to the base element
+	//* @public
+	//*/
+	&.selected,
+	&.pressed {
+		/* Public Class Names */
+	}
+
+	.disabled({
+		cursor: default;
+	});
+}

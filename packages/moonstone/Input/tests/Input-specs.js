@@ -4,6 +4,8 @@ import sinon from 'sinon';
 import Input from '../Input';
 import Spotlight from '@enact/spotlight';
 
+const isPaused = () => Spotlight.isPaused() ? 'paused' : 'not paused';
+
 describe('Input Specs', () => {
 	it('should have an input element', () => {
 		const subject = mount(
@@ -47,7 +49,7 @@ describe('Input Specs', () => {
 		);
 		const input = subject.find('input');
 
-		input.node.focus();
+		node.querySelector('input').focus();
 		input.simulate('keyDown', {nativeEvent: {which: 13, keyCode: 13}});
 		node.remove();
 
@@ -145,23 +147,22 @@ describe('Input Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should pause spotlight when input has focus', () => {
-		const pauseSpy = sinon.spy(Spotlight, 'pause');
+	it('should pause spotlight when input has focus', () => {
 		const subject = mount(
 			<Input />
 		);
 
 		subject.simulate('mouseDown');
 
-		const expected = true;
-		const actual = pauseSpy.calledOnce;
+		const expected = 'paused';
+		const actual = isPaused();
 
-		Spotlight.pause.restore();
+		Spotlight.resume();
+
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should resume spotlight on unmount', () => {
-		const resumeSpy = sinon.spy(Spotlight, 'resume');
+	it('should resume spotlight on unmount', () => {
 		const subject = mount(
 			<Input />
 		);
@@ -169,10 +170,11 @@ describe('Input Specs', () => {
 		subject.simulate('mouseDown');
 		subject.unmount();
 
-		const expected = true;
-		const actual = resumeSpy.calledOnce;
+		const expected = 'not paused';
+		const actual = isPaused();
 
-		Spotlight.resume.restore();
+		Spotlight.resume();
+
 		expect(actual).to.equal(expected);
 	});
 

@@ -1,78 +1,8 @@
-import curry from 'ramda/src/curry';
-import compose from 'ramda/src/compose';
-import merge from 'ramda/src/merge';
-import classnames from 'classnames';
+import classnames from 'classnames/bind';
+
+import {mergeClassNameMaps} from '../util';
 
 import {addInternalProp} from './util';
-
-// Joins two strings in a className-friendly way
-const joinClasses = curry((a, b) => a + ' ' + b);
-
-// Creates a function accepting two arguments. When both are truthy, calls fn with both. If either
-// is falsey, returns the truthy one or the first if both are falsey.
-const bothOrEither = curry((fn, a, b) => {
-	if (a && b) {
-		return fn(a, b);
-	} else {
-		return b || a;
-	}
-});
-
-// Returns either the value for the property or the property name itself
-const propOrSelf = curry((obj, prop) => obj && obj[prop] || prop);
-
-// Takes a string (multiple classes can be space-delimited) and a css-modules object and resolves
-// the class names to their css-modules name
-const resolveClassNames = curry((css, className) => {
-	if (css && className) {
-		return className.split(' ').map(propOrSelf(css)).join(' ');
-	}
-
-	return className;
-});
-
-// Takes a styles config object and either resolves `className` with `css` or `className` iself
-const localClassName = ({css, className}) => resolveClassNames(css, className) || '';
-
-// Merges the locally-resolved className and the className from the props
-const mergeClassName = (config, {className}) => {
-	return bothOrEither(joinClasses, localClassName(config), className);
-};
-
-// Merges the local style object and the style object from the props
-const mergeStyle = ({style: componentStyle}, {style: authorStyle}) => {
-	return bothOrEither(merge, componentStyle, authorStyle);
-};
-
-/**
- * Creates the `join()` method of the styler
- *
- * @param {Object} cfg styles configuration object
- * @param {Object} props Render props
- * @returns {Function} `join()`
- * @method join
- * @private
- */
-const join = (cfg) => {
-	if (cfg.css) {
-		return compose(resolveClassNames(cfg.css), classnames);
-	}
-
-	return classnames;
-};
-
-/**
- * Creates the `append()` method of the styler
- *
- * @method append
- * @param {Object} props Render props updated by styles with `className` and `styler.join`
- * @returns {Function} `append()`
- * @private
- */
-const append = (props) => {
-	const j = props.styler.join;
-	return props.className ? compose(joinClasses(props.className), j) : j;
-};
 
 /**
  * Merges external and internal CSS classes and style objects. Internal CSS classes can be
@@ -99,37 +29,61 @@ const append = (props) => {
  *		}
  *	};
  *
- *	styles(stylesConfig, props); // {className: 'unambiguous-button-class-name global-class', styles: {color: 'red', display: 'none'}}
+ *	const renderStyles = styles(stylesConfig);
+ *	const renderStyles(props); // {className: 'unambiguous-button-class-name global-class', styles: {color: 'red', display: 'none'}}
  * ```
  *
  * @method styles
- * @param {Object} cfg Configuration object containing one of `css`, `className`, and/or `style`
- * @param {Object} props Render props
- * @returns {Function} Function accepting props and returning update props with computed properties
+ * @param   {Object}    cfg  Configuration object containing one of `css`, `className`,
+ *                           `publicClassNames`, and/or `style`
+ *
+ * @returns {Function}       Function that accepts a props object and mutates it to merge class
+ *                           names and style objects and provide the `styler` utility function and
+ *                           `css` merged class name map
  * @private
  */
-const styles = (cfg, props) => {
-	const prop = cfg.prop || 'className';
+const styles = (cfg, optProps) => {
+	const {className, css: configCss, prop = 'className', style} = cfg;
+	let {publicClassNames: allowedClassNames} = cfg;
 
-	const style = mergeStyle(cfg, props);
-	if (style) {
-		props.style = style;
+	if (configCss && allowedClassNames === true) {
+		allowedClassNames = Object.keys(configCss);
+	} else if (typeof allowedClassNames === 'string') {
+		allowedClassNames = allowedClassNames.split(/\s+/);
 	}
 
-	const className = mergeClassName(cfg, props);
-	if (className) {
-		props[prop] = className;
+	const renderStyles = (props) => {
+		let css = configCss;
+
+		if (style) {
+			props.style = Object.assign({}, style, props.style);
+		}
+
+		// if the props includes a css map, merge them together now
+		if (css && allowedClassNames && props.css) {
+			css = mergeClassNameMaps(css, props.css, allowedClassNames);
+		}
+
+		const cn = css ? classnames.bind(css) : classnames;
+		const joinedClassName = props[prop] = classnames(
+			className ? cn(className.split(' ')) : null,
+			props.className
+		);
+
+		addInternalProp(props, 'css', css);
+		addInternalProp(props, 'styler', {
+			join: cn,
+			append: (...args) => cn(joinedClassName, ...args)
+		});
+
+		return props;
+	};
+
+	if (optProps) {
+		return renderStyles(optProps);
 	}
 
-	// styler should not be automatically spread onto children
-	addInternalProp(props, 'styler', {
-		join: join(cfg)
-	});
-
-	// append requires the computed className property so it is built off the updated props rather
-	// than the provided props
-	props.styler.append = append(props);
-	return props;
+	return renderStyles;
 };
 
 export default styles;

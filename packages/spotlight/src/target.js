@@ -97,7 +97,7 @@ function isRestrictedContainer (containerId) {
 
 function getSpottableDescendantsWithoutContainers (containerId, containerIds) {
 	return getSpottableDescendants(containerId).filter(n => {
-		return !isContainer(n) || containerIds.indexOf(n.dataset.containerId) === -1;
+		return !isContainer(n) || containerIds.indexOf(n.dataset.spotlightId) === -1;
 	});
 }
 
@@ -128,7 +128,7 @@ function getContainerContainingRect (elementRects, elementRect) {
 	// one of the candidate element, we need to ignore container `enterTo` preferences and
 	// retrieve its spottable descendants and try to navigate to them.
 	if (overlapping.length) {
-		return overlapping[0].element.dataset.containerId;
+		return overlapping[0].element.dataset.spotlightId;
 	}
 
 	return false;
@@ -168,7 +168,7 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 			if (!next) {
 				// filter out the container and try again
 				elementRects = elementRects.filter(rect => {
-					return rect.element.dataset.containerId !== overlappingContainerId;
+					return rect.element.dataset.spotlightId !== overlappingContainerId;
 				});
 				continue;
 			}
@@ -187,7 +187,7 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 
 		// if we match a container, recurse into it
 		if (next && isContainer(next)) {
-			const nextContainerId = next.dataset.containerId;
+			const nextContainerId = next.dataset.spotlightId;
 
 			// need to cache this reference so we can filter it out later if necessary
 			const lastNavigated = next;
@@ -225,6 +225,17 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 		return previous;
 	}
 
+	// `spotlightOverflow` is a private, and likely temporary, API to allow a component within an
+	// spotlight container with `overflow: true` to be treated as if it were outside of the
+	// container. The result is that the candidates, `elements` are filtered by the bounds of the
+	// overflow container effectively hiding those that have overflowed and are visually hidden.
+	//
+	// Currently only used by moonstone/Scroller.Scrollbar as a means to allow 5-way navigation to
+	// escape the Scrollable from paging controls rather than focusing contents that are out of view
+	if (element.dataset.spotlightOverflow === 'ignore') {
+		boundingRect = getOverflowContainerRect(containerId) || boundingRect;
+	}
+
 	let elementRects = filterRects(getRects(elements), boundingRect);
 
 	let next = null;
@@ -248,7 +259,7 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 			if (!next) {
 				// filter out the container and try again
 				elementRects = elementRects.filter(rect => {
-					return rect.element.dataset.containerId !== overlappingContainerId;
+					return rect.element.dataset.spotlightId !== overlappingContainerId;
 				});
 				continue;
 			}
@@ -267,7 +278,7 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 
 		// if we match a container,
 		if (next && isContainer(next)) {
-			const nextContainerId = next.dataset.containerId;
+			const nextContainerId = next.dataset.spotlightId;
 
 			// need to cache this reference so we can filter it out later if necessary
 			const lastNavigated = next;

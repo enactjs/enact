@@ -15,6 +15,7 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	flex-grow: 1;
+	text-indent: 0.2em;
 
 	&[type=number] {
 		-moz-appearance: textfield;
@@ -53,17 +54,34 @@
 .decorator {
 	display: inline-flex;
 	position: relative;
-	padding: 3px 30px;
+	padding: @moon-input-padding (@moon-input-height / 2);
 	border-radius: 1008px;
-	margin: 6px;
+	margin: 0 (@moon-spotlight-outset / 2);
 	border: @moon-input-border-width solid transparent;
 	box-sizing: border-box;
+	vertical-align: middle;
 
 	.input,
 	.iconBefore,
 	.iconAfter {
-		line-height: 57px;
-		height: 57px;
+		line-height: @moon-input-height;
+		height: @moon-input-height;
+		vertical-align: middle;
+	}
+
+	&.small {
+		padding: 0 (@moon-input-small-height / 2);
+
+		.iconBefore,
+		.iconAfter {
+			line-height: @moon-input-small-height;
+			height: @moon-input-small-height;
+		}
+
+		.input {
+			font-size: @moon-input-small-font-size;
+			height: @moon-input-small-height;
+		}
 	}
 
 	.iconBefore,
@@ -72,11 +90,11 @@
 	}
 
 	.iconAfter {
-		.padding-start-end(18px, 0);
+		.padding-start-end(@moon-input-icon-spacing, 0);
 	}
 
 	.iconBefore {
-		.padding-start-end(0, 18px);
+		.padding-start-end(0, @moon-input-icon-spacing);
 	}
 
 	// RIGBY NOTE: multiline is a NOT YET IMPLEMENTED feature that combines <input> and <textarea>

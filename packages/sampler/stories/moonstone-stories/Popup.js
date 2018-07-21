@@ -1,34 +1,37 @@
-import Popup, {PopupBase} from '@enact/moonstone/Popup';
+import Popup from '@enact/moonstone/Popup';
 import BodyText from '@enact/moonstone/BodyText';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, text, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('Popup', PopupBase, Popup);
+const Config = mergeComponentMetadata('Popup', Popup);
 
-storiesOf('Popup')
-	.addWithInfo(
-		' ',
-		'Basic usage of Popup',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'Popup',
+		withInfo({
+			propTablesExclude: [Popup],
+			text: 'Basic usage of Popup'
+		})(() => (
 			<div>
 				<Popup
-					open={boolean('open', false)}
-					noAnimation={boolean('noAnimation', false)}
-					noAutoDismiss={boolean('noAutoDismiss', false)}
+					open={boolean('open', Config)}
+					noAnimation={boolean('noAnimation', Config)}
+					noAutoDismiss={boolean('noAutoDismiss', Config)}
 					onClose={action('onClose')}
 					onHide={action('onHide')}
 					onShow={action('onShow')}
-					scrimType={select('scrimType', ['none', 'translucent', 'transparent'], 'translucent')}
-					showCloseButton={boolean('showCloseButton', false)}
-					spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-only')}
+					scrimType={select('scrimType', ['none', 'translucent', 'transparent'], Config, 'translucent')}
+					showCloseButton={boolean('showCloseButton', Config)}
+					spotlightRestrict={select('spotlightRestrict', ['self-first', 'self-only'], Config, 'self-only')}
 				>
-					<div>{text('children', 'Hello Popup')}</div>
+					<div>{text('children', Config, 'Hello Popup')}</div>
 				</Popup>
 				<BodyText centered>Use KNOBS to interact with Popup.</BodyText>
 			</div>
-		),
-		{propTables: [Config]}
+		))
 	);

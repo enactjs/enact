@@ -14,7 +14,6 @@ import React from 'react';
 
 import {MarqueeController} from '../Marquee';
 import {Picker, PickerItem} from '../internal/Picker';
-import SpottablePicker from '../Picker/SpottablePicker';
 import {validateRange} from '../internal/validators';
 
 import css from './EditableIntegerPicker.less';
@@ -46,6 +45,7 @@ const EditableIntegerPickerBase = kind({
 		 * The maximum value selectable by the picker (inclusive).
 		 *
 		 * @type {Number}
+		 * @required
 		 * @public
 		 */
 		max: PropTypes.number.isRequired,
@@ -54,6 +54,7 @@ const EditableIntegerPickerBase = kind({
 		 * The minimum value selectable by the picker (inclusive).
 		 *
 		 * @type {Number}
+		 * @required
 		 * @public
 		 */
 		min: PropTypes.number.isRequired,
@@ -69,17 +70,17 @@ const EditableIntegerPickerBase = kind({
 		'aria-valuetext': PropTypes.string,
 
 		/**
-		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{moonstone/Icon.Icon} are
+		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		decrementIcon: PropTypes.string,
 
 		/**
 		 * When `true`, the EditableIntegerPicker is shown as disabled and does not generate `onChange`
-		 * [events]{@glossary event}.
+		 * [events]{@link /docs/developer-guide/glossary/#event}.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -95,10 +96,10 @@ const EditableIntegerPickerBase = kind({
 		editMode : PropTypes.bool,
 
 		/**
-		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{moonstone/Icon.Icon} are
+		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		incrementIcon: PropTypes.string,
@@ -247,22 +248,28 @@ const EditableIntegerPickerBase = kind({
 				label = value;
 			}
 
-			return (
-				editMode ?
+			if (editMode) {
+				return (
 					<input
 						className={css.input}
 						key={value}
 						onBlur={onInputBlur}
 						ref={inputRef}
-					/> : <PickerItem
-						key={value}
-						onClick={onPickerItemClick}
-					>
-						{`${label} ${unit}`}
-					</PickerItem>
+					/>
+				);
+			}
+
+			return (
+				<PickerItem
+					key={value}
+					onClick={onPickerItemClick}
+				>
+					{`${label} ${unit}`}
+				</PickerItem>
 			);
 		},
-		className: ({className, editMode, styler}) => editMode ? styler.append({editMode}) : className
+		className: ({className, editMode, styler}) => editMode ? styler.append({editMode}) : className,
+		disabled: ({disabled, max, min}) => min >= max ? true : disabled
 	},
 
 	render: ({pickerRef, ...rest}) => {
@@ -298,9 +305,7 @@ const EditableIntegerPicker = Pure(
 		EditableIntegerPickerDecorator(
 			MarqueeController(
 				{marqueeOnFocus: true},
-				SpottablePicker(
-					EditableIntegerPickerBase
-				)
+				EditableIntegerPickerBase
 			)
 		)
 	)

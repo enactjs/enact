@@ -1,16 +1,6 @@
-// ToggleItem
-//
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-
 .toggleItem {
-	.icon {
-		margin-top: 0;
-		margin-bottom: 0;
-		.margin-start-end(0, @moon-toggle-item-icon-margin);
-
-		&:not(.selected) {
-			visibility: hidden;
-		}
+	// Apply to the marquee content area to tell it to expand to the available width of the container
+	.content {
+		flex: 1 1 auto;
 	}
 }

@@ -2,14 +2,12 @@
  * Provides the {@link core/kind.kind} method to create components
  *
  * @module core/kind
+ * @exports kind
  */
 
+import React from 'react';
+
 import computed from './computed';
-import contextTypes from './contextTypes';
-import defaultProps from './defaultProps';
-import handlers from './handlers';
-import name from './name';
-import propTypes from './propTypes';
 import styles from './styles';
 
 /**
@@ -57,37 +55,77 @@ import styles from './styles';
  * ```
  *
  * @function
- * @param  {Object} config - Component configuration
+ * @param  {Object}    config    Component configuration
  *
- * @returns {Function}        Component
+ * @returns {Function}           Component
  * @memberof core/kind
  * @public
  */
 const kind = (config) => {
+	const {
+		computed: cfgComputed,
+		contextTypes,
+		defaultProps,
+		handlers,
+		name,
+		propTypes,	// eslint-disable-line react/forbid-foreign-prop-types
+		render,
+		styles: cfgStyles
+	} = config;
+
+	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
+	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
+
 	// addition prop decorations would be chained here (after config.render)
-	let render = (props, context, updater) => {
-		let p = Object.assign({}, props);
-		if (config.styles) p = styles(config.styles, p, context, updater);
-		if (config.computed) p = computed(config.computed, p, context, updater);
-		return config.render(p, context, updater);
+	const Component = class extends React.Component {
+		static displayName = name || 'Component'
+
+		static propTypes = propTypes
+
+		static contextTypes = contextTypes
+
+		static defaultProps = defaultProps
+
+		constructor () {
+			super();
+			this.handlers = {};
+
+			// cache bound function for each handler
+			if (handlers) {
+				Object.keys(handlers).forEach(handler => {
+					return this.prepareHandler(handler, handlers[handler]);
+				});
+			}
+		}
+
+		/*
+		 * Caches an event handler on the local `handlers` member
+		 *
+		 * @param   {String}    name     Event name
+		 * @param   {Function}  handler  Event handler
+		 *
+		 * @returns {undefined}
+		 */
+		prepareHandler (prop, handler) {
+			this.handlers[prop] = (ev) => {
+				return handler(ev, this.props, this.context);
+			};
+		}
+
+		render () {
+			let p = Object.assign({}, this.props, this.handlers);
+			if (renderStyles) p = renderStyles(p, this.context);
+			if (renderComputed) p = renderComputed(p, this.context);
+
+			return render(p, this.context);
+		}
 	};
 
-	// render() decorations
-	if (config.handlers) {
-		// need to set name and contextTypes on pre-wrapped Component
-		if (config.contextTypes) contextTypes(config.contextTypes, render);
-		render = handlers(config.handlers, render, config.contextTypes);
-	}
+	// Decorate the Component with the computed property object in DEV for easier testability
+	if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
 
-	if (config.name) name(config.name, render);
-	if (config.propTypes) propTypes(config.propTypes, render);
-	if (config.defaultProps) defaultProps(config.defaultProps, render);
-	if (config.contextTypes) contextTypes(config.contextTypes, render);
 
-	// Decorate the SFC with the computed property object in DEV for easier testability
-	if (__DEV__ && config.computed) render.computed = config.computed;
-
-	return render;
+	return Component;
 };
 
 export default kind;

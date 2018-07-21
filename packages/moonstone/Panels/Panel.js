@@ -1,4 +1,3 @@
-import deprecate from '@enact/core/internal/deprecate';
 import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -10,14 +9,6 @@ import SpotlightContainerDecorator, {spotlightDefaultClass} from '@enact/spotlig
 import css from './Panel.less';
 
 let panelId = 0;
-
-// Called when `noAutoFocus` is true. Warns the first time and returns the new `autoFocus` value
-const adaptToAutoFocus = deprecate(() => 'none', {
-	name: 'noAutoFocus',
-	since: '1.3.0',
-	until: '2.0.0',
-	replacedBy: 'autoFocus'
-});
 
 /**
 * {@link moonstone/Panels.Panel} is the default kind for controls created inside a
@@ -82,24 +73,12 @@ const PanelBase = kind({
 		 * @default false
 		 * @public
 		 */
-		hideChildren: PropTypes.bool,
-
-		/**
-		 * When `true`, the contents of the Panel will not receive spotlight focus after being
-		 * rendered.
-		 *
-		 * @deprecated Replaced by `autoFocus="none"`
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noAutoFocus: PropTypes.bool
+		hideChildren: PropTypes.bool
 	},
 
 	defaultProps: {
 		autoFocus: 'last-focused',
-		hideChildren: false,
-		noAutoFocus: false
+		hideChildren: false
 	},
 
 	styles: {
@@ -117,7 +96,7 @@ const PanelBase = kind({
 		),
 		spotOnRender: (node, {autoFocus}) => {
 			if (node && !Spotlight.getCurrent()) {
-				const {containerId} = node.dataset;
+				const {spotlightId} = node.dataset;
 				const config = {
 					enterTo: 'last-focused'
 				};
@@ -130,18 +109,14 @@ const PanelBase = kind({
 					}
 				}
 
-				Spotlight.set(containerId, config);
-				Spotlight.focus(containerId);
+				Spotlight.set(spotlightId, config);
+				Spotlight.focus(spotlightId);
 			}
 		}
 	},
 
 	computed: {
-		spotOnRender: ({autoFocus, hideChildren, noAutoFocus, spotOnRender}) => {
-			if (noAutoFocus) {
-				autoFocus = adaptToAutoFocus();
-			}
-
+		spotOnRender: ({autoFocus, hideChildren, spotOnRender}) => {
 			// In order to spot the body components, we defer spotting until !hideChildren. If the
 			// Panel opts out of hideChildren support by explicitly setting it to false, it'll spot
 			// on first render.
@@ -166,7 +141,6 @@ const PanelBase = kind({
 	render: ({bodyClassName, children, header, headerId, spotOnRender, ...rest}) => {
 		delete rest.autoFocus;
 		delete rest.hideChildren;
-		delete rest.noAutoFocus;
 
 		return (
 			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender}>

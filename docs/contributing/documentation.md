@@ -20,18 +20,25 @@ There are three general levels of documentation that will appear within the sour
 
 ## Module Documentation
 
-Each module within Enact should have one (and only one) file that includes the `@module` tag. The name of the module should be prefixed with the name of the package that contains it (e.g. `moonstone/Button`). Each module has a limited number of exports so they should be documented within the module block and the default export should be identified:
+Each module (and, consequently, directory) within Enact should have one (and only one) file that includes the `@module` tag. The name of the module should be prefixed with the name of the package that contains it (e.g. `moonstone/Button`). Each module has a limited number of exports so they should be documented within the module block using the `@exports` tag. The module description should not list the exports or repeat information that should appear at the component level.
 
 ```
 /**
- * Exports the {@link moonstone/Button.Button} and {@link moonstone/Button.ButtonBase}
- * components.  The default export is {@link moonstone/Button.Button}.
+ * Provides Moonstone-themed button components and behaviors.
+ *
+ * @example
+ * <Button small>Hello Enact!</Button>
  *
  * @module moonstone/Button
+ * @exports Button
+ * @exports ButtonBase
+ * @exports ButtonDecorator
  */
 ```
 
-Usually this block will appear in the file with the same name as the module.  If the module uses an **index.md** file to export, it should appear there.
+Usually this block will appear in the file with the same name as the module.  If the module uses an **index.js** file to export, it should appear there.
+
+If possible, include an executable example showing the module using the `@example` tag.
 
 ## Class Level Documentation
 
@@ -43,9 +50,8 @@ Below is an example block for a component:
 
 ```
 /**
- * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
- * Pressable applied.  If the Button's child component is text, it will be uppercased unless
- * `preserveCase` is set.
+ * A Moonstone-styled button with built-in support for uppercasing, tooltips, marqueed text, and
+ * Spotlight focus.
  *
  * Usage:
  * ```
@@ -54,21 +60,21 @@ Below is an example block for a component:
  *
  * @class Button
  * @memberof moonstone/Button
- * @mixes i18n/Uppercase.Uppercase
- * @mixes moonstone/TooltipDecorator.TooltipDecorator
- * @mixes spotlight.Spottable
- * @mixes ui/Pressable.Pressable
+ * @extends moonstone/Button.ButtonBase
+ * @mixes moonstone/Button.ButtonDecorator
  * @ui
  * @public
  */
 ```
 
-* `@link` tags can be used to link to related materials
-* `@class` should include the name of the object being documented
+* `@link` tags can be used to link to related materials.
+* `@class` should include the name of the object being documented.
 * `@memberof` is required and should reflect the name of the module the object belongs to.
-* `@mixes` is used to call out HOCs that may be applied
-* `@ui` is a custom tag that should be applied to any component that creates visible controls
+* `@extends` is used when a component's root element is another public custom component.
+* `@mixes` is used to call out HOCs that may be applied.
+* `@ui` is a custom tag that should be applied to any component that creates visible controls.
 * `@public` should be used for any component or HOC that is exported. Unexported objects should be marked `@private` to prevent them from appearing in the documentation.
+* Note: The Usage example is not runnable and will not render a preview.
 
 ### Higher-order Components
 
@@ -76,11 +82,12 @@ Below is an example of HOC declaration:
 
 ```
 /**
- * {@link ui/Holdable.Holdable} is a Higher-order Component that applies a 'Holdable' behavior
- * to its wrapped component, providing methods that fire when a hold behavior is detected.
+ * A Higher-order Component that provides a consistent set of pointer events -- `onDown`, `onUp`,
+ * and `onTap` -- across mouse and touch interfaces along with support for common gestures including
+ * `onFlick`, `onDrag`, `onHold`, and `onHoldPulse`.
  *
- * @class Holdable
- * @memberof ui/Holdable
+ * @class Touchable
+ * @memberof ui/Touchable
  * @hoc
  * @public
  */
@@ -93,22 +100,21 @@ HOCs that include configurable options should be documented as follows:
 
 ```
 /**
- * Default config for {@link ui/Holdable.Holdable}
+ * Default config for {@link ui/Touchable.Touchable}.
  *
- * @memberof ui/Holdable.Holdable
+ * @memberof ui/Touchable.Touchable
  * @hocconfig
- * @public
  */
 const defaultConfig = {
 	/**
-	 * You can use the `endHold` property...
+	 * Configures the prop name to pass the active state to the wrapped component
 	 *
 	 * @type {String}
-	 * @default 'onMove'
-	 * @memberof ui/Holdable.defaultConfig
+	 * @default null
+	 * @memberof ui/Touchable.Touchable.defaultConfig
 	 */
-	endHold: 'onMove',
-	...
+	activeProp: null
+};
 ```
 
 * `@memberof` needs to be applied both to the default config object itself and all its members. HOC configs should be a member of the HOC component, not the module it is a member of.
@@ -161,7 +167,7 @@ Property-level documentation refers to documentation within a component or HOC. 
 * `@required` should be applied to any property that has `isRequired` set on it.
 * `@default` can be used to indicate the default value (if applicable) of a property. Only properties that appear in the `defaultProps` section should use this. Values should not be wrapped in code blocks.
 
-In general, we do not provide jsDoc comments for methods that appear within components as we do not expose any public methods this way.
+In general, we do not provide jsDoc comments for methods that appear within components as we generally do not expose public methods this way.
 
 >Note: We use three types to refer to renderable items: `Node`, `Element`, and `Component`.
 >* `Node` refers to anything renderable: `<div>HTML Element</div>`, `<Button>React Component</Button>`, or `'string'`;
@@ -190,16 +196,43 @@ There are some special cases that appear within the Enact framework. One example
 * `@param` should be repeated for each parameter. The type(s) is set within curly braces, followed by the name of the parameter. A short description of the parameter follows. Default parameter values are documented by including them within square brackets in the name position as shown above.
 * `@returns` indicates the type of the return. Functions that have no return should be documented as returning `{undefined}` to keep ESLint happy.
 
+## The Enact Voice
+
+Enact docs should strive to have a common voice.  They should be concise, informative and, as appropriate, a bit playful.  Don't be afraid to inject a little bit of fun into what could otherwise be dry reading.
+
+Tips:
+
+* Use the active voice when writing docs.
+* Descriptions should focus on what the componet or property provides.
+* Only document the `true` state for boolean propertues unless the `false` state's operation is unclear.
+* Property descriptions use the present tense and complete either 'This property ...' or 'This property configures ...'
+* Callbacks use the future perfect tense and complete the sentence 'This callback will be ...'
+* Imperative methods (rarely used) use the present tense and completes the sentence 'Call this method to ...'
+
+Good:
+
+* A Moonstone-styled button with built-in support for ...
+* The color of the underline beneath button's content.
+* Applies a disabled style and prevents interacting with the component.
+* Called when the internal input is focused.
+
+Could be better:
+
+* This component could be used to display a button ...
+* Set this to change the color of the underline beneath the button's content.
+* Controls whether the item is expanded or not.
+* A callback function invoked when the internal input is focused.
+
 ## Verifying Correct Documentation
 
 Errors in documentation can prevent the doc tool from correctly generating our docs. Always run the `parse` command over the documentation to be sure there are no parse warnings. To do this, follow these steps:
 
 ```bash
-git clone git@github.com:enactjs/enact-docs.git
-cd enact-docs
+git clone git@github.com:enactjs/docs.git
+cd docs
 npm install
-rm -rf node_modules/enact
-ln -s /path/to/your/enact/repo node_modules/enact
+rm -rf raw/enact
+ln -s /path/to/your/enact/repo raw/enact
 npm run parse
 ```
 

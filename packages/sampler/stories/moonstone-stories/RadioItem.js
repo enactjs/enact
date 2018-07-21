@@ -1,26 +1,27 @@
 import RadioItem from '@enact/moonstone/RadioItem';
-import ToggleItem from '@enact/moonstone/ToggleItem';
-import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {boolean, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('RadioItem', ItemBase, Item, ToggleItem, RadioItem);
+const Config = mergeComponentMetadata('RadioItem', RadioItem);
 
-storiesOf('RadioItem')
-	.addWithInfo(
-		' ',
-		'Basic usage of RadioItem',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'RadioItem',
+		withInfo({
+			propTablesExclude: [RadioItem],
+			text: 'Basic usage of RadioItem'
+		})(() => (
 			<RadioItem
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', Config)}
+				inline={boolean('inline', Config)}
 				onToggle={action('onToggle')}
 			>
-				{text('children', 'Hello RadioItem')}
+				{text('children', Config, 'Hello RadioItem')}
 			</RadioItem>
-		),
-		{propTables: [Config]}
+		))
 	);

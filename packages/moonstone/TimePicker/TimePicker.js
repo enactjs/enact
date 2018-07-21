@@ -66,11 +66,11 @@ const indexOfMeridiem = (time, meridiems) => {
 };
 
 const dateTimeConfig = {
-	customProps: function (i18n, value) {
+	customProps: function (i18n, value, {meridiemLabel}) {
 		let values = {
 			// i18n props
 			meridiems: i18n.meridiemLabels,
-			meridiemLabel: null,
+			meridiemLabel,
 
 			// date components
 			hour: 12,
@@ -78,7 +78,7 @@ const dateTimeConfig = {
 			meridiem: 0
 		};
 
-		if (i18n.meridiemEnabled) {
+		if (i18n.meridiemEnabled && meridiemLabel == null) {
 			if (values.meridiems.length > 2) {
 				values.meridiemLabel = `${values.meridiems[0]} / ${values.meridiems[1]} ...`;
 			} else {
@@ -194,7 +194,7 @@ const dateTimeConfig = {
  * month, and meridiem.
  *
  * Set the [value]{@link moonstone/TimePicker.TimePicker#value} property to a standard JavaScript
- * {@glossary Date} object to initialize the picker.
+ * [Date] {@link /docs/developer-guide/glossary/#date} object to initialize the picker.
  *
  * By default, `TimePicker` maintains the state of its `value` property. Supply the
  * `defaultValue` property to control its initial value. If you wish to directly control updates

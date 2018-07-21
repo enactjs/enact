@@ -13,6 +13,8 @@ import {spottableClass} from '../Spottable';
 
 import {rootContainerId} from '../src/container';
 
+import '../styles/debug.less';
+
 /**
  * Default configuration for SpotlightRootDecorator
  *
@@ -83,7 +85,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		navigableFilter = (elem) => {
 			while (elem && elem !== document && elem.nodeType === 1) {
-				if (elem.getAttribute('data-container-disabled') === 'true') return false;
+				if (elem.getAttribute('data-spotlight-container-disabled') === 'true') return false;
 				elem = elem.parentNode;
 			}
 		}
@@ -96,6 +98,5 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 export default SpotlightRootDecorator;
 export {
-	rootContainerId as spotlightRootContainerName, // DEPRECATED
 	SpotlightRootDecorator
 };

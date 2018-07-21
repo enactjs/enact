@@ -1,101 +1,123 @@
-import Button from '@enact/moonstone/Button';
+import Button, {ButtonBase} from '@enact/moonstone/Button';
+import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
+import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {boolean as storybookBoolean} from '@storybook/addon-knobs';
 import css from './Button.less';
+
+import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
+
+// Button's prop `minWidth` defaults to true and we only want to show `minWidth={false}` in the JSX. In order to hide `minWidth` when `true`, we use the normal storybook boolean knob and return `void 0` when `true`.
+Button.displayName = 'Button';
+const Config = mergeComponentMetadata('Button', UIButtonBase, UIButton, ButtonBase, Button);
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'lightTranslucent': 'lightTranslucent', 'transparent': 'transparent'},
+	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
+	casing: ['preserve', 'sentence', 'word', 'upper'],
 	longText:{'Loooooooooooooooooog Button': 'Loooooooooooooooooog Button', 'BUTTON   WITH   EXTRA   SPACES': 'BUTTON   WITH   EXTRA   SPACES'},
-	tallText:{'ิ้  ไั  ஒ  து': 'ิ้  ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'}
+	tallText:{'ิ้  ไั  ஒ  து': 'ิ้  ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'},
+	icons: ['', ...Object.keys(icons)]
 };
 
-storiesOf('Button')
-	.addWithInfo(
+storiesOf('Button', module)
+	.add(
 		'with long text',
 		() => (
 			<Button
-				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
-				disabled={boolean('disabled')}
-				minWidth={boolean('minWidth')}
-				selected={boolean('selected')}
-				small={boolean('small')}
+				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+				casing={select('casing', prop.casing, Config, 'upper')}
+				disabled={boolean('disabled', Config)}
+				icon={select('icon', prop.icons, Config)}
+				minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
+				selected={boolean('selected', Config)}
+				small={boolean('small', Config)}
 			>
-				{select('value', prop.longText, 'Loooooooooooooooooog Button')}
+				{select('value', prop.longText, Config, 'Loooooooooooooooooog Button')}
 			</Button>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with tall characters',
 		() => (
 			<Button
-				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
-				disabled={boolean('disabled')}
-				minWidth={boolean('minWidth')}
-				selected={boolean('selected')}
-				small={boolean('small')}
+				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+				casing={select('casing', prop.casing, Config, 'upper')}
+				disabled={boolean('disabled', Config)}
+				icon={select('icon', prop.icons, Config)}
+				minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
+				selected={boolean('selected', Config)}
+				small={boolean('small', Config)}
 			>
-				{select('value', prop.tallText, 'ิ้  ไั  ஒ  து')}
+				{select('value', prop.tallText, Config, 'ิ้  ไั  ஒ  து')}
 			</Button>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'to validate minWidth with a single character',
 		() => (
 			<Button
-				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
-				disabled={boolean('disabled')}
-				minWidth={boolean('minWidth', false)}
-				selected={boolean('selected')}
-				small={boolean('small')}
+				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+				casing={select('casing', prop.casing, Config, 'upper')}
+				disabled={boolean('disabled', Config)}
+				icon={select('icon', prop.icons, Config)}
+				minWidth={storybookBoolean('minWidth', false) ? void 0 : false}
+				selected={boolean('selected', Config)}
+				small={boolean('small', Config)}
 			>
-				{text('value', 'A')}
+				{text('value', Config, 'A')}
 			</Button>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'to test if the parent element\'s background causes occlusion',
 		() => (
 			<div className={css.bgColor}>
 				<Button
 					onClick={action('onClick')}
-					disabled={boolean('disabled')}
+					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+					casing={select('casing', prop.casing, Config, 'upper')}
+					disabled={boolean('disabled', Config)}
+					icon={select('icon', prop.icons, Config)}
+					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
+					selected={boolean('selected', Config)}
+					small={boolean('small', Config)}
 				>
 					Normal Button
 				</Button>
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with tap area displayed',
 		() => (
 			<div>
 				<Button
-					casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
-					className={css.tapArea}
 					onClick={action('onClick')}
-					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
-					disabled={boolean('disabled')}
-					minWidth={boolean('minWidth')}
-					selected={boolean('selected')}
+					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+					casing={select('casing', prop.casing, Config, 'upper')}
+					disabled={boolean('disabled', Config)}
+					icon={select('icon', prop.icons, Config)}
+					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
+					selected={boolean('selected', Config)}
+					small={boolean('small', Config)}
 				>
 					Normal Button
 				</Button>
 				<Button
-					casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
-					className={css.tapArea}
 					onClick={action('onClick')}
-					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
-					disabled={boolean('disabled')}
-					minWidth={boolean('minWidth')}
-					selected={boolean('selected')}
+					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+					casing={select('casing', prop.casing, Config, 'upper')}
+					disabled={boolean('disabled', Config)}
+					icon={select('icon', prop.icons, Config)}
+					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
+					selected={boolean('selected', Config)}
 					small
 				>
 					Small Button
@@ -103,4 +125,3 @@ storiesOf('Button')
 			</div>
 		)
 	);
-

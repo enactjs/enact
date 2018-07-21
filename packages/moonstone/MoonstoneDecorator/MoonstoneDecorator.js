@@ -8,6 +8,7 @@ import {addAll} from '@enact/core/keymap';
 import hoc from '@enact/core/hoc';
 import I18nDecorator from '@enact/i18n/I18nDecorator';
 import React from 'react';
+import classNames from 'classnames';
 import {ResolutionDecorator} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
@@ -18,6 +19,7 @@ import I18nFontDecorator from './I18nFontDecorator';
 import AccessibilityDecorator from './AccessibilityDecorator';
 import screenTypes from './screenTypes.json';
 import css from './MoonstoneDecorator.less';
+import {configure} from '@enact/ui/Touchable';
 
 /**
  * Default config for {@link moonstone/MoonstoneDecorator.MoonstoneDecorator}.
@@ -26,16 +28,17 @@ import css from './MoonstoneDecorator.less';
  * @hocconfig
  */
 const defaultConfig = {
-	i18n: true,
+	disableFullscreen: false,
 	float: true,
+	i18n: true,
 	noAutoFocus: false,
 	overlay: false,
 	ri: {
 		screenTypes
 	},
+	skin: true,
 	spotlight: true,
-	textSize: true,
-	skin: true
+	textSize: true
 };
 
 /**
@@ -43,7 +46,6 @@ const defaultConfig = {
  * Moonstone theming to an application. It also applies
  * [floating layer]{@link ui/FloatingLayer.FloatingLayerDecorator},
  * [resolution independence]{@link ui/resolution.ResolutionDecorator},
- * [custom text sizing]{@link moonstone/MoonstoneDecorator.TextSizeDecorator},
  * [skin support]{@link ui/Skinnable}, [spotlight]{@link spotlight.SpotlightRootDecorator}, and
  * [internationalization support]{@link i18n/I18nDecorator.I18nDecorator}. It is meant to be applied to
  * the root element of an app.
@@ -58,10 +60,14 @@ const defaultConfig = {
  * @public
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {ri, i18n, spotlight, float, noAutoFocus, overlay, textSize, skin, highContrast} = config;
+	const {ri, i18n, spotlight, float, noAutoFocus, overlay,
+		textSize, skin, highContrast, disableFullscreen} = config;
 
 	// Apply classes depending on screen type (overlay / fullscreen)
-	const bgClassName = 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
+	const bgClassName = classNames({
+		'enact-fit': !disableFullscreen,
+		[css.bg]: !overlay
+	});
 
 	let App = Wrapped;
 	if (float) App = FloatingLayerDecorator({wrappedClassName: bgClassName}, App);
@@ -93,21 +99,35 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			33, // channel up
 			34 // channel down
 		],
+		red: 403,
+		green: 404,
+		yellow: 405,
+		blue: 406,
+		play: 415,
+		pause: 19,
+		rewind: 412,
+		fastForward: 417,
 		pointerHide: 1537,
 		pointerShow: 1536
+	});
+
+	// configure the default hold time
+	configure({
+		hold: {
+			events: [
+				{name: 'hold', time: 400}
+			]
+		}
 	});
 
 	const Decorator = class extends React.Component {
 		static displayName = 'MoonstoneDecorator';
 
 		render () {
-			let className = css.root + ' enact-unselectable';
-			if (!float) {
-				className += ' ' + bgClassName;
-			}
-			if (this.props.className) {
-				className += ` ${this.props.className}`;
-			}
+			const className = classNames(css.root, this.props.className, 'enact-unselectable', {
+				[bgClassName]: !float,
+				'enact-fit': !disableFullscreen
+			});
 
 			return (
 				<App {...this.props} className={className} />

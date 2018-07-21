@@ -1,4 +1,4 @@
-# @enact/core
+# @enact/core [![npm (scoped)](https://img.shields.io/npm/v/@enact/core.svg?style=flat-square)](https://www.npmjs.com/package/@enact/core)
 
 > The set of essential building blocks for an Enact-based application.
 

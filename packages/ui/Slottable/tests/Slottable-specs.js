@@ -148,7 +148,7 @@ describe('Slottable Specs', () => {
 
 	it('should distribute children with props other than simply \'children\', in entirety, to the matching destination slot', function () {
 		const Component = Slottable({slots: ['a', 'b', 'c', 'custom']}, ({a, b, c, custom}) => (
-			<div>
+			<div className="root-div">
 				{c}
 				{b}
 				{a}
@@ -170,7 +170,7 @@ describe('Slottable Specs', () => {
 		expect(actual).to.equal(expected);
 
 		const expectedTitle = 'Div A';
-		const actualTitle = subject.childAt(2).prop('title');
+		const actualTitle = subject.find('.root-div').childAt(2).prop('title');
 		expect(actualTitle).to.equal(expectedTitle);
 	});
 });

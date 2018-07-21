@@ -1,135 +1,97 @@
 /**
- * Exports the {@link moonstone/SelectableItem.SelectableItem}
+ * Provides Moonstone-themed item component and interactive togglable circle.
  *
  * @module moonstone/SelectableItem
+ * @exports SelectableItem
+ * @exports SelectableItemBase
+ * @exports SelectableItemDecorator
  */
 
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Pure from '@enact/ui/internal/Pure';
-import Toggleable from '@enact/ui/Toggleable';
-import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 
-import {ToggleItemBase} from '../ToggleItem';
-import Skinnable from '../Skinnable';
+import {ToggleItemBase, ToggleItemDecorator} from '../ToggleItem';
 
-import css from './SelectableItem.less';
+import SelectableIcon from './SelectableIcon';
+
+import componentCss from './SelectableItem.less';
 
 /**
- * {@link moonstone/SelectableItem.SelectableItem} is component
- * that is an Item that is Toggleable. It has two selected states `true` &
- * `false`. It uses a dot to represent its selected state.
+ * Renders an item with a circle shaped component. Useful to show a selected state on an item.
  *
- * @class SelectableItemBase
+ * @class SelectableItem
  * @memberof moonstone/SelectableItem
+ * @extends moonstone/ToggleItem.ToggleItemBase
  * @ui
  * @public
  */
 const SelectableItemBase = kind({
 	name: 'SelectableItem',
 
-	propTypes: /** @lends moonstone/SelectableItem.SelectableItemBase.prototype */ {
+	propTypes: /** @lends moonstone/SelectableItem.SelectableItem.prototype */ {
 		/**
-		 * The string to be displayed as the main content of the selectable item.
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
 		 *
-		 * @type {String}
+		 * The following classes are supported:
+		 *
+		 * * `selectableItem` - The root class name
+		 *
+		 * @type {Object}
 		 * @public
 		 */
-		children: PropTypes.string.isRequired,
-
-		/**
-		 * When true, a disabled visual state is applied to the selectable item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		disabled: PropTypes.bool,
-
-		/**
-		 * When `true`, inline styling is applied to the selectable item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		inline: PropTypes.bool,
-
-		/**
-		 * The handler to run when the selectable item is toggled.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {String} event.selected - Selected value of item.
-		 * @param {*} event.value - Value passed from `value` prop.
-		 * @public
-		 */
-		onToggle: PropTypes.func,
-
-		/**
-		 * When `true`, a dot, indicating it is selected, is shown on the selectable item.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		selected: PropTypes.bool,
-
-		/**
-		 * The value that will be sent to the `onToggle` handler.
-		 *
-		 * @type {*}
-		 * @default ''
-		 * @public
-		 */
-		value: PropTypes.any
+		css: PropTypes.object
 	},
 
 	styles: {
-		css,
-		className: 'selectableItem'
-	},
-
-	computed: {
-		iconClasses: ({selected, styler}) => styler.join(
-			css.dot,
-			{selected}
-		)
+		css: componentCss,
+		className: 'selectableItem',
+		publicClassNames: ['selectableItem']
 	},
 
 	render: (props) => (
-		<ToggleItemBase {...props} icon="circle" />
+		<ToggleItemBase
+			data-webos-voice-intent="SelectCheckItem"
+			{...props}
+			css={props.css}
+			iconComponent={SelectableIcon}
+		/>
 	)
 });
 
+/**
+ * Adds interactive functionality to `SelectableItemBase`
+ *
+ * @class SelectableItemDecorator
+ * @memberof moonstone/SelectableItem
+ * @mixes moonstone/ToggleItem.ToggleItemDecorator
+ * @hoc
+ * @public
+ */
+const SelectableItemDecorator = ToggleItemDecorator({invalidateProps: ['inline', 'selected']});
 
 /**
- * {@link moonstone/SelectableItem.SelectableItem} is component that is an Item that is
- * {@link ui/Toggleable.Toggleable}. It has two selected states `true` & `false`. It uses a dot to
- * represent its selected state.
+ * A Moonstone-styled item with circle shaped component with built-in support for toggling,
+ * marqueed text, and `Spotlight` focus.
  *
- * By default, `SelectableItem` maintains the state of its `selected` property. Supply the
- * `defaultSelected` property to control its initial value. If you wish to directly control updates
- * to the component, supply a value to `selected` at creation time and update it in response to
- * `onToggle` events.
+ * Usage:
+ * ```
+ * <SelectableItem>Toggle Me</SelectableItem>
+ * ```
  *
  * @class SelectableItem
  * @memberof moonstone/SelectableItem
- * @mixes ui/Toggleable.Toggleable
+ * @extends moonstone/SelectableItem.SelectableItemBase
+ * @mixes moonstone/SelectableItem.SelectableItemDecorator
  * @ui
  * @public
  */
-const SelectableItem = Pure(
-	Toggleable(
-		{prop: 'selected'},
-		RemeasurableDecorator(
-			{trigger: 'selected'},
-			Skinnable(
-				SelectableItemBase
-			)
-		)
-	)
-);
+const SelectableItem = SelectableItemDecorator(SelectableItemBase);
 
 export default SelectableItem;
-export {SelectableItem, SelectableItemBase};
+export {
+	SelectableItem,
+	SelectableItemBase,
+	SelectableItemDecorator
+};
