@@ -6,9 +6,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/ContextualPopup` to refocus its activator on close when the popup lacks spottable children
+- `moonstone/Dialog` to hide `titleBelow` when `title` is not set
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll properly when holding down paging control buttons
 - `moonstone/ExpandableItem` spotlight behavior when leaving the component via 5-way
-- `moonstone/Dialog` to hide `titleBelow` when `title` is not set
+- `moonstone/Slider` to correctly prevent 5-way actions when activated
+- `moonstone/ExpandableItem` and other expandable components to spotlight correctly when switching from pointer mode to 5-way with `closeOnSelect`
 
 ## [2.0.0-rc.2] - 2018-07-16
 
@@ -16,6 +19,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Input` to not focus by *tab* key
 - `moonstone/Picker` to properly set focus when navigating between buttons
+- `moonstone/Popup` to set correct open state while transitioning
 - `moonstone/ProgressBar.ProgressBarTooltip` unknown props warning
 - `moonstone/Scrollable` to disable spotlight container during flick events only when contents can scroll
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll properly when `animate` is false via `scrollTo`
