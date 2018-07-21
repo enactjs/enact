@@ -104,11 +104,12 @@ const PickerBase = kind({
 		incrementIcon: PropTypes.string,
 
 		/**
-		 * Allows the user can use the arrow keys to adjust the picker's value.
+		 * Allows the user to use the arrow keys to adjust the picker's value.
 		 *
-		 * The user may no longer use those arrow keys to navigate while this control is focused.
-		 * A default control allows full navigation, but requires individual ENTER presses on the
-		 * incrementer and decrementer buttons. Pointer interaction is the same for both formats.
+		 * Key presses are captured in the directions of the increment and decrement buttons but
+		 * others are unaffected. A non-joined Picker allows navigation in any direction, but
+		 * requires individual ENTER presses on the incrementer and decrementer buttons. Pointer
+		 * interaction is the same for both formats.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -146,8 +147,7 @@ const PickerBase = kind({
 		/**
 		 * Orientation of the picker.
 		 *
-		 * Controls whether the buttons are aligned horizontally or vertically with its selected
-		 * value.
+		 * Controls whether the buttons are arranged horizontally or vertically around the value.
 		 *
 		 * * Values: `'horizontal'`, `'vertical'`
 		 *
@@ -168,7 +168,7 @@ const PickerBase = kind({
 		/**
 		 * The width of the picker.
 		 *
-		 * A number can be used to set the minimum number of characters to be shown.  Setting a
+		 * A number can be used to set the minimum number of characters to be shown. Setting a
 		 * number to less than the number of characters in the longest value will cause the width to
 		 * grow for the longer values.
 		 *

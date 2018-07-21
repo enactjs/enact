@@ -121,7 +121,8 @@ const HeaderBase = kind({
 		/**
 		 * Title of the header.
 		 *
-		 * This is a [`slot`]{@link ui/Slottable.Slottable}.
+		 * This is a [`slot`]{@link ui/Slottable.Slottable}, so it can be used as a tag-name inside
+		 * this component.
 		 *
 		 * Example:
 		 * ```
@@ -139,7 +140,8 @@ const HeaderBase = kind({
 		/**
 		 * Text displayed below the title.
 		 *
-		 * This is a [`slot`]{@link ui/Slottable.Slottable}.
+		 * This is a [`slot`]{@link ui/Slottable.Slottable}, so it can be used as a tag-name inside
+		 * this component.
 		 *
 		 * @type {String}
 		 */

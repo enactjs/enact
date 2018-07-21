@@ -57,7 +57,7 @@ const ProgressBarTooltipBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * Displays the percentage instead of the value.
+		 * Displays the value as a percentage.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -67,6 +67,7 @@ const ProgressBarTooltipBase = kind({
 
 		/**
 		 * The proportion of the filled part of the bar.
+		 *
 		 * * Should be a number between 0 and 1.
 		 *
 		 * @type {Number}

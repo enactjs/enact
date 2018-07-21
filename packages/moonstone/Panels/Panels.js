@@ -61,16 +61,16 @@ const PanelsBase = kind({
 		children: PropTypes.node,
 
 		/**
-		* Sets the hint string read when focusing the application close button.
-		*
-		* @type {String}
-		* @default 'Exit app'
-		* @public
-		*/
+		 * Sets the hint string read when focusing the application close button.
+		 *
+		 * @type {String}
+		 * @default 'Exit app'
+		 * @public
+		 */
 		closeButtonAriaLabel: PropTypes.string,
 
 		/**
-		 * The background-color opacity of the application close button.
+		 * The background opacity of the application close button.
 		 * * Values: `'translucent'`, `'lightTranslucent'`, `'transparent'`
 		 *
 		 * @type {String}

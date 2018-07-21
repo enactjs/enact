@@ -1,5 +1,5 @@
 /**
- * This component provides a labeled region to group components.
+ * This component provides a labeled region to a group of components.
  *
  * @example
  * <Region title="Select an Option">
@@ -27,8 +27,8 @@ const RegionBase = kind({
 
 	propTypes: /** @lends moonstone/Region.Region.prototype */ {
 		/**
-		 * Title placed within an instance of [Divider]{@link moonstone/Divider.Divider}
-		 * before the children.
+		 * Title placed within an instance of [Divider]{@link moonstone/Divider.Divider} before the
+		 * children.
 		 *
 		 * @type {String}
 		 * @required

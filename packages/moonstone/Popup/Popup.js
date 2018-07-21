@@ -86,7 +86,7 @@ const PopupBase = kind({
 		onCloseButtonClick: PropTypes.func,
 
 		/**
-		 * Called when popup hides.
+		 * Called after the popup's "hide" transition finishes.
 		 *
 		 * @type {Function}
 		 * @public
@@ -94,7 +94,7 @@ const PopupBase = kind({
 		onHide: PropTypes.func,
 
 		/**
-		 * Called when popup shows.
+		 * Called after the popup's "show" transition finishes.
 		 *
 		 * @type {Function}
 		 * @public
@@ -122,7 +122,7 @@ const PopupBase = kind({
 		showCloseButton: PropTypes.bool,
 
 		/**
-		 * The container id.
+		 * The container id for {@link spotlight/Spotlight}.
 		 *
 		 * @type {String}
 		 * @default null
@@ -263,7 +263,7 @@ class Popup extends React.Component {
 		noAutoDismiss: PropTypes.bool,
 
 		/**
-		 * Called on,
+		 * Called on:
 		 *
 		 * * pressing `ESC` key,
 		 * * clicking on the close button, or
@@ -278,7 +278,7 @@ class Popup extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
-		 * Hide callback function
+		 * Called after hide transition has completed, and immediately with no transition.
 		 *
 		 * @type {Function}
 		 * @public
@@ -294,7 +294,7 @@ class Popup extends React.Component {
 		onKeyDown: PropTypes.func,
 
 		/**
-		 * Called when popup shows.
+		 * Called after show transition has completed, and immediately with no transition.
 		 *
 		 * Note: The function does not run if Popup is initially opened and
 		 * [noAnimation]{@link moonstone/Popup.PopupBase#noAnimation} is `true`.

@@ -39,7 +39,7 @@ const RangePickerBase = kind({
 
 	propTypes: /** @lends moonstone/RangePicker.RangePickerBase.prototype */ {
 		/**
-		 * Maximum selectable value.
+		 * Maximum selectable value (inclusive).
 		 *
 		 * @type {Number}
 		 * @required
@@ -48,7 +48,7 @@ const RangePickerBase = kind({
 		max: PropTypes.number.isRequired,
 
 		/**
-		 * Minimum selectable value.
+		 * Minimum selectable value (inclusive).
 		 *
 		 * @type {Number}
 		 * @required
@@ -139,7 +139,8 @@ const RangePickerBase = kind({
 		/**
 		 * Disables animation.
 		 *
-		 * By default, the picker will animate transitions between items.
+		 * By default, the picker will animate transitions between items, provided a `width` is
+		 * defined.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -157,8 +158,7 @@ const RangePickerBase = kind({
 		/**
 		 * Orientation of the picker.
 		 *
-		 * Controls whether the buttons are aligned horizontally or vertically with its selected
-		 * value.
+		 * Controls whether the buttons are arranged horizontally or vertically around the value.
 		 *
 		 * * Values: `'horizontal'`, `'vertical'`
 		 *
@@ -191,11 +191,12 @@ const RangePickerBase = kind({
 		/**
 		 * The width of the picker.
 		 *
-		 * A number can be used to set the minimum number of characters to be shown.  Setting a
+		 * A number can be used to set the minimum number of characters to be shown. Setting a
 		 * number to less than the number of characters in the longest value will cause the width to
 		 * grow for the longer values.
 		 *
 		 * A string can be used to select from pre-defined widths:
+		 *
 		 * * `'small'` - numeric values
 		 * * `'medium'` - single or short words
 		 * * `'large'` - maximum-sized pickers taking full width of its parent
@@ -211,7 +212,8 @@ const RangePickerBase = kind({
 		]),
 
 		/**
-		 * Allows picker to continue from the start of the list after it reaches the end.
+		 * Allows picker to continue from the start of the list after it reaches the end and
+		 * vice-versa.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -256,8 +258,7 @@ const RangePickerBase = kind({
 });
 
 /**
- * [RangePicker]{@link moonstone/RangePicker.RangePicker} is a component that lets the user select
- * a number from a range of numbers.
+ * A component that lets the user select a number from a range of numbers.
  *
  * By default, `RangePicker` maintains the state of its `value` property. Supply the `defaultValue`
  * property to control its initial value. If you wish to directly control updates to the component,

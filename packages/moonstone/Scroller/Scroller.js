@@ -3,11 +3,11 @@
  * @example
  * <Scroller>
  * 	<div style={{height: "150px"}}>
- * 		<p>Scroll me</p>
- * 		<p>Scroll me</p>
- * 		<p>Scroll me</p>
- * 		<p>Scroll me</p>
- * 		<p>Scroll me</p>
+ * 		<p>San Francisco</p>
+ * 		<p>Seoul</p>
+ * 		<p>Bangalore</p>
+ * 		<p>New York</p>
+ * 		<p>London</p>
  * 	</div>
  * </Scroller>
  *
@@ -38,7 +38,7 @@ const
  * A Moonstone-styled base component for [Scroller]{@link moonstone/Scroller.Scroller}.
  * In most circumstances, you will want to use the
  * [SpotlightContainerDecorator]{@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
- * and Scrollable version, [Scroller]{@link moonstone/Scroller.Scroller}
+ * and the Scrollable version, [Scroller]{@link moonstone/Scroller.Scroller}.
  *
  * @class ScrollerBase
  * @memberof moonstone/Scroller

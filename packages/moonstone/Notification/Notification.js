@@ -95,7 +95,7 @@ const NotificationBase = kind({
 		open: PropTypes.bool,
 
 		/**
-		 * Scrim type.
+		 * Determines the technique used to cover the screen when the notification is present.
 		 *
 		 * * Values: `'transparent'`, `'translucent'`, or `'none'`.
 		 *

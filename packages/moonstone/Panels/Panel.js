@@ -11,14 +11,15 @@ import css from './Panel.less';
 let panelId = 0;
 
 /**
-* A Panel has controls created inside a [Panels]{@link moonstone/Panels.Panels} container.
-* [Panels]{@link moonstone/Panels.Panels} will typically contain several instances of these.
-*
-* @class Panel
-* @memberof moonstone/Panels
-* @ui
-* @public
-*/
+ * A Panel is the standard view container used inside a [Panels]{@link moonstone/Panels.Panels} view
+ * manager instance. [Panels]{@link moonstone/Panels.Panels} will typically contain several
+ * instances of these and transition between them.
+ *
+ * @class Panel
+ * @memberof moonstone/Panels
+ * @ui
+ * @public
+ */
 const PanelBase = kind({
 
 	name: 'Panel',

@@ -102,10 +102,10 @@ const ProgressBarBase = kind({
 		 * </ProgressBar>
 		 * ```
 		 *
-		 * @type {Boolean|Element}
+		 * @type {Boolean|Component|Element}
 		 * @public
 		 */
-		tooltip: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.object, PropTypes.func])
+		tooltip: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.func])
 	},
 
 	defaultProps: {

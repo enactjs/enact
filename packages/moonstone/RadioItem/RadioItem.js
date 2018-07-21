@@ -1,5 +1,5 @@
 /**
- * Provides Moonstone-themed Item component and interactive togglable radio icon.
+ * Provides a Moonstone-themed Item component and interactive togglable radio icon.
  *
  * @example
  * <RadioItem>Item</RadioItem>
@@ -19,7 +19,7 @@ import ToggleItem from '../ToggleItem';
 import componentCss from './RadioItem.less';
 
 /**
- * Renders an `Item` with a radio-dot component.
+ * Renders an `Item` with a radio-dot icon.
  *
  * @class RadioItem
  * @memberof moonstone/RadioItem

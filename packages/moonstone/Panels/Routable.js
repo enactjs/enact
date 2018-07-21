@@ -14,7 +14,10 @@ import {Router, propTypes, toSegments} from './Router';
  */
 const defaultConfig = {
 	/**
-	 * The property name of event callback invoked when navigating back up the path.
+	 * The event to listen to for path changes.
+	 *
+	 * This defines the actual name of the [navigate]{@link moonstone/Panels.Routable#navigate}
+	 * property.
 	 *
 	 * @type {String}
 	 * @required
