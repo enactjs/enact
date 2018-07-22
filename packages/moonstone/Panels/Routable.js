@@ -7,16 +7,19 @@ import PropTypes from 'prop-types';
 import {Router, propTypes, toSegments} from './Router';
 
 /**
- * Default config for {@link moonstone/Panels.Routable}
+ * Default config for [`Routable`]{@link moonstone/Panels.Routable}.
  *
  * @memberof moonstone/Panels.Routable
  * @hocconfig
  */
 const defaultConfig = {
 	/**
-	 * The event callback invoked when navigating back up the path
+	 * The event to listen to for path changes.
 	 *
-	 * @type {Function}
+	 * This defines the actual name of the [navigate]{@link moonstone/Panels.Routable#navigate}
+	 * property.
+	 *
+	 * @type {String}
 	 * @required
 	 * @memberof moonstone/Panels.Routable.defaultConfig
 	 */
@@ -24,8 +27,9 @@ const defaultConfig = {
 };
 
 /**
- * Adds support for Routes as children of Panels which are selected via `path` instead of the usual
- * flat array of Panels. When using `Routable` you must specify the `navigate` config option.
+ * A Higher-order component that provides support for Routes as children of Panels which are
+ * selected via `path` instead of the usual flat array of Panels. When using `Routable` you must
+ * specify the `navigate` config option.
  *
  * @class Routable
  * @memberof moonstone/Panels
@@ -42,10 +46,10 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 
 		propTypes: /** @lends moonstone/Panels.Routable.prototype */ {
 			/**
-			 * Path to the active panel
+			 * Path to the active panel.
 			 *
 			 * May either be a URI-style path (`'/app/home/settings'`) or an array
-			 * of strings (`['app', 'home', 'settings']`)
+			 * of strings (`['app', 'home', 'settings']`).
 			 *
 			 * @type {String|String[]}
 			 * @required
@@ -54,7 +58,11 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 			path: propTypes.path.isRequired,
 
 			/**
-			 * Decorates payload with path for `index`
+			 * Called when navigating.
+			 *
+			 * The event object is decorated to add `path`.
+			 *
+			 * *NOTE*: The actual name of this property is configured in the HOC config.
 			 *
 			 * @type {Function}
 			 */

@@ -1,11 +1,16 @@
 /**
- * Exports the {@link moonstone/Panels.Panels}, {@link moonstone/Panels.Panel},
- * {@link moonstone/Panels.ActivityPanels}, {@link moonstone/Panels.AlwaysViewingPanels},
- * {@link moonstone/Panels.Breadcrumb}, {@link moonstone/Panels.Header} components. It
- * also exports the {@link moonstone/Panels.Routable} HOC and {@link moonstone/Panels.Route}
- * function. The default export is {@link moonstone/Panels.Panels}.
+ * Panels provides a way to manage different screens of an app.
  *
  * @module moonstone/Panels
+ * @exports ActivityPanels
+ * @exports AlwaysViewingPanels
+ * @exports Breadcrumb
+ * @exports Header
+ * @exports Panel
+ * @exports Panels
+ * @exports PanelsBase
+ * @exports Routable
+ * @exports Route
  */
 
 import ActivityPanels from './ActivityPanels';
