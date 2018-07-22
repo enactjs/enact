@@ -39,10 +39,13 @@ const defaultConfig = {
 };
 
 /**
- * This Higher-order component which positions [Tooltip]{@link moonstone/TooltipDecorator.Tooltip}
- * in relation to the wrapped component.
+ * A Higher-order Component which positions [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} in
+ * relation to the wrapped component.
  *
- * The tooltip is displayed around its componnt where there is available window space on hover.
+ * The tooltip is automatically displayed when the decoratorated component is focused after a set
+ * period of time.
+ *
+ * The tooltip is positioned around the decorator where there is available window space.
  *
  * Note that the direction of tooltip will be flipped horizontally in RTL locales.
  *
@@ -101,6 +104,11 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * * Values: `'above'`, `'above center'`, `'above left'`, `'above right'`, `'below'`,
 			 * `'below center'`, `'below left'`, `'below right'`, `'left bottom'`, `'left middle'`,
 			 * `'left top'`, `'right bottom'`, `'right middle'`, `'right top'`
+			 *
+			 * The values starting with `'left`' and `'right'` place the tooltip on the side
+			 * (sideways tooltip) with two additional positions available, `'top'` and `'bottom'`,
+			 * which place the tooltip content toward the top or bottom, with the tooltip pointer
+			 * middle-aligned to the activator.
 			 *
 			 * @type {String}
 			 * @default 'above'

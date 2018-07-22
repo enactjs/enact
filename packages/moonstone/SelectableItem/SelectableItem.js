@@ -1,8 +1,9 @@
 /**
- * Provides a Moonstone-themed selectable item component with a toggle icon.
+ * Provides a Moonstone-themed [Item]{@link moonstone/Item} with an icon that toggles on and off.
  *
  * @example
- *<SelectableItem>Click Me</SelectableItem>
+ * <SelectableItem>Click Me</SelectableItem>
+ *
  * @module moonstone/SelectableItem
  * @exports SelectableItem
  * @exports SelectableItemBase
@@ -20,7 +21,7 @@ import SelectableIcon from './SelectableIcon';
 import componentCss from './SelectableItem.less';
 
 /**
- * Renders an item with a round toggle icon.
+ * Renders an [Item]{@link moonstone/Item} with a circle icon, by default.
  *
  * @class SelectableItem
  * @memberof moonstone/SelectableItem

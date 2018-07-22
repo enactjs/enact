@@ -18,7 +18,7 @@ import ToggleIcon from '../ToggleIcon';
 import componentCss from './Switch.less';
 
 /**
- * A pill shaped toggle switch.
+ * Renders the base level DOM structure of the component.
  *
  * @class Switch
  * @memberof moonstone/Switch

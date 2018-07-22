@@ -3,8 +3,12 @@
  *
  * @example
  * <TimePicker title="Open me" value={new Date()}></TimePicker>
+ *
  * @module moonstone/TimePicker
+ * @exports TimePicker
+ * @exports TimePickerBase
  */
+
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';

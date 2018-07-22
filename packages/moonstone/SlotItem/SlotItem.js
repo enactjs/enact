@@ -4,14 +4,14 @@
  * customizable by a theme or application.
  *
  * @example
- *	<SlotItem autoHide="both">
- *		<slotBefore>
- *			<Icon>flag</Icon>
- *			<Icon>star</Icon>
- *		</slotBefore>
- *		An Item that will show some icons before and after this text when spotted
- *		<Icon slot="slotAfter">trash</Icon>
- *	</SlotItem>
+ * <SlotItem autoHide="both">
+ * 	<slotBefore>
+ * 		<Icon>flag</Icon>
+ * 		<Icon>star</Icon>
+ * 	</slotBefore>
+ * 	An Item that will show some icons before and after this text when spotted
+ * 	<Icon slot="slotAfter">trash</Icon>
+ * </SlotItem>
  *
  * @module moonstone/SlotItem
  * @exports SlotItem

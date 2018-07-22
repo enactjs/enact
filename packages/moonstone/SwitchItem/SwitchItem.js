@@ -5,6 +5,7 @@
  * <SwitchItem>
  * 	Item
  * </SwitchItem>
+ *
  * @module moonstone/SwitchItem
  * @exports SwitchItem
  * @exports SwitchItemBase

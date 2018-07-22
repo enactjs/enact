@@ -1,5 +1,10 @@
 /**
- * Moonstone-themed toggle item component.
+ * A Moonstone-themed [Item]{@link moonstone/Item} used as the basis for other stylized toggle item
+ * components.
+ *
+ * Note: This is not intended to be used directly, but should be extended by a component that will
+ * customize this component's appearance by supplying an
+ * [iconComponent prop]{@link moonstone/ToggleItem.ToggleItemBase#iconComponent}.
  *
  * @example
  * <ToggleItem
@@ -7,6 +12,7 @@
  * 	iconPosition='before'>
  * 	Toggle me
  * </ToggleItem>
+ *
  * @module moonstone/ToggleItem
  * @exports ToggleItem
  * @exports ToggleItemBase
@@ -29,7 +35,7 @@ import {SlotItemBase} from '../SlotItem';
 import componentCss from './ToggleItem.less';
 
 /**
- * Moonstone-styled toggle component without any behavior.
+ * A Moonstone-styled toggle [Item]{@link moonstone/Item} without any behavior.
  *
  * @class ToggleItemBase
  * @memberof moonstone/ToggleItem
@@ -50,7 +56,7 @@ const ToggleItemBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * The Icon to render in this item.
+		 * The icon component to render in this item.
 		 *
 		 * This component receives the `selected` prop and value, and must therefore respond to it in some
 		 * way. It is recommended to use [ToggleIcon]{@link moonstone/ToggleIcon} for this.

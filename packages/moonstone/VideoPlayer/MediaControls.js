@@ -48,8 +48,8 @@ const MediaControlsBase = kind({
 	// intentionally assigning these props to MediaControls instead of Base (which is private)
 	propTypes: /** @lends moonstone/VideoPlayer.MediaControls.prototype */ {
 		/**
-		 * Backward [icon]{@link moonstone/Icon.Icon}. Accepts any [icon]{@link moonstone/Icon.Icon}
-		 * component type.
+		 * Reverse-playback [icon]{@link moonstone/Icon.Icon} name. Accepts any
+		 * [icon]{@link moonstone/Icon.Icon} component type.
 		 *
 		 * @type {String}
 		 * @default 'backward'
@@ -58,8 +58,8 @@ const MediaControlsBase = kind({
 		backwardIcon: PropTypes.string,
 
 		/**
-		 * Forward [icon]{@link moonstone/Icon.Icon}. Accepts any [icon]{@link moonstone/Icon.Icon}
-		 * component type.
+		 * Forward [icon]{@link moonstone/Icon.Icon} name. Accepts any
+		 * [icon]{@link moonstone/Icon.Icon} component type.
 		 *
 		 * @type {String}
 		 * @default 'forward'
@@ -68,8 +68,8 @@ const MediaControlsBase = kind({
 		forwardIcon: PropTypes.string,
 
 		/**
-		 * Jump backward [icon]{@link moonstone/Icon.Icon}. Accepts any [icon]{@link moonstone/Icon.Icon}
-		 * component type.
+		 * Jump backward [icon]{@link moonstone/Icon.Icon} name. Accepts any
+		 * [icon]{@link moonstone/Icon.Icon} component type.
 		 *
 		 * @type {String}
 		 * @default 'skipbackward'
@@ -86,8 +86,8 @@ const MediaControlsBase = kind({
 		jumpButtonsDisabled: PropTypes.bool,
 
 		/**
-		 * Jump forward [icon]{@link moonstone/Icon.Icon}. Accepts any [icon]{@link moonstone/Icon.Icon}
-		 * component type.
+		 * Jump forward [icon]{@link moonstone/Icon.Icon} name. Accepts any
+		 * [icon]{@link moonstone/Icon.Icon} component type.
 		 *
 		 * @type {String}
 		 * @default 'skipforward'
@@ -115,7 +115,7 @@ const MediaControlsBase = kind({
 		mediaDisabled: PropTypes.bool,
 
 		/**
-		 * The label for the 'More' button for when the 'More' tray is open.
+		 * The label for the "more" button for when the "more" tray is open.
 		 * This will show on the tooltip.
 		 *
 		 * @type {String}
@@ -138,7 +138,7 @@ const MediaControlsBase = kind({
 		moreButtonColor: PropTypes.oneOf(['red', 'green', 'yellow', 'blue']),
 
 		/**
-		 * Disables the media 'More' button.
+		 * Disables the media "more" button.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -146,7 +146,7 @@ const MediaControlsBase = kind({
 		moreButtonDisabled: PropTypes.bool,
 
 		/**
-		 * The label for the 'More' button. This will show on the tooltip.
+		 * The label for the "more" button. This will show on the tooltip.
 		 *
 		 * @type {String}
 		 * @default 'More'
@@ -870,8 +870,8 @@ const handleCancel = (ev, {onClose}) => {
  * This uses [Slottable]{@link ui/Slottable} to accept the custom tags, `<leftComponents>`
  * and `<rightComponents>`, to add components to the left and right of the media
  * controls. Any additional children will be rendered into the "more" controls area causing the
- * 'More' button to appear. Showing the additional components is handled by `MediaControls` when the
- * user taps the 'More' button.
+ * "more" button to appear. Showing the additional components is handled by `MediaControls` when the
+ * user taps the "more" button.
  *
  * @class MediaControls
  * @memberof moonstone/VideoPlayer

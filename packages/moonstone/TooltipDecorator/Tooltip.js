@@ -9,8 +9,7 @@ import TooltipLabel from './TooltipLabel';
 import css from './Tooltip.less';
 
 /**
- * [TooltipBase]{@link moonstone/TooltipDecorator.TooltipBase} is a stateless tooltip component with
- * the Moonston styling applied.
+ * A stateless tooltip component with Moonstone styling applied.
  *
  * @class TooltipBase
  * @memberof moonstone/TooltipDecorator
@@ -129,9 +128,8 @@ const TooltipBase = kind({
 });
 
 /**
- * [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} is a tooltip component with Moonstone styling
- * applied. If the Tooltip's child component is text, it will be uppercased unless
- * `casing` is set.
+ * A tooltip component with Moonstone styling applied. If the Tooltip's child component is text, it
+ * will be uppercased unless `casing` is set.
  *
  * @class Tooltip
  * @memberof moonstone/TooltipDecorator

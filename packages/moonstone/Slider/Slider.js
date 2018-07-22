@@ -1,5 +1,5 @@
 /**
- * Provides a Moonstone-themed slider components and behaviors.
+ * Provides Moonstone-themed slider components and behaviors.
  *
  * @example
  * <Slider
@@ -65,7 +65,7 @@ const SliderBase = kind({
 		activateOnFocus: PropTypes.bool,
 
 		/**
-		 * Displays the knob selected and can be moved using 5-way controls.
+		 * Displays the knob as "selected" and can be moved using 5-way controls.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -86,7 +86,8 @@ const SliderBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Indicates the tooltip, if present, is shown.
+		 * Indicates that the slider has gained focus and if the tooltip is present, it will be
+		 * shown.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -300,8 +301,8 @@ const SliderDecorator = compose(
 );
 
 /**
- * Slider input with Moonstone styling, [`Spottable`]{@link spotlight/Spottable.Spottable}
- * , [Touchable]{@link ui/Touchable} and [`SliderDecorator`]{@link moonstone/Slider.SliderDecorator}
+ * Slider input with Moonstone styling, [`Spottable`]{@link spotlight/Spottable.Spottable},
+ * [Touchable]{@link ui/Touchable} and [`SliderDecorator`]{@link moonstone/Slider.SliderDecorator}
  * applied.
  *
  * By default, `Slider` maintains the state of its `value` property. Supply the `defaultValue`
@@ -336,8 +337,7 @@ const Slider = SliderDecorator(SliderBase);
  * [ProgressBar]{@link moonstone/ProgressBar.ProgressBar}, or
  * [Slider]{@link moonstone/Slider.Slider}.
  *
- * See [ProgressBarTooltip]{@link moonstone/ProgressBar.ProgressBarTooltip}
- *
+ * @see moonstone/ProgressBar.ProgressBarTooltip
  * @class SliderTooltip
  * @memberof moonstone/Slider
  * @ui

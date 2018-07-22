@@ -98,7 +98,7 @@ const SpinnerBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Makes the background-color transparent.
+		 * Removes the background color (making it transparent).
 		 *
 		 * @type {Boolean}
 		 * @default false

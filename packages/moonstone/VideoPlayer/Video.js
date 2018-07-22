@@ -22,7 +22,7 @@ const VideoBase = class extends React.Component {
 
 	static propTypes = /** @lends moonstone/VideoPlayer.Video.prototype */ {
 		/**
-		 * Play the video automatically.
+		 * Video plays automatically.
 		 *
 		 * @type {Boolean}
 		 * @default false

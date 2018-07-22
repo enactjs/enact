@@ -3,7 +3,10 @@
  *
  * @example
  * <ToggleButton>Toggle me</ToggleButton>
+ *
  * @module moonstone/ToggleButton
+ * @exports ToggleButton
+ * @exports ToggleButtonBase
  */
 
 import kind from '@enact/core/kind';
@@ -47,10 +50,10 @@ const ToggleButtonBase = kind({
 		 * If `toggleOffLabel` and/or `toggleOnLabel` are provided, they will be used for the
 		 * respective states.
 		 *
-		 * @type {Node|String}
+		 * @type {Node}
 		 * @public
 		 */
-		children: PropTypes.oneOf([PropTypes.string, PropTypes.node]),
+		children: PropTypes.node,
 
 		/**
 		 * Disables the button.
