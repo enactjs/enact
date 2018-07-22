@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` to track pointer mode while paused
+
 ## [2.0.0-rc.2] - 2018-07-16
 
 ### Added
