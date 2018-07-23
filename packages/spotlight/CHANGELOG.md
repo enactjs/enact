@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [2.0.0-rc.3] - 2018-07-23
 
+### Added
+
+- `spotlight` to have the 5-way mode by setting pointerMode to false.
+
 ### Fixed
 
 - `spotlight` to track pointer mode while paused

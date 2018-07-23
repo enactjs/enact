@@ -481,6 +481,7 @@ const Spotlight = (function () {
 				setLastContainer(rootContainerId);
 				configureDefaults(containerDefaults);
 				configureContainer(rootContainerId);
+				Spotlight.setPointerMode(false);
 				_initialized = true;
 			}
 		},
