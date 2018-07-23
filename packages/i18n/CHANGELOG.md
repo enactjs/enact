@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `i18n/ilib` to caculate Time properly when DST in Iran locale. 
+
 ## [2.0.0-rc.2] - 2018-07-16
 
 No significant changes.
