@@ -801,12 +801,12 @@ TimeZone.prototype.inDaylightTime = function (date, wallTime) {
 		// check if the dst property is defined -- the intrinsic JS Date object doesn't work so
 		// well if we are in the overlap time at the end of DST, so we have to work around that
 		// problem by adding in the savings ourselves
-		var offset = 0;
+		var offset = this.offset * 60000;
 		if (typeof(date.dst) !== 'undefined' && !date.dst) {
-			offset = this.dstSavings * 60000;
+			offset += this.dstSavings * 60000;
 		}
-		
-		var d = new Date(date ? date.getTimeExtended() + offset: undefined);
+
+		var d = new Date(date ? date.getTimeExtended() - offset: undefined);
 		// the DST offset is always the one that is closest to positive infinity, no matter 
 		// if you are in the northern or southern hemisphere, east or west
 		var dst = Math.max(this.offsetJan1, this.offsetJun1);
