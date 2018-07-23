@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact i18n module, newest chan
 
 ### Fixed
 
-- `i18n/ilib` to caculate Time properly when DST in Iran locale. 
+- `i18n/ilib` to calculate time properly over DST boundary in fa-IR locale
 
 ## [2.0.0-rc.2] - 2018-07-16
 
