@@ -116,7 +116,7 @@ class ScrollButtons extends Component {
 		rtl: PropTypes.bool,
 
 		/**
-		 * If `true`, the scrollbar will be oriented vertically.
+		 * The scrollbar will be oriented vertically.
 		 *
 		 * @type {Boolean}
 		 * @default true

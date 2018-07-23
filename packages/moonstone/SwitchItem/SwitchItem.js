@@ -1,6 +1,11 @@
 /**
  * Provides Moonstone-themed item component and interactive togglable switch.
  *
+ * @example
+ * <SwitchItem>
+ * 	Item
+ * </SwitchItem>
+ *
  * @module moonstone/SwitchItem
  * @exports SwitchItem
  * @exports SwitchItemBase
@@ -17,7 +22,7 @@ import ToggleItem from '../ToggleItem';
 import componentCss from './SwitchItem.less';
 
 /**
- * Renders an item with a switch component. Useful to show an on/off state.
+ * Renders an item with a [Switch]{@link moonstone/Switch}.
  *
  * @class SwitchItem
  * @memberof moonstone/SwitchItem

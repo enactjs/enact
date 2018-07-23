@@ -24,3 +24,7 @@ consistent with this Project, the open source license indicated in the previous 
 specified by the Project and approved by the Open Source Initiative(OSI) at http://www.opensource.org.
 
 *(Inspired by the Linux Developer Certificate of Origin.)*
+
+### Example DCO Sign-off
+
+	Enact-DCO-1.0-Signed-off-by: Joe Smith <joe@myco.com>

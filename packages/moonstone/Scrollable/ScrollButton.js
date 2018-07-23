@@ -61,7 +61,7 @@ const ScrollButton = kind({
 		'aria-label': PropTypes.string,
 
 		/**
-		 * When `true`, the `aria-label` is set.
+		 * Sets the `aria-label`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -70,8 +70,7 @@ const ScrollButton = kind({
 		active: PropTypes.bool,
 
 		/**
-		 * When `true`, the component is shown as disabled and does not generate `onClick`.
-		 * [events]{@link /docs/developer-guide/glossary/#event}.
+		 * Disables the button.
 		 *
 		 * @type {Boolean}
 		 * @public

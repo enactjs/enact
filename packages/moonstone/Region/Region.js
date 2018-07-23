@@ -1,5 +1,9 @@
 /**
- * Exports the {@link moonstone/Region.Region} component.
+ * This component provides a labeled region to a group of components.
+ *
+ * @example
+ * <Region title="Select an Option">
+ * </Region>
  *
  * @module moonstone/Region
  */
@@ -11,16 +15,7 @@ import PropTypes from 'prop-types';
 import Divider from '../Divider';
 
 /**
- * {@link moonstone/Region.Region} provides a labeled region to group components. The `title` is
- * wrapped by a {@link moonstone/Divider.Divider} which precedes any `children`.
- *
- * ```
- * <Region title="Select an Option">
- *   <Group childComponent={CheckboxItem} selectedProp="selected">
- *     {items}
- *   </Group>
- * </Region>
- * ```
+ * A component for grouping other components.
  *
  * @class Region
  * @memberof moonstone/Region
@@ -32,8 +27,8 @@ const RegionBase = kind({
 
 	propTypes: /** @lends moonstone/Region.Region.prototype */ {
 		/**
-		 * The title of the region placed within an instance of {@link moonstone/Divider.Divider}
-		 * before the children.
+		 * Title placed within an instance of [Divider]{@link moonstone/Divider.Divider} before the
+		 * children.
 		 *
 		 * @type {String}
 		 * @required
@@ -42,7 +37,9 @@ const RegionBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
-		 * Sets the aria-label for the region. If unset, it defaults to the value of `title`
+		 * The aria-label for the region.
+		 *
+		 * If unset, it defaults to the value of `title`
 		 *
 		 * @memberof moonstone/Region.Region.prototype
 		 * @type {String}
@@ -51,7 +48,7 @@ const RegionBase = kind({
 		'aria-label': PropTypes.string,
 
 		/**
-		 * The contents of the region
+		 * Contents of the region.
 		 *
 		 * @type {Node}
 		 * @public

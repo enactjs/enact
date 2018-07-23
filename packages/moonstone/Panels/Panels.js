@@ -13,7 +13,7 @@ import Viewport from './Viewport';
 import css from './Panels.less';
 
 /**
- * Basic Panels component without breadcrumbs or default arranger
+ * Basic Panels component without breadcrumbs or default [arranger]{@link ui/ViewManager.Arranger}
  *
  * @class Panels
  * @memberof moonstone/Panels
@@ -25,7 +25,7 @@ const PanelsBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Panels.prototype */ {
 		/**
-		 * Function that generates unique identifiers for Panel instances
+		 * Function that generates unique identifiers for Panel instances.
 		 *
 		 * @type {Function}
 		 * @required
@@ -35,8 +35,9 @@ const PanelsBase = kind({
 
 		/**
 		 * Set of functions that control how the panels are transitioned into and out of the
-		 * viewport
+		 * viewport.
 		 *
+		 * @see ui/ViewManager.SlideArranger
 		 * @type {Arranger}
 		 * @public
 		 */
@@ -52,7 +53,7 @@ const PanelsBase = kind({
 		childProps: PropTypes.object,
 
 		/**
-		 * Panels to be rendered
+		 * [`Panels`]{@link moonstone/Panels.Panel} to be rendered
 		 *
 		 * @type {Panel}
 		 * @public
@@ -60,17 +61,17 @@ const PanelsBase = kind({
 		children: PropTypes.node,
 
 		/**
-		* Sets the hint string read when focusing the application close button.
-		*
-		* @type {String}
-		* @default 'Exit app'
-		* @public
-		*/
+		 * Sets the hint string read when focusing the application close button.
+		 *
+		 * @type {String}
+		 * @default 'Exit app'
+		 * @public
+		 */
 		closeButtonAriaLabel: PropTypes.string,
 
 		/**
-		 * The background-color opacity of the application close button; valid values are
-		 * `'translucent'`, `'lightTranslucent'`, and `'transparent'`.
+		 * The background opacity of the application close button.
+		 * * Values: `'translucent'`, `'lightTranslucent'`, `'transparent'`
 		 *
 		 * @type {String}
 		 * @default 'transparent'
@@ -96,7 +97,7 @@ const PanelsBase = kind({
 		index: PropTypes.number,
 
 		/**
-		 * When `false`, panel transitions are disabled
+		 * Disables panel transitions.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -105,7 +106,7 @@ const PanelsBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * When `true`, application close button does not show on the top right corner
+		 * Indicates the close button will not be rendered on the top right corner.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -114,7 +115,7 @@ const PanelsBase = kind({
 		noCloseButton: PropTypes.bool,
 
 		/**
-		 * A function to run when app close button is clicked
+		 * Called when the app close button is clicked.
 		 *
 		 * @type {Function}
 		 * @public
@@ -122,7 +123,7 @@ const PanelsBase = kind({
 		onApplicationClose: PropTypes.func,
 
 		/**
-		 * Callback to handle cancel/back key events
+		 * Called with cancel/back key events.
 		 *
 		 * @type {Function}
 		 * @public
