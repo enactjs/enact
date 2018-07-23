@@ -2,7 +2,6 @@
  * Provides Moonstone-themed scrollable components and behaviors.
  *
  * @module moonstone/Scrollable
- * @exports dataIndexAttribute
  * @exports Scrollable
  * @private
  */
@@ -51,7 +50,8 @@ const TouchableDiv = Touchable('div');
 
 /**
  * The name of a custom attribute which indicates the index of an item in
- * [VirtualList]{@link moonstone/VirtualList.VirtualList} or [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
+ * [VirtualList]{@link moonstone/VirtualList.VirtualList} or
+ * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
  *
  * @constant dataIndexAttribute
  * @memberof moonstone/Scrollable
@@ -140,7 +140,7 @@ class ScrollableBase extends Component {
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
-		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
+		 * Allows 5-way navigation to the scrollbar controls. By default, 5-way will
 		 * not move focus to the scrollbar controls.
 		 *
 		 * @type {Boolean}
@@ -346,8 +346,8 @@ class ScrollableBase extends Component {
 			if (item && item === spotItem) {
 				this.calculateAndScrollTo(item);
 			}
-		} else if (this.childRef.setLastFocusedIndex) {
-			this.childRef.setLastFocusedIndex(ev.target);
+		} else if (this.childRef.setLastFocusedNode) {
+			this.childRef.setLastFocusedNode(ev.target);
 		}
 	}
 

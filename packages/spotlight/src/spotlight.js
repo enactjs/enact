@@ -386,6 +386,7 @@ const Spotlight = (function () {
 
 	function onKeyDown (evt) {
 		if (shouldPreventNavigation()) {
+			notifyKeyDown(evt.keyCode);
 			return;
 		}
 
@@ -412,7 +413,10 @@ const Spotlight = (function () {
 	}
 
 	function onMouseMove ({target, clientX, clientY}) {
-		if (shouldPreventNavigation()) return;
+		if (shouldPreventNavigation()) {
+			notifyPointerMove(null, target, clientX, clientY);
+			return;
+		}
 
 		const current = getCurrent();
 		const update = notifyPointerMove(current, target, clientX, clientY);

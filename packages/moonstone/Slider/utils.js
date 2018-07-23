@@ -1,5 +1,5 @@
 import clamp from 'ramda/src/clamp';
-import {adaptEvent, forKey, forProp, forward, handle, oneOf, stopImmediate} from '@enact/core/handle';
+import {adaptEvent, forKey, forProp, forward, handle, oneOf, stop} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {calcProportion} from '@enact/ui/Slider/utils';
 
@@ -53,7 +53,7 @@ const isActive = (ev, props) => {
 const handleIncrement = handle(
 	isActive,
 	isIncrement,
-	stopImmediate,
+	stop,
 	isNotMax,
 	emitChange(1)
 );
@@ -61,7 +61,7 @@ const handleIncrement = handle(
 const handleDecrement = handle(
 	isActive,
 	isDecrement,
-	stopImmediate,
+	stop,
 	isNotMin,
 	emitChange(-1)
 );
