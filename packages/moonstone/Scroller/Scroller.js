@@ -1,5 +1,15 @@
 /**
  * Provides Moonstone-themed scroller components and behaviors.
+ * @example
+ * <Scroller>
+ * 	<div style={{height: "150px"}}>
+ * 		<p>San Francisco</p>
+ * 		<p>Seoul</p>
+ * 		<p>Bangalore</p>
+ * 		<p>New York</p>
+ * 		<p>London</p>
+ * 	</div>
+ * </Scroller>
  *
  * @module moonstone/Scroller
  * @exports Scroller
@@ -26,8 +36,9 @@ const
 
 /**
  * A Moonstone-styled base component for [Scroller]{@link moonstone/Scroller.Scroller}.
- * In most circumstances, you will want to use the SpotlightContainerDecorator and Scrollable version:
- * [Scroller]{@link moonstone/Scroller.Scroller}
+ * In most circumstances, you will want to use the
+ * [SpotlightContainerDecorator]{@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
+ * and the Scrollable version, [Scroller]{@link moonstone/Scroller.Scroller}.
  *
  * @class ScrollerBase
  * @memberof moonstone/Scroller
@@ -48,7 +59,7 @@ class ScrollerBase extends Component {
 		initUiChildRef: PropTypes.func,
 
 		/**
-		 * Callback function to run after [Scroller]{@link moonstone/Scroller.Scroller} updates.
+		 * Called when [Scroller]{@link moonstone/Scroller.Scroller} updates.
 		 *
 		 * @type {function}
 		 * @private
@@ -395,10 +406,7 @@ Scroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
 	/**
 	 * Direction of the scroller.
 	 *
-	 * Valid values are:
-	 * * `'both'`,
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
+	 * * Values: `'both'`, `'horizontal'`, `'vertical'`.
 	 *
 	 * @type {String}
 	 * @default 'both'
@@ -444,10 +452,7 @@ ScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototyp
 	/**
 	 * Direction of the scroller.
 	 *
-	 * Valid values are:
-	 * * `'both'`,
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
+	 * * Values: `'both'`, `'horizontal'`, `'vertical'`.
 	 *
 	 * @type {String}
 	 * @default 'both'

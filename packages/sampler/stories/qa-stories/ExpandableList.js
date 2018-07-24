@@ -7,7 +7,7 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
-import {boolean, text, select} from '@storybook/addon-knobs';
+import {boolean, text, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('ExpandableList', ExpandableList, ExpandableListBase);

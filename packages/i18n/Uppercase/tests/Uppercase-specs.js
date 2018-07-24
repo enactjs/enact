@@ -67,7 +67,7 @@ describe('Uppercase', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not uppercase content when it contains multiple children', function () {
+	it('should uppercase content when it contains multiple children', function () {
 		const Component = (props) => (
 			<div>{props.children}</div>
 		);
@@ -81,7 +81,7 @@ describe('Uppercase', () => {
 			</Wrapped>
 		);
 
-		const expected = 'uppercaseuppercase';
+		const expected = 'UPPERCASEUPPERCASE';
 		const actual = subject.text();
 
 		expect(actual).to.equal(expected);

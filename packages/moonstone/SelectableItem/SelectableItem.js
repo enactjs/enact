@@ -1,5 +1,8 @@
 /**
- * Provides Moonstone-themed item component and interactive togglable circle.
+ * Provides a Moonstone-themed [Item]{@link moonstone/Item} with an icon that toggles on and off.
+ *
+ * @example
+ * <SelectableItem>Click Me</SelectableItem>
  *
  * @module moonstone/SelectableItem
  * @exports SelectableItem
@@ -18,7 +21,7 @@ import SelectableIcon from './SelectableIcon';
 import componentCss from './SelectableItem.less';
 
 /**
- * Renders an item with a circle shaped component. Useful to show a selected state on an item.
+ * Renders an [Item]{@link moonstone/Item} with a circle icon, by default.
  *
  * @class SelectableItem
  * @memberof moonstone/SelectableItem
@@ -61,7 +64,7 @@ const SelectableItemBase = kind({
 });
 
 /**
- * Adds interactive functionality to `SelectableItemBase`
+ * Adds interactive toggle functionality to `SelectableItemBase`.
  *
  * @class SelectableItemDecorator
  * @memberof moonstone/SelectableItem
@@ -72,13 +75,7 @@ const SelectableItemBase = kind({
 const SelectableItemDecorator = ToggleItemDecorator({invalidateProps: ['inline', 'selected']});
 
 /**
- * A Moonstone-styled item with circle shaped component with built-in support for toggling,
- * marqueed text, and `Spotlight` focus.
- *
- * Usage:
- * ```
- * <SelectableItem>Toggle Me</SelectableItem>
- * ```
+ * A Moonstone-styled item with a toggle icon, marqueed text, and `Spotlight` focus.
  *
  * @class SelectableItem
  * @memberof moonstone/SelectableItem

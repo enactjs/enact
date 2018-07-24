@@ -13,6 +13,8 @@ import {spottableClass} from '../Spottable';
 
 import {rootContainerId} from '../src/container';
 
+import '../styles/debug.less';
+
 /**
  * Default configuration for SpotlightRootDecorator
  *

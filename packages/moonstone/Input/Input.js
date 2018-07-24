@@ -10,8 +10,7 @@
  */
 
 import kind from '@enact/core/kind';
-import {Subscription} from '@enact/core/internal/PubSub';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import {isRtlText} from '@enact/i18n/util';
 import Changeable from '@enact/ui/Changeable';
 import Pure from '@enact/ui/internal/Pure';
@@ -229,8 +228,6 @@ const InputBase = kind({
 		type: 'text'
 	},
 
-	contextTypes,
-
 	styles: {
 		css: componentCss,
 		className: 'decorator',
@@ -288,6 +285,7 @@ const InputBase = kind({
 					disabled={disabled}
 					onChange={onChange}
 					placeholder={placeholder}
+					tabIndex={-1}
 					type={type}
 					value={value}
 				/>
@@ -314,8 +312,8 @@ const InputBase = kind({
  * @public
  */
 const Input = Pure(
-	Subscription(
-		{channels: ['i18n'], mapMessageToProps: (channel, {rtl}) => ({rtl})},
+	I18nContextDecorator(
+		{rtlProp: 'rtl'},
 		Changeable(
 			InputSpotlightDecorator(
 				Skinnable(
