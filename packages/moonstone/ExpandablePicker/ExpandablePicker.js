@@ -45,7 +45,7 @@ const ExpandablePickerBase = kind({
 
 	propTypes: /** @lends moonstone/ExpandablePicker.ExpandablePickerBase.prototype */ {
 		/**
-		 * Children from which to pick
+		 * Picker value list.
 		 *
 		 * @type {Node}
 		 * @required
@@ -80,9 +80,11 @@ const ExpandablePickerBase = kind({
 		decrementAriaLabel: PropTypes.string,
 
 		/**
-		 * A custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
-		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{@link moonstone/Icon.Icon#orientation} is changed.
+		 * A custom icon for the decrementer.
+		 *
+		 * All strings supported by [Icon]{@link moonstone/Icon.Icon} are supported. Without a
+		 * custom icon, the default is used, and is automatically changed when the
+		 * [orientation]{@link moonstone/Picker.Picker#orientation} is changed.
 		 *
 		 * @type {string}
 		 * @public
@@ -107,9 +109,11 @@ const ExpandablePickerBase = kind({
 		incrementAriaLabel: PropTypes.string,
 
 		/**
-		 * A custom icon for the incrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
-		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{@link moostone/Icon.Icon#orientation} is changed.
+		 * A custom icon for the incrementer.
+		 *
+		 * All strings supported by [Icon]{@link moonstone/Icon.Icon} are supported. Without a
+		 * custom icon, the default is used, and is automatically changed when the
+		 * [orientation]{@link moonstone/Picker.Picker#orientation} is changed.
 		 *
 		 * @type {String}
 		 * @public
@@ -117,11 +121,12 @@ const ExpandablePickerBase = kind({
 		incrementIcon: PropTypes.string,
 
 		/**
-		 * The user interaction of the control. A joined picker allows the user to use
-		 * the arrow keys to adjust the picker's value. The user may no longer use those arrow keys
-		 * to navigate while this control is focused. A non-joined control allows full navigation,
-		 * but requires individual ENTER presses on the incrementer and decrementer buttons.
-		 * Pointer interaction is the same for both formats.
+		 * Allows the user to use the arrow keys to adjust the picker's value.
+		 *
+		 * Key presses are captured in the directions of the increment and decrement buttons but
+		 * others are unaffected. A non-joined Picker allows navigation in any direction, but
+		 * requires individual ENTER presses on the incrementer and decrementer buttons. Pointer
+		 * interaction is the same for both formats.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -205,8 +210,11 @@ const ExpandablePickerBase = kind({
 		open: PropTypes.bool,
 
 		/**
-		 * The orientation of the picker, i.e. whether the buttons are above and below or on the
-		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
+		 * Orientation of the picker.
+		 *
+		 * Controls whether the buttons are arranged horizontally or vertically around the value.
+		 *
+		 * * Values: `'horizontal'`, `'vertical'`
 		 *
 		 * @type {String}
 		 * @default 'horizontal'
@@ -249,9 +257,18 @@ const ExpandablePickerBase = kind({
 		value: PropTypes.number,
 
 		/*
-		 * The size of the picker: `'small'`, `'medium'`, `'large'`, or set to `null` to
-		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
-		 * word pickers, `'large'` for maximum-sized pickers.
+		 * The width of the picker.
+		 *
+		 * A number can be used to set the minimum number of characters to be shown. Setting a
+		 * number to less than the number of characters in the longest value will cause the width to
+		 * grow for the longer values.
+		 *
+		 * A string can be used to select from pre-defined widths:
+		 * * `'small'` - numeric values
+		 * * `'medium'` - single or short words
+		 * * `'large'` - maximum-sized pickers taking full width of its parent
+		 *
+		 * By default, the picker will size according to the longest valid value.
 		 *
 		 * @type {String}
 		 * @public
@@ -259,8 +276,8 @@ const ExpandablePickerBase = kind({
 		width: PropTypes.oneOf([null, 'small', 'medium', 'large']),
 
 		/*
-		 * Allows picker to continue from the opposite end of the list of options when reaching the
-		 * start or the end of the list.
+		 * Allows picker to continue from the start of the list after it reaches the end and
+		 * vice-versa.
 		 *
 		 * @type {Boolean}
 		 * @public
