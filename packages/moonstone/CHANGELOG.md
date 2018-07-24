@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [2.0.0-rc.3] - 2018-07-23
 
+### Changed
+
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` overscroll effect color more recognizable on the focused element
+
 ### Fixed
 
 - `moonstone/ContextualPopup` to refocus its activator on close when the popup lacks spottable children
