@@ -207,12 +207,6 @@ class ScrollableBase extends Component {
 		configureSpotlightContainer(nextProps);
 	}
 
-	componentDidUpdate () {
-		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null) {
-			this.calculateAndScrollTo(Spotlight.getCurrent());
-		}
-	}
-
 	componentWillUnmount () {
 		this.stopOverscrollJob('horizontal', 'before');
 		this.stopOverscrollJob('horizontal', 'after');
@@ -291,8 +285,10 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	calculateAndScrollTo = (spotItem) => {
-		const positionFn = this.childRef.calculatePositionOnFocus,
+	calculateAndScrollTo = () => {
+		const
+			spotItem = Spotlight.getCurrent(),
+			positionFn = this.childRef.calculatePositionOnFocus,
 			{containerRef} = this.uiRef.childRef;
 
 		if (spotItem && positionFn && containerRef && containerRef.contains(spotItem)) {
@@ -344,7 +340,7 @@ class ScrollableBase extends Component {
 				spotItem = Spotlight.getCurrent();
 
 			if (item && item === spotItem) {
-				this.calculateAndScrollTo(item);
+				this.calculateAndScrollTo();
 			}
 		} else if (this.childRef.setLastFocusedNode) {
 			this.childRef.setLastFocusedNode(ev.target);
@@ -571,8 +567,9 @@ class ScrollableBase extends Component {
 
 	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
 	handleScrollerUpdate = () => {
-		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null && Spotlight.getPointerMode()) {
-			this.calculateAndScrollTo(Spotlight.getCurrent());
+		// For Scroller
+		if (this.uiRef.scrollToInfo === null && !this.hasOwnProperty(this.childRef.restoreLastFocused) && Spotlight.getPointerMode()) {
+			this.calculateAndScrollTo();
 		}
 	}
 
