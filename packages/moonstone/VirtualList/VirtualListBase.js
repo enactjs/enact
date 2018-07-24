@@ -843,10 +843,22 @@ const VirtualListBaseFactory = (type) => {
 				numOfItems > 0 &&
 				(preservedIndex < dataSize) &&
 				(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
-				// If we need to restore last focus and the index is beyond the screen,
-				// we call `scrollTo` to create DOM for it.
-				cbScrollTo({index: preservedIndex, animate: false, focus: true});
-				this.isScrolledByJump = true;
+				const {firstIndex} = this.uiRef.state;
+
+				// If the preserved index item is already rendered
+				if (firstIndex <= preservedIndex && preservedIndex < firstIndex + numOfItems) {
+					const node = this.uiRef.containerRef.querySelector(`[data-index='${preservedIndex}'].spottable`);
+
+					if (node) {
+						Spotlight.focus(node);
+					}
+				// If the preserved index item is needed to render
+				} else {
+					// If we need to restore last focus and the index is beyond the screen,
+					// we call `scrollTo` to create DOM for it.
+					cbScrollTo({index: preservedIndex, animate: false, focus: true});
+					this.isScrolledByJump = true;
+				}
 
 				return true;
 			} else {
