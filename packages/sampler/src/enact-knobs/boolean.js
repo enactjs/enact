@@ -31,7 +31,7 @@ const boolean = (name, Config, preferredValue) => {
 	}
 
 	// Set false for default boolean props that are not defined.
-	const defaultValue = Config.defaultProps[name] != null ? Config.defaultProps[name] : false;
+	const defaultValue = (Config.defaultProps[name] != null) ? Config.defaultProps[name] : false;
 	// console.log(name, Config, preferredValue, preferredValue != null, Config.defaultProps);
 	return nullify(booleanKnob(name, (preferredValue != null ? preferredValue : defaultValue), Config.groupId));
 };
