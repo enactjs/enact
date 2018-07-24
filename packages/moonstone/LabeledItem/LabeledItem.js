@@ -1,13 +1,13 @@
- /**
-  * Provides Moonstone styled item with a label below.
-  *
-  * @example
-  * <LabeledItem label="Label">Hello LabeledItem</LabeledItem>
-  *
-  * @module moonstone/LabeledItem
-  * @exports LabeledItem
-  * @exports LabeledItemBase
-  */
+/**
+ * Provides Moonstone styled item with a label below.
+ *
+ * @example
+ * <LabeledItem label="Label">Hello LabeledItem</LabeledItem>
+ *
+ * @module moonstone/LabeledItem
+ * @exports LabeledItem
+ * @exports LabeledItemBase
+ */
 
 import kind from '@enact/core/kind';
 import React from 'react';
