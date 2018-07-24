@@ -469,12 +469,7 @@ const VirtualListBaseFactory = (type) => {
 					const node = this.uiRef.containerRef.querySelector(`[data-index='${indexToScroll}'].spottable`);
 
 					if (node) {
-						// When changing from "pointer" mode to "5way key" mode,
-						// a pointer is hidden and a last focused item get focused after 30ms.
-						// To make sure the item to be focused after that, we used 50ms.
-						setTimeout(() => {
-							Spotlight.focus(node);
-						}, 50);
+						Spotlight.focus(node);
 					}
 				} else {
 					// Scroll to the next spottable item without animation
