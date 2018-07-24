@@ -1,18 +1,18 @@
 /**
- * An unstyled body text component and behaviors to be customized by a theme or application.
+ * Text block component to be customized by a theme or application.
  *
  * @module ui/BodyText
  * @exports BodyText
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import componentCss from './BodyText.less';
 
 /**
- * A basic text-block component without any behaviors applied to it.
+ * A simple, unstyled text block component.
  *
  * @class BodyText
  * @memberof ui/BodyText
@@ -24,7 +24,10 @@ const BodyText = kind({
 
 	propTypes: /** @lends ui/BodyText.BodyText.prototype */ {
 		/**
-		 * Applies the `centered` CSS class to the [BodyTextBase]{@link ui/BodyText.BodyTextBase}
+		 * Centers the contents.
+		 *
+		 * Applies the `centered` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
 		 * @default false

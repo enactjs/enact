@@ -1,9 +1,10 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 /**
- * {@link ui/AnnounceDecorator.Announce} provides an imperative API, `announce`, to alert the user
- * of behavior for accessibility.
+ * An unstyled component with an imperative API to alert the user.
+ *
+ * The `announce()` method should be used to alert the user of behavior for accessibility.
  *
  * Example:
  * ```

@@ -1,5 +1,5 @@
 /**
- * Exports the {@link ui/A11yDecorator.A11yDecorator} higher-order component (HOC).
+ * Provides a higher-order component to add accessibility utility features to a component.
  *
  * @module ui/A11yDecorator
  * @exports A11yDecorator
@@ -7,8 +7,8 @@
 
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 /**
  * Default config for {@link ui/A11yDecorator.A11yDecorator}.
@@ -28,10 +28,21 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/A11yDecorator.A11yDecorator} is a higher-order component (HOC) that adds support for hint
- * text to be read before and/or after the content. By default, the `children` prop is used as the
- * source of the components content but may be configured by passing a different `prop` to the HOC
- * configuration.
+ * Adds support for hint text to be read before and/or after the content.
+ *
+ * By default, the `children` prop is used as the source of the components content but may be
+ * configured by passing a different `prop` to the HOC configuration.
+ *
+ * Usage:
+ * ```
+ * const MyComponent = A11yDecorator(MyComponentBase);
+ *
+ * // passes an aria-label property to MyComponentBase with accessibilityPreHint and
+ * // accessibilityHint wrapping children
+ * <MyComponent accessibilityPreHint="before children" accessibilityHint="after children">
+ *   {children}
+ * </MyComponent>
+ * ```
  *
  * @class A11yDecorator
  * @memberof ui/A11yDecorator
@@ -46,29 +57,28 @@ const A11yDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		propTypes: /** @lends ui/A11yDecorator.A11yDecorator.prototype */ {
 			/**
+			 * Sets the value of the `aria-label` attribute for the wrapped component.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			'aria-label': PropTypes.string,
+
+			/**
 			 * Sets the hint text to be read after the content.
 			 *
 			 * @type {String}
 			 * @public
 			 */
 			accessibilityHint: PropTypes.string,
+
 			/**
 			 * Sets the hint text to be read before the content.
 			 *
 			 * @type {String}
 			 * @public
 			 */
-			accessibilityPreHint: PropTypes.string,
-			// TODO: fix bug in react eslint rules with sorting of quoted keys
-			/**
-			 * Sets the value of the `aria-label` attribute for the wrapped component.
-			 *
-			 * @type {String}
-			 * @public
-			 * @memberof ui/A11yDecorator.A11yDecorator.prototype
-			 */
-			// eslint-disable-next-line react/sort-prop-types
-			'aria-label': PropTypes.string
+			accessibilityPreHint: PropTypes.string
 		},
 
 		computed: {
@@ -101,4 +111,6 @@ const A11yDecorator = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default A11yDecorator;
-export {A11yDecorator};
+export {
+	A11yDecorator
+};
