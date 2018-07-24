@@ -16,7 +16,7 @@
 import ActivityPanels from './ActivityPanels';
 import AlwaysViewingPanels from './AlwaysViewingPanels';
 import Breadcrumb from './Breadcrumb';
-import Header from './Header';
+import Header, {HeaderBase} from './Header';
 import Panel from './Panel';
 import Panels from './Panels';
 import Routable from './Routable';
@@ -28,6 +28,7 @@ export {
 	AlwaysViewingPanels,
 	Breadcrumb,
 	Header,
+	HeaderBase,
 	Panel,
 	Panels,
 	Panels as PanelsBase,
