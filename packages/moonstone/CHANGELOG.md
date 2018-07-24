@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/VideoPlayer` not to read out what is not needed when panel disappears after clicking more button.
+
 ## [2.0.0-rc.3] - 2018-07-23
 
 ### Fixed
