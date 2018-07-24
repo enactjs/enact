@@ -28,7 +28,7 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {
 			highContrast: PropTypes.bool,
 
 			/**
-			 * Set the goal size of the text. The UI library will be responsible for using this
+			 * Sets the goal size of the text. The UI library will be responsible for using this
 			 * information to adjust the components' text sizes to this preset.
 			 * Current presets are `'normal'` (default), and `'large'`.
 			 *

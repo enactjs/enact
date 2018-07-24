@@ -43,7 +43,7 @@ const FormCheckboxBase = kind({
 		 * * A URL specifying path to an icon image, or
 		 * * An object representing a resolution independent resource (See {@link ui/resolution}).
 		 *
-		 * @type {String|Object}
+		 * @type {String}
 		 * @public
 		 */
 		children: PropTypes.string,

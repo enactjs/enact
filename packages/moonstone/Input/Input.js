@@ -206,7 +206,7 @@ const InputBase = kind({
 		 * Accepted values correspond to the standard HTML5 input types.
 		 *
 		 * @type {String}
-		 * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input
+		 * @see [MDN input types doc]{@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types}
 		 * @default 'text'
 		 * @public
 		 */
