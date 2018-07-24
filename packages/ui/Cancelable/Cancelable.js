@@ -1,5 +1,5 @@
 /**
- * Exports the {@link ui/Cancelable.Cancelable} higher-order component (HOC).
+ * Provides components and methods to add support for handling cancel actions.
  *
  * @module ui/Cancelable
  * @exports addCancelHandler
@@ -11,11 +11,11 @@ import {forward, handle, stop, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import invariant from 'invariant';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
-import {addModal, removeModal} from './modalHandler';
 import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
+import {addModal, removeModal} from './modalHandler';
 
 /**
  * Default config for {@link ui/Cancelable.Cancelable}
@@ -25,6 +25,8 @@ import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler'
  */
 const defaultConfig = {
 	/**
+	 * Called when a cancel action is invoked by the user.
+	 *
 	 * If it is a string, the cancel handler will attempt to invoke a function passed as a prop of
 	 * that name. If it is a function, that function will be called with the current props as the
 	 * only argument.
@@ -39,6 +41,8 @@ const defaultConfig = {
 	onCancel: null,
 
 	/**
+	 * Subscribes to cancel events globally for this instance.
+	 *
 	 * When `true`, the `Cancelable` instance will handle cancel events globally that successfully
 	 * bubble up to `window` regardless of which component is focused.
 	 *
@@ -53,6 +57,8 @@ const defaultConfig = {
 	modal: false,
 
 	/**
+	 * The component that will contain the wrapped component.
+	 *
 	 * When set, the wrapped component will be contained within an instance of `component`. This may
 	 * be necessary if the props passed to the wrapped component are not placed on the root element.
 	 *
@@ -67,11 +73,39 @@ const defaultConfig = {
 add('cancel', 27);
 
 /**
- * {@link ui/Cancelable.Cancelable} is a higher-order component (HOC) that allows mapping
- * a cancel key event to existing event handler either directly or via a custom function which can
- * adapt the event payload.
+ * Adds support to a component to handle cancel actions.
  *
- * The `onCancel` config option is required.
+ * The cancel event may be handled either by a design-time config function or a run-time prop
+ * function. If the component handles the event and wants to prevent upstream components from also
+ * handling the event, the callback should invoke `stopPropagation()` on the event object.
+ *
+ * Usage of config function:
+ * ```
+ * import Cancelable from '@enact/ui/Cancelable';
+ *
+ * const CancelableComponent = Cancelable(
+ *   {cancel: function (ev, props) {
+ *     // Can inspect either the `onCancel` event, `ev`, and/or the `props` to determine how
+ *     // to handle the event (e.g. invoking an event handler from `props`).
+ *
+ *     // Stop upstream instances of Cancelable from handling the event
+ *     ev.stopPropagaion();
+ *   }},
+ *   MyComponent
+ * );
+ * ```
+ *
+ * Usage of prop function:
+ * ```
+ * import Cancelable from '@enact/ui/Cancelable';
+ *
+ * const CancelableComponent = Cancelable(
+ *   // When a cancel action is received and a handler function exists for the prop
+ *   // `onCancel`, it will be invoked and passed the `onCancel` event object.
+ *   {cancel: 'onCancel'},
+ *   MyComponent
+ * );
+ * ```
  *
  * @class Cancelable
  * @memberof ui/Cancelable
@@ -117,9 +151,12 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
 			/**
-			 * Cancels an event.
+			 * Called when a cancel action is received.
 			 *
-			 * @type {String|Function}
+			 * This callback is invoked for every cancel action before the config or prop handler is
+			 * invoked.
+			 *
+			 * @type {Function}
 			 * @public
 			 */
 			onCancel: PropTypes.func
