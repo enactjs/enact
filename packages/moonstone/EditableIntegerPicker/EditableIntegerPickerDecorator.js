@@ -54,8 +54,8 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
 			min: PropTypes.number.isRequired,
 
 			/**
-			 * When `true`, the EditableIntegerPicker is shown as disabled and does not generate `onChange`
-			 * [events]{@glossary event}.
+			 * Disables EditableIntegerPicker is shown as disabled and does not generate `onChange`
+			 * [events]{@link /docs/developer-guide/glossary/#event}.
 			 *
 			 * @type {Boolean}
 			 * @public

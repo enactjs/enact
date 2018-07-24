@@ -33,6 +33,19 @@ const FormCheckboxBase = kind({
 	name: 'FormCheckbox',
 
 	propTypes: {
+		/**
+		 * The icon to be shown when selected.
+		 *
+		 * May be specified as either:
+		 *
+		 * * A string that represents an icon from the [iconList]{@link ui/Icon.IconBase.iconList},
+		 * * An HTML entity string, Unicode reference or hex value (in the form '0x...'),
+		 * * A URL specifying path to an icon image, or
+		 * * An object representing a resolution independent resource (See {@link ui/resolution}).
+		 *
+		 * @type {String|Object}
+		 * @public
+		 */
 		children: PropTypes.string,
 		css: PropTypes.object
 	},

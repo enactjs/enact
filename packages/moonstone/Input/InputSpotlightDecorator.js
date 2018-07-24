@@ -48,7 +48,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/Input/InputSpotlightDecorator.InputSpotlightDecorator.prototype */ {
 			/**
-			 * When `true`, focusing the decorator directly via 5-way will forward the focus onto the <input>.
+			 * Focusing the decorator directly via 5-way will forward the focus onto the <input>.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -57,7 +57,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			autoFocus: PropTypes.bool,
 
 			/**
-			 * When `true`, applies a disabled style and the control becomes non-interactive.
+			 * Applies a disabled style and the control becomes non-interactive.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -66,7 +66,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * When `true`, blurs the input when the "enter" key is pressed.
+			 * Blurs the input when the "enter" key is pressed.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -102,7 +102,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			onSpotlightDisappear: PropTypes.func,
 
 			/**
-			 * When `true`, prevents navigation of the component using spotlight.
+			 * Prevents navigation of the component using spotlight
 			 *
 			 * @type {Boolean}
 			 * @default false

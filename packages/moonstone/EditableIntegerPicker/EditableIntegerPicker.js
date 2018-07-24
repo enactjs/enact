@@ -36,7 +36,7 @@ const digits = (num) => {
 };
 
 /**
- * A picker component that lets the user select a number from a range of numbers.
+ * A picker component that lets the user select a number in between `min` and `max` numbers.
  * This component is not spottable. Developers are encouraged to use
  * {@link moonstone/EditableIntegerPicker.EditableIntegerPicker}.
  *

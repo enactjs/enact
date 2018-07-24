@@ -65,7 +65,7 @@ const IncrementSliderBase = kind({
 
 	propTypes: /** @lends moonstone/IncrementSlider.IncrementSliderBase.prototype */ {
 		/**
-		 * When `true`, prevents read out of both the slider and the increment and decrement
+		 * Prevents read out of both the slider and the increment and decrement
 		 * buttons.
 		 *
 		 * @type {Boolean}
@@ -95,7 +95,7 @@ const IncrementSliderBase = kind({
 		'data-webos-voice-group-label': PropTypes.string,
 
 		/**
-		 * Displays the knob selected and can be moved using 5-way controls.
+		 * Displays the knob in its selected state, and it can be moved using 5-way controls.
 		 *
 		 * @type {Boolean}
 		 * @public

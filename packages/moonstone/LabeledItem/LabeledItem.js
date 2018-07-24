@@ -1,12 +1,13 @@
-/**
- * Exports the {@link moonstone/LabeledItem.LabeledItem} component.
- *
- * @example
- * <LabeledItem label="Label">Hello LabeledItem</LabeledItem>
- *
- * @module moonstone/LabeledItem
- * @module moonstone/LabeledItemBase
- */
+ /**
+  * Provides Moonstone styled item with a label below.
+  *
+  * @example
+  * <LabeledItem label="Label">Hello LabeledItem</LabeledItem>
+  *
+  * @module moonstone/LabeledItem
+  * @exports LabeledItem
+  * @exports LabeledItemBase
+  */
 
 import kind from '@enact/core/kind';
 import React from 'react';
