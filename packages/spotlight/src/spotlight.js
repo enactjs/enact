@@ -172,6 +172,15 @@ const Spotlight = (function () {
 		}
 	}
 
+	// An extension point for updating pointer mode based on the current platform.
+	// Currently only webOS
+	function setPlatformPointerMode () {
+		const palmSystem = window.PalmSystem;
+		if (palmSystem && palmSystem.cursor) {
+			setPointerMode(palmSystem.cursor.visibility);
+		}
+	}
+
 	function focusElement (elem, containerIds, fromPointer) {
 		if (!elem) {
 			return false;
@@ -350,12 +359,7 @@ const Spotlight = (function () {
 		// platform may focus the window after the app has already focused a component so we prevent
 		// trying to focus something else (potentially) unless the window was previously blurred
 		if (_spotOnWindowFocus) {
-			const palmSystem = window.PalmSystem;
-
-			if (palmSystem && palmSystem.cursor) {
-				Spotlight.setPointerMode(palmSystem.cursor.visibility);
-			}
-
+			setPlatformPointerMode();
 			// If the window was previously blurred while in pointer mode, the last active containerId may
 			// not have yet set focus to its spottable elements. For this reason we can't rely on setting focus
 			// to the last focused element of the last active containerId, so we use rootContainerId instead
@@ -481,7 +485,9 @@ const Spotlight = (function () {
 				setLastContainer(rootContainerId);
 				configureDefaults(containerDefaults);
 				configureContainer(rootContainerId);
-				Spotlight.setPointerMode(false);
+				// by default, pointer mode is off but the platform's current state will override that
+				setPointerMode(false);
+				setPlatformPointerMode();
 				_initialized = true;
 			}
 		},
