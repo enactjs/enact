@@ -408,30 +408,30 @@ class ScrollableBase extends Component {
 				viewportBounds = containerRef.getBoundingClientRect(),
 				spotItemBounds = spotItem.getBoundingClientRect(),
 				endPoint = this.getEndPoint(direction, spotItemBounds, viewportBounds);
-			let next = getTargetByDirectionFromPosition(rDirection, endPoint, spotlightId);
+			let next = null;
 
 			/* 1. Find spottable item in viewport */
+			next = getTargetByDirectionFromPosition(rDirection, endPoint, spotlightId);
+
 			if (next !== spotItem) {
 				this.animateOnFocus = false;
 				Spotlight.focus(next);
 			/* 2. Find spottable item out of viewport */
 			// For Scroller
 			} else if (this.childRef.scrollToNextPage) {
-				const nodeToScroll = this.childRef.scrollToNextPage({direction, focusedItem: spotItem, reverseDirection: rDirection, scrollBoundHeight: bounds.scrollHeight, spotlightId, viewportBoundHeight: viewportBounds.height});
+				next = this.childRef.scrollToNextPage({direction, focusedItem: spotItem, reverseDirection: rDirection, scrollBoundHeight: bounds.scrollHeight, spotlightId, viewportBoundHeight: viewportBounds.height});
 
-				if (nodeToScroll !== null) {
+				if (next !== null) {
 					this.animateOnFocus = false;
-					Spotlight.focus(nodeToScroll);
+					Spotlight.focus(next);
 				}
-
-				return false;
 			// For VirtualList
 			} else if (this.childRef.scrollToNextItem) {
-				// For VirtualList, need to check whether an overscroll effect is needed
 				this.childRef.scrollToNextItem({direction, focusedItem: spotItem, reverseDirection: rDirection, spotlightId});
-
-				return false;
 			}
+
+			// Need to check whether an overscroll effect is needed
+			return false;
 		}
 
 		return true;

@@ -316,21 +316,20 @@ class ScrollerBase extends Component {
 			endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect());
 		let candidateNode = null;
 
-		/* 2. Find spottable item out of viewport */
-		/* 2-1 First, find a spottable item in the next page */
-		if (direction === 'down' || direction === 'right') {
+		/* Find a spottable item in the next page */
+		if (direction === 'down') {
 			endPoint.y += viewportBoundHeight;
 		} else {
 			endPoint.y -= viewportBoundHeight;
 		}
 		candidateNode = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
 
-		/* 2-2 Last, find a spottable item in a whole data */
+		/* Find a spottable item in a whole data */
 		if (candidateNode === spotItem) {
 			candidateNode = getTargetByDirectionFromPosition(direction, endPoint, spotlightId);
 		}
 
-		/* 2-3 If there is no spottable item next to the current item */
+		/* If there is no spottable item next to the current item */
 		if (candidateNode === spotItem) {
 			return null;
 		}
