@@ -206,6 +206,7 @@ const InputBase = kind({
 		 * Accepted values correspond to the standard HTML5 input types.
 		 *
 		 * @type {String}
+		 * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input
 		 * @default 'text'
 		 * @public
 		 */
@@ -344,6 +345,15 @@ const Input = Pure(
  * @memberof moonstone/Input.Input.prototype
  * @type {Boolean}
  * @default false
+ * @public
+ */
+
+/**
+ * Sets the initial value.
+ *
+ * @name defaultValue
+ * @memberof moonstone/Input.Input.prototype
+ * @type {String}
  * @public
  */
 
