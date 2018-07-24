@@ -48,7 +48,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/Input/InputSpotlightDecorator.InputSpotlightDecorator.prototype */ {
 			/**
-			 * Focusing the decorator directly via 5-way will forward the focus onto the <input>.
+			 * Focuses the <input> when the decorator is focused via 5-way.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -75,7 +75,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			dismissOnEnter: PropTypes.bool,
 
 			/**
-			 * The handler to run when the internal input is focused.
+			 * Called when the internal <input> is focused.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
@@ -84,7 +84,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			onActivate: PropTypes.func,
 
 			/**
-			 * The handler to run when the internal input loses focus.
+			 * Called when the internal <input> loses focus.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
@@ -93,7 +93,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			onDeactivate: PropTypes.func,
 
 			/**
-			 * The handler to run when the component is removed while retaining focus.
+			 * Called when the component is removed while retaining focus.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
@@ -102,7 +102,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			onSpotlightDisappear: PropTypes.func,
 
 			/**
-			 * Prevents navigation of the component using spotlight
+			 * Disables spotlight navigation into the component.
 			 *
 			 * @type {Boolean}
 			 * @default false

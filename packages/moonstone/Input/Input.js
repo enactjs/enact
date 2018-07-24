@@ -398,7 +398,7 @@ const Input = Pure(
  */
 
 /**
- * Prevents navigation of the component using spotlight.
+ * Disables spotlight navigation into the component.
  *
  * @name spotlightDisabled
  * @memberof moonstone/Input.Input.prototype

@@ -2,7 +2,7 @@
  * Provides components for displaying and controlling marqueed text.
  *
  * @example
- * <MarqueeText>Lorem ipsum dolor sit amet</MarqueeText>
+ * <Marquee>Lorem ipsum dolor sit amet</Marquee>
  *
  * @see ui/Marquee
  * @module moonstone/Marquee

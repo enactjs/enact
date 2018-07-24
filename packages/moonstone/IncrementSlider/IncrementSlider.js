@@ -95,7 +95,7 @@ const IncrementSliderBase = kind({
 		'data-webos-voice-group-label': PropTypes.string,
 
 		/**
-		 * Displays the knob in its selected state, and it can be moved using 5-way controls.
+		 * Sets the knob to selected state and allows it to move via 5-way controls.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -140,7 +140,7 @@ const IncrementSliderBase = kind({
 		decrementIcon: PropTypes.string,
 
 		/**
-		 * Disables IncrementSlider and does not generate events.
+		 * Disables the slider and prevents events from firing.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -148,7 +148,7 @@ const IncrementSliderBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Shows the tooltip when present
+		 * Shows the tooltip, when present.
 		 * @type {Boolean}
 		 * @public
 		 */
@@ -331,7 +331,7 @@ const IncrementSliderBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * Disables spotlight navigation.
+		 * Disables spotlight navigation into the component.
 		 *
 		 * @type {Boolean}
 		 * @public

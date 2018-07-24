@@ -133,7 +133,8 @@ const ExpandableListBase = kind({
 		label: PropTypes.node,
 
 		/**
-		 * Stays open when the user navigates to the `title` of the component using 5-way controls.
+		 * Keeps the expandable open when the user navigates to the `title` of the component using
+		 * 5-way controls and the user must select/tap the title to close the expandable.
 		 *
 		 * This does not affect `closeOnSelect`.
 		 *
@@ -144,7 +145,7 @@ const ExpandableListBase = kind({
 		noAutoClose: PropTypes.bool,
 
 		/**
-		 * Allows the user to move {@glossary Spotlight} past the bottom of the expandable
+		 * Allows the user to move [Spotlight] {@link /docs/developer-guide/glossary/#spotlight} past the bottom of the expandable
 		 * (when open) using 5-way controls.
 		 *
 		 * @type {Boolean}
@@ -244,7 +245,7 @@ const ExpandableListBase = kind({
 		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)]),
 
 		/**
-		 * Disables spotlight navigation.
+		 * Disables spotlight navigation into the component.
 		 *
 		 * @type {Boolean}
 		 * @default false

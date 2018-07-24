@@ -32,7 +32,7 @@ import componentCss from './FormCheckbox.less';
 const FormCheckboxBase = kind({
 	name: 'FormCheckbox',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/FormCheckbox.FormCheckbox.prototype */ {
 		/**
 		 * The icon to be shown when selected.
 		 *

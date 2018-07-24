@@ -87,8 +87,8 @@ const EditableIntegerPickerBase = kind({
 		decrementIcon: PropTypes.string,
 
 		/**
-		 * Disables the EditableIntegerPicker and does not generate `onChange`
-		 * [events]{@glossary event}.
+		 * Disables the picker and prevents events from firing.
+		 * [events]{@link /docs/developer-guide/glossary/#event}.
 		 *
 		 * @type {Boolean}
 		 * @public

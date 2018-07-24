@@ -239,7 +239,7 @@ const ExpandablePickerBase = kind({
 		rtl: PropTypes.bool,
 
 		/**
-		 * Disables spotlight navigation.
+		 * Disables spotlight navigation into the component.
 		 *
 		 * @type {Boolean}
 		 * @default false

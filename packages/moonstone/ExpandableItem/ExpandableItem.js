@@ -114,7 +114,7 @@ const ExpandableItemBase = kind({
 
 		/**
 		 * Closes the expandable automatically when the user navigates to the `title`
-		 * of the component using 5-way controls; if `false`, the user must select/tap the header to
+		 * of the component using 5-way controls; if `false`, the user must select/tap the title to
 		 * close the expandable.
 		 *
 		 * @type {Boolean}
@@ -149,7 +149,7 @@ const ExpandableItemBase = kind({
 		label: PropTypes.node,
 
 		/**
-		 * Prevents the user from moving {@glossary Spotlight} past the bottom
+		 * Prevents the user from moving [Spotlight] {@link /docs/developer-guide/glossary/#spotlight} past the bottom
 		 * of the expandable (when open) using 5-way controls.
 		 *
 		 * @type {Boolean}
@@ -273,7 +273,7 @@ const ExpandableItemBase = kind({
 		showLabel: PropTypes.oneOf(['always', 'never', 'auto']),
 
 		/**
-		 * Disables spotlight navigation.
+		 * Disables spotlight navigation into the component.
 		 *
 		 * @type {Boolean}
 		 * @default false

@@ -2,7 +2,7 @@
  * Provides a media component with image and text overlay support.
  *
  * @example
- * <MediaOverlay>
+ * <MediaOverlay text="overlay">
  *   <source src="http://media.w3.org/2010/05/sintel/trailer.mp4" />
  * </MediaOverlay>
  *
