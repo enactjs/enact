@@ -8,10 +8,6 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 - `spotlight` to default to 5-way mode on initialization
 
-### Added
-
-- `spotlight` to have the 5-way mode by setting pointerMode to false.
-
 ### Fixed
 
 - `spotlight` to track pointer mode while paused
