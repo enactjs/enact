@@ -310,16 +310,32 @@ class ScrollerBase extends Component {
 		return oPoint;
 	}
 
-	scrollToNextPage = ({direction, reverseDirection, focusedItem, spotlightId}) => {
+	scrollToNextPage = ({direction, focusedItem, reverseDirection, spotlightId, viewportBoundHeight}) => {
 		const
-			endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect()),
-			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
+			spotItem = Spotlight.getCurrent(),
+			endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect());
+		let candidateNode = null;
 
-		if (next === focusedItem) {
-			return false; // Scroll one page with animation
+		/* 2. Find spottable item out of viewport */
+		/* 2-1 First, find a spottable item in the next page */
+		if (direction === 'down' || direction === 'right') {
+			endPoint.y += viewportBoundHeight;
 		} else {
-			return next; // Focus a next item
+			endPoint.y -= viewportBoundHeight;
 		}
+		candidateNode = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
+
+		/* 2-2 Last, find a spottable item in a whole data */
+		if (candidateNode === spotItem) {
+			candidateNode = getTargetByDirectionFromPosition(direction, endPoint, spotlightId);
+		}
+
+		/* 2-3 If there is no spottable item next to the current item */
+		if (candidateNode === spotItem) {
+			return null;
+		}
+
+		return candidateNode;
 	}
 
 	scrollToBoundary = (direction) => {

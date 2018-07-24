@@ -486,8 +486,6 @@ const VirtualListBaseFactory = (type) => {
 				}
 				cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
 			}
-
-			return true;
 		}
 
 		/**
