@@ -24,7 +24,7 @@ storiesOf('Moonstone', module)
 		})(() => (
 			<SlotItem
 				autoHide={select('autoHide', prop.autoHide, Config, 'after')}
-				disabled={boolean('disabled', Config)}
+				disabled={boolean('disabled', Config, false)}
 			>
 				<Icon slot="slotBefore">star</Icon>
 				{text('children', Config, 'Hello Item')}

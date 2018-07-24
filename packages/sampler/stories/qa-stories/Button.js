@@ -31,11 +31,11 @@ storiesOf('Button', module)
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 				casing={select('casing', prop.casing, Config, 'upper')}
-				disabled={boolean('disabled', Config)}
+				disabled={boolean('disabled', Config, false)}
 				icon={select('icon', prop.icons, Config)}
 				minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
-				selected={boolean('selected', Config)}
-				small={boolean('small', Config)}
+				selected={boolean('selected', Config, false)}
+				small={boolean('small', Config, false)}
 			>
 				{select('value', prop.longText, Config, 'Loooooooooooooooooog Button')}
 			</Button>
@@ -48,11 +48,11 @@ storiesOf('Button', module)
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 				casing={select('casing', prop.casing, Config, 'upper')}
-				disabled={boolean('disabled', Config)}
+				disabled={boolean('disabled', Config, false)}
 				icon={select('icon', prop.icons, Config)}
 				minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
-				selected={boolean('selected', Config)}
-				small={boolean('small', Config)}
+				selected={boolean('selected', Config, false)}
+				small={boolean('small', Config, false)}
 			>
 				{select('value', prop.tallText, Config, 'ิ้  ไั  ஒ  து')}
 			</Button>
@@ -65,11 +65,11 @@ storiesOf('Button', module)
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 				casing={select('casing', prop.casing, Config, 'upper')}
-				disabled={boolean('disabled', Config)}
+				disabled={boolean('disabled', Config, false)}
 				icon={select('icon', prop.icons, Config)}
 				minWidth={storybookBoolean('minWidth', false) ? void 0 : false}
-				selected={boolean('selected', Config)}
-				small={boolean('small', Config)}
+				selected={boolean('selected', Config, false)}
+				small={boolean('small', Config, false)}
 			>
 				{text('value', Config, 'A')}
 			</Button>
@@ -83,11 +83,11 @@ storiesOf('Button', module)
 					onClick={action('onClick')}
 					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 					casing={select('casing', prop.casing, Config, 'upper')}
-					disabled={boolean('disabled', Config)}
+					disabled={boolean('disabled', Config, false)}
 					icon={select('icon', prop.icons, Config)}
 					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
-					selected={boolean('selected', Config)}
-					small={boolean('small', Config)}
+					selected={boolean('selected', Config, false)}
+					small={boolean('small', Config, false)}
 				>
 					Normal Button
 				</Button>
@@ -102,11 +102,11 @@ storiesOf('Button', module)
 					onClick={action('onClick')}
 					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 					casing={select('casing', prop.casing, Config, 'upper')}
-					disabled={boolean('disabled', Config)}
+					disabled={boolean('disabled', Config, false)}
 					icon={select('icon', prop.icons, Config)}
 					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
-					selected={boolean('selected', Config)}
-					small={boolean('small', Config)}
+					selected={boolean('selected', Config, false)}
+					small={boolean('small', Config, false)}
 				>
 					Normal Button
 				</Button>
@@ -114,10 +114,10 @@ storiesOf('Button', module)
 					onClick={action('onClick')}
 					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 					casing={select('casing', prop.casing, Config, 'upper')}
-					disabled={boolean('disabled', Config)}
+					disabled={boolean('disabled', Config, false)}
 					icon={select('icon', prop.icons, Config)}
 					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
-					selected={boolean('selected', Config)}
+					selected={boolean('selected', Config, false)}
 					small
 				>
 					Small Button

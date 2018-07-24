@@ -24,7 +24,7 @@ storiesOf('Moonstone', module)
 				// disabled and inline have problems when set to `null` from the internal nullify...
 				disabled={boolean('disabled', Config, false)}
 				iconPosition={select('iconPosition', ['before', 'after'], Config)}
-				inline={boolean('inline', Config)}
+				inline={boolean('inline', Config, false)}
 				onToggle={action('onToggle')}
 			>
 				{text('children', Config, 'Hello CheckboxItem')}

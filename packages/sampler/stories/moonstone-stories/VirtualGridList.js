@@ -111,7 +111,7 @@ storiesOf('Moonstone', module)
 			<VirtualGridList
 				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 				direction={select('direction', prop.direction, Config, 'vertical')}
-				focusableScrollbar={boolean('focusableScrollbar', Config)}
+				focusableScrollbar={boolean('focusableScrollbar', Config, false)}
 				itemRenderer={renderItem}
 				itemSize={{
 					minWidth: ri.scale(number('minWidth', Config, 180)),

@@ -29,9 +29,9 @@ storiesOf('Input', module)
 		'with long text',
 		() => (
 			<Input
-				autoFocus={boolean('autoFocus', Input)}
+				autoFocus={boolean('autoFocus', Input, false)}
 				onChange={action('onChange')}
-				disabled={boolean('disabled', Input)}
+				disabled={boolean('disabled', Input, false)}
 				iconAfter={select('iconAfter', iconNames, Input)}
 				iconBefore={select('iconBefore', iconNames, Input)}
 				invalid={boolean('invalid', Input, false)}
@@ -46,9 +46,9 @@ storiesOf('Input', module)
 		'with long placeholder',
 		() => (
 			<Input
-				autoFocus={boolean('autoFocus', Input)}
+				autoFocus={boolean('autoFocus', Input, false)}
 				onChange={action('onChange')}
-				disabled={boolean('disabled', Input)}
+				disabled={boolean('disabled', Input, false)}
 				iconAfter={select('iconAfter', iconNames, Input)}
 				iconBefore={select('iconBefore', iconNames, Input)}
 				invalid={boolean('invalid', Input, false)}
@@ -63,9 +63,9 @@ storiesOf('Input', module)
 		() => (
 			<div>
 				<Input
-					autoFocus={boolean('autoFocus', Input)}
+					autoFocus={boolean('autoFocus', Input, false)}
 					onChange={action('onChange')}
-					disabled={boolean('disabled', Input)}
+					disabled={boolean('disabled', Input, false)}
 					iconAfter={select('iconAfter', iconNames, Input)}
 					iconBefore={select('iconBefore', iconNames, Input)}
 					placeholder={text('placeholder', Input, 'Input some tall characters')}
@@ -73,9 +73,9 @@ storiesOf('Input', module)
 					defaultValue={inputData.tallText[0]}
 				/>
 				<Input
-					autoFocus={boolean('autoFocus', Input)}
+					autoFocus={boolean('autoFocus', Input, false)}
 					onChange={action('onChange')}
-					disabled={boolean('disabled', Input)}
+					disabled={boolean('disabled', Input, false)}
 					iconAfter={select('iconAfter', iconNames, Input)}
 					iconBefore={select('iconBefore', iconNames, Input)}
 					placeholder={text('placeholder', Input, 'Input some tall characters')}
@@ -83,9 +83,9 @@ storiesOf('Input', module)
 					defaultValue={inputData.tallText[1]}
 				/>
 				<Input
-					autoFocus={boolean('autoFocus', Input)}
+					autoFocus={boolean('autoFocus', Input, false)}
 					onChange={action('onChange')}
-					disabled={boolean('disabled', Input)}
+					disabled={boolean('disabled', Input, false)}
 					iconAfter={select('iconAfter', iconNames, Input)}
 					iconBefore={select('iconBefore', iconNames, Input)}
 					placeholder={text('placeholder', Input, 'Input some tall characters')}
@@ -99,9 +99,9 @@ storiesOf('Input', module)
 		'with extra spacing',
 		() => (
 			<Input
-				autoFocus={boolean('autoFocus', Input)}
+				autoFocus={boolean('autoFocus', Input, false)}
 				onChange={action('onChange')}
-				disabled={boolean('disabled', Input)}
+				disabled={boolean('disabled', Input, false)}
 				iconAfter={select('iconAfter', iconNames, Input)}
 				iconBefore={select('iconBefore', iconNames, Input)}
 				placeholder={text('placeholder', Input)}
@@ -114,9 +114,9 @@ storiesOf('Input', module)
 		'with RTL and LTR text together',
 		() => (
 			<Input
-				autoFocus={boolean('autoFocus', Input)}
+				autoFocus={boolean('autoFocus', Input, false)}
 				onChange={action('onChange')}
-				disabled={boolean('disabled', Input)}
+				disabled={boolean('disabled', Input, false)}
 				iconAfter={select('iconAfter', iconNames, Input)}
 				iconBefore={select('iconBefore', iconNames, Input)}
 				placeholder={text('placeholder', Input, 'Input RTL and LTR text together')}
@@ -131,9 +131,9 @@ storiesOf('Input', module)
 			<div>
 				<div style={divMargin()}>
 					<Input
-						autoFocus={boolean('autoFocus', Input)}
+						autoFocus={boolean('autoFocus', Input, false)}
 						onChange={action('onChange')}
-						disabled={boolean('disabled', Input)}
+						disabled={boolean('disabled', Input, false)}
 						iconAfter={select('iconAfter', iconNames, Input)}
 						iconBefore={select('iconBefore', iconNames, Input)}
 						placeholder={text('placeholder', Input)}
@@ -141,9 +141,9 @@ storiesOf('Input', module)
 						defaultValue={inputData.initialValue + ' one'}
 					/>
 					<Input
-						autoFocus={boolean('autoFocus', Input)}
+						autoFocus={boolean('autoFocus', Input, false)}
 						onChange={action('onChange')}
-						disabled={boolean('disabled', Input)}
+						disabled={boolean('disabled', Input, false)}
 						iconAfter={select('iconAfter', iconNames, Input)}
 						iconBefore={select('iconBefore', iconNames, Input)}
 						placeholder={text('placeholder', Input)}
@@ -153,9 +153,9 @@ storiesOf('Input', module)
 				</div>
 				<div style={divMargin()}>
 					<Input
-						autoFocus={boolean('autoFocus', Input)}
+						autoFocus={boolean('autoFocus', Input, false)}
 						onChange={action('onChange')}
-						disabled={boolean('disabled', Input)}
+						disabled={boolean('disabled', Input, false)}
 						iconAfter={select('iconAfter', iconNames, Input)}
 						iconBefore={select('iconBefore', iconNames, Input)}
 						placeholder={text('placeholder', Input)}
@@ -163,9 +163,9 @@ storiesOf('Input', module)
 						defaultValue={inputData.initialValue + ' three'}
 					/>
 					<Input
-						autoFocus={boolean('autoFocus', Input)}
+						autoFocus={boolean('autoFocus', Input, false)}
 						onChange={action('onChange')}
-						disabled={boolean('disabled', Input)}
+						disabled={boolean('disabled', Input, false)}
 						iconAfter={select('iconAfter', iconNames, Input)}
 						iconBefore={select('iconBefore', iconNames, Input)}
 						placeholder={text('placeholder', Input)}
@@ -180,9 +180,9 @@ storiesOf('Input', module)
 		'with a range',
 		() => (
 			<Input
-				autoFocus={boolean('autoFocus', Input)}
+				autoFocus={boolean('autoFocus', Input, false)}
 				onChange={action('onChange')}
-				disabled={boolean('disabled', Input)}
+				disabled={boolean('disabled', Input, false)}
 				iconAfter={select('iconAfter', iconNames, Input)}
 				iconBefore={select('iconBefore', iconNames, Input)}
 				type={inputData.type[1]}

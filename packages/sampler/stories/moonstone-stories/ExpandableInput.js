@@ -21,7 +21,7 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of divider'
 		})(() => (
 			<ExpandableInput
-				disabled={boolean('disabled', Config)}
+				disabled={boolean('disabled', Config, false)}
 				iconAfter={select('iconAfter', iconNames, Config)}
 				iconBefore={select('iconBefore', iconNames, Config)}
 				noneText={text('noneText', Config, 'noneText')}

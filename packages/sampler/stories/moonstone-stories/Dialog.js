@@ -24,15 +24,15 @@ storiesOf('Moonstone', module)
 				<Dialog
 					casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
 					// null issue
-					noAnimation={boolean('noAnimation', Config)}
+					noAnimation={boolean('noAnimation', Config, false)}
 					// null issue
-					noAutoDismiss={boolean('noAutoDismiss', Config)}
+					noAutoDismiss={boolean('noAutoDismiss', Config, false)}
 					// null issue
-					noDivider={boolean('noDivider', Config)}
+					noDivider={boolean('noDivider', Config, false)}
 					onClose={action('onClose')}
 					// null issue
-					open={boolean('open', Config)}
-					showCloseButton={boolean('showCloseButton', Config)}
+					open={boolean('open', Config, false)}
+					showCloseButton={boolean('showCloseButton', Config, false)}
 				>
 					<title>{text('title', Config, 'Hello Dialog')}</title>
 					<titleBelow>{text('titleBelow', Config, 'This is an organized dialog')}</titleBelow>

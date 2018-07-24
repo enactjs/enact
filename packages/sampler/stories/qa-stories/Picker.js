@@ -60,10 +60,10 @@ storiesOf('Picker', module)
 				onChange={action('onChange')}
 				width={select('width', prop.width, Picker, 'large')}
 				orientation={select('orientation', prop.orientation, Picker, 'horizontal')}
-				wrap={boolean('wrap', Picker)}
-				joined={boolean('joined', Picker)}
-				noAnimation={boolean('noAnimation', Picker)}
-				disabled={boolean('disabled', Picker)}
+				wrap={boolean('wrap', Picker, false)}
+				joined={boolean('joined', Picker, false)}
+				noAnimation={boolean('noAnimation', Picker, false)}
+				disabled={boolean('disabled', Picker, false)}
 				incrementIcon={select('incrementIcon', iconNames, Picker)}
 				decrementIcon={select('decrementIcon', iconNames, Picker)}
 			>
@@ -78,10 +78,10 @@ storiesOf('Picker', module)
 				onChange={action('onChange')}
 				width={select('width', prop.width, Picker, 'large')}
 				orientation={select('orientation', prop.orientation, Picker, 'horizontal')}
-				wrap={boolean('wrap', Picker)}
-				joined={boolean('joined', Picker)}
-				noAnimation={boolean('noAnimation', Picker)}
-				disabled={boolean('disabled', Picker)}
+				wrap={boolean('wrap', Picker, false)}
+				joined={boolean('joined', Picker, false)}
+				noAnimation={boolean('noAnimation', Picker, false)}
+				disabled={boolean('disabled', Picker, false)}
 				incrementIcon={select('incrementIcon', iconNames, Picker)}
 				decrementIcon={select('decrementIcon', iconNames, Picker)}
 			>
@@ -96,10 +96,10 @@ storiesOf('Picker', module)
 				onChange={action('onChange')}
 				width={select('width', prop.width, Picker, 'medium')}
 				orientation={select('orientation', prop.orientation, Picker, 'horizontal')}
-				wrap={boolean('wrap', Picker)}
-				joined={boolean('joined', Picker)}
-				noAnimation={boolean('noAnimation', Picker)}
-				disabled={boolean('disabled', Picker)}
+				wrap={boolean('wrap', Picker, false)}
+				joined={boolean('joined', Picker, false)}
+				noAnimation={boolean('noAnimation', Picker, false)}
+				disabled={boolean('disabled', Picker, false)}
 				incrementIcon={select('incrementIcon', iconNames, Picker)}
 				decrementIcon={select('decrementIcon', iconNames, Picker)}
 				defaultValue={2}
@@ -116,9 +116,9 @@ storiesOf('Picker', module)
 				width={select('width', prop.width, Picker, 'large')}
 				orientation={select('orientation', prop.orientation, Picker)}
 				wrap={boolean('wrap', Picker, true)}
-				joined={boolean('joined', Picker)}
-				noAnimation={boolean('noAnimation', Picker)}
-				disabled={boolean('disabled', Picker)}
+				joined={boolean('joined', Picker, false)}
+				noAnimation={boolean('noAnimation', Picker, false)}
+				disabled={boolean('disabled', Picker, false)}
 				incrementIcon={select('incrementIcon', iconNames, Picker)}
 				decrementIcon={select('decrementIcon', iconNames, Picker)}
 			>
@@ -134,9 +134,9 @@ storiesOf('Picker', module)
 				width={select('width', prop.width, Picker, 'large')}
 				orientation={select('orientation', prop.orientation, Picker)}
 				wrap={boolean('wrap', Picker, true)}
-				joined={boolean('joined', Picker)}
-				noAnimation={boolean('noAnimation', Picker)}
-				disabled={boolean('disabled', Picker)}
+				joined={boolean('joined', Picker, false)}
+				noAnimation={boolean('noAnimation', Picker, false)}
+				disabled={boolean('disabled', Picker, false)}
 				incrementIcon={select('incrementIcon', iconNames, Picker)}
 				decrementIcon={select('decrementIcon', iconNames, Picker)}
 			>
@@ -150,10 +150,10 @@ storiesOf('Picker', module)
 			<PickerAddRemove
 				width={select('width', prop.width, Picker, 'medium')}
 				orientation={select('orientation', prop.orientation, Picker, 'horizontal')}
-				wrap={boolean('wrap', Picker)}
-				joined={boolean('joined', Picker)}
-				noAnimation={boolean('noAnimation', Picker)}
-				disabled={boolean('disabled', Picker)}
+				wrap={boolean('wrap', Picker, false)}
+				joined={boolean('joined', Picker, false)}
+				noAnimation={boolean('noAnimation', Picker, false)}
+				disabled={boolean('disabled', Picker, false)}
 			>
 				{pickerList.emptyList}
 			</PickerAddRemove>
@@ -164,10 +164,10 @@ storiesOf('Picker', module)
 		() => (
 			<PickerRTL
 				width={select('width', prop.width, Picker, 'medium')}
-				wrap={boolean('wrap', Picker)}
-				joined={boolean('joined', Picker)}
-				noAnimation={boolean('noAnimation', Picker)}
-				disabled={boolean('disabled', Picker)}
+				wrap={boolean('wrap', Picker, false)}
+				joined={boolean('joined', Picker, false)}
+				noAnimation={boolean('noAnimation', Picker, false)}
+				disabled={boolean('disabled', Picker, false)}
 			>
 				{pickerList.orderedList}
 			</PickerRTL>

@@ -18,8 +18,8 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of SelectableItem'
 		})(() => (
 			<SelectableItem
-				disabled={boolean('disabled', Config)}
-				inline={boolean('inline', Config)}
+				disabled={boolean('disabled', Config, false)}
+				inline={boolean('inline', Config, false)}
 				onToggle={action('onToggle')}
 			>
 				{text('children', Config, 'Hello SelectableItem')}

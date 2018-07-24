@@ -15,7 +15,7 @@ storiesOf('Moonstone', module)
 		})(() => (
 			<LabeledItem
 				label={text('label', LabeledItem, 'Label')}
-				disabled={boolean('disabled', LabeledItem)}
+				disabled={boolean('disabled', LabeledItem, false)}
 			>
 				{text('children', LabeledItem, 'Hello LabeledItem')}
 			</LabeledItem>

@@ -25,7 +25,7 @@ storiesOf('UI', module)
 					<Cell size={number('cell size', Cell, {range: true, min: 0, max: 300, step: 5}, 100) + 'px'} shrink>
 						<Button small>First</Button>
 					</Cell>
-					<Cell shrink={boolean('shrinkable cell', Cell)}>
+					<Cell shrink={boolean('shrinkable cell', Cell, false)}>
 						<Button small>Second</Button>
 					</Cell>
 					<Cell>

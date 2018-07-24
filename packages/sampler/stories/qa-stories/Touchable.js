@@ -15,7 +15,7 @@ storiesOf('Touchable', module)
 			<Button
 				onHold={action('onHold')}
 				onHoldPulse={action('onHoldPulse')}
-				disabled={boolean('disabled', Button)}
+				disabled={boolean('disabled', Button, false)}
 			>
 				Touchable
 			</Button>
@@ -34,7 +34,7 @@ storiesOf('Touchable', module)
 				}}
 				onHold={action('onHold')}
 				onHoldPulse={action('onHoldPulse')}
-				disabled={boolean('disabled', Button)}
+				disabled={boolean('disabled', Button, false)}
 			>
 				LongPress
 			</Button>
@@ -51,7 +51,7 @@ storiesOf('Touchable', module)
 				noResume={boolean('noResume', Button, false)}
 				onHold={action('onHold')}
 				onHoldPulse={action('onHoldPulse')}
-				disabled={boolean('disabled', Button)}
+				disabled={boolean('disabled', Button, false)}
 			>
 				Resumable
 			</Button>
@@ -64,7 +64,7 @@ storiesOf('Touchable', module)
 				noResume={boolean('noResume', Button, true)}
 				onHold={action('onHold')}
 				onHoldPulse={action('onHoldPulse')}
-				disabled={boolean('disabled', Button)}
+				disabled={boolean('disabled', Button, false)}
 			>
 				Not Resumable
 			</Button>
@@ -75,7 +75,7 @@ storiesOf('Touchable', module)
 		() => (
 			<TouchableDiv
 				onFlick={action('onFlick')}
-				disabled={boolean('disabled', TouchableDiv)}
+				disabled={boolean('disabled', TouchableDiv, false)}
 				style={{border: '2px dashed #888', width: 500, height: 500}}
 			>
 				Flick within this component
@@ -94,7 +94,7 @@ storiesOf('Touchable', module)
 				onDragStart={action('onDragStart')}
 				onDrag={action('onDrag')}
 				onDragEnd={action('onDragEnd')}
-				disabled={boolean('disabled', TouchableDiv)}
+				disabled={boolean('disabled', TouchableDiv, false)}
 				style={{border: '2px dashed #888', width: 500, height: 500}}
 			>
 				Drag within this component. Setting <code>noResume</code> to <code>false</code> should
@@ -106,7 +106,7 @@ storiesOf('Touchable', module)
 		'onTap when clicked',
 		() => (
 			<TouchableDiv
-				disabled={boolean('disabled', TouchableDiv)}
+				disabled={boolean('disabled', TouchableDiv, false)}
 				noResume={boolean('noResume', TouchableDiv, false)}
 				onClick={action('onClick')}
 				onDown={action('onDown')}

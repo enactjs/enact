@@ -65,7 +65,7 @@ storiesOf('Moonstone', module)
 		})(() => (
 			<Scroller
 				direction={select('direction', prop.direction, Config, 'both')}
-				focusableScrollbar={boolean('focusableScrollbar', Config)}
+				focusableScrollbar={boolean('focusableScrollbar', Config, false)}
 				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, Config, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
