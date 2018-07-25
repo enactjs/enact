@@ -6,7 +6,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to set a 5 way key mode when pressing a key
+- `moonstone/Scroller` not to scroll via page up/down keys if there is no spottable component in that direction
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to handle focus properly via page up/down keys when switching to 5-way mode
 
 ## [2.0.0-rc.3] - 2018-07-23
 

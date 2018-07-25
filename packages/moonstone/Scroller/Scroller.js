@@ -310,16 +310,25 @@ class ScrollerBase extends Component {
 		return oPoint;
 	}
 
-	scrollToNextPage = ({direction, reverseDirection, focusedItem, spotlightId}) => {
-		const
-			endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect()),
-			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
+	scrollToNextPage = ({direction, focusedItem, reverseDirection, spotlightId, viewportHeight}) => {
+		const endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect());
+		let candidateNode = null;
 
-		if (next === focusedItem) {
-			return false; // Scroll one page with animation
-		} else {
-			return next; // Focus a next item
+		/* Find a spottable item in the next page */
+		endPoint.y += (viewportHeight * (direction === 'down' ? 1 : -1));
+		candidateNode = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
+
+		/* Find a spottable item in a whole data */
+		if (candidateNode === focusedItem) {
+			candidateNode = getTargetByDirectionFromPosition(direction, endPoint, spotlightId);
 		}
+
+		/* If there is no spottable item next to the current item */
+		if (candidateNode === focusedItem) {
+			return null;
+		}
+
+		return candidateNode;
 	}
 
 	scrollToBoundary = (direction) => {

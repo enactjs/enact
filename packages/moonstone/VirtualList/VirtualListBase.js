@@ -408,12 +408,11 @@ const VirtualListBaseFactory = (type) => {
 				{dimensionToExtent, primary} = this.uiRef,
 				{findSpottableItem} = this,
 				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo,
-				numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent),
-				isPageDown = (direction === 'down' || direction === 'right') ? 1 : -1;
+				numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent);
 			let candidateIndex = -1;
 
 			/* First, find a spottable item in this page */
-			if (isPageDown === 1) { // Page Down
+			if (direction === 'down') { // Page Down
 				if ((lastVisibleIndex - (lastVisibleIndex % dimensionToExtent)) > currentIndex) { // If a current focused item is in the last visible line.
 					candidateIndex = findSpottableItem(
 						lastVisibleIndex,
@@ -429,7 +428,7 @@ const VirtualListBaseFactory = (type) => {
 
 			/* Second, find a spottable item in the next page */
 			if (candidateIndex === -1) {
-				if (isPageDown === 1) { // Page Down
+				if (direction === 'down') { // Page Down
 					candidateIndex = findSpottableItem(lastVisibleIndex + numOfItemsInPage, lastVisibleIndex);
 				} else { // Page Up
 					candidateIndex = findSpottableItem(firstVisibleIndex - numOfItemsInPage, firstVisibleIndex);
@@ -438,7 +437,7 @@ const VirtualListBaseFactory = (type) => {
 
 			/* Last, find a spottable item in a whole data */
 			if (candidateIndex === -1) {
-				if (isPageDown === 1) { // Page Down
+				if (direction === 'down') { // Page Down
 					candidateIndex = findSpottableItem(lastVisibleIndex + numOfItemsInPage + 1, dataSize);
 				} else { // Page Up
 					candidateIndex = findSpottableItem(firstVisibleIndex - numOfItemsInPage - 1, -1);
@@ -461,10 +460,6 @@ const VirtualListBaseFactory = (type) => {
 				indexToScroll = this.getIndexToScroll(direction, focusedIndex);
 
 			if (indexToScroll !== -1 && focusedIndex !== indexToScroll) {
-				const
-					isRtl = this.props.rtl,
-					isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right');
-
 				if (firstIndex <= indexToScroll && indexToScroll < firstIndex + numOfItems) {
 					const node = this.uiRef.containerRef.querySelector(`[data-index='${indexToScroll}'].spottable`);
 
@@ -479,10 +474,8 @@ const VirtualListBaseFactory = (type) => {
 					focusedItem.blur();
 					this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
 				}
-				cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
+				cbScrollTo({index: indexToScroll, stickTo: direction === 'down' ? 'end' : 'start', animate: false});
 			}
-
-			return true;
 		}
 
 		/**
