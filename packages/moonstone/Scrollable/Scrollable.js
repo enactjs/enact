@@ -476,6 +476,7 @@ class ScrollableBase extends Component {
 				direction = null;
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
+				Spotlight.setPointerMode(false);
 				direction = this.getPageDirection(keyCode);
 				overscrollEffectRequired = !this.scrollByPage(keyCode);
 			} else {

@@ -469,12 +469,7 @@ const VirtualListBaseFactory = (type) => {
 					const node = this.uiRef.containerRef.querySelector(`[data-index='${indexToScroll}'].spottable`);
 
 					if (node) {
-						// When changing from "pointer" mode to "5way key" mode,
-						// a pointer is hidden and a last focused item get focused after 30ms.
-						// To make sure the item to be focused after that, we used 50ms.
-						setTimeout(() => {
-							Spotlight.focus(node);
-						}, 50);
+						Spotlight.focus(node);
 					}
 				} else {
 					// Scroll to the next spottable item without animation
@@ -625,20 +620,7 @@ const VirtualListBaseFactory = (type) => {
 						Spotlight.pause();
 					}
 
-					if (isWrapped) {
-						// In case of 'wrapping-around',
-						// we need to blur the current focus immediately
-						// since it can be a very long scroll (from one edge to the other edge)
-						// and definitely it's not a case of changing "pointer" mode to "5way key" mode.
-						target.blur();
-					} else {
-						// When changing from "pointer" mode to "5way key" mode,
-						// a pointer is hidden and a last focused item get focused after 30ms.
-						// To make sure the item to be blurred after that, we used 50ms.
-						setTimeout(() => {
-							target.blur();
-						}, 50);
-					}
+					target.blur();
 
 					this.isScrolledBy5way = true;
 					cbScrollTo({
