@@ -4,9 +4,9 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
-### Added
+### Fixed
 
-- `spotlight` webOS mouse event handler.
+- `spotlight` to blur when webOS mouse leaves the webOS apps.
 
 ### Changed
 
