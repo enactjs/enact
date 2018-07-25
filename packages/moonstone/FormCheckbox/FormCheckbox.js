@@ -21,7 +21,7 @@ import ToggleIcon from '../ToggleIcon';
 import componentCss from './FormCheckbox.less';
 
 /**
- * Represents a Boolean state, and looks like a check mark in a circle.
+ * A component that represents a Boolean state, and looks like a check mark in a circle.
  *
  * @class FormCheckbox
  * @memberof moonstone/FormCheckbox

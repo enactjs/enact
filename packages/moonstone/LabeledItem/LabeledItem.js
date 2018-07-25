@@ -33,8 +33,8 @@ const Controller = MarqueeController(
 import componentCss from './LabeledItem.less';
 
 /**
- * {@link moonstone/LabeledItem.LabeledItemBase} is a focusable Moonstone-styled component
- * that combines marquee-able text content with a synchronized marquee-able text label.
+ * A focusable component that combines marquee-able text content with a synchronized
+ * marquee-able text label.
  *
  * @class LabeledItemBase
  * @memberof moonstone/LabeledItem

@@ -54,9 +54,8 @@ function wouldDirectionLeaveContainer (dir, srcNode) {
 }
 
 /**
- * {@link moonstone/ExpandableItem.ExpandableItemBase} is a stateless component that
- * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
- * additional contents.
+ * A stateless component that renders a {@link moonstone/LabeledItem.LabeledItem} that can be
+ * expanded to show additional contents.
  *
  * @class ExpandableItemBase
  * @memberof moonstone/ExpandableItem
@@ -427,9 +426,8 @@ const ExpandableItemBase = kind({
 });
 
 /**
- * {@link moonstone/ExpandableItem.ExpandableItem} renders a
- * {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show additional
- * contents.
+ * A component that renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to
+ * show additional contents.
  *
  * `ExpandableItem` maintains its open/closed state by default. The initial state can be supplied
  * using `defaultOpen`. In order to directly control the open/closed state, supply a value for

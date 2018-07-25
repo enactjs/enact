@@ -61,9 +61,8 @@ const PureGroup = Pure(
 );
 
 /**
- * {@link moonstone/ExpandableList.ExpandableListBase} is a stateless component that
- * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
- * a selectable list of items.
+ * A stateless component that renders a {@link moonstone/LabeledItem.LabeledItem} that can be
+ * expanded to show a selectable list of items.
  *
  * @class ExpandableListBase
  * @memberof moonstone/ExpandableList
@@ -363,9 +362,8 @@ const ExpandableListBase = kind({
 });
 
 /**
- * {@link moonstone/ExpandableList.ExpandableList} renders a
- * {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show a selectable
- * list of items.
+ * A component that renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to
+ * show a selectable list of items.
  *
  * By default, `ExpandableList` maintains the state of its `selected` property. Supply the
  * `defaultSelected` property to control its initial value. If you wish to directly control updates

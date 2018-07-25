@@ -31,9 +31,8 @@ import ExpandablePickerDecorator from './ExpandablePickerDecorator';
 import css from './ExpandablePicker.less';
 
 /**
- * {@link moonstone/ExpandablePicker.ExpandablePickerBase} is a stateless component that
- * renders a list of items into a picker that allows the user to select only a single item at
- * a time. It supports increment/decrement buttons for selection.
+ * A stateless component that renders a list of items into a picker that allows the user to select
+ * only a single item at a time. It supports increment/decrement buttons for selection.
  *
  * @class ExpandablePickerBase
  * @memberof moonstone/ExpandablePicker
@@ -393,9 +392,8 @@ const ExpandablePickerBase = kind({
 });
 
 /**
- * {@link moonstone/ExpandablePicker.ExpandablePicker} is a stateful component that
- * renders a list of items into a picker that allows the user to select only a single item at
- * a time. It supports increment/decrement buttons for selection.
+ * A stateful component that renders a list of items into a picker that allows the user to select
+ * only a single item at a time. It supports increment/decrement buttons for selection.
  *
  * By default, `ExpandablePicker` maintains the state of its `value` property. Supply the
  * `defaultValue` property to control its initial value. If you wish to directly control updates

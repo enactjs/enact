@@ -129,8 +129,8 @@ const EditableIntegerPickerBase = kind({
 		onInputBlur : PropTypes.func,
 
 		/**
-		 * Called when the pickerItem is clicked.
-		 * This enables the input field in the component.
+		 * Called when the pickerItem is clicked and if `editMode` is false. This enables the input field
+		 * in the component.
 		 *
 		 * @type {Function}
 		 * @public
@@ -295,8 +295,7 @@ const EditableIntegerPickerBase = kind({
 });
 
 /**
- * {@link moonstone/EditableIntegerPicker.EditableIntegerPicker} is a component that lets the user select a number from
- * a range of numbers.
+ * A component that lets the user select a number from a range of numbers.
  *
  * By default, `EditableIntegerPicker` maintains the state of its `value` property. Supply the `defaultValue`
  * property to control its initial value. If you wish to directly control updates to the component,

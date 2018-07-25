@@ -4,8 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * {@link moonstone/MoonstoneDecorator.AccessibilityDecorator} is a Higher-order Component that
- * classifies an application with a target set of font sizing rules
+ * A Higher-order Component that classifies an application with a target set of font sizing rules.
  *
  * @class AccessibilityDecorator
  * @memberof moonstone/MoonstoneDecorator

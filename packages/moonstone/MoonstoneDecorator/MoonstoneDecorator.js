@@ -43,8 +43,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link moonstone/MoonstoneDecorator.MoonstoneDecorator} is a Higher-order Component that applies
- * Moonstone theming to an application. It also applies
+ * A Higher-order Component that applies Moonstone theming to an application. It also applies
  * [floating layer]{@link ui/FloatingLayer.FloatingLayerDecorator},
  * [resolution independence]{@link ui/resolution.ResolutionDecorator},
  * [skin support]{@link ui/Skinnable}, [spotlight]{@link spotlight.SpotlightRootDecorator}, and
