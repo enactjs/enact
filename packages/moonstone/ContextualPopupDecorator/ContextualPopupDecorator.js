@@ -190,7 +190,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			showCloseButton : PropTypes.bool,
+			showCloseButton: PropTypes.bool,
 
 			/**
 			 * The current skin for this component.

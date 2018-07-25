@@ -1,5 +1,5 @@
 /**
- * Provides Moonstone-themed item components and behaviors. Useful for content in lists.
+ * Provides Moonstone styled item components and behaviors. Useful for content in lists.
  *
  * @example
  * <Item>Hello Enact!</Item>
@@ -24,7 +24,7 @@ import Skinnable from '../Skinnable';
 import componentCss from './Item.less';
 
 /**
- * A moonstone-styled item without any behavior.
+ * A Moonstone styled item without any behavior.
  *
  * @class ItemBase
  * @memberof moonstone/Item
@@ -66,7 +66,7 @@ const ItemBase = kind({
 });
 
 /**
- * Moonstone-specific item behaviors to apply to [Item]{@link moonstone/Item.ItemBase}.
+ * Moonstone specific item behaviors to apply to [Item]{@link moonstone/Item.ItemBase}.
  *
  * @class ItemDecorator
  * @memberof moonstone/Item
@@ -85,7 +85,7 @@ const ItemDecorator = compose(
 );
 
 /**
- * A Moonstone-styled item with built-in support for marqueed text, and Spotlight focus.
+ * A Moonstone styled item with built-in support for marqueed text, and Spotlight focus.
  *
  * Usage:
  * ```

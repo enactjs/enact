@@ -469,7 +469,7 @@ const VideoPlayerBase = class extends React.Component {
 		source: PropTypes.node,
 
 		/**
-		 * Prevents navigation of the component using spotlight.
+		 * Disables spotlight navigation into the component.
 		 *
 		 * @type {Boolean}
 		 * @public

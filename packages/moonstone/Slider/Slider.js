@@ -65,7 +65,7 @@ const SliderBase = kind({
 		activateOnFocus: PropTypes.bool,
 
 		/**
-		 * Displays the knob as "selected" and can be moved using 5-way controls.
+		 * Sets the knob to selected state and allows it to move via 5-way controls.
 		 *
 		 * @type {Boolean}
 		 * @public

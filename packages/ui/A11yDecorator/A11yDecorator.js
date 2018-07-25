@@ -27,10 +27,9 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/A11yDecorator.A11yDecorator} is a Higher-order Component that adds support for hint
- * text to be read before and/or after the content. By default, the `children` prop is used as the
- * source of the components content but may be configured by passing a different `prop` to the HOC
- * configuration.
+ * A Higher-order Component that adds support for hint text to be read before and/or after the
+ * content. By default, the `children` prop is used as the source of the components content but
+ * may be configured by passing a different `prop` to the HOC configuration.
  *
  * @class A11yDecorator
  * @memberof ui/A11yDecorator
