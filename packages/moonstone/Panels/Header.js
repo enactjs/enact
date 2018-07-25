@@ -257,4 +257,4 @@ const Header = Slottable({slots: ['headerInput', 'subTitleBelow', 'title', 'titl
 Header.defaultSlot = 'header';
 
 export default Header;
-export {Header, Header as HeaderBase};
+export {Header, HeaderBase};

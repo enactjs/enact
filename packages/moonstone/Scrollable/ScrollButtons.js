@@ -259,6 +259,7 @@ class ScrollButtons extends Component {
 
 		if (isPageDown(keyCode) && !nextButtonDisabled) {
 			if (focusableScrollButtons) {
+				Spotlight.setPointerMode(false);
 				Spotlight.focus(this.nextButtonNodeRef);
 			} else {
 				this.onClickNext(ev);
@@ -276,6 +277,7 @@ class ScrollButtons extends Component {
 
 		if (isPageUp(keyCode) && !prevButtonDisabled) {
 			if (focusableScrollButtons) {
+				Spotlight.setPointerMode(false);
 				Spotlight.focus(this.prevButtonNodeRef);
 			} else {
 				this.onClickPrev(ev);

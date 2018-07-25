@@ -2,7 +2,17 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to set a 5 way key mode when pressing a key
+
 ## [2.0.0-rc.3] - 2018-07-23
+
+### Changed
+
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` overscroll effect color more recognizable on the focused element
 
 ### Fixed
 
