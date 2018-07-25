@@ -21,11 +21,14 @@ import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 // import React from 'react';
 
-import Icon from '../Icon';
+import {IconBase} from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import componentCss from './Button.less';
+
+// Make a basic Icon in case we need it later. This cuts `Pure` out of icon for a small gain.
+const Icon = Skinnable(IconBase);
 
 // Called when `tooltip` props are used
 const deprecation = deprecate(() => {}, {
