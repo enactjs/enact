@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `spotlight` to default to 5-way mode on initialization
+
 ## [2.0.0-rc.3] - 2018-07-23
 
 ### Fixed
