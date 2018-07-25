@@ -20,9 +20,12 @@ const boolean = (name, Config, preferredValue) => {
 	if (typeof Config === 'string' || Config == null) {
 		// Config wasn't set, or was omitted, causing the preferredValue to be the last value. Reassignment dipsy-doodle.
 		preferredValue = Config;
-		Config = {
-			defaultProps: {}
-		};
+		Config = {};
+	}
+
+	// If there is no `defaultProps` object on the Config object
+	if (!Config.defaultProps) {
+		Config.defaultProps = {};
 	}
 
 	// If there's no group ID but there is a display name, use that for the group ID
@@ -30,7 +33,10 @@ const boolean = (name, Config, preferredValue) => {
 		Config.groupId = Config.displayName;
 	}
 
-	return nullify(booleanKnob(name, (preferredValue != null ? preferredValue : Config.defaultProps[name]), Config.groupId));
+	// Set false for default boolean props that are not defined.
+	const defaultValue = (Config.defaultProps[name] != null) ? Config.defaultProps[name] : false;
+
+	return nullify(booleanKnob(name, (preferredValue != null ? preferredValue : defaultValue), Config.groupId));
 };
 
 export default boolean;

@@ -20,9 +20,12 @@ const text = (name, Config, preferredValue) => {
 	if (typeof Config === 'string' || Config == null) {
 		// Config wasn't set, or was omitted, causing the preferredValue to be the last value. Reassignment dipsy-doodle.
 		preferredValue = Config;
-		Config = {
-			defaultProps: {}
-		};
+		Config = {};
+	}
+
+	// If there is no `defaultProps` object on the Config object
+	if (!Config.defaultProps) {
+		Config.defaultProps = {};
 	}
 
 	// If there's no group ID but there is a display name, use that for the group ID

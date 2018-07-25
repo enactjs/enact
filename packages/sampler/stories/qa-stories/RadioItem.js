@@ -1,11 +1,16 @@
 import RadioItem from '@enact/moonstone/RadioItem';
+import ToggleItem from '@enact/moonstone/ToggleItem';
+import UiToggleItem, {ToggleItemBase as UiToggleItemBase} from '@enact/ui/ToggleItem';
+import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
+import {mergeComponentMetadata} from '../../src/utils';
 import {boolean} from '../../src/enact-knobs';
 
 RadioItem.displayName = 'RaditoItem';
+const Config = mergeComponentMetadata('RadioItem', ItemBase, Item, UiToggleItemBase, UiToggleItem, ToggleItem, RadioItem);
 
 const radioData = {
 	longTextWithSpace : ['FirstLongTextWithSpace FirstLongTextWithSpace FirstLongTextWithSpace FirstLongTextWithSpace', 'SecondLongTextWithSpace SecondLongTextWithSpace SecondLongTextWithSpace SecondLongTextWithSpace'],
@@ -20,15 +25,15 @@ storiesOf('RadioItem', module)
 		() => (
 			<div>
 				<RadioItem
-					disabled={boolean('disabled', RadioItem, false)}
-					inline={boolean('inline', RadioItem, false)}
+					disabled={boolean('disabled', Config)}
+					inline={boolean('inline', Config)}
 					onToggle={action('onToggle')}
 				>
 					{radioData.longTextWithSpace[0]}
 				</RadioItem>
 				<RadioItem
-					disabled={boolean('disabled', RadioItem, false)}
-					inline={boolean('inline', RadioItem, false)}
+					disabled={boolean('disabled', Config)}
+					inline={boolean('inline', Config)}
 					onToggle={action('onToggle')}
 				>
 					{radioData.longTextWithSpace[1]}
@@ -41,15 +46,15 @@ storiesOf('RadioItem', module)
 		() => (
 			<div>
 				<RadioItem
-					disabled={boolean('disabled', RadioItem, false)}
-					inline={boolean('inline', RadioItem, false)}
+					disabled={boolean('disabled', Config)}
+					inline={boolean('inline', Config)}
 					onToggle={action('onToggle')}
 				>
 					{radioData.longTextWithoutSpace[0]}
 				</RadioItem>
 				<RadioItem
-					disabled={boolean('disabled', RadioItem, false)}
-					inline={boolean('inline', RadioItem, false)}
+					disabled={boolean('disabled', Config)}
+					inline={boolean('inline', Config)}
 					onToggle={action('onToggle')}
 				>
 					{radioData.longTextWithoutSpace[1]}
@@ -62,15 +67,15 @@ storiesOf('RadioItem', module)
 		() => (
 			<div>
 				<RadioItem
-					disabled={boolean('disabled', RadioItem, false)}
-					inline={boolean('inline', RadioItem, false)}
+					disabled={boolean('disabled', Config)}
+					inline={boolean('inline', Config)}
 					onToggle={action('onToggle')}
 				>
 					{radioData.tallText[0]}
 				</RadioItem>
 				<RadioItem
-					disabled={boolean('disabled', RadioItem, false)}
-					inline={boolean('inline', RadioItem, false)}
+					disabled={boolean('disabled', Config)}
+					inline={boolean('inline', Config)}
 					onToggle={action('onToggle')}
 				>
 					{radioData.tallText[1]}
@@ -83,15 +88,15 @@ storiesOf('RadioItem', module)
 		() => (
 			<div>
 				<RadioItem
-					disabled={boolean('disabled', RadioItem, false)}
-					inline={boolean('inline', RadioItem, false)}
+					disabled={boolean('disabled', Config)}
+					inline={boolean('inline', Config)}
 					onToggle={action('onToggle')}
 				>
 					{radioData.rightToLeft[0]}
 				</RadioItem>
 				<RadioItem
-					disabled={boolean('disabled', RadioItem, false)}
-					inline={boolean('inline', RadioItem, false)}
+					disabled={boolean('disabled', Config)}
+					inline={boolean('inline', Config)}
 					onToggle={action('onToggle')}
 				>
 					{radioData.rightToLeft[1]}
@@ -104,16 +109,16 @@ storiesOf('RadioItem', module)
 		() => (
 			<div>
 				<RadioItem
-					disabled={boolean('disabled', RadioItem, false)}
-					inline={boolean('inline', RadioItem, false)}
+					disabled={boolean('disabled', Config)}
+					inline={boolean('inline', Config)}
 					onToggle={action('onToggle')}
 					defaultSelected
 				>
 					RadioItem1
 				</RadioItem>
 				<RadioItem
-					disabled={boolean('disabled', RadioItem, false)}
-					inline={boolean('inline', RadioItem, false)}
+					disabled={boolean('disabled', Config)}
+					inline={boolean('inline', Config)}
 					onToggle={action('onToggle')}
 					defaultSelected
 				>
