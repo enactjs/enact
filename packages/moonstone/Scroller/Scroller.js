@@ -310,12 +310,12 @@ class ScrollerBase extends Component {
 		return oPoint;
 	}
 
-	scrollToNextPage = ({direction, focusedItem, reverseDirection, spotlightId, viewportBoundHeight}) => {
+	scrollToNextPage = ({direction, focusedItem, reverseDirection, spotlightId, viewportHeight}) => {
 		const endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect());
 		let candidateNode = null;
 
 		/* Find a spottable item in the next page */
-		endPoint.y += (viewportBoundHeight * (direction === 'down' ? 1 : -1));
+		endPoint.y += (viewportHeight * (direction === 'down' ? 1 : -1));
 		candidateNode = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
 
 		/* Find a spottable item in a whole data */

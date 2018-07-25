@@ -413,12 +413,11 @@ class ScrollableBase extends Component {
 			next = getTargetByDirectionFromPosition(rDirection, endPoint, spotlightId);
 
 			if (next !== focusedItem) {
-				this.animateOnFocus = false;
 				Spotlight.focus(next);
 			/* 2. Find spottable item out of viewport */
 			// For Scroller
 			} else if (this.childRef.scrollToNextPage) {
-				next = this.childRef.scrollToNextPage({direction, focusedItem, reverseDirection: rDirection, scrollBoundHeight: bounds.scrollHeight, spotlightId, viewportBoundHeight: viewportBounds.height});
+				next = this.childRef.scrollToNextPage({direction, focusedItem, reverseDirection: rDirection, spotlightId, viewportHeight: viewportBounds.height});
 
 				if (next !== null) {
 					this.animateOnFocus = false;
