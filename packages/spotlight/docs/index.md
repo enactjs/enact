@@ -36,8 +36,7 @@ mode**.  By default, Spotlight is configured to switch between these modes
 whenever suitable input is received--i.e.: it switches to pointer mode on
 `mousemove` and back to 5-way mode on `keydown`.
 
-When Spotlight initializes, the default mode is 5-way. On webOS, the current pointer
-mode for the system is used instead.
+Spotlight initializes in 5-way mode. On webOS, the platform's current pointer mode is used instead.
 
 ## Navigation
 
