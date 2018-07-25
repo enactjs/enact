@@ -18,6 +18,7 @@
 
 import {is} from '@enact/core/keymap';
 import {isWindowReady} from '@enact/core/snapshot';
+import platform from '@enact/core/platform';
 import last from 'ramda/src/last';
 
 import Accelerator from '../Accelerator';
@@ -354,7 +355,7 @@ const Spotlight = (function () {
 		_pointerMoveDuringKeyPress = false;
 	}
 
-	function webOSMouseHandler (ev) {
+	function onWebOSMouse (ev) {
 		if (ev && ev.detail && ev.detail.type === 'Leave') {
 			onBlur();
 		}
@@ -488,7 +489,7 @@ const Spotlight = (function () {
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
-				document.addEventListener('webOSMouse', webOSMouseHandler);
+				if (platform.webos) document.addEventListener('webOSMouse', onWebOSMouse);
 				setLastContainer(rootContainerId);
 				configureDefaults(containerDefaults);
 				configureContainer(rootContainerId);
@@ -511,7 +512,7 @@ const Spotlight = (function () {
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
-			document.removeEventListener('webOSMouse', webOSMouseHandler);
+			if (platform.webos) document.removeEventListener('webOSMouse', onWebOSMouse);
 			Spotlight.clear();
 			_initialized = false;
 		},
