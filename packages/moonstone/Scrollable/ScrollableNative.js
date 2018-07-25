@@ -455,7 +455,7 @@ class ScrollableBaseNative extends Component {
 		return oPoint;
 	}
 
-	scrollByPage = (keyCode) => {
+	scrollByPage = (direction) => {
 		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
 		// scroller as a plain container
 		if (!this.uiRef.state.isVerticalScrollbarVisible) {
@@ -463,61 +463,41 @@ class ScrollableBaseNative extends Component {
 		}
 
 		const
-			{childRef, containerRef, scrollToAccumulatedTarget} = this.uiRef,
-			bounds = this.uiRef.getScrollBounds(),
-			canScrollVertically = this.uiRef.canScrollVertically(bounds),
-			pageDistance = (isPageUp(keyCode) ? -1 : 1) * (canScrollVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier,
-			spotItem = Spotlight.getCurrent();
+			{childRef, containerRef} = this.uiRef,
+			focusedItem = Spotlight.getCurrent();
 
-		if (spotItem) {
-			// Should skip scroll by page when spotItem is paging control button of Scrollbar
-			if (!childRef.containerRef.contains(spotItem)) {
-				return true;
-			}
-
+		// Should skip scroll by page when focusedItem is paging control button of Scrollbar
+		if (focusedItem && childRef.containerRef.contains(focusedItem)) {
 			const
 				// VirtualList and Scroller have a spotlightId on containerRef
 				spotlightId = containerRef.dataset.spotlightId,
-				direction = this.getPageDirection(keyCode),
 				rDirection = reverseDirections[direction],
 				viewportBounds = containerRef.getBoundingClientRect(),
-				spotItemBounds = spotItem.getBoundingClientRect(),
-				endPoint = this.getEndPoint(direction, spotItemBounds, viewportBounds),
-				next = getTargetByDirectionFromPosition(rDirection, endPoint, spotlightId);
+				focusedItemBounds = focusedItem.getBoundingClientRect(),
+				endPoint = this.getEndPoint(direction, focusedItemBounds, viewportBounds);
+			let next = null;
 
-			// If there is no next spottable DOM elements, scroll one page with animation
-			if (!next) {
-				scrollToAccumulatedTarget(pageDistance, canScrollVertically);
-			// If there is a next spottable DOM element vertically or horizontally, focus it without animation
-			} else if (next !== spotItem && this.childRef.scrollToNextPage) {
-				this.animateOnFocus = false;
-				if (Spotlight.getPointerMode()) {
-					// When changing from "pointer" mode to "5way key" mode,
-					// a pointer is hidden and a last focused item get focused after 30ms.
-					// To make sure the item to be focused after that, we used 50ms.
-					setTimeout(() => {
-						Spotlight.focus(next);
-					}, 50);
-				} else {
+			/* 1. Find spottable item in viewport */
+			next = getTargetByDirectionFromPosition(rDirection, endPoint, spotlightId);
+
+			if (next !== focusedItem) {
+				Spotlight.focus(next);
+			/* 2. Find spottable item out of viewport */
+			// For Scroller
+			} else if (this.childRef.scrollToNextPage) {
+				next = this.childRef.scrollToNextPage({direction, focusedItem, reverseDirection: rDirection, spotlightId, viewportHeight: viewportBounds.height});
+
+				if (next !== null) {
+					this.animateOnFocus = false;
 					Spotlight.focus(next);
 				}
-			// If a next spottable DOM element is equals to the current spottable item, we need to find a next item
-			} else {
-				const
-					scrollFn = this.childRef.scrollToNextPage || this.childRef.scrollToNextItem,
-					nextPage = scrollFn({direction, reverseDirection: rDirection, focusedItem: spotItem, spotlightId});
-
-				if (typeof nextPage === 'object') { // If finding a next spottable item in a Scroller, focus it
-					this.animateOnFocus = false;
-					Spotlight.focus(nextPage);
-				} else if (nextPage === false) { // Scroll one page with animation if nextPage is equals to `false`
-					scrollToAccumulatedTarget(pageDistance, canScrollVertically);
-				} else if (nextPage === true) { // For a VirtualList, need to check whether an overscroll effect is needed
-					return false;
-				}
+			// For VirtualList
+			} else if (this.childRef.scrollToNextItem) {
+				this.childRef.scrollToNextItem({direction, focusedItem, reverseDirection: rDirection, spotlightId});
 			}
-		} else {
-			scrollToAccumulatedTarget(pageDistance, canScrollVertically);
+
+			// Need to check whether an overscroll effect is needed
+			return false;
 		}
 
 		return true;
@@ -543,10 +523,11 @@ class ScrollableBaseNative extends Component {
 		this.animateOnFocus = true;
 
 		if (isPageUp(keyCode) || isPageDown(keyCode)) {
+			Spotlight.setPointerMode(false);
 			ev.preventDefault();
 			if (!repeat && this.hasFocus()) {
 				direction = this.getPageDirection(keyCode);
-				overscrollEffectRequired = !this.scrollByPage(keyCode);
+				overscrollEffectRequired = !this.scrollByPage(direction);
 			}
 		} else if (!Spotlight.getPointerMode() && !repeat && this.hasFocus()) {
 			direction = getDirection(keyCode);
