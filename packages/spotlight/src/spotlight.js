@@ -354,6 +354,12 @@ const Spotlight = (function () {
 		_pointerMoveDuringKeyPress = false;
 	}
 
+	function webOSMouseHandler (ev) {
+		if (ev && ev.detail && ev.detail.type === 'Leave') {
+			onBlur();
+		}
+	}
+
 	function onFocus () {
 		// Normally, there isn't focus here unless the window has been blurred above. On webOS, the
 		// platform may focus the window after the app has already focused a component so we prevent
@@ -482,6 +488,7 @@ const Spotlight = (function () {
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
+				document.addEventListener('webOSMouse', webOSMouseHandler);
 				setLastContainer(rootContainerId);
 				configureDefaults(containerDefaults);
 				configureContainer(rootContainerId);
@@ -504,6 +511,7 @@ const Spotlight = (function () {
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
+			document.removeEventListener('webOSMouse', webOSMouseHandler);
 			Spotlight.clear();
 			_initialized = false;
 		},

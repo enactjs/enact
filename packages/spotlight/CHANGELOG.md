@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Added
+
+- `spotlight` webOS mouse event handler.
+
 ### Changed
 
 - `spotlight` to default to 5-way mode on initialization
