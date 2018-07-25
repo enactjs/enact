@@ -464,7 +464,6 @@ class ScrollableBaseNative extends Component {
 
 		const
 			{childRef, containerRef} = this.uiRef,
-			bounds = this.uiRef.getScrollBounds(),
 			focusedItem = Spotlight.getCurrent();
 
 		// Should skip scroll by page when focusedItem is paging control button of Scrollbar
