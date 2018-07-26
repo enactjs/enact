@@ -130,15 +130,18 @@ const kind = (config) => {
 	if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
 
 	Component.inline = (props, context) => {
-		const updated = {
+		let updated = {
 			...defaultProps,
 			...props
 		};
 
 		if (handlers) {
-			Object.keys(handlers).forEach(key => {
-				updated[key] = (ev) => handlers[key](ev, props, context);
-			});
+			// generate a handler with a clone of updated to ensure each handler receives the same
+			// props without the kind.handlers injected.
+			updated = Object.keys(handlers).reduce((_props, key) => {
+				_props[key] = (ev) => handlers[key](ev, updated, context);
+				return _props;
+			}, {...updated});
 		}
 
 		return renderKind(updated, context);
