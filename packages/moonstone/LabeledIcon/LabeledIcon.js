@@ -7,15 +7,16 @@
 
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-// import React from 'react';
 import compose from 'ramda/src/compose';
 import Pure from '@enact/ui/internal/Pure';
 import UiLabeledIcon from '@enact/ui/LabeledIcon';
 
-import Icon from '../Icon';
+import {IconBase} from '../Icon';
 import Skinnable from '../Skinnable';
 
 import componentCss from './LabeledIcon.less';
+
+const Icon = Skinnable(IconBase);
 
 /**
  * A basic LabeledIcon component structure without any behaviors applied to it.

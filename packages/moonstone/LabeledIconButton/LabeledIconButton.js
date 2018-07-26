@@ -7,7 +7,6 @@
 
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-// import React from 'react';
 import compose from 'ramda/src/compose';
 import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
@@ -55,7 +54,7 @@ const LabeledIconButtonBase = kind({
 		 *
 		 * The following classes are supported:
 		 *
-		 * * `LabeledIconButton` - The root component class
+		 * * `labeledIconButton` - The root component class
 		 * * `label` - The label component class
 		 * * `icon` - The icon component class
 		 *
