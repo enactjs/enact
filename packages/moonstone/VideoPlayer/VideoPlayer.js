@@ -1023,10 +1023,6 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	handleEmptied = () => {
-		this.hideControls();
-	}
-
 	handlePlay = this.handle(
 		this.shouldShowMiniFeedback,
 		() => this.play()
@@ -1759,7 +1755,6 @@ const VideoPlayerBase = class extends React.Component {
 		mediaProps.mediaComponent = 'video';
 		mediaProps.onPlay = this.handlePlayEvent;
 		mediaProps.onLoadStart = this.handleLoadStart;
-		mediaProps.onEmptied = this.handleEmptied;
 		mediaProps.onUpdate = this.handleEvent;
 		mediaProps.ref = this.setVideoRef;
 
