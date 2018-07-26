@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `moonstone/VideoPlayer` to allow preventing bottom control render via play event handler
+- `moonstone/VideoPlayer` to allow preventing bottom control render via loadstart event handler
 
 ### Fixed
 
