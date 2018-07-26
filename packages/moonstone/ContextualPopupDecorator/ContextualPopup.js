@@ -129,7 +129,7 @@ const ContextualPopupBase = kind({
 		onCloseButtonClick: PropTypes.func,
 
 		/**
-		 * Shows the close button
+		 * Shows the close button.
 		 *
 		 * @type {Boolean}
 		 * @default false

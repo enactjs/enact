@@ -40,7 +40,7 @@ const IconButtonBase = kind({
 
 	propTypes: /** @lends moonstone/IconButton.IconButtonBase.prototype */ {
 		/**
-		 * The background-color opacity of this icon button
+		 * The background-color opacity of this icon button.
 		 *
 		 * Valid values are:
 		 * * `'translucent'`,

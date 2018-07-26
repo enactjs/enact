@@ -26,7 +26,7 @@ import {ProgressBarTooltip} from './ProgressBarTooltip';
 import componentCss from './ProgressBar.less';
 
 /**
- * Renders a moonstone-styled ProgressBar.
+ * Renders a moonstone-styled progress bar.
  *
  * @class ProgressBarBase
  * @memberof moonstone/ProgressBar
@@ -51,7 +51,7 @@ const ProgressBarBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Enable to draw special visual attention to this component.
+		 * Highlights the filled portion.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -59,9 +59,9 @@ const ProgressBarBase = kind({
 		highlighted: PropTypes.bool,
 
 		/**
-		 * Sets the orientation of the slider, whether the progress-bar depicts its progress value
-		 * in a left and right orientation or up and down onientation.
-		 * Must be either `'horizontal'` or `'vertical'`.
+		 * Sets the orientation of the slider.
+		 *
+		 * * Values: `'horizontal'`, `'vertical'`
 		 *
 		 * @type {String}
 		 * @default 'horizontal'
@@ -70,8 +70,7 @@ const ProgressBarBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * The proportion of the filled portion of the progress bar. Valid values are
-		 * between `0` and `1`.
+		 * A number between `0` and `1` indicating the proportion of the filled portion of the bar.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -80,9 +79,9 @@ const ProgressBarBase = kind({
 		progress: PropTypes.number,
 
 		/**
-		 * Enables the built-in tooltip
+		 * Enables the built-in tooltip.
 		 *
-		 * To customize the tooltip, pass either a custom Tooltip component or an instance of
+		 * To customize the tooltip, pass either a custom tooltip component or an instance of
 		 * [ProgressBarTooltip]{@link moonstone/ProgressBar.ProgressBarTooltip} with additional
 		 * props configured.
 		 *
@@ -103,10 +102,10 @@ const ProgressBarBase = kind({
 		 * </ProgressBar>
 		 * ```
 		 *
-		 * @type {Boolean|Element|Function}
+		 * @type {Boolean|Component|Element}
 		 * @public
 		 */
-		tooltip: PropTypes.oneOfType([PropTypes.bool, PropTypes.object, PropTypes.func])
+		tooltip: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.func])
 	},
 
 	defaultProps: {

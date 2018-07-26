@@ -1,6 +1,9 @@
 /**
  * Moonstone styled input components.
  *
+ * @example
+ * <Input placeholder="Enter text here" />
+ *
  * @module moonstone/Input
  * @exports Input
  * @exports InputBase
@@ -60,7 +63,7 @@ const InputBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Applies a disabled style and prevents interacting with the component.
+		 * Disables Input and becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -203,6 +206,7 @@ const InputBase = kind({
 		 * Accepted values correspond to the standard HTML5 input types.
 		 *
 		 * @type {String}
+		 * @see [MDN input types doc]{@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types}
 		 * @default 'text'
 		 * @public
 		 */
@@ -302,7 +306,7 @@ const InputBase = kind({
  *
  * @class Input
  * @memberof moonstone/Input
- * @mixes i18n/I18nDecorator.I18nContextDecorator
+ * @extends moonstone/Input.InputBase
  * @mixes ui/Changeable.Changeable
  * @mixes spotlight/Spottable.Spottable
  * @ui
@@ -341,6 +345,15 @@ const Input = Pure(
  * @memberof moonstone/Input.Input.prototype
  * @type {Boolean}
  * @default false
+ * @public
+ */
+
+/**
+ * Sets the initial value.
+ *
+ * @name defaultValue
+ * @memberof moonstone/Input.Input.prototype
+ * @type {String}
  * @public
  */
 
@@ -385,7 +398,7 @@ const Input = Pure(
  */
 
 /**
- * Prevents navigation of the component using spotlight.
+ * Disables spotlight navigation into the component.
  *
  * @name spotlightDisabled
  * @memberof moonstone/Input.Input.prototype

@@ -15,7 +15,7 @@ import React from 'react';
 import {MarqueeDecorator} from '../Marquee';
 import Popup from '../Popup';
 
-import css from './Dialog.less';
+import componentCss from './Dialog.less';
 
 const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
 
@@ -64,6 +64,19 @@ const DialogBase = kind({
 		 * @public
 		 */
 		children: PropTypes.node,
+
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `dialog` - The root class name
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		css: PropTypes.object,
 
 		/**
 		 * Disables animating the dialog on or off screen.
@@ -147,6 +160,8 @@ const DialogBase = kind({
 		/**
 		 * The secondary text displayed below the `title` within the header.
 		 *
+		 * Will not display if `title` is not set.
+		 *
 		 * @type {String}
 		 * @public
 		 */
@@ -163,19 +178,21 @@ const DialogBase = kind({
 	},
 
 	styles: {
-		css,
-		className: 'dialog'
+		css: componentCss,
+		className: 'dialog',
+		publicClassNames: ['dialog']
 	},
 
 	computed: {
-		className: ({noDivider, styler}) => styler.append({showDivider: !noDivider})
+		className: ({noDivider, styler}) => styler.append({showDivider: !noDivider}),
+		titleBelow: ({title, titleBelow}) => title ? titleBelow : ''
 	},
 
-	render: ({buttons, casing, children, title, titleBelow, ...rest}) => {
+	render: ({buttons, casing, css, children, title, titleBelow, ...rest}) => {
 		delete rest.noDivider;
 
 		return (
-			<Popup {...rest}>
+			<Popup {...rest} css={css}>
 				<div className={css.titleWrapper}>
 					<div className={css.titleBlock}>
 						<MarqueeH1 casing={casing} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>

@@ -1,5 +1,5 @@
 /**
- * Provides Moonstone-themed Image component that supports multiple resolution sources.
+ * Provides Moonstone styled Image component that supports multiple resolution sources.
  *
  * @example
  * <Image src="https://dummyimage.com/64/e048e0/0011ff" style={{height: 64, width: 64}} />

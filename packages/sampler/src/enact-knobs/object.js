@@ -20,9 +20,12 @@ const object = (name, Config, preferredObject) => {
 	if (typeof Config === 'object' || Config == null) {
 		// Config wasn't set, or was omitted, causing the preferredObject to be the last value. Reassignment dipsy-doodle.
 		preferredObject = Config;
-		Config = {
-			defaultProps: {}
-		};
+		Config = {};
+	}
+
+	// If there is no `defaultProps` object on the Config object
+	if (!Config.defaultProps) {
+		Config.defaultProps = {};
 	}
 
 	// If there's no group ID but there is a display name, use that for the group ID

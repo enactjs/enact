@@ -11,15 +11,15 @@ import css from './Panel.less';
 let panelId = 0;
 
 /**
-* {@link moonstone/Panels.Panel} is the default kind for controls created inside a
-* [moonstone/Panels]{@link moonstone/Panels.Panels} container. A `moonstone/Panels`
-* will typically contain several instances of these.
-*
-* @class Panel
-* @memberof moonstone/Panels
-* @ui
-* @public
-*/
+ * A Panel is the standard view container used inside a [Panels]{@link moonstone/Panels.Panels} view
+ * manager instance. [Panels]{@link moonstone/Panels.Panels} will typically contain several
+ * instances of these and transition between them.
+ *
+ * @class Panel
+ * @memberof moonstone/Panels
+ * @ui
+ * @public
+ */
 const PanelBase = kind({
 
 	name: 'Panel',
@@ -52,8 +52,10 @@ const PanelBase = kind({
 		autoFocus: PropTypes.string,
 
 		/**
-		 * Header for the panel. This is usually passed by the {@link ui/Slottable.Slottable} API by
-		 * using a [Header]{@link moonstone/Panels.Header} component as a child of the Panel.
+		 * Header for the panel.
+		 *
+		 * This is usually passed by the [Slottable]{@link ui/Slottable.Slottable} API by using a
+		 * [Header]{@link moonstone/Panels.Header} component as a child of the Panel.
 		 *
 		 * @type {Header}
 		 * @public
@@ -61,11 +63,11 @@ const PanelBase = kind({
 		header: PropTypes.node,
 
 		/**
-		 * When `true`, only the `header` is rendered and the body components are not. Setting to
-		 * `false` will cause all components to be rendered and the body components will fade in.
+		 * Hides the body components.
 		 *
-		 * When a Panel is used within {@link moonstone/Panels.Panels},
-		 * {@link moonstone/Panels.ActivityPanels}, or {@link moonstone/Panels.AlwaysViewingPanels},
+		 * When a Panel is used within [`Panels`]{@link moonstone/Panels.Panels},
+		 * [`ActivityPanels`]{@link moonstone/Panels.ActivityPanels}, or
+		 * [`AlwaysViewingPanels`]{@link moonstone/Panels.AlwaysViewingPanels},
 		 * this property will be set automatically to `true` on render and `false` after animating
 		 * into view.
 		 *

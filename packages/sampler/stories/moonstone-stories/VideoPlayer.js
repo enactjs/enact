@@ -1,5 +1,5 @@
 import icons from './icons';
-import VideoPlayer, {MediaControls} from '@enact/moonstone/VideoPlayer';
+import VideoPlayer, {MediaControls, VideoPlayerBase} from '@enact/moonstone/VideoPlayer';
 import IconButton from '@enact/moonstone/IconButton';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
@@ -76,7 +76,7 @@ prop.events.forEach( (ev) => {
 	prop.eventActions[ev] = action(ev);
 });
 
-const Config = mergeComponentMetadata('VideoPlayer', VideoPlayer);
+const Config = mergeComponentMetadata('VideoPlayer', VideoPlayerBase, VideoPlayer);
 const MediaControlsConfig = mergeComponentMetadata('MediaControls', MediaControls);
 
 VideoPlayer.displayName = 'VideoPlayer';

@@ -1,5 +1,8 @@
 /**
- * Provides Moonstone-themed form item component and interactive togglable checkbox.
+ * Provides Moonstone styled form item component and interactive togglable checkbox.
+ *
+ * @example
+ * <FormCheckboxItem>A Checkbox for a form</FormCheckboxItem>
  *
  * @module moonstone/FormCheckboxItem
  * @exports FormCheckboxItem
