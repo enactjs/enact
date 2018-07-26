@@ -554,7 +554,6 @@ const VideoPlayerBase = class extends React.Component {
 		 *
 		 * Events:
 		 * * `onLoadStart` - Called when the video starts to load
-		 * * `onPlay` - Sent when playback of the media starts after having been paused
 		 * * `onUpdate` - Sent when any of the properties were updated
 		 *
 		 * Methods:
@@ -1007,22 +1006,29 @@ const VideoPlayerBase = class extends React.Component {
 		return true;
 	}
 
-	handleLoadStart = () => {
-		this.firstPlayReadFlag = true;
-		this.prevCommand = this.props.noAutoPlay ? 'pause' : 'play';
-		this.speedIndex = 0;
-		this.setState({
-			announce: AnnounceState.READY,
-			currentTime: 0,
-			sourceUnavailable: true,
-			proportionPlayed: 0,
-			proportionLoaded: 0
-		});
-
-		if (!this.state.bottomControlsRendered) {
-			this.renderBottomControl.idle();
+	handleLoadStart = this.handle(
+		() => {
+			this.firstPlayReadFlag = true;
+			this.prevCommand = this.props.noAutoPlay ? 'pause' : 'play';
+			this.speedIndex = 0;
+			this.setState({
+				announce: AnnounceState.READY,
+				currentTime: 0,
+				sourceUnavailable: true,
+				proportionPlayed: 0,
+				proportionLoaded: 0
+			});
+			return true;
+		},
+		forwardWithPrevent('onLoadStart'),
+		() => {
+			if (!this.state.bottomControlsRendered) {
+				this.renderBottomControl.idle();
+			} else {
+				this.showControls();
+			}
 		}
-	}
+	)
 
 	handlePlay = this.handle(
 		forwardPlay,
@@ -1108,16 +1114,6 @@ const VideoPlayerBase = class extends React.Component {
 
 		this.setState(updatedState);
 	}
-
-	handlePlayEvent = this.handle(
-		forwardPlay,
-		() => {
-			if (this.state.bottomControlsRendered && !this.state.mediaControlsVisible) {
-				// show bottom controls when playing the next video
-				this.showControls();
-			}
-		}
-	);
 
 	renderBottomControl = new Job(() => {
 		if (!this.state.bottomControlsRendered) {
@@ -1756,7 +1752,6 @@ const VideoPlayerBase = class extends React.Component {
 		mediaProps.className = css.video;
 		mediaProps.controls = false;
 		mediaProps.mediaComponent = 'video';
-		mediaProps.onPlay = this.handlePlayEvent;
 		mediaProps.onLoadStart = this.handleLoadStart;
 		mediaProps.onUpdate = this.handleEvent;
 		mediaProps.ref = this.setVideoRef;
