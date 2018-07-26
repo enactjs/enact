@@ -197,6 +197,7 @@ const PopupBase = kind({
 		delete rest.closeButtonAriaLabel;
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
+
 		return (
 			<TransitionContainer
 				className={css.popupTransitionContainer}
@@ -387,6 +388,13 @@ class Popup extends React.Component {
 			activator: null
 		};
 		checkScrimNone(this.props);
+	}
+
+	// Spot the content after it's mounted.
+	componentDidMount () {
+		if (this.props.open) {
+			this.spotPopupContent();
+		}
 	}
 
 	componentWillReceiveProps (nextProps) {
