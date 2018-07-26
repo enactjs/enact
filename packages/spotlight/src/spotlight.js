@@ -32,6 +32,7 @@ import {
 	getAllContainerIds,
 	getContainerConfig,
 	getContainerLastFocusedElement,
+	getContainerNode,
 	getContainersForNode,
 	getLastContainer,
 	getSpottableDescendants,
@@ -166,7 +167,6 @@ const Spotlight = (function () {
 
 	function getCurrent () {
 		if (!isWindowReady()) return;
-
 		let activeElement = document.activeElement;
 		if (activeElement && activeElement !== document.body) {
 			return activeElement;
@@ -743,6 +743,21 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		setActiveContainer: function (containerId) {
+			// If the current container is restricted to 'self-only' and if the next container to be
+			// activated is not inside the currently activated container, the next container should not be
+			// activated.
+			const currentContainerId = this.getActiveContainer();
+			if (currentContainerId) {
+				const config = getContainerConfig(currentContainerId);
+				if (config.restrict === 'self-only') {
+					const currentContainer = getContainerNode(currentContainerId);
+					const nextContainer = getContainerNode(containerId);
+
+					if (currentContainer && nextContainer && !currentContainer.contains(nextContainer)) {
+						return;
+					}
+				}
+			}
 			setLastContainer(containerId || rootContainerId);
 		},
 
