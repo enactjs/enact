@@ -55,6 +55,9 @@ const ButtonBase = kind({
 		 * When `true`, the button is shown as disabled and does not
 		 * `onClick` [events]{@link /docs/developer-guide/glossary/#event}.
 		 *
+		 * Note: `onClick` events are handled by the [Touchable]{@link ui/Touchable} HOC, added to
+		 * `Button`, but not `ButtonBase`.
+		 *
 		 * @type {Boolean}
 		 * @default false
 		 * @public

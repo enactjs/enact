@@ -9,7 +9,7 @@
 	padding: 0 @moon-spotlight-outset;
 
 	.icon {
-		margin-top: 0;  // Margin top is handled by the outer mrgin. Setting it to 0 (for proper vertical centering) should allow this to be respected as well.
+		margin-top: 0;  // Margin top is handled by the parent's mrgin. An app setting the parent margin to 0 would not expect icon's margin to protrude past the outer component boundary. This ensures that won't happen.
 		margin-bottom: @moon-spotlight-outset;
 	}
 

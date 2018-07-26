@@ -65,8 +65,7 @@ const LabeledIconBase = kind({
 		/**
 		 * Disables the [LabeledIconBase]{@link ui/LabeledIcon.LabeledIconBase}
 		 *
-		 * When `true`, the LabeledIcon is shown as disabled and does not respond to
-		 * `onClick` [events]{@link /docs/developer-guide/glossary/#event}.
+		 * When `true`, the LabeledIcon is shown as disabled.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -140,7 +139,6 @@ const LabeledIconBase = kind({
 				disabled
 			});
 			iconComponent = void 0;
-			// iconComponent = CellBase.defaultProps.component;  // Note, presently defaultProps are not filling in automatically. This line may be romeved once that is tip-top.
 			iconClassName = null;
 		}
 
@@ -149,7 +147,6 @@ const LabeledIconBase = kind({
 
 		return LayoutBase.inline({
 			align: 'center center',
-			// component: LayoutBase.defaultProps.component,  // Note, presently defaultProps are not filling in automatically. This line may be romeved once that is tip-top.
 			className,
 			disabled,
 			orientation,
@@ -175,34 +172,6 @@ const LabeledIconBase = kind({
 				})
 			]
 		});
-		// return (
-		// 	<Layout
-		// 		align="center center"
-		// 		className={className}
-		// 		disabled={disabled}
-		// 		orientation={orientation}
-		// 		style={style}
-		// 	>
-		// 		<Cell
-		// 			shrink
-		// 			size="100%"
-		// 			{...rest}
-		// 			component={iconComponent}
-		// 			className={css.iconCell + ' ' + iconClassName}
-		// 			disabled={disabled}
-		// 		>
-		// 			{icon}
-		// 		</Cell>
-		// 		<Cell
-		// 			shrink
-		// 			component="label"
-		// 			className={css.label}
-		// 			disabled={disabled}
-		// 		>
-		// 			{children}
-		// 		</Cell>
-		// 	</Layout>
-		// );
 	}
 });
 

@@ -102,7 +102,6 @@ const IconButtonBase = kind({
 			'data-webos-voice-intent': 'Select',
 			...rest,
 			buttonComponent: <ButtonBase css={css} />,
-			// buttonComponent: ButtonBase.inline({css}),
 			css,
 			icon: children,
 			iconComponent: (children ? Icon : void 0),

@@ -87,7 +87,12 @@ const ButtonBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		css: PropTypes.object,
+
+		/*
+		 * Passed on to UI, referenced here for performance.
+		 */
+		icon: PropTypes.any
 	},
 
 	styles: {

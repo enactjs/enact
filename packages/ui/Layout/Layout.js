@@ -185,7 +185,10 @@ const LayoutBase = kind({
  * @public
  */
 const Column = (props) => (
-	<LayoutBase {...props} orientation="vertical" />
+	LayoutBase.inline({
+		...props,
+		orientation: 'vertical'
+	})
 );
 
 /**
@@ -196,7 +199,10 @@ const Column = (props) => (
  * @public
  */
 const Row = (props) => (
-	<LayoutBase {...props} orientation="horizontal" />
+	LayoutBase.inline({
+		...props,
+		orientation: 'horizontal'
+	})
 );
 
 export default LayoutBase;
