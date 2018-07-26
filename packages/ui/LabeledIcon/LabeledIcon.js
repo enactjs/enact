@@ -12,7 +12,7 @@ import compose from 'ramda/src/compose';
 
 import ComponentOverride from '../ComponentOverride';
 import Slottable from '../Slottable';
-import Layout, {Cell} from '../Layout';
+import {CellBase, LayoutBase} from '../Layout';
 
 import componentCss from './LabeledIcon.less';
 
@@ -134,46 +134,75 @@ const LabeledIconBase = kind({
 		// rendered JSX component, it should become a child of `Cell.icon` and iconComponent should
 		// use Cell's default value. We must also reposition the `icon` class
 		if (React.isValidElement(icon)) {
-			icon = <ComponentOverride
-				component={icon}
-				className={iconClassName}
-				disabled={disabled}
-			/>;
+			icon = ComponentOverride({
+				component: icon,
+				className: iconClassName,
+				disabled
+			});
 			iconComponent = void 0;
+			// iconComponent = CellBase.defaultProps.component;  // Note, presently defaultProps are not filling in automatically. This line may be romeved once that is tip-top.
 			iconClassName = null;
 		}
 
 		delete rest.inline;
 		delete rest.labelPosition;
 
-		return (
-			<Layout
-				align="center center"
-				className={className}
-				disabled={disabled}
-				orientation={orientation}
-				style={style}
-			>
-				<Cell
-					shrink
-					size="100%"
-					{...rest}
-					component={iconComponent}
-					className={css.iconCell + ' ' + iconClassName}
-					disabled={disabled}
-				>
-					{icon}
-				</Cell>
-				<Cell
-					shrink
-					component="label"
-					className={css.label}
-					disabled={disabled}
-				>
-					{children}
-				</Cell>
-			</Layout>
-		);
+		return LayoutBase.inline({
+			align: 'center center',
+			// component: LayoutBase.defaultProps.component,  // Note, presently defaultProps are not filling in automatically. This line may be romeved once that is tip-top.
+			className,
+			disabled,
+			orientation,
+			style,
+			children: [
+				CellBase.inline({
+					key: 'icon',
+					shrink: true,
+					size: '100%',
+					...rest,
+					component: iconComponent,
+					className: (css.iconCell + ' ' + iconClassName),
+					disabled,
+					children: icon
+				}),
+				CellBase.inline({
+					key: 'label',
+					shrink: true,
+					component: 'label',
+					className: css.label,
+					disabled,
+					children
+				})
+			]
+		});
+		// return (
+		// 	<Layout
+		// 		align="center center"
+		// 		className={className}
+		// 		disabled={disabled}
+		// 		orientation={orientation}
+		// 		style={style}
+		// 	>
+		// 		<Cell
+		// 			shrink
+		// 			size="100%"
+		// 			{...rest}
+		// 			component={iconComponent}
+		// 			className={css.iconCell + ' ' + iconClassName}
+		// 			disabled={disabled}
+		// 		>
+		// 			{icon}
+		// 		</Cell>
+		// 		<Cell
+		// 			shrink
+		// 			component="label"
+		// 			className={css.label}
+		// 			disabled={disabled}
+		// 		>
+		// 			{children}
+		// 		</Cell>
+		// 	</Layout>
+		// );
 	}
 });
 

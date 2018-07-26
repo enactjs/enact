@@ -19,11 +19,14 @@ import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 
-import Icon from '../Icon';
+import {IconBase} from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import componentCss from './Button.less';
+
+// Make a basic Icon in case we need it later. This cuts `Pure` out of icon for a small gain.
+const Icon = Skinnable(IconBase);
 
 // Called when `tooltip` props are used
 const deprecation = deprecate(() => {}, {
@@ -110,8 +113,8 @@ const ButtonBase = kind({
 		return UiButtonBase.inline({
 			'data-webos-voice-intent': 'Select',
 			...rest,
-			css: css,
-			iconComponent: Icon
+			css,
+			iconComponent: (rest.icon ? Icon : null)  // Conditionally send the Icon component to UiButtonBase
 		});
 	}
 });

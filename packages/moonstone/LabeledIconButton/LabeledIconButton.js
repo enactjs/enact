@@ -7,15 +7,14 @@
 
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
 import compose from 'ramda/src/compose';
 import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
 import UiLabeledIcon from '@enact/ui/LabeledIcon';
 import {IconButtonDecorator as UiIconButtonDecorator} from '@enact/ui/IconButton';
 
-import Skinnable from '../Skinnable';
 import {IconButtonBase} from '../IconButton';
+import Skinnable from '../Skinnable';
 
 // This refers to the LabeledIcon styling, since they're the same.
 // If this fact changes in the future, we can simply create a new less file in this component and
@@ -55,7 +54,7 @@ const LabeledIconButtonBase = kind({
 		 *
 		 * The following classes are supported:
 		 *
-		 * * `LabeledIconButton` - The root component class
+		 * * `labeledIconButton` - The root component class
 		 * * `label` - The label component class
 		 * * `icon` - The icon component class
 		 *
@@ -72,15 +71,12 @@ const LabeledIconButtonBase = kind({
 	},
 
 	render: ({css, children, ...rest}) => {
-		return (
-			<UiLabeledIcon
-				iconComponent={IconButton}
-				{...rest}
-				css={css}
-			>
-				{children}
-			</UiLabeledIcon>
-		);
+		return UiLabeledIcon.inline({
+			iconComponent: IconButton,
+			...rest,
+			css,
+			children
+		});
 	}
 });
 

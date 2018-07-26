@@ -102,9 +102,10 @@ const IconButtonBase = kind({
 			'data-webos-voice-intent': 'Select',
 			...rest,
 			buttonComponent: <ButtonBase css={css} />,
-			css: css,
+			// buttonComponent: ButtonBase.inline({css}),
+			css,
 			icon: children,
-			iconComponent: Icon,
+			iconComponent: (children ? Icon : void 0),
 			children: tooltipNode
 		});
 	}
