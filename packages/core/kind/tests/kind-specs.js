@@ -92,4 +92,22 @@ describe('kind', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	describe('inline', function () {
+		it('should set default props when passed prop is undefined', function () {
+			const component = Kind.inline({
+				// explicitly testing settings undefined in this test case
+				// eslint-disable-next-line no-undefined
+				label: undefined
+			});
+
+			// since we're inlining the output, we have to reference where the label prop lands --
+			// the title prop of the <div> -- rather than the label prop on the component (which
+			// doesn't exist due to inlining).
+			const expected = 'Label';
+			const actual = component.props.title;
+
+			expect(actual).to.equal(expected);
+		});
+	});
+
 });
