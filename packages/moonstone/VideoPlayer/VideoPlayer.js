@@ -713,7 +713,8 @@ const VideoPlayerBase = class extends React.Component {
 			}
 		}
 
-		if (this.state.bottomControlsRendered && !prevState.bottomControlsRendered) {
+		// Once video starts loading it queues bottom control render until idle
+		if (this.state.bottomControlsRendered && !prevState.bottomControlsRendered && !this.state.mediaControlsVisible) {
 			this.showControls();
 		}
 	}
@@ -1112,6 +1113,7 @@ const VideoPlayerBase = class extends React.Component {
 		forwardPlay,
 		() => {
 			if (this.state.bottomControlsRendered && !this.state.mediaControlsVisible) {
+				// show bottom controls when playing the next video
 				this.showControls();
 			}
 		}
