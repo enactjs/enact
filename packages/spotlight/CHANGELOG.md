@@ -10,8 +10,8 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
-- `spotlight` to blur when pointer leaves floating webOS app.
-- `spotlight` `setActiveContainer()` to check if the current container is restricted to 'self-only'.
+- `spotlight` to blur when pointer leaves floating webOS app
+- `spotlight` to prevent changing the active container when the currently active container is restricted is "self-only"
 
 ## [2.0.0-rc.3] - 2018-07-23
 
