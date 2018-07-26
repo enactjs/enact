@@ -4,7 +4,7 @@ import {scale, unit} from '@enact/ui/resolution';
 
 import {breadcrumbWidth} from './Breadcrumb';
 
-/**
+/*
  * Panel arrangers have a unique design requirement that varies their transition depending on the
  * direction (reverse) of the transition. This takes the two arrangement functions and returns
  * another function that picks which to call based on the value of `reverseTransition`.
@@ -19,7 +19,7 @@ const forwardBackward = (f, b) => (config) => {
 	f2(config);
 };
 
-/**
+/*
  * Utility method to apply the same easing and reset the transform before applying `fn`
  *
  * @param   {Function} fn Arrangement function
@@ -55,7 +55,7 @@ export const AlwaysViewingArranger = {
 
 // Actvity Arranger
 
-/**
+/*
  * Appends a transform that accounts for a single breadcrumb
  *
  * @param  {Node} node      DOM Node

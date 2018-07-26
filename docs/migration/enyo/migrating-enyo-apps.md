@@ -1,5 +1,5 @@
 ---
-title: Migrating Enyo Applications
+title: Enyo Application Migration Guide
 ---
 
 ## Overview

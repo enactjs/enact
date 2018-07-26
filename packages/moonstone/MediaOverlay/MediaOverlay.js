@@ -1,6 +1,11 @@
 /**
  * Provides a media component with image and text overlay support.
  *
+ * @example
+ * <MediaOverlay text="overlay">
+ *   <source src="http://media.w3.org/2010/05/sintel/trailer.mp4" />
+ * </MediaOverlay>
+ *
  * @module moonstone/MediaOverlay
  * @exports MediaOverlay
  * @exports MediaOverlayBase
@@ -84,7 +89,7 @@ const MediaOverlayBase = kind({
 		mediaComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
-		 * Placeholder for image overlay
+		 * Placeholder for image overlay.
 		 *
 		 * @type {String}
 		 * @public
@@ -92,7 +97,7 @@ const MediaOverlayBase = kind({
 		placeholder: PropTypes.string,
 
 		/**
-		 * Text to display over media
+		 * Text to display over media.
 		 *
 		 * @type {String}
 		 * @public
@@ -186,6 +191,7 @@ const MediaOverlayDecorator = compose(
  *
  * @class MediaOverlay
  * @memberof moonstone/MediaOverlay
+ * @extends moonstone/mediaOverlay.MediaOverlayBase
  * @mixes moonstone/MediaOverlay.MediaOverlayDecorator
  * @ui
  * @public

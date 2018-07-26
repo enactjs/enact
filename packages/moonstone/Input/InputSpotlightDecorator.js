@@ -28,7 +28,7 @@ const handleKeyDown = handle(
 );
 
 /**
- * {@link moonstone/Input.InputSpotlightDecorator} is a Higher-order Component that manages the
+ * A Higher-order Component that manages the
  * spotlight behavior for an {@link moonstone/Input.Input}
  *
  * @class InputSpotlightDecorator
@@ -48,7 +48,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/Input/InputSpotlightDecorator.InputSpotlightDecorator.prototype */ {
 			/**
-			 * When `true`, focusing the decorator directly via 5-way will forward the focus onto the <input>
+			 * Focuses the <input> when the decorator is focused via 5-way.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -57,7 +57,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			autoFocus: PropTypes.bool,
 
 			/**
-			 * When `true`, applies a disabled style and the control becomes non-interactive.
+			 * Applies a disabled style and the control becomes non-interactive.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -66,7 +66,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * When `true`, blurs the input when the "enter" key is pressed.
+			 * Blurs the input when the "enter" key is pressed.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -75,7 +75,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			dismissOnEnter: PropTypes.bool,
 
 			/**
-			 * The handler to run when the internal input is focused
+			 * Called when the internal <input> is focused.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
@@ -84,7 +84,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			onActivate: PropTypes.func,
 
 			/**
-			 * The handler to run when the internal input loses focus
+			 * Called when the internal <input> loses focus.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
@@ -93,7 +93,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			onDeactivate: PropTypes.func,
 
 			/**
-			 * The handler to run when the component is removed while retaining focus.
+			 * Called when the component is removed while retaining focus.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
@@ -102,7 +102,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			onSpotlightDisappear: PropTypes.func,
 
 			/**
-			 * When `true`, prevents navigation of the component using spotlight
+			 * Disables spotlight navigation into the component.
 			 *
 			 * @type {Boolean}
 			 * @default false

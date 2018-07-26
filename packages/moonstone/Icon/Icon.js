@@ -1,5 +1,5 @@
 /**
- * Provides Moonstone-themed icon components and behaviors.
+ * Provides Moonstone styled icon components and behaviors.
  *
  * @example
  * <Icon>flag</Icon>

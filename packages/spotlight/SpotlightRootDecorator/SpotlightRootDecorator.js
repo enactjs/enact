@@ -56,8 +56,6 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillMount () {
 			if (typeof window === 'object') {
-				const palmSystem = window.PalmSystem;
-
 				Spotlight.initialize({
 					selector: '.' + spottableClass,
 					restrict: 'none'
@@ -66,10 +64,6 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				Spotlight.set(rootContainerId, {
 					overflow: true
 				});
-
-				if (palmSystem && palmSystem.cursor) {
-					Spotlight.setPointerMode(palmSystem.cursor.visibility);
-				}
 			}
 		}
 

@@ -256,8 +256,11 @@
 
 // Radio Item
 // ---------------------------------------
-@moon-radio-item-indicator-size: 24px;
-@moon-radio-item-indicator-border: 3px;
+@moon-radio-item-indicator-size: 20px;
+@moon-radio-item-indicator-border: 2px;  // ### Exceptional Case ###
+	// 2px, not being a multiple of 3, poses special problems. Any math or assignment related to
+	// this value must be specifically considered as to not impose layout issues related to, for
+	// example a width of 19.9998px, which can be treated by 19px or 20px, depending on the case.
 
 // GridListImageItem
 // ---------------------------------------

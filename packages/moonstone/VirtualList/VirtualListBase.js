@@ -408,12 +408,11 @@ const VirtualListBaseFactory = (type) => {
 				{dimensionToExtent, primary} = this.uiRef,
 				{findSpottableItem} = this,
 				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo,
-				numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent),
-				isPageDown = (direction === 'down' || direction === 'right') ? 1 : -1;
+				numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent);
 			let candidateIndex = -1;
 
 			/* First, find a spottable item in this page */
-			if (isPageDown === 1) { // Page Down
+			if (direction === 'down') { // Page Down
 				if ((lastVisibleIndex - (lastVisibleIndex % dimensionToExtent)) > currentIndex) { // If a current focused item is in the last visible line.
 					candidateIndex = findSpottableItem(
 						lastVisibleIndex,
@@ -429,7 +428,7 @@ const VirtualListBaseFactory = (type) => {
 
 			/* Second, find a spottable item in the next page */
 			if (candidateIndex === -1) {
-				if (isPageDown === 1) { // Page Down
+				if (direction === 'down') { // Page Down
 					candidateIndex = findSpottableItem(lastVisibleIndex + numOfItemsInPage, lastVisibleIndex);
 				} else { // Page Up
 					candidateIndex = findSpottableItem(firstVisibleIndex - numOfItemsInPage, firstVisibleIndex);
@@ -438,7 +437,7 @@ const VirtualListBaseFactory = (type) => {
 
 			/* Last, find a spottable item in a whole data */
 			if (candidateIndex === -1) {
-				if (isPageDown === 1) { // Page Down
+				if (direction === 'down') { // Page Down
 					candidateIndex = findSpottableItem(lastVisibleIndex + numOfItemsInPage + 1, dataSize);
 				} else { // Page Up
 					candidateIndex = findSpottableItem(firstVisibleIndex - numOfItemsInPage - 1, -1);
@@ -461,20 +460,11 @@ const VirtualListBaseFactory = (type) => {
 				indexToScroll = this.getIndexToScroll(direction, focusedIndex);
 
 			if (indexToScroll !== -1 && focusedIndex !== indexToScroll) {
-				const
-					isRtl = this.props.rtl,
-					isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right');
-
 				if (firstIndex <= indexToScroll && indexToScroll < firstIndex + numOfItems) {
 					const node = this.uiRef.containerRef.querySelector(`[data-index='${indexToScroll}'].spottable`);
 
 					if (node) {
-						// When changing from "pointer" mode to "5way key" mode,
-						// a pointer is hidden and a last focused item get focused after 30ms.
-						// To make sure the item to be focused after that, we used 50ms.
-						setTimeout(() => {
-							Spotlight.focus(node);
-						}, 50);
+						Spotlight.focus(node);
 					}
 				} else {
 					// Scroll to the next spottable item without animation
@@ -484,10 +474,8 @@ const VirtualListBaseFactory = (type) => {
 					focusedItem.blur();
 					this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
 				}
-				cbScrollTo({index: indexToScroll, stickTo: isForward ? 'end' : 'start', animate: false});
+				cbScrollTo({index: indexToScroll, stickTo: direction === 'down' ? 'end' : 'start', animate: false});
 			}
-
-			return true;
 		}
 
 		/**
@@ -625,20 +613,7 @@ const VirtualListBaseFactory = (type) => {
 						Spotlight.pause();
 					}
 
-					if (isWrapped) {
-						// In case of 'wrapping-around',
-						// we need to blur the current focus immediately
-						// since it can be a very long scroll (from one edge to the other edge)
-						// and definitely it's not a case of changing "pointer" mode to "5way key" mode.
-						target.blur();
-					} else {
-						// When changing from "pointer" mode to "5way key" mode,
-						// a pointer is hidden and a last focused item get focused after 30ms.
-						// To make sure the item to be blurred after that, we used 50ms.
-						setTimeout(() => {
-							target.blur();
-						}, 50);
-					}
+					target.blur();
 
 					this.isScrolledBy5way = true;
 					cbScrollTo({

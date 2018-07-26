@@ -120,6 +120,20 @@ const ButtonBase = kind({
 });
 
 /**
+ * Enforces a minimum width on the Button.
+ *
+ * *NOTE*: This property's default is `true` and must be explicitly set to `false` to allow
+ * the button to shrink to fit its contents.
+ *
+ * @name minWidth
+ * @memberof moonstone/Button.ButtonBase.prototype
+ * @type {Boolean}
+ * @default true
+ * @public
+ */
+
+
+/**
  * Applies Moonstone specific behaviors to [Button]{@link moonstone/Button.ButtonBase} components.
  *
  * @hoc

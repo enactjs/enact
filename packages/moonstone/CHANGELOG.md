@@ -6,10 +6,23 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Scroller` to prevent scrolling via page up/down keys if there is no spottable component in that direction
+- `moonstone/VideoPlayer` audio guidance behavior of More button
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to handle focus properly via page up/down keys when switching to 5-way mode
+
+## [2.0.0-rc.3] - 2018-07-23
+
+### Changed
+
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` overscroll effect color more recognizable on the focused element
+
+### Fixed
+
 - `moonstone/ContextualPopup` to refocus its activator on close when the popup lacks spottable children
 - `moonstone/Dialog` to hide `titleBelow` when `title` is not set
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll properly when holding down paging control buttons
 - `moonstone/ExpandableItem` spotlight behavior when leaving the component via 5-way
+- `moonstone/RadioItem` circle thickness to be 2px, matching the design
 - `moonstone/Slider` to correctly prevent 5-way actions when activated
 - `moonstone/ExpandableItem` and other expandable components to spotlight correctly when switching from pointer mode to 5-way with `closeOnSelect`
 
