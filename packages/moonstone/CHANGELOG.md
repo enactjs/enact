@@ -10,15 +10,40 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Scroller` to prevent scrolling via page up/down keys if there is no spottable component in that direction
+- `moonstone/VideoPlayer` audio guidance behavior of More button
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to handle focus properly via page up/down keys when switching to 5-way mode
+
+## [2.0.0-rc.3] - 2018-07-23
+
+### Changed
+
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` overscroll effect color more recognizable on the focused element
+
+### Fixed
+
+- `moonstone/ContextualPopup` to refocus its activator on close when the popup lacks spottable children
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll properly when holding down paging control buttons
+- `moonstone/ExpandableItem` spotlight behavior when leaving the component via 5-way
+- `moonstone/RadioItem` circle thickness to be 2px, matching the design
+- `moonstone/Slider` to correctly prevent 5-way actions when activated
+- `moonstone/ExpandableItem` and other expandable components to spotlight correctly when switching from pointer mode to 5-way with `closeOnSelect`
+
+## [2.0.0-rc.2] - 2018-07-16
+
+### Fixed
+
 - `moonstone/Input` to not focus by *tab* key
-- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effect properly when reached to the edge for the first time by wheel
-- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to show overscroll effect when focus is moved from a disabled paging control button to the opposite button
-- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll properly when `animate` is false via `scrollTo`
-- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` page controls to stop propagating an event if the event is handled
-- `moonstone/ProgressBar.ProgressBarTooltip` not to display unknown props warning
 - `moonstone/Picker` to properly set focus when navigating between buttons
-- `moonstone/Scrollable` to disable container during flick events only when contents can scroll
-- `moonstone/VideoPlayer` to display feedback tooltip when hover out from slider while playing
+- `moonstone/Popup` to set correct open state while transitioning
+- `moonstone/ProgressBar.ProgressBarTooltip` unknown props warning
+- `moonstone/Scrollable` to disable spotlight container during flick events only when contents can scroll
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll properly when `animate` is false via `scrollTo`
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` page controls to stop propagating an event when the event is handled
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to hide overscroll effect when focus is moved from a disabled paging control button to the opposite button
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effect when reaching the edge for the first time by wheel
+- `moonstone/VideoPlayer` to display feedback tooltip when pointer leaves slider while playing
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to restore focus on items focused by pointer
 
 ## [2.0.0-rc.1] - 2018-07-09
 

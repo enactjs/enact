@@ -24,12 +24,12 @@ const stringifyRoutes = (routes) => {
 const propTypes = {
 	path: PropTypes.oneOfType([
 		PropTypes.arrayOf(PropTypes.string),	// array of path segments
-		PropTypes.string								// URI-style path
+		PropTypes.string						// URI-style path
 	])
 };
 
 /**
- * A Router component for use with {@link moonstone/Panels.Panels}
+ * A Router component for use with [`Panels`]{@link moonstone/Panels.Panels}
  *
  * @class Router
  * @memberof moonstone/Panels
@@ -68,6 +68,40 @@ const Router = class extends React.Component {
 		/**
 		 * Routes defined as an object rather than via JSX. If specified, `routes` will take
 		 * precendence over a JSX definition.
+		 *
+		 * ```JavaScript
+		 * const routes = {
+		 *   'first': {
+		 *     '$props': {
+		 *       'title': 'About Routable Panels Pattern'
+		 *     },
+		 *     '$component': AboutPanel,
+		 *     'second': {
+		 *       '$props': {
+		 *         'next': 'fourth',
+		 *         'title': 'Second'
+		 *       },
+		 *       '$component': MainPanel
+		 *     },
+		 *     'third': {
+		 *       '$props': {
+		 *         'next': 'first',
+		 *         'title': 'Third'
+		 *       },
+		 *       '$component': MainPanel,
+		 *       'fourth': {
+		 *         '$props': {
+		 *           'next': 'third',
+		 *           'title': 'Fourth'
+		 *         },
+		 *         '$component': MainPanel
+		 *       }
+		 *     }
+		 *   }
+		 * };
+		 *
+		 *	<Panels path="/app/home/settings" routes={routes} />
+		 * ```
 		 *
 		 * @type {Object}
 		 * @public
@@ -121,7 +155,6 @@ const Router = class extends React.Component {
 				}
 			}
 		});
-
 		return routes;
 	}
 

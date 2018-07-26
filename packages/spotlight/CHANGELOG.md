@@ -4,6 +4,18 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Changed
+
+- `spotlight` to default to 5-way mode on initialization
+
+## [2.0.0-rc.3] - 2018-07-23
+
+### Fixed
+
+- `spotlight` to track pointer mode while paused
+
+## [2.0.0-rc.2] - 2018-07-16
+
 ### Added
 
 - `spotlight` debugging to visualize which components will be targeted as the next component for any 5-way direction
