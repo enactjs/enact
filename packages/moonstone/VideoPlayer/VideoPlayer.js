@@ -1024,6 +1024,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handlePlay = this.handle(
+		forwardPlay,
 		this.shouldShowMiniFeedback,
 		() => this.play()
 	)
