@@ -16,6 +16,7 @@ import Skinnable from '../Skinnable';
 
 import componentCss from './LabeledIcon.less';
 
+// Make a basic Icon. This cuts `Pure` out of icon for a small gain.
 const Icon = Skinnable(IconBase);
 
 /**
