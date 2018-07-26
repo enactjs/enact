@@ -11,7 +11,6 @@
  */
 
 import deprecate from '@enact/core/internal/deprecate';
-import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
@@ -19,7 +18,6 @@ import {ButtonBase as UiButtonBase, ButtonDecorator as UiButtonDecorator} from '
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import React from 'react';
 
 import Icon from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
@@ -92,13 +90,6 @@ const ButtonBase = kind({
 	styles: {
 		css: componentCss,
 		publicClassNames: ['button', 'bg', 'selected', 'small']
-	},
-
-	handlers: {
-		onClick: handle(
-			forProp('disabled', false),
-			forward('onClick')
-		)
 	},
 
 	computed: {
