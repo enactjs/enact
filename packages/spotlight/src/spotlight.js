@@ -166,6 +166,7 @@ const Spotlight = (function () {
 
 	function getCurrent () {
 		if (!isWindowReady()) return;
+
 		let activeElement = document.activeElement;
 		if (activeElement && activeElement !== document.body) {
 			return activeElement;
