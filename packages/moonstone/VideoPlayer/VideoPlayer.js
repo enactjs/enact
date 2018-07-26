@@ -269,6 +269,15 @@ const VideoPlayerBase = class extends React.Component {
 		noAutoPlay: PropTypes.bool,
 
 		/**
+		 * Prevents the default behavior of showing media controls immediately after it's loaded.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noAutoShowMediaControls: PropTypes.bool,
+
+		/**
 		 * Removes the mini feedback.
 		 *
 		 * @type {Boolean}
@@ -1006,29 +1015,26 @@ const VideoPlayerBase = class extends React.Component {
 		return true;
 	}
 
-	handleLoadStart = this.handle(
-		() => {
-			this.firstPlayReadFlag = true;
-			this.prevCommand = this.props.noAutoPlay ? 'pause' : 'play';
-			this.speedIndex = 0;
-			this.setState({
-				announce: AnnounceState.READY,
-				currentTime: 0,
-				sourceUnavailable: true,
-				proportionPlayed: 0,
-				proportionLoaded: 0
-			});
-			return true;
-		},
-		forwardWithPrevent('onLoadStart'),
-		() => {
+	handleLoadStart = () => {
+		this.firstPlayReadFlag = true;
+		this.prevCommand = this.props.noAutoPlay ? 'pause' : 'play';
+		this.speedIndex = 0;
+		this.setState({
+			announce: AnnounceState.READY,
+			currentTime: 0,
+			sourceUnavailable: true,
+			proportionPlayed: 0,
+			proportionLoaded: 0
+		});
+
+		if (!this.props.noAutoShowMediaControls) {
 			if (!this.state.bottomControlsRendered) {
 				this.renderBottomControl.idle();
 			} else {
 				this.showControls();
 			}
 		}
-	)
+	}
 
 	handlePlay = this.handle(
 		forwardPlay,
@@ -1730,6 +1736,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete mediaProps.feedbackHideDelay;
 		delete mediaProps.jumpBy;
 		delete mediaProps.miniFeedbackHideDelay;
+		delete mediaProps.noAutoShowMediaControls;
 		delete mediaProps.onControlsAvailable;
 		delete mediaProps.onFastForward;
 		delete mediaProps.onJumpBackward;

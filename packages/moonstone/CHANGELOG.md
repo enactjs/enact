@@ -4,9 +4,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Changed
+### Add
 
-- `moonstone/VideoPlayer` to allow preventing bottom control render via play event handler
+- `moonstone/VideoPlayer` property `noAutoShowMediaControls`
 
 ### Fixed
 
