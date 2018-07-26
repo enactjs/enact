@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 - `spotlight` to default to 5-way mode on initialization
 
+### Fixed
+
+- `spotlight` to blur when pointer leaves floating webOS app.
+
 ## [2.0.0-rc.3] - 2018-07-23
 
 ### Fixed
