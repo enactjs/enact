@@ -75,6 +75,12 @@ const kind = (config) => {
 
 	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
+	const renderKind = (props, context) => {
+		if (renderStyles) props = renderStyles(props, context);
+		if (renderComputed) props = renderComputed(props, context);
+
+		return render(props, context);
+	};
 
 	// addition prop decorations would be chained here (after config.render)
 	const Component = class extends React.Component {
@@ -113,17 +119,33 @@ const kind = (config) => {
 		}
 
 		render () {
-			let p = Object.assign({}, this.props, this.handlers);
-			if (renderStyles) p = renderStyles(p, this.context);
-			if (renderComputed) p = renderComputed(p, this.context);
-
-			return render(p, this.context);
+			return renderKind({
+				...this.props,
+				...this.handlers
+			}, this.context);
 		}
 	};
 
 	// Decorate the Component with the computed property object in DEV for easier testability
 	if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
 
+	Component.inline = (props, context) => {
+		let updated = {
+			...defaultProps,
+			...props
+		};
+
+		if (handlers) {
+			// generate a handler with a clone of updated to ensure each handler receives the same
+			// props without the kind.handlers injected.
+			updated = Object.keys(handlers).reduce((_props, key) => {
+				_props[key] = (ev) => handlers[key](ev, updated, context);
+				return _props;
+			}, {...updated});
+		}
+
+		return renderKind(updated, context);
+	};
 
 	return Component;
 };
