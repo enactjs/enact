@@ -138,7 +138,7 @@ const LabeledIconBase = kind({
 				className: iconClassName,
 				disabled
 			});
-			iconComponent = void 0;
+			iconComponent = 'div';  // Ideally, this would be `void 0`/`undefined` but pruning this prop out doesn't happen automatically when using .inline below.
 			iconClassName = null;
 		}
 
