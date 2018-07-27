@@ -130,6 +130,7 @@ const kind = (config) => {
 	if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
 
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
+	const handlerKeys = handlers ? Object.keys(handlers) : null;
 
 	Component.inline = (props, context) => {
 		let updated = {
@@ -139,16 +140,16 @@ const kind = (config) => {
 		if (defaultPropKeys && defaultPropKeys.length > 0) {
 			defaultPropKeys.forEach(key => {
 				// eslint-disable-next-line no-undefined
-				if (props[key] === undefined) {
+				if (props == null || props[key] === undefined) {
 					updated[key] = defaultProps[key];
 				}
 			});
 		}
 
-		if (handlers) {
+		if (handlerKeys && handlerKeys.length > 0) {
 			// generate a handler with a clone of updated to ensure each handler receives the same
 			// props without the kind.handlers injected.
-			updated = Object.keys(handlers).reduce((_props, key) => {
+			updated = handlerKeys.reduce((_props, key) => {
 				_props[key] = (ev) => handlers[key](ev, updated, context);
 				return _props;
 			}, {...updated});

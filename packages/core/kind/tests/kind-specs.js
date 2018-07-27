@@ -93,6 +93,32 @@ describe('kind', () => {
 	});
 
 	describe('inline', function () {
+		it('should support a minimal kind', function () {
+			const Minimal = kind({
+				name: 'Minimal',
+				render: () => <div />
+			});
+
+			const component = Minimal.inline();
+
+			const expected = 'div';
+			const actual = component.type;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should set default props when prop is not passed', function () {
+			const component = Kind.inline();
+
+			// since we're inlining the output, we have to reference where the label prop lands --
+			// the title prop of the <div> -- rather than the label prop on the component (which
+			// doesn't exist due to inlining).
+			const expected = 'Label';
+			const actual = component.props.title;
+
+			expect(actual).to.equal(expected);
+		});
+
 		it('should set default props when passed prop is undefined', function () {
 			const component = Kind.inline({
 				// explicitly testing settings undefined in this test case
@@ -100,11 +126,17 @@ describe('kind', () => {
 				label: undefined
 			});
 
-			// since we're inlining the output, we have to reference where the label prop lands --
-			// the title prop of the <div> -- rather than the label prop on the component (which
-			// doesn't exist due to inlining).
 			const expected = 'Label';
 			const actual = component.props.title;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should include handlers', function () {
+			const component = Kind.inline();
+
+			const expected = 'function';
+			const actual = typeof component.props.onClick;
 
 			expect(actual).to.equal(expected);
 		});
