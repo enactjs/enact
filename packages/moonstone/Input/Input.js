@@ -309,6 +309,7 @@ const InputBase = kind({
  * @extends moonstone/Input.InputBase
  * @mixes ui/Changeable.Changeable
  * @mixes spotlight/Spottable.Spottable
+ * @mixes moonstone/Skinnable.Skinnable
  * @ui
  * @public
  */

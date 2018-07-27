@@ -50,9 +50,9 @@ const ButtonBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Disables the [ButtonBase]{@link ui/Button.ButtonBase}
+		 * Applies the `disabled` class.
 		 *
-		 * When `true`, the button is shown as disabled.`.
+		 * When `true`, the button is shown as disabled.
 		 *
 		 * @type {Boolean}
 		 * @default false

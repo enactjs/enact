@@ -32,6 +32,8 @@ import componentCss from './IconButton.less';
  *
  * @class IconButtonBase
  * @memberof moonstone/IconButton
+ * @extends moonstone/Button.ButtonBase
+ * @extends ui/IconButton.IconButtonBase
  * @ui
  * @public
  */
@@ -104,7 +106,7 @@ const IconButtonBase = kind({
 			buttonComponent: <ButtonBase css={css} />,
 			css,
 			icon: children,
-			iconComponent: (children ? Icon : void 0),
+			iconComponent: Icon,
 			children: tooltipNode
 		});
 	}
@@ -119,7 +121,7 @@ const IconButtonBase = kind({
  * @mixes moonstone/TooltipDecorator.TooltipDecorator
  * @mixes ui/IconButton.IconButtonDecorator
  * @mixes spotlight/Spottable.Spottable
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const IconButtonDecorator = compose(

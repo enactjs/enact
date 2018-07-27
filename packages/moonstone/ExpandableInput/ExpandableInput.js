@@ -47,6 +47,7 @@ const handleUpDown = handle(
  *
  * @class ExpandableInputBase
  * @memberof moonstone/ExpandableInput
+ * @extends moonstone/ExpandableItem.ExpandableItemBase
  * @ui
  * @public
  */

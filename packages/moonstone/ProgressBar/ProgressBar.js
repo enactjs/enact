@@ -151,7 +151,7 @@ const ProgressBarBase = kind({
  *
  * @hoc
  * @memberof moonstone/ProgressBar
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const ProgressBarDecorator = compose(
