@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `ui/Image` to require either `placeholder` or `src` props
+
 ## [2.0.0-rc.3] - 2018-07-23
 
 No significant changes.
