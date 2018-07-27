@@ -131,7 +131,6 @@ const ImageBase = kind({
 		 * a specific screenSize.
 		 *
 		 * @type {String|Object}
-		 * @required
 		 * @public
 		 */
 		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
