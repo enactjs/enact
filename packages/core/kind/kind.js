@@ -129,19 +129,21 @@ const kind = (config) => {
 	// Decorate the Component with the computed property object in DEV for easier testability
 	if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
 
-	const defaultPropKeys = Object.keys(defaultProps);
+	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
 
 	Component.inline = (props, context) => {
 		let updated = {
 			...props
 		};
 
-		defaultPropKeys.forEach(key => {
-			// eslint-disable-next-line no-undefined
-			if (props[key] === undefined) {
-				updated[key] = defaultProps[key];
-			}
-		});
+		if (defaultPropKeys && defaultPropKeys.length > 0) {
+			defaultPropKeys.forEach(key => {
+				// eslint-disable-next-line no-undefined
+				if (props[key] === undefined) {
+					updated[key] = defaultProps[key];
+				}
+			});
+		}
 
 		if (handlers) {
 			// generate a handler with a clone of updated to ensure each handler receives the same
