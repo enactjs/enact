@@ -69,6 +69,7 @@ const ItemBase = kind({
  * Moonstone specific item behaviors to apply to [Item]{@link moonstone/Item.ItemBase}.
  *
  * @class ItemDecorator
+ * @hoc
  * @memberof moonstone/Item
  * @mixes spotlight.Spottable
  * @mixes moonstone/Marquee.MarqueeDecorator

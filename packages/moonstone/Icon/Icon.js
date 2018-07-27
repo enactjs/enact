@@ -139,7 +139,7 @@ const IconBase = kind({
  *
  * @hoc
  * @memberof moonstone/Icon
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const IconDecorator = compose(

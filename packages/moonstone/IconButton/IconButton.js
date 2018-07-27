@@ -122,7 +122,7 @@ const IconButtonBase = kind({
  * @mixes moonstone/TooltipDecorator.TooltipDecorator
  * @mixes ui/IconButton.IconButtonDecorator
  * @mixes spotlight/Spottable.Spottable
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const IconButtonDecorator = compose(

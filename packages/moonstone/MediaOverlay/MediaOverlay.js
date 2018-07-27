@@ -169,7 +169,7 @@ const MediaOverlayBase = kind({
  * @memberof moonstone/MediaOverlay
  * @mixes spotlight/Spottable.Spottable
  * @mixes ui/Slottable.Slottable
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const MediaOverlayDecorator = compose(

@@ -120,7 +120,7 @@ const ResponsiveImageDecorator = hoc((config, Wrapped) => {
  *
  * @hoc
  * @memberof moonstone/Image
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const ImageDecorator = compose(

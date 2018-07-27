@@ -117,6 +117,7 @@ const LabeledItemBase = kind({
  * @class LabeledItem
  * @memberof moonstone/LabeledItem
  * @extends moonstone/LabeledItem.LabeledItemBase
+ * @mixes moonstone/Skinnable.Skinnable
  * @ui
  * @public
  */

@@ -142,7 +142,7 @@ const SpinnerBase = kind({
  * spotlight when unmounted. However, spotlight is not paused when `blockClickOn` prop is
  * `'container'`. Blocking spotlight within the container is up to app implementation.
  *
- * @hoc SpinnerSpotlightDecorator
+ * @hoc
  * @memberof moonstone/Spinner
  * @ui
  * @private
@@ -206,7 +206,7 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
  * @hoc
  * @memberof moonstone/Spinner
  * @mixes moonstone/Spinner.SpinnerSpotlightDecorator
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const SpinnerDecorator = compose(
