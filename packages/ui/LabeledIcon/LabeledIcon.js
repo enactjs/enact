@@ -3,6 +3,8 @@
  *
  * @module ui/LabeledIcon
  * @exports LabeledIcon
+ * @exports LabeledIconBase
+ * @exports LabeledIconDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -212,6 +214,7 @@ const LabeledIconDecorator = compose(
  *
  * @class LabeledIcon
  * @memberof ui/LabeledIcon
+ * @extends ui/LabeledIcon.LabeledIconBase
  * @mixes ui/LabeledIcon.LabeledIconDecorator
  * @ui
  * @public

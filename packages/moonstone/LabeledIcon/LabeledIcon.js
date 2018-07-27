@@ -3,6 +3,8 @@
  *
  * @module moonstone/LabeledIcon
  * @exports LabeledIcon
+ * @exports LabeledIconBase
+ * @exports LabeledIconDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -62,11 +64,36 @@ const LabeledIconBase = kind({
 	}
 });
 
+/**
+ * Adds Moonstone specific behaviors to [LabeledIconBase]{@link moonstone/LabeledIcon.LabeledIconBase}.
+ *
+ * @hoc
+ * @memberof moonstone/LabeledIcon
+ * @mixes moonstone/Skinnable.Skinnable
+ * @public
+ */
 const LabeledIconDecorator = compose(
 	Pure,
 	Skinnable
 );
 
+/**
+ * A Moonstone-styled icon component with a label.
+ *
+ * Usage:
+ * ```
+ * <LabeledIcon icon="star" labelPosition="after">
+ *   Favorite
+ * </LabeledIcon>
+ * ```
+ *
+ * @class LabeledIcon
+ * @memberof moonstone/LabeledIcon
+ * @extends moonstone/LabeledIcon.LabeledIconBase
+ * @mixes moonstone/LabeledIcon.LabeledIconDecorator
+ * @ui
+ * @public
+ */
 const LabeledIcon = LabeledIconDecorator(LabeledIconBase);
 
 export default LabeledIcon;

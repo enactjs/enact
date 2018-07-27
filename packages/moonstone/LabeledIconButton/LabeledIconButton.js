@@ -3,6 +3,8 @@
  *
  * @module moonstone/LabeledIconButton
  * @exports LabeledIconButton
+ * @exports LabeledIconButtonBase
+ * @exports LabeledIconButtonDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -71,11 +73,36 @@ const LabeledIconButtonBase = kind({
 	}
 });
 
+/**
+ * Adds Moonstone specific behaviors to [LabeledIconButtonBase]{@link moonstone/LabeledIconButton.LabeledIconButtonBase}.
+ *
+ * @hoc
+ * @memberof moonstone/LabeledIconButton
+ * @mixes moonstone/Skinnable.Skinnable
+ * @public
+ */
 const LabeledIconButtonDecorator = compose(
 	Pure,
 	Skinnable
 );
 
+/**
+ * A Moonstone-styled icon button component with a label.
+ *
+ * Usage:
+ * ```
+ * <LabeledIconButton icon="star" labelPosition="after">
+ *   Favorite
+ * </LabeledIconButton>
+ * ```
+ *
+ * @class LabeledIconButton
+ * @memberof moonstone/LabeledIconButton
+ * @extends moonstone/LabeledIconButton.LabeledIconButtonBase
+ * @mixes moonstone/LabeledIconButton.LabeledIconButtonDecorator
+ * @ui
+ * @public
+ */
 const LabeledIconButton = LabeledIconButtonDecorator(LabeledIconButtonBase);
 
 export default LabeledIconButton;

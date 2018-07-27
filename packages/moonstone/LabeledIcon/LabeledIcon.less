@@ -9,7 +9,10 @@
 	padding: 0 @moon-spotlight-outset;
 
 	.icon {
-		margin-top: 0;  // Margin top is handled by the parent's mrgin. An app setting the parent margin to 0 would not expect icon's margin to protrude past the outer component boundary. This ensures that won't happen.
+		// Margin top is handled by the parent's mrgin. An app setting the parent margin to 0 would
+		// not expect icon's margin to protrude past the outer component boundary. This ensures that
+		// won't happen.
+		margin-top: 0;
 		margin-bottom: @moon-spotlight-outset;
 	}
 
