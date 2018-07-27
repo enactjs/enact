@@ -20,42 +20,15 @@ storiesOf('Moonstone', module)
 		withInfo({
 			propTablesExclude: [LabeledIcon, Scroller, Layout, Cell],
 			text: 'Basic usage of LabeledIcon'
-		})(() => {
-			const disabled = boolean('disabled', Config);
-			const inline = boolean('inline', Config);
-			const labelPosition = select('labelPosition', ['above', 'after', 'before', 'below', 'left', 'right'], Config);
-			const small = boolean('small', Config);
-			return (
-				<Layout orientation="vertical" style={{height: '100%'}}>
-					<Cell shrink>
-						<LabeledIcon
-							disabled={disabled}
-							inline={inline}
-							labelPosition={labelPosition}
-							small={small}
-						>
-							<icon>{select('icon', ['', ...iconNames], Config, 'fullscreen')}</icon>
-							{text('children', Config, 'Hello LabeledIcon')}
-						</LabeledIcon>
-					</Cell>
-					<Cell shrink component={Divider} style={{marginTop: '1em'}}>All Icons</Cell>
-					<Cell>
-						<Scroller>
-							<Layout wrap align="center space-between">
-								{iconNames.map((icon) =>
-									<Cell size={200} key={'icon' + icon}>
-										<LabeledIcon
-											style={{marginLeft: 0, marginRight: 0}}
-											icon={icon}
-											disabled={disabled}
-											labelPosition={labelPosition}
-											small={small}
-										>{icon}</LabeledIcon>
-									</Cell>
-								)}
-							</Layout>
-						</Scroller>
-					</Cell>
-				</Layout>);
-		})
+		})(() => (
+			<LabeledIcon
+				disabled={boolean('disabled', Config)}
+				icon={select('icon', ['', ...iconNames], Config, 'fullscreen')}
+				inline={boolean('inline', Config)}
+				labelPosition={select('labelPosition', ['above', 'after', 'before', 'below', 'left', 'right'], Config)}
+				small={boolean('small', Config)}
+			>
+				{text('children', Config, 'Hello LabeledIcon')}
+			</LabeledIcon>
+		))
 	);
