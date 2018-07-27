@@ -7,17 +7,17 @@
 
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
 import compose from 'ramda/src/compose';
+import React from 'react';
 
 import ComponentOverride from '../ComponentOverride';
-import Slottable from '../Slottable';
 import {CellBase, LayoutBase} from '../Layout';
+import Slottable from '../Slottable';
 
 import componentCss from './LabeledIcon.less';
 
 /**
- * A basic LabeledIcon component structure without any behaviors applied to it.
+ * An icon component with a label without any behaviors applied to it.
  *
  * @class LabeledIconBase
  * @memberof ui/LabeledIcon
@@ -29,8 +29,10 @@ const LabeledIconBase = kind({
 
 	propTypes: /** @lends ui/LabeledIcon.LabeledIconBase.prototype */ {
 		/**
-		 * The readable label. This accepts strings, DOM, and Components, if you need more elaborate
-		 * features.
+		 * The label.
+		 *
+		 * This accepts strings, DOM, and Components, if you need more elaborate features. It may be
+		 * positioned using `labelPosition`.
 		 *
 		 * @type {Node}
 		 * @public
@@ -63,9 +65,7 @@ const LabeledIconBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Disables the [LabeledIconBase]{@link ui/LabeledIcon.LabeledIconBase}
-		 *
-		 * When `true`, the LabeledIcon is shown as disabled.
+		 * Disables the component and becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -74,37 +74,54 @@ const LabeledIconBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * The icon content. This will be passed as `children` to the `iconComponent`, unless you
-		 * supply a React element (like JSX) to this prop, directly or via the `<icon>` slot.
+		 * The icon.
 		 *
-		 * @type {String|Object|Component}
+		 * This will be passed as `children` to the `iconComponent`, unless you supply a React
+		 * element (like JSX) to this prop, directly or via the `<icon>` slot.
+		 *
+		 * @type {String|Element|Component}
+		 * @public
 		 */
 		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.func]),
 
 		/**
-		 * The component used to render the `icon`. This will receive the `icon` prop as `children`
-		 * and should handle it appropriately. This prop is ignored in the case of a component being
-		 * passed into the `icon` prop.
+		 * The component used to render the `icon`.
+		 *
+		 * This will receive the `icon` prop as `children` and should handle it appropriately. This
+		 * prop is ignored in the case of a component being passed into the `icon` prop.
 		 *
 		 * @type {String|Component}
 		 */
 		iconComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
-		 * Enable this component to be used in an "inline" context. This is useful for when you have
-		 * several of these components in a row and are not using a [Layout]{@link ui/Layout} or
-		 * flex-box configuration.
+		 * Enables this component to be used in an "inline" context.
+		 *
+		 * This is useful for when you have several of these components in a row and are not using a
+		 * [Layout]{@link ui/Layout} or flex-box configuration.
 		 *
 		 * @type {Boolean}
+		 * @default false
+		 * @public
 		 */
 		inline: PropTypes.bool,
 
 		/**
-		 * Assigns where the label will be positioned in relation to the icon element. The supported
-		 * options are 'below' (default), 'above', 'left', 'right', 'before', and 'after'. The
-		 * 'before' and 'after' values automatically swap sides when in an RTL locale context.
+		 * The position of the label in relation to the icon element.
+		 *
+		 * Allowed values include:
+		 * * 'below' (default),
+		 * * 'above',
+		 * * 'left',
+		 * * 'right',
+		 * * 'before', and
+		 * * 'after'.
+		 *
+		 * The 'before' and 'after' values automatically swap sides when in an RTL locale context.
 		 *
 		 * @type {String}
+		 * @default 'below'
+		 * @public
 		 */
 		labelPosition: PropTypes.oneOf(['above', 'after', 'before', 'below', 'left', 'right'])
 	},
@@ -122,7 +139,10 @@ const LabeledIconBase = kind({
 
 	computed: {
 		className: ({inline, labelPosition, styler}) => styler.append(labelPosition, {inline}),
-		orientation: ({labelPosition}) => (labelPosition === 'above' || labelPosition === 'below') ? 'vertical' : 'horizontal'
+		orientation: ({labelPosition}) => {
+			const vertical = labelPosition === 'above' || labelPosition === 'below';
+			return vertical ? 'vertical' : 'horizontal';
+		}
 	},
 
 	render: ({css, children, className, disabled, icon, iconComponent, orientation, style, ...rest}) => {
@@ -175,10 +195,27 @@ const LabeledIconBase = kind({
 	}
 });
 
+/**
+ * Adds slot support to [LabeledIconBase]{@link ui/LabeledIcon.LabeledIconBase}
+ *
+ * @hoc
+ * @memberof ui/LabeledIcon
+ * @mixes ui/Slottable.Slottable
+ * @public
+ */
 const LabeledIconDecorator = compose(
 	Slottable({slots: ['icon']})
 );
 
+/**
+ * An icon component with a label without any behaviors applied to it.
+ *
+ * @class LabeledIcon
+ * @memberof ui/LabeledIcon
+ * @mixes ui/LabeledIcon.LabeledIconDecorator
+ * @ui
+ * @public
+ */
 const LabeledIcon = LabeledIconDecorator(LabeledIconBase);
 
 export default LabeledIcon;

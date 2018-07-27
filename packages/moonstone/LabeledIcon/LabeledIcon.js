@@ -1,7 +1,7 @@
 /**
  * Provides unstyled LabeledIcon components to be customized by a theme or application.
  *
- * @module ui/LabeledIcon
+ * @module moonstone/LabeledIcon
  * @exports LabeledIcon
  */
 
@@ -23,23 +23,14 @@ const Icon = Skinnable(IconBase);
  * A basic LabeledIcon component structure without any behaviors applied to it.
  *
  * @class LabeledIconBase
- * @memberof ui/LabeledIcon
+ * @memberof moonstone/LabeledIcon
  * @ui
  * @public
  */
 const LabeledIconBase = kind({
 	name: 'LabeledIcon',
 
-	propTypes: /** @lends ui/LabeledIcon.LabeledIconBase.prototype */ {
-		/**
-		 * The readable label. This accepts strings, DOM, and Components, if you need more elaborate
-		 * features.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		children: PropTypes.node,
-
+	propTypes: /** @lends moonstone/LabeledIcon.LabeledIconBase.prototype */ {
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
@@ -62,12 +53,11 @@ const LabeledIconBase = kind({
 		publicClassNames: ['labeledIcon', 'icon', 'label']
 	},
 
-	render: ({css, children, ...rest}) => {
+	render: (props) => {
 		return UiLabeledIcon.inline({
+			...props,
 			iconComponent: Icon,
-			...rest,
-			css,
-			children
+			css: props.css
 		});
 	}
 });

@@ -1,7 +1,7 @@
 /**
  * Provides unstyled LabeledIconButton components to be customized by a theme or application.
  *
- * @module ui/LabeledIconButton
+ * @module moonstone/LabeledIconButton
  * @exports LabeledIconButton
  */
 
@@ -31,23 +31,15 @@ const IconButton = compose(
  * A basic LabeledIconButton component structure without any behaviors applied to it.
  *
  * @class LabeledIconButtonBase
- * @memberof ui/LabeledIconButton
+ * @memberof moonstone/LabeledIconButton
+ * @extends ui/LabeledIcon.LabeledIcon
  * @ui
  * @public
  */
 const LabeledIconButtonBase = kind({
 	name: 'LabeledIconButton',
 
-	propTypes: /** @lends ui/LabeledIconButton.LabeledIconButtonBase.prototype */ {
-		/**
-		 * The readable label. This accepts strings, DOM, and Components, if you need more elaborate
-		 * features.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		children: PropTypes.node,
-
+	propTypes: /** @lends moonstone/LabeledIconButton.LabeledIconButtonBase.prototype */ {
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
@@ -70,12 +62,11 @@ const LabeledIconButtonBase = kind({
 		publicClassNames: ['labeledIconButton', 'icon', 'label']
 	},
 
-	render: ({css, children, ...rest}) => {
+	render: (props) => {
 		return UiLabeledIcon.inline({
+			...props,
 			iconComponent: IconButton,
-			...rest,
-			css,
-			children
+			css: props.css
 		});
 	}
 });
