@@ -100,18 +100,15 @@ const IconButtonBase = kind({
 	},
 
 	render: ({children, css, tooltipNode, ...rest}) => {
-		return (
-			<UiIconButtonBase
-				data-webos-voice-intent="Select"
-				{...rest}
-				buttonComponent={<ButtonBase css={css} />}
-				css={css}
-				icon={children}
-				iconComponent={Icon}
-			>
-				{tooltipNode}
-			</UiIconButtonBase>
-		);
+		return UiIconButtonBase.inline({
+			'data-webos-voice-intent': 'Select',
+			...rest,
+			buttonComponent: <ButtonBase css={css} />,
+			css: css,
+			icon: children,
+			iconComponent: Icon,
+			children: tooltipNode
+		});
 	}
 });
 

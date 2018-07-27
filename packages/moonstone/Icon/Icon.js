@@ -15,7 +15,6 @@ import kind from '@enact/core/kind';
 import UiIcon from '@enact/ui/Icon';
 import Pure from '@enact/ui/internal/Pure';
 import compose from 'ramda/src/compose';
-import React from 'react';
 
 import Skinnable from '../Skinnable';
 
@@ -35,13 +34,11 @@ import componentCss from './Icon.less';
 const IconBase = kind({
 	name: 'Icon',
 
-	render: (props) => (
-		<UiIcon
-			{...props}
-			css={componentCss}
-			iconList={iconList}
-		/>
-	)
+	render: (props) => UiIcon.inline({
+		...props,
+		css: componentCss,
+		iconList
+	})
 });
 
 // Let's find a way to import this list directly, and bonus feature, render our icons in the docs

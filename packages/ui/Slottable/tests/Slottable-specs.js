@@ -58,11 +58,11 @@ describe('Slottable Specs', () => {
 	it('should distribute children whose \'type\' has a \'defaultSlot\' property that matches a slot', function () {
 		const Custom = kind({
 			name: 'Custom',
-			render: (props) => {
-				return <div>{props.children}</div>;
+			render: ({children}) => {
+				return <div>{children}</div>;
 			}
 		});
-		Custom.defaultSlot = 'a';
+		Custom.defaultSlot = 'c';
 
 		const Component = Slottable({slots: ['a', 'b', 'c']}, ({a, b, c}) => (
 			<div>
@@ -71,16 +71,16 @@ describe('Slottable Specs', () => {
 				{a}
 			</div>
 		));
+
 		const subject = mount(
 			<Component>
 				<div slot="a">A</div>
 				<div slot="b">B</div>
-				<Custom>D</Custom>
-				<div slot="c">C</div>
+				<Custom>C</Custom>
 			</Component>
 		);
 
-		const expected = 'CBAD';
+		const expected = 'CBA';
 		const actual = subject.text();
 
 		expect(actual).to.equal(expected);

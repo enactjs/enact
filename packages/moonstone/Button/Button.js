@@ -18,7 +18,6 @@ import {ButtonBase as UiButtonBase, ButtonDecorator as UiButtonDecorator} from '
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import React from 'react';
 
 import Icon from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
@@ -109,14 +108,12 @@ const ButtonBase = kind({
 			deprecation();
 		}
 
-		return (
-			<UiButtonBase
-				data-webos-voice-intent="Select"
-				{...rest}
-				css={css}
-				iconComponent={Icon}
-			/>
-		);
+		return UiButtonBase.inline({
+			'data-webos-voice-intent': 'Select',
+			...rest,
+			css: css,
+			iconComponent: Icon
+		});
 	}
 });
 
