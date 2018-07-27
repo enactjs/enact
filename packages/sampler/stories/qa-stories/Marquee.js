@@ -39,6 +39,7 @@ storiesOf('Marquee', module)
 					<Marquee
 						style={{width: ri.unit(399, 'rem')}}
 						disabled={disabled}
+						forceDirection={select('forceDirection', ['', 'ltr', 'rtl'], Marquee, '')}
 						marqueeDelay={number('marqueeDelay', Marquee, 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', Marquee, false)}
 						marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
@@ -63,6 +64,7 @@ storiesOf('Marquee', module)
 					<Marquee
 						style={{width: ri.unit(399, 'rem')}}
 						disabled={disabled}
+						forceDirection={select('forceDirection', ['', 'ltr', 'rtl'], Marquee, '')}
 						marqueeDelay={number('marqueeDelay', Marquee, 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', Marquee, false)}
 						marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
@@ -87,6 +89,7 @@ storiesOf('Marquee', module)
 					{LTR.map((children, index) => (
 						<Marquee
 							disabled={disabled}
+							forceDirection={select('forceDirection', ['', 'ltr', 'rtl'], Marquee, '')}
 							key={index}
 							marqueeDelay={number('marqueeDelay', Marquee, 1000)}
 							marqueeDisabled={boolean('marqueeDisabled', Marquee, false)}

@@ -160,6 +160,8 @@ const DialogBase = kind({
 		/**
 		 * The secondary text displayed below the `title` within the header.
 		 *
+		 * Will not display if `title` is not set.
+		 *
 		 * @type {String}
 		 * @public
 		 */
@@ -182,7 +184,8 @@ const DialogBase = kind({
 	},
 
 	computed: {
-		className: ({noDivider, styler}) => styler.append({showDivider: !noDivider})
+		className: ({noDivider, styler}) => styler.append({showDivider: !noDivider}),
+		titleBelow: ({title, titleBelow}) => title ? titleBelow : ''
 	},
 
 	render: ({buttons, casing, css, children, title, titleBelow, ...rest}) => {
