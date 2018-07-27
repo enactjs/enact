@@ -38,6 +38,10 @@ import componentCss from './LabeledItem.less';
  *
  * @class LabeledItemBase
  * @memberof moonstone/LabeledItem
+ * @extends moonstone/Item.ItemBase
+ * @mixes spotlight/Spottable.Spottable
+ * @mixes ui/Touchable.Touchable
+ * @mixes moonstone/Marquee.MarqueeController
  * @ui
  * @public
  */
@@ -112,7 +116,7 @@ const LabeledItemBase = kind({
 });
 
 /**
- * A Moonstone styled labeled item with built-in support for marqueed text, and Spotlight focus.
+ * A Moonstone styled labeled item with built-in support for marqueed text and Spotlight focus.
  *
  * @class LabeledItem
  * @memberof moonstone/LabeledItem

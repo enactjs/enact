@@ -40,6 +40,7 @@ const deprecation = deprecate(() => {}, {
  *
  * @class ButtonBase
  * @memberof moonstone/Button
+ * @extends ui/Button.ButtonBase
  * @ui
  * @public
  */

@@ -36,6 +36,7 @@ import css from './ExpandablePicker.less';
  *
  * @class ExpandablePickerBase
  * @memberof moonstone/ExpandablePicker
+ * @extends moonstone/ExpandableItem.ExpandableItemBase
  * @ui
  * @public
  */

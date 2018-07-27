@@ -28,6 +28,7 @@ import componentCss from './Item.less';
  *
  * @class ItemBase
  * @memberof moonstone/Item
+ * @extends ui/Item.ItemBase
  * @ui
  * @public
  */

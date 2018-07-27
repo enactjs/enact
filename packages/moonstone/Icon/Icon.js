@@ -28,6 +28,7 @@ import componentCss from './Icon.less';
  *
  * @class IconBase
  * @memberof moonstone/Icon
+ * @extends ui/Icon.Icon
  * @ui
  * @public
  */
