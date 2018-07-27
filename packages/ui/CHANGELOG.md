@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Removed
+
+- `ui/Skinnable.withSkinnableProps` higher-order component
+
 ### Fixed
 
 - `ui/Scrollable` to ignore native drag events which interfered with touch drag support
