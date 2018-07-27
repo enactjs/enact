@@ -66,6 +66,7 @@ const PureGroup = Pure(
  *
  * @class ExpandableListBase
  * @memberof moonstone/ExpandableList
+ * @extends moonstone/ExpandableItem.ExpandableItemBase
  * @ui
  * @public
  */

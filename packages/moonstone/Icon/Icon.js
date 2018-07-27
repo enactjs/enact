@@ -28,6 +28,7 @@ import componentCss from './Icon.less';
  *
  * @class IconBase
  * @memberof moonstone/Icon
+ * @extends ui/Icon.Icon
  * @ui
  * @public
  */
@@ -139,7 +140,7 @@ const IconBase = kind({
  *
  * @hoc
  * @memberof moonstone/Icon
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const IconDecorator = compose(
