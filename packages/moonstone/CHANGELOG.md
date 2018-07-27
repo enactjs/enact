@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Scroller` to prevent scrolling via page up/down keys if there is no spottable component in that direction
 - `moonstone/Dialog` to hide `titleBelow` when `title` is not set
+- `moonstone/Image` to suppress drag and drop support by default
 - `moonstone/VideoPlayer` audio guidance behavior of More button
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to handle focus properly via page up/down keys when switching to 5-way mode
 - `moonstone/Popup` to spot the content after it's mounted

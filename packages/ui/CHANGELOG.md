@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Scrollable` to ignore native drag events which interfered with touch drag support
+
 ## [2.0.0-rc.3] - 2018-07-23
 
 No significant changes.

@@ -57,6 +57,7 @@ const ImageBase = kind({
 	render: ({css, ...rest}) => {
 		return (
 			<UiImage
+				draggable="false"
 				{...rest}
 				css={css}
 			/>
