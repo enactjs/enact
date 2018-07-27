@@ -446,6 +446,7 @@ class ScrollableBase extends Component {
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
 	enqueueForceUpdate = () => {
+		this.isInvalidated = true;
 		this.childRef.calculateMetrics();
 		this.forceUpdate();
 	}
@@ -481,6 +482,7 @@ class ScrollableBase extends Component {
 	deferScrollTo = true
 	isScrollAnimationTargetAccumulated = false
 	isUpdatedScrollThumb = false
+	isInvalidated = false
 
 	// overscroll
 	overscrollStatus = {
