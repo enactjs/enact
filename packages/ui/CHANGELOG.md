@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Changed
 
 - `ui/Image` to require either `placeholder` or `src` props
+- `ui/GridListImageItem` to not require `source` prop
 
 ## [2.0.0-rc.3] - 2018-07-23
 

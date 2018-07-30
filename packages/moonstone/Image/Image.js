@@ -79,7 +79,7 @@ const ResponsiveImageDecorator = hoc((config, Wrapped) => {
 		static displayName = 'ResponsiveImageDecorator'
 
 		static propTypes = {
-			src: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired
+			src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 		}
 
 		constructor (props) {
