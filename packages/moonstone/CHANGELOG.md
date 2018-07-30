@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Changed
+
+- `moonstone/VideoPlayer` to allow preventing bottom control render via loadstart event handler
+
 ### Fixed
 
 - `moonstone/Scroller` to prevent scrolling via page up/down keys if there is no spottable component in that direction
