@@ -4,7 +4,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Add
+### Added
 
 - `moonstone/VideoPlayer` property `noAutoShowMediaControls`
 
