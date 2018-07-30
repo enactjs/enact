@@ -4,13 +4,14 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Removed
+
+- `ui/Skinnable.withSkinnableProps` higher-order component
+
 ### Changed
 
 - `ui/Image` to require either `placeholder` or `src` props
 - `ui/GridListImageItem` to not require `source` prop
-### Removed
-
-- `ui/Skinnable.withSkinnableProps` higher-order component
 
 ### Fixed
 
