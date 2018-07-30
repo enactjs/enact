@@ -1,25 +1,37 @@
 /**
- * Contains the declaration for the {@link moonstone/Checkbox.Checkbox} component.
+ * Moonstone styled checkbox components.
+ *
+ * @example
+ * <Checkbox onToggle={console.log} />
  *
  * @module moonstone/Checkbox
+ * @exports Checkbox
+ * @exports CheckboxBase
  */
 
 import kind from '@enact/core/kind';
-import {handle, forward} from '@enact/core/handle';
-import React from 'react';
 import PropTypes from 'prop-types';
-import Pure from '@enact/ui/internal/Pure';
+import React from 'react';
 
-import Icon from '../Icon';
-import Skinnable from '../Skinnable';
+import ToggleIcon from '../ToggleIcon';
+import Icon from '@enact/ui/Icon';
 
 import css from './Checkbox.less';
 
 /**
- * {@link moonstone/Checkbox.Checkbox} represents a Boolean state, and looks like a check mark in a box.
+ * A checkbox component, ready to use in Moonstone applications.
+ *
+ * `Checkbox` may be used independently to represent a togglable state but is more commonly used as
+ * part of [CheckboxItem]{@link moonstone/CheckboxItem}.
+ *
+ * Usage:
+ * ```
+ * <Checkbox selected />
+ * ```
  *
  * @class Checkbox
  * @memberof moonstone/Checkbox
+ * @extends moonstone/ToggleIcon.ToggleIcon
  * @ui
  * @public
  */
@@ -28,76 +40,35 @@ const CheckboxBase = kind({
 
 	propTypes: /** @lends moonstone/Checkbox.Checkbox.prototype */ {
 		/**
-		 * Sets whether this control is disabled, and non-interactive
+		 * The icon displayed when `selected`.
 		 *
-		 * @type {Boolean}
-		 * @default false
+		 * @see moonstone/Icon.Icon.children
+		 * @type {String|Object}
+		 * @default	'check'
 		 * @public
 		 */
-		disabled: PropTypes.bool,
-
-		/**
-		 * The handler to run when the component is toggled.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {String} event.selected - Selected value of item.
-		 * @param {*} event.value - Value passed from `value` prop.
-		 * @public
-		 */
-		onToggle: PropTypes.func,
-
-		/**
-		 * Sets whether this control is in the "on" or "off" state. `true` for on, `false` for "off".
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		selected: PropTypes.bool
+		children: PropTypes.string
 	},
 
 	defaultProps: {
-		selected: false,
-		disabled: false
+		children: 'check'
 	},
 
-	styles: {
-		css,
-		className: 'checkbox'
-	},
-
-	handlers: {
-		onToggle: handle(
-			forward('onClick'),
-			(ev, {selected, onToggle}) => {
-				if (onToggle) {
-					onToggle({selected: !selected});
-				}
-			}
-		)
-	},
-
-	computed: {
-		className: ({selected, styler}) => styler.append({selected})
-	},
-
-	render: ({onToggle, ...rest}) => {
-		delete rest.selected;
-
+	render: ({children, ...rest}) => {
 		return (
-			<div {...rest} onClick={onToggle}>
-				<Icon className={css.icon}>check</Icon>
-			</div>
+			<ToggleIcon
+				{...rest}
+				css={css}
+				iconComponent={Icon}
+			>
+				{children}
+			</ToggleIcon>
 		);
 	}
 });
 
-const Checkbox = Pure(
-	Skinnable(
-		CheckboxBase
-	)
-);
-
-export default Checkbox;
-export {Checkbox, CheckboxBase};
+export default CheckboxBase;
+export {
+	CheckboxBase as Checkbox,
+	CheckboxBase
+};

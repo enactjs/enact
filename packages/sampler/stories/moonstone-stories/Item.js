@@ -1,22 +1,27 @@
 import Item, {ItemBase} from '@enact/moonstone/Item';
+import UiItem, {ItemBase as UiItemBase} from '@enact/ui/Item';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
-import {boolean, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {boolean, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('Item', ItemBase, Item);
+const Config = mergeComponentMetadata('Item', UiItemBase, UiItem, ItemBase, Item);
+Item.displayName = 'Item';
 
-storiesOf('Item')
-	.addWithInfo(
-		' ',
-		'Basic usage of Item',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'Item',
+		withInfo({
+			propTablesExclude: [Item],
+			text: 'Basic usage of Item'
+		})(() => (
 			<Item
-				disabled={boolean('disabled', false)}
+				disabled={boolean('disabled', Config)}
+				inline={boolean('inline', Config)}
 			>
-				{text('children', 'Hello Item')}
+				{text('children', Config, 'Hello Item')}
 			</Item>
-		),
-		{propTables: [Config]}
+		))
 	);

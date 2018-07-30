@@ -17,7 +17,7 @@ describe('Group', () => {
 		);
 
 		const selected = 1;
-		subject.first().childAt(selected).simulate('click', {});
+		subject.find('div').at(selected).simulate('click', {});
 
 		const expected = selected;
 		const actual = handleClick.firstCall.args[0].selected;
@@ -34,7 +34,7 @@ describe('Group', () => {
 		);
 
 		const selected = 1;
-		subject.first().childAt(selected).simulate('click', {});
+		subject.find('div').at(selected).simulate('click', {});
 
 		const expected = stringItems[selected];
 		const actual = handleClick.firstCall.args[0].data;
@@ -50,7 +50,7 @@ describe('Group', () => {
 			</GroupBase>
 		);
 
-		subject.first().childAt(0).simulate('mousemove', {});
+		subject.find('div').at(0).simulate('mousemove', {});
 
 		const expected = true;
 		const actual = handleClick.called;

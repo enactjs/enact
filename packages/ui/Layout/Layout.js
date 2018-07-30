@@ -25,7 +25,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {Cell, toFlexAlign} from './Cell';
+import {Cell, CellBase, toFlexAlign} from './Cell';
 
 import css from './Layout.less';
 
@@ -67,6 +67,10 @@ const LayoutBase = kind({
 		 * `"start"` refers to the top in a horizontal layout, and left in a vertical LTR layout
 		 * `"end"` refers to the bottom in a horizontal layout, and right in a vertical LTR layout
 		 * `"start"` and `"end"` reverse places when in a vertical layout in a RTL locale.
+		 * This includes support for `align-parts` which is shorthand for combining `align-items`
+		 * and `justify-content` into a single property, separated by a space, in that order.
+		 * This allows you to specify both the horizontal and vertical alignment in one property,
+		 * separated by a space.
 		 *
 		 * @type {String}
 		 * @public
@@ -85,7 +89,7 @@ const LayoutBase = kind({
 		 * The type of component to use to render as the Layout. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
 		 *
-		 * @type {String|Node}
+		 * @type {Component}
 		 * @default 'div'
 		 * @public
 		 */
@@ -149,9 +153,16 @@ const LayoutBase = kind({
 			);
 		},
 		style: ({align, style}) => {
+			if (!align) return style;
+
+			// This is effectively a polyfill for the upcoming `place-items` prop which is shorthand
+			// for align-items and justify-items together
+			const alignParts = align.split(' ');
+
 			return {
 				...style,
-				alignItems: toFlexAlign(align)
+				alignItems: toFlexAlign(alignParts[0]),
+				justifyContent: toFlexAlign(alignParts[1])
 			};
 		}
 	},
@@ -174,7 +185,10 @@ const LayoutBase = kind({
  * @public
  */
 const Column = (props) => (
-	<LayoutBase {...props} orientation="vertical" />
+	LayoutBase.inline({
+		...props,
+		orientation: 'vertical'
+	})
 );
 
 /**
@@ -185,12 +199,16 @@ const Column = (props) => (
  * @public
  */
 const Row = (props) => (
-	<LayoutBase {...props} orientation="horizontal" />
+	LayoutBase.inline({
+		...props,
+		orientation: 'horizontal'
+	})
 );
 
 export default LayoutBase;
 export {
 	Cell,
+	CellBase,
 	Column,
 	LayoutBase as Layout,
 	LayoutBase,

@@ -1,8 +1,12 @@
 import SelectableItem from '@enact/moonstone/SelectableItem';
 import Group from '@enact/ui/Group';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, text, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+
+import {boolean, select, text} from '../../src/enact-knobs';
+
+SelectableItem.displayName = 'SelectableItem';
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -13,91 +17,115 @@ const inputData = {
 	normalText : 'Selectable Item'
 };
 
-storiesOf('SelectableItem')
-	.addWithInfo(
+storiesOf('SelectableItem', module)
+	.add(
 		'with long text',
 		() => (
 			<div>
 				<SelectableItem
-					disabled={boolean('disabled', false)}
-					inline={boolean('inline', false)}
+					disabled={boolean('disabled', SelectableItem, false)}
+					inline={boolean('inline', SelectableItem, false)}
 					onToggle={action('onToggle')}
 				>
-					{text('Long Text', inputData.longText)}
+					{text('Long Text', SelectableItem, inputData.longText)}
 				</SelectableItem>
 				<SelectableItem
 					disabled
-					inline={boolean('inline', false)}
+					inline={boolean('inline', SelectableItem, false)}
 					onToggle={action('onToggle')}
 				>
-					{text('Disable Long Text', inputData.disabledLong)}
+					{text('Disable Long Text', SelectableItem, inputData.disabledLong)}
 				</SelectableItem>
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with tall characters',
 		() => (
 			<SelectableItem
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', SelectableItem, false)}
+				inline={boolean('inline', SelectableItem, false)}
 				onToggle={action('onToggle')}
 			>
-				{select('children', inputData.tallText, inputData.tallText[0])}
+				{select('children', inputData.tallText, SelectableItem, inputData.tallText[0])}
 			</SelectableItem>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with right to left text',
 		() => (
 			<SelectableItem
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', SelectableItem, false)}
+				inline={boolean('inline', SelectableItem, false)}
 				onToggle={action('onToggle')}
 			>
-				{text('Right to Left Text', inputData.rtlText)}
+				{text('Right to Left Text', SelectableItem, inputData.rtlText)}
 			</SelectableItem>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with extra spacing',
 		() => (
 			<SelectableItem
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', SelectableItem, false)}
+				inline={boolean('inline', SelectableItem, false)}
 				onToggle={action('onToggle')}
 			>
-				{text('extra space text', inputData.extraSpaceText)}
+				{text('extra space text', SelectableItem, inputData.extraSpaceText)}
 			</SelectableItem>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with default selected',
 		() => (
 			<SelectableItem
 				defaultSelected
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', SelectableItem, false)}
+				inline={boolean('inline', SelectableItem, false)}
 				onToggle={action('onToggle')}
 			>
-				{text('children', inputData.normalText)}
+				{text('children', SelectableItem, inputData.normalText)}
 			</SelectableItem>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'that is grouped',
 		() => (
 			<Group
 				childComponent={SelectableItem}
 				itemProps={{
-					inline: boolean('inline', false),
-					disabled: boolean('disabled', false)
+					inline: boolean('inline', SelectableItem, false),
+					disabled: boolean('disabled', SelectableItem, false)
 				}}
+				childSelect="onToggle"
 				selectedProp="selected"
+				disabled={boolean('disabled', SelectableItem, false)}
 				onSelect={action('onSelect')}
 			>
 
-				{[text('Normal Text 1', inputData.normalText + 1), text('Normal Text 2', inputData.normalText + 2), text('Normal Text 3', inputData.normalText + 3)]}
+				{[
+					text('Normal Text 1', SelectableItem, inputData.normalText + 1),
+					text('Normal Text 2', SelectableItem, inputData.normalText + 2),
+					text('Normal Text 3', SelectableItem, inputData.normalText + 3)
+				]}
+			</Group>
+		)
+	)
+	.add(
+		'that is grouped with individual disabled items',
+		() => (
+			<Group
+				childComponent={SelectableItem}
+				childSelect="onToggle"
+				selectedProp="selected"
+				onSelect={action('onSelect')}
+			>
+				{[
+					{key: 'item1', children: '1', disabled: true},
+					{key: 'item2', children: '2', disabled: false},
+					{key: 'item3', children: '3', disabled: true},
+					{key: 'item4', children: '4', disabled: false}
+				]}
 			</Group>
 		)
 	);

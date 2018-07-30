@@ -49,7 +49,7 @@ class ViewManager extends React.Component {
 		/**
 		 * Type of component wrapping the children. May be a DOM node or a custom React component.
 		 *
-		 * @type {String|Component}
+		 * @type {Component}
 		 * @default 'div'
 		 */
 		component: PropTypes.oneOfType([
@@ -207,7 +207,7 @@ class ViewManager extends React.Component {
 
 		const from = (start || start === 0) ? start : index;
 		const to = (end || end === 0) && end >= index ? end : index;
-		const size = to - from + (noAnimation ? 0 : 1);
+		const size = to - from + ((noAnimation || !arranger) ? 0 : 1);
 
 		const views = childrenList.slice(from, to + 1);
 		const childFactory = wrapWithView({

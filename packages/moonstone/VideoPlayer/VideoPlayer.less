@@ -16,6 +16,10 @@
 		width: 100%;
 	}
 
+	.preloadVideo {
+		display: none;
+	}
+
 	.overlay {
 		position: absolute;
 		.position(0);
@@ -100,7 +104,7 @@
 						.font-kerning;
 
 						&.infoVisible {
-							transform: translateY(~'calc(var(--infoComponentsOffset) * -1)') translateZ(0);
+							transform: translateY(~"calc(var(--infoComponentsOffset) * -1)") translateZ(0);
 						}
 
 						.moon-locale-non-latin({line-height: @moon-non-latin-header-text-line-height;});
@@ -157,6 +161,7 @@
 
 			.sliderFrame {
 				@slider-padding-v: ((@moon-video-player-slider-tap-area - @moon-video-player-slider-height) / 2);
+				@slider-padding-h: @moon-video-player-slider-knob-size;
 
 				&.hidden {
 					will-change: opacity;
@@ -164,9 +169,16 @@
 				}
 
 				.mediaSlider {
+					margin: 0;
 					padding: @slider-padding-v 0;
 					height: @moon-video-player-slider-height;
-					margin: 0;
+
+					// Add a tap area that extends to the edges of the screen, to make the slider more accessible
+					&::before {
+						content: "";
+						position: absolute;
+						.position(0, -(@moon-video-player-padding-side));
+					}
 
 					// Grow the knob when the Slider gets spotted
 					.focus({
@@ -184,17 +196,6 @@
 							}
 						}
 					});
-				}
-
-				.input {
-					padding: 0;
-
-					// Add a tap area that extends to the edges of the screen, to make the slider more accessible
-					&::before {
-						content: '';
-						position: absolute;
-						.position(0, -(@moon-video-player-padding-side));
-					}
 				}
 
 				.fill,
@@ -219,7 +220,7 @@
 						-webkit-transform: @moon-translate-center scale(0.5);
 						transform:         @moon-translate-center scale(0.5);
 						opacity: 0;
-						will-change: transform opacity;
+						will-change: transform, opacity;
 						-webkit-transition: -webkit-transform @activate-transition-function 0.2s, opacity ease 0.2s;
 						transition:                 transform @activate-transition-function 0.2s, opacity ease 0.2s;
 					}
@@ -259,7 +260,7 @@
 					flex: 0 1;
 					// Take the size of buttons, add margins for each button, multiply that by the amount of buttons, then remove the margins for the first and last button
 					// Due to a LESS parsing issue, this 'calc' must be applied to a full-property, not a short-hand property
-					flex-basis: ~'calc((' @moon-icon-button-size + (@moon-spotlight-outset * 2) ~' * var(--moon-video-player-max-side-components)) - ' (@moon-spotlight-outset * 2) ~')';
+					flex-basis: ~"calc((" @moon-icon-button-size + (@moon-spotlight-outset * 2) ~" * var(--moon-video-player-max-side-components)) - " (@moon-spotlight-outset * 2) ~")";
 					white-space: nowrap;
 					padding: @expanding-button-clearance 0;
 				}
@@ -387,22 +388,24 @@
 				}
 
 				.sliderFrame {
-					.sliderBar {
-						background-color: @moon-video-player-slider-bg-color;
-					}
+					.slider {
+						.bars {
+							background-color: @moon-video-player-slider-bg-color;
+						}
 
-					.load {
-						background-color: @moon-video-player-slider-load-color;
-					}
+						.load {
+							background-color: @moon-video-player-slider-load-color;
+						}
 
-					.fill {
-						background-color: @moon-video-player-slider-fill-color;
-					}
+						.fill {
+							background-color: @moon-video-player-slider-fill-color;
+						}
 
-					// Knob
-					.knob {
-						&::before {
-							background-color: @moon-video-player-slider-knob-color;
+						// Knob
+						.knob {
+							&::before {
+								background-color: @moon-video-player-slider-knob-color;
+							}
 						}
 					}
 

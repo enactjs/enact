@@ -1,6 +1,8 @@
 import {getContainersForNode, setContainerLastFocusedElement} from '@enact/spotlight/src/container';
+import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import Spotlight from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
@@ -13,6 +15,20 @@ import PropTypes from 'prop-types';
  * @private
  */
 const defaultConfig = {
+	/**
+	 * Returns the child -- either a node or a CSS selector -- to focus after expanding.
+	 *
+	 * If this function is defined, it will be passed the container node and the current set of
+	 * props and should return either a node or a CSS selector to be passed to
+	 * {@link spotlight/Spotlight.focus}.
+	 *
+	 * @type {Function}
+	 * @default null
+	 * @memberof moonstone/ExpandableItem.ExpandableSpotlightDecorator.defaultConfig
+	 * @private
+	 */
+	getChildFocusTarget: null,
+
 	/**
 	 * When `true` and used in conjunction with `noAutoFocus` when `false`, the contents of the
 	 * container will receive spotlight focus expanded, even in pointer mode.
@@ -34,7 +50,7 @@ const defaultConfig = {
  * @private
  */
 const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {noPointerMode} = config;
+	const {getChildFocusTarget, noPointerMode} = config;
 
 	return class extends React.Component {
 		static displayName = 'ExpandableSpotlightDecorator'
@@ -64,36 +80,77 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			noAutoFocus: false
 		}
 
+		constructor () {
+			super();
+
+			this.paused = new Pause('ExpandableItem');
+		}
+
+		componentWillUnmount () {
+			this.resume();
+		}
+
 		highlightContents = () => {
 			const current = Spotlight.getCurrent();
 			if (this.containerNode.contains(current) || document.activeElement === document.body) {
 				const contents = this.containerNode.querySelector('[data-expandable-container]');
 				if (contents && !this.props.noAutoFocus && !contents.contains(current)) {
-					Spotlight.focus(contents.dataset.containerId);
+					let focused = false;
+
+					// Attempt to retrieve the Expandable-configured child focus target
+					if (getChildFocusTarget) {
+						const selectedNode = getChildFocusTarget(contents, this.props);
+
+						if (selectedNode) {
+							focused = Spotlight.focus(selectedNode);
+						}
+					}
+
+					if (!focused) {
+						Spotlight.focus(contents.dataset.spotlightId);
+					}
 				}
 			}
 		}
 
 		highlightLabeledItem = () => {
 			const current = Spotlight.getCurrent();
+			const label = this.containerNode.querySelector('[data-expandable-label]');
+
+			if (current === label) return;
+
 			if (this.containerNode.contains(current)) {
-				Spotlight.focus(this.containerNode.querySelector('[data-expandable-label]'));
-			} else if (!current) {
-				// when focus is not currently set during close (due to a cancel event or the close
-				// on blur from ExpandableInput), we need to fix the last focused element for the
-				// container tree to be the labeled item so that focus can be restored to it rather
-				// than spotlight getting lost
-				const label = this.containerNode.querySelector('[data-expandable-label]');
+				if (Spotlight.getPointerMode()) {
+					// If we don't clear the focus, switching back to 5-way before focusing anything
+					// will result in what appears to be lost focus
+					current.blur();
+				}
+
+				Spotlight.focus(label);
+			} else {
 				const containerIds = getContainersForNode(label);
+
+				// when focus is not within the expandable (due to a cancel event or the close
+				// on blur from ExpandableInput, or some quick key presses), we need to fix the last
+				// focused element config so that focus can be restored to the label rather than
+				// spotlight getting lost.
+				//
+				// If there is focus somewhere else, then we only need to fix the nearest container
+				// to be the label. If there isn't focus, we need to update the entire container
+				// tree.
+				if (current) {
+					containerIds.splice(containerIds.length - 1);
+				}
 
 				setContainerLastFocusedElement(label, containerIds);
 			}
 		}
 
 		highlight = (callback) => {
-			const {open} = this.props;
+			if (Spotlight.isPaused()) return;
+
 			const pointerMode = Spotlight.getPointerMode();
-			const changePointerMode = pointerMode && (noPointerMode || !open);
+			const changePointerMode = pointerMode && noPointerMode;
 
 			if (changePointerMode) {
 				// we temporarily set pointer mode to `false` to ensure that focus is forced away
@@ -108,11 +165,34 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+
+		pause = () => {
+			this.paused.pause();
+		}
+
+		resume = () => {
+			this.paused.resume();
+		}
+
 		handleHide = () => {
+			this.resume();
 			this.highlight(this.highlightLabeledItem);
 		}
 
+		handle = handle.bind(this)
+
+		handleClose = this.handle(
+			forward('onClose'),
+			this.pause
+		)
+
+		handleOpen = this.handle(
+			forward('onOpen'),
+			this.pause
+		)
+
 		handleShow = () => {
+			this.resume();
 			this.highlight(this.highlightContents);
 		}
 
@@ -129,6 +209,8 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					{...props}
 					onHide={this.handleHide}
 					onShow={this.handleShow}
+					onOpen={this.handleOpen}
+					onClose={this.handleClose}
 					setContainerNode={this.setContainerNode}
 				/>
 			);

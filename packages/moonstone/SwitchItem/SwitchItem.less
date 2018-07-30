@@ -1,14 +1,19 @@
 // SwitchItem.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
 
+// Public
 .switchItem {
+	/* Available for customization */
+}
+
+// Interally theme our implementation using published classes from ToggleItem and ToggleIcon
+.toggleItem {
 	.switch {
-		display: block;
 		.margin-start-end(@moon-toggle-item-icon-margin, 0);
 
-		&:before {
+		&::before {
 			display: none;
 		}
 	}

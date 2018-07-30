@@ -4,33 +4,12 @@
 @import '../styles/skin.less';
 
 .progressBar {
-	position: relative;
 	height: @moon-progress-bar-height;
 	margin: @moon-spotlight-outset;
-	direction: ltr;
 
 	&.vertical {
 		min-height: 120px;
 		width: @moon-progress-bar-height;
-		display: inline-block;
-
-		.fill {
-			width: 100%;
-			bottom: 0;
-		}
-		.load {
-			width: 100%;
-			bottom: 0;
-		}
-	}
-
-	.fill {
-		height: 100%;
-		position: absolute;
-	}
-	.load {
-		height: 100%;
-		position: absolute;
 	}
 
 	// Skin colors
@@ -43,6 +22,12 @@
 
 		.load {
 			background-color: @moon-progress-bar-loaded-bg-color;
+		}
+
+		&.highlighted {
+			.fill {
+				background-color: @moon-progress-bar-highlighted-fill-bg-color;
+			}
 		}
 	});
 }

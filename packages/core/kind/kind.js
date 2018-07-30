@@ -2,14 +2,12 @@
  * Provides the {@link core/kind.kind} method to create components
  *
  * @module core/kind
+ * @exports kind
  */
 
+import React from 'react';
+
 import computed from './computed';
-import contextTypes from './contextTypes';
-import defaultProps from './defaultProps';
-import handlers from './handlers';
-import name from './name';
-import propTypes from './propTypes';
 import styles from './styles';
 
 /**
@@ -57,37 +55,110 @@ import styles from './styles';
  * ```
  *
  * @function
- * @param  {Object} config - Component configuration
+ * @param  {Object}    config    Component configuration
  *
- * @returns {Function}        Component
+ * @returns {Function}           Component
  * @memberof core/kind
  * @public
  */
 const kind = (config) => {
-	// addition prop decorations would be chained here (after config.render)
-	let render = (props, context, updater) => {
-		let p = Object.assign({}, props);
-		if (config.styles) p = styles(config.styles, p, context, updater);
-		if (config.computed) p = computed(config.computed, p, context, updater);
-		return config.render(p, context, updater);
+	const {
+		computed: cfgComputed,
+		contextTypes,
+		defaultProps,
+		handlers,
+		name,
+		propTypes,	// eslint-disable-line react/forbid-foreign-prop-types
+		render,
+		styles: cfgStyles
+	} = config;
+
+	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
+	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
+	const renderKind = (props, context) => {
+		if (renderStyles) props = renderStyles(props, context);
+		if (renderComputed) props = renderComputed(props, context);
+
+		return render(props, context);
 	};
 
-	// render() decorations
-	if (config.handlers) {
-		// need to set name and contextTypes on pre-wrapped Component
-		if (config.contextTypes) contextTypes(config.contextTypes, render);
-		render = handlers(config.handlers, render, config.contextTypes);
-	}
+	// addition prop decorations would be chained here (after config.render)
+	const Component = class extends React.Component {
+		static displayName = name || 'Component'
 
-	if (config.name) name(config.name, render);
-	if (config.propTypes) propTypes(config.propTypes, render);
-	if (config.defaultProps) defaultProps(config.defaultProps, render);
-	if (config.contextTypes) contextTypes(config.contextTypes, render);
+		static propTypes = propTypes
 
-	// Decorate the SFC with the computed property object in DEV for easier testability
-	if (__DEV__ && config.computed) render.computed = config.computed;
+		static contextTypes = contextTypes
 
-	return render;
+		static defaultProps = defaultProps
+
+		constructor () {
+			super();
+			this.handlers = {};
+
+			// cache bound function for each handler
+			if (handlers) {
+				Object.keys(handlers).forEach(handler => {
+					return this.prepareHandler(handler, handlers[handler]);
+				});
+			}
+		}
+
+		/*
+		 * Caches an event handler on the local `handlers` member
+		 *
+		 * @param   {String}    name     Event name
+		 * @param   {Function}  handler  Event handler
+		 *
+		 * @returns {undefined}
+		 */
+		prepareHandler (prop, handler) {
+			this.handlers[prop] = (ev) => {
+				return handler(ev, this.props, this.context);
+			};
+		}
+
+		render () {
+			return renderKind({
+				...this.props,
+				...this.handlers
+			}, this.context);
+		}
+	};
+
+	// Decorate the Component with the computed property object in DEV for easier testability
+	if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
+
+	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
+	const handlerKeys = handlers ? Object.keys(handlers) : null;
+
+	Component.inline = (props, context) => {
+		let updated = {
+			...props
+		};
+
+		if (defaultPropKeys && defaultPropKeys.length > 0) {
+			defaultPropKeys.forEach(key => {
+				// eslint-disable-next-line no-undefined
+				if (props == null || props[key] === undefined) {
+					updated[key] = defaultProps[key];
+				}
+			});
+		}
+
+		if (handlerKeys && handlerKeys.length > 0) {
+			// generate a handler with a clone of updated to ensure each handler receives the same
+			// props without the kind.handlers injected.
+			updated = handlerKeys.reduce((_props, key) => {
+				_props[key] = (ev) => handlers[key](ev, updated, context);
+				return _props;
+			}, {...updated});
+		}
+
+		return renderKind(updated, context);
+	};
+
+	return Component;
 };
 
 export default kind;

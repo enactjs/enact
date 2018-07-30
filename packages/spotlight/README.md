@@ -1,4 +1,4 @@
-# Spotlight
+# @enact/spotlight [![npm (scoped)](https://img.shields.io/npm/v/@enact/spotlight.svg?style=flat-square)](https://www.npmjs.com/package/@enact/spotlight)
 
 > An extensible library for 5-way navigation and focus control.
 

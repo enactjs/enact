@@ -1,16 +1,23 @@
 import Spinner from '@enact/moonstone/Spinner';
 import ri from '@enact/ui/resolution';
 import React from 'react';
-import {action, storiesOf} from '@kadira/storybook';
-import {boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
+import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
-storiesOf('Spinner')
-	.addWithInfo(
-		' ',
-		'Basic usage of Spinner',
-		() => (
+const Config = mergeComponentMetadata('Spinner', Spinner);
+Spinner.displayName = 'Spinner';
+
+storiesOf('Moonstone', module)
+	.add(
+		'Spinner',
+		withInfo({
+			propTablesExclude: [Spinner],
+			text: 'Basic usage of Spinner'
+		})(() => (
 			<div
 				style={{
 					outline: 'teal dashed 1px',
@@ -59,14 +66,14 @@ storiesOf('Spinner')
 						onClick={action('Inside container events')}
 					/>
 					<Spinner
-						blockClickOn={nullify(select('blockClickOn', [null, 'container', 'screen']))}
-						centered={boolean('centered', false)}
-						scrim={boolean('scrim', false)}
-						transparent={boolean('transparent', false)}
+						blockClickOn={select('blockClickOn', [null, 'container', 'screen'], Config)}
+						centered={boolean('centered', Config)}
+						scrim={boolean('scrim', Config)}
+						transparent={boolean('transparent', Config)}
 					>
-						{text('content', '')}
+						{text('content', Config, '')}
 					</Spinner>
 				</div>
 			</div>
-		)
+		))
 	);

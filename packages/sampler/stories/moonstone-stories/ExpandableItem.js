@@ -1,26 +1,35 @@
-import ExpandableItem from '@enact/moonstone/ExpandableItem';
+import ExpandableItem, {Expandable, ExpandableItemBase} from '@enact/moonstone/ExpandableItem';
 import Icon from '@enact/moonstone/Icon';
 import Item from '@enact/moonstone/Item';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
+import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
-storiesOf('ExpandableItem')
-	.addWithInfo(
-		' ',
-		'Basic usage of ExpandableItem',
-		() => (
+const Config = mergeComponentMetadata('ExpandableItem', Expandable, ExpandableItem, ExpandableItemBase);
+ExpandableItem.displayName = 'ExpandableItem';
+Icon.displayName = 'Icon';
+Item.displayName = 'Item';
+
+storiesOf('Moonstone', module)
+	.add(
+		'ExpandableItem',
+		withInfo({
+			propTablesExclude: [ExpandableItem, Icon, Item],
+			text: 'Basic usage of ExpandableItem'
+		})(() => (
 			<ExpandableItem
-				autoClose={nullify(boolean('autoClose', false))}
-				disabled={boolean('disabled', false)}
-				label={text('label', 'label')}
-				lockBottom={nullify(boolean('lockBottom', false))}
+				autoClose={boolean('autoClose', Config)}
+				disabled={boolean('disabled', Config)}
+				label={text('label', Config, 'label')}
+				lockBottom={boolean('lockBottom', Config)}
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}
-				showLabel={select('showLabel', ['always', 'never', 'auto'], 'auto')}
-				title={text('title', 'title')}
+				showLabel={select('showLabel', ['always', 'never', 'auto'], Config)}
+				title={text('title', Config, 'title')}
 			>
 				<Item>
 					This can be any type of content you might want to
@@ -30,5 +39,5 @@ storiesOf('ExpandableItem')
 					<Icon>star</Icon> You could include other components as well <Icon>star</Icon>
 				</Item>
 			</ExpandableItem>
-		)
+		))
 	);

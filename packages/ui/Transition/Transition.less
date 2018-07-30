@@ -2,24 +2,28 @@
 //
 @import "../styles/mixins.less";
 
-.transitionFrame {
-	overflow: hidden;
-}
-
 .transition {
-	&.slide {
-		transition-property: transform;
-		will-change: transform;
+	.inner {
+		overflow: hidden;
 	}
 
-	&.fade {
+	&.slide {
+		overflow: hidden;
+
+		.inner {
+			transition-property: transform;
+			will-change: transform;
+		}
+	}
+
+	&.fade .inner {
 		transition-property: opacity;
 		will-change: opacity;
 	}
 
 	&.shown {
-		&.slide {
-			transform: translate(0, 0, 0);
+		&.slide .inner {
+			transform: translate3d(0, 0, 0);
 		}
 
 		&.clip {
@@ -29,27 +33,26 @@
 			}
 		}
 
-		&.fade {
+		&.fade .inner {
 			opacity: 1;
 		}
 	}
 
 	&.hidden {
 		&.slide {
-			&.up {
+			&.up .inner {
 				transform: translateY(-100%);
-				max-height: 0;
 			}
 
-			&.right {
+			&.right .inner {
 				transform: translateX(100%);
 			}
 
-			&.down {
+			&.down .inner {
 				transform: translateY(100%);
 			}
 
-			&.left {
+			&.left .inner {
 				transform: translateX(-100%);
 			}
 		}
@@ -66,25 +69,35 @@
 			}
 		}
 
-		&.fade {
+		&.fade .inner {
 			opacity: 0;
 		}
 	}
 
 	&.clip {
 		position: relative;
-		transition-property: height;
-		will-change: height;
 
-		&.up {
-			.inner {
-				top: 0;
-			}
+		&.up,
+		&.down {
+			transition-property: height;
+			will-change: height;
 		}
 
 		&.right,
-		&.down,
 		&.left {
+			transition-property: max-width;
+			will-change: max-width;
+
+			.inner {
+				position: relative;
+			}
+		}
+
+		&.up .inner {
+			top: 0;
+		}
+
+		&.down {
 			.inner {
 				transition-property: transform;
 				will-change: transform;
@@ -96,6 +109,10 @@
 		}
 
 		&.right {
+			.inner {
+				right: 0;
+			}
+
 			&.hidden .inner {
 				transform: translateX(-100%);
 			}
@@ -104,12 +121,6 @@
 		&.down {
 			&.hidden .inner {
 				transform: translateY(-100%);
-			}
-		}
-
-		&.left {
-			&.hidden .inner {
-				transform: translateX(100%);
 			}
 		}
 	}

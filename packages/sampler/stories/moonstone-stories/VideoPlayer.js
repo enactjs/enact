@@ -1,45 +1,45 @@
 import icons from './icons';
-import VideoPlayer, {VideoPlayerBase} from '@enact/moonstone/VideoPlayer';
+import VideoPlayer, {MediaControls, VideoPlayerBase} from '@enact/moonstone/VideoPlayer';
 import IconButton from '@enact/moonstone/IconButton';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, number, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const Config = mergeComponentMetadata('VideoPlayer', VideoPlayerBase, VideoPlayer);
+import {boolean, number, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
 // Set up some defaults for info and knobs
 const prop = {
+	moreButtonColor: [
+		'',
+		'red',
+		'green',
+		'yellow',
+		'blue'
+	],
 	videoTitles: [
 		'Sintel',
 		'Big Buck Bunny',
 		'VideoTest',
 		'Bad Video Source'
 	],
-	videos: [
-		{
-			poster: 'http://media.w3.org/2010/05/sintel/poster.png',
-			source: 'http://media.w3.org/2010/05/sintel/trailer.mp4'
-		},
-		{
-			poster: 'http://media.w3.org/2010/05/bunny/poster.png',
-			source: 'http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov'
-		},
-		{
-			poster: 'http://media.w3.org/2010/05/video/poster.png',
-			source: 'http://media.w3.org/2010/05/video/movie_300.mp4'
-		},
-		{
-			poster: 'http://media.w3.org/2010/05/video/poster.png',
-			// Purposefully not a video to demonstrate source error state
-			source: 'https://github.com/mderrick/react-html5video'
-		}
-	],
+	videos: {
+		'Sintel': 'http://media.w3.org/2010/05/sintel/trailer.mp4',
+		'Big Buck Bunny': 'http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov',
+		'VideoTest': 'http://media.w3.org/2010/05/video/movie_300.mp4',
+		// Purposefully not a video to demonstrate source error state
+		'Bad Video Source': 'https://github.com/mderrick/react-html5video'
+	},
+	posters: {
+		'Sintel': 'http://media.w3.org/2010/05/sintel/poster.png',
+		'Big Buck Bunny': 'http://media.w3.org/2010/05/bunny/poster.png',
+		'VideoTest': 'http://media.w3.org/2010/05/video/poster.png',
+		'Bad Video Source': 'http://media.w3.org/2010/05/video/poster.png'
+	},
 	events: [
 		'onAbort',
-		'onBackwardButtonClick',
 		'onCanPlay',
 		'onCanPlayThrough',
 		'onControlsAvailable',
@@ -48,44 +48,27 @@ const prop = {
 		'onEncrypted',
 		'onEnded',
 		'onError',
-		'onForwardButtonClick',
-		'onJumpBackwardButtonClick',
-		'onJumpForwardButtonClick',
+		'onFastForward',
+		'onJumpBackward',
+		'onJumpForward',
 		'onLoadedData',
 		'onLoadedMetadata',
 		'onLoadStart',
 		'onPause',
 		'onPlay',
-		'onPlayButtonClick',
 		'onPlaying',
 		'onProgress',
 		'onRateChange',
+		'onRewind',
 		'onSeeked',
 		'onSeekFailed',
 		'onSeeking',
 		'onStalled',
 		'onSuspend',
 		// 'onTimeUpdate',	// Disabled due to Storybook Actions-reporting having an adverse effect on VideoPlayer performance. Uncomment to view this event.
-		'onUMSMediaInfo',	// Custom webOS media event
 		'onVolumeChange',
 		'onWaiting'
 	]
-};
-
-const videoSources = {};
-for (let index = 0; index < prop.videos.length; index++) {
-	if (index != null && prop.videos[index]) {
-		videoSources[prop.videos[index].source] = prop.videoTitles[index];
-	}
-}
-
-const matchPoster = (src) => {
-	for (let index = 0; index < prop.videos.length; index += 1) {
-		if (prop.videos[index].source === src) {
-			return prop.videos[index].poster;
-		}
-	}
-	return '';
 };
 
 prop.eventActions = {};
@@ -93,13 +76,22 @@ prop.events.forEach( (ev) => {
 	prop.eventActions[ev] = action(ev);
 });
 
-storiesOf('VideoPlayer')
-	.addWithInfo(
-		' ',
-		'The basic VideoPlayer',
-		() => {
-			const videoSource = select('source', videoSources, prop.videos[0].source);
-			const poster = matchPoster(videoSource);
+const Config = mergeComponentMetadata('VideoPlayer', VideoPlayerBase, VideoPlayer);
+const MediaControlsConfig = mergeComponentMetadata('MediaControls', MediaControls);
+
+VideoPlayer.displayName = 'VideoPlayer';
+MediaControls.displayName = 'MediaControls';
+
+storiesOf('Moonstone', module)
+	.add(
+		'VideoPlayer',
+		withInfo({
+			propTablesExclude: [Button, IconButton, MediaControls, VideoPlayer],
+			text: 'The basic VideoPlayer'
+		})(() => {
+			const videoTitle = select('source', prop.videoTitles, Config, 'Sintel');
+			const videoSource = prop.videos[videoTitle];
+			const poster = prop.posters[videoTitle];
 			return (
 				<div
 					style={{
@@ -124,52 +116,54 @@ storiesOf('VideoPlayer')
 						}}
 					>VideoPlayer Edge</label>
 					<VideoPlayer
-						autoCloseTimeout={number('autoCloseTimeout', 7000)}
-						backwardIcon={select('backwardIcon', icons, 'backward')}
-						disabled={boolean('disabled', false)}
-						feedbackHideDelay={number('feedbackHideDelay', 3000)}
-						forwardIcon={select('forwardIcon', icons, 'forward')}
-						initialJumpDelay={number('initialJumpDelay', 400)}
-						jumpBackwardIcon={select('jumpBackwardIcon', icons, 'skipbackward')}
-						jumpForwardIcon={select('jumpForwardIcon', icons, 'skipforward')}
-						jumpButtonsDisabled={boolean('jumpButtonsDisabled', false)}
-						jumpDelay={number('jumpDelay', 200)}
-						rateButtonsDisabled={boolean('rateButtonsDisabled', false)}
-						loop={boolean('loop', true)}
-						miniFeedbackHideDelay={number('miniFeedbackHideDelay', 2000)}
-						moreButtonCloseLabel={text('moreButtonCloseLabel')}
-						moreButtonDisabled={boolean('moreButtonDisabled', false)}
-						moreButtonLabel={text('moreButtonLabel')}
-						muted={boolean('muted', true)}
-						no5WayJump={boolean('no5WayJump', false)}
-						noAutoPlay={boolean('noAutoPlay', false)}
-						noJumpButtons={boolean('noJumpButtons', false)}
-						noMiniFeedback={boolean('noMiniFeedback', false)}
-						noRateButtons={boolean('noRateButtons', false)}
-						noSlider={boolean('noSlider', false)}
-						pauseAtEnd={boolean('pauseAtEnd', false)}
-						pauseIcon={select('pauseIcon', icons, 'pause')}
-						playIcon={select('playIcon', icons, 'play')}
+						autoCloseTimeout={number('autoCloseTimeout', Config, 7000)}
+						disabled={boolean('disabled', Config)}
+						feedbackHideDelay={number('feedbackHideDelay', Config, 3000)}
+						loop={boolean('loop', Config, true)}
+						miniFeedbackHideDelay={number('miniFeedbackHideDelay', Config, 2000)}
+						muted={boolean('muted', Config, true)}
+						noAutoPlay={boolean('noAutoPlay', Config)}
+						noAutoShowMediaControls={boolean('noAutoShowMediaControls', Config)}
+						noMiniFeedback={boolean('noMiniFeedback', Config)}
+						noSlider={boolean('noSlider', Config)}
+						pauseAtEnd={boolean('pauseAtEnd', Config)}
 						poster={poster}
-						seekDisabled={boolean('seekDisabled', false)}
-						spotlightDisabled={boolean('spotlightDisabled', false)}
+						seekDisabled={boolean('seekDisabled', Config)}
+						spotlightDisabled={boolean('spotlightDisabled', Config)}
 						thumbnailSrc={poster}
-						thumbnailUnavailable={boolean('thumbnailUnavailable', false)}
-						tooltipHideDelay={number('tooltipHideDelay', 3000)}
-						title={text('title', 'Moonstone VideoPlayer Sample Video')}
-						titleHideDelay={number('titleHideDelay', 4000)}
+						thumbnailUnavailable={boolean('thumbnailUnavailable', Config)}
+						title={text('title', Config, 'Moonstone VideoPlayer Sample Video')}
+						titleHideDelay={number('titleHideDelay', Config, 4000)}
 						{...prop.eventActions}
 					>
 						<source src={videoSource} type="video/mp4" />
 						<infoComponents>A video about some things happening to and around some characters. Very exciting stuff.</infoComponents>
-						<leftComponents><IconButton backgroundOpacity="translucent">fullscreen</IconButton></leftComponents>
-						<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
-
-						<Button backgroundOpacity="translucent">Add To Favorites</Button>
-						<IconButton backgroundOpacity="translucent">star</IconButton>
+						<MediaControls
+							backwardIcon={select('backwardIcon', icons, MediaControlsConfig, 'backward')}
+							forwardIcon={select('forwardIcon', icons, MediaControlsConfig, 'forward')}
+							initialJumpDelay={number('initialJumpDelay', MediaControlsConfig, 400)}
+							jumpBackwardIcon={select('jumpBackwardIcon', icons, MediaControlsConfig, 'skipbackward')}
+							jumpButtonsDisabled={boolean('jumpButtonsDisabled', MediaControlsConfig)}
+							jumpDelay={number('jumpDelay', MediaControlsConfig, 200)}
+							jumpForwardIcon={select('jumpForwardIcon', icons, MediaControlsConfig, 'skipforward')}
+							moreButtonCloseLabel={text('moreButtonCloseLabel', MediaControlsConfig)}
+							moreButtonColor={select('moreButtonColor', prop.moreButtonColor, MediaControlsConfig, '')}
+							moreButtonDisabled={boolean('moreButtonDisabled', MediaControlsConfig)}
+							moreButtonLabel={text('moreButtonLabel', MediaControlsConfig)}
+							no5WayJump={boolean('no5WayJump', MediaControlsConfig)}
+							noJumpButtons={boolean('noJumpButtons', MediaControlsConfig)}
+							noRateButtons={boolean('noRateButtons', MediaControlsConfig)}
+							pauseIcon={select('pauseIcon', icons, MediaControlsConfig, 'pause')}
+							playIcon={select('playIcon', icons, MediaControlsConfig, 'play')}
+							rateButtonsDisabled={boolean('rateButtonsDisabled', MediaControlsConfig)}
+						>
+							<leftComponents><IconButton backgroundOpacity="translucent">fullscreen</IconButton></leftComponents>
+							<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
+							<Button backgroundOpacity="translucent">Add To Favorites</Button>
+							<IconButton backgroundOpacity="translucent">star</IconButton>
+						</MediaControls>
 					</VideoPlayer>
 				</div>
 			);
-		},
-		{propTables: [Config]}
+		})
 	);

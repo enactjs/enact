@@ -1,42 +1,45 @@
 import ToggleButton from '@enact/moonstone/ToggleButton';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {text, boolean, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+
+import {boolean, select, text} from '../../src/enact-knobs';
+
+ToggleButton.displayName = 'ToggleButton';
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'transparent': 'transparent'},
+	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
+	casing: ['preserve', 'sentence', 'word', 'upper'],
 	tallText:{'ิ้  ไั  ஒ  து': 'ิ้  ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'}
 };
 
-storiesOf('ToggleButton')
-	.addWithInfo(
+storiesOf('ToggleButton', module)
+	.add(
 		'with long text',
 		() => (
 			<ToggleButton
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
-				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
-				disabled={boolean('disabled')}
-				small={boolean('small')}
-				toggleOnLabel={text('toggleOnLabel', 'Loooooooooooooooooog On')}
-				toggleOffLabel={text('toggleOffLabel', 'Loooooooooooooooooog Off')}
+				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, ToggleButton)}
+				casing={select('casing', prop.casing, ToggleButton, 'upper')}
+				disabled={boolean('disabled', ToggleButton)}
+				small={boolean('small', ToggleButton)}
+				toggleOnLabel={text('toggleOnLabel', ToggleButton, 'Loooooooooooooooooog On')}
+				toggleOffLabel={text('toggleOffLabel', ToggleButton, 'Loooooooooooooooooog Off')}
 			/>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with tall characters',
 		() => (
 			<ToggleButton
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
-				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
-				disabled={boolean('disabled')}
-				small={boolean('small')}
-				toggleOnLabel={select('toggleOnLabel', prop.tallText, 'ิ้  ไั  ஒ  து')}
-				toggleOffLabel={select('toggleOffLabel', prop.tallText, 'ิ้  ไั  ஒ  து')}
+				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, ToggleButton)}
+				casing={select('casing', prop.casing, ToggleButton, 'upper')}
+				disabled={boolean('disabled', ToggleButton)}
+				small={boolean('small', ToggleButton)}
+				toggleOnLabel={select('toggleOnLabel', prop.tallText, ToggleButton, 'ิ้  ไั  ஒ  து')}
+				toggleOffLabel={select('toggleOffLabel', prop.tallText, ToggleButton, 'ิ้  ไั  ஒ  து')}
 			/>
 		)
 	);
-
-

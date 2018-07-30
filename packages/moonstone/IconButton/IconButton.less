@@ -1,25 +1,24 @@
 // IconButton.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/text.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/text.less";
 
 .iconButton {
-	.border-box();
 	.moon-taparea(@moon-icon-button-size);
 
-	padding: 0;
 	width: @moon-icon-button-size;
 	height: @moon-icon-button-size;
+	padding: 0;
 	background-size: @moon-icon-sprite-size @moon-icon-sprite-size * 2;
-	background-position: center 0;
+	line-height: @moon-icon-size;
 
 	&.small {
 		padding: 0;
 		width: @moon-icon-button-small-size;
 		height: @moon-icon-button-small-size;
 		background-size: @moon-icon-sprite-small-size @moon-icon-sprite-small-size * 2;
-		background-position: center 0;
+		line-height: @moon-icon-small-size;
 
 		.moon-taparea(@moon-icon-button-small-size);
 	}
@@ -27,28 +26,35 @@
 	.moon-custom-text({
 		height: @moon-icon-button-size-large;
 		width: @moon-icon-button-size-large;
+		line-height: @moon-icon-size-large;
 
 		&.small {
 			height: @moon-icon-button-small-size-large;
 			width: @moon-icon-button-small-size-large;
+			line-height: @moon-icon-small-size-large;
 		}
 	});
-
-	.icon {
-		margin: 0 auto;
-		pointer-events: none;
-	}
 
 	&.red,
 	&.green,
 	&.yellow,
 	&.blue {
-		.icon {
-			line-height: 42px;
-		}
+		line-height: 42px;
 
-		&.small .icon {
+		&.small {
 			line-height: 30px;
 		}
+	}
+
+	// Assign the parent's line-height to the internal Icon component so it can be adjusted externally
+	.icon,
+	.icon.small {
+		line-height: inherit;
+	}
+
+	// Include the classes that we explicitly said are customizable in the publicClassNames
+	.bg,
+	.selected {
+		/* Exported for customization*/
 	}
 }

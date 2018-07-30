@@ -9,8 +9,7 @@ import TooltipLabel from './TooltipLabel';
 import css from './Tooltip.less';
 
 /**
- * {@link moonstone/TooltipDecorator.TooltipBase} is a stateless tooltip component with
- * Moonston styling applied.
+ * A stateless tooltip component with Moonstone styling applied.
  *
  * @class TooltipBase
  * @memberof moonstone/TooltipDecorator
@@ -30,8 +29,9 @@ const TooltipBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * Position of tooltip arrow in relation to the activator; valid values are
-		 * `'left'`, `'center'`, `'right'`, `'top'`, `'middle'`, and `'bottom'`.
+		 * Position of tooltip arrow in relation to the activator.
+		 *
+		 * * Values: `'left'`, `'center'`, `'right'`, `'top'`, `'middle'`, `'bottom'`
 		 *
 		 * Note that `'left'`, `'center'`, `'right'` are applicable when direction is in vertical
 		 * orientation (i.e. `'above'`, `'below'`), and `'top'`, `'middle'`, and `'bottom'` are
@@ -44,8 +44,9 @@ const TooltipBase = kind({
 		arrowAnchor: PropTypes.oneOf(['left', 'center', 'right', 'top', 'middle', 'bottom']),
 
 		/**
-		 * Direction of label in relation to the activator; valid values are `'above'`, `'below'`,
-		 * `'left'`, and `'right'`.
+		 * Direction of label in relation to the activator.
+		 *
+		 * * Values: `'above'`, `'below'`, `'left'`, and `'right'`
 		 *
 		 * @type {String}
 		 * @default 'above'
@@ -60,14 +61,14 @@ const TooltipBase = kind({
 		 * @public
 		 */
 		position: PropTypes.shape({
-			top: PropTypes.number,
 			bottom: PropTypes.number,
 			left: PropTypes.number,
-			right: PropTypes.number
+			right: PropTypes.number,
+			top: PropTypes.number
 		}),
 
 		/**
-		 * The method to run when the tooltip mounts/unmounts, giving a reference to the DOM.
+		 * Called when the tooltip mounts/unmounts, giving a reference to the DOM.
 		 *
 		 * @type {Function}
 		 * @public
@@ -75,8 +76,10 @@ const TooltipBase = kind({
 		tooltipRef: PropTypes.func,
 
 		/**
-		 * The width of tooltip content in pixels (px). If the content goes over the given width,
-		 * then it will automatically wrap. When `null`, content does not wrap.
+		 * The width of tooltip content in pixels (px).
+		 *
+		 * If the content goes over the given width, then it will automatically wrap. When `null`,
+		 * content does not wrap.
 		 *
 		 * @type {Number|null}
 		 * @public
@@ -125,9 +128,8 @@ const TooltipBase = kind({
 });
 
 /**
- * {@link moonstone/TooltipDecorator.Tooltip} is a tooltip component with Moonstone styling
- * applied. If the Tooltip's child component is text, it will be uppercased unless
- * `casing` is set.
+ * A tooltip component with Moonstone styling applied. If the Tooltip's child component is text, it
+ * will be uppercased unless `casing` is set.
  *
  * @class Tooltip
  * @memberof moonstone/TooltipDecorator

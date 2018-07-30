@@ -1,8 +1,15 @@
 /**
- * Exports the {@link moonstone/DatePicker.DatePicker} and {@link moonstone/DatePicker.DatePickerBase}
- * components.
+ * Date selection components and behaviors.
+ *
+ * @example
+ * <DatePicker
+ *   onChange={console.log}
+ * 	 title="Select Date"
+ * />
  *
  * @module moonstone/DatePicker
+ * @exports DatePicker
+ * @exports DatePickerBase
  */
 
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
@@ -91,11 +98,11 @@ const dateTimeConfig = {
 };
 
 /**
- * {@link moonstone/DatePicker.DatePicker} allows the selection (or simply display) of
- * a day, month, and year.
+ * An expand date selection component, ready to use in Moonstone applications.
  *
- * Set the [value]{@link moonstone/DatePicker.DatePicker#value} property to a standard
- * JavaScript {@glossary Date} object to initialize the picker.
+ * `DatePicker` may be used to select the year, month, and day. It uses a standard `Date` object for
+ * its `value` which can be shared as the `value` for a
+ * [TimePicker]{@link moonstone/TimePicker.TimePicker} to select both a date and time.
  *
  * By default, `DatePicker` maintains the state of its `value` property. Supply the
  * `defaultValue` property to control its initial value. If you wish to directly control updates
@@ -107,8 +114,18 @@ const dateTimeConfig = {
  * state, supply a value for `open` at creation time and update its value in response to
  * `onClose`/`onOpen` events.
  *
+ * Usage:
+ * ```
+ * <DatePicker
+ *  defaultValue={selectedDate}
+ *  onChange={handleChange}
+ *  title="Select Date"
+ * />
+ * ```
+ *
  * @class DatePicker
  * @memberof moonstone/DatePicker
+ * @extends moonstone/DatePicker.DatePickerBase
  * @mixes ui/Toggleable.Toggleable
  * @mixes ui/RadioDecorator.RadioDecorator
  * @mixes ui/Changeable.Changeable
@@ -124,5 +141,45 @@ const DatePicker = Pure(
 	)
 );
 
+/**
+ * The initial value used when `open` is not set.
+ *
+ * @name defaultOpen
+ * @type {Boolean}
+ * @memberof moonstone/DatePicker.DatePicker.prototype
+ * @public
+ */
+
+/**
+ * The initial value used when `value` is not set.
+ *
+ * @name defaultValue
+ * @type {Date}
+ * @memberof moonstone/DatePicker.DatePicker.prototype
+ * @public
+ */
+
+/**
+ * Opens the component to display the date component pickers.
+ *
+ * @name open
+ * @type {Boolean}
+ * @default false
+ * @memberof moonstone/DatePicker.DatePicker.prototype
+ * @public
+ */
+
+/**
+ * The selected date
+ *
+ * @name value
+ * @type {Date}
+ * @memberof moonstone/DatePicker.DatePicker.prototype
+ * @public
+ */
+
 export default DatePicker;
-export {DatePicker, DatePickerBase};
+export {
+	DatePicker,
+	DatePickerBase
+};

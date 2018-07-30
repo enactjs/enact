@@ -23,8 +23,8 @@ describe('Button', () => {
 			<Button disabled>I am a disabled Button</Button>
 		);
 
-		const expected = 1;
-		const actual = button.find({disabled: true}).length;
+		const expected = true;
+		const actual = button.find('div').at(0).prop('disabled');
 
 		expect(actual).to.equal(expected);
 	});

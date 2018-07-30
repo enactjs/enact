@@ -2,14 +2,19 @@
  * Provides methods to add and remove global event listeners
  *
  * @module core/dispatcher
+ * @exports off
+ * @exports on
+ * @exports once
  */
 
 import curry from 'ramda/src/curry';
 
-import getListeners from './listeners';
+import {getListeners, addListener} from './listeners';
 
-/**
+/*
  * Checks if the default target of `document` exists before returning it, otherwise returns `false`.
+ *
+ * @function
  *
  * @returns {Node|Boolean}
  * @memberof core/dispatcher
@@ -17,8 +22,8 @@ import getListeners from './listeners';
  */
 const getDefaultTarget = () => typeof document !== 'undefined' && document;
 
-/**
- * Wraps event callbacks with a try-catch block to prevent unrelated code from blocking
+/*
+ * Wraps event callbacks with a try-catch block to prevent unrelated code from blocking.
  *
  * @function
  * @param	{Event}		ev	Event payload
@@ -37,8 +42,8 @@ const invoker = curry(function (ev, fn) {
 	}
 });
 
-/**
- * Dispatches an event to the registered handlers
+/*
+ * Dispatches an event to the registered handlers.
  *
  * @function
  * @param	{Event}		ev	Event payload
@@ -58,7 +63,7 @@ const dispatcher = function (ev) {
 };
 
 /**
- * Adds a new global event listener
+ * Adds a new global event listener. Duplicate event handlers will be discarded.
  *
  * @function
  * @param	{String}	name				Event name
@@ -67,20 +72,20 @@ const dispatcher = function (ev) {
  *
  * @returns {undefined}
  * @memberof core/dispatcher
+ * @public
  */
 const on = function (name, fn, target = getDefaultTarget()) {
 	if (target) {
-		const listeners = getListeners(target, name);
+		const added = addListener(target, name, fn);
 
-		const length = listeners.push(fn);
-		if (length === 1) {
+		if (added && getListeners(target, name).length === 1) {
 			target.addEventListener(name, dispatcher);
 		}
 	}
 };
 
 /**
- * Removes a global event listener
+ * Removes a global event listener.
  *
  * @function
  * @param	{String}	name				Event name
@@ -89,6 +94,7 @@ const on = function (name, fn, target = getDefaultTarget()) {
  *
  * @returns {undefined}
  * @memberof core/dispatcher
+ * @public
  */
 const off = function (name, fn, target = getDefaultTarget()) {
 	if (target) {
@@ -105,16 +111,17 @@ const off = function (name, fn, target = getDefaultTarget()) {
 };
 
 /**
- * Adds a new global event listener that removes itself after handling one event
+ * Adds a new global event listener that removes itself after handling one event.
  *
  * @function
  * @param	{String}	name		Event name
  * @param	{Function}	fn			Event handler
  * @param	{Node}		[target]	Event listener target
  *
- * @returns {Function}						The single-use handler which can be passed to `off` to
- *											remove it.
+ * @returns {Function}				The single-use handler which can be passed to `off` to
+ *									remove it.
  * @memberof core/dispatcher
+ * @public
  */
 const once = function (name, fn, target) {
 	const onceFn = function (ev) {

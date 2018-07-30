@@ -4,6 +4,11 @@ import sinon from 'sinon';
 
 import DaySelector from '../DaySelector';
 
+const tap = (node) => {
+	node.simulate('mousedown');
+	node.simulate('mouseup');
+};
+
 describe('DaySelector', () => {
 
 	it('should set selected prop to true for the item that is selected by default', function () {
@@ -26,7 +31,7 @@ describe('DaySelector', () => {
 		);
 
 		const item = subject.find('DaySelectorItem').first();
-		item.simulate('click', {});
+		tap(item);
 
 		const expected = true;
 		const actual = handleSelect.calledOnce;
@@ -42,7 +47,7 @@ describe('DaySelector', () => {
 		);
 
 		const item = subject.find('DaySelectorItem').last();
-		item.simulate('click', {});
+		tap(item);
 
 		const expected = content;
 		const actual = handleSelect.firstCall.args[0].content;
@@ -50,15 +55,15 @@ describe('DaySelector', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should use the long string format when longDayLabels is true', function () {
+	it('should use the full string format when dayNameLength is `full`', function () {
 		const handleSelect = sinon.spy();
 		const content = 'Saturday';
 		const subject = mount(
-			<DaySelector longDayLabels onSelect={handleSelect} />
+			<DaySelector dayNameLength="full" onSelect={handleSelect} />
 		);
 
 		const item = subject.find('DaySelectorItem').last();
-		item.simulate('click', {});
+		tap(item);
 
 		const expected = content;
 		const actual = handleSelect.firstCall.args[0].content;
@@ -74,7 +79,7 @@ describe('DaySelector', () => {
 		);
 
 		const item = subject.find('DaySelectorItem').last();
-		item.simulate('click', {});
+		tap(item);
 
 		const expected = content;
 		const actual = handleSelect.firstCall.args[0].content;
@@ -90,7 +95,7 @@ describe('DaySelector', () => {
 		);
 
 		const item = subject.find('DaySelectorItem').first();
-		item.simulate('click', {});
+		tap(item);
 
 		const expected = content;
 		const actual = handleSelect.firstCall.args[0].content;
@@ -106,7 +111,7 @@ describe('DaySelector', () => {
 		);
 
 		const item = subject.find('DaySelectorItem').last();
-		item.simulate('click', {});
+		tap(item);
 
 		const expected = content;
 		const actual = handleSelect.firstCall.args[0].content;

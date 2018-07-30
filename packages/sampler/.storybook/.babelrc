@@ -1,9 +1,9 @@
 {
-	"presets": ["es2015", "stage-0", "react"],
+	"presets": ["env", "stage-0", "react"],
 	"plugins": ["dev-expression"],
 	"env": {
 		"production": {
-			"plugins": ["transform-react-inline-elements","transform-react-constant-elements"]
+			"plugins": ["transform-react-inline-elements"]
 		}
 	}
 }

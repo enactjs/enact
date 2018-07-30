@@ -1,7 +1,13 @@
 import React from 'react';
-import {mount} from 'enzyme';
-import RangePicker from '../RangePicker';
-import css from '../../internal/Picker/Picker.less';
+import {mount, shallow} from 'enzyme';
+import {RangePicker, RangePickerBase} from '../RangePicker';
+
+const tap = (node) => {
+	node.simulate('mousedown');
+	node.simulate('mouseup');
+};
+const decrement = (slider) => tap(slider.find('IconButton').last());
+const increment = (slider) => tap(slider.find('IconButton').first());
 
 describe('RangePicker Specs', () => {
 	it('should render a single child with the current value', function () {
@@ -20,8 +26,8 @@ describe('RangePicker Specs', () => {
 			<RangePicker min={0} max={100} defaultValue={10} step={1} />
 		);
 
-		const button = picker.find(`.${css.incrementer}`);
-		button.simulate('mouseDown');
+		increment(picker);
+
 		const expected = '11';
 		const actual = picker.find('PickerItem').first().text();
 
@@ -33,8 +39,8 @@ describe('RangePicker Specs', () => {
 			<RangePicker min={0} max={100} defaultValue={10} step={1} />
 		);
 
-		const button = picker.find(`.${css.decrementer}`);
-		button.simulate('mouseDown');
+		decrement(picker);
+
 		const expected = '9';
 		const actual = picker.find('PickerItem').first().text();
 
@@ -61,5 +67,14 @@ describe('RangePicker Specs', () => {
 		const actual = picker.find('PickerItem').text();
 
 		expect(actual).to.equal(expected);
+	});
+
+	it('should be disabled when limited to a single value', function () {
+		const picker = shallow(
+			<RangePickerBase min={0} max={0} value={0} />
+		);
+
+		const actual = picker.find('SpottablePicker').last().prop('disabled');
+		expect(actual).to.be.true();
 	});
 });

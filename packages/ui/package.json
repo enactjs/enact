@@ -1,11 +1,11 @@
 {
   "name": "@enact/ui",
-  "version": "1.15.0",
+  "version": "2.0.0",
   "description": "A collection of simplified unstyled cross-platform UI components for Enact",
   "main": "index.js",
   "scripts": {
     "clean": "enact clean",
-    "lint": "enact lint --framework",
+    "lint": "enact lint --strict",
     "test": "enact test start --single-run --browsers PhantomJS",
     "test-json": "enact test start --single-run --browsers PhantomJS --reporters json",
     "test-watch": "enact test start --browsers PhantomJS",
@@ -28,13 +28,15 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^1.15.0",
-    "invariant": "~2.2.2",
-    "prop-types": "~15.6.0",
-    "ramda": "~0.24.1",
-    "react": "~15.6.1",
-    "react-dom": "~15.6.1",
-    "recompose": "~0.23.5",
-    "warning": "~3.0.0"
+    "@enact/core": "^2.0.0",
+    "classnames": "^2.2.5",
+    "direction": "^1.0.1",
+    "invariant": "^2.2.2",
+    "prop-types": "^15.6.0",
+    "ramda": "^0.24.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "recompose": "^0.26.0",
+    "warning": "^3.0.0"
   }
 }

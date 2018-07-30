@@ -1,8 +1,9 @@
 import React from 'react';
-import {mount} from 'enzyme';
-import sinon from 'sinon';
-import EditableIntegerPicker from '../EditableIntegerPicker';
+import {mount, shallow} from 'enzyme';
+import {EditableIntegerPicker, EditableIntegerPickerBase} from '../EditableIntegerPicker';
 import Spotlight from '@enact/spotlight';
+
+const isPaused = () => Spotlight.isPaused() ? 'paused' : 'not paused';
 
 const tap = (node) => {
 	node.simulate('mousedown');
@@ -54,32 +55,48 @@ describe('EditableIntegerPicker', () => {
 	});
 
 	it('should disable input when blurred', function () {
+		const node = document.body.appendChild(document.createElement('div'));
 		const picker = mount(
-			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />
+			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />,
+			{attachTo: node}
 		);
 
 		picker.find('PickerItem').simulate('click', {target: {type: 'click'}});
-		const input = picker.find('input').first();
-		input.node.focus();
-		input.simulate('blur');
+
+		const input = node.querySelector('input');
+		input.focus();
+		input.blur();
+
+		picker.update();
+
 		const expected = 0;
 		const actual = picker.find('input').length;
+
+		node.parentNode.removeChild(node);
 
 		expect(actual).to.equal(expected);
 	});
 
 	it('should take value inputted and navigate to the value on blur', function () {
+		const node = document.body.appendChild(document.createElement('div'));
 		const picker = mount(
-			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />
+			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />,
+			{attachTo: node}
 		);
 
 		picker.find('PickerItem').simulate('click', {target: {type: 'click'}});
-		const input = picker.find('input').first();
-		input.node.focus();
-		input.node.value = 38;
-		input.simulate('blur');
+
+		const input = node.querySelector('input');
+		input.focus();
+		input.value = 38;
+		input.blur();
+
+		picker.update();
+
 		const expected = 38;
 		const actual = parseInt(picker.find('PickerItem').first().text());
+
+		node.parentNode.removeChild(node);
 
 		expect(actual).to.equal(expected);
 	});
@@ -97,35 +114,53 @@ describe('EditableIntegerPicker', () => {
 	});
 
 	it('should pause the spotlight when input is focused', function () {
-		const pauseSpy = sinon.spy(Spotlight, 'pause');
+		const node = document.body.appendChild(document.createElement('div'));
 		const picker = mount(
-			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />
+			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />,
+			{attachTo: node}
 		);
 
 		picker.simulate('keyDown', {keyCode: 50});
-		const input = picker.find('input').first();
-		input.node.focus();
-		const expected = true;
-		const actual = pauseSpy.calledOnce;
-		Spotlight.pause.restore();
+		const input = node.querySelector('input');
+		input.focus();
+
+		const expected = 'paused';
+		const actual = isPaused();
+
+		Spotlight.resume();
+		node.parentNode.removeChild(node);
+
 		expect(actual).to.equal(expected);
 	});
 
 	it('should resume the spotlight when input is blurred', function () {
-		const resumeSpy = sinon.spy(Spotlight, 'resume');
+		const node = document.body.appendChild(document.createElement('div'));
 		const picker = mount(
-			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />
+			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />,
+			{attachTo: node}
 		);
 
 		picker.find('PickerItem').simulate('click', {target: {type: 'click'}});
-		const input = picker.find('input').first();
 
-		input.node.focus();
-		input.simulate('blur');
-		const expected = true;
-		const actual = resumeSpy.calledOnce;
-		Spotlight.resume.restore();
+		const input = node.querySelector('input');
+		input.focus();
+		input.blur();
+
+		const expected = 'not paused';
+		const actual = isPaused();
+
+		node.parentNode.removeChild(node);
+
 		expect(actual).to.equal(expected);
+	});
+
+	it('should be disabled when limited to a single value', function () {
+		const picker = shallow(
+			<EditableIntegerPickerBase min={0} max={0} value={0} />
+		);
+
+		const actual = picker.find('SpottablePicker').last().prop('disabled');
+		expect(actual).to.be.true();
 	});
 
 });

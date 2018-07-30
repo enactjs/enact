@@ -6,6 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import Spotlight from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 
 import css from './Panels.less';
 
@@ -66,13 +67,19 @@ const ViewportBase = class extends React.Component {
 		noAnimation: false
 	}
 
+	constructor () {
+		super();
+
+		this.paused = new Pause('Viewport');
+	}
+
 	componentDidMount () {
 		// eslint-disable-next-line react/no-find-dom-node
 		this.node = ReactDOM.findDOMNode(this);
 	}
 
 	componentWillUnmount () {
-		Spotlight.resume();
+		this.paused.resume();
 	}
 
 	addTransitioningClass = () => {
@@ -91,25 +98,29 @@ const ViewportBase = class extends React.Component {
 		return true;
 	}
 
+	pause = () => this.paused.pause()
+
+	resume = () => this.paused.resume()
+
 	handle = handle.bind(this)
 
 	handleTransition = this.handle(
 		forward('onTransition'),
 		this.removeTransitioningClass,
-		Spotlight.resume
+		this.resume
 	)
 
 	handleWillTransition = this.handle(
 		forward('onWillTransition'),
 		this.addTransitioningClass,
-		Spotlight.pause
+		this.pause
 	)
 
 	mapChildren = (children, generateId) => React.Children.map(children, (child, index) => {
-		return React.cloneElement(child, {
-			containerId: child.props.containerId || generateId(index, 'panel-container', Spotlight.remove),
+		return child ? React.cloneElement(child, {
+			spotlightId: child.props.spotlightId || generateId(index, 'panel-container', Spotlight.remove),
 			'data-index': index
-		});
+		}) : null;
 	})
 
 	getEnteringProp = (noAnimation) => noAnimation ? null : 'hideChildren'

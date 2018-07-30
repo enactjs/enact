@@ -3,20 +3,19 @@ title: Spotlight
 ---
 
 
-1. [What Is Spotlight?](#1)
-2. [Modes](#2)
-3. [Navigation](#3)
-4. [Selectors](#4)
-5. [SpotlightRootDecorator](#5)
-6. [Spottable](#6)
-7. [Container](#7)
-8. [Events](#8)
-9. [Spotlight API](#9)
-10. [HOC Parameters and Properties](#10)
-11. [Examples](#11)
+1. [What Is Spotlight?](#what-is-spotlight)
+2. [Modes](#modes)
+3. [Navigation](#navigation)
+4. [Selectors](#selectors)
+5. [SpotlightRootDecorator](#spotlightrootdecorator)
+6. [Spottable](#spottable)
+7. [Containers](#containers)
+8. [Events](#events)
+9. [Spotlight API](#spotlight-api)
+10. [HOC Parameters and Properties](#hoc-parameters-and-properties)
+11. [Examples](#examples)
 
-<a name="1"></a>
-## 1. What Is Spotlight?
+## What Is Spotlight?
 
 Spotlight is an extensible utility that enables users to navigate
 applications using a keyboard or television remote control.  Responding to input
@@ -30,16 +29,16 @@ library.
 Spotlight is based on a fork of [JavaScript SpatialNavigation](https://github.com/luke-chang/js-spatial-navigation)
 (c) 2016 Luke Chang, under the terms of the [Mozilla Public License](https://www.mozilla.org/en-US/MPL/2.0/).
 
-<a name="2"></a>
-## 2. Modes
+## Modes
 
 Spotlight operates in two mutually exclusive modes: **5-way mode** and **Pointer
 mode**.  By default, Spotlight is configured to switch between these modes
 whenever suitable input is received--i.e.: it switches to pointer mode on
 `mousemove` and back to 5-way mode on `keydown`.
 
-<a name="3"></a>
-## 3. Navigation
+Spotlight initializes in 5-way mode. On webOS, the platform's current pointer mode is used instead.
+
+## Navigation
 
 Spotlight enables navigation between controls by assigning focus to one control
 at a time.  Focus-enabled controls are considered to be "spottable". These spottable
@@ -79,8 +78,7 @@ handleSpotlightDown = (e) => {
 <Button onSpotlightDown={this.handleSpotlightDown}>Target Button</Button>
 ```
 
-<a name="4"></a>
-## 4. Selectors
+## Selectors
 
 Spotlight identifies spottable controls via selectors. A selector can be any of the
 following types:
@@ -108,8 +106,7 @@ Spotlight to parse the selector, re-indexing the available Spottable controls.
 Spotlight.focus('[data-container-id="container-name"] .spottable');
 ```
 
-<a name="5"></a>
-## 5. SpotlightRootDecorator
+## SpotlightRootDecorator
 The `SpotlightRootDecorator` is a top-level HOC (Higher Order Component) that is
 required to use Spotlight. It is responsible for initializing the Spotlight instance
 and managing navigation event listeners.
@@ -126,8 +123,7 @@ const App = SpotlightRootDecorator(ApplicationView);
 It's worth noting that `@enact/moonstone` applications include `SpotlightRootDecorator`
 by default in its `MoonstoneDecorator` HOC.
 
-<a name="6"></a>
-## 6. Spottable
+## Spottable
 
 In order to make a control focus-enabled (or "spottable") with Spotlight, simply
 wrap your base control with the `Spottable` HOC, like so:
@@ -138,8 +134,7 @@ wrap your base control with the `Spottable` HOC, like so:
     const SpottableComponent = Spottable(Component);
 ```
 
-<a name="7"></a>
-## 7. Containers
+## Containers
 
 In order to organize controls into navigation groups, we have created Spotlight
 containers.
@@ -193,8 +188,7 @@ const App = kind({
 ```
 
 
-<a name="8"></a>
-## 8. EVENTS ##
+## Events
 
 Spotlight uses native DOM events to navigate the available spottable controls and does not
 directly dispatch synthetic events to the currently spotted control.
@@ -203,8 +197,7 @@ To determine if spotlight is the cause of a specific spotted control's key event
 validate the native `target` property of the key event against `document.activeElement`.
 
 
-<a name="9"></a>
-## 9. SPOTLIGHT API ##
+## Spotlight API
 
 In order to use the Spotlight API, simply import Spotlight into your application and call
 any of its available methods to manipulate how your application responds to navigation
@@ -214,29 +207,28 @@ events.
 import Spotlight from '@enact/spotlight';
 ```
 
-#### `Spotlight.pause()` ####
+#### `Spotlight.pause()`
 Temporarily pauses Spotlight until `resume()` is called.
 
-#### `Spotlight.resume()` ####
+#### `Spotlight.resume()`
 Resumes Spotlight navigation.
 
-#### `Spotlight.focus([containerId/selector])` ####
+#### `Spotlight.focus([containerId/selector])`
 + `containerId/selector`: (optional) String / Selector (without @ syntax)
 
 Dispatches focus to the specified containerId or the first spottable child that
 matches `selector`. This method has no effect if Spotlight is paused.
 
-#### `Spotlight.move(direction, [selector])` ####
+#### `Spotlight.move(direction, [selector])`
 + `direction`: `'left'`, `'right'`, `'up'` or `'down'`
 + `selector`: (optional) Selector (without @ syntax)
 
 Moves focus in the specified direction of `selector`. If `selector` is not specified,
 Spotlight will move in the given direction of the currently spotted control.
 
-<a name="10"></a>
-## 10. HOC PARAMETERS AND PROPERTIES ##
+## HOC Parameters And Properties
 
-##### Spotlight HOC Parameters #####
+##### Spotlight HOC Parameters
 
 Parameters in the form of an object can be passed as an initial argument to a HOC when creating a
 Spotlight control. In these cases, the HOC parameter should remain static and unchanged in the
@@ -248,7 +240,7 @@ import Spottable from '@enact/spotlight/Spottable';
 const Control = Spottable({emulateMouse: false}, 'div');
 ```
 
-##### Spotlight HOC Properties #####
+##### Spotlight HOC Properties
 
 Spotlight HOCs are able to use properties that are passed to them via parent controls. These properties
 are passed like in any other Enact component.
@@ -263,9 +255,9 @@ const App = kind({
 });
 ```
 
-### Spottable ###
+### Spottable
 
-##### Parameters #####
+##### Parameters
 
 `emulateMouse`
 + Type: [boolean]
@@ -273,7 +265,7 @@ const App = kind({
 
 Whether or not the component should emulate mouse events as a response to Spotlight 5-way events.
 
-##### Properties #####
+##### Properties
 `spotlightDisabled`
 + Type: [boolean]
 + Default: `false`
@@ -293,9 +285,9 @@ A callback function to override default spotlight behavior when exiting the spot
 
 A callback function to be called when the component is removed while retaining focus.
 
-### Container ###
+### Container
 
-##### Parameters #####
+##### Parameters
 
 `defaultElement`
 + Type: [string|string[]]
@@ -318,7 +310,7 @@ this container receives focus first.
 
 Whether the container will preserve the id when it unmounts.
 
-#### Properties ####
+#### Properties
 
 `containerId`
 + Type: [string]
@@ -354,8 +346,7 @@ import Component from './Component';
 const Container = SpotlightContainerDecorator({enterTo: 'last-focused', restrict: 'self-only'}, Component);
 ```
 
-<a name="11"></a>
-## 11. Examples ##
+## Examples
 
 #### Basic usage
 

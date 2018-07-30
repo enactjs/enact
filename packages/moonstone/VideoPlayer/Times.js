@@ -23,6 +23,7 @@ const TimesBase = kind({
 		 * An instance of a Duration Formatter from i18n. {@link i18n/ilib/lib/DurationFmt.DurationFmt}
 		 *
 		 * @type {Object}
+		 * @required
 		 * @public
 		 */
 		formatter: PropTypes.object.isRequired,

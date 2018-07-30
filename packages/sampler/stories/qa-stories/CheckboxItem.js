@@ -1,8 +1,16 @@
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
+import ToggleItem from '@enact/moonstone/ToggleItem';
+import UiToggleItem, {ToggleItemBase as UiToggleItemBase} from '@enact/ui/ToggleItem';
+import Item, {ItemBase} from '@enact/moonstone/Item';
 import Group from '@enact/ui/Group';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, text, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+
+import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
+
+const Config = mergeComponentMetadata('CheckboxItem', ItemBase, Item, UiToggleItemBase, UiToggleItem, ToggleItem, CheckboxItem);
 
 const prop = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -11,65 +19,69 @@ const prop = {
 	rtlText: 'هناك حقيقة مثبتة منذ زمن طويل وهي'
 };
 
-storiesOf('CheckboxItem')
-	.addWithInfo(
+storiesOf('CheckboxItem', module)
+	.add(
 		'with long text',
 		() => (
 			<CheckboxItem
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', Config, false)}
+				iconPosition={select('iconPosition', ['before', 'after'], Config)}
+				inline={boolean('inline', Config)}
 				onToggle={action('onToggle')}
 			>
-				{text('children', prop.longText)}
+				{text('children', Config, prop.longText)}
 			</CheckboxItem>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with tall characters',
 		() => (
 			<CheckboxItem
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', Config, false)}
+				iconPosition={select('iconPosition', ['before', 'after'], Config)}
+				inline={boolean('inline', Config)}
 				onToggle={action('onToggle')}
 			>
-				{select('children', prop.tallText, prop.tallText[0])}
+				{select('children', prop.tallText, Config, prop.tallText[0])}
 			</CheckboxItem>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with extra spacing',
 		() => (
 			<CheckboxItem
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', Config, false)}
+				iconPosition={select('iconPosition', ['before', 'after'], Config)}
+				inline={boolean('inline', Config)}
 				onToggle={action('onToggle')}
 			>
-				{text('children', prop.extraSpaceText)}
+				{text('children', Config, prop.extraSpaceText)}
 			</CheckboxItem>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with right to left text',
 		() => (
 			<CheckboxItem
-				disabled={boolean('disabled', false)}
-				inline={boolean('inline', false)}
+				disabled={boolean('disabled', Config, false)}
+				iconPosition={select('iconPosition', ['before', 'after'], Config)}
+				inline={boolean('inline', Config)}
 				onToggle={action('onToggle')}
 			>
-				{text('children', prop.rtlText)}
+				{text('children', Config, prop.rtlText)}
 			</CheckboxItem>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'that is grouped',
 		() => (
 			<Group
 				childComponent={CheckboxItem}
 				childSelect="onToggle"
 				itemProps={{
-					inline: boolean('ItemProps-Inline', false)
+					inline: boolean('ItemProps-Inline', Group, false)
 				}}
-				select={select('select', ['single', 'radio', 'multiple'], 'multiple')}
+				select={select('select', ['single', 'radio', 'multiple'], Group, 'multiple')}
 				selectedProp="selected"
 				defaultSelected={0}
 				onSelect={action('onSelect')}

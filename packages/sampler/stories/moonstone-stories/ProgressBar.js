@@ -1,24 +1,42 @@
-import ProgressBar, {ProgressBarBase} from '@enact/moonstone/ProgressBar';
+import ProgressBar, {ProgressBarTooltip} from '@enact/moonstone/ProgressBar';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
-import {boolean, number} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {boolean, number, select} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('ProgressBar', ProgressBarBase, ProgressBar);
+const ProgressBarConfig = mergeComponentMetadata('ProgressBar', ProgressBar);
+const ProgressBarTooltipConfig = mergeComponentMetadata('ProgressBarTooltip', ProgressBarTooltip);
 
-storiesOf('ProgressBar')
-	.addWithInfo(
-		' ',
-		'The basic ProgressBar',
-		() => (
-			<ProgressBar
-				backgroundProgress={number('backgroundProgress', 0.5, {range: true, min: 0, max: 1, step: 0.01})}
-				progress={number('progress', 0.4, {range: true, min: 0, max: 1, step: 0.01})}
-				vertical={boolean('vertical', false)}
-				disabled={nullify(boolean('disabled', false))}
-			/>
-		),
-		{propTables: [Config]}
+ProgressBar.displayName = 'ProgressBar';
+ProgressBarTooltip.displayName = 'ProgressBarTooltip';
+
+storiesOf('Moonstone', module)
+	.add(
+		'ProgressBar',
+		withInfo({
+			propTablesExclude: [ProgressBar, ProgressBarTooltip],
+			text: 'The basic ProgressBar'
+		})(() => {
+			const side = select('side', ['after', 'before', 'left', 'right'], ProgressBarTooltipConfig, 'before');
+			const tooltip = boolean('tooltip', ProgressBarTooltipConfig);
+
+			return (
+				<ProgressBar
+					backgroundProgress={number('backgroundProgress', ProgressBarConfig, {range: true, min: 0, max: 1, step: 0.01}, 0.5)}
+					disabled={boolean('disabled', ProgressBarConfig)}
+					highlighted={boolean('highlighted', ProgressBarConfig)}
+					orientation={select('orientation', ['horizontal', 'vertical'], ProgressBarConfig, 'horizontal')}
+					progress={number('progress', ProgressBarConfig, {range: true, min: 0, max: 1, step: 0.01}, 0.4)}
+					side={select('side', ['after', 'before', 'left', 'right'], ProgressBarConfig, 'before')}
+				>
+					{tooltip ? (
+						<ProgressBarTooltip
+							side={side}
+						/>
+					) : null}
+				</ProgressBar>
+			);
+		})
 	);

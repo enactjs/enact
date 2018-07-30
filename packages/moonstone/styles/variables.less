@@ -38,6 +38,7 @@
 @moon-clock-top-font-size:          66px;
 @moon-clock-bottom-font-size:       27px;
 @moon-calendar-day-small-font-size: 24px;
+@moon-input-small-font-size:        24px;
 
 @moon-non-latin-superscript-text-size:  24px;
 @moon-non-latin-large-text-size:        48px;
@@ -148,7 +149,7 @@
 @moon-button-small-height-large: 72px;
 @moon-button-border-width: 6px;
 @moon-button-border-radius: 9999px;
-@moon-button-small-tap-area-height: 78px;
+@moon-button-small-tap-area-height: (@moon-spotlight-outset + @moon-button-small-height + @moon-spotlight-outset);
 @moon-button-large-text-size: 30px;
 @moon-button-small-text-size: 24px;
 @moon-button-large-min-width: 180px;
@@ -159,7 +160,9 @@
 @moon-button-h-margin: @moon-spotlight-outset;
 
 // Divider
+// ---------------------------------------
 @moon-divider-border-width: 3px;
+@moon-divider-height: 39px;
 
 // Icon Sizes
 // ---------------------------------------
@@ -180,6 +183,15 @@
 @moon-icon-tap-area-offset: -(@moon-button-border-width + (@moon-button-small-tap-area-height - @moon-button-small-height) / 2);
 @moon-icon-margin: 12px;
 
+// Input
+// ---------------------------------------
+@moon-input-padding: 3px;
+@moon-input-border-width: @moon-button-border-width;
+@moon-input-tooltip-offset: (@moon-input-border-width + @moon-tooltip-point-width);
+@moon-input-icon-spacing: 18px;
+@moon-input-height: (@moon-button-height - ((@moon-input-border-width * 2) + (@moon-input-padding * 2)));
+@moon-input-small-height: (@moon-button-small-height - (@moon-input-border-width * 2));
+
 // Items
 // ---------------------------------------
 @moon-item-height: 60px;
@@ -195,6 +207,7 @@
 @moon-formcheckbox-size-large: (@moon-item-height-large * 0.8);	// Relative to `Item` height
 @moon-formcheckbox-check-icon-size: 72px;
 @moon-formcheckbox-check-icon-size-large: 84px;
+@moon-formcheckbox-border-size: 3px;
 
 // Checkbox
 // ---------------------------------------
@@ -219,12 +232,7 @@
 @moon-toggle-button-switch-border-width: 3px;
 @moon-toggle-button-switch-width: 15px;
 @moon-toggle-button-text-switch-gutter: 18px;
-
-// Input
-// ---------------------------------------
-@moon-input-border-width: 6px;
-@moon-input-height: 60px;
-@moon-input-tooltip-offset: @moon-input-border-width + @moon-tooltip-point-width;
+@moon-toggle-button-small-text-switch-gutter: 12px;
 
 // Panels
 // ---------------------------------------
@@ -248,8 +256,11 @@
 
 // Radio Item
 // ---------------------------------------
-@moon-radio-item-indicator-size: 18px;
-@moon-radio-item-indicator-border: 3px;
+@moon-radio-item-indicator-size: 20px;
+@moon-radio-item-indicator-border: 2px;  // ### Exceptional Case ###
+	// 2px, not being a multiple of 3, poses special problems. Any math or assignment related to
+	// this value must be specifically considered as to not impose layout issues related to, for
+	// example a width of 19.9998px, which can be treated by 19px or 20px, depending on the case.
 
 // GridListImageItem
 // ---------------------------------------
@@ -258,6 +269,12 @@
 @moon-gridlist-item-caption-padding-top: 9px;
 @moon-gridlist-item-one-caption-padding-bottom: 42px;
 @moon-gridlist-item-two-captions-padding-bottom: 96px;
+
+// Scrollable
+// ---------------------------------------
+@moon-scrollable-overscroll-thickness: 6px;
+@moon-scrollable-overscroll-duration: 300ms;
+@moon-scrollable-scrollbar-size: @moon-icon-button-small-size;
 
 // ToggleSwitch
 // ---------------------------------------
@@ -280,7 +297,7 @@
 @moon-slider-knob-width-large: @moon-button-small-height-large;
 @moon-slider-knob-height: @moon-button-small-height;
 @moon-slider-knob-height-large: @moon-button-small-height-large;
-@moon-slider-tooltip-offset: 54px;
+@moon-slider-tooltip-offset: (@moon-slider-knob-height / 2);
 @moon-slider-knob-resting-state-scale: 0.8;
 
 // IntegerPicker
@@ -314,6 +331,12 @@
 @moon-contextual-popup-arrow-height: 30px;
 @moon-contextual-popup-arrow-width: 30px;
 
+// Dialog
+// ---------------------------------------
+@moon-dialog-top-padding: 24px;
+@moon-dialog-h-padding: 42px;
+@moon-dialog-bottom-padding: 42px;
+
 // Notification
 // ---------------------------------------
 @moon-notification-font-family: "MuseoSans";
@@ -323,6 +346,12 @@
 @moon-notification-border-radius: 15px;
 @moon-notification-out-border-radius: 18px;
 @moon-notification-button-gap: 9px;
+@moon-notification-margin-bottom: 324px;
+@moon-notification-padding-left-right: 30px;
+@moon-notification-padding-top-botton: 24px;
+@moon-notification-min-width: 300px;
+@moon-notification-max-width: 978px;
+@moon-notification-wide-width: 1287px;
 
 // Tooltip
 // ---------------------------------------
@@ -360,6 +389,12 @@
 @moon-video-player-slider-knob-size:               24px;
 @moon-video-player-slider-tap-area:                81px;
 @moon-video-player-title-size:                     48px;
+
+// MediaOverlay
+// ---------------------------------------
+@moon-mediaoverlay-width: 321px;
+@moon-mediaoverlay-spotlight-outset-width: 6px;
+@moon-mediaoverlay-font-weight: 500;
 
 // Generic
 // ---------------------------------------

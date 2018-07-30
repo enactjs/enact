@@ -1,11 +1,25 @@
 /* eslint-disable no-console */
 /* global console */
 
+/**
+ * Provides a collection of functions for fetching application metadata.
+ *
+ * @module webos/application
+ * @exports fetchAppId,
+ * @exports fetchAppInfo,
+ * @exports fetchAppRootPath,
+ * @exports platformBack
+ */
+
 let appInfo = {};
 
 /**
- * Fetches the appID of the caller app
- * @returns {String} AppID of the app.
+ * Fetches the appID of the caller app.
+ *
+ * @function
+ * @returns {String} AppID of the app
+ * @memberof webos/application
+ * @public
  */
 const fetchAppId = () => {
 	if (window.PalmSystem && window.PalmSystem.identifier) {
@@ -15,15 +29,22 @@ const fetchAppId = () => {
 };
 
 /**
- * @callback webOS~appInfoCallback
- * @param {?object} info - JSON data object read from the app's "appinfo.json" file. Undefined if not found.
+ * The callback signature for `fetchAppInfo`
+ *
+ * @callback appInfoCallback
+ * @param {?object} info - JSON data object read from the app's *appinfo.json* file. `undefined` if not found.
+ * @memberof webos/application
  */
 
 /**
- * Fetches the appinfo.json data of the caller app with a cache saved to webOS.appInfo
- * @param {webOS~appInfoCallback} callback - The function to called upon completion
- * @param {String} [path] - An optional relative filepath from the current document to a specific appinfo to read
+ * Fetches the *appinfo.json* data of the caller app.
+ *
+ * @function
+ * @param {webos/application~appInfoCallback} callback - Called upon completion
+ * @param {String} [path] - Optional relative filepath to a specific *appinfo.json* to read
  * @returns {undefined}
+ * @memberof webos/application
+ * @public
  */
 const fetchAppInfo = (callback, path) => {
 	if (Object.keys(appInfo).length === 0) {
@@ -62,8 +83,12 @@ const fetchAppInfo = (callback, path) => {
 };
 
 /**
- * Fetches the full root URI path of the caller app
- * @returns {String} App's URI path the app is within.
+ * Fetches the full root URI (path) of the caller app.
+ *
+ * @function
+ * @returns {String} App's URI (application install path)
+ * @memberof webos/application
+ * @public
  */
 const fetchAppRootPath = () => {
 	let base = window.location.href;
@@ -83,8 +108,12 @@ const fetchAppRootPath = () => {
 };
 
 /**
- * Emulate the back key to move backwards 1 level.
+ * Emulate the remote *back* key.
+ *
+ * @function
  * @returns {undefined}
+ * @memberof webos/application
+ * @public
  */
 const platformBack = () => {
 	if (window.PalmSystem && window.PalmSystem.platformBack) {

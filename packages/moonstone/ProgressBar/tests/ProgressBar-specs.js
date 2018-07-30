@@ -1,49 +1,30 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import ProgressBar from '../ProgressBar';
-import css from '../ProgressBar.less';
 
 describe('ProgressBar Specs', () => {
-	it('should have width of 50%', () => {
+	it('should only show tooltip when tooltip is true', function () {
 		const progressBar = mount(
-			<ProgressBar
-				progress={0.5}
-			/>
+			<ProgressBar tooltip />
 		);
 
-		expect(progressBar.find(`.${css.fill}`).prop('style').width).to.equal('50%');
+		const expected = 1;
+		const actual = progressBar.find('ProgressBarTooltip').length;
+
+		expect(actual).to.equal(expected);
 	});
 
-	it('should have background width of 75%', () => {
+	it('should have tooltip show progress as percentage', function () {
 		const progressBar = mount(
 			<ProgressBar
-				backgroundProgress={0.75}
+				tooltip
+				progress={0.6}
 			/>
 		);
 
-		expect(progressBar.find(`.${css.load}`).prop('style').width).to.equal('75%');
-	});
+		const expected = '60%';
+		const actual = progressBar.find('ProgressBarTooltip').text();
 
-	it('should have height of 50%', () => {
-		const progressBar = mount(
-			<ProgressBar
-				progress={0.5}
-				vertical
-			/>
-		);
-
-		expect(progressBar.find(`.${css.fill}`).prop('style').height).to.equal('50%');
-	});
-
-	it('should have background height of 50%', () => {
-		const progressBar = mount(
-			<ProgressBar
-				progress={0.5}
-				backgroundProgress={0.75}
-				vertical
-			/>
-		);
-
-		expect(progressBar.find(`.${css.load}`).prop('style').height).to.equal('75%');
+		expect(actual).to.equal(expected);
 	});
 });
