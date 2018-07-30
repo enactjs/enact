@@ -69,7 +69,7 @@ const dateTimeConfig = {
 		/*
 		 * Converts a gregorian year to local year
 		 *
-		 * @param	{Number}	year	gregorian year string
+		 * @param	{Number}	year	gregorian year
 		 *
 		 * @returns	{Number}		local year
 		 */
