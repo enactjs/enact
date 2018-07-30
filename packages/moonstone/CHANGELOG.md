@@ -30,6 +30,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/EditableIntegerPicker` component
 - `moonstone/GridListImageItem` component
 
+## [1.13.4] - 2018-07-30
+
+### Fixed
+
+- `moonstone/DatePicker` to calculate min and max year in the current calender
+
 ## [1.13.3] - 2018-01-16
 
 ### Fixed
