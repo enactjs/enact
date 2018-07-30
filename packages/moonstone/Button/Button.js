@@ -10,7 +10,6 @@
  * @exports ButtonDecorator
  */
 
-import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
@@ -19,17 +18,14 @@ import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 
-import Icon from '../Icon';
+import {IconBase} from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import componentCss from './Button.less';
 
-// Called when `tooltip` props are used
-const deprecation = deprecate(() => {}, {
-	message: 'Tooltip props require the button to be wrapped by TooltipDecorator',
-	since: '2.0.0'
-});
+// Make a basic Icon in case we need it later. This cuts `Pure` out of icon for a small gain.
+const Icon = Skinnable(IconBase);
 
 /**
  * A button component.
@@ -104,14 +100,10 @@ const ButtonBase = kind({
 		delete rest.backgroundOpacity;
 		delete rest.color;
 
-		if (__DEV__ && Object.keys(rest).some(s => s.indexOf('tooltip') === 0)) {
-			deprecation();
-		}
-
 		return UiButtonBase.inline({
 			'data-webos-voice-intent': 'Select',
 			...rest,
-			css: css,
+			css,
 			iconComponent: Icon
 		});
 	}

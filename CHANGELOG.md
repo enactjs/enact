@@ -2,6 +2,35 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.0.0] - 2018-07-30
+
+### Removed
+
+- `ui/Skinnable.withSkinnableProps` higher-order component
+
+### Added
+
+- `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` components for a lightweight `Icon` or `IconButton` with a label
+- `moonstone/VideoPlayer` property `noAutoShowMediaControls`
+- `ui/LabeledIcon` component for a lightweight `Icon` with a label
+
+### Changed
+
+- `spotlight` to default to 5-way mode on initialization
+
+### Fixed
+
+- `moonstone/Scroller` to prevent scrolling via page up/down keys if there is no spottable component in that direction
+- `moonstone/Dialog` to hide `titleBelow` when `title` is not set
+- `moonstone/Image` to suppress drag and drop support by default
+- `moonstone/VideoPlayer` audio guidance behavior of More button
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to handle focus properly via page up/down keys when switching to 5-way mode
+- `moonstone/Popup` to spot the content after it's mounted
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll properly via voice control in RTL locales
+- `spotlight` to blur when pointer leaves floating webOS app
+- `spotlight` to prevent changing the active container when the currently active container is restricted is "self-only"
+- `ui/Scrollable` to ignore native drag events which interfered with touch drag support
+
 ## [2.0.0-rc.3] - 2018-07-23
 
 ### Fixed
@@ -545,6 +574,12 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/DaySelector` component
 - `moonstone/EditableIntegerPicker` component
 - `moonstone/GridListImageItem` component
+
+## [1.13.4] - 2018-07-30
+
+### Fixed
+
+- `moonstone/DatePicker` to calculate min and max year in the current calender
 
 ## [1.13.3] - 2018-01-16
 

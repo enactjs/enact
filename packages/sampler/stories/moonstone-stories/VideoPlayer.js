@@ -123,6 +123,7 @@ storiesOf('Moonstone', module)
 						miniFeedbackHideDelay={number('miniFeedbackHideDelay', Config, 2000)}
 						muted={boolean('muted', Config, true)}
 						noAutoPlay={boolean('noAutoPlay', Config)}
+						noAutoShowMediaControls={boolean('noAutoShowMediaControls', Config)}
 						noMiniFeedback={boolean('noMiniFeedback', Config)}
 						noSlider={boolean('noSlider', Config)}
 						pauseAtEnd={boolean('pauseAtEnd', Config)}

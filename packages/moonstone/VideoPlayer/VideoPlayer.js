@@ -269,6 +269,15 @@ const VideoPlayerBase = class extends React.Component {
 		noAutoPlay: PropTypes.bool,
 
 		/**
+		 * Prevents the default behavior of showing media controls immediately after it's loaded.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noAutoShowMediaControls: PropTypes.bool,
+
+		/**
 		 * Removes the mini feedback.
 		 *
 		 * @type {Boolean}
@@ -554,7 +563,6 @@ const VideoPlayerBase = class extends React.Component {
 		 *
 		 * Events:
 		 * * `onLoadStart` - Called when the video starts to load
-		 * * `onPlay` - Sent when playback of the media starts after having been paused
 		 * * `onUpdate` - Sent when any of the properties were updated
 		 *
 		 * Methods:
@@ -684,7 +692,6 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-
 		if (
 			!this.state.mediaControlsVisible && prevState.mediaControlsVisible !== this.state.mediaControlsVisible ||
 			!this.state.mediaSliderVisible && prevState.mediaSliderVisible !== this.state.mediaSliderVisible
@@ -712,6 +719,11 @@ const VideoPlayerBase = class extends React.Component {
 					this.focusDefaultMediaControl();
 				}
 			}
+		}
+
+		// Once video starts loading it queues bottom control render until idle
+		if (this.state.bottomControlsRendered && !prevState.bottomControlsRendered && !this.state.mediaControlsVisible) {
+			this.showControls();
 		}
 	}
 
@@ -1015,7 +1027,13 @@ const VideoPlayerBase = class extends React.Component {
 			proportionLoaded: 0
 		});
 
-		this.showControls();
+		if (!this.props.noAutoShowMediaControls) {
+			if (!this.state.bottomControlsRendered) {
+				this.renderBottomControl.idle();
+			} else {
+				this.showControls();
+			}
+		}
 	}
 
 	handlePlay = this.handle(
@@ -1103,16 +1121,10 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState(updatedState);
 	}
 
-	handlePlayEvent = (ev) => {
-		forward('onPlay', ev, this.props);
-		if (!this.state.bottomControlsRendered) {
-			this.renderBottomControl.idle();
-		}
-	}
-
 	renderBottomControl = new Job(() => {
-		this.showControls();
-		this.setState({bottomControlsRendered: true});
+		if (!this.state.bottomControlsRendered) {
+			this.setState({bottomControlsRendered: true});
+		}
 	});
 
 	/**
@@ -1724,6 +1736,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete mediaProps.feedbackHideDelay;
 		delete mediaProps.jumpBy;
 		delete mediaProps.miniFeedbackHideDelay;
+		delete mediaProps.noAutoShowMediaControls;
 		delete mediaProps.onControlsAvailable;
 		delete mediaProps.onFastForward;
 		delete mediaProps.onJumpBackward;
@@ -1746,7 +1759,6 @@ const VideoPlayerBase = class extends React.Component {
 		mediaProps.className = css.video;
 		mediaProps.controls = false;
 		mediaProps.mediaComponent = 'video';
-		mediaProps.onPlay = this.handlePlayEvent;
 		mediaProps.onLoadStart = this.handleLoadStart;
 		mediaProps.onUpdate = this.handleEvent;
 		mediaProps.ref = this.setVideoRef;

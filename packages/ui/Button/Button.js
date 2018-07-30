@@ -52,8 +52,7 @@ const ButtonBase = kind({
 		/**
 		 * Applies the `disabled` class.
 		 *
-		 * Note: Unless wrapped by `Touchable`, the component will still generate `onClick`
-		 * [events]{@link /docs/developer-guide/glossary/#event}.
+		 * When `true`, the button is shown as disabled.
 		 *
 		 * @type {Boolean}
 		 * @default false
