@@ -15,9 +15,9 @@ import {boolean, select, text} from '../../src/enact-knobs';
 const Config = mergeComponentMetadata('LabeledIcon', UiLabeledIconBase, UiLabeledIcon, LabeledIcon);
 Config.displayName = 'LabeledIcon';
 
-storiesOf('Moonstone', module)
+storiesOf('LabeledIcon', module)
 	.add(
-		'LabeledIcon',
+		'with all icons',
 		withInfo({
 			propTablesExclude: [LabeledIcon, Scroller, Layout, Cell],
 			text: 'Basic usage of LabeledIcon'
@@ -34,8 +34,8 @@ storiesOf('Moonstone', module)
 							inline={inline}
 							labelPosition={labelPosition}
 							small={small}
+							icon={select('icon', ['', ...iconNames], Config, 'fullscreen')}
 						>
-							<icon>{select('icon', ['', ...iconNames], Config, 'fullscreen')}</icon>
 							{text('children', Config, 'Hello LabeledIcon')}
 						</LabeledIcon>
 					</Cell>
