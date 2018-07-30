@@ -90,11 +90,12 @@ const LabeledIconBase = kind({
 		 * The component used to render the `icon`.
 		 *
 		 * This will receive the `icon` prop as `children` and should handle it appropriately. This
-		 * prop is ignored in the case of a component being passed into the `icon` prop.
+		 * prop is ignored in the case of a component being passed into the `icon` prop. It will
+		 * also receive the `small` prop as set on the component.
 		 *
-		 * @type {String|Component}
+		 * @type {Component}
 		 */
-		iconComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+		iconComponent: PropTypes.func,
 
 		/**
 		 * Enables this component to be used in an "inline" context.
@@ -125,7 +126,18 @@ const LabeledIconBase = kind({
 		 * @default 'below'
 		 * @public
 		 */
-		labelPosition: PropTypes.oneOf(['above', 'after', 'before', 'below', 'left', 'right'])
+		labelPosition: PropTypes.oneOf(['above', 'after', 'before', 'below', 'left', 'right']),
+
+		/**
+		 * Reduces the size of the icon component.
+		 *
+		 * The value of `small` is forwarded on to `iconComponent`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		small: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -147,7 +159,7 @@ const LabeledIconBase = kind({
 		}
 	},
 
-	render: ({css, children, className, disabled, icon, iconComponent, orientation, style, ...rest}) => {
+	render: ({css, children, disabled, icon, iconComponent, orientation, small, ...rest}) => {
 		let iconClassName = css.icon;
 
 		// Rearrange the props to support custom JSX components
@@ -158,9 +170,12 @@ const LabeledIconBase = kind({
 			icon = ComponentOverride({
 				component: icon,
 				className: iconClassName,
-				disabled
+				disabled,
+				small
 			});
-			iconComponent = void 0;
+			// Removing small and iconComponent from CellBase
+			// eslint-disable-next-line no-undefined
+			small = iconComponent = undefined;
 			iconClassName = null;
 		}
 
@@ -168,21 +183,20 @@ const LabeledIconBase = kind({
 		delete rest.labelPosition;
 
 		return LayoutBase.inline({
+			...rest,
 			align: 'center center',
-			className,
 			disabled,
 			orientation,
-			style,
 			children: [
 				CellBase.inline({
 					key: 'icon',
 					shrink: true,
 					size: '100%',
-					...rest,
 					component: iconComponent,
+					children: icon,
 					className: (css.iconCell + ' ' + iconClassName),
 					disabled,
-					children: icon
+					small
 				}),
 				CellBase.inline({
 					key: 'label',

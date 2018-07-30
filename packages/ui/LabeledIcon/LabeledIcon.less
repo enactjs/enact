@@ -14,6 +14,12 @@
 	}
 
 	&.above,
+	&.below {
+		// ui/Layout defaults to height: 100% which must be suppressed here
+		height: auto;
+	}
+
+	&.above,
 	&.before,
 	&.left,
 	:global(.enact-locale-right-to-left) &.right {

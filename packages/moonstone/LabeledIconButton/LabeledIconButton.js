@@ -8,20 +8,18 @@
  */
 
 import kind from '@enact/core/kind';
+import Spottable from '@enact/spotlight/Spottable';
+import {IconButtonDecorator as UiIconButtonDecorator} from '@enact/ui/IconButton';
+import UiLabeledIcon from '@enact/ui/LabeledIcon';
+import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import Spottable from '@enact/spotlight/Spottable';
-import Pure from '@enact/ui/internal/Pure';
-import UiLabeledIcon from '@enact/ui/LabeledIcon';
-import {IconButtonDecorator as UiIconButtonDecorator} from '@enact/ui/IconButton';
+import React from 'react';
 
 import {IconButtonBase} from '../IconButton';
 import Skinnable from '../Skinnable';
 
-// This refers to the LabeledIcon styling, since they're the same.
-// If this fact changes in the future, we can simply create a new less file in this component and
-// either copy or less-import the styling rules from LabeledIcon. (Whichever is more appropriate.)
-import componentCss from '../LabeledIcon/LabeledIcon.less';
+import componentCss from './LabeledIconButton.less';
 
 const IconButton = compose(
 	UiIconButtonDecorator,
@@ -49,26 +47,49 @@ const LabeledIconButtonBase = kind({
 		 * The following classes are supported:
 		 *
 		 * * `labeledIconButton` - The root component class
-		 * * `label` - The label component class
 		 * * `icon` - The icon component class
+		 * * `label` - The label component class
+		 * * `selected` - Applied to a `selected` button
+		 * * `small` - Applied to a `small` button
 		 *
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		css: PropTypes.object,
+
+		/**
+		 * The icon displayed within the button.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		icon: PropTypes.string,
+
+		/**
+		 * Selects the component.
+		 *
+		 * Setting `selected` may be useful when the component represents a toggleable option. The
+		 * visual effect may be customized using the
+		 * [css]{@link moonstone/LabeledIconButton.LabeledIconButtonBase.prototype.css} prop.
+		 */
+		selected: PropTypes.bool
 	},
 
 	styles: {
 		css: componentCss,
 		className: 'labeledIconButton',
-		publicClassNames: ['labeledIconButton', 'icon', 'label']
+		publicClassNames: ['labeledIconButton', 'icon', 'label', 'selected', 'small']
 	},
 
-	render: (props) => {
+	render: ({css, icon, selected, ...rest}) => {
 		return UiLabeledIcon.inline({
-			...props,
-			iconComponent: IconButton,
-			css: props.css
+			...rest,
+			icon: (
+				<IconButton selected={selected}>
+					{icon}
+				</IconButton>
+			),
+			css
 		});
 	}
 });
