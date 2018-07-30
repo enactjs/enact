@@ -16,7 +16,7 @@ import React from 'react';
  * @param   {Object}    cfg        Configuration object mapping event names to event handlers
  * @param   {Function}  Component  A component
  * @returns {Function}             A component wrapping `Component` with bound event handlers
- * @public
+ * @private
  */
 const handlers = (cfg, Component) => {
 	return class extends React.Component {

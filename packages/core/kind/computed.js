@@ -20,7 +20,7 @@
  * @param {Object} cfg Configuration object mapping transformation functions to property names
  * @param {Object} props Render props
  * @returns {Function} Function accepting props and returning update props with computed properties
- * @public
+ * @private
  */
 const computed = (cfg, props, ...args) => {
 	const keys = Object.keys(cfg);

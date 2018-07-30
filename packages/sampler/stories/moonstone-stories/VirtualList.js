@@ -12,19 +12,14 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('VirtualList', VirtualListCore, VirtualList);
 
 const
-	style = {
-		item: {
-			borderBottom: ri.scale(2) + 'px solid #202328',
-			boxSizing: 'border-box'
-		},
-		list: {
-			height: ri.scale(552) + 'px'
-		}
-	},
 	items = [],
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderItem = (size) => ({data, index, ...rest}) => {
-		const itemStyle = {height: size + 'px', ...style.item};
+		const itemStyle = {
+			height: size + 'px',
+			borderBottom: ri.unit(3, 'rem') + ' solid #202328',
+			boxSizing: 'border-box'
+		};
 
 		return (
 			<Item {...rest} style={itemStyle}>
@@ -53,7 +48,9 @@ storiesOf('VirtualList')
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', 0))}
-					style={style.list}
+					style={{
+						height: ri.unit(552, 'rem')
+					}}
 				/>
 			);
 		},

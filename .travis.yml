@@ -3,7 +3,7 @@ node_js:
     - "node"
 sudo: false
 install:
-    - npm install -g enact-dev
+    - npm install -g @enact/cli
     - npm install
     - npm run bootstrap
 script:

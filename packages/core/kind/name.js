@@ -6,7 +6,7 @@
  * @returns {Function} Function accepting a render method on which `displayName` will be set as
  *	displayName
  * @method name
- * @public
+ * @private
  */
 const name = (displayName, render) => {
 	render.displayName = displayName;

@@ -1,6 +1,6 @@
 {
   "name": "enact-sampler",
-  "version": "1.13.2",
+  "version": "1.13.3",
   "description": "Component and QA samples for Enact",
   "private": true,
   "main": "index.js",
@@ -40,12 +40,12 @@
     "webpack": "1.14.0"
   },
   "dependencies": {
-    "@enact/core": "^1.13.2",
-    "@enact/i18n": "^1.13.2",
-    "@enact/moonstone": "^1.13.2",
-    "@enact/spotlight": "^1.13.2",
-    "@enact/ui": "^1.13.2",
-    "@enact/webos": "^1.13.2",
+    "@enact/core": "^1.13.3",
+    "@enact/i18n": "^1.13.3",
+    "@enact/moonstone": "^1.13.3",
+    "@enact/spotlight": "^1.13.3",
+    "@enact/ui": "^1.13.3",
+    "@enact/webos": "^1.13.3",
     "@kadira/react-storybook-addon-info": "~3.3.0",
     "@kadira/storybook": "~2.34.0",
     "@kadira/storybook-addon-knobs": "~1.7.1",

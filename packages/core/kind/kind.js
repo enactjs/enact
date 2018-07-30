@@ -1,3 +1,9 @@
+/**
+ * Provides the {@link core/kind.kind} method to create components
+ *
+ * @module core/kind
+ */
+
 import computed from './computed';
 import contextTypes from './contextTypes';
 import defaultProps from './defaultProps';
@@ -7,7 +13,7 @@ import propTypes from './propTypes';
 import styles from './styles';
 
 /**
- * Creates a stateless functional component with some helpful declarative sugar.
+ * Creates a new component with some helpful declarative syntactic sugar.
  *
  * Example:
  * ```
@@ -49,9 +55,13 @@ import styles from './styles';
  *		)
  *	});
  * ```
+ *
+ * @function
  * @param  {Object} config - Component configuration
  *
  * @returns {Function}        Component
+ * @memberof core/kind
+ * @public
  */
 const kind = (config) => {
 	// addition prop decorations would be chained here (after config.render)

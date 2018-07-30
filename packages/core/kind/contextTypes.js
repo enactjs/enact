@@ -5,7 +5,7 @@
  *
  * @returns {Function} Function accepting a render method on which `cfg` will be set as contextTypes
  * @method contextTypes
- * @public
+ * @private
  */
 const contextTypes = (cfg, render) => (render.contextTypes = cfg);
 

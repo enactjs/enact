@@ -5,7 +5,7 @@
  *
  * @returns {Function} Function accepting a render method on which `cfg` will be set as defaultProps
  * @method defaultProps
- * @public
+ * @private
  */
 const defaultProps = (cfg, render) => (render.defaultProps = cfg);
 

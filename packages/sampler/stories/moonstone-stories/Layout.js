@@ -1,4 +1,5 @@
 import Layout, {Cell} from '@enact/ui/Layout';
+import ri from '@enact/ui/resolution';
 import Button from '@enact/moonstone/Button';
 import Item from '@enact/moonstone/Item';
 import React from 'react';
@@ -14,7 +15,7 @@ storiesOf('Layout')
 	.addWithInfo(
 		' ',
 		'Basic usage of Layout',
-		() => (<div className="debug" style={{height: '400px'}}>
+		() => (<div className="debug" style={{height: ri.unit(399, 'rem')}}>
 			<Layout
 				align={select('align', ['start', 'center', 'stretch', 'end'], 'start')}
 				orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}

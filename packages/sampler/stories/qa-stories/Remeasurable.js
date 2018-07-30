@@ -1,6 +1,7 @@
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import Item from '@enact/moonstone/Item';
 import Scroller from '@enact/moonstone/Scroller';
+import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import SelectableItem from '@enact/moonstone/SelectableItem';
@@ -27,7 +28,7 @@ storiesOf('Remeasurable')
 	.addWithInfo(
 		'should recalculate long marquee when scrollbar is rendered',
 		() => (
-			<Scroller style={{height: '400px', width: '500px'}}>
+			<Scroller style={{height: ri.unit(399, 'rem'), width: ri.unit(501, 'rem')}}>
 				<NoUpdate>
 					<Item>ABCDEFGHIJKLMNOPQRST</Item>
 					<SelectableItem>
@@ -45,7 +46,7 @@ storiesOf('Remeasurable')
 	.addWithInfo(
 		'should recalculate when selectable item is selected',
 		() => (
-			<Scroller style={{height: '400px', width: '500px'}}>
+			<Scroller style={{height: ri.unit(399, 'rem'), width: ri.unit(501, 'rem')}}>
 				<SelectableItem>
 					SELECTABLE ITEM ABCDEFG
 				</SelectableItem>

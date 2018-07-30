@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [1.13.3] - 2017-01-16
+
+### Fixed
+
+- `core/kind` and `core/hoc` public documentation to be visible
+
 ## [1.13.2] - 2017-12-14
 
 No significant changes.

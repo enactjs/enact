@@ -51,6 +51,7 @@ const mergeStyle = ({style: componentStyle}, {style: authorStyle}) => {
  * @param {Object} props Render props
  * @returns {Function} `join()`
  * @method join
+ * @private
  */
 const join = (cfg) => {
 	if (cfg.css) {
@@ -66,6 +67,7 @@ const join = (cfg) => {
  * @method append
  * @param {Object} props Render props updated by styles with `className` and `styler.join`
  * @returns {Function} `append()`
+ * @private
  */
 const append = (props) => {
 	const j = props.styler.join;
@@ -104,7 +106,7 @@ const append = (props) => {
  * @param {Object} cfg Configuration object containing one of `css`, `className`, and/or `style`
  * @param {Object} props Render props
  * @returns {Function} Function accepting props and returning update props with computed properties
- * @public
+ * @private
  */
 const styles = (cfg, props) => {
 	const prop = cfg.prop || 'className';

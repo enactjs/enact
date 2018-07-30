@@ -43,8 +43,8 @@ const defaultConfig = {
  * Higher-order Component that configures resolution support for its wrapped component tree.
  *
  * Configuration options:
- *	* dynamic: true - when true, updates the resolution classes when the window resizes
- *	* screenTypes: null - defines a set of screen types to support
+ *	* dynamic: `true` - when `true`, updates the resolution classes when the window resizes
+ *	* screenTypes: `null` - defines a set of screen types to support
  *
  * Example:
  * ```
