@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/DatePicker` to calculate min and max year in the current calender.
+- `moonstone/DatePicker` to calculate min and max year in the current calender
 
 ## [1.13.2] - 2017-12-14
 

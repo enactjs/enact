@@ -66,12 +66,12 @@ const dateTimeConfig = {
 			.match(/([mdy]+)/ig)
 			.map(s => s[0].toLowerCase());
 
-		/**
+		/*
 		 * Converts a gregorian year to local year
 		 *
-		 * @param	{string}	year	gregorian year string
+		 * @param	{Number}	year	gregorian year string
 		 *
-		 * @returns	{string}		local year
+		 * @returns	{Number}		local year
 		 */
 		const toLocalYear = (year) => {
 			return DateFactory({
