@@ -5,6 +5,7 @@
  * @module moonstone/DatePicker
  */
 
+import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 import Pure from '@enact/ui/internal/Pure';
 
@@ -14,7 +15,7 @@ import Skinnable from '../Skinnable';
 import DatePickerBase from './DatePickerBase';
 
 const dateTimeConfig = {
-	customProps: function (i18n, value) {
+	customProps: function (i18n, value, props) {
 		const values = {
 			maxMonths: 12,
 			maxDays: 31,
@@ -29,6 +30,8 @@ const dateTimeConfig = {
 			values.day = value.getDays();
 			values.maxMonths = i18n.formatter.cal.getNumMonths(values.year);
 			values.maxDays = i18n.formatter.cal.getMonLength(values.month, values.year);
+			values.maxYear = i18n.toLocalYear(props.maxYear);
+			values.minYear = i18n.toLocalYear(props.minYear);
 		}
 
 		return values;
@@ -63,7 +66,27 @@ const dateTimeConfig = {
 			.match(/([mdy]+)/ig)
 			.map(s => s[0].toLowerCase());
 
-		return {formatter, order};
+		/*
+		 * Converts a gregorian year to local year
+		 *
+		 * @param	{Number}	year	gregorian year
+		 *
+		 * @returns	{Number}		local year
+		 */
+		const toLocalYear = (year) => {
+			return DateFactory({
+				julianday: DateFactory({
+					year,
+					type: 'gregorian',
+					month: 1,
+					day: 1,
+					timezone: 'local'
+				}).getJulianDay(),
+				timezone: 'local'
+			}).getYears();
+		};
+
+		return {formatter, order, toLocalYear};
 	}
 };
 

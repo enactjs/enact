@@ -215,7 +215,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 				if (value) {
 					label = this.i18nContext.formatter.format(value);
 				}
-				props = customProps(this.i18nContext, pickerValue);
+				props = customProps(this.i18nContext, pickerValue, this.props);
 				order = this.i18nContext.order;
 			}
 
