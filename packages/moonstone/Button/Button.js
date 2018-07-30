@@ -18,7 +18,6 @@ import {ButtonBase as UiButtonBase, ButtonDecorator as UiButtonDecorator} from '
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import React from 'react';
 
 import Icon from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
@@ -40,6 +39,7 @@ const deprecation = deprecate(() => {}, {
  *
  * @class ButtonBase
  * @memberof moonstone/Button
+ * @extends ui/Button.ButtonBase
  * @ui
  * @public
  */
@@ -108,14 +108,12 @@ const ButtonBase = kind({
 			deprecation();
 		}
 
-		return (
-			<UiButtonBase
-				data-webos-voice-intent="Select"
-				{...rest}
-				css={css}
-				iconComponent={Icon}
-			/>
-		);
+		return UiButtonBase.inline({
+			'data-webos-voice-intent': 'Select',
+			...rest,
+			css: css,
+			iconComponent: Icon
+		});
 	}
 });
 
@@ -138,12 +136,11 @@ const ButtonBase = kind({
  *
  * @hoc
  * @memberof moonstone/Button
- * @extends moonstone/Button.ButtonBase
  * @mixes i18n/Uppercase.Uppercase
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes ui/Button.ButtonDecorator
  * @mixes spotlight/Spottable.Spottable
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const ButtonDecorator = compose(

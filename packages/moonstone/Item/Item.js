@@ -28,6 +28,7 @@ import componentCss from './Item.less';
  *
  * @class ItemBase
  * @memberof moonstone/Item
+ * @extends ui/Item.ItemBase
  * @ui
  * @public
  */
@@ -69,6 +70,7 @@ const ItemBase = kind({
  * Moonstone specific item behaviors to apply to [Item]{@link moonstone/Item.ItemBase}.
  *
  * @class ItemDecorator
+ * @hoc
  * @memberof moonstone/Item
  * @mixes spotlight.Spottable
  * @mixes moonstone/Marquee.MarqueeDecorator

@@ -287,7 +287,8 @@ const SliderBase = kind({
  * @memberof moonstone/Slider
  * @mixes ui/Changeable.Changeable
  * @mixes spotlight/Spottable.Spottable
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
+ * @mixes ui/Slottable.Slottable
  * @mixes ui/Slider.SliderDecorator
  * @public
  */

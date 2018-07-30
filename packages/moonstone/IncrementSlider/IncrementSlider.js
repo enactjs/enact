@@ -57,6 +57,9 @@ const forwardWithType = (type, props) => forward(type, {type}, props);
  *
  * @class IncrementSliderBase
  * @memberof moonstone/IncrementSlider
+ * @extends moonstone/Slider.SliderBase
+ * @mixes moonstone/Skinnable.Skinnable
+ * @mixes spotlight/Spottable.Spottable
  * @ui
  * @public
  */

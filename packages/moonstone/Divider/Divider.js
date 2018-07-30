@@ -105,7 +105,7 @@ const DividerBase = kind({
  * @memberof moonstone/Divider
  * @mixes i18n/Uppercase.Uppercase
  * @mixes moonstone/MarqueeDecorator.MarqueeDecorator
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const DividerDecorator = compose(

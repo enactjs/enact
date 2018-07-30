@@ -632,6 +632,8 @@ const VirtualListBaseFactory = (type) => {
 		onKeyDown = (ev) => {
 			const {keyCode, repeat, target} = ev;
 
+			this.isScrolledByJump = false;
+
 			if (getDirection(keyCode)) {
 				ev.preventDefault();
 				this.setSpotlightContainerRestrict(keyCode, target);

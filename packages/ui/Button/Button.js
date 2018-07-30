@@ -7,7 +7,6 @@
  * @exports ButtonDecorator
  */
 
-import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -51,10 +50,10 @@ const ButtonBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Disables the [ButtonBase]{@link ui/Button.ButtonBase}
+		 * Applies the `disabled` class.
 		 *
-		 * When `true`, the button is shown as disabled and does not
-		 * `onClick` [events]{@link /docs/developer-guide/glossary/#event}.
+		 * Note: Unless wrapped by `Touchable`, the component will still generate `onClick`
+		 * [events]{@link /docs/developer-guide/glossary/#event}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -154,13 +153,6 @@ const ButtonBase = kind({
 				<Icon small={small} className={css.icon}>{icon}</Icon>
 			) : icon;
 		}
-	},
-
-	handlers: {
-		onClick: handle(
-			forProp('disabled', false),
-			forward('onClick')
-		)
 	},
 
 	render: ({children, css, disabled, icon, ...rest}) => {

@@ -8,6 +8,13 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Image` to require either `placeholder` or `src` props
 - `ui/GridListImageItem` to not require `source` prop
+### Removed
+
+- `ui/Skinnable.withSkinnableProps` higher-order component
+
+### Fixed
+
+- `ui/Scrollable` to ignore native drag events which interfered with touch drag support
 
 ## [2.0.0-rc.3] - 2018-07-23
 

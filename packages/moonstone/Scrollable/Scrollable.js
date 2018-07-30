@@ -207,12 +207,6 @@ class ScrollableBase extends Component {
 		configureSpotlightContainer(nextProps);
 	}
 
-	componentDidUpdate () {
-		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null) {
-			this.calculateAndScrollTo(Spotlight.getCurrent());
-		}
-	}
-
 	componentWillUnmount () {
 		this.stopOverscrollJob('horizontal', 'before');
 		this.stopOverscrollJob('horizontal', 'after');
@@ -291,8 +285,10 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	calculateAndScrollTo = (spotItem) => {
-		const positionFn = this.childRef.calculatePositionOnFocus,
+	calculateAndScrollTo = () => {
+		const
+			spotItem = Spotlight.getCurrent(),
+			positionFn = this.childRef.calculatePositionOnFocus,
 			{containerRef} = this.uiRef.childRef;
 
 		if (spotItem && positionFn && containerRef && containerRef.contains(spotItem)) {
@@ -344,7 +340,7 @@ class ScrollableBase extends Component {
 				spotItem = Spotlight.getCurrent();
 
 			if (item && item === spotItem) {
-				this.calculateAndScrollTo(item);
+				this.calculateAndScrollTo();
 			}
 		} else if (this.childRef.setLastFocusedNode) {
 			this.childRef.setLastFocusedNode(ev.target);
@@ -552,8 +548,8 @@ class ScrollableBase extends Component {
 
 	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
 	handleScrollerUpdate = () => {
-		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null && Spotlight.getPointerMode()) {
-			this.calculateAndScrollTo(Spotlight.getCurrent());
+		if (this.uiRef.scrollToInfo === null && Spotlight.getPointerMode()) {
+			this.calculateAndScrollTo();
 		}
 	}
 
@@ -665,7 +661,9 @@ class ScrollableBase extends Component {
 	}
 
 	onVoice = (e) => {
-		const scroll = e && e.detail && e.detail.scroll;
+		const
+			scroll = e && e.detail && e.detail.scroll,
+			isRtl = this.uiRef.state.rtl;
 		this.isVoiceControl = true;
 
 		switch (scroll) {
@@ -679,11 +677,11 @@ class ScrollableBase extends Component {
 				break;
 			case 'left':
 				this.voiceControlDirection = 'horizontal';
-				this.onScrollbarButtonClick({isPreviousScrollButton: true, isVerticalScrollBar: false});
+				this.onScrollbarButtonClick({isPreviousScrollButton: !isRtl, isVerticalScrollBar: false});
 				break;
 			case 'right':
 				this.voiceControlDirection = 'horizontal';
-				this.onScrollbarButtonClick({isPreviousScrollButton: false, isVerticalScrollBar: false});
+				this.onScrollbarButtonClick({isPreviousScrollButton: isRtl, isVerticalScrollBar: false});
 				break;
 			case 'top':
 				this.voiceControlDirection = 'vertical';
@@ -695,11 +693,11 @@ class ScrollableBase extends Component {
 				break;
 			case 'leftmost':
 				this.voiceControlDirection = 'horizontal';
-				this.uiRef.scrollTo({align: 'left'});
+				this.uiRef.scrollTo({align: isRtl ? 'right' : 'left'});
 				break;
 			case 'rightmost':
 				this.voiceControlDirection = 'horizontal';
-				this.uiRef.scrollTo({align: 'right'});
+				this.uiRef.scrollTo({align: isRtl ? 'left' : 'right'});
 				break;
 			default:
 				this.isVoiceControl = false;

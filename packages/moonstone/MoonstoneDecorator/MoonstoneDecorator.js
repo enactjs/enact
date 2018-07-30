@@ -46,11 +46,11 @@ const defaultConfig = {
  * A Higher-order Component that applies Moonstone theming to an application. It also applies
  * [floating layer]{@link ui/FloatingLayer.FloatingLayerDecorator},
  * [resolution independence]{@link ui/resolution.ResolutionDecorator},
- * [skin support]{@link ui/Skinnable}, [spotlight]{@link spotlight.SpotlightRootDecorator}, and
+ * [skin support]{@link moonstone/Skinnable}, [spotlight]{@link spotlight.SpotlightRootDecorator}, and
  * [internationalization support]{@link i18n/I18nDecorator.I18nDecorator}. It is meant to be applied to
  * the root element of an app.
  *
- * [Skins]{@link ui/Skinnable} provide a way to change the coloration of your app. The currently
+ * [Skins]{@link moonstone/Skinnable} provide a way to change the coloration of your app. The currently
  * supported skins for Moonstone are "moonstone" (the default, dark skin) and "moonstone-light".
  * Use the `skin` property to assign a skin. Ex: `<DecoratedApp skin="light" />`
  *
