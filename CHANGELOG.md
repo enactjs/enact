@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.13.4] - 2018-07-30
+
+### Fixed
+
+- `moonstone/DatePicker` to calculate min and max year in the current calender
+
 ## [1.13.3] - 2017-01-16
 
 ### Fixed
