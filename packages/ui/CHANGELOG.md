@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/LabeledIcon` component for a lightweight `Icon` with a label
+
 ### Removed
 
 - `ui/Skinnable.withSkinnableProps` higher-order component
