@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VideoPlayer` to reset key down hold when media becomes unavailable
 - `moonstone/Scroller` to prevent scrolling via page up/down keys if there is no spottable component in that direction
 - `moonstone/Dialog` to hide `titleBelow` when `title` is not set
 - `moonstone/Image` to suppress drag and drop support by default
