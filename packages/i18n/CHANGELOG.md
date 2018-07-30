@@ -104,6 +104,10 @@ No significant changes.
 
 No significant changes.
 
+## [1.13.4] - 2018-07-30
+
+No significant changes.
+
 ## [1.13.3] - 2018-01-16
 
 No significant changes.

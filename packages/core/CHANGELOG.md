@@ -119,6 +119,10 @@ No significant changes.
 
 - `core/factory`, to be removed in 2.0.0
 
+## [1.13.4] - 2018-07-30
+
+No significant changes.
+
 ## [1.13.3] - 2018-01-16
 
 ### Fixed

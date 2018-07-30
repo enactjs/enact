@@ -242,6 +242,10 @@ No significant changes.
 
 - `ui/Holdable` and `ui/Pressable`, to be replaced by `ui/Touchable` in 2.0.0
 
+## [1.13.4] - 2018-07-30
+
+No significant changes.
+
 ## [1.13.3] - 2018-01-16
 
 No significant changes.
