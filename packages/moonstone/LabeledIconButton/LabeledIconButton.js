@@ -1,5 +1,14 @@
 /**
- * Provides unstyled LabeledIconButton components to be customized by a theme or application.
+ * An [Icon]{@link moonstone/Icon.Icon} that acts like a [Button]{@link moonstone/Button.Button}
+ * decorated with a label.
+ *
+ * You may specify an image or a font-based icon by setting the `icon` to either the path
+ * to the image or a string from an [iconList]{@link moonstone/Icon.IconBase.iconList}.
+ *
+ * @example
+ * <LabeledIconButton icon="star" labelPosition="after">
+ *   Favorite
+ * </LabeledIconButton>
  *
  * @module moonstone/LabeledIconButton
  * @exports LabeledIconButton
@@ -28,7 +37,7 @@ const IconButton = compose(
 )(IconButtonBase);
 
 /**
- * A basic LabeledIconButton component structure without any behaviors applied to it.
+ * An icon button component with a label.
  *
  * @class LabeledIconButtonBase
  * @memberof moonstone/LabeledIconButton
@@ -70,7 +79,7 @@ const LabeledIconButtonBase = kind({
 		 *
 		 * Setting `selected` may be useful when the component represents a toggleable option. The
 		 * visual effect may be customized using the
-		 * [css]{@link moonstone/LabeledIconButton.LabeledIconButtonBase.prototype.css} prop.
+		 * [css]{@link moonstone/LabeledIconButton.LabeledIconButtonBase.css} prop.
 		 */
 		selected: PropTypes.bool
 	},

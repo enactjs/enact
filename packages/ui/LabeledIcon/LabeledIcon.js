@@ -19,7 +19,7 @@ import Slottable from '../Slottable';
 import componentCss from './LabeledIcon.less';
 
 /**
- * An icon component with a label without any behaviors applied to it.
+ * An icon component with a label.
  *
  * @class LabeledIconBase
  * @memberof ui/LabeledIcon
@@ -225,6 +225,13 @@ const LabeledIconDecorator = compose(
 
 /**
  * An icon component with a label without any behaviors applied to it.
+ *
+ * Usage:
+ * ```
+ * <LabeledIcon icon="star" labelPosition="after">
+ *   Favorite
+ * </LabeledIcon>
+ * ```
  *
  * @class LabeledIcon
  * @memberof ui/LabeledIcon

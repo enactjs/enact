@@ -1,5 +1,13 @@
 /**
- * Provides unstyled LabeledIcon components to be customized by a theme or application.
+ * An [Icon]{@link moonstone/Icon.Icon} ecorated with a label.
+ *
+ * You may specify an image or a font-based icon by setting the `icon` to either the path
+ * to the image or a string from an [iconList]{@link moonstone/Icon.IconBase.iconList}.
+ *
+ * @example
+ * <LabeledIcon icon="star" labelPosition="after">
+ *   Favorite
+ * </LabeledIcon>
  *
  * @module moonstone/LabeledIcon
  * @exports LabeledIcon
