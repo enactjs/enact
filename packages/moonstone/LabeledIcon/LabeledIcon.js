@@ -16,10 +16,10 @@
  */
 
 import kind from '@enact/core/kind';
+import UiLabeledIcon from '@enact/ui/LabeledIcon';
+import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import Pure from '@enact/ui/internal/Pure';
-import UiLabeledIcon from '@enact/ui/LabeledIcon';
 
 import {IconBase} from '../Icon';
 import Skinnable from '../Skinnable';
