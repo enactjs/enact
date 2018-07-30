@@ -10,7 +10,6 @@
  * @exports ButtonDecorator
  */
 
-import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
@@ -27,12 +26,6 @@ import componentCss from './Button.less';
 
 // Make a basic Icon in case we need it later. This cuts `Pure` out of icon for a small gain.
 const Icon = Skinnable(IconBase);
-
-// Called when `tooltip` props are used
-const deprecation = deprecate(() => {}, {
-	message: 'Tooltip props require the button to be wrapped by TooltipDecorator',
-	since: '2.0.0'
-});
 
 /**
  * A button component.
@@ -106,10 +99,6 @@ const ButtonBase = kind({
 	render: ({css, ...rest}) => {
 		delete rest.backgroundOpacity;
 		delete rest.color;
-
-		if (__DEV__ && Object.keys(rest).some(s => s.indexOf('tooltip') === 0)) {
-			deprecation();
-		}
 
 		return UiButtonBase.inline({
 			'data-webos-voice-intent': 'Select',
