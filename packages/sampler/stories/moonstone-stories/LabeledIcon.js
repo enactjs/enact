@@ -1,5 +1,4 @@
 import LabeledIcon from '@enact/moonstone/LabeledIcon';
-import Divider from '@enact/moonstone/Divider';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {withInfo} from '@storybook/addon-info';
