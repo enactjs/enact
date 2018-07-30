@@ -185,28 +185,35 @@ const DialogBase = kind({
 
 	computed: {
 		className: ({noDivider, styler}) => styler.append({showDivider: !noDivider}),
+		generateId: () => () => Math.random().toString(36).substr(2, 8),
 		titleBelow: ({title, titleBelow}) => title ? titleBelow : ''
 	},
 
-	render: ({buttons, casing, css, children, title, titleBelow, ...rest}) => {
+	render: ({buttons, casing, css, children, generateId, title, titleBelow, ...rest}) => {
 		delete rest.noDivider;
 
+		const
+			buttonsId = generateId(),
+			childrenId = generateId(),
+			titleBelowId = generateId(),
+			titleId = generateId();
+
 		return (
-			<Popup {...rest} css={css}>
+			<Popup {...rest} aria-labelledby={`${titleId} ${titleBelowId} ${childrenId} ${buttonsId}`} css={css}>
 				<div className={css.titleWrapper}>
 					<div className={css.titleBlock}>
-						<MarqueeH1 casing={casing} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
+						<MarqueeH1 casing={casing} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title} id={titleId}>
 							{title}
 						</MarqueeH1>
-						<h2 className={css.titleBelow}>
+						<h2 className={css.titleBelow} id={titleBelowId}>
 							{titleBelow}
 						</h2>
 					</div>
-					<div className={css.buttons}>
+					<div className={css.buttons} id={buttonsId}>
 						{buttons}
 					</div>
 				</div>
-				<div className={css.body}>
+				<div className={css.body} id={childrenId}>
 					{children}
 				</div>
 			</Popup>
