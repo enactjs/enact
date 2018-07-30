@@ -131,6 +131,26 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 
 		/**
+		 * Converts a gregorian year to local year
+		 *
+		 * @param	{string}	year	gregorian year string
+		 *
+		 * @returns	{string}		local year
+		 */
+		toLocalYear (year) {
+			return DateFactory({
+				julianday: DateFactory({
+					year,
+					type: 'gregorian',
+					month: 1,
+					day: 1,
+					timezone: 'local'
+				}).getJulianDay(),
+				timezone: 'local'
+			}).getYears();
+		}
+
+		/**
 		 * Converts a JavaScript Date to unix time
 		 *
 		 * @param	{Date}	date	A Date to convert
@@ -201,6 +221,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
+			const {minYear, maxYear, ...rest} = this.props;
 			const value = this.toIDate(this.state.value);
 			// pickerValue is only set when cancelling to prevent the unexpected changing of the
 			// picker values before closing.
@@ -221,9 +242,11 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 
 			return (
 				<Wrapped
-					{...this.props}
+					{...rest}
 					{...props}
 					{...this.handlers}
+					{...(maxYear && {maxYear: this.toLocalYear(maxYear)})}
+					{...(minYear && {minYear: this.toLocalYear(minYear)})}
 					label={label}
 					order={order}
 					value={value}
