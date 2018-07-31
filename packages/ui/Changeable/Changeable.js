@@ -77,6 +77,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			 * The event object must contain a property with the same name as the configured `prop`.
 			 *
 			 * @name onChange
+			 * @memberof ui/Changeable.Changeable.prototype
 			 * @type {Function}
 			 * @public
 			 */
@@ -88,6 +89,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			 * This prop is consumed by `Changeable` and not passed onto the wrapped component.
 			 *
 			 * @name defaultValue
+			 * @memberof ui/Changeable.Changeable.prototype
 			 * @type {*}
 			 * @public
 			 */

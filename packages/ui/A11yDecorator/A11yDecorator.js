@@ -59,6 +59,7 @@ const A11yDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * Sets the value of the `aria-label` attribute for the wrapped component.
 			 *
+			 * @memberof ui/A11yDecorator.A11yDecorator.prototype
 			 * @type {String}
 			 * @public
 			 */
