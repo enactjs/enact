@@ -17,6 +17,12 @@ import Popup from '../Popup';
 
 import componentCss from './Dialog.less';
 
+/*
+ * If two or more Dialogs are rendered on one screen,
+ * the same ID can be generated.
+ */
+const id = Math.random().toString(36).substr(2, 8);
+
 const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
 
 /**
@@ -185,35 +191,28 @@ const DialogBase = kind({
 
 	computed: {
 		className: ({noDivider, styler}) => styler.append({showDivider: !noDivider}),
-		generateId: () => () => Math.random().toString(36).substr(2, 8),
 		titleBelow: ({title, titleBelow}) => title ? titleBelow : ''
 	},
 
-	render: ({buttons, casing, css, children, generateId, title, titleBelow, ...rest}) => {
+	render: ({buttons, casing, css, children, title, titleBelow, ...rest}) => {
 		delete rest.noDivider;
 
-		const
-			buttonsId = generateId(),
-			childrenId = generateId(),
-			titleBelowId = generateId(),
-			titleId = generateId();
-
 		return (
-			<Popup {...rest} aria-labelledby={`${titleId} ${titleBelowId} ${childrenId} ${buttonsId}`} css={css}>
+			<Popup {...rest} aria-labelledby={`${id}_title ${id}_titleBelow ${id}_children ${id}_buttons`} css={css}>
 				<div className={css.titleWrapper}>
 					<div className={css.titleBlock}>
-						<MarqueeH1 casing={casing} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title} id={titleId}>
+						<MarqueeH1 casing={casing} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title} id={`${id}_title`}>
 							{title}
 						</MarqueeH1>
-						<h2 className={css.titleBelow} id={titleBelowId}>
+						<h2 className={css.titleBelow} id={`${id}_titleBelow`}>
 							{titleBelow}
 						</h2>
 					</div>
-					<div className={css.buttons} id={buttonsId}>
+					<div className={css.buttons} id={`${id}_buttons`}>
 						{buttons}
 					</div>
 				</div>
-				<div className={css.body} id={childrenId}>
+				<div className={css.body} id={`${id}_children`}>
 					{children}
 				</div>
 			</Popup>
