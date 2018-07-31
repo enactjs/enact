@@ -10,6 +10,7 @@
  * @exports ImageDecorator
  */
 
+import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import UiImage from '@enact/ui/Image';
@@ -47,7 +48,18 @@ const ImageBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		css: PropTypes.object,
+
+		/**
+		 * Hides the image.
+		 *
+		 * Mainly used for hiding default broken icon.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		hideImage: PropTypes.bool
 	},
 
 	styles: {
@@ -55,7 +67,13 @@ const ImageBase = kind({
 		publicClassNames: ['image']
 	},
 
+	computed: {
+		className: ({hideImage, styler}) => styler.append({hideImage})
+	},
+
 	render: ({css, ...rest}) => {
+		delete rest.hideImage;
+
 		return (
 			<UiImage
 				draggable="false"
@@ -76,9 +94,9 @@ const ImageBase = kind({
 //
 // This is ripe for refactoring, and could probably move into UI to be generalized, but that's for
 // another time. -B 2018-05-01
-const ResponsiveImageDecorator = hoc((config, Wrapped) => {
+const MoonstoneImageDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
-		static displayName = 'ResponsiveImageDecorator'
+		static displayName = 'MoonstoneImageDecorator'
 
 		static propTypes = {
 			src: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired
@@ -87,7 +105,8 @@ const ResponsiveImageDecorator = hoc((config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				src: selectSrc(this.props.src)
+				src: selectSrc(this.props.src),
+				error: false
 			};
 		}
 
@@ -97,6 +116,22 @@ const ResponsiveImageDecorator = hoc((config, Wrapped) => {
 
 		componentWillUnmount () {
 			window.removeEventListener('resize', this.handleResize);
+		}
+
+		handleLoad = (ev) => {
+			forward('onLoad', ev, this.props);
+			if (this.state.error) {
+				this.setState({
+					error: false
+				});
+			}
+		}
+
+		handleError = (ev) => {
+			forward('onError', ev, this.props);
+			this.setState({
+				error: true
+			});
 		}
 
 		handleResize = () => {
@@ -112,7 +147,14 @@ const ResponsiveImageDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
-			return <Wrapped {...this.props} />;
+			return (
+				<Wrapped
+					{...this.props}
+					hideImage={this.state.error}
+					onError={this.handleError}
+					onLoad={this.handleLoad}
+				/>
+			);
 		}
 	};
 });
@@ -127,7 +169,7 @@ const ResponsiveImageDecorator = hoc((config, Wrapped) => {
  */
 const ImageDecorator = compose(
 	Pure,
-	ResponsiveImageDecorator,
+	MoonstoneImageDecorator,
 	Skinnable
 );
 
