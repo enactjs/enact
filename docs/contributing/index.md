@@ -37,10 +37,7 @@ project. Please read this section carefully if you are interested in contributin
 *   To contribute a change, fork the repo, push changes to your fork, and submit a pull request to enact to have your change
 	reviewed for submission to master. For details on the GitHub pull request process, see [here](https://help.github.com/articles/using-pull-requests).
 
-*   **IMPORTANT**: All pull requests must now include the following line in the pull request comments (using your full name and email
-	address), which indicates your contribution complies to the ***[Enact Developer's Certificate of Origin v1.0](./dco.md)***:
-
-	`Enact-DCO-1.0-Signed-off-by: Joe Smith <joe@myco.com>`
+*   **IMPORTANT**: No pull requests will be accepted until the contributor has signed off on our ***[Enact Developer's Certificate of Origin v1.0](./dco.md)***. We use an automated system that validates compliance before the first pull request is accepted.
 
 	Below is a layman's description of the five points in the Enact DCO (be sure to read and agree to the full text [here](./dco.md)):
 
