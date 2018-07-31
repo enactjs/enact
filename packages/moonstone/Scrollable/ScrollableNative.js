@@ -384,7 +384,6 @@ class ScrollableBaseNative extends Component {
 
 			if (pos && (pos.left !== this.uiRef.scrollLeft || pos.top !== this.uiRef.scrollTop)) {
 				this.startScrollOnFocus(pos);
-				this.uiRef.isInvalidated = false;
 			}
 
 			// update `scrollHeight`
@@ -620,6 +619,7 @@ class ScrollableBaseNative extends Component {
 	handleScrollerUpdate = () => {
 		if (this.uiRef.isInvalidated && this.uiRef.scrollToInfo === null && Spotlight.getPointerMode()) {
 			this.calculateAndScrollTo();
+			this.uiRef.isInvalidated = false;
 		}
 	}
 
@@ -809,6 +809,7 @@ class ScrollableBaseNative extends Component {
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
+				onUpdate={this.handleScrollerUpdate}
 				onWheel={this.onWheel}
 				ref={this.initUiRef}
 				removeEventListeners={this.removeEventListeners}
@@ -846,7 +847,6 @@ class ScrollableBaseNative extends Component {
 									className: componentCss.scrollableFill,
 									isVerticalScrollbarVisible,
 									initUiChildRef,
-									onUpdate: this.handleScrollerUpdate,
 									ref: this.initChildRef,
 									rtl,
 									spotlightId

@@ -260,6 +260,14 @@ class ScrollableBase extends Component {
 		onScrollStop: PropTypes.func,
 
 		/**
+		 * Called when [Scroller]{@link moonstone/Scroller.Scroller} updates.
+		 *
+		 * @type {function}
+		 * @private
+		 */
+		onUpdate: PropTypes.func,
+
+		/**
 		 * Called when wheeling.
 		 *
 		 * @type {Function}
@@ -406,8 +414,8 @@ class ScrollableBase extends Component {
 		) {
 			this.deferScrollTo = false;
 			this.isUpdatedScrollThumb = this.updateScrollThumbSize();
-		} else {
-			this.updateScrollbars();
+		} else if (!this.updateScrollbars() && !this.childRef.hasOwnProperty('hasDataSizeChanged')) {
+			this.props.onUpdate();
 		}
 
 		if (this.scrollToInfo !== null) {
@@ -1085,6 +1093,8 @@ class ScrollableBase extends Component {
 			this.deferScrollTo = false;
 			this.isUpdatedScrollThumb = this.updateScrollThumbSize();
 		}
+
+		return isVisibilityChanged;
 	}
 
 	updateScrollThumbSize = () => {
