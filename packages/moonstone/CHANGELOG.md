@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Scroller` to go to next page properly via page up/down keys
+
 ## [2.0.0] - 2018-07-30
 
 ### Added
