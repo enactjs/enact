@@ -584,6 +584,14 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			paused: PropTypes.bool,
 
 			/**
+			 * Disables state on the media "play"/"pause" button
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			playPauseButtonDisabled: PropTypes.bool,
+
+			/**
 			 * Disables the media playback-rate control buttons; the inner pair.
 			 *
 			 * @type {Boolean}
@@ -730,6 +738,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				moreButtonSpotlightId,
 				no5WayJump,
 				noRateButtons,
+				playPauseButtonDisabled,
 				rateButtonsDisabled,
 				visible
 			} = this.props;
@@ -741,10 +750,12 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				this.toggleMoreComponents();
 			}
 
-			if (is('play', ev.keyCode)) {
-				forward('onPlay', ev, this.props);
-			} else if (is('pause', ev.keyCode)) {
-				forward('onPause', ev, this.props);
+			if (!playPauseButtonDisabled) {
+				if (is('play', ev.keyCode)) {
+					forward('onPlay', ev, this.props);
+				} else if (is('pause', ev.keyCode)) {
+					forward('onPause', ev, this.props);
+				}
 			}
 
 			if (!no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
