@@ -268,6 +268,14 @@ const MediaControlsBase = kind({
 		playIcon: PropTypes.string,
 
 		/**
+		 * Disables state on the media "play"/"pause" button
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		playPauseButtonDisabled: PropTypes.bool,
+
+		/**
 		 * Disables the media playback-rate control buttons; the inner pair.
 		 *
 		 * @type {Boolean}
@@ -363,6 +371,7 @@ const MediaControlsBase = kind({
 		paused,
 		pauseIcon,
 		playIcon,
+		playPauseButtonDisabled,
 		playPauseClassName,
 		rateButtonsDisabled,
 		rightComponents,
@@ -383,7 +392,7 @@ const MediaControlsBase = kind({
 						<Container className={css.mediaControls} spotlightDisabled={showMoreComponents || spotlightDisabled}>
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpBackwardIcon}</MediaButton>}
 							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{backwardIcon}</MediaButton>}
-							<MediaButton aria-label={paused ? $L('Play') : $L('Pause')} className={playPauseClassName} backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{paused ? playIcon : pauseIcon}</MediaButton>
+							<MediaButton aria-label={paused ? $L('Play') : $L('Pause')} className={playPauseClassName} backgroundOpacity="translucent" disabled={mediaDisabled || playPauseButtonDisabled} onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{paused ? playIcon : pauseIcon}</MediaButton>
 							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onForwardButtonClick} spotlightDisabled={spotlightDisabled}>{forwardIcon}</MediaButton>}
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpForwardIcon}</MediaButton>}
 						</Container>
