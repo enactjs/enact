@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` audio guidance behavior of More button
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to handle focus properly via page up/down keys when switching to 5-way mode
 - `moonstone/Popup` to spot the content after it's mounted
+- `moonstone/Dialog` to properly reading order of dialog prop `buttons` and `children`
 
 ## [2.0.0-rc.3] - 2018-07-23
 
