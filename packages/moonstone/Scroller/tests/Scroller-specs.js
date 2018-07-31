@@ -143,24 +143,4 @@ describe('Scroller', () => {
 			expect(actual).to.equal(expected);
 		});
 	});
-
-	describe('ScrollerBase API', () => {
-		it('should call onUpdate when Scroller updates', function () {
-			const handleUpdate = sinon.spy();
-			const subject = shallow(
-				<ScrollerBase
-					onUpdate={handleUpdate}
-				>
-					{contents}
-				</ScrollerBase>
-			);
-
-			subject.setProps({children: ''});
-
-			const expected = true;
-			const actual = handleUpdate.calledOnce;
-
-			expect(expected).to.equal(actual);
-		});
-	});
 });
