@@ -260,7 +260,7 @@ class ScrollableBase extends Component {
 		onScrollStop: PropTypes.func,
 
 		/**
-		 * Called when [Scroller]{@link moonstone/Scroller.Scroller} updates.
+		 * Called when invalidating [Scroller]{@link moonstone/Scroller.Scroller}'s bounds
 		 *
 		 * @type {function}
 		 * @private
@@ -393,6 +393,7 @@ class ScrollableBase extends Component {
 
 	componentDidUpdate (prevProps, prevState) {
 		const
+			{onUpdate} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			{hasDataSizeChanged} = this.childRef;
 
@@ -414,8 +415,8 @@ class ScrollableBase extends Component {
 		) {
 			this.deferScrollTo = false;
 			this.isUpdatedScrollThumb = this.updateScrollThumbSize();
-		} else if (!this.updateScrollbars() && !this.childRef.hasOwnProperty('hasDataSizeChanged')) {
-			this.props.onUpdate();
+		} else if (!this.updateScrollbars() && onUpdate && !this.childRef.hasOwnProperty('hasDataSizeChanged')) {
+			onUpdate();
 		}
 
 		if (this.scrollToInfo !== null) {
@@ -454,7 +455,7 @@ class ScrollableBase extends Component {
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
 	enqueueForceUpdate = () => {
-		this.isInvalidated = true;
+		this.scrollOnFocusInPointerMode = true;
 		this.childRef.calculateMetrics();
 		this.forceUpdate();
 	}
@@ -490,7 +491,7 @@ class ScrollableBase extends Component {
 	deferScrollTo = true
 	isScrollAnimationTargetAccumulated = false
 	isUpdatedScrollThumb = false
-	isInvalidated = false
+	scrollOnFocusInPointerMode = false
 
 	// overscroll
 	overscrollStatus = {
@@ -1229,6 +1230,7 @@ class ScrollableBase extends Component {
 		delete rest.onScroll;
 		delete rest.onScrollStart;
 		delete rest.onScrollStop;
+		delete rest.onUpdate;
 		delete rest.onWheel;
 		delete rest.removeEventListeners;
 		delete rest.scrollTo;
