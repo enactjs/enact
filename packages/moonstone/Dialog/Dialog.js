@@ -80,7 +80,7 @@ const DialogBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * The dialog id reference for setting aria-labelledby.
+		 * The id of dialog referred to when generating ids for `'title'`, `'titleBelow'`, `'children'`, and `'buttons'`.
 		 *
 		 * @type {String}
 		 * @private
