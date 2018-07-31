@@ -267,7 +267,7 @@ const TimePickerBase = kind({
 		rtl: PropTypes.bool,
 
 		/**
-		 * Prevents navigation of the component using spotlight.
+		 * Disables spotlight navigation into the component.
 		 *
 		 * @type {Boolean}
 		 * @default false

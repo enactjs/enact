@@ -45,3 +45,13 @@
 		}
 	}
 }
+
+// Here, we target the storybook rendering canvas div. It's inserted as a child of our Panel, but it
+// applies position:relative, which doesn't help us when we have stories that should fill the entire
+// panel body. This targets that inaccessible node using Panel's structure and storybook's structure
+// to update that goofy rule to a rational one.
+.panel > section > div > div:first-child {
+	width: 100%;
+	height: 100%;
+	position: absolute !important;
+}

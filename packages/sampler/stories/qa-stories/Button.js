@@ -99,6 +99,7 @@ storiesOf('Button', module)
 		() => (
 			<div>
 				<Button
+					className={css.tapArea}
 					onClick={action('onClick')}
 					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 					casing={select('casing', prop.casing, Config, 'upper')}
@@ -111,6 +112,7 @@ storiesOf('Button', module)
 					Normal Button
 				</Button>
 				<Button
+					className={css.tapArea}
 					onClick={action('onClick')}
 					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 					casing={select('casing', prop.casing, Config, 'upper')}

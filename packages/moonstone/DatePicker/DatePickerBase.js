@@ -240,7 +240,7 @@ const DatePickerBase = kind({
 		rtl: PropTypes.bool,
 
 		/**
-		 * Disables the component with respect to spotlight navigation only.
+		 * Disables 5-way spotlight from navigating into the component.
 		 *
 		 * @type {Boolean}
 		 * @default false

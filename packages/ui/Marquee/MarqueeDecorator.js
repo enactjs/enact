@@ -91,6 +91,7 @@ const defaultConfig = {
 	 * * `'ltr'` if the text should marquee to the left
 	 *
 	 * @type {Function}
+	 * @kind member
 	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	marqueeDirection: (str) => direction(str) === 'rtl' ? 'rtl' : 'ltr'

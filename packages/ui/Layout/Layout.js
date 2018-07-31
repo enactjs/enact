@@ -30,7 +30,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {Cell, toFlexAlign} from './Cell';
+import {Cell, CellBase, toFlexAlign} from './Cell';
 
 import css from './Layout.less';
 
@@ -190,7 +190,10 @@ const LayoutBase = kind({
  * @public
  */
 const Column = (props) => (
-	<LayoutBase {...props} orientation="vertical" />
+	LayoutBase.inline({
+		...props,
+		orientation: 'vertical'
+	})
 );
 
 /**
@@ -201,12 +204,16 @@ const Column = (props) => (
  * @public
  */
 const Row = (props) => (
-	<LayoutBase {...props} orientation="horizontal" />
+	LayoutBase.inline({
+		...props,
+		orientation: 'horizontal'
+	})
 );
 
 export default LayoutBase;
 export {
 	Cell,
+	CellBase,
 	Column,
 	LayoutBase as Layout,
 	LayoutBase,

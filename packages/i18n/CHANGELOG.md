@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [2.0.0] - 2018-07-30
+
+No significant changes.
+
+## [2.0.0-rc.3] - 2018-07-23
+
+### Fixed
+
+- `i18n/ilib` to calculate time properly over DST boundary in fa-IR locale
+
 ## [2.0.0-rc.2] - 2018-07-16
 
 No significant changes.
@@ -95,6 +105,10 @@ No significant changes.
 No significant changes.
 
 ## [1.14.0] - 2018-02-23
+
+No significant changes.
+
+## [1.13.4] - 2018-07-30
 
 No significant changes.
 

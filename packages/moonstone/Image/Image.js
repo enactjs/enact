@@ -1,5 +1,5 @@
 /**
- * Provides Moonstone-themed Image component that supports multiple resolution sources.
+ * Provides Moonstone styled Image component that supports multiple resolution sources.
  *
  * @example
  * <Image src="https://dummyimage.com/64/e048e0/0011ff" style={{height: 64, width: 64}} />
@@ -28,6 +28,7 @@ import componentCss from './Image.less';
  *
  * @class ImageBase
  * @memberof moonstone/Image
+ * @extends ui/Image.Image
  * @ui
  * @public
  */
@@ -57,6 +58,7 @@ const ImageBase = kind({
 	render: ({css, ...rest}) => {
 		return (
 			<UiImage
+				draggable="false"
 				{...rest}
 				css={css}
 			/>
@@ -120,7 +122,7 @@ const ResponsiveImageDecorator = hoc((config, Wrapped) => {
  *
  * @hoc
  * @memberof moonstone/Image
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const ImageDecorator = compose(

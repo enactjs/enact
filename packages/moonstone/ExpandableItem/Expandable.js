@@ -58,8 +58,8 @@ const defaultConfig = {
 };
 
 /**
- * {@link moonstone/ExpandableItem.Expandable} manages the open state of a component
- * and adds {@link ui/Cancelable.Cancelable} support to call the `onClose` handler on
+ * A Higher-order Component that manages the open state of a component and adds {@link ui/Cancelable.Cancelable}
+ * support to call the `onClose` handler on
  * cancel.
  *
  * @class Expandable
