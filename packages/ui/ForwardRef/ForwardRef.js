@@ -1,5 +1,5 @@
 /**
- * Provides a HOC interface for `ref` forwarding.
+ * A higher-order component (HOC) interface for `ref` forwarding.
  *
  * @module ui/ForwardRef
  * @exports	ForwardRef
@@ -16,7 +16,7 @@ import React from 'react';
  */
 const defaultConfig = {
 	/**
-	 * Configures the prop name to pass the ref callback
+	 * The prop name to pass the ref callback
 	 *
 	 * @type {String}
 	 * @default 'forwardRef'
