@@ -384,6 +384,7 @@ class ScrollableBaseNative extends Component {
 
 			if (pos && (pos.left !== this.uiRef.scrollLeft || pos.top !== this.uiRef.scrollTop)) {
 				this.startScrollOnFocus(pos);
+				this.uiRef.isInvalidated = false;
 			}
 
 			// update `scrollHeight`
@@ -617,7 +618,7 @@ class ScrollableBaseNative extends Component {
 
 	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
 	handleScrollerUpdate = () => {
-		if (this.uiRef.scrollToInfo === null && Spotlight.getPointerMode()) {
+		if (this.uiRef.isInvalidated && this.uiRef.scrollToInfo === null && Spotlight.getPointerMode()) {
 			this.calculateAndScrollTo();
 		}
 	}
