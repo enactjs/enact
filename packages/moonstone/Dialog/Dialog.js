@@ -6,22 +6,17 @@
  * @exports DialogBase
  */
 
+import IdProvider from '@enact/moonstone/internal/IdProvider';
 import kind from '@enact/core/kind';
-import Uppercase from '@enact/i18n/Uppercase';
-import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Slottable from '@enact/ui/Slottable';
+import Uppercase from '@enact/i18n/Uppercase';
 
 import {MarqueeDecorator} from '../Marquee';
 import Popup from '../Popup';
 
 import componentCss from './Dialog.less';
-
-/*
- * If two or more Dialogs are rendered on one screen,
- * the same ID can be generated.
- */
-const id = Math.random().toString(36).substr(2, 8);
 
 const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
 
@@ -83,6 +78,14 @@ const DialogBase = kind({
 		 * @private
 		 */
 		css: PropTypes.object,
+
+		/**
+		 * The dialog id reference for setting aria-labelledby.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		id: PropTypes.string,
 
 		/**
 		 * Disables animating the dialog on or off screen.
@@ -194,7 +197,7 @@ const DialogBase = kind({
 		titleBelow: ({title, titleBelow}) => title ? titleBelow : ''
 	},
 
-	render: ({buttons, casing, css, children, title, titleBelow, ...rest}) => {
+	render: ({buttons, casing, css, children, id, title, titleBelow, ...rest}) => {
 		delete rest.noDivider;
 
 		return (
@@ -250,9 +253,12 @@ const DialogBase = kind({
  * @ui
  * @public
  */
-const Dialog = Slottable(
-	{slots: ['title', 'titleBelow', 'buttons']},
-	DialogBase
+const Dialog = IdProvider(
+	{generateProp: null, prefix: 'd_'},
+	Slottable(
+		{slots: ['title', 'titleBelow', 'buttons']},
+		DialogBase
+	)
 );
 
 export default Dialog;
