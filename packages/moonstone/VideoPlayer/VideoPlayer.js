@@ -278,6 +278,15 @@ const VideoPlayerBase = class extends React.Component {
 		noAutoShowMediaControls: PropTypes.bool,
 
 		/**
+		 * Prevents showing media slider feedback when fast forward or rewind.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		noMediaSliderFeedback: PropTypes.bool,
+
+		/**
 		 * Removes the mini feedback.
 		 *
 		 * @type {Boolean}
@@ -955,7 +964,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			if (this.showMiniFeedback && (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider)) {
 				this.setState(({loading, duration, error}) => ({
-					mediaSliderVisible: shouldShowSlider,
+					mediaSliderVisible: shouldShowSlider && !this.props.noMediaSliderFeedback,
 					miniFeedbackVisible: !(loading || !duration || error)
 				}));
 			}
