@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scroller` to prevent scrolling based on focused item when hovering the item
+- `moonstone/Scroller` to prevent scrolling hovering the truncated spottable item
 
 ## [2.0.0] - 2018-07-30
 
