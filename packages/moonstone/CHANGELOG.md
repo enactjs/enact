@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Dialog` read order of dialog contents
 - `moonstone/Scroller` to go to next page properly via page up/down keys
+- `moonstone/Tooltip` to transform its arrow up by 1px to avoid gap between its body and arrow
 
 ## [2.0.0] - 2018-07-30
 
