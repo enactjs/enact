@@ -38,7 +38,7 @@ const CellBase = kind({
 		align: PropTypes.string,
 
 		/**
-		 * Any valid Node that should be positioned in this Cell.
+		 * Any valid [Node]{@link /docs/developer-guide/glossary/#node} that should be positioned in this `Cell`.
 		 *
 		 * @type {Node}
 		 * @public
@@ -46,7 +46,7 @@ const CellBase = kind({
 		children: PropTypes.node,
 
 		/**
-		 * The type of component to use to render as the Cell. May be a DOM node name (e.g 'div',
+		 * The type of component to use to render as the `Cell`. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
 		 *
 		 * @type {Component}

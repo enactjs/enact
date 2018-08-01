@@ -1,10 +1,10 @@
 /**
- * Provides an unstyled indeterminate progress indicator (Spinner) component to be customized by a
- * theme or application. Basically, this positions your Spinner component where you want it on the
+ * An unstyled indeterminate progress indicator (Spinner) component to be customized by a
+ * theme or application. Basically, this positions your `Spinner` component where you want it on the
  * screen, and hooks into the interaction blocking code and scrim management.
  *
  * The theme using this component must supply a `component` element which follows the requirements
- * listed by the [component]{@link ui/Spinner.Spinner.spinnerComponent} prop documentation.
+ * listed by the [component]{@link ui/Spinner.Spinner.component} prop documentation.
  *
  * @module ui/Spinner
  * @exports Spinner
@@ -19,7 +19,7 @@ import FloatingLayer from '../FloatingLayer';
 import componentCss from './Spinner.less';
 
 /**
- * A minimally styled component that controls Spinner positioning and interaction states.
+ * A minimally styled component that controls `Spinner` positioning and interaction states.
  *
  * @class Spinner
  * @memberof ui/Spinner
@@ -54,10 +54,10 @@ const Spinner = kind({
 		 * * 'screen' blocks entire screen
 		 * * 'container' blocks up to the nearest ancestor with absolute or relative positioning
 		 *
-		 * When blockClickOn is either `'screen'` or `'container'`, a translucent scrim can be added
+		 * When `blockClickOn` is either `'screen'` or `'container'`, a translucent scrim can be added
 		 * by setting [scrim]{@link ui/Spinner.Spinner#scrim} prop to `true`.
 		 *
-		 * @type {String}
+		 * @type {String|null}
 		 * @public
 		 */
 		blockClickOn: PropTypes.oneOf(['screen', 'container', null]),

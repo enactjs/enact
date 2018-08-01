@@ -33,7 +33,7 @@ const calcBarStyle = (prop, anchor, value = anchor, startProp, endProp) => {
 };
 
 /**
- * Provides unstyled progress bar component to be customized by a theme or application.
+ * An unstyled progress bar component that can be customized by a theme or application.
  *
  * @class ProgressBar
  * @memberof ui/ProgressBar
@@ -81,7 +81,7 @@ const ProgressBar = kind({
 
 		/**
 		 * Sets the orientation of the slider, whether the progress-bar depicts its progress value
-		 * in a left and right orientation or up and down onientation.
+		 * in a left and right orientation or up and down orientation.
 		 * Must be either `'horizontal'` or `'vertical'`.
 		 *
 		 * @type {String}

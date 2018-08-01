@@ -2,6 +2,7 @@
  * Exports the {@link ui/Repeater.Repeater} component.
  *
  * @module ui/Repeater
+ * @exports Repeater
  */
 
 import React from 'react';
@@ -39,7 +40,7 @@ const RepeaterBase = kind({
 		 * responsible for setting properties like `disabled`, `className`, and setting the text
 		 * content using the `children` key.
 		 *
-		 * NOTE: When an array of objects is provided, make sure unique `key` is assigned to each
+		 * > **NOTE**: When an array of objects is provided, make sure a unique `key` is assigned to each
 		 * data. See https://fb.me/react-warning-keys for more information.
 		 *
 		 * @type {String[]|Object[]}
@@ -63,7 +64,7 @@ const RepeaterBase = kind({
 		childProp: PropTypes.string,
 
 		/**
-		 * The property on each `childComponent` that receives the index of the item in the Repeater
+		 * The property on each `childComponent` that receives the index of the item in the `Repeater`
 		 *
 		 * @type {String}
 		 * @default 'data-index'
