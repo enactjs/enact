@@ -6,13 +6,13 @@
  * @exports DialogBase
  */
 
-import IdProvider from '@enact/moonstone/internal/IdProvider';
 import kind from '@enact/core/kind';
+import Uppercase from '@enact/i18n/Uppercase';
+import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Slottable from '@enact/ui/Slottable';
-import Uppercase from '@enact/i18n/Uppercase';
 
+import IdProvider from '../internal/IdProvider';
 import {MarqueeDecorator} from '../Marquee';
 import Popup from '../Popup';
 
