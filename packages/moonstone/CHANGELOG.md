@@ -4,9 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-## Fixed
+### Fixed
 
 - `moonstone/Dialog` read order of dialog contents
+- `moonstone/Scroller` to go to next page properly via page up/down keys
 
 ## [2.0.0] - 2018-07-30
 

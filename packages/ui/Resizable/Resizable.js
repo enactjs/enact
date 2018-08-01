@@ -1,7 +1,8 @@
 /**
- * Exports the {@link ui/Resizable.Resizable} Higher-order Component (HOC).
+ * Exports the {@link ui/Resizable.Resizable} higher-order component (HOC).
  *
  * @module ui/Resizable
+ * @exports Resizable
  */
 
 import {forward, handle} from '@enact/core/handle';
@@ -51,9 +52,9 @@ const contextTypes = {
 };
 
 /**
- * {@link ui/Resizable.Resizable} is a Higher-order Component that can be used to notify a container
- * that the Wrapped component has been resized. It may be useful in cases where a component may need
- * to update itself as a result of its children changing in size, such a Scroller.
+ * {@link ui/Resizable.Resizable} is a higher-order component that can be used to notify a container
+ * that the wrapped component has been resized. It may be useful in cases where a component may need
+ * to update itself as a result of its children changing in size, such as a [Scroller] {@link ui/Scroller}.
  *
  * Containers must provide an `invalidateBounds` method via React's context in order for `Resizable`
  * instances to notify it of resize.
