@@ -1,5 +1,5 @@
 /**
- * Provides unstyled scrollable components and behaviors to be customized by a theme or application.
+ * Unstyled scrollable components and behaviors to be customized by a theme or application.
  *
  * @module ui/Scrollable
  * @exports constants

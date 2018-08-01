@@ -1,5 +1,5 @@
 /*
- * Exports the {@link ui/FloatingLayer.FloatingLayerDecorator} Higher-order Component (HOC).
+ * Exports the {@link ui/FloatingLayer.FloatingLayerDecorator} higher-order component (HOC).
  */
 
 import hoc from '@enact/core/hoc';
@@ -32,7 +32,7 @@ const defaultConfig = {
 	floatLayerId: 'floatLayer',
 
 	/**
-	 * Classname applied to wrapped component. It can be used when you want to only apply
+	 * Class name applied to wrapped component. It can be used when you want to only apply
 	 * certain styles to the wrapped component and not to the float layer.
 	 *
 	 * @type {String}
@@ -44,7 +44,7 @@ const defaultConfig = {
 };
 
 /**
- * Higher-order Component that adds a FloatingLayer adjacent to wrapped component.
+ * HOC that adds a FloatingLayer adjacent to wrapped component.
  *
  * @class FloatingLayerDecorator
  * @memberof ui/FloatingLayer
