@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/DatePicker` property `yearFormatter` to accept a function to handle different types of calendar years
+
 ### Fixed
 
 - `moonstone/Slider` to forward `onActivate` event

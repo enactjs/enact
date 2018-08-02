@@ -258,6 +258,14 @@ const DatePickerBase = kind({
 		yearAriaLabel: PropTypes.string,
 
 		/**
+		 * The function to format the year to handle different types of calendar.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		yearFormatter: PropTypes.func,
+
+		/**
 		 * The label displayed below the year picker.
 		 *
 		 * This prop will also be appended to the current value and set as "aria-valuetext" on the
@@ -288,6 +296,11 @@ const DatePickerBase = kind({
 		)
 	},
 
+	computed: {
+		maxYear: ({maxYear, yearFormatter}) => yearFormatter ? yearFormatter(maxYear) : maxYear,
+		minYear: ({minYear, yearFormatter}) => yearFormatter ? yearFormatter (minYear) : minYear
+	},
+
 	render: ({
 		'data-webos-voice-disabled': voiceDisabled,
 		day,
@@ -316,6 +329,7 @@ const DatePickerBase = kind({
 		yearLabel = $L('year'),
 		...rest
 	}) => {
+		delete rest.yearFormatter;
 
 		return (
 			<ExpandableItemBase

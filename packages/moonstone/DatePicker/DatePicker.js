@@ -22,7 +22,7 @@ import Skinnable from '../Skinnable';
 import DatePickerBase from './DatePickerBase';
 
 const dateTimeConfig = {
-	customProps: function (i18n, value, props) {
+	customProps: function (i18n, value) {
 		const values = {
 			maxMonths: 12,
 			maxDays: 31,
@@ -37,8 +37,7 @@ const dateTimeConfig = {
 			values.day = value.getDays();
 			values.maxMonths = i18n.formatter.cal.getNumMonths(values.year);
 			values.maxDays = i18n.formatter.cal.getMonLength(values.month, values.year);
-			values.maxYear = i18n.toLocalYear(props.maxYear);
-			values.minYear = i18n.toLocalYear(props.minYear);
+			values.yearFormatter = i18n.toLocalYear;
 		}
 
 		return values;
