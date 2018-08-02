@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [2.0.1] - 2018-08-01
+
+### Fixed
+
+- `spotlight` to not blur when pointer leaves floating webOS app while paused
+
 ## [2.0.0] - 2018-07-30
 
 ### Changed
