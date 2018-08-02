@@ -332,8 +332,8 @@ class ScrollableBase extends Component {
 
 	static defaultProps = {
 		cbScrollTo: nop,
-		noScrollByDrag: false,
 		horizontalScrollbar: 'auto',
+		noScrollByDrag: false,
 		onScroll: nop,
 		onScrollStart: nop,
 		onScrollStop: nop,
