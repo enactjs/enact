@@ -253,7 +253,7 @@ class ScrollableBaseNative extends Component {
 		onScrollStop: PropTypes.func,
 
 		/**
-		 * Called when invalidating [Scroller]{@link ui/Scroller.ScrollerNative}'s bounds
+		 * Called when invalidating [ScrollerNative]{@link ui/Scroller.ScrollerNative}'s bounds
 		 *
 		 * @type {function}
 		 * @private

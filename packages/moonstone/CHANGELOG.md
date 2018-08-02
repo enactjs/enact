@@ -2,11 +2,16 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [2.0.1] - 2018-08-01
+## [unreleased]
 
 ### Fixed
 
 - `moonstone/Scroller` to prevent unexpected scrolling when updated by app
+
+## [2.0.1] - 2018-08-01
+
+### Fixed
+
 - `moonstone/Dialog` read order of dialog contents
 - `moonstone/Scroller` to go to next page properly via page up/down keys
 
