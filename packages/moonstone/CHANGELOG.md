@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VideoPlayer` to fallback focusing on available media buttons if default spotlight component is disabled
+
 ## [2.0.1] - 2018-08-01
 
 ### Fixed
