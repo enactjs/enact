@@ -1695,7 +1695,8 @@ const VideoPlayerBase = class extends React.Component {
 	getControlsAriaProps () {
 		if (this.state.announce === AnnounceState.TITLE) {
 			return {
-				role: 'region',
+				role: 'alert',
+				'aria-live': 'off',
 				'aria-labelledby': `${this.id}_title`
 			};
 		} else if (this.state.announce === AnnounceState.INFO) {

@@ -674,8 +674,10 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				let selectedButton = Spotlight.getCurrent();
 				if (selectedButton === this.mediaControlsNode.querySelector(`.${css.moreButton}`)) {
 					if (this.props.visible) {
-						selectedButton.blur();
-						selectedButton.focus();
+						setTimeout(() => {
+							selectedButton.blur();
+							selectedButton.focus();
+						}, 100);
 					}
 				} else if (!this.state.showMoreComponents) {
 					// if spotlight was not in "back" button, then focus "more" button
@@ -728,7 +730,9 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			if (mediaDisabled) return;
 
 			if (visible && moreButtonColor && !moreButtonDisabled && is(moreButtonColor, ev.keyCode)) {
-				Spotlight.focus(moreButtonSpotlightId);
+				setTimeout(() => {
+					Spotlight.focus(moreButtonSpotlightId);
+				}, 100);
 				this.toggleMoreComponents();
 			}
 
