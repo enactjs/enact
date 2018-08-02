@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `moonstone/VideoPlayer.MediaControls` property `playPauseButtonDisabled`
+
+### Fixed
+
+- `moonstone/VideoPlayer` to fallback focusing on available media buttons if default spotlight component is disabled
+
 ## [2.0.0] - 2018-07-30
 
 ### Added

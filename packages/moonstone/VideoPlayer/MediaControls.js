@@ -22,6 +22,15 @@ import {countReactChildren} from './util';
 
 import css from './VideoPlayer.less';
 
+const OuterContainer = SpotlightContainerDecorator({
+	enterTo: 'default-element',
+	defaultElement: [
+		`.${css.leftComponents} .${spotlightDefaultClass}`,
+		`.${css.rightComponents} .${spotlightDefaultClass}`,
+		`.${spotlightDefaultClass}`,
+		`.${css.mediaControls} > .spottable`
+	]
+}, 'div');
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 const MediaButton = onlyUpdateForKeys([
 	'children',
@@ -308,6 +317,15 @@ const MediaControlsBase = kind({
 		spotlightDisabled: PropTypes.bool,
 
 		/**
+		 * A custom media controls container ID to use with Spotlight.
+		 *
+		 * @type {String}
+		 * @public
+		 * @default 'mediaControls'
+		 */
+		spotlightId: PropTypes.string,
+
+		/**
 		 * The visibility of the component. When `false`, the component will be hidden.
 		 *
 		 * @type {Boolean}
@@ -322,6 +340,7 @@ const MediaControlsBase = kind({
 		forwardIcon: 'forward',
 		jumpBackwardIcon: 'skipbackward',
 		jumpForwardIcon: 'skipforward',
+		spotlightId: 'mediaControls',
 		moreButtonCloseLabel: $L('Back'),
 		moreButtonColor: 'blue',
 		moreButtonLabel: $L('More'),
@@ -377,6 +396,7 @@ const MediaControlsBase = kind({
 		rightComponents,
 		showMoreComponents,
 		spotlightDisabled,
+		spotlightId,
 		...rest
 	}) => {
 		delete rest.moreButtonCloseLabel;
@@ -385,7 +405,7 @@ const MediaControlsBase = kind({
 		delete rest.visible;
 
 		return (
-			<div {...rest} data-media-controls>
+			<OuterContainer {...rest} spotlightId={spotlightId}>
 				<div className={css.leftComponents}>{leftComponents}</div>
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
@@ -420,7 +440,7 @@ const MediaControlsBase = kind({
 						</MediaButton>
 					) : null}
 				</div>
-			</div>
+			</OuterContainer>
 		);
 	}
 });
