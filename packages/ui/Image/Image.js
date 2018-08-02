@@ -8,6 +8,8 @@
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
+import warning from 'warning';
+
 import {selectSrc} from '../resolution';
 
 import componentCss from './Image.less';
@@ -44,17 +46,9 @@ const ImageBase = kind({
 
 	propTypes: /** @lends ui/Image.Image.prototype */ {
 		/**
-		 * String value or Object of values used to determine which image will appear on
-		 * a specific screenSize.
+		 * The aria-label for the image.
 		 *
-		 * @type {String|Object}
-		 * @required
-		 * @public
-		 */
-		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-
-		/**
-		 * Sets the aria-label for the image. If unset, it defaults to the value of `alt`
+		 * If unset, it defaults to the value of `alt`.
 		 *
 		 * @type {String}
 		 * @public
@@ -112,7 +106,9 @@ const ImageBase = kind({
 
 		/**
 		 * A placeholder image to be displayed before the image is loaded.
-		 * For performance purposes, it should be pre-loaded or be a data url.
+		 *
+		 * For performance purposes, it should be pre-loaded or be a data url. If `src` is
+		 * unset, this value will be used as the `background-image`.
 		 *
 		 * @type {String}
 		 * @default ''
@@ -131,7 +127,16 @@ const ImageBase = kind({
 		 * @default 'fill'
 		 * @public
 		 */
-		sizing: PropTypes.oneOf(['fit', 'fill', 'none'])
+		sizing: PropTypes.oneOf(['fit', 'fill', 'none']),
+
+		/**
+		 * String value or Object of values used to determine which image will appear on
+		 * a specific screenSize.
+		 *
+		 * @type {String|Object}
+		 * @public
+		 */
+		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	defaultProps: {
@@ -146,10 +151,11 @@ const ImageBase = kind({
 	},
 
 	computed: {
-		bgImage: ({src, placeholder}) => {
-			const imageSrc = selectSrc(src);
+		bgImage: ({placeholder, src}) => {
+			const imageSrc = selectSrc(src) || placeholder;
+			warning(imageSrc, 'Image requires that either the "placeholder" or "src" props be specified.');
 			if (!imageSrc) return null;
-			return placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
+			return placeholder && imageSrc !== placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
 		},
 		className: ({className, sizing, styler}) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;
