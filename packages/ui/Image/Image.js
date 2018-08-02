@@ -105,7 +105,8 @@ const ImageBase = kind({
 
 		/**
 		 * A placeholder image to be displayed before the image is loaded.
-		 * For performance purposes, it should be pre-loaded or be a data url.
+		 * For performance purposes, it should be pre-loaded or be a data url. If `src` is
+		 * unset, this value will be used as the `background-image`.
 		 *
 		 * @type {String}
 		 * @default ''
@@ -138,8 +139,7 @@ const ImageBase = kind({
 
 	defaultProps: {
 		placeholder: '',
-		sizing: 'fill',
-		src: ''
+		sizing: 'fill'
 	},
 
 	styles: {
