@@ -98,8 +98,7 @@ const SpinnerBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, the background-color  of the spinner is transparent.
-		 *
+		 * Removes the background color (making it transparent).
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -143,7 +142,7 @@ const SpinnerBase = kind({
  * spotlight when unmounted. However, spotlight is not paused when `blockClickOn` prop is
  * `'container'`. Blocking spotlight within the container is up to app implementation.
  *
- * @hoc SpinnerSpotlightDecorator
+ * @hoc
  * @memberof moonstone/Spinner
  * @ui
  * @private
@@ -207,7 +206,7 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
  * @hoc
  * @memberof moonstone/Spinner
  * @mixes moonstone/Spinner.SpinnerSpotlightDecorator
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const SpinnerDecorator = compose(
@@ -217,7 +216,7 @@ const SpinnerDecorator = compose(
 );
 
 /**
- * A ready to use Moonstone-styled Spinner.
+ * A Moonstone-styled Spinner.
  *
  * @class Spinner
  * @memberof moonstone/Spinner

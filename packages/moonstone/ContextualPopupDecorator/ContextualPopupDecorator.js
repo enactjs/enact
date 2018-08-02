@@ -35,7 +35,7 @@ const defaultConfig = {
 	/**
 	 * Disables passing the `skin` prop to the wrapped component.
 	 *
-	 * @see ui/Skinnable.Skinnable.skin
+	 * @see moonstone/Skinnable.Skinnable.skin
 	 * @type {Boolean}
 	 * @default false
 	 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.defaultConfig
@@ -190,7 +190,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			showCloseButton : PropTypes.bool,
+			showCloseButton: PropTypes.bool,
 
 			/**
 			 * The current skin for this component.
@@ -199,7 +199,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * [ContextualPopup]{@link moonstone/ContextualPopupDecorator.ContextualPopup} and not
 			 * to the popup's activator component.
 			 *
-			 * @see ui/Skinnable.Skinnable.skin
+			 * @see moonstone/Skinnable.Skinnable.skin
 			 * @type {String}
 			 * @public
 			 */
@@ -275,12 +275,18 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else if (this.props.open && !nextProps.open) {
 
 				this.updateLeaveFor(null);
-				this.setState({
+				this.setState(state => ({
 					activator: null,
-					// only spot the activator on close if spotlight isn't set or if the current
-					// focus is within the popup
-					shouldSpotActivator: !current || this.containerNode.contains(current)
-				});
+					// only spot the activator on close if spotlight ...
+					shouldSpotActivator: (
+						// isn't set
+						!current ||
+						// is on the activator and we want to re-spot it so a11y read out can occur
+						current === state.activator ||
+						// is within the popup
+						this.containerNode.contains(current)
+					)
+				}));
 			}
 		}
 

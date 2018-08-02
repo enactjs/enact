@@ -25,7 +25,7 @@ const SELECTED_DAY_TYPES = {
  * @hoc
  * @memberof moonstone/DaySelector
  * @mixes ui/Changeable.Changeable
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const DaySelectorDecorator = hoc((config, Wrapped) => {

@@ -1,7 +1,5 @@
 /**
- * Exports the {@link moonstone/TooltipDecorator.TooltipDecorator} Higher-order Component (HOC),
- * {@link moonstone/TooltipDecorator.Tooltip} and {@link moonstone/TooltipDecorator.TooltipBase}
- * components. The default export is {@link moonstone/TooltipDecorator.TooltipDecorator}.
+ * Moonstone styled tooltip components.
  *
  * @module moonstone/TooltipDecorator
  */
@@ -21,7 +19,7 @@ import {Tooltip, TooltipBase} from './Tooltip';
 let currentTooltip; // needed to know whether or not we should stop a showing job when unmounting
 
 /**
- * Default config for {@link moonstone/TooltipDecorator.TooltipDecorator}
+ * Default config for [TooltipDecorator]{@link moonstone/TooltipDecorator.TooltipDecorator}
  *
  * @memberof moonstone/TooltipDecorator.TooltipDecorator
  * @hocconfig
@@ -41,12 +39,13 @@ const defaultConfig = {
 };
 
 /**
- * {@link moonstone/TooltipDecorator.TooltipDecorator} is a Higher-order Component which
- * positions {@link moonstone/TooltipDecorator.Tooltip} in relation to the
- * Wrapped component.
- * The tooltip is automatically displayed when the user hovers over the decorator for
- * a given period of time. The tooltip is positioned around the decorator where there
- * is available window space.
+ * A Higher-order Component which positions [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} in
+ * relation to the wrapped component.
+ *
+ * The tooltip is automatically displayed when the decoratorated component is focused after a set
+ * period of time.
+ *
+ * The tooltip is positioned around the decorator where there is available window space.
  *
  * Note that the direction of tooltip will be flipped horizontally in RTL locales.
  *
@@ -64,7 +63,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/TooltipDecorator.TooltipDecorator.prototype */ {
 			/**
-			 * When `true`, the component is shown as disabled but will show a tooltip, if present.
+			 * Disables the component but does not affect tooltip operation.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -73,7 +72,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * Sets the text direction to be right-to-left
+			 * Indicates the tooltip text direction is right-to-left.
 			 *
 			 * @type {Boolean}
 			 * @private
@@ -81,7 +80,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			rtl: PropTypes.bool,
 
 			/**
-			 * Configures the mode of uppercasing of the `tooltipText` that should be performed.
+			 * The casing of `tooltipText`.
 			 *
 			 * @see i18n/Uppercase#casing
 			 * @type {String}
@@ -91,7 +90,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			tooltipCasing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 
 			/**
-			 * Number of milliseconds to wait before showing tooltip when hover.
+			 * Time to wait (in milliseconds) before showing tooltip on hover.
 			 *
 			 * @type {Number}
 			 * @default 500
@@ -100,13 +99,15 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			tooltipDelay: PropTypes.number,
 
 			/**
-			 * Position of the tooltip with respect to the activating control. Valid values are
-			 * `'above'`, `'above center'`, `'above left'`, `'above right'`, `'below'`, `'below center'`,
-			 * `'below left'`, `'below right'`, `'left bottom'`, `'left middle'`, `'left top'`,
-			 * `'right bottom'`, `'right middle'`, `'right top'`.
+			 * Position of the tooltip with respect to the activating control.
+			 *
+			 * * Values: `'above'`, `'above center'`, `'above left'`, `'above right'`, `'below'`,
+			 * `'below center'`, `'below left'`, `'below right'`, `'left bottom'`, `'left middle'`,
+			 * `'left top'`, `'right bottom'`, `'right middle'`, `'right top'`
+			 *
 			 * The values starting with `'left`' and `'right'` place the tooltip on the side
-			 * (sideways tooltip) with two additional positions available, `'top'` and `'bottom'`, which
-			 * places the tooltip content toward the top or bottom, with the tooltip pointer
+			 * (sideways tooltip) with two additional positions available, `'top'` and `'bottom'`,
+			 * which place the tooltip content toward the top or bottom, with the tooltip pointer
 			 * middle-aligned to the activator.
 			 *
 			 * @type {String}
@@ -120,7 +121,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				'right bottom', 'right middle', 'right top']),
 
 			/**
-			 * An object containing properties to be passed to tooltip component.
+			 * Properties to be passed to tooltip component.
 			 *
 			 * @type {Object}
 			 * @public
@@ -128,7 +129,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			tooltipProps: PropTypes.object,
 
 			/**
-			 * The text to be displayed as the main content of the tooltip.
+			 * Tooltip content.
 			 *
 			 * @type {Node}
 			 * @public
@@ -136,8 +137,10 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			tooltipText: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 			/**
-			 * The width of tooltip content in pixels (px). If the content goes over the given width,
-			 * then it will automatically wrap. When `null`, content does not wrap.
+			 * The width of tooltip content in pixels (px).
+			 *
+			 * If the content goes over the given width, it will automatically wrap. When `null`,
+			 * content does not wrap.
 			 *
 			 * @type {Number|null}
 			 * @public

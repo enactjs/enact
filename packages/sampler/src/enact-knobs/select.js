@@ -25,9 +25,12 @@ const select = (name, items, Config, selecetdValue) => {
 	if (typeof Config === 'string' || Config == null) {
 		// Config wasn't set, or was omitted, causing the selectedValue to be the last value. Reassignment dipsy-doodle.
 		selecetdValue = Config;
-		Config = {
-			defaultProps: {}
-		};
+		Config = {};
+	}
+
+	// If there is no `defaultProps` object on the Config object
+	if (!Config.defaultProps) {
+		Config.defaultProps = {};
 	}
 
 	const defaultValue = selecetdValue || Config.defaultProps[name];

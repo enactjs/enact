@@ -10,7 +10,6 @@
  * @exports ButtonDecorator
  */
 
-import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
@@ -18,19 +17,15 @@ import {ButtonBase as UiButtonBase, ButtonDecorator as UiButtonDecorator} from '
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import React from 'react';
 
-import Icon from '../Icon';
+import {IconBase} from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import componentCss from './Button.less';
 
-// Called when `tooltip` props are used
-const deprecation = deprecate(() => {}, {
-	message: 'Tooltip props require the button to be wrapped by TooltipDecorator',
-	since: '2.0.0'
-});
+// Make a basic Icon in case we need it later. This cuts `Pure` out of icon for a small gain.
+const Icon = Skinnable(IconBase);
 
 /**
  * A button component.
@@ -40,6 +35,7 @@ const deprecation = deprecate(() => {}, {
  *
  * @class ButtonBase
  * @memberof moonstone/Button
+ * @extends ui/Button.ButtonBase
  * @ui
  * @public
  */
@@ -104,32 +100,39 @@ const ButtonBase = kind({
 		delete rest.backgroundOpacity;
 		delete rest.color;
 
-		if (__DEV__ && Object.keys(rest).some(s => s.indexOf('tooltip') === 0)) {
-			deprecation();
-		}
-
-		return (
-			<UiButtonBase
-				data-webos-voice-intent="Select"
-				{...rest}
-				css={css}
-				iconComponent={Icon}
-			/>
-		);
+		return UiButtonBase.inline({
+			'data-webos-voice-intent': 'Select',
+			...rest,
+			css,
+			iconComponent: Icon
+		});
 	}
 });
+
+/**
+ * Enforces a minimum width on the Button.
+ *
+ * *NOTE*: This property's default is `true` and must be explicitly set to `false` to allow
+ * the button to shrink to fit its contents.
+ *
+ * @name minWidth
+ * @memberof moonstone/Button.ButtonBase.prototype
+ * @type {Boolean}
+ * @default true
+ * @public
+ */
+
 
 /**
  * Applies Moonstone specific behaviors to [Button]{@link moonstone/Button.ButtonBase} components.
  *
  * @hoc
  * @memberof moonstone/Button
- * @extends moonstone/Button.ButtonBase
  * @mixes i18n/Uppercase.Uppercase
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes ui/Button.ButtonDecorator
  * @mixes spotlight/Spottable.Spottable
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const ButtonDecorator = compose(

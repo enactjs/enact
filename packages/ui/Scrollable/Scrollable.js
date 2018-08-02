@@ -1,5 +1,5 @@
 /**
- * Provides unstyled scrollable components and behaviors to be customized by a theme or application.
+ * Unstyled scrollable components and behaviors to be customized by a theme or application.
  *
  * @module ui/Scrollable
  * @exports constants
@@ -531,6 +531,8 @@ class ScrollableBase extends Component {
 	}
 
 	onDragStart = (ev) => {
+		if (ev.type === 'dragstart') return;
+
 		this.stop();
 		this.isDragging = true;
 		this.dragStartX = this.scrollLeft + this.getRtlX(ev.x);
@@ -538,6 +540,8 @@ class ScrollableBase extends Component {
 	}
 
 	onDrag = (ev) => {
+		if (ev.type === 'drag') return;
+
 		const {direction} = this.props;
 
 		this.start({
@@ -547,7 +551,9 @@ class ScrollableBase extends Component {
 		});
 	}
 
-	onDragEnd = () => {
+	onDragEnd = (ev) => {
+		if (ev.type === 'dragend') return;
+
 		this.isDragging = false;
 
 		if (this.flickTarget) {

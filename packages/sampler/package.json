@@ -1,6 +1,6 @@
 {
   "name": "enact-sampler",
-  "version": "2.0.0-rc.2",
+  "version": "2.0.1",
   "description": "Component and QA samples for Enact",
   "private": true,
   "main": "index.js",
@@ -17,12 +17,12 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^2.0.0-rc.2",
-    "@enact/i18n": "^2.0.0-rc.2",
-    "@enact/moonstone": "^2.0.0-rc.2",
-    "@enact/spotlight": "^2.0.0-rc.2",
-    "@enact/ui": "^2.0.0-rc.2",
-    "@enact/webos": "^2.0.0-rc.2",
+    "@enact/core": "^2.0.1",
+    "@enact/i18n": "^2.0.1",
+    "@enact/moonstone": "^2.0.1",
+    "@enact/spotlight": "^2.0.1",
+    "@enact/ui": "^2.0.1",
+    "@enact/webos": "^2.0.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2"
   },

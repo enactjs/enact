@@ -1,6 +1,6 @@
 /**
- * Exports the {@link ui/Layout.Layout}, {@link ui/Layout.LayoutBase}, and  {@link ui/Layout.Cell}
- * components. The default export is {@link ui/Layout.Layout}. Layout also has two shorthand
+ * Exports the {@link ui/Layout.Layout}, {@link ui/Layout.LayoutBase}, and {@link ui/Layout.Cell}
+ * components. The default export is {@link ui/Layout.Layout}. `Layout` also has two shorthand
  * components exported: `Row` and `Column`. These two assign preset `orientation` properties to
  * simplify usage and readability. They are identical to `<Layout orientation="horizontal">` and
  * `<Layout orientation="vertical">` respectively.
@@ -19,13 +19,18 @@
  * </Layout>
  *
  * @module ui/Layout
+ * @exports Cell
+ * @exports Column
+ * @exports Layout
+ * @exports LayoutBase
+ * @exports Row
  */
 
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {Cell, toFlexAlign} from './Cell';
+import {Cell, CellBase, toFlexAlign} from './Cell';
 
 import css from './Layout.less';
 
@@ -33,9 +38,9 @@ import css from './Layout.less';
  * A stateless component that acts as a containing area for [Cells]{@link ui/Layout.Cell} to be
  * positioned in a row or a column (horizontally or vertically, respectively. It supports an
  * [orientation]{@link ui/Layout.Layout#orientation} property for laying-out its contents
- * (Cells) in an organized, readable way.
+ * (`Cells`) in an organized, readable way.
  *
- * Additional Example:
+ * Example:
  * ```
  * import Input from '@enact/moonstone/Input';
  * import css from './LayoutExample.less';
@@ -86,7 +91,7 @@ const LayoutBase = kind({
 		children: PropTypes.node,
 
 		/**
-		 * The type of component to use to render as the Layout. May be a DOM node name (e.g 'div',
+		 * The type of component to use to render as the `Layout`. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
 		 *
 		 * @type {Component}
@@ -96,8 +101,8 @@ const LayoutBase = kind({
 		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
-		 * Allows this Layout to have following siblings drawn on the same line as itself, instead
-		 * of carving out the entire horizontal space for itself.
+		 * When `true`, allows this `Layout` to have following siblings drawn on the same line as itself
+		 * instead of carving out the entire horizontal space for itself.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -106,7 +111,7 @@ const LayoutBase = kind({
 		inline: PropTypes.bool,
 
 		/**
-		 * The orientation of the Layout, i.e. how the children [Cells]{@link ui/Layout.Cell} are
+		 * The orientation of the `Layout`, i.e. how the children [Cells]{@link ui/Layout.Cell} are
 		 * positioned on the screen. Must be either `'horizontal'` or `'vertical'`.
 		 *
 		 * @type {String}
@@ -116,10 +121,10 @@ const LayoutBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * Determine how a Layout handles its cells if there are more than fit in the available
-		 * space. This works like a normal Boolean prop, but also accepts strings for customization
+		 * Determines how a Layout handles its cells if there are more than fit in the available
+		 * space. This works like a normal `Boolean` prop, but also accepts strings for customization
 		 * beyond the basic on/off support. In addition to `true` and `false`, the following strings
-		 * are supported: 'wrap', 'nowrap', 'reverse'. 'reverse' preforms standard line wrapping but
+		 * are supported: 'wrap', 'nowrap', 'reverse'. 'reverse' performs standard line wrapping but
 		 * additional lines are placed above/before the preceding line instead of below/after.
 		 *
 		 * @type {Boolean|String}
@@ -185,7 +190,10 @@ const LayoutBase = kind({
  * @public
  */
 const Column = (props) => (
-	<LayoutBase {...props} orientation="vertical" />
+	LayoutBase.inline({
+		...props,
+		orientation: 'vertical'
+	})
 );
 
 /**
@@ -196,12 +204,16 @@ const Column = (props) => (
  * @public
  */
 const Row = (props) => (
-	<LayoutBase {...props} orientation="horizontal" />
+	LayoutBase.inline({
+		...props,
+		orientation: 'horizontal'
+	})
 );
 
 export default LayoutBase;
 export {
 	Cell,
+	CellBase,
 	Column,
 	LayoutBase as Layout,
 	LayoutBase,

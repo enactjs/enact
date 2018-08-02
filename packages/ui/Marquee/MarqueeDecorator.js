@@ -91,6 +91,7 @@ const defaultConfig = {
 	 * * `'ltr'` if the text should marquee to the left
 	 *
 	 * @type {Function}
+	 * @kind member
 	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	marqueeDirection: (str) => direction(str) === 'rtl' ? 'rtl' : 'ltr'
@@ -122,7 +123,7 @@ const TimerState = {
 };
 
 /**
- * {@link ui/Marquee.MarqueeDecorator} is a Higher-order Component which makes
+ * {@link ui/Marquee.MarqueeDecorator} is a higher-order component (HOC) which makes
  * the Wrapped component's children marquee.
  *
  * @class MarqueeDecorator

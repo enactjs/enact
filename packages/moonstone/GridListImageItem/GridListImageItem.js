@@ -1,8 +1,17 @@
 /**
- * Provides Moonstone-themed grid list image item components and behaviors.
+ * Provides Moonstone styled grid list image item components and behaviors.
+ *
+ * @example
+ * <GridListImageItem
+ *   caption="image0"
+ *   source="http://placehold.it/100x100/9037ab/ffffff&text=Image0"
+ *   subCaption="sub-image0"
+ * />
  *
  * @module moonstone/GridListImageItem
  * @exports GridListIamgeItem
+ * @exports GridListImageItemBase
+ * @exports GridListImageItemDecorator
  */
 
 import compose from 'ramda/src/compose';
@@ -30,7 +39,7 @@ const
 	);
 
 /**
- * A moonstone-styled base component for [GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem}.
+ * A Moonstone styled base component for [GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem}.
  *
  * @class GridListImageItemBase
  * @extends ui/GridListImageItem.GridListImageItem
@@ -73,7 +82,7 @@ const GridListImageItemBase = kind({
 		placeholder: PropTypes.string,
 
 		/**
-		 * When `true`, applies a selected visual effect to the image, but only if `selectionOverlayShowing`
+		 * Applies a selected visual effect to the image, but only if `selectionOverlayShowing`
 		 * is also `true`.
 		 *
 		 * @type {Boolean}
@@ -162,6 +171,7 @@ const GridListImageItemDecorator = compose(
  *
  * @class GridListImageItem
  * @memberof moonstone/GridListImageItem
+ * @extends moonstone/GridListIamgeItem.GridListImageItemBase
  * @mixes moonstone/GridListImageItem.GridListImageItemDecorator
  * @see moonstone/GridListImageItem.GridListImageItemBase
  * @ui

@@ -12,10 +12,11 @@ import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import IdProvider from '../internal/IdProvider';
 import {MarqueeDecorator} from '../Marquee';
 import Popup from '../Popup';
 
-import css from './Dialog.less';
+import componentCss from './Dialog.less';
 
 const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
 
@@ -64,6 +65,27 @@ const DialogBase = kind({
 		 * @public
 		 */
 		children: PropTypes.node,
+
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `dialog` - The root class name
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		css: PropTypes.object,
+
+		/**
+		 * The id of dialog referred to when generating ids for `'title'`, `'titleBelow'`, `'children'`, and `'buttons'`.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		id: PropTypes.string,
 
 		/**
 		 * Disables animating the dialog on or off screen.
@@ -147,6 +169,8 @@ const DialogBase = kind({
 		/**
 		 * The secondary text displayed below the `title` within the header.
 		 *
+		 * Will not display if `title` is not set.
+		 *
 		 * @type {String}
 		 * @public
 		 */
@@ -163,33 +187,35 @@ const DialogBase = kind({
 	},
 
 	styles: {
-		css,
-		className: 'dialog'
+		css: componentCss,
+		className: 'dialog',
+		publicClassNames: ['dialog']
 	},
 
 	computed: {
-		className: ({noDivider, styler}) => styler.append({showDivider: !noDivider})
+		className: ({noDivider, styler}) => styler.append({showDivider: !noDivider}),
+		titleBelow: ({title, titleBelow}) => title ? titleBelow : ''
 	},
 
-	render: ({buttons, casing, children, title, titleBelow, ...rest}) => {
+	render: ({buttons, casing, css, children, id, title, titleBelow, ...rest}) => {
 		delete rest.noDivider;
 
 		return (
-			<Popup {...rest}>
+			<Popup {...rest} aria-labelledby={`${id}_title ${id}_titleBelow ${id}_children ${id}_buttons`} css={css}>
 				<div className={css.titleWrapper}>
 					<div className={css.titleBlock}>
-						<MarqueeH1 casing={casing} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
+						<MarqueeH1 casing={casing} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title} id={`${id}_title`}>
 							{title}
 						</MarqueeH1>
-						<h2 className={css.titleBelow}>
+						<h2 className={css.titleBelow} id={`${id}_titleBelow`}>
 							{titleBelow}
 						</h2>
 					</div>
-					<div className={css.buttons}>
+					<div className={css.buttons} id={`${id}_buttons`}>
 						{buttons}
 					</div>
 				</div>
-				<div className={css.body}>
+				<div className={css.body} id={`${id}_children`}>
 					{children}
 				</div>
 			</Popup>
@@ -227,9 +253,12 @@ const DialogBase = kind({
  * @ui
  * @public
  */
-const Dialog = Slottable(
-	{slots: ['title', 'titleBelow', 'buttons']},
-	DialogBase
+const Dialog = IdProvider(
+	{generateProp: null, prefix: 'd_'},
+	Slottable(
+		{slots: ['title', 'titleBelow', 'buttons']},
+		DialogBase
+	)
 );
 
 export default Dialog;

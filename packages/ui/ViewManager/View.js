@@ -39,7 +39,7 @@ class View extends React.Component {
 		duration: PropTypes.number.isRequired,
 
 		/**
-		 * Set to `true` when the View should "appear" without transitioning into the viewport
+		 * Set to `true` when the View should 'appear' without transitioning into the viewport
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -64,7 +64,7 @@ class View extends React.Component {
 
 		/**
 		 * Time, in milliseconds, to wait after a view has entered to inform it by passing the
-		 * `enteringProp` as false.
+		 * `enteringProp` as `false`.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -93,14 +93,14 @@ class View extends React.Component {
 		index: PropTypes.number,
 
 		/**
-		 * Indicates if a view is currently leaving.
+		 * When `true`, indicates if a view is currently leaving.
 		 *
 		 * @type {Boolean}
 		 */
 		leaving: PropTypes.bool,
 
 		/**
-		 * Indicates if the transition should be animated
+		 * When `true`, indicates if the transition should be animated
 		 *
 		 * @type {Boolean}
 		 * @default true
@@ -116,7 +116,7 @@ class View extends React.Component {
 		previousIndex: PropTypes.number,
 
 		/**
-		 * Indicates if the transition should be reversed. The effect depends on how the provided
+		 * When `true`, indicates if the transition should be reversed. The effect depends on how the provided
 		 * `arranger` handles reversal.
 		 *
 		 * @type {Boolean}
