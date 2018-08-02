@@ -36,7 +36,7 @@ const defaultConfig = {
 	notify: 'onScroll',
 
 	/**
-	 * Multiplier used with the Wrapped components height and width to determine the threshold for
+	 * Multiplier used with the wrapped component's height and width to determine the threshold for
 	 * replacing the placeholder component with the true component.
 	 *
 	 * @type {Number}
@@ -47,7 +47,7 @@ const defaultConfig = {
 };
 
 /**
- * [PlaceholderControllerDecorator]{@link ui/Placeholder.PlaceholderControllerDecorator} is a Higher-order Component that can make
+ * [PlaceholderControllerDecorator]{@link ui/Placeholder.PlaceholderControllerDecorator} is a higher-order component (HOC) that can make
  * placeholders rendered or not rendered depending on `'scrollTop'` from the `'onScroll'`'s parameter.
  *
  * @class PlaceholderControllerDecorator

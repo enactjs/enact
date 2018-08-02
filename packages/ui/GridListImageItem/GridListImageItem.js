@@ -1,8 +1,8 @@
 /**
- * Provides unstyled grid list image item components and behaviors to be customized by a theme or application.
+ * Unstyled grid list image item components and behaviors to be customized by a theme or application.
  *
  * @module ui/GridListImageItem
- * @exports GridListIamgeItem
+ * @exports GridListImageItem
  */
 
 import kind from '@enact/core/kind';
@@ -105,7 +105,7 @@ const GridListImageItem = kind({
 		 * component, `kind()` or React component. The following is an example with custom selection
 		 * overlay kind.
 		 *
-		 * Example Usage:
+		 * Example:
 		 * ```
 		 * const SelectionOverlay = kind({
 		 * 	render: () => <div>custom overlay</div>
