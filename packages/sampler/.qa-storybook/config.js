@@ -10,7 +10,7 @@ setOptions({
 	showStoriesPanel: true,
 	showAddonPanel: true,
 	showSearchBox: false,
-	addonPanelInRight: false,
+	addonPanelInRight: false
 });
 
 configure(stories, module);

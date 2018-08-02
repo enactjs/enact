@@ -1,8 +1,8 @@
 /**
- * Provides unstyled grid list image item components and behaviors to be customized by a theme or application.
+ * Unstyled grid list image item components and behaviors to be customized by a theme or application.
  *
  * @module ui/GridListImageItem
- * @exports GridListIamgeItem
+ * @exports GridListImageItem
  */
 
 import kind from '@enact/core/kind';
@@ -26,15 +26,6 @@ const GridListImageItem = kind({
 	name: 'ui:GridListImageItem',
 
 	propTypes: /** @lends ui/GridListImageItem.GridListImageItem.prototype */ {
-		/**
-		 * The absolute URL path to the image.
-		 *
-		 * @type {String}
-		 * @required
-		 * @public
-		 */
-		source: PropTypes.string.isRequired,
-
 		/**
 		 * The primary caption to be displayed with the image.
 		 *
@@ -114,7 +105,7 @@ const GridListImageItem = kind({
 		 * component, `kind()` or React component. The following is an example with custom selection
 		 * overlay kind.
 		 *
-		 * Example Usage:
+		 * Example:
 		 * ```
 		 * const SelectionOverlay = kind({
 		 * 	render: () => <div>custom overlay</div>
@@ -137,6 +128,14 @@ const GridListImageItem = kind({
 		 * @public
 		 */
 		selectionOverlayShowing: PropTypes.bool,
+
+		/**
+		 * The absolute URL path to the image.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		source: PropTypes.string,
 
 		/**
 		 * The second caption line to be displayed with the image.

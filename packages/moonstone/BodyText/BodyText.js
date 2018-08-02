@@ -71,7 +71,7 @@ const BodyTextBase = kind({
  *
  * @hoc
  * @memberof moonstone/BodyText
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const BodyTextDecorator = compose(

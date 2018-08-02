@@ -4,8 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * {@link moonstone/MoonstoneDecorator.AccessibilityDecorator} is a Higher-order Component that
- * classifies an application with a target set of font sizing rules
+ * A Higher-order Component that classifies an application with a target set of font sizing rules.
  *
  * @class AccessibilityDecorator
  * @memberof moonstone/MoonstoneDecorator
@@ -28,7 +27,9 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {
 			highContrast: PropTypes.bool,
 
 			/**
-			 * Set the goal size of the text. The UI library will be responsible for using this
+			 * Sets the goal size of the text.
+			 *
+			 * The UI library will be responsible for using this
 			 * information to adjust the components' text sizes to this preset.
 			 * Current presets are `'normal'` (default), and `'large'`.
 			 *

@@ -32,6 +32,8 @@ import componentCss from './IconButton.less';
  *
  * @class IconButtonBase
  * @memberof moonstone/IconButton
+ * @extends moonstone/Button.ButtonBase
+ * @extends ui/IconButton.IconButtonBase
  * @ui
  * @public
  */
@@ -40,7 +42,7 @@ const IconButtonBase = kind({
 
 	propTypes: /** @lends moonstone/IconButton.IconButtonBase.prototype */ {
 		/**
-		 * The background-color opacity of this icon button
+		 * The background-color opacity of this icon button.
 		 *
 		 * Valid values are:
 		 * * `'translucent'`,
@@ -98,18 +100,15 @@ const IconButtonBase = kind({
 	},
 
 	render: ({children, css, tooltipNode, ...rest}) => {
-		return (
-			<UiIconButtonBase
-				data-webos-voice-intent="Select"
-				{...rest}
-				buttonComponent={<ButtonBase css={css} />}
-				css={css}
-				icon={children}
-				iconComponent={Icon}
-			>
-				{tooltipNode}
-			</UiIconButtonBase>
-		);
+		return UiIconButtonBase.inline({
+			'data-webos-voice-intent': 'Select',
+			...rest,
+			buttonComponent: <ButtonBase css={css} />,
+			css,
+			icon: children,
+			iconComponent: Icon,
+			children: tooltipNode
+		});
 	}
 });
 
@@ -122,7 +121,7 @@ const IconButtonBase = kind({
  * @mixes moonstone/TooltipDecorator.TooltipDecorator
  * @mixes ui/IconButton.IconButtonDecorator
  * @mixes spotlight/Spottable.Spottable
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const IconButtonDecorator = compose(

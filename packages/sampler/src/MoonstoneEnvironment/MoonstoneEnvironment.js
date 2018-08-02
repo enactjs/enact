@@ -1,5 +1,6 @@
 // Moonstone Environment
 
+import classnames from 'classnames';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -27,7 +28,7 @@ const PanelsBase = kind({
 	render: ({children, title, description, ...rest}) => (
 		<div {...rest}>
 			<Panels onApplicationClose={reloadPage}>
-				<Panel>
+				<Panel className={css.panel}>
 					<Header type="compact" title={title} casing="preserve" />
 					{description ? (
 						<div className={css.description}>
@@ -131,8 +132,28 @@ const StorybookDecorator = (story, config) => {
 		},
 		groupId: globalGroup
 	};
+
+	const DevelopmentConfig = {
+		defaultProps: {
+			'debug aria': false,
+			'debug layout': false,
+			'debug spotlight': false
+		},
+		groupId: 'Development'
+	};
+
+	const classes = {
+		aria: boolean('debug aria', DevelopmentConfig, (getPropFromURL('debug aria') === 'true')),
+		layout: boolean('debug layout', DevelopmentConfig, (getPropFromURL('debug layout') === 'true')),
+		spotlight: boolean('debug spotlight', DevelopmentConfig, (getPropFromURL('debug spotlight') === 'true'))
+	};
+	if (Object.keys(classes).length > 0) {
+		classes.debug = true;
+	}
+
 	return (
 		<Moonstone
+			className={classnames(classes)}
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
 			locale={select('locale', locales, Config, getPropFromURL('locale'))}

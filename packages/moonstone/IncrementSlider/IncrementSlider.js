@@ -10,7 +10,6 @@
  *   max={100}
  *   min={-100}
  *   step={5}
- *   tooltip
  * />
  *
  * @module moonstone/IncrementSlider
@@ -58,6 +57,9 @@ const forwardWithType = (type, props) => forward(type, {type}, props);
  *
  * @class IncrementSliderBase
  * @memberof moonstone/IncrementSlider
+ * @extends moonstone/Slider.SliderBase
+ * @mixes moonstone/Skinnable.Skinnable
+ * @mixes spotlight/Spottable.Spottable
  * @ui
  * @public
  */
@@ -66,7 +68,7 @@ const IncrementSliderBase = kind({
 
 	propTypes: /** @lends moonstone/IncrementSlider.IncrementSliderBase.prototype */ {
 		/**
-		 * When `true`, prevents read out of both the slider and the increment and decrement
+		 * Prevents read out of both the slider and the increment and decrement
 		 * buttons.
 		 *
 		 * @type {Boolean}
@@ -96,7 +98,7 @@ const IncrementSliderBase = kind({
 		'data-webos-voice-group-label': PropTypes.string,
 
 		/**
-		 * When `true`, the knob displays selected and can be moved using 5-way controls.
+		 * Sets the knob to selected state and allows it to move via 5-way controls.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -141,7 +143,7 @@ const IncrementSliderBase = kind({
 		decrementIcon: PropTypes.string,
 
 		/**
-		 * When `true`, the component is shown as disabled and does not generate events
+		 * Disables the slider and prevents events from firing.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -149,7 +151,7 @@ const IncrementSliderBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * When `true`, the tooltip is shown when present
+		 * Shows the tooltip, when present.
 		 * @type {Boolean}
 		 * @public
 		 */
@@ -211,7 +213,7 @@ const IncrementSliderBase = kind({
 		min: PropTypes.number,
 
 		/**
-		 * When `true`, the slider bar doesn't show a fill and doesn't highlight when spotted
+		 * Hides the slider bar fill and prevents highlight when spotted.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -219,7 +221,7 @@ const IncrementSliderBase = kind({
 		noFill: PropTypes.bool,
 
 		/**
-		 * The handler when the knob is activated or deactivated by selecting it via 5-way
+		 * Called when the knob is activated or deactivated by selecting it via 5-way.
 		 *
 		 * @type {Function}
 		 * @public
@@ -227,7 +229,7 @@ const IncrementSliderBase = kind({
 		onActivate: PropTypes.func,
 
 		/**
-		 * The handler to run when the value is changed.
+		 * Called when the value is changed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -237,7 +239,7 @@ const IncrementSliderBase = kind({
 		onChange: PropTypes.func,
 
 		/**
-		 * The handler to run when the decrement button becomes disabled
+		 * Called run when the decrement button becomes disabled.
 		 *
 		 * @type {Function}
 		 * @private
@@ -245,7 +247,7 @@ const IncrementSliderBase = kind({
 		onDecrementSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * Forwarded from SliderBehaviorDecorator onto the internal slider
+		 * Forwarded from SliderBehaviorDecorator onto the internal slider.
 		 *
 		 * @type {Function}
 		 * @private
@@ -253,7 +255,7 @@ const IncrementSliderBase = kind({
 		onDragEnd: PropTypes.func,
 
 		/**
-		 * Forwarded from SliderBehaviorDecorator onto the internal slider
+		 * Forwarded from SliderBehaviorDecorator onto the internal slider.
 		 *
 		 * @type {Function}
 		 * @private
@@ -261,7 +263,7 @@ const IncrementSliderBase = kind({
 		onDragStart: PropTypes.func,
 
 		/**
-		 * The handler to run when the increment button becomes disabled
+		 * Called when the increment button becomes disabled.
 		 *
 		 * @type {Function}
 		 * @private
@@ -269,7 +271,7 @@ const IncrementSliderBase = kind({
 		onIncrementSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * The handler to run when the increment button becomes disabled
+		 * Called when the increment button becomes disabled.
 		 *
 		 * @type {Function}
 		 * @private
@@ -277,7 +279,7 @@ const IncrementSliderBase = kind({
 		onSpotlightDirection: PropTypes.func,
 
 		/**
-		 * The handler to run when the component is removed while retaining focus.
+		 * Called when the component is removed while retaining focus.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -286,7 +288,7 @@ const IncrementSliderBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the component when the 5-way down key is pressed.
+		 * Called prior to focus leaving the component when the 5-way down key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -295,7 +297,7 @@ const IncrementSliderBase = kind({
 		onSpotlightDown: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the component when the 5-way left key is pressed.
+		 * Called prior to focus leaving the component when the 5-way left key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -304,7 +306,7 @@ const IncrementSliderBase = kind({
 		onSpotlightLeft: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the component when the 5-way right key is pressed.
+		 * Called prior to focus leaving the component when the 5-way right key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -313,7 +315,7 @@ const IncrementSliderBase = kind({
 		onSpotlightRight: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the component when the 5-way up key is pressed.
+		 * Called prior to focus leaving the component when the 5-way up key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -332,7 +334,7 @@ const IncrementSliderBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * When `true`, the component cannot be navigated using spotlight.
+		 * Disables spotlight navigation into the component.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -578,6 +580,7 @@ const IncrementSliderDecorator = compose(
  *
  * @class IncrementSlider
  * @memberof moonstone/IncrementSlider
+ * @extends moonstone/IncrementSlider.IncrementSliderBase
  * @ui
  * @public
  */

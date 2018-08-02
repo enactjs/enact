@@ -16,7 +16,7 @@
 		}
 
 		&.shrink {
-			flex: 0 0 0;
+			flex: 0 0 auto;
 		}
 	}
 
@@ -62,23 +62,23 @@
 	}
 
 	// Debug lines to help see what's going on
-	:global(.debug)&,
-	:global(.debug) & {
+	:global(.debug.layout)&,
+	:global(.debug.layout) & {
 		outline: 1px dotted teal;
 	}
 
 	.cell {
-		:global(.debug)&,
-		:global(.debug) & {
+		:global(.debug.layout)&,
+		:global(.debug.layout) & {
 			outline: 1px dashed red;
 		}
 	}
-	& .cell {                :global(.debug) & { outline-color: red; }}
-	& & .cell {              :global(.debug) & { outline-color: orange; }}
-	& & & .cell {            :global(.debug) & { outline-color: yellow; }}
-	& & & & .cell {          :global(.debug) & { outline-color: lime; }}
-	& & & & & .cell {        :global(.debug) & { outline-color: cyan; }}
-	& & & & & & .cell {      :global(.debug) & { outline-color: blue; }}
-	& & & & & & & .cell {    :global(.debug) & { outline-color: violet; }}
-	& & & & & & & & .cell {  :global(.debug) & { outline-color: lightslategray; }}
+	& .cell {                :global(.debug.layout) & { outline-color: red; }}
+	& & .cell {              :global(.debug.layout) & { outline-color: orange; }}
+	& & & .cell {            :global(.debug.layout) & { outline-color: yellow; }}
+	& & & & .cell {          :global(.debug.layout) & { outline-color: lime; }}
+	& & & & & .cell {        :global(.debug.layout) & { outline-color: cyan; }}
+	& & & & & & .cell {      :global(.debug.layout) & { outline-color: blue; }}
+	& & & & & & & .cell {    :global(.debug.layout) & { outline-color: violet; }}
+	& & & & & & & & .cell {  :global(.debug.layout) & { outline-color: lightslategray; }}
 }

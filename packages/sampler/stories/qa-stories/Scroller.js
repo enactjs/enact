@@ -28,6 +28,7 @@ storiesOf('Scroller', module)
 		'List of things',
 		() => (
 			<Scroller
+				data-spotlight-container-disabled={boolean('data-spotlight-container-disabled', Scroller, false)}
 				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
 				style={{height: ri.unit(600, 'rem')}}
 			>

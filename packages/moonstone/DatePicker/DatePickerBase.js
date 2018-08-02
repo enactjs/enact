@@ -20,7 +20,7 @@ import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponen
  * @memberof moonstone/DatePicker
  * @extends moonstone/ExpandableItem.ExpandableItemBase
  * @ui
- * @private
+ * @public
  */
 const DatePickerBase = kind({
 	name: 'DatePickerBase',
@@ -94,6 +94,15 @@ const DatePickerBase = kind({
 		 * @public
 		 */
 		year: PropTypes.number.isRequired,
+
+		/**
+		 * Disables voice control.
+		 *
+		 * @type {Boolean}
+		 * @memberof moonstone/DatePicker.DatePickerBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
 
 		/**
 		 * The "aria-label" for the day picker.
@@ -231,7 +240,7 @@ const DatePickerBase = kind({
 		rtl: PropTypes.bool,
 
 		/**
-		 * Disables the component with respect to spotlight navigation only.
+		 * Disables 5-way spotlight from navigating into the component.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -280,6 +289,7 @@ const DatePickerBase = kind({
 	},
 
 	render: ({
+		'data-webos-voice-disabled': voiceDisabled,
 		day,
 		dayAriaLabel,
 		dayLabel = $L('day'),
@@ -312,6 +322,7 @@ const DatePickerBase = kind({
 				{...rest}
 				showLabel="always"
 				autoClose={false}
+				data-webos-voice-disabled={voiceDisabled}
 				lockBottom={false}
 				onSpotlightDisappear={onSpotlightDisappear}
 				onSpotlightLeft={onSpotlightLeft}
@@ -332,6 +343,8 @@ const DatePickerBase = kind({
 										accessibilityHint={dayLabel}
 										aria-label={dayAriaLabel}
 										className={css.day}
+										data-webos-voice-disabled={voiceDisabled}
+										data-webos-voice-group-label={dayLabel}
 										key="day-picker"
 										label={noLabels ? null : dayLabel}
 										max={maxDays}
@@ -352,6 +365,8 @@ const DatePickerBase = kind({
 										accessibilityHint={monthLabel}
 										aria-label={monthAriaLabel}
 										className={css.month}
+										data-webos-voice-disabled={voiceDisabled}
+										data-webos-voice-group-label={monthLabel}
 										key="month-picker"
 										label={noLabels ? null : monthLabel}
 										max={maxMonths}
@@ -372,6 +387,8 @@ const DatePickerBase = kind({
 										accessibilityHint={yearLabel}
 										aria-label={yearAriaLabel}
 										className={css.year}
+										data-webos-voice-disabled={voiceDisabled}
+										data-webos-voice-group-label={yearLabel}
 										key="year-picker"
 										label={noLabels ? null : yearLabel}
 										max={maxYear}

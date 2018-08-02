@@ -1,5 +1,15 @@
 /**
  * Provides Moonstone-themed scroller components and behaviors.
+ * @example
+ * <Scroller>
+ * 	<div style={{height: "150px"}}>
+ * 		<p>San Francisco</p>
+ * 		<p>Seoul</p>
+ * 		<p>Bangalore</p>
+ * 		<p>New York</p>
+ * 		<p>London</p>
+ * 	</div>
+ * </Scroller>
  *
  * @module moonstone/Scroller
  * @exports Scroller
@@ -26,8 +36,9 @@ const
 
 /**
  * A Moonstone-styled base component for [Scroller]{@link moonstone/Scroller.Scroller}.
- * In most circumstances, you will want to use the SpotlightContainerDecorator and Scrollable version:
- * [Scroller]{@link moonstone/Scroller.Scroller}
+ * In most circumstances, you will want to use the
+ * [SpotlightContainerDecorator]{@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
+ * and the Scrollable version, [Scroller]{@link moonstone/Scroller.Scroller}.
  *
  * @class ScrollerBase
  * @memberof moonstone/Scroller
@@ -48,7 +59,7 @@ class ScrollerBase extends Component {
 		initUiChildRef: PropTypes.func,
 
 		/**
-		 * Callback function to run after [Scroller]{@link moonstone/Scroller.Scroller} updates.
+		 * Called when [Scroller]{@link moonstone/Scroller.Scroller} updates.
 		 *
 		 * @type {function}
 		 * @private
@@ -299,16 +310,24 @@ class ScrollerBase extends Component {
 		return oPoint;
 	}
 
-	scrollToNextPage = ({direction, reverseDirection, focusedItem, spotlightId}) => {
-		const
-			endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect()),
-			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
+	scrollToNextPage = ({direction, focusedItem, reverseDirection, spotlightId}) => {
+		const endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect());
+		let candidateNode = null;
 
-		if (next === focusedItem) {
-			return false; // Scroll one page with animation
-		} else {
-			return next; // Focus a next item
+		/* Find a spottable item in the next page */
+		candidateNode = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
+
+		/* Find a spottable item in a whole data */
+		if (candidateNode === focusedItem) {
+			candidateNode = getTargetByDirectionFromPosition(direction, endPoint, spotlightId);
 		}
+
+		/* If there is no spottable item next to the current item */
+		if (candidateNode === focusedItem) {
+			return null;
+		}
+
+		return candidateNode;
 	}
 
 	scrollToBoundary = (direction) => {
@@ -395,10 +414,7 @@ Scroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
 	/**
 	 * Direction of the scroller.
 	 *
-	 * Valid values are:
-	 * * `'both'`,
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
+	 * * Values: `'both'`, `'horizontal'`, `'vertical'`.
 	 *
 	 * @type {String}
 	 * @default 'both'
@@ -444,10 +460,7 @@ ScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototyp
 	/**
 	 * Direction of the scroller.
 	 *
-	 * Valid values are:
-	 * * `'both'`,
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
+	 * * Values: `'both'`, `'horizontal'`, `'vertical'`.
 	 *
 	 * @type {String}
 	 * @default 'both'

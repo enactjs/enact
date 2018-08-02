@@ -2,6 +2,39 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [2.0.1] - 2018-08-01
+
+### Fixed
+
+- `spotlight` to not blur when pointer leaves floating webOS app while paused
+
+## [2.0.0] - 2018-07-30
+
+### Changed
+
+- `spotlight` to default to 5-way mode on initialization
+
+### Fixed
+
+- `spotlight` to blur when pointer leaves floating webOS app
+- `spotlight` to prevent changing the active container when the currently active container is restricted is "self-only"
+
+## [2.0.0-rc.3] - 2018-07-23
+
+### Fixed
+
+- `spotlight` to track pointer mode while paused
+
+## [2.0.0-rc.2] - 2018-07-16
+
+### Added
+
+- `spotlight` debugging to visualize which components will be targeted as the next component for any 5-way direction
+
+## [2.0.0-rc.1] - 2018-07-09
+
+No significant changes.
+
 ## [2.0.0-beta.9] - 2018-07-02
 
 No significant changes.
@@ -110,6 +143,10 @@ No significant changes.
 No significant changes.
 
 ## [1.14.0] - 2018-02-23
+
+No significant changes.
+
+## [1.13.4] - 2018-07-30
 
 No significant changes.
 

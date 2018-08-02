@@ -9,14 +9,15 @@ and to update the current locale. Additionally, it provides a locale-aware `Uppe
 ## Usage
 
 ```
-import {I18nDecorator, contextTypes} from '@enact/i18n/I18nDecorator';
+import {I18nContextDecorator, I18nDecorator} from '@enact/i18n/I18nDecorator';
+import React from 'react';
 
-const MyComponent = (props, context) => (
-    <div>{context.rtl ? 'right to left' : 'left to right'}</div>
+const MyComponent = I18nContextDecorator(
+    {rtlProp: 'rtl'},
+    (props) => (
+        <div>{props.rtl ? 'right to left' : 'left to right'}</div>
+    )
 );
-
-// Without contextTypes, your component will not receive context!
-MyComponent.contextTypes = contextTypes;
 
 const MyApp = () => (
     <div>

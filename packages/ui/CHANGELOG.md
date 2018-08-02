@@ -2,6 +2,48 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `ui/Image` to not require `src` prop if `placeholder` is specified
+- `ui/GridListImageItem` to not require `source` prop
+
+## [2.0.1] - 2018-08-01
+
+No significant changes.
+
+## [2.0.0] - 2018-07-30
+
+### Added
+
+- `ui/LabeledIcon` component for a lightweight `Icon` with a label
+
+### Removed
+
+- `ui/Skinnable.withSkinnableProps` higher-order component
+
+### Fixed
+
+- `ui/Scrollable` to ignore native drag events which interfered with touch drag support
+
+## [2.0.0-rc.3] - 2018-07-23
+
+No significant changes.
+
+## [2.0.0-rc.2] - 2018-07-16
+
+No significant changes.
+
+## [2.0.0-rc.1] - 2018-07-09
+
+### Removed
+
+- `ui/FloatingLayer.contextTypes` export
+- `ui/Marquee.controlContextTypes` export
+- `ui/Placeholder.contextTypes` export
+- `ui/Resizable.contextTypes` export
+
 ## [2.0.0-beta.9] - 2018-07-02
 
 No significant changes.
@@ -210,6 +252,10 @@ No significant changes.
 ### Deprecated
 
 - `ui/Holdable` and `ui/Pressable`, to be replaced by `ui/Touchable` in 2.0.0
+
+## [1.13.4] - 2018-07-30
+
+No significant changes.
 
 ## [1.13.3] - 2018-01-16
 

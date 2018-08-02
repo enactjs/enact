@@ -18,42 +18,25 @@ This guide details how to use some of i18n library's features. For an overview o
 
 `I18nDecorator` is a higher-order component (HOC) that provides easy access to locale information. Applications wishing to receive locale information can wrap the root component with the HOC. It is not necessary to use `I18nDecorator` directly for applications using `MoonstoneDecorator`.
 
-The HOC works by passing locale information to the app through `context` and CSS classes. It contains two properties inside its `context`:
+The HOC works by passing locale information to the app through [context](https://reactjs.org/docs/context.html) and CSS classes. It contains three properties via context:
 
+* `locale` - a string representing the current locale
 * `rtl` - if `true` then the locale is a right-to-left language.
 * `updateLocale` - a function to update the locale of the app.
 
-### Using I18nDecorator context
+### Accessing I18nDecorator context properties
 
-The following example demonstrates using `context` and `contextTypes` with a component:
-
-```javascript
-import {contextTypes} from '@enact/i18n/I18nDecorator';
-
-const SomeComponent = (props, context) => (
-	<div>Hello from the {context.rlt ? 'right' : 'left'}</div>
-);
-
-// This works for class-based, stateless, and Enact `kind` components
-SomeComponent.contextTypes = contextTypes;
-```
-
-> NOTE: Omitting `contextTypes` will prevent the component from receiving the passed `context`.
-
-`context` is used very similarly to `props` in a component.
-
-In a stateless component, `context` is the second argument to the `render()` function. In a `kind` component, context is also passed as the second argument to `computed`, `handlers` and `render`:
+The following example demonstrates using `I18nContextDecorator` with a component:
 
 ```javascript
-const SomeComponent = kind({
-	name: 'SomeComponent',
-	computed: {
-		computedProp: (props, context) => context.rtl ? 'left' : 'right'
-	},
-	render: ({computedProp}) => (
-		<div>{computedProp}</div>
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+
+const SomeComponent = I18nContextDecorator(
+	{rtlProp: 'rtl'},
+	(props) => (
+		<div>Hello from the {context.rtl ? 'right' : 'left'}</div>
 	)
-});
+);
 ```
 
 ## Locale-Specific CSS

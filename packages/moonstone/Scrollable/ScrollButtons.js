@@ -1,6 +1,5 @@
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import {is} from '@enact/core/keymap';
-import {off, on} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
@@ -117,7 +116,7 @@ class ScrollButtons extends Component {
 		rtl: PropTypes.bool,
 
 		/**
-		 * If `true`, the scrollbar will be oriented vertically.
+		 * The scrollbar will be oriented vertically.
 		 *
 		 * @type {Boolean}
 		 * @default true
@@ -141,36 +140,12 @@ class ScrollButtons extends Component {
 		};
 	}
 
-	componentWillUnmount () {
-		this.setIgnoreMode(false); // To remove event handler
-	}
-
-	ignoreMode = false
-	pressed = false
 	announce = null
 
 	// elements
 
 	prevButtonNodeRef = null
 	nextButtonNodeRef = null
-
-	setPressStatus = (isPressed) => {
-		this.pressed = isPressed;
-	}
-
-	setIgnoreMode = (shouldIgnore) => {
-		if (shouldIgnore !== this.ignoreMode) {
-			if (shouldIgnore) {
-				this.ignoreMode = true;
-				on('mousemove', this.onUp);
-				on('mouseup', this.onUp);
-			} else {
-				this.ignoreMode = false;
-				off('mousemove', this.onUp);
-				off('mouseup', this.onUp);
-			}
-		}
-	}
 
 	updateButtons = (bounds) => {
 		const
@@ -180,8 +155,7 @@ class ScrollButtons extends Component {
 			shouldDisablePrevButton = currentPos <= 0,
 			/* If a scroll size or a client size is not integer,
 			   browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
-			shouldDisableNextButton = maxPos - currentPos <= 1,
-			spotItem = Spotlight.getCurrent();
+			shouldDisableNextButton = maxPos - currentPos <= 1;
 
 		this.setState((prevState) => {
 			const
@@ -196,13 +170,6 @@ class ScrollButtons extends Component {
 				return {nextButtonDisabled: shouldDisableNextButton};
 			}
 		});
-
-		if (this.pressed && (
-			shouldDisablePrevButton && spotItem && spotItem === this.prevButtonNodeRef ||
-			shouldDisableNextButton && spotItem && spotItem === this.nextButtonNodeRef
-		)) {
-			this.setIgnoreMode(true);
-		}
 	}
 
 	isOneOfScrollButtonsFocused = () => {
@@ -212,8 +179,6 @@ class ScrollButtons extends Component {
 	}
 
 	onDownPrev = () => {
-		this.setPressStatus(true);
-
 		if (this.announce) {
 			const {rtl, vertical} = this.props;
 			this.announce(vertical && $L('UP') || rtl && $L('RIGHT') || $L('LEFT'));
@@ -221,8 +186,6 @@ class ScrollButtons extends Component {
 	}
 
 	onDownNext = () => {
-		this.setPressStatus(true);
-
 		if (this.announce) {
 			const {rtl, vertical} = this.props;
 			this.announce(vertical && $L('DOWN') || rtl && $L('LEFT') || $L('RIGHT'));
@@ -241,27 +204,10 @@ class ScrollButtons extends Component {
 		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
 	}
 
-	onHoldPulsePrev = (ev) => {
-		const {onPrevScroll, vertical} = this.props;
-
-		if (!this.ignoreMode) {
-			onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
-		}
-	}
-
-	onHoldPulseNext = (ev) => {
-		const {onNextScroll, vertical} = this.props;
-
-		if (!this.ignoreMode) {
-			onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
-		}
-	}
-
 	focusOnOppositeScrollButton = (ev, direction) => {
 		const buttonNode = (ev.target === this.nextButtonNodeRef) ? this.prevButtonNodeRef : this.nextButtonNodeRef;
 
-		ev.preventDefault();
-		ev.nativeEvent.stopPropagation();
+		ev.stopPropagation();
 
 		if (!Spotlight.focus(buttonNode)) {
 			Spotlight.move(direction);
@@ -305,11 +251,6 @@ class ScrollButtons extends Component {
 		}
 	}
 
-	onUp = () => {
-		this.setPressStatus(false);
-		this.setIgnoreMode(false);
-	}
-
 	onKeyDownPrev = (ev) => {
 		const
 			{focusableScrollButtons} = this.props,
@@ -318,6 +259,7 @@ class ScrollButtons extends Component {
 
 		if (isPageDown(keyCode) && !nextButtonDisabled) {
 			if (focusableScrollButtons) {
+				Spotlight.setPointerMode(false);
 				Spotlight.focus(this.nextButtonNodeRef);
 			} else {
 				this.onClickNext(ev);
@@ -335,6 +277,7 @@ class ScrollButtons extends Component {
 
 		if (isPageUp(keyCode) && !prevButtonDisabled) {
 			if (focusableScrollButtons) {
+				Spotlight.setPointerMode(false);
 				Spotlight.focus(this.prevButtonNodeRef);
 			} else {
 				this.onClickPrev(ev);
@@ -378,13 +321,12 @@ class ScrollButtons extends Component {
 				key="prevButton"
 				onClick={this.onClickPrev}
 				onDown={this.onDownPrev}
-				onHoldPulse={this.onHoldPulsePrev}
+				onHoldPulse={this.onClickPrev}
 				onKeyDown={this.onKeyDownPrev}
 				onSpotlightDown={this.onSpotlight}
 				onSpotlightLeft={this.onSpotlight}
 				onSpotlightRight={this.onSpotlight}
 				onSpotlightUp={this.onSpotlight}
-				onUp={this.onUp}
 				ref={this.initPrevButtonRef}
 			>
 				{prevIcon}
@@ -398,13 +340,12 @@ class ScrollButtons extends Component {
 				key="nextButton"
 				onClick={this.onClickNext}
 				onDown={this.onDownNext}
-				onHoldPulse={this.onHoldPulseNext}
+				onHoldPulse={this.onClickNext}
 				onKeyDown={this.onKeyDownNext}
 				onSpotlightDown={this.onSpotlight}
 				onSpotlightLeft={this.onSpotlight}
 				onSpotlightRight={this.onSpotlight}
 				onSpotlightUp={this.onSpotlight}
-				onUp={this.onUp}
 				ref={this.initNextButtonRef}
 			>
 				{nextIcon}
