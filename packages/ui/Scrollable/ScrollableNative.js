@@ -417,7 +417,7 @@ class ScrollableBaseNative extends Component {
 			this.deferScrollTo = false;
 			this.isUpdatedScrollThumb = this.updateScrollThumbSize();
 		} else if (!this.updateScrollbars()) {
-			if (this.shouldUpdateScroller === true && !this.childRef.hasOwnProperty('hasDataSizeChanged')) {
+			if (this.shouldUpdateScroller && !this.childRef.hasOwnProperty('hasDataSizeChanged')) {
 				// For Scroller
 				onUpdate();
 			}

@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scroller` to prevent scrolling when hovering the truncated spottable item
+- `moonstone/Scroller` to prevent unexpected scrolling when updated by app
 - `moonstone/Scroller` to go to next page properly via page up/down keys
 
 ## [2.0.0] - 2018-07-30
