@@ -17,7 +17,6 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import Touchable from '@enact/ui/Touchable';
 
 import $L from '../internal/$L';
 
@@ -45,8 +44,6 @@ const
 		right: 'left',
 		up: 'down'
 	};
-
-const TouchableDiv = Touchable('div');
 
 /**
  * The name of a custom attribute which indicates the index of an item in
@@ -732,6 +729,7 @@ class ScrollableBase extends Component {
 				addEventListeners={this.addEventListeners}
 				applyOverscrollEffect={this.applyOverscrollEffect}
 				clearOverscrollEffect={this.clearOverscrollEffect}
+				noScrollByDrag
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onWheel={this.onWheel}
@@ -743,6 +741,8 @@ class ScrollableBase extends Component {
 					childComponentProps,
 					className,
 					componentCss,
+					contentComponent: ContentComponent,
+					contentComponentProps: {className: contentClassName, ...restContentProps},
 					handleScroll,
 					horizontalScrollbarProps,
 					initChildRef: initUiChildRef,
@@ -752,7 +752,6 @@ class ScrollableBase extends Component {
 					rtl,
 					scrollTo,
 					style,
-					touchableProps: {className: touchableClassName, ...restTouchableProps},
 					verticalScrollbarProps
 				}) => (
 					<div
@@ -764,7 +763,7 @@ class ScrollableBase extends Component {
 						style={style}
 					>
 						<div className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={this.initVerticalOverscrollRef}>
-							<TouchableDiv className={classNames(touchableClassName, overscrollCss.overscrollFrame, overscrollCss.horizontal)} ref={this.initHorizontalOverscrollRef} {...restTouchableProps}>
+							<ContentComponent className={classNames(contentClassName, overscrollCss.overscrollFrame, overscrollCss.horizontal)} ref={this.initHorizontalOverscrollRef} {...restContentProps}>
 								{childRenderer({
 									...childComponentProps,
 									cbScrollTo: scrollTo,
@@ -777,7 +776,7 @@ class ScrollableBase extends Component {
 									rtl,
 									spotlightId
 								})}
-							</TouchableDiv>
+							</ContentComponent>
 							{isVerticalScrollbarVisible ?
 								<Scrollbar
 									{...verticalScrollbarProps}

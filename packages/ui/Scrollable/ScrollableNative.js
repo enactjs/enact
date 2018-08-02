@@ -1299,6 +1299,8 @@ class ScrollableBaseNative extends Component {
 			childComponentProps: rest,
 			className: scrollableClasses,
 			componentCss: css,
+			contentComponent,
+			contentComponentProps,
 			horizontalScrollbarProps: this.horizontalScrollbarProps,
 			initChildRef: this.initChildRef,
 			initContainerRef: this.initContainerRef,
@@ -1307,8 +1309,6 @@ class ScrollableBaseNative extends Component {
 			rtl,
 			scrollTo: this.scrollTo,
 			style,
-			contentComponent,
-			contentComponentProps,
 			verticalScrollbarProps: this.verticalScrollbarProps
 		});
 	}
@@ -1349,8 +1349,8 @@ class ScrollableNative extends Component {
 					contentComponent : ContentComponent,
 					contentComponentProps,
 					horizontalScrollbarProps,
-					initContainerRef,
 					initChildRef,
+					initContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
 					rtl,
