@@ -45,8 +45,10 @@
 
 		&.leftArrow {
 			.tooltipArrow {
-				transform: translate(100%, 1%) rotate(-90deg) scaleY(-1);
+				transform-origin: 100% 0;
+				transform: rotate(90deg) rotateY(180deg);
 				right: 0;
+				top: -@moon-tooltip-point-width;
 			}
 
 			.tooltipLabel {
@@ -78,9 +80,10 @@
 
 		&.leftArrow {
 			.tooltipArrow {
-				transform: translate(100%, 99%) rotate(90deg);
-				bottom: 0;
-				right: 0;
+				transform-origin: 100% 100%;
+				transform: rotate(270deg) rotateX(180deg) rotateY(180deg);
+				right: @moon-tooltip-point-height;
+				bottom: -@moon-tooltip-point-width;
 			}
 
 			.tooltipLabel {
