@@ -12,6 +12,7 @@ import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import IdProvider from '../internal/IdProvider';
 import {MarqueeDecorator} from '../Marquee';
 import Popup from '../Popup';
 
@@ -77,6 +78,14 @@ const DialogBase = kind({
 		 * @private
 		 */
 		css: PropTypes.object,
+
+		/**
+		 * The id of dialog referred to when generating ids for `'title'`, `'titleBelow'`, `'children'`, and `'buttons'`.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		id: PropTypes.string,
 
 		/**
 		 * Disables animating the dialog on or off screen.
@@ -188,25 +197,25 @@ const DialogBase = kind({
 		titleBelow: ({title, titleBelow}) => title ? titleBelow : ''
 	},
 
-	render: ({buttons, casing, css, children, title, titleBelow, ...rest}) => {
+	render: ({buttons, casing, css, children, id, title, titleBelow, ...rest}) => {
 		delete rest.noDivider;
 
 		return (
-			<Popup {...rest} css={css}>
+			<Popup {...rest} aria-labelledby={`${id}_title ${id}_titleBelow ${id}_children ${id}_buttons`} css={css}>
 				<div className={css.titleWrapper}>
 					<div className={css.titleBlock}>
-						<MarqueeH1 casing={casing} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
+						<MarqueeH1 casing={casing} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title} id={`${id}_title`}>
 							{title}
 						</MarqueeH1>
-						<h2 className={css.titleBelow}>
+						<h2 className={css.titleBelow} id={`${id}_titleBelow`}>
 							{titleBelow}
 						</h2>
 					</div>
-					<div className={css.buttons}>
+					<div className={css.buttons} id={`${id}_buttons`}>
 						{buttons}
 					</div>
 				</div>
-				<div className={css.body}>
+				<div className={css.body} id={`${id}_children`}>
 					{children}
 				</div>
 			</Popup>
@@ -244,9 +253,12 @@ const DialogBase = kind({
  * @ui
  * @public
  */
-const Dialog = Slottable(
-	{slots: ['title', 'titleBelow', 'buttons']},
-	DialogBase
+const Dialog = IdProvider(
+	{generateProp: null, prefix: 'd_'},
+	Slottable(
+		{slots: ['title', 'titleBelow', 'buttons']},
+		DialogBase
+	)
 );
 
 export default Dialog;

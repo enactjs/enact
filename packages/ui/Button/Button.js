@@ -1,5 +1,5 @@
 /**
- * Provides unstyled button components and behaviors to be customized by a theme or application.
+ * Unstyled button components and behaviors to be customized by a theme or application.
  *
  * @module ui/Button
  * @exports Button
@@ -90,7 +90,10 @@ const ButtonBase = kind({
 		iconComponent: PropTypes.func,
 
 		/**
-		 * Applies the `minWidth` CSS class to the [ButtonBase]{@link ui/Button.ButtonBase}
+		 * Enforces a minimum width for the component.
+		 *
+		 * Applies the `minWidth` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
 		 * @default true
@@ -99,7 +102,10 @@ const ButtonBase = kind({
 		minWidth: PropTypes.bool,
 
 		/**
-		 * Applies the `pressed` CSS class to the [ButtonBase]{@link ui/Button.ButtonBase}
+		 * Indicates the component is depressed.
+		 *
+		 * Applies the `pressed` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -108,7 +114,10 @@ const ButtonBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * Applies the `selected` CSS class to the [ButtonBase]{@link ui/Button.ButtonBase}
+		 * Indicates the component is selected.
+		 *
+		 * Applies the `selected` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -117,7 +126,10 @@ const ButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Applies the `small` CSS class to the [ButtonBase]{@link ui/Button.ButtonBase}
+		 * Reduces the size of the component.
+		 *
+		 * Applies the `small` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
 		 * @default false
