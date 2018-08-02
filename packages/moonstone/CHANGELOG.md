@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Slider` to forward `onActivate` event
+
 ## [2.0.1] - 2018-08-01
 
 ### Fixed
