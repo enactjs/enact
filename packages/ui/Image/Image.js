@@ -46,7 +46,9 @@ const ImageBase = kind({
 
 	propTypes: /** @lends ui/Image.Image.prototype */ {
 		/**
-		 * Sets the aria-label for the image. If unset, it defaults to the value of `alt`
+		 * The aria-label for the image.
+		 *
+		 * If unset, it defaults to the value of `alt`.
 		 *
 		 * @type {String}
 		 * @public
@@ -104,6 +106,7 @@ const ImageBase = kind({
 
 		/**
 		 * A placeholder image to be displayed before the image is loaded.
+		 *
 		 * For performance purposes, it should be pre-loaded or be a data url. If `src` is
 		 * unset, this value will be used as the `background-image`.
 		 *
