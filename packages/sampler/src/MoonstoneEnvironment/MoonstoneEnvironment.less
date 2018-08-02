@@ -50,8 +50,11 @@
 // applies position:relative, which doesn't help us when we have stories that should fill the entire
 // panel body. This targets that inaccessible node using Panel's structure and storybook's structure
 // to update that goofy rule to a rational one.
-.panel > section > div > div:first-child {
+// The :not() bit targets only non-enact elements, so if a story doesn't use withInfo, and a `div`
+// isn't added, the components aren't being told to be a different size/position.
+.panel > section > div:not([class]):first-child,
+.panel > section > div > div:not([class]):first-child {
 	width: 100%;
 	height: 100%;
-	position: absolute !important;
+	position: relative !important;
 }
