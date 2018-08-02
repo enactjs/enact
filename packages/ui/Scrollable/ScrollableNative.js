@@ -154,6 +154,15 @@ class ScrollableBaseNative extends Component {
 		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
 		/**
+		 * Prevents scroll by dragging or flicking on the list or the scroller.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		noScrollByDrag: PropTypes.bool,
+
+		/**
 		 * Called when flicking with a mouse or a touch screen.
 		 *
 		 * @type {Function}
@@ -324,6 +333,7 @@ class ScrollableBaseNative extends Component {
 
 	static defaultProps = {
 		cbScrollTo: nop,
+		noScrollByDrag: false,
 		horizontalScrollbar: 'auto',
 		onScroll: nop,
 		onScrollStart: nop,
@@ -1251,9 +1261,21 @@ class ScrollableBaseNative extends Component {
 
 	render () {
 		const
-			{className, containerRenderer, style, ...rest} = this.props,
+			{className, containerRenderer, noScrollByDrag, style, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl} = this.state,
-			scrollableClasses = classNames(css.scrollable, className);
+			scrollableClasses = classNames(css.scrollable, className),
+			contentComponent = noScrollByDrag ? 'div' : TouchableDiv,
+			contentComponentProps = {
+				className: css.content,
+				...(!noScrollByDrag && {
+					className: css.content,
+					onDrag: this.onDrag,
+					onDragEnd: this.onDragEnd,
+					onDragStart: this.onDragStart,
+					onFlick: this.onFlick,
+					onTouchStart: this.onTouchStart
+				})
+			};
 
 		delete rest.addEventListeners;
 		delete rest.applyOverscrollEffect;
@@ -1285,14 +1307,8 @@ class ScrollableBaseNative extends Component {
 			rtl,
 			scrollTo: this.scrollTo,
 			style,
-			touchableProps: {
-				className: css.content,
-				onDrag: this.onDrag,
-				onDragEnd: this.onDragEnd,
-				onDragStart: this.onDragStart,
-				onFlick: this.onFlick,
-				onTouchStart: this.onTouchStart
-			},
+			contentComponent,
+			contentComponentProps,
 			verticalScrollbarProps: this.verticalScrollbarProps
 		});
 	}
@@ -1330,6 +1346,8 @@ class ScrollableNative extends Component {
 					childComponentProps,
 					className,
 					componentCss,
+					contentComponent : ContentComponent,
+					contentComponentProps,
 					horizontalScrollbarProps,
 					initContainerRef,
 					initChildRef,
@@ -1338,7 +1356,6 @@ class ScrollableNative extends Component {
 					rtl,
 					scrollTo,
 					style,
-					touchableProps,
 					verticalScrollbarProps
 				}) => (
 					<div
@@ -1347,7 +1364,7 @@ class ScrollableNative extends Component {
 						style={style}
 					>
 						<div className={componentCss.container}>
-							<TouchableDiv {...touchableProps}>
+							<ContentComponent {...contentComponentProps}>
 								{childRenderer({
 									...childComponentProps,
 									cbScrollTo: scrollTo,
@@ -1355,7 +1372,7 @@ class ScrollableNative extends Component {
 									initChildRef,
 									rtl
 								})}
-							</TouchableDiv>
+							</ContentComponent>
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
 						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
