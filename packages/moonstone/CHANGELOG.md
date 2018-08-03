@@ -11,8 +11,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VideoPlayer` to fallback focusing on available media buttons if default spotlight component is disabled
-### Fixed
-
 - `moonstone/Slider` to forward `onActivate` event
 - `moonstone/GridListImageItem` to properly vertically align when the content varies in size
 
