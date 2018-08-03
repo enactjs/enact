@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Fixed
+
+- `ui/Marquee` to optimize performance on rendering and use `transform` instead of `will-change`
+
 ### Changed
 
 - `ui/Image` to not require `src` prop if `placeholder` is specified
