@@ -489,7 +489,7 @@ const Spotlight = (function () {
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
-				if (platform.webos) document.addEventListener('webOSMouse', handleWebOSMouseEvent);
+				if (platform.webos) window.top.document.addEventListener('webOSMouse', handleWebOSMouseEvent);
 				setLastContainer(rootContainerId);
 				configureDefaults(containerDefaults);
 				configureContainer(rootContainerId);
@@ -512,7 +512,7 @@ const Spotlight = (function () {
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
-			if (platform.webos) document.removeEventListener('webOSMouse', handleWebOSMouseEvent);
+			if (platform.webos) window.top.document.removeEventListener('webOSMouse', handleWebOSMouseEvent);
 			Spotlight.clear();
 			_initialized = false;
 		},

@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` to properly detect when pointer leaves inside an iframe
+
 ## [2.0.1] - 2018-08-01
 
 ### Fixed
