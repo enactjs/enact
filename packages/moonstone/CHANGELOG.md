@@ -6,6 +6,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Slider` to forward `onActivate` event
+- `moonstone/GridListImageItem` to properly vertically align when the content varies in size
 - `moonstone/VideoPlayer` to not read out infoComponent when select more button on mediaContorls
 
 ## [2.0.1] - 2018-08-01
