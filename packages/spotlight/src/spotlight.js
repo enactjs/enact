@@ -496,8 +496,8 @@ const Spotlight = (function () {
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
 				if (platform.webos) {
-					document.addEventListener('webOSMouse', handleWebOSMouseEvent);
-					document.addEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
+					window.top.document.addEventListener('webOSMouse', handleWebOSMouseEvent);
+					window.top.document.addEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
 				}
 				setLastContainer(rootContainerId);
 				configureDefaults(containerDefaults);
@@ -522,8 +522,8 @@ const Spotlight = (function () {
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
 			if (platform.webos) {
-				document.removeEventListener('webOSMouse', handleWebOSMouseEvent);
-				document.removeEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
+				window.top.document.removeEventListener('webOSMouse', handleWebOSMouseEvent);
+				window.top.document.removeEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
 			}
 			Spotlight.clear();
 			_initialized = false;
