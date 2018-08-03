@@ -443,7 +443,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			initialJumpDelay: PropTypes.number,
 
 			/**
-			 * The status of infoComponent's id is set to aria-labelledby and is ready to be read.
+			 * The status of video player when aria-labelledby and region are rendered.
 			 *
 			 * @type {Boolean}
 			 * @public
@@ -633,7 +633,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			this.paused = new Pause('VideoPlayer');
 
 			this.state = {
-				isFirstReadInfoComponents: true,
+				hasReadInfoComponents: false,
 				showMoreComponents: false
 			};
 
@@ -680,7 +680,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				forwardToggleMore({showMoreComponents: this.state.showMoreComponents}, this.props);
 			}
 
-			if (this.state.showMoreComponents && this.props.isRenderedAriaProps && this.state.isFirstReadInfoComponents) {
+			if (this.state.showMoreComponents && this.props.isRenderedAriaProps && !this.state.hasReadInfoComponents) {
 				// Readout the infoComponents for the first time.
 				this.focusMoreButton();
 			}
@@ -815,7 +815,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 		}
 
 		toggleMoreComponents () {
-			if (!this.state.isFirstReadInfoComponents) {
+			if (this.state.hasReadInfoComponents) {
 				this.focusMoreButton();
 			}
 
@@ -832,17 +832,18 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				return;
 			}
 
-			// Readout 'more' or 'back' button explicitly.
-			let selectedButton = Spotlight.getCurrent();
+			const selectedButton = Spotlight.getCurrent();
 			if (selectedButton === this.mediaControlsNode.querySelector(`.${css.moreButton}`)) {
+				// Press enter of 5way key
 				selectedButton.blur();
 				selectedButton.focus();
 			} else {
+				// Press color key
 				Spotlight.focus(this.props.moreButtonSpotlightId);
 			}
 
 			this.setState({
-				isFirstReadInfoComponents: false
+				hasReadInfoComponents: true
 			});
 		}
 

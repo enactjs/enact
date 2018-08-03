@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/VideoPlayer` to not read out infoComponent when select more button on mediaContorls
+- `moonstone/VideoPlayer` prop `infoComponents` to be read out when selecting more button on media control.
 
 ## [2.0.1] - 2018-08-01
 
