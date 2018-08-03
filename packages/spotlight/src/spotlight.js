@@ -361,6 +361,12 @@ const Spotlight = (function () {
 		}
 	}
 
+	function handleKeyboardStateChangeEvent ({visibility}) {
+		if (!visibility) {
+			setPlatformPointerMode();
+		}
+	}
+
 	function onFocus () {
 		// Normally, there isn't focus here unless the window has been blurred above. On webOS, the
 		// platform may focus the window after the app has already focused a component so we prevent
@@ -489,7 +495,10 @@ const Spotlight = (function () {
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
-				if (platform.webos) document.addEventListener('webOSMouse', handleWebOSMouseEvent);
+				if (platform.webos) {
+					document.addEventListener('webOSMouse', handleWebOSMouseEvent);
+					document.addEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
+				}
 				setLastContainer(rootContainerId);
 				configureDefaults(containerDefaults);
 				configureContainer(rootContainerId);
@@ -512,7 +521,10 @@ const Spotlight = (function () {
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
-			if (platform.webos) document.removeEventListener('webOSMouse', handleWebOSMouseEvent);
+			if (platform.webos) {
+				document.removeEventListener('webOSMouse', handleWebOSMouseEvent);
+				document.removeEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
+			}
 			Spotlight.clear();
 			_initialized = false;
 		},
