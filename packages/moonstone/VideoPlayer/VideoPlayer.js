@@ -282,7 +282,7 @@ const VideoPlayerBase = class extends React.Component {
 		 *
 		 * @type {Boolean}
 		 * @default false
-		 * @private
+		 * @public
 		 */
 		noMediaSliderFeedback: PropTypes.bool,
 

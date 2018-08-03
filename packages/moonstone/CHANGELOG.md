@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/VideoPlayer` property `noMediaSliderFeedback`
+
 ### Fixed
 
 - `moonstone/Slider` to forward `onActivate` event
