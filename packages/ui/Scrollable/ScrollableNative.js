@@ -1264,8 +1264,8 @@ class ScrollableBaseNative extends Component {
 			{className, containerRenderer, noScrollByDrag, style, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl} = this.state,
 			scrollableClasses = classNames(css.scrollable, className),
-			contentComponent = noScrollByDrag ? 'div' : TouchableDiv,
-			contentComponentProps = {
+			childWrapper = noScrollByDrag ? 'div' : TouchableDiv,
+			childWrapperProps = {
 				className: css.content,
 				...(!noScrollByDrag && {
 					className: css.content,
@@ -1297,10 +1297,10 @@ class ScrollableBaseNative extends Component {
 
 		return containerRenderer({
 			childComponentProps: rest,
+			childWrapper,
+			childWrapperProps,
 			className: scrollableClasses,
 			componentCss: css,
-			contentComponent,
-			contentComponentProps,
 			horizontalScrollbarProps: this.horizontalScrollbarProps,
 			initChildRef: this.initChildRef,
 			initContainerRef: this.initContainerRef,
@@ -1344,10 +1344,10 @@ class ScrollableNative extends Component {
 				{...rest}
 				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
 					childComponentProps,
+					childWrapper : ChildWrapper,
+					childWrapperProps,
 					className,
 					componentCss,
-					contentComponent : ContentComponent,
-					contentComponentProps,
 					horizontalScrollbarProps,
 					initChildRef,
 					initContainerRef,
@@ -1364,7 +1364,7 @@ class ScrollableNative extends Component {
 						style={style}
 					>
 						<div className={componentCss.container}>
-							<ContentComponent {...contentComponentProps}>
+							<ChildWrapper {...childWrapperProps}>
 								{childRenderer({
 									...childComponentProps,
 									cbScrollTo: scrollTo,
@@ -1372,7 +1372,7 @@ class ScrollableNative extends Component {
 									initChildRef,
 									rtl
 								})}
-							</ContentComponent>
+							</ChildWrapper>
 							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
 						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}

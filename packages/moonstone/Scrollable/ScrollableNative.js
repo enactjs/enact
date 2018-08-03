@@ -128,6 +128,15 @@ class ScrollableBaseNative extends Component {
 		focusableScrollbar: PropTypes.bool,
 
 		/**
+		 * Prevents scroll by dragging or flicking on the list or the scroller.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		noScrollByDrag: PropTypes.bool,
+
+		/**
 		 * Sets the hint string read when focusing the next button in the vertical scroll bar.
 		 *
 		 * @type {String}
@@ -166,7 +175,8 @@ class ScrollableBaseNative extends Component {
 
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
-		focusableScrollbar: false
+		focusableScrollbar: false,
+		noScrollByDrag: true
 	}
 
 	constructor (props) {
@@ -802,8 +812,7 @@ class ScrollableBaseNative extends Component {
 				addEventListeners={this.addEventListeners}
 				applyOverscrollEffect={this.applyOverscrollEffect}
 				clearOverscrollEffect={this.clearOverscrollEffect}
-				noScrollByDrag
-				onFlick={this.onFlick}
+				onFlick={this.props.noScrollByDrag ? null : this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
 				onWheel={this.onWheel}
@@ -814,10 +823,10 @@ class ScrollableBaseNative extends Component {
 				start={this.start}
 				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
 					childComponentProps,
+					childWrapper: ChildWrapper,
+					childWrapperProps: {className: contentClassName, ...restChildWrapperProps},
 					className,
 					componentCss,
-					contentComponent: ContentComponent,
-					contentComponentProps: {className: contentClassName, ...restContentProps},
 					horizontalScrollbarProps,
 					initChildRef: initUiChildRef,
 					initContainerRef: initUiContainerRef,
@@ -837,7 +846,7 @@ class ScrollableBaseNative extends Component {
 						style={style}
 					>
 						<div className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={this.initVerticalOverscrollRef}>
-							<ContentComponent className={classNames(contentClassName, overscrollCss.overscrollFrame, overscrollCss.horizontal)} ref={this.initHorizontalOverscrollRef} {...restContentProps}>
+							<ChildWrapper className={classNames(contentClassName, overscrollCss.overscrollFrame, overscrollCss.horizontal)} ref={this.initHorizontalOverscrollRef} {...restChildWrapperProps}>
 								{childRenderer({
 									...childComponentProps,
 									cbScrollTo: scrollTo,
@@ -849,7 +858,7 @@ class ScrollableBaseNative extends Component {
 									rtl,
 									spotlightId
 								})}
-							</ContentComponent>
+							</ChildWrapper>
 							{isVerticalScrollbarVisible ?
 								<Scrollbar
 									{...verticalScrollbarProps}
