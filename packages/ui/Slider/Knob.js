@@ -47,7 +47,7 @@ const Knob = kind({
 		 * the above props or a component instance (e.g. `<MyTooltip customProp="value" />`) which
 		 * will have its props merged with the above props.
 		 *
-		 * See {@link ui/ComponentOverride} for more information.
+		 * @see {@link ui/ComponentOverride}
 		 *
 		 * @type {Function|Element}
 		 * @public

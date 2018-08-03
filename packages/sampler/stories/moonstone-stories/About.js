@@ -52,8 +52,9 @@ storiesOf('About', module)
 	.add(
 		'A Tour of Sampler',
 		withInfo('A Tour of Sampler')(() => (
-			<div>
+			<div style={{overflow: 'hidden', height: '100%'}}>
 				<BodyText
+					style={{margin: `0 ${riSafe(12)} 0.8em`}}
 					centered={boolean('text centered', BodyText)}
 				>
 					Welcome to the Enact sampler! Explore Enact components.
@@ -67,7 +68,7 @@ storiesOf('About', module)
 						Click <b>Show Info</b> to see the live source code for the sample
 					</div>
 				</aside>
-				<aside className={css.hintDialog} style={riSafe({position: 'relative', top: 60, left: 30})}>
+				<aside className={css.hintDialog} style={riSafe({position: 'relative', top: 60, left: 33})}>
 					<Pointer length={30} angle="90deg" style={riSafe({left: 0, top: 9})} />
 					<div className={css.text}>
 						Select any component from the <b>sidebar</b> to see how it works

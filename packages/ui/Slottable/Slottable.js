@@ -1,7 +1,8 @@
 /**
- * Exports the {@link ui/Slottable.Slottable} Higher-order Component (HOC).
+ * Exports the {@link ui/Slottable.Slottable} higher-order component (HOC).
  *
  * @module ui/Slottable
+ * @exports Slottable
  */
 
 import hoc from '@enact/core/hoc';
@@ -87,8 +88,8 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/Slottable.Slottable} is a Higher-order Component that allows wrapped components to
- * separate children into pre-designated 'slots'.  To use Slottable, you must configure it by passing in
+ * {@link ui/Slottable.Slottable} is a higher-order component (HOC) that allows wrapped components to
+ * separate children into pre-designated 'slots'.  To use `Slottable`, you must configure it by passing in
  * a config object with the `slots` member set to an array of slot names.  Any children whose
  * `slot` or `defaultSlot` property matches a named slot or whose type matches a named slot will be placed
  * into a property of the same name on the wrapped component.

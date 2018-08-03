@@ -356,7 +356,7 @@ const Spotlight = (function () {
 	}
 
 	function handleWebOSMouseEvent (ev) {
-		if (ev && ev.detail && ev.detail.type === 'Leave') {
+		if (!isPaused() && ev && ev.detail && ev.detail.type === 'Leave') {
 			onBlur();
 		}
 	}
