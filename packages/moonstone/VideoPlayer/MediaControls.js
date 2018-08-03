@@ -28,7 +28,7 @@ const OuterContainer = SpotlightContainerDecorator({
 		`.${css.leftComponents} .${spotlightDefaultClass}`,
 		`.${css.rightComponents} .${spotlightDefaultClass}`,
 		`.${spotlightDefaultClass}`,
-		`.${css.mediaControls} > .spottable`
+		`.${css.mediaControls} *`
 	]
 }, 'div');
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
