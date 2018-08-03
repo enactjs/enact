@@ -1,4 +1,5 @@
 import kind from '@enact/core/kind';
+import hoc from '@enact/core/hoc';
 import {memoize} from '@enact/core/util';
 import ilib from '@enact/i18n';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
@@ -194,8 +195,54 @@ const ProgressBarTooltipBase = kind({
 	}
 });
 
-const ProgressBarTooltip = I18nContextDecorator(
-	{rtlProp: 'rtl'},
+const ProgressBarTooltipDecorator = hoc((config, Wrapped) => {
+
+	const Decorator = class extends React.Component {
+		static displayName = 'ProgressBarTooltipDecorator';
+
+		constructor (props) {
+			super(props);
+
+			this.state = {
+				width: props.width
+			};
+		}
+
+		normalizeWidth = () => {
+			if (this.tooltipNode) {
+				// Restore it to normal
+				this.tooltipNode.style.setProperty('width', null);
+				// Measure again
+				const tooltipBounds = this.tooltipNode.getBoundingClientRect(); // label bound
+
+				// console.log('ready to normalize width', tooltipBounds.width, '->', Math.ceil(tooltipBounds.width));
+				this.setState({width: Math.ceil(tooltipBounds.width)});
+			}
+		}
+
+		getTooltipRef = (node) => {
+			this.tooltipNode = node;
+			if (node) {
+				this.normalizeWidth();
+			}
+		}
+
+		render () {
+			const {...props} = this.props;
+			return (
+				<Wrapped {...props} width={this.state.width} tooltipRef={this.getTooltipRef} />
+			);
+		}
+	};
+
+	return I18nContextDecorator(
+		{rtlProp: 'rtl'},
+		Decorator
+	);
+});
+
+
+const ProgressBarTooltip = ProgressBarTooltipDecorator(
 	ProgressBarTooltipBase
 );
 ProgressBarTooltip.defaultSlot = 'tooltip';
