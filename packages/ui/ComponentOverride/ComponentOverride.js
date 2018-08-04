@@ -1,10 +1,11 @@
 /**
- * Provides a utility component that either clones or creates a component instance based on the
+ * A utility component that either clones or creates a component instance based on the
  * incoming `component` prop value. This allows you to supply JSX as the component used in your prop
  * allowing you to add your own properties. They'll get mixed onto the component when it's used in
  * the parent component.
  *
  * @module ui/ComponentOverride
+ * @exports ComponentOverride
  */
 
 import React from 'react';
@@ -16,6 +17,7 @@ import React from 'react';
  * element (e.g. `<Button customProp="value" />`) and return a new element which includes the
  * remaining props specified.
  *
+ * Example:
  * ```
  * const LabeledIconButton = ({iconComponent, label, ...rest}) => {
  *   return (

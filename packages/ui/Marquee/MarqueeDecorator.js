@@ -123,7 +123,7 @@ const TimerState = {
 };
 
 /**
- * {@link ui/Marquee.MarqueeDecorator} is a Higher-order Component which makes
+ * {@link ui/Marquee.MarqueeDecorator} is a higher-order component (HOC) which makes
  * the Wrapped component's children marquee.
  *
  * @class MarqueeDecorator

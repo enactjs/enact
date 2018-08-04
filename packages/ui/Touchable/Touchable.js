@@ -197,7 +197,7 @@ const defaultConfig = {
 };
 
 /**
- * A Higher-order Component that provides a consistent set of pointer events -- `onDown`, `onUp`,
+ * A higher-order component (HOC) that provides a consistent set of pointer events -- `onDown`, `onUp`,
  * and `onTap` -- across mouse and touch interfaces along with support for common gestures including
  * `onFlick`, `onDrag`, `onHold`, and `onHoldPulse`.
  *
@@ -216,7 +216,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends ui/Touchable.Touchable.prototype */ {
 			/**
-			 * Controls whether the component is disabled.
+			 * When `true`, disables the component.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -262,7 +262,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			noResume: PropTypes.bool,
 
 			/**
-			 * Event handler for "down" pointer events
+			 * Event handler for 'down' pointer events
 			 *
 			 * @type {Function}
 			 * @public
@@ -274,7 +274,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			 *
  			 * Event payload includes:
 			 *
-			 * * `type` - Type of event, `"onDrag"`
+			 * * `type` - Type of event, `'onDrag'`
 			 * * `x` - Horizontal position of the drag, relative to the viewport
 			 * * `y` - Vertical position of the drag, relative to the viewport
 			 *
@@ -284,11 +284,11 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			onDrag: PropTypes.func,
 
 			/**
-			 * Event handler for end of a drag gesture
+			 * Event handler for the end of a drag gesture
 			 *
  			 * Event payload includes:
 			 *
-			 * * `type` - Type of event, `"onDragEnd"`
+			 * * `type` - Type of event, `'onDragEnd'`
 			 *
 			 * @type {Function}
 			 * @public
@@ -300,7 +300,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			 *
  			 * Event payload includes:
 			 *
-			 * * `type` - Type of event, `"onDragStart"`
+			 * * `type` - Type of event, `'onDragStart'`
 			 * * `x` - Horizontal position of the drag, relative to the viewport
 			 * * `y` - Vertical position of the drag, relative to the viewport
 			 *
@@ -314,8 +314,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			 *
 			 * Event payload includes:
 			 *
-			 * * `type` - Type of event, `"onFlick"`
-			 * * `direction` - Primary direction of the flick, either `"horizontal"` or `"vertical"`
+			 * * `type` - Type of event, `'onFlick'`
+			 * * `direction` - Primary direction of the flick, either `'horizontal'` or `'vertical'`
 			 * * `velocity` - Velocity of flick
 			 * * `velocityX` - Velocity of flick along te horizontal axis
 			 * * `velocityY` - Velocity of flick along te vertical axis
@@ -330,7 +330,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			 *
 			 * Event payload includes:
 			 *
-			 * * `type` - Type of event, `"onFlick"`
+			 * * `type` - Type of event, `'onFlick'`
 			 * * `name` - The name of the hold as configured in the events list
 			 * * `time` - Time, in milliseconds, configured for this hold which may vary slightly
 			 *            from time since the hold began
@@ -345,7 +345,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			 *
 			 * Event payload includes:
 			 *
-			 * * `type` - Type of event, `"onHold"`
+			 * * `type` - Type of event, `'onHold'`
 			 * * `time` - Time, in milliseconds, since the hold began
 			 *
 			 * @type {Function}
@@ -354,7 +354,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			onHoldPulse: PropTypes.func,
 
 			/**
-			 * Event handler for "tap" pointer events
+			 * Event handler for 'tap' pointer events
 			 *
 			 * @type {Function}
 			 * @public
@@ -362,7 +362,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			onTap: PropTypes.func,
 
 			/**
-			 * Event handler for "up" pointer events
+			 * Event handler for 'up' pointer events
 			 *
 			 * @type {Function}
 			 * @public

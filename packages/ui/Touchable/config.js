@@ -46,8 +46,9 @@ const mergeConfig = (cfg) => {
 /**
  * Configures the global gesture configuration for the application.
  *
+ * Example:
  * ```
- * // Updates the maxMoves, moveTolerance, and frequency configurations while retaining the
+ * // Updates the `maxMoves`, `moveTolerance`, and `frequency` configurations while retaining the
  * // current value of all other configurations
  * configure({
  *     flick: {
@@ -94,6 +95,7 @@ const mergeConfig = (cfg) => {
  *     controls the amount of time that must pass before this `onHold` event is fired and should
  *     be a multiple of `frequency`.
  *
+ * @function
  * @param   {Object}     config  A partial or complete configuration object
  *
  * @returns {undefined}

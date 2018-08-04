@@ -2,6 +2,20 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Slider` to forward `onActivate` event
+- `moonstone/GridListImageItem` to properly vertically align when the content varies in size
+
+## [2.0.1] - 2018-08-01
+
+### Fixed
+
+- `moonstone/Dialog` read order of dialog contents
+- `moonstone/Scroller` to go to next page properly via page up/down keys
+
 ## [2.0.0] - 2018-07-30
 
 ### Added
