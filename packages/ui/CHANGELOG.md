@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
+- `ui/Image` to not display broken image icons
 - `ui/Image` to not require `src` prop if `placeholder` is specified
 - `ui/GridListImageItem` to not require `source` prop
 
