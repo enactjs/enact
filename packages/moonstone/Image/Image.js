@@ -112,9 +112,7 @@ const ResponsiveImageDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
-			return (
-				<Wrapped {...this.props} />
-			);
+			return <Wrapped {...this.props} />;
 		}
 	};
 });
