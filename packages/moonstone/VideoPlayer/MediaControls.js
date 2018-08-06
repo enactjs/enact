@@ -155,6 +155,14 @@ const MediaControlsBase = kind({
 		moreButtonLabel: PropTypes.string,
 
 		/**
+		 * The method to run when the more button rendered, giving a reference to the DOM.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		moreButtonRef: PropTypes.func,
+
+		/**
 		 * A custom more button ID to use with Spotlight.
 		 *
 		 * @type {String}
@@ -349,6 +357,7 @@ const MediaControlsBase = kind({
 		moreButtonClassName,
 		moreButtonColor,
 		moreButtonDisabled,
+		moreButtonRef,
 		moreButtonSpotlightId,
 		moreIcon,
 		moreIconLabel,
@@ -402,10 +411,11 @@ const MediaControlsBase = kind({
 							color={moreButtonColor}
 							disabled={moreButtonDisabled}
 							onClick={onMoreClick}
-							tooltipProps={{role: 'dialog'}}
-							tooltipText={moreIconLabel}
+							ref={moreButtonRef}
 							spotlightId={moreButtonSpotlightId}
 							spotlightDisabled={spotlightDisabled}
+							tooltipProps={{role: 'dialog'}}
+							tooltipText={moreIconLabel}
 						>
 							{moreIcon}
 						</MediaButton>
@@ -626,6 +636,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.mediaControlsNode = null;
+			this.moreButtonNode = null;
 
 			this.keyLoop = null;
 			this.pulsingKeyCode = null;
@@ -802,6 +813,10 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			this.mediaControlsNode = ReactDOM.findDOMNode(node); // eslint-disable-line react/no-find-dom-node
 		}
 
+		getMoreButtonRef = (node) => {
+			this.moreButtonNode = ReactDOM.findDOMNode(node); // eslint-disable-line react/no-find-dom-node
+		}
+
 		areMoreComponentsAvailable () {
 			return this.state.showMoreComponents;
 		}
@@ -833,7 +848,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			}
 
 			const selectedButton = Spotlight.getCurrent();
-			if (selectedButton === this.mediaControlsNode.querySelector(`.${css.moreButton}`)) {
+			if (selectedButton === this.moreButtonNode) {
 				// Press enter of 5way key
 				selectedButton.blur();
 				selectedButton.focus();
@@ -874,6 +889,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				<Wrapped
 					ref={this.getMediaControls}
 					{...props}
+					moreButtonRef={this.getMoreButtonRef}
 					onClose={this.handleClose}
 					onMoreClick={this.handleMoreClick}
 					onPlayButtonClick={this.handlePlayButtonClick}
