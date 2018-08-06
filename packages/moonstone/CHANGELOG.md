@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Popup` to prevent duplicated key handling after `Spotlight.move` in key down handler.
+- `moonstone/Popup` to prevent to moved twice at one 5-way key input if there is two or more button.
 - `moonstone/Slider` to forward `onActivate` event
 - `moonstone/GridListImageItem` to properly vertically align when the content varies in size
 
