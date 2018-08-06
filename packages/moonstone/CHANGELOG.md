@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Scroller` to support RTL to prevent scrolls originating from focus events
 - `moonstone/Slider` to forward `onActivate` event
 - `moonstone/GridListImageItem` to properly vertically align when the content varies in size
 
