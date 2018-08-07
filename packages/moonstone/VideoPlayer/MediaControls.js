@@ -158,7 +158,7 @@ const MediaControlsBase = kind({
 		 * The method to run when the more button rendered, giving a reference to the DOM.
 		 *
 		 * @type {Function}
-		 * @public
+		 * @private
 		 */
 		moreButtonRef: PropTypes.func,
 
