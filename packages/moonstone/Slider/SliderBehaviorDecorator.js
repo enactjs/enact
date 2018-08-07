@@ -110,6 +110,7 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleActivate () {
+			forward('onActivate', {type: 'onActivate'}, this.props);
 			this.setState(toggleActive);
 			this.setState(useHintOnActive);
 		}
