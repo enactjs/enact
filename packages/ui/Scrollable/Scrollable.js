@@ -1197,10 +1197,10 @@ class ScrollableBase extends Component {
 		// Prevent scroll by focus.
 		// VirtualList and VirtualGridList DO NOT receive `onscroll` event.
 		// Only Scroller could get `onscroll` event.
-		if (!this.animator.isAnimating() && childRef && childRef.containerRef && this.childRef.getRtlPositionX) {
+		if (!this.animator.isAnimating() && childRef && childRef.containerRef && childRef.getRtlPositionX) {
 			// For Scroller
 			childRef.containerRef.scrollTop = this.scrollTop;
-			childRef.containerRef.scrollLeft = this.childRef.getRtlPositionX(this.scrollLeft);
+			childRef.containerRef.scrollLeft = childRef.getRtlPositionX(this.scrollLeft);
 		}
 	}
 
