@@ -8,9 +8,11 @@ import {accelerate, clearTransform, compose, reverse, slideInPartial, slideOutPa
 
 /**
  * A basic arranger that must be configured with `enter` and `leave` direction
+ *
+ * @function
  * @memberof ui/ViewManager
- * @param {Object} config Configuration object including `amount`, `enter` and `leave` properties
- * @returns {Object} An arranger
+ * @param {Object}    config    Configuration object including `amount`, `enter` and `leave` properties
+ * @returns {Object}            An arranger
  * @public
  */
 export const SlideArranger = ({amount = 100, enter, leave}) => ({
