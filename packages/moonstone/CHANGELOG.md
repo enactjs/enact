@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Scroller` not to scroll to wrong position via 5way navigation in RTL languages
 - `moonstone/Slider` to forward `onActivate` event
 - `moonstone/GridListImageItem` to properly vertically align when the content varies in size
 
