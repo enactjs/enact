@@ -851,7 +851,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			if (selectedButton === this.moreButtonNode) {
 				// Press enter of 5way key
 				selectedButton.blur();
-				selectedButton.focus();
+				Spotlight.focus(selectedButton);
 			} else {
 				// Press color key
 				Spotlight.focus(this.props.moreButtonSpotlightId);
