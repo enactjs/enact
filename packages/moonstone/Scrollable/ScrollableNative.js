@@ -134,7 +134,7 @@ class ScrollableBaseNative extends Component {
 		 * @default false
 		 * @private
 		 */
-		noScrollByDrag: PropTypes.bool,
+		scrollByDrag: PropTypes.bool,
 
 		/**
 		 * Sets the hint string read when focusing the next button in the vertical scroll bar.
@@ -176,7 +176,7 @@ class ScrollableBaseNative extends Component {
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
 		focusableScrollbar: false,
-		noScrollByDrag: true
+		scrollByDrag: false
 	}
 
 	constructor (props) {
@@ -793,9 +793,10 @@ class ScrollableBaseNative extends Component {
 				'data-spotlight-container-disabled': spotlightContainerDisabled,
 				'data-spotlight-id': spotlightId,
 				focusableScrollbar,
-				scrollRightAriaLabel,
-				scrollLeftAriaLabel,
+				scrollByDrag,
 				scrollDownAriaLabel,
+				scrollLeftAriaLabel,
+				scrollRightAriaLabel,
 				scrollUpAriaLabel,
 				...rest
 			} = this.props,
@@ -812,7 +813,8 @@ class ScrollableBaseNative extends Component {
 				addEventListeners={this.addEventListeners}
 				applyOverscrollEffect={this.applyOverscrollEffect}
 				clearOverscrollEffect={this.clearOverscrollEffect}
-				onFlick={this.props.noScrollByDrag ? null : this.onFlick}
+				noScrollByDrag={!scrollByDrag}
+				onFlick={scrollByDrag ? this.onFlick : null}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
 				onWheel={this.onWheel}
