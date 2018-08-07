@@ -410,14 +410,16 @@ class ScrollableBase extends Component {
 			if (next !== focusedItem) {
 				Spotlight.focus(next);
 			/* 2. Find spottable item out of viewport */
-			} else if (this.childRef.scrollToNextPage) { // For Scroller
+			// For Scroller
+			} else if (this.childRef.scrollToNextPage) {
 				next = this.childRef.scrollToNextPage({direction, focusedItem, reverseDirection: rDirection, spotlightId});
 
 				if (next !== null) {
 					this.animateOnFocus = false;
 					Spotlight.focus(next);
 				}
-			} else if (this.childRef.scrollToNextItem) { // For VirtualList
+			// For VirtualList
+			} else if (this.childRef.scrollToNextItem) {
 				this.childRef.scrollToNextItem({direction, focusedItem, reverseDirection: rDirection, spotlightId});
 			}
 
