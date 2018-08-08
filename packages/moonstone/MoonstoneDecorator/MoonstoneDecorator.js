@@ -78,7 +78,6 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		// font stylesheet when the locale changes
 		App = I18nDecorator(
 			{
-				preloadResources: true,
 				loader: createResBundle
 			},
 			I18nFontDecorator(

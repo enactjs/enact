@@ -62,7 +62,7 @@ const dateTimeConfig = {
 		}
 	},
 	i18n: async function () {
-		const formatter = await ilibPromise(DateFmt, {
+		const formatter = await ilibPromise(DateFmt, [], {
 			date: 'dmwy',
 			length: 'full',
 			timezone: 'local',

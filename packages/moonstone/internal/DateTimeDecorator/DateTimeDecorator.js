@@ -109,6 +109,10 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			this.initI18n();
 		}
 
+		componentWillUnmount () {
+			this.unmounted = true;
+		}
+
 		initI18n () {
 			const locale = ilib.getLocale();
 
@@ -116,6 +120,8 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 				this.locale = locale;
 
 				i18n().then(context => {
+					if (this.unmounted) return;
+
 					this.setState({
 						i18n: context
 					});

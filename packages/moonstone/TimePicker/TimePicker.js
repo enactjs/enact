@@ -159,14 +159,14 @@ const dateTimeConfig = {
 
 		// Label formatter
 		const [formatter, merFormatter, li] = await Promise.all([
-			ilibPromise(DateFmt, {
+			ilibPromise(DateFmt, [], {
 				type: 'time',
 				useNative: false,
 				timezone: 'local',
 				length: 'full',
 				date: 'dmwy'
 			}),
-			ilibPromise(DateFmt, {
+			ilibPromise(DateFmt, [], {
 				template: 'a',
 				useNative: false,
 				timezone: 'local'
