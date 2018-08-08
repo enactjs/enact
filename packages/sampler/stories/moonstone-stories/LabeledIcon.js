@@ -2,9 +2,7 @@ import LabeledIcon from '@enact/moonstone/LabeledIcon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {withInfo} from '@storybook/addon-info';
-import Scroller from '@enact/ui/Scroller';
 import {LabeledIconBase as UiLabeledIconBase, LabeledIcon as UiLabeledIcon} from '@enact/ui/LabeledIcon';
-import Layout, {Cell} from '@enact/ui/Layout';
 
 import iconNames from './icons';
 import {mergeComponentMetadata} from '../../src/utils';
