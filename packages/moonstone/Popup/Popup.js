@@ -464,8 +464,6 @@ class Popup extends React.Component {
 			if (spottables && Spotlight.getCurrent() && spotlightRestrict !== 'self-only') {
 				focusChanged = Spotlight.move(direction);
 				if (focusChanged) {
-					// prevent default page scrolling
-					ev.preventDefault();
 					// stop propagation to prevent default spotlight behavior
 					ev.stopPropagation();
 				}
