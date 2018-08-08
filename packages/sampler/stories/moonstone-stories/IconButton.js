@@ -24,7 +24,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'IconButton',
 		withInfo({
-			propTablesExclude: [IconButton],
 			text: 'The basic IconButton'
 		})(() => (
 			<IconButton

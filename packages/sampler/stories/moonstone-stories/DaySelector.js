@@ -21,7 +21,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'DaySelector',
 		withInfo({
-			propTablesExclude: [DaySelector],
 			text: 'Basic usage of DaySelector'
 		})(() => (
 			<DaySelector

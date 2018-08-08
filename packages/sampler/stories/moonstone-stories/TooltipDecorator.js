@@ -39,7 +39,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'TooltipDecorator',
 		withInfo({
-			propTablesExclude: [Button],
 			text: 'The basic TooltipDecorator'
 		})(() => (
 			<div style={{textAlign: 'center'}}>

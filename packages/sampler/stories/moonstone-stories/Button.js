@@ -24,7 +24,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'Button',
 		withInfo({
-			propTablesExclude: [Button],
 			text: 'The basic Button'
 		})(() => (
 			<Button

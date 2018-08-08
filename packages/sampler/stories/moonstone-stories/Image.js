@@ -20,7 +20,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'Image',
 		withInfo({
-			propTablesExclude: [Image],
 			text: 'The basic Image'
 		})(() => (
 			<Image

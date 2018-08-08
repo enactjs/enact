@@ -14,7 +14,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'Popup',
 		withInfo({
-			propTablesExclude: [Popup],
 			text: 'Basic usage of Popup'
 		})(() => (
 			<div>

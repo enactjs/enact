@@ -17,7 +17,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'ExpandableInput',
 		withInfo({
-			propTablesExclude: [ExpandableInput],
 			text: 'Basic usage of divider'
 		})(() => (
 			<ExpandableInput

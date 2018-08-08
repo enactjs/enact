@@ -33,7 +33,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'ContextualPopupDecorator',
 		withInfo({
-			propTablesExclude: [BodyText, ContextualButton],
 			text: 'Basic usage of ContextualPopupDecorator'
 		})(() => (
 			<div style={{textAlign: 'center', marginTop: ri.unit(99, 'rem')}}>

@@ -17,7 +17,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'CheckboxItem',
 		withInfo({
-			propTablesExclude: [CheckboxItem],
 			text: 'Basic usage of CheckboxItem'
 		})(() => (
 			<CheckboxItem

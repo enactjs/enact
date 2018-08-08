@@ -22,7 +22,6 @@ storiesOf('Moonstone', module)
 		'EditableIntegerPicker',
 
 		withInfo({
-			propTablesExclude: [EditableIntegerPicker],
 			text: 'Basic usage of EditableIntegerPicker'
 		})(() => (
 			<EditableIntegerPicker
