@@ -1300,7 +1300,7 @@ class Scrollable extends Component {
 				{...rest}
 				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
 					childComponentProps,
-					childWrapper : ChildWrapper,
+					childWrapper: ChildWrapper,
 					childWrapperProps,
 					className,
 					componentCss,
