@@ -97,7 +97,6 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
 			this.setState({
 				isActive: true
 			});
-			this.pointerMode = Spotlight.getPointerMode();
 			this.freezeSpotlight(true);
 		}
 
@@ -122,11 +121,8 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
 		freezeSpotlight = (freeze) => {
 			if (!freeze) {
 				this.paused.resume();
-				Spotlight.setPointerMode(this.pointerMode);
 			} else {
 				this.paused.pause();
-				// we temporarily set the pointer mode to false when the input field is enabled.
-				Spotlight.setPointerMode(false);
 			}
 		}
 
