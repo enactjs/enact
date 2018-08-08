@@ -4,14 +4,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Added
-
-- `moonstone/DatePicker` property `yearFormatter` to accept a function to handle different types of calendar years
-
 ### Fixed
 
 - `moonstone/Slider` to forward `onActivate` event
 - `moonstone/GridListImageItem` to properly vertically align when the content varies in size
+- `moonstone/DatePicker` to correctly change year when `minYear` and `maxYear` aren't provided
 
 ## [2.0.1] - 2018-08-01
 
