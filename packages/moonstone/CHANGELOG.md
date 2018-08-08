@@ -6,8 +6,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Popup` to prevent moving twice at one 5-way key input when the `Popup` has `spotlightRestrict='self-first'` option and there are two or more buttons
 - `moonstone/EditableIntegerPicker` management of spotlight pointer mode
+- `moonstone/Popup` to prevent duplicate 5-way navigation when `spotlightRestrict="self-first"`
 - `moonstone/Scroller` not to scroll to wrong position via 5way navigation in RTL languages
 - `moonstone/Slider` to forward `onActivate` event
 
