@@ -2,6 +2,13 @@ import {isNonLatinLocale, isRtlLocale} from '../locale';
 import LocaleInfo from '../ilib/lib/LocaleInfo';
 import ilibPromise from '../src/promise';
 
+/*
+ * A function that returns locale in class name.
+ *
+ * @memberof i18n/I18nDecorator
+ * @returns {String} Class
+ * @private
+ */
 async function getI18nClasses () {
 	// eslint-disable-next-line no-undefined
 	const li = await ilibPromise(LocaleInfo, [undefined]); // for the current locale
@@ -10,7 +17,7 @@ async function getI18nClasses () {
 	const classes = [];
 
 	if (isNonLatinLocale(locale)) {
-		// allow enyo to define other fonts for non-Latin languages, or for certain
+		// allow enact to define other fonts for non-Latin languages, or for certain
 		// Latin-based languages where the characters with some accents don't appear in the
 		// regular fonts, creating a strange 'ransom note' look with a mix of fonts in the
 		// same word. So, treat it like a non-Latin language in order to get all the characters
@@ -20,7 +27,7 @@ async function getI18nClasses () {
 
 	const scriptName = li.getScript();
 	if (scriptName !== 'Latn' && scriptName !== 'Cyrl' && scriptName !== 'Grek') {
-		// GF-45884: allow enyo to avoid setting italic fonts for those scripts that do not
+		// GF-45884: allow enact to avoid setting italic fonts for those scripts that do not
 		// commonly use italics
 		classes.push(base + 'non-italic');
 	}
@@ -31,7 +38,7 @@ async function getI18nClasses () {
 		classes.push(base + 'right-to-left');
 	}
 
-	// allow enyo or the apps to give CSS classes that are specific to the language, country, or script
+	// allow enact or the apps to give CSS classes that are specific to the language, country, or script
 	if (locale.getLanguage()) {
 		classes.push(base + locale.getLanguage());
 		if (locale.getScript()) {

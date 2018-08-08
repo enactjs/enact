@@ -1,6 +1,11 @@
 /**
  * Provides Moonstone-themed item component and interactive togglable switch.
  *
+ * @example
+ * <SwitchItem>
+ * 	Item
+ * </SwitchItem>
+ *
  * @module moonstone/SwitchItem
  * @exports SwitchItem
  * @exports SwitchItemBase
@@ -17,7 +22,7 @@ import ToggleItem from '../ToggleItem';
 import componentCss from './SwitchItem.less';
 
 /**
- * Renders an item with a switch component. Useful to show an on/off state.
+ * Renders an item with a [Switch]{@link moonstone/Switch}.
  *
  * @class SwitchItem
  * @memberof moonstone/SwitchItem
@@ -45,7 +50,7 @@ const SwitchItemBase = kind({
 		/**
 		 * Customize the component used as the switch.
 		 *
-		 * @type {Component}
+		 * @type {Element|Function}
 		 * @default {@link moonstone/Switch.Switch}
 		 * @private
 		 */
@@ -73,7 +78,7 @@ const SwitchItemBase = kind({
 
 	render: (props) => (
 		<ToggleItem
-			data-webos-voice-intent="SelectToggleItem"
+			data-webos-voice-intent="SetToggleItem"
 			{...props}
 			css={props.css}
 			iconPosition="after"

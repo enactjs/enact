@@ -13,6 +13,8 @@ import {spottableClass} from '../Spottable';
 
 import {rootContainerId} from '../src/container';
 
+import '../styles/debug.less';
+
 /**
  * Default configuration for SpotlightRootDecorator
  *
@@ -54,8 +56,6 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillMount () {
 			if (typeof window === 'object') {
-				const palmSystem = window.PalmSystem;
-
 				Spotlight.initialize({
 					selector: '.' + spottableClass,
 					restrict: 'none'
@@ -64,10 +64,6 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				Spotlight.set(rootContainerId, {
 					overflow: true
 				});
-
-				if (palmSystem && palmSystem.cursor) {
-					Spotlight.setPointerMode(palmSystem.cursor.visibility);
-				}
 			}
 		}
 
@@ -96,6 +92,5 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 export default SpotlightRootDecorator;
 export {
-	rootContainerId as spotlightRootContainerName, // DEPRECATED
 	SpotlightRootDecorator
 };

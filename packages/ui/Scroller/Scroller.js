@@ -1,5 +1,5 @@
 /**
- * Provides unstyled scroller components and behaviors to be customized by a theme or application.
+ * Unstyled scroller components and behaviors to be customized by a theme or application.
  *
  * @module ui/Scroller
  * @exports Scroller
@@ -56,7 +56,15 @@ class ScrollerBase extends Component {
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
-		 * `true` if rtl, `false` if ltr.
+		 * Prop to check context value if Scrollbar exists or not.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		isVerticalScrollbarVisible: PropTypes.bool,
+
+		/**
+		 * `true` if RTL, `false` if LTR.
 		 *
 		 * @type {Boolean}
 		 * @private
@@ -72,8 +80,11 @@ class ScrollerBase extends Component {
 		this.calculateMetrics();
 	}
 
-	componentDidUpdate () {
+	componentDidUpdate (prevProps) {
 		this.calculateMetrics();
+		if (this.props.isVerticalScrollbarVisible && !prevProps.isVerticalScrollbarVisible) {
+			this.forceUpdate();
+		}
 	}
 
 	scrollBounds = {
@@ -172,6 +183,7 @@ class ScrollerBase extends Component {
 		delete rest.cbScrollTo;
 		delete rest.direction;
 		delete rest.rtl;
+		delete rest.isVerticalScrollbarVisible;
 
 		return (
 			<div
@@ -187,7 +199,7 @@ class ScrollerBase extends Component {
 /**
  * An unstyled scroller.
  *
- * Usage:
+ * Example:
  * ```
  * <Scroller>Scroll me.</Scroller>
  * ```
@@ -234,7 +246,7 @@ Scroller.defaultProps = {
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
  *
- * Usage:
+ * Example:
  * ```
  * <ScrollerNative>Scroll me.</ScrollerNative>
  * ```

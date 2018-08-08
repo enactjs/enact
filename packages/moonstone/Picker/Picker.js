@@ -1,8 +1,16 @@
 /**
- * Exports the {@link moonstone/Picker.Picker} and {@link moonstone/Picker.PickerBase}
- * components. The default export is {@link moonstone/Picker.Picker}.
+ * A component for selecting values from a list of values.
+ *
+ * @example
+ * <Picker>
+ * 	<p>A</p>
+ * 	<p>B</p>
+ * 	<p>C</p>
+ * </Picker>
  *
  * @module moonstone/Picker
+ * @exports Picker
+ * @exports PickerBase
  */
 
 import Changeable from '@enact/ui/Changeable';
@@ -16,10 +24,10 @@ import {MarqueeController} from '../Marquee';
 import {validateRange} from '../internal/validators';
 
 import PickerCore, {PickerItem} from '../internal/Picker';
-import SpottablePicker from './SpottablePicker';
 
 /**
- * The base component for {@link moonstone/Picker.Picker}. This version is not spottable.
+ * The base component for [`Picker`]{@link moonstone/Picker.Picker}. This version is not
+ * [`spottable`]{@link spotlight/Spottable.Spottable}.
  *
  * @class PickerBase
  * @memberof moonstone/Picker
@@ -31,7 +39,7 @@ const PickerBase = kind({
 
 	propTypes: /** @lends moonstone/Picker.PickerBase.prototype */ {
 		/**
-		 * Children from which to pick
+		 * Picker value list.
 		 *
 		 * @type {Node}
 		 * @required
@@ -40,8 +48,9 @@ const PickerBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
-		 * to the current selected child text.
+		 * The `aria-valuetext` for the picker.
+		 *
+		 * By default, `aria-valuetext` is set to the current selected child text.
 		 *
 		 * @type {String}
 		 * @memberof moonstone/Picker.PickerBase.prototype
@@ -50,9 +59,24 @@ const PickerBase = kind({
 		'aria-valuetext': PropTypes.string,
 
 		/**
-		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
-		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{Icon#orientation} is changed.
+		 * The voice control labels for the `children`.
+		 *
+		 * By default, `data-webos-voice-labels-ext` is generated from `children`. However, if
+		 * `children` is not an array of numbers or strings, `data-webos-voice-labels-ext` should be
+		 * set to an array of labels.
+		 *
+		 * @type {Number[]|String[]}
+		 * @memberof moonstone/Picker.PickerBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-labels-ext': PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.arrayOf(PropTypes.string)]),
+
+		/**
+		 * A custom icon for the decrementer.
+		 *
+		 * All strings supported by [Icon]{@link moonstone/Icon.Icon} are supported. Without a
+		 * custom icon, the default is used, and is automatically changed when the
+		 * [orientation]{@link moonstone/Picker.Picker#orientation} is changed.
 		 *
 		 * @type {String}
 		 * @public
@@ -60,8 +84,7 @@ const PickerBase = kind({
 		decrementIcon: PropTypes.string,
 
 		/**
-		 * When `true`, the Picker is shown as disabled and does not generate `onChange`
-		 * [events]{@glossary event}.
+		 * Disables the picker.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -69,9 +92,11 @@ const PickerBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
-		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{Icon#orientation} is changed.
+		 * A custom icon for the incrementer.
+		 *
+		 * All strings supported by [Icon]{@link moonstone/Icon.Icon} are supported. Without a
+		 * custom icon, the default is used, and is automatically changed when the
+		 * [orientation]{@link moonstone/Picker.Picker#orientation} is changed.
 		 *
 		 * @type {String}
 		 * @public
@@ -79,11 +104,12 @@ const PickerBase = kind({
 		incrementIcon: PropTypes.string,
 
 		/**
-		 * Determines the user interaction of the control. A joined picker allows the user to use
-		 * the arrow keys to adjust the picker's value. The user may no longer use those arrow keys
-		 * to navigate, while this control is focused. A split control allows full navigation,
-		 * but requires individual ENTER presses on the incrementer and decrementer buttons.
-		 * Pointer interaction is the same for both formats.
+		 * Allows the user to use the arrow keys to adjust the picker's value.
+		 *
+		 * Key presses are captured in the directions of the increment and decrement buttons but
+		 * others are unaffected. A non-joined Picker allows navigation in any direction, but
+		 * requires individual ENTER presses on the incrementer and decrementer buttons. Pointer
+		 * interaction is the same for both formats.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -91,9 +117,11 @@ const PickerBase = kind({
 		joined: PropTypes.bool,
 
 		/**
+		 * Disables marqueeing of items.
+		 *
 		 * By default, each picker item is wrapped by a
-		 * {@link moonstone/Marquee.MarqueeText}. When `marqueeDisabled` is `true`,
-		 * the items will not be wrapped.
+		 * [`MarqueeText`]{@link moonstone/Marquee.MarqueeText}. When this is set, the items will
+		 * not be wrapped.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -101,9 +129,7 @@ const PickerBase = kind({
 		marqueeDisabled: PropTypes.bool,
 
 		/**
-		 * By default, the picker will animate transitions between items if it has a defined
-		 * `width`. Specifying `noAnimation` will prevent any transition animation for the
-		 * component.
+		 * Disables transition animation.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -111,7 +137,7 @@ const PickerBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * A function to run when the control should increment or decrement.
+		 * Called when the `value` changes.
 		 *
 		 * @type {Function}
 		 * @public
@@ -119,8 +145,11 @@ const PickerBase = kind({
 		onChange: PropTypes.func,
 
 		/**
-		 * Sets the orientation of the picker, whether the buttons are above and below or on the
-		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
+		 * Orientation of the picker.
+		 *
+		 * Controls whether the buttons are arranged horizontally or vertically around the value.
+		 *
+		 * * Values: `'horizontal'`, `'vertical'`
 		 *
 		 * @type {String}
 		 * @public
@@ -128,7 +157,7 @@ const PickerBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * Index of the selected child
+		 * Index of the selected child.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -137,13 +166,18 @@ const PickerBase = kind({
 		value: PropTypes.number,
 
 		/**
-		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
-		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
-		 * word pickers, `'large'` for maximum-sized pickers.
+		 * The width of the picker.
 		 *
-		 * You may also supply a number. This number will determine the minumum size of the Picker.
-		 * Setting a number to less than the number of characters in your longest value may produce
-		 * unexpected results.
+		 * A number can be used to set the minimum number of characters to be shown. Setting a
+		 * number to less than the number of characters in the longest value will cause the width to
+		 * grow for the longer values.
+		 *
+		 * A string can be used to select from pre-defined widths:
+		 * * `'small'` - numeric values
+		 * * `'medium'` - single or short words
+		 * * `'large'` - maximum-sized pickers taking full width of its parent
+		 *
+		 * By default, the picker will size according to the longest valid value.
 		 *
 		 * @type {String|Number}
 		 * @public
@@ -154,8 +188,8 @@ const PickerBase = kind({
 		]),
 
 		/**
-		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
-		 * to `true` to allow the picker to continue from the opposite end of the list of options.
+		 * Allows picker to continue from the start of the list after it reaches the end and
+		 * vice-versa.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -181,20 +215,32 @@ const PickerBase = kind({
 				</PickerItem>
 			);
 		}),
+		disabled: ({children, disabled}) => React.Children.count(children) > 1 ? disabled : true,
 		value: ({value, children}) => {
 			const max = children && children.length ? children.length - 1 : 0;
 			if (__DEV__) {
 				validateRange(value, 0, max, 'Picker', '"value"', 'min', 'max index');
 			}
 			return clamp(0, max, value);
+		},
+		voiceLabel: ({children, 'data-webos-voice-labels-ext': voiceLabelsExt}) => {
+			let voiceLabel;
+			if (voiceLabelsExt) {
+				voiceLabel = voiceLabelsExt;
+			} else {
+				voiceLabel = React.Children.map(children, (child) => (
+					(typeof child === 'number' || typeof child === 'string') ? child : '')
+				);
+			}
+			return JSON.stringify(voiceLabel);
 		}
 	},
 
-	render: ({children, max, value, ...rest}) => {
+	render: ({children, max, value, voiceLabel, ...rest}) => {
 		delete rest.marqueeDisabled;
 
 		return (
-			<PickerCore {...rest} min={0} max={max} index={value} step={1} value={value}>
+			<PickerCore {...rest} data-webos-voice-labels-ext={voiceLabel} min={0} max={max} index={value} step={1} value={value}>
 				{children}
 			</PickerCore>
 		);
@@ -202,9 +248,8 @@ const PickerBase = kind({
 });
 
 /**
- * A Picker component that allows selecting values from a list of values.
- *
- * By default, `Picker` maintains the state of its `value` property. Supply the `defaultValue`
+ * A Picker component that allows selecting values from a list of values. By default,
+ * `RangePicker` maintains the state of its `value` property. Supply the `defaultValue`
  * property to control its initial value. If you wish to directly control updates to the component,
  * supply a value to `value` at creation time and update it in response to `onChange` events.
  *
@@ -219,12 +264,21 @@ const Picker = Pure(
 	Changeable(
 		MarqueeController(
 			{marqueeOnFocus: true},
-			SpottablePicker(
-				PickerBase
-			)
+			PickerBase
 		)
 	)
 );
+
+/**
+ * Default index of the selected child.
+ *
+ * *Note*: Changing `defaultValue` after initial render has no effect.
+ *
+ * @name defaultValue
+ * @memberof moonstone/Picker.Picker.prototype
+ * @type {Number}
+ * @public
+ */
 
 export default Picker;
 export {Picker, PickerBase};

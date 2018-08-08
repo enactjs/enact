@@ -1,10 +1,17 @@
 /**
- * Exports the {@link moonstone/ExpandableItem.ExpandableItem} and
- * {@link moonstone/ExpandableItem.ExpandableItemBase} components and
- * {@link moonstone/ExpandableItem.Expandable} Higher-Order Component (HOC). The default
- * export is {@link moonstone/ExpandableItem.ExpandableItem}.
+ * Moonstone styled expandable item.
+ *
+ * @example
+ * <ExpandableItem
+ *   title="Expandable Item"
+ * >
+ *   This is an Expandable Item
+ * </ExpandableItem>
  *
  * @module moonstone/ExpandableItem
+ * @exports Expandable
+ * @exports ExpandableItem
+ * @exports ExpandableItemBase
  */
 
 import {is} from '@enact/core/keymap';
@@ -47,9 +54,8 @@ function wouldDirectionLeaveContainer (dir, srcNode) {
 }
 
 /**
- * {@link moonstone/ExpandableItem.ExpandableItemBase} is a stateless component that
- * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
- * additional contents.
+ * A stateless component that renders a {@link moonstone/LabeledItem.LabeledItem} that can be
+ * expanded to show additional contents.
  *
  * @class ExpandableItemBase
  * @memberof moonstone/ExpandableItem
@@ -70,8 +76,44 @@ const ExpandableItemBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
-		 * When `true`, the expandable automatically closes when the user navigates to the `title`
-		 * of the component using 5-way controls; if `false`, the user must select/tap the header to
+		 * Disables voice control.
+		 *
+		 * @type {Boolean}
+		 * @memberof moonstone/ExpandableItem.ExpandableItemBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
+
+		/**
+		 * The voice control group.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/ExpandableItem.ExpandableItemBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-group-label': PropTypes.string,
+
+		/**
+		 * The voice control intent.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/ExpandableItem.ExpandableItemBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-intent': PropTypes.string,
+
+		/**
+		 * The voice control label.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/ExpandableItem.ExpandableItemBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-label': PropTypes.string,
+
+		/**
+		 * Closes the expandable automatically when the user navigates to the `title`
+		 * of the component using 5-way controls; if `false`, the user must select/tap the title to
 		 * close the expandable.
 		 *
 		 * @type {Boolean}
@@ -81,7 +123,7 @@ const ExpandableItemBase = kind({
 		autoClose: PropTypes.bool,
 
 		/**
-		 * The contents of the expandable item displayed when `open` is `true`
+		 * The contents of the expandable item displayed when `open` is `true`.
 		 *
 		 * @type {Node}
 		 * @public
@@ -89,7 +131,7 @@ const ExpandableItemBase = kind({
 		children: PropTypes.node,
 
 		/**
-		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 * Disables ExpandableItem and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -106,7 +148,7 @@ const ExpandableItemBase = kind({
 		label: PropTypes.node,
 
 		/**
-		 * When `true`, the user is prevented from moving {@glossary Spotlight} past the bottom
+		 * Prevents the user from moving [Spotlight] {@link /docs/developer-guide/glossary/#spotlight} past the bottom
 		 * of the expandable (when open) using 5-way controls.
 		 *
 		 * @type {Boolean}
@@ -123,7 +165,7 @@ const ExpandableItemBase = kind({
 		noneText: PropTypes.string,
 
 		/**
-		 * Callback to be called when a condition occurs which should cause the expandable to close
+		 * Called when a condition occurs which should cause the expandable to close.
 		 *
 		 * @type {Function}
 		 * @public
@@ -131,7 +173,7 @@ const ExpandableItemBase = kind({
 		onClose: PropTypes.func,
 
 		/**
-		 * Callback to be called when the expandable closes
+		 * Called when the expandable closes.
 		 *
 		 * @type {Function}
 		 * @private
@@ -139,7 +181,7 @@ const ExpandableItemBase = kind({
 		onHide: PropTypes.func,
 
 		/**
-		 * Callback to be called when a condition occurs which should cause the expandable to open
+		 * Called when a condition occurs which should cause the expandable to open.
 		 *
 		 * @type {Function}
 		 * @public
@@ -147,7 +189,7 @@ const ExpandableItemBase = kind({
 		onOpen: PropTypes.func,
 
 		/**
-		 * Callback to be called when the expandable opens
+		 * Called when the expandable opens.
 		 *
 		 * @type {Function}
 		 * @private
@@ -155,7 +197,7 @@ const ExpandableItemBase = kind({
 		onShow: PropTypes.func,
 
 		/**
-		 * The handler to run when the component is removed while retaining focus.
+		 * Called when the component is removed while retaining focus.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -164,7 +206,7 @@ const ExpandableItemBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way down key is pressed.
+		 * Called prior to focus leaving the expandable when the 5-way down key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -173,7 +215,7 @@ const ExpandableItemBase = kind({
 		onSpotlightDown: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 * Called prior to focus leaving the expandable when the 5-way left key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -182,7 +224,7 @@ const ExpandableItemBase = kind({
 		onSpotlightLeft: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 * Called prior to focus leaving the expandable when the 5-way right key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -191,7 +233,7 @@ const ExpandableItemBase = kind({
 		onSpotlightRight: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way up key is pressed.
+		 * Called prior to focus leaving the expandable when the 5-way up key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -200,7 +242,7 @@ const ExpandableItemBase = kind({
 		onSpotlightUp: PropTypes.func,
 
 		/**
-		 * When `true`, the control is rendered in the expanded state, with the contents visible
+		 * Opens ExpandableItem with the contents visible.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -209,7 +251,7 @@ const ExpandableItemBase = kind({
 		open: PropTypes.bool,
 
 		/**
-		 * Sets a reference to the root container node of the ExpandableItem
+		 * Sets a reference to the root container node of the ExpandableItem.
 		 *
 		 * @type {Function}
 		 * @private
@@ -230,7 +272,7 @@ const ExpandableItemBase = kind({
 		showLabel: PropTypes.oneOf(['always', 'never', 'auto']),
 
 		/**
-		 * When `true`, the component cannot be navigated using spotlight.
+		 * Disables spotlight navigation into the component.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -240,6 +282,7 @@ const ExpandableItemBase = kind({
 	},
 
 	defaultProps: {
+		'data-webos-voice-intent': 'Select',
 		autoClose: false,
 		disabled: false,
 		lockBottom: false,
@@ -303,6 +346,10 @@ const ExpandableItemBase = kind({
 
 	render: ({
 		children,
+		'data-webos-voice-disabled': voiceDisabled,
+		'data-webos-voice-group-label': voiceGroupLabel,
+		'data-webos-voice-intent': voiceIntent,
+		'data-webos-voice-label': voiceLabel,
 		disabled,
 		handleKeyDown,
 		handleLabelKeyDown,
@@ -344,6 +391,10 @@ const ExpandableItemBase = kind({
 					css={css}
 					className={labeledItemClassName}
 					data-expandable-label
+					data-webos-voice-disabled={voiceDisabled}
+					data-webos-voice-group-label={voiceGroupLabel}
+					data-webos-voice-intent={voiceIntent}
+					data-webos-voice-label={voiceLabel}
 					disabled={disabled}
 					label={label}
 					onTap={handleOpen}
@@ -375,9 +426,8 @@ const ExpandableItemBase = kind({
 });
 
 /**
- * {@link moonstone/ExpandableItem.ExpandableItem} renders a
- * {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show additional
- * contents.
+ * A component that renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to
+ * show additional contents.
  *
  * `ExpandableItem` maintains its open/closed state by default. The initial state can be supplied
  * using `defaultOpen`. In order to directly control the open/closed state, supply a value for
@@ -385,6 +435,7 @@ const ExpandableItemBase = kind({
  *
  * @class ExpandableItem
  * @memberof moonstone/ExpandableItem
+ * @extends moonstone/ExpandableItem.ExpandableItemBase
  * @ui
  * @mixes moonstone/ExpandableItem.Expandable
  * @public

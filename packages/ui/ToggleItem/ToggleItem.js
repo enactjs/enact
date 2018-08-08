@@ -1,5 +1,5 @@
 /**
- * Provides Moonstone-themed toggle item components and behaviors. This is not intended to be used
+ * Unstyled toggle item components and behaviors. This is not intended to be used
  * directly, but should be extended by a component that will customize this component's appearance
  * by supplying an [iconComponent prop]{@link ui/ToggleItem.ToggleItemBase#iconComponent}.
  *
@@ -16,7 +16,6 @@ import compose from 'ramda/src/compose';
 
 import ComponentOverride from '../ComponentOverride';
 import Toggleable from '../Toggleable';
-import {RemeasurableDecorator} from '../Remeasurable';
 import Touchable from '../Touchable';
 
 import componentCss from './ToggleItem.less';
@@ -49,9 +48,9 @@ const ToggleItemBase = kind({
 
 	propTypes: /** @lends ui/ToggleItem.ToggleItemBase.prototype */ {
 		/**
-		 * The string to be displayed as the main content of the toggle item.
+		 * The main content of the toggle item.
 		 *
-		 * @type {String}
+		 * @type {Node}
 		 * @required
 		 * @public
 		 */
@@ -60,20 +59,20 @@ const ToggleItemBase = kind({
 		/**
 		 * The type of component to use to render as root element. This receives the `css` prop for
 		 * theme extension and therefore must be a custom component and not a simple HTML DOM node.
-		 * Recommended component or themed derivitive: [SlotItem]{@link ui/SlotItem.SlotItem}
+		 * Recommended component or themed derivative: [SlotItem]{@link ui/SlotItem.SlotItem}
 		 *
-		 * @type {Component}
+		 * @type {Function}
 		 * @required
 		 * @public
 		 */
 		component: PropTypes.func.isRequired,
 
 		/**
-		 * The Icon to render in this item. This component receives the `selected` prop and value,
+		 * The `Icon` to render in this item. This component receives the `selected` prop and value,
 		 * and must therefore respond to it in some way. It is recommended to use
 		 * [ToggleIcon]{@link ui/ToggleIcon} for this.
 		 *
-		 * @type {Component}
+		 * @type {Component|Element}
 		 * @required
 		 * @public
 		 */
@@ -93,7 +92,7 @@ const ToggleItemBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Applies a disabled visual state to the toggle item.
+		 * When `true`, applies a disabled visual state to the toggle item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -112,7 +111,7 @@ const ToggleItemBase = kind({
 		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
-		 * Specifies on which side (`before` or `after`) of the text the icon appears.
+		 * Specifies on which side (`'before'` or `'after'`) of the text the icon appears.
 		 *
 		 * @type {String}
 		 * @default 'before'
@@ -125,6 +124,7 @@ const ToggleItemBase = kind({
 		 * generally use `onToggle` instead.
 		 *
 		 * @type {Function}
+		 * @public
 		 */
 		onTap: PropTypes.func,
 
@@ -140,7 +140,7 @@ const ToggleItemBase = kind({
 		onToggle: PropTypes.func,
 
 		/**
-		 * Applies the provided `icon` when the this is `true`.
+		 * When `true`, applies the provided `icon`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -150,6 +150,7 @@ const ToggleItemBase = kind({
 
 		/**
 		 * The value that will be sent to the `onToggle` handler.
+		 *
 		 * @type {*}
 		 * @default null
 		 * @public
@@ -175,7 +176,7 @@ const ToggleItemBase = kind({
 		slotAfter: iconCreator('after')
 	},
 
-	render: ({component: Component, css, children, onToggle, selected, ...rest}) => {
+	render: ({component: Component, css, children, selected, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.iconPosition;
 		delete rest.value;
@@ -186,7 +187,6 @@ const ToggleItemBase = kind({
 				{...rest}
 				css={css}
 				aria-checked={selected}
-				onTap={onToggle}
 			>
 				{children}
 			</Component>
@@ -199,22 +199,20 @@ const ToggleItemBase = kind({
  *
  * @class ToggleItemDecorator
  * @memberof ui/ToggleItem
- * @mixes ui/Remeasurable.RemeasurableDecorator
  * @mixes ui/Touchable.Touchable
  * @mixes ui/Toggleable.Toggleable
  * @hoc
  * @public
  */
 const ToggleItemDecorator = compose(
-	RemeasurableDecorator({trigger: 'selected'}),
-	Touchable,
-	Toggleable
+	Toggleable({toggleProp: 'onTap'}),
+	Touchable
 );
 
 /**
- * A Moonstone-styled item with built-in support for toggling, marqueed text, and `Spotlight` focus.
+ * An unstyled item with built-in support for toggling.
  *
- * Usage:
+ * Example:
  * ```
  * <ToggleItem icon="lock" iconPosition="before">Toggle Me</ToggleItem>
  * ```

@@ -18,6 +18,7 @@ import compose from 'ramda/src/compose';
 import React from 'react';
 import Pause from '@enact/spotlight/Pause';
 import UiSpinnerBase from '@enact/ui/Spinner';
+import Spotlight from '@enact/spotlight';
 
 import $L from '../internal/$L';
 import Marquee from '../Marquee';
@@ -97,8 +98,7 @@ const SpinnerBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, the background-color  of the spinner is transparent.
-		 *
+		 * Removes the background color (making it transparent).
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -142,7 +142,7 @@ const SpinnerBase = kind({
  * spotlight when unmounted. However, spotlight is not paused when `blockClickOn` prop is
  * `'container'`. Blocking spotlight within the container is up to app implementation.
  *
- * @hoc SpinnerSpotlightDecorator
+ * @hoc
  * @memberof moonstone/Spinner
  * @ui
  * @private
@@ -156,6 +156,7 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 			 * Determines how far the click-blocking should extend.
 			 *
 			 * It can be either `'screen'`, `'container'`, or `null`. `'screen'` pauses spotlight.
+			 * Changing this property to `'screen'` after creation is not supported.
 			 *
 			 * @type {String}
 			 * @default null
@@ -172,9 +173,13 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 
 		componentWillMount () {
 			const {blockClickOn} = this.props;
+			const current = Spotlight.getCurrent();
 
 			if (blockClickOn === 'screen') {
 				this.paused.pause();
+				if (current) {
+					current.blur();
+				}
 			}
 		}
 
@@ -182,6 +187,7 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 			const {blockClickOn} = this.props;
 
 			if (blockClickOn === 'screen') {
+				Spotlight.focus();
 				this.paused.resume();
 			}
 		}
@@ -200,7 +206,7 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
  * @hoc
  * @memberof moonstone/Spinner
  * @mixes moonstone/Spinner.SpinnerSpotlightDecorator
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const SpinnerDecorator = compose(
@@ -210,7 +216,7 @@ const SpinnerDecorator = compose(
 );
 
 /**
- * A ready to use Moonstone-styled Spinner.
+ * A Moonstone-styled Spinner.
  *
  * @class Spinner
  * @memberof moonstone/Spinner

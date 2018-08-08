@@ -18,13 +18,13 @@ const
  *
  * @typedef {Object} gridListItemSizeShape
  * @memberof ui/VirtualList
- * @property {Number} minWidth - The minimum width of the grid list item.
- * @property {Number} minHeight - The minimum height of the grid list item.
+ * @property {Number}    minWidth    The minimum width of the grid list item.
+ * @property {Number}    minHeight    The minimum height of the grid list item.
  * @public
  */
 const gridListItemSizeShape = PropTypes.shape({
-	minWidth: PropTypes.number.isRequired,
-	minHeight: PropTypes.number.isRequired
+	minHeight: PropTypes.number.isRequired,
+	minWidth: PropTypes.number.isRequired
 });
 
 /**
@@ -41,12 +41,12 @@ const VirtualListBaseFactory = (type) => {
 
 		static propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
 			/**
-			 * The `render` function called for each item in the list.
+			 * The rendering function called for each item in the list.
 			 *
-			 * > NOTE: The list does NOT always render a component whenever its render function is called
+			 * > **Note**: The list does **not** always render a component whenever its render function is called
 			 * due to performance optimization.
 			 *
-			 * Usage:
+			 * Example:
 			 * ```
 			 * renderItem = ({index, ...rest}) => {
 			 * 	delete rest.data;
@@ -58,10 +58,10 @@ const VirtualListBaseFactory = (type) => {
 			 * ```
 			 *
 			 * @type {Function}
-			 * @param {Object} event
-			 * @param {Number} event.data-index It is required for Spotlight 5-way navigation. Pass to the root element in the component.
-			 * @param {Number} event.index The index number of the component to render
-			 * @param {Number} event.key It MUST be passed as a prop to the root element in the component for DOM recycling.
+			 * @param {Object}     event
+			 * @param {Number}     event.data-index    It is required for `Spotlight` 5-way navigation. Pass to the root element in the component.
+			 * @param {Number}     event.index    The index number of the component to render
+			 * @param {Number}     event.key    It MUST be passed as a prop to the root element in the component for DOM recycling.
 			 *
 			 * @required
 			 * @public
@@ -69,7 +69,7 @@ const VirtualListBaseFactory = (type) => {
 			itemRenderer: PropTypes.func.isRequired,
 
 			/**
-			 * Size of an item for the list; valid values are either a number for `VirtualList`
+			 * The size of an item for the list; valid values are either a number for `VirtualList`
 			 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
 			 *
 			 * @type {Number|ui/VirtualList.gridListItemSizeShape}
@@ -91,6 +91,22 @@ const VirtualListBaseFactory = (type) => {
 			itemsRenderer: PropTypes.func.isRequired,
 
 			/**
+			 * Activates the component for voice control.
+			 *
+			 * @type {Boolean}
+			 * @private
+			 */
+			'data-webos-voice-focused': PropTypes.bool,
+
+			/**
+			 * The voice control group label.
+			 *
+			 * @type {String}
+			 * @private
+			 */
+			'data-webos-voice-group-label': PropTypes.string,
+
+			/**
 			 * Callback method of scrollTo.
 			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
 			 *
@@ -103,17 +119,17 @@ const VirtualListBaseFactory = (type) => {
 			 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
 			 *
 			 * @type {Object}
-			 * @property {Number} clientWidth - The client width of the list.
-			 * @property {Number} clientHeight - The client height of the list.
+			 * @property {Number}    clientHeight    The client height of the list.
+			 * @property {Number}    clientWidth    The client width of the list.
 			 * @public
 			 */
 			clientSize: PropTypes.shape({
-				clientWidth: PropTypes.number.isRequired,
-				clientHeight: PropTypes.number.isRequired
+				clientHeight: PropTypes.number.isRequired,
+				clientWidth: PropTypes.number.isRequired
 			}),
 
 			/**
-			 * Size of the data.
+			 * The number of items of data the list contains.
 			 *
 			 * @type {Number}
 			 * @default 0
@@ -122,7 +138,7 @@ const VirtualListBaseFactory = (type) => {
 			dataSize: PropTypes.number,
 
 			/**
-			 * Direction of the list.
+			 * The layout direction of the list.
 			 *
 			 * Valid values are:
 			 * * `'horizontal'`, and
@@ -154,7 +170,7 @@ const VirtualListBaseFactory = (type) => {
 			overhang: PropTypes.number,
 
 			/**
-			 * It scrolls by page when `true`, by item when `false`.
+			 * When `true`, the list will scroll by page.  Otherwise the list will scroll by item.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -163,7 +179,7 @@ const VirtualListBaseFactory = (type) => {
 			pageScroll: PropTypes.bool,
 
 			/**
-			 * `true` if rtl, `false` if ltr.
+			 * `true` if RTL, `false` if LTR.
 			 *
 			 * @type {Boolean}
 			 * @private
@@ -171,7 +187,7 @@ const VirtualListBaseFactory = (type) => {
 			rtl: PropTypes.bool,
 
 			/**
-			 * Spacing between items.
+			 * The spacing between items.
 			 *
 			 * @type {Number}
 			 * @default 0
@@ -496,8 +512,8 @@ const VirtualListBaseFactory = (type) => {
 
 		setContainerSize = () => {
 			if (this.contentRef) {
-				this.contentRef.style.width = this.scrollBounds.scrollWidth + 'px';
-				this.contentRef.style.height = this.scrollBounds.scrollHeight + 'px';
+				this.contentRef.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
+				this.contentRef.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
 			}
 		}
 
@@ -631,7 +647,6 @@ const VirtualListBaseFactory = (type) => {
 			this.cc[key] = React.cloneElement(itemElement, {
 				...componentProps,
 				className: classNames(css.listItem, itemElement.props.className),
-				['data-preventscrollonfocus']: true, // Added this attribute to prevent scroll on focus by browser
 				style: {...itemElement.props.style, ...(this.composeStyle(...rest))}
 			});
 		}
@@ -753,7 +768,7 @@ const VirtualListBaseFactory = (type) => {
 
 		render () {
 			const
-				{className, itemsRenderer, style, ...rest} = this.props,
+				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
 				{cc, initItemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className);
 
@@ -764,18 +779,20 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.getComponentProps;
 			delete rest.itemRenderer;
 			delete rest.itemSize;
+			delete rest.onUpdate;
 			delete rest.overhang;
 			delete rest.pageScroll;
 			delete rest.rtl;
 			delete rest.spacing;
 			delete rest.updateStatesAndBounds;
+			delete rest.isVerticalScrollbarVisible;
 
 			if (primary) {
 				this.positionItems();
 			}
 
 			return (
-				<div className={containerClasses} ref={this.initContainerRef} style={style}>
+				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.initContainerRef} style={style}>
 					<div {...rest} ref={this.initContentRef}>
 						{itemsRenderer({cc, initItemContainerRef, primary})}
 					</div>
@@ -826,7 +843,7 @@ const ScrollableVirtualList = (props) => (
 
 ScrollableVirtualList.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
 	/**
-	 * Direction of the list.
+	 * The layout direction of the list.
 	 *
 	 * Valid values are:
 	 * * `'horizontal'`, and
@@ -860,7 +877,7 @@ const ScrollableVirtualListNative = (props) => (
 
 ScrollableVirtualListNative.propTypes = /** @lends ui/VirtualList.VirtualListBaseNative.prototype */ {
 	/**
-	 * Direction of the list.
+	 * The layout direction of the list.
 	 *
 	 * Valid values are:
 	 * * `'horizontal'`, and

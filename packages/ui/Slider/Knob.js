@@ -19,7 +19,7 @@ const Knob = kind({
 		/**
 		 * The orientation of the slider, either `"horizontal"` or `"vertical"`.
 		 *
-		 * @type {Boolean}
+		 * @type {String}
 		 * @default "horizontal"
 		 * @public
 		 */
@@ -47,9 +47,9 @@ const Knob = kind({
 		 * the above props or a component instance (e.g. `<MyTooltip customProp="value" />`) which
 		 * will have its props merged with the above props.
 		 *
-		 * See {@link ui/ComponentOverride} for more information.
+		 * @see {@link ui/ComponentOverride}
 		 *
-		 * @type {Component|Element}
+		 * @type {Function|Element}
 		 * @public
 		 */
 		tooltipComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),

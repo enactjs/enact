@@ -1,5 +1,15 @@
 /**
  * Provides Moonstone-themed scroller components and behaviors.
+ * @example
+ * <Scroller>
+ * 	<div style={{height: "150px"}}>
+ * 		<p>San Francisco</p>
+ * 		<p>Seoul</p>
+ * 		<p>Bangalore</p>
+ * 		<p>New York</p>
+ * 		<p>London</p>
+ * 	</div>
+ * </Scroller>
  *
  * @module moonstone/Scroller
  * @exports Scroller
@@ -26,8 +36,9 @@ const
 
 /**
  * A Moonstone-styled base component for [Scroller]{@link moonstone/Scroller.Scroller}.
- * In most circumstances, you will want to use the SpotlightContainerDecorator and Scrollable version:
- * [Scroller]{@link moonstone/Scroller.Scroller}
+ * In most circumstances, you will want to use the
+ * [SpotlightContainerDecorator]{@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
+ * and the Scrollable version, [Scroller]{@link moonstone/Scroller.Scroller}.
  *
  * @class ScrollerBase
  * @memberof moonstone/Scroller
@@ -48,12 +59,27 @@ class ScrollerBase extends Component {
 		initUiChildRef: PropTypes.func,
 
 		/**
+		 * Called when [Scroller]{@link moonstone/Scroller.Scroller} updates.
+		 *
+		 * @type {function}
+		 * @private
+		 */
+		onUpdate: PropTypes.func,
+
+		/**
 		 * `true` if rtl, `false` if ltr.
 		 *
 		 * @type {Boolean}
 		 * @private
 		 */
 		rtl: PropTypes.bool
+	}
+
+	componentDidUpdate () {
+		const {onUpdate} = this.props;
+		if (onUpdate) {
+			onUpdate();
+		}
 	}
 
 	componentWillUnmount () {
@@ -151,22 +177,22 @@ class ScrollerBase extends Component {
 			}
 		}
 
-		// Calculations for `containerHeight` that are bigger than `clientHeight`
 		if (itemHeight > clientHeight) {
+			// Calculations for `containerHeight` that are bigger than `clientHeight`
 			const
 				{top, height: nestedItemHeight} = focusedItem.getBoundingClientRect(),
 				nestedItemTop = this.uiRef.containerRef.scrollTop + (top - containerTop),
 				nestedItemBottom = nestedItemTop + nestedItemHeight;
 
-			if (newItemTop - nestedItemHeight - currentScrollTop > epsilon) {
-				// set scroll position so that the top of the container is at least on the top
-				newScrollTop = newItemTop - nestedItemHeight;
-			} else if (nestedItemBottom - scrollBottom > epsilon) {
+			if (nestedItemBottom - scrollBottom > epsilon) {
 				// Caculate when 5-way focus down past the bottom.
 				newScrollTop += nestedItemBottom - scrollBottom;
 			} else if (nestedItemTop - currentScrollTop < epsilon) {
 				// Caculate when 5-way focus up past the top.
 				newScrollTop += nestedItemTop - currentScrollTop;
+			} else if (newItemTop - nestedItemHeight - currentScrollTop > epsilon) {
+				// set scroll position so that the top of the container is at least on the top as a fallback.
+				newScrollTop = newItemTop - nestedItemHeight;
 			}
 		} else if (itemBottom - scrollBottom > epsilon) {
 			// Caculate when 5-way focus down past the bottom.
@@ -284,16 +310,24 @@ class ScrollerBase extends Component {
 		return oPoint;
 	}
 
-	scrollToNextPage = ({direction, reverseDirection, focusedItem, containerId}) => {
-		const
-			endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect()),
-			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, containerId);
+	scrollToNextPage = ({direction, focusedItem, reverseDirection, spotlightId}) => {
+		const endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect());
+		let candidateNode = null;
 
-		if (next === focusedItem) {
-			return false; // Scroll one page with animation
-		} else {
-			return next; // Focus a next item
+		/* Find a spottable item in the next page */
+		candidateNode = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
+
+		/* Find a spottable item in a whole data */
+		if (candidateNode === focusedItem) {
+			candidateNode = getTargetByDirectionFromPosition(direction, endPoint, spotlightId);
 		}
+
+		/* If there is no spottable item next to the current item */
+		if (candidateNode === focusedItem) {
+			return null;
+		}
+
+		return candidateNode;
 	}
 
 	scrollToBoundary = (direction) => {
@@ -338,6 +372,7 @@ class ScrollerBase extends Component {
 		const props = Object.assign({}, this.props);
 
 		delete props.initUiChildRef;
+		delete props.onUpdate;
 
 		return (
 			<UiScrollerBase
@@ -379,10 +414,7 @@ Scroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
 	/**
 	 * Direction of the scroller.
 	 *
-	 * Valid values are:
-	 * * `'both'`,
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
+	 * * Values: `'both'`, `'horizontal'`, `'vertical'`.
 	 *
 	 * @type {String}
 	 * @default 'both'
@@ -428,10 +460,7 @@ ScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototyp
 	/**
 	 * Direction of the scroller.
 	 *
-	 * Valid values are:
-	 * * `'both'`,
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
+	 * * Values: `'both'`, `'horizontal'`, `'vertical'`.
 	 *
 	 * @type {String}
 	 * @default 'both'

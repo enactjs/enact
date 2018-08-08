@@ -278,7 +278,7 @@ const navigableFilter = (node, containerId) => {
 const getSpottableDescendants = (containerId) => {
 	const node = getContainerNode(containerId);
 
-	// if it's falsey or is a disabled container, return an empty set
+	// if it's falsy or is a disabled container, return an empty set
 	if (!node || (isContainerNode(node) && !isContainerEnabled(node))) {
 		return [];
 	}
@@ -563,7 +563,7 @@ const isNavigable = (node, containerId, verify) => {
 /**
  * Returns the IDs of all containers
  *
- * @return {String[]}  Array of container IDs
+ * @returns {String[]}  Array of container IDs
  * @memberof spotlight/container
  * @private
  */
@@ -850,6 +850,22 @@ function getLastContainer () {
 }
 
 function setLastContainer (containerId) {
+	// If the current container is restricted to 'self-only' and if the next container to be
+	// activated is not inside the currently activated container, the next container should not be
+	// activated.
+	const currentContainerId = getLastContainer();
+	if (currentContainerId) {
+		const config = getContainerConfig(currentContainerId);
+		if (config && config.restrict === 'self-only') {
+			const currentContainer = getContainerNode(currentContainerId);
+			const nextContainer = getContainerNode(containerId);
+
+			if (currentContainer && nextContainer && !currentContainer.contains(nextContainer)) {
+				return;
+			}
+		}
+	}
+
 	_lastContainerId = containerId || '';
 }
 

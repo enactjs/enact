@@ -2,6 +2,7 @@
  * Provides the {@link core/kind.kind} method to create components
  *
  * @module core/kind
+ * @exports kind
  */
 
 import React from 'react';
@@ -54,9 +55,9 @@ import styles from './styles';
  * ```
  *
  * @function
- * @param  {Object} config - Component configuration
+ * @param  {Object}    config    Component configuration
  *
- * @returns {Function}        Component
+ * @returns {Function}           Component
  * @memberof core/kind
  * @public
  */
@@ -67,13 +68,19 @@ const kind = (config) => {
 		defaultProps,
 		handlers,
 		name,
-		propTypes,
+		propTypes,	// eslint-disable-line react/forbid-foreign-prop-types
 		render,
 		styles: cfgStyles
 	} = config;
 
 	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
+	const renderKind = (props, context) => {
+		if (renderStyles) props = renderStyles(props, context);
+		if (renderComputed) props = renderComputed(props, context);
+
+		return render(props, context);
+	};
 
 	// addition prop decorations would be chained here (after config.render)
 	const Component = class extends React.Component {
@@ -81,9 +88,9 @@ const kind = (config) => {
 
 		static propTypes = propTypes
 
-		static defaultProps = defaultProps
-
 		static contextTypes = contextTypes
+
+		static defaultProps = defaultProps
 
 		constructor () {
 			super();
@@ -97,7 +104,7 @@ const kind = (config) => {
 			}
 		}
 
-		/**
+		/*
 		 * Caches an event handler on the local `handlers` member
 		 *
 		 * @param   {String}    name     Event name
@@ -112,17 +119,44 @@ const kind = (config) => {
 		}
 
 		render () {
-			let p = Object.assign({}, this.props, this.handlers);
-			if (renderStyles) p = renderStyles(p, this.context);
-			if (renderComputed) p = renderComputed(p, this.context);
-
-			return render(p, this.context);
+			return renderKind({
+				...this.props,
+				...this.handlers
+			}, this.context);
 		}
 	};
 
 	// Decorate the Component with the computed property object in DEV for easier testability
 	if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
 
+	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
+	const handlerKeys = handlers ? Object.keys(handlers) : null;
+
+	Component.inline = (props, context) => {
+		let updated = {
+			...props
+		};
+
+		if (defaultPropKeys && defaultPropKeys.length > 0) {
+			defaultPropKeys.forEach(key => {
+				// eslint-disable-next-line no-undefined
+				if (props == null || props[key] === undefined) {
+					updated[key] = defaultProps[key];
+				}
+			});
+		}
+
+		if (handlerKeys && handlerKeys.length > 0) {
+			// generate a handler with a clone of updated to ensure each handler receives the same
+			// props without the kind.handlers injected.
+			updated = handlerKeys.reduce((_props, key) => {
+				_props[key] = (ev) => handlers[key](ev, updated, context);
+				return _props;
+			}, {...updated});
+		}
+
+		return renderKind(updated, context);
+	};
 
 	return Component;
 };

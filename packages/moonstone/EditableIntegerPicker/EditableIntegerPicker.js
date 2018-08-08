@@ -1,8 +1,16 @@
 /**
- * Exports the {@link moonstone/EditableIntegerPicker.EditableIntegerPicker} and
- * {@link moonstone/EditableIntegerPicker.EditableIntegerPickerBase} components
+ * Moonstone styled editable integer picker.
+ *
+ * @example
+ * <EditableIntegerPicker
+ *   editMode
+ *   max={10}
+ *   min={1}
+ * />
  *
  * @module moonstone/EditableIntegerPicker
+ * @exports EditableIntegerPicker
+ * @exports EditableIntegerPickerBase
  */
 
 import Changeable from '@enact/ui/Changeable';
@@ -14,7 +22,6 @@ import React from 'react';
 
 import {MarqueeController} from '../Marquee';
 import {Picker, PickerItem} from '../internal/Picker';
-import SpottablePicker from '../Picker/SpottablePicker';
 import {validateRange} from '../internal/validators';
 
 import css from './EditableIntegerPicker.less';
@@ -29,8 +36,8 @@ const digits = (num) => {
 };
 
 /**
- * {@link moonstone/EditableIntegerPicker.EditableIntegerPickerBase} is a component that lets the user select a number
- * from a range of numbers. This version is not spottable. Developers are encouraged to use
+ * A picker component that lets the user select a number in between `min` and `max` numbers.
+ * This component is not spottable. Developers are encouraged to use
  * {@link moonstone/EditableIntegerPicker.EditableIntegerPicker}.
  *
  * @class EditableIntegerPickerBase
@@ -71,17 +78,17 @@ const EditableIntegerPickerBase = kind({
 		'aria-valuetext': PropTypes.string,
 
 		/**
-		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{moonstone/Icon.Icon} are
+		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		decrementIcon: PropTypes.string,
 
 		/**
-		 * When `true`, the EditableIntegerPicker is shown as disabled and does not generate `onChange`
-		 * [events]{@glossary event}.
+		 * Disables the picker and prevents events from firing.
+		 * [events]{@link /docs/developer-guide/glossary/#event}.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -94,13 +101,13 @@ const EditableIntegerPickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		editMode : PropTypes.bool,
+		editMode: PropTypes.bool,
 
 		/**
-		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{moonstone/Icon.Icon} are
+		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
 		 * supported. Without a custom icon, the default is used.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		incrementIcon: PropTypes.string,
@@ -114,21 +121,23 @@ const EditableIntegerPickerBase = kind({
 		inputRef: PropTypes.func,
 
 		/**
-		 * A function to be run when there is a blur in the input
+		 * Called when there is a blur in the input.
 		 *
 		 * @type {Function}
 		 * @public
 		 */
-		onInputBlur : PropTypes.func,
+		onInputBlur: PropTypes.func,
 
 		/**
-		 * A function to be run when pickerItem is clicked.
-		 * This enables the input field in the component
+		 * Called when the pickerItem is clicked and `editMode` is `false`.
+		 *
+		 * In response, the `editMode` should be switched to `true` to enable editing. This is
+		 * automatically handled by {@link moonstone/EditableIntegerPicker.EditableIntegerPicker}.
 		 *
 		 * @type {Function}
 		 * @public
 		 */
-		onPickerItemClick : PropTypes.func,
+		onPickerItemClick: PropTypes.func,
 
 		/**
 		 * Sets the orientation of the picker, whether the buttons are above and below or on the
@@ -155,7 +164,7 @@ const EditableIntegerPickerBase = kind({
 		 * @type {Function}
 		 * @private
 		 */
-		pickerRef : PropTypes.func,
+		pickerRef: PropTypes.func,
 
 		/**
 		 * Allow the picker to only increment or decrement by a given value. A step of `2` would
@@ -183,7 +192,7 @@ const EditableIntegerPickerBase = kind({
 		 * @default 0
 		 * @public
 		 */
-		value : PropTypes.number,
+		value: PropTypes.number,
 
 		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
@@ -249,22 +258,28 @@ const EditableIntegerPickerBase = kind({
 				label = value;
 			}
 
-			return (
-				editMode ?
+			if (editMode) {
+				return (
 					<input
 						className={css.input}
 						key={value}
 						onBlur={onInputBlur}
 						ref={inputRef}
-					/> : <PickerItem
-						key={value}
-						onClick={onPickerItemClick}
-					>
-						{`${label} ${unit}`}
-					</PickerItem>
+					/>
+				);
+			}
+
+			return (
+				<PickerItem
+					key={value}
+					onClick={onPickerItemClick}
+				>
+					{`${label} ${unit}`}
+				</PickerItem>
 			);
 		},
-		className: ({className, editMode, styler}) => editMode ? styler.append({editMode}) : className
+		className: ({className, editMode, styler}) => editMode ? styler.append({editMode}) : className,
+		disabled: ({disabled, max, min}) => min >= max ? true : disabled
 	},
 
 	render: ({pickerRef, ...rest}) => {
@@ -282,8 +297,7 @@ const EditableIntegerPickerBase = kind({
 });
 
 /**
- * {@link moonstone/EditableIntegerPicker.EditableIntegerPicker} is a component that lets the user select a number from
- * a range of numbers.
+ * A component that lets the user select a number from a range of numbers.
  *
  * By default, `EditableIntegerPicker` maintains the state of its `value` property. Supply the `defaultValue`
  * property to control its initial value. If you wish to directly control updates to the component,
@@ -291,6 +305,7 @@ const EditableIntegerPickerBase = kind({
  *
  * @class EditableIntegerPicker
  * @memberof moonstone/EditableIntegerPicker
+ * @extends moonstone/EditableIntegerPicker.EditableIntegerPickerBase
  * @mixes ui/Changeable.Changeable
  * @ui
  * @public
@@ -300,9 +315,7 @@ const EditableIntegerPicker = Pure(
 		EditableIntegerPickerDecorator(
 			MarqueeController(
 				{marqueeOnFocus: true},
-				SpottablePicker(
-					EditableIntegerPickerBase
-				)
+				EditableIntegerPickerBase
 			)
 		)
 	)

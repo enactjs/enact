@@ -1,5 +1,4 @@
 import {addAll, is} from '@enact/core/keymap';
-import {contextTypes} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
@@ -34,8 +33,6 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
 
 		static displayName = 'EditableIntegerPickerDecorator'
 
-		static contextTypes = contextTypes
-
 		static propTypes =  /** @lends moonstone/EditableIntegerPicker.EditableIntegerPickerDecorator.prototype */ {
 			/**
 		 	* The maximum value selectable by the picker (inclusive).
@@ -56,8 +53,8 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
 			min: PropTypes.number.isRequired,
 
 			/**
-			 * When `true`, the EditableIntegerPicker is shown as disabled and does not generate `onChange`
-			 * [events]{@glossary event}.
+			 * Disables EditableIntegerPicker and does not generate `onChange`
+			 * [events]{@link /docs/developer-guide/glossary/#event}.
 			 *
 			 * @type {Boolean}
 			 * @public
@@ -65,7 +62,7 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * The value of the picker to be displayed
+			 * The value displayed in the picker.
 			 *
 			 * @type {Number}
 			 * @default 0
@@ -100,7 +97,6 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
 			this.setState({
 				isActive: true
 			});
-			this.pointerMode = Spotlight.getPointerMode();
 			this.freezeSpotlight(true);
 		}
 
@@ -125,11 +121,8 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
 		freezeSpotlight = (freeze) => {
 			if (!freeze) {
 				this.paused.resume();
-				Spotlight.setPointerMode(this.pointerMode);
 			} else {
 				this.paused.pause();
-				// we temporarily set the pointer mode to false when the input field is enabled.
-				Spotlight.setPointerMode(false);
 			}
 		}
 

@@ -1,5 +1,5 @@
 /**
- * This component allows you to transition its children components onto the screen, whether that's
+ * A component that can transition its children components onto the screen, whether that's
  * from off the edge of the screen or hidden inside or behind an already-on-screen component.
  * You can switch types of transitions using the `type` property, change the direction they come in
  * from using the `direction` property, or even adjust the transition timing function using
@@ -89,11 +89,11 @@ const TransitionBase = kind({
 		direction: PropTypes.oneOf(['up', 'right', 'down', 'left']),
 
 		/**
-		 * Control how long the transition should take.
+		 * Controls how long the transition should take.
 		 * Supported preset durations are: `'short'` (250ms), `'medium'` (500ms), and `'long'` (1s).
 		 * `'medium'` (500ms) is default when no others are specified.
 		 * Any valid CSS duration value is also accepted, e.g. "200ms" or "3s". Pure numeric values
-		 * are also supported and treated as miliseconds.
+		 * are also supported and treated as milliseconds.
 		 *
 		 * @type {String|Number}
 		 * @default 'medium'
@@ -111,7 +111,7 @@ const TransitionBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * Customize the transition timing function.
+		 * The transition timing function.
 		 * Supported function names are: `ease`, `ease-in`, `ease-out`, `ease-in-out`, `ease-in-quart`,
 		 * `ease-out-quart`, and `linear`.
 		 *
@@ -130,7 +130,7 @@ const TransitionBase = kind({
 		]),
 
 		/**
-		 * How you'd like the transition to affect the content.
+		 * The type of transition to affect the content.
 		 * Supported types are: `'slide'`, `'clip'`, and `'fade'`.
 		 *
 		 * Details on types:
@@ -156,7 +156,7 @@ const TransitionBase = kind({
 		type: PropTypes.oneOf(['slide', 'clip', 'fade']),
 
 		/**
-		 * Set the visibility of the component, which determines whether it's on screen or off.
+		 * Sets the visibility of the component, which determines whether it's on screen or off.
 		 *
 		 * @type {Boolean}
 		 * @default true
@@ -254,8 +254,6 @@ const TRANSITION_STATE = {
  */
 class Transition extends React.Component {
 
-	static contextTypes = contextTypes
-
 	static propTypes = /** @lends ui/Transition.Transition.prototype */ {
 		/**
 		 * The node to be transitioned.
@@ -276,7 +274,7 @@ class Transition extends React.Component {
 		direction: PropTypes.oneOf(['up', 'right', 'down', 'left']),
 
 		/**
-		 * Control how long the transition should take.
+		 * Controls how long the transition should take.
 		 * Supported preset durations are: `'short'` (250ms), `'medium'` (500ms), and `'long'` (1s).
 		 * `'medium'` (500ms) is default when no others are specified.
 		 * Any valid CSS duration value is also accepted, e.g. "200ms" or "3s". Pure numeric values
@@ -305,7 +303,7 @@ class Transition extends React.Component {
 		onShow: PropTypes.func,
 
 		/**
-		 * Customize the transition timing function.
+		 * The transition timing function.
 		 * Supported function names are: `ease`, `ease-in`, `ease-out`, `ease-in-out`, `ease-in-quart`,
 		 * `ease-out-quart`, and `linear`.
 		 *
@@ -324,7 +322,7 @@ class Transition extends React.Component {
 		]),
 
 		/**
-		 * How you'd like the transition to affect the content.
+		 * The type of transition to affect the content.
 		 * Supported types are: `'slide'`, `'clip'`, and `'fade'`.
 		 *
 		 * Details on types:
@@ -358,6 +356,8 @@ class Transition extends React.Component {
 		 */
 		visible: PropTypes.bool
 	}
+
+	static contextTypes = contextTypes
 
 	static defaultProps = {
 		direction: 'up',

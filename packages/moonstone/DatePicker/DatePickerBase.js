@@ -1,7 +1,7 @@
 import {forKey, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import $L from '../internal/$L';
 import {DateComponentRangePicker} from '../internal/DateComponentPicker';
@@ -11,21 +11,25 @@ import css from './DatePicker.less';
 import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
 
 /**
- * {@link moonstone/DatePicker.DatePickerBase} is the stateless functional date picker
- * component. Should not be used directly but may be composed within another component as it is
- * within {@link moonstone/DatePicker.DatePicker}.
+ * A date selection component.
+ *
+ * This component is most often not used directly but may be composed within another component as it
+ * is within [DatePicker]{@link moonstone/DatePicker.DatePicker}.
  *
  * @class DatePickerBase
  * @memberof moonstone/DatePicker
+ * @extends moonstone/ExpandableItem.ExpandableItemBase
  * @ui
- * @private
+ * @public
  */
 const DatePickerBase = kind({
 	name: 'DatePickerBase',
 
 	propTypes:  /** @lends moonstone/DatePicker.DatePickerBase.prototype */ {
 		/**
-		 * The `day` component of the Date
+		 * The `day` component of the Date.
+		 *
+		 * The value should be a number between 1 and `maxDays`.
 		 *
 		 * @type {Number}
 		 * @required
@@ -34,7 +38,7 @@ const DatePickerBase = kind({
 		day: PropTypes.number.isRequired,
 
 		/**
-		 * The number of days in the month
+		 * The number of days in the month.
 		 *
 		 * @type {Number}
 		 * @required
@@ -43,7 +47,7 @@ const DatePickerBase = kind({
 		maxDays: PropTypes.number.isRequired,
 
 		/**
-		 * The number of months in the year
+		 * The number of months in the year.
 		 *
 		 * @type {Number}
 		 * @required
@@ -52,7 +56,9 @@ const DatePickerBase = kind({
 		maxMonths: PropTypes.number.isRequired,
 
 		/**
-		 * The `month` component of the Date
+		 * The `month` component of the Date.
+		 *
+		 * The value should be a number between 1 and `maxMonths`.
 		 *
 		 * @type {Number}
 		 * @required
@@ -61,8 +67,9 @@ const DatePickerBase = kind({
 		month: PropTypes.number.isRequired,
 
 		/**
-		 * The order in which the component pickers are displayed. Should be an array of 3 strings
-		 * containing one of `'m'`, `'d'`, and `'y'`.
+		 * The order in which the component pickers are displayed.
+		 *
+		 * The value should be an array of 3 strings containing one of `'m'`, `'d'`, and `'y'`.
 		 *
 		 * @type {String[]}
 		 * @required
@@ -80,7 +87,7 @@ const DatePickerBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
-		 * The `year` component of the Date
+		 * The `year` component of the Date.
 		 *
 		 * @type {Number}
 		 * @required
@@ -89,7 +96,16 @@ const DatePickerBase = kind({
 		year: PropTypes.number.isRequired,
 
 		/**
-		 * The "aria-label" for the day picker
+		 * Disables voice control.
+		 *
+		 * @type {Boolean}
+		 * @memberof moonstone/DatePicker.DatePickerBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
+
+		/**
+		 * The "aria-label" for the day picker.
 		 *
 		 * @type {String}
 		 * @default 'change a value with up down button'
@@ -110,7 +126,7 @@ const DatePickerBase = kind({
 		dayLabel: PropTypes.string,
 
 		/**
-		 * The maximum selectable `year` value
+		 * The maximum selectable `year` value.
 		 *
 		 * @type {Number}
 		 * @default 2099
@@ -119,7 +135,7 @@ const DatePickerBase = kind({
 		maxYear: PropTypes.number,
 
 		/**
-		 * The minimum selectable `year` value
+		 * The minimum selectable `year` value.
 		 *
 		 * @type {Number}
 		 * @default 1900
@@ -128,7 +144,7 @@ const DatePickerBase = kind({
 		minYear: PropTypes.number,
 
 		/**
-		 * The "aria-label" for the month picker
+		 * The "aria-label" for the month picker.
 		 *
 		 * @type {String}
 		 * @default 'change a value with up down button'
@@ -149,7 +165,7 @@ const DatePickerBase = kind({
 		monthLabel: PropTypes.string,
 
 		/**
-		 * When `true`, omits the labels below the pickers
+		 * Omits the labels below the pickers.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -157,7 +173,7 @@ const DatePickerBase = kind({
 		noLabels: PropTypes.bool,
 
 		/**
-		 * Handler for changes in the `date` component of the Date
+		 * Called when the `date` component of the Date changes.
 		 *
 		 * @type {Function}
 		 * @public
@@ -165,7 +181,7 @@ const DatePickerBase = kind({
 		onChangeDate: PropTypes.func,
 
 		/**
-		 * Handler for changes in the `month` component of the Date
+		 * Called when the `month` component of the Date changes.
 		 *
 		 * @type {Function}
 		 * @public
@@ -173,7 +189,7 @@ const DatePickerBase = kind({
 		onChangeMonth: PropTypes.func,
 
 		/**
-		 * Handler for changes in the `year` component of the Date
+		 * Called when the `year` component of the Date changes.
 		 *
 		 * @type {Function}
 		 * @public
@@ -181,7 +197,7 @@ const DatePickerBase = kind({
 		onChangeYear: PropTypes.func,
 
 		/**
-		 * Callback to be called when a condition occurs which should cause the expandable to close
+		 * Called when the user requests the expandable close.
 		 *
 		 * @type {Function}
 		 * @public
@@ -189,7 +205,7 @@ const DatePickerBase = kind({
 		onClose: PropTypes.func,
 
 		/**
-		 * The handler to run when the component is removed while retaining focus.
+		 * Called when the component is removed when it had focus.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -198,7 +214,7 @@ const DatePickerBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 * Called prior to focus leaving the expandable when the 5-way left key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -207,7 +223,7 @@ const DatePickerBase = kind({
 		onSpotlightLeft: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 * Called prior to focus leaving the expandable when the 5-way right key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -216,7 +232,7 @@ const DatePickerBase = kind({
 		onSpotlightRight: PropTypes.func,
 
 		/**
-		 * When `true`, current locale is RTL
+		 * Indicates the content's text direction is right-to-left.
 		 *
 		 * @type {Boolean}
 		 * @private
@@ -224,7 +240,7 @@ const DatePickerBase = kind({
 		rtl: PropTypes.bool,
 
 		/**
-		 * When `true`, the component cannot be navigated using spotlight.
+		 * Disables 5-way spotlight from navigating into the component.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -233,7 +249,7 @@ const DatePickerBase = kind({
 		spotlightDisabled: PropTypes.bool,
 
 		/**
-		 * The "aria-label" for the year picker
+		 * The "aria-label" for the year picker.
 		 *
 		 * @type {String}
 		 * @default 'change a value with up down button'
@@ -273,6 +289,7 @@ const DatePickerBase = kind({
 	},
 
 	render: ({
+		'data-webos-voice-disabled': voiceDisabled,
 		day,
 		dayAriaLabel,
 		dayLabel = $L('day'),
@@ -305,6 +322,7 @@ const DatePickerBase = kind({
 				{...rest}
 				showLabel="always"
 				autoClose={false}
+				data-webos-voice-disabled={voiceDisabled}
 				lockBottom={false}
 				onSpotlightDisappear={onSpotlightDisappear}
 				onSpotlightLeft={onSpotlightLeft}
@@ -325,6 +343,8 @@ const DatePickerBase = kind({
 										accessibilityHint={dayLabel}
 										aria-label={dayAriaLabel}
 										className={css.day}
+										data-webos-voice-disabled={voiceDisabled}
+										data-webos-voice-group-label={dayLabel}
 										key="day-picker"
 										label={noLabels ? null : dayLabel}
 										max={maxDays}
@@ -345,6 +365,8 @@ const DatePickerBase = kind({
 										accessibilityHint={monthLabel}
 										aria-label={monthAriaLabel}
 										className={css.month}
+										data-webos-voice-disabled={voiceDisabled}
+										data-webos-voice-group-label={monthLabel}
 										key="month-picker"
 										label={noLabels ? null : monthLabel}
 										max={maxMonths}
@@ -365,6 +387,8 @@ const DatePickerBase = kind({
 										accessibilityHint={yearLabel}
 										aria-label={yearAriaLabel}
 										className={css.year}
+										data-webos-voice-disabled={voiceDisabled}
+										data-webos-voice-group-label={yearLabel}
 										key="year-picker"
 										label={noLabels ? null : yearLabel}
 										max={maxYear}
@@ -389,4 +413,6 @@ const DatePickerBase = kind({
 });
 
 export default DatePickerBase;
-export {DatePickerBase};
+export {
+	DatePickerBase
+};

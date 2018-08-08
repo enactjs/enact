@@ -2,13 +2,12 @@ import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {contextTypes as controlContextTypes} from '@enact/ui/Marquee/MarqueeController';
 import Pure from '@enact/ui/internal/Pure';
 import Touchable from '@enact/ui/Touchable';
 
-import {controlContextTypes} from '../../Marquee';
 import Icon from '../../Icon';
 import IconButton from '../../IconButton';
-import {withSkinnableProps} from '../../Skinnable';
 
 import css from './Picker.less';
 
@@ -24,7 +23,7 @@ const JoinedPickerButtonBase = kind({
 	},
 
 	render: ({disabled, icon, ...rest}) => (
-		<span {...rest} disabled={disabled}>
+		<span {...rest} data-webos-voice-intent="Select" disabled={disabled}>
 			<Icon className={css.icon} disabled={disabled} small>{icon}</Icon>
 		</span>
 	)
@@ -44,7 +43,6 @@ const PickerButtonBase = kind({
 		]),
 		joined: PropTypes.bool,
 		onSpotlightDisappear: PropTypes.func,
-		skin: PropTypes.string,
 		spotlightDisabled: PropTypes.bool
 	},
 
@@ -83,7 +81,6 @@ const PickerButtonBase = kind({
 		if (joined) {
 			delete rest.hidden;
 			delete rest.onSpotlightDisappear;
-			delete rest.skin;
 			delete rest.spotlightDisabled;
 
 			return (
@@ -100,9 +97,7 @@ const PickerButtonBase = kind({
 });
 
 const PickerButton = Pure(
-	withSkinnableProps(
-		PickerButtonBase
-	)
+	PickerButtonBase
 );
 
 export default PickerButton;

@@ -1,5 +1,5 @@
 /**
- * Provides an unstyled item component that accepts multiple positions of children, using the usual
+ * An unstyled item component that accepts multiple positions of children, using the usual
  * `children` prop, as well as two additional props: `slotBefore`, and `slotAfter`.
  * It is able to be customized by a theme or application.
  *
@@ -18,7 +18,7 @@ import Slottable from '../Slottable';
 import componentCss from './SlotItem.less';
 
 /**
- * A ui-styled SlotItem without any behavior.
+ * A ui-styled `SlotItem` without any behavior.
  *
  * @class SlotItemBase
  * @memberof ui/SlotItem
@@ -35,7 +35,7 @@ const SlotItemBase = kind({
 		 * This component will receive the `inline` prop and any additional unhandled props provided
 		 * to `SlotItem`. A derivative of [Item]{@link ui/Item.Item} is recommended.
 		 *
-		 * @type {Component}
+		 * @type {Function}
 		 * @required
 		 * @public
 		 */
@@ -166,7 +166,7 @@ const SlotItemBase = kind({
 });
 
 /**
- * ui-specific item with slot behaviors to apply to [SlotItem]{@link ui/SlotItem.SlotItemBase}.
+ * A ui-specific higher-order component (HOC) with slot behaviors to apply to [SlotItem]{@link ui/SlotItem.SlotItemBase}.
  *
  * @class SlotItemDecorator
  * @memberof ui/SlotItem
@@ -179,6 +179,7 @@ const SlotItemDecorator = Slottable({slots: ['slotAfter', 'slotBefore']});
 /**
  * A ui-styled item with built-in support for slots.
  *
+ * Example:
  * ```
  *	<SlotItem component={Item} autoHide="both">
  *		<slotBefore>

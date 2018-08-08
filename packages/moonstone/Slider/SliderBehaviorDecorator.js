@@ -48,7 +48,7 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'SliderBehaviorDecorator'
 
 		static propTypes = {
-			'aria-valuetext': PropTypes.oneOf([PropTypes.string, PropTypes.number]),
+			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 			max: PropTypes.number,
 			min: PropTypes.number,
 			orientation: PropTypes.string,
@@ -110,6 +110,7 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleActivate () {
+			forward('onActivate', {type: 'onActivate'}, this.props);
 			this.setState(toggleActive);
 			this.setState(useHintOnActive);
 		}
@@ -159,6 +160,7 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			return (
 				<Wrapped
+					role="slider"
 					{...props}
 					active={this.state.active}
 					aria-valuetext={this.getValueText()}

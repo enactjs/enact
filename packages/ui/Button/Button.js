@@ -1,5 +1,5 @@
 /**
- * Provides unstyled button components and behaviors to be customized by a theme or application.
+ * Unstyled button components and behaviors to be customized by a theme or application.
  *
  * @module ui/Button
  * @exports Button
@@ -7,7 +7,6 @@
  * @exports ButtonDecorator
  */
 
-import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -51,10 +50,9 @@ const ButtonBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Disables the [ButtonBase]{@link ui/Button.ButtonBase}
+		 * Applies the `disabled` class.
 		 *
-		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
-		 * generate `onClick` [events]{@glossary event}.
+		 * When `true`, the button is shown as disabled.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -92,7 +90,10 @@ const ButtonBase = kind({
 		iconComponent: PropTypes.func,
 
 		/**
-		 * Applies the `minWidth` CSS class to the [ButtonBase]{@link ui/Button.ButtonBase}
+		 * Enforces a minimum width for the component.
+		 *
+		 * Applies the `minWidth` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
 		 * @default true
@@ -101,7 +102,10 @@ const ButtonBase = kind({
 		minWidth: PropTypes.bool,
 
 		/**
-		 * Applies the `pressed` CSS class to the [ButtonBase]{@link ui/Button.ButtonBase}
+		 * Indicates the component is depressed.
+		 *
+		 * Applies the `pressed` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -110,7 +114,10 @@ const ButtonBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * Applies the `selected` CSS class to the [ButtonBase]{@link ui/Button.ButtonBase}
+		 * Indicates the component is selected.
+		 *
+		 * Applies the `selected` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -119,7 +126,10 @@ const ButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Applies the `small` CSS class to the [ButtonBase]{@link ui/Button.ButtonBase}
+		 * Reduces the size of the component.
+		 *
+		 * Applies the `small` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -154,13 +164,6 @@ const ButtonBase = kind({
 				<Icon small={small} className={css.icon}>{icon}</Icon>
 			) : icon;
 		}
-	},
-
-	handlers: {
-		onClick: handle(
-			forProp('disabled', false),
-			forward('onClick')
-		)
 	},
 
 	render: ({children, css, disabled, icon, ...rest}) => {

@@ -1,13 +1,18 @@
 /**
  * Provides a media component with image and text overlay support.
  *
+ * @example
+ * <MediaOverlay text="overlay">
+ *   <source src="http://media.w3.org/2010/05/sintel/trailer.mp4" />
+ * </MediaOverlay>
+ *
  * @module moonstone/MediaOverlay
  * @exports MediaOverlay
  * @exports MediaOverlayBase
  * @exports MediaOverlayDecorator
  */
 
-import styles from '@enact/core/kind/styles';
+import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 import {Layout, Cell} from '@enact/ui/Layout';
 import Media from '@enact/ui/Media';
@@ -18,17 +23,10 @@ import compose from 'ramda/src/compose';
 import React from 'react';
 
 import Image from '../Image';
-import {MarqueeController, Marquee} from '../Marquee';
+import {Marquee} from '../Marquee';
 import Skinnable from '../Skinnable';
-import {compareSources} from '../VideoPlayer/util';
 
 import componentCss from './MediaOverlay.less';
-
-const renderStyles = styles({
-	css: componentCss,
-	className: 'mediaOverlay',
-	publicClassNames: ['mediaOverlay', 'image', 'textLayout']
-});
 
 /**
  * A media component with image and text overlay support.
@@ -38,8 +36,10 @@ const renderStyles = styles({
  * @ui
  * @public
  */
-class MediaOverlayBase extends React.Component {
-	static propTypes = /** @lends moonstone/MediaOverlay.MediaOverlayBase.prototype */ {
+const MediaOverlayBase = kind({
+	name: 'MediaOverlay',
+
+	propTypes: /** @lends moonstone/MediaOverlay.MediaOverlayBase.prototype */ {
 		/**
 		 * Any children `<source>` tag elements will be sent directly to the media element as
 		 * sources.
@@ -68,7 +68,7 @@ class MediaOverlayBase extends React.Component {
 		 *
 		 * NOTE: When image is displayed, media is not displayed even though it is playing.
 		 *
-		 * @type {String | Object}
+		 * @type {String|Object}
 		 * @public
 		 */
 		imageOverlay: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
@@ -89,7 +89,7 @@ class MediaOverlayBase extends React.Component {
 		mediaComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
-		 * Placeholder for image overlay
+		 * Placeholder for image overlay.
 		 *
 		 * @type {String}
 		 * @public
@@ -97,7 +97,7 @@ class MediaOverlayBase extends React.Component {
 		placeholder: PropTypes.string,
 
 		/**
-		 * Text to display over media
+		 * Text to display over media.
 		 *
 		 * @type {String}
 		 * @public
@@ -118,48 +118,30 @@ class MediaOverlayBase extends React.Component {
 		 * @default "center"
 		 */
 		textAlign: PropTypes.string
-	}
+	},
 
-	static defaultProps = {
+	defaultProps: {
 		mediaComponent: 'video',
 		textAlign: 'center'
-	}
+	},
 
-	constructor (props) {
-		super(props);
+	styles: {
+		css: componentCss,
+		className: 'mediaOverlay',
+		publicClassNames: ['mediaOverlay', 'image', 'textLayout']
+	},
 
-		this.media = null;
-	}
-
-	componentDidUpdate (prevProps) {
-		const {source} = this.props;
-		const {source: prevSource} = prevProps;
-
-		if (!compareSources(source, prevSource)) {
-			this.media.load();
-		}
-	}
-
-	setMediaRef = (media) => {
-		this.media = media;
-	}
-
-	render () {
-		const props = renderStyles(Object.assign({}, this.props));
-		const {css, imageOverlay, mediaComponent, placeholder, source, text, textAlign, ...rest} = props;
-
+	render: ({css, imageOverlay, mediaComponent, placeholder, source, text, textAlign, ...rest}) => {
 		return (
 			<div {...rest}>
 				<Media
 					autoPlay
 					className={css.media}
-					component={mediaComponent}
 					controls={false}
+					mediaComponent={mediaComponent}
 					muted
-					ref={this.setMediaRef}
-				>
-					{source}
-				</Media>
+					source={source}
+				/>
 				{imageOverlay ? (
 					<Image
 						className={css.image}
@@ -178,22 +160,20 @@ class MediaOverlayBase extends React.Component {
 			</div>
 		);
 	}
-}
+});
 
 /**
  * Moonstone-specific behaviors to apply to [MediaOverlay]{@link moonstone/MediaOverlay.MediaOverlayBase}.
  *
  * @hoc
  * @memberof moonstone/MediaOverlay
- * @mixes moonstone/Marquee.MarqueeController
  * @mixes spotlight/Spottable.Spottable
  * @mixes ui/Slottable.Slottable
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const MediaOverlayDecorator = compose(
 	Pure,
-	MarqueeController({marqueeOnFocus: true}),
 	Spottable,
 	Slottable({slots: ['source']}),
 	Skinnable
@@ -211,6 +191,7 @@ const MediaOverlayDecorator = compose(
  *
  * @class MediaOverlay
  * @memberof moonstone/MediaOverlay
+ * @extends moonstone/mediaOverlay.MediaOverlayBase
  * @mixes moonstone/MediaOverlay.MediaOverlayDecorator
  * @ui
  * @public

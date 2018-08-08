@@ -7,8 +7,10 @@ import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
+
+import {boolean} from '../../src/enact-knobs';
+
 import css from './About.less';
 
 const riSafe = (style) => {
@@ -50,13 +52,14 @@ storiesOf('About', module)
 	.add(
 		'A Tour of Sampler',
 		withInfo('A Tour of Sampler')(() => (
-			<div>
+			<div style={{overflow: 'hidden', height: '100%'}}>
 				<BodyText
-					centered={boolean('text centered', false)}
+					style={{margin: `0 ${riSafe(12)} 0.8em`}}
+					centered={boolean('text centered', BodyText)}
 				>
 					Welcome to the Enact sampler! Explore Enact components.
 				</BodyText>
-				<Button onClick={action('onClick')} selected={boolean('button selected', false)}>
+				<Button onClick={action('onClick')} selected={boolean('button selected', Button)}>
 					Click me
 				</Button>
 				<aside className={css.hintDialog} style={{top: riSafe(48), right: 30}}>
@@ -65,7 +68,7 @@ storiesOf('About', module)
 						Click <b>Show Info</b> to see the live source code for the sample
 					</div>
 				</aside>
-				<aside className={css.hintDialog} style={riSafe({position: 'relative', top: 60, left: 30})}>
+				<aside className={css.hintDialog} style={riSafe({position: 'relative', top: 60, left: 33})}>
 					<Pointer length={30} angle="90deg" style={riSafe({left: 0, top: 9})} />
 					<div className={css.text}>
 						Select any component from the <b>sidebar</b> to see how it works

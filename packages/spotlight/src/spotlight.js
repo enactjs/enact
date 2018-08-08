@@ -17,6 +17,8 @@
  */
 
 import {is} from '@enact/core/keymap';
+import {isWindowReady} from '@enact/core/snapshot';
+import platform from '@enact/core/platform';
 import last from 'ramda/src/last';
 
 import Accelerator from '../Accelerator';
@@ -50,6 +52,7 @@ import {
 import {
 	getLastPointerPosition,
 	getPointerMode,
+	hasPointerMoved,
 	notifyKeyDown,
 	notifyPointerMove,
 	setPointerMode
@@ -162,9 +165,20 @@ const Spotlight = (function () {
 	}
 
 	function getCurrent () {
+		if (!isWindowReady()) return;
+
 		let activeElement = document.activeElement;
 		if (activeElement && activeElement !== document.body) {
 			return activeElement;
+		}
+	}
+
+	// An extension point for updating pointer mode based on the current platform.
+	// Currently only webOS
+	function setPlatformPointerMode () {
+		const palmSystem = window.PalmSystem;
+		if (palmSystem && palmSystem.cursor) {
+			setPointerMode(palmSystem.cursor.visibility);
 		}
 	}
 
@@ -226,6 +240,10 @@ const Spotlight = (function () {
 			setContainerLastFocusedElement(elem, containerIds);
 			setLastContainer(containerId);
 		}
+
+		if (__DEV__) {
+			assignFocusPreview(elem);
+		}
 	}
 
 	function restoreFocus () {
@@ -236,7 +254,7 @@ const Spotlight = (function () {
 			next.unshift(lastContainerId);
 
 			// only prepend last focused if it exists so that Spotlight.focus() doesn't receive
-			// a falsey target
+			// a falsy target
 			const lastFocused = getContainerLastFocusedElement(lastContainerId);
 			if (lastFocused) {
 				next.unshift(lastFocused);
@@ -246,6 +264,29 @@ const Spotlight = (function () {
 		// attempt to find a target starting with the last focused element in the last
 		// container, followed by the last container, and finally the root container
 		return next.reduce((focused, target) => focused || Spotlight.focus(target), false);
+	}
+
+	// The below should be gated on non-production environment only.
+	function assignFocusPreview (elem) {
+		const directions = ['up', 'right', 'down', 'left'],
+			nextClassBase = spottableClass + '-next-';
+
+		// Remove all previous targets
+		directions.forEach((dir) => {
+			const nextClass = nextClassBase + dir,
+				prevElems = parseSelector('.' + nextClass);
+			if (prevElems && prevElems.length !== 0) {
+				prevElems.forEach(prevElem => prevElem.classList.remove(nextClass));
+			}
+		});
+
+		// Find all next targets and identify them
+		directions.forEach((dir) => {
+			const nextElem = getTargetByDirectionFromElement(dir, elem);
+			if (nextElem) {
+				nextElem.classList.add(nextClassBase + dir);
+			}
+		});
 	}
 
 	function spotNextFromPoint (direction, position) {
@@ -314,21 +355,26 @@ const Spotlight = (function () {
 		_pointerMoveDuringKeyPress = false;
 	}
 
+	function handleWebOSMouseEvent (ev) {
+		if (!isPaused() && ev && ev.detail && ev.detail.type === 'Leave') {
+			onBlur();
+		}
+	}
+
 	function onFocus () {
 		// Normally, there isn't focus here unless the window has been blurred above. On webOS, the
 		// platform may focus the window after the app has already focused a component so we prevent
 		// trying to focus something else (potentially) unless the window was previously blurred
 		if (_spotOnWindowFocus) {
-			const palmSystem = window.PalmSystem;
-
-			if (palmSystem && palmSystem.cursor) {
-				Spotlight.setPointerMode(palmSystem.cursor.visibility);
-			}
-
+			setPlatformPointerMode();
 			// If the window was previously blurred while in pointer mode, the last active containerId may
 			// not have yet set focus to its spottable elements. For this reason we can't rely on setting focus
 			// to the last focused element of the last active containerId, so we use rootContainerId instead
-			Spotlight.focus(getContainerLastFocusedElement(rootContainerId));
+			if (!Spotlight.focus(getContainerLastFocusedElement(rootContainerId))) {
+				// If the last focused element was previously also disabled (or no longer exists), we
+				// need to set focus somewhere
+				Spotlight.focus();
+			}
 			_spotOnWindowFocus = false;
 		}
 	}
@@ -351,6 +397,7 @@ const Spotlight = (function () {
 
 	function onKeyDown (evt) {
 		if (shouldPreventNavigation()) {
+			notifyKeyDown(evt.keyCode);
 			return;
 		}
 
@@ -358,12 +405,7 @@ const Spotlight = (function () {
 		const direction = getDirection(keyCode);
 		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
 
-		if (pointerHandled) {
-			_pointerMoveDuringKeyPress = true;
-			return;
-		}
-
-		if (!(direction || isEnter(keyCode))) {
+		if (pointerHandled || !(direction || isEnter(keyCode))) {
 			return;
 		}
 
@@ -382,7 +424,10 @@ const Spotlight = (function () {
 	}
 
 	function onMouseMove ({target, clientX, clientY}) {
-		if (shouldPreventNavigation()) return;
+		if (shouldPreventNavigation()) {
+			notifyPointerMove(null, target, clientX, clientY);
+			return;
+		}
 
 		const current = getCurrent();
 		const update = notifyPointerMove(current, target, clientX, clientY);
@@ -413,7 +458,7 @@ const Spotlight = (function () {
 
 		const {target} = evt;
 
-		if (getPointerMode()) {
+		if (getPointerMode() && hasPointerMoved(evt.clientX, evt.clientY)) {
 			const next = getNavigableTarget(target); // account for child controls
 
 			if (next && next !== getCurrent()) {
@@ -444,9 +489,13 @@ const Spotlight = (function () {
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
+				if (platform.webos) document.addEventListener('webOSMouse', handleWebOSMouseEvent);
 				setLastContainer(rootContainerId);
 				configureDefaults(containerDefaults);
 				configureContainer(rootContainerId);
+				// by default, pointer mode is off but the platform's current state will override that
+				setPointerMode(false);
+				setPlatformPointerMode();
 				_initialized = true;
 			}
 		},
@@ -463,6 +512,7 @@ const Spotlight = (function () {
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
+			if (platform.webos) document.removeEventListener('webOSMouse', handleWebOSMouseEvent);
 			Spotlight.clear();
 			_initialized = false;
 		},
@@ -618,7 +668,13 @@ const Spotlight = (function () {
 			const nextContainerIds = getContainersForNode(target);
 			const nextContainerId = last(nextContainerIds);
 			if (isNavigable(target, nextContainerId, true)) {
-				return focusElement(target, nextContainerIds);
+				const focused = focusElement(target, nextContainerIds);
+
+				if (!focused && wasContainerId) {
+					this.setActiveContainer(elem);
+				}
+
+				return focused;
 			} else if (wasContainerId) {
 				// if we failed to find a spottable target within the provided container, we'll set
 				// it as the active container to allow it to focus itself if its contents change

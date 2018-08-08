@@ -2,63 +2,43 @@
 title: i18n (Internationalization)
 ---
 
-* [Overview](#1)
-* [Using I18nDecorator](#2)
-* [Locale-Specific CSS](#3)
-* [Translating Strings using $L()](#4)
-* [Updating Locale](#4)
-* [iLib](#6)
-* [Sample i18n App](#7)
+* [Overview](#overview)
+* [Using I18nDecorator](#using-i18ndecorator)
+* [Locale-Specific CSS](#locale-specific-css)
+* [Translating Strings using $L()](#translating-strings-using-l)
+* [Updating Locale](#updating-locale)
+* [iLib](#ilib)
+* [Sample i18n App](#sample)
 
-<a name="1"></a>
 ## Overview
 
 This guide details how to use some of i18n library's features. For an overview of the modules supplied with the library please see [I18nDecorator](../../modules/i18n/I18nDecorator/) and [Uppercase](../../modules/i18n/Uppercase/). This library incorporates the [iLib](https://github.com/iLib-js/iLib) internationalization library.
 
-<a name="2"></a>
 ## Using I18nDecorator
 
-`I18nDecorator` is a Higher-order Component (HOC) that provides easy access to locale information. Applications wishing to receive locale information can wrap the root component with the HOC. It is not necessary to use `I18nDecorator` directly for applications using `MoonstoneDecorator`.
+`I18nDecorator` is a higher-order component (HOC) that provides easy access to locale information. Applications wishing to receive locale information can wrap the root component with the HOC. It is not necessary to use `I18nDecorator` directly for applications using `MoonstoneDecorator`.
 
-The HOC works by passing locale information to the app through `context` and CSS classes. It contains two properties inside its `context`:
+The HOC works by passing locale information to the app through [context](https://reactjs.org/docs/context.html) and CSS classes. It contains three properties via context:
 
+* `locale` - a string representing the current locale
 * `rtl` - if `true` then the locale is a right-to-left language.
 * `updateLocale` - a function to update the locale of the app.
 
-### Using I18nDecorator context
+### Accessing I18nDecorator context properties
 
-The following example demonstrates using `context` and `contextTypes` with a component:
-
-```javascript
-import {contextTypes} from '@enact/i18n/I18nDecorator';
-
-const SomeComponent = (props, context) => (
-	<div>Hello from the {context.rlt ? 'right' : 'left'}</div>
-);
-
-// This works for class-based, stateless, and Enact `kind` components
-SomeComponent.contextTypes = contextTypes;
-```
-
-> NOTE: Omitting `contextTypes` will prevent the component from receiving the passed `context`.
-
-`context` is used very similarly to `props` in a component.
-
-In a stateless component, `context` is the second argument to the `render()` function. In a `kind` component, context is also passed as the second argument to `computed`, `handlers` and `render`:
+The following example demonstrates using `I18nContextDecorator` with a component:
 
 ```javascript
-const SomeComponent = kind({
-	name: 'SomeComponent',
-	computed: {
-		computedProp: (props, context) => context.rtl ? 'left' : 'right'
-	},
-	render: ({computedProp}) => (
-		<div>{computedProp}</div>
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+
+const SomeComponent = I18nContextDecorator(
+	{rtlProp: 'rtl'},
+	(props) => (
+		<div>Hello from the {context.rtl ? 'right' : 'left'}</div>
 	)
-});
+);
 ```
 
-<a name="3"></a>
 ## Locale-Specific CSS
 
 When the `I18nDecorator` wraps your app, it automatically applies some CSS
@@ -101,7 +81,6 @@ used to turn on right-to-left orientation for a widget:
 
 > NOTE: We're using LESS and CSS modules, which are supported by the enact command line tool
 
-<a name="4"></a>
 ## Translating Strings using $L()
 
 `$L()` is a convenience function wrapping `ilib/ResBundle` that is exported by the
@@ -137,7 +116,7 @@ The `strings.json` files should contain the translations in JSON format, i.e.:
 		"source string1": "translated string1",
 		"source string2": "translated string2",
 		...
-	} 
+	}
 ```
 
 Many localization companies are able to provide translations in this format.
@@ -146,18 +125,14 @@ The string returned from a call to `$L()` will be the translated string for the
 current UI locale. If a different locale or a bundle with a different name is
 needed, use `ResBundle` directly instead of `$L()`.
 
-<a name="5"></a>
 ## Updating Locale
 
 If you wish to learn how to programmatically change the locale, please see [Updating Locale](./updating-locale.md).
 
-<a name="6"></a>
 ## iLib
 
 iLib provides the locale-specific features of i18n. If you wish to learn about some of the other things it can do, like string translation, string/number formatting, etc., please see [iLib Docs](./ilib.md).
 
-<a name="7"></a>
 ## Sample
 
 A sample i18n app is available [here](https://github.com/enactjs/samples/tree/master/pattern-locale-switching).
-

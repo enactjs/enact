@@ -1,17 +1,14 @@
 import Item from '@enact/moonstone/Item';
-import {VirtualList as UiVirtualList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
-import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
+import {VirtualList as UiVirtualList} from '@enact/ui/VirtualList';
+import VirtualList from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean, number, select} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBase, UiVirtualListBase);
+import {boolean, number, select} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
 const
 	wrapOption = {
@@ -20,6 +17,7 @@ const
 		"'noAnimation'": 'noAnimation'
 	},
 	items = [],
+	defaultDataSize = 1000,
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderItem = (size) => ({index, ...rest}) => {
 		const itemStyle = {
@@ -35,26 +33,41 @@ const
 		);
 	};
 
-for (let i = 0; i < 1000; i++) {
-	items.push('Item ' + ('00' + i).slice(-3));
-}
+const updateDataSize = (dataSize) => {
+	const
+		itemNumberDigits = dataSize > 0 ? ((dataSize - 1) + '').length : 0,
+		headingZeros = Array(itemNumberDigits).join('0');
+
+	items.length = 0;
+
+	for (let i = 0; i < dataSize; i++) {
+		items.push('Item ' + (headingZeros + i).slice(-itemNumberDigits));
+	}
+
+	return dataSize;
+};
+
+updateDataSize(defaultDataSize);
+
+const Config = mergeComponentMetadata('VirtualList', UiVirtualList, VirtualList);
+UiVirtualList.displayName = 'VirtualList';
 
 storiesOf('UI', module)
 	.add(
 		'VirtualList',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [UiVirtualList],
 			text: 'Basic usage of VirtualList'
 		})(() => {
-			const itemSize = ri.scale(number('itemSize', 72));
+			const itemSize = ri.scale(number('itemSize', Config, 72));
 			return (
 				<UiVirtualList
-					dataSize={number('dataSize', items.length)}
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', 0))}
+					spacing={ri.scale(number('spacing', Config, 0))}
 					style={{
 						height: ri.unit(552, 'rem')
 					}}
@@ -67,23 +80,23 @@ storiesOf('Moonstone', module)
 	.add(
 		'VirtualList',
 		withInfo({
-			propTables: [Config],
+			propTablesExclude: [VirtualList],
 			text: 'Basic usage of VirtualList'
 		})(() => {
-			const itemSize = ri.scale(number('itemSize', 72));
+			const itemSize = ri.scale(number('itemSize', Config, 72));
 			return (
 				<VirtualList
-					dataSize={number('dataSize', items.length)}
-					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+					focusableScrollbar={boolean('focusableScrollbar', Config)}
 					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', 0))}
+					spacing={ri.scale(number('spacing', Config, 0))}
 					style={{
 						height: ri.unit(552, 'rem')
 					}}
-					wrap={wrapOption[select('wrap', ['false', 'true', "'noAnimation'"])]}
+					wrap={wrapOption[select('wrap', ['false', 'true', "'noAnimation'"], Config)]}
 				/>
 			);
 		})

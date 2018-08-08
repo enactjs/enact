@@ -27,6 +27,14 @@ const FeedbackTooltipBase = kind({
 
 	propTypes: /** @lends moonstone/VideoPlayer.FeedbackTooltip.prototype */ {
 		/**
+		 * Invoke action to display or hide tooltip.
+		 *
+		 * @type {String}
+		 * @default 'idle'
+		 */
+		action: PropTypes.oneOf(['focus', 'blur', 'idle']),
+
+		/**
 		 * Duration of the curent media in seconds
 		 *
 		 * @type {Number}
@@ -54,15 +62,6 @@ const FeedbackTooltipBase = kind({
 		 * @public
 		 */
 		hidden: PropTypes.bool,
-
-		/**
-		 * When `true`, only time would appear in tooltip.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noFeedback: PropTypes.bool,
 
 		/**
 		 * Part of the API required by `ui/Slider` but not used by FeedbackTooltip which only
@@ -108,12 +107,12 @@ const FeedbackTooltipBase = kind({
 		/**
 		 * This component will be used instead of the built-in version. The internal thumbnail style
 		 * will be applied to this component. This component follows the same rules as the built-in
-		 * version; hiding and showing according to the state of `noFeedback`.
+		 * version; hiding and showing according to the state of `action`.
 		 *
 		 * This can be a tag name as a string, a rendered DOM node, a component, or a component
 		 * instance.
 		 *
-		 * @type {Component}
+		 * @type {Component|Element}
 		 * @public
 		 */
 		thumbnailComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.element, PropTypes.func]),
@@ -147,7 +146,7 @@ const FeedbackTooltipBase = kind({
 	},
 
 	defaultProps: {
-		noFeedback: false,
+		action: 'idle',
 		thumbnailDeactivated: false,
 		hidden: false
 	},
@@ -168,10 +167,11 @@ const FeedbackTooltipBase = kind({
 				thumbnailDeactivated
 			});
 		},
-		thumbnailComponent: ({noFeedback, thumbnailComponent, thumbnailSrc}) => {
-			// noFeedback is effectively "tooltip mode", one mode being whether the time and icon are visible,
-			// the other being the thumbnail and time are visible.
-			if (noFeedback) {
+		feedbackVisible: ({action, playbackState}) => {
+			return (action !== 'focus' || action === 'idle') && !(action === 'blur' && playbackState === 'play');
+		},
+		thumbnailComponent: ({action, thumbnailComponent, thumbnailSrc}) => {
+			if (action === 'focus') {
 				if (thumbnailComponent) {
 					return <ComponentOverride
 						component={thumbnailComponent}
@@ -188,7 +188,8 @@ const FeedbackTooltipBase = kind({
 		}
 	},
 
-	render: ({children, noFeedback, playbackState, playbackRate, thumbnailComponent, ...rest}) => {
+	render: ({children, feedbackVisible, playbackState, playbackRate, thumbnailComponent, ...rest}) => {
+		delete rest.action;
 		delete rest.duration;
 		delete rest.formatter;
 		delete rest.hidden;
@@ -203,7 +204,7 @@ const FeedbackTooltipBase = kind({
 				{thumbnailComponent}
 				<FeedbackContent
 					className={css.content}
-					feedbackVisible={!noFeedback}
+					feedbackVisible={feedbackVisible}
 					playbackRate={playbackRate}
 					playbackState={playbackState}
 				>
@@ -215,7 +216,7 @@ const FeedbackTooltipBase = kind({
 });
 
 const FeedbackTooltip = onlyUpdateForKeys(
-	['children', 'noFeedback', 'playbackState', 'playbackRate', 'thumbnailComponent', 'thumbnailDeactivated', 'thumbnailSrc', 'visible']
+	['action', 'children', 'hidden', 'playbackState', 'playbackRate', 'thumbnailComponent', 'thumbnailDeactivated', 'thumbnailSrc', 'visible']
 )(
 	Skinnable(
 		FeedbackTooltipBase

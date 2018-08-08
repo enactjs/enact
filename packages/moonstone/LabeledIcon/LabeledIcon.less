@@ -1,0 +1,53 @@
+// LabeledIcon.less
+//
+@import "../styles/variables.less";
+
+.labeledIcon {
+	min-width: 96px;
+	max-width: 300px;
+	margin: @moon-spotlight-outset;
+	padding: 0 @moon-spotlight-outset;
+
+	.icon {
+		// Margin top is handled by the parent's mrgin. An app setting the parent margin to 0 would
+		// not expect icon's margin to protrude past the outer component boundary. This ensures that
+		// won't happen.
+		margin-top: 0;
+		margin-bottom: @moon-spotlight-outset;
+	}
+
+	.label {
+		text-overflow: ellipsis;
+		overflow: hidden;
+		width: 100%;
+		white-space: nowrap;
+	}
+
+	&.above,
+	&.below {
+		text-align: center;
+	}
+
+	// Allow the lable to collapse to smaller than its content
+	&.after,
+	&.before,
+	&.left,
+	&.right {
+		.label {
+			flex-shrink: 1;
+		}
+	}
+
+	// Text alignment
+	&.before {
+		text-align: end;
+	}
+
+	&.left {
+		text-align: right;
+	}
+
+	&.right {
+		text-align: left;
+	}
+}

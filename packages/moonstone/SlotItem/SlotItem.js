@@ -1,7 +1,17 @@
 /**
- * Provides Moonstone-themed item component that accepts multiple positions of children, using the
- * usual `children` prop, as well as two additional props: `slotBefore`, and `slotAfter`.
- * It is able to be customized by a theme or application.
+ * Provides a Moonstone-themed item component that accepts multiple positions for children, using
+ * the usual `children` prop, as well as two additional props: `slotBefore`, and `slotAfter`.  It is
+ * customizable by a theme or application.
+ *
+ * @example
+ * <SlotItem autoHide="both">
+ * 	<slotBefore>
+ * 		<Icon>flag</Icon>
+ * 		<Icon>star</Icon>
+ * 	</slotBefore>
+ * 	An Item that will show some icons before and after this text when spotted
+ * 	<Icon slot="slotAfter">trash</Icon>
+ * </SlotItem>
  *
  * @module moonstone/SlotItem
  * @exports SlotItem
@@ -12,7 +22,6 @@
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
-import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 import {SlotItemBase as UiSlotItemBase, SlotItemDecorator as UiSlotItemDecorator} from '@enact/ui/SlotItem';
 import {ItemDecorator as UiItemDecorator} from '@enact/ui/Item';
 import Toggleable from '@enact/ui/Toggleable';
@@ -78,7 +87,6 @@ const SlotItemBase = kind({
  * @mixes ui/SlotItem.SlotItemDecorator
  * @mixes ui/Toggleable
  * @mixes spotlight.Spottable
- * @mixes ui/Remeasurable.RemeasurableDecorator
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes moonstone/Skinnable
  * @hoc
@@ -92,7 +100,6 @@ const SlotItemDecorator = compose(
 	),
 	UiItemDecorator, // (Touchable)
 	Spottable,
-	RemeasurableDecorator({trigger: 'remeasure'}),
 	MarqueeDecorator({className: componentCss.content, invalidateProps: ['inline', 'autoHide', 'remeasure']}),
 	Skinnable
 );

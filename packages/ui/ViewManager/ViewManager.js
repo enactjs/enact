@@ -3,6 +3,13 @@
  * arrangers for use with it.
  *
  * @module ui/ViewManager
+ * @exports shape
+ * @exports SlideArranger
+ * @exports SlideBottomArranger
+ * @exports SlideLeftArranger
+ * @exports SlideRightArranger
+ * @exports SlideTopArranger
+ * @exports ViewManager
  */
 
 import React from 'react';
@@ -49,7 +56,7 @@ class ViewManager extends React.Component {
 		/**
 		 * Type of component wrapping the children. May be a DOM node or a custom React component.
 		 *
-		 * @type {String|Component}
+		 * @type {Component}
 		 * @default 'div'
 		 */
 		component: PropTypes.oneOfType([

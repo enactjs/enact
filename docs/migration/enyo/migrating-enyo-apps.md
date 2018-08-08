@@ -1,5 +1,5 @@
 ---
-title: Migrating Enyo Applications
+title: Enyo Application Migration Guide
 ---
 
 ## Overview
@@ -65,7 +65,7 @@ them in the `components` property of the kind.
 var InnerComponent = kind({
 	name: 'InnerComponent',
 	kind: enyo.Control,
-	content: 'This is just a &lt;div&gt; with some text' 
+	content: 'This is just a &lt;div&gt; with some text'
 });
 ...
 var OuterComponent = kind({
@@ -166,7 +166,7 @@ Enyo has several different ways to handle events (`enyo.Signals`, the `handlers`
 property of `UiComponents`, etc.).  In Enact, event handling is a bit different.
 
 To handle an event, use `@enact/core/handle` to create a handler.  It accepts one or more input functions that will process
-or filter the event.  The input functions will be processed in order until one returns `false` (or any falsey value).
+or filter the event.  The input functions will be processed in order until one returns `false` (or any falsy value).
 
 ```jsx harmony
 ...
@@ -216,16 +216,16 @@ a majority of the Spotlight navigation events or are there multiple levels of ne
 
 #### Spotlight Containers
 
-If your application uses Spotlight containers, be sure to review the [Spotlight container documentation](../../spotlight/).
+If your application uses Spotlight containers, be sure to review the [Spotlight container documentation](../../spotlight/#containers).
 
 #### Custom Spotlight Components
 
-If you have created custom Spotlight components in your application, make sure to review the [Spottable documentation](../../spotlight/).
+If you have created custom Spotlight components in your application, make sure to review the [Spottable documentation](../../spotlight/#spottable).
 
 #### Spotlight Events
 
 Spotlight now uses native DOM events and does not dispatch synthetic events to the currently spotted control.  Please review
-the [Spotlight event documentation](../../spotlight/).
+the [Spotlight event documentation](../../spotlight/#events).
 
 ### Data Management
 
@@ -304,7 +304,7 @@ const MainView = kind({
 			data={data}
 			...
 		/>
-	) 
+	)
 });
 ...
 ```

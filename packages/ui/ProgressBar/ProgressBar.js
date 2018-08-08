@@ -17,9 +17,23 @@ import {validateRange} from '../internal/validators';
 import componentCss from './ProgressBar.less';
 
 const progressToPercent = (value) => (clamp(0, 1, value) * 100) + '%';
+const calcBarStyle = (prop, anchor, value = anchor, startProp, endProp) => {
+	let start = Math.min(anchor, value);
+	let end = Math.max(anchor, value) - start;
+
+	if (__DEV__) {
+		validateRange(start, 0, 1, 'ProgressBar', prop, 'min', 'max');
+		validateRange(end, 0, 1, 'ProgressBar', prop, 'min', 'max');
+	}
+
+	return {
+		[startProp]: progressToPercent(start),
+		[endProp]: progressToPercent(end)
+	};
+};
 
 /**
- * Provides unstyled progress bar component to be customized by a theme or application.
+ * An unstyled progress bar component that can be customized by a theme or application.
  *
  * @class ProgressBar
  * @memberof ui/ProgressBar
@@ -55,10 +69,10 @@ const ProgressBar = kind({
 		 * The following classes are supported:
 		 *
 		 * * `progressBar` - The root component class
-		 * * `fill` - The foreground node of the progress bar
-		 * * `load` - The background node of the progress bar
-		 * * `horizontal` - Applied when `orientation` is `'horizontal'`
-		 * * `vertical` - Applied when `orientation` is `'vertical'`
+		 * * `fill`        - The foreground node of the progress bar
+		 * * `load`        - The background node of the progress bar
+		 * * `horizontal`  - Applied when `orientation` is `'horizontal'`
+		 * * `vertical`    - Applied when `orientation` is `'vertical'`
 		 *
 		 * @type {Object}
 		 * @public
@@ -67,7 +81,7 @@ const ProgressBar = kind({
 
 		/**
 		 * Sets the orientation of the slider, whether the progress-bar depicts its progress value
-		 * in a left and right orientation or up and down onientation.
+		 * in a left and right orientation or up and down orientation.
 		 * Must be either `'horizontal'` or `'vertical'`.
 		 *
 		 * @type {String}
@@ -84,13 +98,29 @@ const ProgressBar = kind({
 		 * @default 0
 		 * @public
 		 */
-		progress: PropTypes.number
+		progress: PropTypes.number,
+
+		/**
+		 * Sets the point, as a proportion between 0 and 1, from which the progress bar is filled.
+		 *
+		 * Applies to both the progress bar's `value` and `backgroundProgress`. In both cases,
+		 * setting the value of `progressAnchor` will cause the progress bar to fill from that point
+		 * down, when `value` or `backgroundProgress` is proportionally less than the anchor, or up,
+		 * when `value` or `backgroundProgress` is proportionally greater than the anchor, rather
+		 * than always from the start of the progress bar.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		progressAnchor: PropTypes.number
 	},
 
 	defaultProps: {
 		backgroundProgress: 0,
 		orientation: 'horizontal',
-		progress: 0
+		progress: 0,
+		progressAnchor: 0
 	},
 
 	styles: {
@@ -101,21 +131,37 @@ const ProgressBar = kind({
 
 	computed: {
 		className: ({orientation, styler}) => styler.append(orientation),
-		progressCssProp: ({orientation}) => ((orientation === 'vertical') ? 'height' : 'width')
+		style: ({backgroundProgress, progress, progressAnchor, style}) => {
+			return {
+				...style,
+				...calcBarStyle(
+					'backgroundProgress',
+					progressAnchor,
+					backgroundProgress,
+					'--ui-progressbar-proportion-start-background',
+					'--ui-progressbar-proportion-end-background',
+				),
+				...calcBarStyle(
+					'progress',
+					progressAnchor,
+					progress,
+					'--ui-progressbar-proportion-start',
+					'--ui-progressbar-proportion-end'
+				)
+			};
+		}
 	},
 
-	render: ({backgroundProgress, children, css, progress, progressCssProp, ...rest}) => {
+	render: ({children, css, ...rest}) => {
+		delete rest.backgroundProgress;
 		delete rest.orientation;
-
-		if (__DEV__) {
-			validateRange(backgroundProgress, 0, 1, 'ProgressBar', 'backgroundProgress', 'min', 'max');
-			validateRange(progress, 0, 1, 'ProgressBar', 'progress', 'min', 'max');
-		}
+		delete rest.progress;
+		delete rest.progressAnchor;
 
 		return (
 			<div role="progressbar" {...rest}>
-				<div className={css.load} style={{[progressCssProp]: progressToPercent(backgroundProgress)}} />
-				<div className={css.fill} style={{[progressCssProp]: progressToPercent(progress)}} />
+				<div className={css.load} />
+				<div className={css.fill} />
 				{children}
 			</div>
 		);

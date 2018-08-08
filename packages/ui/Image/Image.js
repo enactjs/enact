@@ -1,5 +1,5 @@
 /**
- * Provides unstyled image component to be customized by a theme or application.
+ * An unstyled image component to be customized by a theme or application.
  *
  * @module ui/Image
  * @exports Image
@@ -8,17 +8,18 @@
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
+import warning from 'warning';
+
 import {selectSrc} from '../resolution';
 
 import componentCss from './Image.less';
 
 /**
  * A basic image component designed to display images conditionally based on screen size. This
- * component does not have a default size as a result image will not show unless size is specified
- * for its particular usage using a CSS `className` or inline `style`.
+ * component does not have a default size, therefore the image will not show unless a size is
+ * specified using a CSS `className` or inline `style`.
  *
- * Usage:
- *
+ * Example:
  * ```
  * const src = {
  *   'hd': 'http://lorempixel.com/64/64/city/1/',
@@ -45,17 +46,9 @@ const ImageBase = kind({
 
 	propTypes: /** @lends ui/Image.Image.prototype */ {
 		/**
-		 * String value or Object of values used to determine which image will appear on
-		 * a specific screenSize.
+		 * The aria-label for the image.
 		 *
-		 * @type {String | Object}
-		 * @required
-		 * @public
-		 */
-		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-
-		/**
-		 * Sets the aria-label for the image. If unset, it defaults to the value of `alt`
+		 * If unset, it defaults to the value of `alt`.
 		 *
 		 * @type {String}
 		 * @public
@@ -73,7 +66,7 @@ const ImageBase = kind({
 		alt: PropTypes.string,
 
 		/**
-		 * Node for the children of an Image. Useful for overlays.
+		 * Node for the children of an `Image`. Useful for overlays.
 		 *
 		 * @type {Node}
 		 * @public
@@ -96,7 +89,7 @@ const ImageBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Function that will run if the image has an error.
+		 * A function that will run if the image has an error.
 		 *
 		 * @type {Function}
 		 * @public
@@ -104,7 +97,7 @@ const ImageBase = kind({
 		onError: PropTypes.func,
 
 		/**
-		 * Function that will run once the image is loaded.
+		 * A function that will run once the image is loaded.
 		 *
 		 * @type {Function}
 		 * @public
@@ -113,7 +106,9 @@ const ImageBase = kind({
 
 		/**
 		 * A placeholder image to be displayed before the image is loaded.
-		 * For performance purposes, it should be pre-loaded or be a data url.
+		 *
+		 * For performance purposes, it should be pre-loaded or be a data url. If `src` is
+		 * unset, this value will be used as the `background-image`.
 		 *
 		 * @type {String}
 		 * @default ''
@@ -122,7 +117,7 @@ const ImageBase = kind({
 		placeholder: PropTypes.string,
 
 		/**
-		 * Used to set the `background-size` of an Image.
+		 * Used to set the `background-size` of an `Image`.
 		 *
 		 * * `'fill'` - sets `background-size: cover`
 		 * * `'fit'` - sets `background-size: contain`
@@ -132,7 +127,16 @@ const ImageBase = kind({
 		 * @default 'fill'
 		 * @public
 		 */
-		sizing: PropTypes.oneOf(['fit', 'fill', 'none'])
+		sizing: PropTypes.oneOf(['fit', 'fill', 'none']),
+
+		/**
+		 * String value or Object of values used to determine which image will appear on
+		 * a specific screenSize.
+		 *
+		 * @type {String|Object}
+		 * @public
+		 */
+		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	defaultProps: {
@@ -147,10 +151,11 @@ const ImageBase = kind({
 	},
 
 	computed: {
-		bgImage: ({src, placeholder}) => {
-			const imageSrc = selectSrc(src);
+		bgImage: ({placeholder, src}) => {
+			const imageSrc = selectSrc(src) || placeholder;
+			warning(imageSrc, 'Image requires that either the "placeholder" or "src" props be specified.');
 			if (!imageSrc) return null;
-			return placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
+			return placeholder && imageSrc !== placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
 		},
 		className: ({className, sizing, styler}) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;

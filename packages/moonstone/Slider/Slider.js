@@ -1,5 +1,5 @@
 /**
- * Provides a Moonstone-themed slider components and behaviors
+ * Provides Moonstone-themed slider components and behaviors.
  *
  * @example
  * <Slider
@@ -22,6 +22,7 @@ import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 import Changeable from '@enact/ui/Changeable';
 import ComponentOverride from '@enact/ui/ComponentOverride';
+import ProgressBar from '@enact/ui/ProgressBar';
 import Pure from '@enact/ui/internal/Pure';
 import Slottable from '@enact/ui/Slottable';
 import UiSlider from '@enact/ui/Slider';
@@ -42,7 +43,7 @@ import {
 import componentCss from './Slider.less';
 
 /**
- * Range-selection input component
+ * Range-selection input component.
  *
  * @class SliderBase
  * @extends ui/Slider.SliderBase
@@ -55,8 +56,8 @@ const SliderBase = kind({
 
 	propTypes: /** @lends moonstone/Slider.SliderBase.prototype */ {
 		/**
-		 * When `true`, the component may be manipulated via the directional input keys upon
-		 * receiving focus.
+		 * Activates the component when focused so that it may be manipulated via the directional
+		 * input keys.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -64,7 +65,7 @@ const SliderBase = kind({
 		activateOnFocus: PropTypes.bool,
 
 		/**
-		 * When `true`, the knob displays selected and can be moved using 5-way controls.
+		 * Sets the knob to selected state and allows it to move via 5-way controls.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -85,7 +86,8 @@ const SliderBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, the tooltip, if present, is shown
+		 * Indicates that the slider has gained focus and if the tooltip is present, it will be
+		 * shown.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -166,7 +168,7 @@ const SliderBase = kind({
 		/**
 		 * Enables the built-in tooltip
 		 *
-		 * To customize the tooltip, pass either a custom Tooltip component or an instance of
+		 * To customize the tooltip, pass either a custom tooltip component or an instance of
 		 * [SliderTooltip]{@link moonstone/Slider.SliderTooltip} with additional props configured.
 		 *
 		 * ```
@@ -264,6 +266,9 @@ const SliderBase = kind({
 			<UiSlider
 				{...rest}
 				css={css}
+				progressBarComponent={
+					<ProgressBar css={css} />
+				}
 				tooltipComponent={
 					<ComponentOverride
 						component={tooltip}
@@ -282,7 +287,8 @@ const SliderBase = kind({
  * @memberof moonstone/Slider
  * @mixes ui/Changeable.Changeable
  * @mixes spotlight/Spottable.Spottable
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
+ * @mixes ui/Slottable.Slottable
  * @mixes ui/Slider.SliderDecorator
  * @public
  */
@@ -296,7 +302,9 @@ const SliderDecorator = compose(
 );
 
 /**
- * Range-selection input with Moonstone styling, Spottable, Touchable and SliderDecorator applied.
+ * Slider input with Moonstone styling, [`Spottable`]{@link spotlight/Spottable.Spottable},
+ * [Touchable]{@link ui/Touchable} and [`SliderDecorator`]{@link moonstone/Slider.SliderDecorator}
+ * applied.
  *
  * By default, `Slider` maintains the state of its `value` property. Supply the `defaultValue`
  * property to control its initial value. If you wish to directly control updates to the
@@ -330,8 +338,7 @@ const Slider = SliderDecorator(SliderBase);
  * [ProgressBar]{@link moonstone/ProgressBar.ProgressBar}, or
  * [Slider]{@link moonstone/Slider.Slider}.
  *
- * See {@link moonstone/ProgressBar.ProgressBarTooltip}
- *
+ * @see moonstone/ProgressBar.ProgressBarTooltip
  * @class SliderTooltip
  * @memberof moonstone/Slider
  * @ui

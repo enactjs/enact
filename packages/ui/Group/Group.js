@@ -1,8 +1,10 @@
 /**
- * Exports the {@link ui/Group.Group} and {@link ui/Group.GroupItem}
+ * Exports the {@link ui/Group.Group} and {@link ui/Group.GroupBase}
  * components.  The default export is {@link ui/Group.Group}.
  *
  * @module ui/Group
+ * @exports Group
+ * @exports GroupBase
  */
 
 import kind from '@enact/core/kind';
@@ -121,7 +123,7 @@ const GroupBase = kind({
 		/**
 		 * The index(es) of the currently activated item.
 		 *
-		 * @type {Number | Array}
+		 * @type {Number|Array}
 		 * @public
 		 */
 		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.array]),

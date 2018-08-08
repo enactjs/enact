@@ -10,7 +10,7 @@ const animated = css.text + ' ' + css.animate;
 const isEventSource = (ev) => ev.target === ev.currentTarget;
 
 /**
- * Marquees the children of the component
+ * Marquees the children of the component.
  *
  * Generally, you would use {@link ui/Marquee.Marquee} which wraps this component with
  * {@link ui/Marquee.MarqueeDecorator} which automates the necessary calculations.
@@ -26,7 +26,7 @@ const MarqueeBase = kind({
 	propTypes: /** @lends ui/Marquee.MarqueeBase.prototype */ {
 
 		/**
-		 * Text alignment value of the marquee.
+		 * Text alignment value of the marquee
 		 *
 		 * Valid values are:
 		 *
@@ -52,7 +52,7 @@ const MarqueeBase = kind({
 		 *
 		 * This prop may be empty in some cases, which is OK.
 		 *
-		 * @type {Node|Node[]}
+		 * @type {Node}
 		 * @public
 		 */
 		children: PropTypes.node,
