@@ -14,7 +14,6 @@ storiesOf('UI', module)
 	.add(
 		'Layout',
 		withInfo({
-			propTablesExclude: [Button, Cell, Item, Layout],
 			text: 'Basic usage of Layout'
 		})(() => (
 			<div className="debug" style={{height: ri.unit(399, 'rem')}}>

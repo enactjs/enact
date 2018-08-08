@@ -15,7 +15,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'LabeledIconButton',
 		withInfo({
-			propTablesExclude: [LabeledIconButton],
 			text: 'Basic usage of LabeledIconButton'
 		})(() => (
 			<LabeledIconButton

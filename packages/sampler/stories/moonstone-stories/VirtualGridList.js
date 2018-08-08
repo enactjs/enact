@@ -80,7 +80,6 @@ storiesOf('UI', module)
 	.add(
 		'VirtualList.VirtualGridList',
 		withInfo({
-			propTablesExclude: [UiVirtualGridList],
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<UiVirtualGridList
@@ -105,7 +104,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'VirtualList.VirtualGridList',
 		withInfo({
-			propTablesExclude: [VirtualGridList],
 			text: 'Basic usage of VirtualGridList'
 		})(() => (
 			<VirtualGridList

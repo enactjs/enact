@@ -14,7 +14,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'ExpandableList',
 		withInfo({
-			propTablesExclude: [ExpandableList],
 			text: 'Basic usage of ExpandableList'
 		})(() => (
 			<ExpandableList
