@@ -3,6 +3,7 @@
  *
  * @module spotlight/Accelerator
  */
+import {perfNow} from '@enact/core/util';
 
 /**
  * @class Accelerator
@@ -85,7 +86,7 @@ class Accelerator {
 			case 'keydown':
 				if (event.keyCode !== this.keyCode) {
 					this.reset();
-					this.time = Date.now();
+					this.time = perfNow();
 					this.keyCode = event.keyCode;
 					return callback(event);
 				} else if (this.canceled) {
@@ -94,7 +95,7 @@ class Accelerator {
 					event.preventDefault();
 					return true;
 				} else {
-					let elapsedTime = Date.now() - this.time,
+					let elapsedTime = perfNow() - this.time,
 						seconds = Math.floor(elapsedTime / 1000),
 						toSkip = 0;
 
