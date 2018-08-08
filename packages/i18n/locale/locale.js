@@ -103,8 +103,8 @@ async function isRtlLocale () {
  */
 const updateLocale = async function (locale) {
 	// blow away the cache to force it to reload the manifest files for the new app
-	// eslint-disable-next-line no-undefined
 	if (ilib._load) {
+		// eslint-disable-next-line no-undefined
 		ilib._load.manifest = undefined;
 	}
 	// remove the cache of the platform name to allow transition between snapshot and browser

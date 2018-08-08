@@ -13,7 +13,7 @@ import {Publisher, contextTypes as stateContextTypes} from '@enact/core/internal
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import ilib from '../ilib';
+import ilib from '../ilib/lib/ilib';
 import Charset from '../ilib/lib/Charset';
 import Country from '../ilib/lib/Country';
 import DateFmt from '../ilib/lib/DateFmt';
@@ -24,6 +24,8 @@ import {isRtlLocale, updateLocale} from '../locale';
 import ilibPromise from '../src/promise';
 
 import getI18nClasses from './getI18nClasses';
+
+const hasLocaleChanged = (newLocale) => newLocale !== ilib.getLocale();
 
 const contextTypes = {
 	rtl: PropTypes.bool,
@@ -86,13 +88,13 @@ const I18nDecorator = hoc(decoratorDefaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			const ilibLocale = ilib.getLocale();
-			const locale = props.locale && props.locale !== ilibLocale ? updateLocale(props.locale) : ilibLocale;
+
+			this.updateLocale(props.locale || ilib.getLocale());
 
 			this.state = {
 				classes: '',
-				locale: locale,
-				rtl: isRtlLocale(),
+				locale: null,
+				rtl: false,
 				updateLocale: this.updateLocale
 			};
 		}
@@ -169,11 +171,15 @@ const I18nDecorator = hoc(decoratorDefaultConfig, (config, Wrapped) => {
 		updateLocale = async (newLocale) => {
 			const locale = await updateLocale(newLocale);
 
+			if (hasLocaleChanged(newLocale)) return;
+
 			const [rtl, classes] = await Promise.all([
 				isRtlLocale(),
 				getI18nClasses(),
 				this.preloadResources()
 			]);
+
+			if (hasLocaleChanged(newLocale)) return;
 
 			this.setState({
 				classes,
