@@ -17,7 +17,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'Input',
 		withInfo({
-			propTablesExclude: [Input],
 			text: 'The basic Input'
 		})(() => (
 			<Input

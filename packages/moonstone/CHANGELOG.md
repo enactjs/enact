@@ -7,6 +7,27 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VideoPlayer` to reset key down hold when media becomes unavailable
+- `moonstone/EditableIntegerPicker` management of spotlight pointer mode
+- `moonstone/Popup` to prevent duplicate 5-way navigation when `spotlightRestrict="self-first"`
+- `moonstone/Scroller` not to scroll to wrong position via 5way navigation in RTL languages
+- `moonstone/Slider` to forward `onActivate` event
+
+## [2.0.1] - 2018-08-01
+
+### Fixed
+
+- `moonstone/Dialog` read order of dialog contents
+- `moonstone/Scroller` to go to next page properly via page up/down keys
+
+## [2.0.0] - 2018-07-30
+
+### Added
+
+- `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` components for a lightweight `Icon` or `IconButton` with a label
+- `moonstone/VideoPlayer` property `noAutoShowMediaControls`
+
+### Fixed
+
 - `moonstone/Scroller` to prevent scrolling via page up/down keys if there is no spottable component in that direction
 - `moonstone/Dialog` to hide `titleBelow` when `title` is not set
 - `moonstone/Image` to suppress drag and drop support by default
@@ -458,6 +479,12 @@ No significant changes.
 - `moonstone/DaySelector` component
 - `moonstone/EditableIntegerPicker` component
 - `moonstone/GridListImageItem` component
+
+## [1.13.4] - 2018-07-30
+
+### Fixed
+
+- `moonstone/DatePicker` to calculate min and max year in the current calender
 
 ## [1.13.3] - 2018-01-16
 

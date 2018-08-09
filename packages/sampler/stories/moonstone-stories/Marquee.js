@@ -11,7 +11,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'Marquee',
 		withInfo({
-			propTablesExclude: [Marquee],
 			text: 'The basic MarqueeText'
 		})(() => {
 			const disabled = boolean('disabled', Marquee);

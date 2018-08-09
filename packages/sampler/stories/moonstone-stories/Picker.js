@@ -27,7 +27,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'Picker',
 		withInfo({
-			propTablesExclude: [Picker],
 			text: 'Basic usage of Picker'
 		})(() => (
 			<Picker

@@ -4,7 +4,6 @@ import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean as storybookBoolean} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
@@ -25,7 +24,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'Button',
 		withInfo({
-			propTablesExclude: [Button],
 			text: 'The basic Button'
 		})(() => (
 			<Button
@@ -34,7 +32,7 @@ storiesOf('Moonstone', module)
 				casing={select('casing', prop.casing, Config, 'upper')}
 				disabled={boolean('disabled', Config)}
 				icon={select('icon', prop.icons, Config)}
-				minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
+				minWidth={!!boolean('minWidth', Config)}
 				selected={boolean('selected', Config)}
 				small={boolean('small', Config)}
 			>

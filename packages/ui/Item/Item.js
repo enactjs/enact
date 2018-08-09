@@ -1,5 +1,5 @@
 /**
- * Provides an unstyled item component and behaviors to be customized by a theme or application.
+ * An unstyled item component and behaviors to be customized by a theme or application.
  *
  * @module ui/Item
  * @exports Item
@@ -62,7 +62,7 @@ const ItemBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Applies a disabled state to the item.
+		 * When `true`, applies a disabled state to the item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -71,7 +71,7 @@ const ItemBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Applies inline styling to the item.
+		 * When `true`, applies inline styling to the item.
 		 *
 		 * @type {Boolean}
 		 * @default false

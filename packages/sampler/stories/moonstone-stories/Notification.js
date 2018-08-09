@@ -17,7 +17,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'Notification',
 		withInfo({
-			propTablesExclude: [Button, Notification],
 			text: 'Basic usage of Notification'
 		})(() => (
 			<Notification
