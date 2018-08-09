@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VideoPlayer` to reset key down hold when media becomes unavailable
 - `moonstone/EditableIntegerPicker` management of spotlight pointer mode
 - `moonstone/Popup` to prevent duplicate 5-way navigation when `spotlightRestrict="self-first"`
 - `moonstone/Scroller` not to scroll to wrong position via 5way navigation in RTL languages
