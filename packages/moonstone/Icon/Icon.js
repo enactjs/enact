@@ -128,7 +128,7 @@ const IconBase = kind({
  * @name iconList
  * @memberof moonstone/Icon
  * @constant
- * @type Object
+ * @type {Object}
  * @public
  */
 
