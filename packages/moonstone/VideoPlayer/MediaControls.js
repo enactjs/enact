@@ -155,6 +155,14 @@ const MediaControlsBase = kind({
 		moreButtonLabel: PropTypes.string,
 
 		/**
+		 * The method to run when the more button rendered, giving a reference to the DOM.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		moreButtonRef: PropTypes.func,
+
+		/**
 		 * A custom more button ID to use with Spotlight.
 		 *
 		 * @type {String}
@@ -349,6 +357,7 @@ const MediaControlsBase = kind({
 		moreButtonClassName,
 		moreButtonColor,
 		moreButtonDisabled,
+		moreButtonRef,
 		moreButtonSpotlightId,
 		moreIcon,
 		moreIconLabel,
@@ -402,10 +411,11 @@ const MediaControlsBase = kind({
 							color={moreButtonColor}
 							disabled={moreButtonDisabled}
 							onClick={onMoreClick}
-							tooltipProps={{role: 'dialog'}}
-							tooltipText={moreIconLabel}
+							ref={moreButtonRef}
 							spotlightId={moreButtonSpotlightId}
 							spotlightDisabled={spotlightDisabled}
+							tooltipProps={{role: 'dialog'}}
+							tooltipText={moreIconLabel}
 						>
 							{moreIcon}
 						</MediaButton>
@@ -441,6 +451,14 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			 * @public
 			 */
 			initialJumpDelay: PropTypes.number,
+
+			/**
+			 * The status of video player when aria-labelledby and region are rendered.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			isRenderedAriaProps: PropTypes.bool,
 
 			/**
 			 * The number of milliseconds that the player will throttle before firing a
@@ -618,6 +636,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.mediaControlsNode = null;
+			this.moreButtonNode = null;
 
 			this.keyLoop = null;
 			this.pulsingKeyCode = null;
@@ -625,6 +644,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			this.paused = new Pause('VideoPlayer');
 
 			this.state = {
+				hasReadInfoComponents: false,
 				showMoreComponents: false
 			};
 
@@ -669,18 +689,11 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 		componentDidUpdate (prevProps, prevState) {
 			if (this.state.showMoreComponents !== prevState.showMoreComponents) {
 				forwardToggleMore({showMoreComponents: this.state.showMoreComponents}, this.props);
+			}
 
-				// Readout 'more' or 'back' button explicitly.
-				let selectedButton = Spotlight.getCurrent();
-				if (selectedButton === this.mediaControlsNode.querySelector(`.${css.moreButton}`)) {
-					if (this.props.visible) {
-						selectedButton.blur();
-						selectedButton.focus();
-					}
-				} else if (!this.state.showMoreComponents) {
-					// if spotlight was not in "back" button, then focus "more" button
-					Spotlight.focus(this.props.moreButtonSpotlightId);
-				}
+			if (this.state.showMoreComponents && this.props.isRenderedAriaProps && !this.state.hasReadInfoComponents) {
+				// Readout the infoComponents for the first time.
+				this.focusMoreButton();
 			}
 		}
 
@@ -718,7 +731,6 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				mediaDisabled,
 				moreButtonColor,
 				moreButtonDisabled,
-				moreButtonSpotlightId,
 				no5WayJump,
 				noRateButtons,
 				rateButtonsDisabled,
@@ -728,7 +740,6 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			if (mediaDisabled) return;
 
 			if (visible && moreButtonColor && !moreButtonDisabled && is(moreButtonColor, ev.keyCode)) {
-				Spotlight.focus(moreButtonSpotlightId);
 				this.toggleMoreComponents();
 			}
 
@@ -802,6 +813,10 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			this.mediaControlsNode = ReactDOM.findDOMNode(node); // eslint-disable-line react/no-find-dom-node
 		}
 
+		getMoreButtonRef = (node) => {
+			this.moreButtonNode = ReactDOM.findDOMNode(node); // eslint-disable-line react/no-find-dom-node
+		}
+
 		areMoreComponentsAvailable () {
 			return this.state.showMoreComponents;
 		}
@@ -815,10 +830,35 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 		}
 
 		toggleMoreComponents () {
+			if (this.state.hasReadInfoComponents) {
+				this.focusMoreButton();
+			}
+
 			this.setState((prevState) => {
 				return {
 					showMoreComponents: !prevState.showMoreComponents
 				};
+			});
+
+		}
+
+		focusMoreButton = () => {
+			if (!this.props.visible) {
+				return;
+			}
+
+			const selectedButton = Spotlight.getCurrent();
+			if (selectedButton === this.moreButtonNode) {
+				// Press enter of 5way key
+				selectedButton.blur();
+				Spotlight.focus(selectedButton);
+			} else {
+				// Press color key
+				Spotlight.focus(this.props.moreButtonSpotlightId);
+			}
+
+			this.setState({
+				hasReadInfoComponents: true
 			});
 		}
 
@@ -834,6 +874,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 		render () {
 			const props = Object.assign({}, this.props);
 			delete props.initialJumpDelay;
+			delete props.isRenderedAriaProps;
 			delete props.jumpDelay;
 			delete props.no5WayJump;
 			delete props.onFastForward;
@@ -848,6 +889,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				<Wrapped
 					ref={this.getMediaControls}
 					{...props}
+					moreButtonRef={this.getMoreButtonRef}
 					onClose={this.handleClose}
 					onMoreClick={this.handleMoreClick}
 					onPlayButtonClick={this.handlePlayButtonClick}

@@ -612,6 +612,9 @@ const VideoPlayerBase = class extends React.Component {
 		this.selectPlaybackRates('fastForward');
 		this.sliderKnobProportion = 0;
 
+		// The status of controlsAriaProps when aria-labelledby and region are rendered
+		this.isRenderedAriaProps = false;
+
 		this.initI18n();
 
 		// Re-render-necessary State
@@ -1669,7 +1672,9 @@ const VideoPlayerBase = class extends React.Component {
 			infoVisible: showMoreComponents,
 			titleVisible: true,
 			announce: announce < AnnounceState.INFO ? AnnounceState.INFO : AnnounceState.DONE
-		}));
+		}), () => {
+			this.isRenderedAriaProps = true;
+		});
 	}
 
 	handleMediaControlsClose = (ev) => {
@@ -1695,13 +1700,14 @@ const VideoPlayerBase = class extends React.Component {
 	getControlsAriaProps () {
 		if (this.state.announce === AnnounceState.TITLE) {
 			return {
-				role: 'region',
-				'aria-labelledby': `${this.id}_title`
+				'aria-labelledby': `${this.id}_title`,
+				'aria-live': 'off',
+				role: 'alert'
 			};
 		} else if (this.state.announce === AnnounceState.INFO) {
 			return {
-				role: 'region',
-				'aria-labelledby': `${this.id}_info`
+				'aria-labelledby': `${this.id}_info`,
+				role: 'region'
 			};
 		}
 
@@ -1864,6 +1870,7 @@ const VideoPlayerBase = class extends React.Component {
 
 							<ComponentOverride
 								component={mediaControlsComponent}
+								isRenderedAriaProps={this.isRenderedAriaProps}
 								mediaDisabled={disabled || this.state.sourceUnavailable}
 								onBackwardButtonClick={this.handleRewind}
 								onClose={this.handleMediaControlsClose}

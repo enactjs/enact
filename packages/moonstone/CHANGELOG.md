@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Popup` to prevent duplicate 5-way navigation when `spotlightRestrict="self-first"`
 - `moonstone/Scroller` not to scroll to wrong position via 5way navigation in RTL languages
 - `moonstone/Slider` to forward `onActivate` event
+- `moonstone/VideoPlayer` prop `infoComponents` to be read out when selecting more button on media control.
 
 ## [2.0.1] - 2018-08-01
 
