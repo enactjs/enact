@@ -7,7 +7,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Scrollable` to use GPU acceleration to improve rendering performance
-- `ui/Marquee` to remove `will-change` style and move `position` style into `animate` class to improve rendering performance
+- `ui/Marquee` to move `position: relative` style into `animate` class to improve rendering performance
 
 ### Changed
 
