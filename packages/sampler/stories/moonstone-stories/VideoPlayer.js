@@ -86,7 +86,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'VideoPlayer',
 		withInfo({
-			propTablesExclude: [Button, IconButton, MediaControls, VideoPlayer],
 			text: 'The basic VideoPlayer'
 		})(() => {
 			const videoTitle = select('source', prop.videoTitles, Config, 'Sintel');

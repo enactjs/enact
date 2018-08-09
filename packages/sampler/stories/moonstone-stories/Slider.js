@@ -17,7 +17,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'Slider',
 		withInfo({
-			propTablesExclude: [Slider, SliderTooltip],
 			text: 'Basic usage of Slider'
 		})(() => {
 			const side = select('side', ['after', 'before', 'left', 'right'], SliderTooltipConfig, 'before');

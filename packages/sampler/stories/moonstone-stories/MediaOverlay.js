@@ -67,7 +67,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'MediaOverlay',
 		withInfo({
-			propTablesExclude: [MediaOverlay],
 			text: 'The basic MediaOverlay'
 		})(() => {
 			const videoTitle = select('source', prop.videoTitles, Config, 'Sintel');

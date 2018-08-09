@@ -14,7 +14,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'TimePicker',
 		withInfo({
-			propTablesExclude: [TimePicker],
 			text: 'The basic TimePicker'
 		})(() => (
 			<TimePicker

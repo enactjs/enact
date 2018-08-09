@@ -14,7 +14,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'SelectableItem',
 		withInfo({
-			propTablesExclude: [SelectableItem],
 			text: 'Basic usage of SelectableItem'
 		})(() => (
 			<SelectableItem
