@@ -2,8 +2,8 @@
  * Utilities for webOS platform detection.
  *
  * @module webos/platform
- * @export detect
- * @export platform
+ * @exports detect
+ * @exports platform
  */
 
 function is (type) {
