@@ -725,6 +725,21 @@ const VideoPlayerBase = class extends React.Component {
 		if (this.state.bottomControlsRendered && !prevState.bottomControlsRendered && !this.state.mediaControlsVisible) {
 			this.showControls();
 		}
+
+		if (this.state.mediaControlsVisible && prevState.infoVisible !== this.state.infoVisible) {
+			const
+				moreButton = this.player.querySelector(`.${css.moreButton}`),
+				selectedButton = Spotlight.getCurrent();
+
+			if (selectedButton === moreButton) {
+				// When pressing the back key, color key, 5-way select on the 'more' or 'back' button.
+				selectedButton.blur();
+				selectedButton.focus();
+			} else {
+				// When pressing the back key, color key on the other button.
+				Spotlight.focus(moreButton);
+			}
+		}
 	}
 
 	componentWillUnmount () {
@@ -1695,13 +1710,14 @@ const VideoPlayerBase = class extends React.Component {
 	getControlsAriaProps () {
 		if (this.state.announce === AnnounceState.TITLE) {
 			return {
-				role: 'region',
-				'aria-labelledby': `${this.id}_title`
+				'aria-labelledby': `${this.id}_title`,
+				'aria-live': 'off',
+				role: 'alert'
 			};
 		} else if (this.state.announce === AnnounceState.INFO) {
 			return {
-				role: 'region',
-				'aria-labelledby': `${this.id}_info`
+				'aria-labelledby': `${this.id}_info`,
+				role: 'region'
 			};
 		}
 
