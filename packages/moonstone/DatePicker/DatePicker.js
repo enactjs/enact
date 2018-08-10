@@ -37,8 +37,8 @@ const dateTimeConfig = {
 			values.day = value.getDays();
 			values.maxMonths = i18n.formatter.cal.getNumMonths(values.year);
 			values.maxDays = i18n.formatter.cal.getMonLength(values.month, values.year);
-			values.maxYear = i18n.toLocalYear(props.maxYear);
-			values.minYear = i18n.toLocalYear(props.minYear);
+			values.maxYear = i18n.toLocalYear(props.maxYear || DatePickerBase.defaultProps.maxYear);
+			values.minYear = i18n.toLocalYear(props.minYear || DatePickerBase.defaultProps.minYear);
 		}
 
 		return values;
