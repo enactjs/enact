@@ -128,15 +128,6 @@ class ScrollableBaseNative extends Component {
 		focusableScrollbar: PropTypes.bool,
 
 		/**
-		 * Prevents scroll by dragging or flicking on the list or the scroller.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
-		 */
-		scrollByDrag: PropTypes.bool,
-
-		/**
 		 * Sets the hint string read when focusing the next button in the vertical scroll bar.
 		 *
 		 * @type {String}
@@ -175,8 +166,7 @@ class ScrollableBaseNative extends Component {
 
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
-		focusableScrollbar: false,
-		scrollByDrag: false
+		focusableScrollbar: false
 	}
 
 	constructor (props) {
@@ -793,7 +783,6 @@ class ScrollableBaseNative extends Component {
 				'data-spotlight-container-disabled': spotlightContainerDisabled,
 				'data-spotlight-id': spotlightId,
 				focusableScrollbar,
-				scrollByDrag,
 				scrollDownAriaLabel,
 				scrollLeftAriaLabel,
 				scrollRightAriaLabel,
@@ -809,12 +798,12 @@ class ScrollableBaseNative extends Component {
 
 		return (
 			<UiScrollableBaseNative
+				noScrollByDrag
 				{...rest}
 				addEventListeners={this.addEventListeners}
 				applyOverscrollEffect={this.applyOverscrollEffect}
 				clearOverscrollEffect={this.clearOverscrollEffect}
-				noScrollByDrag={!scrollByDrag}
-				onFlick={scrollByDrag ? this.onFlick : null}
+				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
 				onWheel={this.onWheel}
