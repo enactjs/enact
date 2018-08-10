@@ -682,6 +682,12 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 					Spotlight.focus(this.props.moreButtonSpotlightId);
 				}
 			}
+
+			// if media controls disabled, reset key loop
+			if (!prevProps.mediaDisabled && this.props.mediaDisabled) {
+				this.stopListeningForPulses();
+				this.paused.resume();
+			}
 		}
 
 		componentWillUnmount () {

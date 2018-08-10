@@ -16,7 +16,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'ProgressBar',
 		withInfo({
-			propTablesExclude: [ProgressBar, ProgressBarTooltip],
 			text: 'The basic ProgressBar'
 		})(() => {
 			const side = select('side', ['after', 'before', 'left', 'right'], ProgressBarTooltipConfig, 'before');

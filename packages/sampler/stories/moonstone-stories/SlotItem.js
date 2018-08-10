@@ -19,7 +19,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'SlotItem',
 		withInfo({
-			propTablesExclude: [Icon, SlotItem],
 			text: 'Basic usage of SlotItem'
 		})(() => (
 			<SlotItem

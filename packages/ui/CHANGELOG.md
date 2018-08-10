@@ -7,6 +7,11 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Image` to not display broken image icons
+- `ui/Scrollable` to use GPU acceleration to improve rendering performance
+- `ui/Marquee` to move `position: relative` style into `animate` class to improve rendering performance
+
+### Changed
+
 - `ui/Image` to not require `src` prop if `placeholder` is specified
 - `ui/GridListImageItem` to not require `source` prop
 

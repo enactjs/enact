@@ -16,7 +16,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'ExpandablePicker',
 		withInfo({
-			propTablesExclude: [ExpandablePicker],
 			text: 'Basic usage of ExpandablePicker'
 		})(() => (
 			<ExpandablePicker

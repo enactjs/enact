@@ -118,7 +118,7 @@ const GridListImageItemBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['gridListImageItem', 'icon', 'image', 'selected', 'caption', 'subCaption']
+		publicClassNames: ['icon', 'image', 'selected', 'caption', 'subCaption']
 	},
 
 	render: ({css, selectionOverlay, ...rest}) => {
