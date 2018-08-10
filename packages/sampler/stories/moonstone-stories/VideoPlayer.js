@@ -124,6 +124,7 @@ storiesOf('Moonstone', module)
 						muted={boolean('muted', Config, true)}
 						noAutoPlay={boolean('noAutoPlay', Config)}
 						noAutoShowMediaControls={boolean('noAutoShowMediaControls', Config)}
+						noMediaSliderFeedback={boolean('noAutoShowMediaControls', Config, false)}
 						noMiniFeedback={boolean('noMiniFeedback', Config)}
 						noSlider={boolean('noSlider', Config)}
 						pauseAtEnd={boolean('pauseAtEnd', Config)}
