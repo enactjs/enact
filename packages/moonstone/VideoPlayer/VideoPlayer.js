@@ -615,6 +615,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.selectPlaybackRates('fastForward');
 		this.sliderKnobProportion = 0;
 		this.mediaControlsSpotlightId = props.spotlightId + '_mediaControls';
+		this.moreButtonSpotlightId = this.mediaControlsSpotlightId + '_moreButton';
 
 		this.initI18n();
 
@@ -705,6 +706,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (this.props.spotlightId !== prevProps.spotlightId) {
 			this.mediaControlsSpotlightId = this.props.spotlightId + '_mediaControls';
+			this.moreButtonSpotlightId = this.mediaControlsSpotlightId + '_moreButton';
 		}
 
 		if (!this.state.mediaControlsVisible && prevState.mediaControlsVisible) {
@@ -735,18 +737,12 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		if (this.state.mediaControlsVisible && prevState.infoVisible !== this.state.infoVisible) {
-			const
-				moreButton = this.player.querySelector(`.${css.moreButton}`),
-				selectedButton = Spotlight.getCurrent();
-
-			if (selectedButton === moreButton) {
-				// When pressing the back key, color key, 5-way select on the 'more' or 'back' button.
-				selectedButton.blur();
-				selectedButton.focus();
-			} else {
-				// When pressing the back key, color key on the other button.
-				Spotlight.focus(moreButton);
+			const current = Spotlight.getCurrent();
+			if (current && current.dataset.spotlightId === this.moreButtonSpotlightId) {
+				// need to blur manually to read out `infoComponent`
+				current.blur();
 			}
+			Spotlight.focus(this.moreButtonSpotlightId);
 		}
 	}
 
@@ -1870,6 +1866,7 @@ const VideoPlayerBase = class extends React.Component {
 							<ComponentOverride
 								component={mediaControlsComponent}
 								mediaDisabled={disabled || this.state.sourceUnavailable}
+								moreButtonSpotlightId={this.moreButtonSpotlightId}
 								onBackwardButtonClick={this.handleRewind}
 								onClose={this.handleMediaControlsClose}
 								onFastForward={this.handleFastForward}
