@@ -6,12 +6,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/VideoPlayer` to reset key down hold when media becomes unavailable
+- `moonstone/DatePicker` to correctly change year when `minYear` and `maxYear` aren't provided
 - `moonstone/EditableIntegerPicker` management of spotlight pointer mode
+- `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` to have proper spacing and label-alignment with all label positions
 - `moonstone/Popup` to prevent duplicate 5-way navigation when `spotlightRestrict="self-first"`
 - `moonstone/Scroller` not to scroll to wrong position via 5way navigation in RTL languages
 - `moonstone/Slider` to forward `onActivate` event
-- `moonstone/DatePicker` to correctly change year when `minYear` and `maxYear` aren't provided
+- `moonstone/VideoPlayer` to reset key down hold when media becomes unavailable
 
 ## [2.0.1] - 2018-08-01
 
