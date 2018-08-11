@@ -898,6 +898,7 @@ const ScrollableNative = Skinnable(SpotlightContainerDecorator(
 	{
 		overflow: true,
 		preserveId: true,
+		preventScroll: true,
 		restrict: 'self-first'
 	},
 	ScrollableBaseNative
