@@ -1,8 +1,7 @@
-import sinon from 'sinon';
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import React from 'react';
 
-import Scroller, {ScrollerBase} from '../Scroller';
+import Scroller from '../Scroller';
 
 describe('Scroller', () => {
 	let contents;
@@ -141,26 +140,6 @@ describe('Scroller', () => {
 			const actual = subject.find('ScrollButton').at(1).prop('aria-label');
 
 			expect(actual).to.equal(expected);
-		});
-	});
-
-	describe('ScrollerBase API', () => {
-		it('should call onUpdate when Scroller updates', function () {
-			const handleUpdate = sinon.spy();
-			const subject = shallow(
-				<ScrollerBase
-					onUpdate={handleUpdate}
-				>
-					{contents}
-				</ScrollerBase>
-			);
-
-			subject.setProps({children: ''});
-
-			const expected = true;
-			const actual = handleUpdate.calledOnce;
-
-			expect(expected).to.equal(actual);
 		});
 	});
 });
