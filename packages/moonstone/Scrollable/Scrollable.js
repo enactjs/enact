@@ -734,6 +734,7 @@ class ScrollableBase extends Component {
 				clearOverscrollEffect={this.clearOverscrollEffect}
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
+				onUpdate={this.handleScrollerUpdate}
 				onWheel={this.onWheel}
 				ref={this.initUiRef}
 				removeEventListeners={this.removeEventListeners}
@@ -772,7 +773,6 @@ class ScrollableBase extends Component {
 									initUiChildRef,
 									isVerticalScrollbarVisible,
 									onScroll: handleScroll,
-									onUpdate: this.handleScrollerUpdate,
 									ref: this.initChildRef,
 									rtl,
 									spotlightId

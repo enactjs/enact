@@ -808,6 +808,7 @@ class ScrollableBaseNative extends Component {
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
+				onUpdate={this.handleScrollerUpdate}
 				onWheel={this.onWheel}
 				ref={this.initUiRef}
 				removeEventListeners={this.removeEventListeners}
@@ -845,7 +846,6 @@ class ScrollableBaseNative extends Component {
 									className: componentCss.scrollableFill,
 									isVerticalScrollbarVisible,
 									initUiChildRef,
-									onUpdate: this.handleScrollerUpdate,
 									ref: this.initChildRef,
 									rtl,
 									spotlightId

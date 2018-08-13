@@ -260,6 +260,14 @@ class ScrollableBase extends Component {
 		onScrollStop: PropTypes.func,
 
 		/**
+		 * Called when invalidating [Scroller]{@link ui/Scroller.Scroller}'s bounds
+		 *
+		 * @type {function}
+		 * @private
+		 */
+		onUpdate: PropTypes.func,
+
+		/**
 		 * Called when wheeling.
 		 *
 		 * @type {Function}
@@ -327,6 +335,7 @@ class ScrollableBase extends Component {
 		onScroll: nop,
 		onScrollStart: nop,
 		onScrollStop: nop,
+		onUpdate: nop,
 		verticalScrollbar: 'auto'
 	}
 
@@ -385,6 +394,7 @@ class ScrollableBase extends Component {
 
 	componentDidUpdate (prevProps, prevState) {
 		const
+			{onUpdate} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			{hasDataSizeChanged} = this.childRef;
 
@@ -404,10 +414,15 @@ class ScrollableBase extends Component {
 			hasDataSizeChanged === false &&
 			(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
 		) {
+			// For VirtualList
 			this.deferScrollTo = false;
 			this.isUpdatedScrollThumb = this.updateScrollThumbSize();
-		} else {
-			this.updateScrollbars();
+		} else if (!this.updateScrollbars()) {
+			if (this.shouldUpdateScroller && !this.childRef.hasOwnProperty('hasDataSizeChanged')) {
+				// For Scroller
+				onUpdate();
+			}
+			this.shouldUpdateScroller = false;
 		}
 
 		if (this.scrollToInfo !== null) {
@@ -446,6 +461,7 @@ class ScrollableBase extends Component {
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
 	enqueueForceUpdate = () => {
+		this.shouldUpdateScroller = true;
 		this.childRef.calculateMetrics();
 		this.forceUpdate();
 	}
@@ -481,6 +497,7 @@ class ScrollableBase extends Component {
 	deferScrollTo = true
 	isScrollAnimationTargetAccumulated = false
 	isUpdatedScrollThumb = false
+	shouldUpdateScroller = false
 
 	// overscroll
 	overscrollStatus = {
@@ -1083,6 +1100,8 @@ class ScrollableBase extends Component {
 			this.deferScrollTo = false;
 			this.isUpdatedScrollThumb = this.updateScrollThumbSize();
 		}
+
+		return isVisibilityChanged;
 	}
 
 	updateScrollThumbSize = () => {
@@ -1221,6 +1240,7 @@ class ScrollableBase extends Component {
 		delete rest.onScroll;
 		delete rest.onScrollStart;
 		delete rest.onScrollStop;
+		delete rest.onUpdate;
 		delete rest.onWheel;
 		delete rest.removeEventListeners;
 		delete rest.scrollTo;

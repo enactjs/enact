@@ -59,27 +59,12 @@ class ScrollerBase extends Component {
 		initUiChildRef: PropTypes.func,
 
 		/**
-		 * Called when [Scroller]{@link moonstone/Scroller.Scroller} updates.
-		 *
-		 * @type {function}
-		 * @private
-		 */
-		onUpdate: PropTypes.func,
-
-		/**
 		 * `true` if rtl, `false` if ltr.
 		 *
 		 * @type {Boolean}
 		 * @private
 		 */
 		rtl: PropTypes.bool
-	}
-
-	componentDidUpdate () {
-		const {onUpdate} = this.props;
-		if (onUpdate) {
-			onUpdate();
-		}
 	}
 
 	componentWillUnmount () {

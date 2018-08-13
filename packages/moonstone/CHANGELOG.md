@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Scroller` to prevent unexpected scrolling when updated by app
 - `moonstone/DatePicker` to correctly change year when `minYear` and `maxYear` aren't provided
 - `moonstone/EditableIntegerPicker` management of spotlight pointer mode
 - `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` to have proper spacing and label-alignment with all label positions
