@@ -17,7 +17,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'Icon',
 		withInfo({
-			propTablesExclude: [Divider, Icon],
 			text: 'Basic usage of Icon'
 		})(() => {
 			const small = boolean('small', Icon);

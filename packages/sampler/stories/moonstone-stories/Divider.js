@@ -20,7 +20,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'Divider',
 		withInfo({
-			propTablesExclude: [Divider],
 			text: 'Basic usage of Divider'
 		})(() => (
 			<Divider

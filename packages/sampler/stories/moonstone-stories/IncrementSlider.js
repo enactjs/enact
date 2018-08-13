@@ -17,7 +17,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'IncrementSlider',
 		withInfo({
-			propTablesExclude: [IncrementSlider],
 			text: 'Basic usage of IncrementSlider'
 		})(() => {
 			const side = select('side', ['after', 'before', 'left', 'right'], IncrementSliderTooltipConfig, 'after');

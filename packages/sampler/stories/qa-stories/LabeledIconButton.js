@@ -2,10 +2,8 @@ import LabeledIconButton from '@enact/moonstone/LabeledIconButton';
 import Divider from '@enact/moonstone/Divider';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 import Scroller from '@enact/ui/Scroller';
 import {LabeledIconBase as UiLabeledIconBase, LabeledIcon as UiLabeledIcon} from '@enact/ui/LabeledIcon';
-
 import Layout, {Cell} from '@enact/ui/Layout';
 
 import iconNames from '../moonstone-stories/icons';
@@ -13,23 +11,20 @@ import iconNames from '../moonstone-stories/icons';
 import {mergeComponentMetadata} from '../../src/utils';
 import {boolean, select, text} from '../../src/enact-knobs';
 
+LabeledIconButton.displayName = 'LabeledIconButton';
 const Config = mergeComponentMetadata('LabeledIconButton', UiLabeledIconBase, UiLabeledIcon, LabeledIconButton);
-Config.displayName = 'LabeledIconButton';
 
 storiesOf('LabeledIconButton', module)
 	.add(
 		'with all icons',
-		withInfo({
-			propTablesExclude: [LabeledIconButton, Scroller, Layout, Cell],
-			text: 'Basic usage of LabeledIconButton'
-		})(() => {
+		() => {
 			const disabled = boolean('disabled', Config);
 			const inline = boolean('inline', Config);
 			const labelPosition = select('labelPosition', ['above', 'after', 'before', 'below', 'left', 'right'], Config);
 			const selected = boolean('selected', Config);
 			const small = boolean('small', Config);
 			return (
-				<Layout orientation="vertical" style={{height: '100%'}}>
+				<Layout orientation="vertical">
 					<Cell shrink>
 						<LabeledIconButton
 							disabled={disabled}
@@ -62,5 +57,5 @@ storiesOf('LabeledIconButton', module)
 						</Scroller>
 					</Cell>
 				</Layout>);
-		})
+		}
 	);
