@@ -2,6 +2,24 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.0.2] - 2018-13-01
+
+### Fixed
+
+- `moonstone/DatePicker` to correctly change year when `minYear` and `maxYear` aren't provided
+- `moonstone/EditableIntegerPicker` management of spotlight pointer mode
+- `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` to have proper spacing and label-alignment with all label positions
+- `moonstone/Popup` to prevent duplicate 5-way navigation when `spotlightRestrict="self-first"`
+- `moonstone/Scroller` not to scroll to wrong position via 5way navigation in RTL languages
+- `moonstone/Slider` to forward `onActivate` event
+- `moonstone/VideoPlayer` to reset key down hold when media becomes unavailable
+- `spotlight` to update pointer mode after hiding webOS VKB
+- `ui/Image` to not display "missing image" icon when `src` fails to load
+- `ui/Image` to not require `src` prop if `placeholder` is specified
+- `ui/GridListImageItem` to not require `source` prop
+- `ui/Scrollable` to use GPU acceleration to improve rendering performance
+- `ui/Marquee` to move `position: relative` style into `animate` class to improve rendering performance
+
 ## [2.0.1] - 2018-08-01
 
 ### Fixed
