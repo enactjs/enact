@@ -16,7 +16,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'RadioItem',
 		withInfo({
-			propTablesExclude: [RadioItem],
 			text: 'Basic usage of RadioItem'
 		})(() => (
 			<RadioItem

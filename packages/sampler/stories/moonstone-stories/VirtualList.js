@@ -56,7 +56,6 @@ storiesOf('UI', module)
 	.add(
 		'VirtualList',
 		withInfo({
-			propTablesExclude: [UiVirtualList],
 			text: 'Basic usage of VirtualList'
 		})(() => {
 			const itemSize = ri.scale(number('itemSize', Config, 72));
@@ -80,7 +79,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'VirtualList',
 		withInfo({
-			propTablesExclude: [VirtualList],
 			text: 'Basic usage of VirtualList'
 		})(() => {
 			const itemSize = ri.scale(number('itemSize', Config, 72));

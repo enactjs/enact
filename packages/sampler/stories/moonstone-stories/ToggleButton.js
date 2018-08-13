@@ -20,7 +20,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'ToggleButton',
 		withInfo({
-			propTablesExclude: [ToggleButton],
 			text: 'The basic ToggleButton'
 		})(() => (
 			<ToggleButton

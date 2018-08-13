@@ -22,7 +22,6 @@ storiesOf('UI', module)
 	.add(
 		'Scroller',
 		withInfo({
-			propTablesExclude: [UiScroller],
 			text: 'Basic usage of Scroller'
 		})(() => (
 			<UiScroller
@@ -60,7 +59,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'Scroller',
 		withInfo({
-			propTablesExclude: [Scroller],
 			text: 'Basic usage of Scroller'
 		})(() => (
 			<Scroller

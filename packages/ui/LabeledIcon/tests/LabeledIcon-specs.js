@@ -6,7 +6,7 @@ import css from '../LabeledIcon.less';
 
 const iconName = 'anIconName';
 const iconLabel = 'A real label';
-const iconComponent = 'div';
+const iconComponent = ({children}) => <div>{children}</div>;
 
 describe('LabeledIcon Specs', () => {
 	it('should insert the icon source into the icon when using the prop approach', function () {

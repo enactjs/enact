@@ -14,7 +14,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'Item',
 		withInfo({
-			propTablesExclude: [Item],
 			text: 'Basic usage of Item'
 		})(() => (
 			<Item

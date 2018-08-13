@@ -463,6 +463,10 @@ class Popup extends React.Component {
 
 			if (spottables && Spotlight.getCurrent() && spotlightRestrict !== 'self-only') {
 				focusChanged = Spotlight.move(direction);
+				if (focusChanged) {
+					// stop propagation to prevent default spotlight behavior
+					ev.stopPropagation();
+				}
 			}
 
 			if (!spottables || (focusChanged === false && isUp(keyCode))) {

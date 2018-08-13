@@ -35,6 +35,8 @@ storiesOf('Popup', module)
 					<br />
 					<Container>
 						<Button>Button</Button>
+						<Button>Button</Button>
+						<Button>Button</Button>
 					</Container>
 				</Popup>
 			</div>

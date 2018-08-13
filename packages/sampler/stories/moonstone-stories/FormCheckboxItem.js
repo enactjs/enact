@@ -13,7 +13,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'FormCheckboxItem',
 		withInfo({
-			propTablesExclude: [FormCheckboxItem],
 			text: 'Basic usage of FormCheckboxItem'
 		})(() => (
 			<FormCheckboxItem
