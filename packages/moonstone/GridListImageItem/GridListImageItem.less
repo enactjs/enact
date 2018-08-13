@@ -31,14 +31,12 @@
 		}
 	}
 
-	.caption {
-		.moon-sub-header-text();
-		padding-top: @moon-gridlist-item-caption-padding-top;
+	div:first-child:nth-last-child(-n+2) {
+		height: ~"calc(100% - " @moon-gridlist-item-one-caption-padding-bottom ~")";
 	}
 
-	.subCaption {
+	div:nth-child(3) {
 		.moon-body-text();
-		padding-top: @moon-gridlist-item-caption-padding-top;
 	}
 
 	// Skin colors
