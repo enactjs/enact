@@ -150,9 +150,9 @@ class ScrollerBase extends Component {
 				{scrollHeight} = this.uiRef.scrollBounds,
 				scrollHeightDecrease = previousScrollHeight - scrollHeight;
 
-			newScrollTop = scrollTop;
-
 			if (scrollHeightDecrease > 0) {
+				newScrollTop = scrollTop;
+
 				const
 					itemBounds = focusedItem.getBoundingClientRect(),
 					newItemBottom = newScrollTop + itemBounds.top + itemBounds.height - containerTop;
