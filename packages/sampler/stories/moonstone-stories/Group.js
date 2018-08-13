@@ -31,7 +31,6 @@ storiesOf('UI', module)
 	.add(
 		'Group',
 		withInfo({
-			propTablesExclude: [Group],
 			text: 'Basic usage of Group'
 		})(() => (
 			<Group

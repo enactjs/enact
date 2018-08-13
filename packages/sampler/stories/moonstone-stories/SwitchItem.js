@@ -13,7 +13,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'SwitchItem',
 		withInfo({
-			propTablesExclude: [SwitchItem],
 			text: 'Basic usage of SwitchItem'
 		})(() => (
 			<SwitchItem

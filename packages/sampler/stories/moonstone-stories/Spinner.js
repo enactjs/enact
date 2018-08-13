@@ -15,7 +15,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'Spinner',
 		withInfo({
-			propTablesExclude: [Spinner],
 			text: 'Basic usage of Spinner'
 		})(() => (
 			<div

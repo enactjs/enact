@@ -11,7 +11,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'BodyText',
 		withInfo({
-			propTablesExclude: [BodyText],
 			text: 'The basic BodyText'
 		})(() => (
 			<BodyText

@@ -10,7 +10,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'LabeledItem',
 		withInfo({
-			propTablesExclude: [LabeledItem],
 			text: 'Basic usage of LabeledItem'
 		})(() => (
 			<LabeledItem
