@@ -4,6 +4,9 @@
 @import '../styles/skin.less';
 
 .gridListImageItem {
+	display:flex;
+	flex-direction: column;
+
 	box-sizing: border-box;
 	border-width: @moon-gridlist-item-border-width;
 	border-style: solid;
@@ -21,10 +24,6 @@
 		opacity: 0.5;
 	}
 
-	.image {
-		height: ~"calc(100% - " @moon-gridlist-item-two-captions-padding-bottom ~")";
-	}
-
 	&.selected {
 		.icon {
 			opacity: 1;
@@ -33,11 +32,13 @@
 
 	.caption {
 		.moon-sub-header-text();
+		height: @moon-gridlist-item-caption-height;
 		padding-top: @moon-gridlist-item-caption-padding-top;
 	}
 
 	.subCaption {
 		.moon-body-text();
+		height: @moon-gridlist-item-subcaption-height;
 		padding-top: @moon-gridlist-item-caption-padding-top;
 	}
 
