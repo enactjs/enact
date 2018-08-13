@@ -25,18 +25,14 @@
 		height: ~"calc(100% - " @moon-gridlist-item-two-captions-padding-bottom ~")";
 	}
 
-	&.selected {
-		.icon {
-			opacity: 1;
-		}
-	}
-
 	div:first-child:nth-last-child(-n+2) {
 		height: ~"calc(100% - " @moon-gridlist-item-one-caption-padding-bottom ~")";
 	}
 
-	div:nth-child(3) {
-		.moon-body-text();
+	&.selected {
+		.icon {
+			opacity: 1;
+		}
 	}
 
 	// Skin colors
