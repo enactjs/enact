@@ -6,6 +6,7 @@
  */
 
 import kind from '@enact/core/kind';
+import {Layout, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -189,13 +190,13 @@ const GridListImageItem = kind({
 		delete rest.selectionOverlayShowing;
 
 		return (
-			<div {...rest}>
-				<ImageComponent className={css.image} placeholder={placeholder} src={source}>
+			<Layout {...rest} inline orientation="vertical">
+				<Cell className={css.image} component={ImageComponent} placeholder={placeholder} src={source}>
 					{selectionOverlay}
-				</ImageComponent>
-				{caption ? (<Caption className={css.caption}>{caption}</Caption>) : null}
-				{subCaption ? (<Caption className={css.subCaption}>{subCaption}</Caption>) : null}
-			</div>
+				</Cell>
+				{caption ? (<Cell className={css.caption} component={Caption} shrink>{caption}</Cell>) : null}
+				{subCaption ? (<Cell className={css.subCaption} component={Caption} shrink>{subCaption}</Cell>) : null}
+			</Layout>
 		);
 	}
 });
