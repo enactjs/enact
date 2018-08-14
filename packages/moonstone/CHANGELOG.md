@@ -2,11 +2,18 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [2.0.2] - 2018-13-01
+## [unreleased]
 
 ### Added
 
 - `moonstone/VideoPlayer.MediaControls` property `playPauseButtonDisabled`
+
+### Fixed
+
+- `moonstone/VideoPlayer` to fallback focusing on available media buttons if default spotlight component is disabled
+- `moonstone/VideoPlayer` to read out `infoComponents` accessibility value when `moreButtonColor` is pressed
+
+## [2.0.2] - 2018-13-01
 
 ### Fixed
 
@@ -15,7 +22,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` to have proper spacing and label-alignment with all label positions
 - `moonstone/Popup` to prevent duplicate 5-way navigation when `spotlightRestrict="self-first"`
 - `moonstone/Scroller` not to scroll to wrong position via 5way navigation in RTL languages
-- `moonstone/VideoPlayer` to fallback focusing on available media buttons if default spotlight component is disabled
 - `moonstone/Scroller` not to scroll when focusing in pointer mode
 - `moonstone/Slider` to forward `onActivate` event
 - `moonstone/VideoPlayer` to reset key down hold when media becomes unavailable
