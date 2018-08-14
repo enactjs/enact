@@ -129,8 +129,8 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {className, ...rest} = this.props;
 			return (
 				<div className={className}>
-					<Wrapped {...rest} className={wrappedClassName} />
-					<div id={floatLayerId} ref={this.setFloatingLayer} />
+					<Wrapped key="floatWrapped" {...rest} className={wrappedClassName} />
+					<div id={floatLayerId} key="floatLayer" ref={this.setFloatingLayer} />
 				</div>
 			);
 		}
