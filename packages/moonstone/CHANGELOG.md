@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [2.0.2] - 2018-13-01
+## [unreleased]
 
 ### Added
 
@@ -11,6 +11,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VideoPlayer` to fallback focusing on available media buttons if default spotlight component is disabled
+
+## [2.0.2] - 2018-13-01
+
+### Fixed
+
 - `moonstone/DatePicker` to correctly change year when `minYear` and `maxYear` aren't provided
 - `moonstone/EditableIntegerPicker` management of spotlight pointer mode
 - `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` to have proper spacing and label-alignment with all label positions
