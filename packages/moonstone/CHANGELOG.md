@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/VideoPlayer` to round a number downward to its nearest integer for consistent expression
+- `moonstone/VideoPlayer` to round the time displayed down to nearest second
 
 ## [2.0.2] - 2018-13-01
 
