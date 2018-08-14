@@ -158,7 +158,8 @@ const FeedbackTooltipBase = kind({
 
 	computed: {
 		children: ({children, duration, formatter}) => {
-			return secondsToTime(children * duration, formatter);
+			const seconds = Math.round(children * duration);
+			return secondsToTime(seconds, formatter);
 		},
 		className: ({hidden, playbackState: s, proportion, thumbnailDeactivated, styler}) => {
 			return styler.append({
