@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/VideoPlayer` to round a number downward to its nearest integer for consistent representation
+
 ## [2.0.2] - 2018-13-01
 
 ### Fixed

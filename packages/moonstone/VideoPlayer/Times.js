@@ -68,7 +68,6 @@ const TimesBase = kind({
 		delete rest.current;
 		delete rest.formatter;
 		delete rest.total;
-
 		return (
 			<div {...rest}>
 				<time className={css.currentTime} dateTime={currentPeriod}>{currentReadable}</time>

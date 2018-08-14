@@ -1576,7 +1576,7 @@ const VideoPlayerBase = class extends React.Component {
 		// TODO: fix Slider to not send onKnobMove when the knob hasn't, in fact, moved
 		if (this.sliderKnobProportion !== ev.proportion) {
 			this.sliderKnobProportion = ev.proportion;
-			const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
+			const seconds = Math.floor(this.sliderKnobProportion * this.video.duration);
 
 			if (!isNaN(seconds)) {
 				this.sliderTooltipTimeJob.throttle(seconds);
@@ -1590,7 +1590,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleSliderFocus = () => {
-		const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
+		const seconds = Math.floor(this.sliderKnobProportion * this.video.duration);
 		this.sliderScrubbing = true;
 
 		this.setState({
