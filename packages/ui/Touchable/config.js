@@ -96,7 +96,7 @@ const mergeConfig = (cfg) => {
  *     be a multiple of `frequency`.
  *
  * @function
- * @param   {Object}     config  A partial or complete configuration object
+ * @param   {Object}     cfg  A partial or complete configuration object
  *
  * @returns {undefined}
  * @public

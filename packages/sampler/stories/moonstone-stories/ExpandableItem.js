@@ -18,7 +18,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'ExpandableItem',
 		withInfo({
-			propTablesExclude: [ExpandableItem, Icon, Item],
 			text: 'Basic usage of ExpandableItem'
 		})(() => (
 			<ExpandableItem
