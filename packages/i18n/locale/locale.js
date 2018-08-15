@@ -11,7 +11,6 @@ import LocaleInfo from '../ilib/lib/LocaleInfo';
 import ScriptInfo from '../ilib/lib/ScriptInfo';
 
 import {initCaseMappers} from '../src/case';
-import {setResBundleLocale} from '../src/resBundle';
 
 /**
  * Tell whether or not the given locale is considered a non-Latin locale for webOS purposes. This
@@ -86,8 +85,6 @@ const updateLocale = function (locale) {
 	// is expected and desired
 	ilib.setLocale(locale);
 	const newLocale = ilib.getLocale();
-	// we supply whatever ilib determined was actually the locale based on what was passed in
-	setResBundleLocale(newLocale);
 	// Recreate the case mappers to use the just-recently-set locale
 	initCaseMappers();
 

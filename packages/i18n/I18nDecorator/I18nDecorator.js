@@ -13,8 +13,10 @@ import {Publisher, contextTypes as stateContextTypes} from '@enact/core/internal
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import ilib from '../src/index.js';
+
 import {isRtlLocale, updateLocale} from '../locale';
+import ilib from '../src/index.js';
+import {setResBundleLocale} from '../src/resBundle';
 
 import getI18nClasses from './getI18nClasses';
 
@@ -37,7 +39,9 @@ const I18nContext = React.createContext(null);
  * @hoc
  * @public
  */
-const I18nDecorator = hoc((config, Wrapped) => {
+const I18nDecorator = hoc({sync: false}, (config, Wrapped) => {
+	const {sync} = config;
+
 	return class extends React.Component {
 		static displayName = 'I18nDecorator'
 
@@ -74,6 +78,10 @@ const I18nDecorator = hoc((config, Wrapped) => {
 				rtl: isRtlLocale(),
 				updateLocale: this.updateLocale
 			};
+
+			if (sync) {
+				setResBundleLocale(locale);
+			}
 		}
 
 		getChildContext () {
@@ -125,6 +133,10 @@ const I18nDecorator = hoc((config, Wrapped) => {
 		 */
 		updateLocale = (newLocale) => {
 			const locale = updateLocale(newLocale);
+			if (sync) {
+				setResBundleLocale(locale);
+			}
+
 			const updated = {
 				locale,
 				rtl: isRtlLocale()

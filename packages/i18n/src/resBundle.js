@@ -6,8 +6,6 @@ let resBundle;
 
 /**
  * Returns the current ilib.ResBundle
- *
- * @returns {ilib.ResBundle} Current ResBundle
  */
 function getResBundle () {
 	return resBundle;
@@ -18,36 +16,61 @@ function getResBundle () {
  *
  * @param  {ilib.Locale} locale Locale for ResBundle
  *
- * @returns {ilib.ResBundle} New ilib.ResBundle
+ * @returns {Promise|ResBundle} Resolves with a new ilib.ResBundle
  */
-function createResBundle (locale) {
-	resBundle = new ResBundle({
+function createResBundle (locale, options, sync = true) {
+	const opts = {
 		locale: locale,
 		type: 'html',
 		name: 'strings',
-		sync: true,
-		lengthen: true		// if pseudo-localizing, this tells it to lengthen strings
-	});
+		lengthen: true,		// if pseudo-localizing, this tells it to lengthen strings
+		sync,
+		...options
+	};
 
-	return resBundle;
+	if (sync) {
+		return new ResBundle(opts);
+	}
+
+	return new Promise((resolve, reject) => {
+		// eslint-disable-next-line no-new
+		new ResBundle({
+			...opts,
+			onLoad: (bundle) => {
+				if (bundle) {
+					resolve(bundle);
+				}
+
+				reject();
+			}
+		});
+	});
 }
 
 /**
  * Set the locale for the strings that $L loads. This may reload the
  * string resources if necessary.
+ *
  * @param {string} spec the locale specifier
- * @returns {undefined}
+ * @returns {Promise} Resolves with a new ilib.ResBundle
  */
-function setResBundleLocale (spec) {
+function setResBundleLocale (spec, sync) {
 	// Load any ResBundle external data into cache.
 	ResBundle.strings = ResBundle.strings || {};
 	ResBundle.strings.cache = global.resBundleData || ResBundle.strings.cache;
 	// Get active bundle and if needed, (re)initialize.
 	const locale = new Locale(spec);
-	const rb = getResBundle();
-	if (!rb || spec !== rb.getLocale().getSpec()) {
-		createResBundle(locale);
+	if (!resBundle || spec !== resBundle.getLocale().getSpec()) {
+		if (!sync) {
+			return createResBundle(locale, null, false).then(bundle => {
+				resBundle = bundle;
+			});
+		}
+
+		resBundle = createResBundle(locale, null, true);
 	}
+
+	return resBundle;
 }
 
 /**
@@ -63,5 +86,6 @@ function clearResBundle () {
 export {
 	getResBundle,
 	setResBundleLocale,
-	clearResBundle
+	clearResBundle,
+	createResBundle
 };
