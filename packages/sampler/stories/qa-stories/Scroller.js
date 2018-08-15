@@ -88,11 +88,7 @@ storiesOf('Scroller', module)
 		'With Many ExpandableList',
 		() => (
 			<Scroller
-				direction={select('direction', prop.direction, Scroller, 'vertical')}
 				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
-			  horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, Scroller, 'auto')}
-				onScrollStart={action('onScrollStart')}
-				onScrollStop={action('onScrollStop')}
 				style={{
 					width: '100%'
 				}}
