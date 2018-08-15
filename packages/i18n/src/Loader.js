@@ -2,9 +2,10 @@
 
 import xhr from 'xhr';
 
-import Loader from '@enact/i18n/ilib/lib/Loader';
-import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
-import ZoneInfoFile from '@enact/i18n/src/zoneinfo';
+import Loader from '../ilib/lib/Loader';
+import LocaleInfo from '../ilib/lib/LocaleInfo';
+
+import ZoneInfoFile from './zoneinfo';
 
 const inProgressRequests = {};
 
@@ -109,8 +110,6 @@ EnyoLoader.prototype._pathjoin = function (_root, subpath) {
  * @returns {undefined}
  */
 EnyoLoader.prototype._loadFilesAsync = async function (path, params, cache) {
-	console.log('🚀 loading asynchronously', path);
-
 	let _root = iLibResources;
 	if (params && typeof params.root !== 'undefined') {
 		_root = params.root;
@@ -200,7 +199,6 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 		let locdata = this._pathjoin(this.base, 'locale');
 		// synchronous
 		paths.forEach(function (path, index) {
-			console.log('loading synchronously', path);
 			if (this.webos && path.indexOf('zoneinfo') !== -1) {
 				ret.push(this._createZoneFile(path));
 			} else if (cache.data[index]) {
