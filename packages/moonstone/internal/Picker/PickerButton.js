@@ -88,15 +88,7 @@ const PickerButtonBase = kind({
 			);
 		} else {
 			return (
-				<IconButton
-					{...rest}
-					backgroundOpacity="transparent"
-					disabled={disabled}
-					holdConfig={{events: [
-						{name: 'hold', time: 800}
-					]}}
-					small
-				>
+				<IconButton {...rest} backgroundOpacity="transparent" disabled={disabled} small>
 					{icon}
 				</IconButton>
 			);

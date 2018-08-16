@@ -4,10 +4,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Changed
+
+- `moonstone/Picker` key down hold threshold to 800ms before firing the `onChange` event
+
 ### Fixed
 
 - `moonstone/VideoPlayer` to round the time displayed down to nearest second
-- `moonstone/Picker` to correctly update its value once when button is selected
 
 ## [2.0.2] - 2018-13-01
 

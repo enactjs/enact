@@ -22,6 +22,12 @@ import SpottablePicker from './SpottablePicker';
 
 import css from './Picker.less';
 
+const holdConfig = {
+	events: [
+		{name: 'hold', time: 800}
+	]
+};
+
 const isDown = is('down');
 const isLeft = is('left');
 const isRight = is('right');
@@ -856,6 +862,7 @@ const PickerBase = class extends React.Component {
 					data-webos-voice-label={joined ? this.calcButtonLabel(!reverse, valueText) : null}
 					disabled={incrementerDisabled}
 					hidden={reachedEnd}
+					holdConfig={holdConfig}
 					icon={incrementIcon}
 					joined={joined}
 					onDown={this.handleIncDown}
@@ -892,6 +899,7 @@ const PickerBase = class extends React.Component {
 					data-webos-voice-label={joined ? this.calcButtonLabel(reverse, valueText) : null}
 					disabled={decrementerDisabled}
 					hidden={reachedStart}
+					holdConfig={holdConfig}
 					icon={decrementIcon}
 					joined={joined}
 					onDown={this.handleDecDown}
