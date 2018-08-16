@@ -7,12 +7,12 @@ describe('RadioDecorator', () => {
 
 	// eslint-disable-next-line enact/prop-types
 	const Item = ({onClick, active}) => (
-		<item onClick={onClick}>
+		<span onClick={onClick}>
 			{active ? 'Active' : 'Inactive'}
-		</item>
+		</span>
 	);
 
-	const Controller = RadioControllerDecorator('controller');
+	const Controller = RadioControllerDecorator('main');
 
 	it('should be activated when its prop is true on mount', function () {
 		const Component = RadioDecorator({prop: 'active'}, Item);
@@ -22,8 +22,8 @@ describe('RadioDecorator', () => {
 			</Controller>
 		);
 
-		const expected = subject.find('RadioDecorator').get(0);
-		const actual = subject.get(0).active;
+		const expected = subject.find('RadioDecorator').instance();
+		const actual = subject.instance().active;
 
 		expect(actual).to.equal(expected);
 	});
@@ -37,7 +37,7 @@ describe('RadioDecorator', () => {
 		);
 
 		const expected = null;
-		const actual = subject.get(0).active;
+		const actual = subject.instance().active;
 
 		expect(actual).to.equal(expected);
 	});
@@ -57,8 +57,8 @@ describe('RadioDecorator', () => {
 			active: true
 		});
 
-		const expected = subject.find('RadioDecorator').get(0);
-		const actual = subject.find('RadioControllerDecorator').get(0).active;
+		const expected = subject.find('RadioDecorator').instance();
+		const actual = subject.find('RadioControllerDecorator').instance().active;
 
 		expect(actual).to.equal(expected);
 	});
@@ -71,10 +71,10 @@ describe('RadioDecorator', () => {
 			</Controller>
 		);
 
-		subject.find('item').simulate('click');
+		subject.find('span').simulate('click');
 
-		const expected = subject.find('RadioDecorator').get(0);
-		const actual = subject.get(0).active;
+		const expected = subject.find('RadioDecorator').instance();
+		const actual = subject.instance().active;
 
 		expect(actual).to.equal(expected);
 	});
@@ -87,10 +87,10 @@ describe('RadioDecorator', () => {
 			</Controller>
 		);
 
-		subject.find('item').simulate('click');
+		subject.find('span').simulate('click');
 
 		const expected = null;
-		const actual = subject.get(0).active;
+		const actual = subject.instance().active;
 
 		expect(actual).to.equal(expected);
 	});
@@ -104,10 +104,10 @@ describe('RadioDecorator', () => {
 			</Controller>
 		);
 
-		subject.find('item').at(1).simulate('click');
+		subject.find('span').at(1).simulate('click');
 
-		const expected = subject.find('RadioDecorator').get(1);
-		const actual = subject.get(0).active;
+		const expected = subject.find('RadioDecorator').at(1).instance();
+		const actual = subject.instance().active;
 
 		expect(actual).to.equal(expected);
 	});
@@ -126,18 +126,18 @@ describe('RadioDecorator', () => {
 		);
 
 		const childController = subject.find('RadioControllerDecorator').at(1);
-		childController.find('item').at(1).simulate('click');
+		childController.find('span').at(1).simulate('click');
 
 		// Breaking the pattern of 1 expect per test in order to verify the expect change happened
 		// (activating second component in child controller) and no unexpected change happened in
 		// the parent controller (active component should remain the first component)
 
-		const childExpected = childController.find('RadioDecorator').get(1);
-		const childActual = childController.get(0).active;
+		const childExpected = childController.find('RadioDecorator').at(1).instance();
+		const childActual = childController.at(0).instance().active;
 		expect(childActual).to.equal(childExpected);
 
-		const parentExpected = subject.find('RadioDecorator').get(0);
-		const parentActual = subject.get(0).active;
+		const parentExpected = subject.find('RadioDecorator').at(0).instance();
+		const parentActual = subject.at(0).instance().active;
 		expect(parentActual).to.equal(parentExpected);
 	});
 

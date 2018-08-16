@@ -1,24 +1,30 @@
-/* eslint enact/no-module-exports-import: off */
+import {configure, addDecorator} from '@storybook/react';
+import {withKnobsOptions} from '@storybook/addon-knobs';
+import {setDefaults} from '@storybook/addon-info';
 
-import {configure, setAddon, addDecorator} from '@kadira/storybook';
-import infoAddon from '@kadira/react-storybook-addon-info';
-import {withKnobs} from '@kadira/storybook-addon-knobs';
-import backgrounds from 'react-storybook-addon-backgrounds';
 import Moonstone from '../src/MoonstoneEnvironment';
 
-
 function config (stories, mod) {
-	addDecorator(Moonstone);
-	addDecorator(withKnobs);
-	addDecorator(backgrounds([
-		{name: 'dark', value: '#000000', default: true},
-		{name: 'light', value: '#e8e9e8'},
-		{name: 'dark image', value: 'darkgray url("http://lorempixel.com/720/480/abstract/2/") no-repeat center/cover'},
-		{name: 'light image', value: 'lightgray url("http://lorempixel.com/720/480/cats/9/") no-repeat center/cover'},
-		{name: 'random image', value: 'gray url("http://lorempixel.com/720/480/") no-repeat center/cover'}
-	]));
 
-	setAddon(infoAddon);
+	addDecorator(Moonstone);
+	addDecorator(withKnobsOptions({
+		// debounce: {wait: 500}, // Same as lodash debounce.
+		timestamps: true // Doesn't emit events while user is typing.
+	}));
+
+	// Set addon-info defaults
+	setDefaults({
+		propTables: null, // Disable all propTables
+		// header: false, // Global configuration for the info addon across all of your stories.
+		// inline: true,
+		styles: {
+			children: {
+				// backgroundColor: 'purple',  // For easier debugging
+				width: '100%',
+				height: '100%'
+			}
+		}
+	});
 
 	function loadStories () {
 		stories.keys().forEach((filename) => stories(filename));
@@ -27,4 +33,4 @@ function config (stories, mod) {
 	configure(loadStories, mod);
 }
 
-module.exports = config;
+export default config;

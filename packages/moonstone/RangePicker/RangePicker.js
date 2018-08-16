@@ -1,6 +1,8 @@
 /**
- * Exports the {@link moonstone/RangePicker.RangePicker} and
- * {@link moonstone/RangePicker.RangePickerBase} components
+ * A component for selecting a number from a range of numbers.
+ *
+ * @example
+ * <RangePicker defaultValue={70} min={0} max={100}></RangePicker>
  *
  * @module moonstone/RangePicker
  */
@@ -13,7 +15,6 @@ import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 
 import {Picker, PickerItem} from '../internal/Picker';
-import SpottablePicker from '../Picker/SpottablePicker';
 import {validateRange} from '../internal/validators';
 
 const digits = (num) => {
@@ -25,9 +26,8 @@ const digits = (num) => {
 };
 
 /**
- * {@link moonstone/RangePicker.RangePickerBase} is a component that lets the user select a number
- * from a range of numbers. This version is not spottable. Developers are encouraged to use
- * {@link moonstone/RangePicker.RangePicker}.
+ * Base component of [RangePicker]{@link moonstone/RangePicker.RangePicker} which is not
+ * [spottable]{@link spotlight/Spottable.Spottable}.
  *
  * @class RangePickerBase
  * @memberof moonstone/RangePicker
@@ -39,32 +39,36 @@ const RangePickerBase = kind({
 
 	propTypes: /** @lends moonstone/RangePicker.RangePickerBase.prototype */ {
 		/**
-		 * The maximum value selectable by the picker (inclusive).
+		 * Maximum selectable value (inclusive).
 		 *
 		 * @type {Number}
+		 * @required
 		 * @public
 		 */
 		max: PropTypes.number.isRequired,
 
 		/**
-		 * The minimum value selectable by the picker (inclusive).
+		 * Minimum selectable value (inclusive).
 		 *
 		 * @type {Number}
+		 * @required
 		 * @public
 		 */
 		min: PropTypes.number.isRequired,
 
 		/**
-		 * Current value
+		 * Current value.
 		 *
 		 * @type {Number}
+		 * @required
 		 * @public
 		 */
 		value: PropTypes.number.isRequired,
 
 		/**
-		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
-		 * to the current selected child value.
+		 * The `aria-valuetext` for the picker.
+		 *
+		 * By default, `aria-valuetext` is set to the current selected child value.
 		 *
 		 * @type {String}
 		 * @memberof moonstone/RangePicker.RangePickerBase.prototype
@@ -73,7 +77,7 @@ const RangePickerBase = kind({
 		'aria-valuetext': PropTypes.string,
 
 		/**
-		 * Children from which to pick
+		 * Children from which to pick.
 		 *
 		 * @type {Node}
 		 * @public
@@ -81,7 +85,7 @@ const RangePickerBase = kind({
 		children: PropTypes.node,
 
 		/**
-		 * Class name for component
+		 * Class name for component.
 		 *
 		 * @type {String}
 		 * @public
@@ -89,9 +93,11 @@ const RangePickerBase = kind({
 		className: PropTypes.string,
 
 		/**
-		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
-		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{Icon#orientation} is changed.
+		 * A custom icon for the decrementer.
+		 *
+		 * All strings supported by [Icon]{@link moonstone/Icon.Icon} are supported. Without a
+		 * custom icon, the default is used, and is automatically changed when the
+		 * [orientation]{@link moonstone/RangePicker.RangePicker#orientation} is changed.
 		 *
 		 * @type {string}
 		 * @public
@@ -99,8 +105,7 @@ const RangePickerBase = kind({
 		decrementIcon: PropTypes.string,
 
 		/**
-		 * When `true`, the RangePicker is shown as disabled and does not generate `onChange`
-		 * [events]{@glossary event}.
+		 * Disables the picker.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -108,21 +113,23 @@ const RangePickerBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
-		 * supported. Without a custom icon, the default is used, and is automatically changed when
-		 * the [orientation]{Icon#orientation} is changed.
+		 * A custom icon for the incrementer.
 		 *
-		 * @type {string}
+		 * All strings supported by [Icon]{@link moonstone/Icon.Icon} are supported. Without a
+		 * custom icon, the default is used, and is automatically changed when the
+		 * [orientation]{@link moonstone/RangePicker.RangePicker#orientation} is changed.
+		 *
+		 * @type {String}
 		 * @public
 		 */
 		incrementIcon: PropTypes.string,
 
 		/**
-		 * Determines the user interaction of the control. A joined picker allows the user to use
-		 * the arrow keys to adjust the picker's value. The user may no longer use those arrow keys
-		 * to navigate, while this control is focused. A split control allows full navigation,
-		 * but requires individual ENTER presses on the incrementer and decrementer buttons.
-		 * Pointer interaction is the same for both formats.
+		 * Allows the user can use the arrow keys to adjust the picker's value.
+		 *
+		 * The user may no longer use those arrow keys to navigate while this control is focused.
+		 * A default control allows full navigation, but requires individual ENTER presses on the
+		 * incrementer and decrementer buttons. Pointer interaction is the same for both formats.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -130,9 +137,10 @@ const RangePickerBase = kind({
 		joined: PropTypes.bool,
 
 		/**
-		 * By default, the picker will animate transitions between items if it has a defined
-		 * `width`. Specifying `noAnimation` will prevent any transition animation for the
-		 * component.
+		 * Disables animation.
+		 *
+		 * By default, the picker will animate transitions between items, provided a `width` is
+		 * defined.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -140,7 +148,7 @@ const RangePickerBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * A function to run when the control should increment or decrement.
+		 * Called when `value` changes.
 		 *
 		 * @type {Function}
 		 * @public
@@ -148,8 +156,11 @@ const RangePickerBase = kind({
 		onChange: PropTypes.func,
 
 		/**
-		 * Sets the orientation of the picker, whether the buttons are above and below or on the
-		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
+		 * Orientation of the picker.
+		 *
+		 * Controls whether the buttons are arranged horizontally or vertically around the value.
+		 *
+		 * * Values: `'horizontal'`, `'vertical'`
 		 *
 		 * @type {String}
 		 * @default 'horizontal'
@@ -158,8 +169,8 @@ const RangePickerBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * When `true`, pads the display value with zeros up to the number of digits of the value of
-		 * `min` or max`, whichever is greater.
+		 * Pads the display value with zeros up to the number of digits of `min` or max`, whichever
+		 * is greater.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -167,8 +178,9 @@ const RangePickerBase = kind({
 		padded: PropTypes.bool,
 
 		/**
-		 * Allow the picker to only increment or decrement by a given value. A step of `2` would
-		 * cause a picker to increment from 10 to 12 to 14, etc.
+		 * The smallest value change allowed for the picker.
+		 *
+		 * For example, a step of `2` would cause the picker to increment from 0 to 2 to 4, etc.
 		 *
 		 * @type {Number}
 		 * @default 1
@@ -177,13 +189,19 @@ const RangePickerBase = kind({
 		step: PropTypes.number,
 
 		/**
-		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
-		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
-		 * word pickers, `'large'` for maximum-sized pickers.
+		 * The width of the picker.
 		 *
-		 * You may also supply a number. This number will determine the minumum size of the Picker.
-		 * Setting a number to less than the number of characters in your longest value may produce
-		 * unexpected results.
+		 * A number can be used to set the minimum number of characters to be shown. Setting a
+		 * number to less than the number of characters in the longest value will cause the width to
+		 * grow for the longer values.
+		 *
+		 * A string can be used to select from pre-defined widths:
+		 *
+		 * * `'small'` - numeric values
+		 * * `'medium'` - single or short words
+		 * * `'large'` - maximum-sized pickers taking full width of its parent
+		 *
+		 * By default, the picker will size according to the longest valid value.
 		 *
 		 * @type {String|Number}
 		 * @public
@@ -194,8 +212,8 @@ const RangePickerBase = kind({
 		]),
 
 		/**
-		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
-		 * to true to allow the picker to continue from the opposite end of the list of options.
+		 * Allows picker to continue from the start of the list after it reaches the end and
+		 * vice-versa.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -204,6 +222,7 @@ const RangePickerBase = kind({
 	},
 
 	computed: {
+		disabled: ({disabled, max, min}) => min >= max ? true : disabled,
 		label: ({max, min, padded, value}) => {
 			if (padded) {
 				const maxDigits = digits(Math.max(Math.abs(min), Math.abs(max)));
@@ -222,13 +241,16 @@ const RangePickerBase = kind({
 				validateRange(value, min, max, 'RangePicker');
 			}
 			return clamp(min, max, value);
+		},
+		voiceLabel: ({min, max}) => {
+			return JSON.stringify([min, max]);
 		}
 	},
 
-	render: ({label, value, ...rest}) => {
+	render: ({label, value, voiceLabel, ...rest}) => {
 		delete rest.padded;
 		return (
-			<Picker {...rest} index={0} value={value} reverse={false}>
+			<Picker {...rest} data-webos-voice-labels-ext={voiceLabel} index={0} value={value} reverse={false}>
 				<PickerItem key={value} marqueeDisabled style={{direction: 'ltr'}}>{label}</PickerItem>
 			</Picker>
 		);
@@ -236,8 +258,7 @@ const RangePickerBase = kind({
 });
 
 /**
- * {@link moonstone/RangePicker.RangePicker} is a component that lets the user select a number from
- * a range of numbers.
+ * A component that lets the user select a number from a range of numbers.
  *
  * By default, `RangePicker` maintains the state of its `value` property. Supply the `defaultValue`
  * property to control its initial value. If you wish to directly control updates to the component,
@@ -251,11 +272,18 @@ const RangePickerBase = kind({
  */
 const RangePicker = Pure(
 	Changeable(
-		SpottablePicker(
-			RangePickerBase
-		)
+		RangePickerBase
 	)
 );
+
+/**
+ * Default value
+ *
+ * @name defaultValue
+ * @memberof moonstone/RangePicker.RangePicker.prototype
+ * @type {Number}
+ * @public
+ */
 
 export default RangePicker;
 export {RangePicker, RangePickerBase};

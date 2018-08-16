@@ -58,11 +58,11 @@ describe('Slottable Specs', () => {
 	it('should distribute children whose \'type\' has a \'defaultSlot\' property that matches a slot', function () {
 		const Custom = kind({
 			name: 'Custom',
-			render: (props) => {
-				return <div>{props.children}</div>;
+			render: ({children}) => {
+				return <div>{children}</div>;
 			}
 		});
-		Custom.defaultSlot = 'a';
+		Custom.defaultSlot = 'c';
 
 		const Component = Slottable({slots: ['a', 'b', 'c']}, ({a, b, c}) => (
 			<div>
@@ -71,16 +71,16 @@ describe('Slottable Specs', () => {
 				{a}
 			</div>
 		));
+
 		const subject = mount(
 			<Component>
 				<div slot="a">A</div>
 				<div slot="b">B</div>
-				<Custom>D</Custom>
-				<div slot="c">C</div>
+				<Custom>C</Custom>
 			</Component>
 		);
 
-		const expected = 'CBAD';
+		const expected = 'CBA';
 		const actual = subject.text();
 
 		expect(actual).to.equal(expected);
@@ -148,7 +148,7 @@ describe('Slottable Specs', () => {
 
 	it('should distribute children with props other than simply \'children\', in entirety, to the matching destination slot', function () {
 		const Component = Slottable({slots: ['a', 'b', 'c', 'custom']}, ({a, b, c, custom}) => (
-			<div>
+			<div className="root-div">
 				{c}
 				{b}
 				{a}
@@ -170,7 +170,7 @@ describe('Slottable Specs', () => {
 		expect(actual).to.equal(expected);
 
 		const expectedTitle = 'Div A';
-		const actualTitle = subject.childAt(2).prop('title');
+		const actualTitle = subject.find('.root-div').childAt(2).prop('title');
 		expect(actualTitle).to.equal(expectedTitle);
 	});
 });

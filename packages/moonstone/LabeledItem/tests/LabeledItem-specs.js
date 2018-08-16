@@ -6,7 +6,7 @@ import css from '../LabeledItem.less';
 
 describe('LabeledItem Specs', () => {
 
-	const labelClass = '.' + css.label;
+	const labelClass = 'div.' + css.label;
 
 	it('should render a label (<div>) by default', function () {
 		const item = mount(

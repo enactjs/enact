@@ -1,5 +1,6 @@
-@import './variables.less';
-@import './mixins.less';
+@import "~@enact/ui/styles/text.less";
+@import "./variables.less";
+@import "./mixins.less";
 
 //
 // Mixin classes for creating the moontone text classes
@@ -272,13 +273,8 @@
 	font-weight: @moon-divider-font-weight;
 	font-style: @moon-divider-font-style;
 	letter-spacing: @moon-divider-letter-spacing;
+
 	:global(.enact-locale-non-italic) & {
 		font-style: normal;
-	}
-}
-
-.locale-japanese-line-break() {
-	:global(.enact-locale-ja) & {
-		line-break: strict;
 	}
 }

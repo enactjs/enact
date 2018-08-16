@@ -1,10 +1,18 @@
 /**
- * Exports the {@link moonstone/DatePicker.DatePicker} and {@link moonstone/DatePicker.DatePickerBase}
- * components.
+ * Date selection components and behaviors.
+ *
+ * @example
+ * <DatePicker
+ *   onChange={console.log}
+ * 	 title="Select Date"
+ * />
  *
  * @module moonstone/DatePicker
+ * @exports DatePicker
+ * @exports DatePickerBase
  */
 
+import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 import Pure from '@enact/ui/internal/Pure';
 
@@ -14,7 +22,7 @@ import Skinnable from '../Skinnable';
 import DatePickerBase from './DatePickerBase';
 
 const dateTimeConfig = {
-	customProps: function (i18n, value) {
+	customProps: function (i18n, value, props) {
 		const values = {
 			maxMonths: 12,
 			maxDays: 31,
@@ -29,6 +37,8 @@ const dateTimeConfig = {
 			values.day = value.getDays();
 			values.maxMonths = i18n.formatter.cal.getNumMonths(values.year);
 			values.maxDays = i18n.formatter.cal.getMonLength(values.month, values.year);
+			values.maxYear = i18n.toLocalYear(props.maxYear || DatePickerBase.defaultProps.maxYear);
+			values.minYear = i18n.toLocalYear(props.minYear || DatePickerBase.defaultProps.minYear);
 		}
 
 		return values;
@@ -63,16 +73,36 @@ const dateTimeConfig = {
 			.match(/([mdy]+)/ig)
 			.map(s => s[0].toLowerCase());
 
-		return {formatter, order};
+		/*
+		 * Converts a gregorian year to local year
+		 *
+		 * @param	{Number}	year	gregorian year
+		 *
+		 * @returns	{Number}		local year
+		 */
+		const toLocalYear = (year) => {
+			return DateFactory({
+				julianday: DateFactory({
+					year,
+					type: 'gregorian',
+					month: 1,
+					day: 1,
+					timezone: 'local'
+				}).getJulianDay(),
+				timezone: 'local'
+			}).getYears();
+		};
+
+		return {formatter, order, toLocalYear};
 	}
 };
 
 /**
- * {@link moonstone/DatePicker.DatePicker} allows the selection (or simply display) of
- * a day, month, and year.
+ * An expand date selection component, ready to use in Moonstone applications.
  *
- * Set the [value]{@link moonstone/DatePicker.DatePicker#value} property to a standard
- * JavaScript {@glossary Date} object to initialize the picker.
+ * `DatePicker` may be used to select the year, month, and day. It uses a standard `Date` object for
+ * its `value` which can be shared as the `value` for a
+ * [TimePicker]{@link moonstone/TimePicker.TimePicker} to select both a date and time.
  *
  * By default, `DatePicker` maintains the state of its `value` property. Supply the
  * `defaultValue` property to control its initial value. If you wish to directly control updates
@@ -84,8 +114,18 @@ const dateTimeConfig = {
  * state, supply a value for `open` at creation time and update its value in response to
  * `onClose`/`onOpen` events.
  *
+ * Usage:
+ * ```
+ * <DatePicker
+ *  defaultValue={selectedDate}
+ *  onChange={handleChange}
+ *  title="Select Date"
+ * />
+ * ```
+ *
  * @class DatePicker
  * @memberof moonstone/DatePicker
+ * @extends moonstone/DatePicker.DatePickerBase
  * @mixes ui/Toggleable.Toggleable
  * @mixes ui/RadioDecorator.RadioDecorator
  * @mixes ui/Changeable.Changeable
@@ -101,5 +141,45 @@ const DatePicker = Pure(
 	)
 );
 
+/**
+ * The initial value used when `open` is not set.
+ *
+ * @name defaultOpen
+ * @type {Boolean}
+ * @memberof moonstone/DatePicker.DatePicker.prototype
+ * @public
+ */
+
+/**
+ * The initial value used when `value` is not set.
+ *
+ * @name defaultValue
+ * @type {Date}
+ * @memberof moonstone/DatePicker.DatePicker.prototype
+ * @public
+ */
+
+/**
+ * Opens the component to display the date component pickers.
+ *
+ * @name open
+ * @type {Boolean}
+ * @default false
+ * @memberof moonstone/DatePicker.DatePicker.prototype
+ * @public
+ */
+
+/**
+ * The selected date
+ *
+ * @name value
+ * @type {Date}
+ * @memberof moonstone/DatePicker.DatePicker.prototype
+ * @public
+ */
+
 export default DatePicker;
-export {DatePicker, DatePickerBase};
+export {
+	DatePicker,
+	DatePickerBase
+};

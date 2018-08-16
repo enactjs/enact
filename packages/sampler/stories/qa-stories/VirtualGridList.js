@@ -1,21 +1,21 @@
+import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
+import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList/VirtualListBase';
 import GridListImageItem from '@enact/moonstone/GridListImageItem';
-import {VirtualGridList} from '@enact/moonstone/VirtualList';
-import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import ri from '@enact/ui/resolution';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, number} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
 
-import nullify from '../../src/utils/nullify.js';
+import {boolean, number} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('VirtualGridList', VirtualListCore, VirtualGridList);
+const Config = mergeComponentMetadata('VirtualGridList', VirtualGridList, VirtualListBase, UiVirtualListBase);
 
 const
 	items = [],
 	// eslint-disable-next-line enact/prop-types
-	renderItem = ({data, index, ...rest}) => {
-		const {text, subText, source} = data[index];
+	renderItem = ({index, ...rest}) => {
+		const {text, subText, source} = items[index];
 
 		return (
 			<GridListImageItem
@@ -38,23 +38,22 @@ for (let i = 0; i < 1000; i++) {
 	items.push({text, subText, source});
 }
 
-storiesOf('VirtualList.VirtualGridList')
-	.addWithInfo(
+storiesOf('VirtualList.VirtualGridList', module)
+	.add(
 		'Horizontal VirtualGridList',
 		() => (
 			<VirtualGridList
-				component={renderItem}
-				data={items}
-				dataSize={number('dataSize', items.length)}
+				dataSize={number('dataSize', Config, items.length)}
 				direction="horizontal"
-				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+				focusableScrollbar={boolean('focusableScrollbar', Config, false)}
+				itemRenderer={renderItem}
 				itemSize={{
-					minWidth: ri.scale(number('minWidth', 180)),
-					minHeight: ri.scale(number('minHeight', 270))
+					minWidth: ri.scale(number('minWidth', Config, 180)),
+					minHeight: ri.scale(number('minHeight', Config, 270))
 				}}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				spacing={ri.scale(number('spacing', 18))}
+				spacing={ri.scale(number('spacing', Config, 18))}
 				style={{
 					height: ri.unit(552, 'rem')
 				}}

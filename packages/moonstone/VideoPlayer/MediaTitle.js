@@ -3,7 +3,7 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {MarqueeText} from '../Marquee';
+import Marquee from '../Marquee';
 
 import css from './VideoPlayer.less';
 
@@ -24,6 +24,7 @@ const MediaTitleBase = kind({
 		 * in the forms `${id}_title` and `${id}_info`, respectively.
 		 *
 		 * @type {String}
+		 * @required
 		 * @public
 		 */
 		id: PropTypes.string.isRequired,
@@ -49,17 +50,17 @@ const MediaTitleBase = kind({
 		/**
 		 * A title string to identify the media's title.
 		 *
-		 * @type {String}
+		 * @type {Node}
 		 * @public
 		 */
-		title: PropTypes.string,
+		title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 		/**
 		 * Setting this to false effectively hides the entire component. Setting it to `false` after
 		 * the control has rendered causes a fade-out transition. Setting to `true` after or during
 		 * the transition makes the component immediately visible again, without delay or transition.
 		 *
-		 * @type {String}
+		 * @type {Boolean}
 		 * @default true
 		 * @public
 		 */
@@ -99,9 +100,9 @@ const MediaTitleBase = kind({
 
 		return (
 			<div {...rest} id={id}>
-				<MarqueeText id={id + '_title'} className={titleClassName} marqueeOn="render">
+				<Marquee id={id + '_title'} className={titleClassName} marqueeOn="render">
 					{title}
-				</MarqueeText>
+				</Marquee>
 				<div id={id + '_info'} className={childrenClassName}>  {/* tabIndex={-1} */}
 					{children}
 				</div>

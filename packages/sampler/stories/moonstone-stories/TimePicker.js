@@ -1,36 +1,34 @@
-import TimePicker, {TimePickerBase} from '@enact/moonstone/TimePicker';
+import TimePicker from '@enact/moonstone/TimePicker';
 import React from 'react';
-import PropTypes from 'prop-types';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {withInfo} from '@storybook/addon-info';
 
-import nullify from '../../src/utils/nullify.js';
-import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
+import {boolean, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('TimePicker', TimePicker.propTypes, TimePickerBase.propTypes, {
-	propTypes: {
-		onChange: PropTypes.func,
-		onClose: PropTypes.func,
-		onOpen: PropTypes.func,
-		open: PropTypes.bool,
-		value: PropTypes.instanceOf(Date)
-	}}
-);
-removeProps(Config, 'onChangeHour defaultOpen onChangeMeridiem hour onChangeMinute minute meridiem meridiems order');
+const Config = mergeComponentMetadata('TimePicker', TimePicker);
+TimePicker.displayName = 'TimePicker';
 
-storiesOf('TimePicker')
-	.addWithInfo(
-		' ',
-		'The basic TimePicker',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'TimePicker',
+		withInfo({
+			text: 'The basic TimePicker'
+		})(() => (
 			<TimePicker
-				title={text('title', 'Time')}
-				noLabels={nullify(boolean('noLabels', false))}
-				noneText={text('noneText', 'Nothing Selected')}
+				hourAriaLabel={text('hourAriaLabel', Config, '')}
+				hourLabel={text('hourLabel', Config, '')}
+				meridiemAriaLabel={text('meridiemAriaLabel', Config, '')}
+				meridiemLabel={text('meridiemLabel', Config, '')}
+				minuteAriaLabel={text('minuteAriaLabel', Config, '')}
+				minuteLabel={text('minuteLabel', Config, '')}
+				noLabels={boolean('noLabels', Config)}
+				noneText={text('noneText', Config, 'Nothing Selected')}
 				onChange={action('onChange')}
-				onOpen={action('onOpen')}
 				onClose={action('onClose')}
+				onOpen={action('onOpen')}
+				title={text('title', Config, 'Time')}
 			/>
-		),
-		{propTables: [Config]}
+		))
 	);

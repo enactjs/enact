@@ -2,23 +2,26 @@
 title: Updating Locale
 ---
 
-Locale may be explicitly set by setting `props` on the decorator or by calling the `updateLocale` function on `context`. Apps should use only one of these methods to set locale or conflicts could arise (for example, if a re-render of the root component caused the locale to be reset).
+Locale may be explicitly set by setting `props` on the decorator or by calling the `updateLocale` function via [context](https://reactjs.org/docs/context.html). Apps should use only one of these methods to set locale or conflicts could arise (for example, if a re-render of the root component caused the locale to be reset).
 
 ## Using context
 
-Context is the easiest way to update the locale. Call the `updateLocale` function, passing the locale string (e.g. `context.updateLocale('en-US')`. Remember to use `contextTypes`:
+Context is the easiest way to update the locale. Call the `updateLocale` function, passing the locale string (e.g. `context.updateLocale('en-US')`:
 
 ```javascript
-import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+import React from 'react';
 
-class SomeComponent extends React.Component {
-    ...
-    static contextTypes = contextTypes;
-
-    changeLocale = (locale) => {
-        this.context.updateLocale(locale);
-    }
-	...
+const SomeComponent = I18nContextDecorator(
+	{updateLocaleProp: 'updateLocale'},
+	class extends React.Component {
+		...
+		changeLocale = (locale) => {
+			this.props.updateLocale(locale);
+		}
+		...
+	}
+);
 ```
 
 ## Updating locale via props
@@ -84,4 +87,3 @@ export default connect(mapStateToProps, mapDispatchToProps, null, {pure: false})
 ```
 
 This will allow the `context` to flow through to the component, but it will also cause performance issues because your component will be re-rendering on every change. If you must use `context` with `react-redux`, please make the component as small as possible to reduce re-renders or use `shouldComponentUpdate`.
-

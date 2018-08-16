@@ -38,7 +38,7 @@ const forCancel = function (ev) {
  *
  * @function
  * @memberof ui/Cancelable
- * @param {Function} handler	Function that will receive the event and should return `false` if
+ * @param {Function} handler	Function that will receive the event and should return `true` if
  *								the event is a cancel event.
  * @returns {undefined}
  * @public
@@ -54,7 +54,7 @@ const addCancelHandler = function (handler) {
  *
  * @function
  * @memberof ui/Cancelable
- * @param  {Function} handler A previously added filter function
+ * @param {Function} handler A previously added filter function
  * @returns {undefined}
  * @public
  */

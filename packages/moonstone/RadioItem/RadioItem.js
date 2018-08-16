@@ -1,140 +1,70 @@
 /**
- * Exports the {@link moonstone/RadioItem.RadioItem} component.
+ * Provides a Moonstone-themed Item component and interactive togglable radio icon.
+ *
+ * @example
+ * <RadioItem>Item</RadioItem>
  *
  * @module moonstone/RadioItem
+ * @exports RadioItem
+ * @exports RadioItemBase
  */
 
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Pure from '@enact/ui/internal/Pure';
-import Toggleable from '@enact/ui/Toggleable';
 
-import {ToggleItemBase} from '../ToggleItem';
-import Skinnable from '../Skinnable';
+import ToggleIcon from '../ToggleIcon';
+import ToggleItem from '../ToggleItem';
 
-import css from './RadioItem.less';
+import componentCss from './RadioItem.less';
 
 /**
- * {@link moonstone/RadioItem.RadioItemBase} is a component that
- * combines a Toggleable radio selector and an Item. It has two selected states
- * `true` & `false`.
+ * Renders an `Item` with a radio-dot icon.
  *
- * @class RadioItemBase
+ * @class RadioItem
  * @memberof moonstone/RadioItem
+ * @extends moonstone/ToggleItem.ToggleItem
  * @ui
  * @public
  */
 const RadioItemBase = kind({
 	name: 'RadioItem',
 
-	propTypes: /** @lends moonstone/RadioItem.RadioItemBase.prototype */ {
+	propTypes: /** @lends moonstone/RadioItem.RadioItem.prototype */ {
 		/**
-		 * The string to be displayed as the main content of the radio item.
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
 		 *
-		 * @type {String}
+		 * The following classes are supported:
+		 *
+		 * * `radioItem` - The root class name
+		 *
+		 * @type {Object}
 		 * @public
 		 */
-		children: PropTypes.string.isRequired,
-
-		/**
-		 * Applies a disabled visual state to the radio item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		disabled: PropTypes.bool,
-
-		/**
-		 * Applies inline styling to the radio item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		inline: PropTypes.bool,
-
-		/**
-		 * The handler to run when the radio item is toggled.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {String} event.selected - Selected value of item.
-		 * @param {*} event.value - Value passed from `value` prop.
-		 * @public
-		 */
-		onToggle: PropTypes.func,
-
-		/**
-		 * Applies a filled circle icon to the radio item.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		selected: PropTypes.bool,
-
-		/**
-		 * The value that will be sent to the `onToggle` handler.
-		 *
-		 * @type {*}
-		 * @default ''
-		 * @public
-		 */
-		value: PropTypes.any
-	},
-
-	defaultProps: {
-		disabled: false,
-		inline: false,
-		value: ''
+		css: PropTypes.object
 	},
 
 	styles: {
-		css,
-		className: 'radioItem'
-	},
-
-	computed: {
-		icon: ({selected, styler}) => {
-			const className = styler.join(css.dot, {selected});
-
-			return (
-				<div className={className} />
-			);
-		}
+		css: componentCss,
+		className: 'radioItem',
+		publicClassNames: ['radioItem']
 	},
 
 	render: (props) => (
-		<ToggleItemBase {...props} />
+		<ToggleItem
+			data-webos-voice-intent="SelectRadioItem"
+			{...props}
+			css={props.css}
+			iconComponent={
+				<ToggleIcon css={componentCss} />
+			}
+		/>
 	)
 });
 
-
-/**
- * {@link moonstone/RadioItem.RadioItem} is a component that combines a
- * {@link ui/Toggleable.Toggleable} radio selector and an Item. It has two selected states `true` &
- * `false`.
- *
- * By default, `RadioItem` maintains the state of its `selected` property. Supply the
- * `defaultSelected` property to control its initial value. If you wish to directly control updates
- * to the component, supply a value to `selected` at creation time and update it in response to
- * `onToggle` events.
- *
- * @class RadioItem
- * @memberof moonstone/RadioItem
- * @mixes ui/Toggleable.Toggleable
- * @ui
- * @public
- */
-const RadioItem = Pure(
-	Toggleable(
-		{prop: 'selected'},
-		Skinnable(
-			RadioItemBase
-		)
-	)
-);
-
-export default RadioItem;
-export {RadioItem, RadioItemBase};
+export default RadioItemBase;
+export {
+	RadioItemBase as RadioItem,
+	RadioItemBase
+};

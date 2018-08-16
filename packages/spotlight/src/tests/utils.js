@@ -58,6 +58,7 @@ const spottable = (props) => node({
 
 const container = (props) => node({
 	[containerAttribute]: _id++,
+	'data-spotlight-container': true,
 	...coerceProps(props)
 });
 

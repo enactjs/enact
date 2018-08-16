@@ -1,7 +1,15 @@
 import Button from '@enact/moonstone/Button';
+import TooltipDecorator, {Tooltip, TooltipBase} from '@enact/moonstone/TooltipDecorator';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
-import {number, object, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+// import {object} from '@storybook/addon-knobs';
+import {withInfo} from '@storybook/addon-info';
+
+import {number, object, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
+
+const Config = mergeComponentMetadata('TooltipDecorator', TooltipDecorator, Tooltip, TooltipBase);
+const TooltipButton = TooltipDecorator(Button);
 
 const prop = {
 	tooltipPosition: {
@@ -27,22 +35,23 @@ const prop = {
 	}
 };
 
-storiesOf('TooltipDecorator')
-	.addWithInfo(
-		' ',
-		'The basic TooltipDecorator',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'TooltipDecorator',
+		withInfo({
+			text: 'The basic TooltipDecorator'
+		})(() => (
 			<div style={{textAlign: 'center'}}>
-				<Button
-					tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
-					tooltipDelay={number('tooltipDelay', 500)}
-					tooltipText={text('tooltipText', 'tooltip!')}
-					tooltipPosition={select('tooltipPosition', prop.tooltipPosition, 'above')}
-					tooltipWidth={number('tooltipWidth')}
-					tooltipProps={object('tooltipProps', prop.ariaObject)}
+				<TooltipButton
+					tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
+					tooltipDelay={number('tooltipDelay', Config, 500)}
+					tooltipText={text('tooltipText', Config, 'tooltip!')}
+					tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
+					tooltipWidth={number('tooltipWidth', Config)}
+					tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
 				>
 					hello
-				</Button>
+				</TooltipButton>
 			</div>
-		)
+		))
 	);

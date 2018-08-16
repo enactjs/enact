@@ -9,6 +9,13 @@ import ReactDOM from 'react-dom';
 
 import {shape} from './Arranger';
 
+// If the View was "appearing", then entering will always be false and this will not result in a
+// re-render. If the view should enter, state.enter will be true and this will toggle it to false
+// causing a re-render.
+const clearEntering = ({entering}) => {
+	return entering ? {entering: false} : null;
+};
+
 /**
  * A `View` wraps a set of children for {@link ui/ViewManager.ViewManager}.
  * It is not intended to be used directly
@@ -26,13 +33,24 @@ class View extends React.Component {
 		 * Time in milliseconds to complete a transition
 		 *
 		 * @type {Number}
+		 * @required
+		 * @public
 		 */
 		duration: PropTypes.number.isRequired,
+
+		/**
+		 * Set to `true` when the View should 'appear' without transitioning into the viewport
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		appearing: PropTypes.bool,
 
 		/**
 		 * Arranger to control the animation
 		 *
 		 * @type {Arranger}
+		 * @public
 		 */
 		arranger: shape,
 
@@ -46,10 +64,11 @@ class View extends React.Component {
 
 		/**
 		 * Time, in milliseconds, to wait after a view has entered to inform it by passing the
-		 * `enteringProp` as false.
+		 * `enteringProp` as `false`.
 		 *
 		 * @type {Number}
 		 * @default 0
+		 * @public
 		 */
 		enteringDelay: PropTypes.number,
 
@@ -62,6 +81,7 @@ class View extends React.Component {
 		 * be notified of the change in transition.
 		 *
 		 * @type {String}
+		 * @public
 		 */
 		enteringProp: PropTypes.string,
 
@@ -73,17 +93,18 @@ class View extends React.Component {
 		index: PropTypes.number,
 
 		/**
-		 * Indicates if a view is currently leaving.
+		 * When `true`, indicates if a view is currently leaving.
 		 *
 		 * @type {Boolean}
 		 */
 		leaving: PropTypes.bool,
 
 		/**
-		 * Indicates if the transition should be animated
+		 * When `true`, indicates if the transition should be animated
 		 *
 		 * @type {Boolean}
 		 * @default true
+		 * @public
 		 */
 		noAnimation: PropTypes.bool,
 
@@ -95,7 +116,7 @@ class View extends React.Component {
 		previousIndex: PropTypes.number,
 
 		/**
-		 * Indicates if the transition should be reversed. The effect depends on how the provided
+		 * When `true`, indicates if the transition should be reversed. The effect depends on how the provided
 		 * `arranger` handles reversal.
 		 *
 		 * @type {Boolean}
@@ -105,6 +126,7 @@ class View extends React.Component {
 	}
 
 	static defaultProps = {
+		appearing: false,
 		enteringDelay: 0
 	}
 
@@ -113,7 +135,7 @@ class View extends React.Component {
 		this.animation = null;
 		this._raf = null;
 		this.state = {
-			entering: true
+			entering: !props.appearing
 		};
 	}
 
@@ -143,9 +165,7 @@ class View extends React.Component {
 	}
 
 	enteringJob = new Job(() => {
-		this.setState({
-			entering: false
-		});
+		this.setState(clearEntering);
 	})
 
 	componentWillAppear (callback) {
@@ -158,9 +178,7 @@ class View extends React.Component {
 	}
 
 	componentDidAppear () {
-		this.setState({
-			entering: false
-		});
+		this.setState(clearEntering);
 	}
 
 	// This is called at the same time as componentDidMount() for components added to an existing

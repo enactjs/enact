@@ -1,16 +1,16 @@
 import SwitchItem from '@enact/moonstone/SwitchItem';
-import VirtualList from '@enact/moonstone/VirtualList';
-import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
+import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
+import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, number} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
 
-import nullify from '../../src/utils/nullify.js';
+import {boolean, number} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('VirtualList', VirtualListCore, VirtualList);
+const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBase, UiVirtualListBase);
 
 const
 	style = {
@@ -24,11 +24,11 @@ const
 	},
 	items = [],
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderItem = (size) => ({data, index, ...rest}) => {
+	renderItem = (size) => ({index, ...rest}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
 		return (
-			<StatefulSwitchItem  index={index} style={itemStyle} {...rest}>
-				{data[index].item}
+			<StatefulSwitchItem index={index} style={itemStyle} {...rest}>
+				{items[index].item}
 			</StatefulSwitchItem>
 		);
 	};
@@ -57,7 +57,9 @@ class StatefulSwitchItem extends React.Component {
 
 	onToggle = () => {
 		items[this.props.index].selected = !items[this.props.index].selected;
-		this.setState({selected: !this.state.selected});
+		this.setState(({selected}) => ({
+			selected: !selected
+		}));
 	}
 
 	render () {
@@ -72,21 +74,20 @@ class StatefulSwitchItem extends React.Component {
 	}
 }
 
-storiesOf('VirtualList')
-	.addWithInfo(
+storiesOf('VirtualList', module)
+	.add(
 		'with more items',
 		() => {
-			const itemSize = ri.scale(number('itemSize', 72));
+			const itemSize = ri.scale(number('itemSize', Config, 72));
 			return (
 				<VirtualList
-					component={renderItem(itemSize)}
-					data={items}
-					dataSize={number('dataSize', items.length)}
-					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
+					dataSize={number('dataSize', Config, items.length)}
+					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
+					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', 0))}
+					spacing={ri.scale(number('spacing', Config, 0))}
 					style={style.list}
 				/>
 			);

@@ -27,7 +27,7 @@ const defaultConfig = {
 	/**
 	 * Classes to be added to the root node
 	 *
-	 * @type {string}
+	 * @type {String}
 	 * @default null
 	 * @memberof moonstone/Panels.BreadcrumbDecorator.defaultConfig
 	 */
@@ -37,7 +37,7 @@ const defaultConfig = {
 	 * Maximum number of breadcrumbs to display. If a function, it will be called on render to
 	 * calculate the number of breadcrumbs
 	 *
-	 * @type {number|function}
+	 * @type {Number|Function}
 	 * @default 0
 	 * @memberof moonstone/Panels.BreadcrumbDecorator.defaultConfig
 	 */
@@ -46,7 +46,7 @@ const defaultConfig = {
 	/**
 	 * Arranger for Panels
 	 *
-	 * @type {object}
+	 * @type {Object}
 	 * @default null
 	 * @memberof moonstone/Panels.BreadcrumbDecorator.defaultConfig
 	 */
@@ -74,11 +74,11 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * Array of breadcrumbs or a function that generates an array of breadcrumbs
 			 *
-			 * @type {Function|node[]}
+			 * @type {Function|Node[]}
 			 * @default IndexedBreadcrumbs
 			 */
 			breadcrumbs: PropTypes.oneOfType([
-				PropTypes.func,							// generator
+				PropTypes.func,						// generator
 				PropTypes.arrayOf(PropTypes.node)	// static array of breadcrumbs
 			]),
 
@@ -125,7 +125,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			index: PropTypes.number,
 
 			/**
-			 * Disable breadcrumb transitions
+			 * Disable breadcrumb transitions.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -133,8 +133,8 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			noAnimation: PropTypes.bool,
 
 			/**
-			 * Handler called when a breadcrumb is clicked. The payload includes the `index` of the
-			 * selected breadcrumb
+			 * Called when a breadcrumb is clicked. The payload includes the `index` of the selected
+			 * breadcrumb
 			 *
 			 * @type {Function}
 			 */

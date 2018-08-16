@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-no-bind */
+
 import React from 'react';
 import {shallow} from 'enzyme';
 import Repeater from '../Repeater';

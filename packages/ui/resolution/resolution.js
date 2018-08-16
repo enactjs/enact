@@ -2,11 +2,15 @@ let baseScreen,
 	orientation,
 	riRatio,
 	screenType,
+	workspaceBounds = {
+		width: (typeof window === 'object') ? window.innerWidth : 1920,
+		height: (typeof window === 'object') ? window.innerHeight : 1080
+	},
 	screenTypes = [{
 		name: 'standard',
 		pxPerRem: 16,
-		width: (typeof window === 'object') ? window.innerWidth : 1920,
-		height: (typeof window === 'object') ? window.innerHeight : 1080,
+		width: workspaceBounds.width,
+		height: workspaceBounds.height,
 		aspectRatioName: 'standard',
 		base: true
 	}],	// Assign one sane type in case defineScreenTypes is never run.
@@ -29,13 +33,34 @@ const configDefaults = {
 };
 
 /**
+ * Update the common measured boundary object. This object is used as "what size screen are we
+ * looking at". Providing no arguments has no effect and updates nothing.
+ *
+ * @function
+ * @memberOf ui/resolution
+ * @param {Node}    measurementNode    A standard DOM node or the `window` node.
+ *
+ * @returns {undefined}
+ * @private
+ */
+const updateWorkspaceBounds = (measurementNode) => {
+	if (measurementNode && (measurementNode.clientHeight || measurementNode.clientWidth)) {
+		workspaceBounds = {height: measurementNode.clientHeight, width: measurementNode.clientWidth};
+	} else if (measurementNode && (measurementNode.innerHeight || measurementNode.innerWidth)) {
+		// A backup for if measurementNode is actually `window` and not a normal node
+		workspaceBounds = {height: measurementNode.innerHeight, width: measurementNode.innerWidth};
+	}
+};
+
+/**
  * Fetch the screenType object
  *
+ * @function
  * @memberof ui/resolution
- * @param  {String} type The key string for the screen type object. If falsy, the current
- *	screenType is used
+ * @param  {String}    type    The key string for the screen type object. If falsy, the current
+ *                             screenType is used
  *
- * @returns {Object}     screenTypeObject
+ * @returns {Object}           screenTypeObject
  * @private
  */
 function getScreenTypeObject (type) {
@@ -59,10 +84,11 @@ function getScreenTypeObject (type) {
  *
  * Executing this method also initializes the rest of the resolution-independence code.
  *
+ * Example:
  * ```
- * var resolution = require('enyo/resolution');
+ * import ri from 'enact/ui/resolution';
  *
- * resolution.defineScreenTypes([
+ * ri.defineScreenTypes([
  * 	{name: 'vga',     pxPerRem: 8,  width: 640,  height: 480,  aspectRatioName: 'standard'},
  * 	{name: 'xga',     pxPerRem: 16, width: 1024, height: 768,  aspectRatioName: 'standard'},
  * 	{name: 'hd',      pxPerRem: 16, width: 1280, height: 720,  aspectRatioName: 'hdtv'},
@@ -72,14 +98,15 @@ function getScreenTypeObject (type) {
  * ]);
  * ```
  *
+ * @function
  * @memberof ui/resolution
- * @param {Array} types - An array of objects containing screen configuration data, as in the
- * preceding example.
+ * @param {Array}    types    An array of objects containing screen configuration data, as in the
+ *                            preceding example.
  * @returns {undefined}
  * @public
  */
 function defineScreenTypes (types) {
-	screenTypes = types;
+	if (types) screenTypes = types;
 	for (let i = 0; i < screenTypes.length; i++) {
 		if (screenTypes[i]['base']) baseScreen = screenTypes[i];
 	}
@@ -91,19 +118,17 @@ function defineScreenTypes (types) {
  * match is defined as the screen type that is the closest to the screen resolution without
  * going over. ("The Price is Right" style.)
  *
+ * @function
  * @memberof ui/resolution
- * @param {Object} [rez] - Optional measurement scheme. Must include `height` and `width` properties.
- * @returns {String} Screen type (e.g., `'fhd'`, `'uhd'`, etc.)
+ * @param {Object}    rez    Optional measurement scheme. Must include `height` and `width` properties.
+ * @returns {String}         Screen type (e.g., `'fhd'`, `'uhd'`, etc.)
  * @public
  */
 function getScreenType (rez) {
-	rez = rez || {
-		height: (typeof window === 'object') ? window.innerHeight : 1080,
-		width: (typeof window === 'object') ? window.innerWidth : 1920
-	};
+	rez = rez || workspaceBounds;
 
 	const types = screenTypes;
-	let bestMatch = types[types.length - 1].name;
+	let bestMatch = types[types.length - 1].name; // Blindly set the first screen type, in case no matches are found later.
 
 	orientation = 'landscape';
 
@@ -114,38 +139,39 @@ function getScreenType (rez) {
 		rez.height = swap;
 	}
 
-	// loop thorugh resolutions
+	// Loop through resolutions, last->first, largest->smallest
 	for (let i = types.length - 1; i >= 0; i--) {
-		// find the one that matches our current size or is smaller. default to the first.
-		if (rez.width <= types[i].width) {
+		// Does the current resolution fit inside this screenType definition? If so, save it as the current best match.
+		if (rez.height <= types[i].height && rez.width <= types[i].width) {
 			bestMatch = types[i].name;
 		}
 	}
-	// return the name of the resolution if we find one.
+	// Return the name of the closest fitting set of dimensions.
 	return bestMatch;
 }
 
 /**
  * Calculate the base rem font size. This is how the magic happens. This accepts an
- * optional screenType name. If one isn't provided, the currently detected screen type is used.
- * This uses the config option "orientationHandling", which when set to "scale" and the screen is
+ * optional `screenType` name. If one isn't provided, the currently detected screen type is used.
+ * This uses the config option `orientationHandling`, which when set to "scale" and the screen is
  * in portrait orientation, will dynamically calculate what the base font size should be, if the
  * width were proportionally scaled down to fit in the portrait space.
  *
  * To use, put the following in your application code:
  * ```
- * 	var RI = require('moonstone/resolution');
+ * import ri from '@enact/ui/resolution';
  *
- * 	RI.config.orientationHandling = 'scale';
- * 	RI.init();
+ * ri.config.orientationHandling = 'scale';
+ * ri.init();
  * ```
  *
- * This has no effect if the screen is in landscape, or if orientationHandling is unset.
+ * This has no effect if the screen is in landscape, or if `orientationHandling` is unset.
  *
+ * @function
  * @memberof ui/resolution
- * @param {String} type - Screen type to base size the calculation on. If no
- *     screen type is provided, the current screen type will be used.
- * @returns {String} The calculated pixel size (with unit suffix. Ex: "24px").
+ * @param {String}    type    Screen type to base size the calculation on. If no
+ *                            screen type is provided, the current screen type will be used.
+ * @returns {String}          The calculated pixel size (with unit suffix. Ex: "24px").
  * @public
  */
 function calculateFontSize (type) {
@@ -161,10 +187,11 @@ function calculateFontSize (type) {
 }
 
 /**
+ * @function
  * @memberof ui/resolution
- * @param {String} size A valid CSS measurement to be applied as the base document font size.
+ * @param {String}    size     A valid CSS measurement to be applied as the base document font size.
  * @private
- * @returns {null} n/a
+ * @returns {undefined}
  */
 function updateBaseFontSize (size) {
 	if (typeof window === 'object') {
@@ -175,9 +202,10 @@ function updateBaseFontSize (size) {
 /**
  * Returns the CSS classes for the given `type`
  *
+ * @function
  * @memberof ui/resolution
- * @param {String} type Screen type
- * @returns {String} classes CSS class names
+ * @param {String}    type    Screen type
+ * @returns {String}          CSS class names
  * @public
  */
 function getResolutionClasses (type = screenType) {
@@ -198,10 +226,11 @@ function getResolutionClasses (type = screenType) {
 /**
  * Returns the ratio of pixels per rem for the given `type` to the pixels per rem for the base type
  *
+ * @function
  * @memberof ui/resolution
- * @param  {String} [type] Screen type
+ * @param  {String}    type    Screen type
  *
- * @returns {Number}      ratio
+ * @returns {Number}           ratio
  */
 function getRiRatio (type = screenType) {
 	if (type && baseScreen) {
@@ -219,9 +248,9 @@ function getRiRatio (type = screenType) {
  * Returns the pixels per rem for the given `type`
  *
  * @memberof ui/resolution
- * @param  {String} [type] Screen type
+ * @param {String}    type    Screen type
  *
- * @returns {Number}      pixels per rem
+ * @returns {Number}          pixels per rem
  */
 function getUnitToPixelFactors (type = screenType) {
 	if (type) {
@@ -234,10 +263,11 @@ function getUnitToPixelFactors (type = screenType) {
  * Calculates the aspect ratio of the specified screen type. If no screen type is provided,
  * the current screen type is used.
  *
+ * @function
  * @memberof ui/resolution
- * @param {String} type - Screen type whose aspect ratio will be calculated. If no screen
- * type is provided, the current screen type is used.
- * @returns {Number} The calculated screen ratio (e.g., `1.333`, `1.777`, `2.333`, etc.)
+ * @param {String}    type    Screen type whose aspect ratio will be calculated. If no screen
+ *                            type is provided, the current screen type is used.
+ * @returns {Number}          The calculated screen ratio (e.g., `1.333`, `1.777`, `2.333`, etc.)
  * @public
  */
 function getAspectRatio (type) {
@@ -252,10 +282,11 @@ function getAspectRatio (type) {
  * Returns the name of the aspect ratio for a specified screen type, or for the default
  * screen type if none is provided.
  *
+ * @function
  * @memberof ui/resolution
- * @param {String} type - Screen type whose aspect ratio name will be returned. If no
- * screen type is provided, the current screen type will be used.
- * @returns {String} The name of the screen type's aspect ratio
+ * @param {String}    type    Screen type whose aspect ratio name will be returned. If no
+ *                            screen type is provided, the current screen type will be used.
+ * @returns {String}          The name of the screen type's aspect ratio
  * @public
  */
 function getAspectRatioName (type) {
@@ -267,10 +298,11 @@ function getAspectRatioName (type) {
  * Takes a provided pixel value and performs a scaling operation based on the current
  * screen type.
  *
+ * @function
  * @memberof ui/resolution
- * @param {Number} px - The quantity of standard-resolution pixels to scale to the
- * current screen resolution.
- * @returns {Number} The scaled value based on the current screen scaling factor
+ * @param {Number}    px    The quantity of standard-resolution pixels to scale to the
+ *                          current screen resolution.
+ * @returns {Number}        The scaled value based on the current screen scaling factor
  * @public
  */
 function scale (px) {
@@ -282,23 +314,23 @@ function scale (px) {
  * measurement method, like "rem". Other units are available if defined in the
  * {@link ui/resolution.unitToPixelFactors} object.
  *
- * ```javascript
- * var
- * 	dom = require('enyo/dom');
+ * Example:
+ * ```
+ * import ri from '@enact/ui/resolution';
  *
  * // Do calculations and get back the desired CSS unit.
  * var frameWidth = 250,
- *     frameWithMarginInches = dom.unit( 10 + frameWidth + 10, 'in' ),
- *     frameWithMarginRems = dom.unit( 10 + frameWidth + 10, 'rem' );
- * // '2.8125in' == frameWithMarginInches
- * // '22.5rem' == frameWithMarginRems
+ *     frameWithMarginInches = ri.unit( 10 + frameWidth + 10, 'in' ), // '2.8125in' == frameWithMarginInches
+ *     frameWithMarginRems = ri.unit( 10 + frameWidth + 10, 'rem' ); // '22.5rem' == frameWithMarginRems
  * ```
  *
+ * @function
  * @memberof ui/resolution
- * @param {(String|Number)} pixels - The pixels or math to convert to the unit.
- *	("px" suffix in String format is permitted. ex: `'20px'`)
- * @param {(String)} toUnit - The name of the unit to convert to.
- * @returns {(String|undefined)} Resulting conversion in CSS safe format, in case of malformed input, `undefined`
+ * @param {String|Number}     pixels    The pixels or math to convert to the unit ("px" suffix in String
+ *                                       format is permitted. ex: `'20px'`)
+ * @param {String}            toUnit    The name of the unit to convert to.
+ *
+ * @returns {String|undefined}          Resulting conversion in CSS safe format, in case of malformed input, `undefined`
  * @public
  */
 function unit (pixels, toUnit) {
@@ -315,8 +347,9 @@ function unit (pixels, toUnit) {
  *
  * @function
  * @memberof ui/resolution
- * @param {Number} pixels - The quantity of standard-resolution pixels to scale to rems
- * @returns {(Number|undefined)} Resulting conversion, in case of malformed input, `undefined`
+ * @param {Number}    pixels    The quantity of standard-resolution pixels to scale to rems
+ *
+ * @returns {String|undefined}  Resulting conversion or, in case of malformed input, `undefined`
  * @public
  */
 const scaleToRem = (pixels) => unit(scale(pixels), 'rem');
@@ -326,9 +359,9 @@ const scaleToRem = (pixels) => unit(scale(pixels), 'rem');
  *
  * @typedef {Object} selectSrcOptions
  * @memberof ui/resolution
- * @property {String} hd - HD / 720p Resolution image asset source URI/URL
- * @property {String} fhd - FHD / 1080p Resolution image asset source URI/URL
- * @property {String} uhd - UHD / 4K Resolution image asset source URI/URL
+ * @property {String}    hd    HD / 720p Resolution image asset source URI/URL
+ * @property {String}    fhd    FHD / 1080p Resolution image asset source URI/URL
+ * @property {String}    uhd    UHD / 4K Resolution image asset source URI/URL
  */
 
 /**
@@ -340,28 +373,34 @@ const scaleToRem = (pixels) => unit(scale(pixels), 'rem');
  * (keys:screen and values:src). The image sources will be used when the screen
  * resolution is less than or equal to the provided screen types.
  *
+ * Example:
  * ```
  * // Take advantage of the multi-res mode
- * var
- * 	kind = require('enyo/kind'),
- * 	Image = require('enyo/Image');
+ * import {Image} from '@enact/ui/Image';
  *
- * {kind: Image, src: {
- * 	'hd': 'http://lorempixel.com/64/64/city/1/',
- * 	'fhd': 'http://lorempixel.com/128/128/city/1/',
- * 	'uhd': 'http://lorempixel.com/256/256/city/1/'
- * }, alt: 'Multi-res'},
- *
- * // Standard string `src`
- * {kind: Image, src: http://lorempixel.com/128/128/city/1/', alt: 'Large'},
+ * const src = {
+ *     'hd': 'http://lorempixel.com/64/64/city/1/',
+ *     'fhd': 'http://lorempixel.com/128/128/city/1/',
+ *     'uhd': 'http://lorempixel.com/256/256/city/1/'
+ * };
+ * ...
+ * <Image src={src} ... />
+ * ...
  * ```
  *
+ * @function
  * @memberof ui/resolution
- * @param {(String|ui/resolution.selectSrcSrcOptions)} src - A string containing
- * a single image source or a key/value hash/object containing keys representing screen
- * types (`'hd'`, `'fhd'`, `'uhd'`, etc.) and values containing the asset source for
- * that target screen resolution.
- * @returns {String} The chosen source, given the string or hash provided
+ * @param {String|ui/resolution.selectSrcSrcOptions}    src    A string containing
+ *                                                             a single image source or
+ *                                                             a key/value hash/object
+ *                                                             containing keys representing
+ *                                                             screen types (`'hd'`, `'fhd'`,
+ *                                                             `'uhd'`, etc.) and values
+ *                                                             containing the asset source
+ *                                                             for that target screen resolution.
+ *
+ * @returns {String}                                           The chosen source, given the string
+ *                                                             or hash provided
  * @public
  */
 function selectSrc (src) {
@@ -383,11 +422,18 @@ function selectSrc (src) {
  * This will need to be re-run any time the screen size changes, so all the values can be
  * re-cached.
  *
+ * @function
  * @memberof ui/resolution
- * @returns {undefined} [description]
+ * @param {Object}    args    A hash of options. The key `measurementNode` is used to as the node,
+ *                            typically the root element, to measure and use as the dimensions for
+ *                            the `screenType`.
+ *
+ * @returns {undefined}
  * @public
  */
-function init () {
+function init (args = {}) {
+	const {measurementNode} = args;
+	updateWorkspaceBounds(measurementNode);
 	screenType = getScreenType();
 	screenTypeObject = getScreenTypeObject();
 	unitToPixelFactors.rem = getUnitToPixelFactors();

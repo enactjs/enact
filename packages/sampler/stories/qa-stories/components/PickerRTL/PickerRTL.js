@@ -1,10 +1,10 @@
 import kind from '@enact/core/kind';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Picker from '@enact/moonstone/Picker';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const PickerRTL = kind({
+const PickerRTLBase = kind({
 
 	name: 'PickerRTL',
 
@@ -28,7 +28,7 @@ const PickerRTL = kind({
 	},
 
 	computed: {
-		clientStyle: (_, {rtl}) => {
+		clientStyle: ({rtl}) => {
 			const options = {
 				incrementIcon: 'arrowlargeright',
 				decrementIcon: 'arrowlargeleft'
@@ -57,5 +57,9 @@ const PickerRTL = kind({
 	}
 });
 
-PickerRTL.contextTypes = contextTypes;
+const PickerRTL = I18nContextDecorator(
+	{rtlProp: 'rtl'},
+	PickerRTLBase
+);
+
 export default PickerRTL;

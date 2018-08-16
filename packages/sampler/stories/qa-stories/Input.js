@@ -1,10 +1,17 @@
 import {icons} from '@enact/moonstone/Icon';
 import {Input, InputBase} from '@enact/moonstone/Input';
+import ri from '@enact/ui/resolution';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+
+import {boolean, select, text} from '../../src/enact-knobs';
+
+Input.displayName = 'Input';
 
 const iconNames = ['', ...Object.keys(icons)];
+
+const divMargin = () => ({margin: ri.unit(12, 'rem')});
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -17,197 +24,169 @@ const inputData = {
 	type: ['text', 'number', 'password']
 };
 
-storiesOf('Input')
-	.addWithInfo(
+storiesOf('Input', module)
+	.add(
 		'with long text',
 		() => (
 			<Input
-				autoFocus={boolean('autoFocus')}
+				autoFocus={boolean('autoFocus', Input)}
 				onChange={action('onChange')}
-				disabled={boolean('disabled')}
-				iconAfter={select('iconAfter', iconNames)}
-				iconBefore={select('iconBefore', iconNames)}
-				invalid={boolean('invalid', false)}
-				invalidMessage={text('invalidMessage', InputBase.defaultProps.invalidMessage)}
-				noDecorator={boolean('noDecorator')}
-				placeholder={text('placeholder')}
-				type={select('type', inputData.type, inputData.type[0])}
+				disabled={boolean('disabled', Input)}
+				iconAfter={select('iconAfter', iconNames, Input)}
+				iconBefore={select('iconBefore', iconNames, Input)}
+				invalid={boolean('invalid', Input, false)}
+				invalidMessage={text('invalidMessage', Input, InputBase.defaultProps.invalidMessage)}
+				placeholder={text('placeholder', Input)}
+				type={select('type', inputData.type, Input, inputData.type[0])}
 				defaultValue={inputData.longText}
 			/>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with long placeholder',
 		() => (
 			<Input
-				autoFocus={boolean('autoFocus')}
+				autoFocus={boolean('autoFocus', Input)}
 				onChange={action('onChange')}
-				disabled={boolean('disabled')}
-				iconAfter={select('iconAfter', iconNames)}
-				iconBefore={select('iconBefore', iconNames)}
-				invalid={boolean('invalid', false)}
-				invalidMessage={text('invalidMessage', InputBase.defaultProps.invalidMessage)}
-				noDecorator={boolean('noDecorator')}
-				placeholder={text('placeholder', inputData.longPlaceHolder)}
-				type={select('type', inputData.type, inputData.type[0])}
+				disabled={boolean('disabled', Input)}
+				iconAfter={select('iconAfter', iconNames, Input)}
+				iconBefore={select('iconBefore', iconNames, Input)}
+				invalid={boolean('invalid', Input, false)}
+				invalidMessage={text('invalidMessage', Input, InputBase.defaultProps.invalidMessage)}
+				placeholder={text('placeholder', Input, inputData.longPlaceHolder)}
+				type={select('type', inputData.type, Input, inputData.type[0])}
 			/>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with tall characters',
 		() => (
 			<div>
 				<Input
-					autoFocus={boolean('autoFocus')}
+					autoFocus={boolean('autoFocus', Input)}
 					onChange={action('onChange')}
-					disabled={boolean('disabled')}
-					iconAfter={select('iconAfter', iconNames)}
-					iconBefore={select('iconBefore', iconNames)}
-					noDecorator={boolean('noDecorator')}
-					placeholder={text('placeholder', 'Input some tall characters')}
-					type={select('type', inputData.type, inputData.type[0])}
+					disabled={boolean('disabled', Input)}
+					iconAfter={select('iconAfter', iconNames, Input)}
+					iconBefore={select('iconBefore', iconNames, Input)}
+					placeholder={text('placeholder', Input, 'Input some tall characters')}
+					type={select('type', inputData.type, Input, inputData.type[0])}
 					defaultValue={inputData.tallText[0]}
 				/>
 				<Input
-					autoFocus={boolean('autoFocus')}
+					autoFocus={boolean('autoFocus', Input)}
 					onChange={action('onChange')}
-					disabled={boolean('disabled')}
-					iconAfter={select('iconAfter', iconNames)}
-					iconBefore={select('iconBefore', iconNames)}
-					noDecorator={boolean('noDecorator')}
-					placeholder={text('placeholder', 'Input some tall characters')}
-					type={select('type', inputData.type, inputData.type[0])}
+					disabled={boolean('disabled', Input)}
+					iconAfter={select('iconAfter', iconNames, Input)}
+					iconBefore={select('iconBefore', iconNames, Input)}
+					placeholder={text('placeholder', Input, 'Input some tall characters')}
+					type={select('type', inputData.type, Input, inputData.type[0])}
 					defaultValue={inputData.tallText[1]}
 				/>
 				<Input
-					autoFocus={boolean('autoFocus')}
+					autoFocus={boolean('autoFocus', Input)}
 					onChange={action('onChange')}
-					disabled={boolean('disabled')}
-					iconAfter={select('iconAfter', iconNames)}
-					iconBefore={select('iconBefore', iconNames)}
-					noDecorator={boolean('noDecorator')}
-					placeholder={text('placeholder', 'Input some tall characters')}
-					type={select('type', inputData.type, inputData.type[0])}
+					disabled={boolean('disabled', Input)}
+					iconAfter={select('iconAfter', iconNames, Input)}
+					iconBefore={select('iconBefore', iconNames, Input)}
+					placeholder={text('placeholder', Input, 'Input some tall characters')}
+					type={select('type', inputData.type, Input, inputData.type[0])}
 					defaultValue={inputData.tallText[2]}
 				/>
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with extra spacing',
 		() => (
 			<Input
-				autoFocus={boolean('autoFocus')}
+				autoFocus={boolean('autoFocus', Input)}
 				onChange={action('onChange')}
-				disabled={boolean('disabled')}
-				iconAfter={select('iconAfter', iconNames)}
-				iconBefore={select('iconBefore', iconNames)}
-				noDecorator={boolean('noDecorator')}
-				placeholder={text('placeholder')}
-				type={select('type', inputData.type, inputData.type[0])}
+				disabled={boolean('disabled', Input)}
+				iconAfter={select('iconAfter', iconNames, Input)}
+				iconBefore={select('iconBefore', iconNames, Input)}
+				placeholder={text('placeholder', Input)}
+				type={select('type', inputData.type, Input, inputData.type[0])}
 				defaultValue={inputData.extraSpaceText}
 			/>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with RTL and LTR text together',
 		() => (
 			<Input
-				autoFocus={boolean('autoFocus')}
+				autoFocus={boolean('autoFocus', Input)}
 				onChange={action('onChange')}
-				disabled={boolean('disabled')}
-				iconAfter={select('iconAfter', iconNames)}
-				iconBefore={select('iconBefore', iconNames)}
-				noDecorator={boolean('noDecorator')}
-				placeholder={text('placeholder', 'Input RTL and LTR text together')}
-				type={select('type', inputData.type, inputData.type[0])}
+				disabled={boolean('disabled', Input)}
+				iconAfter={select('iconAfter', iconNames, Input)}
+				iconBefore={select('iconBefore', iconNames, Input)}
+				placeholder={text('placeholder', Input, 'Input RTL and LTR text together')}
+				type={select('type', inputData.type, Input, inputData.type[0])}
 				defaultValue={inputData.rtlAndLtr}
 			/>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'5 way test',
 		() => (
 			<div>
-				<div>
+				<div style={divMargin()}>
 					<Input
-						autoFocus={boolean('autoFocus')}
+						autoFocus={boolean('autoFocus', Input)}
 						onChange={action('onChange')}
-						disabled={boolean('disabled')}
-						iconAfter={select('iconAfter', iconNames)}
-						iconBefore={select('iconBefore', iconNames)}
-						noDecorator={boolean('noDecorator')}
-						placeholder={text('placeholder')}
-						type={select('type', inputData.type, inputData.type[0])}
+						disabled={boolean('disabled', Input)}
+						iconAfter={select('iconAfter', iconNames, Input)}
+						iconBefore={select('iconBefore', iconNames, Input)}
+						placeholder={text('placeholder', Input)}
+						type={select('type', inputData.type, Input, inputData.type[0])}
 						defaultValue={inputData.initialValue + ' one'}
 					/>
 					<Input
-						autoFocus={boolean('autoFocus')}
+						autoFocus={boolean('autoFocus', Input)}
 						onChange={action('onChange')}
-						disabled={boolean('disabled')}
-						iconAfter={select('iconAfter', iconNames)}
-						iconBefore={select('iconBefore', iconNames)}
-						noDecorator={boolean('noDecorator')}
-						placeholder={text('placeholder')}
-						type={select('type', inputData.type, inputData.type[0])}
+						disabled={boolean('disabled', Input)}
+						iconAfter={select('iconAfter', iconNames, Input)}
+						iconBefore={select('iconBefore', iconNames, Input)}
+						placeholder={text('placeholder', Input)}
+						type={select('type', inputData.type, Input, inputData.type[0])}
 						defaultValue={inputData.initialValue + ' two'}
 					/>
 				</div>
-				<div>
+				<div style={divMargin()}>
 					<Input
-						autoFocus={boolean('autoFocus')}
+						autoFocus={boolean('autoFocus', Input)}
 						onChange={action('onChange')}
-						disabled={boolean('disabled')}
-						iconAfter={select('iconAfter', iconNames)}
-						iconBefore={select('iconBefore', iconNames)}
-						noDecorator={boolean('noDecorator')}
-						placeholder={text('placeholder')}
-						type={select('type', inputData.type, inputData.type[0])}
+						disabled={boolean('disabled', Input)}
+						iconAfter={select('iconAfter', iconNames, Input)}
+						iconBefore={select('iconBefore', iconNames, Input)}
+						placeholder={text('placeholder', Input)}
+						type={select('type', inputData.type, Input, inputData.type[0])}
 						defaultValue={inputData.initialValue + ' three'}
 					/>
 					<Input
-						autoFocus={boolean('autoFocus')}
+						autoFocus={boolean('autoFocus', Input)}
 						onChange={action('onChange')}
-						disabled={boolean('disabled')}
-						iconAfter={select('iconAfter', iconNames)}
-						iconBefore={select('iconBefore', iconNames)}
-						noDecorator={boolean('noDecorator')}
-						placeholder={text('placeholder')}
-						type={select('type', inputData.type, inputData.type[0])}
+						disabled={boolean('disabled', Input)}
+						iconAfter={select('iconAfter', iconNames, Input)}
+						iconBefore={select('iconBefore', iconNames, Input)}
+						placeholder={text('placeholder', Input)}
+						type={select('type', inputData.type, Input, inputData.type[0])}
 						defaultValue={inputData.initialValue + ' four'}
 					/>
 				</div>
 			</div>
 		)
 	)
-	.addWithInfo(
+	.add(
 		'with a range',
 		() => (
 			<Input
-				autoFocus={boolean('autoFocus')}
+				autoFocus={boolean('autoFocus', Input)}
 				onChange={action('onChange')}
-				disabled={boolean('disabled')}
-				iconAfter={select('iconAfter', iconNames)}
-				iconBefore={select('iconBefore', iconNames)}
-				noDecorator={boolean('noDecorator')}
+				disabled={boolean('disabled', Input)}
+				iconAfter={select('iconAfter', iconNames, Input)}
+				iconBefore={select('iconBefore', iconNames, Input)}
 				type={inputData.type[1]}
 				defaultValue={inputData.initialNumericValue}
-			/>
-		)
-	)
-	.addWithInfo(
-		'with long placeholder',
-		() => (
-			<Input
-				onChange={action('onChange')}
-				disabled={boolean('disabled')}
-				iconAfter={select('iconAfter', iconNames)}
-				iconBefore={select('iconBefore', iconNames)}
-				invalid={boolean('invalid', false)}
-				invalidMessage={text('invalidMessage', InputBase.defaultProps.invalidMessage)}
-				noDecorator={boolean('noDecorator')}
-				placeholder={text('placeholder', inputData.longText)}
-				type={select('type', inputData.type, inputData.type[0])}
 			/>
 		)
 	)

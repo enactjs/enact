@@ -67,14 +67,14 @@ class HourPicker extends React.Component {
 * @class TimePickerBase
 * @memberof moonstone/TimePicker
 * @ui
-* @private
+* @public
 */
 const TimePickerBase = kind({
 	name: 'TimePickerBase',
 
 	propTypes: /** @lends moonstone/TimePicker.TimePickerBase.prototype */ {
 		/**
-		 * The `hour` component of the Date
+		 * The `hour` component of the time.
 		 *
 		 * @type {Number}
 		 * @required
@@ -83,7 +83,7 @@ const TimePickerBase = kind({
 		hour: PropTypes.number.isRequired,
 
 		/**
-		 * The `minute` component of the time
+		 * The `minute` component of the time.
 		 *
 		 * @type {Number}
 		 * @required
@@ -92,8 +92,9 @@ const TimePickerBase = kind({
 		minute: PropTypes.number.isRequired,
 
 		/**
-		 * The order in which the component pickers are displayed. Should be an array of 2 or 3
-		 * strings containing one of `'h'`, `'k'`, `'m'`, and `'a'`.
+		 * The order in which the component pickers are displayed.
+		 *
+		 * Should be an array of 2 or 3 strings containing one of `'h'`, `'k'`, `'m'`, and `'a'`.
 		 *
 		 * @type {String[]}
 		 * @required
@@ -111,7 +112,34 @@ const TimePickerBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
-		 * The `meridiem` component of the time
+		 * Disables voice control.
+		 *
+		 * @type {Boolean}
+		 * @memberof moonstone/TimePicker.TimePickerBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
+
+		/**
+		 * The "aria-label" for the hour picker
+		 *
+		 * @type {String}
+		 * @default 'change a value with up down button'
+		 * @public
+		 */
+		hourAriaLabel: PropTypes.string,
+
+		/**
+		 * Sets the hint string read when focusing the hour picker.
+		 *
+		 * @type {String}
+		 * @default 'hour'
+		 * @public
+		 */
+		hourLabel: PropTypes.string,
+
+		/**
+		 * The `meridiem` component of the time.
 		 *
 		 * @type {Number}
 		 * @required
@@ -120,16 +148,24 @@ const TimePickerBase = kind({
 		meridiem: PropTypes.number,
 
 		/**
-		 * String of meridiem for picker label
+		 * The "aria-label" for the meridiem picker.
 		 *
 		 * @type {String}
-		 * @required
+		 * @default 'change a value with up down button'
+		 * @public
+		 */
+		meridiemAriaLabel: PropTypes.string,
+
+		/**
+		 * The hint string read when focusing the meridiem picker.
+		 *
+		 * @type {String}
 		 * @public
 		 */
 		meridiemLabel: PropTypes.string,
 
 		/**
-		 * Array of meridiem labels to display
+		 * Array of meridiem labels to display.
 		 *
 		 * @type {String[]}
 		 * @required
@@ -138,7 +174,25 @@ const TimePickerBase = kind({
 		meridiems: PropTypes.arrayOf(PropTypes.string),
 
 		/**
-		 * When `true`, omits the labels below the pickers
+		 * The "aria-label" for the minute picker.
+		 *
+		 * @type {String}
+		 * @default 'change a value with up down button'
+		 * @public
+		 */
+		minuteAriaLabel: PropTypes.string,
+
+		/**
+		 * Sets the hint string read when focusing the minute picker.
+		 *
+		 * @type {String}
+		 * @default 'minute'
+		 * @public
+		 */
+		minuteLabel: PropTypes.string,
+
+		/**
+		 * Omits the labels below the pickers.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -146,7 +200,7 @@ const TimePickerBase = kind({
 		noLabels: PropTypes.bool,
 
 		/**
-		 * Handler for changes in the `hour` component of the time
+		 * Called on changes in the `hour` component of the time.
 		 *
 		 * @type {Function}
 		 * @public
@@ -154,7 +208,7 @@ const TimePickerBase = kind({
 		onChangeHour: PropTypes.func,
 
 		/**
-		 * Handler for changes in the `meridiem` component of the time
+		 * Called on changes in the `meridiem` component of the time.
 		 *
 		 * @type {Function}
 		 * @public
@@ -162,7 +216,7 @@ const TimePickerBase = kind({
 		onChangeMeridiem: PropTypes.func,
 
 		/**
-		 * Handler for changes in the `minute` component of the time
+		 * Called on changes in the `minute` component of the time.
 		 *
 		 * @type {Function}
 		 * @public
@@ -170,7 +224,7 @@ const TimePickerBase = kind({
 		onChangeMinute: PropTypes.func,
 
 		/**
-		 * Callback to be called when a condition occurs which should cause the expandable to close
+		 * Called when a condition occurs which should cause the expandable to close.
 		 *
 		 * @type {Function}
 		 * @public
@@ -178,7 +232,7 @@ const TimePickerBase = kind({
 		onClose: PropTypes.func,
 
 		/**
-		 * The handler to run when the component is removed while retaining focus.
+		 * Called when the component is removed while retaining focus.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -187,7 +241,7 @@ const TimePickerBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 * Called when the focus leaves the expandable when the 5-way left key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -196,7 +250,7 @@ const TimePickerBase = kind({
 		onSpotlightLeft: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 * Called when the focus leaves the expandable when the 5-way right key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -205,7 +259,7 @@ const TimePickerBase = kind({
 		onSpotlightRight: PropTypes.func,
 
 		/**
-		 * When `true`, current locale is RTL
+		 * Set content to RTL.
 		 *
 		 * @type {Boolean}
 		 * @private
@@ -213,7 +267,7 @@ const TimePickerBase = kind({
 		rtl: PropTypes.bool,
 
 		/**
-		 * When `true`, the component cannot be navigated using spotlight.
+		 * Disables spotlight navigation into the component.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -239,17 +293,25 @@ const TimePickerBase = kind({
 	},
 
 	computed: {
-		hasMeridiem: ({order}) => order.indexOf('a') >= 0
+		hasMeridiem: ({order}) => order.indexOf('a') >= 0,
+		meridiemPickerWidth: ({meridiem, meridiems}) => meridiems[meridiem].length * 2
 	},
 
 	render: ({
+		'data-webos-voice-disabled': voiceDisabled,
 		handlePickerKeyDown,
 		hasMeridiem,
 		hour,
+		hourAriaLabel,
+		hourLabel = $L('hour'),
 		meridiem,
+		meridiemAriaLabel,
 		meridiemLabel,
+		meridiemPickerWidth,
 		meridiems,
 		minute,
+		minuteAriaLabel,
+		minuteLabel = $L('minute'),
 		noLabels,
 		onChangeHour,
 		onChangeMeridiem,
@@ -267,6 +329,7 @@ const TimePickerBase = kind({
 				{...rest}
 				showLabel="always"
 				autoClose={false}
+				data-webos-voice-disabled={voiceDisabled}
 				lockBottom={false}
 				onSpotlightDisappear={onSpotlightDisappear}
 				onSpotlightLeft={onSpotlightLeft}
@@ -290,9 +353,13 @@ const TimePickerBase = kind({
 								case 'k':
 									return (
 										<HourPicker
+											accessibilityHint={hourLabel}
+											aria-label={hourAriaLabel}
 											className={css.hourComponents}
+											data-webos-voice-disabled={voiceDisabled}
+											data-webos-voice-group-label={hourLabel}
 											key="hour-picker"
-											label={noLabels ? null : $L('hour')}
+											label={noLabels ? null : hourLabel}
 											onChange={onChangeHour}
 											onSpotlightDisappear={onSpotlightDisappear}
 											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
@@ -308,17 +375,21 @@ const TimePickerBase = kind({
 								case 'm':
 									return (
 										<DateComponentRangePicker
+											accessibilityHint={minuteLabel}
+											aria-label={minuteAriaLabel}
 											className={css.minutesComponents}
+											data-webos-voice-disabled={voiceDisabled}
+											data-webos-voice-group-label={minuteLabel}
 											key="minute-picker"
-											label={noLabels ? null : $L('minute')}
+											label={noLabels ? null : minuteLabel}
 											max={59}
 											min={0}
 											onChange={onChangeMinute}
 											onSpotlightDisappear={onSpotlightDisappear}
 											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
 											onSpotlightRight={isRight ? onSpotlightRight : null}
-											spotlightDisabled={spotlightDisabled}
 											padded
+											spotlightDisabled={spotlightDisabled}
 											value={minute}
 											width={2}
 											wrap
@@ -327,8 +398,12 @@ const TimePickerBase = kind({
 								case 'a':
 									return (
 										<DateComponentPicker
+											accessibilityHint={meridiemLabel}
+											aria-label={meridiemAriaLabel}
 											aria-valuetext={meridiems ? meridiems[meridiem] : null}
 											className={css.meridiemComponent}
+											data-webos-voice-disabled={voiceDisabled}
+											data-webos-voice-group-label={meridiemLabel}
 											key="meridiem-picker"
 											label={noLabels ? null : meridiemLabel}
 											onChange={onChangeMeridiem}
@@ -338,7 +413,7 @@ const TimePickerBase = kind({
 											reverse
 											spotlightDisabled={spotlightDisabled}
 											value={meridiem}
-											width={4}
+											width={meridiemPickerWidth}
 											wrap
 										>
 											{meridiems}

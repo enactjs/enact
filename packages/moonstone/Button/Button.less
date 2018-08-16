@@ -1,9 +1,9 @@
 // Button.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/text.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/text.less";
+@import "../styles/skin.less";
 
 // Local scope for some math variables
 & {
@@ -34,21 +34,13 @@
 
 .button {
 	.moon-large-button-text();
-	position: relative;
-	overflow: visible;
 	height: @moon-button-height;
 	line-height: (@moon-button-height - (2 * @moon-button-border-width));
 	border-radius: @moon-button-border-radius;
-	cursor: pointer;
-	white-space: nowrap;
-	display: inline-block;
-	width: auto;
 	min-width: @moon-button-height;
 	max-width: 300px;
 	padding: 0 @moon-button-h-padding;
 	margin: 0 @moon-button-h-margin;
-	box-sizing: border-box;
-	z-index: 0;
 	text-align: center;
 	vertical-align: middle;
 	.moon-taparea(@moon-button-height);
@@ -61,11 +53,7 @@
 	});
 
 	.bg {
-		.position(0);
-		position: absolute;
-		content: '';
 		background-color: inherit;
-		z-index: -1;
 		border-width: @moon-button-border-width;
 		border-style: solid;
 		border-radius: @moon-button-border-radius;
@@ -80,22 +68,12 @@
 		animation-timing-function: ease-out;
 	}
 
-	.marquee {
-		flex-grow: 1;
-		text-align: center;
-	}
-
 	.client {
 		padding: @moon-button-border-width;	// We match the amount removed by the line-height above, so the text doesn't overlap the border
-		display: flex;
-		align-items: center;
-		box-sizing: border-box;
-		height: 100%;
-		position: relative;
 
 		// Colored under-bar
 		&::before {
-			content: '';
+			content: "";
 			position: absolute;
 			min-width: 24px;
 			height: 6px;
@@ -108,6 +86,15 @@
 		.icon {
 			-webkit-margin-start: 0;
 		}
+	}
+
+	//**
+	//* The marquee container of the client area. Added by {@link moonstone/MarqueeDecorator}.
+	//* @public
+	//*/
+	.marquee {
+		flex-grow: 1;
+		text-align: center;
 	}
 
 	&.minWidth {
@@ -150,19 +137,13 @@
 		.focus({
 			&.pressed,
 			&:active {
-				&:not(.noAnimation) {
-					.bg {
-						-webkit-animation-name: expand;
-						animation-name: expand;
-					}
+				.bg {
+					-webkit-animation-name: expand;
+					animation-name: expand;
 				}
 			}
 		});
 	}
-
-	.disabled({
-		cursor: default;
-	});
 
 	// Skin colors
 	.applySkins({
@@ -202,42 +183,18 @@
 			background-color: @moon-remote-button-blue-color;
 		}
 
-		&:not([disabled]) {
-			.focus({
-				color: @moon-spotlight-text-color;
-				background-color: transparent;
+		.focus({
+			color: @moon-spotlight-text-color;
+			background-color: transparent;
 
-				.bg {
-					background-color: @moon-spotlight-border-color;
-				}
+			.bg {
+				background-color: @moon-spotlight-border-color;
+			}
 
-				&.pressed,
-				&:active {
-					&.noAnimation {
-						.bg {
-							background-color: @moon-button-bg-color;
-							border-color: @moon-spotlight-border-color;
-						}
-
-						&.translucent .bg {
-							background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
-						}
-
-						&.lightTranslucent .bg {
-							background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
-						}
-
-						&.transparent {
-							color: @moon-button-transparent-active-text-color;
-
-							.bg {
-								background-color: transparent;
-							}
-						}
-					}
-				}
+			.disabled({
+				color: @moon-spotlight-disabled-text-color;
 			});
-		}
+		});
 
 		// 'Selected' state
 		&.selected {
@@ -253,24 +210,8 @@
 					border-color: @moon-active-spotlight-border-color;
 					background-color: @moon-spotlight-border-color;
 				}
-
-				&.pressed,
-				&:active {
-					&.noAnimation {
-						.bg {
-							border-color: @moon-active-spotlight-border-color;
-						}
-					}
-				}
 			});
 		}
-
-		.disabled({
-			&.translucent,
-			&.transparent {
-				opacity: @moon-disabled-translucent-opacity;
-			}
-		});
 	});
 }
 
@@ -279,8 +220,7 @@
 		// Button-non-disabled rules
 		&:not([disabled]) {
 			.focus({
-				&.pressed,
-				&:active {
+				&.pressed {
 					.bg {
 						-webkit-animation-name: none;
 						animation-name: none;
@@ -312,15 +252,6 @@
 
 					.bg {
 						background-color: transparent;
-					}
-				}
-
-				&.pressed,
-				&:active {
-					&.noAnimation {
-						.bg {
-							border-color: transparent;
-						}
 					}
 				}
 			});

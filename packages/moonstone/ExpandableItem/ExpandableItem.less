@@ -1,0 +1,47 @@
+// ExpandableItem.less
+//
+@import '../styles/variables.less';
+@import "../styles/text.less";
+
+.expandableItem {
+	&.autoLabel {
+		min-height: @moon-body-line-height + @moon-item-line-height + (@moon-item-vertical-padding * 2);
+
+		.moon-custom-text({
+			min-height: @moon-body-line-height + @moon-item-line-height-large + (@moon-item-vertical-padding * 2);
+		});
+	}
+
+	.labeledItem {
+		&.always,
+		&.auto {
+			.label {
+				display: block;
+			}
+		}
+
+		&.never {
+			.label {
+				display: none;
+			}
+		}
+
+		.icon {
+			will-change: transform;
+		}
+	}
+
+	&.open {
+		.labeledItem {
+			&.auto {
+				.label {
+					display: none;
+				}
+			}
+
+			.icon {
+				transform: scaleY(-1);
+			}
+		}
+	}
+}

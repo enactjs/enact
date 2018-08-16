@@ -1,46 +1,53 @@
+import BodyText from '@enact/moonstone/BodyText';
 import Divider from '@enact/moonstone/Divider';
 import Item from '@enact/moonstone/Item';
 import ri from '@enact/ui/resolution';
 import Scroller from '@enact/moonstone/Scroller';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
-import {text, select} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+
+import {select, text} from '../../src/enact-knobs';
+
+Divider.displayName = 'Divider';
 
 const
 	prop = {
-		tallText: {'नरेंद्र मोदी': 'नरेंद्र मोदी', 'ฟิ้  ไั  ஒ  து': 'ฟิ้  ไั  ஒ  து', 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ': 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ'}
+		tallText: {'नरेंद्र मोदी': 'नरेंद्र मोदी', 'ฟิ้  ไั  ஒ  து': 'ฟิ้  ไั  ஒ  து', 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ': 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ'},
+		marqueeOn: ['', 'hover', 'render']
 	};
 
-storiesOf('Divider')
-	.addWithInfo(
+storiesOf('Divider', module)
+	.add(
 		'with long text',
 		() => (
-			<Divider>
-				{text('children', 'This long text is for the marquee test in divider component. This long text is for the marquee test in divider component. This long text is for the marquee test in divider component.')}
+			<Divider
+				marqueeOn={select('marqueeOn', prop.marqueeOn, Divider)}
+			>
+				{text('children', Divider, 'This long text is for the marquee test in divider component. This long text is for the marquee test in divider component. This long text is for the marquee test in divider component.')}
 			</Divider>
 		)
 	)
 
-	.addWithInfo(
+	.add(
 		'with tall characters',
 		() => (
 			<Divider>
-				{select('children', prop.tallText, 'नरेंद्र मोदी')}
+				{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}
 			</Divider>
 		)
 	)
 
-	.addWithInfo(
+	.add(
 		'with an element below',
 		() => (
 			<div>
-				<div>
+				<BodyText>
 					Adjust the spacing prop to see how the Divider is positioned with respect to the element below.
-				</div>
+				</BodyText>
 				<Divider
-					spacing={select('spacing', ['normal', 'small', 'medium', 'large', 'none'])}
+					spacing={select('spacing', ['normal', 'small', 'medium', 'large', 'none'], Divider)}
 				>
-					{text('children', 'Hello World')}
+					{text('children', Divider, 'Hello World')}
 				</Divider>
 				<Item>
 					Some content below
@@ -49,60 +56,30 @@ storiesOf('Divider')
 		)
 	)
 
-	.addWithInfo(
+	.add(
 		'Multiple',
 		() => (
 			<div>
-				<Divider>
-					First Divider
-				</Divider>
-				<Item>
-					Item 11
-				</Item>
-				<Item>
-					Item 12
-				</Item>
-				<Item>
-					Item 13
-				</Item>
-				<Divider>
-					Second Divider
-				</Divider>
-				<Item>
-					Item 21
-				</Item>
-				<Item>
-					Item 22
-				</Item>
-				<Item>
-					Item 23
-				</Item>
-				<Divider>
-					Third Divider
-				</Divider>
-				<Item>
-					Item 31
-				</Item>
-				<Item>
-					Item 32
-				</Item>
-				<Item>
-					Item 33
-				</Item>
-				<Divider>
-					Fourth Divider
-				</Divider>
-				<Item>
-					Item 41
-				</Item>
-				<Item>
-					Item 42
-				</Item>
+				<Divider>First Divider</Divider>
+				<Item>Item 11</Item>
+				<Item>Item 12</Item>
+				<Item>Item 13</Item>
+				<Divider>Second Divider</Divider>
+				<Item>Item 21</Item>
+				<Item>Item 22</Item>
+				<Item>Item 23</Item>
+				<Divider>Third Divider</Divider>
+				<Item>Item 31</Item>
+				<Item>Item 32</Item>
+				<Item>Item 33</Item>
+				<Divider>Fourth Divider</Divider>
+				<Item>Item 41</Item>
+				<Item>Item 42</Item>
 			</div>
 		)
 	)
 
-	.addWithInfo(
+	.add(
 		'Multiple Scroller',
 		() => (
 			<Scroller
@@ -119,51 +96,21 @@ storiesOf('Divider')
 						width: ri.unit(2001, 'rem')
 					}}
 				>
-					<Divider>
-						First Divider
-					</Divider>
-					<Item>
-						Item 11
-					</Item>
-					<Item>
-						Item 12
-					</Item>
-					<Item>
-						Item 13
-					</Item>
-					<Divider>
-						Second Divider
-					</Divider>
-					<Item>
-						Item 21
-					</Item>
-					<Item>
-						Item 22
-					</Item>
-					<Item>
-						Item 23
-					</Item>
-					<Divider>
-						Third Divider
-					</Divider>
-					<Item>
-						Item 31
-					</Item>
-					<Item>
-						Item 32
-					</Item>
-					<Item>
-						Item 33
-					</Item>
-					<Divider>
-						Fourth Divider
-					</Divider>
-					<Item>
-						Item 41
-					</Item>
-					<Item>
-						Item 42
-					</Item>
+					<Divider>First Divider</Divider>
+					<Item>Item 11</Item>
+					<Item>Item 12</Item>
+					<Item>Item 13</Item>
+					<Divider>Second Divider</Divider>
+					<Item>Item 21</Item>
+					<Item>Item 22</Item>
+					<Item>Item 23</Item>
+					<Divider>Third Divider</Divider>
+					<Item>Item 31</Item>
+					<Item>Item 32</Item>
+					<Item>Item 33</Item>
+					<Divider>Fourth Divider</Divider>
+					<Item>Item 41</Item>
+					<Item>Item 42</Item>
 				</div>
 			</Scroller>
 		)

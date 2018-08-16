@@ -1,4 +1,3 @@
-import deprecate from '@enact/core/internal/deprecate';
 import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -11,24 +10,16 @@ import css from './Panel.less';
 
 let panelId = 0;
 
-// Called when `noAutoFocus` is true. Warns the first time and returns the new `autoFocus` value
-const adaptToAutoFocus = deprecate(() => 'none', {
-	name: 'noAutoFocus',
-	since: '1.3.0',
-	until: '2.0.0',
-	replacedBy: 'autoFocus'
-});
-
 /**
-* {@link moonstone/Panels.Panel} is the default kind for controls created inside a
-* [moonstone/Panels]{@link moonstone/Panels.Panels} container. A `moonstone/Panels`
-* will typically contain several instances of these.
-*
-* @class Panel
-* @memberof moonstone/Panels
-* @ui
-* @public
-*/
+ * A Panel is the standard view container used inside a [Panels]{@link moonstone/Panels.Panels} view
+ * manager instance. [Panels]{@link moonstone/Panels.Panels} will typically contain several
+ * instances of these and transition between them.
+ *
+ * @class Panel
+ * @memberof moonstone/Panels
+ * @ui
+ * @public
+ */
 const PanelBase = kind({
 
 	name: 'Panel',
@@ -61,8 +52,10 @@ const PanelBase = kind({
 		autoFocus: PropTypes.string,
 
 		/**
-		 * Header for the panel. This is usually passed by the {@link ui/Slottable.Slottable} API by
-		 * using a [Header]{@link moonstone/Panels.Header} component as a child of the Panel.
+		 * Header for the panel.
+		 *
+		 * This is usually passed by the [Slottable]{@link ui/Slottable.Slottable} API by using a
+		 * [Header]{@link moonstone/Panels.Header} component as a child of the Panel.
 		 *
 		 * @type {Header}
 		 * @public
@@ -70,11 +63,11 @@ const PanelBase = kind({
 		header: PropTypes.node,
 
 		/**
-		 * When `true`, only the `header` is rendered and the body components are not. Setting to
-		 * `false` will cause all components to be rendered and the body components will fade in.
+		 * Hides the body components.
 		 *
-		 * When a Panel is used within {@link moonstone/Panels.Panels},
-		 * {@link moonstone/Panels.ActivityPanels}, or {@link moonstone/Panels.AlwaysViewingPanels},
+		 * When a Panel is used within [`Panels`]{@link moonstone/Panels.Panels},
+		 * [`ActivityPanels`]{@link moonstone/Panels.ActivityPanels}, or
+		 * [`AlwaysViewingPanels`]{@link moonstone/Panels.AlwaysViewingPanels},
 		 * this property will be set automatically to `true` on render and `false` after animating
 		 * into view.
 		 *
@@ -82,24 +75,12 @@ const PanelBase = kind({
 		 * @default false
 		 * @public
 		 */
-		hideChildren: PropTypes.bool,
-
-		/**
-		 * When `true`, the contents of the Panel will not receive spotlight focus after being
-		 * rendered.
-		 *
-		 * @deprecated Replaced by `autoFocus="none"`
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noAutoFocus: PropTypes.bool
+		hideChildren: PropTypes.bool
 	},
 
 	defaultProps: {
 		autoFocus: 'last-focused',
-		hideChildren: false,
-		noAutoFocus: false
+		hideChildren: false
 	},
 
 	styles: {
@@ -117,7 +98,7 @@ const PanelBase = kind({
 		),
 		spotOnRender: (node, {autoFocus}) => {
 			if (node && !Spotlight.getCurrent()) {
-				const {containerId} = node.dataset;
+				const {spotlightId} = node.dataset;
 				const config = {
 					enterTo: 'last-focused'
 				};
@@ -130,18 +111,14 @@ const PanelBase = kind({
 					}
 				}
 
-				Spotlight.set(containerId, config);
-				Spotlight.focus(containerId);
+				Spotlight.set(spotlightId, config);
+				Spotlight.focus(spotlightId);
 			}
 		}
 	},
 
 	computed: {
-		spotOnRender: ({autoFocus, hideChildren, noAutoFocus, spotOnRender}) => {
-			if (noAutoFocus) {
-				autoFocus = adaptToAutoFocus();
-			}
-
+		spotOnRender: ({autoFocus, hideChildren, spotOnRender}) => {
 			// In order to spot the body components, we defer spotting until !hideChildren. If the
 			// Panel opts out of hideChildren support by explicitly setting it to false, it'll spot
 			// on first render.
@@ -166,7 +143,6 @@ const PanelBase = kind({
 	render: ({bodyClassName, children, header, headerId, spotOnRender, ...rest}) => {
 		delete rest.autoFocus;
 		delete rest.hideChildren;
-		delete rest.noAutoFocus;
 
 		return (
 			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender}>

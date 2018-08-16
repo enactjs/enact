@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import SelectableItem from '../SelectableItem';
-import css from '../SelectableItem.less';
+import css from '../SelectableIcon.less';
 
 describe('SelectableItem Specs', () => {
 	it('should render no icon when not selected', function () {
@@ -11,10 +11,10 @@ describe('SelectableItem Specs', () => {
 			</SelectableItem>
 		);
 
-		const expected = css.selected;
-		const actual = selectableItem.find('Icon').prop('className');
+		const expected = 0;
+		const actual = selectableItem.find(`.${css.selected}`).length;
 
-		expect(actual).to.not.contain(expected);
+		expect(actual).to.equal(expected);
 	});
 
 	it('should render correct icon when selected', function () {
@@ -24,10 +24,10 @@ describe('SelectableItem Specs', () => {
 			</SelectableItem>
 		);
 
-		const expected = css.selected;
-		const actual = selectableItem.find('Icon').prop('className');
+		const expected = 1;
+		const actual = selectableItem.find(`.${css.selected}`).length;
 
-		expect(actual).to.contain(expected);
+		expect(actual).to.equal(expected);
 	});
 
 });

@@ -2,11 +2,157 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [2.0.2] - 2018-13-01
+
+### Fixed
+
+- `spotlight` to update pointer mode after hiding webOS VKB
+
+## [2.0.1] - 2018-08-01
+
+### Fixed
+
+- `spotlight` to not blur when pointer leaves floating webOS app while paused
+
+## [2.0.0] - 2018-07-30
+
+### Changed
+
+- `spotlight` to default to 5-way mode on initialization
+
+### Fixed
+
+- `spotlight` to blur when pointer leaves floating webOS app
+- `spotlight` to prevent changing the active container when the currently active container is restricted is "self-only"
+
+## [2.0.0-rc.3] - 2018-07-23
+
+### Fixed
+
+- `spotlight` to track pointer mode while paused
+
+## [2.0.0-rc.2] - 2018-07-16
+
+### Added
+
+- `spotlight` debugging to visualize which components will be targeted as the next component for any 5-way direction
+
+## [2.0.0-rc.1] - 2018-07-09
+
+No significant changes.
+
+## [2.0.0-beta.9] - 2018-07-02
+
+No significant changes.
+
+## [2.0.0-beta.8] - 2018-06-25
+
+### Fixed
+
+- `spotlight/Spottable` to retain focus for disabled component after updates
+- `spotlight/Spottable` to emulate `onMouseUp` events that occur immediately after a non-enter key press
+- `spotlight/Spottable` to prevent scroll on focus on webOS
+
+## [2.0.0-beta.7] - 2018-06-11
+
+No significant changes.
+
+## [2.0.0-beta.6] - 2018-06-04
+
+### Fixed
+
+- `spotlight` to provide more natural 5-way behavior
+- `spotlight` to handle pointer events only when pointer has moved
+- `spotlight` to update the last focused container when unable to set focus within that container
+- `spotlight/Spottable` to not trigger a scroll on focus on webOS
+
+## [2.0.0-beta.5] - 2018-05-29
+
+No significant changes.
+
+## [2.0.0-beta.4] - 2018-05-21
+
+### Fixed
+
+- `spotlight/Spottable` to not make components spottable when `spotlightDisabled` is set
+
+## [2.0.0-beta.3] - 2018-05-14
+
+### Fixed
+
+- `spotlight` to retry setting focus when the window is activated
+- `spotlight` handling of 5-way events after the pointer hides
+
+## [2.0.0-beta.2] - 2018-05-07
+
+### Fixed
+
+- `spotlight/Spottable` to not add a focused state when a component had already been set as disabled
+
+## [2.0.0-beta.1] - 2018-04-29
+
+### Changed
+
+- `spotlight/Spottable` to retain focus on a component when it becomes disabled while focused
+
+## [2.0.0-alpha.8] - 2018-04-17
+
+No significant changes.
+
+## [2.0.0-alpha.7 - 2018-04-03]
+
+### Fixed
+
+- `spotlight` to partition and prioritize next spottable elements for more natural 5-way behavior
+
+## [2.0.0-alpha.6] - 2018-03-22
+
+### Removed
+
+- `spotlight/SpotlightContainerDecorator` prop `containerId`, to be replaced by `spotlightId`
+
+### Added
+
+- `spotlight/Pause` module which acts as a semaphore for spotlight pause state
+- `spotlight/Spottable` prop `spotlightId` to simplify focusing components
+
+### Changed
+
+- `spotlight/Spotlight.focus` to support focusing by `spotlightId`
+- `spotlight` container attributes `data-container-disabled` and `data-container-muted` to be `data-spotlight-container-disabled` and `data-spotlight-container-muted`, respectively
+
+## [2.0.0-alpha.5] - 2018-03-07
+
+No significant changes.
+
+## [2.0.0-alpha.4] - 2018-02-13
+
+### Fixed
+
+- `spotlight/Spottable` to not remove `tabindex` from unspottable components to allow blur events to propagate as expected when a component becomes disabled
+- `spotlight/Spottable` to prevent unnecessary updates due to focus changes
+
+## [2.0.0-alpha.3] - 2018-01-18
+
+No significant changes.
+
+## [2.0.0-alpha.2] - 2017-08-29
+
+No significant changes.
+
+## [2.0.0-alpha.1] - 2017-08-27
+
+No significant changes.
+
 ## [1.15.0] - 2018-02-28
 
 No significant changes.
 
 ## [1.14.0] - 2018-02-23
+
+No significant changes.
+
+## [1.13.4] - 2018-07-30
 
 No significant changes.
 
@@ -71,7 +217,7 @@ No significant changes.
 
 ## [1.9.3] - 2017-10-03
 
-No significant changes.
+- `spotlight.Spotlight` method `focus()` to verify that the target element matches its container's selector rules prior to setting focus
 
 ## [1.9.2] - 2017-09-26
 

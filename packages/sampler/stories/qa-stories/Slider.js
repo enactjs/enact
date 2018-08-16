@@ -6,11 +6,10 @@ import Slider from '@enact/moonstone/Slider';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {storiesOf} from '@kadira/storybook';
-import {withKnobs, number} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {withKnobs, number} from '@storybook/addon-knobs';
 
 class SliderList extends React.Component {
-
 	static propTypes = {
 		itemSize: PropTypes.number
 	}
@@ -56,7 +55,7 @@ class SliderList extends React.Component {
 		this.fillItems(e.value);
 	}
 
-	renderItem = (size) => ({data, index, ...rest}) => {
+	renderItem = (size) => ({index, ...rest}) => {
 		const itemStyle = {
 			height: size + 'px',
 			borderBottom: ri.unit(3, 'rem') + ' solid #202328',
@@ -65,7 +64,7 @@ class SliderList extends React.Component {
 
 		return (
 			<Item {...rest} style={itemStyle}>
-				{data[index].item + ': ' + data[index].count}
+				{this.items[index].item + ': ' + this.items[index].count}
 			</Item>
 		);
 	}
@@ -75,22 +74,18 @@ class SliderList extends React.Component {
 			<div>
 				<Slider
 					backgroundProgress={0}
-					detachedKnob={false}
 					disabled={false}
 					max={100}
 					min={0}
 					onChange={this.handleChange}
 					step={1}
 					tooltip={false}
-					vertical={false}
 					value={this.state.value}
 				/>
 				<VirtualList
-					component={this.renderItem(this.props.itemSize)}
-					data={this.state.selectedItems}
 					dataSize={this.state.selectedItems.length}
+					itemRenderer={this.renderItem(this.props.itemSize)}
 					itemSize={this.props.itemSize}
-					spacing={ri.scale(0)}
 					style={{
 						height: ri.unit(552, 'rem')
 					}}
@@ -100,15 +95,14 @@ class SliderList extends React.Component {
 	}
 }
 
-storiesOf('Slider')
+storiesOf('Slider', module)
 	.addDecorator(withKnobs)
-	.addWithInfo(
+	.add(
 		'Add and Remove ',
 		() => {
-			const itemSize = ri.scale(number('itemSize', 72));
+			const itemSize = ri.scale(number('itemSize', Slider, 72));
 			return (
 				<SliderList itemSize={itemSize} />
 			);
 		}
 	);
-

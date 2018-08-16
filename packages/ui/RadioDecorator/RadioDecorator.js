@@ -1,6 +1,6 @@
 /**
  * Exports the {@link ui/RadioDecorator.RadioDecorator} and
- * {@link ui/RadioDecorator.RadioControllerDecorator} Higher-order Components (HOCs).
+ * {@link ui/RadioDecorator.RadioControllerDecorator} higher-order components (HOCs).
  *
  * @module ui/RadioDecorator
  */
@@ -47,7 +47,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/RadioDecorator.RadioDecorator} is a Higher-order Component that allows another
+ * {@link ui/RadioDecorator.RadioDecorator} is a higher-order component (HOC) that allows another
  * component to have a mutually exclusive relationship with other descendants of the same
  * {@link ui/RadioDecorator.RadioControllerDecorator}.
  *
@@ -89,7 +89,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.notifyController(nextProps);
 		}
 
-		componentWillUnount () {
+		componentWillUnmount () {
 			if (this.sync) {
 				this.sync = false;
 				this.context.deregisterRadioItem(this);
@@ -98,13 +98,12 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		notifyController (props) {
 			if (this.sync && prop && props[prop]) {
-				// console.log('notify', prop, deactivate);
 				this.context.activateRadioItem(this);
 			}
 		}
 
-		/**
-		 * Invoked by a RadioControllerDecorator when the wrapped component should be deactivated
+		/*
+		 * Invoked by a `RadioControllerDecorator` when the wrapped component should be deactivated
 		 *
 		 * @returns {undefined}
 		 */
@@ -139,7 +138,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				if (deactivate) props[deactivate] = this.handleDeactivate;
 			}
 
-			return <Wrapped  {...props} />;
+			return <Wrapped {...props} />;
 		}
 	};
 });

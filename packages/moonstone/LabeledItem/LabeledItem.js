@@ -1,30 +1,47 @@
 /**
- * Exports the {@link moonstone/LabeledItem.LabeledItem} component.
+ * Provides Moonstone styled item with a label below.
+ *
+ * @example
+ * <LabeledItem label="Label">Hello LabeledItem</LabeledItem>
  *
  * @module moonstone/LabeledItem
+ * @exports LabeledItem
+ * @exports LabeledItemBase
  */
 
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
+import Touchable from '@enact/ui/Touchable';
 import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
 import {ItemBase} from '../Item';
+import {Marquee, MarqueeController} from '../Marquee';
 import Skinnable from '../Skinnable';
-import {MarqueeController, MarqueeText} from '../Marquee';
 
-const Controller = MarqueeController({marqueeOnFocus: true}, Spottable(ItemBase));
+const Controller = MarqueeController(
+	{marqueeOnFocus: true},
+	Touchable(
+		Spottable(
+			ItemBase
+		)
+	)
+);
 
-import css from './LabeledItem.less';
+import componentCss from './LabeledItem.less';
 
 /**
- * {@link moonstone/LabeledItem.LabeledItemBase} is a focusable Moonstone-styled component
- * that combines marquee-able text content with a synchronized marquee-able text label.
+ * A focusable component that combines marquee-able text content with a synchronized
+ * marquee-able text label.
  *
  * @class LabeledItemBase
  * @memberof moonstone/LabeledItem
+ * @extends moonstone/Item.ItemBase
+ * @mixes spotlight/Spottable.Spottable
+ * @mixes ui/Touchable.Touchable
+ * @mixes moonstone/Marquee.MarqueeController
  * @ui
  * @public
  */
@@ -42,7 +59,22 @@ const LabeledItemBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `labeledItem` - The root class name
+		 * * `icon` - Applied to the icon
+		 * * `label` - Applied to the label
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
+
+		/**
+		 * Applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -60,28 +92,39 @@ const LabeledItemBase = kind({
 		/**
 		 * Icon to be displayed next to the title text.
 		 *
-		 * @type {String}
+		 * @type {String|Object}
 		 * @public
 		 */
-		titleIcon: PropTypes.string
+		titleIcon: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	styles: {
-		css,
-		className: 'labeleditem'
+		css: componentCss,
+		className: 'labeledItem',
+		publicClassNames: ['labeledItem', 'icon', 'label']
 	},
 
-	render: ({children, disabled, label, titleIcon, ...rest}) => (
-		<Controller disabled={disabled} {...rest}>
+	render: ({children, css, disabled, label, titleIcon, ...rest}) => (
+		<Controller disabled={disabled} {...rest} css={css}>
 			<div className={css.text}>
-				<MarqueeText disabled={disabled} className={css.title}>{children}</MarqueeText>
+				<Marquee disabled={disabled} className={css.title}>{children}</Marquee>
 				{(titleIcon != null) ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
 			</div>
-			{(label != null) ? <MarqueeText disabled={disabled} className={css.label}>{label}</MarqueeText> : null}
+			{(label != null) ? <Marquee disabled={disabled} className={css.label}>{label}</Marquee> : null}
 		</Controller>
 	)
 });
 
+/**
+ * A Moonstone styled labeled item with built-in support for marqueed text and Spotlight focus.
+ *
+ * @class LabeledItem
+ * @memberof moonstone/LabeledItem
+ * @extends moonstone/LabeledItem.LabeledItemBase
+ * @mixes moonstone/Skinnable.Skinnable
+ * @ui
+ * @public
+ */
 const LabeledItem = Pure(
 	Skinnable(
 		LabeledItemBase

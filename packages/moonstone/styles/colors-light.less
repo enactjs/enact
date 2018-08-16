@@ -26,15 +26,17 @@
 @moon-bg-color:      @moon-light-gray;
 @moon-text-color:    @moon-dark-gray;
 @moon-border-color:  @moon-dark-gray;
+@moon-overlay-text-shadow: 0 2px 2px rgba(0, 0, 0, 0.75);
 
 // Disabled Opacity
 // ---------------------------------------
-@moon-disabled-opacity: 0.3;
+@moon-disabled-opacity: 0.6;
 @moon-disabled-translucent-opacity: 0.4;
 
 // Spotlight and State
 // ---------------------------------------
 @moon-spotlight-text-color:           @moon-white;
+@moon-spotlight-disabled-text-color:  fade(@moon-spotlight-text-color, 40%);
 @moon-spotlight-text-color:           @moon-white;
 @moon-spotlight-bg-color:             @moon-accent;
 @moon-spotlight-border-color:         @moon-accent;
@@ -129,6 +131,7 @@
 // ---------------------------------------
 @moon-formcheckbox-bg-color: @moon-white;
 @moon-formcheckbox-text-color: @moon-text-color;
+@moon-formcheckbox-border-color: fade(@moon-black, 15%);
 
 // GridListImageItem
 // ---------------------------------------
@@ -160,10 +163,11 @@
 
 // Progress Bar
 // ---------------------------------------
-@moon-progress-bar-bg-color: rgba(128, 128, 128, 0.3);
-@moon-progress-bar-loaded-bg-color: rgba(86, 86, 86, 0.2);
-@moon-progress-bar-fill-bg-color: #808080;
+@moon-progress-bar-bg-color: fade(@moon-gray, 50%);
+@moon-progress-bar-loaded-bg-color: fade(@moon-text-color, 40%);
+@moon-progress-bar-fill-bg-color: @moon-text-color;
 @moon-progress-bar-tooltip-text-color: @moon-white;
+@moon-progress-bar-highlighted-fill-bg-color: @moon-spotlight-bg-color;
 
 // RadioItem
 // ---------------------------------------
@@ -216,4 +220,8 @@
 @moon-video-player-slider-load-color: fade(darken(@moon-accent, 30%), 30%);
 @moon-video-player-subdued-text-color: #ccc;
 @moon-video-player-title-color: @moon-white;
-@moon-video-player-title-text-shadow: 0 2px 2px rgba(0, 0, 0, 0.75);
+@moon-video-player-title-text-shadow: @moon-overlay-text-shadow;
+
+// Scrollable
+// ---------------------------------------
+@moon-scrollable-overscroll-color: #454545;

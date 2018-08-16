@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * Default config for {@link ui/Placeholder.PlaceholderDecorator}
+ * Default config for [PlaceholderDecorator]{@link ui/Placeholder.PlaceholderDecorator}
  *
  * @memberof ui/Placeholder.PlaceholderDecorator
  * @hocconfig
@@ -31,7 +31,7 @@ const defaultConfig = {
 
 /**
  * The context propTypes required by `PlaceholderDecorator`. This should be set as the `childContextTypes` of a
- * container so that the container could notify when scrolling
+ * container so that the container can notify when scrolling
  *
  * @memberof ui/Placeholder.PlaceholderDecorator
  * @public
@@ -43,8 +43,8 @@ const contextTypes = {
 };
 
 /**
- * {@link ui/Placeholder.PlaceholderDecorator} is a Higher-order Component that can be used that
- * a container notify the Wrapped component when scrolling.
+ * [PlaceholderDecorator]{@link ui/Placeholder.PlaceholderDecorator} is a higher-order component (HOC) that enables
+ * a container to notify the wrapped component when scrolling.
  *
  * Containers must provide `registerPlaceholder`, `unregisterPlaceholder`, and `invalidateBounds` methods via React's context for
  * `PlaceholderDecorator` instances.
@@ -58,7 +58,7 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {placeholderComponent: PlaceholderComponent, style} = config;
 	const placeholderStyle = Object.assign({}, defaultConfig.style, style);
 
-	return class extends React.Component {
+	return class extends React.PureComponent {
 		static displayName = 'PlaceholderDecorator'
 
 		static contextTypes = contextTypes
@@ -77,6 +77,13 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		componentDidUpdate (prevProps, prevState) {
+			if (this.state.visible && prevState.visible !== this.state.visible) {
+				this.context.invalidateBounds();
+				this.context.unregisterPlaceholder(this);
+			}
+		}
+
 		componentWillUnmount () {
 			if (!this.state.visible) {
 				this.context.unregisterPlaceholder(this);
@@ -87,9 +94,7 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {offsetLeft, offsetTop, offsetHeight, offsetWidth} = this.placeholderRef;
 
 			if (offsetTop < topThreshold + offsetHeight && offsetLeft < leftThreshold + offsetWidth) {
-				this.setState({visible: true});
-				this.context.invalidateBounds();
-				this.context.unregisterPlaceholder(this);
+				this.setState((state) => state.visible ? null : {visible: true});
 			}
 		}
 

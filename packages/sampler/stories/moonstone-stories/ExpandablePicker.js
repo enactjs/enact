@@ -1,29 +1,36 @@
 import ExpandablePicker, {ExpandablePickerBase} from '@enact/moonstone/ExpandablePicker';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
+import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('ExpandablePicker', ExpandablePickerBase, ExpandablePicker);
-removeProps(Config, 'onPick');
+const Config = mergeComponentMetadata('ExpandablePicker', ExpandablePicker, ExpandablePickerBase);
+ExpandablePicker.displayName = 'ExpandablePicker';
 
 const emoticons = ['💥 boom', '😩🖐 facepalm', '🍩 doughnut', '👻 ghost', '💍 ring', '🎮 videogame', '🍌🍌 bananas'];
 
-storiesOf('ExpandablePicker')
-	.addWithInfo(
-		' ',
-		'Basic usage of ExpandablePicker',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'ExpandablePicker',
+		withInfo({
+			text: 'Basic usage of ExpandablePicker'
+		})(() => (
 			<ExpandablePicker
-				title={text('title', 'Favorite Emoji')}
+				checkButtonAriaLabel={text('checkButtonAriaLabel', Config, '')}
+				decrementAriaLabel={text('decrementAriaLabel', Config, '')}
+				incrementAriaLabel={text('incrementAriaLabel', Config, '')}
+				joined={boolean('joined', Config)}
 				onChange={action('onChange')}
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}
-				width={select('width', ['small', 'medium', 'large'], 'large')}
+				pickerAriaLabel={text('pickerAriaLabel', Config, '')}
+				title={text('title', Config, 'Favorite Emoji')}
+				width={select('width', ['small', 'medium', 'large'], Config, 'large')}
 			>
 				{emoticons}
 			</ExpandablePicker>
-		),
-		{propTables: [Config]}
+		))
 	);

@@ -1,24 +1,22 @@
-import Item, {ItemBase} from '@enact/moonstone/Item';
 import LabeledItem from '@enact/moonstone/LabeledItem';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
-import {boolean, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {boolean, text} from '../../src/enact-knobs';
+LabeledItem.displayName = 'LabeledItem';
 
-const Config = mergeComponentMetadata('LabeledItem', ItemBase, Item, LabeledItem);
-
-storiesOf('LabeledItem')
-	.addWithInfo(
-		' ',
-		'Basic usage of LabeledItem',
-		() => (
+storiesOf('Moonstone', module)
+	.add(
+		'LabeledItem',
+		withInfo({
+			text: 'Basic usage of LabeledItem'
+		})(() => (
 			<LabeledItem
-				label={text('label', 'Label')}
-				disabled={boolean('disabled', false)}
+				label={text('label', LabeledItem, 'Label')}
+				disabled={boolean('disabled', LabeledItem)}
 			>
-				{text('children', 'Hello LabeledItem')}
+				{text('children', LabeledItem, 'Hello LabeledItem')}
 			</LabeledItem>
-		),
-		{propTables: [Config]}
+		))
 	);

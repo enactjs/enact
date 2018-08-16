@@ -1,0 +1,21 @@
+// Image.less
+//
+.image {
+	display: inline-block;
+	background-position: center;
+	background-repeat: no-repeat;
+
+	&.fit {
+		background-size: contain;
+	}
+
+	&.fill {
+		background-size: cover;
+	}
+
+	.img {
+		height: 0;
+		width: 0;
+		visibility: hidden;
+	}
+}

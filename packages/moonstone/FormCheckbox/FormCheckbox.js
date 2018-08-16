@@ -1,26 +1,31 @@
 /**
- * Contains the declaration for the {@link moonstone/FormCheckbox.FormCheckbox} component.
+ * Moonstone styled checkmark icon inside a circle, primarily used inside the
+ * [FormCheckboxItem]{@link moonstone/FormCheckboxItem.FormCheckboxItem}. This also has built-in
+ * `Spotlight` support since `FormCheckboxItem` is a specialized [Item]{@link moonstone/Item} that
+ * does not visually respond to focus; this child component shows focus instead.
+ *
+ * @example
+ * <FormCheckbox />
  *
  * @module moonstone/FormCheckbox
+ * @exports FormCheckbox
+ * @exports FormCheckboxBase
  */
 
 import kind from '@enact/core/kind';
-import {handle, forward} from '@enact/core/handle';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Icon from '../Icon';
-import Skinnable from '../Skinnable';
+import ToggleIcon from '../ToggleIcon';
 
-import css from './FormCheckbox.less';
+import componentCss from './FormCheckbox.less';
 
 /**
- * {@link moonstone/FormCheckbox.FormCheckbox} represents a Boolean state, and looks like a check
- * mark in a circle. It also has built-in spotlight support and is intended for use in a specialized
- * [Item]{@link moonstone/Item} that does not visually respond to focus, so this can show focus instead.
+ * A component that represents a Boolean state, and looks like a check mark in a circle.
  *
  * @class FormCheckbox
  * @memberof moonstone/FormCheckbox
+ * @extends moonstone/ToggleIcon.ToggleIcon
  * @ui
  * @public
  */
@@ -29,72 +34,37 @@ const FormCheckboxBase = kind({
 
 	propTypes: /** @lends moonstone/FormCheckbox.FormCheckbox.prototype */ {
 		/**
-		 * Sets whether this control is disabled, and non-interactive
+		 * The icon to be shown when selected.
 		 *
-		 * @type {Boolean}
-		 * @default false
+		 * May be specified as either:
+		 *
+		 * * A string that represents an icon from the [iconList]{@link ui/Icon.IconBase.iconList},
+		 * * An HTML entity string, Unicode reference or hex value (in the form '0x...'),
+		 * * A URL specifying path to an icon image, or
+		 * * An object representing a resolution independent resource (See {@link ui/resolution}).
+		 *
+		 * @type {String}
 		 * @public
 		 */
-		disabled: PropTypes.bool,
-
-		/**
-		 * The handler to run when the component is toggled.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {String} event.selected - Selected value of item.
-		 * @param {*} event.value - Value passed from `value` prop.
-		 * @public
-		 */
-		onToggle: PropTypes.func,
-
-		/**
-		 * Sets whether this control is in the "on" or "off" state. `true` for on, `false` for "off".
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		selected: PropTypes.bool
+		children: PropTypes.string,
+		css: PropTypes.object
 	},
 
 	defaultProps: {
-		selected: false,
-		disabled: false
+		children: 'check'
 	},
 
 	styles: {
-		css,
-		className: 'formCheckbox'
+		css: componentCss
 	},
 
-	handlers: {
-		onToggle: handle(
-			forward('onClick'),
-			(ev, {selected, onToggle}) => {
-				if (onToggle) {
-					onToggle({selected: !selected});
-				}
-			}
-		)
-	},
-
-	computed: {
-		className: ({selected, styler}) => styler.append({selected})
-	},
-
-	render: ({onToggle, ...rest}) => {
-		delete rest.selected;
-
-		return (
-			<div {...rest} onClick={onToggle}>
-				<Icon className={css.icon}>check</Icon>
-			</div>
-		);
-	}
+	render: ({children, css, ...rest}) => (
+		<ToggleIcon {...rest} css={css}>{children}</ToggleIcon>
+	)
 });
 
-const FormCheckbox = Skinnable(FormCheckboxBase);
-
-export default FormCheckbox;
-export {FormCheckbox, FormCheckboxBase};
+export default FormCheckboxBase;
+export {
+	FormCheckboxBase as FormCheckbox,
+	FormCheckboxBase
+};

@@ -51,7 +51,7 @@ const scenarios = {
 	disabledContainers: join(
 		someSpottables(5),
 		someContainers(5),
-		node({[containerAttribute]: 'disabled-container', 'data-container-disabled': true})
+		node({[containerAttribute]: 'disabled-container', 'data-spotlight-container-disabled': true})
 	),
 	nestedContainersWithSpottables: join(
 		someSpottables(5),
@@ -76,7 +76,7 @@ const scenarios = {
 				someSpottables(2),
 				container({
 					[containerAttribute]: 'third-container',
-					'data-container-disabled': true,
+					'data-spotlight-container-disabled': true,
 					children: join(
 						someSpottables(4),
 						node({id: 'child-of-third'})
@@ -87,12 +87,12 @@ const scenarios = {
 	),
 	spottablesInDisabledContainer: container({
 		[containerAttribute]: 'container',
-		'data-container-disabled': true,
+		'data-spotlight-container-disabled': true,
 		children: someSpottables(5)
 	}),
 	spottablesInNestedDisabledContainer: container({
 		[containerAttribute]: 'container',
-		'data-container-disabled': true,
+		'data-spotlight-container-disabled': true,
 		children: container({
 			[containerAttribute]: 'child',
 			children: someSpottables(5)
@@ -337,7 +337,7 @@ describe('container', () => {
 
 		it('should return true for nodes that have the container attribute', () => {
 			const div = document.createElement('div');
-			div.setAttribute(containerAttribute, 'my-container');
+			div.setAttribute('data-spotlight-container', 'my-container');
 
 			const expected = true;
 			const actual = isContainer(div);
@@ -521,7 +521,7 @@ describe('container', () => {
 				configureContainer('second-container');
 
 				const expected = 'second-container';
-				const actual = getContainerFocusTarget('first-container').parentNode.dataset.containerId;
+				const actual = getContainerFocusTarget('first-container').parentNode.dataset.spotlightId;
 
 				expect(actual).to.equal(expected);
 			}
@@ -945,7 +945,7 @@ describe('container', () => {
 				configureContainer('first-container', {
 					restrict: 'self-only'
 				});
-				const current = root.querySelector('[data-container-id="first-container"] .spottable');
+				const current = root.querySelector('[data-spotlight-id="first-container"] .spottable');
 				const target = root.querySelector('.spottable');
 
 				setLastContainerFromTarget(current, target);
@@ -966,8 +966,8 @@ describe('container', () => {
 				configureContainer('second-container', {
 					restrict: 'none'
 				});
-				const current = root.querySelector('[data-container-id="first-container"] .spottable');
-				const target = root.querySelector('[data-container-id="second-container"] .spottable');
+				const current = root.querySelector('[data-spotlight-id="first-container"] .spottable');
+				const target = root.querySelector('[data-spotlight-id="second-container"] .spottable');
 
 				setLastContainerFromTarget(current, target);
 
@@ -987,8 +987,8 @@ describe('container', () => {
 				configureContainer('second-container', {
 					restrict: 'none'
 				});
-				const current = root.querySelector('[data-container-id="second-container"] .spottable');
-				const target = root.querySelector('[data-container-id="first-container"]');
+				const current = root.querySelector('[data-spotlight-id="second-container"] .spottable');
+				const target = root.querySelector('[data-spotlight-id="first-container"]');
 
 				setLastContainerFromTarget(current, target);
 
@@ -1043,7 +1043,7 @@ describe('container', () => {
 		it('should not include inacive containers', testScenario(
 			scenarios.onlyContainers,
 			(root) => {
-				const {containerId} = root.querySelector('[data-container-id]').dataset;
+				const {containerId} = root.querySelector('[data-spotlight-id]').dataset;
 
 				addContainer(containerId);
 				unmountContainer(containerId);

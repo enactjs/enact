@@ -13,11 +13,12 @@ import last from 'ramda/src/last';
 
 import {matchSelector} from './utils';
 
-const containerAttribute = 'data-container-id';
+const containerAttribute = 'data-spotlight-id';
 const containerConfigs   = new Map();
-const containerKey       = 'containerId';
+const containerKey       = 'spotlightId';
+const disabledKey        = 'spotlightContainerDisabled';
 const containerPrefix    = 'container-';
-const containerSelector  = `[${containerAttribute}]`;
+const containerSelector  = '[data-spotlight-container]';
 const rootContainerId    = 'spotlightRootDecorator';
 const reverseDirections = {
 	'left': 'right',
@@ -104,7 +105,7 @@ const querySelector = (node, includeSelector, excludeSelector) => {
  * @private
  */
 const isContainerNode = (node) => {
-	return node && node.dataset && containerKey in node.dataset;
+	return node && node.dataset && 'spotlightContainer' in node.dataset;
 };
 
 /**
@@ -174,7 +175,7 @@ const isContainer = (nodeOrId) => {
  */
 const isContainerEnabled = (node) => {
 	return mapContainers(node, container => {
-		return container.dataset.containerDisabled !== 'true';
+		return container.dataset[disabledKey] !== 'true';
 	}).reduce(and, true);
 };
 
@@ -190,7 +191,7 @@ const isContainerEnabled = (node) => {
 const getContainerId = (node) => node.dataset[containerKey];
 
 /**
- * Generates a CSS selector string for a currrent container if `node` is a container
+ * Generates a CSS selector string for a current container if `node` is a container
  *
  * @param   {Node}    node  Container Node
  *
@@ -277,7 +278,7 @@ const navigableFilter = (node, containerId) => {
 const getSpottableDescendants = (containerId) => {
 	const node = getContainerNode(containerId);
 
-	// if it's falsey or is a disabled container, return an empty set
+	// if it's falsy or is a disabled container, return an empty set
 	if (!node || (isContainerNode(node) && !isContainerEnabled(node))) {
 		return [];
 	}
@@ -292,7 +293,7 @@ const getSpottableDescendants = (containerId) => {
 	const subContainerSelector = getSubContainerSelector(node);
 	const candidates = querySelector(
 		node,
-		`${spottableSelector}, ${getContainerSelector(node)} ${containerSelector}:not([data-container-disabled="true"])`,
+		`${spottableSelector}, ${getContainerSelector(node)} ${containerSelector}:not([data-spotlight-container-disabled="true"])`,
 		`${subContainerSelector} ${spottableSelector}, ${subContainerSelector} ${containerSelector}`
 	);
 
@@ -547,7 +548,7 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	const containerNode = getContainerNode(containerId);
-	if (containerNode !== document && containerNode.dataset.containerDisabled === 'true') {
+	if (containerNode !== document && containerNode.dataset[disabledKey] === 'true') {
 		return false;
 	}
 
@@ -562,7 +563,7 @@ const isNavigable = (node, containerId, verify) => {
 /**
  * Returns the IDs of all containers
  *
- * @return {String[]}  Array of container IDs
+ * @returns {String[]}  Array of container IDs
  * @memberof spotlight/container
  * @private
  */
@@ -849,6 +850,22 @@ function getLastContainer () {
 }
 
 function setLastContainer (containerId) {
+	// If the current container is restricted to 'self-only' and if the next container to be
+	// activated is not inside the currently activated container, the next container should not be
+	// activated.
+	const currentContainerId = getLastContainer();
+	if (currentContainerId) {
+		const config = getContainerConfig(currentContainerId);
+		if (config && config.restrict === 'self-only') {
+			const currentContainer = getContainerNode(currentContainerId);
+			const nextContainer = getContainerNode(containerId);
+
+			if (currentContainer && nextContainer && !currentContainer.contains(nextContainer)) {
+				return;
+			}
+		}
+	}
+
 	_lastContainerId = containerId || '';
 }
 

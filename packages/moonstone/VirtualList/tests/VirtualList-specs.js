@@ -45,10 +45,10 @@ describe('VirtualList', () => {
 			resultScrollLeft = e.scrollLeft;
 			resultScrollTop = e.scrollTop;
 		};
-		renderItem = ({data, index, ...rest}) => {	// eslint-disable-line enact/display-name, enact/prop-types
+		renderItem = ({index, ...rest}) => { // eslint-disable-line enact/display-name, enact/prop-types
 			return (
 				<Item {...rest}>
-					{data[index].name}
+					{items[index].name}
 				</Item>
 			);
 		};
@@ -79,15 +79,14 @@ describe('VirtualList', () => {
 		const subject = mount(
 			<VirtualList
 				clientSize={clientSize}
-				component={renderItem}
-				data={items}
 				dataSize={dataSize}
+				itemRenderer={renderItem}
 				itemSize={30}
 			/>
 		);
 
 		const expected = 'Account 0';
-		const actual = subject.find('VirtualListCore').children().at(0).text();
+		const actual = subject.find('[data-index]').at(0).text();
 
 		expect(actual).to.equal(expected);
 	});
@@ -96,15 +95,14 @@ describe('VirtualList', () => {
 		const subject = mount(
 			<VirtualList
 				clientSize={clientSize}
-				component={renderItem}
-				data={items}
 				dataSize={dataSize}
+				itemRenderer={renderItem}
 				itemSize={30}
 			/>
 		);
 
 		const expected = 27; // 720 / 30 + 3
-		const actual = subject.find('VirtualListCore').children().length;
+		const actual = subject.find('Item[data-index]').length;
 
 		expect(actual).to.equal(expected);
 	});
@@ -113,10 +111,9 @@ describe('VirtualList', () => {
 		const subject = mount(
 			<VirtualList
 				clientSize={clientSize}
-				component={renderItem}
-				data={items}
 				dataSize={dataSize}
 				direction="horizontal"
+				itemRenderer={renderItem}
 				itemSize={30}
 			/>
 		);
@@ -133,9 +130,8 @@ describe('VirtualList', () => {
 				<VirtualList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
-					component={renderItem}
-					data={items}
 					dataSize={dataSize}
+					itemRenderer={renderItem}
 					itemSize={30}
 					onScrollStop={handlerOnScrollStop}
 				/>
@@ -154,10 +150,9 @@ describe('VirtualList', () => {
 				<VirtualList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
-					component={renderItem}
-					data={items}
 					dataSize={dataSize}
 					direction="horizontal"
+					itemRenderer={renderItem}
 					itemSize={30}
 					onScrollStop={handlerOnScrollStop}
 				/>
@@ -176,9 +171,8 @@ describe('VirtualList', () => {
 				<VirtualList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
-					component={renderItem}
-					data={items}
 					dataSize={dataSize}
+					itemRenderer={renderItem}
 					itemSize={30}
 					onScrollStop={handlerOnScrollStop}
 				/>
@@ -198,9 +192,8 @@ describe('VirtualList', () => {
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
-						component={renderItem}
-						data={items}
 						dataSize={dataSize}
+						itemRenderer={renderItem}
 						itemSize={30}
 						onScrollStart={handlerOnScrollStart}
 					/>
@@ -219,9 +212,8 @@ describe('VirtualList', () => {
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
-						component={renderItem}
-						data={items}
 						dataSize={dataSize}
+						itemRenderer={renderItem}
 						itemSize={30}
 						onScroll={handlerOnScroll}
 					/>
@@ -240,9 +232,8 @@ describe('VirtualList', () => {
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
-						component={renderItem}
-						data={items}
 						dataSize={dataSize}
+						itemRenderer={renderItem}
 						itemSize={30}
 						onScrollStop={handlerOnScrollStop}
 					/>
@@ -261,27 +252,111 @@ describe('VirtualList', () => {
 	describe('Adding an item', () => {
 		it('should render an added item named \'Password 0\' as the first item', (done) => {
 			const itemArray = [{name: 'A'}, {name: 'B'}, {name: 'C'}];
+			const renderItemArray = ({index, ...rest}) => { // eslint-disable-line enact/display-name, enact/prop-types, react/jsx-no-bind
+				return (
+					<div {...rest} id={'item' + index}>
+						{itemArray[index].name}
+					</div>
+				);
+			};
 
 			const subject = mount(
 				<VirtualList
 					clientSize={clientSize}
-					component={renderItem}
-					data={itemArray}
 					dataSize={itemArray.length}
+					itemRenderer={renderItemArray} // eslint-disable-line react/jsx-no-bind
 					itemSize={30}
 				/>
 			);
 
 			itemArray.unshift({name: 'Password 0'});
-			subject.setProps({data: itemArray, dataSize: itemArray.length});
+			subject.setProps({dataSize: itemArray.length});
 
 			setTimeout(() => {
 				const expected = itemArray[0].name;
-				const actual = subject.find('VirtualListCore').children().at(0).text();
+				const actual = subject.find('[data-index]').at(0).text();
 
 				expect(actual).to.equal(expected);
 				done();
 			}, 0);
+		});
+	});
+
+	describe('Scrollbar accessibility', () => {
+		it('should set "aria-label" to previous scroll button in the horizontal scrollbar', function () {
+			const label = 'custom button aria label';
+			const subject = mount(
+				<VirtualList
+					clientSize={clientSize}
+					dataSize={dataSize}
+					direction="horizontal"
+					scrollLeftAriaLabel={label}
+					itemRenderer={renderItem}
+					itemSize={30}
+				/>
+			);
+
+			const expected = label;
+			const actual = subject.find('ScrollButton').at(0).prop('aria-label');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should set "aria-label" to next scroll button in the horizontal scrollbar', function () {
+			const label = 'custom button aria label';
+			const subject = mount(
+				<VirtualList
+					clientSize={clientSize}
+					dataSize={dataSize}
+					direction="horizontal"
+					scrollRightAriaLabel={label}
+					itemRenderer={renderItem}
+					itemSize={30}
+				/>
+			);
+
+			const expected = label;
+			const actual = subject.find('ScrollButton').at(1).prop('aria-label');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should set "aria-label" to previous scroll button in the vertical scrollbar', function () {
+			const label = 'custom button aria label';
+			const subject = mount(
+				<VirtualList
+					clientSize={clientSize}
+					dataSize={dataSize}
+					direction="vertical"
+					itemRenderer={renderItem}
+					itemSize={30}
+					scrollUpAriaLabel={label}
+				/>
+			);
+
+			const expected = label;
+			const actual = subject.find('ScrollButton').at(0).prop('aria-label');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should set "aria-label" to next scroll button in the vertical scrollbar', function () {
+			const label = 'custom button aria label';
+			const subject = mount(
+				<VirtualList
+					clientSize={clientSize}
+					dataSize={dataSize}
+					direction="vertical"
+					itemRenderer={renderItem}
+					itemSize={30}
+					scrollDownAriaLabel={label}
+				/>
+			);
+
+			const expected = label;
+			const actual = subject.find('ScrollButton').at(1).prop('aria-label');
+
+			expect(actual).to.equal(expected);
 		});
 	});
 });

@@ -1,29 +1,34 @@
-import Notification, {NotificationBase} from '@enact/moonstone/Notification';
+import Notification from '@enact/moonstone/Notification';
+import Popup from '@enact/moonstone/Popup';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
+import {withInfo} from '@storybook/addon-info';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {boolean, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('Notification', NotificationBase, Notification);
+const Config = mergeComponentMetadata('Notification', Notification, Popup);
 
-storiesOf('Notification')
-	.addWithInfo(
-		' ',
-		'Basic usage of Notification',
-		() => (
+Notification.displayName = 'Notification';
+
+storiesOf('Moonstone', module)
+	.add(
+		'Notification',
+		withInfo({
+			text: 'Basic usage of Notification'
+		})(() => (
 			<Notification
-				open={boolean('open', true)}
-				noAutoDismiss={boolean('noAutoDismiss', false)}
+				open={boolean('open', Config, true)}
+				noAutoDismiss={boolean('noAutoDismiss', Config)}
 				onClose={action('onClose')}
 			>
-				<span>{text('message', 'Notification has content in it and can be very useful for organizing information for the user.')}</span>
+				<span>{text('message', Config, 'Notification has content in it and can be very useful for organizing information for the user.')}</span>
 				<buttons>
 					<Button>Ok</Button>
 					<Button>Nevermind</Button>
 				</buttons>
 			</Notification>
-		),
-		{propTables: [Config]}
+		))
 	);
