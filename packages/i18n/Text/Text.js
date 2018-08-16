@@ -143,8 +143,12 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			if (!this.shouldTranslate()) {
+				const props = Object.assign({}, this.props);
+
+				delete props.locale;
+
 				return (
-					<Wrapped {...this.props} />
+					<Wrapped {...props} />
 				);
 			}
 
@@ -157,6 +161,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			const props = Object.assign({}, this.props);
+			delete props.locale;
 			Object.keys(this.state.map).forEach(prop => {
 				props[prop] = this.getTextForProp(prop);
 			});
