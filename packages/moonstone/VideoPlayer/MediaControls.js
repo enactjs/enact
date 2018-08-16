@@ -706,18 +706,6 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 		componentDidUpdate (prevProps, prevState) {
 			if (this.state.showMoreComponents !== prevState.showMoreComponents) {
 				forwardToggleMore({showMoreComponents: this.state.showMoreComponents}, this.props);
-
-				// Readout 'more' or 'back' button explicitly.
-				let selectedButton = Spotlight.getCurrent();
-				if (selectedButton === this.mediaControlsNode.querySelector(`.${css.moreButton}`)) {
-					if (this.props.visible) {
-						selectedButton.blur();
-						selectedButton.focus();
-					}
-				} else if (!this.state.showMoreComponents) {
-					// if spotlight was not in "back" button, then focus "more" button
-					Spotlight.focus(this.props.moreButtonSpotlightId);
-				}
 			}
 
 			// if media controls disabled, reset key loop
@@ -761,7 +749,6 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				mediaDisabled,
 				moreButtonColor,
 				moreButtonDisabled,
-				moreButtonSpotlightId,
 				no5WayJump,
 				noRateButtons,
 				playPauseButtonDisabled,
@@ -772,7 +759,6 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			if (mediaDisabled) return;
 
 			if (visible && moreButtonColor && !moreButtonDisabled && is(moreButtonColor, ev.keyCode)) {
-				Spotlight.focus(moreButtonSpotlightId);
 				this.toggleMoreComponents();
 			}
 
