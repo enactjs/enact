@@ -277,7 +277,7 @@ const MediaControlsBase = kind({
 		playIcon: PropTypes.string,
 
 		/**
-		 * Disables state on the media "play"/"pause" button
+		 * Disables the media "play"/"pause" button.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -317,7 +317,7 @@ const MediaControlsBase = kind({
 		spotlightDisabled: PropTypes.bool,
 
 		/**
-		 * A custom media controls container ID to use with Spotlight.
+		 * The spotlight ID for the media controls container.
 		 *
 		 * @type {String}
 		 * @public
