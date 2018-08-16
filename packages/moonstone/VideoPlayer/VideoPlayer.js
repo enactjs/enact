@@ -278,7 +278,7 @@ const VideoPlayerBase = class extends React.Component {
 		noAutoShowMediaControls: PropTypes.bool,
 
 		/**
-		 * Prevents showing media slider feedback when fast forward or rewind.
+		 * Hides media slider feedback when fast forward or rewind while media controls are hidden.
 		 *
 		 * @type {Boolean}
 		 * @default false
