@@ -3,7 +3,6 @@ import ExpandableList from '@enact/moonstone/ExpandableList';
 import Scroller from '@enact/moonstone/Scroller';
 import Item from '@enact/moonstone/Item';
 import Divider from '@enact/moonstone/Divider';
-import BodyText from '@enact/moonstone/BodyText';
 import ri from '@enact/ui/resolution';
 import Group from '@enact/ui/Group';
 import React from 'react';
@@ -60,7 +59,7 @@ storiesOf('Scroller', module)
 		'Horizontal scroll',
 		() => (
 			<Scroller
-				direction={select('direction', prop.direction, Scroller, 'vertical')}
+				direction={select('direction', prop.direction, Scroller, 'horizontal')}
 				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
 				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, Scroller, 'auto')}
 				onScrollStart={action('onScrollStart')}
@@ -156,5 +155,5 @@ storiesOf('Scroller', module)
 					{['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8', 'Option 9', 'Option 10', 'Option 11', 'Option 12', 'Option 13', 'Option 14', 'Option 15', 'Option 16', 'Option 17', 'Option 18', 'Option 19', 'Option 20']}
 				</ExpandableList>
 			</Scroller>
-	  )
-	 );
+		)
+	);
