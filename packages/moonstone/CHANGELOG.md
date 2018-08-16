@@ -7,6 +7,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/Picker` key down hold threshold to 800ms before firing the `onChange` event
+### Added
+
+- `moonstone/VideoPlayer` property `noMediaSliderFeedback`
 
 ### Fixed
 
