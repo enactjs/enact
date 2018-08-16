@@ -19,7 +19,7 @@ const
 			boxSizing: 'border-box'
 		},
 		list: {
-			height: '100%'
+			height: ri.unit(552, 'rem')
 		}
 	},
 	items = [],
