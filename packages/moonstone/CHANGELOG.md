@@ -9,6 +9,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer.MediaControls` property `playPauseButtonDisabled`
 - `moonstone/VideoPlayer` property `noMediaSliderFeedback`
 
+### Changed
+
+- `moonstone/Picker` key down hold threshold to 800ms before firing the `onChange` event
+
 ### Fixed
 
 - `moonstone/VideoPlayer` to fallback focusing on available media buttons if default spotlight component is disabled
