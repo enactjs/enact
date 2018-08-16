@@ -7,11 +7,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/VideoPlayer.MediaControls` property `playPauseButtonDisabled`
+- `moonstone/VideoPlayer` property `noMediaSliderFeedback`
 
 ### Fixed
 
 - `moonstone/VideoPlayer` to fallback focusing on available media buttons if default spotlight component is disabled
 - `moonstone/VideoPlayer` to read out `infoComponents` accessibility value when `moreButtonColor` is pressed
+- `moonstone/VideoPlayer` to round the time displayed down to nearest second
 
 ## [2.0.2] - 2018-13-01
 

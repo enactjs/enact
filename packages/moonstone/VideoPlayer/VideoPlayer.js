@@ -279,6 +279,15 @@ const VideoPlayerBase = class extends React.Component {
 		noAutoShowMediaControls: PropTypes.bool,
 
 		/**
+		 * Hides media slider feedback when fast forward or rewind while media controls are hidden.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noMediaSliderFeedback: PropTypes.bool,
+
+		/**
 		 * Removes the mini feedback.
 		 *
 		 * @type {Boolean}
@@ -974,7 +983,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			if (this.showMiniFeedback && (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider)) {
 				this.setState(({loading, duration, error}) => ({
-					mediaSliderVisible: shouldShowSlider,
+					mediaSliderVisible: shouldShowSlider && !this.props.noMediaSliderFeedback,
 					miniFeedbackVisible: !(loading || !duration || error)
 				}));
 			}
@@ -1576,7 +1585,7 @@ const VideoPlayerBase = class extends React.Component {
 		// TODO: fix Slider to not send onKnobMove when the knob hasn't, in fact, moved
 		if (this.sliderKnobProportion !== ev.proportion) {
 			this.sliderKnobProportion = ev.proportion;
-			const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
+			const seconds = Math.floor(this.sliderKnobProportion * this.video.duration);
 
 			if (!isNaN(seconds)) {
 				this.sliderTooltipTimeJob.throttle(seconds);
@@ -1590,7 +1599,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleSliderFocus = () => {
-		const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
+		const seconds = Math.floor(this.sliderKnobProportion * this.video.duration);
 		this.sliderScrubbing = true;
 
 		this.setState({
@@ -1738,6 +1747,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete mediaProps.jumpBy;
 		delete mediaProps.miniFeedbackHideDelay;
 		delete mediaProps.noAutoShowMediaControls;
+		delete mediaProps.noMediaSliderFeedback;
 		delete mediaProps.onControlsAvailable;
 		delete mediaProps.onFastForward;
 		delete mediaProps.onJumpBackward;
