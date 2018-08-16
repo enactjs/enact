@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VideoPlayer` property `noMediaSliderFeedback`
 
+### Changed
+
+- `moonstone/Icon` and `moonstone/IconButton` to require children 
+
 ### Fixed
 
 - `moonstone/VideoPlayer` to round the time displayed down to nearest second
