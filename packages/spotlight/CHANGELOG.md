@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` to always update the last focused container when it contains the focused element
+
 ## [2.0.2] - 2018-13-01
 
 ### Fixed
