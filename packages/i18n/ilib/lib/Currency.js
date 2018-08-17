@@ -94,8 +94,6 @@ var ResBundle = require("./ResBundle.js");
  * known currencies. xxx is replaced with the requested code.
  */
 var Currency = function (options) {
-	this.sync = true;
-	
 	if (options) {
 		if (options.code) {
 			this.code = options.code;
@@ -106,29 +104,32 @@ var Currency = function (options) {
 		if (options.sign) {
 			this.sign = options.sign;
 		}
-		if (typeof(options.sync) !== 'undefined') {
-			this.sync = options.sync;
-		}
 		if (options.loadParams) {
 			this.loadParams = options.loadParams;
 		}
+	} else {
+	    options = {sync: true};
 	}
+	
+    if (typeof(options.sync) === 'undefined') {
+        options.sync = true;
+    }
 	
 	this.locale = this.locale || new Locale();
 	if (typeof(ilib.data.currency) === 'undefined') {
 		Utils.loadData({
 			name: "currency.json",
-			object: Currency, 
+			object: "Currency", 
 			locale: "-",
 			sync: this.sync, 
 			loadParams: this.loadParams, 
 			callback: ilib.bind(this, function(currency) {
 				ilib.data.currency = currency;
-				this._loadLocinfo(options && options.onLoad);
+				this._loadLocinfo(options);
 			})
 		});
 	} else {
-		this._loadLocinfo(options && options.onLoad);
+		this._loadLocinfo(options);
 	}
 };
 
@@ -159,53 +160,60 @@ Currency.prototype = {
 	/**
 	 * @private
 	 */
-	_loadLocinfo: function(onLoad) {
+	_loadLocinfo: function(options) {
 		new LocaleInfo(this.locale, {
+		    sync: options.sync,
+		    loadParams: options.loadParams,
 			onLoad: ilib.bind(this, function (li) {
-				var currInfo;
-				
-				this.locinfo = li;
-		    	if (this.code) {
-		    		currInfo = ilib.data.currency[this.code];
-		    		if (!currInfo) {
-		    			throw "currency " + this.code + " is unknown";
-		    		}
-		    	} else if (this.sign) {
-		    		currInfo = ilib.data.currency[this.sign]; // maybe it is really a code...
-		    		if (typeof(currInfo) !== 'undefined') {
-		    			this.code = this.sign;
-		    		} else {
-		    			this.code = this.locinfo.getCurrency();
-		    			currInfo = ilib.data.currency[this.code];
-		    			if (currInfo.sign !== this.sign) {
-		    				// current locale does not use the sign, so search for it
-		    				for (var cur in ilib.data.currency) {
-		    					if (cur && ilib.data.currency[cur]) {
-		    						currInfo = ilib.data.currency[cur];
-		    						if (currInfo.sign === this.sign) {
-		    							// currency data is already ordered so that the currency with the
-		    							// largest circulation is at the beginning, so all we have to do
-		    							// is take the first one in the list that matches
-		    							this.code = cur;
-		    							break;
-		    						}
-		    					}
-		    				}
-		    			}
-		    		}
-		    	}
-		    	
-		    	if (!currInfo || !this.code) {
-		    		this.code = this.locinfo.getCurrency();
-		    		currInfo = ilib.data.currency[this.code];
-		    	}
-		    	
-		    	this.name = currInfo.name;
-		    	this.fractionDigits = currInfo.decimals;
-		    	this.sign = currInfo.sign;
-		    	
-				if (typeof(onLoad) === 'function') {
-					onLoad(this);
+			    var currInfo;
+
+			    this.locinfo = li;
+			    if (this.code) {
+			        currInfo = ilib.data.currency[this.code];
+			        if (!currInfo) {
+			            if (options.sync) {
+			                throw "currency " + this.code + " is unknown";
+			            } else if (typeof(options.onLoad) === "function") {
+			                options.onLoad(undefined);
+			                return;
+			            }
+			        }
+			    } else if (this.sign) {
+			        currInfo = ilib.data.currency[this.sign]; // maybe it is really a code...
+			        if (typeof(currInfo) !== 'undefined') {
+			            this.code = this.sign;
+			        } else {
+			            this.code = this.locinfo.getCurrency();
+			            currInfo = ilib.data.currency[this.code];
+			            if (currInfo.sign !== this.sign) {
+			                // current locale does not use the sign, so search for it
+			                for (var cur in ilib.data.currency) {
+			                    if (cur && ilib.data.currency[cur]) {
+			                        currInfo = ilib.data.currency[cur];
+			                        if (currInfo.sign === this.sign) {
+			                            // currency data is already ordered so that the currency with the
+			                            // largest circulation is at the beginning, so all we have to do
+			                            // is take the first one in the list that matches
+			                            this.code = cur;
+			                            break;
+			                        }
+			                    }
+			                }
+			            }
+			        }
+			    }
+
+			    if (!currInfo || !this.code) {
+			        this.code = this.locinfo.getCurrency();
+			        currInfo = ilib.data.currency[this.code];
+			    }
+
+			    this.name = currInfo.name;
+			    this.fractionDigits = currInfo.decimals;
+			    this.sign = currInfo.sign;
+
+				if (typeof(options.onLoad) === 'function') {
+				    options.onLoad(this);
 				}
 			})
 		});

@@ -30,7 +30,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'RangePicker',
 		withInfo({
-			propTablesExclude: [RangePicker],
 			text: 'Basic usage of RangePicker'
 		})(() => (
 			<RangePicker

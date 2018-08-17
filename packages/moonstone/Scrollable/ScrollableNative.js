@@ -615,8 +615,16 @@ class ScrollableBaseNative extends Component {
 	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
 	handleScrollerUpdate = () => {
 		if (this.uiRef.scrollToInfo === null && Spotlight.getPointerMode()) {
-			this.calculateAndScrollTo();
+			const scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
+			if (scrollHeight !== this.uiRef.bounds.scrollHeight) {
+				this.calculateAndScrollTo();
+			}
 		}
+
+		// oddly, Scroller manages this.uiRef.bounds so if we don't update it here (it is also
+		// updated in calculateAndScrollTo but we might not have made it to that point), it will be
+		// out of date when we land back in this method next time.
+		this.uiRef.bounds.scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 	}
 
 	clearOverscrollEffect = (orientation, edge) => {

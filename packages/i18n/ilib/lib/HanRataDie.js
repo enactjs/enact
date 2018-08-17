@@ -95,7 +95,7 @@ var HanRataDie = function(params) {
 		new HanCal({
 			sync: params && params.sync,
 			loadParams: params && params.loadParams,
-			callback: ilib.bind(this, function(c) {
+			onLoad: ilib.bind(this, function(c) {
 				this.cal = c;
 				RataDie.call(this, params);
 				if (params && typeof(params.callback) === 'function') {

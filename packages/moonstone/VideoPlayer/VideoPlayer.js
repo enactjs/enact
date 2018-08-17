@@ -18,8 +18,8 @@ import ilib from '@enact/i18n';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {toUpperCase} from '@enact/i18n/util';
 import Spotlight from '@enact/spotlight';
-import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
-import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
+import {SpotlightContainerDecorator} from '@enact/spotlight/SpotlightContainerDecorator';
+import {Spottable} from '@enact/spotlight/Spottable';
 import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ComponentOverride from '@enact/ui/ComponentOverride';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
@@ -226,6 +226,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * * `onRewind` - Called when the media is rewound via a key event
 		 * * `onToggleMore` - Called when the more components are hidden or shown
 		 * * `paused` - `true` when the media is paused
+		 * * `spotlightId` - The spotlight container Id for the media controls
 		 * * `spotlightDisabled` - `true` when spotlight is disabled for the media controls
 		 * * `visible` - `true` when the media controls should be displayed
 		 *
@@ -276,6 +277,15 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		noAutoShowMediaControls: PropTypes.bool,
+
+		/**
+		 * Hides media slider feedback when fast forward or rewind while media controls are hidden.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noMediaSliderFeedback: PropTypes.bool,
 
 		/**
 		 * Removes the mini feedback.
@@ -490,6 +500,7 @@ const VideoPlayerBase = class extends React.Component {
 		 *
 		 * @type {String}
 		 * @public
+		 * @default 'videoPlayer'
 		 */
 		spotlightId: PropTypes.string,
 
@@ -594,6 +605,7 @@ const VideoPlayerBase = class extends React.Component {
 			slowForward: ['1/4', '1/2'],
 			slowRewind: ['-1/2', '-1']
 		},
+		spotlightId: 'videoPlayer',
 		titleHideDelay: 5000,
 		videoComponent: Media
 	}
@@ -611,6 +623,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.id = this.generateId();
 		this.selectPlaybackRates('fastForward');
 		this.sliderKnobProportion = 0;
+		this.mediaControlsSpotlightId = props.spotlightId + '_mediaControls';
+		this.moreButtonSpotlightId = this.mediaControlsSpotlightId + '_moreButton';
 
 		this.initI18n();
 
@@ -699,6 +713,11 @@ const VideoPlayerBase = class extends React.Component {
 			this.context.closeAllFloatingLayers();
 		}
 
+		if (this.props.spotlightId !== prevProps.spotlightId) {
+			this.mediaControlsSpotlightId = this.props.spotlightId + '_mediaControls';
+			this.moreButtonSpotlightId = this.mediaControlsSpotlightId + '_moreButton';
+		}
+
 		if (!this.state.mediaControlsVisible && prevState.mediaControlsVisible) {
 			forwardControlsAvailable({available: false}, this.props);
 			this.stopAutoCloseTimeout();
@@ -716,7 +735,7 @@ const VideoPlayerBase = class extends React.Component {
 				const current = Spotlight.getCurrent();
 				if (!current || this.player.contains(current)) {
 					// Set focus within media controls when they become visible.
-					this.focusDefaultMediaControl();
+					Spotlight.focus(this.mediaControlsSpotlightId);
 				}
 			}
 		}
@@ -724,6 +743,15 @@ const VideoPlayerBase = class extends React.Component {
 		// Once video starts loading it queues bottom control render until idle
 		if (this.state.bottomControlsRendered && !prevState.bottomControlsRendered && !this.state.mediaControlsVisible) {
 			this.showControls();
+		}
+
+		if (this.state.mediaControlsVisible && prevState.infoVisible !== this.state.infoVisible) {
+			const current = Spotlight.getCurrent();
+			if (current && current.dataset.spotlightId === this.moreButtonSpotlightId) {
+				// need to blur manually to read out `infoComponent`
+				current.blur();
+			}
+			Spotlight.focus(this.moreButtonSpotlightId);
 		}
 	}
 
@@ -955,7 +983,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			if (this.showMiniFeedback && (!this.state.miniFeedbackVisible || this.state.mediaSliderVisible !== shouldShowSlider)) {
 				this.setState(({loading, duration, error}) => ({
-					mediaSliderVisible: shouldShowSlider,
+					mediaSliderVisible: shouldShowSlider && !this.props.noMediaSliderFeedback,
 					miniFeedbackVisible: !(loading || !duration || error)
 				}));
 			}
@@ -1532,25 +1560,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.hideControls
 	)
 
-	/**
-	 * Check for elements with the spotlightDefaultClass, in the following location order:
-	 * left components, right components, media controls or more controls (depending on which is
-	 * available)
-	 *
-	 * @returns {Node|false} The focused control or `false` if nothing is found.
-	 * @private
-	 */
-	focusDefaultMediaControl = () => {
-		const defaultSpottable = `.${spotlightDefaultClass}.${spottableClass}`;
-		const defaultControl =
-			this.player.querySelector(
-				`.${css.leftComponents} ${defaultSpottable}, .${css.rightComponents} ${defaultSpottable}`
-			) ||
-			this.player.querySelector(`[data-media-controls] ${defaultSpottable}`);
-
-		return defaultControl ? Spotlight.focus(defaultControl) : false;
-	}
-
 	//
 	// Player Interaction events
 	//
@@ -1576,7 +1585,7 @@ const VideoPlayerBase = class extends React.Component {
 		// TODO: fix Slider to not send onKnobMove when the knob hasn't, in fact, moved
 		if (this.sliderKnobProportion !== ev.proportion) {
 			this.sliderKnobProportion = ev.proportion;
-			const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
+			const seconds = Math.floor(this.sliderKnobProportion * this.video.duration);
 
 			if (!isNaN(seconds)) {
 				this.sliderTooltipTimeJob.throttle(seconds);
@@ -1590,7 +1599,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleSliderFocus = () => {
-		const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
+		const seconds = Math.floor(this.sliderKnobProportion * this.video.duration);
 		this.sliderScrubbing = true;
 
 		this.setState({
@@ -1635,7 +1644,7 @@ const VideoPlayerBase = class extends React.Component {
 		} else if (is('down', ev.keyCode)) {
 			Spotlight.setPointerMode(false);
 
-			if (this.focusDefaultMediaControl()) {
+			if (Spotlight.focus(this.mediaControlsSpotlightId)) {
 				stopImmediate(ev);
 			}
 		} else if (is('up', ev.keyCode)) {
@@ -1695,13 +1704,14 @@ const VideoPlayerBase = class extends React.Component {
 	getControlsAriaProps () {
 		if (this.state.announce === AnnounceState.TITLE) {
 			return {
-				role: 'region',
-				'aria-labelledby': `${this.id}_title`
+				'aria-labelledby': `${this.id}_title`,
+				'aria-live': 'off',
+				role: 'alert'
 			};
 		} else if (this.state.announce === AnnounceState.INFO) {
 			return {
-				role: 'region',
-				'aria-labelledby': `${this.id}_info`
+				'aria-labelledby': `${this.id}_info`,
+				role: 'region'
 			};
 		}
 
@@ -1737,6 +1747,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete mediaProps.jumpBy;
 		delete mediaProps.miniFeedbackHideDelay;
 		delete mediaProps.noAutoShowMediaControls;
+		delete mediaProps.noMediaSliderFeedback;
 		delete mediaProps.onControlsAvailable;
 		delete mediaProps.onFastForward;
 		delete mediaProps.onJumpBackward;
@@ -1865,6 +1876,7 @@ const VideoPlayerBase = class extends React.Component {
 							<ComponentOverride
 								component={mediaControlsComponent}
 								mediaDisabled={disabled || this.state.sourceUnavailable}
+								moreButtonSpotlightId={this.moreButtonSpotlightId}
 								onBackwardButtonClick={this.handleRewind}
 								onClose={this.handleMediaControlsClose}
 								onFastForward={this.handleFastForward}
@@ -1878,6 +1890,7 @@ const VideoPlayerBase = class extends React.Component {
 								onRewind={this.handleRewind}
 								onToggleMore={this.handleToggleMore}
 								paused={this.state.paused}
+								spotlightId={this.mediaControlsSpotlightId}
 								spotlightDisabled={!this.state.mediaControlsVisible || spotlightDisabled}
 								visible={this.state.mediaControlsVisible}
 							/>

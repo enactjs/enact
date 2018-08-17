@@ -1,7 +1,7 @@
 /*
- * digitalStorage.js - Unit conversions for Digital Storage
- * 
- * Copyright © 2014-2015, JEDLSoft
+ * DigitalStorageUnit.js - Unit conversions for Digital Storage
+ *
+ * Copyright © 2014-2015, 2018 JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,46 +18,33 @@
  */
 
 /*
-!depends 
+!depends
 Measurement.js
+JSUtils.js
 */
 
 var Measurement = require("./Measurement.js");
+var JSUtils = require("./JSUtils.js");
 
 /**
  * @class
  * Create a new DigitalStorage measurement instance.
- *  
+ *
  * @constructor
  * @extends Measurement
- * @param options {{unit:string,amount:number|string|undefined}} Options controlling 
+ * @param options {{unit:string,amount:number|string|undefined}} Options controlling
  * the construction of this instance
  */
 var DigitalStorageUnit = function (options) {
 	this.unit = "byte";
 	this.amount = 0;
-	this.aliases = DigitalStorageUnit.aliases; // share this table in all instances
-	
-	if (options) {
-		if (typeof(options.unit) !== 'undefined') {
-			this.originalUnit = options.unit;
-			this.unit = this.aliases[options.unit] || options.unit;
-		}
-		
-		if (typeof(options.amount) === 'object') {
-			if (options.amount.getMeasure() === "digitalStorage") {
-				this.amount = DigitalStorageUnit.convert(this.unit, options.amount.getUnit(), options.amount.getAmount());
-			} else {
-				throw "Cannot convert unit " + options.amount.unit + " to a digitalStorage";
-			}
-		} else if (typeof(options.amount) !== 'undefined') {
-			this.amount = parseFloat(options.amount);
-		}
-	}
-	
-	if (typeof(DigitalStorageUnit.ratios[this.unit]) === 'undefined') {
-		throw "Unknown unit: " + options.unit;
-	}
+
+    this.ratios = DigitalStorageUnit.ratios;
+    this.aliases = DigitalStorageUnit.aliases;
+    this.aliasesLower = DigitalStorageUnit.aliasesLower;
+    this.systems = DigitalStorageUnit.systems;
+
+    this.parent(options);
 };
 
 DigitalStorageUnit.prototype = new Measurement();
@@ -65,7 +52,7 @@ DigitalStorageUnit.prototype.parent = Measurement;
 DigitalStorageUnit.prototype.constructor = DigitalStorageUnit;
 
 DigitalStorageUnit.ratios = {
-    /*            #    bit             byte            kb              kB              mb              mB              gb               gB               tb               tB               pb               pB   */           
+    /*            #    bit             byte            kb              kB              mb              mB              gb               gB               tb               tB               pb               pB   */
 	"bit":      [ 1,   1,              0.125,          0.0009765625,   1.220703125e-4, 9.536743164e-7, 1.192092896e-7, 9.313225746e-10, 1.164153218e-10, 9.094947017e-13, 1.136868377e-13, 8.881784197e-16, 1.110223025e-16 ],
     "byte":     [ 2,   8,              1,              0.0078125,      0.0009765625,   7.629394531e-6, 9.536743164e-7, 7.450580597e-9,  9.313225746e-10, 7.275957614e-12, 9.094947017e-13, 7.105427358e-15, 8.881784197e-16 ],
     "kilobit":  [ 3,   1024,           128,            1,              0.125,          0.0009765625,   1.220703125e-4, 9.536743164e-7,  1.192092896e-7,  9.313225746e-10, 1.164153218e-10, 9.094947017e-13, 1.136868377e-13 ],
@@ -80,33 +67,54 @@ DigitalStorageUnit.ratios = {
     "petabyte": [ 12,  9.007199255e15, 1.125899907e15, 8.796093022e12, 1.099511628e12, 8589934592,     1073741824,     8388608,         1048576,         8192,            1024,            8,               1               ]
 };
 
-DigitalStorageUnit.bitSystem = {
-    "bit":      1,
-    "kilobit":  3,
-    "megabit":  5,
-    "gigabit":  7,
-    "terabit":  9,
-    "petabit":  11
+/**
+ * Return a new instance of this type of measurement.
+ * 
+ * @param {Object} params parameters to the constructor
+ * @return {Measurement} a measurement subclass instance
+ */
+DigitalStorageUnit.prototype.newUnit = function(params) {
+    return new DigitalStorageUnit(params);
 };
-DigitalStorageUnit.byteSystem = {
-    "byte":     2,
-    "kilobyte": 4,
-    "megabyte": 6,
-    "gigabyte": 8,
-    "terabyte": 10,
-    "petabyte": 12
+
+DigitalStorageUnit.systems = {
+    "metric": [],
+    "uscustomary": [],
+    "imperial": [],
+    "conversions": {
+        "metric": {},
+        "uscustomary": {},
+        "imperial": {}
+    }
 };
+
+DigitalStorageUnit.bitSystem = [
+    "bit",
+    "kilobit",
+    "megabit",
+    "gigabit",
+    "terabit",
+    "petabit"
+];
+DigitalStorageUnit.byteSystem = [
+    "byte",
+    "kilobyte",
+    "megabyte",
+    "gigabyte",
+    "terabyte",
+    "petabyte"
+];
 
 /**
  * Return the type of this measurement. Examples are "mass",
  * "length", "speed", etc. Measurements can only be converted
  * to measurements of the same type.<p>
- * 
- * The type of the units is determined automatically from the 
- * units. For example, the unit "grams" is type "mass". Use the 
+ *
+ * The type of the units is determined automatically from the
+ * units. For example, the unit "grams" is type "mass". Use the
  * static call {@link Measurement.getAvailableUnits}
  * to find out what units this version of ilib supports.
- *  
+ *
  * @return {string} the name of the type of this measurement
  */
 DigitalStorageUnit.prototype.getMeasure = function() {
@@ -114,33 +122,12 @@ DigitalStorageUnit.prototype.getMeasure = function() {
 };
 
 /**
- * Return a new measurement instance that is converted to a new
- * measurement unit. Measurements can only be converted
- * to measurements of the same type.<p>
- *  
- * @param {string} to The name of the units to convert to
- * @return {Measurement|undefined} the converted measurement
- * or undefined if the requested units are for a different
- * measurement type
- * 
- */
-DigitalStorageUnit.prototype.convert = function(to) {
-	if (!to || typeof(DigitalStorageUnit.ratios[this.normalizeUnits(to)]) === 'undefined') {
-		return undefined;
-	}
-	return new DigitalStorageUnit({
-		unit: to,
-		amount: this
-	});
-};
-
-/**
  * Localize the measurement to the commonly used measurement in that locale. For example
- * If a user's locale is "en-US" and the measurement is given as "60 kmh", 
- * the formatted number should be automatically converted to the most appropriate 
+ * If a user's locale is "en-US" and the measurement is given as "60 kmh",
+ * the formatted number should be automatically converted to the most appropriate
  * measure in the other system, in this case, mph. The formatted result should
- * appear as "37.3 mph". 
- * 
+ * appear as "37.3 mph".
+ *
  * @param {string} locale current locale string
  * @returns {Measurement} a new instance that is converted to locale
  */
@@ -154,42 +141,68 @@ DigitalStorageUnit.prototype.localize = function(locale) {
 /**
  * Scale the measurement unit to an acceptable level. The scaling
  * happens so that the integer part of the amount is as small as
- * possible without being below zero. This will result in the 
+ * possible without being below zero. This will result in the
  * largest units that can represent this measurement without
- * fractions. Measurements can only be scaled to other measurements 
+ * fractions. Measurements can only be scaled to other measurements
  * of the same type.
- * 
+ *
  * @param {string=} measurementsystem system to use (uscustomary|imperial|metric),
  * or undefined if the system can be inferred from the current measure
- * @return {Measurement} a new instance that is scaled to the 
+ * @param {Object=} units mapping from the measurement system to the units to use
+ * for this scaling. If this is not defined, this measurement type will use the
+ * set of units that it knows about for the given measurement system
+ * @return {Measurement} a new instance that is scaled to the
  * right level
  */
-DigitalStorageUnit.prototype.scale = function(measurementsystem) {
-    var mSystem;
-    if (this.unit in DigitalStorageUnit.bitSystem) {
-    	mSystem = DigitalStorageUnit.bitSystem;
+DigitalStorageUnit.prototype.scale = function(measurementsystem, units) {
+    var mSystem, systemName = this.getMeasurementSystem();
+    if (units) {
+        mSystem = units[systemName];
     } else {
-    	mSystem = DigitalStorageUnit.byteSystem;
-    }
-    
-    var dStorage = this.amount;
-    var munit = this.unit;
-    var fromRow = DigitalStorageUnit.ratios[this.unit];
-    
-    dStorage = 18446744073709551999;
-    for (var m in mSystem) {
-    	var tmp = this.amount * fromRow[mSystem[m]];
-        if (tmp >= 1 && tmp < dStorage) {
-        	dStorage = tmp;
-	        munit = m;
+        if (JSUtils.indexOf(DigitalStorageUnit.byteSystem, this.unit) > -1) {
+            mSystem = DigitalStorageUnit.byteSystem;
+        } else {
+            mSystem = DigitalStorageUnit.bitSystem;
         }
     }
     
-    return new DigitalStorageUnit({
-		unit: munit,
-		amount: dStorage
+    return this.newUnit(this.scaleUnits(mSystem));
+};
+
+/**
+ * Expand the current measurement such that any fractions of the current unit
+ * are represented in terms of smaller units in the same system instead of fractions
+ * of the current unit. For example, "6.25 feet" may be represented as
+ * "6 feet 4 inches" instead. The return value is an array of measurements which
+ * are progressively smaller until the smallest unit in the system is reached
+ * or until there is a whole number of any unit along the way.
+ *
+ * @param {string=} measurementsystem system to use (uscustomary|imperial|metric),
+ * or undefined if the system can be inferred from the current measure
+ * @param {Object=} units mapping from the measurement system to the units to use
+ * for this scaling. If this is not defined, this measurement type will use the
+ * set of units that it knows about for the given measurement system
+ * @return {Array.<Measurement>} an array of new measurements in order from
+ * the current units to the smallest units in the system which together are the
+ * same measurement as this one
+ */
+DigitalStorageUnit.prototype.expand = function(measurementsystem, units) {
+    var mSystem, systemName = this.getMeasurementSystem();
+    if (units) {
+        mSystem = units[systemName];
+    } else {
+        if (this.unit in DigitalStorageUnit.byteSystem) {
+            mSystem = DigitalStorageUnit.byteSystem;
+        } else {
+            mSystem = DigitalStorageUnit.bitSystem;
+        }
+    }
+
+    return this.list(mSystem, DigitalStorageUnit.ratios).map(function(item) {
+        return new DigitalStorageUnit(item);
     });
 };
+
 
 DigitalStorageUnit.aliases = {
     "bits": "bit",
@@ -302,6 +315,13 @@ DigitalStorageUnit.aliases = {
     "pB": "petabyte"
 };
 
+(function() {
+    DigitalStorageUnit.aliasesLower = {};
+    for (var a in DigitalStorageUnit.aliases) {
+        DigitalStorageUnit.aliasesLower[a.toLowerCase()] = DigitalStorageUnit.aliases[a];
+    }
+})();
+
 /**
  * Convert a digitalStorage to another measure.
  * @static
@@ -311,13 +331,13 @@ DigitalStorageUnit.aliases = {
  * @returns {number|undefined} the converted amount
  */
 DigitalStorageUnit.convert = function(to, from, digitalStorage) {
-    from = DigitalStorageUnit.aliases[from] || from;
-    to = DigitalStorageUnit.aliases[to] || to;
+    from = Measurement.getUnitIdCaseInsensitive(DigitalStorageUnit, from) || from;
+    to = Measurement.getUnitIdCaseInsensitive(DigitalStorageUnit, to) || to;
 	var fromRow = DigitalStorageUnit.ratios[from];
 	var toRow = DigitalStorageUnit.ratios[to];
 	if (typeof(from) === 'undefined' || typeof(to) === 'undefined') {
 		return undefined;
-	}	
+	}
 	var result = digitalStorage * fromRow[toRow[0]];
     return result;
 };
@@ -327,11 +347,7 @@ DigitalStorageUnit.convert = function(to, from, digitalStorage) {
  * @static
  */
 DigitalStorageUnit.getMeasures = function () {
-	var ret = [];
-	for (var m in DigitalStorageUnit.ratios) {
-		ret.push(m);
-	}
-	return ret;
+    return Object.keys(DigitalStorageUnit.ratios);
 };
 
 //register with the factory method

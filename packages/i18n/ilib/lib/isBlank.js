@@ -1,6 +1,6 @@
 /*
  * isBlank.js - Character type is blank
- * 
+ *
  * Copyright © 2012-2015, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,7 @@ var IString = require("./IString.js");
 
 /**
  * Return whether or not the first character is a blank character.<p>
- * 
+ *
  * @static
  * ie. a space or a tab.
  * @param {string|IString|number} ch character or code point to examine
@@ -48,7 +48,7 @@ var isBlank = function (ch) {
 			num = ch._toCodePoint(0);
 			break;
 	}
-	return CType._inRange(num, 'blank', ilib.data.ctype);
+	return ilib.data.ctype ? CType._inRange(num, 'blank', ilib.data.ctype) : (ch === ' ' || ch === '\t');
 };
 
 /**

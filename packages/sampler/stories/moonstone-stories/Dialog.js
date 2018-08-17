@@ -17,7 +17,6 @@ storiesOf('Moonstone', module)
 	.add(
 		'Dialog',
 		withInfo({
-			propTablesExclude: [BodyText, Button, Dialog],
 			text: 'Basic usage of Dialog'
 		})(() => (
 			<div>

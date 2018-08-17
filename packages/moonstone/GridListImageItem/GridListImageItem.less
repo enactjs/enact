@@ -21,39 +21,10 @@
 		opacity: 0.5;
 	}
 
-	.image {
-		display: block; // leaving this to prevent whitespace between inline-block elements
-		width: 100%;
-		height: 100%;
-		margin: 0;
-	}
-
-	.overlayComponent {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		height: 100%;
-	}
-
-	.overlayContainer {
-		background-color: transparent;
-		pointer-events: none;
-		height: 100%;
-	}
-
 	&.selected {
 		.icon {
 			opacity: 1;
 		}
-	}
-
-	&.useCaption,
-	&.useSubCaption {
-		padding-bottom: @moon-gridlist-item-one-caption-padding-bottom;
-	}
-
-	&.useCaption.useSubCaption {
-		padding-bottom: @moon-gridlist-item-two-captions-padding-bottom;
 	}
 
 	.caption {

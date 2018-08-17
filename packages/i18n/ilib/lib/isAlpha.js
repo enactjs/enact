@@ -1,6 +1,6 @@
 /*
  * ctype.islpha.js - Character type is alphabetic
- * 
+ *
  * Copyright © 2012-2015, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,7 @@ var IString = require("./IString.js");
 
 /**
  * Return whether or not the first character is alphabetic.<p>
- * 
+ *
  * @static
  * @param {string|IString|number} ch character or code point to examine
  * @return {boolean} true if the first character is alphabetic.
@@ -47,11 +47,13 @@ var isAlpha = function (ch) {
 			num = ch._toCodePoint(0);
 			break;
 	}
-	return CType._inRange(num, 'Lu', ilib.data.ctype_l) ||
+	return ilib.data.ctype_l ?
+	    (CType._inRange(num, 'Lu', ilib.data.ctype_l) ||
 		CType._inRange(num, 'Ll', ilib.data.ctype_l) ||
 		CType._inRange(num, 'Lt', ilib.data.ctype_l) ||
 		CType._inRange(num, 'Lm', ilib.data.ctype_l) ||
-		CType._inRange(num, 'Lo', ilib.data.ctype_l);
+		CType._inRange(num, 'Lo', ilib.data.ctype_l)) :
+		((num >= 0x41 && num <= 0x5A) || (num >= 0x61 && num <= 0x7A));
 };
 
 /**
