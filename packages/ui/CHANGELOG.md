@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
-- `moonstone/Icon` and `moonstone/labeledIcon` to require children
+- `ui/Icon` to require children
 
 ## [2.0.2] - 2018-13-01
 

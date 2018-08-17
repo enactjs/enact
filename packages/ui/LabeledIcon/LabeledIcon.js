@@ -39,7 +39,7 @@ const LabeledIconBase = kind({
 		 * @type {Node}
 		 * @public
 		 */
-		children: PropTypes.node.isRequired,
+		children: PropTypes.node,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
