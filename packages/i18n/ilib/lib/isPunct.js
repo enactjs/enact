@@ -1,6 +1,6 @@
 /*
  * isPunct.js - Character type is punctuation
- * 
+ *
  * Copyright © 2012-2015, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,7 @@ var IString = require("./IString.js");
 
 /**
  * Return whether or not the first character is punctuation.<p>
- * 
+ *
  * @static
  * @param {string|IString|number} ch character or code point to examine
  * @return {boolean} true if the first character is punctuation.
@@ -49,13 +49,18 @@ var isPunct = function (ch) {
 			break;
 	}
 
-	return CType._inRange(num, 'Pd', ilib.data.ctype_p) ||
+	return ilib.data.ctype_p ?
+	    (CType._inRange(num, 'Pd', ilib.data.ctype_p) ||
 		CType._inRange(num, 'Ps', ilib.data.ctype_p) ||
 		CType._inRange(num, 'Pe', ilib.data.ctype_p) ||
 		CType._inRange(num, 'Pc', ilib.data.ctype_p) ||
 		CType._inRange(num, 'Po', ilib.data.ctype_p) ||
 		CType._inRange(num, 'Pi', ilib.data.ctype_p) ||
-		CType._inRange(num, 'Pf', ilib.data.ctype_p);
+		CType._inRange(num, 'Pf', ilib.data.ctype_p)) :
+		((num >= 0x21 && num <= 0x2F) ||
+		(num >= 0x3A && num <= 0x40) ||
+		(num >= 0x5B && num <= 0x60) ||
+		(num >= 0x7B && num <= 0x7E));
 };
 
 /**

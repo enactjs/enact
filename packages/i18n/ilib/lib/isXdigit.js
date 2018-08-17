@@ -1,6 +1,6 @@
 /*
  * isXdigit.js - Character type is hex digit
- * 
+ *
  * Copyright © 2012-2015, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +29,7 @@ var IString = require("./IString.js");
 /**
  * Return whether or not the first character is a hexadecimal digit written
  * in the Latin script. (0-9 or A-F)<p>
- * 
+ *
  * @static
  * @param {string|IString|number} ch character or code point to examine
  * @return {boolean} true if the first character is a hexadecimal digit written
@@ -51,7 +51,8 @@ var isXdigit = function (ch) {
 			break;
 	}
 
-	return CType._inRange(num, 'xdigit', ilib.data.ctype);
+	return ilib.data.ctype ? CType._inRange(num, 'xdigit', ilib.data.ctype) :
+	    ((num >= 0x30 && num <= 0x39) || (num >= 0x41 && num <= 0x46) || (num >= 0x61 && num <= 0x66));
 };
 
 /**

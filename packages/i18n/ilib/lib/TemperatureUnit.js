@@ -1,7 +1,7 @@
 /*
- * temperature.js - Unit conversions for Temperature/temperature
- * 
- * Copyright © 2014-2015, JEDLSoft
+ * TemperatureUnit.js - Unit conversions for temperature measurements
+ *
+ * Copyright © 2014-2015, 2018 JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  */
 
 /*
-!depends 
+!depends
 Measurement.js
 */
 
@@ -27,67 +27,103 @@ var Measurement = require("./Measurement.js");
 /**
  * @class
  * Create a new Temperature measurement instance.
- *  
+ *
  * @constructor
  * @extends Measurement
- * @param options {{unit:string,amount:number|string|undefined}} Options controlling 
+ * @param options {{unit:string,amount:number|string|undefined}} Options controlling
  * the construction of this instance
  */
 var TemperatureUnit = function (options) {
-	this.unit = "celsius";
-	this.amount = 0;
-	this.aliases = TemperatureUnit.aliases; // share this table in all instances
+    this.unit = "celsius";
+    this.amount = 0;
 
-	if (options) {
-		if (typeof(options.unit) !== 'undefined') {
-			this.originalUnit = options.unit;
-			this.unit = this.aliases[options.unit] || options.unit;
-		}
+    this.ratios = TemperatureUnit.ratios;
+    this.aliases = TemperatureUnit.aliases;
+    this.aliasesLower = TemperatureUnit.aliasesLower;
+    this.systems = TemperatureUnit.systems;
 
-		if (typeof(options.amount) === 'object') {
-			if (options.amount.getMeasure() === "temperature") {
-				this.amount = TemperatureUnit.convert(this.unit, options.amount.getUnit(), options.amount.getAmount());
-			} else {
-				throw "Cannot convert unit " + options.amount.unit + " to a temperature";
-			}
-		} else if (typeof(options.amount) !== 'undefined') {
-			this.amount = parseFloat(options.amount);
-		}
-	}
+    this.parent(options);
 };
 
 TemperatureUnit.prototype = new Measurement();
 TemperatureUnit.prototype.parent = Measurement;
 TemperatureUnit.prototype.constructor = TemperatureUnit;
 
+TemperatureUnit.ratios = {
+    /*            index, C            K            F   */
+    "celsius":    [ 1,   1,           1,           9/5 ],
+    "kelvin":     [ 2,   1,           1,           9/5 ],
+    "fahrenheit": [ 3,   5/9,         5/9,         1   ]
+};
+
 /**
  * Return the type of this measurement. Examples are "mass",
  * "length", "speed", etc. Measurements can only be converted
  * to measurements of the same type.<p>
- * 
- * The type of the units is determined automatically from the 
- * units. For example, the unit "grams" is type "mass". Use the 
+ *
+ * The type of the units is determined automatically from the
+ * units. For example, the unit "grams" is type "mass". Use the
  * static call {@link Measurement.getAvailableUnits}
  * to find out what units this version of ilib supports.
- *  
+ *
  * @return {string} the name of the type of this measurement
  */
 TemperatureUnit.prototype.getMeasure = function() {
 	return "temperature";
 };
 
+/**
+ * Return a new instance of this type of measurement.
+ *
+ * @param {Object} params parameters to the constructor
+ * @return {Measurement} a measurement subclass instance
+ */
+TemperatureUnit.prototype.newUnit = function(params) {
+    return new TemperatureUnit(params);
+};
+
+TemperatureUnit.systems = {
+    "metric": [
+        "celsius",
+        "kelvin"
+    ],
+    "uscustomary": [
+        "fahrenheit"
+    ],
+    "imperial": [
+        "fahrenheit"
+    ],
+    "conversions": {
+        "metric": {
+            "uscustomary": {
+                "celsius": "fahrenheit",
+                "kelvin": "fahrenheit"
+            },
+            "imperial": {
+                "celsius": "fahrenheit",
+                "kelvin": "fahrenheit"
+            }
+        },
+        "uscustomary": {
+            "metric": {
+                "fahrenheit": "celsius"
+            }
+        },
+        "imperial": {
+            "metric": {
+                "fahrenheit": "celsius"
+            }
+        }
+    }
+};
+
 TemperatureUnit.aliases = {
     "Celsius": "celsius",
-    "celsius": "celsius",
     "C": "celsius",
-    "centegrade": "celsius",
     "Centegrade": "celsius",
-    "centigrade": "celsius",
     "Centigrade": "celsius",
-    "fahrenheit": "fahrenheit",
     "Fahrenheit": "fahrenheit",
     "F": "fahrenheit",
-    "kelvin": "kelvin",
     "K": "kelvin",
     "Kelvin": "kelvin",
     "°F": "fahrenheit",
@@ -96,24 +132,28 @@ TemperatureUnit.aliases = {
     "°C": "celsius"
 };
 
+(function() {
+    TemperatureUnit.aliasesLower = {};
+    for (var a in TemperatureUnit.aliases) {
+        TemperatureUnit.aliasesLower[a.toLowerCase()] = TemperatureUnit.aliases[a];
+    }
+})();
+
 /**
  * Return a new measurement instance that is converted to a new
  * measurement unit. Measurements can only be converted
  * to measurements of the same type.<p>
- *  
+ *
  * @param {string} to The name of the units to convert to
  * @return {Measurement|undefined} the converted measurement
  * or undefined if the requested units are for a different
- * measurement type 
+ * measurement type
  */
 TemperatureUnit.prototype.convert = function(to) {
-	if (!to || typeof(TemperatureUnit.ratios[this.normalizeUnits(to)]) === 'undefined') {
-		return undefined;
-	}
-	return new TemperatureUnit({
-		unit: to,
-		amount: this
-	});
+    if (!to || typeof(TemperatureUnit.ratios[this.normalizeUnits(to)]) === 'undefined') {
+        return undefined;
+    }
+    return TemperatureUnit.convert(to, this.unit, this.amount);
 };
 
 /**
@@ -125,92 +165,60 @@ TemperatureUnit.prototype.convert = function(to) {
  * @returns {number|undefined} the converted amount
  */
 TemperatureUnit.convert = function(to, from, temperature) {
-	var result = 0;
-	from = TemperatureUnit.aliases[from] || from;
-	to = TemperatureUnit.aliases[to] || to;
-	if (from === to)
-		return temperature;
+    var result = 0;
+    from = Measurement.getUnitIdCaseInsensitive(TemperatureUnit, from) || from;
+    to = Measurement.getUnitIdCaseInsensitive(TemperatureUnit, to) || to;
+    if (from === to) {
+        return temperature;
+    } else if (from === "celsius") {
+        if (to === "fahrenheit") {
+            result = ((temperature * 9 / 5) + 32);
+        } else if (to === "kelvin") {
+            result = (temperature + 273.15);
+        }
+    } else if (from === "fahrenheit") {
+        if (to === "celsius") {
+            result = ((5 / 9 * (temperature - 32)));
+        } else if (to === "kelvin") {
+            result = ((temperature + 459.67) * 5 / 9);
+        }
+    } else if (from === "kelvin") {
+        if (to === "celsius") {
+            result = (temperature - 273.15);
+        } else if (to === "fahrenheit") {
+            result = ((temperature * 9 / 5) - 459.67);
+        }
+    }
 
-	else if (from === "celsius") {
-		if (to === "fahrenheit") {
-			result = ((temperature * 9 / 5) + 32);
-		} else if (to === "kelvin") {
-			result = (temperature + 273.15);
-		}
-
-	} else if (from === "fahrenheit") {
-		if (to === "celsius") {
-			result = ((5 / 9 * (temperature - 32)));
-		} else if (to === "kelvin") {
-			result = ((temperature + 459.67) * 5 / 9);
-		}
-	} else if (from === "kelvin") {
-		if (to === "celsius") {
-			result = (temperature - 273.15);
-		} else if (to === "fahrenheit") {
-			result = ((temperature * 9 / 5) - 459.67);
-		}
-	}
-
-	return result;
+    return result;
 };
 
 /**
  * Scale the measurement unit to an acceptable level. The scaling
  * happens so that the integer part of the amount is as small as
- * possible without being below zero. This will result in the 
+ * possible without being below zero. This will result in the
  * largest units that can represent this measurement without
- * fractions. Measurements can only be scaled to other measurements 
+ * fractions. Measurements can only be scaled to other measurements
  * of the same type.
- * 
+ *
  * @param {string=} measurementsystem system to use (uscustomary|imperial|metric),
  * or undefined if the system can be inferred from the current measure
- * @return {Measurement} a new instance that is scaled to the 
+ * @return {Measurement} a new instance that is scaled to the
  * right level
  */
 TemperatureUnit.prototype.scale = function(measurementsystem) {
-    return new TemperatureUnit({
-        unit: this.unit,
-        amount: this.amount
-    }); 
-};
+    // no scaling for temp units
+    return this;
+ };
 
 /**
  * @private
  * @static
  */
 TemperatureUnit.getMeasures = function () {
-	return ["celsius", "kelvin", "fahrenheit"];
-};
-TemperatureUnit.metricToUScustomary = {
-	"celsius": "fahrenheit"
-};
-TemperatureUnit.usCustomaryToMetric = {
-	"fahrenheit": "celsius"
+    return ["celsius", "kelvin", "fahrenheit"];
 };
 
-/**
- * Localize the measurement to the commonly used measurement in that locale. For example
- * If a user's locale is "en-US" and the measurement is given as "60 kmh", 
- * the formatted number should be automatically converted to the most appropriate 
- * measure in the other system, in this case, mph. The formatted result should
- * appear as "37.3 mph". 
- * 
- * @param {string} locale current locale string
- * @returns {Measurement} a new instance that is converted to locale
- */
-TemperatureUnit.prototype.localize = function(locale) {
-    var to;
-    if (locale === "en-US" ) {
-        to = TemperatureUnit.metricToUScustomary[this.unit] || this.unit;
-    } else {
-        to = TemperatureUnit.usCustomaryToMetric[this.unit] || this.unit;
-    }
-    return new TemperatureUnit({
-        unit: to,
-        amount: this
-    });
-};
 //register with the factory method
 Measurement._constructors["temperature"] = TemperatureUnit;
 

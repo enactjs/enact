@@ -104,15 +104,11 @@ var CalendarFactory = function (options) {
 		new LocaleInfo(locale, {
 			sync: sync,
 			loadParams: options && options.loadParams,
-			onLoad: ilib.bind(this, function(info) {
+			onLoad: function(info) {
 				type = info.getCalendar();
 				
 				instance = CalendarFactory._init(type, options);
-				
-				if (options && typeof(options.onLoad) === 'function') {
-					options.onLoad(instance);
-				}
-			})
+			}
 		});
 	} else {
 		instance = CalendarFactory._init(type, options);
@@ -165,6 +161,9 @@ CalendarFactory._init = function(type, options) {
 	
 	// pass the same options through to the constructor so the subclass
 	// has the ability to do something with if it needs to
+    if (!cons && typeof(options.onLoad) === "function") {
+        options.onLoad(undefined);
+    }
 	return cons && new cons(options);
 };
 

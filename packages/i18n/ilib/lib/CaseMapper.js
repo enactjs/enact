@@ -89,7 +89,7 @@ var CaseMapper = function (options) {
 			break;
 	}
 	
-	if (ilib._getBrowser() === "ie") {
+	if (ilib._getBrowser() === "ie" || ilib._getBrowser() === "Edge") {
 		// IE is missing these mappings for some reason
 		if (this.up) {
 			this.mapData['ς'] = 'Σ';

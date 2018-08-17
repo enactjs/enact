@@ -1,7 +1,7 @@
 /*
  * CharmapTable.js - A character set mapping class that maps using trie table
  * 
- * Copyright © 2014-2015, JEDLSoft
+ * Copyright © 2014-2015,2018, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -123,63 +123,76 @@ var IString = require("./IString.js");
  * @param {Object=} options options which govern the construction of this instance
  */
 var CharmapTable = function(options) {
-	var sync = true,
-	    loadParams = undefined;
-	
-	// console.log("CharmapTable: constructor with options: " + JSON.stringify(options));
-	
-	this.parent.call(this, options);
-	
-	if (options) {
-		if (typeof(options.charset) === "object") {
-			this.charset = options.charset;
-		} else if (typeof(options.name) !== 'undefined') {
-			this.charset = new Charset({name: options.name});
-		}
-		
-		if (typeof(options.sync) !== 'undefined') {
-			sync = (options.sync == true);
-		}
-		
-		if (typeof(options.loadParams) !== 'undefined') {
-			loadParams = options.loadParams;
-		}
-	}
+    var sync = true,
+        loadParams = undefined;
 
-	if (!this.charset) {
-		this.charset = new Charset({name: "ISO-8859-15"});
-	}
+    // console.log("CharmapTable: constructor with options: " + JSON.stringify(options));
 
-	this._calcExpansionFactor();
-	
-	if (!Charmap.cache) {
-		Charmap.cache = {};
-	}
+    this.parent.call(this, options);
+    this.charsetName = "ISO-8859-15";
 
-	Utils.loadData({
-		object: Charmap, 
-		locale: "-",
-		nonlocale: true,
-		name: "charmaps/" + this.charset.getName() + ".json", 
-		sync: sync, 
-		loadParams: loadParams, 
-		callback: ilib.bind(this, function (mapping) {
-			if (!mapping) {
-				throw "No mapping found for " + this.charset.getName();
-			}
+    if (options) {
+        if (typeof(options.charset) === "object") {
+            this.charset = options.charset;
+            this.charsetName = this.charset.getName();
+        } else if (typeof(options.name) !== 'undefined') {
+            this.charsetName = options.name;
+        }
+    } else {
+        options = {sync: true};
+    }
 
-			/** @type {{from:Object,to:Object}} */
-			this.map = mapping;
-			if (options && typeof(options.onLoad) === 'function') {
-				options.onLoad(this);
-			}
-		})
-	});
+    if (!this.charset) {
+        new Charset({
+            name: this.charsetName,
+            sync: sync,
+            loadParams: options.loadParams,
+            onLoad: ilib.bind(this, function(cs) {
+                this.charset = cs;
+                this._init(options);
+            })
+        });
+    } else {
+        this._init(options);
+    }
 };
 
-CharmapTable.prototype = new Charmap();
+CharmapTable.prototype = new Charmap({noinstance: true});
 CharmapTable.prototype.parent = Charmap;
 CharmapTable.prototype.constructor = CharmapTable;
+
+/**
+ * Initialize the table charmap object
+ * @private
+ */
+CharmapTable.prototype._init = function(options) {
+    this._calcExpansionFactor();
+    
+    Utils.loadData({
+        object: "Charmap", 
+        locale: "-",
+        nonlocale: true,
+        name: "charmaps/" + this.charset.getName() + ".json", 
+        sync: options.sync, 
+        loadParams: options.loadParams, 
+        callback: ilib.bind(this, function (mapping) {
+            var ret = this;
+            if (!mapping) {
+                if (options.sync) {
+                    throw "No mapping found for " + this.charset.getName();
+                } else {
+                    ret = undefined;
+                }
+            }
+
+            /** @type {{from:Object,to:Object}} */
+            this.map = mapping;
+            if (typeof(options.onLoad) === 'function') {
+                options.onLoad(ret);
+            }
+        })
+    });
+};
 
 /**
  * Walk a trie to find the value for the current position in the given array.

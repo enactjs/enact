@@ -90,100 +90,141 @@ var IslamicCal = require("./IslamicCal.js");
  * @param {Object=} params parameters that govern the settings and behaviour of this Islamic date
  */
 var IslamicDate = function(params) {
-	this.cal = new IslamicCal();
-	
-	if (params) {
-		if (params.locale) {
-			this.locale = (typeof(params.locale) === 'string') ? new Locale(params.locale) : params.locale;
-			var li = new LocaleInfo(this.locale);
-			this.timezone = li.getTimeZone(); 
-		}
-		if (params.timezone) {
-			this.timezone = params.timezone;
-		}
-		
-		if (params.year || params.month || params.day || params.hour ||
-				params.minute || params.second || params.millisecond ) {
-			/**
-			 * Year in the Islamic calendar.
-			 * @type number
-			 */
-			this.year = parseInt(params.year, 10) || 0;
+    this.cal = new IslamicCal();
 
-			/**
-			 * The month number, ranging from 1 to 12 (December).
-			 * @type number
-			 */
-			this.month = parseInt(params.month, 10) || 1;
+    params = params || {};
 
-			/**
-			 * The day of the month. This ranges from 1 to 30.
-			 * @type number
-			 */
-			this.day = parseInt(params.day, 10) || 1;
-			
-			/**
-			 * The hour of the day. This can be a number from 0 to 23, as times are
-			 * stored unambiguously in the 24-hour clock.
-			 * @type number
-			 */
-			this.hour = parseInt(params.hour, 10) || 0;
+    if (params.timezone) {
+        this.timezone = params.timezone;
+    }
+    if (params.locale) {
+        this.locale = (typeof(params.locale) === 'string') ? new Locale(params.locale) : params.locale;
+    }
 
-			/**
-			 * The minute of the hours. Ranges from 0 to 59.
-			 * @type number
-			 */
-			this.minute = parseInt(params.minute, 10) || 0;
-
-			/**
-			 * The second of the minute. Ranges from 0 to 59.
-			 * @type number
-			 */
-			this.second = parseInt(params.second, 10) || 0;
-
-			/**
-			 * The millisecond of the second. Ranges from 0 to 999.
-			 * @type number
-			 */
-			this.millisecond = parseInt(params.millisecond, 10) || 0;
-			
-			/**
-			 * The day of the year. Ranges from 1 to 355.
-			 * @type number
-			 */
-			this.dayOfYear = parseInt(params.dayOfYear, 10);
-
-			if (typeof(params.dst) === 'boolean') {
-				this.dst = params.dst;
-			}
-			
-			this.rd = this.newRd(this);
-			
-			// add the time zone offset to the rd to convert to UTC
-			if (!this.tz) {
-				this.tz = new TimeZone({id: this.timezone});
-			}
-			// getOffsetMillis requires that this.year, this.rd, and this.dst 
-			// are set in order to figure out which time zone rules apply and 
-			// what the offset is at that point in the year
-			this.offset = this.tz._getOffsetMillisWallTime(this) / 86400000;
-			if (this.offset !== 0) {
-				this.rd = this.newRd({
-					rd: this.rd.getRataDie() - this.offset
-				});
-			}
-		}
-	}
-
-	if (!this.rd) {
-		this.rd = this.newRd(params);
-		this._calcDateComponents();
-	}
+    if (!this.timezone) {
+        if (this.locale) {
+            new LocaleInfo(this.locale, {
+                sync: params.sync,
+                loadParams: params.loadParams,
+                onLoad: ilib.bind(this, function(li) {
+                    this.li = li;
+                    this.timezone = li.getTimeZone();
+                    this._init(params);
+                })
+            });
+        } else {
+            this.timezone = "local";
+            this._init(params);
+        }
+    } else {
+        this._init(params);
+    }
 };
 
 IslamicDate.prototype = new IDate({noinstance: true});
 IslamicDate.prototype.parent = IDate;
 IslamicDate.prototype.constructor = IslamicDate;
+
+/**
+ * Initialize the date
+ * @private
+ */
+IslamicDate.prototype._init = function (params) {
+    if (params.year || params.month || params.day || params.hour ||
+        params.minute || params.second || params.millisecond ) {
+        /**
+         * Year in the Islamic calendar.
+         * @type number
+         */
+        this.year = parseInt(params.year, 10) || 0;
+
+        /**
+         * The month number, ranging from 1 to 12 (December).
+         * @type number
+         */
+        this.month = parseInt(params.month, 10) || 1;
+
+        /**
+         * The day of the month. This ranges from 1 to 30.
+         * @type number
+         */
+        this.day = parseInt(params.day, 10) || 1;
+
+        /**
+         * The hour of the day. This can be a number from 0 to 23, as times are
+         * stored unambiguously in the 24-hour clock.
+         * @type number
+         */
+        this.hour = parseInt(params.hour, 10) || 0;
+
+        /**
+         * The minute of the hours. Ranges from 0 to 59.
+         * @type number
+         */
+        this.minute = parseInt(params.minute, 10) || 0;
+
+        /**
+         * The second of the minute. Ranges from 0 to 59.
+         * @type number
+         */
+        this.second = parseInt(params.second, 10) || 0;
+
+        /**
+         * The millisecond of the second. Ranges from 0 to 999.
+         * @type number
+         */
+        this.millisecond = parseInt(params.millisecond, 10) || 0;
+
+        /**
+         * The day of the year. Ranges from 1 to 355.
+         * @type number
+         */
+        this.dayOfYear = parseInt(params.dayOfYear, 10);
+
+        if (typeof(params.dst) === 'boolean') {
+            this.dst = params.dst;
+        }
+
+        this.rd = this.newRd(this);
+
+        new TimeZone({
+            id: this.timezone,
+            sync: params.sync,
+            loadParams: params.loadParams,
+            onLoad: ilib.bind(this, function(tz) {
+                this.tz = tz;
+                // add the time zone offset to the rd to convert to UTC
+                // getOffsetMillis requires that this.year, this.rd, and this.dst 
+                // are set in order to figure out which time zone rules apply and 
+                // what the offset is at that point in the year
+                this.offset = this.tz._getOffsetMillisWallTime(this) / 86400000;
+                if (this.offset !== 0) {
+                    this.rd = this.newRd({
+                        rd: this.rd.getRataDie() - this.offset
+                    });
+                }
+                this._init2(params);
+            })
+        });
+    } else {
+        this._init2(params);
+    }
+};
+
+/**
+ * @private
+ * Finish initializing this date object
+ */
+IslamicDate.prototype._init2 = function (params) {
+    if (!this.rd) {
+        this.rd = this.newRd(params);
+        this._calcDateComponents();
+    }
+
+    if (typeof(params.onLoad) === "function") {
+        params.onLoad(this);
+    }
+};
 
 /**
  * the cumulative lengths of each month, for a non-leap year 
