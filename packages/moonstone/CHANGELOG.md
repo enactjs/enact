@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/GridListImageItem` to properly vertically align when the content varies in size
 - `moonstone/VideoPlayer` to fallback focusing on available media buttons if default spotlight component is disabled
 - `moonstone/VideoPlayer` to read out `infoComponents` accessibility value when `moreButtonColor` is pressed
 - `moonstone/VideoPlayer` to round the time displayed down to nearest second
@@ -30,7 +31,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` not to scroll to wrong position via 5way navigation in RTL languages
 - `moonstone/Scroller` not to scroll when focusing in pointer mode
 - `moonstone/Slider` to forward `onActivate` event
-- `moonstone/GridListImageItem` to properly vertically align when the content varies in size
 - `moonstone/VideoPlayer` to reset key down hold when media becomes unavailable
 
 ## [2.0.1] - 2018-08-01
