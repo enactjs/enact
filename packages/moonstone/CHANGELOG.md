@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to scroll by dragging
 - `moonstone/GridListImageItem` to properly vertically align when the content varies in size
 - `moonstone/VideoPlayer` to fallback focusing on available media buttons if default spotlight component is disabled
 - `moonstone/VideoPlayer` to read out `infoComponents` accessibility value when `moreButtonColor` is pressed
@@ -24,8 +25,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to scroll by dragging
-- `moonstone/EditableIntegerPicker` management of spotlight pointer mode
 - `moonstone/DatePicker` to correctly change year when `minYear` and `maxYear` aren't provided
 - `moonstone/EditableIntegerPicker` management of spotlight pointer mode
 - `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` to have proper spacing and label-alignment with all label positions
