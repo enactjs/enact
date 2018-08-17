@@ -11,7 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VideoPlayer` to round the time displayed down to nearest second
-- `moonstone/Slider` not to fire `onChange` event when `value` has not changed
+- `moonstone/Slider` to not emit `onChange` event when `value` has not changed
 
 ## [2.0.2] - 2018-13-01
 
