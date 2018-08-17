@@ -857,10 +857,16 @@ function setLastContainer (containerId) {
 	if (currentContainerId) {
 		const config = getContainerConfig(currentContainerId);
 		if (config && config.restrict === 'self-only') {
+			const focused = document.activeElement;
 			const currentContainer = getContainerNode(currentContainerId);
 			const nextContainer = getContainerNode(containerId);
 
-			if (currentContainer && nextContainer && !currentContainer.contains(nextContainer)) {
+			if (currentContainer &&
+				nextContainer &&
+				// allow the last container to be updated when the focus lies within nextContainer
+				!(focused && nextContainer.contains(focused)) &&
+				!currentContainer.contains(nextContainer)
+			) {
 				return;
 			}
 		}
