@@ -1784,7 +1784,6 @@ const VideoPlayerBase = class extends React.Component {
 			<RootContainer
 				className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')}
 				onClick={this.activityDetected}
-				onKeyDown={this.activityDetected}
 				ref={this.setPlayerRef}
 				spotlightDisabled={spotlightDisabled}
 				spotlightId={spotlightId}
