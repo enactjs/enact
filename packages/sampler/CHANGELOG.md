@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/VirtualList` sampler's item not to have focus
+
 ## [2.0.2] - 2018-13-01
 
 No significant changes.
