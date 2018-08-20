@@ -2,7 +2,32 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [2.0.2] - 2018-13-01
+## [2.1.0] - 2018-08-20
+
+### Added
+
+- `moonstone/VideoPlayer` property `noMediaSliderFeedback`
+- `moonstone/VideoPlayer.MediaControls` property `playPauseButtonDisabled`
+
+### Changed
+
+- `i18n` to use the latest version of the `ilib`
+- `moonstone/Picker` key down hold threshold to 800ms before firing the `onChange` event
+
+### Fixed
+
+- `moonstone/GridListImageItem` to properly vertically align when the content varies in size
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to not scroll by dragging
+- `moonstone/Slider` to not emit `onChange` event when `value` has not changed
+- `moonstone/VideoPlayer` to focus on available media buttons if the default spotlight component is disabled
+- `moonstone/VideoPlayer` to keep media controls visible when interacting with popups
+- `moonstone/VideoPlayer` to read out `infoComponents` accessibility value when `moreButtonColor` is pressed
+- `moonstone/VideoPlayer` to round the time displayed down to the nearest second
+- `moonstone/VirtualList` to restore last focused item correctly
+- `ui/VirtualList` sampler to use `ui/Item` instead of `moonstone/Item`
+- `ui/FloatingLayer` to apply `key`s to prevent React warnings
+
+## [2.0.2] - 2018-08-13
 
 ### Fixed
 
