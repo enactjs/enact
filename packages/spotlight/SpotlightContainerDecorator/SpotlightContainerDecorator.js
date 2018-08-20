@@ -201,7 +201,11 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			let id = nextProps.spotlightId;
 			if (prevId !== id) {
-				Spotlight.remove(prevId);
+				if (this.state.preserveId) {
+					Spotlight.unmount(prevId);
+				} else {
+					Spotlight.remove(prevId);
+				}
 				id = Spotlight.add(id);
 
 				this.setState(stateFromProps({spotlightId: id}));
