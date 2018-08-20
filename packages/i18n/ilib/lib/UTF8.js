@@ -1,7 +1,7 @@
 /*
  * UTF8.js - Implement Unicode Transformation Format 8-bit mappings
  * 
- * Copyright © 2014-2015, JEDLSoft
+ * Copyright © 2014-2015, 2018, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,12 +32,38 @@ var IString = require("./IString.js");
  * @extends Charmap
  */
 var UTF8 = function (options) {
-	this.charset = new Charset({name: "UTF-8"});
+    options = options || {sync: true};
+    if (typeof(options.charset) === "object" && options.charset instanceof Charset) {
+        this.charset = options.charset;
+        this._init(options);
+    } else {
+        new Charset({
+            name: "UTF-8",
+            sync: options.sync,
+            loadParams: options.loadParams,
+            onLoad: ilib.bind(this, function(cs) {
+                this.charset = cs;
+                this._init(options);
+            })
+        });
+    }
 };
 
-UTF8.prototype = new Charmap();
+UTF8.prototype = new Charmap({noinstance: true});
 UTF8.prototype.parent = Charmap;
 UTF8.prototype.constructor = UTF8;
+
+/**
+ * @private
+ * Initialize the charmap instance
+ */
+UTF8.prototype._init = function(options) {
+    this._calcExpansionFactor();
+
+    if (typeof(options.onLoad) === "function") {
+        options.onLoad(this);
+    }
+};
 
 UTF8.prototype.validate = function(bytes) {
 	var i = 0;

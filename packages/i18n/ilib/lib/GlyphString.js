@@ -2,7 +2,7 @@
  * GlyphString.js - ilib string subclass that allows you to access 
  * whole glyphs at a time
  * 
- * Copyright © 2015, JEDLSoft
+ * Copyright © 2015-2018, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
  */
 
 // !depends IString.js CType.js Utils.js JSUtils.js
-// !data norm ctype_m
+// !data normdata ctype_m
 
 var ilib = require("./ilib.js");
 var Utils = require("./Utils.js");
@@ -62,10 +62,10 @@ var CType = require("./CType.js");
  * combining accents are the only way to create these accented and 
  * combined versions of the characters.<p>
  * 
- * The solution to thise problem is not to use the the CSS property 
+ * The solution to this problem is not to use the the CSS property 
  * "text-overflow: ellipsis" in your web site, ever. Instead, use
- * a glyph string to truncate text between glyphs instead of between
- * characters.<p>
+ * a glyph string to truncate text between glyphs dynamically,
+ * rather than truncating between Unicode characters using CSS.<p>
  * 
  * Glyph strings are also useful for truncation, hyphenation, and 
  * line wrapping, as all of these should be done between glyphs instead
@@ -106,26 +106,17 @@ var GlyphString = function (str, options) {
 	
 	IString.call(this, str);
 	
-	var sync = true;
-	var loadParams = {};
-	if (options) {
-		if (typeof(options.sync) === 'boolean') {
-			sync = options.sync;
-		}
-		if (options.loadParams) {
-			loadParams = options.loadParams;
-		}
-	}
+	options = options || {sync: true};
 	
-	CType._load("ctype_m", sync, loadParams, function() {
+	CType._load("ctype_m", options.sync, options.loadParams, ilib.bind(this, function() {
 		if (!ilib.data.norm || JSUtils.isEmpty(ilib.data.norm.ccc)) {
 			Utils.loadData({
-				object: GlyphString, 
+				object: "GlyphString", 
 				locale: "-", 
 				name: "normdata.json",
 				nonlocale: true,
-				sync: sync, 
-				loadParams: loadParams, 
+				sync: options.sync, 
+				loadParams: options.loadParams, 
 				callback: ilib.bind(this, function (norm) {
 					ilib.extend(ilib.data.norm, norm);
 					if (options && typeof(options.onLoad) === 'function') {
@@ -138,7 +129,7 @@ var GlyphString = function (str, options) {
 				options.onLoad(this);
 			}
 		}
-	});
+	}));
 };
 
 GlyphString.prototype = new IString(undefined);

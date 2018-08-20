@@ -38,7 +38,7 @@ const configureSpotlight = (spotlightId, instance) => {
 			}
 
 			return all.reduce((focused, node) => {
-				return focused || node.dataset.index === key && node;
+				return focused || Number(node.dataset.index) === key && node;
 			}, null);
 		}
 	});

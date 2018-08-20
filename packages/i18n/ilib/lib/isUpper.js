@@ -1,6 +1,6 @@
 /*
  * isUpper.js - Character type is upper-case letter
- * 
+ *
  * Copyright © 2012-2015, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,9 +28,9 @@ var IString = require("./IString.js");
 
 /**
  * Return whether or not the first character is upper-case. For alphabetic
- * characters in scripts that do not make a distinction between upper- and 
+ * characters in scripts that do not make a distinction between upper- and
  * lower-case, this function always returns true.<p>
- * 
+ *
  * @static
  * @param {string|IString|number} ch character or code point to examine
  * @return {boolean} true if the first character is upper-case.
@@ -51,7 +51,7 @@ var isUpper = function (ch) {
 			break;
 	}
 
-	return CType._inRange(num, 'Lu', ilib.data.ctype_l);
+	return ilib.data.ctype_l ? CType._inRange(num, 'Lu', ilib.data.ctype_l) : (num >= 0x41 && num <= 0x5A);
 };
 
 /**

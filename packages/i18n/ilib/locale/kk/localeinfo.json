@@ -1,1 +1,1 @@
-{"delimiter":{"quotationStart":"«","quotationEnd":"»","alternateQuotationStart":"“","alternateQuotationEnd":"”"},"language.name":"Kazakh","numfmt":{"decimalChar":",","groupChar":" ","currencyFormats":{"common":"{n} {s}","commonNegative":"-{n} {s}"}},"scripts":["Cyrl","Arab"],"locale":"kk"}
+{"delimiter":{"quotationStart":"«","quotationEnd":"»","alternateQuotationStart":"“","alternateQuotationEnd":"”"},"language.name":"Kazakh","numfmt":{"decimalChar":",","groupChar":" ","currencyFormats":{"common":"{n} {s}","commonNegative":"-{n} {s}"}},"scripts":["Arab","Cyrl"],"locale":"kk"}

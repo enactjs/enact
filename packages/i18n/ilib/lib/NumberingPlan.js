@@ -88,7 +88,7 @@ var NumberingPlan = function (options) {
 
 	Utils.loadData({
 		name: "numplan.json",
-		object: NumberingPlan,
+		object: "NumberingPlan",
 		locale: this.locale,
 		sync: sync, 
 		loadParams: loadParams, 
