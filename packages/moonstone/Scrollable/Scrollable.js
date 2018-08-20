@@ -383,7 +383,7 @@ class ScrollableBase extends Component {
 		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
 		// scroller as a plain container
 		if (!this.uiRef.state.isVerticalScrollbarVisible) {
-			return true;
+			return false;
 		}
 
 		const
@@ -421,10 +421,10 @@ class ScrollableBase extends Component {
 			}
 
 			// Need to check whether an overscroll effect is needed
-			return false;
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	hasFocus () {
@@ -451,25 +451,23 @@ class ScrollableBase extends Component {
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				Spotlight.setPointerMode(false);
 				direction = this.getPageDirection(keyCode);
-				overscrollEffectRequired = !this.scrollByPage(direction);
-			} else {
+				overscrollEffectRequired = this.scrollByPage(direction);
+			} else if (getDirection(keyCode)) {
+				const element = Spotlight.getCurrent();
+
 				direction = getDirection(keyCode);
-				if (direction) {
-					const element = Spotlight.getCurrent();
+				overscrollEffectRequired = !(element ? getTargetByDirectionFromElement(direction, element) : null);
+				if (overscrollEffectRequired) {
+					const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef;
 
-					overscrollEffectRequired = !(element ? getTargetByDirectionFromElement(direction, element) : null);
-					if (overscrollEffectRequired) {
-						const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef;
-
-						if ((horizontalScrollbarRef && horizontalScrollbarRef.getContainerRef().contains(element)) ||
-							(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(element))) {
-							overscrollEffectRequired = false;
-						}
+					if ((horizontalScrollbarRef && horizontalScrollbarRef.getContainerRef().contains(element)) ||
+						(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(element))) {
+						overscrollEffectRequired = false;
 					}
 				}
 			}
 
-			if (overscrollEffectRequired) { /* if the spotlight focus will not move */
+			if (direction && overscrollEffectRequired) { /* if the spotlight focus will not move */
 				const
 					orientation = (direction === 'up' || direction === 'down') ? 'vertical' : 'horizontal',
 					bounds = this.uiRef.getScrollBounds(),
@@ -479,7 +477,7 @@ class ScrollableBase extends Component {
 					const
 						isRtl = this.uiRef.state.rtl,
 						edge = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
-					this.uiRef.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce, 1);
+					this.uiRef.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 				}
 			}
 		}
@@ -559,12 +557,8 @@ class ScrollableBase extends Component {
 	}
 
 	clearOverscrollEffect = (orientation, edge) => {
-		const {type} = this.uiRef.getOverscrollStatus(orientation, edge);
-
-		if (type !== overscrollTypeNone) {
-			this.overscrollJobs[orientation][edge].startAfter(overscrollTimeout, orientation, edge, overscrollTypeNone, 0);
-			this.uiRef.setOverscrollStatus(orientation, edge, overscrollTypeNone, 0);
-		}
+		this.overscrollJobs[orientation][edge].startAfter(overscrollTimeout, orientation, edge, overscrollTypeNone, 0);
+		this.uiRef.setOverscrollStatus(orientation, edge, overscrollTypeNone, 0);
 	}
 
 	applyOverscrollEffect = (orientation, edge, type, ratio) => {
