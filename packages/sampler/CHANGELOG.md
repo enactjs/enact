@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ### Fixed
 
-- `ui/VirtualList` sampler to replace `moonstone/Item` with `ui/Item`
+- `ui/VirtualList` sampler to use `ui/Item` instead of `moonstone/Item`
 
 ## [2.0.2] - 2018-13-01
 
