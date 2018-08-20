@@ -10,7 +10,7 @@
 
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {on, off} from '@enact/core/dispatcher';
-import {adaptEvent, call, forKey, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
+import {adaptEvent, call, forKey, forward, forwardWithPrevent, handle, stopImmediate, returnsTrue} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {platform} from '@enact/core/platform';
 import {perfNow, Job} from '@enact/core/util';
@@ -661,7 +661,6 @@ const VideoPlayerBase = class extends React.Component {
 
 	componentDidMount () {
 		on('mousemove', this.activityDetected);
-		on('keypress', this.activityDetected);
 		on('keydown', this.handleGlobalKeyDown);
 		this.startDelayedFeedbackHide();
 	}
@@ -757,7 +756,6 @@ const VideoPlayerBase = class extends React.Component {
 
 	componentWillUnmount () {
 		off('mousemove', this.activityDetected);
-		off('keypress', this.activityDetected);
 		off('keydown', this.handleGlobalKeyDown);
 		this.stopRewindJob();
 		this.stopAutoCloseTimeout();
@@ -1104,6 +1102,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleGlobalKeyDown = this.handle(
+		returnsTrue(this.activityDetected),
 		forKey('down'),
 		() => (
 			!this.state.mediaControlsVisible &&
