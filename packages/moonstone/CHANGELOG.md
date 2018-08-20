@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VirtualList` to restore last focused correctly
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to scroll by dragging
 - `moonstone/GridListImageItem` to properly vertically align when the content varies in size
 - `moonstone/VideoPlayer` to fallback focusing on available media buttons if default spotlight component is disabled
