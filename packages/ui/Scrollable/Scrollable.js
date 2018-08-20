@@ -726,26 +726,26 @@ class ScrollableBase extends Component {
 		this.setOverscrollStatus(orientation, edge, type === overscrollTypeOnce ? overscrollTypeDone : type, ratio);
 	}
 
-	checkAndApplyOverscrollEffect = (orientation, edge, type, ratio) => {
+	checkAndApplyOverscrollEffect = (orientation, edge, type, ratio = 1) => {
 		const
 			isVertical = (orientation === 'vertical'),
 			curPos = isVertical ? this.scrollTop : this.scrollLeft,
 			maxPos = this.getScrollBounds()[isVertical ? 'maxTop' : 'maxLeft'];
 
-		if (edge === 'before' && curPos <= 0) { // On the beginning edge
-			this.applyOverscrollEffect(orientation, 'before', type, ratio);
-		} else if (edge === 'after' && curPos >= maxPos) { // On the ending edge
-			this.applyOverscrollEffect(orientation, 'after', type, ratio);
+		if ((edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos)) { // Already on the edge
+			this.applyOverscrollEffect(orientation, edge, type, ratio);
 		} else {
 			this.setOverscrollStatus(orientation, edge, type, ratio);
 		}
 	}
 
 	clearOverscrollEffect = (orientation, edge) => {
-		if (this.props.clearOverscrollEffect) {
-			this.props.clearOverscrollEffect(orientation, edge);
-		} else if (this.getOverscrollStatus(orientation, edge).type !== overscrollTypeNone) {
-			this.applyOverscrollEffect(orientation, edge, overscrollTypeNone, 0);
+		if (this.getOverscrollStatus(orientation, edge).type !== overscrollTypeNone) {
+			if (this.props.clearOverscrollEffect) {
+				this.props.clearOverscrollEffect(orientation, edge);
+			} else {
+				this.applyOverscrollEffect(orientation, edge, overscrollTypeNone, 0);
+			}
 		}
 	}
 
@@ -786,7 +786,7 @@ class ScrollableBase extends Component {
 			if (this.isDragging) {
 				this.applyOverscrollEffectOnDrag(orientation, edge, targetPosition, overscrollTypeHold);
 			} else if (this.getOverscrollStatus(orientation, edge).type === overscrollTypeNone) {
-				this.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce, 1);
+				this.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 			}
 		}
 	}
