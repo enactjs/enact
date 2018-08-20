@@ -6,7 +6,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
-- `ui/Icon` to require children and `ui/LabeledIcon` to require `icon` prop
+- `ui/Icon` to require children
+- `ui/LabeledIcon` to require `icon` prop
 
 ## [2.0.2] - 2018-13-01
 
