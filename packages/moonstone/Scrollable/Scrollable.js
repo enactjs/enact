@@ -147,6 +147,21 @@ class ScrollableBase extends Component {
 		focusableScrollbar: PropTypes.bool,
 
 		/**
+		 * Specifies overscroll effects shows on which type of inputs.
+		 *
+		 * @type {String[]}
+		 * @default null
+		 * @private
+		 */
+		overscrollEffectOn: PropTypes.shape({
+			arrowKey: PropTypes.bool,
+			drag: PropTypes.bool,
+			pageKey: PropTypes.bool,
+			scrollbarButton: PropTypes.bool,
+			wheel: PropTypes.bool
+		}),
+
+		/**
 		 * Sets the hint string read when focusing the next button in the vertical scroll bar.
 		 *
 		 * @type {String}
@@ -185,7 +200,14 @@ class ScrollableBase extends Component {
 
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
-		focusableScrollbar: false
+		focusableScrollbar: false,
+		overscrollEffectOn: {
+			arrowKey: false,
+			drag: false,
+			pageKey: false,
+			scrollbarButton: false,
+			wheel: true
+		}
 	}
 
 	constructor (props) {
@@ -275,7 +297,7 @@ class ScrollableBase extends Component {
 					targetX: left,
 					targetY: top,
 					animate: (animationDuration > 0) && this.animateOnFocus,
-					overscrollEffect: (!this.childRef.shouldPreventOverscrollEffect || !this.childRef.shouldPreventOverscrollEffect())
+					overscrollEffect: this.props.overscrollEffectOn[this.uiRef.lastInputType] && (!this.childRef.shouldPreventOverscrollEffect || !this.childRef.shouldPreventOverscrollEffect())
 				});
 				this.lastScrollPositionOnFocus = pos;
 			}
@@ -390,6 +412,8 @@ class ScrollableBase extends Component {
 			{childRef, containerRef} = this.uiRef,
 			focusedItem = Spotlight.getCurrent();
 
+		this.uiRef.lastInputType = 'pageKey';
+
 		// Should skip scroll by page when focusedItem is paging control button of Scrollbar
 		if (focusedItem && childRef.containerRef.contains(focusedItem)) {
 			const
@@ -451,12 +475,15 @@ class ScrollableBase extends Component {
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				Spotlight.setPointerMode(false);
 				direction = this.getPageDirection(keyCode);
-				overscrollEffectRequired = this.scrollByPage(direction);
+				overscrollEffectRequired = this.scrollByPage(direction) && overscrollEffectOn.pageKey;
 			} else if (getDirection(keyCode)) {
 				const element = Spotlight.getCurrent();
 
 				direction = getDirection(keyCode);
-				overscrollEffectRequired = !(element ? getTargetByDirectionFromElement(direction, element) : null);
+
+				this.uiRef.lastInputType = 'arrowKey';
+
+				overscrollEffectRequired = overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null);
 				if (overscrollEffectRequired) {
 					const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef;
 
@@ -489,12 +516,14 @@ class ScrollableBase extends Component {
 			direction = isPreviousScrollButton ? -1 : 1,
 			pageDistance = direction * (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
+		this.uiRef.lastInputType = 'scrollbarButton';
+
 		if (direction !== this.uiRef.wheelDirection) {
 			this.uiRef.isScrollAnimationTargetAccumulated = false;
 			this.uiRef.wheelDirection = direction;
 		}
 
-		this.uiRef.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar);
+		this.uiRef.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar, this.props.overscrollEffectOn.scrollbarButton);
 	}
 
 	stop = () => {
