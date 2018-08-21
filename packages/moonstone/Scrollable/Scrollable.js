@@ -468,6 +468,7 @@ class ScrollableBase extends Component {
 		this.animateOnFocus = true;
 
 		if (!repeat && this.hasFocus()) {
+			const {overscrollEffectOn} = this.props;
 			let
 				overscrollEffectRequired = false,
 				direction = null;
