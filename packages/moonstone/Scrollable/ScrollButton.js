@@ -4,7 +4,7 @@ import React from 'react';
 
 import IconButton from '../IconButton';
 
-import css from './Scrollbar.less';
+import css from './ScrollButton.less';
 
 const classNameMap = {
 	down: css.scrollbarBottomButton,
@@ -70,6 +70,15 @@ const ScrollButton = kind({
 		active: PropTypes.bool,
 
 		/**
+		 * Override [IconButton]{@link moonstone/IconButton and
+		 * [Button]{@link moonstone/Button's `'bg'` and `'client'` css classes
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		css: PropTypes.object,
+
+		/**
 		 * Disables the button.
 		 *
 		 * @type {Boolean}
@@ -88,7 +97,7 @@ const ScrollButton = kind({
 		className: ({direction, styler}) => styler.append(classNameMap[direction])
 	},
 
-	render: ({children, disabled, ...rest}) => {
+	render: ({css, children, disabled, ...rest}) => {
 		delete rest.active;
 		delete rest.direction;
 
@@ -96,6 +105,7 @@ const ScrollButton = kind({
 			<IconButton
 				{...rest}
 				backgroundOpacity="transparent"
+				css={css}
 				disabled={disabled}
 				small
 			>

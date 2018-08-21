@@ -34,33 +34,6 @@
 		}
 	}
 
-	/* ScrollButton */
-	.scrollbarButtonNoCompositeLayer {
-		&,
-		&:before,
-		&:after,
-		div,
-		span {
-			will-change: auto;
-		}
-
-		&:before {
-			content: none;
-		}
-
-		div,
-		span {
-			-webkit-transform: initial;
-			transform: initial;
-		}
-	}
-
-	.scrollButton {
-		.scrollbarButtonNoCompositeLayer;
-		background-color: transparent;
-		margin: 0;
-	}
-
 	/* ScrollThumb */
 	.thumbShown {
 		opacity: 1;
