@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `spotlight/Spottable` config option `selectionKeys` to support using alternate keys to fire selection-based events.
+
 ## [2.1.0] - 2018-08-20
 
 No significant changes.

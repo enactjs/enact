@@ -215,6 +215,7 @@ describe('Picker Specs', function () {
 
 		const expected = -1;
 		picker.simulate('keyDown', {keyCode: 37});
+		picker.simulate('mousedown');
 		const actual = handleChange.args[0][0].value;
 
 		expect(actual).to.equal(expected);
@@ -228,6 +229,7 @@ describe('Picker Specs', function () {
 
 		const expected = 1;
 		picker.simulate('keyDown', {keyCode: 39});
+		picker.simulate('mousedown');
 		const actual = handleChange.args[0][0].value;
 
 		expect(actual).to.equal(expected);
@@ -241,6 +243,7 @@ describe('Picker Specs', function () {
 
 		const expected = -1;
 		picker.simulate('keyDown', {keyCode: 40});
+		picker.simulate('mousedown');
 		const actual = handleChange.args[0][0].value;
 
 		expect(actual).to.equal(expected);
@@ -254,6 +257,7 @@ describe('Picker Specs', function () {
 
 		const expected = 1;
 		picker.simulate('keyDown', {keyCode: 38});
+		picker.simulate('mousedown');
 		const actual = handleChange.args[0][0].value;
 
 		expect(actual).to.equal(expected);
@@ -267,6 +271,7 @@ describe('Picker Specs', function () {
 
 		const expected = false;
 		picker.simulate('keyDown', {keyCode: 37});
+		picker.simulate('mousedown');
 		const actual = handleChange.called;
 
 		expect(actual).to.equal(expected);
@@ -280,6 +285,7 @@ describe('Picker Specs', function () {
 
 		const expected = false;
 		picker.simulate('keyDown', {keyCode: 39});
+		picker.simulate('mousedown');
 		const actual = handleChange.called;
 
 		expect(actual).to.equal(expected);
@@ -293,6 +299,7 @@ describe('Picker Specs', function () {
 
 		const expected = false;
 		picker.simulate('keyDown', {keyCode: 40});
+		picker.simulate('mousedown');
 		const actual = handleChange.called;
 
 		expect(actual).to.equal(expected);
@@ -306,6 +313,7 @@ describe('Picker Specs', function () {
 
 		const expected = false;
 		picker.simulate('keyDown', {keyCode: 38});
+		picker.simulate('mousedown');
 		const actual = handleChange.called;
 
 		expect(actual).to.equal(expected);
