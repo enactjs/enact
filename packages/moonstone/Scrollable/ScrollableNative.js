@@ -131,7 +131,13 @@ class ScrollableBaseNative extends Component {
 		 * Specifies overscroll effects shows on which type of inputs.
 		 *
 		 * @type {Object}
-		 * @default {arrowKey: false, drag: false, pageKey: false, scrollbarButton: false, wheel: true}
+		 * @default {
+		 *	arrowKey: false,
+		 *	drag: false,
+		 *	pageKey: false,
+		 *	scrollbarButton: false,
+		 *	wheel: true
+		 * }
 		 * @private
 		 */
 		overscrollEffectOn: PropTypes.shape({
