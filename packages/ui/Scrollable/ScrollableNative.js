@@ -595,7 +595,7 @@ class ScrollableBaseNative extends Component {
 			this.stop();
 		}
 
-		if (this.overscrollEnabled) { // not check this.props.overscrollEffectOn.drag for safty
+		if (this.overscrollEnabled) { // not check this.props.overscrollEffectOn.drag for safety
 			this.clearAllOverscrollEffects();
 		}
 		this.isTouching = false;
@@ -648,7 +648,7 @@ class ScrollableBaseNative extends Component {
 		} else {
 			const
 				{overscrollEffectOn} = this.props,
-				overscrollEffectNeeded = this.overscrollEnabled && overscrollEffectOn.wheel,
+				overscrollEffectRequired = this.overscrollEnabled && overscrollEffectOn.wheel,
 				bounds = this.getScrollBounds(),
 				canScrollHorizontally = this.canScrollHorizontally(bounds),
 				canScrollVertically = this.canScrollVertically(bounds),
@@ -678,11 +678,11 @@ class ScrollableBaseNative extends Component {
 						(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(ev.target))) {
 						delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 						needToHideThumb = !delta;
-					} else if (overscrollEffectNeeded) {
+					} else if (overscrollEffectRequired) {
 						this.checkAndApplyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce);
 					}
 				} else {
-					if (overscrollEffectNeeded && eventDelta < 0 && this.scrollTop <= 0 || eventDelta > 0 && this.scrollTop >= bounds.maxTop) {
+					if (overscrollEffectRequired && (eventDelta < 0 && this.scrollTop <= 0 || eventDelta > 0 && this.scrollTop >= bounds.maxTop)) {
 						this.applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
 					}
 					needToHideThumb = true;
@@ -692,7 +692,7 @@ class ScrollableBaseNative extends Component {
 					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
 				} else {
-					if (overscrollEffectNeeded && eventDelta < 0 && this.scrollLeft <= 0 || eventDelta > 0 && this.scrollLeft >= bounds.maxLeft) {
+					if (overscrollEffectRequired && (eventDelta < 0 && this.scrollLeft <= 0 || eventDelta > 0 && this.scrollLeft >= bounds.maxLeft)) {
 						this.applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
 					}
 					needToHideThumb = true;

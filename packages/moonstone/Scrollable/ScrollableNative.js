@@ -282,7 +282,7 @@ class ScrollableBaseNative extends Component {
 	 */
 	onWheel = (ev) => {
 		const
-			overscrollEffectNeeded = this.props.overscrollEffectOn.wheel,
+			overscrollEffectRequired = this.props.overscrollEffectOn.wheel,
 			bounds = this.uiRef.getScrollBounds(),
 			canScrollHorizontally = this.uiRef.canScrollHorizontally(bounds),
 			canScrollVertically = this.uiRef.canScrollVertically(bounds),
@@ -314,11 +314,11 @@ class ScrollableBaseNative extends Component {
 					(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(ev.target))) {
 					delta = this.uiRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
-				} else if (overscrollEffectNeeded) {
+				} else if (overscrollEffectRequired) {
 					this.uiRef.checkAndApplyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce);
 				}
 			} else {
-				if (overscrollEffectNeeded && eventDelta < 0 && this.uiRef.scrollTop <= 0 || eventDelta > 0 && this.uiRef.scrollTop >= bounds.maxTop) {
+				if (overscrollEffectRequired && (eventDelta < 0 && this.uiRef.scrollTop <= 0 || eventDelta > 0 && this.uiRef.scrollTop >= bounds.maxTop)) {
 					this.uiRef.applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
 				}
 				needToHideThumb = true;
@@ -332,7 +332,7 @@ class ScrollableBaseNative extends Component {
 				delta = this.uiRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				needToHideThumb = !delta;
 			} else {
-				if (overscrollEffectNeeded && eventDelta < 0 && this.scrollLeft <= 0 || eventDelta > 0 && this.scrollLeft >= bounds.maxLeft) {
+				if (overscrollEffectRequired && (eventDelta < 0 && this.scrollLeft <= 0 || eventDelta > 0 && this.scrollLeft >= bounds.maxLeft)) {
 					this.uiRef.applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
 				}
 				needToHideThumb = true;
@@ -348,7 +348,7 @@ class ScrollableBaseNative extends Component {
 				this.uiRef.isScrollAnimationTargetAccumulated = false;
 				this.uiRef.wheelDirection = direction;
 			}
-			this.uiRef.scrollToAccumulatedTarget(delta, canScrollVertically, overscrollEffectNeeded);
+			this.uiRef.scrollToAccumulatedTarget(delta, canScrollVertically, overscrollEffectRequired);
 		}
 
 		if (needToHideThumb) {

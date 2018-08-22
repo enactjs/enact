@@ -596,7 +596,7 @@ class ScrollableBase extends Component {
 			this.stop();
 		}
 
-		if (this.overscrollEnabled) { // not check this.props.overscrollEffectOn.drag for safty
+		if (this.overscrollEnabled) { // not check this.props.overscrollEffectOn.drag for safety
 			this.clearAllOverscrollEffects();
 		}
 
