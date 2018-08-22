@@ -1,6 +1,6 @@
 
 /**
- * Exports the {@link ui/internal/Pure.Pure} Higher-order component (HOC).
+ * Exports the {@link ui/internal/Pure.Pure} higher-order component (HOC).
  *
  * @module ui/internal/Pure
  * @private

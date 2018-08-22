@@ -41,7 +41,7 @@ const defaultConfig = {
 };
 
 /**
- * Higher-order component that generates globally-unique identifiers
+ * A higher-order component that generates globally-unique identifiers
  *
  * @class IdProvider
  * @hoc

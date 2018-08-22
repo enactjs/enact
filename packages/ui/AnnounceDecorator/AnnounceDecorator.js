@@ -30,7 +30,7 @@ const defaultConfig = {
 };
 
 /**
- * A Higher-order component that provides a function to its wrapped component which can be called to alert the user for
+ * A higher-order component that provides a function to its wrapped component which can be called to alert the user for
  * accessibility notifications.
  *
  * By default, the function is passed in the `announce` prop but may be customized by specifying the

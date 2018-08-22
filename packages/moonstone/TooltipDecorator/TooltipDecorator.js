@@ -39,7 +39,7 @@ const defaultConfig = {
 };
 
 /**
- * A Higher-order component which positions [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} in
+ * A higher-order component which positions [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} in
  * relation to the wrapped component.
  *
  * The tooltip is automatically displayed when the decoratorated component is focused after a set

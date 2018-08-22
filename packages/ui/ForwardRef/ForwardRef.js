@@ -1,5 +1,5 @@
 /**
- * A Higher-order component interface for `ref` forwarding.
+ * A higher-order component interface for `ref` forwarding.
  *
  * @module ui/ForwardRef
  * @exports	ForwardRef
@@ -26,7 +26,7 @@ const defaultConfig = {
 };
 
 /**
- * A Higher-order component that adapts [`React.forwardRef`](https://reactjs.org/docs/forwarding-refs.html)
+ * A higher-order component that adapts [`React.forwardRef`](https://reactjs.org/docs/forwarding-refs.html)
  * to be chainable with other HOCs.
  *
  * The following examples are equivalent:
