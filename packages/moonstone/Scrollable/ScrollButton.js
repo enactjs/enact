@@ -4,7 +4,7 @@ import React from 'react';
 
 import IconButton from '../IconButton';
 
-import css from './ScrollButton.less';
+import componentCss from './ScrollButton.less';
 
 const classNameMap = {
 	down: css.scrollbarBottomButton,
@@ -88,7 +88,7 @@ const ScrollButton = kind({
 	},
 
 	styles: {
-		css,
+		css: componentCss,
 		className: 'scrollButton'
 	},
 
