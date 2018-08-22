@@ -50,7 +50,7 @@ const ButtonBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Disables Button and prevents events from firing.
+		 * Applies the `disabled` class.
 		 *
 		 * When `true`, the button is shown as disabled.
 		 *

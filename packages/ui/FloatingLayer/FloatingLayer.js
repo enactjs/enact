@@ -254,7 +254,7 @@ const handleCancel = handle(
 );
 
 /**
- * FloatingLayer that mixes {@link ui/Cancelable.Cancelable} to handle FloatingLayer dismissal
+ * FloatingLayer that mixes {@link ui/Cancelable.Cancelable} to handle FloatingLayer dismissal.
  *
  * This is used for modal components such as popups.
  *

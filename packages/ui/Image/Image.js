@@ -89,7 +89,7 @@ const ImageBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Called when if the image has an error.
+		 * Called if the image has an error.
 		 *
 		 * @type {Function}
 		 * @public

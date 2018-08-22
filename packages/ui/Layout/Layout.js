@@ -1,5 +1,5 @@
 /**
- * Provides ui layout support using `Cell`, `Row`, and `Column`.
+ * Provides ui layout support using `Cell`, `Row`, and `Column` that uses flexbox to lay out elements.
  *
  * @example
  * <Layout>

@@ -1,5 +1,5 @@
 /**
- * A component that will marquee its overflowing contents/.
+ * A component that will marquee its overflowing contents.
  *
  * @module ui/Marquee
  * @exports Marquee
