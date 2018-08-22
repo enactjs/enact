@@ -1210,7 +1210,7 @@ class ScrollableBaseNative extends Component {
 
 		if (childRef && childRef.containerRef) {
 			if (childRef.containerRef.addEventListener) {
-				childRef.containerRef.addEventListener('scroll', this.onScroll, {capture: true});
+				childRef.containerRef.addEventListener('scroll', this.onScroll, {capture: true, passive: true});
 				childRef.containerRef.addEventListener('mousedown', this.onMouseDown);
 			}
 			this.childRef.containerRef.style.scrollBehavior = 'smooth';
@@ -1230,7 +1230,7 @@ class ScrollableBaseNative extends Component {
 		}
 
 		if (childRef && childRef.containerRef && childRef.containerRef.removeEventListener) {
-			childRef.containerRef.removeEventListener('scroll', this.onScroll, {capture: true});
+			childRef.containerRef.removeEventListener('scroll', this.onScroll, {capture: true, passive: true});
 			childRef.containerRef.removeEventListener('mousedown', this.onMouseDown);
 		}
 
