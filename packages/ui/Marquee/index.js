@@ -1,6 +1,5 @@
 /**
- * A component that will marquee its overflowing contents and a higher-order component
- * (HOC) to add marquee behavior to the content of existing components.
+ * A component that will marquee its overflowing contents/.
  *
  * @module ui/Marquee
  * @exports Marquee

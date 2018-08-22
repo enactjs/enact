@@ -92,7 +92,7 @@ const GridListImageItem = kind({
 		placeholder: PropTypes.string,
 
 		/**
-		 * When `true`, applies a selected visual effect to the image, but only if `selectionOverlayShowing`
+		 * Applies a selected visual effect to the image, but only if `selectionOverlayShowing`
 		 * is also `true`.
 		 *
 		 * @type {Boolean}
@@ -121,8 +121,7 @@ const GridListImageItem = kind({
 		selectionOverlay: PropTypes.func,
 
 		/**
-		 * When `true`, a selection overlay with a centered icon is shown. When `selected` is true,
-		 * a check mark is shown.
+		 * Shows a selection overlay with a centered icon. When `selected` is true, a check mark is shown.
 		 *
 		 * @type {Boolean}
 		 * @default false

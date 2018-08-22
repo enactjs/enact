@@ -212,7 +212,7 @@ const LabeledIconBase = kind({
 });
 
 /**
- * Adds slot support to [LabeledIconBase]{@link ui/LabeledIcon.LabeledIconBase}
+ * A Higher-order Component that adds [slot]{@link ui/Slottable.Slottable} support to [LabeledIconBase]{@link ui/LabeledIcon.LabeledIconBase}
  *
  * @hoc
  * @memberof ui/LabeledIcon

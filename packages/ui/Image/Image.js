@@ -89,7 +89,7 @@ const ImageBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * A function that will run if the image has an error.
+		 * Called when if the image has an error.
 		 *
 		 * @type {Function}
 		 * @public
@@ -97,7 +97,7 @@ const ImageBase = kind({
 		onError: PropTypes.func,
 
 		/**
-		 * A function that will run once the image is loaded.
+		 * Called once the image is loaded.
 		 *
 		 * @type {Function}
 		 * @public

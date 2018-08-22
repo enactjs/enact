@@ -28,7 +28,7 @@ const defaultConfig = {
 };
 
 /**
- * Adds support for hint text to be read before and/or after the content.
+ * A Higher-order Component that adds support for hint text to be read before and/or after the content.
  *
  * By default, the `children` prop is used as the source of the components content but may be
  * configured by passing a different `prop` to the HOC configuration.

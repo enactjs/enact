@@ -73,7 +73,7 @@ const defaultConfig = {
 add('cancel', 27);
 
 /**
- * Adds support to a component to handle cancel actions.
+ * A Higher-order Component that adds support to a component to handle cancel actions.
  *
  * The cancel event may be handled either by a design-time config function or a run-time prop
  * function. If the component handles the event and wants to prevent upstream components from also

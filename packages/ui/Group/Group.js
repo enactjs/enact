@@ -1,6 +1,5 @@
 /**
- * Exports the {@link ui/Group.Group} and {@link ui/Group.GroupBase}
- * components.  The default export is {@link ui/Group.Group}.
+ * Provides a component that renders a group of components given a set of data.
  *
  * @module ui/Group
  * @exports Group
@@ -17,8 +16,8 @@ import Repeater from '../Repeater';
 import {GroupItem, pickGroupItemProps} from './GroupItem';
 
 /**
- * {@link ui/Group.GroupBase} is a stateless component that supports selection of its child items
- * via configurable properties and events.
+ * A stateless component that supports selection of its child items via configurable
+ * properties and events.
  *
  * @class GroupBase
  * @memberof ui/Group
@@ -167,8 +166,10 @@ const GroupBase = kind({
 });
 
 /**
- * {@link ui/Group.Group} supports selection of its child items via configurable properties and
+ * A component that supports selection of its child items via configurable properties and
  * events.
+ *
+ * Selected item is managed by {@link ui/Changeable.Changeable}.
  *
  * @class Group
  * @memberof ui/Group

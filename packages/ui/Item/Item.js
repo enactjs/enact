@@ -62,7 +62,7 @@ const ItemBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, applies a disabled state to the item.
+		 * Applies a disabled state to the item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -71,7 +71,7 @@ const ItemBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * When `true`, applies inline styling to the item.
+		 * Applies inline styling to the item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -111,7 +111,7 @@ const ItemBase = kind({
 });
 
 /**
- * Adds touch support to the component it wraps.
+ * A Higher-order Component that adds touch support to the component it wraps.
  *
  * @hoc
  * @memberof ui/Item
